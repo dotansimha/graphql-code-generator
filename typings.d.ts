@@ -1,2 +1,2 @@
-/// <reference types="typed-graphql" />
+/// <reference types="@types/graphql" />
 /// <reference types="@types/node" />

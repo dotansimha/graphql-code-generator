@@ -52,12 +52,12 @@
     }
   },
   "dependencies": {
+    "@types/graphql": "^0.8.2",
     "@types/handlebars": "^4.0.31",
     "@types/node": "^0.0.2",
     "commander": "^2.9.0",
     "graphql": "^0.8.2",
     "handlebars": "^4.0.6",
-    "nodemon": "^1.11.0",
-    "typed-graphql": "^1.0.2"
+    "nodemon": "^1.11.0"
   }
 }

@@ -23,7 +23,7 @@ export interface Model {
   enumValues?: EnumValue[];
 }
 
-export interface Document {
+export interface CodegenDocument {
   isQuery: boolean;
   isMutation: boolean;
   isSubscription: boolean;
@@ -32,5 +32,5 @@ export interface Document {
 
 export interface Codegen {
   models: Model[];
-  documents: Document[];
+  documents: CodegenDocument[];
 }

@@ -2,6 +2,10 @@
 # yarn lockfile v1
 
 
+"@types/graphql@^0.8.2":
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/@types/graphql/-/graphql-0.8.2.tgz#271c6df47a449ebce5d971f8df7f5da0b401edca"
+
 "@types/handlebars@^4.0.31":
   version "4.0.31"
   resolved "https://registry.yarnpkg.com/@types/handlebars/-/handlebars-4.0.31.tgz#a7fba66fafe42713aee88eeca8db91192efe6e72"
@@ -1559,10 +1563,6 @@ tunnel-agent@~0.4.1:
 tweetnacl@^0.14.3, tweetnacl@~0.14.0:
   version "0.14.4"
   resolved "https://registry.yarnpkg.com/tweetnacl/-/tweetnacl-0.14.4.tgz#8c9dbfb52795686f166cd2023794bcf103d13c2b"
-
-typed-graphql@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/typed-graphql/-/typed-graphql-1.0.2.tgz#4c0f788775d552df4d4ec3d73f25469252f40fb8"
 
 typescript@^2.0.10:
   version "2.1.1"
