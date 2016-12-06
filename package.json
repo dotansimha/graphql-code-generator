@@ -34,7 +34,13 @@
   },
   "homepage": "https://github.com/dotansimha/graphql-codegen#readme",
   "devDependencies": {
+    "cz-conventional-changelog": "^1.2.0",
     "rimraf": "^2.5.4",
     "typescript": "^2.0.10"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
