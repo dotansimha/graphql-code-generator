@@ -1,0 +1,32 @@
+{
+  "name": "graphql-codegen",
+  "version": "0.0.1",
+  "description": "GraphQL types and code generator based on schema",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dotansimha/graphql-codegen.git"
+  },
+  "keywords": [
+    "graphql",
+    "codegen",
+    "generator",
+    "apollo",
+    "node",
+    "typescript",
+    "ts",
+    "flow",
+    "types",
+    "d.ts",
+    "typings"
+  ],
+  "author": "Dotan Simha <dotansimha@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dotansimha/graphql-codegen/issues"
+  },
+  "homepage": "https://github.com/dotansimha/graphql-codegen#readme"
+}
