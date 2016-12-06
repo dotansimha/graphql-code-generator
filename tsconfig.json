@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "experimentalDecorators": true,
-    "module": "es2015",
+    "module": "commonjs",
     "target": "es5",
     "lib": ["es6", "dom"],
     "noImplicitAny": false,

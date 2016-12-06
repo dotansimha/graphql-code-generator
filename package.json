@@ -47,5 +47,11 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "dependencies": {
+    "@types/node": "^0.0.2",
+    "commander": "^2.9.0",
+    "graphql": "^0.8.2",
+    "typed-graphql": "^1.0.2"
   }
 }
