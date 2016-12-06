@@ -15,6 +15,9 @@
     "type": "git",
     "url": "git+https://github.com/dotansimha/graphql-codegen.git"
   },
+  "bin": {
+    "graphql-codegen": "dist/index.js"
+  },
   "keywords": [
     "graphql",
     "codegen",
