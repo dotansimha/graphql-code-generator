@@ -36,21 +36,21 @@ const isArray = (type: GraphQLType): boolean => {
   return (type.toString()).indexOf('[') > -1;
 };
 
-const getTypeName = (models: ModelsObject, type: GraphQLType) => {
+const getTypeName = (type: GraphQLType) => {
   const name = (type.toString()).replace(/[\[\]!]/g, '');
 
   if (primitivesMap[name]) {
     return primitivesMap[name];
-  }
-  else if (models[name]) {
-    return models[name].name;
   }
   else {
     return name;
   }
 };
 
-export const prepareCodegen = (schema: GraphQLSchema, documents: Source[], typesMap: TypeMap = schema.getTypeMap(), models: ModelsObject = {}): Codegen => {
+export const prepareCodegen = (schema: GraphQLSchema, documents: Source[]): Codegen => {
+  let models: ModelsObject = {};
+  let typesMap: TypeMap = schema.getTypeMap();
+
   Object.keys(typesMap).forEach(typeName => {
     const type: GraphQLType = typesMap[typeName];
     let currentType: Model = {
@@ -83,7 +83,7 @@ export const prepareCodegen = (schema: GraphQLSchema, documents: Source[], types
           .map<Field>((field: GraphQLFieldDefinition) => {
             return {
               name: field.name,
-              type: getTypeName(models, field.type),
+              type: getTypeName(field.type),
               isArray: isArray(field.type),
               isRequired: isRequired(field.type),
               isNullable: false
