@@ -5,9 +5,10 @@
   "main": "dist/index.js",
   "scripts": {
     "clean": "rimraf ./dist",
-    "precompile": "npm run clean",
-    "compile": "tsc",
-    "start": "npm run compile",
+    "lint": "tslint src/**/*.ts",
+    "prebuild": "npm run clean && npm run lint",
+    "build": "tsc",
+    "start": "npm run build",
     "test": ""
   },
   "repository": {
@@ -36,6 +37,7 @@
   "devDependencies": {
     "cz-conventional-changelog": "^1.2.0",
     "rimraf": "^2.5.4",
+    "tslint": "^4.0.2",
     "typescript": "^2.0.10"
   },
   "config": {
