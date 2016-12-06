@@ -4,11 +4,14 @@
   "description": "GraphQL types and code generator based on schema",
   "main": "dist/index.js",
   "scripts": {
+    "watch": "tsc --watch",
     "clean": "rimraf ./dist",
     "lint": "tslint src/**/*.ts",
     "prebuild": "npm run clean && npm run lint",
     "build": "tsc",
-    "start": "npm run build",
+    "prestart": "npm run build",
+    "start": "node ./dist/index.js",
+    "debug": "nodemon ./dist/index.js",
     "test": ""
   },
   "repository": {
@@ -49,9 +52,12 @@
     }
   },
   "dependencies": {
+    "@types/handlebars": "^4.0.31",
     "@types/node": "^0.0.2",
     "commander": "^2.9.0",
     "graphql": "^0.8.2",
+    "handlebars": "^4.0.6",
+    "nodemon": "^1.11.0",
     "typed-graphql": "^1.0.2"
   }
 }

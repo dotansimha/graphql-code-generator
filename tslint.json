@@ -36,7 +36,7 @@
     "no-unused-expression": true,
     "no-use-before-declare": true,
     "no-var-keyword": false,
-    "object-literal-sort-keys": true,
+    "object-literal-sort-keys": false,
     "no-conditional-assignment": true,
     "one-line": [true,
       "check-open-brace",
