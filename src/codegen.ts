@@ -3,11 +3,16 @@ import {
   Source,
   GraphQLType,
   TypeMap,
-  GraphQLFieldDefinitionMap,
   GraphQLEnumType,
   GraphQLEnumValueDefinition,
   GraphQLObjectType,
-  GraphQLFieldDefinition
+  GraphQLFieldDefinition,
+  GraphQLInterfaceType,
+  GraphQLInputObjectType,
+  GraphQLUnionType,
+  GraphQLList,
+  GraphQLNonNull,
+  getNamedType
 } from 'graphql';
 import {Codegen, Model, EnumValue, Field} from './interfaces';
 import unregisterDecorator = Handlebars.unregisterDecorator;
@@ -47,52 +52,69 @@ const getTypeName = (type: GraphQLType) => {
   }
 };
 
+const handleType = (typeName: string, type: GraphQLType) => {
+  let currentType: Model = {
+    name: typeName,
+    fields: [],
+    isFragment: false,
+    isEnum: false,
+    isObject: false,
+    isInterface: false,
+    isUnion: false
+  };
+
+  if (!shouldSkip(typeName)) {
+    if (type instanceof GraphQLEnumType) {
+      currentType.isEnum = true;
+      currentType.enumValues = type.getValues().map<EnumValue>((enumItem: GraphQLEnumValueDefinition) => {
+        return <EnumValue>{
+          name: enumItem.name,
+          description: enumItem.description,
+          value: enumItem.value
+        }
+      });
+    }
+    else if (type instanceof GraphQLObjectType || type instanceof GraphQLInputObjectType) {
+      currentType.isObject = true;
+      const fields = type.getFields();
+
+      currentType.fields = Object
+        .keys(fields)
+        .map((fieldName: string) => fields[fieldName])
+        .map<Field>((field: GraphQLFieldDefinition) => {
+          return {
+            name: field.name,
+            type: getTypeName(field.type),
+            isArray: isArray(field.type),
+            isRequired: isRequired(field.type)
+          };
+        });
+    }
+    else if (type instanceof GraphQLInterfaceType) {
+      currentType.isInterface = true;
+      // TODO: implemented
+    }
+    else if (type instanceof GraphQLUnionType) {
+      currentType.isUnion = true;
+      // TODO: implemented
+    }
+    else if (type instanceof GraphQLList || type instanceof GraphQLNonNull) {
+      return handleType(typeName, getNamedType(type));
+    }
+
+    return currentType;
+  }
+  else {
+    return null;
+  }
+};
+
 export const prepareCodegen = (schema: GraphQLSchema, documents: Source[]): Codegen => {
   let models: ModelsObject = {};
   let typesMap: TypeMap = schema.getTypeMap();
 
   Object.keys(typesMap).forEach(typeName => {
-    const type: GraphQLType = typesMap[typeName];
-    let currentType: Model = {
-      name: typeName,
-      fields: [],
-      isFragment: false,
-      isEnum: false,
-      isInterface: false,
-      isInnerType: false
-    };
-
-    if (!shouldSkip(typeName)) {
-      if (type instanceof GraphQLEnumType) {
-        currentType.isEnum = true;
-        currentType.enumValues = type.getValues().map<EnumValue>((enumItem: GraphQLEnumValueDefinition) => {
-          return <EnumValue>{
-            name: enumItem.name,
-            description: enumItem.description,
-            value: enumItem.value
-          }
-        });
-      }
-      else if (type instanceof GraphQLObjectType) {
-        currentType.isInterface = true;
-        const fields: GraphQLFieldDefinitionMap = type.getFields();
-
-        currentType.fields = Object
-          .keys(fields)
-          .map<GraphQLFieldDefinition>((fieldName: string) => fields[fieldName])
-          .map<Field>((field: GraphQLFieldDefinition) => {
-            return {
-              name: field.name,
-              type: getTypeName(field.type),
-              isArray: isArray(field.type),
-              isRequired: isRequired(field.type),
-              isNullable: false
-            };
-          });
-      }
-    }
-
-    models[typeName] = currentType;
+    models[typeName] = handleType(typeName, typesMap[typeName]);
   });
 
   return <Codegen>{

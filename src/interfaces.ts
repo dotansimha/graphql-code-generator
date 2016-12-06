@@ -3,7 +3,6 @@ export interface Field {
   type: string;
   isArray: boolean;
   isRequired: boolean;
-  isNullable: boolean;
 }
 
 export interface EnumValue {
@@ -17,9 +16,10 @@ export interface Model {
   parent?: string;
   fields: Field[];
   isFragment: boolean;
+  isObject: boolean;
   isInterface: boolean;
-  isInnerType: boolean;
   isEnum: boolean;
+  isUnion: boolean;
   enumValues?: EnumValue[];
 }
 
