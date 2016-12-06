@@ -4,7 +4,11 @@
   "description": "GraphQL types and code generator based on schema",
   "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "clean": "rimraf ./dist",
+    "precompile": "npm run clean",
+    "compile": "tsc",
+    "start": "npm run compile",
+    "test": ""
   },
   "repository": {
     "type": "git",
@@ -28,5 +32,9 @@
   "bugs": {
     "url": "https://github.com/dotansimha/graphql-codegen/issues"
   },
-  "homepage": "https://github.com/dotansimha/graphql-codegen#readme"
+  "homepage": "https://github.com/dotansimha/graphql-codegen#readme",
+  "devDependencies": {
+    "rimraf": "^2.5.4",
+    "typescript": "^2.0.10"
+  }
 }
