@@ -11,7 +11,8 @@
     "build": "tsc",
     "prestart": "npm run build",
     "start": "node ./dist/index.js",
-    "debug": "nodemon ./dist/index.js",
+    "debug": "node --inspect --debug-brk ./dist/index.js",
+    "dev": "nodemon --ext ts,js,d.ts,template,graphql,json,handlebars ./dist/index.js",
     "test": ""
   },
   "repository": {

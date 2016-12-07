@@ -28,6 +28,9 @@ export interface CodegenDocument {
   isMutation: boolean;
   isSubscription: boolean;
   name: string;
+  rawName: string;
+  fields: Field[];
+  variables: Field[];
 }
 
 export interface Codegen {

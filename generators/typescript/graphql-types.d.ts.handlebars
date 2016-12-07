@@ -1,0 +1,28 @@
+{{#each models ~}}
+    {{#if isObject ~}}
+    export interface {{ name }} {
+        {{#each fields}}
+        {{ name }}: {{#if isArray}}Array<{{/if}}{{ type }}{{#if isArray}}>{{/if}}{{#unless isRequired}} | null{{/unless}}{{#unless @last}},{{/unless}}
+        {{/each ~}}
+    };
+
+    {{/if ~}}
+
+    {{#if isEnum ~}}
+    export enum {{ name }} {
+        {{#each enumValues }}
+        {{ name }} = <any>"{{ value }}"{{#unless @last}},{{/unless}}
+        {{/each ~}}
+    };
+
+    {{/if ~}}
+{{/each ~}}
+
+{{#each documents ~}}
+    export interface {{ name }}Variables {
+        {{#each variables}}
+        {{ name }}: {{#if isArray}}Array<{{/if}}{{ type }}{{#if isArray}}>{{/if}}{{#unless @last}},{{/unless}}
+        {{/each ~}}
+    };
+
+{{/each ~}}
