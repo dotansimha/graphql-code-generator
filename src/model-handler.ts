@@ -22,7 +22,10 @@ const primitivesMap = {
 
 const shouldSkip = (typeName: string): boolean => {
   return !typeName ||
-    typeName.indexOf('__') > -1
+    typeName.indexOf('__') > -1 ||
+    typeName === 'Query' ||
+    typeName === 'Mutation' ||
+    typeName === 'Subscription'
 };
 
 export const isRequired = (type: GraphQLType): boolean => {

@@ -19,10 +19,12 @@
 {{/each ~}}
 
 {{#each documents ~}}
+    {{#if hasVariables ~}}
     export interface {{ name }}Variables {
         {{#each variables}}
-        {{ name }}: {{#if isArray}}Array<{{/if}}{{ type }}{{#if isArray}}>{{/if}}{{#unless @last}},{{/unless}}
+        {{ name }}: {{#if isArray}}Array<{{/if}}{{ type }}{{#if isArray}}>{{/if}}{{#unless isRequired}} | null{{/unless}}{{#unless @last}},{{/unless}}
         {{/each ~}}
     };
 
+    {{/if ~}}
 {{/each ~}}

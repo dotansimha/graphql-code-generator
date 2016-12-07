@@ -4,6 +4,7 @@ import {VariableDefinitionNode} from "graphql/language/ast";
 import {typeFromAST} from "graphql/utilities/typeFromAST";
 import {GraphQLSchema} from "graphql/type/schema";
 import {getTypeName, isArray} from "./model-handler";
+import * as toPascalCase from "pascal-case";
 
 const typesMap = {
   query: 'Query',
@@ -12,7 +13,7 @@ const typesMap = {
 };
 
 const buildName = (name: string, type: string): string => {
-  return name + typesMap[type];
+  return toPascalCase(name) + typesMap[type];
 };
 
 const buildVariables = (schema: GraphQLSchema, definitionNode: OperationDefinitionNode): Field[] => {
@@ -28,6 +29,11 @@ const buildVariables = (schema: GraphQLSchema, definitionNode: OperationDefiniti
   });
 };
 
+const buildFields = (schema: GraphQLSchema, definitionNode: OperationDefinitionNode): Field[] => {
+  console.log(definitionNode.selectionSet);
+  return [];
+};
+
 export const handleOperation = (schema: GraphQLSchema, definitionNode: OperationDefinitionNode): CodegenDocument => {
   const name = definitionNode.name.value;
   const type = definitionNode.operation;
@@ -39,10 +45,15 @@ export const handleOperation = (schema: GraphQLSchema, definitionNode: Operation
     isSubscription: type === 'subscription',
     isMutation: type === 'mutation',
     variables: [],
-    fields: []
+    fields: [],
+    hasVariables: false,
+    hasFields: false
   };
 
   document.variables = buildVariables(schema, definitionNode);
+  document.fields = buildFields(schema, definitionNode);
+  document.hasVariables = document.variables.length > 0;
+  document.hasFields = document.fields.length > 0;
 
   return document;
 };

@@ -56,9 +56,11 @@
     "@types/graphql": "^0.8.2",
     "@types/handlebars": "^4.0.31",
     "@types/node": "^0.0.2",
+    "@types/pascal-case": "^0.0.29",
     "commander": "^2.9.0",
     "graphql": "^0.8.2",
     "handlebars": "^4.0.6",
-    "nodemon": "^1.11.0"
+    "nodemon": "^1.11.0",
+    "pascal-case": "^2.0.0"
   }
 }

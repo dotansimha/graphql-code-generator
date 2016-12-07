@@ -31,6 +31,8 @@ export interface CodegenDocument {
   rawName: string;
   fields: Field[];
   variables: Field[];
+  hasFields: boolean;
+  hasVariables: boolean;
 }
 
 export interface Codegen {
