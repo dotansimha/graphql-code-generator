@@ -8,6 +8,6 @@ import {generateCode} from './generator';
 const schema = loadSchema('./dev-test/githunt/schema.json');
 const documents = loadDocumentsSources([ './dev-test/githunt/comment.query.graphql' ]);
 const codegen = prepareCodegen(schema, documents);
-const generated = generateCode(codegen, './dev-test/githunt/models.template');
+const generated = generateCode(codegen, './generators/typescript/graphql-types.d.ts.template');
 
 console.log(generated);
