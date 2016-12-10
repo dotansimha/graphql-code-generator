@@ -41,7 +41,7 @@ const buildVariables = (schema: GraphQLSchema, definitionNode: OperationDefiniti
   });
 };
 
-const buildRootFields = (schema: GraphQLSchema, rootObject: GraphQLType, selections: SelectionSetNode, appendTo?: Model, result: Model[] = []): Model[] => {
+const buildInnerModelsArray = (schema: GraphQLSchema, rootObject: GraphQLType, selections: SelectionSetNode, appendTo?: Model, result: Model[] = []): Model[] => {
   (selections ? selections.selections : []).forEach((selectionNode: SelectionNode) => {
     switch (selectionNode.kind) {
       case FIELD: {
@@ -56,7 +56,7 @@ const buildRootFields = (schema: GraphQLSchema, rootObject: GraphQLType, selecti
             fields: []
           };
 
-          buildRootFields(schema, actualType, selectionNode.selectionSet, model, result);
+          buildInnerModelsArray(schema, actualType, selectionNode.selectionSet, model, result);
 
           result.push(model);
         }
@@ -118,7 +118,7 @@ export const handleOperation = (schema: GraphQLSchema, definitionNode: Operation
   };
 
   document.variables = buildVariables(schema, definitionNode);
-  document.innerTypes = buildRootFields(schema, root, definitionNode.selectionSet);
+  document.innerTypes = buildInnerModelsArray(schema, root, definitionNode.selectionSet);
   document.hasVariables = document.variables.length > 0;
   document.hasInnerTypes = document.innerTypes.length > 0;
 
