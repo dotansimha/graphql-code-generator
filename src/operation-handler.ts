@@ -4,7 +4,7 @@ import {SelectionSetNode, SelectionNode, OperationDefinitionNode, VariableDefini
 import {getNamedType, GraphQLType, GraphQLObjectType} from "graphql/type/definition";
 import {FIELD, FRAGMENT_SPREAD, INLINE_FRAGMENT} from "graphql/language/kinds";
 import {CodegenDocument, Field, Model} from './interfaces';
-import {getTypeName, isArray} from "./model-handler";
+import {getTypeName, isArray, isRequired} from "./model-handler";
 import {getFieldDef} from "./utils";
 import pascalCase = require("pascal-case");
 
@@ -26,13 +26,12 @@ const buildVariables = (schema: GraphQLSchema, definitionNode: OperationDefiniti
       name: variableDefinition.variable.name.value,
       type: getTypeName(typeFromSchema),
       isArray: isArray(typeFromSchema),
-      isRequired: isArray(typeFromSchema)
+      isRequired: isRequired(typeFromSchema)
     }
   });
 };
 
 const handleNameDuplications = (name: string, existing: Model[]): string => {
-  console.log(name, existing);
   if (existing.find(model => model.name === name)) {
     return '_' + name;
   }
@@ -77,7 +76,9 @@ const buildInnerModelsArray = (schema: GraphQLSchema, rootObject: GraphQLType, s
         else {
           appendTo.fields.push({
             name: propertyName,
-            type: getTypeName(actualType)
+            type: getTypeName(actualType),
+            isArray: isArray(actualType),
+            isRequired: isRequired(actualType)
           });
         }
 
