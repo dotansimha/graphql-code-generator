@@ -51,14 +51,29 @@ const buildInnerModelsArray = (schema: GraphQLSchema, rootObject: GraphQLType, s
         const actualType = getNamedType(field.type);
 
         if (actualType instanceof GraphQLObjectType) {
+          const modelName = pascalCase(fieldName);
           let model = {
-            name: pascalCase(fieldName),
+            name: modelName,
             fields: []
           };
 
           buildInnerModelsArray(schema, actualType, selectionNode.selectionSet, model, result);
 
           result.push(model);
+
+          if (!appendTo) {
+            appendTo = {
+              name: 'Result',
+              fields: []
+            };
+
+            result.push(appendTo);
+          }
+
+          appendTo.fields.push({
+            name: propertyName,
+            type: modelName
+          });
         }
         else {
           appendTo.fields.push({
@@ -104,9 +119,10 @@ export const handleOperation = (schema: GraphQLSchema, definitionNode: Operation
   const name = definitionNode.name.value;
   const type = definitionNode.operation;
   const root = getRoot(schema, definitionNode);
+  const builtName = buildName(name, type);
 
   let document: CodegenDocument = {
-    name: buildName(name, type),
+    name: builtName,
     rawName: name,
     isQuery: type === 'query',
     isSubscription: type === 'subscription',
@@ -114,11 +130,12 @@ export const handleOperation = (schema: GraphQLSchema, definitionNode: Operation
     variables: [],
     innerTypes: [],
     hasVariables: false,
-    hasInnerTypes: false
+    hasInnerTypes: false,
   };
 
   document.variables = buildVariables(schema, definitionNode);
   document.innerTypes = buildInnerModelsArray(schema, root, definitionNode.selectionSet);
+
   document.hasVariables = document.variables.length > 0;
   document.hasInnerTypes = document.innerTypes.length > 0;
 
