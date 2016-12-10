@@ -1,8 +1,8 @@
 export interface Field {
   name: string;
-  type: string;
-  isArray: boolean;
-  isRequired: boolean;
+  type?: string;
+  isArray?: boolean;
+  isRequired?: boolean;
 }
 
 export interface EnumValue {
@@ -11,15 +11,15 @@ export interface EnumValue {
 }
 
 export interface Model {
-  name: string;
+  name?: string;
   description?: string;
   parent?: string;
-  fields: Field[];
-  isFragment: boolean;
-  isObject: boolean;
-  isInterface: boolean;
-  isEnum: boolean;
-  isUnion: boolean;
+  fields?: Field[];
+  isFragment?: boolean;
+  isObject?: boolean;
+  isInterface?: boolean;
+  isEnum?: boolean;
+  isUnion?: boolean;
   enumValues?: EnumValue[];
 }
 
@@ -29,9 +29,9 @@ export interface CodegenDocument {
   isSubscription: boolean;
   name: string;
   rawName: string;
-  fields: Field[];
+  innerTypes: Model[];
   variables: Field[];
-  hasFields: boolean;
+  hasInnerTypes: boolean;
   hasVariables: boolean;
 }
 
