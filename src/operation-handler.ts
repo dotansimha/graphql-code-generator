@@ -1,22 +1,12 @@
-import {CodegenDocument, Field, Model} from './interfaces';
-import {OperationDefinitionNode} from "graphql/language/ast";
-import {VariableDefinitionNode} from "graphql/language/ast";
 import {typeFromAST} from "graphql/utilities/typeFromAST";
 import {GraphQLSchema} from "graphql/type/schema";
+import {SelectionSetNode, SelectionNode, OperationDefinitionNode, VariableDefinitionNode} from "graphql/language/ast";
+import {getNamedType, GraphQLType, GraphQLObjectType} from "graphql/type/definition";
+import {FIELD, FRAGMENT_SPREAD, INLINE_FRAGMENT} from "graphql/language/kinds";
+import {CodegenDocument, Field, Model} from './interfaces';
 import {getTypeName, isArray} from "./model-handler";
-import pascalCase = require("pascal-case");
-import {GraphQLObjectType} from "graphql/type/definition";
-import {SelectionSetNode} from "graphql/language/ast";
-import {SelectionNode} from "graphql/language/ast";
-import {FIELD} from "graphql/language/kinds";
-import {FRAGMENT_SPREAD} from "graphql/language/kinds";
-import {INLINE_FRAGMENT} from "graphql/language/kinds";
 import {getFieldDef} from "./utils";
-import {GraphQLOutputType} from "graphql/type/definition";
-import {GraphQLField} from "graphql/type/definition";
-import {GraphQLType} from "graphql/type/definition";
-import {getNamedType} from "graphql/type/definition";
-import {GraphQLNonNull} from "graphql/type/definition";
+import pascalCase = require("pascal-case");
 
 const typesMap = {
   query: 'Query',
@@ -41,6 +31,15 @@ const buildVariables = (schema: GraphQLSchema, definitionNode: OperationDefiniti
   });
 };
 
+const handleNameDuplications = (name: string, existing: Model[]): string => {
+  console.log(name, existing);
+  if (existing.find(model => model.name === name)) {
+    return '_' + name;
+  }
+
+  return name;
+};
+
 const buildInnerModelsArray = (schema: GraphQLSchema, rootObject: GraphQLType, selections: SelectionSetNode, appendTo?: Model, result: Model[] = []): Model[] => {
   (selections ? selections.selections : []).forEach((selectionNode: SelectionNode) => {
     switch (selectionNode.kind) {
@@ -51,15 +50,15 @@ const buildInnerModelsArray = (schema: GraphQLSchema, rootObject: GraphQLType, s
         const actualType = getNamedType(field.type);
 
         if (actualType instanceof GraphQLObjectType) {
-          const modelName = pascalCase(fieldName);
+          const modelName = handleNameDuplications(pascalCase(fieldName), result);
           let model = {
             name: modelName,
             fields: []
           };
 
-          buildInnerModelsArray(schema, actualType, selectionNode.selectionSet, model, result);
-
           result.push(model);
+
+          buildInnerModelsArray(schema, actualType, selectionNode.selectionSet, model, result);
 
           if (!appendTo) {
             appendTo = {

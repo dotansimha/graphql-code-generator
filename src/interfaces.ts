@@ -13,7 +13,6 @@ export interface EnumValue {
 export interface Model {
   name?: string;
   description?: string;
-  parent?: string;
   fields?: Field[];
   isFragment?: boolean;
   isObject?: boolean;
