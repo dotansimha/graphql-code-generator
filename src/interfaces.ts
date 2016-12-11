@@ -28,6 +28,7 @@ export interface CodegenDocument {
   isQuery: boolean;
   isMutation: boolean;
   isSubscription: boolean;
+  isFragment: boolean;
   name: string;
   rawName: string;
   innerTypes: Model[];

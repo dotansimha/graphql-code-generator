@@ -39,7 +39,7 @@ const handleNameDuplications = (name: string, existing: Model[]): string => {
   return name;
 };
 
-const buildInnerModelsArray = (schema: GraphQLSchema, rootObject: GraphQLType, selections: SelectionSetNode, appendTo?: Model, result: Model[] = []): Model[] => {
+export const buildInnerModelsArray = (schema: GraphQLSchema, rootObject: GraphQLType, selections: SelectionSetNode, appendTo?: Model, result: Model[] = []): Model[] => {
   (selections ? selections.selections : []).forEach((selectionNode: SelectionNode) => {
     switch (selectionNode.kind) {
       case FIELD: {
@@ -93,7 +93,7 @@ const buildInnerModelsArray = (schema: GraphQLSchema, rootObject: GraphQLType, s
 
       case FRAGMENT_SPREAD: {
         const fragmentName = selectionNode.name.value;
-        appendTo.fragmentsUsed.push(fragmentName);
+        appendTo.fragmentsUsed.push(pascalCase(fragmentName) + '.Fragment');
         appendTo.usingFragments = appendTo.fragmentsUsed.length > 0;
 
         break;

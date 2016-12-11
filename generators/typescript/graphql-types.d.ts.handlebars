@@ -4,7 +4,7 @@
         {{#each fields}}
         {{ name }}: {{#if isArray}}Array<{{/if}}{{ type }}{{#if isArray}}>{{/if}}{{#unless isRequired}} | null{{/unless}};
         {{/each ~}}
-    };
+    }
 
     {{/if ~}}
 
@@ -13,7 +13,7 @@
         {{#each enumValues }}
         {{ name }} = <any>"{{ value }}"{{#unless @last}},{{/unless}}
         {{/each ~}}
-    };
+    }
 
     {{/if ~}}
 {{/each ~}}
@@ -24,7 +24,7 @@
         {{#each variables}}
         {{ name }}: {{#if isArray}}Array<{{/if}}{{ type }}{{#if isArray}}>{{/if}}{{#unless isRequired}} | null{{/unless}};
         {{/each ~}}
-    };
+    }
 
     {{/if ~}}
 
@@ -41,7 +41,7 @@
             {{#each fields}}
               {{ name }}: {{#if isArray}}Array<{{/if}}{{ type }}{{#if isArray}}>{{/if}};
             {{/each}}
-          };
+          }
           {{/if}}
 
         {{/each ~}}
@@ -51,9 +51,9 @@
           {{#each fields}}
           {{ name }}: {{#if isArray}}Array<{{/if}}{{ type }}{{#if isArray}}>{{/if}};
           {{/each}}
-          };
+          }
 
       {{/each ~}}
-    };
+    }
 
 {{/each ~}}
