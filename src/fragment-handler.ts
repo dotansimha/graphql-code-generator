@@ -26,7 +26,8 @@ export const handleFragment = (schema: GraphQLSchema, fragmentNode: FragmentDefi
     name: 'Fragment',
     fields: [],
     isObject: true,
-    isFragment: true
+    isFragment: true,
+    fragmentsUsed: []
   };
 
   const root = typeFromAST(schema, fragmentNode.typeCondition);

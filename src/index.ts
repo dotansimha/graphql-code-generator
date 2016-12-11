@@ -1,17 +1,28 @@
 #!/usr/bin/env node
 
+import {initCLI, validateCliOptions, transformOptions, TransformedCliOptions, cliError} from './cli';
 import {loadSchema} from './scheme-loader';
-import {loadDocumentsSources} from './document-loader';
 import {prepareCodegen} from './codegen';
+import {loadDocumentsSources} from './document-loader';
 import {generateCode} from './generator';
+import * as fs from 'fs';
+import * as path from 'path';
 
-const schema = loadSchema('./dev-test/githunt/schema.json');
-const documents = loadDocumentsSources([
-  './dev-test/githunt/comment.query.graphql' ,
-  './dev-test/githunt/comment-added.subscription.graphql',
-  './dev-test/githunt/comments-page-comment.fragment.graphql',
-  './dev-test/githunt/current-user.query.graphql',
-  './dev-test/githunt/vote.mutation.graphql'
-]);
-const codegen = prepareCodegen(schema, documents);
-const generated = generateCode(codegen, './generators/typescript/graphql-types.d.ts.handlebars');
+const options = initCLI(process.argv);
+validateCliOptions(options);
+
+transformOptions(options)
+  .then<any>((transformedOptions: TransformedCliOptions) => {
+    const schema = loadSchema(transformedOptions.introspection);
+    const documents = transformedOptions.documents;
+    const codegen = prepareCodegen(schema, loadDocumentsSources(documents));
+
+    return {
+      content: generateCode(codegen, transformedOptions.template.templateFile),
+      path: path.resolve(transformedOptions.outPath)
+    };
+  })
+  .then((generationResult) => {
+    fs.writeFileSync(generationResult.path, generationResult.content);
+  })
+  .catch(cliError);

@@ -53,11 +53,14 @@
     }
   },
   "dependencies": {
+    "@types/commander": "^2.3.31",
+    "@types/glob": "^5.0.30",
     "@types/graphql": "^0.8.2",
     "@types/handlebars": "^4.0.31",
     "@types/node": "^0.0.2",
     "@types/pascal-case": "^0.0.29",
     "commander": "^2.9.0",
+    "glob": "^7.1.1",
     "graphql": "^0.8.2",
     "handlebars": "^4.0.6",
     "nodemon": "^1.11.0",

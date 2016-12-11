@@ -137,6 +137,7 @@ export const handleOperation = (schema: GraphQLSchema, definitionNode: Operation
     isQuery: type === 'query',
     isSubscription: type === 'subscription',
     isMutation: type === 'mutation',
+    isFragment: false,
     variables: [],
     innerTypes: [],
     hasVariables: false,

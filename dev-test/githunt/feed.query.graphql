@@ -1,0 +1,8 @@
+query Feed($type: FeedType!, $offset: Int, $limit: Int) {
+  currentUser {
+    login
+  }
+  feed(type: $type, offset: $offset, limit: $limit) {
+    ...FeedEntry
+  }
+}
