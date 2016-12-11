@@ -1,10 +1,10 @@
-import {GraphQLInterfaceType} from "graphql/type/definition";
-import {GraphQLObjectType} from "graphql/type/definition";
-import {TypeNameMetaFieldDef} from "graphql/type/introspection";
-import {GraphQLUnionType} from "graphql/type/definition";
-import {TypeMetaFieldDef} from "graphql/type/introspection";
-import {SchemaMetaFieldDef} from "graphql/type/introspection";
-import {GraphQLField} from "graphql/type/definition";
+import {GraphQLInterfaceType} from 'graphql/type/definition';
+import {GraphQLObjectType} from 'graphql/type/definition';
+import {TypeNameMetaFieldDef} from 'graphql/type/introspection';
+import {GraphQLUnionType} from 'graphql/type/definition';
+import {TypeMetaFieldDef} from 'graphql/type/introspection';
+import {SchemaMetaFieldDef} from 'graphql/type/introspection';
+import {GraphQLField} from 'graphql/type/definition';
 
 export function getFieldDef(schema, parentType, fieldAST): GraphQLField<any, any> {
   const name = fieldAST.name.value;

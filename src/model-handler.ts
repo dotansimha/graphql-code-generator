@@ -1,15 +1,15 @@
-import {Model, EnumValue, Field} from "./interfaces";
-import {GraphQLType} from "graphql/type/definition";
-import {GraphQLEnumType} from "graphql/type/definition";
-import {GraphQLEnumValue} from "graphql/type/definition";
-import {GraphQLObjectType} from "graphql/type/definition";
-import {GraphQLInputObjectType} from "graphql/type/definition";
-import {GraphQLField} from "graphql/type/definition";
-import {GraphQLInterfaceType} from "graphql/type/definition";
-import {GraphQLUnionType} from "graphql/type/definition";
-import {GraphQLList} from "graphql/type/definition";
-import {GraphQLNonNull} from "graphql/type/definition";
-import {getNamedType} from "graphql/type/definition";
+import {Model, EnumValue, Field} from './interfaces';
+import {GraphQLType} from 'graphql/type/definition';
+import {GraphQLEnumType} from 'graphql/type/definition';
+import {GraphQLEnumValue} from 'graphql/type/definition';
+import {GraphQLObjectType} from 'graphql/type/definition';
+import {GraphQLInputObjectType} from 'graphql/type/definition';
+import {GraphQLField} from 'graphql/type/definition';
+import {GraphQLInterfaceType} from 'graphql/type/definition';
+import {GraphQLUnionType} from 'graphql/type/definition';
+import {GraphQLList} from 'graphql/type/definition';
+import {GraphQLNonNull} from 'graphql/type/definition';
+import {getNamedType} from 'graphql/type/definition';
 
 // TODO: this is specific for TypeScript, need to get outside into a JSON settings file per language generator
 const primitivesMap = {
@@ -25,7 +25,7 @@ const shouldSkip = (typeName: string): boolean => {
     typeName.indexOf('__') > -1 ||
     typeName === 'Query' ||
     typeName === 'Mutation' ||
-    typeName === 'Subscription'
+    typeName === 'Subscription';
 };
 
 export const isRequired = (type: GraphQLType): boolean => {
@@ -66,7 +66,7 @@ export const handleType = (typeName: string, type: GraphQLType) => {
           name: enumItem.name,
           description: enumItem.description,
           value: enumItem.value
-        }
+        };
       });
     }
     else if (type instanceof GraphQLObjectType || type instanceof GraphQLInputObjectType) {

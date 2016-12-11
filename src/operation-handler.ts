@@ -1,12 +1,12 @@
-import {typeFromAST} from "graphql/utilities/typeFromAST";
-import {GraphQLSchema} from "graphql/type/schema";
-import {SelectionSetNode, SelectionNode, OperationDefinitionNode, VariableDefinitionNode} from "graphql/language/ast";
-import {getNamedType, GraphQLType, GraphQLObjectType} from "graphql/type/definition";
-import {FIELD, FRAGMENT_SPREAD, INLINE_FRAGMENT} from "graphql/language/kinds";
+import {typeFromAST} from 'graphql/utilities/typeFromAST';
+import {GraphQLSchema} from 'graphql/type/schema';
+import {SelectionSetNode, SelectionNode, OperationDefinitionNode, VariableDefinitionNode} from 'graphql/language/ast';
+import {getNamedType, GraphQLType, GraphQLObjectType} from 'graphql/type/definition';
+import {FIELD, FRAGMENT_SPREAD, INLINE_FRAGMENT} from 'graphql/language/kinds';
 import {CodegenDocument, Field, Model} from './interfaces';
-import {getTypeName, isArray, isRequired} from "./model-handler";
-import {getFieldDef} from "./utils";
-import pascalCase = require("pascal-case");
+import {getTypeName, isArray, isRequired} from './model-handler';
+import {getFieldDef} from './utils';
+import pascalCase = require('pascal-case');
 
 const typesMap = {
   query: 'Query',
@@ -27,7 +27,7 @@ const buildVariables = (schema: GraphQLSchema, definitionNode: OperationDefiniti
       type: getTypeName(typeFromSchema),
       isArray: isArray(typeFromSchema),
       isRequired: isRequired(typeFromSchema)
-    }
+    };
   });
 };
 
@@ -39,10 +39,14 @@ const handleNameDuplications = (name: string, existing: Model[]): string => {
   return name;
 };
 
-export const buildInnerModelsArray = (schema: GraphQLSchema, rootObject: GraphQLType, selections: SelectionSetNode, appendTo?: Model, result: Model[] = []): Model[] => {
+export const buildInnerModelsArray = (schema: GraphQLSchema,
+                                      rootObject: GraphQLType,
+                                      selections: SelectionSetNode,
+                                      appendTo?: Model,
+                                      result: Model[] = []): Model[] => {
   (selections ? selections.selections : []).forEach((selectionNode: SelectionNode) => {
     switch (selectionNode.kind) {
-      case FIELD: {
+      case FIELD:
         const fieldName = selectionNode.name.value;
         const propertyName = selectionNode.alias ? selectionNode.alias.value : fieldName;
         const field = getFieldDef(schema, rootObject, selectionNode);
@@ -89,23 +93,19 @@ export const buildInnerModelsArray = (schema: GraphQLSchema, rootObject: GraphQL
         }
 
         break;
-      }
 
-      case FRAGMENT_SPREAD: {
+      case FRAGMENT_SPREAD:
         const fragmentName = selectionNode.name.value;
         appendTo.fragmentsUsed.push(pascalCase(fragmentName) + '.Fragment');
         appendTo.usingFragments = appendTo.fragmentsUsed.length > 0;
-
         break;
-      }
 
-      case INLINE_FRAGMENT: {
+      case INLINE_FRAGMENT:
+        // TODO: Handle this
         break;
-      }
 
-      default: {
+      default:
         break;
-      }
     }
   });
 

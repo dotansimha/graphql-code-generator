@@ -1,9 +1,9 @@
-import {GraphQLSchema,} from 'graphql';
+import {GraphQLSchema} from 'graphql';
 import {Codegen, Model, CodegenDocument} from './interfaces';
-import {GraphQLNamedType, DefinitionNode, DocumentNode, Kind} from "graphql";
-import {handleType} from "./model-handler";
-import {handleOperation} from "./operation-handler";
-import {handleFragment} from "./fragment-handler";
+import {GraphQLNamedType, DefinitionNode, DocumentNode, Kind} from 'graphql';
+import {handleType} from './model-handler';
+import {handleOperation} from './operation-handler';
+import {handleFragment} from './fragment-handler';
 
 export const prepareCodegen = (schema: GraphQLSchema, document: DocumentNode): Codegen => {
   let models: Model[] = [];
@@ -16,19 +16,16 @@ export const prepareCodegen = (schema: GraphQLSchema, document: DocumentNode): C
 
   document.definitions.forEach((definition: DefinitionNode) => {
     switch (definition.kind) {
-      case Kind.OPERATION_DEFINITION: {
+      case Kind.OPERATION_DEFINITION:
         documents.push(handleOperation(schema, definition));
-
         break;
-      }
-      case Kind.FRAGMENT_DEFINITION: {
+
+      case Kind.FRAGMENT_DEFINITION:
         documents.push(handleFragment(schema, definition));
+        break;
 
+      default:
         break;
-      }
-      default: {
-        break;
-      }
     }
   });
 
