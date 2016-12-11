@@ -9,7 +9,7 @@ export interface {{ name }} {
 {{/if ~}}
 
 {{#if isEnum ~}}
-export type {{ name }} = {{#each enumValues }} "{{ value }}"{{#unless @last}} | {{/unless}}{{/each ~}};
+export type {{ name }} = {{#each enumValues }}"{{ value }}"{{#unless @last}} | {{/unless}}{{/each ~}};
 
 {{/if ~}}
 {{/each ~}}
