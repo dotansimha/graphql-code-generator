@@ -50,7 +50,7 @@ Allowed flags:
 | -u, --url       | String   | GraphQL server endpoint to fetch the introspection from, must provide URL or file flag |
 | -t, --template  | String   | Template name, for example: "typescript"                                               |
 | -o, --out       | String   | Path for output file/directory. default is `./`                                        |
-| <documents ...> | [String] | Space separated paths of `.graphql` files, allows glob path                            |
+| documents...    | [String] | Space separated paths of `.graphql` files, allows glob path                            |
 
 Usage examples:
 
@@ -63,6 +63,10 @@ Usage examples:
 
         $ graphql-codegen --url http://localhost:3010/graphql --template typescript --out ./typings/ ./src/**/*.graphql
     
+
+- Example using pre-defined files inside this repo (using Apollo's [GitHunt-API](https://github.com/apollostack/Githunt-API) and [GitHunt-Angular2](https://github.com/apollostack/Githunt-angular2)):
+
+        $ graphql-codegen --file ./dev-test/githunt/schema.json --template typescript --out ./dev-test/githunt/typings.d.ts ./dev-test/githunt/**/*.graphql 
 
 ## Integrate into a project
 
