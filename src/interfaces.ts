@@ -19,7 +19,9 @@ export interface Model {
   isInterface?: boolean;
   isEnum?: boolean;
   isUnion?: boolean;
+  usingFragments?: boolean;
   enumValues?: EnumValue[];
+  fragmentsUsed?: string[];
 }
 
 export interface CodegenDocument {

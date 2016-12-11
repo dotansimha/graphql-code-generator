@@ -52,7 +52,8 @@ const buildInnerModelsArray = (schema: GraphQLSchema, rootObject: GraphQLType, s
           const modelName = handleNameDuplications(pascalCase(fieldName), result);
           let model = {
             name: modelName,
-            fields: []
+            fields: [],
+            fragmentsUsed: []
           };
 
           result.push(model);
@@ -60,9 +61,11 @@ const buildInnerModelsArray = (schema: GraphQLSchema, rootObject: GraphQLType, s
           buildInnerModelsArray(schema, actualType, selectionNode.selectionSet, model, result);
 
           if (!appendTo) {
+            // Means we are on the root object, and we need to create the Result interface
             appendTo = {
               name: 'Result',
-              fields: []
+              fields: [],
+              fragmentsUsed: []
             };
 
             result.push(appendTo);
@@ -86,6 +89,10 @@ const buildInnerModelsArray = (schema: GraphQLSchema, rootObject: GraphQLType, s
       }
 
       case FRAGMENT_SPREAD: {
+        const fragmentName = selectionNode.name.value;
+        appendTo.fragmentsUsed.push(fragmentName);
+        appendTo.usingFragments = appendTo.fragmentsUsed.length > 0;
+
         break;
       }
 
