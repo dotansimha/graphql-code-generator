@@ -31,7 +31,7 @@
     export namespace {{ name }} {
       {{#each innerTypes}}
           {{#if usingFragments}}
-          export type {{ name }} = {{#each fragmentsUsed ~}}{{this}}{{/each }} && {
+          export type {{ name }} = {{#each fragmentsUsed ~}}{{this}} &&{{/each }} {
           {{#each fields}}
             {{ name }}: {{#if isArray}}Array<{{/if}}{{ type }}{{#if isArray}}>{{/if}};
           {{/each}}

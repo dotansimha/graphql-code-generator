@@ -46,7 +46,8 @@ const buildInnerModelsArray = (schema: GraphQLSchema, rootObject: GraphQLType, s
         const fieldName = selectionNode.name.value;
         const propertyName = selectionNode.alias ? selectionNode.alias.value : fieldName;
         const field = getFieldDef(schema, rootObject, selectionNode);
-        const actualType = getNamedType(field.type);
+        const rawType = field.type;
+        const actualType = getNamedType(rawType);
 
         if (actualType instanceof GraphQLObjectType) {
           const modelName = handleNameDuplications(pascalCase(fieldName), result);
@@ -73,7 +74,9 @@ const buildInnerModelsArray = (schema: GraphQLSchema, rootObject: GraphQLType, s
 
           appendTo.fields.push({
             name: propertyName,
-            type: modelName
+            type: modelName,
+            isArray: isArray(rawType),
+            isRequired: isRequired(rawType)
           });
         }
         else {
