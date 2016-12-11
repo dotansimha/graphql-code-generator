@@ -8,6 +8,12 @@
   dependencies:
     "@types/node" "*"
 
+"@types/form-data@*":
+  version "0.0.33"
+  resolved "https://registry.yarnpkg.com/@types/form-data/-/form-data-0.0.33.tgz#c9ac85b2a5fd18435b8c85d9ecb50e6d6c893ff8"
+  dependencies:
+    "@types/node" "*"
+
 "@types/glob@^5.0.30":
   version "5.0.30"
   resolved "https://registry.yarnpkg.com/@types/glob/-/glob-5.0.30.tgz#1026409c5625a8689074602808d082b2867b8a51"
@@ -34,6 +40,13 @@
 "@types/pascal-case@^0.0.29":
   version "0.0.29"
   resolved "https://registry.yarnpkg.com/@types/pascal-case/-/pascal-case-0.0.29.tgz#8c7caca6497e9385fd95f389f15e376f8a3df302"
+
+"@types/request@^0.0.36":
+  version "0.0.36"
+  resolved "https://registry.yarnpkg.com/@types/request/-/request-0.0.36.tgz#e845870fc5fa372402d9f5c19fccc4ca0a5af543"
+  dependencies:
+    "@types/form-data" "*"
+    "@types/node" "*"
 
 abbrev@1:
   version "1.0.9"

@@ -1,4 +1,4 @@
-export type FeedType =  "HOT" |  "NEW" |  "TOP";
+export type FeedType = "HOT" | "NEW" | "TOP";
 
 export interface Entry {
     repository: Repository;
@@ -40,7 +40,11 @@ export interface Vote {
     vote_value: number;
 }
 
-export type VoteType =  "UP" |  "DOWN" |  "CANCEL";
+export interface A {
+    test: MyType;
+}
+
+export type VoteType = "UP" | "DOWN" | "CANCEL";
 
 export namespace OnCommentAddedSubscription {
       export interface Variables {

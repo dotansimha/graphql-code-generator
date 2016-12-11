@@ -36,9 +36,33 @@ Or, using Yarn:
 
 This package offers both modules exports (to use with NodeJS/JavaScript application), or CLI util.
 
-### CLI flags
+### CLI 
 
-// TODO
+CLI usage is as follow:
+
+    $ graphql-codegen [options] <documents ...>
+    
+Allowed flags:    
+
+| Flag Name       | Type     | Description                                                                            |
+|-----------------|----------|----------------------------------------------------------------------------------------|
+| -f, --file      | String   | Introspection JSON file, must provide file or URL flag                                 |
+| -u, --url       | String   | GraphQL server endpoint to fetch the introspection from, must provide URL or file flag |
+| -t, --template  | String   | Template name, for example: "typescript"                                               |
+| -o, --out       | String   | Path for output file/directory. default is `./`                                        |
+| <documents ...> | [String] | Space separated paths of `.graphql` files, allows glob path                            |
+
+Usage examples:
+
+- With local introspection JSON file, generated TypeScript types:
+
+        $ graphql-codegen --file mySchema.json --template typescript --out ./typings/ ./src/**/*.graphql
+    
+   
+- With remote GraphQL endpoint, generated TypeScript types:
+
+        $ graphql-codegen --url http://localhost:3010/graphql --template typescript --out ./typings/ ./src/**/*.graphql
+    
 
 ## Integrate into a project
 

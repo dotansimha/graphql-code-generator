@@ -1,8 +1,10 @@
 import * as commander from 'commander';
 import * as fs from 'fs';
 import * as glob from 'glob';
+import * as request from 'request';
 import {IntrospectionQuery} from 'graphql/utilities/introspectionQuery';
 import {GeneratorTemplate, generators} from './templates';
+import {introspectionQuery} from 'graphql/utilities/introspectionQuery';
 
 export interface TransformedCliOptions {
   introspection?: IntrospectionQuery;
@@ -47,7 +49,7 @@ export const validateCliOptions = (options) => {
     cliError('Please specify one of --file or --url flags!');
   }
 
-  if (!template ) {
+  if (!template) {
     cliError('Please specify language/platform, using --template flag');
   }
 
@@ -91,7 +93,34 @@ export const transformOptions = (options): Promise<TransformedCliOptions> => {
     });
   }
   else if (url) {
-    // TODO: Support GraphQL URL
+    introspectionPromise = new Promise<IntrospectionQuery>((resolve, reject) => {
+      request.post({
+        url: url,
+        json: {
+          query: introspectionQuery
+        },
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      }, (err, response, body) => {
+        if (err) {
+          reject(err);
+
+          return;
+        }
+
+        const bodyJson = body.data;
+
+        if (!bodyJson || (bodyJson.errors && bodyJson.errors.length > 0)) {
+          reject('Unable to download schema from remote: ' + bodyJson.errors.map(item => item.message).join(', '));
+
+          return;
+        }
+
+        resolve(bodyJson);
+      });
+    });
   }
 
   const documentsPromises = documents.map((documentGlob: string) => {
