@@ -83,8 +83,8 @@ const buildInnerModelsArray = (schema: GraphQLSchema, rootObject: GraphQLType, s
           appendTo.fields.push({
             name: propertyName,
             type: getTypeName(actualType),
-            isArray: isArray(actualType),
-            isRequired: isRequired(actualType)
+            isArray: isArray(rawType),
+            isRequired: isRequired(rawType)
           });
         }
 
