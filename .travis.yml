@@ -6,5 +6,7 @@ before_install:
   - rm -rf node_modules
 install:
   - npm install
+before_script:
+  - npm run build
 script:
   - npm run test
