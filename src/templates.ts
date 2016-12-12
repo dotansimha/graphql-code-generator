@@ -6,6 +6,7 @@ export interface TemplateConfig {
   template?: string;
   filesExtension?: string;
   templates?: {[key: string]: string};
+  primitives?: {[key: string]: string};
   basePath?: string;
 }
 
@@ -16,7 +17,8 @@ export interface GeneratorTemplate {
 }
 
 const getConfig = (generatorPath: string): TemplateConfig => {
-  let config = <TemplateConfig>(JSON.parse(fs.readFileSync(path.resolve(generatorPath + '/config.json'), 'utf8')));
+  let dirString = path.dirname(fs.realpathSync(__filename));
+  let config = <TemplateConfig>(JSON.parse(fs.readFileSync(path.resolve(dirString, generatorPath, 'config.json'), 'utf8')));
   config.basePath = generatorPath;
 
   return config;
@@ -26,11 +28,11 @@ export const generators: GeneratorTemplate[] = [
   {
     language: 'TypeScript Single File',
     aliases: ['ts', 'typescript', 'ts-single', 'typescript-single'],
-    config: getConfig('./generators/typescript-single-file/')
+    config: getConfig('../generators/typescript-single-file/')
   },
   {
     language: 'TypeScript Multiple Files',
     aliases: ['ts-multiple', 'typescript-multiple'],
-    config: getConfig('./generators/typescript-multiple-files/')
+    config: getConfig('../generators/typescript-multiple-files/')
   }
 ];

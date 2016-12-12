@@ -5,5 +5,12 @@
     "model": "./model.handlebars",
     "document": "./document.handlebars",
     "index": "./index.handlebars"
+  },
+  "primitives": {
+    "String": "string",
+    "Int": "number",
+    "Float": "number",
+    "Boolean": "boolean",
+    "ID": "string"
   }
 }

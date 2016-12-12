@@ -22,6 +22,7 @@ export interface Model {
   usingFragments?: boolean;
   enumValues?: EnumValue[];
   fragmentsUsed?: string[];
+  imports?: string[];
 }
 
 export interface CodegenDocument {
@@ -35,6 +36,7 @@ export interface CodegenDocument {
   variables: Field[];
   hasInnerTypes: boolean;
   hasVariables: boolean;
+  imports?: string[];
 }
 
 export interface Codegen {

@@ -4,7 +4,7 @@ import {SelectionSetNode, SelectionNode, OperationDefinitionNode, VariableDefini
 import {getNamedType, GraphQLType, GraphQLObjectType} from 'graphql/type/definition';
 import {FIELD, FRAGMENT_SPREAD, INLINE_FRAGMENT} from 'graphql/language/kinds';
 import {CodegenDocument, Field, Model} from './interfaces';
-import {getTypeName, isArray, isRequired} from './model-handler';
+import {getTypeName, isArray, isRequired, isPrimitive} from './model-handler';
 import {getFieldDef} from './utils';
 import pascalCase = require('pascal-case');
 
@@ -18,13 +18,13 @@ const buildName = (name: string, type: string): string => {
   return pascalCase(name) + typesMap[type];
 };
 
-const buildVariables = (schema: GraphQLSchema, definitionNode: OperationDefinitionNode): Field[] => {
+const buildVariables = (schema: GraphQLSchema, definitionNode: OperationDefinitionNode, primitivesMap: any): Field[] => {
   return definitionNode.variableDefinitions.map<Field>((variableDefinition: VariableDefinitionNode) => {
     const typeFromSchema = typeFromAST(schema, variableDefinition.type);
 
     return <Field>{
       name: variableDefinition.variable.name.value,
-      type: getTypeName(typeFromSchema),
+      type: getTypeName(primitivesMap, typeFromSchema),
       isArray: isArray(typeFromSchema),
       isRequired: isRequired(typeFromSchema)
     };
@@ -42,9 +42,11 @@ const handleNameDuplications = (name: string, existing: Model[]): string => {
 export const buildInnerModelsArray = (schema: GraphQLSchema,
                                       rootObject: GraphQLType,
                                       selections: SelectionSetNode,
+                                      primitivesMap: any,
                                       appendTo?: Model,
                                       result: Model[] = []): Model[] => {
   (selections ? selections.selections : []).forEach((selectionNode: SelectionNode) => {
+    console.log(primitivesMap);
     switch (selectionNode.kind) {
       case FIELD:
         const fieldName = selectionNode.name.value;
@@ -63,7 +65,7 @@ export const buildInnerModelsArray = (schema: GraphQLSchema,
 
           result.push(model);
 
-          buildInnerModelsArray(schema, actualType, selectionNode.selectionSet, model, result);
+          buildInnerModelsArray(schema, actualType, selectionNode.selectionSet, primitivesMap, model, result);
 
           if (!appendTo) {
             // Means we are on the root object, and we need to create the Result interface
@@ -86,7 +88,7 @@ export const buildInnerModelsArray = (schema: GraphQLSchema,
         else {
           appendTo.fields.push({
             name: propertyName,
-            type: getTypeName(actualType),
+            type: getTypeName(primitivesMap, actualType),
             isArray: isArray(rawType),
             isRequired: isRequired(rawType)
           });
@@ -96,7 +98,7 @@ export const buildInnerModelsArray = (schema: GraphQLSchema,
 
       case FRAGMENT_SPREAD:
         const fragmentName = selectionNode.name.value;
-        appendTo.fragmentsUsed.push(pascalCase(fragmentName) + '.Fragment');
+        appendTo.fragmentsUsed.push(pascalCase(fragmentName));
         appendTo.usingFragments = appendTo.fragmentsUsed.length > 0;
         break;
 
@@ -125,7 +127,7 @@ const getRoot = (schema: GraphQLSchema, operation: OperationDefinitionNode): Gra
   }
 };
 
-export const handleOperation = (schema: GraphQLSchema, definitionNode: OperationDefinitionNode): CodegenDocument => {
+export const handleOperation = (schema: GraphQLSchema, definitionNode: OperationDefinitionNode, primitivesMap: any): CodegenDocument => {
   const name = definitionNode.name.value;
   const type = definitionNode.operation;
   const root = getRoot(schema, definitionNode);
@@ -142,13 +144,20 @@ export const handleOperation = (schema: GraphQLSchema, definitionNode: Operation
     innerTypes: [],
     hasVariables: false,
     hasInnerTypes: false,
+    imports: []
   };
 
-  document.variables = buildVariables(schema, definitionNode);
-  document.innerTypes = buildInnerModelsArray(schema, root, definitionNode.selectionSet);
+  document.variables = buildVariables(schema, definitionNode, primitivesMap);
+  document.innerTypes = buildInnerModelsArray(schema, root, definitionNode.selectionSet, primitivesMap);
 
   document.hasVariables = document.variables.length > 0;
   document.hasInnerTypes = document.innerTypes.length > 0;
+
+  document.variables.forEach((field: Field) => {
+    if (field.type && !isPrimitive(primitivesMap, field.type)) {
+      document.imports.push(field.type);
+    }
+  });
 
   return document;
 };

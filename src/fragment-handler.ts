@@ -5,7 +5,7 @@ import pascalCase = require('pascal-case');
 import {buildInnerModelsArray} from './operation-handler';
 import {typeFromAST} from 'graphql/utilities/typeFromAST';
 
-export const handleFragment = (schema: GraphQLSchema, fragmentNode: FragmentDefinitionNode): CodegenDocument => {
+export const handleFragment = (schema: GraphQLSchema, fragmentNode: FragmentDefinitionNode, primitivesMap: any): CodegenDocument => {
   const rawName = fragmentNode.name.value;
   const fragmentName = pascalCase(rawName);
 
@@ -31,7 +31,7 @@ export const handleFragment = (schema: GraphQLSchema, fragmentNode: FragmentDefi
   };
 
   const root = typeFromAST(schema, fragmentNode.typeCondition);
-  result.innerTypes = [appendTo, ...buildInnerModelsArray(schema, root, fragmentNode.selectionSet, appendTo)];
+  result.innerTypes = [appendTo, ...buildInnerModelsArray(schema, root, fragmentNode.selectionSet, primitivesMap, appendTo)];
   result.hasInnerTypes = result.innerTypes.length > 0;
 
   return result;

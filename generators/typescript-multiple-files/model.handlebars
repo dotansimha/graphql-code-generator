@@ -1,3 +1,7 @@
+{{#each imports ~}}
+  import { {{ this }} } from './index';
+{{/each ~}}
+
 {{#if isObject ~}}
 export interface {{ name }} {
     {{#each fields}}

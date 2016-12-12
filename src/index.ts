@@ -22,7 +22,7 @@ transformOptions(options)
   .then<FileResult[]>((transformedOptions: TransformedCliOptions) => {
     const schema = loadSchema(transformedOptions.introspection);
     const documents = transformedOptions.documents;
-    const codegen = prepareCodegen(schema, loadDocumentsSources(documents));
+    const codegen = prepareCodegen(schema, loadDocumentsSources(documents), transformedOptions.template.config.primitives);
     const templateConfig = transformedOptions.template.config;
     const strategy = templateConfig.strategy || 'SINGLE_FILE';
     const baseOutPath = path.basename(transformedOptions.outPath);

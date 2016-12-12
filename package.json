@@ -10,9 +10,9 @@
     "prebuild": "npm run clean && npm run lint",
     "build": "tsc",
     "prestart": "npm run build",
-    "start": "node ./dist/index.js",
-    "debug": "node --inspect --debug-brk ./dist/index.js",
-    "dev": "nodemon --ext ts,js,d.ts,template,graphql,json,handlebars ./dist/index.js",
+    "start": "cd dist && node index.js",
+    "debug": "cd dist && node --inspect --debug-brk index.js",
+    "dev": "cd dist && nodemon --ext ts,js,d.ts,template,graphql,json,handlebars index.js",
     "test": ""
   },
   "repository": {
@@ -42,10 +42,7 @@
   },
   "homepage": "https://github.com/dotansimha/graphql-codegen#readme",
   "devDependencies": {
-    "cz-conventional-changelog": "^1.2.0",
-    "rimraf": "^2.5.4",
-    "tslint": "^4.0.2",
-    "typescript": "^2.0.10"
+    "cz-conventional-changelog": "^1.2.0"
   },
   "config": {
     "commitizen": {
@@ -68,6 +65,9 @@
     "mkdirp": "^0.5.1",
     "nodemon": "^1.11.0",
     "pascal-case": "^2.0.0",
-    "request": "^2.79.0"
+    "request": "^2.79.0",
+    "rimraf": "^2.5.4",
+    "tslint": "^4.0.2",
+    "typescript": "^2.0.10"
   }
 }

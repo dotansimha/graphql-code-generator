@@ -11,13 +11,8 @@ import {GraphQLList} from 'graphql/type/definition';
 import {GraphQLNonNull} from 'graphql/type/definition';
 import {getNamedType} from 'graphql/type/definition';
 
-// TODO: this is specific for TypeScript, need to get outside into a JSON settings file per language generator
-const primitivesMap = {
-  String: 'string',
-  Int: 'number',
-  Float: 'number',
-  Boolean: 'boolean',
-  ID: 'string',
+export const isPrimitive = (primitivesMap: any, type: string) => {
+  return Object.keys(primitivesMap).map(key => primitivesMap[key]).find(item => item === type);
 };
 
 const shouldSkip = (typeName: string): boolean => {
@@ -36,7 +31,7 @@ export const isArray = (type: GraphQLType): boolean => {
   return (type.toString()).indexOf('[') > -1;
 };
 
-export const getTypeName = (type: GraphQLType) => {
+export const getTypeName = (primitivesMap: any, type: GraphQLType) => {
   const name = (type.toString()).replace(/[\[\]!]/g, '');
 
   if (primitivesMap[name]) {
@@ -47,8 +42,9 @@ export const getTypeName = (type: GraphQLType) => {
   }
 };
 
-export const handleType = (typeName: string, type: GraphQLType) => {
+export const handleType = (primitivesMap: any, typeName: string, type: GraphQLType) => {
   let currentType: Model = {
+    imports: [],
     name: typeName,
     fields: [],
     isFragment: false,
@@ -77,9 +73,15 @@ export const handleType = (typeName: string, type: GraphQLType) => {
         .keys(fields)
         .map((fieldName: string) => fields[fieldName])
         .map<Field>((field: GraphQLField<any, any>) => {
+          const type = getTypeName(primitivesMap, field.type);
+
+          if (!isPrimitive(primitivesMap, type)) {
+            currentType.imports.push(type);
+          }
+
           return {
             name: field.name,
-            type: getTypeName(field.type),
+            type: type,
             isArray: isArray(field.type),
             isRequired: isRequired(field.type)
           };
@@ -94,7 +96,7 @@ export const handleType = (typeName: string, type: GraphQLType) => {
       // TODO: implemented
     }
     else if (type instanceof GraphQLList || type instanceof GraphQLNonNull) {
-      return handleType(typeName, getNamedType(type));
+      return handleType(primitivesMap, typeName, getNamedType(type));
     }
 
     return currentType;

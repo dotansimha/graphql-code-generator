@@ -1,4 +1,3 @@
-import {Codegen} from './interfaces';
 import * as handlebars from 'handlebars';
 import * as fs from 'fs';
 
