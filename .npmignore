@@ -1,1 +1,10 @@
 dev-test
+coverage
+test
+src
+jest.ts-compiler.js
+.travis.yml
+tslint.json
+tsconfig.json
+typings.d.ts
+yarn.lock
