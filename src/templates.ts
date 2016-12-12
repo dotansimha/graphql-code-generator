@@ -1,15 +1,36 @@
+import * as fs from 'fs';
+import * as path from 'path';
+
+export interface TemplateConfig {
+  strategy: 'SINGLE_FILE' | 'MULTIPLE_FILES';
+  template?: string;
+  filesExtension?: string;
+  templates?: {[key: string]: string};
+  basePath?: string;
+}
+
 export interface GeneratorTemplate {
   language: string;
   aliases: string[];
-  templateFile: string;
-  configFile?: string;
+  config?: TemplateConfig;
 }
+
+const getConfig = (generatorPath: string): TemplateConfig => {
+  let config = <TemplateConfig>(JSON.parse(fs.readFileSync(path.resolve(generatorPath + '/config.json'), 'utf8')));
+  config.basePath = generatorPath;
+
+  return config;
+};
 
 export const generators: GeneratorTemplate[] = [
   {
-    language: 'TypeScript',
-    aliases: ['ts', 'typescript'],
-    templateFile: './generators/typescript/graphql-types.d.ts.handlebars',
-    configFile: './generators/typescript/config.json'
+    language: 'TypeScript Single File',
+    aliases: ['ts', 'typescript', 'ts-single', 'typescript-single'],
+    config: getConfig('./generators/typescript-single-file/')
+  },
+  {
+    language: 'TypeScript Multiple Files',
+    aliases: ['ts-multiple', 'typescript-multiple'],
+    config: getConfig('./generators/typescript-multiple-files/')
   }
 ];

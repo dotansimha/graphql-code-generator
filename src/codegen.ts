@@ -30,7 +30,7 @@ export const prepareCodegen = (schema: GraphQLSchema, document: DocumentNode): C
   });
 
   return <Codegen>{
-    models,
-    documents
+    models: models.filter(item => item),
+    documents: documents.filter(item => item)
   };
 };

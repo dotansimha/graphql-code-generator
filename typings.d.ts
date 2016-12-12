@@ -5,3 +5,4 @@
 /// <reference types="@types/minimatch" />
 /// <reference types="@types/request" />
 /// <reference types="@types/form-data" />
+/// <reference types="@types/mkdirp" />

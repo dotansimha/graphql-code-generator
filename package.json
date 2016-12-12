@@ -57,6 +57,7 @@
     "@types/glob": "^5.0.30",
     "@types/graphql": "^0.8.2",
     "@types/handlebars": "^4.0.31",
+    "@types/mkdirp": "^0.3.29",
     "@types/node": "^0.0.2",
     "@types/pascal-case": "^0.0.29",
     "@types/request": "^0.0.36",
@@ -64,6 +65,7 @@
     "glob": "^7.1.1",
     "graphql": "^0.8.2",
     "handlebars": "^4.0.6",
+    "mkdirp": "^0.5.1",
     "nodemon": "^1.11.0",
     "pascal-case": "^2.0.0",
     "request": "^2.79.0"

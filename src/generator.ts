@@ -10,6 +10,6 @@ const loadFromPath = (filePath: string): string => {
   }
 };
 
-export const generateCode = (codegen: Codegen, templatePath: string): string => {
-  return handlebars.compile(loadFromPath(templatePath))(codegen);
+export const generateCode = (compileContext: any, templatePath: string): string => {
+  return handlebars.compile(loadFromPath(templatePath))(compileContext);
 };

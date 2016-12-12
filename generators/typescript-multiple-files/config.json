@@ -1,0 +1,8 @@
+{
+  "strategy": "MULTIPLE_FILES",
+  "filesExtension": "d.ts",
+  "templates": {
+    "model": "./model.handlebars",
+    "document": "./document.handlebars"
+  }
+}

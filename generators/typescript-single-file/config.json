@@ -1,0 +1,4 @@
+{
+  "strategy": "SINGLE_FILE",
+  "template": "./template.handlebars"
+}
