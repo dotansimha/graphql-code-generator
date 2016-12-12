@@ -3,9 +3,12 @@
 public struct {{ name }}: GraphQLMapConvertible {
   public var fieldsMap: GraphQLMap
 
-  public init({{#each fields ~}}{{ name }}: {{#if isArray}}[{{/if}}{{ type }}{{#if isArray}}]{{/if}}{{#unless isRequired}}?{{/unless}}{{#unless @last}}, {{/unless}}{{/each ~}}) {
-    fieldsMap = [{{#each fields ~}}"{{ name }}": {{ name }}{{#unless @last}}, {{/unless}}{{/each ~}}]
-  }
+  {{#times fields.length}}
+    public init({{#limitedEach ../fields count=this ~}}{{ name }}: {{#if isArray}}[{{/if}}{{ type }}{{#if isArray}}]{{/if}}{{#unless isRequired}}?{{/unless}}{{#unless @last}}, {{/unless}}{{/limitedEach ~}}) {
+      fieldsMap = [{{#limitedEach ../fields count=this ~}}"{{ name }}": {{ name }}{{#unless @last}}, {{/unless}}{{/limitedEach ~}}]
+    }
+
+  {{/times}}
 }
 
 {{/if ~}}
@@ -18,4 +21,37 @@ public enum {{ name }}: String {
 }
 
 {{/if ~}}
+{{/each ~}}
+
+
+{{#each documents ~}}
+  public struct {{ name }} {
+  {{#if hasVariables}}
+    public struct Variables {
+    {{#each variables}}
+      public let {{ name }}: {{#if isArray}}[{{/if}}{{ type }}{{#if isArray}}]{{/if}}{{#unless isRequired}}?{{/unless}}
+    {{/each}}
+    }
+
+  {{/if ~}}
+
+  {{#each innerTypes}}
+    public struct {{name}} {
+    {{#each fields}}
+      public let {{ name }}: {{#if isArray}}[{{/if}}{{ type }}{{#if isArray}}]{{/if}}{{#unless isRequired}}?{{/unless}}
+    {{/each}}
+    }
+
+  {{/each ~}}
+
+  {{#each resultFields}}
+    export interface Result {
+    {{#each fields}}
+      {{ name }}: {{#if isArray}}[{{/if}}{{ type }}{{#if isArray}}]{{/if}}
+    {{/each}}
+    }
+
+  {{/each ~}}
+  }
+
 {{/each ~}}

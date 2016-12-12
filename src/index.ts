@@ -9,6 +9,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as mkdirp from 'mkdirp';
 import {Model, CodegenDocument} from './interfaces';
+import {initHelpers} from './handlebars-helpers';
 
 const options = initCLI(process.argv);
 validateCliOptions(options);
@@ -20,6 +21,7 @@ export interface FileResult {
 
 transformOptions(options)
   .then<FileResult[]>((transformedOptions: TransformedCliOptions) => {
+    initHelpers();
     const schema = loadSchema(transformedOptions.introspection);
     const documents = transformedOptions.documents;
     const codegen = prepareCodegen(schema, loadDocumentsSources(documents), transformedOptions.template.config.primitives);

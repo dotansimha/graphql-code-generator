@@ -10,5 +10,6 @@ const loadFromPath = (filePath: string): string => {
 };
 
 export const generateCode = (compileContext: any, templatePath: string): string => {
+
   return handlebars.compile(loadFromPath(templatePath))(compileContext);
 };
