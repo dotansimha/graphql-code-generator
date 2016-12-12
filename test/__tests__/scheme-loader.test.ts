@@ -2,7 +2,7 @@ import {validateSchema, loadSchema} from "../../src/scheme-loader";
 import {IntrospectionQuery} from "graphql/utilities/introspectionQuery";
 import {GraphQLSchema} from "graphql/type/schema";
 
-describe('document-loader', () => {
+describe('scheme-loader', () => {
   let schema;
 
   beforeAll(() => {
