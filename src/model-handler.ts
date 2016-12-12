@@ -10,7 +10,6 @@ import {GraphQLUnionType} from 'graphql/type/definition';
 import {GraphQLList} from 'graphql/type/definition';
 import {GraphQLNonNull} from 'graphql/type/definition';
 import {getNamedType} from 'graphql/type/definition';
-import {createSecureContext} from "tls";
 
 export const isPrimitive = (primitivesMap: any, type: string) => {
   return Object.keys(primitivesMap).map(key => primitivesMap[key]).find(item => item === type);

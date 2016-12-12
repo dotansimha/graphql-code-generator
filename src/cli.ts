@@ -11,7 +11,7 @@ export interface TransformedCliOptions {
   documents?: string[];
   template?: GeneratorTemplate;
   outPath?: string;
-  isDev?: boolean
+  isDev?: boolean;
 }
 
 export const initCLI = (args): commander.IExportedCommand => {
