@@ -40,6 +40,9 @@ export interface Vote {
     vote_value: number;
 }
 
+export interface A {
+    test: MyType;
+}
 
 export type VoteType = "UP" | "DOWN" | "CANCEL";
 
@@ -138,7 +141,7 @@ export namespace CurrentUserForProfileQuery {
 }
 
 export namespace FeedEntry {
-      export type Fragment = VoteButtons.Fragment & RepoInfo.Fragment & {
+      export type Fragment = VoteButtons & RepoInfo & {
         id: number;
         commentCount: number;
         repository: Repository;
@@ -172,7 +175,7 @@ export namespace FeedQuery {
           feed: Array<Feed>;
       }
 
-      export type Feed = FeedEntry.Fragment & {
+      export type Feed = FeedEntry & {
       }
 
 }
@@ -218,7 +221,7 @@ export namespace SubmitCommentMutation {
           commentContent: string;
       }
 
-      export type SubmitComment = CommentsPageComment.Fragment & {
+      export type SubmitComment = CommentsPageComment & {
       }
 
       export interface Result {
