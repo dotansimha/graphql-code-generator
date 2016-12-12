@@ -60,7 +60,8 @@ export const buildInnerModelsArray = (schema: GraphQLSchema,
           let model = {
             name: modelName,
             fields: [],
-            fragmentsUsed: []
+            fragmentsUsed: [],
+            inlineFragments: []
           };
 
           result.push(model);
@@ -72,7 +73,8 @@ export const buildInnerModelsArray = (schema: GraphQLSchema,
             appendTo = {
               name: 'Result',
               fields: [],
-              fragmentsUsed: []
+              fragmentsUsed: [],
+              inlineFragments: []
             };
 
             result.push(appendTo);
@@ -103,7 +105,26 @@ export const buildInnerModelsArray = (schema: GraphQLSchema,
         break;
 
       case INLINE_FRAGMENT:
-        // TODO: Handle this
+        const root = typeFromAST(schema, selectionNode.typeCondition);
+        const name = selectionNode.typeCondition.name.value + 'InlineFragment';
+
+        let fragmentModel: Model = {
+          name: name,
+          fields: [],
+          fragmentsUsed: [],
+          inlineFragments: []
+        };
+
+        appendTo.inlineFragments.push({
+          typeName: name,
+          onModel: selectionNode.typeCondition.name.value,
+        });
+
+        appendTo.hasInlineFragments = appendTo.inlineFragments.length > 0;
+
+        result.push(fragmentModel);
+        buildInnerModelsArray(schema, root, selectionNode.selectionSet, primitivesMap, fragmentModel, result);
+
         break;
 
       default:

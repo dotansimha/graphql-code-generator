@@ -20,9 +20,13 @@ query Comment($repoFullName: String!, $limit: Int, $offset: Int) {
     repository {
       full_name
       html_url
-      description
-      open_issues_count
-      stargazers_count
+
+      ... on Repository {
+        description
+        open_issues_count
+        stargazers_count
+      }
     }
+
   }
 }

@@ -10,6 +10,11 @@ export interface EnumValue {
   description: string;
 }
 
+export interface InlineFragment {
+  typeName?: string;
+  onModel?: string;
+}
+
 export interface Model {
   name?: string;
   description?: string;
@@ -22,6 +27,8 @@ export interface Model {
   usingFragments?: boolean;
   enumValues?: EnumValue[];
   fragmentsUsed?: string[];
+  inlineFragments?: InlineFragment[];
+  hasInlineFragments?: boolean;
   imports?: string[];
 }
 

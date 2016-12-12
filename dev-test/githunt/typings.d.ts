@@ -40,227 +40,226 @@ export interface Vote {
     vote_value: number;
 }
 
-export interface A {
-    test: MyType;
-}
-
 export type VoteType = "UP" | "DOWN" | "CANCEL";
 
 export namespace OnCommentAddedSubscription {
-      export interface Variables {
+      export type Variables = {
           repoFullName: string;
       }
 
-      export interface CommentAdded {
-          id: number;
-          postedBy: PostedBy;
-          createdAt: number;
-          content: string;
-      }
+      export type CommentAdded = {
+        id: number;
+        postedBy: PostedBy;
+        createdAt: number;
+        content: string;
+      } 
 
-      export interface PostedBy {
-          login: string;
-          html_url: string;
-      }
+      export type PostedBy = {
+        login: string;
+        html_url: string;
+      } 
 
-      export interface Result {
-          commentAdded: CommentAdded;
-      }
+      export type Result = {
+        commentAdded: CommentAdded;
+      } 
 
 }
 
 export namespace CommentQuery {
-      export interface Variables {
+      export type Variables = {
           repoFullName: string;
           limit: number | null;
           offset: number | null;
       }
 
-      export interface CurrentUser {
-          login: string;
-          html_url: string;
-      }
+      export type CurrentUser = {
+        login: string;
+        html_url: string;
+      } 
 
-      export interface Result {
-          currentUser: CurrentUser;
-          entry: Entry;
-      }
+      export type Result = {
+        currentUser: CurrentUser;
+        entry: Entry;
+      } 
 
-      export interface Entry {
-          id: number;
-          postedBy: PostedBy;
-          createdAt: number;
-          comments: Array<Comments>;
-          commentCount: number;
-          repository: Repository;
-      }
+      export type Entry = {
+        id: number;
+        postedBy: PostedBy;
+        createdAt: number;
+        comments: Array<Comments>;
+        commentCount: number;
+        repository: Repository;
+      } 
 
-      export interface PostedBy {
-          login: string;
-          html_url: string;
-      }
+      export type PostedBy = {
+        login: string;
+        html_url: string;
+      } 
 
-      export type Comments = CommentsPageComment.Fragment & {
-      }
+      export type Comments = {
+      } & CommentsPageComment.Fragment 
 
-      export interface Repository {
-          full_name: string;
-          html_url: string;
-          description: string;
-          open_issues_count: number;
-          stargazers_count: number;
-      }
+      export type Repository = {
+        full_name: string;
+        html_url: string;
+      } & (RepositoryInlineFragment | {}) 
+
+      export type RepositoryInlineFragment = {
+        description: string;
+        open_issues_count: number;
+        stargazers_count: number;
+      } 
 
 }
 
 export namespace CommentsPageComment {
-      export interface Fragment {
-          id: number;
-          postedBy: PostedBy;
-          createdAt: number;
-          content: string;
-      }
+      export type Fragment = {
+        id: number;
+        postedBy: PostedBy;
+        createdAt: number;
+        content: string;
+      } 
 
-      export interface PostedBy {
-          login: string;
-          html_url: string;
-      }
+      export type PostedBy = {
+        login: string;
+        html_url: string;
+      } 
 
 }
 
 export namespace CurrentUserForProfileQuery {
-      export interface CurrentUser {
-          login: string;
-          avatar_url: string;
-      }
+      export type CurrentUser = {
+        login: string;
+        avatar_url: string;
+      } 
 
-      export interface Result {
-          currentUser: CurrentUser;
-      }
+      export type Result = {
+        currentUser: CurrentUser;
+      } 
 
 }
 
 export namespace FeedEntry {
-      export type Fragment = VoteButtons & RepoInfo & {
+      export type Fragment = {
         id: number;
         commentCount: number;
         repository: Repository;
-      }
+      } & VoteButtons.Fragment & RepoInfo.Fragment 
 
-      export interface Repository {
-          full_name: string;
-          html_url: string;
-          owner: Owner;
-      }
+      export type Repository = {
+        full_name: string;
+        html_url: string;
+        owner: Owner;
+      } 
 
-      export interface Owner {
-          avatar_url: string;
-      }
+      export type Owner = {
+        avatar_url: string;
+      } 
 
 }
 
 export namespace FeedQuery {
-      export interface Variables {
+      export type Variables = {
           type: FeedType;
           offset: number | null;
           limit: number | null;
       }
 
-      export interface CurrentUser {
-          login: string;
-      }
+      export type CurrentUser = {
+        login: string;
+      } 
 
-      export interface Result {
-          currentUser: CurrentUser;
-          feed: Array<Feed>;
-      }
+      export type Result = {
+        currentUser: CurrentUser;
+        feed: Array<Feed>;
+      } 
 
-      export type Feed = FeedEntry & {
-      }
+      export type Feed = {
+      } & FeedEntry.Fragment 
 
 }
 
 export namespace SubmitRepositoryMutation {
-      export interface Variables {
+      export type Variables = {
           repoFullName: string;
       }
 
-      export interface SubmitRepository {
-          createdAt: number;
-      }
+      export type SubmitRepository = {
+        createdAt: number;
+      } 
 
-      export interface Result {
-          submitRepository: SubmitRepository;
-      }
+      export type Result = {
+        submitRepository: SubmitRepository;
+      } 
 
 }
 
 export namespace RepoInfo {
-      export interface Fragment {
-          createdAt: number;
-          repository: Repository;
-          postedBy: PostedBy;
-      }
+      export type Fragment = {
+        createdAt: number;
+        repository: Repository;
+        postedBy: PostedBy;
+      } 
 
-      export interface Repository {
-          description: string;
-          stargazers_count: number;
-          open_issues_count: number;
-      }
+      export type Repository = {
+        description: string;
+        stargazers_count: number;
+        open_issues_count: number;
+      } 
 
-      export interface PostedBy {
-          html_url: string;
-          login: string;
-      }
+      export type PostedBy = {
+        html_url: string;
+        login: string;
+      } 
 
 }
 
 export namespace SubmitCommentMutation {
-      export interface Variables {
+      export type Variables = {
           repoFullName: string;
           commentContent: string;
       }
 
-      export type SubmitComment = CommentsPageComment & {
-      }
+      export type SubmitComment = {
+      } & CommentsPageComment.Fragment 
 
-      export interface Result {
-          submitComment: SubmitComment;
-      }
+      export type Result = {
+        submitComment: SubmitComment;
+      } 
 
 }
 
 export namespace VoteButtons {
-      export interface Fragment {
-          score: number;
-          vote: Vote;
-      }
+      export type Fragment = {
+        score: number;
+        vote: Vote;
+      } 
 
-      export interface Vote {
-          vote_value: number;
-      }
+      export type Vote = {
+        vote_value: number;
+      } 
 
 }
 
 export namespace VoteMutation {
-      export interface Variables {
+      export type Variables = {
           repoFullName: string;
           type: VoteType;
       }
 
-      export interface Vote {
-          score: number;
-          id: number;
-          vote: _Vote;
-      }
+      export type Vote = {
+        score: number;
+        id: number;
+        vote: _Vote;
+      } 
 
-      export interface _Vote {
-          vote_value: number;
-      }
+      export type _Vote = {
+        vote_value: number;
+      } 
 
-      export interface Result {
-          vote: Vote;
-      }
+      export type Result = {
+        vote: Vote;
+      } 
 
 }
 
