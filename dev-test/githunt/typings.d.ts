@@ -40,9 +40,6 @@ export interface Vote {
     vote_value: number;
 }
 
-export interface A {
-    test: MyType;
-}
 
 export type VoteType = "UP" | "DOWN" | "CANCEL";
 
