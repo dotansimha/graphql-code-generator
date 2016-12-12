@@ -3,10 +3,10 @@
 {{/each ~}}
 
 {{#if isObject ~}}
-export interface {{ name }} {
-    {{#each fields}}
-    {{ name }}: {{#if isArray}}Array<{{/if}}{{ type }}{{#if isArray}}>{{/if}}{{#unless isRequired}} | null{{/unless}};
-    {{/each ~}}
+export interface {{ name }}{{#if hasImplementedInterfaces}} extends {{#each implementedInterfaces}}{{this}}{{/each}}{{/if}} {
+{{#each fields}}
+  {{ name }}: {{#if isArray}}Array<{{/if}}{{ type }}{{#if isArray}}>{{/if}}{{#unless isRequired}} | null{{/unless}};
+{{/each ~}}
 }
 
 {{/if ~}}

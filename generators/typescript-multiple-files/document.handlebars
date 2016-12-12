@@ -10,38 +10,30 @@
 {{/each ~}}
 
 export namespace {{ name }} {
-  {{#if hasVariables}}
-      export interface Variables {
-      {{#each variables}}
-          {{ name }}: {{#if isArray}}Array<{{/if}}{{ type }}{{#if isArray}}>{{/if}}{{#unless isRequired}} | null{{/unless}};
-      {{/each}}
-      }
+{{#if hasVariables}}
+  export type Variables = {
+  {{#each variables}}
+    {{ name }}: {{#if isArray}}Array<{{/if}}{{ type }}{{#if isArray}}>{{/if}}{{#unless isRequired}} | null{{/unless}};
+  {{/each}}
+  }
 
-  {{/if ~}}
+{{/if ~}}
 
-  {{#each innerTypes}}
-      {{#if usingFragments}}
-      export type {{ name }} = {{#each fragmentsUsed ~}}{{this}}.Fragment & {{/each }}{
-      {{#each fields}}
-        {{ name }}: {{#if isArray}}Array<{{/if}}{{ type }}{{#if isArray}}>{{/if}};
-      {{/each}}
-      }
-      {{else}}
-      export interface {{name}} {
-        {{#each fields}}
-          {{ name }}: {{#if isArray}}Array<{{/if}}{{ type }}{{#if isArray}}>{{/if}};
-        {{/each}}
-      }
-      {{/if}}
+{{#each innerTypes}}
+  export type {{ name }} = {
+  {{#each fields}}
+    {{ name }}: {{#if isArray}}Array<{{/if}}{{ type }}{{#if isArray}}>{{/if}};
+  {{/each}}
+  } {{#each fragmentsUsed}}& {{this}}.Fragment {{/each }}{{#if hasInlineFragments}}& ({{#each inlineFragments}}{{ typeName }}{{/each}} | {}) {{/if}}
 
-    {{/each ~}}
+{{/each ~}}
 
 {{#each resultFields}}
-      export interface {{ name }}Result {
-      {{#each fields}}
-      {{ name }}: {{#if isArray}}Array<{{/if}}{{ type }}{{#if isArray}}>{{/if}};
-      {{/each}}
-      }
+  export type Result = {
+  {{#each fields}}
+    {{ name }}: {{#if isArray}}Array<{{/if}}{{ type }}{{#if isArray}}>{{/if}};
+  {{/each}}
+  }
 
-  {{/each ~}}
+{{/each ~}}
 }

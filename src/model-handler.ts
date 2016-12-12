@@ -47,11 +47,8 @@ export const handleType = (primitivesMap: any, typeName: string, type: GraphQLTy
     imports: [],
     name: typeName,
     fields: [],
-    isFragment: false,
     isEnum: false,
-    isObject: false,
-    isInterface: false,
-    isUnion: false
+    isObject: false
   };
 
   if (!shouldSkip(typeName)) {
@@ -65,9 +62,16 @@ export const handleType = (primitivesMap: any, typeName: string, type: GraphQLTy
         };
       });
     }
-    else if (type instanceof GraphQLObjectType || type instanceof GraphQLInputObjectType) {
+    else if (type instanceof GraphQLObjectType || type instanceof GraphQLInputObjectType || type instanceof GraphQLInterfaceType) {
       currentType.isObject = true;
       const fields = type.getFields();
+
+      if (type instanceof GraphQLObjectType) {
+        currentType.implementedInterfaces = type.getInterfaces().map<string>(interf => {
+          return interf.name;
+        });
+        currentType.hasImplementedInterfaces = currentType.implementedInterfaces.length > 0;
+      }
 
       currentType.fields = Object
         .keys(fields)
@@ -87,13 +91,12 @@ export const handleType = (primitivesMap: any, typeName: string, type: GraphQLTy
           };
         });
     }
-    else if (type instanceof GraphQLInterfaceType) {
-      currentType.isInterface = true;
-      // TODO: implemented
-    }
     else if (type instanceof GraphQLUnionType) {
-      currentType.isUnion = true;
-      // TODO: implemented
+      // TODO: Handle union
+      //
+      // type.getTypes().map(type => {
+      //   return type.name
+      // });
     }
     else if (type instanceof GraphQLList || type instanceof GraphQLNonNull) {
       return handleType(primitivesMap, typeName, getNamedType(type));

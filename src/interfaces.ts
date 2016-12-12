@@ -19,17 +19,17 @@ export interface Model {
   name?: string;
   description?: string;
   fields?: Field[];
-  isFragment?: boolean;
   isObject?: boolean;
-  isInterface?: boolean;
+  isFragment?: boolean;
   isEnum?: boolean;
-  isUnion?: boolean;
   usingFragments?: boolean;
   enumValues?: EnumValue[];
   fragmentsUsed?: string[];
   inlineFragments?: InlineFragment[];
   hasInlineFragments?: boolean;
   imports?: string[];
+  implementedInterfaces?: string[];
+  hasImplementedInterfaces?: boolean;
 }
 
 export interface CodegenDocument {

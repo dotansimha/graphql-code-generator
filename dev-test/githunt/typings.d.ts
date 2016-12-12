@@ -28,12 +28,16 @@ export interface User {
     html_url: string;
 }
 
-export interface Comment {
+export interface Comment extends TestInterface {
     id: number;
     postedBy: User;
     createdAt: number;
     content: string;
     repoName: string;
+}
+
+export interface TestInterface {
+    content: string;
 }
 
 export interface Vote {
