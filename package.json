@@ -4,6 +4,7 @@
   "description": "GraphQL types and code generator based on schema",
   "main": "dist/index.js",
   "scripts": {
+    "build-tests": "tsc -p tsconfig.test.json",
     "watch": "tsc --watch",
     "clean": "rimraf ./dist",
     "lint": "tslint src/**/*.ts",
@@ -55,7 +56,8 @@
     "transform": {
       "^.+\\.(ts|tsx)$": "<rootDir>/jest.ts-compiler.js"
     },
-    "testRegex": "/test/.*\\.(ts|tsx|js)$"
+    "testRegex": "/__tests__/.*\\.(ts|tsx|js)$",
+    "testEnvironment": "node"
   },
   "dependencies": {
     "@types/commander": "^2.3.31",
