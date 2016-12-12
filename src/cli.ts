@@ -11,12 +11,14 @@ export interface TransformedCliOptions {
   documents?: string[];
   template?: GeneratorTemplate;
   outPath?: string;
+  isDev?: boolean
 }
 
 export const initCLI = (args): commander.IExportedCommand => {
   commander
     .version('0.0.1')
     .usage('graphql-codegen [options]')
+    .option('-d, --dev', 'Turn on development mode - prints results to console')
     .option('-f, --file <filePath>', 'Parse local GraphQL introspection JSON file')
     .option('-u, --url <graphql-endpoint>', 'Parse remote GraphQL endpoint as introspection file')
     .option('-t, --template <template-name>', 'Language/platform name templates')
@@ -68,8 +70,13 @@ export const transformOptions = (options): Promise<TransformedCliOptions> => {
   const documents: string[] = options['args'] || [];
   const template: string = options['template'];
   const out: string = options['out'];
+  const isDev: boolean = options['dev'] !== undefined;
   const result: TransformedCliOptions = {};
   let introspectionPromise;
+
+  if (isDev) {
+    console.log('Development mode is ON - output will print to console');
+  }
 
   if (file) {
     introspectionPromise = new Promise<IntrospectionQuery>((resolve, reject) => {
@@ -166,6 +173,7 @@ export const transformOptions = (options): Promise<TransformedCliOptions> => {
     result.documents = documents;
     result.template = generatorTemplate;
     result.outPath = out;
+    result.isDev = isDev;
 
     return result;
   });

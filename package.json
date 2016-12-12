@@ -12,7 +12,7 @@
     "prestart": "npm run build",
     "start": "cd dist && node index.js",
     "debug": "cd dist && node --inspect --debug-brk index.js",
-    "dev": "cd dist && nodemon --ext ts,js,d.ts,template,graphql,json,handlebars index.js",
+    "dev": "cd dist && nodemon --ext ts,js,d.ts,template,graphql,json,handlebars index.js --dev --url http://localhost:3010/graphql --template typescript --out ../dev-test/githunt/typings.d.ts ../dev-test/githunt/**/*.graphql ",
     "test": ""
   },
   "repository": {

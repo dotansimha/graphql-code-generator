@@ -17,6 +17,7 @@ validateCliOptions(options);
 export interface FileResult {
   path: string;
   content: string;
+  isDev?: boolean;
 }
 
 transformOptions(options)
@@ -37,6 +38,7 @@ transformOptions(options)
       const templatePath = path.resolve(transformedOptions.template.config.basePath, transformedOptions.template.config.template);
 
       return [{
+        isDev: transformedOptions.isDev,
         content: generateCode(codegen, templatePath),
         path: path.resolve(transformedOptions.outPath)
       }];
@@ -58,6 +60,7 @@ transformOptions(options)
         if (templateName === 'model') {
           codegen.models.forEach((model: Model) => {
             resultsArr.push({
+              isDev: transformedOptions.isDev,
               content: generateCode(model, templatePath),
               path: path.resolve(transformedOptions.outPath, model.name + '.model.' + filesExtension)
             });
@@ -67,6 +70,7 @@ transformOptions(options)
         if (templateName === 'document') {
           codegen.documents.forEach((document: CodegenDocument) => {
             resultsArr.push({
+              isDev: transformedOptions.isDev,
               content: generateCode(document, templatePath),
               path: path.resolve(transformedOptions.outPath, document.name + '.document.' + filesExtension)
             });
@@ -82,6 +86,7 @@ transformOptions(options)
         const templatePath = path.resolve(transformedOptions.template.config.basePath, templates['index']);
 
         resultsArr.push({
+          isDev: transformedOptions.isDev,
           content: generateCode({files: resultsArr.map(item => {
             return {
               fileName: path.basename(item.path, '.' + filesExtension),
@@ -102,8 +107,14 @@ transformOptions(options)
   })
   .then((generationResult: FileResult[]) => {
     generationResult.forEach((file: FileResult) => {
-      fs.writeFileSync(file.path, file.content);
-      console.log(`Generated file written to ${file.path}`);
+      if (file.isDev) {
+        console.log(`================== ${file.path} ==================`);
+        console.log(file.content);
+      }
+      else {
+        fs.writeFileSync(file.path, file.content);
+        console.log(`Generated file written to ${file.path}`);
+      }
     });
   })
   .catch(cliError);

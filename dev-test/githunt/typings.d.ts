@@ -3,6 +3,7 @@ export type FeedType = "HOT" | "NEW" | "TOP";
 export interface Entry {
     repository: Repository;
     postedBy: User;
+    testUnion: B | null;
     createdAt: number;
     score: number;
     hotScore: number;
@@ -26,6 +27,14 @@ export interface User {
     login: string;
     avatar_url: string;
     html_url: string;
+}
+
+export interface S {
+    b: string | null;
+}
+
+export interface T {
+    a: string | null;
 }
 
 export interface Comment extends TestInterface {

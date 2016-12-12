@@ -22,6 +22,7 @@ export interface Model {
   isObject?: boolean;
   isFragment?: boolean;
   isEnum?: boolean;
+  isUnion?: boolean;
   usingFragments?: boolean;
   enumValues?: EnumValue[];
   fragmentsUsed?: string[];
@@ -30,6 +31,8 @@ export interface Model {
   imports?: string[];
   implementedInterfaces?: string[];
   hasImplementedInterfaces?: boolean;
+  hasUnionTypes?: boolean;
+  unionTypes?: string[];
 }
 
 export interface CodegenDocument {

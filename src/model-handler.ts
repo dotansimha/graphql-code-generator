@@ -10,6 +10,7 @@ import {GraphQLUnionType} from 'graphql/type/definition';
 import {GraphQLList} from 'graphql/type/definition';
 import {GraphQLNonNull} from 'graphql/type/definition';
 import {getNamedType} from 'graphql/type/definition';
+import {createSecureContext} from "tls";
 
 export const isPrimitive = (primitivesMap: any, type: string) => {
   return Object.keys(primitivesMap).map(key => primitivesMap[key]).find(item => item === type);
@@ -92,11 +93,11 @@ export const handleType = (primitivesMap: any, typeName: string, type: GraphQLTy
         });
     }
     else if (type instanceof GraphQLUnionType) {
-      // TODO: Handle union
-      //
-      // type.getTypes().map(type => {
-      //   return type.name
-      // });
+      currentType.name = type.name || typeName;
+      currentType.isUnion = true;
+      currentType.isObject = false;
+      currentType.unionTypes = type.getTypes().map(type => type.name);
+      currentType.hasUnionTypes = currentType.unionTypes.length > 0;
     }
     else if (type instanceof GraphQLList || type instanceof GraphQLNonNull) {
       return handleType(primitivesMap, typeName, getNamedType(type));

@@ -12,6 +12,13 @@ export interface {{ name }}{{#if hasImplementedInterfaces}} extends {{#each impl
 export type {{ name }} = {{#each enumValues }}"{{ value }}"{{#unless @last}} | {{/unless}}{{/each ~}};
 
 {{/if ~}}
+
+{{#if isUnion ~}}
+  {{#if hasUnionTypes}}
+export type {{ name }} = {{#each unionTypes}}{{this}}{{#unless @last}} | {{/unless}}{{/each}};
+  {{/if}}
+
+{{/if}}
 {{/each ~}}
 
 {{#each documents ~}}
