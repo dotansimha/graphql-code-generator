@@ -8,7 +8,11 @@ GraphQL code generator, with flexible support for multiple languages and platfor
 
 Supported language/platforms:
 
-- TypeScript (for both client and server)
+| Language        | Type           | CLI Name                                                                  |
+|-----------------|----------------|---------------------------------------------------------------------------|
+| TypeScript      | Single File    | ts, typescript, ts-single, typescript-single                              |
+| TypeScript      | Multiple Files | ts-multiple, typescript-multiple                                          |
+
 
 ## Installation
 
