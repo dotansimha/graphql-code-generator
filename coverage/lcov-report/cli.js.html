@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for cli.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="prettify.css" />
+    <link rel="stylesheet" href="base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="index.html">All files</a> cli.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>0/91</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/41</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>0/19</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>0/85</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">"use strict";
+var commander = <span class="cstat-no" title="statement not covered" >require("commander");</span>
+var fs = <span class="cstat-no" title="statement not covered" >require("fs");</span>
+var glob = <span class="cstat-no" title="statement not covered" >require("glob");</span>
+var request = <span class="cstat-no" title="statement not covered" >require("request");</span>
+var templates_1 = <span class="cstat-no" title="statement not covered" >require("./templates");</span>
+var introspectionQuery_1 = <span class="cstat-no" title="statement not covered" >require("graphql/utilities/introspectionQuery");</span>
+<span class="cstat-no" title="statement not covered" >exports.initCLI = <span class="fstat-no" title="function not covered" >fu</span>nction (args) {</span>
+<span class="cstat-no" title="statement not covered" >    commander</span>
+        .version('0.0.1')
+        .usage('graphql-codegen [options]')
+        .option('-d, --dev', 'Turn on development mode - prints results to console')
+        .option('-f, --file &lt;filePath&gt;', 'Parse local GraphQL introspection JSON file')
+        .option('-u, --url &lt;graphql-endpoint&gt;', 'Parse remote GraphQL endpoint as introspection file')
+        .option('-t, --template &lt;template-name&gt;', 'Language/platform name templates')
+        .option('-o, --out &lt;path&gt;', 'Output file(s) path', String, './')
+        .arguments('&lt;options&gt; [documents...]')
+        .parse(args);
+<span class="cstat-no" title="statement not covered" >    return commander;</span>
+};
+<span class="cstat-no" title="statement not covered" >exports.cliError = <span class="fstat-no" title="function not covered" >fu</span>nction (err) {</span>
+<span class="cstat-no" title="statement not covered" >    if (typeof err === 'object') {</span>
+<span class="cstat-no" title="statement not covered" >        console.log(err);</span>
+    }
+<span class="cstat-no" title="statement not covered" >    console.error('Error: ' + err);</span>
+<span class="cstat-no" title="statement not covered" >    process.exit(1);</span>
+<span class="cstat-no" title="statement not covered" >    return;</span>
+};
+<span class="cstat-no" title="statement not covered" >exports.validateCliOptions = <span class="fstat-no" title="function not covered" >fu</span>nction (options) {</span>
+    var file = <span class="cstat-no" title="statement not covered" >options['file'];</span>
+    var url = <span class="cstat-no" title="statement not covered" >options['url'];</span>
+    var template = <span class="cstat-no" title="statement not covered" >options['template'];</span>
+    var out = <span class="cstat-no" title="statement not covered" >options['out'];</span>
+    var documents = <span class="cstat-no" title="statement not covered" >options['args'];</span>
+<span class="cstat-no" title="statement not covered" >    if (!file &amp;&amp; !url) {</span>
+<span class="cstat-no" title="statement not covered" >        exports.cliError('Please specify one of --file or --url flags!');</span>
+    }
+<span class="cstat-no" title="statement not covered" >    if (!template) {</span>
+<span class="cstat-no" title="statement not covered" >        exports.cliError('Please specify language/platform, using --template flag');</span>
+    }
+<span class="cstat-no" title="statement not covered" >    if (!documents || documents.length === 0) {</span>
+<span class="cstat-no" title="statement not covered" >        exports.cliError('Please specify GraphQL documents input');</span>
+    }
+};
+var getGeneratorTemplate = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >fu</span>nction (templateName) {</span>
+<span class="cstat-no" title="statement not covered" >    return templates_1.generators.find(<span class="fstat-no" title="function not covered" >fu</span>nction (item) { <span class="cstat-no" title="statement not covered" >return (item.aliases || []).indexOf(templateName.toLowerCase()) &gt; -1; </span>});</span>
+};
+<span class="cstat-no" title="statement not covered" >exports.transformOptions = <span class="fstat-no" title="function not covered" >fu</span>nction (options) {</span>
+    var file = <span class="cstat-no" title="statement not covered" >options['file'];</span>
+    var url = <span class="cstat-no" title="statement not covered" >options['url'];</span>
+    var documents = <span class="cstat-no" title="statement not covered" >options['args'] || [];</span>
+    var template = <span class="cstat-no" title="statement not covered" >options['template'];</span>
+    var out = <span class="cstat-no" title="statement not covered" >options['out'];</span>
+    var isDev = <span class="cstat-no" title="statement not covered" >options['dev'] !== undefined;</span>
+    var result = <span class="cstat-no" title="statement not covered" >{};</span>
+    var introspectionPromise;
+<span class="cstat-no" title="statement not covered" >    if (isDev) {</span>
+<span class="cstat-no" title="statement not covered" >        console.log('Development mode is ON - output will print to console');</span>
+    }
+<span class="cstat-no" title="statement not covered" >    if (file) {</span>
+<span class="cstat-no" title="statement not covered" >        introspectionPromise = new Promise(<span class="fstat-no" title="function not covered" >fu</span>nction (resolve, reject) {</span>
+<span class="cstat-no" title="statement not covered" >            if (fs.existsSync(file)) {</span>
+<span class="cstat-no" title="statement not covered" >                try {</span>
+                    var fileContent = <span class="cstat-no" title="statement not covered" >fs.readFileSync(file, 'utf8');</span>
+<span class="cstat-no" title="statement not covered" >                    if (!fileContent) {</span>
+<span class="cstat-no" title="statement not covered" >                        reject("Unable to read local introspection file: " + file);</span>
+                    }
+<span class="cstat-no" title="statement not covered" >                    resolve(JSON.parse(fileContent));</span>
+                }
+                catch (e) {
+<span class="cstat-no" title="statement not covered" >                    reject(e);</span>
+                }
+            }
+            else {
+<span class="cstat-no" title="statement not covered" >                reject("Unable to locate local introspection file: " + file);</span>
+            }
+        });
+    }
+    else <span class="cstat-no" title="statement not covered" >if (url) {</span>
+<span class="cstat-no" title="statement not covered" >        introspectionPromise = new Promise(<span class="fstat-no" title="function not covered" >fu</span>nction (resolve, reject) {</span>
+<span class="cstat-no" title="statement not covered" >            request.post({</span>
+                url: url,
+                json: {
+                    query: introspectionQuery_1.introspectionQuery
+                },
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            }, <span class="fstat-no" title="function not covered" >fu</span>nction (err, response, body) {
+<span class="cstat-no" title="statement not covered" >                if (err) {</span>
+<span class="cstat-no" title="statement not covered" >                    reject(err);</span>
+<span class="cstat-no" title="statement not covered" >                    return;</span>
+                }
+                var bodyJson = <span class="cstat-no" title="statement not covered" >body.data;</span>
+<span class="cstat-no" title="statement not covered" >                if (!bodyJson || (bodyJson.errors &amp;&amp; bodyJson.errors.length &gt; 0)) {</span>
+<span class="cstat-no" title="statement not covered" >                    reject('Unable to download schema from remote: ' + bodyJson.errors.map(<span class="fstat-no" title="function not covered" >fu</span>nction (item) { <span class="cstat-no" title="statement not covered" >return item.message; </span>}).join(', '));</span>
+<span class="cstat-no" title="statement not covered" >                    return;</span>
+                }
+<span class="cstat-no" title="statement not covered" >                resolve(bodyJson);</span>
+            });
+        });
+    }
+    var documentsPromises = <span class="cstat-no" title="statement not covered" >documents.map(<span class="fstat-no" title="function not covered" >fu</span>nction (documentGlob) {</span>
+<span class="cstat-no" title="statement not covered" >        return new Promise(<span class="fstat-no" title="function not covered" >fu</span>nction (resolve, reject) {</span>
+<span class="cstat-no" title="statement not covered" >            glob(documentGlob, <span class="fstat-no" title="function not covered" >fu</span>nction (err, files) {</span>
+<span class="cstat-no" title="statement not covered" >                if (err) {</span>
+<span class="cstat-no" title="statement not covered" >                    reject(err);</span>
+                }
+<span class="cstat-no" title="statement not covered" >                if (!files || files.length === 0) {</span>
+<span class="cstat-no" title="statement not covered" >                    reject("Unable to locate files matching glob definition: " + documentGlob);</span>
+                }
+<span class="cstat-no" title="statement not covered" >                resolve(files);</span>
+            });
+        });
+    });
+    var generatorTemplatePromise = <span class="cstat-no" title="statement not covered" >new Promise(<span class="fstat-no" title="function not covered" >fu</span>nction (resolve, reject) {</span>
+        var generatorTemplate = <span class="cstat-no" title="statement not covered" >getGeneratorTemplate(template);</span>
+<span class="cstat-no" title="statement not covered" >        if (generatorTemplate) {</span>
+<span class="cstat-no" title="statement not covered" >            resolve(generatorTemplate);</span>
+        }
+        else {
+            var allowedTemplates = <span class="cstat-no" title="statement not covered" >templates_1.generators.map(<span class="fstat-no" title="function not covered" >fu</span>nction (item) { <span class="cstat-no" title="statement not covered" >return item.aliases; </span>}).reduce(<span class="fstat-no" title="function not covered" >fu</span>nction (a, b) { <span class="cstat-no" title="statement not covered" >return a.concat(b); </span>}).join(', ');</span>
+<span class="cstat-no" title="statement not covered" >            reject("Unknown template language specified: " + template + ", available are: " + allowedTemplates);</span>
+        }
+    });
+    var documentsPromise = <span class="cstat-no" title="statement not covered" >Promise.all(documentsPromises).then(<span class="fstat-no" title="function not covered" >fu</span>nction (files) {</span>
+<span class="cstat-no" title="statement not covered" >        return files.reduce(<span class="fstat-no" title="function not covered" >fu</span>nction (a, b) {</span>
+<span class="cstat-no" title="statement not covered" >            return a.concat(b);</span>
+        });
+    });
+<span class="cstat-no" title="statement not covered" >    return Promise.all([</span>
+        introspectionPromise,
+        documentsPromise,
+        generatorTemplatePromise
+    ]).then(<span class="fstat-no" title="function not covered" >fu</span>nction (_a) {
+        var introspection = <span class="cstat-no" title="statement not covered" >_a[0],</span> documents = <span class="cstat-no" title="statement not covered" >_a[1],</span> generatorTemplate = <span class="cstat-no" title="statement not covered" >_a[2];</span>
+<span class="cstat-no" title="statement not covered" >        result.introspection = introspection;</span>
+<span class="cstat-no" title="statement not covered" >        result.documents = documents;</span>
+<span class="cstat-no" title="statement not covered" >        result.template = generatorTemplate;</span>
+<span class="cstat-no" title="statement not covered" >        result.outPath = out;</span>
+<span class="cstat-no" title="statement not covered" >        result.isDev = isDev;</span>
+<span class="cstat-no" title="statement not covered" >        return result;</span>
+    });
+};
+//# sourceMappingURL=cli.js.map</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Dec 13 2016 01:14:30 GMT+0200 (IST)
+</div>
+</div>
+<script src="prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="sorter.js"></script>
+</body>
+</html>

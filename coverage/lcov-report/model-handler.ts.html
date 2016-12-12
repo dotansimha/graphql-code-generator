@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for model-handler.ts</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="prettify.css" />
+    <link rel="stylesheet" href="base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="index.html">All files</a> model-handler.ts
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">29.63% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>16/54</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/28</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">15.38% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>2/13</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">31.37% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>16/51</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {Model, EnumValue, Field} from './interfaces';
+import {GraphQLType} from 'graphql/type/definition';
+import {GraphQLEnumType} from 'graphql/type/definition';
+import {GraphQLEnumValue} from 'graphql/type/definition';
+import {GraphQLObjectType} from 'graphql/type/definition';
+import {GraphQLInputObjectType} from 'graphql/type/definition';
+import {GraphQLField} from 'graphql/type/definition';
+import {GraphQLInterfaceType} from 'graphql/type/definition';
+import {GraphQLUnionType} from 'graphql/type/definition';
+import {GraphQLList} f<span class="fstat-no" title="function not covered" >ro</span>m 'graphql/type/definition';
+impo<span class="cstat-no" title="statement not covered" >rt {GraphQLNonNull} from 'graphql/type<span class="fstat-no" title="function not covered" >/d</span>efinition';<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span></span></span>
+import {getNamedType} from 'graphql/type/definition';
+<span class="fstat-no" title="function not covered" ></span>
+expo<span class="cstat-no" title="statement not covered" >rt const isPrimitive = (primitivesMap: any, type: string) =&gt; {</span>
+  return Object.keys(primitivesMap).map(key =&gt; primitivesMap[key]).find(item =&gt; item === type);
+};
+&nbsp;
+const shouldSkip = (typeName: string): boolean =&gt; {
+  return !typeName ||
+    typeName.indexOf('__') &gt; -1 ||
+    typeName === 'Query' ||
+    typeName === 'Mutation' ||
+    typeName === 'Subscription';
+};
+&nbsp;
+export const isRequire<span class="fstat-no" title="function not covered" >d </span>= (type: GraphQLType): boolean =&gt; {
+  return (type.<span class="cstat-no" title="statement not covered" >toString()).indexOf('!') &gt; -1;</span>
+};<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" ></span>
+export const isArray = (type: GraphQLType): boolean =&gt; {
+  return (type.toString()).indexOf('[') &gt; -1;
+};<span class="cstat-no" title="statement not covered" ></span>
+&nbsp;
+export const getTypeName = (primitivesMap: any, type: GraphQLType) =&gt; {
+  const name = (type.<span class="fstat-no" title="function not covered" >to</span>String()).replace(/[\[\]!]/g, '');
+<span class="cstat-no" title="statement not covered" ></span>
+  if (primitivesMap[name]) {
+    return primitivesMap[name];
+  }
+  else {
+    return name;
+  }
+};<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" ></span>
+export const<span class="cstat-no" title="statement not covered" > handleType = (primitivesMa</span>p: any, typeName: string, type: GraphQLType) =&gt; {
+  let curren<span class="cstat-no" title="statement not covered" >tType: Model = {<span class="fstat-no" title="function not covered" ></span></span>
+    imports: [],<span class="cstat-no" title="statement not covered" ></span>
+    name: typeName,
+    fields: [],
+    isEnum: false,
+    isObject: false
+  };
+&nbsp;
+  if (!should<span class="cstat-no" title="statement not covered" >Skip(typeName)) {</span>
+    if (type<span class="cstat-no" title="statement not covered" > instanceof GraphQLEnumType) </span>{
+      currentType.isEnum = <span class="cstat-no" title="statement not covered" >true;</span>
+      curren<span class="cstat-no" title="statement not covered" >tType.enumValues = type.getValues().map&lt;EnumValue&gt;((enumItem: GraphQLEnumValue) =&gt; {</span>
+        return &lt;<span class="cstat-no" title="statement not covered" >EnumValue&gt;{<span class="fstat-no" title="function not covered" ></span></span>
+          name: enum<span class="cstat-no" title="statement not covered" >Item.name,</span>
+          description: enumItem.description,
+          value:<span class="cstat-no" title="statement not covered" > enumItem.value</span>
+        };
+      });<span class="cstat-no" title="statement not covered" ></span>
+    }
+    else if (type ins<span class="fstat-no" title="function not covered" >ta</span>nceof GraphQLObjectTy<span class="cstat-no" title="statement not covered" >pe || type instanceof GraphQ</span>LInputObjectType || type instanceof GraphQLInterfaceType) {
+      currentType.isO<span class="fstat-no" title="function not covered" >bj</span>ect = true;
+      const fields = type.g<span class="cstat-no" title="statement not covered" >etFields();</span>
+<span class="cstat-no" title="statement not covered" ></span>
+      if (type insta<span class="cstat-no" title="statement not covered" >nceof GraphQLObjectType) {</span>
+        currentType.implementedInterfaces = type.getInterfaces().map&lt;string&gt;(interf =&gt; {
+          return<span class="cstat-no" title="statement not covered" > interf.name;</span>
+        });
+        currentType.hasImplementedInterfaces = currentType.implementedInterfaces.length &gt; 0;
+      }
+&nbsp;
+      currentType.fields = Object
+        .keys(fields)
+        .map((fieldName: string) =&gt; fields[fieldName])
+        .map&lt;<span class="cstat-no" title="statement not covered" >Field&gt;((field: GraphQLField&lt;any, any&gt;) =&gt; {</span>
+          co<span class="cstat-no" title="statement not covered" >nst type = getTypeName(primitivesMap, fiel</span>d.type);
+<span class="cstat-no" title="statement not covered" ></span>
+          if<span class="cstat-no" title="statement not covered" > (!isPrimitive(primitivesMap, </span>type)) {
+<span class="cstat-no" title="statement not covered" >            currentType.imports.push(type);<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span></span>
+          }<span class="cstat-no" title="statement not covered" ></span>
+&nbsp;
+          ret<span class="cstat-no" title="statement not covered" >urn {</span>
+<span class="cstat-no" title="statement not covered" >            name: field.name,</span>
+            type: type,
+<span class="cstat-no" title="statement not covered" >            isArray: isArray</span>(field.type),
+            isRequired: isRequired(field.type)
+          };
+<span class="cstat-no" title="statement not covered" >        });</span>
+    }
+    else if (type instanceof GraphQLUnionType) {
+      currentType.name = type.name || typeName;
+      currentType.isUnion = true;
+      currentType.isObject = false;
+      currentType.unionTypes = type.getTypes().map(type =&gt; type.name);
+      currentType.hasUnionTypes = currentType.unionTypes.length &gt; 0;
+    }
+    else if (type instanceof GraphQLList || type instanceof GraphQLNonNull) {
+      return handleType(primitivesMap, typeName, getNamedType(type));
+    }
+&nbsp;
+    return currentType;
+  }
+  else {
+    return null;
+  }
+};
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Dec 13 2016 01:14:38 GMT+0200 (IST)
+</div>
+</div>
+<script src="prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="sorter.js"></script>
+</body>
+</html>

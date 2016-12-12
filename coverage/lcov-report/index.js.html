@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for index.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="prettify.css" />
+    <link rel="stylesheet" href="base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="index.html">All files</a> index.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>0/56</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/18</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>0/8</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>0/55</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">#!/usr/bin/env node
+"use strict";
+var cli_1 = <span class="cstat-no" title="statement not covered" >require("./cli");</span>
+var scheme_loader_1 = <span class="cstat-no" title="statement not covered" >require("./scheme-loader");</span>
+var codegen_1 = <span class="cstat-no" title="statement not covered" >require("./codegen");</span>
+var document_loader_1 = <span class="cstat-no" title="statement not covered" >require("./document-loader");</span>
+var generator_1 = <span class="cstat-no" title="statement not covered" >require("./generator");</span>
+var fs = <span class="cstat-no" title="statement not covered" >require("fs");</span>
+var path = <span class="cstat-no" title="statement not covered" >require("path");</span>
+var mkdirp = <span class="cstat-no" title="statement not covered" >require("mkdirp");</span>
+var handlebars_helpers_1 = <span class="cstat-no" title="statement not covered" >require("./handlebars-helpers");</span>
+var options = <span class="cstat-no" title="statement not covered" >cli_1.initCLI(process.argv);</span>
+<span class="cstat-no" title="statement not covered" >cli_1.validateCliOptions(options);</span>
+<span class="cstat-no" title="statement not covered" >cli_1.transformOptions(options)</span>
+    .then(<span class="fstat-no" title="function not covered" >fu</span>nction (transformedOptions) {
+<span class="cstat-no" title="statement not covered" >    handlebars_helpers_1.initHelpers();</span>
+    var schema = <span class="cstat-no" title="statement not covered" >scheme_loader_1.loadSchema(transformedOptions.introspection);</span>
+    var documents = <span class="cstat-no" title="statement not covered" >transformedOptions.documents;</span>
+    var codegen = <span class="cstat-no" title="statement not covered" >codegen_1.prepareCodegen(schema, document_loader_1.loadDocumentsSources(documents), transformedOptions.template.config.primitives);</span>
+    var templateConfig = <span class="cstat-no" title="statement not covered" >transformedOptions.template.config;</span>
+    var strategy = <span class="cstat-no" title="statement not covered" >templateConfig.strategy || 'SINGLE_FILE';</span>
+    var baseOutPath = <span class="cstat-no" title="statement not covered" >path.basename(transformedOptions.outPath);</span>
+<span class="cstat-no" title="statement not covered" >    if (strategy === 'SINGLE_FILE') {</span>
+<span class="cstat-no" title="statement not covered" >        if (baseOutPath.indexOf('.') === -1) {</span>
+<span class="cstat-no" title="statement not covered" >            throw "Generator '" + transformedOptions.template.language + "' uses single-file strategy! Please specify a filename using --out flag!";</span>
+        }
+        var templatePath = <span class="cstat-no" title="statement not covered" >path.resolve(transformedOptions.template.config.basePath, transformedOptions.template.config.template);</span>
+<span class="cstat-no" title="statement not covered" >        return [{</span>
+                isDev: transformedOptions.isDev,
+                content: generator_1.generateCode(codegen, templatePath),
+                path: path.resolve(transformedOptions.outPath)
+            }];
+    }
+    else <span class="cstat-no" title="statement not covered" >if (strategy === 'MULTIPLE_FILES') {</span>
+<span class="cstat-no" title="statement not covered" >        if (baseOutPath.indexOf('.') &gt; -1) {</span>
+<span class="cstat-no" title="statement not covered" >            throw "Generator '" + transformedOptions.template.language + "' uses multiple-files strategy! Please specify a directory using --out flag!";</span>
+        }
+        var resultsArr_1 = <span class="cstat-no" title="statement not covered" >[];</span>
+        var filesExtension_1 = <span class="cstat-no" title="statement not covered" >transformedOptions.template.config.filesExtension;</span>
+        var templates_1 = <span class="cstat-no" title="statement not covered" >transformedOptions.template.config.templates;</span>
+        var outPath = <span class="cstat-no" title="statement not covered" >path.resolve(transformedOptions.outPath);</span>
+<span class="cstat-no" title="statement not covered" >        mkdirp.sync(outPath);</span>
+<span class="cstat-no" title="statement not covered" >        Object.keys(templates_1).forEach(<span class="fstat-no" title="function not covered" >fu</span>nction (templateName) {</span>
+            var templatePath = <span class="cstat-no" title="statement not covered" >path.resolve(transformedOptions.template.config.basePath, templates_1[templateName]);</span>
+<span class="cstat-no" title="statement not covered" >            if (templateName === 'model') {</span>
+<span class="cstat-no" title="statement not covered" >                codegen.models.forEach(<span class="fstat-no" title="function not covered" >fu</span>nction (model) {</span>
+<span class="cstat-no" title="statement not covered" >                    resultsArr_1.push({</span>
+                        isDev: transformedOptions.isDev,
+                        content: generator_1.generateCode(model, templatePath),
+                        path: path.resolve(transformedOptions.outPath, model.name + '.model.' + filesExtension_1)
+                    });
+                });
+            }
+<span class="cstat-no" title="statement not covered" >            if (templateName === 'document') {</span>
+<span class="cstat-no" title="statement not covered" >                codegen.documents.forEach(<span class="fstat-no" title="function not covered" >fu</span>nction (document) {</span>
+<span class="cstat-no" title="statement not covered" >                    resultsArr_1.push({</span>
+                        isDev: transformedOptions.isDev,
+                        content: generator_1.generateCode(document, templatePath),
+                        path: path.resolve(transformedOptions.outPath, document.name + '.document.' + filesExtension_1)
+                    });
+                });
+            }
+        });
+<span class="cstat-no" title="statement not covered" >        resultsArr_1 = resultsArr_1.filter(<span class="fstat-no" title="function not covered" >fu</span>nction (item) { <span class="cstat-no" title="statement not covered" >return item.content.length &gt; 0; </span>});</span>
+<span class="cstat-no" title="statement not covered" >        if (templates_1['index']) {</span>
+            var directoryPath_1 = <span class="cstat-no" title="statement not covered" >path.resolve(transformedOptions.outPath);</span>
+            var indexOutPath = <span class="cstat-no" title="statement not covered" >path.resolve(directoryPath_1, 'index.' + filesExtension_1);</span>
+            var templatePath = <span class="cstat-no" title="statement not covered" >path.resolve(transformedOptions.template.config.basePath, templates_1['index']);</span>
+<span class="cstat-no" title="statement not covered" >            resultsArr_1.push({</span>
+                isDev: transformedOptions.isDev,
+                content: generator_1.generateCode({ files: resultsArr_1.map(<span class="fstat-no" title="function not covered" >fu</span>nction (item) {
+<span class="cstat-no" title="statement not covered" >                        return {</span>
+                            fileName: path.basename(item.path, '.' + filesExtension_1),
+                            fullPath: item.path,
+                            extension: filesExtension_1,
+                            directory: directoryPath_1
+                        };
+                    }) }, templatePath),
+                path: indexOutPath
+            });
+        }
+<span class="cstat-no" title="statement not covered" >        return resultsArr_1;</span>
+    }
+    else {
+<span class="cstat-no" title="statement not covered" >        throw "Unknown strategy (" + strategy + ") specified in language template " + transformedOptions.template.language;</span>
+    }
+})
+    .then(<span class="fstat-no" title="function not covered" >fu</span>nction (generationResult) {
+<span class="cstat-no" title="statement not covered" >    generationResult.forEach(<span class="fstat-no" title="function not covered" >fu</span>nction (file) {</span>
+<span class="cstat-no" title="statement not covered" >        if (file.isDev) {</span>
+<span class="cstat-no" title="statement not covered" >            console.log("================== " + file.path + " ==================");</span>
+<span class="cstat-no" title="statement not covered" >            console.log(file.content);</span>
+        }
+        else {
+<span class="cstat-no" title="statement not covered" >            fs.writeFileSync(file.path, file.content);</span>
+<span class="cstat-no" title="statement not covered" >            console.log("Generated file written to " + file.path);</span>
+        }
+    });
+})
+    .catch(cli_1.cliError);
+//# sourceMappingURL=index.js.map</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Dec 13 2016 01:14:30 GMT+0200 (IST)
+</div>
+</div>
+<script src="prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="sorter.js"></script>
+</body>
+</html>

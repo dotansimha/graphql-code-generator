@@ -1,0 +1,539 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for graphql-codegen/coverage/lcov-report/sorter.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../../prettify.css" />
+    <link rel="stylesheet" href="../../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../../index.html">All files</a> / <a href="index.html">graphql-codegen/coverage/lcov-report</a> sorter.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>0/77</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/22</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>0/17</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>0/77</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159</td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">var addSorting = <span class="cstat-no" title="statement not covered" >(<span class="fstat-no" title="function not covered" >fu</span>nction () {</span>
+    "use strict";
+    var cols,
+        currentSort = <span class="cstat-no" title="statement not covered" >{</span>
+            index: 0,
+            desc: false
+        };
+&nbsp;
+    // returns the summary table element
+    function <span class="fstat-no" title="function not covered" >getTable(</span>) { <span class="cstat-no" title="statement not covered" >return document.querySelector('.coverage-summary'); </span>}
+    // returns the thead element of the summary table
+    function <span class="fstat-no" title="function not covered" >getTableHeader(</span>) { <span class="cstat-no" title="statement not covered" >return getTable().querySelector('thead tr'); </span>}
+    // returns the tbody element of the summary table
+    function <span class="fstat-no" title="function not covered" >getTableBody(</span>) { <span class="cstat-no" title="statement not covered" >return getTable().querySelector('tbody'); </span>}
+    // returns the th element for nth column
+    function <span class="fstat-no" title="function not covered" >getNthColumn(</span>n) { <span class="cstat-no" title="statement not covered" >return getTableHeader().querySelectorAll('th')[n]; </span>}
+&nbsp;
+    // loads all columns
+    function <span class="fstat-no" title="function not covered" >loadColumns(</span>) {
+        var colNodes = <span class="cstat-no" title="statement not covered" >getTableHeader().querySelectorAll('th'),</span>
+            colNode,
+            cols = <span class="cstat-no" title="statement not covered" >[],</span>
+            col,
+            i;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        for (i = 0; i &lt; colNodes.length; i += 1) {</span>
+<span class="cstat-no" title="statement not covered" >            colNode = colNodes[i];</span>
+<span class="cstat-no" title="statement not covered" >            col = {</span>
+                key: colNode.getAttribute('data-col'),
+                sortable: !colNode.getAttribute('data-nosort'),
+                type: colNode.getAttribute('data-type') || 'string'
+            };
+<span class="cstat-no" title="statement not covered" >            cols.push(col);</span>
+<span class="cstat-no" title="statement not covered" >            if (col.sortable) {</span>
+<span class="cstat-no" title="statement not covered" >                col.defaultDescSort = col.type === 'number';</span>
+<span class="cstat-no" title="statement not covered" >                colNode.innerHTML = colNode.innerHTML + '&lt;span class="sorter"&gt;&lt;/span&gt;';</span>
+            }
+        }
+<span class="cstat-no" title="statement not covered" >        return cols;</span>
+    }
+    // attaches a data attribute to every tr element with an object
+    // of data values keyed by column name
+    function <span class="fstat-no" title="function not covered" >loadRowData(</span>tableRow) {
+        var tableCols = <span class="cstat-no" title="statement not covered" >tableRow.querySelectorAll('td'),</span>
+            colNode,
+            col,
+            data = <span class="cstat-no" title="statement not covered" >{},</span>
+            i,
+            val;
+<span class="cstat-no" title="statement not covered" >        for (i = 0; i &lt; tableCols.length; i += 1) {</span>
+<span class="cstat-no" title="statement not covered" >            colNode = tableCols[i];</span>
+<span class="cstat-no" title="statement not covered" >            col = cols[i];</span>
+<span class="cstat-no" title="statement not covered" >            val = colNode.getAttribute('data-value');</span>
+<span class="cstat-no" title="statement not covered" >            if (col.type === 'number') {</span>
+<span class="cstat-no" title="statement not covered" >                val = Number(val);</span>
+            }
+<span class="cstat-no" title="statement not covered" >            data[col.key] = val;</span>
+        }
+<span class="cstat-no" title="statement not covered" >        return data;</span>
+    }
+    // loads all row data
+    function <span class="fstat-no" title="function not covered" >loadData(</span>) {
+        var rows = <span class="cstat-no" title="statement not covered" >getTableBody().querySelectorAll('tr'),</span>
+            i;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        for (i = 0; i &lt; rows.length; i += 1) {</span>
+<span class="cstat-no" title="statement not covered" >            rows[i].data = loadRowData(rows[i]);</span>
+        }
+    }
+    // sorts the table using the data for the ith column
+    function <span class="fstat-no" title="function not covered" >sortByIndex(</span>index, desc) {
+        var key = <span class="cstat-no" title="statement not covered" >cols[index].key,</span>
+            sorter = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >fu</span>nction (a, b) {</span>
+<span class="cstat-no" title="statement not covered" >                a = a.data[key];</span>
+<span class="cstat-no" title="statement not covered" >                b = b.data[key];</span>
+<span class="cstat-no" title="statement not covered" >                return a &lt; b ? -1 : a &gt; b ? 1 : 0;</span>
+            },
+            finalSorter = <span class="cstat-no" title="statement not covered" >sorter,</span>
+            tableBody = <span class="cstat-no" title="statement not covered" >document.querySelector('.coverage-summary tbody'),</span>
+            rowNodes = <span class="cstat-no" title="statement not covered" >tableBody.querySelectorAll('tr'),</span>
+            rows = <span class="cstat-no" title="statement not covered" >[],</span>
+            i;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        if (desc) {</span>
+<span class="cstat-no" title="statement not covered" >            finalSorter = <span class="fstat-no" title="function not covered" >fu</span>nction (a, b) {</span>
+<span class="cstat-no" title="statement not covered" >                return -1 * sorter(a, b);</span>
+            };
+        }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        for (i = 0; i &lt; rowNodes.length; i += 1) {</span>
+<span class="cstat-no" title="statement not covered" >            rows.push(rowNodes[i]);</span>
+<span class="cstat-no" title="statement not covered" >            tableBody.removeChild(rowNodes[i]);</span>
+        }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        rows.sort(finalSorter);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        for (i = 0; i &lt; rows.length; i += 1) {</span>
+<span class="cstat-no" title="statement not covered" >            tableBody.appendChild(rows[i]);</span>
+        }
+    }
+    // removes sort indicators for current column being sorted
+    function <span class="fstat-no" title="function not covered" >removeSortIndicators(</span>) {
+        var col = <span class="cstat-no" title="statement not covered" >getNthColumn(currentSort.index),</span>
+            cls = <span class="cstat-no" title="statement not covered" >col.className;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        cls = cls.replace(/ sorted$/, '').replace(/ sorted-desc$/, '');</span>
+<span class="cstat-no" title="statement not covered" >        col.className = cls;</span>
+    }
+    // adds sort indicators for current column being sorted
+    function <span class="fstat-no" title="function not covered" >addSortIndicators(</span>) {
+<span class="cstat-no" title="statement not covered" >        getNthColumn(currentSort.index).className += currentSort.desc ? ' sorted-desc' : ' sorted';</span>
+    }
+    // adds event listeners for all sorter widgets
+    function <span class="fstat-no" title="function not covered" >enableUI(</span>) {
+        var i,
+            el,
+            ithSorter = <span class="cstat-no" title="statement not covered" >function <span class="fstat-no" title="function not covered" >ithSorter(</span>i) {</span>
+                var col = <span class="cstat-no" title="statement not covered" >cols[i];</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                return <span class="fstat-no" title="function not covered" >fu</span>nction () {</span>
+                    var desc = <span class="cstat-no" title="statement not covered" >col.defaultDescSort;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    if (currentSort.index === i) {</span>
+<span class="cstat-no" title="statement not covered" >                        desc = !currentSort.desc;</span>
+                    }
+<span class="cstat-no" title="statement not covered" >                    sortByIndex(i, desc);</span>
+<span class="cstat-no" title="statement not covered" >                    removeSortIndicators();</span>
+<span class="cstat-no" title="statement not covered" >                    currentSort.index = i;</span>
+<span class="cstat-no" title="statement not covered" >                    currentSort.desc = desc;</span>
+<span class="cstat-no" title="statement not covered" >                    addSortIndicators();</span>
+                };
+            };
+<span class="cstat-no" title="statement not covered" >        for (i =0 ; i &lt; cols.length; i += 1) {</span>
+<span class="cstat-no" title="statement not covered" >            if (cols[i].sortable) {</span>
+                // add the click event handler on the th so users
+                // dont have to click on those tiny arrows
+<span class="cstat-no" title="statement not covered" >                el = getNthColumn(i).querySelector('.sorter').parentElement;</span>
+<span class="cstat-no" title="statement not covered" >                if (el.addEventListener) {</span>
+<span class="cstat-no" title="statement not covered" >                    el.addEventListener('click', ithSorter(i));</span>
+                } else {
+<span class="cstat-no" title="statement not covered" >                    el.attachEvent('onclick', ithSorter(i));</span>
+                }
+            }
+        }
+    }
+    // adds sorting functionality to the UI
+<span class="cstat-no" title="statement not covered" >    return <span class="fstat-no" title="function not covered" >fu</span>nction () {</span>
+<span class="cstat-no" title="statement not covered" >        if (!getTable()) {</span>
+<span class="cstat-no" title="statement not covered" >            return;</span>
+        }
+<span class="cstat-no" title="statement not covered" >        cols = loadColumns();</span>
+<span class="cstat-no" title="statement not covered" >        loadData(cols);</span>
+<span class="cstat-no" title="statement not covered" >        addSortIndicators();</span>
+<span class="cstat-no" title="statement not covered" >        enableUI();</span>
+    };
+})();
+&nbsp;
+<span class="cstat-no" title="statement not covered" >window.addEventListener('load', addSorting);</span>
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Dec 13 2016 01:12:40 GMT+0200 (IST)
+</div>
+</div>
+<script src="../../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../../sorter.js"></script>
+</body>
+</html>

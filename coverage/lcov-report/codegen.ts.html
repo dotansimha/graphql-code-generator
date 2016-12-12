@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for codegen.ts</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="prettify.css" />
+    <link rel="stylesheet" href="base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="index.html">All files</a> codegen.ts
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>0/22</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/5</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>0/5</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>0/21</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {GraphQLSchema} from 'graphql';
+import {Codegen,<span class="cstat-no" title="statement not covered" > Model, CodegenDocu</span>ment} from './interfaces';
+import {GraphQLNamedTy<span class="cstat-no" title="statement not covered" >pe, DefinitionNode, Documen</span>tNode, Kind} from 'graphql';
+import {handleType} from '<span class="cstat-no" title="statement not covered" >./model-handler';</span>
+import {handleOperation} <span class="cstat-no" title="statement not covered" >from './operation-handler';</span>
+<span class="cstat-no" title="statement not covered" >import {handleFragment} f<span class="fstat-no" title="function not covered" >ro</span>m './fragment-handler';</span>
+<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" ></span></span>
+export const prep<span class="cstat-no" title="statement not covered" >are</span>Codegen = (schema: GraphQLSchema, document: DocumentNode, primitivesMap: any = {}): Codegen =&gt; {
+  let models: Model[<span class="cstat-no" title="statement not covered" >] =</span> [];
+  let documents: Co<span class="cstat-no" title="statement not covered" >degenDocument[] = []</span>;
+  le<span class="cstat-no" title="statement not covered" >t typesMap: GraphQLNamedType =<span class="fstat-no" title="function not covered" > s</span>chema.getTypeMap();</span>
+<span class="cstat-no" title="statement not covered" ></span>
+  Object.keys(typesMap).forEach(typeName =&gt; {
+<span class="cstat-no" title="statement not covered" >    models.push(handleType(primit<span class="fstat-no" title="function not covered" >iv</span>esMap, typeName, typesMap[typeName]));</span>
+  });<span class="cstat-no" title="statement not covered" ></span>
+&nbsp;
+  document.defin<span class="cstat-no" title="statement not covered" >itions.forEach((definition: DefinitionNode) =&gt; {</span>
+    switch (defi<span class="cstat-no" title="statement not covered" >nition.</span>kind) {
+      case Kind.OPERATION_DEFINITION:
+        document<span class="cstat-no" title="statement not covered" >s.push(handleOperation(schema, definition, primitivesMap));</span>
+        break;<span class="cstat-no" title="statement not covered" ></span>
+&nbsp;
+      case Kind.<span class="cstat-no" title="statement not covered" >FRAGMEN</span>T_DEFINITION:
+        documents.push(handleFragment(schema, definition, primitivesMap));
+        break;
+<span class="cstat-no" title="statement not covered" ></span>
+      default:<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span>
+        break;<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span>
+    }
+  });
+&nbsp;
+  return &lt;Codegen&gt;{
+    models: models.filter(item =&gt; item),
+    documents: documents.filter(item =&gt; item)
+  };
+};
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Dec 13 2016 01:14:38 GMT+0200 (IST)
+</div>
+</div>
+<script src="prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="sorter.js"></script>
+</body>
+</html>
