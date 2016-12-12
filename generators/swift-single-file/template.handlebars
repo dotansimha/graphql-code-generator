@@ -1,3 +1,5 @@
+import Apollo
+
 {{#each models ~}}
 {{#if isObject ~}}
 public struct {{ name }}: GraphQLMapConvertible {
@@ -45,9 +47,9 @@ public enum {{ name }}: String {
   {{/each ~}}
 
   {{#each resultFields}}
-    export interface Result {
+    public struct Result {
     {{#each fields}}
-      {{ name }}: {{#if isArray}}[{{/if}}{{ type }}{{#if isArray}}]{{/if}}
+      public let {{ name }}: {{#if isArray}}[{{/if}}{{ type }}{{#if isArray}}]{{/if}}{{#unless isRequired}}?{{/unless}}
     {{/each}}
     }
 
