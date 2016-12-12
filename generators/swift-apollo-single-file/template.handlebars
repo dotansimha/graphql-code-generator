@@ -1,0 +1,21 @@
+{{#each models ~}}
+{{#if isObject ~}}
+public struct {{ name }}: GraphQLMapConvertible {
+  public var fieldsMap: GraphQLMap
+
+  public init({{#each fields ~}}{{ name }}: {{#if isArray}}[{{/if}}{{ type }}{{#if isArray}}]{{/if}}{{#unless isRequired}}?{{/unless}}{{#unless @last}}, {{/unless}}{{/each ~}}) {
+    fieldsMap = [{{#each fields ~}}"{{ name }}": {{ name }}{{#unless @last}}, {{/unless}}{{/each ~}}]
+  }
+}
+
+{{/if ~}}
+
+{{#if isEnum}}
+public enum {{ name }}: String {
+  {{#each enumValues }}
+    case {{name}} = "{{ value }}"
+  {{/each}}
+}
+
+{{/if ~}}
+{{/each ~}}

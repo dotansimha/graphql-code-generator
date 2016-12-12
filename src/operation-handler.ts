@@ -7,6 +7,7 @@ import {CodegenDocument, Field, Model} from './interfaces';
 import {getTypeName, isArray, isRequired, isPrimitive} from './model-handler';
 import {getFieldDef} from './utils';
 import pascalCase = require('pascal-case');
+import {print} from 'graphql/language/printer';
 
 const typesMap = {
   query: 'Query',
@@ -46,7 +47,6 @@ export const buildInnerModelsArray = (schema: GraphQLSchema,
                                       appendTo?: Model,
                                       result: Model[] = []): Model[] => {
   (selections ? selections.selections : []).forEach((selectionNode: SelectionNode) => {
-    console.log(primitivesMap);
     switch (selectionNode.kind) {
       case FIELD:
         const fieldName = selectionNode.name.value;
@@ -144,7 +144,8 @@ export const handleOperation = (schema: GraphQLSchema, definitionNode: Operation
     innerTypes: [],
     hasVariables: false,
     hasInnerTypes: false,
-    imports: []
+    imports: [],
+    document: print(definitionNode)
   };
 
   document.variables = buildVariables(schema, definitionNode, primitivesMap);

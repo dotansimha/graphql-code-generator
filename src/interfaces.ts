@@ -31,6 +31,7 @@ export interface CodegenDocument {
   isSubscription: boolean;
   isFragment: boolean;
   name: string;
+  document: string;
   rawName: string;
   innerTypes: Model[];
   variables: Field[];

@@ -4,6 +4,7 @@ import {Model, CodegenDocument} from './interfaces';
 import pascalCase = require('pascal-case');
 import {buildInnerModelsArray} from './operation-handler';
 import {typeFromAST} from 'graphql/utilities/typeFromAST';
+import {print} from 'graphql/language/printer';
 
 export const handleFragment = (schema: GraphQLSchema, fragmentNode: FragmentDefinitionNode, primitivesMap: any): CodegenDocument => {
   const rawName = fragmentNode.name.value;
@@ -19,7 +20,8 @@ export const handleFragment = (schema: GraphQLSchema, fragmentNode: FragmentDefi
     innerTypes: [],
     hasInnerTypes: false,
     variables: [],
-    hasVariables: false
+    hasVariables: false,
+    document: print(fragmentNode)
   };
 
   let appendTo: Model = {

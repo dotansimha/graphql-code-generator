@@ -34,5 +34,10 @@ export const generators: GeneratorTemplate[] = [
     language: 'TypeScript Multiple Files',
     aliases: ['ts-multiple', 'typescript-multiple'],
     config: getConfig('../generators/typescript-multiple-files/')
+  },
+  {
+    language: 'Swift (Apollo) Single File',
+    aliases: ['swift-apollo', 'swift', 'swift-apollo-single'],
+    config: getConfig('../generators/swift-apollo-single-file/')
   }
 ];
