@@ -1,0 +1,10 @@
+sudo: required
+language: node_js
+node_js:
+  - "6"
+before_install:
+  - rm -rf node_modules
+install:
+  - npm install
+script:
+  - npm run test
