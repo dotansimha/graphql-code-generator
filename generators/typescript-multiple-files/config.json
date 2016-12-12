@@ -3,6 +3,7 @@
   "filesExtension": "d.ts",
   "templates": {
     "model": "./model.handlebars",
-    "document": "./document.handlebars"
+    "document": "./document.handlebars",
+    "index": "./index.handlebars"
   }
 }

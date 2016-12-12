@@ -72,6 +72,26 @@ transformOptions(options)
         }
       });
 
+      resultsArr = resultsArr.filter(item => item.content.length > 0);
+
+      if (templates['index']) {
+        const directoryPath = path.resolve(transformedOptions.outPath);
+        const indexOutPath = path.resolve(directoryPath, 'index.' + filesExtension);
+        const templatePath = path.resolve(transformedOptions.template.config.basePath, templates['index']);
+
+        resultsArr.push({
+          content: generateCode({files: resultsArr.map(item => {
+            return {
+              fileName: path.basename(item.path, '.' + filesExtension),
+              fullPath: item.path,
+              extension: filesExtension,
+              directory: directoryPath
+            };
+          })}, templatePath),
+          path: indexOutPath
+        });
+      }
+
       return resultsArr;
     }
     else {
@@ -79,7 +99,7 @@ transformOptions(options)
     }
   })
   .then((generationResult: FileResult[]) => {
-    generationResult.filter(item => item.content.length > 0).forEach((file: FileResult) => {
+    generationResult.forEach((file: FileResult) => {
       fs.writeFileSync(file.path, file.content);
       console.log(`Generated file written to ${file.path}`);
     });
