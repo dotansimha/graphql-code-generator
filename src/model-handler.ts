@@ -10,37 +10,7 @@ import {GraphQLUnionType} from 'graphql/type/definition';
 import {GraphQLList} from 'graphql/type/definition';
 import {GraphQLNonNull} from 'graphql/type/definition';
 import {getNamedType} from 'graphql/type/definition';
-
-export const isPrimitive = (primitivesMap: any, type: string) => {
-  return Object.keys(primitivesMap).map(key => primitivesMap[key]).find(item => item === type);
-};
-
-const shouldSkip = (typeName: string): boolean => {
-  return !typeName ||
-    typeName.indexOf('__') > -1 ||
-    typeName === 'Query' ||
-    typeName === 'Mutation' ||
-    typeName === 'Subscription';
-};
-
-export const isRequired = (type: GraphQLType): boolean => {
-  return (type.toString()).indexOf('!') > -1;
-};
-
-export const isArray = (type: GraphQLType): boolean => {
-  return (type.toString()).indexOf('[') > -1;
-};
-
-export const getTypeName = (primitivesMap: any, type: GraphQLType) => {
-  const name = (type.toString()).replace(/[\[\]!]/g, '');
-
-  if (primitivesMap[name]) {
-    return primitivesMap[name];
-  }
-  else {
-    return name;
-  }
-};
+import {shouldSkip, getTypeName, isPrimitive, isArray, isRequired} from './utils';
 
 export const handleType = (primitivesMap: any, typeName: string, type: GraphQLType) => {
   let currentType: Model = {

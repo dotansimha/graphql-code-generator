@@ -4,8 +4,7 @@ import {SelectionSetNode, SelectionNode, OperationDefinitionNode, VariableDefini
 import {getNamedType, GraphQLType, GraphQLObjectType} from 'graphql/type/definition';
 import {FIELD, FRAGMENT_SPREAD, INLINE_FRAGMENT} from 'graphql/language/kinds';
 import {CodegenDocument, Field, Model} from './interfaces';
-import {getTypeName, isArray, isRequired, isPrimitive} from './model-handler';
-import {getFieldDef} from './utils';
+import {getFieldDef, getTypeName, isArray, isRequired, isPrimitive} from './utils';
 import pascalCase = require('pascal-case');
 import {print} from 'graphql/language/printer';
 
@@ -51,7 +50,7 @@ export const buildInnerModelsArray = (schema: GraphQLSchema,
       case FIELD:
         const fieldName = selectionNode.name.value;
         const propertyName = selectionNode.alias ? selectionNode.alias.value : fieldName;
-        const field = getFieldDef(schema, rootObject, selectionNode);
+        const field = getFieldDef(rootObject, selectionNode);
         const rawType = field.type;
         const actualType = getNamedType(rawType);
 
@@ -135,7 +134,7 @@ export const buildInnerModelsArray = (schema: GraphQLSchema,
   return result;
 };
 
-const getRoot = (schema: GraphQLSchema, operation: OperationDefinitionNode): GraphQLObjectType => {
+export const getRoot = (schema: GraphQLSchema, operation: OperationDefinitionNode): GraphQLObjectType => {
   switch (operation.operation) {
     case 'query':
       return schema.getQueryType();
