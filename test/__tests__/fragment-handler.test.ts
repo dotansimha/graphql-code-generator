@@ -111,4 +111,34 @@ describe('handleFragment', () => {
     expect(fragmentModel.isFragment).toBeTruthy();
     expect(fragmentModel.fragmentsUsed).toEqual([]);
   });
+
+  test('should detect the correct inner fragments that in use', () => {
+    const fragmentString = stripIndent`
+        fragment feedEntry on Entry {
+          id
+          commentCount
+          repository {
+            full_name
+            html_url
+            owner {
+              avatar_url
+            }
+          }
+          ...VoteButtons
+          ...RepoInfo
+        }`;
+
+    fs['__setMockFiles']({
+      'multiple-fragments.graphql': fragmentString
+    });
+
+    document = <FragmentDefinitionNode>(loadDocumentsSources([
+      'multiple-fragments.graphql'
+    ]).definitions[0]);
+
+    const codegen = handleFragment(testSchema, document, primitivesMap);
+    const fragmentModel = codegen.innerTypes.find(item => item.name === 'Fragment');
+
+    expect(fragmentModel.fragmentsUsed).toEqual(['VoteButtons', 'RepoInfo']);
+  });
 });
