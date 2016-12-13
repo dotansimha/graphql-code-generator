@@ -11,10 +11,19 @@
     "sourceMap": true,
     "declaration": true,
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "types": [
+      "@types/graphql",
+      "@types/node",
+      "@types/commander",
+      "@types/glob",
+      "@types/minimatch",
+      "@types/request",
+      "@types/form-data",
+      "@types/mkdirp"
+    ]
   },
   "files": [
-    "typings.d.ts",
     "src/index.ts"
   ],
   "exclude": [
