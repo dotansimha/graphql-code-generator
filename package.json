@@ -60,7 +60,7 @@
     "collectCoverageFrom": ["**/src/**/*.ts"],
     "moduleFileExtensions": ["ts", "tsx", "js"],
     "transform": {
-      "^.+\\.(ts|tsx)$": "<rootDir>/jest.ts-compiler.js"
+      "^.+\\.(ts|tsx)$": "<rootDir>/test/jest.typescript.js"
     },
     "testRegex": "/__tests__/.*\\.(ts|tsx|js)$",
     "testEnvironment": "node"
