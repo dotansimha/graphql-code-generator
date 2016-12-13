@@ -61,6 +61,10 @@
       "**/src/**/*.ts"
     ],
     "coverageDirectory": "./test/coverage",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      ".*?handlebars-helpers.*?"
+    ],
     "moduleFileExtensions": [
       "ts",
       "tsx",

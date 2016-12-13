@@ -1,4 +1,5 @@
 jest.mock('fs');
+jest.unmock('handlebars');
 import * as fs from 'fs';
 import {loadFromPath, generateCode} from "../../src/generator";
 

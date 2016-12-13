@@ -20,9 +20,9 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">0% </span>
+        <span class="strong">19.35% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>0/31</span>
+        <span class='fraction'>6/31</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
@@ -30,14 +30,14 @@
         <span class='fraction'>0/35</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">0% </span>
+        <span class="strong">20% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>0/5</span>
+        <span class='fraction'>1/5</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">0% </span>
+        <span class="strong">19.35% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>0/31</span>
+        <span class='fraction'>6/31</span>
       </div>
     </div>
   </div>
@@ -111,27 +111,27 @@
 66
 67
 68</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -141,7 +141,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -178,23 +178,23 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import * as Handlebars from 'handlebars';
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >export const initHelpe<span class="fstat-no" title="function not covered" >rs</span> = () =&gt; {</span>
-  Ha<span class="cstat-no" title="statement not covered" >ndlebars.registerHelper('times', fu<span class="fstat-no" title="function not covered" >nc</span>tion (n, block) {</span>
+&nbsp;
+export const initHelpers = () =&gt; {
+  Handlebars.registerHelper('times', fu<span class="fstat-no" title="function not covered" >nc</span>tion (n, block) {
     let accum = '';<span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" ></span>
     for (let<span class="cstat-no" title="statement not covered" > i = 0; i &lt; n; ++i) {</span>
       accum += block.fn(i);
     }<span class="cstat-no" title="statement not covered" ></span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    return accum;<span class="fstat-no" title="function not covered" ></span></span>
+    return accum;<span class="fstat-no" title="function not covered" ></span>
   });<span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" ></span>
   Handlebars<span class="cstat-no" title="statement not covered" >.registerHelper('for',</span> function (from, to, incr, block) {
     let accum = '';
 <span class="cstat-no" title="statement not covered" ></span>
     for (let i = from; i &lt; to; i += incr) {
-<span class="cstat-no" title="statement not covered" >      accum += block.fn(i);<span class="fstat-no" title="function not covered" ></span></span>
+      accum += block.fn(i);<span class="fstat-no" title="function not covered" ></span>
     }<span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" ></span>
     retu<span class="cstat-no" title="statement not covered" >rn accum;</span>
@@ -208,7 +208,7 @@
       ret = ret + block.fn(context[i], {
 <span class="cstat-no" title="statement not covered" >          data: {</span>
             last: i === count - 1,
-<span class="cstat-no" title="statement not covered" >            first: i === 0,<span class="fstat-no" title="function not covered" ></span></span>
+            first: i === 0,<span class="fstat-no" title="function not covered" ></span>
 <span class="cstat-no" title="statement not covered" >            index: 1</span>
           }
         });<span class="cstat-no" title="statement not covered" ></span>
@@ -250,7 +250,7 @@
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Dec 13 2016 16:03:38 GMT+0200 (IST)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Dec 13 2016 16:14:35 GMT+0200 (IST)
 </div>
 </div>
 <script src="prettify.js"></script>
