@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1481639861506" clover="3.2.0">
-  <project timestamp="1481639861507" name="All files">
-    <metrics statements="338" coveredstatements="96" conditionals="126" coveredconditionals="30" methods="64" coveredmethods="21" elements="528" coveredelements="147" complexity="0" loc="338" ncloc="338" packages="1" files="13" classes="13">
+<coverage generated="1481640973173" clover="3.2.0">
+  <project timestamp="1481640973173" name="All files">
+    <metrics statements="338" coveredstatements="128" conditionals="126" coveredconditionals="35" methods="64" coveredmethods="25" elements="528" coveredelements="188" complexity="0" loc="338" ncloc="338" packages="1" files="13" classes="13">
       <file name="cli.ts" path="/Users/dotansimha/Dev/graphql-codegen/src/cli.ts">
         <metrics statements="85" coveredstatements="0" conditionals="41" coveredconditionals="0" methods="19" coveredmethods="0"/>
         <line num="2" count="0" type="stmt"/>
@@ -116,14 +116,14 @@
       </file>
       <file name="document-loader.ts" path="/Users/dotansimha/Dev/graphql-codegen/src/document-loader.ts">
         <metrics statements="8" coveredstatements="8" conditionals="2" coveredconditionals="2" methods="2" coveredmethods="2"/>
-        <line num="2" count="3" type="stmt"/>
-        <line num="3" count="3" type="stmt"/>
-        <line num="4" count="3" type="stmt"/>
-        <line num="5" count="16" type="stmt"/>
-        <line num="6" count="14" type="stmt"/>
+        <line num="2" count="4" type="stmt"/>
+        <line num="3" count="4" type="stmt"/>
+        <line num="4" count="4" type="stmt"/>
+        <line num="5" count="19" type="stmt"/>
+        <line num="6" count="17" type="stmt"/>
         <line num="9" count="2" type="stmt"/>
-        <line num="12" count="3" type="stmt"/>
-        <line num="13" count="8" type="stmt"/>
+        <line num="12" count="4" type="stmt"/>
+        <line num="13" count="9" type="stmt"/>
       </file>
       <file name="fragment-handler.ts" path="/Users/dotansimha/Dev/graphql-codegen/src/fragment-handler.ts">
         <metrics statements="13" coveredstatements="13" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
@@ -211,46 +211,46 @@
         <line num="96" count="0" type="stmt"/>
       </file>
       <file name="inner-models-builer.ts" path="/Users/dotansimha/Dev/graphql-codegen/src/inner-models-builer.ts">
-        <metrics statements="39" coveredstatements="28" conditionals="14" coveredconditionals="9" methods="2" coveredmethods="2"/>
-        <line num="2" count="1" type="stmt"/>
-        <line num="3" count="1" type="stmt"/>
-        <line num="4" count="1" type="stmt"/>
-        <line num="5" count="1" type="stmt"/>
-        <line num="6" count="1" type="stmt"/>
-        <line num="7" count="1" type="stmt"/>
-        <line num="8" count="36" type="stmt"/>
-        <line num="9" count="36" type="stmt"/>
-        <line num="10" count="86" type="stmt"/>
-        <line num="12" count="84" type="stmt"/>
-        <line num="13" count="84" type="stmt"/>
-        <line num="14" count="84" type="stmt"/>
-        <line num="15" count="84" type="stmt"/>
-        <line num="16" count="84" type="stmt"/>
-        <line num="17" count="84" type="stmt"/>
-        <line num="18" count="24" type="stmt"/>
-        <line num="19" count="24" type="stmt"/>
-        <line num="25" count="24" type="stmt"/>
-        <line num="26" count="24" type="stmt"/>
-        <line num="27" count="24" type="stmt"/>
-        <line num="29" count="0" type="stmt"/>
-        <line num="35" count="0" type="stmt"/>
-        <line num="37" count="24" type="stmt"/>
-        <line num="45" count="60" type="stmt"/>
-        <line num="52" count="84" type="stmt"/>
-        <line num="54" count="2" type="stmt"/>
-        <line num="55" count="2" type="stmt"/>
-        <line num="56" count="2" type="stmt"/>
-        <line num="57" count="2" type="stmt"/>
-        <line num="59" count="0" type="stmt"/>
-        <line num="60" count="0" type="stmt"/>
-        <line num="61" count="0" type="stmt"/>
-        <line num="67" count="0" type="stmt"/>
-        <line num="71" count="0" type="stmt"/>
-        <line num="72" count="0" type="stmt"/>
-        <line num="73" count="0" type="stmt"/>
-        <line num="74" count="0" type="stmt"/>
+        <metrics statements="39" coveredstatements="38" conditionals="14" coveredconditionals="11" methods="2" coveredmethods="2"/>
+        <line num="2" count="2" type="stmt"/>
+        <line num="3" count="2" type="stmt"/>
+        <line num="4" count="2" type="stmt"/>
+        <line num="5" count="2" type="stmt"/>
+        <line num="6" count="2" type="stmt"/>
+        <line num="7" count="2" type="stmt"/>
+        <line num="8" count="67" type="stmt"/>
+        <line num="9" count="67" type="stmt"/>
+        <line num="10" count="161" type="stmt"/>
+        <line num="12" count="151" type="stmt"/>
+        <line num="13" count="151" type="stmt"/>
+        <line num="14" count="151" type="stmt"/>
+        <line num="15" count="151" type="stmt"/>
+        <line num="16" count="151" type="stmt"/>
+        <line num="17" count="151" type="stmt"/>
+        <line num="18" count="45" type="stmt"/>
+        <line num="19" count="45" type="stmt"/>
+        <line num="25" count="45" type="stmt"/>
+        <line num="26" count="45" type="stmt"/>
+        <line num="27" count="45" type="stmt"/>
+        <line num="29" count="7" type="stmt"/>
+        <line num="35" count="7" type="stmt"/>
+        <line num="37" count="45" type="stmt"/>
+        <line num="45" count="106" type="stmt"/>
+        <line num="52" count="151" type="stmt"/>
+        <line num="54" count="7" type="stmt"/>
+        <line num="55" count="7" type="stmt"/>
+        <line num="56" count="7" type="stmt"/>
+        <line num="57" count="7" type="stmt"/>
+        <line num="59" count="3" type="stmt"/>
+        <line num="60" count="3" type="stmt"/>
+        <line num="61" count="3" type="stmt"/>
+        <line num="67" count="3" type="stmt"/>
+        <line num="71" count="3" type="stmt"/>
+        <line num="72" count="3" type="stmt"/>
+        <line num="73" count="3" type="stmt"/>
+        <line num="74" count="3" type="stmt"/>
         <line num="76" count="0" type="stmt"/>
-        <line num="79" count="36" type="stmt"/>
+        <line num="79" count="67" type="stmt"/>
       </file>
       <file name="interfaces.ts" path="/Users/dotansimha/Dev/graphql-codegen/src/interfaces.ts">
         <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
@@ -298,40 +298,40 @@
         <line num="68" count="0" type="stmt"/>
       </file>
       <file name="operation-handler.ts" path="/Users/dotansimha/Dev/graphql-codegen/src/operation-handler.ts">
-        <metrics statements="23" coveredstatements="0" conditionals="4" coveredconditionals="0" methods="4" coveredmethods="0"/>
-        <line num="2" count="0" type="stmt"/>
-        <line num="3" count="0" type="stmt"/>
-        <line num="4" count="0" type="stmt"/>
-        <line num="5" count="0" type="stmt"/>
-        <line num="6" count="0" type="stmt"/>
-        <line num="11" count="0" type="stmt"/>
-        <line num="12" count="0" type="stmt"/>
-        <line num="13" count="0" type="stmt"/>
-        <line num="14" count="0" type="stmt"/>
-        <line num="22" count="0" type="stmt"/>
-        <line num="23" count="0" type="stmt"/>
-        <line num="24" count="0" type="stmt"/>
-        <line num="25" count="0" type="stmt"/>
-        <line num="26" count="0" type="stmt"/>
-        <line num="27" count="0" type="stmt"/>
-        <line num="41" count="0" type="stmt"/>
-        <line num="42" count="0" type="stmt"/>
-        <line num="43" count="0" type="stmt"/>
-        <line num="44" count="0" type="stmt"/>
-        <line num="45" count="0" type="stmt"/>
-        <line num="46" count="0" type="stmt"/>
+        <metrics statements="23" coveredstatements="22" conditionals="4" coveredconditionals="3" methods="4" coveredmethods="4"/>
+        <line num="2" count="1" type="stmt"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="5" count="1" type="stmt"/>
+        <line num="6" count="1" type="stmt"/>
+        <line num="11" count="1" type="stmt"/>
+        <line num="12" count="7" type="stmt"/>
+        <line num="13" count="15" type="stmt"/>
+        <line num="14" count="15" type="stmt"/>
+        <line num="22" count="1" type="stmt"/>
+        <line num="23" count="7" type="stmt"/>
+        <line num="24" count="7" type="stmt"/>
+        <line num="25" count="7" type="stmt"/>
+        <line num="26" count="7" type="stmt"/>
+        <line num="27" count="7" type="stmt"/>
+        <line num="41" count="7" type="stmt"/>
+        <line num="42" count="7" type="stmt"/>
+        <line num="43" count="7" type="stmt"/>
+        <line num="44" count="7" type="stmt"/>
+        <line num="45" count="7" type="stmt"/>
+        <line num="46" count="15" type="stmt"/>
         <line num="47" count="0" type="stmt"/>
-        <line num="50" count="0" type="stmt"/>
+        <line num="50" count="7" type="stmt"/>
       </file>
       <file name="scheme-loader.ts" path="/Users/dotansimha/Dev/graphql-codegen/src/scheme-loader.ts">
         <metrics statements="7" coveredstatements="7" conditionals="2" coveredconditionals="2" methods="2" coveredmethods="2"/>
-        <line num="2" count="3" type="stmt"/>
-        <line num="3" count="3" type="stmt"/>
-        <line num="4" count="6" type="stmt"/>
+        <line num="2" count="4" type="stmt"/>
+        <line num="3" count="4" type="stmt"/>
+        <line num="4" count="7" type="stmt"/>
         <line num="5" count="1" type="stmt"/>
-        <line num="8" count="3" type="stmt"/>
-        <line num="9" count="4" type="stmt"/>
-        <line num="10" count="4" type="stmt"/>
+        <line num="8" count="4" type="stmt"/>
+        <line num="9" count="5" type="stmt"/>
+        <line num="10" count="5" type="stmt"/>
       </file>
       <file name="templates.ts" path="/Users/dotansimha/Dev/graphql-codegen/src/templates.ts">
         <metrics statements="8" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
@@ -346,38 +346,38 @@
       </file>
       <file name="utils.ts" path="/Users/dotansimha/Dev/graphql-codegen/src/utils.ts">
         <metrics statements="32" coveredstatements="32" conditionals="17" coveredconditionals="15" methods="12" coveredmethods="12"/>
-        <line num="2" count="2" type="stmt"/>
-        <line num="3" count="2" type="stmt"/>
-        <line num="4" count="2" type="stmt"/>
-        <line num="5" count="2" type="stmt"/>
-        <line num="6" count="2" type="stmt"/>
-        <line num="8" count="2" type="stmt"/>
+        <line num="2" count="3" type="stmt"/>
+        <line num="3" count="3" type="stmt"/>
+        <line num="4" count="3" type="stmt"/>
+        <line num="5" count="3" type="stmt"/>
+        <line num="6" count="77" type="stmt"/>
+        <line num="8" count="3" type="stmt"/>
         <line num="9" count="8" type="stmt"/>
-        <line num="15" count="2" type="stmt"/>
-        <line num="16" count="86" type="stmt"/>
-        <line num="18" count="2" type="stmt"/>
-        <line num="19" count="86" type="stmt"/>
-        <line num="21" count="2" type="stmt"/>
-        <line num="22" count="67" type="stmt"/>
-        <line num="23" count="67" type="stmt"/>
-        <line num="24" count="63" type="stmt"/>
+        <line num="15" count="3" type="stmt"/>
+        <line num="16" count="168" type="stmt"/>
+        <line num="18" count="3" type="stmt"/>
+        <line num="19" count="168" type="stmt"/>
+        <line num="21" count="3" type="stmt"/>
+        <line num="22" count="128" type="stmt"/>
+        <line num="23" count="128" type="stmt"/>
+        <line num="24" count="124" type="stmt"/>
         <line num="27" count="4" type="stmt"/>
-        <line num="31" count="85" type="stmt"/>
-        <line num="32" count="85" type="stmt"/>
-        <line num="34" count="85" type="stmt"/>
-        <line num="37" count="2" type="stmt"/>
-        <line num="38" count="2" type="stmt"/>
-        <line num="39" count="30" type="stmt"/>
+        <line num="31" count="152" type="stmt"/>
+        <line num="32" count="152" type="stmt"/>
+        <line num="34" count="152" type="stmt"/>
+        <line num="37" count="3" type="stmt"/>
+        <line num="38" count="3" type="stmt"/>
+        <line num="39" count="63" type="stmt"/>
         <line num="40" count="3" type="stmt"/>
-        <line num="42" count="27" type="stmt"/>
-        <line num="44" count="2" type="stmt"/>
-        <line num="45" count="5" type="stmt"/>
-        <line num="47" count="2" type="stmt"/>
-        <line num="49" count="1" type="stmt"/>
-        <line num="51" count="1" type="stmt"/>
+        <line num="42" count="48" type="stmt"/>
+        <line num="44" count="3" type="stmt"/>
+        <line num="45" count="12" type="stmt"/>
+        <line num="47" count="5" type="stmt"/>
+        <line num="49" count="3" type="stmt"/>
+        <line num="51" count="3" type="stmt"/>
         <line num="53" count="1" type="stmt"/>
-        <line num="56" count="2" type="stmt"/>
-        <line num="57" count="5" type="stmt"/>
+        <line num="56" count="3" type="stmt"/>
+        <line num="57" count="12" type="stmt"/>
       </file>
     </metrics>
   </project>
