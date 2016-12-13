@@ -60,7 +60,7 @@ Allowed flags:
 | -u,--url        | String   | GraphQL server endpoint to fetch the introspection from, must provide URL or file flag |
 | -t,--template   | String   | Template name, for example: "typescript"                                               |
 | -o,--out        | String   | Path for output file/directory. When using single-file generator specify filename, and when using multiple-files generator specify a directory                                     |
-| -d,--deb        | void     | Turns ON development mode - prints output to console instead of files                  |
+| -d,--dev        | void     | Turns ON development mode - prints output to console instead of files                  |
 | documents...    | [String] | Space separated paths of `.graphql` files, allows glob path                            |
 
 Usage examples:
