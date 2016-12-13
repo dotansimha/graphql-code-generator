@@ -2,6 +2,7 @@ import {GraphQLInterfaceType} from 'graphql/type/definition';
 import {GraphQLObjectType} from 'graphql/type/definition';
 import {GraphQLField} from 'graphql/type/definition';
 import {GraphQLType} from 'graphql/type/definition';
+import {Model} from "./interfaces";
 
 export const isPrimitive = (primitivesMap: any, type: string) => {
   return Object.keys(primitivesMap).map(key => primitivesMap[key]).find(item => item === type);
@@ -42,3 +43,11 @@ export function getFieldDef(parentType, fieldAST): GraphQLField<any, any> {
     return parentType.getFields()[name];
   }
 }
+
+export const handleNameDuplications = (name: string, existing: Model[]): string => {
+  if (existing.find(model => model.name === name)) {
+    return handleNameDuplications('_' + name, existing);
+  }
+
+  return name;
+};

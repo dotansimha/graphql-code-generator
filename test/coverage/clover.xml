@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1481638491709" clover="3.2.0">
-  <project timestamp="1481638491710" name="All files">
-    <metrics statements="334" coveredstatements="94" conditionals="126" coveredconditionals="26" methods="64" coveredmethods="20" elements="524" coveredelements="140" complexity="0" loc="334" ncloc="334" packages="1" files="12" classes="12">
+<coverage generated="1481638840479" clover="3.2.0">
+  <project timestamp="1481638840480" name="All files">
+    <metrics statements="334" coveredstatements="95" conditionals="126" coveredconditionals="27" methods="64" coveredmethods="20" elements="524" coveredelements="142" complexity="0" loc="334" ncloc="334" packages="1" files="12" classes="12">
       <file name="cli.ts" path="/Users/dotansimha/Dev/graphql-codegen/src/cli.ts">
         <metrics statements="85" coveredstatements="0" conditionals="41" coveredconditionals="0" methods="19" coveredmethods="0"/>
         <line num="2" count="0" type="stmt"/>
@@ -256,7 +256,7 @@
         <line num="68" count="0" type="stmt"/>
       </file>
       <file name="operation-handler.ts" path="/Users/dotansimha/Dev/graphql-codegen/src/operation-handler.ts">
-        <metrics statements="71" coveredstatements="39" conditionals="24" coveredconditionals="11" methods="10" coveredmethods="5"/>
+        <metrics statements="67" coveredstatements="36" conditionals="22" coveredconditionals="10" methods="8" coveredmethods="3"/>
         <line num="2" count="2" type="stmt"/>
         <line num="3" count="2" type="stmt"/>
         <line num="4" count="2" type="stmt"/>
@@ -271,63 +271,59 @@
         <line num="18" count="0" type="stmt"/>
         <line num="19" count="0" type="stmt"/>
         <line num="27" count="2" type="stmt"/>
-        <line num="28" count="24" type="stmt"/>
-        <line num="29" count="0" type="stmt"/>
-        <line num="31" count="24" type="stmt"/>
-        <line num="33" count="2" type="stmt"/>
-        <line num="34" count="36" type="stmt"/>
-        <line num="35" count="36" type="stmt"/>
-        <line num="36" count="86" type="stmt"/>
-        <line num="38" count="84" type="stmt"/>
-        <line num="39" count="84" type="stmt"/>
-        <line num="40" count="84" type="stmt"/>
-        <line num="41" count="84" type="stmt"/>
-        <line num="42" count="84" type="stmt"/>
-        <line num="43" count="84" type="stmt"/>
-        <line num="44" count="24" type="stmt"/>
+        <line num="28" count="36" type="stmt"/>
+        <line num="29" count="36" type="stmt"/>
+        <line num="30" count="86" type="stmt"/>
+        <line num="32" count="84" type="stmt"/>
+        <line num="33" count="84" type="stmt"/>
+        <line num="34" count="84" type="stmt"/>
+        <line num="35" count="84" type="stmt"/>
+        <line num="36" count="84" type="stmt"/>
+        <line num="37" count="84" type="stmt"/>
+        <line num="38" count="24" type="stmt"/>
+        <line num="39" count="24" type="stmt"/>
         <line num="45" count="24" type="stmt"/>
-        <line num="51" count="24" type="stmt"/>
-        <line num="52" count="24" type="stmt"/>
-        <line num="53" count="24" type="stmt"/>
+        <line num="46" count="24" type="stmt"/>
+        <line num="47" count="24" type="stmt"/>
+        <line num="49" count="0" type="stmt"/>
         <line num="55" count="0" type="stmt"/>
-        <line num="61" count="0" type="stmt"/>
-        <line num="63" count="24" type="stmt"/>
-        <line num="71" count="60" type="stmt"/>
-        <line num="78" count="84" type="stmt"/>
-        <line num="80" count="2" type="stmt"/>
-        <line num="81" count="2" type="stmt"/>
-        <line num="82" count="2" type="stmt"/>
-        <line num="83" count="2" type="stmt"/>
-        <line num="85" count="0" type="stmt"/>
-        <line num="86" count="0" type="stmt"/>
+        <line num="57" count="24" type="stmt"/>
+        <line num="65" count="60" type="stmt"/>
+        <line num="72" count="84" type="stmt"/>
+        <line num="74" count="2" type="stmt"/>
+        <line num="75" count="2" type="stmt"/>
+        <line num="76" count="2" type="stmt"/>
+        <line num="77" count="2" type="stmt"/>
+        <line num="79" count="0" type="stmt"/>
+        <line num="80" count="0" type="stmt"/>
+        <line num="81" count="0" type="stmt"/>
         <line num="87" count="0" type="stmt"/>
+        <line num="91" count="0" type="stmt"/>
+        <line num="92" count="0" type="stmt"/>
         <line num="93" count="0" type="stmt"/>
-        <line num="97" count="0" type="stmt"/>
-        <line num="98" count="0" type="stmt"/>
-        <line num="99" count="0" type="stmt"/>
-        <line num="100" count="0" type="stmt"/>
-        <line num="102" count="0" type="stmt"/>
-        <line num="105" count="36" type="stmt"/>
-        <line num="107" count="2" type="stmt"/>
-        <line num="108" count="1" type="stmt"/>
-        <line num="110" count="1" type="stmt"/>
-        <line num="112" count="0" type="stmt"/>
+        <line num="94" count="0" type="stmt"/>
+        <line num="96" count="0" type="stmt"/>
+        <line num="99" count="36" type="stmt"/>
+        <line num="101" count="2" type="stmt"/>
+        <line num="102" count="1" type="stmt"/>
+        <line num="104" count="1" type="stmt"/>
+        <line num="106" count="0" type="stmt"/>
+        <line num="108" count="0" type="stmt"/>
+        <line num="110" count="0" type="stmt"/>
+        <line num="113" count="2" type="stmt"/>
         <line num="114" count="0" type="stmt"/>
+        <line num="115" count="0" type="stmt"/>
         <line num="116" count="0" type="stmt"/>
-        <line num="119" count="2" type="stmt"/>
-        <line num="120" count="0" type="stmt"/>
-        <line num="121" count="0" type="stmt"/>
-        <line num="122" count="0" type="stmt"/>
-        <line num="123" count="0" type="stmt"/>
-        <line num="124" count="0" type="stmt"/>
+        <line num="117" count="0" type="stmt"/>
+        <line num="118" count="0" type="stmt"/>
+        <line num="132" count="0" type="stmt"/>
+        <line num="133" count="0" type="stmt"/>
+        <line num="134" count="0" type="stmt"/>
+        <line num="135" count="0" type="stmt"/>
+        <line num="136" count="0" type="stmt"/>
+        <line num="137" count="0" type="stmt"/>
         <line num="138" count="0" type="stmt"/>
-        <line num="139" count="0" type="stmt"/>
-        <line num="140" count="0" type="stmt"/>
         <line num="141" count="0" type="stmt"/>
-        <line num="142" count="0" type="stmt"/>
-        <line num="143" count="0" type="stmt"/>
-        <line num="144" count="0" type="stmt"/>
-        <line num="147" count="0" type="stmt"/>
       </file>
       <file name="scheme-loader.ts" path="/Users/dotansimha/Dev/graphql-codegen/src/scheme-loader.ts">
         <metrics statements="7" coveredstatements="7" conditionals="2" coveredconditionals="2" methods="2" coveredmethods="2"/>
@@ -351,7 +347,7 @@
         <line num="10" count="0" type="stmt"/>
       </file>
       <file name="utils.ts" path="/Users/dotansimha/Dev/graphql-codegen/src/utils.ts">
-        <metrics statements="19" coveredstatements="19" conditionals="11" coveredconditionals="9" methods="8" coveredmethods="8"/>
+        <metrics statements="23" coveredstatements="23" conditionals="13" coveredconditionals="11" methods="10" coveredmethods="10"/>
         <line num="2" count="2" type="stmt"/>
         <line num="3" count="2" type="stmt"/>
         <line num="4" count="2" type="stmt"/>
@@ -371,6 +367,10 @@
         <line num="31" count="85" type="stmt"/>
         <line num="33" count="85" type="stmt"/>
         <line num="36" count="2" type="stmt"/>
+        <line num="37" count="2" type="stmt"/>
+        <line num="38" count="30" type="stmt"/>
+        <line num="39" count="3" type="stmt"/>
+        <line num="41" count="27" type="stmt"/>
       </file>
     </metrics>
   </project>

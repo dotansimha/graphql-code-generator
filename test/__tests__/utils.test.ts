@@ -1,7 +1,10 @@
 jest.mock('fs');
 import * as fs from 'fs';
 
-import {isRequired, isArray, shouldSkip, getTypeName, getFieldDef, isPrimitive} from "../../src/utils";
+import {
+  isRequired, isArray, shouldSkip, getTypeName, getFieldDef, isPrimitive,
+  handleNameDuplications
+} from "../../src/utils";
 import {GraphQLInputObjectType} from "graphql/type/definition";
 import {GraphQLNonNull} from "graphql/type/definition";
 import {GraphQLFloat} from "graphql/type/scalars";
@@ -184,4 +187,18 @@ describe('model-handler', () => {
       expect(isArray(field.type)).toBeFalsy();
     });
   });
+
+  describe('handleNameDuplications', () => {
+    test('should return the same name when there are no dupes', () => {
+      expect(handleNameDuplications('Name', [])).toBe('Name');
+    });
+
+    test('should return the correct name when name exists', () => {
+      expect(handleNameDuplications('Name', [{name: 'Name'}])).toBe('_Name');
+    });
+
+    test('should return the correct name when name exists multiple times', () => {
+      expect(handleNameDuplications('Name', [{name: '_Name'}, {name: 'Name'}])).toBe('__Name');
+    });
+  })
 });

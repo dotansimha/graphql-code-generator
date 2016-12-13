@@ -4,7 +4,7 @@ import {SelectionSetNode, SelectionNode, OperationDefinitionNode, VariableDefini
 import {getNamedType, GraphQLType, GraphQLObjectType} from 'graphql/type/definition';
 import {FIELD, FRAGMENT_SPREAD, INLINE_FRAGMENT} from 'graphql/language/kinds';
 import {CodegenDocument, Field, Model} from './interfaces';
-import {getFieldDef, getTypeName, isArray, isRequired, isPrimitive} from './utils';
+import {getFieldDef, getTypeName, isArray, isRequired, isPrimitive, handleNameDuplications} from './utils';
 import pascalCase = require('pascal-case');
 import {print} from 'graphql/language/printer';
 
@@ -29,14 +29,6 @@ const buildVariables = (schema: GraphQLSchema, definitionNode: OperationDefiniti
       isRequired: isRequired(typeFromSchema)
     };
   });
-};
-
-const handleNameDuplications = (name: string, existing: Model[]): string => {
-  if (existing.find(model => model.name === name)) {
-    return '_' + name;
-  }
-
-  return name;
 };
 
 export const buildInnerModelsArray = (schema: GraphQLSchema,

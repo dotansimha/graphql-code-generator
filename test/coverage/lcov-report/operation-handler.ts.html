@@ -20,24 +20,24 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">56.16% </span>
+        <span class="strong">54.41% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>41/73</span>
+        <span class='fraction'>37/68</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">45.83% </span>
+        <span class="strong">45.45% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>11/24</span>
+        <span class='fraction'>10/22</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">50% </span>
+        <span class="strong">37.5% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>5/10</span>
+        <span class='fraction'>3/8</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">54.93% </span>
+        <span class="strong">53.73% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>39/71</span>
+        <span class='fraction'>36/67</span>
       </div>
     </div>
   </div>
@@ -219,15 +219,7 @@
 174
 175
 176
-177
-178
-179
-180
-181
-182
-183
-184
-185</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+177</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
@@ -252,12 +244,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">24x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">24x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">36x</span>
@@ -409,15 +395,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {typeFromAST} from 'graphql/utilities/typeFromAST';
 import {GraphQLSchema} from 'graphql/type/schema';
 import {SelectionSetNode, SelectionNode, OperationDefinitionNode, VariableDefinitionNode} from 'graphql/language/ast';
 import {getNamedType, GraphQLType, GraphQLObjectType} from 'graphql/type/definition';
 import {FIELD, FRAGMENT_SPREAD, INLINE_FRAGMENT} from 'graphql/language/kinds';
 import {CodegenDocument, Field, Model} from './interfaces';
-import {getFieldDef, getTypeName, isArray, isRequired, isPrimitive} from './utils';
+import {getFieldDef, getTypeName, isArray, isRequired, isPrimitive, handleNameDuplications} from './utils';
 import pascalCase = require('pascal-case');
 import {print} from 'graphql/language/printer';
 &nbsp;
@@ -438,20 +422,12 @@ const buildVariables = (schema: GraphQLSchema, definitionNode: OperationDefiniti
     return &lt;Field&gt;{
       name: variableDefinition.variable.name.value,
       type: getTypeName(primitivesMap, typeFromSchema),
-    <span class="missing-if-branch" title="if path not taken" >I</span>  isArray: isArray(typeFromSchema),
-      is<span class="cstat-no" title="statement not covered" >Required: isRequire</span>d(typeFromSchema)
+      isArray: isArray(typeFromSchema),
+      isRequired: isRequired(typeFromSchem<span class="branch-1 cbranch-no" title="branch not covered" >a)</span>
     };
   });
 };
-&nbsp;
-const handleNameDuplications = (name: string, existing: Model[]): string =&gt; {
-  if (existing.find(model =&gt; model.name ==<span class="branch-1 cbranch-no" title="branch not covered" >= n</span>ame)) {
-    return '_' + name;
-  }
-&nbsp;
-  return name;<span class="branch-0 cbranch-no" title="branch not covered" ></span>
-};
-&nbsp;
+<span class="branch-0 cbranch-no" title="branch not covered" ></span>
 export const buildInnerModelsArray = (schema: GraphQLSchema,
                                       rootObject: GraphQLType,
                                       selections: SelectionSetNode,
@@ -463,17 +439,17 @@ export const buildInnerModelsArray = (schema: GraphQLSchema,
       case FIELD:
         const fieldName = selectionNode.name.value;
         const propertyName = selectionNode.alias ? selectionNode.alias.value : fieldName;
-        const field <span class="missing-if-branch" title="if path not taken" >I</span>= getFieldDef(rootObject, selectionNode);
+        const field = getFieldDef(rootObject, selectionNode);
         const rawType = field.type;
-        const actualType<span class="cstat-no" title="statement not covered" > = getNamedType(rawType);</span>
+        const actual<span class="missing-if-branch" title="if path not taken" >I</span>Type = getNamedType(rawType);
 &nbsp;
-        if (actualType instanceof GraphQLObjectType) {
+        if (actualType i<span class="cstat-no" title="statement not covered" >nstanceof GraphQLObjectType) {</span>
           const modelName = handleNameDuplications(pascalCase(fieldName), result);
           let model = {
             name: modelName,
-            fields: [],<span class="cstat-no" title="statement not covered" ></span>
+            fields: [],
             fragmentsUsed: [],
-            inlineFragments: []
+            inlineFragme<span class="cstat-no" title="statement not covered" >nts: []</span>
           };
 &nbsp;
           result.push(model);
@@ -494,49 +470,49 @@ export const buildInnerModelsArray = (schema: GraphQLSchema,
 &nbsp;
           appendTo.fields.push({
             name: propertyName,
-<span class="branch-2 cbranch-no" title="branch not covered" >            type: modelName,</span>
-            isArray: isArra<span class="cstat-no" title="statement not covered" >y(rawType),</span>
-            isRequired: isR<span class="cstat-no" title="statement not covered" >equired(rawType)</span>
+            type: modelName,
+            isArray: isArray(rawType),
+<span class="branch-2 cbranch-no" title="branch not covered" >            isRequired: isRequired(rawType)</span>
           });<span class="cstat-no" title="statement not covered" ></span>
-        }
-        else {
+        }<span class="cstat-no" title="statement not covered" ></span>
+        else {<span class="cstat-no" title="statement not covered" ></span>
           appendTo.fields.push({
             name: propertyName,
             type: getTypeName(primitivesMap, actualType),
-            isAr<span class="cstat-no" title="statement not covered" >ray: isArray(rawType),</span>
+            isArray: isArray(rawType),
             isRequired: isRequired(rawType)
-          });
+          });<span class="cstat-no" title="statement not covered" ></span>
         }
-<span class="cstat-no" title="statement not covered" ></span>
-        break;<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" ></span>
-      case FRAGM<span class="cstat-no" title="statement not covered" >ENT_SPR</span>EAD:
-        cons<span class="branch-3 cbranch-no" title="branch not covered" >t fragmentName = selectionNode.name.value;</span>
-        appendTo<span class="cstat-no" title="statement not covered" >.fragme</span>ntsUsed.push(pascalCase(fragmentName));
-        appendTo.usingFragments = appendTo.fragmentsUsed.length &gt; 0;
+&nbsp;
         break;
+<span class="cstat-no" title="statement not covered" ></span>
+      case FRAGM<span class="cstat-no" title="statement not covered" >ENT_SPREAD:</span>
+        const fr<span class="cstat-no" title="statement not covered" >agmentName = selectionNode.name.value;</span>
+        appendTo<span class="cstat-no" title="statement not covered" >.fragme</span>ntsUsed.push(pascalCase(fragmentName));
+        appe<span class="branch-3 cbranch-no" title="branch not covered" >ndTo.usingFragments = appendTo.fragmentsUsed.length &gt; 0;</span>
+        break;<span class="cstat-no" title="statement not covered" ></span>
 &nbsp;
       case INLINE_FRAGMENT:
         const root = typeFromAST(schema, selectionNode.typeCondition);
         const name = selectionNode.typeCondition.name.value + 'InlineFragment';
 &nbsp;
         let fragmentModel: Model = {
-<span class="branch-1 cbranch-no" title="branch not covered" >          name: name,</span>
-          fi<span class="cstat-no" title="statement not covered" >elds: [],</span>
-<span class="branch-2 cbranch-no" title="branch not covered" >          fragmentsUsed: [],</span>
+          name: name,
+          fields: [],
+<span class="branch-1 cbranch-no" title="branch not covered" >          fragmentsUsed: [],</span>
           in<span class="cstat-no" title="statement not covered" >lineFragments: []</span>
-<span class="branch-3 cbranch-no" title="branch not covered" >        };</span>
+<span class="branch-2 cbranch-no" title="branch not covered" >        };</span>
 <span class="cstat-no" title="statement not covered" ></span>
-        appendTo.inlineFragments.push({
-          typeName: name,
-          onModel: selecti<span class="fstat-no" title="function not covered" >on</span>Node.typeCondition.name.value,
-        });<span class="cstat-no" title="statement not covered" ></span>
+<span class="branch-3 cbranch-no" title="branch not covered" >        appendTo.inlineFragments.push({</span>
+          ty<span class="cstat-no" title="statement not covered" >peName: </span>name,
+          onModel: selectionNode.typeCondition.name.value,
+        });
+<span class="fstat-no" title="function not covered" ></span>
+        appendT<span class="cstat-no" title="statement not covered" >o.hasInlineFragments = app</span>endTo.inlineFragments.length &gt; 0;
 <span class="cstat-no" title="statement not covered" ></span>
-        appendT<span class="cstat-no" title="statement not covered" >o.hasInlineFragments = appendTo.inlineFr</span>agments.length &gt; 0;
+        result.<span class="cstat-no" title="statement not covered" >push(fragmentModel);</span>
+        buildInnerMo<span class="cstat-no" title="statement not covered" >delsArray(schema, root</span>, selectionNode.selectionSet, primitivesMap, fragmentModel, result);
 <span class="cstat-no" title="statement not covered" ></span>
-        result.push<span class="cstat-no" title="statement not covered" >(fragmentModel);</span>
-        buildInnerModelsArray(schema, root, selectionNode.selectionSet, primitivesMap, fragmentModel, result);
-&nbsp;
         break;
 &nbsp;
       default:
@@ -548,18 +524,18 @@ export const buildInnerModelsArray = (schema: GraphQLSchema,
 };
 &nbsp;
 export const getRoot = (schema: GraphQLSchema, operation: OperationDefinitionNode): GraphQLObjectType =&gt; {
-  sw<span class="cstat-no" title="statement not covered" >itch (operation.operation) {</span>
-<span class="cstat-no" title="statement not covered" >    case 'query':</span>
+  switch (operation.operation) {
+    case 'query':
 <span class="cstat-no" title="statement not covered" >      return schema.getQueryType();</span>
 <span class="cstat-no" title="statement not covered" >    case 'mutation':</span>
-<span class="cstat-no" title="statement not covered" >      return schema.getMutation<span class="fstat-no" title="function not covered" >Ty</span>pe();</span>
-    case<span class="cstat-no" title="statement not covered" > 'subscription':</span>
-      return<span class="cstat-no" title="statement not covered" > schema.getSubscriptionType();</span>
-    default:
-      return;
-  }<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >      return schema.getMutationType();</span>
+<span class="cstat-no" title="statement not covered" >    case 'subscription':</span>
+<span class="cstat-no" title="statement not covered" >      return schema.getSubscrip<span class="fstat-no" title="function not covered" >ti</span>onType();</span>
+    defa<span class="cstat-no" title="statement not covered" >ult:</span>
+      return<span class="cstat-no" title="statement not covered" >;</span>
+  }
 };
-&nbsp;
+<span class="cstat-no" title="statement not covered" ></span>
 export const handleOperation = (schema: GraphQLSchema, definitionNode: OperationDefinitionNode, primitivesMap: any): CodegenDocument =&gt; {
   const name = definitionNode.name.value;
   const type = definitionNode.operation;
@@ -601,7 +577,7 @@ export const handleOperation = (schema: GraphQLSchema, definitionNode: Operation
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Dec 13 2016 16:14:51 GMT+0200 (IST)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Dec 13 2016 16:20:40 GMT+0200 (IST)
 </div>
 </div>
 <script src="prettify.js"></script>
