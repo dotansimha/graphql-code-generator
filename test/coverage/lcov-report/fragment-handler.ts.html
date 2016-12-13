@@ -20,9 +20,9 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">0% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>0/13</span>
+        <span class='fraction'>13/13</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -30,18 +30,18 @@
         <span class='fraction'>0/0</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">0% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>0/1</span>
+        <span class='fraction'>1/1</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">0% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>0/13</span>
+        <span class='fraction'>13/13</span>
       </div>
     </div>
   </div>
-  <div class='status-line low'></div>
+  <div class='status-line high'></div>
 <pre><table class="coverage">
 <tr><td class="line-count quiet">1
 2
@@ -84,14 +84,14 @@
 39
 40
 41</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -104,17 +104,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -124,14 +124,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {GraphQLSchema} from 'graphql/type/schema';
-import {FragmentD<span class="cstat-no" title="statement not covered" >efinitionNode} from 'gr</span>aphql/language/ast';
-import {Model, CodegenDocu<span class="cstat-no" title="statement not covered" >ment} from './interfaces';</span>
-import pascalCase = <span class="cstat-no" title="statement not covered" >require('pascal-case');</span>
-import {buildInn<span class="cstat-no" title="statement not covered" >erModelsArray} from './operation-han</span>dler';
-<span class="cstat-no" title="statement not covered" >import {typeFromAST} from<span class="fstat-no" title="function not covered" > '</span>graphql/utilities/typeFromAST';</span>
-import {print} fro<span class="cstat-no" title="statement not covered" >m 'graphql/language/prin</span>ter';
-<span class="cstat-no" title="statement not covered" ></span>
-export const hand<span class="cstat-no" title="statement not covered" >leFragment = (schema: GraphQLSchema, fragmentNode: FragmentDefinitionNode, primitivesMap: any): CodegenDocument =&gt; {</span>
+import {FragmentDefinitionNode} from 'graphql/language/ast';
+import {Model, CodegenDocument} from './interfaces';
+import pascalCase = require('pascal-case');
+import {buildInnerModelsArray} from './operation-handler';
+import {typeFromAST} from 'graphql/utilities/typeFromAST';
+import {print} from 'graphql/language/printer';
+&nbsp;
+export const handleFragment = (schema: GraphQLSchema, fragmentNode: FragmentDefinitionNode, primitivesMap: any): CodegenDocument =&gt; {
   const rawName = fragmentNode.name.value;
   const fragmentName = pascalCase(rawName);
 &nbsp;
@@ -144,17 +144,17 @@ export const hand<span class="cstat-no" title="statement not covered" >leFragmen
     isFragment: true,
     innerTypes: [],
     hasInnerTypes: false,
-    variables: [],<span class="cstat-no" title="statement not covered" ></span>
+    variables: [],
     hasVariables: false,
     document: print(fragmentNode)
   };
 &nbsp;
   let appendTo: Model = {
     name: 'Fragment',
-    fields: [],<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    isObject: true,</span>
-<span class="cstat-no" title="statement not covered" >    isFragment: true,</span>
-<span class="cstat-no" title="statement not covered" >    fragmentsUsed: </span>[]
+    fields: [],
+    isObject: true,
+    isFragment: true,
+    fragmentsUsed: []
   };
 &nbsp;
   const root = typeFromAST(schema, fragmentNode.typeCondition);
@@ -169,7 +169,7 @@ export const hand<span class="cstat-no" title="statement not covered" >leFragmen
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Dec 13 2016 14:49:26 GMT+0200 (IST)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Dec 13 2016 15:39:45 GMT+0200 (IST)
 </div>
 </div>
 <script src="prettify.js"></script>

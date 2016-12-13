@@ -20,7 +20,8 @@
       "@types/minimatch",
       "@types/request",
       "@types/form-data",
-      "@types/mkdirp"
+      "@types/mkdirp",
+      "@types/common-tags"
     ]
   },
   "files": [
