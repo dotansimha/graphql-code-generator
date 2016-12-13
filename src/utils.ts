@@ -3,6 +3,8 @@ import {GraphQLObjectType} from 'graphql/type/definition';
 import {GraphQLField} from 'graphql/type/definition';
 import {GraphQLType} from 'graphql/type/definition';
 import {Model} from "./interfaces";
+import {GraphQLSchema} from "graphql/type/schema";
+import {OperationDefinitionNode} from "graphql/language/ast";
 
 export const isPrimitive = (primitivesMap: any, type: string) => {
   return Object.keys(primitivesMap).map(key => primitivesMap[key]).find(item => item === type);
@@ -50,4 +52,17 @@ export const handleNameDuplications = (name: string, existing: Model[]): string 
   }
 
   return name;
+};
+
+export const getRoot = (schema: GraphQLSchema, operation: OperationDefinitionNode): GraphQLObjectType => {
+  switch (operation.operation) {
+    case 'query':
+      return schema.getQueryType();
+    case 'mutation':
+      return schema.getMutationType();
+    case 'subscription':
+      return schema.getSubscriptionType();
+    default:
+      return;
+  }
 };

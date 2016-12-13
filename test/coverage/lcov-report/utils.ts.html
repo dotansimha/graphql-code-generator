@@ -20,24 +20,24 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">100% </span>
+        <span class="strong">90.63% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>26/26</span>
+        <span class='fraction'>29/32</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">84.62% </span>
+        <span class="strong">70.59% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>11/13</span>
+        <span class='fraction'>12/17</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>10/10</span>
+        <span class='fraction'>11/11</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">100% </span>
+        <span class="strong">89.66% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>23/23</span>
+        <span class='fraction'>26/29</span>
       </div>
     </div>
   </div>
@@ -96,7 +96,21 @@
 51
 52
 53
-54</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
@@ -138,6 +152,20 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">27x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -154,6 +182,8 @@ import {GraphQLObjectType} from 'graphql/type/definition';
 import {GraphQLField} from 'graphql/type/definition';
 import {GraphQLType} from 'graphql/type/definition';
 import {Model} from "./interfaces";
+import {GraphQLSchema} from "graphql/type/schema";
+import {OperationDefinitionNode} from "graphql/language/ast";
 &nbsp;
 export const isPrimitive = (primitivesMap: any, type: string) =&gt; {
   return Object.keys(primitivesMap).map(key =&gt; primitivesMap[key]).find(item =&gt; item === type);
@@ -177,10 +207,10 @@ export const isArray = (type: GraphQLType): boolean =&gt; {
 &nbsp;
 export const getTypeName = (primitivesMap: any, type: GraphQLType) =&gt; {
   const name = (type.toString()).replace(/[\[\]!]/g, '');
-&nbsp;
-  if (primitivesMap[name]) {
-    <span class="missing-if-branch" title="else path not taken" >E</span>return primitivesMap[name];
-  }<span class="branch-1 cbranch-no" title="branch not covered" ></span>
+<span class="missing-if-branch" title="else path not taken" >E</span>
+  if (pr<span class="branch-1 cbranch-no" title="branch not covered" >imitivesMap[name]) {</span>
+    return primitivesMap[name];
+  }
   else {
     return name;
   }
@@ -193,22 +223,34 @@ export function getFieldDef(parentType, fieldAST): GraphQLField&lt;any, any&gt; 
     parentType instanceof GraphQLInterfaceType) {
     return parentType.getFields()[name];
   }
-}
-&nbsp;
-export const handleNameDuplications = (name: string, existing: Model[]): string =&gt; {
-  if (existing.find(model =&gt; model.name === name)) {
-    return handleNameDuplications('_' + name, existing);
-  }
+}<span class="branch-1 cbranch-no" title="branch not covered" ></span>
+<span class="cstat-no" title="statement not covered" ></span>
+export c<span class="branch-2 cbranch-no" title="branch not covered" >onst handleNameDuplications = (name: string, existing: Model[]): string =&gt; {</span>
+  if (existi<span class="cstat-no" title="statement not covered" >ng.find(model =&gt; model.name === name)</span>) {
+    retu<span class="branch-3 cbranch-no" title="branch not covered" >rn handleNameDuplications('_' + name, existing);</span>
+  }<span class="cstat-no" title="statement not covered" ></span>
 &nbsp;
   return name;
 };
-&nbsp;</pre></td></tr>
+&nbsp;
+export const getRoot = (schema: GraphQLSchema, operation: OperationDefinitionNode): GraphQLObjectType =&gt; {
+  switch (operation.operation) {
+    case 'query':
+      return schema.getQueryType();
+    case 'mutation':
+      return schema.getMutationType();
+    case 'subscription':
+      return schema.getSubscriptionType();
+    default:
+      return;
+  }
+};</pre></td></tr>
 </table></pre>
 <div class='push'></div><!-- for sticky footer -->
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Dec 13 2016 16:20:40 GMT+0200 (IST)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Dec 13 2016 16:23:30 GMT+0200 (IST)
 </div>
 </div>
 <script src="prettify.js"></script>

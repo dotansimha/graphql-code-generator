@@ -20,24 +20,24 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">54.41% </span>
+        <span class="strong">54.84% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>37/68</span>
+        <span class='fraction'>34/62</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">45.45% </span>
+        <span class="strong">50% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>10/22</span>
+        <span class='fraction'>9/18</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">37.5% </span>
+        <span class="strong">28.57% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>3/8</span>
+        <span class='fraction'>2/7</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">53.73% </span>
+        <span class="strong">54.1% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>36/67</span>
+        <span class='fraction'>33/61</span>
       </div>
     </div>
   </div>
@@ -206,35 +206,22 @@
 161
 162
 163
-164
-165
-166
-167
-168
-169
-170
-171
-172
-173
-174
-175
-176
-177</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
+164</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -245,7 +232,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-yes">86x</span>
@@ -319,19 +306,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -360,7 +335,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -401,7 +375,7 @@ import {SelectionSetNode, SelectionNode, OperationDefinitionNode, VariableDefini
 import {getNamedType, GraphQLType, GraphQLObjectType} from 'graphql/type/definition';
 import {FIELD, FRAGMENT_SPREAD, INLINE_FRAGMENT} from 'graphql/language/kinds';
 import {CodegenDocument, Field, Model} from './interfaces';
-import {getFieldDef, getTypeName, isArray, isRequired, isPrimitive, handleNameDuplications} from './utils';
+import {getFieldDef, getTypeName, isArray, isRequired, isPrimitive, handleNameDuplications, getRoot} from './utils';
 import pascalCase = require('pascal-case');
 import {print} from 'graphql/language/printer';
 &nbsp;
@@ -495,48 +469,35 @@ export const buildInnerModelsArray = (schema: GraphQLSchema,
       case INLINE_FRAGMENT:
         const root = typeFromAST(schema, selectionNode.typeCondition);
         const name = selectionNode.typeCondition.name.value + 'InlineFragment';
+<span class="fstat-no" title="function not covered" ></span>
+        let fra<span class="cstat-no" title="statement not covered" >gmentModel: Model = {</span>
+          name:<span class="cstat-no" title="statement not covered" > name,</span>
+          field<span class="cstat-no" title="statement not covered" >s: [],</span>
+          fragmentsU<span class="cstat-no" title="statement not covered" >sed: [],</span>
+          inlineFra<span class="cstat-no" title="statement not covered" >gments: []</span>
+        };
 &nbsp;
-        let fragmentModel: Model = {
-          name: name,
-          fields: [],
-<span class="branch-1 cbranch-no" title="branch not covered" >          fragmentsUsed: [],</span>
-          in<span class="cstat-no" title="statement not covered" >lineFragments: []</span>
-<span class="branch-2 cbranch-no" title="branch not covered" >        };</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="branch-3 cbranch-no" title="branch not covered" >        appendTo.inlineFragments.push({</span>
-          ty<span class="cstat-no" title="statement not covered" >peName: </span>name,
+        appendTo.inlineFragments.push({
+          typeName: name,
           onModel: selectionNode.typeCondition.name.value,
         });
-<span class="fstat-no" title="function not covered" ></span>
-        appendT<span class="cstat-no" title="statement not covered" >o.hasInlineFragments = app</span>endTo.inlineFragments.length &gt; 0;
-<span class="cstat-no" title="statement not covered" ></span>
-        result.<span class="cstat-no" title="statement not covered" >push(fragmentModel);</span>
-        buildInnerMo<span class="cstat-no" title="statement not covered" >delsArray(schema, root</span>, selectionNode.selectionSet, primitivesMap, fragmentModel, result);
-<span class="cstat-no" title="statement not covered" ></span>
-        break;
 &nbsp;
-      default:
-        break;
-    }
-  });
+        appendTo.hasInlineFragments = appendTo.inlineFragments.length &gt; 0;
 &nbsp;
-  return result;
+        result.push(fragmentModel);
+        buildInnerModelsArray(schema, root, selectionNode.selectionSet, primitivesMap, fragmentModel, result);
+&nbsp;
+        break;
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >      default:</span>
+<span class="cstat-no" title="statement not covered" >        break;</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+  })<span class="cstat-no" title="statement not covered" >;<span class="fstat-no" title="function not covered" ></span></span>
+<span class="cstat-no" title="statement not covered" ></span>
+  return res<span class="cstat-no" title="statement not covered" >ult;</span>
 };
 &nbsp;
-export const getRoot = (schema: GraphQLSchema, operation: OperationDefinitionNode): GraphQLObjectType =&gt; {
-  switch (operation.operation) {
-    case 'query':
-<span class="cstat-no" title="statement not covered" >      return schema.getQueryType();</span>
-<span class="cstat-no" title="statement not covered" >    case 'mutation':</span>
-<span class="cstat-no" title="statement not covered" >      return schema.getMutationType();</span>
-<span class="cstat-no" title="statement not covered" >    case 'subscription':</span>
-<span class="cstat-no" title="statement not covered" >      return schema.getSubscrip<span class="fstat-no" title="function not covered" >ti</span>onType();</span>
-    defa<span class="cstat-no" title="statement not covered" >ult:</span>
-      return<span class="cstat-no" title="statement not covered" >;</span>
-  }
-};
-<span class="cstat-no" title="statement not covered" ></span>
-export const handleOperation = (schema: GraphQLSchema, definitionNode: OperationDefinitionNode, primitivesMap: any): CodegenDocument =&gt; {
+expo<span class="cstat-no" title="statement not covered" >rt const handleOp</span>eration = (schema: GraphQLSchema, definitionNode: OperationDefinitionNode, primitivesMap: any): CodegenDocument =&gt; {
   const name = definitionNode.name.value;
   const type = definitionNode.operation;
   const root = getRoot(schema, definitionNode);
@@ -577,7 +538,7 @@ export const handleOperation = (schema: GraphQLSchema, definitionNode: Operation
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Dec 13 2016 16:20:40 GMT+0200 (IST)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Dec 13 2016 16:23:30 GMT+0200 (IST)
 </div>
 </div>
 <script src="prettify.js"></script>

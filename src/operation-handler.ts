@@ -4,7 +4,7 @@ import {SelectionSetNode, SelectionNode, OperationDefinitionNode, VariableDefini
 import {getNamedType, GraphQLType, GraphQLObjectType} from 'graphql/type/definition';
 import {FIELD, FRAGMENT_SPREAD, INLINE_FRAGMENT} from 'graphql/language/kinds';
 import {CodegenDocument, Field, Model} from './interfaces';
-import {getFieldDef, getTypeName, isArray, isRequired, isPrimitive, handleNameDuplications} from './utils';
+import {getFieldDef, getTypeName, isArray, isRequired, isPrimitive, handleNameDuplications, getRoot} from './utils';
 import pascalCase = require('pascal-case');
 import {print} from 'graphql/language/printer';
 
@@ -124,19 +124,6 @@ export const buildInnerModelsArray = (schema: GraphQLSchema,
   });
 
   return result;
-};
-
-export const getRoot = (schema: GraphQLSchema, operation: OperationDefinitionNode): GraphQLObjectType => {
-  switch (operation.operation) {
-    case 'query':
-      return schema.getQueryType();
-    case 'mutation':
-      return schema.getMutationType();
-    case 'subscription':
-      return schema.getSubscriptionType();
-    default:
-      return;
-  }
 };
 
 export const handleOperation = (schema: GraphQLSchema, definitionNode: OperationDefinitionNode, primitivesMap: any): CodegenDocument => {

@@ -3,7 +3,7 @@ import * as fs from 'fs';
 
 import {
   isRequired, isArray, shouldSkip, getTypeName, getFieldDef, isPrimitive,
-  handleNameDuplications
+  handleNameDuplications, getRoot
 } from "../../src/utils";
 import {GraphQLInputObjectType} from "graphql/type/definition";
 import {GraphQLNonNull} from "graphql/type/definition";
@@ -13,7 +13,6 @@ import {GraphQLString} from "graphql/type/scalars";
 import {GraphQLType} from "graphql/type/definition";
 import {loadSchema} from "../../src/scheme-loader";
 import {GraphQLSchema} from "graphql/type/schema";
-import {getRoot} from "../../src/operation-handler";
 import {loadDocumentsSources} from "../../src/document-loader";
 import {OperationDefinitionNode} from "graphql/language/ast";
 import {FIELD} from "graphql/language/kinds";
