@@ -7,7 +7,7 @@ import {loadSchema} from "../../src/scheme-loader";
 import {loadDocumentsSources} from "../../src/document-loader";
 import {DocumentNode} from "graphql/language/ast";
 import { stripIndent } from 'common-tags';
-import {handleOperation} from "../../src/operation-handler";
+import {handleOperation, buildVariables} from "../../src/operation-handler";
 
 describe('handleOperation', () => {
   let testSchema: GraphQLSchema;
@@ -102,14 +102,14 @@ describe('handleOperation', () => {
     });
 
     describe('Query', () => {
-      test('Should return the correct name for query', () => {
+      test('should return the correct name for query', () => {
         const definition = <OperationDefinitionNode>documents.definitions[0];
         const codegen = handleOperation(testSchema, definition, primitivesMap);
 
         expect(codegen.name).toBe('CommentQuery');
       });
 
-      test('Should return the correct booleans for query', () => {
+      test('should return the correct booleans for query', () => {
         const definition = <OperationDefinitionNode>documents.definitions[0];
         const codegen = handleOperation(testSchema, definition, primitivesMap);
 
@@ -121,14 +121,14 @@ describe('handleOperation', () => {
     });
 
     describe('Mutation', () => {
-      test('Should return the correct name for mutation', () => {
+      test('should return the correct name for mutation', () => {
         const definition = <OperationDefinitionNode>documents.definitions[1];
         const codegen = handleOperation(testSchema, definition, primitivesMap);
 
         expect(codegen.name).toBe('SubmitCommentMutation');
       });
 
-      test('Should return the correct booleans for mutation', () => {
+      test('should return the correct booleans for mutation', () => {
         const definition = <OperationDefinitionNode>documents.definitions[1];
         const codegen = handleOperation(testSchema, definition, primitivesMap);
 
@@ -140,14 +140,14 @@ describe('handleOperation', () => {
     });
 
     describe('Subscription', () => {
-      test('Should return the correct name for subscription', () => {
+      test('should return the correct name for subscription', () => {
         const definition = <OperationDefinitionNode>documents.definitions[2];
         const codegen = handleOperation(testSchema, definition, primitivesMap);
 
         expect(codegen.name).toBe('OnCommentAddedSubscription');
       });
 
-      test('Should return the correct booleans for subscription', () => {
+      test('should return the correct booleans for subscription', () => {
         const definition = <OperationDefinitionNode>documents.definitions[2];
         const codegen = handleOperation(testSchema, definition, primitivesMap);
 
@@ -155,6 +155,26 @@ describe('handleOperation', () => {
         expect(codegen.isMutation).toBeFalsy();
         expect(codegen.isQuery).toBeFalsy();
         expect(codegen.isFragment).toBeFalsy();
+      });
+    });
+
+    describe('buildVariables', () => {
+      test('should return the correct variables names for query', () => {
+        const definition = <OperationDefinitionNode>documents.definitions[0];
+
+        expect(buildVariables(testSchema, definition, primitivesMap).map(item => item.name)).toEqual(['repoFullName', 'limit', 'offset']);
+      });
+
+      test('should return the correct types for variables for query', () => {
+        const definition = <OperationDefinitionNode>documents.definitions[0];
+
+        expect(buildVariables(testSchema, definition, primitivesMap).map(item => item.type)).toEqual(['string', 'number', 'number']);
+      });
+
+      test('should return the correct required indication for query', () => {
+        const definition = <OperationDefinitionNode>documents.definitions[0];
+
+        expect(buildVariables(testSchema, definition, primitivesMap).map(item => item.isRequired)).toEqual([true, false, false]);
       });
     });
   });

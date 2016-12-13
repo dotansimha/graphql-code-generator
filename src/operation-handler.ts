@@ -16,7 +16,7 @@ const typesMap = {
   mutation: 'Mutation'
 };
 
-const buildVariables = (schema: GraphQLSchema, definitionNode: OperationDefinitionNode, primitivesMap: any): Field[] => {
+export const buildVariables = (schema: GraphQLSchema, definitionNode: OperationDefinitionNode, primitivesMap: any): Field[] => {
   return definitionNode.variableDefinitions.map<Field>((variableDefinition: VariableDefinitionNode) => {
     const typeFromSchema = typeFromAST(schema, variableDefinition.type);
 

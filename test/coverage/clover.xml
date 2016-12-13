@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1481640973173" clover="3.2.0">
-  <project timestamp="1481640973173" name="All files">
+<coverage generated="1481641738911" clover="3.2.0">
+  <project timestamp="1481641738911" name="All files">
     <metrics statements="338" coveredstatements="128" conditionals="126" coveredconditionals="35" methods="64" coveredmethods="25" elements="528" coveredelements="188" complexity="0" loc="338" ncloc="338" packages="1" files="13" classes="13">
       <file name="cli.ts" path="/Users/dotansimha/Dev/graphql-codegen/src/cli.ts">
         <metrics statements="85" coveredstatements="0" conditionals="41" coveredconditionals="0" methods="19" coveredmethods="0"/>
@@ -305,9 +305,9 @@
         <line num="5" count="1" type="stmt"/>
         <line num="6" count="1" type="stmt"/>
         <line num="11" count="1" type="stmt"/>
-        <line num="12" count="7" type="stmt"/>
-        <line num="13" count="15" type="stmt"/>
-        <line num="14" count="15" type="stmt"/>
+        <line num="12" count="10" type="stmt"/>
+        <line num="13" count="24" type="stmt"/>
+        <line num="14" count="24" type="stmt"/>
         <line num="22" count="1" type="stmt"/>
         <line num="23" count="7" type="stmt"/>
         <line num="24" count="7" type="stmt"/>
@@ -354,13 +354,13 @@
         <line num="8" count="3" type="stmt"/>
         <line num="9" count="8" type="stmt"/>
         <line num="15" count="3" type="stmt"/>
-        <line num="16" count="168" type="stmt"/>
+        <line num="16" count="177" type="stmt"/>
         <line num="18" count="3" type="stmt"/>
-        <line num="19" count="168" type="stmt"/>
+        <line num="19" count="177" type="stmt"/>
         <line num="21" count="3" type="stmt"/>
-        <line num="22" count="128" type="stmt"/>
-        <line num="23" count="128" type="stmt"/>
-        <line num="24" count="124" type="stmt"/>
+        <line num="22" count="137" type="stmt"/>
+        <line num="23" count="137" type="stmt"/>
+        <line num="24" count="133" type="stmt"/>
         <line num="27" count="4" type="stmt"/>
         <line num="31" count="152" type="stmt"/>
         <line num="32" count="152" type="stmt"/>
