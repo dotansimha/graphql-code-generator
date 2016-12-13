@@ -2,9 +2,10 @@ import {GraphQLInterfaceType} from 'graphql/type/definition';
 import {GraphQLObjectType} from 'graphql/type/definition';
 import {GraphQLField} from 'graphql/type/definition';
 import {GraphQLType} from 'graphql/type/definition';
-import {Model} from "./interfaces";
-import {GraphQLSchema} from "graphql/type/schema";
-import {OperationDefinitionNode} from "graphql/language/ast";
+import {Model} from './interfaces';
+import {GraphQLSchema} from 'graphql/type/schema';
+import {OperationDefinitionNode} from 'graphql/language/ast';
+import pascalCase = require('pascal-case');
 
 export const isPrimitive = (primitivesMap: any, type: string) => {
   return Object.keys(primitivesMap).map(key => primitivesMap[key]).find(item => item === type);
@@ -65,4 +66,8 @@ export const getRoot = (schema: GraphQLSchema, operation: OperationDefinitionNod
     default:
       return;
   }
+};
+
+export const buildName = (typesMap: any, name: string, type: string): string => {
+  return pascalCase(name) + typesMap[type];
 };

@@ -2,9 +2,9 @@ import {GraphQLSchema} from 'graphql/type/schema';
 import {FragmentDefinitionNode} from 'graphql/language/ast';
 import {Model, CodegenDocument} from './interfaces';
 import pascalCase = require('pascal-case');
-import {buildInnerModelsArray} from './operation-handler';
 import {typeFromAST} from 'graphql/utilities/typeFromAST';
 import {print} from 'graphql/language/printer';
+import {buildInnerModelsArray} from './inner-models-builer';
 
 export const handleFragment = (schema: GraphQLSchema, fragmentNode: FragmentDefinitionNode, primitivesMap: any): CodegenDocument => {
   const rawName = fragmentNode.name.value;
