@@ -1,0 +1,11 @@
+{
+  "strategy": "SINGLE_FILE",
+  "template": "./template.handlebars",
+  "primitives": {
+    "String": "string",
+    "Int": "number",
+    "Float": "number",
+    "Boolean": "bool",
+    "ID": "string"
+  }
+}

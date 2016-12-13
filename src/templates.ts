@@ -35,9 +35,9 @@ export const generators: GeneratorTemplate[] = [
     aliases: ['ts-multiple', 'typescript-multiple'],
     config: getConfig('../generators/typescript-multiple-files/')
   },
-  // {
-  //   language: 'Swift Single File',
-  //   aliases: ['swift', 'swift-apollo-single'],
-  //   config: getConfig('../generators/swift-single-file/')
-  // }
+  {
+    language: 'Flow Single File',
+    aliases: ['flow', 'flow-single'],
+    config: getConfig('../generators/flow-single-file/')
+  }
 ];
