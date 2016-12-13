@@ -58,6 +58,7 @@
   "jest": {
     "collectCoverage": true,
     "collectCoverageFrom": ["**/src/**/*.ts"],
+    "coverageDirectory": "./test/coverage",
     "moduleFileExtensions": ["ts", "tsx", "js"],
     "transform": {
       "^.+\\.(ts|tsx)$": "<rootDir>/test/jest.typescript.js"
