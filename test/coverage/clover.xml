@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1481636582083" clover="3.2.0">
-  <project timestamp="1481636582084" name="All files">
-    <metrics statements="365" coveredstatements="86" conditionals="161" coveredconditionals="24" methods="69" coveredmethods="18" elements="595" coveredelements="128" complexity="0" loc="365" ncloc="365" packages="1" files="13" classes="13">
+<coverage generated="1481637819133" clover="3.2.0">
+  <project timestamp="1481637819133" name="All files">
+    <metrics statements="365" coveredstatements="94" conditionals="161" coveredconditionals="26" methods="69" coveredmethods="20" elements="595" coveredelements="140" complexity="0" loc="365" ncloc="365" packages="1" files="13" classes="13">
       <file name="cli.ts" path="/Users/dotansimha/Dev/graphql-codegen/src/cli.ts">
         <metrics statements="85" coveredstatements="0" conditionals="41" coveredconditionals="0" methods="19" coveredmethods="0"/>
         <line num="2" count="0" type="stmt"/>
@@ -142,15 +142,15 @@
         <line num="32" count="12" type="stmt"/>
       </file>
       <file name="generator.ts" path="/Users/dotansimha/Dev/graphql-codegen/src/generator.ts">
-        <metrics statements="8" coveredstatements="0" conditionals="2" coveredconditionals="0" methods="2" coveredmethods="0"/>
-        <line num="2" count="0" type="stmt"/>
-        <line num="3" count="0" type="stmt"/>
-        <line num="4" count="0" type="stmt"/>
-        <line num="5" count="0" type="stmt"/>
-        <line num="6" count="0" type="stmt"/>
-        <line num="9" count="0" type="stmt"/>
-        <line num="12" count="0" type="stmt"/>
-        <line num="13" count="0" type="stmt"/>
+        <metrics statements="8" coveredstatements="8" conditionals="2" coveredconditionals="2" methods="2" coveredmethods="2"/>
+        <line num="2" count="1" type="stmt"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="5" count="3" type="stmt"/>
+        <line num="6" count="2" type="stmt"/>
+        <line num="9" count="1" type="stmt"/>
+        <line num="12" count="1" type="stmt"/>
+        <line num="13" count="1" type="stmt"/>
       </file>
       <file name="handlebars-helpers.ts" path="/Users/dotansimha/Dev/graphql-codegen/src/handlebars-helpers.ts">
         <metrics statements="31" coveredstatements="0" conditionals="35" coveredconditionals="0" methods="5" coveredmethods="0"/>
