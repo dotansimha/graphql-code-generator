@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1481639350499" clover="3.2.0">
-  <project timestamp="1481639350499" name="All files">
-    <metrics statements="338" coveredstatements="92" conditionals="126" coveredconditionals="27" methods="64" coveredmethods="20" elements="528" coveredelements="139" complexity="0" loc="338" ncloc="338" packages="1" files="13" classes="13">
+<coverage generated="1481639861506" clover="3.2.0">
+  <project timestamp="1481639861507" name="All files">
+    <metrics statements="338" coveredstatements="96" conditionals="126" coveredconditionals="30" methods="64" coveredmethods="21" elements="528" coveredelements="147" complexity="0" loc="338" ncloc="338" packages="1" files="13" classes="13">
       <file name="cli.ts" path="/Users/dotansimha/Dev/graphql-codegen/src/cli.ts">
         <metrics statements="85" coveredstatements="0" conditionals="41" coveredconditionals="0" methods="19" coveredmethods="0"/>
         <line num="2" count="0" type="stmt"/>
@@ -345,7 +345,7 @@
         <line num="10" count="0" type="stmt"/>
       </file>
       <file name="utils.ts" path="/Users/dotansimha/Dev/graphql-codegen/src/utils.ts">
-        <metrics statements="32" coveredstatements="28" conditionals="17" coveredconditionals="12" methods="12" coveredmethods="11"/>
+        <metrics statements="32" coveredstatements="32" conditionals="17" coveredconditionals="15" methods="12" coveredmethods="12"/>
         <line num="2" count="2" type="stmt"/>
         <line num="3" count="2" type="stmt"/>
         <line num="4" count="2" type="stmt"/>
@@ -371,13 +371,13 @@
         <line num="40" count="3" type="stmt"/>
         <line num="42" count="27" type="stmt"/>
         <line num="44" count="2" type="stmt"/>
-        <line num="45" count="1" type="stmt"/>
-        <line num="47" count="1" type="stmt"/>
-        <line num="49" count="0" type="stmt"/>
-        <line num="51" count="0" type="stmt"/>
-        <line num="53" count="0" type="stmt"/>
+        <line num="45" count="5" type="stmt"/>
+        <line num="47" count="2" type="stmt"/>
+        <line num="49" count="1" type="stmt"/>
+        <line num="51" count="1" type="stmt"/>
+        <line num="53" count="1" type="stmt"/>
         <line num="56" count="2" type="stmt"/>
-        <line num="57" count="0" type="stmt"/>
+        <line num="57" count="5" type="stmt"/>
       </file>
     </metrics>
   </project>

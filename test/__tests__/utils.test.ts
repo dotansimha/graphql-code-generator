@@ -3,7 +3,7 @@ import * as fs from 'fs';
 
 import {
   isRequired, isArray, shouldSkip, getTypeName, getFieldDef, isPrimitive,
-  handleNameDuplications, getRoot
+  handleNameDuplications, getRoot, buildName
 } from "../../src/utils";
 import {GraphQLInputObjectType} from "graphql/type/definition";
 import {GraphQLNonNull} from "graphql/type/definition";
@@ -29,7 +29,13 @@ const getSomeField = (document) => {
   return nodeField;
 };
 
-describe('model-handler', () => {
+const typesMap = {
+  query: 'Query',
+  subscription: 'Subscription',
+  mutation: 'Mutation'
+};
+
+describe('utils', () => {
   let testSchema: GraphQLSchema;
   let rootType: GraphQLType;
   let inputTypeObject: GraphQLInputObjectType;
@@ -198,6 +204,46 @@ describe('model-handler', () => {
 
     test('should return the correct name when name exists multiple times', () => {
       expect(handleNameDuplications('Name', [{name: '_Name'}, {name: 'Name'}])).toBe('__Name');
+    });
+  });
+
+  describe('buildName', () => {
+    test('should return the name with pascal case', () => {
+      expect(buildName(typesMap, 'name', 'query')).toBe('NameQuery');
+    });
+
+    test('should return the name as pascal case when using _', () => {
+      expect(buildName(typesMap, 'my_name', 'query')).toBe('MyNameQuery');
+    });
+
+    test('should return the correct name when using query', () => {
+      expect(buildName(typesMap, 'operation', 'query')).toBe('OperationQuery');
+    });
+
+    test('should return the correct name when using mutation', () => {
+      expect(buildName(typesMap, 'operation', 'mutation')).toBe('OperationMutation');
+    });
+
+    test('should return the correct name when using subscription', () => {
+      expect(buildName(typesMap, 'operation', 'subscription')).toBe('OperationSubscription');
+    });
+  });
+
+  describe('getRoot', () => {
+    test('should return the correct root when using query', () => {
+      expect(getRoot(testSchema, <OperationDefinitionNode>{operation: 'query'}).name).toBe('Query');
+    });
+
+    test('should return the correct root when using mutation', () => {
+      expect(getRoot(testSchema, <OperationDefinitionNode>{operation: 'mutation'}).name).toBe('Mutation');
+    });
+
+    test('should return the correct root when using subscription', () => {
+      expect(getRoot(testSchema, <OperationDefinitionNode>{operation: 'subscription'}).name).toBe('Subscription');
+    });
+
+    test('should return undefined when using invalid root name', () => {
+      expect(getRoot(testSchema, <any>{operation: 'error'})).toBeUndefined();
     });
   })
 });
