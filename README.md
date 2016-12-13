@@ -12,6 +12,7 @@ Supported language/platforms:
 |-----------------|----------------|---------------------------------------------------------------------------|
 | TypeScript      | Single File    | ts, typescript, ts-single, typescript-single                              |
 | TypeScript      | Multiple Files | ts-multiple, typescript-multiple                                          |
+| Flow            | Single File    | flow, flow-single                                                         |
 
 
 ## Installation
