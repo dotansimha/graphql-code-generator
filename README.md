@@ -6,7 +6,11 @@
 
 GraphQL code generator, with flexible support for multiple languages and platforms. 
 
-Supported language/platforms:
+This generator generates both models (based on GraphQL server-side schema), and documents (client-side operations, such as Query, Mutation as Subscription).
+
+Most of the generators support single-file (which is a large file with all of your types/classes/interfaces/enums), and some support multiple-files (file for each model/document, with support for imports).
+
+**Supported languages/platforms:**
 
 | Language        | Type           | CLI Name                                                                  |
 |-----------------|----------------|---------------------------------------------------------------------------|
@@ -21,21 +25,21 @@ Supported language/platforms:
 
 To install the package using NPM, run:
 
-    $ npm install -g graphql-codegen
+    $ npm install -g graphql-code-generator
 
 Or, using Yarn:
     
-    $ yarn global add graphql-codegen
+    $ yarn global add graphql-code-generator
 
 #### Dev-dependency
 
 You can also add it as dev-dependency to your application:
 
-    $ npm install --save-dev graphql-codegen
+    $ npm install --save-dev graphql-code-generator
 
 Or, using Yarn:
     
-    $ yarn add --dev graphql-codegen
+    $ yarn add --dev graphql-code-generator
 
 ## Usage
 
@@ -45,33 +49,34 @@ This package offers both modules exports (to use with NodeJS/JavaScript applicat
 
 CLI usage is as follow:
 
-    $ graphql-codegen [options] <documents ...>
+    $ gql-gen [options] <documents ...>
     
 Allowed flags:    
 
 | Flag Name       | Type     | Description                                                                            |
 |-----------------|----------|----------------------------------------------------------------------------------------|
-| -f, --file      | String   | Introspection JSON file, must provide file or URL flag                                 |
-| -u, --url       | String   | GraphQL server endpoint to fetch the introspection from, must provide URL or file flag |
-| -t, --template  | String   | Template name, for example: "typescript"                                               |
-| -o, --out       | String   | Path for output file/directory. default is `./`                                        |
+| -f,--file       | String   | Introspection JSON file, must provide file or URL flag                                 |
+| -u,--url        | String   | GraphQL server endpoint to fetch the introspection from, must provide URL or file flag |
+| -t,--template   | String   | Template name, for example: "typescript"                                               |
+| -o,--out        | String   | Path for output file/directory. When using single-file generator specify filename, and when using multiple-files generator specify a directory                                     |
+| -d,--deb        | void     | Turns ON development mode - prints output to console instead of files                  |
 | documents...    | [String] | Space separated paths of `.graphql` files, allows glob path                            |
 
 Usage examples:
 
 - With local introspection JSON file, generated TypeScript types:
 
-        $ graphql-codegen --file mySchema.json --template typescript --out ./typings/ ./src/**/*.graphql
+        $ gql-gen --file mySchema.json --template typescript --out ./typings/ ./src/**/*.graphql
     
    
 - With remote GraphQL endpoint, generated TypeScript types:
 
-        $ graphql-codegen --url http://localhost:3010/graphql --template typescript --out ./typings/ ./src/**/*.graphql
+        $ gql-gen --url http://localhost:3010/graphql --template typescript --out ./typings/ ./src/**/*.graphql
     
 
 - Example using pre-defined files inside this repo (using Apollo's [GitHunt-API](https://github.com/apollostack/Githunt-API) and [GitHunt-Angular2](https://github.com/apollostack/Githunt-angular2)):
 
-        $ graphql-codegen --file ./dev-test/githunt/schema.json --template typescript --out ./dev-test/githunt/typings.d.ts ./dev-test/githunt/**/*.graphql 
+        $ gql-gen --file ./dev-test/githunt/schema.json --template typescript --out ./dev-test/githunt/typings.d.ts ./dev-test/githunt/**/*.graphql 
 
 ## Integrate into a project
 
@@ -85,12 +90,14 @@ When using NodeJS/JavaScript application, use NPM script to generate your types,
 
     // ...
     "scripts": {
-        "prebuild": "graphql-codegen --file SCHEMA_FILE --template LANGUAGE_TEMPLATE --out OUT_PATH ./src/**/*.graphql"
+        "prebuild": "gql-gen --file SCHEMA_FILE --template LANGUAGE_TEMPLATE --out OUT_PATH ./src/**/*.graphql"
         "build": "YOUR_BUILD_SCRIPT_HERE"
     },
     // ...
 
-> We used NPM script that executed before `build` task, and executes `graphql-codegen` in order to generate the types.
+#### Other Environments
+
+If you are using GraphQL with environment different from NodeJS and wish to generate types and interfaces for your platform, start by installing NodeJS and the package as global, and then add the generation command to your build process.
 
 ## Contributing
 

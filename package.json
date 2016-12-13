@@ -1,5 +1,5 @@
 {
-  "name": "graphql-codegen",
+  "name": "graphql-code-generator",
   "version": "0.0.1",
   "description": "GraphQL types and code generator based on schema",
   "main": "dist/index.js",
@@ -21,12 +21,16 @@
     "url": "git+https://github.com/dotansimha/graphql-codegen.git"
   },
   "bin": {
-    "graphql-codegen": "dist/index.js"
+    "gql-gen": "dist/index.js"
   },
   "keywords": [
+    "gql",
+    "generator",
+    "code",
+    "types",
+    "interfaces",
     "graphql",
     "codegen",
-    "generator",
     "apollo",
     "node",
     "typescript",

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1481629929712" clover="3.2.0">
-  <project timestamp="1481629929712" name="All files">
+<coverage generated="1481631092692" clover="3.2.0">
+  <project timestamp="1481631092692" name="All files">
     <metrics statements="365" coveredstatements="49" conditionals="161" coveredconditionals="14" methods="69" coveredmethods="13" elements="595" coveredelements="76" complexity="0" loc="365" ncloc="365" packages="1" files="13" classes="13">
       <file name="cli.ts" path="/Users/dotansimha/Dev/graphql-codegen/src/cli.ts">
         <metrics statements="85" coveredstatements="0" conditionals="41" coveredconditionals="0" methods="19" coveredmethods="0"/>
