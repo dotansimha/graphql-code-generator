@@ -14,6 +14,11 @@ export interface TransformedCliOptions {
   isDev?: boolean;
 }
 
+function collect(val, memo) {
+  memo.push(val);
+  return memo;
+}
+
 export const initCLI = (args): commander.IExportedCommand => {
   commander
     .version(require('../package.json').version)
@@ -21,6 +26,7 @@ export const initCLI = (args): commander.IExportedCommand => {
     .option('-d, --dev', 'Turn on development mode - prints results to console')
     .option('-f, --file <filePath>', 'Parse local GraphQL introspection JSON file')
     .option('-u, --url <graphql-endpoint>', 'Parse remote GraphQL endpoint as introspection file')
+    .option('-h, --header [header]', 'Header to add to the introspection HTTP request when using --url', collect, [])
     .option('-t, --template <template-name>', 'Language/platform name templates')
     .option('-o, --out <path>', 'Output file(s) path', String, './')
     .arguments('<options> [documents...]')
@@ -62,6 +68,7 @@ export const transformOptions = (options): Promise<TransformedCliOptions> => {
   const documents: string[] = options['args'] || [];
   const template: string = options['template'];
   const out: string = options['out'];
+  const headers: string[] = options['header'] || [];
   const isDev: boolean = options['dev'] !== undefined;
   const result: TransformedCliOptions = {};
   let introspectionPromise;
@@ -74,7 +81,7 @@ export const transformOptions = (options): Promise<TransformedCliOptions> => {
     introspectionPromise = introspectionFromFile(file);
   }
   else if (url) {
-    introspectionPromise = introspectionFromUrl(url);
+    introspectionPromise = introspectionFromUrl(url, headers);
   }
 
   const documentsPromise = documentsFromGlobs(documents);

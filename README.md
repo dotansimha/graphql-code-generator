@@ -58,6 +58,7 @@ Allowed flags:
 |-----------------|----------|----------------------------------------------------------------------------------------|
 | -f,--file       | String   | Introspection JSON file, must provide file or URL flag                                 |
 | -u,--url        | String   | GraphQL server endpoint to fetch the introspection from, must provide URL or file flag |
+| -h,--header     | String   | Header to add to the introspection HTTP request when using --url  |
 | -t,--template   | String   | Template name, for example: "typescript"                                               |
 | -o,--out        | String   | Path for output file/directory. When using single-file generator specify filename, and when using multiple-files generator specify a directory                                     |
 | -d,--dev        | void     | Turns ON development mode - prints output to console instead of files                  |
@@ -65,16 +66,18 @@ Allowed flags:
 
 Usage examples:
 
-- With local introspection JSON file, generated TypeScript types:
+- With local introspection JSON file, generate TypeScript types:
 
         $ gql-gen --file mySchema.json --template typescript --out ./typings/ ./src/**/*.graphql
     
-   
-- With remote GraphQL endpoint, generated TypeScript types:
+- With remote GraphQL endpoint, generate Flow types:
 
-        $ gql-gen --url http://localhost:3010/graphql --template typescript --out ./typings/ ./src/**/*.graphql
+        $ gql-gen --url http://localhost:3010/graphql --template flow --out ./typings/ ./src/**/*.graphql
+
+- With remote GraphQL endpoint that requires Authorization, generate TypeScript types:
+
+        $ gql-gen --url http://localhost:3010/graphql --header "Authorization: MY_KEY" --template typescript --out ./typings/ ./src/**/*.graphql
     
-
 - Example using pre-defined files inside this repo (using Apollo's [GitHunt-API](https://github.com/apollostack/Githunt-API) and [GitHunt-Angular2](https://github.com/apollostack/Githunt-angular2)):
 
         $ gql-gen --file ./dev-test/githunt/schema.json --template typescript --out ./dev-test/githunt/typings.d.ts ./dev-test/githunt/**/*.graphql 
