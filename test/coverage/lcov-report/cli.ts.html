@@ -22,7 +22,7 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>0/91</span>
+        <span class='fraction'>0/89</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
@@ -37,7 +37,7 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>0/85</span>
+        <span class='fraction'>0/83</span>
       </div>
     </div>
   </div>
@@ -219,11 +219,7 @@
 174
 175
 176
-177
-178
-179
-180
-181</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+177</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -257,9 +253,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -366,7 +359,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -443,48 +435,44 @@ export const cliErr<span class="cstat-no" title="statement not covered" >or = (e
   pr<span class="cstat-no" title="statement not covered" >ocess.exit(1);</span>
 <span class="cstat-no" title="statement not covered" ></span>
   return;
-};<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" ></span>
-export const validateCliOptions = (options) =&gt; {
+};
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span>
+expo<span class="cstat-no" title="statement not covered" >rt const validateCliOptions = (opti<span class="fstat-no" title="function not covered" >on</span>s) =&gt; {<span class="cstat-no" title="statement not covered" ></span></span>
   const file = options['file'];
-  const url = options['url'<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >];</span></span>
-  co<span class="cstat-no" title="statement not covered" >nst template = options['template'];<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span></span>
-  const out = options['out'];
-<span class="cstat-no" title="statement not covered" >  const documents: string[]<span class="fstat-no" title="function not covered" > =</span> options['args'];</span>
+<span class="cstat-no" title="statement not covered" >  const url = options['url'<span class="fstat-no" title="function not covered" >];</span></span>
+  const templat<span class="cstat-no" title="statement not covered" >e = options['tem</span>plate'];
+  const out = <span class="cstat-no" title="statement not covered" >options['out'];</span>
+  const documents: s<span class="cstat-no" title="statement not covered" >tring[] = options['arg</span>s'] || [];
 <span class="cstat-no" title="statement not covered" ></span>
   if (!file &amp;&amp;<span class="cstat-no" title="statement not covered" > !url) {</span>
-    cliError('Please<span class="cstat-no" title="statement not covered" > specify one of --file</span> or --url flags!');
+    cliError('Pl<span class="cstat-no" title="statement not covered" >ease specify one of --file or</span> --url flags!');
   }<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" ></span>
-  if (!template)<span class="cstat-no" title="statement not covered" > {</span>
-    cliError('Ple<span class="cstat-no" title="statement not covered" >ase</span> specify language/platform, using --template flag');
+&nbsp;
+  if<span class="cstat-no" title="statement not covered" > (!template) {</span>
+    cliE<span class="cstat-no" title="statement not covered" >rror('Please specify language/platform, using --template flag');</span>
   }
-<span class="cstat-no" title="statement not covered" ></span>
-  if (!d<span class="cstat-no" title="statement not covered" >ocuments || documents.length === 0) {</span>
-    cliError('Please specify GraphQL documents input');
-  }<span class="cstat-no" title="statement not covered" ></span>
-};<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span>
-<span class="cstat-no" title="statement not covered" ></span>
-const getGenerat<span class="cstat-no" title="statement not covered" >orTemplate = (templateName: string): GeneratorTemplate =&gt; {</span>
-  return generators.find(item =&gt; (item<span class="cstat-no" title="statement not covered" >.aliases || []).indexOf(templa</span>teName.toLowerCase()) &gt; -1);
+};<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span>
+const getGen<span class="cstat-no" title="statement not covered" >eratorTemplate = (templateName: string): GeneratorTemplate =&gt; {</span>
+  return generat<span class="cstat-no" title="statement not covered" >ors.find(item =&gt; (item.aliases || []).indexOf(templateName.toLowerCase()) &gt; -1);</span>
 };<span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" ></span>
-export const transformOptions = (options): Promise&lt;TransformedCliOptions&gt; =&gt; {
-  const file: string<span class="cstat-no" title="statement not covered" > = options['file'];</span>
-  const url: string = options['url'];
+export const transformOp<span class="cstat-no" title="statement not covered" >tions = (options): Promise&lt;TransformedCliOptions&gt; =&gt; {</span>
+  const file: string = options['file'];
+  const url: string <span class="cstat-no" title="statement not covered" >= options['url'];</span>
   const documents: string[] = options['args'] || [];
-  const template: st<span class="cstat-no" title="statement not covered" >ring = opti</span>ons['template'];
-  const out: string = options['out'];
+  const template: string = options['template'];
+  const out: string <span class="cstat-no" title="statement not covered" >= options['</span>out'];
   const isDev: boolean = options['dev'] !== undefined;
   const result: TransformedCliOptions = {};
-  let introspect<span class="cstat-no" title="statement not covered" >ionPromise;</span>
-&nbsp;
+  let introspectionPromise;
+<span class="cstat-no" title="statement not covered" ></span>
   if (isDev) {
     console.log('Development mode is ON - output will print to console');
-  }<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span>
-  if (file) <span class="cstat-no" title="statement not covered" >{</span>
-    introspectionPromise = new Promise&lt;IntrospectionQuery&gt;((resolve, reject) =&gt; {
+  }
+<span class="cstat-no" title="statement not covered" ></span>
+  if (fi<span class="cstat-no" title="statement not covered" >le) {<span class="fstat-no" title="function not covered" ></span></span>
+    introspe<span class="cstat-no" title="statement not covered" >ctionPromise = new Promise&lt;IntrospectionQuery&gt;((resolve, reject) =&gt; {</span>
       if (fs.existsSync(file)) {
         try {
           const fileContent = fs.readFileSync(file, 'utf8');
@@ -492,61 +480,61 @@ export const transformOptions = (options): Promise&lt;TransformedCliOptions&gt; 
           if (!fileContent) {
             reject(`Unable to read local introspection file: ${file}`);
           }
-<span class="fstat-no" title="function not covered" ></span>
-          resolv<span class="cstat-no" title="statement not covered" >e(&lt;IntrospectionQuery&gt;JSON.parse(fileContent));</span>
+&nbsp;
+          resol<span class="fstat-no" title="function not covered" >ve</span>(&lt;IntrospectionQuery&gt;JSON.parse(fileContent));
         }<span class="cstat-no" title="statement not covered" ></span>
         catch (e) {<span class="cstat-no" title="statement not covered" ></span>
-          reject(e);
-        }<span class="cstat-no" title="statement not covered" ></span>
+          reject(e);<span class="cstat-no" title="statement not covered" ></span>
+        }
       }<span class="cstat-no" title="statement not covered" ></span>
-      else {<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span></span>
-        reject(`Unab<span class="cstat-no" title="statement not covered" >le to lo</span>cate local introspection file: ${file}`);
-      }
-    });<span class="cstat-no" title="statement not covered" ></span>
-  }
+      else {<span class="cstat-no" title="statement not covered" ></span>
+        reject(`Unab<span class="cstat-no" title="statement not covered" >le to locate local introspection file: ${file}`);<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span></span>
+      }<span class="cstat-no" title="statement not covered" ></span>
+    });
+  }<span class="cstat-no" title="statement not covered" ></span>
   else if (url) {
     introspectionPromise = new Promise&lt;IntrospectionQuery&gt;((resolve, reject) =&gt; {
-      request.post({<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span>
-<span class="cstat-no" title="statement not covered" >        url: url,<span class="fstat-no" title="function not covered" ></span></span>
-        json<span class="cstat-no" title="statement not covered" >: {<span class="fstat-no" title="function not covered" ></span></span>
-          query:<span class="cstat-no" title="statement not covered" > introspectionQuery</span>
+      request.post({
+        url: url,<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span>
+<span class="cstat-no" title="statement not covered" >        json: {<span class="fstat-no" title="function not covered" ></span></span>
+          qu<span class="cstat-no" title="statement not covered" >ery: introspectionQ<span class="fstat-no" title="function not covered" >ue</span>ry</span>
         },<span class="cstat-no" title="statement not covered" ></span>
-        headers: {
-          'Accep<span class="cstat-no" title="statement not covered" >t': 'application/json',</span>
-          'Content-T<span class="cstat-no" title="statement not covered" >ype': 'application/json'</span>
-        }
-      }, (err, r<span class="cstat-no" title="statement not covered" >esponse, body) =</span>&gt; {
-        if (err) {
+        headers: {<span class="cstat-no" title="statement not covered" ></span>
+          'Accept': 'application/json',
+          'Conte<span class="cstat-no" title="statement not covered" >nt-Type': 'application/json'</span>
+        }<span class="cstat-no" title="statement not covered" ></span>
+      }, (err, response, body) =&gt; {
+        if (err)<span class="cstat-no" title="statement not covered" > {</span>
           reject(err);
 &nbsp;
-          return;<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span>
-        }<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" ></span>
-        cons<span class="cstat-no" title="statement not covered" >t bodyJson = body.data;</span>
-&nbsp;
-        if (!bodyJson || (bodyJson.errors &amp;&amp; bodyJson.errors.length &gt; 0)) {
-          reject('Unable to downloa<span class="cstat-no" title="statement not covered" >d schema from remote: ' + b<span class="fstat-no" title="function not covered" >od</span>yJson.errors.map<span class="cstat-no" title="statement not covered" >(item =&gt; item.message</span>).join(', <span class="fstat-no" title="function not covered" >')</span>);<span class="cstat-no" title="statement not covered" ></span></span>
-<span class="cstat-no" title="statement not covered" ></span>
           return;
-        }
-<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span>
-<span class="cstat-no" title="statement not covered" >        resolve(bodyJson);<span class="fstat-no" title="function not covered" ></span></span>
-      });<span class="cstat-no" title="statement not covered" ></span>
-    });
-  }
+        }<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span>
 <span class="cstat-no" title="statement not covered" ></span>
-  const documentsPromises = documents.map((documentGlob: string) =&gt; {
+<span class="cstat-no" title="statement not covered" >        const bodyJson = body.data;</span>
+<span class="cstat-no" title="statement not covered" ></span>
+        if (!bodyJson || (bodyJson.errors &amp;&amp; bodyJson.errors.length &gt; 0)) {
+          reject('Unable to download schema from remote: ' + bodyJson.errors.map(item =&gt; item.message).join(', '));
+<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ><span class="fstat-no" title="function not covered" ></span></span></span></span></span>
+          re<span class="cstat-no" title="statement not covered" >turn;</span>
+        }
+&nbsp;
+        resolve(bodyJson);<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span>
+      })<span class="cstat-no" title="statement not covered" >;<span class="fstat-no" title="function not covered" ></span></span>
+    });<span class="cstat-no" title="statement not covered" ></span>
+  }
+&nbsp;
+  co<span class="cstat-no" title="statement not covered" >nst documentsPromises = documents.map((documentGlob: string) =&gt; {</span>
     return new Promise&lt;string[]&gt;((resolve, reject) =&gt; {
       glob(documentGlob, (err, files) =&gt; {
-        if (<span class="fstat-no" title="function not covered" >er</span>r) {
-          reject(err);<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" ></span></span></span>
+        if (err) {
+          re<span class="fstat-no" title="function not covered" >je</span>ct(err);
+        }<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" ></span></span></span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >        if (!files || files.length ===</span> 0) {
+<span class="cstat-no" title="statement not covered" >          reject(`Unable to locate files matc</span>hing glob definition: ${documentGlob}`);
 <span class="cstat-no" title="statement not covered" >        }</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >        if (!files || files.length === 0) {</span>
-<span class="cstat-no" title="statement not covered" >          reject(`Unable to lo</span>cate files matching glob definition: ${documentGlob}`);
-<span class="cstat-no" title="statement not covered" >        }</span>
-<span class="cstat-no" title="statement not covered" ></span>
-        resolve(files);
+<span class="cstat-no" title="statement not covered" >        resolve(files);</span>
       });
     });
   });
@@ -564,7 +552,7 @@ export const transformOptions = (options): Promise&lt;TransformedCliOptions&gt; 
   });
 &nbsp;
   const documentsPromise = Promise.all(documentsPromises).then((files: string[][]) =&gt; {
-    return files.reduce((a, b) =&gt; {
+    return files.length === 0 ? [] : files.reduce((a, b) =&gt; {
       return a.concat(b);
     });
   });
@@ -589,7 +577,7 @@ export const transformOptions = (options): Promise&lt;TransformedCliOptions&gt; 
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Dec 13 2016 17:33:25 GMT+0200 (IST)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Dec 14 2016 12:34:20 GMT+0200 (IST)
 </div>
 </div>
 <script src="prettify.js"></script>

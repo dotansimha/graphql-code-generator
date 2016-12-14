@@ -35,12 +35,15 @@ transformOptions(options)
         throw `Generator '${transformedOptions.template.language}' uses single-file strategy! Please specify a filename using --out flag!`;
       }
 
-      const templatePath = path.resolve(transformedOptions.template.config.basePath, transformedOptions.template.config.template);
+      const templatePath = path.resolve(__dirname, transformedOptions.template.config.basePath, transformedOptions.template.config.template);
+      const outPath = path.resolve(transformedOptions.outPath);
+      const outDir = path.dirname(outPath);
+      mkdirp.sync(outDir);
 
       return [{
         isDev: transformedOptions.isDev,
         content: generateCode(codegen, templatePath),
-        path: path.resolve(transformedOptions.outPath)
+        path: outPath
       }];
     }
     else if (strategy === 'MULTIPLE_FILES') {
@@ -55,7 +58,7 @@ transformOptions(options)
       mkdirp.sync(outPath);
 
       Object.keys(templates).forEach((templateName: string) => {
-        const templatePath = path.resolve(transformedOptions.template.config.basePath, templates[templateName]);
+        const templatePath = path.resolve(__dirname, transformedOptions.template.config.basePath, templates[templateName]);
 
         if (templateName === 'model') {
           codegen.models.forEach((model: Model) => {

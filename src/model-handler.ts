@@ -13,7 +13,7 @@ import {
   GraphQLType,
   GraphQLScalarType
 } from 'graphql/type/definition';
-import {shouldSkip, getTypeName, isPrimitive, isArray, isRequired} from "./utils";
+import {shouldSkip, getTypeName, isPrimitive, isArray, isRequired} from './utils';
 
 export const handleType = (primitivesMap: any, type: GraphQLType) => {
   const typeName = type['name'];

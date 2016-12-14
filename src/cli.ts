@@ -121,8 +121,6 @@ export const transformOptions = (options): Promise<TransformedCliOptions> => {
           return;
         }
 
-        console.log(JSON.stringify(bodyJson));
-
         resolve(bodyJson);
       });
     });

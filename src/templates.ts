@@ -17,7 +17,7 @@ export interface GeneratorTemplate {
 }
 
 const getConfig = (generatorPath: string): TemplateConfig => {
-  let dirString = path.dirname(fs.realpathSync(__filename));
+  let dirString = __dirname;
   let config = <TemplateConfig>(JSON.parse(fs.readFileSync(path.resolve(dirString, generatorPath, 'config.json'), 'utf8')));
   config.basePath = generatorPath;
 

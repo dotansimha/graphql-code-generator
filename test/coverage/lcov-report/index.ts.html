@@ -22,7 +22,7 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>0/56</span>
+        <span class='fraction'>0/59</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
@@ -37,7 +37,7 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>0/55</span>
+        <span class='fraction'>0/58</span>
       </div>
     </div>
   </div>
@@ -163,7 +163,10 @@
 118
 119
 120
-121</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+121
+122
+123
+124</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -189,6 +192,9 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -310,22 +316,25 @@ tran<span class="cstat-no" title="statement not covered" >sformOptions(options)<
     initHelp<span class="cstat-no" title="statement not covered" >ers();</span>
     const schema = loadSchema(transformedOptions.introspection);
     const documents = trans<span class="cstat-no" title="statement not covered" >formedOptions.documents;</span>
-    cons<span class="cstat-no" title="statement not covered" >t codegen = prepareCodegen(schema, loadDocumentsSources(documents), transformedOptions.template.config.primitives);</span>
-    const templateConfig = transformedOptions.template.config;
-    const strategy = templateConfig.strategy || 'SINGLE_FILE';
-    const baseOutPath = path.basename(transformedOptions.outPath);
+    const codegen = pr<span class="cstat-no" title="statement not covered" >epareCodegen(schema, loadDocumentsSources</span>(documents), transformedOptions.template.config.primitives);
+    const templateCon<span class="cstat-no" title="statement not covered" >fig = transformedOptio</span>ns.template.config;
+    cons<span class="cstat-no" title="statement not covered" >t strategy = template</span>Config.strategy || 'SINGLE_FILE';
+    cons<span class="cstat-no" title="statement not covered" >t baseOutPath = path.basename(transformedOptions.outPath);</span>
 &nbsp;
     if (strategy === 'SINGLE_FILE') {
-      if <span class="cstat-no" title="statement not covered" >(baseOutPath.indexOf('.') === -1) {</span>
-<span class="cstat-no" title="statement not covered" >        throw `Generator '${transformedOptions.template.language}' uses single-file strategy! Please specify a filename using --out flag!`;</span>
-      }<span class="cstat-no" title="statement not covered" ></span>
-&nbsp;
-      const templatePath = <span class="cstat-no" title="statement not covered" >pat</span>h.resolve(transformedOptions.template.config.basePath, transformedOptions.template.config.template);
+      if (baseOutPath.indexOf('.') === -1) {
+        throw `Generator '${transformedOptions.template.language}' uses single-file strategy! Please specify a filename using --out flag!`;
+      }
+<span class="cstat-no" title="statement not covered" ></span>
+      co<span class="cstat-no" title="statement not covered" >nst templatePath = path.resolve(__dirname, transformedOptions.template.config.basePath, transformedOptions.template.config.template);</span>
+      const <span class="cstat-no" title="statement not covered" >outPath = path.resolve(transformedOptions.outPath);</span>
+      const outDir = path.dirname(outPath);
+      mkdirp.sync(outDir);<span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" ></span>
       return [{<span class="cstat-no" title="statement not covered" ></span>
         isDev: transfo<span class="cstat-no" title="statement not covered" >rmedOptions.isDev,</span>
 <span class="cstat-no" title="statement not covered" >        content: generateCode(</span>codegen, templatePath),
-<span class="cstat-no" title="statement not covered" >        path: path.resolve(transformedOpt<span class="fstat-no" title="function not covered" >io</span>ns.outPath)</span>
+<span class="cstat-no" title="statement not covered" >        path: outPath<span class="fstat-no" title="function not covered" ></span></span>
       }];<span class="cstat-no" title="statement not covered" ></span>
     }<span class="cstat-no" title="statement not covered" ></span>
     else if (str<span class="cstat-no" title="statement not covered" >ategy === 'MULTIPLE_FIL<span class="fstat-no" title="function not covered" >ES</span>') {</span>
@@ -340,7 +349,7 @@ tran<span class="cstat-no" title="statement not covered" >sformOptions(options)<
       mkdirp.syn<span class="cstat-no" title="statement not covered" >c(outPath);<span class="fstat-no" title="function not covered" ></span></span>
 <span class="cstat-no" title="statement not covered" ></span>
       Object.keys(templates).forEach((templateName: string) =&gt; {
-        const templatePath = path.resolve(transformedOptions.template.config.basePath, templates[templateName]);
+        const templatePath = path.resolve(__dirname, transformedOptions.template.config.basePath, templates[templateName]);
 &nbsp;
         if (templateName === 'model') {
           codegen.models.forEach((model: Model) =&gt; {
@@ -409,7 +418,7 @@ tran<span class="cstat-no" title="statement not covered" >sformOptions(options)<
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Dec 13 2016 17:33:25 GMT+0200 (IST)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Dec 14 2016 12:34:20 GMT+0200 (IST)
 </div>
 </div>
 <script src="prettify.js"></script>

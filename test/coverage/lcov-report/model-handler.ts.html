@@ -20,14 +20,14 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">65.85% </span>
+        <span class="strong">57.14% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>27/41</span>
+        <span class='fraction'>20/35</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">33.33% </span>
+        <span class="strong">30.43% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>7/21</span>
+        <span class='fraction'>7/23</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">50% </span>
@@ -35,9 +35,9 @@
         <span class='fraction'>3/6</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">67.5% </span>
+        <span class="strong">58.82% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>27/40</span>
+        <span class='fraction'>20/34</span>
       </div>
     </div>
   </div>
@@ -125,14 +125,13 @@
 80
 81
 82
-83</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+83
+84
+85
+86
+87
+88
+89</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -190,10 +189,23 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -208,41 +220,44 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {Model, EnumValue, Field} from './interfaces';
-import {GraphQLType} from 'graphql/type/definition';
-import {GraphQLEnumType} from 'graphql/type/definition';
-import {GraphQLEnumValue} from 'graphql/type/definition';
-import {GraphQLObjectType} from 'graphql/type/definition';
-import {GraphQLInputObjectType} from 'graphql/type/definition';
-import {GraphQLField} from 'graphql/type/definition';
-import {GraphQLInterfaceType} from 'graphql/type/definition';
-import {GraphQLUnionType} from 'graphql/type/definition';
-import {GraphQLList} from 'graphql/type/definition';
-import {GraphQLNonNull} from 'graphql/type/definition';
-import {getNamedType} from 'graphql/type/definition';
-import {shouldSkip, getTypeName, isPrimitive, isArray, isRequired} from "./utils";
-&nbsp;
+import {
+  getNamedType,
+  GraphQLNonNull,
+  GraphQLList,
+  GraphQLUnionType,
+  GraphQLInterfaceType,
+  GraphQLField,
+  GraphQLInputObjectType,
+  GraphQLObjectType,
+  GraphQLEnumValue,
+  GraphQLEnumType,
+  Gr<span class="missing-if-branch" title="else path not taken" >E</span>aphQLType,
+  GraphQ<span class="missing-if-branch" title="if path not taken" >I</span>LScalarType
+} from 'grap<span class="cstat-no" title="statement not covered" >hql/type/definition';</span>
+import {shou<span class="cstat-no" title="statement not covered" >ldSkip, getTypeName, isPrimitive, isArray, isR<span class="fstat-no" title="function not covered" >eq</span>uired} from './utils';</span>
+<span class="cstat-no" title="statement not covered" ></span>
 export const handleType = (primitivesMap: any, type: GraphQLType) =&gt; {
   const typeName = type['name'];
 &nbsp;
   let currentType: Model = {
     imports: [],
-    <span class="missing-if-branch" title="else path not taken" >E</span>name: typeName,
-    fiel<span class="missing-if-branch" title="if path not taken" >I</span>ds: [],
-    isEnum: <span class="cstat-no" title="statement not covered" >false,</span>
-    isObject<span class="cstat-no" title="statement not covered" >: false<span class="fstat-no" title="function not covered" ></span></span>
-  };<span class="cstat-no" title="statement not covered" ></span>
-&nbsp;
-  if (!shouldSkip(typeName)) {
+    name: typeName,
+    fields: [<span class="missing-if-branch" title="else path not taken" >E</span>],<span class="branch-2 cbranch-no" title="branch not covered" ><span class="branch-1 cbranch-no" title="branch not covered" ></span></span>
+    isEnum: false,
+    isObject: false
+  };<span class="missing-if-branch" title="else path not taken" >E</span>
+<span class="fstat-no" title="function not covered" ></span>
+  if (!shouldSkip(ty<span class="cstat-no" title="statement not covered" >peName)) {</span>
     if (type instanceof GraphQLEnumType) {
       currentType.isEnum = true;
       currentType.enumValues = type.getValues().map&lt;EnumValue&gt;((enumItem: GraphQLEnumValue) =&gt; {
         return &lt;EnumValue&gt;{
-          nam<span class="missing-if-branch" title="else path not taken" >E</span>e: enumItem.name,<span class="branch-2 cbranch-no" title="branch not covered" ><span class="branch-1 cbranch-no" title="branch not covered" ></span></span>
+          name: enumItem.name,
           description: enumItem.description,
           value: enumItem.value
-        };<span class="missing-if-branch" title="else path not taken" >E</span>
-      });<span class="fstat-no" title="function not covered" ></span>
-    }<span class="cstat-no" title="statement not covered" ></span>
+        };
+      });
+    }
     else if (type instanceof GraphQLObjectType || type instanceof GraphQLInputObjectType || type instanceof GraphQLInterfaceType) {
       currentType.isObject = true;
       const fields = type.getFields();
@@ -252,38 +267,41 @@ export const handleType = (primitivesMap: any, type: GraphQLType) =&gt; {
           return interf.name;
         });
         currentType.hasImplementedInterfaces = currentType.implementedInterfaces.length &gt; 0;
-      }
-&nbsp;
-      currentType.fields = Object
-        .keys(fields)
-        .map((fieldName: string) =&gt; fields[fieldName])
-        .map&lt;Field&gt;((field: GraphQLField&lt;any, any&gt;) =&gt; {
+      }<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" ></span>
+      curren<span class="cstat-no" title="statement not covered" >tType.fields = Object</span>
+        .key<span class="cstat-no" title="statement not covered" >s(fields)</span>
+        .map<span class="cstat-no" title="statement not covered" >((fieldName: string) =&gt; fields[fieldName])<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span></span>
+        .map<span class="cstat-no" title="statement not covered" >&lt;Field&gt;((field: GraphQLField&lt;any, any&gt;) =&gt; {</span>
           const type = getTypeName(primitivesMap, field.type);
-&nbsp;
-          if (!isPrimitive(primitivesMap, type)) {
+<span class="cstat-no" title="statement not covered" ></span>
+          if<span class="cstat-no" title="statement not covered" > (!isPrimitive(primitivesMap, type)) {</span>
             currentType.imports.push(type);
           }<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" ></span>
-          re<span class="cstat-no" title="statement not covered" >turn {</span>
-<span class="cstat-no" title="statement not covered" >            name: field.name,</span>
-<span class="cstat-no" title="statement not covered" >            type: type,<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span></span>
-<span class="cstat-no" title="statement not covered" >            isArray: isArray(field.type),</span>
+&nbsp;
+          return {
+            name: field.name,
+            type: type,
+<span class="cstat-no" title="statement not covered" >            isArray: </span>isArray(field.type),
             isRequired: isRequired(field.type)
-          };<span class="cstat-no" title="statement not covered" ></span>
-        });<span class="cstat-no" title="statement not covered" ></span>
+          };
+        });
     }
     else if (type instanceof GraphQLUnionType) {
       currentType.name = type.name || typeName;
       currentType.isUnion = true;
-      cu<span class="cstat-no" title="statement not covered" >rrentType.isO</span>bject = false;
+      currentType.isObject = false;
       currentType.unionTypes = type.getTypes().map(type =&gt; type.name);
       currentType.hasUnionTypes = currentType.unionTypes.length &gt; 0;
     }
     else if (type instanceof GraphQLList || type instanceof GraphQLNonNull) {
-      return handleType(primitivesMap, typeName, getNamedType(type));
+      return handleType(primitivesMap, getNamedType(type));
+    }
+    else if (type instanceof GraphQLScalarType) {
+      // TODO: Handle scalar
     }
 &nbsp;
-    return currentType;
+      return currentType;
   }
   else {
     return null;
@@ -295,7 +313,7 @@ export const handleType = (primitivesMap: any, type: GraphQLType) =&gt; {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Dec 13 2016 17:33:25 GMT+0200 (IST)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Dec 14 2016 12:34:20 GMT+0200 (IST)
 </div>
 </div>
 <script src="prettify.js"></script>
