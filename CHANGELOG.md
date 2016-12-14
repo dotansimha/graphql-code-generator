@@ -1,3 +1,14 @@
+<a name="0.1.9"></a>
+## [0.1.9](https://github.com/dotansimha/graphql-codegen/compare/0.1.8...v0.1.9) (2016-12-14)
+
+
+### Features
+
+* **cli:** added package version to cli ([df698d8](https://github.com/dotansimha/graphql-codegen/commit/df698d8))
+* **core:** added support for custom scalar types ([6ce7aa9](https://github.com/dotansimha/graphql-codegen/commit/6ce7aa9))
+
+
+
 <a name="0.1.8"></a>
 ## 0.1.8 (2016-12-14)
 

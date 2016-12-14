@@ -1,6 +1,6 @@
 {
   "name": "graphql-code-generator",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "GraphQL types and code generator based on schema",
   "main": "dist/index.js",
   "scripts": {
