@@ -6,6 +6,7 @@ before_install:
   - rm -rf node_modules
 install:
   - npm install
+  - npm install -g conventional-changelog-cli
 before_script:
   - npm run build
 script:
