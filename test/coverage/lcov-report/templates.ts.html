@@ -20,9 +20,9 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">0% </span>
+        <span class="strong">40% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>0/8</span>
+        <span class='fraction'>4/10</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -32,12 +32,12 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>0/1</span>
+        <span class='fraction'>0/2</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">0% </span>
+        <span class="strong">40% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>0/8</span>
+        <span class='fraction'>4/10</span>
       </div>
     </div>
   </div>
@@ -86,16 +86,24 @@
 41
 42
 43
-44</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+44
+45
+46
+47
+48</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -130,17 +138,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import * as fs from 'fs';
-import * <span class="cstat-no" title="statement not covered" >as path from '</span>path';
-<span class="cstat-no" title="statement not covered" ></span>
-export interface<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" > T</span>emplateConfig {</span>
-  strategy: 'SINGLE_<span class="cstat-no" title="statement not covered" >FILE' | 'M</span>ULTIPLE_FILES';
-  template?: strin<span class="cstat-no" title="statement not covered" >g;</span>
-  fi<span class="cstat-no" title="statement not covered" >lesExtension?: string;</span>
-  te<span class="cstat-no" title="statement not covered" >mplates?: {[key</span>: string]: string};
-  primitives?: {[key: string]: string};
-<span class="cstat-no" title="statement not covered" >  basePath?: string;</span>
-}
+import * as path from 'path';
 &nbsp;
+export interface<span class="fstat-no" title="function not covered" > T</span>emplateConfig {
+  strategy: 'SINGLE_<span class="cstat-no" title="statement not covered" >FILE' | 'M</span>ULTIPLE_FILES';
+  template?: string;<span class="cstat-no" title="statement not covered" ></span>
+  filesExtension?:<span class="cstat-no" title="statement not covered" > string;</span>
+  te<span class="cstat-no" title="statement not covered" >mplates?: {[key: string]: string}</span>;
+  pr<span class="cstat-no" title="statement not covered" >imitives?: {[ke</span>y: string]: string};
+  basePath?: string;
+}<span class="fstat-no" title="function not covered" ></span>
+<span class="cstat-no" title="statement not covered" ></span>
 export interface GeneratorTemplate {
   language: string;
   aliases: string[];
@@ -149,36 +157,40 @@ export interface GeneratorTemplate {
 &nbsp;
 const getConfig = (generatorPath: string): TemplateConfig =&gt; {
   let dirString = __dirname;
-  let config = &lt;TemplateConfig&gt;(JSON.parse(fs.readFileSync(path.resolve(dirString, generatorPath, 'config.json'), 'utf8')));
+  const configPath = path.resolve(dirString, generatorPath, 'config.json');
+  let config = &lt;TemplateConfig&gt;(JSON.parse(fs.readFileSync(configPath, 'utf8')));
   config.basePath = generatorPath;
 &nbsp;
   return config;
 };
 &nbsp;
-export const generators: GeneratorTemplate[] = [
-  {
-    language: 'TypeScript Single File',
-    aliases: ['ts', 'typescript', 'ts-single', 'typescript-single'],
-    config: getConfig('../generators/typescript-single-file/')
-  },
-  {
-    language: 'TypeScript Multiple Files',
-    aliases: ['ts-multiple', 'typescript-multiple'],
-    config: getConfig('../generators/typescript-multiple-files/')
-  },
-  {
-    language: 'Flow Single File',
-    aliases: ['flow', 'flow-single'],
-    config: getConfig('../generators/flow-single-file/')
-  }
-];
+export const getGenerators = () =&gt; {
+  return [
+    {
+      language: 'TypeScript Single File',
+      aliases: ['ts', 'typescript', 'ts-single', 'typescript-single'],
+      config: getConfig('../generators/typescript-single-file/')
+    },
+    {
+      language: 'TypeScript Multiple Files',
+      aliases: ['ts-multiple', 'typescript-multiple'],
+      config: getConfig('../generators/typescript-multiple-files/')
+    },
+    {
+      language: 'Flow Single File',
+      aliases: ['flow', 'flow-single'],
+      config: getConfig('../generators/flow-single-file/')
+    }
+  ];
+};
+&nbsp;
 &nbsp;</pre></td></tr>
 </table></pre>
 <div class='push'></div><!-- for sticky footer -->
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Dec 14 2016 12:49:13 GMT+0200 (IST)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Dec 14 2016 14:49:37 GMT+0200 (IST)
 </div>
 </div>
 <script src="prettify.js"></script>

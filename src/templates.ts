@@ -18,26 +18,30 @@ export interface GeneratorTemplate {
 
 const getConfig = (generatorPath: string): TemplateConfig => {
   let dirString = __dirname;
-  let config = <TemplateConfig>(JSON.parse(fs.readFileSync(path.resolve(dirString, generatorPath, 'config.json'), 'utf8')));
+  const configPath = path.resolve(dirString, generatorPath, 'config.json');
+  let config = <TemplateConfig>(JSON.parse(fs.readFileSync(configPath, 'utf8')));
   config.basePath = generatorPath;
 
   return config;
 };
 
-export const generators: GeneratorTemplate[] = [
-  {
-    language: 'TypeScript Single File',
-    aliases: ['ts', 'typescript', 'ts-single', 'typescript-single'],
-    config: getConfig('../generators/typescript-single-file/')
-  },
-  {
-    language: 'TypeScript Multiple Files',
-    aliases: ['ts-multiple', 'typescript-multiple'],
-    config: getConfig('../generators/typescript-multiple-files/')
-  },
-  {
-    language: 'Flow Single File',
-    aliases: ['flow', 'flow-single'],
-    config: getConfig('../generators/flow-single-file/')
-  }
-];
+export const getGenerators = () => {
+  return [
+    {
+      language: 'TypeScript Single File',
+      aliases: ['ts', 'typescript', 'ts-single', 'typescript-single'],
+      config: getConfig('../generators/typescript-single-file/')
+    },
+    {
+      language: 'TypeScript Multiple Files',
+      aliases: ['ts-multiple', 'typescript-multiple'],
+      config: getConfig('../generators/typescript-multiple-files/')
+    },
+    {
+      language: 'Flow Single File',
+      aliases: ['flow', 'flow-single'],
+      config: getConfig('../generators/flow-single-file/')
+    }
+  ];
+};
+

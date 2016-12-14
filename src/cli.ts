@@ -1,10 +1,10 @@
 import * as commander from 'commander';
-import * as fs from 'fs';
-import * as glob from 'glob';
-import * as request from 'request';
 import {IntrospectionQuery} from 'graphql/utilities/introspectionQuery';
-import {GeneratorTemplate, generators} from './templates';
-import {introspectionQuery} from 'graphql/utilities/introspectionQuery';
+import {GeneratorTemplate} from './templates';
+import {introspectionFromUrl} from './introspection-from-url';
+import {introspectionFromFile} from './introspection-from-file';
+import {documentsFromGlobs} from './documents-glob';
+import {getTemplateGenerator} from './template-loader';
 
 export interface TransformedCliOptions {
   introspection?: IntrospectionQuery;
@@ -16,7 +16,6 @@ export interface TransformedCliOptions {
 
 export const initCLI = (args): commander.IExportedCommand => {
   commander
-    .version('0.0.1')
     .usage('graphql-codegen [options]')
     .option('-d, --dev', 'Turn on development mode - prints results to console')
     .option('-f, --file <filePath>', 'Parse local GraphQL introspection JSON file')
@@ -45,7 +44,6 @@ export const validateCliOptions = (options) => {
   const url = options['url'];
   const template = options['template'];
   const out = options['out'];
-  const documents: string[] = options['args'] || [];
 
   if (!file && !url) {
     cliError('Please specify one of --file or --url flags!');
@@ -56,9 +54,6 @@ export const validateCliOptions = (options) => {
   }
 };
 
-const getGeneratorTemplate = (templateName: string): GeneratorTemplate => {
-  return generators.find(item => (item.aliases || []).indexOf(templateName.toLowerCase()) > -1);
-};
 
 export const transformOptions = (options): Promise<TransformedCliOptions> => {
   const file: string = options['file'];
@@ -75,90 +70,14 @@ export const transformOptions = (options): Promise<TransformedCliOptions> => {
   }
 
   if (file) {
-    introspectionPromise = new Promise<IntrospectionQuery>((resolve, reject) => {
-      if (fs.existsSync(file)) {
-        try {
-          const fileContent = fs.readFileSync(file, 'utf8');
-
-          if (!fileContent) {
-            reject(`Unable to read local introspection file: ${file}`);
-          }
-
-          resolve(<IntrospectionQuery>JSON.parse(fileContent));
-        }
-        catch (e) {
-          reject(e);
-        }
-      }
-      else {
-        reject(`Unable to locate local introspection file: ${file}`);
-      }
-    });
+    introspectionPromise = introspectionFromFile(file);
   }
   else if (url) {
-    introspectionPromise = new Promise<IntrospectionQuery>((resolve, reject) => {
-      request.post({
-        url: url,
-        json: {
-          query: introspectionQuery
-        },
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        }
-      }, (err, response, body) => {
-        if (err) {
-          reject(err);
-
-          return;
-        }
-
-        const bodyJson = body.data;
-
-        if (!bodyJson || (bodyJson.errors && bodyJson.errors.length > 0)) {
-          reject('Unable to download schema from remote: ' + bodyJson.errors.map(item => item.message).join(', '));
-
-          return;
-        }
-
-        resolve(bodyJson);
-      });
-    });
+    introspectionPromise = introspectionFromUrl(url);
   }
 
-  const documentsPromises = documents.map((documentGlob: string) => {
-    return new Promise<string[]>((resolve, reject) => {
-      glob(documentGlob, (err, files) => {
-        if (err) {
-          reject(err);
-        }
-
-        if (!files || files.length === 0) {
-          reject(`Unable to locate files matching glob definition: ${documentGlob}`);
-        }
-
-        resolve(files);
-      });
-    });
-  });
-
-  const generatorTemplatePromise = new Promise<GeneratorTemplate>((resolve, reject) => {
-    const generatorTemplate = getGeneratorTemplate(template);
-
-    if (generatorTemplate) {
-      resolve(generatorTemplate);
-    }
-    else {
-      const allowedTemplates = generators.map(item => item.aliases).reduce((a, b) => a.concat(b)).join(', ');
-      reject(`Unknown template language specified: ${template}, available are: ${allowedTemplates}`);
-    }
-  });
-
-  const documentsPromise = Promise.all(documentsPromises).then((files: string[][]) => {
-    return files.length === 0 ? [] : files.reduce((a, b) => {
-      return a.concat(b);
-    });
-  });
+  const documentsPromise = documentsFromGlobs(documents);
+  const generatorTemplatePromise = getTemplateGenerator(template);
 
   return Promise.all([
     introspectionPromise,

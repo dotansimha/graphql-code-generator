@@ -1,7 +1,9 @@
 jest.mock('fs');
 jest.unmock('handlebars');
 import * as fs from 'fs';
-import {loadFromPath, generateCode} from "../../src/generator";
+import * as path from 'path';
+
+import {loadFromPath, compileTemplate} from "../../src/template-loader";
 
 describe('generator', () => {
   const template = '{{#if models}} TEST {{/if}}';
@@ -29,7 +31,7 @@ describe('generator', () => {
 
   describe('generateCode', () => {
     test('should return the compiled string and use handlebars', () => {
-      const returnValue = generateCode({models: [{}]}, 'template.handlebars');
+      const returnValue = compileTemplate({models: [{}]}, 'template.handlebars');
 
       expect(returnValue).toBeDefined();
       expect(returnValue).toEqual(' TEST ');

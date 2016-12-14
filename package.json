@@ -61,6 +61,7 @@
     }
   },
   "jest": {
+    "verbose": true,
     "collectCoverage": true,
     "collectCoverageFrom": [
       "**/src/**/*.ts"
@@ -103,6 +104,6 @@
     "request": "^2.79.0",
     "rimraf": "^2.5.4",
     "tslint": "^4.0.2",
-    "typescript": "^2.0.10"
+    "typescript": "^2.1.4"
   }
 }

@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for template-loader.ts</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="prettify.css" />
+    <link rel="stylesheet" href="base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="index.html">All files</a> template-loader.ts
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">52.38% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>11/21</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">33.33% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>2/6</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">25% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>2/8</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">61.11% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>11/18</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line medium'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import * as handlebars from 'handlebars';
+import * as fs from 'fs';
+import {GeneratorTemplate, getGenerators} from './templates';
+&nbsp;
+export const loadFromPath = (filePath: string): string =&gt; {
+  if (fs.existsSync(filePath)) {
+    return fs.readFileSync(filePath, 'utf8');
+  } else {
+    throw new Error(`Template file ${filePath} does not exists!`);
+  }
+};
+&nbsp;
+const getGeneratorTemplate <span class="fstat-no" title="function not covered" >= </span>(templateName: string): GeneratorTemplate =&gt; {
+  re<span class="cstat-no" title="statement not covered" >turn getGenerators().find(item =&gt; (item.<span class="fstat-no" title="function not covered" >al</span>iases || []).ind<span class="cstat-no" title="statement not covered" >exOf(templateName.toLowerCase()) &gt; -1);</span></span>
+};
+<span class="fstat-no" title="function not covered" ></span>
+expo<span class="cstat-no" title="statement not covered" >rt const getTemplat<span class="fstat-no" title="function not covered" >eG</span>enerator = (template: string): Promise&lt;GeneratorTemplate&gt; =&gt; {</span>
+  return new Promise&lt;GeneratorTe<span class="cstat-no" title="statement not covered" >mplate&gt;((resolve, reject) =&gt; {</span>
+    cons<span class="cstat-no" title="statement not covered" >t generatorTemplate = getGeneratorTemplate(template);</span>
+<span class="cstat-no" title="statement not covered" ></span>
+    if (generatorTemplate) {
+      resolve(generatorTemplate);
+    }<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ><span class="fstat-no" title="function not covered" ></span></span></span></span></span>
+    else {<span class="cstat-no" title="statement not covered" ></span>
+      const allowedTemplates = getGenerators().map(item =&gt; item.aliases).reduce((a, b) =&gt; a.concat(b)).join(', ');
+      reject(`Unknown template language specified: ${template}, available are: ${allowedTemplates}`);
+    }
+  });
+};
+&nbsp;
+export const compileTemplate = (compileContext: any, templatePath: string): string =&gt; {
+  return handlebars.compile(loadFromPath(templatePath))(compileContext);
+};
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Dec 14 2016 14:49:37 GMT+0200 (IST)
+</div>
+</div>
+<script src="prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="sorter.js"></script>
+</body>
+</html>

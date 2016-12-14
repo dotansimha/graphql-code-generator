@@ -4,7 +4,7 @@ import {initCLI, validateCliOptions, transformOptions, TransformedCliOptions, cl
 import {loadSchema} from './scheme-loader';
 import {prepareCodegen} from './codegen';
 import {loadDocumentsSources} from './document-loader';
-import {generateCode} from './generator';
+import {compileTemplate} from './template-loader';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as mkdirp from 'mkdirp';
@@ -42,7 +42,7 @@ transformOptions(options)
 
       return [{
         isDev: transformedOptions.isDev,
-        content: generateCode(codegen, templatePath),
+        content: compileTemplate(codegen, templatePath),
         path: outPath
       }];
     }
@@ -64,7 +64,7 @@ transformOptions(options)
           codegen.models.forEach((model: Model) => {
             resultsArr.push({
               isDev: transformedOptions.isDev,
-              content: generateCode(model, templatePath),
+              content: compileTemplate(model, templatePath),
               path: path.resolve(transformedOptions.outPath, model.name + '.model.' + filesExtension)
             });
           });
@@ -74,7 +74,7 @@ transformOptions(options)
           codegen.documents.forEach((document: CodegenDocument) => {
             resultsArr.push({
               isDev: transformedOptions.isDev,
-              content: generateCode(document, templatePath),
+              content: compileTemplate(document, templatePath),
               path: path.resolve(transformedOptions.outPath, document.name + '.document.' + filesExtension)
             });
           });
@@ -90,7 +90,7 @@ transformOptions(options)
 
         resultsArr.push({
           isDev: transformedOptions.isDev,
-          content: generateCode({files: resultsArr.map(item => {
+          content: compileTemplate({files: resultsArr.map(item => {
             return {
               fileName: path.basename(item.path, '.' + filesExtension),
               fullPath: item.path,
