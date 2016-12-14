@@ -1,6 +1,6 @@
 # GraphQL Code Generator
 
-[![npm version](https://badge.fury.io/js/graphql-code-generator.svg)](https://badge.fury.io/js/graphql-code-generator) [![Build Status](https://travis-ci.org/dotansimha/graphql-code-generator.svg?branch=master)](https://travis-ci.org/dotansimha/graphql-code-generator) [![codecov](https://codecov.io/gh/dotansimha/graphql-code-generator/branch/master/graph/badge.svg)](https://codecov.io/gh/dotansimha/graphql-code-generator) [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/) [![GitHub license](https://img.shields.io/badge/license-MIT-lightgrey.svg?maxAge=2592000)](https://raw.githubusercontent.com/apollostack/apollo-ios/master/LICENSE)
+[![npm version](http://d25lcipzij17d.cloudfront.net/badge.svg?id=js&type=6&v=0.1.8&x2=0)](https://badge.fury.io/js/graphql-code-generator) [![Build Status](https://travis-ci.org/dotansimha/graphql-code-generator.svg?branch=master)](https://travis-ci.org/dotansimha/graphql-code-generator) [![codecov](https://codecov.io/gh/dotansimha/graphql-code-generator/branch/master/graph/badge.svg)](https://codecov.io/gh/dotansimha/graphql-code-generator) [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/) [![GitHub license](https://img.shields.io/badge/license-MIT-lightgrey.svg?maxAge=2592000)](https://raw.githubusercontent.com/apollostack/apollo-ios/master/LICENSE)
 
 
 ## Overview
