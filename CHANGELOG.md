@@ -1,3 +1,11 @@
+<a name="0.2.0"></a>
+# [0.2.0](https://github.com/dotansimha/graphql-codegen/compare/0.1.9...v0.2.0) (2016-12-14)
+
+
+### Features
+
+* **core:** added custom headers for remote GraphQL endpoint ([d3b2cf9](https://github.com/dotansimha/graphql-codegen/commit/d3b2cf9))
+
 <a name="0.1.9"></a>
 ## [0.1.9](https://github.com/dotansimha/graphql-codegen/compare/0.1.8...v0.1.9) (2016-12-14)
 
