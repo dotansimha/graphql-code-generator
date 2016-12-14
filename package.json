@@ -16,7 +16,7 @@
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "create-git-tag": "git tag $(cat package.json | $(npm bin)/json version)",
     "dev": "cd dist && nodemon --ext ts,js,d.ts,template,graphql,json,handlebars index.js --dev --url http://localhost:3010/graphql --template flow --out ../dev-test/githunt/typings.d.ts",
-    "prepublish": "npm run build && npm run test && npm run create-git-tag && git push && git push --tags",
+    "prerelease": "npm run build && npm run test && npm run create-git-tag && git push && git push --tags",
     "test": "jest"
   },
   "repository": {
