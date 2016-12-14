@@ -22,22 +22,22 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>0/49</span>
+        <span class='fraction'>0/52</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>0/16</span>
+        <span class='fraction'>0/18</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>0/5</span>
+        <span class='fraction'>0/6</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>0/47</span>
+        <span class='fraction'>0/50</span>
       </div>
     </div>
   </div>
@@ -139,14 +139,26 @@
 94
 95
 96
-97</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+97
+98
+99
+100
+101
+102
+103
+104</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -186,8 +198,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -198,6 +208,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -210,6 +223,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -241,14 +255,19 @@ import {GeneratorTemplate} from<span class="cstat-no" title="statement not cover
 import {introspectionFromUrl} fr<span class="cstat-no" title="statement not covered" >om './introspection-from-url';</span>
 import {introspectionFr<span class="cstat-no" title="statement not covered" >omFile} from './introspectio</span>n-from-file';
 import {documentsFromGlo<span class="cstat-no" title="statement not covered" >bs} from './documents-glob';</span>
-<span class="cstat-no" title="statement not covered" >import {getTemplat<span class="fstat-no" title="function not covered" >eG</span>enerator} from './template-loader';</span>
+import {g<span class="fstat-no" title="function not covered" >etTempla</span>teGenerator} from './template-loader';
 <span class="cstat-no" title="statement not covered" ></span>
-export interface TransformedCliOptions {
+expo<span class="cstat-no" title="statement not covered" >rt interface </span>TransformedCliOptions {
   introspection?: IntrospectionQuery;
-  documents?: string[];
-  template?: GeneratorTemplate;
+<span class="cstat-no" title="statement not covered" >  documents?: stri<span class="fstat-no" title="function not covered" >ng</span>[];</span>
+  te<span class="cstat-no" title="statement not covered" >mplate?: GeneratorTemplate;</span>
   outPath?: string;
   isDev?: boolean;
+}
+&nbsp;
+function collect(val, memo) {
+  memo.push(val);
+  return memo;
 }
 &nbsp;
 export const initCLI = (args): commander.IExportedCommand =&gt; {
@@ -258,28 +277,29 @@ export const initCLI = (args): commander.IExportedCommand =&gt; {
 <span class="cstat-no" title="statement not covered" >    .option('-d, --dev', 'Turn on development mode - prints results to console')</span>
     .opt<span class="cstat-no" title="statement not covered" >ion('-f, --file &lt;f</span>ilePath&gt;', 'Parse local GraphQL introspection JSON file')
     .option('-u, --url &lt;graphql-endpoint&gt;', 'Parse remote GraphQL endpoint as introspection file')
-<span class="cstat-no" title="statement not covered" >    .option('-t, --template &lt;templat</span>e-name&gt;', 'Language/platform name templates')
-<span class="cstat-no" title="statement not covered" >    .option('-o, --ou</span>t &lt;path&gt;', 'Output file(s) path', String, './')
-<span class="cstat-no" title="statement not covered" >    .argumen</span>ts('&lt;options&gt; [documents...]')
-    .parse(args);
-<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span>
-  return comman<span class="cstat-no" title="statement not covered" >der;</span>
+<span class="cstat-no" title="statement not covered" >    .option('-h, --header [header]',</span> 'Header to add to the introspection HTTP request when using --url', collect, [])
+<span class="cstat-no" title="statement not covered" >    .option('-t, --te</span>mplate &lt;template-name&gt;', 'Language/platform name templates')
+<span class="cstat-no" title="statement not covered" >    .option(</span>'-o, --out &lt;path&gt;', 'Output file(s) path', String, './')
+    .arguments('&lt;options&gt; [documents...]')
+<span class="cstat-no" title="statement not covered" >    .parse(args);<span class="fstat-no" title="function not covered" ></span></span>
+<span class="cstat-no" title="statement not covered" ></span>
+  return comma<span class="cstat-no" title="statement not covered" >nder;</span>
 };<span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" ></span>
-export const c<span class="cstat-no" title="statement not covered" >liError = (err:</span> string) =&gt; {
-  if<span class="cstat-no" title="statement not covered" > (typeof err === 'object') {</span>
-    cons<span class="cstat-no" title="statement not covered" >ole.log(err);</span>
-  }
+expo<span class="cstat-no" title="statement not covered" >rt const cliError = (err: string) =&gt; {</span>
+  if (ty<span class="cstat-no" title="statement not covered" >peof err === 'object') {</span>
+    console.log(err);
+  }<span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" ></span>
-  consol<span class="cstat-no" title="statement not covered" >e.error('Error: ' + err);</span>
+  console.error('Error: ' + err);
   process.exit(1);
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  return;<span class="fstat-no" title="function not covered" ></span></span>
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span>
+  return;<span class="cstat-no" title="statement not covered" ></span>
 };<span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" ></span>
-export const validat<span class="cstat-no" title="statement not covered" >eCliOptions = (options</span>) =&gt; {
-  const file = opti<span class="cstat-no" title="statement not covered" >ons['file'];</span>
-  const url = <span class="cstat-no" title="statement not covered" >options['url'];</span>
+export const valida<span class="cstat-no" title="statement not covered" >teCliOptions = (opti</span>ons) =&gt; {
+  const file =<span class="cstat-no" title="statement not covered" > options['file'</span>];
+  const url = opti<span class="cstat-no" title="statement not covered" >ons['url'];</span>
   const template<span class="cstat-no" title="statement not covered" > = options['template'];</span>
   const out = opt<span class="cstat-no" title="statement not covered" >ion</span>s['out'];
 &nbsp;
@@ -299,19 +319,20 @@ export const transformOptions = (op<span class="cstat-no" title="statement not c
   const documents: string[] = options['args'] || [];
   const template: string = options['template'];
   const out:<span class="fstat-no" title="function not covered" > s</span>tring = options['out'];
-  const isDev: boolean = opt<span class="cstat-no" title="statement not covered" >ions['</span>dev'] !== und<span class="cstat-no" title="statement not covered" >efined</span>;<span class="cstat-no" title="statement not covered" ></span>
-  const <span class="cstat-no" title="statement not covered" >result: TransformedCliOptions = {};</span>
+  const headers: string[] = <span class="cstat-no" title="statement not covered" >option</span>s['header'] |<span class="cstat-no" title="statement not covered" >| [];<span class="cstat-no" title="statement not covered" ></span></span>
+  const <span class="cstat-no" title="statement not covered" >isDev: boolean = options['dev'] !== un</span>defined;
+  const <span class="cstat-no" title="statement not covered" >result: TransformedCliOptions </span>= {};
   let in<span class="cstat-no" title="statement not covered" >trospectionPromise;</span>
 <span class="cstat-no" title="statement not covered" ></span>
   if (is<span class="cstat-no" title="statement not covered" >Dev) {</span>
-    cons<span class="cstat-no" title="statement not covered" >ole.log('Development m</span>ode is ON - output will print to console');
-  }<span class="cstat-no" title="statement not covered" ></span>
+    cons<span class="cstat-no" title="statement not covered" >ole.log('Develo</span>pment mode is ON - output will print to console');
+  }
 &nbsp;
   if (file) {
     introspectionPromise = introspectionFromFile(file);
   }
   else if (url) {
-    introspectionPromise = introspectionFromUrl(url);
+    introspectionPromise = introspectionFromUrl(url, headers);
   }
 &nbsp;
   const documentsPromise = documentsFromGlobs(documents);
@@ -337,7 +358,7 @@ export const transformOptions = (op<span class="cstat-no" title="statement not c
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Dec 14 2016 15:12:51 GMT+0200 (IST)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Dec 14 2016 15:56:03 GMT+0200 (IST)
 </div>
 </div>
 <script src="prettify.js"></script>

@@ -8,7 +8,7 @@ export const introspectionFromUrl = (url: string, headers: string[]): Promise<In
 
     return {
       [name]: value
-    }
+    };
   });
 
   let extraHeaders = {};

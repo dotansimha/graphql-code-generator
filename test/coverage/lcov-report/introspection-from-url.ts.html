@@ -22,22 +22,22 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>0/14</span>
+        <span class='fraction'>0/23</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>0/7</span>
+        <span class='fraction'>0/9</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>0/4</span>
+        <span class='fraction'>0/6</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>0/13</span>
+        <span class='fraction'>0/20</span>
       </div>
     </div>
   </div>
@@ -77,10 +77,39 @@
 32
 33
 34
-35</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -102,6 +131,9 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -115,27 +147,43 @@
 import request<span class="cstat-no" title="statement not covered" > = require('request</span>');
 import {introspectionQuery}<span class="cstat-no" title="statement not covered" > from 'graphql/utilities/introspectionQuery';</span>
 <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span>
-expo<span class="cstat-no" title="statement not covered" >rt const introspect<span class="fstat-no" title="function not covered" >io</span>nFromUrl = (url: string): Promise&lt;IntrospectionQuery&gt; =&gt; {</span>
-  return<span class="cstat-no" title="statement not covered" > new Promise&lt;IntrospectionQuery&gt;((resolve, reject) =&gt; {</span>
+export const introspection<span class="cstat-no" title="statement not covered" >FromUrl = (u<span class="fstat-no" title="function not covered" >rl</span>: string, headers: string[]): Promise&lt;IntrospectionQuery&gt; =&gt; {</span>
+  let splittedHea<span class="cstat-no" title="statement not covered" >ders = headers.map((head</span>er: stri<span class="cstat-no" title="statement not covered" >ng) =&gt;</span> {<span class="cstat-no" title="statement not covered" ></span>
+    cons<span class="cstat-no" title="statement not covered" >t [name, value] = header.split(/\s*:\s*/);</span>
+&nbsp;
+    return {
+      [name]: value
+    };
+  });<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" ></span>
+  let ex<span class="cstat-no" title="statement not covered" >traHeaders = {};<span class="fstat-no" title="function not covered" ></span></span>
+<span class="cstat-no" title="statement not covered" ></span>
+  if (splittedHeaders.length &gt; 0) {
+    extraHeaders = splittedHeaders.reduce((a, b) =&gt; {
+<span class="cstat-no" title="statement not covered" >      return Object.ass<span class="fstat-no" title="function not covered" >ig</span>n({}, a, b);</span>
+    });<span class="cstat-no" title="statement not covered" ></span>
+  }
+&nbsp;
+  return new Promise&lt;IntrospectionQuery&gt;((resolve, reject) =&gt; {
     request.post({
       url: url,
       json: {
         query: introspectionQuery
       },
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      }<span class="fstat-no" title="function not covered" ></span>
-    }, (err,<span class="cstat-no" title="statement not covered" > response, body) =&gt; {</span>
+      heade<span class="fstat-no" title="function not covered" >rs</span>: Object.assign({
+        'Acc<span class="cstat-no" title="statement not covered" >ept': 'application/json',</span>
+        'Content<span class="cstat-no" title="statement not covered" >-Type': 'appl</span>ication/json'
+      }, extraHe<span class="cstat-no" title="statement not covered" >aders)</span>
+    }, (err, response, body) =&gt; {
       if (err) {<span class="cstat-no" title="statement not covered" ></span>
-        reject(e<span class="cstat-no" title="statement not covered" >rr);</span>
-&nbsp;
-        return;<span class="cstat-no" title="statement not covered" ></span>
-      }<span class="cstat-no" title="statement not covered" ></span>
+        reje<span class="cstat-no" title="statement not covered" >ct(err);</span>
 <span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span></span>
-      const body<span class="cstat-no" title="statement not covered" >Json = b</span>ody.data;
+        return;<span class="cstat-no" title="statement not covered" ></span>
+      }
+<span class="cstat-no" title="statement not covered" ></span>
+      const bodyJson = body.data;
 &nbsp;
-      if (!b<span class="cstat-no" title="statement not covered" >odyJson || (bodyJso</span>n.errors &amp;&amp; bodyJson.errors.length &gt; 0)) {
+      if (!bodyJson || (bodyJson.errors &amp;&amp; bodyJson.errors.length &gt; 0)) {
         reject('Unable to download schema from remote: ' + bodyJson.errors.map(item =&gt; item.message).join(', '));
 &nbsp;
         return;
@@ -151,7 +199,7 @@ expo<span class="cstat-no" title="statement not covered" >rt const introspect<sp
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Dec 14 2016 15:12:51 GMT+0200 (IST)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Dec 14 2016 15:56:03 GMT+0200 (IST)
 </div>
 </div>
 <script src="prettify.js"></script>
