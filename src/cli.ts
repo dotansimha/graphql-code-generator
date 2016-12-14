@@ -45,7 +45,7 @@ export const validateCliOptions = (options) => {
   const url = options['url'];
   const template = options['template'];
   const out = options['out'];
-  const documents: string[] = options['args'];
+  const documents: string[] = options['args'] || [];
 
   if (!file && !url) {
     cliError('Please specify one of --file or --url flags!');
@@ -53,10 +53,6 @@ export const validateCliOptions = (options) => {
 
   if (!template) {
     cliError('Please specify language/platform, using --template flag');
-  }
-
-  if (!documents || documents.length === 0) {
-    cliError('Please specify GraphQL documents input');
   }
 };
 
@@ -125,6 +121,8 @@ export const transformOptions = (options): Promise<TransformedCliOptions> => {
           return;
         }
 
+        console.log(JSON.stringify(bodyJson));
+
         resolve(bodyJson);
       });
     });
@@ -159,7 +157,7 @@ export const transformOptions = (options): Promise<TransformedCliOptions> => {
   });
 
   const documentsPromise = Promise.all(documentsPromises).then((files: string[][]) => {
-    return files.reduce((a, b) => {
+    return files.length === 0 ? [] : files.reduce((a, b) => {
       return a.concat(b);
     });
   });

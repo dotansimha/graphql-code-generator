@@ -50,7 +50,7 @@ This package offers both modules exports (to use with NodeJS/JavaScript applicat
 
 CLI usage is as follow:
 
-    $ gql-gen [options] <documents ...>
+    $ gql-gen [options] [documents ...]
     
 Allowed flags:    
 
@@ -61,7 +61,7 @@ Allowed flags:
 | -t,--template   | String   | Template name, for example: "typescript"                                               |
 | -o,--out        | String   | Path for output file/directory. When using single-file generator specify filename, and when using multiple-files generator specify a directory                                     |
 | -d,--dev        | void     | Turns ON development mode - prints output to console instead of files                  |
-| documents...    | [String] | Space separated paths of `.graphql` files, allows glob path                            |
+| documents...    | [String] | Space separated paths of `.graphql` files, allows glob path, this field is optional - if no documents specified, only server side schema types will be generated                           |
 
 Usage examples:
 

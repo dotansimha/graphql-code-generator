@@ -1,18 +1,23 @@
 import {Model, EnumValue, Field} from './interfaces';
-import {GraphQLType} from 'graphql/type/definition';
-import {GraphQLEnumType} from 'graphql/type/definition';
-import {GraphQLEnumValue} from 'graphql/type/definition';
-import {GraphQLObjectType} from 'graphql/type/definition';
-import {GraphQLInputObjectType} from 'graphql/type/definition';
-import {GraphQLField} from 'graphql/type/definition';
-import {GraphQLInterfaceType} from 'graphql/type/definition';
-import {GraphQLUnionType} from 'graphql/type/definition';
-import {GraphQLList} from 'graphql/type/definition';
-import {GraphQLNonNull} from 'graphql/type/definition';
-import {getNamedType} from 'graphql/type/definition';
-import {shouldSkip, getTypeName, isPrimitive, isArray, isRequired} from './utils';
+import {
+  getNamedType,
+  GraphQLNonNull,
+  GraphQLList,
+  GraphQLUnionType,
+  GraphQLInterfaceType,
+  GraphQLField,
+  GraphQLInputObjectType,
+  GraphQLObjectType,
+  GraphQLEnumValue,
+  GraphQLEnumType,
+  GraphQLType,
+  GraphQLScalarType
+} from 'graphql/type/definition';
+import {shouldSkip, getTypeName, isPrimitive, isArray, isRequired} from "./utils";
 
-export const handleType = (primitivesMap: any, typeName: string, type: GraphQLType) => {
+export const handleType = (primitivesMap: any, type: GraphQLType) => {
+  const typeName = type['name'];
+
   let currentType: Model = {
     imports: [],
     name: typeName,
@@ -69,10 +74,13 @@ export const handleType = (primitivesMap: any, typeName: string, type: GraphQLTy
       currentType.hasUnionTypes = currentType.unionTypes.length > 0;
     }
     else if (type instanceof GraphQLList || type instanceof GraphQLNonNull) {
-      return handleType(primitivesMap, typeName, getNamedType(type));
+      return handleType(primitivesMap, getNamedType(type));
+    }
+    else if (type instanceof GraphQLScalarType) {
+      // TODO: Handle scalar
     }
 
-    return currentType;
+      return currentType;
   }
   else {
     return null;

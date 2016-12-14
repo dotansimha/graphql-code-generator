@@ -11,7 +11,7 @@ export const prepareCodegen = (schema: GraphQLSchema, document: DocumentNode, pr
   let typesMap: GraphQLNamedType = schema.getTypeMap();
 
   Object.keys(typesMap).forEach(typeName => {
-    models.push(handleType(primitivesMap, typeName, typesMap[typeName]));
+    models.push(handleType(primitivesMap, typesMap[typeName]));
   });
 
   document.definitions.forEach((definition: DefinitionNode) => {
