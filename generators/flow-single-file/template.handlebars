@@ -1,4 +1,9 @@
 {{#each models ~}}
+  {{#if isCustomScalar ~}}
+    declare type {{ name }} = any;
+
+  {{/if ~}}
+
   {{#if isObject ~}}
     declare type {{ name }} = {{#if hasImplementedInterfaces}}{{#each implementedInterfaces}}{{this}} & {{/each}}{{/if}} {
     {{#each fields}}

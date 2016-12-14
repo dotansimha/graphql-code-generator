@@ -20,6 +20,7 @@ export interface Model {
   description?: string;
   fields?: Field[];
   isObject?: boolean;
+  isCustomScalar?: boolean;
   isFragment?: boolean;
   isEnum?: boolean;
   isUnion?: boolean;

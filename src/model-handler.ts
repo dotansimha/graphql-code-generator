@@ -15,6 +15,8 @@ import {
 } from 'graphql/type/definition';
 import {shouldSkip, getTypeName, isPrimitive, isArray, isRequired} from './utils';
 
+const ignoredScalars = ['Boolean', 'Float', 'String', 'ID', 'Int']
+
 export const handleType = (primitivesMap: any, type: GraphQLType) => {
   const typeName = type['name'];
 
@@ -23,7 +25,8 @@ export const handleType = (primitivesMap: any, type: GraphQLType) => {
     name: typeName,
     fields: [],
     isEnum: false,
-    isObject: false
+    isObject: false,
+    isCustomScalar: false
   };
 
   if (!shouldSkip(typeName)) {
@@ -76,8 +79,8 @@ export const handleType = (primitivesMap: any, type: GraphQLType) => {
     else if (type instanceof GraphQLList || type instanceof GraphQLNonNull) {
       return handleType(primitivesMap, getNamedType(type));
     }
-    else if (type instanceof GraphQLScalarType) {
-      // TODO: Handle scalar
+    else if (type instanceof GraphQLScalarType && ignoredScalars.indexOf(currentType.name) === -1) {
+      currentType.isCustomScalar = true;
     }
 
       return currentType;

@@ -1,4 +1,9 @@
 {{#each models ~}}
+{{#if isCustomScalar ~}}
+export type {{ name }} = any;
+
+{{/if ~}}
+
 {{#if isObject ~}}
 export interface {{ name }}{{#if hasImplementedInterfaces}} extends {{#each implementedInterfaces}}{{this}}{{/each}}{{/if}} {
     {{#each fields}}
