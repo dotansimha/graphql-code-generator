@@ -16,6 +16,7 @@ export interface TransformedCliOptions {
 
 export const initCLI = (args): commander.IExportedCommand => {
   commander
+    .version(require('../package.json').version)
     .usage('graphql-codegen [options]')
     .option('-d, --dev', 'Turn on development mode - prints results to console')
     .option('-f, --file <filePath>', 'Parse local GraphQL introspection JSON file')
