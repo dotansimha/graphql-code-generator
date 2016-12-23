@@ -1,5 +1,21 @@
 import * as Handlebars from 'handlebars';
 
+function isFunction(functionToCheck) {
+  let getType = {};
+  return functionToCheck && getType.toString.call(functionToCheck) === '[object Function]';
+}
+
+export interface PartialDefinition {
+  name: string;
+  content: string;
+}
+
+export const initPartials = (partials: PartialDefinition[]) => {
+  partials.forEach((partial: PartialDefinition) => {
+    Handlebars.registerPartial(partial.name, partial.content);
+  });
+};
+
 export const initHelpers = () => {
   Handlebars.registerHelper('times', function (n, block) {
     let accum = '';
@@ -64,4 +80,5 @@ export const initHelpers = () => {
         return options.inverse(this);
     }
   });
+
 };

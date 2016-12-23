@@ -29,7 +29,7 @@ export const buildVariables = (schema: GraphQLSchema, definitionNode: OperationD
   });
 };
 
-export const handleOperation = (schema: GraphQLSchema, definitionNode: OperationDefinitionNode, primitivesMap: any): CodegenDocument => {
+export const handleOperation = (schema: GraphQLSchema, definitionNode: OperationDefinitionNode, primitivesMap: any, flattenInnerTypes: boolean): CodegenDocument => {
   const name = definitionNode.name.value;
   const type = definitionNode.operation;
   const root = getRoot(schema, definitionNode);
@@ -46,12 +46,14 @@ export const handleOperation = (schema: GraphQLSchema, definitionNode: Operation
     innerTypes: [],
     hasVariables: false,
     hasInnerTypes: false,
+    rootType: null,
     imports: [],
     document: print(definitionNode)
   };
 
   document.variables = buildVariables(schema, definitionNode, primitivesMap);
-  document.innerTypes = buildInnerModelsArray(schema, root, definitionNode.selectionSet, primitivesMap);
+  document.innerTypes = buildInnerModelsArray(schema, root, flattenInnerTypes, definitionNode.selectionSet, primitivesMap);
+  document.rootType = document.innerTypes.find(i => i.isRoot);
 
   document.hasVariables = document.variables.length > 0;
   document.hasInnerTypes = document.innerTypes.length > 0;

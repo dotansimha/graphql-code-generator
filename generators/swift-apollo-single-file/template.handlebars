@@ -1,0 +1,31 @@
+import Apollo
+
+{{#each documents ~}}
+  public final class {{ name }}: {{#if isMutation }}GraphQLMutation{{/if}}{{#if isQuery }}GraphQLQuery{{/if}}{{#if isSubscription }}GraphQLSubscription{{/if}} {
+  {{#each variables}}
+    public let {{ name }}: {{#if isArray}}[{{/if}}{{ type }}{{#if isArray}}]{{/if}}{{#unless isRequired}}?{{/unless}}
+  {{/each}}
+
+    public init({{#each variables}}{{ name }}: {{#if isArray}}[{{/if}}{{ type }}{{#if isArray}}]{{/if}}{{#unless isRequired}}?{{/unless}}{{#unless @last}}, {{/unless}}{{/each}}) {
+      {{#each variables}}
+      self.{{ name }} = {{ name }}
+      {{/each}}
+    }
+
+    public var variables: GraphQLMap? {
+      return [{{#each variables}}"{{name}}": {{name}}{{#unless @last}}, {{/unless}}{{/each}}]
+    }
+
+    public struct Data: GraphQLMappable {
+      public let {{ rawName }}: Result?
+
+      public init(reader: GraphQLResultReader) throws {
+        {{ rawName }} = try reader.optionalValue(for: Field(responseName: "{{ rawName }}"))
+      }
+
+      {{> inner-type innerTypes=innerTypes}}
+    }
+  }
+
+{{/each ~}}
+

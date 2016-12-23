@@ -22,22 +22,22 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>0/59</span>
+        <span class='fraction'>0/62</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>0/18</span>
+        <span class='fraction'>0/20</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>0/8</span>
+        <span class='fraction'>0/9</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>0/58</span>
+        <span class='fraction'>0/61</span>
       </div>
     </div>
   </div>
@@ -166,7 +166,14 @@
 121
 122
 123
-124</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+124
+125
+126
+127
+128
+129
+130
+131</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -182,6 +189,13 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -295,29 +309,36 @@ import {init<span class="cstat-no" title="statement not covered" >CLI, validateC
 import {loadSchema} fr<span class="cstat-no" title="statement not covered" >om './scheme-loader';</span>
 import {prepareC<span class="cstat-no" title="statement not covered" >odegen} from './codeg</span>en';
 import {loadDocumentsSou<span class="cstat-no" title="statement not covered" >rces} from './document-loader</span>';
-import {compileTemplate}<span class="cstat-no" title="statement not covered" > from './template-loader';</span>
+import {compileTemplate,<span class="cstat-no" title="statement not covered" > loadFromPath} from './templa</span>te-loader';
 import * <span class="cstat-no" title="statement not covered" >as fs from 'fs</span>';
 import * as<span class="cstat-no" title="statement not covered" > path from 'path</span>';
 import * as m<span class="cstat-no" title="statement not covered" >kdirp from 'mkdirp</span>';
 import {Model, CodegenDocum<span class="cstat-no" title="statement not covered" >ent} from './interfaces';</span>
-import {initHe<span class="cstat-no" title="statement not covered" >lpers} from './handlebars-he</span>lpers';
+import {initHe<span class="cstat-no" title="statement not covered" >lpers, initPartials, Partial</span>Definition} from './handlebars-helpers';
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >const options = initCLI(process.argv);</span>
 validateCl<span class="fstat-no" title="function not covered" >iO</span>ptions(options);
 <span class="cstat-no" title="statement not covered" ></span>
-export interface <span class="cstat-no" title="statement not covered" >FileResult {</span>
-  path: string;<span class="cstat-no" title="statement not covered" ></span>
-  content: string;<span class="cstat-no" title="statement not covered" ></span>
-  isDev?: boolean;<span class="cstat-no" title="statement not covered" ></span>
-}<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" ></span>
-tran<span class="cstat-no" title="statement not covered" >sformOptions(options)</span>
-  .then&lt;<span class="cstat-no" title="statement not covered" >FileResult[]&gt;((transformedOptions: TransformedCliOptions) =&gt; {</span>
-    initHelp<span class="cstat-no" title="statement not covered" >ers();</span>
+expo<span class="cstat-no" title="statement not covered" >rt interface FileResult {</span>
+  pa<span class="cstat-no" title="statement not covered" >th: string;<span class="fstat-no" title="function not covered" ></span></span>
+  conten<span class="cstat-no" title="statement not covered" >t: string;</span>
+  isDev?: boolean;
+}
+&nbsp;
+transformOptions(options)
+  .then&lt;FileResul<span class="cstat-no" title="statement not covered" >t[]&gt;((transformedOptions: TransformedCliOptions) =&gt; {</span>
+    const templateCo<span class="cstat-no" title="statement not covered" >nfig = transformedOptions.tem</span>plate.config;
+    initHelpers();<span class="cstat-no" title="statement not covered" ></span>
+    initPartials((<span class="cstat-no" title="statement not covered" >templateConfig.partials || []).map&lt;PartialDefinition&gt;((partialPath: string) =&gt; {</span>
+      return {<span class="cstat-no" title="statement not covered" ></span>
+        content: loadF<span class="cstat-no" title="statement not covered" >romPath(path.resolve(__dirname, transforme</span>dOptions.template.config.basePath, partialPath)),
+<span class="cstat-no" title="statement not covered" >        name: path.basename(partialPath, path.extname(partialPath))</span>
+      }<span class="cstat-no" title="statement not covered" ></span>
+    }));<span class="cstat-no" title="statement not covered" ></span>
     const schema = loadSchema(transformedOptions.introspection);
     const documents = trans<span class="cstat-no" title="statement not covered" >formedOptions.documents;</span>
-    const codegen = pr<span class="cstat-no" title="statement not covered" >epareCodegen(schema, loadDocumentsSources</span>(documents), transformedOptions.template.config.primitives);
-    const templateCon<span class="cstat-no" title="statement not covered" >fig = transformedOptio</span>ns.template.config;
+    const flattenInner<span class="cstat-no" title="statement not covered" >Types = templateConfig.flattenInnerTypes;</span>
+    const codegen = p<span class="cstat-no" title="statement not covered" >repareCodegen(schema, </span>loadDocumentsSources(documents), transformedOptions.template.config.primitives, flattenInnerTypes);
     cons<span class="cstat-no" title="statement not covered" >t strategy = template</span>Config.strategy || 'SINGLE_FILE';
     cons<span class="cstat-no" title="statement not covered" >t baseOutPath = path.basename(transformedOptions.outPath);</span>
 &nbsp;
@@ -418,7 +439,7 @@ tran<span class="cstat-no" title="statement not covered" >sformOptions(options)<
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Dec 14 2016 15:56:03 GMT+0200 (IST)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Dec 23 2016 11:06:32 GMT+0200 (IST)
 </div>
 </div>
 <script src="prettify.js"></script>

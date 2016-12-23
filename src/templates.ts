@@ -8,6 +8,8 @@ export interface TemplateConfig {
   templates?: {[key: string]: string};
   primitives?: {[key: string]: string};
   basePath?: string;
+  flattenInnerTypes?: boolean;
+  partials?: string[];
 }
 
 export interface GeneratorTemplate {
@@ -41,6 +43,11 @@ export const getGenerators = () => {
       language: 'Flow Single File',
       aliases: ['flow', 'flow-single'],
       config: getConfig('../generators/flow-single-file/')
+    },
+    {
+      language: 'Swift (Apollo) Single File',
+      aliases: ['swift', 'swift-apollo', 'swift-single'],
+      config: getConfig('../generators/swift-apollo-single-file/')
     }
   ];
 };

@@ -22,12 +22,12 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>0/22</span>
+        <span class='fraction'>0/24</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>0/5</span>
+        <span class='fraction'>0/7</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
@@ -37,7 +37,7 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>0/21</span>
+        <span class='fraction'>0/22</span>
       </div>
     </div>
   </div>
@@ -91,8 +91,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -102,12 +100,14 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -122,28 +122,28 @@ import {handleType} from '<span class="cstat-no" title="statement not covered" >
 import {handleOperation} <span class="cstat-no" title="statement not covered" >from './operation-handler';</span>
 <span class="cstat-no" title="statement not covered" >import {handleFragment} f<span class="fstat-no" title="function not covered" >ro</span>m './fragment-handler';</span>
 <span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" ></span></span>
-export const prep<span class="cstat-no" title="statement not covered" >are</span>Codegen = (schema: GraphQLSchema, document: DocumentNode, primitivesMap: any = {}): Codegen =&gt; {
-  let models: Model[<span class="cstat-no" title="statement not covered" >] =</span> [];
-  let documents: Co<span class="cstat-no" title="statement not covered" >degenDocument[] = []</span>;
-  le<span class="cstat-no" title="statement not covered" >t typesMap: GraphQLNamedType =<span class="fstat-no" title="function not covered" > s</span>chema.getTypeMap();</span>
+expo<span class="cstat-no" title="statement not covered" >rt const prepareCodegen = (schema: G<span class="cstat-no" title="statement not covered" >raphQLSchema, document: Do</span>cu</span>mentNode, primitivesMap: any = {}, flattenInnerTypes: boolean = true): Codegen =&gt; {
+  let models: Mod<span class="cstat-no" title="statement not covered" >el[</span>] = [];
+  let documents: Cod<span class="cstat-no" title="statement not covered" >ege</span>nDocument[] = [];
+  let typesMap: Gra<span class="cstat-no" title="statement not covered" >phQLNamedType = sche</span>ma.getTypeMap();
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span>
+  Object<span class="cstat-no" title="statement not covered" >.keys(typesMap).forEach(typeName =&gt; {</span>
+    models.push(handleType(primitivesMap, typesMap[typeName]));
+  })<span class="cstat-no" title="statement not covered" >;<span class="fstat-no" title="function not covered" ></span></span>
 <span class="cstat-no" title="statement not covered" ></span>
-  Object.keys(typesMap).forEach(typeName =&gt; {
-<span class="cstat-no" title="statement not covered" >    models.push(handleType(primit<span class="fstat-no" title="function not covered" >iv</span>esMap, typesMap[typeName]));</span>
-  });<span class="cstat-no" title="statement not covered" ></span>
-&nbsp;
-  document.defin<span class="cstat-no" title="statement not covered" >itions.forEach((definition: DefinitionNode) =&gt; {</span>
-    switch (defi<span class="cstat-no" title="statement not covered" >nition.</span>kind) {
-      case Kind.OPERATION_DEFINITION:
-        document<span class="cstat-no" title="statement not covered" >s.push(handleOperation(schema, definition, primitivesMap));</span>
+  document.definitions.forEach((definition: DefinitionNode) =&gt; {
+    switch (defi<span class="cstat-no" title="statement not covered" >nition.kind) {</span>
+      case Kind.<span class="cstat-no" title="statement not covered" >OPERATI</span>ON_DEFINITION:
+        documents.push(handleOperation(schema, definition, primitivesMap, flattenInnerTypes));
         break;<span class="cstat-no" title="statement not covered" ></span>
-&nbsp;
-      case Kind.<span class="cstat-no" title="statement not covered" >FRAGMEN</span>T_DEFINITION:
-        documents.push(handleFragment(schema, definition, primitivesMap));
-        break;
 <span class="cstat-no" title="statement not covered" ></span>
-      default:<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span>
+      case Kind.FRAGMENT_DEFINITION:
+        document<span class="cstat-no" title="statement not covered" >s.push(</span>handleFragment(schema, definition, primitivesMap, flattenInnerTypes));
+        break;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      default:</span>
         break;<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span>
-    }
+    }<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span>
   });
 &nbsp;
   return &lt;Codegen&gt;{
@@ -157,7 +157,7 @@ export const prep<span class="cstat-no" title="statement not covered" >are</span
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Dec 14 2016 15:56:03 GMT+0200 (IST)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Dec 23 2016 11:06:32 GMT+0200 (IST)
 </div>
 </div>
 <script src="prettify.js"></script>

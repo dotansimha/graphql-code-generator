@@ -9,6 +9,7 @@ import {typeFromAST} from 'graphql/utilities/typeFromAST';
 
 export const buildInnerModelsArray = (schema: GraphQLSchema,
                                       rootObject: GraphQLType,
+                                      flattenInnerTypes: boolean,
                                       selections: SelectionSetNode,
                                       primitivesMap: any,
                                       appendTo?: Model,
@@ -24,20 +25,28 @@ export const buildInnerModelsArray = (schema: GraphQLSchema,
 
         if (actualType instanceof GraphQLObjectType) {
           const modelName = handleNameDuplications(pascalCase(fieldName), result);
-          let model = {
+          let model: Model = {
             name: modelName,
             fields: [],
             fragmentsUsed: [],
-            inlineFragments: []
+            inlineFragments: [],
+            schemaTypeName: String(actualType)
           };
 
           result.push(model);
 
-          buildInnerModelsArray(schema, actualType, selectionNode.selectionSet, primitivesMap, model, result);
+          let resultArr = result;
+
+          if (!flattenInnerTypes) {
+            model.innerTypes = resultArr = [];
+          }
+
+          buildInnerModelsArray(schema, actualType, flattenInnerTypes, selectionNode.selectionSet, primitivesMap, model, resultArr);
 
           if (!appendTo) {
             // Means we are on the root object, and we need to create the Result interface
             appendTo = {
+              isRoot: true,
               name: 'Result',
               fields: [],
               fragmentsUsed: [],
@@ -73,13 +82,15 @@ export const buildInnerModelsArray = (schema: GraphQLSchema,
 
       case INLINE_FRAGMENT:
         const root = typeFromAST(schema, selectionNode.typeCondition);
-        const name = selectionNode.typeCondition.name.value + 'InlineFragment';
+        const schemaTypeName = selectionNode.typeCondition.name.value;
+        const name = schemaTypeName + 'InlineFragment';
 
         let fragmentModel: Model = {
           name: name,
           fields: [],
           fragmentsUsed: [],
-          inlineFragments: []
+          inlineFragments: [],
+          schemaTypeName: schemaTypeName
         };
 
         appendTo.inlineFragments.push({
@@ -90,7 +101,14 @@ export const buildInnerModelsArray = (schema: GraphQLSchema,
         appendTo.hasInlineFragments = appendTo.inlineFragments.length > 0;
 
         result.push(fragmentModel);
-        buildInnerModelsArray(schema, root, selectionNode.selectionSet, primitivesMap, fragmentModel, result);
+
+        let resultArr = result;
+
+        if (!flattenInnerTypes) {
+          fragmentModel.innerTypes = resultArr = [];
+        }
+
+        buildInnerModelsArray(schema, root, flattenInnerTypes, selectionNode.selectionSet, primitivesMap, fragmentModel, resultArr);
 
         break;
 

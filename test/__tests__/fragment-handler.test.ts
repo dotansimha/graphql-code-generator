@@ -44,66 +44,66 @@ describe('handleFragment', () => {
   });
 
   test('should create a valid CodegenDocument object from the fragment definition', () => {
-    expect(handleFragment(testSchema, document, primitivesMap)).toBeDefined();
+    expect(handleFragment(testSchema, document, primitivesMap, true)).toBeDefined();
   });
 
   test('should return the correct amount of inner models', () => {
-    const codegen = handleFragment(testSchema, document, primitivesMap);
+    const codegen = handleFragment(testSchema, document, primitivesMap, true);
 
     expect(codegen.hasInnerTypes).toBeTruthy();
     expect(codegen.innerTypes.length).toBe(3);
   });
 
   test('should detect the correct inner models for the fragment', () => {
-    const codegen = handleFragment(testSchema, document, primitivesMap);
+    const codegen = handleFragment(testSchema, document, primitivesMap, true);
 
     expect(codegen.innerTypes.map(type => type.name)).toEqual(['Fragment', 'Repository', 'Owner']);
   });
 
   test('should return the correct name with the correct case', () => {
-    const codegen = handleFragment(testSchema, document, primitivesMap);
+    const codegen = handleFragment(testSchema, document, primitivesMap, true);
 
     expect(codegen.name).toBe('FeedEntry');
   });
 
   test('should return the correct raw name', () => {
-    const codegen = handleFragment(testSchema, document, primitivesMap);
+    const codegen = handleFragment(testSchema, document, primitivesMap, true);
 
     expect(codegen.rawName).toBe('feedEntry');
   });
 
   test('should return the correct value for isQuery', () => {
-    const codegen = handleFragment(testSchema, document, primitivesMap);
+    const codegen = handleFragment(testSchema, document, primitivesMap, true);
 
     expect(codegen.isQuery).toBeFalsy();
   });
 
   test('should return the correct value for isSubscription', () => {
-    const codegen = handleFragment(testSchema, document, primitivesMap);
+    const codegen = handleFragment(testSchema, document, primitivesMap, true);
 
     expect(codegen.isSubscription).toBeFalsy();
   });
 
   test('should return the correct value for isMutation', () => {
-    const codegen = handleFragment(testSchema, document, primitivesMap);
+    const codegen = handleFragment(testSchema, document, primitivesMap, true);
 
     expect(codegen.isMutation).toBeFalsy();
   });
 
   test('should return the correct value for isFragment', () => {
-    const codegen = handleFragment(testSchema, document, primitivesMap);
+    const codegen = handleFragment(testSchema, document, primitivesMap, true);
 
     expect(codegen.isFragment).toBeTruthy();
   });
 
   test('should return the correct document string', () => {
-    const codegen = handleFragment(testSchema, document, primitivesMap);
+    const codegen = handleFragment(testSchema, document, primitivesMap, true);
 
     expect(stripIndent`${codegen.document}`).toBe(fragmentString);
   });
 
   test('should contain the correct inner type with name Fragment', () => {
-    const codegen = handleFragment(testSchema, document, primitivesMap);
+    const codegen = handleFragment(testSchema, document, primitivesMap, true);
     const fragmentModel = codegen.innerTypes.find(item => item.name === 'Fragment');
 
     expect(fragmentModel.name).toBe('Fragment');
@@ -136,7 +136,7 @@ describe('handleFragment', () => {
       'multiple-fragments.graphql'
     ]).definitions[0]);
 
-    const codegen = handleFragment(testSchema, document, primitivesMap);
+    const codegen = handleFragment(testSchema, document, primitivesMap, true);
     const fragmentModel = codegen.innerTypes.find(item => item.name === 'Fragment');
 
     expect(fragmentModel.fragmentsUsed).toEqual(['VoteButtons', 'RepoInfo']);

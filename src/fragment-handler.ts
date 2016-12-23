@@ -6,7 +6,7 @@ import {typeFromAST} from 'graphql/utilities/typeFromAST';
 import {print} from 'graphql/language/printer';
 import {buildInnerModelsArray} from './inner-models-builer';
 
-export const handleFragment = (schema: GraphQLSchema, fragmentNode: FragmentDefinitionNode, primitivesMap: any): CodegenDocument => {
+export const handleFragment = (schema: GraphQLSchema, fragmentNode: FragmentDefinitionNode, primitivesMap: any, flattenInnerTypes: boolean): CodegenDocument => {
   const rawName = fragmentNode.name.value;
   const fragmentName = pascalCase(rawName);
 
@@ -33,7 +33,7 @@ export const handleFragment = (schema: GraphQLSchema, fragmentNode: FragmentDefi
   };
 
   const root = typeFromAST(schema, fragmentNode.typeCondition);
-  result.innerTypes = [appendTo, ...buildInnerModelsArray(schema, root, fragmentNode.selectionSet, primitivesMap, appendTo)];
+  result.innerTypes = [appendTo, ...buildInnerModelsArray(schema, root, flattenInnerTypes, fragmentNode.selectionSet, primitivesMap, appendTo)];
   result.hasInnerTypes = result.innerTypes.length > 0;
 
   return result;

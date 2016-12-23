@@ -3,6 +3,7 @@ export interface Field {
   type?: string;
   isArray?: boolean;
   isRequired?: boolean;
+  schemaType?: any;
 }
 
 export interface EnumValue {
@@ -34,6 +35,9 @@ export interface Model {
   hasImplementedInterfaces?: boolean;
   hasUnionTypes?: boolean;
   unionTypes?: string[];
+  isRoot?: boolean;
+  innerTypes?: Model[];
+  schemaTypeName?: string;
 }
 
 export interface CodegenDocument {
@@ -45,6 +49,7 @@ export interface CodegenDocument {
   document: string;
   rawName: string;
   innerTypes: Model[];
+  rootType: Model;
   variables: Field[];
   hasInnerTypes: boolean;
   hasVariables: boolean;

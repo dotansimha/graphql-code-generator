@@ -1,6 +1,10 @@
 {
   "strategy": "SINGLE_FILE",
+  "flattenInnerTypes": false,
   "template": "./template.handlebars",
+  "partials": [
+    "./inner-type.handlebars"
+  ],
   "primitives": {
     "String": "String",
     "Int": "Int",

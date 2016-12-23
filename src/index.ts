@@ -4,12 +4,12 @@ import {initCLI, validateCliOptions, transformOptions, TransformedCliOptions, cl
 import {loadSchema} from './scheme-loader';
 import {prepareCodegen} from './codegen';
 import {loadDocumentsSources} from './document-loader';
-import {compileTemplate} from './template-loader';
+import {compileTemplate, loadFromPath} from './template-loader';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as mkdirp from 'mkdirp';
 import {Model, CodegenDocument} from './interfaces';
-import {initHelpers} from './handlebars-helpers';
+import {initHelpers, initPartials, PartialDefinition} from './handlebars-helpers';
 
 const options = initCLI(process.argv);
 validateCliOptions(options);
@@ -22,11 +22,18 @@ export interface FileResult {
 
 transformOptions(options)
   .then<FileResult[]>((transformedOptions: TransformedCliOptions) => {
+    const templateConfig = transformedOptions.template.config;
     initHelpers();
+    initPartials((templateConfig.partials || []).map<PartialDefinition>((partialPath: string) => {
+      return {
+        content: loadFromPath(path.resolve(__dirname, transformedOptions.template.config.basePath, partialPath)),
+        name: path.basename(partialPath, path.extname(partialPath))
+      }
+    }));
     const schema = loadSchema(transformedOptions.introspection);
     const documents = transformedOptions.documents;
-    const codegen = prepareCodegen(schema, loadDocumentsSources(documents), transformedOptions.template.config.primitives);
-    const templateConfig = transformedOptions.template.config;
+    const flattenInnerTypes = templateConfig.flattenInnerTypes;
+    const codegen = prepareCodegen(schema, loadDocumentsSources(documents), transformedOptions.template.config.primitives, flattenInnerTypes);
     const strategy = templateConfig.strategy || 'SINGLE_FILE';
     const baseOutPath = path.basename(transformedOptions.outPath);
 

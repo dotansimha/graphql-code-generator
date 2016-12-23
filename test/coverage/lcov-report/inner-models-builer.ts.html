@@ -20,14 +20,14 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">97.5% </span>
+        <span class="strong">97.87% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>39/40</span>
+        <span class='fraction'>46/47</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">78.57% </span>
+        <span class="strong">77.78% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>11/14</span>
+        <span class='fraction'>14/18</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -35,9 +35,9 @@
         <span class='fraction'>2/2</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">97.44% </span>
+        <span class="strong">97.83% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>38/39</span>
+        <span class='fraction'>45/46</span>
       </div>
     </div>
   </div>
@@ -146,7 +146,25 @@
 101
 102
 103
-104</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
@@ -170,11 +188,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">45x</span>
+<span class="cline-any cline-yes">45x</span>
+<span class="cline-any cline-yes">45x</span>
+<span class="cline-any cline-yes">21x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">45x</span>
 <span class="cline-any cline-yes">45x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -207,6 +231,8 @@
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -218,6 +244,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -225,6 +255,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">67x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -260,8 +296,9 @@ import {typeFromAST} from 'graphql/utilities/typeFromAST';
 <span class="branch-1 cbranch-no" title="branch not covered" ></span>
 export const buildInnerModelsArray = (schema: GraphQLSchema,
                                       rootObject: GraphQLType,
-                                      selections: SelectionSetNode,
-                                      primitivesMap: any,<span class="branch-0 cbranch-no" title="branch not covered" ></span>
+                                      flattenInnerTypes: boolean,
+                                      selections: Selecti<span class="branch-0 cbranch-no" title="branch not covered" >onSetNode,</span>
+                                      primitivesMap: any,
                                       appendTo?: Model,
                                       result: Model[] = []): Model[] =&gt; {
   (selections ? selections.selections : []).forEach((selectionNode: SelectionNode) =&gt; {
@@ -275,20 +312,28 @@ export const buildInnerModelsArray = (schema: GraphQLSchema,
 &nbsp;
         if (actualType instanceof GraphQLObjectType) {
           const modelName = handleNameDuplications(pascalCase(fieldName), result);
-          let model = {
+          let model: Model = {
             name: modelName,
             fields: [],
             fragmentsUsed: [],
-            inlineFragments: []
+            inlineFragments: [],
+            schemaTypeName: String(actualType)
           };
 &nbsp;
           result.push(model);
 &nbsp;
-          buildInnerModelsArray(schema, actualType, selectionNode.selectionSet, primitivesMap, model, result);
+          let resultArr = result;
+&nbsp;
+          if (!flattenInnerTypes) {
+            model.innerTypes = resultArr = [];
+          }
+&nbsp;
+          buildInnerModelsArray(schema, actualType, flattenInnerTypes, selectionNode.selectionSet, primitivesMap, model, resultArr);
 &nbsp;
           if (!appendTo) {
             // Means we are on the root object, and we need to create the Result interface
             appendTo = {
+              isRoot: true,
               name: 'Result',
               fields: [],
               fragmentsUsed: [],
@@ -321,16 +366,18 @@ export const buildInnerModelsArray = (schema: GraphQLSchema,
         appendTo.fragmentsUsed.push(pascalCase(fragmentName));
         appendTo.usingFragments = appendTo.fragmentsUsed.length &gt; 0;
         break;
-&nbsp;
+<span class="missing-if-branch" title="else path not taken" >E</span>
       case INLINE_FRAGMENT:
-        cons<span class="branch-3 cbranch-no" title="branch not covered" >t root = typeFromAST(schema, selectionNode.typeCondition);</span>
-        const na<span class="cstat-no" title="statement not covered" >me = se</span>lectionNode.typeCondition.name.value + 'InlineFragment';
-&nbsp;
-        let fragmentModel: Model = {
+        const root = typeFromAST(schema, selectionNode.typeCondition);
+        const schemaTypeName = selectionNode.typeCondition.name.value;
+        const name = schemaTypeName + 'InlineFragment';
+<span class="branch-3 cbranch-no" title="branch not covered" ></span>
+        let frag<span class="cstat-no" title="statement not covered" >mentMod</span>el: Model = {
           name: name,
           fields: [],
           fragmentsUsed: [],
-          inlineFragments: []
+          inlineFragments: [],
+          schemaTypeName: schemaTypeName
         };
 &nbsp;
         appendTo.inlineFragments.push({
@@ -341,7 +388,14 @@ export const buildInnerModelsArray = (schema: GraphQLSchema,
         appendTo.hasInlineFragments = appendTo.inlineFragments.length &gt; 0;
 &nbsp;
         result.push(fragmentModel);
-        buildInnerModelsArray(schema, root, selectionNode.selectionSet, primitivesMap, fragmentModel, result);
+&nbsp;
+        let resultArr = result;
+&nbsp;
+        if (!flattenInnerTypes) {
+          fragmentModel.innerTypes = resultArr = [];
+        }
+&nbsp;
+        buildInnerModelsArray(schema, root, flattenInnerTypes, selectionNode.selectionSet, primitivesMap, fragmentModel, resultArr);
 &nbsp;
         break;
 &nbsp;
@@ -358,7 +412,7 @@ export const buildInnerModelsArray = (schema: GraphQLSchema,
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Dec 14 2016 15:56:03 GMT+0200 (IST)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Dec 23 2016 11:06:32 GMT+0200 (IST)
 </div>
 </div>
 <script src="prettify.js"></script>

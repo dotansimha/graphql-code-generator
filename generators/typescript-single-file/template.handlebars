@@ -45,15 +45,6 @@ export namespace {{ name }} {
       } {{#each fragmentsUsed}}& {{this}}.Fragment {{/each }}{{#if hasInlineFragments}}& ({{#each inlineFragments}}{{ typeName }}{{/each}} | {}) {{/if}}
 
   {{/each ~}}
-
-{{#each resultFields}}
-      export type Result = {
-      {{#each fields}}
-      {{ name }}: {{#if isArray}}Array<{{/if}}{{ type }}{{#if isArray}}>{{/if}};
-      {{/each}}
-      }
-
-  {{/each ~}}
 }
 
 {{/each ~}}
