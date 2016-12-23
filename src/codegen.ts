@@ -5,7 +5,10 @@ import {handleType} from './model-handler';
 import {handleOperation} from './operation-handler';
 import {handleFragment} from './fragment-handler';
 
-export const prepareCodegen = (schema: GraphQLSchema, document: DocumentNode, primitivesMap: any = {}, flattenInnerTypes: boolean = true): Codegen => {
+export const prepareCodegen = (schema: GraphQLSchema,
+                               document: DocumentNode,
+                               primitivesMap: any = {},
+                               flattenInnerTypes = true): Codegen => {
   let models: Model[] = [];
   let documents: CodegenDocument[] = [];
   let typesMap: GraphQLNamedType = schema.getTypeMap();

@@ -28,7 +28,7 @@ transformOptions(options)
       return {
         content: loadFromPath(path.resolve(__dirname, transformedOptions.template.config.basePath, partialPath)),
         name: path.basename(partialPath, path.extname(partialPath))
-      }
+      };
     }));
     const schema = loadSchema(transformedOptions.introspection);
     const documents = transformedOptions.documents;
