@@ -21,7 +21,8 @@ export const handleFragment = (schema: GraphQLSchema, fragmentNode: FragmentDefi
     hasInnerTypes: false,
     variables: [],
     hasVariables: false,
-    document: print(fragmentNode)
+    document: print(fragmentNode),
+    rootType: null
   };
 
   let appendTo: Model = {
@@ -31,6 +32,8 @@ export const handleFragment = (schema: GraphQLSchema, fragmentNode: FragmentDefi
     isFragment: true,
     fragmentsUsed: []
   };
+
+  result.rootType = appendTo;
 
   const root = typeFromAST(schema, fragmentNode.typeCondition);
   result.innerTypes = [appendTo, ...buildInnerModelsArray(schema, root, flattenInnerTypes, fragmentNode.selectionSet, primitivesMap, appendTo)];
