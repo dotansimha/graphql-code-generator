@@ -12,6 +12,8 @@ export interface TransformedCliOptions {
   template?: GeneratorTemplate;
   outPath?: string;
   isDev?: boolean;
+  noSchema?: boolean;
+  noDocuments?: boolean;
 }
 
 function collect(val, memo) {
@@ -28,6 +30,8 @@ export const initCLI = (args): commander.IExportedCommand => {
     .option('-u, --url <graphql-endpoint>', 'Parse remote GraphQL endpoint as introspection file')
     .option('-h, --header [header]', 'Header to add to the introspection HTTP request when using --url', collect, [])
     .option('-t, --template <template-name>', 'Language/platform name templates')
+    .option('-nm, --no-schema', 'Generates only client side documents, without server side schema types')
+    .option('-nd, --no-documents', 'Generates only server side schema types, without client side documents')
     .option('-o, --out <path>', 'Output file(s) path', String, './')
     .arguments('<options> [documents...]')
     .parse(args);
@@ -70,6 +74,8 @@ export const transformOptions = (options): Promise<TransformedCliOptions> => {
   const out: string = options['out'];
   const headers: string[] = options['header'] || [];
   const isDev: boolean = options['dev'] !== undefined;
+  const noSchema: boolean = !options['schema'];
+  const noDocuments: boolean = !options['documents'];
   const result: TransformedCliOptions = {};
   let introspectionPromise;
 
@@ -97,6 +103,8 @@ export const transformOptions = (options): Promise<TransformedCliOptions> => {
     result.template = generatorTemplate;
     result.outPath = out;
     result.isDev = isDev;
+    result.noSchema = noSchema;
+    result.noDocuments = noDocuments;
 
     return result;
   });

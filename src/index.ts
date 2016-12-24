@@ -32,8 +32,11 @@ transformOptions(options)
     }));
     const schema = loadSchema(transformedOptions.introspection);
     const documents = transformedOptions.documents;
-    const flattenInnerTypes = templateConfig.flattenInnerTypes;
-    const codegen = prepareCodegen(schema, loadDocumentsSources(documents), transformedOptions.template.config.primitives, flattenInnerTypes);
+    const codegen = prepareCodegen(schema, loadDocumentsSources(documents), transformedOptions.template.config.primitives, {
+      flattenInnerTypes: templateConfig.flattenInnerTypes,
+      noSchema: transformedOptions.noSchema,
+      noDocuments: transformedOptions.noDocuments
+    });
     const strategy = templateConfig.strategy || 'SINGLE_FILE';
     const baseOutPath = path.basename(transformedOptions.outPath);
 

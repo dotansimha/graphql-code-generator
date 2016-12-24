@@ -5,10 +5,16 @@ import {handleType} from './model-handler';
 import {handleOperation} from './operation-handler';
 import {handleFragment} from './fragment-handler';
 
+export interface CodegenConfig {
+  flattenInnerTypes?: boolean;
+  noSchema?: boolean;
+  noDocuments?: boolean;
+}
+
 export const prepareCodegen = (schema: GraphQLSchema,
                                document: DocumentNode,
                                primitivesMap: any = {},
-                               flattenInnerTypes = true): Codegen => {
+                               config: CodegenConfig = {}): Codegen => {
   let models: Model[] = [];
   let documents: CodegenDocument[] = [];
   let typesMap: GraphQLNamedType = schema.getTypeMap();
@@ -17,23 +23,32 @@ export const prepareCodegen = (schema: GraphQLSchema,
     models.push(handleType(primitivesMap, typesMap[typeName]));
   });
 
-  document.definitions.forEach((definition: DefinitionNode) => {
-    switch (definition.kind) {
-      case Kind.OPERATION_DEFINITION:
-        documents.push(handleOperation(schema, definition, primitivesMap, flattenInnerTypes));
-        break;
+  if (!config.noDocuments) {
+    document.definitions.forEach((definition: DefinitionNode) => {
+      switch (definition.kind) {
+        case Kind.OPERATION_DEFINITION:
+          documents.push(handleOperation(schema, definition, primitivesMap, config.flattenInnerTypes));
+          break;
 
-      case Kind.FRAGMENT_DEFINITION:
-        documents.push(handleFragment(schema, definition, primitivesMap, flattenInnerTypes));
-        break;
+        case Kind.FRAGMENT_DEFINITION:
+          documents.push(handleFragment(schema, definition, primitivesMap, config.flattenInnerTypes));
+          break;
 
-      default:
-        break;
-    }
-  });
+        default:
+          break;
+      }
+    });
+  }
+
 
   return <Codegen>{
-    models: models.filter(item => item),
+    models: models.filter(item => {
+      if (item) {
+        return !(config.noSchema && !item.isEnum);
+      }
+
+      return false;
+    }),
     documents: documents.filter(item => item)
   };
 };
