@@ -58,7 +58,8 @@ export const buildInnerModelsArray = (schema: GraphQLSchema,
           let resultArr = result;
 
           if (!flattenInnerTypes) {
-            model.innerTypes = resultArr = [];
+            appendTo.innerTypes = resultArr = [];
+            resultArr.push(model);
           }
           else {
             result.push(model);

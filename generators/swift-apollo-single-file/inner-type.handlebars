@@ -1,11 +1,14 @@
 {{#each innerTypes}}
 public struct {{#if isRoot}}Data{{else}}{{name}}{{/if}}: GraphQLMappable {
-  {{#unless isRoot}}public let __typename = "{{ schemaTypeName }}"{{/unless}}
+  {{#unless isRoot}}public let __typename: String{{/unless}}
   {{#each fields}}
   public let {{ name }}: {{#if isArray}}[{{/if}}{{ type }}{{#if isArray}}]{{/if}}{{#unless isRequired}}?{{/unless}}
   {{/each}}
 
   public init(reader: GraphQLResultReader) throws {
+    {{#unless isRoot}}
+    __typename = try reader.value(for: Field(responseName: "__typename"))
+    {{/unless}}
     {{#each fields}}
     {{ name }} = try reader.{{#if isRequired }}{{#if isArray}}list{{else}}value{{/if}}{{ else }}{{#if isArray}}optionalList{{else}}optionalValue{{/if}}{{/if}}(for: Field(responseName: "{{ name }}"))
     {{/each}}
@@ -13,5 +16,4 @@ public struct {{#if isRoot}}Data{{else}}{{name}}{{/if}}: GraphQLMappable {
 
   {{> inner-type innerTypes=innerTypes ~}}
 }
-
 {{/each}}
