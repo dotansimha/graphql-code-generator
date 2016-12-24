@@ -1,19 +1,26 @@
 {{#each innerTypes}}
-public struct {{#if isRoot}}Data{{else}}{{name}}{{/if}}: GraphQLMappable {
-  {{#unless isRoot}}public let __typename: String{{/unless}}
+public struct {{#if isRoot}}Data{{else}}{{#if isInlineFragment}}As{{schemaTypeName}}{{else}}{{name}}{{/if}}{{/if}}: {{#if isInlineFragment}}GraphQLConditionalFragment{{else}}GraphQLMappable{{/if}} {
+  {{#if isInlineFragment}}public static let possibleTypes = ["{{schemaTypeName}}"]{{/if}}
+  {{#unless isRoot}}public let __typename{{#if isInlineFragment}}= "{{schemaTypeName}}"{{else}}: String{{/if}}{{/unless}}
+  {{#if isInlineFragment}}{{#each ../parentFields}}public let {{ name }}: {{#if isArray}}[{{/if}}{{ type }}{{#if isArray}}?]{{/if}}{{#unless isRequired}}?{{/unless}}{{/each}}{{/if}}
   {{#each fields}}
-  public let {{ name }}: {{#if isArray}}[{{/if}}{{ type }}{{#if isArray}}]{{/if}}{{#unless isRequired}}?{{/unless}}
+  public let {{ name }}: {{#if isArray}}[{{/if}}{{ type }}{{#if isArray}}?]{{/if}}{{#unless isRequired}}?{{/unless}}
+  {{/each}}
+  {{#each inlineFragments}}
+  public let as{{ typeName }}: As{{ typeName }}?
   {{/each}}
 
   public init(reader: GraphQLResultReader) throws {
-    {{#unless isRoot}}
-    __typename = try reader.value(for: Field(responseName: "__typename"))
-    {{/unless}}
+    {{#unless isRoot}}__typename = try reader.value(for: Field(responseName: "__typename")){{/unless}}
     {{#each fields}}
     {{ name }} = try reader.{{#if isRequired }}{{#if isArray}}list{{else}}value{{/if}}{{ else }}{{#if isArray}}optionalList{{else}}optionalValue{{/if}}{{/if}}(for: Field(responseName: "{{ name }}"))
     {{/each}}
+    {{#each inlineFragments}}
+    as{{ typeName }} = try As{{ typeName }}(reader: reader, ifTypeMatches: __typename)
+    {{/each}}
   }
 
-  {{> inner-type innerTypes=innerTypes ~}}
+  {{> inner-type innerTypes=innerTypes parentFields=fields}}
 }
+
 {{/each}}

@@ -23,6 +23,7 @@ export interface Model {
   isObject?: boolean;
   isCustomScalar?: boolean;
   isFragment?: boolean;
+  isInlineFragment?: boolean;
   isEnum?: boolean;
   isUnion?: boolean;
   usingFragments?: boolean;

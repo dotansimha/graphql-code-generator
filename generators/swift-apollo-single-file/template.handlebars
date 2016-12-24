@@ -40,9 +40,11 @@ import Apollo
       {{/each}}
     }
 
+    {{#if hasVariables}}
     public var variables: GraphQLMap? {
       return [{{#each variables}}"{{name}}": {{name}}{{#unless @last}}, {{/unless}}{{/each}}]
     }
+    {{/if}}
 
     {{> inner-type innerTypes=innerTypes}}
   }

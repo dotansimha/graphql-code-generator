@@ -58,7 +58,7 @@ export const buildInnerModelsArray = (schema: GraphQLSchema,
           let resultArr = result;
 
           if (!flattenInnerTypes) {
-            appendTo.innerTypes = resultArr = [];
+            appendTo.innerTypes = resultArr = appendTo.innerTypes || [];
             resultArr.push(model);
           }
           else {
@@ -94,22 +94,25 @@ export const buildInnerModelsArray = (schema: GraphQLSchema,
           fields: [],
           fragmentsUsed: [],
           inlineFragments: [],
+          isInlineFragment: true,
           schemaTypeName: schemaTypeName
         };
 
         appendTo.inlineFragments.push({
-          typeName: name,
+          typeName: schemaTypeName,
           onModel: selectionNode.typeCondition.name.value,
         });
 
         appendTo.hasInlineFragments = appendTo.inlineFragments.length > 0;
 
-        result.push(fragmentModel);
-
         let resultArr = result;
 
         if (!flattenInnerTypes) {
-          fragmentModel.innerTypes = resultArr = [];
+          appendTo.innerTypes = resultArr = appendTo.innerTypes || [];
+          resultArr.push(fragmentModel);
+        }
+        else {
+          result.push(fragmentModel);
         }
 
         buildInnerModelsArray(schema, root, flattenInnerTypes, selectionNode.selectionSet, primitivesMap, fragmentModel, resultArr);
