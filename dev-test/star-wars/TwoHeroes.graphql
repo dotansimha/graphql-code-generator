@@ -1,0 +1,8 @@
+query TwoHeroes {
+  r2: hero {
+    name
+  }
+  luke: hero(episode: EMPIRE) {
+    name
+  }
+}

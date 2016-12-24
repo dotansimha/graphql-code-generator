@@ -9,7 +9,10 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as mkdirp from 'mkdirp';
 import {Model, CodegenDocument} from './interfaces';
-import {initHelpers, initPartials, PartialDefinition} from './handlebars-helpers';
+import {
+  initHelpers, initPartials, PartialDefinition, HelperDefinition,
+  initTemplateHelpers
+} from './handlebars-helpers';
 
 const options = initCLI(process.argv);
 validateCliOptions(options);
@@ -28,6 +31,12 @@ transformOptions(options)
       return {
         content: loadFromPath(path.resolve(__dirname, transformedOptions.template.config.basePath, partialPath)),
         name: path.basename(partialPath, path.extname(partialPath))
+      };
+    }));
+    initTemplateHelpers((templateConfig.helpers || []).map<HelperDefinition>((helperPath: string) => {
+      return {
+        func: require(path.resolve(__dirname, transformedOptions.template.config.basePath, helperPath)),
+        name: path.basename(helperPath, path.extname(helperPath))
       };
     }));
     const schema = loadSchema(transformedOptions.introspection);

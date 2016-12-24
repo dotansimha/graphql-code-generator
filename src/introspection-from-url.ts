@@ -1,6 +1,5 @@
-import {IntrospectionQuery} from 'graphql/utilities/introspectionQuery';
+import {introspectionQuery, IntrospectionQuery} from 'graphql/utilities/introspectionQuery';
 import request = require('request');
-import {introspectionQuery} from 'graphql/utilities/introspectionQuery';
 
 export const introspectionFromUrl = (url: string, headers: string[]): Promise<IntrospectionQuery> => {
   let splittedHeaders = headers.map((header: string) => {
@@ -23,7 +22,7 @@ export const introspectionFromUrl = (url: string, headers: string[]): Promise<In
     request.post({
       url: url,
       json: {
-        query: introspectionQuery
+        query: introspectionQuery.replace('locations', '')
       },
       headers: Object.assign({
         'Accept': 'application/json',
@@ -38,8 +37,8 @@ export const introspectionFromUrl = (url: string, headers: string[]): Promise<In
 
       const bodyJson = body.data;
 
-      if (!bodyJson || (bodyJson.errors && bodyJson.errors.length > 0)) {
-        reject('Unable to download schema from remote: ' + bodyJson.errors.map(item => item.message).join(', '));
+      if (!bodyJson || (body.errors && body.errors.length > 0)) {
+        reject('Unable to download schema from remote: ' + body.errors.map(item => item.message).join(', '));
 
         return;
       }

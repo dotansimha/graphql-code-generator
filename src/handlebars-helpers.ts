@@ -10,9 +10,20 @@ export interface PartialDefinition {
   content: string;
 }
 
+export interface HelperDefinition {
+  name: string;
+  func: Function;
+}
+
 export const initPartials = (partials: PartialDefinition[]) => {
   partials.forEach((partial: PartialDefinition) => {
     Handlebars.registerPartial(partial.name, partial.content);
+  });
+};
+
+export const initTemplateHelpers = (helpers: HelperDefinition[]) => {
+  helpers.forEach((helper: HelperDefinition) => {
+    Handlebars.registerHelper(helper.name, helper.func);
   });
 };
 

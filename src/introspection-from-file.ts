@@ -11,7 +11,12 @@ export const introspectionFromFile = (file: string) => {
           reject(`Unable to read local introspection file: ${file}`);
         }
 
-        resolve(<IntrospectionQuery>JSON.parse(fileContent));
+        let introspection = JSON.parse(fileContent);
+        if (introspection.data) {
+          introspection = introspection.data;
+        }
+
+        resolve(<IntrospectionQuery>introspection);
       }
       catch (e) {
         reject(e);

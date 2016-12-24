@@ -1,0 +1,21 @@
+query HeroParentTypeDependentField($episode: Episode) {
+  hero(episode: $episode) {
+    name
+    ... on Human {
+      friends {
+        name
+        ... on Human {
+          height(unit: FOOT)
+        }
+      }
+    }
+    ... on Droid {
+      friends {
+        name
+        ... on Human {
+          height(unit: METER)
+        }
+      }
+    }
+  }
+}

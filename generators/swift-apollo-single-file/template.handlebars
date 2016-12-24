@@ -2,9 +2,12 @@ import Apollo
 
 {{#each documents ~}}
   public final class {{ name }}: {{#if isMutation }}GraphQLMutation{{/if}}{{#if isQuery }}GraphQLQuery{{/if}}{{#if isSubscription }}GraphQLSubscription{{/if}} {
-  {{#each variables}}
+    public static let operationDefinition =
+      {{#multiline-string document }}{{/multiline-string}};
+
+    {{#each variables}}
     public let {{ name }}: {{#if isArray}}[{{/if}}{{ type }}{{#if isArray}}]{{/if}}{{#unless isRequired}}?{{/unless}}
-  {{/each}}
+    {{/each}}
 
     public init({{#each variables}}{{ name }}: {{#if isArray}}[{{/if}}{{ type }}{{#if isArray}}]{{/if}}{{#unless isRequired}}?{{/unless}}{{#unless @last}}, {{/unless}}{{/each}}) {
       {{#each variables}}

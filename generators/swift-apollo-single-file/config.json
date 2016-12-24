@@ -5,6 +5,9 @@
   "partials": [
     "./inner-type.handlebars"
   ],
+  "helpers": [
+    "./multiline-string.js"
+  ],
   "primitives": {
     "String": "String",
     "Int": "Int",

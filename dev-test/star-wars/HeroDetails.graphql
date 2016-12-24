@@ -1,0 +1,11 @@
+query HeroDetails($episode: Episode) {
+  hero(episode: $episode) {
+    name
+    ... on Human {
+      height
+    }
+    ... on Droid {
+      primaryFunction
+    }
+  }
+}

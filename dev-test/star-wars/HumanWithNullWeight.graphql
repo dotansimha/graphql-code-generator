@@ -1,0 +1,6 @@
+query HumanWithNullHeight {
+  human(id: 1004) {
+    name
+    mass
+  }
+}

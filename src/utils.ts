@@ -20,15 +20,15 @@ export const shouldSkip = (typeName: string): boolean => {
 };
 
 export const isRequired = (type: GraphQLType): boolean => {
-  return (type.toString()).indexOf('!') > -1;
+  return (String(type)).indexOf('!') > -1;
 };
 
 export const isArray = (type: GraphQLType): boolean => {
-  return (type.toString()).indexOf('[') > -1;
+  return (String(type)).indexOf('[') > -1;
 };
 
 export const getTypeName = (primitivesMap: any, type: GraphQLType) => {
-  const name = (type.toString()).replace(/[\[\]!]/g, '');
+  const name = (String(type)).replace(/[\[\]!]/g, '');
 
   if (primitivesMap[name]) {
     return primitivesMap[name];

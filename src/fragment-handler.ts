@@ -30,7 +30,8 @@ export const handleFragment = (schema: GraphQLSchema, fragmentNode: FragmentDefi
     fields: [],
     isObject: true,
     isFragment: true,
-    fragmentsUsed: []
+    fragmentsUsed: [],
+    inlineFragments: []
   };
 
   result.rootType = appendTo;

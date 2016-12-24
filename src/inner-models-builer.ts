@@ -1,4 +1,4 @@
-import {getNamedType, GraphQLType, GraphQLObjectType} from 'graphql/type/definition';
+import {getNamedType, GraphQLType, GraphQLObjectType, GraphQLInterfaceType} from 'graphql/type/definition';
 import {FIELD, FRAGMENT_SPREAD, INLINE_FRAGMENT} from 'graphql/language/kinds';
 import {SelectionSetNode, SelectionNode} from 'graphql/language/ast';
 import {GraphQLSchema} from 'graphql/type/schema';
@@ -23,7 +23,7 @@ export const buildInnerModelsArray = (schema: GraphQLSchema,
         const rawType = field.type;
         const actualType = getNamedType(rawType);
 
-        if (actualType instanceof GraphQLObjectType) {
+        if (actualType instanceof GraphQLObjectType || actualType instanceof GraphQLInterfaceType) {
           const modelName = handleNameDuplications(pascalCase(fieldName), result);
           let model: Model = {
             name: modelName,

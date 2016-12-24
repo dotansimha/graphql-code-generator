@@ -10,6 +10,7 @@ export interface TemplateConfig {
   basePath?: string;
   flattenInnerTypes?: boolean;
   partials?: string[];
+  helpers?: string[];
 }
 
 export interface GeneratorTemplate {
