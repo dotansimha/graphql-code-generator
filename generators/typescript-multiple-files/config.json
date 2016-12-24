@@ -1,6 +1,7 @@
 {
   "strategy": "MULTIPLE_FILES",
   "filesExtension": "d.ts",
+  "flattenInnerTypes": true,
   "templates": {
     "model": "./model.handlebars",
     "document": "./document.handlebars",

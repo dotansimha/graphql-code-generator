@@ -1,6 +1,7 @@
 {
   "strategy": "SINGLE_FILE",
   "template": "./template.handlebars",
+  "flattenInnerTypes": true,
   "primitives": {
     "String": "string",
     "Int": "number",

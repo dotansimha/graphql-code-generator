@@ -25,9 +25,9 @@
         <span class='fraction'>46/47</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">77.78% </span>
+        <span class="strong">80% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>14/18</span>
+        <span class='fraction'>16/20</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -164,7 +164,10 @@
 119
 120
 121
-122</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+122
+123
+124
+125</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
@@ -184,34 +187,37 @@
 <span class="cline-any cline-yes">45x</span>
 <span class="cline-any cline-yes">45x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">45x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">45x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">45x</span>
 <span class="cline-any cline-yes">45x</span>
 <span class="cline-any cline-yes">21x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">45x</span>
-<span class="cline-any cline-yes">45x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">24x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">45x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">106x</span>
@@ -285,7 +291,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {getNamedType, GraphQLType, GraphQLObjectType} from 'graphql/type/definition';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {getNamedType, GraphQLType, GraphQLObjectType, GraphQLInterfaceType} from 'graphql/type/definition';
 import {FIELD, FRAGMENT_SPREAD, INLINE_FRAGMENT} from 'graphql/language/kinds';
 import {SelectionSetNode, SelectionNode} from 'graphql/language/ast';
 import {GraphQLSchema} from 'graphql/type/schema';
@@ -310,34 +316,18 @@ export const buildInnerModelsArray = (schema: GraphQLSchema,
         const rawType = field.type;
         const actualType = getNamedType(rawType);
 &nbsp;
-        if (actualType instanceof GraphQLObjectType) {
+        if (actualType instanceof GraphQLObjectType || actualType instanceof GraphQLInterfaceType) {
           const modelName = handleNameDuplications(pascalCase(fieldName), result);
-          let model: Model = {
-            name: modelName,
-            fields: [],
-            fragmentsUsed: [],
-            inlineFragments: [],
-            schemaTypeName: String(actualType)
-          };
-&nbsp;
-          result.push(model);
-&nbsp;
-          let resultArr = result;
-&nbsp;
-          if (!flattenInnerTypes) {
-            model.innerTypes = resultArr = [];
-          }
-&nbsp;
-          buildInnerModelsArray(schema, actualType, flattenInnerTypes, selectionNode.selectionSet, primitivesMap, model, resultArr);
 &nbsp;
           if (!appendTo) {
-            // Means we are on the root object, and we need to create the Result interface
+            // Means we are on the root object, and we need to create the root interface result
             appendTo = {
               isRoot: true,
-              name: 'Result',
+              name: fieldName,
               fields: [],
               fragmentsUsed: [],
-              inlineFragments: []
+              inlineFragments: [],
+              innerTypes: []
             };
 &nbsp;
             result.push(appendTo);
@@ -349,6 +339,25 @@ export const buildInnerModelsArray = (schema: GraphQLSchema,
             isArray: isArray(rawType),
             isRequired: isRequired(rawType)
           });
+&nbsp;
+          let model: Model = {
+            name: modelName,
+            fields: [],
+            fragmentsUsed: [],
+            inlineFragments: [],
+            schemaTypeName: String(actualType)
+          };
+&nbsp;
+          let resultArr = result;
+&nbsp;
+          if (!flattenInnerTypes) {
+            model.innerTypes = resultArr = [];
+          }
+          else {
+            result.push(model);
+          }
+&nbsp;
+          buildInnerModelsArray(schema, actualType, flattenInnerTypes, selectionNode.selectionSet, primitivesMap, model, resultArr);
         }
         else {
           appendTo.fields.push({
@@ -412,7 +421,7 @@ export const buildInnerModelsArray = (schema: GraphQLSchema,
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sat Dec 24 2016 11:18:10 GMT+0200 (IST)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sat Dec 24 2016 14:38:03 GMT+0200 (IST)
 </div>
 </div>
 <script src="prettify.js"></script>

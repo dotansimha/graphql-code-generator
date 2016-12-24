@@ -92,8 +92,7 @@
 47
 48
 49
-50
-51</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+50</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -142,49 +141,47 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {IntrospectionQuery} from 'graphql/utilities/introspectionQuery';
-import request<span class="cstat-no" title="statement not covered" > = require('request</span>');
-import {introspectionQuery}<span class="cstat-no" title="statement not covered" > from 'graphql/utilities/introspectionQuery';</span>
-<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span>
-export const introspection<span class="cstat-no" title="statement not covered" >FromUrl = (u<span class="fstat-no" title="function not covered" >rl</span>: string, headers: string[]): Promise&lt;IntrospectionQuery&gt; =&gt; {</span>
-  let splittedHea<span class="cstat-no" title="statement not covered" >ders = headers.map((head</span>er: stri<span class="cstat-no" title="statement not covered" >ng) =&gt;</span> {<span class="cstat-no" title="statement not covered" ></span>
-    cons<span class="cstat-no" title="statement not covered" >t [name, value] = header.split(/\s*:\s*/);</span>
-&nbsp;
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {introspectionQuery, IntrospectionQuery} from 'graphql/utilities/introspectionQuery';
+import request = require('r<span class="cstat-no" title="statement not covered" >equest');</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >export const introspectionFromU<span class="fstat-no" title="function not covered" >rl</span> = (url: string, headers: string[]): Promise&lt;IntrospectionQuery&gt; =&gt; {</span>
+  let splittedHeaders = he<span class="cstat-no" title="statement not covered" >aders.map((h<span class="fstat-no" title="function not covered" >ea</span>der: string) =&gt; {</span>
+    const [name, <span class="cstat-no" title="statement not covered" >value] = header.split(/\</span>s*:\s*/)<span class="cstat-no" title="statement not covered" >;<span class="cstat-no" title="statement not covered" ></span></span>
+<span class="cstat-no" title="statement not covered" ></span>
     return {
       [name]: value
     };
-  });<span class="cstat-no" title="statement not covered" ></span>
+  });
 <span class="cstat-no" title="statement not covered" ></span>
-  let ex<span class="cstat-no" title="statement not covered" >traHeaders = {};<span class="fstat-no" title="function not covered" ></span></span>
-<span class="cstat-no" title="statement not covered" ></span>
-  if (splittedHeaders.length &gt; 0) {
+  le<span class="cstat-no" title="statement not covered" >t extraHeaders = {};</span>
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span>
+  if (splitt<span class="cstat-no" title="statement not covered" >edHeaders.length &gt; 0) {</span>
     extraHeaders = splittedHeaders.reduce((a, b) =&gt; {
-<span class="cstat-no" title="statement not covered" >      return Object.ass<span class="fstat-no" title="function not covered" >ig</span>n({}, a, b);</span>
-    });<span class="cstat-no" title="statement not covered" ></span>
-  }
+      return Object.assign({}, a, b);
+<span class="cstat-no" title="statement not covered" >    });<span class="fstat-no" title="function not covered" ></span></span>
+  }<span class="cstat-no" title="statement not covered" ></span>
 &nbsp;
   return new Promise&lt;IntrospectionQuery&gt;((resolve, reject) =&gt; {
     request.post({
       url: url,
       json: {
-        query: introspectionQuery
+        query: introspectionQuery.replace('locations', '')
       },
-      heade<span class="fstat-no" title="function not covered" >rs</span>: Object.assign({
-        'Acc<span class="cstat-no" title="statement not covered" >ept': 'application/json',</span>
-        'Content<span class="cstat-no" title="statement not covered" >-Type': 'appl</span>ication/json'
+      headers: Object.assign({
+        'Ac<span class="fstat-no" title="function not covered" >ce</span>pt': 'application/json',
+        'Con<span class="cstat-no" title="statement not covered" >tent-Type': 'application/json'</span>
       }, extraHe<span class="cstat-no" title="statement not covered" >aders)</span>
-    }, (err, response, body) =&gt; {
-      if (err) {<span class="cstat-no" title="statement not covered" ></span>
-        reje<span class="cstat-no" title="statement not covered" >ct(err);</span>
-<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span></span>
-        return;<span class="cstat-no" title="statement not covered" ></span>
-      }
+    }, (err, res<span class="cstat-no" title="statement not covered" >ponse, b</span>ody) =&gt; {
+      if (err) {
+        reject(err);<span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" ></span>
-      const bodyJson = body.data;
+        return;<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span></span>
+      }<span class="cstat-no" title="statement not covered" ></span>
 &nbsp;
-      if (!bodyJson || (bodyJson.errors &amp;&amp; bodyJson.errors.length &gt; 0)) {
-        reject('Unable to download schema from remote: ' + bodyJson.errors.map(item =&gt; item.message).join(', '));
+      const <span class="cstat-no" title="statement not covered" >bodyJson = body.dat</span>a;
+&nbsp;
+      if (!bodyJson || (body.errors &amp;&amp; body.errors.length &gt; 0)) {
+        reject('Unable to download schema from remote: ' + body.errors.map(item =&gt; item.message).join(', '));
 &nbsp;
         return;
       }
@@ -199,7 +196,7 @@ export const introspection<span class="cstat-no" title="statement not covered" >
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sat Dec 24 2016 11:18:10 GMT+0200 (IST)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sat Dec 24 2016 14:38:03 GMT+0200 (IST)
 </div>
 </div>
 <script src="prettify.js"></script>

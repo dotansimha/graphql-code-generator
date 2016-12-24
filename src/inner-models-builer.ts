@@ -25,32 +25,16 @@ export const buildInnerModelsArray = (schema: GraphQLSchema,
 
         if (actualType instanceof GraphQLObjectType || actualType instanceof GraphQLInterfaceType) {
           const modelName = handleNameDuplications(pascalCase(fieldName), result);
-          let model: Model = {
-            name: modelName,
-            fields: [],
-            fragmentsUsed: [],
-            inlineFragments: [],
-            schemaTypeName: String(actualType)
-          };
-
-          result.push(model);
-
-          let resultArr = result;
-
-          if (!flattenInnerTypes) {
-            model.innerTypes = resultArr = [];
-          }
-
-          buildInnerModelsArray(schema, actualType, flattenInnerTypes, selectionNode.selectionSet, primitivesMap, model, resultArr);
 
           if (!appendTo) {
-            // Means we are on the root object, and we need to create the Result interface
+            // Means we are on the root object, and we need to create the root interface result
             appendTo = {
               isRoot: true,
-              name: 'Result',
+              name: fieldName,
               fields: [],
               fragmentsUsed: [],
-              inlineFragments: []
+              inlineFragments: [],
+              innerTypes: []
             };
 
             result.push(appendTo);
@@ -62,6 +46,25 @@ export const buildInnerModelsArray = (schema: GraphQLSchema,
             isArray: isArray(rawType),
             isRequired: isRequired(rawType)
           });
+
+          let model: Model = {
+            name: modelName,
+            fields: [],
+            fragmentsUsed: [],
+            inlineFragments: [],
+            schemaTypeName: String(actualType)
+          };
+
+          let resultArr = result;
+
+          if (!flattenInnerTypes) {
+            model.innerTypes = resultArr = [];
+          }
+          else {
+            result.push(model);
+          }
+
+          buildInnerModelsArray(schema, actualType, flattenInnerTypes, selectionNode.selectionSet, primitivesMap, model, resultArr);
         }
         else {
           appendTo.fields.push({

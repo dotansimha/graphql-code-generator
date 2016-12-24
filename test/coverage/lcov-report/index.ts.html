@@ -22,22 +22,22 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>0/62</span>
+        <span class='fraction'>0/63</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>0/20</span>
+        <span class='fraction'>0/22</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>0/9</span>
+        <span class='fraction'>0/10</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>0/61</span>
+        <span class='fraction'>0/62</span>
       </div>
     </div>
   </div>
@@ -173,7 +173,19 @@
 128
 129
 130
-131</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -198,8 +210,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -279,6 +300,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -314,101 +338,113 @@ import * <span class="cstat-no" title="statement not covered" >as fs from 'fs</s
 import * as<span class="cstat-no" title="statement not covered" > path from 'path</span>';
 import * as m<span class="cstat-no" title="statement not covered" >kdirp from 'mkdirp</span>';
 import {Model, CodegenDocum<span class="cstat-no" title="statement not covered" >ent} from './interfaces';</span>
-import {initHe<span class="cstat-no" title="statement not covered" >lpers, initPartials, Partial</span>Definition} from './handlebars-helpers';
+import {<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  initHelpers, initPartials, Partia</span>lDefinition, HelperDefinition,
+<span class="cstat-no" title="statement not covered" >  initTemplateHelpers</span>
+} from './<span class="fstat-no" title="function not covered" >ha</span>ndlebars-helpers';
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >const options = initCLI(process.argv);</span>
-validateCl<span class="fstat-no" title="function not covered" >iO</span>ptions(options);
+cons<span class="cstat-no" title="statement not covered" >t options = initCLI(process.argv);</span>
+vali<span class="cstat-no" title="statement not covered" >dateCliOptions(options);<span class="fstat-no" title="function not covered" ></span></span>
 <span class="cstat-no" title="statement not covered" ></span>
-expo<span class="cstat-no" title="statement not covered" >rt interface FileResult {</span>
-  pa<span class="cstat-no" title="statement not covered" >th: string;<span class="fstat-no" title="function not covered" ></span></span>
-  conten<span class="cstat-no" title="statement not covered" >t: string;</span>
+export interface FileResult {
+  path: string;
+  content: string;
   isDev?: boolean;
-}
-&nbsp;
+}<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span>
+<span class="cstat-no" title="statement not covered" ></span>
 transformOptions(options)
-  .then&lt;FileResul<span class="cstat-no" title="statement not covered" >t[]&gt;((transformedOptions: TransformedCliOptions) =&gt; {</span>
-    const templateCo<span class="cstat-no" title="statement not covered" >nfig = transformedOptions.tem</span>plate.config;
-    initHelpers();<span class="cstat-no" title="statement not covered" ></span>
-    initPartials((<span class="cstat-no" title="statement not covered" >templateConfig.partials || []).map&lt;PartialDefinition&gt;((partialPath: string) =&gt; {</span>
+  .then&lt;FileResult[]&gt;((transformedOptions: TransformedCliOptions) =&gt; {
+    const templateConfig = transformedOptions.template.config;
+    initHelpers();
+    initPartials(<span class="cstat-no" title="statement not covered" >(templateConfig.partials || []).map&lt;PartialDefinition&gt;((parti</span>alPath: string) =&gt; {
       return {<span class="cstat-no" title="statement not covered" ></span>
-        content: loadF<span class="cstat-no" title="statement not covered" >romPath(path.resolve(__dirname, transforme</span>dOptions.template.config.basePath, partialPath)),
-<span class="cstat-no" title="statement not covered" >        name: path.basename(partialPath, path.extname(partialPath))</span>
+        content: l<span class="cstat-no" title="statement not covered" >oadFromPath(path.resolve(__dirname, transformedOptions.template.config.basePath, partialPath)),</span>
+        name: path.basename(partialPath, path.extname(partialPath))
+      };
+    }));
+    initTemplateHelpers((templateConfig.helpers || []).map&lt;HelperDefinition&gt;((helperPath: string) =&gt; {
+      return {<span class="cstat-no" title="statement not covered" ></span>
+        func: require(<span class="cstat-no" title="statement not covered" >path.resolve(__dirname, transformedOptions</span>.template.config.basePath, helperPath)),
+<span class="cstat-no" title="statement not covered" >        name: path.basename(helperPath, path.extname(helperPath))</span>
       };<span class="cstat-no" title="statement not covered" ></span>
     }));<span class="cstat-no" title="statement not covered" ></span>
     const schema = loadSchema(transformedOptions.introspection);
     const documents = trans<span class="cstat-no" title="statement not covered" >formedOptions.documents;</span>
-    const flattenInner<span class="cstat-no" title="statement not covered" >Types = templateConfig.flattenInnerTypes;</span>
-    const codegen = p<span class="cstat-no" title="statement not covered" >repareCodegen(schema, </span>loadDocumentsSources(documents), transformedOptions.template.config.primitives, flattenInnerTypes);
-    cons<span class="cstat-no" title="statement not covered" >t strategy = template</span>Config.strategy || 'SINGLE_FILE';
-    cons<span class="cstat-no" title="statement not covered" >t baseOutPath = path.basename(transformedOptions.outPath);</span>
+    const codegen = pr<span class="cstat-no" title="statement not covered" >epareCodegen(schema, loadDocumentsSources</span>(documents), transformedOptions.template.config.primitives, {
+      flattenInnerTyp<span class="cstat-no" title="statement not covered" >es: templateConfig.fla</span>ttenInnerTypes,
+      no<span class="cstat-no" title="statement not covered" >Schema: transformedOp</span>tions.noSchema,
+      no<span class="cstat-no" title="statement not covered" >Documents: transformedOptions.noDocuments</span>
+    });
+    const strategy = templateConfig.strategy || 'SINGLE_FILE';
+    const baseOutPath = path.basename(transformedOptions.outPath);
 &nbsp;
     if (strategy === 'SINGLE_FILE') {
-      if (baseOutPath.indexOf('.') === -1) {
-        throw `Generator '${transformedOptions.template.language}' uses single-file strategy! Please specify a filename using --out flag!`;
-      }
+      if <span class="cstat-no" title="statement not covered" >(baseOutPath.indexOf('.') === -1) {</span>
+<span class="cstat-no" title="statement not covered" >        throw `Generator '${transformedOptions.template.language}' uses single-file strategy! Please specify a filename using --out flag!`;</span>
+      }<span class="cstat-no" title="statement not covered" ></span>
+&nbsp;
+      const templatePath = <span class="cstat-no" title="statement not covered" >pat</span>h.resolve(__dirname, transformedOptions.template.config.basePath, transformedOptions.template.config.template);
+      const outPath = path.reso<span class="cstat-no" title="statement not covered" >lve(transformedOptions.outPath);</span>
+      const outDir = path.<span class="cstat-no" title="statement not covered" >dirname(outPath);</span>
+      mkdirp.sync(outD<span class="cstat-no" title="statement not covered" >ir);</span>
 <span class="cstat-no" title="statement not covered" ></span>
-      co<span class="cstat-no" title="statement not covered" >nst templatePath = path.resolve(__dirname, transformedOptions.template.config.basePath, transformedOptions.template.config.template);</span>
-      const <span class="cstat-no" title="statement not covered" >outPath = path.resolve(transformedOptions.outPath);</span>
-      const outDir = path.dirname(outPath);
-      mkdirp.sync(outDir);<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" ></span>
-      return [{<span class="cstat-no" title="statement not covered" ></span>
-        isDev: transfo<span class="cstat-no" title="statement not covered" >rmedOptions.isDev,</span>
-<span class="cstat-no" title="statement not covered" >        content: compileTempla</span>te(codegen, templatePath),
-<span class="cstat-no" title="statement not covered" >        path: outPath<span class="fstat-no" title="function not covered" ></span></span>
+      re<span class="cstat-no" title="statement not covered" >turn [{<span class="fstat-no" title="function not covered" ></span></span>
+        isDev: transformedOptio<span class="cstat-no" title="statement not covered" >ns.isDev,</span>
+        cont<span class="cstat-no" title="statement not covered" >ent: compileTemplate(codegen, templatePath),</span>
+        path: ou<span class="cstat-no" title="statement not covered" >tPath<span class="fstat-no" title="function not covered" ></span></span>
       }];<span class="cstat-no" title="statement not covered" ></span>
-    }<span class="cstat-no" title="statement not covered" ></span>
-    else if (str<span class="cstat-no" title="statement not covered" >ategy === 'MULTIPLE_FIL<span class="fstat-no" title="function not covered" >ES</span>') {</span>
-      if (baseOutPat<span class="cstat-no" title="statement not covered" >h.indexOf('.') &gt; -1) {</span>
+    }
+    else if (strategy === 'MULTIPLE_FILES') {
+      if (baseOutPath.indexOf('.') &gt; -1) {
         throw `Generator '${transformedOptions.template.language}' uses multiple-files strategy! Please specify a directory using --out flag!`;
       }
 &nbsp;
-      let resultsArr: FileResult[] = [];
-      const filesExtension = transformedOptions.template.config.filesExtension;
-      const templates = transformedOptions.template.config.templates;
-      const <span class="cstat-no" title="statement not covered" >outPath = path.resolve(transformedOptions.outPath);</span>
-      mkdirp.syn<span class="cstat-no" title="statement not covered" >c(outPath);<span class="fstat-no" title="function not covered" ></span></span>
-<span class="cstat-no" title="statement not covered" ></span>
+      let re<span class="cstat-no" title="statement not covered" >sultsArr: FileResult[] = [];</span>
+      const file<span class="cstat-no" title="statement not covered" >sExtension = transformedOp<span class="fstat-no" title="function not covered" >ti</span>ons.template.config.filesExtension;</span>
+      const template<span class="cstat-no" title="statement not covered" >s = transformedOptions.template.config.templates;</span>
+      const outPath = path.resolve(transformedOptions.outPath);
+      mkdirp.sync(outPath);
+&nbsp;
       Object.keys(templates).forEach((templateName: string) =&gt; {
         const templatePath = path.resolve(__dirname, transformedOptions.template.config.basePath, templates[templateName]);
 &nbsp;
         if (templateName === 'model') {
-          codegen.models.forEach((model: Model) =&gt; {
-            resultsArr.push({
-              isDev: transformedOptions.isDev,
-<span class="cstat-no" title="statement not covered" >              content: compileTemplate(mode<span class="fstat-no" title="function not covered" >l,</span> templatePath),<span class="cstat-no" title="statement not covered" ></span></span>
-<span class="cstat-no" title="statement not covered" >              path: path.resolve(transformedOptions.outPath, model.name + '.model.' + filesExtension)</span>
-            });<span class="cstat-no" title="statement not covered" ></span>
-          });<span class="cstat-no" title="statement not covered" ></span>
-        }<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >          codegen.models.forEach((model: Mo<span class="fstat-no" title="function not covered" >de</span>l) =&gt; {<span class="cstat-no" title="statement not covered" ></span></span>
+<span class="cstat-no" title="statement not covered" >            resultsArr.push({</span>
+              isDev: transformedOp<span class="cstat-no" title="statement not covered" >tions.isDev,</span>
+              content: compileT<span class="cstat-no" title="statement not covered" >emplate(model, templatePath),</span>
+              path: path.resolv<span class="cstat-no" title="statement not covered" >e(transformedOptions.outPath, model.name + '.model.' + filesExtension)</span>
+<span class="cstat-no" title="statement not covered" >            });</span>
+          });
+        }<span class="fstat-no" title="function not covered" ></span>
 <span class="cstat-no" title="statement not covered" ></span>
         if (templateName === 'document') {
-          codegen.documents.forEach((document: CodegenDocument) =&gt; {<span class="fstat-no" title="function not covered" ></span>
-            resultsArr.p<span class="cstat-no" title="statement not covered" >ush({</span>
+          codegen.documents.forEach((document: CodegenDocument) =&gt; {
+            resultsArr.push({
               isDev: transformedOptions.isDev,
               content: compileTemplate(document, templatePath),
               path: path.resolve(transformedOptions.outPath, document.name + '.document.' + filesExtension)
             });
           });
         }
-      });
+      })<span class="cstat-no" title="statement not covered" >;</span>
 &nbsp;
       resultsArr = resultsArr.filter(item =&gt; item.content.length &gt; 0);
 <span class="cstat-no" title="statement not covered" ></span>
       if (templates['index']) {
         const directoryPath = path.resolve(transformedOptions.outPath);
-<span class="cstat-no" title="statement not covered" >        const indexOutPath = path.resolve(directoryPath, 'index.' + filesExtension);</span>
-        const templatePath = path.resolve(transformedOptions.template.config.basePath, templates['index']);
-&nbsp;
-        re<span class="fstat-no" title="function not covered" >su</span>ltsArr.push({
-<span class="cstat-no" title="statement not covered" >          isDev: transformedO<span class="fstat-no" title="function not covered" >pt</span>ions.isDev,</span>
-<span class="cstat-no" title="statement not covered" >          content: compileTemplate({files: resultsArr.map(item =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >            return {</span>
-<span class="cstat-no" title="statement not covered" >              fileName: path.basename(i</span>tem.path, '.' + filesExtension),
-              fullPath: item.path,
+        co<span class="fstat-no" title="function not covered" >ns</span>t indexOutPath = path.resolve(directoryPath, 'index.' + filesExtension);
+<span class="cstat-no" title="statement not covered" >        const templatePath = <span class="fstat-no" title="function not covered" >pa</span>th.resolve(transformedOptions.template.config.basePath, templates['index']);</span>
+<span class="cstat-no" title="statement not covered" ></span>
+        resu<span class="cstat-no" title="statement not covered" >ltsArr.push({</span>
+          is<span class="cstat-no" title="statement not covered" >Dev: transformedOptions.isD</span>ev,
+          content: compileTemplate({files: resultsArr.map(item =&gt; {
+            return {
+<span class="cstat-no" title="statement not covered" >              fileName: path.basename(item.path, '.' + </span>filesExtension),
+<span class="cstat-no" title="statement not covered" >              fullPath: item.path,</span>
               extension: filesExtension,
-<span class="cstat-no" title="statement not covered" >              directory: directoryPath</span>
-<span class="cstat-no" title="statement not covered" >            };</span>
+              directory: directoryPath
+            };
           })}, templatePath),
           path: indexOutPath
         });
@@ -439,7 +475,7 @@ transformOptions(options)
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sat Dec 24 2016 11:18:10 GMT+0200 (IST)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sat Dec 24 2016 14:38:03 GMT+0200 (IST)
 </div>
 </div>
 <script src="prettify.js"></script>

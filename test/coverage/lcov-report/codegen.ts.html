@@ -22,12 +22,12 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>0/24</span>
+        <span class='fraction'>0/27</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>0/7</span>
+        <span class='fraction'>0/13</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
@@ -37,7 +37,7 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>0/22</span>
+        <span class='fraction'>0/25</span>
       </div>
     </div>
   </div>
@@ -82,7 +82,22 @@
 37
 38
 39
-40</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -98,19 +113,34 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -128,35 +158,50 @@ import {handleType} from '<span class="cstat-no" title="statement not covered" >
 import {handleOperation} <span class="cstat-no" title="statement not covered" >from './operation-handler';</span>
 <span class="cstat-no" title="statement not covered" >import {handleFragment} f<span class="fstat-no" title="function not covered" >ro</span>m './fragment-handler';</span>
 <span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" ></span></span>
-expo<span class="cstat-no" title="statement not covered" >rt const prepareCodegen = (schema: G<span class="cstat-no" title="statement not covered" >raphQLSchema,</span></span>
-<span class="cstat-no" title="statement not covered" ></span>                               document: DocumentNode,
-<span class="cstat-no" title="statement not covered" ></span>                               primitivesMap: any = {},
-<span class="cstat-no" title="statement not covered" >                               flattenI</span>nnerTypes = true): Codegen =&gt; {
-  le<span class="cstat-no" title="statement not covered" >t models: Model[] = [];<span class="fstat-no" title="function not covered" ></span></span>
-  let do<span class="cstat-no" title="statement not covered" >cuments: CodegenDocument[] = [];</span>
-  let typesMap: GraphQLNamedType = schema.getTypeMap();
-<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span>
-  Object<span class="cstat-no" title="statement not covered" >.keys(typesMap).forEach(typeName =&gt; {</span>
-    models.push(handleType(primitivesMap, typesMap[typeName]));
-  });<span class="cstat-no" title="statement not covered" ></span>
+expo<span class="cstat-no" title="statement not covered" >rt interface CodegenConfi<span class="cstat-no" title="statement not covered" >g {</span></span>
+  flattenInnerTyp<span class="cstat-no" title="statement not covered" >es?</span>: boolean;
+  noSchema?: boolean<span class="cstat-no" title="statement not covered" >;</span>
+  noDocuments?: boo<span class="cstat-no" title="statement not covered" >lean;</span>
+}<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span>
 <span class="cstat-no" title="statement not covered" ></span>
-  document.definitions.forEach((definition: DefinitionNode) =&gt; {
-    switch (defi<span class="cstat-no" title="statement not covered" >nition.kind) {</span>
-      case Kind.<span class="cstat-no" title="statement not covered" >OPERATI</span>ON_DEFINITION:
-        documents.push(handleOperation(schema, definition, primitivesMap, flattenInnerTypes));
-        break;<span class="cstat-no" title="statement not covered" ></span>
+export const prepareCodegen = (schema: GraphQLSchema,
+<span class="cstat-no" title="statement not covered" >                               document: DocumentNode,</span>
+<span class="cstat-no" title="statement not covered" >                               primit<span class="fstat-no" title="function not covered" >iv</span>esMap: any = {},</span>
+<span class="cstat-no" title="statement not covered" >                               config: CodegenConfig = {}): Codegen =&gt; {</span>
+  let models: Model[] = [];
+  let documents: Cod<span class="cstat-no" title="statement not covered" >egenDocument[] = [];</span>
+  let typesMap: Grap<span class="cstat-no" title="statement not covered" >hQLName</span>dType = schema.getTypeMap();
 &nbsp;
-      case Kind.FRAGMENT_DEFINITION:
-<span class="cstat-no" title="statement not covered" >        documents.push(handleFragment(schema, definition, primitivesMap, flattenInnerTypes));</span>
-        break;<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span>
-<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span>
-      default:
-        break;
-    }
+  Object.keys(typesM<span class="cstat-no" title="statement not covered" >ap).forEach(typeName =&gt; {</span>
+    models.push(hand<span class="cstat-no" title="statement not covered" >leType(</span>primitivesMap, typesMap[typeName]));
   });
+<span class="cstat-no" title="statement not covered" ></span>
+  if (!config.noDocuments) {
+    document.definitions.forEach((definition: DefinitionNode) =&gt; {
+      switch (definition.kind) {
+<span class="cstat-no" title="statement not covered" >        case Kind.OPERATION_DEFINITION:</span>
+          documents.push(handl<span class="fstat-no" title="function not covered" >eO</span>peration(schema, definition, primitivesMap, config.flattenInnerTypes));
+          br<span class="cstat-no" title="statement not covered" >eak;</span>
+<span class="cstat-no" title="statement not covered" ></span>
+        case Kind.FRAGMENT_DEFINITION:
+          do<span class="cstat-no" title="statement not covered" >cuments.push(h</span>andleFragment(schema, definition, primitivesMap, config.flattenInnerTypes));
+          break;
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span>
+        default:
+          break;
+      }
+    });
+  }
+&nbsp;
 &nbsp;
   return &lt;Codegen&gt;{
-    models: models.filter(item =&gt; item),
+    models: models.filter(item =&gt; {
+      if (item) {
+        return !(config.noSchema &amp;&amp; !item.isEnum);
+      }
+&nbsp;
+      return false;
+    }),
     documents: documents.filter(item =&gt; item)
   };
 };
@@ -166,7 +211,7 @@ expo<span class="cstat-no" title="statement not covered" >rt const prepareCodege
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sat Dec 24 2016 11:18:10 GMT+0200 (IST)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sat Dec 24 2016 14:38:03 GMT+0200 (IST)
 </div>
 </div>
 <script src="prettify.js"></script>
