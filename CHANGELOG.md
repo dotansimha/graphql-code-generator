@@ -1,3 +1,17 @@
+<a name="0.2.5"></a>
+## [0.2.5](https://github.com/dotansimha/graphql-codegen/compare/0.2.4...v0.2.5) (2016-12-24)
+
+
+### Bug Fixes
+
+* **generators:** fixed a small bug with typescript generator after code modifications ([33a4b83](https://github.com/dotansimha/graphql-codegen/commit/33a4b83))
+
+### Features
+
+* **generators:** WIP: added swift generator support for inline fragments ([3c087b4](https://github.com/dotansimha/graphql-codegen/commit/3c087b4))
+* **generators:** WIP: some more fixes and template code for swift generator ([3b0d0f9](https://github.com/dotansimha/graphql-codegen/commit/3b0d0f9))
+* **generators:** WIP: swift generator and some bug fixes ([f5b0b92](https://github.com/dotansimha/graphql-codegen/commit/f5b0b92))
+
 <a name="0.2.4"></a>
 ## [0.2.4](https://github.com/dotansimha/graphql-codegen/compare/0.2.3...v0.2.4) (2016-12-24)
 
