@@ -1,32 +1,29 @@
+<a name="0.2.4"></a>
+## [0.2.4](https://github.com/dotansimha/graphql-codegen/compare/0.2.3...v0.2.4) (2016-12-24)
+
+
+### Features
+
+* **cli:** add support for --no-documents and --no-schema flags ([1a6a692](https://github.com/dotansimha/graphql-codegen/commit/1a6a692))
+
+
 <a name="0.2.3"></a>
-## [0.2.3](https://github.com/dotansimha/graphql-codegen/compare/0.2.0...v0.2.3) (2016-12-24)
-
-
-### Bug Fixes
-
-* **fragments:** added rootType to fragments ([af9b932](https://github.com/dotansimha/graphql-codegen/commit/af9b932))
+## [0.2.3](https://github.com/dotansimha/graphql-codegen/compare/0.2.2...v0.2.3) (2016-12-24)
 
 
 ### Features
 
 * **documents-finder:** add support for finding GraphQL documents inside code files ([1d11980](https://github.com/dotansimha/graphql-codegen/commit/1d11980))
-* **flatten, partials:** add support for non-flatten innerTypes ([1f6d001](https://github.com/dotansimha/graphql-codegen/commit/1f6d001))
 
 
 
 <a name="0.2.2"></a>
-## [0.2.2](https://github.com/dotansimha/graphql-codegen/compare/0.2.0...v0.2.2) (2016-12-23)
+## [0.2.2](https://github.com/dotansimha/graphql-codegen/compare/0.2.1...v0.2.2) (2016-12-23)
 
 
 ### Bug Fixes
 
 * **fragments:** added rootType to fragments ([af9b932](https://github.com/dotansimha/graphql-codegen/commit/af9b932))
-
-
-### Features
-
-* **flatten, partials:** add support for non-flatten innerTypes ([1f6d001](https://github.com/dotansimha/graphql-codegen/commit/1f6d001))
-
 
 
 <a name="0.2.1"></a>
