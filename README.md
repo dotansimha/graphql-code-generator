@@ -62,13 +62,17 @@ Allowed flags:
 | -t,--template   | String   | Template name, for example: "typescript"                                               |
 | -o,--out        | String   | Path for output file/directory. When using single-file generator specify filename, and when using multiple-files generator specify a directory                                     |
 | -d,--dev        | void     | Turns ON development mode - prints output to console instead of files                  |
-| documents...    | [String] | Space separated paths of `.graphql` files, allows glob path, this field is optional - if no documents specified, only server side schema types will be generated                           |
+| documents...    | [String] | Space separated paths of `.graphql` files or code files (glob path is supported) that contains GraphQL documents inside strings, or with `gql` tag (JavaScript), this field is optional - if no documents specified, only server side schema types will be generated                           |
 
 Usage examples:
 
 - With local introspection JSON file, generate TypeScript types:
 
         $ gql-gen --file mySchema.json --template typescript --out ./typings/ ./src/**/*.graphql
+    
+- With local introspection JSON file, generate TypeScript files, from GraphQL documents inside code files (`.ts`):
+
+        $ gql-gen --file mySchema.json --template typescript --out ./typings/ ./src/**/*.ts
     
 - With remote GraphQL endpoint, generate Flow types:
 
