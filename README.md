@@ -17,6 +17,7 @@ Most of the generators support single-file (which is a large file with all of yo
 | TypeScript      | Single File    | ts, typescript, ts-single, typescript-single                              |
 | TypeScript      | Multiple Files | ts-multiple, typescript-multiple                                          |
 | Flow            | Single File    | flow, flow-single                                                         |
+| Swift (with Apollo) | Single File | swift, swift-apollo, swift-single                                                     |
 
 
 ## Installation
