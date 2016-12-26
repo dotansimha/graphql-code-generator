@@ -52,7 +52,7 @@
   "devDependencies": {
     "conventional-changelog": "^1.1.0",
     "cz-conventional-changelog": "^1.2.0",
-    "jest": "^17.0.3",
+    "jest": "^18.0.0",
     "jsontool": "^7.0.2"
   },
   "config": {
@@ -90,8 +90,8 @@
     "@types/handlebars": "^4.0.31",
     "@types/jest": "^16.0.1",
     "@types/mkdirp": "^0.3.29",
-    "@types/node": "^0.0.2",
-    "@types/pascal-case": "^0.0.29",
+    "@types/node": "^6.0.53",
+    "@types/pascal-case": "^1.1.2",
     "@types/request": "^0.0.36",
     "commander": "^2.9.0",
     "common-tags": "^1.4.0",
