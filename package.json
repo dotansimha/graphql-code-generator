@@ -52,7 +52,7 @@
   "devDependencies": {
     "conventional-changelog": "^1.1.0",
     "cz-conventional-changelog": "^1.2.0",
-    "jest": "^18.0.0"=
+    "jest": "^18.0.0"
   },
   "config": {
     "commitizen": {
