@@ -5,6 +5,7 @@ import {GraphQLSchema} from 'graphql/type/schema';
 import {Model} from './interfaces';
 import {getFieldDef, handleNameDuplications, isArray, isRequired, getTypeName} from './utils';
 import pascalCase = require('pascal-case');
+import camelCase = require('camel-case');
 import {typeFromAST} from 'graphql/utilities/typeFromAST';
 
 export const buildInnerModelsArray = (schema: GraphQLSchema,
@@ -80,7 +81,12 @@ export const buildInnerModelsArray = (schema: GraphQLSchema,
 
       case FRAGMENT_SPREAD:
         const fragmentName = selectionNode.name.value;
-        appendTo.fragmentsUsed.push(pascalCase(fragmentName));
+
+        appendTo.fragmentsUsed.push({
+          fieldName: camelCase(fragmentName),
+          typeName: pascalCase(fragmentName)
+        });
+
         appendTo.usingFragments = appendTo.fragmentsUsed.length > 0;
         break;
 

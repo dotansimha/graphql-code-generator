@@ -16,6 +16,11 @@ export interface InlineFragment {
   onModel?: string;
 }
 
+export interface SpreadFragment {
+  fieldName?: string;
+  typeName?: string;
+}
+
 export interface Model {
   name?: string;
   description?: string;
@@ -28,7 +33,7 @@ export interface Model {
   isUnion?: boolean;
   usingFragments?: boolean;
   enumValues?: EnumValue[];
-  fragmentsUsed?: string[];
+  fragmentsUsed?: SpreadFragment[];
   inlineFragments?: InlineFragment[];
   hasInlineFragments?: boolean;
   imports?: string[];

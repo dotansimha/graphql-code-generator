@@ -2,6 +2,7 @@
 public struct {{#if isRoot}}Data{{else}}{{#if isInlineFragment}}As{{schemaTypeName}}{{else}}{{name}}{{/if}}{{/if}}: {{#if isInlineFragment}}GraphQLConditionalFragment{{else}}GraphQLMappable{{/if}} {
   {{#if isInlineFragment}}public static let possibleTypes = ["{{schemaTypeName}}"]{{/if}}
   {{#unless isRoot}}public let __typename{{#if isInlineFragment}}= "{{schemaTypeName}}"{{else}}: String{{/if}}{{/unless}}
+  {{#if usingFragments}}public let fragments: Fragments{{/if}}
   {{#if isInlineFragment}}{{#each ../parentFields}}public let {{ name }}: {{#if isArray}}[{{/if}}{{ type }}{{#if isArray}}?]{{/if}}{{#unless isRequired}}?{{/unless}}{{/each}}{{/if}}
   {{#each fields}}
   public let {{ name }}: {{#if isArray}}[{{/if}}{{ type }}{{#if isArray}}?]{{/if}}{{#unless isRequired}}?{{/unless}}
@@ -18,7 +19,22 @@ public struct {{#if isRoot}}Data{{else}}{{#if isInlineFragment}}As{{schemaTypeNa
     {{#each inlineFragments}}
     as{{ typeName }} = try As{{ typeName }}(reader: reader, ifTypeMatches: __typename)
     {{/each}}
+
+    {{#if usingFragments}}
+      {{#each fragmentsUsed}}
+    let {{fieldName}} = try {{typeName}}(reader: reader)
+      {{/each}}
+    fragments = Fragments({{#each fragmentsUsed}}{{fieldName}}: {{fieldName}}{{/each}})
+    {{/if}}
   }
+
+  {{#if usingFragments}}
+  public struct Fragments {
+  {{#each fragmentsUsed}}
+    public let {{fieldName}}: {{typeName}}
+  {{/each}}
+  }
+  {{/if}}
 
   {{> inner-type innerTypes=innerTypes parentFields=fields}}
 }

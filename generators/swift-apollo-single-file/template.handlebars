@@ -26,8 +26,8 @@ import Apollo
 {{/each ~}}
 
 {{#each documents ~}}
-  public final class {{ name }}: {{#if isMutation }}GraphQLMutation{{/if}}{{#if isQuery }}GraphQLQuery{{/if}}{{#if isSubscription }}GraphQLSubscription{{/if}} {
-    public static let operationDefinition =
+  public {{#if isFragment}}struct{{else}}final class{{/if}} {{ name }}: {{#if isMutation }}GraphQLMutation{{/if}}{{#if isQuery }}GraphQLQuery{{/if}}{{#if isSubscription }}GraphQLSubscription{{/if}}{{#if isFragment }}GraphQLNamedFragment{{/if}} {
+    public static let {{#if isFragment}}fragment{{else}}operation{{/if}}Definition =
       {{#multiline-string document }}{{/multiline-string}};
 
     {{#each variables}}

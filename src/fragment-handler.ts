@@ -27,6 +27,7 @@ export const handleFragment = (schema: GraphQLSchema, fragmentNode: FragmentDefi
 
   let appendTo: Model = {
     name: 'Fragment',
+    schemaTypeName: rawName,
     fields: [],
     isObject: true,
     isFragment: true,
