@@ -5,6 +5,7 @@
     "**/docs/**",
     "**/generators/**",
     "**/dev-test/**",
+    "**/test/coverage/**"
   ],
   "test": [
       "**/test/**",
