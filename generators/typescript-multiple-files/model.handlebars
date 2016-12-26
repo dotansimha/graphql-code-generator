@@ -2,28 +2,25 @@
   import { {{ this }} } from './index';
 {{/each ~}}
 
-{{#if isCustomScalar ~}}
-  export type {{ name }} = any;
+{{#if isCustomScalar}}
 
-{{/if ~}}
+export type {{ name }} = any;
+{{/if}}
+{{#if isObject}}
 
-{{#if isObject ~}}
-  export interface {{ name }}{{#if hasImplementedInterfaces}} extends {{#each implementedInterfaces}}{{this}}{{/each}}{{/if}} {
+export interface {{ name }}{{#if hasImplementedInterfaces}} extends {{#each implementedInterfaces}}{{this}}{{/each}}{{/if}} {
   {{#each fields}}
-    {{ name }}: {{#if isArray}}Array<{{/if}}{{ type }}{{#if isArray}}>{{/if}}{{#unless isRequired}} | null{{/unless}};
-  {{/each ~}}
-  }
+  {{ name }}: {{#if isArray}}Array<{{/if}}{{ type }}{{#if isArray}}>{{/if}}{{#unless isRequired}} | null{{/unless}};
+  {{/each}}
+}
+{{/if}}
+{{#if isEnum}}
 
-{{/if ~}}
+export type {{ name }} = {{#each enumValues }}"{{ value }}"{{#unless @last}} | {{/unless}}{{/each}};
+{{/if}}
+{{#if isUnion}}
 
-{{#if isEnum ~}}
-  export type {{ name }} = {{#each enumValues }}"{{ value }}"{{#unless @last}} | {{/unless}}{{/each ~}};
-
-{{/if ~}}
-
-{{#if isUnion ~}}
   {{#if hasUnionTypes}}
-    export type {{ name }} = {{#each unionTypes}}{{this}}{{#unless @last}} | {{/unless}}{{/each}};
+export type {{ name }} = {{#each unionTypes}}{{this}}{{#unless @last}} | {{/unless}}{{/each}};
   {{/if}}
-
 {{/if}}
