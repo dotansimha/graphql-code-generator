@@ -103,6 +103,7 @@ public final class CreateReviewForEpisodeMutation: GraphQLMutation {
 "    commentary" +
 "  }" +
 "}"
+  
   public let episode: Episode
   public let review: ReviewInput
 
@@ -116,6 +117,7 @@ public final class CreateReviewForEpisodeMutation: GraphQLMutation {
   }
   
   public struct Data: GraphQLMappable {
+    
     public let createReview: CreateReview?
   
     public init(reader: GraphQLResultReader) throws {
@@ -123,6 +125,7 @@ public final class CreateReviewForEpisodeMutation: GraphQLMutation {
     }
     
     public struct CreateReview: GraphQLMappable {
+      
       public let __typename: String
       public let stars: Int
       public let commentary: String?
@@ -135,7 +138,6 @@ public final class CreateReviewForEpisodeMutation: GraphQLMutation {
     }
   }
 }
-
 public final class HeroAndFriendsNamesQuery: GraphQLQuery {
   public static let operationDefinition = "query HeroAndFriendsNames($episode: Episode) {" +
 "  hero(episode: $episode) {" +
@@ -145,6 +147,7 @@ public final class HeroAndFriendsNamesQuery: GraphQLQuery {
 "    }" +
 "  }" +
 "}"
+  
   public let episode: Episode?
 
   public var variables: GraphQLMap? {
@@ -156,6 +159,7 @@ public final class HeroAndFriendsNamesQuery: GraphQLQuery {
   }
   
   public struct Data: GraphQLMappable {
+    
     public let hero: Hero?
   
     public init(reader: GraphQLResultReader) throws {
@@ -163,6 +167,7 @@ public final class HeroAndFriendsNamesQuery: GraphQLQuery {
     }
     
     public struct Hero: GraphQLMappable {
+      
       public let __typename: String
       public let name: String
       public let friends: [Friends?]?
@@ -174,6 +179,7 @@ public final class HeroAndFriendsNamesQuery: GraphQLQuery {
       }
       
       public struct Friends: GraphQLMappable {
+        
         public let __typename: String
         public let name: String
       
@@ -185,7 +191,6 @@ public final class HeroAndFriendsNamesQuery: GraphQLQuery {
     }
   }
 }
-
 public final class HeroAppearsInQuery: GraphQLQuery {
   public static let operationDefinition = "query HeroAppearsIn {" +
 "  hero {" +
@@ -193,10 +198,12 @@ public final class HeroAppearsInQuery: GraphQLQuery {
 "    appearsIn" +
 "  }" +
 "}"
+  
   public init() {
   }
   
   public struct Data: GraphQLMappable {
+    
     public let hero: Hero?
   
     public init(reader: GraphQLResultReader) throws {
@@ -204,6 +211,7 @@ public final class HeroAppearsInQuery: GraphQLQuery {
     }
     
     public struct Hero: GraphQLMappable {
+      
       public let __typename: String
       public let name: String
       public let appearsIn: [Episode?]
@@ -216,7 +224,6 @@ public final class HeroAppearsInQuery: GraphQLQuery {
     }
   }
 }
-
 public final class HeroDetailsQuery: GraphQLQuery {
   public static let operationDefinition = "query HeroDetails($episode: Episode) {" +
 "  hero(episode: $episode) {" +
@@ -229,6 +236,7 @@ public final class HeroDetailsQuery: GraphQLQuery {
 "    }" +
 "  }" +
 "}"
+  
   public let episode: Episode?
 
   public var variables: GraphQLMap? {
@@ -240,6 +248,7 @@ public final class HeroDetailsQuery: GraphQLQuery {
   }
   
   public struct Data: GraphQLMappable {
+    
     public let hero: Hero?
   
     public init(reader: GraphQLResultReader) throws {
@@ -247,6 +256,8 @@ public final class HeroDetailsQuery: GraphQLQuery {
     }
     
     public struct Hero: GraphQLMappable {
+      
+      public static let possibleTypes = ["Human", "Droid"]
       public let __typename: String
       public let name: String
       public let asHuman: AsHuman?
@@ -260,38 +271,40 @@ public final class HeroDetailsQuery: GraphQLQuery {
       }
       
       public struct AsHuman: GraphQLConditionalFragment {
+        
         public static let possibleTypes = ["Human"]
         public let __typename = "Human"
         public let name: String
         public let height: Float?
       
         public init(reader: GraphQLResultReader) throws {
-          __typename = try reader.value(for: Field(responseName: "__typename"))
           height = try reader.optionalValue(for: Field(responseName: "height"))
+          name = try reader.value(for: Field(responseName: "name"))
         }
       }
       
       public struct AsDroid: GraphQLConditionalFragment {
+        
         public static let possibleTypes = ["Droid"]
         public let __typename = "Droid"
         public let name: String
         public let primaryFunction: String?
       
         public init(reader: GraphQLResultReader) throws {
-          __typename = try reader.value(for: Field(responseName: "__typename"))
           primaryFunction = try reader.optionalValue(for: Field(responseName: "primaryFunction"))
+          name = try reader.value(for: Field(responseName: "name"))
         }
       }
     }
   }
 }
-
 public final class HeroDetailsWithFragmentQuery: GraphQLQuery {
   public static let operationDefinition = "query HeroDetailsWithFragment($episode: Episode) {" +
 "  hero(episode: $episode) {" +
 "    ...HeroDetails" +
 "  }" +
 "}"
+  
   public let episode: Episode?
 
   public var variables: GraphQLMap? {
@@ -303,6 +316,7 @@ public final class HeroDetailsWithFragmentQuery: GraphQLQuery {
   }
   
   public struct Data: GraphQLMappable {
+    
     public let hero: Hero?
   
     public init(reader: GraphQLResultReader) throws {
@@ -310,16 +324,17 @@ public final class HeroDetailsWithFragmentQuery: GraphQLQuery {
     }
     
     public struct Hero: GraphQLMappable {
+      
       public let __typename: String
       public let fragments: Fragments
     
       public init(reader: GraphQLResultReader) throws {
         __typename = try reader.value(for: Field(responseName: "__typename"))
-        let heroDetails = try HeroDetails.Fragment(reader: reader)
+        let heroDetails = try HeroDetails(reader: reader)
         fragments = Fragments(heroDetails: heroDetails)
       }
       public struct Fragments {
-        public let heroDetails: HeroDetails.Fragment
+        public let heroDetails: HeroDetails
       }
     }
   }
@@ -335,52 +350,52 @@ public struct HeroDetails: GraphQLNamedFragment {
 "    primaryFunction" +
 "  }" +
 "}"
+  public static let possibleTypes = ["Human", "Droid"]
+  public let __typename: String
+  public let name: String
+  public let asHuman: AsHuman?
+  public let asDroid: AsDroid?
+
+  public init(reader: GraphQLResultReader) throws {
+    __typename = try reader.value(for: Field(responseName: "__typename"))
+    name = try reader.value(for: Field(responseName: "name"))
+    asHuman = try AsHuman(reader: reader, ifTypeMatches: __typename)
+    asDroid = try AsDroid(reader: reader, ifTypeMatches: __typename)
+  }
   
-  public struct Fragment: GraphQLMappable {
-    public let __typename: String
+  public struct AsHuman: GraphQLConditionalFragment {
+    
+    public static let possibleTypes = ["Human"]
+    public let __typename = "Human"
     public let name: String
-    public let asHuman: AsHuman?
-    public let asDroid: AsDroid?
+    public let height: Float?
   
     public init(reader: GraphQLResultReader) throws {
-      __typename = try reader.value(for: Field(responseName: "__typename"))
+      height = try reader.optionalValue(for: Field(responseName: "height"))
       name = try reader.value(for: Field(responseName: "name"))
-      asHuman = try AsHuman(reader: reader, ifTypeMatches: __typename)
-      asDroid = try AsDroid(reader: reader, ifTypeMatches: __typename)
     }
+  }
+  
+  public struct AsDroid: GraphQLConditionalFragment {
     
-    public struct AsHuman: GraphQLConditionalFragment {
-      public static let possibleTypes = ["Human"]
-      public let __typename = "Human"
-      public let name: String
-      public let height: Float?
-    
-      public init(reader: GraphQLResultReader) throws {
-        __typename = try reader.value(for: Field(responseName: "__typename"))
-        height = try reader.optionalValue(for: Field(responseName: "height"))
-      }
-    }
-    
-    public struct AsDroid: GraphQLConditionalFragment {
-      public static let possibleTypes = ["Droid"]
-      public let __typename = "Droid"
-      public let name: String
-      public let primaryFunction: String?
-    
-      public init(reader: GraphQLResultReader) throws {
-        __typename = try reader.value(for: Field(responseName: "__typename"))
-        primaryFunction = try reader.optionalValue(for: Field(responseName: "primaryFunction"))
-      }
+    public static let possibleTypes = ["Droid"]
+    public let __typename = "Droid"
+    public let name: String
+    public let primaryFunction: String?
+  
+    public init(reader: GraphQLResultReader) throws {
+      primaryFunction = try reader.optionalValue(for: Field(responseName: "primaryFunction"))
+      name = try reader.value(for: Field(responseName: "name"))
     }
   }
 }
-
 public final class HeroNameQuery: GraphQLQuery {
   public static let operationDefinition = "query HeroName($episode: Episode) {" +
 "  hero(episode: $episode) {" +
 "    name" +
 "  }" +
 "}"
+  
   public let episode: Episode?
 
   public var variables: GraphQLMap? {
@@ -392,6 +407,7 @@ public final class HeroNameQuery: GraphQLQuery {
   }
   
   public struct Data: GraphQLMappable {
+    
     public let hero: Hero?
   
     public init(reader: GraphQLResultReader) throws {
@@ -399,6 +415,7 @@ public final class HeroNameQuery: GraphQLQuery {
     }
     
     public struct Hero: GraphQLMappable {
+      
       public let __typename: String
       public let name: String
     
@@ -409,13 +426,13 @@ public final class HeroNameQuery: GraphQLQuery {
     }
   }
 }
-
 public final class HeroNameConditionalInclusionQuery: GraphQLQuery {
   public static let operationDefinition = "query HeroNameConditionalInclusion($episode: Episode, $includeName: Boolean!) {" +
 "  hero(episode: $episode) {" +
 "    name @include(if: $includeName)" +
 "  }" +
 "}"
+  
   public let episode: Episode?
   public let includeName: Bool
 
@@ -429,6 +446,7 @@ public final class HeroNameConditionalInclusionQuery: GraphQLQuery {
   }
   
   public struct Data: GraphQLMappable {
+    
     public let hero: Hero?
   
     public init(reader: GraphQLResultReader) throws {
@@ -436,6 +454,7 @@ public final class HeroNameConditionalInclusionQuery: GraphQLQuery {
     }
     
     public struct Hero: GraphQLMappable {
+      
       public let __typename: String
       public let name: String
     
@@ -446,13 +465,13 @@ public final class HeroNameConditionalInclusionQuery: GraphQLQuery {
     }
   }
 }
-
 public final class HeroNameConditionalExclusionQuery: GraphQLQuery {
   public static let operationDefinition = "query HeroNameConditionalExclusion($episode: Episode, $skipName: Boolean!) {" +
 "  hero(episode: $episode) {" +
 "    name @skip(if: $skipName)" +
 "  }" +
 "}"
+  
   public let episode: Episode?
   public let skipName: Bool
 
@@ -466,6 +485,7 @@ public final class HeroNameConditionalExclusionQuery: GraphQLQuery {
   }
   
   public struct Data: GraphQLMappable {
+    
     public let hero: Hero?
   
     public init(reader: GraphQLResultReader) throws {
@@ -473,6 +493,7 @@ public final class HeroNameConditionalExclusionQuery: GraphQLQuery {
     }
     
     public struct Hero: GraphQLMappable {
+      
       public let __typename: String
       public let name: String
     
@@ -483,7 +504,6 @@ public final class HeroNameConditionalExclusionQuery: GraphQLQuery {
     }
   }
 }
-
 public final class HeroParentTypeDependentFieldQuery: GraphQLQuery {
   public static let operationDefinition = "query HeroParentTypeDependentField($episode: Episode) {" +
 "  hero(episode: $episode) {" +
@@ -506,6 +526,7 @@ public final class HeroParentTypeDependentFieldQuery: GraphQLQuery {
 "    }" +
 "  }" +
 "}"
+  
   public let episode: Episode?
 
   public var variables: GraphQLMap? {
@@ -517,6 +538,7 @@ public final class HeroParentTypeDependentFieldQuery: GraphQLQuery {
   }
   
   public struct Data: GraphQLMappable {
+    
     public let hero: Hero?
   
     public init(reader: GraphQLResultReader) throws {
@@ -524,6 +546,8 @@ public final class HeroParentTypeDependentFieldQuery: GraphQLQuery {
     }
     
     public struct Hero: GraphQLMappable {
+      
+      public static let possibleTypes = ["Human", "Droid"]
       public let __typename: String
       public let name: String
       public let asHuman: AsHuman?
@@ -537,17 +561,20 @@ public final class HeroParentTypeDependentFieldQuery: GraphQLQuery {
       }
       
       public struct AsHuman: GraphQLConditionalFragment {
+        
         public static let possibleTypes = ["Human"]
         public let __typename = "Human"
         public let name: String
         public let friends: [Friends?]?
       
         public init(reader: GraphQLResultReader) throws {
-          __typename = try reader.value(for: Field(responseName: "__typename"))
           friends = try reader.optionalList(for: Field(responseName: "friends"))
+          name = try reader.value(for: Field(responseName: "name"))
         }
         
         public struct Friends: GraphQLMappable {
+          
+          public static let possibleTypes = ["Human"]
           public let __typename: String
           public let name: String
           public let asHuman: AsHuman?
@@ -559,31 +586,35 @@ public final class HeroParentTypeDependentFieldQuery: GraphQLQuery {
           }
           
           public struct AsHuman: GraphQLConditionalFragment {
+            
             public static let possibleTypes = ["Human"]
             public let __typename = "Human"
             public let name: String
             public let height: Float?
           
             public init(reader: GraphQLResultReader) throws {
-              __typename = try reader.value(for: Field(responseName: "__typename"))
               height = try reader.optionalValue(for: Field(responseName: "height"))
+              name = try reader.value(for: Field(responseName: "name"))
             }
           }
         }
       }
       
       public struct AsDroid: GraphQLConditionalFragment {
+        
         public static let possibleTypes = ["Droid"]
         public let __typename = "Droid"
         public let name: String
         public let friends: [Friends?]?
       
         public init(reader: GraphQLResultReader) throws {
-          __typename = try reader.value(for: Field(responseName: "__typename"))
           friends = try reader.optionalList(for: Field(responseName: "friends"))
+          name = try reader.value(for: Field(responseName: "name"))
         }
         
         public struct Friends: GraphQLMappable {
+          
+          public static let possibleTypes = ["Human"]
           public let __typename: String
           public let name: String
           public let asHuman: AsHuman?
@@ -595,14 +626,15 @@ public final class HeroParentTypeDependentFieldQuery: GraphQLQuery {
           }
           
           public struct AsHuman: GraphQLConditionalFragment {
+            
             public static let possibleTypes = ["Human"]
             public let __typename = "Human"
             public let name: String
             public let height: Float?
           
             public init(reader: GraphQLResultReader) throws {
-              __typename = try reader.value(for: Field(responseName: "__typename"))
               height = try reader.optionalValue(for: Field(responseName: "height"))
+              name = try reader.value(for: Field(responseName: "name"))
             }
           }
         }
@@ -610,7 +642,6 @@ public final class HeroParentTypeDependentFieldQuery: GraphQLQuery {
     }
   }
 }
-
 public final class HeroTypeDependentAliasedFieldQuery: GraphQLQuery {
   public static let operationDefinition = "query HeroTypeDependentAliasedField($episode: Episode) {" +
 "  hero(episode: $episode) {" +
@@ -622,6 +653,7 @@ public final class HeroTypeDependentAliasedFieldQuery: GraphQLQuery {
 "    }" +
 "  }" +
 "}"
+  
   public let episode: Episode?
 
   public var variables: GraphQLMap? {
@@ -633,6 +665,7 @@ public final class HeroTypeDependentAliasedFieldQuery: GraphQLQuery {
   }
   
   public struct Data: GraphQLMappable {
+    
     public let hero: Hero?
   
     public init(reader: GraphQLResultReader) throws {
@@ -640,6 +673,8 @@ public final class HeroTypeDependentAliasedFieldQuery: GraphQLQuery {
     }
     
     public struct Hero: GraphQLMappable {
+      
+      public static let possibleTypes = ["Human", "Droid"]
       public let __typename: String
       public let asHuman: AsHuman?
       public let asDroid: AsDroid?
@@ -651,30 +686,29 @@ public final class HeroTypeDependentAliasedFieldQuery: GraphQLQuery {
       }
       
       public struct AsHuman: GraphQLConditionalFragment {
+        
         public static let possibleTypes = ["Human"]
         public let __typename = "Human"
         public let property: String?
       
         public init(reader: GraphQLResultReader) throws {
-          __typename = try reader.value(for: Field(responseName: "__typename"))
-          property = try reader.optionalValue(for: Field(responseName: "property"))
+          property = try reader.optionalValue(for: Field(responseName: "property", fieldName: "homePlanet"))
         }
       }
       
       public struct AsDroid: GraphQLConditionalFragment {
+        
         public static let possibleTypes = ["Droid"]
         public let __typename = "Droid"
         public let property: String?
       
         public init(reader: GraphQLResultReader) throws {
-          __typename = try reader.value(for: Field(responseName: "__typename"))
-          property = try reader.optionalValue(for: Field(responseName: "property"))
+          property = try reader.optionalValue(for: Field(responseName: "property", fieldName: "primaryFunction"))
         }
       }
     }
   }
 }
-
 public final class HumanWithNullHeightQuery: GraphQLQuery {
   public static let operationDefinition = "query HumanWithNullHeight {" +
 "  human(id: 1004) {" +
@@ -682,10 +716,12 @@ public final class HumanWithNullHeightQuery: GraphQLQuery {
 "    mass" +
 "  }" +
 "}"
+  
   public init() {
   }
   
   public struct Data: GraphQLMappable {
+    
     public let human: Human?
   
     public init(reader: GraphQLResultReader) throws {
@@ -693,6 +729,7 @@ public final class HumanWithNullHeightQuery: GraphQLQuery {
     }
     
     public struct Human: GraphQLMappable {
+      
       public let __typename: String
       public let name: String
       public let mass: Float?
@@ -705,7 +742,6 @@ public final class HumanWithNullHeightQuery: GraphQLQuery {
     }
   }
 }
-
 public final class TwoHeroesQuery: GraphQLQuery {
   public static let operationDefinition = "query TwoHeroes {" +
 "  r2: hero {" +
@@ -715,19 +751,22 @@ public final class TwoHeroesQuery: GraphQLQuery {
 "    name" +
 "  }" +
 "}"
+  
   public init() {
   }
   
   public struct Data: GraphQLMappable {
-    public let r2: Hero?
-    public let luke: Hero?
+    
+    public let r2: R2_Hero?
+    public let luke: Luke_Hero?
   
     public init(reader: GraphQLResultReader) throws {
-      r2 = try reader.optionalValue(for: Field(responseName: "r2"))
-      luke = try reader.optionalValue(for: Field(responseName: "luke"))
+      r2 = try reader.optionalValue(for: Field(responseName: "r2", fieldName: "hero"))
+      luke = try reader.optionalValue(for: Field(responseName: "luke", fieldName: "hero"))
     }
     
-    public struct Hero: GraphQLMappable {
+    public struct R2_Hero: GraphQLMappable {
+      
       public let __typename: String
       public let name: String
     
@@ -737,7 +776,8 @@ public final class TwoHeroesQuery: GraphQLQuery {
       }
     }
     
-    public struct Hero: GraphQLMappable {
+    public struct Luke_Hero: GraphQLMappable {
+      
       public let __typename: String
       public let name: String
     
@@ -748,5 +788,4 @@ public final class TwoHeroesQuery: GraphQLQuery {
     }
   }
 }
-
 

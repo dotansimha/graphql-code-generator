@@ -24,8 +24,12 @@ extension {{ name }}: JSONDecodable, JSONEncodable {}
 {{/each}}
 
 {{#each documents}}
-public {{#if isFragment}}struct{{else}}final class{{/if}} {{ name }}: {{#if isMutation }}GraphQLMutation{{/if}}{{#if isQuery }}GraphQLQuery{{/if}}{{#if isSubscription }}GraphQLSubscription{{/if}}{{#if isFragment }}GraphQLNamedFragment{{/if}} {
-  public static let {{#if isFragment}}fragment{{else}}operation{{/if}}Definition = {{#multiline-string document }}{{/multiline-string}}
+{{#if isFragment }}
+{{> inner-type innerTypes=rootType}}
+{{else}}
+public final class {{ name }}: {{#if isMutation }}GraphQLMutation{{/if}}{{#if isQuery }}GraphQLQuery{{/if}}{{#if isSubscription }}GraphQLSubscription{{/if}}{{#if isFragment }}GraphQLNamedFragment{{/if}} {
+  public static let operationDefinition = {{#multiline-string document }}{{/multiline-string}}
+  {{#if isFragment}}public static let possibleTypes = [{{#each possibleFragmentTypes}}"{{this}}"{{#unless @last}}, {{/unless}}{{/each}}]{{/if}}
   {{#if hasVariables}}
     {{#each variables}}
   public let {{ name }}: {{#if isArray}}[{{/if}}{{ type }}{{#if isArray}}]{{/if}}{{#unless isRequired}}?{{/unless}}
@@ -36,15 +40,13 @@ public {{#if isFragment}}struct{{else}}final class{{/if}} {{ name }}: {{#if isMu
   }
 
   {{/if}}
-  {{#unless isFragment }}
   public init({{#each variables}}{{ name }}: {{#if isArray}}[{{/if}}{{ type }}{{#if isArray}}]{{/if}}{{#unless isRequired}}?{{/unless}}{{#unless @last}}, {{/unless}}{{/each}}) {
     {{#each variables}}
     self.{{ name }} = {{ name }}
     {{/each}}
   }
-  {{/unless}}
   {{> inner-type innerTypes=innerTypes}}
 }
-
+{{/if}}
 {{/each}}
 

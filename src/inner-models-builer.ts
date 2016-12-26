@@ -18,8 +18,15 @@ export const buildInnerModelsArray = (schema: GraphQLSchema,
   (selections ? selections.selections : []).forEach((selectionNode: SelectionNode) => {
     switch (selectionNode.kind) {
       case FIELD:
+        let isAliased = false;
         const fieldName = selectionNode.name.value;
-        const propertyName = selectionNode.alias ? selectionNode.alias.value : fieldName;
+        let propertyName = fieldName;
+
+        if (selectionNode.alias && selectionNode.alias.value) {
+          isAliased = true;
+          propertyName = selectionNode.alias.value;
+        }
+
         const field = getFieldDef(rootObject, selectionNode);
         const rawType = field.type;
         const actualType = getNamedType(rawType);
@@ -43,13 +50,15 @@ export const buildInnerModelsArray = (schema: GraphQLSchema,
 
           appendTo.fields.push({
             name: propertyName,
-            type: modelName,
+            schemaFieldName: fieldName,
+            type: isAliased ? pascalCase(propertyName) + '_' + modelName : modelName,
+            isAliased: isAliased,
             isArray: isArray(rawType),
             isRequired: isRequired(rawType)
           });
 
           let model: Model = {
-            name: modelName,
+            name: isAliased ? pascalCase(propertyName) + '_' + modelName : modelName,
             fields: [],
             fragmentsUsed: [],
             inlineFragments: [],
@@ -71,6 +80,8 @@ export const buildInnerModelsArray = (schema: GraphQLSchema,
         else {
           appendTo.fields.push({
             name: propertyName,
+            isAliased: isAliased,
+            schemaFieldName: fieldName,
             type: getTypeName(primitivesMap, actualType),
             isArray: isArray(rawType),
             isRequired: isRequired(rawType)

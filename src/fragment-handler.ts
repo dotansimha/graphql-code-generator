@@ -9,6 +9,7 @@ import {buildInnerModelsArray} from './inner-models-builer';
 export const handleFragment = (schema: GraphQLSchema, fragmentNode: FragmentDefinitionNode, primitivesMap: any, flattenInnerTypes: boolean): CodegenDocument => {
   const rawName = fragmentNode.name.value;
   const fragmentName = pascalCase(rawName);
+  const root = typeFromAST(schema, fragmentNode.typeCondition);
 
   let result: CodegenDocument = {
     name: fragmentName,
@@ -22,7 +23,7 @@ export const handleFragment = (schema: GraphQLSchema, fragmentNode: FragmentDefi
     variables: [],
     hasVariables: false,
     document: print(fragmentNode),
-    rootType: null
+    rootType: []
   };
 
   let appendTo: Model = {
@@ -35,9 +36,7 @@ export const handleFragment = (schema: GraphQLSchema, fragmentNode: FragmentDefi
     inlineFragments: []
   };
 
-  result.rootType = appendTo;
-
-  const root = typeFromAST(schema, fragmentNode.typeCondition);
+  result.rootType = [appendTo];
   result.innerTypes = [appendTo, ...buildInnerModelsArray(schema, root, flattenInnerTypes, fragmentNode.selectionSet, primitivesMap, appendTo)];
   result.hasInnerTypes = result.innerTypes.length > 0;
 

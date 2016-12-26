@@ -46,14 +46,14 @@ export const handleOperation = (schema: GraphQLSchema, definitionNode: Operation
     innerTypes: [],
     hasVariables: false,
     hasInnerTypes: false,
-    rootType: null,
+    rootType: [],
     imports: [],
     document: print(definitionNode)
   };
 
   document.variables = buildVariables(schema, definitionNode, primitivesMap);
   document.innerTypes = buildInnerModelsArray(schema, root, flattenInnerTypes, definitionNode.selectionSet, primitivesMap);
-  document.rootType = document.innerTypes.find(i => i.isRoot);
+  document.rootType = [document.innerTypes.find(i => i.isRoot)];
 
   document.hasVariables = document.variables.length > 0;
   document.hasInnerTypes = document.innerTypes.length > 0;

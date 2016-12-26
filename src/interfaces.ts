@@ -1,6 +1,8 @@
 export interface Field {
   name: string;
   type?: string;
+  schemaFieldName?: string;
+  isAliased?: boolean;
   isArray?: boolean;
   isRequired?: boolean;
   schemaType?: any;
@@ -55,7 +57,7 @@ export interface CodegenDocument {
   document: string;
   rawName: string;
   innerTypes: Model[];
-  rootType: Model;
+  rootType: Model[];
   variables: Field[];
   hasInnerTypes: boolean;
   hasVariables: boolean;

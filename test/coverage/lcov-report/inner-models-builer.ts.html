@@ -20,14 +20,14 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">96% </span>
+        <span class="strong">92.59% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>48/50</span>
+        <span class='fraction'>50/54</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">83.33% </span>
+        <span class="strong">76.67% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>20/24</span>
+        <span class='fraction'>23/30</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -35,9 +35,9 @@
         <span class='fraction'>2/2</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">95.92% </span>
+        <span class="strong">92.45% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>47/49</span>
+        <span class='fraction'>49/53</span>
       </div>
     </div>
   </div>
@@ -177,7 +177,18 @@
 132
 133
 134
-135</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
@@ -193,6 +204,11 @@
 <span class="cline-any cline-yes">151x</span>
 <span class="cline-any cline-yes">151x</span>
 <span class="cline-any cline-yes">151x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">151x</span>
+<span class="cline-any cline-yes">151x</span>
 <span class="cline-any cline-yes">151x</span>
 <span class="cline-any cline-yes">151x</span>
 <span class="cline-any cline-yes">45x</span>
@@ -209,6 +225,8 @@
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">45x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -239,6 +257,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">151x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7x</span>
@@ -280,6 +300,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">67x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -324,15 +346,22 @@ import {typeFromAST} from 'graphql/utilities/typeFromAST';
 export const buildInnerModelsArray = (schema: GraphQLSchema,
                                       rootObject: GraphQLType,
                                       flattenInnerTypes: boolean,
-                                      selections: Selecti<span class="branch-0 cbranch-no" title="branch not covered" >onSetNode,</span>
+                                      selections: SelectionSetNode,
                                       primitivesMap: any,
-                                      appendTo?: Model,
-                                      result: Model[] = []): Model[] =&gt; {
-  (selections ? selections.selections : []).forEach((selectionNode: SelectionNode) =&gt; {
+                <span class="missing-if-branch" title="if path not taken" >I</span>                      appen<span class="branch-1 cbranch-no" title="branch not covered" >dTo?: Model,</span>
+<span class="cstat-no" title="statement not covered" ></span>                                      result: Model[] = []): Model[] =&gt; {
+  (selections ? sele<span class="cstat-no" title="statement not covered" >ctions.selections : []).forEach((selection</span>Node: SelectionNode) =&gt; {
     switch (selectionNode.kind) {
       case FIELD:
+        let isAliased = false;
         const fieldName = selectionNode.name.value;
-        const propertyName = selectionNode.alias ? selectionNode.alias.value : fieldName;
+        let propertyName = fieldName;
+&nbsp;
+        if (selectionNode.alias &amp;&amp; selectionNode.alias.value) {
+          isAliased = true;
+          propertyName = selectionNode.alias.value;
+        }
+&nbsp;
         const field = getFieldDef(rootObject, selectionNode);
         const rawType = field.type;
         const actualType = getNamedType(rawType);
@@ -343,26 +372,28 @@ export const buildInnerModelsArray = (schema: GraphQLSchema,
           if (!appendTo) {
             // Means we are on the root object, and we need to create the root interface result
             appendTo = {
-              isRoot: true,
+              isRoot: true,<span class="branch-0 cbranch-no" title="branch not covered" ></span>
               name: fieldName,
               fields: [],
               fragmentsUsed: [],
               inlineFragments: [],
               innerTypes: []
-            };
+            };<span class="branch-0 cbranch-no" title="branch not covered" ></span>
 &nbsp;
             result.push(appendTo);
           }
 &nbsp;
           appendTo.fields.push({
             name: propertyName,
-            type: modelName,
+            schemaFieldName: fieldName,
+            type: isAliased ? pascalCase(propertyName) + '_' + modelName : modelName,
+            isAliased: isAliased,
             isArray: isArray(rawType),
             isRequired: isRequired(rawType)
           });
 &nbsp;
           let model: Model = {
-            name: modelName,
+            name: isAliased ? pascalCase(propertyName) + '_' + modelName : modelName,
             fields: [],
             fragmentsUsed: [],
             inlineFragments: [],
@@ -384,6 +415,8 @@ export const buildInnerModelsArray = (schema: GraphQLSchema,
         else {
           appendTo.fields.push({
             name: propertyName,
+            isAliased: isAliased,
+            schemaFieldName: fieldName,
             type: getTypeName(primitivesMap, actualType),
             isArray: isArray(rawType),
             isRequired: isRequired(rawType)
@@ -398,19 +431,19 @@ export const buildInnerModelsArray = (schema: GraphQLSchema,
         appendTo.fragmentsUsed.push({
           fieldName: camelCase(fragmentName),
           typeName: pascalCase(fragmentName)
-        });
+        });<span class="missing-if-branch" title="else path not taken" >E</span>
 &nbsp;
-        appendTo<span class="missing-if-branch" title="else path not taken" >E</span>.usingFragments = appendTo.fragmentsUsed.length &gt; 0;
+        appendTo.usingFragments = appendTo.fragmentsUsed.length &gt; 0;
         break;
 &nbsp;
-      case INLINE_FRAGMENT:
+      case INLINE_FR<span class="cstat-no" title="statement not covered" >AGMENT:</span>
         const root = typeFromAST(schema, selectionNode.typeCondition);
-        const schema<span class="cstat-no" title="statement not covered" >TypeName = selectionNode.typ</span>eCondition.name.value;
+        const schemaTypeName = selectionNode.typeCondition.name.value;
         const name = schemaTypeName + 'InlineFragment';
-&nbsp;
-        let fragmentModel: Model = {
-          na<span class="branch-3 cbranch-no" title="branch not covered" >me: name,</span>
-          fields<span class="cstat-no" title="statement not covered" >: [],</span>
+<span class="branch-3 cbranch-no" title="branch not covered" ></span>
+        let frag<span class="cstat-no" title="statement not covered" >mentMod</span>el: Model = {
+          name: name,
+          fields: [],
           fragmentsUsed: [],
           inlineFragments: [],
           isInlineFragment: true,
@@ -451,7 +484,7 @@ export const buildInnerModelsArray = (schema: GraphQLSchema,
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Dec 26 2016 22:17:55 GMT+0200 (IST)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Dec 26 2016 23:35:17 GMT+0200 (IST)
 </div>
 </div>
 <script src="prettify.js"></script>
