@@ -1,53 +1,50 @@
 import Apollo
 
-{{#each models ~}}
-  {{#if isObject ~}}
-  public struct {{ name }}: GraphQLMapConvertible {
-    public var fieldsMap: GraphQLMap
+{{#each models}}
+  {{#if isObject}}
+public struct {{ name }}: GraphQLMapConvertible {
+  public var graphQLMap: GraphQLMap
 
-    {{#times fields.length}}
-    public init({{#limitedEach ../fields count=this ~}}{{ name }}: {{#if isArray}}[{{/if}}{{ type }}{{#if isArray}}]{{/if}}{{#unless isRequired}}?{{/unless}}{{#unless @last}}, {{/unless}}{{/limitedEach ~}}) {
-      fieldsMap = [{{#limitedEach ../fields count=this ~}}"{{ name }}": {{ name }}{{#unless @last}}, {{/unless}}{{/limitedEach ~}}]
-    }
-
-    {{/times}}
+  public init({{#each fields }}{{ name }}: {{#if isArray}}[{{/if}}{{ type }}{{#if isArray}}]{{/if}}{{#unless isRequired}}? = nil{{/unless}}{{#unless @last}}, {{/unless}}{{/each }}) {
+    graphQLMap = [{{#each fields }}"{{ name }}": {{ name }}{{#unless @last}}, {{/unless}}{{/each }}]
   }
+}
 
   {{/if ~}}
-
-  {{#if isEnum ~}}
-  public enum {{ name }}: String {
-  {{#each enumValues }}
-    case {{name}} = "{{ value }}" /// {{ description }}
-  {{/each ~}}
-  }
-
-  {{/if ~}}
+  {{#if isEnum}}
+public enum {{ name }}: String {
+{{#each enumValues }}
+  case {{name}} = "{{ value }}" /// {{ description }}
 {{/each ~}}
+  }
 
-{{#each documents ~}}
-  public {{#if isFragment}}struct{{else}}final class{{/if}} {{ name }}: {{#if isMutation }}GraphQLMutation{{/if}}{{#if isQuery }}GraphQLQuery{{/if}}{{#if isSubscription }}GraphQLSubscription{{/if}}{{#if isFragment }}GraphQLNamedFragment{{/if}} {
-    public static let {{#if isFragment}}fragment{{else}}operation{{/if}}Definition =
-      {{#multiline-string document }}{{/multiline-string}};
+extension {{ name }}: JSONDecodable, JSONEncodable {}
 
+  {{/if ~}}
+{{/each}}
+
+{{#each documents}}
+public {{#if isFragment}}struct{{else}}final class{{/if}} {{ name }}: {{#if isMutation }}GraphQLMutation{{/if}}{{#if isQuery }}GraphQLQuery{{/if}}{{#if isSubscription }}GraphQLSubscription{{/if}}{{#if isFragment }}GraphQLNamedFragment{{/if}} {
+  public static let {{#if isFragment}}fragment{{else}}operation{{/if}}Definition = {{#multiline-string document }}{{/multiline-string}}
+  {{#if hasVariables}}
     {{#each variables}}
-    public let {{ name }}: {{#if isArray}}[{{/if}}{{ type }}{{#if isArray}}]{{/if}}{{#unless isRequired}}?{{/unless}}
+  public let {{ name }}: {{#if isArray}}[{{/if}}{{ type }}{{#if isArray}}]{{/if}}{{#unless isRequired}}?{{/unless}}
     {{/each}}
 
-    public init({{#each variables}}{{ name }}: {{#if isArray}}[{{/if}}{{ type }}{{#if isArray}}]{{/if}}{{#unless isRequired}}?{{/unless}}{{#unless @last}}, {{/unless}}{{/each}}) {
-      {{#each variables}}
-      self.{{ name }} = {{ name }}
-      {{/each}}
-    }
-
-    {{#if hasVariables}}
-    public var variables: GraphQLMap? {
-      return [{{#each variables}}"{{name}}": {{name}}{{#unless @last}}, {{/unless}}{{/each}}]
-    }
-    {{/if}}
-
-    {{> inner-type innerTypes=innerTypes}}
+  public var variables: GraphQLMap? {
+    return [{{#each variables}}"{{name}}": {{name}}{{#unless @last}}, {{/unless}}{{/each}}]
   }
 
-{{/each ~}}
+  {{/if}}
+  {{#unless isFragment }}
+  public init({{#each variables}}{{ name }}: {{#if isArray}}[{{/if}}{{ type }}{{#if isArray}}]{{/if}}{{#unless isRequired}}?{{/unless}}{{#unless @last}}, {{/unless}}{{/each}}) {
+    {{#each variables}}
+    self.{{ name }} = {{ name }}
+    {{/each}}
+  }
+  {{/unless}}
+  {{> inner-type innerTypes=innerTypes}}
+}
+
+{{/each}}
 

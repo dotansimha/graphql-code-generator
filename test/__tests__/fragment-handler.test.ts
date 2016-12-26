@@ -139,6 +139,6 @@ describe('handleFragment', () => {
     const codegen = handleFragment(testSchema, document, primitivesMap, true);
     const fragmentModel = codegen.innerTypes.find(item => item.name === 'Fragment');
 
-    expect(fragmentModel.fragmentsUsed).toEqual(['VoteButtons', 'RepoInfo']);
+    expect(fragmentModel.fragmentsUsed).toEqual([{fieldName: 'voteButtons', typeName: 'VoteButtons'}, {fieldName: 'repoInfo', typeName: 'RepoInfo'}]);
   });
 });
