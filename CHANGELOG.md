@@ -1,3 +1,21 @@
+<a name="0.3.0"></a>
+# [0.3.0](https://github.com/dotansimha/graphql-codegen/compare/0.2.5...v0.3.0) (2016-12-26)
+
+
+### Bug Fixes
+
+* **generators:** fixes for ts generators ([2f72d44](https://github.com/dotansimha/graphql-codegen/commit/2f72d44))
+
+
+### Features
+
+* **generators:** generated ts/swift result examples ([e43f289](https://github.com/dotansimha/graphql-codegen/commit/e43f289))
+* **generators:** swift with Apollo iOS generator ([cee08c8](https://github.com/dotansimha/graphql-codegen/commit/cee08c8))
+* **generators:** add support for fragments spread for swift generator ([f95fa72](https://github.com/dotansimha/graphql-codegen/commit/f95fa72))
+* **generators:** More fixes for swift generator ([487a249](https://github.com/dotansimha/graphql-codegen/commit/487a249))
+
+
+
 <a name="0.2.5"></a>
 ## [0.2.5](https://github.com/dotansimha/graphql-codegen/compare/0.2.4...v0.2.5) (2016-12-24)
 
