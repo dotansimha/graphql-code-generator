@@ -19,6 +19,21 @@ Most of the generators support single-file (which is a large file with all of yo
 | Flow            | Single File    | flow, flow-single                                                         |
 | Swift (with Apollo) | Single File | swift, swift-apollo, swift-single                                                     |
 
+## Examples
+
+Refer to the generated examples inside this repository:
+
+### Star Wars
+
+Based on the GraphQL Star Wars example:
+* [Swift Example](https://github.com/dotansimha/graphql-code-generator/blob/master/dev-test/star-wars/API.swift)
+* [TypeScript Example](https://github.com/dotansimha/graphql-code-generator/blob/master/dev-test/star-wars/typings.d.ts)
+
+### GitHunt
+
+Based on the Apollo's GitHunt example:
+* [Swift Example](https://github.com/dotansimha/graphql-code-generator/blob/master/dev-test/githunt/API.swift)
+* [TypeScript Example](https://github.com/dotansimha/graphql-code-generator/blob/master/dev-test/githunt/typings.d.ts)
 
 ## Installation
 
