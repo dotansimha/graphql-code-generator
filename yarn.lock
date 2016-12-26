@@ -49,10 +49,6 @@
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-0.0.2.tgz#0da4934902fbf68a97a0f53204a35ad2224917bc"
 
-"@types/pascal-case@^0.0.29":
-  version "0.0.29"
-  resolved "https://registry.yarnpkg.com/@types/pascal-case/-/pascal-case-0.0.29.tgz#8c7caca6497e9385fd95f389f15e376f8a3df302"
-
 "@types/request@^0.0.36":
   version "0.0.36"
   resolved "https://registry.yarnpkg.com/@types/request/-/request-0.0.36.tgz#e845870fc5fa372402d9f5c19fccc4ca0a5af543"

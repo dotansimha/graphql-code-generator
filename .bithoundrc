@@ -1,0 +1,33 @@
+{
+ "ignore": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/docs/**",
+    "**/generators/**",
+    "**/dev-test/**",
+  ],
+  "test": [
+      "**/test/**",
+      "**/tests/**",
+      "**/spec/**",
+      "**/specs/**",
+      "**/*.test.ts",
+      "**/*.test.js",
+      "**/*.spec.js",
+      "**/*.spec.ts"
+    ],
+  "critics": {
+    "lint": {"engine": "tslint"}
+  },
+    "dependencies": {
+      "mute": [
+
+      ],
+      "unused-ignores": [
+        "tslint",
+        "rimraf",
+        "nodemon",
+        "@types/*"
+      ]
+    }
+}
