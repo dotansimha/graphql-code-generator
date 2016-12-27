@@ -28,7 +28,7 @@ export interface FileResult {
   isDev?: boolean;
 }
 
-export function Transform(transformedOptions: TransformedOptions) {
+export function Transform(transformedOptions: TransformedOptions): FileResult[] {
   const templateConfig = transformedOptions.template.config;
   initHelpers();
   initPartials((templateConfig.partials || []).map<PartialDefinition>((partialPath: string) => {
