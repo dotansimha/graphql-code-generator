@@ -89,7 +89,7 @@
     "@types/handlebars": "^4.0.31",
     "@types/jest": "^16.0.1",
     "@types/mkdirp": "^0.3.29",
-    "@types/node": "^6.0.53",
+    "@types/node": "^6.0.54",
     "@types/request": "^0.0.37",
     "camel-case": "^3.0.0",
     "commander": "^2.9.0",
