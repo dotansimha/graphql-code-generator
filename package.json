@@ -82,6 +82,17 @@
     "testEnvironment": "node"
   },
   "dependencies": {
+    "camel-case": "^3.0.0",
+    "commander": "^2.9.0",
+    "common-tags": "^1.4.0",
+    "glob": "^7.1.1",
+    "graphql": "^0.8.2",
+    "handlebars": "^4.0.6",
+    "mkdirp": "^0.5.1",
+    "pascal-case": "^2.0.0",
+    "request": "^2.79.0"
+  },
+  "devDependencies": {
     "@types/commander": "^2.3.31",
     "@types/common-tags": "^1.2.5",
     "@types/glob": "^5.0.30",
@@ -91,19 +102,13 @@
     "@types/mkdirp": "^0.3.29",
     "@types/node": "^6.0.54",
     "@types/request": "^0.0.37",
-    "camel-case": "^3.0.0",
-    "commander": "^2.9.0",
-    "common-tags": "^1.4.0",
-    "glob": "^7.1.1",
-    "graphql": "^0.8.2",
-    "handlebars": "^4.0.6",
-    "mkdirp": "^0.5.1",
     "nodemon": "^1.11.0",
-    "pascal-case": "^2.0.0",
-    "request": "^2.79.0",
     "rimraf": "^2.5.4",
     "tslint": "^4.0.2",
     "typescript": "^2.1.4"
+  },
+  "optionalDependencies": {
+    "@types/graphql": "^0.8.2"
   },
   "typings": "dist/index.d.ts",
   "typescript": {
