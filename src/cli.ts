@@ -1,20 +1,9 @@
 import * as commander from 'commander';
-import {IntrospectionQuery} from 'graphql/utilities/introspectionQuery';
-import {GeneratorTemplate} from './templates';
+import {TransformedOptions} from './transform-engine';
 import {introspectionFromUrl} from './introspection-from-url';
 import {introspectionFromFile} from './introspection-from-file';
 import {documentsFromGlobs} from './documents-glob';
 import {getTemplateGenerator} from './template-loader';
-
-export interface TransformedCliOptions {
-  introspection?: IntrospectionQuery;
-  documents?: string[];
-  template?: GeneratorTemplate;
-  outPath?: string;
-  isDev?: boolean;
-  noSchema?: boolean;
-  noDocuments?: boolean;
-}
 
 function collect(val, memo) {
   memo.push(val);
@@ -65,8 +54,7 @@ export const validateCliOptions = (options) => {
   }
 };
 
-
-export const transformOptions = (options): Promise<TransformedCliOptions> => {
+export const transformOptions = (options): Promise<TransformedOptions> => {
   const file: string = options['file'];
   const url: string = options['url'];
   const documents: string[] = options['args'] || [];
@@ -76,7 +64,7 @@ export const transformOptions = (options): Promise<TransformedCliOptions> => {
   const isDev: boolean = options['dev'] !== undefined;
   const noSchema: boolean = !options['schema'];
   const noDocuments: boolean = !options['documents'];
-  const result: TransformedCliOptions = {};
+  const result: TransformedOptions = {};
   let introspectionPromise;
 
   if (isDev) {

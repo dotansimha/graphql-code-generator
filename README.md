@@ -120,6 +120,42 @@ When using NodeJS/JavaScript application, use NPM script to generate your types,
     },
     // ...
 
+#### Write a script to generate schema on compilation time
+
+You can import the library, and then write your own script to generate schema typings.
+For example:
+
+```typescript
+import { graphql, introspectionQuery } from 'graphql';
+import { FileResult, Transform, TransformedOptions, getTemplateGenerator } from 'graphql-code-generator';
+import * as fs from 'fs';
+
+import { schema } from './schema';
+// schema is GraphQLScheme Object.
+
+const OUT = "./graphql-types.d.ts";
+
+Promise.all([
+  graphql(schema, introspectionQuery).then(res => res.data),
+  getTemplateGenerator('typescript'),
+]).then(([introspection, template]) => (<TransformedOptions>{
+  introspection: introspection,
+  documents: [],
+  template: template,
+  outPath: OUT,
+  isDev: false,
+  noSchema: false,
+  noDocuments: true,
+}))
+.then(Transform)
+.then((files: FileResult[]) => {
+  files.forEach((fileResult: FileResult) => {
+    fs.writeFileSync(fileResult.path, fileResult.content);
+  });
+  return files;
+});
+```
+
 #### Other Environments
 
 If you are using GraphQL with environment different from NodeJS and wish to generate types and interfaces for your platform, start by installing NodeJS and the package as global, and then add the generation command to your build process.

@@ -140,16 +140,16 @@ describe('utils', () => {
       expect(shouldSkip('__MyType')).toBeTruthy();
     });
 
-    test('should return true when type is root (Query)', () => {
-      expect(shouldSkip('Query')).toBeTruthy();
+    test('should return false when type is root (Query)', () => {
+      expect(shouldSkip('Query')).toBeFalsy();
     });
 
-    test('should return true when type is root (Mutation)', () => {
-      expect(shouldSkip('Mutation')).toBeTruthy();
+    test('should return false when type is root (Mutation)', () => {
+      expect(shouldSkip('Mutation')).toBeFalsy();
     });
 
-    test('should return true when type is root (Subscription)', () => {
-      expect(shouldSkip('Subscription')).toBeTruthy();
+    test('should return false when type is root (Subscription)', () => {
+      expect(shouldSkip('Subscription')).toBeFalsy();
     });
 
     test('should return false when type is a regular type (not root or __)', () => {

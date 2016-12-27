@@ -22,14 +22,14 @@ describe('model-handler', () => {
 
   describe('handleType', () => {
     test('should return valid Model', () => {
-      const model = handleType(primitivesMap, typesMap['Repository']);
-      expect(model).toBeDefined();
+      const model = handleType(testSchema, primitivesMap, typesMap['Repository']);
+      expect(model).toBeDefined();add
     });
 
     test('should return the correct type name', () => {
-      const model = handleType(primitivesMap, typesMap['Repository']);
+      const model = handleType(testSchema, primitivesMap, typesMap['Repository']);
 
-      expect(model.name).toBe('Repository');
+      expect(model[0].name).toBe('Repository');
     });
   });
 });

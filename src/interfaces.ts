@@ -33,6 +33,7 @@ export interface Model {
   isInlineFragment?: boolean;
   isEnum?: boolean;
   isUnion?: boolean;
+  isArgumentsType?: boolean;
   usingFragments?: boolean;
   enumValues?: EnumValue[];
   fragmentsUsed?: SpreadFragment[];
@@ -46,6 +47,7 @@ export interface Model {
   isRoot?: boolean;
   innerTypes?: Model[];
   schemaTypeName?: string;
+  isInput?: boolean;
 }
 
 export interface CodegenDocument {

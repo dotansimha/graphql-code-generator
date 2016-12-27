@@ -10,12 +10,6 @@ import pascalCase = require('pascal-case');
 import {print} from 'graphql/language/printer';
 import {buildInnerModelsArray} from './inner-models-builer';
 
-const typesMap = {
-  query: 'Query',
-  subscription: 'Subscription',
-  mutation: 'Mutation'
-};
-
 export const buildVariables = (schema: GraphQLSchema, definitionNode: OperationDefinitionNode, primitivesMap: any): Field[] => {
   return definitionNode.variableDefinitions.map<Field>((variableDefinition: VariableDefinitionNode) => {
     const typeFromSchema = typeFromAST(schema, variableDefinition.type);
@@ -33,6 +27,11 @@ export const handleOperation = (schema: GraphQLSchema, definitionNode: Operation
   const name = definitionNode.name.value;
   const type = definitionNode.operation;
   const root = getRoot(schema, definitionNode);
+  const typesMap = {
+    query: schema.getQueryType().name,
+    subscription: schema.getSubscriptionType().name,
+    mutation: schema.getMutationType().name,
+  };
   const builtName = buildName(typesMap, name, type);
 
   let document: CodegenDocument = {
