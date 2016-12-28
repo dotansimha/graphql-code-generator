@@ -22,7 +22,7 @@ describe('model-handler', () => {
   describe('handleType', () => {
     test('should return valid Model', () => {
       const model = handleType(testSchema, primitivesMap, typesMap['Repository']);
-      expect(model).toBeDefined();add
+      expect(model).toBeDefined();
     });
 
     test('should return the correct type name', () => {

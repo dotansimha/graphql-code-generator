@@ -1,3 +1,19 @@
+<a name="0.4.0"></a>
+# [0.4.0](https://github.com/dotansimha/graphql-codegen/compare/0.3.0...v0.4.0) (2016-12-28)
+
+
+### Bug Fixes
+
+* **package:** update [@types](https://github.com/types)/request to version 0.0.37 ([4fcdc32](https://github.com/dotansimha/graphql-codegen/commit/4fcdc32))
+
+
+### Features
+
+* **libify:** added lib exports ([7175e11](https://github.com/dotansimha/graphql-codegen/commit/7175e11))
+* **core:** added support for server side schema arguments
+
+
+
 <a name="0.3.0"></a>
 # [0.3.0](https://github.com/dotansimha/graphql-codegen/compare/0.2.5...v0.3.0) (2016-12-26)
 
