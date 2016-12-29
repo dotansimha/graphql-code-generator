@@ -1,3 +1,11 @@
+<a name="0.5.0"></a>
+# [0.5.0](https://github.com/dotansimha/graphql-codegen/compare/0.3.0...v0.5.0) (2016-12-29)
+
+### Features
+
+* **core:** add support for loading GraphQL schema from js export file ([1587ef7](https://github.com/dotansimha/graphql-codegen/commit/1587ef7))
+
+
 <a name="0.4.0"></a>
 # [0.4.0](https://github.com/dotansimha/graphql-codegen/compare/0.3.0...v0.4.0) (2016-12-28)
 
