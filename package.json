@@ -90,7 +90,7 @@
   "devDependencies": {
     "conventional-changelog": "^1.1.0",
     "cz-conventional-changelog": "^1.2.0",
-    "jest": "^18.0.0",
+    "jest": "^18.1.0",
     "@types/commander": "^2.3.31",
     "@types/common-tags": "^1.2.5",
     "@types/glob": "^5.0.30",
