@@ -69,17 +69,18 @@ CLI usage is as follow:
     
 Allowed flags:    
 
-| Flag Name       | Type     | Description                                                                            |
-|-----------------|----------|----------------------------------------------------------------------------------------|
-| -f,--file       | String   | Introspection JSON file, must provide file or URL flag                                 |
-| -u,--url        | String   | GraphQL server endpoint to fetch the introspection from, must provide URL or file flag |
-| -h,--header     | String   | Header to add to the introspection HTTP request when using --url  |
-| -t,--template   | String   | Template name, for example: "typescript"                                               |
-| -o,--out        | String   | Path for output file/directory. When using single-file generator specify filename, and when using multiple-files generator specify a directory                                     |
-| -nm,--no-model  | void     | If specified, server side schema won't be generated through the template (enums won't omit) |
-| -nd,--no-documents  | void     | If specified, client side documents won't be generated through the template |
-| -d,--dev        | void     | Turns ON development mode - prints output to console instead of files                  |
-| documents...    | [String] | Space separated paths of `.graphql` files or code files (glob path is supported) that contains GraphQL documents inside strings, or with `gql` tag (JavaScript), this field is optional - if no documents specified, only server side schema types will be generated                           |
+| Flag Name          | Type     | Description                                                                            |
+|--------------------|----------|----------------------------------------------------------------------------------------|
+| -f,--file          | String   | Introspection JSON file, must provide file or URL flag                                 |
+| -u,--url           | String   | GraphQL server endpoint to fetch the introspection from, must provide URL or file flag |
+| -e,--export        | String   | Path to a JavaScript (es5/6) file that exports (as default export) your `GraphQLSchema` object |
+| -h,--header        | String   | Header to add to the introspection HTTP request when using --url  |
+| -t,--template      | String   | Template name, for example: "typescript"                                               |
+| -o,--out           | String   | Path for output file/directory. When using single-file generator specify filename, and when using multiple-files generator specify a directory                                     |
+| -m,--no-schema     | void     | If specified, server side schema won't be generated through the template (enums won't omit) |
+| -c,--no-documents  | void     | If specified, client side documents won't be generated through the template |
+| -d,--dev           | void     | Turns ON development mode - prints output to console instead of files                  |
+| documents...       | [String] | Space separated paths of `.graphql` files or code files (glob path is supported) that contains GraphQL documents inside strings, or with `gql` tag (JavaScript), this field is optional - if no documents specified, only server side schema types will be generated                           |
 
 **Usage examples:***
 

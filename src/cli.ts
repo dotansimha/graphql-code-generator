@@ -4,6 +4,7 @@ import {introspectionFromUrl} from './introspection-from-url';
 import {introspectionFromFile} from './introspection-from-file';
 import {documentsFromGlobs} from './documents-glob';
 import {getTemplateGenerator} from './template-loader';
+import {introspectionFromExport} from './introspection-from-export';
 
 function collect(val, memo) {
   memo.push(val);
@@ -17,10 +18,11 @@ export const initCLI = (args): commander.IExportedCommand => {
     .option('-d, --dev', 'Turn on development mode - prints results to console')
     .option('-f, --file <filePath>', 'Parse local GraphQL introspection JSON file')
     .option('-u, --url <graphql-endpoint>', 'Parse remote GraphQL endpoint as introspection file')
+    .option('-u, --export <export-file>', 'Path to a JavaScript (es5/6) file that exports (as default export) your `GraphQLSchema` object')
     .option('-h, --header [header]', 'Header to add to the introspection HTTP request when using --url', collect, [])
     .option('-t, --template <template-name>', 'Language/platform name templates')
-    .option('-nm, --no-schema', 'Generates only client side documents, without server side schema types')
-    .option('-nd, --no-documents', 'Generates only server side schema types, without client side documents')
+    .option('-m, --no-schema', 'Generates only client side documents, without server side schema types')
+    .option('-c, --no-documents', 'Generates only server side schema types, without client side documents')
     .option('-o, --out <path>', 'Output file(s) path', String, './')
     .arguments('<options> [documents...]')
     .parse(args);
@@ -42,11 +44,12 @@ export const cliError = (err: string) => {
 export const validateCliOptions = (options) => {
   const file = options['file'];
   const url = options['url'];
+  const fsExport = options['export'];
   const template = options['template'];
   const out = options['out'];
 
-  if (!file && !url) {
-    cliError('Please specify one of --file or --url flags!');
+  if (!file && !url && !fsExport) {
+    cliError('Please specify one of --file, --url or --export flags!');
   }
 
   if (!template) {
@@ -57,6 +60,7 @@ export const validateCliOptions = (options) => {
 export const transformOptions = (options): Promise<TransformedOptions> => {
   const file: string = options['file'];
   const url: string = options['url'];
+  const fsExport: string = options['export'];
   const documents: string[] = options['args'] || [];
   const template: string = options['template'];
   const out: string = options['out'];
@@ -77,6 +81,10 @@ export const transformOptions = (options): Promise<TransformedOptions> => {
   else if (url) {
     introspectionPromise = introspectionFromUrl(url, headers);
   }
+  else if (fsExport) {
+    introspectionPromise = introspectionFromExport(fsExport);
+  }
+
 
   const documentsPromise = documentsFromGlobs(documents);
   const generatorTemplatePromise = getTemplateGenerator(template);
