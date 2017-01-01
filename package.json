@@ -105,9 +105,6 @@
     "tslint": "^4.0.2",
     "typescript": "^2.1.4"
   },
-  "optionalDependencies": {
-    "@types/graphql": "^0.8.2"
-  },
   "typings": "dist/index.d.ts",
   "typescript": {
     "definition": "dist/index.d.ts"
