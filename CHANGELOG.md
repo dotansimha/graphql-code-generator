@@ -1,3 +1,8 @@
+<a name="0.5.1"></a>
+## [0.5.1](https://github.com/dotansimha/graphql-codegen/compare/0.5.0...v0.5.1) (2017-01-03)
+
+* updated dependecies
+
 <a name="0.5.0"></a>
 # [0.5.0](https://github.com/dotansimha/graphql-codegen/compare/0.3.0...v0.5.0) (2016-12-29)
 
