@@ -4,16 +4,16 @@ import * as fs from 'fs';
 import {
   isRequired, isArray, shouldSkip, getTypeName, getFieldDef, isPrimitive,
   handleNameDuplications, getRoot, buildName
-} from "../../src/utils";
+} from "../../src/utils/utils";
 import {GraphQLInputObjectType} from "graphql/type/definition";
 import {GraphQLNonNull} from "graphql/type/definition";
 import {GraphQLFloat} from "graphql/type/scalars";
 import {GraphQLList} from "graphql/type/definition";
 import {GraphQLString} from "graphql/type/scalars";
 import {GraphQLType} from "graphql/type/definition";
-import {loadSchema} from "../../src/scheme-loader";
+import {loadSchema} from "../../src/loaders/scheme-loader";
 import {GraphQLSchema} from "graphql/type/schema";
-import {loadDocumentsSources} from "../../src/document-loader";
+import {loadDocumentsSources} from "../../src/loaders/document-loader";
 import {OperationDefinitionNode} from "graphql/language/ast";
 import {FIELD} from "graphql/language/kinds";
 

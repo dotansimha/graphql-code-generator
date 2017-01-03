@@ -3,7 +3,7 @@ jest.unmock('handlebars');
 import * as fs from 'fs';
 import * as path from 'path';
 
-import {loadFromPath, compileTemplate} from "../../src/template-loader";
+import {loadFromPath, compileTemplate} from "../../src/loaders/template-loader";
 
 describe('generator', () => {
   const template = '{{#if models}} TEST {{/if}}';

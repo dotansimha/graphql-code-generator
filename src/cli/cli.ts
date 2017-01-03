@@ -1,10 +1,10 @@
 import * as commander from 'commander';
-import {TransformedOptions} from './transform-engine';
-import {introspectionFromUrl} from './introspection-from-url';
-import {introspectionFromFile} from './introspection-from-file';
-import {documentsFromGlobs} from './documents-glob';
-import {getTemplateGenerator} from './template-loader';
-import {introspectionFromExport} from './introspection-from-export';
+import {TransformedOptions} from '../engine/transform-engine';
+import {introspectionFromUrl} from '../loaders/introspection-from-url';
+import {introspectionFromFile} from '../loaders/introspection-from-file';
+import {documentsFromGlobs} from '../utils/documents-glob';
+import {getTemplateGenerator} from '../loaders/template-loader';
+import {introspectionFromExport} from '../loaders/introspection-from-export';
 
 function collect(val, memo) {
   memo.push(val);
@@ -13,7 +13,7 @@ function collect(val, memo) {
 
 export const initCLI = (args): commander.IExportedCommand => {
   commander
-    .version(require('../package.json').version)
+    .version(require('../../package.json').version)
     .usage('graphql-codegen [options]')
     .option('-d, --dev', 'Turn on development mode - prints results to console')
     .option('-f, --file <filePath>', 'Parse local GraphQL introspection JSON file')

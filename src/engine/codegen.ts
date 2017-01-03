@@ -1,9 +1,9 @@
 import {GraphQLSchema} from 'graphql';
-import {Codegen, Model, CodegenDocument} from './interfaces';
+import {Codegen, Model, CodegenDocument} from '../models/interfaces';
 import {GraphQLNamedType, DefinitionNode, DocumentNode, Kind} from 'graphql';
-import {handleType} from './model-handler';
-import {handleOperation} from './operation-handler';
-import {handleFragment} from './fragment-handler';
+import {handleType} from '../handlers/model-handler';
+import {handleOperation} from '../handlers/operation-handler';
+import {handleFragment} from '../handlers/fragment-handler';
 
 export interface CodegenConfig {
   flattenInnerTypes?: boolean;

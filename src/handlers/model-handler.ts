@@ -1,4 +1,4 @@
-import {Model, EnumValue, Field} from './interfaces';
+import {Model, EnumValue, Field} from '../models/interfaces';
 import {
   getNamedType,
   GraphQLNonNull,
@@ -15,7 +15,7 @@ import {
   GraphQLArgument
 } from 'graphql/type/definition';
 import {GraphQLSchema} from 'graphql/type/schema';
-import {shouldSkip, getTypeName, isPrimitive, isArray, isRequired} from './utils';
+import {shouldSkip, getTypeName, isPrimitive, isArray, isRequired} from '../utils/utils';
 import pascalCase = require('pascal-case');
 
 const ignoredScalars = ['Boolean', 'Float', 'String', 'ID', 'Int'];

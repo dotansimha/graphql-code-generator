@@ -33,22 +33,22 @@ export const getGenerators = () => {
     {
       language: 'TypeScript Single File',
       aliases: ['ts', 'typescript', 'ts-single', 'typescript-single'],
-      config: getConfig('../generators/typescript-single-file/')
+      config: getConfig('../../generators/typescript-single-file/')
     },
     {
       language: 'TypeScript Multiple Files',
       aliases: ['ts-multiple', 'typescript-multiple'],
-      config: getConfig('../generators/typescript-multiple-files/')
+      config: getConfig('../../generators/typescript-multiple-files/')
     },
     {
       language: 'Flow Single File',
       aliases: ['flow', 'flow-single'],
-      config: getConfig('../generators/flow-single-file/')
+      config: getConfig('../../generators/flow-single-file/')
     },
     {
       language: 'Swift (Apollo) Single File',
       aliases: ['swift', 'swift-apollo', 'swift-single'],
-      config: getConfig('../generators/swift-apollo-single-file/')
+      config: getConfig('../../generators/swift-apollo-single-file/')
     }
   ];
 };

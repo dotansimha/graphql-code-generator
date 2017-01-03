@@ -1,10 +1,10 @@
 jest.mock('fs');
 import * as fs from 'fs';
 
-import {handleFragment} from "../../src/fragment-handler";
+import {handleFragment} from "../../src/handlers/fragment-handler";
 import {GraphQLSchema} from "graphql/type/schema";
-import {loadSchema} from "../../src/scheme-loader";
-import {loadDocumentsSources} from "../../src/document-loader";
+import {loadSchema} from "../../src/loaders/scheme-loader";
+import {loadDocumentsSources} from "../../src/loaders/document-loader";
 import {FragmentDefinitionNode} from "graphql/language/ast";
 import { stripIndent } from 'common-tags';
 

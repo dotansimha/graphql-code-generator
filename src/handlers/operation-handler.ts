@@ -1,11 +1,11 @@
 import {typeFromAST} from 'graphql/utilities/typeFromAST';
 import {GraphQLSchema} from 'graphql/type/schema';
 import {OperationDefinitionNode, VariableDefinitionNode} from 'graphql/language/ast';
-import {CodegenDocument, Field} from './interfaces';
+import {CodegenDocument, Field} from '../models/interfaces';
 import {
   getTypeName, isArray, isRequired, isPrimitive, getRoot,
   buildName
-} from './utils';
+} from '../utils/utils';
 import pascalCase = require('pascal-case');
 import {print} from 'graphql/language/printer';
 import {buildInnerModelsArray} from './inner-models-builer';

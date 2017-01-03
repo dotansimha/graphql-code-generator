@@ -3,11 +3,11 @@ jest.mock('fs');
 import * as fs from 'fs';
 
 import {GraphQLSchema} from "graphql/type/schema";
-import {loadSchema} from "../../src/scheme-loader";
-import {loadDocumentsSources} from "../../src/document-loader";
+import {loadSchema} from "../../src/loaders/scheme-loader";
+import {loadDocumentsSources} from "../../src/loaders/document-loader";
 import {DocumentNode} from "graphql/language/ast";
 import { stripIndent } from 'common-tags';
-import {handleOperation, buildVariables} from "../../src/operation-handler";
+import {handleOperation, buildVariables} from "../../src/handlers/operation-handler";
 
 describe('handleOperation', () => {
   let testSchema: GraphQLSchema;

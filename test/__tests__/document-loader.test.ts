@@ -1,7 +1,7 @@
 jest.mock('fs');
 
 import * as fs from 'fs';
-import {loadFileContent, loadDocumentsSources} from "../../src/document-loader";
+import {loadFileContent, loadDocumentsSources} from "../../src/loaders/document-loader";
 
 describe('document-loader', () => {
   beforeAll(() => {

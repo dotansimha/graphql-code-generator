@@ -1,5 +1,5 @@
-export {Transform, TransformedOptions, FileResult} from './transform-engine';
-export {getTemplateGenerator} from './template-loader';
-export {documentsFromGlobs} from './documents-glob';
-export {introspectionFromUrl} from './introspection-from-url';
-export {introspectionFromFile} from './introspection-from-file';
+export {Transform, TransformedOptions, FileResult} from './engine/transform-engine';
+export {getTemplateGenerator} from './loaders/template-loader';
+export {documentsFromGlobs} from './utils/documents-glob';
+export {introspectionFromUrl} from './loaders/introspection-from-url';
+export {introspectionFromFile} from './loaders/introspection-from-file';

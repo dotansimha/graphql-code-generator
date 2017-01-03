@@ -1,6 +1,6 @@
 import * as handlebars from 'handlebars';
 import * as fs from 'fs';
-import {GeneratorTemplate, getGenerators} from './templates';
+import {GeneratorTemplate, getGenerators} from '../engine/templates';
 
 export const loadFromPath = (filePath: string): string => {
   if (fs.existsSync(filePath)) {

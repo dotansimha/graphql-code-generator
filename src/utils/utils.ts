@@ -2,7 +2,7 @@ import {GraphQLInterfaceType} from 'graphql/type/definition';
 import {GraphQLObjectType} from 'graphql/type/definition';
 import {GraphQLField} from 'graphql/type/definition';
 import {GraphQLType} from 'graphql/type/definition';
-import {Model} from './interfaces';
+import {Model} from '../models/interfaces';
 import {GraphQLSchema} from 'graphql/type/schema';
 import {OperationDefinitionNode} from 'graphql/language/ast';
 import pascalCase = require('pascal-case');

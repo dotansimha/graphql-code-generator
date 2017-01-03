@@ -1,6 +1,6 @@
 import {GraphQLSchema} from 'graphql/type/schema';
 import {FragmentDefinitionNode} from 'graphql/language/ast';
-import {Model, CodegenDocument} from './interfaces';
+import {Model, CodegenDocument} from '../models/interfaces';
 import pascalCase = require('pascal-case');
 import {typeFromAST} from 'graphql/utilities/typeFromAST';
 import {print} from 'graphql/language/printer';

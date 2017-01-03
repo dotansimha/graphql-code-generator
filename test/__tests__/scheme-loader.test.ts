@@ -1,4 +1,4 @@
-import {validateSchema, loadSchema} from "../../src/scheme-loader";
+import {validateSchema, loadSchema} from "../../src/loaders/scheme-loader";
 import {IntrospectionQuery} from "graphql/utilities/introspectionQuery";
 import {GraphQLSchema} from "graphql/type/schema";
 

@@ -1,16 +1,16 @@
 import {IntrospectionQuery} from 'graphql/utilities/introspectionQuery';
-import {loadSchema} from './scheme-loader';
+import {loadSchema} from '../loaders/scheme-loader';
 import {prepareCodegen} from './codegen';
-import {loadDocumentsSources} from './document-loader';
-import {compileTemplate, loadFromPath} from './template-loader';
+import {loadDocumentsSources} from '../loaders/document-loader';
+import {compileTemplate, loadFromPath} from '../loaders/template-loader';
 import * as path from 'path';
 import * as mkdirp from 'mkdirp';
-import {Model, CodegenDocument} from './interfaces';
+import {Model, CodegenDocument} from '../models/interfaces';
 import {GeneratorTemplate} from './templates';
 import {
   initHelpers, initPartials, PartialDefinition, HelperDefinition,
   initTemplateHelpers
-} from './handlebars-helpers';
+} from '../utils/handlebars-helpers';
 
 export interface TransformedOptions {
   introspection?: IntrospectionQuery;

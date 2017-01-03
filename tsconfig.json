@@ -26,7 +26,7 @@
   },
   "files": [
     "src/index.ts",
-    "src/gql-gen.ts"
+    "src/cli/gql-gen.ts"
   ],
   "exclude": [
     "node_modules"

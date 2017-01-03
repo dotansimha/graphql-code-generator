@@ -1,7 +1,7 @@
 import {DocumentNode, Source, parse, concatAST} from 'graphql';
 import * as fs from 'fs';
 import * as path from 'path';
-import {extractDocumentStringFromCodeFile} from './document-finder';
+import {extractDocumentStringFromCodeFile} from '../utils/document-finder';
 
 export const loadFileContent = (filePath: string): DocumentNode | null => {
   if (fs.existsSync(filePath)) {

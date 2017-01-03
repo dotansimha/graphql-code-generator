@@ -1,6 +1,6 @@
-import {loadSchema} from "../../src/scheme-loader";
+import {loadSchema} from "../../src/loaders/scheme-loader";
 import {GraphQLSchema} from "graphql/type/schema";
-import {handleType} from "../../src/model-handler";
+import {handleType} from "../../src/handlers/model-handler";
 
 const primitivesMap = {
   "String": "string",

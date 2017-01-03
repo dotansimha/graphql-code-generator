@@ -2,8 +2,8 @@ import {getNamedType, GraphQLType, GraphQLObjectType, GraphQLInterfaceType} from
 import {FIELD, FRAGMENT_SPREAD, INLINE_FRAGMENT} from 'graphql/language/kinds';
 import {SelectionSetNode, SelectionNode} from 'graphql/language/ast';
 import {GraphQLSchema} from 'graphql/type/schema';
-import {Model} from './interfaces';
-import {getFieldDef, handleNameDuplications, isArray, isRequired, getTypeName} from './utils';
+import {Model} from '../models/interfaces';
+import {getFieldDef, handleNameDuplications, isArray, isRequired, getTypeName} from '../utils/utils';
 import pascalCase = require('pascal-case');
 import camelCase = require('camel-case');
 import {typeFromAST} from 'graphql/utilities/typeFromAST';

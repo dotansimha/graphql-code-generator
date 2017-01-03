@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import {initCLI, validateCliOptions, transformOptions, cliError} from './cli';
-import {FileResult, Transform} from './transform-engine';
+import {FileResult, Transform} from '../engine/transform-engine';
 import * as fs from 'fs';
 
 const options = initCLI(process.argv);
