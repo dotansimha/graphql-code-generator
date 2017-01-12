@@ -103,7 +103,7 @@
     "nodemon": "^1.11.0",
     "rimraf": "^2.5.4",
     "tslint": "^4.0.2",
-    "typescript": "^2.1.4"
+    "typescript": "^2.1.5"
   },
   "typings": "dist/index.d.ts",
   "typescript": {
