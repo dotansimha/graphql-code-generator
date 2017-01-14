@@ -94,16 +94,16 @@
     "@types/commander": "^2.3.31",
     "@types/common-tags": "^1.2.5",
     "@types/glob": "^5.0.30",
-    "@types/graphql": "^0.8.2",
+    "@types/graphql": "^0.8.6",
     "@types/handlebars": "^4.0.31",
     "@types/jest": "^16.0.3",
     "@types/mkdirp": "^0.3.29",
-    "@types/node": "^6.0.56",
+    "@types/node": "^6.0.59",
     "@types/request": "^0.0.39",
     "nodemon": "^1.11.0",
     "rimraf": "^2.5.4",
-    "tslint": "^4.0.2",
-    "typescript": "^2.1.5"
+    "typescript": "^2.1.5",
+    "tslint": "^4.3.1"
   },
   "typings": "dist/index.d.ts",
   "typescript": {
