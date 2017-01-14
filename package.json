@@ -96,7 +96,7 @@
     "@types/glob": "^5.0.30",
     "@types/graphql": "^0.8.6",
     "@types/handlebars": "^4.0.31",
-    "@types/jest": "^16.0.3",
+    "@types/jest": "^16.0.4",
     "@types/mkdirp": "^0.3.29",
     "@types/node": "^6.0.59",
     "@types/request": "^0.0.39",
