@@ -99,7 +99,7 @@
     "@types/jest": "^18.1.1",
     "@types/mkdirp": "^0.3.29",
     "@types/node": "^7.0.4",
-    "@types/request": "^0.0.39",
+    "@types/request": "^0.0.40",
     "nodemon": "^1.11.0",
     "rimraf": "^2.5.4",
     "typescript": "^2.1.5",
