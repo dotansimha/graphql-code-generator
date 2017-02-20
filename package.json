@@ -101,8 +101,8 @@
     "@types/node": "^7.0.5",
     "@types/request": "^0.0.40",
     "nodemon": "^1.11.0",
+    "typescript": "^2.1.6",
     "rimraf": "^2.6.0",
-    "typescript": "^2.1.5",
     "tslint": "^4.4.2"
   },
   "typings": "dist/index.d.ts",
