@@ -32,7 +32,7 @@ const generateAnonymous = type => {
   return `Anonymous_${counter}_`;
 };
 
-export const handleOperation = (schema: GraphQLSchema, definitionNode: OperationDefinitionNode, primitivesMap: any, flattenInnerTypes: boolean = false): CodegenDocument => {
+export const handleOperation = (schema: GraphQLSchema, definitionNode: OperationDefinitionNode, primitivesMap: any, flattenInnerTypes = false): CodegenDocument => {
   const type = definitionNode.operation;
   const name = (definitionNode.name || { value: generateAnonymous(type) }).value;
   const root = getRoot(schema, definitionNode);

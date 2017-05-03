@@ -1,3 +1,19 @@
+<a name="0.5.2"></a>
+## [0.5.2](https://github.com/dotansimha/graphql-codegen/compare/0.5.1...v0.5.2) (2017-05-03)
+
+## Bug fixes
+* Added support for Anonymous operations (closes [#82](https://github.com/dotansimha/graphql-code-generator/issues/82))
+* Fixed a bug with missing root types (closes [#83](https://github.com/dotansimha/graphql-code-generator/issues/83))
+* Fixed a bug with multiple extends for TypeScript generator [#81](https://github.com/dotansimha/graphql-code-generator/pull/81) - Thanks @Anthonyzou
+* Fixed a issue with generated TypeScript file and TSLint warnings [#81](https://github.com/dotansimha/graphql-code-generator/pull/81) - Thanks @Anthonyzou
+
+### Other
+
+* Updated all dependencies to their latest version.
+* **package:** update graphql to version 0.9.1 ([2782925](https://github.com/dotansimha/graphql-codegen/commit/2782925))
+
+
+
 <a name="0.5.1"></a>
 ## [0.5.1](https://github.com/dotansimha/graphql-codegen/compare/0.5.0...v0.5.1) (2017-01-03)
 
