@@ -28,6 +28,11 @@ export const buildInnerModelsArray = (schema: GraphQLSchema,
         }
 
         const field = getFieldDef(rootObject, selectionNode);
+
+        if (!field) {
+          return [];
+        }
+
         const rawType = field.type;
         const actualType = getNamedType(rawType);
 

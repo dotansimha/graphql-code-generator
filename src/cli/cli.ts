@@ -11,7 +11,7 @@ function collect(val, memo) {
   return memo;
 }
 
-export const initCLI = (args): commander.IExportedCommand => {
+export const initCLI = (args): any => {
   commander
     .version(require('../../package.json').version)
     .usage('graphql-codegen [options]')

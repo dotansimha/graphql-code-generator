@@ -1,27 +1,35 @@
-import {OperationDefinitionNode} from "graphql/language/ast";
 jest.mock('fs');
-import * as fs from 'fs';
 
-import {GraphQLSchema} from "graphql/type/schema";
-import {loadSchema} from "../../src/loaders/scheme-loader";
-import {loadDocumentsSources} from "../../src/loaders/document-loader";
-import {DocumentNode} from "graphql/language/ast";
+import { OperationDefinitionNode } from 'graphql/language/ast';
+import * as fs from 'fs';
+import { GraphQLSchema } from 'graphql/type/schema';
+import { loadSchema } from '../../src/loaders/scheme-loader';
+import { loadDocumentsSources } from '../../src/loaders/document-loader';
+import { DocumentNode } from 'graphql/language/ast';
 import { stripIndent } from 'common-tags';
-import {handleOperation, buildVariables} from "../../src/handlers/operation-handler";
+import { handleOperation, buildVariables } from '../../src/handlers/operation-handler';
 
 describe('handleOperation', () => {
   let testSchema: GraphQLSchema;
   let documents: DocumentNode;
   let primitivesMap = {
-    "String": "string",
-    "Int": "number",
-    "Float": "number",
-    "Boolean": "boolean",
-    "ID": "string"
+    'String': 'string',
+    'Int': 'number',
+    'Float': 'number',
+    'Boolean': 'boolean',
+    'ID': 'string'
   };
 
   const mutationString = stripIndent`
     mutation submitComment($repoFullName: String!, $commentContent: String!) {
+      submitComment(repoFullName: $repoFullName, commentContent: $commentContent) {
+        ...CommentsPageComment
+      }
+    }
+  `;
+
+  const anonymousMutationString = stripIndent`
+    mutation($repoFullName: String!, $commentContent: String!) {
       submitComment(repoFullName: $repoFullName, commentContent: $commentContent) {
         ...CommentsPageComment
       }
@@ -79,7 +87,8 @@ describe('handleOperation', () => {
     fs['__setMockFiles']({
       'comment.query.graphql': queryString,
       'submit-comment.mutation.graphql': mutationString,
-      'comment-added.subscription.graphql': subscriptionString
+      'comment-added.subscription.graphql': subscriptionString,
+      'anonymous.mutation.graphql': anonymousMutationString,
     });
 
     testSchema = loadSchema(require('../../dev-test/githunt/schema.json'));
@@ -87,8 +96,20 @@ describe('handleOperation', () => {
     documents = loadDocumentsSources([
       'comment.query.graphql',
       'submit-comment.mutation.graphql',
-      'comment-added.subscription.graphql'
+      'comment-added.subscription.graphql',
+      'anonymous.mutation.graphql',
     ]);
+  });
+
+  describe('Schema', () => {
+    test('should polyfill when root types are missing', () => {
+      const schema = loadSchema(require('../../dev-test/githunt/schema_without_mutations.json'));
+
+      expect(() => {
+        const definition = <OperationDefinitionNode>documents.definitions[1];
+        handleOperation(schema, definition, primitivesMap);
+      }).not.toThrow();
+    });
   });
 
   describe('handleOperation', () => {
@@ -126,6 +147,13 @@ describe('handleOperation', () => {
         const codegen = handleOperation(testSchema, definition, primitivesMap);
 
         expect(codegen.name).toBe('SubmitCommentMutation');
+      });
+
+      test('should return the correct name for anonymous mutation', () => {
+        const definition = <OperationDefinitionNode>documents.definitions[3];
+        const codegen = handleOperation(testSchema, definition, primitivesMap);
+
+        expect(codegen.name).toBe('Anonymous_1Mutation');
       });
 
       test('should return the correct booleans for mutation', () => {

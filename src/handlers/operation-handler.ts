@@ -23,14 +23,23 @@ export const buildVariables = (schema: GraphQLSchema, definitionNode: OperationD
   });
 };
 
-export const handleOperation = (schema: GraphQLSchema, definitionNode: OperationDefinitionNode, primitivesMap: any, flattenInnerTypes: boolean): CodegenDocument => {
-  const name = definitionNode.name.value;
+let counter = 0;
+
+const generateAnonymous = type => {
+  console.warn(`Your documents definition has anonymous ${type} - please name it for better result!`);
+  counter++;
+
+  return `Anonymous_${counter}_`;
+};
+
+export const handleOperation = (schema: GraphQLSchema, definitionNode: OperationDefinitionNode, primitivesMap: any, flattenInnerTypes: boolean = false): CodegenDocument => {
   const type = definitionNode.operation;
+  const name = (definitionNode.name || { value: generateAnonymous(type) }).value;
   const root = getRoot(schema, definitionNode);
   const typesMap = {
-    query: schema.getQueryType().name,
-    subscription: schema.getSubscriptionType().name,
-    mutation: schema.getMutationType().name,
+    query: (schema.getQueryType() || { name: 'Query' }).name,
+    subscription: (schema.getSubscriptionType() || { name: 'Subscription' }).name,
+    mutation: (schema.getMutationType() || { name: 'Mutation' }).name,
   };
   const builtName = buildName(typesMap, name, type);
 
