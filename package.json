@@ -1,6 +1,6 @@
 {
   "name": "graphql-code-generator",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "GraphQL types and code generator based on schema",
   "main": "dist/index.js",
   "scripts": {
@@ -81,29 +81,29 @@
     "commander": "^2.9.0",
     "common-tags": "^1.4.0",
     "glob": "^7.1.1",
-    "graphql": "^0.9.1",
-    "handlebars": "^4.0.6",
+    "graphql": "^0.9.6",
+    "handlebars": "^4.0.8",
     "mkdirp": "^0.5.1",
-    "pascal-case": "^2.0.0",
-    "request": "^2.79.0"
+    "pascal-case": "^2.0.1",
+    "request": "^2.81.0"
   },
   "devDependencies": {
-    "conventional-changelog": "^1.1.0",
-    "cz-conventional-changelog": "^1.2.0",
-    "jest": "^18.1.0",
-    "@types/commander": "^2.3.31",
+    "@types/commander": "^2.9.0",
     "@types/common-tags": "^1.2.5",
     "@types/glob": "^5.0.30",
-    "@types/graphql": "^0.8.6",
-    "@types/handlebars": "^4.0.31",
-    "@types/jest": "^18.1.1",
+    "@types/graphql": "^0.9.0",
+    "@types/handlebars": "^4.0.32",
+    "@types/jest": "^19.2.2",
     "@types/mkdirp": "^0.3.29",
-    "@types/node": "^7.0.5",
-    "@types/request": "^0.0.40",
+    "@types/node": "^7.0.15",
+    "@types/request": "^0.0.42",
+    "conventional-changelog": "^1.1.3",
+    "cz-conventional-changelog": "^2.0.0",
+    "jest": "^19.0.2",
     "nodemon": "^1.11.0",
-    "typescript": "^2.1.6",
-    "rimraf": "^2.6.0",
-    "tslint": "^4.4.2"
+    "rimraf": "^2.6.1",
+    "tslint": "^5.1.0",
+    "typescript": "^2.3.2"
   },
   "typings": "dist/index.d.ts",
   "typescript": {
