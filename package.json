@@ -81,7 +81,7 @@
     "commander": "^2.9.0",
     "common-tags": "^1.4.0",
     "glob": "^7.1.1",
-    "graphql": "^0.9.6",
+    "graphql": "^0.10.0",
     "handlebars": "^4.0.8",
     "mkdirp": "^0.5.1",
     "pascal-case": "^2.0.1",
