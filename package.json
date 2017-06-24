@@ -14,7 +14,7 @@
     "start": "cd dist && node gql-gen.js",
     "debug": "cd dist && node --inspect --debug-brk gql-gen.js",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
-    "create-git-tag": "git tag $(cat package.json | $(npm bin)/json version)",
+    "create-git-tag": "git tag $(cat package.json | json version)",
     "dev": "cd dist/cli && nodemon --ext ts,js,d.ts,template,graphql,json,handlebars gql-gen.js --dev --file ../../dev-test/githunt/schema.json --template ts --out ../../dev-test/githunt/typings.d.ts  ../../dev-test/githunt/**/*.graphql",
     "prepare--": "npm run build && npm run test && npm run create-git-tag && git push && git push --tags",
     "test": "jest"
