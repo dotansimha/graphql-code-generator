@@ -1,6 +1,6 @@
 {
   "name": "graphql-code-generator",
-  "version": "0.5.2",
+  "version": "0.5.4",
   "description": "GraphQL types and code generator based on schema",
   "main": "dist/index.js",
   "scripts": {
@@ -76,12 +76,14 @@
     "testRegex": "/__tests__/.*\\.(ts|tsx|js)$",
     "testEnvironment": "node"
   },
+  "peerDependencies": {
+    "graphql": "^0.10 | ^0.9 | ^0.8"
+  },
   "dependencies": {
     "camel-case": "^3.0.0",
     "commander": "^2.10.0",
     "common-tags": "^1.4.0",
     "glob": "^7.1.2",
-    "graphql": "^0.10.3",
     "handlebars": "^4.0.10",
     "mkdirp": "^0.5.1",
     "pascal-case": "^2.0.1",
@@ -97,6 +99,7 @@
     "@types/mkdirp": "^0.3.29",
     "@types/node": "^8.0.2",
     "@types/request": "^0.0.44",
+    "graphql": "^0.10 | ^0.9 | ^0.8",
     "conventional-changelog": "^1.1.3",
     "cz-conventional-changelog": "^2.0.0",
     "jest": "^20.0.4",
