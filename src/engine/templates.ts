@@ -23,7 +23,7 @@ const getConfig = (generatorPath: string): TemplateConfig => {
   let dirString = __dirname;
   const configPath = path.resolve(dirString, generatorPath, 'config.json');
   let config = <TemplateConfig>(JSON.parse(fs.readFileSync(configPath, 'utf8')));
-  config.basePath = generatorPath;
+  config.basePath = path.resolve(dirString, generatorPath);
 
   return config;
 };
