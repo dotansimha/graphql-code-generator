@@ -1,5 +1,69 @@
 import Apollo
 
+public struct Query: GraphQLMapConvertible {
+  public var graphQLMap: GraphQLMap
+
+  public init(hero: Character? = nil, reviews: [Review]? = nil, search: [SearchResult]? = nil, character: Character? = nil, droid: Droid? = nil, human: Human? = nil, starship: Starship? = nil) {
+    graphQLMap = ["hero": hero, "reviews": reviews, "search": search, "character": character, "droid": droid, "human": human, "starship": starship]
+  }
+}
+
+public struct HeroQuery: GraphQLMapConvertible {
+  public var graphQLMap: GraphQLMap
+
+  public init(episode: Episode? = nil) {
+    graphQLMap = ["episode": episode]
+  }
+}
+
+public struct ReviewsQuery: GraphQLMapConvertible {
+  public var graphQLMap: GraphQLMap
+
+  public init(episode: Episode) {
+    graphQLMap = ["episode": episode]
+  }
+}
+
+public struct SearchQuery: GraphQLMapConvertible {
+  public var graphQLMap: GraphQLMap
+
+  public init(text: String? = nil) {
+    graphQLMap = ["text": text]
+  }
+}
+
+public struct CharacterQuery: GraphQLMapConvertible {
+  public var graphQLMap: GraphQLMap
+
+  public init(id: String) {
+    graphQLMap = ["id": id]
+  }
+}
+
+public struct DroidQuery: GraphQLMapConvertible {
+  public var graphQLMap: GraphQLMap
+
+  public init(id: String) {
+    graphQLMap = ["id": id]
+  }
+}
+
+public struct HumanQuery: GraphQLMapConvertible {
+  public var graphQLMap: GraphQLMap
+
+  public init(id: String) {
+    graphQLMap = ["id": id]
+  }
+}
+
+public struct StarshipQuery: GraphQLMapConvertible {
+  public var graphQLMap: GraphQLMap
+
+  public init(id: String) {
+    graphQLMap = ["id": id]
+  }
+}
+
 public enum Episode: String {
   case NEWHOPE = "NEWHOPE" /// Star Wars Episode IV: A New Hope, released in 1977.
   case EMPIRE = "EMPIRE" /// Star Wars Episode V: The Empire Strikes Back, released in 1980.
@@ -13,6 +77,14 @@ public struct Character: GraphQLMapConvertible {
 
   public init(id: String, name: String, friends: [Character]? = nil, friendsConnection: FriendsConnection, appearsIn: [Episode]) {
     graphQLMap = ["id": id, "name": name, "friends": friends, "friendsConnection": friendsConnection, "appearsIn": appearsIn]
+  }
+}
+
+public struct FriendsConnectionCharacter: GraphQLMapConvertible {
+  public var graphQLMap: GraphQLMap
+
+  public init(first: Int? = nil, after: String? = nil) {
+    graphQLMap = ["first": first, "after": after]
   }
 }
 
@@ -56,6 +128,22 @@ public struct Human: GraphQLMapConvertible {
   }
 }
 
+public struct HeightHuman: GraphQLMapConvertible {
+  public var graphQLMap: GraphQLMap
+
+  public init(unit: LengthUnit? = nil) {
+    graphQLMap = ["unit": unit]
+  }
+}
+
+public struct FriendsConnectionHuman: GraphQLMapConvertible {
+  public var graphQLMap: GraphQLMap
+
+  public init(first: Int? = nil, after: String? = nil) {
+    graphQLMap = ["first": first, "after": after]
+  }
+}
+
 public enum LengthUnit: String {
   case METER = "METER" /// The standard unit around the world
   case FOOT = "FOOT" /// Primarily used in the United States
@@ -71,11 +159,43 @@ public struct Starship: GraphQLMapConvertible {
   }
 }
 
+public struct LengthStarship: GraphQLMapConvertible {
+  public var graphQLMap: GraphQLMap
+
+  public init(unit: LengthUnit? = nil) {
+    graphQLMap = ["unit": unit]
+  }
+}
+
 public struct Droid: GraphQLMapConvertible {
   public var graphQLMap: GraphQLMap
 
   public init(id: String, name: String, friends: [Character]? = nil, friendsConnection: FriendsConnection, appearsIn: [Episode], primaryFunction: String? = nil) {
     graphQLMap = ["id": id, "name": name, "friends": friends, "friendsConnection": friendsConnection, "appearsIn": appearsIn, "primaryFunction": primaryFunction]
+  }
+}
+
+public struct FriendsConnectionDroid: GraphQLMapConvertible {
+  public var graphQLMap: GraphQLMap
+
+  public init(first: Int? = nil, after: String? = nil) {
+    graphQLMap = ["first": first, "after": after]
+  }
+}
+
+public struct Mutation: GraphQLMapConvertible {
+  public var graphQLMap: GraphQLMap
+
+  public init(createReview: Review? = nil) {
+    graphQLMap = ["createReview": createReview]
+  }
+}
+
+public struct CreateReviewMutation: GraphQLMapConvertible {
+  public var graphQLMap: GraphQLMap
+
+  public init(episode: Episode? = nil, review: ReviewInput) {
+    graphQLMap = ["episode": episode, "review": review]
   }
 }
 
