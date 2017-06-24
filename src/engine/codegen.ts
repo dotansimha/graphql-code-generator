@@ -17,7 +17,7 @@ export const prepareCodegen = (schema: GraphQLSchema,
                                config: CodegenConfig = {}): Codegen => {
   let models: Model[] = [];
   let documents: CodegenDocument[] = [];
-  let typesMap: GraphQLNamedType = schema.getTypeMap();
+  let typesMap: { [typeName: string]: GraphQLNamedType } = schema.getTypeMap();
 
   Object.keys(typesMap).forEach(typeName => {
     models.push(...handleType(schema, primitivesMap, typesMap[typeName]));
