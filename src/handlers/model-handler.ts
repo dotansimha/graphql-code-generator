@@ -94,7 +94,7 @@ export const handleType = (schema: GraphQLSchema, primitivesMap: any, type: Grap
             resultArr.push(buildArgumentsType(primitivesMap, field.name, typeName, fieldArguments));
           }
 
-          if (!isPrimitive(primitivesMap, type)) {
+          if (!isPrimitive(primitivesMap, type) && currentType.imports.indexOf(type) === -1) {
             currentType.imports.push(type);
           }
 
