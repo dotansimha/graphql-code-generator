@@ -1,5 +1,29 @@
 import Apollo
 
+public struct Query: GraphQLMapConvertible {
+  public var graphQLMap: GraphQLMap
+
+  public init(feed: [Entry]? = nil, entry: Entry? = nil, currentUser: User? = nil) {
+    graphQLMap = ["feed": feed, "entry": entry, "currentUser": currentUser]
+  }
+}
+
+public struct FeedQuery: GraphQLMapConvertible {
+  public var graphQLMap: GraphQLMap
+
+  public init(type: FeedType, offset: Int? = nil, limit: Int? = nil) {
+    graphQLMap = ["type": type, "offset": offset, "limit": limit]
+  }
+}
+
+public struct EntryQuery: GraphQLMapConvertible {
+  public var graphQLMap: GraphQLMap
+
+  public init(repoFullName: String) {
+    graphQLMap = ["repoFullName": repoFullName]
+  }
+}
+
 public enum FeedType: String {
   case HOT = "HOT" /// Sort by a combination of freshness and score, using Reddit&#x27;s algorithm
   case NEW = "NEW" /// Newest entries first
@@ -13,6 +37,14 @@ public struct Entry: GraphQLMapConvertible {
 
   public init(repository: Repository, postedBy: User, createdAt: Float, score: Int, hotScore: Float, comments: [Comment], commentCount: Int, id: Int, vote: Vote) {
     graphQLMap = ["repository": repository, "postedBy": postedBy, "createdAt": createdAt, "score": score, "hotScore": hotScore, "comments": comments, "commentCount": commentCount, "id": id, "vote": vote]
+  }
+}
+
+public struct CommentsEntry: GraphQLMapConvertible {
+  public var graphQLMap: GraphQLMap
+
+  public init(limit: Int? = nil, offset: Int? = nil) {
+    graphQLMap = ["limit": limit, "offset": offset]
   }
 }
 
@@ -48,6 +80,38 @@ public struct Vote: GraphQLMapConvertible {
   }
 }
 
+public struct Mutation: GraphQLMapConvertible {
+  public var graphQLMap: GraphQLMap
+
+  public init(submitRepository: Entry? = nil, vote: Entry? = nil, submitComment: Comment? = nil) {
+    graphQLMap = ["submitRepository": submitRepository, "vote": vote, "submitComment": submitComment]
+  }
+}
+
+public struct SubmitRepositoryMutation: GraphQLMapConvertible {
+  public var graphQLMap: GraphQLMap
+
+  public init(repoFullName: String) {
+    graphQLMap = ["repoFullName": repoFullName]
+  }
+}
+
+public struct VoteMutation: GraphQLMapConvertible {
+  public var graphQLMap: GraphQLMap
+
+  public init(repoFullName: String, type: VoteType) {
+    graphQLMap = ["repoFullName": repoFullName, "type": type]
+  }
+}
+
+public struct SubmitCommentMutation: GraphQLMapConvertible {
+  public var graphQLMap: GraphQLMap
+
+  public init(repoFullName: String, commentContent: String) {
+    graphQLMap = ["repoFullName": repoFullName, "commentContent": commentContent]
+  }
+}
+
 public enum VoteType: String {
   case UP = "UP" /// 
   case DOWN = "DOWN" /// 
@@ -55,6 +119,22 @@ public enum VoteType: String {
 }
 
 extension VoteType: JSONDecodable, JSONEncodable {}
+
+public struct Subscription: GraphQLMapConvertible {
+  public var graphQLMap: GraphQLMap
+
+  public init(commentAdded: Comment? = nil) {
+    graphQLMap = ["commentAdded": commentAdded]
+  }
+}
+
+public struct CommentAddedSubscription: GraphQLMapConvertible {
+  public var graphQLMap: GraphQLMap
+
+  public init(repoFullName: String) {
+    graphQLMap = ["repoFullName": repoFullName]
+  }
+}
 
 
 public final class OnCommentAddedSubscription: GraphQLSubscription {

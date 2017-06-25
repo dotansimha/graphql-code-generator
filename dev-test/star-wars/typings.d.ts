@@ -1,3 +1,42 @@
+/* tslint:disable */
+
+export interface Query {
+  hero: Character | null;
+  reviews: Array<Review> | null;
+  search: Array<SearchResult> | null;
+  character: Character | null;
+  droid: Droid | null;
+  human: Human | null;
+  starship: Starship | null;
+}
+
+export interface HeroQueryArgs {
+  episode: Episode | null;
+}
+
+export interface ReviewsQueryArgs {
+  episode: Episode;
+}
+
+export interface SearchQueryArgs {
+  text: string | null;
+}
+
+export interface CharacterQueryArgs {
+  id: string;
+}
+
+export interface DroidQueryArgs {
+  id: string;
+}
+
+export interface HumanQueryArgs {
+  id: string;
+}
+
+export interface StarshipQueryArgs {
+  id: string;
+}
 
 export type Episode = "NEWHOPE" | "EMPIRE" | "JEDI";
 
@@ -7,6 +46,11 @@ export interface Character {
   friends: Array<Character> | null;
   friendsConnection: FriendsConnection;
   appearsIn: Array<Episode>;
+}
+
+export interface FriendsConnectionCharacterArgs {
+  first: number | null;
+  after: string | null;
 }
 
 export interface FriendsConnection {
@@ -46,12 +90,25 @@ export interface Human extends Character {
   starships: Array<Starship> | null;
 }
 
+export interface HeightHumanArgs {
+  unit: LengthUnit | null;
+}
+
+export interface FriendsConnectionHumanArgs {
+  first: number | null;
+  after: string | null;
+}
+
 export type LengthUnit = "METER" | "FOOT";
 
 export interface Starship {
   id: string;
   name: string;
   length: number | null;
+}
+
+export interface LengthStarshipArgs {
+  unit: LengthUnit | null;
 }
 
 export interface Droid extends Character {
@@ -61,6 +118,20 @@ export interface Droid extends Character {
   friendsConnection: FriendsConnection;
   appearsIn: Array<Episode>;
   primaryFunction: string | null;
+}
+
+export interface FriendsConnectionDroidArgs {
+  first: number | null;
+  after: string | null;
+}
+
+export interface Mutation {
+  createReview: Review | null;
+}
+
+export interface CreateReviewMutationArgs {
+  episode: Episode | null;
+  review: ReviewInput;
 }
 
 export interface ReviewInput {
