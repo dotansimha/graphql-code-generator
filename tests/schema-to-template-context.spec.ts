@@ -174,7 +174,7 @@ describe('schemaToTemplateContext', () => {
   it('should return the correct result when using input type', () => {
     const typeDefs = `
       type Query {
-        test(argument: Input): Int
+        test(argument: Input!): [Int]
       }
       
       input Input {

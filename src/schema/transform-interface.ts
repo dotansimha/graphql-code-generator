@@ -5,7 +5,7 @@ import { resolveFields } from './transform-fields';
 export function transformInterface(gqlInterface: GraphQLInterfaceType): Interface {
   return {
     name: gqlInterface.name,
-    description: gqlInterface.description,
-    fields: resolveFields(gqlInterface),
+    description: gqlInterface.description || '',
+    fields: resolveFields(gqlInterface.getFields()),
   };
 }

@@ -9,6 +9,9 @@ export interface Field {
   name: string;
   description: string;
   arguments: Argument[];
+  type: string;
+  isArray: boolean;
+  isRequired: boolean;
 }
 
 export interface Type {
