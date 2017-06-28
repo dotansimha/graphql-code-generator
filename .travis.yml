@@ -1,0 +1,17 @@
+sudo: required
+language: node_js
+node_js:
+  - 6
+  - 7
+  - 8
+before_install:
+  - npm install -g lerna
+install:
+  - npm install
+  - lerna clean
+before_script:
+  - lerna run build
+script:
+  - lerna run test
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
