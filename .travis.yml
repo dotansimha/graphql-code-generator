@@ -10,6 +10,7 @@ install:
   - npm install
   - lerna clean
 before_script:
+  - lerna bootstrap
   - lerna run build
 script:
   - lerna run test
