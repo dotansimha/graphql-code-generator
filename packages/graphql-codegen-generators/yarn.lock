@@ -2,9 +2,17 @@
 # yarn lockfile v1
 
 
+"@types/common-tags@^1.2.5":
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/@types/common-tags/-/common-tags-1.2.5.tgz#14f29893992eb325594b83d739af02f2b6520f46"
+
 "@types/graphql@^0.9.0", "@types/graphql@^0.9.3":
   version "0.9.3"
   resolved "https://registry.yarnpkg.com/@types/graphql/-/graphql-0.9.3.tgz#4a2a888e110c796eb7671bf8f9ecef229ad67749"
+
+"@types/handlebars@^4.0.33":
+  version "4.0.33"
+  resolved "https://registry.yarnpkg.com/@types/handlebars/-/handlebars-4.0.33.tgz#ee45696b067e4bdf15c3956710a4c36c17d8f8f0"
 
 "@types/jest@^20.0.2":
   version "20.0.2"
@@ -708,9 +716,9 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.2:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/graceful-readlink/-/graceful-readlink-1.0.1.tgz#4cafad76bc62f02fa039b2f94e9a3dd3a391a725"
 
-graphql-codegen-core@^0.6.0-alpha.14ecb322:
-  version "0.6.0-alpha.d381584b"
-  resolved "https://registry.yarnpkg.com/graphql-codegen-core/-/graphql-codegen-core-0.6.0-alpha.d381584b.tgz#a6f588eb5ae52914ad3e42dda8b81b4695d1cc62"
+graphql-codegen-core@0.6.0-alpha.afd0ebbc:
+  version "0.6.0-alpha.afd0ebbc"
+  resolved "https://registry.yarnpkg.com/graphql-codegen-core/-/graphql-codegen-core-0.6.0-alpha.afd0ebbc.tgz#30ea92cb66154a60a04307927037c25fd81016cf"
   dependencies:
     camel-case "^3.0.0"
     commander "^2.10.0"

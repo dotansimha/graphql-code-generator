@@ -7,16 +7,21 @@
     "test": "jest"
   },
   "devDependencies": {
+    "@types/common-tags": "^1.2.5",
     "@types/graphql": "^0.9.3",
     "@types/jest": "^20.0.2",
+    "common-tags": "^1.4.0",
     "graphql": "^0.10.3",
-    "graphql-codegen-core": "^0.6.0-alpha.14ecb322",
+    "graphql-codegen-core": "0.6.0-alpha.afd0ebbc",
     "graphql-tools": "^1.0.0",
     "jest": "^20.0.4",
     "tslint": "^5.4.3",
     "typescript": "^2.4.1"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@types/handlebars": "^4.0.33",
+    "handlebars": "^4.0.10"
+  },
   "jest": {
     "moduleFileExtensions": [
       "ts",
