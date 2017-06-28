@@ -1,0 +1,5 @@
+mutation submitRepository($repoFullName: String!) {
+  submitRepository(repoFullName: $repoFullName) {
+    createdAt
+  }
+}

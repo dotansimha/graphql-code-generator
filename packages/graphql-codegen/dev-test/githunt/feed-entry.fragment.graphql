@@ -1,0 +1,13 @@
+fragment FeedEntry on Entry {
+  id
+  commentCount
+  repository {
+    full_name
+    html_url
+    owner {
+      avatar_url
+    }
+  }
+  ...VoteButtons
+  ...RepoInfo
+}

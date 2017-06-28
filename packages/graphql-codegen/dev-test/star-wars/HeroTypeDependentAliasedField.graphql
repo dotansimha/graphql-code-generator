@@ -1,0 +1,11 @@
+query HeroTypeDependentAliasedField($episode: Episode) {
+  hero(episode: $episode) {
+    ... on Human {
+      property: homePlanet
+    }
+    ... on Droid {
+      property: primaryFunction
+    }
+  }
+}
+

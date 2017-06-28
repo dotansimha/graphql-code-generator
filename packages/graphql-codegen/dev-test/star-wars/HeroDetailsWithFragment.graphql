@@ -1,0 +1,15 @@
+query HeroDetailsWithFragment($episode: Episode) {
+  hero(episode: $episode) {
+    ...HeroDetails
+  }
+}
+
+fragment HeroDetails on Character {
+  name
+  ... on Human {
+    height
+  }
+  ... on Droid {
+    primaryFunction
+  }
+}

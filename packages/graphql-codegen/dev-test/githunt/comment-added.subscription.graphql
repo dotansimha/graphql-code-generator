@@ -1,0 +1,11 @@
+subscription onCommentAdded($repoFullName: String!){
+  commentAdded(repoFullName: $repoFullName){
+    id
+    postedBy {
+      login
+      html_url
+    }
+    createdAt
+    content
+  }
+}
