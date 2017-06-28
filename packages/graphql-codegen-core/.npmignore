@@ -1,0 +1,5 @@
+dev-test
+src
+node_modules
+tests
+!dist
