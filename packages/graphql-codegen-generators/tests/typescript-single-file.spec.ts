@@ -98,5 +98,37 @@ describe('TypeScript Single File', () => {
         f4: string | null;
       }`);
     });
+
+    it('should generate correctly when using simple type that extends interface', () => {
+      const templateContext = compileAndBuildContext(`
+        type Query {
+          fieldTest: A!
+        }
+        
+        interface Base {
+          f1: String
+        }
+        
+        type A implements Base {
+          f1: String
+          f2: String
+        }
+      `);
+
+      const compiled = compileTemplate(template, config, templateContext);
+      const content = compiled[0].content;
+      expect(content).toBySimilarStringTo(`
+        /* tslint:disable */
+      
+        export interface Query {
+          fieldTest: A;
+        }
+      
+        export interface A extends Base {
+          f1: string | null;
+          f2: string | null;
+        }`);
+    });
+
   });
 });

@@ -12,7 +12,7 @@
     "@types/jest": "^20.0.2",
     "common-tags": "^1.4.0",
     "graphql": "^0.10.3",
-    "graphql-codegen-core": "0.6.0-alpha.afd0ebbc",
+    "graphql-codegen-core": "0.6.0-alpha.3744e90e",
     "graphql-tools": "^1.0.0",
     "jest": "^20.0.4",
     "tslint": "^5.4.3",
