@@ -17,7 +17,7 @@
     "create-git-tag": "git tag $(cat package.json | json version)",
     "dev": "cd dist/cli && nodemon --ext ts,js,d.ts,template,graphql,json,handlebars gql-gen.js --dev --file ../../dev-test/githunt/schema.json --template ts --out ../../dev-test/githunt/typings.d.ts  ../../dev-test/githunt/**/*.graphql",
     "prepare--": "npm run build && npm run test && npm run create-git-tag && git push && git push --tags",
-    "test": "jest --no-cache"
+    "test": "jest --no-cache --verbose --runInBand"
   },
   "repository": {
     "type": "git",

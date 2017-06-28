@@ -5,7 +5,7 @@
   "author": "dotansimha <dotansimha@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "postinstall": "lerna init && lerna bootstrap"
+    "init": "lerna init && lerna bootstrap"
   },
   "dependencies": {
     "lerna": "^2.0.0-rc.5"
