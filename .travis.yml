@@ -4,15 +4,13 @@ node_js:
   - 6
   - 7
   - 8
-before_install:
-  - npm install -g lerna
 install:
   - npm install
-  - lerna clean
+  - npm run clean
 before_script:
-  - lerna bootstrap
-  - lerna run build
+  - npm run bootstrap
+  - npm run build
 script:
-  - lerna run test
+  - npm run test
 after_success:
   - bash <(curl -s https://codecov.io/bash)

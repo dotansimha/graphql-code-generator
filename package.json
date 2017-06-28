@@ -5,7 +5,10 @@
   "author": "dotansimha <dotansimha@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "init": "lerna init && lerna bootstrap"
+    "clean": "lerna clean --yes",
+    "bootstrap": "lerna bootstrap",
+    "build": "lerna run build",
+    "test": "lerna run test"
   },
   "dependencies": {
     "lerna": "^2.0.0-rc.5"
