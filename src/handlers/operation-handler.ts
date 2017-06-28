@@ -67,7 +67,7 @@ export const handleOperation = (schema: GraphQLSchema, definitionNode: Operation
   document.hasInnerTypes = document.innerTypes.length > 0;
 
   document.variables.forEach((field: Field) => {
-    if (field.type && !isPrimitive(primitivesMap, field.type)) {
+    if (field.type && !isPrimitive(primitivesMap, field.type) && document.imports.indexOf(field.type) === -1) {
       document.imports.push(field.type);
     }
   });
