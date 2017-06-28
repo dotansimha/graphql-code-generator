@@ -1,0 +1,32 @@
+{
+  "name": "graphql-codegen-generators",
+  "version": "0.6.0",
+  "description": "GraphQL code generator templates",
+  "license": "MIT",
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@types/graphql": "^0.9.3",
+    "@types/jest": "^20.0.2",
+    "graphql": "^0.10.3",
+    "graphql-codegen-core": "^0.6.0-alpha.14ecb322",
+    "graphql-tools": "^1.0.0",
+    "jest": "^20.0.4",
+    "tslint": "^5.4.3",
+    "typescript": "^2.4.1"
+  },
+  "dependencies": {},
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "transform": {
+      "^.+\\.(ts|tsx)$": "<rootDir>/tests/jest.typescript.js"
+    },
+    "testRegex": "tests/.*\\.ts$",
+    "testEnvironment": "node"
+  }
+}

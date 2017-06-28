@@ -1,0 +1,10 @@
+{
+  "template": "./template.handlebars",
+  "primitives": {
+    "String": "string",
+    "Int": "number",
+    "Float": "number",
+    "Boolean": "boolean",
+    "ID": "string"
+  }
+}
