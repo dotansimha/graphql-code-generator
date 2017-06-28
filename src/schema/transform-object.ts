@@ -6,7 +6,7 @@ export function transformGraphQLObject(object: GraphQLObjectType | GraphQLInputO
   return {
     name: object.name,
     description: object.description || '',
-    fields: resolveFields(object.getFields()),
+    fields: resolveFields((object as any).getFields()),
     interfaces: object instanceof GraphQLObjectType ? object.getInterfaces().map(inf => inf.name) : [],
     isInputType: object instanceof GraphQLInputObjectType,
   };

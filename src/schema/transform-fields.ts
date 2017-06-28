@@ -4,9 +4,9 @@ import { Field } from '../types';
 import { resolveType } from './resolve-type';
 
 export function resolveFields(rawFields: GraphQLFieldMap<any, any>): Field[] {
-  const fieldsArray = objectMapToArray<GraphQLField>(rawFields);
+  const fieldsArray = objectMapToArray<GraphQLField<any, any>>(rawFields);
 
-  return fieldsArray.map<Field>((item: { key: string, value: GraphQLField }): Field => {
+  return fieldsArray.map<Field>((item: { key: string, value: GraphQLField<any, any> }): Field => {
     const type = resolveType(item.value.type);
 
     return {
