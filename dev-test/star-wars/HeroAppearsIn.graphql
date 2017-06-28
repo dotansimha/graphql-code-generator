@@ -1,6 +1,0 @@
-query HeroAppearsIn {
-  hero {
-    name
-    appearsIn
-  }
-}
