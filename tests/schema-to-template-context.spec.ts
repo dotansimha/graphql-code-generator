@@ -191,4 +191,21 @@ describe('schemaToTemplateContext', () => {
     expect(context.scalars.length).toBe(0);
     expect(context.unions.length).toBe(0);
   });
+
+  it('should throw when invalid type is in schema', () => {
+    const typeDefs = `
+      type Query {
+        test: String
+      }
+    `;
+    const schema = makeExecutableSchema({ typeDefs, resolvers: {}, allowUndefinedInResolve: true }) as GraphQLSchema;
+
+    Object.assign(schema, {
+      _typeMap: {
+        C: {}
+      },
+    });
+
+    expect(() => schemaToTemplateContext(schema)).toThrow();
+  });
 });

@@ -84,7 +84,7 @@ describe('transformObject', () => {
   });
 
   it('should use the correct value of interfaces', () => {
-    const BookType = new GraphQLObjectType({
+    const bookType = new GraphQLObjectType({
       name : 'Book',
       fields : {
         author : { type : GraphQLString }
@@ -96,10 +96,10 @@ describe('transformObject', () => {
       fields: {
         test: {
           description: 'Test',
-          type: BookType,
+          type: bookType,
         }
       },
-      resolveType: () => BookType
+      resolveType: () => bookType
     });
 
     const gqlInterface = new GraphQLObjectType({
@@ -107,7 +107,7 @@ describe('transformObject', () => {
       fields: {
         test: {
           description: 'Test',
-          type: BookType,
+          type: bookType,
         }
       },
       interfaces: [ gqlInterface ]

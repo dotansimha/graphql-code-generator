@@ -56,14 +56,16 @@
   },
   "jest": {
     "verbose": true,
-    "collectCoverage": false,
+    "collectCoverage": true,
     "collectCoverageFrom": [
       "src/**/*.ts"
     ],
-    "coverageDirectory": "./test/coverage",
+    "coverageDirectory": "./tests/coverage",
     "coveragePathIgnorePatterns": [
       "/node_modules/",
-      ".*?handlebars-helpers.*?"
+      ".*?handlebars-helpers.*?",
+      "src/index.ts",
+      "src/types.ts"
     ],
     "moduleFileExtensions": [
       "ts",

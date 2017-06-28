@@ -50,6 +50,8 @@ export function schemaToTemplateContext(schema: GraphQLSchema): SchemaTemplateCo
       result.interfaces.push(transformInterface(actualTypeDef));
     } else if (actualTypeDef instanceof GraphQLScalarType) {
       result.scalars.push(transformScalar(actualTypeDef));
+    } else {
+      throw new Error(`Unexpected GraphQL type definition: ${graphQlType.key} => ${String(actualTypeDef)}`);
     }
   });
 

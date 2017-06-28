@@ -18,7 +18,7 @@
     "rootDir": "./src"
   },
   "files": [
-    "src/engine.ts"
+    "src/index.ts"
   ],
   "exclude": [
     "node_modules"
