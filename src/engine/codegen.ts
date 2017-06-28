@@ -20,7 +20,9 @@ export const prepareCodegen = (schema: GraphQLSchema,
   let typesMap: { [typeName: string]: GraphQLNamedType } = schema.getTypeMap();
 
   Object.keys(typesMap).forEach(typeName => {
-    models.push(...handleType(schema, primitivesMap, typesMap[typeName]));
+    if (!(typeName in primitivesMap)) {
+      models.push(...handleType(schema, primitivesMap, typesMap[typeName]));
+    }
   });
 
   if (!config.noDocuments) {
