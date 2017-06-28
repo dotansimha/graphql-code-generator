@@ -1,5 +1,13 @@
 import { oneLine } from 'common-tags';
 
+declare global {
+  namespace jest {
+    interface Matchers<R> {
+      toBySimilarStringTo(expected: string): R;
+    }
+  }
+}
+
 function toBySimilarStringTo(received: string, argument: string) {
   const strippedA = oneLine`${received}`;
   const strippedB = oneLine`${argument}`;
