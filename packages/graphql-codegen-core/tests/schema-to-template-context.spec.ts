@@ -18,6 +18,13 @@ describe('schemaToTemplateContext', () => {
     expect(context.inputTypes.length).toBe(0);
     expect(context.scalars.length).toBe(0);
     expect(context.unions.length).toBe(0);
+
+    expect(context.hasTypes).toBeTruthy();
+    expect(context.hasInterfaces).toBeFalsy();
+    expect(context.hasEnums).toBeFalsy();
+    expect(context.hasInputTypes).toBeFalsy();
+    expect(context.hasScalars).toBeFalsy();
+    expect(context.hasUnions).toBeFalsy();
   });
 
   it('should pass GraphQL error when schema is not valid', () => {
@@ -52,6 +59,13 @@ describe('schemaToTemplateContext', () => {
     expect(context.inputTypes.length).toBe(0);
     expect(context.scalars.length).toBe(0);
     expect(context.unions.length).toBe(0);
+
+    expect(context.hasTypes).toBeTruthy();
+    expect(context.hasInterfaces).toBeFalsy();
+    expect(context.hasEnums).toBeFalsy();
+    expect(context.hasInputTypes).toBeFalsy();
+    expect(context.hasScalars).toBeFalsy();
+    expect(context.hasUnions).toBeFalsy();
   });
 
   it('should return the correct result when custom type is defined', () => {
@@ -74,6 +88,13 @@ describe('schemaToTemplateContext', () => {
     expect(context.inputTypes.length).toBe(0);
     expect(context.scalars.length).toBe(0);
     expect(context.unions.length).toBe(0);
+
+    expect(context.hasTypes).toBeTruthy();
+    expect(context.hasInterfaces).toBeFalsy();
+    expect(context.hasEnums).toBeFalsy();
+    expect(context.hasInputTypes).toBeFalsy();
+    expect(context.hasScalars).toBeFalsy();
+    expect(context.hasUnions).toBeFalsy();
   });
 
   it('should return the correct result when using interface', () => {
@@ -100,6 +121,13 @@ describe('schemaToTemplateContext', () => {
     expect(context.inputTypes.length).toBe(0);
     expect(context.scalars.length).toBe(0);
     expect(context.unions.length).toBe(0);
+
+    expect(context.hasTypes).toBeTruthy();
+    expect(context.hasInterfaces).toBeTruthy();
+    expect(context.hasEnums).toBeFalsy();
+    expect(context.hasInputTypes).toBeFalsy();
+    expect(context.hasScalars).toBeFalsy();
+    expect(context.hasUnions).toBeFalsy();
   });
 
   it('should return the correct result when using unions', () => {
@@ -127,6 +155,13 @@ describe('schemaToTemplateContext', () => {
     expect(context.inputTypes.length).toBe(0);
     expect(context.scalars.length).toBe(0);
     expect(context.unions.length).toBe(1);
+
+    expect(context.hasTypes).toBeTruthy();
+    expect(context.hasInterfaces).toBeFalsy();
+    expect(context.hasEnums).toBeFalsy();
+    expect(context.hasInputTypes).toBeFalsy();
+    expect(context.hasScalars).toBeFalsy();
+    expect(context.hasUnions).toBeTruthy();
   });
 
   it('should return the correct result when using enum', () => {
@@ -150,6 +185,13 @@ describe('schemaToTemplateContext', () => {
     expect(context.inputTypes.length).toBe(0);
     expect(context.scalars.length).toBe(0);
     expect(context.unions.length).toBe(0);
+
+    expect(context.hasTypes).toBeTruthy();
+    expect(context.hasInterfaces).toBeFalsy();
+    expect(context.hasEnums).toBeTruthy();
+    expect(context.hasInputTypes).toBeFalsy();
+    expect(context.hasScalars).toBeFalsy();
+    expect(context.hasUnions).toBeFalsy();
   });
 
   it('should return the correct result when using scalar', () => {
@@ -169,6 +211,13 @@ describe('schemaToTemplateContext', () => {
     expect(context.inputTypes.length).toBe(0);
     expect(context.scalars.length).toBe(1);
     expect(context.unions.length).toBe(0);
+
+    expect(context.hasTypes).toBeTruthy();
+    expect(context.hasInterfaces).toBeFalsy();
+    expect(context.hasEnums).toBeFalsy();
+    expect(context.hasInputTypes).toBeFalsy();
+    expect(context.hasScalars).toBeTruthy();
+    expect(context.hasUnions).toBeFalsy();
   });
 
   it('should return the correct result when using input type', () => {
@@ -190,6 +239,13 @@ describe('schemaToTemplateContext', () => {
     expect(context.inputTypes.length).toBe(1);
     expect(context.scalars.length).toBe(0);
     expect(context.unions.length).toBe(0);
+
+    expect(context.hasTypes).toBeTruthy();
+    expect(context.hasInterfaces).toBeFalsy();
+    expect(context.hasEnums).toBeFalsy();
+    expect(context.hasInputTypes).toBeTruthy();
+    expect(context.hasScalars).toBeFalsy();
+    expect(context.hasUnions).toBeFalsy();
   });
 
   it('should throw when invalid type is in schema', () => {

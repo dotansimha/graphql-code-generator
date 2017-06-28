@@ -27,6 +27,25 @@ describe('resolveFields', () => {
     expect(result[0].isRequired).toBeFalsy();
     expect(result[0].isArray).toBeFalsy();
     expect(result[0].arguments.length).toBe(0);
+    expect(result[0].hasArguments).toBeFalsy();
+  });
+
+  it('should build the correct fields map when using type with single primitive scalar and args', () => {
+    const parsed = parseAndBuildSchema<GraphQLObjectType>(`
+      type A {
+        f1(t: String): String
+      }
+    `, 'A');
+
+    const result = resolveFields(parsed.getFields());
+
+    expect(result.length).toBe(1);
+    expect(result[0].name).toBe('f1');
+    expect(result[0].description).toBe('');
+    expect(result[0].isRequired).toBeFalsy();
+    expect(result[0].isArray).toBeFalsy();
+    expect(result[0].arguments.length).toBe(1);
+    expect(result[0].hasArguments).toBeTruthy();
   });
 
   it('should identify the correct number of fields', () => {
