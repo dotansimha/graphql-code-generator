@@ -9,14 +9,16 @@ export function resolveFields(rawFields: GraphQLFieldMap<any, any>): Field[] {
 
   return fieldsArray.map<Field>((item: { key: string, value: GraphQLField<any, any> }): Field => {
     const type = resolveType(item.value.type);
+    const resolvedArguments = resolveArguments(item.value.args || []);
 
     return {
       name: item.value.name,
       description: item.value.description || '',
-      arguments: resolveArguments(item.value.args || []),
+      arguments: resolvedArguments,
       type: type.name,
       isArray: type.isArray,
       isRequired: type.isRequired,
+      hasArguments: resolvedArguments.length > 0,
     };
   });
 }

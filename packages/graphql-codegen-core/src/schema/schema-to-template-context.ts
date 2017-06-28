@@ -11,7 +11,7 @@ import { transformUnion } from './transform-union';
 import { transformInterface } from './transform-interface';
 import { transformScalar } from './transform-scalar';
 
-const GRAPHQL_PRIMITIVES = ['String', 'Int', 'Boolean'];
+const GRAPHQL_PRIMITIVES = ['String', 'Int', 'Boolean', 'ID', 'Float'];
 type GraphQLTypesMap = { [typeName: string]: GraphQLNamedType };
 
 const clearTypes = (typesMap: GraphQLTypesMap): GraphQLTypesMap => Object.keys(typesMap)
@@ -29,6 +29,12 @@ export function schemaToTemplateContext(schema: GraphQLSchema): SchemaTemplateCo
     unions: [],
     scalars: [],
     interfaces: [],
+    hasTypes: false,
+    hasInputTypes: false,
+    hasEnums: false,
+    hasUnions: false,
+    hasScalars: false,
+    hasInterfaces: false,
   };
 
   const rawTypesMap = schema.getTypeMap();
@@ -54,6 +60,13 @@ export function schemaToTemplateContext(schema: GraphQLSchema): SchemaTemplateCo
       throw new Error(`Unexpected GraphQL type definition: ${graphQlType.key} => ${String(actualTypeDef)}`);
     }
   });
+
+  result.hasTypes = result.types.length > 0;
+  result.hasInputTypes = result.inputTypes.length > 0;
+  result.hasEnums = result.enums.length > 0;
+  result.hasUnions = result.unions.length > 0;
+  result.hasScalars = result.scalars.length > 0;
+  result.hasInterfaces = result.interfaces.length > 0;
 
   return result;
 }

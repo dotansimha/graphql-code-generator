@@ -13,6 +13,7 @@ export interface Field {
   type: string;
   isArray: boolean;
   isRequired: boolean;
+  hasArguments: boolean;
 }
 
 export interface Type {
@@ -21,6 +22,8 @@ export interface Type {
   name: string;
   isInputType: boolean;
   interfaces: string[];
+  hasFields: boolean;
+  hasInterfaces: boolean;
 }
 
 export interface Scalar {
@@ -50,6 +53,7 @@ export interface Interface {
   name: string;
   description: string;
   fields: Field[];
+  hasFields: boolean;
 }
 
 export interface SchemaTemplateContext {
@@ -59,4 +63,10 @@ export interface SchemaTemplateContext {
   unions: Union[];
   interfaces: Interface[];
   scalars: Scalar[];
+  hasTypes: boolean;
+  hasInputTypes: boolean;
+  hasEnums: boolean;
+  hasUnions: boolean;
+  hasScalars: boolean;
+  hasInterfaces: boolean;
 }
