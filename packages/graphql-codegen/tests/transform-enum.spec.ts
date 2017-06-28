@@ -1,4 +1,4 @@
-import { GraphQLEnumType, GraphQLEnumValue } from 'graphql';
+import { GraphQLEnumType } from 'graphql';
 import { transformGraphQLEnum } from '../src/schema/transform-enum';
 
 describe('transformGraphQLEnum', () => {

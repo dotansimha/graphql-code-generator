@@ -1,8 +1,9 @@
 export interface Argument {
   name: string;
   description: string;
-  type: Type;
+  type: string;
   isRequired: boolean;
+  isArray: boolean;
 }
 
 export interface Field {

@@ -2,6 +2,7 @@ import { GraphQLField, GraphQLFieldMap } from 'graphql';
 import { objectMapToArray } from '../utils/object-map-to-array';
 import { Field } from '../types';
 import { resolveType } from './resolve-type';
+import { resolveArguments } from './resolve-arguments';
 
 export function resolveFields(rawFields: GraphQLFieldMap<any, any>): Field[] {
   const fieldsArray = objectMapToArray<GraphQLField<any, any>>(rawFields);
@@ -12,7 +13,7 @@ export function resolveFields(rawFields: GraphQLFieldMap<any, any>): Field[] {
     return {
       name: item.value.name,
       description: item.value.description || '',
-      arguments: [],
+      arguments: resolveArguments(item.value.args || []),
       type: type.name,
       isArray: type.isArray,
       isRequired: type.isRequired,
