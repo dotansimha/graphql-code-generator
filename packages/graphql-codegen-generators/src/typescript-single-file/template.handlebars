@@ -10,3 +10,6 @@ export interface {{ name }}{{#if hasInterfaces}} extends {{#each interfaces}}{{t
 {{/each}}
 }
 {{/each}}
+{{#each enums}}
+export type {{ name }} = {{#each values }}"{{ value }}"{{#unless @last}} | {{/unless}}{{/each}};
+{{/each}}

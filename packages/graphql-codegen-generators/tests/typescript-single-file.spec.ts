@@ -130,5 +130,49 @@ describe('TypeScript Single File', () => {
         }`);
     });
 
+    it('should generate correctly when using custom scalar', () => {
+      const templateContext = compileAndBuildContext(`
+        type Query {
+          fieldTest: [Date]
+        }
+        
+        scalar Date
+      `);
+
+      const compiled = compileTemplate(template, config, templateContext);
+      const content = compiled[0].content;
+      expect(content).toBySimilarStringTo(`
+      /* tslint:disable */
+
+      export type Date = any;
+      
+      export interface Query {
+        fieldTest: Date[] | null;
+      }`);
+    });
+
+    it('should generate enums correctly', () => {
+      const templateContext = compileAndBuildContext(`
+        type Query {
+          fieldTest: MyEnum!
+        }
+        
+        enum MyEnum {
+          A
+          B
+          C
+        }
+      `);
+
+      const compiled = compileTemplate(template, config, templateContext);
+      const content = compiled[0].content;
+      expect(content).toBySimilarStringTo(`
+      /* tslint:disable */
+      
+      export interface Query {
+        fieldTest: MyEnum;
+      }
+      export type MyEnum = "A" | "B" | "C";`);
+      });
   });
 });
