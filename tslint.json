@@ -32,7 +32,7 @@
     "no-shadowed-variable": false,
     "no-string-literal": false,
     "no-switch-case-fall-through": true,
-    "no-trailing-whitespace": true,
+    "no-trailing-whitespace": [true, "ignore-template-strings"],
     "no-unused-expression": true,
     "no-use-before-declare": false,
     "no-var-keyword": false,

@@ -3,7 +3,11 @@
     "experimentalDecorators": true,
     "module": "commonjs",
     "target": "es5",
-    "lib": ["es6", "dom"],
+    "lib": [
+      "es6",
+      "esnext",
+      "es2015"
+    ],
     "noImplicitAny": false,
     "suppressImplicitAnyIndexErrors": true,
     "moduleResolution": "node",
@@ -11,22 +15,10 @@
     "sourceMap": true,
     "declaration": true,
     "outDir": "./dist",
-    "rootDir": "./src",
-    "types": [
-      "@types/graphql",
-      "@types/node",
-      "@types/commander",
-      "@types/glob",
-      "@types/minimatch",
-      "@types/request",
-      "@types/form-data",
-      "@types/mkdirp",
-      "@types/common-tags"
-    ]
+    "rootDir": "./src"
   },
   "files": [
-    "src/index.ts",
-    "src/cli/gql-gen.ts"
+    "src/engine.ts"
   ],
   "exclude": [
     "node_modules"
