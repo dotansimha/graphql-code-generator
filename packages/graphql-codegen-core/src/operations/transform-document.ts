@@ -1,7 +1,8 @@
-import { DefinitionNode, DocumentNode, FragmentDefinitionNode, GraphQLSchema } from 'graphql';
+import { DefinitionNode, DocumentNode, FragmentDefinitionNode, GraphQLSchema, OperationDefinitionNode } from 'graphql';
 import { Document } from '../types';
 import { transformFragment } from './transform-fragment-document';
 import { OPERATION_DEFINITION, FRAGMENT_DEFINITION } from 'graphql/language/kinds';
+import { transformOperation } from './transform-operation';
 
 export function transformDocument(schema: GraphQLSchema, documentNode: DocumentNode): Document {
   const result: Document = {
@@ -13,7 +14,7 @@ export function transformDocument(schema: GraphQLSchema, documentNode: DocumentN
 
   (documentNode.definitions || []).forEach((definitionNode: DefinitionNode) => {
     if (definitionNode.kind === OPERATION_DEFINITION) {
-
+      result.operations.push(transformOperation(schema, definitionNode as OperationDefinitionNode));
     } else if (definitionNode.kind === FRAGMENT_DEFINITION) {
       result.fragments.push(transformFragment(schema, definitionNode as FragmentDefinitionNode));
     } else {

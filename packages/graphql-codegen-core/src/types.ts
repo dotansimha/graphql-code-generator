@@ -99,10 +99,12 @@ export interface Fragment {
 
 export interface Operation {
   name: string;
-  selectionSet: any;
+  selectionSet: SelectionSetItem[];
   operationType: string;
   variables: Variable[];
   hasVariables: boolean;
+  interfaces: string[];
+  hasInterfaces: boolean;
 }
 
 export interface Variable {

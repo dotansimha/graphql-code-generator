@@ -28,18 +28,20 @@ describe('transformDocument', () => {
     expect(document.fragments[0].name).toBe('MyFragment');
     expect(document.fragments[0].onType).toBe('User');
     expect(document.fragments[0].selectionSet.length).toBe(2);
-    expect(document.fragments[0].selectionSet[0].name).toBe('login');
-    expect(document.fragments[0].selectionSet[1].name).toBe('avatar_url');
-    expect(document.fragments[0].selectionSet[0].type).toBe('String');
-    expect(document.fragments[0].selectionSet[1].type).toBe('String');
-    expect(document.fragments[0].selectionSet[0].isRequired).toBeTruthy();
-    expect(document.fragments[0].selectionSet[1].isRequired).toBeTruthy();
-    expect(document.fragments[0].selectionSet[0].isArray).toBeFalsy();
-    expect(document.fragments[0].selectionSet[1].isArray).toBeFalsy();
-    expect(document.fragments[0].selectionSet[0].selectionSet.length).toBe(0);
-    expect(document.fragments[0].selectionSet[1].selectionSet.length).toBe(0);
-    expect(document.fragments[0].selectionSet[0].arguments.length).toBe(0);
-    expect(document.fragments[0].selectionSet[1].arguments.length).toBe(0);
+    const first = document.fragments[0].selectionSet[0] as SelectionSetFieldNode;
+    const second = document.fragments[0].selectionSet[1] as SelectionSetFieldNode;
+    expect(first.name).toBe('login');
+    expect(second.name).toBe('avatar_url');
+    expect(first.type).toBe('String');
+    expect(second.type).toBe('String');
+    expect(first.isRequired).toBeTruthy();
+    expect(second.isRequired).toBeTruthy();
+    expect(first.isArray).toBeFalsy();
+    expect(second.isArray).toBeFalsy();
+    expect(first.selectionSet.length).toBe(0);
+    expect(second.selectionSet.length).toBe(0);
+    expect(first.arguments.length).toBe(0);
+    expect(second.arguments.length).toBe(0);
   });
 
   it('should return correct result when using 2 levels fragment', () => {
