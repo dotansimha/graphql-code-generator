@@ -1,6 +1,9 @@
-import { SelectionSetFieldNode, SelectionSetInlineFragment, SelectionSetItem } from '../types';
 import {
-  FieldNode, getNamedType, GraphQLSchema, GraphQLType, InlineFragmentNode, SelectionNode,
+  SelectionSetFieldNode, SelectionSetFragmentSpread, SelectionSetInlineFragment,
+  SelectionSetItem
+} from '../types';
+import {
+  FieldNode, FragmentSpreadNode, getNamedType, GraphQLSchema, GraphQLType, InlineFragmentNode, SelectionNode,
   SelectionSetNode, typeFromAST
 } from 'graphql';
 import { FIELD, FRAGMENT_SPREAD, INLINE_FRAGMENT } from 'graphql/language/kinds';
@@ -23,13 +26,17 @@ export function buildSelectionSet(schema: GraphQLSchema, rootObject: GraphQLType
         isArray: resolvedType.isArray,
       } as SelectionSetFieldNode;
     } else if (selectionNode.kind === FRAGMENT_SPREAD) {
-
-    } else if (selectionNode.kind === INLINE_FRAGMENT) {
-      const fieldNode = selectionNode as InlineFragmentNode;
-      const root = typeFromAST(schema, fieldNode.typeCondition);
+      const fieldNode = selectionNode as FragmentSpreadNode;
 
       return {
-        selectionSet: buildSelectionSet(schema, root, fieldNode.selectionSet),
+        fragmentName: fieldNode.name.value,
+      } as SelectionSetFragmentSpread;
+    } else if (selectionNode.kind === INLINE_FRAGMENT) {
+      const fieldNode = selectionNode as InlineFragmentNode;
+      const nextRoot = typeFromAST(schema, fieldNode.typeCondition);
+
+      return {
+        selectionSet: buildSelectionSet(schema, nextRoot, fieldNode.selectionSet),
         onType: fieldNode.typeCondition.name.value,
       } as SelectionSetInlineFragment;
     } else {

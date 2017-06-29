@@ -76,7 +76,11 @@ export interface SelectionSetInlineFragment {
   onType: string;
 }
 
-export type SelectionSetItem = SelectionSetFieldNode | SelectionSetInlineFragment;
+export interface SelectionSetFragmentSpread {
+  fragmentName: string;
+}
+
+export type SelectionSetItem = SelectionSetFieldNode | SelectionSetInlineFragment | SelectionSetFragmentSpread;
 
 export interface SelectionSetFieldNode {
   name: string;
@@ -91,8 +95,6 @@ export interface Fragment {
   name: string;
   selectionSet: SelectionSetItem[];
   onType: string;
-  fragments: string[];
-  hasFragments: boolean;
 }
 
 export interface Operation {
