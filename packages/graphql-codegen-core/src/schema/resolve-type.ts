@@ -1,4 +1,4 @@
-import { getNamedType, GraphQLInputType, GraphQLOutputType } from 'graphql';
+import { getNamedType, GraphQLInputType, GraphQLOutputType, GraphQLType } from 'graphql';
 
 export interface ResolvedType {
   name: string;
@@ -14,7 +14,7 @@ export function isArray(type: GraphQLOutputType | GraphQLInputType): boolean {
   return (String(type)).indexOf('[') > -1;
 }
 
-export function resolveType(type: GraphQLOutputType | GraphQLInputType): ResolvedType {
+export function resolveType(type: GraphQLType): ResolvedType {
   return {
     name: getNamedType(type).name,
     isRequired: isRequired(type),

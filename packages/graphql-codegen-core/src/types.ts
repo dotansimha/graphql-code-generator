@@ -70,3 +70,31 @@ export interface SchemaTemplateContext {
   hasScalars: boolean;
   hasInterfaces: boolean;
 }
+
+export interface SelectionSetFieldNode {
+  name: string;
+  arguments: any[];
+  selectionSet: SelectionSetFieldNode[];
+  type: string;
+  isRequired: boolean;
+  isArray: boolean;
+}
+
+export interface Fragment {
+  name: string;
+  selectionSet: SelectionSetFieldNode[];
+  onType: string;
+}
+
+export interface Operation {
+  name: string;
+  selectionSet: any;
+  operationType: string;
+}
+
+export interface Document {
+  fragments: Fragment[];
+  operations: Operation[];
+  hasFragments: boolean;
+  hasOperations: boolean;
+}
