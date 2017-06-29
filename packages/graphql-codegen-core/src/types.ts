@@ -84,12 +84,25 @@ export interface Fragment {
   name: string;
   selectionSet: SelectionSetFieldNode[];
   onType: string;
+  fragments: string[];
+  hasFragments: boolean;
 }
 
 export interface Operation {
   name: string;
   selectionSet: any;
   operationType: string;
+  variables: Variable[];
+  fragments: string[];
+  hasFragments: boolean;
+  hasVariables: boolean;
+}
+
+export interface Variable {
+  name: string;
+  type: string;
+  isRequired: boolean;
+  isArray: boolean;
 }
 
 export interface Document {

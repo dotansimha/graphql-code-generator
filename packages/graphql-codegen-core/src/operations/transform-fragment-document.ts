@@ -1,5 +1,5 @@
 import { FragmentDefinitionNode, GraphQLSchema, typeFromAST } from 'graphql';
-import { Fragment, SchemaTemplateContext } from '../types';
+import { Fragment } from '../types';
 import { buildSelectionSet } from './build-selection-set';
 
 export function transformFragment(schema: GraphQLSchema, fragment: FragmentDefinitionNode): Fragment {
@@ -11,5 +11,7 @@ export function transformFragment(schema: GraphQLSchema, fragment: FragmentDefin
     name,
     onType,
     selectionSet: buildSelectionSet(schema, root, fragment.selectionSet),
+    fragments: [], // TODO
+    hasFragments: false, //TODO
   };
 }
