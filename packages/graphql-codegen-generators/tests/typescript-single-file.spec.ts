@@ -1,5 +1,5 @@
 import '../test-matchers/custom-matchers';
-import { schemaToTemplateContext, SchemaTemplateContext } from 'graphql-codegen-core';
+import { schemaToTemplateContext, SchemaTemplateContext, introspectionToGraphQLSchema } from 'graphql-codegen-core';
 import { GraphQLSchema } from 'graphql';
 import * as fs from 'fs';
 import { makeExecutableSchema } from 'graphql-tools';
@@ -231,7 +231,7 @@ describe('TypeScript Single File', () => {
           fieldTest: string;
         }
         
-        export interface QueryFieldTestArgs {
+        export interface FieldTestQueryArgs {
           arg1: string | null;
         }`);
     });
@@ -276,10 +276,38 @@ describe('TypeScript Single File', () => {
           f4: number[] | null; 
         }
         
-        export interface QueryFieldTestArgs {
+        export interface FieldTestQueryArgs {
           myArgument: T;
         }
     `);
+    });
+
+    it('should generate from a whole schema object correctly', () => {
+      const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./dev-test/githunt/schema.json').toString()));
+      const context = schemaToTemplateContext(schema);
+      const compiled = compileTemplate(template, config, context);
+      const content = compiled[0].content;
+
+      expect(content).toContain('export interface Query');
+      expect(content).toContain('export interface Mutation');
+      expect(content).toContain('export interface Subscription');
+
+      expect(content).toContain('export type FeedType');
+      expect(content).toContain('export type VoteType');
+
+      expect(content).toContain('export interface Entry');
+      expect(content).toContain('export interface User');
+      expect(content).toContain('export interface Repository');
+      expect(content).toContain('export interface Comment');
+      expect(content).toContain('export interface Vote');
+
+      expect(content).toContain('export interface FeedQueryArgs');
+      expect(content).toContain('export interface EntryQueryArgs');
+      expect(content).toContain('export interface CommentsEntryArgs');
+      expect(content).toContain('export interface SubmitRepositoryMutationArgs');
+      expect(content).toContain('export interface VoteMutationArgs');
+      expect(content).toContain('export interface SubmitCommentMutationArgs');
+      expect(content).toContain('export interface CommentAddedSubscriptionArgs');
     });
   });
 });

@@ -1,5 +1,5 @@
 import { introspectionToGraphQLSchema } from '../src/utils/introspection-to-schema';
-import * as validSchema from '../dev-test/githunt/schema.json';
+import * as validSchema from '../../graphql-codegen-generators/dev-test/githunt/schema.json';
 import { GraphQLSchema } from 'graphql';
 
 describe('introspectionToGraphQLSchema', () => {
