@@ -3,7 +3,8 @@ import gql from 'graphql-tag';
 import { introspectionToGraphQLSchema } from '../src/utils/introspection-to-schema';
 import { GraphQLSchema } from 'graphql';
 import { transformDocument } from '../src/operations/transform-document'; import {
-  SelectionSetFieldNode, SelectionSetFragmentSpread,
+  SelectionSetFieldNode,
+  SelectionSetFragmentSpread,
   SelectionSetInlineFragment
 } from '../src/types';
 
@@ -125,5 +126,62 @@ describe('transformDocument', () => {
     expect(document.fragments[0].selectionSet.length).toBe(2);
     expect((document.fragments[0].selectionSet[1] as SelectionSetFieldNode).selectionSet.length).toBe(1);
     expect(((document.fragments[0].selectionSet[1] as SelectionSetFieldNode).selectionSet[0] as SelectionSetFragmentSpread).fragmentName).toBe('RepoFragment');
+  });
+
+  it('should return correct result when using simple query', () => {
+    const query = gql`
+      query MyQuery {
+        currentUser {
+          login
+          avatar_url
+        }
+      }`;
+
+    const document = transformDocument(schema, query);
+
+    expect(document.operations.length).toBe(1);
+    expect(document.fragments.length).toBe(0);
+    expect(document.operations[0].hasInterfaces).toBeFalsy();
+    expect(document.operations[0].hasVariables).toBeFalsy();
+    expect(document.operations[0].name).toBe('MyQuery');
+    expect(document.operations[0].interfaces.length).toBe(0);
+    expect(document.operations[0].variables.length).toBe(0);
+    expect(document.operations[0].operationType).toBe('query');
+    expect(document.operations[0].selectionSet.length).toBe(1);
+  });
+
+  it('should return correct result when using simple query with 2 levels', () => {
+    const query = gql`
+      query MyQuery {
+        entry {
+          id
+          postedBy {
+            login
+            html_url
+          }
+          createdAt
+        }
+      }`;
+
+    const document = transformDocument(schema, query);
+
+    expect(document.operations.length).toBe(1);
+    expect(document.fragments.length).toBe(0);
+    expect(document.operations[0].hasInterfaces).toBeFalsy();
+    expect(document.operations[0].hasVariables).toBeFalsy();
+    expect(document.operations[0].name).toBe('MyQuery');
+    expect(document.operations[0].interfaces.length).toBe(0);
+    expect(document.operations[0].variables.length).toBe(0);
+    expect(document.operations[0].operationType).toBe('query');
+    expect(document.operations[0].selectionSet.length).toBe(1);
+
+    const operation = document.operations[0].selectionSet[0] as SelectionSetFieldNode;
+    expect(operation.selectionSet.length).toBe(3);
+    const innerField0 = operation.selectionSet[0] as SelectionSetFieldNode;
+    const innerField1 = operation.selectionSet[1] as SelectionSetFieldNode;
+    const innerField2 = operation.selectionSet[2] as SelectionSetFieldNode;
+    expect(innerField0.name).toBe('id');
+    expect(innerField1.name).toBe('postedBy');
+    expect(innerField2.name).toBe('createdAt');
   });
 });
