@@ -29,7 +29,7 @@ describe('TypeScript Single File', () => {
       `);
       const compiled = compileTemplate(template, config, templateContext);
       const content = compiled[0].content;
-      expect(content).toBySimilarStringTo(`
+      expect(content).toBeSimilarStringTo(`
       /* tslint:disable */
       
       export interface Query {
@@ -50,7 +50,7 @@ describe('TypeScript Single File', () => {
       `);
       const compiled = compileTemplate(template, config, templateContext);
       const content = compiled[0].content;
-      expect(content).toBySimilarStringTo(`
+      expect(content).toBeSimilarStringTo(`
       /* tslint:disable */
       
       export interface Query {
@@ -81,7 +81,7 @@ describe('TypeScript Single File', () => {
       `);
       const compiled = compileTemplate(template, config, templateContext);
       const content = compiled[0].content;
-      expect(content).toBySimilarStringTo(`
+      expect(content).toBeSimilarStringTo(`
       /* tslint:disable */
       
       export interface Query {
@@ -117,7 +117,7 @@ describe('TypeScript Single File', () => {
 
       const compiled = compileTemplate(template, config, templateContext);
       const content = compiled[0].content;
-      expect(content).toBySimilarStringTo(`
+      expect(content).toBeSimilarStringTo(`
         /* tslint:disable */
       
         export interface Query {
@@ -141,7 +141,7 @@ describe('TypeScript Single File', () => {
 
       const compiled = compileTemplate(template, config, templateContext);
       const content = compiled[0].content;
-      expect(content).toBySimilarStringTo(`
+      expect(content).toBeSimilarStringTo(`
       /* tslint:disable */
 
       export type Date = any;
@@ -166,7 +166,7 @@ describe('TypeScript Single File', () => {
 
       const compiled = compileTemplate(template, config, templateContext);
       const content = compiled[0].content;
-      expect(content).toBySimilarStringTo(`
+      expect(content).toBeSimilarStringTo(`
       /* tslint:disable */
       
       export interface Query {
