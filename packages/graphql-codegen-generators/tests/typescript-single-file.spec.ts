@@ -174,5 +174,45 @@ describe('TypeScript Single File', () => {
       }
       export type MyEnum = "A" | "B" | "C";`);
       });
+
+    it('should generate unions correctly', () => {
+      const templateContext = compileAndBuildContext(`
+        type Query {
+          fieldTest: C!
+        }
+        
+        type A {
+          f1: String
+        }
+        
+        type B {
+          f2: String
+        }
+        
+        # Union description
+        union C = A | B
+      `);
+
+      const compiled = compileTemplate(template, config, templateContext);
+      const content = compiled[0].content;
+      expect(content).toBeSimilarStringTo(`
+        /* tslint:disable */
+        
+        export interface Query {
+          fieldTest: C;
+        }
+        
+        export interface A {
+          f1: string | null;
+        }
+        
+        export interface B {
+          f2: string | null;
+        }
+        
+        // Union description
+        export type C = A | B;
+      `);
+      });
   });
 });
