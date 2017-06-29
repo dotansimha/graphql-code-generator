@@ -7,4 +7,6 @@ export function getFieldDef(parentType, fieldAST): GraphQLField<any, any> {
     parentType instanceof GraphQLInterfaceType) {
     return parentType.getFields()[name];
   }
+
+  return null;
 }

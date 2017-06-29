@@ -71,10 +71,17 @@ export interface SchemaTemplateContext {
   hasInterfaces: boolean;
 }
 
+export interface SelectionSetInlineFragment {
+  selectionSet: SelectionSetItem[];
+  onType: string;
+}
+
+export type SelectionSetItem = SelectionSetFieldNode | SelectionSetInlineFragment;
+
 export interface SelectionSetFieldNode {
   name: string;
   arguments: any[];
-  selectionSet: SelectionSetFieldNode[];
+  selectionSet: SelectionSetItem[];
   type: string;
   isRequired: boolean;
   isArray: boolean;
@@ -82,7 +89,7 @@ export interface SelectionSetFieldNode {
 
 export interface Fragment {
   name: string;
-  selectionSet: SelectionSetFieldNode[];
+  selectionSet: SelectionSetItem[];
   onType: string;
   fragments: string[];
   hasFragments: boolean;

@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import gql from 'graphql-tag';
 import { introspectionToGraphQLSchema } from '../src/utils/introspection-to-schema';
 import { GraphQLSchema } from 'graphql';
-import { transformDocument } from '../src/operations/transform-document';
+import { transformDocument } from '../src/operations/transform-document'; import { SelectionSetInlineFragment } from '../src/types';
 
 describe('transformDocument', () => {
   let schema: GraphQLSchema;
@@ -65,5 +65,31 @@ describe('transformDocument', () => {
     expect(document.fragments[0].selectionSet[0].selectionSet.length).toBe(0);
     expect(document.fragments[0].selectionSet[1].selectionSet.length).toBe(3);
     expect(document.fragments[0].selectionSet[2].selectionSet.length).toBe(2);
+  });
+
+  it('should return correct result when using fragment with inline fragment', () => {
+    const fragment = gql`
+      fragment MyFragment on Entry {
+        createdAt
+        repository {
+          ... on Repository {
+            description
+            stargazers_count
+            open_issues_count
+          }
+        }
+      }
+    `;
+
+    const document = transformDocument(schema, fragment);
+
+    expect(document.operations.length).toBe(0);
+    expect(document.fragments.length).toBe(1);
+    expect(document.fragments[0].name).toBe('MyFragment');
+    expect(document.fragments[0].onType).toBe('Entry');
+    expect(document.fragments[0].selectionSet.length).toBe(2);
+    expect(document.fragments[0].selectionSet[1].selectionSet.length).toBe(1);
+    expect(document.fragments[0].selectionSet[1].selectionSet[0].selectionSet.length).toBe(3);
+    expect((document.fragments[0].selectionSet[1].selectionSet[0] as SelectionSetInlineFragment).onType).toBe('Repository');
   });
 });
