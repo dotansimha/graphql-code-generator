@@ -1,6 +1,17 @@
 import { oneLine } from 'common-tags';
 
-function toBySimilarStringTo(received: string, argument: string) {
+declare global {
+  namespace jest {
+    interface Matchers<R> {
+      /**
+       * Normalizes whitespace and performs string comparisons
+       */
+      toBeSimilarStringTo(expected: string): R;
+    }
+  }
+}
+
+function toBeSimilarStringTo(received: string, argument: string) {
   const strippedA = oneLine`${received}`;
   const strippedB = oneLine`${argument}`;
 
@@ -28,5 +39,5 @@ function toBySimilarStringTo(received: string, argument: string) {
 }
 
 expect.extend({
-  toBySimilarStringTo,
+  toBeSimilarStringTo,
 });
