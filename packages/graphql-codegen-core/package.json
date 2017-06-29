@@ -88,6 +88,7 @@
     "@types/node": "7",
     "graphql-tag": "^2.4.2",
     "jest": "^20.0.4",
+    "rimraf": "^2.6.1",
     "tslint": "^5.4.3",
     "typescript": "^2.4.1"
   },

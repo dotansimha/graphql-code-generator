@@ -11,7 +11,5 @@ export function transformFragment(schema: GraphQLSchema, fragment: FragmentDefin
     name,
     onType,
     selectionSet: buildSelectionSet(schema, root, fragment.selectionSet),
-    fragments: [], // TODO
-    hasFragments: false, //TODO
-  };
+  } as Fragment;
 }

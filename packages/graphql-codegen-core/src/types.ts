@@ -102,8 +102,6 @@ export interface Operation {
   selectionSet: any;
   operationType: string;
   variables: Variable[];
-  fragments: string[];
-  hasFragments: boolean;
   hasVariables: boolean;
 }
 
