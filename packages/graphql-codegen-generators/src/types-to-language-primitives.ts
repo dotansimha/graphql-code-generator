@@ -22,5 +22,14 @@ export function typesToLanguagePrimitives(config: Config, templateContext: Schem
     });
   });
 
+  contextCopy.inputTypes.forEach(type => {
+    type.fields.forEach(field => {
+      field.arguments.forEach(arg => {
+        arg.type = convertToPrimitive(map, arg.type);
+      });
+      field.type = convertToPrimitive(map, field.type);
+    });
+  });
+
   return contextCopy;
 }

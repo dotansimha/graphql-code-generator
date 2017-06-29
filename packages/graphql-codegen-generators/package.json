@@ -19,7 +19,9 @@
     "typescript": "^2.4.1"
   },
   "dependencies": {
+    "@types/change-case": "^2.3.1",
     "@types/handlebars": "^4.0.33",
+    "change-case": "^3.0.1",
     "handlebars": "^4.0.10"
   },
   "jest": {

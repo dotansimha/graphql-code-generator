@@ -5,14 +5,32 @@
 export type {{ name }} = any;
 {{/each}}
 {{#each types}}
-
 {{#if description }}// {{description}}{{/if}}
 export interface {{ name }}{{#if hasInterfaces}} extends {{#each interfaces}}{{this}}{{#unless @last}},{{/unless}}{{/each}}{{/if}} {
 {{#each fields}}
-  {{#if description }}// {{description}}{{/if}}
+  {{ name }}: {{ type }}{{#if isArray}}[]{{/if}}{{#unless isRequired}} | null{{/unless}}; {{#if description }}  // {{description}}{{/if}}
+{{/each}}
+}
+{{/each}}
+{{#each inputTypes}}
+{{#if description }}// {{description}}{{/if}}
+export interface {{ name }}{{#if hasInterfaces}} extends {{#each interfaces}}{{this}}{{#unless @last}},{{/unless}}{{/each}}{{/if}} {
+{{#each fields}}
+  {{ name }}: {{ type }}{{#if isArray}}[]{{/if}}{{#unless isRequired}} | null{{/unless}}; {{#if description }}  // {{description}}{{/if}}
+{{/each}}
+}
+{{/each}}
+{{#each types}}
+  {{#each fields}}
+    {{# if hasArguments }}
+
+export interface {{ toPascalCase ../name }}{{ toPascalCase name }}Args {
+{{#each arguments}}
   {{ name }}: {{ type }}{{#if isArray}}[]{{/if}}{{#unless isRequired}} | null{{/unless}};
 {{/each}}
 }
+    {{/if}}
+  {{/each}}
 {{/each}}
 {{#each enums}}
 {{#if description }}// {{description}}{{/if}}

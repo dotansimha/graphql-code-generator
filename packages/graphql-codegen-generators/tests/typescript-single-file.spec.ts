@@ -173,7 +173,7 @@ describe('TypeScript Single File', () => {
         fieldTest: MyEnum;
       }
       export type MyEnum = "A" | "B" | "C";`);
-      });
+    });
 
     it('should generate unions correctly', () => {
       const templateContext = compileAndBuildContext(`
@@ -213,6 +213,73 @@ describe('TypeScript Single File', () => {
         // Union description
         export type C = A | B;
       `);
-      });
+    });
+
+    it('should generate type arguments types correctly when using simple Scalar', () => {
+      const templateContext = compileAndBuildContext(`
+        type Query {
+          fieldTest(arg1: String): String!
+        }
+      `);
+
+      const compiled = compileTemplate(template, config, templateContext);
+      const content = compiled[0].content;
+      expect(content).toBeSimilarStringTo(`
+        /* tslint:disable */
+        
+        export interface Query {
+          fieldTest: string;
+        }
+        
+        export interface QueryFieldTestArgs {
+          arg1: string | null;
+        }`);
+    });
+
+    it('should generate type arguments types correctly when using custom input', () => {
+      const templateContext = compileAndBuildContext(`
+        type Query {
+          fieldTest(myArgument: T!): Return
+        }
+        
+        type Return {
+          ok: Boolean!
+          msg: String!
+        }
+        
+        input T {
+          f1: String
+          f2: Int!
+          f3: [String]
+          f4: [Float]
+        }
+      `);
+
+      const compiled = compileTemplate(template, config, templateContext);
+      const content = compiled[0].content;
+      expect(content).toBeSimilarStringTo(`
+       /* tslint:disable */
+        
+       export interface Query {
+          fieldTest: Return | null; 
+        }
+        
+        export interface Return {
+          ok: boolean; 
+          msg: string; 
+        }
+        
+        export interface T {
+          f1: string | null; 
+          f2: number; 
+          f3: string[] | null; 
+          f4: number[] | null; 
+        }
+        
+        export interface QueryFieldTestArgs {
+          myArgument: T;
+        }
+    `);
+    });
   });
 });
