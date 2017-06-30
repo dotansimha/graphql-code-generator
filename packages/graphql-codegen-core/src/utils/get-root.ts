@@ -9,6 +9,6 @@ export const getRoot = (schema: GraphQLSchema, operation: OperationDefinitionNod
     case 'subscription':
       return schema.getSubscriptionType();
     default:
-      return;
+      return null;
   }
 };
