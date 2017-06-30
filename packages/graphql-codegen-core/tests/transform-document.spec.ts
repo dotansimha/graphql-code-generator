@@ -41,8 +41,6 @@ describe('transformDocument', () => {
     expect(second.isArray).toBeFalsy();
     expect(first.selectionSet.length).toBe(0);
     expect(second.selectionSet.length).toBe(0);
-    expect(first.arguments.length).toBe(0);
-    expect(second.arguments.length).toBe(0);
   });
 
   it('should return correct result when using 2 levels fragment', () => {
@@ -141,10 +139,29 @@ describe('transformDocument', () => {
 
     expect(document.operations.length).toBe(1);
     expect(document.fragments.length).toBe(0);
-    expect(document.operations[0].hasInterfaces).toBeFalsy();
     expect(document.operations[0].hasVariables).toBeFalsy();
     expect(document.operations[0].name).toBe('MyQuery');
-    expect(document.operations[0].interfaces.length).toBe(0);
+    expect(document.operations[0].variables.length).toBe(0);
+    expect(document.operations[0].operationType).toBe('query');
+    expect(document.operations[0].selectionSet.length).toBe(1);
+  });
+
+
+  it('should return correct result when using anonymous query', () => {
+    const query = gql`
+      query {
+        currentUser {
+          login
+          avatar_url
+        }
+      }`;
+
+    const document = transformDocument(schema, query);
+
+    expect(document.operations.length).toBe(1);
+    expect(document.fragments.length).toBe(0);
+    expect(document.operations[0].hasVariables).toBeFalsy();
+    expect(document.operations[0].name).toBe('');
     expect(document.operations[0].variables.length).toBe(0);
     expect(document.operations[0].operationType).toBe('query');
     expect(document.operations[0].selectionSet.length).toBe(1);
@@ -167,10 +184,8 @@ describe('transformDocument', () => {
 
     expect(document.operations.length).toBe(1);
     expect(document.fragments.length).toBe(0);
-    expect(document.operations[0].hasInterfaces).toBeFalsy();
     expect(document.operations[0].hasVariables).toBeFalsy();
     expect(document.operations[0].name).toBe('MyQuery');
-    expect(document.operations[0].interfaces.length).toBe(0);
     expect(document.operations[0].variables.length).toBe(0);
     expect(document.operations[0].operationType).toBe('query');
     expect(document.operations[0].selectionSet.length).toBe(1);

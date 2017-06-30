@@ -20,7 +20,6 @@ export function buildSelectionSet(schema: GraphQLSchema, rootObject: GraphQLType
       return {
         name: fieldNode.alias && fieldNode.alias.value ? fieldNode.alias.value : fieldNode.name.value,
         selectionSet: buildSelectionSet(schema, getNamedType(field.type), fieldNode.selectionSet || []),
-        arguments: [],
         type: resolvedType.name,
         isRequired: resolvedType.isRequired,
         isArray: resolvedType.isArray,

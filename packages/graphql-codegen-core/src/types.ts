@@ -84,7 +84,6 @@ export type SelectionSetItem = SelectionSetFieldNode | SelectionSetInlineFragmen
 
 export interface SelectionSetFieldNode {
   name: string;
-  arguments: any[];
   selectionSet: SelectionSetItem[];
   type: string;
   isRequired: boolean;
@@ -103,8 +102,6 @@ export interface Operation {
   operationType: string;
   variables: Variable[];
   hasVariables: boolean;
-  interfaces: string[];
-  hasInterfaces: boolean;
 }
 
 export interface Variable {
