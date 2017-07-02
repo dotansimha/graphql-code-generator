@@ -10,5 +10,13 @@ export {
   EnumValue,
   Union,
   Interface,
-  SchemaTemplateContext
+  SchemaTemplateContext,
+  Document,
+  Variable,
+  Operation,
+  Fragment,
+  SelectionSetItem,
+  SelectionSetFieldNode,
+  SelectionSetFragmentSpread,
+  SelectionSetInlineFragment,
 } from './types';
