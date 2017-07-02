@@ -19,4 +19,8 @@ export {
   SelectionSetFieldNode,
   SelectionSetFragmentSpread,
   SelectionSetInlineFragment,
+
+  isFieldNode,
+  isFragmentSpreadNode,
+  isInlineFragmentNode,
 } from './types';
