@@ -11,7 +11,7 @@ import { getFieldDef } from '../utils/get-field-def';
 import { resolveType } from '../schema/resolve-type';
 
 export function buildSelectionSet(schema: GraphQLSchema, rootObject: GraphQLType, node: SelectionSetNode): SelectionSetItem[] {
-  return (node.selections || []).map<SelectionSetItem>((selectionNode: SelectionNode): SelectionSetItem => {
+  return ((node && node.selections ? node.selections : []) as SelectionNode[]).map<SelectionSetItem>((selectionNode: SelectionNode): SelectionSetItem => {
     if (selectionNode.kind === FIELD) {
       const fieldNode = selectionNode as FieldNode;
       const field = getFieldDef(rootObject, fieldNode);
