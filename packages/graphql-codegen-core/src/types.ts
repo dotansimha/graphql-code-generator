@@ -71,18 +71,20 @@ export interface SchemaTemplateContext {
   hasInterfaces: boolean;
 }
 
-export interface SelectionSetInlineFragment {
+export interface SelectionSetItem {
+
+}
+
+export interface SelectionSetInlineFragment extends SelectionSetItem {
   selectionSet: SelectionSetItem[];
   onType: string;
 }
 
-export interface SelectionSetFragmentSpread {
+export interface SelectionSetFragmentSpread extends SelectionSetItem {
   fragmentName: string;
 }
 
-export type SelectionSetItem = SelectionSetFieldNode | SelectionSetInlineFragment | SelectionSetFragmentSpread;
-
-export interface SelectionSetFieldNode {
+export interface SelectionSetFieldNode extends SelectionSetItem {
   name: string;
   selectionSet: SelectionSetItem[];
   type: string;

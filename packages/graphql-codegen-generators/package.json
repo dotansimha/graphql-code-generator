@@ -16,6 +16,7 @@
     "common-tags": "^1.4.0",
     "graphql": "^0.10.3",
     "graphql-codegen-core": "0.6.0-alpha.6cb4c2a8",
+    "graphql-tag": "^2.4.2",
     "graphql-tools": "^1.0.0",
     "jest": "^20.0.4",
     "raw-loader": "^0.5.1",

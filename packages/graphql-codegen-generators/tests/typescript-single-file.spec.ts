@@ -5,11 +5,10 @@ import * as fs from 'fs';
 import { makeExecutableSchema } from 'graphql-tools';
 import { compileTemplate } from '../src/compile';
 import { TypescriptSingleFile } from '../dist/index.js';
+import gql from 'graphql-tag';
 
 declare module '../dist/index.js' {
-  export { compileTemplate } from 'graphql-codegen-generators/src/compile';
-  export { Config, FileOutput } from 'graphql-codegen-generators/src/types';
-  import TypescriptSingleFile from 'graphql-codegen-generators/src/typescript-single-file/config';
+  const TypescriptSingleFile: any;
   export { TypescriptSingleFile };
 }
 
@@ -24,7 +23,7 @@ describe('TypeScript Single File', () => {
 
   beforeAll(() => {
     config = TypescriptSingleFile;
-    template = TypescriptSingleFile.templates['index'];
+    template = TypescriptSingleFile.templates.index;
   });
 
   describe('Schema', () => {
@@ -315,6 +314,26 @@ describe('TypeScript Single File', () => {
       expect(content).toContain('export interface VoteMutationArgs');
       expect(content).toContain('export interface SubmitCommentMutationArgs');
       expect(content).toContain('export interface CommentAddedSubscriptionArgs');
+    });
+  });
+
+  describe('Operations', () => {
+    it('Should compile simple Query correctly', () => {
+      const query = gql`
+        query myFeed {
+          feed {
+            id
+            commentCount
+            repository {
+              full_name
+              html_url
+              owner {
+                avatar_url
+              }
+            }
+          }
+        }
+      `;
     });
   });
 });

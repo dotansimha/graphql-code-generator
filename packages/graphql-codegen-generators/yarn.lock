@@ -1353,6 +1353,10 @@ graphql-codegen-core@0.6.0-alpha.6cb4c2a8:
     graphql "^0.10.3"
     graphql-tools "^1.0.0"
 
+graphql-tag@^2.4.2:
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.4.2.tgz#6a63297d8522d03a2b72d26f1b239aab343840cd"
+
 graphql-tools@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/graphql-tools/-/graphql-tools-1.0.0.tgz#76b25e1dce0521b31d5566aac281b2f134bc49c8"
