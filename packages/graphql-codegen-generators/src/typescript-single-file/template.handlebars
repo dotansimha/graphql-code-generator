@@ -5,27 +5,17 @@
 export type {{ name }} = any;
 {{/each}}
 {{#each types}}
-{{#if description }}// {{description}}{{/if}}
-export interface {{ name }}{{#if hasInterfaces}} extends {{#each interfaces}}{{this}}{{#unless @last}},{{/unless}}{{/each}}{{/if}} {
-{{#each fields}}
-  {{ name }}: {{ type }}{{#if isArray}}[]{{/if}}{{#unless isRequired}} | null{{/unless}}; {{#if description }}  // {{description}}{{/if}}
-{{/each}}
-}
+{{> type }}
 {{/each}}
 {{#each inputTypes}}
-{{#if description }}// {{description}}{{/if}}
-export interface {{ name }}{{#if hasInterfaces}} extends {{#each interfaces}}{{this}}{{#unless @last}},{{/unless}}{{/each}}{{/if}} {
-{{#each fields}}
-  {{ name }}: {{ type }}{{#if isArray}}[]{{/if}}{{#unless isRequired}} | null{{/unless}}; {{#if description }}  // {{description}}{{/if}}
-{{/each}}
-}
+{{> type }}
 {{/each}}
 {{#each types}}
   {{#each fields}}
     {{# if hasArguments }}
 export interface {{ toPascalCase name }}{{ toPascalCase ../name }}Args {
 {{#each arguments}}
-  {{ name }}: {{ type }}{{#if isArray}}[]{{/if}}{{#unless isRequired}} | null{{/unless}}; {{#if description }}// {{description}}{{/if}}
+  {{ name }}: {{ toPrimitive type }}{{#if isArray}}[]{{/if}}{{#unless isRequired}} | null{{/unless}}; {{#if description }}// {{description}}{{/if}}
 {{/each}}
 }
     {{/if}}

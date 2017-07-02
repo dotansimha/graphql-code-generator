@@ -9,6 +9,7 @@ export interface Config {
     Boolean: string;
     ID: string;
   };
+  out: string;
 }
 
 export interface FileOutput {

@@ -1,5 +1,5 @@
 import '../test-matchers/custom-matchers';
-import { schemaToTemplateContext, SchemaTemplateContext, introspectionToGraphQLSchema } from 'graphql-codegen-core';
+import { transformDocument, schemaToTemplateContext, SchemaTemplateContext, introspectionToGraphQLSchema } from 'graphql-codegen-core';
 import { GraphQLSchema } from 'graphql';
 import * as fs from 'fs';
 import { makeExecutableSchema } from 'graphql-tools';
@@ -19,11 +19,10 @@ describe('TypeScript Single File', () => {
     return schemaToTemplateContext(schema);
   };
 
-  let config, template;
+  let config;
 
   beforeAll(() => {
     config = TypescriptSingleFile;
-    template = TypescriptSingleFile.templates.index;
   });
 
   describe('Schema', () => {
@@ -33,7 +32,7 @@ describe('TypeScript Single File', () => {
           fieldTest: String
         }
       `);
-      const compiled = compileTemplate(template, config, templateContext);
+      const compiled = compileTemplate(config, templateContext);
       const content = compiled[0].content;
       expect(content).toBeSimilarStringTo(`
       /* tslint:disable */
@@ -54,7 +53,7 @@ describe('TypeScript Single File', () => {
           f2: Int
         }
       `);
-      const compiled = compileTemplate(template, config, templateContext);
+      const compiled = compileTemplate(config, templateContext);
       const content = compiled[0].content;
       expect(content).toBeSimilarStringTo(`
       /* tslint:disable */
@@ -85,7 +84,7 @@ describe('TypeScript Single File', () => {
           f4: String
         }
       `);
-      const compiled = compileTemplate(template, config, templateContext);
+      const compiled = compileTemplate(config, templateContext);
       const content = compiled[0].content;
       expect(content).toBeSimilarStringTo(`
       /* tslint:disable */
@@ -121,7 +120,7 @@ describe('TypeScript Single File', () => {
         }
       `);
 
-      const compiled = compileTemplate(template, config, templateContext);
+      const compiled = compileTemplate(config, templateContext);
       const content = compiled[0].content;
       expect(content).toBeSimilarStringTo(`
         /* tslint:disable */
@@ -145,7 +144,7 @@ describe('TypeScript Single File', () => {
         scalar Date
       `);
 
-      const compiled = compileTemplate(template, config, templateContext);
+      const compiled = compileTemplate(config, templateContext);
       const content = compiled[0].content;
       expect(content).toBeSimilarStringTo(`
       /* tslint:disable */
@@ -170,7 +169,7 @@ describe('TypeScript Single File', () => {
         }
       `);
 
-      const compiled = compileTemplate(template, config, templateContext);
+      const compiled = compileTemplate(config, templateContext);
       const content = compiled[0].content;
       expect(content).toBeSimilarStringTo(`
       /* tslint:disable */
@@ -199,7 +198,7 @@ describe('TypeScript Single File', () => {
         union C = A | B
       `);
 
-      const compiled = compileTemplate(template, config, templateContext);
+      const compiled = compileTemplate(config, templateContext);
       const content = compiled[0].content;
       expect(content).toBeSimilarStringTo(`
         /* tslint:disable */
@@ -228,7 +227,7 @@ describe('TypeScript Single File', () => {
         }
       `);
 
-      const compiled = compileTemplate(template, config, templateContext);
+      const compiled = compileTemplate(config, templateContext);
       const content = compiled[0].content;
       expect(content).toBeSimilarStringTo(`
         /* tslint:disable */
@@ -261,7 +260,7 @@ describe('TypeScript Single File', () => {
         }
       `);
 
-      const compiled = compileTemplate(template, config, templateContext);
+      const compiled = compileTemplate(config, templateContext);
       const content = compiled[0].content;
       expect(content).toBeSimilarStringTo(`
        /* tslint:disable */
@@ -291,7 +290,7 @@ describe('TypeScript Single File', () => {
     it('should generate from a whole schema object correctly', () => {
       const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./dev-test/githunt/schema.json').toString()));
       const context = schemaToTemplateContext(schema);
-      const compiled = compileTemplate(template, config, context);
+      const compiled = compileTemplate(config, context);
       const content = compiled[0].content;
 
       expect(content).toContain('export interface Query');
@@ -319,7 +318,10 @@ describe('TypeScript Single File', () => {
 
   describe('Operations', () => {
     it('Should compile simple Query correctly', () => {
-      const query = gql`
+      const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./dev-test/githunt/schema.json').toString()));
+      const context = schemaToTemplateContext(schema);
+
+      const documents = gql`
         query myFeed {
           feed {
             id
@@ -334,6 +336,9 @@ describe('TypeScript Single File', () => {
           }
         }
       `;
+
+      const transformedDocument = transformDocument(schema, documents);
+      const compiled = compileTemplate(config, context, [transformedDocument]);
     });
   });
 });

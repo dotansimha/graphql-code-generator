@@ -1,19 +1,43 @@
 import { Config, FileOutput } from './types';
-import { SchemaTemplateContext } from 'graphql-codegen-core';
-import { compile } from 'handlebars';
-import { typesToLanguagePrimitives } from './types-to-language-primitives';
+import { Document, Fragment, Operation, SchemaTemplateContext } from 'graphql-codegen-core';
+import { compile, registerPartial, registerHelper } from 'handlebars';
 import { initHelpers } from './handlebars-extensions';
 
-initHelpers();
+export function compileTemplate(config: Config, templateContext: SchemaTemplateContext, documents: Document[] = []): FileOutput[] {
+  initHelpers();
 
-export function compileTemplate(template: string, config: Config, templateContext: SchemaTemplateContext): FileOutput[] {
-  const compiledTemplate = compile(template);
-  const transformed = typesToLanguagePrimitives(config, templateContext);
+  registerHelper('toPrimitive', function (type) {
+    return config.primitives[type] || type || '';
+  });
+
+  Object.keys(config.templates).map(templateName => ({
+    name: templateName,
+    content: config.templates[templateName]
+  })).forEach(({ name, content }) => {
+    registerPartial(name, content);
+  });
+
+  const templates = config.templates;
+  const compiledMainTemplate = compile(templates['index']);
+  const mergedDocuments: Document = documents.reduce((previousValue: Document, item: Document): Document => {
+    const opArr = [...previousValue.operations, ...item.operations] as Operation[];
+    const frArr = [...previousValue.fragments, ...item.fragments] as Fragment[];
+
+    return {
+      operations: opArr,
+      fragments: frArr,
+      hasFragments: frArr.length > 0,
+      hasOperations: opArr.length > 0,
+    }
+  }, { hasFragments: false, hasOperations: false, operations: [], fragments: [] } as Document);
 
   return [
     {
-      filename: 'types.d.ts',
-      content: compiledTemplate(transformed),
+      filename: config.out,
+      content: compiledMainTemplate({
+        ...templateContext,
+        operations: mergedDocuments.operations,
+      }),
     },
   ];
 }
