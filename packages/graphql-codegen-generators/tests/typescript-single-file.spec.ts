@@ -316,7 +316,7 @@ describe('TypeScript Single File', () => {
     });
   });
 
-  describe('Operations', () => {
+  describe.only('Operations', () => {
     it('Should compile simple Query correctly', () => {
       const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./dev-test/githunt/schema.json').toString()));
       const context = schemaToTemplateContext(schema);
@@ -339,6 +339,7 @@ describe('TypeScript Single File', () => {
 
       const transformedDocument = transformDocument(schema, documents);
       const compiled = compileTemplate(config, context, [transformedDocument]);
+      console.log(compiled[0].content);
     });
   });
 });

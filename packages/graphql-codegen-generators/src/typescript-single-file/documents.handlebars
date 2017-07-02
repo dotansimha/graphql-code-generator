@@ -1,0 +1,23 @@
+{{#each operations }}
+export namespace {{ toPascalCase name }}{{ toPascalCase operationType }} {
+  export interface Variables {
+  {{#each variables}}
+    {{ name }}: {{#if isArray}}Array<{{/if}}{{ type }}{{#if isArray}}>{{/if}}{{#unless isRequired}} | null{{/unless}};
+  {{/each}}
+  }
+
+  export interface Result {
+    {{#each selectionSet}}
+    {{ name }}: {{ toPrimitive type }}{{#if isArray}}[]{{/if}}{{#unless isRequired}} | null{{/unless}}; {{#if description }}  // {{description}}{{/if}}
+    {{/each}}
+  }
+  {{#each innerModels }}
+
+  export interface {{ modelType }} {
+    {{#each fields}}
+    {{ name }}: {{ toPrimitive type }}{{#if isArray}}[]{{/if}}{{#unless isRequired}} | null{{/unless}}; {{#if description }}  // {{description}}{{/if}}
+    {{/each}}
+  }
+  {{/each}}
+}
+{{/each}}

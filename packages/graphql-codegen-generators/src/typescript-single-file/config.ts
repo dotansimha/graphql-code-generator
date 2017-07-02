@@ -1,12 +1,16 @@
 import { Config } from '../types';
 import * as mainTemplate from './template.handlebars';
 import * as typeTemplate from './type.handlebars';
+import * as schemaTemplate from './schema.handlebars';
+import * as documentsTemplate from './documents.handlebars';
 
 const config: Config = {
   singleFile: true,
   templates: {
     index: mainTemplate,
     type: typeTemplate,
+    schema: schemaTemplate,
+    documents: documentsTemplate,
   },
   flattenTypes: true,
   primitives: {

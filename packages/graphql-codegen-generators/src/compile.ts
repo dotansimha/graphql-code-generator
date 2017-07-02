@@ -2,6 +2,7 @@ import { Config, FileOutput } from './types';
 import { Document, Fragment, Operation, SchemaTemplateContext } from 'graphql-codegen-core';
 import { compile, registerPartial, registerHelper } from 'handlebars';
 import { initHelpers } from './handlebars-extensions';
+import { flattenTypes } from './flatten-types';
 
 export function compileTemplate(config: Config, templateContext: SchemaTemplateContext, documents: Document[] = []): FileOutput[] {
   initHelpers();
@@ -19,7 +20,7 @@ export function compileTemplate(config: Config, templateContext: SchemaTemplateC
 
   const templates = config.templates;
   const compiledMainTemplate = compile(templates['index']);
-  const mergedDocuments: Document = documents.reduce((previousValue: Document, item: Document): Document => {
+  let mergedDocuments: Document = documents.reduce((previousValue: Document, item: Document): Document => {
     const opArr = [...previousValue.operations, ...item.operations] as Operation[];
     const frArr = [...previousValue.fragments, ...item.fragments] as Fragment[];
 
@@ -31,12 +32,17 @@ export function compileTemplate(config: Config, templateContext: SchemaTemplateC
     }
   }, { hasFragments: false, hasOperations: false, operations: [], fragments: [] } as Document);
 
+  if (config.flattenTypes) {
+    mergedDocuments = flattenTypes(mergedDocuments);
+  }
+
   return [
     {
       filename: config.out,
       content: compiledMainTemplate({
         ...templateContext,
         operations: mergedDocuments.operations,
+        fragments: mergedDocuments.fragments,
       }),
     },
   ];

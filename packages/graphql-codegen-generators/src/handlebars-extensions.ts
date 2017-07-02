@@ -1,5 +1,6 @@
 import { registerHelper } from 'handlebars';
 import { camelCase, pascalCase, snakeCase, titleCase } from 'change-case';
+import { oneLineTrim } from 'common-tags';
 
 export const initHelpers = () => {
   registerHelper('times', function (n, block) {
@@ -10,6 +11,14 @@ export const initHelpers = () => {
     }
 
     return accum;
+  });
+
+  registerHelper('toComment', function(str) {
+    if (!str || str === '') {
+      return '';
+    }
+
+    return '/* ' + oneLineTrim`${str || ''}` + ' */';
   });
 
   registerHelper('toLowerCase', function (str) {

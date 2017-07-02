@@ -1,6 +1,6 @@
-{{#if description }}// {{description}}{{/if}}
+{{ toComment description }}
 export interface {{ name }}{{#if hasInterfaces}} extends {{#each interfaces}}{{this}}{{#unless @last}},{{/unless}}{{/each}}{{/if}} {
 {{#each fields}}
-  {{ name }}: {{ toPrimitive type }}{{#if isArray}}[]{{/if}}{{#unless isRequired}} | null{{/unless}}; {{#if description }}  // {{description}}{{/if}}
+  {{ name }}: {{ toPrimitive type }}{{#if isArray}}[]{{/if}}{{#unless isRequired}} | null{{/unless}}; {{ toComment description }}
 {{/each}}
 }
