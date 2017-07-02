@@ -4,19 +4,25 @@
   "description": "GraphQL code generator templates",
   "license": "MIT",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "webpack"
   },
   "devDependencies": {
     "@types/common-tags": "^1.2.5",
     "@types/graphql": "^0.9.3",
     "@types/jest": "^20.0.2",
+    "@types/node": "7",
+    "awesome-typescript-loader": "^3.2.1",
     "common-tags": "^1.4.0",
     "graphql": "^0.10.3",
-    "graphql-codegen-core": "0.6.0-alpha.3744e90e",
+    "graphql-codegen-core": "0.6.0-alpha.6cb4c2a8",
     "graphql-tools": "^1.0.0",
     "jest": "^20.0.4",
+    "raw-loader": "^0.5.1",
     "tslint": "^5.4.3",
-    "typescript": "^2.4.1"
+    "typescript": "^2.4.1",
+    "webpack": "^3.0.0",
+    "webpack-node-externals": "^1.6.0"
   },
   "dependencies": {
     "@types/change-case": "^2.3.1",

@@ -4,6 +4,14 @@ import { GraphQLSchema } from 'graphql';
 import * as fs from 'fs';
 import { makeExecutableSchema } from 'graphql-tools';
 import { compileTemplate } from '../src/compile';
+import { TypescriptSingleFile } from '../dist/index.js';
+
+declare module '../dist/index.js' {
+  export { compileTemplate } from 'graphql-codegen-generators/src/compile';
+  export { Config, FileOutput } from 'graphql-codegen-generators/src/types';
+  import TypescriptSingleFile from 'graphql-codegen-generators/src/typescript-single-file/config';
+  export { TypescriptSingleFile };
+}
 
 describe('TypeScript Single File', () => {
   const compileAndBuildContext = (typeDefs: string): SchemaTemplateContext => {
@@ -12,12 +20,11 @@ describe('TypeScript Single File', () => {
     return schemaToTemplateContext(schema);
   };
 
-  let template;
-  let config;
+  let config, template;
 
   beforeAll(() => {
-    template = fs.readFileSync('./src/typescript-single-file/template.handlebars').toString();
-    config = JSON.parse(fs.readFileSync('./src/typescript-single-file/config.json').toString());
+    config = TypescriptSingleFile;
+    template = TypescriptSingleFile.templates['index'];
   });
 
   describe('Schema', () => {

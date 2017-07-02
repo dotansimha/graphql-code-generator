@@ -13,9 +13,12 @@
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "sourceMap": true,
-    "declaration": true
+    "declaration": true,
+    "outDir": "./dist/"
   },
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "dev-test",
+    "tests"
   ]
 }

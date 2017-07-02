@@ -1,5 +1,7 @@
 export interface Config {
-  template: string;
+  singleFile: boolean;
+  flattenTypes: boolean;
+  templates: { [templateName: string]: string };
   primitives: {
     String: string;
     Int: string;
