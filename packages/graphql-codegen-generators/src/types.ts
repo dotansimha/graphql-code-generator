@@ -1,6 +1,6 @@
 import { Operation, Document, Fragment, SelectionSetItem } from 'graphql-codegen-core';
 
-export interface Config {
+export interface GeneratorConfig {
   singleFile: boolean;
   flattenTypes: boolean;
   templates: { [templateName: string]: string };
@@ -37,4 +37,10 @@ export interface FlattenDocument extends Document {
 export interface FlattenModel {
   modelType: string;
   fields: SelectionSetItem[];
+}
+
+export interface Settings {
+  generateSchema?: boolean;
+  generateDocuments?: boolean;
+  verbose?: boolean;
 }

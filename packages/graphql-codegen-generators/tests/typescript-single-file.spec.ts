@@ -338,8 +338,40 @@ describe('TypeScript Single File', () => {
       `;
 
       const transformedDocument = transformDocument(schema, documents);
-      const compiled = compileTemplate(config, context, [transformedDocument]);
-      console.log(compiled[0].content);
+      const compiled = compileTemplate(config, context, [transformedDocument], { generateSchema: false });
+
+      expect(compiled[0].content).toBeSimilarStringTo(`
+          /* tslint:disable */
+          /* A list of options for the sort order of the feed */
+          export type FeedType = "HOT" | "NEW" | "TOP";
+          
+          /* The type of vote to record, when submitting a vote */
+          export type VoteType = "UP" | "DOWN" | "CANCEL";
+          
+          export namespace MyFeedQuery {
+            export interface Variables {
+            }
+          
+            export interface Result {
+              feed: Feed[] | null; 
+            }
+          
+            export interface Feed {
+              id: number; 
+              commentCount: number; 
+              repository: Repository; 
+            }
+          
+            export interface Repository {
+              full_name: string; 
+              html_url: string; 
+              owner: Owner | null; 
+            }
+          
+            export interface Owner {
+              avatar_url: string; 
+            }
+          }`);
     });
   });
 });

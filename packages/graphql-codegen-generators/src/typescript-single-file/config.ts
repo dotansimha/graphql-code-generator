@@ -1,10 +1,10 @@
-import { Config } from '../types';
+import { GeneratorConfig } from '../types';
 import * as mainTemplate from './template.handlebars';
 import * as typeTemplate from './type.handlebars';
 import * as schemaTemplate from './schema.handlebars';
 import * as documentsTemplate from './documents.handlebars';
 
-const config: Config = {
+const config: GeneratorConfig = {
   singleFile: true,
   templates: {
     index: mainTemplate,

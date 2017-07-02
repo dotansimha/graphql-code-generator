@@ -23,9 +23,10 @@ export interface {{ toPascalCase name }}{{ toPascalCase ../name }}Args {
 {{#each enums}}
 {{ toComment description }}
 export type {{ name }} = {{#each values }}"{{ value }}"{{#unless @last}} | {{/unless}}{{/each}};
+
 {{/each}}
 {{#each unions}}
-
 {{ toComment description }}
 export type {{ name }} = {{#each possibleTypes}}{{this}}{{#unless @last}} | {{/unless}}{{/each}};
+
 {{/each}}
