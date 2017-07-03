@@ -81,10 +81,12 @@ export interface SelectionSetItem {
 export interface SelectionSetInlineFragment extends SelectionSetItem {
   selectionSet: SelectionSetItem[];
   onType: string;
-  fragmentsSpread: string[];
+  fields: SelectionSetFieldNode[];
+  fragmentsSpread: SelectionSetFragmentSpread[];
   inlineFragments: SelectionSetInlineFragment[],
   hasFragmentsSpread: boolean;
   hasInlineFragments: boolean;
+  hasFields: boolean;
 }
 
 export interface SelectionSetFragmentSpread extends SelectionSetItem {
