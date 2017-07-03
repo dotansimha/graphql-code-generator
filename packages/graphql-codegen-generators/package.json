@@ -16,7 +16,7 @@
     "awesome-typescript-loader": "^3.2.1",
     "common-tags": "^1.4.0",
     "graphql": "^0.10.3",
-    "graphql-codegen-core": "0.6.0-alpha.cc01df5b",
+    "graphql-codegen-core": "0.6.0-alpha.b44f7c86",
     "graphql-tag": "^2.4.2",
     "graphql-tools": "^1.0.0",
     "jest": "^20.0.4",

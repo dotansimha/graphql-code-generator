@@ -1,16 +1,18 @@
 import { GeneratorConfig } from '../types';
-import * as mainTemplate from './template.handlebars';
-import * as typeTemplate from './type.handlebars';
-import * as schemaTemplate from './schema.handlebars';
-import * as documentsTemplate from './documents.handlebars';
+import * as index from './template.handlebars';
+import * as type from './type.handlebars';
+import * as schema from './schema.handlebars';
+import * as documents from './documents.handlebars';
+import * as selectionSet from './selection-set.handlebars';
 
 const config: GeneratorConfig = {
   singleFile: true,
   templates: {
-    index: mainTemplate,
-    type: typeTemplate,
-    schema: schemaTemplate,
-    documents: documentsTemplate,
+    index,
+    type,
+    schema,
+    documents,
+    selectionSet,
   },
   flattenTypes: true,
   primitives: {

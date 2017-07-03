@@ -72,6 +72,8 @@ export function compileTemplate(config: GeneratorConfig, templateContext: Schema
         ...(!executionSettings.generateSchema) ? prepareSchemaForDocumentsOnly(templateContext) : templateContext,
         operations: mergedDocuments.operations,
         fragments: mergedDocuments.fragments,
+        hasFragments: mergedDocuments.hasFragments,
+        hasOperations: mergedDocuments.hasOperations,
       }),
     },
   ];

@@ -1,5 +1,8 @@
 import { FlattenDocument, FlattenFragment, FlattenModel, FlattenOperation } from './types';
-import { Document, Fragment, Operation, SelectionSetFieldNode, SelectionSetItem } from 'graphql-codegen-core';
+import {
+  Document, Fragment, isFieldNode, Operation, SelectionSetFieldNode,
+  SelectionSetItem
+} from 'graphql-codegen-core';
 import { pascalCase } from 'change-case';
 
 export const handleNameDuplications = (name: string, existing: FlattenModel[]): string => {
@@ -16,20 +19,20 @@ function buildModelFromField(field: SelectionSetFieldNode, result: FlattenModel[
   return {
     modelType: modelName,
     fields: field.selectionSet,
+    fragmentsSpread: field.fragmentsSpread,
+    hasFragmentsSpread: field.hasFragmentsSpread
   };
 }
 
 function flattenSelectionSet(selectionSet: SelectionSetItem[], result: FlattenModel[] = []): FlattenModel[] {
   selectionSet.forEach((item: SelectionSetItem) => {
-    if (item['selectionSet']) {
-      const selectionSetField = item as SelectionSetFieldNode;
-
-      if (selectionSetField.selectionSet.length > 0) {
-        const model = buildModelFromField(selectionSetField, result);
-        selectionSetField.type = model.modelType;
+    if (isFieldNode(item)) {
+      if (item.selectionSet.length > 0) {
+        const model = buildModelFromField(item, result);
+        item.type = model.modelType;
         result.push(model);
 
-        flattenSelectionSet(selectionSetField.selectionSet, result);
+        flattenSelectionSet(item.selectionSet, result);
       }
     }
   });

@@ -348,11 +348,11 @@ describe('TypeScript Single File', () => {
           /* The type of vote to record, when submitting a vote */
           export type VoteType = "UP" | "DOWN" | "CANCEL";
           
-          export namespace MyFeedQuery {
+          export namespace MyFeed {
             export interface Variables {
             }
           
-            export interface Result {
+            export interface Query {
               feed: Feed[] | null; 
             }
           
@@ -372,6 +372,37 @@ describe('TypeScript Single File', () => {
               avatar_url: string; 
             }
           }`);
+    });
+
+    it('Should compile simple Query with Fragment spread correctly', () => {
+      const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./dev-test/githunt/schema.json').toString()));
+      const context = schemaToTemplateContext(schema);
+
+      const documents = gql`
+        query myFeed {
+          feed {
+            id
+            commentCount
+            repository {
+              full_name
+              ...RepoFields
+            }
+          }
+        }
+        
+        fragment RepoFields on Repository {
+          html_url
+          owner {
+            avatar_url
+          }
+        }
+      `;
+
+      const transformedDocument = transformDocument(schema, documents);
+      const compiled = compileTemplate(config, context, [transformedDocument], { generateSchema: false });
+      const content = compiled[0].content;
+
+      console.log(content);
     });
   });
 });

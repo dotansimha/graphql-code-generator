@@ -1,22 +1,32 @@
 {{#each operations }}
-export namespace {{ toPascalCase name }}{{ toPascalCase operationType }} {
-  export interface Variables {
+export namespace {{ toPascalCase name }} {
+  export type Variables = {
   {{#each variables}}
     {{ name }}: {{#if isArray}}Array<{{/if}}{{ type }}{{#if isArray}}>{{/if}}{{#unless isRequired}} | null{{/unless}};
   {{/each}}
   }
 
-  export interface Result {
-    {{#each selectionSet}}
-    {{ name }}: {{ toPrimitive type }}{{#if isArray}}[]{{/if}}{{#unless isRequired}} | null{{/unless}}; {{#if description }}  // {{description}}{{/if}}
-    {{/each}}
+  export type {{ toPascalCase operationType }} = {
+    {{> selectionSet selectionSet }}
   }
   {{#each innerModels }}
 
-  export interface {{ modelType }} {
-    {{#each fields}}
-    {{ name }}: {{ toPrimitive type }}{{#if isArray}}[]{{/if}}{{#unless isRequired}} | null{{/unless}}; {{#if description }}  // {{description}}{{/if}}
-    {{/each}}
+  export type {{ modelType }} = {
+    {{> selectionSet fields }}
+  }{{#if hasFragmentsSpread}} {{#each fragmentsSpread}}& {{this}}.Fragment{{/each}}{{/if}};
+  {{/each}}
+}
+{{/each}}
+{{#each fragments }}
+
+export namespace {{name}} {
+  export type Fragment = {
+    {{> selectionSet selectionSet }}
+  }
+  {{#each innerModels }}
+
+  export type {{ modelType }} = {
+    {{> selectionSet fields }}
   }
   {{/each}}
 }

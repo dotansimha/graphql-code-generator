@@ -1,0 +1,5 @@
+{{#each this}}
+{{#if isField }}
+{{ name }}: {{ toPrimitive type }}{{#if isArray}}[]{{/if}}{{#unless isRequired}} | null{{/unless}}; {{#if description }}  // {{description}}{{/if}}
+{{/if}}
+{{/each}}

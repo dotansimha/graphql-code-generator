@@ -37,6 +37,8 @@ export interface FlattenDocument extends Document {
 export interface FlattenModel {
   modelType: string;
   fields: SelectionSetItem[];
+  fragmentsSpread: string[];
+  hasFragmentsSpread: boolean;
 }
 
 export interface Settings {
