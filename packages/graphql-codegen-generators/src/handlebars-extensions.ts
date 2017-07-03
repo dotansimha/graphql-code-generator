@@ -2,7 +2,11 @@ import { registerHelper } from 'handlebars';
 import { camelCase, pascalCase, snakeCase, titleCase } from 'change-case';
 import { oneLineTrim } from 'common-tags';
 
-export const initHelpers = () => {
+export const initHelpers = primitives => {
+  registerHelper('toPrimitive', function (type) {
+    return primitives[type] || type || '';
+  });
+
   registerHelper('times', function (n, block) {
     let accum = '';
 

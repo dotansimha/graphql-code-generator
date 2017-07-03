@@ -23,20 +23,29 @@ function prepareSchemaForDocumentsOnly(templateContext: SchemaTemplateContext): 
   return copy;
 }
 
+function generateSingleFile(compiledIndexTemplate: HandlebarsTemplateDelegate, executionSettings: Settings, config: GeneratorConfig, templateContext: SchemaTemplateContext, documents: Document): FileOutput[] {
+  return [
+    {
+      filename: config.out,
+      content: compiledIndexTemplate({
+        ...(!executionSettings.generateSchema) ? prepareSchemaForDocumentsOnly(templateContext) : templateContext,
+        operations: documents.operations,
+        fragments: documents.fragments,
+        hasFragments: documents.hasFragments,
+        hasOperations: documents.hasOperations,
+      }),
+    },
+  ];
+}
+
 export function compileTemplate(config: GeneratorConfig, templateContext: SchemaTemplateContext, documents: Document[] = [], settings: Settings = DEFAULT_SETTINGS): FileOutput[] {
+  initHelpers(config.primitives);
   const executionSettings = Object.assign(DEFAULT_SETTINGS, settings);
-  initHelpers();
-
-  registerHelper('toPrimitive', function (type) {
-    return config.primitives[type] || type || '';
-  });
-
-  Object.keys(config.templates).forEach((templateName: string) => {
-    registerPartial(templateName, config.templates[templateName]);
-  });
-
   const templates = config.templates;
-  const compiledMainTemplate = compile(templates['index']);
+
+  Object.keys(templates).forEach((templateName: string) => {
+    registerPartial(templateName, templates[templateName]);
+  });
 
   let mergedDocuments: Document;
 
@@ -65,16 +74,24 @@ export function compileTemplate(config: GeneratorConfig, templateContext: Schema
     }
   }
 
-  return [
-    {
-      filename: config.out,
-      content: compiledMainTemplate({
-        ...(!executionSettings.generateSchema) ? prepareSchemaForDocumentsOnly(templateContext) : templateContext,
-        operations: mergedDocuments.operations,
-        fragments: mergedDocuments.fragments,
-        hasFragments: mergedDocuments.hasFragments,
-        hasOperations: mergedDocuments.hasOperations,
-      }),
-    },
-  ];
+  if (config.singleFile) {
+    if (!templates['index']) {
+      throw new Error(`Template 'index' is required when using singleFile = true!`);
+    }
+
+    return generateSingleFile(
+      compile(templates['index']),
+      executionSettings,
+      config,
+      templateContext,
+      mergedDocuments,
+    );
+  } else if (!config.singleFile) {
+    if (!templates['type']) {
+      throw new Error(`Templates 'type' are required when using singleFile = false!`);
+    }
+
+  } else {
+    return [];
+  }
 }
