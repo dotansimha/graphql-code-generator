@@ -72,7 +72,10 @@ export interface SchemaTemplateContext {
 }
 
 export interface SelectionSetItem {
-
+  isFragmentSpread: boolean;
+  isInlineFragment: boolean;
+  isField: boolean;
+  isLeaf: boolean;
 }
 
 export interface SelectionSetInlineFragment extends SelectionSetItem {
