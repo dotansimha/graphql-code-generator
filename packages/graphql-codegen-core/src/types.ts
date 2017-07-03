@@ -81,6 +81,10 @@ export interface SelectionSetItem {
 export interface SelectionSetInlineFragment extends SelectionSetItem {
   selectionSet: SelectionSetItem[];
   onType: string;
+  fragmentsSpread: string[];
+  inlineFragments: SelectionSetInlineFragment[],
+  hasFragmentsSpread: boolean;
+  hasInlineFragments: boolean;
 }
 
 export interface SelectionSetFragmentSpread extends SelectionSetItem {
@@ -93,6 +97,10 @@ export interface SelectionSetFieldNode extends SelectionSetItem {
   type: string;
   isRequired: boolean;
   isArray: boolean;
+  fragmentsSpread: string[];
+  inlineFragments: SelectionSetInlineFragment[],
+  hasFragmentsSpread: boolean;
+  hasInlineFragments: boolean;
 }
 
 export function isFieldNode(node: SelectionSetItem): node is SelectionSetFieldNode {
