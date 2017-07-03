@@ -1,4 +1,7 @@
-import { Operation, Document, Fragment, SelectionSetItem } from 'graphql-codegen-core';
+import {
+  Operation, Document, Fragment, SelectionSetItem, SelectionSetFragmentSpread,
+  SelectionSetFieldNode, SelectionSetInlineFragment
+} from 'graphql-codegen-core';
 
 export interface GeneratorConfig {
   singleFile: boolean;
@@ -36,9 +39,12 @@ export interface FlattenDocument extends Document {
 
 export interface FlattenModel {
   modelType: string;
-  fields: SelectionSetItem[];
-  fragmentsSpread: string[];
+  fields: SelectionSetFieldNode[];
+  fragmentsSpread: SelectionSetFragmentSpread[];
+  inlineFragments: SelectionSetInlineFragment[];
   hasFragmentsSpread: boolean;
+  hasFields: boolean;
+  hasInlineFragments: boolean;
 }
 
 export interface Settings {

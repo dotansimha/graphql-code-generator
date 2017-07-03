@@ -18,9 +18,12 @@ function buildModelFromField(field: SelectionSetFieldNode, result: FlattenModel[
 
   return {
     modelType: modelName,
-    fields: field.selectionSet,
+    fields: field.fields,
     fragmentsSpread: field.fragmentsSpread,
-    hasFragmentsSpread: field.hasFragmentsSpread
+    inlineFragments: field.inlineFragments,
+    hasFields: field.hasFields,
+    hasFragmentsSpread: field.hasFragmentsSpread,
+    hasInlineFragments: field.hasInlineFragments,
   };
 }
 
