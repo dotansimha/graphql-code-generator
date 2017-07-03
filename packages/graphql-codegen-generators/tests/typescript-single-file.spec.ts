@@ -215,7 +215,7 @@ describe('TypeScript Single File', () => {
           f2: string | null;
         }
         
-        // Union description
+        /* Union description */
         export type C = A | B;
       `);
     });
@@ -316,7 +316,7 @@ describe('TypeScript Single File', () => {
     });
   });
 
-  describe.only('Operations', () => {
+  describe('Operations', () => {
     it('Should compile simple Query correctly', () => {
       const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./dev-test/githunt/schema.json').toString()));
       const context = schemaToTemplateContext(schema);
@@ -349,26 +349,26 @@ describe('TypeScript Single File', () => {
           export type VoteType = "UP" | "DOWN" | "CANCEL";
           
           export namespace MyFeed {
-            export interface Variables {
+            export type Variables = {
             }
           
-            export interface Query {
+            export type Query = {
               feed: Feed[] | null; 
             }
           
-            export interface Feed {
+            export type Feed = {
               id: number; 
               commentCount: number; 
               repository: Repository; 
             }
           
-            export interface Repository {
+            export type Repository = {
               full_name: string; 
               html_url: string; 
               owner: Owner | null; 
             }
           
-            export interface Owner {
+            export type Owner = {
               avatar_url: string; 
             }
           }`);
@@ -402,7 +402,43 @@ describe('TypeScript Single File', () => {
       const compiled = compileTemplate(config, context, [transformedDocument], { generateSchema: false });
       const content = compiled[0].content;
 
-      console.log(content);
+      expect(content).toBeSimilarStringTo(`
+          /* tslint:disable */
+          /* A list of options for the sort order of the feed */
+          export type FeedType = "HOT" | "NEW" | "TOP";
+          
+          /* The type of vote to record, when submitting a vote */
+          export type VoteType = "UP" | "DOWN" | "CANCEL";
+          
+          export namespace MyFeed {
+            export type Variables = {
+            }
+          
+            export type Query = {
+              feed: Feed[] | null; 
+            }
+          
+            export type Feed = {
+              id: number; 
+              commentCount: number; 
+              repository: Repository; 
+            }
+          
+            export type Repository = {
+              full_name: string; 
+            } & RepoFields.Fragment
+          }
+          
+          export namespace RepoFields {
+            export type Fragment = {
+              html_url: string; 
+              owner: Owner | null; 
+            }
+          
+            export type Owner = {
+              avatar_url: string; 
+            }
+          }`);
     });
   });
 });
