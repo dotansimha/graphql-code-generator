@@ -92,6 +92,7 @@ export interface SelectionSetFragmentSpread extends SelectionSetItem {
 }
 
 export interface SelectionSetFieldNode extends SelectionSetItem {
+  selectionSet: SelectionSetItem[];
   name: string;
   type: string;
   isRequired: boolean;
