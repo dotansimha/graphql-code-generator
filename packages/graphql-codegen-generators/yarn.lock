@@ -1346,9 +1346,9 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.2:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/graceful-readlink/-/graceful-readlink-1.0.1.tgz#4cafad76bc62f02fa039b2f94e9a3dd3a391a725"
 
-graphql-codegen-core@0.6.0-alpha.09509210:
-  version "0.6.0-alpha.9509210"
-  resolved "https://registry.yarnpkg.com/graphql-codegen-core/-/graphql-codegen-core-0.6.0-alpha.9509210.tgz#a99150c449519b56b2f7d1da0ec068ea8f73c04a"
+graphql-codegen-core@0.6.0-alpha.1bc8b137:
+  version "0.6.0-alpha.1bc8b137"
+  resolved "https://registry.yarnpkg.com/graphql-codegen-core/-/graphql-codegen-core-0.6.0-alpha.1bc8b137.tgz#c717b607e8b4b05dac6a19a405463285787c5444"
   dependencies:
     graphql "^0.10.3"
     graphql-tools "^1.0.0"

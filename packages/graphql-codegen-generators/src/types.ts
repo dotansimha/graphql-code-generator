@@ -1,5 +1,5 @@
 import {
-  Operation, Document, Fragment, SelectionSetItem, SelectionSetFragmentSpread,
+  Operation, Document, Fragment, SelectionSetFragmentSpread,
   SelectionSetFieldNode, SelectionSetInlineFragment
 } from 'graphql-codegen-core';
 
@@ -38,6 +38,7 @@ export interface FlattenDocument extends Document {
 }
 
 export interface FlattenModel {
+  schemaBaseType: string;
   modelType: string;
   fields: SelectionSetFieldNode[];
   fragmentsSpread: SelectionSetFragmentSpread[];

@@ -1,5 +1,10 @@
 import '../test-matchers/custom-matchers';
-import { transformDocument, schemaToTemplateContext, SchemaTemplateContext, introspectionToGraphQLSchema } from 'graphql-codegen-core';
+import {
+  transformDocument,
+  schemaToTemplateContext,
+  SchemaTemplateContext,
+  introspectionToGraphQLSchema
+} from 'graphql-codegen-core';
 import { GraphQLSchema } from 'graphql';
 import * as fs from 'fs';
 import { makeExecutableSchema } from 'graphql-tools';
@@ -389,7 +394,7 @@ describe('TypeScript Single File', () => {
             }
           }
         }
-        
+
         fragment RepoFields on Repository {
           html_url
           owner {
@@ -439,6 +444,74 @@ describe('TypeScript Single File', () => {
               avatar_url: string; 
             }
           }`);
+    });
+
+    it('Should compile simple Query with inline Fragment', () => {
+      const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./dev-test/githunt/schema.json').toString()));
+      const context = schemaToTemplateContext(schema);
+
+      const documents = gql`
+        query myFeed {
+          feed {
+            id
+            commentCount
+            repository {
+              html_url
+              ... on Repository {
+                full_name
+              }
+              ... on Repository {
+                owner {
+                  avatar_url
+                }
+              }
+            }
+          }
+        }
+      `;
+
+      const transformedDocument = transformDocument(schema, documents);
+      const compiled = compileTemplate(config, context, [transformedDocument], { generateSchema: false });
+      const content = compiled[0].content;
+
+      expect(content).toBeSimilarStringTo(`
+       /* tslint:disable */
+    /* A list of options for the sort order of the feed */
+    export type FeedType = "HOT" | "NEW" | "TOP";
+    
+    /* The type of vote to record, when submitting a vote */
+    export type VoteType = "UP" | "DOWN" | "CANCEL";
+    
+    export namespace MyFeed {
+      export type Variables = {
+      }
+    
+      export type Query = {
+        feed: Feed[] | null; 
+      }
+    
+      export type Feed = {
+        id: number; 
+        commentCount: number; 
+        repository: Repository; 
+      }
+    
+      export type Repository = {
+        html_url: string; 
+      }  & RepositoryInlineFragment & _RepositoryInlineFragment
+    
+      export type RepositoryInlineFragment = {
+        full_name: string; 
+      }
+    
+      export type _RepositoryInlineFragment = {
+        owner: Owner | null; 
+      }
+    
+      export type Owner = {
+        avatar_url: string; 
+      }
+    }`);
     });
   });
 });

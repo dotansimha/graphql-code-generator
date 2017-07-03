@@ -1,6 +1,6 @@
 import { FlattenDocument, FlattenFragment, FlattenModel, FlattenOperation } from './types';
 import {
-  Document, Fragment, isFieldNode, Operation, SelectionSetFieldNode,
+  Document, Fragment, isFieldNode, isInlineFragmentNode, Operation, SelectionSetFieldNode, SelectionSetInlineFragment,
   SelectionSetItem
 } from 'graphql-codegen-core';
 import { pascalCase } from 'change-case';
@@ -17,6 +17,7 @@ function buildModelFromField(field: SelectionSetFieldNode, result: FlattenModel[
   const modelName = handleNameDuplications(pascalCase(field.name), result);
 
   return {
+    schemaBaseType: field.type,
     modelType: modelName,
     fields: field.fields,
     fragmentsSpread: field.fragmentsSpread,
@@ -24,6 +25,21 @@ function buildModelFromField(field: SelectionSetFieldNode, result: FlattenModel[
     hasFields: field.hasFields,
     hasFragmentsSpread: field.hasFragmentsSpread,
     hasInlineFragments: field.hasInlineFragments,
+  };
+}
+
+function buildModelFromInlineFragment(fragment: SelectionSetInlineFragment, result: FlattenModel[]): FlattenModel {
+  const modelName = handleNameDuplications(pascalCase(fragment.onType) + 'InlineFragment', result);
+
+  return {
+    schemaBaseType: fragment.onType,
+    modelType: modelName,
+    fields: fragment.fields,
+    fragmentsSpread: fragment.fragmentsSpread,
+    inlineFragments: fragment.inlineFragments,
+    hasFields: fragment.hasFields,
+    hasFragmentsSpread: fragment.hasFragmentsSpread,
+    hasInlineFragments: fragment.hasInlineFragments,
   };
 }
 
@@ -37,6 +53,12 @@ function flattenSelectionSet(selectionSet: SelectionSetItem[], result: FlattenMo
 
         flattenSelectionSet(item.selectionSet, result);
       }
+    } else if (isInlineFragmentNode(item)) {
+      const model = buildModelFromInlineFragment(item, result);
+      item.onType = model.modelType;
+      result.push(model);
+
+      flattenSelectionSet(item.selectionSet, result);
     }
   });
 
