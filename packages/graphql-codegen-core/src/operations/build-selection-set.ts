@@ -1,7 +1,7 @@
 import {
   isFragmentSpreadNode,
   SelectionSetFieldNode, SelectionSetFragmentSpread, SelectionSetInlineFragment,
-  SelectionSetItem, isInlineFragmentNode
+  SelectionSetItem, isInlineFragmentNode, isFieldNode
 } from '../types';
 import {
   FieldNode, FragmentSpreadNode, getNamedType, GraphQLSchema, GraphQLType, InlineFragmentNode, SelectionNode,
@@ -11,6 +11,21 @@ import { FIELD, FRAGMENT_SPREAD, INLINE_FRAGMENT } from 'graphql/language/kinds'
 import { getFieldDef } from '../utils/get-field-def';
 import { resolveType } from '../schema/resolve-type';
 
+function separateSelectionSet(selectionSet: SelectionSetItem[]): any {
+  const fields = selectionSet.filter(n => isFieldNode(n));
+  const fragmentsSpread = selectionSet.filter(n => isFragmentSpreadNode(n));
+  const inlineFragments = selectionSet.filter(n => isInlineFragmentNode(n));
+
+  return {
+    fragmentsSpread,
+    fields,
+    inlineFragments,
+    hasFragmentsSpread: fragmentsSpread.length > 0,
+    hasFields: fields.length > 0,
+    hasInlineFragments: inlineFragments.length > 0,
+  };
+}
+
 export function buildSelectionSet(schema: GraphQLSchema, rootObject: GraphQLType, node: SelectionSetNode): SelectionSetItem[] {
   return ((node && node.selections ? node.selections : []) as SelectionNode[]).map<SelectionSetItem>((selectionNode: SelectionNode): SelectionSetItem => {
     if (selectionNode.kind === FIELD) {
@@ -18,8 +33,6 @@ export function buildSelectionSet(schema: GraphQLSchema, rootObject: GraphQLType
       const field = getFieldDef(rootObject, fieldNode);
       const resolvedType = resolveType(field.type);
       const childSelectionSet = buildSelectionSet(schema, getNamedType(field.type), fieldNode.selectionSet);
-      const fragmentsSpread = childSelectionSet.filter(n => isFragmentSpreadNode(n)).map<string>((fs: SelectionSetFragmentSpread) => fs.fragmentName);
-      const inlineFragments = childSelectionSet.filter(n => isInlineFragmentNode(n)).map<SelectionSetInlineFragment>((fs: SelectionSetInlineFragment) => fs);
 
       return {
         isField: true,
@@ -28,10 +41,7 @@ export function buildSelectionSet(schema: GraphQLSchema, rootObject: GraphQLType
         isLeaf: childSelectionSet.length === 0,
         name: fieldNode.alias && fieldNode.alias.value ? fieldNode.alias.value : fieldNode.name.value,
         selectionSet: childSelectionSet,
-        fragmentsSpread: fragmentsSpread,
-        inlineFragments: inlineFragments,
-        hasFragmentsSpread: fragmentsSpread.length > 0,
-        hasInlineFragments: inlineFragments.length > 0,
+        ...separateSelectionSet(childSelectionSet),
         type: resolvedType.name,
         isRequired: resolvedType.isRequired,
         isArray: resolvedType.isArray,
@@ -50,8 +60,6 @@ export function buildSelectionSet(schema: GraphQLSchema, rootObject: GraphQLType
       const fieldNode = selectionNode as InlineFragmentNode;
       const nextRoot = typeFromAST(schema, fieldNode.typeCondition);
       const childSelectionSet = buildSelectionSet(schema, nextRoot, fieldNode.selectionSet);
-      const fragmentsSpread = childSelectionSet.filter(n => isFragmentSpreadNode(n)).map<string>((fs: SelectionSetFragmentSpread) => fs.fragmentName);
-      const inlineFragments = childSelectionSet.filter(n => isInlineFragmentNode(n)).map<SelectionSetInlineFragment>((fs: SelectionSetInlineFragment) => fs);
 
       return {
         isField: false,
@@ -59,10 +67,7 @@ export function buildSelectionSet(schema: GraphQLSchema, rootObject: GraphQLType
         isInlineFragment: true,
         isLeaf: childSelectionSet.length === 0,
         selectionSet: childSelectionSet,
-        fragmentsSpread: fragmentsSpread,
-        inlineFragments: inlineFragments,
-        hasFragmentsSpread: fragmentsSpread.length > 0,
-        hasInlineFragments: inlineFragments.length > 0,
+        ...separateSelectionSet(childSelectionSet),
         onType: fieldNode.typeCondition.name.value,
       } as SelectionSetInlineFragment;
     } else {
