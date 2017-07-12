@@ -30,10 +30,12 @@ export interface FileOutput {
 
 export interface FlattenOperation extends Operation {
   innerModels: FlattenModel[];
+  isFlatten: boolean;
 }
 
 export interface FlattenFragment extends Fragment {
   innerModels: FlattenModel[];
+  isFlatten: boolean;
 }
 
 export interface FlattenDocument extends Document {
@@ -61,10 +63,13 @@ export interface Settings {
 }
 
 export interface MultiFileTemplates {
+  operation: HandlebarsTemplateDelegate[];
+  fragment: HandlebarsTemplateDelegate[];
   type: HandlebarsTemplateDelegate[];
   scalar: HandlebarsTemplateDelegate[];
   'interface': HandlebarsTemplateDelegate[];
   inputType: HandlebarsTemplateDelegate[];
   union: HandlebarsTemplateDelegate[];
   'enum': HandlebarsTemplateDelegate[];
+
 }

@@ -43,7 +43,7 @@ function buildModelFromInlineFragment(fragment: SelectionSetInlineFragment, resu
   };
 }
 
-function flattenSelectionSet(selectionSet: SelectionSetItem[], result: FlattenModel[] = []): FlattenModel[] {
+export function flattenSelectionSet(selectionSet: SelectionSetItem[], result: FlattenModel[] = []): FlattenModel[] {
   selectionSet.forEach((item: SelectionSetItem) => {
     if (isFieldNode(item)) {
       if (item.selectionSet.length > 0) {
@@ -69,12 +69,14 @@ export function flattenTypes(document: Document): FlattenDocument {
   return {
     operations: document.operations.map<FlattenOperation>((operation: Operation): FlattenOperation => {
       return {
+        isFlatten: true,
         ...operation,
         innerModels: flattenSelectionSet(operation.selectionSet),
       } as FlattenOperation;
     }),
     fragments: document.fragments.map<FlattenFragment>((fragment: Fragment): FlattenFragment => {
       return {
+        isFlatten: true,
         ...fragment,
         innerModels: flattenSelectionSet(fragment.selectionSet),
       } as FlattenFragment;

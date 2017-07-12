@@ -1,12 +1,13 @@
 import { registerHelper } from 'handlebars';
 import { camelCase, pascalCase, snakeCase, titleCase } from 'change-case';
 import { oneLineTrim } from 'common-tags';
-import { Argument, Field, Interface, Type } from 'graphql-codegen-core';
+import { Argument, Field, SchemaTemplateContext, SelectionSetFragmentSpread } from 'graphql-codegen-core';
 import { getFieldTypeAsString } from './field-type-to-string';
 import { sanitizeFilename } from './sanitizie-filename';
-import { GeneratorConfig } from './types';
+import { FlattenModel, FlattenOperation, GeneratorConfig } from './types';
+import { flattenSelectionSet } from './flatten-types';
 
-export const initHelpers = (config: GeneratorConfig) => {
+export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTemplateContext) => {
   registerHelper('toPrimitive', function (type) {
     return config.primitives[type] || type || '';
   });
@@ -81,6 +82,61 @@ export const initHelpers = (config: GeneratorConfig) => {
           imports.push({ name: possibleType, file });
         }
       });
+    }
+
+    // Operations and Fragments
+    if (context.selectionSet) {
+      const flattenDocument: FlattenOperation = context.isFlatten ? context : flattenSelectionSet(context);
+      flattenDocument.innerModels.forEach((innerModel: FlattenModel) => {
+        if (innerModel.fragmentsSpread && innerModel.fragmentsSpread.length > 0) {
+          innerModel.fragmentsSpread.forEach((fragmentSpread: SelectionSetFragmentSpread) => {
+            const file = sanitizeFilename(fragmentSpread.fragmentName, 'fragment') + '.' + config.filesExtension;
+
+            if (!imports.find(t => t.name === fragmentSpread.fragmentName)) {
+              imports.push({ name: fragmentSpread.fragmentName, file });
+            }
+          });
+        }
+
+        const schemaType = innerModel.schemaBaseType;
+        const inputType = schemaContext.inputTypes.find(inputType => inputType.name === schemaType);
+
+        if (inputType) {
+          const file = sanitizeFilename(inputType.name, 'input-type') + '.' + config.filesExtension;
+
+          if (!imports.find(t => t.name === inputType.name)) {
+            imports.push({ name: inputType.name, file });
+          }
+
+          return;
+        }
+
+        const enumType = schemaContext.enums.find(enumType => enumType.name === schemaType);
+
+        if (enumType) {
+          const file = sanitizeFilename(enumType.name, 'enum') + '.' + config.filesExtension;
+
+          if (!imports.find(t => t.name === enumType.name)) {
+            imports.push({ name: enumType.name, file });
+          }
+
+          return;
+        }
+
+        const scalarType = schemaContext.scalars.find(scalarType => scalarType.name === schemaType);
+
+        if (scalarType) {
+          const file = sanitizeFilename(scalarType.name, 'scalar') + '.' + config.filesExtension;
+
+          if (!imports.find(t => t.name === scalarType.name)) {
+            imports.push({ name: scalarType.name, file });
+          }
+
+          return;
+        }
+      });
+
+
     }
 
     for (let i = 0, j = imports.length; i < j; i++) {

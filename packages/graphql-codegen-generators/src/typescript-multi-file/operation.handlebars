@@ -1,0 +1,20 @@
+{{#eachImport this }}
+import { {{ name }} } from './{{ file }}';
+{{/eachImport}}
+export namespace {{ toPascalCase name }} {
+  export type Variables = {
+{{#each variables}}
+    {{ name }}: {{#if isArray}}Array<{{/if}}{{ type }}{{#if isArray}}>{{/if}}{{#unless isRequired}} | null{{/unless}};
+{{/each}}
+  }
+
+  export type {{ toPascalCase operationType }} = {
+    {{> selectionSet selectionSet }}
+  }
+{{#each innerModels }}
+
+  export type {{ modelType }} = {
+    {{> selectionSet fields }}
+  }{{#if hasFragmentsSpread}}{{#each fragmentsSpread}} & {{fragmentName}}.Fragment{{/each}}{{/if}}{{#if hasInlineFragments}}{{#each inlineFragments}} & {{onType}}{{/each}}{{/if}}
+{{/each}}
+}

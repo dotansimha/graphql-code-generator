@@ -1,0 +1,13 @@
+{{#eachImport this }}
+import { {{ name }} } from './{{ file }}';
+{{/eachImport}}
+export namespace {{name}} {
+  export type Fragment = {
+    {{> selectionSet selectionSet }}
+  }
+  {{#each innerModels }}
+  export type {{ modelType }} = {
+    {{> selectionSet fields }}
+  }
+  {{/each}}
+}

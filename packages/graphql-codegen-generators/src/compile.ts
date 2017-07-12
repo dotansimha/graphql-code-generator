@@ -100,17 +100,35 @@ function generateMultipleFiles(templates: MultiFileTemplates, executionSettings:
     });
   });
 
+  templates.operation.forEach((compiledTemplate: HandlebarsTemplateDelegate) => {
+    documents.operations.forEach((operation: Operation) => {
+      result.push({
+        filename: sanitizeFilename(operation.name, operation.operationType) + '.' + (config.filesExtension || ''),
+        content: compiledTemplate(operation),
+      });
+    });
+  });
+
+  templates.fragment.forEach((compiledTemplate: HandlebarsTemplateDelegate) => {
+    documents.fragments.forEach((fragment: Fragment) => {
+      result.push({
+        filename: sanitizeFilename(fragment.name, 'fragment') + '.' + (config.filesExtension || ''),
+        content: compiledTemplate(fragment),
+      });
+    });
+  });
+
   return result;
 }
 
 function toArrayAndCompileTemplates(templateDef): HandlebarsTemplateDelegate[] {
   templateDef = templateDef || [];
 
-  return (Array.isArray(templateDef) ? templateDef : [ templateDef ]).map(template => compile(template));
+  return (Array.isArray(templateDef) ? templateDef : [templateDef]).map(template => compile(template));
 }
 
 export function compileTemplate(config: GeneratorConfig, templateContext: SchemaTemplateContext, documents: Document[] = [], settings: Settings = DEFAULT_SETTINGS): FileOutput[] {
-  initHelpers(config);
+  initHelpers(config, templateContext);
   const executionSettings = Object.assign(DEFAULT_SETTINGS, settings);
   const templates = config.templates;
 
@@ -174,6 +192,8 @@ export function compileTemplate(config: GeneratorConfig, templateContext: Schema
         union: toArrayAndCompileTemplates(templates['union']),
         scalar: toArrayAndCompileTemplates(templates['scalar']),
         'enum': toArrayAndCompileTemplates(templates['enum']),
+        operation: toArrayAndCompileTemplates(templates['operation']),
+        fragment: toArrayAndCompileTemplates(templates['fragment']),
       },
       executionSettings,
       config,

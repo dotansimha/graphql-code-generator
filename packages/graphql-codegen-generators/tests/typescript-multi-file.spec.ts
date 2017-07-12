@@ -1,12 +1,14 @@
 import '../test-matchers/custom-matchers';
 import {
   schemaToTemplateContext,
-  SchemaTemplateContext,
+  SchemaTemplateContext, transformDocument, introspectionToGraphQLSchema,
 } from 'graphql-codegen-core';
 import { GraphQLSchema } from 'graphql';
 import { makeExecutableSchema } from 'graphql-tools';
 import { TypescriptMultiFile } from '../dist/index.js';
 import { compileTemplate } from '../src/compile';
+import gql from 'graphql-tag';
+import * as fs from 'fs';
 
 declare module '../dist/index.js' {
   const TypescriptMultiFile: any;
@@ -322,6 +324,150 @@ describe('TypeScript Multi File', () => {
         }
       `);
 
+    });
+  });
+
+  describe('Operations', () => {
+    it('Should compile simple Query correctly', () => {
+      const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./dev-test/githunt/schema.json').toString()));
+      const context = schemaToTemplateContext(schema);
+
+      const documents = gql`
+        query myFeed {
+          feed {
+            id
+            commentCount
+            repository {
+              full_name
+              html_url
+              owner {
+                avatar_url
+              }
+            }
+          }
+        }
+      `;
+
+      const transformedDocument = transformDocument(schema, documents);
+      const compiled = compileTemplate(config, context, [transformedDocument], { generateSchema: false });
+
+      expect(compiled.length).toBe(3);
+      expect(compiled[0].filename).toBe('feedtype.enum.d.ts');
+      expect(compiled[1].filename).toBe('votetype.enum.d.ts');
+      expect(compiled[2].filename).toBe('myfeed.query.d.ts');
+
+      expect(compiled[0].content).toBeSimilarStringTo(`
+        /* A list of options for the sort order of the feed */
+        export type FeedType = "HOT" | "NEW" | "TOP";
+      `);
+      expect(compiled[1].content).toBeSimilarStringTo(`
+        /* The type of vote to record, when submitting a vote */
+        export type VoteType = "UP" | "DOWN" | "CANCEL";
+      `);
+      expect(compiled[2].content).toBeSimilarStringTo(`
+        export namespace MyFeed {
+          export type Variables = {
+          }
+        
+          export type Query = {
+            feed: Feed[] | null; 
+          }
+        
+          export type Feed = {
+            id: number; 
+            commentCount: number; 
+            repository: Repository; 
+          }
+        
+          export type Repository = {
+            full_name: string; 
+            html_url: string; 
+            owner: Owner | null; 
+          }
+        
+          export type Owner = {
+            avatar_url: string; 
+          }
+        }
+      `);
+
+    });
+
+    it.only('Should compile simple Query with Fragment spread correctly', () => {
+      const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./dev-test/githunt/schema.json').toString()));
+      const context = schemaToTemplateContext(schema);
+
+      const documents = gql`
+        query myFeed {
+          feed {
+            id
+            commentCount
+            repository {
+              full_name
+              ...RepoFields
+            }
+          }
+        }
+
+        fragment RepoFields on Repository {
+          html_url
+          owner {
+            avatar_url
+          }
+        }
+      `;
+
+      const transformedDocument = transformDocument(schema, documents);
+      const compiled = compileTemplate(config, context, [transformedDocument], { generateSchema: false });
+
+      expect(compiled.length).toBe(4);
+      expect(compiled[0].filename).toBe('feedtype.enum.d.ts');
+      expect(compiled[1].filename).toBe('votetype.enum.d.ts');
+      expect(compiled[2].filename).toBe('myfeed.query.d.ts');
+      expect(compiled[3].filename).toBe('repofields.fragment.d.ts');
+
+      expect(compiled[0].content).toBeSimilarStringTo(`
+        /* A list of options for the sort order of the feed */
+        export type FeedType = "HOT" | "NEW" | "TOP";
+      `);
+      expect(compiled[1].content).toBeSimilarStringTo(`
+        /* The type of vote to record, when submitting a vote */
+        export type VoteType = "UP" | "DOWN" | "CANCEL";
+      `);
+      expect(compiled[2].content).toBeSimilarStringTo(`
+        import { RepoFields } from './repofields.fragment.d.ts';
+        
+        export namespace MyFeed {
+          export type Variables = {
+          }
+        
+          export type Query = {
+            feed: Feed[] | null; 
+          }
+        
+          export type Feed = {
+            id: number; 
+            commentCount: number; 
+            repository: Repository; 
+          }
+        
+          export type Repository = {
+            full_name: string; 
+          } & RepoFields.Fragment
+        }
+      `);
+      expect(compiled[3].content).toBeSimilarStringTo(`
+        export namespace RepoFields {
+          export type Fragment = {
+            html_url: string; 
+            owner: Owner | null; 
+          }
+        
+          export type Owner = {
+            avatar_url: string; 
+          }
+        }
+      `);
     });
   });
 });
