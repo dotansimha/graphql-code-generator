@@ -71,6 +71,33 @@ describe('TypeScript Multi File', () => {
       `);
     });
 
+    it('should generate the correct types when using Query and enum', () => {
+      const templateContext = compileAndBuildContext(`
+        enum MyEnum {
+          V1,
+          V2,
+        }
+        
+        type Query {
+          fieldTest: MyEnum
+        }
+      `);
+      const compiled = compileTemplate(config, templateContext);
+      expect(compiled.length).toBe(2);
+      expect(compiled[0].filename).toBe('query.type.d.ts');
+      expect(compiled[0].content).toBeSimilarStringTo(`
+        import { MyEnum } from './myenum.enum.d.ts';
+        
+        export interface Query {
+          fieldTest: MyEnum | null; 
+        }
+      `);
+      expect(compiled[1].filename).toBe('myenum.enum.d.ts');
+      expect(compiled[1].content).toBeSimilarStringTo(`
+        export type MyEnum = "V1" | "V2";
+      `);
+    });
+
     it('should generate the correct types when using Query and twice of the same type (no dupes)', () => {
       const templateContext = compileAndBuildContext(`
         type MyType {

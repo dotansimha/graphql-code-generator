@@ -1,5 +1,5 @@
 import { GeneratorConfig, FileOutput, Settings, EInputType, MultiFileTemplates } from './types';
-import { Document, Fragment, Operation, SchemaTemplateContext, Type } from 'graphql-codegen-core';
+import { Document, Enum, Fragment, Operation, SchemaTemplateContext, Type } from 'graphql-codegen-core';
 import { compile, registerPartial } from 'handlebars';
 import { initHelpers } from './handlebars-extensions';
 import { flattenTypes } from './flatten-types';
@@ -47,11 +47,24 @@ function generateMultipleFiles(templates: MultiFileTemplates, executionSettings:
       result.push({
         filename: sanitizeFilename(type.name, 'type') + '.' + (config.filesExtension || ''),
         content: compiledTypeTemplate(type),
-      })
-    })
+      });
+    });
+  });
+
+  templates.enum.forEach((compiledTypeTemplate: HandlebarsTemplateDelegate) => {
+    templateContext.enums.forEach((en: Enum) => {
+      result.push({
+        filename: sanitizeFilename(en.name, 'enum') + '.' + (config.filesExtension || ''),
+        content: compiledTypeTemplate(en),
+      });
+    });
   });
 
   return result;
+}
+
+function toArrayAndCompileTemplates(templateDef): HandlebarsTemplateDelegate[] {
+  return (Array.isArray(templateDef) ? templateDef : [ templateDef ]).map(template => compile(template));
 }
 
 export function compileTemplate(config: GeneratorConfig, templateContext: SchemaTemplateContext, documents: Document[] = [], settings: Settings = DEFAULT_SETTINGS): FileOutput[] {
@@ -107,19 +120,21 @@ export function compileTemplate(config: GeneratorConfig, templateContext: Schema
       mergedDocuments,
     );
   } else if (config.inputType === EInputType.MULTIPLE_FILES) {
-    if (!templates['type']) {
-      throw new Error(`Templates 'type' is required when using inputType = MULTIPLE_FILES!`);
+    if (!templates['type'] || !templates['enum']) {
+      throw new Error(`Templates 'type', 'enum' are required when using inputType = MULTIPLE_FILES!`);
     }
 
     if (!config.filesExtension) {
       throw new Error('Config filesExtension is required when using inputType = MULTIPLE_FILES!')
     }
 
-    const compiledTypeTemplates = (Array.isArray(templates['type']) ? templates['type'] : [templates['type']]).map(template => compile(template));
+    const compiledTypeTemplates = toArrayAndCompileTemplates(templates['type']);
+    const compiledEnumTemplates = toArrayAndCompileTemplates(templates['enum']);
 
     return generateMultipleFiles(
       {
         type: compiledTypeTemplates,
+        'enum': compiledEnumTemplates
       },
       executionSettings,
       config,
