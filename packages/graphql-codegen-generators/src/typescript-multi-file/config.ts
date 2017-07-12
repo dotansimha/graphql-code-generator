@@ -1,6 +1,8 @@
 import { EInputType, GeneratorConfig } from '../types';
 import * as type from './type.handlebars';
 import * as enumTemplate from './enum.handlebars';
+import * as scalar from './scalar.handlebars';
+import * as union from './union.handlebars';
 
 const config: GeneratorConfig = {
   inputType: EInputType.MULTIPLE_FILES,
@@ -9,6 +11,8 @@ const config: GeneratorConfig = {
     inputType: type,
     'enum': enumTemplate,
     'interface': type,
+    scalar,
+    union,
   },
   flattenTypes: true,
   primitives: {

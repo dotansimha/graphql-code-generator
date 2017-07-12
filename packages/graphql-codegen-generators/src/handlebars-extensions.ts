@@ -47,13 +47,13 @@ export const initHelpers = (config: GeneratorConfig) => {
       });
     }
 
-    // Types
+    // Types that uses interfaces
     if (context.interfaces) {
-      context.interfaces.forEach((inf: Interface) => {
-          const file = sanitizeFilename(inf.name, 'interface') + '.' + config.filesExtension;
+      context.interfaces.forEach((infName: string) => {
+          const file = sanitizeFilename(infName, 'interface') + '.' + config.filesExtension;
 
-          if (!imports.find(t => t.name === inf.name)) {
-            imports.push({ name: inf.name, file });
+          if (!imports.find(t => t.name === infName)) {
+            imports.push({ name: infName, file });
           }
       });
     }

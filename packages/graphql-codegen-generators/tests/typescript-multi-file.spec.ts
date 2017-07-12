@@ -127,5 +127,76 @@ describe('TypeScript Multi File', () => {
         }
       `);
     });
+
+    it('should generate correctly when using simple type that extends interface', () => {
+      const templateContext = compileAndBuildContext(`
+        type Query {
+          fieldTest: A!
+        }
+        
+        interface Base {
+          f1: String
+        }
+        
+        type A implements Base {
+          f1: String
+          f2: String
+        }
+      `);
+
+      const compiled = compileTemplate(config, templateContext);
+      expect(compiled.length).toBe(3);
+      expect(compiled[0].filename).toBe('query.type.d.ts');
+      expect(compiled[1].filename).toBe('a.type.d.ts');
+      expect(compiled[2].filename).toBe('base.interface.d.ts');
+
+      expect(compiled[2].content).toBeSimilarStringTo(`
+        export interface Base {
+          f1: string | null;
+        }
+      `);
+      expect(compiled[0].content).toBeSimilarStringTo(`
+        import { A } from './a.type.d.ts';
+        
+        export interface Query {
+          fieldTest: A;
+        }
+      `);
+      expect(compiled[1].content).toBeSimilarStringTo(`
+        import { Base } from './base.interface.d.ts';
+        
+        export interface A extends Base {
+          f1: string | null;
+          f2: string | null;
+        }
+      `);
+    });
+
+    it('should generate correctly when using custom scalar', () => {
+      const templateContext = compileAndBuildContext(`
+        type Query {
+          fieldTest: [Date]
+        }
+        
+        scalar Date
+      `);
+
+      const compiled = compileTemplate(config, templateContext);
+      expect(compiled.length).toBe(2);
+      expect(compiled[0].filename).toBe('query.type.d.ts');
+      expect(compiled[1].filename).toBe('date.scalar.d.ts');
+
+      expect(compiled[0].content).toBeSimilarStringTo(`
+        import { Date } from './date.scalar.d.ts';
+        
+        export interface Query {
+          fieldTest: Date[] | null;
+        }
+      `);
+      expect(compiled[1].content).toBeSimilarStringTo(`
+        export type Date = any;
+      `);
+
+    });
   });
 });

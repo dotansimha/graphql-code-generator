@@ -162,10 +162,6 @@ export function compileTemplate(config: GeneratorConfig, templateContext: Schema
       mergedDocuments,
     );
   } else if (config.inputType === EInputType.MULTIPLE_FILES) {
-    if (!templates['type'] || !templates['enum']) {
-      throw new Error(`Templates 'type', 'enum' are required when using inputType = MULTIPLE_FILES!`);
-    }
-
     if (!config.filesExtension) {
       throw new Error('Config filesExtension is required when using inputType = MULTIPLE_FILES!')
     }
