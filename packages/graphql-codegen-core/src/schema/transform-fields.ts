@@ -3,6 +3,7 @@ import { objectMapToArray } from '../utils/object-map-to-array';
 import { Field } from '../types';
 import { resolveType } from './resolve-type';
 import { resolveArguments } from './resolve-arguments';
+import { resolveTypeIndicators } from './resolve-type-indicators';
 
 export function resolveFields(rawFields: GraphQLFieldMap<any, any>): Field[] {
   const fieldsArray = objectMapToArray<GraphQLField<any, any>>(rawFields);
@@ -11,7 +12,7 @@ export function resolveFields(rawFields: GraphQLFieldMap<any, any>): Field[] {
     const type = resolveType(item.value.type);
     const resolvedArguments = resolveArguments(item.value.args || []);
     const namedType = getNamedType(item.value.type);
-    const isEnum = namedType['getValues'] !== undefined;
+    const indicators = resolveTypeIndicators(namedType);
 
     return {
       name: item.value.name,
@@ -21,12 +22,12 @@ export function resolveFields(rawFields: GraphQLFieldMap<any, any>): Field[] {
       isArray: type.isArray,
       isRequired: type.isRequired,
       hasArguments: resolvedArguments.length > 0,
-      isType: namedType['getFields'] !== undefined && namedType['getInterfaces'] !== undefined,
-      isScalar: isLeafType(namedType) && !isEnum,
-      isInterface: namedType['resolveType'] !== undefined && namedType['getFields'] !== undefined,
-      isUnion: namedType['resolveType'] !== undefined && namedType['getTypes'] !== undefined,
-      isInputType: namedType['getFields'] !== undefined && namedType['getInterfaces'] === undefined,
-      isEnum: isEnum,
+      isEnum: indicators.isEnum,
+      isScalar: indicators.isScalar,
+      isInterface: indicators.isInterface,
+      isUnion: indicators.isUnion,
+      isInputType: indicators.isInputType,
+      isType: indicators.isType,
     };
   });
 }

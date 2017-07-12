@@ -4,6 +4,12 @@ export interface Argument {
   type: string;
   isRequired: boolean;
   isArray: boolean;
+  isType: boolean;
+  isScalar: boolean;
+  isInterface: boolean;
+  isUnion: boolean;
+  isInputType: boolean;
+  isEnum: boolean;
 }
 
 export interface Field {
