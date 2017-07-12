@@ -2,6 +2,7 @@ import {
   Operation, Document, Fragment, SelectionSetFragmentSpread,
   SelectionSetFieldNode, SelectionSetInlineFragment
 } from 'graphql-codegen-core';
+
 export const EInputType = {
   SINGLE_FILE: 'SINGLE_FILE',
   MULTIPLE_FILES: 'MULTIPLE_FILES',
@@ -63,13 +64,12 @@ export interface Settings {
 }
 
 export interface MultiFileTemplates {
-  operation: HandlebarsTemplateDelegate[];
-  fragment: HandlebarsTemplateDelegate[];
-  type: HandlebarsTemplateDelegate[];
-  scalar: HandlebarsTemplateDelegate[];
-  'interface': HandlebarsTemplateDelegate[];
-  inputType: HandlebarsTemplateDelegate[];
-  union: HandlebarsTemplateDelegate[];
-  'enum': HandlebarsTemplateDelegate[];
-
+  operation: Function[];
+  fragment: Function[];
+  type: Function[];
+  scalar: Function[];
+  'interface': Function[];
+  inputType: Function[];
+  union: Function[];
+  'enum': Function[];
 }
