@@ -393,7 +393,7 @@ describe('TypeScript Multi File', () => {
 
     });
 
-    it.only('Should compile simple Query with Fragment spread correctly', () => {
+    it('Should compile simple Query with Fragment spread correctly', () => {
       const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./dev-test/githunt/schema.json').toString()));
       const context = schemaToTemplateContext(schema);
 
