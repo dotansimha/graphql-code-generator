@@ -48,5 +48,9 @@
     },
     "testRegex": "tests/.*\\.ts$",
     "testEnvironment": "node"
+  },
+  "typings": "dist/index.d.ts",
+  "typescript": {
+    "definition": "dist/index.d.ts"
   }
 }
