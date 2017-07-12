@@ -248,5 +248,80 @@ describe('TypeScript Multi File', () => {
         export type C = A | B;
       `);
     });
+
+    it('should generate type arguments types correctly when using simple primitive', () => {
+      const templateContext = compileAndBuildContext(`
+        type Query {
+          fieldTest(arg1: String): String!
+        }
+      `);
+
+      const compiled = compileTemplate(config, templateContext);
+      expect(compiled.length).toBe(1);
+      const content = compiled[0].content;
+      expect(compiled[0].filename).toBe('query.type.d.ts');
+      expect(content).toBeSimilarStringTo(`
+        export interface Query {
+          fieldTest: string;
+        }
+        
+        export interface FieldTestQueryArgs {
+          arg1: string | null;
+        }`);
+    });
+
+    it('should generate type arguments types correctly when using custom input', () => {
+      const templateContext = compileAndBuildContext(`
+        type Query {
+          fieldTest(myArgument: T!): Return
+        }
+        
+        type Return {
+          ok: Boolean!
+          msg: String!
+        }
+        
+        input T {
+          f1: String
+          f2: Int!
+          f3: [String]
+          f4: [Float]
+        }
+      `);
+
+      const compiled = compileTemplate(config, templateContext);
+      expect(compiled.length).toBe(3);
+      expect(compiled[0].filename).toBe('query.type.d.ts');
+      expect(compiled[1].filename).toBe('return.type.d.ts');
+      expect(compiled[2].filename).toBe('t.input-type.d.ts');
+
+      expect(compiled[0].content).toBeSimilarStringTo(`
+        import { Return } from './return.type.d.ts';
+        import { T } from './t.input-type.d.ts';
+        
+        export interface Query {
+          fieldTest: Return | null; 
+        }
+                
+        export interface FieldTestQueryArgs {
+          myArgument: T;
+        }
+      `);
+      expect(compiled[1].content).toBeSimilarStringTo(`
+        export interface Return {
+          ok: boolean; 
+          msg: string; 
+        }
+      `);
+      expect(compiled[2].content).toBeSimilarStringTo(`
+        export interface T {
+          f1: string | null; 
+          f2: number; 
+          f3: string[] | null; 
+          f4: number[] | null; 
+        }
+      `);
+
+    });
   });
 });

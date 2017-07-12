@@ -1,7 +1,7 @@
 import { registerHelper } from 'handlebars';
 import { camelCase, pascalCase, snakeCase, titleCase } from 'change-case';
 import { oneLineTrim } from 'common-tags';
-import { Field, Interface, Type } from 'graphql-codegen-core';
+import { Argument, Field, Interface, Type } from 'graphql-codegen-core';
 import { getFieldTypeAsString } from './field-type-to-string';
 import { sanitizeFilename } from './sanitizie-filename';
 import { GeneratorConfig } from './types';
@@ -37,11 +37,25 @@ export const initHelpers = (config: GeneratorConfig) => {
     if (context.fields) {
       context.fields.forEach((field: Field) => {
         if (!config.primitives[field.type]) {
-          let fieldType = getFieldTypeAsString(field);
+          const fieldType = getFieldTypeAsString(field);
           const file = sanitizeFilename(field.type, fieldType) + '.' + config.filesExtension;
 
           if (!imports.find(t => t.name === field.type)) {
             imports.push({ name: field.type, file });
+          }
+
+          // Fields arguments
+          if (field.arguments && field.arguments.length > 0) {
+            field.arguments.forEach((arg: Argument) => {
+              if (!config.primitives[arg.type]) {
+                const fieldType = getFieldTypeAsString(arg);
+                const file = sanitizeFilename(arg.type, fieldType) + '.' + config.filesExtension;
+
+                if (!imports.find(t => t.name === arg.type)) {
+                  imports.push({ name: arg.type, file });
+                }
+              }
+            });
           }
         }
       });
@@ -50,11 +64,11 @@ export const initHelpers = (config: GeneratorConfig) => {
     // Types that uses interfaces
     if (context.interfaces) {
       context.interfaces.forEach((infName: string) => {
-          const file = sanitizeFilename(infName, 'interface') + '.' + config.filesExtension;
+        const file = sanitizeFilename(infName, 'interface') + '.' + config.filesExtension;
 
-          if (!imports.find(t => t.name === infName)) {
-            imports.push({ name: infName, file });
-          }
+        if (!imports.find(t => t.name === infName)) {
+          imports.push({ name: infName, file });
+        }
       });
     }
 
