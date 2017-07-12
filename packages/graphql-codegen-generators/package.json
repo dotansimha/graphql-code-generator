@@ -6,7 +6,10 @@
   "scripts": {
     "test": "jest",
     "pretest": "yarn build",
-    "build": "webpack"
+    "build": "webpack",
+    "bundledts": "dts-generator --out dist/index.d.ts --project ./ --name graphql-codegen-generators --main 'graphql-codegen-generators/src/index'",
+    "postbundledts": "rimraf ./dist/src/",
+    "postbuild": "npm run bundledts"
   },
   "devDependencies": {
     "@types/common-tags": "^1.2.5",
@@ -21,6 +24,7 @@
     "graphql-tools": "^1.0.0",
     "jest": "^20.0.4",
     "raw-loader": "^0.5.1",
+    "rimraf": "^2.6.1",
     "tslint": "^5.4.3",
     "typescript": "^2.4.1",
     "webpack": "^3.0.0",
@@ -30,6 +34,7 @@
     "@types/change-case": "^2.3.1",
     "@types/handlebars": "^4.0.33",
     "change-case": "^3.0.1",
+    "dts-generator": "^2.1.0",
     "handlebars": "^4.0.10"
   },
   "jest": {
