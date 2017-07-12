@@ -3,7 +3,10 @@ import { introspectionFromFile } from './loaders/introspection-from-file';
 import { introspectionFromUrl } from './loaders/introspection-from-url';
 import { introspectionFromExport } from './loaders/introspection-from-export';
 import { documentsFromGlobs } from './utils/documents-glob';
-import { getGeneratorConfig } from 'graphql-codegen-generators';
+import { getGeneratorConfig, compileTemplate, FileOutput } from 'graphql-codegen-generators';
+import { introspectionToGraphQLSchema, schemaToTemplateContext, transformDocument } from 'graphql-codegen-core';
+import { loadDocumentsSources } from './loaders/document-loader';
+import * as path from 'path';
 
 export interface CLIOptions {
   file?: string;
@@ -67,34 +70,44 @@ export const validateCliOptions = (options: CLIOptions) => {
   }
 };
 
-export const executeWithOptions = (options: CLIOptions): Promise<any> => {
+export const executeWithOptions = async (options: CLIOptions): Promise<FileOutput[]> => {
   validateCliOptions(options);
 
   const file: string = options.file;
   const url: string = options.url;
   const fsExport: string = options.export;
-  const documents: string[] = options.args|| [];
+  const documents: string[] = options.args || [];
   const template: string = options.template;
-  const out: string = options.out;
+  const out: string = options.out || './';
   const headers: string[] = options.headers;
   const noSchema: boolean = !options.schema;
   const noDocuments: boolean = !options.documents;
-  let introspectionPromise;
+  let schemaExportPromise;
 
   if (file) {
-    introspectionPromise = introspectionFromFile(file);
+    schemaExportPromise = introspectionFromFile(file).then(introspectionToGraphQLSchema);
   }
   else if (url) {
-    introspectionPromise = introspectionFromUrl(url, headers);
+    schemaExportPromise = introspectionFromUrl(url, headers).then(introspectionToGraphQLSchema);
   }
   else if (fsExport) {
-    introspectionPromise = introspectionFromExport(fsExport);
+    schemaExportPromise = introspectionFromExport(fsExport);
   }
 
-  const documentsPromise = documentsFromGlobs(documents);
-  const templateFn = getGeneratorConfig(template);
+  const graphQlSchema = await schemaExportPromise;
+  const context = schemaToTemplateContext(graphQlSchema);
+  const documents = transformDocument(graphQlSchema, loadDocumentsSources(await documentsFromGlobs(documents)));
+  const templateConfig = getGeneratorConfig(template);
 
-  console.log(templateFn);
+  if (!templateConfig) {
+    throw new Error(`Unknown template: ${template}!`);
+  }
 
-  return Promise.resolve([]);
+  return compileTemplate(templateConfig, context, [documents], {
+    generateSchema: noSchema,
+    generateDocuments: noDocuments
+  }).map((item: FileOutput) => ({
+    content: item.content,
+    filename: path.resolve(process.cwd(), out, item.filename),
+  }));
 };
