@@ -12,7 +12,7 @@ describe('transformDocument', () => {
   let schema: GraphQLSchema;
 
   beforeAll(() => {
-    schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('../graphql-codegen-generators/dev-test/githunt/schema.json').toString()));
+    schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('../../dev-test/githunt/schema.json').toString()));
   });
 
   it('should return correct result when using simple fragment', () => {

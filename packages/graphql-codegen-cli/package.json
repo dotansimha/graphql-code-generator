@@ -81,7 +81,8 @@
   "dependencies": {
     "commander": "^2.11.0",
     "glob": "^7.1.2",
-    "graphql-codegen-generators": "0.6.0-alpha.866878b2",
+    "graphql-codegen-core": "0.6.0-alpha.040ffe5d",
+    "graphql-codegen-generators": "0.6.0-alpha.040ffe5d",
     "mkdirp": "^0.5.1",
     "request": "^2.81.0"
   }

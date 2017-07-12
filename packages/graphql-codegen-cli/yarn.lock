@@ -2,12 +2,6 @@
 # yarn lockfile v1
 
 
-"@types/change-case@^2.3.1":
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/@types/change-case/-/change-case-2.3.1.tgz#dbaf4efb63ad8586ab8819179a790904ccb6a837"
-  dependencies:
-    change-case "*"
-
 "@types/commander@^2.9.1":
   version "2.9.1"
   resolved "https://registry.yarnpkg.com/@types/commander/-/commander-2.9.1.tgz#d4e464425baf4685bd49dd233be11de9c00c0784"
@@ -284,7 +278,7 @@ babel-register@^6.24.1:
     mkdirp "^0.5.1"
     source-map-support "^0.4.2"
 
-babel-runtime@^6.22.0:
+babel-runtime@^6.18.0, babel-runtime@^6.22.0:
   version "6.23.0"
   resolved "https://registry.yarnpkg.com/babel-runtime/-/babel-runtime-6.23.0.tgz#0a9489f144de70efb3ce4300accdb329e2fc543b"
   dependencies:
@@ -421,7 +415,7 @@ chalk@^1.1.0, chalk@^1.1.3:
     strip-ansi "^3.0.0"
     supports-color "^2.0.0"
 
-change-case@*, change-case@^3.0.1:
+change-case@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/change-case/-/change-case-3.0.1.tgz#ee5f5ad0415ad1ad9e8072cf49cd4cfa7660a554"
   dependencies:
@@ -495,6 +489,12 @@ combined-stream@^1.0.5, combined-stream@~1.0.5:
 commander@^2.11.0, commander@^2.9.0:
   version "2.11.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.11.0.tgz#157152fd1e7a6c8d98a5b715cf376df928004563"
+
+common-tags@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/common-tags/-/common-tags-1.4.0.tgz#1187be4f3d4cf0c0427d43f74eef1f73501614c0"
+  dependencies:
+    babel-runtime "^6.18.0"
 
 concat-map@0.0.1:
   version "0.0.1"
@@ -784,20 +784,28 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.2:
   version "4.1.11"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.11.tgz#0e8bdfe4d1ddb8854d64e04ea7c00e2a026e5658"
 
-graphql-codegen-core@0.6.0-alpha.866878b2:
-  version "0.6.0-alpha.866878b2"
-  resolved "https://registry.yarnpkg.com/graphql-codegen-core/-/graphql-codegen-core-0.6.0-alpha.866878b2.tgz#e6eb39a3bec05beaedaf9f1fb58504ce5484ae6a"
+graphql-codegen-core@0.6.0-alpha.040ffe5d:
+  version "0.6.0-alpha.040ffe5d"
+  resolved "https://registry.yarnpkg.com/graphql-codegen-core/-/graphql-codegen-core-0.6.0-alpha.040ffe5d.tgz#fb5f16f1e38f57008b8a7bac71b61bbfb1ab5bd5"
   dependencies:
     graphql "^0.10.3"
     graphql-tools "^1.0.0"
 
-graphql-codegen-generators@0.6.0-alpha.866878b2:
-  version "0.6.0-alpha.866878b2"
-  resolved "https://registry.yarnpkg.com/graphql-codegen-generators/-/graphql-codegen-generators-0.6.0-alpha.866878b2.tgz#27acc520b9329649444fce97caafed499139fbea"
+graphql-codegen-core@0.6.0-alpha.a6fea330:
+  version "0.6.0-alpha.a6fea330"
+  resolved "https://registry.yarnpkg.com/graphql-codegen-core/-/graphql-codegen-core-0.6.0-alpha.a6fea330.tgz#67943ff4b6f735590ab74308cbe59ccf53ed2d2f"
   dependencies:
-    "@types/change-case" "^2.3.1"
+    graphql "^0.10.3"
+    graphql-tools "^1.0.0"
+
+graphql-codegen-generators@0.6.0-alpha.040ffe5d:
+  version "0.6.0-alpha.040ffe5d"
+  resolved "https://registry.yarnpkg.com/graphql-codegen-generators/-/graphql-codegen-generators-0.6.0-alpha.040ffe5d.tgz#b3fbfbf3b153d95a01bb33b4c4fce00726755bb0"
+  dependencies:
     "@types/handlebars" "^4.0.33"
     change-case "^3.0.1"
+    common-tags "^1.4.0"
+    graphql-codegen-core "0.6.0-alpha.a6fea330"
     handlebars "^4.0.10"
 
 graphql-tag@^2.4.2:
