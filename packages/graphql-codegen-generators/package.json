@@ -12,6 +12,8 @@
     "postbuild": "npm run bundledts"
   },
   "devDependencies": {
+    "@types/change-case": "^2.3.1",
+    "@types/handlebars": "^4.0.33",
     "@types/common-tags": "^1.2.5",
     "@types/graphql": "^0.9.3",
     "@types/jest": "^20.0.2",
@@ -28,13 +30,11 @@
     "tslint": "^5.4.3",
     "typescript": "^2.4.1",
     "webpack": "^3.0.0",
-    "webpack-node-externals": "^1.6.0"
+    "webpack-node-externals": "^1.6.0",
+    "dts-generator": "^2.1.0"
   },
   "dependencies": {
-    "@types/change-case": "^2.3.1",
-    "@types/handlebars": "^4.0.33",
     "change-case": "^3.0.1",
-    "dts-generator": "^2.1.0",
     "handlebars": "^4.0.10"
   },
   "jest": {
