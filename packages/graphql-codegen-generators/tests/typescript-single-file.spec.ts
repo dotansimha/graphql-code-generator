@@ -129,6 +129,10 @@ describe('TypeScript Single File', () => {
       const content = compiled[0].content;
       expect(content).toBeSimilarStringTo(`
         /* tslint:disable */
+        
+        export interface Base {
+          f1: string | null;
+        }
       
         export interface Query {
           fieldTest: A;

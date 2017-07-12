@@ -62,5 +62,9 @@ export interface Settings {
 
 export interface MultiFileTemplates {
   type: HandlebarsTemplateDelegate[];
+  scalar: HandlebarsTemplateDelegate[];
+  'interface': HandlebarsTemplateDelegate[];
+  inputType: HandlebarsTemplateDelegate[];
+  union: HandlebarsTemplateDelegate[];
   'enum': HandlebarsTemplateDelegate[];
 }

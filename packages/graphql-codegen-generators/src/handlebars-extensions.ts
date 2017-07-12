@@ -1,7 +1,7 @@
 import { registerHelper } from 'handlebars';
 import { camelCase, pascalCase, snakeCase, titleCase } from 'change-case';
 import { oneLineTrim } from 'common-tags';
-import { Field, Type } from 'graphql-codegen-core';
+import { Field, Interface, Type } from 'graphql-codegen-core';
 import { getFieldTypeAsString } from './field-type-to-string';
 import { sanitizeFilename } from './sanitizie-filename';
 import { GeneratorConfig } from './types';
@@ -33,10 +33,9 @@ export const initHelpers = (config: GeneratorConfig) => {
     let ret = '';
     const imports: { name: string; file: string; }[] = [];
 
-    if (context.fields && context.interfaces) {
-      const type = context as Type;
-
-      type.fields.forEach((field: Field) => {
+    // Interface, input types, types
+    if (context.fields) {
+      context.fields.forEach((field: Field) => {
         if (!config.primitives[field.type]) {
           let fieldType = getFieldTypeAsString(field);
           const file = sanitizeFilename(field.type, fieldType) + '.' + config.filesExtension;
@@ -45,10 +44,30 @@ export const initHelpers = (config: GeneratorConfig) => {
             imports.push({ name: field.type, file });
           }
         }
-      })
+      });
     }
 
+    // Types
+    if (context.interfaces) {
+      context.interfaces.forEach((inf: Interface) => {
+          const file = sanitizeFilename(inf.name, 'interface') + '.' + config.filesExtension;
 
+          if (!imports.find(t => t.name === inf.name)) {
+            imports.push({ name: inf.name, file });
+          }
+      });
+    }
+
+    // Unions
+    if (context.possibleTypes) {
+      context.possibleTypes.forEach((possibleType: string) => {
+        const file = sanitizeFilename(possibleType, 'type') + '.' + config.filesExtension;
+
+        if (!imports.find(t => t.name === possibleType)) {
+          imports.push({ name: possibleType, file });
+        }
+      });
+    }
 
     for (let i = 0, j = imports.length; i < j; i++) {
       ret = ret + options.fn(imports[i]);

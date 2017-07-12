@@ -1,0 +1,5 @@
+{{#eachImport this }}
+import { {{ name }} } from './{{ file }}';
+{{/eachImport}}
+{{ toComment description }}
+export type {{ name }} = {{#each possibleTypes}}{{this}}{{#unless @last}} | {{/unless}}{{/each}};

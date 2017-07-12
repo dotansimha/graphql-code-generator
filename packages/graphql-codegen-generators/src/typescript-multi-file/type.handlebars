@@ -7,3 +7,13 @@ export interface {{ name }}{{#if hasInterfaces}} extends {{#each interfaces}}{{t
   {{ name }}: {{ toPrimitive type }}{{#if isArray}}[]{{/if}}{{#unless isRequired}} | null{{/unless}}; {{ toComment description }}
 {{/each}}
 }
+
+{{~#each fields}}
+  {{~# if hasArguments }}
+    export interface {{ toPascalCase name }}{{ toPascalCase ../name }}Args {
+    {{#each arguments}}
+      {{ name }}: {{ toPrimitive type }}{{#if isArray}}[]{{/if}}{{#unless isRequired}} | null{{/unless}}; {{ toComment description }}
+    {{/each}}
+    }
+  {{/if}}
+{{/each}}

@@ -1,5 +1,8 @@
 import { GeneratorConfig, FileOutput, Settings, EInputType, MultiFileTemplates } from './types';
-import { Document, Enum, Fragment, Operation, SchemaTemplateContext, Type } from 'graphql-codegen-core';
+import {
+  Document, Enum, Fragment, Interface, Operation, Scalar, SchemaTemplateContext,
+  Type, Union
+} from 'graphql-codegen-core';
 import { compile, registerPartial } from 'handlebars';
 import { initHelpers } from './handlebars-extensions';
 import { flattenTypes } from './flatten-types';
@@ -41,9 +44,10 @@ function generateSingleFile(compiledIndexTemplate: HandlebarsTemplateDelegate, e
 
 function generateMultipleFiles(templates: MultiFileTemplates, executionSettings: Settings, config: GeneratorConfig, templateContext: SchemaTemplateContext, documents: Document): FileOutput[] {
   const result: FileOutput[] = [];
+  const schemaContext = (!executionSettings.generateSchema) ? prepareSchemaForDocumentsOnly(templateContext) : templateContext;
 
   templates.type.forEach((compiledTypeTemplate: HandlebarsTemplateDelegate) => {
-    templateContext.types.forEach((type: Type) => {
+    schemaContext.types.forEach((type: Type) => {
       result.push({
         filename: sanitizeFilename(type.name, 'type') + '.' + (config.filesExtension || ''),
         content: compiledTypeTemplate(type),
@@ -51,11 +55,47 @@ function generateMultipleFiles(templates: MultiFileTemplates, executionSettings:
     });
   });
 
+  templates.inputType.forEach((compiledTypeTemplate: HandlebarsTemplateDelegate) => {
+    schemaContext.inputTypes.forEach((type: Type) => {
+      result.push({
+        filename: sanitizeFilename(type.name, 'input-type') + '.' + (config.filesExtension || ''),
+        content: compiledTypeTemplate(type),
+      });
+    });
+  });
+
+  templates.union.forEach((compiledTypeTemplate: HandlebarsTemplateDelegate) => {
+    schemaContext.unions.forEach((union: Union) => {
+      result.push({
+        filename: sanitizeFilename(union.name, 'union') + '.' + (config.filesExtension || ''),
+        content: compiledTypeTemplate(union),
+      });
+    });
+  });
+
   templates.enum.forEach((compiledTypeTemplate: HandlebarsTemplateDelegate) => {
-    templateContext.enums.forEach((en: Enum) => {
+    schemaContext.enums.forEach((en: Enum) => {
       result.push({
         filename: sanitizeFilename(en.name, 'enum') + '.' + (config.filesExtension || ''),
         content: compiledTypeTemplate(en),
+      });
+    });
+  });
+
+  templates.scalar.forEach((compiledTypeTemplate: HandlebarsTemplateDelegate) => {
+    schemaContext.scalars.forEach((scalar: Scalar) => {
+      result.push({
+        filename: sanitizeFilename(scalar.name, 'scalar') + '.' + (config.filesExtension || ''),
+        content: compiledTypeTemplate(scalar),
+      });
+    });
+  });
+
+  templates.interface.forEach((compiledTypeTemplate: HandlebarsTemplateDelegate) => {
+    schemaContext.interfaces.forEach((inf: Interface) => {
+      result.push({
+        filename: sanitizeFilename(inf.name, 'interface') + '.' + (config.filesExtension || ''),
+        content: compiledTypeTemplate(inf),
       });
     });
   });
@@ -64,6 +104,8 @@ function generateMultipleFiles(templates: MultiFileTemplates, executionSettings:
 }
 
 function toArrayAndCompileTemplates(templateDef): HandlebarsTemplateDelegate[] {
+  templateDef = templateDef || [];
+
   return (Array.isArray(templateDef) ? templateDef : [ templateDef ]).map(template => compile(template));
 }
 
@@ -128,13 +170,14 @@ export function compileTemplate(config: GeneratorConfig, templateContext: Schema
       throw new Error('Config filesExtension is required when using inputType = MULTIPLE_FILES!')
     }
 
-    const compiledTypeTemplates = toArrayAndCompileTemplates(templates['type']);
-    const compiledEnumTemplates = toArrayAndCompileTemplates(templates['enum']);
-
     return generateMultipleFiles(
       {
-        type: compiledTypeTemplates,
-        'enum': compiledEnumTemplates
+        type: toArrayAndCompileTemplates(templates['type']),
+        inputType: toArrayAndCompileTemplates(templates['inputType']),
+        'interface': toArrayAndCompileTemplates(templates['interface']),
+        union: toArrayAndCompileTemplates(templates['union']),
+        scalar: toArrayAndCompileTemplates(templates['scalar']),
+        'enum': toArrayAndCompileTemplates(templates['enum']),
       },
       executionSettings,
       config,
