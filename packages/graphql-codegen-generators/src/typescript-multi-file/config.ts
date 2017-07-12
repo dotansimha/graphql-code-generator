@@ -1,8 +1,8 @@
-import { GeneratorConfig } from '../types';
+import { EInputType, GeneratorConfig } from '../types';
 import * as type from './type.handlebars';
 
 const config: GeneratorConfig = {
-  singleFile: false,
+  inputType: EInputType.MULTIPLE_FILES,
   templates: {
     type,
   },
@@ -14,7 +14,7 @@ const config: GeneratorConfig = {
     Boolean: 'boolean',
     ID: 'string'
   },
-  out: 'types/',
+  filesExtension: 'd.ts',
 };
 
 export default config;

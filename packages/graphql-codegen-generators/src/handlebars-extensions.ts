@@ -1,10 +1,14 @@
 import { registerHelper } from 'handlebars';
 import { camelCase, pascalCase, snakeCase, titleCase } from 'change-case';
 import { oneLineTrim } from 'common-tags';
+import { Field, Type } from 'graphql-codegen-core';
+import { getFieldTypeAsString } from './field-type-to-string';
+import { sanitizeFilename } from './sanitizie-filename';
+import { GeneratorConfig } from './types';
 
-export const initHelpers = primitives => {
+export const initHelpers = (config: GeneratorConfig) => {
   registerHelper('toPrimitive', function (type) {
-    return primitives[type] || type || '';
+    return config.primitives[type] || type || '';
   });
 
   registerHelper('times', function (n, block) {
@@ -17,12 +21,35 @@ export const initHelpers = primitives => {
     return accum;
   });
 
-  registerHelper('toComment', function(str) {
+  registerHelper('toComment', function (str) {
     if (!str || str === '') {
       return '';
     }
 
     return '/* ' + oneLineTrim`${str || ''}` + ' */';
+  });
+
+  registerHelper('eachImport', function (context: any, options: { fn: Function }) {
+    let ret = '';
+    const imports: { name: string; file: string; }[] = [];
+
+    if (context.fields && context.interfaces) {
+      const type = context as Type;
+
+      type.fields.forEach((field: Field) => {
+        if (!config.primitives[field.type]) {
+          let fieldType = getFieldTypeAsString(field);
+          const file = sanitizeFilename(field.type, fieldType) + '.' + config.filesExtension;
+          imports.push({ name: field.type, file });
+        }
+      })
+    }
+
+    for (let i = 0, j = imports.length; i < j; i++) {
+      ret = ret + options.fn(imports[i]);
+    }
+
+    return ret;
   });
 
   registerHelper('toLowerCase', function (str) {

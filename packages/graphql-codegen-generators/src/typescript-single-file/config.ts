@@ -1,4 +1,4 @@
-import { GeneratorConfig } from '../types';
+import { EInputType, GeneratorConfig } from '../types';
 import * as index from './template.handlebars';
 import * as type from './type.handlebars';
 import * as schema from './schema.handlebars';
@@ -6,7 +6,7 @@ import * as documents from './documents.handlebars';
 import * as selectionSet from './selection-set.handlebars';
 
 const config: GeneratorConfig = {
-  singleFile: true,
+  inputType: EInputType.SINGLE_FILE,
   templates: {
     index,
     type,
@@ -22,7 +22,7 @@ const config: GeneratorConfig = {
     Boolean: 'boolean',
     ID: 'string'
   },
-  out: 'types.d.ts',
+  outFile: 'types.d.ts',
 };
 
 export default config;

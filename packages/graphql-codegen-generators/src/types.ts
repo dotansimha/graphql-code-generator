@@ -2,11 +2,16 @@ import {
   Operation, Document, Fragment, SelectionSetFragmentSpread,
   SelectionSetFieldNode, SelectionSetInlineFragment
 } from 'graphql-codegen-core';
+export const EInputType = {
+  SINGLE_FILE: 'SINGLE_FILE',
+  MULTIPLE_FILES: 'MULTIPLE_FILES',
+  PROJECT: 'PROJECT',
+};
 
 export interface GeneratorConfig {
-  singleFile: boolean;
+  inputType: string; // EInputType
   flattenTypes: boolean;
-  templates: { [templateName: string]: string };
+  templates: { [templateName: string]: string | string[] } | string;
   primitives: {
     String: string;
     Int: string;
@@ -14,7 +19,8 @@ export interface GeneratorConfig {
     Boolean: string;
     ID: string;
   };
-  out: string;
+  outFile?: string;
+  filesExtension?: string;
 }
 
 export interface FileOutput {
@@ -52,4 +58,8 @@ export interface Settings {
   generateSchema?: boolean;
   generateDocuments?: boolean;
   verbose?: boolean;
+}
+
+export interface MultiFileTemplates {
+  type: HandlebarsTemplateDelegate[];
 }

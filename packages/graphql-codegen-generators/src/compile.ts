@@ -1,8 +1,9 @@
-import { GeneratorConfig, FileOutput, Settings } from './types';
-import { Document, Fragment, Operation, SchemaTemplateContext } from 'graphql-codegen-core';
-import { compile, registerPartial, registerHelper } from 'handlebars';
+import { GeneratorConfig, FileOutput, Settings, EInputType, MultiFileTemplates } from './types';
+import { Document, Fragment, Operation, SchemaTemplateContext, Type } from 'graphql-codegen-core';
+import { compile, registerPartial } from 'handlebars';
 import { initHelpers } from './handlebars-extensions';
 import { flattenTypes } from './flatten-types';
+import { sanitizeFilename } from './sanitizie-filename';
 
 export const DEFAULT_SETTINGS: Settings = {
   generateSchema: true,
@@ -14,11 +15,11 @@ function prepareSchemaForDocumentsOnly(templateContext: SchemaTemplateContext): 
   let copy = Object.assign({}, templateContext);
 
   copy.interfaces = [];
-  copy.hasInterfaces = false;
-  copy.types = [];
-  copy.hasTypes = false;
-  copy.hasUnions = false;
   copy.unions = [];
+  copy.types = [];
+  copy.hasInterfaces = false;
+  copy.hasUnions = false;
+  copy.hasTypes = false;
 
   return copy;
 }
@@ -26,7 +27,7 @@ function prepareSchemaForDocumentsOnly(templateContext: SchemaTemplateContext): 
 function generateSingleFile(compiledIndexTemplate: HandlebarsTemplateDelegate, executionSettings: Settings, config: GeneratorConfig, templateContext: SchemaTemplateContext, documents: Document): FileOutput[] {
   return [
     {
-      filename: config.out,
+      filename: config.outFile,
       content: compiledIndexTemplate({
         ...(!executionSettings.generateSchema) ? prepareSchemaForDocumentsOnly(templateContext) : templateContext,
         operations: documents.operations,
@@ -38,8 +39,23 @@ function generateSingleFile(compiledIndexTemplate: HandlebarsTemplateDelegate, e
   ];
 }
 
+function generateMultipleFiles(templates: MultiFileTemplates, executionSettings: Settings, config: GeneratorConfig, templateContext: SchemaTemplateContext, documents: Document): FileOutput[] {
+  const result: FileOutput[] = [];
+
+  templates.type.forEach((compiledTypeTemplate: HandlebarsTemplateDelegate) => {
+    templateContext.types.forEach((type: Type) => {
+      result.push({
+        filename: sanitizeFilename(type.name, 'type') + '.' + (config.filesExtension || ''),
+        content: compiledTypeTemplate(type),
+      })
+    })
+  });
+
+  return result;
+}
+
 export function compileTemplate(config: GeneratorConfig, templateContext: SchemaTemplateContext, documents: Document[] = [], settings: Settings = DEFAULT_SETTINGS): FileOutput[] {
-  initHelpers(config.primitives);
+  initHelpers(config);
   const executionSettings = Object.assign(DEFAULT_SETTINGS, settings);
   const templates = config.templates;
 
@@ -74,9 +90,13 @@ export function compileTemplate(config: GeneratorConfig, templateContext: Schema
     }
   }
 
-  if (config.singleFile) {
+  if (config.inputType === EInputType.SINGLE_FILE) {
     if (!templates['index']) {
-      throw new Error(`Template 'index' is required when using singleFile = true!`);
+      throw new Error(`Template 'index' is required when using inputType = SINGLE_FILE!`);
+    }
+
+    if (!config.outFile) {
+      throw new Error('Config outFile is required when using inputType = SINGLE_FILE!')
     }
 
     return generateSingleFile(
@@ -86,12 +106,32 @@ export function compileTemplate(config: GeneratorConfig, templateContext: Schema
       templateContext,
       mergedDocuments,
     );
-  } else if (!config.singleFile) {
+  } else if (config.inputType === EInputType.MULTIPLE_FILES) {
     if (!templates['type']) {
-      throw new Error(`Templates 'type' are required when using singleFile = false!`);
+      throw new Error(`Templates 'type' is required when using inputType = MULTIPLE_FILES!`);
+    }
+
+    if (!config.filesExtension) {
+      throw new Error('Config filesExtension is required when using inputType = MULTIPLE_FILES!')
+    }
+
+    const compiledTypeTemplates = (Array.isArray(templates['type']) ? templates['type'] : [templates['type']]).map(template => compile(template));
+
+    return generateMultipleFiles(
+      {
+        type: compiledTypeTemplates,
+      },
+      executionSettings,
+      config,
+      templateContext,
+      mergedDocuments,
+    );
+  } else if (config.inputType === EInputType.PROJECT) {
+    if (!templates || typeof templates !== 'string') {
+      throw new Error(`Templates 'type' is required when using inputType = PROJECT!`);
     }
 
   } else {
-    return [];
+    throw new Error(`Invalid inputType specified: ${config.inputType}!`);
   }
 }
