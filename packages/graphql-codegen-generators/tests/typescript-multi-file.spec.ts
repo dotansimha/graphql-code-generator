@@ -42,6 +42,7 @@ describe('TypeScript Multi File', () => {
         }
       `);
     });
+
     it('should generate the correct types when using Query and simple type', () => {
       const templateContext = compileAndBuildContext(`
         type MyType {
@@ -60,6 +61,36 @@ describe('TypeScript Multi File', () => {
         
         export interface Query {
           fieldTest: MyType | null; 
+        }
+      `);
+      expect(compiled[1].filename).toBe('mytype.type.d.ts');
+      expect(compiled[1].content).toBeSimilarStringTo(`
+        export interface MyType {
+          f1: string | null; 
+        }
+      `);
+    });
+
+    it('should generate the correct types when using Query and twice of the same type (no dupes)', () => {
+      const templateContext = compileAndBuildContext(`
+        type MyType {
+          f1: String
+        }
+        
+        type Query {
+          fieldTest: MyType
+          fieldTest2: MyType
+        }
+      `);
+      const compiled = compileTemplate(config, templateContext);
+      expect(compiled.length).toBe(2);
+      expect(compiled[0].filename).toBe('query.type.d.ts');
+      expect(compiled[0].content).toBeSimilarStringTo(`
+        import { MyType } from './mytype.type.d.ts';
+        
+        export interface Query {
+          fieldTest: MyType | null; 
+          fieldTest2: MyType | null; 
         }
       `);
       expect(compiled[1].filename).toBe('mytype.type.d.ts');

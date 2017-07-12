@@ -40,10 +40,15 @@ export const initHelpers = (config: GeneratorConfig) => {
         if (!config.primitives[field.type]) {
           let fieldType = getFieldTypeAsString(field);
           const file = sanitizeFilename(field.type, fieldType) + '.' + config.filesExtension;
-          imports.push({ name: field.type, file });
+
+          if (!imports.find(t => t.name === field.type)) {
+            imports.push({ name: field.type, file });
+          }
         }
       })
     }
+
+
 
     for (let i = 0, j = imports.length; i < j; i++) {
       ret = ret + options.fn(imports[i]);
