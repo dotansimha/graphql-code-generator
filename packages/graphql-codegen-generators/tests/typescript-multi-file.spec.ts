@@ -329,7 +329,7 @@ describe('TypeScript Multi File', () => {
 
   describe('Operations', () => {
     it('Should compile simple Query correctly', () => {
-      const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./dev-test/githunt/schema.json').toString()));
+      const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('../../dev-test/githunt/schema.json').toString()));
       const context = schemaToTemplateContext(schema);
 
       const documents = gql`
@@ -394,7 +394,7 @@ describe('TypeScript Multi File', () => {
     });
 
     it('Should compile simple Query with Fragment spread correctly', () => {
-      const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./dev-test/githunt/schema.json').toString()));
+      const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('../../dev-test/githunt/schema.json').toString()));
       const context = schemaToTemplateContext(schema);
 
       const documents = gql`

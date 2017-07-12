@@ -297,7 +297,7 @@ describe('TypeScript Single File', () => {
     });
 
     it('should generate from a whole schema object correctly', () => {
-      const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./dev-test/githunt/schema.json').toString()));
+      const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('../../dev-test/githunt/schema.json').toString()));
       const context = schemaToTemplateContext(schema);
       const compiled = compileTemplate(config, context);
       const content = compiled[0].content;
@@ -327,7 +327,7 @@ describe('TypeScript Single File', () => {
 
   describe('Operations', () => {
     it('Should compile simple Query correctly', () => {
-      const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./dev-test/githunt/schema.json').toString()));
+      const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('../../dev-test/githunt/schema.json').toString()));
       const context = schemaToTemplateContext(schema);
 
       const documents = gql`
@@ -384,7 +384,7 @@ describe('TypeScript Single File', () => {
     });
 
     it('Should compile simple Query with Fragment spread correctly', () => {
-      const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./dev-test/githunt/schema.json').toString()));
+      const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('../../dev-test/githunt/schema.json').toString()));
       const context = schemaToTemplateContext(schema);
 
       const documents = gql`
@@ -451,7 +451,7 @@ describe('TypeScript Single File', () => {
     });
 
     it('Should compile simple Query with inline Fragment', () => {
-      const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./dev-test/githunt/schema.json').toString()));
+      const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('../../dev-test/githunt/schema.json').toString()));
       const context = schemaToTemplateContext(schema);
 
       const documents = gql`
