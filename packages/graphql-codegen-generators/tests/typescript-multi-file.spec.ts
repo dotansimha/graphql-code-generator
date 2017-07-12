@@ -196,7 +196,57 @@ describe('TypeScript Multi File', () => {
       expect(compiled[1].content).toBeSimilarStringTo(`
         export type Date = any;
       `);
+    });
 
+    it('should generate unions correctly', () => {
+      const templateContext = compileAndBuildContext(`
+        type Query {
+          fieldTest: C!
+        }
+        
+        type A {
+          f1: String
+        }
+        
+        type B {
+          f2: String
+        }
+        
+        # Union description
+        union C = A | B
+      `);
+
+      const compiled = compileTemplate(config, templateContext);
+      expect(compiled.length).toBe(4);
+      expect(compiled[0].filename).toBe('query.type.d.ts');
+      expect(compiled[1].filename).toBe('a.type.d.ts');
+      expect(compiled[2].filename).toBe('b.type.d.ts');
+      expect(compiled[3].filename).toBe('c.union.d.ts');
+
+      expect(compiled[0].content).toBeSimilarStringTo(`
+        import { C } from './c.union.d.ts';
+        
+        export interface Query {
+          fieldTest: C;
+        }
+      `);
+      expect(compiled[1].content).toBeSimilarStringTo(`
+        export interface A {
+          f1: string | null;
+        }
+      `);
+      expect(compiled[2].content).toBeSimilarStringTo(`
+        export interface B {
+          f2: string | null;
+        }
+      `);
+      expect(compiled[3].content).toBeSimilarStringTo(`
+        import { A } from './a.type.d.ts';
+        import { B } from './b.type.d.ts';
+        
+        /* Union description */
+        export type C = A | B;
+      `);
     });
   });
 });
