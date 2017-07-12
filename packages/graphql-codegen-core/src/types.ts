@@ -14,6 +14,12 @@ export interface Field {
   isArray: boolean;
   isRequired: boolean;
   hasArguments: boolean;
+  isType: boolean;
+  isScalar: boolean;
+  isInterface: boolean;
+  isUnion: boolean;
+  isInputType: boolean;
+  isEnum: boolean;
 }
 
 export interface Type {
@@ -118,7 +124,6 @@ export function isFragmentSpreadNode(node: SelectionSetItem): node is SelectionS
 export function isInlineFragmentNode(node: SelectionSetItem): node is SelectionSetInlineFragment {
   return node['selectionSet'] !== undefined && node['onType'] !== undefined;
 }
-
 
 export interface Fragment {
   name: string;
