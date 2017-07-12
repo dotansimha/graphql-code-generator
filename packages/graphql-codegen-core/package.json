@@ -4,8 +4,6 @@
   "description": "GraphQL types and code generator based on schema",
   "main": "dist/index.js",
   "scripts": {
-    "build-tests": "tsc -p tsconfig.test.json",
-    "watch": "tsc --watch",
     "clean": "rimraf ./dist",
     "lint": "tslint src/**/*.ts",
     "prebuild": "npm run clean && npm run lint",
@@ -13,10 +11,6 @@
     "prestart": "npm run build",
     "start": "cd dist && node gql-gen.js",
     "debug": "cd dist && node --inspect --debug-brk gql-gen.js",
-    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
-    "create-git-tag": "git tag $(cat package.json | json version)",
-    "dev": "cd dist/cli && nodemon --ext ts,js,d.ts,template,graphql,json,handlebars gql-gen.js --dev --file ../../dev-test/githunt/schema.json --template ts --out ../../dev-test/githunt/typings.d.ts  ../../dev-test/githunt/**/*.graphql",
-    "prepare--": "npm run build && npm run test && npm run create-git-tag && git push && git push --tags",
     "test": "jest --no-cache --verbose --runInBand"
   },
   "repository": {

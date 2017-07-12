@@ -1,5 +1,88 @@
 {
   "name": "graphql-codegen-cli",
   "version": "0.6.0",
-  "license": "MIT"
+  "license": "MIT",
+  "bin": {
+    "gql-gen": "dist/gql-gen.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dotansimha/graphql-codegen.git"
+  },
+  "scripts": {
+    "clean": "rimraf ./dist",
+    "lint": "tslint src/**/*.ts",
+    "prebuild": "npm run clean && npm run lint",
+    "build": "tsc",
+    "prestart": "npm run build",
+    "start": "cd dist && node gql-gen.js",
+    "debug": "cd dist && node --inspect --debug-brk gql-gen.js",
+    "test": "jest --no-cache --verbose --runInBand"
+  },
+  "keywords": [
+    "gql",
+    "generator",
+    "code",
+    "types",
+    "interfaces",
+    "graphql",
+    "codegen",
+    "apollo",
+    "node",
+    "typescript",
+    "ts",
+    "flow",
+    "types",
+    "d.ts",
+    "typings"
+  ],
+  "author": "Dotan Simha <dotansimha@gmail.com>",
+  "bugs": {
+    "url": "https://github.com/dotansimha/graphql-codegen/issues"
+  },
+  "homepage": "https://github.com/dotansimha/graphql-codegen#readme",
+  "jest": {
+    "verbose": true,
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "src/**/*.ts"
+    ],
+    "coverageDirectory": "./tests/coverage",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      ".*?handlebars-helpers.*?",
+      "src/index.ts",
+      "src/types.ts"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "transform": {
+      "^.+\\.(ts|tsx)$": "<rootDir>/tests/jest.typescript.js"
+    },
+    "testRegex": "tests/.*\\.ts$",
+    "testEnvironment": "node"
+  },
+  "devDependencies": {
+    "@types/commander": "^2.9.1",
+    "@types/glob": "^5.0.30",
+    "@types/jest": "^20.0.2",
+    "@types/mkdirp": "^0.3.29",
+    "@types/node": "7",
+    "@types/request": "^0.0.45",
+    "graphql-tag": "^2.4.2",
+    "jest": "^20.0.4",
+    "rimraf": "^2.6.1",
+    "tslint": "^5.4.3",
+    "typescript": "^2.4.1"
+  },
+  "dependencies": {
+    "commander": "^2.11.0",
+    "glob": "^7.1.2",
+    "graphql-codegen-generators": "0.6.0-alpha.866878b2",
+    "mkdirp": "^0.5.1",
+    "request": "^2.81.0"
+  }
 }
