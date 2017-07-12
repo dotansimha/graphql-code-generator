@@ -14,7 +14,6 @@
     "@types/jest": "^20.0.2",
     "@types/node": "7",
     "awesome-typescript-loader": "^3.2.1",
-    "common-tags": "^1.4.0",
     "graphql": "^0.10.3",
     "graphql-tag": "^2.4.2",
     "graphql-tools": "^1.0.0",
@@ -29,6 +28,7 @@
   },
   "dependencies": {
     "@types/handlebars": "^4.0.33",
+    "common-tags": "^1.4.0",
     "graphql-codegen-core": "0.6.0-alpha.a6fea330",
     "change-case": "^3.0.1",
     "handlebars": "^4.0.10"
