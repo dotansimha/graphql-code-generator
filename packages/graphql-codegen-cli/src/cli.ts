@@ -96,14 +96,14 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
 
   const graphQlSchema = await schemaExportPromise;
   const context = schemaToTemplateContext(graphQlSchema);
-  const documents = transformDocument(graphQlSchema, loadDocumentsSources(await documentsFromGlobs(documents)));
+  const transformedDocuments = transformDocument(graphQlSchema, loadDocumentsSources(await documentsFromGlobs(documents)));
   const templateConfig = getGeneratorConfig(template);
 
   if (!templateConfig) {
     throw new Error(`Unknown template: ${template}!`);
   }
 
-  return compileTemplate(templateConfig, context, [documents], {
+  return compileTemplate(templateConfig, context, [transformedDocuments], {
     generateSchema: noSchema,
     generateDocuments: noDocuments
   }).map((item: FileOutput) => ({
