@@ -48,5 +48,6 @@
   "typings": "dist/src/index.d.ts",
   "typescript": {
     "definition": "dist/src/index.d.ts"
-  }
+  },
+  "main": "./dist/index.js"
 }
