@@ -64,12 +64,5 @@ export interface Settings {
 }
 
 export interface MultiFileTemplates {
-  operation: Function[];
-  fragment: Function[];
-  type: Function[];
-  scalar: Function[];
-  'interface': Function[];
-  inputType: Function[];
-  union: Function[];
-  'enum': Function[];
+  [templateHandler: string]: Function[];
 }
