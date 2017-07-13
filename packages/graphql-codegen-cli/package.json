@@ -82,7 +82,7 @@
     "commander": "^2.11.0",
     "glob": "^7.1.2",
     "graphql-codegen-core": "0.6.0-alpha.040ffe5d",
-    "graphql-codegen-generators": "0.6.0-alpha.040ffe5d",
+    "graphql-codegen-generators": "0.6.0-alpha.8a5e7815",
     "mkdirp": "^0.5.1",
     "request": "^2.81.0"
   }
