@@ -40,7 +40,7 @@ function handleSchema(compiledTemplate: Function, schemaContext: SchemaTemplateC
   return [{
     filename: prefixAndPath + sanitizeFilename('', 'schema') + '.' + (fileExtension || ''),
     content: compiledTemplate({
-      schema: schemaContext
+      ...schemaContext
     }),
   }];
 }
@@ -51,8 +51,11 @@ function handleAll(compiledTemplate: Function, schemaContext: SchemaTemplateCont
   return [{
     filename: prefixAndPath + sanitizeFilename('', 'all') + '.' + (fileExtension || ''),
     content: compiledTemplate({
-      schema: schemaContext,
-      documents
+      ...schemaContext,
+      operations: documents.operations,
+      fragments: documents.fragments,
+      hasFragments: documents.hasFragments,
+      hasOperations: documents.hasOperations,
     }),
   }];
 }
@@ -63,7 +66,10 @@ function handleDocuments(compiledTemplate: Function, schemaContext: SchemaTempla
   return [{
     filename: prefixAndPath + sanitizeFilename('', 'documents') + '.' + (fileExtension || ''),
     content: compiledTemplate({
-      documents,
+      operations: documents.operations,
+      fragments: documents.fragments,
+      hasFragments: documents.hasFragments,
+      hasOperations: documents.hasOperations,
     }),
   }];
 }
