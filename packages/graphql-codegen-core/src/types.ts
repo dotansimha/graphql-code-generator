@@ -143,6 +143,9 @@ export interface Operation {
   operationType: string;
   variables: Variable[];
   hasVariables: boolean;
+  isQuery: boolean;
+  isMutation: boolean;
+  isSubscription: boolean;
 }
 
 export interface Variable {

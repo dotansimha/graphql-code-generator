@@ -18,5 +18,8 @@ export function transformOperation(schema: GraphQLSchema, operationNode: Operati
     operationType: operationNode.operation,
     variables: variables,
     hasVariables: variables.length > 0,
+    isQuery: operationNode.operation === 'query',
+    isMutation: operationNode.operation === 'mutation',
+    isSubscription: operationNode.operation === 'subscription',
   };
 }
