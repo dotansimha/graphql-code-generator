@@ -10,6 +10,7 @@ import { transformGraphQLEnum } from './transform-enum';
 import { transformUnion } from './transform-union';
 import { transformInterface } from './transform-interface';
 import { transformScalar } from './transform-scalar';
+import { debugLog } from '../debugging';
 
 const GRAPHQL_PRIMITIVES = ['String', 'Int', 'Boolean', 'ID', 'Float'];
 type GraphQLTypesMap = { [typeName: string]: GraphQLNamedType };
@@ -22,6 +23,7 @@ const clearTypes = (typesMap: GraphQLTypesMap): GraphQLTypesMap => Object.keys(t
   }, {});
 
 export function schemaToTemplateContext(schema: GraphQLSchema): SchemaTemplateContext {
+  debugLog('[schemaToTemplateContext] started...');
   const result: SchemaTemplateContext = {
     types: [],
     inputTypes: [],
@@ -40,6 +42,8 @@ export function schemaToTemplateContext(schema: GraphQLSchema): SchemaTemplateCo
   const rawTypesMap = schema.getTypeMap();
   const typesMap = clearTypes(rawTypesMap);
   const typesArray = objectMapToArray<GraphQLNamedType>(typesMap);
+
+  debugLog(`[schemaToTemplateContext] Got total of ${typesArray.length} types in the GraphQL schema`);
 
   typesArray.map((graphQlType: { key: string, value: GraphQLNamedType }) => {
     const actualTypeDef = graphQlType.value;
@@ -67,6 +71,8 @@ export function schemaToTemplateContext(schema: GraphQLSchema): SchemaTemplateCo
   result.hasUnions = result.unions.length > 0;
   result.hasScalars = result.scalars.length > 0;
   result.hasInterfaces = result.interfaces.length > 0;
+
+  debugLog(`[schemaToTemplateContext] done, results is: `, result);
 
   return result;
 }

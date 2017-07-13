@@ -4,6 +4,7 @@ import { Field } from '../types';
 import { resolveType } from './resolve-type';
 import { resolveArguments } from './resolve-arguments';
 import { resolveTypeIndicators } from './resolve-type-indicators';
+import { debugLog } from '../debugging';
 
 export function resolveFields(rawFields: GraphQLFieldMap<any, any>): Field[] {
   const fieldsArray = objectMapToArray<GraphQLField<any, any>>(rawFields);
@@ -13,6 +14,8 @@ export function resolveFields(rawFields: GraphQLFieldMap<any, any>): Field[] {
     const resolvedArguments = resolveArguments(item.value.args || []);
     const namedType = getNamedType(item.value.type);
     const indicators = resolveTypeIndicators(namedType);
+
+    debugLog(`[resolveFields] transformed field ${item.value.name} of type ${type}, resolved type is: `, type);
 
     return {
       name: item.value.name,

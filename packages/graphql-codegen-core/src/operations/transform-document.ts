@@ -3,6 +3,7 @@ import { Document } from '../types';
 import { transformFragment } from './transform-fragment-document';
 import { OPERATION_DEFINITION, FRAGMENT_DEFINITION } from 'graphql/language/kinds';
 import { transformOperation } from './transform-operation';
+import { debugLog } from '../debugging';
 
 export function transformDocument(schema: GraphQLSchema, documentNode: DocumentNode): Document {
   const result: Document = {
@@ -12,7 +13,11 @@ export function transformDocument(schema: GraphQLSchema, documentNode: DocumentN
     hasOperations: false,
   };
 
-  (documentNode.definitions || []).forEach((definitionNode: DefinitionNode) => {
+  const definitions = (documentNode.definitions || []);
+
+  debugLog(`[transformDocument] transforming total of ${definitions.length} definitions...`);
+
+  definitions.forEach((definitionNode: DefinitionNode) => {
     if (definitionNode.kind === OPERATION_DEFINITION) {
       result.operations.push(transformOperation(schema, definitionNode as OperationDefinitionNode));
     } else if (definitionNode.kind === FRAGMENT_DEFINITION) {

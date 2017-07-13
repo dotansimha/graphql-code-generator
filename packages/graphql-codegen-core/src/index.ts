@@ -24,3 +24,5 @@ export {
   isFragmentSpreadNode,
   isInlineFragmentNode,
 } from './types';
+
+export { debugLog } from './debugging';

@@ -10,6 +10,7 @@ import {
 import { FIELD, FRAGMENT_SPREAD, INLINE_FRAGMENT } from 'graphql/language/kinds';
 import { getFieldDef } from '../utils/get-field-def';
 import { resolveType } from '../schema/resolve-type';
+import { debugLog } from '../debugging';
 
 function separateSelectionSet(selectionSet: SelectionSetItem[]): any {
   const fields = selectionSet.filter(n => isFieldNode(n));
@@ -30,6 +31,8 @@ export function buildSelectionSet(schema: GraphQLSchema, rootObject: GraphQLType
   return ((node && node.selections ? node.selections : []) as SelectionNode[]).map<SelectionSetItem>((selectionNode: SelectionNode): SelectionSetItem => {
     if (selectionNode.kind === FIELD) {
       const fieldNode = selectionNode as FieldNode;
+      const name = fieldNode.alias && fieldNode.alias.value ? fieldNode.alias.value : fieldNode.name.value;
+      debugLog(`[buildSelectionSet] transforming FIELD with name ${name}`);
       const field = getFieldDef(rootObject, fieldNode);
       const resolvedType = resolveType(field.type);
       const childSelectionSet = buildSelectionSet(schema, getNamedType(field.type), fieldNode.selectionSet);
@@ -39,7 +42,7 @@ export function buildSelectionSet(schema: GraphQLSchema, rootObject: GraphQLType
         isFragmentSpread: false,
         isInlineFragment: false,
         isLeaf: childSelectionSet.length === 0,
-        name: fieldNode.alias && fieldNode.alias.value ? fieldNode.alias.value : fieldNode.name.value,
+        name,
         selectionSet: childSelectionSet,
         ...separateSelectionSet(childSelectionSet),
         type: resolvedType.name,
@@ -48,6 +51,7 @@ export function buildSelectionSet(schema: GraphQLSchema, rootObject: GraphQLType
       } as SelectionSetFieldNode;
     } else if (selectionNode.kind === FRAGMENT_SPREAD) {
       const fieldNode = selectionNode as FragmentSpreadNode;
+      debugLog(`[buildSelectionSet] transforming FRAGMENT_SPREAD with name ${fieldNode.name.value}...`);
 
       return {
         isField: false,
@@ -57,6 +61,8 @@ export function buildSelectionSet(schema: GraphQLSchema, rootObject: GraphQLType
         fragmentName: fieldNode.name.value,
       } as SelectionSetFragmentSpread;
     } else if (selectionNode.kind === INLINE_FRAGMENT) {
+      debugLog(`[buildSelectionSet] transforming INLINE_FRAGMENT...`);
+
       const fieldNode = selectionNode as InlineFragmentNode;
       const nextRoot = typeFromAST(schema, fieldNode.typeCondition);
       const childSelectionSet = buildSelectionSet(schema, nextRoot, fieldNode.selectionSet);

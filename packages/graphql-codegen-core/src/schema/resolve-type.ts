@@ -1,4 +1,5 @@
 import { getNamedType, GraphQLInputType, GraphQLOutputType, GraphQLType } from 'graphql';
+import { debugLog } from '../debugging';
 
 export interface ResolvedType {
   name: string;
@@ -15,8 +16,11 @@ export function isArray(type: GraphQLOutputType | GraphQLInputType): boolean {
 }
 
 export function resolveType(type: GraphQLType): ResolvedType {
+  const name = getNamedType(type).name;
+  debugLog(`[resolveType] resolving type ${name}`);
+
   return {
-    name: getNamedType(type).name,
+    name,
     isRequired: isRequired(type),
     isArray: isArray(type),
   };
