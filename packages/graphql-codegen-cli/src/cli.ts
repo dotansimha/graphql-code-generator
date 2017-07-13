@@ -11,12 +11,11 @@ import {
   FileOutput,
   ALLOWED_CUSTOM_TEMPLATE_EXT,
 } from 'graphql-codegen-generators';
-import { introspectionToGraphQLSchema, schemaToTemplateContext, transformDocument } from 'graphql-codegen-core';
+import { debugLog, introspectionToGraphQLSchema, schemaToTemplateContext, transformDocument } from 'graphql-codegen-core';
 import { loadDocumentsSources } from './loaders/document-loader';
 import * as path from 'path';
 import { scanForTemplatesInPath } from './loaders/templates-scanner';
 import * as fs from 'fs';
-import { debugLog } from '../../graphql-codegen-core/src/debugging';
 
 export interface CLIOptions {
   file?: string;
