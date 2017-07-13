@@ -791,9 +791,9 @@ graphql-codegen-core@0.6.0-alpha.31d807a4:
     graphql "^0.10.3"
     graphql-tools "^1.0.0"
 
-graphql-codegen-generators@0.6.0-alpha.24ca3932:
-  version "0.6.0-alpha.24ca3932"
-  resolved "https://registry.yarnpkg.com/graphql-codegen-generators/-/graphql-codegen-generators-0.6.0-alpha.24ca3932.tgz#af5bee522782a892a7ddbd94f08209516a074330"
+graphql-codegen-generators@0.6.0-alpha.275b77af:
+  version "0.6.0-alpha.275b77af"
+  resolved "https://registry.yarnpkg.com/graphql-codegen-generators/-/graphql-codegen-generators-0.6.0-alpha.275b77af.tgz#215add46b032cec793e4a4a8ad78cdfffaddb1c4"
   dependencies:
     "@types/handlebars" "^4.0.33"
     change-case "^3.0.1"
