@@ -15,7 +15,7 @@ describe('generateProject', () => {
         ID: 'string'
       },
       templates: {
-        'prefix.js.operation.template': `{{ test }}`,
+        'prefix.js.operation.template': `{{ name }}`,
       },
     };
 
@@ -43,5 +43,6 @@ describe('generateProject', () => {
     const compiled = compileTemplate(config, context, [transformedDocument], { generateSchema: false });
 
     expect(compiled[0].filename).toBe('prefix.myfeed.query.js');
+    expect(compiled[0].content).toBe('myFeed');
   });
 });
