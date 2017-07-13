@@ -84,13 +84,14 @@ export const validateCliOptions = (options: CLIOptions) => {
   const url = options.url;
   const fsExport = options.export;
   const template = options.template;
+  const project = options.project;
 
   if (!file && !url && !fsExport) {
     cliError('Please specify one of --file, --url or --export flags!');
   }
 
-  if (!template) {
-    cliError('Please specify language/platform, using --template flag');
+  if (!template && !project) {
+    cliError('Please specify language/platform, using --template flag, or specify --project to generate with custom project!');
   }
 };
 
