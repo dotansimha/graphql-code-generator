@@ -3,7 +3,7 @@
   "version": "0.6.0",
   "license": "MIT",
   "bin": {
-    "gql-gen": "dist/gql-gen.js"
+    "gql-gen": "dist/index.js"
   },
   "repository": {
     "type": "git",
