@@ -188,7 +188,7 @@ export function generateMultipleFiles(templates: MultiFileTemplates, executionSe
       debugLog(`[generateMultipleFiles] Using custom template handlers, parsed template name result: `, parsedTemplateName);
 
       if (parsedTemplateName !== null) {
-        result.push(...parsedTemplateName.handler(templateFn, schemaContext, documents, parsedTemplateName.fileExtension, parsedTemplateName.prefix + '.'))
+        result.push(...parsedTemplateName.handler(templateFn, schemaContext, documents, parsedTemplateName.fileExtension, parsedTemplateName.prefix))
       }
     }
   });
