@@ -24,7 +24,7 @@ const handlersMap = {
   fragment: handleFragment,
 };
 
-const ALLOWED_CUSTOM_TEMPLATE_EXT = [
+export const ALLOWED_CUSTOM_TEMPLATE_EXT = [
   'template',
   'handlebars',
   'tmpl',
