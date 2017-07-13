@@ -2,7 +2,7 @@ import { introspectionQuery, IntrospectionQuery } from 'graphql/utilities/intros
 import * as request from 'request';
 
 export const introspectionFromUrl = (url: string, headers: string[]): Promise<IntrospectionQuery> => {
-  let splittedHeaders = headers.map((header: string) => {
+  let splittedHeaders = (headers || []).map((header: string) => {
     const [name, value] = header.split(/\s*:\s*/);
 
     return {
