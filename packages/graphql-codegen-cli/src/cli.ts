@@ -16,6 +16,7 @@ import { loadDocumentsSources } from './loaders/document-loader';
 import * as path from 'path';
 import { scanForTemplatesInPath } from './loaders/templates-scanner';
 import * as fs from 'fs';
+import { debugLog } from '../../graphql-codegen-core/src/debugging';
 
 export interface CLIOptions {
   file?: string;
@@ -122,11 +123,24 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
   }
 
   const graphQlSchema = await schemaExportPromise;
+
+  if (process.env.VERBOSE !== undefined) {
+    console.log(`GraphQL Schema is: `, graphQlSchema);
+  }
+
   const context = schemaToTemplateContext(graphQlSchema);
+  debugLog(`[executeWithOptions] Schema template context build, the result is: `);
+  Object.keys(context).forEach(key => {
+    if (Array.isArray(context[key])) {
+      debugLog(`Total of ${key}: ${context[key].length}`);
+    }
+  });
+
   const transformedDocuments = transformDocument(graphQlSchema, loadDocumentsSources(await documentsFromGlobs(documents)));
   let templateConfig: GeneratorConfig = null;
 
   if (template && template !== '') {
+    debugLog(`[executeWithOptions] using template: ${template}`);
     templateConfig = getGeneratorConfig(template);
 
     if (!templateConfig) {
@@ -135,10 +149,13 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
   }
 
   if (project && project !== '') {
+    debugLog(`[executeWithOptions] using project: ${project}`);
+
     const configPath = path.resolve(process.cwd(), projectConfig);
 
     if (fs.existsSync(configPath)) {
       const config = JSON.parse(fs.readFileSync(configPath).toString()) as ProjectConfig;
+      debugLog(`[executeWithOptions] Got project config JSON: `, config);
       const templates = scanForTemplatesInPath(project, ALLOWED_CUSTOM_TEMPLATE_EXT);
 
       templateConfig = {
@@ -157,6 +174,6 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
     generateDocuments: noDocuments
   }).map((item: FileOutput) => ({
     content: item.content,
-    filename: path.resolve(process.cwd(), out, item.filename),
+    filename: path.isAbsolute(item.filename) ? item.filename : path.resolve(process.cwd(), out, item.filename),
   }));
 };
