@@ -107,8 +107,8 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
   const projectConfig: string = options.projectConfig || './gql-gen.json';
   const out: string = options.out || './';
   const headers: string[] = options.headers;
-  const noSchema: boolean = !options.schema;
-  const noDocuments: boolean = !options.documents;
+  const generateSchema: boolean = options.schema;
+  const generateDocuments: boolean = options.documents;
   let schemaExportPromise;
 
   if (file) {
@@ -169,8 +169,8 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
   }
 
   return compileTemplate(templateConfig, context, [transformedDocuments], {
-    generateSchema: noSchema,
-    generateDocuments: noDocuments
+    generateSchema,
+    generateDocuments,
   }).map((item: FileOutput) => ({
     content: item.content,
     filename: path.isAbsolute(item.filename) ? item.filename : path.resolve(process.cwd(), out, item.filename),
