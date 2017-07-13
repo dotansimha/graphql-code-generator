@@ -23,7 +23,7 @@
     "@types/minimatch" "*"
     "@types/node" "*"
 
-"@types/graphql@^0.9.0", "@types/graphql@^0.9.3":
+"@types/graphql@^0.9.0":
   version "0.9.3"
   resolved "https://registry.yarnpkg.com/@types/graphql/-/graphql-0.9.3.tgz#4a2a888e110c796eb7671bf8f9ecef229ad67749"
 
@@ -447,10 +447,6 @@ block-stream@*:
   resolved "https://registry.yarnpkg.com/block-stream/-/block-stream-0.0.9.tgz#13ebfe778a03205cfe03751481ebb4b3300c126a"
   dependencies:
     inherits "~2.0.0"
-
-bluebird@3.3.3:
-  version "3.3.3"
-  resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.3.3.tgz#cf96a45d77b9a97a43c46a365c4619f62bf976d0"
 
 bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.1.1, bn.js@^4.4.0:
   version "4.11.7"
@@ -989,14 +985,6 @@ dts-bundle@^0.7.3:
     glob "^6.0.4"
     mkdirp "^0.5.0"
 
-dts-generator@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/dts-generator/-/dts-generator-2.1.0.tgz#039b87a4f5f847b3b8ef00ddee3eb09545decefe"
-  dependencies:
-    bluebird "3.3.3"
-    glob "7.0.0"
-    mkdirp "0.5.1"
-
 ecc-jsbn@~0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/ecc-jsbn/-/ecc-jsbn-0.1.1.tgz#0fc73a9ed5f0d53c38193398523ef7e543777505"
@@ -1386,16 +1374,6 @@ glob-parent@^2.0.0:
   dependencies:
     is-glob "^2.0.0"
 
-glob@7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/glob/-/glob-7.0.0.tgz#3b20a357fffcf46bb384aed6f8ae9a647fdb6ac4"
-  dependencies:
-    inflight "^1.0.4"
-    inherits "2"
-    minimatch "2 || 3"
-    once "^1.3.0"
-    path-is-absolute "^1.0.0"
-
 glob@^6.0.4:
   version "6.0.4"
   resolved "https://registry.yarnpkg.com/glob/-/glob-6.0.4.tgz#0f08860f6a155127b2fadd4f9ce24b1aab6e4d22"
@@ -1429,9 +1407,9 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.2:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/graceful-readlink/-/graceful-readlink-1.0.1.tgz#4cafad76bc62f02fa039b2f94e9a3dd3a391a725"
 
-graphql-codegen-core@0.6.0-alpha.a6fea330:
-  version "0.6.0-alpha.a6fea330"
-  resolved "https://registry.yarnpkg.com/graphql-codegen-core/-/graphql-codegen-core-0.6.0-alpha.a6fea330.tgz#67943ff4b6f735590ab74308cbe59ccf53ed2d2f"
+graphql-codegen-core@0.6.0-alpha.31d807a4:
+  version "0.6.0-alpha.31d807a4"
+  resolved "https://registry.yarnpkg.com/graphql-codegen-core/-/graphql-codegen-core-0.6.0-alpha.31d807a4.tgz#918334591921b3c26724f37c330cb1ea7f398a08"
   dependencies:
     graphql "^0.10.3"
     graphql-tools "^1.0.0"
@@ -2358,7 +2336,7 @@ mixin-deep@^1.1.3:
     for-in "^1.0.2"
     is-extendable "^0.1.1"
 
-mkdirp@0.5.1, "mkdirp@>=0.5 0", mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0:
+"mkdirp@>=0.5 0", mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0:
   version "0.5.1"
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-0.5.1.tgz#30057438eac6cf7f8c4767f38648d6697d75c903"
   dependencies:

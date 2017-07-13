@@ -8,7 +8,7 @@ import {
   SchemaTemplateContext,
   Type,
   Union,
-  Document
+  Document, debugLog
 } from 'graphql-codegen-core';
 import { sanitizeFilename } from './sanitizie-filename';
 import { prepareSchemaForDocumentsOnly } from './prepare-documents-only';
@@ -35,6 +35,8 @@ export const ALLOWED_CUSTOM_TEMPLATE_EXT = [
 ];
 
 function handleSchema(compiledTemplate: Function, schemaContext: SchemaTemplateContext, documents: Document, fileExtension: string, prefixAndPath: string = ''): FileOutput[] {
+  debugLog(`[handleSchema] called`);
+
   return [{
     filename: prefixAndPath + sanitizeFilename('', 'schema') + '.' + (fileExtension || ''),
     content: compiledTemplate({
@@ -44,6 +46,8 @@ function handleSchema(compiledTemplate: Function, schemaContext: SchemaTemplateC
 }
 
 function handleAll(compiledTemplate: Function, schemaContext: SchemaTemplateContext, documents: Document, fileExtension: string, prefixAndPath: string = ''): FileOutput[] {
+  debugLog(`[handleAll] called`);
+
   return [{
     filename: prefixAndPath + sanitizeFilename('', 'all') + '.' + (fileExtension || ''),
     content: compiledTemplate({
@@ -54,6 +58,8 @@ function handleAll(compiledTemplate: Function, schemaContext: SchemaTemplateCont
 }
 
 function handleDocuments(compiledTemplate: Function, schemaContext: SchemaTemplateContext, documents: Document, fileExtension: string, prefixAndPath: string = ''): FileOutput[] {
+  debugLog(`[handleDocuments] called`);
+
   return [{
     filename: prefixAndPath + sanitizeFilename('', 'documents') + '.' + (fileExtension || ''),
     content: compiledTemplate({
@@ -63,6 +69,8 @@ function handleDocuments(compiledTemplate: Function, schemaContext: SchemaTempla
 }
 
 function handleType(compiledTemplate: Function, schemaContext: SchemaTemplateContext, documents: Document, fileExtension: string, prefixAndPath: string = ''): FileOutput[] {
+  debugLog(`[handleType] called`);
+
   return schemaContext.types.map((type: Type) => ({
     filename: prefixAndPath + sanitizeFilename(type.name, 'type') + '.' + (fileExtension || ''),
     content: compiledTemplate(type),
@@ -70,6 +78,8 @@ function handleType(compiledTemplate: Function, schemaContext: SchemaTemplateCon
 }
 
 function handleInputType(compiledTemplate: Function, schemaContext: SchemaTemplateContext, documents: Document, fileExtension: string, prefixAndPath: string = ''): FileOutput[] {
+  debugLog(`[handleInputType] called`);
+
   return schemaContext.inputTypes.map((type: Type) => ({
     filename: prefixAndPath + sanitizeFilename(type.name, 'input-type') + '.' + (fileExtension || ''),
     content: compiledTemplate(type),
@@ -77,6 +87,8 @@ function handleInputType(compiledTemplate: Function, schemaContext: SchemaTempla
 }
 
 function handleUnion(compiledTemplate: Function, schemaContext: SchemaTemplateContext, documents: Document, fileExtension: string, prefixAndPath: string = ''): FileOutput[] {
+  debugLog(`[handleUnion] called`);
+
   return schemaContext.unions.map((union: Union) => ({
     filename: prefixAndPath + sanitizeFilename(union.name, 'union') + '.' + (fileExtension || ''),
     content: compiledTemplate(union),
@@ -84,6 +96,8 @@ function handleUnion(compiledTemplate: Function, schemaContext: SchemaTemplateCo
 }
 
 function handleEnum(compiledTemplate: Function, schemaContext: SchemaTemplateContext, documents: Document, fileExtension: string, prefixAndPath: string = ''): FileOutput[] {
+  debugLog(`[handleEnum] called`);
+
   return schemaContext.enums.map((en: Enum) => ({
     filename: prefixAndPath + sanitizeFilename(en.name, 'enum') + '.' + (fileExtension || ''),
     content: compiledTemplate(en),
@@ -91,6 +105,8 @@ function handleEnum(compiledTemplate: Function, schemaContext: SchemaTemplateCon
 }
 
 function handleScalar(compiledTemplate: Function, schemaContext: SchemaTemplateContext, documents: Document, fileExtension: string, prefixAndPath: string = ''): FileOutput[] {
+  debugLog(`[handleScalar] called`);
+
   return schemaContext.scalars.map((scalar: Scalar) => ({
     filename: prefixAndPath + sanitizeFilename(scalar.name, 'scalar') + '.' + (fileExtension || ''),
     content: compiledTemplate(scalar),
@@ -98,6 +114,8 @@ function handleScalar(compiledTemplate: Function, schemaContext: SchemaTemplateC
 }
 
 function handleInterface(compiledTemplate: Function, schemaContext: SchemaTemplateContext, documents: Document, fileExtension: string, prefixAndPath: string = ''): FileOutput[] {
+  debugLog(`[handleInterface] called`);
+
   return schemaContext.interfaces.map((inf: Interface) => ({
     filename: prefixAndPath + sanitizeFilename(inf.name, 'interface') + '.' + (fileExtension || ''),
     content: compiledTemplate(inf),
@@ -105,6 +123,8 @@ function handleInterface(compiledTemplate: Function, schemaContext: SchemaTempla
 }
 
 function handleOperation(compiledTemplate: Function, schemaContext: SchemaTemplateContext, documents: Document, fileExtension: string, prefixAndPath: string = ''): FileOutput[] {
+  debugLog(`[handleOperation] called`);
+
   return documents.operations.map((operation: Operation) => ({
     filename: prefixAndPath + sanitizeFilename(operation.name, operation.operationType) + '.' + (fileExtension || ''),
     content: compiledTemplate(operation),
@@ -112,6 +132,8 @@ function handleOperation(compiledTemplate: Function, schemaContext: SchemaTempla
 }
 
 function handleFragment(compiledTemplate: Function, schemaContext: SchemaTemplateContext, documents: Document, fileExtension: string, prefixAndPath: string = ''): FileOutput[] {
+  debugLog(`[handleFragment] called`);
+
   return documents.fragments.map((fragment: Fragment) => ({
     filename: prefixAndPath + sanitizeFilename(fragment.name, 'fragment') + '.' + (fileExtension || ''),
     content: compiledTemplate(fragment),
@@ -140,18 +162,24 @@ function parseTemplateName(templateName: string): { prefix: string; handler: Fun
 }
 
 export function generateMultipleFiles(templates: MultiFileTemplates, executionSettings: Settings, config: GeneratorConfig, templateContext: SchemaTemplateContext, documents: Document): FileOutput[] {
+  debugLog(`[generateMultipleFiles] Compiling multiple files...`);
   const result: FileOutput[] = [];
   const schemaContext = (!executionSettings.generateSchema) ? prepareSchemaForDocumentsOnly(templateContext) : templateContext;
 
   Object.keys(templates).forEach(templateName => {
+    debugLog(`[generateMultipleFiles] Checking template: ${templateName}`);
+
     const templateFn = templates[templateName];
 
     if (handlersMap[templateName]) {
+      debugLog(`[generateMultipleFiles] Using simple handle of type: ${templateName}`);
+
       const handler = handlersMap[templateName];
 
       result.push(...handler(templateFn, schemaContext, documents, config.filesExtension))
     } else {
       const parsedTemplateName = parseTemplateName(templateName);
+      debugLog(`[generateMultipleFiles] Using custom template handlers, parsed template name result: `, parsedTemplateName);
 
       if (parsedTemplateName !== null) {
         result.push(...parsedTemplateName.handler(templateFn, schemaContext, documents, parsedTemplateName.fileExtension, parsedTemplateName.prefix + '.'))

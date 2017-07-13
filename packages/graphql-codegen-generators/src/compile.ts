@@ -1,5 +1,5 @@
 import { GeneratorConfig, FileOutput, Settings, EInputType } from './types';
-import { Document, Fragment, Operation, SchemaTemplateContext } from 'graphql-codegen-core';
+import { debugLog, Document, Fragment, Operation, SchemaTemplateContext } from 'graphql-codegen-core';
 import { compile, registerPartial } from 'handlebars';
 import { initHelpers } from './handlebars-extensions';
 import { flattenTypes } from './flatten-types';
@@ -12,17 +12,23 @@ export const DEFAULT_SETTINGS: Settings = {
 };
 
 export function compileTemplate(config: GeneratorConfig, templateContext: SchemaTemplateContext, documents: Document[] = [], settings: Settings = DEFAULT_SETTINGS): FileOutput[] {
+  debugLog(`[compileTemplate] starting to compile template with input type = ${config.inputType}`);
+  debugLog(`[compileTemplate] settings = `, settings);
   initHelpers(config, templateContext);
   const executionSettings = Object.assign(DEFAULT_SETTINGS, settings);
   const templates = config.templates;
 
   Object.keys(templates).forEach((templateName: string) => {
+    debugLog(`[compileTemplate] register partial template ${templateName}`);
+
     registerPartial(templateName, templates[templateName]);
   });
 
   let mergedDocuments: Document;
 
   if (!executionSettings.generateDocuments) {
+    debugLog(`[compileTemplate] generateDocuments is false, ignoring documents...`);
+
     mergedDocuments = {
       fragments: [],
       operations: [],
@@ -42,7 +48,11 @@ export function compileTemplate(config: GeneratorConfig, templateContext: Schema
       }
     }, { hasFragments: false, hasOperations: false, operations: [], fragments: [] } as Document);
 
+    debugLog(`[compileTemplate] all documents merged into single document, total of ${mergedDocuments.operations.length} operations and ${mergedDocuments.fragments.length} fragments`);
+
     if (config.flattenTypes) {
+      debugLog(`[compileTemplate] flattenTypes is true, flattening all selection sets from all documents...`);
+
       mergedDocuments = flattenTypes(mergedDocuments);
     }
   }
@@ -55,6 +65,8 @@ export function compileTemplate(config: GeneratorConfig, templateContext: Schema
     if (!config.outFile) {
       throw new Error('Config outFile is required when using inputType = SINGLE_FILE!')
     }
+
+    debugLog(`[compileTemplate] Executing generateSingleFile...`);
 
     return generateSingleFile(
       compile(templates['index']),
@@ -70,6 +82,8 @@ export function compileTemplate(config: GeneratorConfig, templateContext: Schema
       }
     }
 
+    debugLog(`[compileTemplate] Executing generateMultipleFiles...`);
+
     const compiledTemplates = Object.keys(templates).map(templateName => {
       const compiledTemplate = compile(templates[templateName]);
 
@@ -82,6 +96,8 @@ export function compileTemplate(config: GeneratorConfig, templateContext: Schema
 
       return prev;
     }, {}) as {[name: string]: Function[]};
+
+    debugLog(`[compileTemplate] Templates names: `, Object.keys(compiledTemplates));
 
     return generateMultipleFiles(
       compiledTemplates,
