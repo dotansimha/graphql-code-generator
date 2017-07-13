@@ -95,7 +95,6 @@ export const validateCliOptions = (options: CLIOptions) => {
 };
 
 export const executeWithOptions = async (options: CLIOptions): Promise<FileOutput[]> => {
-  console.log(options);
   validateCliOptions(options);
 
   const file: string = options.file;
