@@ -22,6 +22,9 @@ const handlersMap = {
   'interface': handleInterface,
   operation: handleOperation,
   fragment: handleFragment,
+  schema: handleSchema,
+  documents: handleDocuments,
+  all: handleAll,
 };
 
 export const ALLOWED_CUSTOM_TEMPLATE_EXT = [
@@ -30,6 +33,34 @@ export const ALLOWED_CUSTOM_TEMPLATE_EXT = [
   'tmpl',
   'gqlgen'
 ];
+
+function handleSchema(compiledTemplate: Function, schemaContext: SchemaTemplateContext, documents: Document, fileExtension: string, prefixAndPath: string = ''): FileOutput[] {
+  return [{
+    filename: prefixAndPath + sanitizeFilename('', 'schema') + '.' + (fileExtension || ''),
+    content: compiledTemplate({
+      schema: schemaContext
+    }),
+  }];
+}
+
+function handleAll(compiledTemplate: Function, schemaContext: SchemaTemplateContext, documents: Document, fileExtension: string, prefixAndPath: string = ''): FileOutput[] {
+  return [{
+    filename: prefixAndPath + sanitizeFilename('', 'all') + '.' + (fileExtension || ''),
+    content: compiledTemplate({
+      schema: schemaContext,
+      documents
+    }),
+  }];
+}
+
+function handleDocuments(compiledTemplate: Function, schemaContext: SchemaTemplateContext, documents: Document, fileExtension: string, prefixAndPath: string = ''): FileOutput[] {
+  return [{
+    filename: prefixAndPath + sanitizeFilename('', 'documents') + '.' + (fileExtension || ''),
+    content: compiledTemplate({
+      documents,
+    }),
+  }];
+}
 
 function handleType(compiledTemplate: Function, schemaContext: SchemaTemplateContext, documents: Document, fileExtension: string, prefixAndPath: string = ''): FileOutput[] {
   return schemaContext.types.map((type: Type) => ({
