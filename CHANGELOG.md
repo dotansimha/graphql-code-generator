@@ -1,3 +1,11 @@
+<a name="0.5.5"></a>
+## [0.5.5](https://github.com/dotansimha/graphql-codegen/compare/0.5.4...0.5.5) (2017-07-13)
+
+* fixed peer dependencies issue
+* fixed error with template resolution [PR #110](https://github.com/dotansimha/graphql-code-generator/pull/110)
+* update depndencies
+* Prevent primitives from being output like other models [PR #116](https://github.com/dotansimha/graphql-code-generator/pull/116)
+
 <a name="0.5.4"></a>
 ## [0.5.4](https://github.com/dotansimha/graphql-codegen/compare/0.5.2...0.5.4) (2017-06-24)
 
