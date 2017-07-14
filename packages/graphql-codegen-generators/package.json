@@ -30,7 +30,7 @@
     "@types/handlebars": "^4.0.33",
     "change-case": "^3.0.1",
     "common-tags": "^1.4.0",
-    "graphql-codegen-core": "0.6.0-alpha.31d807a4",
+    "graphql-codegen-core": "^0.6.0",
     "handlebars": "^4.0.10"
   },
   "jest": {
