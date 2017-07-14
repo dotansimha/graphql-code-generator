@@ -4,6 +4,7 @@ import { getRoot } from '../utils/get-root';
 import { buildSelectionSet } from './build-selection-set';
 import { transformVariables } from './transform-variables';
 import { debugLog } from '../debugging';
+import { print } from 'graphql/language/printer';
 
 export function transformOperation(schema: GraphQLSchema, operationNode: OperationDefinitionNode): Operation {
   const name = operationNode.name && operationNode.name.value ? operationNode.name.value : '';
@@ -21,5 +22,6 @@ export function transformOperation(schema: GraphQLSchema, operationNode: Operati
     isQuery: operationNode.operation === 'query',
     isMutation: operationNode.operation === 'mutation',
     isSubscription: operationNode.operation === 'subscription',
+    document: print(operationNode),
   };
 }

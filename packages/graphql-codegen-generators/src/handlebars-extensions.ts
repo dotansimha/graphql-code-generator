@@ -166,8 +166,22 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
     return titleCase(str || '');
   });
 
-  registerHelper('toCamelCqse', function (str) {
+  registerHelper('toCamelCase', function (str) {
     return camelCase(str || '');
+  });
+
+  registerHelper('multilineString', function (str) {
+    if (!str) {
+      return '';
+    }
+
+    const lines = str.split('\n');
+
+    return lines.map((line, index) => {
+      const isLastLine = index != lines.length - 1;
+
+      return `"${line.replace(/"/g, '\\"')}"` + (isLastLine ? ' +' : '');
+    }).join('\r\n');
   });
 
   registerHelper('for', function (from, to, incr, block) {

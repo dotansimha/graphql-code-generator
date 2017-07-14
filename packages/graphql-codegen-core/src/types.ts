@@ -135,6 +135,7 @@ export interface Fragment {
   name: string;
   selectionSet: SelectionSetItem[];
   onType: string;
+  document: string;
 }
 
 export interface Operation {
@@ -146,6 +147,7 @@ export interface Operation {
   isQuery: boolean;
   isMutation: boolean;
   isSubscription: boolean;
+  document: string;
 }
 
 export interface Variable {
