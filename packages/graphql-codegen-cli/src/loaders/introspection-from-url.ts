@@ -1,4 +1,4 @@
-import { introspectionQuery, IntrospectionQuery } from 'graphql/utilities/introspectionQuery';
+import { introspectionQuery, IntrospectionQuery } from 'graphql-codegen-core';
 import * as request from 'request';
 
 export const introspectionFromUrl = (url: string, headers: string[]): Promise<IntrospectionQuery> => {

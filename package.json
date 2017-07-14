@@ -8,9 +8,10 @@
     "clean": "lerna clean --yes",
     "bootstrap": "lerna bootstrap",
     "build": "lerna run build",
-    "test": "lerna run test"
+    "test": "lerna run test",
+    "publish-canary": "$(npm bin)/lerna publish --canary"
   },
   "dependencies": {
-    "lerna": "^2.0.0-rc.5"
+    "lerna": "^2.0.0"
   }
 }

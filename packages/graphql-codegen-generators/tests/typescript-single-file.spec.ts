@@ -5,12 +5,10 @@ import {
   SchemaTemplateContext,
   introspectionToGraphQLSchema
 } from 'graphql-codegen-core';
-import { GraphQLSchema } from 'graphql';
+import { gql, makeExecutableSchema, GraphQLSchema } from 'graphql-codegen-core';
 import * as fs from 'fs';
-import { makeExecutableSchema } from 'graphql-tools';
 import { compileTemplate } from '../src/compile';
 import { TypescriptSingleFile } from '../dist/index.js';
-import gql from 'graphql-tag';
 
 declare module '../dist/index.js' {
   const TypescriptSingleFile: any;

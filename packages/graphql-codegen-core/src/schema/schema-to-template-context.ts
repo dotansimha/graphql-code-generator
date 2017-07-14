@@ -3,7 +3,7 @@ import {
   GraphQLSchema,
   GraphQLUnionType
 } from 'graphql';
-import { SchemaTemplateContext, Type } from '../types';
+import { SchemaTemplateContext } from '../types';
 import { objectMapToArray } from '../utils/object-map-to-array';
 import { transformGraphQLObject } from './transform-object';
 import { transformGraphQLEnum } from './transform-enum';
@@ -61,7 +61,7 @@ export function schemaToTemplateContext(schema: GraphQLSchema): SchemaTemplateCo
     } else if (actualTypeDef instanceof GraphQLScalarType) {
       result.scalars.push(transformScalar(actualTypeDef));
     } else {
-      throw new Error(`Unexpected GraphQL type definition: ${graphQlType.key} => ${String(actualTypeDef)}`);
+      throw new Error(`Unexpected GraphQL type definition: ${graphQlType.key} (As string: ${String(actualTypeDef)})`);
     }
   });
 

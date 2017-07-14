@@ -2,10 +2,6 @@
 # yarn lockfile v1
 
 
-"@types/graphql@^0.9.0":
-  version "0.9.3"
-  resolved "https://registry.yarnpkg.com/@types/graphql/-/graphql-0.9.3.tgz#4a2a888e110c796eb7671bf8f9ecef229ad67749"
-
 JSONStream@^1.0.4:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/JSONStream/-/JSONStream-1.3.1.tgz#707f761e01dae9e16f1bcf93703b78c70966579a"
@@ -414,10 +410,6 @@ delegates@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/delegates/-/delegates-1.0.0.tgz#84c6e159b81904fdca59a0ef44cd870d31250f9a"
 
-deprecated-decorator@^0.1.6:
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/deprecated-decorator/-/deprecated-decorator-0.1.6.tgz#00966317b7a12fe92f3cc831f7583af329b86c37"
-
 detect-indent@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/detect-indent/-/detect-indent-5.0.0.tgz#3871cc0a6a002e8c3e5b3cf7f336264675f06b9d"
@@ -610,29 +602,6 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.2, graceful-fs@^4.1.6:
   version "4.1.11"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.11.tgz#0e8bdfe4d1ddb8854d64e04ea7c00e2a026e5658"
 
-graphql-codegen-core@0.6.0-alpha.4e12bbc7:
-  version "0.6.0-alpha.4e12bbc7"
-  resolved "https://registry.yarnpkg.com/graphql-codegen-core/-/graphql-codegen-core-0.6.0-alpha.4e12bbc7.tgz#66cea9ddb88d5650c09830377ecc79e0e175ea92"
-  dependencies:
-    graphql "^0.10.3"
-    graphql-tools "^1.0.0"
-
-graphql-tools@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/graphql-tools/-/graphql-tools-1.0.0.tgz#76b25e1dce0521b31d5566aac281b2f134bc49c8"
-  dependencies:
-    deprecated-decorator "^0.1.6"
-    lodash "^4.3.0"
-    uuid "^3.0.1"
-  optionalDependencies:
-    "@types/graphql" "^0.9.0"
-
-graphql@^0.10.3:
-  version "0.10.3"
-  resolved "https://registry.yarnpkg.com/graphql/-/graphql-0.10.3.tgz#c313afd5518e673351bee18fb63e2a0e487407ab"
-  dependencies:
-    iterall "^1.1.0"
-
 handlebars@^4.0.2:
   version "4.0.10"
   resolved "https://registry.yarnpkg.com/handlebars/-/handlebars-4.0.10.tgz#3d30c718b09a3d96f23ea4cc1f403c4d3ba9ff4f"
@@ -783,10 +752,6 @@ isexe@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/isexe/-/isexe-2.0.0.tgz#e8fbf374dc556ff8947a10dcb0572d633f2cfa10"
 
-iterall@^1.1.0:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/iterall/-/iterall-1.1.1.tgz#f7f0af11e9a04ec6426260f5019d9fcca4d50214"
-
 jschardet@^1.4.2:
   version "1.4.2"
   resolved "https://registry.yarnpkg.com/jschardet/-/jschardet-1.4.2.tgz#2aa107f142af4121d145659d44f50830961e699a"
@@ -821,9 +786,9 @@ lcid@^1.0.0:
   dependencies:
     invert-kv "^1.0.0"
 
-lerna@^2.0.0-rc.5:
-  version "2.0.0-rc.5"
-  resolved "https://registry.yarnpkg.com/lerna/-/lerna-2.0.0-rc.5.tgz#b59d168caaac6e3443078c1bce194208c9aa3090"
+lerna@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/lerna/-/lerna-2.0.0.tgz#49a72fe70e06aebfd7ea23efb2ab41abe60ebeea"
   dependencies:
     async "^1.5.0"
     chalk "^1.1.1"

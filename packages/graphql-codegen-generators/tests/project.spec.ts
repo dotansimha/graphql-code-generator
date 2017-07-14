@@ -1,6 +1,7 @@
 import { EInputType, GeneratorConfig } from '../src/types';
-import { introspectionToGraphQLSchema, schemaToTemplateContext, transformDocument } from 'graphql-codegen-core';
-import * as fs from 'fs'; import gql from 'graphql-tag'; import { compileTemplate } from '../src/compile';
+import { gql, introspectionToGraphQLSchema, schemaToTemplateContext, transformDocument } from 'graphql-codegen-core';
+import * as fs from 'fs';
+import { compileTemplate } from '../src/compile';
 
 describe('generateProject', () => {
   it('should handle templates correctly and return the correct result path', () => {

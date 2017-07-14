@@ -1,4 +1,4 @@
-import { DocumentNode, Source, parse, concatAST } from 'graphql';
+import { DocumentNode, Source, parse, concatAST } from 'graphql-codegen-core';
 import * as fs from 'fs';
 import * as path from 'path';
 import { extractDocumentStringFromCodeFile } from '../utils/document-finder';

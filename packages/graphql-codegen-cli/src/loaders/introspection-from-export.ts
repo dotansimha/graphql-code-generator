@@ -1,6 +1,5 @@
 import * as fs from 'fs';
-import { GraphQLSchema } from 'graphql/type/schema';
-import { graphql, introspectionQuery } from 'graphql';
+import { graphql, introspectionQuery, GraphQLSchema } from 'graphql-codegen-core';
 
 export const introspectionFromExport = (file: string) => {
   return new Promise<any>((resolve, reject) => {

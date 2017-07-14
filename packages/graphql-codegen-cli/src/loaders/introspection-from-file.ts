@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import { IntrospectionQuery } from 'graphql/utilities/introspectionQuery';
+import { IntrospectionQuery } from 'graphql-codegen-core';
 
 export const introspectionFromFile = (file: string) => {
   return new Promise<IntrospectionQuery>((resolve, reject) => {

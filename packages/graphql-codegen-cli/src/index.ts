@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
+import * as fs from 'fs';
 import { initCLI, executeWithOptions, cliError } from './cli';
 import { FileOutput } from 'graphql-codegen-generators';
-import * as fs from 'fs';
 import { debugLog } from 'graphql-codegen-core';
 
 const options = initCLI(process.argv);
