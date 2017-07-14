@@ -1,6 +1,6 @@
 {
   "name": "graphql-codegen-cli",
-  "version": "0.7.0-alpha.073f588d",
+  "version": "0.7.0-alpha.b5ecec0c",
   "license": "MIT",
   "bin": {
     "gql-gen": "dist/index.js"
@@ -81,8 +81,8 @@
   "dependencies": {
     "commander": "^2.11.0",
     "glob": "^7.1.2",
-    "graphql-codegen-core": "^0.7.0-alpha.073f588d",
-    "graphql-codegen-generators": "^0.7.0-alpha.073f588d",
+    "graphql-codegen-core": "^0.7.0-alpha.b5ecec0c",
+    "graphql-codegen-generators": "^0.7.0-alpha.b5ecec0c",
     "mkdirp": "^0.5.1",
     "request": "^2.81.0"
   }
