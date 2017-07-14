@@ -38,7 +38,7 @@ function handleSchema(compiledTemplate: Function, schemaContext: SchemaTemplateC
   debugLog(`[handleSchema] called`);
 
   return [{
-    filename: prefixAndPath + sanitizeFilename('', 'schema') + '.' + (fileExtension || ''),
+    filename: prefixAndPath + '.' + (fileExtension || ''),
     content: compiledTemplate({
       ...schemaContext
     }),
@@ -49,7 +49,7 @@ function handleAll(compiledTemplate: Function, schemaContext: SchemaTemplateCont
   debugLog(`[handleAll] called`);
 
   return [{
-    filename: prefixAndPath + sanitizeFilename('', 'all') + '.' + (fileExtension || ''),
+    filename: prefixAndPath + '.' + (fileExtension || ''),
     content: compiledTemplate({
       ...schemaContext,
       operations: documents.operations,
@@ -64,7 +64,7 @@ function handleDocuments(compiledTemplate: Function, schemaContext: SchemaTempla
   debugLog(`[handleDocuments] called`);
 
   return [{
-    filename: prefixAndPath + sanitizeFilename('', 'documents') + '.' + (fileExtension || ''),
+    filename: prefixAndPath + '.' + (fileExtension || ''),
     content: compiledTemplate({
       operations: documents.operations,
       fragments: documents.fragments,
@@ -78,7 +78,7 @@ function handleType(compiledTemplate: Function, schemaContext: SchemaTemplateCon
   debugLog(`[handleType] called`);
 
   return schemaContext.types.map((type: Type) => ({
-    filename: prefixAndPath + sanitizeFilename(type.name, 'type') + '.' + (fileExtension || ''),
+    filename: (prefixAndPath === '' ? '' : prefixAndPath + '.') + sanitizeFilename(type.name, 'type') + '.' + (fileExtension || ''),
     content: compiledTemplate(type),
   }));
 }
@@ -87,7 +87,7 @@ function handleInputType(compiledTemplate: Function, schemaContext: SchemaTempla
   debugLog(`[handleInputType] called`);
 
   return schemaContext.inputTypes.map((type: Type) => ({
-    filename: prefixAndPath + sanitizeFilename(type.name, 'input-type') + '.' + (fileExtension || ''),
+    filename: (prefixAndPath === '' ? '' : prefixAndPath + '.') + sanitizeFilename(type.name, 'input-type') + '.' + (fileExtension || ''),
     content: compiledTemplate(type),
   }));
 }
@@ -96,7 +96,7 @@ function handleUnion(compiledTemplate: Function, schemaContext: SchemaTemplateCo
   debugLog(`[handleUnion] called`);
 
   return schemaContext.unions.map((union: Union) => ({
-    filename: prefixAndPath + sanitizeFilename(union.name, 'union') + '.' + (fileExtension || ''),
+    filename: (prefixAndPath === '' ? '' : prefixAndPath + '.') + sanitizeFilename(union.name, 'union') + '.' + (fileExtension || ''),
     content: compiledTemplate(union),
   }));
 }
@@ -105,7 +105,7 @@ function handleEnum(compiledTemplate: Function, schemaContext: SchemaTemplateCon
   debugLog(`[handleEnum] called`);
 
   return schemaContext.enums.map((en: Enum) => ({
-    filename: prefixAndPath + sanitizeFilename(en.name, 'enum') + '.' + (fileExtension || ''),
+    filename: (prefixAndPath === '' ? '' : prefixAndPath + '.') + sanitizeFilename(en.name, 'enum') + '.' + (fileExtension || ''),
     content: compiledTemplate(en),
   }));
 }
@@ -114,7 +114,7 @@ function handleScalar(compiledTemplate: Function, schemaContext: SchemaTemplateC
   debugLog(`[handleScalar] called`);
 
   return schemaContext.scalars.map((scalar: Scalar) => ({
-    filename: prefixAndPath + sanitizeFilename(scalar.name, 'scalar') + '.' + (fileExtension || ''),
+    filename: (prefixAndPath === '' ? '' : prefixAndPath + '.') + sanitizeFilename(scalar.name, 'scalar') + '.' + (fileExtension || ''),
     content: compiledTemplate(scalar),
   }));
 }
@@ -123,7 +123,7 @@ function handleInterface(compiledTemplate: Function, schemaContext: SchemaTempla
   debugLog(`[handleInterface] called`);
 
   return schemaContext.interfaces.map((inf: Interface) => ({
-    filename: prefixAndPath + sanitizeFilename(inf.name, 'interface') + '.' + (fileExtension || ''),
+    filename: (prefixAndPath === '' ? '' : prefixAndPath + '.') + sanitizeFilename(inf.name, 'interface') + '.' + (fileExtension || ''),
     content: compiledTemplate(inf),
   }));
 }
@@ -132,7 +132,7 @@ function handleOperation(compiledTemplate: Function, schemaContext: SchemaTempla
   debugLog(`[handleOperation] called`);
 
   return documents.operations.map((operation: Operation) => ({
-    filename: prefixAndPath + sanitizeFilename(operation.name, operation.operationType) + '.' + (fileExtension || ''),
+    filename: (prefixAndPath === '' ? '' : prefixAndPath + '.') + sanitizeFilename(operation.name, operation.operationType) + '.' + (fileExtension || ''),
     content: compiledTemplate(operation),
   }));
 }
@@ -141,7 +141,7 @@ function handleFragment(compiledTemplate: Function, schemaContext: SchemaTemplat
   debugLog(`[handleFragment] called`);
 
   return documents.fragments.map((fragment: Fragment) => ({
-    filename: prefixAndPath + sanitizeFilename(fragment.name, 'fragment') + '.' + (fileExtension || ''),
+    filename: (prefixAndPath === '' ? '' : prefixAndPath + '.') + sanitizeFilename(fragment.name, 'fragment') + '.' + (fileExtension || ''),
     content: compiledTemplate(fragment),
   }));
 }

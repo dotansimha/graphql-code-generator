@@ -5,6 +5,7 @@ import { initHelpers } from './handlebars-extensions';
 import { flattenTypes } from './flatten-types';
 import { generateMultipleFiles } from './generate-multiple-files';
 import { generateSingleFile } from './generate-single-file';
+import { cleanTemplateComments } from './clean-template';
 
 export const DEFAULT_SETTINGS: Settings = {
   generateSchema: true,
@@ -69,7 +70,7 @@ export function compileTemplate(config: GeneratorConfig, templateContext: Schema
     debugLog(`[compileTemplate] Executing generateSingleFile...`);
 
     return generateSingleFile(
-      compile(templates['index']),
+      compile(cleanTemplateComments(templates['index'])),
       executionSettings,
       config,
       templateContext,
@@ -85,7 +86,7 @@ export function compileTemplate(config: GeneratorConfig, templateContext: Schema
     debugLog(`[compileTemplate] Executing generateMultipleFiles...`);
 
     const compiledTemplates = Object.keys(templates).map(templateName => {
-      const compiledTemplate = compile(templates[templateName]);
+      const compiledTemplate = compile(cleanTemplateComments(templates[templateName]));
 
       return {
         key: templateName,
