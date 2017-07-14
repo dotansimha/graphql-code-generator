@@ -96,7 +96,7 @@
     "@types/graphql": "^0.9.2",
     "@types/handlebars": "^4.0.33",
     "@types/jest": "^20.0.2",
-    "@types/mkdirp": "^0.3.29",
+    "@types/mkdirp": "^0.5.0",
     "@types/node": "^8.0.2",
     "@types/request": "^0.0.46",
     "conventional-changelog": "^1.1.3",
