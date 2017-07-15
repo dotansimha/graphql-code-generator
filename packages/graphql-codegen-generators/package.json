@@ -1,6 +1,6 @@
 {
   "name": "graphql-codegen-generators",
-  "version": "0.7.0-alpha.b5ecec0c",
+  "version": "0.7.0-alpha.383c3d35",
   "description": "GraphQL code generator templates",
   "license": "MIT",
   "scripts": {
@@ -30,7 +30,7 @@
     "@types/handlebars": "^4.0.33",
     "change-case": "^3.0.1",
     "common-tags": "^1.4.0",
-    "graphql-codegen-core": "^0.7.0-alpha.b5ecec0c",
+    "graphql-codegen-core": "^0.7.0-alpha.383c3d35",
     "handlebars": "^4.0.10"
   },
   "jest": {
