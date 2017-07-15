@@ -73,7 +73,8 @@
     "testEnvironment": "node"
   },
   "dependencies": {
-    "graphql": "^0.10.3",
+    "@types/graphql": "^0.10.0",
+    "graphql": "^0.10.4",
     "graphql-tools": "^1.0.0"
   },
   "devDependencies": {
