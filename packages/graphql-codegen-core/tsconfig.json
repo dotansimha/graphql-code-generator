@@ -14,8 +14,8 @@
     "emitDecoratorMetadata": true,
     "sourceMap": true,
     "declaration": true,
-    "outDir": "./dist",
-    "rootDir": "./src"
+    "outDir": "./dist/",
+    "rootDir": "./src/"
   },
   "files": [
     "src/index.ts"
