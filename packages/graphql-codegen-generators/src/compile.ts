@@ -86,6 +86,7 @@ export function compileTemplate(config: GeneratorConfig, templateContext: Schema
     debugLog(`[compileTemplate] Executing generateMultipleFiles...`);
 
     const compiledTemplates = Object.keys(templates).map(templateName => {
+      debugLog(`[compileTemplate] Compiling template: ${templateName}...`);
       const compiledTemplate = compile(cleanTemplateComments(templates[templateName], templateName));
 
       return {
