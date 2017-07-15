@@ -4,7 +4,6 @@ import {
   SchemaTemplateContext, transformDocument, introspectionToGraphQLSchema,
 } from 'graphql-codegen-core';
 import { gql, makeExecutableSchema, GraphQLSchema } from 'graphql-codegen-core';
-import { TypescriptMultiFile } from '../dist/index.js';
 import { compileTemplate } from '../src/compile';
 import * as fs from 'fs';
 import { TypescriptMultiFile } from 'graphql-codegen-generators';

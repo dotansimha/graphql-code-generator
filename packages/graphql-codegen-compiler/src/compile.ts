@@ -14,8 +14,13 @@ export const DEFAULT_SETTINGS: Settings = {
 };
 
 export function compileTemplate(config: GeneratorConfig, templateContext: SchemaTemplateContext, documents: Document[] = [], settings: Settings = DEFAULT_SETTINGS): FileOutput[] {
+  if (!config) {
+    throw new Error(`compileTemplate required valid config!`);
+  }
+
   debugLog(`[compileTemplate] starting to compile template with input type = ${config.inputType}`);
   debugLog(`[compileTemplate] settings = `, settings);
+
   initHelpers(config, templateContext);
   const executionSettings = Object.assign(DEFAULT_SETTINGS, settings);
   const templates = config.templates;

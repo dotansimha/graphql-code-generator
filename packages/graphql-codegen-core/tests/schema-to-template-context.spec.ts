@@ -3,6 +3,25 @@ import { schemaToTemplateContext } from '../src/schema/schema-to-template-contex
 import { GraphQLSchema } from 'graphql';
 
 describe('schemaToTemplateContext', () => {
+  it('should return the correct result when schema got directive', () => {
+    const typeDefs = `
+      type Query {
+        test: String 
+      }
+      
+      schema @app {
+        query: Query,
+      }
+      
+      directive @app on SCHEMA
+    `;
+
+    const schema = makeExecutableSchema({ typeDefs, resolvers: {}, allowUndefinedInResolve: true }) as GraphQLSchema;
+    const context = schemaToTemplateContext(schema);
+
+    expect(context.directives).toEqual({ app: {} });
+  });
+
   it('should return the correct result when only Query defined', () => {
     const typeDefs = `
       type Query {

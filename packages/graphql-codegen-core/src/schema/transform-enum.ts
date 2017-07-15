@@ -1,9 +1,11 @@
-import { GraphQLEnumType, GraphQLEnumValue } from 'graphql';
+import { GraphQLEnumType, GraphQLEnumValue, GraphQLSchema } from 'graphql';
 import { Enum, EnumValue } from '../types';
 import { debugLog } from '../debugging';
+import { getDirectives } from '../utils/get-directives';
 
-export function transformGraphQLEnum(graphqlEnum: GraphQLEnumType): Enum {
+export function transformGraphQLEnum(schema: GraphQLSchema, graphqlEnum: GraphQLEnumType): Enum {
   debugLog(`[transformGraphQLEnum] transformed enum ${graphqlEnum.name}`);
+  const directives = getDirectives(schema, graphqlEnum);
 
   const enumValues = graphqlEnum.getValues().map<EnumValue>((enumItem: GraphQLEnumValue) => {
     return <EnumValue>{
@@ -17,5 +19,7 @@ export function transformGraphQLEnum(graphqlEnum: GraphQLEnumType): Enum {
     name: graphqlEnum.name,
     description: graphqlEnum.description || '',
     values: enumValues,
+    directives,
+    usesDirectives: Object.keys(directives).length > 0,
   };
 }

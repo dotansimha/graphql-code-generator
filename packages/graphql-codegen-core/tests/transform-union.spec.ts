@@ -15,7 +15,7 @@ describe('transformUnion', () => {
       resolveType: () => null,
     });
 
-    const result = transformUnion(gqlObj);
+    const result = transformUnion({} as any, gqlObj);
 
     expect(result.name).toBe('MyUnion');
     expect(result.description).toBe('');
@@ -35,7 +35,7 @@ describe('transformUnion', () => {
       resolveType: () => null,
     });
 
-    const result = transformUnion(gqlObj);
+    const result = transformUnion({} as any, gqlObj);
 
     expect(result.description).toBe('test');
   });
@@ -54,7 +54,7 @@ describe('transformUnion', () => {
       resolveType: () => null,
     });
 
-    const result = transformUnion(gqlObj);
+    const result = transformUnion({} as any, gqlObj);
 
     expect(result.possibleTypes.length).toBe(1);
     expect(result.possibleTypes[0]).toBe('Book');

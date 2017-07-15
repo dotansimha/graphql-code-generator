@@ -12,7 +12,7 @@ describe('transformInterface', () => {
       }
     });
 
-    const result = transformInterface(gqlInterface);
+    const result = transformInterface({} as any, gqlInterface);
 
     expect(result.name).toBe('name');
     expect(result.description).toBe('');
@@ -29,7 +29,7 @@ describe('transformInterface', () => {
       }
     });
 
-    const result = transformInterface(gqlInterface);
+    const result = transformInterface({} as any, gqlInterface);
 
     expect(result.description).toBe('Test');
   });
@@ -45,7 +45,7 @@ describe('transformInterface', () => {
       }
     });
 
-    const result = transformInterface(gqlInterface);
+    const result = transformInterface({} as any, gqlInterface);
 
     expect(result.fields.length).toBe(1);
     expect(result.fields[0].name).toBe('test');

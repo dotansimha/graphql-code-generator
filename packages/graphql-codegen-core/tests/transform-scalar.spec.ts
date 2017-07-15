@@ -8,7 +8,7 @@ describe('transformScalar', () => {
       serialize: () => '',
     });
 
-    const result = transformScalar(gqlObj);
+    const result = transformScalar({} as any, gqlObj);
 
     expect(result.name).toBe('name');
     expect(result.description).toBe('');
@@ -21,7 +21,7 @@ describe('transformScalar', () => {
       serialize: () => '',
     });
 
-    const result = transformScalar(gqlObj);
+    const result = transformScalar({} as any, gqlObj);
 
     expect(result.name).toBe('name');
     expect(result.description).toBe('MyScalar');

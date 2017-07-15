@@ -1,4 +1,11 @@
-export interface Argument {
+import { GraphQLSchema } from 'graphql';
+
+export interface AstNode {
+  directives: DirectiveUseMap;
+  usesDirectives: boolean;
+}
+
+export interface Argument extends AstNode {
   name: string;
   description: string;
   type: string;
@@ -12,7 +19,7 @@ export interface Argument {
   isEnum: boolean;
 }
 
-export interface Field {
+export interface Field extends AstNode{
   name: string;
   description: string;
   arguments: Argument[];
@@ -28,7 +35,7 @@ export interface Field {
   isEnum: boolean;
 }
 
-export interface Type {
+export interface Type extends AstNode {
   fields: Field[];
   description: string;
   name: string;
@@ -38,52 +45,55 @@ export interface Type {
   hasInterfaces: boolean;
 }
 
-export interface Scalar {
+export interface Scalar extends AstNode {
   name: string;
   description: string;
 }
 
-export interface Enum {
+export interface Enum extends AstNode {
   name: string;
   description: string;
   values: EnumValue[];
 }
 
-export interface EnumValue {
+export interface EnumValue extends AstNode {
   name: string;
   value: string;
   description: string;
 }
 
-export interface Union {
+export interface Union extends AstNode {
   name: string;
   description: string;
   possibleTypes: string[];
 }
 
-export interface Interface {
+export interface Interface extends AstNode {
   name: string;
   description: string;
   fields: Field[];
   hasFields: boolean;
 }
 
-export interface SchemaTemplateContext {
+export interface SchemaTemplateContext extends AstNode {
   types: Type[];
   inputTypes: Type[];
   enums: Enum[];
   unions: Union[];
   interfaces: Interface[];
   scalars: Scalar[];
+  definedDirectives: Directive[];
   hasTypes: boolean;
   hasInputTypes: boolean;
   hasEnums: boolean;
   hasUnions: boolean;
   hasScalars: boolean;
   hasInterfaces: boolean;
+  hasDefinedDirectives: boolean;
+  rawSchema: GraphQLSchema;
 }
 
-export interface SelectionSetItem {
+export interface SelectionSetItem extends AstNode {
   isFragmentSpread: boolean;
   isInlineFragment: boolean;
   isField: boolean;
@@ -131,14 +141,14 @@ export function isInlineFragmentNode(node: SelectionSetItem): node is SelectionS
   return node['selectionSet'] !== undefined && node['onType'] !== undefined;
 }
 
-export interface Fragment {
+export interface Fragment extends AstNode {
   name: string;
   selectionSet: SelectionSetItem[];
   onType: string;
   document: string;
 }
 
-export interface Operation {
+export interface Operation extends AstNode {
   name: string;
   selectionSet: SelectionSetItem[];
   operationType: string;
@@ -162,4 +172,36 @@ export interface Document {
   operations: Operation[];
   hasFragments: boolean;
   hasOperations: boolean;
+}
+
+export interface DirectiveUseMap {
+  [name: string]: string;
+}
+
+export interface Directive {
+  name: string;
+  description: string;
+  locations: string[];
+  arguments: Argument[];
+  hasArguments: boolean;
+
+  onFragmentSpread: boolean;
+  onInlineFragment: boolean;
+  onQuery: boolean;
+  onMutation: boolean;
+  onSubscription: boolean;
+  onFragment: boolean;
+  onField: boolean;
+
+  onSchema: boolean;
+  onScalar: boolean;
+  onFieldDefinition: boolean;
+  onEnum: boolean;
+  onEnumValue: boolean;
+  onObject: boolean;
+  onInputObject: boolean;
+  onInputField: boolean;
+  onArgument: boolean;
+  onInterface: boolean;
+  onUnion: boolean;
 }

@@ -12,7 +12,7 @@ describe('transformObject', () => {
       }
     });
 
-    const result = transformGraphQLObject(gqlObj);
+    const result = transformGraphQLObject({} as any, gqlObj);
 
     expect(result.name).toBe('name');
     expect(result.description).toBe('');
@@ -28,7 +28,7 @@ describe('transformObject', () => {
       }
     });
 
-    const result = transformGraphQLObject(gqlObj);
+    const result = transformGraphQLObject({} as any, gqlObj);
     expect(result.isInputType).toBeTruthy();
   });
 
@@ -42,7 +42,7 @@ describe('transformObject', () => {
       }
     });
 
-    const result = transformGraphQLObject(gqlObj);
+    const result = transformGraphQLObject({} as any, gqlObj);
     expect(result.isInputType).toBeFalsy();
   });
 
@@ -57,7 +57,7 @@ describe('transformObject', () => {
       }
     });
 
-    const result = transformGraphQLObject(gqlObj);
+    const result = transformGraphQLObject({} as any, gqlObj);
 
     expect(result.description).toBe('Test');
   });
@@ -73,7 +73,7 @@ describe('transformObject', () => {
       }
     });
 
-    const result = transformGraphQLObject(gqlInterface);
+    const result = transformGraphQLObject({} as any, gqlInterface);
 
     expect(result.fields.length).toBe(1);
     expect(result.fields[0].name).toBe('test');
@@ -113,7 +113,7 @@ describe('transformObject', () => {
       interfaces: [ gqlInterface ]
     });
 
-    const result = transformGraphQLObject(gqlInterface);
+    const result = transformGraphQLObject({} as any, gqlInterface);
 
     expect(result.fields.length).toBe(1);
     expect(result.interfaces.length).toBe(1);

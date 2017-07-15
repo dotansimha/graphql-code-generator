@@ -20,7 +20,7 @@ describe('resolveArguments', () => {
     `, 'A');
 
     const args = parsed.getFields()['f1'].args;
-    const result = resolveArguments(args);
+    const result = resolveArguments({} as any, args);
 
     expect(result.length).toBe(1);
   });
@@ -33,7 +33,7 @@ describe('resolveArguments', () => {
     `, 'A');
 
     const args = parsed.getFields()['f1'].args;
-    const result = resolveArguments(args);
+    const result = resolveArguments({} as any, args);
 
     expect(result.length).toBe(2);
   });
@@ -46,7 +46,7 @@ describe('resolveArguments', () => {
     `, 'A');
 
     const args = parsed.getFields()['f1'].args;
-    const result = resolveArguments(args);
+    const result = resolveArguments({} as any, args);
 
     expect(result.length).toBe(0);
   });
@@ -59,7 +59,7 @@ describe('resolveArguments', () => {
     `, 'A');
 
     const args = parsed.getFields()['f1'].args;
-    const result = resolveArguments(args);
+    const result = resolveArguments({} as any, args);
 
     expect(result.length).toBe(1);
     expect(result[0].name).toBe('arg');
@@ -77,7 +77,7 @@ describe('resolveArguments', () => {
     `, 'A');
 
     const args = parsed.getFields()['f1'].args;
-    const result = resolveArguments(args);
+    const result = resolveArguments({} as any, args);
 
     expect(result.length).toBe(1);
     expect(result[0].name).toBe('arg');
@@ -95,7 +95,7 @@ describe('resolveArguments', () => {
     `, 'A');
 
     const args = parsed.getFields()['f1'].args;
-    const result = resolveArguments(args);
+    const result = resolveArguments({} as any, args);
 
     expect(result.length).toBe(1);
     expect(result[0].name).toBe('arg');
@@ -113,7 +113,7 @@ describe('resolveArguments', () => {
     `, 'A');
 
     const args = parsed.getFields()['f1'].args;
-    const result = resolveArguments(args);
+    const result = resolveArguments({} as any, args);
 
     expect(result.length).toBe(1);
     expect(result[0].name).toBe('arg');
@@ -136,7 +136,7 @@ describe('resolveArguments', () => {
     `, 'A');
 
     const args = parsed.getFields()['f1'].args;
-    const result = resolveArguments(args);
+    const result = resolveArguments({} as any, args);
 
     expect(result.length).toBe(1);
     expect(result[0].name).toBe('arg');

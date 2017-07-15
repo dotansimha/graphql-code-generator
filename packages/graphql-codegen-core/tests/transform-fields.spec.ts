@@ -19,7 +19,7 @@ describe('resolveFields', () => {
       }
     `, 'A');
 
-    const result = resolveFields(parsed.getFields());
+    const result = resolveFields({} as any, parsed.getFields());
 
     expect(result.length).toBe(1);
     expect(result[0].name).toBe('f1');
@@ -37,7 +37,7 @@ describe('resolveFields', () => {
       }
     `, 'A');
 
-    const result = resolveFields(parsed.getFields());
+    const result = resolveFields({} as any, parsed.getFields());
 
     expect(result.length).toBe(1);
     expect(result[0].name).toBe('f1');
@@ -58,7 +58,7 @@ describe('resolveFields', () => {
       }
     `, 'A');
 
-    const result = resolveFields(parsed.getFields());
+    const result = resolveFields({} as any, parsed.getFields());
 
     expect(result.length).toBe(4);
     expect(result[0].name).toBe('f1');
@@ -74,7 +74,7 @@ describe('resolveFields', () => {
       }
     `, 'A');
 
-    const result = resolveFields(parsed.getFields());
+    const result = resolveFields({} as any, parsed.getFields());
 
     expect(result.length).toBe(1);
     expect(result[0].name).toBe('f1');
@@ -90,7 +90,7 @@ describe('resolveFields', () => {
       }
     `, 'A');
 
-    const result = resolveFields(parsed.getFields());
+    const result = resolveFields({} as any, parsed.getFields());
 
     expect(result.length).toBe(1);
     expect(result[0].name).toBe('f1');
@@ -106,7 +106,7 @@ describe('resolveFields', () => {
       }
     `, 'A');
 
-    const result = resolveFields(parsed.getFields());
+    const result = resolveFields({} as any, parsed.getFields());
 
     expect(result.length).toBe(1);
     expect(result[0].name).toBe('f1');
@@ -122,7 +122,7 @@ describe('resolveFields', () => {
       }
     `, 'A');
 
-    const result = resolveFields(parsed.getFields());
+    const result = resolveFields({} as any, parsed.getFields());
 
     expect(result.length).toBe(1);
     expect(result[0].name).toBe('f1');
@@ -142,7 +142,7 @@ describe('resolveFields', () => {
       }
     `, 'A');
 
-    const result = resolveFields(parsed.getFields());
+    const result = resolveFields({} as any, parsed.getFields());
 
     expect(result.length).toBe(1);
     expect(result[0].name).toBe('f1');
@@ -163,7 +163,7 @@ describe('resolveFields', () => {
       }
     `, 'A');
 
-    const result = resolveFields(parsed.getFields());
+    const result = resolveFields({} as any, parsed.getFields());
 
     expect(result.length).toBe(1);
     expect(result[0].name).toBe('f1');
@@ -183,7 +183,7 @@ describe('resolveFields', () => {
       }
     `, 'A');
 
-    const result = resolveFields(parsed.getFields());
+    const result = resolveFields({} as any, parsed.getFields());
 
     expect(result.length).toBe(1);
     expect(result[0].name).toBe('f1');
@@ -207,7 +207,7 @@ describe('resolveFields', () => {
       }
     `, 'A');
 
-    const result = resolveFields(parsed.getFields());
+    const result = resolveFields({} as any, parsed.getFields());
 
     expect(result.length).toBe(1);
     expect(result[0].name).toBe('f1');
@@ -233,7 +233,7 @@ describe('resolveFields', () => {
       }
     `, 'A');
 
-    const result = resolveFields(parsed.getFields());
+    const result = resolveFields({} as any, parsed.getFields());
 
     expect(result.length).toBe(1);
     expect(result[0].name).toBe('f1');
@@ -258,7 +258,7 @@ describe('resolveFields', () => {
       }
     `, 'A');
 
-    const result = resolveFields(parsed.getFields());
+    const result = resolveFields({} as any, parsed.getFields());
 
     expect(result.length).toBe(1);
     expect(result[0].name).toBe('f1');
@@ -284,7 +284,7 @@ describe('resolveFields', () => {
       }
     `, 'A');
 
-    const result = resolveFields(parsed.getFields());
+    const result = resolveFields({} as any, parsed.getFields());
 
     expect(result.length).toBe(1);
     expect(result[0].name).toBe('f1');

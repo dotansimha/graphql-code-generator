@@ -10,7 +10,7 @@ describe('transformGraphQLEnum', () => {
       },
     });
 
-    const result = transformGraphQLEnum(gqlEnum);
+    const result = transformGraphQLEnum({} as any, gqlEnum);
 
     expect(result.name).toBe('name');
     expect(result.description).toBe('');
@@ -25,7 +25,7 @@ describe('transformGraphQLEnum', () => {
       },
     });
 
-    const result = transformGraphQLEnum(gqlEnum);
+    const result = transformGraphQLEnum({} as any, gqlEnum);
 
     expect(result.description).toBe('my enum');
   });
@@ -39,7 +39,7 @@ describe('transformGraphQLEnum', () => {
       },
     });
 
-    const result = transformGraphQLEnum(gqlEnum);
+    const result = transformGraphQLEnum({} as any, gqlEnum);
 
     expect(result.values instanceof Array).toBeTruthy();
     expect(result.values.length).toBe(1);
@@ -59,7 +59,7 @@ describe('transformGraphQLEnum', () => {
       },
     });
 
-    const result = transformGraphQLEnum(gqlEnum);
+    const result = transformGraphQLEnum({} as any, gqlEnum);
 
     expect(result.values instanceof Array).toBeTruthy();
     expect(result.values.length).toBe(3);
