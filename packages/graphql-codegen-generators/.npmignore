@@ -1,4 +1,5 @@
-node_modules
-test-matchers
-tests
+../graphql-codegen-generators/dev-test
 src
+node_modules
+tests
+!dist

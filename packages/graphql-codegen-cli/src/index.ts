@@ -2,7 +2,7 @@
 
 import * as fs from 'fs';
 import { initCLI, executeWithOptions, cliError } from './cli';
-import { FileOutput } from 'graphql-codegen-generators';
+import { FileOutput } from 'graphql-codegen-compiler';
 import { debugLog } from 'graphql-codegen-core';
 
 const options = initCLI(process.argv);

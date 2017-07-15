@@ -7,11 +7,7 @@ import { gql, makeExecutableSchema, GraphQLSchema } from 'graphql-codegen-core';
 import { TypescriptMultiFile } from '../dist/index.js';
 import { compileTemplate } from '../src/compile';
 import * as fs from 'fs';
-
-declare module '../dist/index.js' {
-  const TypescriptMultiFile: any;
-  export { TypescriptMultiFile };
-}
+import { TypescriptMultiFile } from 'graphql-codegen-generators';
 
 describe('TypeScript Multi File', () => {
   const compileAndBuildContext = (typeDefs: string): SchemaTemplateContext => {

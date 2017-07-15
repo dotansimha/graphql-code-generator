@@ -2,7 +2,7 @@ import { GeneratorConfig } from './types';
 import TypescriptSingleFile from './typescript-single-file/config';
 import TypescriptMultiFile from './typescript-multi-file/config';
 
-const definitions = {
+export const definitions = {
   // TypeScript single file
   ts: TypescriptSingleFile,
   typescript: TypescriptSingleFile,

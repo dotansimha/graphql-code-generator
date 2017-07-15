@@ -1,4 +1,3 @@
-import { EInputType, GeneratorConfig } from '../types';
 import * as type from './type.handlebars';
 import * as enumTemplate from './enum.handlebars';
 import * as scalar from './scalar.handlebars';
@@ -6,6 +5,7 @@ import * as union from './union.handlebars';
 import * as operation from './operation.handlebars';
 import * as fragment from './fragment.handlebars';
 import * as selectionSet from '../typescript-single-file/selection-set.handlebars';
+import { EInputType, GeneratorConfig } from '../types';
 
 const config: GeneratorConfig = {
   inputType: EInputType.MULTIPLE_FILES,

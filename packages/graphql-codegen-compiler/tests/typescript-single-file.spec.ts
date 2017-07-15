@@ -8,12 +8,7 @@ import {
 import { gql, makeExecutableSchema, GraphQLSchema } from 'graphql-codegen-core';
 import * as fs from 'fs';
 import { compileTemplate } from '../src/compile';
-import { TypescriptSingleFile } from '../dist/index.js';
-
-declare module '../dist/index.js' {
-  const TypescriptSingleFile: any;
-  export { TypescriptSingleFile };
-}
+import { TypescriptSingleFile } from 'graphql-codegen-generators';
 
 describe('TypeScript Single File', () => {
   const compileAndBuildContext = (typeDefs: string): SchemaTemplateContext => {

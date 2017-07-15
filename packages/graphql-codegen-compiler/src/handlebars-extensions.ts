@@ -4,8 +4,9 @@ import { oneLineTrim } from 'common-tags';
 import { Argument, Field, SchemaTemplateContext, SelectionSetFragmentSpread } from 'graphql-codegen-core';
 import { getFieldTypeAsString } from './field-type-to-string';
 import { sanitizeFilename } from './sanitizie-filename';
-import { FlattenModel, FlattenOperation, GeneratorConfig } from './types';
+import { FlattenModel, FlattenOperation } from './types';
 import { flattenSelectionSet } from './flatten-types';
+import { GeneratorConfig } from 'graphql-codegen-generators';
 
 export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTemplateContext) => {
   registerHelper('toPrimitive', function (type) {

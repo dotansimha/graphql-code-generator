@@ -4,18 +4,20 @@ import { introspectionFromUrl } from './loaders/introspection-from-url';
 import { introspectionFromExport } from './loaders/introspection-from-export';
 import { documentsFromGlobs } from './utils/documents-glob';
 import {
-  EInputType,
-  GeneratorConfig,
-  getGeneratorConfig,
   compileTemplate,
   FileOutput,
   ALLOWED_CUSTOM_TEMPLATE_EXT,
-} from 'graphql-codegen-generators';
+} from 'graphql-codegen-compiler';
 import { debugLog, introspectionToGraphQLSchema, schemaToTemplateContext, transformDocument } from 'graphql-codegen-core';
 import { loadDocumentsSources } from './loaders/document-loader';
 import * as path from 'path';
 import { scanForTemplatesInPath } from './loaders/templates-scanner';
 import * as fs from 'fs';
+import {
+  EInputType,
+  GeneratorConfig,
+  getGeneratorConfig
+} from 'graphql-codegen-generators';
 
 export interface CLIOptions {
   file?: string;

@@ -1,9 +1,9 @@
-import { EInputType, GeneratorConfig } from '../types';
 import * as index from './template.handlebars';
 import * as type from './type.handlebars';
 import * as schema from './schema.handlebars';
 import * as documents from './documents.handlebars';
 import * as selectionSet from './selection-set.handlebars';
+import { EInputType, GeneratorConfig } from '../types';
 
 const config: GeneratorConfig = {
   inputType: EInputType.SINGLE_FILE,

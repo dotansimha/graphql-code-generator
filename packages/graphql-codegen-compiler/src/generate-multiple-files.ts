@@ -1,4 +1,5 @@
-import { FileOutput, MultiFileTemplates, Settings, GeneratorConfig } from './types';
+import { FileOutput, MultiFileTemplates, Settings } from './types';
+import { GeneratorConfig } from 'graphql-codegen-generators';
 import {
   Enum,
   Fragment,

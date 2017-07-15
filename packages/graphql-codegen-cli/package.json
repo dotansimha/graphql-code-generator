@@ -83,6 +83,7 @@
     "glob": "^7.1.2",
     "graphql-codegen-core": ">0.7.0-alpha.0",
     "graphql-codegen-generators": ">0.7.0-alpha.0",
+    "graphql-codegen-compiler": ">0.7.0-alpha.0",
     "mkdirp": "^0.5.1",
     "request": "^2.81.0"
   }
