@@ -2,6 +2,8 @@ import * as fs from 'fs';
 import { IntrospectionQuery } from 'graphql-codegen-core';
 
 export const introspectionFromFile = (file: string) => {
+  console.log(`Loading GraphQL Introspection from file: ${file}...`);
+
   return new Promise<IntrospectionQuery>((resolve, reject) => {
     if (fs.existsSync(file)) {
       try {

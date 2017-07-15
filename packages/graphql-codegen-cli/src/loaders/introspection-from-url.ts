@@ -1,7 +1,10 @@
 import { introspectionQuery, IntrospectionQuery } from 'graphql-codegen-core';
 import * as request from 'request';
+import { debugLog } from '../../../graphql-codegen-core/src/debugging';
 
 export const introspectionFromUrl = (url: string, headers: string[]): Promise<IntrospectionQuery> => {
+  console.log(`Loading GraphQL Introspection from remote: ${url}...`);
+
   let splittedHeaders = (headers || []).map((header: string) => {
     const [name, value] = header.split(/\s*:\s*/);
 
@@ -17,6 +20,8 @@ export const introspectionFromUrl = (url: string, headers: string[]): Promise<In
       return Object.assign({}, a, b);
     });
   }
+
+  debugLog(`Executing POST to ${url} with headers: `, splittedHeaders);
 
   return new Promise<IntrospectionQuery>((resolve, reject) => {
     request.post({
