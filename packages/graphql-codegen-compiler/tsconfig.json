@@ -14,9 +14,11 @@
     "emitDecoratorMetadata": true,
     "sourceMap": true,
     "declaration": true,
+    "rootDir": "./src/",
     "outDir": "./dist/"
   },
   "exclude": [
+    "test-matchers",
     "node_modules",
     "tests",
     "dist"
