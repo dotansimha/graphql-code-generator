@@ -4,7 +4,7 @@
   "description": "GraphQL code generator predefined templates",
   "license": "MIT",
   "scripts": {
-    "test": "jest",
+    "test": "",
     "build": "webpack"
   },
   "devDependencies": {

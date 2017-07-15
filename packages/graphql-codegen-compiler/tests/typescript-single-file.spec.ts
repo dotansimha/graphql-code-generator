@@ -24,6 +24,75 @@ describe('TypeScript Single File', () => {
   });
 
   describe('Schema', () => {
+    it('should support custom handlebar ifDirective when directive added', () => {
+      const templateContext = compileAndBuildContext(`
+        type Query @app {
+          fieldTest: String
+        }
+        
+        schema {
+          query: Query
+        }
+        
+        directive @app on OBJECT
+      `);
+
+      const compiled = compileTemplate({
+        ...config,
+        templates: {
+          index: '{{#each types}}{{#ifDirective this "app"}}directive{{/ifDirective}}{{/each}}',
+        }
+      }, templateContext);
+
+      expect(compiled[0].content).toBe('directive');
+    });
+
+    it('should support custom handlebar ifDirective when no directive added', () => {
+      const templateContext = compileAndBuildContext(`
+        type Query {
+          fieldTest: String
+        }
+        
+        schema {
+          query: Query
+        }
+        
+        directive @app on OBJECT
+      `);
+
+      const compiled = compileTemplate({
+        ...config,
+        templates: {
+          index: '{{#each types}}{{#ifDirective this "app"}}directive{{/ifDirective}}{{/each}}',
+        }
+      }, templateContext);
+
+      expect(compiled[0].content).toBe('');
+    });
+
+    it('should support custom handlebar ifDirective when directive added and args', () => {
+      const templateContext = compileAndBuildContext(`
+        type Query {
+          fieldTest: String
+        }
+        
+        schema @app(test: "123") {
+          query: Query
+        }
+        
+        directive @app(test: String) on OBJECT
+      `);
+
+      const compiled = compileTemplate({
+        ...config,
+        templates: {
+          index: '{{#ifDirective this "app"}}directive{{test}}{{/ifDirective}}',
+        }
+      }, templateContext);
+
+      expect(compiled[0].content).toBe('directive123');
+    });
+
     it('should compile template correctly when using a simple Query', () => {
       const templateContext = compileAndBuildContext(`
         type Query {

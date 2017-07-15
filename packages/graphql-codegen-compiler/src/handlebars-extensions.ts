@@ -23,6 +23,19 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
     return accum;
   });
 
+  registerHelper('ifDirective', function (context: any, directiveName: string, options: { fn: Function, data: { root: any } }) {
+    if (context && context['directives'] && directiveName && typeof directiveName === 'string') {
+      const directives = context['directives'];
+      const directiveValue = directives[directiveName];
+
+      if (directiveValue) {
+        return options.fn ? options.fn(directiveValue) : '';
+      }
+    }
+
+    return '';
+  });
+
   registerHelper('toComment', function (str) {
     if (!str || str === '') {
       return '';
