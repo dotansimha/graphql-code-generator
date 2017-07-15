@@ -7,10 +7,6 @@
     "test": "jest",
     "build": "tsc"
   },
-  "peerDependencies": {
-    "graphql-codegen-core": ">0.7.0-alpha.383c3d35",
-    "graphql-codegen-generators": ">0.7.0-alpha.383c3d35"
-  },
   "devDependencies": {
     "@types/change-case": "^2.3.1",
     "@types/common-tags": "^1.2.5",
@@ -22,15 +18,16 @@
     "jest": "^20.0.4",
     "rimraf": "^2.6.1",
     "tslint": "^5.4.3",
-    "typescript": "^2.4.1",
-    "graphql-codegen-core": ">0.7.0-alpha.0",
-    "graphql-codegen-generators": ">0.7.0-alpha.383c3d35"
+    "typescript": "^2.4.1"
   },
   "dependencies": {
     "@types/handlebars": "^4.0.33",
     "change-case": "^3.0.1",
     "common-tags": "^1.4.0",
-    "handlebars": "^4.0.10"
+    "handlebars": "^4.0.10",
+    "graphql-codegen-core": ">0.8.0-alpha.0",
+    "graphql-codegen-generators": ">0.8.0-alpha.0",
+    "graphql-codegen-compiler": ">0.8.0-alpha.0"
   },
   "jest": {
     "moduleFileExtensions": [
