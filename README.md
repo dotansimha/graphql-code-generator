@@ -23,10 +23,6 @@ There are 3 types of template generators available at the moment:
 
 If you are looking for the **Flow** / **Swift** generators, please note that we will implement it soon again, but you can use `0.5.5` from NPM.
 
-## Examples
-
-This package
-
 ## Installation
 
 To install the generator, use the following:
@@ -84,8 +80,6 @@ Allowed flags:
 ## Examples
 
 This repository includes some examples for generated outputs under `dev-test` directory.
-
-#### TypeScript example
 
 * Star Wars generated TypeScript output is [available here](https://github.com/dotansimha/graphql-code-generator/blob/master/dev-test/star-wars/typings.d.ts).        
 * GitHunt generated TypeScript output is [available here](https://github.com/dotansimha/graphql-code-generator/blob/master/dev-test/githunt/types.d.ts).        
