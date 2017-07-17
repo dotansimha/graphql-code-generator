@@ -1,5 +1,5 @@
 {
-  "name": "graphql-codegen-cli",
+  "name": "graphql-code-generator",
   "version": "0.7.0-alpha.383c3d35",
   "license": "MIT",
   "bin": {
