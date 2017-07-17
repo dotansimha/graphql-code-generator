@@ -1,0 +1,50 @@
+{
+  "name": "graphql-codegen-compiler",
+  "version": "0.7.0-alpha.383c3d35",
+  "description": "GraphQL code generator compiler",
+  "license": "MIT",
+  "scripts": {
+    "test": "jest",
+    "build": "tsc",
+    "prebuild": "rimraf ./dist/"
+  },
+  "devDependencies": {
+    "@types/change-case": "^2.3.1",
+    "@types/common-tags": "^1.2.5",
+    "@types/jest": "^20.0.2",
+    "@types/node": "7",
+    "graphql": "^0.10.4",
+    "graphql-tag": "^2.4.2",
+    "graphql-tools": "^1.0.0",
+    "jest": "^20.0.4",
+    "rimraf": "^2.6.1",
+    "tslint": "^5.4.3",
+    "typescript": "^2.4.1"
+  },
+  "dependencies": {
+    "@types/handlebars": "^4.0.33",
+    "change-case": "^3.0.1",
+    "common-tags": "^1.4.0",
+    "graphql-codegen-compiler": ">0.7.0-alpha.0",
+    "graphql-codegen-core": ">0.7.0-alpha.0",
+    "graphql-codegen-generators": ">0.7.0-alpha.0",
+    "handlebars": "^4.0.10"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "transform": {
+      "^.+\\.(ts|tsx)$": "<rootDir>/tests/jest.typescript.js"
+    },
+    "testRegex": "tests/.*\\.ts$",
+    "testEnvironment": "node"
+  },
+  "typings": "dist/src/index.d.ts",
+  "typescript": {
+    "definition": "dist/src/index.d.ts"
+  },
+  "main": "./dist/index.js"
+}

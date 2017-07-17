@@ -1,3 +1,8 @@
+<a name="0.8.0"></a>
+## [0.8.0](https://github.com/dotansimha/graphql-codegen/compare/0.5.5...0.8.0) (2017-07-17)
+
+* Refactor everything :)
+
 <a name="0.5.5"></a>
 ## [0.5.5](https://github.com/dotansimha/graphql-codegen/compare/0.5.4...0.5.5) (2017-07-13)
 

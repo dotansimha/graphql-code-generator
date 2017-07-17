@@ -1,0 +1,93 @@
+{
+  "name": "graphql-codegen-core",
+  "version": "0.7.0-alpha.383c3d35",
+  "description": "GraphQL types and code generator based on schema",
+  "main": "dist/index.js",
+  "scripts": {
+    "clean": "rimraf ./dist",
+    "lint": "tslint src/**/*.ts",
+    "prebuild": "npm run clean && npm run lint",
+    "build": "tsc",
+    "prestart": "npm run build",
+    "start": "cd dist && node gql-gen.js",
+    "debug": "cd dist && node --inspect --debug-brk gql-gen.js",
+    "test": "jest --no-cache --verbose --runInBand"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dotansimha/graphql-codegen.git"
+  },
+  "bin": {
+    "gql-gen": "dist/cli/gql-gen.js"
+  },
+  "keywords": [
+    "gql",
+    "generator",
+    "code",
+    "types",
+    "interfaces",
+    "graphql",
+    "codegen",
+    "apollo",
+    "node",
+    "typescript",
+    "ts",
+    "flow",
+    "types",
+    "d.ts",
+    "typings"
+  ],
+  "author": "Dotan Simha <dotansimha@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dotansimha/graphql-codegen/issues"
+  },
+  "homepage": "https://github.com/dotansimha/graphql-codegen#readme",
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "jest": {
+    "verbose": true,
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "src/**/*.ts"
+    ],
+    "coverageDirectory": "./tests/coverage",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      ".*?handlebars-helpers.*?",
+      "src/index.ts",
+      "src/types.ts"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "transform": {
+      "^.+\\.(ts|tsx)$": "<rootDir>/tests/jest.typescript.js"
+    },
+    "testRegex": "tests/.*\\.ts$",
+    "testEnvironment": "node"
+  },
+  "dependencies": {
+    "@types/graphql": "^0.10.0",
+    "graphql": "^0.10.4",
+    "graphql-tools": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^20.0.2",
+    "@types/node": "7",
+    "graphql-tag": "^2.4.2",
+    "jest": "^20.0.4",
+    "rimraf": "^2.6.1",
+    "tslint": "^5.4.3",
+    "typescript": "^2.4.1"
+  },
+  "typings": "dist/index.d.ts",
+  "typescript": {
+    "definition": "dist/index.d.ts"
+  }
+}

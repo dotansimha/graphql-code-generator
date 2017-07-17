@@ -1,0 +1,33 @@
+{{#each operations }}
+export namespace {{ toPascalCase name }} {
+  export type Variables = {
+  {{#each variables}}
+    {{ name }}: {{#if isArray}}Array<{{/if}}{{ type }}{{#if isArray}}>{{/if}}{{#unless isRequired}} | null{{/unless}};
+  {{/each}}
+  }
+
+  export type {{ toPascalCase operationType }} = {
+    {{> selectionSet selectionSet }}
+  }
+  {{#each innerModels }}
+
+  export type {{ modelType }} = {
+    {{> selectionSet fields }}
+  }{{#if hasFragmentsSpread}}{{#each fragmentsSpread}} & {{fragmentName}}.Fragment{{/each}}{{/if}}{{#if hasInlineFragments}}{{#each inlineFragments}} & {{onType}}{{/each}}{{/if}}
+  {{/each}}
+}
+{{/each}}
+{{#each fragments }}
+
+export namespace {{name}} {
+  export type Fragment = {
+    {{> selectionSet selectionSet }}
+  }
+  {{#each innerModels }}
+
+  export type {{ modelType }} = {
+    {{> selectionSet fields }}
+  }
+  {{/each}}
+}
+{{/each}}

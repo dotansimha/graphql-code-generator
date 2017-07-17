@@ -1,14 +1,14 @@
 sudo: required
 language: node_js
 node_js:
-  - "6"
-before_install:
-  - rm -rf node_modules
+  - 6
+  - 7
+  - 8
 install:
   - npm install
+  - npm run clean
 before_script:
+  - npm run bootstrap
   - npm run build
 script:
   - npm run test
-after_success:
-  - bash <(curl -s https://codecov.io/bash)
