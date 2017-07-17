@@ -41,15 +41,29 @@ And then to use it, execute if from NPM script, for use `$(npm bin)/gql-gen ...`
 
 > You can also install it as global NPM module and use it with `gql-gen` executable.
 
-## Usage
+## Usage Examples
 
 This package offers both modules exports (to use with NodeJS/JavaScript application), or CLI util.
-
-### CLI Options
 
 CLI usage is as follow:
 
     $ gql-gen [options] [documents ...]
+
+- With local introspection JSON file, generate TypeScript types:
+
+        $ gql-gen --file mySchema.json --template typescript --out ./typings/ "./src/**/*.graphql"
+    
+- With local introspection JSON file, generate TypeScript files, from GraphQL documents inside code files (`.ts`):
+
+        $ gql-gen --file mySchema.json --template typescript --out ./typings/ "./src/**/*.ts"
+    
+- With remote GraphQL endpoint that requires Authorization, generate TypeScript types:
+
+        $ gql-gen --url http://localhost:3010/graphql --header "Authorization: MY_KEY" --template typescript --out ./typings/ "./src/**/*.graphql"
+        
+> Note: when specifying a glob path (with `*` or `**`), make sure to wrap the argument with double quotes (`"..."`).
+
+### CLI Options
     
 Allowed flags:    
 
@@ -67,22 +81,6 @@ Allowed flags:
 | -c,--no-documents  | void     | If specified, client side documents won't be generated through the template |
 | documents...       | [String] | Space separated paths of `.graphql` files or code files (glob path is supported) that contains GraphQL documents inside strings, or with `gql` tag (JavaScript), this field is optional - if no documents specified, only server side schema types will be generated                           |
 
-**Usage examples:***
-
-> Note: when specifying a glob path (with `*` or `**`), make sure to wrap the argument with double quotes (`"..."`).
-
-- With local introspection JSON file, generate TypeScript types:
-
-        $ gql-gen --file mySchema.json --template typescript --out ./typings/ "./src/**/*.graphql"
-    
-- With local introspection JSON file, generate TypeScript files, from GraphQL documents inside code files (`.ts`):
-
-        $ gql-gen --file mySchema.json --template typescript --out ./typings/ "./src/**/*.ts"
-    
-- With remote GraphQL endpoint that requires Authorization, generate TypeScript types:
-
-        $ gql-gen --url http://localhost:3010/graphql --header "Authorization: MY_KEY" --template typescript --out ./typings/ "./src/**/*.graphql"
-        
 ## Examples
 
 This repository includes some examples for generated outputs under `dev-test` directory.
