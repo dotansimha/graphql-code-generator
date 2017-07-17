@@ -121,7 +121,7 @@ GraphQL code generator implementation is separated to multiple NPM packages:
 | `graphql-codegen-generators` | [README](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/graphql-codegen-generators/README.md) |
 | `graphql-codegen-cli` | [README](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/graphql-codegen-cli/README.md) |
 
-#### Other Environments
+## Other Environments
 
 If you are using GraphQL with environment different from NodeJS and wish to generate types and interfaces for your platform, start by installing NodeJS and the package as global, and then add the generation command to your build process.
 
