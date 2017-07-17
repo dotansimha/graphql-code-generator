@@ -45,7 +45,7 @@ And then to use it, execute if from NPM script, for use `$(npm bin)/gql-gen ...`
 
 This package offers both modules exports (to use with NodeJS/JavaScript application), or CLI util.
 
-### CLI 
+### CLI Options
 
 CLI usage is as follow:
 
@@ -65,7 +65,6 @@ Allowed flags:
 | -o,--out           | String   | Path for output file/directory. When using single-file generator specify filename, and when using multiple-files generator specify a directory                                     |
 | -m,--no-schema     | void     | If specified, server side schema won't be generated through the template (enums won't omit) |
 | -c,--no-documents  | void     | If specified, client side documents won't be generated through the template |
-| -d,--dev           | void     | Turns ON development mode - prints output to console instead of files                  |
 | documents...       | [String] | Space separated paths of `.graphql` files or code files (glob path is supported) that contains GraphQL documents inside strings, or with `gql` tag (JavaScript), this field is optional - if no documents specified, only server side schema types will be generated                           |
 
 **Usage examples:***
@@ -83,7 +82,16 @@ Allowed flags:
 - With remote GraphQL endpoint that requires Authorization, generate TypeScript types:
 
         $ gql-gen --url http://localhost:3010/graphql --header "Authorization: MY_KEY" --template typescript --out ./typings/ "./src/**/*.graphql"
-    
+        
+## Examples
+
+This repository includes some examples for generated outputs under `dev-test` directory.
+
+#### TypeScript example
+
+* Star Wars generated TypeScript output is [available here](https://github.com/dotansimha/graphql-code-generator/blob/master/dev-test/star-wars/typings.d.ts).        
+* GitHunt generated TypeScript output is [available here](https://github.com/dotansimha/graphql-code-generator/blob/master/dev-test/githunt/types.d.ts).        
+        
 ## Integration
 
 To use inside an existing project, I recommend to add a pre-build script that executes the code generator, inside you `package.json`, for example:
@@ -98,53 +106,30 @@ To use inside an existing project, I recommend to add a pre-build script that ex
 }
 ```
 
-## Project Generation
+## Custom Templates
 
-This generator package also allow you to integrate it as a framework and be part of you whole development process.
-
-This way you can generate code based on your GraphQL schema / operations.
-
-To start using GraphQL code generator with your project, install the module, and then create a JSON file called `gqlgen.json` in your project's root directory, specifying the following:
-
-```json
-{
-  "flattenTypes": true,
-  "primitives": {
-    "String": "string",
-    "Int": "number",
-    "Float": "number",
-    "Boolean": "boolean",
-    "ID": "string"
-  }
-}
-```
-
-> The purpose of this file to to indicate to the GraphQL code generate if you want to flatten selection set, and specify your environment's scalars transformation, for example: `String` from GraphQL is `string` in TypeScript.
-
-Now create a simple template file with this special structure: `{file-prefix}.{file-extension}.{required-context}.gqlgen`, for example: `hoc.js.all.gqlgen`, and use any custom template, for example:
-
-```handlebars
-{{#each types}}
-    GraphQL Type: {{ name }}
-{{/each}}
-```
-
-This file will compile by the generator as Handlebars template, with the `all` context, and the result file name will be `hoc.js`.
-
-There are a lot of available contexts, and you can read the [full documentation about how to generate a custom project with custom template here]().
+To create custom template, or generate a whole project from GraphQL schema, refer to [Custom Templates Documentation](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/graphql-codegen-generators/CUSTOM_TEMPLATES.md) 
 
 ## Packages
 
 GraphQL code generator implementation is separated to multiple NPM packages:
 
-- `graphql-codegen-core`: The core package, receives `GraphQLSchema` and GraphQL operations and input, and outputs a custom transformed JSON structure.
-- `graphql-codegen-compiler`: receives `core` package output and modify the structure to support easy integration with Handlebars.
-- `graphql-codegen-generators`: includes built-in generators with config and templates.
-- `graphql-codegen-cli`: CLI executable, reading and writing file from/to the file-system or remote endpoint.
+| Package Name       | Documentation |
+|--------------------|---------------|
+| `graphql-codegen-core` | [README](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/graphql-codegen-core/README.md) |
+| `graphql-codegen-compiler` | [README](https://github.com/dotansimha/graphql-code-compiler/blob/master/packages/graphql-codegen-core/README.md) |
+| `graphql-codegen-generators` | [README](https://github.com/dotansimha/graphql-code-generators/blob/master/packages/graphql-codegen-core/README.md) |
+| `graphql-codegen-cli` | [README](https://github.com/dotansimha/graphql-code-cli/blob/master/packages/graphql-codegen-core/README.md) |
 
 #### Other Environments
 
 If you are using GraphQL with environment different from NodeJS and wish to generate types and interfaces for your platform, start by installing NodeJS and the package as global, and then add the generation command to your build process.
+
+## Troubleshoot
+
+If you have issues with the generator, feel free open issues in this repository.
+
+If you report a bug or execution issue, please run the generator with `DEBUG=true gql-gel ...` and provide the debug log.
 
 ## Contributing
 
