@@ -117,9 +117,9 @@ GraphQL code generator implementation is separated to multiple NPM packages:
 | Package Name       | Documentation |
 |--------------------|---------------|
 | `graphql-codegen-core` | [README](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/graphql-codegen-core/README.md) |
-| `graphql-codegen-compiler` | [README](https://github.com/dotansimha/graphql-code-compiler/blob/master/packages/graphql-codegen-core/README.md) |
-| `graphql-codegen-generators` | [README](https://github.com/dotansimha/graphql-code-generators/blob/master/packages/graphql-codegen-core/README.md) |
-| `graphql-codegen-cli` | [README](https://github.com/dotansimha/graphql-code-cli/blob/master/packages/graphql-codegen-core/README.md) |
+| `graphql-codegen-compiler` | [README](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/graphql-codegen-compiler/README.md) |
+| `graphql-codegen-generators` | [README](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/graphql-codegen-generators/README.md) |
+| `graphql-codegen-cli` | [README](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/graphql-codegen-cli/README.md) |
 
 #### Other Environments
 
