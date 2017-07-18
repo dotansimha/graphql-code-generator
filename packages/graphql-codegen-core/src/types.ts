@@ -146,6 +146,12 @@ export interface Fragment extends AstNode {
   selectionSet: SelectionSetItem[];
   onType: string;
   document: string;
+  fields: SelectionSetFieldNode[];
+  fragmentsSpread: SelectionSetFragmentSpread[];
+  inlineFragments: SelectionSetInlineFragment[],
+  hasFragmentsSpread: boolean;
+  hasInlineFragments: boolean;
+  hasFields: boolean;
 }
 
 export interface Operation extends AstNode {
@@ -158,6 +164,12 @@ export interface Operation extends AstNode {
   isMutation: boolean;
   isSubscription: boolean;
   document: string;
+  fields: SelectionSetFieldNode[];
+  fragmentsSpread: SelectionSetFragmentSpread[];
+  inlineFragments: SelectionSetInlineFragment[],
+  hasFragmentsSpread: boolean;
+  hasInlineFragments: boolean;
+  hasFields: boolean;
 }
 
 export interface Variable {

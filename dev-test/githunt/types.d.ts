@@ -90,7 +90,7 @@ export type VoteType = "UP" | "DOWN" | "CANCEL";
 
 export namespace OnCommentAdded {
   export type Variables = {
-    repoFullName: String;
+    repoFullName: string;
   }
 
   export type Subscription = {
@@ -111,9 +111,9 @@ export namespace OnCommentAdded {
 }
 export namespace Comment {
   export type Variables = {
-    repoFullName: String;
-    limit: Int | null;
-    offset: Int | null;
+    repoFullName: string;
+    limit: number | null;
+    offset: number | null;
   }
 
   export type Query = {
@@ -170,8 +170,8 @@ export namespace CurrentUserForProfile {
 export namespace Feed {
   export type Variables = {
     type: FeedType;
-    offset: Int | null;
-    limit: Int | null;
+    offset: number | null;
+    limit: number | null;
   }
 
   export type Query = {
@@ -188,7 +188,7 @@ export namespace Feed {
 }
 export namespace SubmitRepository {
   export type Variables = {
-    repoFullName: String;
+    repoFullName: string;
   }
 
   export type Mutation = {
@@ -201,8 +201,8 @@ export namespace SubmitRepository {
 }
 export namespace SubmitComment {
   export type Variables = {
-    repoFullName: String;
-    commentContent: String;
+    repoFullName: string;
+    commentContent: string;
   }
 
   export type Mutation = {
@@ -214,7 +214,7 @@ export namespace SubmitComment {
 }
 export namespace Vote {
   export type Variables = {
-    repoFullName: String;
+    repoFullName: string;
     type: VoteType;
   }
 
@@ -252,9 +252,7 @@ export namespace FeedEntry {
     id: number; 
     commentCount: number; 
     repository: Repository; 
-    :  | null; 
-    :  | null; 
-  }
+  } & VoteButtons.Fragment & RepoInfo.Fragment
 
   export type Repository = {
     full_name: string; 

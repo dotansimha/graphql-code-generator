@@ -226,7 +226,7 @@ export namespace HeroName {
 export namespace HeroNameConditionalInclusion {
   export type Variables = {
     episode: Episode | null;
-    includeName: Boolean;
+    includeName: boolean;
   }
 
   export type Query = {
@@ -240,7 +240,7 @@ export namespace HeroNameConditionalInclusion {
 export namespace HeroNameConditionalExclusion {
   export type Variables = {
     episode: Episode | null;
-    skipName: Boolean;
+    skipName: boolean;
   }
 
   export type Query = {
@@ -342,9 +342,7 @@ export namespace TwoHeroes {
 export namespace HeroDetails {
   export type Fragment = {
     name: string; 
-    :  | null; 
-    :  | null; 
-  }
+  } & HumanInlineFragment & DroidInlineFragment
 
   export type HumanInlineFragment = {
     height: number | null; 
