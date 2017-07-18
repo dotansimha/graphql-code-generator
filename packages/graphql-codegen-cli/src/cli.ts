@@ -52,7 +52,6 @@ function collect(val, memo) {
 
 export const initCLI = (args): any => {
   commander
-    .version(require('../../../package.json').version)
     .usage('gql-gen [options]')
     .option('-f, --file <filePath>', 'Parse local GraphQL introspection JSON file')
     .option('-u, --url <graphql-endpoint>', 'Parse remote GraphQL endpoint as introspection file')
