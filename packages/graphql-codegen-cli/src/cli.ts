@@ -8,7 +8,12 @@ import {
   FileOutput,
   ALLOWED_CUSTOM_TEMPLATE_EXT,
 } from 'graphql-codegen-compiler';
-import { debugLog, introspectionToGraphQLSchema, schemaToTemplateContext, transformDocument } from 'graphql-codegen-core';
+import {
+  debugLog,
+  introspectionToGraphQLSchema,
+  schemaToTemplateContext,
+  transformDocument
+} from 'graphql-codegen-core';
 import { loadDocumentsSources } from './loaders/document-loader';
 import * as path from 'path';
 import { scanForTemplatesInPath } from './loaders/templates-scanner';
@@ -172,8 +177,32 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
   return compileTemplate(templateConfig, context, [transformedDocuments], {
     generateSchema,
     generateDocuments,
-  }).map((item: FileOutput) => ({
-    content: item.content,
-    filename: path.isAbsolute(item.filename) ? item.filename : path.resolve(process.cwd(), out, item.filename),
-  }));
+  }).map((item: FileOutput) => {
+    let resultName = item.filename;
+
+    if (!path.isAbsolute(resultName)) {
+      const resolved = path.resolve(process.cwd(), out);
+
+      if (fs.existsSync(resolved)) {
+        const stats = fs.lstatSync(resolved);
+
+        if (stats.isDirectory()) {
+          resultName = path.resolve(resolved, item.filename);
+        } else if (stats.isFile()) {
+          resultName = resolved;
+        }
+      } else {
+        if (out.endsWith('/')) {
+          resultName = path.resolve(resolved, item.filename);
+        } else {
+          resultName = resolved;
+        }
+      }
+    }
+
+    return {
+      content: item.content,
+      filename: resultName,
+    };
+  });
 };

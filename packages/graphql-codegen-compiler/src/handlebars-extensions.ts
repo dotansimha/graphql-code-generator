@@ -62,7 +62,7 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
     const imports: { name: string; file: string; }[] = [];
 
     // Interface, input types, types
-    if (context.fields) {
+    if (context.fields && !context.onType && !context.operationType) {
       context.fields.forEach((field: Field) => {
         if (!config.primitives[field.type]) {
           const fieldType = getFieldTypeAsString(field);

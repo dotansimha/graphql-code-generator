@@ -1,3 +1,10 @@
+<a name="0.8.4"></a>
+## [0.8.4](https://github.com/dotansimha/graphql-codegen/compare/0.8.3...0.8.4) (2017-07-19)
+
+* Fixed issue with generated result missing Fragment spread 
+* Fixed issue with wrong output for GraphQL primitives
+* Fixed issue with default output file overrides the `out` cli parameter
+
 <a name="0.8.3"></a>
 ## [0.8.3](https://github.com/dotansimha/graphql-codegen/compare/0.8.2...0.8.3) (2017-07-19)
 

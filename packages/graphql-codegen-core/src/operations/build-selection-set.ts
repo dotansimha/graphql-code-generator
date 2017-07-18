@@ -12,7 +12,7 @@ import { getFieldDef } from '../utils/get-field-def';
 import { resolveType } from '../schema/resolve-type';
 import { debugLog } from '../debugging';
 
-function separateSelectionSet(selectionSet: SelectionSetItem[]): any {
+export function separateSelectionSet(selectionSet: SelectionSetItem[]): any {
   const fields = selectionSet.filter(n => isFieldNode(n));
   const fragmentsSpread = selectionSet.filter(n => isFragmentSpreadNode(n));
   const inlineFragments = selectionSet.filter(n => isInlineFragmentNode(n));
