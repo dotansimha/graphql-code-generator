@@ -1,3 +1,8 @@
+<a name="0.8.3"></a>
+## [0.8.3](https://github.com/dotansimha/graphql-codegen/compare/0.8.2...0.8.3) (2017-07-19)
+
+* Fixed issue with __typename in selectionSet 
+
 <a name="0.8.2"></a>
 ## [0.8.2](https://github.com/dotansimha/graphql-codegen/compare/0.8.1...0.8.2) (2017-07-18)
 
