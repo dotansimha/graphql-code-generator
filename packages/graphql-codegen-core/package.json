@@ -17,9 +17,6 @@
     "type": "git",
     "url": "git+https://github.com/dotansimha/graphql-codegen.git"
   },
-  "bin": {
-    "gql-gen": "dist/cli/gql-gen.js"
-  },
   "keywords": [
     "gql",
     "generator",
