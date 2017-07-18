@@ -1,7 +1,7 @@
 import { GraphQLObjectType, GraphQLSchema, OperationDefinitionNode } from 'graphql';
 import { Operation } from '../types';
 import { getRoot } from '../utils/get-root';
-import { buildSelectionSet } from './build-selection-set';
+import { buildSelectionSet, separateSelectionSet } from './build-selection-set';
 import { transformVariables } from './transform-variables';
 import { debugLog } from '../debugging';
 import { print } from 'graphql/language/printer';
@@ -14,10 +14,11 @@ export function transformOperation(schema: GraphQLSchema, operationNode: Operati
   const root: GraphQLObjectType = getRoot(schema, operationNode);
   const variables = transformVariables(schema, operationNode);
   const directives = getDirectives(schema, operationNode);
+  const selectionSet = buildSelectionSet(schema, root, operationNode.selectionSet);
 
   return {
     name,
-    selectionSet: buildSelectionSet(schema, root, operationNode.selectionSet),
+    selectionSet,
     operationType: operationNode.operation,
     variables: variables,
     hasVariables: variables.length > 0,
@@ -27,5 +28,6 @@ export function transformOperation(schema: GraphQLSchema, operationNode: Operati
     document: print(operationNode),
     directives,
     usesDirectives: Object.keys(directives).length > 0,
-  };
+    ...separateSelectionSet(selectionSet),
+  } as Operation;
 }
