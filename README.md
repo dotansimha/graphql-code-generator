@@ -117,6 +117,13 @@ GraphQL code generator implementation is separated to multiple NPM packages:
 
 If you are using GraphQL with environment different from NodeJS and wish to generate types and interfaces for your platform, start by installing NodeJS and the package as global, and then add the generation command to your build process.
 
+## Difference with `apollo-codegen`
+
+`apollo-codegen` generates a similar results, but it based on code that generates the results.
+This package uses templates (with Handlebars) to generate results, and it basically supports any output because you can simply create you template and then compile it with your GraphQL schema and GraphQL operations and get a more customized result.
+This package also allow you to create custom templates, regardless the built-in generators, so you can use your schema as source to any generated result you need.
+
+
 ## Troubleshoot
 
 If you have issues with the generator, feel free open issues in this repository.
