@@ -1,6 +1,6 @@
 {
   "name": "graphql-codegen-core",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "description": "GraphQL types and code generator based on schema",
   "main": "dist/index.js",
   "scripts": {
@@ -72,8 +72,8 @@
   "dependencies": {
     "@types/graphql": "^0.10.0",
     "graphql": "^0.10.4",
-    "graphql-tools": "^1.0.0",
-    "graphql-tag": "^2.4.2"
+    "graphql-tag": "^2.4.2",
+    "graphql-tools": "^1.0.0"
   },
   "devDependencies": {
     "@types/jest": "^20.0.2",

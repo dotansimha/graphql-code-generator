@@ -1,6 +1,6 @@
 {
   "name": "graphql-code-generator",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "license": "MIT",
   "bin": {
     "gql-gen": "dist/index.js"
@@ -81,8 +81,8 @@
   "dependencies": {
     "commander": "^2.11.0",
     "glob": "^7.1.2",
-    "graphql-codegen-compiler": "^0.8.1",
-    "graphql-codegen-core": "^0.8.1",
+    "graphql-codegen-compiler": "^0.8.2",
+    "graphql-codegen-core": "^0.8.2",
     "graphql-codegen-generators": "^0.8.0",
     "mkdirp": "^0.5.1",
     "request": "^2.81.0"
