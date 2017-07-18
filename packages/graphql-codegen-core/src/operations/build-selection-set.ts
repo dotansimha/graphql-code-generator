@@ -34,6 +34,13 @@ export function buildSelectionSet(schema: GraphQLSchema, rootObject: GraphQLType
       const name = fieldNode.alias && fieldNode.alias.value ? fieldNode.alias.value : fieldNode.name.value;
       debugLog(`[buildSelectionSet] transforming FIELD with name ${name}`);
       const field = getFieldDef(rootObject, fieldNode);
+
+      if (!field) {
+        debugLog(`[buildSelectionSet] Ignoring field because of null result from getFieldDef...`);
+
+        return null;
+      }
+
       const resolvedType = resolveType(field.type);
       const childSelectionSet = buildSelectionSet(schema, getNamedType(field.type), fieldNode.selectionSet);
 
@@ -79,5 +86,5 @@ export function buildSelectionSet(schema: GraphQLSchema, rootObject: GraphQLType
     } else {
       throw new Error(`Unexpected GraphQL type: ${(selectionNode as any).kind}!`);
     }
-  });
+  }).filter(item => item); // filter to remove null types
 }

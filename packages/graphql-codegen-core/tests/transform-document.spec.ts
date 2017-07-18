@@ -71,6 +71,23 @@ describe('transformDocument', () => {
     expect((document.fragments[0].selectionSet[2] as SelectionSetFieldNode).selectionSet.length).toBe(2);
   });
 
+  it('should return correct result when using __typename in selectionSet', () => {
+    const fragment = gql`
+      fragment RepoInfo on Entry {
+        createdAt
+        __typename
+      }
+    `;
+
+    const document = transformDocument(schema, fragment);
+
+    expect(document.operations.length).toBe(0);
+    expect(document.fragments.length).toBe(1);
+    expect(document.fragments[0].name).toBe('RepoInfo');
+    expect(document.fragments[0].onType).toBe('Entry');
+    expect(document.fragments[0].selectionSet.length).toBe(1);
+  });
+
   it('should return correct result when using fragment with inline fragment', () => {
     const fragment = gql`
       fragment MyFragment on Entry {
