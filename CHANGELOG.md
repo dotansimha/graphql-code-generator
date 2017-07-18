@@ -1,3 +1,8 @@
+<a name="0.8.1"></a>
+## [0.8.1](https://github.com/dotansimha/graphql-codegen/compare/0.8.0...0.8.1) (2017-07-18)
+
+* Fixed issue with NPM installation
+
 <a name="0.8.0"></a>
 ## [0.8.0](https://github.com/dotansimha/graphql-codegen/compare/0.5.5...0.8.0) (2017-07-17)
 
