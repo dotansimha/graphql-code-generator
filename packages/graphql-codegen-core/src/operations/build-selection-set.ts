@@ -11,6 +11,7 @@ import { FIELD, FRAGMENT_SPREAD, INLINE_FRAGMENT } from 'graphql/language/kinds'
 import { getFieldDef } from '../utils/get-field-def';
 import { resolveType } from '../schema/resolve-type';
 import { debugLog } from '../debugging';
+import { resolveTypeIndicators } from '../schema/resolve-type-indicators';
 
 export function separateSelectionSet(selectionSet: SelectionSetItem[]): any {
   const fields = selectionSet.filter(n => isFieldNode(n));
@@ -43,6 +44,8 @@ export function buildSelectionSet(schema: GraphQLSchema, rootObject: GraphQLType
 
       const resolvedType = resolveType(field.type);
       const childSelectionSet = buildSelectionSet(schema, getNamedType(field.type), fieldNode.selectionSet);
+      const namedType = getNamedType(field.type);
+      const indicators = resolveTypeIndicators(namedType);
 
       return {
         isField: true,
@@ -55,6 +58,12 @@ export function buildSelectionSet(schema: GraphQLSchema, rootObject: GraphQLType
         type: resolvedType.name,
         isRequired: resolvedType.isRequired,
         isArray: resolvedType.isArray,
+        isEnum: indicators.isEnum,
+        isScalar: indicators.isScalar,
+        isInterface: indicators.isInterface,
+        isUnion: indicators.isUnion,
+        isInputType: indicators.isInputType,
+        isType: indicators.isType,
       } as SelectionSetFieldNode;
     } else if (selectionNode.kind === FRAGMENT_SPREAD) {
       const fieldNode = selectionNode as FragmentSpreadNode;

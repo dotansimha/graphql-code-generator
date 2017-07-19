@@ -1,6 +1,6 @@
-import { Argument, Field } from 'graphql-codegen-core';
+import { Argument, Field, Variable } from 'graphql-codegen-core';
 
-export function getFieldTypeAsString(field: Field | Argument): string {
+export function getFieldTypeAsString(field: Field | Argument | Variable): string {
   if (field.isEnum) {
     return 'enum';
   } else if (field.isType) {

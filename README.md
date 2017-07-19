@@ -82,6 +82,7 @@ Allowed flags:
 This repository includes some examples for generated outputs under `dev-test` directory.
 
 * Star Wars generated TypeScript output is [available here](https://github.com/dotansimha/graphql-code-generator/blob/master/dev-test/star-wars/types.d.ts).        
+* Star Wars generated TypeScript (multiple files) output is [available here](https://github.com/dotansimha/graphql-code-generator/blob/master/dev-test/star-wars/ts-multiple/).        
 * GitHunt generated TypeScript output is [available here](https://github.com/dotansimha/graphql-code-generator/blob/master/dev-test/githunt/types.d.ts).        
         
 ## Integration

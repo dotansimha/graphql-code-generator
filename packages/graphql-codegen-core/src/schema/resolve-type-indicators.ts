@@ -17,7 +17,7 @@ export function resolveTypeIndicators(namedType: GraphQLNamedType): NamedTypeInd
     isScalar: isLeafType(namedType) && !isEnum,
     isInterface: namedType['resolveType'] !== undefined && namedType['getFields'] !== undefined,
     isUnion: namedType['resolveType'] !== undefined && namedType['getTypes'] !== undefined,
-    isInputType: namedType['getFields'] !== undefined && namedType['getInterfaces'] === undefined,
+    isInputType: namedType['getFields'] !== undefined && namedType['getInterfaces'] === undefined && namedType['resolveType'] === undefined,
     isEnum: isEnum,
   };
 }

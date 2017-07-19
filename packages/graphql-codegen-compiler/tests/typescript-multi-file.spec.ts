@@ -52,7 +52,7 @@ describe('TypeScript Multi File', () => {
       expect(compiled.length).toBe(2);
       expect(compiled[0].filename).toBe('query.type.d.ts');
       expect(compiled[0].content).toBeSimilarStringTo(`
-        import { MyType } from './mytype.type.d.ts';
+        import { MyType } from './mytype.type';
         
         export interface Query {
           fieldTest: MyType | null; 
@@ -81,7 +81,7 @@ describe('TypeScript Multi File', () => {
       expect(compiled.length).toBe(2);
       expect(compiled[0].filename).toBe('query.type.d.ts');
       expect(compiled[0].content).toBeSimilarStringTo(`
-        import { MyEnum } from './myenum.enum.d.ts';
+        import { MyEnum } from './myenum.enum';
         
         export interface Query {
           fieldTest: MyEnum | null; 
@@ -108,7 +108,7 @@ describe('TypeScript Multi File', () => {
       expect(compiled.length).toBe(2);
       expect(compiled[0].filename).toBe('query.type.d.ts');
       expect(compiled[0].content).toBeSimilarStringTo(`
-        import { MyType } from './mytype.type.d.ts';
+        import { MyType } from './mytype.type';
         
         export interface Query {
           fieldTest: MyType | null; 
@@ -151,14 +151,14 @@ describe('TypeScript Multi File', () => {
         }
       `);
       expect(compiled[0].content).toBeSimilarStringTo(`
-        import { A } from './a.type.d.ts';
+        import { A } from './a.type';
         
         export interface Query {
           fieldTest: A;
         }
       `);
       expect(compiled[1].content).toBeSimilarStringTo(`
-        import { Base } from './base.interface.d.ts';
+        import { Base } from './base.interface';
         
         export interface A extends Base {
           f1: string | null;
@@ -182,7 +182,7 @@ describe('TypeScript Multi File', () => {
       expect(compiled[1].filename).toBe('date.scalar.d.ts');
 
       expect(compiled[0].content).toBeSimilarStringTo(`
-        import { Date } from './date.scalar.d.ts';
+        import { Date } from './date.scalar';
         
         export interface Query {
           fieldTest: Date[] | null;
@@ -219,7 +219,7 @@ describe('TypeScript Multi File', () => {
       expect(compiled[3].filename).toBe('c.union.d.ts');
 
       expect(compiled[0].content).toBeSimilarStringTo(`
-        import { C } from './c.union.d.ts';
+        import { C } from './c.union';
         
         export interface Query {
           fieldTest: C;
@@ -236,8 +236,8 @@ describe('TypeScript Multi File', () => {
         }
       `);
       expect(compiled[3].content).toBeSimilarStringTo(`
-        import { A } from './a.type.d.ts';
-        import { B } from './b.type.d.ts';
+        import { A } from './a.type';
+        import { B } from './b.type';
         
         /* Union description */
         export type C = A | B;
@@ -291,8 +291,8 @@ describe('TypeScript Multi File', () => {
       expect(compiled[2].filename).toBe('t.input-type.d.ts');
 
       expect(compiled[0].content).toBeSimilarStringTo(`
-        import { Return } from './return.type.d.ts';
-        import { T } from './t.input-type.d.ts';
+        import { Return } from './return.type';
+        import { T } from './t.input-type';
         
         export interface Query {
           fieldTest: Return | null; 
@@ -428,7 +428,7 @@ describe('TypeScript Multi File', () => {
         export type VoteType = "UP" | "DOWN" | "CANCEL";
       `);
       expect(compiled[2].content).toBeSimilarStringTo(`
-        import { RepoFields } from './repofields.fragment.d.ts';
+        import { RepoFields } from './repofields.fragment';
         
         export namespace MyFeed {
           export type Variables = {

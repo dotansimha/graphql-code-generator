@@ -1,3 +1,10 @@
+<a name="0.8.5"></a>
+## [0.8.5](https://github.com/dotansimha/graphql-codegen/compare/0.8.4...0.8.5) (2017-07-19)
+
+* Fixed issue with missing indicators for variables and selection set node
+* Better imports optimization and detection
+* Removed default file extension for imports builder
+
 <a name="0.8.4"></a>
 ## [0.8.4](https://github.com/dotansimha/graphql-codegen/compare/0.8.3...0.8.4) (2017-07-19)
 

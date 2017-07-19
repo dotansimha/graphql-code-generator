@@ -1,7 +1,14 @@
 import { registerHelper } from 'handlebars';
 import { camelCase, pascalCase, snakeCase, titleCase } from 'change-case';
 import { oneLineTrim } from 'common-tags';
-import { Argument, Field, SchemaTemplateContext, SelectionSetFragmentSpread } from 'graphql-codegen-core';
+import {
+  SelectionSetFieldNode,
+  Argument,
+  Field,
+  SchemaTemplateContext,
+  SelectionSetFragmentSpread,
+  Variable
+} from 'graphql-codegen-core';
 import { getFieldTypeAsString } from './field-type-to-string';
 import { sanitizeFilename } from './sanitizie-filename';
 import { FlattenModel, FlattenOperation } from './types';
@@ -65,26 +72,30 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
     if (context.fields && !context.onType && !context.operationType) {
       context.fields.forEach((field: Field) => {
         if (!config.primitives[field.type]) {
+          if (field.type === context.name) {
+            return;
+          }
+
           const fieldType = getFieldTypeAsString(field);
-          const file = sanitizeFilename(field.type, fieldType) + '.' + config.filesExtension;
+          const file = sanitizeFilename(field.type, fieldType);
 
           if (!imports.find(t => t.name === field.type)) {
             imports.push({ name: field.type, file });
           }
+        }
 
-          // Fields arguments
-          if (field.arguments && field.arguments.length > 0) {
-            field.arguments.forEach((arg: Argument) => {
-              if (!config.primitives[arg.type]) {
-                const fieldType = getFieldTypeAsString(arg);
-                const file = sanitizeFilename(arg.type, fieldType) + '.' + config.filesExtension;
+        // Fields arguments
+        if (field.arguments && field.hasArguments) {
+          field.arguments.forEach((arg: Argument) => {
+            if (!config.primitives[arg.type]) {
+              const fieldType = getFieldTypeAsString(arg);
+              const file = sanitizeFilename(arg.type, fieldType);
 
-                if (!imports.find(t => t.name === arg.type)) {
-                  imports.push({ name: arg.type, file });
-                }
+              if (!imports.find(t => t.name === arg.type)) {
+                imports.push({ name: arg.type, file });
               }
-            });
-          }
+            }
+          });
         }
       });
     }
@@ -92,7 +103,7 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
     // Types that uses interfaces
     if (context.interfaces) {
       context.interfaces.forEach((infName: string) => {
-        const file = sanitizeFilename(infName, 'interface') + '.' + config.filesExtension;
+        const file = sanitizeFilename(infName, 'interface');
 
         if (!imports.find(t => t.name === infName)) {
           imports.push({ name: infName, file });
@@ -103,10 +114,23 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
     // Unions
     if (context.possibleTypes) {
       context.possibleTypes.forEach((possibleType: string) => {
-        const file = sanitizeFilename(possibleType, 'type') + '.' + config.filesExtension;
+        const file = sanitizeFilename(possibleType, 'type');
 
         if (!imports.find(t => t.name === possibleType)) {
           imports.push({ name: possibleType, file });
+        }
+      });
+    }
+
+    if (context.variables) {
+      context.variables.forEach((variable: Variable) => {
+        if (!config.primitives[variable.type]) {
+          const fieldType = getFieldTypeAsString(variable);
+          const file = sanitizeFilename(variable.type, fieldType);
+
+          if (!imports.find(t => t.name === variable.type)) {
+            imports.push({ name: variable.type, file });
+          }
         }
       });
     }
@@ -117,7 +141,7 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
       flattenDocument.innerModels.forEach((innerModel: FlattenModel) => {
         if (innerModel.fragmentsSpread && innerModel.fragmentsSpread.length > 0) {
           innerModel.fragmentsSpread.forEach((fragmentSpread: SelectionSetFragmentSpread) => {
-            const file = sanitizeFilename(fragmentSpread.fragmentName, 'fragment') + '.' + config.filesExtension;
+            const file = sanitizeFilename(fragmentSpread.fragmentName, 'fragment');
 
             if (!imports.find(t => t.name === fragmentSpread.fragmentName)) {
               imports.push({ name: fragmentSpread.fragmentName, file });
@@ -125,49 +149,36 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
           });
         }
 
-        const schemaType = innerModel.schemaBaseType;
-        const inputType = schemaContext.inputTypes.find(inputType => inputType.name === schemaType);
+        innerModel.fields.forEach((field: SelectionSetFieldNode) => {
+          if (!config.primitives[field.type]) {
+            let type = null;
 
-        if (inputType) {
-          const file = sanitizeFilename(inputType.name, 'input-type') + '.' + config.filesExtension;
+            if (field.isEnum) {
+              type = 'enum';
+            } else if (field.isInputType) {
+              type = 'input-type';
+            } else if (field.isScalar) {
+              type = 'scalar';
+            }
 
-          if (!imports.find(t => t.name === inputType.name)) {
-            imports.push({ name: inputType.name, file });
+            if (type !== null) {
+              const file = sanitizeFilename(field.type, type);
+
+              if (!imports.find(t => t.name === field.type)) {
+                imports.push({ name: field.type, file });
+              }
+            }
           }
-
-          return;
-        }
-
-        const enumType = schemaContext.enums.find(enumType => enumType.name === schemaType);
-
-        if (enumType) {
-          const file = sanitizeFilename(enumType.name, 'enum') + '.' + config.filesExtension;
-
-          if (!imports.find(t => t.name === enumType.name)) {
-            imports.push({ name: enumType.name, file });
-          }
-
-          return;
-        }
-
-        const scalarType = schemaContext.scalars.find(scalarType => scalarType.name === schemaType);
-
-        if (scalarType) {
-          const file = sanitizeFilename(scalarType.name, 'scalar') + '.' + config.filesExtension;
-
-          if (!imports.find(t => t.name === scalarType.name)) {
-            imports.push({ name: scalarType.name, file });
-          }
-
-          return;
-        }
+        });
       });
-
-
     }
 
     for (let i = 0, j = imports.length; i < j; i++) {
-      ret = ret + options.fn(imports[i]);
+      ret = ret + options.fn(imports[i], {
+        data: {
+          withExtension: imports[i] + '.' + config.filesExtension,
+        },
+      });
     }
 
     return ret;

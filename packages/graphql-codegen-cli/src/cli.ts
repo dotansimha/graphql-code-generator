@@ -23,6 +23,7 @@ import {
   GeneratorConfig,
   getGeneratorConfig
 } from 'graphql-codegen-generators';
+import * as mkdirp from 'mkdirp';
 
 export interface CLIOptions {
   file?: string;
@@ -199,6 +200,9 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
         }
       }
     }
+
+    const resultDir = path.dirname(resultName);
+    mkdirp.sync(resultDir);
 
     return {
       content: item.content,

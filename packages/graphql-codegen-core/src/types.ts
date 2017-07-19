@@ -19,7 +19,7 @@ export interface Argument extends AstNode {
   isEnum: boolean;
 }
 
-export interface Field extends AstNode{
+export interface Field extends AstNode {
   name: string;
   description: string;
   arguments: Argument[];
@@ -127,6 +127,13 @@ export interface SelectionSetFieldNode extends SelectionSetItem {
   hasFragmentsSpread: boolean;
   hasInlineFragments: boolean;
   hasFields: boolean;
+
+  isType: boolean;
+  isScalar: boolean;
+  isInterface: boolean;
+  isUnion: boolean;
+  isInputType: boolean;
+  isEnum: boolean;
 }
 
 export function isFieldNode(node: SelectionSetItem): node is SelectionSetFieldNode {
@@ -177,6 +184,12 @@ export interface Variable {
   type: string;
   isRequired: boolean;
   isArray: boolean;
+  isType: boolean;
+  isScalar: boolean;
+  isInterface: boolean;
+  isUnion: boolean;
+  isInputType: boolean;
+  isEnum: boolean;
 }
 
 export interface Document {

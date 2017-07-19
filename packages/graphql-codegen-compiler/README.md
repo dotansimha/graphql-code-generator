@@ -99,6 +99,17 @@ Output:
 /* hi */
 ```
 
+### `eachImport(element: any)`
+
+Iterates over a calculated array of imports (file names) that in use by the `element`.
+
+Example:
+```handlebars
+{{#eachImport type}}
+    import { {{ name }} } from './{{file}}';
+{{/eachImport}}
+```
+
 ## Other Template Helpers
 
 ### `times(count: number)`
