@@ -153,7 +153,8 @@ function parseTemplateName(templateName: string): { prefix: string; handler: Fun
 
   if (templateExtension && ALLOWED_CUSTOM_TEMPLATE_EXT.includes(templateExtension)) {
     const compilationContext = splitted[splitted.length - 2];
-    const fileExtension = splitted[splitted.length - 3];
+    const base = splitted[splitted.length - 3].split('/');
+    const fileExtension = base[base.length - 1];
     const handler = handlersMap[compilationContext];
 
     if (handler) {
