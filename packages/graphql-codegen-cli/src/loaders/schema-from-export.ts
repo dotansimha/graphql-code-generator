@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import { GraphQLSchema } from 'graphql-codegen-core';
 
-export const introspectionFromExport = (file: string): Promise<GraphQLSchema> => {
+export const schemaFromExport = (file: string): Promise<GraphQLSchema> => {
   console.log(`Loading GraphQL Introspection from JavaScript ES6 export: ${file}...`);
 
   return new Promise<any>((resolve, reject) => {

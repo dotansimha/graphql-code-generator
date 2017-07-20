@@ -1,7 +1,7 @@
 import * as commander from 'commander';
 import { introspectionFromFile } from './loaders/introspection-from-file';
 import { introspectionFromUrl } from './loaders/introspection-from-url';
-import { introspectionFromExport } from './loaders/introspection-from-export';
+import { schemaFromExport } from './loaders/schema-from-export';
 import { documentsFromGlobs } from './utils/documents-glob';
 import {
   compileTemplate,
@@ -125,7 +125,7 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
     schemaExportPromise = introspectionFromUrl(url, headers).then(introspectionToGraphQLSchema);
   }
   else if (fsExport) {
-    schemaExportPromise = introspectionFromExport(fsExport);
+    schemaExportPromise = schemaFromExport(fsExport);
   }
 
   const graphQlSchema = await schemaExportPromise;

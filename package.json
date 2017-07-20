@@ -9,6 +9,7 @@
     "bootstrap": "lerna bootstrap",
     "build": "lerna run build",
     "test": "lerna run test",
+    "prepublish": "npm run build",
     "publish-canary": "$(npm bin)/lerna publish --canary"
   },
   "dependencies": {
