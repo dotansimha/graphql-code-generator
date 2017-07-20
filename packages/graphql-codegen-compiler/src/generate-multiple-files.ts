@@ -13,6 +13,7 @@ import {
 } from 'graphql-codegen-core';
 import { sanitizeFilename } from './sanitizie-filename';
 import { prepareSchemaForDocumentsOnly } from './prepare-documents-only';
+import * as path from 'path';
 
 const handlersMap = {
   type: handleType,
@@ -148,18 +149,27 @@ function handleFragment(compiledTemplate: Function, schemaContext: SchemaTemplat
 }
 
 function parseTemplateName(templateName: string): { prefix: string; handler: Function; fileExtension: string; } {
-  const splitted = (templateName || '').split('.');
-  const templateExtension = splitted[splitted.length - 1];
+  const splitted = (path.basename(templateName)).split('.');
+
+  if (splitted.length === 3) {
+    splitted.unshift('');
+  }
+
+  if (splitted.length !== 4) {
+    throw new Error(`Invalid template name: ${templateName}!`);
+  }
+
+  const templateExtension = splitted[3];
 
   if (templateExtension && ALLOWED_CUSTOM_TEMPLATE_EXT.includes(templateExtension)) {
-    const compilationContext = splitted[splitted.length - 2];
-    const base = splitted[splitted.length - 3].split('/');
-    const fileExtension = base[base.length - 1];
+    const compilationContext = splitted[2];
+    const prefix = splitted[0];
+    const fileExtension = splitted[1];
     const handler = handlersMap[compilationContext];
 
     if (handler) {
       return {
-        prefix: base.slice(0, base.length - 1).join('/'),
+        prefix: path.resolve(path.dirname(templateName), prefix),
         handler,
         fileExtension,
       };
