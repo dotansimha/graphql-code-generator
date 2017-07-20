@@ -41,7 +41,7 @@ describe('generateProject', () => {
     const transformedDocument = transformDocument(schema, documents);
     const compiled = compileTemplate(config, context, [transformedDocument], { generateSchema: false });
 
-    expect(compiled[0].filename).toBe('prefix.myfeed.query.js');
+    expect(compiled[0].filename).toContain('prefix.myfeed.query.js');
     expect(compiled[0].content).toBe('myFeed');
   });
 
@@ -84,7 +84,7 @@ describe('generateProject', () => {
     const transformedDocument = transformDocument(schema, documents);
     const compiled = compileTemplate(config, context, [transformedDocument], { generateSchema: false });
 
-    expect(compiled[0].filename).toBe('prefix.js');
+    expect(compiled[0].filename).toContain('prefix.js');
   });
 
   it('should handle templates correctly and return the correct result path with prefix ', () => {
@@ -99,7 +99,7 @@ describe('generateProject', () => {
         ID: 'string'
       },
       templates: {
-        'prefix-test.asdasdasd.js.operation.template': `{{ name }}`,
+        'prefix-test.js.operation.template': `{{ name }}`,
       },
     };
 
@@ -126,7 +126,7 @@ describe('generateProject', () => {
     const transformedDocument = transformDocument(schema, documents);
     const compiled = compileTemplate(config, context, [transformedDocument], { generateSchema: false });
 
-    expect(compiled[0].filename).toBe('prefix-test.asdasdasd.myfeed.query.js');
+    expect(compiled[0].filename).toContain('prefix-test.myfeed.query.js');
     expect(compiled[0].content).toBe('myFeed');
   });
 });

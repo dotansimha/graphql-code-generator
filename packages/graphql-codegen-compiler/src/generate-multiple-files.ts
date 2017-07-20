@@ -157,7 +157,7 @@ function parseTemplateName(templateName: string): { prefix: string; handler: Fun
     hasPrefix = false;
   }
 
-  if (splitted.length !== 4) {
+  if (splitted.length !== 4 && templateName.includes('/')) {
     throw new Error(`Invalid template name: ${templateName}!`);
   }
 
@@ -173,7 +173,7 @@ function parseTemplateName(templateName: string): { prefix: string; handler: Fun
       const pref = path.resolve(path.dirname(templateName) + '/', prefix);
 
       return {
-        prefix: hasPrefix ? pref + '.' : pref + '/',
+        prefix: hasPrefix ? ['all', 'documents', 'schema'].includes(compilationContext) ? pref : pref + '.' : pref + '/',
         handler,
         fileExtension,
       };
