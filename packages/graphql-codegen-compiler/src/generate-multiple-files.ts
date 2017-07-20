@@ -169,7 +169,7 @@ function parseTemplateName(templateName: string): { prefix: string; handler: Fun
 
     if (handler) {
       return {
-        prefix: path.resolve(path.dirname(templateName), prefix),
+        prefix: path.resolve(path.dirname(templateName), '/', prefix),
         handler,
         fileExtension,
       };
