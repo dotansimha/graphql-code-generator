@@ -1,3 +1,10 @@
+<a name="0.8.6"></a>
+## [0.8.6](https://github.com/dotansimha/graphql-codegen/compare/0.8.5...0.8.6) (2017-07-20)
+
+* Fixed issue with loading GraphQLSchema export from JS file
+* Changed `graphql` to be peer dependency to avoid multiple instance of GraphQL
+* Fixed issue with custom templates without prefix name
+
 <a name="0.8.5"></a>
 ## [0.8.5](https://github.com/dotansimha/graphql-codegen/compare/0.8.4...0.8.5) (2017-07-19)
 
