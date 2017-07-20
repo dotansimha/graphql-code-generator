@@ -14,7 +14,7 @@ There are 3 types of template generators available at the moment:
 * Multiple files - generated multiple files (usually file per type/operation/enum...)
 * Project - generated multiple/single file, based on custom templates in a directory.
 
-**Supported languages/platforms (`0.8.0`):**
+**Supported languages/platforms (`0.8.x`):**
 
 | Language        | Type           | CLI Name                                                                  |
 |-----------------|----------------|---------------------------------------------------------------------------|
@@ -22,6 +22,8 @@ There are 3 types of template generators available at the moment:
 | TypeScript      | Multiple Files | ts-multiple, typescript-multiple                                          |
 
 If you are looking for the **Flow** / **Swift** generators, please note that we will implement it soon again, but you can use `0.5.5` from NPM.
+
+**Note: In order to use GraphQL `direcrtives` feature, please use GraphQL > 0.9.4 as peer dependency for the generator!**
 
 ## Installation
 
