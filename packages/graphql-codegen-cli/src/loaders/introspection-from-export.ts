@@ -1,21 +1,25 @@
 import * as fs from 'fs';
-import { graphql, introspectionQuery, GraphQLSchema } from 'graphql-codegen-core';
+import { GraphQLSchema } from 'graphql-codegen-core';
 
-export const introspectionFromExport = (file: string) => {
+export const introspectionFromExport = (file: string): Promise<GraphQLSchema> => {
   console.log(`Loading GraphQL Introspection from JavaScript ES6 export: ${file}...`);
 
   return new Promise<any>((resolve, reject) => {
     if (fs.existsSync(file)) {
       try {
-        const schema = require(file);
+        const exports = require(file);
 
-        if (schema && schema instanceof GraphQLSchema) {
-          const result = graphql(schema, introspectionQuery).then(res => res.data);
+        if (exports) {
+          const schema = exports.default || exports.schema;
 
-          resolve(result);
+          if (schema) {
+            resolve(schema as GraphQLSchema);
+          } else {
+            reject(new Error(`Invalid export from export file ${file}: missing default export or 'schema' export!`));
+          }
         }
         else {
-          reject(new Error(`Invalid export from export file ${file}, make sure to default export your GraphQLSchema object!`));
+          reject(new Error(`Invalid export from export file ${file}: empty export!`));
         }
       }
       catch (e) {
