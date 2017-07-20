@@ -16,8 +16,8 @@ import {
 } from 'graphql-codegen-core';
 import { loadDocumentsSources } from './loaders/document-loader';
 import * as path from 'path';
-import { scanForTemplatesInPath } from './loaders/templates-scanner';
 import * as fs from 'fs';
+import { scanForTemplatesInPath } from './loaders/templates-scanner';
 import {
   EInputType,
   GeneratorConfig,
