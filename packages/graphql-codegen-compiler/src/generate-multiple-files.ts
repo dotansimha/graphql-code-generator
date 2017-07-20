@@ -159,7 +159,7 @@ function parseTemplateName(templateName: string): { prefix: string; handler: Fun
 
     if (handler) {
       return {
-        prefix: splitted.slice(0, splitted.length - 3).join('.'),
+        prefix: base.slice(0, base.length - 1).join('/'),
         handler,
         fileExtension,
       };
