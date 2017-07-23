@@ -172,10 +172,9 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
 
         if (fs.existsSync(resolvedPath)) {
           const requiredFile = require(resolvedPath);
-          console.log(requiredFile);
 
-          if (requiredFile && requiredFile.default && typeof requiredFile.default === 'function') {
-            resolvedHelpers[helperName] = requiredFile.default;
+          if (requiredFile && requiredFile && typeof requiredFile === 'function') {
+            resolvedHelpers[helperName] = requiredFile;
           } else {
             throw new Error(`Custom template file ${resolvedPath} does not have a default export function!`);
           }
