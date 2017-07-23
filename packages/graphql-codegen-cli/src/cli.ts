@@ -170,8 +170,8 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
         const filePath = config.customHelpers[helperName];
         const resolvedPath = path.isAbsolute(filePath) ? filePath : path.resolve(process.cwd(), filePath);
 
-        if (fs.existsSync(filePath)) {
-          const requiredFile = require(filePath);
+        if (fs.existsSync(resolvedPath)) {
+          const requiredFile = require(resolvedPath);
 
           if (requiredFile && requiredFile.default && typeof requiredFile.default === 'function') {
             resolvedHelpers[helperName] = requiredFile.default;
