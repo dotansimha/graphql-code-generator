@@ -16,6 +16,12 @@ import { flattenSelectionSet } from './flatten-types';
 import { GeneratorConfig } from 'graphql-codegen-generators';
 
 export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTemplateContext) => {
+  const customHelpers = config.customHelpers || {};
+
+  Object.keys(customHelpers).forEach(helperName => {
+    registerHelper(helperName, customHelpers[helperName]);
+  });
+
   registerHelper('toPrimitive', function (type) {
     return config.primitives[type] || type || '';
   });
@@ -30,26 +36,30 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
     return accum;
   });
 
-  registerHelper('ifDirective', function (context: any, directiveName: string, options: { fn: Function, data: { root: any } }) {
+  registerHelper('ifDirective', function (context: any, directiveName: string, options: { inverse: Function, fn: Function, data: { root: any } }) {
     if (context && context['directives'] && directiveName && typeof directiveName === 'string') {
       const directives = context['directives'];
       const directiveValue = directives[directiveName];
 
       if (directiveValue) {
         return options.fn ? options.fn(directiveValue) : '';
+      } else {
+        return options.inverse ? options.inverse() : '';
       }
     }
 
     return '';
   });
 
-  registerHelper('unlessDirective', function (context: any, directiveName: string, options: { fn: Function, data: { root: any } }) {
+  registerHelper('unlessDirective', function (context: any, directiveName: string, options: { inverse: Function, fn: Function, data: { root: any } }) {
     if (context && context['directives'] && directiveName && typeof directiveName === 'string') {
       const directives = context['directives'];
       const directiveValue = directives[directiveName];
 
       if (!directiveValue) {
         return options.fn ? options.fn(directiveValue) : '';
+      } else {
+        return options.inverse ? options.inverse() : '';
       }
     }
 
@@ -230,5 +240,32 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
     }
 
     return accum;
+  });
+
+  registerHelper('ifCond', function (v1: any, operator: string, v2: any, options) {
+    switch (operator) {
+      case '==':
+        return (v1 == v2) ? options.fn(this) : options.inverse(this);
+      case '===':
+        return (v1 === v2) ? options.fn(this) : options.inverse(this);
+      case '!=':
+        return (v1 != v2) ? options.fn(this) : options.inverse(this);
+      case '!==':
+        return (v1 !== v2) ? options.fn(this) : options.inverse(this);
+      case '<':
+        return (v1 < v2) ? options.fn(this) : options.inverse(this);
+      case '<=':
+        return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+      case '>':
+        return (v1 > v2) ? options.fn(this) : options.inverse(this);
+      case '>=':
+        return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+      case '&&':
+        return (v1 && v2) ? options.fn(this) : options.inverse(this);
+      case '||':
+        return (v1 || v2) ? options.fn(this) : options.inverse(this);
+      default:
+        return options.inverse(this);
+    }
   });
 };

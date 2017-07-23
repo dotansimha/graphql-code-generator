@@ -48,6 +48,7 @@ interface ProjectConfig {
     Boolean: string;
     ID: string;
   };
+  customHelpers: { [helperName: string]: string };
 }
 
 function collect(val, memo) {
@@ -163,12 +164,31 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
       const config = JSON.parse(fs.readFileSync(configPath).toString()) as ProjectConfig;
       debugLog(`[executeWithOptions] Got project config JSON: `, config);
       const templates = scanForTemplatesInPath(project, ALLOWED_CUSTOM_TEMPLATE_EXT);
+      const resolvedHelpers: {[key: string]: Function} = {};
+
+      Object.keys(config.customHelpers || {}).map(helperName => {
+        const filePath = config.customHelpers[helperName];
+        const resolvedPath = path.isAbsolute(filePath) ? filePath : path.resolve(process.cwd(), filePath);
+
+        if (fs.existsSync(filePath)) {
+          const requiredFile = require(filePath);
+
+          if (requiredFile && requiredFile.default && typeof requiredFile.default === 'function') {
+            resolvedHelpers[helperName] = requiredFile.default;
+          } else {
+            throw new Error(`Custom template file ${resolvedPath} does not have a default export function!`);
+          }
+        } else {
+          throw new Error(`Custom template file ${helperName} does not exists in path: ${resolvedPath}`);
+        }
+      });
 
       templateConfig = {
         inputType: EInputType.PROJECT,
         templates,
         flattenTypes: config.flattenTypes,
         primitives: config.primitives,
+        customHelpers: resolvedHelpers,
       };
     } else {
       throw new Error(`Please specify --projectConfig path or create gql-gen.json in your project root!`);
