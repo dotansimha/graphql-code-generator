@@ -5,22 +5,27 @@ export const introspectionFromUrl = (url: string, headers: string[]): Promise<In
   console.log(`Loading GraphQL Introspection from remote: ${url}...`);
 
   let splittedHeaders = (headers || []).map((header: string) => {
-    const [name, value] = header.split(/\s*:\s*/);
+    const result = header.match(/^(.*?)[:=]{1}(.*?)$/);
 
-    return {
-      [name]: value
-    };
-  });
+    if (result && result.length > 0) {
+      const name = result[1];
+      const value = result[2];
 
-  let extraHeaders = {};
+      return {
+        [name]: value,
+      };
+    }
 
-  if (splittedHeaders.length > 0) {
-    extraHeaders = splittedHeaders.reduce((a, b) => {
-      return Object.assign({}, a, b);
-    });
-  }
+    return null;
+  }).filter(item => item);
 
-  debugLog(`Executing POST to ${url} with headers: `, splittedHeaders);
+  let extraHeaders = {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json',
+    ...(splittedHeaders.reduce((prev, item) => ({ ...prev, ...item }), {}))
+  };
+
+  debugLog(`Executing POST to ${url} with headers: `, extraHeaders);
 
   return new Promise<IntrospectionQuery>((resolve, reject) => {
     request.post({
@@ -28,10 +33,7 @@ export const introspectionFromUrl = (url: string, headers: string[]): Promise<In
       json: {
         query: introspectionQuery.replace('locations', '')
       },
-      headers: Object.assign({
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      }, extraHeaders)
+      headers: extraHeaders,
     }, (err, response, body) => {
       if (err) {
         reject(err);

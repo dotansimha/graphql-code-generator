@@ -33,7 +33,7 @@ export interface CLIOptions {
   template?: string;
   project?: string;
   out?: string;
-  headers?: string[];
+  header?: string[];
   schema?: any;
   documents?: any;
   projectConfig?: string;
@@ -113,7 +113,7 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
   const project: string = options.project;
   const projectConfig: string = options.projectConfig || './gql-gen.json';
   const out: string = options.out || './';
-  const headers: string[] = options.headers;
+  const headers: string[] = options.header;
   const generateSchema: boolean = options.schema;
   const generateDocuments: boolean = options.documents;
   let schemaExportPromise;

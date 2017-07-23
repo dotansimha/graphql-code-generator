@@ -1,3 +1,8 @@
+<a name="0.8.7"></a>
+## [0.8.7](https://github.com/dotansimha/graphql-codegen/compare/0.8.6...0.8.7) (2017-07-23)
+
+* Fixed issue with remote GraphQL endpoint and custom headers
+
 <a name="0.8.6"></a>
 ## [0.8.6](https://github.com/dotansimha/graphql-codegen/compare/0.8.5...0.8.6) (2017-07-20)
 
