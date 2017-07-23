@@ -172,6 +172,7 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
 
         if (fs.existsSync(resolvedPath)) {
           const requiredFile = require(resolvedPath);
+          console.log(requiredFile);
 
           if (requiredFile && requiredFile.default && typeof requiredFile.default === 'function') {
             resolvedHelpers[helperName] = requiredFile.default;
