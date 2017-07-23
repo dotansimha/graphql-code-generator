@@ -48,7 +48,7 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
       }
     }
 
-    return '';
+    return options.inverse ? options.inverse() : '';
   });
 
   registerHelper('unlessDirective', function (context: any, directiveName: string, options: { inverse: Function, fn: Function, data: { root: any } }) {
@@ -63,7 +63,7 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
       }
     }
 
-    return '';
+    return options.inverse ? options.inverse() : '';
   });
 
   registerHelper('toComment', function (str) {
