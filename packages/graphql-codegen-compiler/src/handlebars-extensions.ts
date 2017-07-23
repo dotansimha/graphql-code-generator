@@ -90,7 +90,7 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
           const file = sanitizeFilename(field.type, fieldType);
 
           if (!imports.find(t => t.name === field.type)) {
-            imports.push({ name: field.type, file });
+            imports.push({ name: field.type, file, type: fieldType });
           }
         }
 
@@ -102,7 +102,7 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
               const file = sanitizeFilename(arg.type, fieldType);
 
               if (!imports.find(t => t.name === arg.type)) {
-                imports.push({ name: arg.type, file });
+                imports.push({ name: arg.type, file, type: fieldType });
               }
             }
           });
@@ -116,7 +116,7 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
         const file = sanitizeFilename(infName, 'interface');
 
         if (!imports.find(t => t.name === infName)) {
-          imports.push({ name: infName, file });
+          imports.push({ name: infName, file, type: 'interface' });
         }
       });
     }
@@ -127,7 +127,7 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
         const file = sanitizeFilename(possibleType, 'type');
 
         if (!imports.find(t => t.name === possibleType)) {
-          imports.push({ name: possibleType, file });
+          imports.push({ name: possibleType, file, type: 'type' });
         }
       });
     }
@@ -139,7 +139,7 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
           const file = sanitizeFilename(variable.type, fieldType);
 
           if (!imports.find(t => t.name === variable.type)) {
-            imports.push({ name: variable.type, file });
+            imports.push({ name: variable.type, file, type: fieldType });
           }
         }
       });
@@ -154,7 +154,7 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
             const file = sanitizeFilename(fragmentSpread.fragmentName, 'fragment');
 
             if (!imports.find(t => t.name === fragmentSpread.fragmentName)) {
-              imports.push({ name: fragmentSpread.fragmentName, file });
+              imports.push({ name: fragmentSpread.fragmentName, file, type: 'fragment' });
             }
           });
         }
@@ -175,7 +175,7 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
               const file = sanitizeFilename(field.type, type);
 
               if (!imports.find(t => t.name === field.type)) {
-                imports.push({ name: field.type, file });
+                imports.push({ name: field.type, file, type });
               }
             }
           }
