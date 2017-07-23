@@ -1,6 +1,6 @@
 {
   "name": "graphql-codegen-generators",
-  "version": "0.8.6",
+  "version": "0.8.7",
   "description": "GraphQL code generator predefined templates",
   "license": "MIT",
   "scripts": {
