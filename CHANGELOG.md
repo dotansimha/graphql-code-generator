@@ -1,3 +1,8 @@
+<a name="0.8.9"></a>
+## [0.8.9](https://github.com/dotansimha/graphql-codegen/compare/0.8.8...0.8.9) (2017-07-24)
+
+* Fixed bug with relative path for export
+
 <a name="0.8.8"></a>
 ## [0.8.8](https://github.com/dotansimha/graphql-codegen/compare/0.8.7...0.8.8) (2017-07-24)
 
