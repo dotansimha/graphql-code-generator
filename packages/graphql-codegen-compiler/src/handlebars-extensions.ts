@@ -274,6 +274,8 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
       throw new Error(`Both type and name are required for withGql helper!`);
     }
 
+    type = camelCase(type);
+
     const sourceArr = schemaContext[type] || schemaContext[type + 's'];
 
     if (!sourceArr) {
