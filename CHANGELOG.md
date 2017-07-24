@@ -1,3 +1,11 @@
+<a name="0.8.8"></a>
+## [0.8.8](https://github.com/dotansimha/graphql-codegen/compare/0.8.7...0.8.8) (2017-07-24)
+
+* Added support for custom helpers when generating custom templates
+* Added more Handlebars helpers
+* Some fixed for `ifDirective` helper
+* Updated docs
+
 <a name="0.8.7"></a>
 ## [0.8.7](https://github.com/dotansimha/graphql-codegen/compare/0.8.6...0.8.7) (2017-07-23)
 
