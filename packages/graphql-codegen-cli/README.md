@@ -8,3 +8,28 @@ It parses the CLI commands into a `GeneratorConfig` and `Settings` object, and a
 
 For a full CLI documentation, please refer to the main `README` file of the package.
 
+## `gql-gen.json`
+
+`gql-gen.json` is a local config file, provides a custom config when using custom templates.
+
+This is an example for a valid file:
+
+```json
+{
+  "flattenTypes": true,
+  "primitives": {
+    "String": "string",
+    "Int": "number",
+    "Float": "number",
+    "Boolean": "boolean",
+    "ID": "string"
+  },
+  "customHelpers": {
+    "myHelper": "./my-helper.js"
+  }
+}
+```
+
+You can override the config for `flattenTypes` and `primitives` (refer to `graphql-codegen-compiler` package README for more info).
+
+You can also specify JavaScript files for `customHelpers` when generating custom templates (the custom files should export a `Function` as default).

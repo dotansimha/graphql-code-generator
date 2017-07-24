@@ -17,4 +17,5 @@ export interface GeneratorConfig {
   };
   outFile?: string;
   filesExtension?: string;
+  customHelpers?: { [helperName: string]: Function };
 }

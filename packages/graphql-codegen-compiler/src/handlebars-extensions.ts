@@ -16,6 +16,12 @@ import { flattenSelectionSet } from './flatten-types';
 import { GeneratorConfig } from 'graphql-codegen-generators';
 
 export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTemplateContext) => {
+  const customHelpers = config.customHelpers || {};
+
+  Object.keys(customHelpers).forEach(helperName => {
+    registerHelper(helperName, customHelpers[helperName]);
+  });
+
   registerHelper('toPrimitive', function (type) {
     return config.primitives[type] || type || '';
   });
@@ -30,30 +36,34 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
     return accum;
   });
 
-  registerHelper('ifDirective', function (context: any, directiveName: string, options: { fn: Function, data: { root: any } }) {
+  registerHelper('ifDirective', function (context: any, directiveName: string, options: { inverse: Function, fn: Function, data: { root: any } }) {
     if (context && context['directives'] && directiveName && typeof directiveName === 'string') {
       const directives = context['directives'];
       const directiveValue = directives[directiveName];
 
       if (directiveValue) {
-        return options.fn ? options.fn(directiveValue) : '';
+        return options && options.fn ? options.fn(directiveValue) : '';
+      } else {
+        return options && options.inverse ? options.inverse() : '';
       }
     }
 
-    return '';
+    return options && options.inverse ? options.inverse() : '';
   });
 
-  registerHelper('unlessDirective', function (context: any, directiveName: string, options: { fn: Function, data: { root: any } }) {
+  registerHelper('unlessDirective', function (context: any, directiveName: string, options: { inverse: Function, fn: Function, data: { root: any } }) {
     if (context && context['directives'] && directiveName && typeof directiveName === 'string') {
       const directives = context['directives'];
       const directiveValue = directives[directiveName];
 
       if (!directiveValue) {
-        return options.fn ? options.fn(directiveValue) : '';
+        return options && options.fn ? options.fn(directiveValue) : '';
+      } else {
+        return options && options.inverse ? options.inverse() : '';
       }
     }
 
-    return '';
+    return options && options.inverse ? options.inverse() : '';
   });
 
   registerHelper('toComment', function (str) {
@@ -66,7 +76,7 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
 
   registerHelper('eachImport', function (context: any, options: { fn: Function }) {
     let ret = '';
-    const imports: { name: string; file: string; }[] = [];
+    const imports: { name: string; file: string; type: string }[] = [];
 
     // Interface, input types, types
     if (context.fields && !context.onType && !context.operationType) {
@@ -80,7 +90,7 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
           const file = sanitizeFilename(field.type, fieldType);
 
           if (!imports.find(t => t.name === field.type)) {
-            imports.push({ name: field.type, file });
+            imports.push({ name: field.type, file, type: fieldType });
           }
         }
 
@@ -92,7 +102,7 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
               const file = sanitizeFilename(arg.type, fieldType);
 
               if (!imports.find(t => t.name === arg.type)) {
-                imports.push({ name: arg.type, file });
+                imports.push({ name: arg.type, file, type: fieldType });
               }
             }
           });
@@ -106,7 +116,7 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
         const file = sanitizeFilename(infName, 'interface');
 
         if (!imports.find(t => t.name === infName)) {
-          imports.push({ name: infName, file });
+          imports.push({ name: infName, file, type: 'interface' });
         }
       });
     }
@@ -117,7 +127,7 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
         const file = sanitizeFilename(possibleType, 'type');
 
         if (!imports.find(t => t.name === possibleType)) {
-          imports.push({ name: possibleType, file });
+          imports.push({ name: possibleType, file, type: 'type' });
         }
       });
     }
@@ -129,7 +139,7 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
           const file = sanitizeFilename(variable.type, fieldType);
 
           if (!imports.find(t => t.name === variable.type)) {
-            imports.push({ name: variable.type, file });
+            imports.push({ name: variable.type, file, type: fieldType });
           }
         }
       });
@@ -144,7 +154,7 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
             const file = sanitizeFilename(fragmentSpread.fragmentName, 'fragment');
 
             if (!imports.find(t => t.name === fragmentSpread.fragmentName)) {
-              imports.push({ name: fragmentSpread.fragmentName, file });
+              imports.push({ name: fragmentSpread.fragmentName, file, type: 'fragment' });
             }
           });
         }
@@ -165,7 +175,7 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
               const file = sanitizeFilename(field.type, type);
 
               if (!imports.find(t => t.name === field.type)) {
-                imports.push({ name: field.type, file });
+                imports.push({ name: field.type, file, type });
               }
             }
           }
@@ -230,5 +240,54 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
     }
 
     return accum;
+  });
+
+  registerHelper('ifCond', function (v1: any, operator: string, v2: any, options) {
+    switch (operator) {
+      case '==':
+        return (v1 == v2) ? options.fn(this) : options.inverse(this);
+      case '===':
+        return (v1 === v2) ? options.fn(this) : options.inverse(this);
+      case '!=':
+        return (v1 != v2) ? options.fn(this) : options.inverse(this);
+      case '!==':
+        return (v1 !== v2) ? options.fn(this) : options.inverse(this);
+      case '<':
+        return (v1 < v2) ? options.fn(this) : options.inverse(this);
+      case '<=':
+        return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+      case '>':
+        return (v1 > v2) ? options.fn(this) : options.inverse(this);
+      case '>=':
+        return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+      case '&&':
+        return (v1 && v2) ? options.fn(this) : options.inverse(this);
+      case '||':
+        return (v1 || v2) ? options.fn(this) : options.inverse(this);
+      default:
+        return options.inverse(this);
+    }
+  });
+
+  registerHelper('withGql', (type: string, name: string, options) => {
+    if (!type || !name) {
+      throw new Error(`Both type and name are required for withGql helper!`);
+    }
+
+    type = camelCase(type);
+
+    const sourceArr = schemaContext[type] || schemaContext[type + 's'];
+
+    if (!sourceArr) {
+      throw new Error(`Type ${type} is not a valid SchemaTemplateContext field!`);
+    }
+
+    const item = sourceArr.find(item => item.name === name);
+
+    if (!item) {
+      throw new Error(`GraphQL object with name ${name} and type ${type} cannot be found!`);
+    }
+
+    return options.fn(item);
   });
 };
