@@ -1,13 +1,16 @@
 import * as fs from 'fs';
 import { GraphQLSchema } from 'graphql-codegen-core';
+import * as path from 'path';
 
 export const schemaFromExport = (file: string): Promise<GraphQLSchema> => {
   console.log(`Loading GraphQL Introspection from JavaScript ES6 export: ${file}...`);
 
   return new Promise<any>((resolve, reject) => {
-    if (fs.existsSync(file)) {
+    const fullPath = path.isAbsolute(file) ? file : path.resolve(process.cwd(), file);
+
+    if (fs.existsSync(fullPath)) {
       try {
-        const exports = require(file);
+        const exports = require(fullPath);
 
         if (exports) {
           const schema = exports.default || exports.schema;
@@ -15,11 +18,11 @@ export const schemaFromExport = (file: string): Promise<GraphQLSchema> => {
           if (schema) {
             resolve(schema as GraphQLSchema);
           } else {
-            reject(new Error(`Invalid export from export file ${file}: missing default export or 'schema' export!`));
+            reject(new Error(`Invalid export from export file ${fullPath}: missing default export or 'schema' export!`));
           }
         }
         else {
-          reject(new Error(`Invalid export from export file ${file}: empty export!`));
+          reject(new Error(`Invalid export from export file ${fullPath}: empty export!`));
         }
       }
       catch (e) {
@@ -27,7 +30,7 @@ export const schemaFromExport = (file: string): Promise<GraphQLSchema> => {
       }
     }
     else {
-      reject(`Unable to locate introspection from export file: ${file}`);
+      reject(`Unable to locate introspection from export file: ${fullPath}`);
     }
   });
 };
