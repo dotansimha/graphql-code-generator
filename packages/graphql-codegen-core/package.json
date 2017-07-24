@@ -1,6 +1,6 @@
 {
   "name": "graphql-codegen-core",
-  "version": "0.8.8",
+  "version": "0.8.9",
   "description": "GraphQL types and code generator based on schema",
   "main": "dist/index.js",
   "scripts": {
