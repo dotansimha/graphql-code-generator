@@ -237,3 +237,9 @@ Use with `SINGLE_FILE`, specify the default filename for the generated file.
 ### filesExtension
 
 Use with `MULTIPLE_FILES`, specify the file extension for the generated files.
+
+### customHelpers
+
+With `customHelpers` you can add custom helpers that executes with your custom templates.
+
+Provide an object with `key` as the name of the helper, and a `Function` for the helper execution.

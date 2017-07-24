@@ -84,6 +84,48 @@ Type name: MyType
 Extra name? No!
 ```
 
+### `withGql(type: string, name: string)` 
+
+Locates GraphQL element of `type` with name `name`, use it if you need to access GraphQL specific element, for example "MyType" of "type".
+
+Super useful when you need to access the actual object inside `withImports` or in any other case. 
+
+```graphql
+type MyType {
+  f1: String
+}
+```
+```handlebars
+{{#withGql "type" "MyType"}}
+    {{ name }}
+{{/withGql}}
+```
+Output:
+```
+MyType
+```
+
+### `eachImport(context)`
+
+Locates all external uses of `context`, and returns an array of: `{ name: string, type: string, filename: string }`, so you can use it to create imports when generating multiple files.
+
+`context` can be any GraphQL available object.
+
+```graphql
+type MyType {
+  f: OtherType
+}
+```
+```handlebars
+{{#eachImport this }}
+import { {{ name }} } from './{{ file }}';
+{{/eachImport}}
+```
+Output:
+```
+import { OtherType } from './othertype.type';
+```
+
 ### `toComment(str: string)`
 
 Prints a string as comment with `/* ... */`, and also trims multiple lines into a single line.
@@ -246,3 +288,21 @@ Output:
 "myString" + 
 "other line"
 ```
+
+### `ifCond(p1: any, comparator: string, p2: any)`
+
+Executes a simple if command of two parameters, using comparator.
+
+Available comparators: `===`, `==`, `!==`, `!=`, `<`, `<=`, `>`, `>=`, `&&`, `||`.
+
+Example:
+```handlebars
+{{#ifCond "test" "===" "test"}}
+   Hi!
+{{/ifCond}}
+```
+Output:
+```
+    Hi!
+```
+
