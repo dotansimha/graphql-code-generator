@@ -42,13 +42,13 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
       const directiveValue = directives[directiveName];
 
       if (directiveValue) {
-        return options.fn ? options.fn(directiveValue) : '';
+        return options && options.fn ? options.fn(directiveValue) : '';
       } else {
-        return options.inverse ? options.inverse() : '';
+        return options && options.inverse ? options.inverse() : '';
       }
     }
 
-    return options.inverse ? options.inverse() : '';
+    return options && options.inverse ? options.inverse() : '';
   });
 
   registerHelper('unlessDirective', function (context: any, directiveName: string, options: { inverse: Function, fn: Function, data: { root: any } }) {
@@ -57,13 +57,13 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
       const directiveValue = directives[directiveName];
 
       if (!directiveValue) {
-        return options.fn ? options.fn(directiveValue) : '';
+        return options && options.fn ? options.fn(directiveValue) : '';
       } else {
-        return options.inverse ? options.inverse() : '';
+        return options && options.inverse ? options.inverse() : '';
       }
     }
 
-    return options.inverse ? options.inverse() : '';
+    return options && options.inverse ? options.inverse() : '';
   });
 
   registerHelper('toComment', function (str) {
@@ -76,7 +76,7 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
 
   registerHelper('eachImport', function (context: any, options: { fn: Function }) {
     let ret = '';
-    const imports: { name: string; file: string; }[] = [];
+    const imports: { name: string; file: string; type: string }[] = [];
 
     // Interface, input types, types
     if (context.fields && !context.onType && !context.operationType) {
@@ -267,5 +267,25 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
       default:
         return options.inverse(this);
     }
+  });
+
+  registerHelper('withGql', (type: string, name: string, options) => {
+    if (!type || !name) {
+      throw new Error(`Both type and name are required for withGql helper!`);
+    }
+
+    const sourceArr = schemaContext[type] || schemaContext[type + 's'];
+
+    if (!sourceArr) {
+      throw new Error(`Type ${type} is not a valid SchemaTemplateContext field!`);
+    }
+
+    const item = sourceArr.find(item => item.name === name);
+
+    if (!item) {
+      throw new Error(`GraphQL object with name ${name} and type ${type} cannot be found!`);
+    }
+
+    return options.fn(item);
   });
 };
