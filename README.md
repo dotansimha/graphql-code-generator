@@ -23,7 +23,7 @@ There are 3 types of template generators available at the moment:
 
 If you are looking for the **Flow** / **Swift** generators, please note that we will implement it soon again, but you can use `0.5.5` from NPM.
 
-**Note: In order to use GraphQL `direcrtives` feature, please use GraphQL > 0.9.4 as peer dependency for the generator!**
+**Note: In order to use GraphQL `directives` feature, please use GraphQL > 0.9.4 as peer dependency for the generator!**
 
 ## Installation
 
