@@ -25,6 +25,8 @@ import {
 } from 'graphql-codegen-generators';
 import * as mkdirp from 'mkdirp';
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
 export interface CLIOptions {
   file?: string;
   url?: string;
