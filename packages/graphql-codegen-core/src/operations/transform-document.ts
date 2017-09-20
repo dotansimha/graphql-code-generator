@@ -1,4 +1,4 @@
-import { DefinitionNode, DocumentNode, FragmentDefinitionNode, GraphQLSchema, OperationDefinitionNode } from 'graphql';
+import { DefinitionNode, DocumentNode, FragmentDefinitionNode, GraphQLSchema, OperationDefinitionNode, printType } from 'graphql';
 import { Document } from '../types';
 import { transformFragment } from './transform-fragment-document';
 import { OPERATION_DEFINITION, FRAGMENT_DEFINITION } from 'graphql/language/kinds';
@@ -23,7 +23,8 @@ export function transformDocument(schema: GraphQLSchema, documentNode: DocumentN
     } else if (definitionNode.kind === FRAGMENT_DEFINITION) {
       result.fragments.push(transformFragment(schema, definitionNode as FragmentDefinitionNode));
     } else {
-      throw new Error(`Unexpected DefinitionNode sub-type: ${definitionNode.toString()}`);
+      console.log(`WARNING: It seems like you provided a GraphQL schema instead of GraphQL document: `);
+      console.log(definitionNode);
     }
   });
 

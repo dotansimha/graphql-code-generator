@@ -2,7 +2,7 @@ import { debugLog, introspectionQuery, IntrospectionQuery } from 'graphql-codege
 import * as request from 'request';
 
 export const introspectionFromUrl = (url: string, headers: string[]): Promise<IntrospectionQuery> => {
-  debugLog(`Loading GraphQL Introspection from remote: ${url}...`);
+  console.log(`Loading GraphQL Introspection from remote: ${url}...`);
 
   let splittedHeaders = (headers || []).map((header: string) => {
     const result = header.match(/^(.*?)[:=]{1}(.*?)$/);
