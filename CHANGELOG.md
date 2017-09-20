@@ -1,3 +1,12 @@
+<a name="0.8.11"></a>
+## [0.8.11](https://github.com/dotansimha/graphql-codegen/compare/0.8.10...0.8.11) (2017-07-24)
+
+* Export all available interfaces from the compiler package (Fixes [#144](https://github.com/dotansimha/graphql-code-generator/issues/144)
+* Fixed incorrect typings path (Fixes [#143](https://github.com/dotansimha/graphql-code-generator/issues/143))
+* Simplify fragment emitting for selection sets (Fixes [#139](https://github.com/dotansimha/graphql-code-generator/issues/139))
+* Change TypeScript optional to use `?` instead of `| null` ([#142](https://github.com/dotansimha/graphql-code-generator/pull/142))
+* Allow insecure HTTP requests (Fixes [#137](https://github.com/dotansimha/graphql-code-generator/issues/137))
+
 <a name="0.8.10"></a>
 ## [0.8.10](https://github.com/dotansimha/graphql-codegen/compare/0.8.9...0.8.10) (2017-07-24)
 
