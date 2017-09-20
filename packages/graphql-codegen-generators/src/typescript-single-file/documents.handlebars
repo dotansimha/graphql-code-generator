@@ -6,28 +6,28 @@ export namespace {{ toPascalCase name }} {
   {{/each}}
   }
 
-  export type {{ toPascalCase operationType }} = {
+  export type {{ toPascalCase operationType }} ={{#if hasFields}} {
     {{> selectionSet fields }}
-  }{{#if hasFragmentsSpread}}{{#each fragmentsSpread}} & {{fragmentName}}.Fragment{{/each}}{{/if}}{{#if hasInlineFragments}}{{#each inlineFragments}} & {{onType}}{{/each}}{{/if}}
+  }{{/if}} {{#if hasFragmentsSpread}}{{#if hasFields}}& {{/if}}{{#each fragmentsSpread}}{{fragmentName}}.Fragment{{#unless @last}} & {{/unless}}{{/each}}{{/if}}{{#if hasInlineFragments}}{{#if hasFields}}& {{/if}}{{#each inlineFragments}}{{onType}}{{#unless @last}} & {{/unless}}{{/each}}{{/if}}
   {{#each innerModels }}
 
-  export type {{ modelType }} = {
+  export type {{ modelType }} ={{#if hasFields}} {
     {{> selectionSet fields }}
-  }{{#if hasFragmentsSpread}}{{#each fragmentsSpread}} & {{fragmentName}}.Fragment{{/each}}{{/if}}{{#if hasInlineFragments}}{{#each inlineFragments}} & {{onType}}{{/each}}{{/if}}
+  }{{/if}} {{#if hasFragmentsSpread}}{{#if hasFields}}& {{/if}}{{#each fragmentsSpread}}{{fragmentName}}.Fragment{{#unless @last}} & {{/unless}}{{/each}}{{/if}}{{#if hasInlineFragments}}{{#if hasFields}}& {{/if}}{{#each inlineFragments}}{{onType}}{{#unless @last}} & {{/unless}}{{/each}}{{/if}}
   {{/each}}
 }
 {{/each}}
 {{#each fragments }}
 
 export namespace {{name}} {
-  export type Fragment = {
+  export type Fragment ={{#if hasFields}} {
     {{> selectionSet fields }}
-  }{{#if hasFragmentsSpread}}{{#each fragmentsSpread}} & {{fragmentName}}.Fragment{{/each}}{{/if}}{{#if hasInlineFragments}}{{#each inlineFragments}} & {{onType}}{{/each}}{{/if}}
+  }{{/if}} {{#if hasFragmentsSpread}}{{#if hasFields}}& {{/if}}{{#each fragmentsSpread}}{{fragmentName}}.Fragment{{#unless @last}} & {{/unless}}{{/each}}{{/if}}{{#if hasInlineFragments}}{{#if hasFields}}& {{/if}}{{#each inlineFragments}}{{onType}}{{#unless @last}} & {{/unless}}{{/each}}{{/if}}
   {{#each innerModels }}
 
-  export type {{ modelType }} = {
+  export type {{ modelType }} ={{#if hasFields}} {
     {{> selectionSet fields }}
-  }{{#if hasFragmentsSpread}}{{#each fragmentsSpread}} & {{fragmentName}}.Fragment{{/each}}{{/if}}{{#if hasInlineFragments}}{{#each inlineFragments}} & {{onType}}{{/each}}{{/if}}
+  }{{/if}} {{#if hasFragmentsSpread}}{{#if hasFields}}& {{/if}}{{#each fragmentsSpread}}{{fragmentName}}.Fragment{{#unless @last}} & {{/unless}}{{/each}}{{/if}}{{#if hasInlineFragments}}{{#if hasFields}}& {{/if}}{{#each inlineFragments}}{{onType}}{{#unless @last}} & {{/unless}}{{/each}}{{/if}}
   {{/each}}
 }
 {{/each}}

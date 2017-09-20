@@ -1,9 +1,9 @@
 /* tslint:disable */
 
 export interface Query {
-  feed: Entry[] | null; /* A feed of repository submissions */
-  entry: Entry | null; /* A single entry */
-  currentUser: User | null; /* Return the currently logged in user, or null if nobody is logged in */
+  feed?: Entry[]; /* A feed of repository submissions */
+  entry?: Entry; /* A single entry */
+  currentUser?: User; /* Return the currently logged in user, or null if nobody is logged in */
 }
 /* Information about a GitHub repository submitted to GitHunt */
 export interface Entry {
@@ -22,11 +22,11 @@ GitHub API for simplicity, even though the convention for GraphQL is usually to 
 export interface Repository {
   name: string; /* Just the name of the repository, e.g. GitHunt-API */
   full_name: string; /* The full name of the repository with the username, e.g. apollostack/GitHunt-API */
-  description: string | null; /* The description of the repository */
+  description?: string; /* The description of the repository */
   html_url: string; /* The link to the repository on GitHub */
   stargazers_count: number; /* The number of people who have starred this repository on GitHub */
-  open_issues_count: number | null; /* The number of open issues on this repository on GitHub */
-  owner: User | null; /* The owner of this repository on GitHub, e.g. apollostack */
+  open_issues_count?: number; /* The number of open issues on this repository on GitHub */
+  owner?: User; /* The owner of this repository on GitHub, e.g. apollostack */
 }
 /* A user object from the GitHub API. This uses the exact field names returned from the GitHub API. */
 export interface User {
@@ -48,25 +48,25 @@ export interface Vote {
 }
 
 export interface Mutation {
-  submitRepository: Entry | null; /* Submit a new repository, returns the new submission */
-  vote: Entry | null; /* Vote on a repository submission, returns the submission that was voted on */
-  submitComment: Comment | null; /* Comment on a repository, returns the new comment */
+  submitRepository?: Entry; /* Submit a new repository, returns the new submission */
+  vote?: Entry; /* Vote on a repository submission, returns the submission that was voted on */
+  submitComment?: Comment; /* Comment on a repository, returns the new comment */
 }
 
 export interface Subscription {
-  commentAdded: Comment | null; /* Subscription fires on every comment added */
+  commentAdded?: Comment; /* Subscription fires on every comment added */
 }
 export interface FeedQueryArgs {
   type: FeedType; /* The sort order for the feed */
-  offset: number | null; /* The number of items to skip, for pagination */
-  limit: number | null; /* The number of items to fetch starting from the offset, for pagination */
+  offset?: number; /* The number of items to skip, for pagination */
+  limit?: number; /* The number of items to fetch starting from the offset, for pagination */
 }
 export interface EntryQueryArgs {
   repoFullName: string; /* The full repository name from GitHub, e.g. &quot;apollostack/GitHunt-API&quot; */
 }
 export interface CommentsEntryArgs {
-  limit: number | null; 
-  offset: number | null; 
+  limit?: number; 
+  offset?: number; 
 }
 export interface SubmitRepositoryMutationArgs {
   repoFullName: string; /* The full repository name from GitHub, e.g. &quot;apollostack/GitHunt-API&quot; */
@@ -94,37 +94,37 @@ export namespace OnCommentAdded {
   }
 
   export type Subscription = {
-    commentAdded: CommentAdded | null; 
-  }
+    commentAdded?: CommentAdded; 
+  } 
 
   export type CommentAdded = {
     id: number; 
     postedBy: PostedBy; 
     createdAt: number; 
     content: string; 
-  }
+  } 
 
   export type PostedBy = {
     login: string; 
     html_url: string; 
-  }
+  } 
 }
 export namespace Comment {
   export type Variables = {
     repoFullName: string;
-    limit: number | null;
-    offset: number | null;
+    limit?: number;
+    offset?: number;
   }
 
   export type Query = {
-    currentUser: CurrentUser | null; 
-    entry: Entry | null; 
-  }
+    currentUser?: CurrentUser; 
+    entry?: Entry; 
+  } 
 
   export type CurrentUser = {
     login: string; 
     html_url: string; 
-  }
+  } 
 
   export type Entry = {
     id: number; 
@@ -133,14 +133,15 @@ export namespace Comment {
     comments: Comments[]; 
     commentCount: number; 
     repository: Repository; 
-  }
+  } 
 
   export type PostedBy = {
     login: string; 
     html_url: string; 
-  }
+  } 
 
   export type Comments = {
+    id: number; 
   } & CommentsPageComment.Fragment
 
   export type Repository = {
@@ -149,42 +150,41 @@ export namespace Comment {
   } & RepositoryInlineFragment
 
   export type RepositoryInlineFragment = {
-    description: string | null; 
-    open_issues_count: number | null; 
+    description?: string; 
+    open_issues_count?: number; 
     stargazers_count: number; 
-  }
+  } 
 }
 export namespace CurrentUserForProfile {
   export type Variables = {
   }
 
   export type Query = {
-    currentUser: CurrentUser | null; 
-  }
+    currentUser?: CurrentUser; 
+  } 
 
   export type CurrentUser = {
     login: string; 
     avatar_url: string; 
-  }
+  } 
 }
 export namespace Feed {
   export type Variables = {
     type: FeedType;
-    offset: number | null;
-    limit: number | null;
+    offset?: number;
+    limit?: number;
   }
 
   export type Query = {
-    currentUser: CurrentUser | null; 
-    feed: Feed[] | null; 
-  }
+    currentUser?: CurrentUser; 
+    feed?: Feed[]; 
+  } 
 
   export type CurrentUser = {
     login: string; 
-  }
+  } 
 
-  export type Feed = {
-  } & FeedEntry.Fragment
+  export type Feed = FeedEntry.Fragment
 }
 export namespace SubmitRepository {
   export type Variables = {
@@ -192,12 +192,12 @@ export namespace SubmitRepository {
   }
 
   export type Mutation = {
-    submitRepository: SubmitRepository | null; 
-  }
+    submitRepository?: SubmitRepository; 
+  } 
 
   export type SubmitRepository = {
     createdAt: number; 
-  }
+  } 
 }
 export namespace SubmitComment {
   export type Variables = {
@@ -206,11 +206,10 @@ export namespace SubmitComment {
   }
 
   export type Mutation = {
-    submitComment: SubmitComment | null; 
-  }
+    submitComment?: SubmitComment; 
+  } 
 
-  export type SubmitComment = {
-  } & CommentsPageComment.Fragment
+  export type SubmitComment = CommentsPageComment.Fragment
 }
 export namespace Vote {
   export type Variables = {
@@ -219,32 +218,31 @@ export namespace Vote {
   }
 
   export type Mutation = {
-    vote: Vote | null; 
-  }
+    vote?: Vote; 
+  } 
 
   export type Vote = {
     score: number; 
     id: number; 
     vote: _Vote; 
-  }
+  } 
 
   export type _Vote = {
     vote_value: number; 
-  }
+  } 
 }
 
 export namespace CommentsPageComment {
   export type Fragment = {
-    id: number; 
     postedBy: PostedBy; 
     createdAt: number; 
     content: string; 
-  }
+  } 
 
   export type PostedBy = {
     login: string; 
     html_url: string; 
-  }
+  } 
 }
 
 export namespace FeedEntry {
@@ -257,12 +255,12 @@ export namespace FeedEntry {
   export type Repository = {
     full_name: string; 
     html_url: string; 
-    owner: Owner | null; 
-  }
+    owner?: Owner; 
+  } 
 
   export type Owner = {
     avatar_url: string; 
-  }
+  } 
 }
 
 export namespace RepoInfo {
@@ -270,27 +268,27 @@ export namespace RepoInfo {
     createdAt: number; 
     repository: Repository; 
     postedBy: PostedBy; 
-  }
+  } 
 
   export type Repository = {
-    description: string | null; 
+    description?: string; 
     stargazers_count: number; 
-    open_issues_count: number | null; 
-  }
+    open_issues_count?: number; 
+  } 
 
   export type PostedBy = {
     html_url: string; 
     login: string; 
-  }
+  } 
 }
 
 export namespace VoteButtons {
   export type Fragment = {
     score: number; 
     vote: Vote; 
-  }
+  } 
 
   export type Vote = {
     vote_value: number; 
-  }
+  } 
 }

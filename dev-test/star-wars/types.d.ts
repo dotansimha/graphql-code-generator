@@ -3,79 +3,79 @@
 export interface Character {
   id: string; /* The ID of the character */
   name: string; /* The name of the character */
-  friends: Character[] | null; /* The friends of the character, or an empty list if they have none */
+  friends?: Character[]; /* The friends of the character, or an empty list if they have none */
   friendsConnection: FriendsConnection; /* The friends of the character exposed as a connection with edges */
   appearsIn: Episode[]; /* The movies this character appears in */
 }
 /* The query type, represents all of the entry points into our object graph */
 export interface Query {
-  hero: Character | null; 
-  reviews: Review[] | null; 
-  search: SearchResult[] | null; 
-  character: Character | null; 
-  droid: Droid | null; 
-  human: Human | null; 
-  starship: Starship | null; 
+  hero?: Character; 
+  reviews?: Review[]; 
+  search?: SearchResult[]; 
+  character?: Character; 
+  droid?: Droid; 
+  human?: Human; 
+  starship?: Starship; 
 }
 /* A connection object for a character&#x27;s friends */
 export interface FriendsConnection {
-  totalCount: number | null; /* The total number of friends */
-  edges: FriendsEdge[] | null; /* The edges for each of the character&#x27;s friends. */
-  friends: Character[] | null; /* A list of the friends, as a convenience when edges are not needed. */
+  totalCount?: number; /* The total number of friends */
+  edges?: FriendsEdge[]; /* The edges for each of the character&#x27;s friends. */
+  friends?: Character[]; /* A list of the friends, as a convenience when edges are not needed. */
   pageInfo: PageInfo; /* Information for paginating this connection */
 }
 /* An edge object for a character&#x27;s friends */
 export interface FriendsEdge {
   cursor: string; /* A cursor used for pagination */
-  node: Character | null; /* The character represented by this friendship edge */
+  node?: Character; /* The character represented by this friendship edge */
 }
 /* Information for paginating this connection */
 export interface PageInfo {
-  startCursor: string | null; 
-  endCursor: string | null; 
+  startCursor?: string; 
+  endCursor?: string; 
   hasNextPage: boolean; 
 }
 /* Represents a review for a movie */
 export interface Review {
   stars: number; /* The number of stars this review gave, 1-5 */
-  commentary: string | null; /* Comment about the movie */
+  commentary?: string; /* Comment about the movie */
 }
 /* A humanoid creature from the Star Wars universe */
 export interface Human extends Character {
   id: string; /* The ID of the human */
   name: string; /* What this human calls themselves */
-  homePlanet: string | null; /* The home planet of the human, or null if unknown */
-  height: number | null; /* Height in the preferred unit, default is meters */
-  mass: number | null; /* Mass in kilograms, or null if unknown */
-  friends: Character[] | null; /* This human&#x27;s friends, or an empty list if they have none */
+  homePlanet?: string; /* The home planet of the human, or null if unknown */
+  height?: number; /* Height in the preferred unit, default is meters */
+  mass?: number; /* Mass in kilograms, or null if unknown */
+  friends?: Character[]; /* This human&#x27;s friends, or an empty list if they have none */
   friendsConnection: FriendsConnection; /* The friends of the human exposed as a connection with edges */
   appearsIn: Episode[]; /* The movies this human appears in */
-  starships: Starship[] | null; /* A list of starships this person has piloted, or an empty list if none */
+  starships?: Starship[]; /* A list of starships this person has piloted, or an empty list if none */
 }
 
 export interface Starship {
   id: string; /* The ID of the starship */
   name: string; /* The name of the starship */
-  length: number | null; /* Length of the starship, along the longest axis */
+  length?: number; /* Length of the starship, along the longest axis */
 }
 /* An autonomous mechanical character in the Star Wars universe */
 export interface Droid extends Character {
   id: string; /* The ID of the droid */
   name: string; /* What others call this droid */
-  friends: Character[] | null; /* This droid&#x27;s friends, or an empty list if they have none */
+  friends?: Character[]; /* This droid&#x27;s friends, or an empty list if they have none */
   friendsConnection: FriendsConnection; /* The friends of the droid exposed as a connection with edges */
   appearsIn: Episode[]; /* The movies this droid appears in */
-  primaryFunction: string | null; /* This droid&#x27;s primary function */
+  primaryFunction?: string; /* This droid&#x27;s primary function */
 }
 /* The mutation type, represents all updates we can make to our data */
 export interface Mutation {
-  createReview: Review | null; 
+  createReview?: Review; 
 }
 /* The input object sent when someone is creating a new review */
 export interface ReviewInput {
   stars: number; /* 0-5 stars */
-  commentary: string | null; /* Comment about the movie, optional */
-  favoriteColor: ColorInput | null; /* Favorite color, optional */
+  commentary?: string; /* Comment about the movie, optional */
+  favoriteColor?: ColorInput; /* Favorite color, optional */
 }
 /* The input object sent when passing a color */
 export interface ColorInput {
@@ -84,13 +84,13 @@ export interface ColorInput {
   blue: number; 
 }
 export interface HeroQueryArgs {
-  episode: Episode | null; 
+  episode?: Episode; 
 }
 export interface ReviewsQueryArgs {
   episode: Episode; 
 }
 export interface SearchQueryArgs {
-  text: string | null; 
+  text?: string; 
 }
 export interface CharacterQueryArgs {
   id: string; 
@@ -105,21 +105,21 @@ export interface StarshipQueryArgs {
   id: string; 
 }
 export interface HeightHumanArgs {
-  unit: LengthUnit | null; 
+  unit?: LengthUnit; 
 }
 export interface FriendsConnectionHumanArgs {
-  first: number | null; 
-  after: string | null; 
+  first?: number; 
+  after?: string; 
 }
 export interface LengthStarshipArgs {
-  unit: LengthUnit | null; 
+  unit?: LengthUnit; 
 }
 export interface FriendsConnectionDroidArgs {
-  first: number | null; 
-  after: string | null; 
+  first?: number; 
+  after?: string; 
 }
 export interface CreateReviewMutationArgs {
-  episode: Episode | null; 
+  episode?: Episode; 
   review: ReviewInput; 
 }
 /* The episodes in the Star Wars trilogy */
@@ -131,224 +131,3 @@ export type LengthUnit = "METER" | "FOOT";
 
 export type SearchResult = Human | Droid | Starship;
 
-export namespace CreateReviewForEpisode {
-  export type Variables = {
-    episode: Episode;
-    review: ReviewInput;
-  }
-
-  export type Mutation = {
-    createReview: CreateReview | null; 
-  }
-
-  export type CreateReview = {
-    stars: number; 
-    commentary: string | null; 
-  }
-}
-export namespace HeroAndFriendsNames {
-  export type Variables = {
-    episode: Episode | null;
-  }
-
-  export type Query = {
-    hero: Hero | null; 
-  }
-
-  export type Hero = {
-    name: string; 
-    friends: Friends[] | null; 
-  }
-
-  export type Friends = {
-    name: string; 
-  }
-}
-export namespace HeroAppearsIn {
-  export type Variables = {
-  }
-
-  export type Query = {
-    hero: Hero | null; 
-  }
-
-  export type Hero = {
-    name: string; 
-    appearsIn: Episode[]; 
-  }
-}
-export namespace HeroDetails {
-  export type Variables = {
-    episode: Episode | null;
-  }
-
-  export type Query = {
-    hero: Hero | null; 
-  }
-
-  export type Hero = {
-    name: string; 
-  } & HumanInlineFragment & DroidInlineFragment
-
-  export type HumanInlineFragment = {
-    height: number | null; 
-  }
-
-  export type DroidInlineFragment = {
-    primaryFunction: string | null; 
-  }
-}
-export namespace HeroDetailsWithFragment {
-  export type Variables = {
-    episode: Episode | null;
-  }
-
-  export type Query = {
-    hero: Hero | null; 
-  }
-
-  export type Hero = {
-  } & HeroDetails.Fragment
-}
-export namespace HeroName {
-  export type Variables = {
-    episode: Episode | null;
-  }
-
-  export type Query = {
-    hero: Hero | null; 
-  }
-
-  export type Hero = {
-    name: string; 
-  }
-}
-export namespace HeroNameConditionalInclusion {
-  export type Variables = {
-    episode: Episode | null;
-    includeName: boolean;
-  }
-
-  export type Query = {
-    hero: Hero | null; 
-  }
-
-  export type Hero = {
-    name: string; 
-  }
-}
-export namespace HeroNameConditionalExclusion {
-  export type Variables = {
-    episode: Episode | null;
-    skipName: boolean;
-  }
-
-  export type Query = {
-    hero: Hero | null; 
-  }
-
-  export type Hero = {
-    name: string; 
-  }
-}
-export namespace HeroParentTypeDependentField {
-  export type Variables = {
-    episode: Episode | null;
-  }
-
-  export type Query = {
-    hero: Hero | null; 
-  }
-
-  export type Hero = {
-    name: string; 
-  } & HumanInlineFragment & DroidInlineFragment
-
-  export type HumanInlineFragment = {
-    friends: Friends[] | null; 
-  }
-
-  export type Friends = {
-    name: string; 
-  } & _HumanInlineFragment
-
-  export type _HumanInlineFragment = {
-    height: number | null; 
-  }
-
-  export type DroidInlineFragment = {
-    friends: _Friends[] | null; 
-  }
-
-  export type _Friends = {
-    name: string; 
-  } & __HumanInlineFragment
-
-  export type __HumanInlineFragment = {
-    height: number | null; 
-  }
-}
-export namespace HeroTypeDependentAliasedField {
-  export type Variables = {
-    episode: Episode | null;
-  }
-
-  export type Query = {
-    hero: Hero | null; 
-  }
-
-  export type Hero = {
-  } & HumanInlineFragment & DroidInlineFragment
-
-  export type HumanInlineFragment = {
-    property: string | null; 
-  }
-
-  export type DroidInlineFragment = {
-    property: string | null; 
-  }
-}
-export namespace HumanWithNullHeight {
-  export type Variables = {
-  }
-
-  export type Query = {
-    human: Human | null; 
-  }
-
-  export type Human = {
-    name: string; 
-    mass: number | null; 
-  }
-}
-export namespace TwoHeroes {
-  export type Variables = {
-  }
-
-  export type Query = {
-    r2: R2 | null; 
-    luke: Luke | null; 
-  }
-
-  export type R2 = {
-    name: string; 
-  }
-
-  export type Luke = {
-    name: string; 
-  }
-}
-
-export namespace HeroDetails {
-  export type Fragment = {
-    name: string; 
-  } & HumanInlineFragment & DroidInlineFragment
-
-  export type HumanInlineFragment = {
-    height: number | null; 
-  }
-
-  export type DroidInlineFragment = {
-    primaryFunction: string | null; 
-  }
-}
