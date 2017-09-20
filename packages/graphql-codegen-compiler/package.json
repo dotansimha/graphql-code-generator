@@ -42,9 +42,9 @@
     "testRegex": "tests/.*\\.ts$",
     "testEnvironment": "node"
   },
-  "typings": "dist/src/index.d.ts",
+  "typings": "dist/index.d.ts",
   "typescript": {
-    "definition": "dist/src/index.d.ts"
+    "definition": "dist/index.d.ts"
   },
   "main": "./dist/index.js"
 }

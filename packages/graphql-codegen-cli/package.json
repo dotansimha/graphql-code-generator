@@ -86,5 +86,9 @@
     "graphql-codegen-generators": "0.8.10",
     "mkdirp": "^0.5.1",
     "request": "^2.81.0"
+  },
+  "typings": "dist/index.d.ts",
+  "typescript": {
+    "definition": "dist/index.d.ts"
   }
 }

@@ -15,8 +15,8 @@
     "webpack-node-externals": "^1.6.0"
   },
   "main": "./dist/index.js",
-  "typings": "dist/src/index.d.ts",
+  "typings": "dist/index.d.ts",
   "typescript": {
-    "definition": "dist/src/index.d.ts"
+    "definition": "dist/index.d.ts"
   }
 }
