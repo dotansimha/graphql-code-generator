@@ -1,5 +1,10 @@
+<a name="0.8.12"></a>
+## [0.8.12](https://github.com/dotansimha/graphql-codegen/compare/0.8.11...0.8.12) (2017-09-21)
+
+* Fix for custom templates in an external project that use `.` in result file name (for example: `my-file.d.ts.schema.handlebars`)
+
 <a name="0.8.11"></a>
-## [0.8.11](https://github.com/dotansimha/graphql-codegen/compare/0.8.10...0.8.11) (2017-07-24)
+## [0.8.11](https://github.com/dotansimha/graphql-codegen/compare/0.8.10...0.8.11) (2017-09-20)
 
 * Export all available interfaces from the compiler package (Fixes [#144](https://github.com/dotansimha/graphql-code-generator/issues/144)
 * Fixed incorrect typings path (Fixes [#143](https://github.com/dotansimha/graphql-code-generator/issues/143))

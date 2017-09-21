@@ -149,7 +149,7 @@ function handleFragment(compiledTemplate: Function, schemaContext: SchemaTemplat
 }
 
 function parseTemplateName(templateName: string): { prefix: string; handler: Function; fileExtension: string; } {
-  const splitted = (path.basename(templateName)).split('.');
+  let splitted = (path.basename(templateName)).split('.');
   let hasPrefix = true;
 
   if (splitted.length === 3) {
@@ -157,8 +157,13 @@ function parseTemplateName(templateName: string): { prefix: string; handler: Fun
     hasPrefix = false;
   }
 
-  if (splitted.length !== 4 && templateName.includes('/')) {
-    throw new Error(`Invalid template name: ${templateName}!`);
+  if (splitted.length > 4 && templateName.includes('/')) {
+    splitted = [
+      splitted.slice(0, splitted.length - 3).join('.'),
+      splitted[2],
+      splitted[3],
+      splitted[4],
+    ];
   }
 
   const templateExtension = splitted[3];
