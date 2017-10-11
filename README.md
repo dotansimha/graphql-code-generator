@@ -2,6 +2,10 @@
 
 [![npm version](https://badge.fury.io/js/graphql-code-generator.svg)](https://badge.fury.io/js/graphql-code-generator) [![Build Status](https://travis-ci.org/dotansimha/graphql-code-generator.svg?branch=master)](https://travis-ci.org/dotansimha/graphql-code-generator) [![bitHound Overall Score](https://www.bithound.io/github/dotansimha/graphql-code-generator/badges/score.svg)](https://www.bithound.io/github/dotansimha/graphql-code-generator) [![codebeat badge](https://codebeat.co/badges/ec220cc6-31f0-4a80-85cc-0dfa162d8e53)](https://codebeat.co/projects/github-com-dotansimha-graphql-code-generator) [![bitHound Dependencies](https://www.bithound.io/github/dotansimha/graphql-code-generator/badges/dependencies.svg)](https://www.bithound.io/github/dotansimha/graphql-code-generator/master/dependencies/npm) [![bitHound Dev Dependencies](https://www.bithound.io/github/dotansimha/graphql-code-generator/badges/devDependencies.svg)](https://www.bithound.io/github/dotansimha/graphql-code-generator/master/dependencies/npm) 
 
+<p align="center">
+    <img src="https://github.com/dotansimha/graphql-code-generator/raw/feature/logo/logo.png?raw=true" />
+</p>
+
 ## Overview
 
 GraphQL code generator, with flexible support for multiple languages and platforms, and the ability to create custom generated projects based on GraphQL schema or operations.
