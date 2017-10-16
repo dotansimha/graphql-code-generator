@@ -74,7 +74,7 @@ directive @addName(name: String!) on OBJECT
 ```handlebars
 {{#each types}}
     Type name: {{ name }}
-    Extra name? {{#unlessDirective this "appName"}}No!{{/unlessDirective}}
+    Extra name? {{#unlessDirective this "addName"}}No!{{/unlessDirective}}
 
 {{/each}}
 ```
