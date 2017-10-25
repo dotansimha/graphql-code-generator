@@ -8,6 +8,8 @@
 
 ## Overview
 
+**[GraphQL Codegen 1.0 blog post & examples @ Medium](https://medium.com/@dotansimha/graphql-code-generator-a34e3785e6fb)**
+
 GraphQL code generator, with flexible support for multiple languages and platforms, and the ability to create custom generated projects based on GraphQL schema or operations.
 
 This generator generates both models (based on GraphQL server-side schema), and documents (client-side operations, such as `query`, `mutation` as `subscription`).
