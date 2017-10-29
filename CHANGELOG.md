@@ -1,5 +1,5 @@
-<a name="0.8.13"></a>
-## [0.8.13](https://github.com/dotansimha/graphql-codegen/compare/0.8.12...0.8.13) (2017-10-29)
+<a name="0.8.14"></a>
+## [0.8.14](https://github.com/dotansimha/graphql-codegen/compare/0.8.12...0.8.14) (2017-10-29)
 
 * (Compiler) Fixed execution context for `ifDirective` and `unlessDirective` (now the parent is also available, no need for `../`)
 * (TypeScript) Fix for nullable types [Fixes #155](https://github.com/dotansimha/graphql-code-generator/issues/155)
