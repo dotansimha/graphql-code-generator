@@ -4,7 +4,7 @@ import { {{ name }} } from './{{ file }}';
 {{ toComment description }}
 export interface {{ name }}{{#if hasInterfaces}} extends {{#each interfaces}}{{this}}{{#unless @last}},{{/unless}}{{/each}}{{/if}} {
 {{#each fields}}
-  {{ name }}{{#unless isRequired}}?{{/unless}}: {{ toPrimitive type }}{{#if isArray}}[]{{/if}}; {{ toComment description }}
+  {{ name }}{{#unless isRequired}}?{{/unless}}: {{ toPrimitive type }}{{#if isArray}}[]{{/if}}{{#unless isRequired}} | null{{/unless}}; {{ toComment description }}
 {{/each}}
 }
 
@@ -12,7 +12,7 @@ export interface {{ name }}{{#if hasInterfaces}} extends {{#each interfaces}}{{t
   {{~# if hasArguments }}
 export interface {{ toPascalCase name }}{{ toPascalCase ../name }}Args {
 {{#each arguments}}
-  {{ name }}{{#unless isRequired}}?{{/unless}}: {{ toPrimitive type }}{{#if isArray}}[]{{/if}}; {{ toComment description }}
+  {{ name }}{{#unless isRequired}}?{{/unless}}: {{ toPrimitive type }}{{#if isArray}}[]{{/if}}{{#unless isRequired}} | null{{/unless}}; {{ toComment description }}
 {{/each}}
 }
   {{/if}}

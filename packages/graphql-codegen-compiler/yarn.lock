@@ -12,10 +12,6 @@
   version "1.2.5"
   resolved "https://registry.yarnpkg.com/@types/common-tags/-/common-tags-1.2.5.tgz#14f29893992eb325594b83d739af02f2b6520f46"
 
-"@types/graphql@^0.10.0":
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/@types/graphql/-/graphql-0.10.0.tgz#85c6cddd0de9449af009af9ff61aa5870c59fee3"
-
 "@types/graphql@^0.9.0":
   version "0.9.4"
   resolved "https://registry.yarnpkg.com/@types/graphql/-/graphql-0.9.4.tgz#cdeb6bcbef9b6c584374b81aa7f48ecf3da404fa"
@@ -759,32 +755,6 @@ globals@^9.0.0:
 graceful-fs@^4.1.11, graceful-fs@^4.1.2:
   version "4.1.11"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.11.tgz#0e8bdfe4d1ddb8854d64e04ea7c00e2a026e5658"
-
-graphql-codegen-compiler@>0.8.0-alpha.0:
-  version "0.8.0-alpha.2c1bcf44"
-  resolved "https://registry.yarnpkg.com/graphql-codegen-compiler/-/graphql-codegen-compiler-0.8.0-alpha.2c1bcf44.tgz#56549bf3b39bef0303d213e107734549a1c3e9ed"
-  dependencies:
-    "@types/handlebars" "^4.0.33"
-    change-case "^3.0.1"
-    common-tags "^1.4.0"
-    handlebars "^4.0.10"
-
-graphql-codegen-core@>0.8.0-alpha.0:
-  version "0.8.0-alpha.8b63add2"
-  resolved "https://registry.yarnpkg.com/graphql-codegen-core/-/graphql-codegen-core-0.8.0-alpha.8b63add2.tgz#d62c3feb718780e138f19fa9b780966567c99f14"
-  dependencies:
-    "@types/graphql" "^0.10.0"
-    graphql "^0.10.4"
-    graphql-tools "^1.0.0"
-
-graphql-codegen-generators@>0.8.0-alpha.0:
-  version "0.8.0-alpha.8b63add2"
-  resolved "https://registry.yarnpkg.com/graphql-codegen-generators/-/graphql-codegen-generators-0.8.0-alpha.8b63add2.tgz#3b8ed6a61ce6e2d8ae886f93122c5c480c108f40"
-  dependencies:
-    "@types/handlebars" "^4.0.33"
-    change-case "^3.0.1"
-    common-tags "^1.4.0"
-    handlebars "^4.0.10"
 
 graphql-tag@^2.4.2:
   version "2.4.2"

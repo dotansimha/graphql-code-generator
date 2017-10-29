@@ -4,7 +4,7 @@ import { {{ name }} } from './{{ file }}';
 export namespace {{ toPascalCase name }} {
   export type Variables = {
 {{#each variables}}
-    {{ name }}{{#unless isRequired}}?{{/unless}}: {{ toPrimitive type }}{{#if isArray}}[]{{/if}};
+    {{ name }}{{#unless isRequired}}?{{/unless}}: {{ toPrimitive type }}{{#if isArray}}[]{{/if}}{{#unless isRequired}} | null{{/unless}};
 {{/each}}
   }
 

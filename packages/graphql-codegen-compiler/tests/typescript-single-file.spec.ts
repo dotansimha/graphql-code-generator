@@ -105,7 +105,7 @@ describe('TypeScript Single File', () => {
       /* tslint:disable */
       
       export interface Query {
-        fieldTest?: string;
+        fieldTest?: string | null;
       }`);
     });
 
@@ -126,12 +126,12 @@ describe('TypeScript Single File', () => {
       /* tslint:disable */
       
       export interface Query {
-        fieldTest?: string;
+        fieldTest?: string | null;
       }
       
       export interface T {
-        f1?: string;
-        f2?: number;
+        f1?: string | null;
+        f2?: number | null;
       }`);
     });
 
@@ -157,17 +157,17 @@ describe('TypeScript Single File', () => {
       /* tslint:disable */
       
       export interface Query {
-        fieldTest?: string;
+        fieldTest?: string | null;
       }
       
       export interface T {
-        f1?: string[];
+        f1?: string[] | null;
         f2: number;
-        f3?: A;
+        f3?: A | null;
       }
         
       export interface A {
-        f4?: string;
+        f4?: string | null;
       }`);
     });
 
@@ -193,7 +193,7 @@ describe('TypeScript Single File', () => {
         /* tslint:disable */
         
         export interface Base {
-          f1?: string;
+          f1?: string | null;
         }
       
         export interface Query {
@@ -201,8 +201,8 @@ describe('TypeScript Single File', () => {
         }
       
         export interface A extends Base {
-          f1?: string;
-          f2?: string;
+          f1?: string | null;
+          f2?: string | null;
         }`);
     });
 
@@ -223,7 +223,7 @@ describe('TypeScript Single File', () => {
       export type Date = any;
       
       export interface Query {
-        fieldTest?: Date[];
+        fieldTest?: Date[] | null;
       }`);
     });
 
@@ -279,11 +279,11 @@ describe('TypeScript Single File', () => {
         }
         
         export interface A {
-          f1?: string;
+          f1?: string | null;
         }
         
         export interface B {
-          f2?: string;
+          f2?: string | null;
         }
         
         /* Union description */
@@ -308,7 +308,7 @@ describe('TypeScript Single File', () => {
         }
         
         export interface FieldTestQueryArgs {
-          arg1?: string;
+          arg1?: string | null;
         }`);
     });
 
@@ -337,7 +337,7 @@ describe('TypeScript Single File', () => {
        /* tslint:disable */
         
        export interface Query {
-          fieldTest?: Return; 
+          fieldTest?: Return | null; 
         }
         
         export interface Return {
@@ -346,10 +346,10 @@ describe('TypeScript Single File', () => {
         }
         
         export interface T {
-          f1?: string; 
+          f1?: string | null; 
           f2: number; 
-          f3?: string[]; 
-          f4?: number[]; 
+          f3?: string[] | null; 
+          f4?: number[] | null; 
         }
         
         export interface FieldTestQueryArgs {
@@ -424,7 +424,7 @@ describe('TypeScript Single File', () => {
             }
           
             export type Query = {
-              feed?: Feed[]; 
+              feed?: Feed[] | null; 
             }
           
             export type Feed = {
@@ -436,7 +436,7 @@ describe('TypeScript Single File', () => {
             export type Repository = {
               full_name: string; 
               html_url: string; 
-              owner?: Owner; 
+              owner?: Owner | null; 
             }
           
             export type Owner = {
@@ -486,7 +486,7 @@ describe('TypeScript Single File', () => {
             }
           
             export type Query = {
-              feed?: Feed[]; 
+              feed?: Feed[] | null; 
             }
           
             export type Feed = {
@@ -503,7 +503,7 @@ describe('TypeScript Single File', () => {
           export namespace RepoFields {
             export type Fragment = {
               html_url: string; 
-              owner?: Owner; 
+              owner?: Owner | null; 
             }
           
             export type Owner = {
@@ -553,7 +553,7 @@ describe('TypeScript Single File', () => {
       }
     
       export type Query = {
-        feed?: Feed[]; 
+        feed?: Feed[] | null; 
       }
     
       export type Feed = {
@@ -571,7 +571,7 @@ describe('TypeScript Single File', () => {
       }
     
       export type _RepositoryInlineFragment = {
-        owner?: Owner; 
+        owner?: Owner | null; 
       }
     
       export type Owner = {

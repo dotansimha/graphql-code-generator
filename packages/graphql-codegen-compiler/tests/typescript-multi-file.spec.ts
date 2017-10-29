@@ -33,7 +33,7 @@ describe('TypeScript Multi File', () => {
       expect(compiled[0].filename).toBe('query.type.d.ts');
       expect(compiled[0].content).toBeSimilarStringTo(`
         export interface Query {
-          fieldTest?: string; 
+          fieldTest?: string | null; 
         }
       `);
     });
@@ -55,13 +55,13 @@ describe('TypeScript Multi File', () => {
         import { MyType } from './mytype.type';
         
         export interface Query {
-          fieldTest?: MyType; 
+          fieldTest?: MyType | null; 
         }
       `);
       expect(compiled[1].filename).toBe('mytype.type.d.ts');
       expect(compiled[1].content).toBeSimilarStringTo(`
         export interface MyType {
-          f1?: string; 
+          f1?: string | null; 
         }
       `);
     });
@@ -84,7 +84,7 @@ describe('TypeScript Multi File', () => {
         import { MyEnum } from './myenum.enum';
         
         export interface Query {
-          fieldTest?: MyEnum; 
+          fieldTest?: MyEnum | null; 
         }
       `);
       expect(compiled[1].filename).toBe('myenum.enum.d.ts');
@@ -111,14 +111,14 @@ describe('TypeScript Multi File', () => {
         import { MyType } from './mytype.type';
         
         export interface Query {
-          fieldTest?: MyType; 
-          fieldTest2?: MyType; 
+          fieldTest?: MyType | null; 
+          fieldTest2?: MyType | null; 
         }
       `);
       expect(compiled[1].filename).toBe('mytype.type.d.ts');
       expect(compiled[1].content).toBeSimilarStringTo(`
         export interface MyType {
-          f1?: string; 
+          f1?: string | null; 
         }
       `);
     });
@@ -147,7 +147,7 @@ describe('TypeScript Multi File', () => {
 
       expect(compiled[2].content).toBeSimilarStringTo(`
         export interface Base {
-          f1?: string;
+          f1?: string | null;
         }
       `);
       expect(compiled[0].content).toBeSimilarStringTo(`
@@ -161,8 +161,8 @@ describe('TypeScript Multi File', () => {
         import { Base } from './base.interface';
         
         export interface A extends Base {
-          f1?: string;
-          f2?: string;
+          f1?: string | null;
+          f2?: string | null;
         }
       `);
     });
@@ -185,7 +185,7 @@ describe('TypeScript Multi File', () => {
         import { Date } from './date.scalar';
         
         export interface Query {
-          fieldTest?: Date[];
+          fieldTest?: Date[] | null;
         }
       `);
       expect(compiled[1].content).toBeSimilarStringTo(`
@@ -227,12 +227,12 @@ describe('TypeScript Multi File', () => {
       `);
       expect(compiled[1].content).toBeSimilarStringTo(`
         export interface A {
-          f1?: string;
+          f1?: string | null;
         }
       `);
       expect(compiled[2].content).toBeSimilarStringTo(`
         export interface B {
-          f2?: string;
+          f2?: string | null;
         }
       `);
       expect(compiled[3].content).toBeSimilarStringTo(`
@@ -261,7 +261,7 @@ describe('TypeScript Multi File', () => {
         }
         
         export interface FieldTestQueryArgs {
-          arg1?: string;
+          arg1?: string | null;
         }`);
     });
 
@@ -295,7 +295,7 @@ describe('TypeScript Multi File', () => {
         import { T } from './t.input-type';
         
         export interface Query {
-          fieldTest?: Return; 
+          fieldTest?: Return | null; 
         }
                 
         export interface FieldTestQueryArgs {
@@ -310,10 +310,10 @@ describe('TypeScript Multi File', () => {
       `);
       expect(compiled[2].content).toBeSimilarStringTo(`
         export interface T {
-          f1?: string; 
+          f1?: string | null; 
           f2: number; 
-          f3?: string[]; 
-          f4?: number[]; 
+          f3?: string[] | null; 
+          f4?: number[] | null; 
         }
       `);
 
@@ -363,7 +363,7 @@ describe('TypeScript Multi File', () => {
           }
         
           export type Query = {
-            feed?: Feed[]; 
+            feed?: Feed[] | null; 
           }
         
           export type Feed = {
@@ -375,7 +375,7 @@ describe('TypeScript Multi File', () => {
           export type Repository = {
             full_name: string; 
             html_url: string; 
-            owner?: Owner; 
+            owner?: Owner | null; 
           }
         
           export type Owner = {
@@ -435,7 +435,7 @@ describe('TypeScript Multi File', () => {
           }
         
           export type Query = {
-            feed?: Feed[]; 
+            feed?: Feed[] | null; 
           }
         
           export type Feed = {
@@ -453,7 +453,7 @@ describe('TypeScript Multi File', () => {
         export namespace RepoFields {
           export type Fragment = {
             html_url: string; 
-            owner?: Owner; 
+            owner?: Owner | null; 
           }
         
           export type Owner = {
