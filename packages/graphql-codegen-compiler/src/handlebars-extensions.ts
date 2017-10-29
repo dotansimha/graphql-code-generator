@@ -42,13 +42,13 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
       const directiveValue = directives[directiveName];
 
       if (directiveValue) {
-        return options && options.fn ? options.fn(directiveValue) : '';
+        return options && options.fn ? options.fn({ ...(directiveValue || {}), ...context}) : '';
       } else {
-        return options && options.inverse ? options.inverse() : '';
+        return options && options.inverse ? options.inverse(context) : '';
       }
     }
 
-    return options && options.inverse ? options.inverse() : '';
+    return options && options.inverse ? options.inverse(context) : '';
   });
 
   registerHelper('unlessDirective', function (context: any, directiveName: string, options: { inverse: Function, fn: Function, data: { root: any } }) {
@@ -57,13 +57,13 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
       const directiveValue = directives[directiveName];
 
       if (!directiveValue) {
-        return options && options.fn ? options.fn(directiveValue) : '';
+        return options && options.fn ? options.fn({ ...(directiveValue || {}), ...context}) : '';
       } else {
-        return options && options.inverse ? options.inverse() : '';
+        return options && options.inverse ? options.inverse(context) : '';
       }
     }
 
-    return options && options.inverse ? options.inverse() : '';
+    return options && options.inverse ? options.inverse(context) : '';
   });
 
   registerHelper('toComment', function (str) {
