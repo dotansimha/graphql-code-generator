@@ -1,0 +1,6 @@
+{{ toComment description }}
+export type {{ name }}{{#if hasInterfaces}} implements {{#each interfaces}}{{this}}{{#unless @last}},{{/unless}}{{/each}}{{/if}} = {
+{{#each fields}}
+  +{{ name }}{{#unless isRequired}}?{{/unless}}: {{ toPrimitive type }}{{#if isArray}}[]{{/if}}{{#unless isRequired}}{{/unless}}; {{ toComment description }}
+{{/each}}
+}

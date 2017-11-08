@@ -1,0 +1,29 @@
+{{#each operations }}
+export type {{ toPascalCase name}}Variables = {
+{{#each variables}}
+  +{{ name }}{{#unless isRequired}}?{{/unless}}: {{ toPrimitive type }}{{#if isArray}}[]{{/if}}{{#unless isRequired}} | null{{/unless}};
+{{/each}}
+}
+
+export type {{ toPascalCase operationType }} ={{#if hasFields}} {
+  {{> selectionSet fields }}
+}{{/if}} {{#if hasFragmentsSpread}}{{#if hasFields}}& {{/if}}{{#each fragmentsSpread}}{{fragmentName}}.Fragment{{#unless @last}} & {{/unless}}{{/each}}{{/if}}{{#if hasInlineFragments}}{{#if hasFields}}& {{/if}}{{#each inlineFragments}}{{onType}}{{#unless @last}} & {{/unless}}{{/each}}{{/if}}
+{{#each innerModels }}
+
+export type {{ modelType }} ={{#if hasFields}} {
+  {{> selectionSet fields }}
+}{{/if}} {{#if hasFragmentsSpread}}{{#if hasFields}}& {{/if}}{{#each fragmentsSpread}}{{fragmentName}}.Fragment{{#unless @last}} & {{/unless}}{{/each}}{{/if}}{{#if hasInlineFragments}}{{#if hasFields}}& {{/if}}{{#each inlineFragments}}{{onType}}{{#unless @last}} & {{/unless}}{{/each}}{{/if}}
+{{/each}}
+{{/each}}
+{{#each fragments }}
+
+export type {{name}}Fragment ={{#if hasFields}} {
+  {{> selectionSet fields }}
+}{{/if}} {{#if hasFragmentsSpread}}{{#if hasFields}}& {{/if}}{{#each fragmentsSpread}}{{fragmentName}}.Fragment{{#unless @last}} & {{/unless}}{{/each}}{{/if}}{{#if hasInlineFragments}}{{#if hasFields}}& {{/if}}{{#each inlineFragments}}{{onType}}{{#unless @last}} & {{/unless}}{{/each}}{{/if}}
+{{#each innerModels }}
+
+export type {{ modelType }} ={{#if hasFields}} {
+  {{> selectionSet fields }}
+}{{/if}} {{#if hasFragmentsSpread}}{{#if hasFields}}& {{/if}}{{#each fragmentsSpread}}{{fragmentName}}.Fragment{{#unless @last}} & {{/unless}}{{/each}}{{/if}}{{#if hasInlineFragments}}{{#if hasFields}}& {{/if}}{{#each inlineFragments}}{{onType}}{{#unless @last}} & {{/unless}}{{/each}}{{/if}}
+{{/each}}
+{{/each}}

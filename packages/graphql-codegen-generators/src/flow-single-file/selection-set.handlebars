@@ -1,0 +1,3 @@
+{{#each this}}
+{{ name }}{{#unless isRequired}}?{{/unless}}: {{ toPrimitive type }}{{#if isArray}}[]{{/if}}{{#unless isRequired}}{{/unless}}; {{#if description }}  // {{description}}{{/if}}
+{{/each}}
