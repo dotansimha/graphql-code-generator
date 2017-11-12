@@ -8,9 +8,9 @@ import {
 import { gql, makeExecutableSchema, GraphQLSchema } from 'graphql-codegen-core';
 import * as fs from 'fs';
 import { compileTemplate } from '../src/compile';
-import { TypescriptSingleFile } from 'graphql-codegen-generators';
+import { TypescriptSingleFile, GeneratorConfig } from 'graphql-codegen-generators';
 
-describe('TypeScript Single File', () => {
+describe('Single File', () => {
   const compileAndBuildContext = (typeDefs: string): SchemaTemplateContext => {
     const schema = makeExecutableSchema({ typeDefs, resolvers: {}, allowUndefinedInResolve: true }) as GraphQLSchema;
 
@@ -42,9 +42,33 @@ describe('TypeScript Single File', () => {
         templates: {
           index: '{{#each types}}{{#ifDirective this "app"}}directive{{/ifDirective}}{{/each}}',
         }
-      }, templateContext);
+      } as GeneratorConfig, templateContext);
 
       expect(compiled[0].content).toBe('directive');
+    });
+
+    it('should pass custom config to template', () => {
+      const templateContext = compileAndBuildContext(`
+        type Query {
+          fieldTest: String
+        }
+        
+        schema {
+          query: Query
+        }
+      `);
+
+      const compiled = compileTemplate({
+        ...config,
+        templates: {
+          index: '{{ config.custom }}',
+        },
+        config: {
+          custom: 'A',
+        },
+      } as GeneratorConfig, templateContext);
+
+      expect(compiled[0].content).toBe('A');
     });
 
     it('should support custom handlebar ifDirective when no directive added', () => {
@@ -65,7 +89,7 @@ describe('TypeScript Single File', () => {
         templates: {
           index: '{{#each types}}{{#ifDirective this "app"}}directive{{/ifDirective}}{{/each}}',
         }
-      }, templateContext);
+      } as GeneratorConfig, templateContext);
 
       expect(compiled[0].content).toBe('');
     });
@@ -88,7 +112,7 @@ describe('TypeScript Single File', () => {
         templates: {
           index: '{{#ifDirective this "app"}}directive{{test}}{{/ifDirective}}',
         }
-      }, templateContext);
+      } as GeneratorConfig, templateContext);
 
       expect(compiled[0].content).toBe('directive123');
     });

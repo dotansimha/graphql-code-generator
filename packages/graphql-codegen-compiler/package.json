@@ -23,12 +23,14 @@
   },
   "dependencies": {
     "@types/handlebars": "^4.0.33",
+    "@types/moment": "^2.13.0",
     "change-case": "^3.0.1",
     "common-tags": "^1.4.0",
     "graphql-codegen-compiler": "0.8.14",
     "graphql-codegen-core": "0.8.14",
     "graphql-codegen-generators": "0.8.14",
-    "handlebars": "^4.0.10"
+    "handlebars": "^4.0.10",
+    "moment": "^2.19.2"
   },
   "jest": {
     "moduleFileExtensions": [

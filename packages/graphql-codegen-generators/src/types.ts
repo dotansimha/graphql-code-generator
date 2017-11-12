@@ -7,6 +7,7 @@ export const EInputType = {
 export interface GeneratorConfig {
   inputType: string; // EInputType
   flattenTypes: boolean;
+  config?: { [configName: string]: any };
   templates: { [templateName: string]: string | string[] } | string;
   primitives: {
     String: string;
