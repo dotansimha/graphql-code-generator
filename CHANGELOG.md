@@ -1,3 +1,14 @@
+<a name="NEXT"></a>
+## NEXT
+
+* Added support for generator-specific config in `gql-gen.json` file.
+* Generated config is now exposed in the template under the name `config` in the root context.
+* Added `currentTime` to the context.
+
+### Breaking Changes
+
+* Changed CLI option that points to `gql-gen.json` file from `--project-config` to `--config`.
+
 <a name="0.8.14"></a>
 ## [0.8.14](https://github.com/dotansimha/graphql-codegen/compare/0.8.12...0.8.14) (2017-10-29)
 
