@@ -6,9 +6,9 @@ import {
 import { gql, makeExecutableSchema, GraphQLSchema } from 'graphql-codegen-core';
 import { compileTemplate } from '../src/compile';
 import * as fs from 'fs';
-import { TypescriptMultiFile } from 'graphql-codegen-generators';
+import { TypescriptMultiFile, GeneratorConfig } from 'graphql-codegen-generators';
 
-describe('TypeScript Multi File', () => {
+describe('Multiple Files', () => {
   const compileAndBuildContext = (typeDefs: string): SchemaTemplateContext => {
     const schema = makeExecutableSchema({ typeDefs, resolvers: {}, allowUndefinedInResolve: true }) as GraphQLSchema;
 
@@ -22,6 +22,28 @@ describe('TypeScript Multi File', () => {
   });
 
   describe('Schema', () => {
+    it('should pass custom config correctly to the generator', () => {
+      const templateContext = compileAndBuildContext(`
+        type Query {
+          fieldTest: String
+        }
+      `);
+
+      const compiled = compileTemplate({
+        ...config,
+        templates: {
+          type: `{{ config.custom }}`
+        },
+        config: {
+          custom: 'A',
+        },
+      } as GeneratorConfig, templateContext);
+
+      expect(compiled.length).toBe(1);
+      expect(compiled[0].filename).toBe('query.type.d.ts');
+      expect(compiled[0].content).toBeSimilarStringTo(`A`);
+    });
+
     it('should generate the correct types when using only simple Query', () => {
       const templateContext = compileAndBuildContext(`
         type Query {

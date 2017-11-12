@@ -14,6 +14,7 @@ import {
 import { sanitizeFilename } from './sanitizie-filename';
 import { prepareSchemaForDocumentsOnly } from './prepare-documents-only';
 import * as path from 'path';
+import * as moment from 'moment';
 
 const handlersMap = {
   type: handleType,
@@ -36,24 +37,30 @@ export const ALLOWED_CUSTOM_TEMPLATE_EXT = [
   'gqlgen'
 ];
 
-function handleSchema(compiledTemplate: Function, schemaContext: SchemaTemplateContext, documents: Document, fileExtension: string, prefixAndPath: string = ''): FileOutput[] {
+interface ExtraConfig {
+  [configName: string]: any;
+}
+
+function handleSchema(compiledTemplate: Function, schemaContext: SchemaTemplateContext, documents: Document, extraConfig: ExtraConfig, fileExtension: string, prefixAndPath: string = ''): FileOutput[] {
   debugLog(`[handleSchema] called`);
 
   return [{
     filename: prefixAndPath + '.' + (fileExtension || ''),
     content: compiledTemplate({
+      config: extraConfig,
       ...schemaContext
     }),
   }];
 }
 
-function handleAll(compiledTemplate: Function, schemaContext: SchemaTemplateContext, documents: Document, fileExtension: string, prefixAndPath: string = ''): FileOutput[] {
+function handleAll(compiledTemplate: Function, schemaContext: SchemaTemplateContext, documents: Document, extraConfig: ExtraConfig, fileExtension: string, prefixAndPath: string = ''): FileOutput[] {
   debugLog(`[handleAll] called`);
 
   return [{
     filename: prefixAndPath + '.' + (fileExtension || ''),
     content: compiledTemplate({
       ...schemaContext,
+      config: extraConfig,
       operations: documents.operations,
       fragments: documents.fragments,
       hasFragments: documents.hasFragments,
@@ -62,12 +69,13 @@ function handleAll(compiledTemplate: Function, schemaContext: SchemaTemplateCont
   }];
 }
 
-function handleDocuments(compiledTemplate: Function, schemaContext: SchemaTemplateContext, documents: Document, fileExtension: string, prefixAndPath: string = ''): FileOutput[] {
+function handleDocuments(compiledTemplate: Function, schemaContext: SchemaTemplateContext, documents: Document, extraConfig: ExtraConfig, fileExtension: string, prefixAndPath: string = ''): FileOutput[] {
   debugLog(`[handleDocuments] called`);
 
   return [{
     filename: prefixAndPath + '.' + (fileExtension || ''),
     content: compiledTemplate({
+      config: extraConfig,
       operations: documents.operations,
       fragments: documents.fragments,
       hasFragments: documents.hasFragments,
@@ -76,75 +84,99 @@ function handleDocuments(compiledTemplate: Function, schemaContext: SchemaTempla
   }];
 }
 
-function handleType(compiledTemplate: Function, schemaContext: SchemaTemplateContext, documents: Document, fileExtension: string, prefixAndPath: string = ''): FileOutput[] {
+function handleType(compiledTemplate: Function, schemaContext: SchemaTemplateContext, documents: Document, extraConfig: ExtraConfig, fileExtension: string, prefixAndPath: string = ''): FileOutput[] {
   debugLog(`[handleType] called`);
 
   return schemaContext.types.map((type: Type) => ({
     filename: prefixAndPath + sanitizeFilename(type.name, 'type') + '.' + (fileExtension || ''),
-    content: compiledTemplate(type),
+    content: compiledTemplate({
+      ...type,
+      config: extraConfig,
+    }),
   }));
 }
 
-function handleInputType(compiledTemplate: Function, schemaContext: SchemaTemplateContext, documents: Document, fileExtension: string, prefixAndPath: string = ''): FileOutput[] {
+function handleInputType(compiledTemplate: Function, schemaContext: SchemaTemplateContext, documents: Document, extraConfig: ExtraConfig, fileExtension: string, prefixAndPath: string = ''): FileOutput[] {
   debugLog(`[handleInputType] called`);
 
   return schemaContext.inputTypes.map((type: Type) => ({
     filename: prefixAndPath + sanitizeFilename(type.name, 'input-type') + '.' + (fileExtension || ''),
-    content: compiledTemplate(type),
+    content: compiledTemplate({
+      ...type,
+      config: extraConfig,
+    }),
   }));
 }
 
-function handleUnion(compiledTemplate: Function, schemaContext: SchemaTemplateContext, documents: Document, fileExtension: string, prefixAndPath: string = ''): FileOutput[] {
+function handleUnion(compiledTemplate: Function, schemaContext: SchemaTemplateContext, documents: Document, extraConfig: ExtraConfig, fileExtension: string, prefixAndPath: string = ''): FileOutput[] {
   debugLog(`[handleUnion] called`);
 
   return schemaContext.unions.map((union: Union) => ({
     filename: prefixAndPath + sanitizeFilename(union.name, 'union') + '.' + (fileExtension || ''),
-    content: compiledTemplate(union),
+    content: compiledTemplate({
+      ...union,
+      config: extraConfig,
+    }),
   }));
 }
 
-function handleEnum(compiledTemplate: Function, schemaContext: SchemaTemplateContext, documents: Document, fileExtension: string, prefixAndPath: string = ''): FileOutput[] {
+function handleEnum(compiledTemplate: Function, schemaContext: SchemaTemplateContext, documents: Document, extraConfig: ExtraConfig, fileExtension: string, prefixAndPath: string = ''): FileOutput[] {
   debugLog(`[handleEnum] called`);
 
   return schemaContext.enums.map((en: Enum) => ({
     filename: prefixAndPath + sanitizeFilename(en.name, 'enum') + '.' + (fileExtension || ''),
-    content: compiledTemplate(en),
+    content: compiledTemplate({
+      ...en,
+      config: extraConfig,
+    }),
   }));
 }
 
-function handleScalar(compiledTemplate: Function, schemaContext: SchemaTemplateContext, documents: Document, fileExtension: string, prefixAndPath: string = ''): FileOutput[] {
+function handleScalar(compiledTemplate: Function, schemaContext: SchemaTemplateContext, documents: Document, extraConfig: ExtraConfig, fileExtension: string, prefixAndPath: string = ''): FileOutput[] {
   debugLog(`[handleScalar] called`);
 
   return schemaContext.scalars.map((scalar: Scalar) => ({
     filename: prefixAndPath + sanitizeFilename(scalar.name, 'scalar') + '.' + (fileExtension || ''),
-    content: compiledTemplate(scalar),
+    content: compiledTemplate({
+      ...scalar,
+      config: extraConfig,
+    }),
   }));
 }
 
-function handleInterface(compiledTemplate: Function, schemaContext: SchemaTemplateContext, documents: Document, fileExtension: string, prefixAndPath: string = ''): FileOutput[] {
+function handleInterface(compiledTemplate: Function, schemaContext: SchemaTemplateContext, documents: Document, extraConfig: ExtraConfig, fileExtension: string, prefixAndPath: string = ''): FileOutput[] {
   debugLog(`[handleInterface] called`);
 
   return schemaContext.interfaces.map((inf: Interface) => ({
     filename: prefixAndPath + sanitizeFilename(inf.name, 'interface') + '.' + (fileExtension || ''),
-    content: compiledTemplate(inf),
+    content: compiledTemplate({
+      ...inf,
+      config: extraConfig,
+    }),
   }));
 }
 
-function handleOperation(compiledTemplate: Function, schemaContext: SchemaTemplateContext, documents: Document, fileExtension: string, prefixAndPath: string = ''): FileOutput[] {
+function handleOperation(compiledTemplate: Function, schemaContext: SchemaTemplateContext, documents: Document, extraConfig: ExtraConfig, fileExtension: string, prefixAndPath: string = ''): FileOutput[] {
   debugLog(`[handleOperation] called`);
 
   return documents.operations.map((operation: Operation) => ({
     filename: prefixAndPath + sanitizeFilename(operation.name, operation.operationType) + '.' + (fileExtension || ''),
-    content: compiledTemplate(operation),
+    content: compiledTemplate({
+      ...operation,
+      config: extraConfig,
+    }),
   }));
 }
 
-function handleFragment(compiledTemplate: Function, schemaContext: SchemaTemplateContext, documents: Document, fileExtension: string, prefixAndPath: string = ''): FileOutput[] {
+function handleFragment(compiledTemplate: Function, schemaContext: SchemaTemplateContext, documents: Document, extraConfig: ExtraConfig, fileExtension: string, prefixAndPath: string = ''): FileOutput[] {
   debugLog(`[handleFragment] called`);
 
   return documents.fragments.map((fragment: Fragment) => ({
     filename: prefixAndPath + sanitizeFilename(fragment.name, 'fragment') + '.' + (fileExtension || ''),
-    content: compiledTemplate(fragment),
+    content: compiledTemplate({
+      ...fragment,
+      config: extraConfig,
+    }),
   }));
 }
 
@@ -203,13 +235,19 @@ export function generateMultipleFiles(templates: MultiFileTemplates, executionSe
 
       const handler = handlersMap[templateName];
 
-      result.push(...handler(templateFn, schemaContext, documents, config.filesExtension))
+      result.push(...handler(templateFn, schemaContext, documents, {
+        ...(config.config),
+        currentTime: moment().format(),
+      }, config.filesExtension));
     } else {
       const parsedTemplateName = parseTemplateName(templateName);
       debugLog(`[generateMultipleFiles] Using custom template handlers, parsed template name result: `, parsedTemplateName);
 
       if (parsedTemplateName !== null) {
-        result.push(...parsedTemplateName.handler(templateFn, schemaContext, documents, parsedTemplateName.fileExtension, parsedTemplateName.prefix))
+        result.push(...parsedTemplateName.handler(templateFn, schemaContext, documents, {
+          ...config.config,
+          currentTime: moment().format(),
+        }, parsedTemplateName.fileExtension, parsedTemplateName.prefix));
       }
     }
   });

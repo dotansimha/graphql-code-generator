@@ -15,7 +15,7 @@ export const DEFAULT_SETTINGS: Settings = {
 
 export function compileTemplate(config: GeneratorConfig, templateContext: SchemaTemplateContext, documents: Document[] = [], settings: Settings = DEFAULT_SETTINGS): FileOutput[] {
   if (!config) {
-    throw new Error(`compileTemplate required valid config!`);
+    throw new Error(`compileTemplate requires a valid GeneratorConfig object!`);
   }
 
   debugLog(`[compileTemplate] starting to compile template with input type = ${config.inputType}`);
@@ -52,10 +52,12 @@ export function compileTemplate(config: GeneratorConfig, templateContext: Schema
         fragments: frArr,
         hasFragments: frArr.length > 0,
         hasOperations: opArr.length > 0,
-      }
+      };
     }, { hasFragments: false, hasOperations: false, operations: [], fragments: [] } as Document);
 
-    debugLog(`[compileTemplate] all documents merged into single document, total of ${mergedDocuments.operations.length} operations and ${mergedDocuments.fragments.length} fragments`);
+    debugLog(
+      `[compileTemplate] all documents merged into single document, total of ${mergedDocuments.operations.length} operations and ${mergedDocuments.fragments.length} fragments`
+    );
 
     if (config.flattenTypes) {
       debugLog(`[compileTemplate] flattenTypes is true, flattening all selection sets from all documents...`);
@@ -70,7 +72,7 @@ export function compileTemplate(config: GeneratorConfig, templateContext: Schema
     }
 
     if (!config.outFile) {
-      throw new Error('Config outFile is required when using inputType = SINGLE_FILE!')
+      throw new Error('Config outFile is required when using inputType = SINGLE_FILE!');
     }
 
     debugLog(`[compileTemplate] Executing generateSingleFile...`);
@@ -85,7 +87,7 @@ export function compileTemplate(config: GeneratorConfig, templateContext: Schema
   } else if (config.inputType === EInputType.MULTIPLE_FILES || config.inputType === EInputType.PROJECT) {
     if (config.inputType === EInputType.MULTIPLE_FILES) {
       if (!config.filesExtension) {
-        throw new Error('Config filesExtension is required when using inputType = MULTIPLE_FILES!')
+        throw new Error('Config filesExtension is required when using inputType = MULTIPLE_FILES!');
       }
     }
 
@@ -103,7 +105,7 @@ export function compileTemplate(config: GeneratorConfig, templateContext: Schema
       prev[item.key] = item.value;
 
       return prev;
-    }, {}) as {[name: string]: Function[]};
+    }, {}) as { [name: string]: Function[] };
 
     debugLog(`[compileTemplate] Templates names: `, Object.keys(compiledTemplates));
 

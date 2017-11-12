@@ -38,19 +38,20 @@ export interface CLIOptions {
   header?: string[];
   schema?: any;
   documents?: any;
-  projectConfig?: string;
+  config?: string;
 }
 
-interface ProjectConfig {
-  flattenTypes: boolean;
-  primitives: {
+interface GqlGenConfig {
+  flattenTypes?: boolean;
+  primitives?: {
     String: string;
     Int: string;
     Float: string;
     Boolean: string;
     ID: string;
   };
-  customHelpers: { [helperName: string]: string };
+  customHelpers?: { [helperName: string]: string };
+  generatorConfig?: { [configName: string]: any };
 }
 
 function collect(val, memo) {
@@ -68,7 +69,7 @@ export const initCLI = (args): any => {
     .option('-h, --header [header]', 'Header to add to the introspection HTTP request when using --url', collect, [])
     .option('-t, --template <template-name>', 'Language/platform name templates')
     .option('-p, --project <project-path>', 'Project path(s) to scan for custom template files')
-    .option('--project-config <json-file>', 'Project configuration file')
+    .option('--config <json-file>', 'Codegen configuration file, defaults to: ./gql-gen.json')
     .option('-m, --no-schema', 'Generates only client side documents, without server side schema types')
     .option('-c, --no-documents', 'Generates only server side schema types, without client side documents')
     .option('-o, --out <path>', 'Output file(s) path', String, './')
@@ -114,7 +115,7 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
   const documents: string[] = options.args || [];
   const template: string = options.template;
   const project: string = options.project;
-  const projectConfig: string = options.projectConfig || './gql-gen.json';
+  const gqlGenConfigFilePath: string = options.config || './gql-gen.json';
   const out: string = options.out || './';
   const headers: string[] = options.header;
   const generateSchema: boolean = options.schema;
@@ -157,45 +158,52 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
     }
   }
 
-  if (project && project !== '') {
-    debugLog(`[executeWithOptions] using project: ${project}`);
+  debugLog(`[executeWithOptions] using project: ${project}`);
 
-    const configPath = path.resolve(process.cwd(), projectConfig);
+  const configPath = path.resolve(process.cwd(), gqlGenConfigFilePath);
+  let config: GqlGenConfig = null;
 
-    if (fs.existsSync(configPath)) {
-      const config = JSON.parse(fs.readFileSync(configPath).toString()) as ProjectConfig;
-      debugLog(`[executeWithOptions] Got project config JSON: `, config);
-      const templates = scanForTemplatesInPath(project, ALLOWED_CUSTOM_TEMPLATE_EXT);
-      const resolvedHelpers: {[key: string]: Function} = {};
-
-      Object.keys(config.customHelpers || {}).map(helperName => {
-        const filePath = config.customHelpers[helperName];
-        const resolvedPath = path.isAbsolute(filePath) ? filePath : path.resolve(process.cwd(), filePath);
-
-        if (fs.existsSync(resolvedPath)) {
-          const requiredFile = require(resolvedPath);
-
-          if (requiredFile && requiredFile && typeof requiredFile === 'function') {
-            resolvedHelpers[helperName] = requiredFile;
-          } else {
-            throw new Error(`Custom template file ${resolvedPath} does not have a default export function!`);
-          }
-        } else {
-          throw new Error(`Custom template file ${helperName} does not exists in path: ${resolvedPath}`);
-        }
-      });
-
-      templateConfig = {
-        inputType: EInputType.PROJECT,
-        templates,
-        flattenTypes: config.flattenTypes,
-        primitives: config.primitives,
-        customHelpers: resolvedHelpers,
-      };
-    } else {
-      throw new Error(`Please specify --projectConfig path or create gql-gen.json in your project root!`);
-    }
+  if (fs.existsSync(configPath)) {
+    console.log('Loading config file from: ', configPath);
+    config = JSON.parse(fs.readFileSync(configPath).toString()) as GqlGenConfig;
+    debugLog(`[executeWithOptions] Got project config JSON: `, config);
   }
+
+  if (project && project !== '') {
+    if (config === null) {
+      throw new Error(`To use project feature, please specify --config path or create gql-gen.json in your project root!`);
+    }
+
+    const templates = scanForTemplatesInPath(project, ALLOWED_CUSTOM_TEMPLATE_EXT);
+    const resolvedHelpers: { [key: string]: Function } = {};
+
+    Object.keys(config.customHelpers || {}).map(helperName => {
+      const filePath = config.customHelpers[helperName];
+      const resolvedPath = path.isAbsolute(filePath) ? filePath : path.resolve(process.cwd(), filePath);
+
+      if (fs.existsSync(resolvedPath)) {
+        const requiredFile = require(resolvedPath);
+
+        if (requiredFile && requiredFile && typeof requiredFile === 'function') {
+          resolvedHelpers[helperName] = requiredFile;
+        } else {
+          throw new Error(`Custom template file ${resolvedPath} does not have a default export function!`);
+        }
+      } else {
+        throw new Error(`Custom template file ${helperName} does not exists in path: ${resolvedPath}`);
+      }
+    });
+
+    templateConfig = {
+      inputType: EInputType.PROJECT,
+      templates,
+      flattenTypes: config.flattenTypes,
+      primitives: config.primitives,
+      customHelpers: resolvedHelpers,
+    };
+  }
+
+  templateConfig.config = config ? (config.generatorConfig || {}) : {};
 
   return compileTemplate(templateConfig, context, [transformedDocuments], {
     generateSchema,

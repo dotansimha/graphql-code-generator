@@ -33,3 +33,23 @@ This is an example for a valid file:
 You can override the config for `flattenTypes` and `primitives` (refer to `graphql-codegen-compiler` package README for more info).
 
 You can also specify JavaScript files for `customHelpers` when generating custom templates (the custom files should export a `Function` as default).
+
+### Generator Specific Config
+
+You can also pass configuration object to the output generator, by adding `generatorConfig` to the `gql-gen.json` file:
+
+```json
+{
+  "generatorConfig": {
+    "myConfig": "my value"
+  },
+  "flattenTypes": true,
+  "primitives": {
+    "String": "string",
+    "Int": "number",
+    "Float": "number",
+    "Boolean": "boolean",
+    "ID": "string"
+  }
+}
+```
