@@ -39,6 +39,7 @@ export interface CLIOptions {
   schema?: any;
   documents?: any;
   config?: string;
+  require?: string[];
 }
 
 interface GqlGenConfig {
@@ -73,7 +74,7 @@ export const initCLI = (args): any => {
     .option('-m, --no-schema', 'Generates only client side documents, without server side schema types')
     .option('-c, --no-documents', 'Generates only server side schema types, without client side documents')
     .option('-o, --out <path>', 'Output file(s) path', String, './')
-    .option('-r, --require [module]', 'module to preload (option can be repeated)', collect, [])
+    .option('-r, --require [require]', 'module to preload (option can be repeated)', collect, [])
     .arguments('<options> [documents...]')
     .parse(args);
 
@@ -121,7 +122,10 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
   const headers: string[] = options.header;
   const generateSchema: boolean = options.schema;
   const generateDocuments: boolean = options.documents;
+  const modulesToRequire: string[] = options.require || [];
   let schemaExportPromise;
+
+  modulesToRequire.forEach((mod) => require(mod));
 
   if (file) {
     schemaExportPromise = introspectionFromFile(file).then(introspectionToGraphQLSchema);

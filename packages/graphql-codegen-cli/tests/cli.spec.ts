@@ -28,4 +28,14 @@ describe('executeWithOptions', () => {
     expect(result.length).toBe(1);
   });
 
+  it('execute the correct results when using export and require', async () => {
+    const result = await executeWithOptions({
+      export: '../../dev-test/githunt/schema.js',
+      template: 'ts',
+      require: ['../tests/dummy-require.js']
+    });
+    expect(result.length).toBe(1);
+    expect(global.dummyWasLoaded).toBe(true);
+  });
+
 });
