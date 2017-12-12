@@ -19,4 +19,13 @@ describe('executeWithOptions', () => {
 
     expect(result[0].content).toContain('Generated in');
   });
+
+  it('execute the correct results when using export', async () => {
+    const result = await executeWithOptions({
+      export: '../../dev-test/githunt/schema.js',
+      template: 'ts',
+    });
+    expect(result.length).toBe(1);
+  });
+
 });

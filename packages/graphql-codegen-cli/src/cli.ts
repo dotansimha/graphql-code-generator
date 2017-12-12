@@ -73,6 +73,7 @@ export const initCLI = (args): any => {
     .option('-m, --no-schema', 'Generates only client side documents, without server side schema types')
     .option('-c, --no-documents', 'Generates only server side schema types, without client side documents')
     .option('-o, --out <path>', 'Output file(s) path', String, './')
+    .option('-r, --require [module]', 'module to preload (option can be repeated)', collect, [])
     .arguments('<options> [documents...]')
     .parse(args);
 
