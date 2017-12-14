@@ -111,7 +111,10 @@ describe('Multiple Files', () => {
       `);
       expect(compiled[1].filename).toBe('myenum.enum.d.ts');
       expect(compiled[1].content).toBeSimilarStringTo(`
-        export type MyEnum = "V1" | "V2";
+        export enum MyEnum {
+          V1 = "V1",
+          V2 = "V2"
+        }
       `);
     });
 

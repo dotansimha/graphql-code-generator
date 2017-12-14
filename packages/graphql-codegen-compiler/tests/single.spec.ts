@@ -272,7 +272,11 @@ describe('Single File', () => {
       export interface Query {
         fieldTest: MyEnum;
       }
-      export type MyEnum = "A" | "B" | "C";`);
+      export enum MyEnum {
+        A = "A",
+        B = "B",
+        C = "C"
+      `);
     });
 
     it('should generate unions correctly', () => {
