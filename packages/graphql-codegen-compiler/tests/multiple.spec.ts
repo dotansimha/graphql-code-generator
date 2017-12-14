@@ -456,7 +456,7 @@ describe('Multiple Files', () => {
         /* A list of options for the sort order of the feed */
         export enum FeedType {
           HOT = "HOT",
-          NEW = NEW",
+          NEW = "NEW",
           TOP = "TOP",
         }
       `);
