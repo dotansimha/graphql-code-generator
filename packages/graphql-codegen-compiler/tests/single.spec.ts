@@ -276,6 +276,7 @@ describe('Single File', () => {
         A = "A",
         B = "B",
         C = "C",
+      }
       `);
     });
 
