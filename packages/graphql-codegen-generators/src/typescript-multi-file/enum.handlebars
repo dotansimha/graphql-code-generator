@@ -1,5 +1,5 @@
 {{ toComment description }}
 export enum {{ name }} {
-  {{#each values }}{{value}}: "{{ value }}"{{#unless @last}},
+  {{#each values }}{{value}}= "{{ value }}",{{#unless @last}}
   {{/unless}}{{/each}}
 }

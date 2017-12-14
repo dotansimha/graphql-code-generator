@@ -275,7 +275,7 @@ describe('Single File', () => {
       export enum MyEnum {
         A = "A",
         B = "B",
-        C = "C"
+        C = "C",
       `);
     });
 
