@@ -105,7 +105,7 @@ export interface SelectionSetInlineFragment extends SelectionSetItem {
   onType: string;
   fields: SelectionSetFieldNode[];
   fragmentsSpread: SelectionSetFragmentSpread[];
-  inlineFragments: SelectionSetInlineFragment[],
+  inlineFragments: SelectionSetInlineFragment[];
   hasFragmentsSpread: boolean;
   hasInlineFragments: boolean;
   hasFields: boolean;
@@ -123,7 +123,7 @@ export interface SelectionSetFieldNode extends SelectionSetItem {
   isArray: boolean;
   fields: SelectionSetFieldNode[];
   fragmentsSpread: SelectionSetFragmentSpread[];
-  inlineFragments: SelectionSetInlineFragment[],
+  inlineFragments: SelectionSetInlineFragment[];
   hasFragmentsSpread: boolean;
   hasInlineFragments: boolean;
   hasFields: boolean;
@@ -155,7 +155,7 @@ export interface Fragment extends AstNode {
   document: string;
   fields: SelectionSetFieldNode[];
   fragmentsSpread: SelectionSetFragmentSpread[];
-  inlineFragments: SelectionSetInlineFragment[],
+  inlineFragments: SelectionSetInlineFragment[];
   hasFragmentsSpread: boolean;
   hasInlineFragments: boolean;
   hasFields: boolean;
@@ -173,7 +173,7 @@ export interface Operation extends AstNode {
   document: string;
   fields: SelectionSetFieldNode[];
   fragmentsSpread: SelectionSetFragmentSpread[];
-  inlineFragments: SelectionSetInlineFragment[],
+  inlineFragments: SelectionSetInlineFragment[];
   hasFragmentsSpread: boolean;
   hasInlineFragments: boolean;
   hasFields: boolean;

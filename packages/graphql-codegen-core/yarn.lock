@@ -711,12 +711,6 @@ graphql-tools@^1.0.0:
   optionalDependencies:
     "@types/graphql" "^0.9.0"
 
-graphql@^0.10.4:
-  version "0.10.4"
-  resolved "https://registry.yarnpkg.com/graphql/-/graphql-0.10.4.tgz#55ae6857ae521e3592aec4265587e5e94c477667"
-  dependencies:
-    iterall "^1.1.0"
-
 growly@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/growly/-/growly-1.3.0.tgz#f10748cbe76af964b7c96c93c6bcc28af120c081"
@@ -979,10 +973,6 @@ istanbul-reports@^1.1.1:
   resolved "https://registry.yarnpkg.com/istanbul-reports/-/istanbul-reports-1.1.1.tgz#042be5c89e175bc3f86523caab29c014e77fee4e"
   dependencies:
     handlebars "^4.0.3"
-
-iterall@^1.1.0:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/iterall/-/iterall-1.1.1.tgz#f7f0af11e9a04ec6426260f5019d9fcca4d50214"
 
 jest-changed-files@^20.0.3:
   version "20.0.3"
