@@ -161,8 +161,10 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
     if (!templateConfig) {
       const templateFromExport = require(template);
 
-      if (!templateFromExport) {
+      if (!templateFromExport || !templateFromExport.default) {
         throw new Error(`Unknown template: ${template}`);
+      } else {
+        templateConfig = templateFromExport.default;
       }
     }
   }
