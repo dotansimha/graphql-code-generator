@@ -1,2 +1,5 @@
 {{ toComment description }}
-export type {{ name }} = {{#each values }}"{{ value }}"{{#unless @last}} | {{/unless}}{{/each}};
+export enum {{ name }} {
+  {{#each values }}{{value}} = "{{ value }}",{{#unless @last}}
+  {{/unless}}{{/each}}
+}

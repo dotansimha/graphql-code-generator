@@ -111,7 +111,10 @@ describe('Multiple Files', () => {
       `);
       expect(compiled[1].filename).toBe('myenum.enum.d.ts');
       expect(compiled[1].content).toBeSimilarStringTo(`
-        export type MyEnum = "V1" | "V2";
+        export enum MyEnum {
+          V1 = "V1",
+          V2 = "V2",
+        }
       `);
     });
 
@@ -373,11 +376,19 @@ describe('Multiple Files', () => {
 
       expect(compiled[0].content).toBeSimilarStringTo(`
         /* A list of options for the sort order of the feed */
-        export type FeedType = "HOT" | "NEW" | "TOP";
+        export enum FeedType {
+          HOT = "HOT",
+          NEW = "NEW",
+          TOP = "TOP",
+        }
       `);
       expect(compiled[1].content).toBeSimilarStringTo(`
         /* The type of vote to record, when submitting a vote */
-        export type VoteType = "UP" | "DOWN" | "CANCEL";
+        export enum VoteType {
+          UP = "UP",
+          DOWN = "DOWN",
+          CANCEL = "CANCEL",
+        }
       `);
       expect(compiled[2].content).toBeSimilarStringTo(`
         export namespace MyFeed {
@@ -443,11 +454,19 @@ describe('Multiple Files', () => {
 
       expect(compiled[0].content).toBeSimilarStringTo(`
         /* A list of options for the sort order of the feed */
-        export type FeedType = "HOT" | "NEW" | "TOP";
+        export enum FeedType {
+          HOT = "HOT",
+          NEW = "NEW",
+          TOP = "TOP",
+        }
       `);
       expect(compiled[1].content).toBeSimilarStringTo(`
         /* The type of vote to record, when submitting a vote */
-        export type VoteType = "UP" | "DOWN" | "CANCEL";
+        export enum VoteType {
+          UP = "UP",
+          DOWN = "DOWN",
+          CANCEL = "CANCEL",
+        }
       `);
       expect(compiled[2].content).toBeSimilarStringTo(`
         import { RepoFields } from './repofields.fragment';

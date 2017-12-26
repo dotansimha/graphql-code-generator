@@ -272,7 +272,12 @@ describe('Single File', () => {
       export interface Query {
         fieldTest: MyEnum;
       }
-      export type MyEnum = "A" | "B" | "C";`);
+      export enum MyEnum {
+        A = "A",
+        B = "B",
+        C = "C",
+      }
+      `);
     });
 
     it('should generate unions correctly', () => {
@@ -392,8 +397,8 @@ describe('Single File', () => {
       expect(content).toContain('export interface Mutation');
       expect(content).toContain('export interface Subscription');
 
-      expect(content).toContain('export type FeedType');
-      expect(content).toContain('export type VoteType');
+      expect(content).toContain('export enum FeedType');
+      expect(content).toContain('export enum VoteType');
 
       expect(content).toContain('export interface Entry');
       expect(content).toContain('export interface User');
@@ -438,10 +443,18 @@ describe('Single File', () => {
       expect(compiled[0].content).toBeSimilarStringTo(`
           /* tslint:disable */
           /* A list of options for the sort order of the feed */
-          export type FeedType = "HOT" | "NEW" | "TOP";
+          export enum FeedType {
+            HOT = "HOT",
+            NEW = "NEW",
+            TOP = "TOP",
+          }
           
           /* The type of vote to record, when submitting a vote */
-          export type VoteType = "UP" | "DOWN" | "CANCEL";
+          export enum VoteType {
+            UP = "UP",
+            DOWN = "DOWN",
+            CANCEL = "CANCEL",
+          }
           
           export namespace MyFeed {
             export type Variables = {
@@ -500,10 +513,18 @@ describe('Single File', () => {
       expect(content).toBeSimilarStringTo(`
           /* tslint:disable */
           /* A list of options for the sort order of the feed */
-          export type FeedType = "HOT" | "NEW" | "TOP";
+          export enum FeedType {
+            HOT = "HOT",
+            NEW = "NEW",
+            TOP = "TOP",
+          }
           
           /* The type of vote to record, when submitting a vote */
-          export type VoteType = "UP" | "DOWN" | "CANCEL";
+          export enum VoteType {
+            UP = "UP",
+            DOWN = "DOWN",
+            CANCEL = "CANCEL",
+          }
           
           export namespace MyFeed {
             export type Variables = {
@@ -567,10 +588,18 @@ describe('Single File', () => {
       expect(content).toBeSimilarStringTo(`
        /* tslint:disable */
     /* A list of options for the sort order of the feed */
-    export type FeedType = "HOT" | "NEW" | "TOP";
+    export enum FeedType {
+      HOT = "HOT",
+      NEW = "NEW",
+      TOP = "TOP",
+    }
     
     /* The type of vote to record, when submitting a vote */
-    export type VoteType = "UP" | "DOWN" | "CANCEL";
+    export enum VoteType {
+      UP = "UP",
+      DOWN = "DOWN",
+      CANCEL = "CANCEL",
+    }
     
     export namespace MyFeed {
       export type Variables = {
