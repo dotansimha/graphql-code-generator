@@ -159,7 +159,11 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
     templateConfig = getGeneratorConfig(template);
 
     if (!templateConfig) {
-      throw new Error(`Unknown template: ${template}!`);
+      const templateFromExport = require(template);
+
+      if (!templateFromExport) {
+        throw new Error(`Unknown template: ${template}`);
+      }
     }
   }
 

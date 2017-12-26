@@ -72,6 +72,7 @@
     "@types/mkdirp": "^0.3.29",
     "@types/node": "7",
     "@types/request": "^0.0.45",
+    "graphql": "^0.12.3",
     "graphql-tag": "^2.4.2",
     "jest": "^20.0.4",
     "rimraf": "^2.6.1",
