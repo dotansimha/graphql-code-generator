@@ -46,44 +46,36 @@
     }
   },
   "jest": {
-    "verbose": true,
-    "collectCoverage": true,
-    "collectCoverageFrom": [
-      "src/**/*.ts"
-    ],
-    "coverageDirectory": "./tests/coverage",
-    "coveragePathIgnorePatterns": [
-      "/node_modules/",
-      ".*?handlebars-helpers.*?",
-      "src/index.ts",
-      "src/types.ts"
-    ],
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
     "moduleFileExtensions": [
       "ts",
       "tsx",
-      "js"
-    ],
-    "transform": {
-      "^.+\\.(ts|tsx)$": "<rootDir>/tests/jest.typescript.js"
-    },
-    "testRegex": "tests/.*\\.ts$",
-    "testEnvironment": "node"
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
   },
   "dependencies": {
-    "graphql-tag": "^2.4.2",
-    "graphql-tools": "^1.0.0"
+    "graphql-tag": "^2.6.1",
+    "graphql-tools": "^2.14.1"
   },
   "peerDependencies": {
-    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0"
+    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0"
   },
   "devDependencies": {
-    "@types/graphql": "^0.10.0",
-    "@types/jest": "^20.0.2",
+    "@types/graphql": "^0.11.7",
+    "@types/jest": "^21.1.9",
     "@types/node": "7",
-    "jest": "^20.0.4",
-    "rimraf": "^2.6.1",
+    "jest": "^22.0.4",
+    "graphql": "^0.12.3",
+    "rimraf": "^2.6.2",
+    "ts-jest": "^22.0.0",
     "tslint": "^5.4.3",
-    "typescript": "^2.4.1"
+    "typescript": "^2.6.2"
   },
   "typings": "dist/index.d.ts",
   "typescript": {

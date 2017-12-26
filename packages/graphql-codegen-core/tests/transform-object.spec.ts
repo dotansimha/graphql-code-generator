@@ -91,7 +91,7 @@ describe('transformObject', () => {
       }
     });
 
-    const gqlInterface = new GraphQLInterfaceType({
+    const interface1 = new GraphQLInterfaceType({
       name: 'MyInterface',
       fields: {
         test: {
@@ -110,7 +110,7 @@ describe('transformObject', () => {
           type: bookType,
         }
       },
-      interfaces: [ gqlInterface ]
+      interfaces: [ interface1 ]
     });
 
     const result = transformGraphQLObject({} as any, gqlInterface);

@@ -1,4 +1,9 @@
-import { GraphQLNamedType, isLeafType } from 'graphql';
+import {
+  GraphQLEnumType,
+  GraphQLInputObjectType,
+  GraphQLInterfaceType, GraphQLNamedType, GraphQLObjectType, GraphQLScalarType, GraphQLType, GraphQLUnionType,
+  isLeafType
+} from 'graphql';
 
 export interface NamedTypeIndicators {
   isType: boolean;
@@ -13,11 +18,11 @@ export function resolveTypeIndicators(namedType: GraphQLNamedType): NamedTypeInd
   const isEnum = namedType['getValues'] !== undefined;
 
   return {
-    isType: namedType['getFields'] !== undefined && namedType['getInterfaces'] !== undefined,
-    isScalar: isLeafType(namedType) && !isEnum,
-    isInterface: namedType['resolveType'] !== undefined && namedType['getFields'] !== undefined,
-    isUnion: namedType['resolveType'] !== undefined && namedType['getTypes'] !== undefined,
-    isInputType: namedType['getFields'] !== undefined && namedType['getInterfaces'] === undefined && namedType['resolveType'] === undefined,
-    isEnum: isEnum,
+    isType: namedType instanceof GraphQLObjectType,
+    isScalar: namedType instanceof GraphQLScalarType,
+    isInterface: namedType instanceof GraphQLInterfaceType,
+    isUnion: namedType instanceof GraphQLUnionType,
+    isInputType: namedType instanceof GraphQLInputObjectType,
+    isEnum: namedType instanceof GraphQLEnumType,
   };
 }

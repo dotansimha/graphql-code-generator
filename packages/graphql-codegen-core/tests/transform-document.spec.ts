@@ -2,7 +2,8 @@ import * as fs from 'fs';
 import gql from 'graphql-tag';
 import { introspectionToGraphQLSchema } from '../src/utils/introspection-to-schema';
 import { GraphQLSchema } from 'graphql';
-import { transformDocument } from '../src/operations/transform-document'; import {
+import { transformDocument } from '../src/operations/transform-document';
+import {
   SelectionSetFieldNode,
   SelectionSetFragmentSpread,
   SelectionSetInlineFragment
@@ -17,10 +18,10 @@ describe('transformDocument', () => {
 
   it('should return correct result when using simple fragment', () => {
     const fragment = gql`
-      fragment MyFragment on User {
-        login
-        avatar_url
-      }`;
+        fragment MyFragment on User {
+            login
+            avatar_url
+        }`;
 
     const document = transformDocument(schema, fragment);
 
@@ -45,18 +46,18 @@ describe('transformDocument', () => {
 
   it('should return correct result when using 2 levels fragment', () => {
     const fragment = gql`
-      fragment RepoInfo on Entry {
-        createdAt
-        repository {
-          description
-          stargazers_count
-          open_issues_count
+        fragment RepoInfo on Entry {
+            createdAt
+            repository {
+                description
+                stargazers_count
+                open_issues_count
+            }
+            postedBy {
+                html_url
+                login
+            }
         }
-        postedBy {
-          html_url
-          login
-        }
-      }
     `;
 
     const document = transformDocument(schema, fragment);
@@ -73,10 +74,10 @@ describe('transformDocument', () => {
 
   it('should return correct result when using __typename in selectionSet', () => {
     const fragment = gql`
-      fragment RepoInfo on Entry {
-        createdAt
-        __typename
-      }
+        fragment RepoInfo on Entry {
+            createdAt
+            __typename
+        }
     `;
 
     const document = transformDocument(schema, fragment);
@@ -90,16 +91,16 @@ describe('transformDocument', () => {
 
   it('should return correct result when using fragment with inline fragment', () => {
     const fragment = gql`
-      fragment MyFragment on Entry {
-        createdAt
-        repository {
-          ... on Repository {
-            description
-            stargazers_count
-            open_issues_count
-          }
+        fragment MyFragment on Entry {
+            createdAt
+            repository {
+                ... on Repository {
+                    description
+                    stargazers_count
+                    open_issues_count
+                }
+            }
         }
-      }
     `;
 
     const document = transformDocument(schema, fragment);
@@ -116,18 +117,18 @@ describe('transformDocument', () => {
 
   it('should return correct result when using 2 fragments with fragment spread', () => {
     const fragment = gql`
-      fragment MyFragment on Entry {
-        createdAt
-        repository {
-          ...RepoFragment
+        fragment MyFragment on Entry {
+            createdAt
+            repository {
+                ...RepoFragment
+            }
         }
-      }
 
-      fragment RepoFragment on Repository {
-        description
-        stargazers_count
-        open_issues_count
-      }
+        fragment RepoFragment on Repository {
+            description
+            stargazers_count
+            open_issues_count
+        }
     `;
 
     const document = transformDocument(schema, fragment);
@@ -145,12 +146,12 @@ describe('transformDocument', () => {
 
   it('should return correct result when using simple query', () => {
     const query = gql`
-      query MyQuery {
-        currentUser {
-          login
-          avatar_url
-        }
-      }`;
+        query MyQuery {
+            currentUser {
+                login
+                avatar_url
+            }
+        }`;
 
     const document = transformDocument(schema, query);
 
@@ -166,12 +167,12 @@ describe('transformDocument', () => {
 
   it('should return correct result when using anonymous query', () => {
     const query = gql`
-      query {
-        currentUser {
-          login
-          avatar_url
-        }
-      }`;
+        query {
+            currentUser {
+                login
+                avatar_url
+            }
+        }`;
 
     const document = transformDocument(schema, query);
 
@@ -186,16 +187,16 @@ describe('transformDocument', () => {
 
   it('should return correct result when using simple query with 2 levels', () => {
     const query = gql`
-      query MyQuery {
-        entry {
-          id
-          postedBy {
-            login
-            html_url
-          }
-          createdAt
-        }
-      }`;
+        query MyQuery {
+            entry {
+                id
+                postedBy {
+                    login
+                    html_url
+                }
+                createdAt
+            }
+        }`;
 
     const document = transformDocument(schema, query);
 

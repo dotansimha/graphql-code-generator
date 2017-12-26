@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "experimentalDecorators": true,
-    "module": "commonjs",
-    "target": "es5",
+    "module": "umd",
+    "target": "es2016",
     "lib": [
       "es6",
       "esnext",

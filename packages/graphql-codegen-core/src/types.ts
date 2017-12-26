@@ -199,9 +199,7 @@ export interface Document {
   hasOperations: boolean;
 }
 
-export interface DirectiveUseMap {
-  [name: string]: string;
-}
+export type DirectiveUseMap = { [key: string]: any };
 
 export interface Directive {
   name: string;

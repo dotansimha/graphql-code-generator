@@ -68,7 +68,7 @@ export const initCLI = (args): any => {
     .option('-u, --url <graphql-endpoint>', 'Parse remote GraphQL endpoint as introspection file')
     .option('-u, --export <export-file>', 'Path to a JavaScript (es5/6) file that exports (as default export) your `GraphQLSchema` object')
     .option('-h, --header [header]', 'Header to add to the introspection HTTP request when using --url', collect, [])
-    .option('-t, --template <template-name>', 'Language/platform name templates')
+    .option('-t, --template <template-name>', 'Language/platform name templates, or a name of NPM modules that `export default` GqlGenConfig object')
     .option('-p, --project <project-path>', 'Project path(s) to scan for custom template files')
     .option('--config <json-file>', 'Codegen configuration file, defaults to: ./gql-gen.json')
     .option('-m, --no-schema', 'Generates only client side documents, without server side schema types')

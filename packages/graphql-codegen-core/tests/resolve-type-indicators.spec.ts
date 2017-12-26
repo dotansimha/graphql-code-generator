@@ -27,7 +27,6 @@ describe('resolveTypeIndicators', () => {
     expect(indicators.isUnion).toBeFalsy();
     expect(indicators.isScalar).toBeFalsy();
     expect(indicators.isInputType).toBeFalsy();
-
     expect(indicators.isInterface).toBeTruthy();
   });
 

@@ -12,7 +12,7 @@ export function getDirectives(schema: GraphQLSchema, node: any): DirectiveUseMap
       const directiveValue = getDirectiveValues(directive, astNode);
 
       if (directiveValue !== undefined) {
-        result[directive.name] = directiveValue;
+        result[directive.name] = directiveValue || {};
       }
     });
   }
