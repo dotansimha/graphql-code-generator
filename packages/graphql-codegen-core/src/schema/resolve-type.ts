@@ -8,8 +8,8 @@ export interface ResolvedType {
 }
 
 export function isRequired(type: GraphQLOutputType | GraphQLInputType): boolean {
-  const stringType = String(type)
-  return stringType.lastIndexOf('!') === stringType.length - 1
+  const stringType = String(type);
+  return stringType.lastIndexOf('!') === stringType.length - 1;
 }
 
 export function isArray(type: GraphQLOutputType | GraphQLInputType): boolean {
