@@ -70,7 +70,7 @@
     "@types/glob": "^5.0.30",
     "@types/jest": "^22.2.0",
     "@types/mkdirp": "^0.3.29",
-    "@types/node": "9.7.4",
+    "@types/node": "9.4.7",
     "@types/request": "^0.0.45",
     "graphql": "^0.13.1",
     "graphql-tag": "^2.8.0",
