@@ -1,6 +1,10 @@
 <a name="NEXT"></a>
 ## NEXT
 
+<a name="0.8.16"></a>
+## [0.8.16](https://github.com/dotansimha/graphql-codegen/compare/0.8.15...0.8.16) (2018-03-13)
+* Handle lists and non-null properly (Thanks @FredyC)
+
 <a name="0.8.15"></a>
 ## [0.8.15](https://github.com/dotansimha/graphql-codegen/compare/0.8.14...0.8.15) (2018-03-13)
 
