@@ -62,7 +62,7 @@
     "transform": {
       "^.+\\.(ts|tsx)$": "<rootDir>/tests/jest.typescript.js"
     },
-    "testRegex": "tests/.*\\.ts$",
+    "testRegex": "tests/.*\\.spec.ts$",
     "testEnvironment": "node"
   },
   "devDependencies": {
@@ -91,7 +91,8 @@
     "graphql-codegen-generators": "0.8.18",
     "mkdirp": "0.5.1",
     "prettier": "1.11.1",
-    "request": "2.85.0"
+    "request": "2.85.0",
+    "strip-comments": "0.4.4"
   },
   "typings": "dist/index.d.ts",
   "typescript": {
