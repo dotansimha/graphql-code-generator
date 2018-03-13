@@ -9,7 +9,7 @@ export const documentsFromGlobs = (documents: string[]): Promise<string[]> => {
         }
 
         if (!files || files.length === 0) {
-          reject(`Unable to locate files matching glob definition: ${documentGlob}`);
+          console.log(`No files matched for glob expression: ${documentGlob}`);
         }
 
         resolve(files);
