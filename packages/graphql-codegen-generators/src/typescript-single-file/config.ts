@@ -3,6 +3,7 @@ import * as type from './type.handlebars';
 import * as schema from './schema.handlebars';
 import * as documents from './documents.handlebars';
 import * as selectionSet from './selection-set.handlebars';
+import * as fragments from './fragments.handlebars';
 import { EInputType, GeneratorConfig } from '../types';
 
 const config: GeneratorConfig = {
@@ -13,6 +14,7 @@ const config: GeneratorConfig = {
     schema,
     documents,
     selectionSet,
+    fragments,
   },
   flattenTypes: true,
   primitives: {

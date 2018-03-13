@@ -1,11 +1,14 @@
 export namespace HeroDetails {
   export type Fragment = {
+    __typename?: "Character";
     name: string; 
-  }  & HumanInlineFragment & DroidInlineFragment
+  } & (HumanInlineFragment | DroidInlineFragment)
   export type HumanInlineFragment = {
-    height: number | null; 
-  } 
+    __typename?: "Human";
+    height?: number | null; 
+  }
   export type DroidInlineFragment = {
-    primaryFunction: string | null; 
-  } 
+    __typename?: "Droid";
+    primaryFunction?: string | null; 
+  }
 }

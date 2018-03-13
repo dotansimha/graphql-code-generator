@@ -1,2 +1,6 @@
 /* The episodes in the Star Wars trilogy */
-export type Episode = "NEWHOPE" | "EMPIRE" | "JEDI";
+export enum Episode {
+  NEWHOPE = "NEWHOPE",
+  EMPIRE = "EMPIRE",
+  JEDI = "JEDI",
+}

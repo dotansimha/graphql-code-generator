@@ -3,11 +3,17 @@ import { {{ name }} } from './{{ file }}';
 {{/eachImport}}
 export namespace {{name}} {
   export type Fragment = {
+    __typename?: "{{ onType }}";
     {{> selectionSet fields }}
-  } {{#if hasFragmentsSpread}}{{#each fragmentsSpread}} & {{fragmentName}}.Fragment{{/each}}{{/if}}{{#if hasInlineFragments}}{{#each inlineFragments}} & {{onType}}{{/each}}{{/if}}
+  }{{> fragments this }}
   {{#each innerModels }}
   export type {{ modelType }} = {
+  {{#unless hasInlineFragments}}
+    __typename?: "{{ schemaBaseType }}";
+  {{else}}
+    __typename?: {{#each inlineFragments}}{{onType}}["__typename"]{{#unless @last}} | {{/unless}}{{/each}};
+  {{/unless}}
     {{> selectionSet fields }}
-  } {{#if hasFragmentsSpread}}{{#each fragmentsSpread}} & {{fragmentName}}.Fragment{{/each}}{{/if}}{{#if hasInlineFragments}}{{#each inlineFragments}} & {{onType}}{{/each}}{{/if}}
+  }{{> fragments this }}
   {{/each}}
 }

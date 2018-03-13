@@ -396,22 +396,26 @@ describe('Multiple Files', () => {
           }
         
           export type Query = {
+            __typename?: "Query";
             feed?: Feed[] | null; 
           }
         
           export type Feed = {
+            __typename?: "Entry";
             id: number; 
             commentCount: number; 
             repository: Repository; 
           }
         
           export type Repository = {
+            __typename?: "Repository";
             full_name: string; 
             html_url: string; 
             owner?: Owner | null; 
           }
         
           export type Owner = {
+            __typename?: "User";
             avatar_url: string; 
           }
         }
@@ -476,16 +480,19 @@ describe('Multiple Files', () => {
           }
         
           export type Query = {
+            __typename?: "Query";
             feed?: Feed[] | null; 
           }
         
           export type Feed = {
+            __typename?: "Entry";
             id: number; 
             commentCount: number; 
             repository: Repository; 
           }
         
           export type Repository = {
+            __typename?: "Repository";
             full_name: string; 
           } & RepoFields.Fragment
         }
@@ -493,11 +500,13 @@ describe('Multiple Files', () => {
       expect(compiled[3].content).toBeSimilarStringTo(`
         export namespace RepoFields {
           export type Fragment = {
+            __typename?: "Repository";
             html_url: string; 
             owner?: Owner | null; 
           }
         
           export type Owner = {
+            __typename?: "User";
             avatar_url: string; 
           }
         }

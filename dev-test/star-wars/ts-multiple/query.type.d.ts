@@ -7,23 +7,23 @@ import { Human } from './human.type';
 import { Starship } from './starship.type';
 /* The query type, represents all of the entry points into our object graph */
 export interface Query {
-  hero: Character | null; 
-  reviews: Review[] | null; 
-  search: SearchResult[] | null; 
-  character: Character | null; 
-  droid: Droid | null; 
-  human: Human | null; 
-  starship: Starship | null; 
+  hero?: Character | null; 
+  reviews?: Review[] | null; 
+  search?: SearchResult[] | null; 
+  character?: Character | null; 
+  droid?: Droid | null; 
+  human?: Human | null; 
+  starship?: Starship | null; 
 }
 
 export interface HeroQueryArgs {
-  episode: Episode | null; 
+  episode?: Episode | null; 
 }
 export interface ReviewsQueryArgs {
   episode: Episode; 
 }
 export interface SearchQueryArgs {
-  text: string | null; 
+  text?: string | null; 
 }
 export interface CharacterQueryArgs {
   id: string; 

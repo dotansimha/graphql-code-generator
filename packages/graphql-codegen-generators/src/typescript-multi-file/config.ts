@@ -5,6 +5,7 @@ import * as union from './union.handlebars';
 import * as operation from './operation.handlebars';
 import * as fragment from './fragment.handlebars';
 import * as selectionSet from '../typescript-single-file/selection-set.handlebars';
+import * as fragments from '../typescript-single-file/fragments.handlebars';
 import { EInputType, GeneratorConfig } from '../types';
 
 const config: GeneratorConfig = {
@@ -19,6 +20,7 @@ const config: GeneratorConfig = {
     operation,
     fragment,
     selectionSet,
+    fragments,
   },
   flattenTypes: true,
   primitives: {

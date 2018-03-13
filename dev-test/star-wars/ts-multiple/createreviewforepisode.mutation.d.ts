@@ -7,11 +7,13 @@ export namespace CreateReviewForEpisode {
   }
 
   export type Mutation = {
-    createReview: CreateReview | null; 
-  } 
+    __typename?: "Mutation";
+    createReview?: CreateReview | null; 
+  }
 
   export type CreateReview = {
+    __typename?: "Review";
     stars: number; 
-    commentary: string | null; 
+    commentary?: string | null; 
   }
 }

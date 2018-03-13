@@ -7,13 +7,19 @@ export namespace {{ toPascalCase name }} {
   }
 
   export type {{ toPascalCase operationType }} ={{#if hasFields}} {
+    __typename?: "{{ toPascalCase operationType }}";
     {{> selectionSet fields }}
-  }{{/if}} {{#if hasFragmentsSpread}}{{#if hasFields}}& {{/if}}{{#each fragmentsSpread}}{{fragmentName}}.Fragment{{#unless @last}} & {{/unless}}{{/each}}{{/if}}{{#if hasInlineFragments}}{{#if hasFields}}& {{/if}}{{#each inlineFragments}}{{onType}}{{#unless @last}} & {{/unless}}{{/each}}{{/if}}
+  }{{/if}}{{> fragments this }}
   {{#each innerModels }}
 
   export type {{ modelType }} ={{#if hasFields}} {
+  {{#unless hasInlineFragments}}
+    __typename?: "{{ schemaBaseType }}";
+  {{else}}
+    __typename?: {{#each inlineFragments}}{{onType}}["__typename"]{{#unless @last}} | {{/unless}}{{/each}};
+  {{/unless}}
     {{> selectionSet fields }}
-  }{{/if}} {{#if hasFragmentsSpread}}{{#if hasFields}}& {{/if}}{{#each fragmentsSpread}}{{fragmentName}}.Fragment{{#unless @last}} & {{/unless}}{{/each}}{{/if}}{{#if hasInlineFragments}}{{#if hasFields}}& {{/if}}{{#each inlineFragments}}{{onType}}{{#unless @last}} & {{/unless}}{{/each}}{{/if}}
+  }{{/if}}{{> fragments this }}
   {{/each}}
 }
 {{/each}}
@@ -21,13 +27,20 @@ export namespace {{ toPascalCase name }} {
 
 export namespace {{name}} {
   export type Fragment ={{#if hasFields}} {
+    __typename?: "{{ onType }}";
     {{> selectionSet fields }}
-  }{{/if}} {{#if hasFragmentsSpread}}{{#if hasFields}}& {{/if}}{{#each fragmentsSpread}}{{fragmentName}}.Fragment{{#unless @last}} & {{/unless}}{{/each}}{{/if}}{{#if hasInlineFragments}}{{#if hasFields}}& {{/if}}{{#each inlineFragments}}{{onType}}{{#unless @last}} & {{/unless}}{{/each}}{{/if}}
+  }{{/if}}{{> fragments this }}
   {{#each innerModels }}
 
   export type {{ modelType }} ={{#if hasFields}} {
+  {{#unless hasInlineFragments}}
+    __typename?: "{{ schemaBaseType }}";
+  {{else}}
+    __typename?: {{#each inlineFragments}}{{onType}}["__typename"]{{#unless @last}} | {{/unless}}{{/each}};
+  {{/unless}}
     {{> selectionSet fields }}
-  }{{/if}} {{#if hasFragmentsSpread}}{{#if hasFields}}& {{/if}}{{#each fragmentsSpread}}{{fragmentName}}.Fragment{{#unless @last}} & {{/unless}}{{/each}}{{/if}}{{#if hasInlineFragments}}{{#if hasFields}}& {{/if}}{{#each inlineFragments}}{{onType}}{{#unless @last}} & {{/unless}}{{/each}}{{/if}}
+  }{{/if}}{{> fragments this }}
   {{/each}}
 }
 {{/each}}
+

@@ -461,22 +461,26 @@ describe('Single File', () => {
             }
           
             export type Query = {
+              __typename?: "Query";
               feed?: Feed[] | null; 
             }
           
             export type Feed = {
+              __typename?: "Entry";
               id: number; 
               commentCount: number; 
               repository: Repository; 
             }
           
             export type Repository = {
+              __typename?: "Repository";
               full_name: string; 
               html_url: string; 
               owner?: Owner | null; 
             }
           
             export type Owner = {
+              __typename?: "User";
               avatar_url: string; 
             }
           }`);
@@ -531,27 +535,32 @@ describe('Single File', () => {
             }
           
             export type Query = {
+              __typename?: "Query";
               feed?: Feed[] | null; 
             }
           
             export type Feed = {
+              __typename?: "Entry";
               id: number; 
               commentCount: number; 
               repository: Repository; 
             }
           
             export type Repository = {
+              __typename?: "Repository";
               full_name: string; 
             } & RepoFields.Fragment
           }
           
           export namespace RepoFields {
             export type Fragment = {
+              __typename?: "Repository";
               html_url: string; 
               owner?: Owner | null; 
             }
           
             export type Owner = {
+              __typename?: "User";
               avatar_url: string; 
             }
           }`);
@@ -606,28 +615,34 @@ describe('Single File', () => {
       }
     
       export type Query = {
+        __typename?: "Query";
         feed?: Feed[] | null; 
       }
     
       export type Feed = {
+        __typename?: "Entry";
         id: number; 
         commentCount: number; 
         repository: Repository; 
       }
     
       export type Repository = {
+        __typename?: RepositoryInlineFragment["__typename"] | _RepositoryInlineFragment["__typename"];
         html_url: string; 
-      }  & RepositoryInlineFragment & _RepositoryInlineFragment
+      } & (RepositoryInlineFragment | _RepositoryInlineFragment)
     
       export type RepositoryInlineFragment = {
+        __typename?: "Repository";
         full_name: string; 
       }
     
       export type _RepositoryInlineFragment = {
+        __typename?: "Repository";
         owner?: Owner | null; 
       }
     
       export type Owner = {
+        __typename?: "User";
         avatar_url: string; 
       }
     }`);
