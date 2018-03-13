@@ -84,6 +84,7 @@ Allowed flags:
 | -o,--out           | String   | Path for output file/directory. When using single-file generator specify filename, and when using multiple-files generator specify a directory                                     |
 | -m,--no-schema     | void     | If specified, server side schema won't be generated through the template (enums won't omit) |
 | -c,--no-documents  | void     | If specified, client side documents won't be generated through the template |
+| --no-overwrite     | void     | If specified, the generator will not override existing files |
 | documents...       | [String] | Space separated paths of `.graphql` files or code files (glob path is supported) that contains GraphQL documents inside strings, or with `gql` tag (JavaScript), this field is optional - if no documents specified, only server side schema types will be generated                           |
 
 ## Examples
