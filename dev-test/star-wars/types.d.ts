@@ -147,13 +147,13 @@ export namespace CreateReviewForEpisode {
   export type Mutation = {
     __typename?: "Mutation";
     createReview?: CreateReview | null; 
-  };
+  }
 
   export type CreateReview = {
     __typename?: "Review";
     stars: number; 
     commentary?: string | null; 
-  };
+  }
 }
 export namespace HeroAndFriendsNames {
   export type Variables = {
@@ -163,18 +163,18 @@ export namespace HeroAndFriendsNames {
   export type Query = {
     __typename?: "Query";
     hero?: Hero | null; 
-  };
+  }
 
   export type Hero = {
     __typename?: "Character";
     name: string; 
     friends?: Friends[] | null; 
-  };
+  }
 
   export type Friends = {
     __typename?: "Character";
     name: string; 
-  };
+  }
 }
 export namespace HeroAppearsIn {
   export type Variables = {
@@ -183,13 +183,13 @@ export namespace HeroAppearsIn {
   export type Query = {
     __typename?: "Query";
     hero?: Hero | null; 
-  };
+  }
 
   export type Hero = {
     __typename?: "Character";
     name: string; 
     appearsIn: Episode[]; 
-  };
+  }
 }
 export namespace HeroDetails {
   export type Variables = {
@@ -199,22 +199,22 @@ export namespace HeroDetails {
   export type Query = {
     __typename?: "Query";
     hero?: Hero | null; 
-  };
+  }
 
   export type Hero = {
     __typename?: HumanInlineFragment["__typename"] | DroidInlineFragment["__typename"];
     name: string; 
-  } & (HumanInlineFragment | DroidInlineFragment);
+  } & (HumanInlineFragment | DroidInlineFragment)
 
   export type HumanInlineFragment = {
     __typename?: "Human";
     height?: number | null; 
-  };
+  }
 
   export type DroidInlineFragment = {
     __typename?: "Droid";
     primaryFunction?: string | null; 
-  };
+  }
 }
 export namespace HeroDetailsWithFragment {
   export type Variables = {
@@ -224,9 +224,9 @@ export namespace HeroDetailsWithFragment {
   export type Query = {
     __typename?: "Query";
     hero?: Hero | null; 
-  };
+  }
 
-  export type Hero =HeroDetails.Fragment;
+  export type Hero =HeroDetails.Fragment
 }
 export namespace HeroName {
   export type Variables = {
@@ -236,12 +236,12 @@ export namespace HeroName {
   export type Query = {
     __typename?: "Query";
     hero?: Hero | null; 
-  };
+  }
 
   export type Hero = {
     __typename?: "Character";
     name: string; 
-  };
+  }
 }
 export namespace HeroNameConditionalInclusion {
   export type Variables = {
@@ -252,12 +252,12 @@ export namespace HeroNameConditionalInclusion {
   export type Query = {
     __typename?: "Query";
     hero?: Hero | null; 
-  };
+  }
 
   export type Hero = {
     __typename?: "Character";
     name: string; 
-  };
+  }
 }
 export namespace HeroNameConditionalExclusion {
   export type Variables = {
@@ -268,12 +268,12 @@ export namespace HeroNameConditionalExclusion {
   export type Query = {
     __typename?: "Query";
     hero?: Hero | null; 
-  };
+  }
 
   export type Hero = {
     __typename?: "Character";
     name: string; 
-  };
+  }
 }
 export namespace HeroParentTypeDependentField {
   export type Variables = {
@@ -283,42 +283,42 @@ export namespace HeroParentTypeDependentField {
   export type Query = {
     __typename?: "Query";
     hero?: Hero | null; 
-  };
+  }
 
   export type Hero = {
     __typename?: HumanInlineFragment["__typename"] | DroidInlineFragment["__typename"];
     name: string; 
-  } & (HumanInlineFragment | DroidInlineFragment);
+  } & (HumanInlineFragment | DroidInlineFragment)
 
   export type HumanInlineFragment = {
     __typename?: "Human";
     friends?: Friends[] | null; 
-  };
+  }
 
   export type Friends = {
     __typename?: _HumanInlineFragment["__typename"];
     name: string; 
-  } & (_HumanInlineFragment);
+  } & (_HumanInlineFragment)
 
   export type _HumanInlineFragment = {
     __typename?: "Human";
     height?: number | null; 
-  };
+  }
 
   export type DroidInlineFragment = {
     __typename?: "Droid";
     friends?: _Friends[] | null; 
-  };
+  }
 
   export type _Friends = {
     __typename?: __HumanInlineFragment["__typename"];
     name: string; 
-  } & (__HumanInlineFragment);
+  } & (__HumanInlineFragment)
 
   export type __HumanInlineFragment = {
     __typename?: "Human";
     height?: number | null; 
-  };
+  }
 }
 export namespace HeroTypeDependentAliasedField {
   export type Variables = {
@@ -328,19 +328,19 @@ export namespace HeroTypeDependentAliasedField {
   export type Query = {
     __typename?: "Query";
     hero?: Hero | null; 
-  };
+  }
 
-  export type Hero =HumanInlineFragment | DroidInlineFragment;
+  export type Hero =HumanInlineFragment | DroidInlineFragment
 
   export type HumanInlineFragment = {
     __typename?: "Human";
     property?: string | null; 
-  };
+  }
 
   export type DroidInlineFragment = {
     __typename?: "Droid";
     property?: string | null; 
-  };
+  }
 }
 export namespace HumanWithNullHeight {
   export type Variables = {
@@ -349,13 +349,13 @@ export namespace HumanWithNullHeight {
   export type Query = {
     __typename?: "Query";
     human?: Human | null; 
-  };
+  }
 
   export type Human = {
     __typename?: "Human";
     name: string; 
     mass?: number | null; 
-  };
+  }
 }
 export namespace TwoHeroes {
   export type Variables = {
@@ -365,30 +365,32 @@ export namespace TwoHeroes {
     __typename?: "Query";
     r2?: R2 | null; 
     luke?: Luke | null; 
-  };
+  }
 
   export type R2 = {
     __typename?: "Character";
     name: string; 
-  };
+  }
 
   export type Luke = {
     __typename?: "Character";
     name: string; 
-  };
+  }
 }
 
 export namespace HeroDetails {
   export type Fragment = {
     __typename?: "Character";
     name: string; 
-  } & (HumanInlineFragment | DroidInlineFragment);
+  } & (HumanInlineFragment | DroidInlineFragment)
 
   export type HumanInlineFragment = {
+    __typename?: "Human";
     height?: number | null; 
-  };
+  }
 
   export type DroidInlineFragment = {
+    __typename?: "Droid";
     primaryFunction?: string | null; 
-  };
+  }
 }

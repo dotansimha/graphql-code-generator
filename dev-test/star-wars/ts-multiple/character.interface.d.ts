@@ -4,12 +4,12 @@ import { Episode } from './episode.enum';
 export interface Character {
   id: string; /* The ID of the character */
   name: string; /* The name of the character */
-  friends: Character[] | null; /* The friends of the character, or an empty list if they have none */
+  friends?: Character[] | null; /* The friends of the character, or an empty list if they have none */
   friendsConnection: FriendsConnection; /* The friends of the character exposed as a connection with edges */
   appearsIn: Episode[]; /* The movies this character appears in */
 }
 
 export interface FriendsConnectionCharacterArgs {
-  first: number | null; 
-  after: string | null; 
+  first?: number | null; 
+  after?: string | null; 
 }

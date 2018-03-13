@@ -1,2 +1,5 @@
 /* Units of height */
-export type LengthUnit = "METER" | "FOOT";
+export enum LengthUnit {
+  METER = "METER",
+  FOOT = "FOOT",
+}

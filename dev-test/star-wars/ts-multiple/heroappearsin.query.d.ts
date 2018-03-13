@@ -4,10 +4,12 @@ export namespace HeroAppearsIn {
   }
 
   export type Query = {
-    hero: Hero | null; 
-  } 
+    __typename?: "Query";
+    hero?: Hero | null; 
+  }
 
   export type Hero = {
+    __typename?: "Character";
     name: string; 
     appearsIn: Episode[]; 
   }

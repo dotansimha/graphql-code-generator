@@ -1,19 +1,22 @@
 import { Episode } from './episode.enum';
 export namespace HeroAndFriendsNames {
   export type Variables = {
-    episode: Episode | null;
+    episode?: Episode | null;
   }
 
   export type Query = {
-    hero: Hero | null; 
-  } 
+    __typename?: "Query";
+    hero?: Hero | null; 
+  }
 
   export type Hero = {
+    __typename?: "Character";
     name: string; 
-    friends: Friends[] | null; 
+    friends?: Friends[] | null; 
   }
 
   export type Friends = {
+    __typename?: "Character";
     name: string; 
   }
 }

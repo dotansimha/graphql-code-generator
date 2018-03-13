@@ -3,11 +3,13 @@ export namespace HumanWithNullHeight {
   }
 
   export type Query = {
-    human: Human | null; 
-  } 
+    __typename?: "Query";
+    human?: Human | null; 
+  }
 
   export type Human = {
+    __typename?: "Human";
     name: string; 
-    mass: number | null; 
+    mass?: number | null; 
   }
 }

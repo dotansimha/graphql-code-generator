@@ -1,22 +1,26 @@
 import { Episode } from './episode.enum';
 export namespace HeroDetails {
   export type Variables = {
-    episode: Episode | null;
+    episode?: Episode | null;
   }
 
   export type Query = {
-    hero: Hero | null; 
-  } 
+    __typename?: "Query";
+    hero?: Hero | null; 
+  }
 
   export type Hero = {
+    __typename?: HumanInlineFragment["__typename"] | DroidInlineFragment["__typename"];
     name: string; 
-  } & HumanInlineFragment & DroidInlineFragment
+  } & (HumanInlineFragment | DroidInlineFragment)
 
   export type HumanInlineFragment = {
-    height: number | null; 
+    __typename?: "Human";
+    height?: number | null; 
   }
 
   export type DroidInlineFragment = {
-    primaryFunction: string | null; 
+    __typename?: "Droid";
+    primaryFunction?: string | null; 
   }
 }

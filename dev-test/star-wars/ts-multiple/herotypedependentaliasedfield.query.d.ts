@@ -1,21 +1,23 @@
 import { Episode } from './episode.enum';
 export namespace HeroTypeDependentAliasedField {
   export type Variables = {
-    episode: Episode | null;
+    episode?: Episode | null;
   }
 
   export type Query = {
-    hero: Hero | null; 
-  } 
+    __typename?: "Query";
+    hero?: Hero | null; 
+  }
 
-  export type Hero = {
-  } & HumanInlineFragment & DroidInlineFragment
+  export type Hero =HumanInlineFragment | DroidInlineFragment
 
   export type HumanInlineFragment = {
-    property: string | null; 
+    __typename?: "Human";
+    property?: string | null; 
   }
 
   export type DroidInlineFragment = {
-    property: string | null; 
+    __typename?: "Droid";
+    property?: string | null; 
   }
 }

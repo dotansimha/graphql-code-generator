@@ -1,38 +1,46 @@
 import { Episode } from './episode.enum';
 export namespace HeroParentTypeDependentField {
   export type Variables = {
-    episode: Episode | null;
+    episode?: Episode | null;
   }
 
   export type Query = {
-    hero: Hero | null; 
-  } 
+    __typename?: "Query";
+    hero?: Hero | null; 
+  }
 
   export type Hero = {
+    __typename?: HumanInlineFragment["__typename"] | DroidInlineFragment["__typename"];
     name: string; 
-  } & HumanInlineFragment & DroidInlineFragment
+  } & (HumanInlineFragment | DroidInlineFragment)
 
   export type HumanInlineFragment = {
-    friends: Friends[] | null; 
+    __typename?: "Human";
+    friends?: Friends[] | null; 
   }
 
   export type Friends = {
+    __typename?: _HumanInlineFragment["__typename"];
     name: string; 
-  } & _HumanInlineFragment
+  } & (_HumanInlineFragment)
 
   export type _HumanInlineFragment = {
-    height: number | null; 
+    __typename?: "Human";
+    height?: number | null; 
   }
 
   export type DroidInlineFragment = {
-    friends: _Friends[] | null; 
+    __typename?: "Droid";
+    friends?: _Friends[] | null; 
   }
 
   export type _Friends = {
+    __typename?: __HumanInlineFragment["__typename"];
     name: string; 
-  } & __HumanInlineFragment
+  } & (__HumanInlineFragment)
 
   export type __HumanInlineFragment = {
-    height: number | null; 
+    __typename?: "Human";
+    height?: number | null; 
   }
 }

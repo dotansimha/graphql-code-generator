@@ -2,13 +2,13 @@ import { Episode } from './episode.enum';
 import { HeroDetails } from './herodetails.fragment';
 export namespace HeroDetailsWithFragment {
   export type Variables = {
-    episode: Episode | null;
+    episode?: Episode | null;
   }
 
   export type Query = {
-    hero: Hero | null; 
-  } 
+    __typename?: "Query";
+    hero?: Hero | null; 
+  }
 
-  export type Hero = {
-  } & HeroDetails.Fragment
+  export type Hero =HeroDetails.Fragment
 }
