@@ -128,7 +128,7 @@ describe('resolveFields', () => {
     expect(result[0].name).toBe('f1');
     expect(result[0].type).toBe('String');
     expect(result[0].isArray).toBeTruthy();
-    expect(result[0].isRequired).toBeTruthy();
+    expect(result[0].isRequired).toBeFalsy();
   });
 
   it('should identify other custom types', () => {
