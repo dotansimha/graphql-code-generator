@@ -12,7 +12,7 @@
     "test": "lerna run test"
   },
   "dependencies": {
-    "lerna": "^2.9.0"
+    "lerna": "2.9.0"
   },
   "workspaces": [
     "packages/*"
