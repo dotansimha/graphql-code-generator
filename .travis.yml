@@ -1,14 +1,13 @@
 sudo: required
 language: node_js
+cache: yarn
 node_js:
-  - 6
-  - 7
   - 8
+  - 9
 install:
-  - npm install
-  - npm run clean
+  - yarn
+  - yarn clean
 before_script:
-  - npm run bootstrap
-  - npm run build
+  - yarn build
 script:
-  - npm run test
+  - yarn test
