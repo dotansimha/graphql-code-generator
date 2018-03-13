@@ -5,6 +5,7 @@ import { initCLI, executeWithOptions, cliError } from './cli';
 import { FileOutput } from 'graphql-codegen-compiler';
 import { debugLog } from 'graphql-codegen-core';
 import { fileExists } from './utils/file-exists';
+import { prettify } from './utils/prettier';
 
 const options = initCLI(process.argv);
 
@@ -18,7 +19,7 @@ executeWithOptions(options)
       console.log(`Generation result is: `, generationResult);
     }
 
-    generationResult.forEach((result: FileOutput) => {
+    generationResult.forEach(async (result: FileOutput) => {
       if (!options.overwrite && fileExists(result.filename)) {
         console.log(`Generated file skipped (already exists, and no-overwrite flag is ON): ${result.filename}`);
 
@@ -33,7 +34,7 @@ executeWithOptions(options)
         return;
       }
 
-      fs.writeFileSync(result.filename, result.content);
+      fs.writeFileSync(result.filename, await prettify(result.filename, result.content));
       console.log(`Generated file written to ${result.filename}`);
     });
   })

@@ -35,11 +35,11 @@ If you are looking for the **Flow** / **Swift** generators, please note that we 
 
 To install the generator, use the following:
 
-    $ npm install --save-dev graphql-code-generator
+    $ npm install --save-dev graphql-code-generator graphql
 
 Or, using Yarn:
 
-    $ yarn add -D graphql-code-generator
+    $ yarn add -D graphql-code-generator graphql
 
 And then to use it, execute if from NPM script, for use `$(npm bin)/gql-gen ...` from the command line.
 
@@ -123,6 +123,13 @@ GraphQL code generator implementation is separated to multiple NPM packages:
 | `graphql-codegen-compiler` | [README](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/graphql-codegen-compiler/README.md) |
 | `graphql-codegen-generators` | [README](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/graphql-codegen-generators/README.md) |
 | `graphql-codegen-cli` | [README](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/graphql-codegen-cli/README.md) |
+
+## Prettier Support
+
+The generator will automatically executes `prettier` on the output code, when possible. It will automatically use the correct parser according to the file extensions of the output file.
+In case of an error, prettier will be ignored, and will write the file as-is.
+
+If you project has [prettier config file](https://prettier.io/docs/en/configuration.html), the generator will use it and respect your code-style.
 
 ## TypeScript Support
 
