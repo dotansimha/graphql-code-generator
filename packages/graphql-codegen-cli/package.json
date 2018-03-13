@@ -12,9 +12,9 @@
   "scripts": {
     "clean": "rimraf ./dist",
     "lint": "tslint src/**/*.ts",
-    "prebuild": "npm run clean && npm run lint",
+    "prebuild": "yarn clean && yarn lint",
     "build": "tsc",
-    "prestart": "npm run build",
+    "prestart": "yarn build",
     "start": "cd dist && node gql-gen.js",
     "debug": "cd dist && node --inspect --debug-brk gql-gen.js",
     "test": "jest --no-cache --verbose --runInBand"
@@ -70,7 +70,7 @@
     "@types/glob": "^5.0.30",
     "@types/jest": "^22.2.0",
     "@types/mkdirp": "^0.3.29",
-    "@types/node": "7",
+    "@types/node": "9.7.4",
     "@types/request": "^0.0.45",
     "graphql": "^0.13.1",
     "graphql-tag": "^2.8.0",

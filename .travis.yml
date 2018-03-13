@@ -6,8 +6,5 @@ node_js:
   - 9
 install:
   - yarn
-  - yarn clean
-before_script:
-  - yarn build
 script:
   - yarn test

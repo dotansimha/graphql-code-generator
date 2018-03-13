@@ -24,7 +24,7 @@ To build this package and the generators template, start by installing the packa
 Then, you can use the existing NPM scripts to build the package:
 
 ```
-    $ npm run build
+    $ yarn build
     // Or, with Yarn
     $ yarn build
 ```
@@ -111,7 +111,7 @@ You also need to specify the `outFile` of the package, which is the default file
 
 When using `MULTIPLE_FILES`, you need to specify a template for each available compilation context (refer to `templates` section for the list of available contexts).
 
-You also need to specify the `filesExtension` for the generated files. 
+You also need to specify the `filesExtension` for the generated files.
 
 ### templates
 
@@ -136,12 +136,12 @@ Also, all templates specified under `templates` will be loaded as Handlebars tem
 
 ```typescript
 const config = {
-  // ... 
+  // ...
   templates: {
     index: '{{>selectionSet}}',
     selectionSet: 'Hello',
   },
-  // ... 
+  // ...
 };
 ```
 
@@ -149,12 +149,12 @@ The `index` template loads `selectionSet` template, and it can also provide a co
 
 ```typescript
 const config = {
-  // ... 
+  // ...
   templates: {
     index: '{{>selectionSet types}}',
     selectionSet: '{{#each this }} Type name: {{ name }}{{/each}}',
   },
-  // ... 
+  // ...
 };
 ```
 

@@ -76,13 +76,9 @@
   dependencies:
     moment "*"
 
-"@types/node@*", "@types/node@9.4.7", "@types/node@^9.4.6":
+"@types/node@*", "@types/node@9.4.7", "@types/node@9.7.4", "@types/node@^9.4.6":
   version "9.4.7"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-9.4.7.tgz#57d81cd98719df2c9de118f2d5f3b1120dcd7275"
-
-"@types/node@7":
-  version "7.0.56"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-7.0.56.tgz#b6b659049191822be43c14610c1785d4b9cddecf"
 
 "@types/request@^0.0.45":
   version "0.0.45"

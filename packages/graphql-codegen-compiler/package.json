@@ -12,7 +12,7 @@
     "@types/change-case": "^2.3.1",
     "@types/common-tags": "^1.2.5",
     "@types/jest": "^22.2.0",
-    "@types/node": "7",
+    "@types/node": "9.7.4",
     "graphql": "^0.13.1",
     "graphql-tag": "^2.8.0",
     "graphql-tools": "^2.21.0",
