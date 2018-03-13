@@ -1,7 +1,6 @@
-import { DefinitionNode, DocumentNode, FragmentDefinitionNode, GraphQLSchema, OperationDefinitionNode, printType } from 'graphql';
+import { Kind, DefinitionNode, DocumentNode, FragmentDefinitionNode, GraphQLSchema, OperationDefinitionNode } from 'graphql';
 import { Document } from '../types';
 import { transformFragment } from './transform-fragment-document';
-import { OPERATION_DEFINITION, FRAGMENT_DEFINITION } from 'graphql/language/kinds';
 import { transformOperation } from './transform-operation';
 import { debugLog } from '../debugging';
 
@@ -18,12 +17,12 @@ export function transformDocument(schema: GraphQLSchema, documentNode: DocumentN
   debugLog(`[transformDocument] transforming total of ${definitions.length} definitions...`);
 
   definitions.forEach((definitionNode: DefinitionNode) => {
-    if (definitionNode.kind === OPERATION_DEFINITION) {
+    if (definitionNode.kind === Kind.OPERATION_DEFINITION) {
       result.operations.push(transformOperation(schema, definitionNode as OperationDefinitionNode));
-    } else if (definitionNode.kind === FRAGMENT_DEFINITION) {
+    } else if (definitionNode.kind === Kind.FRAGMENT_DEFINITION) {
       result.fragments.push(transformFragment(schema, definitionNode as FragmentDefinitionNode));
     } else {
-      console.log(`WARNING: It seems like you provided a GraphQL schema instead of GraphQL document: `);
+      console.log(`WARNING: It seems like you provided an invalid GraphQL document: `);
       console.log(definitionNode);
     }
   });

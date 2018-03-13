@@ -9,28 +9,26 @@
     "prebuild": "rimraf ./dist/"
   },
   "devDependencies": {
-    "@types/change-case": "^2.3.1",
-    "@types/common-tags": "^1.2.5",
-    "@types/jest": "^20.0.2",
-    "@types/node": "7",
-    "graphql": "^0.10.4",
-    "graphql-tag": "^2.4.2",
-    "graphql-tools": "^1.0.0",
-    "jest": "^20.0.4",
-    "rimraf": "^2.6.1",
-    "tslint": "^5.4.3",
-    "typescript": "^2.4.1"
+    "@types/common-tags": "1.4.0",
+    "@types/jest": "22.2.0",
+    "@types/node": "9.4.7",
+    "graphql": "0.13.1",
+    "graphql-tag": "2.8.0",
+    "graphql-tools": "2.21.0",
+    "jest": "22.4.2",
+    "rimraf": "2.6.2",
+    "ts-jest": "22.4.1",
+    "tslint": "5.9.1",
+    "typescript": "2.7.2"
   },
   "dependencies": {
-    "@types/handlebars": "^4.0.33",
-    "@types/moment": "^2.13.0",
-    "change-case": "^3.0.1",
-    "common-tags": "^1.4.0",
-    "graphql-codegen-compiler": "0.8.14",
+    "@types/handlebars": "4.0.36",
+    "change-case": "3.0.2",
+    "common-tags": "1.7.2",
     "graphql-codegen-core": "0.8.14",
     "graphql-codegen-generators": "0.8.14",
-    "handlebars": "^4.0.10",
-    "moment": "^2.19.2"
+    "handlebars": "4.0.11",
+    "moment": "2.21.0"
   },
   "jest": {
     "moduleFileExtensions": [

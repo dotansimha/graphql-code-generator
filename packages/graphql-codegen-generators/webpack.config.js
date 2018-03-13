@@ -8,6 +8,7 @@ module.exports = {
     filename: "index.js",
     libraryTarget: "commonjs"
   },
+  mode: 'production',
   target: 'node',
   externals: [nodeExternals()],
   resolve: {
@@ -15,7 +16,7 @@ module.exports = {
   },
   devtool: 'source-map',
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.tsx?$/,
         loader: 'awesome-typescript-loader'

@@ -12,8 +12,8 @@ declare global {
 }
 
 function toBeSimilarStringTo(received: string, argument: string) {
-  const strippedA = oneLine`${received}`;
-  const strippedB = oneLine`${argument}`;
+  const strippedA = (oneLine`${received}`).replace(/\s\s+/g, ' ');;
+  const strippedB = (oneLine`${argument}`).replace(/\s\s+/g, ' ');;
 
   if (strippedA === strippedB) {
     return {

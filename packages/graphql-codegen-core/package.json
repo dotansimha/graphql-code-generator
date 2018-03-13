@@ -6,9 +6,9 @@
   "scripts": {
     "clean": "rimraf ./dist",
     "lint": "tslint src/**/*.ts",
-    "prebuild": "npm run clean && npm run lint",
+    "prebuild": "yarn clean && yarn lint",
     "build": "tsc",
-    "prestart": "npm run build",
+    "prestart": "yarn build",
     "start": "cd dist && node gql-gen.js",
     "debug": "cd dist && node --inspect --debug-brk gql-gen.js",
     "test": "jest --no-cache --verbose --runInBand"
@@ -60,23 +60,23 @@
     ]
   },
   "dependencies": {
-    "graphql-tag": "^2.6.1",
-    "graphql-tools": "^2.14.1"
+    "graphql-tag": "2.8.0",
+    "graphql-tools": "2.21.0"
   },
   "peerDependencies": {
-    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0"
+    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0"
   },
   "devDependencies": {
-    "@types/graphql": "^0.11.7",
-    "@types/jest": "^21.1.9",
-    "@types/node": "7",
-    "apollo-link": "^1.0.7",
-    "graphql": "^0.12.3",
-    "jest": "^22.0.4",
-    "rimraf": "^2.6.2",
-    "ts-jest": "^22.0.0",
-    "tslint": "^5.4.3",
-    "typescript": "^2.6.2"
+    "@types/graphql": "0.12.4",
+    "@types/jest": "22.2.0",
+    "@types/node": "9.4.7",
+    "apollo-link": "1.2.1",
+    "graphql": "0.13.1",
+    "jest": "22.4.2",
+    "rimraf": "2.6.2",
+    "ts-jest": "22.4.1",
+    "tslint": "5.9.1",
+    "typescript": "2.7.2"
   },
   "typings": "dist/index.d.ts",
   "typescript": {
