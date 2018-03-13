@@ -75,6 +75,7 @@ export const initCLI = (args): any => {
     .option('-c, --no-documents', 'Generates only server side schema types, without client side documents')
     .option('-o, --out <path>', 'Output file(s) path', String, './')
     .option('-r, --require [require]', 'module to preload (option can be repeated)', collect, [])
+    .option('-ow, --no-overwrite', 'Skip file writing if the output file(s) already exists in path')
     .arguments('<options> [documents...]')
     .parse(args);
 

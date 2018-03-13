@@ -4,6 +4,7 @@ import * as fs from 'fs';
 import { initCLI, executeWithOptions, cliError } from './cli';
 import { FileOutput } from 'graphql-codegen-compiler';
 import { debugLog } from 'graphql-codegen-core';
+import { fileExists } from './utils/file-exists';
 
 const options = initCLI(process.argv);
 
@@ -18,6 +19,12 @@ executeWithOptions(options)
     }
 
     generationResult.forEach((result: FileOutput) => {
+      if (!options.overwrite && fileExists(result.filename)) {
+        console.log(`Generated file skipped (already exists, and no-overwrite flag is ON): ${result.filename}`);
+
+        return;
+      }
+
       fs.writeFileSync(result.filename, result.content);
       console.log(`Generated file written to ${result.filename}`);
     });
