@@ -25,6 +25,14 @@ executeWithOptions(options)
         return;
       }
 
+      const content = result.content.trim();
+
+      if (content.length === 0) {
+        console.log(`Generated file skipped (empty): ${result.filename}`);
+
+        return;
+      }
+
       fs.writeFileSync(result.filename, result.content);
       console.log(`Generated file written to ${result.filename}`);
     });
