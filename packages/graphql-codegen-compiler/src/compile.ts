@@ -28,7 +28,7 @@ export function compileTemplate(config: GeneratorConfig, templateContext: Schema
   Object.keys(templates).forEach((templateName: string) => {
     debugLog(`[compileTemplate] register partial template ${templateName}`);
 
-    registerPartial(templateName, templates[templateName]);
+    registerPartial(templateName, templates[templateName].trim());
   });
 
   let mergedDocuments: Document;
