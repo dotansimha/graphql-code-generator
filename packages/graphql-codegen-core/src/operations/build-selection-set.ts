@@ -4,10 +4,10 @@ import {
   SelectionSetItem, isInlineFragmentNode, isFieldNode
 } from '../types';
 import {
+  Kind,
   FieldNode, FragmentSpreadNode, getNamedType, GraphQLSchema, GraphQLType, InlineFragmentNode, SelectionNode,
   SelectionSetNode, typeFromAST
 } from 'graphql';
-import { FIELD, FRAGMENT_SPREAD, INLINE_FRAGMENT } from 'graphql/language/kinds';
 import { getFieldDef } from '../utils/get-field-def';
 import { resolveType } from '../schema/resolve-type';
 import { debugLog } from '../debugging';
@@ -30,7 +30,7 @@ export function separateSelectionSet(selectionSet: SelectionSetItem[]): any {
 
 export function buildSelectionSet(schema: GraphQLSchema, rootObject: GraphQLType, node: SelectionSetNode): SelectionSetItem[] {
   return ((node && node.selections ? node.selections : []) as SelectionNode[]).map<SelectionSetItem>((selectionNode: SelectionNode): SelectionSetItem => {
-    if (selectionNode.kind === FIELD) {
+    if (selectionNode.kind === Kind.FIELD) {
       const fieldNode = selectionNode as FieldNode;
       const name = fieldNode.alias && fieldNode.alias.value ? fieldNode.alias.value : fieldNode.name.value;
       debugLog(`[buildSelectionSet] transforming FIELD with name ${name}`);
@@ -65,7 +65,7 @@ export function buildSelectionSet(schema: GraphQLSchema, rootObject: GraphQLType
         isInputType: indicators.isInputType,
         isType: indicators.isType,
       } as SelectionSetFieldNode;
-    } else if (selectionNode.kind === FRAGMENT_SPREAD) {
+    } else if (selectionNode.kind === Kind.FRAGMENT_SPREAD) {
       const fieldNode = selectionNode as FragmentSpreadNode;
       debugLog(`[buildSelectionSet] transforming FRAGMENT_SPREAD with name ${fieldNode.name.value}...`);
 
@@ -76,7 +76,7 @@ export function buildSelectionSet(schema: GraphQLSchema, rootObject: GraphQLType
         isLeaf: true,
         fragmentName: fieldNode.name.value,
       } as SelectionSetFragmentSpread;
-    } else if (selectionNode.kind === INLINE_FRAGMENT) {
+    } else if (selectionNode.kind === Kind.INLINE_FRAGMENT) {
       debugLog(`[buildSelectionSet] transforming INLINE_FRAGMENT...`);
 
       const fieldNode = selectionNode as InlineFragmentNode;
