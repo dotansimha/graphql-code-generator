@@ -24,5 +24,9 @@
   "lint-staged": {
     "*.{ts,tsx}": "tslint",
     "*.{js,json,css,md,ts,tsx}": ["prettier --write", "git add"]
+  },
+  "prettier": {
+    "printWidth": 120,
+    "singleQuote": true
   }
 }
