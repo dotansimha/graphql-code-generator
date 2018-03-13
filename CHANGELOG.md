@@ -1,9 +1,16 @@
 <a name="NEXT"></a>
 ## NEXT
 
+<a name="0.8.15"></a>
+## [0.8.15](https://github.com/dotansimha/graphql-codegen/compare/0.8.14...0.8.15) (2018-03-13)
+
 * Added support for generator-specific config in `gql-gen.json` file.
 * Generated config is now exposed in the template under the name `config` in the root context.
 * Added `currentTime` to the context.
+* Added support for GraphQL 0.13
+* Updated all dependencies
+* Added support for using custom `require` using `--require` flag (Thanks Jonas Kello)
+* Update TypeScript enum template (Thanks @darthtrevino)
 
 ### Breaking Changes
 
@@ -69,14 +76,14 @@
 <a name="0.8.4"></a>
 ## [0.8.4](https://github.com/dotansimha/graphql-codegen/compare/0.8.3...0.8.4) (2017-07-19)
 
-* Fixed issue with generated result missing Fragment spread 
+* Fixed issue with generated result missing Fragment spread
 * Fixed issue with wrong output for GraphQL primitives
 * Fixed issue with default output file overrides the `out` cli parameter
 
 <a name="0.8.3"></a>
 ## [0.8.3](https://github.com/dotansimha/graphql-codegen/compare/0.8.2...0.8.3) (2017-07-19)
 
-* Fixed issue with __typename in selectionSet 
+* Fixed issue with __typename in selectionSet
 
 <a name="0.8.2"></a>
 ## [0.8.2](https://github.com/dotansimha/graphql-codegen/compare/0.8.1...0.8.2) (2017-07-18)
