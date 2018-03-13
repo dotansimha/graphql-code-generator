@@ -1,16 +1,19 @@
 {
   "name": "graphql-code-generator",
   "version": "0.8.0",
+  "private": true,
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "author": "dotansimha <dotansimha@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "clean": "lerna clean --yes",
-    "bootstrap": "lerna bootstrap",
+    "clean": "lerna clean --yes && rm -rf node_modules",
     "build": "lerna run build",
     "test": "lerna run test"
   },
   "dependencies": {
-    "lerna": "^2.0.0"
-  }
+    "lerna": "^2.9.0"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
 }

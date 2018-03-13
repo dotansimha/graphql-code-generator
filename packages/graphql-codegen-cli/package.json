@@ -68,19 +68,20 @@
   "devDependencies": {
     "@types/commander": "^2.9.1",
     "@types/glob": "^5.0.30",
-    "@types/jest": "^20.0.2",
+    "@types/jest": "^22.2.0",
     "@types/mkdirp": "^0.3.29",
     "@types/node": "7",
     "@types/request": "^0.0.45",
     "graphql": "^0.12.3",
     "graphql-tag": "^2.4.2",
-    "jest": "^20.0.4",
+    "jest": "^22.4.2",
     "rimraf": "^2.6.1",
+    "ts-jest": "^22.4.1",
     "tslint": "^5.4.3",
     "typescript": "^2.4.1"
   },
   "peerDependencies": {
-    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0"
+    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || || ^0.13.0"
   },
   "dependencies": {
     "commander": "^2.11.0",
