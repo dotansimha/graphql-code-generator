@@ -1,4 +1,4 @@
-import { registerHelper } from 'handlebars';
+import { registerHelper, SafeString } from 'handlebars';
 import { camelCase, pascalCase, snakeCase, titleCase } from 'change-case';
 import { oneLineTrim } from 'common-tags';
 import {
@@ -24,6 +24,10 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
 
   registerHelper('toPrimitive', function (type) {
     return config.primitives[type] || type || '';
+  });
+
+  registerHelper('stringify', function (obj) {
+    return new SafeString(JSON.stringify(obj));
   });
 
   registerHelper('times', function (n, block) {
