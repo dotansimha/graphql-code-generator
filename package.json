@@ -9,12 +9,20 @@
     "postinstall": "yarn build",
     "clean": "lerna clean --yes && rm -rf node_modules",
     "build": "lerna run build",
-    "test": "lerna run test"
+    "test": "lerna run test",
+    "lint": "lerna run lint",
+    "precommit": "lint-staged"
   },
   "dependencies": {
     "lerna": "2.9.0"
   },
-  "workspaces": [
-    "packages/*"
-  ]
+  "workspaces": ["packages/*"],
+  "devDependencies": {
+    "husky": "0.14.3",
+    "lint-staged": "7.0.0"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": "tslint",
+    "*.{js,json,css,md,ts,tsx}": ["prettier --write", "git add"]
+  }
 }
