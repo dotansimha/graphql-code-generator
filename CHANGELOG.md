@@ -1,5 +1,11 @@
 <a name="NEXT"></a>
 
+<a name="0.8.19"></a>
+## [0.8.19](https://github.com/dotansimha/graphql-codegen/compare/0.8.18...0.8.19) (2018-03-13)
+* Ignore commented code in document files
+* Better detection for GraphQL documents usage with `gql` tag.
+* Added prettier support (see README)
+
 <a name="0.8.18"></a>
 ## [0.8.18](https://github.com/dotansimha/graphql-codegen/compare/0.8.16...0.8.18) (2018-03-13)
 * Added `__typename` to TypeScript templates, with support for inline fragments.
