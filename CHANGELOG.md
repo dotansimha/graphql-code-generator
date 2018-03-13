@@ -1,5 +1,7 @@
 <a name="NEXT"></a>
 
+<a name="0.8.18"></a>
+## [0.8.18](https://github.com/dotansimha/graphql-codegen/compare/0.8.16...0.8.18) (2018-03-13)
 # Added `__typename` to TypeScript templates, with support for inline fragments.
 # Added `stringify` Handlebars helpers for easy debugging.
 # Codegen compiler: trim templates before using it.
