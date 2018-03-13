@@ -1,0 +1,6 @@
+query myQuery {
+  data {
+    field1
+    field2
+  }
+}
