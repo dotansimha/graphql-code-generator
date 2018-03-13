@@ -6,6 +6,8 @@
 # Refactor parts of the TypeScript templates
 # Change inline fragments behavior in generated TypeScript code to use `|` instead of `&`.
 # Added `--no-overwrite` flag to skip overwriting existing files
+# Generator will not throw an error if a glob expression does not match any GraphQL document files
+# Generator will not write a file to file system if the content is empty
 
 <a name="0.8.16"></a>
 ## [0.8.16](https://github.com/dotansimha/graphql-codegen/compare/0.8.15...0.8.16) (2018-03-13)
