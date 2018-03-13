@@ -20,12 +20,16 @@ const EXTENSION_TO_PARSER = {
 };
 
 export async function prettify(filePath: string, content: string): Promise<string> {
-  const fileExtension = path.extname(filePath).slice(1);
-  const parser = EXTENSION_TO_PARSER[fileExtension];
-  const config = await prettier.resolveConfig(process.cwd(), { useCache: true, editorconfig: true });
+  try {
+    const fileExtension = path.extname(filePath).slice(1);
+    const parser = EXTENSION_TO_PARSER[fileExtension];
+    const config = await prettier.resolveConfig(process.cwd(), { useCache: true, editorconfig: true });
 
-  return prettier.format(content, {
-    parser,
-    ...(config || {}),
-  });
+    return prettier.format(content, {
+      parser,
+      ...(config || {}),
+    });
+  } catch (e) {
+    return content;
+  }
 }
