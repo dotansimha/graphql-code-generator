@@ -1,0 +1,35 @@
+{{#each scalars}}
+
+{{ toComment description }}
+export type {{ name }} = any;
+{{/each}}
+{{#each interfaces}}
+  {{~> type }}
+{{/each}}
+{{#each types}}
+  {{~> type }}
+{{/each}}
+{{#each inputTypes}}
+  {{~> type }}
+{{/each}}
+{{~#each types}}
+  {{~#each fields}}
+    {{~# if hasArguments }}
+export type {{ toPascalCase name }}{{ toPascalCase ../name }}Args = {
+{{#each arguments}}
+  {{ name }}{{#unless isRequired}}?{{/unless}}: {{ toPrimitive type }}{{#if isArray}}[]{{/if}}{{#unless isRequired}}{{/unless}}; {{ toComment description }}
+{{/each}}
+}
+    {{/if}}
+  {{/each}}
+{{/each}}
+{{#each enums}}
+{{ toComment description }}
+export type {{ name }} = {{#each values }}"{{ value }}"{{#unless @last}} | {{/unless}}{{/each}};
+
+{{/each}}
+{{#each unions}}
+{{ toComment description }}
+export type {{ name }} = {{#each possibleTypes}}{{this}}{{#unless @last}} | {{/unless}}{{/each}};
+
+{{/each}}
