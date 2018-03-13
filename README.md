@@ -1,6 +1,6 @@
 # GraphQL Code Generator
 
-[![npm version](https://badge.fury.io/js/graphql-code-generator.svg)](https://badge.fury.io/js/graphql-code-generator) [![Build Status](https://travis-ci.org/dotansimha/graphql-code-generator.svg?branch=master)](https://travis-ci.org/dotansimha/graphql-code-generator) [![bitHound Overall Score](https://www.bithound.io/github/dotansimha/graphql-code-generator/badges/score.svg)](https://www.bithound.io/github/dotansimha/graphql-code-generator) [![codebeat badge](https://codebeat.co/badges/ec220cc6-31f0-4a80-85cc-0dfa162d8e53)](https://codebeat.co/projects/github-com-dotansimha-graphql-code-generator) [![bitHound Dependencies](https://www.bithound.io/github/dotansimha/graphql-code-generator/badges/dependencies.svg)](https://www.bithound.io/github/dotansimha/graphql-code-generator/master/dependencies/npm) [![bitHound Dev Dependencies](https://www.bithound.io/github/dotansimha/graphql-code-generator/badges/devDependencies.svg)](https://www.bithound.io/github/dotansimha/graphql-code-generator/master/dependencies/npm) 
+[![npm version](https://badge.fury.io/js/graphql-code-generator.svg)](https://badge.fury.io/js/graphql-code-generator) [![Build Status](https://travis-ci.org/dotansimha/graphql-code-generator.svg?branch=master)](https://travis-ci.org/dotansimha/graphql-code-generator) [![bitHound Overall Score](https://www.bithound.io/github/dotansimha/graphql-code-generator/badges/score.svg)](https://www.bithound.io/github/dotansimha/graphql-code-generator) [![codebeat badge](https://codebeat.co/badges/ec220cc6-31f0-4a80-85cc-0dfa162d8e53)](https://codebeat.co/projects/github-com-dotansimha-graphql-code-generator) [![bitHound Dependencies](https://www.bithound.io/github/dotansimha/graphql-code-generator/badges/dependencies.svg)](https://www.bithound.io/github/dotansimha/graphql-code-generator/master/dependencies/npm) [![bitHound Dev Dependencies](https://www.bithound.io/github/dotansimha/graphql-code-generator/badges/devDependencies.svg)](https://www.bithound.io/github/dotansimha/graphql-code-generator/master/dependencies/npm)
 
 <p align="center">
     <img src="https://github.com/dotansimha/graphql-code-generator/blob/master/logo.png?raw=true" />
@@ -38,7 +38,7 @@ To install the generator, use the following:
     $ npm install --save-dev graphql-code-generator
 
 Or, using Yarn:
-    
+
     $ yarn add -D graphql-code-generator
 
 And then to use it, execute if from NPM script, for use `$(npm bin)/gql-gen ...` from the command line.
@@ -56,26 +56,27 @@ CLI usage is as follow:
 - With local introspection JSON file, generate TypeScript types:
 
         $ gql-gen --file mySchema.json --template typescript --out ./typings/ "./src/**/*.graphql"
-    
+
 - With local introspection JSON file, generate TypeScript files, from GraphQL documents inside code files (`.ts`):
 
         $ gql-gen --file mySchema.json --template typescript --out ./typings/ "./src/**/*.ts"
-    
+
 - With remote GraphQL endpoint that requires Authorization, generate TypeScript types:
 
         $ gql-gen --url http://localhost:3010/graphql --header "Authorization: MY_KEY" --template typescript --out ./typings/ "./src/**/*.graphql"
-        
+
 > Note: when specifying a glob path (with `*` or `**`), make sure to wrap the argument with double quotes (`"..."`).
 
 ### CLI Options
-    
-Allowed flags:    
+
+Allowed flags:
 
 | Flag Name          | Type     | Description                                                                            |
 |--------------------|----------|----------------------------------------------------------------------------------------|
 | -f,--file          | String   | Introspection JSON file, must provide file or URL flag                                 |
 | -u,--url           | String   | GraphQL server endpoint to fetch the introspection from, must provide URL or file flag |
 | -e,--export        | String   | Path to a JavaScript (es5/6) file that exports (as default export) your `GraphQLSchema` object |
+| -r,--require       | String   | Path to a `require` extension, see TypeScript support for more info |
 | -h,--header        | String   | Header to add to the introspection HTTP request when using --url  |
 | -t,--template      | String   | Template name, for example: "typescript" (not required when using `--project`)         |
 | -p,--project       | String   | Project directory with templates (refer to "Project Generation" section)                |
@@ -89,10 +90,10 @@ Allowed flags:
 
 This repository includes some examples for generated outputs under `dev-test` directory.
 
-* Star Wars generated TypeScript output is [available here](https://github.com/dotansimha/graphql-code-generator/blob/master/dev-test/star-wars/types.d.ts).        
-* Star Wars generated TypeScript (multiple files) output is [available here](https://github.com/dotansimha/graphql-code-generator/blob/master/dev-test/star-wars/ts-multiple/).        
-* GitHunt generated TypeScript output is [available here](https://github.com/dotansimha/graphql-code-generator/blob/master/dev-test/githunt/types.d.ts).        
-        
+* Star Wars generated TypeScript output is [available here](https://github.com/dotansimha/graphql-code-generator/blob/master/dev-test/star-wars/types.d.ts).
+* Star Wars generated TypeScript (multiple files) output is [available here](https://github.com/dotansimha/graphql-code-generator/blob/master/dev-test/star-wars/ts-multiple/).
+* GitHunt generated TypeScript output is [available here](https://github.com/dotansimha/graphql-code-generator/blob/master/dev-test/githunt/types.d.ts).
+
 ## Integration
 
 To use inside an existing project, I recommend to add a pre-build script that executes the code generator, inside you `package.json`, for example:
@@ -109,7 +110,7 @@ To use inside an existing project, I recommend to add a pre-build script that ex
 
 ## Custom Templates
 
-To create custom template, or generate a whole project from GraphQL schema, refer to [Custom Templates Documentation](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/graphql-codegen-generators/CUSTOM_TEMPLATES.md) 
+To create custom template, or generate a whole project from GraphQL schema, refer to [Custom Templates Documentation](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/graphql-codegen-generators/CUSTOM_TEMPLATES.md)
 
 ## Packages
 
@@ -121,6 +122,18 @@ GraphQL code generator implementation is separated to multiple NPM packages:
 | `graphql-codegen-compiler` | [README](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/graphql-codegen-compiler/README.md) |
 | `graphql-codegen-generators` | [README](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/graphql-codegen-generators/README.md) |
 | `graphql-codegen-cli` | [README](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/graphql-codegen-cli/README.md) |
+
+## TypeScript Support
+
+If you are using TypeScript and would like to use your GraphQL Schema from a local file (using `--export`), you can use `--require` to load a require extension.
+
+For example, install `ts-node` from NPM and use it this way:
+
+```
+gql-gen --require ts-node/register --template typescript --export ./src/my-schema.ts --out ./src/models/
+```
+
+This way, the file `./src/my-schema.ts` is loaded directly as TypeScript file, and you don't need to compile it to plain JavaScript before using it.
 
 ## Other Environments
 
