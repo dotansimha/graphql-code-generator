@@ -1,7 +1,8 @@
+// tslint:disable-next-line:variable-name
 export const EInputType = {
   SINGLE_FILE: 'SINGLE_FILE',
   MULTIPLE_FILES: 'MULTIPLE_FILES',
-  PROJECT: 'PROJECT',
+  PROJECT: 'PROJECT'
 };
 
 export interface GeneratorConfig {
