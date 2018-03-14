@@ -1,6 +1,6 @@
 {
   "name": "graphql-code-generator",
-  "version": "0.8.19",
+  "version": "0.8.20",
   "license": "MIT",
   "bin": {
     "gql-gen": "dist/index.js"
@@ -44,10 +44,21 @@
   "jest": {
     "verbose": true,
     "collectCoverage": true,
-    "collectCoverageFrom": ["src/**/*.ts"],
+    "collectCoverageFrom": [
+      "src/**/*.ts"
+    ],
     "coverageDirectory": "./tests/coverage",
-    "coveragePathIgnorePatterns": ["/node_modules/", ".*?handlebars-helpers.*?", "src/index.ts", "src/types.ts"],
-    "moduleFileExtensions": ["ts", "tsx", "js"],
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      ".*?handlebars-helpers.*?",
+      "src/index.ts",
+      "src/types.ts"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
     "transform": {
       "^.+\\.(ts|tsx)$": "<rootDir>/tests/jest.typescript.js"
     },
@@ -61,9 +72,9 @@
     "@types/prettier": "1.10.0",
     "commander": "2.15.0",
     "glob": "7.1.2",
-    "graphql-codegen-compiler": "0.8.19",
-    "graphql-codegen-core": "0.8.19",
-    "graphql-codegen-generators": "0.8.19",
+    "graphql-codegen-compiler": "0.8.20",
+    "graphql-codegen-core": "0.8.20",
+    "graphql-codegen-generators": "0.8.20",
     "mkdirp": "0.5.1",
     "prettier": "1.11.1",
     "request": "2.85.0",
