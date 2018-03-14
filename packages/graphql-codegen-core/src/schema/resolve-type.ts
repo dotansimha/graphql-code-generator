@@ -13,7 +13,7 @@ export function isRequired(type: GraphQLOutputType | GraphQLInputType): boolean 
 }
 
 export function isArray(type: GraphQLOutputType | GraphQLInputType): boolean {
-  return (String(type)).indexOf('[') > -1;
+  return String(type).indexOf('[') > -1;
 }
 
 export function resolveType(type: GraphQLType): ResolvedType {
@@ -23,6 +23,6 @@ export function resolveType(type: GraphQLType): ResolvedType {
   return {
     name,
     isRequired: isRequired(type),
-    isArray: isArray(type),
+    isArray: isArray(type)
   };
 }

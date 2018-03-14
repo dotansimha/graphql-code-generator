@@ -1,6 +1,12 @@
 import { FlattenDocument, FlattenFragment, FlattenModel, FlattenOperation } from './types';
 import {
-  Document, Fragment, isFieldNode, isInlineFragmentNode, Operation, SelectionSetFieldNode, SelectionSetInlineFragment,
+  Document,
+  Fragment,
+  isFieldNode,
+  isInlineFragmentNode,
+  Operation,
+  SelectionSetFieldNode,
+  SelectionSetInlineFragment,
   SelectionSetItem
 } from 'graphql-codegen-core';
 import { pascalCase } from 'change-case';
@@ -24,7 +30,7 @@ function buildModelFromField(field: SelectionSetFieldNode, result: FlattenModel[
     inlineFragments: field.inlineFragments,
     hasFields: field.hasFields,
     hasFragmentsSpread: field.hasFragmentsSpread,
-    hasInlineFragments: field.hasInlineFragments,
+    hasInlineFragments: field.hasInlineFragments
   };
 }
 
@@ -39,7 +45,7 @@ function buildModelFromInlineFragment(fragment: SelectionSetInlineFragment, resu
     inlineFragments: fragment.inlineFragments,
     hasFields: fragment.hasFields,
     hasFragmentsSpread: fragment.hasFragmentsSpread,
-    hasInlineFragments: fragment.hasInlineFragments,
+    hasInlineFragments: fragment.hasInlineFragments
   };
 }
 
@@ -71,17 +77,17 @@ export function flattenTypes(document: Document): FlattenDocument {
       return {
         isFlatten: true,
         ...operation,
-        innerModels: flattenSelectionSet(operation.selectionSet),
+        innerModels: flattenSelectionSet(operation.selectionSet)
       } as FlattenOperation;
     }),
     fragments: document.fragments.map<FlattenFragment>((fragment: Fragment): FlattenFragment => {
       return {
         isFlatten: true,
         ...fragment,
-        innerModels: flattenSelectionSet(fragment.selectionSet),
+        innerModels: flattenSelectionSet(fragment.selectionSet)
       } as FlattenFragment;
     }),
     hasOperations: document.hasOperations,
-    hasFragments: document.hasFragments,
+    hasFragments: document.hasFragments
   };
 }

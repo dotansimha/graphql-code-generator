@@ -16,11 +16,13 @@ describe('generateProject', () => {
         ID: 'string'
       },
       templates: {
-        'prefix.js.operation.template': `{{ name }}`,
-      },
+        'prefix.js.operation.template': `{{ name }}`
+      }
     };
 
-    const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('../../dev-test/githunt/schema.json').toString()));
+    const schema = introspectionToGraphQLSchema(
+      JSON.parse(fs.readFileSync('../../dev-test/githunt/schema.json').toString())
+    );
     const context = schemaToTemplateContext(schema);
     const documents = gql`
       query myFeed {
@@ -57,13 +59,14 @@ describe('generateProject', () => {
         ID: 'string'
       },
       templates: {
-        'prefix.js.all.template': `{{ name }}`,
-      },
+        'prefix.js.all.template': `{{ name }}`
+      }
     };
 
-    const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('../../dev-test/githunt/schema.json').toString()));
+    const schema = introspectionToGraphQLSchema(
+      JSON.parse(fs.readFileSync('../../dev-test/githunt/schema.json').toString())
+    );
     const context = schemaToTemplateContext(schema);
-
 
     const documents = gql`
       query myFeed {
@@ -99,13 +102,14 @@ describe('generateProject', () => {
         ID: 'string'
       },
       templates: {
-        'prefix-test.js.operation.template': `{{ name }}`,
-      },
+        'prefix-test.js.operation.template': `{{ name }}`
+      }
     };
 
-    const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('../../dev-test/githunt/schema.json').toString()));
+    const schema = introspectionToGraphQLSchema(
+      JSON.parse(fs.readFileSync('../../dev-test/githunt/schema.json').toString())
+    );
     const context = schemaToTemplateContext(schema);
-
 
     const documents = gql`
       query myFeed {

@@ -1,6 +1,10 @@
 import {
-  Operation, Document, Fragment, SelectionSetFragmentSpread,
-  SelectionSetFieldNode, SelectionSetInlineFragment
+  Operation,
+  Document,
+  Fragment,
+  SelectionSetFragmentSpread,
+  SelectionSetFieldNode,
+  SelectionSetInlineFragment
 } from 'graphql-codegen-core';
 
 export interface FileOutput {

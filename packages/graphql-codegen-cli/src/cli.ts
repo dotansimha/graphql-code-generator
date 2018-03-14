@@ -3,11 +3,7 @@ import { introspectionFromFile } from './loaders/introspection-from-file';
 import { introspectionFromUrl } from './loaders/introspection-from-url';
 import { schemaFromExport } from './loaders/schema-from-export';
 import { documentsFromGlobs } from './utils/documents-glob';
-import {
-  compileTemplate,
-  FileOutput,
-  ALLOWED_CUSTOM_TEMPLATE_EXT,
-} from 'graphql-codegen-compiler';
+import { compileTemplate, FileOutput, ALLOWED_CUSTOM_TEMPLATE_EXT } from 'graphql-codegen-compiler';
 import {
   debugLog,
   introspectionToGraphQLSchema,
@@ -18,11 +14,7 @@ import { loadDocumentsSources } from './loaders/document-loader';
 import * as path from 'path';
 import * as fs from 'fs';
 import { scanForTemplatesInPath } from './loaders/templates-scanner';
-import {
-  EInputType,
-  GeneratorConfig,
-  getGeneratorConfig
-} from 'graphql-codegen-generators';
+import { EInputType, GeneratorConfig, getGeneratorConfig } from 'graphql-codegen-generators';
 import * as mkdirp from 'mkdirp';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
@@ -30,7 +22,7 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 export interface CLIOptions {
   file?: string;
   url?: string;
-  'export'?: string;
+  export?: string;
   args?: string[];
   template?: string;
   project?: string;
@@ -66,9 +58,15 @@ export const initCLI = (args): any => {
     .usage('gql-gen [options]')
     .option('-f, --file <filePath>', 'Parse local GraphQL introspection JSON file')
     .option('-u, --url <graphql-endpoint>', 'Parse remote GraphQL endpoint as introspection file')
-    .option('-u, --export <export-file>', 'Path to a JavaScript (es5/6) file that exports (as default export) your `GraphQLSchema` object')
+    .option(
+      '-u, --export <export-file>',
+      'Path to a JavaScript (es5/6) file that exports (as default export) your `GraphQLSchema` object'
+    )
     .option('-h, --header [header]', 'Header to add to the introspection HTTP request when using --url', collect, [])
-    .option('-t, --template <template-name>', 'Language/platform name templates, or a name of NPM modules that `export default` GqlGenConfig object')
+    .option(
+      '-t, --template <template-name>',
+      'Language/platform name templates, or a name of NPM modules that `export default` GqlGenConfig object'
+    )
     .option('-p, --project <project-path>', 'Project path(s) to scan for custom template files')
     .option('--config <json-file>', 'Codegen configuration file, defaults to: ./gql-gen.json')
     .option('-m, --no-schema', 'Generates only client side documents, without server side schema types')
@@ -105,7 +103,9 @@ export const validateCliOptions = (options: CLIOptions) => {
   }
 
   if (!template && !project) {
-    cliError('Please specify language/platform, using --template flag, or specify --project to generate with custom project!');
+    cliError(
+      'Please specify language/platform, using --template flag, or specify --project to generate with custom project!'
+    );
   }
 };
 
@@ -126,15 +126,13 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
   const modulesToRequire: string[] = options.require || [];
   let schemaExportPromise;
 
-  modulesToRequire.forEach((mod) => require(mod));
+  modulesToRequire.forEach(mod => require(mod));
 
   if (file) {
     schemaExportPromise = introspectionFromFile(file).then(introspectionToGraphQLSchema);
-  }
-  else if (url) {
+  } else if (url) {
     schemaExportPromise = introspectionFromUrl(url, headers).then(introspectionToGraphQLSchema);
-  }
-  else if (fsExport) {
+  } else if (fsExport) {
     schemaExportPromise = schemaFromExport(fsExport);
   }
 
@@ -152,7 +150,10 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
     }
   });
 
-  const transformedDocuments = transformDocument(graphQlSchema, loadDocumentsSources(await documentsFromGlobs(documents)));
+  const transformedDocuments = transformDocument(
+    graphQlSchema,
+    loadDocumentsSources(await documentsFromGlobs(documents))
+  );
   let templateConfig: GeneratorConfig = null;
 
   if (template && template !== '') {
@@ -183,7 +184,9 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
 
   if (project && project !== '') {
     if (config === null) {
-      throw new Error(`To use project feature, please specify --config path or create gql-gen.json in your project root!`);
+      throw new Error(
+        `To use project feature, please specify --config path or create gql-gen.json in your project root!`
+      );
     }
 
     const templates = scanForTemplatesInPath(project, ALLOWED_CUSTOM_TEMPLATE_EXT);
@@ -211,15 +214,15 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
       templates,
       flattenTypes: config.flattenTypes,
       primitives: config.primitives,
-      customHelpers: resolvedHelpers,
+      customHelpers: resolvedHelpers
     };
   }
 
-  templateConfig.config = config ? (config.generatorConfig || {}) : {};
+  templateConfig.config = config ? config.generatorConfig || {} : {};
 
   return compileTemplate(templateConfig, context, [transformedDocuments], {
     generateSchema,
-    generateDocuments,
+    generateDocuments
   }).map((item: FileOutput) => {
     let resultName = item.filename;
 
@@ -248,7 +251,7 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
 
     return {
       content: item.content,
-      filename: resultName,
+      filename: resultName
     };
   });
 };

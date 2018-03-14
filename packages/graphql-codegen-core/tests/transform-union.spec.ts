@@ -4,15 +4,15 @@ import { transformUnion } from '../src/schema/transform-union';
 describe('transformUnion', () => {
   it('should use the correct value of name', () => {
     const bookType = new GraphQLObjectType({
-      name : 'Book',
-      fields : {
-        author : { type : GraphQLString }
+      name: 'Book',
+      fields: {
+        author: { type: GraphQLString }
       }
     });
     const gqlObj = new GraphQLUnionType({
       name: 'MyUnion',
-      types: [ bookType ],
-      resolveType: () => null,
+      types: [bookType],
+      resolveType: () => null
     });
 
     const result = transformUnion({} as any, gqlObj);
@@ -23,16 +23,16 @@ describe('transformUnion', () => {
 
   it('should use the correct value of description', () => {
     const bookType = new GraphQLObjectType({
-      name : 'Book',
-      fields : {
-        author : { type : GraphQLString }
+      name: 'Book',
+      fields: {
+        author: { type: GraphQLString }
       }
     });
     const gqlObj = new GraphQLUnionType({
       name: 'MyUnion',
       description: 'test',
-      types: [ bookType ],
-      resolveType: () => null,
+      types: [bookType],
+      resolveType: () => null
     });
 
     const result = transformUnion({} as any, gqlObj);
@@ -42,16 +42,16 @@ describe('transformUnion', () => {
 
   it('should identify the correct available types for the union', () => {
     const bookType = new GraphQLObjectType({
-      name : 'Book',
-      fields : {
-        author : { type : GraphQLString }
+      name: 'Book',
+      fields: {
+        author: { type: GraphQLString }
       }
     });
     const gqlObj = new GraphQLUnionType({
       name: 'MyUnion',
       description: 'test',
-      types: [ bookType ],
-      resolveType: () => null,
+      types: [bookType],
+      resolveType: () => null
     });
 
     const result = transformUnion({} as any, gqlObj);

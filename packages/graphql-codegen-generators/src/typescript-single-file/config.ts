@@ -14,7 +14,7 @@ const config: GeneratorConfig = {
     schema,
     documents,
     selectionSet,
-    fragments,
+    fragments
   },
   flattenTypes: true,
   primitives: {
@@ -24,7 +24,7 @@ const config: GeneratorConfig = {
     Boolean: 'boolean',
     ID: 'string'
   },
-  outFile: 'types.d.ts',
+  outFile: 'types.d.ts'
 };
 
 export default config;

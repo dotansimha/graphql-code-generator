@@ -1,7 +1,12 @@
 import {
   GraphQLEnumType,
   GraphQLInputObjectType,
-  GraphQLInterfaceType, GraphQLNamedType, GraphQLObjectType, GraphQLScalarType, GraphQLType, GraphQLUnionType,
+  GraphQLInterfaceType,
+  GraphQLNamedType,
+  GraphQLObjectType,
+  GraphQLScalarType,
+  GraphQLType,
+  GraphQLUnionType,
   isLeafType
 } from 'graphql';
 
@@ -23,6 +28,6 @@ export function resolveTypeIndicators(namedType: GraphQLNamedType): NamedTypeInd
     isInterface: namedType instanceof GraphQLInterfaceType,
     isUnion: namedType instanceof GraphQLUnionType,
     isInputType: namedType instanceof GraphQLInputObjectType,
-    isEnum: namedType instanceof GraphQLEnumType,
+    isEnum: namedType instanceof GraphQLEnumType
   };
 }

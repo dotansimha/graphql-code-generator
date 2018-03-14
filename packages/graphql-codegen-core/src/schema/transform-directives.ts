@@ -32,7 +32,7 @@ export function transformDirectives(schema: GraphQLSchema, directives: GraphQLDi
       onInputField: locations.includes(DirectiveLocation.INPUT_FIELD_DEFINITION),
       onArgument: locations.includes(DirectiveLocation.ARGUMENT_DEFINITION),
       onInterface: locations.includes(DirectiveLocation.INTERFACE),
-      onUnion: locations.includes(DirectiveLocation.UNION),
+      onUnion: locations.includes(DirectiveLocation.UNION)
     };
   });
 }

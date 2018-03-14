@@ -6,7 +6,9 @@ import { print } from 'graphql/language/printer';
 import { getDirectives } from '../utils/get-directives';
 
 export function transformFragment(schema: GraphQLSchema, fragment: FragmentDefinitionNode): Fragment {
-  debugLog(`[transformFragment] transforming fragment ${fragment.name.value} on type ${fragment.typeCondition.name.value}`);
+  debugLog(
+    `[transformFragment] transforming fragment ${fragment.name.value} on type ${fragment.typeCondition.name.value}`
+  );
 
   const root = typeFromAST(schema, fragment.typeCondition);
   const name = fragment.name.value;
@@ -21,6 +23,6 @@ export function transformFragment(schema: GraphQLSchema, fragment: FragmentDefin
     document: print(fragment),
     directives,
     usesDirectives: Object.keys(directives).length > 0,
-    ...separateSelectionSet(selectionSet),
+    ...separateSelectionSet(selectionSet)
   } as Fragment;
 }

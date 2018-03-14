@@ -10,7 +10,7 @@ export const definitions = {
   'typescript-single': TypescriptSingleFile,
   // TypeScript multiple files
   'ts-multiple': TypescriptMultiFile,
-  'typescript-multiple': TypescriptMultiFile,
+  'typescript-multiple': TypescriptMultiFile
 };
 
 export function getGeneratorConfig(name: string): GeneratorConfig {

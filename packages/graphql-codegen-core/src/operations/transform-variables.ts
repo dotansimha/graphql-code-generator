@@ -8,7 +8,11 @@ export function transformVariables(schema: GraphQLSchema, definitionNode: Operat
   return definitionNode.variableDefinitions.map<Variable>((variableDefinition: VariableDefinitionNode): Variable => {
     const typeFromSchema = typeFromAST(schema, variableDefinition.type);
     const resolvedType = resolveType(typeFromSchema);
-    debugLog(`[transformVariables] transforming variable ${variableDefinition.variable.name.value} of type ${resolvedType.name}`);
+    debugLog(
+      `[transformVariables] transforming variable ${variableDefinition.variable.name.value} of type ${
+        resolvedType.name
+      }`
+    );
     const namedType = getNamedType(typeFromSchema);
     const indicators = resolveTypeIndicators(namedType);
 
@@ -22,7 +26,7 @@ export function transformVariables(schema: GraphQLSchema, definitionNode: Operat
       isInterface: indicators.isInterface,
       isUnion: indicators.isUnion,
       isInputType: indicators.isInputType,
-      isType: indicators.isType,
+      isType: indicators.isType
     };
   });
 }

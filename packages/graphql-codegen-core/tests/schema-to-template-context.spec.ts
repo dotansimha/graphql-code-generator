@@ -278,7 +278,7 @@ describe('schemaToTemplateContext', () => {
     Object.assign(schema, {
       _typeMap: {
         C: {}
-      },
+      }
     });
 
     expect(() => schemaToTemplateContext(schema)).toThrow();

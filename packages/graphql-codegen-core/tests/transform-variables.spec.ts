@@ -1,7 +1,8 @@
 import gql from 'graphql-tag';
 import { GraphQLSchema } from 'graphql';
 import * as fs from 'fs';
-import { introspectionToGraphQLSchema } from '../src/utils/introspection-to-schema'; import { transformVariables } from '../src/operations/transform-variables';
+import { introspectionToGraphQLSchema } from '../src/utils/introspection-to-schema';
+import { transformVariables } from '../src/operations/transform-variables';
 
 describe('transformVariables', () => {
   let schema: GraphQLSchema;
@@ -17,7 +18,8 @@ describe('transformVariables', () => {
           login
           avatar_url
         }
-      }`;
+      }
+    `;
 
     const variables = transformVariables(schema, query.definitions[0]);
     expect(variables.length).toBe(0);
@@ -30,7 +32,8 @@ describe('transformVariables', () => {
           login
           avatar_url
         }
-      }`;
+      }
+    `;
 
     const variables = transformVariables(schema, query.definitions[0]);
     expect(variables.length).toBe(1);
@@ -47,7 +50,8 @@ describe('transformVariables', () => {
           login
           avatar_url
         }
-      }`;
+      }
+    `;
 
     const variables = transformVariables(schema, query.definitions[0]);
     expect(variables.length).toBe(3);

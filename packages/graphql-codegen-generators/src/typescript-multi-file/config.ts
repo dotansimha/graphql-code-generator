@@ -13,14 +13,14 @@ const config: GeneratorConfig = {
   templates: {
     type,
     inputType: type,
-    'enum': enumTemplate,
-    'interface': type,
+    enum: enumTemplate,
+    interface: type,
     scalar,
     union,
     operation,
     fragment,
     selectionSet,
-    fragments,
+    fragments
   },
   flattenTypes: true,
   primitives: {
@@ -30,7 +30,7 @@ const config: GeneratorConfig = {
     Boolean: 'boolean',
     ID: 'string'
   },
-  filesExtension: 'd.ts',
+  filesExtension: 'd.ts'
 };
 
 export default config;

@@ -7,8 +7,7 @@ export function getFieldDef(parentType, fieldAST): GraphQLField<any, any> {
     return null;
   }
 
-  if (parentType instanceof GraphQLObjectType ||
-    parentType instanceof GraphQLInterfaceType) {
+  if (parentType instanceof GraphQLObjectType || parentType instanceof GraphQLInterfaceType) {
     return parentType.getFields()[name];
   }
 

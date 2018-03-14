@@ -1,7 +1,12 @@
 import {
-  GraphQLEnumType, GraphQLInputObjectType, GraphQLInterfaceType,
-  GraphQLNamedType, GraphQLObjectType, GraphQLScalarType,
-  GraphQLSchema, GraphQLUnionType,
+  GraphQLEnumType,
+  GraphQLInputObjectType,
+  GraphQLInterfaceType,
+  GraphQLNamedType,
+  GraphQLObjectType,
+  GraphQLScalarType,
+  GraphQLSchema,
+  GraphQLUnionType
 } from 'graphql';
 import { Directive, SchemaTemplateContext } from '../types';
 import { objectMapToArray } from '../utils/object-map-to-array';
@@ -17,12 +22,13 @@ import { getDirectives } from '../utils/get-directives';
 const GRAPHQL_PRIMITIVES = ['String', 'Int', 'Boolean', 'ID', 'Float'];
 type GraphQLTypesMap = { [typeName: string]: GraphQLNamedType };
 
-const clearTypes = (typesMap: GraphQLTypesMap): GraphQLTypesMap => Object.keys(typesMap)
-  .filter(key => !GRAPHQL_PRIMITIVES.includes(key) && !key.startsWith('__'))
-  .reduce((obj, key) => {
-    obj[key] = typesMap[key];
-    return obj;
-  }, {});
+const clearTypes = (typesMap: GraphQLTypesMap): GraphQLTypesMap =>
+  Object.keys(typesMap)
+    .filter(key => !GRAPHQL_PRIMITIVES.includes(key) && !key.startsWith('__'))
+    .reduce((obj, key) => {
+      obj[key] = typesMap[key];
+      return obj;
+    }, {});
 
 export function schemaToTemplateContext(schema: GraphQLSchema): SchemaTemplateContext {
   debugLog('[schemaToTemplateContext] started...');
@@ -46,7 +52,7 @@ export function schemaToTemplateContext(schema: GraphQLSchema): SchemaTemplateCo
     hasDefinedDirectives: false,
     rawSchema: schema,
     directives,
-    usesDirectives: Object.keys(directives).length > 0,
+    usesDirectives: Object.keys(directives).length > 0
   };
 
   const rawTypesMap = schema.getTypeMap();
@@ -55,7 +61,7 @@ export function schemaToTemplateContext(schema: GraphQLSchema): SchemaTemplateCo
 
   debugLog(`[schemaToTemplateContext] Got total of ${typesArray.length} types in the GraphQL schema`);
 
-  typesArray.map((graphQlType: { key: string, value: GraphQLNamedType }) => {
+  typesArray.map((graphQlType: { key: string; value: GraphQLNamedType }) => {
     const actualTypeDef = graphQlType.value;
 
     if (actualTypeDef instanceof GraphQLObjectType) {

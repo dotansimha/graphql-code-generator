@@ -16,8 +16,7 @@ export const loadFileContent = (filePath: string): DocumentNode | null => {
 
     if (foundDoc) {
       return parse(new Source(foundDoc, filePath));
-    }
-    else {
+    } else {
       return null;
     }
   } else {

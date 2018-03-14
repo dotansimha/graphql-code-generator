@@ -1,5 +1,6 @@
 import { DocumentNode, GraphQLEnumType, GraphQLObjectType, GraphQLString, OperationDefinitionNode } from 'graphql';
-import gql from 'graphql-tag'; import { getFieldDef } from '../src/utils/get-field-def';
+import gql from 'graphql-tag';
+import { getFieldDef } from '../src/utils/get-field-def';
 
 describe('getFieldDef', () => {
   it('should return the correct field when using GraphQLObjectType', () => {
@@ -8,9 +9,9 @@ describe('getFieldDef', () => {
       fields: {
         f1: {
           type: GraphQLString,
-          name: 'f1',
-        },
-      },
+          name: 'f1'
+        }
+      }
     });
 
     const parsedDocuments = gql`
@@ -19,7 +20,8 @@ describe('getFieldDef', () => {
       }
     `;
 
-    const fieldNode = ((parsedDocuments as DocumentNode).definitions[0] as OperationDefinitionNode).selectionSet.selections[0];
+    const fieldNode = ((parsedDocuments as DocumentNode).definitions[0] as OperationDefinitionNode).selectionSet
+      .selections[0];
     const fieldDef = getFieldDef(type, fieldNode);
 
     expect(fieldDef.type).toBe(GraphQLString);
@@ -31,8 +33,8 @@ describe('getFieldDef', () => {
       name: 'myType',
       values: {
         A: {},
-        B: {},
-      },
+        B: {}
+      }
     });
 
     const parsedDocuments = gql`
@@ -41,7 +43,8 @@ describe('getFieldDef', () => {
       }
     `;
 
-    const fieldNode = ((parsedDocuments as DocumentNode).definitions[0] as OperationDefinitionNode).selectionSet.selections[0];
+    const fieldNode = ((parsedDocuments as DocumentNode).definitions[0] as OperationDefinitionNode).selectionSet
+      .selections[0];
     const fieldDef = getFieldDef(type, fieldNode);
 
     expect(fieldDef).toBe(null);

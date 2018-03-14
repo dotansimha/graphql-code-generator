@@ -5,7 +5,7 @@ describe('transformScalar', () => {
   it('should use the correct value of name', () => {
     const gqlObj = new GraphQLScalarType({
       name: 'name',
-      serialize: () => '',
+      serialize: () => ''
     });
 
     const result = transformScalar({} as any, gqlObj);
@@ -18,7 +18,7 @@ describe('transformScalar', () => {
     const gqlObj = new GraphQLScalarType({
       name: 'name',
       description: 'MyScalar',
-      serialize: () => '',
+      serialize: () => ''
     });
 
     const result = transformScalar({} as any, gqlObj);
@@ -26,5 +26,4 @@ describe('transformScalar', () => {
     expect(result.name).toBe('name');
     expect(result.description).toBe('MyScalar');
   });
-
 });

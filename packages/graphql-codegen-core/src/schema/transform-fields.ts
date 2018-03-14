@@ -10,7 +10,7 @@ import { getDirectives } from '../utils/get-directives';
 export function resolveFields(schema: GraphQLSchema, rawFields: GraphQLFieldMap<any, any>): Field[] {
   const fieldsArray = objectMapToArray<GraphQLField<any, any>>(rawFields);
 
-  return fieldsArray.map<Field>((item: { key: string, value: GraphQLField<any, any> }): Field => {
+  return fieldsArray.map<Field>((item: { key: string; value: GraphQLField<any, any> }): Field => {
     const type = resolveType(item.value.type);
     const resolvedArguments = resolveArguments(schema, item.value.args || []);
     const namedType = getNamedType(item.value.type);
@@ -34,7 +34,7 @@ export function resolveFields(schema: GraphQLSchema, rawFields: GraphQLFieldMap<
       isInputType: indicators.isInputType,
       isType: indicators.isType,
       directives,
-      usesDirectives: Object.keys(directives).length > 0,
+      usesDirectives: Object.keys(directives).length > 0
     };
   });
 }

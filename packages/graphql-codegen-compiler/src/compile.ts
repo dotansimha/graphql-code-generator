@@ -10,10 +10,15 @@ import { cleanTemplateComments } from './clean-template';
 
 export const DEFAULT_SETTINGS: Settings = {
   generateSchema: true,
-  generateDocuments: true,
+  generateDocuments: true
 };
 
-export function compileTemplate(config: GeneratorConfig, templateContext: SchemaTemplateContext, documents: Document[] = [], settings: Settings = DEFAULT_SETTINGS): FileOutput[] {
+export function compileTemplate(
+  config: GeneratorConfig,
+  templateContext: SchemaTemplateContext,
+  documents: Document[] = [],
+  settings: Settings = DEFAULT_SETTINGS
+): FileOutput[] {
   if (!config) {
     throw new Error(`compileTemplate requires a valid GeneratorConfig object!`);
   }
@@ -40,23 +45,28 @@ export function compileTemplate(config: GeneratorConfig, templateContext: Schema
       fragments: [],
       operations: [],
       hasFragments: false,
-      hasOperations: false,
+      hasOperations: false
     };
   } else {
-    mergedDocuments = documents.reduce((previousValue: Document, item: Document): Document => {
-      const opArr = [...previousValue.operations, ...item.operations] as Operation[];
-      const frArr = [...previousValue.fragments, ...item.fragments] as Fragment[];
+    mergedDocuments = documents.reduce(
+      (previousValue: Document, item: Document): Document => {
+        const opArr = [...previousValue.operations, ...item.operations] as Operation[];
+        const frArr = [...previousValue.fragments, ...item.fragments] as Fragment[];
 
-      return {
-        operations: opArr,
-        fragments: frArr,
-        hasFragments: frArr.length > 0,
-        hasOperations: opArr.length > 0,
-      };
-    }, { hasFragments: false, hasOperations: false, operations: [], fragments: [] } as Document);
+        return {
+          operations: opArr,
+          fragments: frArr,
+          hasFragments: frArr.length > 0,
+          hasOperations: opArr.length > 0
+        };
+      },
+      { hasFragments: false, hasOperations: false, operations: [], fragments: [] } as Document
+    );
 
     debugLog(
-      `[compileTemplate] all documents merged into single document, total of ${mergedDocuments.operations.length} operations and ${mergedDocuments.fragments.length} fragments`
+      `[compileTemplate] all documents merged into single document, total of ${
+        mergedDocuments.operations.length
+      } operations and ${mergedDocuments.fragments.length} fragments`
     );
 
     if (config.flattenTypes) {
@@ -82,7 +92,7 @@ export function compileTemplate(config: GeneratorConfig, templateContext: Schema
       executionSettings,
       config,
       templateContext,
-      mergedDocuments,
+      mergedDocuments
     );
   } else if (config.inputType === EInputType.MULTIPLE_FILES || config.inputType === EInputType.PROJECT) {
     if (config.inputType === EInputType.MULTIPLE_FILES) {
@@ -93,29 +103,25 @@ export function compileTemplate(config: GeneratorConfig, templateContext: Schema
 
     debugLog(`[compileTemplate] Executing generateMultipleFiles...`);
 
-    const compiledTemplates = Object.keys(templates).map(templateName => {
-      debugLog(`[compileTemplate] Compiling template: ${templateName}...`);
-      const compiledTemplate = compile(cleanTemplateComments(templates[templateName], templateName));
+    const compiledTemplates = Object.keys(templates)
+      .map(templateName => {
+        debugLog(`[compileTemplate] Compiling template: ${templateName}...`);
+        const compiledTemplate = compile(cleanTemplateComments(templates[templateName], templateName));
 
-      return {
-        key: templateName,
-        value: compiledTemplate,
-      };
-    }).reduce((prev, item) => {
-      prev[item.key] = item.value;
+        return {
+          key: templateName,
+          value: compiledTemplate
+        };
+      })
+      .reduce((prev, item) => {
+        prev[item.key] = item.value;
 
-      return prev;
-    }, {}) as { [name: string]: Function[] };
+        return prev;
+      }, {}) as { [name: string]: Function[] };
 
     debugLog(`[compileTemplate] Templates names: `, Object.keys(compiledTemplates));
 
-    return generateMultipleFiles(
-      compiledTemplates,
-      executionSettings,
-      config,
-      templateContext,
-      mergedDocuments,
-    );
+    return generateMultipleFiles(compiledTemplates, executionSettings, config, templateContext, mergedDocuments);
   } else {
     throw new Error(`Invalid inputType specified: ${config.inputType}!`);
   }
