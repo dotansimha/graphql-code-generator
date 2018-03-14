@@ -27,4 +27,10 @@ describe('extractDocumentStringFromCodeFile', () => {
     expect(doc).not.toContain('myQuery1');
     expect(doc).not.toContain('myQuery3');
   });
+
+  it('file with gql and template literal in ts/tsx file', () => {
+    const fileContent = fs.readFileSync('./tests/test-files/5.tsx').toString();
+    const doc = extractDocumentStringFromCodeFile(fileContent);
+    expect(doc).toContain('query');
+  });
 });
