@@ -7,16 +7,6 @@
     "test": "",
     "build": "webpack"
   },
-  "devDependencies": {
-    "@types/jest": "22.2.0",
-    "awesome-typescript-loader": "4.0.1",
-    "jest": "22.4.2",
-    "raw-loader": "0.5.1",
-    "ts-jest": "22.4.1",
-    "webpack": "4.1.1",
-    "webpack-cli": "2.0.11",
-    "webpack-node-externals": "1.6.0"
-  },
   "main": "./dist/index.js",
   "typings": "dist/index.d.ts",
   "typescript": {
