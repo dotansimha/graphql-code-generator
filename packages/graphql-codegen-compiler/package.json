@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest",
     "build": "tsc",
-    "prebuild": "rimraf ./dist/"
+    "prebuild": "rimraf ./dist/",
+    "lint": "tslint src/**/*.ts"
   },
   "dependencies": {
     "@types/handlebars": "4.0.36",
