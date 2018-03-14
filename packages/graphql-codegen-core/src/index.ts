@@ -21,12 +21,20 @@ export {
   SelectionSetFieldNode,
   SelectionSetFragmentSpread,
   SelectionSetInlineFragment,
-
   isFieldNode,
   isFragmentSpreadNode,
-  isInlineFragmentNode,
+  isInlineFragmentNode
 } from './types';
 export { debugLog } from './debugging';
-export { DocumentNode, Source, parse, concatAST, graphql, introspectionQuery, GraphQLSchema, IntrospectionQuery } from 'graphql';
+export {
+  DocumentNode,
+  Source,
+  parse,
+  concatAST,
+  graphql,
+  introspectionQuery,
+  GraphQLSchema,
+  IntrospectionQuery
+} from 'graphql';
 export { gql };
 export { makeExecutableSchema } from 'graphql-tools';

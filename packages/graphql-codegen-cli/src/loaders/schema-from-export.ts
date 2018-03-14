@@ -18,18 +18,17 @@ export const schemaFromExport = (file: string): Promise<GraphQLSchema> => {
           if (schema) {
             resolve(schema as GraphQLSchema);
           } else {
-            reject(new Error(`Invalid export from export file ${fullPath}: missing default export or 'schema' export!`));
+            reject(
+              new Error(`Invalid export from export file ${fullPath}: missing default export or 'schema' export!`)
+            );
           }
-        }
-        else {
+        } else {
           reject(new Error(`Invalid export from export file ${fullPath}: empty export!`));
         }
-      }
-      catch (e) {
+      } catch (e) {
         reject(e);
       }
-    }
-    else {
+    } else {
       reject(`Unable to locate introspection from export file: ${fullPath}`);
     }
   });

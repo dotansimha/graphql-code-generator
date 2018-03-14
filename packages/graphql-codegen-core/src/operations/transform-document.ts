@@ -1,4 +1,11 @@
-import { Kind, DefinitionNode, DocumentNode, FragmentDefinitionNode, GraphQLSchema, OperationDefinitionNode } from 'graphql';
+import {
+  Kind,
+  DefinitionNode,
+  DocumentNode,
+  FragmentDefinitionNode,
+  GraphQLSchema,
+  OperationDefinitionNode
+} from 'graphql';
 import { Document } from '../types';
 import { transformFragment } from './transform-fragment-document';
 import { transformOperation } from './transform-operation';
@@ -9,10 +16,10 @@ export function transformDocument(schema: GraphQLSchema, documentNode: DocumentN
     fragments: [],
     operations: [],
     hasFragments: false,
-    hasOperations: false,
+    hasOperations: false
   };
 
-  const definitions = (documentNode.definitions || []);
+  const definitions = documentNode.definitions || [];
 
   debugLog(`[transformDocument] transforming total of ${definitions.length} definitions...`);
 

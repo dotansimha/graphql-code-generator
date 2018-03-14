@@ -6,20 +6,8 @@
   "scripts": {
     "test": "jest",
     "build": "tsc",
-    "prebuild": "rimraf ./dist/"
-  },
-  "devDependencies": {
-    "@types/common-tags": "1.4.0",
-    "@types/jest": "22.2.0",
-    "@types/node": "9.4.7",
-    "graphql": "0.13.1",
-    "graphql-tag": "2.8.0",
-    "graphql-tools": "2.22.0",
-    "jest": "22.4.2",
-    "rimraf": "2.6.2",
-    "ts-jest": "22.4.1",
-    "tslint": "5.9.1",
-    "typescript": "2.7.2"
+    "prebuild": "rimraf ./dist/",
+    "lint": "tslint src/**/*.ts"
   },
   "dependencies": {
     "@types/handlebars": "4.0.36",
@@ -31,11 +19,7 @@
     "moment": "2.21.0"
   },
   "jest": {
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
-    ],
+    "moduleFileExtensions": ["ts", "tsx", "js"],
     "transform": {
       "^.+\\.(ts|tsx)$": "<rootDir>/tests/jest.typescript.js"
     },

@@ -6,8 +6,8 @@ describe('transformGraphQLEnum', () => {
     const gqlEnum = new GraphQLEnumType({
       name: 'name',
       values: {
-        A: {},
-      },
+        A: {}
+      }
     });
 
     const result = transformGraphQLEnum({} as any, gqlEnum);
@@ -21,8 +21,8 @@ describe('transformGraphQLEnum', () => {
       name: 'name',
       description: 'my enum',
       values: {
-        A: {},
-      },
+        A: {}
+      }
     });
 
     const result = transformGraphQLEnum({} as any, gqlEnum);
@@ -35,8 +35,8 @@ describe('transformGraphQLEnum', () => {
       name: 'name',
       description: 'my enum',
       values: {
-        A: {},
-      },
+        A: {}
+      }
     });
 
     const result = transformGraphQLEnum({} as any, gqlEnum);
@@ -55,8 +55,8 @@ describe('transformGraphQLEnum', () => {
       values: {
         A: {},
         B: {},
-        C: {},
-      },
+        C: {}
+      }
     });
 
     const result = transformGraphQLEnum({} as any, gqlEnum);

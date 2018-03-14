@@ -3,21 +3,26 @@ import { resolveFields } from '../src/schema/transform-fields';
 
 describe('resolveFields', () => {
   function parseAndBuildSchema<T>(str: string, typeName: string): T {
-    return buildASTSchema(parse(`
+    return buildASTSchema(
+      parse(`
       type Query {
         test: Int
       }
       
       ${str}
-    `)).getTypeMap()[typeName] as T;
+    `)
+    ).getTypeMap()[typeName] as T;
   }
 
   it('should build the correct fields map when using type with single primitive scalar', () => {
-    const parsed = parseAndBuildSchema<GraphQLObjectType>(`
+    const parsed = parseAndBuildSchema<GraphQLObjectType>(
+      `
       type A {
         f1: String
       }
-    `, 'A');
+    `,
+      'A'
+    );
 
     const result = resolveFields({} as any, parsed.getFields());
 
@@ -31,11 +36,14 @@ describe('resolveFields', () => {
   });
 
   it('should build the correct fields map when using type with single primitive scalar and args', () => {
-    const parsed = parseAndBuildSchema<GraphQLObjectType>(`
+    const parsed = parseAndBuildSchema<GraphQLObjectType>(
+      `
       type A {
         f1(t: String): String
       }
-    `, 'A');
+    `,
+      'A'
+    );
 
     const result = resolveFields({} as any, parsed.getFields());
 
@@ -49,14 +57,17 @@ describe('resolveFields', () => {
   });
 
   it('should identify the correct number of fields', () => {
-    const parsed = parseAndBuildSchema<GraphQLObjectType>(`
+    const parsed = parseAndBuildSchema<GraphQLObjectType>(
+      `
       type A {
         f1: String
         f2: Int
         f3: Float
         f4: ID
       }
-    `, 'A');
+    `,
+      'A'
+    );
 
     const result = resolveFields({} as any, parsed.getFields());
 
@@ -68,11 +79,14 @@ describe('resolveFields', () => {
   });
 
   it('should identify Array type', () => {
-    const parsed = parseAndBuildSchema<GraphQLObjectType>(`
+    const parsed = parseAndBuildSchema<GraphQLObjectType>(
+      `
       type A {
         f1: [String]
       }
-    `, 'A');
+    `,
+      'A'
+    );
 
     const result = resolveFields({} as any, parsed.getFields());
 
@@ -84,11 +98,14 @@ describe('resolveFields', () => {
   });
 
   it('should identify required Array type', () => {
-    const parsed = parseAndBuildSchema<GraphQLObjectType>(`
+    const parsed = parseAndBuildSchema<GraphQLObjectType>(
+      `
       type A {
         f1: [String]!
       }
-    `, 'A');
+    `,
+      'A'
+    );
 
     const result = resolveFields({} as any, parsed.getFields());
 
@@ -100,11 +117,14 @@ describe('resolveFields', () => {
   });
 
   it('should identify required Array type with inner required', () => {
-    const parsed = parseAndBuildSchema<GraphQLObjectType>(`
+    const parsed = parseAndBuildSchema<GraphQLObjectType>(
+      `
       type A {
         f1: [String!]!
       }
-    `, 'A');
+    `,
+      'A'
+    );
 
     const result = resolveFields({} as any, parsed.getFields());
 
@@ -116,11 +136,14 @@ describe('resolveFields', () => {
   });
 
   it('should identify required Array type with inner required only', () => {
-    const parsed = parseAndBuildSchema<GraphQLObjectType>(`
+    const parsed = parseAndBuildSchema<GraphQLObjectType>(
+      `
       type A {
         f1: [String!]
       }
-    `, 'A');
+    `,
+      'A'
+    );
 
     const result = resolveFields({} as any, parsed.getFields());
 
@@ -132,7 +155,8 @@ describe('resolveFields', () => {
   });
 
   it('should identify other custom types', () => {
-    const parsed = parseAndBuildSchema<GraphQLObjectType>(`
+    const parsed = parseAndBuildSchema<GraphQLObjectType>(
+      `
       type A {
         f1: B
       }
@@ -140,7 +164,9 @@ describe('resolveFields', () => {
       type B {
         f: String
       }
-    `, 'A');
+    `,
+      'A'
+    );
 
     const result = resolveFields({} as any, parsed.getFields());
 
@@ -151,9 +177,9 @@ describe('resolveFields', () => {
     expect(result[0].isRequired).toBeFalsy();
   });
 
-
   it('should identify other custom types with required', () => {
-    const parsed = parseAndBuildSchema<GraphQLObjectType>(`
+    const parsed = parseAndBuildSchema<GraphQLObjectType>(
+      `
       type A {
         f1: B!
       }
@@ -161,7 +187,9 @@ describe('resolveFields', () => {
       type B {
         f: String
       }
-    `, 'A');
+    `,
+      'A'
+    );
 
     const result = resolveFields({} as any, parsed.getFields());
 
@@ -173,7 +201,8 @@ describe('resolveFields', () => {
   });
 
   it('should identify other custom types with array', () => {
-    const parsed = parseAndBuildSchema<GraphQLObjectType>(`
+    const parsed = parseAndBuildSchema<GraphQLObjectType>(
+      `
       type A {
         f1: [B]
       }
@@ -181,7 +210,9 @@ describe('resolveFields', () => {
       type B {
         f: String
       }
-    `, 'A');
+    `,
+      'A'
+    );
 
     const result = resolveFields({} as any, parsed.getFields());
 
@@ -193,7 +224,8 @@ describe('resolveFields', () => {
   });
 
   it('should identify other custom types with interfaces', () => {
-    const parsed = parseAndBuildSchema<GraphQLObjectType>(`
+    const parsed = parseAndBuildSchema<GraphQLObjectType>(
+      `
       type A {
         f1: B
       }
@@ -205,7 +237,9 @@ describe('resolveFields', () => {
       type B implements T {
         f: String
       }
-    `, 'A');
+    `,
+      'A'
+    );
 
     const result = resolveFields({} as any, parsed.getFields());
 
@@ -217,7 +251,8 @@ describe('resolveFields', () => {
   });
 
   it('should identify other custom types with union', () => {
-    const parsed = parseAndBuildSchema<GraphQLObjectType>(`
+    const parsed = parseAndBuildSchema<GraphQLObjectType>(
+      `
       type A {
         f1: B
       }
@@ -231,7 +266,9 @@ describe('resolveFields', () => {
       type D {
         t: String
       }
-    `, 'A');
+    `,
+      'A'
+    );
 
     const result = resolveFields({} as any, parsed.getFields());
 
@@ -242,7 +279,8 @@ describe('resolveFields', () => {
     expect(result[0].isRequired).toBeFalsy();
   });
   it('should identify other custom types with required union', () => {
-    const parsed = parseAndBuildSchema<GraphQLObjectType>(`
+    const parsed = parseAndBuildSchema<GraphQLObjectType>(
+      `
       type A {
         f1: B!
       }
@@ -256,7 +294,9 @@ describe('resolveFields', () => {
       type D {
         t: String
       }
-    `, 'A');
+    `,
+      'A'
+    );
 
     const result = resolveFields({} as any, parsed.getFields());
 
@@ -268,7 +308,8 @@ describe('resolveFields', () => {
   });
 
   it('should identify other custom types with union array', () => {
-    const parsed = parseAndBuildSchema<GraphQLObjectType>(`
+    const parsed = parseAndBuildSchema<GraphQLObjectType>(
+      `
       type A {
         f1: [B]
       }
@@ -282,7 +323,9 @@ describe('resolveFields', () => {
       type D {
         t: String
       }
-    `, 'A');
+    `,
+      'A'
+    );
 
     const result = resolveFields({} as any, parsed.getFields());
 

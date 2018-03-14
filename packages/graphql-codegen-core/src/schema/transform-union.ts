@@ -12,6 +12,6 @@ export function transformUnion(schema: GraphQLSchema, union: GraphQLUnionType): 
     description: union.description || '',
     possibleTypes: union.getTypes().map(type => type.name),
     directives,
-    usesDirectives: Object.keys(directives).length > 0,
+    usesDirectives: Object.keys(directives).length > 0
   };
 }

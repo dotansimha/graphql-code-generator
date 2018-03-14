@@ -1,4 +1,4 @@
-import {buildClientSchema, GraphQLSchema, IntrospectionQuery} from 'graphql';
+import { buildClientSchema, GraphQLSchema, IntrospectionQuery } from 'graphql';
 
 export const validateIntrospection = (schema: IntrospectionQuery) => {
   if (!schema.__schema) {

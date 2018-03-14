@@ -18,7 +18,8 @@ describe('getRoot', () => {
           login
           avatar_url
         }
-      }`;
+      }
+    `;
 
     const root = getRoot(schema, query.definitions[0]);
     expect(String(root)).toBe('Query');
@@ -31,7 +32,8 @@ describe('getRoot', () => {
           login
           avatar_url
         }
-      }`;
+      }
+    `;
 
     const root = getRoot(schema, query.definitions[0]);
     expect(String(root)).toBe('Mutation');
@@ -44,7 +46,8 @@ describe('getRoot', () => {
           login
           avatar_url
         }
-      }`;
+      }
+    `;
 
     const root = getRoot(schema, query.definitions[0]);
     expect(String(root)).toBe('Subscription');
@@ -55,7 +58,8 @@ describe('getRoot', () => {
       fragment f on User {
         login
         avatar_url
-      }`;
+      }
+    `;
 
     const root = getRoot(schema, query.definitions[0]);
     expect(root).toBe(null);

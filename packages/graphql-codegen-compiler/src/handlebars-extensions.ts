@@ -22,15 +22,15 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
     registerHelper(helperName, customHelpers[helperName]);
   });
 
-  registerHelper('toPrimitive', function (type) {
+  registerHelper('toPrimitive', function(type) {
     return config.primitives[type] || type || '';
   });
 
-  registerHelper('stringify', function (obj) {
+  registerHelper('stringify', function(obj) {
     return new SafeString(JSON.stringify(obj));
   });
 
-  registerHelper('times', function (n, block) {
+  registerHelper('times', function(n, block) {
     let accum = '';
 
     for (let i = 0; i < n; ++i) {
@@ -40,13 +40,17 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
     return accum;
   });
 
-  registerHelper('ifDirective', function (context: any, directiveName: string, options: { inverse: Function, fn: Function, data: { root: any } }) {
+  registerHelper('ifDirective', function(
+    context: any,
+    directiveName: string,
+    options: { inverse: Function; fn: Function; data: { root: any } }
+  ) {
     if (context && context['directives'] && directiveName && typeof directiveName === 'string') {
       const directives = context['directives'];
       const directiveValue = directives[directiveName];
 
       if (directiveValue) {
-        return options && options.fn ? options.fn({ ...(directiveValue || {}), ...context}) : '';
+        return options && options.fn ? options.fn({ ...(directiveValue || {}), ...context }) : '';
       } else {
         return options && options.inverse ? options.inverse(context) : '';
       }
@@ -55,13 +59,17 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
     return options && options.inverse ? options.inverse(context) : '';
   });
 
-  registerHelper('unlessDirective', function (context: any, directiveName: string, options: { inverse: Function, fn: Function, data: { root: any } }) {
+  registerHelper('unlessDirective', function(
+    context: any,
+    directiveName: string,
+    options: { inverse: Function; fn: Function; data: { root: any } }
+  ) {
     if (context && context['directives'] && directiveName && typeof directiveName === 'string') {
       const directives = context['directives'];
       const directiveValue = directives[directiveName];
 
       if (!directiveValue) {
-        return options && options.fn ? options.fn({ ...(directiveValue || {}), ...context}) : '';
+        return options && options.fn ? options.fn({ ...(directiveValue || {}), ...context }) : '';
       } else {
         return options && options.inverse ? options.inverse(context) : '';
       }
@@ -70,7 +78,7 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
     return options && options.inverse ? options.inverse(context) : '';
   });
 
-  registerHelper('toComment', function (str) {
+  registerHelper('toComment', function(str) {
     if (!str || str === '') {
       return '';
     }
@@ -78,7 +86,7 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
     return '/* ' + oneLineTrim`${str || ''}` + ' */';
   });
 
-  registerHelper('eachImport', function (context: any, options: { fn: Function }) {
+  registerHelper('eachImport', function(context: any, options: { fn: Function }) {
     let ret = '';
     const imports: { name: string; file: string; type: string }[] = [];
 
@@ -188,55 +196,59 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
     }
 
     for (let i = 0, j = imports.length; i < j; i++) {
-      ret = ret + options.fn(imports[i], {
-        data: {
-          withExtension: imports[i] + '.' + config.filesExtension,
-        },
-      });
+      ret =
+        ret +
+        options.fn(imports[i], {
+          data: {
+            withExtension: imports[i] + '.' + config.filesExtension
+          }
+        });
     }
 
     return ret;
   });
 
-  registerHelper('toLowerCase', function (str) {
+  registerHelper('toLowerCase', function(str) {
     return (str || '').toLowerCase();
   });
 
-  registerHelper('toUpperCase', function (str) {
+  registerHelper('toUpperCase', function(str) {
     return (str || '').toUpperCase();
   });
 
-  registerHelper('toPascalCase', function (str) {
+  registerHelper('toPascalCase', function(str) {
     return pascalCase(str || '');
   });
 
-  registerHelper('toSnakeCase', function (str) {
+  registerHelper('toSnakeCase', function(str) {
     return snakeCase(str || '');
   });
 
-  registerHelper('toTitleCase', function (str) {
+  registerHelper('toTitleCase', function(str) {
     return titleCase(str || '');
   });
 
-  registerHelper('toCamelCase', function (str) {
+  registerHelper('toCamelCase', function(str) {
     return camelCase(str || '');
   });
 
-  registerHelper('multilineString', function (str) {
+  registerHelper('multilineString', function(str) {
     if (!str) {
       return '';
     }
 
     const lines = str.split('\n');
 
-    return lines.map((line, index) => {
-      const isLastLine = index != lines.length - 1;
+    return lines
+      .map((line, index) => {
+        const isLastLine = index !== lines.length - 1;
 
-      return `"${line.replace(/"/g, '\\"')}"` + (isLastLine ? ' +' : '');
-    }).join('\r\n');
+        return `"${line.replace(/"/g, '\\"')}"` + (isLastLine ? ' +' : '');
+      })
+      .join('\r\n');
   });
 
-  registerHelper('for', function (from, to, incr, block) {
+  registerHelper('for', function(from, to, incr, block) {
     let accum = '';
 
     for (let i = from; i < to; i += incr) {
@@ -246,28 +258,28 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
     return accum;
   });
 
-  registerHelper('ifCond', function (v1: any, operator: string, v2: any, options) {
+  registerHelper('ifCond', function(v1: any, operator: string, v2: any, options) {
     switch (operator) {
       case '==':
-        return (v1 == v2) ? options.fn(this) : options.inverse(this);
+        return v1 === v2 ? options.fn(this) : options.inverse(this);
       case '===':
-        return (v1 === v2) ? options.fn(this) : options.inverse(this);
+        return v1 === v2 ? options.fn(this) : options.inverse(this);
       case '!=':
-        return (v1 != v2) ? options.fn(this) : options.inverse(this);
+        return v1 !== v2 ? options.fn(this) : options.inverse(this);
       case '!==':
-        return (v1 !== v2) ? options.fn(this) : options.inverse(this);
+        return v1 !== v2 ? options.fn(this) : options.inverse(this);
       case '<':
-        return (v1 < v2) ? options.fn(this) : options.inverse(this);
+        return v1 < v2 ? options.fn(this) : options.inverse(this);
       case '<=':
-        return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+        return v1 <= v2 ? options.fn(this) : options.inverse(this);
       case '>':
-        return (v1 > v2) ? options.fn(this) : options.inverse(this);
+        return v1 > v2 ? options.fn(this) : options.inverse(this);
       case '>=':
-        return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+        return v1 >= v2 ? options.fn(this) : options.inverse(this);
       case '&&':
-        return (v1 && v2) ? options.fn(this) : options.inverse(this);
+        return v1 && v2 ? options.fn(this) : options.inverse(this);
       case '||':
-        return (v1 || v2) ? options.fn(this) : options.inverse(this);
+        return v1 || v2 ? options.fn(this) : options.inverse(this);
       default:
         return options.inverse(this);
     }

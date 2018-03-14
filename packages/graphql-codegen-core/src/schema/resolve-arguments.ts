@@ -27,7 +27,7 @@ export function resolveArguments(schema, args: GraphQLArgument[]): Argument[] {
       isInputType: indicators.isInputType,
       isType: indicators.isType,
       directives,
-      usesDirectives: Object.keys(directives).length > 0,
+      usesDirectives: Object.keys(directives).length > 0
     };
   });
 }

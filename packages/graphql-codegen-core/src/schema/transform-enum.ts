@@ -20,6 +20,6 @@ export function transformGraphQLEnum(schema: GraphQLSchema, graphqlEnum: GraphQL
     description: graphqlEnum.description || '',
     values: enumValues,
     directives,
-    usesDirectives: Object.keys(directives).length > 0,
+    usesDirectives: Object.keys(directives).length > 0
   };
 }

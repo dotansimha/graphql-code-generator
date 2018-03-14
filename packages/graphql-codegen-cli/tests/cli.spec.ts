@@ -4,7 +4,7 @@ describe('executeWithOptions', () => {
   it('execute the correct results when using file', async () => {
     const result = await executeWithOptions({
       file: '../../dev-test/githunt/schema.json',
-      template: 'ts',
+      template: 'ts'
     });
 
     expect(result.length).toBe(1);
@@ -14,7 +14,7 @@ describe('executeWithOptions', () => {
     const result = await executeWithOptions({
       file: '../../dev-test/githunt/schema.json',
       template: 'ts',
-      config: '../../dev-test/config/gql-gen.json',
+      config: '../../dev-test/config/gql-gen.json'
     });
 
     expect(result[0].content).toContain('Generated in');
@@ -23,7 +23,7 @@ describe('executeWithOptions', () => {
   it.skip('execute the correct results when using export', async () => {
     const result = await executeWithOptions({
       export: '../../dev-test/githunt/schema.js',
-      template: 'ts',
+      template: 'ts'
     });
     expect(result.length).toBe(1);
   });
@@ -37,5 +37,4 @@ describe('executeWithOptions', () => {
     expect(result.length).toBe(1);
     expect(global.dummyWasLoaded).toBe(true);
   });
-
 });

@@ -16,6 +16,6 @@ export function transformInterface(schema: GraphQLSchema, gqlInterface: GraphQLI
     fields: resolvedFields,
     hasFields: resolvedFields.length > 0,
     directives,
-    usesDirectives: Object.keys(directives).length > 0,
+    usesDirectives: Object.keys(directives).length > 0
   };
 }

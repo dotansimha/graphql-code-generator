@@ -3,22 +3,27 @@ import { resolveTypeIndicators } from '../src/schema/resolve-type-indicators';
 
 describe('resolveTypeIndicators', () => {
   function parseAndBuildSchema<T>(str: string, typeName: string): T {
-    const schema = buildASTSchema(parse(`
+    const schema = buildASTSchema(
+      parse(`
       type Query {
         test: Int
       }
       
       ${str}
-    `));
+    `)
+    );
 
     return schema.getTypeMap()[typeName] as T;
   }
 
   it('should return the correct indicators when using interface', () => {
-    const type = parseAndBuildSchema(`
+    const type = parseAndBuildSchema(
+      `
     interface A {
       f: String
-    }`, 'A');
+    }`,
+      'A'
+    );
 
     const indicators = resolveTypeIndicators(type);
 
@@ -31,9 +36,12 @@ describe('resolveTypeIndicators', () => {
   });
 
   it('should return the correct indicators when using scalar', () => {
-    const type = parseAndBuildSchema(`
+    const type = parseAndBuildSchema(
+      `
     scalar A
-    `, 'A');
+    `,
+      'A'
+    );
 
     const indicators = resolveTypeIndicators(type);
 
@@ -47,12 +55,15 @@ describe('resolveTypeIndicators', () => {
   });
 
   it('should return the correct indicators when using enum', () => {
-    const type = parseAndBuildSchema(`
+    const type = parseAndBuildSchema(
+      `
     enum A {
       V1,
       V2
     }
-    `, 'A');
+    `,
+      'A'
+    );
 
     const indicators = resolveTypeIndicators(type);
 
@@ -66,11 +77,14 @@ describe('resolveTypeIndicators', () => {
   });
 
   it('should return the correct indicators when using input', () => {
-    const type = parseAndBuildSchema(`
+    const type = parseAndBuildSchema(
+      `
     input A {
       f: String
     }
-    `, 'A');
+    `,
+      'A'
+    );
 
     const indicators = resolveTypeIndicators(type);
 
@@ -84,11 +98,14 @@ describe('resolveTypeIndicators', () => {
   });
 
   it('should return the correct indicators when using type', () => {
-    const type = parseAndBuildSchema(`
+    const type = parseAndBuildSchema(
+      `
     type A {
       f: String
     }
-    `, 'A');
+    `,
+      'A'
+    );
 
     const indicators = resolveTypeIndicators(type);
 
@@ -102,7 +119,8 @@ describe('resolveTypeIndicators', () => {
   });
 
   it('should return the correct indicators when using union', () => {
-    const type = parseAndBuildSchema(`
+    const type = parseAndBuildSchema(
+      `
     type B {
       f: String
     }
@@ -112,7 +130,9 @@ describe('resolveTypeIndicators', () => {
     }
     
     union A = B | C
-    `, 'A');
+    `,
+      'A'
+    );
 
     const indicators = resolveTypeIndicators(type);
 

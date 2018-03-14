@@ -9,12 +9,45 @@
     "postinstall": "yarn build",
     "clean": "lerna clean --yes && rm -rf node_modules",
     "build": "lerna run build",
-    "test": "lerna run test"
+    "test": "lerna run test",
+    "lint": "lerna run lint",
+    "precommit": "lint-staged"
   },
+  "workspaces": ["packages/*"],
   "dependencies": {
     "lerna": "2.9.0"
   },
-  "workspaces": [
-    "packages/*"
-  ]
+  "devDependencies": {
+    "@types/glob": "5.0.35",
+    "@types/jest": "22.2.0",
+    "@types/mkdirp": "0.5.2",
+    "@types/node": "9.4.7",
+    "@types/request": "2.47.0",
+    "@types/common-tags": "1.4.0",
+    "@types/graphql": "0.12.4",
+    "husky": "0.14.3",
+    "lint-staged": "7.0.0",
+    "tslint": "5.9.1",
+    "typescript": "2.7.2",
+    "graphql": "0.13.1",
+    "graphql-tag": "2.8.0",
+    "jest": "22.4.2",
+    "rimraf": "2.6.2",
+    "ts-jest": "22.4.1",
+    "graphql-tools": "2.22.0",
+    "apollo-link": "1.2.1",
+    "awesome-typescript-loader": "4.0.1",
+    "raw-loader": "0.5.1",
+    "webpack": "4.1.1",
+    "webpack-cli": "2.0.11",
+    "webpack-node-externals": "1.6.0"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": "tslint",
+    "*.{js,json,css,md,ts,tsx}": ["prettier --write", "git add"]
+  },
+  "prettier": {
+    "printWidth": 120,
+    "singleQuote": true
+  }
 }

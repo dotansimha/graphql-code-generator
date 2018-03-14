@@ -7,7 +7,7 @@ describe('transformInterface', () => {
       name: 'name',
       fields: {
         test: {
-          type: GraphQLString,
+          type: GraphQLString
         }
       }
     });
@@ -24,7 +24,7 @@ describe('transformInterface', () => {
       description: 'Test',
       fields: {
         test: {
-          type: GraphQLString,
+          type: GraphQLString
         }
       }
     });
@@ -40,7 +40,7 @@ describe('transformInterface', () => {
       fields: {
         test: {
           description: 'Test',
-          type: GraphQLString,
+          type: GraphQLString
         }
       }
     });

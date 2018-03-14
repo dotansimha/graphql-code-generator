@@ -11,6 +11,6 @@ export function transformScalar(schema: GraphQLSchema, scalar: GraphQLScalarType
     name: scalar.name,
     description: scalar.description || '',
     directives,
-    usesDirectives: Object.keys(directives).length > 0,
+    usesDirectives: Object.keys(directives).length > 0
   };
 }

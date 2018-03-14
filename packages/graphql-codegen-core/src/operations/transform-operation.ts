@@ -28,6 +28,6 @@ export function transformOperation(schema: GraphQLSchema, operationNode: Operati
     document: print(operationNode),
     directives,
     usesDirectives: Object.keys(directives).length > 0,
-    ...separateSelectionSet(selectionSet),
+    ...separateSelectionSet(selectionSet)
   } as Operation;
 }

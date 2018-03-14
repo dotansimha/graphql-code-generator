@@ -1,7 +1,9 @@
 import '../test-matchers/custom-matchers';
 import {
   schemaToTemplateContext,
-  SchemaTemplateContext, transformDocument, introspectionToGraphQLSchema,
+  SchemaTemplateContext,
+  transformDocument,
+  introspectionToGraphQLSchema
 } from 'graphql-codegen-core';
 import { gql, makeExecutableSchema, GraphQLSchema } from 'graphql-codegen-core';
 import { compileTemplate } from '../src/compile';
@@ -29,15 +31,18 @@ describe('Multiple Files', () => {
         }
       `);
 
-      const compiled = compileTemplate({
-        ...config,
-        templates: {
-          type: `{{ config.custom }}`
-        },
-        config: {
-          custom: 'A',
-        },
-      } as GeneratorConfig, templateContext);
+      const compiled = compileTemplate(
+        {
+          ...config,
+          templates: {
+            type: `{{ config.custom }}`
+          },
+          config: {
+            custom: 'A'
+          }
+        } as GeneratorConfig,
+        templateContext
+      );
 
       expect(compiled.length).toBe(1);
       expect(compiled[0].filename).toBe('query.type.d.ts');
@@ -341,13 +346,14 @@ describe('Multiple Files', () => {
           f4?: number[] | null; 
         }
       `);
-
     });
   });
 
   describe('Operations', () => {
     it('Should compile simple Query correctly', () => {
-      const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('../../dev-test/githunt/schema.json').toString()));
+      const schema = introspectionToGraphQLSchema(
+        JSON.parse(fs.readFileSync('../../dev-test/githunt/schema.json').toString())
+      );
       const context = schemaToTemplateContext(schema);
 
       const documents = gql`
@@ -420,11 +426,12 @@ describe('Multiple Files', () => {
           }
         }
       `);
-
     });
 
     it('Should compile simple Query with Fragment spread correctly', () => {
-      const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('../../dev-test/githunt/schema.json').toString()));
+      const schema = introspectionToGraphQLSchema(
+        JSON.parse(fs.readFileSync('../../dev-test/githunt/schema.json').toString())
+      );
       const context = schemaToTemplateContext(schema);
 
       const documents = gql`

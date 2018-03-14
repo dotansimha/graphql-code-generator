@@ -1,4 +1,4 @@
-declare module "*.handlebars" {
+declare module '*.handlebars' {
   const content: string;
   export = content;
 }

@@ -4,7 +4,10 @@ import { Type } from '../types';
 import { debugLog } from '../debugging';
 import { getDirectives } from '../utils/get-directives';
 
-export function transformGraphQLObject(schema: GraphQLSchema, object: GraphQLObjectType | GraphQLInputObjectType): Type {
+export function transformGraphQLObject(
+  schema: GraphQLSchema,
+  object: GraphQLObjectType | GraphQLInputObjectType
+): Type {
   debugLog(`[transformGraphQLObject] transforming type ${object.name}`);
   const resolvedFields = resolveFields(schema, (object as any).getFields());
   const resolvedInterfaces = object instanceof GraphQLObjectType ? object.getInterfaces().map(inf => inf.name) : [];
@@ -19,6 +22,6 @@ export function transformGraphQLObject(schema: GraphQLSchema, object: GraphQLObj
     hasFields: resolvedFields.length > 0,
     hasInterfaces: resolvedInterfaces.length > 0,
     directives,
-    usesDirectives: Object.keys(directives).length > 0,
+    usesDirectives: Object.keys(directives).length > 0
   };
 }

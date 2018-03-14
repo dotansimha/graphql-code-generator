@@ -37,12 +37,15 @@ describe('Single File', () => {
         directive @app on OBJECT
       `);
 
-      const compiled = compileTemplate({
-        ...config,
-        templates: {
-          index: '{{#each types}}{{#ifDirective this "app"}}directive{{/ifDirective}}{{/each}}',
-        }
-      } as GeneratorConfig, templateContext);
+      const compiled = compileTemplate(
+        {
+          ...config,
+          templates: {
+            index: '{{#each types}}{{#ifDirective this "app"}}directive{{/ifDirective}}{{/each}}'
+          }
+        } as GeneratorConfig,
+        templateContext
+      );
 
       expect(compiled[0].content).toBe('directive');
     });
@@ -58,15 +61,18 @@ describe('Single File', () => {
         }
       `);
 
-      const compiled = compileTemplate({
-        ...config,
-        templates: {
-          index: '{{ config.custom }}',
-        },
-        config: {
-          custom: 'A',
-        },
-      } as GeneratorConfig, templateContext);
+      const compiled = compileTemplate(
+        {
+          ...config,
+          templates: {
+            index: '{{ config.custom }}'
+          },
+          config: {
+            custom: 'A'
+          }
+        } as GeneratorConfig,
+        templateContext
+      );
 
       expect(compiled[0].content).toBe('A');
     });
@@ -84,12 +90,15 @@ describe('Single File', () => {
         directive @app on OBJECT
       `);
 
-      const compiled = compileTemplate({
-        ...config,
-        templates: {
-          index: '{{#each types}}{{#ifDirective this "app"}}directive{{/ifDirective}}{{/each}}',
-        }
-      } as GeneratorConfig, templateContext);
+      const compiled = compileTemplate(
+        {
+          ...config,
+          templates: {
+            index: '{{#each types}}{{#ifDirective this "app"}}directive{{/ifDirective}}{{/each}}'
+          }
+        } as GeneratorConfig,
+        templateContext
+      );
 
       expect(compiled[0].content).toBe('');
     });
@@ -107,12 +116,15 @@ describe('Single File', () => {
         directive @app(test: String) on OBJECT
       `);
 
-      const compiled = compileTemplate({
-        ...config,
-        templates: {
-          index: '{{#ifDirective this "app"}}directive{{test}}{{/ifDirective}}',
-        }
-      } as GeneratorConfig, templateContext);
+      const compiled = compileTemplate(
+        {
+          ...config,
+          templates: {
+            index: '{{#ifDirective this "app"}}directive{{test}}{{/ifDirective}}'
+          }
+        } as GeneratorConfig,
+        templateContext
+      );
 
       expect(compiled[0].content).toBe('directive123');
     });
@@ -388,7 +400,9 @@ describe('Single File', () => {
     });
 
     it('should generate from a whole schema object correctly', () => {
-      const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('../../dev-test/githunt/schema.json').toString()));
+      const schema = introspectionToGraphQLSchema(
+        JSON.parse(fs.readFileSync('../../dev-test/githunt/schema.json').toString())
+      );
       const context = schemaToTemplateContext(schema);
       const compiled = compileTemplate(config, context);
       const content = compiled[0].content;
@@ -418,7 +432,9 @@ describe('Single File', () => {
 
   describe('Operations', () => {
     it('Should compile simple Query correctly', () => {
-      const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('../../dev-test/githunt/schema.json').toString()));
+      const schema = introspectionToGraphQLSchema(
+        JSON.parse(fs.readFileSync('../../dev-test/githunt/schema.json').toString())
+      );
       const context = schemaToTemplateContext(schema);
 
       const documents = gql`
@@ -487,7 +503,9 @@ describe('Single File', () => {
     });
 
     it('Should compile simple Query with Fragment spread correctly', () => {
-      const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('../../dev-test/githunt/schema.json').toString()));
+      const schema = introspectionToGraphQLSchema(
+        JSON.parse(fs.readFileSync('../../dev-test/githunt/schema.json').toString())
+      );
       const context = schemaToTemplateContext(schema);
 
       const documents = gql`
@@ -567,7 +585,9 @@ describe('Single File', () => {
     });
 
     it('Should compile simple Query with inline Fragment', () => {
-      const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('../../dev-test/githunt/schema.json').toString()));
+      const schema = introspectionToGraphQLSchema(
+        JSON.parse(fs.readFileSync('../../dev-test/githunt/schema.json').toString())
+      );
       const context = schemaToTemplateContext(schema);
 
       const documents = gql`

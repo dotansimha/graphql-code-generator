@@ -22,12 +22,10 @@ export const introspectionFromFile = (file: string) => {
         }
 
         resolve(<IntrospectionQuery>introspection);
-      }
-      catch (e) {
+      } catch (e) {
         reject(e);
       }
-    }
-    else {
+    } else {
       reject(`Unable to locate local introspection file: ${fullPath}`);
     }
   });
