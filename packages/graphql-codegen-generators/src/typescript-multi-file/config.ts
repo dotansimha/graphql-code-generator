@@ -30,7 +30,7 @@ const config: GeneratorConfig = {
     Boolean: 'boolean',
     ID: 'string'
   },
-  filesExtension: 'd.ts'
+  filesExtension: 'ts'
 };
 
 export default config;

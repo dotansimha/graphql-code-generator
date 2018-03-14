@@ -24,7 +24,7 @@ const config: GeneratorConfig = {
     Boolean: 'boolean',
     ID: 'string'
   },
-  outFile: 'types.d.ts'
+  outFile: 'types.ts'
 };
 
 export default config;

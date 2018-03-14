@@ -52,7 +52,7 @@ const config: GeneratorConfig = {
     Float: 'number',
     Boolean: 'boolean',
     ID: 'string'
-  },
+  }
 };
 
 export default config;
@@ -75,7 +75,7 @@ const config: GeneratorConfig = {
     type,
     schema,
     documents,
-    selectionSet,
+    selectionSet
   },
   flattenTypes: true,
   primitives: {
@@ -85,7 +85,7 @@ const config: GeneratorConfig = {
     Boolean: 'boolean',
     ID: 'string'
   },
-  outFile: 'types.d.ts',
+  outFile: 'types.ts'
 };
 
 export default config;
@@ -101,13 +101,13 @@ For example, we have TypeScript generators for both single and multiple files.
 
 The input type field effects the rest of the fields:
 
-#### *SINGLE_FILE*
+#### _SINGLE_FILE_
 
 When using `SINGLE_FILE`, you must specify the main template name, with a key called `index`, and this will be the root of your app.
 
 You also need to specify the `outFile` of the package, which is the default file name in case of output filename was not specified through the CLI.
 
-#### *MULTIPLE_FILES*
+#### _MULTIPLE_FILES_
 
 When using `MULTIPLE_FILES`, you need to specify a template for each available compilation context (refer to `templates` section for the list of available contexts).
 
@@ -120,12 +120,12 @@ You also need to specify the `filesExtension` for the generated files.
 There are special context types for templates, and each type of templates will compile with a different context:
 
 * `index`: use with `SINGLE_FILE` to declare the main entry point of the generated file, compiled with a merged object, containing all [`SchemaTemplateContext`](https://github.com/dotansimha/graphql-code-generator/blob/e9e4722723541628bc7ae58c0e4082556af4bfb8/packages/graphql-codegen-core/src/types.ts#L78-L94) and [`Document`](https://github.com/dotansimha/graphql-code-generator/blob/e9e4722723541628bc7ae58c0e4082556af4bfb8/packages/graphql-codegen-core/src/types.ts#L170-L175) fields.
-* `type`: use with `MULTIPLE_FILES` to declare that this template belongs to GraphQL schema `type`, this template will compile with *each* [type](https://github.com/dotansimha/graphql-code-generator/blob/e9e4722723541628bc7ae58c0e4082556af4bfb8/packages/graphql-codegen-core/src/types.ts#L38-L46) in your schema.
-* `inputType`: use with `MULTIPLE_FILES` to declare that this template belongs to GraphQL schema `input`, this template will compile with *each* [input type](https://github.com/dotansimha/graphql-code-generator/blob/e9e4722723541628bc7ae58c0e4082556af4bfb8/packages/graphql-codegen-core/src/types.ts#L38-L46) in your schema.
-* `union`: use with `MULTIPLE_FILES` to declare that this template belongs to GraphQL schema `union`, this template will compile with *each* [union](https://github.com/dotansimha/graphql-code-generator/blob/e9e4722723541628bc7ae58c0e4082556af4bfb8/packages/graphql-codegen-core/src/types.ts#L65-L69) in your schema.
-* `scalar`: use with `MULTIPLE_FILES` to declare that this template belongs to GraphQL schema `scalar`, this template will compile with *each* [scalar](https://github.com/dotansimha/graphql-code-generator/blob/e9e4722723541628bc7ae58c0e4082556af4bfb8/packages/graphql-codegen-core/src/types.ts#L48-L51) in your schema.
-* `enum`: use with `MULTIPLE_FILES` to declare that this template belongs to GraphQL schema `enum`, this template will compile with *each* [enum](https://github.com/dotansimha/graphql-code-generator/blob/e9e4722723541628bc7ae58c0e4082556af4bfb8/packages/graphql-codegen-core/src/types.ts#L53-L57) in your schema.
-* `interface`: use with `MULTIPLE_FILES` to declare that this template belongs to GraphQL schema `interface`, this template will compile with *each* [interface](https://github.com/dotansimha/graphql-code-generator/blob/e9e4722723541628bc7ae58c0e4082556af4bfb8/packages/graphql-codegen-core/src/types.ts#L71-L76) in your schema.
+* `type`: use with `MULTIPLE_FILES` to declare that this template belongs to GraphQL schema `type`, this template will compile with _each_ [type](https://github.com/dotansimha/graphql-code-generator/blob/e9e4722723541628bc7ae58c0e4082556af4bfb8/packages/graphql-codegen-core/src/types.ts#L38-L46) in your schema.
+* `inputType`: use with `MULTIPLE_FILES` to declare that this template belongs to GraphQL schema `input`, this template will compile with _each_ [input type](https://github.com/dotansimha/graphql-code-generator/blob/e9e4722723541628bc7ae58c0e4082556af4bfb8/packages/graphql-codegen-core/src/types.ts#L38-L46) in your schema.
+* `union`: use with `MULTIPLE_FILES` to declare that this template belongs to GraphQL schema `union`, this template will compile with _each_ [union](https://github.com/dotansimha/graphql-code-generator/blob/e9e4722723541628bc7ae58c0e4082556af4bfb8/packages/graphql-codegen-core/src/types.ts#L65-L69) in your schema.
+* `scalar`: use with `MULTIPLE_FILES` to declare that this template belongs to GraphQL schema `scalar`, this template will compile with _each_ [scalar](https://github.com/dotansimha/graphql-code-generator/blob/e9e4722723541628bc7ae58c0e4082556af4bfb8/packages/graphql-codegen-core/src/types.ts#L48-L51) in your schema.
+* `enum`: use with `MULTIPLE_FILES` to declare that this template belongs to GraphQL schema `enum`, this template will compile with _each_ [enum](https://github.com/dotansimha/graphql-code-generator/blob/e9e4722723541628bc7ae58c0e4082556af4bfb8/packages/graphql-codegen-core/src/types.ts#L53-L57) in your schema.
+* `interface`: use with `MULTIPLE_FILES` to declare that this template belongs to GraphQL schema `interface`, this template will compile with _each_ [interface](https://github.com/dotansimha/graphql-code-generator/blob/e9e4722723541628bc7ae58c0e4082556af4bfb8/packages/graphql-codegen-core/src/types.ts#L71-L76) in your schema.
 * `operation`: use with `MULTIPLE_FILES` to declare that this template belongs to GraphQL operation (`query`/`mutation`/`subsription`), this template will compile with [`Operation` context](https://github.com/dotansimha/graphql-code-generator/blob/e9e4722723541628bc7ae58c0e4082556af4bfb8/packages/graphql-codegen-core/src/types.ts#L151-L161).
 * `fragment`: use with `MULTIPLE_FILES` to declare that this template belongs to GraphQL `fragment`, this template will compile with [`Fragment` context](https://github.com/dotansimha/graphql-code-generator/blob/e9e4722723541628bc7ae58c0e4082556af4bfb8/packages/graphql-codegen-core/src/types.ts#L144-L149).
 * `schema`: use with `MULTIPLE_FILES` to compile with [`SchemaTemplateContext`](https://github.com/dotansimha/graphql-code-generator/blob/e9e4722723541628bc7ae58c0e4082556af4bfb8/packages/graphql-codegen-core/src/types.ts#L78-L94).
@@ -139,8 +139,8 @@ const config = {
   // ...
   templates: {
     index: '{{>selectionSet}}',
-    selectionSet: 'Hello',
-  },
+    selectionSet: 'Hello'
+  }
   // ...
 };
 ```
@@ -152,8 +152,8 @@ const config = {
   // ...
   templates: {
     index: '{{>selectionSet types}}',
-    selectionSet: '{{#each this }} Type name: {{ name }}{{/each}}',
-  },
+    selectionSet: '{{#each this }} Type name: {{ name }}{{/each}}'
+  }
   // ...
 };
 ```
@@ -232,7 +232,6 @@ For example, GraphQL type of `String` is actually a `string` in TypeScript.
 ### outFile
 
 Use with `SINGLE_FILE`, specify the default filename for the generated file.
-
 
 ### filesExtension
 
