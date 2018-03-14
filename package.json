@@ -13,9 +13,7 @@
     "lint": "lerna run lint",
     "precommit": "lint-staged"
   },
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": ["packages/*"],
   "engines": {
     "yarn": "^1.5.1"
   },
@@ -45,14 +43,11 @@
     "raw-loader": "0.5.1",
     "webpack": "4.1.1",
     "webpack-cli": "2.0.11",
-    "webpack-node-externals": "1.6.0",
+    "webpack-node-externals": "1.6.0"
   },
   "lint-staged": {
     "*.{ts,tsx}": "tslint",
-    "*.{js,json,css,md,ts,tsx}": [
-      "prettier --write",
-      "git add"
-    ]
+    "*.{js,json,css,md,ts,tsx}": ["prettier --write", "git add"]
   },
   "prettier": {
     "printWidth": 120,
