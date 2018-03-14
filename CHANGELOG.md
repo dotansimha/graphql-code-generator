@@ -1,13 +1,23 @@
 <a name="NEXT"></a>
 
+<a name="0.8.20"></a>
+
+## [0.8.20](https://github.com/dotansimha/graphql-codegen/compare/0.8.19...0.8.20) (2018-03-14)
+
+* Fixed a bug with `gql` detection on TSX files
+
 <a name="0.8.19"></a>
+
 ## [0.8.19](https://github.com/dotansimha/graphql-codegen/compare/0.8.18...0.8.19) (2018-03-13)
+
 * Ignore commented code in document files
 * Better detection for GraphQL documents usage with `gql` tag.
 * Added prettier support (see README)
 
 <a name="0.8.18"></a>
+
 ## [0.8.18](https://github.com/dotansimha/graphql-codegen/compare/0.8.16...0.8.18) (2018-03-13)
+
 * Added `__typename` to TypeScript templates, with support for inline fragments.
 * Added `stringify` Handlebars helpers for easy debugging.
 * Codegen compiler: trim templates before using it.
@@ -18,10 +28,13 @@
 * Generator will not write a file to file system if the content is empty
 
 <a name="0.8.16"></a>
+
 ## [0.8.16](https://github.com/dotansimha/graphql-codegen/compare/0.8.15...0.8.16) (2018-03-13)
+
 * Handle lists and non-null properly (Thanks @FredyC)
 
 <a name="0.8.15"></a>
+
 ## [0.8.15](https://github.com/dotansimha/graphql-codegen/compare/0.8.14...0.8.15) (2018-03-13)
 
 * Added support for generator-specific config in `gql-gen.json` file.
@@ -37,17 +50,20 @@
 * Changed CLI option that points to `gql-gen.json` file from `--project-config` to `--config`.
 
 <a name="0.8.14"></a>
+
 ## [0.8.14](https://github.com/dotansimha/graphql-codegen/compare/0.8.12...0.8.14) (2017-10-29)
 
 * (Compiler) Fixed execution context for `ifDirective` and `unlessDirective` (now the parent is also available, no need for `../`)
 * (TypeScript) Fix for nullable types [Fixes #155](https://github.com/dotansimha/graphql-code-generator/issues/155)
 
 <a name="0.8.12"></a>
+
 ## [0.8.12](https://github.com/dotansimha/graphql-codegen/compare/0.8.11...0.8.12) (2017-09-21)
 
 * Fix for custom templates in an external project that use `.` in result file name (for example: `my-file.d.ts.schema.handlebars`)
 
 <a name="0.8.11"></a>
+
 ## [0.8.11](https://github.com/dotansimha/graphql-codegen/compare/0.8.10...0.8.11) (2017-09-20)
 
 * Export all available interfaces from the compiler package (Fixes [#144](https://github.com/dotansimha/graphql-code-generator/issues/144)
@@ -57,16 +73,19 @@
 * Allow insecure HTTP requests (Fixes [#137](https://github.com/dotansimha/graphql-code-generator/issues/137))
 
 <a name="0.8.10"></a>
+
 ## [0.8.10](https://github.com/dotansimha/graphql-codegen/compare/0.8.9...0.8.10) (2017-07-24)
 
 * Fixed bug with relative path for export JS
 
 <a name="0.8.9"></a>
+
 ## [0.8.9](https://github.com/dotansimha/graphql-codegen/compare/0.8.8...0.8.9) (2017-07-24)
 
 * Fixed bug with relative path for file schema
 
 <a name="0.8.8"></a>
+
 ## [0.8.8](https://github.com/dotansimha/graphql-codegen/compare/0.8.7...0.8.8) (2017-07-24)
 
 * Added support for custom helpers when generating custom templates
@@ -75,11 +94,13 @@
 * Updated docs
 
 <a name="0.8.7"></a>
+
 ## [0.8.7](https://github.com/dotansimha/graphql-codegen/compare/0.8.6...0.8.7) (2017-07-23)
 
 * Fixed issue with remote GraphQL endpoint and custom headers
 
 <a name="0.8.6"></a>
+
 ## [0.8.6](https://github.com/dotansimha/graphql-codegen/compare/0.8.5...0.8.6) (2017-07-20)
 
 * Fixed issue with loading GraphQLSchema export from JS file
@@ -87,6 +108,7 @@
 * Fixed issue with custom templates without prefix name
 
 <a name="0.8.5"></a>
+
 ## [0.8.5](https://github.com/dotansimha/graphql-codegen/compare/0.8.4...0.8.5) (2017-07-19)
 
 * Fixed issue with missing indicators for variables and selection set node
@@ -94,6 +116,7 @@
 * Removed default file extension for imports builder
 
 <a name="0.8.4"></a>
+
 ## [0.8.4](https://github.com/dotansimha/graphql-codegen/compare/0.8.3...0.8.4) (2017-07-19)
 
 * Fixed issue with generated result missing Fragment spread
@@ -101,26 +124,31 @@
 * Fixed issue with default output file overrides the `out` cli parameter
 
 <a name="0.8.3"></a>
+
 ## [0.8.3](https://github.com/dotansimha/graphql-codegen/compare/0.8.2...0.8.3) (2017-07-19)
 
-* Fixed issue with __typename in selectionSet
+* Fixed issue with \_\_typename in selectionSet
 
 <a name="0.8.2"></a>
+
 ## [0.8.2](https://github.com/dotansimha/graphql-codegen/compare/0.8.1...0.8.2) (2017-07-18)
 
 * Fixed issue with NPM installation
 
 <a name="0.8.1"></a>
+
 ## [0.8.1](https://github.com/dotansimha/graphql-codegen/compare/0.8.0...0.8.1) (2017-07-18)
 
 * Fixed issue with NPM installation
 
 <a name="0.8.0"></a>
+
 ## [0.8.0](https://github.com/dotansimha/graphql-codegen/compare/0.5.5...0.8.0) (2017-07-17)
 
 * Refactor everything :)
 
 <a name="0.5.5"></a>
+
 ## [0.5.5](https://github.com/dotansimha/graphql-codegen/compare/0.5.4...0.5.5) (2017-07-13)
 
 * fixed peer dependencies issue
@@ -129,15 +157,17 @@
 * Prevent primitives from being output like other models [PR #116](https://github.com/dotansimha/graphql-code-generator/pull/116)
 
 <a name="0.5.4"></a>
+
 ## [0.5.4](https://github.com/dotansimha/graphql-codegen/compare/0.5.2...0.5.4) (2017-06-24)
 
 * updated all dependencies
 
-
 <a name="0.5.2"></a>
+
 ## [0.5.2](https://github.com/dotansimha/graphql-codegen/compare/0.5.1...v0.5.2) (2017-05-03)
 
 ## Bug fixes
+
 * Added support for Anonymous operations (closes [#82](https://github.com/dotansimha/graphql-code-generator/issues/82))
 * Fixed a bug with missing root types (closes [#83](https://github.com/dotansimha/graphql-code-generator/issues/83))
 * Fixed a bug with multiple extends for TypeScript generator [#81](https://github.com/dotansimha/graphql-code-generator/pull/81) - Thanks @Anthonyzou
@@ -148,45 +178,40 @@
 * Updated all dependencies to their latest version.
 * **package:** update graphql to version 0.9.1 ([2782925](https://github.com/dotansimha/graphql-codegen/commit/2782925))
 
-
-
 <a name="0.5.1"></a>
+
 ## [0.5.1](https://github.com/dotansimha/graphql-codegen/compare/0.5.0...v0.5.1) (2017-01-03)
 
 * updated dependecies
 
 <a name="0.5.0"></a>
+
 # [0.5.0](https://github.com/dotansimha/graphql-codegen/compare/0.3.0...v0.5.0) (2016-12-29)
 
 ### Features
 
 * **core:** add support for loading GraphQL schema from js export file ([1587ef7](https://github.com/dotansimha/graphql-codegen/commit/1587ef7))
 
-
 <a name="0.4.0"></a>
-# [0.4.0](https://github.com/dotansimha/graphql-codegen/compare/0.3.0...v0.4.0) (2016-12-28)
 
+# [0.4.0](https://github.com/dotansimha/graphql-codegen/compare/0.3.0...v0.4.0) (2016-12-28)
 
 ### Bug Fixes
 
 * **package:** update [@types](https://github.com/types)/request to version 0.0.37 ([4fcdc32](https://github.com/dotansimha/graphql-codegen/commit/4fcdc32))
-
 
 ### Features
 
 * **libify:** added lib exports ([7175e11](https://github.com/dotansimha/graphql-codegen/commit/7175e11))
 * **core:** added support for server side schema arguments
 
-
-
 <a name="0.3.0"></a>
-# [0.3.0](https://github.com/dotansimha/graphql-codegen/compare/0.2.5...v0.3.0) (2016-12-26)
 
+# [0.3.0](https://github.com/dotansimha/graphql-codegen/compare/0.2.5...v0.3.0) (2016-12-26)
 
 ### Bug Fixes
 
 * **generators:** fixes for ts generators ([2f72d44](https://github.com/dotansimha/graphql-codegen/commit/2f72d44))
-
 
 ### Features
 
@@ -195,11 +220,9 @@
 * **generators:** add support for fragments spread for swift generator ([f95fa72](https://github.com/dotansimha/graphql-codegen/commit/f95fa72))
 * **generators:** More fixes for swift generator ([487a249](https://github.com/dotansimha/graphql-codegen/commit/487a249))
 
-
-
 <a name="0.2.5"></a>
-## [0.2.5](https://github.com/dotansimha/graphql-codegen/compare/0.2.4...v0.2.5) (2016-12-24)
 
+## [0.2.5](https://github.com/dotansimha/graphql-codegen/compare/0.2.4...v0.2.5) (2016-12-24)
 
 ### Bug Fixes
 
@@ -212,71 +235,62 @@
 * **generators:** WIP: swift generator and some bug fixes ([f5b0b92](https://github.com/dotansimha/graphql-codegen/commit/f5b0b92))
 
 <a name="0.2.4"></a>
-## [0.2.4](https://github.com/dotansimha/graphql-codegen/compare/0.2.3...v0.2.4) (2016-12-24)
 
+## [0.2.4](https://github.com/dotansimha/graphql-codegen/compare/0.2.3...v0.2.4) (2016-12-24)
 
 ### Features
 
 * **cli:** add support for --no-documents and --no-schema flags ([1a6a692](https://github.com/dotansimha/graphql-codegen/commit/1a6a692))
 
-
 <a name="0.2.3"></a>
-## [0.2.3](https://github.com/dotansimha/graphql-codegen/compare/0.2.2...v0.2.3) (2016-12-24)
 
+## [0.2.3](https://github.com/dotansimha/graphql-codegen/compare/0.2.2...v0.2.3) (2016-12-24)
 
 ### Features
 
 * **documents-finder:** add support for finding GraphQL documents inside code files ([1d11980](https://github.com/dotansimha/graphql-codegen/commit/1d11980))
 
-
-
 <a name="0.2.2"></a>
-## [0.2.2](https://github.com/dotansimha/graphql-codegen/compare/0.2.1...v0.2.2) (2016-12-23)
 
+## [0.2.2](https://github.com/dotansimha/graphql-codegen/compare/0.2.1...v0.2.2) (2016-12-23)
 
 ### Bug Fixes
 
 * **fragments:** added rootType to fragments ([af9b932](https://github.com/dotansimha/graphql-codegen/commit/af9b932))
 
-
 <a name="0.2.1"></a>
-## [0.2.1](https://github.com/dotansimha/graphql-codegen/compare/0.2.0...v0.2.1) (2016-12-23)
 
+## [0.2.1](https://github.com/dotansimha/graphql-codegen/compare/0.2.0...v0.2.1) (2016-12-23)
 
 ### Features
 
 * **flatten, partials:** add support for non-flatten innerTypes ([1f6d001](https://github.com/dotansimha/graphql-codegen/commit/1f6d001))
 
-
-
 <a name="0.2.0"></a>
-# [0.2.0](https://github.com/dotansimha/graphql-codegen/compare/0.1.9...v0.2.0) (2016-12-14)
 
+# [0.2.0](https://github.com/dotansimha/graphql-codegen/compare/0.1.9...v0.2.0) (2016-12-14)
 
 ### Features
 
 * **core:** added custom headers for remote GraphQL endpoint ([d3b2cf9](https://github.com/dotansimha/graphql-codegen/commit/d3b2cf9))
 
 <a name="0.1.9"></a>
-## [0.1.9](https://github.com/dotansimha/graphql-codegen/compare/0.1.8...v0.1.9) (2016-12-14)
 
+## [0.1.9](https://github.com/dotansimha/graphql-codegen/compare/0.1.8...v0.1.9) (2016-12-14)
 
 ### Features
 
 * **cli:** added package version to cli ([df698d8](https://github.com/dotansimha/graphql-codegen/commit/df698d8))
 * **core:** added support for custom scalar types ([6ce7aa9](https://github.com/dotansimha/graphql-codegen/commit/6ce7aa9))
 
-
-
 <a name="0.1.8"></a>
-## 0.1.8 (2016-12-14)
 
+## 0.1.8 (2016-12-14)
 
 ### Bug Fixes
 
 * **core:** fixes for cli and template path resolve ([b7a3540](https://github.com/dotansimha/graphql-codegen/commit/b7a3540))
 * **typescript:** fixed enum template ([c05acd6](https://github.com/dotansimha/graphql-codegen/commit/c05acd6))
-
 
 ### Features
 
@@ -314,6 +328,3 @@
 * **loader:** added basic schema loader and validator from JSON introspection file ([13b3dec](https://github.com/dotansimha/graphql-codegen/commit/13b3dec))
 * **parser:** added basic parser for documents and added some basic interfaces ([8ecaf4e](https://github.com/dotansimha/graphql-codegen/commit/8ecaf4e))
 * **typescript:** fixed issue with fragment name ([e3799da](https://github.com/dotansimha/graphql-codegen/commit/e3799da))
-
-
-
