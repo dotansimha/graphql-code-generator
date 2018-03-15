@@ -34,7 +34,7 @@
     "jest": "22.4.2",
     "rimraf": "2.6.2",
     "ts-jest": "22.4.1",
-    "graphql-tools": "2.22.0",
+    "graphql-tools": "2.23.0",
     "apollo-link": "1.2.1",
     "awesome-typescript-loader": "4.0.1",
     "raw-loader": "0.5.1",
