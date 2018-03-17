@@ -16,6 +16,7 @@ import * as fs from 'fs';
 import { scanForTemplatesInPath } from './loaders/templates-scanner';
 import { EInputType, GeneratorConfig, getGeneratorConfig } from 'graphql-codegen-generators';
 import * as mkdirp from 'mkdirp';
+import * as validUrl from 'valid-url';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
@@ -23,13 +24,14 @@ export interface CLIOptions {
   file?: string;
   url?: string;
   export?: string;
+  schema?: string;
   args?: string[];
   template?: string;
   project?: string;
   out?: string;
   header?: string[];
-  schema?: any;
-  documents?: any;
+  skipSchema?: any;
+  skipDocuments?: any;
   config?: string;
   require?: string[];
 }
@@ -62,15 +64,24 @@ export const initCLI = (args): any => {
       '-u, --export <export-file>',
       'Path to a JavaScript (es5/6) file that exports (as default export) your `GraphQLSchema` object'
     )
-    .option('-h, --header [header]', 'Header to add to the introspection HTTP request when using --url', collect, [])
+    .option(
+      '-s, --schema <path>',
+      'Path to GraphQL schema: local JSON file, GraphQL endpoint, local file that exports GraphQLSchema/AST/JSON'
+    )
+    .option(
+      '-h, --header [header]',
+      'Header to add to the introspection HTTP request when using --url/--schema with url',
+      collect,
+      []
+    )
     .option(
       '-t, --template <template-name>',
       'Language/platform name templates, or a name of NPM modules that `export default` GqlGenConfig object'
     )
     .option('-p, --project <project-path>', 'Project path(s) to scan for custom template files')
     .option('--config <json-file>', 'Codegen configuration file, defaults to: ./gql-gen.json')
-    .option('-m, --no-schema', 'Generates only client side documents, without server side schema types')
-    .option('-c, --no-documents', 'Generates only server side schema types, without client side documents')
+    .option('-m, --skip-schema', 'Generates only client side documents, without server side schema types')
+    .option('-c, --skip-documents', 'Generates only server side schema types, without client side documents')
     .option('-o, --out <path>', 'Output file(s) path', String, './')
     .option('-r, --require [require]', 'module to preload (option can be repeated)', collect, [])
     .option('-ow, --no-overwrite', 'Skip file writing if the output file(s) already exists in path')
@@ -92,14 +103,23 @@ export const cliError = (err: string) => {
 };
 
 export const validateCliOptions = (options: CLIOptions) => {
+  const schema = options.schema;
   const file = options.file;
   const url = options.url;
   const fsExport = options.export;
   const template = options.template;
   const project = options.project;
 
-  if (!file && !url && !fsExport) {
-    cliError('Please specify one of --file, --url or --export flags!');
+  if (!schema && !file && !url && !fsExport) {
+    cliError('Please specify one of --schema, --file, --url or --export flags!');
+  }
+
+  if (file) {
+    console.warn(`WARNING: --file is deprecated, use --schema instead.`);
+  } else if (url) {
+    console.warn(`WARNING: --url is deprecated, use --schema instead.`);
+  } else if (fsExport) {
+    console.warn(`WARNING: --export is deprecated, use --schema instead.`);
   }
 
   if (!template && !project) {
@@ -112,6 +132,7 @@ export const validateCliOptions = (options: CLIOptions) => {
 export const executeWithOptions = async (options: CLIOptions): Promise<FileOutput[]> => {
   validateCliOptions(options);
 
+  const schema: string = options.schema;
   const file: string = options.file;
   const url: string = options.url;
   const fsExport: string = options.export;
@@ -121,19 +142,39 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
   const gqlGenConfigFilePath: string = options.config || './gql-gen.json';
   const out: string = options.out || './';
   const headers: string[] = options.header;
-  const generateSchema: boolean = options.schema;
-  const generateDocuments: boolean = options.documents;
+  const generateSchema: boolean = !!options.skipSchema;
+  const generateDocuments: boolean = !!options.skipDocuments;
   const modulesToRequire: string[] = options.require || [];
   let schemaExportPromise;
 
   modulesToRequire.forEach(mod => require(mod));
 
-  if (file) {
+  if (schema) {
+    if (validUrl.isUri(schema)) {
+      schemaExportPromise = introspectionFromUrl(schema, headers).then(introspectionToGraphQLSchema);
+    } else if (fs.existsSync(schema)) {
+      const extension = path.extname(schema);
+
+      if (!extension) {
+        cliError('Invalid --schema local path provided, unable to find the file extension!');
+      } else if (extension === '.json') {
+        schemaExportPromise = introspectionFromFile(schema).then(introspectionToGraphQLSchema);
+      } else {
+        schemaExportPromise = schemaFromExport(schema);
+      }
+    } else {
+      cliError('Invalid --schema provided, please use a path to local file or HTTP endpoint');
+    }
+  } else if (file) {
     schemaExportPromise = introspectionFromFile(file).then(introspectionToGraphQLSchema);
   } else if (url) {
     schemaExportPromise = introspectionFromUrl(url, headers).then(introspectionToGraphQLSchema);
   } else if (fsExport) {
     schemaExportPromise = schemaFromExport(fsExport);
+  }
+
+  if (!schemaExportPromise) {
+    cliError('Invalid --schema provided, please use a path to local file or HTTP endpoint');
   }
 
   const graphQlSchema = await schemaExportPromise;

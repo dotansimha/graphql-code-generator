@@ -44,21 +44,10 @@
   "jest": {
     "verbose": true,
     "collectCoverage": true,
-    "collectCoverageFrom": [
-      "src/**/*.ts"
-    ],
+    "collectCoverageFrom": ["src/**/*.ts"],
     "coverageDirectory": "./tests/coverage",
-    "coveragePathIgnorePatterns": [
-      "/node_modules/",
-      ".*?handlebars-helpers.*?",
-      "src/index.ts",
-      "src/types.ts"
-    ],
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
-    ],
+    "coveragePathIgnorePatterns": ["/node_modules/", ".*?handlebars-helpers.*?", "src/index.ts", "src/types.ts"],
+    "moduleFileExtensions": ["ts", "tsx", "js"],
     "transform": {
       "^.+\\.(ts|tsx)$": "<rootDir>/tests/jest.typescript.js"
     },
@@ -70,6 +59,7 @@
   },
   "dependencies": {
     "@types/prettier": "1.10.0",
+    "@types/valid-url": "1.0.2",
     "commander": "2.15.0",
     "glob": "7.1.2",
     "graphql-codegen-compiler": "0.8.20",
@@ -78,7 +68,8 @@
     "mkdirp": "0.5.1",
     "prettier": "1.11.1",
     "request": "2.85.0",
-    "strip-comments": "0.4.4"
+    "strip-comments": "0.4.4",
+    "valid-url": "1.0.9"
   },
   "typings": "dist/index.d.ts",
   "typescript": {
