@@ -1,6 +1,6 @@
 {
   "name": "graphql-code-generator",
-  "version": "0.8.20",
+  "version": "0.8.21",
   "license": "MIT",
   "bin": {
     "gql-gen": "dist/index.js"
@@ -72,9 +72,9 @@
     "@types/prettier": "1.10.0",
     "commander": "2.15.0",
     "glob": "7.1.2",
-    "graphql-codegen-compiler": "0.8.20",
-    "graphql-codegen-core": "0.8.20",
-    "graphql-codegen-generators": "0.8.20",
+    "graphql-codegen-compiler": "0.8.21",
+    "graphql-codegen-core": "0.8.21",
+    "graphql-codegen-generators": "0.8.21",
     "mkdirp": "0.5.1",
     "prettier": "1.11.1",
     "request": "2.85.0",
