@@ -1,5 +1,8 @@
 <a name="NEXT"></a>
 
+* Use default `.ts` extension for TypeScript generatos (instead of `.d.ts`) to avoid errors with enums (Thanks @guilhermehubner)
+* Update some dependencies to the latest version.
+
 <a name="0.8.20"></a>
 
 ## [0.8.20](https://github.com/dotansimha/graphql-codegen/compare/0.8.19...0.8.20) (2018-03-14)
