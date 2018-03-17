@@ -281,12 +281,10 @@ function parseTemplateName(templateName: string): { prefix: string; handler: Fun
     const handler = handlersMap[compilationContext];
 
     if (handler) {
-      const pref = path.resolve(path.dirname(templateName) + '/', prefix);
-
       return {
         prefix: hasPrefix
-          ? ['all', 'documents', 'schema'].includes(compilationContext) ? pref : pref + '.'
-          : pref + '/',
+          ? ['all', 'documents', 'schema'].includes(compilationContext) ? prefix : prefix + '.'
+          : ['all', 'documents', 'schema'].includes(compilationContext) ? compilationContext : prefix,
         handler,
         fileExtension
       };

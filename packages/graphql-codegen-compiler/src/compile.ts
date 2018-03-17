@@ -33,7 +33,9 @@ export function compileTemplate(
   Object.keys(templates).forEach((templateName: string) => {
     debugLog(`[compileTemplate] register partial template ${templateName}`);
 
-    registerPartial(templateName, templates[templateName].trim());
+    // TODO needs to be configurable
+    // Should probably have prefix information or something
+    registerPartial(templateName.split('.').reverse()[1], templates[templateName].trim());
   });
 
   let mergedDocuments: Document;
