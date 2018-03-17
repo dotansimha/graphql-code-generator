@@ -61,7 +61,7 @@
   },
   "dependencies": {
     "graphql-tag": "2.8.0",
-    "graphql-tools": "2.23.0"
+    "graphql-tools": "2.23.1"
   },
   "peerDependencies": {
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0"
