@@ -11,7 +11,9 @@
     "build": "lerna run build",
     "test": "lerna run test",
     "lint": "lerna run lint",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "prerelease": "yarn build && yarn test",
+    "release": "lerna publish --exact --force-publish=\"*\""
   },
   "workspaces": ["packages/*"],
   "dependencies": {
