@@ -33,7 +33,7 @@ Now create a simple template file with this special structure: `{file-prefix}.{f
 
 This file will compile by the generator as Handlebars template, with the `all` context, and the result file name will be `hoc.js`.
 
-To see a full list of available contexts, [refer to `graphql-codegen-generators` package README](https://github.com/dotansimha/graphql-code-generators/blob/master/packages/graphql-codegen-core/README.md#templates)
+To see a full list of available contexts, [refer to `graphql-codegen-generators` package README](https://github.com/dotansimha/graphql-code-generators/blob/master/packages/graphql-codegen-generators/README.md#templates)
 
 Next, run the generator from the CLI, but use `project` flag (instead of `template`), and specify the base path for you templates (the generator will look for the following file extensions: `template`, `tmpl`, `gqlgen`, `handlebars`):
 
