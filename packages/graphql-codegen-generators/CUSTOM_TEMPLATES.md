@@ -33,10 +33,14 @@ Now create a simple template file with this special structure: `{file-prefix}.{f
 
 This file will compile by the generator as Handlebars template, with the `all` context, and the result file name will be `hoc.js`.
 
-To see a full list of available contexts, [refer to `graphql-codegen-generators` package README](https://github.com/dotansimha/graphql-code-generators/blob/master/packages/graphql-codegen-generators/README.md#templates)
+To see a full list of available contexts, [refer to `graphql-codegen-generators` package README](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/graphql-codegen-generators/README.md#templates)
 
 Next, run the generator from the CLI, but use `project` flag (instead of `template`), and specify the base path for you templates (the generator will look for the following file extensions: `template`, `tmpl`, `gqlgen`, `handlebars`):
 
-    $ gql-gen --project ./src/ --file ./schema.json "./src/graphql/**/*.graphql"
+    $ gql-gen --project ./templates/ --out ./src/generated --file ./schema.json "./src/graphql/**/*.graphql"
 
-> No need to specify the output directory, since the generator will create the generated files next to the template.
+#### tips, tricks, and gotchas
+
+**Any subdirectory structure will be maintained in the output.** When using the `eachImport` helper, note that the import `file` is just the filename, so you'll have to [handle relative paths yourself](https://github.com/micimize/graphql-to-io-ts/blob/master/src/helpers/relative-import.js).
+
+**All templates in your template directory will be registered with `registerPartial(filename.split('.').reverse()[1], template)`, so `ts.type.gqlgen` becomes the partial `type`.** This means you can easily use `{{> type }}` in `ts.inputType.gqlgen`, but also means that multiple templates using the same context might clobber eachother in the partial registry. If this is a problem, simply make a seperate partial with a unique name like `prefixPartial.handlebars`.
