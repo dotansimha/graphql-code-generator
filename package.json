@@ -26,7 +26,7 @@
     "@types/node": "9.4.7",
     "@types/request": "2.47.0",
     "@types/common-tags": "1.4.0",
-    "@types/graphql": "0.12.5",
+    "@types/graphql": "0.13.0",
     "husky": "0.14.3",
     "lint-staged": "7.0.0",
     "tslint": "5.9.1",

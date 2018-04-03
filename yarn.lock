@@ -46,9 +46,9 @@
     "@types/minimatch" "*"
     "@types/node" "*"
 
-"@types/graphql@0.12.5":
-  version "0.12.5"
-  resolved "https://registry.yarnpkg.com/@types/graphql/-/graphql-0.12.5.tgz#24993f51177a8afa2c5d49bed1d8fb6bf8d06ded"
+"@types/graphql@0.13.0":
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/@types/graphql/-/graphql-0.13.0.tgz#78a33a7f429a06a64714817d9130d578e0f35ecb"
 
 "@types/handlebars@4.0.36":
   version "4.0.36"
