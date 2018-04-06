@@ -38,7 +38,7 @@
     "ts-jest": "22.4.1",
     "graphql-tools": "2.23.1",
     "apollo-link": "1.2.1",
-    "awesome-typescript-loader": "4.0.1",
+    "awesome-typescript-loader": "5.0.0",
     "raw-loader": "0.5.1",
     "webpack": "4.1.1",
     "webpack-cli": "2.0.12",
