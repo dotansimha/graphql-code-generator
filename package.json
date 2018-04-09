@@ -17,7 +17,7 @@
   },
   "workspaces": ["packages/*"],
   "dependencies": {
-    "lerna": "2.9.0"
+    "lerna": "2.10.1"
   },
   "devDependencies": {
     "@types/glob": "5.0.35",
