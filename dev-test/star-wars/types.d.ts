@@ -3,9 +3,7 @@
 export interface Character {
   id: string /* The ID of the character */;
   name: string /* The name of the character */;
-  friends?:
-    | Character[]
-    | null /* The friends of the character, or an empty list if they have none */;
+  friends?: Character[] | null /* The friends of the character, or an empty list if they have none */;
   friendsConnection: FriendsConnection /* The friends of the character exposed as a connection with edges */;
   appearsIn: Episode[] /* The movies this character appears in */;
 }
@@ -22,12 +20,8 @@ export interface Query {
 /* A connection object for a character&#x27;s friends */
 export interface FriendsConnection {
   totalCount?: number | null /* The total number of friends */;
-  edges?:
-    | FriendsEdge[]
-    | null /* The edges for each of the character&#x27;s friends. */;
-  friends?:
-    | Character[]
-    | null /* A list of the friends, as a convenience when edges are not needed. */;
+  edges?: FriendsEdge[] | null /* The edges for each of the character&#x27;s friends. */;
+  friends?: Character[] | null /* A list of the friends, as a convenience when edges are not needed. */;
   pageInfo: PageInfo /* Information for paginating this connection */;
 }
 /* An edge object for a character&#x27;s friends */
@@ -50,19 +44,13 @@ export interface Review {
 export interface Human extends Character {
   id: string /* The ID of the human */;
   name: string /* What this human calls themselves */;
-  homePlanet?:
-    | string
-    | null /* The home planet of the human, or null if unknown */;
+  homePlanet?: string | null /* The home planet of the human, or null if unknown */;
   height?: number | null /* Height in the preferred unit, default is meters */;
   mass?: number | null /* Mass in kilograms, or null if unknown */;
-  friends?:
-    | Character[]
-    | null /* This human&#x27;s friends, or an empty list if they have none */;
+  friends?: Character[] | null /* This human&#x27;s friends, or an empty list if they have none */;
   friendsConnection: FriendsConnection /* The friends of the human exposed as a connection with edges */;
   appearsIn: Episode[] /* The movies this human appears in */;
-  starships?:
-    | Starship[]
-    | null /* A list of starships this person has piloted, or an empty list if none */;
+  starships?: Starship[] | null /* A list of starships this person has piloted, or an empty list if none */;
 }
 
 export interface Starship {
@@ -74,9 +62,7 @@ export interface Starship {
 export interface Droid extends Character {
   id: string /* The ID of the droid */;
   name: string /* What others call this droid */;
-  friends?:
-    | Character[]
-    | null /* This droid&#x27;s friends, or an empty list if they have none */;
+  friends?: Character[] | null /* This droid&#x27;s friends, or an empty list if they have none */;
   friendsConnection: FriendsConnection /* The friends of the droid exposed as a connection with edges */;
   appearsIn: Episode[] /* The movies this droid appears in */;
   primaryFunction?: string | null /* This droid&#x27;s primary function */;
@@ -137,16 +123,16 @@ export interface CreateReviewMutationArgs {
   review: ReviewInput;
 }
 /* The episodes in the Star Wars trilogy */
-export enum Episode {
-  NEWHOPE = "NEWHOPE",
-  EMPIRE = "EMPIRE",
-  JEDI = "JEDI"
+export declare enum Episode {
+  NEWHOPE = 'NEWHOPE',
+  EMPIRE = 'EMPIRE',
+  JEDI = 'JEDI'
 }
 
 /* Units of height */
-export enum LengthUnit {
-  METER = "METER",
-  FOOT = "FOOT"
+export declare enum LengthUnit {
+  METER = 'METER',
+  FOOT = 'FOOT'
 }
 
 export type SearchResult = Human | Droid | Starship;
@@ -158,12 +144,12 @@ export namespace CreateReviewForEpisode {
   };
 
   export type Mutation = {
-    __typename?: "Mutation";
+    __typename?: 'Mutation';
     createReview?: CreateReview | null;
   };
 
   export type CreateReview = {
-    __typename?: "Review";
+    __typename?: 'Review';
     stars: number;
     commentary?: string | null;
   };
@@ -174,18 +160,18 @@ export namespace HeroAndFriendsNames {
   };
 
   export type Query = {
-    __typename?: "Query";
+    __typename?: 'Query';
     hero?: Hero | null;
   };
 
   export type Hero = {
-    __typename?: "Character";
+    __typename?: 'Character';
     name: string;
     friends?: Friends[] | null;
   };
 
   export type Friends = {
-    __typename?: "Character";
+    __typename?: 'Character';
     name: string;
   };
 }
@@ -193,12 +179,12 @@ export namespace HeroAppearsIn {
   export type Variables = {};
 
   export type Query = {
-    __typename?: "Query";
+    __typename?: 'Query';
     hero?: Hero | null;
   };
 
   export type Hero = {
-    __typename?: "Character";
+    __typename?: 'Character';
     name: string;
     appearsIn: Episode[];
   };
@@ -209,24 +195,22 @@ export namespace HeroDetails {
   };
 
   export type Query = {
-    __typename?: "Query";
+    __typename?: 'Query';
     hero?: Hero | null;
   };
 
   export type Hero = {
-    __typename?:
-      | HumanInlineFragment["__typename"]
-      | DroidInlineFragment["__typename"];
+    __typename?: HumanInlineFragment['__typename'] | DroidInlineFragment['__typename'];
     name: string;
   } & (HumanInlineFragment | DroidInlineFragment);
 
   export type HumanInlineFragment = {
-    __typename?: "Human";
+    __typename?: 'Human';
     height?: number | null;
   };
 
   export type DroidInlineFragment = {
-    __typename?: "Droid";
+    __typename?: 'Droid';
     primaryFunction?: string | null;
   };
 }
@@ -236,7 +220,7 @@ export namespace HeroDetailsWithFragment {
   };
 
   export type Query = {
-    __typename?: "Query";
+    __typename?: 'Query';
     hero?: Hero | null;
   };
 
@@ -248,12 +232,12 @@ export namespace HeroName {
   };
 
   export type Query = {
-    __typename?: "Query";
+    __typename?: 'Query';
     hero?: Hero | null;
   };
 
   export type Hero = {
-    __typename?: "Character";
+    __typename?: 'Character';
     name: string;
   };
 }
@@ -264,12 +248,12 @@ export namespace HeroNameConditionalInclusion {
   };
 
   export type Query = {
-    __typename?: "Query";
+    __typename?: 'Query';
     hero?: Hero | null;
   };
 
   export type Hero = {
-    __typename?: "Character";
+    __typename?: 'Character';
     name: string;
   };
 }
@@ -280,12 +264,12 @@ export namespace HeroNameConditionalExclusion {
   };
 
   export type Query = {
-    __typename?: "Query";
+    __typename?: 'Query';
     hero?: Hero | null;
   };
 
   export type Hero = {
-    __typename?: "Character";
+    __typename?: 'Character';
     name: string;
   };
 }
@@ -295,44 +279,42 @@ export namespace HeroParentTypeDependentField {
   };
 
   export type Query = {
-    __typename?: "Query";
+    __typename?: 'Query';
     hero?: Hero | null;
   };
 
   export type Hero = {
-    __typename?:
-      | HumanInlineFragment["__typename"]
-      | DroidInlineFragment["__typename"];
+    __typename?: HumanInlineFragment['__typename'] | DroidInlineFragment['__typename'];
     name: string;
   } & (HumanInlineFragment | DroidInlineFragment);
 
   export type HumanInlineFragment = {
-    __typename?: "Human";
+    __typename?: 'Human';
     friends?: Friends[] | null;
   };
 
   export type Friends = {
-    __typename?: _HumanInlineFragment["__typename"];
+    __typename?: _HumanInlineFragment['__typename'];
     name: string;
   } & (_HumanInlineFragment);
 
   export type _HumanInlineFragment = {
-    __typename?: "Human";
+    __typename?: 'Human';
     height?: number | null;
   };
 
   export type DroidInlineFragment = {
-    __typename?: "Droid";
+    __typename?: 'Droid';
     friends?: _Friends[] | null;
   };
 
   export type _Friends = {
-    __typename?: __HumanInlineFragment["__typename"];
+    __typename?: __HumanInlineFragment['__typename'];
     name: string;
   } & (__HumanInlineFragment);
 
   export type __HumanInlineFragment = {
-    __typename?: "Human";
+    __typename?: 'Human';
     height?: number | null;
   };
 }
@@ -342,19 +324,19 @@ export namespace HeroTypeDependentAliasedField {
   };
 
   export type Query = {
-    __typename?: "Query";
+    __typename?: 'Query';
     hero?: Hero | null;
   };
 
   export type Hero = HumanInlineFragment | DroidInlineFragment;
 
   export type HumanInlineFragment = {
-    __typename?: "Human";
+    __typename?: 'Human';
     property?: string | null;
   };
 
   export type DroidInlineFragment = {
-    __typename?: "Droid";
+    __typename?: 'Droid';
     property?: string | null;
   };
 }
@@ -362,12 +344,12 @@ export namespace HumanWithNullHeight {
   export type Variables = {};
 
   export type Query = {
-    __typename?: "Query";
+    __typename?: 'Query';
     human?: Human | null;
   };
 
   export type Human = {
-    __typename?: "Human";
+    __typename?: 'Human';
     name: string;
     mass?: number | null;
   };
@@ -376,35 +358,35 @@ export namespace TwoHeroes {
   export type Variables = {};
 
   export type Query = {
-    __typename?: "Query";
+    __typename?: 'Query';
     r2?: R2 | null;
     luke?: Luke | null;
   };
 
   export type R2 = {
-    __typename?: "Character";
+    __typename?: 'Character';
     name: string;
   };
 
   export type Luke = {
-    __typename?: "Character";
+    __typename?: 'Character';
     name: string;
   };
 }
 
 export namespace HeroDetails {
   export type Fragment = {
-    __typename?: "Character";
+    __typename?: 'Character';
     name: string;
   } & (HumanInlineFragment | DroidInlineFragment);
 
   export type HumanInlineFragment = {
-    __typename?: "Human";
+    __typename?: 'Human';
     height?: number | null;
   };
 
   export type DroidInlineFragment = {
-    __typename?: "Droid";
+    __typename?: 'Droid';
     primaryFunction?: string | null;
   };
 }

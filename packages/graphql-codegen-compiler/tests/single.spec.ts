@@ -284,7 +284,7 @@ describe('Single File', () => {
       export interface Query {
         fieldTest: MyEnum;
       }
-      export enum MyEnum {
+      export declare enum MyEnum {
         A = "A",
         B = "B",
         C = "C",
@@ -411,8 +411,8 @@ describe('Single File', () => {
       expect(content).toContain('export interface Mutation');
       expect(content).toContain('export interface Subscription');
 
-      expect(content).toContain('export enum FeedType');
-      expect(content).toContain('export enum VoteType');
+      expect(content).toContain('export declare enum FeedType');
+      expect(content).toContain('export declare enum VoteType');
 
       expect(content).toContain('export interface Entry');
       expect(content).toContain('export interface User');
@@ -459,14 +459,14 @@ describe('Single File', () => {
       expect(compiled[0].content).toBeSimilarStringTo(`
           /* tslint:disable */
           /* A list of options for the sort order of the feed */
-          export enum FeedType {
+          export declare enum FeedType {
             HOT = "HOT",
             NEW = "NEW",
             TOP = "TOP",
           }
           
           /* The type of vote to record, when submitting a vote */
-          export enum VoteType {
+          export declare enum VoteType {
             UP = "UP",
             DOWN = "DOWN",
             CANCEL = "CANCEL",
@@ -535,14 +535,14 @@ describe('Single File', () => {
       expect(content).toBeSimilarStringTo(`
           /* tslint:disable */
           /* A list of options for the sort order of the feed */
-          export enum FeedType {
+          export declare enum FeedType {
             HOT = "HOT",
             NEW = "NEW",
             TOP = "TOP",
           }
           
           /* The type of vote to record, when submitting a vote */
-          export enum VoteType {
+          export declare enum VoteType {
             UP = "UP",
             DOWN = "DOWN",
             CANCEL = "CANCEL",
@@ -617,14 +617,14 @@ describe('Single File', () => {
       expect(content).toBeSimilarStringTo(`
        /* tslint:disable */
     /* A list of options for the sort order of the feed */
-    export enum FeedType {
+    export declare enum FeedType {
       HOT = "HOT",
       NEW = "NEW",
       TOP = "TOP",
     }
     
     /* The type of vote to record, when submitting a vote */
-    export enum VoteType {
+    export declare enum VoteType {
       UP = "UP",
       DOWN = "DOWN",
       CANCEL = "CANCEL",
