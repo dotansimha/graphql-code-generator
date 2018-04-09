@@ -1,5 +1,5 @@
 /* Units of height */
-export enum LengthUnit {
-  METER = "METER",
-  FOOT = "FOOT",
+export declare enum LengthUnit {
+  METER = 'METER',
+  FOOT = 'FOOT'
 }
