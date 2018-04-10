@@ -24,7 +24,7 @@ To build this package and the generators template, start by installing the packa
 Then, you can use the existing NPM scripts to build the package:
 
 ```
-    $ yarn build
+    $ npm build
     // Or, with Yarn
     $ yarn build
 ```
