@@ -70,7 +70,7 @@
   },
   "dependencies": {
     "@types/prettier": "1.10.0",
-    "commander": "2.15.0",
+    "commander": "2.15.1",
     "glob": "7.1.2",
     "graphql-codegen-compiler": "0.8.21",
     "graphql-codegen-core": "0.8.21",
