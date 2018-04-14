@@ -59,7 +59,7 @@ export const initCLI = (args): any => {
     .option('-f, --file <filePath>', 'Parse local GraphQL introspection JSON file')
     .option('-u, --url <graphql-endpoint>', 'Parse remote GraphQL endpoint as introspection file')
     .option(
-      '-u, --export <export-file>',
+      '-e, --export <export-file>',
       'Path to a JavaScript (es5/6) file that exports (as default export) your `GraphQLSchema` object'
     )
     .option('-h, --header [header]', 'Header to add to the introspection HTTP request when using --url', collect, [])
