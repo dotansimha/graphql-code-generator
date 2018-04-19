@@ -24,7 +24,7 @@ To build this package, start by installing the package dependencies:
 Then, you can use the existing NPM scripts to build the package:
 
 ```
-    $ yarn build
+    $ npm build
     // Or, with Yarn
     $ yarn build
 ```
