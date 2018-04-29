@@ -168,22 +168,22 @@ For example, let's take a look in the following GraphQL schema and `query`:
 
 ```graphql schema
 type NameFields {
-    firstName: String
-    lastName: String
+  firstName: String
+  lastName: String
 }
 
 type User {
-    name: NameFields
-    email: String
-    age: Int
+  name: NameFields
+  email: String
+  age: Int
 }
 
 type Query {
-    me: User
+  me: User
 }
 
 schema {
-    query: Query
+  query: Query
 }
 ```
 

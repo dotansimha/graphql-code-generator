@@ -291,8 +291,12 @@ function parseTemplateNameElements(templateName: string): TemplateNameElements |
       fileExtension: splitted[1],
       compilationContext,
       prefix: hasPrefix
-        ? ['all', 'documents', 'schema'].includes(compilationContext) ? prefix : prefix + '.'
-        : ['all', 'documents', 'schema'].includes(compilationContext) ? compilationContext : prefix
+        ? ['all', 'documents', 'schema'].includes(compilationContext)
+          ? prefix
+          : prefix + '.'
+        : ['all', 'documents', 'schema'].includes(compilationContext)
+          ? compilationContext
+          : prefix
     };
   }
   return null;
