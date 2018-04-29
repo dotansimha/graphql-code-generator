@@ -3,7 +3,7 @@ import { getDirectiveValues } from 'graphql/execution/values';
 import { DirectiveUseMap } from '../types';
 
 export function getDirectives(schema: GraphQLSchema, node: any): DirectiveUseMap {
-  const schemaDirectives: GraphQLDirective[] = schema.getDirectives ? schema.getDirectives() : [];
+  const schemaDirectives: ReadonlyArray<GraphQLDirective> = schema.getDirectives ? schema.getDirectives() : [];
   const astNode = node['astNode'];
   let result: DirectiveUseMap = {};
 
