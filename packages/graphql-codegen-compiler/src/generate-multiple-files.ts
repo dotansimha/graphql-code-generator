@@ -259,7 +259,16 @@ function handleFragment(
   }));
 }
 
-function parseTemplateName(templateName: string): { prefix: string; handler: Function; fileExtension: string } {
+type TemplateNameElements = {
+  compilationContext: string;
+  prefix: string;
+  fileExtension: string;
+  pathPrefix: string;
+};
+
+function parseTemplateNameElements(templateName: string): TemplateNameElements | null {
+  let basename = path.basename(templateName);
+  let pathPrefix = templateName.substr(0, templateName.length - basename.length);
   let splitted = path.basename(templateName).split('.');
   let hasPrefix = true;
 
@@ -275,24 +284,30 @@ function parseTemplateName(templateName: string): { prefix: string; handler: Fun
   const templateExtension = splitted[3];
 
   if (templateExtension && ALLOWED_CUSTOM_TEMPLATE_EXT.includes(templateExtension)) {
-    const compilationContext = splitted[2];
     const prefix = splitted[0];
-    const fileExtension = splitted[1];
-    const handler = handlersMap[compilationContext];
-
-    if (handler) {
-      const pref = path.resolve(path.dirname(templateName) + '/', prefix);
-
-      return {
-        prefix: hasPrefix
-          ? ['all', 'documents', 'schema'].includes(compilationContext) ? pref : pref + '.'
-          : pref + '/',
-        handler,
-        fileExtension
-      };
-    }
+    const compilationContext = splitted[2];
+    return {
+      pathPrefix,
+      fileExtension: splitted[1],
+      compilationContext,
+      prefix: hasPrefix
+        ? ['all', 'documents', 'schema'].includes(compilationContext) ? prefix : prefix + '.'
+        : ['all', 'documents', 'schema'].includes(compilationContext) ? compilationContext : prefix
+    };
   }
+  return null;
+}
 
+function parseTemplateName(templateName: string): { prefix: string; handler: Function; fileExtension: string } {
+  let elements = parseTemplateNameElements(templateName);
+  if (elements && handlersMap[elements.compilationContext]) {
+    let { compilationContext, pathPrefix, prefix, fileExtension } = elements;
+    return {
+      handler: handlersMap[compilationContext],
+      prefix: pathPrefix + prefix,
+      fileExtension
+    };
+  }
   return null;
 }
 

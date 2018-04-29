@@ -4,7 +4,7 @@ This generator also allow you to generate custom custom template from your Graph
 
 This way you can generate custom code based on your GraphQL schema / operations.
 
-To start using GraphQL code generator with custom templates, install the CLI module, and then create a JSON file called `gqlgen.json` in your project's root directory, specifying the following:
+To start using GraphQL code generator with custom templates, install the CLI module, and then create a JSON file called `gql-gen.json` in your project's root directory, specifying the following:
 
 ```json
 {
@@ -37,7 +37,10 @@ To see a full list of available contexts, [refer to `graphql-codegen-generators`
 
 Next, run the generator from the CLI, but use `project` flag (instead of `template`), and specify the base path for you templates (the generator will look for the following file extensions: `template`, `tmpl`, `gqlgen`, `handlebars`):
 
-    $ gql-gen --project ./src/ --file ./schema.json "./src/graphql/**/*.graphql"
-    
-> No need to specify the output directory, since the generator will create the generated files next to the template.
-    
+    $ gql-gen --project ./templates/ --out ./src/generated --file ./schema.json "./src/graphql/**/*.graphql"
+
+#### tips, tricks, and gotchas
+
+**Any subdirectory structure will be maintained in the output.** When using the `eachImport` helper, note that the import `file` is just the filename, so you'll have to [handle relative paths yourself](https://github.com/micimize/graphql-to-io-ts/blob/master/src/helpers/relative-import.js).
+
+**All templates in your template directory will be registered with `registerPartial(filename.split('.').reverse()[1], template)`, so `ts.type.gqlgen` becomes the partial `type`.** This means you can easily use `{{> type }}` in `ts.inputType.gqlgen`, but also means that multiple templates using the same context might clobber eachother in the partial registry. If this is a problem, simply make a seperate partial with a unique name like `prefixPartial.handlebars`.
