@@ -1,0 +1,55 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`extractDocumentStringFromCodeFile file with commented code 1`] = `
+"query myQuery2 {
+    data {
+      field1
+      field2
+    }
+  }"
+`;
+
+exports[`extractDocumentStringFromCodeFile file with gql and string and function use 1`] = `
+"query myQuery {
+    data {
+      field1
+      field2
+    }
+  }"
+`;
+
+exports[`extractDocumentStringFromCodeFile file with gql and template literal 1`] = `
+"query myQuery {
+    data {
+      field1
+      field2
+    }
+  }"
+`;
+
+exports[`extractDocumentStringFromCodeFile file with gql and template literal in ts/tsx file 1`] = `
+"query GPlayerList {
+    allPlayers {
+      id
+      tier
+      name
+    }
+  }"
+`;
+
+exports[`extractDocumentStringFromCodeFile file with gql and template literal, with use of string variables 1`] = `
+"query ArticleDetail {
+    Article(id: \\"thisisnotarealID\\") {
+      title
+    }
+  }"
+`;
+
+exports[`extractDocumentStringFromCodeFile file with simple gql content 1`] = `
+"query myQuery {
+  data {
+    field1
+    field2
+  }
+}"
+`;
