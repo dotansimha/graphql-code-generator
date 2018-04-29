@@ -8,6 +8,12 @@
 * Mark template comments as safe to avoid url escaping ([#210](https://github.com/dotansimha/graphql-code-generator/pull/210), Thanks @micimize)
 * Fixed some links in the docs and add relevant docs for the included changes ([#210](https://github.com/dotansimha/graphql-code-generator/pull/210), Thanks @micimize)
 * Fix export CLI short alias ([#255](https://github.com/dotansimha/graphql-code-generator/pull/255), Thanks @eritikass)
+* Deprecate `--export`, `--file`, `--url` in favor of `--schema` ([#208](https://github.com/dotansimha/graphql-code-generator/pull/208))
+
+### BREAKING CHANGES
+
+* `--no-schema` changed to `--skip-schema`
+* `--no-documents` changed to `--skip-documents`
 
 <a name="0.8.21"></a>
 
