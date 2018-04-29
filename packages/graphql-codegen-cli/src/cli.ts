@@ -142,8 +142,8 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
   const gqlGenConfigFilePath: string = options.config || './gql-gen.json';
   const out: string = options.out || './';
   const headers: string[] = options.header;
-  const generateSchema: boolean = !!options.skipSchema;
-  const generateDocuments: boolean = !!options.skipDocuments;
+  const generateSchema: boolean = !options.skipSchema;
+  const generateDocuments: boolean = !options.skipDocuments;
   const modulesToRequire: string[] = options.require || [];
   let schemaExportPromise;
 

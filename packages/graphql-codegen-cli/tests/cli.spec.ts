@@ -10,6 +10,24 @@ describe('executeWithOptions', () => {
     expect(result.length).toBe(1);
   });
 
+  it('execute the correct results when using schema with json file', async () => {
+    const result = await executeWithOptions({
+      schema: '../../dev-test/githunt/schema.json',
+      template: 'ts'
+    });
+
+    expect(result.length).toBe(1);
+  });
+
+  it('execute the correct results when using schema with js file', async () => {
+    const result = await executeWithOptions({
+      schema: '../../dev-test/test-schema/schema-object.js',
+      template: 'ts'
+    });
+
+    expect(result.length).toBe(1);
+  });
+
   it('execute the correct results when using custom config file', async () => {
     const result = await executeWithOptions({
       file: '../../dev-test/githunt/schema.json',
@@ -25,7 +43,7 @@ describe('executeWithOptions', () => {
       // export: '../../dev-test/githunt/schema.js',
       // template: 'ts'
       export: '../../dev-test/test-schema/schema-object.js',
-      template: 'ts',
+      template: 'ts'
     });
     expect(result.length).toBe(1);
   });
@@ -33,15 +51,38 @@ describe('executeWithOptions', () => {
   it('execute the correct results when using schema export as text', async () => {
     const result = await executeWithOptions({
       export: '../../dev-test/test-schema/schema-text.js',
-      template: 'ts',
+      template: 'ts'
     });
     expect(result.length).toBe(1);
+  });
+
+  it('execute the correct results when using skipSchema', async () => {
+    const result = await executeWithOptions({
+      export: '../../dev-test/test-schema/schema-text.js',
+      template: 'ts',
+      skipSchema: true
+    });
+
+    expect(result[0].content).toBe(`/* tslint:disable */
+`);
+  });
+
+  it('execute the correct results when using skipDocuments', async () => {
+    const result = await executeWithOptions({
+      export: '../../dev-test/star-wars/schema.json',
+      template: 'ts',
+      args: ['../../dev-test/star-wars/HeroDetails.graphql'],
+      skipDocuments: true,
+      skipSchema: true
+    });
+
+    expect(result[0].content).not.toContain('HeroDetails');
   });
 
   it('execute the correct results when using schema export as ast', async () => {
     const result = await executeWithOptions({
       export: '../../dev-test/test-schema/schema-ast.js',
-      template: 'ts',
+      template: 'ts'
     });
     expect(result.length).toBe(1);
   });
@@ -49,7 +90,7 @@ describe('executeWithOptions', () => {
   it('execute the correct results when using schema export as json', async () => {
     const result = await executeWithOptions({
       export: '../../dev-test/test-schema/schema-json.js',
-      template: 'ts',
+      template: 'ts'
     });
     expect(result.length).toBe(1);
   });
