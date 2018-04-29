@@ -23,7 +23,7 @@
     "@types/glob": "5.0.35",
     "@types/jest": "22.2.3",
     "@types/mkdirp": "0.5.2",
-    "@types/node": "9.6.2",
+    "@types/node": "9.6.7",
     "@types/request": "2.47.0",
     "@types/common-tags": "1.4.0",
     "@types/graphql": "0.12.5",
