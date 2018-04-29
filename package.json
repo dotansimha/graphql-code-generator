@@ -45,7 +45,7 @@
     "webpack-node-externals": "1.7.2"
   },
   "lint-staged": {
-    "*.{ts,tsx}": "tslint",
+    "*.{ts,tsx}": ["tslint --fix", "git add"],
     "*.{js,json,css,md,ts,tsx}": ["prettier --write", "git add"]
   },
   "prettier": {
