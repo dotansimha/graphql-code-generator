@@ -19,7 +19,7 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
   const customHelpers = config.customHelpers || {};
 
   Object.keys(customHelpers).forEach(helperName => {
-    registerHelper(helperName, customHelpers[helperName]);
+    registerHelper(helperName, customHelpers[helperName] as any);
   });
 
   registerHelper('toPrimitive', function(type) {
@@ -83,7 +83,7 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
       return '';
     }
 
-    return '/* ' + oneLineTrim`${str || ''}` + ' */';
+    return new SafeString('/* ' + oneLineTrim`${str || ''}` + ' */');
   });
 
   registerHelper('eachImport', function(context: any, options: { fn: Function }) {

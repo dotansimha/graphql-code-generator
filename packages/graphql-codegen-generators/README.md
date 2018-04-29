@@ -24,7 +24,7 @@ To build this package and the generators template, start by installing the packa
 Then, you can use the existing NPM scripts to build the package:
 
 ```
-    $ yarn build
+    $ npm build
     // Or, with Yarn
     $ yarn build
 ```
@@ -168,22 +168,22 @@ For example, let's take a look in the following GraphQL schema and `query`:
 
 ```graphql schema
 type NameFields {
-    firstName: String
-    lastName: String
+  firstName: String
+  lastName: String
 }
 
 type User {
-    name: NameFields
-    email: String
-    age: Int
+  name: NameFields
+  email: String
+  age: Int
 }
 
 type Query {
-    me: User
+  me: User
 }
 
 schema {
-    query: Query
+  query: Query
 }
 ```
 

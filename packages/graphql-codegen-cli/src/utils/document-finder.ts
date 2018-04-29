@@ -10,18 +10,22 @@ export const extractDocumentStringFromCodeFile = (fileContent: string): string |
     }
   } catch (e) {
     try {
-      fileContent = stripComments(fileContent);
+      fileContent = stripComments(fileContent, { sourceType: 'module' });
     } catch (e) {
-      // nothing to to here
+      try {
+        fileContent = stripComments(fileContent);
+      } catch (e) {
+        // nothing to to here
+      }
     }
 
-    let matches = fileContent.match(/gql[(]?[`'"]([\s\S\n\r.]*?)[`'"][)]?/gm);
+    let matches = fileContent.match(/gql[(]?`([\s\S\n\r.]*?)`/gm);
 
     if (matches === null) {
       matches = fileContent.match(/(['"](query|subscription|fragment|mutation) .*?['"])/gm);
     }
 
-    const result = (matches || []).map(item => item.replace(/\$\{.*?\}/g, '').replace(/(gql|`)/g, '')).join();
+    const result = (matches || []).map(item => item.replace(/\$\{.*?\}/g, '').replace(/(gql|[(]?`)/g, '')).join();
 
     if (!result || result === '') {
       return null;

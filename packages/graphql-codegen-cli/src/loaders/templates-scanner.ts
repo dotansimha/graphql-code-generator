@@ -13,7 +13,7 @@ export function scanForTemplatesInPath(dirPath: string, fileExtensions: string[]
   debugLog(`[scanForTemplatesInPath] Got results from glob: `, results);
 
   return results.reduce((prev, filePath) => {
-    prev[filePath] = fs.readFileSync(filePath).toString();
+    prev[filePath.substr(absolutePath.length + 1)] = fs.readFileSync(filePath).toString();
 
     return prev;
   }, {});
