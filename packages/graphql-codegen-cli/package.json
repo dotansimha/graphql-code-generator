@@ -78,7 +78,7 @@
     "mkdirp": "0.5.1",
     "prettier": "1.12.1",
     "request": "2.85.0",
-    "strip-comments": "0.4.4"
+    "strip-comments": "1.0.1"
   },
   "typings": "dist/index.d.ts",
   "typescript": {
