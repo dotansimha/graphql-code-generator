@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLSchema, OperationDefinitionNode } from 'graphql';
+import { GraphQLSchema, OperationDefinitionNode } from 'graphql';
 import { Operation } from '../types';
 import { getRoot } from '../utils/get-root';
 import { buildSelectionSet, separateSelectionSet } from './build-selection-set';
@@ -11,7 +11,12 @@ export function transformOperation(schema: GraphQLSchema, operationNode: Operati
   const name = operationNode.name && operationNode.name.value ? operationNode.name.value : '';
   debugLog(`[transformOperation] transforming operation ${name} of type ${operationNode.operation}`);
 
-  const root: GraphQLObjectType = getRoot(schema, operationNode);
+  const root = getRoot(schema, operationNode);
+
+  if (!root) {
+    throw new Error(`Unable to find the schema root matching: ${operationNode.operation}`);
+  }
+
   const variables = transformVariables(schema, operationNode);
   const directives = getDirectives(schema, operationNode);
   const selectionSet = buildSelectionSet(schema, root, operationNode.selectionSet);

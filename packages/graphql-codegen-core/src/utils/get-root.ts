@@ -1,6 +1,6 @@
 import { GraphQLObjectType, GraphQLSchema, OperationDefinitionNode } from 'graphql';
 
-export const getRoot = (schema: GraphQLSchema, operation: OperationDefinitionNode): GraphQLObjectType => {
+export const getRoot = (schema: GraphQLSchema, operation: OperationDefinitionNode): GraphQLObjectType | void => {
   switch (operation.operation) {
     case 'query':
       return schema.getQueryType();

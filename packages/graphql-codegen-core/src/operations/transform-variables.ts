@@ -3,10 +3,11 @@ import { Variable } from '../types';
 import { resolveType } from '../schema/resolve-type';
 import { debugLog } from '../debugging';
 import { resolveTypeIndicators } from '../schema/resolve-type-indicators';
+import { NonNullTypeNode } from 'graphql/language/ast';
 
 export function transformVariables(schema: GraphQLSchema, definitionNode: OperationDefinitionNode): Variable[] {
   return definitionNode.variableDefinitions.map<Variable>((variableDefinition: VariableDefinitionNode): Variable => {
-    const typeFromSchema = typeFromAST(schema, variableDefinition.type);
+    const typeFromSchema = typeFromAST(schema, variableDefinition.type as NonNullTypeNode);
     const resolvedType = resolveType(typeFromSchema);
     debugLog(
       `[transformVariables] transforming variable ${variableDefinition.variable.name.value} of type ${

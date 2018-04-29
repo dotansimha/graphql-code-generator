@@ -44,21 +44,10 @@
   "jest": {
     "verbose": true,
     "collectCoverage": true,
-    "collectCoverageFrom": [
-      "src/**/*.ts"
-    ],
+    "collectCoverageFrom": ["src/**/*.ts"],
     "coverageDirectory": "./tests/coverage",
-    "coveragePathIgnorePatterns": [
-      "/node_modules/",
-      ".*?handlebars-helpers.*?",
-      "src/index.ts",
-      "src/types.ts"
-    ],
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
-    ],
+    "coveragePathIgnorePatterns": ["/node_modules/", ".*?handlebars-helpers.*?", "src/index.ts", "src/types.ts"],
+    "moduleFileExtensions": ["ts", "tsx", "js"],
     "transform": {
       "^.+\\.(ts|tsx)$": "<rootDir>/tests/jest.typescript.js"
     },

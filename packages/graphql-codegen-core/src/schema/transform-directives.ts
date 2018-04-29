@@ -2,7 +2,7 @@ import { GraphQLDirective, DirectiveLocation, GraphQLSchema } from 'graphql';
 import { Directive } from '../types';
 import { resolveArguments } from './resolve-arguments';
 
-export function transformDirectives(schema: GraphQLSchema, directives: GraphQLDirective[]): Directive[] {
+export function transformDirectives(schema: GraphQLSchema, directives: ReadonlyArray<GraphQLDirective>): Directive[] {
   return directives.map<Directive>((directive: GraphQLDirective): Directive => {
     const args = resolveArguments(schema, directive.args);
     const locations = directive.locations || [];
