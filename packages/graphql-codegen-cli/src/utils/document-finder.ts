@@ -10,9 +10,13 @@ export const extractDocumentStringFromCodeFile = (fileContent: string): string |
     }
   } catch (e) {
     try {
-      fileContent = stripComments(fileContent);
+      fileContent = stripComments(fileContent, { sourceType: 'module' });
     } catch (e) {
-      // nothing to to here
+      try {
+        fileContent = stripComments(fileContent);
+      } catch (e) {
+        // nothing to to here
+      }
     }
 
     let matches = fileContent.match(/gql[(]?`([\s\S\n\r.]*?)`/gm);
