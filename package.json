@@ -17,35 +17,35 @@
   },
   "workspaces": ["packages/*"],
   "dependencies": {
-    "lerna": "2.9.0"
+    "lerna": "2.11.0"
   },
   "devDependencies": {
     "@types/glob": "5.0.35",
-    "@types/jest": "22.2.0",
+    "@types/jest": "22.2.3",
     "@types/mkdirp": "0.5.2",
-    "@types/node": "9.4.7",
+    "@types/node": "9.6.7",
     "@types/request": "2.47.0",
     "@types/common-tags": "1.4.0",
     "@types/graphql": "0.13.0",
     "husky": "0.14.3",
-    "lint-staged": "7.0.0",
+    "lint-staged": "7.0.5",
     "tslint": "5.9.1",
-    "typescript": "2.7.2",
+    "typescript": "2.8.3",
     "graphql": "0.13.2",
-    "graphql-tag": "2.8.0",
-    "jest": "22.4.2",
+    "graphql-tag": "2.9.1",
+    "jest": "22.4.3",
     "rimraf": "2.6.2",
-    "ts-jest": "22.4.1",
-    "graphql-tools": "2.23.1",
-    "apollo-link": "1.2.1",
-    "awesome-typescript-loader": "4.0.1",
+    "ts-jest": "22.4.4",
+    "graphql-tools": "3.0.0",
+    "apollo-link": "1.2.2",
+    "awesome-typescript-loader": "5.0.0",
     "raw-loader": "0.5.1",
-    "webpack": "4.1.1",
-    "webpack-cli": "2.0.12",
-    "webpack-node-externals": "1.6.0"
+    "webpack": "4.6.0",
+    "webpack-cli": "2.0.15",
+    "webpack-node-externals": "1.7.2"
   },
   "lint-staged": {
-    "*.{ts,tsx}": "tslint",
+    "*.{ts,tsx}": ["tslint --fix", "git add"],
     "*.{js,json,css,md,ts,tsx}": ["prettier --write", "git add"]
   },
   "prettier": {

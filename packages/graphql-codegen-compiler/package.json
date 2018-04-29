@@ -16,7 +16,7 @@
     "graphql-codegen-core": "0.8.21",
     "graphql-codegen-generators": "0.8.21",
     "handlebars": "4.0.11",
-    "moment": "2.21.0"
+    "moment": "2.22.1"
   },
   "jest": {
     "moduleFileExtensions": [
