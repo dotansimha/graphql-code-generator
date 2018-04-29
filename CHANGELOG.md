@@ -1,5 +1,13 @@
 <a name="NEXT"></a>
 
+* Update dependencies
+* Fix bugs with document finder ([#233](https://github.com/dotansimha/graphql-code-generator/issues/233), [#216](https://github.com/dotansimha/graphql-code-generator/pull/216))
+* Respect `--out` when generating a project ([#210](https://github.com/dotansimha/graphql-code-generator/pull/210), Thanks @micimize)
+* Automatically registerPartial custom templates without breaking normal partial registration ([#210](https://github.com/dotansimha/graphql-code-generator/pull/210), Thanks @micimize)
+* Make `ts.{ schema, documents }.handlebars` work without a prefix (e.g. `ts.schema.handlebars` => `schema.ts`) ([#210](https://github.com/dotansimha/graphql-code-generator/pull/210), Thanks @micimize)
+* Mark template comments as safe to avoid url escaping ([#210](https://github.com/dotansimha/graphql-code-generator/pull/210), Thanks @micimize)
+* Fixed some links in the docs and add relevant docs for the included changes ([#210](https://github.com/dotansimha/graphql-code-generator/pull/210), Thanks @micimize)
+* Fix export CLI short alias ([#255](https://github.com/dotansimha/graphql-code-generator/pull/255), Thanks @eritikass)
 
 <a name="0.8.21"></a>
 
