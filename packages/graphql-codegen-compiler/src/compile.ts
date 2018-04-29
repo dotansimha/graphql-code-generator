@@ -33,7 +33,8 @@ export function compileTemplate(
   Object.keys(templates).forEach((templateName: string) => {
     debugLog(`[compileTemplate] register partial template ${templateName}`);
 
-    registerPartial(templateName, templates[templateName].trim());
+    const partialName = templateName.includes('.') ? templateName.split('.').reverse()[1] : templateName;
+    registerPartial(partialName, templates[templateName].trim());
   });
 
   let mergedDocuments: Document;
