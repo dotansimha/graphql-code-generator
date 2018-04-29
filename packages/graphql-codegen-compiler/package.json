@@ -10,7 +10,7 @@
     "lint": "tslint src/**/*.ts"
   },
   "dependencies": {
-    "@types/handlebars": "4.0.36",
+    "@types/handlebars": "4.0.37",
     "change-case": "3.0.2",
     "common-tags": "1.7.2",
     "graphql-codegen-core": "0.8.21",

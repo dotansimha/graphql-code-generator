@@ -19,7 +19,7 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
   const customHelpers = config.customHelpers || {};
 
   Object.keys(customHelpers).forEach(helperName => {
-    registerHelper(helperName, customHelpers[helperName]);
+    registerHelper(helperName, customHelpers[helperName] as any);
   });
 
   registerHelper('toPrimitive', function(type) {
