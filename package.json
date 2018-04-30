@@ -15,9 +15,7 @@
     "prerelease": "yarn build && yarn test",
     "release": "lerna publish --exact --force-publish=\"*\""
   },
-  "workspaces": {
-    "packages": ["packages/*", "packages/scripts/*", "packages/templates/*"]
-  },
+  "workspaces": ["packages/*", "packages/scripts/*", "packages/templates/*"],
   "dependencies": {
     "lerna": "2.11.0"
   },
