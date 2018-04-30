@@ -70,6 +70,10 @@
     "strip-comments": "1.0.1",
     "valid-url": "1.0.9"
   },
+  "devDependencies": {
+    "graphql-codegen-typescript-template": "0.8.21",
+    "graphql-codegen-typescript-template-multiple": "0.8.21"
+  },
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts",
   "typescript": {
