@@ -15,6 +15,7 @@
 
 * `--no-schema` changed to `--skip-schema`
 * `--no-documents` changed to `--skip-documents`
+* Templates are no longer part of the core package, and they needed to be installed separately (see README installation notes)
 
 <a name="0.8.21"></a>
 

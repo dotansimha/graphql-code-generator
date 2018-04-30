@@ -4,9 +4,9 @@ import * as schema from './schema.handlebars';
 import * as documents from './documents.handlebars';
 import * as selectionSet from './selection-set.handlebars';
 import * as fragments from './fragments.handlebars';
-import { EInputType, GeneratorConfig } from '../types';
+import { EInputType, GeneratorConfig } from 'graphql-codegen-core';
 
-const config: GeneratorConfig = {
+export const config: GeneratorConfig = {
   inputType: EInputType.SINGLE_FILE,
   templates: {
     index,
@@ -26,5 +26,3 @@ const config: GeneratorConfig = {
   },
   outFile: 'types.ts'
 };
-
-export default config;

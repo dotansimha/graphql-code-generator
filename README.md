@@ -13,20 +13,26 @@
 
 GraphQL code generator, with flexible support for multiple languages and platforms, and the ability to create custom generated projects based on GraphQL schema or operations.
 
+GraphQL entities are defined as static and typed, which means they can be analyzed and use as a base for generating everything.
+
 This generator generates both models (based on GraphQL server-side schema), and documents (client-side operations, such as `query`, `mutation` as `subscription`).
 
-There are 3 types of template generators available at the moment:
+## Use Cases
 
-* Single file - generates a single output file from GraphQL schema and operations
-* Multiple files - generated multiple files (usually file per type/operation/enum...)
-* Project - generated multiple/single file, based on custom templates in a directory.
+The codegen let's you either use a predefined template, or write your own.
 
-**Supported languages/platforms (`0.8.x`):**
+The predefined templates are common templates that helps GraphQL developers.
 
-| Language   | Type           | CLI Name                                     |
-| ---------- | -------------- | -------------------------------------------- |
-| TypeScript | Single File    | ts, typescript, ts-single, typescript-single |
-| TypeScript | Multiple Files | ts-multiple, typescript-multiple             |
+For example, if you develop a **server-side with TypeScript and GraphQL**, you can use the codegen with the TypeScript template to generate Typings for you server side, based on your schema.
+
+If you develop a **client-side with TypeScript, Angular and GraphQL**, you can use the codegen with the TypeScript template to generate Typings for you client-side, based on your schema and your queries/mutations.
+
+## Available Templates:
+
+| Language   | Purpose                                                                                 | Package Name                                   |
+| ---------- | --------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| TypeScript | Generate server-side TypeScript types, and client-side typings                          | `graphql-codegen-typescript-template`          |
+| TypeScript | Generate server-side TypeScript types, and client-side typings - file per type/document | `graphql-codegen-typescript-template-multiple` |
 
 If you are looking for the **Flow** / **Swift** generators, please note that we will implement it soon again, but you can use `0.5.5` from NPM.
 
@@ -37,12 +43,16 @@ If you are looking for the **Flow** / **Swift** generators, please note that we 
 To install the generator, use the following:
 
     $ npm install --save-dev graphql-code-generator graphql
-
-Or, using Yarn:
-
+    // Or, with Yarn
     $ yarn add -D graphql-code-generator graphql
 
-And then to use it, execute if from NPM script, for use `$(npm bin)/gql-gen ...` from the command line.
+Then, install the template package you wish to use, for example:
+
+    $ npm install --save-dev graphql-codegen-typescript-template
+    // Or, with Yarn
+    $ yarn add -D graphql-codegen-typescript-template
+
+And then to use it, execute it from NPM script, or use `$(npm bin)/gql-gen ...` from the command line. If you are using Yarn, you can just use `yarn gql-gen ...`
 
 > You can also install it as global NPM module and use it with `gql-gen` executable.
 
@@ -56,15 +66,15 @@ CLI usage is as follow:
 
 * With local introspection JSON file, generate TypeScript types:
 
-        $ gql-gen --file mySchema.json --template typescript --out ./typings/ "./src/**/*.graphql"
+        $ gql-gen --file mySchema.json --template graphql-codegen-typescript-template --out ./typings/ "./src/**/*.graphql"
 
 * With local introspection JSON file, generate TypeScript files, from GraphQL documents inside code files (`.ts`):
 
-        $ gql-gen --file mySchema.json --template typescript --out ./typings/ "./src/**/*.ts"
+        $ gql-gen --file mySchema.json --template graphql-codegen-typescript-template --out ./typings/ "./src/**/*.ts"
 
 * With remote GraphQL endpoint that requires Authorization, generate TypeScript types:
 
-        $ gql-gen --url http://localhost:3010/graphql --header "Authorization: MY_KEY" --template typescript --out ./typings/ "./src/**/*.graphql"
+        $ gql-gen --url http://localhost:3010/graphql --header "Authorization: MY_KEY" --template graphql-codegen-typescript-template --out ./typings/ "./src/**/*.graphql"
 
 > Note: when specifying a glob path (with `*` or `**`), make sure to wrap the argument with double quotes (`"..."`).
 
@@ -86,7 +96,7 @@ Allowed flags:
 | --no-overwrite    | void     | If specified, the generator will not override existing files                                                                                                                                                                                                         |
 | documents...      | [String] | Space separated paths of `.graphql` files or code files (glob path is supported) that contains GraphQL documents inside strings, or with `gql` tag (JavaScript), this field is optional - if no documents specified, only server side schema types will be generated |
 
-## Examples
+## Output Examples
 
 This repository includes some examples for generated outputs under `dev-test` directory.
 

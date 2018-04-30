@@ -3,9 +3,11 @@ import { introspectionFromFile } from './loaders/introspection-from-file';
 import { introspectionFromUrl } from './loaders/introspection-from-url';
 import { schemaFromExport } from './loaders/schema-from-export';
 import { documentsFromGlobs } from './utils/documents-glob';
-import { compileTemplate, FileOutput, ALLOWED_CUSTOM_TEMPLATE_EXT } from 'graphql-codegen-compiler';
+import { ALLOWED_CUSTOM_TEMPLATE_EXT, compileTemplate, FileOutput } from 'graphql-codegen-compiler';
 import {
   debugLog,
+  EInputType,
+  GeneratorConfig,
   introspectionToGraphQLSchema,
   schemaToTemplateContext,
   transformDocument
@@ -14,7 +16,6 @@ import { loadDocumentsSources } from './loaders/document-loader';
 import * as path from 'path';
 import * as fs from 'fs';
 import { scanForTemplatesInPath } from './loaders/templates-scanner';
-import { EInputType, GeneratorConfig, getGeneratorConfig } from 'graphql-codegen-generators';
 import * as mkdirp from 'mkdirp';
 import * as validUrl from 'valid-url';
 
@@ -137,7 +138,7 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
   const url: string = options.url;
   const fsExport: string = options.export;
   const documents: string[] = options.args || [];
-  const template: string = options.template;
+  let template: string = options.template;
   const project: string = options.project;
   const gqlGenConfigFilePath: string = options.config || './gql-gen.json';
   const out: string = options.out || './';
@@ -199,16 +200,25 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
 
   if (template && template !== '') {
     debugLog(`[executeWithOptions] using template: ${template}`);
-    templateConfig = getGeneratorConfig(template);
 
-    if (!templateConfig) {
-      const templateFromExport = require(template);
+    // Backward compatibility for older versions
+    if (
+      template === 'ts' ||
+      template === 'ts-single' ||
+      template === 'typescript' ||
+      template === 'typescript-single'
+    ) {
+      template = 'graphql-codegen-typescript-template';
+    } else if (template === 'ts-multiple' || template === 'typescript-multiple') {
+      template = 'graphql-codegen-typescript-template-multiple';
+    }
 
-      if (!templateFromExport || !templateFromExport.default) {
-        throw new Error(`Unknown template: ${template}`);
-      } else {
-        templateConfig = templateFromExport.default;
-      }
+    const templateFromExport = require(template);
+
+    if (!templateFromExport || !templateFromExport.default) {
+      throw new Error(`Unknown codegen template: ${template}, please make sure it's installed using npm/Yarn!`);
+    } else {
+      templateConfig = templateFromExport.default || templateFromExport.config || templateFromExport;
     }
   }
 

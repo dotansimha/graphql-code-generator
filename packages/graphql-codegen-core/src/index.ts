@@ -23,7 +23,9 @@ export {
   SelectionSetInlineFragment,
   isFieldNode,
   isFragmentSpreadNode,
-  isInlineFragmentNode
+  isInlineFragmentNode,
+  EInputType,
+  GeneratorConfig
 } from './types';
 export { debugLog } from './debugging';
 export {

@@ -4,11 +4,11 @@ import * as scalar from './scalar.handlebars';
 import * as union from './union.handlebars';
 import * as operation from './operation.handlebars';
 import * as fragment from './fragment.handlebars';
-import * as selectionSet from '../typescript-single-file/selection-set.handlebars';
-import * as fragments from '../typescript-single-file/fragments.handlebars';
-import { EInputType, GeneratorConfig } from '../types';
+import * as selectionSet from './selection-set.handlebars';
+import * as fragments from './fragments.handlebars';
+import { EInputType, GeneratorConfig } from 'graphql-codegen-core';
 
-const config: GeneratorConfig = {
+export const config: GeneratorConfig = {
   inputType: EInputType.MULTIPLE_FILES,
   templates: {
     type,
@@ -32,5 +32,3 @@ const config: GeneratorConfig = {
   },
   filesExtension: 'ts'
 };
-
-export default config;

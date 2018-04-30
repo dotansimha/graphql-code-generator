@@ -1,6 +1,6 @@
 import { FileOutput, Settings } from './types';
 import { debugLog, Document, Fragment, Operation, SchemaTemplateContext } from 'graphql-codegen-core';
-import { GeneratorConfig, EInputType } from 'graphql-codegen-generators';
+import { GeneratorConfig, EInputType } from 'graphql-codegen-core';
 import { compile, registerPartial } from 'handlebars';
 import { initHelpers } from './handlebars-extensions';
 import { flattenTypes } from './flatten-types';

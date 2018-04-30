@@ -14,9 +14,12 @@
     "change-case": "3.0.2",
     "common-tags": "1.7.2",
     "graphql-codegen-core": "0.8.21",
-    "graphql-codegen-generators": "0.8.21",
     "handlebars": "4.0.11",
     "moment": "2.22.1"
+  },
+  "devDependencies": {
+    "graphql-codegen-typescript-template": "0.8.21",
+    "graphql-codegen-typescript-template-multiple": "0.8.21"
   },
   "jest": {
     "moduleFileExtensions": ["ts", "tsx", "js"],

@@ -3,11 +3,7 @@
     "experimentalDecorators": true,
     "module": "commonjs",
     "target": "es5",
-    "lib": [
-      "es6",
-      "esnext",
-      "es2015"
-    ],
+    "lib": ["es6", "esnext", "es2015"],
     "noImplicitAny": false,
     "suppressImplicitAnyIndexErrors": true,
     "moduleResolution": "node",
@@ -16,9 +12,5 @@
     "declaration": true,
     "outDir": "./dist/"
   },
-  "exclude": [
-    "node_modules",
-    "tests",
-    "dist"
-  ]
+  "exclude": ["node_modules", "tests", "dist"]
 }
