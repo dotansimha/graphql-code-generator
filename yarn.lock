@@ -7122,9 +7122,9 @@ webpack-addons@^1.1.5:
   dependencies:
     jscodeshift "^0.4.0"
 
-webpack-cli@2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/webpack-cli/-/webpack-cli-2.1.0.tgz#b2b63feaf209a0d177acf50f3a6415db1d28a61d"
+webpack-cli@2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/webpack-cli/-/webpack-cli-2.1.1.tgz#e2fa01d1e4f3aea7b7a7541101706327d5c42657"
   dependencies:
     chalk "^2.3.2"
     cross-spawn "^6.0.5"
