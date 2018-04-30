@@ -17,10 +17,6 @@
     "handlebars": "4.0.11",
     "moment": "2.22.1"
   },
-  "devDependencies": {
-    "graphql-codegen-typescript-template": "0.8.21",
-    "graphql-codegen-typescript-template-multiple": "0.8.21"
-  },
   "jest": {
     "moduleFileExtensions": ["ts", "tsx", "js"],
     "transform": {

@@ -1,32 +1,31 @@
-import '../test-matchers/custom-matchers';
+import './custom-matchers';
 import {
-  schemaToTemplateContext,
+  GeneratorConfig,
+  gql,
+  GraphQLSchema,
+  introspectionToGraphQLSchema,
+  makeExecutableSchema,
   SchemaTemplateContext,
-  transformDocument,
-  introspectionToGraphQLSchema
+  schemaToTemplateContext,
+  transformDocument
 } from 'graphql-codegen-core';
-import { gql, makeExecutableSchema, GraphQLSchema } from 'graphql-codegen-core';
-import { compileTemplate } from '../src/compile';
+import { compileTemplate } from 'graphql-codegen-compiler';
+import config from '../dist';
 import * as fs from 'fs';
-import { GeneratorConfig } from 'graphql-codegen-core';
-import TypescriptMultiFile from 'graphql-codegen-typescript-template-multiple';
 
-describe('Multiple Files', () => {
-  const compileAndBuildContext = (typeDefs: string): SchemaTemplateContext => {
+describe('TypeScript Multiple', () => {
+  const compileAndBuildContext = (typeDefs: string): { context: SchemaTemplateContext; schema: GraphQLSchema } => {
     const schema = makeExecutableSchema({ typeDefs, resolvers: {}, allowUndefinedInResolve: true }) as GraphQLSchema;
 
-    return schemaToTemplateContext(schema);
+    return {
+      schema,
+      context: schemaToTemplateContext(schema)
+    };
   };
-
-  let config;
-
-  beforeAll(() => {
-    config = TypescriptMultiFile;
-  });
 
   describe('Schema', () => {
     it('should pass custom config correctly to the generator', () => {
-      const templateContext = compileAndBuildContext(`
+      const { context } = compileAndBuildContext(`
         type Query {
           fieldTest: String
         }
@@ -42,7 +41,7 @@ describe('Multiple Files', () => {
             custom: 'A'
           }
         } as GeneratorConfig,
-        templateContext
+        context
       );
 
       expect(compiled.length).toBe(1);
@@ -51,12 +50,12 @@ describe('Multiple Files', () => {
     });
 
     it('should generate the correct types when using only simple Query', () => {
-      const templateContext = compileAndBuildContext(`
+      const { context } = compileAndBuildContext(`
         type Query {
           fieldTest: String
         }
       `);
-      const compiled = compileTemplate(config, templateContext);
+      const compiled = compileTemplate(config, context);
       expect(compiled.length).toBe(1);
       expect(compiled[0].filename).toBe('query.type.ts');
       expect(compiled[0].content).toBeSimilarStringTo(`
@@ -67,7 +66,7 @@ describe('Multiple Files', () => {
     });
 
     it('should generate the correct types when using Query and simple type', () => {
-      const templateContext = compileAndBuildContext(`
+      const { context } = compileAndBuildContext(`
         type MyType {
           f1: String
         }
@@ -76,7 +75,7 @@ describe('Multiple Files', () => {
           fieldTest: MyType
         }
       `);
-      const compiled = compileTemplate(config, templateContext);
+      const compiled = compileTemplate(config, context);
       expect(compiled.length).toBe(2);
       expect(compiled[0].filename).toBe('query.type.ts');
       expect(compiled[0].content).toBeSimilarStringTo(`
@@ -95,7 +94,7 @@ describe('Multiple Files', () => {
     });
 
     it('should generate the correct types when using Query and enum', () => {
-      const templateContext = compileAndBuildContext(`
+      const { context } = compileAndBuildContext(`
         enum MyEnum {
           V1,
           V2,
@@ -105,7 +104,7 @@ describe('Multiple Files', () => {
           fieldTest: MyEnum
         }
       `);
-      const compiled = compileTemplate(config, templateContext);
+      const compiled = compileTemplate(config, context);
       expect(compiled.length).toBe(2);
       expect(compiled[0].filename).toBe('query.type.ts');
       expect(compiled[0].content).toBeSimilarStringTo(`
@@ -125,7 +124,7 @@ describe('Multiple Files', () => {
     });
 
     it('should generate the correct types when using Query and twice of the same type (no dupes)', () => {
-      const templateContext = compileAndBuildContext(`
+      const { context } = compileAndBuildContext(`
         type MyType {
           f1: String
         }
@@ -135,7 +134,7 @@ describe('Multiple Files', () => {
           fieldTest2: MyType
         }
       `);
-      const compiled = compileTemplate(config, templateContext);
+      const compiled = compileTemplate(config, context);
       expect(compiled.length).toBe(2);
       expect(compiled[0].filename).toBe('query.type.ts');
       expect(compiled[0].content).toBeSimilarStringTo(`
@@ -155,7 +154,7 @@ describe('Multiple Files', () => {
     });
 
     it('should generate correctly when using simple type that extends interface', () => {
-      const templateContext = compileAndBuildContext(`
+      const { context } = compileAndBuildContext(`
         type Query {
           fieldTest: A!
         }
@@ -170,7 +169,7 @@ describe('Multiple Files', () => {
         }
       `);
 
-      const compiled = compileTemplate(config, templateContext);
+      const compiled = compileTemplate(config, context);
       expect(compiled.length).toBe(3);
       expect(compiled[0].filename).toBe('query.type.ts');
       expect(compiled[1].filename).toBe('a.type.ts');
@@ -199,7 +198,7 @@ describe('Multiple Files', () => {
     });
 
     it('should generate correctly when using custom scalar', () => {
-      const templateContext = compileAndBuildContext(`
+      const { context } = compileAndBuildContext(`
         type Query {
           fieldTest: [Date]
         }
@@ -207,7 +206,7 @@ describe('Multiple Files', () => {
         scalar Date
       `);
 
-      const compiled = compileTemplate(config, templateContext);
+      const compiled = compileTemplate(config, context);
       expect(compiled.length).toBe(2);
       expect(compiled[0].filename).toBe('query.type.ts');
       expect(compiled[1].filename).toBe('date.scalar.ts');
@@ -225,7 +224,7 @@ describe('Multiple Files', () => {
     });
 
     it('should generate unions correctly', () => {
-      const templateContext = compileAndBuildContext(`
+      const { context } = compileAndBuildContext(`
         type Query {
           fieldTest: C!
         }
@@ -242,7 +241,7 @@ describe('Multiple Files', () => {
         union C = A | B
       `);
 
-      const compiled = compileTemplate(config, templateContext);
+      const compiled = compileTemplate(config, context);
       expect(compiled.length).toBe(4);
       expect(compiled[0].filename).toBe('query.type.ts');
       expect(compiled[1].filename).toBe('a.type.ts');
@@ -276,13 +275,13 @@ describe('Multiple Files', () => {
     });
 
     it('should generate type arguments types correctly when using simple primitive', () => {
-      const templateContext = compileAndBuildContext(`
+      const { context } = compileAndBuildContext(`
         type Query {
           fieldTest(arg1: String): String!
         }
       `);
 
-      const compiled = compileTemplate(config, templateContext);
+      const compiled = compileTemplate(config, context);
       expect(compiled.length).toBe(1);
       const content = compiled[0].content;
       expect(compiled[0].filename).toBe('query.type.ts');
@@ -297,7 +296,7 @@ describe('Multiple Files', () => {
     });
 
     it('should generate type arguments types correctly when using custom input', () => {
-      const templateContext = compileAndBuildContext(`
+      const { context } = compileAndBuildContext(`
         type Query {
           fieldTest(myArgument: T!): Return
         }
@@ -315,7 +314,7 @@ describe('Multiple Files', () => {
         }
       `);
 
-      const compiled = compileTemplate(config, templateContext);
+      const compiled = compileTemplate(config, context);
       expect(compiled.length).toBe(3);
       expect(compiled[0].filename).toBe('query.type.ts');
       expect(compiled[1].filename).toBe('return.type.ts');
@@ -352,9 +351,7 @@ describe('Multiple Files', () => {
 
   describe('Operations', () => {
     it('Should compile simple Query correctly', () => {
-      const schema = introspectionToGraphQLSchema(
-        JSON.parse(fs.readFileSync('../../dev-test/githunt/schema.json').toString())
-      );
+      const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
       const context = schemaToTemplateContext(schema);
 
       const documents = gql`
@@ -430,9 +427,7 @@ describe('Multiple Files', () => {
     });
 
     it('Should compile simple Query with Fragment spread correctly', () => {
-      const schema = introspectionToGraphQLSchema(
-        JSON.parse(fs.readFileSync('../../dev-test/githunt/schema.json').toString())
-      );
+      const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
       const context = schemaToTemplateContext(schema);
 
       const documents = gql`
