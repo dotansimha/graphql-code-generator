@@ -31,8 +31,9 @@ If you develop a **client-side with TypeScript, Angular and GraphQL**, you can u
 
 | Language   | Purpose                                                                                 | Package Name                                   |
 | ---------- | --------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| TypeScript | Generate server-side TypeScript types, and client-side typings                          | `graphql-codegen-typescript-template`          |
-| TypeScript | Generate server-side TypeScript types, and client-side typings - file per type/document | `graphql-codegen-typescript-template-multiple` |
+| TypeScript | Generate server-side TypeScript types, and client-side typings                          | [`graphql-codegen-typescript-template`](https://github.com/dotansimha/graphql-code-generator/tree/8149205af14e7d7f191dff58b154224381286e65/packages/templates/typescript)          |
+| TypeScript | Generate server-side TypeScript types, and client-side typings - file per type/document | [`graphql-codegen-typescript-template-multiple`](https://github.com/dotansimha/graphql-code-generator/tree/8149205af14e7d7f191dff58b154224381286e65/packages/templates/typescript-multiple) |
+| MongoDB TypeScript Models | Generate server-side TypeScript types, with MongoDB models               | [`graphql-codegen-typescript-mongodb-template`](https://github.com/dotansimha/graphql-code-generator/blob/8149205af14e7d7f191dff58b154224381286e65/packages/templates/typescript-mongodb/README.md) |
 
 If you are looking for the **Flow** / **Swift** generators, please note that we will implement it soon again, but you can use `0.5.5` from NPM.
 
@@ -91,8 +92,8 @@ Allowed flags:
 | -p,--project      | String   | Project directory with templates (refer to "Project Generation" section)                                                                                                                                                                                             |
 | --project-config  | String   | Path to project config JSON file (refer to "Project Generation" section), defaults to `gqlgen.json`                                                                                                                                                                  |
 | -o,--out          | String   | Path for output file/directory. When using single-file generator specify filename, and when using multiple-files generator specify a directory                                                                                                                       |
-| -m,--no-schema    | void     | If specified, server side schema won't be generated through the template (enums won't omit)                                                                                                                                                                          |
-| -c,--no-documents | void     | If specified, client side documents won't be generated through the template                                                                                                                                                                                          |
+| -m,--skip-schema    | void     | If specified, server side schema won't be generated through the template (enums won't omit)                                                                                                                                                                          |
+| -c,--skip-documents | void     | If specified, client side documents won't be generated through the template                                                                                                                                                                                          |
 | --no-overwrite    | void     | If specified, the generator will not override existing files                                                                                                                                                                                                         |
 | documents...      | [String] | Space separated paths of `.graphql` files or code files (glob path is supported) that contains GraphQL documents inside strings, or with `gql` tag (JavaScript), this field is optional - if no documents specified, only server side schema types will be generated |
 
@@ -130,7 +131,6 @@ GraphQL code generator implementation is separated to multiple NPM packages:
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | `graphql-codegen-core`       | [README](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/graphql-codegen-core/README.md)       |
 | `graphql-codegen-compiler`   | [README](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/graphql-codegen-compiler/README.md)   |
-| `graphql-codegen-generators` | [README](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/graphql-codegen-generators/README.md) |
 | `graphql-codegen-cli`        | [README](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/graphql-codegen-cli/README.md)        |
 
 ## Prettier Support
