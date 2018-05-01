@@ -28,6 +28,9 @@ copyfiles(
     content.devDependencies = content.devDependencies || {};
     content.devDependencies[pack.name] = pack.version;
     content.devDependencies['graphql-codegen-core'] = pack.version;
+    content.devDependencies['graphql-codegen-compiler'] = pack.version;
+    content.devDependencies['graphql'] = '0.13.2';
+    content.devDependencies['@types/graphql'] = '0.13.0';
     fs.writeFileSync(packageFilePath, JSON.stringify(content, null, 2));
   }
 );
