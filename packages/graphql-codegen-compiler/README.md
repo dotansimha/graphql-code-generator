@@ -1,6 +1,6 @@
 # `graphql-codegen-compiler`
 
-This package compiles the output of [`graphql-codegen-core`](../graphql-codegen-core/README.md) along with [`GeneratorConfig`](./packages/graphql-codegen-core/src/types.ts) and [`Settings`](../graphql-codegen-compiler/src/types.ts), and compiles the template, returns an array of [`FileOutput`](../graphql-codegen-compiler/src/types.ts).
+This package compiles the output of [`graphql-codegen-core`](../graphql-codegen-core/README.md) along with [`GeneratorConfig`](../packages/graphql-codegen-core/src/types.ts#L239-L254) and [`Settings`](../graphql-codegen-core/src/types.ts#L261-L265), and compiles the template, returns an array of [`FileOutput`](../graphql-codegen-core/src/types.ts#L256-L259).
 
 The main entry point of the package is `compile` method, and you can import it directly and use it without the CLI package.
 
