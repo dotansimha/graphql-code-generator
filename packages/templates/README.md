@@ -4,7 +4,7 @@ If you with to write a custom template, you can either use one of the following 
 
 ## Write you own template package
 
-To write you own template package using Handlebars, you can use [`codegen-handlebars-templates-scripts`](https://github.com/dotansimha/graphql-code-generator/blob/60f66697c32a3ddeff2d51413131cba6620294e5/packages/scripts/handlebars-templates-scripts/README.md).
+To write you own template package using Handlebars, you can use [`codegen-handlebars-templates-scripts`](../scripts/handlebars-templates-scripts/README.md).
 
 ## Write your own output processor
 
@@ -29,7 +29,7 @@ Your function need to match the following signature:
 (templateContext: SchemaTemplateContext, mergedDocuments: Document, settings: any) => FileOutput[] | Promise<FileOutput[]>;
 ```
 
-* `templateContext` is the GraphQL Codegen context object - which is your `GraphQLSchema` in an easy-to-use structure ([see `types.ts` file for more info](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/graphql-codegen-core/src/types.ts#L78))
+* `templateContext` is the GraphQL Codegen context object - which is your `GraphQLSchema` in an easy-to-use structure ([see `types.ts` file for more info](../../packages/graphql-codegen-core/src/types.ts#L78))
 * `mergedDocuments` is all the GraphQL documents (query/mutation/subscription/fragment) that the codegen could find
 * `settings` is an object of settings - these are matching to the cli options.
 
