@@ -1,11 +1,4 @@
 export { compileTemplate } from './compile';
-export {
-  FileOutput,
-  Settings,
-  MultiFileTemplates,
-  FlattenFragment,
-  FlattenModel,
-  FlattenDocument,
-  FlattenOperation
-} from './types';
+export * from './types';
 export { ALLOWED_CUSTOM_TEMPLATE_EXT } from './generate-multiple-files';
+export { flattenTypes, flattenSelectionSet, handleNameDuplications } from './flatten-types';

@@ -252,3 +252,30 @@ export interface GeneratorConfig {
   filesExtension?: string;
   customHelpers?: { [helperName: string]: Function };
 }
+
+export interface FileOutput {
+  filename: string;
+  content: string;
+}
+
+export interface Settings {
+  generateSchema?: boolean;
+  generateDocuments?: boolean;
+  verbose?: boolean;
+}
+
+export type CustomProcessingFunction = (
+  templateContext: SchemaTemplateContext,
+  mergedDocuments: Document,
+  settings: any
+) => FileOutput[] | Promise<FileOutput[]>;
+
+export function isCustomProcessingFunction(
+  config: GeneratorConfig | CustomProcessingFunction
+): config is CustomProcessingFunction {
+  return typeof config === 'function';
+}
+
+export function isGeneratorConfig(config: GeneratorConfig | CustomProcessingFunction): config is GeneratorConfig {
+  return typeof config !== 'function' && !!(config as any).inputType;
+}

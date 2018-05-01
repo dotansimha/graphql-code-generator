@@ -7,11 +7,6 @@ import {
   SelectionSetInlineFragment
 } from 'graphql-codegen-core';
 
-export interface FileOutput {
-  filename: string;
-  content: string;
-}
-
 export interface FlattenOperation extends Operation {
   innerModels: FlattenModel[];
   isFlatten: boolean;
@@ -38,12 +33,6 @@ export interface FlattenModel {
   hasFragmentsSpread: boolean;
   hasFields: boolean;
   hasInlineFragments: boolean;
-}
-
-export interface Settings {
-  generateSchema?: boolean;
-  generateDocuments?: boolean;
-  verbose?: boolean;
 }
 
 export interface MultiFileTemplates {

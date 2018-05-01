@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import { compileTemplate } from '../src/compile';
 
 describe('generateProject', () => {
-  it('should handle templates correctly and return the correct result path', () => {
+  it('should handle templates correctly and return the correct result path', async () => {
     const config: GeneratorConfig = {
       inputType: EInputType.PROJECT,
       flattenTypes: true,
@@ -41,13 +41,13 @@ describe('generateProject', () => {
     `;
 
     const transformedDocument = transformDocument(schema, documents);
-    const compiled = compileTemplate(config, context, [transformedDocument], { generateSchema: false });
+    const compiled = await compileTemplate(config, context, [transformedDocument], { generateSchema: false });
 
     expect(compiled[0].filename).toContain('prefix.myfeed.query.js');
     expect(compiled[0].content).toBe('myFeed');
   });
 
-  it('should handle templates correctly and return the correct result path when using all context', () => {
+  it('should handle templates correctly and return the correct result path when using all context', async () => {
     const config: GeneratorConfig = {
       inputType: EInputType.PROJECT,
       flattenTypes: true,
@@ -85,12 +85,12 @@ describe('generateProject', () => {
     `;
 
     const transformedDocument = transformDocument(schema, documents);
-    const compiled = compileTemplate(config, context, [transformedDocument], { generateSchema: false });
+    const compiled = await compileTemplate(config, context, [transformedDocument], { generateSchema: false });
 
     expect(compiled[0].filename).toContain('prefix.js');
   });
 
-  it('should handle templates correctly and return the correct result path with prefix ', () => {
+  it('should handle templates correctly and return the correct result path with prefix ', async () => {
     const config: GeneratorConfig = {
       inputType: EInputType.PROJECT,
       flattenTypes: true,
@@ -128,7 +128,7 @@ describe('generateProject', () => {
     `;
 
     const transformedDocument = transformDocument(schema, documents);
-    const compiled = compileTemplate(config, context, [transformedDocument], { generateSchema: false });
+    const compiled = await compileTemplate(config, context, [transformedDocument], { generateSchema: false });
 
     expect(compiled[0].filename).toContain('prefix-test.myfeed.query.js');
     expect(compiled[0].content).toBe('myFeed');

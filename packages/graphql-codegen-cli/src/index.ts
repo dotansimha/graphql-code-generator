@@ -2,7 +2,7 @@
 
 import * as fs from 'fs';
 import { initCLI, executeWithOptions, cliError } from './cli';
-import { FileOutput } from 'graphql-codegen-compiler';
+import { FileOutput } from 'graphql-codegen-core';
 import { debugLog } from 'graphql-codegen-core';
 import { fileExists } from './utils/file-exists';
 import { prettify } from './utils/prettier';

@@ -1,6 +1,5 @@
 import { prepareSchemaForDocumentsOnly } from './prepare-documents-only';
-import { FileOutput, Settings } from './types';
-import { SchemaTemplateContext, Document, debugLog } from 'graphql-codegen-core';
+import { Settings, FileOutput, SchemaTemplateContext, Document, debugLog } from 'graphql-codegen-core';
 import { GeneratorConfig } from 'graphql-codegen-core';
 import * as moment from 'moment';
 

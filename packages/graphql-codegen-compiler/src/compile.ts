@@ -1,6 +1,16 @@
-import { FileOutput, Settings } from './types';
-import { debugLog, Document, Fragment, Operation, SchemaTemplateContext } from 'graphql-codegen-core';
-import { GeneratorConfig, EInputType } from 'graphql-codegen-core';
+import {
+  Settings,
+  CustomProcessingFunction,
+  debugLog,
+  Document,
+  EInputType,
+  Fragment,
+  GeneratorConfig,
+  Operation,
+  SchemaTemplateContext,
+  FileOutput,
+  isCustomProcessingFunction
+} from 'graphql-codegen-core';
 import { compile, registerPartial } from 'handlebars';
 import { initHelpers } from './handlebars-extensions';
 import { flattenTypes } from './flatten-types';
@@ -13,30 +23,22 @@ export const DEFAULT_SETTINGS: Settings = {
   generateDocuments: true
 };
 
-export function compileTemplate(
-  config: GeneratorConfig,
+export async function compileTemplate(
+  config: GeneratorConfig | CustomProcessingFunction,
   templateContext: SchemaTemplateContext,
   documents: Document[] = [],
   settings: Settings = DEFAULT_SETTINGS
-): FileOutput[] {
-  if (!config) {
-    throw new Error(`compileTemplate requires a valid GeneratorConfig object!`);
-  }
-
-  debugLog(`[compileTemplate] starting to compile template with input type = ${config.inputType}`);
+): Promise<FileOutput[]> {
+  const isExternalProcessingFunction = isCustomProcessingFunction(config);
   debugLog(`[compileTemplate] settings = `, settings);
 
-  initHelpers(config, templateContext);
+  if (!config) {
+    throw new Error(
+      `compileTemplate requires a valid GeneratorConfig object or a custom output processing function (CustomProcessingFunction)!`
+    );
+  }
+
   const executionSettings = Object.assign(DEFAULT_SETTINGS, settings);
-  const templates = config.templates;
-
-  Object.keys(templates).forEach((templateName: string) => {
-    debugLog(`[compileTemplate] register partial template ${templateName}`);
-
-    const partialName = templateName.includes('.') ? templateName.split('.').reverse()[1] : templateName;
-    registerPartial(partialName, templates[templateName].trim());
-  });
-
   let mergedDocuments: Document;
 
   if (!executionSettings.generateDocuments) {
@@ -70,60 +72,93 @@ export function compileTemplate(
       } operations and ${mergedDocuments.fragments.length} fragments`
     );
 
-    if (config.flattenTypes) {
+    if (!isExternalProcessingFunction && (config as GeneratorConfig).flattenTypes) {
       debugLog(`[compileTemplate] flattenTypes is true, flattening all selection sets from all documents...`);
 
       mergedDocuments = flattenTypes(mergedDocuments);
     }
   }
 
-  if (config.inputType === EInputType.SINGLE_FILE) {
-    if (!templates['index']) {
-      throw new Error(`Template 'index' is required when using inputType = SINGLE_FILE!`);
-    }
+  if (isExternalProcessingFunction) {
+    debugLog(`[compileTemplate] starting to compile template with external processing function...`);
 
-    if (!config.outFile) {
-      throw new Error('Config outFile is required when using inputType = SINGLE_FILE!');
-    }
+    let externalFn = config as CustomProcessingFunction;
 
-    debugLog(`[compileTemplate] Executing generateSingleFile...`);
+    try {
+      const result = await externalFn(templateContext, mergedDocuments, executionSettings);
 
-    return generateSingleFile(
-      compile(cleanTemplateComments(templates['index'])),
-      executionSettings,
-      config,
-      templateContext,
-      mergedDocuments
-    );
-  } else if (config.inputType === EInputType.MULTIPLE_FILES || config.inputType === EInputType.PROJECT) {
-    if (config.inputType === EInputType.MULTIPLE_FILES) {
-      if (!config.filesExtension) {
-        throw new Error('Config filesExtension is required when using inputType = MULTIPLE_FILES!');
+      if (!Array.isArray(result)) {
+        throw new Error('The result of external processing function must be an array of FileOutput!');
       }
+
+      return result;
+    } catch (e) {
+      debugLog('[compileTemplate] external processing function has thrown an exception!', e);
+
+      throw e;
     }
-
-    debugLog(`[compileTemplate] Executing generateMultipleFiles...`);
-
-    const compiledTemplates = Object.keys(templates)
-      .map(templateName => {
-        debugLog(`[compileTemplate] Compiling template: ${templateName}...`);
-        const compiledTemplate = compile(cleanTemplateComments(templates[templateName], templateName));
-
-        return {
-          key: templateName,
-          value: compiledTemplate
-        };
-      })
-      .reduce((prev, item) => {
-        prev[item.key] = item.value;
-
-        return prev;
-      }, {}) as { [name: string]: Function[] };
-
-    debugLog(`[compileTemplate] Templates names: `, Object.keys(compiledTemplates));
-
-    return generateMultipleFiles(compiledTemplates, executionSettings, config, templateContext, mergedDocuments);
   } else {
-    throw new Error(`Invalid inputType specified: ${config.inputType}!`);
+    config = config as GeneratorConfig;
+    debugLog(`[compileTemplate] starting to compile template with input type = ${config.inputType}`);
+
+    initHelpers(config, templateContext);
+    const templates = config.templates;
+
+    Object.keys(templates).forEach((templateName: string) => {
+      debugLog(`[compileTemplate] register partial template ${templateName}`);
+
+      const partialName = templateName.includes('.') ? templateName.split('.').reverse()[1] : templateName;
+      registerPartial(partialName, templates[templateName].trim());
+    });
+
+    if (config.inputType === EInputType.SINGLE_FILE) {
+      if (!templates['index']) {
+        throw new Error(`Template 'index' is required when using inputType = SINGLE_FILE!`);
+      }
+
+      if (!config.outFile) {
+        throw new Error('Config outFile is required when using inputType = SINGLE_FILE!');
+      }
+
+      debugLog(`[compileTemplate] Executing generateSingleFile...`);
+
+      return generateSingleFile(
+        compile(cleanTemplateComments(templates['index'])),
+        executionSettings,
+        config,
+        templateContext,
+        mergedDocuments
+      );
+    } else if (config.inputType === EInputType.MULTIPLE_FILES || config.inputType === EInputType.PROJECT) {
+      if (config.inputType === EInputType.MULTIPLE_FILES) {
+        if (!config.filesExtension) {
+          throw new Error('Config filesExtension is required when using inputType = MULTIPLE_FILES!');
+        }
+      }
+
+      debugLog(`[compileTemplate] Executing generateMultipleFiles...`);
+
+      const compiledTemplates = Object.keys(templates)
+        .map(templateName => {
+          debugLog(`[compileTemplate] Compiling template: ${templateName}...`);
+          const compiledTemplate = compile(cleanTemplateComments(templates[templateName], templateName));
+
+          return {
+            key: templateName,
+            value: compiledTemplate
+          };
+        })
+        .reduce((prev, item) => {
+          prev[item.key] = item.value;
+
+          return prev;
+        }, {}) as { [name: string]: Function[] };
+
+      debugLog(`[compileTemplate] Templates names: `, Object.keys(compiledTemplates));
+
+      return generateMultipleFiles(compiledTemplates, executionSettings, config, templateContext, mergedDocuments);
+    } else {
+      throw new Error(`Invalid inputType specified: ${config.inputType}!`);
+    }
   }
 }

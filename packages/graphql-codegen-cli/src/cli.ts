@@ -1,23 +1,27 @@
 import * as commander from 'commander';
+import * as path from 'path';
+import * as fs from 'fs';
+import * as mkdirp from 'mkdirp';
+import * as validUrl from 'valid-url';
+
 import { introspectionFromFile } from './loaders/introspection-from-file';
 import { introspectionFromUrl } from './loaders/introspection-from-url';
 import { schemaFromExport } from './loaders/schema-from-export';
 import { documentsFromGlobs } from './utils/documents-glob';
-import { ALLOWED_CUSTOM_TEMPLATE_EXT, compileTemplate, FileOutput } from 'graphql-codegen-compiler';
+import { loadDocumentsSources } from './loaders/document-loader';
+import { scanForTemplatesInPath } from './loaders/templates-scanner';
+import { ALLOWED_CUSTOM_TEMPLATE_EXT, compileTemplate } from 'graphql-codegen-compiler';
 import {
   debugLog,
   EInputType,
   GeneratorConfig,
   introspectionToGraphQLSchema,
   schemaToTemplateContext,
-  transformDocument
+  transformDocument,
+  CustomProcessingFunction,
+  FileOutput,
+  isGeneratorConfig
 } from 'graphql-codegen-core';
-import { loadDocumentsSources } from './loaders/document-loader';
-import * as path from 'path';
-import * as fs from 'fs';
-import { scanForTemplatesInPath } from './loaders/templates-scanner';
-import * as mkdirp from 'mkdirp';
-import * as validUrl from 'valid-url';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
@@ -196,7 +200,7 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
     graphQlSchema,
     loadDocumentsSources(await documentsFromGlobs(documents))
   );
-  let templateConfig: GeneratorConfig = null;
+  let templateConfig: GeneratorConfig | CustomProcessingFunction | null = null;
 
   if (template && template !== '') {
     debugLog(`[executeWithOptions] using template: ${template}`);
@@ -213,9 +217,11 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
       template = 'graphql-codegen-typescript-template-multiple';
     }
 
-    const templateFromExport = require(template);
+    const localFilePath = path.resolve(process.cwd(), template);
+    const localFileExists = fs.existsSync(localFilePath);
+    const templateFromExport = require(localFileExists ? localFilePath : template);
 
-    if (!templateFromExport || !templateFromExport.default) {
+    if (!templateFromExport) {
       throw new Error(`Unknown codegen template: ${template}, please make sure it's installed using npm/Yarn!`);
     } else {
       templateConfig = templateFromExport.default || templateFromExport.config || templateFromExport;
@@ -269,12 +275,14 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
     };
   }
 
-  templateConfig.config = config ? config.generatorConfig || {} : {};
+  if (isGeneratorConfig(templateConfig)) {
+    templateConfig.config = config ? config.generatorConfig || {} : {};
+  }
 
-  return compileTemplate(templateConfig, context, [transformedDocuments], {
+  return (await compileTemplate(templateConfig, context, [transformedDocuments], {
     generateSchema,
     generateDocuments
-  }).map((item: FileOutput) => {
+  })).map((item: FileOutput) => {
     let resultName = item.filename;
 
     if (!path.isAbsolute(resultName)) {
