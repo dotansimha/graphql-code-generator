@@ -21,13 +21,11 @@ copyfiles(
     const packageFilePath = path.join(newProjectDir, './package.json');
     const content = JSON.parse(fs.readFileSync(packageFilePath));
 
-    if (content.name !== 'my-codegen-template') {
-      return;
+    if (content.name === 'my-codegen-template') {
+      content.name = path.basename(newProjectDir);
     }
 
     content.devDependencies = content.devDependencies || {};
-
-    content.name = path.basename(newProjectDir);
     content.devDependencies[pack.name] = pack.version;
     content.devDependencies['graphql-codegen-core'] = pack.version;
     fs.writeFileSync(packageFilePath, JSON.stringify(content, null, 2));
