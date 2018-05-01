@@ -17,6 +17,12 @@ Now, run the following command inside your directory:
 
     yarn codegen-handlebars-templates-scripts init
 
+> If some files such as `package.json` are already exists in this dir, please use `--overwrite` to make sure it changes it as well.
+
+Now, install the boilerplate dependencies by running:
+
+    yarn
+
 The CLI util will create the boilerplate for you, so all you have to do it to write your own templates under `src/` and defined it in `config.ts` file.
 
 ## Testing your template locally

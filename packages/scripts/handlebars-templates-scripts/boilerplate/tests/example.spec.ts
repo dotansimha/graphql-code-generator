@@ -32,16 +32,16 @@ describe('Tests Example', () => {
   `;
 
   describe('Schema Only', () => {
-    it('Should execute and return the correct result', () => {
+    it('Should execute and return the correct result', async () => {
       const { context } = compileAndBuildContext(testSchema);
-      const compiled = compileTemplate(config, context);
+      const compiled = await compileTemplate(config, context);
 
       expect(compiled[0].content).toBeDefined();
     });
   });
 
   describe('Schema and Documents', () => {
-    it('Should execute and return the correct results', () => {
+    it('Should execute and return the correct results', async () => {
       const { context, schema } = compileAndBuildContext(testSchema);
       const documents = gql`
         query myQuery {
@@ -50,7 +50,7 @@ describe('Tests Example', () => {
       `;
 
       const transformedDocument = transformDocument(schema, documents);
-      const compiled = compileTemplate(config, context, [transformedDocument], { generateSchema: false });
+      const compiled = await compileTemplate(config, context, [transformedDocument], { generateSchema: false });
       const content = compiled[0].content;
 
       expect(content).toBeDefined();
