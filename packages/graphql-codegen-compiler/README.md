@@ -1,6 +1,6 @@
 # `graphql-codegen-compiler`
 
-This package compiles the output of [`graphql-codegen-core`](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/graphql-codegen-core/README.md) along with [`GeneratorConfig`](https://github.com/dotansimha/graphql-code-generator/blob/e9e4722723541628bc7ae58c0e4082556af4bfb8/packages/graphql-codegen-generators/src/types.ts#L7-L20) and [`Settings`](https://github.com/dotansimha/graphql-code-generator/blob/e9e4722723541628bc7ae58c0e4082556af4bfb8/packages/graphql-codegen-compiler/src/types.ts#L39-L43), and compiles the template, returns an array of [`FileOutput`](https://github.com/dotansimha/graphql-code-generator/blob/e9e4722723541628bc7ae58c0e4082556af4bfb8/packages/graphql-codegen-compiler/src/types.ts#L6-L9).
+This package compiles the output of [`graphql-codegen-core`](../graphql-codegen-core/README.md) along with [`GeneratorConfig`](./packages/graphql-codegen-core/src/types.ts) and [`Settings`](../graphql-codegen-compiler/src/types.ts), and compiles the template, returns an array of [`FileOutput`](../graphql-codegen-compiler/src/types.ts).
 
 The main entry point of the package is `compile` method, and you can import it directly and use it without the CLI package.
 
@@ -13,11 +13,13 @@ We are using Handlebars as template compiler, with some custom Handlebars helper
 Accepts a string with a GraphQL type and converts it to the language primitive as specified in the template config, if the type isn't a primitive - it just returns it.
 
 Example:
+
 ```graphql
 type MyType {
   f1: String
 }
 ```
+
 ```handlebars
 {{#each types}}
     Type {{ name }} fields:
@@ -26,7 +28,9 @@ type MyType {
     {{/each}}
 {{/each}}
 ```
+
 Output:
+
 ```
 Type MyType fields:
     Field f1 type is: string
@@ -34,11 +38,12 @@ Type MyType fields:
 
 ### `ifDirective(context: any, directiveName: string)`
 
-Special GraphQL helper that accepts *any* GraphQL entity, and extracts the GraphQL Directives of the entity.
+Special GraphQL helper that accepts _any_ GraphQL entity, and extracts the GraphQL Directives of the entity.
 
 The compiled context is the arguments values of the entity.
 
 Example:
+
 ```graphql
 type MyType @addName(name: "Dotan") {
   f1: String
@@ -46,6 +51,7 @@ type MyType @addName(name: "Dotan") {
 
 directive @addName(name: String!) on OBJECT
 ```
+
 ```handlebars
 {{#each types}}
     Type name: {{ name }}
@@ -53,7 +59,9 @@ directive @addName(name: String!) on OBJECT
 
 {{/each}}
 ```
+
 Output:
+
 ```
 Type name: MyType
 Extra name? Yes! and the name is: Dotan
@@ -64,6 +72,7 @@ Extra name? Yes! and the name is: Dotan
 The opposite of `ifDirective`.
 
 Example:
+
 ```graphql
 type MyType {
   f1: String
@@ -71,6 +80,7 @@ type MyType {
 
 directive @addName(name: String!) on OBJECT
 ```
+
 ```handlebars
 {{#each types}}
     Type name: {{ name }}
@@ -78,29 +88,34 @@ directive @addName(name: String!) on OBJECT
 
 {{/each}}
 ```
+
 Output:
+
 ```
 Type name: MyType
 Extra name? No!
 ```
 
-### `withGql(type: string, name: string)` 
+### `withGql(type: string, name: string)`
 
 Locates GraphQL element of `type` with name `name`, use it if you need to access GraphQL specific element, for example "MyType" of "type".
 
-Super useful when you need to access the actual object inside `withImports` or in any other case. 
+Super useful when you need to access the actual object inside `withImports` or in any other case.
 
 ```graphql
 type MyType {
   f1: String
 }
 ```
+
 ```handlebars
 {{#withGql "type" "MyType"}}
     {{ name }}
 {{/withGql}}
 ```
+
 Output:
+
 ```
 MyType
 ```
@@ -116,12 +131,15 @@ type MyType {
   f: OtherType
 }
 ```
+
 ```handlebars
 {{#eachImport this }}
 import { {{ name }} } from './{{ file }}';
 {{/eachImport}}
 ```
+
 Output:
+
 ```
 import { OtherType } from './othertype.type';
 ```
@@ -133,10 +151,13 @@ Prints a string as comment with `/* ... */`, and also trims multiple lines into 
 Useful for `description` field of GraphQL entities.
 
 Example:
+
 ```handlebars
 {{toComment "hi"}}
 ```
+
 Output:
+
 ```
 /* hi */
 ```
@@ -146,6 +167,7 @@ Output:
 Iterates over a calculated array of imports (file names) that in use by the `element`.
 
 Example:
+
 ```handlebars
 {{#eachImport type}}
     import { {{ name }} } from './{{file}}';
@@ -159,12 +181,15 @@ Example:
 Returns the template child string `count` times, the execution context of the child content is the i/times.
 
 Example:
+
 ```handlebars
 {{#times 3}}
     Hello {{ this }}!
 {{/times}}
 ```
+
 Output:
+
 ```
 Hello 0
 Hello 1
@@ -178,12 +203,15 @@ Similar to `for` loop.
 Returns the template child string amount of times according to `from` to `to` by increasing `incr`, the execution context of the child content is the i/times.
 
 Example:
+
 ```handlebars
 {{#for 3 6 1}}
     Hello {{ this }}!
 {{/times}}
 ```
+
 Output:
+
 ```
 Hello 3
 Hello 4
@@ -197,12 +225,15 @@ Similar to `for` loop.
 Returns the template child string amount of times according to `from` to `to` by increasing `incr`, the execution context of the child content is the i/times.
 
 Example:
+
 ```handlebars
 {{#for 3 6 1}}
     Hello {{ this }}!
 {{/times}}
 ```
+
 Output:
+
 ```
 Hello 3
 Hello 4
@@ -214,10 +245,13 @@ Hello 5
 Return a lowercase version of the string.
 
 Example:
+
 ```handlebars
 {{toLowerCase "Hello" }}
 ```
+
 Output:
+
 ```
 hello
 ```
@@ -227,10 +261,13 @@ hello
 Return an uppercase version of the string.
 
 Example:
+
 ```handlebars
 {{toUpperCase "Hello" }}
 ```
+
 Output:
+
 ```
 HELLO
 ```
@@ -240,10 +277,13 @@ HELLO
 Return an [snake case](https://en.wikipedia.org/wiki/Snake_case) version of the string.
 
 Example:
+
 ```handlebars
 {{toSnakeCase "doSomething" }}
 ```
+
 Output:
+
 ```
 do-something
 ```
@@ -253,10 +293,13 @@ do-something
 Return an [title case](http://www.grammar-monster.com/lessons/capital_letters_title_case.htm) version of the string.
 
 Example:
+
 ```handlebars
 {{toTitleCase "doSomething" }}
 ```
+
 Output:
+
 ```
 Do Something
 ```
@@ -266,10 +309,13 @@ Do Something
 Return an [camel case](http://wiki.c2.com/?CamelCase) version of the string.
 
 Example:
+
 ```handlebars
 {{toCamelCase "DoSomething" }}
 ```
+
 Output:
+
 ```
 doSomething
 ```
@@ -279,13 +325,16 @@ doSomething
 Converts a multiline string into a string with line breaks, to prevent code from being broken.
 
 Example:
+
 ```handlebars
 {{toCamelCase "myString
 other line" }}
 ```
+
 Output:
+
 ```
-"myString" + 
+"myString" +
 "other line"
 ```
 
@@ -296,13 +345,15 @@ Executes a simple if command of two parameters, using comparator.
 Available comparators: `===`, `==`, `!==`, `!=`, `<`, `<=`, `>`, `>=`, `&&`, `||`.
 
 Example:
+
 ```handlebars
 {{#ifCond "test" "===" "test"}}
    Hi!
 {{/ifCond}}
 ```
+
 Output:
+
 ```
     Hi!
 ```
-

@@ -11,7 +11,7 @@
 * Deprecate `--export`, `--file`, `--url` in favor of `--schema` ([#208](https://github.com/dotansimha/graphql-code-generator/pull/208))
 * Added support for a `Promise<GraphQLSchema>` as export value ([#208](https://github.com/dotansimha/graphql-code-generator/pull/208))
 * New template! TypeScript typings with MongoDB models!
-
+* Added support for custom output processor ([#263](https://github.com/dotansimha/graphql-code-generator/issues/263))
 
 ### BREAKING CHANGES
 

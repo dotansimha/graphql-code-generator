@@ -29,11 +29,11 @@ If you develop a **client-side with TypeScript, Angular and GraphQL**, you can u
 
 ## Available Templates:
 
-| Language   | Purpose                                                                                 | Package Name                                   |
-| ---------- | --------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| TypeScript | Generate server-side TypeScript types, and client-side typings                          | [`graphql-codegen-typescript-template`](https://github.com/dotansimha/graphql-code-generator/tree/8149205af14e7d7f191dff58b154224381286e65/packages/templates/typescript)          |
-| TypeScript | Generate server-side TypeScript types, and client-side typings - file per type/document | [`graphql-codegen-typescript-template-multiple`](https://github.com/dotansimha/graphql-code-generator/tree/8149205af14e7d7f191dff58b154224381286e65/packages/templates/typescript-multiple) |
-| MongoDB TypeScript Models | Generate server-side TypeScript types, with MongoDB models               | [`graphql-codegen-typescript-mongodb-template`](https://github.com/dotansimha/graphql-code-generator/blob/8149205af14e7d7f191dff58b154224381286e65/packages/templates/typescript-mongodb/README.md) |
+| Language                  | Purpose                                                                                 | Package Name                                                                               |
+| ------------------------- | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| TypeScript                | Generate server-side TypeScript types, and client-side typings                          | [`graphql-codegen-typescript-template`](./packages/templates/typescript)                   |
+| TypeScript                | Generate server-side TypeScript types, and client-side typings - file per type/document | [`graphql-codegen-typescript-template-multiple`](./packages/templates/typescript-multiple) |
+| MongoDB TypeScript Models | Generate server-side TypeScript types, with MongoDB models                              | [`graphql-codegen-typescript-mongodb-template`](./packages/templates/typescript-mongodb)   |
 
 If you are looking for the **Flow** / **Swift** generators, please note that we will implement it soon again, but you can use `0.5.5` from NPM.
 
@@ -83,27 +83,27 @@ CLI usage is as follow:
 
 Allowed flags:
 
-| Flag Name         | Type     | Description                                                                                                                                                                                                                                                          |
-| ----------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| -s,--schema       | String   | Local or remote path to GraphQL schema: Introspection JSON file, GraphQL server endpoint to fetch the introspection from, local file that exports `GraphQLSchema`, JSON object or AST string.                                                                        |
-| -r,--require      | String   | Path to a `require` extension, [read this](https://gist.github.com/jamestalmage/df922691475cff66c7e6) for more info                                                                                                                                                  |
-| -h,--header       | String   | Header to add to the introspection HTTP request when using --url                                                                                                                                                                                                     |
-| -t,--template     | String   | Template name, for example: "typescript" (not required when using `--project`)                                                                                                                                                                                       |
-| -p,--project      | String   | Project directory with templates (refer to "Project Generation" section)                                                                                                                                                                                             |
-| --project-config  | String   | Path to project config JSON file (refer to "Project Generation" section), defaults to `gqlgen.json`                                                                                                                                                                  |
-| -o,--out          | String   | Path for output file/directory. When using single-file generator specify filename, and when using multiple-files generator specify a directory                                                                                                                       |
+| Flag Name           | Type     | Description                                                                                                                                                                                                                                                          |
+| ------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| -s,--schema         | String   | Local or remote path to GraphQL schema: Introspection JSON file, GraphQL server endpoint to fetch the introspection from, local file that exports `GraphQLSchema`, JSON object or AST string.                                                                        |
+| -r,--require        | String   | Path to a `require` extension, [read this](https://gist.github.com/jamestalmage/df922691475cff66c7e6) for more info                                                                                                                                                  |
+| -h,--header         | String   | Header to add to the introspection HTTP request when using --url                                                                                                                                                                                                     |
+| -t,--template       | String   | Template name, for example: "typescript" (not required when using `--project`)                                                                                                                                                                                       |
+| -p,--project        | String   | Project directory with templates (refer to "Project Generation" section)                                                                                                                                                                                             |
+| --project-config    | String   | Path to project config JSON file (refer to "Project Generation" section), defaults to `gqlgen.json`                                                                                                                                                                  |
+| -o,--out            | String   | Path for output file/directory. When using single-file generator specify filename, and when using multiple-files generator specify a directory                                                                                                                       |
 | -m,--skip-schema    | void     | If specified, server side schema won't be generated through the template (enums won't omit)                                                                                                                                                                          |
 | -c,--skip-documents | void     | If specified, client side documents won't be generated through the template                                                                                                                                                                                          |
-| --no-overwrite    | void     | If specified, the generator will not override existing files                                                                                                                                                                                                         |
-| documents...      | [String] | Space separated paths of `.graphql` files or code files (glob path is supported) that contains GraphQL documents inside strings, or with `gql` tag (JavaScript), this field is optional - if no documents specified, only server side schema types will be generated |
+| --no-overwrite      | void     | If specified, the generator will not override existing files                                                                                                                                                                                                         |
+| documents...        | [String] | Space separated paths of `.graphql` files or code files (glob path is supported) that contains GraphQL documents inside strings, or with `gql` tag (JavaScript), this field is optional - if no documents specified, only server side schema types will be generated |
 
 ## Output Examples
 
 This repository includes some examples for generated outputs under `dev-test` directory.
 
-* Star Wars generated TypeScript output is [available here](https://github.com/dotansimha/graphql-code-generator/blob/master/dev-test/star-wars/types.d.ts).
-* Star Wars generated TypeScript (multiple files) output is [available here](https://github.com/dotansimha/graphql-code-generator/blob/master/dev-test/star-wars/ts-multiple/).
-* GitHunt generated TypeScript output is [available here](https://github.com/dotansimha/graphql-code-generator/blob/master/dev-test/githunt/types.d.ts).
+* Star Wars generated TypeScript output is [available here](./dev-test/star-wars/types.d.ts).
+* Star Wars generated TypeScript (multiple files) output is [available here](./dev-test/star-wars/ts-multiple/).
+* GitHunt generated TypeScript output is [available here](./dev-test/githunt/types.d.ts).
 
 ## Integration
 
@@ -121,17 +121,7 @@ To use inside an existing project, I recommend to add a pre-build script that ex
 
 ## Custom Templates
 
-To create custom template, or generate a whole project from GraphQL schema, refer to [Custom Templates Documentation](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/graphql-codegen-generators/CUSTOM_TEMPLATES.md)
-
-## Packages
-
-GraphQL code generator implementation is separated to multiple NPM packages:
-
-| Package Name                 | Documentation                                                                                                            |
-| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| `graphql-codegen-core`       | [README](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/graphql-codegen-core/README.md)       |
-| `graphql-codegen-compiler`   | [README](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/graphql-codegen-compiler/README.md)   |
-| `graphql-codegen-cli`        | [README](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/graphql-codegen-cli/README.md)        |
+To create custom template, or generate a whole project from GraphQL schema, refer to [Custom Templates Documentation](./packages/templates/README.md)
 
 ## Prettier Support
 
