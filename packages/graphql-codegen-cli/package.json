@@ -68,7 +68,7 @@
     "mkdirp": "0.5.1",
     "prettier": "1.12.1",
     "request": "2.85.0",
-    "strip-comments": "1.0.1",
+    "strip-comments": "1.0.2",
     "valid-url": "1.0.9"
   },
   "typings": "dist/index.d.ts",
