@@ -29,7 +29,7 @@
     "@types/graphql": "0.13.0",
     "husky": "0.14.3",
     "lint-staged": "7.0.5",
-    "tslint": "5.9.1",
+    "tslint": "5.10.0",
     "typescript": "2.8.3",
     "graphql": "0.13.2",
     "graphql-tag": "2.9.2",
