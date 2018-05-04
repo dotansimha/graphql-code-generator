@@ -20,7 +20,7 @@ export type {{ name }} = any;
     {{~# if hasArguments }}
 export interface {{ toPascalCase name }}{{ toPascalCase ../name }}Args {
 {{#each arguments}}
-  {{ name }}{{#unless isRequired}}?{{/unless}}: {{ toPrimitive type }}{{#if isArray}}[]{{/if}}{{#unless isRequired}} | null{{/unless}}; {{ toComment description }}
+  {{ name }}: {{ toPrimitive type }}{{#if isArray}}[]{{/if}}{{#unless isRequired}} | null{{/unless}}; {{ toComment description }}
 {{/each}}
 }
     {{/if}}
