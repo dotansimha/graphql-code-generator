@@ -228,3 +228,54 @@ export interface Directive {
   onInterface: boolean;
   onUnion: boolean;
 }
+
+// tslint:disable-next-line:variable-name
+export const EInputType = {
+  SINGLE_FILE: 'SINGLE_FILE',
+  MULTIPLE_FILES: 'MULTIPLE_FILES',
+  PROJECT: 'PROJECT'
+};
+
+export interface GeneratorConfig {
+  inputType: string; // EInputType
+  flattenTypes: boolean;
+  config?: { [configName: string]: any };
+  templates: { [templateName: string]: string | string[] } | string;
+  primitives: {
+    String: string;
+    Int: string;
+    Float: string;
+    Boolean: string;
+    ID: string;
+  };
+  outFile?: string;
+  filesExtension?: string;
+  customHelpers?: { [helperName: string]: Function };
+}
+
+export interface FileOutput {
+  filename: string;
+  content: string;
+}
+
+export interface Settings {
+  generateSchema?: boolean;
+  generateDocuments?: boolean;
+  verbose?: boolean;
+}
+
+export type CustomProcessingFunction = (
+  templateContext: SchemaTemplateContext,
+  mergedDocuments: Document,
+  settings: any
+) => FileOutput[] | Promise<FileOutput[]>;
+
+export function isCustomProcessingFunction(
+  config: GeneratorConfig | CustomProcessingFunction
+): config is CustomProcessingFunction {
+  return typeof config === 'function';
+}
+
+export function isGeneratorConfig(config: GeneratorConfig | CustomProcessingFunction): config is GeneratorConfig {
+  return typeof config !== 'function' && !!(config as any).inputType;
+}

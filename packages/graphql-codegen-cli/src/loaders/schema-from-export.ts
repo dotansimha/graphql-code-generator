@@ -9,7 +9,7 @@ import {
   IntrospectionQuery,
   buildClientSchema
 } from 'graphql';
-import { extractExtensionDefinitions } from 'graphql-tools';
+import { debugLog } from 'graphql-codegen-core';
 
 function isPromise(obj) {
   return !!obj && (typeof obj === 'object' || typeof obj === 'function') && typeof obj.then === 'function';
@@ -59,6 +59,8 @@ export const schemaFromExport = (file: string): Promise<GraphQLSchema> => {
 
               resolve(schemaResult);
             } catch (e) {
+              debugLog('Unexpected exceptiom while trying to figure out the schema: ', e);
+
               reject(new Error('Exported schema must be of type GraphQLSchema, text, AST, or introspection JSON.'));
 
               return;

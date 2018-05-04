@@ -1,0 +1,36 @@
+{
+  "name": "graphql-codegen-typescript-template",
+  "version": "0.8.21",
+  "description": "",
+  "license": "MIT",
+  "scripts": {
+    "prepublishOnly": "yarn build",
+    "build": "codegen-handlebars-templates-scripts build",
+    "pretest": "yarn build",
+    "test": "codegen-handlebars-templates-scripts test"
+  },
+  "devDependencies": {
+    "@types/common-tags": "1.4.0",
+    "codegen-handlebars-templates-scripts": "0.8.21",
+    "common-tags": "1.7.2",
+    "graphql-codegen-compiler": "0.8.21",
+    "graphql-codegen-core": "0.8.21"
+  },
+  "main": "./dist/index.js",
+  "typings": "dist/index.d.ts",
+  "typescript": {
+    "definition": "dist/index.d.ts"
+  },
+  "jest": {
+    "globals": {
+      "ts-jest": {
+        "enableTsDiagnostics": false
+      }
+    },
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json", "node"]
+  }
+}

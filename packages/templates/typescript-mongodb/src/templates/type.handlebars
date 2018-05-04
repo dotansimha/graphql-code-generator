@@ -1,0 +1,24 @@
+{{#each fields}}
+{{~# if hasArguments }}
+export interface {{ toPascalCase name }}{{ toPascalCase ../name }}Args {
+{{#each arguments}}
+  {{ name }}: {{ toPrimitive type }}{{#isArray this }}[]{{/isArray}}{{#unless isRequired}} | null{{/unless}}; {{ toComment description }}
+{{/each}}
+}
+
+{{/if}}
+{{/each}}
+{{#ifNotRootType this }}
+{{#ifDirective this "entity" }}
+export interface {{ ../name }}DbObject {
+{{#filterModelFields ../fields}}
+  {{#unlessDirective this "id" }}
+    {{ ../name }}?: {{#if ../isEnum}}string{{else}}{{#ifDirective ../this "link" }}ObjectID{{/ifDirective}}{{#unlessDirective ../this "link" }}{{#ifDirective ../../this "column"}}{{#if overrideType}}{{ overrideType }}{{#if overrideIsArray}}[]{{/if}}{{else}}{{ toPrimitive ../../../type }}{{/if}}{{ else }}{{ toPrimitive ../../../type }}{{/ifDirective}}{{/unlessDirective}}{{/if}}{{#ifDirective ../this "embedded" }}DbObject{{/ifDirective}}{{#if ../isArray}}[]{{/if}};
+  {{else}}
+    _id: ObjectID;
+  {{/unlessDirective}}
+{{/filterModelFields}}
+}
+{{/ifDirective}}
+{{>inputType}}
+{{/ifNotRootType}}

@@ -13,9 +13,11 @@
     "lint": "lerna run lint",
     "precommit": "lint-staged",
     "prerelease": "yarn build && yarn test",
-    "release": "lerna publish --exact --force-publish=\"*\""
+    "prerelease:canary": "yarn build && yarn test",
+    "release": "lerna publish --exact --force-publish=\"*\"",
+    "release:canary": "lerna publish --force-publish=\"*\" --canary --exact"
   },
-  "workspaces": ["packages/*"],
+  "workspaces": ["packages/*", "packages/scripts/*", "packages/templates/*"],
   "dependencies": {
     "lerna": "2.11.0"
   },

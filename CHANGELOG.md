@@ -10,11 +10,15 @@
 * Fix export CLI short alias ([#255](https://github.com/dotansimha/graphql-code-generator/pull/255), Thanks @eritikass)
 * Deprecate `--export`, `--file`, `--url` in favor of `--schema` ([#208](https://github.com/dotansimha/graphql-code-generator/pull/208))
 * Added support for a `Promise<GraphQLSchema>` as export value ([#208](https://github.com/dotansimha/graphql-code-generator/pull/208))
+* New template! TypeScript typings with MongoDB models!
+* Added support for custom output processor ([#263](https://github.com/dotansimha/graphql-code-generator/issues/263))
+* Better detection of `GraphQLSchema` objects
 
 ### BREAKING CHANGES
 
 * `--no-schema` changed to `--skip-schema`
 * `--no-documents` changed to `--skip-documents`
+* Templates are no longer part of the core package, and they needed to be installed separately (see README installation notes)
 
 <a name="0.8.21"></a>
 

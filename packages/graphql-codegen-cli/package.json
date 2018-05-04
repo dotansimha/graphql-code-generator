@@ -64,15 +64,19 @@
     "glob": "7.1.2",
     "graphql-codegen-compiler": "0.8.21",
     "graphql-codegen-core": "0.8.21",
-    "graphql-codegen-generators": "0.8.21",
     "mkdirp": "0.5.1",
     "prettier": "1.12.1",
     "request": "2.85.0",
     "strip-comments": "1.0.2",
     "valid-url": "1.0.9"
   },
-  "typings": "dist/index.d.ts",
+  "devDependencies": {
+    "graphql-codegen-typescript-template": "0.8.21",
+    "graphql-codegen-typescript-template-multiple": "0.8.21"
+  },
+  "main": "./dist/index.js",
+  "typings": "./dist/index.d.ts",
   "typescript": {
-    "definition": "dist/index.d.ts"
+    "definition": "./dist/index.d.ts"
   }
 }

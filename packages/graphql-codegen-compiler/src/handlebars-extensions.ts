@@ -13,7 +13,7 @@ import { getFieldTypeAsString } from './field-type-to-string';
 import { sanitizeFilename } from './sanitizie-filename';
 import { FlattenModel, FlattenOperation } from './types';
 import { flattenSelectionSet } from './flatten-types';
-import { GeneratorConfig } from 'graphql-codegen-generators';
+import { GeneratorConfig } from 'graphql-codegen-core';
 
 export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTemplateContext) => {
   const customHelpers = config.customHelpers || {};
