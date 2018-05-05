@@ -58,7 +58,7 @@
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || || ^0.13.0"
   },
   "dependencies": {
-    "@types/prettier": "1.12.0",
+    "@types/prettier": "1.12.1",
     "@types/valid-url": "1.0.2",
     "commander": "2.15.1",
     "glob": "7.1.2",
