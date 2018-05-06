@@ -14,6 +14,7 @@
 * Added support for custom output processor ([#263](https://github.com/dotansimha/graphql-code-generator/issues/263))
 * Better detection of `GraphQLSchema` objects
 * Added programmatic usage ([#288](https://github.com/dotansimha/graphql-code-generator/pull/288))
+* TypeScript generated comments are now `docstring` valid!
 
 ### BREAKING CHANGES
 

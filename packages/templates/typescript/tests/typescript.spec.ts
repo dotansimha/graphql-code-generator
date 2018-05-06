@@ -24,7 +24,30 @@ describe('TypeScript template', () => {
   };
 
   describe('Schema Only', () => {
-    it('should support custom handlebar ifDirective when directive added', () => {
+    it('should output docstring correctly', async () => {
+      const { context } = compileAndBuildContext(`
+        # type-description
+        type Query {
+          # field-description
+          fieldTest: String 
+        }
+        
+        schema {
+          query: Query
+        }
+      `);
+
+      const compiled = await compileTemplate(config, context);
+
+      expect(compiled[0].content).toBeSimilarStringTo(`
+      /* tslint:disable */
+      /** type-description */
+      export interface Query {
+        fieldTest?: string | null; /** field-description */
+      }`);
+    });
+
+    it('should support custom handlebar ifDirective when directive added', async () => {
       const { context } = compileAndBuildContext(`
         type Query @app {
           fieldTest: String
@@ -37,7 +60,7 @@ describe('TypeScript template', () => {
         directive @app on OBJECT
       `);
 
-      const compiled = compileTemplate(
+      const compiled = await compileTemplate(
         {
           ...config,
           templates: {
@@ -50,7 +73,7 @@ describe('TypeScript template', () => {
       expect(compiled[0].content).toBe('directive');
     });
 
-    it('should pass custom config to template', () => {
+    it('should pass custom config to template', async () => {
       const { context } = compileAndBuildContext(`
         type Query {
           fieldTest: String
@@ -61,7 +84,7 @@ describe('TypeScript template', () => {
         }
       `);
 
-      const compiled = compileTemplate(
+      const compiled = await compileTemplate(
         {
           ...config,
           templates: {
@@ -77,7 +100,7 @@ describe('TypeScript template', () => {
       expect(compiled[0].content).toBe('A');
     });
 
-    it('should support custom handlebar ifDirective when no directive added', () => {
+    it('should support custom handlebar ifDirective when no directive added', async () => {
       const { context } = compileAndBuildContext(`
         type Query {
           fieldTest: String
@@ -90,7 +113,7 @@ describe('TypeScript template', () => {
         directive @app on OBJECT
       `);
 
-      const compiled = compileTemplate(
+      const compiled = await compileTemplate(
         {
           ...config,
           templates: {
@@ -103,7 +126,7 @@ describe('TypeScript template', () => {
       expect(compiled[0].content).toBe('');
     });
 
-    it('should support custom handlebar ifDirective when directive added and args', () => {
+    it('should support custom handlebar ifDirective when directive added and args', async () => {
       const { context } = compileAndBuildContext(`
         type Query {
           fieldTest: String
@@ -116,7 +139,7 @@ describe('TypeScript template', () => {
         directive @app(test: String) on OBJECT
       `);
 
-      const compiled = compileTemplate(
+      const compiled = await compileTemplate(
         {
           ...config,
           templates: {
@@ -129,13 +152,13 @@ describe('TypeScript template', () => {
       expect(compiled[0].content).toBe('directive123');
     });
 
-    it('should compile template correctly when using a simple Query', () => {
+    it('should compile template correctly when using a simple Query', async () => {
       const { context } = compileAndBuildContext(`
         type Query {
           fieldTest: String
         }
       `);
-      const compiled = compileTemplate(config, context);
+      const compiled = await compileTemplate(config, context);
       const content = compiled[0].content;
       expect(content).toBeSimilarStringTo(`
       /* tslint:disable */
@@ -145,7 +168,7 @@ describe('TypeScript template', () => {
       }`);
     });
 
-    it('should compile template correctly when using a simple Query with some fields and types', () => {
+    it('should compile template correctly when using a simple Query with some fields and types', async () => {
       const { context } = compileAndBuildContext(`
         type Query {
           fieldTest: String
@@ -156,7 +179,7 @@ describe('TypeScript template', () => {
           f2: Int
         }
       `);
-      const compiled = compileTemplate(config, context);
+      const compiled = await compileTemplate(config, context);
       const content = compiled[0].content;
       expect(content).toBeSimilarStringTo(`
       /* tslint:disable */
@@ -171,7 +194,7 @@ describe('TypeScript template', () => {
       }`);
     });
 
-    it('should compile template correctly when using a simple Query with arrays and required', () => {
+    it('should compile template correctly when using a simple Query with arrays and required', async () => {
       const { context } = compileAndBuildContext(`
         type Query {
           fieldTest: String
@@ -187,7 +210,7 @@ describe('TypeScript template', () => {
           f4: String
         }
       `);
-      const compiled = compileTemplate(config, context);
+      const compiled = await compileTemplate(config, context);
       const content = compiled[0].content;
       expect(content).toBeSimilarStringTo(`
       /* tslint:disable */
@@ -207,7 +230,7 @@ describe('TypeScript template', () => {
       }`);
     });
 
-    it('should generate correctly when using simple type that extends interface', () => {
+    it('should generate correctly when using simple type that extends interface', async () => {
       const { context } = compileAndBuildContext(`
         type Query {
           fieldTest: A!
@@ -223,7 +246,7 @@ describe('TypeScript template', () => {
         }
       `);
 
-      const compiled = compileTemplate(config, context);
+      const compiled = await compileTemplate(config, context);
       const content = compiled[0].content;
       expect(content).toBeSimilarStringTo(`
         /* tslint:disable */
@@ -242,7 +265,7 @@ describe('TypeScript template', () => {
         }`);
     });
 
-    it('should generate correctly when using custom scalar', () => {
+    it('should generate correctly when using custom scalar', async () => {
       const { context } = compileAndBuildContext(`
         type Query {
           fieldTest: [Date]
@@ -251,7 +274,7 @@ describe('TypeScript template', () => {
         scalar Date
       `);
 
-      const compiled = compileTemplate(config, context);
+      const compiled = await compileTemplate(config, context);
       const content = compiled[0].content;
       expect(content).toBeSimilarStringTo(`
       /* tslint:disable */
@@ -263,7 +286,7 @@ describe('TypeScript template', () => {
       }`);
     });
 
-    it('should generate enums correctly', () => {
+    it('should generate enums correctly', async () => {
       const { context } = compileAndBuildContext(`
         type Query {
           fieldTest: MyEnum!
@@ -276,7 +299,7 @@ describe('TypeScript template', () => {
         }
       `);
 
-      const compiled = compileTemplate(config, context);
+      const compiled = await compileTemplate(config, context);
       const content = compiled[0].content;
       expect(content).toBeSimilarStringTo(`
       /* tslint:disable */
@@ -292,7 +315,7 @@ describe('TypeScript template', () => {
       `);
     });
 
-    it('should generate unions correctly', () => {
+    it('should generate unions correctly', async () => {
       const { context } = compileAndBuildContext(`
         type Query {
           fieldTest: C!
@@ -310,7 +333,7 @@ describe('TypeScript template', () => {
         union C = A | B
       `);
 
-      const compiled = compileTemplate(config, context);
+      const compiled = await compileTemplate(config, context);
       const content = compiled[0].content;
       expect(content).toBeSimilarStringTo(`
         /* tslint:disable */
@@ -327,19 +350,19 @@ describe('TypeScript template', () => {
           f2?: string | null;
         }
         
-        /* Union description */
+        /** Union description */
         export type C = A | B;
       `);
     });
 
-    it('should generate type arguments types correctly when using simple Scalar', () => {
+    it('should generate type arguments types correctly when using simple Scalar', async () => {
       const { context } = compileAndBuildContext(`
         type Query {
           fieldTest(arg1: String): String!
         }
       `);
 
-      const compiled = compileTemplate(config, context);
+      const compiled = await compileTemplate(config, context);
       const content = compiled[0].content;
       expect(content).toBeSimilarStringTo(`
         /* tslint:disable */
@@ -353,7 +376,7 @@ describe('TypeScript template', () => {
         }`);
     });
 
-    it('should generate type arguments types correctly when using custom input', () => {
+    it('should generate type arguments types correctly when using custom input', async () => {
       const { context } = compileAndBuildContext(`
         type Query {
           fieldTest(myArgument: T!): Return
@@ -372,7 +395,7 @@ describe('TypeScript template', () => {
         }
       `);
 
-      const compiled = compileTemplate(config, context);
+      const compiled = await compileTemplate(config, context);
       const content = compiled[0].content;
       expect(content).toBeSimilarStringTo(`
        /* tslint:disable */
@@ -399,10 +422,10 @@ describe('TypeScript template', () => {
     `);
     });
 
-    it('should generate from a whole schema object correctly', () => {
+    it('should generate from a whole schema object correctly', async () => {
       const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
       const context = schemaToTemplateContext(schema);
-      const compiled = compileTemplate(config, context);
+      const compiled = await compileTemplate(config, context);
       const content = compiled[0].content;
 
       expect(content).toContain('export interface Query');
@@ -429,7 +452,7 @@ describe('TypeScript template', () => {
   });
 
   describe('Operations', () => {
-    it('Should compile simple Query correctly', () => {
+    it('Should compile simple Query correctly', async () => {
       const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
       const context = schemaToTemplateContext(schema);
 
@@ -450,18 +473,18 @@ describe('TypeScript template', () => {
       `;
 
       const transformedDocument = transformDocument(schema, documents);
-      const compiled = compileTemplate(config, context, [transformedDocument], { generateSchema: false });
+      const compiled = await compileTemplate(config, context, [transformedDocument], { generateSchema: false });
 
       expect(compiled[0].content).toBeSimilarStringTo(`
           /* tslint:disable */
-          /* A list of options for the sort order of the feed */
+          /** A list of options for the sort order of the feed */
           export enum FeedType {
             HOT = "HOT",
             NEW = "NEW",
             TOP = "TOP",
           }
           
-          /* The type of vote to record, when submitting a vote */
+          /** The type of vote to record, when submitting a vote */
           export enum VoteType {
             UP = "UP",
             DOWN = "DOWN",
@@ -498,7 +521,7 @@ describe('TypeScript template', () => {
           }`);
     });
 
-    it('Should compile simple Query with Fragment spread correctly', () => {
+    it('Should compile simple Query with Fragment spread correctly', async () => {
       const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
       const context = schemaToTemplateContext(schema);
 
@@ -523,19 +546,19 @@ describe('TypeScript template', () => {
       `;
 
       const transformedDocument = transformDocument(schema, documents);
-      const compiled = compileTemplate(config, context, [transformedDocument], { generateSchema: false });
+      const compiled = await compileTemplate(config, context, [transformedDocument], { generateSchema: false });
       const content = compiled[0].content;
 
       expect(content).toBeSimilarStringTo(`
           /* tslint:disable */
-          /* A list of options for the sort order of the feed */
+          /** A list of options for the sort order of the feed */
           export enum FeedType {
             HOT = "HOT",
             NEW = "NEW",
             TOP = "TOP",
           }
           
-          /* The type of vote to record, when submitting a vote */
+          /** The type of vote to record, when submitting a vote */
           export enum VoteType {
             UP = "UP",
             DOWN = "DOWN",
@@ -578,7 +601,7 @@ describe('TypeScript template', () => {
           }`);
     });
 
-    it('Should compile simple Query with inline Fragment', () => {
+    it('Should compile simple Query with inline Fragment', async () => {
       const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
       const context = schemaToTemplateContext(schema);
 
@@ -603,19 +626,19 @@ describe('TypeScript template', () => {
       `;
 
       const transformedDocument = transformDocument(schema, documents);
-      const compiled = compileTemplate(config, context, [transformedDocument], { generateSchema: false });
+      const compiled = await compileTemplate(config, context, [transformedDocument], { generateSchema: false });
       const content = compiled[0].content;
 
       expect(content).toBeSimilarStringTo(`
        /* tslint:disable */
-    /* A list of options for the sort order of the feed */
+    /** A list of options for the sort order of the feed */
     export enum FeedType {
       HOT = "HOT",
       NEW = "NEW",
       TOP = "TOP",
     }
     
-    /* The type of vote to record, when submitting a vote */
+    /** The type of vote to record, when submitting a vote */
     export enum VoteType {
       UP = "UP",
       DOWN = "DOWN",

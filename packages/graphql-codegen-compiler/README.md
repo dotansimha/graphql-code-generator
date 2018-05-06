@@ -146,7 +146,7 @@ import { OtherType } from './othertype.type';
 
 ### `toComment(str: string)`
 
-Prints a string as comment with `/* ... */`, and also trims multiple lines into a single line.
+Prints a valid docstring comment as string with `/* ... */`, and also trims multiple lines into a single line.
 
 Useful for `description` field of GraphQL entities.
 
@@ -159,7 +159,7 @@ Example:
 Output:
 
 ```
-/* hi */
+/** hi */
 ```
 
 ### `eachImport(element: any)`
