@@ -1,4 +1,4 @@
-import { executeWithOptions } from '../src/cli';
+import { executeWithOptions } from '../src/codegen';
 
 describe('Custom Processor', () => {
   it('should detect custom processor function correctly', async () => {

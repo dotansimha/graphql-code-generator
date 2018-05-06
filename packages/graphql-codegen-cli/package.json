@@ -3,7 +3,7 @@
   "version": "0.8.21",
   "license": "MIT",
   "bin": {
-    "gql-gen": "dist/index.js"
+    "gql-gen": "dist/cli.js"
   },
   "repository": {
     "type": "git",
