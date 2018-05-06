@@ -4,26 +4,16 @@ Create GraphQL Codegen templates easily with this Handlebars.
 
 This package exposes a CLI util called `codegen-handlebars-templates-scripts` which allow you to easily create a GraphQL Codegen Template project, and built it without dealing with external utils.
 
-To get started with this package, install it globally, or as local dependency inside an existing directory:
-
-    $ yarn global add codegen-handlebars-templates-scripts
-
-Then, to start a new project, create a directory for your template project:
+To start a new project, create a directory for your template project and generate boilerplate:
 
     $ mkdir my-codegen-template
     $ cd my-codegen-template
-
-Now, run the following command inside your directory:
-
-    yarn codegen-handlebars-templates-scripts init
+    $ npx codegen-handlebars-templates-scripts init
+    $ yarn
 
 > If some files such as `package.json` are already exists in this dir, please use `--overwrite` to make sure it changes it as well.
 
-Now, install the boilerplate dependencies by running:
-
-    yarn
-
-The CLI util will create the boilerplate for you, so all you have to do it to write your own templates under `src/` and defined it in `config.ts` file.
+Now all you have to do it to write your own templates under `src/` and defined it in `config.ts` file.
 
 ## Testing your template locally
 
