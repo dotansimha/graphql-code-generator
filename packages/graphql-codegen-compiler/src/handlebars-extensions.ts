@@ -83,7 +83,7 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
       return '';
     }
 
-    return new SafeString('/* ' + oneLineTrim`${str || ''}` + ' */');
+    return new SafeString('/** ' + oneLineTrim`${str || ''}` + ' */');
   });
 
   registerHelper('eachImport', function(context: any, options: { fn: Function }) {

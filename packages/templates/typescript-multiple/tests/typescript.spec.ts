@@ -24,14 +24,14 @@ describe('TypeScript Multiple', () => {
   };
 
   describe('Schema', () => {
-    it('should pass custom config correctly to the generator', () => {
+    it('should pass custom config correctly to the generator', async () => {
       const { context } = compileAndBuildContext(`
         type Query {
           fieldTest: String
         }
       `);
 
-      const compiled = compileTemplate(
+      const compiled = await compileTemplate(
         {
           ...config,
           templates: {
@@ -49,13 +49,13 @@ describe('TypeScript Multiple', () => {
       expect(compiled[0].content).toBeSimilarStringTo(`A`);
     });
 
-    it('should generate the correct types when using only simple Query', () => {
+    it('should generate the correct types when using only simple Query', async () => {
       const { context } = compileAndBuildContext(`
         type Query {
           fieldTest: String
         }
       `);
-      const compiled = compileTemplate(config, context);
+      const compiled = await compileTemplate(config, context);
       expect(compiled.length).toBe(1);
       expect(compiled[0].filename).toBe('query.type.ts');
       expect(compiled[0].content).toBeSimilarStringTo(`
@@ -65,7 +65,7 @@ describe('TypeScript Multiple', () => {
       `);
     });
 
-    it('should generate the correct types when using Query and simple type', () => {
+    it('should generate the correct types when using Query and simple type', async () => {
       const { context } = compileAndBuildContext(`
         type MyType {
           f1: String
@@ -75,7 +75,7 @@ describe('TypeScript Multiple', () => {
           fieldTest: MyType
         }
       `);
-      const compiled = compileTemplate(config, context);
+      const compiled = await compileTemplate(config, context);
       expect(compiled.length).toBe(2);
       expect(compiled[0].filename).toBe('query.type.ts');
       expect(compiled[0].content).toBeSimilarStringTo(`
@@ -93,7 +93,7 @@ describe('TypeScript Multiple', () => {
       `);
     });
 
-    it('should generate the correct types when using Query and enum', () => {
+    it('should generate the correct types when using Query and enum', async () => {
       const { context } = compileAndBuildContext(`
         enum MyEnum {
           V1,
@@ -104,7 +104,7 @@ describe('TypeScript Multiple', () => {
           fieldTest: MyEnum
         }
       `);
-      const compiled = compileTemplate(config, context);
+      const compiled = await compileTemplate(config, context);
       expect(compiled.length).toBe(2);
       expect(compiled[0].filename).toBe('query.type.ts');
       expect(compiled[0].content).toBeSimilarStringTo(`
@@ -123,7 +123,7 @@ describe('TypeScript Multiple', () => {
       `);
     });
 
-    it('should generate the correct types when using Query and twice of the same type (no dupes)', () => {
+    it('should generate the correct types when using Query and twice of the same type (no dupes)', async () => {
       const { context } = compileAndBuildContext(`
         type MyType {
           f1: String
@@ -134,7 +134,7 @@ describe('TypeScript Multiple', () => {
           fieldTest2: MyType
         }
       `);
-      const compiled = compileTemplate(config, context);
+      const compiled = await compileTemplate(config, context);
       expect(compiled.length).toBe(2);
       expect(compiled[0].filename).toBe('query.type.ts');
       expect(compiled[0].content).toBeSimilarStringTo(`
@@ -153,7 +153,7 @@ describe('TypeScript Multiple', () => {
       `);
     });
 
-    it('should generate correctly when using simple type that extends interface', () => {
+    it('should generate correctly when using simple type that extends interface', async () => {
       const { context } = compileAndBuildContext(`
         type Query {
           fieldTest: A!
@@ -169,7 +169,7 @@ describe('TypeScript Multiple', () => {
         }
       `);
 
-      const compiled = compileTemplate(config, context);
+      const compiled = await compileTemplate(config, context);
       expect(compiled.length).toBe(3);
       expect(compiled[0].filename).toBe('query.type.ts');
       expect(compiled[1].filename).toBe('a.type.ts');
@@ -197,7 +197,7 @@ describe('TypeScript Multiple', () => {
       `);
     });
 
-    it('should generate correctly when using custom scalar', () => {
+    it('should generate correctly when using custom scalar', async () => {
       const { context } = compileAndBuildContext(`
         type Query {
           fieldTest: [Date]
@@ -206,7 +206,7 @@ describe('TypeScript Multiple', () => {
         scalar Date
       `);
 
-      const compiled = compileTemplate(config, context);
+      const compiled = await compileTemplate(config, context);
       expect(compiled.length).toBe(2);
       expect(compiled[0].filename).toBe('query.type.ts');
       expect(compiled[1].filename).toBe('date.scalar.ts');
@@ -223,7 +223,7 @@ describe('TypeScript Multiple', () => {
       `);
     });
 
-    it('should generate unions correctly', () => {
+    it('should generate unions correctly', async () => {
       const { context } = compileAndBuildContext(`
         type Query {
           fieldTest: C!
@@ -241,7 +241,7 @@ describe('TypeScript Multiple', () => {
         union C = A | B
       `);
 
-      const compiled = compileTemplate(config, context);
+      const compiled = await compileTemplate(config, context);
       expect(compiled.length).toBe(4);
       expect(compiled[0].filename).toBe('query.type.ts');
       expect(compiled[1].filename).toBe('a.type.ts');
@@ -269,19 +269,19 @@ describe('TypeScript Multiple', () => {
         import { A } from './a.type';
         import { B } from './b.type';
 
-        /* Union description */
+        /** Union description */
         export type C = A | B;
       `);
     });
 
-    it('should generate type arguments types correctly when using simple primitive', () => {
+    it('should generate type arguments types correctly when using simple primitive', async () => {
       const { context } = compileAndBuildContext(`
         type Query {
           fieldTest(arg1: String): String!
         }
       `);
 
-      const compiled = compileTemplate(config, context);
+      const compiled = await compileTemplate(config, context);
       expect(compiled.length).toBe(1);
       const content = compiled[0].content;
       expect(compiled[0].filename).toBe('query.type.ts');
@@ -295,7 +295,7 @@ describe('TypeScript Multiple', () => {
         }`);
     });
 
-    it('should generate type arguments types correctly when using custom input', () => {
+    it('should generate type arguments types correctly when using custom input', async () => {
       const { context } = compileAndBuildContext(`
         type Query {
           fieldTest(myArgument: T!): Return
@@ -314,7 +314,7 @@ describe('TypeScript Multiple', () => {
         }
       `);
 
-      const compiled = compileTemplate(config, context);
+      const compiled = await compileTemplate(config, context);
       expect(compiled.length).toBe(3);
       expect(compiled[0].filename).toBe('query.type.ts');
       expect(compiled[1].filename).toBe('return.type.ts');
@@ -350,7 +350,7 @@ describe('TypeScript Multiple', () => {
   });
 
   describe('Operations', () => {
-    it('Should compile simple Query correctly', () => {
+    it('Should compile simple Query correctly', async () => {
       const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
       const context = schemaToTemplateContext(schema);
 
@@ -371,7 +371,7 @@ describe('TypeScript Multiple', () => {
       `;
 
       const transformedDocument = transformDocument(schema, documents);
-      const compiled = compileTemplate(config, context, [transformedDocument], { generateSchema: false });
+      const compiled = await compileTemplate(config, context, [transformedDocument], { generateSchema: false });
 
       expect(compiled.length).toBe(3);
       expect(compiled[0].filename).toBe('feedtype.enum.ts');
@@ -379,7 +379,7 @@ describe('TypeScript Multiple', () => {
       expect(compiled[2].filename).toBe('myfeed.query.ts');
 
       expect(compiled[0].content).toBeSimilarStringTo(`
-        /* A list of options for the sort order of the feed */
+        /** A list of options for the sort order of the feed */
         export enum FeedType {
           HOT = "HOT",
           NEW = "NEW",
@@ -387,7 +387,7 @@ describe('TypeScript Multiple', () => {
         }
       `);
       expect(compiled[1].content).toBeSimilarStringTo(`
-        /* The type of vote to record, when submitting a vote */
+        /** The type of vote to record, when submitting a vote */
         export enum VoteType {
           UP = "UP",
           DOWN = "DOWN",
@@ -426,7 +426,7 @@ describe('TypeScript Multiple', () => {
       `);
     });
 
-    it('Should compile simple Query with Fragment spread correctly', () => {
+    it('Should compile simple Query with Fragment spread correctly', async () => {
       const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
       const context = schemaToTemplateContext(schema);
 
@@ -451,7 +451,7 @@ describe('TypeScript Multiple', () => {
       `;
 
       const transformedDocument = transformDocument(schema, documents);
-      const compiled = compileTemplate(config, context, [transformedDocument], { generateSchema: false });
+      const compiled = await compileTemplate(config, context, [transformedDocument], { generateSchema: false });
 
       expect(compiled.length).toBe(4);
       expect(compiled[0].filename).toBe('feedtype.enum.ts');
@@ -460,7 +460,7 @@ describe('TypeScript Multiple', () => {
       expect(compiled[3].filename).toBe('repofields.fragment.ts');
 
       expect(compiled[0].content).toBeSimilarStringTo(`
-        /* A list of options for the sort order of the feed */
+        /** A list of options for the sort order of the feed */
         export enum FeedType {
           HOT = "HOT",
           NEW = "NEW",
@@ -468,7 +468,7 @@ describe('TypeScript Multiple', () => {
         }
       `);
       expect(compiled[1].content).toBeSimilarStringTo(`
-        /* The type of vote to record, when submitting a vote */
+        /** The type of vote to record, when submitting a vote */
         export enum VoteType {
           UP = "UP",
           DOWN = "DOWN",
