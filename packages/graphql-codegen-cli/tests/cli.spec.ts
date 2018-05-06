@@ -1,4 +1,4 @@
-import { executeWithOptions } from '../src/cli';
+import { executeWithOptions } from '../src/codegen';
 
 describe('executeWithOptions', () => {
   it('execute the correct results when using file', async () => {
