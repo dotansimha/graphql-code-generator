@@ -105,7 +105,7 @@ This repository includes some examples for generated outputs under `dev-test` di
 * Star Wars generated TypeScript (multiple files) output is [available here](./dev-test/star-wars/ts-multiple/).
 * GitHunt generated TypeScript output is [available here](./dev-test/githunt/types.d.ts).
 
-## Integration
+## Integrate with your project
 
 To use inside an existing project, I recommend to add a pre-build script that executes the code generator, inside you `package.json`, for example:
 
@@ -114,10 +114,28 @@ To use inside an existing project, I recommend to add a pre-build script that ex
   "name": "my-project",
   "scripts": {
     "prebuild": "gql-gen ...",
-    "build": "webpack"
+    "build": "..."
   }
 }
 ```
+
+## Programmatic Usage
+
+If you with to use this package as a library and execute it from your code, do the following:
+
+```typescript
+import { generate } from 'graphql-code-generator';
+
+function doSomething() {
+  const generatedFiles = await generate({
+    template: 'typescript',
+    url: 'http://127.0.0.1:3000/graphql',
+    out: process.cwd() + '/models/'
+  });
+}
+```
+
+The method `generate` accepts two parameters: `(options: CLIOptions, saveToFile: boolean)`, and returns `Promise<FileOutput[]>`.
 
 ## Custom Templates
 
