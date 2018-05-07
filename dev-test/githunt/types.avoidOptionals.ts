@@ -1,9 +1,9 @@
 /* tslint:disable */
 
 export interface Query {
-  feed?: (Entry | null)[] | null /** A feed of repository submissions */;
-  entry?: Entry | null /** A single entry */;
-  currentUser?: User | null /** Return the currently logged in user, or null if nobody is logged in */;
+  feed: (Entry | null)[] | null /** A feed of repository submissions */;
+  entry: Entry | null /** A single entry */;
+  currentUser: User | null /** Return the currently logged in user, or null if nobody is logged in */;
 }
 /** Information about a GitHub repository submitted to GitHunt */
 export interface Entry {
@@ -21,11 +21,11 @@ export interface Entry {
 export interface Repository {
   name: string /** Just the name of the repository, e.g. GitHunt-API */;
   full_name: string /** The full name of the repository with the username, e.g. apollostack/GitHunt-API */;
-  description?: string | null /** The description of the repository */;
+  description: string | null /** The description of the repository */;
   html_url: string /** The link to the repository on GitHub */;
   stargazers_count: number /** The number of people who have starred this repository on GitHub */;
-  open_issues_count?: number | null /** The number of open issues on this repository on GitHub */;
-  owner?: User | null /** The owner of this repository on GitHub, e.g. apollostack */;
+  open_issues_count: number | null /** The number of open issues on this repository on GitHub */;
+  owner: User | null /** The owner of this repository on GitHub, e.g. apollostack */;
 }
 /** A user object from the GitHub API. This uses the exact field names returned from the GitHub API. */
 export interface User {
@@ -47,25 +47,25 @@ export interface Vote {
 }
 
 export interface Mutation {
-  submitRepository?: Entry | null /** Submit a new repository, returns the new submission */;
-  vote?: Entry | null /** Vote on a repository submission, returns the submission that was voted on */;
-  submitComment?: Comment | null /** Comment on a repository, returns the new comment */;
+  submitRepository: Entry | null /** Submit a new repository, returns the new submission */;
+  vote: Entry | null /** Vote on a repository submission, returns the submission that was voted on */;
+  submitComment: Comment | null /** Comment on a repository, returns the new comment */;
 }
 
 export interface Subscription {
-  commentAdded?: Comment | null /** Subscription fires on every comment added */;
+  commentAdded: Comment | null /** Subscription fires on every comment added */;
 }
 export interface FeedQueryArgs {
   type: FeedType /** The sort order for the feed */;
-  offset?: number | null /** The number of items to skip, for pagination */;
-  limit?: number | null /** The number of items to fetch starting from the offset, for pagination */;
+  offset: number | null /** The number of items to skip, for pagination */;
+  limit: number | null /** The number of items to fetch starting from the offset, for pagination */;
 }
 export interface EntryQueryArgs {
   repoFullName: string /** The full repository name from GitHub, e.g. "apollostack/GitHunt-API" */;
 }
 export interface CommentsEntryArgs {
-  limit?: number | null;
-  offset?: number | null;
+  limit: number | null;
+  offset: number | null;
 }
 export interface SubmitRepositoryMutationArgs {
   repoFullName: string /** The full repository name from GitHub, e.g. "apollostack/GitHunt-API" */;
@@ -82,9 +82,17 @@ export interface CommentAddedSubscriptionArgs {
   repoFullName: string;
 }
 /** A list of options for the sort order of the feed */
-export type FeedType = 'HOT' | 'NEW' | 'TOP';
+export enum FeedType {
+  HOT = 'HOT',
+  NEW = 'NEW',
+  TOP = 'TOP'
+}
 /** The type of vote to record, when submitting a vote */
-export type VoteType = 'UP' | 'DOWN' | 'CANCEL';
+export enum VoteType {
+  UP = 'UP',
+  DOWN = 'DOWN',
+  CANCEL = 'CANCEL'
+}
 export namespace OnCommentAdded {
   export type Variables = {
     repoFullName: string;
@@ -92,7 +100,7 @@ export namespace OnCommentAdded {
 
   export type Subscription = {
     __typename?: 'Subscription';
-    commentAdded?: CommentAdded | null;
+    commentAdded: CommentAdded | null;
   };
 
   export type CommentAdded = {
@@ -112,14 +120,14 @@ export namespace OnCommentAdded {
 export namespace Comment {
   export type Variables = {
     repoFullName: string;
-    limit?: number | null;
-    offset?: number | null;
+    limit: number | null;
+    offset: number | null;
   };
 
   export type Query = {
     __typename?: 'Query';
-    currentUser?: CurrentUser | null;
-    entry?: Entry | null;
+    currentUser: CurrentUser | null;
+    entry: Entry | null;
   };
 
   export type CurrentUser = {
@@ -154,8 +162,8 @@ export namespace Comment {
 
   export type RepositoryInlineFragment = {
     __typename?: 'Repository';
-    description?: string | null;
-    open_issues_count?: number | null;
+    description: string | null;
+    open_issues_count: number | null;
     stargazers_count: number;
   };
 }
@@ -164,7 +172,7 @@ export namespace CurrentUserForProfile {
 
   export type Query = {
     __typename?: 'Query';
-    currentUser?: CurrentUser | null;
+    currentUser: CurrentUser | null;
   };
 
   export type CurrentUser = {
@@ -176,14 +184,14 @@ export namespace CurrentUserForProfile {
 export namespace Feed {
   export type Variables = {
     type: FeedType;
-    offset?: number | null;
-    limit?: number | null;
+    offset: number | null;
+    limit: number | null;
   };
 
   export type Query = {
     __typename?: 'Query';
-    currentUser?: CurrentUser | null;
-    feed?: (Feed | null)[] | null;
+    currentUser: CurrentUser | null;
+    feed: (Feed | null)[] | null;
   };
 
   export type CurrentUser = {
@@ -200,7 +208,7 @@ export namespace SubmitRepository {
 
   export type Mutation = {
     __typename?: 'Mutation';
-    submitRepository?: SubmitRepository | null;
+    submitRepository: SubmitRepository | null;
   };
 
   export type SubmitRepository = {
@@ -216,7 +224,7 @@ export namespace SubmitComment {
 
   export type Mutation = {
     __typename?: 'Mutation';
-    submitComment?: SubmitComment | null;
+    submitComment: SubmitComment | null;
   };
 
   export type SubmitComment = CommentsPageComment.Fragment;
@@ -229,7 +237,7 @@ export namespace Vote {
 
   export type Mutation = {
     __typename?: 'Mutation';
-    vote?: Vote | null;
+    vote: Vote | null;
   };
 
   export type Vote = {
@@ -274,7 +282,7 @@ export namespace FeedEntry {
     __typename?: 'Repository';
     full_name: string;
     html_url: string;
-    owner?: Owner | null;
+    owner: Owner | null;
   };
 
   export type Owner = {
@@ -293,9 +301,9 @@ export namespace RepoInfo {
 
   export type Repository = {
     __typename?: 'Repository';
-    description?: string | null;
+    description: string | null;
     stargazers_count: number;
-    open_issues_count?: number | null;
+    open_issues_count: number | null;
   };
 
   export type PostedBy = {

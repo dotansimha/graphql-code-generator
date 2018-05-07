@@ -285,6 +285,5 @@ export function isCustomProcessingFunction(
 }
 
 export function isGeneratorConfig(config: GeneratorConfig | CustomProcessingFunction): config is GeneratorConfig {
-  console.log(config);
   return typeof config !== 'function' && !!(config as any).inputType;
 }
