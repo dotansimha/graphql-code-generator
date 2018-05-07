@@ -69,15 +69,15 @@ CLI usage is as follow:
 
 * With local introspection JSON file, generate TypeScript types:
 
-        $ gql-gen --file mySchema.json --template graphql-codegen-typescript-template --out ./typings/ "./src/**/*.graphql"
+        $ gql-gen --schema mySchema.json --template graphql-codegen-typescript-template --out ./typings/ "./src/**/*.graphql"
 
 * With local introspection JSON file, generate TypeScript files, from GraphQL documents inside code files (`.ts`):
 
-        $ gql-gen --file mySchema.json --template graphql-codegen-typescript-template --out ./typings/ "./src/**/*.ts"
+        $ gql-gen --schema mySchema.json --template graphql-codegen-typescript-template --out ./typings/ "./src/**/*.ts"
 
 * With remote GraphQL endpoint that requires Authorization, generate TypeScript types:
 
-        $ gql-gen --url http://localhost:3010/graphql --header "Authorization: MY_KEY" --template graphql-codegen-typescript-template --out ./typings/ "./src/**/*.graphql"
+        $ gql-gen --schema http://localhost:3010/graphql --header "Authorization: MY_KEY" --template graphql-codegen-typescript-template --out ./typings/ "./src/**/*.graphql"
 
 > Note: when specifying a glob path (with `*` or `**`), make sure to wrap the argument with double quotes (`"..."`).
 
@@ -89,7 +89,7 @@ Allowed flags:
 | ------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | -s,--schema         | String   | Local or remote path to GraphQL schema: Introspection JSON file, GraphQL server endpoint to fetch the introspection from, local file that exports `GraphQLSchema`, JSON object or AST string.                                                                        |
 | -r,--require        | String   | Path to a `require` extension, [read this](https://gist.github.com/jamestalmage/df922691475cff66c7e6) for more info                                                                                                                                                  |
-| -h,--header         | String   | Header to add to the introspection HTTP request when using --url                                                                                                                                                                                                     |
+| -h,--header         | String   | Header to add to the introspection HTTP request when using remote endpoint                                                                                                                                                                                                     |
 | -t,--template       | String   | Template name, for example: "typescript" (not required when using `--project`)                                                                                                                                                                                       |
 | -p,--project        | String   | Project directory with templates (refer to "Custom Templates" section)                                                                                                                                                                                               |
 | --project-config    | String   | Path to project config JSON file (refer to "Custom Templates" section), defaults to `gqlgen.json`                                                                                                                                                                    |
@@ -170,7 +170,7 @@ If you project has [prettier config file](https://prettier.io/docs/en/configurat
 
 ## TypeScript Support
 
-If you are using TypeScript and would like to use your GraphQL Schema from a local file (using `--export`), you can use `--require` to load a require extension.
+If you are using TypeScript and would like to use your GraphQL Schema from a local file (using `--schema`), you can use `--require` to load a require extension.
 
 For example, install `ts-node` from NPM and use it this way:
 
