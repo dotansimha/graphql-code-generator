@@ -119,6 +119,24 @@ To use inside an existing project, I recommend to add a pre-build script that ex
 }
 ```
 
+## Generator-specific config
+
+Some of the generators supports a custom config, which you can specify using `gqlgen.json` like that:
+
+```json
+{
+  "generatorConfig": {
+    "printTime": true
+  }
+}
+```
+
+Or, you can set the value using environment variables, before executing the codegen, with the `CODEGEN_` prefix:
+
+```
+CODEGEN_PRINT_TIME=true gql-gen --template ...
+```
+
 ## Programmatic Usage
 
 If you with to use this package as a library and execute it from your code, do the following:

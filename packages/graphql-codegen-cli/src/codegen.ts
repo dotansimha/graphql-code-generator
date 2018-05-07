@@ -12,15 +12,15 @@ import { loadDocumentsSources } from './loaders/document-loader';
 import { scanForTemplatesInPath } from './loaders/templates-scanner';
 import { ALLOWED_CUSTOM_TEMPLATE_EXT, compileTemplate } from 'graphql-codegen-compiler';
 import {
+  CustomProcessingFunction,
   debugLog,
   EInputType,
+  FileOutput,
   GeneratorConfig,
   introspectionToGraphQLSchema,
+  isGeneratorConfig,
   schemaToTemplateContext,
-  transformDocument,
-  CustomProcessingFunction,
-  FileOutput,
-  isGeneratorConfig
+  transformDocument
 } from 'graphql-codegen-core';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
@@ -276,8 +276,26 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
     };
   }
 
+  const relevantEnvVars = Object.keys(process.env)
+    .filter(name => name.startsWith('CODEGEN_'))
+    .reduce((prev, name) => {
+      const cleanName = name
+        .replace('CODEGEN_', '')
+        .toLowerCase()
+        .replace(/[-_]+/g, ' ')
+        .replace(/[^\w\s]/g, '')
+        .replace(/ (.)/g, res => res.toUpperCase())
+        .replace(/ /g, '');
+      prev[cleanName] = process.env[name];
+
+      return prev;
+    }, {});
+
   if (isGeneratorConfig(templateConfig)) {
-    templateConfig.config = config ? config.generatorConfig || {} : {};
+    templateConfig.config = {
+      ...(config && config.generatorConfig ? config.generatorConfig || {} : {}),
+      ...(relevantEnvVars || {})
+    };
   }
 
   return (await compileTemplate(templateConfig, context, [transformedDocuments], {

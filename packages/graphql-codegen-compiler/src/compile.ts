@@ -99,6 +99,11 @@ export async function compileTemplate(
     }
   } else {
     config = config as GeneratorConfig;
+
+    if (!config.config) {
+      config.config = {};
+    }
+
     debugLog(`[compileTemplate] starting to compile template with input type = ${config.inputType}`);
 
     initHelpers(config, templateContext);

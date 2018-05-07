@@ -8,6 +8,7 @@ import * as selectionSet from '../../typescript/src/selection-set.handlebars';
 import * as fragments from './fragments.handlebars';
 import { EInputType, GeneratorConfig } from 'graphql-codegen-core';
 import { getType } from '../../typescript/src/helpers/get-type';
+import { getOptionals } from '../../typescript/src/helpers/get-optionals';
 
 export const config: GeneratorConfig = {
   inputType: EInputType.MULTIPLE_FILES,
@@ -32,7 +33,8 @@ export const config: GeneratorConfig = {
     ID: 'string'
   },
   customHelpers: {
-    convertedType: getType
+    convertedType: getType,
+    getOptionals
   },
   filesExtension: 'ts'
 };

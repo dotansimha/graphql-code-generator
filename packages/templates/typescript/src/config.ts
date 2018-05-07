@@ -6,6 +6,7 @@ import * as selectionSet from './selection-set.handlebars';
 import * as fragments from './fragments.handlebars';
 import { EInputType, GeneratorConfig } from 'graphql-codegen-core';
 import { getType } from './helpers/get-type';
+import { getOptionals } from './helpers/get-optionals';
 
 export const config: GeneratorConfig = {
   inputType: EInputType.SINGLE_FILE,
@@ -26,7 +27,8 @@ export const config: GeneratorConfig = {
     ID: 'string'
   },
   customHelpers: {
-    convertedType: getType
+    convertedType: getType,
+    getOptionals
   },
   outFile: 'types.ts'
 };

@@ -17,6 +17,8 @@
 * TypeScript generated comments are now `docstring` valid!
 * Added `isNullableArray` and `raw` type name to `ResolvedType` interface.
 * Fixed TypeScript template output: handle nullables correctly (See [#260](https://github.com/dotansimha/graphql-code-generator/issues/260))
+* You can now pass generator-specific config using environment variables with the prefix `CODEGEN_`
+* Added `avoidOptionals` to TypeScript generators
 
 ### BREAKING CHANGES
 

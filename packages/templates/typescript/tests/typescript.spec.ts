@@ -24,6 +24,34 @@ describe('TypeScript template', () => {
   };
 
   describe('Schema Only', () => {
+    it('should handle optional correctly', async () => {
+      const { context } = compileAndBuildContext(`
+        type Query {
+          fieldTest: String 
+        }
+        
+        schema {
+          query: Query
+        }
+      `);
+
+      const compiled = await compileTemplate(
+        {
+          ...config,
+          config: {
+            avoidOptionals: true
+          }
+        } as GeneratorConfig,
+        context
+      );
+
+      expect(compiled[0].content).toBeSimilarStringTo(`
+      /* tslint:disable */
+      export interface Query {
+        fieldTest: string | null;
+      }`);
+    });
+
     it('should output docstring correctly', async () => {
       const { context } = compileAndBuildContext(`
         # type-description
