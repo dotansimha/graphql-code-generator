@@ -286,7 +286,15 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
         .replace(/[^\w\s]/g, '')
         .replace(/ (.)/g, res => res.toUpperCase())
         .replace(/ /g, '');
-      prev[cleanName] = process.env[name];
+      let value: any = process.env[name];
+
+      if (value === 'true') {
+        value = true;
+      } else if (value === 'false') {
+        value = false;
+      }
+
+      prev[cleanName] = value;
 
       return prev;
     }, {});

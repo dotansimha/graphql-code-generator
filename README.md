@@ -29,7 +29,7 @@ If you develop a **client-side with TypeScript, Angular and GraphQL**, you can u
 
 ## Available Templates:
 
-| Language                  | Purpose                                                                                 | Package Name                                                                               |
+| Language                  | Purpose                                                                                 | Package Name & Docs                                                                        |
 | ------------------------- | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
 | TypeScript                | Generate server-side TypeScript types, and client-side typings                          | [`graphql-codegen-typescript-template`](./packages/templates/typescript)                   |
 | TypeScript                | Generate server-side TypeScript types, and client-side typings - file per type/document | [`graphql-codegen-typescript-template-multiple`](./packages/templates/typescript-multiple) |

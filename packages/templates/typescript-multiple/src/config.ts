@@ -1,5 +1,5 @@
 import * as type from './type.handlebars';
-import * as enumTemplate from './enum.handlebars';
+import * as enumTemplate from '../../typescript/src/enum.handlebars';
 import * as scalar from './scalar.handlebars';
 import * as union from './union.handlebars';
 import * as operation from './operation.handlebars';

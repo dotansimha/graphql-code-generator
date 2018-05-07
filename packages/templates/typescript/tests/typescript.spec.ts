@@ -52,6 +52,43 @@ describe('TypeScript template', () => {
       }`);
     });
 
+    it('should handle enum as type correctly', async () => {
+      const { context } = compileAndBuildContext(`
+        type Query {
+          fieldTest: String 
+        }
+        
+        enum A {
+          ONE,
+          TWO,
+        }
+        
+        schema {
+          query: Query
+        }
+      `);
+
+      const compiled = await compileTemplate(
+        {
+          ...config,
+          config: {
+            enumsAsTypes: true
+          }
+        } as GeneratorConfig,
+        context
+      );
+
+      expect(compiled[0].content).toBeSimilarStringTo(`
+       /* tslint:disable */
+      
+      export interface Query {
+        fieldTest?: string | null; 
+      }
+      
+      export type A = "ONE" | "TWO";
+      `);
+    });
+
     it('should output docstring correctly', async () => {
       const { context } = compileAndBuildContext(`
         # type-description

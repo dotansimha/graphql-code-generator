@@ -18,13 +18,14 @@
 * Added `isNullableArray` and `raw` type name to `ResolvedType` interface.
 * Fixed TypeScript template output: handle nullables correctly (See [#260](https://github.com/dotansimha/graphql-code-generator/issues/260))
 * You can now pass generator-specific config using environment variables with the prefix `CODEGEN_`
-* Added `avoidOptionals` to TypeScript generators
+* Added `avoidOptionals` option to TypeScript generators
+* Added `enumsAsTypes` option to TypeScript generators
 
 ### BREAKING CHANGES
 
 * `--no-schema` changed to `--skip-schema`
 * `--no-documents` changed to `--skip-documents`
-* Templates are no longer part of the core package, and they needed to be installed separately (see README installation notes)
+* **Templates are no longer part of the core package, and they needed to be installed separately (see README installation notes)**
 
 <a name="0.8.21"></a>
 
