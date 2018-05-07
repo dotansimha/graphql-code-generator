@@ -1,5 +1,6 @@
 <a name="NEXT"></a>
 
+
 <a name="0.9.0"></a>
 
 ## [0.9.0](https://github.com/dotansimha/graphql-codegen/compare/0.8.21...0.9.0) (2018-05-07)

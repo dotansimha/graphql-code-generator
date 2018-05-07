@@ -1,6 +1,6 @@
 {
   "name": "graphql-codegen-compiler",
-  "version": "0.8.21",
+  "version": "0.9.0",
   "description": "GraphQL code generator compiler",
   "license": "MIT",
   "scripts": {
@@ -13,12 +13,16 @@
     "@types/handlebars": "4.0.37",
     "change-case": "3.0.2",
     "common-tags": "1.7.2",
-    "graphql-codegen-core": "0.8.21",
+    "graphql-codegen-core": "0.9.0",
     "handlebars": "4.0.11",
     "moment": "2.22.1"
   },
   "jest": {
-    "moduleFileExtensions": ["ts", "tsx", "js"],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
     "transform": {
       "^.+\\.(ts|tsx)$": "<rootDir>/tests/jest.typescript.js"
     },
