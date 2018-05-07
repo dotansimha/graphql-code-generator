@@ -24,6 +24,108 @@ describe('TypeScript template', () => {
   };
 
   describe('Schema Only', () => {
+    it('should handle immutable type correctly', async () => {
+      const { context } = compileAndBuildContext(`
+        type Query {
+          fieldTest: String 
+          arrayTest1: [String]
+          arrayTest2: [String]!
+          arrayTest3: [String!]!
+          arrayTest4: [String!]
+        }
+        
+        schema {
+          query: Query
+        }
+      `);
+
+      const compiled = await compileTemplate(
+        {
+          ...config,
+          config: {
+            immutableTypes: true
+          }
+        } as GeneratorConfig,
+        context
+      );
+
+      expect(compiled[0].content).toBeSimilarStringTo(`
+      /* tslint:disable */
+      export interface Query {
+        readonly fieldTest?: string | null;
+        readonly arrayTest1?: ReadonlyArray<string | null> | null; 
+        readonly arrayTest2: ReadonlyArray<string | null>; 
+        readonly arrayTest3: ReadonlyArray<string>; 
+        readonly arrayTest4?: ReadonlyArray<string> | null; 
+
+      }`);
+    });
+
+    it('should handle optional correctly', async () => {
+      const { context } = compileAndBuildContext(`
+        type Query {
+          fieldTest: String 
+        }
+        
+        schema {
+          query: Query
+        }
+      `);
+
+      const compiled = await compileTemplate(
+        {
+          ...config,
+          config: {
+            avoidOptionals: true
+          }
+        } as GeneratorConfig,
+        context
+      );
+
+      expect(compiled[0].content).toBeSimilarStringTo(`
+      /* tslint:disable */
+      export interface Query {
+        fieldTest: string | null;
+      }`);
+    });
+
+    it('should handle enum as type correctly', async () => {
+      const { context } = compileAndBuildContext(`
+        type Query {
+          fieldTest: String 
+        }
+        
+        enum A {
+          ONE,
+          TWO,
+        }
+        
+        schema {
+          query: Query
+        }
+      `);
+
+      const compiled = await compileTemplate(
+        {
+          ...config,
+          config: {
+            enumsAsTypes: true
+          }
+        } as GeneratorConfig,
+        context
+      );
+
+      expect(compiled[0].content).toBeSimilarStringTo(`
+       /* tslint:disable */
+      
+      export interface Query {
+        fieldTest?: string | null; 
+      }
+      
+      export type A = "ONE" | "TWO";
+      `);
+    });
+
     it('should output docstring correctly', async () => {
       const { context } = compileAndBuildContext(`
         # type-description
@@ -220,7 +322,7 @@ describe('TypeScript template', () => {
       }
       
       export interface T {
-        f1?: string[] | null;
+        f1?: (string | null)[] | null;
         f2: number;
         f3?: A | null;
       }
@@ -282,7 +384,7 @@ describe('TypeScript template', () => {
       export type Date = any;
       
       export interface Query {
-        fieldTest?: Date[] | null;
+        fieldTest?: (Date | null)[] | null;
       }`);
     });
 
@@ -391,7 +493,9 @@ describe('TypeScript template', () => {
           f1: String
           f2: Int!
           f3: [String]
-          f4: [Float]
+          f4: [String]!
+          f5: [String!]!
+          f6: [String!]
         }
       `);
 
@@ -412,8 +516,10 @@ describe('TypeScript template', () => {
         export interface T {
           f1?: string | null; 
           f2: number; 
-          f3?: string[] | null; 
-          f4?: number[] | null; 
+          f3?: (string | null)[] | null; 
+          f4: (string | null)[]; 
+          f5: string[]; 
+          f6?: string[] | null; 
         }
         
         export interface FieldTestQueryArgs {
@@ -497,7 +603,7 @@ describe('TypeScript template', () => {
           
             export type Query = {
               __typename?: "Query";
-              feed?: Feed[] | null; 
+              feed?: (Feed | null)[] | null;
             }
           
             export type Feed = {
@@ -571,7 +677,7 @@ describe('TypeScript template', () => {
           
             export type Query = {
               __typename?: "Query";
-              feed?: Feed[] | null; 
+              feed?: (Feed | null)[] | null;
             }
           
             export type Feed = {
@@ -651,7 +757,7 @@ describe('TypeScript template', () => {
     
       export type Query = {
         __typename?: "Query";
-        feed?: Feed[] | null; 
+        feed?: (Feed | null)[] | null;
       }
     
       export type Feed = {

@@ -20,19 +20,14 @@ export type {{ name }} = any;
     {{~# if hasArguments }}
 export interface {{ toPascalCase name }}{{ toPascalCase ../name }}Args {
 {{#each arguments}}
-  {{ name }}{{#unless isRequired}}?{{/unless}}: {{ toPrimitive type }}{{#if isArray}}[]{{/if}}{{#unless isRequired}} | null{{/unless}}; {{ toComment description }}
+  {{ name }}{{ getOptionals this }}: {{ convertedType this }}; {{ toComment description }}
 {{/each}}
 }
     {{/if}}
   {{/each}}
 {{/each}}
 {{#each enums}}
-{{ toComment description }}
-export enum {{ name }} {
-  {{#each values }}{{value}} = "{{ value }}",{{#unless @last}}
-  {{/unless}}{{/each}}
-}
-
+  {{~> enum }}
 {{/each}}
 {{#each unions}}
 {{ toComment description }}

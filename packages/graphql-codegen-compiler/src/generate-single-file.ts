@@ -17,6 +17,7 @@ export function generateSingleFile(
       filename: config.outFile,
       content: compiledIndexTemplate({
         config: config.config,
+        primitivesMap: config.primitives,
         currentTime: moment().format(),
         ...(!executionSettings.generateSchema ? prepareSchemaForDocumentsOnly(templateContext) : templateContext),
         operations: documents.operations,

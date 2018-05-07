@@ -1,4 +1,5 @@
 import { registerHelper, SafeString } from 'handlebars';
+import * as Han from 'handlebars';
 import { camelCase, pascalCase, snakeCase, titleCase } from 'change-case';
 import { oneLineTrim } from 'common-tags';
 import {

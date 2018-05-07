@@ -51,7 +51,7 @@ function handleSchema(
     {
       filename: prefixAndPath + '.' + (fileExtension || ''),
       content: compiledTemplate({
-        config: extraConfig,
+        ...extraConfig,
         ...schemaContext
       })
     }
@@ -73,7 +73,7 @@ function handleAll(
       filename: prefixAndPath + '.' + (fileExtension || ''),
       content: compiledTemplate({
         ...schemaContext,
-        config: extraConfig,
+        ...extraConfig,
         operations: documents.operations,
         fragments: documents.fragments,
         hasFragments: documents.hasFragments,
@@ -97,7 +97,7 @@ function handleDocuments(
     {
       filename: prefixAndPath + '.' + (fileExtension || ''),
       content: compiledTemplate({
-        config: extraConfig,
+        ...extraConfig,
         operations: documents.operations,
         fragments: documents.fragments,
         hasFragments: documents.hasFragments,
@@ -121,7 +121,7 @@ function handleType(
     filename: prefixAndPath + sanitizeFilename(type.name, 'type') + '.' + (fileExtension || ''),
     content: compiledTemplate({
       ...type,
-      config: extraConfig
+      ...extraConfig
     })
   }));
 }
@@ -140,7 +140,7 @@ function handleInputType(
     filename: prefixAndPath + sanitizeFilename(type.name, 'input-type') + '.' + (fileExtension || ''),
     content: compiledTemplate({
       ...type,
-      config: extraConfig
+      ...extraConfig
     })
   }));
 }
@@ -159,7 +159,7 @@ function handleUnion(
     filename: prefixAndPath + sanitizeFilename(union.name, 'union') + '.' + (fileExtension || ''),
     content: compiledTemplate({
       ...union,
-      config: extraConfig
+      ...extraConfig
     })
   }));
 }
@@ -178,7 +178,7 @@ function handleEnum(
     filename: prefixAndPath + sanitizeFilename(en.name, 'enum') + '.' + (fileExtension || ''),
     content: compiledTemplate({
       ...en,
-      config: extraConfig
+      ...extraConfig
     })
   }));
 }
@@ -197,7 +197,7 @@ function handleScalar(
     filename: prefixAndPath + sanitizeFilename(scalar.name, 'scalar') + '.' + (fileExtension || ''),
     content: compiledTemplate({
       ...scalar,
-      config: extraConfig
+      ...extraConfig
     })
   }));
 }
@@ -216,7 +216,7 @@ function handleInterface(
     filename: prefixAndPath + sanitizeFilename(inf.name, 'interface') + '.' + (fileExtension || ''),
     content: compiledTemplate({
       ...inf,
-      config: extraConfig
+      ...extraConfig
     })
   }));
 }
@@ -235,7 +235,7 @@ function handleOperation(
     filename: prefixAndPath + sanitizeFilename(operation.name, operation.operationType) + '.' + (fileExtension || ''),
     content: compiledTemplate({
       ...operation,
-      config: extraConfig
+      ...extraConfig
     })
   }));
 }
@@ -254,7 +254,7 @@ function handleFragment(
     filename: prefixAndPath + sanitizeFilename(fragment.name, 'fragment') + '.' + (fileExtension || ''),
     content: compiledTemplate({
       ...fragment,
-      config: extraConfig
+      ...extraConfig
     })
   }));
 }
@@ -344,7 +344,8 @@ export function generateMultipleFiles(
           schemaContext,
           documents,
           {
-            ...config.config,
+            config: config.config,
+            primitivesMap: config.primitives,
             currentTime: moment().format()
           },
           config.filesExtension
@@ -364,8 +365,9 @@ export function generateMultipleFiles(
             schemaContext,
             documents,
             {
-              ...config.config,
-              currentTime: moment().format()
+              config: config.config,
+              currentTime: moment().format(),
+              primitivesMap: config.primitives
             },
             parsedTemplateName.fileExtension,
             parsedTemplateName.prefix

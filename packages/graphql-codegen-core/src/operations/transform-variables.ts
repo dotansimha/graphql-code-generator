@@ -20,6 +20,8 @@ export function transformVariables(schema: GraphQLSchema, definitionNode: Operat
     return {
       name: variableDefinition.variable.name.value,
       type: resolvedType.name,
+      raw: resolvedType.raw,
+      isNullableArray: resolvedType.isNullableArray,
       isArray: resolvedType.isArray,
       isRequired: resolvedType.isRequired,
       isEnum: indicators.isEnum,

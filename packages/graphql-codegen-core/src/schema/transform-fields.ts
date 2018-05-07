@@ -24,6 +24,8 @@ export function resolveFields(schema: GraphQLSchema, rawFields: GraphQLFieldMap<
       description: item.value.description || '',
       arguments: resolvedArguments,
       type: type.name,
+      raw: type.raw,
+      isNullableArray: type.isNullableArray,
       isArray: type.isArray,
       isRequired: type.isRequired,
       hasArguments: resolvedArguments.length > 0,

@@ -4,7 +4,10 @@ import * as schema from './schema.handlebars';
 import * as documents from './documents.handlebars';
 import * as selectionSet from './selection-set.handlebars';
 import * as fragments from './fragments.handlebars';
+import * as enumTemplate from './enum.handlebars';
 import { EInputType, GeneratorConfig } from 'graphql-codegen-core';
+import { getType } from './helpers/get-type';
+import { getOptionals } from './helpers/get-optionals';
 
 export const config: GeneratorConfig = {
   inputType: EInputType.SINGLE_FILE,
@@ -14,7 +17,8 @@ export const config: GeneratorConfig = {
     schema,
     documents,
     selectionSet,
-    fragments
+    fragments,
+    enum: enumTemplate
   },
   flattenTypes: true,
   primitives: {
@@ -23,6 +27,10 @@ export const config: GeneratorConfig = {
     Float: 'number',
     Boolean: 'boolean',
     ID: 'string'
+  },
+  customHelpers: {
+    convertedType: getType,
+    getOptionals
   },
   outFile: 'types.ts'
 };
