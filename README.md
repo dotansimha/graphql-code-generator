@@ -9,7 +9,7 @@
 
 ## Overview
 
-**[GraphQL Codegen 1.0 blog post & examples @ Medium](https://medium.com/@dotansimha/graphql-code-generator-a34e3785e6fb)**
+**[GraphQL Codegen blog post & examples @ Medium](https://medium.com/@dotansimha/graphql-code-generator-a34e3785e6fb)**
 
 GraphQL code generator, with flexible support for multiple languages and platforms, and the ability to create custom generated projects based on GraphQL schema or operations.
 
