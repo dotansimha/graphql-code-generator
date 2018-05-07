@@ -2,14 +2,23 @@ import { getNamedType, GraphQLInputType, GraphQLOutputType, GraphQLType } from '
 import { debugLog } from '../debugging';
 
 export interface ResolvedType {
+  raw: string;
   name: string;
   isRequired: boolean;
   isArray: boolean;
+  isNullableArray: boolean;
 }
 
 export function isRequired(type: GraphQLOutputType | GraphQLInputType): boolean {
   const stringType = String(type);
+
   return stringType.lastIndexOf('!') === stringType.length - 1;
+}
+
+export function isNullable(type: GraphQLOutputType | GraphQLInputType): boolean {
+  const stringType = String(type);
+
+  return isArray(type) && !stringType.includes('!]');
 }
 
 export function isArray(type: GraphQLOutputType | GraphQLInputType): boolean {
@@ -22,7 +31,9 @@ export function resolveType(type: GraphQLType): ResolvedType {
 
   return {
     name,
+    raw: String(type),
     isRequired: isRequired(type),
-    isArray: isArray(type)
+    isArray: isArray(type),
+    isNullableArray: isNullable(type)
   };
 }

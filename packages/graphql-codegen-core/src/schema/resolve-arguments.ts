@@ -19,6 +19,8 @@ export function resolveArguments(schema, args: GraphQLArgument[]): Argument[] {
       description: arg.description || '',
       type: type.name,
       isRequired: type.isRequired,
+      raw: type.raw,
+      isNullableArray: type.isNullableArray,
       isArray: type.isArray,
       isEnum: indicators.isEnum,
       isScalar: indicators.isScalar,

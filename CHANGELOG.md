@@ -15,6 +15,8 @@
 * Better detection of `GraphQLSchema` objects
 * Added programmatic usage ([#288](https://github.com/dotansimha/graphql-code-generator/pull/288))
 * TypeScript generated comments are now `docstring` valid!
+* Added `isNullableArray` and `raw` type name to `ResolvedType` interface.
+* Fixed TypeScript template output: handle nullables correctly (See [#260](https://github.com/dotansimha/graphql-code-generator/issues/260))
 
 ### BREAKING CHANGES
 

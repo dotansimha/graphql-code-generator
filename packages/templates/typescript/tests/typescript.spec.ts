@@ -220,7 +220,7 @@ describe('TypeScript template', () => {
       }
       
       export interface T {
-        f1?: string[] | null;
+        f1?: (string | null)[] | null;
         f2: number;
         f3?: A | null;
       }
@@ -282,7 +282,7 @@ describe('TypeScript template', () => {
       export type Date = any;
       
       export interface Query {
-        fieldTest?: Date[] | null;
+        fieldTest?: (Date | null)[] | null;
       }`);
     });
 
@@ -391,7 +391,9 @@ describe('TypeScript template', () => {
           f1: String
           f2: Int!
           f3: [String]
-          f4: [Float]
+          f4: [String]!
+          f5: [String!]!
+          f6: [String!]
         }
       `);
 
@@ -412,8 +414,10 @@ describe('TypeScript template', () => {
         export interface T {
           f1?: string | null; 
           f2: number; 
-          f3?: string[] | null; 
-          f4?: number[] | null; 
+          f3?: (string | null)[] | null; 
+          f4: (string | null)[]; 
+          f5: string[]; 
+          f6?: string[] | null; 
         }
         
         export interface FieldTestQueryArgs {
@@ -497,7 +501,7 @@ describe('TypeScript template', () => {
           
             export type Query = {
               __typename?: "Query";
-              feed?: Feed[] | null; 
+              feed?: (Feed | null)[] | null;
             }
           
             export type Feed = {
@@ -571,7 +575,7 @@ describe('TypeScript template', () => {
           
             export type Query = {
               __typename?: "Query";
-              feed?: Feed[] | null; 
+              feed?: (Feed | null)[] | null;
             }
           
             export type Feed = {
@@ -651,7 +655,7 @@ describe('TypeScript template', () => {
     
       export type Query = {
         __typename?: "Query";
-        feed?: Feed[] | null; 
+        feed?: (Feed | null)[] | null;
       }
     
       export type Feed = {

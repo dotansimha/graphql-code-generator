@@ -6,11 +6,13 @@ export interface AstNode {
 }
 
 export interface Argument extends AstNode {
+  raw: string;
   name: string;
   description: string;
   type: string;
   isRequired: boolean;
   isArray: boolean;
+  isNullableArray: boolean;
   isType: boolean;
   isScalar: boolean;
   isInterface: boolean;
@@ -24,8 +26,10 @@ export interface Field extends AstNode {
   description: string;
   arguments: Argument[];
   type: string;
+  raw: string;
   isArray: boolean;
   isRequired: boolean;
+  isNullableArray: boolean;
   hasArguments: boolean;
   isType: boolean;
   isScalar: boolean;
@@ -121,6 +125,8 @@ export interface SelectionSetFieldNode extends SelectionSetItem {
   type: string;
   isRequired: boolean;
   isArray: boolean;
+  isNullableArray: boolean;
+  raw: string;
   fields: SelectionSetFieldNode[];
   fragmentsSpread: SelectionSetFragmentSpread[];
   inlineFragments: SelectionSetInlineFragment[];
@@ -184,6 +190,8 @@ export interface Variable {
   type: string;
   isRequired: boolean;
   isArray: boolean;
+  isNullableArray: boolean;
+  raw: string;
   isType: boolean;
   isScalar: boolean;
   isInterface: boolean;

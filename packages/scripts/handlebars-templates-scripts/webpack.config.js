@@ -13,7 +13,10 @@ module.exports = {
   externals: [nodeExternals()],
   resolve: {
     mainFields: ['browser', 'main', 'module'],
-    extensions: ['.ts', '.tsx', '.js', '.jsx']
+    extensions: ['.ts', '.tsx', '.js', '.jsx'],
+    alias: {
+      handlebars: 'handlebars/dist/handlebars.js'
+    }
   },
   devtool: 'source-map',
   module: {

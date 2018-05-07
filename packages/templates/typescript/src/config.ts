@@ -5,6 +5,7 @@ import * as documents from './documents.handlebars';
 import * as selectionSet from './selection-set.handlebars';
 import * as fragments from './fragments.handlebars';
 import { EInputType, GeneratorConfig } from 'graphql-codegen-core';
+import { getType } from './helpers/get-type';
 
 export const config: GeneratorConfig = {
   inputType: EInputType.SINGLE_FILE,
@@ -23,6 +24,9 @@ export const config: GeneratorConfig = {
     Float: 'number',
     Boolean: 'boolean',
     ID: 'string'
+  },
+  customHelpers: {
+    convertedType: getType
   },
   outFile: 'types.ts'
 };

@@ -215,7 +215,7 @@ describe('TypeScript Multiple', () => {
         import { Date } from './date.scalar';
 
         export interface Query {
-          fieldTest?: Date[] | null;
+          fieldTest?: (Date | null)[] | null; 
         }
       `);
       expect(compiled[1].content).toBeSimilarStringTo(`
@@ -340,10 +340,10 @@ describe('TypeScript Multiple', () => {
       `);
       expect(compiled[2].content).toBeSimilarStringTo(`
         export interface T {
-          f1?: string | null;
-          f2: number;
-          f3?: string[] | null;
-          f4?: number[] | null;
+          f1?: string | null; 
+          f2: number; 
+          f3?: (string | null)[] | null; 
+          f4?: (number | null)[] | null; 
         }
       `);
     });
@@ -401,7 +401,7 @@ describe('TypeScript Multiple', () => {
 
           export type Query = {
             __typename?: "Query";
-            feed?: Feed[] | null;
+            feed?: (Feed | null)[] | null;
           }
 
           export type Feed = {
@@ -484,7 +484,7 @@ describe('TypeScript Multiple', () => {
 
           export type Query = {
             __typename?: "Query";
-            feed?: Feed[] | null;
+            feed?: (Feed | null)[] | null;
           }
 
           export type Feed = {
