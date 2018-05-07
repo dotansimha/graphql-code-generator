@@ -1,6 +1,6 @@
 {{ toComment description }}
 export interface {{ name }}{{#if hasInterfaces}} extends {{#each interfaces}}{{this}}{{#unless @last}},{{/unless}}{{/each}}{{/if}} {
 {{#each fields}}
-  {{ name }}{{ getOptionals this }}: {{ convertedType this }}; {{ toComment description }}
+  {{#if @root.config.immutableTypes }}readonly {{/if}}{{ name }}{{ getOptionals this }}: {{ convertedType this }}; {{ toComment description }}
 {{/each}}
 }

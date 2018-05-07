@@ -1,3 +1,5 @@
+import { SafeString } from 'handlebars';
+
 export function getType(type, options) {
   if (!type) {
     return '';
@@ -5,21 +7,26 @@ export function getType(type, options) {
 
   const baseType = type.type;
   const realType = options.data.root.primitivesMap[baseType] || baseType;
+  const useImmutable = !!(options.data.root.config || {}).immutableTypes;
 
   if (type.isArray) {
     let result = realType;
 
     if (type.isNullableArray) {
-      result = `(${[realType, 'null'].join(' | ')})`;
+      result = useImmutable ? [realType, 'null'].join(' | ') : `(${[realType, 'null'].join(' | ')})`;
     }
 
-    result = `${result}[]`;
+    if (useImmutable) {
+      result = `ReadonlyArray<${result}>`;
+    } else {
+      result = `${result}[]`;
+    }
 
     if (!type.isRequired) {
       result = [result, 'null'].join(' | ');
     }
 
-    return result;
+    return new SafeString(result);
   } else {
     if (type.isRequired) {
       return realType;

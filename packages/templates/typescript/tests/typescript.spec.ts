@@ -24,6 +24,43 @@ describe('TypeScript template', () => {
   };
 
   describe('Schema Only', () => {
+    it('should handle immutable type correctly', async () => {
+      const { context } = compileAndBuildContext(`
+        type Query {
+          fieldTest: String 
+          arrayTest1: [String]
+          arrayTest2: [String]!
+          arrayTest3: [String!]!
+          arrayTest4: [String!]
+        }
+        
+        schema {
+          query: Query
+        }
+      `);
+
+      const compiled = await compileTemplate(
+        {
+          ...config,
+          config: {
+            immutableTypes: true
+          }
+        } as GeneratorConfig,
+        context
+      );
+
+      expect(compiled[0].content).toBeSimilarStringTo(`
+      /* tslint:disable */
+      export interface Query {
+        readonly fieldTest?: string | null;
+        readonly arrayTest1?: ReadonlyArray<string | null> | null; 
+        readonly arrayTest2: ReadonlyArray<string | null>; 
+        readonly arrayTest3: ReadonlyArray<string>; 
+        readonly arrayTest4?: ReadonlyArray<string> | null; 
+
+      }`);
+    });
+
     it('should handle optional correctly', async () => {
       const { context } = compileAndBuildContext(`
         type Query {

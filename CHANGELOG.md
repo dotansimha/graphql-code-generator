@@ -20,6 +20,7 @@
 * You can now pass generator-specific config using environment variables with the prefix `CODEGEN_`
 * Added `avoidOptionals` option to TypeScript generators
 * Added `enumsAsTypes` option to TypeScript generators
+* Added `immutableTypes` option to TypeScript generators
 
 ### BREAKING CHANGES
 

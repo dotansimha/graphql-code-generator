@@ -17,3 +17,7 @@ This will cause the generator to avoid using TypeScript optionals (`?`), so the 
 ### `enumsAsTypes` (or `CODEGEN_ENUMS_AS_TYPES`, default value: `false`)
 
 Will generate the declared enums as TypeScript `type` instead of `enums`. This is useful if you can't use `.ts` extension.
+
+### `immutableTypes` (or `CODEGEN_IMMUTABLE_TYPES`, defualt value: `false`)
+
+This will cause the codegen to output `readonly` properties and `ReadonlyArray`.
