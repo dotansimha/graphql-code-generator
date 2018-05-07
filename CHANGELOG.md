@@ -1,6 +1,10 @@
 <a name="NEXT"></a>
 
-* Update dependencies
+<a name="0.9.0"></a>
+
+## [0.9.0](https://github.com/dotansimha/graphql-codegen/compare/0.8.21...0.9.0) (2018-05-07)
+
+* Update all dependencies
 * Fix bugs with document finder ([#233](https://github.com/dotansimha/graphql-code-generator/issues/233), [#216](https://github.com/dotansimha/graphql-code-generator/pull/216))
 * Respect `--out` when generating a project ([#210](https://github.com/dotansimha/graphql-code-generator/pull/210), Thanks @micimize)
 * Automatically registerPartial custom templates without breaking normal partial registration ([#210](https://github.com/dotansimha/graphql-code-generator/pull/210), Thanks @micimize)
@@ -17,10 +21,10 @@
 * TypeScript generated comments are now `docstring` valid!
 * Added `isNullableArray` and `raw` type name to `ResolvedType` interface.
 * Fixed TypeScript template output: handle nullables correctly (See [#260](https://github.com/dotansimha/graphql-code-generator/issues/260))
-* You can now pass generator-specific config using environment variables with the prefix `CODEGEN_`
-* Added `avoidOptionals` option to TypeScript generators
-* Added `enumsAsTypes` option to TypeScript generators
-* Added `immutableTypes` option to TypeScript generators
+* You can now pass generator-specific config using environment variables with the prefix `CODEGEN_` (See [#260](https://github.com/dotansimha/graphql-code-generator/issues/260))
+* Added `avoidOptionals` option to TypeScript generators (See [#260](https://github.com/dotansimha/graphql-code-generator/issues/260))
+* Added `enumsAsTypes` option to TypeScript generators (See [#260](https://github.com/dotansimha/graphql-code-generator/issues/260))
+* Added `immutableTypes` option to TypeScript generators (See [#260](https://github.com/dotansimha/graphql-code-generator/issues/260))
 
 ### BREAKING CHANGES
 
