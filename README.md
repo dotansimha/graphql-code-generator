@@ -11,6 +11,8 @@
 
 **[GraphQL Codegen blog post & examples @ Medium](https://medium.com/@dotansimha/graphql-code-generator-a34e3785e6fb)**
 
+**[What’s new in graphql-code-generator 0.9.0? @ Medium](https://medium.com/@dotansimha/whats-new-in-graphql-code-generator-0-9-0-dba6c9e365d)**
+
 GraphQL code generator, with flexible support for multiple languages and platforms, and the ability to create custom generated projects based on GraphQL schema or operations.
 
 GraphQL entities are defined as static and typed, which means they can be analyzed and use as a base for generating everything.
