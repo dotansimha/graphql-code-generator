@@ -1,6 +1,6 @@
 {
   "name": "graphql-codegen-typescript-mongodb-template",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "",
   "license": "MIT",
   "scripts": {
@@ -10,8 +10,8 @@
     "test": "codegen-handlebars-templates-scripts test"
   },
   "devDependencies": {
-    "codegen-handlebars-templates-scripts": "0.9.0",
-    "graphql-codegen-core": "0.9.0"
+    "codegen-handlebars-templates-scripts": "0.9.1",
+    "graphql-codegen-core": "0.9.1"
   },
   "main": "./dist/index.js",
   "typings": "dist/index.d.ts",
