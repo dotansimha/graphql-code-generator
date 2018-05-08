@@ -1,5 +1,13 @@
 <a name="NEXT"></a>
 
+## NEXT
+
+...
+
+<a name="0.9.1"></a>
+
+## [0.9.1](https://github.com/dotansimha/graphql-codegen/compare/0.9.0...0.9.1) (2018-05-08)
+
 * TypeScript template: added missing `readonly` for `__typename` field when generating immutable types
 * TypeScript template: added missing imports for ts-multiple templates when generating fragments
 
