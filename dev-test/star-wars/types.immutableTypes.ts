@@ -138,39 +138,39 @@ export type SearchResult = Human | Droid | Starship;
 
 export namespace CreateReviewForEpisode {
   export type Variables = {
-    episode: Episode;
-    review: ReviewInput;
+    readonly episode: Episode;
+    readonly review: ReviewInput;
   };
 
   export type Mutation = {
-    __typename?: 'Mutation';
+    readonly __typename?: 'Mutation';
     readonly createReview?: CreateReview | null;
   };
 
   export type CreateReview = {
-    __typename?: 'Review';
+    readonly __typename?: 'Review';
     readonly stars: number;
     readonly commentary?: string | null;
   };
 }
 export namespace HeroAndFriendsNames {
   export type Variables = {
-    episode?: Episode | null;
+    readonly episode?: Episode | null;
   };
 
   export type Query = {
-    __typename?: 'Query';
+    readonly __typename?: 'Query';
     readonly hero?: Hero | null;
   };
 
   export type Hero = {
-    __typename?: 'Character';
+    readonly __typename?: 'Character';
     readonly name: string;
     readonly friends?: ReadonlyArray<Friends | null> | null;
   };
 
   export type Friends = {
-    __typename?: 'Character';
+    readonly __typename?: 'Character';
     readonly name: string;
   };
 }
@@ -178,48 +178,48 @@ export namespace HeroAppearsIn {
   export type Variables = {};
 
   export type Query = {
-    __typename?: 'Query';
+    readonly __typename?: 'Query';
     readonly hero?: Hero | null;
   };
 
   export type Hero = {
-    __typename?: 'Character';
+    readonly __typename?: 'Character';
     readonly name: string;
     readonly appearsIn: ReadonlyArray<Episode | null>;
   };
 }
 export namespace HeroDetails {
   export type Variables = {
-    episode?: Episode | null;
+    readonly episode?: Episode | null;
   };
 
   export type Query = {
-    __typename?: 'Query';
+    readonly __typename?: 'Query';
     readonly hero?: Hero | null;
   };
 
   export type Hero = {
-    __typename?: HumanInlineFragment['__typename'] | DroidInlineFragment['__typename'];
+    readonly __typename?: HumanInlineFragment['__typename'] | DroidInlineFragment['__typename'];
     readonly name: string;
   } & (HumanInlineFragment | DroidInlineFragment);
 
   export type HumanInlineFragment = {
-    __typename?: 'Human';
+    readonly __typename?: 'Human';
     readonly height?: number | null;
   };
 
   export type DroidInlineFragment = {
-    __typename?: 'Droid';
+    readonly __typename?: 'Droid';
     readonly primaryFunction?: string | null;
   };
 }
 export namespace HeroDetailsWithFragment {
   export type Variables = {
-    episode?: Episode | null;
+    readonly episode?: Episode | null;
   };
 
   export type Query = {
-    __typename?: 'Query';
+    readonly __typename?: 'Query';
     readonly hero?: Hero | null;
   };
 
@@ -227,115 +227,115 @@ export namespace HeroDetailsWithFragment {
 }
 export namespace HeroName {
   export type Variables = {
-    episode?: Episode | null;
+    readonly episode?: Episode | null;
   };
 
   export type Query = {
-    __typename?: 'Query';
+    readonly __typename?: 'Query';
     readonly hero?: Hero | null;
   };
 
   export type Hero = {
-    __typename?: 'Character';
+    readonly __typename?: 'Character';
     readonly name: string;
   };
 }
 export namespace HeroNameConditionalInclusion {
   export type Variables = {
-    episode?: Episode | null;
-    includeName: boolean;
+    readonly episode?: Episode | null;
+    readonly includeName: boolean;
   };
 
   export type Query = {
-    __typename?: 'Query';
+    readonly __typename?: 'Query';
     readonly hero?: Hero | null;
   };
 
   export type Hero = {
-    __typename?: 'Character';
+    readonly __typename?: 'Character';
     readonly name: string;
   };
 }
 export namespace HeroNameConditionalExclusion {
   export type Variables = {
-    episode?: Episode | null;
-    skipName: boolean;
+    readonly episode?: Episode | null;
+    readonly skipName: boolean;
   };
 
   export type Query = {
-    __typename?: 'Query';
+    readonly __typename?: 'Query';
     readonly hero?: Hero | null;
   };
 
   export type Hero = {
-    __typename?: 'Character';
+    readonly __typename?: 'Character';
     readonly name: string;
   };
 }
 export namespace HeroParentTypeDependentField {
   export type Variables = {
-    episode?: Episode | null;
+    readonly episode?: Episode | null;
   };
 
   export type Query = {
-    __typename?: 'Query';
+    readonly __typename?: 'Query';
     readonly hero?: Hero | null;
   };
 
   export type Hero = {
-    __typename?: HumanInlineFragment['__typename'] | DroidInlineFragment['__typename'];
+    readonly __typename?: HumanInlineFragment['__typename'] | DroidInlineFragment['__typename'];
     readonly name: string;
   } & (HumanInlineFragment | DroidInlineFragment);
 
   export type HumanInlineFragment = {
-    __typename?: 'Human';
+    readonly __typename?: 'Human';
     readonly friends?: ReadonlyArray<Friends | null> | null;
   };
 
   export type Friends = {
-    __typename?: _HumanInlineFragment['__typename'];
+    readonly __typename?: _HumanInlineFragment['__typename'];
     readonly name: string;
   } & (_HumanInlineFragment);
 
   export type _HumanInlineFragment = {
-    __typename?: 'Human';
+    readonly __typename?: 'Human';
     readonly height?: number | null;
   };
 
   export type DroidInlineFragment = {
-    __typename?: 'Droid';
+    readonly __typename?: 'Droid';
     readonly friends?: ReadonlyArray<_Friends | null> | null;
   };
 
   export type _Friends = {
-    __typename?: __HumanInlineFragment['__typename'];
+    readonly __typename?: __HumanInlineFragment['__typename'];
     readonly name: string;
   } & (__HumanInlineFragment);
 
   export type __HumanInlineFragment = {
-    __typename?: 'Human';
+    readonly __typename?: 'Human';
     readonly height?: number | null;
   };
 }
 export namespace HeroTypeDependentAliasedField {
   export type Variables = {
-    episode?: Episode | null;
+    readonly episode?: Episode | null;
   };
 
   export type Query = {
-    __typename?: 'Query';
+    readonly __typename?: 'Query';
     readonly hero?: Hero | null;
   };
 
   export type Hero = HumanInlineFragment | DroidInlineFragment;
 
   export type HumanInlineFragment = {
-    __typename?: 'Human';
+    readonly __typename?: 'Human';
     readonly property?: string | null;
   };
 
   export type DroidInlineFragment = {
-    __typename?: 'Droid';
+    readonly __typename?: 'Droid';
     readonly property?: string | null;
   };
 }
@@ -343,12 +343,12 @@ export namespace HumanWithNullHeight {
   export type Variables = {};
 
   export type Query = {
-    __typename?: 'Query';
+    readonly __typename?: 'Query';
     readonly human?: Human | null;
   };
 
   export type Human = {
-    __typename?: 'Human';
+    readonly __typename?: 'Human';
     readonly name: string;
     readonly mass?: number | null;
   };
@@ -357,35 +357,35 @@ export namespace TwoHeroes {
   export type Variables = {};
 
   export type Query = {
-    __typename?: 'Query';
+    readonly __typename?: 'Query';
     readonly r2?: R2 | null;
     readonly luke?: Luke | null;
   };
 
   export type R2 = {
-    __typename?: 'Character';
+    readonly __typename?: 'Character';
     readonly name: string;
   };
 
   export type Luke = {
-    __typename?: 'Character';
+    readonly __typename?: 'Character';
     readonly name: string;
   };
 }
 
 export namespace HeroDetails {
   export type Fragment = {
-    __typename?: 'Character';
+    readonly __typename?: 'Character';
     readonly name: string;
   } & (HumanInlineFragment | DroidInlineFragment);
 
   export type HumanInlineFragment = {
-    __typename?: 'Human';
+    readonly __typename?: 'Human';
     readonly height?: number | null;
   };
 
   export type DroidInlineFragment = {
-    __typename?: 'Droid';
+    readonly __typename?: 'Droid';
     readonly primaryFunction?: string | null;
   };
 }

@@ -2,21 +2,21 @@
 export namespace {{ toPascalCase name }} {
   export type Variables = {
   {{#each variables}}
-    {{ name }}{{ getOptionals this }}: {{ convertedType this }};
+    {{#if @root.config.immutableTypes }}readonly {{/if}}{{ name }}{{ getOptionals this }}: {{ convertedType this }};
   {{/each}}
   }
 
   export type {{ toPascalCase operationType }} ={{#if hasFields}} {
-    __typename?: "{{ toPascalCase operationType }}";
+    {{#if @root.config.immutableTypes }}readonly {{/if}}__typename?: "{{ toPascalCase operationType }}";
     {{> selectionSet fields }}
   }{{/if}}{{> fragments this }}
   {{#each innerModels }}
 
   export type {{ modelType }} ={{#if hasFields}} {
   {{#unless hasInlineFragments}}
-    __typename?: "{{ schemaBaseType }}";
+    {{#if @root.config.immutableTypes }}readonly {{/if}}__typename?: "{{ schemaBaseType }}";
   {{else}}
-    __typename?: {{#each inlineFragments}}{{onType}}["__typename"]{{#unless @last}} | {{/unless}}{{/each}};
+    {{#if @root.config.immutableTypes }}readonly {{/if}}__typename?: {{#each inlineFragments}}{{onType}}["__typename"]{{#unless @last}} | {{/unless}}{{/each}};
   {{/unless}}
     {{> selectionSet fields }}
   }{{/if}}{{> fragments this }}
@@ -27,16 +27,16 @@ export namespace {{ toPascalCase name }} {
 
 export namespace {{name}} {
   export type Fragment ={{#if hasFields}} {
-    __typename?: "{{ onType }}";
+    {{#if @root.config.immutableTypes }}readonly {{/if}}__typename?: "{{ onType }}";
     {{> selectionSet fields }}
   }{{/if}}{{> fragments this }}
   {{#each innerModels }}
 
   export type {{ modelType }} ={{#if hasFields}} {
   {{#unless hasInlineFragments}}
-    __typename?: "{{ schemaBaseType }}";
+    {{#if @root.config.immutableTypes }}readonly {{/if}}__typename?: "{{ schemaBaseType }}";
   {{else}}
-    __typename?: {{#each inlineFragments}}{{onType}}["__typename"]{{#unless @last}} | {{/unless}}{{/each}};
+    {{#if @root.config.immutableTypes }}readonly {{/if}}__typename?: {{#each inlineFragments}}{{onType}}["__typename"]{{#unless @last}} | {{/unless}}{{/each}};
   {{/unless}}
     {{> selectionSet fields }}
   }{{/if}}{{> fragments this }}

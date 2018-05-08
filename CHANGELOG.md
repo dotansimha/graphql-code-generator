@@ -1,5 +1,7 @@
 <a name="NEXT"></a>
 
+* TypeScript template: added missing `readonly` for `__typename` field when generating immutable types
+* TypeScript template: added missing imports for ts-multiple templates when generating fragments
 
 <a name="0.9.0"></a>
 

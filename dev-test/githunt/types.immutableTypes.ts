@@ -95,16 +95,16 @@ export enum VoteType {
 }
 export namespace OnCommentAdded {
   export type Variables = {
-    repoFullName: string;
+    readonly repoFullName: string;
   };
 
   export type Subscription = {
-    __typename?: 'Subscription';
+    readonly __typename?: 'Subscription';
     readonly commentAdded?: CommentAdded | null;
   };
 
   export type CommentAdded = {
-    __typename?: 'Comment';
+    readonly __typename?: 'Comment';
     readonly id: number;
     readonly postedBy: PostedBy;
     readonly createdAt: number;
@@ -112,32 +112,32 @@ export namespace OnCommentAdded {
   };
 
   export type PostedBy = {
-    __typename?: 'User';
+    readonly __typename?: 'User';
     readonly login: string;
     readonly html_url: string;
   };
 }
 export namespace Comment {
   export type Variables = {
-    repoFullName: string;
-    limit?: number | null;
-    offset?: number | null;
+    readonly repoFullName: string;
+    readonly limit?: number | null;
+    readonly offset?: number | null;
   };
 
   export type Query = {
-    __typename?: 'Query';
+    readonly __typename?: 'Query';
     readonly currentUser?: CurrentUser | null;
     readonly entry?: Entry | null;
   };
 
   export type CurrentUser = {
-    __typename?: 'User';
+    readonly __typename?: 'User';
     readonly login: string;
     readonly html_url: string;
   };
 
   export type Entry = {
-    __typename?: 'Entry';
+    readonly __typename?: 'Entry';
     readonly id: number;
     readonly postedBy: PostedBy;
     readonly createdAt: number;
@@ -147,7 +147,7 @@ export namespace Comment {
   };
 
   export type PostedBy = {
-    __typename?: 'User';
+    readonly __typename?: 'User';
     readonly login: string;
     readonly html_url: string;
   };
@@ -155,13 +155,13 @@ export namespace Comment {
   export type Comments = CommentsPageComment.Fragment;
 
   export type Repository = {
-    __typename?: RepositoryInlineFragment['__typename'];
+    readonly __typename?: RepositoryInlineFragment['__typename'];
     readonly full_name: string;
     readonly html_url: string;
   } & (RepositoryInlineFragment);
 
   export type RepositoryInlineFragment = {
-    __typename?: 'Repository';
+    readonly __typename?: 'Repository';
     readonly description?: string | null;
     readonly open_issues_count?: number | null;
     readonly stargazers_count: number;
@@ -171,31 +171,31 @@ export namespace CurrentUserForProfile {
   export type Variables = {};
 
   export type Query = {
-    __typename?: 'Query';
+    readonly __typename?: 'Query';
     readonly currentUser?: CurrentUser | null;
   };
 
   export type CurrentUser = {
-    __typename?: 'User';
+    readonly __typename?: 'User';
     readonly login: string;
     readonly avatar_url: string;
   };
 }
 export namespace Feed {
   export type Variables = {
-    type: FeedType;
-    offset?: number | null;
-    limit?: number | null;
+    readonly type: FeedType;
+    readonly offset?: number | null;
+    readonly limit?: number | null;
   };
 
   export type Query = {
-    __typename?: 'Query';
+    readonly __typename?: 'Query';
     readonly currentUser?: CurrentUser | null;
     readonly feed?: ReadonlyArray<Feed | null> | null;
   };
 
   export type CurrentUser = {
-    __typename?: 'User';
+    readonly __typename?: 'User';
     readonly login: string;
   };
 
@@ -203,27 +203,27 @@ export namespace Feed {
 }
 export namespace SubmitRepository {
   export type Variables = {
-    repoFullName: string;
+    readonly repoFullName: string;
   };
 
   export type Mutation = {
-    __typename?: 'Mutation';
+    readonly __typename?: 'Mutation';
     readonly submitRepository?: SubmitRepository | null;
   };
 
   export type SubmitRepository = {
-    __typename?: 'Entry';
+    readonly __typename?: 'Entry';
     readonly createdAt: number;
   };
 }
 export namespace SubmitComment {
   export type Variables = {
-    repoFullName: string;
-    commentContent: string;
+    readonly repoFullName: string;
+    readonly commentContent: string;
   };
 
   export type Mutation = {
-    __typename?: 'Mutation';
+    readonly __typename?: 'Mutation';
     readonly submitComment?: SubmitComment | null;
   };
 
@@ -231,31 +231,31 @@ export namespace SubmitComment {
 }
 export namespace Vote {
   export type Variables = {
-    repoFullName: string;
-    type: VoteType;
+    readonly repoFullName: string;
+    readonly type: VoteType;
   };
 
   export type Mutation = {
-    __typename?: 'Mutation';
+    readonly __typename?: 'Mutation';
     readonly vote?: Vote | null;
   };
 
   export type Vote = {
-    __typename?: 'Entry';
+    readonly __typename?: 'Entry';
     readonly score: number;
     readonly id: number;
     readonly vote: _Vote;
   };
 
   export type _Vote = {
-    __typename?: 'Vote';
+    readonly __typename?: 'Vote';
     readonly vote_value: number;
   };
 }
 
 export namespace CommentsPageComment {
   export type Fragment = {
-    __typename?: 'Comment';
+    readonly __typename?: 'Comment';
     readonly id: number;
     readonly postedBy: PostedBy;
     readonly createdAt: number;
@@ -263,7 +263,7 @@ export namespace CommentsPageComment {
   };
 
   export type PostedBy = {
-    __typename?: 'User';
+    readonly __typename?: 'User';
     readonly login: string;
     readonly html_url: string;
   };
@@ -271,7 +271,7 @@ export namespace CommentsPageComment {
 
 export namespace FeedEntry {
   export type Fragment = {
-    __typename?: 'Entry';
+    readonly __typename?: 'Entry';
     readonly id: number;
     readonly commentCount: number;
     readonly repository: Repository;
@@ -279,35 +279,35 @@ export namespace FeedEntry {
     RepoInfo.Fragment;
 
   export type Repository = {
-    __typename?: 'Repository';
+    readonly __typename?: 'Repository';
     readonly full_name: string;
     readonly html_url: string;
     readonly owner?: Owner | null;
   };
 
   export type Owner = {
-    __typename?: 'User';
+    readonly __typename?: 'User';
     readonly avatar_url: string;
   };
 }
 
 export namespace RepoInfo {
   export type Fragment = {
-    __typename?: 'Entry';
+    readonly __typename?: 'Entry';
     readonly createdAt: number;
     readonly repository: Repository;
     readonly postedBy: PostedBy;
   };
 
   export type Repository = {
-    __typename?: 'Repository';
+    readonly __typename?: 'Repository';
     readonly description?: string | null;
     readonly stargazers_count: number;
     readonly open_issues_count?: number | null;
   };
 
   export type PostedBy = {
-    __typename?: 'User';
+    readonly __typename?: 'User';
     readonly html_url: string;
     readonly login: string;
   };
@@ -315,13 +315,13 @@ export namespace RepoInfo {
 
 export namespace VoteButtons {
   export type Fragment = {
-    __typename?: 'Entry';
+    readonly __typename?: 'Entry';
     readonly score: number;
     readonly vote: Vote;
   };
 
   export type Vote = {
-    __typename?: 'Vote';
+    readonly __typename?: 'Vote';
     readonly vote_value: number;
   };
 }

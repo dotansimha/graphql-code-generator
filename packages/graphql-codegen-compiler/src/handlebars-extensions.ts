@@ -161,6 +161,15 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
     // Operations and Fragments
     if (context.selectionSet) {
       const flattenDocument: FlattenOperation = context.isFlatten ? context : flattenSelectionSet(context);
+
+      flattenDocument.fragmentsSpread.forEach(fragmentSpread => {
+        const file = sanitizeFilename(fragmentSpread.fragmentName, 'fragment');
+
+        if (!imports.find(t => t.name === fragmentSpread.fragmentName)) {
+          imports.push({ name: fragmentSpread.fragmentName, file, type: 'fragment' });
+        }
+      });
+
       flattenDocument.innerModels.forEach((innerModel: FlattenModel) => {
         if (innerModel.fragmentsSpread && innerModel.fragmentsSpread.length > 0) {
           innerModel.fragmentsSpread.forEach((fragmentSpread: SelectionSetFragmentSpread) => {

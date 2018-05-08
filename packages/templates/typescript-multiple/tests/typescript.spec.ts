@@ -24,6 +24,39 @@ describe('TypeScript Multiple', () => {
   };
 
   describe('Schema', () => {
+    it('should generate the correct imports for fragments', async () => {
+      const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
+      const context = schemaToTemplateContext(schema);
+
+      const documents = gql`
+        fragment FeedEntry on Entry {
+          id
+          commentCount
+          repository {
+            full_name
+            html_url
+            owner {
+              avatar_url
+            }
+          }
+          ...VoteButtons
+        }
+
+        fragment VoteButtons on Entry {
+          score
+          vote {
+            vote_value
+          }
+        }
+      `;
+
+      const transformedDocument = transformDocument(schema, documents);
+      const compiled = await compileTemplate(config, context, [transformedDocument], { generateSchema: false });
+      const relevantFile = compiled.find(t => t.filename === 'feedentry.fragment.ts');
+
+      expect(relevantFile.content).toContain('import');
+    });
+
     it('should pass custom config correctly to the generator', async () => {
       const { context } = compileAndBuildContext(`
         type Query {

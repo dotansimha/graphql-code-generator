@@ -1,3 +1,5 @@
+import { VoteButtons } from './votebuttons.fragment';
+import { RepoInfo } from './repoinfo.fragment';
 export namespace FeedEntry {
   export type Fragment = {
     __typename?: 'Entry';
