@@ -10,7 +10,7 @@
     "jest": "22.4.3",
     "raw-loader": "0.5.1",
     "rimraf": "2.6.2",
-    "ts-jest": "22.4.5",
+    "ts-jest": "22.4.6",
     "typescript": "2.8.3",
     "webpack": "4.8.2",
     "webpack-cli": "2.1.3",
