@@ -1,6 +1,6 @@
 import graphql from 'graphql-tag';
 
-// export const myQuery = gql(`
+// export const myQuery = graphql(`
 //   query myQuery1 {
 //     data {
 //       field1
@@ -19,7 +19,7 @@ export const myQuery = graphql(`
 `);
 
 /*
-export const myQuery = gql(`
+export const myQuery = graphql(`
   query myQuery3 {
     data {
       field1

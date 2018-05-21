@@ -1,12 +1,9 @@
-import gql from 'graphql-tag'
+import gql from 'graphql-tag';
 
-import { buildQuery } from 'graph/buildQuery'
-import { GPlayerList } from 'graph/types'
+import { buildQuery } from 'graph/buildQuery';
+import { GPlayerList } from 'graph/types';
 
-export const PlayerListQuery = buildQuery<
-  GPlayerList.Query,
-  GPlayerList.Variables
->(gql`
+export const playerListQuery = buildQuery<GPlayerList.Query, GPlayerList.Variables>(gql`
   query GPlayerList {
     allPlayers {
       id
@@ -14,4 +11,4 @@ export const PlayerListQuery = buildQuery<
       name
     }
   }
-`)
+`);
