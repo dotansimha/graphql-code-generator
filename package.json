@@ -31,7 +31,7 @@
     "@types/common-tags": "1.4.0",
     "@types/graphql": "0.13.1",
     "husky": "0.14.3",
-    "lint-staged": "7.1.0",
+    "lint-staged": "7.1.2",
     "tslint": "5.10.0",
     "typescript": "2.8.3",
     "graphql": "0.13.2",
