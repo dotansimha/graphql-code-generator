@@ -18,11 +18,16 @@ describe('extractDocumentStringFromCodeFile', () => {
 
   it('file with gql and template literal', () => {
     const doc = extract('1.ts');
+    const graphql = extract('7.ts');
+    expect(doc).toEqual(graphql);
     expect(doc).toMatchSnapshot();
   });
 
   it('file with gql and string and function use', () => {
     const doc = extract('2.ts');
+    const graphql = extract('8.ts');
+
+    expect(doc).toEqual(graphql);
     expect(doc).toMatchSnapshot();
   });
 
@@ -33,16 +38,25 @@ describe('extractDocumentStringFromCodeFile', () => {
 
   it('file with commented code', () => {
     const doc = extract('4.ts');
+    const graphql = extract('9.ts');
+
+    expect(doc).toEqual(graphql);
     expect(doc).toMatchSnapshot();
   });
 
   it('file with gql and template literal in ts/tsx file', () => {
     const doc = extract('5.tsx');
+    const graphql = extract('10.tsx');
+
+    expect(doc).toEqual(graphql);
     expect(doc).toMatchSnapshot();
   });
 
   it('file with gql and template literal, with use of string variables', () => {
     const doc = extract('6.ts');
+    const graphql = extract('11.ts');
+
+    expect(doc).toEqual(graphql);
     expect(doc).toMatchSnapshot();
   });
 });
