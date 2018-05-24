@@ -1,8 +1,8 @@
-import { debugLog, introspectionQuery, IntrospectionQuery } from 'graphql-codegen-core';
+import { debugLog, introspectionQuery, IntrospectionQuery, logger } from 'graphql-codegen-core';
 import * as request from 'request';
 
 export const introspectionFromUrl = (url: string, headers: string[]): Promise<IntrospectionQuery> => {
-  console.log(`Loading GraphQL Introspection from remote: ${url}...`);
+  logger.info(`Loading GraphQL Introspection from remote: ${url}...`);
 
   let splittedHeaders = (headers || [])
     .map((header: string) => {

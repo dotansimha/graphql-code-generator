@@ -20,7 +20,8 @@ import {
   introspectionToGraphQLSchema,
   isGeneratorConfig,
   schemaToTemplateContext,
-  transformDocument
+  transformDocument,
+  logger
 } from 'graphql-codegen-core';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
@@ -98,11 +99,7 @@ export const initCLI = (args): CLIOptions => {
 };
 
 export const cliError = (err: string) => {
-  if (typeof err === 'object') {
-    console.log(err);
-  }
-
-  console.error('Error: ' + err);
+  logger.error(err);
   process.exit(1);
 
   return;
@@ -121,11 +118,11 @@ export const validateCliOptions = (options: CLIOptions) => {
   }
 
   if (file) {
-    console.warn(`WARNING: --file is deprecated, use --schema instead.`);
+    logger.warn(`--file is deprecated, use --schema instead.`);
   } else if (url) {
-    console.warn(`WARNING: --url is deprecated, use --schema instead.`);
+    logger.warn(`--url is deprecated, use --schema instead.`);
   } else if (fsExport) {
-    console.warn(`WARNING: --export is deprecated, use --schema instead.`);
+    logger.warn(`--export is deprecated, use --schema instead.`);
   }
 
   if (!template && !project) {
@@ -186,7 +183,7 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
   const graphQlSchema = await schemaExportPromise;
 
   if (process.env.VERBOSE !== undefined) {
-    console.log(`GraphQL Schema is: `, graphQlSchema);
+    logger.info(`GraphQL Schema is: `, graphQlSchema);
   }
 
   const context = schemaToTemplateContext(graphQlSchema);
@@ -235,7 +232,7 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
   let config: GqlGenConfig = null;
 
   if (fs.existsSync(configPath)) {
-    console.log('Loading config file from: ', configPath);
+    logger.info('Loading config file from: ', configPath);
     config = JSON.parse(fs.readFileSync(configPath).toString()) as GqlGenConfig;
     debugLog(`[executeWithOptions] Got project config JSON: `, config);
   }
