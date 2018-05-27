@@ -17,3 +17,4 @@ export {
 } from 'graphql';
 export { gql };
 export { makeExecutableSchema } from 'graphql-tools';
+export { logger } from './utils/logger';

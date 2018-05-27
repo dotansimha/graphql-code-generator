@@ -1,5 +1,7 @@
+import { logger } from './utils/logger';
+
 export function debugLog(...args) {
   if (process.env.DEBUG !== undefined) {
-    console.log(...args);
+    logger.info(...args);
   }
 }

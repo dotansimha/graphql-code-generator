@@ -1,15 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import {
-  GraphQLSchema,
-  DocumentNode,
-  parse,
-  buildASTSchema,
-  extendSchema,
-  IntrospectionQuery,
-  buildClientSchema
-} from 'graphql';
-import { debugLog } from 'graphql-codegen-core';
+import { GraphQLSchema, DocumentNode, parse, buildASTSchema, IntrospectionQuery, buildClientSchema } from 'graphql';
+import { debugLog, logger } from 'graphql-codegen-core';
 
 function isPromise(obj) {
   return !!obj && (typeof obj === 'object' || typeof obj === 'function') && typeof obj.then === 'function';
@@ -33,7 +25,7 @@ function resolveSchema(schema: any): Promise<any> {
 }
 
 export const schemaFromExport = (file: string): Promise<GraphQLSchema> => {
-  console.log(`Loading GraphQL schema object, text, ast, or introspection json from JavaScript ES6 export: ${file}...`);
+  logger.info(`Loading GraphQL schema object, text, ast, or introspection json from JavaScript ES6 export: ${file}...`);
 
   return new Promise<any>(async (resolve, reject) => {
     const fullPath = path.isAbsolute(file) ? file : path.resolve(process.cwd(), file);

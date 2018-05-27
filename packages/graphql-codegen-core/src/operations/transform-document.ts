@@ -10,6 +10,7 @@ import { Document } from '../types';
 import { transformFragment } from './transform-fragment-document';
 import { transformOperation } from './transform-operation';
 import { debugLog } from '../debugging';
+import { logger } from '../utils/logger';
 
 export function transformDocument(schema: GraphQLSchema, documentNode: DocumentNode): Document {
   const result: Document = {
@@ -29,8 +30,8 @@ export function transformDocument(schema: GraphQLSchema, documentNode: DocumentN
     } else if (definitionNode.kind === Kind.FRAGMENT_DEFINITION) {
       result.fragments.push(transformFragment(schema, definitionNode as FragmentDefinitionNode));
     } else {
-      console.log(`WARNING: It seems like you provided an invalid GraphQL document: `);
-      console.log(definitionNode);
+      logger.warn(`It seems like you provided an invalid GraphQL document: `);
+      logger.warn(definitionNode);
     }
   });
 

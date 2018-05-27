@@ -1,9 +1,9 @@
 import * as fs from 'fs';
-import { IntrospectionQuery } from 'graphql-codegen-core';
+import { IntrospectionQuery, logger } from 'graphql-codegen-core';
 import * as path from 'path';
 
 export const introspectionFromFile = (file: string) => {
-  console.log(`Loading GraphQL Introspection from file: ${file}...`);
+  logger.info(`Loading GraphQL Introspection from file: ${file}...`);
 
   return new Promise<IntrospectionQuery>((resolve, reject) => {
     const fullPath = path.isAbsolute(file) ? file : path.resolve(process.cwd(), file);
