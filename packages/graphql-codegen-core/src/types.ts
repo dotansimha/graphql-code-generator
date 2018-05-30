@@ -77,6 +77,8 @@ export interface Interface extends AstNode {
   description: string;
   fields: Field[];
   hasFields: boolean;
+  implementingTypes: string[];
+  hasImplementingTypes: boolean;
 }
 
 export interface SchemaTemplateContext extends AstNode {
