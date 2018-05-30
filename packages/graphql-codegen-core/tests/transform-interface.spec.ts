@@ -1,7 +1,22 @@
 import { GraphQLInterfaceType, GraphQLString } from 'graphql';
 import { transformInterface } from '../src/schema/transform-interface';
+import { makeExecutableSchema } from 'graphql-tools';
 
 describe('transformInterface', () => {
+  const schema = makeExecutableSchema({
+    typeDefs: [
+      `interface A {
+          f: String
+        }`,
+      `type B implements A {
+          f: String
+        }`
+    ],
+    resolverValidationOptions: {
+      requireResolversForResolveType: false
+    }
+  });
+
   it('should use the correct value of name', () => {
     const gqlInterface = new GraphQLInterfaceType({
       name: 'name',
@@ -12,7 +27,7 @@ describe('transformInterface', () => {
       }
     });
 
-    const result = transformInterface({} as any, gqlInterface);
+    const result = transformInterface(schema, gqlInterface);
 
     expect(result.name).toBe('name');
     expect(result.description).toBe('');
@@ -29,7 +44,7 @@ describe('transformInterface', () => {
       }
     });
 
-    const result = transformInterface({} as any, gqlInterface);
+    const result = transformInterface(schema, gqlInterface);
 
     expect(result.description).toBe('Test');
   });
@@ -45,7 +60,7 @@ describe('transformInterface', () => {
       }
     });
 
-    const result = transformInterface({} as any, gqlInterface);
+    const result = transformInterface(schema, gqlInterface);
 
     expect(result.fields.length).toBe(1);
     expect(result.fields[0].name).toBe('test');
@@ -53,5 +68,13 @@ describe('transformInterface', () => {
     expect(result.fields[0].type).toBe('String');
     expect(result.fields[0].isArray).toBeFalsy();
     expect(result.fields[0].isRequired).toBeFalsy();
+  });
+
+  it('should use the correct value when  implementing types', () => {
+    const result = transformInterface(schema, schema.getTypeMap()['A'] as GraphQLInterfaceType);
+
+    expect(result.hasImplementingTypes).toBeTruthy();
+    expect(result.implementingTypes.length).toBe(1);
+    expect(result.implementingTypes[0]).toBe('B');
   });
 });
