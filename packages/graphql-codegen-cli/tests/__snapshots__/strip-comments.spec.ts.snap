@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`stripComments file with jsx and typescript, query in comments 1`] = `
+"import * as React from \\"react\\";
+import gql from 'graphql-tag';
+
+export default class extends React.Component<{}, {}> {
+  public render() {
+    return <div />;
+  }
+}
+
+export const pageQuery = gql\`
+  query IndexQuery {
+    site {
+      siteMetadata {
+        title
+      }
+    }
+  }
+\`;
+
+
+
+
+
+
+
+
+
+
+"
+`;

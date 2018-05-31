@@ -55,4 +55,11 @@ describe('extractDocumentStringFromCodeFile', () => {
     expect(doc).toEqual(graphql);
     expect(doc).toMatchSnapshot();
   });
+
+  it('file with jsx and typescript, query in comments', () => {
+    const doc = extract('12.tsx');
+    const graphql = extract('13.tsx');
+    expect(doc).toEqual(graphql);
+    expect(doc).toMatchSnapshot();
+  });
 });
