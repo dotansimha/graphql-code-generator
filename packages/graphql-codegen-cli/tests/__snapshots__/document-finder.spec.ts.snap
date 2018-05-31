@@ -45,6 +45,16 @@ exports[`extractDocumentStringFromCodeFile file with gql and template literal, w
   }"
 `;
 
+exports[`extractDocumentStringFromCodeFile file with jsx and typescript, query in comments 1`] = `
+"query IndexQuery {
+    site {
+      siteMetadata {
+        title
+      }
+    }
+  }"
+`;
+
 exports[`extractDocumentStringFromCodeFile file with simple gql content 1`] = `
 "query myQuery {
   data {

@@ -69,8 +69,10 @@
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || || ^0.13.0"
   },
   "dependencies": {
+    "@types/babylon": "6.16.2",
     "@types/prettier": "1.12.4",
     "@types/valid-url": "1.0.2",
+    "babylon": "7.0.0-beta.47",
     "commander": "2.15.1",
     "glob": "7.1.2",
     "graphql-codegen-compiler": "0.9.1",
@@ -78,7 +80,6 @@
     "mkdirp": "0.5.1",
     "prettier": "1.13.3",
     "request": "2.87.0",
-    "strip-comments": "1.0.2",
     "valid-url": "1.0.9"
   },
   "devDependencies": {
