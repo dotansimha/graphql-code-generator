@@ -16,16 +16,17 @@ const removeComment = (
 ) => {
   let nl = '';
 
-  // the casting is safe because if type does not exist
-  // we will be comparing undefined against a string
-  if ((comment as CommentLine).type === 'CommentLine') {
+  const isCommentLine = (c: any): c is CommentLine => c.type === 'CommentLine';
+
+  if (isCommentLine(comment)) {
     const before = str.slice(0, comment.start - pos.removed);
     const after = str.slice(comment.end - pos.removed);
     pos.removed += comment.end - comment.start - nl.length;
     return before + nl + after;
   }
 
-  if ((comment as CommentBlock).type === 'CommentBlock') {
+  const isCommentBlock = (c: any): c is CommentBlock => c.type === 'CommentBlock';
+  if (isCommentBlock(comment)) {
     const before = str.slice(0, comment.start - pos.removed);
     const after = str.slice(comment.end - pos.removed);
     pos.removed += comment.end - comment.start - nl.length;
