@@ -17,7 +17,6 @@ const removeComment = (
   let nl = '';
 
   const isCommentLine = (c: any): c is CommentLine => c.type === 'CommentLine';
-
   if (isCommentLine(comment)) {
     const before = str.slice(0, comment.start - pos.removed);
     const after = str.slice(comment.end - pos.removed);
