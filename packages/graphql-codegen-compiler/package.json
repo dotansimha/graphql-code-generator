@@ -15,7 +15,7 @@
     "common-tags": "1.8.0",
     "graphql-codegen-core": "0.9.1",
     "handlebars": "4.0.11",
-    "moment": "2.22.1"
+    "moment": "2.22.2"
   },
   "jest": {
     "moduleFileExtensions": [
