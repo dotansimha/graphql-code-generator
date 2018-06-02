@@ -78,7 +78,7 @@
     "graphql-codegen-compiler": "0.9.1",
     "graphql-codegen-core": "0.9.1",
     "mkdirp": "0.5.1",
-    "prettier": "1.13.3",
+    "prettier": "1.13.4",
     "request": "2.87.0",
     "valid-url": "1.0.9"
   },
