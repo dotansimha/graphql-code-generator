@@ -2,6 +2,21 @@ import * as fs from 'fs';
 import { IntrospectionQuery, logger } from 'graphql-codegen-core';
 import * as path from 'path';
 
+// from https://github.com/npm/npm/blob/latest/lib/utils/parse-json.js
+// from read-package-json
+const stripBOM = (content: string) => {
+  content = content.toString();
+  // Remove byte order marker. This catches EF BB BF (the UTF-8 BOM)
+  // because the buffer-to-string conversion in `fs.readFileSync()`
+  // translates it to FEFF, the UTF-16 BOM.
+  if (content.charCodeAt(0) === 0xfeff) {
+    content = content.slice(1);
+  }
+  return content;
+};
+
+export const parseBOM = (content: string) => JSON.parse(stripBOM(content));
+
 export const introspectionFromFile = (file: string) => {
   logger.info(`Loading GraphQL Introspection from file: ${file}...`);
 
@@ -16,7 +31,7 @@ export const introspectionFromFile = (file: string) => {
           reject(`Unable to read local introspection file: ${fullPath}`);
         }
 
-        let introspection = JSON.parse(fileContent);
+        let introspection = parseBOM(fileContent);
         if (introspection.data) {
           introspection = introspection.data;
         }
