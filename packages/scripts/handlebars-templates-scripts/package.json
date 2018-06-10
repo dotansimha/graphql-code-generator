@@ -13,7 +13,7 @@
     "ts-jest": "22.4.6",
     "typescript": "2.9.1",
     "webpack": "4.10.2",
-    "webpack-cli": "3.0.2",
+    "webpack-cli": "3.0.3",
     "webpack-node-externals": "1.7.2"
   },
   "bin": {
