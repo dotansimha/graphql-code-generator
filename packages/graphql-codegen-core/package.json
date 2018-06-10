@@ -1,6 +1,6 @@
 {
   "name": "graphql-codegen-core",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "description": "GraphQL types and code generator based on schema",
   "main": "dist/index.js",
   "scripts": {
@@ -50,7 +50,14 @@
       "^.+\\.tsx?$": "ts-jest"
     },
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
-    "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json", "node"]
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
   },
   "dependencies": {
     "graphql-tag": "2.9.2",
