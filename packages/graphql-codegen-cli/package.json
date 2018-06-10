@@ -70,7 +70,7 @@
   },
   "dependencies": {
     "@types/babylon": "6.16.2",
-    "@types/prettier": "1.12.4",
+    "@types/prettier": "1.13.0",
     "@types/valid-url": "1.0.2",
     "babel-types": "7.0.0-beta.3",
     "babylon": "7.0.0-beta.47",
@@ -79,7 +79,7 @@
     "graphql-codegen-compiler": "0.9.1",
     "graphql-codegen-core": "0.9.1",
     "mkdirp": "0.5.1",
-    "prettier": "1.13.4",
+    "prettier": "1.13.5",
     "request": "2.87.0",
     "valid-url": "1.0.9"
   },
