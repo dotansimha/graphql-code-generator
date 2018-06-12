@@ -92,9 +92,9 @@
   version "9.6.21"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-9.6.21.tgz#4563c26a53531c5aca943065fcdf2dd562f63cd4"
 
-"@types/prettier@1.13.0":
-  version "1.13.0"
-  resolved "https://registry.yarnpkg.com/@types/prettier/-/prettier-1.13.0.tgz#18f3b5e27cdb55b0708b833c69ed5aa025249b9c"
+"@types/prettier@1.13.1":
+  version "1.13.1"
+  resolved "https://registry.yarnpkg.com/@types/prettier/-/prettier-1.13.1.tgz#5dd359398de96863a0629156f382913a06ebe013"
 
 "@types/request@2.47.0":
   version "2.47.0"
