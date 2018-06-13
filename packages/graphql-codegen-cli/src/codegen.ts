@@ -3,6 +3,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as mkdirp from 'mkdirp';
 import * as validUrl from 'valid-url';
+import { GraphQLSchema } from 'graphql';
 
 import { introspectionFromFile } from './loaders/introspection-from-file';
 import { introspectionFromUrl } from './loaders/introspection-from-url';
@@ -29,6 +30,7 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 export interface CLIOptions {
   file?: string;
   url?: string;
+  introspect?: boolean;
   export?: string;
   schema?: string;
   args?: string[];
@@ -40,7 +42,7 @@ export interface CLIOptions {
   skipDocuments?: any;
   config?: string;
   require?: string[];
-  overwrite: boolean;
+  overwrite?: boolean;
 }
 
 interface GqlGenConfig {
@@ -67,6 +69,7 @@ export const initCLI = (args): CLIOptions => {
     .usage('gql-gen [options]')
     .option('-f, --file <filePath>', 'Parse local GraphQL introspection JSON file')
     .option('-u, --url <graphql-endpoint>', 'Parse remote GraphQL endpoint as introspection file')
+    .option('-i, --introspect', 'Generate an introspection JSON file')
     .option(
       '-e, --export <export-file>',
       'Path to a JavaScript (es5/6) file that exports (as default export) your `GraphQLSchema` object'
@@ -112,9 +115,10 @@ export const validateCliOptions = (options: CLIOptions) => {
   const fsExport = options.export;
   const template = options.template;
   const project = options.project;
+  const introspect = options.introspect;
 
-  if (!schema && !file && !url && !fsExport) {
-    cliError('Please specify one of --schema, --file, --url or --export flags!');
+  if (!schema && !file && !url && !fsExport && !introspect) {
+    cliError('Please specify one of --schema, --file, --url, --introspect or --export flags!');
   }
 
   if (file) {
@@ -125,7 +129,7 @@ export const validateCliOptions = (options: CLIOptions) => {
     logger.warn(`--export is deprecated, use --schema instead.`);
   }
 
-  if (!template && !project) {
+  if (!template && !project && !introspect) {
     cliError(
       'Please specify language/platform, using --template flag, or specify --project to generate with custom project!'
     );
@@ -138,6 +142,7 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
   const schema: string = options.schema;
   const file: string = options.file;
   const url: string = options.url;
+  const introspect: boolean = options.introspect || false;
   const fsExport: string = options.export;
   const documents: string[] = options.args || [];
   let template: string = options.template;
@@ -148,7 +153,7 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
   const generateSchema: boolean = !options.skipSchema;
   const generateDocuments: boolean = !options.skipDocuments;
   const modulesToRequire: string[] = options.require || [];
-  let schemaExportPromise;
+  let schemaExportPromise: Promise<GraphQLSchema>;
 
   modulesToRequire.forEach(mod => require(mod));
 
@@ -184,6 +189,19 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
 
   if (process.env.VERBOSE !== undefined) {
     logger.info(`GraphQL Schema is: `, graphQlSchema);
+  }
+
+  if (introspect) {
+    const EXT_REGEX = /\.\w+$/i;
+    const content = await schemaExportPromise;
+    const filename = EXT_REGEX.test(out) ? out : out + '.json';
+
+    return [
+      {
+        content: JSON.stringify(content, null, 2),
+        filename
+      }
+    ];
   }
 
   const context = schemaToTemplateContext(graphQlSchema);
