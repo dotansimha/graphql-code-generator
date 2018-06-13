@@ -7,6 +7,7 @@
 
 [renovate-badge]: https://img.shields.io/badge/renovate-app-blue.svg
 [renovate-app]: https://renovateapp.com/
+
 <p align="center">
     <img src="https://github.com/dotansimha/graphql-code-generator/blob/master/logo.png?raw=true" />
 </p>
@@ -71,15 +72,15 @@ CLI usage is as follow:
 
     $ gql-gen [options] [documents ...]
 
-* With local introspection JSON file, generate TypeScript types:
+- With local introspection JSON file, generate TypeScript types:
 
         $ gql-gen --schema mySchema.json --template graphql-codegen-typescript-template --out ./typings/ "./src/**/*.graphql"
 
-* With local introspection JSON file, generate TypeScript files, from GraphQL documents inside code files (`.ts`):
+- With local introspection JSON file, generate TypeScript files, from GraphQL documents inside code files (`.ts`):
 
         $ gql-gen --schema mySchema.json --template graphql-codegen-typescript-template --out ./typings/ "./src/**/*.ts"
 
-* With remote GraphQL endpoint that requires Authorization, generate TypeScript types:
+- With remote GraphQL endpoint that requires Authorization, generate TypeScript types:
 
         $ gql-gen --schema http://localhost:3010/graphql --header "Authorization: MY_KEY" --template graphql-codegen-typescript-template --out ./typings/ "./src/**/*.graphql"
 
@@ -97,6 +98,7 @@ Allowed flags:
 | -t,--template       | String   | Template name, for example: "typescript" (not required when using `--project`)                                                                                                                                                                                                           |
 | -p,--project        | String   | Project directory with templates (refer to "Custom Templates" section)                                                                                                                                                                                                                   |
 | --project-config    | String   | Path to project config JSON file (refer to "Custom Templates" section), defaults to `gqlgen.json`                                                                                                                                                                                        |
+| -i,--introspect     | void     | Creates Introspection JSON file (uses `--out`)                                                                                                                                                                                                                                           |
 | -o,--out            | String   | Path for output file/directory. When using single-file generator specify filename, and when using multiple-files generator specify a directory                                                                                                                                           |
 | -m,--skip-schema    | void     | If specified, server side schema won't be generated through the template (enums won't omit)                                                                                                                                                                                              |
 | -c,--skip-documents | void     | If specified, client side documents won't be generated through the template                                                                                                                                                                                                              |
@@ -107,9 +109,9 @@ Allowed flags:
 
 This repository includes some examples for generated outputs under `dev-test` directory.
 
-* Star Wars generated TypeScript output is [available here](./dev-test/star-wars/types.d.ts).
-* Star Wars generated TypeScript (multiple files) output is [available here](./dev-test/star-wars/ts-multiple/).
-* GitHunt generated TypeScript output is [available here](./dev-test/githunt/types.d.ts).
+- Star Wars generated TypeScript output is [available here](./dev-test/star-wars/types.d.ts).
+- Star Wars generated TypeScript (multiple files) output is [available here](./dev-test/star-wars/ts-multiple/).
+- GitHunt generated TypeScript output is [available here](./dev-test/githunt/types.d.ts).
 
 ## Integrate with your project
 
