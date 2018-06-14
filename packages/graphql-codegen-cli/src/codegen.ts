@@ -303,7 +303,7 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
     };
 
     if (templateConfig.deprecationNote) {
-      logger.warning(`Template ${template} is deprecated: ${templateConfig.deprecationNote}`);
+      logger.warn(`Template ${template} is deprecated: ${templateConfig.deprecationNote}`);
     }
   }
 

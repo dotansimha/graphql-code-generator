@@ -186,7 +186,7 @@ describe('transformDocument', () => {
     expect(document.operations.length).toBe(1);
     expect(document.fragments.length).toBe(0);
     expect(document.operations[0].hasVariables).toBeFalsy();
-    expect(document.operations[0].name).toBe('');
+    expect(document.operations[0].name).toBe('Anonymous_query_1');
     expect(document.operations[0].variables.length).toBe(0);
     expect(document.operations[0].operationType).toBe('query');
     expect(document.operations[0].selectionSet.length).toBe(1);
@@ -224,5 +224,53 @@ describe('transformDocument', () => {
     expect(innerField0.name).toBe('id');
     expect(innerField1.name).toBe('postedBy');
     expect(innerField2.name).toBe('createdAt');
+  });
+
+  it('should handle anonymous document correctly', () => {
+    const query = gql`
+      query {
+        entry {
+          id
+          postedBy {
+            login
+            html_url
+          }
+          createdAt
+        }
+      }
+    `;
+
+    const document = transformDocument(schema, query);
+
+    expect(document.operations[0].name).toBe('Anonymous_query_2');
+  });
+
+  it('should handle anonymous document correctly when already used', () => {
+    const query = gql`
+      query {
+        entry {
+          id
+          postedBy {
+            login
+            html_url
+          }
+          createdAt
+        }
+      }
+    `;
+
+    const query2 = gql`
+      query {
+        entry {
+          id
+        }
+      }
+    `;
+
+    const document = transformDocument(schema, query);
+    const document2 = transformDocument(schema, query2);
+
+    expect(document.operations[0].name).toBe('Anonymous_query_3');
+    expect(document2.operations[0].name).toBe('Anonymous_query_4');
   });
 });
