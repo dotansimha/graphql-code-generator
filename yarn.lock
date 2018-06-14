@@ -70,9 +70,9 @@
   version "4.0.38"
   resolved "https://registry.yarnpkg.com/@types/handlebars/-/handlebars-4.0.38.tgz#d0ebec1934c0bba97f99a0cb703fe2ef8c4a662f"
 
-"@types/jest@23.0.0":
-  version "23.0.0"
-  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-23.0.0.tgz#760cac74f00bb9c3075587716d2b3b4435663bc0"
+"@types/jest@23.1.0":
+  version "23.1.0"
+  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-23.1.0.tgz#8054dd838ba23dc331794d26456b86c7e50bf0f6"
 
 "@types/minimatch@*":
   version "3.0.3"
