@@ -5,7 +5,7 @@ exports[`extractDocumentStringFromCodeFile JS file with query shorthand syntax 1
     books {
       isbn
       title
-      description,
+      description
       rating
       thumbnails {
         url
@@ -64,20 +64,6 @@ exports[`extractDocumentStringFromCodeFile file with jsx and typescript, query i
     site {
       siteMetadata {
         title
-      }
-    }
-  }"
-`;
-
-exports[`extractDocumentStringFromCodeFile file with jsx and typescript, query in comments 2`] = `
-"{
-    books {
-      isbn
-      title
-      description,
-      rating
-      thumbnails {
-        url
       }
     }
   }"
