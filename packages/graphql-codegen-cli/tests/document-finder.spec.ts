@@ -62,4 +62,11 @@ describe('extractDocumentStringFromCodeFile', () => {
     expect(doc).toEqual(graphql);
     expect(doc).toMatchSnapshot();
   });
+
+  it('JS file with query shorthand syntax', () => {
+    const doc = extract('14.js');
+    const graphql = extract('15.js');
+    expect(doc).toEqual(graphql);
+    expect(doc).toMatchSnapshot();
+  });
 });
