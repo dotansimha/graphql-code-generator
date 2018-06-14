@@ -301,6 +301,10 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
       ...(config && config.generatorConfig ? config.generatorConfig || {} : {}),
       ...(relevantEnvVars || {})
     };
+
+    if (templateConfig.deprecationNote) {
+      logger.warning(`Template ${template} is deprecated: ${templateConfig.deprecationNote}`);
+    }
   }
 
   return (await compileTemplate(templateConfig, context, [transformedDocuments], {

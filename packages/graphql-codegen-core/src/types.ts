@@ -261,6 +261,7 @@ export interface GeneratorConfig {
   outFile?: string;
   filesExtension?: string;
   customHelpers?: { [helperName: string]: Function };
+  deprecationNote?: string;
 }
 
 export interface FileOutput {
