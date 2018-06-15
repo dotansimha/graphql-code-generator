@@ -102,16 +102,4 @@ describe('executeWithOptions', () => {
     expect(result.length).toBe(1);
     expect(global.dummyWasLoaded).toBe(true);
   });
-
-  it('execute the correct results when using schema and introspection', async () => {
-    const out = './schema.json';
-    const result = await executeWithOptions({
-      introspect: true,
-      schema: '../../dev-test/test-schema/schema-object.js',
-      out
-    });
-    expect(result.length).toBe(1);
-    expect(result[0].filename).toEqual(out);
-    expect(result[0].content).toBeDefined();
-  });
 });
