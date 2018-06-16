@@ -3,6 +3,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as mkdirp from 'mkdirp';
 import * as validUrl from 'valid-url';
+import { GraphQLSchema } from 'graphql';
 
 import { introspectionFromFile } from './loaders/introspection-from-file';
 import { introspectionFromUrl } from './loaders/introspection-from-url';
@@ -40,7 +41,7 @@ export interface CLIOptions {
   skipDocuments?: any;
   config?: string;
   require?: string[];
-  overwrite: boolean;
+  overwrite?: boolean;
 }
 
 interface GqlGenConfig {
@@ -148,7 +149,7 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
   const generateSchema: boolean = !options.skipSchema;
   const generateDocuments: boolean = !options.skipDocuments;
   const modulesToRequire: string[] = options.require || [];
-  let schemaExportPromise;
+  let schemaExportPromise: Promise<GraphQLSchema>;
 
   modulesToRequire.forEach(mod => require(mod));
 

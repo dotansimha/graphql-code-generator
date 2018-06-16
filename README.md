@@ -36,11 +36,12 @@ If you develop a **client-side with TypeScript, Angular and GraphQL**, you can u
 
 ## Available Templates:
 
-| Language                  | Purpose                                                        | Package Name & Docs                                                                      |
-| ------------------------- | -------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| TypeScript                | Generate server-side TypeScript types, and client-side typings | [`graphql-codegen-typescript-template`](./packages/templates/typescript)                 |
-| MongoDB TypeScript Models | Generate server-side TypeScript types, with MongoDB models     | [`graphql-codegen-typescript-mongodb-template`](./packages/templates/typescript-mongodb) |
+| Language                  | Purpose                                                                                 | Package Name & Docs                                                                        |
+| ------------------------- | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| TypeScript                | Generate server-side TypeScript types, and client-side typings                          | [`graphql-codegen-typescript-template`](./packages/templates/typescript)                   |
+| MongoDB TypeScript Models | Generate server-side TypeScript types, with MongoDB models                              | [`graphql-codegen-typescript-mongodb-template`](./packages/templates/typescript-mongodb)   |
 | XSD                       | Generate XSD file                                              | [`graphql-xsd`](https://www.npmjs.com/package/graphql-xsd)                               |
+| Introspection             | Generate Introspection file                                                             | [`graphql-codegen-introspection-template`](./packages/templates/introspection)             |
 
 If you are looking for the **Flow** / **Swift** generators, please note that we will implement it soon again, but you can use `0.5.5` from NPM.
 

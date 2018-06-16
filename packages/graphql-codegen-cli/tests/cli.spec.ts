@@ -40,8 +40,6 @@ describe('executeWithOptions', () => {
 
   it('execute the correct results when using schema export as object', async () => {
     const result = await executeWithOptions({
-      // export: '../../dev-test/githunt/schema.js',
-      // template: 'ts'
       export: '../../dev-test/test-schema/schema-object.js',
       template: 'ts'
     });
