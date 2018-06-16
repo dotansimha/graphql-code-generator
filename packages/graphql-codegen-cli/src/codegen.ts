@@ -42,6 +42,7 @@ export interface CLIOptions {
   config?: string;
   require?: string[];
   overwrite?: boolean;
+  watch?: boolean;
 }
 
 interface GqlGenConfig {
@@ -93,6 +94,7 @@ export const initCLI = (args): CLIOptions => {
     .option('-o, --out <path>', 'Output file(s) path', String, './')
     .option('-r, --require [require]', 'module to preload (option can be repeated)', collect, [])
     .option('-ow, --no-overwrite', 'Skip file writing if the output file(s) already exists in path')
+    .option('-w, --watch', 'Watch for changes and execute generation automatically')
     .arguments('<options> [documents...]')
     .parse(args);
 
@@ -195,10 +197,6 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
     }
   });
 
-  const transformedDocuments = transformDocument(
-    graphQlSchema,
-    loadDocumentsSources(await documentsFromGlobs(documents))
-  );
   let templateConfig: GeneratorConfig | CustomProcessingFunction | null = null;
 
   if (template && template !== '') {
@@ -308,10 +306,18 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
     }
   }
 
-  return (await compileTemplate(templateConfig, context, [transformedDocuments], {
-    generateSchema,
-    generateDocuments
-  })).map((item: FileOutput) => {
+  const executeGeneration = async () => {
+    const transformedDocuments = transformDocument(
+      graphQlSchema,
+      loadDocumentsSources(await documentsFromGlobs(documents))
+    );
+    return compileTemplate(templateConfig, context, [transformedDocuments], {
+      generateSchema,
+      generateDocuments
+    });
+  };
+
+  const normalizeOutput = (item: FileOutput) => {
     let resultName = item.filename;
 
     if (!path.isAbsolute(resultName)) {
@@ -341,5 +347,7 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
       content: item.content,
       filename: resultName
     };
-  });
+  };
+
+  return (await executeGeneration()).map(normalizeOutput);
 };
