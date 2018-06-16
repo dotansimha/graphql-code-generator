@@ -39,8 +39,8 @@ If you develop a **client-side with TypeScript, Angular and GraphQL**, you can u
 | Language                  | Purpose                                                                                 | Package Name & Docs                                                                        |
 | ------------------------- | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
 | TypeScript                | Generate server-side TypeScript types, and client-side typings                          | [`graphql-codegen-typescript-template`](./packages/templates/typescript)                   |
-| TypeScript                | Generate server-side TypeScript types, and client-side typings - file per type/document | [`graphql-codegen-typescript-template-multiple`](./packages/templates/typescript-multiple) |
 | MongoDB TypeScript Models | Generate server-side TypeScript types, with MongoDB models                              | [`graphql-codegen-typescript-mongodb-template`](./packages/templates/typescript-mongodb)   |
+| XSD                       | Generate XSD file                                              | [`graphql-xsd`](https://www.npmjs.com/package/graphql-xsd)                               |
 | Introspection             | Generate Introspection file                                                             | [`graphql-codegen-introspection-template`](./packages/templates/introspection)             |
 
 If you are looking for the **Flow** / **Swift** generators, please note that we will implement it soon again, but you can use `0.5.5` from NPM.
@@ -181,7 +181,7 @@ If you are using TypeScript and would like to use your GraphQL Schema from a loc
 For example, install `ts-node` from NPM and use it this way:
 
 ```
-gql-gen --require ts-node/register --template typescript --export ./src/my-schema.ts --out ./src/models/
+gql-gen --require ts-node/register --template typescript --schema ./src/my-schema.ts --out ./src/models/
 ```
 
 This way, the file `./src/my-schema.ts` is loaded directly as TypeScript file, and you don't need to compile it to plain JavaScript before using it.

@@ -626,6 +626,74 @@ describe('TypeScript template', () => {
             }
           }`);
     });
+    it('Should compile anonymous Query correctly', async () => {
+      const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
+      const context = schemaToTemplateContext(schema);
+
+      const documents = gql`
+        query {
+          feed {
+            id
+            commentCount
+            repository {
+              full_name
+              html_url
+              owner {
+                avatar_url
+              }
+            }
+          }
+        }
+      `;
+
+      const transformedDocument = transformDocument(schema, documents);
+      const compiled = await compileTemplate(config, context, [transformedDocument], { generateSchema: false });
+
+      expect(compiled[0].content).toBeSimilarStringTo(`
+          /* tslint:disable */
+          /** A list of options for the sort order of the feed */
+          export enum FeedType {
+            HOT = "HOT",
+            NEW = "NEW",
+            TOP = "TOP",
+          }
+          
+          /** The type of vote to record, when submitting a vote */
+          export enum VoteType {
+            UP = "UP",
+            DOWN = "DOWN",
+            CANCEL = "CANCEL",
+          }
+          
+          export namespace AnonymousQuery_1 {
+            export type Variables = {
+            }
+          
+            export type Query = {
+              __typename?: "Query";
+              feed?: (Feed | null)[] | null;
+            }
+          
+            export type Feed = {
+              __typename?: "Entry";
+              id: number; 
+              commentCount: number; 
+              repository: Repository; 
+            }
+          
+            export type Repository = {
+              __typename?: "Repository";
+              full_name: string; 
+              html_url: string; 
+              owner?: Owner | null; 
+            }
+          
+            export type Owner = {
+              __typename?: "User";
+              avatar_url: string; 
+            }
+          }`);
+    });
 
     it('Should compile simple Query with Fragment spread correctly', async () => {
       const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));

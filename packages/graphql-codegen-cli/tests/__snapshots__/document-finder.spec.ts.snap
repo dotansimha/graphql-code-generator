@@ -1,5 +1,19 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`extractDocumentStringFromCodeFile JS file with query shorthand syntax 1`] = `
+"{
+    books {
+      isbn
+      title
+      description
+      rating
+      thumbnails {
+        url
+      }
+    }
+  }"
+`;
+
 exports[`extractDocumentStringFromCodeFile file with commented code 1`] = `
 "query myQuery2 {
     data {
