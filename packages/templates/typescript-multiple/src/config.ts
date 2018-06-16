@@ -36,5 +36,7 @@ export const config: GeneratorConfig = {
     convertedType: getType,
     getOptionals
   },
-  filesExtension: 'ts'
+  filesExtension: 'ts',
+  deprecationNote:
+    'GraphQL Codegen template for multiple TypeScript files is deprecated. for more info: https://github.com/dotansimha/graphql-code-generator/issues/307'
 };

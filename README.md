@@ -7,6 +7,7 @@
 
 [renovate-badge]: https://img.shields.io/badge/renovate-app-blue.svg
 [renovate-app]: https://renovateapp.com/
+
 <p align="center">
     <img src="https://github.com/dotansimha/graphql-code-generator/blob/master/logo.png?raw=true" />
 </p>
@@ -35,11 +36,11 @@ If you develop a **client-side with TypeScript, Angular and GraphQL**, you can u
 
 ## Available Templates:
 
-| Language                  | Purpose                                                                                 | Package Name & Docs                                                                        |
-| ------------------------- | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| TypeScript                | Generate server-side TypeScript types, and client-side typings                          | [`graphql-codegen-typescript-template`](./packages/templates/typescript)                   |
-| TypeScript                | Generate server-side TypeScript types, and client-side typings - file per type/document | [`graphql-codegen-typescript-template-multiple`](./packages/templates/typescript-multiple) |
-| MongoDB TypeScript Models | Generate server-side TypeScript types, with MongoDB models                              | [`graphql-codegen-typescript-mongodb-template`](./packages/templates/typescript-mongodb)   |
+| Language                  | Purpose                                                        | Package Name & Docs                                                                      |
+| ------------------------- | -------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| TypeScript                | Generate server-side TypeScript types, and client-side typings | [`graphql-codegen-typescript-template`](./packages/templates/typescript)                 |
+| MongoDB TypeScript Models | Generate server-side TypeScript types, with MongoDB models     | [`graphql-codegen-typescript-mongodb-template`](./packages/templates/typescript-mongodb) |
+| XSD                       | Generate XSD file                                              | [`graphql-xsd`](https://www.npmjs.com/package/graphql-xsd)                               |
 
 If you are looking for the **Flow** / **Swift** generators, please note that we will implement it soon again, but you can use `0.5.5` from NPM.
 
@@ -71,15 +72,15 @@ CLI usage is as follow:
 
     $ gql-gen [options] [documents ...]
 
-* With local introspection JSON file, generate TypeScript types:
+- With local introspection JSON file, generate TypeScript types:
 
         $ gql-gen --schema mySchema.json --template graphql-codegen-typescript-template --out ./typings/ "./src/**/*.graphql"
 
-* With local introspection JSON file, generate TypeScript files, from GraphQL documents inside code files (`.ts`):
+- With local introspection JSON file, generate TypeScript files, from GraphQL documents inside code files (`.ts`):
 
         $ gql-gen --schema mySchema.json --template graphql-codegen-typescript-template --out ./typings/ "./src/**/*.ts"
 
-* With remote GraphQL endpoint that requires Authorization, generate TypeScript types:
+- With remote GraphQL endpoint that requires Authorization, generate TypeScript types:
 
         $ gql-gen --schema http://localhost:3010/graphql --header "Authorization: MY_KEY" --template graphql-codegen-typescript-template --out ./typings/ "./src/**/*.graphql"
 
@@ -107,9 +108,9 @@ Allowed flags:
 
 This repository includes some examples for generated outputs under `dev-test` directory.
 
-* Star Wars generated TypeScript output is [available here](./dev-test/star-wars/types.d.ts).
-* Star Wars generated TypeScript (multiple files) output is [available here](./dev-test/star-wars/ts-multiple/).
-* GitHunt generated TypeScript output is [available here](./dev-test/githunt/types.d.ts).
+- Star Wars generated TypeScript output is [available here](./dev-test/star-wars/types.d.ts).
+- Star Wars generated TypeScript (multiple files) output is [available here](./dev-test/star-wars/ts-multiple/).
+- GitHunt generated TypeScript output is [available here](./dev-test/githunt/types.d.ts).
 
 ## Integrate with your project
 
@@ -179,7 +180,7 @@ If you are using TypeScript and would like to use your GraphQL Schema from a loc
 For example, install `ts-node` from NPM and use it this way:
 
 ```
-gql-gen --require ts-node/register --template typescript --export ./src/my-schema.ts --out ./src/models/
+gql-gen --require ts-node/register --template typescript --schema ./src/my-schema.ts --out ./src/models/
 ```
 
 This way, the file `./src/my-schema.ts` is loaded directly as TypeScript file, and you don't need to compile it to plain JavaScript before using it.
