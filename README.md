@@ -36,12 +36,12 @@ If you develop a **client-side with TypeScript, Angular and GraphQL**, you can u
 
 ## Available Templates:
 
-| Language                  | Purpose                                                                                 | Package Name & Docs                                                                        |
-| ------------------------- | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| TypeScript                | Generate server-side TypeScript types, and client-side typings                          | [`graphql-codegen-typescript-template`](./packages/templates/typescript)                   |
-| MongoDB TypeScript Models | Generate server-side TypeScript types, with MongoDB models                              | [`graphql-codegen-typescript-mongodb-template`](./packages/templates/typescript-mongodb)   |
+| Language                  | Purpose                                                        | Package Name & Docs                                                                      |
+| ------------------------- | -------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| TypeScript                | Generate server-side TypeScript types, and client-side typings | [`graphql-codegen-typescript-template`](./packages/templates/typescript)                 |
+| MongoDB TypeScript Models | Generate server-side TypeScript types, with MongoDB models     | [`graphql-codegen-typescript-mongodb-template`](./packages/templates/typescript-mongodb) |
 | XSD                       | Generate XSD file                                              | [`graphql-xsd`](https://www.npmjs.com/package/graphql-xsd)                               |
-| Introspection             | Generate Introspection file                                                             | [`graphql-codegen-introspection-template`](./packages/templates/introspection)             |
+| Introspection             | Generate Introspection file                                    | [`graphql-codegen-introspection-template`](./packages/templates/introspection)           |
 
 If you are looking for the **Flow** / **Swift** generators, please note that we will implement it soon again, but you can use `0.5.5` from NPM.
 
@@ -103,6 +103,7 @@ Allowed flags:
 | -m,--skip-schema    | void     | If specified, server side schema won't be generated through the template (enums won't omit)                                                                                                                                                                                              |
 | -c,--skip-documents | void     | If specified, client side documents won't be generated through the template                                                                                                                                                                                                              |
 | --no-overwrite      | void     | If specified, the generator will not override existing files                                                                                                                                                                                                                             |
+| -w --watch          | boolean  | Enables watch mode for regenerating documents from schema                                                                                                                                                                                                                                |
 | documents...        | [String] | Space separated paths of `.graphql` files or code files (glob path is supported) that contains GraphQL documents inside strings, or with either `gql` or `graphql` tag (JavaScript), this field is optional - if no documents specified, only server side schema types will be generated |
 
 ## Output Examples
@@ -166,6 +167,11 @@ The method `generate` accepts two parameters: `(options: CLIOptions, saveToFile:
 ## Custom Templates
 
 To create custom template, or generate a whole project from GraphQL schema, refer to [Custom Templates Documentation](./packages/templates/README.md)
+
+## Watch mode
+
+The watch mode is enabled by passing `--watch` option and works only if you are generating documents.
+To use the watch mode you need to have Watchman installed in your system. To support glob patterns, version 3.7 and above is required.
 
 ## Prettier Support
 
