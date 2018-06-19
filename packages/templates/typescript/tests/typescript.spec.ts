@@ -962,6 +962,30 @@ describe('TypeScript template', () => {
       `);
     });
 
+    it('should make fields optional', async () => {
+      const { context } = compileAndBuildContext(`
+        type Query {
+          fieldTest: String 
+        }
+        
+        schema {
+          query: Query
+        }
+      `);
+
+      const compiled = await compileTemplate(config, context);
+
+      const content = compiled[0].content;
+
+      expect(content).toBeSimilarStringTo(`
+        export namespace QueryResolvers {
+          export interface Resolvers {
+            fieldTest?: FieldTestResolver;
+          }
+        }
+      `);
+    });
+
     it('should provide a generic type of result', async () => {
       const { context } = compileAndBuildContext(`
         type Query {
@@ -988,7 +1012,7 @@ describe('TypeScript template', () => {
       `);
     });
 
-    it('should provide a generic type of arguments', async () => {
+    it('should provide a generic type of arguments and support optionals', async () => {
       const { context } = compileAndBuildContext(`
         type Query {
           fieldTest(last: Int!, sort: String): String
