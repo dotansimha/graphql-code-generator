@@ -1,0 +1,23 @@
+{{ toComment description }}
+export namespace {{ name }}Resolvers {
+  export interface Resolvers {
+    {{#each fields}}
+    {{ name }}{{ getOptionals this }}: {{ getFieldResolverName name }}; {{ toComment description }}
+    {{/each}}
+  }
+
+  {{#each fields}}
+  export type {{ getFieldResolverName name }} = {{ getFieldResolver this }};
+
+  {{~# if hasArguments }}
+
+  export interface {{ toPascalCase name }}Args {
+  {{#each arguments}}
+    {{ name }}{{ getOptionals this }}: {{ convertedType this }}; {{ toComment description }}
+  {{/each}}
+  }
+
+  {{/if}}
+  {{/each}}
+  
+}

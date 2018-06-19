@@ -11,11 +11,15 @@ declare global {
   }
 }
 
+function compareStrings(a: string, b: string): boolean {
+  return a.includes(b);
+}
+
 function toBeSimilarStringTo(received: string, argument: string) {
   const strippedA = oneLine`${received}`.replace(/\s\s+/g, ' ');
   const strippedB = oneLine`${argument}`.replace(/\s\s+/g, ' ');
 
-  if (strippedA === strippedB) {
+  if (compareStrings(strippedA, strippedB)) {
     return {
       message: () =>
         `expected 
