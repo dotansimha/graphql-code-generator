@@ -611,7 +611,7 @@ describe('TypeScript template', () => {
   });
 
   describe('Operations', () => {
-    it.skip('Should compile simple Query correctly', async () => {
+    it('Should compile simple Query correctly', async () => {
       const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
       const context = schemaToTemplateContext(schema);
 
@@ -685,7 +685,7 @@ describe('TypeScript template', () => {
         }
       `);
     });
-    it.skip('Should compile anonymous Query correctly', async () => {
+    it('Should compile anonymous Query correctly', async () => {
       const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
       const context = schemaToTemplateContext(schema);
 
@@ -760,7 +760,7 @@ describe('TypeScript template', () => {
       `);
     });
 
-    it.skip('Should compile simple Query with Fragment spread correctly', async () => {
+    it('Should compile simple Query with Fragment spread correctly', async () => {
       const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
       const context = schemaToTemplateContext(schema);
 
@@ -846,7 +846,7 @@ describe('TypeScript template', () => {
       `);
     });
 
-    it.skip('Should compile simple Query with inline Fragment', async () => {
+    it('Should compile simple Query with inline Fragment', async () => {
       const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
       const context = schemaToTemplateContext(schema);
 
@@ -934,7 +934,7 @@ describe('TypeScript template', () => {
     });
   });
 
-  describe('resolver types', () => {
+  describe('Resolvers', () => {
     it('should contain the Resolver type', async () => {
       const { context } = compileAndBuildContext(`
         type Query {
@@ -946,15 +946,7 @@ describe('TypeScript template', () => {
         }
       `);
 
-      const compiled = await compileTemplate(
-        {
-          ...config,
-          config: {
-            avoidOptionals: true
-          }
-        },
-        context
-      );
+      const compiled = await compileTemplate(config, context);
 
       const content = compiled[0].content;
 
@@ -981,22 +973,14 @@ describe('TypeScript template', () => {
         }
       `);
 
-      const compiled = await compileTemplate(
-        {
-          ...config,
-          config: {
-            avoidOptionals: true
-          }
-        },
-        context
-      );
+      const compiled = await compileTemplate(config, context);
 
       const content = compiled[0].content;
 
       expect(content).toBeSimilarStringTo(`
         export namespace QueryResolvers {
           export interface Resolvers {
-            fieldTest: FieldTestResolver;
+            fieldTest?: FieldTestResolver;
           }
     
           export type FieldTestResolver = Resolver<string | null>;
@@ -1015,29 +999,21 @@ describe('TypeScript template', () => {
         }
       `);
 
-      const compiled = await compileTemplate(
-        {
-          ...config,
-          config: {
-            avoidOptionals: true
-          }
-        },
-        context
-      );
+      const compiled = await compileTemplate(config, context);
 
       const content = compiled[0].content;
 
       expect(content).toBeSimilarStringTo(`
         export namespace QueryResolvers {
           export interface Resolvers {
-            fieldTest: FieldTestResolver;
+            fieldTest?: FieldTestResolver;
           }
     
           export type FieldTestResolver = Resolver<string | null, FieldTestArgs>;
           
           export interface FieldTestArgs {
             last: number;
-            sort: string | null;
+            sort?: string | null;
           }
         }
       `);
