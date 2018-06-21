@@ -982,8 +982,7 @@ describe('TypeScript template', () => {
           export interface Resolvers {
             fieldTest?: FieldTestResolver;
           }
-        }
-      `);
+        `);
     });
 
     it('should provide a generic type of result', async () => {
@@ -1040,6 +1039,47 @@ describe('TypeScript template', () => {
             sort?: string | null;
           }
         }
+      `);
+    });
+
+    it('should handle resolvers flag, true by default', async () => {
+      const { context } = compileAndBuildContext(`
+        type Query {
+          fieldTest: String 
+        }
+        
+        schema {
+          query: Query
+        }
+      `);
+
+      const compiled = await compileTemplate(
+        {
+          ...config,
+          config: {
+            resolvers: false
+          }
+        },
+        context
+      );
+
+      const content = compiled[0].content;
+
+      expect(content).not.toBeSimilarStringTo(`
+        import { GraphQLResolveInfo } from 'graphql';
+      `);
+
+      expect(content).not.toBeSimilarStringTo(`
+        type Resolver<Result, Args = any> = (
+          parent: any,
+          args: Args,
+          context: any,
+          info: GraphQLResolveInfo
+        ) => Promise<Result> | Result;
+      `);
+
+      expect(content).not.toBeSimilarStringTo(`
+        export namespace QueryResolvers {
       `);
     });
   });
