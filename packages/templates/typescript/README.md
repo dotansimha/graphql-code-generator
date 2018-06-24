@@ -21,3 +21,7 @@ Will generate the declared enums as TypeScript `type` instead of `enums`. This i
 ### `immutableTypes` (or `CODEGEN_IMMUTABLE_TYPES`, defualt value: `false`)
 
 This will cause the codegen to output `readonly` properties and `ReadonlyArray`.
+
+### `resolvers` (or `CODEGEN_RESOLVERS`, default value: `true`)
+
+This will cause the codegen to output types for resolvers.

@@ -1,3 +1,14 @@
+{{#ifCond @root.config.resolvers "!==" false}}
+import { GraphQLResolveInfo } from 'graphql';
+
+type Resolver<Result, Args = any> = (
+  parent: any,
+  args: Args,
+  context: any,
+  info: GraphQLResolveInfo
+) => Promise<Result> | Result;
+{{/ifCond}}
+
 {{#each scalars}}
 
 {{ toComment description }}
@@ -11,6 +22,12 @@ export type {{ name }} = any;
   {{~> type }}
 
 {{/each}}
+{{#ifCond @root.config.resolvers "!==" false }}
+{{#each types}}
+  {{~> resolver }}  
+
+{{/each}}
+{{/ifCond}}
 {{#each inputTypes}}
   {{~> type }}
 

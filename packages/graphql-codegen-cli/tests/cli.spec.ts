@@ -35,7 +35,7 @@ describe('executeWithOptions', () => {
       config: '../../dev-test/config/gql-gen.json'
     });
 
-    expect(result[0].content).toContain('Generated in');
+    expect(result[0].content).toMatch('Generated in');
   });
 
   it('execute the correct results when using schema export as object', async () => {
@@ -61,8 +61,7 @@ describe('executeWithOptions', () => {
       skipSchema: true
     });
 
-    expect(result[0].content).toBe(`/* tslint:disable */
-`);
+    expect(result[0].content).toMatch(/^\/\* tslint:disable \*\//);
   });
 
   it('execute the correct results when using skipDocuments', async () => {
@@ -74,7 +73,7 @@ describe('executeWithOptions', () => {
       skipSchema: true
     });
 
-    expect(result[0].content).not.toContain('HeroDetails');
+    expect(result[0].content).not.toMatch('HeroDetails');
   });
 
   it('execute the correct results when using schema export as ast', async () => {
