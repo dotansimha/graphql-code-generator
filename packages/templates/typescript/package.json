@@ -1,6 +1,6 @@
 {
   "name": "graphql-codegen-typescript-template",
-  "version": "0.9.3",
+  "version": "0.9.4",
   "description": "",
   "license": "MIT",
   "scripts": {
@@ -11,10 +11,10 @@
   },
   "devDependencies": {
     "@types/common-tags": "1.4.0",
-    "codegen-handlebars-templates-scripts": "0.9.3",
+    "codegen-handlebars-templates-scripts": "0.9.4",
     "common-tags": "1.8.0",
-    "graphql-codegen-compiler": "0.9.3",
-    "graphql-codegen-core": "0.9.3"
+    "graphql-codegen-compiler": "0.9.4",
+    "graphql-codegen-core": "0.9.4"
   },
   "main": "./dist/index.js",
   "typings": "dist/index.d.ts",
