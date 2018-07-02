@@ -6,6 +6,7 @@ import {
   schemaToTemplateContext
 } from 'graphql-codegen-core';
 import { compileTemplate } from 'graphql-codegen-compiler';
+import { introspectionFromSchema } from 'graphql';
 import config from '../dist';
 
 describe('Introspection template', () => {
@@ -37,6 +38,8 @@ describe('Introspection template', () => {
       context
     );
 
-    expect(JSON.stringify(schema)).toEqual(compiled[0].content);
+    const introspection = JSON.stringify(introspectionFromSchema(schema, { descriptions: true }));
+
+    expect({ data: introspection }).toEqual(compiled[0].content);
   });
 });
