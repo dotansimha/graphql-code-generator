@@ -13,6 +13,7 @@
     "@types/common-tags": "1.4.0",
     "codegen-templates-scripts": "0.10.0",
     "common-tags": "1.8.0",
+    "graphql": "0.13.2",
     "graphql-codegen-compiler": "0.10.0",
     "graphql-codegen-core": "0.10.0"
   },
