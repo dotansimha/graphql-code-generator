@@ -1,6 +1,6 @@
 import { EInputType, GeneratorConfig } from 'graphql-codegen-core';
 import * as index from './template.handlebars';
-import { toJSON } from './helpers/to-json';
+import { toIntrospection } from './helpers/to-introspection';
 
 export const config: GeneratorConfig = {
   inputType: EInputType.SINGLE_FILE,
@@ -16,7 +16,7 @@ export const config: GeneratorConfig = {
     ID: 'string'
   },
   customHelpers: {
-    toJSON
+    toIntrospection
   },
   outFile: 'graphql.schema.json'
 };
