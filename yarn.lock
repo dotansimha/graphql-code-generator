@@ -62,9 +62,9 @@
   version "0.12.6"
   resolved "https://registry.yarnpkg.com/@types/graphql/-/graphql-0.12.6.tgz#3d619198585fcabe5f4e1adfb5cf5f3388c66c13"
 
-"@types/graphql@0.13.1":
-  version "0.13.1"
-  resolved "https://registry.yarnpkg.com/@types/graphql/-/graphql-0.13.1.tgz#7d39750355c9ecb921816d6f76c080405b5f6bea"
+"@types/graphql@0.13.2":
+  version "0.13.2"
+  resolved "https://registry.yarnpkg.com/@types/graphql/-/graphql-0.13.2.tgz#cb7d01f7c543541514eb3e192576cc04d305c363"
 
 "@types/handlebars@4.0.38":
   version "4.0.38"
