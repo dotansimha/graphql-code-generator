@@ -2524,6 +2524,10 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.2, graceful-fs@^4.1.6:
   version "4.1.11"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.11.tgz#0e8bdfe4d1ddb8854d64e04ea7c00e2a026e5658"
 
+graphql-codegen-typescript-template-multiple@0.9.4:
+  version "0.9.4"
+  resolved "https://registry.yarnpkg.com/graphql-codegen-typescript-template-multiple/-/graphql-codegen-typescript-template-multiple-0.9.4.tgz#d0a6faa18547b726c3246b8fbca256abeb6c68ec"
+
 graphql-tag@2.9.2:
   version "2.9.2"
   resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.9.2.tgz#2f60a5a981375f430bf1e6e95992427dc18af686"
