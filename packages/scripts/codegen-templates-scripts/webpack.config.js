@@ -10,7 +10,7 @@ module.exports = {
   },
   mode: 'production',
   target: 'node',
-  externals: [nodeExternals()],
+  externals: [nodeExternals(), 'graphql'],
   resolve: {
     mainFields: ['browser', 'main', 'module'],
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
