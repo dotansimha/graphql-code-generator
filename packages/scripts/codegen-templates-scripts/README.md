@@ -2,11 +2,11 @@
 
 Create GraphQL Codegen templates easily with this Handlebars.
 
-This package exposes a CLI util called `codegen-handlebars-templates-scripts` which allow you to easily create a GraphQL Codegen Template project, and built it without dealing with external utils.
+This package exposes a CLI util called `codegen-templates-scripts` which allow you to easily create a GraphQL Codegen Template project, and built it without dealing with external utils.
 
 To get started with this package, install it globally, or as local dependency inside an existing directory:
 
-    $ yarn global add codegen-handlebars-templates-scripts
+    $ yarn global add codegen-templates-scripts
 
 Then, to start a new project, create a directory for your template project:
 
@@ -15,7 +15,7 @@ Then, to start a new project, create a directory for your template project:
 
 Now, run the following command inside your directory:
 
-    yarn codegen-handlebars-templates-scripts init
+    yarn codegen-templates-scripts init
 
 > If some files such as `package.json` are already exists in this dir, please use `--overwrite` to make sure it changes it as well.
 
@@ -71,18 +71,18 @@ You also need to specify the `filesExtension` for the generated files.
 
 There are special context types for templates, and each type of templates will compile with a different context:
 
-* `index`: use with `SINGLE_FILE` to declare the main entry point of the generated file, compiled with a merged object, containing all [`SchemaTemplateContext`](../../graphql-codegen-core/src/types.ts#L78-L94) and [`Document`](../../graphql-codegen-core/src/types.ts#L170-L175) fields.
-* `type`: use with `MULTIPLE_FILES` to declare that this template belongs to GraphQL schema `type`, this template will compile with _each_ [type](../../graphql-codegen-core/src/types.ts#L38-L46) in your schema.
-* `inputType`: use with `MULTIPLE_FILES` to declare that this template belongs to GraphQL schema `input`, this template will compile with _each_ [input type](../../graphql-codegen-core/src/types.ts#L38-L46) in your schema.
-* `union`: use with `MULTIPLE_FILES` to declare that this template belongs to GraphQL schema `union`, this template will compile with _each_ [union](../../graphql-codegen-core/src/types.ts#L65-L69) in your schema.
-* `scalar`: use with `MULTIPLE_FILES` to declare that this template belongs to GraphQL schema `scalar`, this template will compile with _each_ [scalar](../../graphql-codegen-core/src/types.ts#L48-L51) in your schema.
-* `enum`: use with `MULTIPLE_FILES` to declare that this template belongs to GraphQL schema `enum`, this template will compile with _each_ [enum](../../graphql-codegen-core/src/types.ts#L53-L57) in your schema.
-* `interface`: use with `MULTIPLE_FILES` to declare that this template belongs to GraphQL schema `interface`, this template will compile with _each_ [interface](../../graphql-codegen-core/src/types.ts#L71-L76) in your schema.
-* `operation`: use with `MULTIPLE_FILES` to declare that this template belongs to GraphQL operation (`query`/`mutation`/`subsription`), this template will compile with [`Operation` context](../../graphql-codegen-core/src/types.ts#L151-L161).
-* `fragment`: use with `MULTIPLE_FILES` to declare that this template belongs to GraphQL `fragment`, this template will compile with [`Fragment` context](../../graphql-codegen-core/src/types.ts#L144-L149).
-* `schema`: use with `MULTIPLE_FILES` to compile with [`SchemaTemplateContext`](../../graphql-codegen-core/src/types.ts#L78-L94).
-* `documents`: use with `MULTIPLE_FILES` to compile with all operations, the context will be [`Document`](../../graphql-codegen-core/src/types.ts#L170-L175).
-* `all`: same as to `index`.
+- `index`: use with `SINGLE_FILE` to declare the main entry point of the generated file, compiled with a merged object, containing all [`SchemaTemplateContext`](../../graphql-codegen-core/src/types.ts#L78-L94) and [`Document`](../../graphql-codegen-core/src/types.ts#L170-L175) fields.
+- `type`: use with `MULTIPLE_FILES` to declare that this template belongs to GraphQL schema `type`, this template will compile with _each_ [type](../../graphql-codegen-core/src/types.ts#L38-L46) in your schema.
+- `inputType`: use with `MULTIPLE_FILES` to declare that this template belongs to GraphQL schema `input`, this template will compile with _each_ [input type](../../graphql-codegen-core/src/types.ts#L38-L46) in your schema.
+- `union`: use with `MULTIPLE_FILES` to declare that this template belongs to GraphQL schema `union`, this template will compile with _each_ [union](../../graphql-codegen-core/src/types.ts#L65-L69) in your schema.
+- `scalar`: use with `MULTIPLE_FILES` to declare that this template belongs to GraphQL schema `scalar`, this template will compile with _each_ [scalar](../../graphql-codegen-core/src/types.ts#L48-L51) in your schema.
+- `enum`: use with `MULTIPLE_FILES` to declare that this template belongs to GraphQL schema `enum`, this template will compile with _each_ [enum](../../graphql-codegen-core/src/types.ts#L53-L57) in your schema.
+- `interface`: use with `MULTIPLE_FILES` to declare that this template belongs to GraphQL schema `interface`, this template will compile with _each_ [interface](../../graphql-codegen-core/src/types.ts#L71-L76) in your schema.
+- `operation`: use with `MULTIPLE_FILES` to declare that this template belongs to GraphQL operation (`query`/`mutation`/`subsription`), this template will compile with [`Operation` context](../../graphql-codegen-core/src/types.ts#L151-L161).
+- `fragment`: use with `MULTIPLE_FILES` to declare that this template belongs to GraphQL `fragment`, this template will compile with [`Fragment` context](../../graphql-codegen-core/src/types.ts#L144-L149).
+- `schema`: use with `MULTIPLE_FILES` to compile with [`SchemaTemplateContext`](../../graphql-codegen-core/src/types.ts#L78-L94).
+- `documents`: use with `MULTIPLE_FILES` to compile with all operations, the context will be [`Document`](../../graphql-codegen-core/src/types.ts#L170-L175).
+- `all`: same as to `index`.
 
 Also, all templates specified under `templates` will be loaded as Handlebars template partials, so you can use it any time inside other templates, for example, the following templates definitions:
 

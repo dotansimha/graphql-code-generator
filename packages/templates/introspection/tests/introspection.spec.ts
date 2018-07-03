@@ -1,5 +1,4 @@
 import {
-  GeneratorConfig,
   GraphQLSchema,
   makeExecutableSchema,
   SchemaTemplateContext,
@@ -7,7 +6,7 @@ import {
 } from 'graphql-codegen-core';
 import { compileTemplate } from 'graphql-codegen-compiler';
 import { introspectionFromSchema } from 'graphql';
-import config from '../dist';
+import createIntrospection from '../src';
 
 describe('Introspection template', () => {
   const compileAndBuildContext = (typeDefs: string): { context: SchemaTemplateContext; schema: GraphQLSchema } => {
@@ -30,16 +29,10 @@ describe('Introspection template', () => {
       }
     `);
 
-    const compiled = await compileTemplate(
-      {
-        ...config,
-        config
-      } as GeneratorConfig,
-      context
-    );
+    const compiled = await compileTemplate(createIntrospection, context);
 
     const introspection = JSON.stringify(introspectionFromSchema(schema, { descriptions: true }));
 
-    expect({ data: introspection }).toEqual(compiled[0].content);
+    expect(introspection).toEqual(compiled[0].content);
   });
 });

@@ -5,9 +5,9 @@
   "license": "MIT",
   "scripts": {
     "prepublishOnly": "yarn build",
-    "build": "codegen-handlebars-templates-scripts build",
+    "build": "codegen-templates-scripts build",
     "pretest": "yarn build",
-    "test": "codegen-handlebars-templates-scripts test"
+    "test": "codegen-templates-scripts test"
   },
   "devDependencies": {},
   "main": "./dist/index.js",
@@ -25,6 +25,13 @@
       "^.+\\.tsx?$": "ts-jest"
     },
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
-    "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json", "node"]
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
   }
 }

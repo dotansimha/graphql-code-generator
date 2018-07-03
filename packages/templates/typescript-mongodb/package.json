@@ -5,12 +5,11 @@
   "license": "MIT",
   "scripts": {
     "prepublishOnly": "yarn build",
-    "build": "codegen-handlebars-templates-scripts build",
-    "pretest": "yarn build",
-    "test": "codegen-handlebars-templates-scripts test"
+    "build": "codegen-templates-scripts build",
+    "test": "echo ''"
   },
   "devDependencies": {
-    "codegen-handlebars-templates-scripts": "0.9.4",
+    "codegen-templates-scripts": "0.9.4",
     "graphql-codegen-core": "0.9.4"
   },
   "main": "./dist/index.js",
