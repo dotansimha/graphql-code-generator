@@ -1,5 +1,5 @@
 {
-  "name": "codegen-handlebars-templates-scripts",
+  "name": "codegen-templates-scripts",
   "version": "0.9.4",
   "main": "cli.js",
   "license": "MIT",
@@ -17,6 +17,6 @@
     "webpack-node-externals": "1.7.2"
   },
   "bin": {
-    "codegen-handlebars-templates-scripts": "./cli/codegen-handlebars-templates-scripts.js"
+    "codegen-templates-scripts": "./cli/codegen-templates-scripts.js"
   }
 }

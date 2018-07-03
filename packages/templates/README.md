@@ -4,7 +4,7 @@ If you with to write a custom template, you can either use one of the following 
 
 ## Write you own template package
 
-To write you own template package using Handlebars, you can use [`codegen-handlebars-templates-scripts`](../scripts/handlebars-templates-scripts/README.md).
+To write you own template package using Handlebars, you can use [`codegen-templates-scripts`](../scripts/handlebars-templates-scripts/README.md).
 
 ## Write your own output processor
 
@@ -29,9 +29,9 @@ Your function need to match the following signature:
 (templateContext: SchemaTemplateContext, mergedDocuments: Document, settings: any) => FileOutput[] | Promise<FileOutput[]>;
 ```
 
-* `templateContext` is the GraphQL Codegen context object - which is your `GraphQLSchema` in an easy-to-use structure ([see `types.ts` file for more info](../../packages/graphql-codegen-core/src/types.ts#L78))
-* `mergedDocuments` is all the GraphQL documents (query/mutation/subscription/fragment) that the codegen could find
-* `settings` is an object of settings - these are matching to the cli options.
+- `templateContext` is the GraphQL Codegen context object - which is your `GraphQLSchema` in an easy-to-use structure ([see `types.ts` file for more info](../../packages/graphql-codegen-core/src/types.ts#L78))
+- `mergedDocuments` is all the GraphQL documents (query/mutation/subscription/fragment) that the codegen could find
+- `settings` is an object of settings - these are matching to the cli options.
 
 This is an example for a custom function written in pure JS:
 

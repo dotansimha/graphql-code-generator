@@ -30,13 +30,22 @@ webpack(webpackConfig, (err, stats) => {
     return;
   }
 
-  const info = stats.toJson();
+  const info = stats.toString({
+    colors: true,
+    hash: false,
+    chunks: false,
+    assets: false,
+    children: false,
+    version: false,
+    timings: false,
+    modules: false
+  });
 
-  if (stats.hasErrors()) {
-    console.error(info.errors);
+  if (info) {
+    console.log(info);
   }
 
-  if (stats.hasWarnings()) {
-    console.warn(info.warnings);
+  if (stats.hasErrors()) {
+    process.exit(1);
   }
 });

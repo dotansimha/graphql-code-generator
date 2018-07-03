@@ -1,12 +1,12 @@
 import {
-  GeneratorConfig,
   GraphQLSchema,
   makeExecutableSchema,
   SchemaTemplateContext,
   schemaToTemplateContext
 } from 'graphql-codegen-core';
 import { compileTemplate } from 'graphql-codegen-compiler';
-import config from '../dist';
+import { introspectionFromSchema } from 'graphql';
+import createIntrospection from '../src';
 
 describe('Introspection template', () => {
   const compileAndBuildContext = (typeDefs: string): { context: SchemaTemplateContext; schema: GraphQLSchema } => {
@@ -29,14 +29,10 @@ describe('Introspection template', () => {
       }
     `);
 
-    const compiled = await compileTemplate(
-      {
-        ...config,
-        config
-      } as GeneratorConfig,
-      context
-    );
+    const compiled = await compileTemplate(createIntrospection, context);
 
-    expect(JSON.stringify(schema)).toEqual(compiled[0].content);
+    const introspection = JSON.stringify(introspectionFromSchema(schema, { descriptions: true }));
+
+    expect(introspection).toEqual(compiled[0].content);
   });
 });

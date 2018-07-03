@@ -1,6 +1,5 @@
 {
   "name": "graphql-code-generator",
-  "version": "0.8.0",
   "private": true,
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "author": "dotansimha <dotansimha@gmail.com>",
@@ -18,7 +17,11 @@
     "release:canary": "lerna publish --force-publish=\"*\" --canary --exact",
     "generate:examples": "./dev-test/generate-all.sh"
   },
-  "workspaces": ["packages/*", "packages/scripts/*", "packages/templates/*"],
+  "workspaces": [
+    "packages/*",
+    "packages/scripts/*",
+    "packages/templates/*"
+  ],
   "dependencies": {
     "lerna": "2.11.0"
   },
@@ -48,8 +51,14 @@
     "webpack-node-externals": "1.7.2"
   },
   "lint-staged": {
-    "*.{ts,tsx}": ["tslint --fix", "git add"],
-    "*.{js,json,css,md,ts,tsx}": ["prettier --write", "git add"]
+    "*.{ts,tsx}": [
+      "tslint --fix",
+      "git add"
+    ],
+    "*.{js,json,css,md,ts,tsx}": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "prettier": {
     "printWidth": 120,

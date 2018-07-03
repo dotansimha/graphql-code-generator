@@ -8,4 +8,4 @@ program.parse(process.argv);
 
 const projectDir = process.cwd();
 
-jest.runCLI({ projects: [projectDir] }, [projectDir]);
+jest.run([], projectDir);
