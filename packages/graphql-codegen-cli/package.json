@@ -1,6 +1,6 @@
 {
   "name": "graphql-code-generator",
-  "version": "0.9.4",
+  "version": "0.10.0",
   "license": "MIT",
   "bin": {
     "gql-gen": "dist/cli.js"
@@ -76,15 +76,15 @@
     "babylon": "7.0.0-beta.47",
     "commander": "2.16.0",
     "glob": "7.1.2",
-    "graphql-codegen-compiler": "0.9.4",
-    "graphql-codegen-core": "0.9.4",
+    "graphql-codegen-compiler": "0.10.0",
+    "graphql-codegen-core": "0.10.0",
     "mkdirp": "0.5.1",
     "prettier": "1.13.7",
     "request": "2.87.0",
     "valid-url": "1.0.9"
   },
   "devDependencies": {
-    "graphql-codegen-typescript-template": "0.9.4",
+    "graphql-codegen-typescript-template": "0.10.0",
     "graphql-codegen-typescript-template-multiple": "0.9.4"
   },
   "main": "./dist/index.js",
