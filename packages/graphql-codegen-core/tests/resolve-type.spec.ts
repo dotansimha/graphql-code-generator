@@ -121,4 +121,54 @@ describe('Resolve Type', function() {
     expect(result.isRequired).toBeTruthy();
     expect(result.isNullableArray).toBeFalsy();
   });
+
+  describe.only('Inner Type Resolve', () => {
+    it('should detect basic type correctly', () => {
+      const type = parseAndBuildSchema(`type A { f: String }`, 'A').getFields()['f'].type;
+      const result = resolveType(type);
+      expect(result.nestedTypeInfo).toEqual({
+        leafType: 'TYPENAME',
+        name: 'String'
+      });
+    });
+
+    it('should detect required type correctly', () => {
+      const type = parseAndBuildSchema(`type A { f: String! }`, 'A').getFields()['f'].type;
+      const result = resolveType(type);
+      expect(result.nestedTypeInfo).toEqual({
+        leafType: 'REQUIRED',
+        inner: {
+          leafType: 'TYPENAME',
+          name: 'String'
+        }
+      });
+    });
+
+    it('should detect array type correctly', () => {
+      const type = parseAndBuildSchema(`type A { f: [String] }`, 'A').getFields()['f'].type;
+      const result = resolveType(type);
+      expect(result.nestedTypeInfo).toEqual({
+        leafType: 'ARRAY',
+        inner: {
+          leafType: 'TYPENAME',
+          name: 'String'
+        }
+      });
+    });
+
+    it('should detect required array type correctly', () => {
+      const type = parseAndBuildSchema(`type A { f: [String]! }`, 'A').getFields()['f'].type;
+      const result = resolveType(type);
+      expect(result.nestedTypeInfo).toEqual({
+        leafType: 'REQUIRED',
+        inner: {
+          leafType: 'ARRAY',
+          inner: {
+            leafType: 'TYPENAME',
+            name: 'String'
+          }
+        }
+      });
+    });
+  });
 });
