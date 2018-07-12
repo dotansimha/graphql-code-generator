@@ -4,12 +4,13 @@ import * as fs from 'fs';
 import * as mkdirp from 'mkdirp';
 import * as validUrl from 'valid-url';
 import { GraphQLSchema } from 'graphql';
+import * as isGlob from 'is-glob';
 
-import { introspectionFromFile } from './loaders/introspection-from-file';
-import { introspectionFromUrl } from './loaders/introspection-from-url';
+import { introspectionFromFile } from './loaders/schema/introspection-from-file';
+import { introspectionFromUrl } from './loaders/schema/introspection-from-url';
 import { schemaFromExport } from './loaders/schema-from-export';
 import { documentsFromGlobs } from './utils/documents-glob';
-import { loadDocumentsSources } from './loaders/document-loader';
+import { loadDocumentsSources } from './loaders/documents/document-loader';
 import { scanForTemplatesInPath } from './loaders/templates-scanner';
 import { ALLOWED_CUSTOM_TEMPLATE_EXT, compileTemplate } from 'graphql-codegen-compiler';
 import {
@@ -157,14 +158,18 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
     if (validUrl.isUri(schema)) {
       schemaExportPromise = introspectionFromUrl(schema, headers).then(introspectionToGraphQLSchema);
     } else if (fs.existsSync(schema)) {
-      const extension = path.extname(schema);
-
-      if (!extension) {
-        cliError('Invalid --schema local path provided, unable to find the file extension!');
-      } else if (extension === '.json') {
-        schemaExportPromise = introspectionFromFile(schema).then(introspectionToGraphQLSchema);
+      if (isGlob(schema)) {
+        // const typeDefsFiles =
       } else {
-        schemaExportPromise = schemaFromExport(schema);
+        const extension = path.extname(schema);
+
+        if (!extension) {
+          cliError('Invalid --schema local path provided, unable to find the file extension!');
+        } else if (extension === '.json') {
+          schemaExportPromise = introspectionFromFile(schema).then(introspectionToGraphQLSchema);
+        } else {
+          schemaExportPromise = schemaFromExport(schema);
+        }
       }
     } else {
       cliError('Invalid --schema provided, please use a path to local file or HTTP endpoint');

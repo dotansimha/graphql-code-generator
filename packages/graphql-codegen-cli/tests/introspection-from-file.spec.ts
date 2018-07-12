@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import { parseBOM } from '../src/loaders/introspection-from-file';
+import { parseBOM } from '../src/loaders/schema/introspection-from-file';
 
 describe('extractDocumentStringFromCodeFile', () => {
   it('file with byte order mask', () => {
