@@ -1,8 +1,9 @@
-import { CLIOptions, executeWithOptions } from './codegen';
+import { executeWithOptions } from './codegen';
 import { prettify } from './utils/prettier';
 import { fileExists } from './utils/file-exists';
 import { FileOutput, debugLog, logger } from 'graphql-codegen-core';
 import * as fs from 'fs';
+import { CLIOptions } from './cli-options';
 
 export function generate(options: CLIOptions, saveToFile = true) {
   return executeWithOptions(options).then((generationResult: FileOutput[]) => {

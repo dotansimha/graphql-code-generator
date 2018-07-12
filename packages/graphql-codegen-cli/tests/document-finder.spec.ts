@@ -1,7 +1,6 @@
 import * as fs from 'fs';
 import { parse } from 'graphql';
 import { Source } from 'graphql-codegen-core';
-
 import { extractDocumentStringFromCodeFile } from '../src/utils/document-finder';
 
 describe('extractDocumentStringFromCodeFile', () => {

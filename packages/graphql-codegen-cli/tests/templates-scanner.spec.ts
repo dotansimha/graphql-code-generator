@@ -1,4 +1,4 @@
-import { scanForTemplatesInPath } from '../src/loaders/templates-scanner';
+import { scanForTemplatesInPath } from '../src/loaders/template/templates-scanner';
 
 describe('scanForTemplatesInPath', () => {
   it('should return the correct files', () => {
