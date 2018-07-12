@@ -36,12 +36,12 @@ If you develop a **client-side with TypeScript, Angular and GraphQL**, you can u
 
 ## Available Templates:
 
-| Language                  | Purpose                                                                                 | Package Name & Docs                                                                        |
-| ------------------------- | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| TypeScript                | Generate server-side TypeScript types, and client-side typings                          | [`graphql-codegen-typescript-template`](./packages/templates/typescript)                   |
-| MongoDB TypeScript Models | Generate server-side TypeScript types, with MongoDB models                              | [`graphql-codegen-typescript-mongodb-template`](./packages/templates/typescript-mongodb)   |
+| Language                  | Purpose                                                        | Package Name & Docs                                                                      |
+| ------------------------- | -------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| TypeScript                | Generate server-side TypeScript types, and client-side typings | [`graphql-codegen-typescript-template`](./packages/templates/typescript)                 |
+| MongoDB TypeScript Models | Generate server-side TypeScript types, with MongoDB models     | [`graphql-codegen-typescript-mongodb-template`](./packages/templates/typescript-mongodb) |
 | XSD                       | Generate XSD file                                              | [`graphql-xsd`](https://www.npmjs.com/package/graphql-xsd)                               |
-| Introspection             | Generate Introspection file                                                             | [`graphql-codegen-introspection-template`](./packages/templates/introspection)             |
+| Introspection             | Generate Introspection file                                    | [`graphql-codegen-introspection-template`](./packages/templates/introspection)           |
 
 If you are looking for the **Flow** / **Swift** generators, please note that we will implement it soon again, but you can use `0.5.5` from NPM.
 
@@ -93,7 +93,7 @@ Allowed flags:
 
 | Flag Name           | Type     | Description                                                                                                                                                                                                                                                                              |
 | ------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| -s,--schema         | String   | Local or remote path to GraphQL schema: Introspection JSON file, GraphQL server endpoint to fetch the introspection from, local file that exports `GraphQLSchema`, JSON object or AST string.                                                                                            |
+| -s,--schema         | String   | Local or remote path to GraphQL schema: Introspection JSON file, GraphQL server endpoint to fetch the introspection from, local file that exports `GraphQLSchema`, JSON object or AST string, or a Glob expression for `.graphql` files (`"./src/**/*.graphql"`)                         |
 | -r,--require        | String   | Path to a `require` extension, [read this](https://gist.github.com/jamestalmage/df922691475cff66c7e6) for more info                                                                                                                                                                      |
 | -h,--header         | String   | Header to add to the introspection HTTP request when using remote endpoint                                                                                                                                                                                                               |
 | -t,--template       | String   | Template name, for example: "typescript" (not required when using `--project`)                                                                                                                                                                                                           |
