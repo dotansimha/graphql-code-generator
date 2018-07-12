@@ -3,7 +3,7 @@ import { executeWithOptions } from '../src/codegen';
 describe('Custom Processor', () => {
   it('should detect custom processor function correctly', async () => {
     const result = await executeWithOptions({
-      file: '../../dev-test/githunt/schema.json',
+      schema: '../../dev-test/githunt/schema.json',
       template: './tests/test-files/processor/valid.js'
     });
 
@@ -17,7 +17,7 @@ describe('Custom Processor', () => {
 
     try {
       await executeWithOptions({
-        file: '../../dev-test/githunt/schema.json',
+        schema: '../../dev-test/githunt/schema.json',
         template: './tests/test-files/processor/not-exists.js'
       });
     } catch (e) {

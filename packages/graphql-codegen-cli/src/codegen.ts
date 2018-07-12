@@ -2,15 +2,11 @@ import * as commander from 'commander';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as mkdirp from 'mkdirp';
-import * as validUrl from 'valid-url';
 import { GraphQLSchema } from 'graphql';
 
-import { introspectionFromFile } from './loaders/introspection-from-file';
-import { introspectionFromUrl } from './loaders/introspection-from-url';
-import { schemaFromExport } from './loaders/schema-from-export';
 import { documentsFromGlobs } from './utils/documents-glob';
-import { loadDocumentsSources } from './loaders/document-loader';
-import { scanForTemplatesInPath } from './loaders/templates-scanner';
+import { loadDocumentsSources } from './loaders/documents/document-loader';
+import { scanForTemplatesInPath } from './loaders/template/templates-scanner';
 import { ALLOWED_CUSTOM_TEMPLATE_EXT, compileTemplate } from 'graphql-codegen-compiler';
 import {
   CustomProcessingFunction,
@@ -18,31 +14,18 @@ import {
   EInputType,
   FileOutput,
   GeneratorConfig,
-  introspectionToGraphQLSchema,
   isGeneratorConfig,
   schemaToTemplateContext,
   transformDocument,
   logger
 } from 'graphql-codegen-core';
+import { IntrospectionFromFileLoader } from './loaders/schema/introspection-from-file';
+import { IntrospectionFromUrlLoader } from './loaders/schema/introspection-from-url';
+import { SchemaFromTypedefs } from './loaders/schema/schema-from-typedefs';
+import { SchemaFromExport } from './loaders/schema/schema-from-export';
+import { CLIOptions } from './cli-options';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-
-export interface CLIOptions {
-  file?: string;
-  url?: string;
-  export?: string;
-  schema?: string;
-  args?: string[];
-  template?: string;
-  project?: string;
-  out?: string;
-  header?: string[];
-  skipSchema?: any;
-  skipDocuments?: any;
-  config?: string;
-  require?: string[];
-  overwrite?: boolean;
-}
 
 interface GqlGenConfig {
   flattenTypes?: boolean;
@@ -66,12 +49,6 @@ function collect(val, memo) {
 export const initCLI = (args): CLIOptions => {
   commander
     .usage('gql-gen [options]')
-    .option('-f, --file <filePath>', 'Parse local GraphQL introspection JSON file')
-    .option('-u, --url <graphql-endpoint>', 'Parse remote GraphQL endpoint as introspection file')
-    .option(
-      '-e, --export <export-file>',
-      'Path to a JavaScript (es5/6) file that exports (as default export) your `GraphQLSchema` object'
-    )
     .option(
       '-s, --schema <path>',
       'Path to GraphQL schema: local JSON file, GraphQL endpoint, local file that exports GraphQLSchema/AST/JSON'
@@ -133,52 +110,38 @@ export const validateCliOptions = (options: CLIOptions) => {
   }
 };
 
+const schemaHandlers = [
+  new IntrospectionFromUrlLoader(),
+  new IntrospectionFromFileLoader(),
+  new SchemaFromTypedefs(),
+  new SchemaFromExport()
+];
+
 export const executeWithOptions = async (options: CLIOptions): Promise<FileOutput[]> => {
   validateCliOptions(options);
 
   const schema: string = options.schema;
-  const file: string = options.file;
-  const url: string = options.url;
-  const fsExport: string = options.export;
   const documents: string[] = options.args || [];
   let template: string = options.template;
   const project: string = options.project;
   const gqlGenConfigFilePath: string = options.config || './gql-gen.json';
   const out: string = options.out || './';
-  const headers: string[] = options.header;
   const generateSchema: boolean = !options.skipSchema;
   const generateDocuments: boolean = !options.skipDocuments;
   const modulesToRequire: string[] = options.require || [];
-  let schemaExportPromise: Promise<GraphQLSchema>;
+  let schemaExportPromise: Promise<GraphQLSchema> | GraphQLSchema = null;
 
   modulesToRequire.forEach(mod => require(mod));
 
-  if (schema) {
-    if (validUrl.isUri(schema)) {
-      schemaExportPromise = introspectionFromUrl(schema, headers).then(introspectionToGraphQLSchema);
-    } else if (fs.existsSync(schema)) {
-      const extension = path.extname(schema);
-
-      if (!extension) {
-        cliError('Invalid --schema local path provided, unable to find the file extension!');
-      } else if (extension === '.json') {
-        schemaExportPromise = introspectionFromFile(schema).then(introspectionToGraphQLSchema);
-      } else {
-        schemaExportPromise = schemaFromExport(schema);
-      }
-    } else {
-      cliError('Invalid --schema provided, please use a path to local file or HTTP endpoint');
+  for (const handler of schemaHandlers) {
+    if (await handler.canHandle(schema)) {
+      schemaExportPromise = handler.handle(schema, options);
+      break;
     }
-  } else if (file) {
-    schemaExportPromise = introspectionFromFile(file).then(introspectionToGraphQLSchema);
-  } else if (url) {
-    schemaExportPromise = introspectionFromUrl(url, headers).then(introspectionToGraphQLSchema);
-  } else if (fsExport) {
-    schemaExportPromise = schemaFromExport(fsExport);
   }
 
   if (!schemaExportPromise) {
-    cliError('Invalid --schema provided, please use a path to local file or HTTP endpoint');
+    cliError('Invalid --schema provided, please use a path to local file, HTTP endpoint or a glob expression!');
   }
 
   const graphQlSchema = await schemaExportPromise;

@@ -1,15 +1,6 @@
 import { executeWithOptions } from '../src/codegen';
 
 describe('executeWithOptions', () => {
-  it('execute the correct results when using file', async () => {
-    const result = await executeWithOptions({
-      file: '../../dev-test/githunt/schema.json',
-      template: 'ts'
-    });
-
-    expect(result.length).toBe(1);
-  });
-
   it('execute the correct results when using schema with json file', async () => {
     const result = await executeWithOptions({
       schema: '../../dev-test/githunt/schema.json',
@@ -30,7 +21,7 @@ describe('executeWithOptions', () => {
 
   it('execute the correct results when using custom config file', async () => {
     const result = await executeWithOptions({
-      file: '../../dev-test/githunt/schema.json',
+      schema: '../../dev-test/githunt/schema.json',
       template: 'ts',
       config: '../../dev-test/config/gql-gen.json'
     });
@@ -40,7 +31,7 @@ describe('executeWithOptions', () => {
 
   it('execute the correct results when using schema export as object', async () => {
     const result = await executeWithOptions({
-      export: '../../dev-test/test-schema/schema-object.js',
+      schema: '../../dev-test/test-schema/schema-object.js',
       template: 'ts'
     });
     expect(result.length).toBe(1);
@@ -48,7 +39,7 @@ describe('executeWithOptions', () => {
 
   it('execute the correct results when using schema export as text', async () => {
     const result = await executeWithOptions({
-      export: '../../dev-test/test-schema/schema-text.js',
+      schema: '../../dev-test/test-schema/schema-text.js',
       template: 'ts'
     });
     expect(result.length).toBe(1);
@@ -56,7 +47,7 @@ describe('executeWithOptions', () => {
 
   it('execute the correct results when using skipSchema', async () => {
     const result = await executeWithOptions({
-      export: '../../dev-test/test-schema/schema-text.js',
+      schema: '../../dev-test/test-schema/schema-text.js',
       template: 'ts',
       skipSchema: true
     });
@@ -66,7 +57,7 @@ describe('executeWithOptions', () => {
 
   it('execute the correct results when using skipDocuments', async () => {
     const result = await executeWithOptions({
-      export: '../../dev-test/star-wars/schema.json',
+      schema: '../../dev-test/star-wars/schema.json',
       template: 'ts',
       args: ['../../dev-test/star-wars/HeroDetails.graphql'],
       skipDocuments: true,
@@ -78,7 +69,7 @@ describe('executeWithOptions', () => {
 
   it('execute the correct results when using schema export as ast', async () => {
     const result = await executeWithOptions({
-      export: '../../dev-test/test-schema/schema-ast.js',
+      schema: '../../dev-test/test-schema/schema-ast.js',
       template: 'ts'
     });
     expect(result.length).toBe(1);
@@ -86,7 +77,7 @@ describe('executeWithOptions', () => {
 
   it('execute the correct results when using schema export as json', async () => {
     const result = await executeWithOptions({
-      export: '../../dev-test/test-schema/schema-json.js',
+      schema: '../../dev-test/test-schema/schema-json.js',
       template: 'ts'
     });
     expect(result.length).toBe(1);
@@ -94,7 +85,7 @@ describe('executeWithOptions', () => {
 
   it('execute the correct results when using export and require', async () => {
     const result = await executeWithOptions({
-      export: '../../dev-test/githunt/schema.js',
+      schema: '../../dev-test/githunt/schema.js',
       template: 'ts',
       require: ['../tests/dummy-require.js']
     });
