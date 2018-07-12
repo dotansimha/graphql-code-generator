@@ -25,3 +25,9 @@ This will cause the codegen to output `readonly` properties and `ReadonlyArray`.
 ### `resolvers` (or `CODEGEN_RESOLVERS`, default value: `true`)
 
 This will cause the codegen to output types for resolvers.
+
+### `schemaNamespace` (or `CODEGEN_SCHEMA_NAMESPACE`, default value: `null`)
+
+This will cause the codegen to wrap the generated schema typings with a TypeScript namespace.
+
+Use this feature if you need to run the codegen on multiple schemas, but getting a unified types (read more [here](https://www.typescriptlang.org/docs/handbook/declaration-merging.html))
