@@ -8,7 +8,7 @@ type Resolver<Result, Args = any> = (
   info: GraphQLResolveInfo
 ) => Promise<Result> | Result;
 {{/ifCond}}
-
+{{#if @root.config.schemaNamespace ~}}export namespace {{@root.config.schemaNamespace}} { {{/if}}
 {{#each scalars}}
 
 {{ toComment description }}
@@ -22,12 +22,6 @@ export type {{ name }} = any;
   {{~> type }}
 
 {{/each}}
-{{#ifCond @root.config.resolvers "!==" false }}
-{{#each types}}
-  {{~> resolver }}  
-
-{{/each}}
-{{/ifCond}}
 {{#each inputTypes}}
   {{~> type }}
 
@@ -51,3 +45,9 @@ export interface {{ toPascalCase name }}{{ toPascalCase ../name }}Args {
 export type {{ name }} = {{#each possibleTypes}}{{this}}{{#unless @last}} | {{/unless}}{{/each}};
 
 {{/each}}
+{{#if @root.config.schemaNamespace ~}} } {{~/if}}
+{{#ifCond @root.config.resolvers "!==" false }}
+{{#each types}}
+{{~> resolver }}
+{{/each}}
+{{/ifCond}}

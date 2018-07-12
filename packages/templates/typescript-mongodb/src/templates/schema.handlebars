@@ -1,3 +1,4 @@
+{{#if @root.config.schemaNamespace ~}}export namespace {{@root.config.schemaNamespace}} { {{/if}}
 {{#each interfaces}}
 {{>interface }}
 {{/each}}
@@ -19,3 +20,4 @@
 {{#each interfaces}}
 {{>scalar }}
 {{/each}}
+{{#if @root.config.schemaNamespace ~}} } {{~/if}}

@@ -65,14 +65,14 @@ Now, add the directives to your GraphQL definitions, and generate your MongoDB m
 
 Use this directive to declare that a specific GraphQL type should have a generated MongoDB models.
 
-* `embedded: Boolean` - specify this to declare that this entity turns into an object inside another entity. For example, if you want your structure to be `{ _id: string, username: string, profile: { name: string }}`, then your GraphQL type `Profile` should be an embedded type.
+- `embedded: Boolean` - specify this to declare that this entity turns into an object inside another entity. For example, if you want your structure to be `{ _id: string, username: string, profile: { name: string }}`, then your GraphQL type `Profile` should be an embedded type.
 
 ### `@column(overrideType: String, overrideIsArray: Boolean)` (on `FIELD`)
 
 Use this directive to declare that a specific GraphQL field should be part of your generated MongoDB type.
 
-* `overrideType: String` - use this to override the type of the field.
-* `overrideIsArray: Boolean` - specify `true` to override the generated result and force it to generate an array type.
+- `overrideType: String` - use this to override the type of the field.
+- `overrideIsArray: Boolean` - specify `true` to override the generated result and force it to generate an array type.
 
 > Note that if your property is an embedded entity, you should use `@embedded` instead.
 
@@ -126,3 +126,13 @@ export interface ProfileDbObject {
   age: string;
 }
 ```
+
+## Generator Config
+
+This generator supports custom config and output behavior. Use to following flags/environment variables to modify your output as you wish:
+
+### `schemaNamespace` (or `CODEGEN_SCHEMA_NAMESPACE`, default value: `null`)
+
+This will cause the codegen to wrap the generated schema typings with a TypeScript namespace.
+
+Use this feature if you need to run the codegen on multiple schemas, but getting a unified types (read more [here](https://www.typescriptlang.org/docs/handbook/declaration-merging.html))
