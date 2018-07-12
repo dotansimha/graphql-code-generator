@@ -24,6 +24,42 @@ describe('TypeScript template', () => {
   };
 
   describe('Schema Only', () => {
+    it('should handle wrapping namespace correctly', async () => {
+      const { context } = compileAndBuildContext(`
+        type Query {
+          fieldTest: String 
+        }
+        
+        schema {
+          query: Query
+        }
+      `);
+
+      const compiled = await compileTemplate(
+        {
+          ...config,
+          config: {
+            schemaNamespace: 'Models'
+          }
+        } as GeneratorConfig,
+        context
+      );
+
+      const content = compiled[0].content;
+
+      expect(content).toBeSimilarStringTo(`
+      /* tslint:disable */
+      `);
+
+      expect(content).toBeSimilarStringTo(`
+        export namespace Models {
+          export interface Query {
+            fieldTest?: string | null;
+          }
+        }
+      `);
+    });
+
     it('should handle immutable type correctly', async () => {
       const { context } = compileAndBuildContext(`
         type Query {
