@@ -1,7 +1,4 @@
 export interface CLIOptions {
-  file?: string;
-  url?: string;
-  export?: string;
   schema?: string;
   args?: string[];
   template?: string;

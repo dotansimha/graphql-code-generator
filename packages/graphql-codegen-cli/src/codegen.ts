@@ -85,22 +85,11 @@ export const cliError = (err: string) => {
 
 export const validateCliOptions = (options: CLIOptions) => {
   const schema = options.schema;
-  const file = options.file;
-  const url = options.url;
-  const fsExport = options.export;
   const template = options.template;
   const project = options.project;
 
-  if (!schema && !file && !url && !fsExport) {
-    cliError('Please specify one of --schema, --file, --url or --export flags!');
-  }
-
-  if (file) {
-    logger.warn(`--file is deprecated, use --schema instead.`);
-  } else if (url) {
-    logger.warn(`--url is deprecated, use --schema instead.`);
-  } else if (fsExport) {
-    logger.warn(`--export is deprecated, use --schema instead.`);
+  if (!schema) {
+    cliError('Flag --schema is missing!');
   }
 
   if (!template && !project) {
