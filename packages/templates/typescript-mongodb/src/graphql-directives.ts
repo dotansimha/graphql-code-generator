@@ -2,14 +2,22 @@ import gql from 'graphql-tag';
 
 export const directives = gql`
   # Table
-  directive @entity(embedded: Boolean) on OBJECT
+  directive @entity(embedded: Boolean, additionalFields: [AdditionalEntityFields]) on OBJECT
 
   # Field
-  directive @column(overrideType: String, overrideIsArray: Boolean) on FIELD_DEFINITION
+  directive @column(name: String, overrideType: String, overrideIsArray: Boolean) on FIELD_DEFINITION
 
   directive @id on FIELD_DEFINITION
 
   directive @link on FIELD_DEFINITION
 
   directive @embedded on FIELD_DEFINITION
+
+  directive @map(path: String!) on FIELD_DEFINITION
+
+  # Inputs
+  input AdditionalEntityFields {
+    path: String
+    type: String
+  }
 `;

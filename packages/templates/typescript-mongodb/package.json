@@ -6,11 +6,16 @@
   "scripts": {
     "prepublishOnly": "yarn build",
     "build": "codegen-templates-scripts build",
-    "test": "echo ''"
+    "pretest": "yarn build",
+    "test": "codegen-templates-scripts test"
   },
   "devDependencies": {
     "codegen-templates-scripts": "0.10.3",
-    "graphql-codegen-core": "0.10.3"
+    "graphql-codegen-core": "0.10.3",
+    "@types/lodash": "4.14.112"
+  },
+  "dependencies": {
+    "lodash": "4.17.10"
   },
   "main": "./dist/index.js",
   "typings": "dist/index.d.ts",

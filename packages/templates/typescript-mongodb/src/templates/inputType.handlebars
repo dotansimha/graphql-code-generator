@@ -1,3 +1,4 @@
+
 {{ toComment description }}
 export interface {{ name }}{{#if hasInterfaces}} extends {{#each interfaces}}{{this}}{{#unless @last}},{{/unless}}{{/each}}{{/if}} {
 {{#each fields}}
