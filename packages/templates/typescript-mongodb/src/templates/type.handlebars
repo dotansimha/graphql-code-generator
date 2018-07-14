@@ -13,4 +13,5 @@ export interface {{ toPascalCase name }}{{ toPascalCase ../name }}Args {
 
 export interface {{ ../name }}DbObject {{ entityFields ../this }}
 {{/ifDirective}}
+{{>inputType}}
 {{/ifNotRootType}}
