@@ -49,7 +49,7 @@ function convertToInterfaceDefinition(type: Type | Interface, obj: FieldsResult,
 
   let appendExtensions = '';
 
-  if (root && type['interfaces']) {
+  if (root && type['interfaces'] && type['interfaces'].length > 0) {
     const interfaces = type['interfaces'] as string[];
 
     appendExtensions = ` extends ${interfaces.map(n => `${n}DbInterface`).join(', ')} `;
