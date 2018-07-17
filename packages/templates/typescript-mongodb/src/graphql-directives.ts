@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 export const directives = gql`
-  directive @union on UNION
+  directive @union(discriminatorField: String) on UNION
   directive @abstractEntity(discriminatorField: String!) on INTERFACE
   directive @entity(embedded: Boolean, additionalFields: [AdditionalEntityFields]) on OBJECT
   directive @column(name: String, overrideType: String, overrideIsArray: Boolean) on FIELD_DEFINITION
