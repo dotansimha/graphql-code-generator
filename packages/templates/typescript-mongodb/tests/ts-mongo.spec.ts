@@ -34,6 +34,20 @@ describe('Types', () => {
     };
   };
 
+  const hbsContext = {
+    data: {
+      root: {
+        primitivesMap: {
+          String: 'string',
+          Int: 'number',
+          Float: 'number',
+          Boolean: 'boolean',
+          ID: 'string'
+        }
+      }
+    }
+  };
+
   it('should resolve type and fields correctly', async () => {
     const { context } = compileAndBuildContext(`
         type User @entity(additionalFields: [
@@ -74,23 +88,7 @@ describe('Types', () => {
       `);
 
     const type = context.types.find(t => t.name === 'User');
-    const fieldsMapping = entityFields(
-      type,
-      {
-        data: {
-          root: {
-            primitivesMap: {
-              String: 'string',
-              Int: 'number',
-              Float: 'number',
-              Boolean: 'boolean',
-              ID: 'string'
-            }
-          }
-        }
-      },
-      true
-    );
+    const fieldsMapping = entityFields(type, hbsContext, true);
 
     expect(fieldsMapping).toEqual({
       _id: 'ObjectID | null',
@@ -110,5 +108,38 @@ describe('Types', () => {
       other_name: 'string | null',
       nonSchemaField: 'string'
     });
+  });
+
+  it('should resolve type and fields correctly with interfaces', async () => {
+    const { context } = compileAndBuildContext(`
+        interface BaseEntity @abstractEntity(discriminatorField: "type") {
+          id: ID! @id
+          title: String! @column
+        }
+        
+        type Entity1 implements BaseEntity @entity {
+          id: ID! @id
+          title: String! @column
+        }
+      `);
+
+    const gqlInterface = context.interfaces.find(t => t.name === 'BaseEntity');
+    const type1 = context.types.find(t => t.name === 'Entity1');
+    const fieldsMappingInterface = entityFields(gqlInterface, hbsContext, true);
+    const fieldsMappingType = entityFields(type1, hbsContext, true);
+
+    expect(fieldsMappingInterface).toEqual({
+      type: 'string',
+      _id: 'ObjectID',
+      title: 'string'
+    });
+
+    expect(fieldsMappingType).toEqual({
+      _id: 'ObjectID',
+      title: 'string'
+    });
+
+    const fieldsMappingTypeString = entityFields(type1, hbsContext, false);
+    expect(fieldsMappingTypeString).toContain('extends BaseEntityDbInterface');
   });
 });

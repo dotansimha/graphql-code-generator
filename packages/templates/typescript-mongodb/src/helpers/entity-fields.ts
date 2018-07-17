@@ -1,10 +1,11 @@
-import { Field, Type } from 'graphql-codegen-core';
+import { Field, Interface, Type } from 'graphql-codegen-core';
 import { set } from 'lodash';
 import { getResultType } from '../../../typescript/src/utils/get-result-type';
 
 // Directives fields
 const ID_DIRECTIVE = 'id';
 const ENTITY_DIRECTIVE = 'entity';
+const ABSTRACT_ENTITY_DIRECTIVE = 'abstractEntity';
 const LINK_DIRECTIVE = 'link';
 const COLUMN_DIRECTIVE = 'column';
 const EMBEDDED_DIRECTIVE = 'embedded';
@@ -35,7 +36,7 @@ function buildFieldDef(type: string, field: Field, options): string {
   );
 }
 
-function convertToInterfaceDefinition(obj: FieldsResult) {
+function convertToInterfaceDefinition(type: Type | Interface, obj: FieldsResult, root = true) {
   if (typeof obj === 'string') {
     return obj;
   }
@@ -43,16 +44,28 @@ function convertToInterfaceDefinition(obj: FieldsResult) {
   const result = Object.keys(obj).map(fieldName => {
     const fieldValue = obj[fieldName];
 
-    return `${fieldName}: ${convertToInterfaceDefinition(fieldValue as FieldsResult)}`;
+    return `${fieldName}: ${convertToInterfaceDefinition(type, fieldValue as FieldsResult, false)}`;
   });
 
-  return `{\n${result.join('\n')}\n}`;
+  let appendExtensions = '';
+
+  if (root && type['interfaces']) {
+    const interfaces = type['interfaces'] as string[];
+
+    appendExtensions = ` extends ${interfaces.map(n => `${n}DbInterface`).join(', ')} `;
+  }
+
+  return `${appendExtensions}{\n${result.join('\n')}\n}`;
 }
 
-export function entityFields(type: Type, options, returnRaw = false) {
-  if (type && type.directives[ENTITY_DIRECTIVE]) {
+export function entityFields(type: Type | Interface, options, returnRaw = false) {
+  if (type && (type.directives[ENTITY_DIRECTIVE] || type.directives[ABSTRACT_ENTITY_DIRECTIVE])) {
     const allFields = type.fields || [];
     const finalResult: FieldsResult = {};
+
+    if (type.directives[ABSTRACT_ENTITY_DIRECTIVE] && type.directives[ABSTRACT_ENTITY_DIRECTIVE].discriminatorField) {
+      appendField(finalResult, type.directives[ABSTRACT_ENTITY_DIRECTIVE].discriminatorField, 'string');
+    }
 
     for (const field of allFields) {
       if (field.directives[ID_DIRECTIVE]) {
@@ -101,7 +114,8 @@ export function entityFields(type: Type, options, returnRaw = false) {
       }
     }
 
-    const additionalFields: [{ path: string; type: string }] = type.directives[ENTITY_DIRECTIVE].additionalFields || [];
+    const additionalFields: [{ path: string; type: string }] =
+      (type.directives[ENTITY_DIRECTIVE] && type.directives[ENTITY_DIRECTIVE].additionalFields) || [];
 
     if (additionalFields.length > 0) {
       for (const field of additionalFields) {
@@ -113,7 +127,7 @@ export function entityFields(type: Type, options, returnRaw = false) {
       return finalResult;
     }
 
-    return convertToInterfaceDefinition(finalResult);
+    return convertToInterfaceDefinition(type, finalResult);
   }
 
   return '';
