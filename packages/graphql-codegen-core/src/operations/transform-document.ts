@@ -73,8 +73,7 @@ export function transformDocument(schema: GraphQLSchema, documentNode: DocumentN
       const overrideName = fixAnonymousDocument(definitionNode as FragmentDefinitionNode);
       result.fragments.push(transformFragment(schema, definitionNode as FragmentDefinitionNode, overrideName));
     } else {
-      logger.warn(`It seems like you provided an invalid GraphQL document: `);
-      logger.warn(definitionNode);
+      logger.warn(`It seems like you provided an invalid GraphQL document of kind "${definitionNode.kind}".`);
     }
   });
 
