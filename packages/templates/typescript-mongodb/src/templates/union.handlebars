@@ -1,6 +1,6 @@
 {{#ifDirective this "union" }}
 {{ toComment description }}
-export type {{ name }} = {{#each possibleTypes}}{{this}}DbObject{{#unless @last}} | {{/unless}}{{/each}};
+export type {{ name }}DbObject = {{#each possibleTypes}}{{this}}DbObject{{#unless @last}} | {{/unless}}{{/each}};
 
 {{/ifDirective}}
 {{ toComment description }}
