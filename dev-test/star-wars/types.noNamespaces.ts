@@ -361,7 +361,7 @@ export type HeroDetailsQuery = {
 };
 
 export type HeroDetailsHero = {
-  __typename?: HeroDetailsHumanInlineFragment['__typename'] | DroidInlineFragment['__typename'];
+  __typename?: HeroDetailsHumanInlineFragment['__typename'] | HeroDetailsDroidInlineFragment['__typename'];
   name: string;
 } & (HeroDetailsHumanInlineFragment | HeroDetailsDroidInlineFragment);
 
@@ -440,7 +440,9 @@ export type HeroParentTypeDependentFieldQuery = {
 };
 
 export type HeroParentTypeDependentFieldHero = {
-  __typename?: HeroParentTypeDependentFieldHumanInlineFragment['__typename'] | DroidInlineFragment['__typename'];
+  __typename?:
+    | HeroParentTypeDependentFieldHumanInlineFragment['__typename']
+    | HeroParentTypeDependentFieldDroidInlineFragment['__typename'];
   name: string;
 } & (HeroParentTypeDependentFieldHumanInlineFragment | HeroParentTypeDependentFieldDroidInlineFragment);
 
