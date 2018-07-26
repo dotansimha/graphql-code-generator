@@ -26,6 +26,10 @@ This will cause the codegen to output `readonly` properties and `ReadonlyArray`.
 
 This will cause the codegen to output types for resolvers.
 
+### `noNamespaces` (or `CODEGEN_SCHEMA_NO_NAMESPACES`, default value: `null`)
+
+This will cause the codegen not to use `namespace` in typings
+
 ### `schemaNamespace` (or `CODEGEN_SCHEMA_NAMESPACE`, default value: `null`)
 
 This will cause the codegen to wrap the generated schema typings with a TypeScript namespace.

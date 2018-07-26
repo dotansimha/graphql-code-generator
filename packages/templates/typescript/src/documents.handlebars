@@ -1,46 +1,55 @@
 {{#each operations }}
+
+{{#unless @root.config.noNamespaces}}
 export namespace {{ toPascalCase name }} {
-  export type Variables = {
+{{/unless}}
+  export type {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Variables = {
   {{#each variables}}
     {{#if @root.config.immutableTypes }}readonly {{/if}}{{ name }}{{ getOptionals this }}: {{ convertedType this }};
   {{/each}}
   }
 
-  export type {{ toPascalCase operationType }} ={{#if hasFields}} {
+  export type {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}{{ toPascalCase operationType }} ={{#if hasFields}} {
     {{#if @root.config.immutableTypes }}readonly {{/if}}__typename?: "{{ toPascalCase operationType }}";
-    {{> selectionSet fields }}
-  }{{/if}}{{> fragments this }}
+    {{> selectionSet fields=fields prefix=name }}
+  }{{/if}}{{> fragments this=this prefix=name }}
   {{#each innerModels }}
 
-  export type {{ modelType }} ={{#if hasFields}} {
+  export type {{#if @root.config.noNamespaces}}{{ toPascalCase ../name }}{{/if}}{{ modelType }} ={{#if hasFields}} {
   {{#unless hasInlineFragments}}
     {{#if @root.config.immutableTypes }}readonly {{/if}}__typename?: "{{ schemaBaseType }}";
   {{else}}
-    {{#if @root.config.immutableTypes }}readonly {{/if}}__typename?: {{#each inlineFragments}}{{onType}}["__typename"]{{#unless @last}} | {{/unless}}{{/each}};
+    {{#if @root.config.immutableTypes }}readonly {{/if}}__typename?: {{#each inlineFragments}}{{#if @root.config.noNamespaces}}{{ toPascalCase ../../name }}{{/if}}{{onType}}["__typename"]{{#unless @last}} | {{/unless}}{{/each}};
   {{/unless}}
-    {{> selectionSet fields }}
-  }{{/if}}{{> fragments this }}
+    {{> selectionSet fields=fields prefix=../name }}
+  }{{/if}}{{> fragments this=this prefix=../name }}
   {{/each}}
+{{#unless @root.config.noNamespaces}}
 }
+{{/unless}}
 {{/each}}
 {{#each fragments }}
 
+{{#unless @root.config.noNamespaces}}
 export namespace {{name}} {
-  export type Fragment ={{#if hasFields}} {
+{{/unless}}
+  export type {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Fragment ={{#if hasFields}} {
     {{#if @root.config.immutableTypes }}readonly {{/if}}__typename?: "{{ onType }}";
-    {{> selectionSet fields }}
-  }{{/if}}{{> fragments this }}
+    {{> selectionSet fields=fields prefix=name }}
+  }{{/if}}{{> fragments this=this prefix=name }}
   {{#each innerModels }}
 
-  export type {{ modelType }} ={{#if hasFields}} {
+  export type {{#if @root.config.noNamespaces}}{{ toPascalCase ../name }}{{/if}}{{ modelType }} ={{#if hasFields}} {
   {{#unless hasInlineFragments}}
     {{#if @root.config.immutableTypes }}readonly {{/if}}__typename?: "{{ schemaBaseType }}";
   {{else}}
-    {{#if @root.config.immutableTypes }}readonly {{/if}}__typename?: {{#each inlineFragments}}{{onType}}["__typename"]{{#unless @last}} | {{/unless}}{{/each}};
+    {{#if @root.config.immutableTypes }}readonly {{/if}}__typename?: {{#each inlineFragments}}{{#if @root.config.noNamespaces}}{{ toPascalCase ../name }}{{/if}}{{onType}}["__typename"]{{#unless @last}} | {{/unless}}{{/each}};
   {{/unless}}
-    {{> selectionSet fields }}
-  }{{/if}}{{> fragments this }}
+    {{> selectionSet fields=fields prefix=../name }}
+  }{{/if}}{{> fragments this=this prefix=../name}}
   {{/each}}
+{{#unless @root.config.noNamespaces}}
 }
+{{/unless}}
 {{/each}}
 

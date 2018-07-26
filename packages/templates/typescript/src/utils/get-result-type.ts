@@ -1,12 +1,13 @@
 export function getResultType(type, options) {
   const baseType = type.type;
   const realType = options.data.root.primitivesMap[baseType] || baseType;
-  const useImmutable = !!(options.data.root.config || {}).immutableTypes;
+  const config = options.data.root.config || {};
+  const useImmutable = !!config.immutableTypes;
 
   if (type.isArray) {
     let result = realType;
 
-    if (type.isNullableArray) {
+    if (type.isNullableArray && !config.noNamespaces) {
       result = useImmutable ? [realType, 'null'].join(' | ') : `(${[realType, 'null'].join(' | ')})`;
     }
 
