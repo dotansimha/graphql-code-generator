@@ -5,7 +5,8 @@ import {
   GraphQLSchema,
   makeExecutableSchema,
   SchemaTemplateContext,
-  schemaToTemplateContext
+  schemaToTemplateContext,
+  GeneratorConfig
 } from 'graphql-codegen-core';
 
 describe('Resolvers', () => {
@@ -163,6 +164,38 @@ describe('Resolvers', () => {
 
     expect(content).not.toBeSimilarStringTo(`
         export namespace QueryResolvers {
+      `);
+  });
+
+  it('should handle noNamespaces', async () => {
+    const { context } = compileAndBuildContext(`
+        type Query {
+          fieldTest: String 
+        }
+        
+        schema {
+          query: Query
+        }
+      `);
+
+    const compiled = await compileTemplate(
+      {
+        ...config,
+        config: {
+          noNamespaces: true
+        }
+      } as GeneratorConfig,
+      context
+    );
+
+    const content = compiled[0].content;
+
+    expect(content).toBeSimilarStringTo(`
+        export interface QueryResolvers {
+          fieldTest?: QueryFieldTestResolver;
+        }
+
+        export type QueryFieldTestResolver = Resolver<string | null>;
       `);
   });
 });

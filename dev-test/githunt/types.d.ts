@@ -1,4 +1,12 @@
 /* tslint:disable */
+import { GraphQLResolveInfo } from 'graphql';
+
+type Resolver<Result, Args = any> = (
+  parent: any,
+  args: Args,
+  context: any,
+  info: GraphQLResolveInfo
+) => Promise<Result> | Result;
 
 export interface Query {
   feed?: (Entry | null)[] | null /** A feed of repository submissions */;
@@ -85,6 +93,155 @@ export interface CommentAddedSubscriptionArgs {
 export type FeedType = 'HOT' | 'NEW' | 'TOP';
 /** The type of vote to record, when submitting a vote */
 export type VoteType = 'UP' | 'DOWN' | 'CANCEL';
+
+export namespace QueryResolvers {
+  export interface Resolvers {
+    feed?: FeedResolver /** A feed of repository submissions */;
+    entry?: EntryResolver /** A single entry */;
+    currentUser?: CurrentUserResolver /** Return the currently logged in user, or null if nobody is logged in */;
+  }
+
+  export type FeedResolver = Resolver<(Entry | null)[] | null, FeedArgs>;
+  export interface FeedArgs {
+    type: FeedType /** The sort order for the feed */;
+    offset?: number | null /** The number of items to skip, for pagination */;
+    limit?: number | null /** The number of items to fetch starting from the offset, for pagination */;
+  }
+
+  export type EntryResolver = Resolver<Entry | null, EntryArgs>;
+  export interface EntryArgs {
+    repoFullName: string /** The full repository name from GitHub, e.g. "apollostack/GitHunt-API" */;
+  }
+
+  export type CurrentUserResolver = Resolver<User | null>;
+}
+/** Information about a GitHub repository submitted to GitHunt */
+/** Information about a GitHub repository submitted to GitHunt */
+export namespace EntryResolvers {
+  export interface Resolvers {
+    repository?: RepositoryResolver /** Information about the repository from GitHub */;
+    postedBy?: PostedByResolver /** The GitHub user who submitted this entry */;
+    createdAt?: CreatedAtResolver /** A timestamp of when the entry was submitted */;
+    score?: ScoreResolver /** The score of this repository, upvotes - downvotes */;
+    hotScore?: HotScoreResolver /** The hot score of this repository */;
+    comments?: CommentsResolver /** Comments posted about this repository */;
+    commentCount?: CommentCountResolver /** The number of comments posted about this repository */;
+    id?: IdResolver /** The SQL ID of this entry */;
+    vote?: VoteResolver /** XXX to be changed */;
+  }
+
+  export type RepositoryResolver = Resolver<Repository>;
+  export type PostedByResolver = Resolver<User>;
+  export type CreatedAtResolver = Resolver<number>;
+  export type ScoreResolver = Resolver<number>;
+  export type HotScoreResolver = Resolver<number>;
+  export type CommentsResolver = Resolver<(Comment | null)[], CommentsArgs>;
+  export interface CommentsArgs {
+    limit?: number | null;
+    offset?: number | null;
+  }
+
+  export type CommentCountResolver = Resolver<number>;
+  export type IdResolver = Resolver<number>;
+  export type VoteResolver = Resolver<Vote>;
+}
+/** A repository object from the GitHub API. This uses the exact field names returned by theGitHub API for simplicity, even though the convention for GraphQL is usually to camel case. */
+/** A repository object from the GitHub API. This uses the exact field names returned by theGitHub API for simplicity, even though the convention for GraphQL is usually to camel case. */
+export namespace RepositoryResolvers {
+  export interface Resolvers {
+    name?: NameResolver /** Just the name of the repository, e.g. GitHunt-API */;
+    full_name?: Full_nameResolver /** The full name of the repository with the username, e.g. apollostack/GitHunt-API */;
+    description?: DescriptionResolver /** The description of the repository */;
+    html_url?: Html_urlResolver /** The link to the repository on GitHub */;
+    stargazers_count?: Stargazers_countResolver /** The number of people who have starred this repository on GitHub */;
+    open_issues_count?: Open_issues_countResolver /** The number of open issues on this repository on GitHub */;
+    owner?: OwnerResolver /** The owner of this repository on GitHub, e.g. apollostack */;
+  }
+
+  export type NameResolver = Resolver<string>;
+  export type Full_nameResolver = Resolver<string>;
+  export type DescriptionResolver = Resolver<string | null>;
+  export type Html_urlResolver = Resolver<string>;
+  export type Stargazers_countResolver = Resolver<number>;
+  export type Open_issues_countResolver = Resolver<number | null>;
+  export type OwnerResolver = Resolver<User | null>;
+}
+/** A user object from the GitHub API. This uses the exact field names returned from the GitHub API. */
+/** A user object from the GitHub API. This uses the exact field names returned from the GitHub API. */
+export namespace UserResolvers {
+  export interface Resolvers {
+    login?: LoginResolver /** The name of the user, e.g. apollostack */;
+    avatar_url?: Avatar_urlResolver /** The URL to a directly embeddable image for this user's avatar */;
+    html_url?: Html_urlResolver /** The URL of this user's GitHub page */;
+  }
+
+  export type LoginResolver = Resolver<string>;
+  export type Avatar_urlResolver = Resolver<string>;
+  export type Html_urlResolver = Resolver<string>;
+}
+/** A comment about an entry, submitted by a user */
+/** A comment about an entry, submitted by a user */
+export namespace CommentResolvers {
+  export interface Resolvers {
+    id?: IdResolver /** The SQL ID of this entry */;
+    postedBy?: PostedByResolver /** The GitHub user who posted the comment */;
+    createdAt?: CreatedAtResolver /** A timestamp of when the comment was posted */;
+    content?: ContentResolver /** The text of the comment */;
+    repoName?: RepoNameResolver /** The repository which this comment is about */;
+  }
+
+  export type IdResolver = Resolver<number>;
+  export type PostedByResolver = Resolver<User>;
+  export type CreatedAtResolver = Resolver<number>;
+  export type ContentResolver = Resolver<string>;
+  export type RepoNameResolver = Resolver<string>;
+}
+/** XXX to be removed */
+/** XXX to be removed */
+export namespace VoteResolvers {
+  export interface Resolvers {
+    vote_value?: Vote_valueResolver;
+  }
+
+  export type Vote_valueResolver = Resolver<number>;
+}
+
+export namespace MutationResolvers {
+  export interface Resolvers {
+    submitRepository?: SubmitRepositoryResolver /** Submit a new repository, returns the new submission */;
+    vote?: VoteResolver /** Vote on a repository submission, returns the submission that was voted on */;
+    submitComment?: SubmitCommentResolver /** Comment on a repository, returns the new comment */;
+  }
+
+  export type SubmitRepositoryResolver = Resolver<Entry | null, SubmitRepositoryArgs>;
+  export interface SubmitRepositoryArgs {
+    repoFullName: string /** The full repository name from GitHub, e.g. "apollostack/GitHunt-API" */;
+  }
+
+  export type VoteResolver = Resolver<Entry | null, VoteArgs>;
+  export interface VoteArgs {
+    repoFullName: string /** The full repository name from GitHub, e.g. "apollostack/GitHunt-API" */;
+    type: VoteType /** The type of vote - UP, DOWN, or CANCEL */;
+  }
+
+  export type SubmitCommentResolver = Resolver<Comment | null, SubmitCommentArgs>;
+  export interface SubmitCommentArgs {
+    repoFullName: string /** The full repository name from GitHub, e.g. "apollostack/GitHunt-API" */;
+    commentContent: string /** The text content for the new comment */;
+  }
+}
+
+export namespace SubscriptionResolvers {
+  export interface Resolvers {
+    commentAdded?: CommentAddedResolver /** Subscription fires on every comment added */;
+  }
+
+  export type CommentAddedResolver = Resolver<Comment | null, CommentAddedArgs>;
+  export interface CommentAddedArgs {
+    repoFullName: string;
+  }
+}
+
 export namespace OnCommentAdded {
   export type Variables = {
     repoFullName: string;
@@ -109,6 +266,7 @@ export namespace OnCommentAdded {
     html_url: string;
   };
 }
+
 export namespace Comment {
   export type Variables = {
     repoFullName: string;
@@ -159,6 +317,7 @@ export namespace Comment {
     stargazers_count: number;
   };
 }
+
 export namespace CurrentUserForProfile {
   export type Variables = {};
 
@@ -173,6 +332,7 @@ export namespace CurrentUserForProfile {
     avatar_url: string;
   };
 }
+
 export namespace Feed {
   export type Variables = {
     type: FeedType;
@@ -193,6 +353,7 @@ export namespace Feed {
 
   export type Feed = FeedEntry.Fragment;
 }
+
 export namespace SubmitRepository {
   export type Variables = {
     repoFullName: string;
@@ -208,6 +369,7 @@ export namespace SubmitRepository {
     createdAt: number;
   };
 }
+
 export namespace SubmitComment {
   export type Variables = {
     repoFullName: string;
@@ -221,6 +383,7 @@ export namespace SubmitComment {
 
   export type SubmitComment = CommentsPageComment.Fragment;
 }
+
 export namespace Vote {
   export type Variables = {
     repoFullName: string;

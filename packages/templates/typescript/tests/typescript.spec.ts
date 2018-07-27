@@ -882,6 +882,98 @@ describe('TypeScript template', () => {
       `);
     });
 
+    it('Should compile simple Query with Fragment spread and handle noNamespaces', async () => {
+      const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
+      const context = schemaToTemplateContext(schema);
+
+      const documents = gql`
+        query myFeed {
+          feed {
+            id
+            commentCount
+            repository {
+              full_name
+              ...RepoFields
+            }
+          }
+        }
+
+        fragment RepoFields on Repository {
+          html_url
+          owner {
+            avatar_url
+          }
+        }
+      `;
+
+      const transformedDocument = transformDocument(schema, documents);
+      const compiled = await compileTemplate(
+        {
+          ...config,
+          config: {
+            noNamespaces: true
+          }
+        } as GeneratorConfig,
+        context,
+        [transformedDocument],
+        { generateSchema: false }
+      );
+      const content = compiled[0].content;
+
+      expect(content).toBeSimilarStringTo(`
+        /* tslint:disable */
+      `);
+      expect(content).toBeSimilarStringTo(`
+        /** A list of options for the sort order of the feed */
+        export enum FeedType {
+          HOT = "HOT",
+          NEW = "NEW",
+          TOP = "TOP",
+        }
+      `);
+      expect(content).toBeSimilarStringTo(`
+        /** The type of vote to record, when submitting a vote */
+        export enum VoteType {
+          UP = "UP",
+          DOWN = "DOWN",
+          CANCEL = "CANCEL",
+        }
+      `);
+      expect(content).toBeSimilarStringTo(`
+          export type MyFeedVariables = {
+          }
+
+          export type MyFeedQuery = {
+            __typename?: "Query";
+            feed?: MyFeedFeed[] | null;
+          }
+
+          export type MyFeedFeed = {
+            __typename?: "Entry";
+            id: number; 
+            commentCount: number; 
+            repository: MyFeedRepository; 
+          }
+
+          export type MyFeedRepository = {
+            __typename?: "Repository";
+            full_name: string; 
+          } & RepoFieldsFragment
+      `);
+      expect(content).toBeSimilarStringTo(`
+          export type RepoFieldsFragment = {
+            __typename?: "Repository";
+            html_url: string; 
+            owner?: RepoFieldsOwner | null; 
+          }
+
+          export type RepoFieldsOwner = {
+            __typename?: "User";
+            avatar_url: string; 
+          }
+      `);
+    });
+
     it('Should compile simple Query with inline Fragment', async () => {
       const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
       const context = schemaToTemplateContext(schema);
@@ -966,6 +1058,101 @@ describe('TypeScript template', () => {
             avatar_url: string; 
           }
         }
+      `);
+    });
+
+    it('Should compile simple Query with inline Fragment and handle noNamespaces', async () => {
+      const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
+      const context = schemaToTemplateContext(schema);
+
+      const documents = gql`
+        query myFeed {
+          feed {
+            id
+            commentCount
+            repository {
+              html_url
+              ... on Repository {
+                full_name
+              }
+              ... on Repository {
+                owner {
+                  avatar_url
+                }
+              }
+            }
+          }
+        }
+      `;
+
+      const transformedDocument = transformDocument(schema, documents);
+      const compiled = await compileTemplate(
+        {
+          ...config,
+          config: {
+            noNamespaces: true
+          }
+        } as GeneratorConfig,
+        context,
+        [transformedDocument],
+        { generateSchema: false }
+      );
+      const content = compiled[0].content;
+
+      expect(content).toBeSimilarStringTo(`
+       /* tslint:disable */
+       `);
+      expect(content).toBeSimilarStringTo(`
+        /** A list of options for the sort order of the feed */
+        export enum FeedType {
+          HOT = "HOT",
+          NEW = "NEW",
+          TOP = "TOP",
+        }
+      `);
+      expect(content).toBeSimilarStringTo(`
+        /** The type of vote to record, when submitting a vote */
+        export enum VoteType {
+          UP = "UP",
+          DOWN = "DOWN",
+          CANCEL = "CANCEL",
+        }
+      `);
+      expect(content).toBeSimilarStringTo(`
+          export type MyFeedVariables = {
+          }
+        
+          export type MyFeedQuery = {
+            __typename?: "Query";
+            feed?: MyFeedFeed[] | null;
+          }
+        
+          export type MyFeedFeed = {
+            __typename?: "Entry";
+            id: number; 
+            commentCount: number; 
+            repository: MyFeedRepository; 
+          }
+        
+          export type MyFeedRepository = {
+            __typename?: MyFeedRepositoryInlineFragment["__typename"] | MyFeed_RepositoryInlineFragment["__typename"];
+            html_url: string; 
+          } & (MyFeedRepositoryInlineFragment | MyFeed_RepositoryInlineFragment)
+        
+          export type MyFeedRepositoryInlineFragment = {
+            __typename?: "Repository";
+            full_name: string; 
+          }
+        
+          export type MyFeed_RepositoryInlineFragment = {
+            __typename?: "Repository";
+            owner?: MyFeedOwner | null; 
+          }
+        
+          export type MyFeedOwner = {
+            __typename?: "User";
+            avatar_url: string; 
+          }
       `);
     });
   });
