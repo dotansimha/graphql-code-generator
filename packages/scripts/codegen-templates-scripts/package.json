@@ -7,7 +7,7 @@
     "awesome-typescript-loader": "5.2.0",
     "commander": "2.16.0",
     "copyfiles": "2.0.0",
-    "jest": "23.4.1",
+    "jest": "23.4.2",
     "raw-loader": "0.5.1",
     "rimraf": "2.6.2",
     "ts-jest": "23.0.1",
