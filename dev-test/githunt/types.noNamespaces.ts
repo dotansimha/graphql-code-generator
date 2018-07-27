@@ -1,11 +1,11 @@
 /* tslint:disable */
 import { GraphQLResolveInfo } from 'graphql';
 
-type Resolver<Result, Args = any> = (
-  parent: any,
-  args: Args,
-  context: any,
-  info: GraphQLResolveInfo
+type Resolver<Parent, Result, Args = any> = (
+  parent?: Parent,
+  args?: Args,
+  context?: any,
+  info?: GraphQLResolveInfo
 ) => Promise<Result> | Result;
 
 export interface Query {
@@ -108,19 +108,22 @@ export interface QueryResolvers {
   currentUser?: QueryCurrentUserResolver /** Return the currently logged in user, or null if nobody is logged in */;
 }
 
-export type QueryFeedResolver = Resolver<Entry[] | null>;
+export type QueryFeedResolver = Resolver<Query, Entry[] | null>;
 export interface QueryFeedArgs {
   type: FeedType /** The sort order for the feed */;
   offset?: number | null /** The number of items to skip, for pagination */;
   limit?: number | null /** The number of items to fetch starting from the offset, for pagination */;
 }
 
-export type QueryEntryResolver = Resolver<Entry | null>;
+export type QueryEntryResolver = Resolver<Query, Entry | null>;
 export interface QueryEntryArgs {
   repoFullName: string /** The full repository name from GitHub, e.g. "apollostack/GitHunt-API" */;
 }
 
-export type QueryCurrentUserResolver = Resolver<User | null>; /** Information about a GitHub repository submitted to GitHunt */
+export type QueryCurrentUserResolver = Resolver<
+  Query,
+  User | null
+>; /** Information about a GitHub repository submitted to GitHunt */
 export interface EntryResolvers {
   repository?: EntryRepositoryResolver /** Information about the repository from GitHub */;
   postedBy?: EntryPostedByResolver /** The GitHub user who submitted this entry */;
@@ -133,20 +136,21 @@ export interface EntryResolvers {
   vote?: EntryVoteResolver /** XXX to be changed */;
 }
 
-export type EntryRepositoryResolver = Resolver<Repository>;
-export type EntryPostedByResolver = Resolver<User>;
-export type EntryCreatedAtResolver = Resolver<number>;
-export type EntryScoreResolver = Resolver<number>;
-export type EntryHotScoreResolver = Resolver<number>;
-export type EntryCommentsResolver = Resolver<Comment[]>;
+export type EntryRepositoryResolver = Resolver<Entry, Repository>;
+export type EntryPostedByResolver = Resolver<Entry, User>;
+export type EntryCreatedAtResolver = Resolver<Entry, number>;
+export type EntryScoreResolver = Resolver<Entry, number>;
+export type EntryHotScoreResolver = Resolver<Entry, number>;
+export type EntryCommentsResolver = Resolver<Entry, Comment[]>;
 export interface EntryCommentsArgs {
   limit?: number | null;
   offset?: number | null;
 }
 
-export type EntryCommentCountResolver = Resolver<number>;
-export type EntryIdResolver = Resolver<number>;
+export type EntryCommentCountResolver = Resolver<Entry, number>;
+export type EntryIdResolver = Resolver<Entry, number>;
 export type EntryVoteResolver = Resolver<
+  Entry,
   Vote
 >; /** A repository object from the GitHub API. This uses the exact field names returned by theGitHub API for simplicity, even though the convention for GraphQL is usually to camel case. */
 export interface RepositoryResolvers {
@@ -159,22 +163,25 @@ export interface RepositoryResolvers {
   owner?: RepositoryOwnerResolver /** The owner of this repository on GitHub, e.g. apollostack */;
 }
 
-export type RepositoryNameResolver = Resolver<string>;
-export type RepositoryFull_nameResolver = Resolver<string>;
-export type RepositoryDescriptionResolver = Resolver<string | null>;
-export type RepositoryHtml_urlResolver = Resolver<string>;
-export type RepositoryStargazers_countResolver = Resolver<number>;
-export type RepositoryOpen_issues_countResolver = Resolver<number | null>;
-export type RepositoryOwnerResolver = Resolver<User | null>; /** A user object from the GitHub API. This uses the exact field names returned from the GitHub API. */
+export type RepositoryNameResolver = Resolver<Repository, string>;
+export type RepositoryFull_nameResolver = Resolver<Repository, string>;
+export type RepositoryDescriptionResolver = Resolver<Repository, string | null>;
+export type RepositoryHtml_urlResolver = Resolver<Repository, string>;
+export type RepositoryStargazers_countResolver = Resolver<Repository, number>;
+export type RepositoryOpen_issues_countResolver = Resolver<Repository, number | null>;
+export type RepositoryOwnerResolver = Resolver<
+  Repository,
+  User | null
+>; /** A user object from the GitHub API. This uses the exact field names returned from the GitHub API. */
 export interface UserResolvers {
   login?: UserLoginResolver /** The name of the user, e.g. apollostack */;
   avatar_url?: UserAvatar_urlResolver /** The URL to a directly embeddable image for this user's avatar */;
   html_url?: UserHtml_urlResolver /** The URL of this user's GitHub page */;
 }
 
-export type UserLoginResolver = Resolver<string>;
-export type UserAvatar_urlResolver = Resolver<string>;
-export type UserHtml_urlResolver = Resolver<string>; /** A comment about an entry, submitted by a user */
+export type UserLoginResolver = Resolver<User, string>;
+export type UserAvatar_urlResolver = Resolver<User, string>;
+export type UserHtml_urlResolver = Resolver<User, string>; /** A comment about an entry, submitted by a user */
 export interface CommentResolvers {
   id?: CommentIdResolver /** The SQL ID of this entry */;
   postedBy?: CommentPostedByResolver /** The GitHub user who posted the comment */;
@@ -183,34 +190,34 @@ export interface CommentResolvers {
   repoName?: CommentRepoNameResolver /** The repository which this comment is about */;
 }
 
-export type CommentIdResolver = Resolver<number>;
-export type CommentPostedByResolver = Resolver<User>;
-export type CommentCreatedAtResolver = Resolver<number>;
-export type CommentContentResolver = Resolver<string>;
-export type CommentRepoNameResolver = Resolver<string>; /** XXX to be removed */
+export type CommentIdResolver = Resolver<Comment, number>;
+export type CommentPostedByResolver = Resolver<Comment, User>;
+export type CommentCreatedAtResolver = Resolver<Comment, number>;
+export type CommentContentResolver = Resolver<Comment, string>;
+export type CommentRepoNameResolver = Resolver<Comment, string>; /** XXX to be removed */
 export interface VoteResolvers {
   vote_value?: VoteVote_valueResolver;
 }
 
-export type VoteVote_valueResolver = Resolver<number>;
+export type VoteVote_valueResolver = Resolver<Vote, number>;
 export interface MutationResolvers {
   submitRepository?: MutationSubmitRepositoryResolver /** Submit a new repository, returns the new submission */;
   vote?: MutationVoteResolver /** Vote on a repository submission, returns the submission that was voted on */;
   submitComment?: MutationSubmitCommentResolver /** Comment on a repository, returns the new comment */;
 }
 
-export type MutationSubmitRepositoryResolver = Resolver<Entry | null>;
+export type MutationSubmitRepositoryResolver = Resolver<Mutation, Entry | null>;
 export interface MutationSubmitRepositoryArgs {
   repoFullName: string /** The full repository name from GitHub, e.g. "apollostack/GitHunt-API" */;
 }
 
-export type MutationVoteResolver = Resolver<Entry | null>;
+export type MutationVoteResolver = Resolver<Mutation, Entry | null>;
 export interface MutationVoteArgs {
   repoFullName: string /** The full repository name from GitHub, e.g. "apollostack/GitHunt-API" */;
   type: VoteType /** The type of vote - UP, DOWN, or CANCEL */;
 }
 
-export type MutationSubmitCommentResolver = Resolver<Comment | null>;
+export type MutationSubmitCommentResolver = Resolver<Mutation, Comment | null>;
 export interface MutationSubmitCommentArgs {
   repoFullName: string /** The full repository name from GitHub, e.g. "apollostack/GitHunt-API" */;
   commentContent: string /** The text content for the new comment */;
@@ -220,7 +227,7 @@ export interface SubscriptionResolvers {
   commentAdded?: SubscriptionCommentAddedResolver /** Subscription fires on every comment added */;
 }
 
-export type SubscriptionCommentAddedResolver = Resolver<Comment | null>;
+export type SubscriptionCommentAddedResolver = Resolver<Subscription, Comment | null>;
 export interface SubscriptionCommentAddedArgs {
   repoFullName: string;
 }

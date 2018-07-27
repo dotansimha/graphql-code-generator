@@ -1,18 +1,18 @@
 {{#ifCond @root.config.resolvers "!==" false}}
 import { GraphQLResolveInfo } from 'graphql';
 
-type Resolver<Result, Args = any> = (
-  parent: any,
-  args: Args,
-  context: any,
-  info: GraphQLResolveInfo
+type Resolver<Parent, Result, Args = any> = (
+  parent?: Parent,
+  args?: Args,
+  context?: any,
+  info?: GraphQLResolveInfo
 ) => Promise<Result> | Result;
 {{/ifCond}}
 {{#if @root.config.schemaNamespace ~}}export namespace {{@root.config.schemaNamespace}} { {{/if}}
 {{#each scalars}}
 
 {{ toComment description }}
-export type {{ name }} = any;
+export type {{ name }} = {{ getScalarType name }};
 {{/each}}
 {{#each interfaces}}
   {{~> type }}

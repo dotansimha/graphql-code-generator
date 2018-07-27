@@ -2,5 +2,8 @@
 {{#if config.printTime }}
 /** Generated in {{ currentTime }} */
 {{/if}}
+{{#each @root.config.prepend}}
+    {{this}}
+{{/each}}
 {{> schema }}
 {{> documents }}

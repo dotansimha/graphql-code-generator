@@ -23,6 +23,34 @@ describe('TypeScript template', () => {
     };
   };
 
+  it('should handle prepend option correctly', async () => {
+    const { context } = compileAndBuildContext(`
+      type Query {
+        test: String
+      }
+
+      schema {
+        query: Query
+      }
+    `);
+
+    const compiled = await compileTemplate(
+      {
+        ...config,
+        config: {
+          prepend: ['// Test']
+        }
+      } as GeneratorConfig,
+      context
+    );
+
+    const content = compiled[0].content;
+
+    expect(content).toBeSimilarStringTo(`
+    // Test
+    `);
+  });
+
   describe('Schema Only', () => {
     it('should handle wrapping namespace correctly', async () => {
       const { context } = compileAndBuildContext(`
@@ -445,14 +473,25 @@ describe('TypeScript template', () => {
         scalar Date
       `);
 
-      const compiled = await compileTemplate(config, context);
+      const compiled = await compileTemplate(
+        {
+          ...config,
+          config: {
+            scalars: {
+              Date: 'Date'
+            }
+          }
+        } as GeneratorConfig,
+        context
+      );
+
       const content = compiled[0].content;
 
       expect(content).toBeSimilarStringTo(`
         /* tslint:disable */
       `);
       expect(content).toBeSimilarStringTo(`
-        export type Date = any;
+        export type Date = Date;
       `);
       expect(content).toBeSimilarStringTo(`
         export interface Query {

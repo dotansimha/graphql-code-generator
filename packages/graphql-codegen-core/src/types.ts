@@ -247,6 +247,7 @@ export const EInputType = {
 };
 
 export interface GeneratorConfig {
+  prepend?: string[];
   inputType: string; // EInputType
   flattenTypes: boolean;
   config?: { [configName: string]: any };

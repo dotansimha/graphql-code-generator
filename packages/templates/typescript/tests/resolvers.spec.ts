@@ -37,11 +37,11 @@ describe('Resolvers', () => {
     expect(content).toBeSimilarStringTo(`
         import { GraphQLResolveInfo } from 'graphql';
 
-        type Resolver<Result, Args = any> = (
-          parent: any,
-          args: Args,
-          context: any,
-          info: GraphQLResolveInfo
+        type Resolver<Parent, Result, Args = any> = (
+          parent?: Parent,
+          args?: Args,
+          context?: any,
+          info?: GraphQLResolveInfo
         ) => Promise<Result> | Result;
       `);
   });
@@ -90,7 +90,7 @@ describe('Resolvers', () => {
             fieldTest?: FieldTestResolver;
           }
     
-          export type FieldTestResolver = Resolver<string | null>;
+          export type FieldTestResolver = Resolver<Query, string | null>;
         }
       `);
   });
@@ -116,7 +116,7 @@ describe('Resolvers', () => {
             fieldTest?: FieldTestResolver;
           }
     
-          export type FieldTestResolver = Resolver<string | null, FieldTestArgs>;
+          export type FieldTestResolver = Resolver<Query, string | null, FieldTestArgs>;
           
           export interface FieldTestArgs {
             last: number;
@@ -154,11 +154,11 @@ describe('Resolvers', () => {
       `);
 
     expect(content).not.toBeSimilarStringTo(`
-        type Resolver<Result, Args = any> = (
-          parent: any,
-          args: Args,
-          context: any,
-          info: GraphQLResolveInfo
+        type Resolver<Parent, Result, Args = any> = (
+          parent?: Parent,
+          args?: Args,
+          context?: any,
+          info?: GraphQLResolveInfo
         ) => Promise<Result> | Result;
       `);
 
@@ -195,7 +195,7 @@ describe('Resolvers', () => {
           fieldTest?: QueryFieldTestResolver;
         }
 
-        export type QueryFieldTestResolver = Resolver<string | null>;
+        export type QueryFieldTestResolver = Resolver<Query, string | null>;
       `);
   });
 });

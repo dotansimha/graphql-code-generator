@@ -1,11 +1,11 @@
 /* tslint:disable */
 import { GraphQLResolveInfo } from 'graphql';
 
-type Resolver<Result, Args = any> = (
-  parent: any,
-  args: Args,
-  context: any,
-  info: GraphQLResolveInfo
+type Resolver<Parent, Result, Args = any> = (
+  parent?: Parent,
+  args?: Args,
+  context?: any,
+  info?: GraphQLResolveInfo
 ) => Promise<Result> | Result;
 
 /** A character from the Star Wars universe */
@@ -158,37 +158,37 @@ export namespace QueryResolvers {
     starship?: StarshipResolver;
   }
 
-  export type HeroResolver = Resolver<Character | null, HeroArgs>;
+  export type HeroResolver = Resolver<Query, Character | null, HeroArgs>;
   export interface HeroArgs {
     episode?: Episode | null;
   }
 
-  export type ReviewsResolver = Resolver<(Review | null)[] | null, ReviewsArgs>;
+  export type ReviewsResolver = Resolver<Query, (Review | null)[] | null, ReviewsArgs>;
   export interface ReviewsArgs {
     episode: Episode;
   }
 
-  export type SearchResolver = Resolver<(SearchResult | null)[] | null, SearchArgs>;
+  export type SearchResolver = Resolver<Query, (SearchResult | null)[] | null, SearchArgs>;
   export interface SearchArgs {
     text?: string | null;
   }
 
-  export type CharacterResolver = Resolver<Character | null, CharacterArgs>;
+  export type CharacterResolver = Resolver<Query, Character | null, CharacterArgs>;
   export interface CharacterArgs {
     id: string;
   }
 
-  export type DroidResolver = Resolver<Droid | null, DroidArgs>;
+  export type DroidResolver = Resolver<Query, Droid | null, DroidArgs>;
   export interface DroidArgs {
     id: string;
   }
 
-  export type HumanResolver = Resolver<Human | null, HumanArgs>;
+  export type HumanResolver = Resolver<Query, Human | null, HumanArgs>;
   export interface HumanArgs {
     id: string;
   }
 
-  export type StarshipResolver = Resolver<Starship | null, StarshipArgs>;
+  export type StarshipResolver = Resolver<Query, Starship | null, StarshipArgs>;
   export interface StarshipArgs {
     id: string;
   }
@@ -203,10 +203,10 @@ export namespace FriendsConnectionResolvers {
     pageInfo?: PageInfoResolver /** Information for paginating this connection */;
   }
 
-  export type TotalCountResolver = Resolver<number | null>;
-  export type EdgesResolver = Resolver<(FriendsEdge | null)[] | null>;
-  export type FriendsResolver = Resolver<(Character | null)[] | null>;
-  export type PageInfoResolver = Resolver<PageInfo>;
+  export type TotalCountResolver = Resolver<FriendsConnection, number | null>;
+  export type EdgesResolver = Resolver<FriendsConnection, (FriendsEdge | null)[] | null>;
+  export type FriendsResolver = Resolver<FriendsConnection, (Character | null)[] | null>;
+  export type PageInfoResolver = Resolver<FriendsConnection, PageInfo>;
 }
 /** An edge object for a character's friends */
 /** An edge object for a character's friends */
@@ -216,8 +216,8 @@ export namespace FriendsEdgeResolvers {
     node?: NodeResolver /** The character represented by this friendship edge */;
   }
 
-  export type CursorResolver = Resolver<string>;
-  export type NodeResolver = Resolver<Character | null>;
+  export type CursorResolver = Resolver<FriendsEdge, string>;
+  export type NodeResolver = Resolver<FriendsEdge, Character | null>;
 }
 /** Information for paginating this connection */
 /** Information for paginating this connection */
@@ -228,9 +228,9 @@ export namespace PageInfoResolvers {
     hasNextPage?: HasNextPageResolver;
   }
 
-  export type StartCursorResolver = Resolver<string | null>;
-  export type EndCursorResolver = Resolver<string | null>;
-  export type HasNextPageResolver = Resolver<boolean>;
+  export type StartCursorResolver = Resolver<PageInfo, string | null>;
+  export type EndCursorResolver = Resolver<PageInfo, string | null>;
+  export type HasNextPageResolver = Resolver<PageInfo, boolean>;
 }
 /** Represents a review for a movie */
 /** Represents a review for a movie */
@@ -240,8 +240,8 @@ export namespace ReviewResolvers {
     commentary?: CommentaryResolver /** Comment about the movie */;
   }
 
-  export type StarsResolver = Resolver<number>;
-  export type CommentaryResolver = Resolver<string | null>;
+  export type StarsResolver = Resolver<Review, number>;
+  export type CommentaryResolver = Resolver<Review, string | null>;
 }
 /** A humanoid creature from the Star Wars universe */
 /** A humanoid creature from the Star Wars universe */
@@ -258,24 +258,24 @@ export namespace HumanResolvers {
     starships?: StarshipsResolver /** A list of starships this person has piloted, or an empty list if none */;
   }
 
-  export type IdResolver = Resolver<string>;
-  export type NameResolver = Resolver<string>;
-  export type HomePlanetResolver = Resolver<string | null>;
-  export type HeightResolver = Resolver<number | null, HeightArgs>;
+  export type IdResolver = Resolver<Human, string>;
+  export type NameResolver = Resolver<Human, string>;
+  export type HomePlanetResolver = Resolver<Human, string | null>;
+  export type HeightResolver = Resolver<Human, number | null, HeightArgs>;
   export interface HeightArgs {
     unit?: LengthUnit | null;
   }
 
-  export type MassResolver = Resolver<number | null>;
-  export type FriendsResolver = Resolver<(Character | null)[] | null>;
-  export type FriendsConnectionResolver = Resolver<FriendsConnection, FriendsConnectionArgs>;
+  export type MassResolver = Resolver<Human, number | null>;
+  export type FriendsResolver = Resolver<Human, (Character | null)[] | null>;
+  export type FriendsConnectionResolver = Resolver<Human, FriendsConnection, FriendsConnectionArgs>;
   export interface FriendsConnectionArgs {
     first?: number | null;
     after?: string | null;
   }
 
-  export type AppearsInResolver = Resolver<(Episode | null)[]>;
-  export type StarshipsResolver = Resolver<(Starship | null)[] | null>;
+  export type AppearsInResolver = Resolver<Human, (Episode | null)[]>;
+  export type StarshipsResolver = Resolver<Human, (Starship | null)[] | null>;
 }
 
 export namespace StarshipResolvers {
@@ -285,9 +285,9 @@ export namespace StarshipResolvers {
     length?: LengthResolver /** Length of the starship, along the longest axis */;
   }
 
-  export type IdResolver = Resolver<string>;
-  export type NameResolver = Resolver<string>;
-  export type LengthResolver = Resolver<number | null, LengthArgs>;
+  export type IdResolver = Resolver<Starship, string>;
+  export type NameResolver = Resolver<Starship, string>;
+  export type LengthResolver = Resolver<Starship, number | null, LengthArgs>;
   export interface LengthArgs {
     unit?: LengthUnit | null;
   }
@@ -304,17 +304,17 @@ export namespace DroidResolvers {
     primaryFunction?: PrimaryFunctionResolver /** This droid's primary function */;
   }
 
-  export type IdResolver = Resolver<string>;
-  export type NameResolver = Resolver<string>;
-  export type FriendsResolver = Resolver<(Character | null)[] | null>;
-  export type FriendsConnectionResolver = Resolver<FriendsConnection, FriendsConnectionArgs>;
+  export type IdResolver = Resolver<Droid, string>;
+  export type NameResolver = Resolver<Droid, string>;
+  export type FriendsResolver = Resolver<Droid, (Character | null)[] | null>;
+  export type FriendsConnectionResolver = Resolver<Droid, FriendsConnection, FriendsConnectionArgs>;
   export interface FriendsConnectionArgs {
     first?: number | null;
     after?: string | null;
   }
 
-  export type AppearsInResolver = Resolver<(Episode | null)[]>;
-  export type PrimaryFunctionResolver = Resolver<string | null>;
+  export type AppearsInResolver = Resolver<Droid, (Episode | null)[]>;
+  export type PrimaryFunctionResolver = Resolver<Droid, string | null>;
 }
 /** The mutation type, represents all updates we can make to our data */
 /** The mutation type, represents all updates we can make to our data */
@@ -323,7 +323,7 @@ export namespace MutationResolvers {
     createReview?: CreateReviewResolver;
   }
 
-  export type CreateReviewResolver = Resolver<Review | null, CreateReviewArgs>;
+  export type CreateReviewResolver = Resolver<Mutation, Review | null, CreateReviewArgs>;
   export interface CreateReviewArgs {
     episode?: Episode | null;
     review: ReviewInput;

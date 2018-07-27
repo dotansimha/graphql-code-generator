@@ -1,11 +1,11 @@
 /* tslint:disable */
 import { GraphQLResolveInfo } from 'graphql';
 
-type Resolver<Result, Args = any> = (
-  parent: any,
-  args: Args,
-  context: any,
-  info: GraphQLResolveInfo
+type Resolver<Parent, Result, Args = any> = (
+  parent?: Parent,
+  args?: Args,
+  context?: any,
+  info?: GraphQLResolveInfo
 ) => Promise<Result> | Result;
 
 export interface Query {
@@ -28,8 +28,8 @@ export namespace QueryResolvers {
     userById?: UserByIdResolver;
   }
 
-  export type AllUsersResolver = Resolver<ReadonlyArray<User | null>>;
-  export type UserByIdResolver = Resolver<User | null, UserByIdArgs>;
+  export type AllUsersResolver = Resolver<Query, ReadonlyArray<User | null>>;
+  export type UserByIdResolver = Resolver<Query, User | null, UserByIdArgs>;
   export interface UserByIdArgs {
     id: number;
   }
@@ -42,7 +42,7 @@ export namespace UserResolvers {
     email?: EmailResolver;
   }
 
-  export type IdResolver = Resolver<number>;
-  export type NameResolver = Resolver<string>;
-  export type EmailResolver = Resolver<string>;
+  export type IdResolver = Resolver<User, number>;
+  export type NameResolver = Resolver<User, string>;
+  export type EmailResolver = Resolver<User, string>;
 }

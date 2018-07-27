@@ -2,7 +2,7 @@ import { SafeString } from 'handlebars';
 import { getResultType } from '../utils/get-result-type';
 import { capitalize } from '../utils/capitalize';
 
-export function getFieldResolver(type, options) {
+export function getFieldResolver(name, type, options) {
   const config = options.data.root.config || {};
   if (!type) {
     return '';
@@ -12,9 +12,9 @@ export function getFieldResolver(type, options) {
   const realType = getResultType(type, options);
 
   if (type.hasArguments && !config.noNamespaces) {
-    result = `Resolver<${realType}, ${capitalize(type.name)}Args>`;
+    result = `Resolver<${name}, ${realType}, ${capitalize(type.name)}Args>`;
   } else {
-    result = `Resolver<${realType}>`;
+    result = `Resolver<${name}, ${realType}>`;
   }
 
   return new SafeString(result);
