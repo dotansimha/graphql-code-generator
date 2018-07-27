@@ -1,7 +1,7 @@
 /* tslint:disable */
 import { GraphQLResolveInfo } from 'graphql';
 
-type Resolver<Parent, Result, Args = any> = (
+export type Resolver<Parent, Result, Args = any> = (
   parent?: Parent,
   args?: Args,
   context?: any,
