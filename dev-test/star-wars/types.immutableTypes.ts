@@ -506,7 +506,7 @@ export namespace HeroParentTypeDependentField {
 
   export type DroidInlineFragment = {
     readonly __typename?: 'Droid';
-    readonly friends?: ReadonlyArray<_Friends | null> | null;
+    readonly friends?: ReadonlyArray<Friends | null> | null;
   };
 
   export type _Friends = {

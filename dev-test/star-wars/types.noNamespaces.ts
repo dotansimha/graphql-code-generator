@@ -473,7 +473,7 @@ export type HeroParentTypeDependentField_HumanInlineFragment = {
 
 export type HeroParentTypeDependentFieldDroidInlineFragment = {
   __typename?: 'Droid';
-  friends?: HeroParentTypeDependentField_Friends[] | null;
+  friends?: HeroParentTypeDependentFieldFriends[] | null;
 };
 
 export type HeroParentTypeDependentField_Friends = {

@@ -198,4 +198,38 @@ describe('Resolvers', () => {
         export type QueryFieldTestResolver = Resolver<Query, string | null>;
       `);
   });
+
+  it('should handle snake case and convert it to pascal case', async () => {
+    const { context } = compileAndBuildContext(`
+      type snake_case_arg {
+        test: String
+      }  
+
+      type snake_case_result {
+        test: String
+      }
+
+      type Query {
+        snake_case_root_query(
+            arg: snake_case_arg
+          ): snake_case_result
+      }
+      schema {
+        query: Query
+      }
+    `);
+
+    const compiled = await compileTemplate(config, context);
+
+    const content = compiled[0].content;
+
+    expect(content).toBeSimilarStringTo(`
+      export type SnakeCaseRootQueryResolver = Resolver<Query, SnakeCaseResult | null, SnakeCaseRootQueryArgs>;
+      `);
+    expect(content).toBeSimilarStringTo(`
+      export interface SnakeCaseRootQueryArgs {
+        arg?: SnakeCaseArg | null;
+      }
+    `);
+  });
 });

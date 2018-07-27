@@ -155,33 +155,33 @@ export type EntryVoteResolver = Resolver<
 >; /** A repository object from the GitHub API. This uses the exact field names returned by theGitHub API for simplicity, even though the convention for GraphQL is usually to camel case. */
 export interface RepositoryResolvers {
   name?: RepositoryNameResolver /** Just the name of the repository, e.g. GitHunt-API */;
-  full_name?: RepositoryFull_nameResolver /** The full name of the repository with the username, e.g. apollostack/GitHunt-API */;
+  full_name?: RepositoryFullNameResolver /** The full name of the repository with the username, e.g. apollostack/GitHunt-API */;
   description?: RepositoryDescriptionResolver /** The description of the repository */;
-  html_url?: RepositoryHtml_urlResolver /** The link to the repository on GitHub */;
-  stargazers_count?: RepositoryStargazers_countResolver /** The number of people who have starred this repository on GitHub */;
-  open_issues_count?: RepositoryOpen_issues_countResolver /** The number of open issues on this repository on GitHub */;
+  html_url?: RepositoryHtmlUrlResolver /** The link to the repository on GitHub */;
+  stargazers_count?: RepositoryStargazersCountResolver /** The number of people who have starred this repository on GitHub */;
+  open_issues_count?: RepositoryOpenIssuesCountResolver /** The number of open issues on this repository on GitHub */;
   owner?: RepositoryOwnerResolver /** The owner of this repository on GitHub, e.g. apollostack */;
 }
 
 export type RepositoryNameResolver = Resolver<Repository, string>;
-export type RepositoryFull_nameResolver = Resolver<Repository, string>;
+export type RepositoryFullNameResolver = Resolver<Repository, string>;
 export type RepositoryDescriptionResolver = Resolver<Repository, string | null>;
-export type RepositoryHtml_urlResolver = Resolver<Repository, string>;
-export type RepositoryStargazers_countResolver = Resolver<Repository, number>;
-export type RepositoryOpen_issues_countResolver = Resolver<Repository, number | null>;
+export type RepositoryHtmlUrlResolver = Resolver<Repository, string>;
+export type RepositoryStargazersCountResolver = Resolver<Repository, number>;
+export type RepositoryOpenIssuesCountResolver = Resolver<Repository, number | null>;
 export type RepositoryOwnerResolver = Resolver<
   Repository,
   User | null
 >; /** A user object from the GitHub API. This uses the exact field names returned from the GitHub API. */
 export interface UserResolvers {
   login?: UserLoginResolver /** The name of the user, e.g. apollostack */;
-  avatar_url?: UserAvatar_urlResolver /** The URL to a directly embeddable image for this user's avatar */;
-  html_url?: UserHtml_urlResolver /** The URL of this user's GitHub page */;
+  avatar_url?: UserAvatarUrlResolver /** The URL to a directly embeddable image for this user's avatar */;
+  html_url?: UserHtmlUrlResolver /** The URL of this user's GitHub page */;
 }
 
 export type UserLoginResolver = Resolver<User, string>;
-export type UserAvatar_urlResolver = Resolver<User, string>;
-export type UserHtml_urlResolver = Resolver<User, string>; /** A comment about an entry, submitted by a user */
+export type UserAvatarUrlResolver = Resolver<User, string>;
+export type UserHtmlUrlResolver = Resolver<User, string>; /** A comment about an entry, submitted by a user */
 export interface CommentResolvers {
   id?: CommentIdResolver /** The SQL ID of this entry */;
   postedBy?: CommentPostedByResolver /** The GitHub user who posted the comment */;
@@ -196,10 +196,10 @@ export type CommentCreatedAtResolver = Resolver<Comment, number>;
 export type CommentContentResolver = Resolver<Comment, string>;
 export type CommentRepoNameResolver = Resolver<Comment, string>; /** XXX to be removed */
 export interface VoteResolvers {
-  vote_value?: VoteVote_valueResolver;
+  vote_value?: VoteVoteValueResolver;
 }
 
-export type VoteVote_valueResolver = Resolver<Vote, number>;
+export type VoteVoteValueResolver = Resolver<Vote, number>;
 export interface MutationResolvers {
   submitRepository?: MutationSubmitRepositoryResolver /** Submit a new repository, returns the new submission */;
   vote?: MutationVoteResolver /** Vote on a repository submission, returns the submission that was voted on */;
@@ -376,7 +376,7 @@ export type VoteVote = {
   __typename?: 'Entry';
   score: number;
   id: number;
-  vote: Vote_Vote;
+  vote: VoteVote;
 };
 
 export type Vote_Vote = {

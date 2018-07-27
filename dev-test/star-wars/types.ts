@@ -506,7 +506,7 @@ export namespace HeroParentTypeDependentField {
 
   export type DroidInlineFragment = {
     __typename?: 'Droid';
-    friends?: (_Friends | null)[] | null;
+    friends?: (Friends | null)[] | null;
   };
 
   export type _Friends = {

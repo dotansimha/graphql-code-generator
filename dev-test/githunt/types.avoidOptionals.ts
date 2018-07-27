@@ -158,20 +158,20 @@ export namespace EntryResolvers {
 export namespace RepositoryResolvers {
   export interface Resolvers {
     name?: NameResolver /** Just the name of the repository, e.g. GitHunt-API */;
-    full_name?: Full_nameResolver /** The full name of the repository with the username, e.g. apollostack/GitHunt-API */;
+    full_name?: FullNameResolver /** The full name of the repository with the username, e.g. apollostack/GitHunt-API */;
     description?: DescriptionResolver /** The description of the repository */;
-    html_url?: Html_urlResolver /** The link to the repository on GitHub */;
-    stargazers_count?: Stargazers_countResolver /** The number of people who have starred this repository on GitHub */;
-    open_issues_count?: Open_issues_countResolver /** The number of open issues on this repository on GitHub */;
+    html_url?: HtmlUrlResolver /** The link to the repository on GitHub */;
+    stargazers_count?: StargazersCountResolver /** The number of people who have starred this repository on GitHub */;
+    open_issues_count?: OpenIssuesCountResolver /** The number of open issues on this repository on GitHub */;
     owner?: OwnerResolver /** The owner of this repository on GitHub, e.g. apollostack */;
   }
 
   export type NameResolver = Resolver<Repository, string>;
-  export type Full_nameResolver = Resolver<Repository, string>;
+  export type FullNameResolver = Resolver<Repository, string>;
   export type DescriptionResolver = Resolver<Repository, string | null>;
-  export type Html_urlResolver = Resolver<Repository, string>;
-  export type Stargazers_countResolver = Resolver<Repository, number>;
-  export type Open_issues_countResolver = Resolver<Repository, number | null>;
+  export type HtmlUrlResolver = Resolver<Repository, string>;
+  export type StargazersCountResolver = Resolver<Repository, number>;
+  export type OpenIssuesCountResolver = Resolver<Repository, number | null>;
   export type OwnerResolver = Resolver<Repository, User | null>;
 }
 /** A user object from the GitHub API. This uses the exact field names returned from the GitHub API. */
@@ -179,13 +179,13 @@ export namespace RepositoryResolvers {
 export namespace UserResolvers {
   export interface Resolvers {
     login?: LoginResolver /** The name of the user, e.g. apollostack */;
-    avatar_url?: Avatar_urlResolver /** The URL to a directly embeddable image for this user's avatar */;
-    html_url?: Html_urlResolver /** The URL of this user's GitHub page */;
+    avatar_url?: AvatarUrlResolver /** The URL to a directly embeddable image for this user's avatar */;
+    html_url?: HtmlUrlResolver /** The URL of this user's GitHub page */;
   }
 
   export type LoginResolver = Resolver<User, string>;
-  export type Avatar_urlResolver = Resolver<User, string>;
-  export type Html_urlResolver = Resolver<User, string>;
+  export type AvatarUrlResolver = Resolver<User, string>;
+  export type HtmlUrlResolver = Resolver<User, string>;
 }
 /** A comment about an entry, submitted by a user */
 /** A comment about an entry, submitted by a user */
@@ -208,10 +208,10 @@ export namespace CommentResolvers {
 /** XXX to be removed */
 export namespace VoteResolvers {
   export interface Resolvers {
-    vote_value?: Vote_valueResolver;
+    vote_value?: VoteValueResolver;
   }
 
-  export type Vote_valueResolver = Resolver<Vote, number>;
+  export type VoteValueResolver = Resolver<Vote, number>;
 }
 
 export namespace MutationResolvers {
@@ -407,7 +407,7 @@ export namespace Vote {
     __typename?: 'Entry';
     score: number;
     id: number;
-    vote: _Vote;
+    vote: Vote;
   };
 
   export type _Vote = {
