@@ -70,4 +70,8 @@ This will cause the codegen not to use `namespace` in typings
 
 This will cause the codegen to wrap the generated schema typings with a TypeScript namespace.
 
+### `interfacePrefix` (or `CODEGEN_INTERFACE_PREFIX`, default value: `null`)
+
+This will cause the codegen to prefix graphql type interfaces with a value (if `I` is defined as prefix, type `Foo` will be generated as an interface named `IFoo`)
+
 Use this feature if you need to run the codegen on multiple schemas, but getting a unified types (read more [here](https://www.typescriptlang.org/docs/handbook/declaration-merging.html))

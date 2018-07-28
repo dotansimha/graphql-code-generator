@@ -2,8 +2,9 @@ import { pascalCase } from 'change-case';
 
 export function getResultType(type, options) {
   const baseType = type.type;
-  const realType = options.data.root.primitivesMap[baseType] || pascalCase(baseType);
   const config = options.data.root.config || {};
+  const realType =
+    options.data.root.primitivesMap[baseType] || `${config.interfacePrefix || ''}${pascalCase(baseType)}`;
   const useImmutable = !!config.immutableTypes;
 
   if (type.isArray) {

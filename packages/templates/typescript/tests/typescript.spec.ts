@@ -51,6 +51,34 @@ describe('TypeScript template', () => {
     `);
   });
 
+  it('should handle interfacePrefix option correctly', async () => {
+    const { context } = compileAndBuildContext(`
+      type Foo {
+        bar: Bar
+      }
+      type Bar {
+        qux: String
+      }
+    `);
+    const compiled = await compileTemplate(
+      {
+        ...config,
+        config: {
+          interfacePrefix: 'I'
+        }
+      } as GeneratorConfig,
+      context
+    );
+
+    const content = compiled[0].content;
+
+    expect(content).toBeSimilarStringTo(`
+      interface IFoo {
+        bar?: IBar | null;
+      }
+    `);
+  });
+
   describe('Schema Only', () => {
     it('should handle wrapping namespace correctly', async () => {
       const { context } = compileAndBuildContext(`
