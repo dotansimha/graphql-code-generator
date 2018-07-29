@@ -37,7 +37,7 @@ describe('Resolvers', () => {
     expect(content).toBeSimilarStringTo(`
         import { GraphQLResolveInfo } from 'graphql';
 
-        type Resolver<Result, Args = any> = (
+        export type Resolver<Result, Args = any> = (
           parent: any,
           args: Args,
           context: any,
@@ -90,7 +90,7 @@ describe('Resolvers', () => {
             fieldTest?: FieldTestResolver;
           }
     
-          export type FieldTestResolver = Resolver<string | null>;
+          export type FieldTestResolver<R = string | null> = Resolver<R>;
         }
       `);
   });
@@ -116,7 +116,7 @@ describe('Resolvers', () => {
             fieldTest?: FieldTestResolver;
           }
     
-          export type FieldTestResolver = Resolver<string | null, FieldTestArgs>;
+          export type FieldTestResolver<R = string | null> = Resolver<R, FieldTestArgs>;
           
           export interface FieldTestArgs {
             last: number;
@@ -195,7 +195,7 @@ describe('Resolvers', () => {
           fieldTest?: QueryFieldTestResolver;
         }
 
-        export type QueryFieldTestResolver = Resolver<string | null>;
+        export type QueryFieldTestResolver<R = string | null> = Resolver<R>;
       `);
   });
 });
