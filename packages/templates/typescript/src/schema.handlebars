@@ -1,7 +1,7 @@
 {{#ifCond @root.config.resolvers "!==" false}}
 import { GraphQLResolveInfo } from 'graphql';
 
-type Resolver<Result, Args = any> = (
+export type Resolver<Result, Args = any> = (
   parent: any,
   args: Args,
   context: any,
