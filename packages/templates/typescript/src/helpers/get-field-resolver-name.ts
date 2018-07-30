@@ -1,5 +1,5 @@
-import { capitalize } from '../utils/capitalize';
+import { pascalCase } from 'change-case';
 
 export function getFieldResolverName(name) {
-  return `${capitalize(name)}Resolver`;
+  return `${pascalCase(name)}Resolver`;
 }
