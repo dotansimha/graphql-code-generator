@@ -1,13 +1,13 @@
 {{#if @root.config.noNamespaces}}
 {{ toComment description }}
-export interface {{ toPascalCase name }}Resolvers {
+export interface {{ toPascalCase name }}Resolvers<Context = any, Parent = {{toPascalCase name }}> {
   {{#each fields}}
-  {{ name }}?: {{ toPascalCase ../name }}{{ getFieldResolverName name }}; {{ toComment description }}
+  {{ name }}?: {{ toPascalCase ../name }}{{ getFieldResolverName name }}<{{convertedType this}}, Parent, Context>; {{ toComment description }}
   {{/each}}
 }
 
 {{#each fields}}
-export type {{ toPascalCase ../name }}{{ getFieldResolverName name }}<R = {{convertedType this}}> = {{ getFieldResolver  ../name this }};
+export type {{ toPascalCase ../name }}{{ getFieldResolverName name }}<R = {{convertedType this}}, Parent = {{toPascalCase ../name}}, Context = any> = {{ getFieldResolver this }};
 
 {{~# if hasArguments }}
 
@@ -22,14 +22,14 @@ export interface {{ toPascalCase ../name }}{{ toPascalCase name }}Args {
 {{else}}
 {{ toComment description }}
 export namespace {{ toPascalCase name }}Resolvers {
-  export interface Resolvers {
+  export interface Resolvers<Context = any, Parent = {{ toPascalCase name}}> {
     {{#each fields}}
-    {{ name }}?: {{ getFieldResolverName name }}; {{ toComment description }}
+    {{ name }}?: {{ getFieldResolverName name }}<{{convertedType this}}, Parent, Context>; {{ toComment description }}
     {{/each}}
   }
 
   {{#each fields}}
-  export type {{ getFieldResolverName name }}<R = {{convertedType this}}> = {{ getFieldResolver ../name this }};
+  export type {{ getFieldResolverName name }}<R = {{convertedType this}}, Parent = {{toPascalCase ../name}}, Context = any> = {{ getFieldResolver this }};
 
   {{~# if hasArguments }}
 

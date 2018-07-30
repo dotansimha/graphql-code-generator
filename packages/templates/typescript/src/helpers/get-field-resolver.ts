@@ -1,7 +1,7 @@
 import { SafeString } from 'handlebars';
 import { pascalCase } from 'change-case';
 
-export function getFieldResolver(name, type, options) {
+export function getFieldResolver(type, options) {
   const config = options.data.root.config || {};
   if (!type) {
     return '';
@@ -10,9 +10,9 @@ export function getFieldResolver(name, type, options) {
   let result;
 
   if (type.hasArguments && !config.noNamespaces) {
-    result = `Resolver<${pascalCase(name)}, R, ${pascalCase(type.name)}Args>`;
+    result = `Resolver<R, Parent, Context, ${pascalCase(type.name)}Args>`;
   } else {
-    result = `Resolver<${pascalCase(name)}, R>`;
+    result = `Resolver<R, Parent, Context>`;
   }
 
   return new SafeString(result);

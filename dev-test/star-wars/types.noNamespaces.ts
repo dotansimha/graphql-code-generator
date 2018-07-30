@@ -1,10 +1,10 @@
 /* tslint:disable */
 import { GraphQLResolveInfo } from 'graphql';
 
-export type Resolver<Parent, Result, Args = any> = (
+export type Resolver<Result, Parent = any, Context = any, Args = any> = (
   parent?: Parent,
   args?: Args,
-  context?: any,
+  context?: Context,
   info?: GraphQLResolveInfo
 ) => Promise<Result> | Result;
 
@@ -146,167 +146,251 @@ export enum LengthUnit {
 export type SearchResult = Human | Droid | Starship;
 
 /** The query type, represents all of the entry points into our object graph */
-export interface QueryResolvers {
-  hero?: QueryHeroResolver;
-  reviews?: QueryReviewsResolver;
-  search?: QuerySearchResolver;
-  character?: QueryCharacterResolver;
-  droid?: QueryDroidResolver;
-  human?: QueryHumanResolver;
-  starship?: QueryStarshipResolver;
+export interface QueryResolvers<Context = any, Parent = Query> {
+  hero?: QueryHeroResolver<Character | null, Parent, Context>;
+  reviews?: QueryReviewsResolver<Review[] | null, Parent, Context>;
+  search?: QuerySearchResolver<SearchResult[] | null, Parent, Context>;
+  character?: QueryCharacterResolver<Character | null, Parent, Context>;
+  droid?: QueryDroidResolver<Droid | null, Parent, Context>;
+  human?: QueryHumanResolver<Human | null, Parent, Context>;
+  starship?: QueryStarshipResolver<Starship | null, Parent, Context>;
 }
 
-export type QueryHeroResolver = Resolver<Query, Character | null>;
+export type QueryHeroResolver<R = Character | null, Parent = Query, Context = any> = Resolver<R, Parent, Context>;
 export interface QueryHeroArgs {
   episode?: Episode | null;
 }
 
-export type QueryReviewsResolver = Resolver<Query, Review[] | null>;
+export type QueryReviewsResolver<R = Review[] | null, Parent = Query, Context = any> = Resolver<R, Parent, Context>;
 export interface QueryReviewsArgs {
   episode: Episode;
 }
 
-export type QuerySearchResolver = Resolver<Query, SearchResult[] | null>;
+export type QuerySearchResolver<R = SearchResult[] | null, Parent = Query, Context = any> = Resolver<
+  R,
+  Parent,
+  Context
+>;
 export interface QuerySearchArgs {
   text?: string | null;
 }
 
-export type QueryCharacterResolver = Resolver<Query, Character | null>;
+export type QueryCharacterResolver<R = Character | null, Parent = Query, Context = any> = Resolver<R, Parent, Context>;
 export interface QueryCharacterArgs {
   id: string;
 }
 
-export type QueryDroidResolver = Resolver<Query, Droid | null>;
+export type QueryDroidResolver<R = Droid | null, Parent = Query, Context = any> = Resolver<R, Parent, Context>;
 export interface QueryDroidArgs {
   id: string;
 }
 
-export type QueryHumanResolver = Resolver<Query, Human | null>;
+export type QueryHumanResolver<R = Human | null, Parent = Query, Context = any> = Resolver<R, Parent, Context>;
 export interface QueryHumanArgs {
   id: string;
 }
 
-export type QueryStarshipResolver = Resolver<Query, Starship | null>;
+export type QueryStarshipResolver<R = Starship | null, Parent = Query, Context = any> = Resolver<R, Parent, Context>;
 export interface QueryStarshipArgs {
   id: string;
 }
 
 /** A connection object for a character's friends */
-export interface FriendsConnectionResolvers {
-  totalCount?: FriendsConnectionTotalCountResolver /** The total number of friends */;
-  edges?: FriendsConnectionEdgesResolver /** The edges for each of the character's friends. */;
-  friends?: FriendsConnectionFriendsResolver /** A list of the friends, as a convenience when edges are not needed. */;
-  pageInfo?: FriendsConnectionPageInfoResolver /** Information for paginating this connection */;
+export interface FriendsConnectionResolvers<Context = any, Parent = FriendsConnection> {
+  totalCount?: FriendsConnectionTotalCountResolver<number | null, Parent, Context> /** The total number of friends */;
+  edges?: FriendsConnectionEdgesResolver<
+    FriendsEdge[] | null,
+    Parent,
+    Context
+  > /** The edges for each of the character's friends. */;
+  friends?: FriendsConnectionFriendsResolver<
+    Character[] | null,
+    Parent,
+    Context
+  > /** A list of the friends, as a convenience when edges are not needed. */;
+  pageInfo?: FriendsConnectionPageInfoResolver<
+    PageInfo,
+    Parent,
+    Context
+  > /** Information for paginating this connection */;
 }
 
-export type FriendsConnectionTotalCountResolver = Resolver<FriendsConnection, number | null>;
-export type FriendsConnectionEdgesResolver = Resolver<FriendsConnection, FriendsEdge[] | null>;
-export type FriendsConnectionFriendsResolver = Resolver<FriendsConnection, Character[] | null>;
-export type FriendsConnectionPageInfoResolver = Resolver<
-  FriendsConnection,
-  PageInfo
+export type FriendsConnectionTotalCountResolver<
+  R = number | null,
+  Parent = FriendsConnection,
+  Context = any
+> = Resolver<R, Parent, Context>;
+export type FriendsConnectionEdgesResolver<
+  R = FriendsEdge[] | null,
+  Parent = FriendsConnection,
+  Context = any
+> = Resolver<R, Parent, Context>;
+export type FriendsConnectionFriendsResolver<
+  R = Character[] | null,
+  Parent = FriendsConnection,
+  Context = any
+> = Resolver<R, Parent, Context>;
+export type FriendsConnectionPageInfoResolver<R = PageInfo, Parent = FriendsConnection, Context = any> = Resolver<
+  R,
+  Parent,
+  Context
 >; /** An edge object for a character's friends */
-export interface FriendsEdgeResolvers {
-  cursor?: FriendsEdgeCursorResolver /** A cursor used for pagination */;
-  node?: FriendsEdgeNodeResolver /** The character represented by this friendship edge */;
+export interface FriendsEdgeResolvers<Context = any, Parent = FriendsEdge> {
+  cursor?: FriendsEdgeCursorResolver<string, Parent, Context> /** A cursor used for pagination */;
+  node?: FriendsEdgeNodeResolver<
+    Character | null,
+    Parent,
+    Context
+  > /** The character represented by this friendship edge */;
 }
 
-export type FriendsEdgeCursorResolver = Resolver<FriendsEdge, string>;
-export type FriendsEdgeNodeResolver = Resolver<
-  FriendsEdge,
-  Character | null
+export type FriendsEdgeCursorResolver<R = string, Parent = FriendsEdge, Context = any> = Resolver<R, Parent, Context>;
+export type FriendsEdgeNodeResolver<R = Character | null, Parent = FriendsEdge, Context = any> = Resolver<
+  R,
+  Parent,
+  Context
 >; /** Information for paginating this connection */
-export interface PageInfoResolvers {
-  startCursor?: PageInfoStartCursorResolver;
-  endCursor?: PageInfoEndCursorResolver;
-  hasNextPage?: PageInfoHasNextPageResolver;
+export interface PageInfoResolvers<Context = any, Parent = PageInfo> {
+  startCursor?: PageInfoStartCursorResolver<string | null, Parent, Context>;
+  endCursor?: PageInfoEndCursorResolver<string | null, Parent, Context>;
+  hasNextPage?: PageInfoHasNextPageResolver<boolean, Parent, Context>;
 }
 
-export type PageInfoStartCursorResolver = Resolver<PageInfo, string | null>;
-export type PageInfoEndCursorResolver = Resolver<PageInfo, string | null>;
-export type PageInfoHasNextPageResolver = Resolver<PageInfo, boolean>; /** Represents a review for a movie */
-export interface ReviewResolvers {
-  stars?: ReviewStarsResolver /** The number of stars this review gave, 1-5 */;
-  commentary?: ReviewCommentaryResolver /** Comment about the movie */;
+export type PageInfoStartCursorResolver<R = string | null, Parent = PageInfo, Context = any> = Resolver<
+  R,
+  Parent,
+  Context
+>;
+export type PageInfoEndCursorResolver<R = string | null, Parent = PageInfo, Context = any> = Resolver<
+  R,
+  Parent,
+  Context
+>;
+export type PageInfoHasNextPageResolver<R = boolean, Parent = PageInfo, Context = any> = Resolver<
+  R,
+  Parent,
+  Context
+>; /** Represents a review for a movie */
+export interface ReviewResolvers<Context = any, Parent = Review> {
+  stars?: ReviewStarsResolver<number, Parent, Context> /** The number of stars this review gave, 1-5 */;
+  commentary?: ReviewCommentaryResolver<string | null, Parent, Context> /** Comment about the movie */;
 }
 
-export type ReviewStarsResolver = Resolver<Review, number>;
-export type ReviewCommentaryResolver = Resolver<
-  Review,
-  string | null
+export type ReviewStarsResolver<R = number, Parent = Review, Context = any> = Resolver<R, Parent, Context>;
+export type ReviewCommentaryResolver<R = string | null, Parent = Review, Context = any> = Resolver<
+  R,
+  Parent,
+  Context
 >; /** A humanoid creature from the Star Wars universe */
-export interface HumanResolvers {
-  id?: HumanIdResolver /** The ID of the human */;
-  name?: HumanNameResolver /** What this human calls themselves */;
-  homePlanet?: HumanHomePlanetResolver /** The home planet of the human, or null if unknown */;
-  height?: HumanHeightResolver /** Height in the preferred unit, default is meters */;
-  mass?: HumanMassResolver /** Mass in kilograms, or null if unknown */;
-  friends?: HumanFriendsResolver /** This human's friends, or an empty list if they have none */;
-  friendsConnection?: HumanFriendsConnectionResolver /** The friends of the human exposed as a connection with edges */;
-  appearsIn?: HumanAppearsInResolver /** The movies this human appears in */;
-  starships?: HumanStarshipsResolver /** A list of starships this person has piloted, or an empty list if none */;
+export interface HumanResolvers<Context = any, Parent = Human> {
+  id?: HumanIdResolver<string, Parent, Context> /** The ID of the human */;
+  name?: HumanNameResolver<string, Parent, Context> /** What this human calls themselves */;
+  homePlanet?: HumanHomePlanetResolver<
+    string | null,
+    Parent,
+    Context
+  > /** The home planet of the human, or null if unknown */;
+  height?: HumanHeightResolver<number | null, Parent, Context> /** Height in the preferred unit, default is meters */;
+  mass?: HumanMassResolver<number | null, Parent, Context> /** Mass in kilograms, or null if unknown */;
+  friends?: HumanFriendsResolver<
+    Character[] | null,
+    Parent,
+    Context
+  > /** This human's friends, or an empty list if they have none */;
+  friendsConnection?: HumanFriendsConnectionResolver<
+    FriendsConnection,
+    Parent,
+    Context
+  > /** The friends of the human exposed as a connection with edges */;
+  appearsIn?: HumanAppearsInResolver<Episode[], Parent, Context> /** The movies this human appears in */;
+  starships?: HumanStarshipsResolver<
+    Starship[] | null,
+    Parent,
+    Context
+  > /** A list of starships this person has piloted, or an empty list if none */;
 }
 
-export type HumanIdResolver = Resolver<Human, string>;
-export type HumanNameResolver = Resolver<Human, string>;
-export type HumanHomePlanetResolver = Resolver<Human, string | null>;
-export type HumanHeightResolver = Resolver<Human, number | null>;
+export type HumanIdResolver<R = string, Parent = Human, Context = any> = Resolver<R, Parent, Context>;
+export type HumanNameResolver<R = string, Parent = Human, Context = any> = Resolver<R, Parent, Context>;
+export type HumanHomePlanetResolver<R = string | null, Parent = Human, Context = any> = Resolver<R, Parent, Context>;
+export type HumanHeightResolver<R = number | null, Parent = Human, Context = any> = Resolver<R, Parent, Context>;
 export interface HumanHeightArgs {
   unit?: LengthUnit | null;
 }
 
-export type HumanMassResolver = Resolver<Human, number | null>;
-export type HumanFriendsResolver = Resolver<Human, Character[] | null>;
-export type HumanFriendsConnectionResolver = Resolver<Human, FriendsConnection>;
+export type HumanMassResolver<R = number | null, Parent = Human, Context = any> = Resolver<R, Parent, Context>;
+export type HumanFriendsResolver<R = Character[] | null, Parent = Human, Context = any> = Resolver<R, Parent, Context>;
+export type HumanFriendsConnectionResolver<R = FriendsConnection, Parent = Human, Context = any> = Resolver<
+  R,
+  Parent,
+  Context
+>;
 export interface HumanFriendsConnectionArgs {
   first?: number | null;
   after?: string | null;
 }
 
-export type HumanAppearsInResolver = Resolver<Human, Episode[]>;
-export type HumanStarshipsResolver = Resolver<Human, Starship[] | null>;
-export interface StarshipResolvers {
-  id?: StarshipIdResolver /** The ID of the starship */;
-  name?: StarshipNameResolver /** The name of the starship */;
-  length?: StarshipLengthResolver /** Length of the starship, along the longest axis */;
+export type HumanAppearsInResolver<R = Episode[], Parent = Human, Context = any> = Resolver<R, Parent, Context>;
+export type HumanStarshipsResolver<R = Starship[] | null, Parent = Human, Context = any> = Resolver<R, Parent, Context>;
+export interface StarshipResolvers<Context = any, Parent = Starship> {
+  id?: StarshipIdResolver<string, Parent, Context> /** The ID of the starship */;
+  name?: StarshipNameResolver<string, Parent, Context> /** The name of the starship */;
+  length?: StarshipLengthResolver<number | null, Parent, Context> /** Length of the starship, along the longest axis */;
 }
 
-export type StarshipIdResolver = Resolver<Starship, string>;
-export type StarshipNameResolver = Resolver<Starship, string>;
-export type StarshipLengthResolver = Resolver<Starship, number | null>;
+export type StarshipIdResolver<R = string, Parent = Starship, Context = any> = Resolver<R, Parent, Context>;
+export type StarshipNameResolver<R = string, Parent = Starship, Context = any> = Resolver<R, Parent, Context>;
+export type StarshipLengthResolver<R = number | null, Parent = Starship, Context = any> = Resolver<R, Parent, Context>;
 export interface StarshipLengthArgs {
   unit?: LengthUnit | null;
 }
 
 /** An autonomous mechanical character in the Star Wars universe */
-export interface DroidResolvers {
-  id?: DroidIdResolver /** The ID of the droid */;
-  name?: DroidNameResolver /** What others call this droid */;
-  friends?: DroidFriendsResolver /** This droid's friends, or an empty list if they have none */;
-  friendsConnection?: DroidFriendsConnectionResolver /** The friends of the droid exposed as a connection with edges */;
-  appearsIn?: DroidAppearsInResolver /** The movies this droid appears in */;
-  primaryFunction?: DroidPrimaryFunctionResolver /** This droid's primary function */;
+export interface DroidResolvers<Context = any, Parent = Droid> {
+  id?: DroidIdResolver<string, Parent, Context> /** The ID of the droid */;
+  name?: DroidNameResolver<string, Parent, Context> /** What others call this droid */;
+  friends?: DroidFriendsResolver<
+    Character[] | null,
+    Parent,
+    Context
+  > /** This droid's friends, or an empty list if they have none */;
+  friendsConnection?: DroidFriendsConnectionResolver<
+    FriendsConnection,
+    Parent,
+    Context
+  > /** The friends of the droid exposed as a connection with edges */;
+  appearsIn?: DroidAppearsInResolver<Episode[], Parent, Context> /** The movies this droid appears in */;
+  primaryFunction?: DroidPrimaryFunctionResolver<string | null, Parent, Context> /** This droid's primary function */;
 }
 
-export type DroidIdResolver = Resolver<Droid, string>;
-export type DroidNameResolver = Resolver<Droid, string>;
-export type DroidFriendsResolver = Resolver<Droid, Character[] | null>;
-export type DroidFriendsConnectionResolver = Resolver<Droid, FriendsConnection>;
+export type DroidIdResolver<R = string, Parent = Droid, Context = any> = Resolver<R, Parent, Context>;
+export type DroidNameResolver<R = string, Parent = Droid, Context = any> = Resolver<R, Parent, Context>;
+export type DroidFriendsResolver<R = Character[] | null, Parent = Droid, Context = any> = Resolver<R, Parent, Context>;
+export type DroidFriendsConnectionResolver<R = FriendsConnection, Parent = Droid, Context = any> = Resolver<
+  R,
+  Parent,
+  Context
+>;
 export interface DroidFriendsConnectionArgs {
   first?: number | null;
   after?: string | null;
 }
 
-export type DroidAppearsInResolver = Resolver<Droid, Episode[]>;
-export type DroidPrimaryFunctionResolver = Resolver<
-  Droid,
-  string | null
+export type DroidAppearsInResolver<R = Episode[], Parent = Droid, Context = any> = Resolver<R, Parent, Context>;
+export type DroidPrimaryFunctionResolver<R = string | null, Parent = Droid, Context = any> = Resolver<
+  R,
+  Parent,
+  Context
 >; /** The mutation type, represents all updates we can make to our data */
-export interface MutationResolvers {
-  createReview?: MutationCreateReviewResolver;
+export interface MutationResolvers<Context = any, Parent = Mutation> {
+  createReview?: MutationCreateReviewResolver<Review | null, Parent, Context>;
 }
 
-export type MutationCreateReviewResolver = Resolver<Mutation, Review | null>;
+export type MutationCreateReviewResolver<R = Review | null, Parent = Mutation, Context = any> = Resolver<
+  R,
+  Parent,
+  Context
+>;
 export interface MutationCreateReviewArgs {
   episode?: Episode | null;
   review: ReviewInput;

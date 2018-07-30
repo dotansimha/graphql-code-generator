@@ -1,10 +1,10 @@
 /* tslint:disable */
 import { GraphQLResolveInfo } from 'graphql';
 
-export type Resolver<Parent, Result, Args = any> = (
+export type Resolver<Result, Parent = any, Context = any, Args = any> = (
   parent?: Parent,
   args?: Args,
-  context?: any,
+  context?: Context,
   info?: GraphQLResolveInfo
 ) => Promise<Result> | Result;
 
@@ -23,26 +23,31 @@ export interface UserByIdQueryArgs {
 }
 
 export namespace QueryResolvers {
-  export interface Resolvers {
-    allUsers?: AllUsersResolver;
-    userById?: UserByIdResolver;
+  export interface Resolvers<Context = any, Parent = Query> {
+    allUsers?: AllUsersResolver<(User | null)[], Parent, Context>;
+    userById?: UserByIdResolver<User | null, Parent, Context>;
   }
 
-  export type AllUsersResolver = Resolver<Query, (User | null)[]>;
-  export type UserByIdResolver = Resolver<Query, User | null, UserByIdArgs>;
+  export type AllUsersResolver<R = (User | null)[], Parent = Query, Context = any> = Resolver<R, Parent, Context>;
+  export type UserByIdResolver<R = User | null, Parent = Query, Context = any> = Resolver<
+    R,
+    Parent,
+    Context,
+    UserByIdArgs
+  >;
   export interface UserByIdArgs {
     id: number;
   }
 }
 
 export namespace UserResolvers {
-  export interface Resolvers {
-    id?: IdResolver;
-    name?: NameResolver;
-    email?: EmailResolver;
+  export interface Resolvers<Context = any, Parent = User> {
+    id?: IdResolver<number, Parent, Context>;
+    name?: NameResolver<string, Parent, Context>;
+    email?: EmailResolver<string, Parent, Context>;
   }
 
-  export type IdResolver = Resolver<User, number>;
-  export type NameResolver = Resolver<User, string>;
-  export type EmailResolver = Resolver<User, string>;
+  export type IdResolver<R = number, Parent = User, Context = any> = Resolver<R, Parent, Context>;
+  export type NameResolver<R = string, Parent = User, Context = any> = Resolver<R, Parent, Context>;
+  export type EmailResolver<R = string, Parent = User, Context = any> = Resolver<R, Parent, Context>;
 }
