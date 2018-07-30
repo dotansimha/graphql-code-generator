@@ -1,4 +1,5 @@
 {{#ifCond @root.config.resolvers "!==" false}}
+{{#if types}}
 import { GraphQLResolveInfo } from 'graphql';
 
 export type Resolver<Result, Parent = any, Context = any, Args = any> = (
@@ -7,6 +8,7 @@ export type Resolver<Result, Parent = any, Context = any, Args = any> = (
   context?: Context,
   info?: GraphQLResolveInfo
 ) => Promise<Result> | Result;
+{{/if}}
 {{/ifCond}}
 {{#if @root.config.schemaNamespace ~}}export namespace {{@root.config.schemaNamespace}} { {{/if}}
 {{#each scalars}}

@@ -234,7 +234,8 @@ export type FriendsConnectionPageInfoResolver<R = PageInfo, Parent = FriendsConn
   R,
   Parent,
   Context
->; /** An edge object for a character's friends */
+>;
+/** An edge object for a character's friends */
 export interface FriendsEdgeResolvers<Context = any, Parent = FriendsEdge> {
   cursor?: FriendsEdgeCursorResolver<string, Parent, Context> /** A cursor used for pagination */;
   node?: FriendsEdgeNodeResolver<
@@ -249,7 +250,8 @@ export type FriendsEdgeNodeResolver<R = Character | null, Parent = FriendsEdge, 
   R,
   Parent,
   Context
->; /** Information for paginating this connection */
+>;
+/** Information for paginating this connection */
 export interface PageInfoResolvers<Context = any, Parent = PageInfo> {
   startCursor?: PageInfoStartCursorResolver<string | null, Parent, Context>;
   endCursor?: PageInfoEndCursorResolver<string | null, Parent, Context>;
@@ -266,22 +268,16 @@ export type PageInfoEndCursorResolver<R = string | null, Parent = PageInfo, Cont
   Parent,
   Context
 >;
-export type PageInfoHasNextPageResolver<R = boolean, Parent = PageInfo, Context = any> = Resolver<
-  R,
-  Parent,
-  Context
->; /** Represents a review for a movie */
+export type PageInfoHasNextPageResolver<R = boolean, Parent = PageInfo, Context = any> = Resolver<R, Parent, Context>;
+/** Represents a review for a movie */
 export interface ReviewResolvers<Context = any, Parent = Review> {
   stars?: ReviewStarsResolver<number, Parent, Context> /** The number of stars this review gave, 1-5 */;
   commentary?: ReviewCommentaryResolver<string | null, Parent, Context> /** Comment about the movie */;
 }
 
 export type ReviewStarsResolver<R = number, Parent = Review, Context = any> = Resolver<R, Parent, Context>;
-export type ReviewCommentaryResolver<R = string | null, Parent = Review, Context = any> = Resolver<
-  R,
-  Parent,
-  Context
->; /** A humanoid creature from the Star Wars universe */
+export type ReviewCommentaryResolver<R = string | null, Parent = Review, Context = any> = Resolver<R, Parent, Context>;
+/** A humanoid creature from the Star Wars universe */
 export interface HumanResolvers<Context = any, Parent = Human> {
   id?: HumanIdResolver<string, Parent, Context> /** The ID of the human */;
   name?: HumanNameResolver<string, Parent, Context> /** What this human calls themselves */;
@@ -332,6 +328,7 @@ export interface HumanFriendsConnectionArgs {
 
 export type HumanAppearsInResolver<R = Episode[], Parent = Human, Context = any> = Resolver<R, Parent, Context>;
 export type HumanStarshipsResolver<R = Starship[] | null, Parent = Human, Context = any> = Resolver<R, Parent, Context>;
+
 export interface StarshipResolvers<Context = any, Parent = Starship> {
   id?: StarshipIdResolver<string, Parent, Context> /** The ID of the starship */;
   name?: StarshipNameResolver<string, Parent, Context> /** The name of the starship */;
@@ -381,7 +378,8 @@ export type DroidPrimaryFunctionResolver<R = string | null, Parent = Droid, Cont
   R,
   Parent,
   Context
->; /** The mutation type, represents all updates we can make to our data */
+>;
+/** The mutation type, represents all updates we can make to our data */
 export interface MutationResolvers<Context = any, Parent = Mutation> {
   createReview?: MutationCreateReviewResolver<Review | null, Parent, Context>;
 }
