@@ -1,5 +1,4 @@
 import { SafeString } from 'handlebars';
-import { getResultType } from '../utils/get-result-type';
 import { pascalCase } from 'change-case';
 
 export function getFieldResolver(name, type, options) {
@@ -9,12 +8,11 @@ export function getFieldResolver(name, type, options) {
   }
 
   let result;
-  const realType = getResultType(type, options);
 
   if (type.hasArguments && !config.noNamespaces) {
-    result = `Resolver<${pascalCase(name)}, ${realType}, ${pascalCase(type.name)}Args>`;
+    result = `Resolver<${pascalCase(name)}, R, ${pascalCase(type.name)}Args>`;
   } else {
-    result = `Resolver<${pascalCase(name)}, ${realType}>`;
+    result = `Resolver<${pascalCase(name)}, R>`;
   }
 
   return new SafeString(result);

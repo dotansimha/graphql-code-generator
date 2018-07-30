@@ -89,8 +89,7 @@ describe('Resolvers', () => {
           export interface Resolvers {
             fieldTest?: FieldTestResolver;
           }
-    
-          export type FieldTestResolver = Resolver<Query, string | null>;
+        export type FieldTestResolver<R = string | null> = Resolver<Query, R>;
         }
       `);
   });
@@ -116,7 +115,7 @@ describe('Resolvers', () => {
             fieldTest?: FieldTestResolver;
           }
     
-          export type FieldTestResolver = Resolver<Query, string | null, FieldTestArgs>;
+          export type FieldTestResolver<R = string | null> = Resolver<Query, R, FieldTestArgs>;
           
           export interface FieldTestArgs {
             last: number;
@@ -195,7 +194,7 @@ describe('Resolvers', () => {
           fieldTest?: QueryFieldTestResolver;
         }
 
-        export type QueryFieldTestResolver = Resolver<Query, string | null>;
+        export type QueryFieldTestResolver<R = string | null> = Resolver<Query, R>;
       `);
   });
 
@@ -224,7 +223,7 @@ describe('Resolvers', () => {
     const content = compiled[0].content;
 
     expect(content).toBeSimilarStringTo(`
-      export type SnakeCaseRootQueryResolver = Resolver<Query, SnakeCaseResult | null, SnakeCaseRootQueryArgs>;
+      export type SnakeCaseRootQueryResolver<R = SnakeCaseResult | null> = Resolver<Query, R, SnakeCaseRootQueryArgs>;
       `);
     expect(content).toBeSimilarStringTo(`
       export interface SnakeCaseRootQueryArgs {
