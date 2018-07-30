@@ -76,17 +76,20 @@
     "babel-types": "7.0.0-beta.3",
     "babylon": "7.0.0-beta.47",
     "commander": "2.16.0",
+    "fb-watchman": "2.0.0",
     "glob": "7.1.2",
     "graphql-codegen-compiler": "0.10.5",
     "graphql-codegen-core": "0.10.5",
     "is-glob": "4.0.0",
     "is-valid-path": "0.1.1",
     "mkdirp": "0.5.1",
+    "pify": "3.0.0",
     "prettier": "1.14.0",
     "request": "2.87.0",
     "valid-url": "1.0.9"
   },
   "devDependencies": {
+    "@types/pify": "3.0.2",
     "graphql-codegen-typescript-template": "0.10.5",
     "graphql-codegen-typescript-template-multiple": "0.9.4"
   },
