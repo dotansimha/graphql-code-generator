@@ -12,6 +12,7 @@ import { getOptionals } from './helpers/get-optionals';
 import { getFieldResolver } from './helpers/get-field-resolver';
 import { getFieldResolverName } from './helpers/get-field-resolver-name';
 import { isPrimitiveType } from './helpers/is-primitive-type';
+import { getScalarType } from './helpers/get-scalar-type';
 
 export const config: GeneratorConfig = {
   inputType: EInputType.SINGLE_FILE,
@@ -38,7 +39,8 @@ export const config: GeneratorConfig = {
     getFieldResolver,
     getFieldResolverName,
     getOptionals,
-    isPrimitiveType
+    isPrimitiveType,
+    getScalarType
   },
   outFile: 'types.ts'
 };

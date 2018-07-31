@@ -37,11 +37,11 @@ describe('Resolvers', () => {
     expect(content).toBeSimilarStringTo(`
         import { GraphQLResolveInfo } from 'graphql';
 
-        export type Resolver<Result, Args = any> = (
-          parent: any,
-          args: Args,
-          context: any,
-          info: GraphQLResolveInfo
+        export type Resolver<Result, Parent = any, Context = any, Args = any> = (
+          parent?: Parent,
+          args?: Args,
+          context?: Context,
+          info?: GraphQLResolveInfo
         ) => Promise<Result> | Result;
       `);
   });
@@ -63,8 +63,8 @@ describe('Resolvers', () => {
 
     expect(content).toBeSimilarStringTo(`
         export namespace QueryResolvers {
-          export interface Resolvers {
-            fieldTest?: FieldTestResolver;
+          export interface Resolvers<Context = any, Parent = Query> {
+            fieldTest?: FieldTestResolver<string | null, Parent, Context>;
           }
         `);
   });
@@ -86,11 +86,10 @@ describe('Resolvers', () => {
 
     expect(content).toBeSimilarStringTo(`
         export namespace QueryResolvers {
-          export interface Resolvers {
-            fieldTest?: FieldTestResolver;
+          export interface Resolvers<Context = any, Parent = Query> {
+            fieldTest?: FieldTestResolver<string | null, Parent, Context>;
           }
-    
-          export type FieldTestResolver<R = string | null> = Resolver<R>;
+        export type FieldTestResolver<R = string | null, Parent = Query, Context = any> = Resolver<R, Parent, Context>;
         }
       `);
   });
@@ -112,11 +111,11 @@ describe('Resolvers', () => {
 
     expect(content).toBeSimilarStringTo(`
         export namespace QueryResolvers {
-          export interface Resolvers {
-            fieldTest?: FieldTestResolver;
+          export interface Resolvers<Context = any, Parent = Query> {
+            fieldTest?: FieldTestResolver<string | null, Parent, Context>;
           }
     
-          export type FieldTestResolver<R = string | null> = Resolver<R, FieldTestArgs>;
+          export type FieldTestResolver<R = string | null, Parent = Query, Context = any> = Resolver<R, Parent, Context, FieldTestArgs>;
           
           export interface FieldTestArgs {
             last: number;
@@ -154,11 +153,11 @@ describe('Resolvers', () => {
       `);
 
     expect(content).not.toBeSimilarStringTo(`
-        type Resolver<Result, Args = any> = (
-          parent: any,
-          args: Args,
-          context: any,
-          info: GraphQLResolveInfo
+        export type Resolver<Result, Parent = any, Context = any, Args = any> = (
+          parent?: Parent,
+          args?: Args,
+          context?: Context,
+          info?: GraphQLResolveInfo
         ) => Promise<Result> | Result;
       `);
 
@@ -191,11 +190,45 @@ describe('Resolvers', () => {
     const content = compiled[0].content;
 
     expect(content).toBeSimilarStringTo(`
-        export interface QueryResolvers {
-          fieldTest?: QueryFieldTestResolver;
+        export interface QueryResolvers<Context = any, Parent = Query> {
+          fieldTest?: QueryFieldTestResolver<string | null, Parent, Context>;
         }
 
-        export type QueryFieldTestResolver<R = string | null> = Resolver<R>;
+        export type QueryFieldTestResolver<R = string | null, Parent = Query, Context = any> = Resolver<R, Parent, Context>;
       `);
+  });
+
+  it('should handle snake case and convert it to pascal case', async () => {
+    const { context } = compileAndBuildContext(`
+      type snake_case_arg {
+        test: String
+      }  
+
+      type snake_case_result {
+        test: String
+      }
+
+      type Query {
+        snake_case_root_query(
+            arg: snake_case_arg
+          ): snake_case_result
+      }
+      schema {
+        query: Query
+      }
+    `);
+
+    const compiled = await compileTemplate(config, context);
+
+    const content = compiled[0].content;
+
+    expect(content).toBeSimilarStringTo(`
+      export type SnakeCaseRootQueryResolver<R = SnakeCaseResult | null, Parent = Query, Context = any> = Resolver<R, Parent, Context, SnakeCaseRootQueryArgs>;
+      `);
+    expect(content).toBeSimilarStringTo(`
+      export interface SnakeCaseRootQueryArgs {
+        arg?: SnakeCaseArg | null;
+      }
+    `);
   });
 });
