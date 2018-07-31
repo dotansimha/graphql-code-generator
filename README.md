@@ -103,6 +103,7 @@ Allowed flags:
 | -m,--skip-schema    | void     | If specified, server side schema won't be generated through the template (enums won't omit)                                                                                                                                                                                              |
 | -c,--skip-documents | void     | If specified, client side documents won't be generated through the template                                                                                                                                                                                                              |
 | --no-overwrite      | void     | If specified, the generator will not override existing files                                                                                                                                                                                                                             |
+| -w --watch          | boolean  | Enables watch mode for regenerating documents from schema                                                                                                                                                                                                                                |
 | documents...        | [String] | Space separated paths of `.graphql` files or code files (glob path is supported) that contains GraphQL documents inside strings, or with either `gql` or `graphql` tag (JavaScript), this field is optional - if no documents specified, only server side schema types will be generated |
 
 ## Output Examples
@@ -166,6 +167,11 @@ The method `generate` accepts two parameters: `(options: CLIOptions, saveToFile:
 ## Custom Templates
 
 To create custom template, or generate a whole project from GraphQL schema, refer to [Custom Templates Documentation](./packages/templates/README.md)
+
+## Watch mode
+
+The watch mode is enabled by passing `--watch` option.
+To use the watch mode you need to have Watchman installed in your system. To support glob patterns, version 3.7 and above is required.
 
 ## Prettier Support
 

@@ -10,4 +10,5 @@ export interface CLIOptions {
   config?: string;
   require?: string[];
   overwrite?: boolean;
+  watch?: boolean;
 }

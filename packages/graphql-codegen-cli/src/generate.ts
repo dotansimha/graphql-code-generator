@@ -4,9 +4,10 @@ import { fileExists } from './utils/file-exists';
 import { FileOutput, debugLog, logger } from 'graphql-codegen-core';
 import * as fs from 'fs';
 import { CLIOptions } from './cli-options';
+import { createWatcher } from './utils/watcher';
 
 export function generate(options: CLIOptions, saveToFile = true) {
-  return executeWithOptions(options).then((generationResult: FileOutput[]) => {
+  const writeOutput = (generationResult: FileOutput[]) => {
     if (!saveToFile) {
       return generationResult;
     }
@@ -37,5 +38,11 @@ export function generate(options: CLIOptions, saveToFile = true) {
     });
 
     return generationResult;
-  });
+  };
+
+  if (options.watch === true) {
+    return createWatcher(options, writeOutput);
+  }
+
+  return executeWithOptions(options).then(writeOutput);
 }
