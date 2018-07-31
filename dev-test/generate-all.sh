@@ -9,6 +9,7 @@ CODEGEN_ENUMS_AS_TYPES=true node packages/graphql-codegen-cli/dist/cli.js --temp
 CODEGEN_AVOID_OPTIONALS=true node packages/graphql-codegen-cli/dist/cli.js --template graphql-codegen-typescript-template --schema ./dev-test/githunt/schema.json --out ./dev-test/githunt/types.avoidOptionals.ts "./dev-test/githunt/**/*.graphql"
 CODEGEN_IMMUTABLE_TYPES=true node packages/graphql-codegen-cli/dist/cli.js --template graphql-codegen-typescript-template --schema ./dev-test/githunt/schema.json --out ./dev-test/githunt/types.immutableTypes.ts "./dev-test/githunt/**/*.graphql"
 CODEGEN_NO_NAMESPACES=true node packages/graphql-codegen-cli/dist/cli.js --template graphql-codegen-typescript-template --schema ./dev-test/githunt/schema.json --out ./dev-test/githunt/types.noNamespaces.ts "./dev-test/githunt/**/*.graphql"
+node packages/graphql-codegen-cli/dist/cli.js --template graphql-codegen-typescript-react-apollo-template --schema ./dev-test/githunt/schema.json --out ./dev-test/githunt/types.reactApollo.ts "./dev-test/githunt/**/*.graphql"
 node packages/graphql-codegen-cli/dist/cli.js --template graphql-codegen-typescript-template-multiple --schema ./dev-test/githunt/schema.json --out ./dev-test/githunt/ts-multiple/ "./dev-test/githunt/**/*.graphql"
 
 node packages/graphql-codegen-cli/dist/cli.js --template graphql-codegen-typescript-template --schema ./dev-test/star-wars/schema.json --out ./dev-test/star-wars/types.ts "./dev-test/star-wars/**/*.graphql"
