@@ -1,0 +1,11 @@
+import * as ReactApollo from 'react-apollo';
+
+{{#each operations }}
+    {{#unless @root.config.noNamespaces}}
+    export namespace {{toPascalCase name}} {
+    {{/unless}}
+        export class {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Component extends ReactApollo.{{toPascalCase operationType}}<{{toPascalCase operationType}}, {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Variables> { }   
+    {{#unless @root.config.noNamespaces}}
+    }
+    {{/unless}}
+{{/each}}
