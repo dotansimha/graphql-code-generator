@@ -1,0 +1,7 @@
+{
+  "compilerOptions": {
+    "lib": ["esnext"],
+    "skipLibCheck": true
+  },
+  "include": ["**/*.ts"]
+}
