@@ -96,9 +96,9 @@
   version "9.4.7"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-9.4.7.tgz#57d81cd98719df2c9de118f2d5f3b1120dcd7275"
 
-"@types/node@9.6.24":
-  version "9.6.24"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-9.6.24.tgz#c1bccb30f30871718b220b34290ccf53e7ee9317"
+"@types/node@9.6.25":
+  version "9.6.25"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-9.6.25.tgz#2009ab5432ed1f5e1918f7c6b000bc778549b216"
 
 "@types/pify@3.0.2":
   version "3.0.2"
