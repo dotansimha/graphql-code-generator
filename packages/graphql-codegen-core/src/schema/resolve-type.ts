@@ -7,6 +7,7 @@ export interface ResolvedType {
   isRequired: boolean;
   isArray: boolean;
   isNullableArray: boolean;
+  dimensionOfArray: number;
 }
 
 export function isRequired(type: GraphQLOutputType | GraphQLInputType): boolean {
@@ -25,6 +26,21 @@ export function isArray(type: GraphQLOutputType | GraphQLInputType): boolean {
   return String(type).indexOf('[') > -1;
 }
 
+export function dimensionOfArray(type: GraphQLOutputType | GraphQLInputType): number {
+  if (isArray(type)) {
+    let dimension = 0;
+    const characters = Array.from(String(type));
+    for (const char of characters) {
+      if (char !== '[') {
+        return dimension;
+      } else {
+        dimension++;
+      }
+    }
+  }
+  return -1;
+}
+
 export function resolveType(type: GraphQLType): ResolvedType {
   const name = getNamedType(type).name;
   debugLog(`[resolveType] resolving type ${name}`);
@@ -34,6 +50,7 @@ export function resolveType(type: GraphQLType): ResolvedType {
     raw: String(type),
     isRequired: isRequired(type),
     isArray: isArray(type),
-    isNullableArray: isNullable(type)
+    isNullableArray: isNullable(type),
+    dimensionOfArray: dimensionOfArray(type)
   };
 }
