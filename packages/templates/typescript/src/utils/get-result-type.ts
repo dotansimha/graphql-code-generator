@@ -13,11 +13,12 @@ export function getResultType(type, options) {
     if (type.isNullableArray && !config.noNamespaces) {
       result = useImmutable ? [realType, 'null'].join(' | ') : `(${[realType, 'null'].join(' | ')})`;
     }
-
     if (useImmutable) {
-      result = `ReadonlyArray<${result}>`;
+      result = `${new Array(type.dimensionOfArray + 1).join('ReadonlyArray<')}${result}${new Array(
+        type.dimensionOfArray + 1
+      ).join('>')}`;
     } else {
-      result = `${result}[]`;
+      result = `${result}${new Array(type.dimensionOfArray + 1).join('[]')}`;
     }
 
     if (!type.isRequired) {

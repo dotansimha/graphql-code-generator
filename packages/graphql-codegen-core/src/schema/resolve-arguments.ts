@@ -6,30 +6,33 @@ import { debugLog } from '../debugging';
 import { getDirectives } from '../utils/get-directives';
 
 export function resolveArguments(schema, args: GraphQLArgument[]): Argument[] {
-  return args.map((arg: GraphQLArgument): Argument => {
-    const type = resolveType(arg.type);
-    const namedType = getNamedType(arg.type);
-    const indicators = resolveTypeIndicators(namedType);
-    const directives = getDirectives(schema, arg);
+  return args.map(
+    (arg: GraphQLArgument): Argument => {
+      const type = resolveType(arg.type);
+      const namedType = getNamedType(arg.type);
+      const indicators = resolveTypeIndicators(namedType);
+      const directives = getDirectives(schema, arg);
 
-    debugLog(`[resolveArguments] resolving argument ${arg.name} of type ${type.name}...`);
+      debugLog(`[resolveArguments] resolving argument ${arg.name} of type ${type.name}...`);
 
-    return {
-      name: arg.name,
-      description: arg.description || '',
-      type: type.name,
-      isRequired: type.isRequired,
-      raw: type.raw,
-      isNullableArray: type.isNullableArray,
-      isArray: type.isArray,
-      isEnum: indicators.isEnum,
-      isScalar: indicators.isScalar,
-      isInterface: indicators.isInterface,
-      isUnion: indicators.isUnion,
-      isInputType: indicators.isInputType,
-      isType: indicators.isType,
-      directives,
-      usesDirectives: Object.keys(directives).length > 0
-    };
-  });
+      return {
+        name: arg.name,
+        description: arg.description || '',
+        type: type.name,
+        isRequired: type.isRequired,
+        raw: type.raw,
+        isNullableArray: type.isNullableArray,
+        isArray: type.isArray,
+        dimensionOfArray: type.dimensionOfArray,
+        isEnum: indicators.isEnum,
+        isScalar: indicators.isScalar,
+        isInterface: indicators.isInterface,
+        isUnion: indicators.isUnion,
+        isInputType: indicators.isInputType,
+        isType: indicators.isType,
+        directives,
+        usesDirectives: Object.keys(directives).length > 0
+      };
+    }
+  );
 }

@@ -418,9 +418,10 @@ describe('TypeScript template', () => {
         }
         
         type T {
-          f1: [String]
+          f1: [String],
           f2: Int!
-          f3: A
+          f3: A,
+          f4: [[[String]]]
         }
         
         type A {
@@ -443,6 +444,7 @@ describe('TypeScript template', () => {
           f1?: (string | null)[] | null;
           f2: number;
           f3?: A | null;
+          f4?: (string | null)[][][] | null;
         }
       `);
       expect(content).toBeSimilarStringTo(`
