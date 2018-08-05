@@ -1,6 +1,6 @@
 {
   "name": "graphql-code-generator",
-  "version": "0.10.5",
+  "version": "0.10.6",
   "license": "MIT",
   "bin": {
     "gql-gen": "dist/cli.js"
@@ -78,8 +78,8 @@
     "commander": "2.17.0",
     "fb-watchman": "2.0.0",
     "glob": "7.1.2",
-    "graphql-codegen-compiler": "0.10.5",
-    "graphql-codegen-core": "0.10.5",
+    "graphql-codegen-compiler": "0.10.6",
+    "graphql-codegen-core": "0.10.6",
     "is-glob": "4.0.0",
     "is-valid-path": "0.1.1",
     "mkdirp": "0.5.1",
@@ -90,7 +90,7 @@
   },
   "devDependencies": {
     "@types/pify": "3.0.2",
-    "graphql-codegen-typescript-template": "0.10.5",
+    "graphql-codegen-typescript-template": "0.10.6",
     "graphql-codegen-typescript-template-multiple": "0.9.4"
   },
   "main": "./dist/index.js",
