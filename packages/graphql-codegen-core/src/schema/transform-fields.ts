@@ -10,33 +10,36 @@ import { getDirectives } from '../utils/get-directives';
 export function resolveFields(schema: GraphQLSchema, rawFields: GraphQLFieldMap<any, any>): Field[] {
   const fieldsArray = objectMapToArray<GraphQLField<any, any>>(rawFields);
 
-  return fieldsArray.map<Field>((item: { key: string; value: GraphQLField<any, any> }): Field => {
-    const type = resolveType(item.value.type);
-    const resolvedArguments = resolveArguments(schema, item.value.args || []);
-    const namedType = getNamedType(item.value.type);
-    const indicators = resolveTypeIndicators(namedType);
-    const directives = getDirectives(schema, item.value);
+  return fieldsArray.map<Field>(
+    (item: { key: string; value: GraphQLField<any, any> }): Field => {
+      const type = resolveType(item.value.type);
+      const resolvedArguments = resolveArguments(schema, item.value.args || []);
+      const namedType = getNamedType(item.value.type);
+      const indicators = resolveTypeIndicators(namedType);
+      const directives = getDirectives(schema, item.value);
 
-    debugLog(`[resolveFields] transformed field ${item.value.name} of type ${type}, resolved type is: `, type);
+      debugLog(`[resolveFields] transformed field ${item.value.name} of type ${type}, resolved type is: `, type);
 
-    return {
-      name: item.value.name,
-      description: item.value.description || '',
-      arguments: resolvedArguments,
-      type: type.name,
-      raw: type.raw,
-      isNullableArray: type.isNullableArray,
-      isArray: type.isArray,
-      isRequired: type.isRequired,
-      hasArguments: resolvedArguments.length > 0,
-      isEnum: indicators.isEnum,
-      isScalar: indicators.isScalar,
-      isInterface: indicators.isInterface,
-      isUnion: indicators.isUnion,
-      isInputType: indicators.isInputType,
-      isType: indicators.isType,
-      directives,
-      usesDirectives: Object.keys(directives).length > 0
-    };
-  });
+      return {
+        name: item.value.name,
+        description: item.value.description || '',
+        arguments: resolvedArguments,
+        type: type.name,
+        raw: type.raw,
+        isNullableArray: type.isNullableArray,
+        isArray: type.isArray,
+        dimensionOfArray: type.dimensionOfArray,
+        isRequired: type.isRequired,
+        hasArguments: resolvedArguments.length > 0,
+        isEnum: indicators.isEnum,
+        isScalar: indicators.isScalar,
+        isInterface: indicators.isInterface,
+        isUnion: indicators.isUnion,
+        isInputType: indicators.isInputType,
+        isType: indicators.isType,
+        directives,
+        usesDirectives: Object.keys(directives).length > 0
+      };
+    }
+  );
 }
