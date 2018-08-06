@@ -2,7 +2,7 @@
 {{#if types}}
 import { GraphQLResolveInfo } from 'graphql';
 
-export type QueryResolver<Result, Parent = any, Context = any, Args = any> = (
+export type Resolver<Result, Parent = any, Context = any, Args = any> = (
   parent?: Parent,
   args?: Args,
   context?: Context,
@@ -23,9 +23,6 @@ export type SubscriptionResolver<Result, Parent = any, Context = any, Args = any
     info?: GraphQLResolveInfo
   ): R | Result | Promise<R | Result>;
 }
-
-export type Resolver<Result, Parent = any, Context = any, Args = any> = 
-  QueryResolver<Result, Parent, Context, Args> | SubscriptionResolver<Result, Parent, Context, Args>;
 
 {{/if}}
 {{/ifCond}}

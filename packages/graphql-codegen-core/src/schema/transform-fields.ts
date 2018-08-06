@@ -1,4 +1,12 @@
-import { getNamedType, GraphQLField, GraphQLFieldMap, GraphQLSchema, isLeafType } from 'graphql';
+import {
+  getNamedType,
+  GraphQLField,
+  GraphQLFieldMap,
+  GraphQLSchema,
+  GraphQLInterfaceType,
+  GraphQLObjectType,
+  GraphQLInputObjectType
+} from 'graphql';
 import { objectMapToArray } from '../utils/object-map-to-array';
 import { Field } from '../types';
 import { resolveType } from './resolve-type';
@@ -7,7 +15,11 @@ import { resolveTypeIndicators } from './resolve-type-indicators';
 import { debugLog } from '../debugging';
 import { getDirectives } from '../utils/get-directives';
 
-export function resolveFields(schema: GraphQLSchema, rawFields: GraphQLFieldMap<any, any>): Field[] {
+export function resolveFields(
+  schema: GraphQLSchema,
+  rawFields: GraphQLFieldMap<any, any>,
+  parent: GraphQLObjectType | GraphQLInterfaceType | GraphQLInputObjectType
+): Field[] {
   const fieldsArray = objectMapToArray<GraphQLField<any, any>>(rawFields);
 
   return fieldsArray.map<Field>(
@@ -38,8 +50,23 @@ export function resolveFields(schema: GraphQLSchema, rawFields: GraphQLFieldMap<
         isInputType: indicators.isInputType,
         isType: indicators.isType,
         directives,
-        usesDirectives: Object.keys(directives).length > 0
+        usesDirectives: Object.keys(directives).length > 0,
+        isQuery: isQuery(schema, parent.name),
+        isMutation: isMutation(schema, parent.name),
+        isSubscription: isSubscription(schema, parent.name)
       };
     }
   );
+}
+
+function isQuery(schema: GraphQLSchema, parent: string): boolean {
+  return schema.getQueryType() && schema.getQueryType().name === parent;
+}
+
+function isMutation(schema: GraphQLSchema, parent: string): boolean {
+  return schema.getMutationType() && schema.getMutationType().name === parent;
+}
+
+function isSubscription(schema: GraphQLSchema, parent: string): boolean {
+  return schema.getSubscriptionType() && schema.getSubscriptionType().name === parent;
 }

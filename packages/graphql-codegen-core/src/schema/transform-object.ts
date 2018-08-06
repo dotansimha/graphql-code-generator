@@ -9,7 +9,7 @@ export function transformGraphQLObject(
   object: GraphQLObjectType | GraphQLInputObjectType
 ): Type {
   debugLog(`[transformGraphQLObject] transforming type ${object.name}`);
-  const resolvedFields = resolveFields(schema, (object as any).getFields());
+  const resolvedFields = resolveFields(schema, (object as any).getFields(), object);
   const resolvedInterfaces = object instanceof GraphQLObjectType ? object.getInterfaces().map(inf => inf.name) : [];
   const directives = getDirectives(schema, object);
 

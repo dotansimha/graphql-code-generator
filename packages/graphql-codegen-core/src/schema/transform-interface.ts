@@ -8,7 +8,7 @@ import { getImplementingTypes } from './implementing-types';
 export function transformInterface(schema: GraphQLSchema, gqlInterface: GraphQLInterfaceType): Interface {
   debugLog(`[transformInterface] transformed interface ${gqlInterface.name}`);
 
-  const resolvedFields = resolveFields(schema, gqlInterface.getFields());
+  const resolvedFields = resolveFields(schema, gqlInterface.getFields(), gqlInterface);
   const directives = getDirectives(schema, gqlInterface);
   const implementingTypes = getImplementingTypes(gqlInterface.name, schema);
 

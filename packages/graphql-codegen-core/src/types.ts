@@ -39,6 +39,9 @@ export interface Field extends AstNode {
   isUnion: boolean;
   isInputType: boolean;
   isEnum: boolean;
+  isMutation: boolean;
+  isSubscription: boolean;
+  isQuery: boolean;
 }
 
 export interface Type extends AstNode {
