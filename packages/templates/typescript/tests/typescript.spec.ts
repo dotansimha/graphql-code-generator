@@ -530,6 +530,34 @@ describe('TypeScript template', () => {
       `);
     });
 
+    it('should transform correctly name of scalar', async () => {
+      const { context } = compileAndBuildContext(`
+        type Query {
+          fieldTest: [JSON]
+        }
+        
+        scalar JSON
+      `);
+
+      const compiled = await compileTemplate(
+        {
+          ...config
+        } as GeneratorConfig,
+        context
+      );
+
+      const content = compiled[0].content;
+
+      expect(content).toBeSimilarStringTo(`
+        export type Json = any;
+      `);
+      expect(content).toBeSimilarStringTo(`
+        export interface Query {
+          fieldTest?: (Json | null)[] | null;
+        }
+      `);
+    });
+
     it('should generate enums correctly', async () => {
       const { context } = compileAndBuildContext(`
         type Query {
