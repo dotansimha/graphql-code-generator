@@ -5,6 +5,17 @@ export interface AstNode {
   usesDirectives: boolean;
 }
 
+export type FieldType =
+  | 'Interface'
+  | 'InputType'
+  | 'Type'
+  | 'Query'
+  | 'Mutation'
+  | 'Subscription'
+  | 'Enum'
+  | 'Scalar'
+  | 'Union';
+
 export interface Argument extends AstNode {
   raw: string;
   name: string;
@@ -27,6 +38,7 @@ export interface Field extends AstNode {
   description: string;
   arguments: Argument[];
   type: string;
+  fieldType: FieldType;
   raw: string;
   isArray: boolean;
   dimensionOfArray: number;
@@ -39,9 +51,6 @@ export interface Field extends AstNode {
   isUnion: boolean;
   isInputType: boolean;
   isEnum: boolean;
-  isMutation: boolean;
-  isSubscription: boolean;
-  isQuery: boolean;
 }
 
 export interface Type extends AstNode {

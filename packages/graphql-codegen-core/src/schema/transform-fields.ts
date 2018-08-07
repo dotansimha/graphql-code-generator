@@ -5,10 +5,14 @@ import {
   GraphQLSchema,
   GraphQLInterfaceType,
   GraphQLObjectType,
-  GraphQLInputObjectType
+  GraphQLInputObjectType,
+  GraphQLNamedType,
+  GraphQLScalarType,
+  GraphQLUnionType,
+  GraphQLEnumType
 } from 'graphql';
 import { objectMapToArray } from '../utils/object-map-to-array';
-import { Field } from '../types';
+import { Field, FieldType } from '../types';
 import { resolveType } from './resolve-type';
 import { resolveArguments } from './resolve-arguments';
 import { resolveTypeIndicators } from './resolve-type-indicators';
@@ -37,6 +41,7 @@ export function resolveFields(
         description: item.value.description || '',
         arguments: resolvedArguments,
         type: type.name,
+        fieldType: toFieldType(schema, namedType),
         raw: type.raw,
         isNullableArray: type.isNullableArray,
         isArray: type.isArray,
@@ -50,23 +55,24 @@ export function resolveFields(
         isInputType: indicators.isInputType,
         isType: indicators.isType,
         directives,
-        usesDirectives: Object.keys(directives).length > 0,
-        isQuery: isQuery(schema, parent.name),
-        isMutation: isMutation(schema, parent.name),
-        isSubscription: isSubscription(schema, parent.name)
+        usesDirectives: Object.keys(directives).length > 0
       };
     }
   );
 }
 
-function isQuery(schema: GraphQLSchema, parent: string): boolean {
-  return schema.getQueryType() && schema.getQueryType().name === parent;
-}
+function toFieldType(schema: GraphQLSchema, type: GraphQLNamedType): FieldType {
+  const typeMap = {
+    Type: () => type instanceof GraphQLObjectType,
+    Scalar: () => type instanceof GraphQLScalarType,
+    Interface: () => type instanceof GraphQLInterfaceType,
+    Union: () => type instanceof GraphQLUnionType,
+    InputType: () => type instanceof GraphQLInputObjectType,
+    Enum: () => type instanceof GraphQLEnumType,
+    Query: () => schema.getQueryType() && schema.getQueryType().name === type.name,
+    Mutation: () => schema.getMutationType() && schema.getMutationType().name === type.name,
+    Subscription: () => schema.getSubscriptionType() && schema.getSubscriptionType().name === type.name
+  };
 
-function isMutation(schema: GraphQLSchema, parent: string): boolean {
-  return schema.getMutationType() && schema.getMutationType().name === parent;
-}
-
-function isSubscription(schema: GraphQLSchema, parent: string): boolean {
-  return schema.getSubscriptionType() && schema.getSubscriptionType().name === parent;
+  return Object.keys(typeMap).find(fieldType => typeMap[fieldType]()) as FieldType;
 }

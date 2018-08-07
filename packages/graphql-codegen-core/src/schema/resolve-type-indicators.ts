@@ -5,9 +5,7 @@ import {
   GraphQLNamedType,
   GraphQLObjectType,
   GraphQLScalarType,
-  GraphQLType,
-  GraphQLUnionType,
-  isLeafType
+  GraphQLUnionType
 } from 'graphql';
 
 export interface NamedTypeIndicators {

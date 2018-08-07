@@ -11,7 +11,7 @@ export function getFieldResolver(type, options) {
 
   let resolver: string;
 
-  if (type.isSubscription) {
+  if (type.fieldType === 'Subscription') {
     resolver = 'SubscriptionResolver';
   } else {
     resolver = 'Resolver';
