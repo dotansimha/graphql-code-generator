@@ -63,7 +63,7 @@ export interface {{ toPascalCase name }}{{ toPascalCase ../name }}Args {
 {{/each}}
 {{#each unions}}
 {{ toComment description }}
-export type {{ name }} = {{#each possibleTypes}}{{this}}{{#unless @last}} | {{/unless}}{{/each}};
+export type {{ toPascalCase name }} = {{#each possibleTypes}}{{ toPascalCase this}}{{#unless @last}} | {{/unless}}{{/each}};
 
 {{/each}}
 {{#if @root.config.schemaNamespace ~}} } {{~/if}}
