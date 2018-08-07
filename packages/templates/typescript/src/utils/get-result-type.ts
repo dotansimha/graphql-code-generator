@@ -10,19 +10,25 @@ export function getResultType(type, options) {
   if (type.isArray) {
     let result = realType;
 
-    if (type.isNullableArray && !config.noNamespaces) {
-      result = useImmutable ? [realType, 'null'].join(' | ') : `(${[realType, 'null'].join(' | ')})`;
-    }
-    if (useImmutable) {
-      result = `${new Array(type.dimensionOfArray + 1).join('ReadonlyArray<')}${result}${new Array(
-        type.dimensionOfArray + 1
-      ).join('>')}`;
-    } else {
-      result = `${result}${new Array(type.dimensionOfArray + 1).join('[]')}`;
-    }
+    try {
+      if (type.isNullableArray && !config.noNamespaces) {
+        result = useImmutable ? [realType, 'null'].join(' | ') : `(${[realType, 'null'].join(' | ')})`;
+      }
+      if (useImmutable) {
+        result = `${new Array(type.dimensionOfArray + 1).join('ReadonlyArray<')}${result}${new Array(
+          type.dimensionOfArray + 1
+        ).join('>')}`;
+      } else {
+        result = `${result}${new Array(type.dimensionOfArray + 1).join('[]')}`;
+      }
 
-    if (!type.isRequired) {
-      result = [result, 'null'].join(' | ');
+      if (!type.isRequired) {
+        result = [result, 'null'].join(' | ');
+      }
+    } catch (e) {
+      // tslint:disable-next-line
+      console.log('type', { ...type });
+      throw e;
     }
 
     return result;
