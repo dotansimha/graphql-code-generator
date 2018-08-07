@@ -75,7 +75,7 @@
     "@types/valid-url": "1.0.2",
     "babel-types": "7.0.0-beta.3",
     "babylon": "7.0.0-beta.47",
-    "commander": "2.17.0",
+    "commander": "2.17.1",
     "fb-watchman": "2.0.0",
     "glob": "7.1.2",
     "graphql-codegen-compiler": "0.10.6",
