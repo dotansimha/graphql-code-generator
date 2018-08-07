@@ -11,15 +11,15 @@ export function getResultType(type, options) {
     let result = realType;
 
     try {
+      const dimension = (type.dimensionOfArray || -1) + 1;
+
       if (type.isNullableArray && !config.noNamespaces) {
         result = useImmutable ? [realType, 'null'].join(' | ') : `(${[realType, 'null'].join(' | ')})`;
       }
       if (useImmutable) {
-        result = `${new Array(type.dimensionOfArray + 1).join('ReadonlyArray<')}${result}${new Array(
-          type.dimensionOfArray + 1
-        ).join('>')}`;
+        result = `${new Array(dimension).join('ReadonlyArray<')}${result}${new Array(dimension).join('>')}`;
       } else {
-        result = `${result}${new Array(type.dimensionOfArray + 1).join('[]')}`;
+        result = `${result}${new Array(dimension).join('[]')}`;
       }
 
       if (!type.isRequired) {
@@ -28,6 +28,8 @@ export function getResultType(type, options) {
     } catch (e) {
       // tslint:disable-next-line
       console.log('type', { ...type });
+      // tslint:disable-next-line
+      console.log('type.dimensionOfArray', type.dimensionOfArray);
       throw e;
     }
 
