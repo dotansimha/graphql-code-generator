@@ -1,7 +1,7 @@
 /* tslint:disable */
 import { GraphQLResolveInfo } from 'graphql';
 
-export type QueryResolver<Result, Parent = any, Context = any, Args = any> = (
+export type Resolver<Result, Parent = any, Context = any, Args = any> = (
   parent?: Parent,
   args?: Args,
   context?: Context,
@@ -23,10 +23,6 @@ export type SubscriptionResolver<Result, Parent = any, Context = any, Args = any
   ): R | Result | Promise<R | Result>;
 };
 
-export type Resolver<Result, Parent = any, Context = any, Args = any> =
-  | QueryResolver<Result, Parent, Context, Args>
-  | SubscriptionResolver<Result, Parent, Context, Args>;
-
 export interface Query {
   allUsers: (User | null)[];
   userById?: User | null;
@@ -42,13 +38,13 @@ export interface UserByIdQueryArgs {
 }
 
 export namespace QueryResolvers {
-  export interface Resolvers<Context = any, Parent = Query> {
-    allUsers?: AllUsersResolver<(User | null)[], Parent, Context>;
-    userById?: UserByIdResolver<User | null, Parent, Context>;
+  export interface Resolvers<Context = any> {
+    allUsers?: AllUsersResolver<(User | null)[], any, Context>;
+    userById?: UserByIdResolver<User | null, any, Context>;
   }
 
-  export type AllUsersResolver<R = (User | null)[], Parent = Query, Context = any> = Resolver<R, Parent, Context>;
-  export type UserByIdResolver<R = User | null, Parent = Query, Context = any> = Resolver<
+  export type AllUsersResolver<R = (User | null)[], Parent = any, Context = any> = Resolver<R, Parent, Context>;
+  export type UserByIdResolver<R = User | null, Parent = any, Context = any> = Resolver<
     R,
     Parent,
     Context,
@@ -60,13 +56,13 @@ export namespace QueryResolvers {
 }
 
 export namespace UserResolvers {
-  export interface Resolvers<Context = any, Parent = User> {
-    id?: IdResolver<number, Parent, Context>;
-    name?: NameResolver<string, Parent, Context>;
-    email?: EmailResolver<string, Parent, Context>;
+  export interface Resolvers<Context = any> {
+    id?: IdResolver<number, any, Context>;
+    name?: NameResolver<string, any, Context>;
+    email?: EmailResolver<string, any, Context>;
   }
 
-  export type IdResolver<R = number, Parent = User, Context = any> = Resolver<R, Parent, Context>;
-  export type NameResolver<R = string, Parent = User, Context = any> = Resolver<R, Parent, Context>;
-  export type EmailResolver<R = string, Parent = User, Context = any> = Resolver<R, Parent, Context>;
+  export type IdResolver<R = number, Parent = any, Context = any> = Resolver<R, Parent, Context>;
+  export type NameResolver<R = string, Parent = any, Context = any> = Resolver<R, Parent, Context>;
+  export type EmailResolver<R = string, Parent = any, Context = any> = Resolver<R, Parent, Context>;
 }

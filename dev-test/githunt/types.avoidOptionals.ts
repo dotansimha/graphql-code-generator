@@ -1,7 +1,7 @@
 /* tslint:disable */
 import { GraphQLResolveInfo } from 'graphql';
 
-export type QueryResolver<Result, Parent = any, Context = any, Args = any> = (
+export type Resolver<Result, Parent = any, Context = any, Args = any> = (
   parent?: Parent,
   args?: Args,
   context?: Context,
@@ -22,10 +22,6 @@ export type SubscriptionResolver<Result, Parent = any, Context = any, Args = any
     info?: GraphQLResolveInfo
   ): R | Result | Promise<R | Result>;
 };
-
-export type Resolver<Result, Parent = any, Context = any, Args = any> =
-  | QueryResolver<Result, Parent, Context, Args>
-  | SubscriptionResolver<Result, Parent, Context, Args>;
 
 export interface Query {
   feed: (Entry | null)[] | null /** A feed of repository submissions */;
@@ -122,17 +118,17 @@ export enum VoteType {
 }
 
 export namespace QueryResolvers {
-  export interface Resolvers<Context = any, Parent = Query> {
-    feed?: FeedResolver<(Entry | null)[] | null, Parent, Context> /** A feed of repository submissions */;
-    entry?: EntryResolver<Entry | null, Parent, Context> /** A single entry */;
+  export interface Resolvers<Context = any> {
+    feed?: FeedResolver<(Entry | null)[] | null, any, Context> /** A feed of repository submissions */;
+    entry?: EntryResolver<Entry | null, any, Context> /** A single entry */;
     currentUser?: CurrentUserResolver<
       User | null,
-      Parent,
+      any,
       Context
     > /** Return the currently logged in user, or null if nobody is logged in */;
   }
 
-  export type FeedResolver<R = (Entry | null)[] | null, Parent = Query, Context = any> = Resolver<
+  export type FeedResolver<R = (Entry | null)[] | null, Parent = any, Context = any> = Resolver<
     R,
     Parent,
     Context,
@@ -144,37 +140,37 @@ export namespace QueryResolvers {
     limit: number | null /** The number of items to fetch starting from the offset, for pagination */;
   }
 
-  export type EntryResolver<R = Entry | null, Parent = Query, Context = any> = Resolver<R, Parent, Context, EntryArgs>;
+  export type EntryResolver<R = Entry | null, Parent = any, Context = any> = Resolver<R, Parent, Context, EntryArgs>;
   export interface EntryArgs {
     repoFullName: string /** The full repository name from GitHub, e.g. "apollostack/GitHunt-API" */;
   }
 
-  export type CurrentUserResolver<R = User | null, Parent = Query, Context = any> = Resolver<R, Parent, Context>;
+  export type CurrentUserResolver<R = User | null, Parent = any, Context = any> = Resolver<R, Parent, Context>;
 }
 /** Information about a GitHub repository submitted to GitHunt */
 export namespace EntryResolvers {
-  export interface Resolvers<Context = any, Parent = Entry> {
-    repository?: RepositoryResolver<Repository, Parent, Context> /** Information about the repository from GitHub */;
-    postedBy?: PostedByResolver<User, Parent, Context> /** The GitHub user who submitted this entry */;
-    createdAt?: CreatedAtResolver<number, Parent, Context> /** A timestamp of when the entry was submitted */;
-    score?: ScoreResolver<number, Parent, Context> /** The score of this repository, upvotes - downvotes */;
-    hotScore?: HotScoreResolver<number, Parent, Context> /** The hot score of this repository */;
-    comments?: CommentsResolver<(Comment | null)[], Parent, Context> /** Comments posted about this repository */;
+  export interface Resolvers<Context = any> {
+    repository?: RepositoryResolver<Repository, any, Context> /** Information about the repository from GitHub */;
+    postedBy?: PostedByResolver<User, any, Context> /** The GitHub user who submitted this entry */;
+    createdAt?: CreatedAtResolver<number, any, Context> /** A timestamp of when the entry was submitted */;
+    score?: ScoreResolver<number, any, Context> /** The score of this repository, upvotes - downvotes */;
+    hotScore?: HotScoreResolver<number, any, Context> /** The hot score of this repository */;
+    comments?: CommentsResolver<(Comment | null)[], any, Context> /** Comments posted about this repository */;
     commentCount?: CommentCountResolver<
       number,
-      Parent,
+      any,
       Context
     > /** The number of comments posted about this repository */;
-    id?: IdResolver<number, Parent, Context> /** The SQL ID of this entry */;
-    vote?: VoteResolver<Vote, Parent, Context> /** XXX to be changed */;
+    id?: IdResolver<number, any, Context> /** The SQL ID of this entry */;
+    vote?: VoteResolver<Vote, any, Context> /** XXX to be changed */;
   }
 
-  export type RepositoryResolver<R = Repository, Parent = Entry, Context = any> = Resolver<R, Parent, Context>;
-  export type PostedByResolver<R = User, Parent = Entry, Context = any> = Resolver<R, Parent, Context>;
-  export type CreatedAtResolver<R = number, Parent = Entry, Context = any> = Resolver<R, Parent, Context>;
-  export type ScoreResolver<R = number, Parent = Entry, Context = any> = Resolver<R, Parent, Context>;
-  export type HotScoreResolver<R = number, Parent = Entry, Context = any> = Resolver<R, Parent, Context>;
-  export type CommentsResolver<R = (Comment | null)[], Parent = Entry, Context = any> = Resolver<
+  export type RepositoryResolver<R = Repository, Parent = any, Context = any> = Resolver<R, Parent, Context>;
+  export type PostedByResolver<R = User, Parent = any, Context = any> = Resolver<R, Parent, Context>;
+  export type CreatedAtResolver<R = number, Parent = any, Context = any> = Resolver<R, Parent, Context>;
+  export type ScoreResolver<R = number, Parent = any, Context = any> = Resolver<R, Parent, Context>;
+  export type HotScoreResolver<R = number, Parent = any, Context = any> = Resolver<R, Parent, Context>;
+  export type CommentsResolver<R = (Comment | null)[], Parent = any, Context = any> = Resolver<
     R,
     Parent,
     Context,
@@ -185,107 +181,103 @@ export namespace EntryResolvers {
     offset: number | null;
   }
 
-  export type CommentCountResolver<R = number, Parent = Entry, Context = any> = Resolver<R, Parent, Context>;
-  export type IdResolver<R = number, Parent = Entry, Context = any> = Resolver<R, Parent, Context>;
-  export type VoteResolver<R = Vote, Parent = Entry, Context = any> = Resolver<R, Parent, Context>;
+  export type CommentCountResolver<R = number, Parent = any, Context = any> = Resolver<R, Parent, Context>;
+  export type IdResolver<R = number, Parent = any, Context = any> = Resolver<R, Parent, Context>;
+  export type VoteResolver<R = Vote, Parent = any, Context = any> = Resolver<R, Parent, Context>;
 }
 /** A repository object from the GitHub API. This uses the exact field names returned by theGitHub API for simplicity, even though the convention for GraphQL is usually to camel case. */
 export namespace RepositoryResolvers {
-  export interface Resolvers<Context = any, Parent = Repository> {
-    name?: NameResolver<string, Parent, Context> /** Just the name of the repository, e.g. GitHunt-API */;
+  export interface Resolvers<Context = any> {
+    name?: NameResolver<string, any, Context> /** Just the name of the repository, e.g. GitHunt-API */;
     full_name?: FullNameResolver<
       string,
-      Parent,
+      any,
       Context
     > /** The full name of the repository with the username, e.g. apollostack/GitHunt-API */;
-    description?: DescriptionResolver<string | null, Parent, Context> /** The description of the repository */;
-    html_url?: HtmlUrlResolver<string, Parent, Context> /** The link to the repository on GitHub */;
+    description?: DescriptionResolver<string | null, any, Context> /** The description of the repository */;
+    html_url?: HtmlUrlResolver<string, any, Context> /** The link to the repository on GitHub */;
     stargazers_count?: StargazersCountResolver<
       number,
-      Parent,
+      any,
       Context
     > /** The number of people who have starred this repository on GitHub */;
     open_issues_count?: OpenIssuesCountResolver<
       number | null,
-      Parent,
+      any,
       Context
     > /** The number of open issues on this repository on GitHub */;
-    owner?: OwnerResolver<User | null, Parent, Context> /** The owner of this repository on GitHub, e.g. apollostack */;
+    owner?: OwnerResolver<User | null, any, Context> /** The owner of this repository on GitHub, e.g. apollostack */;
   }
 
-  export type NameResolver<R = string, Parent = Repository, Context = any> = Resolver<R, Parent, Context>;
-  export type FullNameResolver<R = string, Parent = Repository, Context = any> = Resolver<R, Parent, Context>;
-  export type DescriptionResolver<R = string | null, Parent = Repository, Context = any> = Resolver<R, Parent, Context>;
-  export type HtmlUrlResolver<R = string, Parent = Repository, Context = any> = Resolver<R, Parent, Context>;
-  export type StargazersCountResolver<R = number, Parent = Repository, Context = any> = Resolver<R, Parent, Context>;
-  export type OpenIssuesCountResolver<R = number | null, Parent = Repository, Context = any> = Resolver<
-    R,
-    Parent,
-    Context
-  >;
-  export type OwnerResolver<R = User | null, Parent = Repository, Context = any> = Resolver<R, Parent, Context>;
+  export type NameResolver<R = string, Parent = any, Context = any> = Resolver<R, Parent, Context>;
+  export type FullNameResolver<R = string, Parent = any, Context = any> = Resolver<R, Parent, Context>;
+  export type DescriptionResolver<R = string | null, Parent = any, Context = any> = Resolver<R, Parent, Context>;
+  export type HtmlUrlResolver<R = string, Parent = any, Context = any> = Resolver<R, Parent, Context>;
+  export type StargazersCountResolver<R = number, Parent = any, Context = any> = Resolver<R, Parent, Context>;
+  export type OpenIssuesCountResolver<R = number | null, Parent = any, Context = any> = Resolver<R, Parent, Context>;
+  export type OwnerResolver<R = User | null, Parent = any, Context = any> = Resolver<R, Parent, Context>;
 }
 /** A user object from the GitHub API. This uses the exact field names returned from the GitHub API. */
 export namespace UserResolvers {
-  export interface Resolvers<Context = any, Parent = User> {
-    login?: LoginResolver<string, Parent, Context> /** The name of the user, e.g. apollostack */;
+  export interface Resolvers<Context = any> {
+    login?: LoginResolver<string, any, Context> /** The name of the user, e.g. apollostack */;
     avatar_url?: AvatarUrlResolver<
       string,
-      Parent,
+      any,
       Context
     > /** The URL to a directly embeddable image for this user's avatar */;
-    html_url?: HtmlUrlResolver<string, Parent, Context> /** The URL of this user's GitHub page */;
+    html_url?: HtmlUrlResolver<string, any, Context> /** The URL of this user's GitHub page */;
   }
 
-  export type LoginResolver<R = string, Parent = User, Context = any> = Resolver<R, Parent, Context>;
-  export type AvatarUrlResolver<R = string, Parent = User, Context = any> = Resolver<R, Parent, Context>;
-  export type HtmlUrlResolver<R = string, Parent = User, Context = any> = Resolver<R, Parent, Context>;
+  export type LoginResolver<R = string, Parent = any, Context = any> = Resolver<R, Parent, Context>;
+  export type AvatarUrlResolver<R = string, Parent = any, Context = any> = Resolver<R, Parent, Context>;
+  export type HtmlUrlResolver<R = string, Parent = any, Context = any> = Resolver<R, Parent, Context>;
 }
 /** A comment about an entry, submitted by a user */
 export namespace CommentResolvers {
-  export interface Resolvers<Context = any, Parent = Comment> {
-    id?: IdResolver<number, Parent, Context> /** The SQL ID of this entry */;
-    postedBy?: PostedByResolver<User, Parent, Context> /** The GitHub user who posted the comment */;
-    createdAt?: CreatedAtResolver<number, Parent, Context> /** A timestamp of when the comment was posted */;
-    content?: ContentResolver<string, Parent, Context> /** The text of the comment */;
-    repoName?: RepoNameResolver<string, Parent, Context> /** The repository which this comment is about */;
+  export interface Resolvers<Context = any> {
+    id?: IdResolver<number, any, Context> /** The SQL ID of this entry */;
+    postedBy?: PostedByResolver<User, any, Context> /** The GitHub user who posted the comment */;
+    createdAt?: CreatedAtResolver<number, any, Context> /** A timestamp of when the comment was posted */;
+    content?: ContentResolver<string, any, Context> /** The text of the comment */;
+    repoName?: RepoNameResolver<string, any, Context> /** The repository which this comment is about */;
   }
 
-  export type IdResolver<R = number, Parent = Comment, Context = any> = Resolver<R, Parent, Context>;
-  export type PostedByResolver<R = User, Parent = Comment, Context = any> = Resolver<R, Parent, Context>;
-  export type CreatedAtResolver<R = number, Parent = Comment, Context = any> = Resolver<R, Parent, Context>;
-  export type ContentResolver<R = string, Parent = Comment, Context = any> = Resolver<R, Parent, Context>;
-  export type RepoNameResolver<R = string, Parent = Comment, Context = any> = Resolver<R, Parent, Context>;
+  export type IdResolver<R = number, Parent = any, Context = any> = Resolver<R, Parent, Context>;
+  export type PostedByResolver<R = User, Parent = any, Context = any> = Resolver<R, Parent, Context>;
+  export type CreatedAtResolver<R = number, Parent = any, Context = any> = Resolver<R, Parent, Context>;
+  export type ContentResolver<R = string, Parent = any, Context = any> = Resolver<R, Parent, Context>;
+  export type RepoNameResolver<R = string, Parent = any, Context = any> = Resolver<R, Parent, Context>;
 }
 /** XXX to be removed */
 export namespace VoteResolvers {
-  export interface Resolvers<Context = any, Parent = Vote> {
-    vote_value?: VoteValueResolver<number, Parent, Context>;
+  export interface Resolvers<Context = any> {
+    vote_value?: VoteValueResolver<number, any, Context>;
   }
 
-  export type VoteValueResolver<R = number, Parent = Vote, Context = any> = Resolver<R, Parent, Context>;
+  export type VoteValueResolver<R = number, Parent = any, Context = any> = Resolver<R, Parent, Context>;
 }
 
 export namespace MutationResolvers {
-  export interface Resolvers<Context = any, Parent = Mutation> {
+  export interface Resolvers<Context = any> {
     submitRepository?: SubmitRepositoryResolver<
       Entry | null,
-      Parent,
+      any,
       Context
     > /** Submit a new repository, returns the new submission */;
     vote?: VoteResolver<
       Entry | null,
-      Parent,
+      any,
       Context
     > /** Vote on a repository submission, returns the submission that was voted on */;
     submitComment?: SubmitCommentResolver<
       Comment | null,
-      Parent,
+      any,
       Context
     > /** Comment on a repository, returns the new comment */;
   }
 
-  export type SubmitRepositoryResolver<R = Entry | null, Parent = Mutation, Context = any> = Resolver<
+  export type SubmitRepositoryResolver<R = Entry | null, Parent = any, Context = any> = Resolver<
     R,
     Parent,
     Context,
@@ -295,13 +287,13 @@ export namespace MutationResolvers {
     repoFullName: string /** The full repository name from GitHub, e.g. "apollostack/GitHunt-API" */;
   }
 
-  export type VoteResolver<R = Entry | null, Parent = Mutation, Context = any> = Resolver<R, Parent, Context, VoteArgs>;
+  export type VoteResolver<R = Entry | null, Parent = any, Context = any> = Resolver<R, Parent, Context, VoteArgs>;
   export interface VoteArgs {
     repoFullName: string /** The full repository name from GitHub, e.g. "apollostack/GitHunt-API" */;
     type: VoteType /** The type of vote - UP, DOWN, or CANCEL */;
   }
 
-  export type SubmitCommentResolver<R = Comment | null, Parent = Mutation, Context = any> = Resolver<
+  export type SubmitCommentResolver<R = Comment | null, Parent = any, Context = any> = Resolver<
     R,
     Parent,
     Context,
@@ -314,15 +306,11 @@ export namespace MutationResolvers {
 }
 
 export namespace SubscriptionResolvers {
-  export interface Resolvers<Context = any, Parent = Subscription> {
-    commentAdded?: CommentAddedResolver<
-      Comment | null,
-      Parent,
-      Context
-    > /** Subscription fires on every comment added */;
+  export interface Resolvers<Context = any> {
+    commentAdded?: CommentAddedResolver<Comment | null, any, Context> /** Subscription fires on every comment added */;
   }
 
-  export type CommentAddedResolver<R = Comment | null, Parent = Subscription, Context = any> = Resolver<
+  export type CommentAddedResolver<R = Comment | null, Parent = any, Context = any> = Resolver<
     R,
     Parent,
     Context,

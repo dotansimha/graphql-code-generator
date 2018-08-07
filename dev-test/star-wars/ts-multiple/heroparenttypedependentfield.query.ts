@@ -35,11 +35,11 @@ export namespace HeroParentTypeDependentField {
   };
 
   export type _Friends = {
-    __typename?: __HumanInlineFragment['__typename'];
+    __typename?: _HumanInlineFragment['__typename'];
     name: string;
-  } & (__HumanInlineFragment);
+  } & (_HumanInlineFragment);
 
-  export type __HumanInlineFragment = {
+  export type _HumanInlineFragment = {
     __typename?: 'Human';
     height?: number | null;
   };
