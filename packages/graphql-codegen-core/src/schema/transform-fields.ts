@@ -1,13 +1,29 @@
-import { getNamedType, GraphQLField, GraphQLFieldMap, GraphQLSchema, isLeafType } from 'graphql';
+import {
+  getNamedType,
+  GraphQLField,
+  GraphQLFieldMap,
+  GraphQLSchema,
+  GraphQLInterfaceType,
+  GraphQLObjectType,
+  GraphQLInputObjectType,
+  GraphQLNamedType,
+  GraphQLScalarType,
+  GraphQLUnionType,
+  GraphQLEnumType
+} from 'graphql';
 import { objectMapToArray } from '../utils/object-map-to-array';
-import { Field } from '../types';
+import { Field, FieldType } from '../types';
 import { resolveType } from './resolve-type';
 import { resolveArguments } from './resolve-arguments';
 import { resolveTypeIndicators } from './resolve-type-indicators';
 import { debugLog } from '../debugging';
 import { getDirectives } from '../utils/get-directives';
 
-export function resolveFields(schema: GraphQLSchema, rawFields: GraphQLFieldMap<any, any>): Field[] {
+export function resolveFields(
+  schema: GraphQLSchema,
+  rawFields: GraphQLFieldMap<any, any>,
+  parent: GraphQLObjectType | GraphQLInterfaceType | GraphQLInputObjectType
+): Field[] {
   const fieldsArray = objectMapToArray<GraphQLField<any, any>>(rawFields);
 
   return fieldsArray.map<Field>(
@@ -25,6 +41,7 @@ export function resolveFields(schema: GraphQLSchema, rawFields: GraphQLFieldMap<
         description: item.value.description || '',
         arguments: resolvedArguments,
         type: type.name,
+        fieldType: toFieldType(schema, namedType),
         raw: type.raw,
         isNullableArray: type.isNullableArray,
         isArray: type.isArray,
@@ -42,4 +59,20 @@ export function resolveFields(schema: GraphQLSchema, rawFields: GraphQLFieldMap<
       };
     }
   );
+}
+
+function toFieldType(schema: GraphQLSchema, type: GraphQLNamedType): FieldType {
+  const typeMap = {
+    Type: () => type instanceof GraphQLObjectType,
+    Scalar: () => type instanceof GraphQLScalarType,
+    Interface: () => type instanceof GraphQLInterfaceType,
+    Union: () => type instanceof GraphQLUnionType,
+    InputType: () => type instanceof GraphQLInputObjectType,
+    Enum: () => type instanceof GraphQLEnumType,
+    Query: () => schema.getQueryType() && schema.getQueryType().name === type.name,
+    Mutation: () => schema.getMutationType() && schema.getMutationType().name === type.name,
+    Subscription: () => schema.getSubscriptionType() && schema.getSubscriptionType().name === type.name
+  };
+
+  return Object.keys(typeMap).find(fieldType => typeMap[fieldType]()) as FieldType;
 }

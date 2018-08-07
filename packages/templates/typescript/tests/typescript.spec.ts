@@ -414,18 +414,18 @@ describe('TypeScript template', () => {
     it('should compile template correctly when using a simple Query with arrays and required', async () => {
       const { context } = compileAndBuildContext(`
         type Query {
-          fieldTest: String
+          fieldTest: T
         }
         
         type T {
-          f1: [String],
+          f1: [String]
           f2: Int!
-          f3: A,
+          f3: A
           f4: [[[String]]]
         }
         
         type A {
-          f4: String
+          f4: T
         }
       `);
       const compiled = await compileTemplate(config, context);
@@ -436,7 +436,7 @@ describe('TypeScript template', () => {
       `);
       expect(content).toBeSimilarStringTo(`
         export interface Query {
-          fieldTest?: string | null;
+          fieldTest?: T | null;
         }
       `);
       expect(content).toBeSimilarStringTo(`
@@ -449,7 +449,7 @@ describe('TypeScript template', () => {
       `);
       expect(content).toBeSimilarStringTo(`
         export interface A {
-          f4?: string | null;
+          f4?: T | null;
         }
       `);
     });
@@ -888,6 +888,87 @@ describe('TypeScript template', () => {
           export type Owner = {
             __typename?: "User";
             avatar_url: string; 
+          }
+        }
+      `);
+    });
+
+    it('Should compile nested types', async () => {
+      const schema = makeExecutableSchema({
+        typeDefs: `
+          type User {
+            profile: Profile
+            id: Int!
+            favFriend: User
+          }
+
+          type Profile {
+            name: String!
+            email: String!
+          }
+          
+          type Query {
+            me: User
+          }
+        `
+      });
+      const context = schemaToTemplateContext(schema);
+
+      const documents = gql`
+        query me {
+          me {
+            id
+            profile {
+              name
+            }
+            favFriend {
+              id
+              profile {
+                email
+              }
+            }
+          }
+        }
+      `;
+
+      const transformedDocument = transformDocument(schema, documents);
+      const compiled = await compileTemplate(config, context, [transformedDocument], { generateSchema: false });
+      const content = compiled[0].content;
+
+      expect(compiled[0].content).toBeSimilarStringTo(`
+        /* tslint:disable */
+      `);
+      expect(content).toBeSimilarStringTo(`
+        export namespace Me {
+          export type Variables = {
+          }
+    
+          export type Query = {
+            __typename?: "Query";
+            me?: Me | null;
+          }
+    
+          export type Me = {
+            __typename?: "User";
+            id: number;
+            profile?: Profile | null;
+            favFriend?: FavFriend | null;
+          }
+    
+          export type Profile = {
+            __typename?: "Profile";
+            name: string;
+          }
+    
+          export type FavFriend = {
+            __typename?: "User";
+            id: number;
+            profile?: _Profile | null;
+          }
+    
+          export type _Profile = {
+            __typename?: "Profile";
+            email: string;
           }
         }
       `);

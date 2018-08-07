@@ -9,10 +9,18 @@ export function getFieldResolver(type, options) {
 
   let result;
 
-  if (type.hasArguments && !config.noNamespaces) {
-    result = `Resolver<R, Parent, Context, ${pascalCase(type.name)}Args>`;
+  let resolver: string;
+
+  if (type.fieldType === 'Subscription') {
+    resolver = 'SubscriptionResolver';
   } else {
-    result = `Resolver<R, Parent, Context>`;
+    resolver = 'Resolver';
+  }
+
+  if (type.hasArguments && !config.noNamespaces) {
+    result = `${resolver}<R, Parent, Context, ${pascalCase(type.name)}Args>`;
+  } else {
+    result = `${resolver}<R, Parent, Context>`;
   }
 
   return new SafeString(result);
