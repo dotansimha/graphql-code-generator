@@ -1060,6 +1060,72 @@ describe('TypeScript template', () => {
       `);
     });
 
+    it('should generate correctly when using scalar and noNamespace', async () => {
+      const schema = makeExecutableSchema({
+        typeDefs: `
+          scalar JSON
+          
+          type User {
+            id: Int!
+            data: JSON
+          }
+          
+          type Query {
+            me: User
+          }
+        `
+      });
+      const context = schemaToTemplateContext(schema);
+
+      const documents = gql`
+        query me {
+          me {
+            id
+            data
+          }
+        }
+      `;
+
+      const transformedDocument = transformDocument(schema, documents);
+      const compiled = await compileTemplate(
+        {
+          ...config,
+          config: {
+            noNamespaces: true,
+            resolvers: false
+          }
+        } as GeneratorConfig,
+        context,
+        [transformedDocument],
+        { generateSchema: false }
+      );
+      const content = compiled[0].content;
+
+      expect(content).toBeSimilarStringTo(`
+        export type Json = any;
+      `);
+
+      expect(content).toBeSimilarStringTo(`
+        export type MeVariables = {
+        }
+      `);
+
+      expect(content).toBeSimilarStringTo(`
+        export type MeQuery = {
+          __typename?: "Query";
+          me?: MeMe | null;
+        }
+      `);
+
+      expect(content).toBeSimilarStringTo(`
+        export type MeMe = {
+          __typename?: "User";
+          id: number;
+          data?: Json | null;
+        }
+      `);
+    });
+
     it('Should compile simple Query with Fragment spread and handle noNamespaces', async () => {
       const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
       const context = schemaToTemplateContext(schema);
