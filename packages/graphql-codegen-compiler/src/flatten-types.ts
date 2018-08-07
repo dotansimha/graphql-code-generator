@@ -73,20 +73,24 @@ export function flattenSelectionSet(selectionSet: SelectionSetItem[], result: Fl
 
 export function flattenTypes(document: Document): FlattenDocument {
   return {
-    operations: document.operations.map<FlattenOperation>((operation: Operation): FlattenOperation => {
-      return {
-        isFlatten: true,
-        ...operation,
-        innerModels: flattenSelectionSet(operation.selectionSet)
-      } as FlattenOperation;
-    }),
-    fragments: document.fragments.map<FlattenFragment>((fragment: Fragment): FlattenFragment => {
-      return {
-        isFlatten: true,
-        ...fragment,
-        innerModels: flattenSelectionSet(fragment.selectionSet)
-      } as FlattenFragment;
-    }),
+    operations: document.operations.map<FlattenOperation>(
+      (operation: Operation): FlattenOperation => {
+        return {
+          isFlatten: true,
+          ...operation,
+          innerModels: flattenSelectionSet(operation.selectionSet)
+        } as FlattenOperation;
+      }
+    ),
+    fragments: document.fragments.map<FlattenFragment>(
+      (fragment: Fragment): FlattenFragment => {
+        return {
+          isFlatten: true,
+          ...fragment,
+          innerModels: flattenSelectionSet(fragment.selectionSet)
+        } as FlattenFragment;
+      }
+    ),
     hasOperations: document.hasOperations,
     hasFragments: document.hasFragments
   };
