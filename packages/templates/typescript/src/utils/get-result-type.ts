@@ -11,7 +11,7 @@ export function getResultType(type, options) {
     let result = realType;
 
     try {
-      const dimension = (type.dimensionOfArray || -1) + 1;
+      const dimension = type.dimensionOfArray + 1;
 
       if (type.isNullableArray && !config.noNamespaces) {
         result = useImmutable ? [realType, 'null'].join(' | ') : `(${[realType, 'null'].join(' | ')})`;

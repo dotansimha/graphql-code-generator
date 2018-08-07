@@ -27,6 +27,22 @@ export function isArray(type: GraphQLOutputType | GraphQLInputType): boolean {
 }
 
 export function dimensionOfArray(type: GraphQLOutputType | GraphQLInputType): number {
+  const result = _dimensionOfArray(type);
+
+  if (typeof result === 'undefined') {
+    // tslint:disable
+    console.log('wrong type', { ...type });
+    console.log('as string', String(type));
+    console.log('inspect', type.inspect());
+    console.log('json', type.toJSON());
+    console.log('is array', isArray(type));
+    console.log('characters', Array.from(String(type)));
+  }
+
+  return result;
+}
+
+export function _dimensionOfArray(type: GraphQLOutputType | GraphQLInputType): number {
   if (isArray(type)) {
     let dimension = 0;
     const characters = Array.from(String(type));
