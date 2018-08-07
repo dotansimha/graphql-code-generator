@@ -558,6 +558,41 @@ describe('TypeScript template', () => {
       `);
     });
 
+    it('should transform correctly name of union', async () => {
+      const { context } = compileAndBuildContext(`
+        type Query {
+          fieldTest: [CBText]
+        }
+        union CBText = ABText | BBText
+        scalar ABText
+        scalar BBText
+      `);
+
+      const compiled = await compileTemplate(
+        {
+          ...config
+        } as GeneratorConfig,
+        context
+      );
+
+      const content = compiled[0].content;
+
+      expect(content).toBeSimilarStringTo(`
+        export type AbText = any;
+      `);
+      expect(content).toBeSimilarStringTo(`
+        export type BbText = any;
+      `);
+      expect(content).toBeSimilarStringTo(`
+        export interface Query {
+          fieldTest?: (CbText | null)[] | null;
+        }
+      `);
+      expect(content).toBeSimilarStringTo(`
+        export type CbText = AbText | BbText;
+      `);
+    });
+
     it('should generate enums correctly', async () => {
       const { context } = compileAndBuildContext(`
         type Query {
