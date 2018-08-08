@@ -1064,10 +1064,16 @@ describe('TypeScript template', () => {
       const schema = makeExecutableSchema({
         typeDefs: `
           scalar JSON
+          enum Access {
+            Read
+            Write
+            All
+          }
           
           type User {
             id: Int!
             data: JSON
+            access: Access
           }
           
           type Query {
@@ -1082,6 +1088,7 @@ describe('TypeScript template', () => {
           me {
             id
             data
+            access
           }
         }
       `;
@@ -1122,6 +1129,7 @@ describe('TypeScript template', () => {
           __typename?: "User";
           id: number;
           data?: Json | null;
+          access?: Access | null;
         }
       `);
     });
