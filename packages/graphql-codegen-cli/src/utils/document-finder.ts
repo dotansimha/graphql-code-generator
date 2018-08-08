@@ -22,7 +22,7 @@ export const extractDocumentStringFromCodeFile = (fileContent: string): string |
     let matches = fileContent.match(/(gql|graphql)[(]?`([\s\S\n\r.]*?)`/gm);
 
     if (matches === null) {
-      matches = fileContent.match(/(['"](query|subscription|fragment|mutation) .*?['"])/gm);
+      matches = fileContent.match(/(['"`](query|subscription|fragment|mutation) .*?['"`])/gm);
     }
 
     const result = (matches || [])
