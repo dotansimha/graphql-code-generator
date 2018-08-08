@@ -452,7 +452,7 @@ export type VoteVote = {
   __typename?: 'Entry';
   score: number;
   id: number;
-  vote: VoteVote;
+  vote: Vote_Vote;
 };
 
 export type Vote_Vote = {

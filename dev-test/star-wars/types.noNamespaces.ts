@@ -427,7 +427,7 @@ export type HeroAppearsInQuery = {
 export type HeroAppearsInHero = {
   __typename?: 'Character';
   name: string;
-  appearsIn: HeroAppearsInEpisode[];
+  appearsIn: Episode[];
 };
 
 export type HeroDetailsVariables = {
@@ -542,15 +542,15 @@ export type HeroParentTypeDependentField_HumanInlineFragment = {
 
 export type HeroParentTypeDependentFieldDroidInlineFragment = {
   __typename?: 'Droid';
-  friends?: HeroParentTypeDependentFieldFriends[] | null;
+  friends?: HeroParentTypeDependentField_Friends[] | null;
 };
 
 export type HeroParentTypeDependentField_Friends = {
-  __typename?: HeroParentTypeDependentField_HumanInlineFragment['__typename'];
+  __typename?: HeroParentTypeDependentField__HumanInlineFragment['__typename'];
   name: string;
-} & (HeroParentTypeDependentField_HumanInlineFragment);
+} & (HeroParentTypeDependentField__HumanInlineFragment);
 
-export type HeroParentTypeDependentField_HumanInlineFragment = {
+export type HeroParentTypeDependentField__HumanInlineFragment = {
   __typename?: 'Human';
   height?: number | null;
 };

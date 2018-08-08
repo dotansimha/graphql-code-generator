@@ -6,7 +6,7 @@ export function getResultType(type, options) {
   const config = options.data.root.config || {};
   const realType =
     options.data.root.primitivesMap[baseType] ||
-    `${config.interfacePrefix || ''}${underscorePrefix + pascalCase(baseType)}`;
+    `${type.isScalar ? '' : config.interfacePrefix || ''}${underscorePrefix + pascalCase(baseType)}`;
   const useImmutable = !!config.immutableTypes;
 
   if (type.isArray) {

@@ -593,15 +593,15 @@ export namespace HeroParentTypeDependentField {
 
   export type DroidInlineFragment = {
     __typename?: 'Droid';
-    friends?: (Friends | null)[] | null;
+    friends?: (_Friends | null)[] | null;
   };
 
   export type _Friends = {
-    __typename?: _HumanInlineFragment['__typename'];
+    __typename?: __HumanInlineFragment['__typename'];
     name: string;
-  } & (_HumanInlineFragment);
+  } & (__HumanInlineFragment);
 
-  export type _HumanInlineFragment = {
+  export type __HumanInlineFragment = {
     __typename?: 'Human';
     height?: number | null;
   };

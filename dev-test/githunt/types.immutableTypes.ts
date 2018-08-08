@@ -482,7 +482,7 @@ export namespace Vote {
     readonly __typename?: 'Entry';
     readonly score: number;
     readonly id: number;
-    readonly vote: Vote;
+    readonly vote: _Vote;
   };
 
   export type _Vote = {
