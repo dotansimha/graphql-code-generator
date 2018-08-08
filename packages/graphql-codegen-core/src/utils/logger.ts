@@ -1,23 +1,21 @@
-import * as moment from 'moment';
 import * as winston from 'winston';
-import { Logger } from 'winston';
+import { createLogger } from 'winston';
 
-export const logger = new Logger({
+export const logger = createLogger({
   transports: [
     new winston.transports.Console({
-      timestamp: () => {
-        return moment().format('HH:mm:ss.SSS');
-      },
       level: 'info',
-      colorize: true,
-      formatter: function(options) {
-        return (
-          `${options.timestamp()} - ` +
-          `${winston.config.colorize(options.level)}: ` +
-          `${options.message ? options.message : ''}` +
-          `${options.meta && Object.keys(options.meta).length ? JSON.stringify(options.meta) : ''}`
-        );
-      }
+      format: winston.format.combine(
+        winston.format.colorize({ level: true }),
+        winston.format.timestamp({
+          format: 'HH:mm:ss.SSS'
+        }),
+        winston.format.printf(info => {
+          return `${info.timestamp} - ${info.level}: ${info.message ? info.message : ''} ${
+            info.meta && Object.keys(info.meta).length ? JSON.stringify(info.meta) : ''
+          }`;
+        })
+      )
     })
   ]
 });
