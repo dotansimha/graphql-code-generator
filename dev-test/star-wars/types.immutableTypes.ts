@@ -608,15 +608,15 @@ export namespace HeroParentTypeDependentField {
 
   export type DroidInlineFragment = {
     readonly __typename?: 'Droid';
-    readonly friends?: ReadonlyArray<Friends | null> | null;
+    readonly friends?: ReadonlyArray<_Friends | null> | null;
   };
 
   export type _Friends = {
-    readonly __typename?: _HumanInlineFragment['__typename'];
+    readonly __typename?: __HumanInlineFragment['__typename'];
     readonly name: string;
-  } & (_HumanInlineFragment);
+  } & (__HumanInlineFragment);
 
-  export type _HumanInlineFragment = {
+  export type __HumanInlineFragment = {
     readonly __typename?: 'Human';
     readonly height?: number | null;
   };

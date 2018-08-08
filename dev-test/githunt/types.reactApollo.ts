@@ -478,7 +478,7 @@ export namespace Vote {
     __typename?: 'Entry';
     score: number;
     id: number;
-    vote: Vote;
+    vote: _Vote;
   };
 
   export type _Vote = {
