@@ -19,6 +19,24 @@ describe('executeWithOptions', () => {
     expect(result.length).toBe(1);
   });
 
+  it('execute the correct results when using schema with graphql file', async () => {
+    const result = await executeWithOptions({
+      schema: '../../dev-test/test-schema/schema.graphql',
+      template: 'ts'
+    });
+
+    expect(result.length).toBe(1);
+  });
+
+  it('execute the correct results when using schema with graphql file and imports', async () => {
+    const result = await executeWithOptions({
+      schema: '../../dev-test/test-schema/schema-with-imports.graphql',
+      template: 'ts'
+    });
+
+    expect(result.length).toBe(1);
+  });
+
   it('execute the correct results when using custom config file', async () => {
     const result = await executeWithOptions({
       schema: '../../dev-test/githunt/schema.json',
@@ -90,6 +108,6 @@ describe('executeWithOptions', () => {
       require: ['../tests/dummy-require.js']
     });
     expect(result.length).toBe(1);
-    expect(global.dummyWasLoaded).toBe(true);
+    expect(global['dummyWasLoaded']).toBe(true);
   });
 });

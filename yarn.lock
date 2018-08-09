@@ -2534,6 +2534,12 @@ graphql-codegen-typescript-template-multiple@0.9.4:
   version "0.9.4"
   resolved "https://registry.yarnpkg.com/graphql-codegen-typescript-template-multiple/-/graphql-codegen-typescript-template-multiple-0.9.4.tgz#d0a6faa18547b726c3246b8fbca256abeb6c68ec"
 
+graphql-import@0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/graphql-import/-/graphql-import-0.6.0.tgz#c00cb8a269ceea263e062922c8c81a2272d1ffcb"
+  dependencies:
+    lodash "^4.17.4"
+
 graphql-tag@2.9.2:
   version "2.9.2"
   resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.9.2.tgz#2f60a5a981375f430bf1e6e95992427dc18af686"
