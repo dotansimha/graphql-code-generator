@@ -36,7 +36,7 @@ describe('Components', () => {
       import gql from 'graphql-tag';
     `);
     expect(content).toBeSimilarStringTo(`
-      export class MyFeed extends Apollo.Query
+      export class MyFeedGQL extends Apollo.Query
     `);
   });
 
@@ -70,7 +70,7 @@ describe('Components', () => {
     const content = compiled[0].content;
 
     expect(content).toBeSimilarStringTo(`
-      export class MyFeed extends Apollo.Query<MyFeedQuery, MyFeedVariables> {
+      export class MyFeedGQL extends Apollo.Query<MyFeedQuery, MyFeedVariables> {
     `);
   });
 
@@ -99,7 +99,7 @@ describe('Components', () => {
     const content = compiled[0].content;
 
     expect(content).toBeSimilarStringTo(`
-      export class MyFeed extends Apollo.Query<MyFeed.Query, MyFeed.Variables> {
+      export class MyFeedGQL extends Apollo.Query<MyFeed.Query, MyFeed.Variables> {
     `);
   });
 });

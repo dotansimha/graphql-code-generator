@@ -3,7 +3,7 @@ import * as Apollo from 'apollo-angular';
 import gql from 'graphql-tag';
 
 {{#each operations }}
-    export class {{ toPascalCase name }} extends Apollo.{{toPascalCase operationType}}<{{ toPascalCase name }}{{#unless @root.config.noNamespaces}}.{{/unless}}{{ toPascalCase operationType }}, {{ toPascalCase name }}{{#unless @root.config.noNamespaces}}.{{/unless}}Variables> {
+    export class {{ toPascalCase name }}GQL extends Apollo.{{toPascalCase operationType}}<{{ toPascalCase name }}{{#unless @root.config.noNamespaces}}.{{/unless}}{{ toPascalCase operationType }}, {{ toPascalCase name }}{{#unless @root.config.noNamespaces}}.{{/unless}}Variables> {
         document = gql` {{ document }} `
     }
 {{/each}}
