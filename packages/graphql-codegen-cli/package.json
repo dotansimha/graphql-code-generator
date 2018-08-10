@@ -83,7 +83,7 @@
     "is-glob": "4.0.0",
     "is-valid-path": "0.1.1",
     "mkdirp": "0.5.1",
-    "pify": "3.0.0",
+    "pify": "4.0.0",
     "prettier": "1.14.1",
     "request": "2.87.0",
     "valid-url": "1.0.9"
