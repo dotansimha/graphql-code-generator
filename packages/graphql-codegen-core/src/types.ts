@@ -5,6 +5,17 @@ export interface AstNode {
   usesDirectives: boolean;
 }
 
+export type FieldType =
+  | 'Interface'
+  | 'InputType'
+  | 'Type'
+  | 'Query'
+  | 'Mutation'
+  | 'Subscription'
+  | 'Enum'
+  | 'Scalar'
+  | 'Union';
+
 export interface Argument extends AstNode {
   raw: string;
   name: string;
@@ -12,6 +23,7 @@ export interface Argument extends AstNode {
   type: string;
   isRequired: boolean;
   isArray: boolean;
+  dimensionOfArray: number;
   isNullableArray: boolean;
   isType: boolean;
   isScalar: boolean;
@@ -26,8 +38,10 @@ export interface Field extends AstNode {
   description: string;
   arguments: Argument[];
   type: string;
+  fieldType: FieldType;
   raw: string;
   isArray: boolean;
+  dimensionOfArray: number;
   isRequired: boolean;
   isNullableArray: boolean;
   hasArguments: boolean;
@@ -127,6 +141,7 @@ export interface SelectionSetFieldNode extends SelectionSetItem {
   type: string;
   isRequired: boolean;
   isArray: boolean;
+  dimensionOfArray: number;
   isNullableArray: boolean;
   raw: string;
   fields: SelectionSetFieldNode[];
@@ -193,6 +208,7 @@ export interface Variable {
   isRequired: boolean;
   isArray: boolean;
   isNullableArray: boolean;
+  dimensionOfArray: number;
   raw: string;
   isType: boolean;
   isScalar: boolean;
@@ -247,6 +263,7 @@ export const EInputType = {
 };
 
 export interface GeneratorConfig {
+  prepend?: string[];
   inputType: string; // EInputType
   flattenTypes: boolean;
   config?: { [configName: string]: any };

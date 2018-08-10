@@ -70,6 +70,7 @@ export const initCLI = (args): CLIOptions => {
     .option('-o, --out <path>', 'Output file(s) path', String, './')
     .option('-r, --require [require]', 'module to preload (option can be repeated)', collect, [])
     .option('-ow, --no-overwrite', 'Skip file writing if the output file(s) already exists in path')
+    .option('-w, --watch', 'Watch for changes and execute generation automatically')
     .arguments('<options> [documents...]')
     .parse(args);
 
@@ -118,39 +119,9 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
   const generateSchema: boolean = !options.skipSchema;
   const generateDocuments: boolean = !options.skipDocuments;
   const modulesToRequire: string[] = options.require || [];
-  let schemaExportPromise: Promise<GraphQLSchema> | GraphQLSchema = null;
 
   modulesToRequire.forEach(mod => require(mod));
 
-  for (const handler of schemaHandlers) {
-    if (await handler.canHandle(schema)) {
-      schemaExportPromise = handler.handle(schema, options);
-      break;
-    }
-  }
-
-  if (!schemaExportPromise) {
-    cliError('Invalid --schema provided, please use a path to local file, HTTP endpoint or a glob expression!');
-  }
-
-  const graphQlSchema = await schemaExportPromise;
-
-  if (process.env.VERBOSE !== undefined) {
-    logger.info(`GraphQL Schema is: `, graphQlSchema);
-  }
-
-  const context = schemaToTemplateContext(graphQlSchema);
-  debugLog(`[executeWithOptions] Schema template context build, the result is: `);
-  Object.keys(context).forEach(key => {
-    if (Array.isArray(context[key])) {
-      debugLog(`Total of ${key}: ${context[key].length}`);
-    }
-  });
-
-  const transformedDocuments = transformDocument(
-    graphQlSchema,
-    loadDocumentsSources(await documentsFromGlobs(documents))
-  );
   let templateConfig: GeneratorConfig | CustomProcessingFunction | null = null;
 
   if (template && template !== '') {
@@ -260,10 +231,44 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
     }
   }
 
-  return (await compileTemplate(templateConfig, context, [transformedDocuments], {
-    generateSchema,
-    generateDocuments
-  })).map((item: FileOutput) => {
+  const executeGeneration = async () => {
+    let schemaExportPromise: Promise<GraphQLSchema> | GraphQLSchema = null;
+
+    for (const handler of schemaHandlers) {
+      if (await handler.canHandle(schema)) {
+        schemaExportPromise = handler.handle(schema, options);
+        break;
+      }
+    }
+
+    if (!schemaExportPromise) {
+      cliError('Invalid --schema provided, please use a path to local file, HTTP endpoint or a glob expression!');
+    }
+
+    const graphQlSchema = await schemaExportPromise;
+
+    if (process.env.VERBOSE !== undefined) {
+      logger.info(`GraphQL Schema is: `, graphQlSchema);
+    }
+
+    const context = schemaToTemplateContext(graphQlSchema);
+    debugLog(`[executeWithOptions] Schema template context build, the result is: `);
+    Object.keys(context).forEach(key => {
+      if (Array.isArray(context[key])) {
+        debugLog(`Total of ${key}: ${context[key].length}`);
+      }
+    });
+
+    const transformedDocuments = transformDocument(
+      graphQlSchema,
+      loadDocumentsSources(await documentsFromGlobs(documents))
+    );
+    return compileTemplate(templateConfig, context, [transformedDocuments], {
+      generateSchema,
+      generateDocuments
+    });
+  };
+  const normalizeOutput = (item: FileOutput) => {
     let resultName = item.filename;
 
     if (!path.isAbsolute(resultName)) {
@@ -293,5 +298,6 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
       content: item.content,
       filename: resultName
     };
-  });
+  };
+  return (await executeGeneration()).map(normalizeOutput);
 };

@@ -5,7 +5,8 @@ import {
   GraphQLSchema,
   makeExecutableSchema,
   SchemaTemplateContext,
-  schemaToTemplateContext
+  schemaToTemplateContext,
+  GeneratorConfig
 } from 'graphql-codegen-core';
 
 describe('Resolvers', () => {
@@ -34,14 +35,29 @@ describe('Resolvers', () => {
     const content = compiled[0].content;
 
     expect(content).toBeSimilarStringTo(`
-        import { GraphQLResolveInfo } from 'graphql';
+    import { GraphQLResolveInfo } from 'graphql';
 
-        type Resolver<Result, Args = any> = (
-          parent: any,
-          args: Args,
-          context: any,
-          info: GraphQLResolveInfo
-        ) => Promise<Result> | Result;
+    export type Resolver<Result, Parent = any, Context = any, Args = any> = (
+      parent?: Parent,
+      args?: Args,
+      context?: Context,
+      info?: GraphQLResolveInfo
+    ) => Promise<Result> | Result;
+    
+    export type SubscriptionResolver<Result, Parent = any, Context = any, Args = any> = {
+      subscribe<R = Result, P = Parent>(
+        parent?: P,
+        args?: Args,
+        context?: Context,
+        info?: GraphQLResolveInfo
+      ): AsyncIterator<R | Result>;
+      resolve?<R = Result, P = Parent>(
+        parent?: P,
+        args?: Args,
+        context?: Context,
+        info?: GraphQLResolveInfo
+      ): R | Result | Promise<R | Result>;
+    }
       `);
   });
 
@@ -62,8 +78,8 @@ describe('Resolvers', () => {
 
     expect(content).toBeSimilarStringTo(`
         export namespace QueryResolvers {
-          export interface Resolvers {
-            fieldTest?: FieldTestResolver;
+          export interface Resolvers<Context = any> {
+            fieldTest?: FieldTestResolver<string | null, any, Context>;
           }
         `);
   });
@@ -85,11 +101,10 @@ describe('Resolvers', () => {
 
     expect(content).toBeSimilarStringTo(`
         export namespace QueryResolvers {
-          export interface Resolvers {
-            fieldTest?: FieldTestResolver;
+          export interface Resolvers<Context = any> {
+            fieldTest?: FieldTestResolver<string | null, any, Context>;
           }
-    
-          export type FieldTestResolver = Resolver<string | null>;
+        export type FieldTestResolver<R = string | null, Parent = any, Context = any> = Resolver<R, Parent, Context>;
         }
       `);
   });
@@ -111,11 +126,11 @@ describe('Resolvers', () => {
 
     expect(content).toBeSimilarStringTo(`
         export namespace QueryResolvers {
-          export interface Resolvers {
-            fieldTest?: FieldTestResolver;
+          export interface Resolvers<Context = any> {
+            fieldTest?: FieldTestResolver<string | null, any, Context>;
           }
     
-          export type FieldTestResolver = Resolver<string | null, FieldTestArgs>;
+          export type FieldTestResolver<R = string | null, Parent = any, Context = any> = Resolver<R, Parent, Context, FieldTestArgs>;
           
           export interface FieldTestArgs {
             last: number;
@@ -153,16 +168,118 @@ describe('Resolvers', () => {
       `);
 
     expect(content).not.toBeSimilarStringTo(`
-        type Resolver<Result, Args = any> = (
-          parent: any,
-          args: Args,
-          context: any,
-          info: GraphQLResolveInfo
+        export type Resolver<Result, Parent = any, Context = any, Args = any> = (
+          parent?: Parent,
+          args?: Args,
+          context?: Context,
+          info?: GraphQLResolveInfo
         ) => Promise<Result> | Result;
       `);
 
     expect(content).not.toBeSimilarStringTo(`
         export namespace QueryResolvers {
       `);
+  });
+
+  it('should handle subscription', async () => {
+    const { context } = compileAndBuildContext(`
+        type Subscription {
+          fieldTest: String 
+        }
+        
+        schema {
+          subscription: Subscription
+        }
+      `);
+
+    const compiled = await compileTemplate(
+      {
+        ...config
+      },
+      context
+    );
+
+    const content = compiled[0].content;
+
+    expect(content).not.toBeSimilarStringTo(`
+      export namespace SubscriptionResolvers {
+        export interface Resolvers<Context = any> {
+          fieldTest?: FieldTestResolver<string | null, any, Context>;
+        }
+
+        export type FieldTestResolver<R = string | null, Parent = any, Context = any> = SubscriptionResolver<R, Parent, Context, FieldTestArgs>;
+        
+        export interface FieldTestArgs {
+          last: number;
+          sort?: string | null;
+        }
+      }
+      `);
+  });
+
+  it('should handle noNamespaces', async () => {
+    const { context } = compileAndBuildContext(`
+        type Query {
+          fieldTest: String 
+        }
+        
+        schema {
+          query: Query
+        }
+      `);
+
+    const compiled = await compileTemplate(
+      {
+        ...config,
+        config: {
+          noNamespaces: true
+        }
+      } as GeneratorConfig,
+      context
+    );
+
+    const content = compiled[0].content;
+
+    expect(content).toBeSimilarStringTo(`
+        export interface QueryResolvers<Context = any> {
+          fieldTest?: QueryFieldTestResolver<string | null, any, Context>;
+        }
+
+        export type QueryFieldTestResolver<R = string | null, Parent = any, Context = any> = Resolver<R, Parent, Context>;
+      `);
+  });
+
+  it('should handle snake case and convert it to pascal case', async () => {
+    const { context } = compileAndBuildContext(`
+      type snake_case_arg {
+        test: String
+      }  
+
+      type snake_case_result {
+        test: String
+      }
+
+      type Query {
+        snake_case_root_query(
+            arg: snake_case_arg
+          ): snake_case_result
+      }
+      schema {
+        query: Query
+      }
+    `);
+
+    const compiled = await compileTemplate(config, context);
+
+    const content = compiled[0].content;
+
+    expect(content).toBeSimilarStringTo(`
+      export type SnakeCaseRootQueryResolver<R = SnakeCaseResult | null, Parent = any, Context = any> = Resolver<R, Parent, Context, SnakeCaseRootQueryArgs>;
+      `);
+    expect(content).toBeSimilarStringTo(`
+      export interface SnakeCaseRootQueryArgs {
+        arg?: SnakeCaseArg | null;
+      }
+    `);
   });
 });

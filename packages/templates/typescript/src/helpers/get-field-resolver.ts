@@ -1,19 +1,26 @@
 import { SafeString } from 'handlebars';
-import { getResultType } from '../utils/get-result-type';
-import { capitalize } from '../utils/capitalize';
+import { pascalCase } from 'change-case';
 
 export function getFieldResolver(type, options) {
+  const config = options.data.root.config || {};
   if (!type) {
     return '';
   }
 
   let result;
-  const realType = getResultType(type, options);
 
-  if (type.hasArguments) {
-    result = `Resolver<${realType}, ${capitalize(type.name)}Args>`;
+  let resolver: string;
+
+  if (type.fieldType === 'Subscription') {
+    resolver = 'SubscriptionResolver';
   } else {
-    result = `Resolver<${realType}>`;
+    resolver = 'Resolver';
+  }
+
+  if (type.hasArguments && !config.noNamespaces) {
+    result = `${resolver}<R, Parent, Context, ${pascalCase(type.name)}Args>`;
+  } else {
+    result = `${resolver}<R, Parent, Context>`;
   }
 
   return new SafeString(result);

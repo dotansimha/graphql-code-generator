@@ -23,6 +23,62 @@ describe('TypeScript template', () => {
     };
   };
 
+  it('should handle prepend option correctly', async () => {
+    const { context } = compileAndBuildContext(`
+      type Query {
+        test: String
+      }
+
+      schema {
+        query: Query
+      }
+    `);
+
+    const compiled = await compileTemplate(
+      {
+        ...config,
+        config: {
+          prepend: ['// Test [="]']
+        }
+      } as GeneratorConfig,
+      context
+    );
+
+    const content = compiled[0].content;
+
+    expect(content).toBeSimilarStringTo(`
+    // Test [="]
+    `);
+  });
+
+  it('should handle interfacePrefix option correctly', async () => {
+    const { context } = compileAndBuildContext(`
+      type Foo {
+        bar: Bar
+      }
+      type Bar {
+        qux: String
+      }
+    `);
+    const compiled = await compileTemplate(
+      {
+        ...config,
+        config: {
+          interfacePrefix: 'I'
+        }
+      } as GeneratorConfig,
+      context
+    );
+
+    const content = compiled[0].content;
+
+    expect(content).toBeSimilarStringTo(`
+      interface IFoo {
+        bar?: IBar | null;
+      }
+    `);
+  });
+
   describe('Schema Only', () => {
     it('should handle wrapping namespace correctly', async () => {
       const { context } = compileAndBuildContext(`
@@ -358,17 +414,18 @@ describe('TypeScript template', () => {
     it('should compile template correctly when using a simple Query with arrays and required', async () => {
       const { context } = compileAndBuildContext(`
         type Query {
-          fieldTest: String
+          fieldTest: T
         }
         
         type T {
           f1: [String]
           f2: Int!
           f3: A
+          f4: [[[String]]]
         }
         
         type A {
-          f4: String
+          f4: T
         }
       `);
       const compiled = await compileTemplate(config, context);
@@ -379,7 +436,7 @@ describe('TypeScript template', () => {
       `);
       expect(content).toBeSimilarStringTo(`
         export interface Query {
-          fieldTest?: string | null;
+          fieldTest?: T | null;
         }
       `);
       expect(content).toBeSimilarStringTo(`
@@ -387,11 +444,12 @@ describe('TypeScript template', () => {
           f1?: (string | null)[] | null;
           f2: number;
           f3?: A | null;
+          f4?: (string | null)[][][] | null;
         }
       `);
       expect(content).toBeSimilarStringTo(`
         export interface A {
-          f4?: string | null;
+          f4?: T | null;
         }
       `);
     });
@@ -445,19 +503,93 @@ describe('TypeScript template', () => {
         scalar Date
       `);
 
-      const compiled = await compileTemplate(config, context);
+      const compiled = await compileTemplate(
+        {
+          ...config,
+          config: {
+            scalars: {
+              Date: 'Date'
+            }
+          }
+        } as GeneratorConfig,
+        context
+      );
+
       const content = compiled[0].content;
 
       expect(content).toBeSimilarStringTo(`
         /* tslint:disable */
       `);
       expect(content).toBeSimilarStringTo(`
-        export type Date = any;
+        export type Date = Date;
       `);
       expect(content).toBeSimilarStringTo(`
         export interface Query {
           fieldTest?: (Date | null)[] | null;
         }
+      `);
+    });
+
+    it('should transform correctly name of scalar', async () => {
+      const { context } = compileAndBuildContext(`
+        type Query {
+          fieldTest: [JSON]
+        }
+        
+        scalar JSON
+      `);
+
+      const compiled = await compileTemplate(
+        {
+          ...config
+        } as GeneratorConfig,
+        context
+      );
+
+      const content = compiled[0].content;
+
+      expect(content).toBeSimilarStringTo(`
+        export type Json = any;
+      `);
+      expect(content).toBeSimilarStringTo(`
+        export interface Query {
+          fieldTest?: (Json | null)[] | null;
+        }
+      `);
+    });
+
+    it('should transform correctly name of union', async () => {
+      const { context } = compileAndBuildContext(`
+        type Query {
+          fieldTest: [CBText]
+        }
+        union CBText = ABText | BBText
+        scalar ABText
+        scalar BBText
+      `);
+
+      const compiled = await compileTemplate(
+        {
+          ...config
+        } as GeneratorConfig,
+        context
+      );
+
+      const content = compiled[0].content;
+
+      expect(content).toBeSimilarStringTo(`
+        export type AbText = any;
+      `);
+      expect(content).toBeSimilarStringTo(`
+        export type BbText = any;
+      `);
+      expect(content).toBeSimilarStringTo(`
+        export interface Query {
+          fieldTest?: (CbText | null)[] | null;
+        }
+      `);
+      expect(content).toBeSimilarStringTo(`
+        export type CbText = AbText | BbText;
       `);
     });
 
@@ -796,6 +928,87 @@ describe('TypeScript template', () => {
       `);
     });
 
+    it('Should compile nested types', async () => {
+      const schema = makeExecutableSchema({
+        typeDefs: `
+          type User {
+            profile: Profile
+            id: Int!
+            favFriend: User
+          }
+
+          type Profile {
+            name: String!
+            email: String!
+          }
+          
+          type Query {
+            me: User
+          }
+        `
+      });
+      const context = schemaToTemplateContext(schema);
+
+      const documents = gql`
+        query me {
+          me {
+            id
+            profile {
+              name
+            }
+            favFriend {
+              id
+              profile {
+                email
+              }
+            }
+          }
+        }
+      `;
+
+      const transformedDocument = transformDocument(schema, documents);
+      const compiled = await compileTemplate(config, context, [transformedDocument], { generateSchema: false });
+      const content = compiled[0].content;
+
+      expect(compiled[0].content).toBeSimilarStringTo(`
+        /* tslint:disable */
+      `);
+      expect(content).toBeSimilarStringTo(`
+        export namespace Me {
+          export type Variables = {
+          }
+    
+          export type Query = {
+            __typename?: "Query";
+            me?: Me | null;
+          }
+    
+          export type Me = {
+            __typename?: "User";
+            id: number;
+            profile?: Profile | null;
+            favFriend?: FavFriend | null;
+          }
+    
+          export type Profile = {
+            __typename?: "Profile";
+            name: string;
+          }
+    
+          export type FavFriend = {
+            __typename?: "User";
+            id: number;
+            profile?: _Profile | null;
+          }
+    
+          export type _Profile = {
+            __typename?: "Profile";
+            email: string;
+          }
+        }
+      `);
+    });
+
     it('Should compile simple Query with Fragment spread correctly', async () => {
       const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
       const context = schemaToTemplateContext(schema);
@@ -879,6 +1092,172 @@ describe('TypeScript template', () => {
             avatar_url: string; 
           }
         }
+      `);
+    });
+
+    it('should generate correctly when using scalar and noNamespace', async () => {
+      const schema = makeExecutableSchema({
+        typeDefs: `
+          scalar JSON
+          enum Access {
+            Read
+            Write
+            All
+          }
+          
+          type User {
+            id: Int!
+            data: JSON
+            access: Access
+          }
+          
+          type Query {
+            me: User
+          }
+        `
+      });
+      const context = schemaToTemplateContext(schema);
+
+      const documents = gql`
+        query me {
+          me {
+            id
+            data
+            access
+          }
+        }
+      `;
+
+      const transformedDocument = transformDocument(schema, documents);
+      const compiled = await compileTemplate(
+        {
+          ...config,
+          config: {
+            noNamespaces: true,
+            resolvers: false
+          }
+        } as GeneratorConfig,
+        context,
+        [transformedDocument],
+        { generateSchema: false }
+      );
+      const content = compiled[0].content;
+
+      expect(content).toBeSimilarStringTo(`
+        export type Json = any;
+      `);
+
+      expect(content).toBeSimilarStringTo(`
+        export type MeVariables = {
+        }
+      `);
+
+      expect(content).toBeSimilarStringTo(`
+        export type MeQuery = {
+          __typename?: "Query";
+          me?: MeMe | null;
+        }
+      `);
+
+      expect(content).toBeSimilarStringTo(`
+        export type MeMe = {
+          __typename?: "User";
+          id: number;
+          data?: Json | null;
+          access?: Access | null;
+        }
+      `);
+    });
+
+    it('Should compile simple Query with Fragment spread and handle noNamespaces', async () => {
+      const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
+      const context = schemaToTemplateContext(schema);
+
+      const documents = gql`
+        query myFeed {
+          feed {
+            id
+            commentCount
+            repository {
+              full_name
+              ...RepoFields
+            }
+          }
+        }
+
+        fragment RepoFields on Repository {
+          html_url
+          owner {
+            avatar_url
+          }
+        }
+      `;
+
+      const transformedDocument = transformDocument(schema, documents);
+      const compiled = await compileTemplate(
+        {
+          ...config,
+          config: {
+            noNamespaces: true
+          }
+        } as GeneratorConfig,
+        context,
+        [transformedDocument],
+        { generateSchema: false }
+      );
+      const content = compiled[0].content;
+
+      expect(content).toBeSimilarStringTo(`
+        /* tslint:disable */
+      `);
+      expect(content).toBeSimilarStringTo(`
+        /** A list of options for the sort order of the feed */
+        export enum FeedType {
+          HOT = "HOT",
+          NEW = "NEW",
+          TOP = "TOP",
+        }
+      `);
+      expect(content).toBeSimilarStringTo(`
+        /** The type of vote to record, when submitting a vote */
+        export enum VoteType {
+          UP = "UP",
+          DOWN = "DOWN",
+          CANCEL = "CANCEL",
+        }
+      `);
+      expect(content).toBeSimilarStringTo(`
+          export type MyFeedVariables = {
+          }
+
+          export type MyFeedQuery = {
+            __typename?: "Query";
+            feed?: MyFeedFeed[] | null;
+          }
+
+          export type MyFeedFeed = {
+            __typename?: "Entry";
+            id: number; 
+            commentCount: number; 
+            repository: MyFeedRepository; 
+          }
+
+          export type MyFeedRepository = {
+            __typename?: "Repository";
+            full_name: string; 
+          } & RepoFieldsFragment
+      `);
+      expect(content).toBeSimilarStringTo(`
+          export type RepoFieldsFragment = {
+            __typename?: "Repository";
+            html_url: string; 
+            owner?: RepoFieldsOwner | null; 
+          }
+
+          export type RepoFieldsOwner = {
+            __typename?: "User";
+            avatar_url: string; 
+          }
       `);
     });
 
@@ -966,6 +1345,101 @@ describe('TypeScript template', () => {
             avatar_url: string; 
           }
         }
+      `);
+    });
+
+    it('Should compile simple Query with inline Fragment and handle noNamespaces', async () => {
+      const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
+      const context = schemaToTemplateContext(schema);
+
+      const documents = gql`
+        query myFeed {
+          feed {
+            id
+            commentCount
+            repository {
+              html_url
+              ... on Repository {
+                full_name
+              }
+              ... on Repository {
+                owner {
+                  avatar_url
+                }
+              }
+            }
+          }
+        }
+      `;
+
+      const transformedDocument = transformDocument(schema, documents);
+      const compiled = await compileTemplate(
+        {
+          ...config,
+          config: {
+            noNamespaces: true
+          }
+        } as GeneratorConfig,
+        context,
+        [transformedDocument],
+        { generateSchema: false }
+      );
+      const content = compiled[0].content;
+
+      expect(content).toBeSimilarStringTo(`
+       /* tslint:disable */
+       `);
+      expect(content).toBeSimilarStringTo(`
+        /** A list of options for the sort order of the feed */
+        export enum FeedType {
+          HOT = "HOT",
+          NEW = "NEW",
+          TOP = "TOP",
+        }
+      `);
+      expect(content).toBeSimilarStringTo(`
+        /** The type of vote to record, when submitting a vote */
+        export enum VoteType {
+          UP = "UP",
+          DOWN = "DOWN",
+          CANCEL = "CANCEL",
+        }
+      `);
+      expect(content).toBeSimilarStringTo(`
+          export type MyFeedVariables = {
+          }
+        
+          export type MyFeedQuery = {
+            __typename?: "Query";
+            feed?: MyFeedFeed[] | null;
+          }
+        
+          export type MyFeedFeed = {
+            __typename?: "Entry";
+            id: number; 
+            commentCount: number; 
+            repository: MyFeedRepository; 
+          }
+        
+          export type MyFeedRepository = {
+            __typename?: MyFeedRepositoryInlineFragment["__typename"] | MyFeed_RepositoryInlineFragment["__typename"];
+            html_url: string; 
+          } & (MyFeedRepositoryInlineFragment | MyFeed_RepositoryInlineFragment)
+        
+          export type MyFeedRepositoryInlineFragment = {
+            __typename?: "Repository";
+            full_name: string; 
+          }
+        
+          export type MyFeed_RepositoryInlineFragment = {
+            __typename?: "Repository";
+            owner?: MyFeedOwner | null; 
+          }
+        
+          export type MyFeedOwner = {
+            __typename?: "User";
+            avatar_url: string; 
+          }
       `);
     });
   });

@@ -1,7 +1,7 @@
 import { logger } from './utils/logger';
 
-export function debugLog(...args) {
+export function debugLog(message: string, ...meta: any[]) {
   if (process.env.DEBUG !== undefined) {
-    logger.info(...args);
+    logger.info(message, ...meta);
   }
 }

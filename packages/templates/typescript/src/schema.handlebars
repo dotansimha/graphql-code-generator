@@ -1,18 +1,36 @@
 {{#ifCond @root.config.resolvers "!==" false}}
+{{#if types}}
 import { GraphQLResolveInfo } from 'graphql';
 
-type Resolver<Result, Args = any> = (
-  parent: any,
-  args: Args,
-  context: any,
-  info: GraphQLResolveInfo
+export type Resolver<Result, Parent = any, Context = any, Args = any> = (
+  parent?: Parent,
+  args?: Args,
+  context?: Context,
+  info?: GraphQLResolveInfo
 ) => Promise<Result> | Result;
+
+export type SubscriptionResolver<Result, Parent = any, Context = any, Args = any> = {
+  subscribe<R = Result, P = Parent>(
+    parent?: P,
+    args?: Args,
+    context?: Context,
+    info?: GraphQLResolveInfo
+  ): AsyncIterator<R | Result>;
+  resolve?<R = Result, P = Parent>(
+    parent?: P,
+    args?: Args,
+    context?: Context,
+    info?: GraphQLResolveInfo
+  ): R | Result | Promise<R | Result>;
+}
+
+{{/if}}
 {{/ifCond}}
 {{#if @root.config.schemaNamespace ~}}export namespace {{@root.config.schemaNamespace}} { {{/if}}
 {{#each scalars}}
 
 {{ toComment description }}
-export type {{ name }} = any;
+export type {{ toPascalCase name }} = {{ getScalarType name }};
 {{/each}}
 {{#each interfaces}}
   {{~> type }}
@@ -42,7 +60,7 @@ export interface {{ toPascalCase name }}{{ toPascalCase ../name }}Args {
 {{/each}}
 {{#each unions}}
 {{ toComment description }}
-export type {{ name }} = {{#each possibleTypes}}{{this}}{{#unless @last}} | {{/unless}}{{/each}};
+export type {{ toPascalCase name }} = {{#each possibleTypes}}{{ toPascalCase this}}{{#unless @last}} | {{/unless}}{{/each}};
 
 {{/each}}
 {{#if @root.config.schemaNamespace ~}} } {{~/if}}
