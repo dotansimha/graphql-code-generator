@@ -33,9 +33,15 @@ describe('Components', () => {
       import * as Apollo from 'apollo-angular';
     `);
     expect(content).toBeSimilarStringTo(`
+      import { Injectable } from '@angular/core';
+    `);
+    expect(content).toBeSimilarStringTo(`
       import gql from 'graphql-tag';
     `);
     expect(content).toBeSimilarStringTo(`
+      @Injectable({
+        providedIn: 'root'
+      })
       export class MyFeedGQL extends Apollo.Query
     `);
   });
@@ -70,6 +76,9 @@ describe('Components', () => {
     const content = compiled[0].content;
 
     expect(content).toBeSimilarStringTo(`
+      @Injectable({
+        providedIn: 'root'
+      })
       export class MyFeedGQL extends Apollo.Query<MyFeedQuery, MyFeedVariables> {
     `);
   });
@@ -99,6 +108,9 @@ describe('Components', () => {
     const content = compiled[0].content;
 
     expect(content).toBeSimilarStringTo(`
+      @Injectable({
+        providedIn: 'root'
+      })
       export class MyFeedGQL extends Apollo.Query<MyFeed.Query, MyFeed.Variables> {
     `);
   });
