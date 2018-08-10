@@ -38,7 +38,7 @@ describe('TypeScript template', () => {
       {
         ...config,
         config: {
-          prepend: ['// Test']
+          prepend: ['// Test [="]']
         }
       } as GeneratorConfig,
       context
@@ -47,7 +47,7 @@ describe('TypeScript template', () => {
     const content = compiled[0].content;
 
     expect(content).toBeSimilarStringTo(`
-    // Test
+    // Test [="]
     `);
   });
 
