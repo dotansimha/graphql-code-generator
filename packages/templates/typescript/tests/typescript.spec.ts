@@ -508,7 +508,7 @@ describe('TypeScript template', () => {
           ...config,
           config: {
             scalars: {
-              Date: 'Date'
+              Date: 'OtherDate'
             }
           }
         } as GeneratorConfig,
@@ -521,6 +521,43 @@ describe('TypeScript template', () => {
         /* tslint:disable */
       `);
       expect(content).toBeSimilarStringTo(`
+        export type Date = OtherDate;
+      `);
+      expect(content).toBeSimilarStringTo(`
+        export interface Query {
+          fieldTest?: (Date | null)[] | null;
+        }
+      `);
+    });
+
+    it('should generate correctly when using custom scalar of same name', async () => {
+      const { context } = compileAndBuildContext(`
+        type Query {
+          fieldTest: [Date]
+        }
+        
+        scalar Date
+      `);
+
+      const compiled = await compileTemplate(
+        {
+          ...config,
+          config: {
+            scalars: {
+              Date: 'Date'
+            }
+          }
+        } as GeneratorConfig,
+        context
+      );
+
+      const content = compiled[0].content;
+
+      expect(content).toBeSimilarStringTo(`
+        /* tslint:disable */
+      `);
+      // Avoid circular type references (#485).
+      expect(content).not.toBeSimilarStringTo(`
         export type Date = Date;
       `);
       expect(content).toBeSimilarStringTo(`
