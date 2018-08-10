@@ -30,7 +30,7 @@ export type SubscriptionResolver<Result, Parent = any, Context = any, Args = any
 {{#each scalars}}
 
 {{ toComment description }}
-{{#if (getScalarType name) }}export type {{ toPascalCase name }} = {{ getScalarType name }};{{/if}}
+{{#ifCond (toPascalCase name) "!==" (getScalarType name) }}export type {{ toPascalCase name }} = {{ getScalarType name }};{{/ifCond}}
 {{/each}}
 {{#each interfaces}}
   {{~> type }}
