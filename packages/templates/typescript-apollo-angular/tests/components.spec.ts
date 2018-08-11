@@ -26,11 +26,24 @@ describe('Components', () => {
     `;
 
     const transformedDocument = transformDocument(schema, documents);
-    const compiled = await compileTemplate(config, context, [transformedDocument], { generateSchema: false });
+    const compiled = await compileTemplate(
+      {
+        ...config,
+        config: {
+          noGraphQLTag: true
+        }
+      },
+      context,
+      [transformedDocument],
+      { generateSchema: false }
+    );
     const content = compiled[0].content;
 
     expect(content).toBeSimilarStringTo(`
       import * as Apollo from 'apollo-angular';
+    `);
+    expect(content).not.toBeSimilarStringTo(`
+      import gql from 'graphql-tag';
     `);
     expect(content).toBeSimilarStringTo(`
       import { Injectable } from '@angular/core';
@@ -65,7 +78,7 @@ describe('Components', () => {
 
     const transformedDocument = transformDocument(schema, documents);
     const compiled = await compileTemplate(
-      { ...config, config: { noNamespaces: true } },
+      { ...config, config: { noNamespaces: true, noGraphQLTag: true } },
       context,
       [transformedDocument],
       { generateSchema: false }
@@ -101,7 +114,17 @@ describe('Components', () => {
     `;
 
     const transformedDocument = transformDocument(schema, documents);
-    const compiled = await compileTemplate(config, context, [transformedDocument], { generateSchema: false });
+    const compiled = await compileTemplate(
+      {
+        ...config,
+        config: {
+          noGraphQLTag: true
+        }
+      },
+      context,
+      [transformedDocument],
+      { generateSchema: false }
+    );
     const content = compiled[0].content;
 
     expect(content).toBeSimilarStringTo(`
@@ -137,7 +160,7 @@ describe('Components', () => {
 
     const transformedDocument = transformDocument(schema, documents);
     const compiled = await compileTemplate(
-      { ...config, config: { noNamespaces: true } },
+      { ...config, config: { noNamespaces: true, noGraphQLTag: true } },
       context,
       [transformedDocument],
       { generateSchema: false }
@@ -156,6 +179,49 @@ describe('Components', () => {
       document = ${JSON.stringify(documents)}
     `);
   });
-});
 
-// document = {"kind":"Document"
+  it('should use graphql-tag when noGraphQLTag flag is disabled (by default)', async () => {
+    const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
+    const context = schemaToTemplateContext(schema);
+
+    const documents = gql`
+      query MyFeed {
+        feed {
+          id
+          commentCount
+          repository {
+            full_name
+            html_url
+            owner {
+              avatar_url
+            }
+          }
+        }
+      }
+    `;
+
+    const transformedDocument = transformDocument(schema, documents);
+    const compiled = await compileTemplate(
+      { ...config, config: { noNamespaces: true } },
+      context,
+      [transformedDocument],
+      { generateSchema: false }
+    );
+    const content = compiled[0].content;
+
+    expect(content).toBeSimilarStringTo(`
+      @Injectable({
+        providedIn: 'root'
+      })
+      export class MyFeedGQL extends Apollo.Query<MyFeedQuery, MyFeedVariables> {
+    `);
+
+    expect(content).toBeSimilarStringTo(`
+      import gql from 'graphql-tag';
+    `);
+
+    expect(content).toBeSimilarStringTo(`
+      document = gql\` query MyFeed {
+    `);
+  });
+});
