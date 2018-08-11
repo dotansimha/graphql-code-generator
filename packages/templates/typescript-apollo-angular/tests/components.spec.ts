@@ -176,7 +176,7 @@ describe('Components', () => {
     `);
 
     expect(content).toBeSimilarStringTo(`
-      document = ${JSON.stringify(documents)}
+      document: any = ${JSON.stringify(documents)}
     `);
   });
 
@@ -221,7 +221,7 @@ describe('Components', () => {
     `);
 
     expect(content).toBeSimilarStringTo(`
-      document = gql\` query MyFeed {
+      document: any = gql\` query MyFeed {
     `);
   });
 });
