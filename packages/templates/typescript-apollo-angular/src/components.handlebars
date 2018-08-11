@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import * as Apollo from 'apollo-angular';
 
-{{#unless @root.config.noGraphQLTag}}
+{{#unless @root.config.noGraphqlTag}}
 import gql from 'graphql-tag';
 {{/unless}}
 
@@ -11,6 +11,6 @@ import gql from 'graphql-tag';
         providedIn: 'root'
     })
     export class {{ toPascalCase name }}GQL extends Apollo.{{toPascalCase operationType}}<{{ toPascalCase name }}{{#unless @root.config.noNamespaces}}.{{/unless}}{{ toPascalCase operationType }}, {{ toPascalCase name }}{{#unless @root.config.noNamespaces}}.{{/unless}}Variables> {
-        document = {{#unless @root.config.noGraphQLTag}}gql` {{ document }} `{{else}}{{{ gql document }}}{{/unless}}
+        document = {{#unless @root.config.noGraphqlTag}}gql` {{ document }} `{{else}}{{{ gql document }}}{{/unless}}
     }
 {{/each}}

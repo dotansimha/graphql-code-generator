@@ -6,7 +6,7 @@ This template is extended version of TypeScript template, so the configuration i
 - Example Input
 
 ```graphql
-query Feed {
+query MyFeed {
   feed {
     id
     commentCount
@@ -17,7 +17,7 @@ query Feed {
 - Example Usage
 
 ```ts
-import { FeedQuery } from './graphql';
+import { MyFeedGQL } from './graphql';
 
 @Component({
   selector: 'feed',
@@ -31,8 +31,16 @@ import { FeedQuery } from './graphql';
 export class FeedComponent {
   feed: Observable<any>;
 
-  constructor(feedQuery: FeedQuery) {
-    this.feed = feedQuery.watch().valueChanges.pipe(map(result => result.data.feed));
+  constructor(feedGQL: MyFeedGQL) {
+    this.feed = feedGQL.watch().valueChanges.pipe(map(result => result.data.feed));
   }
 }
 ```
+
+## Generator Config
+
+This generator supports custom config and output behavior. Use to following flags/environment variables to modify your output as you wish:
+
+### `noGraphqlTag` (or `CODEGEN_NO_GRAPHQL_TAG`, default value: `false`)
+
+This will cause the codegen to output parsed documents and not use a literal tag of `graphql-tag` package.

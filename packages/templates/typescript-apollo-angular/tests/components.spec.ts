@@ -30,7 +30,7 @@ describe('Components', () => {
       {
         ...config,
         config: {
-          noGraphQLTag: true
+          noGraphqlTag: true
         }
       },
       context,
@@ -78,7 +78,7 @@ describe('Components', () => {
 
     const transformedDocument = transformDocument(schema, documents);
     const compiled = await compileTemplate(
-      { ...config, config: { noNamespaces: true, noGraphQLTag: true } },
+      { ...config, config: { noNamespaces: true, noGraphqlTag: true } },
       context,
       [transformedDocument],
       { generateSchema: false }
@@ -118,7 +118,7 @@ describe('Components', () => {
       {
         ...config,
         config: {
-          noGraphQLTag: true
+          noGraphqlTag: true
         }
       },
       context,
@@ -160,7 +160,7 @@ describe('Components', () => {
 
     const transformedDocument = transformDocument(schema, documents);
     const compiled = await compileTemplate(
-      { ...config, config: { noNamespaces: true, noGraphQLTag: true } },
+      { ...config, config: { noNamespaces: true, noGraphqlTag: true } },
       context,
       [transformedDocument],
       { generateSchema: false }
@@ -180,7 +180,7 @@ describe('Components', () => {
     `);
   });
 
-  it('should use graphql-tag when noGraphQLTag flag is disabled (by default)', async () => {
+  it('should use graphql-tag when noGraphqlTag flag is disabled (by default)', async () => {
     const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
     const context = schemaToTemplateContext(schema);
 
