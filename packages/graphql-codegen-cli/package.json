@@ -84,7 +84,7 @@
     "is-valid-path": "0.1.1",
     "mkdirp": "0.5.1",
     "pify": "4.0.0",
-    "prettier": "1.14.1",
+    "prettier": "1.14.2",
     "request": "2.88.0",
     "valid-url": "1.0.9"
   },
