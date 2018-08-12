@@ -24,7 +24,7 @@ query Test {
 - Example Usage
 
 ```tsx
-  <Test.Component query={...} variables={...}>
+  <Test.Component variables={...}>
     ...
   </Test.Component>
 ```
