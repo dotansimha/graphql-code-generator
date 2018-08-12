@@ -1,9 +1,9 @@
-import { SchemaLoader } from './schema-loader';
 import { existsSync } from 'fs';
 import { extname, isAbsolute, resolve as resolvePath } from 'path';
 import * as isValidPath from 'is-valid-path';
 import { buildASTSchema, buildClientSchema, DocumentNode, GraphQLSchema, IntrospectionQuery, parse } from 'graphql';
-import { debugLog, logger } from '../../../../graphql-codegen-core/dist';
+import { debugLog, logger } from 'graphql-codegen-core/dist';
+import { SchemaLoader } from './schema-loader';
 import { CLIOptions } from '../../cli-options';
 
 export class SchemaFromExport implements SchemaLoader {
