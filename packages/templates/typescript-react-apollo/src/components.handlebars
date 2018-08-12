@@ -1,10 +1,19 @@
 import * as ReactApollo from 'react-apollo';
 
+{{#unless @root.config.noGraphqlTag}}
+import gql from 'graphql-tag';
+{{/unless}}
+
 {{#each operations }}
     {{#unless @root.config.noNamespaces}}
     export namespace {{toPascalCase name}} {
     {{/unless}}
-        export class {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Component extends ReactApollo.{{toPascalCase operationType}}<{{toPascalCase operationType}}, {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Variables> { }   
+        export class {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Component extends ReactApollo.{{toPascalCase operationType}}<{{toPascalCase operationType}}, {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Variables> {
+            constructor(props, context){
+                props.query = props.query ||  {{#unless @root.config.noGraphqlTag}}gql` {{ document }} `{{else}}{{{ gql document }}}{{/unless}};
+                super(props, context);
+            }
+        }   
     {{#unless @root.config.noNamespaces}}
     }
     {{/unless}}

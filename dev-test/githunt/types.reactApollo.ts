@@ -562,24 +562,153 @@ export namespace VoteButtons {
 
 import * as ReactApollo from 'react-apollo';
 
+import gql from 'graphql-tag';
+
 export namespace OnCommentAdded {
-  export class Component extends ReactApollo.Subscription<Subscription, Variables> {}
+  export class Component extends ReactApollo.Subscription<Subscription, Variables> {
+    constructor(props, context) {
+      props.query =
+        props.query ||
+        gql`
+          subscription onCommentAdded($repoFullName: String!) {
+            commentAdded(repoFullName: $repoFullName) {
+              id
+              postedBy {
+                login
+                html_url
+              }
+              createdAt
+              content
+            }
+          }
+        `;
+      super(props, context);
+    }
+  }
 }
 export namespace Comment {
-  export class Component extends ReactApollo.Query<Query, Variables> {}
+  export class Component extends ReactApollo.Query<Query, Variables> {
+    constructor(props, context) {
+      props.query =
+        props.query ||
+        gql`
+          query Comment($repoFullName: String!, $limit: Int, $offset: Int) {
+            currentUser {
+              login
+              html_url
+            }
+            entry(repoFullName: $repoFullName) {
+              id
+              postedBy {
+                login
+                html_url
+              }
+              createdAt
+              comments(limit: $limit, offset: $offset) {
+                ...CommentsPageComment
+              }
+              commentCount
+              repository {
+                full_name
+                html_url
+                ... on Repository {
+                  description
+                  open_issues_count
+                  stargazers_count
+                }
+              }
+            }
+          }
+        `;
+      super(props, context);
+    }
+  }
 }
 export namespace CurrentUserForProfile {
-  export class Component extends ReactApollo.Query<Query, Variables> {}
+  export class Component extends ReactApollo.Query<Query, Variables> {
+    constructor(props, context) {
+      props.query =
+        props.query ||
+        gql`
+          query CurrentUserForProfile {
+            currentUser {
+              login
+              avatar_url
+            }
+          }
+        `;
+      super(props, context);
+    }
+  }
 }
 export namespace Feed {
-  export class Component extends ReactApollo.Query<Query, Variables> {}
+  export class Component extends ReactApollo.Query<Query, Variables> {
+    constructor(props, context) {
+      props.query =
+        props.query ||
+        gql`
+          query Feed($type: FeedType!, $offset: Int, $limit: Int) {
+            currentUser {
+              login
+            }
+            feed(type: $type, offset: $offset, limit: $limit) {
+              ...FeedEntry
+            }
+          }
+        `;
+      super(props, context);
+    }
+  }
 }
 export namespace SubmitRepository {
-  export class Component extends ReactApollo.Mutation<Mutation, Variables> {}
+  export class Component extends ReactApollo.Mutation<Mutation, Variables> {
+    constructor(props, context) {
+      props.query =
+        props.query ||
+        gql`
+          mutation submitRepository($repoFullName: String!) {
+            submitRepository(repoFullName: $repoFullName) {
+              createdAt
+            }
+          }
+        `;
+      super(props, context);
+    }
+  }
 }
 export namespace SubmitComment {
-  export class Component extends ReactApollo.Mutation<Mutation, Variables> {}
+  export class Component extends ReactApollo.Mutation<Mutation, Variables> {
+    constructor(props, context) {
+      props.query =
+        props.query ||
+        gql`
+          mutation submitComment($repoFullName: String!, $commentContent: String!) {
+            submitComment(repoFullName: $repoFullName, commentContent: $commentContent) {
+              ...CommentsPageComment
+            }
+          }
+        `;
+      super(props, context);
+    }
+  }
 }
 export namespace Vote {
-  export class Component extends ReactApollo.Mutation<Mutation, Variables> {}
+  export class Component extends ReactApollo.Mutation<Mutation, Variables> {
+    constructor(props, context) {
+      props.query =
+        props.query ||
+        gql`
+          mutation vote($repoFullName: String!, $type: VoteType!) {
+            vote(repoFullName: $repoFullName, type: $type) {
+              score
+              id
+              vote {
+                vote_value
+              }
+            }
+          }
+        `;
+      super(props, context);
+    }
+  }
 }
