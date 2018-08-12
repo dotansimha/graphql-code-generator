@@ -85,7 +85,7 @@
     "mkdirp": "0.5.1",
     "pify": "4.0.0",
     "prettier": "1.14.1",
-    "request": "2.87.0",
+    "request": "2.88.0",
     "valid-url": "1.0.9"
   },
   "devDependencies": {
