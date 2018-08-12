@@ -712,3 +712,149 @@ export namespace Vote {
     }
   }
 }
+import { query } from 'react-apollo/query-hoc';
+import { subscribe as subscription } from 'react-apollo/subscription-hoc';
+import { mutation } from 'react-apollo/mutation-hoc';
+import { ComponentClass, ComponentState } from 'react';
+
+export namespace OnCommentAdded {
+  export const HOC = <TProps = {}>(
+    operationOptions: ReactApollo.OperationOption<TProps, Subscription, Variables>
+  ): ComponentClass<TProps, ComponentState> =>
+    subscription<TProps, Subscription, Variables>(
+      gql`
+        subscription onCommentAdded($repoFullName: String!) {
+          commentAdded(repoFullName: $repoFullName) {
+            id
+            postedBy {
+              login
+              html_url
+            }
+            createdAt
+            content
+          }
+        }
+      `,
+      operationOptions
+    );
+}
+export namespace Comment {
+  export const HOC = <TProps = {}>(
+    operationOptions: ReactApollo.OperationOption<TProps, Query, Variables>
+  ): ComponentClass<TProps, ComponentState> =>
+    query<TProps, Query, Variables>(
+      gql`
+        query Comment($repoFullName: String!, $limit: Int, $offset: Int) {
+          currentUser {
+            login
+            html_url
+          }
+          entry(repoFullName: $repoFullName) {
+            id
+            postedBy {
+              login
+              html_url
+            }
+            createdAt
+            comments(limit: $limit, offset: $offset) {
+              ...CommentsPageComment
+            }
+            commentCount
+            repository {
+              full_name
+              html_url
+              ... on Repository {
+                description
+                open_issues_count
+                stargazers_count
+              }
+            }
+          }
+        }
+      `,
+      operationOptions
+    );
+}
+export namespace CurrentUserForProfile {
+  export const HOC = <TProps = {}>(
+    operationOptions: ReactApollo.OperationOption<TProps, Query, Variables>
+  ): ComponentClass<TProps, ComponentState> =>
+    query<TProps, Query, Variables>(
+      gql`
+        query CurrentUserForProfile {
+          currentUser {
+            login
+            avatar_url
+          }
+        }
+      `,
+      operationOptions
+    );
+}
+export namespace Feed {
+  export const HOC = <TProps = {}>(
+    operationOptions: ReactApollo.OperationOption<TProps, Query, Variables>
+  ): ComponentClass<TProps, ComponentState> =>
+    query<TProps, Query, Variables>(
+      gql`
+        query Feed($type: FeedType!, $offset: Int, $limit: Int) {
+          currentUser {
+            login
+          }
+          feed(type: $type, offset: $offset, limit: $limit) {
+            ...FeedEntry
+          }
+        }
+      `,
+      operationOptions
+    );
+}
+export namespace SubmitRepository {
+  export const HOC = <TProps = {}>(
+    operationOptions: ReactApollo.OperationOption<TProps, Mutation, Variables>
+  ): ComponentClass<TProps, ComponentState> =>
+    mutation<TProps, Mutation, Variables>(
+      gql`
+        mutation submitRepository($repoFullName: String!) {
+          submitRepository(repoFullName: $repoFullName) {
+            createdAt
+          }
+        }
+      `,
+      operationOptions
+    );
+}
+export namespace SubmitComment {
+  export const HOC = <TProps = {}>(
+    operationOptions: ReactApollo.OperationOption<TProps, Mutation, Variables>
+  ): ComponentClass<TProps, ComponentState> =>
+    mutation<TProps, Mutation, Variables>(
+      gql`
+        mutation submitComment($repoFullName: String!, $commentContent: String!) {
+          submitComment(repoFullName: $repoFullName, commentContent: $commentContent) {
+            ...CommentsPageComment
+          }
+        }
+      `,
+      operationOptions
+    );
+}
+export namespace Vote {
+  export const HOC = <TProps = {}>(
+    operationOptions: ReactApollo.OperationOption<TProps, Mutation, Variables>
+  ): ComponentClass<TProps, ComponentState> =>
+    mutation<TProps, Mutation, Variables>(
+      gql`
+        mutation vote($repoFullName: String!, $type: VoteType!) {
+          vote(repoFullName: $repoFullName, type: $type) {
+            score
+            id
+            vote {
+              vote_value
+            }
+          }
+        }
+      `,
+      operationOptions
+    );
+}

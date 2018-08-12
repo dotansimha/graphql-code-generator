@@ -8,7 +8,7 @@ import gql from 'graphql-tag';
     {{#unless @root.config.noNamespaces}}
     export namespace {{toPascalCase name}} {
     {{/unless}}
-        export class {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Component extends ReactApollo.{{toPascalCase operationType}}<{{toPascalCase operationType}}, {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Variables> {
+        export class {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Component extends ReactApollo.{{toPascalCase operationType}}<{{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}{{toPascalCase operationType}}, {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Variables> {
             constructor(props, context){
                 props.query = props.query ||  {{#unless @root.config.noGraphqlTag}}gql` {{ document }} `{{else}}{{{ gql document }}}{{/unless}};
                 super(props, context);
