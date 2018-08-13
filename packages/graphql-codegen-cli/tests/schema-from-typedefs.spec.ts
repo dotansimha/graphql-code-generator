@@ -10,4 +10,14 @@ describe('schema from typedefs', () => {
     expect(built.getTypeMap()['User']).toBeDefined();
     expect(built.getTypeMap()['Query']).toBeDefined();
   });
+
+  it('should work with import notations', () => {
+    const schemaPath = './tests/test-files/schema-dir/query.graphql';
+    const handler = new SchemaFromTypedefs();
+    const canHandle = handler.canHandle(schemaPath);
+    expect(canHandle).toBeTruthy();
+    const built = handler.handle(schemaPath, {});
+    expect(built.getTypeMap()['User']).toBeDefined();
+    expect(built.getTypeMap()['Query']).toBeDefined();
+  });
 });

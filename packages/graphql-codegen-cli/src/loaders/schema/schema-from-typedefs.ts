@@ -5,11 +5,12 @@ import { GraphQLSchema } from 'graphql';
 import * as glob from 'glob';
 import { makeExecutableSchema } from 'graphql-tools';
 import { readFileSync } from 'fs';
+import { importSchema } from 'graphql-import';
 import { CLIOptions } from '../../cli-options';
 
 export class SchemaFromTypedefs implements SchemaLoader {
   canHandle(globPath: string): boolean {
-    return isGlob(globPath) && !isValidPath(globPath);
+    return isGlob(globPath) || (isValidPath(globPath) && globPath.endsWith('.graphql'));
   }
 
   handle(globPath: string, cliOptions: CLIOptions): GraphQLSchema {
@@ -19,8 +20,11 @@ export class SchemaFromTypedefs implements SchemaLoader {
       throw new Error(`Unable to find matching files for glob: ${globPath}!`);
     }
 
+    const typeDefs =
+      globFiles.length > 1 ? globFiles.map(filePath => readFileSync(filePath, 'utf-8')) : importSchema(globFiles[0]);
+
     return makeExecutableSchema({
-      typeDefs: globFiles.map(filePath => readFileSync(filePath, 'utf-8')),
+      typeDefs,
       allowUndefinedInResolve: true,
       resolvers: {}
     });
