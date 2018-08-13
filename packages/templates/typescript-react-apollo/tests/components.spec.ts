@@ -41,8 +41,30 @@ describe('Components', () => {
     expect(content).toBeSimilarStringTo(`
           import * as ReactApollo from 'react-apollo';
         `);
+
     expect(content).toBeSimilarStringTo(`
-          export class Component extends ReactApollo.Query<Query, Variables> { }
+      import gql from 'graphql-tag';
+    `);
+
+    expect(content).toBeSimilarStringTo(`
+                  export class Component extends ReactApollo.Query<Query, Variables> {
+                      constructor(props, context){
+                          props.query = props.query ||  gql\` {
+                              feed {
+                                id
+                                commentCount
+                                repository {
+                                  full_name
+                                  html_url
+                                  owner {
+                                    avatar_url
+                                  }
+                                }
+                              }
+                              } \`;
+                          super(props, context);
+                      }
+                  }
         `);
   });
 });

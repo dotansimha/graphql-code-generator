@@ -1,0 +1,21 @@
+{{#unless @root.config.noHOC}}
+    import { query } from 'react-apollo/query-hoc';
+    import { subscribe as subscription } from 'react-apollo/subscription-hoc';
+    import { mutation } from 'react-apollo/mutation-hoc';
+    import { ComponentClass, ComponentState} from 'react';
+
+    {{#each operations }}
+        {{#unless @root.config.noNamespaces}}
+        export namespace {{toPascalCase name}} {
+        {{/unless}}
+            export const {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}HOC
+                = <TProps = {}>(operationOptions: ReactApollo.OperationOption<TProps, {{toPascalCase operationType}}, Variables>) : ComponentClass<TProps, ComponentState>
+                => {{operationType}}<TProps, {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}{{toPascalCase operationType}}, {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Variables>(
+                    {{#unless @root.config.noGraphqlTag}}gql` {{ document }} `{{else}}{{{ gql document }}}{{/unless}},
+                    operationOptions
+                );
+        {{#unless @root.config.noNamespaces}}
+        }
+        {{/unless}}
+    {{/each}}
+{{/unless}}
