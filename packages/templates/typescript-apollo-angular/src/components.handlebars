@@ -1,0 +1,16 @@
+import { Injectable } from '@angular/core';
+
+import * as Apollo from 'apollo-angular';
+
+{{#unless @root.config.noGraphqlTag}}
+import gql from 'graphql-tag';
+{{/unless}}
+
+{{#each operations }}
+    @Injectable({
+        providedIn: 'root'
+    })
+    export class {{ toPascalCase name }}GQL extends Apollo.{{toPascalCase operationType}}<{{ toPascalCase name }}{{#unless @root.config.noNamespaces}}.{{/unless}}{{ toPascalCase operationType }}, {{ toPascalCase name }}{{#unless @root.config.noNamespaces}}.{{/unless}}Variables> {
+        document: any = {{#unless @root.config.noGraphqlTag}}gql` {{ document }} `{{else}}{{{ gql document }}}{{/unless}}
+    }
+{{/each}}
