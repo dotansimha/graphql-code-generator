@@ -40,6 +40,7 @@ If you develop a **client-side with TypeScript, Angular and GraphQL**, you can u
 | ------------------------- | -------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
 | TypeScript                | Generate server-side TypeScript types, and client-side typings | [`graphql-codegen-typescript-template`](./packages/templates/typescript)                  |
 | MongoDB TypeScript Models | Generate server-side TypeScript types, with MongoDB models     | [`graphql-codegen-typescript-mongodb-template`](./packages/templates/typescript-mongodb)  |
+| Apollo Angular Typescript   | Generate TypeScript types, and Apollo Angular Services         | [`graphql-codegen-typescript-apollo-angular`](./packages/templates/typescript-apollo-angular) |
 | React Apollo Typescript   | Generate TypeScript types, and React Apollo Components         | [`graphql-codegen-typescript-react-apollo`](./packages/templates/typescript-react-apollo) |
 | XSD                       | Generate XSD file                                              | [`graphql-xsd`](https://www.npmjs.com/package/graphql-xsd)                                |
 | Introspection             | Generate Introspection file                                    | [`graphql-codegen-introspection-template`](./packages/templates/introspection)            |
