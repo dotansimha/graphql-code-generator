@@ -712,16 +712,14 @@ export namespace Vote {
     }
   }
 }
-import { query } from 'react-apollo/query-hoc';
-import { subscribe as subscription } from 'react-apollo/subscription-hoc';
-import { mutation } from 'react-apollo/mutation-hoc';
+
 import { ComponentClass, ComponentState } from 'react';
 
 export namespace OnCommentAdded {
   export const HOC = <TProps = {}>(
     operationOptions: ReactApollo.OperationOption<TProps, Subscription, Variables>
   ): ComponentClass<TProps, ComponentState> =>
-    subscription<TProps, Subscription, Variables>(
+    ReactApollo.graphql<TProps, Subscription, Variables>(
       gql`
         subscription onCommentAdded($repoFullName: String!) {
           commentAdded(repoFullName: $repoFullName) {
@@ -742,7 +740,7 @@ export namespace Comment {
   export const HOC = <TProps = {}>(
     operationOptions: ReactApollo.OperationOption<TProps, Query, Variables>
   ): ComponentClass<TProps, ComponentState> =>
-    query<TProps, Query, Variables>(
+    ReactApollo.graphql<TProps, Query, Variables>(
       gql`
         query Comment($repoFullName: String!, $limit: Int, $offset: Int) {
           currentUser {
@@ -779,7 +777,7 @@ export namespace CurrentUserForProfile {
   export const HOC = <TProps = {}>(
     operationOptions: ReactApollo.OperationOption<TProps, Query, Variables>
   ): ComponentClass<TProps, ComponentState> =>
-    query<TProps, Query, Variables>(
+    ReactApollo.graphql<TProps, Query, Variables>(
       gql`
         query CurrentUserForProfile {
           currentUser {
@@ -795,7 +793,7 @@ export namespace Feed {
   export const HOC = <TProps = {}>(
     operationOptions: ReactApollo.OperationOption<TProps, Query, Variables>
   ): ComponentClass<TProps, ComponentState> =>
-    query<TProps, Query, Variables>(
+    ReactApollo.graphql<TProps, Query, Variables>(
       gql`
         query Feed($type: FeedType!, $offset: Int, $limit: Int) {
           currentUser {
@@ -813,7 +811,7 @@ export namespace SubmitRepository {
   export const HOC = <TProps = {}>(
     operationOptions: ReactApollo.OperationOption<TProps, Mutation, Variables>
   ): ComponentClass<TProps, ComponentState> =>
-    mutation<TProps, Mutation, Variables>(
+    ReactApollo.graphql<TProps, Mutation, Variables>(
       gql`
         mutation submitRepository($repoFullName: String!) {
           submitRepository(repoFullName: $repoFullName) {
@@ -828,7 +826,7 @@ export namespace SubmitComment {
   export const HOC = <TProps = {}>(
     operationOptions: ReactApollo.OperationOption<TProps, Mutation, Variables>
   ): ComponentClass<TProps, ComponentState> =>
-    mutation<TProps, Mutation, Variables>(
+    ReactApollo.graphql<TProps, Mutation, Variables>(
       gql`
         mutation submitComment($repoFullName: String!, $commentContent: String!) {
           submitComment(repoFullName: $repoFullName, commentContent: $commentContent) {
@@ -843,7 +841,7 @@ export namespace Vote {
   export const HOC = <TProps = {}>(
     operationOptions: ReactApollo.OperationOption<TProps, Mutation, Variables>
   ): ComponentClass<TProps, ComponentState> =>
-    mutation<TProps, Mutation, Variables>(
+    ReactApollo.graphql<TProps, Mutation, Variables>(
       gql`
         mutation vote($repoFullName: String!, $type: VoteType!) {
           vote(repoFullName: $repoFullName, type: $type) {
