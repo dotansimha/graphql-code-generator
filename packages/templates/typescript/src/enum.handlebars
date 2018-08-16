@@ -1,8 +1,8 @@
 {{ toComment description }}
 {{#if @root.config.enumsAsTypes }}
-export type {{ toPascalCase name }} = {{#each values }}"{{ value }}"{{#unless @last}} | {{/unless}}{{/each}};
+export type {{@root.config.interfacePrefix}}{{ toPascalCase name }} = {{#each values }}"{{ value }}"{{#unless @last}} | {{/unless}}{{/each}};
 {{else}}
-export enum {{ toPascalCase name }} {
+export enum {{@root.config.interfacePrefix}}{{ toPascalCase name }} {
 {{#each values }}
   {{value}} = "{{ value }}",
 {{/each}}
