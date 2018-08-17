@@ -4,10 +4,12 @@ import * as components from './components.handlebars';
 import * as hoc from './hoc.handlebars';
 import { gql } from './helpers/gql';
 import { eq } from './helpers/eq';
+import { toLowerCase } from './helpers/to-lower-case';
 
 typescriptConfig.templates['documents'] += components;
 typescriptConfig.templates['documents'] += hoc;
 typescriptConfig.customHelpers.gql = gql;
 typescriptConfig.customHelpers.eq = eq;
+typescriptConfig.customHelpers.toLowerCase = toLowerCase;
 
 export { typescriptConfig as config };
