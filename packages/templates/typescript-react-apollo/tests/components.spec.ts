@@ -43,28 +43,41 @@ describe('Components', () => {
         `);
 
     expect(content).toBeSimilarStringTo(`
+          import * as React from 'react';
+        `);
+
+    expect(content).toBeSimilarStringTo(`
       import gql from 'graphql-tag';
     `);
 
     expect(content).toBeSimilarStringTo(`
-                  export class Component extends ReactApollo.Query<Query, Variables> {
-                      constructor(props, context){
-                          props.query = props.query ||  gql\` {
-                              feed {
-                                id
-                                commentCount
-                                repository {
-                                  full_name
-                                  html_url
-                                  owner {
-                                    avatar_url
+        export interface ComponentProps {
+            query?: any;
+            variables?: Variables;
+            children: (result: ReactApollo.QueryResult<Query, Variables>) => React.ReactNode;
+        };
+        export class Component extends React.Component<ComponentProps> {
+            render(){
+                return (
+                    <ReactApollo.Query<Query, Variables>
+                    query={ gql\` {
+                                  feed {
+                                      id
+                                      commentCount
+                                      repository {
+                                      full_name
+                                      html_url
+                                      owner {
+                                        avatar_url
+                                      }
+                                    }
                                   }
-                                }
-                              }
-                              } \`;
-                          super(props, context);
-                      }
-                  }
+                                } \` }
+                          {...this.props}
+                          />
+                );
+              }
+          }
         `);
   });
 });
