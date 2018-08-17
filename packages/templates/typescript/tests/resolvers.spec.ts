@@ -38,24 +38,24 @@ describe('Resolvers', () => {
     import { GraphQLResolveInfo } from 'graphql';
 
     export type Resolver<Result, Parent = any, Context = any, Args = any> = (
-      parent?: Parent,
-      args?: Args,
-      context?: Context,
-      info?: GraphQLResolveInfo
+      parent: Parent,
+      args: Args,
+      context: Context,
+      info: GraphQLResolveInfo
     ) => Promise<Result> | Result;
     
     export type SubscriptionResolver<Result, Parent = any, Context = any, Args = any> = {
       subscribe<R = Result, P = Parent>(
-        parent?: P,
-        args?: Args,
-        context?: Context,
-        info?: GraphQLResolveInfo
+        parent: P,
+        args: Args,
+        context: Context,
+        info: GraphQLResolveInfo
       ): AsyncIterator<R | Result>;
       resolve?<R = Result, P = Parent>(
-        parent?: P,
-        args?: Args,
-        context?: Context,
-        info?: GraphQLResolveInfo
+        parent: P,
+        args: Args,
+        context: Context,
+        info: GraphQLResolveInfo
       ): R | Result | Promise<R | Result>;
     }
       `);
@@ -169,10 +169,10 @@ describe('Resolvers', () => {
 
     expect(content).not.toBeSimilarStringTo(`
         export type Resolver<Result, Parent = any, Context = any, Args = any> = (
-          parent?: Parent,
-          args?: Args,
-          context?: Context,
-          info?: GraphQLResolveInfo
+          parent: Parent,
+          args: Args,
+          context: Context,
+          info: GraphQLResolveInfo
         ) => Promise<Result> | Result;
       `);
 
