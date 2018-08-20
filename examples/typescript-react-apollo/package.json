@@ -24,8 +24,8 @@
     "@types/react": "^16.4.11",
     "@types/react-dom": "^16.0.7",
     "concurrently": "^3.6.1",
-    "graphql-code-generator": "^0.10.7",
-    "graphql-codegen-typescript-react-apollo-template": "^0.10.7",
+    "graphql-code-generator": "0.10.7",
+    "graphql-codegen-typescript-react-apollo-template": "0.10.7",
     "typescript": "^3.0.1"
   }
 }
