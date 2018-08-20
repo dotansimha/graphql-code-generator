@@ -11,8 +11,9 @@
     "test": "lerna run test",
     "lint": "lerna run lint",
     "precommit": "lint-staged",
-    "prerelease": "yarn build && yarn test",
-    "prerelease:canary": "yarn build && yarn test",
+    "test-and-build": "yarn test && yarn build",
+    "prerelease": "yarn test-and-build",
+    "prerelease:canary": "yarn test-and-build",
     "release": "lerna publish --exact --force-publish=\"*\"",
     "release:canary": "lerna publish --force-publish=\"*\" --canary --exact",
     "generate:examples": "./dev-test/generate-all.sh"
