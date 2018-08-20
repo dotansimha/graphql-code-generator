@@ -16,13 +16,13 @@
     esutils "^2.0.2"
     js-tokens "^3.0.0"
 
-"@lerna/add@^3.1.1":
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/@lerna/add/-/add-3.1.1.tgz#63955fd164647ef3d0a6f0660e8fd8b71084a2c2"
+"@lerna/add@^3.1.2":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@lerna/add/-/add-3.1.2.tgz#26cccee7e9a853a3ebae22a99660672319443496"
   dependencies:
-    "@lerna/bootstrap" "^3.1.0"
-    "@lerna/command" "^3.1.0"
-    "@lerna/filter-options" "^3.0.5"
+    "@lerna/bootstrap" "^3.1.2"
+    "@lerna/command" "^3.1.2"
+    "@lerna/filter-options" "^3.1.2"
     "@lerna/npm-conf" "^3.0.0"
     "@lerna/validation-error" "^3.0.0"
     dedent "^0.7.0"
@@ -31,21 +31,21 @@
     pacote "^9.1.0"
     semver "^5.5.0"
 
-"@lerna/batch-packages@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@lerna/batch-packages/-/batch-packages-3.0.0.tgz#960a3dbb5fbc17283e2850448c76c023f6a35200"
+"@lerna/batch-packages@^3.1.2":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@lerna/batch-packages/-/batch-packages-3.1.2.tgz#74b5312a01a8916204cbc71237ffbe93144b99df"
   dependencies:
-    "@lerna/package-graph" "^3.0.0"
+    "@lerna/package-graph" "^3.1.2"
     "@lerna/validation-error" "^3.0.0"
     npmlog "^4.1.2"
 
-"@lerna/bootstrap@^3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@lerna/bootstrap/-/bootstrap-3.1.0.tgz#2b999ea4456261f1f2cd238ee10beec279595df5"
+"@lerna/bootstrap@^3.1.2":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@lerna/bootstrap/-/bootstrap-3.1.2.tgz#a99a01d64901e1798441e2fc99aa87fbc26af75c"
   dependencies:
-    "@lerna/batch-packages" "^3.0.0"
-    "@lerna/command" "^3.1.0"
-    "@lerna/filter-options" "^3.0.5"
+    "@lerna/batch-packages" "^3.1.2"
+    "@lerna/command" "^3.1.2"
+    "@lerna/filter-options" "^3.1.2"
     "@lerna/has-npm-version" "^3.0.4"
     "@lerna/npm-conf" "^3.0.0"
     "@lerna/npm-install" "^3.0.0"
@@ -67,15 +67,15 @@
     read-package-tree "^5.1.6"
     semver "^5.5.0"
 
-"@lerna/changed@^3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@lerna/changed/-/changed-3.1.0.tgz#b218934d2e7b665834fadd48a91c82e41f6e18bd"
+"@lerna/changed@^3.1.2":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@lerna/changed/-/changed-3.1.2.tgz#a3e5bd8fcb5f931138f75b272505f1c2f01505bf"
   dependencies:
     "@lerna/collect-updates" "^3.1.0"
-    "@lerna/command" "^3.1.0"
+    "@lerna/command" "^3.1.2"
     "@lerna/listable" "^3.0.0"
     "@lerna/output" "^3.0.0"
-    "@lerna/version" "^3.1.0"
+    "@lerna/version" "^3.1.2"
 
 "@lerna/check-working-tree@^3.1.0":
   version "3.1.0"
@@ -92,37 +92,37 @@
     execa "^0.10.0"
     strong-log-transformer "^1.0.6"
 
-"@lerna/clean@^3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@lerna/clean/-/clean-3.1.0.tgz#33d0d5d2215c4a0a6d9b90ba0dffc4b78de1c808"
+"@lerna/clean@^3.1.2":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@lerna/clean/-/clean-3.1.2.tgz#80cad783c7be06ef4988450ab70f8d15b34a7374"
   dependencies:
-    "@lerna/command" "^3.1.0"
-    "@lerna/filter-options" "^3.0.5"
+    "@lerna/command" "^3.1.2"
+    "@lerna/filter-options" "^3.1.2"
     "@lerna/prompt" "^3.0.0"
     "@lerna/rimraf-dir" "^3.0.0"
     p-map "^1.2.0"
     p-map-series "^1.0.0"
     p-waterfall "^1.0.0"
 
-"@lerna/cli@^3.1.1":
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/@lerna/cli/-/cli-3.1.1.tgz#fbf9d509bf4a55012a0389b06ea67f8b30f025fa"
+"@lerna/cli@^3.1.2":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@lerna/cli/-/cli-3.1.2.tgz#fea13455a3769a282471512f1adac2095c8a1d55"
   dependencies:
-    "@lerna/add" "^3.1.1"
-    "@lerna/bootstrap" "^3.1.0"
-    "@lerna/changed" "^3.1.0"
-    "@lerna/clean" "^3.1.0"
-    "@lerna/create" "^3.1.0"
-    "@lerna/diff" "^3.1.0"
-    "@lerna/exec" "^3.1.0"
+    "@lerna/add" "^3.1.2"
+    "@lerna/bootstrap" "^3.1.2"
+    "@lerna/changed" "^3.1.2"
+    "@lerna/clean" "^3.1.2"
+    "@lerna/create" "^3.1.2"
+    "@lerna/diff" "^3.1.2"
+    "@lerna/exec" "^3.1.2"
     "@lerna/global-options" "^3.0.5"
-    "@lerna/import" "^3.1.0"
-    "@lerna/init" "^3.1.0"
-    "@lerna/link" "^3.1.0"
-    "@lerna/list" "^3.1.0"
-    "@lerna/publish" "^3.1.0"
-    "@lerna/run" "^3.1.0"
-    "@lerna/version" "^3.1.0"
+    "@lerna/import" "^3.1.2"
+    "@lerna/init" "^3.1.2"
+    "@lerna/link" "^3.1.2"
+    "@lerna/list" "^3.1.2"
+    "@lerna/publish" "^3.1.2"
+    "@lerna/run" "^3.1.2"
+    "@lerna/version" "^3.1.2"
     dedent "^0.7.0"
     is-ci "^1.0.10"
     npmlog "^4.1.2"
@@ -138,14 +138,12 @@
     npmlog "^4.1.2"
     slash "^1.0.0"
 
-"@lerna/command@^3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@lerna/command/-/command-3.1.0.tgz#016620ea7c96c687e36870cede428c60df693479"
+"@lerna/command@^3.1.2":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@lerna/command/-/command-3.1.2.tgz#7f459401195d37159a9dfb3b6624a928cbf4f279"
   dependencies:
     "@lerna/child-process" "^3.0.0"
-    "@lerna/collect-updates" "^3.1.0"
-    "@lerna/filter-packages" "^3.0.0"
-    "@lerna/package-graph" "^3.0.0"
+    "@lerna/package-graph" "^3.1.2"
     "@lerna/project" "^3.0.0"
     "@lerna/validation-error" "^3.0.0"
     "@lerna/write-log-file" "^3.0.0"
@@ -177,12 +175,12 @@
     fs-extra "^6.0.1"
     npmlog "^4.1.2"
 
-"@lerna/create@^3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@lerna/create/-/create-3.1.0.tgz#3a2cb5a581cd8c9257d71032d206f5e59dbc7ff0"
+"@lerna/create@^3.1.2":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@lerna/create/-/create-3.1.2.tgz#6bc284b5737132064cf722546e31006e4ec9dad1"
   dependencies:
     "@lerna/child-process" "^3.0.0"
-    "@lerna/command" "^3.1.0"
+    "@lerna/command" "^3.1.2"
     "@lerna/npm-conf" "^3.0.0"
     "@lerna/validation-error" "^3.0.0"
     camelcase "^4.1.0"
@@ -205,30 +203,32 @@
     "@lerna/child-process" "^3.0.0"
     npmlog "^4.1.2"
 
-"@lerna/diff@^3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@lerna/diff/-/diff-3.1.0.tgz#b06ca009d8333fe0136041cd7ef5c0553361b035"
+"@lerna/diff@^3.1.2":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@lerna/diff/-/diff-3.1.2.tgz#e1c26b59bbac2a25c2b84be54db4ce3e25a4c322"
   dependencies:
     "@lerna/child-process" "^3.0.0"
-    "@lerna/command" "^3.1.0"
+    "@lerna/command" "^3.1.2"
     "@lerna/validation-error" "^3.0.0"
     npmlog "^4.1.2"
 
-"@lerna/exec@^3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@lerna/exec/-/exec-3.1.0.tgz#ea8e7d74ddd9fd1e79dc893fa0f44e772be84ac9"
+"@lerna/exec@^3.1.2":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@lerna/exec/-/exec-3.1.2.tgz#2eb73662d915fb88c8ba0ac8acf817d3d1aa6529"
   dependencies:
-    "@lerna/batch-packages" "^3.0.0"
+    "@lerna/batch-packages" "^3.1.2"
     "@lerna/child-process" "^3.0.0"
-    "@lerna/command" "^3.1.0"
-    "@lerna/filter-options" "^3.0.5"
+    "@lerna/command" "^3.1.2"
+    "@lerna/filter-options" "^3.1.2"
     "@lerna/run-parallel-batches" "^3.0.0"
     "@lerna/validation-error" "^3.0.0"
 
-"@lerna/filter-options@^3.0.5":
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/@lerna/filter-options/-/filter-options-3.0.5.tgz#d35935866d28d398674d5b53565633971779469a"
+"@lerna/filter-options@^3.1.2":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@lerna/filter-options/-/filter-options-3.1.2.tgz#83f58ee3de886381b9092200f8c981741533ac15"
   dependencies:
+    "@lerna/collect-updates" "^3.1.0"
+    "@lerna/filter-packages" "^3.0.0"
     dedent "^0.7.0"
 
 "@lerna/filter-packages@^3.0.0":
@@ -256,44 +256,44 @@
     "@lerna/child-process" "^3.0.0"
     semver "^5.5.0"
 
-"@lerna/import@^3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@lerna/import/-/import-3.1.0.tgz#509ea48d5ed7793e08e0b6fc638975f6f7c9b588"
+"@lerna/import@^3.1.2":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@lerna/import/-/import-3.1.2.tgz#7a3db2c30657c8f5d7842c50c36716387835d8d8"
   dependencies:
     "@lerna/child-process" "^3.0.0"
-    "@lerna/command" "^3.1.0"
+    "@lerna/command" "^3.1.2"
     "@lerna/prompt" "^3.0.0"
     "@lerna/validation-error" "^3.0.0"
     dedent "^0.7.0"
     fs-extra "^6.0.1"
     p-map-series "^1.0.0"
 
-"@lerna/init@^3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@lerna/init/-/init-3.1.0.tgz#065fbc2f11546ce0b0a70265ccd4d3ae3dcf6e08"
+"@lerna/init@^3.1.2":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@lerna/init/-/init-3.1.2.tgz#1d0575daec6bb0467262c53fef261b096cd16117"
   dependencies:
     "@lerna/child-process" "^3.0.0"
-    "@lerna/command" "^3.1.0"
+    "@lerna/command" "^3.1.2"
     fs-extra "^6.0.1"
     p-map "^1.2.0"
     write-json-file "^2.3.0"
 
-"@lerna/link@^3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@lerna/link/-/link-3.1.0.tgz#fb879f6099a4e678e997a232598771597ec67fd1"
+"@lerna/link@^3.1.2":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@lerna/link/-/link-3.1.2.tgz#d0f3cffebe6ee2b91c2df9e8bacbc4d48ab9be7d"
   dependencies:
-    "@lerna/command" "^3.1.0"
-    "@lerna/package-graph" "^3.0.0"
+    "@lerna/command" "^3.1.2"
+    "@lerna/package-graph" "^3.1.2"
     "@lerna/symlink-dependencies" "^3.0.0"
     p-map "^1.2.0"
     slash "^1.0.0"
 
-"@lerna/list@^3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@lerna/list/-/list-3.1.0.tgz#4d5779301b709e07397e2edbd04e5d3ce2dfcf4e"
+"@lerna/list@^3.1.2":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@lerna/list/-/list-3.1.2.tgz#eb20a4f541ea905e4c1508f1d4816646136c2d62"
   dependencies:
-    "@lerna/command" "^3.1.0"
-    "@lerna/filter-options" "^3.0.5"
+    "@lerna/command" "^3.1.2"
+    "@lerna/filter-options" "^3.1.2"
     "@lerna/listable" "^3.0.0"
     "@lerna/output" "^3.0.0"
 
@@ -366,10 +366,11 @@
   dependencies:
     npmlog "^4.1.2"
 
-"@lerna/package-graph@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@lerna/package-graph/-/package-graph-3.0.0.tgz#f2e9131856c4f43ea91f2cab1bfe5c9264079f53"
+"@lerna/package-graph@^3.1.2":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@lerna/package-graph/-/package-graph-3.1.2.tgz#b70298a3a8c82e12090da33233bf242223a38f20"
   dependencies:
+    "@lerna/validation-error" "^3.0.0"
     npm-package-arg "^6.0.0"
     semver "^5.5.0"
 
@@ -404,15 +405,15 @@
     inquirer "^5.1.0"
     npmlog "^4.1.2"
 
-"@lerna/publish@^3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@lerna/publish/-/publish-3.1.0.tgz#ffa2b59b9f8cfe5020b7110d3493d379b177234f"
+"@lerna/publish@^3.1.2":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@lerna/publish/-/publish-3.1.2.tgz#32ad8767aac422848b92c835c6fa37652c6ff03f"
   dependencies:
-    "@lerna/batch-packages" "^3.0.0"
+    "@lerna/batch-packages" "^3.1.2"
     "@lerna/check-working-tree" "^3.1.0"
     "@lerna/child-process" "^3.0.0"
     "@lerna/collect-updates" "^3.1.0"
-    "@lerna/command" "^3.1.0"
+    "@lerna/command" "^3.1.2"
     "@lerna/describe-ref" "^3.1.0"
     "@lerna/get-npm-exec-opts" "^3.0.0"
     "@lerna/npm-dist-tag" "^3.0.0"
@@ -422,7 +423,7 @@
     "@lerna/run-lifecycle" "^3.0.0"
     "@lerna/run-parallel-batches" "^3.0.0"
     "@lerna/validation-error" "^3.0.0"
-    "@lerna/version" "^3.1.0"
+    "@lerna/version" "^3.1.2"
     fs-extra "^6.0.1"
     npm-package-arg "^6.0.0"
     npmlog "^4.1.2"
@@ -463,13 +464,13 @@
     p-map "^1.2.0"
     p-map-series "^1.0.0"
 
-"@lerna/run@^3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@lerna/run/-/run-3.1.0.tgz#e66143fff00fc7e508d1b19945df483f246a9a21"
+"@lerna/run@^3.1.2":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@lerna/run/-/run-3.1.2.tgz#7c493cf2b91f91d08df7c0f519dc071293a0d410"
   dependencies:
-    "@lerna/batch-packages" "^3.0.0"
-    "@lerna/command" "^3.1.0"
-    "@lerna/filter-options" "^3.0.5"
+    "@lerna/batch-packages" "^3.1.2"
+    "@lerna/command" "^3.1.2"
+    "@lerna/filter-options" "^3.1.2"
     "@lerna/npm-run-script" "^3.0.0"
     "@lerna/output" "^3.0.0"
     "@lerna/run-parallel-batches" "^3.0.0"
@@ -504,14 +505,14 @@
   dependencies:
     npmlog "^4.1.2"
 
-"@lerna/version@^3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@lerna/version/-/version-3.1.0.tgz#5af293d9de96e431a689a8772f47e5a20939ab08"
+"@lerna/version@^3.1.2":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@lerna/version/-/version-3.1.2.tgz#b246e2146529958fa313499529e880eb73882ec7"
   dependencies:
     "@lerna/check-working-tree" "^3.1.0"
     "@lerna/child-process" "^3.0.0"
     "@lerna/collect-updates" "^3.1.0"
-    "@lerna/command" "^3.1.0"
+    "@lerna/command" "^3.1.2"
     "@lerna/conventional-commits" "^3.0.2"
     "@lerna/output" "^3.0.0"
     "@lerna/prompt" "^3.0.0"
@@ -4332,11 +4333,11 @@ left-pad@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/left-pad/-/left-pad-1.2.0.tgz#d30a73c6b8201d8f7d8e7956ba9616087a68e0ee"
 
-lerna@3.1.1:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/lerna/-/lerna-3.1.1.tgz#ede60f54fb984d19f1551e323fe7e272bba723ce"
+lerna@3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/lerna/-/lerna-3.1.2.tgz#cd741528787783494cd66c970b658f888d14510b"
   dependencies:
-    "@lerna/cli" "^3.1.1"
+    "@lerna/cli" "^3.1.2"
     import-local "^1.0.0"
     npmlog "^4.1.2"
 
