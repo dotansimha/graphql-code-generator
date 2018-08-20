@@ -2,7 +2,7 @@ import * as commander from 'commander';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as mkdirp from 'mkdirp';
-import { GraphQLSchema } from 'graphql';
+import { GraphQLSchema, DocumentNode, GraphQLError } from 'graphql';
 
 import { documentsFromGlobs } from './utils/documents-glob';
 import { loadDocumentsSources } from './loaders/documents/document-loader';
@@ -259,10 +259,18 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
       }
     });
 
-    const transformedDocuments = transformDocument(
-      graphQlSchema,
-      loadDocumentsSources(await documentsFromGlobs(documents))
-    );
+    const documentSourcesResult = loadDocumentsSources(graphQlSchema, await documentsFromGlobs(documents));
+
+    if (Array.isArray(documentSourcesResult) && documentSourcesResult.length > 0) {
+      const graphQLErrors = documentSourcesResult as ReadonlyArray<GraphQLError>;
+      for (const graphQLError of graphQLErrors) {
+        logger.error(`${graphQLError.path}: ${graphQLError.message}`);
+      }
+      cliError('Found errors when validating queries against schema');
+    }
+
+    const transformedDocuments = transformDocument(graphQlSchema, documentSourcesResult as DocumentNode);
+
     return compileTemplate(templateConfig, context, [transformedDocuments], {
       generateSchema,
       generateDocuments

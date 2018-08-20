@@ -1,4 +1,5 @@
-import { DocumentNode, Source, parse, concatAST } from 'graphql-codegen-core';
+import { validate, GraphQLSchema, GraphQLError } from 'graphql';
+import { DocumentNode, Source, parse, concatAST, logger } from 'graphql-codegen-core';
 import * as fs from 'fs';
 import * as path from 'path';
 import { extractDocumentStringFromCodeFile } from '../../utils/document-finder';
@@ -24,6 +25,21 @@ export const loadFileContent = (filePath: string): DocumentNode | null => {
   }
 };
 
-export const loadDocumentsSources = (filePaths: string[]): DocumentNode => {
-  return concatAST(filePaths.map<DocumentNode>(loadFileContent).filter(content => content));
+export const loadDocumentsSources = (
+  schema: GraphQLSchema,
+  filePaths: string[]
+): DocumentNode | ReadonlyArray<GraphQLError> => {
+  const loadResults = filePaths
+    .map(filePath => {
+      const fileContent = loadFileContent(filePath);
+      const errors = validate(schema, fileContent);
+      return {
+        fileContent,
+        errors
+      };
+    })
+    .filter(content => content);
+
+  const errors = loadResults.map(r => r.errors).reduce((soFar, current) => soFar.concat(current), []);
+  return errors.length > 0 ? errors : concatAST(loadResults.map(r => r.fileContent));
 };
