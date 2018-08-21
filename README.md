@@ -14,7 +14,7 @@
 
 ## Overview
 
-**[GraphQL Code Generator v0.11 — Generate React and Angular Apollo Components, Resolver signatures and much more!](https://medium.com/the-guild/graphql-code-generator-v0-11-15bb9b02899e)
+**[GraphQL Code Generator v0.11 — Generate React and Angular Apollo Components, Resolver signatures and much more!](https://medium.com/the-guild/graphql-code-generator-v0-11-15bb9b02899e)**
 
 **[What’s new in graphql-code-generator 0.9.0? @ Medium](https://medium.com/@dotansimha/whats-new-in-graphql-code-generator-0-9-0-dba6c9e365d)**
 
