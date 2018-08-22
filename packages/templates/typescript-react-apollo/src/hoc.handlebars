@@ -3,7 +3,7 @@
         {{#unless @root.config.noNamespaces}}
         export namespace {{toPascalCase name}} {
         {{/unless}}
-            export function {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}HOC<TProps = {}>(operationOptions: ReactApollo.OperationOption<TProps, {{toPascalCase operationType}}, Variables>){
+            export function {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}HOC<TProps = {}>(operationOptions: ReactApollo.OperationOption<TProps, {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}{{toPascalCase operationType}}, {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Variables>){
                 return ReactApollo.graphql<TProps, {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}{{toPascalCase operationType}}, {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Variables>(
                     {{#unless @root.config.noGraphqlTag}}gql` {{ document }} `{{else}}{{{ gql document }}}{{/unless}},
                     operationOptions
