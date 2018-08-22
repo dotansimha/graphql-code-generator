@@ -32,13 +32,19 @@ export const loadDocumentsSources = (
   const loadResults = filePaths
     .map(filePath => {
       const fileContent = loadFileContent(filePath);
+      if (!fileContent) {
+        return {
+          fileContent,
+          errors: []
+        };
+      }
       const errors = validate(schema, fileContent);
       return {
         fileContent,
         errors
       };
     })
-    .filter(content => content);
+    .filter(content => content.fileContent);
 
   const errors = loadResults.map(r => r.errors).reduce((soFar, current) => soFar.concat(current), []);
   return errors.length > 0 ? errors : concatAST(loadResults.map(r => r.fileContent));
