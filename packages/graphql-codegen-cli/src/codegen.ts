@@ -264,7 +264,7 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
     if (Array.isArray(documentSourcesResult) && documentSourcesResult.length > 0) {
       const graphQLErrors = documentSourcesResult as ReadonlyArray<GraphQLError>;
       for (const graphQLError of graphQLErrors) {
-        logger.error(`${graphQLError.path}: ${graphQLError.message}`);
+        logger.error(graphQLError.message);
       }
       cliError('Found errors when validating queries against schema');
     }
