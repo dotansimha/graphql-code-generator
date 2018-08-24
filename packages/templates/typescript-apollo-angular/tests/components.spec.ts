@@ -180,13 +180,13 @@ describe('Components', () => {
     `);
   });
 
-  it('should use graphql-tag when noGraphqlTag flag is disabled (by default)', async () => {
+  it('should not escape html', async () => {
     const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
     const context = schemaToTemplateContext(schema);
 
     const documents = gql`
       query MyFeed {
-        feed {
+        feed(search: "phrase") {
           id
           commentCount
           repository {
@@ -210,18 +210,10 @@ describe('Components', () => {
     const content = compiled[0].content;
 
     expect(content).toBeSimilarStringTo(`
-      @Injectable({
-        providedIn: 'root'
-      })
-      export class MyFeedGQL extends Apollo.Query<MyFeedQuery, MyFeedVariables> {
-    `);
-
-    expect(content).toBeSimilarStringTo(`
-      import gql from 'graphql-tag';
-    `);
-
-    expect(content).toBeSimilarStringTo(`
       document: any = gql\` query MyFeed {
     `);
+
+    expect(content.includes('&quot;')).toBe(false);
+    expect(content.includes('"phrase"')).toBe(true);
   });
 });
