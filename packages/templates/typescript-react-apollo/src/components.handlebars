@@ -19,7 +19,7 @@ import gql from 'graphql-tag';
             render(){
                 return (
                     <ReactApollo.{{ toPascalCase operationType }}<{{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}{{toPascalCase operationType}}, {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Variables>
-                    {{ toLowerCase operationType }}={ {{#unless @root.config.noGraphqlTag}}gql` {{ document }} `{{else}}{{{ gql document }}}{{/unless}} }
+                    {{ toLowerCase operationType }}={ {{#unless @root.config.noGraphqlTag}}gql` {{{ document }}} `{{else}}{{{ gql document }}}{{/unless}} }
                     {...this.props}
                     />
                 );
