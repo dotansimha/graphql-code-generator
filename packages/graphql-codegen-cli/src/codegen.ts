@@ -77,8 +77,18 @@ export const initCLI = (args): CLIOptions => {
   return (commander as any) as CLIOptions;
 };
 
-export const cliError = (err: string) => {
-  logger.error(err);
+export const cliError = (err: any) => {
+  let msg: string;
+
+  if (err instanceof Error) {
+    msg = err.message || err.toString();
+  } else if (typeof err === 'string') {
+    msg = err;
+  } else {
+    msg = JSON.stringify(err);
+  }
+
+  logger.error(msg);
   process.exit(1);
 
   return;
