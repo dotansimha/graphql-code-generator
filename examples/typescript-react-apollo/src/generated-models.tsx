@@ -2,24 +2,24 @@
 import { GraphQLResolveInfo } from 'graphql';
 
 export type Resolver<Result, Parent = any, Context = any, Args = any> = (
-  parent?: Parent,
-  args?: Args,
-  context?: Context,
-  info?: GraphQLResolveInfo
+  parent: Parent,
+  args: Args,
+  context: Context,
+  info: GraphQLResolveInfo
 ) => Promise<Result> | Result;
 
 export type SubscriptionResolver<Result, Parent = any, Context = any, Args = any> = {
   subscribe<R = Result, P = Parent>(
-    parent?: P,
-    args?: Args,
-    context?: Context,
-    info?: GraphQLResolveInfo
+    parent: P,
+    args: Args,
+    context: Context,
+    info: GraphQLResolveInfo
   ): AsyncIterator<R | Result>;
   resolve?<R = Result, P = Parent>(
-    parent?: P,
-    args?: Args,
-    context?: Context,
-    info?: GraphQLResolveInfo
+    parent: P,
+    args: Args,
+    context: Context,
+    info: GraphQLResolveInfo
   ): R | Result | Promise<R | Result>;
 };
 
@@ -354,12 +354,63 @@ export namespace UserQuery {
   };
 }
 
+export namespace UserQueryWithFragment {
+  export type Variables = {
+    id: string;
+  };
+
+  export type Query = {
+    __typename?: 'Query';
+    User?: User | null;
+  };
+
+  export type User = UserFragment.Fragment;
+}
+
+export namespace UserFragment {
+  export type Fragment = {
+    __typename?: 'User';
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    avatar?: string | null;
+  };
+}
+
 import * as ReactApollo from 'react-apollo';
 import * as React from 'react';
 
 import gql from 'graphql-tag';
 
+export namespace UserFragment {
+  export const Document = gql`
+    fragment UserFragment on User {
+      id
+      firstName
+      lastName
+      email
+      avatar
+    }
+  `;
+}
+
 export namespace UserQuery {
+  export const Document = gql`
+    query UserQuery($id: ID!) {
+      User(id: $id) {
+        id
+        firstName
+        lastName
+        email
+        avatar
+      }
+    }
+  `;
+  export const DocumentWithFragments = {
+    kind: 'Document',
+    definitions: [...Document.definitions]
+  };
   export interface ComponentProps {
     query?: any;
     variables?: Variables;
@@ -367,41 +418,41 @@ export namespace UserQuery {
   }
   export class Component extends React.Component<ComponentProps> {
     render() {
-      return (
-        <ReactApollo.Query<Query, Variables>
-          query={gql`
-            query userQuery($id: ID!) {
-              User(id: $id) {
-                id
-                firstName
-                lastName
-                email
-                avatar
-              }
-            }
-          `}
-          {...this.props}
-        />
-      );
+      return <ReactApollo.Query<Query, Variables> query={DocumentWithFragments} {...this.props} />;
+    }
+  }
+}
+export namespace UserQueryWithFragment {
+  export const Document = gql`
+    query UserQueryWithFragment($id: ID!) {
+      User(id: $id) {
+        ...UserFragment
+      }
+    }
+  `;
+  export const DocumentWithFragments = {
+    kind: 'Document',
+    definitions: [...Document.definitions, ...UserFragment.Document.definitions]
+  };
+  export interface ComponentProps {
+    query?: any;
+    variables?: Variables;
+    children: (result: ReactApollo.QueryResult<Query, Variables>) => React.ReactNode;
+  }
+  export class Component extends React.Component<ComponentProps> {
+    render() {
+      return <ReactApollo.Query<Query, Variables> query={DocumentWithFragments} {...this.props} />;
     }
   }
 }
 
 export namespace UserQuery {
-  export function HOC<TProps = {}>(operationOptions: ReactApollo.OperationOption<TProps, Query, Variables>) {
-    return ReactApollo.graphql<TProps, Query, Variables>(
-      gql`
-        query userQuery($id: ID!) {
-          User(id: $id) {
-            id
-            firstName
-            lastName
-            email
-            avatar
-          }
-        }
-      `,
-      operationOptions
-    );
+  export function HOC<TProps = {}>(operationOptions?: ReactApollo.OperationOption<TProps, Query, Variables>) {
+    return ReactApollo.graphql<TProps, Query, Variables>(DocumentWithFragments as any, operationOptions);
+  }
+}
+export namespace UserQueryWithFragment {
+  export function HOC<TProps = {}>(operationOptions?: ReactApollo.OperationOption<TProps, Query, Variables>) {
+    return ReactApollo.graphql<TProps, Query, Variables>(DocumentWithFragments as any, operationOptions);
   }
 }

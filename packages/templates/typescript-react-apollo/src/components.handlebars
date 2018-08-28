@@ -9,7 +9,7 @@ import gql from 'graphql-tag';
 {{#unless @root.config.noNamespaces}}
 export namespace {{toPascalCase name}} {
 {{/unless}}
-    export const {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Document = {{#unless @root.config.noGraphqlTag}}gql`{{{ document }}}`{{else}}{{{ gql document }}}{{/unless}}
+    export const {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Document = {{#unless @root.config.noGraphqlTag}}gql`{{{ document }}}`{{else}}{{{ gql document }}}{{/unless}};
 {{#unless @root.config.noNamespaces}}
 }
 {{/unless}}
@@ -19,7 +19,7 @@ export namespace {{toPascalCase name}} {
     {{#unless @root.config.noNamespaces}}
 export namespace {{toPascalCase name}} {
     {{/unless}}
-    export const {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Document = {{#unless @root.config.noGraphqlTag}}gql`{{{ document }}}`{{else}}{{{ gql document }}}{{/unless}}
+    export const {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Document = {{#unless @root.config.noGraphqlTag}}gql`{{{ document }}}`{{else}}{{{ gql document }}}{{/unless}};
     export const {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}DocumentWithFragments = { 
         kind: 'Document', 
         definitions: [

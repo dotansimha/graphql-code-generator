@@ -51,28 +51,35 @@ describe('Components', () => {
     `);
 
     expect(content).toBeSimilarStringTo(`
-        export interface ComponentProps {
-            query?: any;
-            variables?: Variables;
-            children: (result: ReactApollo.QueryResult<Query, Variables>) => React.ReactNode;
-        };
+      export interface ComponentProps {
+          query?: any;
+          variables?: Variables;
+          children: (result: ReactApollo.QueryResult<Query, Variables>) => React.ReactNode;
+      };
+    `);
+
+    expect(content).toBeSimilarStringTo(`
+    export const Document = gql\`{
+      feed {
+        id
+        commentCount
+        repository {
+          full_name
+          html_url
+          owner {
+            avatar_url
+          }
+        }
+      }
+    }\`;
+    `);
+
+    expect(content).toBeSimilarStringTo(`
         export class Component extends React.Component<ComponentProps> {
             render(){
                 return (
                     <ReactApollo.Query<Query, Variables>
-                    query={ gql\` {
-                                  feed {
-                                      id
-                                      commentCount
-                                      repository {
-                                      full_name
-                                      html_url
-                                      owner {
-                                        avatar_url
-                                      }
-                                    }
-                                  }
-                                } \` }
+                    query={ DocumentWithFragments }
                           {...this.props}
                           />
                 );

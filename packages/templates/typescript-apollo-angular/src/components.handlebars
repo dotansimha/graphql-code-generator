@@ -6,11 +6,41 @@ import * as Apollo from 'apollo-angular';
 import gql from 'graphql-tag';
 {{/unless}}
 
+{{#each fragments}}
+{{#unless @root.config.noNamespaces}}
+export namespace {{toPascalCase name}} {
+{{/unless}}
+    export const {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Document = {{#unless @root.config.noGraphqlTag}}gql`{{{ document }}}`{{else}}{{{ gql document }}}{{/unless}};
+{{#unless @root.config.noNamespaces}}
+}
+{{/unless}}
+{{/each}}
+
 {{#each operations }}
+    {{#unless @root.config.noNamespaces}}
+export namespace {{toPascalCase name}} {
+    {{/unless}}
+    export const {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Document = {{#unless @root.config.noGraphqlTag}}gql`{{{ document }}}`{{else}}{{{ gql document }}}{{/unless}};
+    {{#unless @root.config.noNamespaces}}
+}
+    {{/unless}}
+
     @Injectable({
         providedIn: 'root'
     })
     export class {{ toPascalCase name }}GQL extends Apollo.{{toPascalCase operationType}}<{{ toPascalCase name }}{{#unless @root.config.noNamespaces}}.{{/unless}}{{ toPascalCase operationType }}, {{ toPascalCase name }}{{#unless @root.config.noNamespaces}}.{{/unless}}Variables> {
-        document: any = {{#unless @root.config.noGraphqlTag}}gql` {{{ document }}} `{{else}}{{{ gql document }}}{{/unless}}
+        document = { 
+        kind: 'Document', 
+        definitions: [
+        ...{{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Document.definitions,
+        {{#each innerModels}}
+            {{#if hasFragmentsSpread}}
+                {{#each fragmentsSpread}}
+        ...{{ toPascalCase fragmentName }}{{#unless @root.config.noNamespaces}}.{{/unless}}Document.definitions
+                {{/each}}
+            {{/if}}
+        {{/each}}
+        ]
+    }
     }
 {{/each}}
