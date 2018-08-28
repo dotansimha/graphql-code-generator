@@ -239,6 +239,19 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
     if (templateConfig.deprecationNote) {
       logger.warn(`Template ${template} is deprecated: ${templateConfig.deprecationNote}`);
     }
+
+    if (config) {
+      if ('flattenTypes' in config) {
+        templateConfig.flattenTypes = config.flattenTypes;
+      }
+
+      if ('primitives' in config) {
+        templateConfig.primitives = {
+          ...templateConfig.primitives,
+          ...config.primitives
+        };
+      }
+    }
   }
 
   const executeGeneration = async () => {

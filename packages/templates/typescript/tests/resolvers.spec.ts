@@ -282,4 +282,31 @@ describe('Resolvers', () => {
       }
     `);
   });
+
+  it('Should handle primitives option', async () => {
+    const { context } = compileAndBuildContext(`
+      type TestType {
+        id: ID!
+      }  
+    `);
+
+    const compiled = await compileTemplate(
+      {
+        ...config,
+        primitives: {
+          ...config.primitives,
+          ID: 'number'
+        }
+      },
+      context
+    );
+
+    const content = compiled[0].content;
+
+    expect(content).toBeSimilarStringTo(`
+      export interface TestType {
+        id: number;
+      }
+      `);
+  });
 });
