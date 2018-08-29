@@ -5,7 +5,7 @@ export function getResultType(type, options) {
   const underscorePrefix = type.type.match(/^[\_]+/) || '';
   const config = options.data.root.config || {};
   const realType =
-    options.data.root.primitivesMap[baseType] ||
+    options.data.root.primitives[baseType] ||
     `${type.isScalar ? '' : config.interfacePrefix || ''}${underscorePrefix + pascalCase(baseType)}`;
   const useImmutable = !!config.immutableTypes;
 
