@@ -3232,7 +3232,7 @@ graphql-anywhere@^4.1.0-alpha.0, graphql-anywhere@^4.1.16:
   dependencies:
     apollo-utilities "^1.0.18"
 
-graphql-code-generator@^0.10.7:
+graphql-code-generator@0.10.7:
   version "0.10.7"
   resolved "https://registry.yarnpkg.com/graphql-code-generator/-/graphql-code-generator-0.10.7.tgz#61ea52ab082205dc34e8678b5e4ee1c86ebfe1e3"
   dependencies:
@@ -3274,7 +3274,7 @@ graphql-codegen-core@0.10.7:
     graphql-tools "3.1.1"
     winston "3.0.0"
 
-graphql-codegen-typescript-react-apollo-template@^0.10.7:
+graphql-codegen-typescript-react-apollo-template@0.10.7:
   version "0.10.7"
   resolved "https://registry.yarnpkg.com/graphql-codegen-typescript-react-apollo-template/-/graphql-codegen-typescript-react-apollo-template-0.10.7.tgz#1582f4cc25af95142b3f125f62c5b62daf699b8b"
   dependencies:
