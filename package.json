@@ -15,7 +15,7 @@
     "prerelease": "yarn test-and-build",
     "prerelease:canary": "yarn test-and-build",
     "release": "lerna publish --exact --force-publish=\"*\"",
-    "release:canary": "lerna publish --force-publish=\"*\" --canary --exact",
+    "release:canary": "lerna publish --force-publish=\"*\" --canary --exact --ignore-changes=\"*\"",
     "generate:examples": "./dev-test/generate-all.sh"
   },
   "workspaces": [
