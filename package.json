@@ -15,7 +15,7 @@
     "prerelease": "yarn test-and-build",
     "prerelease:canary": "yarn test-and-build",
     "release": "lerna publish --exact --force-publish=\"*\"",
-    "release:canary": "lerna publish --force-publish=\"*\" --canary --exact --ignore-changes=\"*\"",
+    "release:canary": "lerna publish --force-publish=\"*\" --canary --exact",
     "generate:examples": "./dev-test/generate-all.sh"
   },
   "workspaces": [
@@ -24,7 +24,7 @@
     "packages/templates/*"
   ],
   "dependencies": {
-    "lerna": "3.2.1"
+    "lerna": "2.11.0"
   },
   "devDependencies": {
     "@types/glob": "5.0.35",
