@@ -4,8 +4,7 @@ import * as watchman from 'fb-watchman';
 import * as pify from 'pify';
 import { CLIOptions } from '..';
 import * as isValidPath from 'is-valid-path';
-import { extname } from 'path';
-import { existsSync } from 'fs';
+import * as isGlob from 'is-glob';
 
 const getMatch = (doc: string) => {
   // strip leading `./` from pattern, it doesn't work with that
@@ -18,7 +17,8 @@ export const createWatcher = (options: CLIOptions, onNext: (result: FileOutput[]
   if (args) {
     files.push(...args);
   }
-  if (isValidPath(schema) && existsSync(schema)) {
+
+  if (isGlob(schema) || isValidPath(schema)) {
     files.push(schema);
   }
 

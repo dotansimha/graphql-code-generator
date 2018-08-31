@@ -7,6 +7,7 @@ import { makeExecutableSchema } from 'graphql-tools';
 import { readFileSync } from 'fs';
 import { importSchema } from 'graphql-import';
 import { CLIOptions } from '../../cli-options';
+import { mergeGraphQLSchemas } from '@graphql-modules/epoxy';
 
 export class SchemaFromTypedefs implements SchemaLoader {
   canHandle(globPath: string): boolean {
@@ -21,7 +22,9 @@ export class SchemaFromTypedefs implements SchemaLoader {
     }
 
     const typeDefs =
-      globFiles.length > 1 ? globFiles.map(filePath => readFileSync(filePath, 'utf-8')) : importSchema(globFiles[0]);
+      globFiles.length > 1
+        ? mergeGraphQLSchemas(globFiles.map(filePath => readFileSync(filePath, 'utf-8')))
+        : importSchema(globFiles[0]);
 
     return makeExecutableSchema({
       typeDefs,
