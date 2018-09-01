@@ -160,23 +160,23 @@ describe('Components', () => {
 
     const transformedDocument = transformDocument(schema, documents);
     const compiled = await compileTemplate(
-      { ...config, config: { noGraphqlTag: true } },
+      { ...config, config: { noNamespaces: true, noGraphqlTag: true } },
       context,
       [transformedDocument],
       { generateSchema: false }
     );
     // location might be different so let's remove it
-    const content = compiled[0].content.replace(/,"loc":{"start":\d+,"end":\d+}}/, '}');
+    const content = compiled[0].content.replace(/,"loc":{"start":\d+,"end":\d+}}\s+}/, '}');
 
     expect(content).toBeSimilarStringTo(`
       @Injectable({
         providedIn: 'root'
       })
-      export class MyFeedGQL extends Apollo.Query<MyFeed.Query, MyFeed.Variables> {
+      export class MyFeedGQL extends Apollo.Query<MyFeedQuery, MyFeedVariables> {
     `);
 
     expect(content).toBeSimilarStringTo(`
-      Document = ${JSON.stringify(documents)}
+      document: any = ${JSON.stringify(documents)}
     `);
   });
 
@@ -210,7 +210,7 @@ describe('Components', () => {
     const content = compiled[0].content;
 
     expect(content).toBeSimilarStringTo(`
-      Document = gql\`query MyFeed {
+      document: any = gql\` query MyFeed {
     `);
 
     expect(content.includes('&quot;')).toBe(false);
