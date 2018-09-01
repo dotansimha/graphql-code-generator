@@ -4,12 +4,12 @@ import { toFragmentName } from './to-fragment-name';
 export function gql(operation, options: any): string {
   const config = options.data.root.config || {};
 
-  return config.noGraphqlTag
-    ? JSON.stringify(gqlTag(operation.document))
-    : `gql\`
-      ${operation.document}
-      ${includeFragments(extractFragments(operation.document))}
-    \``;
+  const doc = `
+    ${operation.document}
+    ${includeFragments(extractFragments(operation.document))}
+  `;
+
+  return config.noGraphqlTag ? JSON.stringify(gqlTag(doc)) : 'gql`' + doc + '`';
 }
 
 function includeFragments(fragments: string[]): string {
