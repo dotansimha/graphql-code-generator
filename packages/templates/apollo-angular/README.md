@@ -1,4 +1,4 @@
-# TypeScript Apollo Angular Template
+# Apollo Angular Template
 
 This template generates Apollo services (`Query`, `Mutation`, `Subscription`) with TypeScript typings.
 This template is extended version of TypeScript template, so the configuration is same with `graphql-codegen-typescript-template`.
