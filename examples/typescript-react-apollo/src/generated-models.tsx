@@ -383,34 +383,17 @@ import * as React from 'react';
 
 import gql from 'graphql-tag';
 
-export namespace UserFragment {
-  export const Document = gql`
-    fragment UserFragment on User {
-      id
-      firstName
-      lastName
-      email
-      avatar
-    }
-  `;
-}
+const UserFragmentFragment = gql`
+  fragment UserFragment on User {
+    id
+    firstName
+    lastName
+    email
+    avatar
+  }
+`;
 
 export namespace UserQuery {
-  export const Document = gql`
-    query UserQuery($id: ID!) {
-      User(id: $id) {
-        id
-        firstName
-        lastName
-        email
-        avatar
-      }
-    }
-  `;
-  export const DocumentWithFragments = {
-    kind: 'Document',
-    definitions: [...Document.definitions]
-  };
   export interface ComponentProps {
     query?: any;
     variables?: Variables;
@@ -418,22 +401,26 @@ export namespace UserQuery {
   }
   export class Component extends React.Component<ComponentProps> {
     render() {
-      return <ReactApollo.Query<Query, Variables> query={DocumentWithFragments} {...this.props} />;
+      return (
+        <ReactApollo.Query<Query, Variables>
+          query={gql`
+            query UserQuery($id: ID!) {
+              User(id: $id) {
+                id
+                firstName
+                lastName
+                email
+                avatar
+              }
+            }
+          `}
+          {...this.props}
+        />
+      );
     }
   }
 }
 export namespace UserQueryWithFragment {
-  export const Document = gql`
-    query UserQueryWithFragment($id: ID!) {
-      User(id: $id) {
-        ...UserFragment
-      }
-    }
-  `;
-  export const DocumentWithFragments = {
-    kind: 'Document',
-    definitions: [...Document.definitions, ...UserFragment.Document.definitions]
-  };
   export interface ComponentProps {
     query?: any;
     variables?: Variables;
@@ -441,18 +428,55 @@ export namespace UserQueryWithFragment {
   }
   export class Component extends React.Component<ComponentProps> {
     render() {
-      return <ReactApollo.Query<Query, Variables> query={DocumentWithFragments} {...this.props} />;
+      return (
+        <ReactApollo.Query<Query, Variables>
+          query={gql`
+            query UserQueryWithFragment($id: ID!) {
+              User(id: $id) {
+                ...UserFragment
+              }
+            }
+
+            ${UserFragmentFragment}
+          `}
+          {...this.props}
+        />
+      );
     }
   }
 }
 
 export namespace UserQuery {
   export function HOC<TProps = {}>(operationOptions?: ReactApollo.OperationOption<TProps, Query, Variables>) {
-    return ReactApollo.graphql<TProps, Query, Variables>(DocumentWithFragments as any, operationOptions);
+    return ReactApollo.graphql<TProps, Query, Variables>(
+      gql`
+        query UserQuery($id: ID!) {
+          User(id: $id) {
+            id
+            firstName
+            lastName
+            email
+            avatar
+          }
+        }
+      `,
+      operationOptions
+    );
   }
 }
 export namespace UserQueryWithFragment {
   export function HOC<TProps = {}>(operationOptions?: ReactApollo.OperationOption<TProps, Query, Variables>) {
-    return ReactApollo.graphql<TProps, Query, Variables>(DocumentWithFragments as any, operationOptions);
+    return ReactApollo.graphql<TProps, Query, Variables>(
+      gql`
+        query UserQueryWithFragment($id: ID!) {
+          User(id: $id) {
+            ...UserFragment
+          }
+        }
+
+        ${UserFragmentFragment}
+      `,
+      operationOptions
+    );
   }
 }
