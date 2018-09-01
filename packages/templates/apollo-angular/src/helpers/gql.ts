@@ -6,7 +6,10 @@ export function gql(operation, options: any): string {
 
   return config.noGraphqlTag
     ? JSON.stringify(gqlTag(operation.document))
-    : 'gql` ' + operation.document + includeFragments(extractFragments(operation.document)) + ' `';
+    : `gql\`
+      ${operation.document}
+      ${includeFragments(extractFragments(operation.document))}
+    \``;
 }
 
 function includeFragments(fragments: string[]): string {

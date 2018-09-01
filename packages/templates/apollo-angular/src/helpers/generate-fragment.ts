@@ -10,8 +10,8 @@ export function generateFragment(fragment: any, options: any): string {
     cachedFragments[fragment.name] = fragment;
 
     return `
-            const ${toFragmentName(fragment.name)} = ${gql(fragment, options)};
-        `;
+        const ${toFragmentName(fragment.name)} = ${gql(fragment, options)};
+    `;
   } else {
     if (fragment.document !== cached.document) {
       throw new Error(`Duplicated fragment called '${fragment.name}'`);
