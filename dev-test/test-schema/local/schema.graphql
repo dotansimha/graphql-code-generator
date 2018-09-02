@@ -1,0 +1,8 @@
+type Post {
+  id: Int!
+  title: String!
+}
+
+type Query {
+  allPosts: [Post]!
+}

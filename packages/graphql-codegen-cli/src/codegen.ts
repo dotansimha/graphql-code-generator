@@ -24,6 +24,7 @@ import { IntrospectionFromUrlLoader } from './loaders/schema/introspection-from-
 import { SchemaFromTypedefs } from './loaders/schema/schema-from-typedefs';
 import { SchemaFromExport } from './loaders/schema/schema-from-export';
 import { CLIOptions } from './cli-options';
+import { mergeSchemas } from 'graphql-tools';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
@@ -52,6 +53,10 @@ export const initCLI = (args): CLIOptions => {
     .option(
       '-s, --schema <path>',
       'Path to GraphQL schema: local JSON file, GraphQL endpoint, local file that exports GraphQLSchema/AST/JSON'
+    )
+    .option(
+      '-cs, --clientSchema <path>',
+      'Path to GraphQL client schema: local JSON file, local file that exports GraphQLSchema/AST/JSON'
     )
     .option(
       '-h, --header [header]',
@@ -121,6 +126,7 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
   validateCliOptions(options);
 
   const schema: string = options.schema;
+  const clientSchema: string = options.clientSchema;
   const documents: string[] = options.args || [];
   let template: string = options.template;
   const project: string = options.project;
@@ -255,6 +261,9 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
   }
 
   const executeGeneration = async () => {
+    // TODO: here we should run this part twice, for server schema and client schema
+    // then Promise.all([server, client])
+    // then mergeSchemas()
     let schemaExportPromise: Promise<GraphQLSchema> | GraphQLSchema = null;
 
     for (const handler of schemaHandlers) {
@@ -268,7 +277,27 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
       cliError('Invalid --schema provided, please use a path to local file, HTTP endpoint or a glob expression!');
     }
 
-    const graphQlSchema = await schemaExportPromise;
+    // client schema
+    let clientSchemaExportPromise: Promise<GraphQLSchema> | GraphQLSchema = null;
+
+    if (clientSchema) {
+      for (const handler of schemaHandlers) {
+        if (await handler.canHandle(clientSchema)) {
+          clientSchemaExportPromise = handler.handle(clientSchema, options);
+          break;
+        }
+      }
+
+      if (!clientSchemaExportPromise) {
+        cliError('Invalid --clientSchema provided, please use a path to local file or a glob expression!');
+      }
+    }
+
+    const graphQlSchema = clientSchema
+      ? mergeSchemas({
+          schemas: [await schemaExportPromise, await clientSchemaExportPromise]
+        })
+      : await schemaExportPromise;
 
     if (process.env.VERBOSE !== undefined) {
       logger.info(`GraphQL Schema is: `, graphQlSchema);

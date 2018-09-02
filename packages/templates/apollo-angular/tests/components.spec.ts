@@ -294,4 +294,36 @@ describe('Components', () => {
       \`;
     `);
   });
+
+  it('should handle @client', async () => {
+    const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
+    const context = schemaToTemplateContext(schema);
+
+    const myFeed = gql`
+      query MyFeed {
+        feed @client {
+          id
+        }
+      }
+    `;
+
+    const documents = [myFeed];
+
+    const compiled = await compileTemplate(
+      { ...config, config: { noNamespaces: true } },
+      context,
+      documents.map(doc => transformDocument(schema, doc)),
+      { generateSchema: false }
+    );
+    const content = compiled[0].content;
+
+    expect(content).toBeSimilarStringTo(`
+      document: any = gql\` query MyFeed {
+          feed @client {
+            id
+          }
+        }
+      \`
+    `);
+  });
 });
