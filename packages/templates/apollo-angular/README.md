@@ -32,6 +32,12 @@ It might seem like a lot but let’s split that into smaller pieces and explain 
 - **--out** - path of an output file
 - glob based on which GraphQL Codegen will try to find documents
 
+## Client side schema
+
+Just add
+
+- **--clientSchema** - path of a file with schema
+
 ## Example
 
 You simply create a `.graphql` file and write a query:
