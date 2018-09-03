@@ -3,7 +3,7 @@ language: node_js
 cache: yarn
 node_js:
   - 8
-  - 9
+  - 10
 install:
   - yarn
 script:
