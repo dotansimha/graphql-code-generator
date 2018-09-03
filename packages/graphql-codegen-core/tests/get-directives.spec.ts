@@ -15,22 +15,6 @@ describe('getDirectives', () => {
     expect(directivesMap).toEqual({});
   });
 
-  it('should return the correct directives map when built-in directive specified over OBJECT', () => {
-    const typeDefs = `
-      type Query @deprecated(reason: "test") {
-        test: String 
-      }
-    `;
-
-    const schema = makeExecutableSchema({ typeDefs, resolvers: {}, allowUndefinedInResolve: true }) as GraphQLSchema;
-    const directivesMap = getDirectives(schema, schema.getQueryType());
-    expect(directivesMap).toEqual({
-      deprecated: {
-        reason: 'test'
-      }
-    });
-  });
-
   it('should return the correct directives map when built-in directive specified over FIELD_DEFINITION', () => {
     const typeDefs = `
       type Query {

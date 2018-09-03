@@ -336,6 +336,7 @@ describe('TypeScript template', () => {
       expect(compiled[0].content).toBe('');
     });
 
+    // TODO: GraphQL v14.0.0 doesn't support that
     it('should support custom handlebar ifDirective when directive added and args', async () => {
       const { context } = compileAndBuildContext(`
         type Query {
