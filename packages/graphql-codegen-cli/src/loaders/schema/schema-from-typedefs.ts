@@ -7,8 +7,8 @@ import { makeExecutableSchema } from 'graphql-tools';
 import { readFileSync } from 'fs';
 import { importSchema } from 'graphql-import';
 import { CLIOptions } from '../../cli-options';
-import { mergeGraphQLSchemas } from '@graphql-modules/epoxy';
-
+import * as path from 'path';
+import * as fs from 'fs';
 export class SchemaFromTypedefs implements SchemaLoader {
   canHandle(globPath: string): boolean {
     return isGlob(globPath) || (isValidPath(globPath) && globPath.endsWith('.graphql'));
@@ -21,9 +21,27 @@ export class SchemaFromTypedefs implements SchemaLoader {
       throw new Error(`Unable to find matching files for glob: ${globPath}!`);
     }
 
+    let mergeLogic = arr => arr;
+
+    if ('mergeSchema' in cliOptions) {
+      const patternArr = cliOptions.mergeSchema.split('#');
+      const mergeModuleName = patternArr[0];
+      const mergeFunctionName = patternArr[1];
+      if (!mergeModuleName || !mergeFunctionName) {
+        throw new Error('You have to specify your merge logic with `mergeSchema` option; <mergeModule#mergeFn>');
+      }
+      const localFilePath = path.resolve(process.cwd(), mergeModuleName);
+      const localFileExists = fs.existsSync(localFilePath);
+      const mergeModule = require(localFileExists ? localFilePath : mergeModuleName);
+      if (!(mergeFunctionName in mergeModule)) {
+        throw new Error(`${mergeFunctionName} couldn't be found in ${mergeModule}`);
+      }
+      mergeLogic = mergeModule[mergeFunctionName];
+    }
+
     const typeDefs =
       globFiles.length > 1
-        ? mergeGraphQLSchemas(globFiles.map(filePath => readFileSync(filePath, 'utf-8')))
+        ? mergeLogic(globFiles.map(filePath => readFileSync(filePath, 'utf-8')))
         : importSchema(globFiles[0]);
 
     return makeExecutableSchema({
