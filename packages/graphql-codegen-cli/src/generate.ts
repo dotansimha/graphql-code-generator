@@ -6,8 +6,11 @@ import * as fs from 'fs';
 import { CLIOptions } from './cli-options';
 import { createWatcher } from './utils/watcher';
 
-export function generate(options: CLIOptions, saveToFile = true) {
-  const writeOutput = (generationResult: FileOutput[]) => {
+export function generate(options: CLIOptions & { watch: true }, saveToFile?: boolean): Promise<{}>;
+export function generate(options: CLIOptions & { watch?: false }, saveToFile?: boolean): Promise<FileOutput[]>;
+export function generate(options: CLIOptions, saveToFile?: boolean): Promise<{}> | Promise<FileOutput[]>;
+export function generate(options: CLIOptions, saveToFile = true): any {
+  const writeOutput: (generationResult: FileOutput[]) => FileOutput[] = generationResult => {
     if (!saveToFile) {
       return generationResult;
     }

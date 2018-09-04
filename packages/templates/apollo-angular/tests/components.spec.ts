@@ -160,23 +160,23 @@ describe('Components', () => {
 
     const transformedDocument = transformDocument(schema, documents);
     const compiled = await compileTemplate(
-      { ...config, config: { noGraphqlTag: true } },
+      { ...config, config: { noNamespaces: true, noGraphqlTag: true } },
       context,
       [transformedDocument],
       { generateSchema: false }
     );
     // location might be different so let's remove it
-    const content = compiled[0].content.replace(/,"loc":{"start":\d+,"end":\d+}}/, '}');
+    const content = compiled[0].content.replace(/,"loc":{"start":\d+,"end":\d+}}\s+}/, '}');
 
     expect(content).toBeSimilarStringTo(`
       @Injectable({
         providedIn: 'root'
       })
-      export class MyFeedGQL extends Apollo.Query<MyFeed.Query, MyFeed.Variables> {
+      export class MyFeedGQL extends Apollo.Query<MyFeedQuery, MyFeedVariables> {
     `);
 
     expect(content).toBeSimilarStringTo(`
-      Document = ${JSON.stringify(documents)}
+      document: any = ${JSON.stringify(documents)}
     `);
   });
 
@@ -210,10 +210,162 @@ describe('Components', () => {
     const content = compiled[0].content;
 
     expect(content).toBeSimilarStringTo(`
-      Document = gql\`query MyFeed {
+      document: any = gql\` query MyFeed {
     `);
 
     expect(content.includes('&quot;')).toBe(false);
     expect(content.includes('"phrase"')).toBe(true);
+  });
+
+  it('should handle fragments', async () => {
+    const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
+    const context = schemaToTemplateContext(schema);
+
+    const repositoryWithOwner = gql`
+      fragment RepositoryWithOwner on Repository {
+        full_name
+        html_url
+        owner {
+          avatar_url
+        }
+      }
+    `;
+    const feedWithRepository = gql`
+      fragment FeedWithRepository on FeedType {
+        id
+        commentCount
+        repository(search: "phrase") {
+          ...RepositoryWithOwner
+        }
+      }
+
+      ${repositoryWithOwner}
+    `;
+    const myFeed = gql`
+      query MyFeed {
+        feed {
+          ...FeedWithRepository
+        }
+      }
+
+      ${feedWithRepository}
+    `;
+
+    const documents = [repositoryWithOwner, feedWithRepository, myFeed];
+
+    const compiled = await compileTemplate(
+      { ...config, config: { noNamespaces: true } },
+      context,
+      documents.map(doc => transformDocument(schema, doc)),
+      { generateSchema: false }
+    );
+    const content = compiled[0].content;
+
+    expect(content).toBeSimilarStringTo(`
+      document: any = gql\` query MyFeed {
+          feed {
+            ...FeedWithRepository
+          }
+        }
+        \${FeedWithRepositoryFragment}
+      \`
+    `);
+
+    expect(content).toBeSimilarStringTo(`
+      const FeedWithRepositoryFragment = gql\` fragment FeedWithRepository on FeedType {
+        id
+        commentCount
+        repository(search: "phrase") {
+          ...RepositoryWithOwner
+        }
+      }
+      \${RepositoryWithOwnerFragment}
+      \`;
+    `);
+
+    expect(content).toBeSimilarStringTo(`
+      const RepositoryWithOwnerFragment = gql\` fragment RepositoryWithOwner on Repository {
+          full_name
+          html_url
+          owner {
+            avatar_url
+          }
+        }
+      \`;
+    `);
+  });
+
+  it('should handle named client', async () => {
+    const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
+    const context = schemaToTemplateContext(schema);
+
+    const documents = gql`
+      query MyFeed {
+        feed {
+          id
+        }
+      }
+    `;
+
+    const transformedDocument = transformDocument(schema, documents);
+    const compiled = await compileTemplate(
+      { ...config, config: { noNamespaces: true, namedClient: 'custom' } },
+      context,
+      [transformedDocument],
+      { generateSchema: false }
+    );
+    const content = compiled[0].content;
+
+    expect(content).toBeSimilarStringTo(`
+      document: any = gql\` query MyFeed {
+          feed {
+            id
+          }
+        }
+      \`
+      
+      client = 'custom';
+    `);
+  });
+
+  it('should handle providedIn', async () => {
+    const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
+    const context = schemaToTemplateContext(schema);
+
+    const documents = gql`
+      query MyFeed {
+        feed {
+          id
+        }
+      }
+    `;
+
+    const providedIn = {
+      import: `import { UsersModule } from './users.modules';`,
+      ref: 'UsersModule'
+    };
+
+    const transformedDocument = transformDocument(schema, documents);
+    const compiled = await compileTemplate(
+      {
+        ...config,
+        config: {
+          noNamespaces: true,
+          providedIn
+        }
+      },
+      context,
+      [transformedDocument],
+      { generateSchema: false }
+    );
+    const content = compiled[0].content;
+
+    expect(content).toBeSimilarStringTo(providedIn.import);
+
+    expect(content).toBeSimilarStringTo(`
+      @Injectable({
+        providedIn: ${providedIn.ref}
+      })
+    `);
   });
 });
