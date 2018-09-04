@@ -346,7 +346,7 @@ describe('TypeScript template', () => {
           query: Query
         }
         
-        directive @app(test: String) on OBJECT
+        directive @app(test: String) on OBJECT | SCHEMA
       `);
 
       const compiled = await compileTemplate(
