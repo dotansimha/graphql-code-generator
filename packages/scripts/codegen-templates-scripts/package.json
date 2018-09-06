@@ -4,7 +4,7 @@
   "main": "cli.js",
   "license": "MIT",
   "dependencies": {
-    "awesome-typescript-loader": "5.2.0",
+    "awesome-typescript-loader": "5.2.1",
     "commander": "2.17.1",
     "copyfiles": "2.1.0",
     "jest": "23.5.0",
