@@ -5,7 +5,7 @@
   "license": "MIT",
   "dependencies": {
     "awesome-typescript-loader": "5.2.1",
-    "commander": "2.17.1",
+    "commander": "2.18.0",
     "copyfiles": "2.1.0",
     "jest": "23.5.0",
     "raw-loader": "0.5.1",
