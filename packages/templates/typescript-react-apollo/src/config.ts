@@ -1,14 +1,12 @@
 import typescriptConfig from 'graphql-codegen-typescript-template';
 
 import * as components from './components.handlebars';
-import * as hoc from './hoc.handlebars';
 import { gql } from './helpers/gql';
 import { generateFragment } from './helpers/generate-fragment';
 import { eq } from './helpers/eq';
 import { toLowerCase } from './helpers/to-lower-case';
 
 typescriptConfig.templates['documents'] += components;
-typescriptConfig.templates['documents'] += hoc;
 typescriptConfig.customHelpers.gql = gql;
 typescriptConfig.customHelpers.generateFragment = generateFragment;
 typescriptConfig.customHelpers.eq = eq;
