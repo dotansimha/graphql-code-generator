@@ -14,6 +14,7 @@ import gql from 'graphql-tag';
     {{#unless @root.config.noNamespaces}}
 export namespace {{toPascalCase name}} {
     {{/unless}}
+    export const {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Document = {{{ gql this }}};
     export interface {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}ComponentProps {
         {{ toLowerCase operationType }}?: any;
         variables?: {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Variables;
@@ -23,12 +24,20 @@ export namespace {{toPascalCase name}} {
         render(){
             return (
                 <ReactApollo.{{ toPascalCase operationType }}<{{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}{{toPascalCase operationType}}, {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Variables>
-                {{ toLowerCase operationType }}={ {{{ gql this }}} }
+                {{ toLowerCase operationType }}={ {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Document }
                 {...this.props}
                 />
             );
         }
-    }   
+    }
+    {{#unless @root.config.noHOC}}
+    export function {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}HOC<TProps = {}>(operationOptions?: ReactApollo.OperationOption<TProps, {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}{{toPascalCase operationType}}, {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Variables>){
+        return ReactApollo.graphql<TProps, {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}{{toPascalCase operationType}}, {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Variables>(
+            {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Document,
+            operationOptions
+        );
+    };
+    {{/unless}}
     {{#unless @root.config.noNamespaces}}
 }
     {{/unless}}
