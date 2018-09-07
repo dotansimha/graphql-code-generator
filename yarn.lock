@@ -537,9 +537,9 @@ atob@^2.0.0:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.0.3.tgz#19c7a760473774468f20b2d2d03372ad7d4cbf5d"
 
-awesome-typescript-loader@5.2.0:
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/awesome-typescript-loader/-/awesome-typescript-loader-5.2.0.tgz#d7bccf4823c45096ec24da4c12a1507d276ba15a"
+awesome-typescript-loader@5.2.1:
+  version "5.2.1"
+  resolved "https://registry.yarnpkg.com/awesome-typescript-loader/-/awesome-typescript-loader-5.2.1.tgz#a41daf7847515f4925cdbaa3075d61f289e913fc"
   dependencies:
     chalk "^2.4.1"
     enhanced-resolve "^4.0.0"
@@ -2558,11 +2558,12 @@ graphql-codegen-typescript-template-multiple@0.9.4:
   version "0.9.4"
   resolved "https://registry.yarnpkg.com/graphql-codegen-typescript-template-multiple/-/graphql-codegen-typescript-template-multiple-0.9.4.tgz#d0a6faa18547b726c3246b8fbca256abeb6c68ec"
 
-graphql-import@0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/graphql-import/-/graphql-import-0.6.0.tgz#c00cb8a269ceea263e062922c8c81a2272d1ffcb"
+graphql-import@0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/graphql-import/-/graphql-import-0.7.0.tgz#5b7f2e942b28d9af64ed694283e955c72e09beb7"
   dependencies:
     lodash "^4.17.4"
+    resolve-from "^4.0.0"
 
 graphql-tag@2.9.2:
   version "2.9.2"
@@ -5314,6 +5315,10 @@ resolve-cwd@^2.0.0:
 resolve-from@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/resolve-from/-/resolve-from-3.0.0.tgz#b22c7af7d9d6881bc8b6e653335eebcb0a188748"
+
+resolve-from@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/resolve-from/-/resolve-from-4.0.0.tgz#4abcd852ad32dd7baabfe9b40e00a36db5f392e6"
 
 resolve-url@^0.2.1:
   version "0.2.1"
