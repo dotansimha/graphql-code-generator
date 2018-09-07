@@ -4,6 +4,7 @@ import './App.css';
 import logo from './logo.svg';
 import { TestWithComponent } from '../TestWithComponent/TestWithComponent';
 import { TestWithHOC } from '../TestWithHOC/TestWithHOC.container';
+import { TestWithFragment } from '../TestWithFragment/TestWithFragment';
 
 class App extends React.Component {
   public render() {
@@ -23,6 +24,10 @@ class App extends React.Component {
         <div>
           <strong>Example With Generated HOC</strong>
           <TestWithHOC />
+        </div>
+        <div>
+          <strong>Example With Generated Fragment</strong>
+          <TestWithFragment />
         </div>
       </div>
     );

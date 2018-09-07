@@ -336,32 +336,6 @@ describe('TypeScript template', () => {
       expect(compiled[0].content).toBe('');
     });
 
-    it('should support custom handlebar ifDirective when directive added and args', async () => {
-      const { context } = compileAndBuildContext(`
-        type Query {
-          fieldTest: String
-        }
-        
-        schema @app(test: "123") {
-          query: Query
-        }
-        
-        directive @app(test: String) on OBJECT
-      `);
-
-      const compiled = await compileTemplate(
-        {
-          ...config,
-          templates: {
-            index: '{{#ifDirective this "app"}}directive{{test}}{{/ifDirective}}'
-          }
-        } as GeneratorConfig,
-        context
-      );
-
-      expect(compiled[0].content).toBe('directive123');
-    });
-
     it('should compile template correctly when using a simple Query', async () => {
       const { context } = compileAndBuildContext(`
         type Query {

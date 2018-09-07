@@ -295,10 +295,83 @@ describe('Components', () => {
     `);
   });
 
-  it('should handle @client', async () => {
+  it('should handle named client', async () => {
     const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
     const context = schemaToTemplateContext(schema);
 
+    const documents = gql`
+      query MyFeed {
+        feed {
+          id
+        }
+      }
+    `;
+
+    const transformedDocument = transformDocument(schema, documents);
+    const compiled = await compileTemplate(
+      { ...config, config: { noNamespaces: true, namedClient: 'custom' } },
+      context,
+      [transformedDocument],
+      { generateSchema: false }
+    );
+    const content = compiled[0].content;
+
+    expect(content).toBeSimilarStringTo(`
+      document: any = gql\` query MyFeed {
+          feed {
+            id
+          }
+        }
+      \`
+      
+      client = 'custom';
+    `);
+  });
+
+  it('should handle providedIn', async () => {
+    const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
+    const context = schemaToTemplateContext(schema);
+
+    const documents = gql`
+      query MyFeed {
+        feed {
+          id
+        }
+      }
+    `;
+
+    const providedIn = {
+      import: `import { UsersModule } from './users.modules';`,
+      ref: 'UsersModule'
+    };
+
+    const transformedDocument = transformDocument(schema, documents);
+    const compiled = await compileTemplate(
+      {
+        ...config,
+        config: {
+          noNamespaces: true,
+          providedIn
+        }
+      },
+      context,
+      [transformedDocument],
+      { generateSchema: false }
+    );
+    const content = compiled[0].content;
+
+    expect(content).toBeSimilarStringTo(providedIn.import);
+
+    expect(content).toBeSimilarStringTo(`
+      @Injectable({
+        providedIn: ${providedIn.ref}
+      })
+    `);
+  });
+
+  it('should handle @client', async () => {
+    const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
+    const context = schemaToTemplateContext(schema);
     const myFeed = gql`
       query MyFeed {
         feed @client {
@@ -306,9 +379,7 @@ describe('Components', () => {
         }
       }
     `;
-
     const documents = [myFeed];
-
     const compiled = await compileTemplate(
       { ...config, config: { noNamespaces: true } },
       context,
@@ -316,7 +387,6 @@ describe('Components', () => {
       { generateSchema: false }
     );
     const content = compiled[0].content;
-
     expect(content).toBeSimilarStringTo(`
       document: any = gql\` query MyFeed {
           feed @client {

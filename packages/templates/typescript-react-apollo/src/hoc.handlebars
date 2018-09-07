@@ -5,7 +5,7 @@
         {{/unless}}
             export function {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}HOC<TProps = {}>(operationOptions?: ReactApollo.OperationOption<TProps, {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}{{toPascalCase operationType}}, {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Variables>){
                 return ReactApollo.graphql<TProps, {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}{{toPascalCase operationType}}, {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Variables>(
-                    {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}DocumentWithFragments as any,
+                    {{{ gql this }}},
                     operationOptions
                 )
             };

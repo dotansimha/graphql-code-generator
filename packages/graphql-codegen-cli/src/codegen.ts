@@ -76,6 +76,7 @@ export const initCLI = (args): CLIOptions => {
     .option('-r, --require [require]', 'module to preload (option can be repeated)', collect, [])
     .option('-ow, --no-overwrite', 'Skip file writing if the output file(s) already exists in path')
     .option('-w, --watch', 'Watch for changes and execute generation automatically')
+    .option('-ms, --merge-schema <merge-logic>', 'Merge schemas with custom logic')
     .arguments('<options> [documents...]')
     .parse(args);
 

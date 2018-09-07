@@ -30,24 +30,24 @@
     "@types/glob": "5.0.35",
     "@types/jest": "23.3.1",
     "@types/mkdirp": "0.5.2",
-    "@types/node": "9.6.30",
+    "@types/node": "10.9.4",
     "@types/request": "2.47.1",
     "@types/common-tags": "1.4.0",
-    "@types/graphql": "0.13.4",
+    "@types/graphql": "14.0.0",
     "husky": "0.14.3",
     "lint-staged": "7.2.2",
     "tslint": "5.11.0",
     "typescript": "3.0.3",
-    "graphql": "0.13.2",
+    "graphql": "14.0.2",
     "graphql-tag": "2.9.2",
     "jest": "23.5.0",
     "rimraf": "2.6.2",
     "ts-jest": "23.1.4",
     "graphql-tools": "3.1.1",
     "apollo-link": "1.2.2",
-    "awesome-typescript-loader": "5.2.0",
+    "awesome-typescript-loader": "5.2.1",
     "raw-loader": "0.5.1",
-    "webpack": "4.17.1",
+    "webpack": "4.17.2",
     "webpack-cli": "3.1.0",
     "webpack-node-externals": "1.7.2"
   },
@@ -60,6 +60,9 @@
       "prettier --write",
       "git add"
     ]
+  },
+  "resolutions": {
+    "upath": "1.1.0"
   },
   "prettier": {
     "printWidth": 120,
