@@ -6,8 +6,12 @@ export class TestWithFragment extends React.Component {
     return (
       <UserQueryWithFragment.Component variables={{ id: Date.now().toString() }}>
         {({ loading, error, data }) => {
-          if (loading) return 'Loading...';
-          if (error) return `Error! ${error.message}`;
+          if (loading) {
+            return 'Loading...';
+          }
+          if (error) {
+            return `Error! ${error.message}`;
+          }
           return (
             <dl>
               <dt>
