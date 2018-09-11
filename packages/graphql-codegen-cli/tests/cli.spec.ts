@@ -63,6 +63,34 @@ describe('executeWithOptions', () => {
     expect(result.length).toBe(1);
   });
 
+  describe('with local schema', () => {
+    it('execute the correct results when using schema export as object', async () => {
+      const result = await executeWithOptions({
+        schema: '../../dev-test/test-schema/schema-object.js',
+        clientSchema: '../../dev-test/test-schema/local/schema-object.js',
+        template: 'ts'
+      });
+      expect(result.length).toBe(1);
+    });
+
+    it('execute the correct results when using schema export as text', async () => {
+      const result = await executeWithOptions({
+        schema: '../../dev-test/test-schema/schema-text.js',
+        clientSchema: '../../dev-test/test-schema/local/schema-text.js',
+        template: 'ts'
+      });
+
+      const content = result[0].content;
+
+      expect(content).toMatch('export interface Post');
+      expect(content).toMatch('allPosts: (Post | null)[];');
+      expect(content).toMatch('allPosts: (Post | null)[];');
+      expect(content).toMatch('allPosts?: AllPostsResolver<(Post | null)[], any, Context>;');
+
+      expect(result.length).toBe(1);
+    });
+  });
+
   it('execute the correct results when using skipSchema', async () => {
     const result = await executeWithOptions({
       schema: '../../dev-test/test-schema/schema-text.js',

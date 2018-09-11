@@ -1,5 +1,6 @@
 export interface CLIOptions {
   schema?: string;
+  clientSchema?: string;
   args?: string[];
   template?: string;
   project?: string;

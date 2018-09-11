@@ -106,9 +106,9 @@
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@types/is-glob/-/is-glob-4.0.0.tgz#fb8a2bff539025d4dcd6d5efe7689e03341b876d"
 
-"@types/jest@23.3.1":
-  version "23.3.1"
-  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-23.3.1.tgz#a4319aedb071d478e6f407d1c4578ec8156829cf"
+"@types/jest@23.3.2":
+  version "23.3.2"
+  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-23.3.2.tgz#07b90f6adf75d42c34230c026a2529e56c249dbb"
 
 "@types/minimatch@*":
   version "3.0.3"
@@ -3069,6 +3069,7 @@ graphql-codegen-typescript-template-multiple@0.9.4:
   version "0.9.4"
   resolved "https://registry.yarnpkg.com/graphql-codegen-typescript-template-multiple/-/graphql-codegen-typescript-template-multiple-0.9.4.tgz#d0a6faa18547b726c3246b8fbca256abeb6c68ec"
 
+<<<<<<< HEAD
 graphql-config-extension-graphcool@1.0.8:
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/graphql-config-extension-graphcool/-/graphql-config-extension-graphcool-1.0.8.tgz#320bf4572b207183fb069d155f4102fdf61b7f63"
@@ -3140,8 +3141,14 @@ graphql-import@0.4.5, graphql-import@^0.4.0, graphql-import@^0.4.4:
 graphql-import@0.6.0:
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/graphql-import/-/graphql-import-0.6.0.tgz#c00cb8a269ceea263e062922c8c81a2272d1ffcb"
+=======
+graphql-import@0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/graphql-import/-/graphql-import-0.7.0.tgz#5b7f2e942b28d9af64ed694283e955c72e09beb7"
+>>>>>>> 9f750ab0777fcbf94080ce1711507cb7817d5202
   dependencies:
     lodash "^4.17.4"
+    resolve-from "^4.0.0"
 
 graphql-playground-html@1.5.5:
   version "1.5.5"
@@ -6378,6 +6385,10 @@ resolve-dir@^1.0.0:
 resolve-from@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/resolve-from/-/resolve-from-3.0.0.tgz#b22c7af7d9d6881bc8b6e653335eebcb0a188748"
+
+resolve-from@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/resolve-from/-/resolve-from-4.0.0.tgz#4abcd852ad32dd7baabfe9b40e00a36db5f392e6"
 
 resolve-url@^0.2.1:
   version "0.2.1"
