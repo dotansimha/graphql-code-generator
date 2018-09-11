@@ -24,6 +24,7 @@ import { IntrospectionFromUrlLoader } from './loaders/schema/introspection-from-
 import { SchemaFromTypedefs } from './loaders/schema/schema-from-typedefs';
 import { SchemaFromExport } from './loaders/schema/schema-from-export';
 import { CLIOptions } from './cli-options';
+import { getGraphQLProjectConfig, ConfigNotFoundError } from 'graphql-config';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
@@ -101,7 +102,14 @@ export const validateCliOptions = (options: CLIOptions) => {
   const project = options.project;
 
   if (!schema) {
-    cliError('Flag --schema is missing!');
+    try {
+      const graphqlProjectConfig = getGraphQLProjectConfig(project);
+      options.schema = graphqlProjectConfig.schemaPath;
+    } catch (e) {
+      if (e instanceof ConfigNotFoundError) {
+        cliError('Flag --schema is missing!');
+      }
+    }
   }
 
   if (!template && !project) {
