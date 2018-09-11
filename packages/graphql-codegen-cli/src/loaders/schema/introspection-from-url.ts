@@ -62,8 +62,15 @@ export class IntrospectionFromUrlLoader implements SchemaLoader {
 
           const bodyJson = body.data;
 
-          if (!bodyJson || (body.errors && body.errors.length > 0)) {
-            reject('Unable to download schema from remote: ' + body.errors.map(item => item.message).join(', '));
+          let errorMessage;
+          if (body.errors && body.errors.length > 0) {
+            errorMessage = body.errors.map(item => item.message).join(', ');
+          } else if (!bodyJson) {
+            errorMessage = body;
+          }
+
+          if (errorMessage) {
+            reject('Unable to download schema from remote: ' + errorMessage);
 
             return;
           }
