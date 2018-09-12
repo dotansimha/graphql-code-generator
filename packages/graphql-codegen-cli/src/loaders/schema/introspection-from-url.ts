@@ -49,7 +49,7 @@ export class IntrospectionFromUrlLoader implements SchemaLoader {
         {
           url: url,
           json: {
-            query: introspectionQuery.replace('locations', '')
+            query: introspectionQuery
           },
           headers: extraHeaders
         },

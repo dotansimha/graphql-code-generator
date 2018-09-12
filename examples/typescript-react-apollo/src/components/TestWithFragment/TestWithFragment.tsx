@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { UserQueryWithFragment } from '../../generated-models';
+import { AllPostsWithFragment, UpvotePost } from '../../generated-models';
 
 export class TestWithFragment extends React.Component {
   render() {
     return (
-      <UserQueryWithFragment.Component variables={{ id: Date.now().toString() }}>
+      <AllPostsWithFragment.Component>
         {({ loading, error, data }) => {
           if (loading) {
             return 'Loading...';
@@ -13,29 +13,21 @@ export class TestWithFragment extends React.Component {
             return `Error! ${error.message}`;
           }
           return (
-            <dl>
-              <dt>
-                <strong>First Name:</strong>
-              </dt>
-              <dd>{data.User.firstName}</dd>
-              <dt>
-                <strong>Last Name:</strong>
-              </dt>
-              <dd>{data.User.lastName}</dd>
-              <dt>
-                <strong>Email:</strong>
-              </dt>
-              <dd>{data.User.email}</dd>
-              <dt>
-                <strong>Avatar:</strong>
-              </dt>
-              <dd>
-                <img src={data.User.avatar} />
-              </dd>
-            </dl>
+            <ul>
+              {data.posts.map(post => (
+                <li key={post.id}>
+                  {post.title} by {post.author.firstName} {post.author.lastName} ({post.votes} votes){' '}
+                  <UpvotePost.Component>
+                    {upvotePost => (
+                      <button onClick={() => upvotePost({ variables: { postId: post.id } })}>Upvote</button>
+                    )}
+                  </UpvotePost.Component>
+                </li>
+              ))}
+            </ul>
           );
         }}
-      </UserQueryWithFragment.Component>
+      </AllPostsWithFragment.Component>
     );
   }
 }

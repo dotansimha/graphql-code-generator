@@ -1,7 +1,7 @@
 import { TestWithHOCView } from './TestWithHOC.view';
-import { UserQuery } from '../../generated-models';
+import { AllPosts } from '../../generated-models';
 
-const withUser = UserQuery.HOC({
+const withUser = AllPosts.HOC({
   options: {
     variables: {
       id: Date.now().toString()

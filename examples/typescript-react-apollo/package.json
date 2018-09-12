@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "apollo-boost": "^0.1.13",
-    "graphql": "^0.13.2",
-    "react": "^16.4.2",
-    "react-apollo": "^2.1.11",
-    "react-dom": "^16.4.2",
+    "apollo-boost": "0.1.15",
+    "graphql": "14.0.2",
+    "react": "16.5.0",
+    "react-apollo": "2.1.11",
+    "react-dom": "16.5.0",
     "react-scripts-ts": "2.17.0"
   },
   "scripts": {
@@ -15,11 +15,11 @@
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject",
-    "generate-types": "node node_modules/.bin/gql-gen --schema https://fakerql.com/graphql --template graphql-codegen-typescript-react-apollo-template --out ./src/generated-models.tsx \"./src/**/*.graphql\""
+    "generate-types": "node node_modules/.bin/gql-gen --schema https://simple-posts-authors-graphql.glitch.me --template graphql-codegen-typescript-react-apollo-template --out ./src/generated-models.tsx \"./src/**/*.graphql\""
   },
   "devDependencies": {
-    "@types/graphql": "^0.13.4",
-    "@types/jest": "^23.3.1",
+    "@types/graphql": "14.0.0",
+    "@types/jest": "23.3.2",
     "@types/node": "^10.7.1",
     "@types/react": "^16.4.11",
     "@types/react-dom": "^16.0.7",
