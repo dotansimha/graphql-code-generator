@@ -75,7 +75,7 @@ describe('Components', () => {
     const content = compiled[0].content;
 
     expect(content).toBeSimilarStringTo(`
-        export const Document = gql\`
+        export const getDocument = () => gql\`
            {
             feed {
               id
@@ -117,20 +117,12 @@ describe('Components', () => {
     const content = compiled[0].content;
 
     expect(content).toBeSimilarStringTo(`
-      export interface ComponentProps {
-          query?: any;
-          variables?: Variables;
-          children: (result: ReactApollo.QueryResult<Query, Variables>) => React.ReactNode;
-      };
-    `);
-
-    expect(content).toBeSimilarStringTo(`
-    export class Component extends React.Component<ComponentProps> {
+    export class Component extends React.Component<Partial<ReactApollo.QueryProps<Query, Variables>>> {
       render(){
           return (
               <ReactApollo.Query<Query, Variables>
               query={ Document }
-              {...this.props}
+              {...this.props as any}
                           />
                 );
               }
@@ -210,7 +202,7 @@ describe('Components', () => {
 
     expect(content).toBeSimilarStringTo(`
       export namespace FeedWithRepository {
-        export const Document = gql\`
+        export const getDocument = () => gql\`
           fragment FeedWithRepository on FeedType {
             id
             commentCount
@@ -219,14 +211,14 @@ describe('Components', () => {
             }
           }
 
-          \${RepositoryWithOwner.Document}
+          \${RepositoryWithOwner.getDocument()}
 
         \`;
       }
       `);
     expect(content).toBeSimilarStringTo(`
       export namespace RepositoryWithOwner {
-        export const Document = gql\`
+        export const getDocument = () => gql\`
           fragment RepositoryWithOwner on Repository {
             full_name
             html_url
@@ -277,14 +269,14 @@ describe('Components', () => {
     const content = compiled[0].content;
 
     expect(content).toBeSimilarStringTo(`
-        export const Document = gql\`
+        export const getDocument = () => gql\`
           query MyFeed {
             feed {
               ...FeedWithRepository
             }
           }
 
-          \${FeedWithRepository.Document}
+          \${FeedWithRepository.getDocument()}
         \`;
       `);
   });

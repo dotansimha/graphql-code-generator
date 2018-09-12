@@ -1,0 +1,18 @@
+query allPosts {
+    posts {
+        id
+        title
+        votes
+        author {
+            id
+            firstName
+            lastName
+        }
+    }
+}
+
+query allPostsWithFragment {
+    posts {
+        ...PostFragment
+    }
+}

@@ -14,18 +14,13 @@ import gql from 'graphql-tag';
     {{#unless @root.config.noNamespaces}}
 export namespace {{toPascalCase name}} {
     {{/unless}}
-    export const {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Document = {{{ gql this }}};
-    export interface {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}ComponentProps {
-        {{ toLowerCase operationType }}?: any;
-        variables?: {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Variables;
-        children: (result: ReactApollo.QueryResult<{{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}{{toPascalCase operationType}}, {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Variables>) => React.ReactNode;
-    };
-    export class {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Component extends React.Component<{{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}ComponentProps> {
+    export const get{{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Document = () => {{{ gql this }}};
+    export class {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Component extends React.Component<Partial<ReactApollo.{{ toPascalCase operationType }}Props<{{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}{{toPascalCase operationType}}, {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Variables>>> {
         render(){
             return (
                 <ReactApollo.{{ toPascalCase operationType }}<{{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}{{toPascalCase operationType}}, {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Variables>
-                {{ toLowerCase operationType }}={ {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Document }
-                {...this.props}
+                {{ toLowerCase operationType }}={ get{{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Document() }
+                {...this.props as any}
                 />
             );
         }
@@ -33,7 +28,7 @@ export namespace {{toPascalCase name}} {
     {{#unless @root.config.noHOC}}
     export function {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}HOC<TProps = {}>(operationOptions?: ReactApollo.OperationOption<TProps, {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}{{toPascalCase operationType}}, {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Variables>){
         return ReactApollo.graphql<TProps, {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}{{toPascalCase operationType}}, {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Variables>(
-            {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Document,
+            get{{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Document(),
             operationOptions
         );
     };

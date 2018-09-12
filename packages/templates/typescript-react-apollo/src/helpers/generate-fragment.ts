@@ -12,12 +12,12 @@ export function generateFragment(fragment: any, options: any): string {
 
     if (config.noNamespaces) {
       return `
-      const ${fragment.name}Document = ${gql(fragment, options)};
+      export const get${fragment.name}Document = () => ${gql(fragment, options)};
       `;
     } else {
       return `
         export namespace ${fragment.name} {
-          export const Document = ${gql(fragment, options)};
+          export const getDocument = () => ${gql(fragment, options)};
         }
       `;
     }
