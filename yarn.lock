@@ -1262,9 +1262,9 @@ command-join@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/command-join/-/command-join-2.0.0.tgz#52e8b984f4872d952ff1bdc8b98397d27c7144cf"
 
-commander@2.17.1, commander@~2.17.1:
-  version "2.17.1"
-  resolved "https://registry.yarnpkg.com/commander/-/commander-2.17.1.tgz#bd77ab7de6de94205ceacc72f1716d29f20a77bf"
+commander@2.18.0:
+  version "2.18.0"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-2.18.0.tgz#2bf063ddee7c7891176981a2cc798e5754bc6970"
 
 commander@^2.12.1, commander@^2.14.1, commander@^2.9.0:
   version "2.15.0"
@@ -1273,6 +1273,10 @@ commander@^2.12.1, commander@^2.14.1, commander@^2.9.0:
 commander@~2.13.0:
   version "2.13.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.13.0.tgz#6964bca67685df7c1f1430c584f07d7597885b9c"
+
+commander@~2.17.1:
+  version "2.17.1"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-2.17.1.tgz#bd77ab7de6de94205ceacc72f1716d29f20a77bf"
 
 common-tags@1.8.0:
   version "1.8.0"
@@ -2558,9 +2562,9 @@ graphql-codegen-typescript-template-multiple@0.9.4:
   version "0.9.4"
   resolved "https://registry.yarnpkg.com/graphql-codegen-typescript-template-multiple/-/graphql-codegen-typescript-template-multiple-0.9.4.tgz#d0a6faa18547b726c3246b8fbca256abeb6c68ec"
 
-graphql-import@0.7.0:
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/graphql-import/-/graphql-import-0.7.0.tgz#5b7f2e942b28d9af64ed694283e955c72e09beb7"
+graphql-import@0.7.1:
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/graphql-import/-/graphql-import-0.7.1.tgz#4add8d91a5f752d764b0a4a7a461fcd93136f223"
   dependencies:
     lodash "^4.17.4"
     resolve-from "^4.0.0"
