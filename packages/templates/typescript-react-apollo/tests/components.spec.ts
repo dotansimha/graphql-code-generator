@@ -121,7 +121,7 @@ describe('Components', () => {
       render(){
           return (
               <ReactApollo.Query<Query, Variables>
-              query={ Document }
+              query={ getDocument() }
               {...this.props as any}
                           />
                 );
@@ -156,7 +156,7 @@ describe('Components', () => {
     expect(content).toBeSimilarStringTo(`
       export function HOC<TProps = {}>(operationOptions?: ReactApollo.OperationOption<TProps, Query, Variables>){
         return ReactApollo.graphql<TProps, Query, Variables>(
-          Document, 
+          getDocument(), 
           operationOptions
         );
       };
@@ -211,7 +211,7 @@ describe('Components', () => {
             }
           }
 
-          \${RepositoryWithOwner.Document}
+          \${RepositoryWithOwner.getDocument()}
 
         \`;
       }
@@ -276,7 +276,7 @@ describe('Components', () => {
             }
           }
 
-          \${FeedWithRepository.Document}
+          \${FeedWithRepository.getDocument()}
         \`;
       `);
   });
