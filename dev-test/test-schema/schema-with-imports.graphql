@@ -1,0 +1,9 @@
+# import User from './schema.graphql'
+
+type Query {
+  allUsers: [User]!
+  userById(id: Int!): User
+
+  # Generates a new answer for the guessing game
+  answer: [Int!]!
+}

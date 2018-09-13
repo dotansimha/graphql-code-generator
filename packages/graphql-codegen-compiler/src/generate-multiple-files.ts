@@ -345,7 +345,7 @@ export function generateMultipleFiles(
           documents,
           {
             config: config.config,
-            primitivesMap: config.primitives,
+            primitives: config.primitives,
             currentTime: moment().format()
           },
           config.filesExtension
@@ -366,8 +366,7 @@ export function generateMultipleFiles(
             documents,
             {
               config: config.config,
-              currentTime: moment().format(),
-              primitivesMap: config.primitives
+              currentTime: moment().format()
             },
             parsedTemplateName.fileExtension,
             parsedTemplateName.prefix

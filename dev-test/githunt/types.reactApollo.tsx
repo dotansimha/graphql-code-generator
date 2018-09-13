@@ -561,25 +561,339 @@ export namespace VoteButtons {
 }
 
 import * as ReactApollo from 'react-apollo';
+import * as React from 'react';
+
+import gql from 'graphql-tag';
 
 export namespace OnCommentAdded {
-  export class Component extends ReactApollo.Subscription<Subscription, Variables> {}
+  export interface ComponentProps {
+    subscription?: any;
+    variables?: Variables;
+    children: (result: ReactApollo.QueryResult<Subscription, Variables>) => React.ReactNode;
+  }
+  export class Component extends React.Component<ComponentProps> {
+    render() {
+      return (
+        <ReactApollo.Subscription<Subscription, Variables>
+          subscription={gql`
+            subscription onCommentAdded($repoFullName: String!) {
+              commentAdded(repoFullName: $repoFullName) {
+                id
+                postedBy {
+                  login
+                  html_url
+                }
+                createdAt
+                content
+              }
+            }
+          `}
+          {...this.props}
+        />
+      );
+    }
+  }
 }
 export namespace Comment {
-  export class Component extends ReactApollo.Query<Query, Variables> {}
+  export interface ComponentProps {
+    query?: any;
+    variables?: Variables;
+    children: (result: ReactApollo.QueryResult<Query, Variables>) => React.ReactNode;
+  }
+  export class Component extends React.Component<ComponentProps> {
+    render() {
+      return (
+        <ReactApollo.Query<Query, Variables>
+          query={gql`
+            query Comment($repoFullName: String!, $limit: Int, $offset: Int) {
+              currentUser {
+                login
+                html_url
+              }
+              entry(repoFullName: $repoFullName) {
+                id
+                postedBy {
+                  login
+                  html_url
+                }
+                createdAt
+                comments(limit: $limit, offset: $offset) {
+                  ...CommentsPageComment
+                }
+                commentCount
+                repository {
+                  full_name
+                  html_url
+                  ... on Repository {
+                    description
+                    open_issues_count
+                    stargazers_count
+                  }
+                }
+              }
+            }
+          `}
+          {...this.props}
+        />
+      );
+    }
+  }
 }
 export namespace CurrentUserForProfile {
-  export class Component extends ReactApollo.Query<Query, Variables> {}
+  export interface ComponentProps {
+    query?: any;
+    variables?: Variables;
+    children: (result: ReactApollo.QueryResult<Query, Variables>) => React.ReactNode;
+  }
+  export class Component extends React.Component<ComponentProps> {
+    render() {
+      return (
+        <ReactApollo.Query<Query, Variables>
+          query={gql`
+            query CurrentUserForProfile {
+              currentUser {
+                login
+                avatar_url
+              }
+            }
+          `}
+          {...this.props}
+        />
+      );
+    }
+  }
 }
 export namespace Feed {
-  export class Component extends ReactApollo.Query<Query, Variables> {}
+  export interface ComponentProps {
+    query?: any;
+    variables?: Variables;
+    children: (result: ReactApollo.QueryResult<Query, Variables>) => React.ReactNode;
+  }
+  export class Component extends React.Component<ComponentProps> {
+    render() {
+      return (
+        <ReactApollo.Query<Query, Variables>
+          query={gql`
+            query Feed($type: FeedType!, $offset: Int, $limit: Int) {
+              currentUser {
+                login
+              }
+              feed(type: $type, offset: $offset, limit: $limit) {
+                ...FeedEntry
+              }
+            }
+          `}
+          {...this.props}
+        />
+      );
+    }
+  }
 }
 export namespace SubmitRepository {
-  export class Component extends ReactApollo.Mutation<Mutation, Variables> {}
+  export interface ComponentProps {
+    mutation?: any;
+    variables?: Variables;
+    children: (result: ReactApollo.QueryResult<Mutation, Variables>) => React.ReactNode;
+  }
+  export class Component extends React.Component<ComponentProps> {
+    render() {
+      return (
+        <ReactApollo.Mutation<Mutation, Variables>
+          mutation={gql`
+            mutation submitRepository($repoFullName: String!) {
+              submitRepository(repoFullName: $repoFullName) {
+                createdAt
+              }
+            }
+          `}
+          {...this.props}
+        />
+      );
+    }
+  }
 }
 export namespace SubmitComment {
-  export class Component extends ReactApollo.Mutation<Mutation, Variables> {}
+  export interface ComponentProps {
+    mutation?: any;
+    variables?: Variables;
+    children: (result: ReactApollo.QueryResult<Mutation, Variables>) => React.ReactNode;
+  }
+  export class Component extends React.Component<ComponentProps> {
+    render() {
+      return (
+        <ReactApollo.Mutation<Mutation, Variables>
+          mutation={gql`
+            mutation submitComment($repoFullName: String!, $commentContent: String!) {
+              submitComment(repoFullName: $repoFullName, commentContent: $commentContent) {
+                ...CommentsPageComment
+              }
+            }
+          `}
+          {...this.props}
+        />
+      );
+    }
+  }
 }
 export namespace Vote {
-  export class Component extends ReactApollo.Mutation<Mutation, Variables> {}
+  export interface ComponentProps {
+    mutation?: any;
+    variables?: Variables;
+    children: (result: ReactApollo.QueryResult<Mutation, Variables>) => React.ReactNode;
+  }
+  export class Component extends React.Component<ComponentProps> {
+    render() {
+      return (
+        <ReactApollo.Mutation<Mutation, Variables>
+          mutation={gql`
+            mutation vote($repoFullName: String!, $type: VoteType!) {
+              vote(repoFullName: $repoFullName, type: $type) {
+                score
+                id
+                vote {
+                  vote_value
+                }
+              }
+            }
+          `}
+          {...this.props}
+        />
+      );
+    }
+  }
+}
+
+export namespace OnCommentAdded {
+  export function HOC<TProps = {}>(operationOptions: ReactApollo.OperationOption<TProps, Subscription, Variables>) {
+    return ReactApollo.graphql<TProps, Subscription, Variables>(
+      gql`
+        subscription onCommentAdded($repoFullName: String!) {
+          commentAdded(repoFullName: $repoFullName) {
+            id
+            postedBy {
+              login
+              html_url
+            }
+            createdAt
+            content
+          }
+        }
+      `,
+      operationOptions
+    );
+  }
+}
+export namespace Comment {
+  export function HOC<TProps = {}>(operationOptions: ReactApollo.OperationOption<TProps, Query, Variables>) {
+    return ReactApollo.graphql<TProps, Query, Variables>(
+      gql`
+        query Comment($repoFullName: String!, $limit: Int, $offset: Int) {
+          currentUser {
+            login
+            html_url
+          }
+          entry(repoFullName: $repoFullName) {
+            id
+            postedBy {
+              login
+              html_url
+            }
+            createdAt
+            comments(limit: $limit, offset: $offset) {
+              ...CommentsPageComment
+            }
+            commentCount
+            repository {
+              full_name
+              html_url
+              ... on Repository {
+                description
+                open_issues_count
+                stargazers_count
+              }
+            }
+          }
+        }
+      `,
+      operationOptions
+    );
+  }
+}
+export namespace CurrentUserForProfile {
+  export function HOC<TProps = {}>(operationOptions: ReactApollo.OperationOption<TProps, Query, Variables>) {
+    return ReactApollo.graphql<TProps, Query, Variables>(
+      gql`
+        query CurrentUserForProfile {
+          currentUser {
+            login
+            avatar_url
+          }
+        }
+      `,
+      operationOptions
+    );
+  }
+}
+export namespace Feed {
+  export function HOC<TProps = {}>(operationOptions: ReactApollo.OperationOption<TProps, Query, Variables>) {
+    return ReactApollo.graphql<TProps, Query, Variables>(
+      gql`
+        query Feed($type: FeedType!, $offset: Int, $limit: Int) {
+          currentUser {
+            login
+          }
+          feed(type: $type, offset: $offset, limit: $limit) {
+            ...FeedEntry
+          }
+        }
+      `,
+      operationOptions
+    );
+  }
+}
+export namespace SubmitRepository {
+  export function HOC<TProps = {}>(operationOptions: ReactApollo.OperationOption<TProps, Mutation, Variables>) {
+    return ReactApollo.graphql<TProps, Mutation, Variables>(
+      gql`
+        mutation submitRepository($repoFullName: String!) {
+          submitRepository(repoFullName: $repoFullName) {
+            createdAt
+          }
+        }
+      `,
+      operationOptions
+    );
+  }
+}
+export namespace SubmitComment {
+  export function HOC<TProps = {}>(operationOptions: ReactApollo.OperationOption<TProps, Mutation, Variables>) {
+    return ReactApollo.graphql<TProps, Mutation, Variables>(
+      gql`
+        mutation submitComment($repoFullName: String!, $commentContent: String!) {
+          submitComment(repoFullName: $repoFullName, commentContent: $commentContent) {
+            ...CommentsPageComment
+          }
+        }
+      `,
+      operationOptions
+    );
+  }
+}
+export namespace Vote {
+  export function HOC<TProps = {}>(operationOptions: ReactApollo.OperationOption<TProps, Mutation, Variables>) {
+    return ReactApollo.graphql<TProps, Mutation, Variables>(
+      gql`
+        mutation vote($repoFullName: String!, $type: VoteType!) {
+          vote(repoFullName: $repoFullName, type: $type) {
+            score
+            id
+            vote {
+              vote_value
+            }
+          }
+        }
+      `,
+      operationOptions
+    );
+  }
 }

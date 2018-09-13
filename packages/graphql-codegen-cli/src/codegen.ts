@@ -2,7 +2,7 @@ import * as commander from 'commander';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as mkdirp from 'mkdirp';
-import { GraphQLSchema } from 'graphql';
+import { GraphQLSchema, DocumentNode, GraphQLError } from 'graphql';
 
 import { documentsFromGlobs } from './utils/documents-glob';
 import { loadDocumentsSources } from './loaders/documents/document-loader';
@@ -24,6 +24,7 @@ import { IntrospectionFromUrlLoader } from './loaders/schema/introspection-from-
 import { SchemaFromTypedefs } from './loaders/schema/schema-from-typedefs';
 import { SchemaFromExport } from './loaders/schema/schema-from-export';
 import { CLIOptions } from './cli-options';
+import { mergeSchemas } from 'graphql-tools';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
@@ -54,6 +55,10 @@ export const initCLI = (args): CLIOptions => {
       'Path to GraphQL schema: local JSON file, GraphQL endpoint, local file that exports GraphQLSchema/AST/JSON'
     )
     .option(
+      '-cs, --clientSchema <path>',
+      'Path to GraphQL client schema: local JSON file, local file that exports GraphQLSchema/AST/JSON'
+    )
+    .option(
       '-h, --header [header]',
       'Header to add to the introspection HTTP request when using --url/--schema with url',
       collect,
@@ -71,14 +76,25 @@ export const initCLI = (args): CLIOptions => {
     .option('-r, --require [require]', 'module to preload (option can be repeated)', collect, [])
     .option('-ow, --no-overwrite', 'Skip file writing if the output file(s) already exists in path')
     .option('-w, --watch', 'Watch for changes and execute generation automatically')
+    .option('-ms, --merge-schema <merge-logic>', 'Merge schemas with custom logic')
     .arguments('<options> [documents...]')
     .parse(args);
 
   return (commander as any) as CLIOptions;
 };
 
-export const cliError = (err: string) => {
-  logger.error(err);
+export const cliError = (err: any) => {
+  let msg: string;
+
+  if (err instanceof Error) {
+    msg = err.message || err.toString();
+  } else if (typeof err === 'string') {
+    msg = err;
+  } else {
+    msg = JSON.stringify(err);
+  }
+
+  logger.error(msg);
   process.exit(1);
 
   return;
@@ -110,12 +126,13 @@ const schemaHandlers = [
 export const executeWithOptions = async (options: CLIOptions): Promise<FileOutput[]> => {
   validateCliOptions(options);
 
-  const schema: string = options.schema;
+  const schema = options.schema;
+  const clientSchema = options.clientSchema;
   const documents: string[] = options.args || [];
-  let template: string = options.template;
-  const project: string = options.project;
-  const gqlGenConfigFilePath: string = options.config || './gql-gen.json';
-  const out: string = options.out || './';
+  let template = options.template;
+  const project = options.project;
+  const gqlGenConfigFilePath = options.config || './gql-gen.json';
+  const out = options.out || './';
   const generateSchema: boolean = !options.skipSchema;
   const generateDocuments: boolean = !options.skipDocuments;
   const modulesToRequire: string[] = options.require || [];
@@ -229,23 +246,55 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
     if (templateConfig.deprecationNote) {
       logger.warn(`Template ${template} is deprecated: ${templateConfig.deprecationNote}`);
     }
+
+    if (config) {
+      if ('flattenTypes' in config) {
+        templateConfig.flattenTypes = config.flattenTypes;
+      }
+
+      if ('primitives' in config) {
+        templateConfig.primitives = {
+          ...templateConfig.primitives,
+          ...config.primitives
+        };
+      }
+    }
   }
 
   const executeGeneration = async () => {
-    let schemaExportPromise: Promise<GraphQLSchema> | GraphQLSchema = null;
-
-    for (const handler of schemaHandlers) {
-      if (await handler.canHandle(schema)) {
-        schemaExportPromise = handler.handle(schema, options);
-        break;
+    const loadSchema = async (pointToSchema: string) => {
+      for (const handler of schemaHandlers) {
+        if (await handler.canHandle(pointToSchema)) {
+          return handler.handle(pointToSchema, options);
+        }
       }
-    }
 
-    if (!schemaExportPromise) {
+      throw new Error('Could not handle schema');
+    };
+
+    const schemas: (GraphQLSchema | Promise<GraphQLSchema>)[] = [];
+
+    try {
+      debugLog(`[executeWithOptions] Schema is being loaded `);
+      schemas.push(loadSchema(schema));
+    } catch (e) {
+      debugLog(`[executeWithOptions] Failed to load schema`, e);
       cliError('Invalid --schema provided, please use a path to local file, HTTP endpoint or a glob expression!');
     }
 
-    const graphQlSchema = await schemaExportPromise;
+    if (clientSchema) {
+      try {
+        debugLog(`[executeWithOptions] Client Schema is being loaded `);
+        schemas.push(loadSchema(clientSchema));
+      } catch (e) {
+        debugLog(`[executeWithOptions] Failed to load client schema`, e);
+        cliError('Invalid --clientSchema provided, please use a path to local file or a glob expression!');
+      }
+    }
+
+    const graphQlSchema = mergeSchemas({
+      schemas: await Promise.all(schemas)
+    });
 
     if (process.env.VERBOSE !== undefined) {
       logger.info(`GraphQL Schema is: `, graphQlSchema);
@@ -259,10 +308,18 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
       }
     });
 
-    const transformedDocuments = transformDocument(
-      graphQlSchema,
-      loadDocumentsSources(await documentsFromGlobs(documents))
-    );
+    const documentSourcesResult = loadDocumentsSources(graphQlSchema, await documentsFromGlobs(documents));
+
+    if (Array.isArray(documentSourcesResult) && documentSourcesResult.length > 0) {
+      const graphQLErrors = documentSourcesResult as ReadonlyArray<GraphQLError>;
+      for (const graphQLError of graphQLErrors) {
+        logger.error(graphQLError.message);
+      }
+      cliError('Found errors when validating queries against schema');
+    }
+
+    const transformedDocuments = transformDocument(graphQlSchema, documentSourcesResult as DocumentNode);
+
     return compileTemplate(templateConfig, context, [transformedDocuments], {
       generateSchema,
       generateDocuments

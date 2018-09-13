@@ -14,9 +14,11 @@
 
 ## Overview
 
-**[GraphQL Codegen blog post & examples @ Medium](https://medium.com/@dotansimha/graphql-code-generator-a34e3785e6fb)**
+**[GraphQL Code Generator v0.11 — Generate React and Angular Apollo Components, Resolver signatures and much more!](https://medium.com/the-guild/graphql-code-generator-v0-11-15bb9b02899e)**
 
 **[What’s new in graphql-code-generator 0.9.0? @ Medium](https://medium.com/@dotansimha/whats-new-in-graphql-code-generator-0-9-0-dba6c9e365d)**
+
+**[GraphQL Codegen blog post & examples @ Medium](https://medium.com/@dotansimha/graphql-code-generator-a34e3785e6fb)**
 
 GraphQL code generator, with flexible support for multiple languages and platforms, and the ability to create custom generated projects based on GraphQL schema or operations.
 
@@ -36,13 +38,14 @@ If you develop a **client-side with TypeScript, Angular and GraphQL**, you can u
 
 ## Available Templates:
 
-| Language                  | Purpose                                                        | Package Name & Docs                                                                       |
-| ------------------------- | -------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| TypeScript                | Generate server-side TypeScript types, and client-side typings | [`graphql-codegen-typescript-template`](./packages/templates/typescript)                  |
-| MongoDB TypeScript Models | Generate server-side TypeScript types, with MongoDB models     | [`graphql-codegen-typescript-mongodb-template`](./packages/templates/typescript-mongodb)  |
-| React Apollo Typescript   | Generate TypeScript types, and React Apollo Components         | [`graphql-codegen-typescript-react-apollo`](./packages/templates/typescript-react-apollo) |
-| XSD                       | Generate XSD file                                              | [`graphql-xsd`](https://www.npmjs.com/package/graphql-xsd)                                |
-| Introspection             | Generate Introspection file                                    | [`graphql-codegen-introspection-template`](./packages/templates/introspection)            |
+| Language                  | Purpose                                                        | Package Name & Docs                                                                                |
+| ------------------------- | -------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| TypeScript                | Generate server-side TypeScript types, and client-side typings | [`graphql-codegen-typescript-template`](./packages/templates/typescript)                           |
+| MongoDB TypeScript Models | Generate server-side TypeScript types, with MongoDB models     | [`graphql-codegen-typescript-mongodb-template`](./packages/templates/typescript-mongodb)           |
+| Apollo Angular            | Generate TypeScript types, and Apollo Angular Services         | [`graphql-codegen-apollo-angular-template`](./packages/templates/apollo-angular)                   |
+| React Apollo Typescript   | Generate TypeScript types, and React Apollo Components         | [`graphql-codegen-typescript-react-apollo-template`](./packages/templates/typescript-react-apollo) |
+| XSD                       | Generate XSD file                                              | [`graphql-xsd`](https://www.npmjs.com/package/graphql-xsd)                                         |
+| Introspection             | Generate Introspection file                                    | [`graphql-codegen-introspection-template`](./packages/templates/introspection)                     |
 
 If you are looking for the **Flow** / **Swift** generators, please note that we will implement it soon again, but you can use `0.5.5` from NPM.
 
@@ -95,6 +98,8 @@ Allowed flags:
 | Flag Name           | Type     | Description                                                                                                                                                                                                                                                                              |
 | ------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | -s,--schema         | String   | Local or remote path to GraphQL schema: Introspection JSON file, GraphQL server endpoint to fetch the introspection from, local file that exports `GraphQLSchema`, JSON object or AST string, or a Glob expression for `.graphql` files (`"./src/**/*.graphql"`)                         |
+| -cs,--clientSchema  | String   | Local path to GraphQL schema: Introspection JSON file, local file that exports `GraphQLSchema`, JSON object or AST string, or a Glob expression for `.graphql` files (`"./src/**/*.graphql"`)                                                                                            |
+| -ms, --merge-schema | String   | Merge schemas with a merge module (`moduleName#mergeFunctionExportedFromThisModule`)                                                                                                                                                                                                     |
 | -r,--require        | String   | Path to a `require` extension, [read this](https://gist.github.com/jamestalmage/df922691475cff66c7e6) for more info                                                                                                                                                                      |
 | -h,--header         | String   | Header to add to the introspection HTTP request when using remote endpoint                                                                                                                                                                                                               |
 | -t,--template       | String   | Template name, for example: "typescript" (not required when using `--project`)                                                                                                                                                                                                           |

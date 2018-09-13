@@ -11,8 +11,9 @@
     "test": "lerna run test",
     "lint": "lerna run lint",
     "precommit": "lint-staged",
-    "prerelease": "yarn build && yarn test",
-    "prerelease:canary": "yarn build && yarn test",
+    "test-and-build": "yarn test && yarn build",
+    "prerelease": "yarn test-and-build",
+    "prerelease:canary": "yarn test-and-build",
     "release": "lerna publish --exact --force-publish=\"*\"",
     "release:canary": "lerna publish --force-publish=\"*\" --canary --exact",
     "generate:examples": "./dev-test/generate-all.sh"
@@ -27,26 +28,26 @@
   },
   "devDependencies": {
     "@types/glob": "5.0.35",
-    "@types/jest": "23.3.1",
+    "@types/jest": "23.3.2",
     "@types/mkdirp": "0.5.2",
-    "@types/node": "9.6.26",
+    "@types/node": "10.9.4",
     "@types/request": "2.47.1",
     "@types/common-tags": "1.4.0",
-    "@types/graphql": "0.13.4",
+    "@types/graphql": "14.0.0",
     "husky": "0.14.3",
-    "lint-staged": "7.2.0",
+    "lint-staged": "7.2.2",
     "tslint": "5.11.0",
-    "typescript": "3.0.1",
-    "graphql": "0.13.2",
+    "typescript": "3.0.3",
+    "graphql": "14.0.2",
     "graphql-tag": "2.9.2",
-    "jest": "23.4.2",
+    "jest": "23.6.0",
     "rimraf": "2.6.2",
-    "ts-jest": "23.1.3",
+    "ts-jest": "23.1.4",
     "graphql-tools": "3.1.1",
     "apollo-link": "1.2.2",
-    "awesome-typescript-loader": "5.2.0",
+    "awesome-typescript-loader": "5.2.1",
     "raw-loader": "0.5.1",
-    "webpack": "4.16.5",
+    "webpack": "4.18.0",
     "webpack-cli": "3.1.0",
     "webpack-node-externals": "1.7.2"
   },
@@ -59,6 +60,9 @@
       "prettier --write",
       "git add"
     ]
+  },
+  "resolutions": {
+    "upath": "1.1.0"
   },
   "prettier": {
     "printWidth": 120,

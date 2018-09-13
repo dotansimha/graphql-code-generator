@@ -1,4 +1,5 @@
-import { DocumentNode, Source, parse, concatAST } from 'graphql-codegen-core';
+import { validate, GraphQLSchema, GraphQLError, specifiedRules } from 'graphql';
+import { DocumentNode, Source, parse, concatAST, logger } from 'graphql-codegen-core';
 import * as fs from 'fs';
 import * as path from 'path';
 import { extractDocumentStringFromCodeFile } from '../../utils/document-finder';
@@ -24,6 +25,14 @@ export const loadFileContent = (filePath: string): DocumentNode | null => {
   }
 };
 
-export const loadDocumentsSources = (filePaths: string[]): DocumentNode => {
-  return concatAST(filePaths.map<DocumentNode>(loadFileContent).filter(content => content));
+const effectiveRules = specifiedRules.filter((f: Function) => f.name !== 'NoUnusedFragments');
+
+export const loadDocumentsSources = (
+  schema: GraphQLSchema,
+  filePaths: string[]
+): DocumentNode | ReadonlyArray<GraphQLError> => {
+  const loadResults = filePaths.map(loadFileContent).filter(content => content);
+  const completeAst = concatAST(loadResults);
+  const errors = validate(schema, completeAst, effectiveRules);
+  return errors.length > 0 ? errors : completeAst;
 };

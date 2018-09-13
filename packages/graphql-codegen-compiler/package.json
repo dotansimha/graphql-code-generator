@@ -1,6 +1,6 @@
 {
   "name": "graphql-codegen-compiler",
-  "version": "0.10.7",
+  "version": "0.11.0",
   "description": "GraphQL code generator compiler",
   "license": "MIT",
   "scripts": {
@@ -13,8 +13,8 @@
     "@types/handlebars": "4.0.39",
     "change-case": "3.0.2",
     "common-tags": "1.8.0",
-    "graphql-codegen-core": "0.10.7",
-    "handlebars": "4.0.11",
+    "graphql-codegen-core": "0.11.0",
+    "handlebars": "4.0.12",
     "moment": "2.22.2"
   },
   "jest": {

@@ -336,32 +336,6 @@ describe('TypeScript template', () => {
       expect(compiled[0].content).toBe('');
     });
 
-    it('should support custom handlebar ifDirective when directive added and args', async () => {
-      const { context } = compileAndBuildContext(`
-        type Query {
-          fieldTest: String
-        }
-        
-        schema @app(test: "123") {
-          query: Query
-        }
-        
-        directive @app(test: String) on OBJECT
-      `);
-
-      const compiled = await compileTemplate(
-        {
-          ...config,
-          templates: {
-            index: '{{#ifDirective this "app"}}directive{{test}}{{/ifDirective}}'
-          }
-        } as GeneratorConfig,
-        context
-      );
-
-      expect(compiled[0].content).toBe('directive123');
-    });
-
     it('should compile template correctly when using a simple Query', async () => {
       const { context } = compileAndBuildContext(`
         type Query {
@@ -508,7 +482,7 @@ describe('TypeScript template', () => {
           ...config,
           config: {
             scalars: {
-              Date: 'Date'
+              Date: 'OtherDate'
             }
           }
         } as GeneratorConfig,
@@ -521,6 +495,43 @@ describe('TypeScript template', () => {
         /* tslint:disable */
       `);
       expect(content).toBeSimilarStringTo(`
+        export type Date = OtherDate;
+      `);
+      expect(content).toBeSimilarStringTo(`
+        export interface Query {
+          fieldTest?: (Date | null)[] | null;
+        }
+      `);
+    });
+
+    it('should generate correctly when using custom scalar of same name', async () => {
+      const { context } = compileAndBuildContext(`
+        type Query {
+          fieldTest: [Date]
+        }
+        
+        scalar Date
+      `);
+
+      const compiled = await compileTemplate(
+        {
+          ...config,
+          config: {
+            scalars: {
+              Date: 'Date'
+            }
+          }
+        } as GeneratorConfig,
+        context
+      );
+
+      const content = compiled[0].content;
+
+      expect(content).toBeSimilarStringTo(`
+        /* tslint:disable */
+      `);
+      // Avoid circular type references (#485).
+      expect(content).not.toBeSimilarStringTo(`
         export type Date = Date;
       `);
       expect(content).toBeSimilarStringTo(`

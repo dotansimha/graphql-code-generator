@@ -1,6 +1,6 @@
 {
   "name": "graphql-codegen-core",
-  "version": "0.10.7",
+  "version": "0.11.0",
   "description": "GraphQL types and code generator based on schema",
   "main": "dist/index.js",
   "scripts": {
@@ -62,10 +62,10 @@
   "dependencies": {
     "graphql-tag": "2.9.2",
     "graphql-tools": "3.1.1",
-    "winston": "3.0.0"
+    "winston": "3.1.0"
   },
   "peerDependencies": {
-    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0"
+    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0"
   },
   "typings": "dist/index.d.ts",
   "typescript": {

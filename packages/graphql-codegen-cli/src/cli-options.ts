@@ -1,5 +1,6 @@
 export interface CLIOptions {
   schema?: string;
+  clientSchema?: string;
   args?: string[];
   template?: string;
   project?: string;
@@ -11,4 +12,5 @@ export interface CLIOptions {
   require?: string[];
   overwrite?: boolean;
   watch?: boolean;
+  mergeSchema?: string;
 }

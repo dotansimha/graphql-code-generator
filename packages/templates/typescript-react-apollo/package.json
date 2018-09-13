@@ -1,6 +1,6 @@
 {
   "name": "graphql-codegen-typescript-react-apollo-template",
-  "version": "0.10.7",
+  "version": "0.11.0",
   "description": "",
   "license": "MIT",
   "scripts": {
@@ -10,11 +10,11 @@
     "test": "codegen-templates-scripts test"
   },
   "devDependencies": {
-    "@types/graphql": "0.13.4",
-    "codegen-templates-scripts": "0.10.7",
-    "graphql": "0.13.2",
-    "graphql-codegen-compiler": "0.10.7",
-    "graphql-codegen-core": "0.10.7"
+    "@types/graphql": "14.0.0",
+    "codegen-templates-scripts": "0.11.0",
+    "graphql": "14.0.2",
+    "graphql-codegen-compiler": "0.11.0",
+    "graphql-codegen-core": "0.11.0"
   },
   "main": "./dist/index.js",
   "typings": "dist/index.d.ts",
@@ -41,6 +41,6 @@
     ]
   },
   "dependencies": {
-    "graphql-codegen-typescript-template": "0.10.7"
+    "graphql-codegen-typescript-template": "0.11.0"
   }
 }

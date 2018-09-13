@@ -1,11 +1,39 @@
 import * as ReactApollo from 'react-apollo';
+import * as React from 'react';
+
+{{#unless @root.config.noGraphqlTag}}
+import gql from 'graphql-tag';
+{{/unless}}
+
+
+{{#each fragments}}
+    {{{generateFragment this}}}
+{{/each}}
 
 {{#each operations }}
     {{#unless @root.config.noNamespaces}}
-    export namespace {{toPascalCase name}} {
+export namespace {{toPascalCase name}} {
     {{/unless}}
-        export class {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Component extends ReactApollo.{{toPascalCase operationType}}<{{toPascalCase operationType}}, {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Variables> { }   
-    {{#unless @root.config.noNamespaces}}
+    export const get{{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Document = () => {{{ gql this }}};
+    export class {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Component extends React.Component<Partial<ReactApollo.{{ toPascalCase operationType }}Props<{{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}{{toPascalCase operationType}}, {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Variables>>> {
+        render(){
+            return (
+                <ReactApollo.{{ toPascalCase operationType }}<{{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}{{toPascalCase operationType}}, {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Variables>
+                {{ toLowerCase operationType }}={ get{{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Document() }
+                {...this.props as any}
+                />
+            );
+        }
     }
+    {{#unless @root.config.noHOC}}
+    export function {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}HOC<TProps = {}>(operationOptions?: ReactApollo.OperationOption<TProps, {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}{{toPascalCase operationType}}, {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Variables>){
+        return ReactApollo.graphql<TProps, {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}{{toPascalCase operationType}}, {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Variables>(
+            get{{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Document(),
+            operationOptions
+        );
+    };
+    {{/unless}}
+    {{#unless @root.config.noNamespaces}}
+}
     {{/unless}}
 {{/each}}
