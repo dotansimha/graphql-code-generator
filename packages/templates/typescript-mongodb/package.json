@@ -12,7 +12,7 @@
   "devDependencies": {
     "codegen-templates-scripts": "0.11.0",
     "graphql-codegen-core": "0.11.0",
-    "@types/lodash": "4.14.112"
+    "@types/lodash": "4.14.116"
   },
   "dependencies": {
     "lodash": "4.17.10"
