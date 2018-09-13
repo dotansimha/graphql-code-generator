@@ -11,7 +11,7 @@ const getMatch = (doc: string) => {
   return ['match', doc.replace(/^\.\//, ''), 'wholename'];
 };
 
-export const createWatcher = (options: CLIOptions, onNext: (result: FileOutput[]) => void) => {
+export const createWatcher = (options: CLIOptions, onNext: (result: FileOutput[]) => Promise<FileOutput[]>) => {
   const { args, schema } = options;
   const files = [];
   if (args) {

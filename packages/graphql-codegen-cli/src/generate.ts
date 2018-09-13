@@ -8,9 +8,10 @@ import { createWatcher } from './utils/watcher';
 
 export function generate(options: CLIOptions & { watch: true }, saveToFile?: boolean): Promise<{}>;
 export function generate(options: CLIOptions & { watch?: false }, saveToFile?: boolean): Promise<FileOutput[]>;
-export function generate(options: CLIOptions, saveToFile?: boolean): Promise<{}> | Promise<FileOutput[]>;
-export function generate(options: CLIOptions, saveToFile = true): any {
-  const writeOutput: (generationResult: FileOutput[]) => FileOutput[] = generationResult => {
+export function generate(options: CLIOptions, saveToFile?: boolean): Promise<{} | FileOutput[]>;
+
+export function generate(options: CLIOptions, saveToFile = true): Promise<FileOutput[] | any> {
+  const writeOutput = async (generationResult: FileOutput[]): Promise<FileOutput[]> => {
     if (!saveToFile) {
       return generationResult;
     }
@@ -21,24 +22,26 @@ export function generate(options: CLIOptions, saveToFile = true): any {
       logger.info(`Generation result is: `, generationResult);
     }
 
-    generationResult.forEach(async (result: FileOutput) => {
-      if (!options.overwrite && fileExists(result.filename)) {
-        logger.info(`Generated file skipped (already exists, and no-overwrite flag is ON): ${result.filename}`);
+    await Promise.all(
+      generationResult.map(async (result: FileOutput) => {
+        if (!options.overwrite && fileExists(result.filename)) {
+          logger.info(`Generated file skipped (already exists, and no-overwrite flag is ON): ${result.filename}`);
 
-        return;
-      }
+          return;
+        }
 
-      const content = result.content.trim();
+        const content = result.content.trim();
 
-      if (content.length === 0) {
-        logger.info(`Generated file skipped (empty): ${result.filename}`);
+        if (content.length === 0) {
+          logger.info(`Generated file skipped (empty): ${result.filename}`);
 
-        return;
-      }
+          return;
+        }
 
-      fs.writeFileSync(result.filename, await prettify(result.filename, result.content));
-      logger.info(`Generated file written to ${result.filename}`);
-    });
+        fs.writeFileSync(result.filename, await prettify(result.filename, result.content));
+        logger.info(`Generated file written to ${result.filename}`);
+      })
+    );
 
     return generationResult;
   };
