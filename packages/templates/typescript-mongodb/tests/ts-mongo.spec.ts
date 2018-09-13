@@ -37,7 +37,7 @@ describe('Types', () => {
   const hbsContext = {
     data: {
       root: {
-        primitivesMap: {
+        primitives: {
           String: 'string',
           Int: 'number',
           Float: 'number',
@@ -48,7 +48,7 @@ describe('Types', () => {
     }
   };
 
-  it('should resolve type and fields correctly', async () => {
+  it.only('should resolve type and fields correctly', async () => {
     const { context } = compileAndBuildContext(`
         type User @entity(additionalFields: [
           { path: "nonSchemaField", type: "string" }

@@ -32,7 +32,8 @@ function buildFieldDef(type: string, field: Field, options): string {
       ...field,
       type
     },
-    options
+    options,
+    true
   );
 }
 
@@ -93,10 +94,11 @@ export function entityFields(type: Type | Interface, options, returnRaw = false)
               field.directives[COLUMN_DIRECTIVE].overrideType
                 ? field.directives[COLUMN_DIRECTIVE].overrideType
                 : field.type,
-              field.directives[COLUMN_DIRECTIVE].overrideIsArray
+              field.directives[COLUMN_DIRECTIVE].overrideIsArray !== undefined
                 ? {
                     ...field,
-                    isArray: field.directives[COLUMN_DIRECTIVE].overrideIsArray
+                    isArray: field.directives[COLUMN_DIRECTIVE].overrideIsArray,
+                    dimensionOfArray: 1
                   }
                 : field,
               options

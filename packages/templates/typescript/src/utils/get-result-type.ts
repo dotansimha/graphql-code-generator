@@ -1,12 +1,14 @@
 import { pascalCase } from 'change-case';
 
-export function getResultType(type, options) {
+export function getResultType(type, options, skipPascalCase = false) {
   const baseType = type.type;
   const underscorePrefix = type.type.match(/^[\_]+/) || '';
   const config = options.data.root.config || {};
   const realType =
     options.data.root.primitives[baseType] ||
-    `${type.isScalar ? '' : config.interfacePrefix || ''}${underscorePrefix + pascalCase(baseType)}`;
+    `${type.isScalar ? '' : config.interfacePrefix || ''}${
+      underscorePrefix + skipPascalCase ? baseType : pascalCase(baseType)
+    }`;
   const useImmutable = !!config.immutableTypes;
 
   if (type.isArray) {
@@ -17,6 +19,7 @@ export function getResultType(type, options) {
     if (type.isNullableArray && !config.noNamespaces) {
       result = useImmutable ? [realType, 'null'].join(' | ') : `(${[realType, 'null'].join(' | ')})`;
     }
+
     if (useImmutable) {
       result = `${new Array(dimension).join('ReadonlyArray<')}${result}${new Array(dimension).join('>')}`;
     } else {
