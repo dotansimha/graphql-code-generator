@@ -1,6 +1,6 @@
 {
   "name": "graphql-codegen-apollo-angular-template",
-  "version": "0.12.0",
+  "version": "0.12.1",
   "description": "",
   "license": "MIT",
   "keywords": [
@@ -16,10 +16,10 @@
   },
   "devDependencies": {
     "@types/graphql": "14.0.0",
-    "codegen-templates-scripts": "0.12.0",
+    "codegen-templates-scripts": "0.12.1",
     "graphql": "14.0.2",
-    "graphql-codegen-compiler": "0.12.0",
-    "graphql-codegen-core": "0.12.0"
+    "graphql-codegen-compiler": "0.12.1",
+    "graphql-codegen-core": "0.12.1"
   },
   "main": "./dist/index.js",
   "typings": "dist/index.d.ts",
@@ -46,6 +46,6 @@
     ]
   },
   "dependencies": {
-    "graphql-codegen-typescript-template": "0.12.0"
+    "graphql-codegen-typescript-template": "0.12.1"
   }
 }
