@@ -18,6 +18,7 @@
     "generate-types": "node node_modules/.bin/gql-gen --schema https://simple-posts-authors-graphql.glitch.me --template graphql-codegen-typescript-react-apollo-template --out ./src/generated-models.tsx \"./src/**/*.graphql\""
   },
   "devDependencies": {
+    "tslint-react": "3.6.0",
     "@types/graphql": "14.0.0",
     "@types/jest": "23.3.2",
     "@types/node": "^10.7.1",

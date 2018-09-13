@@ -2,7 +2,6 @@ import { EInputType, GeneratorConfig } from 'graphql-codegen-core';
 import filterModelFields from './helpers/filter-model-fields';
 import isArray from './helpers/is-array';
 import ifPrimitive from './helpers/is-primitive';
-import toMongooseType from './helpers/to-mongoose-type';
 import ifNotRootType from './helpers/if-not-root-type';
 import * as enumTemplate from './templates/enum.handlebars';
 import * as index from './templates/index.handlebars';
@@ -12,6 +11,7 @@ import * as scalar from './templates/scalar.handlebars';
 import * as type from './templates/type.handlebars';
 import * as union from './templates/union.handlebars';
 import * as schema from './templates/schema.handlebars';
+import { entityFields } from './helpers/entity-fields';
 
 export const config: GeneratorConfig = {
   inputType: EInputType.SINGLE_FILE,
@@ -25,10 +25,10 @@ export const config: GeneratorConfig = {
   },
   customHelpers: {
     filterModelFields,
-    toMongooseType,
     isArray,
     ifPrimitive,
-    ifNotRootType
+    ifNotRootType,
+    entityFields
   },
   templates: {
     schema,

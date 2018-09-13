@@ -9,6 +9,7 @@ import { importSchema } from 'graphql-import';
 import { CLIOptions } from '../../cli-options';
 import * as path from 'path';
 import * as fs from 'fs';
+
 export class SchemaFromTypedefs implements SchemaLoader {
   canHandle(globPath: string): boolean {
     return isGlob(globPath) || (isValidPath(globPath) && globPath.endsWith('.graphql'));

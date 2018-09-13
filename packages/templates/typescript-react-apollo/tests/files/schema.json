@@ -143,8 +143,7 @@
       {
         "kind": "SCALAR",
         "name": "Int",
-        "description":
-          "The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. ",
+        "description": "The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. ",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
@@ -334,8 +333,7 @@
       {
         "kind": "OBJECT",
         "name": "Repository",
-        "description":
-          "A repository object from the GitHub API. This uses the exact field names returned by the\nGitHub API for simplicity, even though the convention for GraphQL is usually to camel case.",
+        "description": "A repository object from the GitHub API. This uses the exact field names returned by the\nGitHub API for simplicity, even though the convention for GraphQL is usually to camel case.",
         "fields": [
           {
             "name": "name",
@@ -446,8 +444,7 @@
       {
         "kind": "SCALAR",
         "name": "String",
-        "description":
-          "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.",
+        "description": "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
@@ -457,8 +454,7 @@
       {
         "kind": "OBJECT",
         "name": "User",
-        "description":
-          "A user object from the GitHub API. This uses the exact field names returned from the GitHub API.",
+        "description": "A user object from the GitHub API. This uses the exact field names returned from the GitHub API.",
         "fields": [
           {
             "name": "login",
@@ -517,8 +513,7 @@
       {
         "kind": "SCALAR",
         "name": "Float",
-        "description":
-          "The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](http://en.wikipedia.org/wiki/IEEE_floating_point). ",
+        "description": "The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](http://en.wikipedia.org/wiki/IEEE_floating_point). ",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
@@ -833,8 +828,7 @@
       {
         "kind": "OBJECT",
         "name": "__Schema",
-        "description":
-          "A GraphQL Schema defines the capabilities of a GraphQL server. It exposes all available types and directives on the server, as well as the entry points for query, mutation, and subscription operations.",
+        "description": "A GraphQL Schema defines the capabilities of a GraphQL server. It exposes all available types and directives on the server, as well as the entry points for query, mutation, and subscription operations.",
         "fields": [
           {
             "name": "types",
@@ -890,8 +884,7 @@
           },
           {
             "name": "subscriptionType",
-            "description":
-              "If this server support subscription, the type that subscription operations will be rooted at.",
+            "description": "If this server support subscription, the type that subscription operations will be rooted at.",
             "args": [],
             "type": {
               "kind": "OBJECT",
@@ -934,8 +927,7 @@
       {
         "kind": "OBJECT",
         "name": "__Type",
-        "description":
-          "The fundamental unit of any GraphQL Schema is the type. There are many kinds of types in GraphQL as represented by the `__TypeKind` enum.\n\nDepending on the kind of a type, certain fields describe information about that type. Scalar types provide no information beyond a name and description, while Enum types provide their values. Object and Interface types provide the fields they describe. Abstract types, Union and Interface, provide the Object types possible at runtime. List and NonNull types compose other types.",
+        "description": "The fundamental unit of any GraphQL Schema is the type. There are many kinds of types in GraphQL as represented by the `__TypeKind` enum.\n\nDepending on the kind of a type, certain fields describe information about that type. Scalar types provide no information beyond a name and description, while Enum types provide their values. Object and Interface types provide the fields they describe. Abstract types, Union and Interface, provide the Object types possible at runtime. List and NonNull types compose other types.",
         "fields": [
           {
             "name": "kind",
@@ -1189,8 +1181,7 @@
       {
         "kind": "OBJECT",
         "name": "__Field",
-        "description":
-          "Object and Interface types are described by a list of Fields, each of which has a name, potentially a list of arguments, and a return type.",
+        "description": "Object and Interface types are described by a list of Fields, each of which has a name, potentially a list of arguments, and a return type.",
         "fields": [
           {
             "name": "name",
@@ -1297,8 +1288,7 @@
       {
         "kind": "OBJECT",
         "name": "__InputValue",
-        "description":
-          "Arguments provided to Fields or Directives and the input fields of an InputObject are represented as Input Values which describe their type and optionally a default value.",
+        "description": "Arguments provided to Fields or Directives and the input fields of an InputObject are represented as Input Values which describe their type and optionally a default value.",
         "fields": [
           {
             "name": "name",
@@ -1365,8 +1355,7 @@
       {
         "kind": "OBJECT",
         "name": "__EnumValue",
-        "description":
-          "One possible value for a given Enum. Enum values are unique values, not a placeholder for a string or numeric value. However an Enum value is returned in a JSON response as a string.",
+        "description": "One possible value for a given Enum. Enum values are unique values, not a placeholder for a string or numeric value. However an Enum value is returned in a JSON response as a string.",
         "fields": [
           {
             "name": "name",
@@ -1433,8 +1422,7 @@
       {
         "kind": "OBJECT",
         "name": "__Directive",
-        "description":
-          "A Directive provides a way to describe alternate runtime execution and type validation behavior in a GraphQL document.\n\nIn some cases, you need to provide options to alter GraphQL's execution behavior in ways field arguments will not suffice, such as conditionally including or skipping a field. Directives provide this by describing additional information to the executor.",
+        "description": "A Directive provides a way to describe alternate runtime execution and type validation behavior in a GraphQL document.\n\nIn some cases, you need to provide options to alter GraphQL's execution behavior in ways field arguments will not suffice, such as conditionally including or skipping a field. Directives provide this by describing additional information to the executor.",
         "fields": [
           {
             "name": "name",
@@ -1569,8 +1557,7 @@
       {
         "kind": "ENUM",
         "name": "__DirectiveLocation",
-        "description":
-          "A Directive can be adjacent to many parts of the GraphQL language, a __DirectiveLocation describes one such possible adjacencies.",
+        "description": "A Directive can be adjacent to many parts of the GraphQL language, a __DirectiveLocation describes one such possible adjacencies.",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
@@ -1737,8 +1724,7 @@
         "args": [
           {
             "name": "reason",
-            "description":
-              "Explains why this element was deprecated, usually also including a suggestion for how to access supported similar data. Formatted in [Markdown](https://daringfireball.net/projects/markdown/).",
+            "description": "Explains why this element was deprecated, usually also including a suggestion for how to access supported similar data. Formatted in [Markdown](https://daringfireball.net/projects/markdown/).",
             "type": {
               "kind": "SCALAR",
               "name": "String",

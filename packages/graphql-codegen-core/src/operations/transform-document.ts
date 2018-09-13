@@ -4,7 +4,8 @@ import {
   DocumentNode,
   FragmentDefinitionNode,
   GraphQLSchema,
-  OperationDefinitionNode, print
+  OperationDefinitionNode,
+  print
 } from 'graphql';
 import { Document } from '../types';
 import { transformFragment } from './transform-fragment-document';

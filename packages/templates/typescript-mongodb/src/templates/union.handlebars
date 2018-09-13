@@ -1,2 +1,7 @@
+{{#ifDirective this "union" }}
+{{ toComment description }}
+export type {{ name }}DbObject = {{#if discriminatorField}}{ {{discriminatorField}}: string } & {{/if}}({{#each possibleTypes}}{{this}}DbObject{{#unless @last}} | {{/unless}}{{/each}});
+
+{{/ifDirective}}
 {{ toComment description }}
 export type {{ name }} = {{#each possibleTypes}}{{this}}{{#unless @last}} | {{/unless}}{{/each}};
