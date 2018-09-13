@@ -1,4 +1,4 @@
-import { logger } from 'graphql-codegen-core';
+import { getLogger } from 'graphql-codegen-core';
 import { cliError } from '../src/codegen';
 
 describe('cliError', () => {
@@ -6,7 +6,7 @@ describe('cliError', () => {
   let spyProcessExit: jest.SpyInstance;
 
   beforeEach(() => {
-    spyLogger = jest.spyOn(logger, 'error');
+    spyLogger = jest.spyOn(getLogger(), 'error');
     spyLogger.mockImplementation();
     spyProcessExit = jest.spyOn(process, 'exit');
     spyProcessExit.mockImplementation();

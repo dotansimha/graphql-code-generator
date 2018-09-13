@@ -2,7 +2,7 @@ import { existsSync } from 'fs';
 import { extname, isAbsolute, resolve as resolvePath } from 'path';
 import * as isValidPath from 'is-valid-path';
 import { buildASTSchema, buildClientSchema, DocumentNode, GraphQLSchema, IntrospectionQuery, parse } from 'graphql';
-import { debugLog, logger } from 'graphql-codegen-core';
+import { debugLog, getLogger } from 'graphql-codegen-core';
 import { SchemaLoader } from './schema-loader';
 import { CLIOptions } from '../../cli-options';
 
@@ -14,7 +14,7 @@ export class SchemaFromExport implements SchemaLoader {
   }
 
   handle(file: string, cliOptions: CLIOptions): Promise<GraphQLSchema> {
-    logger.info(
+    getLogger().info(
       `Loading GraphQL schema object, text, ast, or introspection json from JavaScript ES6 export: ${file}...`
     );
 

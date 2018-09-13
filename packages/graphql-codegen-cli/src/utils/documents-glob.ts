@@ -1,5 +1,5 @@
 import * as glob from 'glob';
-import { logger } from 'graphql-codegen-core';
+import { getLogger } from 'graphql-codegen-core';
 
 export const documentsFromGlobs = (documents: string[]): Promise<string[]> => {
   return Promise.all(
@@ -11,7 +11,7 @@ export const documentsFromGlobs = (documents: string[]): Promise<string[]> => {
           }
 
           if (!files || files.length === 0) {
-            logger.warn(`No files matched for glob expression: ${documentGlob}`);
+            getLogger().warn(`No files matched for glob expression: ${documentGlob}`);
           }
 
           resolve(files);

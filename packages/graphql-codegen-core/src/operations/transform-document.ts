@@ -11,7 +11,7 @@ import { Document } from '../types';
 import { transformFragment } from './transform-fragment-document';
 import { transformOperation } from './transform-operation';
 import { debugLog } from '../debugging';
-import { logger } from '..';
+import { getLogger } from '..';
 
 let usedNames: { [key: string]: any } = {};
 
@@ -43,7 +43,7 @@ export function fixAnonymousDocument(documentNode: FragmentDefinitionNode | Oper
   if (!documentNode.name) {
     const newName = generateTempName(documentNode);
 
-    logger.warn(
+    getLogger().warn(
       `The following document does not have a name. The codegen will use an anonymous name: ${newName}, please consider to name it.`,
       print(documentNode)
     );
@@ -74,7 +74,7 @@ export function transformDocument(schema: GraphQLSchema, documentNode: DocumentN
       const overrideName = fixAnonymousDocument(definitionNode as FragmentDefinitionNode);
       result.fragments.push(transformFragment(schema, definitionNode as FragmentDefinitionNode, overrideName));
     } else {
-      logger.warn(`It seems like you provided an invalid GraphQL document of kind "${definitionNode.kind}".`);
+      getLogger().warn(`It seems like you provided an invalid GraphQL document of kind "${definitionNode.kind}".`);
     }
   });
 

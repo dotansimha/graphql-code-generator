@@ -1,5 +1,5 @@
 import { validate, GraphQLSchema, GraphQLError, specifiedRules } from 'graphql';
-import { DocumentNode, Source, parse, concatAST, logger } from 'graphql-codegen-core';
+import { DocumentNode, Source, parse, concatAST } from 'graphql-codegen-core';
 import * as fs from 'fs';
 import * as path from 'path';
 import { extractDocumentStringFromCodeFile } from '../../utils/document-finder';

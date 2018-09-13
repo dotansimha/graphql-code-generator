@@ -1,5 +1,5 @@
 import { executeWithOptions } from '../codegen';
-import { FileOutput, logger } from 'graphql-codegen-core';
+import { FileOutput, getLogger } from 'graphql-codegen-core';
 import * as watchman from 'fb-watchman';
 import * as pify from 'pify';
 import { CLIOptions } from '..';
@@ -29,11 +29,11 @@ export const createWatcher = (options: CLIOptions, onNext: (result: FileOutput[]
       optional: [],
       required: ['relative_root', 'wildmatch']
     });
-    logger.info(`Watching for changes with watchman v${version}...`);
+    getLogger().info(`Watching for changes with watchman v${version}...`);
 
     const { warning, watch, relative_path = '' } = await client.command(['watch-project', process.cwd()]);
     if (warning) {
-      logger.warning(warning);
+      getLogger().warning(warning);
     }
 
     const { clock } = await client.command(['clock', watch]);
@@ -50,7 +50,7 @@ export const createWatcher = (options: CLIOptions, onNext: (result: FileOutput[]
     let isShutdown = false;
     const shutdown = async () => {
       isShutdown = true;
-      logger.info('Shutting down watch...');
+      getLogger().info('Shutting down watch...');
       await client.command(['unsubscribe', watch, subscribe]);
       client.end();
     };

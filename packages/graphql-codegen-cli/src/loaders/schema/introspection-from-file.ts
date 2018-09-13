@@ -1,4 +1,4 @@
-import { logger, introspectionToGraphQLSchema, validateIntrospection } from 'graphql-codegen-core';
+import { getLogger, introspectionToGraphQLSchema, validateIntrospection } from 'graphql-codegen-core';
 import { GraphQLSchema } from 'graphql';
 import { SchemaLoader } from './schema-loader';
 import { existsSync, readFileSync } from 'fs';
@@ -28,7 +28,7 @@ export class IntrospectionFromFileLoader implements SchemaLoader {
   }
 
   handle(pointerToSchema: string, cliOptions: CLIOptions): Promise<GraphQLSchema> {
-    logger.info(`Loading GraphQL Introspection from file: ${pointerToSchema}...`);
+    getLogger().info(`Loading GraphQL Introspection from file: ${pointerToSchema}...`);
 
     return new Promise<GraphQLSchema>((resolve, reject) => {
       const fullPath = isAbsolute(pointerToSchema) ? pointerToSchema : resolvePath(process.cwd(), pointerToSchema);

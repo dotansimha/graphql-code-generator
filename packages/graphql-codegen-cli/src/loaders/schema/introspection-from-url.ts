@@ -1,7 +1,7 @@
 import {
   debugLog,
+  getLogger,
   introspectionQuery,
-  logger,
   introspectionToGraphQLSchema,
   validateIntrospection
 } from 'graphql-codegen-core';
@@ -17,7 +17,7 @@ export class IntrospectionFromUrlLoader implements SchemaLoader {
   }
 
   handle(url: string, cliOptions: CLIOptions): Promise<GraphQLSchema> {
-    logger.info(`Loading GraphQL Introspection from remote: ${url}...`);
+    getLogger().info(`Loading GraphQL Introspection from remote: ${url}...`);
 
     let splittedHeaders = (cliOptions.header || [])
       .map((header: string) => {

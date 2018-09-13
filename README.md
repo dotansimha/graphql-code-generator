@@ -110,6 +110,7 @@ Allowed flags:
 | -c,--skip-documents | void     | If specified, client side documents won't be generated through the template                                                                                                                                                                                                              |
 | --no-overwrite      | void     | If specified, the generator will not override existing files                                                                                                                                                                                                                             |
 | -w --watch          | boolean  | Enables watch mode for regenerating documents from schema                                                                                                                                                                                                                                |
+| --silent            | boolean  | Does not print anything to the console                                                                                                                                                                                                                                                   |
 | documents...        | [String] | Space separated paths of `.graphql` files or code files (glob path is supported) that contains GraphQL documents inside strings, or with either `gql` or `graphql` tag (JavaScript), this field is optional - if no documents specified, only server side schema types will be generated |
 
 ## Output Examples
@@ -168,7 +169,9 @@ function doSomething() {
 }
 ```
 
-The method `generate` accepts two parameters: `(options: CLIOptions, saveToFile: boolean)`, and returns `Promise<FileOutput[]>`.
+The method `generate` accepts two parameters: `(options: CLIOptions & { logger: Logger }, saveToFile: boolean)`, and returns `Promise<FileOutput[]>`.
+
+> You can set `logger` to your own custom logger according to the interface defined in [ts-log](https://github.com/kallaspriit/ts-log).
 
 ## Custom Templates
 

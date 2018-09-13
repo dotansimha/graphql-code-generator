@@ -2,7 +2,7 @@ import * as commander from 'commander';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as mkdirp from 'mkdirp';
-import { GraphQLSchema, DocumentNode, GraphQLError } from 'graphql';
+import { DocumentNode, GraphQLError, GraphQLSchema } from 'graphql';
 
 import { documentsFromGlobs } from './utils/documents-glob';
 import { loadDocumentsSources } from './loaders/documents/document-loader';
@@ -14,10 +14,12 @@ import {
   EInputType,
   FileOutput,
   GeneratorConfig,
+  getLogger,
   isGeneratorConfig,
   schemaToTemplateContext,
+  setSilentLogger,
   transformDocument,
-  logger
+  useWinstonLogger
 } from 'graphql-codegen-core';
 import { IntrospectionFromFileLoader } from './loaders/schema/introspection-from-file';
 import { IntrospectionFromUrlLoader } from './loaders/schema/introspection-from-url';
@@ -76,6 +78,7 @@ export const initCLI = (args): CLIOptions => {
     .option('-r, --require [require]', 'module to preload (option can be repeated)', collect, [])
     .option('-ow, --no-overwrite', 'Skip file writing if the output file(s) already exists in path')
     .option('-w, --watch', 'Watch for changes and execute generation automatically')
+    .option('--silent', 'Does not print anything to the console')
     .option('-ms, --merge-schema <merge-logic>', 'Merge schemas with custom logic')
     .arguments('<options> [documents...]')
     .parse(args);
@@ -94,13 +97,19 @@ export const cliError = (err: any) => {
     msg = JSON.stringify(err);
   }
 
-  logger.error(msg);
+  getLogger().error(msg);
   process.exit(1);
 
   return;
 };
 
 export const validateCliOptions = (options: CLIOptions) => {
+  if (options.silent) {
+    setSilentLogger();
+  } else {
+    useWinstonLogger();
+  }
+
   const schema = options.schema;
   const template = options.template;
   const project = options.project;
@@ -151,12 +160,12 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
       template === 'typescript' ||
       template === 'typescript-single'
     ) {
-      logger.warn(
+      getLogger().warn(
         `You are using the old template name, please install it from NPM and use it by it's new name: "graphql-codegen-typescript-template"`
       );
       template = 'graphql-codegen-typescript-template';
     } else if (template === 'ts-multiple' || template === 'typescript-multiple') {
-      logger.warn(
+      getLogger().warn(
         `You are using the old template name, please install it from NPM and use it by it's new name: "graphql-codegen-typescript-template-multiple"`
       );
       template = 'graphql-codegen-typescript-template-multiple';
@@ -184,7 +193,7 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
   let config: GqlGenConfig = null;
 
   if (fs.existsSync(configPath)) {
-    logger.info('Loading config file from: ', configPath);
+    getLogger().info('Loading config file from: ', configPath);
     config = JSON.parse(fs.readFileSync(configPath).toString()) as GqlGenConfig;
     debugLog(`[executeWithOptions] Got project config JSON: `, config);
   }
@@ -255,7 +264,7 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
     };
 
     if (templateConfig.deprecationNote) {
-      logger.warn(`Template ${template} is deprecated: ${templateConfig.deprecationNote}`);
+      getLogger().warn(`Template ${template} is deprecated: ${templateConfig.deprecationNote}`);
     }
 
     if (config) {
@@ -308,7 +317,7 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
     });
 
     if (process.env.VERBOSE !== undefined) {
-      logger.info(`GraphQL Schema is: `, graphQlSchema);
+      getLogger().info(`GraphQL Schema is: `, graphQlSchema);
     }
 
     const context = schemaToTemplateContext(graphQlSchema);
@@ -324,7 +333,7 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
     if (Array.isArray(documentSourcesResult) && documentSourcesResult.length > 0) {
       const graphQLErrors = documentSourcesResult as ReadonlyArray<GraphQLError>;
       for (const graphQLError of graphQLErrors) {
-        logger.error(graphQLError.message);
+        getLogger().error(graphQLError.message);
       }
       cliError('Found errors when validating queries against schema');
     }

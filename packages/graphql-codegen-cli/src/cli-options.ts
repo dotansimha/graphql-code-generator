@@ -12,5 +12,6 @@ export interface CLIOptions {
   require?: string[];
   overwrite?: boolean;
   watch?: boolean;
+  silent?: boolean;
   mergeSchema?: string;
 }

@@ -17,4 +17,4 @@ export {
 } from 'graphql';
 export { gql };
 export { makeExecutableSchema } from 'graphql-tools';
-export { logger } from './utils/logger';
+export { getLogger, setLogger, setSilentLogger, useWinstonLogger } from './utils/logger';

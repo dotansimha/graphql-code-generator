@@ -1,16 +1,26 @@
 import { executeWithOptions } from './codegen';
 import { prettify } from './utils/prettier';
 import { fileExists } from './utils/file-exists';
-import { FileOutput, debugLog, logger } from 'graphql-codegen-core';
+import { debugLog, FileOutput, getLogger } from 'graphql-codegen-core';
 import * as fs from 'fs';
 import { CLIOptions } from './cli-options';
 import { createWatcher } from './utils/watcher';
+import { setLogger, setSilentLogger, useWinstonLogger } from 'graphql-codegen-core';
+import { Logger } from 'ts-log';
 
-export function generate(options: CLIOptions & { watch: true }, saveToFile?: boolean): Promise<{}>;
-export function generate(options: CLIOptions & { watch?: false }, saveToFile?: boolean): Promise<FileOutput[]>;
-export function generate(options: CLIOptions, saveToFile?: boolean): Promise<{} | FileOutput[]>;
+interface GenerateOptions extends CLIOptions {
+  logger?: Logger;
+}
 
-export function generate(options: CLIOptions, saveToFile = true): Promise<FileOutput[] | any> {
+export function generate(options: GenerateOptions, saveToFile = true): Promise<FileOutput[] | any> {
+  if (options.silent) {
+    setSilentLogger();
+  } else if (options.logger) {
+    setLogger(options.logger);
+  } else {
+    useWinstonLogger();
+  }
+
   const writeOutput = async (generationResult: FileOutput[]): Promise<FileOutput[]> => {
     if (!saveToFile) {
       return generationResult;
@@ -19,13 +29,13 @@ export function generate(options: CLIOptions, saveToFile = true): Promise<FileOu
     debugLog(`Generation result contains total of ${generationResult.length} files...`);
 
     if (process.env.VERBOSE !== undefined) {
-      logger.info(`Generation result is: `, generationResult);
+      getLogger().info(`Generation result is: `, generationResult);
     }
 
     await Promise.all(
       generationResult.map(async (result: FileOutput) => {
         if (!options.overwrite && fileExists(result.filename)) {
-          logger.info(`Generated file skipped (already exists, and no-overwrite flag is ON): ${result.filename}`);
+          getLogger().info(`Generated file skipped (already exists, and no-overwrite flag is ON): ${result.filename}`);
 
           return;
         }
@@ -33,13 +43,13 @@ export function generate(options: CLIOptions, saveToFile = true): Promise<FileOu
         const content = result.content.trim();
 
         if (content.length === 0) {
-          logger.info(`Generated file skipped (empty): ${result.filename}`);
+          getLogger().info(`Generated file skipped (empty): ${result.filename}`);
 
           return;
         }
 
         fs.writeFileSync(result.filename, await prettify(result.filename, result.content));
-        logger.info(`Generated file written to ${result.filename}`);
+        getLogger().info(`Generated file written to ${result.filename}`);
       })
     );
 
