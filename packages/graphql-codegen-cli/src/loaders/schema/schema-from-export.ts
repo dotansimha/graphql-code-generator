@@ -42,7 +42,7 @@ export class SchemaFromExport implements SchemaLoader {
 
                 resolve(schemaResult);
               } catch (e) {
-                debugLog('Unexpected exceptiom while trying to figure out the schema: ', e);
+                debugLog('Unexpected exception while trying to figure out the schema: ', e);
 
                 reject(new Error('Exported schema must be of type GraphQLSchema, text, AST, or introspection JSON.'));
 
