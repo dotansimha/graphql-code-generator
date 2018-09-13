@@ -151,19 +151,30 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
       template === 'typescript' ||
       template === 'typescript-single'
     ) {
+      logger.warn(
+        `You are using the old template name, please install it from NPM and use it by it's new name: "graphql-codegen-typescript-template"`
+      );
       template = 'graphql-codegen-typescript-template';
     } else if (template === 'ts-multiple' || template === 'typescript-multiple') {
+      logger.warn(
+        `You are using the old template name, please install it from NPM and use it by it's new name: "graphql-codegen-typescript-template-multiple"`
+      );
       template = 'graphql-codegen-typescript-template-multiple';
     }
 
     const localFilePath = path.resolve(process.cwd(), template);
     const localFileExists = fs.existsSync(localFilePath);
-    const templateFromExport = require(localFileExists ? localFilePath : template);
 
-    if (!templateFromExport) {
-      throw new Error(`Unknown codegen template: ${template}, please make sure it's installed using npm/Yarn!`);
-    } else {
+    try {
+      const templateFromExport = require(localFileExists ? localFilePath : template);
+
+      if (!templateFromExport) {
+        throw new Error();
+      }
+
       templateConfig = templateFromExport.default || templateFromExport.config || templateFromExport;
+    } catch (e) {
+      throw new Error(`Unknown codegen template: "${template}", please make sure it's installed using npm/Yarn!`);
     }
   }
 
