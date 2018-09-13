@@ -48,7 +48,7 @@ describe('Types', () => {
     }
   };
 
-  it.only('should resolve type and fields correctly', async () => {
+  it('should resolve type and fields correctly', async () => {
     const { context } = compileAndBuildContext(`
         type User @entity(additionalFields: [
           { path: "nonSchemaField", type: "string" }

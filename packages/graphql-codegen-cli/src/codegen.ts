@@ -26,7 +26,8 @@ import { IntrospectionFromUrlLoader } from './loaders/schema/introspection-from-
 import { SchemaFromTypedefs } from './loaders/schema/schema-from-typedefs';
 import { SchemaFromExport } from './loaders/schema/schema-from-export';
 import { CLIOptions } from './cli-options';
-import { mergeSchemas } from 'graphql-tools';
+import { mergeGraphQLSchemas } from '@graphql-modules/epoxy';
+import { makeExecutableSchema } from 'graphql-tools';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
@@ -312,9 +313,11 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
       }
     }
 
-    const graphQlSchema = mergeSchemas({
-      schemas: await Promise.all(schemas)
-    });
+    const allSchemas = await Promise.all(schemas);
+    const graphQlSchema =
+      allSchemas.length === 1
+        ? allSchemas[0]
+        : makeExecutableSchema({ typeDefs: mergeGraphQLSchemas(allSchemas), allowUndefinedInResolve: true });
 
     if (process.env.VERBOSE !== undefined) {
       getLogger().info(`GraphQL Schema is: `, graphQlSchema);
