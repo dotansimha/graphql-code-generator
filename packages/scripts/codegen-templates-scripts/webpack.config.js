@@ -10,7 +10,10 @@ module.exports = {
   },
   mode: 'production',
   target: 'node',
-  externals: [nodeExternals(), 'graphql'],
+  optimization: {
+    minimize: false
+  },
+  externals: [nodeExternals(), 'graphql', 'graphql-codegen-core', 'graphql-codegen-compiler', 'graphql-tag', 'lodash'],
   resolve: {
     mainFields: ['browser', 'main', 'module'],
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
