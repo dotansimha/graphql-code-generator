@@ -15,7 +15,7 @@ export namespace {{ toPascalCase name }} {
   }{{/if}}{{> fragments this=this prefix=name }}
   {{#each innerModels }}
 
-  export type {{#if @root.config.noNamespaces}}{{ toPascalCase ../name }}{{/if}}{{ modelType }} ={{#if hasFields}} {
+  export type {{#if @root.config.noNamespaces}}{{ toPascalCase ../name }}{{/if}}{{ toPascalCase modelType }} ={{#if hasFields}} {
   {{#unless hasInlineFragments}}
     {{#if @root.config.immutableTypes }}readonly {{/if}}__typename?: "{{ schemaBaseType }}";
   {{else}}
@@ -31,7 +31,7 @@ export namespace {{ toPascalCase name }} {
 {{#each fragments }}
 
 {{#unless @root.config.noNamespaces}}
-export namespace {{name}} {
+export namespace {{ toPascalCase name }} {
 {{/unless}}
   export type {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Fragment ={{#if hasFields}} {
     {{#if @root.config.immutableTypes }}readonly {{/if}}__typename?: "{{ onType }}";
@@ -39,7 +39,7 @@ export namespace {{name}} {
   }{{/if}}{{> fragments this=this prefix=name }}
   {{#each innerModels }}
 
-  export type {{#if @root.config.noNamespaces}}{{ toPascalCase ../name }}{{/if}}{{ modelType }} ={{#if hasFields}} {
+  export type {{#if @root.config.noNamespaces}}{{ toPascalCase ../name }}{{/if}}{{ toPascalCase modelType }} ={{#if hasFields}} {
   {{#unless hasInlineFragments}}
     {{#if @root.config.immutableTypes }}readonly {{/if}}__typename?: "{{ schemaBaseType }}";
   {{else}}

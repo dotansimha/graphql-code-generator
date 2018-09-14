@@ -790,6 +790,63 @@ describe('TypeScript template', () => {
   });
 
   describe('Operations', () => {
+    describe('Issues', () => {
+      it('Issue 605 - Incorrect casing for model names and fragments', async () => {
+        const schema = makeExecutableSchema({
+          typeDefs: gql`
+            type User_Special {
+              id: String!
+              name: String!
+            }
+
+            type Query {
+              users: [User_Special]
+              vE2_User: [User_Special]
+            }
+          `,
+          allowUndefinedInResolve: true
+        });
+        const context = schemaToTemplateContext(schema);
+        const documents = gql`
+          query Query1 {
+            users {
+              ...my_fragment
+            }
+          }
+
+          fragment my_fragment on User_Special {
+            id
+            name
+          }
+
+          query Query2 {
+            vE2_User {
+              id
+              name
+            }
+          }
+        `;
+
+        const transformedDocument = transformDocument(schema, documents);
+        const compiled = await compileTemplate(
+          {
+            ...config,
+            config: {
+              immutableTypes: true
+            }
+          } as GeneratorConfig,
+          context,
+          [transformedDocument],
+          { generateSchema: false }
+        );
+        const content = compiled[0].content;
+        expect(content).not.toContain('export namespace my_fragment {');
+        expect(content).not.toContain('export type VE2User = {');
+        expect(content).toContain('export namespace MyFragment {');
+        expect(content).toContain('export type Ve2User = {');
+      });
+    });
+
     it('Should compile simple Query correctly', async () => {
       const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
       const context = schemaToTemplateContext(schema);

@@ -226,11 +226,15 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
     return (str || '').toUpperCase();
   });
 
-  registerHelper('toPascalCase', function(str) {
+  registerHelper('toPascalCase', function(str: string) {
+    if (str.charAt(0) === '_') {
+      return '_' + pascalCase(str || '');
+    }
+
     return pascalCase(str || '');
   });
 
-  registerHelper('toSnakeCase', function(str) {
+  registerHelper('toSnakeCase', function(str: string) {
     return snakeCase(str || '');
   });
 
