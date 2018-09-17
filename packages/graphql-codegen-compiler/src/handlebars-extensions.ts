@@ -1,20 +1,11 @@
 import { registerHelper, SafeString } from 'handlebars';
-import * as Han from 'handlebars';
 import { camelCase, pascalCase, snakeCase, titleCase } from 'change-case';
 import { oneLineTrim } from 'common-tags';
-import {
-  SelectionSetFieldNode,
-  Argument,
-  Field,
-  SchemaTemplateContext,
-  SelectionSetFragmentSpread,
-  Variable
-} from 'graphql-codegen-core';
+import { Argument, Field, GeneratorConfig, SchemaTemplateContext, SelectionSetFieldNode, SelectionSetFragmentSpread, Variable } from 'graphql-codegen-core';
 import { getFieldTypeAsString } from './field-type-to-string';
 import { sanitizeFilename } from './sanitizie-filename';
 import { FlattenModel, FlattenOperation } from './types';
 import { flattenSelectionSet } from './flatten-types';
-import { GeneratorConfig } from 'graphql-codegen-core';
 
 export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTemplateContext) => {
   const customHelpers = config.customHelpers || {};
@@ -23,15 +14,15 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
     registerHelper(helperName, customHelpers[helperName] as any);
   });
 
-  registerHelper('toPrimitive', function(type) {
+  registerHelper('toPrimitive', function (type) {
     return config.primitives[type] || type || '';
   });
 
-  registerHelper('stringify', function(obj) {
+  registerHelper('stringify', function (obj) {
     return new SafeString(JSON.stringify(obj));
   });
 
-  registerHelper('times', function(n, block) {
+  registerHelper('times', function (n, block) {
     let accum = '';
 
     for (let i = 0; i < n; ++i) {
@@ -41,7 +32,7 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
     return accum;
   });
 
-  registerHelper('ifDirective', function(
+  registerHelper('ifDirective', function (
     context: any,
     directiveName: string,
     options: { inverse: Function; fn: Function; data: { root: any } }
@@ -60,7 +51,7 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
     return options && options.inverse ? options.inverse(context) : '';
   });
 
-  registerHelper('unlessDirective', function(
+  registerHelper('unlessDirective', function (
     context: any,
     directiveName: string,
     options: { inverse: Function; fn: Function; data: { root: any } }
@@ -79,7 +70,7 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
     return options && options.inverse ? options.inverse(context) : '';
   });
 
-  registerHelper('toComment', function(str) {
+  registerHelper('toComment', function (str) {
     if (!str || str === '') {
       return '';
     }
@@ -87,7 +78,7 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
     return new SafeString('/** ' + oneLineTrim`${str || ''}` + ' */');
   });
 
-  registerHelper('eachImport', function(context: any, options: { fn: Function }) {
+  registerHelper('eachImport', function (context: any, options: { fn: Function }) {
     let ret = '';
     const imports: { name: string; file: string; type: string }[] = [];
 
@@ -218,35 +209,35 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
     return ret;
   });
 
-  registerHelper('toLowerCase', function(str) {
+  registerHelper('toLowerCase', function (str) {
     return (str || '').toLowerCase();
   });
 
-  registerHelper('toUpperCase', function(str) {
+  registerHelper('toUpperCase', function (str) {
     return (str || '').toUpperCase();
   });
 
-  registerHelper('toPascalCase', function(str: string) {
+  registerHelper('toPascalCase', function (str: string) {
     if (str.charAt(0) === '_') {
-      return '_' + pascalCase(str || '');
+      return str.replace(/^(_*)(.*)/, (match, underscorePrefix, typeName) => `${underscorePrefix}${pascalCase(typeName || '')}`);
     }
 
     return pascalCase(str || '');
   });
 
-  registerHelper('toSnakeCase', function(str: string) {
+  registerHelper('toSnakeCase', function (str: string) {
     return snakeCase(str || '');
   });
 
-  registerHelper('toTitleCase', function(str) {
+  registerHelper('toTitleCase', function (str) {
     return titleCase(str || '');
   });
 
-  registerHelper('toCamelCase', function(str) {
+  registerHelper('toCamelCase', function (str) {
     return camelCase(str || '');
   });
 
-  registerHelper('multilineString', function(str) {
+  registerHelper('multilineString', function (str) {
     if (!str) {
       return '';
     }
@@ -262,7 +253,7 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
       .join('\r\n');
   });
 
-  registerHelper('for', function(from, to, incr, block) {
+  registerHelper('for', function (from, to, incr, block) {
     let accum = '';
 
     for (let i = from; i < to; i += incr) {
@@ -272,7 +263,7 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
     return accum;
   });
 
-  registerHelper('ifCond', function(v1: any, operator: string, v2: any, options) {
+  registerHelper('ifCond', function (v1: any, operator: string, v2: any, options) {
     switch (operator) {
       case '==':
         return v1 === v2 ? options.fn(this) : options.inverse(this);
