@@ -1029,6 +1029,12 @@ describe('TypeScript template', () => {
               profile {
                 email
               }
+              favFriend {
+                id
+                profile {
+                  email
+                }
+              }
             }
           }
         }
@@ -1067,9 +1073,21 @@ describe('TypeScript template', () => {
             __typename?: "User";
             id: number;
             profile?: _Profile | null;
+            favFriend?: _FavFriend | null;
           }
     
           export type _Profile = {
+            __typename?: "Profile";
+            email: string;
+          }
+          
+          export type _FavFriend = {
+            __typename?: "User";
+            id: number;
+            profile?: __Profile | null;
+          }
+          
+          export type __Profile = {
             __typename?: "Profile";
             email: string;
           }

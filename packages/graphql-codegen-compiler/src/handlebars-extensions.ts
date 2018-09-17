@@ -1,12 +1,12 @@
 import { registerHelper, SafeString } from 'handlebars';
-import * as Han from 'handlebars';
 import { camelCase, pascalCase, snakeCase, titleCase } from 'change-case';
 import { oneLineTrim } from 'common-tags';
 import {
-  SelectionSetFieldNode,
   Argument,
   Field,
+  GeneratorConfig,
   SchemaTemplateContext,
+  SelectionSetFieldNode,
   SelectionSetFragmentSpread,
   Variable
 } from 'graphql-codegen-core';
@@ -14,7 +14,6 @@ import { getFieldTypeAsString } from './field-type-to-string';
 import { sanitizeFilename } from './sanitizie-filename';
 import { FlattenModel, FlattenOperation } from './types';
 import { flattenSelectionSet } from './flatten-types';
-import { GeneratorConfig } from 'graphql-codegen-core';
 
 export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTemplateContext) => {
   const customHelpers = config.customHelpers || {};
@@ -228,7 +227,10 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
 
   registerHelper('toPascalCase', function(str: string) {
     if (str.charAt(0) === '_') {
-      return '_' + pascalCase(str || '');
+      return str.replace(
+        /^(_*)(.*)/,
+        (match, underscorePrefix, typeName) => `${underscorePrefix}${pascalCase(typeName || '')}`
+      );
     }
 
     return pascalCase(str || '');

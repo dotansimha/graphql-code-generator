@@ -8,9 +8,7 @@ import gql from 'graphql-tag';
 
 {{ importNgModules operations }}
 
-{{#each fragments}}
-    {{{generateFragment this}}}
-{{/each}}
+{{{generateFragments fragments}}}
 
 {{#each operations}}
     @Injectable({
