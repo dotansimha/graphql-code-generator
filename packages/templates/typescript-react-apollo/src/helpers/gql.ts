@@ -6,7 +6,7 @@ export function gql(operation, options: any): string {
 
   const doc = `
     ${operation.document}
-    ${includeFragments(extractFragments(operation.document, options))}
+    ${includeFragments(transformFragments(operation.document, options))}
   `;
 
   return config.noGraphqlTag ? JSON.stringify(gqlTag(doc)) : 'gql`' + doc + '`';
@@ -15,13 +15,20 @@ export function gql(operation, options: any): string {
 function includeFragments(fragments: string[]): string {
   if (fragments) {
     return `
-      ${fragments.map(name => '${' + name + '}').join('\n')}
+      ${fragments
+        .filter((name, i, all) => all.indexOf(name) === i)
+        .map(name => '${' + name + '}')
+        .join('\n')}
     `;
   }
 
   return '';
 }
 
-function extractFragments(document: string, options: any): string[] | undefined {
-  return (document.match(/\.\.\.[a-z0-9\_]+/gi) || []).map(name => toFragmentName(name.replace('...', ''), options));
+export function extractFragments(document: string): string[] | undefined {
+  return (document.match(/\.\.\.[a-z0-9\_]+/gi) || []).map(name => name.replace('...', ''));
+}
+
+function transformFragments(document: string, options): string[] | undefined {
+  return extractFragments(document).map(document => toFragmentName(document, options));
 }

@@ -195,8 +195,18 @@ import * as React from 'react';
 
 import gql from 'graphql-tag';
 
+export namespace AuthorFragment {
+  export const Document = gql`
+    fragment AuthorFragment on Author {
+      id
+      firstName
+      lastName
+    }
+  `;
+}
+
 export namespace PostFragment {
-  export const getDocument = () => gql`
+  export const Document = gql`
     fragment PostFragment on Post {
       id
       title
@@ -206,22 +216,12 @@ export namespace PostFragment {
       }
     }
 
-    ${AuthorFragment.getDocument()}
-  `;
-}
-
-export namespace AuthorFragment {
-  export const getDocument = () => gql`
-    fragment AuthorFragment on Author {
-      id
-      firstName
-      lastName
-    }
+    ${AuthorFragment.Document}
   `;
 }
 
 export namespace AllPosts {
-  export const getDocument = () => gql`
+  export const Document = gql`
     query allPosts {
       posts {
         id
@@ -237,34 +237,34 @@ export namespace AllPosts {
   `;
   export class Component extends React.Component<Partial<ReactApollo.QueryProps<Query, Variables>>> {
     render() {
-      return <ReactApollo.Query<Query, Variables> query={getDocument()} {...this.props as any} />;
+      return <ReactApollo.Query<Query, Variables> query={Document} {...this.props as any} />;
     }
   }
   export function HOC<TProps = {}>(operationOptions?: ReactApollo.OperationOption<TProps, Query, Variables>) {
-    return ReactApollo.graphql<TProps, Query, Variables>(getDocument(), operationOptions);
+    return ReactApollo.graphql<TProps, Query, Variables>(Document, operationOptions);
   }
 }
 export namespace AllPostsWithFragment {
-  export const getDocument = () => gql`
+  export const Document = gql`
     query allPostsWithFragment {
       posts {
         ...PostFragment
       }
     }
 
-    ${PostFragment.getDocument()}
+    ${PostFragment.Document}
   `;
   export class Component extends React.Component<Partial<ReactApollo.QueryProps<Query, Variables>>> {
     render() {
-      return <ReactApollo.Query<Query, Variables> query={getDocument()} {...this.props as any} />;
+      return <ReactApollo.Query<Query, Variables> query={Document} {...this.props as any} />;
     }
   }
   export function HOC<TProps = {}>(operationOptions?: ReactApollo.OperationOption<TProps, Query, Variables>) {
-    return ReactApollo.graphql<TProps, Query, Variables>(getDocument(), operationOptions);
+    return ReactApollo.graphql<TProps, Query, Variables>(Document, operationOptions);
   }
 }
 export namespace UpvotePost {
-  export const getDocument = () => gql`
+  export const Document = gql`
     mutation upvotePost($postId: Int!) {
       upvotePost(postId: $postId) {
         id
@@ -274,10 +274,10 @@ export namespace UpvotePost {
   `;
   export class Component extends React.Component<Partial<ReactApollo.MutationProps<Mutation, Variables>>> {
     render() {
-      return <ReactApollo.Mutation<Mutation, Variables> mutation={getDocument()} {...this.props as any} />;
+      return <ReactApollo.Mutation<Mutation, Variables> mutation={Document} {...this.props as any} />;
     }
   }
   export function HOC<TProps = {}>(operationOptions?: ReactApollo.OperationOption<TProps, Mutation, Variables>) {
-    return ReactApollo.graphql<TProps, Mutation, Variables>(getDocument(), operationOptions);
+    return ReactApollo.graphql<TProps, Mutation, Variables>(Document, operationOptions);
   }
 }

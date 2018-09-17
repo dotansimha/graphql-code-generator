@@ -75,7 +75,7 @@ describe('Components', () => {
     const content = compiled[0].content;
 
     expect(content).toBeSimilarStringTo(`
-        export const getDocument = () => gql\`
+        export const Document =  gql\`
            {
             feed {
               id
@@ -121,7 +121,7 @@ describe('Components', () => {
       render(){
           return (
               <ReactApollo.Query<Query, Variables>
-              query={ getDocument() }
+              query={ Document }
               {...this.props as any}
                           />
                 );
@@ -156,7 +156,7 @@ describe('Components', () => {
     expect(content).toBeSimilarStringTo(`
       export function HOC<TProps = {}>(operationOptions?: ReactApollo.OperationOption<TProps, Query, Variables>){
         return ReactApollo.graphql<TProps, Query, Variables>(
-          getDocument(), 
+          Document, 
           operationOptions
         );
       };
@@ -202,7 +202,7 @@ describe('Components', () => {
 
     expect(content).toBeSimilarStringTo(`
       export namespace FeedWithRepository {
-        export const getDocument = () => gql\`
+        export const Document = gql\`
           fragment FeedWithRepository on FeedType {
             id
             commentCount
@@ -211,14 +211,14 @@ describe('Components', () => {
             }
           }
 
-          \${RepositoryWithOwner.getDocument()}
+          \${RepositoryWithOwner.Document}
 
         \`;
       }
       `);
     expect(content).toBeSimilarStringTo(`
       export namespace RepositoryWithOwner {
-        export const getDocument = () => gql\`
+        export const Document = gql\`
           fragment RepositoryWithOwner on Repository {
             full_name
             html_url
@@ -269,15 +269,87 @@ describe('Components', () => {
     const content = compiled[0].content;
 
     expect(content).toBeSimilarStringTo(`
-        export const getDocument = () => gql\`
+        export const Document = gql\`
           query MyFeed {
             feed {
               ...FeedWithRepository
             }
           }
 
-          \${FeedWithRepository.getDocument()}
+          \${FeedWithRepository.Document}
         \`;
       `);
+  });
+  it('no duplicated fragments', async () => {
+    const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
+    const context = schemaToTemplateContext(schema);
+    const simpleFeed = gql`
+      fragment SimpleFeed on FeedType {
+        id
+        commentCount
+      }
+    `;
+    const myFeed = gql`
+      query MyFeed {
+        feed {
+          ...SimpleFeed
+        }
+        allFeeds {
+          ...SimpleFeed
+        }
+      }
+    `;
+    const documents = [simpleFeed, myFeed];
+    const compiled = await compileTemplate(config, context, documents.map(doc => transformDocument(schema, doc)), {
+      generateSchema: false
+    });
+    const content = compiled[0].content;
+    expect(content).toBeSimilarStringTo(`
+      const Document = gql\` query MyFeed {
+          feed {
+            ...SimpleFeed
+          }
+          allFeeds {
+            ...SimpleFeed
+          }
+        }
+        \${SimpleFeed.Document}
+      \`
+    `);
+    expect(content).toBeSimilarStringTo(`
+      const Document = gql\` fragment SimpleFeed on FeedType {
+        id
+        commentCount
+      }
+      \`;
+    `);
+  });
+  it('write fragments in proper order (when one depends on other)', async () => {
+    const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
+    const context = schemaToTemplateContext(schema);
+    const myFeed = gql`
+      fragment FeedWithRepository on FeedType {
+        id
+        repository {
+          ...RepositoryWithOwner
+        }
+      }
+      fragment RepositoryWithOwner on Repository {
+        full_name
+      }
+      query MyFeed {
+        feed {
+          ...FeedWithRepository
+        }
+      }
+    `;
+    const documents = [myFeed];
+    const compiled = await compileTemplate(config, context, documents.map(doc => transformDocument(schema, doc)), {
+      generateSchema: false
+    });
+    const content = compiled[0].content;
+    const feedWithRepositoryPos = content.indexOf('fragment FeedWithRepository');
+    const repositoryWithOwnerPos = content.indexOf('fragment RepositoryWithOwner');
+    expect(repositoryWithOwnerPos).toBeLessThan(feedWithRepositoryPos);
   });
 });
