@@ -1,4 +1,4 @@
-import { GraphQLSchema } from 'graphql';
+import { DocumentNode, GraphQLSchema } from 'graphql';
 
 export interface AstNode {
   directives: DirectiveUseMap;
@@ -279,6 +279,7 @@ export interface GeneratorConfig {
   filesExtension?: string;
   customHelpers?: { [helperName: string]: Function };
   deprecationNote?: string;
+  addToSchema?: string | DocumentNode | Array<string | DocumentNode>;
 }
 
 export interface FileOutput {

@@ -1,11 +1,12 @@
 import gqlTag from 'graphql-tag';
 import { toFragmentName } from './to-fragment-name';
+import { removeNgModule } from './ngmodule-directive';
 
 export function gql(operation, options: any): string {
   const config = options.data.root.config || {};
 
   const doc = `
-    ${operation.document}
+    ${removeNgModule(operation.document)}
     ${includeFragments(transformFragments(operation.document))}
   `;
 

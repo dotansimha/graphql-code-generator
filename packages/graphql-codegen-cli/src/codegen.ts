@@ -2,7 +2,7 @@ import * as commander from 'commander';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as mkdirp from 'mkdirp';
-import { DocumentNode, GraphQLError, GraphQLSchema } from 'graphql';
+import { DocumentNode, extendSchema, GraphQLError, GraphQLSchema, parse } from 'graphql';
 
 import { documentsFromGlobs } from './utils/documents-glob';
 import { loadDocumentsSources } from './loaders/documents/document-loader';
@@ -258,6 +258,8 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
       return prev;
     }, {});
 
+  let addToSchema: DocumentNode[] = [];
+
   if (isGeneratorConfig(templateConfig)) {
     templateConfig.config = {
       ...(config && config.generatorConfig ? config.generatorConfig || {} : {}),
@@ -266,6 +268,15 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
 
     if (templateConfig.deprecationNote) {
       getLogger().warn(`Template ${template} is deprecated: ${templateConfig.deprecationNote}`);
+    }
+
+    if (templateConfig.addToSchema) {
+      const asArray = Array.isArray(templateConfig.addToSchema)
+        ? templateConfig.addToSchema
+        : [templateConfig.addToSchema];
+      addToSchema = asArray.map(
+        (extension: string | DocumentNode) => (typeof extension === 'string' ? parse(extension) : extension)
+      );
     }
 
     if (config) {
@@ -314,10 +325,18 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
     }
 
     const allSchemas = await Promise.all(schemas);
-    const graphQlSchema =
+
+    let graphQlSchema =
       allSchemas.length === 1
         ? allSchemas[0]
         : makeExecutableSchema({ typeDefs: mergeGraphQLSchemas(allSchemas), allowUndefinedInResolve: true });
+
+    if (addToSchema && addToSchema.length > 0) {
+      for (const extension of addToSchema) {
+        debugLog(`Extending GraphQL Schema with: `, extension);
+        graphQlSchema = extendSchema(graphQlSchema, extension);
+      }
+    }
 
     if (process.env.VERBOSE !== undefined) {
       getLogger().info(`GraphQL Schema is: `, graphQlSchema);
@@ -348,6 +367,7 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
       generateDocuments
     });
   };
+
   const normalizeOutput = (item: FileOutput) => {
     let resultName = item.filename;
 

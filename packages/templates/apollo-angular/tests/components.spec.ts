@@ -1,8 +1,26 @@
 import './custom-matchers';
-import { gql, introspectionToGraphQLSchema, schemaToTemplateContext, transformDocument } from 'graphql-codegen-core';
+import {
+  GraphQLSchema,
+  makeExecutableSchema,
+  gql,
+  introspectionToGraphQLSchema,
+  schemaToTemplateContext,
+  transformDocument,
+  SchemaTemplateContext
+} from 'graphql-codegen-core';
 import { compileTemplate } from 'graphql-codegen-compiler';
 import config from '../dist';
 import * as fs from 'fs';
+import { DocumentNode, extendSchema } from 'graphql';
+
+const compileAndBuildContext = (typeDefs: string): { context: SchemaTemplateContext; schema: GraphQLSchema } => {
+  const schema = makeExecutableSchema({ typeDefs, resolvers: {}, allowUndefinedInResolve: true });
+
+  return {
+    schema,
+    context: schemaToTemplateContext(schema)
+  };
+};
 
 describe('Components', () => {
   it('should generate Component', async () => {
@@ -323,6 +341,51 @@ describe('Components', () => {
     `);
   });
 
+  test('import NgModules and remove NgModule directive', async () => {
+    const baseSchema = introspectionToGraphQLSchema(
+      JSON.parse(fs.readFileSync('./tests/files/schema.json').toString())
+    );
+    const schema = extendSchema(baseSchema, config.addToSchema as DocumentNode);
+    expect(schema.getDirective('NgModule').name).toBe('NgModule');
+    const context = schemaToTemplateContext(schema);
+    const modulePath = '../my/lazy-module';
+    const moduleName = 'LazyModule';
+
+    const myFeed = gql(`
+      query MyFeed {
+        feed @client @NgModule(module: "${modulePath}#${moduleName}") {
+          id
+        }
+      }
+    `);
+    const documents = [myFeed];
+    const compiled = await compileTemplate(
+      { ...config, config: { noNamespaces: true } },
+      context,
+      documents.map(doc => transformDocument(schema, doc)),
+      { generateSchema: false }
+    );
+    const content = compiled[0].content;
+
+    expect(content).toMatch(`import { ${moduleName} } from '${modulePath}'`);
+
+    expect(content).toBeSimilarStringTo(`
+      @Injectable({
+        providedIn: ${moduleName}
+      })
+      export class MyFeedGQL
+    `);
+
+    expect(content).toBeSimilarStringTo(`
+      document: any = gql\` query MyFeed {
+        feed @client {
+          id
+        }
+      }
+      \`
+    `);
+  });
+
   it('no duplicated fragments', async () => {
     const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
     const context = schemaToTemplateContext(schema);
@@ -387,11 +450,9 @@ describe('Components', () => {
           ...RepositoryWithOwner
         }
       }
-
       fragment RepositoryWithOwner on Repository {
         full_name
       }
-
       query MyFeed {
         feed {
           ...FeedWithRepository
