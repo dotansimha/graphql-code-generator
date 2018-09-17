@@ -375,4 +375,42 @@ describe('Components', () => {
       \`;
     `);
   });
+
+  it.only('write fragments in proper order (when one depends on other)', async () => {
+    const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
+    const context = schemaToTemplateContext(schema);
+
+    const myFeed = gql`
+      fragment FeedWithRepository on FeedType {
+        id
+        repository {
+          ...RepositoryWithOwner
+        }
+      }
+
+      fragment RepositoryWithOwner on Repository {
+        full_name
+      }
+
+      query MyFeed {
+        feed {
+          ...FeedWithRepository
+        }
+      }
+    `;
+
+    const documents = [myFeed];
+    const compiled = await compileTemplate(
+      { ...config, config: { noNamespaces: true } },
+      context,
+      documents.map(doc => transformDocument(schema, doc)),
+      { generateSchema: false }
+    );
+    const content = compiled[0].content;
+
+    const feedWithRepositoryPos = content.indexOf('fragment FeedWithRepository');
+    const repositoryWithOwnerPos = content.indexOf('fragment RepositoryWithOwner');
+
+    expect(repositoryWithOwnerPos).toBeLessThan(feedWithRepositoryPos);
+  });
 });
