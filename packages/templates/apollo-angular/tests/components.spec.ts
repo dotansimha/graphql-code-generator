@@ -376,7 +376,7 @@ describe('Components', () => {
     `);
   });
 
-  it.only('write fragments in proper order (when one depends on other)', async () => {
+  it('write fragments in proper order (when one depends on other)', async () => {
     const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
     const context = schemaToTemplateContext(schema);
 
