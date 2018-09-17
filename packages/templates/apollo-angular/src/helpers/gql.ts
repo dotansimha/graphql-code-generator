@@ -1,17 +1,14 @@
 import gqlTag from 'graphql-tag';
-import { print } from 'graphql';
 import { toFragmentName } from './to-fragment-name';
-import { removeDirective } from './remove-directive';
+import { removeNgModule } from './ngmodule-directive';
 
 export function gql(operation, options: any): string {
   const config = options.data.root.config || {};
 
-  const doc = removeDirective('NgModule')(
-    gqlTag(`
-    ${operation.document}
+  const doc = `
+    ${removeNgModule(operation.document)}
     ${includeFragments(transformFragments(operation.document))}
-  `)
-  );
+  `;
 
   return config.noGraphqlTag ? JSON.stringify(gqlTag(doc)) : 'gql`' + doc + '`';
 }

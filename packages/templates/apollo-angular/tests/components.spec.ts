@@ -361,6 +361,16 @@ describe('Components', () => {
       { generateSchema: false }
     );
     const content = compiled[0].content;
+
+    expect(content).toMatch(`import { ${moduleName} } from '${modulePath}'`);
+
+    expect(content).toBeSimilarStringTo(`
+      @Injectable({
+        providedIn: ${moduleName}
+      })
+      export class MyFeedGQL
+    `);
+
     expect(content).toBeSimilarStringTo(`
       document: any = gql\` query MyFeed {
         feed @client {

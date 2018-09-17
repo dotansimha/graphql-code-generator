@@ -6,9 +6,9 @@ import * as Apollo from 'apollo-angular';
 import gql from 'graphql-tag';
 {{/unless}}
 
-{{ importNgModules operations }}
+{{{ importNgModules operations }}}
 
-{{{generateFragments fragments}}}
+{{{ generateFragments fragments }}}
 
 {{#each operations}}
     @Injectable({
