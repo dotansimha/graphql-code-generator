@@ -1,8 +1,25 @@
 import './custom-matchers';
-import { gql, introspectionToGraphQLSchema, schemaToTemplateContext, transformDocument } from 'graphql-codegen-core';
+import {
+  GraphQLSchema,
+  makeExecutableSchema,
+  gql,
+  introspectionToGraphQLSchema,
+  schemaToTemplateContext,
+  transformDocument,
+  SchemaTemplateContext
+} from 'graphql-codegen-core';
 import { compileTemplate } from 'graphql-codegen-compiler';
 import config from '../dist';
 import * as fs from 'fs';
+
+const compileAndBuildContext = (typeDefs: string): { context: SchemaTemplateContext; schema: GraphQLSchema } => {
+  const schema = makeExecutableSchema({ typeDefs, resolvers: {}, allowUndefinedInResolve: true });
+
+  return {
+    schema,
+    context: schemaToTemplateContext(schema)
+  };
+};
 
 describe('Components', () => {
   it('should generate Component', async () => {
@@ -319,6 +336,37 @@ describe('Components', () => {
             id
           }
         }
+      \`
+    `);
+  });
+
+  test.only('import NgModules and remove NgModule directive', async () => {
+    const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
+    const context = schemaToTemplateContext(schema);
+    const modulePath = '../my/lazy-module';
+    const moduleName = 'LazyModule';
+
+    const myFeed = gql(`
+      query MyFeed {
+        feed @client @NgModule(module: "${modulePath}#${moduleName}") {
+          id
+        }
+      }
+    `);
+    const documents = [myFeed];
+    const compiled = await compileTemplate(
+      { ...config, config: { noNamespaces: true } },
+      context,
+      documents.map(doc => transformDocument(schema, doc)),
+      { generateSchema: false }
+    );
+    const content = compiled[0].content;
+    expect(content).toBeSimilarStringTo(`
+      document: any = gql\` query MyFeed {
+        feed @client {
+          id
+        }
+      }
       \`
     `);
   });

@@ -6,13 +6,15 @@ import * as Apollo from 'apollo-angular';
 import gql from 'graphql-tag';
 {{/unless}}
 
+{{ importNgModules operations }}
+
 {{#each fragments}}
     {{{generateFragment this}}}
 {{/each}}
 
 {{#each operations}}
     @Injectable({
-        providedIn: 'root'
+        providedIn: {{{ providedIn this }}}
     })
     export class {{ toPascalCase name }}GQL extends Apollo.{{toPascalCase operationType}}<{{ toPascalCase name }}{{#unless @root.config.noNamespaces}}.{{/unless}}{{ toPascalCase operationType }}, {{ toPascalCase name }}{{#unless @root.config.noNamespaces}}.{{/unless}}Variables> {
         document: any = {{{ gql this }}}
