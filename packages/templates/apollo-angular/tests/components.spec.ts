@@ -11,6 +11,7 @@ import {
 import { compileTemplate } from 'graphql-codegen-compiler';
 import config from '../dist';
 import * as fs from 'fs';
+import { DocumentNode, extendSchema } from 'graphql';
 
 const compileAndBuildContext = (typeDefs: string): { context: SchemaTemplateContext; schema: GraphQLSchema } => {
   const schema = makeExecutableSchema({ typeDefs, resolvers: {}, allowUndefinedInResolve: true });
@@ -341,7 +342,11 @@ describe('Components', () => {
   });
 
   test('import NgModules and remove NgModule directive', async () => {
-    const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
+    const baseSchema = introspectionToGraphQLSchema(
+      JSON.parse(fs.readFileSync('./tests/files/schema.json').toString())
+    );
+    const schema = extendSchema(baseSchema, config.addToSchema as DocumentNode);
+    expect(schema.getDirective('NgModule').name).toBe('NgModule');
     const context = schemaToTemplateContext(schema);
     const modulePath = '../my/lazy-module';
     const moduleName = 'LazyModule';
