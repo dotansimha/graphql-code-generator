@@ -322,4 +322,57 @@ describe('Components', () => {
       \`
     `);
   });
+
+  it('no duplicated fragments', async () => {
+    const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
+    const context = schemaToTemplateContext(schema);
+
+    const simpleFeed = gql`
+      fragment SimpleFeed on FeedType {
+        id
+        commentCount
+      }
+    `;
+    const myFeed = gql`
+      query MyFeed {
+        feed {
+          ...SimpleFeed
+        }
+        allFeeds {
+          ...SimpleFeed
+        }
+      }
+    `;
+
+    const documents = [simpleFeed, myFeed];
+
+    const compiled = await compileTemplate(
+      { ...config, config: { noNamespaces: true } },
+      context,
+      documents.map(doc => transformDocument(schema, doc)),
+      { generateSchema: false }
+    );
+    const content = compiled[0].content;
+
+    expect(content).toBeSimilarStringTo(`
+      document: any = gql\` query MyFeed {
+          feed {
+            ...SimpleFeed
+          }
+          allFeeds {
+            ...SimpleFeed
+          }
+        }
+        \${SimpleFeedFragment}
+      \`
+    `);
+
+    expect(content).toBeSimilarStringTo(`
+      const SimpleFeedFragment = gql\` fragment SimpleFeed on FeedType {
+        id
+        commentCount
+      }
+      \`;
+    `);
+  });
 });
