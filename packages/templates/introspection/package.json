@@ -1,6 +1,6 @@
 {
   "name": "graphql-codegen-introspection-template",
-  "version": "0.12.2",
+  "version": "0.12.3",
   "description": "",
   "license": "MIT",
   "scripts": {
@@ -10,9 +10,9 @@
     "test": "codegen-templates-scripts test"
   },
   "devDependencies": {
-    "codegen-templates-scripts": "0.12.2",
-    "graphql-codegen-compiler": "0.12.2",
-    "graphql-codegen-core": "0.12.2"
+    "codegen-templates-scripts": "0.12.3",
+    "graphql-codegen-compiler": "0.12.3",
+    "graphql-codegen-core": "0.12.3"
   },
   "main": "./dist/index.js",
   "typings": "dist/index.d.ts",

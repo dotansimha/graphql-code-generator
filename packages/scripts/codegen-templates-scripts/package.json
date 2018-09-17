@@ -1,6 +1,6 @@
 {
   "name": "codegen-templates-scripts",
-  "version": "0.12.2",
+  "version": "0.12.3",
   "main": "cli.js",
   "license": "MIT",
   "dependencies": {
