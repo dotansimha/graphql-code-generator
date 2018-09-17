@@ -15,7 +15,10 @@ export function gql(operation, options: any): string {
 function includeFragments(fragments: string[]): string {
   if (fragments) {
     return `
-      ${fragments.map(name => '${' + name + '}').join('\n')}
+      ${fragments
+        .filter((name, i, all) => all.indexOf(name) === i)
+        .map(name => '${' + name + '}')
+        .join('\n')}
     `;
   }
 
