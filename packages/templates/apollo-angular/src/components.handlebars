@@ -6,9 +6,7 @@ import * as Apollo from 'apollo-angular';
 import gql from 'graphql-tag';
 {{/unless}}
 
-{{#each fragments}}
-    {{{generateFragment this}}}
-{{/each}}
+{{{generateFragments fragments}}}
 
 {{#each operations}}
     @Injectable({
