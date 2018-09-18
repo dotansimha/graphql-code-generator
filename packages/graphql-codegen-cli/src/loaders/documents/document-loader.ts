@@ -27,12 +27,23 @@ export const loadFileContent = (filePath: string): DocumentNode | null => {
 
 const effectiveRules = specifiedRules.filter((f: Function) => f.name !== 'NoUnusedFragments');
 
+export interface LoadDocumentError {
+  readonly filePath: string;
+  readonly errors: ReadonlyArray<GraphQLError>;
+}
+
 export const loadDocumentsSources = (
   schema: GraphQLSchema,
   filePaths: string[]
-): DocumentNode | ReadonlyArray<GraphQLError> => {
-  const loadResults = filePaths.map(loadFileContent).filter(content => content);
-  const completeAst = concatAST(loadResults);
-  const errors = validate(schema, completeAst, effectiveRules);
-  return errors.length > 0 ? errors : completeAst;
+): DocumentNode | ReadonlyArray<LoadDocumentError> => {
+  const loadResults = filePaths
+    .map(filePath => ({ filePath, content: loadFileContent(filePath) }))
+    .filter(result => result.content);
+  const errors: ReadonlyArray<LoadDocumentError> = loadResults
+    .map(result => ({
+      filePath: result.filePath,
+      errors: validate(schema, result.content, effectiveRules)
+    }))
+    .filter(r => r.errors.length > 0);
+  return errors.length > 0 ? errors : concatAST(loadResults.map(r => r.content));
 };

@@ -19,6 +19,11 @@ export function setSilentLogger() {
 }
 
 export function useWinstonLogger() {
+  if (logger && logger.levels) {
+    // Winston already set
+    return;
+  }
+
   const winstonLogger = createLogger({
     transports: [
       new winston.transports.Console({

@@ -1,0 +1,9 @@
+type Query {
+    fieldA: String
+    fieldB: MyType
+}
+
+type MyType {
+    fieldC: Int
+}
+
