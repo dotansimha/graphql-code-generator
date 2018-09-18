@@ -8,3 +8,4 @@ install:
   - yarn
 script:
   - yarn test
+  - ./publish-canary.sh
