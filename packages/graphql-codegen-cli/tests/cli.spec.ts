@@ -1,4 +1,5 @@
 import { executeWithOptions } from '../src/codegen';
+import { getLogger, useWinstonLogger } from 'graphql-codegen-core';
 
 describe('executeWithOptions', () => {
   it('execute the correct results when using schema with json file', async () => {
@@ -8,6 +9,30 @@ describe('executeWithOptions', () => {
     });
 
     expect(result.length).toBe(1);
+  });
+
+  it('execute the throw an error when a document is not valid', async () => {
+    useWinstonLogger();
+    let spyLogger: jest.SpyInstance = jest.spyOn(getLogger(), 'error');
+    spyLogger.mockImplementation();
+    let spyProcessExit: jest.SpyInstance = jest.spyOn(process, 'exit');
+    spyProcessExit.mockImplementation();
+
+    await executeWithOptions({
+      silent: false,
+      schema: './tests/test-documents/schema.graphql',
+      template: 'graphql-codegen-typescript-template',
+      args: ['./tests/test-documents/invalid-fields.graphql']
+    });
+
+    expect(spyLogger.mock.calls[0][0]).toBe(
+      '[./tests/test-documents/invalid-fields.graphql] GraphQL Error: Cannot query field "fieldD" on type "Query". Did you mean "fieldA" or "fieldB"?'
+    );
+    expect(spyLogger.mock.calls[1][0]).toBe('Found 1 errors when validating your GraphQL documents against schema!');
+    expect(spyProcessExit).toBeCalledWith(1);
+
+    spyLogger.mockRestore();
+    spyProcessExit.mockRestore();
   });
 
   it('execute the correct results when using schema with js file', async () => {

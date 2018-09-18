@@ -2,10 +2,10 @@ import * as commander from 'commander';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as mkdirp from 'mkdirp';
-import { DocumentNode, extendSchema, GraphQLError, GraphQLSchema, parse } from 'graphql';
+import { DocumentNode, extendSchema, GraphQLSchema, parse } from 'graphql';
 
 import { documentsFromGlobs } from './utils/documents-glob';
-import { loadDocumentsSources, LoadDocumentError } from './loaders/documents/document-loader';
+import { LoadDocumentError, loadDocumentsSources } from './loaders/documents/document-loader';
 import { scanForTemplatesInPath } from './loaders/template/templates-scanner';
 import { ALLOWED_CUSTOM_TEMPLATE_EXT, compileTemplate } from 'graphql-codegen-compiler';
 import {
@@ -355,13 +355,15 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
     if (Array.isArray(documentSourcesResult) && documentSourcesResult.length > 0) {
       let errorCount = 0;
       const loadDocumentErrors = documentSourcesResult as ReadonlyArray<LoadDocumentError>;
+
       for (const loadDocumentError of loadDocumentErrors) {
         for (const graphQLError of loadDocumentError.errors) {
-          getLogger().error(`${graphQLError.message} found in file ${loadDocumentError.filePath}`);
+          getLogger().error(`[${loadDocumentError.filePath}] GraphQL Error: ${graphQLError.message}`);
           errorCount++;
         }
       }
-      cliError(`Found ${errorCount} errors when validating queries against schema`);
+
+      cliError(`Found ${errorCount} errors when validating your GraphQL documents against schema!`);
     }
 
     const transformedDocuments = transformDocument(graphQlSchema, documentSourcesResult as DocumentNode);
