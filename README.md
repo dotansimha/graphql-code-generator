@@ -69,6 +69,12 @@ And then to use it, execute it from NPM script, or use `$(npm bin)/gql-gen ...` 
 
 > You can also install it as global NPM module and use it with `gql-gen` executable.
 
+#### Pre-release
+
+We are also publishing a pre-release version to NPM on each change.
+
+Just take a look at the build status on CircleCI and find "Publish Canary" job to get the published version.
+
 ## Usage Examples
 
 This package offers both modules exports (to use with NodeJS/JavaScript application), or CLI util.
