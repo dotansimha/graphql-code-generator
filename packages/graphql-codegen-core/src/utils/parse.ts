@@ -7,7 +7,7 @@ export function parse(source: Source | string) {
     let error: Error;
 
     if (typeof source === 'string') {
-      error = new Error(`Parsing '${source.trim().substr(0, 50)}' failed with: ${e.message}`);
+      error = new Error(`Parsing '${source.trim().substr(0, 25)}...' failed with: ${e.message}`);
     } else {
       error = new Error(`Parsing a document in '${source.name}' failed with: ${e.message}`);
     }
