@@ -42,7 +42,7 @@ export const loadDocumentsSources = (
   const errors: ReadonlyArray<LoadDocumentError> = loadResults
     .map(result => ({
       filePath: result.filePath,
-      errors: validate(schema, result.content, effectiveRules)
+      errors: validate(schema, result.content, effectiveRules).filter(e => e.message.indexOf('Unknown fragment') === -1)
     }))
     .filter(r => r.errors.length > 0);
   return errors.length > 0 ? errors : concatAST(loadResults.map(r => r.content));
