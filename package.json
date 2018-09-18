@@ -24,7 +24,7 @@
     "packages/templates/*"
   ],
   "dependencies": {
-    "lerna": "3.4.0"
+    "lerna": "2.11.0"
   },
   "devDependencies": {
     "@types/glob": "5.0.35",
