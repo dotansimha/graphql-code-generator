@@ -22,10 +22,8 @@ jobs:
       - run:
           name: Publish Canary
           command: |
-            if [ "${CIRCLE_BRANCH}" != "master" ]; then
-              echo "//registry.npmjs.org/:_authToken=$NPM_AUTH_TOKEN" > .npmrc
-              npm run ci:release:canary
-            fi
+            echo "//registry.npmjs.org/:_authToken=$NPM_AUTH_TOKEN" > .npmrc
+            npm run ci:release:canary
       - save_cache:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
