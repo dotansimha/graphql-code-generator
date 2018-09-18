@@ -1,5 +1,6 @@
 #!/bin/bash
 
-echo "//registry.npmjs.org/:_authToken=$NPM_AUTH_TOKEN" > ~/.npmrc
+echo "//registry.npmjs.org/:_authToken=$NPM_AUTH_TOKEN" > .npmrc
+npm whoami
 
-yarn release:canary
+npm run release:canary
