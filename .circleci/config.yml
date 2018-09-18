@@ -24,8 +24,7 @@ jobs:
           command: |
             if [ "${CIRCLE_BRANCH}" != "master" ]; then
               echo "//registry.npmjs.org/:_authToken=$NPM_AUTH_TOKEN" > .npmrc
-              npm whoami
-              lerna publish --force-publish="*" --canary --exact --yes
+              npm run ci:release:canary
             fi
       - save_cache:
           key: dependency-cache-{{ checksum "package.json" }}
