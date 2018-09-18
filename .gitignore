@@ -3,3 +3,4 @@ node_modules
 lerna-debug.log
 .yarnclean
 yarn-error.log
+.npmrc

@@ -5,7 +5,6 @@
   "author": "dotansimha <dotansimha@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "postinstall": "yarn build",
     "clean": "lerna clean --yes && rm -rf node_modules",
     "build": "lerna run build",
     "test": "lerna run test",
@@ -16,6 +15,7 @@
     "prerelease:canary": "yarn test-and-build",
     "release": "lerna publish --exact --force-publish=\"*\"",
     "release:canary": "lerna publish --force-publish=\"*\" --canary --exact",
+    "ci:release:canary": "lerna publish --force-publish=\"*\" --canary --exact --yes",
     "generate:examples": "./dev-test/generate-all.sh"
   },
   "workspaces": [
@@ -24,7 +24,7 @@
     "packages/templates/*"
   ],
   "dependencies": {
-    "lerna": "3.4.0"
+    "lerna": "2.11.0"
   },
   "devDependencies": {
     "@types/glob": "5.0.35",
