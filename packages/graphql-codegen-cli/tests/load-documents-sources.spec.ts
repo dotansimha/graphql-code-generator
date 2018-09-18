@@ -39,4 +39,11 @@ describe('loadDocumentsSources', () => {
     expect(errors[0].errors[0] instanceof GraphQLError).toBeTruthy();
     expect(errors[0].errors[0].message).toContain('Cannot query field "fieldD" on type "Query"');
   });
+
+  it.only('should not return an error array when one file references fragment in other file', () => {
+    const documentPath1 = join(__dirname, './test-documents/my-fragment.ts');
+    const documentPath2 = join(__dirname, './test-documents/query-with-my-fragment.ts');
+    const result = loadDocumentsSources(schema, [documentPath1, documentPath2]);
+    expect(Array.isArray(result)).toBeFalsy();
+  });
 });
