@@ -166,11 +166,12 @@ If you with to use this package as a library and execute it from your code, do t
 ```typescript
 import { generate } from 'graphql-code-generator';
 
-function doSomething() {
+async function doSomething() {
   const generatedFiles = await generate({
+    schema: 'http://127.0.0.1:3000/graphql',
     template: 'typescript',
-    url: 'http://127.0.0.1:3000/graphql',
-    out: process.cwd() + '/models/'
+    out: process.cwd() + '/models/',
+    args: ['./src/**/*.graphql']
   });
 }
 ```
