@@ -27,7 +27,7 @@
     "lerna": "2.11.0"
   },
   "devDependencies": {
-    "@types/glob": "5.0.35",
+    "@types/glob": "5.0.36",
     "@types/jest": "23.3.2",
     "@types/mkdirp": "0.5.2",
     "@types/node": "10.10.1",
