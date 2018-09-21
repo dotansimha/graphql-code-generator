@@ -13,7 +13,7 @@ typescriptConfig.customHelpers.generateFragments = generateFragments;
 typescriptConfig.customHelpers.importNgModules = importNgModules;
 typescriptConfig.customHelpers.providedIn = providedIn;
 typescriptConfig.addToSchema = gql`
-  directive @NgModule(module: String!) on OBJECT
+  directive @NgModule(module: String!) on OBJECT | FIELD
 `;
 
 export { typescriptConfig as config };
