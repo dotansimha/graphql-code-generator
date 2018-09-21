@@ -17,7 +17,7 @@ typescriptConfig.customHelpers.providedIn = providedIn;
 typescriptConfig.customHelpers.namedClient = namedClient;
 
 typescriptConfig.addToSchema = gql`
-  directive @NgModule(module: String!) on OBJECT
+  directive @NgModule(module: String!) on OBJECT | FIELD
 
   directive @namedClient(name: String!) on OBJECT | FIELD
 `;
