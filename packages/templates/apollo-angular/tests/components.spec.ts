@@ -386,6 +386,44 @@ describe('Components', () => {
     `);
   });
 
+  test('import namedClient and remove namedClient directive', async () => {
+    const baseSchema = introspectionToGraphQLSchema(
+      JSON.parse(fs.readFileSync('./tests/files/schema.json').toString())
+    );
+    const schema = extendSchema(baseSchema, config.addToSchema as DocumentNode);
+    expect(schema.getDirective('namedClient').name).toBe('namedClient');
+    const context = schemaToTemplateContext(schema);
+
+    const myFeed = gql(`
+      query MyFeed {
+        feed @namedClient(name: "custom") {
+          id
+        }
+      }
+    `);
+    const documents = [myFeed];
+    const compiled = await compileTemplate(
+      { ...config, config: { noNamespaces: true } },
+      context,
+      documents.map(doc => transformDocument(schema, doc)),
+      { generateSchema: false }
+    );
+    const content = compiled[0].content;
+
+    expect(content).toBeSimilarStringTo(`
+      document: any = gql\` query MyFeed {
+        feed {
+          id
+        }
+      }
+      \`
+    `);
+
+    expect(content).toBeSimilarStringTo(`
+      client = 'custom';
+    `);
+  });
+
   it('no duplicated fragments', async () => {
     const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
     const context = schemaToTemplateContext(schema);

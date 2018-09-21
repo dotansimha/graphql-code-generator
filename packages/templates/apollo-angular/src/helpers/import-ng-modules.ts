@@ -1,9 +1,10 @@
-import { operationHasNgModule, extractNgModule } from './ngmodule-directive';
+import { extractNgModule } from './ngmodule-directive';
+import { operationHasDirective } from './directives';
 
 export function importNgModules(operations: any[]) {
   const defs: Record<string, { path: string; module: string }> = {};
 
-  operations.filter(operationHasNgModule).forEach(op => {
+  operations.filter(op => operationHasDirective(op, 'NgModule')).forEach(op => {
     const def = extractNgModule(op);
 
     // by setting key as link we easily get rid of duplicated imports
