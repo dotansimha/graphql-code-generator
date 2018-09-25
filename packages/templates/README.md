@@ -4,7 +4,7 @@ If you with to write a custom template, you can either use one of the following 
 
 ## Write you own template package
 
-To write you own template package using Handlebars, you can use [`codegen-templates-scripts`](../scripts/handlebars-templates-scripts/README.md).
+To write you own template package using Handlebars, you can use [`codegen-templates-scripts`](../scripts/codegen-templates-scripts/README.md).
 
 ## Write your own output processor
 
