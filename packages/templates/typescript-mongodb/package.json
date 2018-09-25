@@ -1,6 +1,6 @@
 {
   "name": "graphql-codegen-typescript-mongodb-template",
-  "version": "0.12.5",
+  "version": "0.12.6",
   "description": "",
   "license": "MIT",
   "scripts": {
@@ -11,8 +11,8 @@
   },
   "devDependencies": {
     "@types/lodash": "4.14.116",
-    "codegen-templates-scripts": "0.12.5",
-    "graphql-codegen-core": "0.12.5"
+    "codegen-templates-scripts": "0.12.6",
+    "graphql-codegen-core": "0.12.6"
   },
   "dependencies": {
     "lodash": "4.17.11"
