@@ -16,5 +16,6 @@ import gql from 'graphql-tag';
     })
     export class {{ toPascalCase name }}GQL extends Apollo.{{toPascalCase operationType}}<{{ toPascalCase name }}{{#unless @root.config.noNamespaces}}.{{/unless}}{{ toPascalCase operationType }}, {{ toPascalCase name }}{{#unless @root.config.noNamespaces}}.{{/unless}}Variables> {
         document: any = {{{ gql this }}}
+        {{{ namedClient this }}}
     }
 {{/each}}

@@ -1,12 +1,12 @@
 import gqlTag from 'graphql-tag';
 import { toFragmentName } from './to-fragment-name';
-import { removeNgModule } from './ngmodule-directive';
+import { removeDirectives } from './directives';
 
 export function gql(operation, options: any): string {
   const config = options.data.root.config || {};
 
   const doc = `
-    ${removeNgModule(operation.document)}
+    ${removeDirectives(operation.document, ['NgModule', 'namedClient'])}
     ${includeFragments(transformFragments(operation.document))}
   `;
 
