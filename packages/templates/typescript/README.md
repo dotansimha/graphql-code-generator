@@ -62,7 +62,7 @@ This will cause the codegen to output `readonly` properties and `ReadonlyArray`.
 
 This will cause the codegen to output types for resolvers.
 
-### `noNamespaces` (or `CODEGEN_SCHEMA_NO_NAMESPACES`, default value: `null`)
+### `noNamespaces` (or `CODEGEN_NO_NAMESPACES`, default value: `null`)
 
 This will cause the codegen not to use `namespace` in typings
 
