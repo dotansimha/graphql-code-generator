@@ -48,7 +48,8 @@ export class SchemaFromTypedefs implements SchemaLoader {
     return makeExecutableSchema({
       typeDefs,
       allowUndefinedInResolve: true,
-      resolvers: {}
+      resolvers: {},
+      resolverValidationOptions: { requireResolversForResolveType: false }
     });
   }
 }
