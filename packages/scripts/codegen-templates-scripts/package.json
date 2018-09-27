@@ -3,6 +3,7 @@
   "version": "0.12.6",
   "main": "cli.js",
   "license": "MIT",
+  "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "dependencies": {
     "awesome-typescript-loader": "5.2.1",
     "commander": "2.18.0",

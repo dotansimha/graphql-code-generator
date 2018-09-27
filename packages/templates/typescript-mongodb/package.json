@@ -3,6 +3,7 @@
   "version": "0.12.6",
   "description": "",
   "license": "MIT",
+  "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "scripts": {
     "prepublishOnly": "yarn build",
     "build": "codegen-templates-scripts build",
