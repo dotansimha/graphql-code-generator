@@ -1,15 +1,17 @@
+import { Operation } from 'graphql-codegen-core';
+
 function R_DEF(directive: string) {
   return new RegExp(`\\s+\\@${directive}\\([^)]+\\)`, 'gm');
 }
 
 // checks if operation has a directive
-export function operationHasDirective(operation, directive: string) {
-  return (operation.document as string).includes(`@${directive}`);
+export function operationHasDirective(operation: Operation, directive: string) {
+  return operation.document.includes(`@${directive}`);
 }
 
 // removes a directive from string
 export function removeDirective(document: string, directive: string) {
-  if (operationHasDirective({ document }, directive)) {
+  if (operationHasDirective({ document } as Operation, directive)) {
     return document.replace(R_DEF(directive), '');
   }
 
@@ -21,7 +23,7 @@ export function removeDirectives(document: string, directives: string[]) {
 }
 
 // tries to find a directive and extract it's arguments
-export function extractDirective(operation, directive) {
+export function extractDirective(operation: Operation, directive: string) {
   const doc: string = operation.document;
   const directives = doc.match(R_DEF(directive));
 

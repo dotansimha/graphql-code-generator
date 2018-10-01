@@ -1,6 +1,8 @@
-function filterModelFields(fieldsArray, options) {
+import { AstNode } from 'graphql-codegen-core';
+
+function filterModelFields(fieldsArray: AstNode[], options: Handlebars.HelperOptions) {
   let result = '';
-  const validFields = [];
+  const validFields: AstNode[] = [];
 
   if (!fieldsArray) {
     throw new Error(`Invalid context for filterModelFields: ${JSON.stringify(fieldsArray)}`);

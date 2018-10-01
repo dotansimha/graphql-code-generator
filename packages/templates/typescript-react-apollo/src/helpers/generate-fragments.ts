@@ -1,8 +1,9 @@
 import { DepGraph } from 'dependency-graph';
 
 import { gql, extractFragments } from './gql';
+import { Fragment } from 'graphql-codegen-core';
 
-export function generateFragments(fragments: any[], options: any): string {
+export function generateFragments(fragments: Fragment[], options: Handlebars.HelperOptions): string {
   const cachedFragments: Record<string, any> = {};
   if (!fragments) {
     return '';
@@ -24,7 +25,7 @@ export function generateFragments(fragments: any[], options: any): string {
     .map(name => generateFragment(graph.getNodeData(name), options))
     .join('\n');
 
-  function generateFragment(fragment: any, options: any): string {
+  function generateFragment(fragment: any, options: any): string | void {
     const cached = cachedFragments[fragment.name];
     if (!cached) {
       cachedFragments[fragment.name] = fragment;

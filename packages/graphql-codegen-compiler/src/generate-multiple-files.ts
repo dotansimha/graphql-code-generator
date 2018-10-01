@@ -40,7 +40,7 @@ interface ExtraConfig {
 function handleSchema(
   compiledTemplate: Function,
   schemaContext: SchemaTemplateContext,
-  documents: Document,
+  _documents: Document,
   extraConfig: ExtraConfig,
   fileExtension: string,
   prefixAndPath = ''
@@ -85,7 +85,7 @@ function handleAll(
 
 function handleDocuments(
   compiledTemplate: Function,
-  schemaContext: SchemaTemplateContext,
+  _schemaContext: SchemaTemplateContext,
   documents: Document,
   extraConfig: ExtraConfig,
   fileExtension: string,
@@ -110,7 +110,7 @@ function handleDocuments(
 function handleType(
   compiledTemplate: Function,
   schemaContext: SchemaTemplateContext,
-  documents: Document,
+  _documents: Document,
   extraConfig: ExtraConfig,
   fileExtension: string,
   prefixAndPath = ''
@@ -129,7 +129,7 @@ function handleType(
 function handleInputType(
   compiledTemplate: Function,
   schemaContext: SchemaTemplateContext,
-  documents: Document,
+  _documents: Document,
   extraConfig: ExtraConfig,
   fileExtension: string,
   prefixAndPath = ''
@@ -148,7 +148,7 @@ function handleInputType(
 function handleUnion(
   compiledTemplate: Function,
   schemaContext: SchemaTemplateContext,
-  documents: Document,
+  _documents: Document,
   extraConfig: ExtraConfig,
   fileExtension: string,
   prefixAndPath = ''
@@ -167,7 +167,7 @@ function handleUnion(
 function handleEnum(
   compiledTemplate: Function,
   schemaContext: SchemaTemplateContext,
-  documents: Document,
+  _documents: Document,
   extraConfig: ExtraConfig,
   fileExtension: string,
   prefixAndPath = ''
@@ -186,7 +186,7 @@ function handleEnum(
 function handleScalar(
   compiledTemplate: Function,
   schemaContext: SchemaTemplateContext,
-  documents: Document,
+  _documents: Document,
   extraConfig: ExtraConfig,
   fileExtension: string,
   prefixAndPath = ''
@@ -205,7 +205,7 @@ function handleScalar(
 function handleInterface(
   compiledTemplate: Function,
   schemaContext: SchemaTemplateContext,
-  documents: Document,
+  _documents: Document,
   extraConfig: ExtraConfig,
   fileExtension: string,
   prefixAndPath = ''
@@ -223,7 +223,7 @@ function handleInterface(
 
 function handleOperation(
   compiledTemplate: Function,
-  schemaContext: SchemaTemplateContext,
+  _schemaContext: SchemaTemplateContext,
   documents: Document,
   extraConfig: ExtraConfig,
   fileExtension: string,
@@ -242,7 +242,7 @@ function handleOperation(
 
 function handleFragment(
   compiledTemplate: Function,
-  schemaContext: SchemaTemplateContext,
+  _schemaContext: SchemaTemplateContext,
   documents: Document,
   extraConfig: ExtraConfig,
   fileExtension: string,

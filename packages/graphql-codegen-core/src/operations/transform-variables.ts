@@ -4,7 +4,6 @@ import { resolveType } from '../schema/resolve-type';
 import { debugLog } from '../debugging';
 import { resolveTypeIndicators } from '../schema/resolve-type-indicators';
 import { NonNullTypeNode } from 'graphql/language/ast';
-import { resolve } from 'path';
 
 export function transformVariables(schema: GraphQLSchema, definitionNode: OperationDefinitionNode): Variable[] {
   return definitionNode.variableDefinitions.map<Variable>(

@@ -22,7 +22,7 @@ import { getDirectives } from '../utils/get-directives';
 export function resolveFields(
   schema: GraphQLSchema,
   rawFields: GraphQLFieldMap<any, any>,
-  parent: GraphQLObjectType | GraphQLInterfaceType | GraphQLInputObjectType
+  _parent: GraphQLObjectType | GraphQLInterfaceType | GraphQLInputObjectType
 ): Field[] {
   const fieldsArray = objectMapToArray<GraphQLField<any, any>>(rawFields);
 

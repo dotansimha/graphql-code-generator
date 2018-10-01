@@ -1,8 +1,9 @@
 import gqlTag from 'graphql-tag';
 import { toFragmentName } from './to-fragment-name';
 import { removeDirectives } from './directives';
+import { Operation } from 'graphql-codegen-core';
 
-export function gql(operation, options: any): string {
+export function gql(operation: Operation, options: any): string {
   const config = options.data.root.config || {};
 
   const doc = `

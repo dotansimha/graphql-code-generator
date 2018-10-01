@@ -18,8 +18,6 @@ export interface NamedTypeIndicators {
 }
 
 export function resolveTypeIndicators(namedType: GraphQLNamedType): NamedTypeIndicators {
-  const isEnum = namedType['getValues'] !== undefined;
-
   return {
     isType: namedType instanceof GraphQLObjectType,
     isScalar: namedType instanceof GraphQLScalarType,
