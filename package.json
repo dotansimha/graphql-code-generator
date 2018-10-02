@@ -47,7 +47,7 @@
     "apollo-link": "1.2.2",
     "awesome-typescript-loader": "5.2.1",
     "raw-loader": "0.5.1",
-    "webpack": "4.19.1",
+    "webpack": "4.20.2",
     "webpack-cli": "3.1.2",
     "webpack-node-externals": "1.7.2"
   },
