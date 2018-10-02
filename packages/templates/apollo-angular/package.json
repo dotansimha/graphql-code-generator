@@ -8,6 +8,7 @@
     "apollo",
     "angular"
   ],
+  "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "scripts": {
     "prepublishOnly": "yarn build",
     "build": "codegen-templates-scripts build",

@@ -1,7 +1,8 @@
 {
   "name": "graphql-codegen-typescript-template",
   "version": "0.12.6",
-  "description": "",
+  "description": "graphql-codegen-cli template for TypeScript typings for both client side and server side",
+  "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
   "scripts": {
     "prepublishOnly": "yarn build",

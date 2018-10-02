@@ -3,6 +3,7 @@
   "version": "0.12.6",
   "description": "GraphQL code generator compiler",
   "license": "MIT",
+  "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "scripts": {
     "test": "jest",
     "build": "tsc",
