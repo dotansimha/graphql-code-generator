@@ -2,7 +2,7 @@ import { getLogger, introspectionToGraphQLSchema, validateIntrospection } from '
 import { GraphQLSchema } from 'graphql';
 import { SchemaLoader } from './schema-loader';
 import { existsSync, readFileSync } from 'fs';
-import * as isValidPath from 'is-valid-path';
+import isValidPath = require('is-valid-path');
 import { extname, isAbsolute, resolve as resolvePath } from 'path';
 import { CLIOptions } from '../../cli-options';
 
@@ -27,7 +27,7 @@ export class IntrospectionFromFileLoader implements SchemaLoader {
     return isValidPath(pointerToSchema) && existsSync(pointerToSchema) && extname(pointerToSchema) === '.json';
   }
 
-  handle(pointerToSchema: string, cliOptions: CLIOptions): Promise<GraphQLSchema> {
+  handle(pointerToSchema: string, _cliOptions: CLIOptions): Promise<GraphQLSchema> {
     getLogger().info(`Loading GraphQL Introspection from file: ${pointerToSchema}...`);
 
     return new Promise<GraphQLSchema>((resolve, reject) => {

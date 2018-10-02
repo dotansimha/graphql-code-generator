@@ -1,4 +1,6 @@
-function isArray(field, options) {
+import { Field } from 'graphql-codegen-core';
+
+function isArray(this: any, field: Field, options: Handlebars.HelperOptions) {
   if (!field) {
     return '';
   }

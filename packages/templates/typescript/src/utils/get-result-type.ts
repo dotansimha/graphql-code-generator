@@ -1,6 +1,7 @@
 import { pascalCase } from 'change-case';
+import { Field } from 'graphql-codegen-core';
 
-export function getResultType(type, options, skipPascalCase = false) {
+export function getResultType(type: Field, options: Handlebars.HelperOptions, skipPascalCase = false) {
   const baseType = type.type;
   const underscorePrefix = type.type.match(/^[\_]+/) || '';
   const config = options.data.root.config || {};

@@ -1,7 +1,8 @@
 import { SafeString } from 'handlebars';
 import { pascalCase } from 'change-case';
+import { Field } from 'graphql-codegen-core';
 
-export function getFieldResolver(type, options) {
+export function getFieldResolver(type: Field, options: Handlebars.HelperOptions) {
   const config = options.data.root.config || {};
   if (!type) {
     return '';

@@ -7,7 +7,7 @@ export function cleanTemplateComments(template: string, debugFilename = ''): str
     debugLog(`[cleanTemplateComments] Found magic comment 'gqlgen' in template ${debugFilename}...`, template);
 
     const result = template
-      .replace(/.*({{.*}})/gi, (all, group) => {
+      .replace(/.*({{.*}})/gi, all => {
         if (all.toLowerCase().includes('gqlgen')) {
           return all;
         }

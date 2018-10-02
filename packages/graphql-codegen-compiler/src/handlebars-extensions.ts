@@ -78,7 +78,7 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
     return options && options.inverse ? options.inverse(context) : '';
   });
 
-  registerHelper('toComment', function(str) {
+  registerHelper('toComment', function(str: string) {
     if (!str || str === '') {
       return '';
     }
@@ -217,11 +217,11 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
     return ret;
   });
 
-  registerHelper('toLowerCase', function(str) {
+  registerHelper('toLowerCase', function(str: string) {
     return (str || '').toLowerCase();
   });
 
-  registerHelper('toUpperCase', function(str) {
+  registerHelper('toUpperCase', function(str: string) {
     return (str || '').toUpperCase();
   });
 
@@ -229,7 +229,7 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
     if (str.charAt(0) === '_') {
       return str.replace(
         /^(_*)(.*)/,
-        (match, underscorePrefix, typeName) => `${underscorePrefix}${pascalCase(typeName || '')}`
+        (_match, underscorePrefix, typeName) => `${underscorePrefix}${pascalCase(typeName || '')}`
       );
     }
 
@@ -240,15 +240,15 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
     return snakeCase(str || '');
   });
 
-  registerHelper('toTitleCase', function(str) {
+  registerHelper('toTitleCase', function(str: string) {
     return titleCase(str || '');
   });
 
-  registerHelper('toCamelCase', function(str) {
+  registerHelper('toCamelCase', function(str: string) {
     return camelCase(str || '');
   });
 
-  registerHelper('multilineString', function(str) {
+  registerHelper('multilineString', function(str: string) {
     if (!str) {
       return '';
     }
@@ -274,7 +274,7 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
     return accum;
   });
 
-  registerHelper('ifCond', function(v1: any, operator: string, v2: any, options) {
+  registerHelper('ifCond', function(this: any, v1: any, operator: string, v2: any, options) {
     switch (operator) {
       case '==':
         return v1 === v2 ? options.fn(this) : options.inverse(this);
@@ -308,7 +308,7 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
 
     type = camelCase(type);
 
-    const sourceArr = schemaContext[type] || schemaContext[type + 's'];
+    const sourceArr: any[] = schemaContext[type] || schemaContext[type + 's'];
 
     if (!sourceArr) {
       throw new Error(`Type ${type} is not a valid SchemaTemplateContext field!`);

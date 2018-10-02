@@ -1,4 +1,6 @@
-export function getOptionals(type, options) {
+import { Field } from 'graphql-codegen-core';
+
+export function getOptionals(type: Field, options: Handlebars.HelperOptions) {
   const config = options.data.root.config || {};
 
   if (

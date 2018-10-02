@@ -15,7 +15,7 @@ import { getLogger } from '..';
 
 let usedNames: { [key: string]: any } = {};
 
-function nameGenerator(operationType: string, count = 1) {
+function nameGenerator(operationType: string, count = 1): any {
   const idea = `Anonymous_${operationType}_${count}`;
 
   if (usedNames[idea]) {

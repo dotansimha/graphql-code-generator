@@ -1,6 +1,6 @@
 import { existsSync } from 'fs';
 import { extname, isAbsolute, resolve as resolvePath } from 'path';
-import * as isValidPath from 'is-valid-path';
+import isValidPath = require('is-valid-path');
 import { buildASTSchema, buildClientSchema, DocumentNode, GraphQLSchema, IntrospectionQuery, parse } from 'graphql';
 import { debugLog, getLogger } from 'graphql-codegen-core';
 import { SchemaLoader } from './schema-loader';
@@ -13,7 +13,7 @@ export class SchemaFromExport implements SchemaLoader {
     return isValidPath(pointerToSchema) && existsSync(fullPath) && extname(pointerToSchema) !== '.json';
   }
 
-  handle(file: string, cliOptions: CLIOptions): Promise<GraphQLSchema> {
+  handle(file: string, _cliOptions: CLIOptions): Promise<GraphQLSchema> {
     getLogger().info(
       `Loading GraphQL schema object, text, ast, or introspection json from JavaScript ES6 export: ${file}...`
     );
@@ -82,7 +82,7 @@ export class SchemaFromExport implements SchemaLoader {
     return (obj as DocumentNode).kind !== undefined;
   }
 
-  isPromise(obj) {
+  isPromise(obj: any): obj is Promise<any> {
     return !!obj && (typeof obj === 'object' || typeof obj === 'function') && typeof obj.then === 'function';
   }
 

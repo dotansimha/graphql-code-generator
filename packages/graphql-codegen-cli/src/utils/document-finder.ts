@@ -1,7 +1,7 @@
 import stripComments from './strip-comments';
 import { parse } from 'graphql-codegen-core';
 
-export const extractDocumentStringFromCodeFile = (fileContent: string): string | null => {
+export const extractDocumentStringFromCodeFile = (fileContent: string): string | void => {
   try {
     const parsed = parse(fileContent);
 

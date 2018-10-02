@@ -4,15 +4,19 @@
     "module": "commonjs",
     "target": "es5",
     "lib": ["es6", "esnext", "es2015"],
-    "noImplicitAny": false,
-    "suppressImplicitAnyIndexErrors": true,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "sourceMap": true,
     "declaration": true,
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
   },
-  "files": ["src/index.ts", "src/cli.ts"],
+  "files": ["src/index.ts", "src/cli.ts", "declarations.d.ts"],
   "exclude": ["node_modules"]
 }

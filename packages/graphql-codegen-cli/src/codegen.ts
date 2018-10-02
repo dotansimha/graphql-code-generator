@@ -28,6 +28,7 @@ import { SchemaFromExport } from './loaders/schema/schema-from-export';
 import { CLIOptions } from './cli-options';
 import { mergeGraphQLSchemas } from '@graphql-modules/epoxy';
 import { makeExecutableSchema } from 'graphql-tools';
+import { SchemaTemplateContext } from 'graphql-codegen-core/dist/types';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
@@ -44,13 +45,13 @@ interface GqlGenConfig {
   generatorConfig?: { [configName: string]: any };
 }
 
-function collect(val, memo) {
+function collect<T>(val: T, memo: T[]) {
   memo.push(val);
 
   return memo;
 }
 
-export const initCLI = (args): CLIOptions => {
+export const initCLI = (args: any): CLIOptions => {
   commander
     .usage('gql-gen [options]')
     .option(
@@ -237,26 +238,29 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
 
   const relevantEnvVars = Object.keys(process.env)
     .filter(name => name.startsWith('CODEGEN_'))
-    .reduce((prev, name) => {
-      const cleanName = name
-        .replace('CODEGEN_', '')
-        .toLowerCase()
-        .replace(/[-_]+/g, ' ')
-        .replace(/[^\w\s]/g, '')
-        .replace(/ (.)/g, res => res.toUpperCase())
-        .replace(/ /g, '');
-      let value: any = process.env[name];
+    .reduce(
+      (prev, name) => {
+        const cleanName = name
+          .replace('CODEGEN_', '')
+          .toLowerCase()
+          .replace(/[-_]+/g, ' ')
+          .replace(/[^\w\s]/g, '')
+          .replace(/ (.)/g, res => res.toUpperCase())
+          .replace(/ /g, '');
+        let value: any = process.env[name];
 
-      if (value === 'true') {
-        value = true;
-      } else if (value === 'false') {
-        value = false;
-      }
+        if (value === 'true') {
+          value = true;
+        } else if (value === 'false') {
+          value = false;
+        }
 
-      prev[cleanName] = value;
+        prev[cleanName] = value;
 
-      return prev;
-    }, {});
+        return prev;
+      },
+      {} as GeneratorConfig['config']
+    );
 
   let addToSchema: DocumentNode[] = [];
 
@@ -344,9 +348,9 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
 
     const context = schemaToTemplateContext(graphQlSchema);
     debugLog(`[executeWithOptions] Schema template context build, the result is: `);
-    Object.keys(context).forEach(key => {
+    Object.keys(context).forEach((key: keyof SchemaTemplateContext) => {
       if (Array.isArray(context[key])) {
-        debugLog(`Total of ${key}: ${context[key].length}`);
+        debugLog(`Total of ${key}: ${(context[key] as any[]).length}`);
       }
     });
 

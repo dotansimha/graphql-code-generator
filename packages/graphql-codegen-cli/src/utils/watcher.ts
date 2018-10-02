@@ -3,7 +3,7 @@ import { FileOutput, getLogger } from 'graphql-codegen-core';
 import * as watchman from 'fb-watchman';
 import * as pify from 'pify';
 import { CLIOptions } from '..';
-import * as isValidPath from 'is-valid-path';
+import isValidPath = require('is-valid-path');
 import * as isGlob from 'is-glob';
 
 const getMatch = (doc: string) => {
@@ -13,7 +13,7 @@ const getMatch = (doc: string) => {
 
 export const createWatcher = (options: CLIOptions, onNext: (result: FileOutput[]) => Promise<FileOutput[]>) => {
   const { args, schema } = options;
-  const files = [];
+  const files: string[] = [];
   if (args) {
     files.push(...args);
   }

@@ -1,7 +1,8 @@
 import { extractNgModule } from './ngmodule-directive';
 import { operationHasDirective } from './directives';
+import { Operation } from 'graphql-codegen-core';
 
-export function providedIn(operation) {
+export function providedIn(operation: Operation) {
   if (operationHasDirective(operation, 'NgModule')) {
     const { module } = extractNgModule(operation);
 

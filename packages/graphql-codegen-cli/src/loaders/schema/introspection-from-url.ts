@@ -53,7 +53,7 @@ export class IntrospectionFromUrlLoader implements SchemaLoader {
           },
           headers: extraHeaders
         },
-        (err, response, body) => {
+        (err, _response, body) => {
           if (err) {
             reject(err);
 
@@ -64,7 +64,7 @@ export class IntrospectionFromUrlLoader implements SchemaLoader {
 
           let errorMessage;
           if (body.errors && body.errors.length > 0) {
-            errorMessage = body.errors.map(item => item.message).join(', ');
+            errorMessage = body.errors.map((item: Error) => item.message).join(', ');
           } else if (!bodyJson) {
             errorMessage = body;
           }
