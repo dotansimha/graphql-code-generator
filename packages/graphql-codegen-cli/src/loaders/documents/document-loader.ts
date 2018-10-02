@@ -32,6 +32,8 @@ export interface LoadDocumentError {
   readonly errors: ReadonlyArray<GraphQLError>;
 }
 
+const IGNORED_VALIDATION_ERRORS = ['Unknown fragment', 'Unknown directive'];
+
 export const loadDocumentsSources = (
   schema: GraphQLSchema,
   filePaths: string[]
@@ -42,8 +44,11 @@ export const loadDocumentsSources = (
   const errors: ReadonlyArray<LoadDocumentError> = loadResults
     .map(result => ({
       filePath: result.filePath,
-      errors: validate(schema, result.content, effectiveRules).filter(e => e.message.indexOf('Unknown fragment') === -1)
+      errors: validate(schema, result.content, effectiveRules).filter(
+        e => !IGNORED_VALIDATION_ERRORS.find(ignoredErr => e.message.indexOf(ignoredErr) > -1)
+      )
     }))
     .filter(r => r.errors.length > 0);
+
   return errors.length > 0 ? errors : concatAST(loadResults.map(r => r.content));
 };
