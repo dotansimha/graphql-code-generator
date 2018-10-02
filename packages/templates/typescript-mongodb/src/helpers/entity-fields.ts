@@ -26,7 +26,7 @@ function appendField(obj: object, field: string, value: string, mapDirectiveValu
 
 type FieldsResult = { [name: string]: string | FieldsResult };
 
-function buildFieldDef(type: string, field: Field, options): string {
+function buildFieldDef(type: string, field: Field, options: Handlebars.HelperOptions): string {
   return getResultType(
     {
       ...field,
@@ -37,7 +37,7 @@ function buildFieldDef(type: string, field: Field, options): string {
   );
 }
 
-function convertToInterfaceDefinition(type: Type | Interface, obj: FieldsResult, root = true) {
+function convertToInterfaceDefinition(type: Type | Interface, obj: FieldsResult, root = true): string {
   if (typeof obj === 'string') {
     return obj;
   }
@@ -59,7 +59,7 @@ function convertToInterfaceDefinition(type: Type | Interface, obj: FieldsResult,
   return `${appendExtensions}{\n${result.join('\n')}\n}`;
 }
 
-export function entityFields(type: Type | Interface, options, returnRaw = false) {
+export function entityFields(type: Type | Interface, options: Handlebars.HelperOptions, returnRaw = false) {
   if (type && (type.directives[ENTITY_DIRECTIVE] || type.directives[ABSTRACT_ENTITY_DIRECTIVE])) {
     const allFields = type.fields || [];
     const finalResult: FieldsResult = {};

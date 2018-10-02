@@ -91,6 +91,7 @@
     "valid-url": "1.0.9"
   },
   "devDependencies": {
+    "@types/fb-watchman": "2.0.0",
     "@types/pify": "3.0.2",
     "graphql-codegen-typescript-template": "0.12.6",
     "graphql-codegen-typescript-template-multiple": "0.9.4"

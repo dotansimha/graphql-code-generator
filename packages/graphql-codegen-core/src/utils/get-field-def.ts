@@ -1,6 +1,6 @@
-import { GraphQLField, GraphQLInterfaceType, GraphQLObjectType } from 'graphql';
+import { GraphQLField, GraphQLInterfaceType, GraphQLObjectType, GraphQLType, FieldNode } from 'graphql';
 
-export function getFieldDef(parentType, fieldAST): GraphQLField<any, any> {
+export function getFieldDef(parentType: GraphQLType, fieldAST: FieldNode): GraphQLField<any, any> {
   const name = fieldAST.name.value;
 
   if (name === '__typename') {

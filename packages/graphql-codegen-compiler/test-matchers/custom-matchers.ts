@@ -12,32 +12,30 @@ declare global {
 }
 
 function toBeSimilarStringTo(received: string, argument: string) {
-  const strippedA = (oneLine`${received}`).replace(/\s\s+/g, ' ');;
-  const strippedB = (oneLine`${argument}`).replace(/\s\s+/g, ' ');;
+  const strippedA = oneLine`${received}`.replace(/\s\s+/g, ' ');
+  const strippedB = oneLine`${argument}`.replace(/\s\s+/g, ' ');
 
   if (strippedA === strippedB) {
     return {
-      message: () => (
-`expected 
+      message: () =>
+        `expected 
  ${received}
  not to be similar (strip-indent) string to
- ${argument}`
-      ),
-      pass: true,
+ ${argument}`,
+      pass: true
     };
   } else {
     return {
-      message: () => (
-`expected 
+      message: () =>
+        `expected 
  ${received}
  to be similar (strip-indent) string to
- ${argument}`
-      ),
-      pass: false,
+ ${argument}`,
+      pass: false
     };
   }
 }
 
 expect.extend({
-  toBeSimilarStringTo,
+  toBeSimilarStringTo
 });

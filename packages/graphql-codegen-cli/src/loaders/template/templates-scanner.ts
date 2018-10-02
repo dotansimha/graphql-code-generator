@@ -3,6 +3,10 @@ import * as glob from 'glob';
 import * as fs from 'fs';
 import { debugLog } from 'graphql-codegen-core';
 
+interface TemplatesScannerResults {
+  [path: string]: string;
+}
+
 export function scanForTemplatesInPath(dirPath: string, fileExtensions: string[]): { [templateName: string]: string } {
   const absolutePath = path.resolve(process.cwd(), dirPath);
   const globPattern = `${absolutePath}/**/*.@(${fileExtensions.join('|')})`;
@@ -12,9 +16,12 @@ export function scanForTemplatesInPath(dirPath: string, fileExtensions: string[]
 
   debugLog(`[scanForTemplatesInPath] Got results from glob: `, results);
 
-  return results.reduce((prev, filePath) => {
-    prev[filePath.substr(absolutePath.length + 1)] = fs.readFileSync(filePath).toString();
+  return results.reduce(
+    (prev, filePath) => {
+      prev[filePath.substr(absolutePath.length + 1)] = fs.readFileSync(filePath).toString();
 
-    return prev;
-  }, {});
+      return prev;
+    },
+    {} as TemplatesScannerResults
+  );
 }

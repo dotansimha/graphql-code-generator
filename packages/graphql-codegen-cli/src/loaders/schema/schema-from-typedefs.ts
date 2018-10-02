@@ -1,6 +1,6 @@
 import { SchemaLoader } from './schema-loader';
 import * as isGlob from 'is-glob';
-import * as isValidPath from 'is-valid-path';
+import isValidPath = require('is-valid-path');
 import { GraphQLSchema } from 'graphql';
 import * as glob from 'glob';
 import { makeExecutableSchema } from 'graphql-tools';
@@ -22,7 +22,7 @@ export class SchemaFromTypedefs implements SchemaLoader {
       throw new Error(`Unable to find matching files for glob: ${globPath}!`);
     }
 
-    let mergeLogic = arr => arr;
+    let mergeLogic = <T = any>(arr: T[]) => arr;
 
     if ('mergeSchema' in cliOptions) {
       const patternArr = cliOptions.mergeSchema.split('#');

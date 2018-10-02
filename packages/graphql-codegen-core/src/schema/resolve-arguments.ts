@@ -1,11 +1,11 @@
-import { getNamedType, GraphQLArgument } from 'graphql';
+import { getNamedType, GraphQLArgument, GraphQLSchema } from 'graphql';
 import { Argument } from '../types';
 import { resolveType } from './resolve-type';
 import { resolveTypeIndicators } from './resolve-type-indicators';
 import { debugLog } from '../debugging';
 import { getDirectives } from '../utils/get-directives';
 
-export function resolveArguments(schema, args: GraphQLArgument[]): Argument[] {
+export function resolveArguments(schema: GraphQLSchema, args: GraphQLArgument[]): Argument[] {
   return args.map(
     (arg: GraphQLArgument): Argument => {
       const type = resolveType(arg.type);

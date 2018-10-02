@@ -3,24 +3,20 @@
     "experimentalDecorators": true,
     "module": "commonjs",
     "target": "es5",
-    "lib": [
-      "es6",
-      "esnext",
-      "es2015"
-    ],
-    "noImplicitAny": false,
+    "lib": ["es6", "esnext", "es2015"],
     "suppressImplicitAnyIndexErrors": true,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "sourceMap": true,
     "declaration": true,
     "rootDir": "./src/",
-    "outDir": "./dist/"
+    "outDir": "./dist/",
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
   },
-  "exclude": [
-    "test-matchers",
-    "node_modules",
-    "tests",
-    "dist"
-  ]
+  "exclude": ["test-matchers", "node_modules", "tests", "dist"]
 }

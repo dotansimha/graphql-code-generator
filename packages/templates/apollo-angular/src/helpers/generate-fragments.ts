@@ -31,7 +31,7 @@ export function generateFragments(fragments: any[], options: any): string {
     .map(name => generateFragment(graph.getNodeData(name), options))
     .join('\n');
 
-  function generateFragment(fragment: any, options: any): string {
+  function generateFragment(fragment: any, options: any): string | void {
     const cached = cachedFragments[fragment.name];
 
     if (!cached) {
