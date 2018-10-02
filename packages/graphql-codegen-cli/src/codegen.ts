@@ -134,7 +134,7 @@ const schemaHandlers = [
   new SchemaFromExport()
 ];
 
-export const executeWithOptions = async (options: CLIOptions): Promise<FileOutput[]> => {
+export const executeWithOptions = async (options: CLIOptions & { [key: string]: any }): Promise<FileOutput[]> => {
   validateCliOptions(options);
 
   const schema = options.schema;
@@ -267,6 +267,7 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
   if (isGeneratorConfig(templateConfig)) {
     templateConfig.config = {
       ...(config && config.generatorConfig ? config.generatorConfig || {} : {}),
+      ...(options && options['templateConfig'] ? options['templateConfig'] : {}),
       ...(relevantEnvVars || {})
     };
 
