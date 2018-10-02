@@ -22,15 +22,23 @@ import { getDirectives } from '../utils/get-directives';
 const GRAPHQL_PRIMITIVES = ['String', 'Int', 'Boolean', 'ID', 'Float'];
 type GraphQLTypesMap = { [typeName: string]: GraphQLNamedType };
 
-const clearTypes = (typesMap: GraphQLTypesMap): GraphQLTypesMap =>
+const clearTypes = (typesMap: GraphQLTypesMap, withIntrospectionType: boolean): GraphQLTypesMap =>
   Object.keys(typesMap)
-    .filter(key => !GRAPHQL_PRIMITIVES.includes(key) && !key.startsWith('__'))
+    .filter(
+      key =>
+        withIntrospectionType
+          ? !GRAPHQL_PRIMITIVES.includes(key)
+          : !GRAPHQL_PRIMITIVES.includes(key) && !key.startsWith('__')
+    )
     .reduce((obj, key) => {
       obj[key] = typesMap[key];
       return obj;
     }, {});
 
-export function schemaToTemplateContext(schema: GraphQLSchema): SchemaTemplateContext {
+export function schemaToTemplateContext(
+  schema: GraphQLSchema,
+  includeIntrospectionTypes = false
+): SchemaTemplateContext {
   debugLog('[schemaToTemplateContext] started...');
 
   const directives = getDirectives(schema, schema);
@@ -56,7 +64,7 @@ export function schemaToTemplateContext(schema: GraphQLSchema): SchemaTemplateCo
   };
 
   const rawTypesMap = schema.getTypeMap();
-  const typesMap = clearTypes(rawTypesMap);
+  const typesMap = clearTypes(rawTypesMap, includeIntrospectionTypes);
   const typesArray = objectMapToArray<GraphQLNamedType>(typesMap);
 
   debugLog(`[schemaToTemplateContext] Got total of ${typesArray.length} types in the GraphQL schema`);

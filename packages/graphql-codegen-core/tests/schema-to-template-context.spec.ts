@@ -3,6 +3,26 @@ import { schemaToTemplateContext } from '../src/schema/schema-to-template-contex
 import { GraphQLSchema } from 'graphql';
 
 describe('schemaToTemplateContext', () => {
+  it('should include introspection types when this flag is specified as true', async () => {
+    const typeDefs = `
+      type Query {
+        test: String 
+      }
+    `;
+
+    const schema = makeExecutableSchema({ typeDefs, resolvers: {}, allowUndefinedInResolve: true }) as GraphQLSchema;
+    const context = schemaToTemplateContext(schema, true);
+
+    expect(context.types.find(t => t.name === '__Schema')).toBeDefined();
+    expect(context.types.find(t => t.name === '__Type')).toBeDefined();
+    expect(context.types.find(t => t.name === '__Field')).toBeDefined();
+    expect(context.types.find(t => t.name === '__InputValue')).toBeDefined();
+    expect(context.types.find(t => t.name === '__EnumValue')).toBeDefined();
+    expect(context.types.find(t => t.name === '__Directive')).toBeDefined();
+    expect(context.enums.find(t => t.name === '__TypeKind')).toBeDefined();
+    expect(context.enums.find(t => t.name === '__DirectiveLocation')).toBeDefined();
+  });
+
   it('should return the correct result when schema got directive', () => {
     const typeDefs = `
       type Query {

@@ -14,4 +14,5 @@ export interface CLIOptions {
   watch?: boolean;
   silent?: boolean;
   mergeSchema?: string;
+  includeIntrospectionTypes?: boolean;
 }

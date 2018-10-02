@@ -1434,6 +1434,35 @@ describe('TypeScript template', () => {
       `);
     });
 
+    it.only('Should generate the correct results using introspection query', async () => {
+      const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
+      const context = schemaToTemplateContext(schema, true);
+
+      const documents = gql`
+        query MyIntrospection {
+          __schema {
+            queryType {
+              fields {
+                name
+              }
+            }
+            mutationType {
+              fields {
+                name
+              }
+            }
+          }
+        }
+      `;
+
+      const transformedDocument = transformDocument(schema, documents);
+      const compiled = await compileTemplate(config, context, [transformedDocument]);
+      const content = compiled[0].content;
+      // console.log(content);
+
+      expect(content).toContain('export interface __Schema {');
+    });
+
     it('Should compile simple Query with inline Fragment and handle noNamespaces', async () => {
       const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
       const context = schemaToTemplateContext(schema);

@@ -82,6 +82,7 @@ export const initCLI = (args: any): CLIOptions => {
     .option('-w, --watch', 'Watch for changes and execute generation automatically')
     .option('--silent', 'Does not print anything to the console')
     .option('-ms, --merge-schema <merge-logic>', 'Merge schemas with custom logic')
+    .option('--include-introspection-types', 'Keeps GraphQL internal introspection types')
     .arguments('<options> [documents...]')
     .parse(args);
 
@@ -147,6 +148,7 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
   const generateSchema: boolean = !options.skipSchema;
   const generateDocuments: boolean = !options.skipDocuments;
   const modulesToRequire: string[] = options.require || [];
+  const includeIntrospectionTypes = !!options.includeIntrospectionTypes;
 
   modulesToRequire.forEach(mod => require(mod));
 
@@ -346,7 +348,7 @@ export const executeWithOptions = async (options: CLIOptions): Promise<FileOutpu
       getLogger().info(`GraphQL Schema is: `, graphQlSchema);
     }
 
-    const context = schemaToTemplateContext(graphQlSchema);
+    const context = schemaToTemplateContext(graphQlSchema, includeIntrospectionTypes);
     debugLog(`[executeWithOptions] Schema template context build, the result is: `);
     Object.keys(context).forEach((key: keyof SchemaTemplateContext) => {
       if (Array.isArray(context[key])) {

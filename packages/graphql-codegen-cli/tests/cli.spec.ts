@@ -11,6 +11,16 @@ describe('executeWithOptions', () => {
     expect(result.length).toBe(1);
   });
 
+  it('should include the GraphQL introspection correctly when the flag is specified', async () => {
+    const result = await executeWithOptions({
+      schema: '../../dev-test/githunt/schema.json',
+      template: 'ts',
+      includeIntrospectionTypes: true
+    });
+
+    expect(result[0].content).toContain('export interface __Schema {');
+  });
+
   it('execute the throw an error when a document is not valid', async () => {
     useWinstonLogger();
     let spyLogger: jest.SpyInstance = jest.spyOn(getLogger(), 'error');
