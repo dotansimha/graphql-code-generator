@@ -1,0 +1,6 @@
+query myQuery {
+    fieldA
+    fieldB @client {
+        fieldC
+    }
+}
