@@ -33,7 +33,7 @@
     "@types/node": "10.10.1",
     "@types/request": "2.47.1",
     "@types/common-tags": "1.4.0",
-    "@types/graphql": "14.0.0",
+    "@types/graphql": "14.0.1",
     "husky": "1.1.0",
     "lint-staged": "7.2.2",
     "tslint": "5.11.0",
