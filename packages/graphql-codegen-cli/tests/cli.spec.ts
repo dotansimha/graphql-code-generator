@@ -44,6 +44,29 @@ describe('executeWithOptions', () => {
     expect(result.length).toBe(1);
   });
 
+  it('should accept and pass templateConfig correctly', async () => {
+    const result = await executeWithOptions({
+      schema: '../../dev-test/test-schema/schema-object.js',
+      template: 'ts',
+      templateConfig: {
+        immutableTypes: true
+      }
+    });
+
+    expect(result[0].content).toContain('readonly id: number;');
+
+    const result2 = await executeWithOptions({
+      schema: '../../dev-test/test-schema/schema-object.js',
+      template: 'ts',
+      templateConfig: {
+        immutableTypes: false
+      }
+    });
+
+    expect(result2[0].content).toContain('id: number;');
+    expect(result2[0].content).not.toContain('readonly id: number;');
+  });
+
   it('execute the correct results when using schema with graphql file', async () => {
     const result = await executeWithOptions({
       schema: '../../dev-test/test-schema/schema.graphql',

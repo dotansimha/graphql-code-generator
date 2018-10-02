@@ -180,6 +180,8 @@ The method `generate` accepts two parameters: `(options: CLIOptions & { logger: 
 
 > You can set `logger` to your own custom logger according to the interface defined in [ts-log](https://github.com/kallaspriit/ts-log).
 
+> You can pass template configuration using `templateConfig` field.
+
 ## Custom Templates
 
 To create custom template, or generate a whole project from GraphQL schema, refer to [Custom Templates Documentation](./packages/templates/README.md)

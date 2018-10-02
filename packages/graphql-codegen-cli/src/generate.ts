@@ -10,6 +10,7 @@ import { Logger } from 'ts-log';
 
 interface GenerateOptions extends CLIOptions {
   logger?: Logger;
+  templateConfig?: { [key: string]: any };
 }
 
 export function generate(options: GenerateOptions, saveToFile = true): Promise<FileOutput[] | any> {
