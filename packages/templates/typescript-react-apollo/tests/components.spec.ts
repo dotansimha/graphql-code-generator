@@ -1,14 +1,5 @@
 import './custom-matchers';
-import {
-  GeneratorConfig,
-  gql,
-  GraphQLSchema,
-  introspectionToGraphQLSchema,
-  makeExecutableSchema,
-  SchemaTemplateContext,
-  schemaToTemplateContext,
-  transformDocument
-} from 'graphql-codegen-core';
+import { gql, introspectionToGraphQLSchema, schemaToTemplateContext, transformDocument } from 'graphql-codegen-core';
 import { compileTemplate } from 'graphql-codegen-compiler';
 import config from '../dist';
 import * as fs from 'fs';
@@ -122,7 +113,7 @@ describe('Components', () => {
           return (
               <ReactApollo.Query<Query, Variables>
               query={ Document }
-              {...this.props as any}
+              {...this['props'] as any}
                           />
                 );
               }
@@ -154,7 +145,7 @@ describe('Components', () => {
     const content = compiled[0].content;
 
     expect(content).toBeSimilarStringTo(`
-      export function HOC<TProps = {}>(operationOptions?: ReactApollo.OperationOption<TProps, Query, Variables>){
+      export function HOC<TProps = any, OperationOptions = ReactApollo.OperationOption<TProps, Query, Variables>>(operationOptions: OperationOptions){
         return ReactApollo.graphql<TProps, Query, Variables>(
           Document, 
           operationOptions
