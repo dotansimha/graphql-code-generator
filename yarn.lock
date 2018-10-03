@@ -118,10 +118,10 @@
   resolved "https://registry.yarnpkg.com/@types/is-glob/-/is-glob-4.0.0.tgz#fb8a2bff539025d4dcd6d5efe7689e03341b876d"
   integrity sha512-zC/2EmD8scdsGIeE+Xg7kP7oi9VP90zgMQtm9Cr25av4V+a+k8slQyiT60qSw8KORYrOKlPXfHwoa1bQbRzskQ==
 
-"@types/jest@23.3.2":
-  version "23.3.2"
-  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-23.3.2.tgz#07b90f6adf75d42c34230c026a2529e56c249dbb"
-  integrity sha512-D1xlXHZpDonVX+VJ28XtcD5xlu8ex6Fc4cQNnrm2wJvlQnbec9RedhCrhQr6kRAE9XWHSec+JPuTmqJ9jC0qsA==
+"@types/jest@23.3.3":
+  version "23.3.3"
+  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-23.3.3.tgz#246ebcc52771d2327bb8e37aa971b412d9dc4237"
+  integrity sha512-G6EBrbjWDfmIpYu8UcRBOhwtDiYaLj5N5jUR5rx0YvbKxRBhXPZVLUmtfShewSUNKiQwpHavpML69a2WMbIlEQ==
 
 "@types/lodash@4.14.116":
   version "4.14.116"
