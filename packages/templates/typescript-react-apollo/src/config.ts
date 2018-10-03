@@ -11,5 +11,6 @@ typescriptConfig.customHelpers.gql = gql;
 typescriptConfig.customHelpers.generateFragments = generateFragments;
 typescriptConfig.customHelpers.eq = eq;
 typescriptConfig.customHelpers.toLowerCase = toLowerCase;
+typescriptConfig.outFile = 'types.tsx';
 
 export { typescriptConfig as config };

@@ -1,7 +1,16 @@
 {
   "compilerOptions": {
     "lib": ["esnext"],
-    "skipLibCheck": true
+    "jsx": "react",
+    "jsxFactory": "React.createElement",
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
   },
-  "include": ["**/*.ts"]
+  "include": ["**/*.ts", "**/*.tsx"]
 }

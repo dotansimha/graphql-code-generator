@@ -237,10 +237,12 @@ export namespace AllPosts {
   `;
   export class Component extends React.Component<Partial<ReactApollo.QueryProps<Query, Variables>>> {
     render() {
-      return <ReactApollo.Query<Query, Variables> query={Document} {...this.props as any} />;
+      return <ReactApollo.Query<Query, Variables> query={Document} {...this['props'] as any} />;
     }
   }
-  export function HOC<TProps = {}>(operationOptions?: ReactApollo.OperationOption<TProps, Query, Variables>) {
+  export function HOC<TProps = any, OperationOptions = ReactApollo.OperationOption<TProps, Query, Variables>>(
+    operationOptions: OperationOptions
+  ) {
     return ReactApollo.graphql<TProps, Query, Variables>(Document, operationOptions);
   }
 }
@@ -256,10 +258,12 @@ export namespace AllPostsWithFragment {
   `;
   export class Component extends React.Component<Partial<ReactApollo.QueryProps<Query, Variables>>> {
     render() {
-      return <ReactApollo.Query<Query, Variables> query={Document} {...this.props as any} />;
+      return <ReactApollo.Query<Query, Variables> query={Document} {...this['props'] as any} />;
     }
   }
-  export function HOC<TProps = {}>(operationOptions?: ReactApollo.OperationOption<TProps, Query, Variables>) {
+  export function HOC<TProps = any, OperationOptions = ReactApollo.OperationOption<TProps, Query, Variables>>(
+    operationOptions: OperationOptions
+  ) {
     return ReactApollo.graphql<TProps, Query, Variables>(Document, operationOptions);
   }
 }
@@ -274,10 +278,12 @@ export namespace UpvotePost {
   `;
   export class Component extends React.Component<Partial<ReactApollo.MutationProps<Mutation, Variables>>> {
     render() {
-      return <ReactApollo.Mutation<Mutation, Variables> mutation={Document} {...this.props as any} />;
+      return <ReactApollo.Mutation<Mutation, Variables> mutation={Document} {...this['props'] as any} />;
     }
   }
-  export function HOC<TProps = {}>(operationOptions?: ReactApollo.OperationOption<TProps, Mutation, Variables>) {
+  export function HOC<TProps = any, OperationOptions = ReactApollo.OperationOption<TProps, Mutation, Variables>>(
+    operationOptions: OperationOptions
+  ) {
     return ReactApollo.graphql<TProps, Mutation, Variables>(Document, operationOptions);
   }
 }
