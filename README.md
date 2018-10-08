@@ -110,7 +110,7 @@ Allowed flags:
 | -h,--header         | String   | Header to add to the introspection HTTP request when using remote endpoint                                                                                                                                                                                                               |
 | -t,--template       | String   | Template name, for example: "typescript" (not required when using `--project`)                                                                                                                                                                                                           |
 | -p,--project        | String   | Project directory with templates (refer to "Custom Templates" section)                                                                                                                                                                                                                   |
-| --config            | String   | Path to project config JSON file (refer to "Custom Templates" section), defaults to `gqlgen.json`                                                                                                                                                                                        |
+| --config            | String   | Path to project config JSON file (refer to "Custom Templates" section), defaults to `gql-gen.json`                                                                                                                                                                                        |
 | -o,--out            | String   | Path for output file/directory. When using single-file generator specify filename, and when using multiple-files generator specify a directory                                                                                                                                           |
 | -m,--skip-schema    | void     | If specified, server side schema won't be generated through the template (enums won't omit)                                                                                                                                                                                              |
 | -c,--skip-documents | void     | If specified, client side documents won't be generated through the template                                                                                                                                                                                                              |
@@ -143,7 +143,7 @@ To use inside an existing project, I recommend to add a pre-build script that ex
 
 ## Generator-specific config
 
-Some of the generators supports a custom config, which you can specify using `gqlgen.json` like that:
+Some of the generators supports a custom config, which you can specify using `gql-gen.json` like that:
 
 ```json
 {
