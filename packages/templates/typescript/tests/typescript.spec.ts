@@ -232,6 +232,124 @@ describe('TypeScript template', () => {
       `);
     });
 
+    it('should handle enum internal values with enumsAsTypes true', async () => {
+      const { context } = compileAndBuildContext(`
+        enum A {
+          ONE,
+          TWO,
+        }
+        
+        enum B {
+          LUKE,
+          YODA
+        }
+        
+        enum C {
+          FOO,
+          BAR
+        }
+      `);
+
+      const compiled = await compileTemplate(
+        {
+          ...config,
+          config: {
+            enums: {
+              A: {
+                ONE: 1,
+                TWO: 2
+              },
+              B: {
+                LUKE: '"luke"',
+                YODA: '"yoda"'
+              }
+            },
+            enumsAsTypes: true
+          }
+        } as GeneratorConfig,
+        context
+      );
+
+      const content = compiled[0].content;
+
+      expect(content).toBeSimilarStringTo(`
+       /* tslint:disable */
+      `);
+
+      expect(content).toBeSimilarStringTo(`
+        export type A = 1 | 2;
+      `);
+      expect(content).toBeSimilarStringTo(`
+        export type B = "luke" | "yoda";
+      `);
+      expect(content).toBeSimilarStringTo(`
+        export type C = "FOO" | "BAR";
+      `);
+    });
+
+    it('should handle enum internal values', async () => {
+      const { context } = compileAndBuildContext(`
+        enum A {
+          ONE,
+          TWO,
+        }
+        
+        enum B {
+          LUKE,
+          YODA
+        }
+        
+        enum C {
+          FOO,
+          BAR
+        }
+      `);
+
+      const compiled = await compileTemplate(
+        {
+          ...config,
+          config: {
+            enums: {
+              A: {
+                ONE: 1,
+                TWO: 2
+              },
+              B: {
+                LUKE: '"luke"',
+                YODA: '"yoda"'
+              }
+            }
+          }
+        } as GeneratorConfig,
+        context
+      );
+
+      const content = compiled[0].content;
+
+      expect(content).toBeSimilarStringTo(`
+       /* tslint:disable */
+      `);
+
+      expect(content).toBeSimilarStringTo(`
+        export enum A {
+          ONE = 1,
+          TWO = 2,
+        }
+      `);
+      expect(content).toBeSimilarStringTo(`
+        export enum B {
+          LUKE = "luke",
+          YODA = "yoda",
+        }
+      `);
+      expect(content).toBeSimilarStringTo(`
+        export enum C {
+          FOO = "FOO",
+          BAR = "BAR",
+        }
+      `);
+    });
+
     it('should output docstring correctly', async () => {
       const { context } = compileAndBuildContext(`
         # type-description
