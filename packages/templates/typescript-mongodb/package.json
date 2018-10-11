@@ -11,7 +11,7 @@
     "test": "codegen-templates-scripts test"
   },
   "devDependencies": {
-    "@types/lodash": "4.14.116",
+    "@types/lodash": "4.14.117",
     "codegen-templates-scripts": "0.12.6",
     "graphql-codegen-core": "0.12.6"
   },
