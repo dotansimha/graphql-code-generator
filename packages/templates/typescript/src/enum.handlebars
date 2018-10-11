@@ -1,10 +1,10 @@
-{{ toComment description }}
+{{{ toComment description }}}
 {{#if @root.config.enumsAsTypes }}
-export type {{@root.config.interfacePrefix}}{{ toPascalCase name }} = {{#each values }}"{{ value }}"{{#unless @last}} | {{/unless}}{{/each}};
+export type {{@root.config.interfacePrefix}}{{ toPascalCase name }} = {{#each values }}{{{ getEnumValue ../name value }}}{{#unless @last}} | {{/unless}}{{/each}};
 {{else}}
 export enum {{@root.config.interfacePrefix}}{{ toPascalCase name }} {
 {{#each values }}
-  {{value}} = "{{ value }}",
+  {{value}} = {{{ getEnumValue ../name value }}},
 {{/each}}
 }
 {{/if}}

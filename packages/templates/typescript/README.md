@@ -31,18 +31,57 @@ Will map scalars to the predefined types
     }
 ```
 
-### Combination of `prepend` and `scalars`
+### `enums` ( default value: `null` )
 
-`prepend` and `scalars` options can be combined to map custom types to scalars.
+Will map enum names to internal value expressions
+
+```json
+    "enums": {
+        "WeekDay": {
+          "SUNDAY": "0",
+          "MONDAY": "1",
+          "TUESDAY": "2",
+          "WEDNESDAY": "3",
+          "THURSDAY": "4",
+          "FRIDAY": "5",
+          "SATURDAY": "6"
+        },
+        "Jedi": {
+          "LUKE": "'Luke Skywalker'",
+          "ANAKIN": "'Darth Vader'",
+          "YODA": "'Yoda'"
+        }
+    }
+```
+
+Note how you must quote string values as they are emitted as-is to the target typescript
+code without wrapping in quotes. This allows you to use different types of value
+besides strings for your enum values.
+
+### Combination of `prepend`, `scalars`, and `enums`
+
+`prepend`, `scalars`, and `enums` options can be combined to map custom types to scalars.
 
 ```json
     prepend: [
-        "import { CustomScalarType } from './custom-types';"
-        "import { AnotherCustomScalarType } from './another-custom-types';"
+        "import { CustomScalarType } from './custom-types';",
+        "import { AnotherCustomScalarType } from './another-custom-types';",
+        "import { WeekDay } from './WeekDay';"
     ],
     scalars: {
         "CustomScalar": "CustomScalarType",
         "AnotherCustomScalar": "AnotherCustomScalarType"
+    },
+    enums: {
+      "WeekDay": {
+        "SUNDAY": "WeekDay.Sunday",
+        "MONDAY": "WeekDay.Monday",
+        "TUESDAY": "WeekDay.Tuesday",
+        "WEDNESDAY": "WeekDay.Wednesday",
+        "THURSDAY": "WeekDay.Thursday",
+        "FRIDAY": "WeekDay.Friday",
+        "SATURDAY": "WeekDay.Saturday",
+      }
     }
 ```
 

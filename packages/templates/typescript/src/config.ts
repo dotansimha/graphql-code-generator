@@ -14,6 +14,7 @@ import { getFieldResolverName } from './helpers/get-field-resolver-name';
 import { isPrimitiveType } from './helpers/is-primitive-type';
 import { getScalarType } from './helpers/get-scalar-type';
 import { shouldHavePrefix } from './helpers/should-have-prefix';
+import { getEnumValue } from './helpers/get-enum-value';
 
 export const config: GeneratorConfig = {
   inputType: EInputType.SINGLE_FILE,
@@ -42,7 +43,8 @@ export const config: GeneratorConfig = {
     getOptionals,
     isPrimitiveType,
     getScalarType,
-    shouldHavePrefix
+    shouldHavePrefix,
+    getEnumValue
   },
   outFile: 'types.ts'
 };
