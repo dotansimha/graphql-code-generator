@@ -88,7 +88,7 @@ export const initCLI = (args: any): CLIOptions => {
   return (commander as any) as CLIOptions;
 };
 
-export const cliError = (err: any) => {
+export const cliError = (err: any, exitOnError = true) => {
   let msg: string;
 
   if (err instanceof Error) {
@@ -100,7 +100,10 @@ export const cliError = (err: any) => {
   }
 
   getLogger().error(msg);
-  process.exit(1);
+
+  if (exitOnError) {
+    process.exit(1);
+  }
 
   return;
 };
@@ -368,7 +371,7 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
         }
       }
 
-      cliError(`Found ${errorCount} errors when validating your GraphQL documents against schema!`);
+      cliError(`Found ${errorCount} errors when validating your GraphQL documents against schema!`, !options.watch);
     }
 
     const transformedDocuments = transformDocument(graphQlSchema, documentSourcesResult as DocumentNode);
