@@ -73,7 +73,7 @@ export const initCLI = (args: any): CLIOptions => {
       'Language/platform name templates, or a name of NPM modules that `export default` GqlGenConfig object'
     )
     .option('-p, --project <project-path>', 'Project path(s) to scan for custom template files')
-    .option('--config <json-file>', 'Codegen configuration file, defaults to: ./gql-gen.json')
+    .option('--config <js/json-file>', 'Codegen configuration file, defaults to: ./gql-gen.json')
     .option('-m, --skip-schema', 'Generates only client side documents, without server side schema types')
     .option('-c, --skip-documents', 'Generates only server side schema types, without client side documents')
     .option('-o, --out <path>', 'Output file(s) path', String, './')
@@ -199,8 +199,13 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
 
   if (fs.existsSync(configPath)) {
     getLogger().info(`Loading config file from: ${configPath}`);
-    config = JSON.parse(fs.readFileSync(configPath).toString()) as GqlGenConfig;
-    debugLog(`[executeWithOptions] Got project config JSON: ${JSON.stringify(config)}`);
+    const configFromExport = require(configPath);
+    config = (configFromExport.default || configFromExport.config || configFromExport) as GqlGenConfig;
+    try {
+      debugLog(`[executeWithOptions] Got project config JSON: ${JSON.stringify(config)}`);
+    } catch (e) {
+      debugLog(`[executeWithOptions] Got project config file: ${configPath}`);
+    }
   }
 
   if (project && project !== '') {

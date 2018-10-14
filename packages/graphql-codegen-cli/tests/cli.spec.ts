@@ -95,6 +95,16 @@ describe('executeWithOptions', () => {
     expect(result[0].content).toMatch('Generated in');
   });
 
+  it('execute the correct results when using custom config js file', async () => {
+    const result = await executeWithOptions({
+      schema: '../../dev-test/githunt/schema.json',
+      template: 'ts',
+      config: '../../dev-test/config/gql-gen.js'
+    });
+
+    expect(result[0].content).toMatch('Generated in');
+  });
+
   it('execute the correct results when using schema export as object', async () => {
     const result = await executeWithOptions({
       schema: '../../dev-test/test-schema/schema-object.js',
