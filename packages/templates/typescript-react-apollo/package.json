@@ -11,7 +11,7 @@
     "test": "codegen-templates-scripts test"
   },
   "devDependencies": {
-    "@types/graphql": "14.0.2",
+    "@types/graphql": "14.0.3",
     "codegen-templates-scripts": "0.12.6",
     "graphql": "14.0.2",
     "graphql-codegen-compiler": "0.12.6",
