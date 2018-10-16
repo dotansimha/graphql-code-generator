@@ -1,3 +1,5 @@
+{{{ trumpsHugeComment 'Enums strarts' }}}
+
 {{{ toComment description }}}
 {{#if @root.config.enumsAsTypes }}
 export type {{@root.config.interfacePrefix}}{{ toPascalCase name }} = {{#each values }}{{{ getEnumValue ../name value }}}{{#unless @last}} | {{/unless}}{{/each}};
@@ -8,3 +10,5 @@ export enum {{@root.config.interfacePrefix}}{{ toPascalCase name }} {
 {{/each}}
 }
 {{/if}}
+
+{{{ trumpsHugeComment 'Enums ends' }}}

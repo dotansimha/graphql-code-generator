@@ -86,6 +86,22 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
     return new SafeString('/** ' + oneLineTrim`${str || ''}` + ' */');
   });
 
+  registerHelper('trumpsHugeComment', function(str: string) {
+    if (!str || str === '') {
+      return '';
+    }
+
+    return new SafeString(
+      [
+        '\n',
+        '// ====================================================',
+        '// ' + oneLineTrim`${str || ''}`,
+        '// ====================================================',
+        '\n'
+      ].join('\n')
+    );
+  });
+
   registerHelper('eachImport', function(context: any, options: { fn: Function }) {
     let ret = '';
     const imports: { name: string; file: string; type: string }[] = [];

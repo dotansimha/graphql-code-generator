@@ -512,4 +512,40 @@ describe('Components', () => {
 
     expect(repositoryWithOwnerPos).toBeLessThan(feedWithRepositoryPos);
   });
+
+  it('should add comments (non-graphql)', async () => {
+    const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
+    const context = schemaToTemplateContext(schema);
+
+    const myFeed = gql`
+      fragment FeedWithRepository on FeedType {
+        id
+        repository {
+          ...RepositoryWithOwner
+        }
+      }
+      fragment RepositoryWithOwner on Repository {
+        full_name
+      }
+      query MyFeed {
+        feed {
+          ...FeedWithRepository
+        }
+      }
+    `;
+
+    const documents = [myFeed];
+    const compiled = await compileTemplate(
+      { ...config, config: { noNamespaces: true } },
+      context,
+      documents.map(doc => transformDocument(schema, doc)),
+      { generateSchema: false }
+    );
+    const content = compiled[0].content;
+
+    expect(content).toBeSimilarStringTo('// APOLLO ANGULAR STARTS');
+    expect(content).toBeSimilarStringTo('// GraphQL Fragments');
+    expect(content).toBeSimilarStringTo('// Apollo Services');
+    expect(content).toBeSimilarStringTo('// APOLLO ANGULAR ENDS');
+  });
 });
