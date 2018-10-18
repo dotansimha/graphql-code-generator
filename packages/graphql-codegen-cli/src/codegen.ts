@@ -3,6 +3,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as mkdirp from 'mkdirp';
 import { DocumentNode, extendSchema, GraphQLSchema, parse } from 'graphql';
+import { getGraphQLProjectConfig, ConfigNotFoundError } from 'graphql-config';
 
 import { documentsFromGlobs } from './utils/documents-glob';
 import { LoadDocumentError, loadDocumentsSources } from './loaders/documents/document-loader';
@@ -120,7 +121,14 @@ export const validateCliOptions = (options: CLIOptions) => {
   const project = options.project;
 
   if (!schema) {
-    cliError('Flag --schema is missing!');
+    try {
+      const graphqlProjectConfig = getGraphQLProjectConfig(project);
+      options.schema = graphqlProjectConfig.schemaPath;
+    } catch (e) {
+      if (e instanceof ConfigNotFoundError) {
+        cliError('Flag --schema is missing!');
+      }
+    }
   }
 
   if (!template && !project) {
