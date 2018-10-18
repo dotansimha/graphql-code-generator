@@ -43,6 +43,7 @@ export interface Field extends AstNode {
   isArray: boolean;
   dimensionOfArray: number;
   isRequired: boolean;
+  isSelected: boolean;
   isNullableArray: boolean;
   hasArguments: boolean;
   isType: boolean;

@@ -5,6 +5,7 @@ export interface ResolvedType {
   raw: string;
   name: string;
   isRequired: boolean;
+  isSelected: boolean;
   isArray: boolean;
   isNullableArray: boolean;
   dimensionOfArray: number;
@@ -49,6 +50,7 @@ export function resolveType(type: GraphQLType): ResolvedType {
     name,
     raw: String(type),
     isRequired: isRequired(type),
+    isSelected: false,
     isArray: isArray(type),
     isNullableArray: isNullable(type),
     dimensionOfArray: dimensionOfArray(type)

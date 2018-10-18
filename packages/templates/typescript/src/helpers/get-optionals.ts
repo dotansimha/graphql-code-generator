@@ -12,7 +12,7 @@ export function getOptionals(type: Field, options: Handlebars.HelperOptions) {
     return '';
   }
 
-  if (!type.isRequired) {
+  if (!type.isRequired && !type.isSelected) {
     return '?';
   }
 

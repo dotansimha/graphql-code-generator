@@ -47,6 +47,7 @@ export function resolveFields(
         isArray: type.isArray,
         dimensionOfArray: type.dimensionOfArray,
         isRequired: type.isRequired,
+        isSelected: type.isSelected,
         hasArguments: resolvedArguments.length > 0,
         isEnum: indicators.isEnum,
         isScalar: indicators.isScalar,

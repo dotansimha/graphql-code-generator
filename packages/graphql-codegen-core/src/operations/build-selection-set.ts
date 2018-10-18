@@ -75,6 +75,7 @@ export function buildSelectionSet(
             type: resolvedType.name,
             raw: resolvedType.raw,
             isRequired: resolvedType.isRequired,
+            isSelected: true,
             isNullableArray: resolvedType.isNullableArray,
             isArray: resolvedType.isArray,
             dimensionOfArray: resolvedType.dimensionOfArray,
