@@ -9,5 +9,9 @@ export function getType(type: Field, options: Handlebars.HelperOptions) {
 
   const result = getResultType(type, options);
 
-  return new SafeString(result);
+  if (result.isQuoted) {
+    return new SafeString(`"${result.type}"`);
+  }
+
+  return new SafeString(result.type);
 }

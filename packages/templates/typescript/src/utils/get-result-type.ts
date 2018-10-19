@@ -1,15 +1,27 @@
 import { pascalCase } from 'change-case';
 import { Field } from 'graphql-codegen-core';
 
-export function getResultType(type: Field, options: Handlebars.HelperOptions, skipPascalCase = false) {
+export interface ResultType {
+  type: string;
+  isQuoted?: boolean;
+}
+
+export function getResultType(type: Field, options: Handlebars.HelperOptions, skipPascalCase = false): ResultType {
   const baseType = type.type;
   const underscorePrefix = type.type.match(/^[\_]+/) || '';
   const config = options.data.root.config || {};
-  const realType =
+  const realType: string =
     options.data.root.primitives[baseType] ||
     `${type.isScalar ? '' : config.interfacePrefix || ''}${underscorePrefix +
       (skipPascalCase ? baseType : pascalCase(baseType))}`;
   const useImmutable = !!config.immutableTypes;
+
+  if (type.name === '__typename') {
+    return {
+      type: type.type,
+      isQuoted: true
+    };
+  }
 
   if (type.isArray) {
     let result = realType;
@@ -30,12 +42,12 @@ export function getResultType(type: Field, options: Handlebars.HelperOptions, sk
       result = [result, 'null'].join(' | ');
     }
 
-    return result;
+    return { type: result };
   } else {
     if (type.isRequired) {
-      return realType;
+      return { type: realType };
     } else {
-      return [realType, 'null'].join(' | ');
+      return { type: [realType, 'null'].join(' | ') };
     }
   }
 }

@@ -113,6 +113,10 @@ export interface SchemaTemplateContext extends AstNode {
   rawSchema: GraphQLSchema;
 }
 
+export interface SelectionSet {
+  hasTypename: boolean;
+  items: SelectionSetItem[];
+}
 export interface SelectionSetItem extends AstNode {
   isFragmentSpread: boolean;
   isInlineFragment: boolean;

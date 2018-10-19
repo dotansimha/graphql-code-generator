@@ -34,7 +34,7 @@ function buildFieldDef(type: string, field: Field, options: Handlebars.HelperOpt
     },
     options,
     true
-  );
+  ).type;
 }
 
 function convertToInterfaceDefinition(type: Type | Interface, obj: FieldsResult, root = true): string {

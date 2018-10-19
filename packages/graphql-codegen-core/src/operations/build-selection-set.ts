@@ -17,7 +17,8 @@ import {
   InlineFragmentNode,
   SelectionNode,
   SelectionSetNode,
-  typeFromAST
+  typeFromAST,
+  GraphQLUnionType
 } from 'graphql';
 import { getFieldDef } from '../utils/get-field-def';
 import { resolveType } from '../schema/resolve-type';
@@ -51,6 +52,22 @@ export function buildSelectionSet(
           const fieldNode = selectionNode as FieldNode;
           const name = fieldNode.alias && fieldNode.alias.value ? fieldNode.alias.value : fieldNode.name.value;
           debugLog(`[buildSelectionSet] transforming FIELD with name ${name}`);
+
+          if (name === '__typename' && !(rootObject instanceof GraphQLUnionType)) {
+            /*
+               * we do not want __typename on Union
+               * in this case, __typename is in each Fragment
+               */
+            return {
+              isField: true,
+              isLeaf: true,
+              name,
+              selectionSet: [],
+              type: (rootObject as any).name,
+              isRequired: true
+            } as SelectionSetFieldNode;
+          }
+
           const field = getFieldDef(rootObject, fieldNode);
 
           if (!field) {
@@ -88,7 +105,6 @@ export function buildSelectionSet(
         } else if (selectionNode.kind === Kind.FRAGMENT_SPREAD) {
           const fieldNode = selectionNode as FragmentSpreadNode;
           debugLog(`[buildSelectionSet] transforming FRAGMENT_SPREAD with name ${fieldNode.name.value}...`);
-
           return {
             isField: false,
             isFragmentSpread: true,
@@ -102,6 +118,25 @@ export function buildSelectionSet(
           const fieldNode = selectionNode as InlineFragmentNode;
           const nextRoot = typeFromAST(schema, fieldNode.typeCondition);
           const childSelectionSet = buildSelectionSet(schema, nextRoot, fieldNode.selectionSet);
+
+          if (!childSelectionSet.some(s => isFieldNode(s) && s.name === '__typename') && fieldNode.typeCondition) {
+            /*
+             * append __typename field for inline fragment on specific type
+             *
+             * Q: why set isRequired ?
+             * A:
+             *   In the user's view, __typename is always needed when composing fragment for union.
+             *   Thus setting isRequired make sense.
+             */
+            childSelectionSet.unshift({
+              isField: true,
+              isLeaf: true,
+              name: '__typename',
+              selectionSet: [],
+              type: fieldNode.typeCondition.name.value,
+              isRequired: true
+            } as SelectionSetFieldNode);
+          }
 
           return {
             isField: false,

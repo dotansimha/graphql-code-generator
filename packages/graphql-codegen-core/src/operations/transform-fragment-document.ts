@@ -5,7 +5,11 @@ import { debugLog } from '../debugging';
 import { print } from 'graphql/language/printer';
 import { getDirectives } from '../utils/get-directives';
 
-export function transformFragment(schema: GraphQLSchema, fragment: FragmentDefinitionNode, overrideName?: string | null): Fragment {
+export function transformFragment(
+  schema: GraphQLSchema,
+  fragment: FragmentDefinitionNode,
+  overrideName?: string | null
+): Fragment {
   debugLog(
     `[transformFragment] transforming fragment ${fragment.name.value} on type ${fragment.typeCondition.name.value}`
   );
