@@ -10,11 +10,11 @@ import gql from 'graphql-tag';
 
 {{{ importNgModules operations }}}
 
-{{{ blockComment 'GraphQL Fragments' }}}
+{{{ blockComment 'GraphQL Fragments' fragments }}}
 
 {{{ generateFragments fragments }}}
 
-{{{ blockComment 'Apollo Services' }}}
+{{{ blockComment 'Apollo Services' operations }}}
 
 {{#each operations}}
     @Injectable({

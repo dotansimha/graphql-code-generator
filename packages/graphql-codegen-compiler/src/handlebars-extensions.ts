@@ -86,8 +86,10 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
     return new SafeString('/** ' + oneLineTrim`${str || ''}` + ' */');
   });
 
-  registerHelper('blockComment', function(str: string) {
-    if (!str || str === '') {
+  registerHelper('blockComment', function(str: string, list: any[] = []) {
+    const show = list && list.length > 0;
+
+    if (!str || str === '' || !show) {
       return '';
     }
 
