@@ -2,7 +2,7 @@
 {{#if @root.config.enumsAsTypes }}
 export type {{@root.config.interfacePrefix}}{{ toPascalCase name }} = {{#each values }}{{{ getEnumValue ../name value }}}{{#unless @last}} | {{/unless}}{{/each}};
 {{else}}
-export enum {{@root.config.interfacePrefix}}{{ toPascalCase name }} {
+export {{#if @root.config.constEnums }}const {{/if}}enum {{@root.config.interfacePrefix}}{{ toPascalCase name }} {
 {{#each values }}
   {{value}} = {{{ getEnumValue ../name value }}},
 {{/each}}
