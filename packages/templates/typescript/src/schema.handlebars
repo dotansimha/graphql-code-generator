@@ -9,7 +9,7 @@ export type Resolver<Result, Parent = any, Context = any, Args = any> = (
   info: GraphQLResolveInfo
 ) => Promise<Result> | Result;
 
-export type SubscriptionResolver<Result, Parent = any, Context = any, Args = any> = {
+export interface ISubscriptionResolverObject<Result, Parent, Context, Args> {
   subscribe<R = Result, P = Parent>(
     parent: P,
     args: Args,
@@ -23,6 +23,10 @@ export type SubscriptionResolver<Result, Parent = any, Context = any, Args = any
     info: GraphQLResolveInfo
   ): R | Result | Promise<R | Result>;
 }
+
+export type SubscriptionResolver<Result, Parent = any, Context = any, Args = any> =
+  | ((...args: any[]) => ISubscriptionResolverObject<Result, Parent, Context, Args>)
+  | ISubscriptionResolverObject<Result, Parent, Context, Args>;
 
 {{/if}}
 {{/ifCond}}
