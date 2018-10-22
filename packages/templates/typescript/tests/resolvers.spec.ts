@@ -44,7 +44,7 @@ describe('Resolvers', () => {
       info: GraphQLResolveInfo
     ) => Promise<Result> | Result;
     
-    export type SubscriptionResolver<Result, Parent = any, Context = any, Args = any> = {
+    export interface ISubscriptionResolverObject<Result, Parent, Context, Args> {
       subscribe<R = Result, P = Parent>(
         parent: P,
         args: Args,
@@ -58,7 +58,11 @@ describe('Resolvers', () => {
         info: GraphQLResolveInfo
       ): R | Result | Promise<R | Result>;
     }
-      `);
+    
+    export type SubscriptionResolver<Result, Parent = any, Context = any, Args = any> =
+      | ((...args: any[]) => ISubscriptionResolverObject<Result, Parent, Context, Args>)
+      | ISubscriptionResolverObject<Result, Parent, Context, Args>;
+    `);
   });
 
   it('should make fields optional', async () => {

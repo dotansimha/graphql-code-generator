@@ -33,7 +33,7 @@ export const createWatcher = (options: CLIOptions, onNext: (result: FileOutput[]
 
     const { warning, watch, relative_path = '' } = await client.command(['watch-project', process.cwd()]);
     if (warning) {
-      getLogger().warning(warning);
+      getLogger().warn(warning);
     }
 
     const { clock } = await client.command(['clock', watch]);
