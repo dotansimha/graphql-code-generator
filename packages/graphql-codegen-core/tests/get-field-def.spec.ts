@@ -22,7 +22,7 @@ describe('getFieldDef', () => {
 
     const fieldNode = ((parsedDocuments as DocumentNode).definitions[0] as OperationDefinitionNode).selectionSet
       .selections[0];
-    const fieldDef = getFieldDef(type, fieldNode);
+    const fieldDef = getFieldDef(type, fieldNode as any);
 
     expect(fieldDef.type).toBe(GraphQLString);
     expect(fieldDef.name).toBe('f1');
@@ -45,7 +45,7 @@ describe('getFieldDef', () => {
 
     const fieldNode = ((parsedDocuments as DocumentNode).definitions[0] as OperationDefinitionNode).selectionSet
       .selections[0];
-    const fieldDef = getFieldDef(type, fieldNode);
+    const fieldDef = getFieldDef(type, fieldNode as any);
 
     expect(fieldDef).toBe(null);
   });

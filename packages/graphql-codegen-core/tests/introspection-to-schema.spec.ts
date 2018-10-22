@@ -8,7 +8,7 @@ describe('introspectionToGraphQLSchema', () => {
   });
 
   it('should return a GraphQLSchema object when passing a valid introspection', () => {
-    const schema = introspectionToGraphQLSchema(validSchema);
+    const schema = introspectionToGraphQLSchema(validSchema as any);
     expect(schema instanceof GraphQLSchema).toBeTruthy();
   });
 });

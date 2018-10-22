@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import { GraphQLObjectType, GraphQLSchema } from 'graphql';
+import { GraphQLSchema } from 'graphql';
 import * as fs from 'fs';
 import { introspectionToGraphQLSchema } from '../src/utils/introspection-to-schema';
 import { getRoot } from '../src/utils/get-root';

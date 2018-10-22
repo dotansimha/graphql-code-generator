@@ -3,7 +3,7 @@ import { resolveArguments } from '../src/schema/resolve-arguments';
 
 describe('resolveArguments', () => {
   function parseAndBuildSchema<T>(str: string, typeName: string): T {
-    return buildASTSchema(
+    return (buildASTSchema(
       parse(`
       type Query {
         test: Int
@@ -11,7 +11,7 @@ describe('resolveArguments', () => {
       
       ${str}
     `)
-    ).getTypeMap()[typeName] as T;
+    ).getTypeMap()[typeName] as unknown) as T;
   }
 
   it('should resolve correctly when there is one arguments', () => {
