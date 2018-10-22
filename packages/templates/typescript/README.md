@@ -93,6 +93,10 @@ This will cause the generator to avoid using TypeScript optionals (`?`), so the 
 
 Will generate the declared enums as TypeScript `type` instead of `enums`. This is useful if you can't use `.ts` extension.
 
+### `constEnums` (or `CODEGEN_CONST_ENUMS`, default value: `false`)
+
+Will generate the `const` enums as TypeScript. [Read this for more information](https://www.typescriptlang.org/docs/handbook/enums.html#const-enums)
+
 ### `immutableTypes` (or `CODEGEN_IMMUTABLE_TYPES`, default value: `false`)
 
 This will cause the codegen to output `readonly` properties and `ReadonlyArray`.
