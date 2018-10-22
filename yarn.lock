@@ -6942,9 +6942,9 @@ webpack-sources@^1.3.0:
     source-list-map "^2.0.0"
     source-map "~0.6.1"
 
-webpack@4.21.0:
-  version "4.21.0"
-  resolved "https://registry.yarnpkg.com/webpack/-/webpack-4.21.0.tgz#bd03605c0f48c0d4aaaef78ead2769485e5afd92"
+webpack@4.22.0:
+  version "4.22.0"
+  resolved "https://registry.yarnpkg.com/webpack/-/webpack-4.22.0.tgz#b168111e2e7b05f5169ac484e79e62093ec39e0d"
   integrity sha512-CGBeop4AYR0dcmk9Afl33qQULwTHQCXQPAIBTHMJoy9DpY8FPUDna/NUlAGTr5o5y9QC901Ww3wCY4wNo1X9Lw==
   dependencies:
     "@webassemblyjs/ast" "1.7.8"
