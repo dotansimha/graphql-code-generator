@@ -1,4 +1,4 @@
-{{{ trumpsHugeComment 'Typescript template starts' }}}
+{{{ blockComment 'START: Typescript template' }}}
 
 {{#ifCond @root.config.resolvers "!==" false}}
 {{#if types}}
@@ -31,31 +31,31 @@ export type SubscriptionResolver<Result, Parent = any, Context = any, Args = any
 {{/ifCond}}
 
 {{#if @root.config.schemaNamespace ~}}export namespace {{@root.config.schemaNamespace}} { {{/if}}
-{{{ trumpsHugeComment 'Scalars' }}}
+{{{ blockComment 'Scalars' }}}
 {{#each scalars}}
 
 {{ toComment description }}
 {{#ifCond (toPascalCase name) "!==" (getScalarType name) }}export type {{ toPascalCase name }} = {{ getScalarType name }};{{/ifCond}}
 {{/each}}
 
-{{{ trumpsHugeComment 'Interfaces' }}}
+{{{ blockComment 'Interfaces' }}}
 {{#each interfaces}}
   {{~> type }}
 
 {{/each}}
 
-{{{ trumpsHugeComment 'Types' }}}
+{{{ blockComment 'Types' }}}
 {{#each types}}
   {{~> type }}
 
 {{/each}}
 
-{{{ trumpsHugeComment 'InputTypes' }}}
+{{{ blockComment 'InputTypes' }}}
 {{#each inputTypes}}
   {{~> type }}
 
 {{/each}}
-{{{ trumpsHugeComment 'Arguments' }}}
+{{{ blockComment 'Arguments' }}}
 {{~#each types}}
   {{~#each fields}}
     {{~# if hasArguments }}
@@ -67,11 +67,11 @@ export interface {{ toPascalCase name }}{{ toPascalCase ../name }}Args {
     {{/if}}
   {{/each}}
 {{/each}}
-{{{ trumpsHugeComment 'Enums' }}}
+{{{ blockComment 'Enums' }}}
 {{#each enums}}
   {{~> enum }}
 {{/each}}
-{{{ trumpsHugeComment 'Unions' }}}
+{{{ blockComment 'Unions' }}}
 {{#each unions}}
 {{ toComment description }}
 export type {{ toPascalCase name }} = {{#each possibleTypes}}{{ toPascalCase this}}{{#unless @last}} | {{/unless}}{{/each}};
@@ -79,11 +79,10 @@ export type {{ toPascalCase name }} = {{#each possibleTypes}}{{ toPascalCase thi
 {{/each}}
 {{#if @root.config.schemaNamespace ~}} } {{~/if}}
 {{#ifCond @root.config.resolvers "!==" false }}
-{{{ trumpsHugeComment 'Resolvers starts' }}}
+{{{ blockComment 'Resolvers' }}}
 {{#each types}}
 {{~> resolver }}
 {{/each}}
-{{{ trumpsHugeComment 'Resolvers ends' }}}
 {{/ifCond}}
 
-{{{ trumpsHugeComment 'Typescript template ends' }}}
+{{{ blockComment 'END: Typescript template' }}}
