@@ -1,5 +1,4 @@
-import { validate, GraphQLSchema, GraphQLError, specifiedRules } from 'graphql';
-import { DocumentNode, Source, parse, concatAST } from 'graphql-codegen-core';
+import { DocumentNode, Source, parse, DocumentFile } from 'graphql-codegen-core';
 import * as fs from 'fs';
 import * as path from 'path';
 import { extractDocumentStringFromCodeFile } from '../../utils/document-finder';
@@ -25,30 +24,6 @@ export const loadFileContent = (filePath: string): DocumentNode | null => {
   }
 };
 
-const effectiveRules = specifiedRules.filter((f: Function) => f.name !== 'NoUnusedFragments');
-
-export interface LoadDocumentError {
-  readonly filePath: string;
-  readonly errors: ReadonlyArray<GraphQLError>;
-}
-
-const IGNORED_VALIDATION_ERRORS = ['Unknown fragment', 'Unknown directive'];
-
-export const loadDocumentsSources = (
-  schema: GraphQLSchema,
-  filePaths: string[]
-): DocumentNode | ReadonlyArray<LoadDocumentError> => {
-  const loadResults = filePaths
-    .map(filePath => ({ filePath, content: loadFileContent(filePath) }))
-    .filter(result => result.content);
-  const errors: ReadonlyArray<LoadDocumentError> = loadResults
-    .map(result => ({
-      filePath: result.filePath,
-      errors: validate(schema, result.content, effectiveRules).filter(
-        e => !IGNORED_VALIDATION_ERRORS.find(ignoredErr => e.message.indexOf(ignoredErr) > -1)
-      )
-    }))
-    .filter(r => r.errors.length > 0);
-
-  return errors.length > 0 ? errors : concatAST(loadResults.map(r => r.content));
+export const loadDocumentsSources = (filePaths: string[]): DocumentFile[] => {
+  return filePaths.map(filePath => ({ filePath, content: loadFileContent(filePath) })).filter(result => result.content);
 };

@@ -7,7 +7,7 @@ import {
   OperationDefinitionNode,
   print
 } from 'graphql';
-import { Document } from '../types';
+import { Document, DocumentFile } from '../types';
 import { transformFragment } from './transform-fragment-document';
 import { transformOperation } from './transform-operation';
 import { debugLog } from '../debugging';
@@ -54,7 +54,32 @@ export function fixAnonymousDocument(documentNode: FragmentDefinitionNode | Oper
   return null;
 }
 
-export function transformDocument(schema: GraphQLSchema, documentNode: DocumentNode): Document {
+export function transformDocumentsFiles(schema: GraphQLSchema, documentFiles: DocumentFile[]): Document {
+  return documentFiles
+    .map(documentsFile => transformDocument(schema, documentsFile.content, documentsFile.filePath))
+    .reduce(
+      (result, transformedDocument) => {
+        result.fragments = [...result.fragments, ...transformedDocument.fragments];
+        result.operations = [...result.operations, ...transformedDocument.operations];
+        result.hasFragments = result.fragments.length > 0;
+        result.hasOperations = result.operations.length > 0;
+
+        return result;
+      },
+      {
+        fragments: [],
+        operations: [],
+        hasFragments: false,
+        hasOperations: false
+      } as Document
+    );
+}
+
+export function transformDocument(
+  schema: GraphQLSchema,
+  documentNode: DocumentNode,
+  originalFilePath: string | null = null
+): Document {
   const result: Document = {
     fragments: [],
     operations: [],
@@ -69,10 +94,14 @@ export function transformDocument(schema: GraphQLSchema, documentNode: DocumentN
   definitions.forEach((definitionNode: DefinitionNode) => {
     if (definitionNode.kind === Kind.OPERATION_DEFINITION) {
       const overrideName = fixAnonymousDocument(definitionNode as OperationDefinitionNode);
-      result.operations.push(transformOperation(schema, definitionNode as OperationDefinitionNode, overrideName));
+      const operation = transformOperation(schema, definitionNode as OperationDefinitionNode, overrideName);
+      operation.originalFile = originalFilePath;
+      result.operations.push(operation);
     } else if (definitionNode.kind === Kind.FRAGMENT_DEFINITION) {
       const overrideName = fixAnonymousDocument(definitionNode as FragmentDefinitionNode);
-      result.fragments.push(transformFragment(schema, definitionNode as FragmentDefinitionNode, overrideName));
+      const fragment = transformFragment(schema, definitionNode as FragmentDefinitionNode, overrideName);
+      fragment.originalFile = originalFilePath;
+      result.fragments.push(fragment);
     } else {
       getLogger().warn(`It seems like you provided an invalid GraphQL document of kind "${definitionNode.kind}".`);
     }

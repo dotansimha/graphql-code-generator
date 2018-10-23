@@ -1,3 +1,4 @@
+import { validateGraphQlDocuments } from './loaders/documents/validate-documents';
 import * as commander from 'commander';
 import * as path from 'path';
 import * as fs from 'fs';
@@ -6,7 +7,7 @@ import { DocumentNode, extendSchema, GraphQLSchema, parse } from 'graphql';
 import { getGraphQLProjectConfig, ConfigNotFoundError } from 'graphql-config';
 
 import { documentsFromGlobs } from './utils/documents-glob';
-import { LoadDocumentError, loadDocumentsSources } from './loaders/documents/document-loader';
+import { loadDocumentsSources } from './loaders/documents/document-loader';
 import { scanForTemplatesInPath } from './loaders/template/templates-scanner';
 import { ALLOWED_CUSTOM_TEMPLATE_EXT, compileTemplate } from 'graphql-codegen-compiler';
 import {
@@ -19,7 +20,7 @@ import {
   isGeneratorConfig,
   schemaToTemplateContext,
   setSilentLogger,
-  transformDocument,
+  transformDocumentsFiles,
   useWinstonLogger
 } from 'graphql-codegen-core';
 import { IntrospectionFromFileLoader } from './loaders/schema/introspection-from-file';
@@ -366,11 +367,12 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
       }
     });
 
-    const documentSourcesResult = loadDocumentsSources(graphQlSchema, await documentsFromGlobs(documents));
+    const foundDocumentsPaths = await documentsFromGlobs(documents);
+    const documentsFiles = await loadDocumentsSources(foundDocumentsPaths);
+    const loadDocumentErrors = validateGraphQlDocuments(graphQlSchema, documentsFiles);
 
-    if (Array.isArray(documentSourcesResult) && documentSourcesResult.length > 0) {
+    if (loadDocumentErrors.length > 0) {
       let errorCount = 0;
-      const loadDocumentErrors = documentSourcesResult as ReadonlyArray<LoadDocumentError>;
 
       for (const loadDocumentError of loadDocumentErrors) {
         for (const graphQLError of loadDocumentError.errors) {
@@ -382,7 +384,7 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
       cliError(`Found ${errorCount} errors when validating your GraphQL documents against schema!`, !options.watch);
     }
 
-    const transformedDocuments = transformDocument(graphQlSchema, documentSourcesResult as DocumentNode);
+    const transformedDocuments = transformDocumentsFiles(graphQlSchema, documentsFiles);
 
     return compileTemplate(templateConfig, context, [transformedDocuments], {
       generateSchema,
