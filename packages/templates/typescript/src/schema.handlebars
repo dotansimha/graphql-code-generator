@@ -35,31 +35,31 @@ export type SubscriptionResolver<Result, Parent = any, Context = any, Args = any
 {{/ifCond}}
 
 {{#if @root.config.schemaNamespace ~}}export namespace {{@root.config.schemaNamespace}} { {{/if}}
-{{{ blockComment 'Scalars' scalars }}}
+{{{ blockCommentIf 'Scalars' scalars }}}
 {{#each scalars}}
 
 {{ toComment description }}
 {{#ifCond (toPascalCase name) "!==" (getScalarType name) }}export type {{ toPascalCase name }} = {{ getScalarType name }};{{/ifCond}}
 {{/each}}
 
-{{{ blockComment 'Interfaces' interfaces }}}
+{{{ blockCommentIf 'Interfaces' interfaces }}}
 {{#each interfaces}}
   {{~> type }}
 
 {{/each}}
 
-{{{ blockComment 'Types' types }}}
+{{{ blockCommentIf 'Types' types }}}
 {{#each types}}
   {{~> type }}
 
 {{/each}}
 
-{{{ blockComment 'InputTypes' inputTypes }}}
+{{{ blockCommentIf 'InputTypes' inputTypes }}}
 {{#each inputTypes}}
   {{~> type }}
 
 {{/each}}
-{{{ blockComment 'Arguments' types }}}
+{{{ blockCommentIf 'Arguments' types }}}
 {{~#each types}}
   {{~#each fields}}
     {{~# if hasArguments }}
@@ -71,11 +71,11 @@ export interface {{ toPascalCase name }}{{ toPascalCase ../name }}Args {
     {{/if}}
   {{/each}}
 {{/each}}
-{{{ blockComment 'Enums' enums }}}
+{{{ blockCommentIf 'Enums' enums }}}
 {{#each enums}}
   {{~> enum }}
 {{/each}}
-{{{ blockComment 'Unions' unions }}}
+{{{ blockCommentIf 'Unions' unions }}}
 {{#each unions}}
 {{ toComment description }}
 export type {{ toPascalCase name }} = {{#each possibleTypes}}{{ toPascalCase this}}{{#unless @last}} | {{/unless}}{{/each}};
@@ -83,7 +83,7 @@ export type {{ toPascalCase name }} = {{#each possibleTypes}}{{ toPascalCase thi
 {{/each}}
 {{#if @root.config.schemaNamespace ~}} } {{~/if}}
 {{#ifCond @root.config.resolvers "!==" false }}
-{{{ blockComment 'Resolvers' types }}}
+{{{ blockCommentIf 'Resolvers' types }}}
 {{#each types}}
 {{~> resolver }}
 {{/each}}

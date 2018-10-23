@@ -543,9 +543,9 @@ describe('Components', () => {
     );
     const content = compiled[0].content;
 
-    expect(content).toBeSimilarStringTo('// APOLLO ANGULAR STARTS');
+    expect(content).toBeSimilarStringTo('// START: Apollo Angular template');
     expect(content).toBeSimilarStringTo('// GraphQL Fragments');
     expect(content).toBeSimilarStringTo('// Apollo Services');
-    expect(content).toBeSimilarStringTo('// APOLLO ANGULAR ENDS');
+    expect(content).toBeSimilarStringTo('// END: Apollo Angular template');
   });
 });

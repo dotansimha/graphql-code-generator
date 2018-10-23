@@ -15,6 +15,22 @@ import { sanitizeFilename } from './sanitizie-filename';
 import { FlattenModel, FlattenOperation } from './types';
 import { flattenSelectionSet } from './flatten-types';
 
+function blockComment(str: string) {
+  if (!str || str === '') {
+    return '';
+  }
+
+  return new SafeString(
+    [
+      '\n',
+      '// ====================================================',
+      '// ' + oneLineTrim`${str || ''}`,
+      '// ====================================================',
+      '\n'
+    ].join('\n')
+  );
+}
+
 export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTemplateContext) => {
   const customHelpers = config.customHelpers || {};
 
@@ -86,23 +102,15 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
     return new SafeString('/** ' + oneLineTrim`${str || ''}` + ' */');
   });
 
-  registerHelper('blockComment', function(str: string, list: any[] = []) {
-    const show = list && list.length > 0;
-
-    if (!str || str === '' || !show) {
-      return '';
+  registerHelper('blockCommentIf', function(str: string, list: any[] = []) {
+    if (list && list.length > 0) {
+      return blockComment(str);
     }
 
-    return new SafeString(
-      [
-        '\n',
-        '// ====================================================',
-        '// ' + oneLineTrim`${str || ''}`,
-        '// ====================================================',
-        '\n'
-      ].join('\n')
-    );
+    return '';
   });
+
+  registerHelper('blockComment', blockComment);
 
   registerHelper('eachImport', function(context: any, options: { fn: Function }) {
     let ret = '';
