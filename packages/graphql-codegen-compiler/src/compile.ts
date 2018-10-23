@@ -17,6 +17,7 @@ import { flattenTypes } from './flatten-types';
 import { generateMultipleFiles } from './generate-multiple-files';
 import { generateSingleFile } from './generate-single-file';
 import { cleanTemplateComments } from './clean-template';
+import { buildFilesArray } from './build-files-array';
 
 export const DEFAULT_SETTINGS: Settings = {
   generateSchema: true,
@@ -47,6 +48,7 @@ export async function compileTemplate(
     mergedDocuments = {
       fragments: [],
       operations: [],
+      documentsFiles: [],
       hasFragments: false,
       hasOperations: false
     };
@@ -65,6 +67,8 @@ export async function compileTemplate(
       },
       { hasFragments: false, hasOperations: false, operations: [], fragments: [] } as Document
     );
+
+    mergedDocuments.documentsFiles = buildFilesArray(mergedDocuments);
 
     debugLog(
       `[compileTemplate] all documents merged into single document, total of ${

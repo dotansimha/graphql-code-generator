@@ -2,7 +2,7 @@ import { makeExecutableSchema } from 'graphql-tools';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 import { loadDocumentsSources } from '../src/loaders/documents/document-loader';
-import { LoadDocumentError, validateGraphQlDocuments } from '../src/loaders/documents/validate-documents';
+import { validateGraphQlDocuments } from '../src/loaders/documents/validate-documents';
 import { GraphQLError } from 'graphql';
 
 describe('loadDocumentsSources', () => {
