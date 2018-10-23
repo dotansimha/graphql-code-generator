@@ -1650,5 +1650,41 @@ describe('TypeScript template', () => {
           }
       `);
     });
+
+    it('Should generate const enums when constEnums is set to true', async () => {
+      const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
+      const context = schemaToTemplateContext(schema);
+      const compiled = await compileTemplate(
+        {
+          ...config,
+          config: {
+            constEnums: true
+          }
+        } as GeneratorConfig,
+        context,
+        []
+      );
+      const content = compiled[0].content;
+
+      expect(content).toBeSimilarStringTo(`
+       /* tslint:disable */
+       `);
+      expect(content).toBeSimilarStringTo(`
+        /** A list of options for the sort order of the feed */
+        export const enum FeedType {
+          HOT = "HOT",
+          NEW = "NEW",
+          TOP = "TOP",
+        }
+      `);
+      expect(content).toBeSimilarStringTo(`
+        /** The type of vote to record, when submitting a vote */
+        export const enum VoteType {
+          UP = "UP",
+          DOWN = "DOWN",
+          CANCEL = "CANCEL",
+        }
+      `);
+    });
   });
 });
