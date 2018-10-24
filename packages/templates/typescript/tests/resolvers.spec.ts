@@ -8,6 +8,7 @@ import {
   schemaToTemplateContext,
   GeneratorConfig
 } from 'graphql-codegen-core';
+import { stripBlockComments } from './utils';
 
 describe('Resolvers', () => {
   const compileAndBuildContext = (typeDefs: string): { context: SchemaTemplateContext; schema: GraphQLSchema } => {
@@ -203,9 +204,9 @@ describe('Resolvers', () => {
       context
     );
 
-    const content = compiled[0].content;
+    const content = stripBlockComments(compiled[0].content);
 
-    expect(content).not.toBeSimilarStringTo(`
+    expect(content).toBeSimilarStringTo(`
       export namespace SubscriptionResolvers {
         export interface Resolvers<Context = any> {
           fieldTest?: FieldTestResolver<string | null, any, Context>;

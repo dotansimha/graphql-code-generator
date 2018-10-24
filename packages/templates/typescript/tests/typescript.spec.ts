@@ -11,11 +11,8 @@ import {
 } from 'graphql-codegen-core';
 import { compileTemplate } from 'graphql-codegen-compiler';
 import config from '../dist';
+import { stripBlockComments } from './utils';
 import * as fs from 'fs';
-
-function stripBlockComments(input: string): string {
-  return input.replace(/^\/\/ [=]+\n\/\/ .*\n\/\/ [=]+/gim, '');
-}
 
 describe('TypeScript template', () => {
   const compileAndBuildContext = (typeDefs: string): { context: SchemaTemplateContext; schema: GraphQLSchema } => {
