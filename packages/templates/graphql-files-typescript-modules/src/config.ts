@@ -8,9 +8,6 @@ export const config: GeneratorConfig = {
     index
   },
   flattenTypes: true,
-  customHelpers: {
-    filenameToModuleName: (filePath: string) => (filePath.charAt(0) === '.' ? `*${filePath.substr(1)}` : filePath)
-  },
   primitives: {
     // Declare your primitives map (GraphQL built-in types to your language types)
     String: 'string',

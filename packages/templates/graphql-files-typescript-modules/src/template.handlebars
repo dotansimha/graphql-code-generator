@@ -3,7 +3,7 @@
 // Generated in {{ currentTime }}
 {{/if}}
 {{#each documentsFiles}} 
-declare module '{{filenameToModuleName relative}}' {
+declare module '*/{{ filename }}' {
     import { DocumentNode } from 'graphql';
     const defaultDocument: DocumentNode;
     {{#each documents}}{{#if operationType}}const {{ name }}: DocumentNode;{{/if}}{{/each}}

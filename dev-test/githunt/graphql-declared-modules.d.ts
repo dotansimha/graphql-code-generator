@@ -1,5 +1,5 @@
 /*tslint:disable*/
-declare module '*/dev-test/githunt/comment-added.subscription.graphql' {
+declare module '*/comment-added.subscription.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
   const onCommentAdded: DocumentNode;
@@ -9,7 +9,7 @@ declare module '*/dev-test/githunt/comment-added.subscription.graphql' {
   export default defaultDocument;
 }
 
-declare module '*/dev-test/githunt/comment.query.graphql' {
+declare module '*/comment.query.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
   const Comment: DocumentNode;
@@ -19,7 +19,7 @@ declare module '*/dev-test/githunt/comment.query.graphql' {
   export default defaultDocument;
 }
 
-declare module '*/dev-test/githunt/current-user.query.graphql' {
+declare module '*/current-user.query.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
   const CurrentUserForProfile: DocumentNode;
@@ -29,7 +29,7 @@ declare module '*/dev-test/githunt/current-user.query.graphql' {
   export default defaultDocument;
 }
 
-declare module '*/dev-test/githunt/feed.query.graphql' {
+declare module '*/feed.query.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
   const Feed: DocumentNode;
@@ -39,7 +39,7 @@ declare module '*/dev-test/githunt/feed.query.graphql' {
   export default defaultDocument;
 }
 
-declare module '*/dev-test/githunt/new-entry.mutation.graphql' {
+declare module '*/new-entry.mutation.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
   const submitRepository: DocumentNode;
@@ -49,7 +49,7 @@ declare module '*/dev-test/githunt/new-entry.mutation.graphql' {
   export default defaultDocument;
 }
 
-declare module '*/dev-test/githunt/submit-comment.mutation.graphql' {
+declare module '*/submit-comment.mutation.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
   const submitComment: DocumentNode;
@@ -59,7 +59,7 @@ declare module '*/dev-test/githunt/submit-comment.mutation.graphql' {
   export default defaultDocument;
 }
 
-declare module '*/dev-test/githunt/vote.mutation.graphql' {
+declare module '*/vote.mutation.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
   const vote: DocumentNode;
@@ -69,7 +69,7 @@ declare module '*/dev-test/githunt/vote.mutation.graphql' {
   export default defaultDocument;
 }
 
-declare module '*/dev-test/githunt/comments-page-comment.fragment.graphql' {
+declare module '*/comments-page-comment.fragment.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
 
@@ -78,7 +78,7 @@ declare module '*/dev-test/githunt/comments-page-comment.fragment.graphql' {
   export default defaultDocument;
 }
 
-declare module '*/dev-test/githunt/feed-entry.fragment.graphql' {
+declare module '*/feed-entry.fragment.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
 
@@ -87,7 +87,7 @@ declare module '*/dev-test/githunt/feed-entry.fragment.graphql' {
   export default defaultDocument;
 }
 
-declare module '*/dev-test/githunt/repo-info.fragment.graphql' {
+declare module '*/repo-info.fragment.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
 
@@ -96,7 +96,7 @@ declare module '*/dev-test/githunt/repo-info.fragment.graphql' {
   export default defaultDocument;
 }
 
-declare module '*/dev-test/githunt/vote-buttons.fragment.graphql' {
+declare module '*/vote-buttons.fragment.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
 
