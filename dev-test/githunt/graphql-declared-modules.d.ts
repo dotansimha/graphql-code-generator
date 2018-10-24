@@ -1,6 +1,8 @@
+/*tslint:disable*/
 declare module '*/dev-test/githunt/comment-added.subscription.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
+  const onCommentAdded: DocumentNode;
 
   export { onCommentAdded };
 
@@ -10,6 +12,7 @@ declare module '*/dev-test/githunt/comment-added.subscription.graphql' {
 declare module '*/dev-test/githunt/comment.query.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
+  const Comment: DocumentNode;
 
   export { Comment };
 
@@ -19,6 +22,7 @@ declare module '*/dev-test/githunt/comment.query.graphql' {
 declare module '*/dev-test/githunt/current-user.query.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
+  const CurrentUserForProfile: DocumentNode;
 
   export { CurrentUserForProfile };
 
@@ -28,6 +32,7 @@ declare module '*/dev-test/githunt/current-user.query.graphql' {
 declare module '*/dev-test/githunt/feed.query.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
+  const Feed: DocumentNode;
 
   export { Feed };
 
@@ -37,6 +42,7 @@ declare module '*/dev-test/githunt/feed.query.graphql' {
 declare module '*/dev-test/githunt/new-entry.mutation.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
+  const submitRepository: DocumentNode;
 
   export { submitRepository };
 
@@ -46,6 +52,7 @@ declare module '*/dev-test/githunt/new-entry.mutation.graphql' {
 declare module '*/dev-test/githunt/submit-comment.mutation.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
+  const submitComment: DocumentNode;
 
   export { submitComment };
 
@@ -55,6 +62,7 @@ declare module '*/dev-test/githunt/submit-comment.mutation.graphql' {
 declare module '*/dev-test/githunt/vote.mutation.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
+  const vote: DocumentNode;
 
   export { vote };
 

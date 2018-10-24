@@ -1,3 +1,4 @@
+/*tslint:disable*/
 {{#if config.printTime }}
 // Generated in {{ currentTime }}
 {{/if}}
@@ -5,6 +6,7 @@
 declare module '{{filenameToModuleName relative}}' {
     import { DocumentNode } from 'graphql';
     const defaultDocument: DocumentNode;
+    {{#each documents}}{{#if operationType}}const {{ name }}: DocumentNode;{{/if}}{{/each}}
     
     export {
       {{#each documents}}{{#if operationType}}{{ name }},{{/if}}{{/each}}
