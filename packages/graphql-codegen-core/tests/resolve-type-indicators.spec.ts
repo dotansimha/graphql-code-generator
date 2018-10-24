@@ -13,7 +13,7 @@ describe('resolveTypeIndicators', () => {
     `)
     );
 
-    return schema.getTypeMap()[typeName] as T;
+    return (schema.getTypeMap()[typeName] as unknown) as T;
   }
 
   it('should return the correct indicators when using interface', () => {
@@ -23,7 +23,7 @@ describe('resolveTypeIndicators', () => {
       f: String
     }`,
       'A'
-    );
+    ) as any;
 
     const indicators = resolveTypeIndicators(type);
 
@@ -41,7 +41,7 @@ describe('resolveTypeIndicators', () => {
     scalar A
     `,
       'A'
-    );
+    ) as any;
 
     const indicators = resolveTypeIndicators(type);
 
@@ -63,7 +63,7 @@ describe('resolveTypeIndicators', () => {
     }
     `,
       'A'
-    );
+    ) as any;
 
     const indicators = resolveTypeIndicators(type);
 
@@ -84,7 +84,7 @@ describe('resolveTypeIndicators', () => {
     }
     `,
       'A'
-    );
+    ) as any;
 
     const indicators = resolveTypeIndicators(type);
 
@@ -105,7 +105,7 @@ describe('resolveTypeIndicators', () => {
     }
     `,
       'A'
-    );
+    ) as any;
 
     const indicators = resolveTypeIndicators(type);
 
@@ -132,7 +132,7 @@ describe('resolveTypeIndicators', () => {
     union A = B | C
     `,
       'A'
-    );
+    ) as any;
 
     const indicators = resolveTypeIndicators(type);
 

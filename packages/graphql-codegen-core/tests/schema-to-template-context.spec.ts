@@ -55,7 +55,7 @@ describe('schemaToTemplateContext', () => {
 
     expect(() => {
       const schema = makeExecutableSchema({ typeDefs, resolvers: {}, allowUndefinedInResolve: true }) as GraphQLSchema;
-      const context = schemaToTemplateContext(schema);
+      schemaToTemplateContext(schema);
     }).toThrow();
   });
 
