@@ -1,19 +1,21 @@
 import { SafeString } from 'handlebars';
 import { pascalCase } from 'change-case';
 import { Field } from 'graphql-codegen-core';
+import { GraphQLSchema } from 'graphql';
 
-export function getFieldResolver(type: Field, options: Handlebars.HelperOptions) {
+export function getFieldResolver(type: Field, parent: any, options: Handlebars.HelperOptions) {
   const config = options.data.root.config || {};
   if (!type) {
     return '';
   }
 
   let result;
-
   let resolver: string;
+  const schema: GraphQLSchema = options.data.root.rawSchema;
+  const subscriptionType = schema.getSubscriptionType();
+  const isSubscription = subscriptionType && subscriptionType.name === parent.name;
 
-  // TODO: we can't tell if a field comes from Subscription
-  if (type.fieldType === 'Subscription') {
+  if (isSubscription) {
     resolver = 'SubscriptionResolver';
   } else {
     resolver = 'Resolver';

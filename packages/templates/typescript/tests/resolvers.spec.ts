@@ -212,12 +212,7 @@ describe('Resolvers', () => {
           fieldTest?: FieldTestResolver<string | null, any, Context>;
         }
 
-        export type FieldTestResolver<R = string | null, Parent = any, Context = any> = SubscriptionResolver<R, Parent, Context, FieldTestArgs>;
-        
-        export interface FieldTestArgs {
-          last: number;
-          sort?: string | null;
-        }
+        export type FieldTestResolver<R = string | null, Parent = any, Context = any> = SubscriptionResolver<R, Parent, Context>;
       }
       `);
   });
