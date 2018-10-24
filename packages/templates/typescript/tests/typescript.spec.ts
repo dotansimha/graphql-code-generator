@@ -13,6 +13,10 @@ import { compileTemplate } from 'graphql-codegen-compiler';
 import config from '../dist';
 import * as fs from 'fs';
 
+function stripBlockComments(input: string): string {
+  return input.replace(/^\/\/ [=]+\n\/\/ .*\n\/\/ [=]+/gim, '');
+}
+
 describe('TypeScript template', () => {
   const compileAndBuildContext = (typeDefs: string): { context: SchemaTemplateContext; schema: GraphQLSchema } => {
     const schema = makeExecutableSchema({ typeDefs, resolvers: {}, allowUndefinedInResolve: true }) as GraphQLSchema;
@@ -101,7 +105,7 @@ describe('TypeScript template', () => {
         context
       );
 
-      const content = compiled[0].content;
+      const content = stripBlockComments(compiled[0].content);
 
       expect(content).toBeSimilarStringTo(`
       /* tslint:disable */

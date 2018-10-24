@@ -1,5 +1,8 @@
+{{{ blockComment 'START: Typescript template' }}}
+
 {{#ifCond @root.config.resolvers "!==" false}}
 {{#if types}}
+
 import { GraphQLResolveInfo } from 'graphql';
 
 export type Resolver<Result, Parent = any, Context = any, Args = any> = (
@@ -30,24 +33,33 @@ export type SubscriptionResolver<Result, Parent = any, Context = any, Args = any
 
 {{/if}}
 {{/ifCond}}
+
 {{#if @root.config.schemaNamespace ~}}export namespace {{@root.config.schemaNamespace}} { {{/if}}
+{{{ blockCommentIf 'Scalars' scalars }}}
 {{#each scalars}}
 
 {{ toComment description }}
 {{#ifCond (toPascalCase name) "!==" (getScalarType name) }}export type {{ toPascalCase name }} = {{ getScalarType name }};{{/ifCond}}
 {{/each}}
+
+{{{ blockCommentIf 'Interfaces' interfaces }}}
 {{#each interfaces}}
   {{~> type }}
 
 {{/each}}
+
+{{{ blockCommentIf 'Types' types }}}
 {{#each types}}
   {{~> type }}
 
 {{/each}}
+
+{{{ blockCommentIf 'InputTypes' inputTypes }}}
 {{#each inputTypes}}
   {{~> type }}
 
 {{/each}}
+{{{ blockCommentIf 'Arguments' types }}}
 {{~#each types}}
   {{~#each fields}}
     {{~# if hasArguments }}
@@ -59,9 +71,11 @@ export interface {{ toPascalCase name }}{{ toPascalCase ../name }}Args {
     {{/if}}
   {{/each}}
 {{/each}}
+{{{ blockCommentIf 'Enums' enums }}}
 {{#each enums}}
   {{~> enum }}
 {{/each}}
+{{{ blockCommentIf 'Unions' unions }}}
 {{#each unions}}
 {{ toComment description }}
 export type {{ toPascalCase name }} = {{#each possibleTypes}}{{ toPascalCase this}}{{#unless @last}} | {{/unless}}{{/each}};
@@ -69,7 +83,10 @@ export type {{ toPascalCase name }} = {{#each possibleTypes}}{{ toPascalCase thi
 {{/each}}
 {{#if @root.config.schemaNamespace ~}} } {{~/if}}
 {{#ifCond @root.config.resolvers "!==" false }}
+{{{ blockCommentIf 'Resolvers' types }}}
 {{#each types}}
 {{~> resolver }}
 {{/each}}
 {{/ifCond}}
+
+{{{ blockComment 'END: Typescript template' }}}

@@ -1,3 +1,5 @@
+{{{ blockComment 'START: Apollo Angular template' }}}
+
 import { Injectable } from '@angular/core';
 
 import * as Apollo from 'apollo-angular';
@@ -8,7 +10,11 @@ import gql from 'graphql-tag';
 
 {{{ importNgModules operations }}}
 
+{{{ blockCommentIf 'GraphQL Fragments' fragments }}}
+
 {{{ generateFragments fragments }}}
+
+{{{ blockCommentIf 'Apollo Services' operations }}}
 
 {{#each operations}}
     @Injectable({
@@ -19,3 +25,5 @@ import gql from 'graphql-tag';
         {{{ namedClient this }}}
     }
 {{/each}}
+
+{{{ blockComment 'END: Apollo Angular template' }}}
