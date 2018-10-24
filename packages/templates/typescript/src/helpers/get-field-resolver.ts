@@ -1,25 +1,28 @@
 import { SafeString } from 'handlebars';
 import { pascalCase } from 'change-case';
-import { Field } from 'graphql-codegen-core';
+import { Field, Type } from 'graphql-codegen-core';
+import { GraphQLSchema } from 'graphql';
 
-export function getFieldResolver(type: Field, options: Handlebars.HelperOptions) {
+export function getFieldResolver(field: Field, type: Type, options: Handlebars.HelperOptions) {
   const config = options.data.root.config || {};
-  if (!type) {
+  if (!field) {
     return '';
   }
 
   let result;
-
   let resolver: string;
+  const schema: GraphQLSchema = options.data.root.rawSchema;
+  const subscriptionType = schema.getSubscriptionType();
+  const isSubscription = subscriptionType && subscriptionType.name === type.name;
 
-  if (type.fieldType === 'Subscription') {
+  if (isSubscription) {
     resolver = 'SubscriptionResolver';
   } else {
     resolver = 'Resolver';
   }
 
-  if (type.hasArguments && !config.noNamespaces) {
-    result = `${resolver}<R, Parent, Context, ${pascalCase(type.name)}Args>`;
+  if (field.hasArguments && !config.noNamespaces) {
+    result = `${resolver}<R, Parent, Context, ${pascalCase(field.name)}Args>`;
   } else {
     result = `${resolver}<R, Parent, Context>`;
   }
