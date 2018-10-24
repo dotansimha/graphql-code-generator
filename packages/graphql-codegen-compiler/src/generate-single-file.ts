@@ -1,5 +1,12 @@
 import { prepareSchemaForDocumentsOnly } from './prepare-documents-only';
-import { Settings, FileOutput, SchemaTemplateContext, Document, debugLog } from 'graphql-codegen-core';
+import {
+  Settings,
+  FileOutput,
+  SchemaTemplateContext,
+  Document,
+  debugLog,
+  TemplateDocumentFileReference
+} from 'graphql-codegen-core';
 import { GeneratorConfig } from 'graphql-codegen-core';
 import * as moment from 'moment';
 
@@ -8,7 +15,8 @@ export function generateSingleFile(
   executionSettings: Settings,
   config: GeneratorConfig,
   templateContext: SchemaTemplateContext,
-  documents: Document
+  documents: Document,
+  documentsFiles: TemplateDocumentFileReference[] = []
 ): FileOutput[] {
   debugLog(`[generateSingleFile] Compiling single file to: ${config.outFile}`);
 
@@ -16,6 +24,7 @@ export function generateSingleFile(
     {
       filename: config.outFile,
       content: compiledIndexTemplate({
+        documentsFiles,
         config: config.config,
         primitives: config.primitives,
         currentTime: moment().format(),

@@ -4,6 +4,8 @@ node packages/graphql-codegen-cli/dist/cli.js --template graphql-codegen-typescr
 CODEGEN_AVOID_OPTIONALS=true node packages/graphql-codegen-cli/dist/cli.js --template graphql-codegen-typescript-template --schema ./dev-test/test-schema/schema.json --out ./dev-test/test-schema/typings.avoidOptionals.ts
 CODEGEN_IMMUTABLE_TYPES=true node packages/graphql-codegen-cli/dist/cli.js --template graphql-codegen-typescript-template --schema ./dev-test/test-schema/schema.json --out ./dev-test/test-schema/typings.immutableTypes.ts
 
+node packages/graphql-codegen-cli/dist/cli.js --template graphql-codegen-graphql-files-typescript-modules --schema ./dev-test/githunt/schema.json --out ./dev-test/githunt/graphql-declared-modules.d.ts "./dev-test/githunt/**/*.graphql"
+
 node packages/graphql-codegen-cli/dist/cli.js --template graphql-codegen-typescript-template --schema ./dev-test/githunt/schema.json --out ./dev-test/githunt/types.ts "./dev-test/githunt/**/*.graphql"
 CODEGEN_ENUMS_AS_TYPES=true node packages/graphql-codegen-cli/dist/cli.js --template graphql-codegen-typescript-template --schema ./dev-test/githunt/schema.json --out ./dev-test/githunt/types.d.ts "./dev-test/githunt/**/*.graphql"
 CODEGEN_AVOID_OPTIONALS=true node packages/graphql-codegen-cli/dist/cli.js --template graphql-codegen-typescript-template --schema ./dev-test/githunt/schema.json --out ./dev-test/githunt/types.avoidOptionals.ts "./dev-test/githunt/**/*.graphql"

@@ -1,5 +1,5 @@
 import { MultiFileTemplates } from './types';
-import { GeneratorConfig, Settings, FileOutput } from 'graphql-codegen-core';
+import { GeneratorConfig, Settings, FileOutput, TemplateDocumentFileReference } from 'graphql-codegen-core';
 import {
   Enum,
   Fragment,
@@ -320,7 +320,8 @@ export function generateMultipleFiles(
   executionSettings: Settings,
   config: GeneratorConfig,
   templateContext: SchemaTemplateContext,
-  documents: Document
+  documents: Document,
+  documentsFiles: TemplateDocumentFileReference[] = []
 ): FileOutput[] {
   debugLog(`[generateMultipleFiles] Compiling multiple files...`);
   const result: FileOutput[] = [];
@@ -344,6 +345,7 @@ export function generateMultipleFiles(
           schemaContext,
           documents,
           {
+            documentsFiles,
             config: config.config,
             primitives: config.primitives,
             currentTime: moment().format()
@@ -365,6 +367,7 @@ export function generateMultipleFiles(
             schemaContext,
             documents,
             {
+              documentsFiles,
               config: config.config,
               currentTime: moment().format()
             },

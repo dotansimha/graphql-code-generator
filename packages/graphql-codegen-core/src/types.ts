@@ -234,7 +234,6 @@ export interface Document {
   operations: Operation[];
   hasFragments: boolean;
   hasOperations: boolean;
-  documentsFiles?: TemplateDocumentFileReference[];
 }
 
 export type DirectiveUseMap = { [key: string]: any };
