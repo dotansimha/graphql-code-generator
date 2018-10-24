@@ -12,6 +12,7 @@ export function getFieldResolver(type: Field, options: Handlebars.HelperOptions)
 
   let resolver: string;
 
+  // TODO: we can't tell if a field comes from Subscription
   if (type.fieldType === 'Subscription') {
     resolver = 'SubscriptionResolver';
   } else {
