@@ -182,6 +182,7 @@ export interface Fragment extends AstNode {
   hasFragmentsSpread: boolean;
   hasInlineFragments: boolean;
   hasFields: boolean;
+  originalFile?: string;
 }
 
 export interface Operation extends AstNode {
@@ -200,6 +201,7 @@ export interface Operation extends AstNode {
   hasFragmentsSpread: boolean;
   hasInlineFragments: boolean;
   hasFields: boolean;
+  originalFile?: string;
 }
 
 export interface Variable {
@@ -216,6 +218,15 @@ export interface Variable {
   isUnion: boolean;
   isInputType: boolean;
   isEnum: boolean;
+}
+
+export interface TemplateDocumentFileReference {
+  relative: string;
+  absolute: string;
+  cwd: string;
+  filename: string;
+  extension: string;
+  documents: AstNode[];
 }
 
 export interface Document {
@@ -298,6 +309,11 @@ export type CustomProcessingFunction = (
   mergedDocuments: Document,
   settings: any
 ) => FileOutput[] | Promise<FileOutput[]>;
+
+export interface DocumentFile {
+  filePath: string;
+  content: DocumentNode;
+}
 
 export function isCustomProcessingFunction(
   config: GeneratorConfig | CustomProcessingFunction

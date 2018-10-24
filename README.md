@@ -38,14 +38,15 @@ If you develop a **client-side with TypeScript, Angular and GraphQL**, you can u
 
 ## Available Templates:
 
-| Language                  | Purpose                                                        | Package Name & Docs                                                                                |
-| ------------------------- | -------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| TypeScript                | Generate server-side TypeScript types, and client-side typings | [`graphql-codegen-typescript-template`](./packages/templates/typescript)                           |
-| MongoDB TypeScript Models | Generate server-side TypeScript types, with MongoDB models     | [`graphql-codegen-typescript-mongodb-template`](./packages/templates/typescript-mongodb)           |
-| Apollo Angular            | Generate TypeScript types, and Apollo Angular Services         | [`graphql-codegen-apollo-angular-template`](./packages/templates/apollo-angular)                   |
-| React Apollo Typescript   | Generate TypeScript types, and React Apollo Components         | [`graphql-codegen-typescript-react-apollo-template`](./packages/templates/typescript-react-apollo) |
-| XSD                       | Generate XSD file                                              | [`graphql-xsd`](https://www.npmjs.com/package/graphql-xsd)                                         |
-| Introspection             | Generate Introspection file                                    | [`graphql-codegen-introspection-template`](./packages/templates/introspection)                     |
+| Language                                | Purpose                                                        | Package Name & Docs                                                                                         |
+| --------------------------------------- | -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| TypeScript                              | Generate server-side TypeScript types, and client-side typings | [`graphql-codegen-typescript-template`](./packages/templates/typescript)                                    |
+| MongoDB TypeScript Models               | Generate server-side TypeScript types, with MongoDB models     | [`graphql-codegen-typescript-mongodb-template`](./packages/templates/typescript-mongodb)                    |
+| Apollo Angular                          | Generate TypeScript types, and Apollo Angular Services         | [`graphql-codegen-apollo-angular-template`](./packages/templates/apollo-angular)                            |
+| React Apollo Typescript                 | Generate TypeScript types, and React Apollo Components         | [`graphql-codegen-typescript-react-apollo-template`](./packages/templates/typescript-react-apollo)          |
+| XSD                                     | Generate XSD file                                              | [`graphql-xsd`](https://www.npmjs.com/package/graphql-xsd)                                                  |
+| Introspection                           | Generate Introspection file                                    | [`graphql-codegen-introspection-template`](./packages/templates/introspection)                              |
+| TypeScript modules for `.graphql` files | Generates `declare module` for `.graphql` files                | [`graphql-codegen-graphql-files-typescript-modules`](./packages/templates/graphql-files-typescript-modules) |
 
 If you are looking for the **Flow** / **Swift** generators, please note that we will implement it soon again, but you can use `0.5.5` from NPM.
 
@@ -110,7 +111,7 @@ Allowed flags:
 | -h,--header         | String   | Header to add to the introspection HTTP request when using remote endpoint                                                                                                                                                                                                               |
 | -t,--template       | String   | Template name, for example: "typescript" (not required when using `--project`)                                                                                                                                                                                                           |
 | -p,--project        | String   | Project directory with templates (refer to "Custom Templates" section)                                                                                                                                                                                                                   |
-| --config            | String   | Path to project config JSON file (refer to "Custom Templates" section), defaults to `gql-gen.json`                                                                                                                                                                                        |
+| --config            | String   | Path to project config JSON file (refer to "Custom Templates" section), defaults to `gql-gen.json`                                                                                                                                                                                       |
 | -o,--out            | String   | Path for output file/directory. When using single-file generator specify filename, and when using multiple-files generator specify a directory                                                                                                                                           |
 | -m,--skip-schema    | void     | If specified, server side schema won't be generated through the template (enums won't omit)                                                                                                                                                                                              |
 | -c,--skip-documents | void     | If specified, client side documents won't be generated through the template                                                                                                                                                                                                              |

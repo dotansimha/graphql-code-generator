@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import gql from 'graphql-tag';
 import { introspectionToGraphQLSchema } from '../src/utils/introspection-to-schema';
 import { GraphQLSchema } from 'graphql';
-import { transformDocument } from '../src/operations/transform-document';
+import { transformDocument, transformDocumentsFiles } from '../src/operations/transform-document';
 import { SelectionSetFieldNode, SelectionSetFragmentSpread, SelectionSetInlineFragment } from '../src/types';
 
 describe('transformDocument', () => {
@@ -10,6 +10,54 @@ describe('transformDocument', () => {
 
   beforeAll(() => {
     schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('../../dev-test/githunt/schema.json').toString()));
+  });
+
+  it('should handle multiple files correctly', () => {
+    const fragment = {
+      filePath: './a.fragment.graphql',
+      content: gql`
+        fragment MyFragment on User {
+          login
+          avatar_url
+        }
+      `
+    };
+    const document = {
+      filePath: './my.query.graphql',
+      content: gql`
+        query MyQuery {
+          currentUser {
+            login
+            avatar_url
+          }
+        }
+      `
+    };
+
+    const result = transformDocumentsFiles(schema, [fragment, document]);
+    expect(result.operations[0].originalFile).toBe(document.filePath);
+    expect(result.fragments[0].originalFile).toBe(fragment.filePath);
+  });
+
+  it('should add the correct file path', () => {
+    const fakePath = './a.graphql';
+    const doc = gql`
+      fragment MyFragment on User {
+        login
+        avatar_url
+      }
+
+      query MyQuery {
+        currentUser {
+          login
+          avatar_url
+        }
+      }
+    `;
+
+    const document = transformDocument(schema, doc, fakePath);
+    expect(document.operations[0].originalFile).toBe(fakePath);
+    expect(document.fragments[0].originalFile).toBe(fakePath);
   });
 
   it('should return correct result when using simple fragment', () => {

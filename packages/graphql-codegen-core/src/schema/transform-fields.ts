@@ -69,9 +69,10 @@ function toFieldType(schema: GraphQLSchema, type: GraphQLNamedType): FieldType {
     Union: () => type instanceof GraphQLUnionType,
     InputType: () => type instanceof GraphQLInputObjectType,
     Enum: () => type instanceof GraphQLEnumType,
-    Query: () => schema.getQueryType() && schema.getQueryType().name === type.name,
-    Mutation: () => schema.getMutationType() && schema.getMutationType().name === type.name,
-    Subscription: () => schema.getSubscriptionType() && schema.getSubscriptionType().name === type.name
+    Query: () => schema.getQueryType() && (schema.getQueryType() as GraphQLObjectType).name === type.name,
+    Mutation: () => schema.getMutationType() && (schema.getMutationType() as GraphQLObjectType).name === type.name,
+    Subscription: () =>
+      schema.getSubscriptionType() && (schema.getSubscriptionType() as GraphQLObjectType).name === type.name
   };
 
   return Object.keys(typeMap).find(fieldType => typeMap[fieldType]()) as FieldType;

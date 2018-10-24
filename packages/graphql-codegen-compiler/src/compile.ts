@@ -17,6 +17,8 @@ import { flattenTypes } from './flatten-types';
 import { generateMultipleFiles } from './generate-multiple-files';
 import { generateSingleFile } from './generate-single-file';
 import { cleanTemplateComments } from './clean-template';
+import { buildFilesArray } from './build-files-array';
+import { TemplateDocumentFileReference } from 'graphql-codegen-core';
 
 export const DEFAULT_SETTINGS: Settings = {
   generateSchema: true,
@@ -40,6 +42,7 @@ export async function compileTemplate(
 
   const executionSettings = Object.assign(DEFAULT_SETTINGS, settings);
   let mergedDocuments: Document;
+  let documentsFiles: TemplateDocumentFileReference[];
 
   if (!executionSettings.generateDocuments) {
     debugLog(`[compileTemplate] generateDocuments is false, ignoring documents...`);
@@ -50,6 +53,7 @@ export async function compileTemplate(
       hasFragments: false,
       hasOperations: false
     };
+    documentsFiles = [];
   } else {
     mergedDocuments = documents.reduce(
       (previousValue: Document, item: Document): Document => {
@@ -71,6 +75,8 @@ export async function compileTemplate(
         mergedDocuments.operations.length
       } operations and ${mergedDocuments.fragments.length} fragments`
     );
+
+    documentsFiles = buildFilesArray(mergedDocuments);
 
     if (!isExternalProcessingFunction && (config as GeneratorConfig).flattenTypes) {
       debugLog(`[compileTemplate] flattenTypes is true, flattening all selection sets from all documents...`);
@@ -132,7 +138,8 @@ export async function compileTemplate(
         executionSettings,
         config,
         templateContext,
-        mergedDocuments
+        mergedDocuments,
+        documentsFiles
       );
     } else if (config.inputType === EInputType.MULTIPLE_FILES || config.inputType === EInputType.PROJECT) {
       if (config.inputType === EInputType.MULTIPLE_FILES) {
@@ -161,7 +168,14 @@ export async function compileTemplate(
 
       debugLog(`[compileTemplate] Templates names: `, Object.keys(compiledTemplates));
 
-      return generateMultipleFiles(compiledTemplates, executionSettings, config, templateContext, mergedDocuments);
+      return generateMultipleFiles(
+        compiledTemplates,
+        executionSettings,
+        config,
+        templateContext,
+        mergedDocuments,
+        documentsFiles
+      );
     } else {
       throw new Error(`Invalid inputType specified: ${config.inputType}!`);
     }

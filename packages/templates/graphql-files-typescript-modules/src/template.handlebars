@@ -1,0 +1,18 @@
+/*tslint:disable*/
+{{#if config.printTime }}
+// Generated in {{ currentTime }}
+{{/if}}
+{{#each documentsFiles}} 
+declare module '*/{{ filename }}' {
+    import { DocumentNode } from 'graphql';
+    const defaultDocument: DocumentNode;
+    {{#each documents}}{{#if operationType}}const {{ name }}: DocumentNode;{{/if}}{{/each}}
+    
+    export {
+      {{#each documents}}{{#if operationType}}{{ name }},{{/if}}{{/each}}
+    };
+
+    export default defaultDocument;
+}
+
+{{/each}}
