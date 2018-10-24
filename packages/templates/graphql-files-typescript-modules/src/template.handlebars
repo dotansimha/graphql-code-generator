@@ -1,0 +1,16 @@
+{{#if config.printTime }}
+// Generated in {{ currentTime }}
+{{/if}}
+{{#each documentsFiles}} 
+declare module '{{filenameToModuleName relative}}' {
+    import { DocumentNode } from 'graphql';
+    const defaultDocument: DocumentNode;
+    
+    export {
+      {{#each documents}}{{#if operationType}}{{ name }},{{/if}}{{/each}}
+    };
+
+    export default defaultDocument;
+}
+
+{{/each}}
