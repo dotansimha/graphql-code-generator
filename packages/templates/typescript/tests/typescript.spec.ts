@@ -1684,5 +1684,63 @@ describe('TypeScript template', () => {
         }
       `);
     });
+
+    it('should separate fragments with |', async () => {
+      const schema = makeExecutableSchema({
+        typeDefs: `
+          type Photo {
+            height: Int!
+            width: Int!
+          }
+          
+          type Sport {
+            id: Int!
+            name: String!
+            teams: Int!
+          }
+          
+          union Extra = Photo | Sport
+          
+          type Person {
+            extra: Extra
+          }
+          
+          type Query {
+            person: Person
+          }
+        `
+      });
+      const context = schemaToTemplateContext(schema);
+
+      const documents = gql`
+        fragment PhotoFragment on Photo {
+          width
+        }
+
+        fragment SportFragment on Sport {
+          id
+        }
+
+        query search {
+          person {
+            extra {
+              ...PhotoFragment
+              ...SportFragment
+              ... on Sport {
+                name
+              }
+            }
+          }
+        }
+      `;
+
+      const transformedDocument = transformDocument(schema, documents);
+      const compiled = await compileTemplate(config, context, [transformedDocument], { generateSchema: false });
+      const content = compiled[0].content;
+
+      expect(content).toBeSimilarStringTo(`
+        export type Extra = (PhotoFragment.Fragment & SportFragment.Fragment) | SportInlineFragment
+      `);
+    });
   });
 });
