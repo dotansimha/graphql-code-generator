@@ -7,7 +7,7 @@ export class GraphQLCodegenPlugin {
   constructor(private options: CLIOptions) {}
 
   apply(compiler: Compiler) {
-    compiler.hooks.beforeCompile.tapAsync(this.pluginName, () => this.run());
+    compiler.hooks.beforeCompile.tapPromise(this.pluginName, () => this.run());
   }
 
   run() {
