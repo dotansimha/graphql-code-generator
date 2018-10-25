@@ -1,5 +1,5 @@
 import { registerHelper, SafeString } from 'handlebars';
-import { camelCase, pascalCase, snakeCase, titleCase } from 'change-case';
+import { camelCase, snakeCase, titleCase } from 'change-case';
 import { oneLineTrim } from 'common-tags';
 import {
   Argument,
@@ -8,7 +8,8 @@ import {
   SchemaTemplateContext,
   SelectionSetFieldNode,
   SelectionSetFragmentSpread,
-  Variable
+  Variable,
+  toPascalCase
 } from 'graphql-codegen-core';
 import { getFieldTypeAsString } from './field-type-to-string';
 import { sanitizeFilename } from './sanitizie-filename';
@@ -251,16 +252,7 @@ export const initHelpers = (config: GeneratorConfig, schemaContext: SchemaTempla
     return (str || '').toUpperCase();
   });
 
-  registerHelper('toPascalCase', function(str: string) {
-    if (str.charAt(0) === '_') {
-      return str.replace(
-        /^(_*)(.*)/,
-        (_match, underscorePrefix, typeName) => `${underscorePrefix}${pascalCase(typeName || '')}`
-      );
-    }
-
-    return pascalCase(str || '');
-  });
+  registerHelper('toPascalCase', toPascalCase);
 
   registerHelper('toSnakeCase', function(str: string) {
     return snakeCase(str || '');

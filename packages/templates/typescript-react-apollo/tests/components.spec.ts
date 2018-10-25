@@ -1,4 +1,4 @@
-import './custom-matchers';
+import 'graphql-codegen-core/dist/testing';
 import { gql, introspectionToGraphQLSchema, schemaToTemplateContext, transformDocument } from 'graphql-codegen-core';
 import { compileTemplate } from 'graphql-codegen-compiler';
 import config from '../dist';
