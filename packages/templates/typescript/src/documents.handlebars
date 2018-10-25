@@ -10,13 +10,13 @@ export namespace {{ toPascalCase name }} {
   {{/each}}
   }
 
-  export type {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}{{ toPascalCase operationType }} ={{#if hasFields}} {
+  export type {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}{{ toPascalCase operationType }} = {{#if hasFields}} {
     {{#if @root.config.immutableTypes }}readonly {{/if}}__typename?: "{{ toPascalCase operationType }}";
     {{> selectionSet fields=fields prefix=name }}
   }{{/if}}{{> fragments this=this prefix=name }}
   {{#each innerModels }}
 
-  export type {{#if @root.config.noNamespaces}}{{ toPascalCase ../name }}{{/if}}{{ toPascalCase modelType }} ={{#if hasFields}} {
+  export type {{#if @root.config.noNamespaces}}{{ toPascalCase ../name }}{{/if}}{{ toPascalCase modelType }} = {{#if hasFields}} {
   {{#unless hasInlineFragments}}
     {{#if @root.config.immutableTypes }}readonly {{/if}}__typename?: "{{ schemaBaseType }}";
   {{else}}
