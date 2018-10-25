@@ -1,4 +1,4 @@
-import './custom-matchers';
+import 'graphql-codegen-core/dist/testing';
 import {
   GraphQLSchema,
   makeExecutableSchema,

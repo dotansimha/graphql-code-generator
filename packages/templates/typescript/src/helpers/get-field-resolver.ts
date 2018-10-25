@@ -1,6 +1,5 @@
 import { SafeString } from 'handlebars';
-import { pascalCase } from 'change-case';
-import { Field, Type } from 'graphql-codegen-core';
+import { Field, Type, toPascalCase } from 'graphql-codegen-core';
 import { GraphQLSchema } from 'graphql';
 
 export function getFieldResolver(field: Field, type: Type, options: Handlebars.HelperOptions) {
@@ -22,7 +21,7 @@ export function getFieldResolver(field: Field, type: Type, options: Handlebars.H
   }
 
   if (field.hasArguments && !config.noNamespaces) {
-    result = `${resolver}<R, Parent, Context, ${pascalCase(field.name)}Args>`;
+    result = `${resolver}<R, Parent, Context, ${toPascalCase(field.name)}Args>`;
   } else {
     result = `${resolver}<R, Parent, Context>`;
   }

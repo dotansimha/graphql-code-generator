@@ -60,6 +60,8 @@
     ]
   },
   "dependencies": {
+    "change-case": "3.0.2",
+    "common-tags": "1.8.0",
     "graphql-tag": "2.10.0",
     "graphql-tools": "4.0.2",
     "ts-log": "2.1.3",

@@ -1,6 +1,6 @@
+import 'graphql-codegen-core/dist/testing';
 import { compileTemplate } from '../../../graphql-codegen-compiler/dist';
 import config from '../dist';
-import './custom-matchers';
 import {
   GraphQLSchema,
   makeExecutableSchema,

@@ -4,6 +4,7 @@ export { schemaToTemplateContext } from './schema/schema-to-template-context';
 export { transformDocument, transformDocumentsFiles } from './operations/transform-document';
 export { validateIntrospection, introspectionToGraphQLSchema } from './utils/introspection-to-schema';
 export { parse } from './utils/parse';
+export { toPascalCase } from './utils/to-pascal-case';
 export * from './types';
 export { debugLog } from './debugging';
 export {
