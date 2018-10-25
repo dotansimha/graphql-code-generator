@@ -371,7 +371,8 @@ describe('TypeScript template', () => {
       expect(content).toBeSimilarStringTo(`/** type-description */`);
       expect(content).toBeSimilarStringTo(`
         export interface Query {
-          fieldTest?: string | null; /** field-description */
+          /** field-description */
+          fieldTest?: string | null;
         }
       `);
     });

@@ -65,7 +65,8 @@ export type SubscriptionResolver<Result, Parent = any, Context = any, Args = any
     {{~# if hasArguments }}
 export interface {{ toPascalCase name }}{{ toPascalCase ../name }}Args {
 {{#each arguments}}
-  {{ name }}{{ getOptionals this }}: {{ convertedType this }}; {{ toComment description }}
+  {{ toComment description }}
+  {{ name }}{{ getOptionals this }}: {{ convertedType this }};
 {{/each}}
 }
     {{/if}}
