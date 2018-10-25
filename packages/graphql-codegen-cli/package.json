@@ -70,7 +70,7 @@
   },
   "dependencies": {
     "graphql-config": "2.2.1",
-    "@graphql-modules/epoxy": "0.1.8",
+    "@graphql-modules/epoxy": "0.1.9",
     "@types/babylon": "6.16.3",
     "@types/is-glob": "4.0.0",
     "@types/prettier": "1.13.2",
