@@ -5,9 +5,10 @@ import * as React from 'react';
 import gql from 'graphql-tag';
 {{/unless}}
 
-
+{{ blockCommentIf 'Fragments' fragments }}
 {{{generateFragments fragments}}}
 
+{{ blockCommentIf 'Components' operations }}
 {{#each operations }}
     {{#unless @root.config.noNamespaces}}
 export namespace {{toPascalCase name}} {
