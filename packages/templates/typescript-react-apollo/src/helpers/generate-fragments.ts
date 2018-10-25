@@ -9,7 +9,7 @@ export function generateFragments(fragments: Fragment[], options: Handlebars.Hel
   if (!fragments) {
     return '';
   }
-  const graph = new DepGraph({ circular: true });
+  const graph = new DepGraph<Fragment>({ circular: true });
   fragments.forEach(fragment => {
     graph.addNode(fragment.name, fragment);
   });
@@ -36,12 +36,12 @@ export function generateFragments(fragments: Fragment[], options: Handlebars.Hel
       // Because all of them will have same namespace FooBar
       if (config.noNamespaces) {
         return `
-          export const ${pascalCasedFragmentName}Document = ${gql(fragment, options)};
+          export const ${pascalCasedFragmentName}FragmentDoc = ${gql(fragment, options)};
         `;
       } else {
         return `
           export namespace ${pascalCasedFragmentName} {
-            export const Document = ${gql(fragment, options)};
+            export const FragmentDoc = ${gql(fragment, options)};
           }
         `;
       }
