@@ -1,6 +1,7 @@
 import 'graphql-codegen-core/dist/testing';
 import { gql, introspectionToGraphQLSchema, schemaToTemplateContext, transformDocument } from 'graphql-codegen-core';
 import { compileTemplate } from 'graphql-codegen-compiler';
+import { makeExecutableSchema } from 'graphql-tools';
 import config from '../dist';
 import * as fs from 'fs';
 
@@ -193,7 +194,7 @@ describe('Components', () => {
 
     expect(content).toBeSimilarStringTo(`
       export namespace FeedWithRepository {
-        export const Document = gql\`
+        export const FragmentDoc = gql\`
           fragment FeedWithRepository on FeedType {
             id
             commentCount
@@ -202,14 +203,14 @@ describe('Components', () => {
             }
           }
 
-          \${RepositoryWithOwner.Document}
+          \${RepositoryWithOwner.FragmentDoc}
 
         \`;
       }
       `);
     expect(content).toBeSimilarStringTo(`
       export namespace RepositoryWithOwner {
-        export const Document = gql\`
+        export const FragmentDoc = gql\`
           fragment RepositoryWithOwner on Repository {
             full_name
             html_url
@@ -267,7 +268,7 @@ describe('Components', () => {
             }
           }
 
-          \${FeedWithRepository.Document}
+          \${FeedWithRepository.FragmentDoc}
         \`;
       `);
   });
@@ -304,11 +305,11 @@ describe('Components', () => {
             ...SimpleFeed
           }
         }
-        \${SimpleFeed.Document}
+        \${SimpleFeed.FragmentDoc}
       \`
     `);
     expect(content).toBeSimilarStringTo(`
-      const Document = gql\` fragment SimpleFeed on FeedType {
+      const FragmentDoc = gql\` fragment SimpleFeed on FeedType {
         id
         commentCount
       }
@@ -342,5 +343,82 @@ describe('Components', () => {
     const feedWithRepositoryPos = content.indexOf('fragment FeedWithRepository');
     const repositoryWithOwnerPos = content.indexOf('fragment RepositoryWithOwner');
     expect(repositoryWithOwnerPos).toBeLessThan(feedWithRepositoryPos);
+  });
+
+  it('Issue 702 - handle duplicated documents when fragment and query have the same name', async () => {
+    const schema = makeExecutableSchema({
+      typeDefs: `
+        type Event {
+          type: String!
+          name: String!
+        }
+
+        type Query {
+          events: [Event]
+        }
+
+        schema {
+          query: Query
+        }
+      `
+    });
+    const context = schemaToTemplateContext(schema);
+    const documents = gql`
+      fragment event on Event {
+        name
+      }
+
+      query event {
+        events {
+          ...event
+        }
+      }
+    `;
+    const transformedDocument = transformDocument(schema, documents);
+    const compiled = await compileTemplate(
+      {
+        ...config,
+        config: {
+          noNamespaces: false
+        }
+      },
+      context,
+      [transformedDocument],
+      { generateSchema: false }
+    );
+    const content = compiled[0].content;
+
+    expect(content).toBeSimilarStringTo(`
+      export namespace Event {
+        export const FragmentDoc = gql\`
+          fragment event on Event {
+            name
+          }
+        \`;
+      }
+    `);
+
+    expect(content).toBeSimilarStringTo(`
+      export namespace Event {
+        export const FragmentDoc = gql\`
+          fragment event on Event {
+            name
+          }
+        \`;
+      }
+    `);
+
+    expect(content).toBeSimilarStringTo(`
+      export namespace Event {
+        export const Document = gql\`
+          query event {
+            events {
+              ...event
+            }
+          }
+
+          \${Event.FragmentDoc}
+      \`;
+    `);
   });
 });
