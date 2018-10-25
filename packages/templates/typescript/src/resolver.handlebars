@@ -4,7 +4,8 @@ export namespace {{ toPascalCase name }}Resolvers {
 {{/unless}}
   export interface {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Resolvers<Context = any> {
     {{#each fields}}
-    {{ name }}?: {{#if @root.config.noNamespaces}}{{ toPascalCase ../name }}{{/if}}{{ getFieldResolverName name }}<{{ convertedType this}}, any, Context>; {{ toComment description }}
+    {{ toComment description }}
+    {{ name }}?: {{#if @root.config.noNamespaces}}{{ toPascalCase ../name }}{{/if}}{{ getFieldResolverName name }}<{{ convertedType this}}, any, Context>;
     {{/each}}
   }
 
@@ -15,7 +16,8 @@ export namespace {{ toPascalCase name }}Resolvers {
 
   export interface {{#if @root.config.noNamespaces}}{{ toPascalCase ../name }}{{/if}}{{ toPascalCase name }}Args {
   {{#each arguments}}
-    {{ name }}{{ getOptionals this }}: {{ convertedType this }}; {{ toComment description }}
+    {{ toComment description }}
+    {{ name }}{{ getOptionals this }}: {{ convertedType this }};
   {{/each}}
   }
 
