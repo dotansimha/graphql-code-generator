@@ -8,6 +8,7 @@
   },
   "scripts": {
     "clean": "rimraf ./dist",
+    "lint": "tslint src/**/*.ts",
     "prebuild": "yarn clean && yarn lint",
     "build": "tsc",
     "prestart": "yarn build",
