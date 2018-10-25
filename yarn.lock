@@ -16,19 +16,19 @@
     esutils "^2.0.2"
     js-tokens "^4.0.0"
 
-"@graphql-modules/epoxy@0.1.8":
-  version "0.1.8"
-  resolved "https://registry.yarnpkg.com/@graphql-modules/epoxy/-/epoxy-0.1.8.tgz#e9244a3a0ad2a1ff0434f28f6c177c481994d55f"
+"@graphql-modules/epoxy@0.1.9":
+  version "0.1.9"
+  resolved "https://registry.yarnpkg.com/@graphql-modules/epoxy/-/epoxy-0.1.9.tgz#291879d517ba4473ea334edbb137a2cc6aed384c"
   dependencies:
-    "@graphql-modules/logger" "0.1.8"
+    "@graphql-modules/logger" "0.1.9"
     "@types/deepmerge" "2.1.0"
-    deepmerge "2.1.1"
-    graphql-tools "4.0.0"
+    deepmerge "2.2.1"
+    graphql-tools "4.0.2"
     tslib "1.9.3"
 
-"@graphql-modules/logger@0.1.8":
-  version "0.1.8"
-  resolved "https://registry.yarnpkg.com/@graphql-modules/logger/-/logger-0.1.8.tgz#ff92c4e97e9fdd4ef04c79b6dc9d83dfb0d01a39"
+"@graphql-modules/logger@0.1.9":
+  version "0.1.9"
+  resolved "https://registry.yarnpkg.com/@graphql-modules/logger/-/logger-0.1.9.tgz#768186df12ad488623ef7231d1bf096fe1610b76"
   dependencies:
     moment "2.22.2"
     tslib "1.9.3"
@@ -1625,9 +1625,9 @@ deep-is@~0.1.3:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/deep-is/-/deep-is-0.1.3.tgz#b369d6fb5dbc13eecf524f91b070feedc357cf34"
 
-deepmerge@2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/deepmerge/-/deepmerge-2.1.1.tgz#e862b4e45ea0555072bf51e7fd0d9845170ae768"
+deepmerge@2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/deepmerge/-/deepmerge-2.2.1.tgz#5d3ff22a01c00f645405a2fbc17d0778a1801170"
 
 default-require-extensions@^1.0.0:
   version "1.0.0"
@@ -2448,16 +2448,6 @@ graphql-request@^1.5.0:
 graphql-tag@2.10.0:
   version "2.10.0"
   resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.10.0.tgz#87da024be863e357551b2b8700e496ee2d4353ae"
-
-graphql-tools@4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/graphql-tools/-/graphql-tools-4.0.0.tgz#6ea01937c6f947212f83567ba687e97c22fdd2a6"
-  dependencies:
-    apollo-link "^1.2.3"
-    apollo-utilities "^1.0.1"
-    deprecated-decorator "^0.1.6"
-    iterall "^1.1.3"
-    uuid "^3.1.0"
 
 graphql-tools@4.0.2:
   version "4.0.2"
