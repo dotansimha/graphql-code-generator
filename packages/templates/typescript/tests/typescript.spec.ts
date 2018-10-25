@@ -1729,6 +1729,9 @@ describe('TypeScript template', () => {
               ... on Sport {
                 name
               }
+              ... on Photo {
+                height
+              }
             }
           }
         }
@@ -1739,7 +1742,7 @@ describe('TypeScript template', () => {
       const content = compiled[0].content;
 
       expect(content).toBeSimilarStringTo(`
-        export type Extra = (PhotoFragment.Fragment & SportFragment.Fragment) | SportInlineFragment
+        export type Extra = PhotoFragment.Fragment | SportFragment.Fragment | SportInlineFragment | PhotoInlineFragment
       `);
     });
   });
