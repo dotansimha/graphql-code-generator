@@ -23,7 +23,7 @@ export namespace {{ toPascalCase name }} {
     {{#if @root.config.immutableTypes }}readonly {{/if}}__typename?: {{#each inlineFragments}}{{#if @root.config.noNamespaces}}{{ toPascalCase ../../name }}{{/if}}{{onType}}["__typename"]{{#unless @last}} | {{/unless}}{{/each}};
   {{/unless}}
     {{> selectionSet fields=fields prefix=../name }}
-  }{{/if}}{{> fragments this=this prefix=../name }}
+  }{{/if}} {{> fragments this=this prefix=../name }}
   {{/each}}
 {{#unless @root.config.noNamespaces}}
 }
