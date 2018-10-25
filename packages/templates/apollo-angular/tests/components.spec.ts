@@ -13,15 +13,6 @@ import config from '../dist';
 import * as fs from 'fs';
 import { DocumentNode, extendSchema } from 'graphql';
 
-const compileAndBuildContext = (typeDefs: string): { context: SchemaTemplateContext; schema: GraphQLSchema } => {
-  const schema = makeExecutableSchema({ typeDefs, resolvers: {}, allowUndefinedInResolve: true });
-
-  return {
-    schema,
-    context: schemaToTemplateContext(schema)
-  };
-};
-
 describe('Components', () => {
   it('should generate Component', async () => {
     const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
