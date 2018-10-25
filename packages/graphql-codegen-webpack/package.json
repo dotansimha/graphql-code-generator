@@ -64,7 +64,7 @@
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0"
   },
   "dependencies": {
-    "graphql-codegen-core": "0.12.6"
+    "graphql-code-generator": "0.12.6"
   },
   "devDependencies": {
     "@types/webpack": "4.4.17"
