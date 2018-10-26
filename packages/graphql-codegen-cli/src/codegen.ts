@@ -6,8 +6,6 @@ import * as mkdirp from 'mkdirp';
 import { DocumentNode, extendSchema, GraphQLSchema, parse } from 'graphql';
 import { getGraphQLProjectConfig, ConfigNotFoundError } from 'graphql-config';
 
-import { documentsFromGlobs } from './utils/documents-glob';
-import { loadDocumentsSources } from './loaders/documents/document-loader';
 import { scanForTemplatesInPath } from './loaders/template/templates-scanner';
 import { ALLOWED_CUSTOM_TEMPLATE_EXT, compileTemplate } from 'graphql-codegen-compiler';
 import {
@@ -23,14 +21,11 @@ import {
   transformDocumentsFiles,
   useWinstonLogger
 } from 'graphql-codegen-core';
-import { IntrospectionFromFileLoader } from './loaders/schema/introspection-from-file';
-import { IntrospectionFromUrlLoader } from './loaders/schema/introspection-from-url';
-import { SchemaFromTypedefs } from './loaders/schema/schema-from-typedefs';
-import { SchemaFromExport } from './loaders/schema/schema-from-export';
 import { CLIOptions } from './cli-options';
 import { mergeGraphQLSchemas } from '@graphql-modules/epoxy';
 import { makeExecutableSchema } from 'graphql-tools';
 import { SchemaTemplateContext } from 'graphql-codegen-core/dist/types';
+import { loadSchema, loadDocuments } from './load';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
@@ -138,13 +133,6 @@ export const validateCliOptions = (options: CLIOptions) => {
     );
   }
 };
-
-const schemaHandlers = [
-  new IntrospectionFromUrlLoader(),
-  new IntrospectionFromFileLoader(),
-  new SchemaFromTypedefs(),
-  new SchemaFromExport()
-];
 
 export const executeWithOptions = async (options: CLIOptions & { [key: string]: any }): Promise<FileOutput[]> => {
   validateCliOptions(options);
@@ -311,21 +299,11 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
   }
 
   const executeGeneration = async () => {
-    const loadSchema = async (pointToSchema: string) => {
-      for (const handler of schemaHandlers) {
-        if (await handler.canHandle(pointToSchema)) {
-          return handler.handle(pointToSchema, options);
-        }
-      }
-
-      throw new Error('Could not handle schema');
-    };
-
     const schemas: (GraphQLSchema | Promise<GraphQLSchema>)[] = [];
 
     try {
       debugLog(`[executeWithOptions] Schema is being loaded `);
-      schemas.push(loadSchema(schema));
+      schemas.push(loadSchema(schema, options));
     } catch (e) {
       debugLog(`[executeWithOptions] Failed to load schema`, e);
       cliError('Invalid --schema provided, please use a path to local file, HTTP endpoint or a glob expression!');
@@ -334,7 +312,7 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
     if (clientSchema) {
       try {
         debugLog(`[executeWithOptions] Client Schema is being loaded `);
-        schemas.push(loadSchema(clientSchema));
+        schemas.push(loadSchema(clientSchema, options));
       } catch (e) {
         debugLog(`[executeWithOptions] Failed to load client schema`, e);
         cliError('Invalid --clientSchema provided, please use a path to local file or a glob expression!');
@@ -367,8 +345,9 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
       }
     });
 
-    const foundDocumentsPaths = await documentsFromGlobs(documents);
-    const documentsFiles = await loadDocumentsSources(foundDocumentsPaths);
+    // const foundDocumentsPaths = await documentsFromGlobs(documents);
+    // const documentsFiles = await loadDocumentsSources(foundDocumentsPaths);
+    const documentsFiles = await loadDocuments(documents);
     const loadDocumentErrors = validateGraphQlDocuments(graphQlSchema, documentsFiles);
 
     if (loadDocumentErrors.length > 0) {
