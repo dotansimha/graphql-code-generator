@@ -38,7 +38,7 @@ describe('Resolvers', () => {
     expect(content).toBeSimilarStringTo(`
     import { GraphQLResolveInfo } from 'graphql';
 
-    export type Resolver<Result, Parent = any, Context = any, Args = any> = (
+    export type Resolver<Result, Parent = any, Context = any, Args = never> = (
       parent: Parent,
       args: Args,
       context: Context,
@@ -60,9 +60,10 @@ describe('Resolvers', () => {
       ): R | Result | Promise<R | Result>;
     }
     
-    export type SubscriptionResolver<Result, Parent = any, Context = any, Args = any> =
+    export type SubscriptionResolver<Result, Parent = any, Context = any, Args = never> =
       | ((...args: any[]) => ISubscriptionResolverObject<Result, Parent, Context, Args>)
-      | ISubscriptionResolverObject<Result, Parent, Context, Args>;
+      | ISubscriptionResolverObject<Result, Parent, Context, 
+>;
     `);
   });
 
@@ -173,7 +174,7 @@ describe('Resolvers', () => {
       `);
 
     expect(content).not.toBeSimilarStringTo(`
-        export type Resolver<Result, Parent = any, Context = any, Args = any> = (
+        export type Resolver<Result, Parent = any, Context = any, Args = never> = (
           parent: Parent,
           args: Args,
           context: Context,
