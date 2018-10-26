@@ -133,7 +133,6 @@ describe('executeWithOptions', () => {
       expect(content).toMatch('export interface Post');
       expect(content).toMatch('allPosts: (Post | null)[];');
       expect(content).toMatch('allPosts: (Post | null)[];');
-      expect(content).toMatch('allPosts?: AllPostsResolver<(Post | null)[], any, Context>;');
 
       expect(result.length).toBe(1);
     });
