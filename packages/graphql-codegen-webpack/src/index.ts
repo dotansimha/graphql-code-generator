@@ -1,9 +1,12 @@
-import { generate, CLIOptions } from 'graphql-code-generator';
+import { generate, CLIOptions, loadSchema } from 'graphql-code-generator';
 import { resolve } from 'path';
+import { printSchema } from 'graphql';
+import { createHash } from 'crypto';
 
 class IgnoringWatchFileSystem {
   constructor(private compiler: any, private wfs: any, private ignoredFile: string) {}
 
+  // TODO: include documents
   watch(files: string[], dirs: any, missing: any, startTime: any, options: any, callback: any, callbackUndelayed: any) {
     const notIgnored = (path: string) => path !== this.ignoredFile;
 
@@ -27,7 +30,7 @@ class IgnoringWatchFileSystem {
         }
 
         // purge ignored file
-        (this.compiler.inputFileSystem as any).purge(this.ignoredFile);
+        this.compiler.inputFileSystem.purge(this.ignoredFile);
         // set new timestamp
         fileTimestamps.set(this.ignoredFile, new Date().getTime());
 
@@ -55,22 +58,39 @@ class IgnoringWatchFileSystem {
 
 export class GraphQLCodegenPlugin {
   pluginName = 'GraphQLCodeGeneratorPlugin';
-  filepath: string;
+  outputFile: string;
+  schemaLocation: string;
+  schemaChecksum = '';
+  documentsChecksum = '';
 
   constructor(private options: CLIOptions) {
-    this.filepath = resolve(process.cwd(), this.options.out);
+    this.outputFile = resolve(process.cwd(), this.options.out);
+    this.schemaLocation = resolve(process.cwd(), this.options.schema);
   }
 
   apply(compiler: any) {
     compiler.hooks.afterEnvironment.tap(this.pluginName, () => {
-      compiler.watchFileSystem = new IgnoringWatchFileSystem(compiler, compiler.watchFileSystem, this.filepath);
+      compiler.watchFileSystem = new IgnoringWatchFileSystem(compiler, compiler.watchFileSystem, this.outputFile);
     });
 
     compiler.hooks.beforeCompile.tapPromise(this.pluginName, () => this.generate());
   }
 
-  // TODO: add caching
   async generate() {
+    const schemaChecksum = checksum(printSchema(await loadSchema(this.schemaLocation, this.options)));
+
+    if (schemaChecksum === this.schemaChecksum) {
+      return;
+    } else {
+      this.schemaChecksum = schemaChecksum;
+    }
+
     return generate(this.options, true);
   }
+}
+
+function checksum(str: string) {
+  return createHash('md5')
+    .update(str, 'utf8')
+    .digest('hex');
 }
