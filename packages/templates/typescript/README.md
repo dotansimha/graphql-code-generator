@@ -101,10 +101,6 @@ Will generate the `const` enums as TypeScript. [Read this for more information](
 
 This will cause the codegen to output `readonly` properties and `ReadonlyArray`.
 
-### `resolvers` (or `CODEGEN_RESOLVERS`, default value: `true`)
-
-This will cause the codegen to output types for resolvers.
-
 ### `noNamespaces` (or `CODEGEN_NO_NAMESPACES`, default value: `null`)
 
 This will cause the codegen not to use `namespace` in typings

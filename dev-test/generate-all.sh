@@ -1,5 +1,7 @@
 #/bin/sh
 
+node packages/graphql-codegen-cli/dist/cli.js --template graphql-codegen-typescript-resolvers-template --schema ./dev-test/test-schema/schema.json --out ./dev-test/test-schema/resolvers-types.ts
+
 node packages/graphql-codegen-cli/dist/cli.js --template graphql-codegen-typescript-template --schema ./dev-test/test-schema/schema.json --out ./dev-test/test-schema/typings.ts
 CODEGEN_AVOID_OPTIONALS=true node packages/graphql-codegen-cli/dist/cli.js --template graphql-codegen-typescript-template --schema ./dev-test/test-schema/schema.json --out ./dev-test/test-schema/typings.avoidOptionals.ts
 CODEGEN_IMMUTABLE_TYPES=true node packages/graphql-codegen-cli/dist/cli.js --template graphql-codegen-typescript-template --schema ./dev-test/test-schema/schema.json --out ./dev-test/test-schema/typings.immutableTypes.ts
