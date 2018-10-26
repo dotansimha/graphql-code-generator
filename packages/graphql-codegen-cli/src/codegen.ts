@@ -31,6 +31,7 @@ import { CLIOptions } from './cli-options';
 import { mergeGraphQLSchemas } from '@graphql-modules/epoxy';
 import { makeExecutableSchema } from 'graphql-tools';
 import { SchemaTemplateContext } from 'graphql-codegen-core/dist/types';
+import { logWithSpinner, succeedSpinner, failSpinner } from './spinner';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
@@ -91,6 +92,7 @@ export const initCLI = (args: any): CLIOptions => {
 };
 
 export const cliError = (err: any, exitOnError = true) => {
+  failSpinner();
   let msg: string;
 
   if (err instanceof Error) {
@@ -147,6 +149,7 @@ const schemaHandlers = [
 ];
 
 export const executeWithOptions = async (options: CLIOptions & { [key: string]: any }): Promise<FileOutput[]> => {
+  logWithSpinner('Validating options');
   validateCliOptions(options);
 
   const schema = options.schema;
@@ -196,6 +199,8 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
       }
 
       templateConfig = templateFromExport.default || templateFromExport.config || templateFromExport;
+      logWithSpinner(`Template: ${template}`);
+      succeedSpinner();
     } catch (e) {
       throw new Error(`Unknown codegen template: "${template}", please make sure it's installed using npm/Yarn!`);
     }
@@ -324,17 +329,21 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
     const schemas: (GraphQLSchema | Promise<GraphQLSchema>)[] = [];
 
     try {
+      logWithSpinner('Loading remote schema');
       debugLog(`[executeWithOptions] Schema is being loaded `);
       schemas.push(loadSchema(schema));
+      succeedSpinner();
     } catch (e) {
       debugLog(`[executeWithOptions] Failed to load schema`, e);
       cliError('Invalid --schema provided, please use a path to local file, HTTP endpoint or a glob expression!');
     }
 
     if (clientSchema) {
+      logWithSpinner('Loading client schema');
       try {
         debugLog(`[executeWithOptions] Client Schema is being loaded `);
         schemas.push(loadSchema(clientSchema));
+        succeedSpinner();
       } catch (e) {
         debugLog(`[executeWithOptions] Failed to load client schema`, e);
         cliError('Invalid --clientSchema provided, please use a path to local file or a glob expression!');
@@ -367,6 +376,12 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
       }
     });
 
+    const hasDocuments = documents.length;
+
+    if (hasDocuments) {
+      logWithSpinner('Loading documents');
+    }
+
     const foundDocumentsPaths = await documentsFromGlobs(documents);
     const documentsFiles = await loadDocumentsSources(foundDocumentsPaths);
     const loadDocumentErrors = validateGraphQlDocuments(graphQlSchema, documentsFiles);
@@ -385,6 +400,12 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
     }
 
     const transformedDocuments = transformDocumentsFiles(graphQlSchema, documentsFiles);
+
+    if (hasDocuments) {
+      succeedSpinner();
+    }
+
+    logWithSpinner('Compiling template');
 
     return compileTemplate(templateConfig, context, [transformedDocuments], {
       generateSchema,

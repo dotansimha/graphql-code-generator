@@ -2,9 +2,10 @@ import { existsSync } from 'fs';
 import { extname, isAbsolute, resolve as resolvePath } from 'path';
 import isValidPath = require('is-valid-path');
 import { buildASTSchema, buildClientSchema, DocumentNode, GraphQLSchema, IntrospectionQuery, parse } from 'graphql';
-import { debugLog, getLogger } from 'graphql-codegen-core';
+import { debugLog } from 'graphql-codegen-core';
 import { SchemaLoader } from './schema-loader';
 import { CLIOptions } from '../../cli-options';
+import { logWithSpinner } from '../../spinner';
 
 export class SchemaFromExport implements SchemaLoader {
   canHandle(pointerToSchema: string): boolean {
@@ -14,7 +15,7 @@ export class SchemaFromExport implements SchemaLoader {
   }
 
   handle(file: string, _cliOptions: CLIOptions): Promise<GraphQLSchema> {
-    getLogger().info(
+    logWithSpinner(
       `Loading GraphQL schema object, text, ast, or introspection json from JavaScript ES6 export: ${file}...`
     );
 
