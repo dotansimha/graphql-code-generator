@@ -62,8 +62,7 @@ describe('Resolvers', () => {
     
     export type SubscriptionResolver<Result, Parent = any, Context = any, Args = never> =
       | ((...args: any[]) => ISubscriptionResolverObject<Result, Parent, Context, Args>)
-      | ISubscriptionResolverObject<Result, Parent, Context, 
->;
+      | ISubscriptionResolverObject<Result, Parent, Context, Args>;
     `);
   });
 
