@@ -1,0 +1,27 @@
+import { GraphQLResolveInfo } from 'graphql';
+
+export type Resolver<Result, Parent = any, Context = any, Args = never> = (
+  parent: Parent,
+  args: Args,
+  context: Context,
+  info: GraphQLResolveInfo
+) => Promise<Result> | Result;
+
+export interface ISubscriptionResolverObject<Result, Parent, Context, Args> {
+  subscribe<R = Result, P = Parent>(
+    parent: P,
+    args: Args,
+    context: Context,
+    info: GraphQLResolveInfo
+  ): AsyncIterator<R | Result>;
+  resolve?<R = Result, P = Parent>(
+    parent: P,
+    args: Args,
+    context: Context,
+    info: GraphQLResolveInfo
+  ): R | Result | Promise<R | Result>;
+}
+
+export type SubscriptionResolver<Result, Parent = any, Context = any, Args = never> =
+  | ((...args: any[]) => ISubscriptionResolverObject<Result, Parent, Context, Args>)
+  | ISubscriptionResolverObject<Result, Parent, Context, Args>;

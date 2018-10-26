@@ -1,7 +1,6 @@
 import * as index from './template.handlebars';
 import * as type from './type.handlebars';
 import * as schema from './schema.handlebars';
-import * as resolver from './resolver.handlebars';
 import * as documents from './documents.handlebars';
 import * as selectionSet from './selection-set.handlebars';
 import * as fragments from './fragments.handlebars';
@@ -22,7 +21,6 @@ export const config: GeneratorConfig = {
     index,
     type,
     schema,
-    resolver,
     documents,
     selectionSet,
     fragments,
