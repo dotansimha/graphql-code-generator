@@ -47,6 +47,7 @@ If you develop a **client-side with TypeScript, Angular and GraphQL**, you can u
 | XSD                                     | Generate XSD file                                              | [`graphql-xsd`](https://www.npmjs.com/package/graphql-xsd)                                                  |
 | Introspection                           | Generate Introspection file                                    | [`graphql-codegen-introspection-template`](./packages/templates/introspection)                              |
 | TypeScript modules for `.graphql` files | Generates `declare module` for `.graphql` files                | [`graphql-codegen-graphql-files-typescript-modules`](./packages/templates/graphql-files-typescript-modules) |
+| TypeScript Resolvers signature          | Generates TypeScript signature for server-side resolvers       | [`graphql-codegen-typescript-resolvers-template`](./packages/templates/typescript-resolvers)                |
 
 If you are looking for the **Flow** / **Swift** generators, please note that we will implement it soon again, but you can use `0.5.5` from NPM.
 

@@ -1,39 +1,5 @@
 {{{ blockComment 'START: Typescript template' }}}
 
-{{#ifCond @root.config.resolvers "!==" false}}
-{{#if types}}
-
-import { GraphQLResolveInfo } from 'graphql';
-
-export type Resolver<Result, Parent = any, Context = any, Args = any> = (
-  parent: Parent,
-  args: Args,
-  context: Context,
-  info: GraphQLResolveInfo
-) => Promise<Result> | Result;
-
-export interface ISubscriptionResolverObject<Result, Parent, Context, Args> {
-  subscribe<R = Result, P = Parent>(
-    parent: P,
-    args: Args,
-    context: Context,
-    info: GraphQLResolveInfo
-  ): AsyncIterator<R | Result>;
-  resolve?<R = Result, P = Parent>(
-    parent: P,
-    args: Args,
-    context: Context,
-    info: GraphQLResolveInfo
-  ): R | Result | Promise<R | Result>;
-}
-
-export type SubscriptionResolver<Result, Parent = any, Context = any, Args = any> =
-  | ((...args: any[]) => ISubscriptionResolverObject<Result, Parent, Context, Args>)
-  | ISubscriptionResolverObject<Result, Parent, Context, Args>;
-
-{{/if}}
-{{/ifCond}}
-
 {{#if @root.config.schemaNamespace ~}}export namespace {{@root.config.schemaNamespace}} { {{/if}}
 {{{ blockCommentIf 'Scalars' scalars }}}
 {{#each scalars}}
@@ -83,11 +49,5 @@ export type {{ toPascalCase name }} = {{#each possibleTypes}}{{ toPascalCase thi
 
 {{/each}}
 {{#if @root.config.schemaNamespace ~}} } {{~/if}}
-{{#ifCond @root.config.resolvers "!==" false }}
-{{{ blockCommentIf 'Resolvers' types }}}
-{{#each types}}
-{{~> resolver }}
-{{/each}}
-{{/ifCond}}
 
 {{{ blockComment 'END: Typescript template' }}}

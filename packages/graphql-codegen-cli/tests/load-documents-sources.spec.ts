@@ -25,6 +25,13 @@ describe('loadDocumentsSources', () => {
     expect(result.length).toBe(0);
   });
 
+  it('should not throw an exception in case of unused variable', async () => {
+    const documentPath = join(__dirname, './test-documents/unused-variable.graphql');
+    const document = await loadDocumentsSources([documentPath]);
+    const result = validateGraphQlDocuments(schema, document);
+    expect(result.length).toBe(0);
+  });
+
   it('should return an error array when document is invalid', async () => {
     const documentPath = join(__dirname, './test-documents/invalid-fields.graphql');
     const document = await loadDocumentsSources([documentPath]);

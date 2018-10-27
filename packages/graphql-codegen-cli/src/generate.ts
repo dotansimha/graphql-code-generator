@@ -7,13 +7,14 @@ import { CLIOptions } from './cli-options';
 import { createWatcher } from './utils/watcher';
 import { setLogger, setSilentLogger, useWinstonLogger } from 'graphql-codegen-core';
 import { Logger } from 'ts-log';
+import spinner from './spinner';
 
 interface GenerateOptions extends CLIOptions {
   logger?: Logger;
   templateConfig?: { [key: string]: any };
 }
 
-export function generate(options: GenerateOptions, saveToFile = true): Promise<FileOutput[] | any> {
+export async function generate(options: GenerateOptions, saveToFile = true): Promise<FileOutput[] | any> {
   if (options.silent) {
     setSilentLogger();
   } else if (options.logger) {
@@ -27,6 +28,8 @@ export function generate(options: GenerateOptions, saveToFile = true): Promise<F
       return generationResult;
     }
 
+    spinner.log('Generating output');
+
     debugLog(`Generation result contains total of ${generationResult.length} files...`);
 
     if (process.env.VERBOSE !== undefined) {
@@ -36,21 +39,19 @@ export function generate(options: GenerateOptions, saveToFile = true): Promise<F
     await Promise.all(
       generationResult.map(async (result: FileOutput) => {
         if (!options.overwrite && fileExists(result.filename)) {
-          getLogger().info(`Generated file skipped (already exists, and no-overwrite flag is ON): ${result.filename}`);
-
+          spinner.succeed(`Generated file skipped (already exists, and no-overwrite flag is ON): ${result.filename}`);
           return;
         }
 
         const content = result.content.trim();
 
         if (content.length === 0) {
-          getLogger().info(`Generated file skipped (empty): ${result.filename}`);
-
+          spinner.succeed(`Generated file skipped (empty): ${result.filename}`);
           return;
         }
 
         fs.writeFileSync(result.filename, await prettify(result.filename, result.content));
-        getLogger().info(`Generated file written to ${result.filename}`);
+        spinner.succeed(`Generated file written to ${result.filename}`);
       })
     );
 
@@ -61,5 +62,10 @@ export function generate(options: GenerateOptions, saveToFile = true): Promise<F
     return createWatcher(options, writeOutput);
   }
 
-  return executeWithOptions(options).then(writeOutput);
+  try {
+    const output = await executeWithOptions(options);
+    return writeOutput(output);
+  } catch (error) {
+    throw error;
+  }
 }
