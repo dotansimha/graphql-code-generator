@@ -1,14 +1,13 @@
 import { validate, GraphQLSchema, GraphQLError, specifiedRules } from 'graphql';
 import { DocumentFile } from 'graphql-codegen-core';
 
-const effectiveRules = specifiedRules.filter((f: Function) => f.name !== 'NoUnusedFragments');
+const rulesToIgnore = ['KnownFragmentNames', 'NoUnusedFragments', 'NoUnusedVariables', 'KnownDirectives'];
+const effectiveRules = specifiedRules.filter((f: Function) => !rulesToIgnore.includes(f.name));
 
 export interface LoadDocumentError {
   readonly filePath: string;
   readonly errors: ReadonlyArray<GraphQLError>;
 }
-
-const IGNORED_VALIDATION_ERRORS = ['Unknown fragment', 'Unknown directive'];
 
 export const validateGraphQlDocuments = (
   schema: GraphQLSchema,
@@ -17,8 +16,6 @@ export const validateGraphQlDocuments = (
   documentFiles
     .map(result => ({
       filePath: result.filePath,
-      errors: validate(schema, result.content, effectiveRules).filter(
-        e => !IGNORED_VALIDATION_ERRORS.find(ignoredErr => e.message.indexOf(ignoredErr) > -1)
-      )
+      errors: validate(schema, result.content, effectiveRules)
     }))
     .filter(r => r.errors.length > 0);
