@@ -150,6 +150,7 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
   const generateSchema: boolean = !options.skipSchema;
   const generateDocuments: boolean = !options.skipDocuments;
   const modulesToRequire: string[] = options.require || [];
+  const exitOnError = typeof options.exitOnError === 'undefined' ? true : options.exitOnError;
 
   modulesToRequire.forEach(mod => require(mod));
 
@@ -375,7 +376,10 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
         }
       }
 
-      cliError(`Found ${errorCount} errors when validating your GraphQL documents against schema!`, !options.watch);
+      cliError(
+        `Found ${errorCount} errors when validating your GraphQL documents against schema!`,
+        options.watch ? false : exitOnError
+      );
     }
 
     const transformedDocuments = transformDocumentsFiles(graphQlSchema, documentsFiles);

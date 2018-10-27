@@ -34,8 +34,13 @@ export class GraphQLCodegenPlugin {
   }
 
   private async generate() {
-    if (await this.shouldGenerate()) {
-      await generate(this.options, true);
+    try {
+      if (await this.shouldGenerate()) {
+        await generate(this.options, true);
+      }
+    } catch (e) {
+      // tslint:disable-next-line
+      console.error(e);
     }
   }
 
