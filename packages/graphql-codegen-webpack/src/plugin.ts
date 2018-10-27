@@ -20,6 +20,10 @@ export class GraphQLCodegenPlugin {
   }
 
   public apply(compiler: compiler.Compiler) {
+    compiler.hooks.watchRun.tap(this.pluginName, () => {
+      this.options.exitOnError = false;
+    });
+
     compiler.hooks.afterEnvironment.tap(this.pluginName, () => {
       (compiler as any).watchFileSystem = new WatchFileSystem(
         compiler,
