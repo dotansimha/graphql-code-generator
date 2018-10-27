@@ -1,3 +1,4 @@
+{{#ifCond operations.length '!==' 0}}
 import * as ReactApollo from 'react-apollo';
 import * as React from 'react';
 
@@ -36,3 +37,4 @@ export namespace {{toPascalCase name}} {
 }
     {{/unless}}
 {{/each}}
+{{/ifCond}}

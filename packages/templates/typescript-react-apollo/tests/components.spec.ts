@@ -421,4 +421,18 @@ describe('Components', () => {
       \`;
     `);
   });
+
+  it(`should skip if there's no operations`, async () => {
+    const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
+    const context = schemaToTemplateContext(schema);
+
+    const compiled = await compileTemplate({ ...config, config: { noNamespaces: true } }, context, [], {
+      generateSchema: false
+    });
+    const content = compiled[0].content;
+
+    expect(content).not.toContain(`import * as ReactApollo from 'react-apollo';`);
+    expect(content).not.toContain(`import * as React from 'react';`);
+    expect(content).not.toContain(`import gql from 'graphql-tag';`);
+  });
 });
