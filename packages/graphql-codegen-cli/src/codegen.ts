@@ -31,7 +31,7 @@ import { CLIOptions } from './cli-options';
 import { mergeGraphQLSchemas } from '@graphql-modules/epoxy';
 import { makeExecutableSchema } from 'graphql-tools';
 import { SchemaTemplateContext } from 'graphql-codegen-core/dist/types';
-import { logWithSpinner, succeedSpinner, failSpinner } from './spinner';
+import spinner from './spinner';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
@@ -92,7 +92,7 @@ export const initCLI = (args: any): CLIOptions => {
 };
 
 export const cliError = (err: any, exitOnError = true) => {
-  failSpinner();
+  spinner.fail();
   let msg: string;
 
   if (err instanceof Error) {
@@ -149,7 +149,7 @@ const schemaHandlers = [
 ];
 
 export const executeWithOptions = async (options: CLIOptions & { [key: string]: any }): Promise<FileOutput[]> => {
-  logWithSpinner('Validating options');
+  spinner.start('Validating options');
   validateCliOptions(options);
 
   const schema = options.schema;
@@ -168,6 +168,7 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
   let templateConfig: GeneratorConfig | CustomProcessingFunction | null = null;
 
   if (template && template !== '') {
+    spinner.log(`Loading template: ${template}`);
     debugLog(`[executeWithOptions] using template: ${template}`);
 
     // Backward compatibility for older versions
@@ -177,12 +178,12 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
       template === 'typescript' ||
       template === 'typescript-single'
     ) {
-      getLogger().warn(
+      spinner.warn(
         `You are using the old template name, please install it from NPM and use it by it's new name: "graphql-codegen-typescript-template"`
       );
       template = 'graphql-codegen-typescript-template';
     } else if (template === 'ts-multiple' || template === 'typescript-multiple') {
-      getLogger().warn(
+      spinner.warn(
         `You are using the old template name, please install it from NPM and use it by it's new name: "graphql-codegen-typescript-template-multiple"`
       );
       template = 'graphql-codegen-typescript-template-multiple';
@@ -199,8 +200,7 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
       }
 
       templateConfig = templateFromExport.default || templateFromExport.config || templateFromExport;
-      logWithSpinner(`Template: ${template}`);
-      succeedSpinner();
+      spinner.succeed();
     } catch (e) {
       throw new Error(`Unknown codegen template: "${template}", please make sure it's installed using npm/Yarn!`);
     }
@@ -218,6 +218,7 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
   }
 
   if (project && project !== '') {
+    spinner.log(`Using project: ${project}`);
     if (config === null) {
       throw new Error(
         `To use project feature, please specify --config path or create gql-gen.json in your project root!`
@@ -252,6 +253,7 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
       customHelpers: resolvedHelpers
     };
   }
+  spinner.succeed();
 
   const relevantEnvVars = Object.keys(process.env)
     .filter(name => name.startsWith('CODEGEN_'))
@@ -289,7 +291,7 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
     };
 
     if (templateConfig.deprecationNote) {
-      getLogger().warn(`Template ${template} is deprecated: ${templateConfig.deprecationNote}`);
+      spinner.warn(`Template ${template} is deprecated: ${templateConfig.deprecationNote}`);
     }
 
     if (templateConfig.addToSchema) {
@@ -329,21 +331,21 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
     const schemas: (GraphQLSchema | Promise<GraphQLSchema>)[] = [];
 
     try {
-      logWithSpinner('Loading remote schema');
+      spinner.log('Loading remote schema');
       debugLog(`[executeWithOptions] Schema is being loaded `);
       schemas.push(loadSchema(schema));
-      succeedSpinner();
+      spinner.succeed();
     } catch (e) {
       debugLog(`[executeWithOptions] Failed to load schema`, e);
       cliError('Invalid --schema provided, please use a path to local file, HTTP endpoint or a glob expression!');
     }
 
     if (clientSchema) {
-      logWithSpinner('Loading client schema');
+      spinner.log('Loading client schema');
       try {
         debugLog(`[executeWithOptions] Client Schema is being loaded `);
         schemas.push(loadSchema(clientSchema));
-        succeedSpinner();
+        spinner.succeed();
       } catch (e) {
         debugLog(`[executeWithOptions] Failed to load client schema`, e);
         cliError('Invalid --clientSchema provided, please use a path to local file or a glob expression!');
@@ -379,7 +381,7 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
     const hasDocuments = documents.length;
 
     if (hasDocuments) {
-      logWithSpinner('Loading documents');
+      spinner.log('Loading documents');
     }
 
     const foundDocumentsPaths = await documentsFromGlobs(documents);
@@ -402,10 +404,10 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
     const transformedDocuments = transformDocumentsFiles(graphQlSchema, documentsFiles);
 
     if (hasDocuments) {
-      succeedSpinner();
+      spinner.succeed();
     }
 
-    logWithSpinner('Compiling template');
+    spinner.log(`Compiling template: ${template}`);
 
     return compileTemplate(templateConfig, context, [transformedDocuments], {
       generateSchema,

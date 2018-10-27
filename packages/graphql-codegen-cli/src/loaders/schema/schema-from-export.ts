@@ -5,7 +5,7 @@ import { buildASTSchema, buildClientSchema, DocumentNode, GraphQLSchema, Introsp
 import { debugLog } from 'graphql-codegen-core';
 import { SchemaLoader } from './schema-loader';
 import { CLIOptions } from '../../cli-options';
-import { logWithSpinner } from '../../spinner';
+import spinner from '../../spinner';
 
 export class SchemaFromExport implements SchemaLoader {
   canHandle(pointerToSchema: string): boolean {
@@ -15,7 +15,7 @@ export class SchemaFromExport implements SchemaLoader {
   }
 
   handle(file: string, _cliOptions: CLIOptions): Promise<GraphQLSchema> {
-    logWithSpinner(
+    spinner.info(
       `Loading GraphQL schema object, text, ast, or introspection json from JavaScript ES6 export: ${file}...`
     );
 
