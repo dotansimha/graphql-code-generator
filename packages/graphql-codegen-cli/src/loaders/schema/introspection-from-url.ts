@@ -1,6 +1,5 @@
 import {
   debugLog,
-  getLogger,
   introspectionQuery,
   introspectionToGraphQLSchema,
   validateIntrospection
@@ -10,6 +9,7 @@ import { SchemaLoader } from './schema-loader';
 import { GraphQLSchema } from 'graphql';
 import { isUri } from 'valid-url';
 import { CLIOptions } from '../../cli-options';
+import spinner from '../../spinner';
 
 export class IntrospectionFromUrlLoader implements SchemaLoader {
   canHandle(pointerToSchema: string): boolean {
@@ -17,7 +17,7 @@ export class IntrospectionFromUrlLoader implements SchemaLoader {
   }
 
   handle(url: string, cliOptions: CLIOptions): Promise<GraphQLSchema> {
-    getLogger().info(`Loading GraphQL Introspection from remote: ${url}...`);
+    spinner.info(`Loading GraphQL Introspection from remote: ${url}...`);
 
     let splittedHeaders = (cliOptions.header || [])
       .map((header: string) => {

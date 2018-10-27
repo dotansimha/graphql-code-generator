@@ -1,10 +1,11 @@
-import { getLogger, introspectionToGraphQLSchema, validateIntrospection } from 'graphql-codegen-core';
+import { introspectionToGraphQLSchema, validateIntrospection } from 'graphql-codegen-core';
 import { GraphQLSchema } from 'graphql';
 import { SchemaLoader } from './schema-loader';
 import { existsSync, readFileSync } from 'fs';
 import isValidPath = require('is-valid-path');
 import { extname, isAbsolute, resolve as resolvePath } from 'path';
 import { CLIOptions } from '../../cli-options';
+import spinner from '../../spinner';
 
 export class IntrospectionFromFileLoader implements SchemaLoader {
   stripBOM(content: string) {
@@ -28,7 +29,7 @@ export class IntrospectionFromFileLoader implements SchemaLoader {
   }
 
   handle(pointerToSchema: string, _cliOptions: CLIOptions): Promise<GraphQLSchema> {
-    getLogger().info(`Loading GraphQL Introspection from file: ${pointerToSchema}...`);
+    spinner.info(`Loading GraphQL Introspection from file: ${pointerToSchema}...`);
 
     return new Promise<GraphQLSchema>((resolve, reject) => {
       const fullPath = isAbsolute(pointerToSchema) ? pointerToSchema : resolvePath(process.cwd(), pointerToSchema);
