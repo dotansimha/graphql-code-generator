@@ -20,6 +20,10 @@ export class GraphQLCodegenPlugin {
   }
 
   public apply(compiler: compiler.Compiler) {
+    compiler.hooks.watchRun.tap(this.pluginName, () => {
+      this.options.exitOnError = false;
+    });
+
     compiler.hooks.afterEnvironment.tap(this.pluginName, () => {
       (compiler as any).watchFileSystem = new WatchFileSystem(
         compiler,
@@ -34,13 +38,8 @@ export class GraphQLCodegenPlugin {
   }
 
   private async generate() {
-    try {
-      if (await this.shouldGenerate()) {
-        await generate(this.options, true);
-      }
-    } catch (e) {
-      // tslint:disable-next-line
-      console.error(e);
+    if (await this.shouldGenerate()) {
+      await generate(this.options, true);
     }
   }
 
