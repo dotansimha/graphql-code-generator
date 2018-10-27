@@ -1,13 +1,5 @@
 import 'graphql-codegen-core/dist/testing';
-import {
-  GraphQLSchema,
-  makeExecutableSchema,
-  gql,
-  introspectionToGraphQLSchema,
-  schemaToTemplateContext,
-  transformDocument,
-  SchemaTemplateContext
-} from 'graphql-codegen-core';
+import { gql, introspectionToGraphQLSchema, schemaToTemplateContext, transformDocument } from 'graphql-codegen-core';
 import { compileTemplate } from 'graphql-codegen-compiler';
 import config from '../dist';
 import * as fs from 'fs';
@@ -538,5 +530,21 @@ describe('Components', () => {
     expect(content).toBeSimilarStringTo('// GraphQL Fragments');
     expect(content).toBeSimilarStringTo('// Apollo Services');
     expect(content).toBeSimilarStringTo('// END: Apollo Angular template');
+  });
+
+  it(`should skip if there's no operations`, async () => {
+    const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
+    const context = schemaToTemplateContext(schema);
+
+    const compiled = await compileTemplate({ ...config, config: { noNamespaces: true } }, context, [], {
+      generateSchema: false
+    });
+    const content = compiled[0].content;
+
+    expect(content).not.toContain('// START: Apollo Angular template');
+    expect(content).not.toContain('// END: Apollo Angular template');
+    expect(content).not.toContain(`import * as Apollo from 'apollo-angular';`);
+    expect(content).not.toContain(`import gql from 'graphql-tag';`);
+    expect(content).not.toContain(`import { Injectable } from '@angular/core';`);
   });
 });
