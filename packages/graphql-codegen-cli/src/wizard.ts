@@ -9,6 +9,29 @@ function log(...msgs: string[]) {
   console.log(...msgs);
 }
 
+const PACKAGE_PATH = resolve(process.cwd(), 'package.json');
+
+function validateScript(script: string) {
+  if (!script.length) {
+    return false;
+  }
+
+  const content = readFileSync(PACKAGE_PATH, {
+    encoding: 'utf-8'
+  });
+  const pkg: any = JSON.parse(content);
+
+  if (!pkg.scripts) {
+    pkg.scripts = {};
+  }
+
+  if (pkg.scripts[script]) {
+    return `Script ${script} already exists and runs "${pkg.scripts[script]}"`;
+  }
+
+  return true;
+}
+
 const templates = {
   regular: {
     name: 'Regular',
@@ -126,7 +149,7 @@ const askForScriptName: inquirer.Question = {
   name: 'script',
   message: 'Script name:',
   suffix: chalk.grey(' (we will add it to package.json)'),
-  validate: (str: string) => str.length > 0
+  validate: validateScript
 };
 
 const askConfirm: inquirer.Question = {
@@ -184,23 +207,14 @@ export async function init() {
 
   const command = options.join(' ');
 
-  const pkgPath = resolve(process.cwd(), 'package.json');
-  const content = readFileSync(pkgPath, {
+  const content = readFileSync(PACKAGE_PATH, {
     encoding: 'utf-8'
   });
   const { amount } = detectIndent(content);
   const pkg: any = JSON.parse(content);
 
-  if (!pkg.scripts) {
-    pkg.scripts = {};
-  }
-
-  if (pkg.scripts[script]) {
-    throw new Error(`Script ${script} already exists and runs "${pkg.scripts[script]}"`);
-  }
-
   pkg.scripts[script] = command;
-  writeFileSync(pkgPath, JSON.stringify(pkg, null, amount));
+  writeFileSync(PACKAGE_PATH, JSON.stringify(pkg, null, amount));
 
   // TODO: install selected template and graphql-code-generator
 
