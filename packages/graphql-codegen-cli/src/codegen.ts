@@ -1,5 +1,4 @@
 import { validateGraphQlDocuments } from './loaders/documents/validate-documents';
-import * as commander from 'commander';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as mkdirp from 'mkdirp';
@@ -42,49 +41,6 @@ interface GqlGenConfig {
   customHelpers?: { [helperName: string]: string };
   generatorConfig?: { [configName: string]: any };
 }
-
-function collect<T>(val: T, memo: T[]) {
-  memo.push(val);
-
-  return memo;
-}
-
-export const initCLI = (args: any): CLIOptions => {
-  commander
-    .usage('gql-gen [options]')
-    .option(
-      '-s, --schema <path>',
-      'Path to GraphQL schema: local JSON file, GraphQL endpoint, local file that exports GraphQLSchema/AST/JSON'
-    )
-    .option(
-      '-cs, --clientSchema <path>',
-      'Path to GraphQL client schema: local JSON file, local file that exports GraphQLSchema/AST/JSON'
-    )
-    .option(
-      '-h, --header [header]',
-      'Header to add to the introspection HTTP request when using --url/--schema with url',
-      collect,
-      []
-    )
-    .option(
-      '-t, --template <template-name>',
-      'Language/platform name templates, or a name of NPM modules that `export default` GqlGenConfig object'
-    )
-    .option('-p, --project <project-path>', 'Project path(s) to scan for custom template files')
-    .option('--config <json-file>', 'Codegen configuration file, defaults to: ./gql-gen.json')
-    .option('-m, --skip-schema', 'Generates only client side documents, without server side schema types')
-    .option('-c, --skip-documents', 'Generates only server side schema types, without client side documents')
-    .option('-o, --out <path>', 'Output file(s) path', String, './')
-    .option('-r, --require [require]', 'module to preload (option can be repeated)', collect, [])
-    .option('-ow, --no-overwrite', 'Skip file writing if the output file(s) already exists in path')
-    .option('-w, --watch', 'Watch for changes and execute generation automatically')
-    .option('--silent', 'Does not print anything to the console')
-    .option('-ms, --merge-schema <merge-logic>', 'Merge schemas with custom logic')
-    .arguments('<options> [documents...]')
-    .parse(args);
-
-  return (commander as any) as CLIOptions;
-};
 
 export const cliError = (err: any, exitOnError = true) => {
   spinner.fail();
