@@ -5,6 +5,7 @@ import { IntrospectionFromFileLoader } from './loaders/schema/introspection-from
 import { IntrospectionFromUrlLoader } from './loaders/schema/introspection-from-url';
 import { SchemaFromTypedefs } from './loaders/schema/schema-from-typedefs';
 import { SchemaFromExport } from './loaders/schema/schema-from-export';
+import { DetailedError } from './errors';
 
 const schemaHandlers = [
   new IntrospectionFromUrlLoader(),
@@ -20,7 +21,18 @@ export async function loadSchema(pointToSchema: string, options: CLIOptions & { 
     }
   }
 
-  throw new Error('Could not handle schema');
+  throw new DetailedError(`
+    Failed to load schema from ${pointToSchema}.
+
+    GraphQL Code Generator supports:
+      - esmodules and commonjs exports
+      - introspection file
+      - url of GraphQL endpoint
+      - multiple files with type definitions
+
+    Try to use one of above options and run codegen again.
+
+  `);
 }
 
 export async function loadDocuments(documents: string[]) {

@@ -10,6 +10,7 @@ import { importSchema } from 'graphql-import';
 import { CLIOptions } from '../../cli-options';
 import * as path from 'path';
 import * as fs from 'fs';
+import { DetailedError } from '../../errors';
 
 export class SchemaFromTypedefs implements SchemaLoader {
   canHandle(globPath: string): boolean {
@@ -20,7 +21,7 @@ export class SchemaFromTypedefs implements SchemaLoader {
     const globFiles = glob.sync(globPath, { cwd: process.cwd() });
 
     if (!globFiles || globFiles.length === 0) {
-      throw new Error(`
+      throw new DetailedError(`
       
         Unable to find matching files for glob: ${globPath}
 
@@ -47,7 +48,7 @@ export class SchemaFromTypedefs implements SchemaLoader {
       const mergeModuleName = patternArr[0];
       const mergeFunctionName = patternArr[1];
       if (!mergeModuleName || !mergeFunctionName) {
-        throw new Error(`
+        throw new DetailedError(`
 
           You have to specify your merge logic with 'mergeSchema' option.
 
@@ -76,7 +77,7 @@ export class SchemaFromTypedefs implements SchemaLoader {
       const localFileExists = fs.existsSync(localFilePath);
       const mergeModule = require(localFileExists ? localFilePath : mergeModuleName);
       if (!(mergeFunctionName in mergeModule)) {
-        throw new Error(`
+        throw new DetailedError(`
         
           Provided ${mergeFunctionName} function couldn't be found in ${mergeModule}
 

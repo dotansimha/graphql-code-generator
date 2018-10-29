@@ -59,7 +59,11 @@
       "node"
     ]
   },
+  "devDependencies": {
+    "@types/chalk": "2.2.0"
+  },
   "dependencies": {
+    "chalk": "2.4.1",
     "change-case": "3.0.2",
     "common-tags": "1.8.0",
     "graphql-tag": "2.10.0",

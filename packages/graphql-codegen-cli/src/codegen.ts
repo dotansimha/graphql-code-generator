@@ -27,6 +27,7 @@ import { mergeGraphQLSchemas } from '@graphql-modules/epoxy';
 import { makeExecutableSchema } from 'graphql-tools';
 import { SchemaTemplateContext } from 'graphql-codegen-core/dist/types';
 import { loadSchema, loadDocuments } from './load';
+import { DetailedError } from './errors';
 import spinner from './spinner';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
@@ -228,7 +229,7 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
       templateConfig = templateFromExport.default || templateFromExport.config || templateFromExport;
       spinner.succeed();
     } catch (e) {
-      throw new Error(`
+      throw new DetailedError(`
 
         Unknown codegen template: "${template}"
 
@@ -260,7 +261,7 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
   if (project && project !== '') {
     spinner.log(`Using project: ${project}`);
     if (config === null) {
-      throw new Error(
+      throw new DetailedError(
         `
           To use project feature, please specify ${chalk.bold('path to the config file')} or create ${chalk.bold(
           'gql-gen.json'
@@ -294,10 +295,10 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
         if (requiredFile && typeof requiredFile === 'function') {
           resolvedHelpers[helperName] = requiredFile;
         } else {
-          throw new Error(`Custom template file ${resolvedPath} does not have a default export function.`);
+          throw new DetailedError(`Custom template file ${resolvedPath} does not have a default export function.`);
         }
       } else {
-        throw new Error(`Custom template file ${helperName} does not exists in path: ${resolvedPath}`);
+        throw new DetailedError(`Custom template file ${helperName} does not exists in path: ${resolvedPath}`);
       }
     });
 
@@ -513,10 +514,21 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
 
     spinner.log(`Compiling template: ${template}`);
 
-    return compileTemplate(templateConfig, context, [transformedDocuments], {
-      generateSchema,
-      generateDocuments
-    });
+    try {
+      return compileTemplate(templateConfig, context, [transformedDocuments], {
+        generateSchema,
+        generateDocuments
+      });
+    } catch (error) {
+      throw new DetailedError(`
+        Failed to compile ${template} template.
+
+        In most cases it's related to the configuration and the GraphQL schema.
+
+          ${error.message}
+
+      `);
+    }
   };
 
   const normalizeOutput = (item: FileOutput) => {
@@ -550,5 +562,25 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
       filename: resultName
     };
   };
-  return (await executeGeneration()).map(normalizeOutput);
+
+  try {
+    const output = await executeGeneration();
+
+    return output.map(normalizeOutput);
+  } catch (error) {
+    if (error instanceof DetailedError) {
+      throw error;
+    } else {
+      throw new DetailedError(
+        `
+        
+        Failed to finish the task:
+
+        ${error.message}
+
+      `,
+        error
+      );
+    }
+  }
 };

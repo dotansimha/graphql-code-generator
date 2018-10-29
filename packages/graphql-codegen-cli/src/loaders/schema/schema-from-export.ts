@@ -7,6 +7,7 @@ import { debugLog } from 'graphql-codegen-core';
 import { SchemaLoader } from './schema-loader';
 import { CLIOptions } from '../../cli-options';
 import spinner from '../../spinner';
+import { DetailedError } from '../../errors';
 
 export class SchemaFromExport implements SchemaLoader {
   canHandle(pointerToSchema: string): boolean {
@@ -136,17 +137,18 @@ export class SchemaFromExport implements SchemaLoader {
         resolve(buildClientSchema(schema.data));
       } else {
         reject(
-          new Error(`
-          Unexpected schema type provided.
+          new DetailedError(`
+            
+            Unexpected schema type provided.
 
-          Should be one of following:
-            - exported GraphQLSchema object
-            - exported string wrapped by the 'gql' tag
-            - string without the 'gql' tag
-            - .graphql file with schema
-            - JSON file with introspection
+            Should be one of following:
+              - exported GraphQLSchema object
+              - exported string wrapped by the 'gql' tag
+              - string without the 'gql' tag
+              - .graphql file with schema
+              - JSON file with introspection
 
-          Please provide correct schema and run codegen again.
+            Please provide correct schema and run codegen again.
           
         `)
         );
