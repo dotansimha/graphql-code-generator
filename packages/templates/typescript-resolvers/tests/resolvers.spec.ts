@@ -515,4 +515,57 @@ describe('Resolvers', () => {
       }
     `);
   });
+
+  it('should accept mappers that reuse generated types', async () => {
+    const { context } = compileAndBuildContext(`
+        type Query {
+          post: Post
+        }
+
+        type Post {
+          id: String
+        }
+        
+        schema {
+          query: Query
+        }
+      `);
+
+    const compiled = await compileTemplate(
+      {
+        ...config,
+        config: {
+          mappers: {
+            // it means that Post type expects Post to be a parent
+            Post: 'Post'
+          }
+        }
+      } as any,
+      context
+    );
+
+    const content = compiled[0].content;
+
+    // should check field's result and match it with provided parents
+    expect(content).toBeSimilarStringTo(`
+      export namespace QueryResolvers {
+        export interface Resolvers<Context = any, TypeParent = never> {
+          post?: PostResolver<Post | null, TypeParent, Context>;
+        }
+
+        export type PostResolver<R = Post | null, Parent = never, Context = any> = Resolver<R, Parent, Context>;
+      }
+    `);
+
+    // should check if type has a defined parent and use it as TypeParent
+    expect(content).toBeSimilarStringTo(`
+      export namespace PostResolvers {
+        export interface Resolvers<Context = any, TypeParent = Post> {
+          id?: IdResolver<string | null, TypeParent, Context>;
+        }
+
+        export type IdResolver<R = string | null, Parent = Post, Context = any> = Resolver<R, Parent, Context>;
+      }
+    `);
+  });
 });
