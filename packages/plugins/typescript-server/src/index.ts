@@ -13,7 +13,7 @@ export const plugin: PluginFunction<TypeScriptServerConfig> = async (
   documents: DocumentFile[],
   config: TypeScriptServerConfig
 ): Promise<string> => {
-  const context = initCommonTemplate(Handlebars, schema, config);
+  const { templateContext } = initCommonTemplate(Handlebars, schema, config);
 
-  return Handlebars.compile(rootTemplate)(context);
+  return Handlebars.compile(rootTemplate)(templateContext);
 };

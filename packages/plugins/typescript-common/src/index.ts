@@ -43,9 +43,13 @@ export function initCommonTemplate(hbs, schema, config) {
   const templateContext = schemaToTemplateContext(schema);
 
   return {
-    ...templateContext,
-    config,
-    primitives: scalars
+    templateContext: {
+      ...templateContext,
+      config,
+      primitives: scalars
+    },
+    convert,
+    scalars
   };
 }
 
@@ -54,7 +58,7 @@ export const plugin: PluginFunction<TypeScriptCommonConfig> = async (
   documents: DocumentFile[],
   config: TypeScriptCommonConfig
 ): Promise<string> => {
-  const context = initCommonTemplate(Handlebars, schema, config);
+  const { templateContext } = initCommonTemplate(Handlebars, schema, config);
 
-  return Handlebars.compile(rootTemplate)(context);
+  return Handlebars.compile(rootTemplate)(templateContext);
 };

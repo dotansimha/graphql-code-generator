@@ -134,7 +134,13 @@ export async function generateOutput(options: GenerateOutputOptions): Promise<Fi
       documents: options.documents
     });
 
-    output += result;
+    output += `
+    ================ Start Plugin: ${name} ================
+
+    ${result}
+
+    ================ End Plugin: ${name} ==================
+    `;
   }
 
   return { filename: options.filename, content: output };

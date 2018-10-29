@@ -8,26 +8,26 @@ import * as fragments from './fragments.handlebars';
 import * as selectionSet from './selection-set.handlebars';
 import { shouldHavePrefix } from './helpers';
 
-export interface TypeScriptServerConfig extends TypeScriptCommonConfig {
-  schemaNamespace?: string;
+export interface TypeScriptClientConfig extends TypeScriptCommonConfig {
+  noNamespaces?: boolean;
 }
 
-export const plugin: PluginFunction<TypeScriptServerConfig> = async (
+export const plugin: PluginFunction<TypeScriptClientConfig> = async (
   schema: GraphQLSchema,
   documents: DocumentFile[],
-  config: TypeScriptServerConfig
+  config: TypeScriptClientConfig
 ): Promise<string> => {
-  const context = initCommonTemplate(Handlebars, schema, config);
+  const { templateContext } = initCommonTemplate(Handlebars, schema, config);
   const transformedDocuments = transformDocumentsFiles(schema, documents);
   const flattenDocuments = flattenTypes(transformedDocuments);
   Handlebars.registerPartial('fragments', fragments);
   Handlebars.registerPartial('selectionSet', selectionSet);
   Handlebars.registerHelper('shouldHavePrefix', shouldHavePrefix);
 
-  const templateContext = {
-    ...context,
+  const hbsContext = {
+    ...templateContext,
     ...flattenDocuments
   };
 
-  return Handlebars.compile(rootTemplate)(templateContext);
+  return Handlebars.compile(rootTemplate)(hbsContext);
 };

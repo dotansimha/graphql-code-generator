@@ -13,6 +13,7 @@ describe('New Generator API', () => {
           plugins:
             - typescript-common
             - typescript-server
+            - typescript-resolvers
         client/types.ts:
           schema:
             - ./tests/test-documents/schema.graphql

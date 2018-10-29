@@ -1,5 +1,3 @@
-{{{ blockComment 'START: Typescript template' }}}
-
 {{#if @root.config.schemaNamespace ~}}export namespace {{@root.config.schemaNamespace}} { {{/if}}
 {{{ blockCommentIf 'Scalars' scalars }}}
 {{#each scalars}}
@@ -39,5 +37,3 @@ export type {{ convert name }} = {{#each possibleTypes}}{{ convert this}}{{#unle
 
 {{/each}}
 {{#if @root.config.schemaNamespace ~}} } {{~/if}}
-
-{{{ blockComment 'END: Typescript template' }}}
