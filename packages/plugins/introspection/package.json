@@ -1,17 +1,19 @@
 {
-  "name": "graphql-codegen-introspection-template",
+  "name": "graphql-codegen-introspection",
   "version": "0.12.6",
-  "description": "",
-  "license": "MIT",
+  "description": "graphql-codegen-cli template for TypeScript typings for both client side and server side",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
+  "license": "MIT",
   "scripts": {
     "prepublishOnly": "yarn build",
     "build": "codegen-templates-scripts build",
     "pretest": "yarn build",
     "test": "codegen-templates-scripts test"
   },
+  "dependencies": {},
   "devDependencies": {
     "codegen-templates-scripts": "0.12.6",
+    "graphql": "14.0.2",
     "graphql-codegen-compiler": "0.12.6",
     "graphql-codegen-core": "0.12.6"
   },
