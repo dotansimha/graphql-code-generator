@@ -471,9 +471,9 @@ describe('Resolvers', () => {
 
     // import parents
     // merge duplicates into single module
-    // expect(content).toBeSimilarStringTo(`
-    //   import { UserParent, PostParent } from './interfaces';
-    // `);
+    expect(content).toBeSimilarStringTo(`
+      import { UserParent, PostParent } from './interfaces';
+    `);
 
     // should check field's result and match it with provided parents
     expect(content).toBeSimilarStringTo(`
