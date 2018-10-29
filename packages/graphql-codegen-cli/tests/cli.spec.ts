@@ -25,10 +25,10 @@ describe('executeWithOptions', () => {
       args: ['./tests/test-documents/invalid-fields.graphql']
     });
 
-    expect(spyLogger.mock.calls[0][0]).toBe(
-      '[./tests/test-documents/invalid-fields.graphql] GraphQL Error: Cannot query field "fieldD" on type "Query". Did you mean "fieldA" or "fieldB"?'
+    expect(spyLogger.mock.calls[0][0]).toContain(
+      'Cannot query field "fieldD" on type "Query". Did you mean "fieldA" or "fieldB"?'
     );
-    expect(spyLogger.mock.calls[1][0]).toBe('Found 1 errors when validating your GraphQL documents against schema!');
+    expect(spyLogger.mock.calls[0][0]).toContain('Found 1 errors');
     expect(spyProcessExit).toBeCalledWith(1);
 
     spyLogger.mockRestore();
