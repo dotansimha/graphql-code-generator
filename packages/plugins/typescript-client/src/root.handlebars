@@ -1,0 +1,56 @@
+{{{ blockCommentIf 'Documents' operations }}}
+{{#each operations }}
+
+{{#unless @root.config.noNamespaces}}
+export namespace {{ convert name }} {
+{{/unless}}
+  export type {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}Variables = {
+  {{#each variables}}
+    {{#if @root.config.immutableTypes }}readonly {{/if}}{{ name }}{{ getOptionals this }}: {{ convertedType this }};
+  {{/each}}
+  }
+
+  export type {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}{{ convert operationType }} ={{#if hasFields}} {
+    {{#if @root.config.immutableTypes }}readonly {{/if}}__typename?: "{{ convert operationType }}";
+    {{> selectionSet fields=fields prefix=name }}
+  }{{/if}}{{> fragments this=this prefix=name }}
+  {{#each innerModels }}
+
+  export type {{#if @root.config.noNamespaces}}{{ convert ../name }}{{/if}}{{ convert modelType }} ={{#if hasFields}} {
+  {{#unless hasInlineFragments}}
+    {{#if @root.config.immutableTypes }}readonly {{/if}}__typename?: "{{ schemaBaseType }}";
+  {{else}}
+    {{#if @root.config.immutableTypes }}readonly {{/if}}__typename?: {{#each inlineFragments}}{{#if @root.config.noNamespaces}}{{ convert ../../name }}{{/if}}{{onType}}["__typename"]{{#unless @last}} | {{/unless}}{{/each}};
+  {{/unless}}
+    {{> selectionSet fields=fields prefix=../name }}
+  }{{/if}} {{> fragments this=this prefix=../name }}
+  {{/each}}
+{{#unless @root.config.noNamespaces}}
+}
+{{/unless}}
+{{/each}}
+{{#each fragments }}
+
+{{#unless @root.config.noNamespaces}}
+export namespace {{ convert name }} {
+{{/unless}}
+  export type {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}Fragment ={{#if hasFields}} {
+    {{#if @root.config.immutableTypes }}readonly {{/if}}__typename?: "{{ onType }}";
+    {{> selectionSet fields=fields prefix=name }}
+  }{{/if}}{{> fragments this=this prefix=name }}
+  {{#each innerModels }}
+
+  export type {{#if @root.config.noNamespaces}}{{ convert ../name }}{{/if}}{{ convert modelType }} ={{#if hasFields}} {
+  {{#unless hasInlineFragments}}
+    {{#if @root.config.immutableTypes }}readonly {{/if}}__typename?: "{{ schemaBaseType }}";
+  {{else}}
+    {{#if @root.config.immutableTypes }}readonly {{/if}}__typename?: {{#each inlineFragments}}{{#if @root.config.noNamespaces}}{{ convert ../name }}{{/if}}{{onType}}["__typename"]{{#unless @last}} | {{/unless}}{{/each}};
+  {{/unless}}
+    {{> selectionSet fields=fields prefix=../name }}
+  }{{/if}}{{> fragments this=this prefix=../name}}
+  {{/each}}
+{{#unless @root.config.noNamespaces}}
+}
+{{/unless}}
+{{/each}}
+

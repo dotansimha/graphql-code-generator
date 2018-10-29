@@ -1,0 +1,43 @@
+{{{ blockComment 'START: Typescript template' }}}
+
+{{#if @root.config.schemaNamespace ~}}export namespace {{@root.config.schemaNamespace}} { {{/if}}
+{{{ blockCommentIf 'Scalars' scalars }}}
+{{#each scalars}}
+
+{{ toComment description }}
+{{#ifCond (convert name) "!==" (getScalarType name) }}export type {{ convert name }} = {{ getScalarType name }};{{/ifCond}}
+{{/each}}
+
+{{{ blockCommentIf 'Interfaces' interfaces }}}
+{{#each interfaces}}
+  {{~> type }}
+
+{{/each}}
+
+{{{ blockCommentIf 'Types' types }}}
+{{#each types}}
+  {{~> type }}
+
+{{/each}}
+{{{ blockCommentIf 'Arguments' types }}}
+{{~#each types}}
+  {{~#each fields}}
+    {{~# if hasArguments }}
+export interface {{ convert name }}{{ convert ../name }}Args {
+{{#each arguments}}
+  {{ toComment description }}
+  {{ name }}{{ getOptionals this }}: {{ convertedType this }};
+{{/each}}
+}
+    {{/if}}
+  {{/each}}
+{{/each}}
+{{{ blockCommentIf 'Unions' unions }}}
+{{#each unions}}
+{{ toComment description }}
+export type {{ convert name }} = {{#each possibleTypes}}{{ convert this}}{{#unless @last}} | {{/unless}}{{/each}};
+
+{{/each}}
+{{#if @root.config.schemaNamespace ~}} } {{~/if}}
+
+{{{ blockComment 'END: Typescript template' }}}

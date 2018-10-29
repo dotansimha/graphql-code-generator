@@ -21,7 +21,8 @@
   "workspaces": [
     "packages/*",
     "packages/scripts/*",
-    "packages/templates/*"
+    "packages/templates/*",
+    "packages/plugins/*"
   ],
   "dependencies": {
     "lerna": "2.11.0"
