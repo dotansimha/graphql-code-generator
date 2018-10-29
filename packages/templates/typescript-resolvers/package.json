@@ -9,8 +9,10 @@
     "pretest": "yarn build",
     "test": "codegen-templates-scripts test"
   },
+  "dependencies": {
+    "graphql-codegen-typescript-template": "0.12.6"
+  },
   "devDependencies": {
-    "graphql-codegen-typescript-template": "0.12.6",
     "codegen-templates-scripts": "0.12.6",
     "graphql-codegen-core": "0.12.6",
     "graphql-codegen-compiler": "0.12.6",
