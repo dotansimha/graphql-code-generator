@@ -1,0 +1,48 @@
+{
+  "name": "graphql-codegen-typescript-react-apollo",
+  "version": "0.12.6",
+  "description": "graphql-codegen-cli template for TypeScript typings for both client side and server side",
+  "repository": "git@github.com:dotansimha/graphql-code-generator.git",
+  "license": "MIT",
+  "scripts": {
+    "prepublishOnly": "yarn build",
+    "build": "codegen-templates-scripts build",
+    "pretest": "yarn build",
+    "test": "codegen-templates-scripts test"
+  },
+  "dependencies": {
+    "graphql-codegen-typescript-common": "0.12.6"
+  },
+  "devDependencies": {
+    "graphql-codegen-plugin-handlebars-helpers": "0.12.6",
+    "graphql-codegen-plugin-helpers": "0.12.6",
+    "codegen-templates-scripts": "0.12.6",
+    "graphql": "14.0.2",
+    "graphql-codegen-compiler": "0.12.6",
+    "graphql-codegen-core": "0.12.6"
+  },
+  "main": "./dist/index.js",
+  "typings": "dist/index.d.ts",
+  "typescript": {
+    "definition": "dist/index.d.ts"
+  },
+  "jest": {
+    "globals": {
+      "ts-jest": {
+        "enableTsDiagnostics": false
+      }
+    },
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
+  }
+}

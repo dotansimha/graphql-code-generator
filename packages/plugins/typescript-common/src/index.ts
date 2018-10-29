@@ -39,6 +39,8 @@ export function initCommonTemplate(hbs, schema, config) {
   hbs.registerHelper('getOptionals', getOptionals);
   hbs.registerHelper('getEnumValue', getEnumValue);
   hbs.registerHelper('convertedType', getType(convert));
+  hbs.registerHelper('toLowerCase', helpers.toLowerCase);
+  hbs.registerHelper('toUpperCase', helpers.toUpperCase);
 
   const templateContext = schemaToTemplateContext(schema);
 

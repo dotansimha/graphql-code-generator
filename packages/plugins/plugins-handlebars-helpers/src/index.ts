@@ -70,5 +70,11 @@ export const helpers = {
     }
 
     return new SafeString('/** ' + oneLineTrim`${str || ''}` + ' */');
+  },
+  toLowerCase(str: string) {
+    return (str || '').toLowerCase();
+  },
+  toUpperCase(str: string) {
+    return (str || '').toUpperCase();
   }
 };

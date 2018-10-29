@@ -9,9 +9,8 @@ describe('New Generator API', () => {
       documents:
         - ./tests/test-documents/valid.graphql
       generates:
-        client/types.d.ts:
-          plugins:  
-            - typescript-graphql-files-modules
+        client/types.tsx:
+          - typescript-react-apollo
     `;
     const config = parseConfigFile(yml);
     const result = await generate(config);

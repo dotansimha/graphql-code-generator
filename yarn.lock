@@ -2826,6 +2826,11 @@ graphql-codegen-typescript-template-multiple@0.9.4:
   resolved "https://registry.yarnpkg.com/graphql-codegen-typescript-template-multiple/-/graphql-codegen-typescript-template-multiple-0.9.4.tgz#d0a6faa18547b726c3246b8fbca256abeb6c68ec"
   integrity sha1-0Kb6oYVHtybDJGuPvKJWq+tsaOw=
 
+graphql-codegen-typescript-template@0.12.6:
+  version "0.12.6"
+  resolved "https://registry.yarnpkg.com/graphql-codegen-typescript-template/-/graphql-codegen-typescript-template-0.12.6.tgz#3120089a7aea93373261377b0e0f89792c8bb5ad"
+  integrity sha512-Qn0EvuFwOmUy4drNEugczNdSmpNtFjJ3oJAdvLW1nnM54GNMlm+9LJLmZfifjG1uB4nvKORV9+v3dY2fKrxaKQ==
+
 graphql-config@2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/graphql-config/-/graphql-config-2.2.1.tgz#5fd0ec77ac7428ca5fb2026cf131be10151a0cb2"
