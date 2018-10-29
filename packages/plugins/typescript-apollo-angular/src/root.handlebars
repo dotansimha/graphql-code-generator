@@ -1,7 +1,4 @@
-{{{ blockComment 'START: Apollo Angular template' }}}
-
 import { Injectable } from '@angular/core';
-
 import * as Apollo from 'apollo-angular';
 
 {{#unless @root.config.noGraphqlTag}}
@@ -20,10 +17,8 @@ import gql from 'graphql-tag';
     @Injectable({
         providedIn: {{{ providedIn this }}}
     })
-    export class {{ toPascalCase name }}GQL extends Apollo.{{toPascalCase operationType}}<{{ toPascalCase name }}{{#unless @root.config.noNamespaces}}.{{/unless}}{{ toPascalCase operationType }}, {{ toPascalCase name }}{{#unless @root.config.noNamespaces}}.{{/unless}}Variables> {
+    export class {{ convert name }}GQL extends Apollo.{{convert operationType}}<{{ convert name }}{{#unless @root.config.noNamespaces}}.{{/unless}}{{ convert operationType }}, {{ convert name }}{{#unless @root.config.noNamespaces}}.{{/unless}}Variables> {
         document: any = {{{ gql this }}}
         {{{ namedClient this }}}
     }
 {{/each}}
-
-{{{ blockComment 'END: Apollo Angular template' }}}

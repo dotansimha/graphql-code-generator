@@ -1,6 +1,6 @@
 import { Field, Interface, Type } from 'graphql-codegen-core';
 import { set } from 'lodash';
-import { getResultType } from '../../../typescript/src/utils/get-result-type';
+import { getResultType } from 'graphql-codegen-typescript-common';
 
 // Directives fields
 const ID_DIRECTIVE = 'id';

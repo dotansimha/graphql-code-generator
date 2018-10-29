@@ -6,11 +6,9 @@ describe('New Generator API', () => {
     const yml = `
       schema:
         - ./tests/test-documents/schema.graphql
-      documents:
-        - ./tests/test-documents/valid.graphql
       generates:
-        client/types.tsx:
-          - typescript-react-apollo
+        types.ts:
+          - typescript-mongodb
     `;
     const config = parseConfigFile(yml);
     const result = await generate(config);

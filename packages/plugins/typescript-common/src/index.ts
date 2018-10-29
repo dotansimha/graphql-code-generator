@@ -41,6 +41,11 @@ export function initCommonTemplate(hbs, schema, config) {
   hbs.registerHelper('convertedType', getType(convert));
   hbs.registerHelper('toLowerCase', helpers.toLowerCase);
   hbs.registerHelper('toUpperCase', helpers.toUpperCase);
+  hbs.registerHelper('times', helpers.times);
+  hbs.registerHelper('stringify', helpers.stringify);
+  hbs.registerHelper('ifDirective', helpers.ifDirective);
+  hbs.registerHelper('unlessDirective', helpers.unlessDirective);
+  hbs.registerHelper('toPrimitive', type => scalars[type] || type || '');
 
   const templateContext = schemaToTemplateContext(schema);
 

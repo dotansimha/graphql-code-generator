@@ -76,5 +76,49 @@ export const helpers = {
   },
   toUpperCase(str: string) {
     return (str || '').toUpperCase();
+  },
+  stringify(obj: any) {
+    return new SafeString(JSON.stringify(obj));
+  },
+  times(n: number, block: any) {
+    let accum = '';
+
+    for (let i = 0; i < n; ++i) {
+      accum += block.fn(i);
+    }
+
+    return accum;
+  },
+  ifDirective(context: any, directiveName: string, options: { inverse: Function; fn: Function; data: { root: any } }) {
+    if (context && context['directives'] && directiveName && typeof directiveName === 'string') {
+      const directives = context['directives'];
+      const directiveValue = directives[directiveName];
+
+      if (directiveValue) {
+        return options && options.fn ? options.fn({ ...(directiveValue || {}), ...context }) : '';
+      } else {
+        return options && options.inverse ? options.inverse(context) : '';
+      }
+    }
+
+    return options && options.inverse ? options.inverse(context) : '';
+  },
+  unlessDirective(
+    context: any,
+    directiveName: string,
+    options: { inverse: Function; fn: Function; data: { root: any } }
+  ) {
+    if (context && context['directives'] && directiveName && typeof directiveName === 'string') {
+      const directives = context['directives'];
+      const directiveValue = directives[directiveName];
+
+      if (!directiveValue) {
+        return options && options.fn ? options.fn({ ...(directiveValue || {}), ...context }) : '';
+      } else {
+        return options && options.inverse ? options.inverse(context) : '';
+      }
+    }
+
+    return options && options.inverse ? options.inverse(context) : '';
   }
 };
