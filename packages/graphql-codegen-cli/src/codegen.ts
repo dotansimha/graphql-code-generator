@@ -3,6 +3,7 @@ import * as commander from 'commander';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as mkdirp from 'mkdirp';
+import chalk from 'chalk';
 import { DocumentNode, extendSchema, GraphQLSchema, parse } from 'graphql';
 import { getGraphQLProjectConfig, ConfigNotFoundError } from 'graphql-config';
 
@@ -124,15 +125,51 @@ export const validateCliOptions = (options: CLIOptions) => {
       options.schema = graphqlProjectConfig.schemaPath;
     } catch (e) {
       if (e instanceof ConfigNotFoundError) {
-        cliError('Flag --schema is missing!');
+        cliError(`
+          
+          Flag ${chalk.bold('--schema')} is missing.
+          
+          Schema points to one of following:
+            - url of a GraphQL server
+            - path to a .graphql file with GraphQL Schema
+            - path to a introspection file
+          
+
+          CLI example:
+            
+            $ gql-gen --schema ./schema.json ...
+          
+          API example:
+            
+            generate({
+              schema: './schema.json',
+              ...
+            });
+
+        `);
       }
     }
   }
 
   if (!template && !project) {
-    cliError(
-      'Please specify language/platform, using --template flag, or specify --project to generate with custom project!'
-    );
+    cliError(`
+      
+      Please specify the template.
+      
+      A template matches an npm package's name.
+
+      CLI example:
+            
+        $ gql-gen --template graphql-codegen-typescript-template ...
+          
+      API example:
+            
+        generate({
+          template: 'graphql-codegen-typescript-template',
+          ...
+        });
+
+    `);
   }
 };
 
@@ -191,7 +228,21 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
       templateConfig = templateFromExport.default || templateFromExport.config || templateFromExport;
       spinner.succeed();
     } catch (e) {
-      throw new Error(`Unknown codegen template: "${template}", please make sure it's installed using npm/Yarn!`);
+      throw new Error(`
+
+        Unknown codegen template: "${template}"
+
+        Please make sure it's installed using npm or yarn.
+
+          $ yarn add ${template} -D
+
+          OR
+
+          $ npm install ${template} -D
+
+        Template should match package's name.
+
+      `);
     }
   }
 
@@ -210,7 +261,23 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
     spinner.log(`Using project: ${project}`);
     if (config === null) {
       throw new Error(
-        `To use project feature, please specify --config path or create gql-gen.json in your project root!`
+        `
+          To use project feature, please specify ${chalk.bold('path to the config file')} or create ${chalk.bold(
+          'gql-gen.json'
+        )} in your project root
+
+          If config file is different then gql-gen.json do the following.
+
+          CLI example:
+
+            $ gql-gen --config ./my-gql-gen.json
+
+          API example:
+
+            generate({
+              config: './my-gql-gen.json'
+            });
+        `
       );
     }
 
@@ -227,7 +294,7 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
         if (requiredFile && typeof requiredFile === 'function') {
           resolvedHelpers[helperName] = requiredFile;
         } else {
-          throw new Error(`Custom template file ${resolvedPath} does not have a default export function!`);
+          throw new Error(`Custom template file ${resolvedPath} does not have a default export function.`);
         }
       } else {
         throw new Error(`Custom template file ${helperName} does not exists in path: ${resolvedPath}`);
@@ -316,7 +383,27 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
       spinner.succeed();
     } catch (e) {
       debugLog(`[executeWithOptions] Failed to load schema`, e);
-      cliError('Invalid --schema provided, please use a path to local file, HTTP endpoint or a glob expression!');
+      cliError(`
+      
+        ${chalk.bold('Invalid schema provided.')}
+        Please use a path to local file, HTTP endpoint or a glob expression.
+
+        Local file should export a string, GraphQLSchema object or should be a .graphql file.
+        GraphQL Code Generator accepts: ES6 modules and CommonJS modules.
+        It should either export schema with the ${chalk.italic('schema')} variable or with default export.
+
+        CLI example:
+
+          $ gql-gen --schema ./path/to/schema.json ...
+
+        API example:
+
+          generate({
+            schema: './path/to/schema.json',
+            ...
+          });
+
+      `);
     }
 
     if (clientSchema) {
@@ -327,7 +414,27 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
         spinner.succeed();
       } catch (e) {
         debugLog(`[executeWithOptions] Failed to load client schema`, e);
-        cliError('Invalid --clientSchema provided, please use a path to local file or a glob expression!');
+        cliError(`
+        
+          ${chalk.bold('Invalid client schema.')}
+          Please use a path to local file or a glob expression.
+
+          Local file should export a string, GraphQLSchema object or should be a .graphql file.
+          GraphQL Code Generator accepts: ES6 modules and CommonJS modules.
+          It should either export schema with the ${chalk.italic('schema')} variable or with default export.
+
+          CLI example:
+
+            $ gql-gen --clientSchema ./path/to/schema.json
+
+          API example:
+
+            generate({
+              clientSchema: './path/to/schema.json',
+              ...
+            });
+
+        `);
       }
     }
 
@@ -367,17 +474,33 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
     const loadDocumentErrors = validateGraphQlDocuments(graphQlSchema, documentsFiles);
 
     if (loadDocumentErrors.length > 0) {
+      const errors: string[] = [];
       let errorCount = 0;
 
       for (const loadDocumentError of loadDocumentErrors) {
         for (const graphQLError of loadDocumentError.errors) {
-          getLogger().error(`[${loadDocumentError.filePath}] GraphQL Error: ${graphQLError.message}`);
+          errors.push(`
+
+            ${loadDocumentError.filePath}: 
+              ${graphQLError.message}
+
+          `);
           errorCount++;
         }
       }
 
       cliError(
-        `Found ${errorCount} errors when validating your GraphQL documents against schema!`,
+        `
+
+          Found ${errorCount} errors.
+
+          GraphQL Code Generator validated your GraphQL documents against the schema.
+          Please fix following errors and run codegen again:
+
+
+          ${errors.join('')}
+        
+        `,
         options.watch ? false : exitOnError
       );
     }

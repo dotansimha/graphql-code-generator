@@ -20,7 +20,12 @@ export const loadFileContent = (filePath: string): DocumentNode | null => {
       return null;
     }
   } else {
-    throw new Error(`Document file ${filePath} does not exists!`);
+    throw new Error(`
+
+      Failed to load a document.
+      Document file ${filePath} does not exists.
+
+    `);
   }
 };
 

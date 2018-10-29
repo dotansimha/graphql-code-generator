@@ -1,6 +1,7 @@
 import { existsSync } from 'fs';
 import { extname, isAbsolute, resolve as resolvePath } from 'path';
 import isValidPath = require('is-valid-path');
+import chalk from 'chalk';
 import { buildASTSchema, buildClientSchema, DocumentNode, GraphQLSchema, IntrospectionQuery, parse } from 'graphql';
 import { debugLog } from 'graphql-codegen-core';
 import { SchemaLoader } from './schema-loader';
@@ -51,17 +52,52 @@ export class SchemaFromExport implements SchemaLoader {
               }
             } else {
               reject(
-                new Error(`Invalid export from export file ${fullPath}: missing default export or 'schema' export!`)
+                new Error(`
+                  Invalid export from file: ${fullPath}
+                  Use either ${chalk.bold('default export')} or export ${chalk.bold('schema')} variable.
+
+                  Example:
+
+                    export default ...;
+
+                    OR
+
+                    export const schema = ...;
+
+                `)
               );
             }
           } else {
-            reject(new Error(`Invalid export from export file ${fullPath}: empty export!`));
+            reject(
+              new Error(`
+            
+              Invalid export from file: ${fullPath}
+
+              You forgot to export schema.
+              Use either ${chalk.bold('default export')} or export ${chalk.bold('schema')} variable.
+
+              Example:
+
+                export default ...;
+
+                OR
+
+                export const schema = ...;
+
+            `)
+            );
           }
         } catch (e) {
           reject(e);
         }
       } else {
-        reject(`Unable to locate introspection from export file: ${fullPath}`);
+        reject(`
+        
+          Unable to locate introspection from export file: ${fullPath}
+
+          File probably does not exist.
+
+        `);
       }
     });
   }
@@ -99,7 +135,21 @@ export class SchemaFromExport implements SchemaLoader {
       } else if (this.isSchemaJson(schema)) {
         resolve(buildClientSchema(schema.data));
       } else {
-        reject(new Error('Unexpected schema type provided!'));
+        reject(
+          new Error(`
+          Unexpected schema type provided.
+
+          Should be one of following:
+            - exported GraphQLSchema object
+            - exported string wrapped by the 'gql' tag
+            - string without the 'gql' tag
+            - .graphql file with schema
+            - JSON file with introspection
+
+          Please provide correct schema and run codegen again.
+          
+        `)
+        );
       }
     });
   }
