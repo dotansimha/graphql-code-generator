@@ -5,23 +5,13 @@ describe('New Generator API', () => {
   it('should read config file correctly', async () => {
     const yml = `
       schema:
-        - ./tests/test-schema.graphql
+        - ./tests/test-documents/schema.graphql
+      documents:
+        - ./tests/test-documents/valid.graphql
       generates:
-        server/types.ts:
-          schema:
-            - ./tests/additional-schema.graphql
-          plugins:
-            - typescript-common
-            - typescript-server
-            - typescript-resolvers
-        client/types.ts:
-          schema:
-            - ./tests/test-documents/schema.graphql
-          documents:
-            - ./tests/test-documents/valid.graphql
+        client/types.d.ts:
           plugins:  
-            - typescript-common
-            - typescript-client
+            - typescript-graphql-files-modules
     `;
     const config = parseConfigFile(yml);
     const result = await generate(config);

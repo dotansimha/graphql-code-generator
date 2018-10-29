@@ -1,4 +1,0 @@
-{{#each fields}}
-{{ toComment description }}
-{{#if @root.config.immutableTypes }}readonly {{/if}}{{ name }}{{ getOptionals this }}: {{#if (shouldHavePrefix this) }} {{toPascalCase ../prefix}}{{/if}}{{ convertedType this }};
-{{/each}}

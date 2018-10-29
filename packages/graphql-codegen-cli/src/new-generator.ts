@@ -56,7 +56,7 @@ async function mergeSchemas(schemas: GraphQLSchema[]): Promise<GraphQLSchema> {
   } else if (schemas.length === 1) {
     return schemas[0];
   } else {
-    return remoteMergeSchemas({ schemas });
+    return remoteMergeSchemas({ schemas: schemas.filter(s => s) });
   }
 }
 
@@ -84,7 +84,10 @@ export async function generate(config: Types.Config): Promise<FileOutput[]> {
   if (documents.length > 0) {
     const foundDocumentsPaths = await documentsFromGlobs(documents);
     rootDocuments = await loadDocumentsSources(foundDocumentsPaths);
-    validateGraphQlDocuments(rootSchema, rootDocuments);
+
+    if (rootSchema) {
+      validateGraphQlDocuments(rootSchema, rootDocuments);
+    }
   }
 
   /* Iterate through all output files, and execute each template piece */
@@ -103,7 +106,10 @@ export async function generate(config: Types.Config): Promise<FileOutput[]> {
     if (outputSpecificDocuments.length > 0) {
       const foundDocumentsPaths = await documentsFromGlobs(outputSpecificDocuments);
       const additionalDocs = await loadDocumentsSources(foundDocumentsPaths);
-      validateGraphQlDocuments(outputSchema, additionalDocs);
+
+      if (outputSchema) {
+        validateGraphQlDocuments(outputSchema, additionalDocs);
+      }
 
       outputDocuments = [...rootDocuments, ...additionalDocs];
     }
@@ -134,13 +140,7 @@ export async function generateOutput(options: GenerateOutputOptions): Promise<Fi
       documents: options.documents
     });
 
-    output += `
-    ================ Start Plugin: ${name} ================
-
-    ${result}
-
-    ================ End Plugin: ${name} ==================
-    `;
+    output += result;
   }
 
   return { filename: options.filename, content: output };
