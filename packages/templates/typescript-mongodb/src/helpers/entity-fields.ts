@@ -1,6 +1,6 @@
 import { Field, Interface, Type } from 'graphql-codegen-core';
 import { set } from 'lodash';
-import { getResultType } from '../../../typescript/src/utils/get-result-type';
+import { convertedType } from 'graphql-codegen-typescript-template';
 
 // Directives fields
 const ID_DIRECTIVE = 'id';
@@ -27,7 +27,7 @@ function appendField(obj: object, field: string, value: string, mapDirectiveValu
 type FieldsResult = { [name: string]: string | FieldsResult };
 
 function buildFieldDef(type: string, field: Field, options: Handlebars.HelperOptions): string {
-  return getResultType(
+  return convertedType(
     {
       ...field,
       type

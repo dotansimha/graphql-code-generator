@@ -1,5 +1,6 @@
 import { Type, toPascalCase } from 'graphql-codegen-core';
 import { GraphQLSchema, GraphQLObjectType } from 'graphql';
+import { pickMapper } from './mappers';
 
 function getRootTypeNames(schema: GraphQLSchema): string[] {
   const query = ((schema.getQueryType() || {}) as GraphQLObjectType).name;
@@ -16,7 +17,8 @@ function isRootType(type: Type, schema: GraphQLSchema) {
 export function getParentType(type: Type, options: Handlebars.HelperOptions) {
   const config = options.data.root.config || {};
   const schema: GraphQLSchema = options.data.root.rawSchema;
-  const name = `${config.interfacePrefix || ''}${toPascalCase(type.name)}`;
+  const mapper = pickMapper(type.name, config.mappers || {});
+  const name = mapper ? mapper.type : `${config.interfacePrefix || ''}${toPascalCase(type.name)}`;
 
   return isRootType(type, schema) ? 'never' : name;
 }

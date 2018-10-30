@@ -5,12 +5,13 @@ export namespace {{ toPascalCase name }}Resolvers {
   export interface {{#if @root.config.noNamespaces}}{{ toPascalCase name }}{{/if}}Resolvers<Context = {{#if @root.config.contextType}}{{@root.config.contextType}}{{else}}any{{/if}}, TypeParent = {{ getParentType this }}> {
     {{#each fields}}
     {{ toComment description }}
-    {{ name }}?: {{#if @root.config.noNamespaces}}{{ toPascalCase ../name }}{{/if}}{{ getFieldResolverName name }}<{{ convertedType this }}, TypeParent, Context>;
+    {{ name }}?: {{#if @root.config.noNamespaces}}{{ toPascalCase ../name }}{{/if}}{{ getFieldResolverName name }}<{{ getFieldType this }}, TypeParent, Context>;
     {{/each}}
   }
 
   {{#each fields}}
-  export type {{#if @root.config.noNamespaces}}{{ toPascalCase ../name }}{{/if}}{{ getFieldResolverName name }}<R = {{ convertedType this }}, Parent = {{ getParentType ../this }}, Context = {{#if @root.config.contextType}}{{@root.config.contextType}}{{else}}any{{/if}}> = {{ getFieldResolver this ../this }};
+
+  export type {{#if @root.config.noNamespaces}}{{ toPascalCase ../name }}{{/if}}{{ getFieldResolverName name }}<R = {{ getFieldType this }}, Parent = {{ getParentType ../this }}, Context = {{#if @root.config.contextType}}{{@root.config.contextType}}{{else}}any{{/if}}> = {{ getFieldResolver this ../this }};
 
   {{~# if hasArguments }}
 
