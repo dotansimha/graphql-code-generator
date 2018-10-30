@@ -2,13 +2,19 @@
   "scripts": {
     "examples": "docusaurus-examples",
     "start": "docusaurus-start",
-    "build": "docusaurus-build",
+    "build": "yarn build:app && yarn build:lambda",
+    "build:app": "docusaurus-build",
+    "build:lambda": "netlify-lambda build lambda",
     "publish-gh-pages": "docusaurus-publish",
     "write-translations": "docusaurus-write-translations",
     "version": "docusaurus-version",
     "rename-version": "docusaurus-rename-version"
   },
   "devDependencies": {
-    "docusaurus": "^1.5.0"
+    "docusaurus": "^1.5.0",
+    "netlify-lambda": "^1.0.2"
+  },
+  "dependencies": {
+    "sendmail": "^1.4.1"
   }
 }
