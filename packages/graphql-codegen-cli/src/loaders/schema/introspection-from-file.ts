@@ -1,10 +1,9 @@
-import { introspectionToGraphQLSchema, validateIntrospection } from 'graphql-codegen-core';
+import { introspectionToGraphQLSchema, validateIntrospection, Types } from 'graphql-codegen-core';
 import { GraphQLSchema } from 'graphql';
 import { SchemaLoader } from './schema-loader';
 import { existsSync, readFileSync } from 'fs';
 import isValidPath = require('is-valid-path');
 import { extname, isAbsolute, resolve as resolvePath } from 'path';
-import { CLIOptions } from '../../cli-options';
 import spinner from '../../spinner';
 
 export class IntrospectionFromFileLoader implements SchemaLoader {
@@ -28,7 +27,7 @@ export class IntrospectionFromFileLoader implements SchemaLoader {
     return isValidPath(pointerToSchema) && existsSync(pointerToSchema) && extname(pointerToSchema) === '.json';
   }
 
-  handle(pointerToSchema: string, _cliOptions: CLIOptions): Promise<GraphQLSchema> {
+  handle(pointerToSchema: string, config: Types.Config, schemaOptions: any): Promise<GraphQLSchema> {
     spinner.info(`Loading GraphQL Introspection from file: ${pointerToSchema}...`);
 
     return new Promise<GraphQLSchema>((resolve, reject) => {

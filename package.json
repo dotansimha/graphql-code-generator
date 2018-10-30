@@ -20,8 +20,7 @@
   },
   "workspaces": [
     "packages/*",
-    "packages/scripts/*",
-    "packages/templates/*",
+    "packages/utils/*",
     "packages/plugins/*"
   ],
   "dependencies": {

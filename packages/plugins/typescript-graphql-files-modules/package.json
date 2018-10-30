@@ -16,7 +16,6 @@
     "graphql-codegen-plugin-helpers": "0.12.6",
     "codegen-templates-scripts": "0.12.6",
     "graphql": "14.0.2",
-    "graphql-codegen-compiler": "0.12.6",
     "graphql-codegen-core": "0.12.6"
   },
   "main": "./dist/index.js",

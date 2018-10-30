@@ -1,5 +1,5 @@
 import { PluginFunction, DocumentFile, transformDocumentsFiles } from 'graphql-codegen-core';
-import { buildFilesArray } from 'graphql-codegen-compiler';
+import { buildFilesArray } from 'graphql-codegen-plugin-helpers';
 import { GraphQLSchema } from 'graphql';
 import * as Handlebars from 'handlebars';
 import * as rootTemplate from './root.handlebars';

@@ -1,7 +1,7 @@
 import { GraphQLSchema } from 'graphql';
-import { CLIOptions } from '../../cli-options';
+import { Types } from 'graphql-codegen-core';
 
-export interface SchemaLoader {
+export interface SchemaLoader<T = any> {
   canHandle(pointerToSchema: string): Promise<boolean> | boolean;
-  handle(pointerToSchema: string, cliOptions: CLIOptions): Promise<GraphQLSchema> | GraphQLSchema;
+  handle(pointerToSchema: string, config: Types.Config, schemaOptions: T): Promise<GraphQLSchema> | GraphQLSchema;
 }

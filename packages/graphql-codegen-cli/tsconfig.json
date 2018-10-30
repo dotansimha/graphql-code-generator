@@ -15,7 +15,7 @@
     "alwaysStrict": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true
+    "noUnusedParameters": false
   },
   "files": ["src/index.ts", "src/cli.ts", "declarations.d.ts"],
   "exclude": ["node_modules"]

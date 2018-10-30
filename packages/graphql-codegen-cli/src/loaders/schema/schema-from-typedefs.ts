@@ -1,3 +1,4 @@
+import { Types } from 'graphql-codegen-core';
 import { SchemaLoader } from './schema-loader';
 import * as isGlob from 'is-glob';
 import isValidPath = require('is-valid-path');
@@ -6,7 +7,6 @@ import * as glob from 'glob';
 import { makeExecutableSchema } from 'graphql-tools';
 import { readFileSync } from 'fs';
 import { importSchema } from 'graphql-import';
-import { CLIOptions } from '../../cli-options';
 import * as path from 'path';
 import * as fs from 'fs';
 
@@ -15,7 +15,7 @@ export class SchemaFromTypedefs implements SchemaLoader {
     return isGlob(globPath) || (isValidPath(globPath) && globPath.endsWith('.graphql'));
   }
 
-  handle(globPath: string, cliOptions: CLIOptions): GraphQLSchema {
+  handle(globPath: string, config: Types.Config, schemaOptions: any): GraphQLSchema {
     const globFiles = glob.sync(globPath, { cwd: process.cwd() });
 
     if (!globFiles || globFiles.length === 0) {
@@ -24,8 +24,8 @@ export class SchemaFromTypedefs implements SchemaLoader {
 
     let mergeLogic = <T = any>(arr: T[]) => arr;
 
-    if ('mergeSchema' in cliOptions) {
-      const patternArr = cliOptions.mergeSchema.split('#');
+    if ('mergeSchemaFiles' in config) {
+      const patternArr = config.mergeSchemaFiles.split('#');
       const mergeModuleName = patternArr[0];
       const mergeFunctionName = patternArr[1];
       if (!mergeModuleName || !mergeFunctionName) {

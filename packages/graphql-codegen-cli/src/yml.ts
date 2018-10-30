@@ -1,4 +1,4 @@
-import { Types } from './types';
+import { Types } from 'graphql-codegen-core';
 import { safeLoad } from 'js-yaml';
 
 export function parseConfigFile(ymlString: string): Types.Config {

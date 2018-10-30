@@ -1,6 +1,6 @@
 import { TypeScriptCommonConfig, initCommonTemplate } from 'graphql-codegen-typescript-common';
 import { PluginFunction, DocumentFile, transformDocumentsFiles } from 'graphql-codegen-core';
-import { flattenTypes } from 'graphql-codegen-compiler';
+import { flattenTypes } from 'graphql-codegen-plugin-helpers';
 import { GraphQLSchema } from 'graphql';
 import * as Handlebars from 'handlebars';
 import * as rootTemplate from './root.handlebars';

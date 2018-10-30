@@ -34,7 +34,7 @@ export namespace Types {
   /* Config Definition */
   export interface Config {
     schema: InstanceOrArray<Schema>;
-    require: RequireExtension;
+    require?: RequireExtension;
     mergeSchemaFiles?: string;
     documents?: InstanceOrArray<OperationDocument>;
     generates: { [filename: string]: OutputConfig | ConfiguredOutput };

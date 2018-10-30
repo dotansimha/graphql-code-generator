@@ -2,11 +2,9 @@ import { existsSync } from 'fs';
 import { extname, isAbsolute, resolve as resolvePath } from 'path';
 import isValidPath = require('is-valid-path');
 import { buildASTSchema, buildClientSchema, DocumentNode, GraphQLSchema, IntrospectionQuery, parse } from 'graphql';
-import { debugLog } from 'graphql-codegen-core';
+import { debugLog, Types } from 'graphql-codegen-core';
 import { SchemaLoader } from './schema-loader';
-import { CLIOptions } from '../../cli-options';
 import spinner from '../../spinner';
-
 export class SchemaFromExport implements SchemaLoader {
   canHandle(pointerToSchema: string): boolean {
     const fullPath = isAbsolute(pointerToSchema) ? pointerToSchema : resolvePath(process.cwd(), pointerToSchema);
@@ -14,7 +12,7 @@ export class SchemaFromExport implements SchemaLoader {
     return isValidPath(pointerToSchema) && existsSync(fullPath) && extname(pointerToSchema) !== '.json';
   }
 
-  handle(file: string, _cliOptions: CLIOptions): Promise<GraphQLSchema> {
+  handle(file: string, config: Types.Config, schemaOptions: any): Promise<GraphQLSchema> {
     spinner.info(
       `Loading GraphQL schema object, text, ast, or introspection json from JavaScript ES6 export: ${file}...`
     );

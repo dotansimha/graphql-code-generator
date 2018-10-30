@@ -13,7 +13,7 @@ module.exports = {
   optimization: {
     minimize: false
   },
-  externals: [nodeExternals(), 'graphql', 'graphql-codegen-core', 'graphql-codegen-compiler', 'graphql-tag', 'lodash'],
+  externals: [nodeExternals(), 'graphql', 'graphql-codegen-core', 'graphql-tag', 'lodash'],
   resolve: {
     mainFields: ['browser', 'main', 'module'],
     extensions: ['.ts', '.tsx', '.js', '.jsx'],

@@ -10,7 +10,9 @@
     "pretest": "yarn build",
     "test": "codegen-templates-scripts test"
   },
-  "dependencies": {},
+  "dependencies": {
+    "graphql-codegen-core": "0.12.6"
+  },
   "devDependencies": {},
   "main": "./dist/index.js",
   "typings": "dist/index.d.ts",

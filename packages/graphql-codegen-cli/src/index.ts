@@ -1,3 +1,1 @@
-export { generate } from './generate';
-export * from './cli-options';
-export * from './new-generator';
+export { executeCodegen } from './codegen';

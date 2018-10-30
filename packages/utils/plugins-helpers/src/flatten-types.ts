@@ -1,15 +1,43 @@
-import { FlattenDocument, FlattenFragment, FlattenModel, FlattenOperation } from './types';
+import { pascalCase } from 'change-case';
 import {
+  Operation,
   Document,
   Fragment,
-  isFieldNode,
-  isInlineFragmentNode,
-  Operation,
+  SelectionSetFragmentSpread,
   SelectionSetFieldNode,
   SelectionSetInlineFragment,
-  SelectionSetItem
+  SelectionSetItem,
+  isFieldNode,
+  isInlineFragmentNode
 } from 'graphql-codegen-core';
-import { pascalCase } from 'change-case';
+
+export interface FlattenOperation extends Operation {
+  innerModels: FlattenModel[];
+  isFlatten: boolean;
+}
+
+export interface FlattenFragment extends Fragment {
+  innerModels: FlattenModel[];
+  isFlatten: boolean;
+}
+
+export interface FlattenDocument extends Document {
+  operations: FlattenOperation[];
+  fragments: FlattenFragment[];
+  hasFragments: boolean;
+  hasOperations: boolean;
+}
+
+export interface FlattenModel {
+  schemaBaseType: string;
+  modelType: string;
+  fields: SelectionSetFieldNode[];
+  fragmentsSpread: SelectionSetFragmentSpread[];
+  inlineFragments: SelectionSetInlineFragment[];
+  hasFragmentsSpread: boolean;
+  hasFields: boolean;
+  hasInlineFragments: boolean;
+}
 
 export const handleNameDuplications = (name: string, existing: FlattenModel[]): string => {
   if (existing.find(model => model.modelType === name)) {
