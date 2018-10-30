@@ -62,10 +62,6 @@ export async function generate(options: GenerateOptions, saveToFile = true): Pro
     return createWatcher(options, writeOutput);
   }
 
-  try {
-    const output = await executeWithOptions(options);
-    return writeOutput(output);
-  } catch (error) {
-    throw error;
-  }
+  const output = await executeWithOptions(options);
+  return writeOutput(output);
 }
