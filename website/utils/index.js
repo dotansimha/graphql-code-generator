@@ -1,3 +1,5 @@
+const React = require('react')
+
 const validations = exports.validations = require('./validations')
 
 // foo_barBaz -> ['foo', 'bar', 'Baz']
@@ -56,3 +58,36 @@ const pluckChildProps = exports.pluckChildProps = (children, whitelist) => {
 
   return childProps
 }
+
+const toInlineScript = exports.toInlineScript = (scriptPath, initialize = () => {}) => {
+  const babel = require('@babel/core')
+  const fs = require('fs')
+  const path = require('path')
+  scriptPath = path.resolve(process.cwd(), scriptPath)
+  const relativeScriptPath = path.relative(process.cwd(), scriptPath)
+  let script = toInlineScript.cache[scriptPath]
+
+  if (!toInlineScript.cache[scriptPath]) {
+    script = fs.readFileSync(scriptPath).toString()
+    script = babel.transform(script, {
+      presets: ['@babel/preset-env', 'babel-preset-minify'],
+      code: true,
+      ast: false,
+    }).code
+
+    toInlineScript.cache[scriptPath] = script
+  }
+
+  if (initialize) {
+    initialize = babel.transform(`(${initialize})()`, {
+      presets: ['@babel/preset-env', 'babel-preset-minify'],
+      code: true,
+      ast: false,
+    }).code
+  }
+
+  return React.createElement('script', { dangerouslySetInnerHTML: {
+    __html: `if(!window.CodeGen)window.CodeGen={};if(!window.CodeGen['${relativeScriptPath}'])window.CodeGen['${relativeScriptPath}']={};var exports=window.CodeGen['${relativeScriptPath}'];var module=Object.defineProperties({},{exports:{get(){return exports},set(v){return exports=window.CodeGen['${relativeScriptPath}']=v}}});${script};var require=function(path){return window.CodeGen[path]};${initialize ? initialize : ''}`
+  } })
+}
+toInlineScript.cache = {}
