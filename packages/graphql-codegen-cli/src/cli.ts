@@ -6,10 +6,13 @@ import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 import { Types } from 'graphql-codegen-core';
 import { parseConfigFile } from './yml';
+import spinner from './spinner';
 
 const ymlPath = join(process.cwd(), './codegen.yml');
 const jsonPath = join(process.cwd(), './codegen.json');
 let config: Types.Config;
+
+spinner.start('Validating options');
 
 if (existsSync(ymlPath)) {
   config = parseConfigFile(readFileSync(ymlPath, 'utf-8'));
@@ -19,4 +22,8 @@ if (existsSync(ymlPath)) {
   config = createConfigFromOldCli(initCLI(process.argv));
 }
 
-generate(config).catch(cliError);
+generate(config)
+  .then(() => {
+    spinner.succeed('Done');
+  })
+  .catch(cliError);

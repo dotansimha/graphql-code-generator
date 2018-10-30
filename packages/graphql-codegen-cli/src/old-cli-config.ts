@@ -107,11 +107,20 @@ export const validateCliOptions = (options: CLIOptions) => {
 };
 
 function transformTemplatesToPlugins(options: CLIOptions): any[] {
+  if (options.template === 'ts' || options.template === 'typescript') {
+    return [
+      {
+        'typescript-common': {},
+        'typescript-client': {},
+        'typescript-server': {}
+      }
+    ];
+  }
+
   return [];
 }
 
 export function createConfigFromOldCli(options: CLIOptions): Types.Config {
-  spinner.start('Validating options');
   validateCliOptions(options);
 
   const configObject: Types.Config = {
