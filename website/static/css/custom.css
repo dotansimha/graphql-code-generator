@@ -1,5 +1,8 @@
 /* your custom css */
+
 @charset "UTF-8";
+
+@import "help.css";
 
 /* source: https://fonts.googleapis.com/css?family=Montserrat:400,600,700 */
 /* cyrillic-ext */

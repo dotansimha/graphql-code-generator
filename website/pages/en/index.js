@@ -5,26 +5,26 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react');
+const React = require('react')
 
-const CompLibrary = require('../../core/CompLibrary.js');
+const CompLibrary = require('../../core/CompLibrary.js')
 
-const MarkdownBlock = CompLibrary.MarkdownBlock; /* Used to read markdown */
-const Container = CompLibrary.Container;
-const GridBlock = CompLibrary.GridBlock;
+const MarkdownBlock = CompLibrary.MarkdownBlock /* Used to read markdown */
+const Container = CompLibrary.Container
+const GridBlock = CompLibrary.GridBlock
 
-const siteConfig = require(`${process.cwd()}/siteConfig.js`);
+const siteConfig = require(`${process.cwd()}/siteConfig.js`)
 
 function imgUrl(img) {
-  return `${siteConfig.baseUrl}img/${img}`;
+  return `${siteConfig.baseUrl}img/${img}`
 }
 
 function docUrl(doc, language) {
-  return `${siteConfig.baseUrl}docs/${language ? `${language}/` : ''}${doc}`;
+  return `${siteConfig.baseUrl}docs/${language ? `${language}/` : ''}${doc}`
 }
 
 function pageUrl(page, language) {
-  return siteConfig.baseUrl + (language ? `${language}/` : '') + page;
+  return siteConfig.baseUrl + (language ? `${language}/` : '') + page
 }
 
 class Button extends React.Component {
@@ -35,13 +35,13 @@ class Button extends React.Component {
           {this.props.children}
         </a>
       </div>
-    );
+    )
   }
 }
 
 Button.defaultProps = {
   target: '_self',
-};
+}
 
 const SplashContainer = props => (
   <div className="homeContainer">
@@ -49,20 +49,20 @@ const SplashContainer = props => (
       <div className="wrapper homeWrapper">{props.children}</div>
     </div>
   </div>
-);
+)
 
 const Logo = props => (
   <div className="projectLogo">
     <img src={props.img_src} alt="Project Logo" />
   </div>
-);
+)
 
 const ProjectTitle = () => (
   <h2 className="projectTitle">
     {siteConfig.title}
     <small>{siteConfig.tagline}</small>
   </h2>
-);
+)
 
 const PromoSection = props => (
   <div className="section promoSection">
@@ -70,11 +70,11 @@ const PromoSection = props => (
       <div className="pluginRowBlock">{props.children}</div>
     </div>
   </div>
-);
+)
 
 class HomeSplash extends React.Component {
   render() {
-    const language = this.props.language || '';
+    const language = this.props.language || ''
     return (
       <SplashContainer>
         <Logo img_src={imgUrl('docusaurus.svg')} />
@@ -87,7 +87,7 @@ class HomeSplash extends React.Component {
           </PromoSection>
         </div>
       </SplashContainer>
-    );
+    )
   }
 }
 
@@ -98,7 +98,7 @@ const Block = props => (
     background={props.background}>
     <GridBlock align="center" contents={props.children} layout={props.layout} />
   </Container>
-);
+)
 
 const Features = () => (
   <Block layout="fourColumn">
@@ -117,7 +117,7 @@ const Features = () => (
       },
     ]}
   </Block>
-);
+)
 
 const FeatureCallout = () => (
   <div
@@ -126,7 +126,7 @@ const FeatureCallout = () => (
     <h2>Feature Callout</h2>
     <MarkdownBlock>These are features of this project</MarkdownBlock>
   </div>
-);
+)
 
 const LearnHow = () => (
   <Block background="light">
@@ -139,7 +139,7 @@ const LearnHow = () => (
       },
     ]}
   </Block>
-);
+)
 
 const TryOut = () => (
   <Block id="try">
@@ -152,7 +152,7 @@ const TryOut = () => (
       },
     ]}
   </Block>
-);
+)
 
 const Description = () => (
   <Block background="dark">
@@ -165,18 +165,18 @@ const Description = () => (
       },
     ]}
   </Block>
-);
+)
 
 const Showcase = props => {
   if ((siteConfig.users || []).length === 0) {
-    return null;
+    return null
   }
 
   const showcase = siteConfig.users.filter(user => user.pinned).map(user => (
     <a href={user.infoLink} key={user.infoLink}>
       <img src={user.image} alt={user.caption} title={user.caption} />
     </a>
-  ));
+  ))
 
   return (
     <div className="productShowcaseSection paddingBottom">
@@ -189,12 +189,12 @@ const Showcase = props => {
         </a>
       </div>
     </div>
-  );
-};
+  )
+}
 
 class Index extends React.Component {
   render() {
-    const language = this.props.language || '';
+    const language = this.props.language || ''
 
     return (
       <div>
@@ -208,8 +208,8 @@ class Index extends React.Component {
           <Showcase language={language} />
         </div>
       </div>
-    );
+    )
   }
 }
 
-module.exports = Index;
+module.exports = Index

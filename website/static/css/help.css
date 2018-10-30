@@ -1,0 +1,35 @@
+.helpTitle {
+  margin-top: 50px;
+  text-align: justify;
+  font-size: 34px;
+  color: #243265;
+}
+
+.helpSubtitle {
+  margin-top: 20px;
+  font-size: 16px;
+  color: #677897;
+  width: 500px;
+}
+@media only screen and (min-device-width: 360px) and (max-device-width: 736px) {
+  .helpTitle {
+    font-size: 25px;
+  }
+
+  .helpSubtitle {
+    font-size: 14px;
+    width: 100%;
+  }
+}
+
+@media only screen and (min-width: 1024px) {
+}
+
+@media only screen and (max-width: 1023px) {
+}
+
+@media only screen and (min-width: 1400px) {
+}
+
+@media only screen and (min-width: 1500px) {
+}
