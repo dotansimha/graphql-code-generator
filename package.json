@@ -16,7 +16,8 @@
     "release": "lerna publish --exact --force-publish=\"*\"",
     "release:canary": "lerna publish --force-publish=\"*\" --canary --exact",
     "ci:release:canary": "lerna publish --force-publish=\"*\" --canary --exact --yes",
-    "generate:examples": "./dev-test/generate-all.sh"
+    "generate:examples": "./dev-test/generate-all.sh",
+    "build-website": "cd website && yarn && yarn build"
   },
   "workspaces": [
     "packages/*",
