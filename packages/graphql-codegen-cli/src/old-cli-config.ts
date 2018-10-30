@@ -116,10 +116,12 @@ export function createConfigFromOldCli(options: CLIOptions): Types.Config {
 
   const configObject: Types.Config = {
     schema: [options.schema, options.clientSchema].filter(s => s),
-    require: options.require,
     generates: {
       [options.out]: transformTemplatesToPlugins(options)
-    }
+    },
+    silent: options.silent,
+    watch: options.watch,
+    require: options.require
   };
 
   return configObject;
