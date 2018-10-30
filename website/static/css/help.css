@@ -77,7 +77,7 @@
   float: right;
   text-transform: uppercase;
   border-radius: 4px;
-  background-color: #115ee1;
+  background-color: var(--primary-color);
   color: white;
   font-size: 14px;
   font-weight: 600;
