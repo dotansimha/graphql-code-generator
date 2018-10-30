@@ -134,6 +134,61 @@ textarea, input {
   font: inherit;
 }
 
+.Button {
+  background-color: transparent;
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+.TextArea > ._label {
+  display: inline-block;
+  margin-left: 10px;
+  transform: translateY(14px);
+  padding: 0 10px;
+  width: fit-content;
+  font-size: 14px;
+  font-style: normal;
+  font-stretch: normal;
+  color: #afbed1;
+  background-color: white;
+}
+
+.TextArea > ._input {
+  width: 100%;
+  height: 100%;
+  display: block;
+  padding: 10px;
+  resize: none;
+  border: solid 1px rgba(120, 151, 188, 0.3);
+}
+
+.TextInput > ._label {
+  display: inline-block;
+  margin-left: 10px;
+  transform: translateY(14px);
+  padding: 0 10px;
+  width: fit-content;
+  font-size: 14px;
+  font-style: normal;
+  font-stretch: normal;
+  color: #afbed1;
+  background-color: white;
+}
+
+.TextInput > ._input {
+  width: 100%;
+  display: block;
+  padding: 10px;
+  resize: none;
+  border: solid 1px rgba(120, 151, 188, 0.3);
+}
+
+.Hyperlink {
+  cursor: pointer;
+  text-decoration: none;
+}
+
 @media only screen and (min-device-width: 360px) and (max-device-width: 736px) {
 }
 

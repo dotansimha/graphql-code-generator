@@ -9,6 +9,9 @@ const React = require('react')
 
 const CompLibrary = require('../../core/CompLibrary.js')
 
+const siteConfig = require(`${process.cwd()}/siteConfig`)
+const ContactForm = require(`${process.cwd()}/core/help/ContactForm.js`)
+
 const Container = CompLibrary.Container
 
 class Help extends React.Component {
@@ -24,6 +27,8 @@ class Help extends React.Component {
           </div>
           <div className="helpTitle">Expert Support</div>
           <div className="helpSubtitle">Get our team's help with Apollo, GraphQL and GraphQL Modules. Whether you’re just getting started or rolling out GraphQL across your whole organization, we can help with architectural design, implementation and education.</div>
+          <ContactForm />
+          <script src={`${siteConfig.baseUrl}lib/sweetalert2.all.min.js`} />
         </Container>
       </div>
     )
