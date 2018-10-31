@@ -90,11 +90,11 @@ To get a grasp of what GraphQL Code Generator is all about, it's recommended to 
 
 #### [Built-In Templates](./docs/templates)
 
-- [Apollo-Angular Template](./docs/templates/apollo-angular.md)
+- [Apollo/Angular Template](./docs/templates/apollo-angular.md)
 
-- [GraphQL/Typescript Modules Template](./docs/templates/graphql-typescript-modules.md)
+- [GraphQL Typescript Modules Template](./docs/templates/graphql-typescript-modules.md)
 
-- [Mongodb/Typescript Models Template](./docs/templates/mongodb-typescript-models.md)
+- [Mongodb Typescript Models Template](./docs/templates/mongodb-typescript-models.md)
 
 - [React/Apollo/Typescript Template](./docs/templates/react-apollo-typescript.md)
 

@@ -1,12 +1,18 @@
 {
   "docs": {
-    "Template Types": [
+    "Introduction": [
+      "introduction/overview",
+      "introduction/getting-started",
+      "introduction/examples"
+    ],
+    "Built-In Templates": [
       "templates/apollo-angular",
       "templates/graphql-typescript-modules",
       "templates/mongodb-typescript-models",
       "templates/react-apollo-typescript",
       "templates/typescript-resolvers",
-      "templates/typescript"
+      "templates/typescript-typings",
+      "templates/custom"
     ]
   }
 }

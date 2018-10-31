@@ -1,6 +1,6 @@
 ---
 id: mongodb-typescript-models
-title: MongoDB TypeScript Models
+title: MongoDB TypeScript Models Template
 ---
 
 This package generates TypeScript types for MongoDB server-side developers.

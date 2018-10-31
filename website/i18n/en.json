@@ -5,23 +5,35 @@
     "previous": "Previous",
     "tagline": "GraphQL oriented websites generations made simple",
     "docs": {
+      "introduction/examples": {
+        "title": "introduction/examples"
+      },
+      "introduction/getting-started": {
+        "title": "introduction/getting-started"
+      },
+      "introduction/overview": {
+        "title": "introduction/overview"
+      },
       "templates/apollo-angular": {
-        "title": "Apollo Angular"
+        "title": "Apollo/Angular Template"
+      },
+      "templates/custom": {
+        "title": "templates/custom"
       },
       "templates/graphql-typescript-modules": {
-        "title": "GraphQL Typescript Modules"
+        "title": "GraphQL Typescript Modules Template"
       },
       "templates/mongodb-typescript-models": {
-        "title": "MongoDB TypeScript Models"
+        "title": "MongoDB TypeScript Models Template"
       },
       "templates/react-apollo-typescript": {
-        "title": "React Apollo Typescript"
+        "title": "React/Apollo/Typescript Template"
       },
       "templates/typescript-resolvers": {
-        "title": "Typescript Resolvers"
+        "title": "Typescript Resolvers Template"
       },
       "templates/typescript": {
-        "title": "TypeScript"
+        "title": "Typescript Typings Template"
       }
     },
     "links": {
@@ -29,7 +41,8 @@
       "Help": "Help"
     },
     "categories": {
-      "Template Types": "Template Types"
+      "Introduction": "Introduction",
+      "Built-In Templates": "Built-In Templates"
     }
   },
   "pages-strings": {

@@ -1,6 +1,6 @@
 ---
 id: typescript
-title: TypeScript
+title: Typescript Typings Template
 ---
 
 This template generates TypeScript typings for both client side and server side.

@@ -1,6 +1,6 @@
 ---
 id: apollo-angular
-title: Apollo Angular
+title: Apollo/Angular Template
 ---
 
 This template generates Apollo services (`Query`, `Mutation`, `Subscription`) with TypeScript typings.

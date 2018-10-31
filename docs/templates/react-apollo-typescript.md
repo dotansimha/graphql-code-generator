@@ -1,6 +1,6 @@
 ---
 id: react-apollo-typescript
-title: React Apollo Typescript
+title: React/Apollo/Typescript Template
 ---
 
 This template generates React Apollo components and HOC with TypeScript typings.

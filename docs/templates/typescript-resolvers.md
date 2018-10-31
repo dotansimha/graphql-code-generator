@@ -1,6 +1,6 @@
 ---
 id: typescript-resolvers
-title: Typescript Resolvers
+title: Typescript Resolvers Template
 ---
 
 This template extends the [base TypeScript template](../typescript/) and adds Resolvers signature to the generated output.
