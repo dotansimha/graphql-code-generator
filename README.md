@@ -26,7 +26,7 @@ Generate code using `gql-gen`:
 
     $ gql-gen --url http://localhost:3000/graphql --template ts --out ./src/types.d.ts
 
-The command above may fetch (for example) the following schema:
+The command above may fetch (for example) the following GraphQL schema:
 
 ```gql
 type Author {
