@@ -7,7 +7,8 @@ export function resolveExternalModuleAndFn(pointer: string): any {
   const functionName = patternArr[1];
   const localFilePath = path.resolve(process.cwd(), moduleName);
   const localFileExists = fs.existsSync(localFilePath);
-  const loadedModule = require(localFileExists ? localFilePath : moduleName);
+  const toLoad = localFileExists ? localFilePath : moduleName;
+  const loadedModule = require(toLoad);
 
   if (!(functionName in loadedModule)) {
     throw new Error(`${functionName} couldn't be found in ${loadedModule}`);

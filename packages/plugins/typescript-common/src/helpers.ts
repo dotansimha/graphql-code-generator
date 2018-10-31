@@ -10,22 +10,16 @@ export function getEnumValue(type: string, name: string, options: Handlebars.Hel
   }
 }
 
-export function getResultType(type: Field, options: Handlebars.HelperOptions, convert, skipConversion = false) {
-  const baseType = type.type;
-  const underscorePrefix = type.type.match(/^[\_]+/) || '';
+export function getFieldType(field: Field, realType: string, options: Handlebars.HelperOptions) {
   const config = options.data.root.config || {};
-  const realType =
-    options.data.root.primitives[baseType] ||
-    `${type.isScalar ? '' : config.interfacePrefix || ''}${underscorePrefix +
-      (skipConversion ? baseType : convert(baseType))}`;
   const useImmutable = !!config.immutableTypes;
 
-  if (type.isArray) {
+  if (field.isArray) {
     let result = realType;
 
-    const dimension = type.dimensionOfArray + 1;
+    const dimension = field.dimensionOfArray + 1;
 
-    if (type.isNullableArray && !config.noNamespaces) {
+    if (field.isNullableArray && !config.noNamespaces) {
       result = useImmutable ? [realType, 'null'].join(' | ') : `(${[realType, 'null'].join(' | ')})`;
     }
 
@@ -35,13 +29,13 @@ export function getResultType(type: Field, options: Handlebars.HelperOptions, co
       result = `${result}${new Array(dimension).join('[]')}`;
     }
 
-    if (!type.isRequired) {
+    if (!field.isRequired) {
       result = [result, 'null'].join(' | ');
     }
 
     return result;
   } else {
-    if (type.isRequired) {
+    if (field.isRequired) {
       return realType;
     } else {
       return [realType, 'null'].join(' | ');
@@ -73,7 +67,19 @@ export const getType = (convert: Function) => (type: Field, options: Handlebars.
     return '';
   }
 
-  const result = getResultType(type, options, convert);
+  const result = convertedType(type, options, convert);
 
   return new SafeString(result);
 };
+
+export function convertedType(type: Field, options: Handlebars.HelperOptions, convert, skipConversion = false) {
+  const baseType = type.type;
+  const underscorePrefix = type.type.match(/^[\_]+/) || '';
+  const config = options.data.root.config || {};
+  const realType =
+    options.data.root.primitives[baseType] ||
+    `${type.isScalar ? '' : config.interfacePrefix || ''}${underscorePrefix +
+      (skipConversion ? baseType : convert(baseType))}`;
+
+  return getFieldType(type, realType, options);
+}

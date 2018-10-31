@@ -1,6 +1,6 @@
 {
   "name": "graphql-code-generator",
-  "version": "0.12.6",
+  "version": "0.13.0",
   "license": "MIT",
   "bin": {
     "gql-gen": "dist/cli.js"
@@ -54,10 +54,11 @@
     "@types/valid-url": "1.0.2",
     "babel-types": "7.0.0-beta.3",
     "babylon": "7.0.0-beta.47",
+    "chalk": "2.4.1",
     "commander": "2.19.0",
     "fb-watchman": "2.0.0",
     "glob": "7.1.3",
-    "graphql-codegen-core": "0.12.6",
+    "graphql-codegen-core": "0.13.0",
     "graphql-import": "0.7.1",
     "is-glob": "4.0.0",
     "is-valid-path": "0.1.1",
@@ -70,6 +71,7 @@
   },
   "devDependencies": {
     "@types/js-yaml": "3.11.2",
+    "@types/chalk": "2.2.0",
     "@types/fb-watchman": "2.0.0",
     "@types/ora": "1.3.4",
     "@types/pify": "3.0.2",

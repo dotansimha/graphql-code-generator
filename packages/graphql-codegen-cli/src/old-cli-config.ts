@@ -21,6 +21,7 @@ export interface CLIOptions {
   watch?: boolean;
   silent?: boolean;
   mergeSchema?: string;
+  exitOnError?: boolean;
   templateConfig?: { [key: string]: any };
 }
 
