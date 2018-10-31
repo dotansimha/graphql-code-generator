@@ -7,13 +7,14 @@ import { SchemaFromTypedefs } from './loaders/schema/schema-from-typedefs';
 import { SchemaFromExport } from './loaders/schema/schema-from-export';
 import { documentsFromGlobs } from './utils/documents-glob';
 import { loadDocumentsSources } from './loaders/documents/document-loader';
-import { validateGraphQlDocuments } from './loaders/documents/validate-documents';
+import { validateGraphQlDocuments, checkValidationErrors } from './loaders/documents/validate-documents';
 
 export interface GenerateOutputOptions {
   filename: string;
   plugins: Types.ConfiguredPlugin[];
   schema: GraphQLSchema;
   documents: DocumentFile[];
+  inheritedConfig: { [key: string]: any };
 }
 
 export interface ExecutePluginOptions {
@@ -63,6 +64,13 @@ async function mergeSchemas(schemas: GraphQLSchema[]): Promise<GraphQLSchema> {
 export async function executeCodegen(config: Types.Config): Promise<FileOutput[]> {
   const result = [];
 
+  /* Load Require extensions */
+  const requireExtensions = normalizeInstanceOrArray<string>(config.require);
+  requireExtensions.forEach(mod => require(mod));
+
+  /* Root templates-config */
+  const rootConfig = config.config || {};
+
   /* Normalize root "schema" field */
   const schemas = normalizeInstanceOrArray<Types.Schema>(config.schema);
 
@@ -88,13 +96,15 @@ export async function executeCodegen(config: Types.Config): Promise<FileOutput[]
     rootDocuments = await loadDocumentsSources(foundDocumentsPaths);
 
     if (rootSchema) {
-      validateGraphQlDocuments(rootSchema, rootDocuments);
+      const errors = validateGraphQlDocuments(rootSchema, rootDocuments);
+      checkValidationErrors(errors, !config.watch);
     }
   }
 
   /* Iterate through all output files, and execute each template piece */
   for (let filename of Object.keys(generates)) {
     const outputConfig = generates[filename];
+    const outputFileTemplateConfig = outputConfig.config || {};
     let outputSchema = rootSchema;
     let outputDocuments: DocumentFile[] = rootDocuments;
 
@@ -113,7 +123,8 @@ export async function executeCodegen(config: Types.Config): Promise<FileOutput[]
       const additionalDocs = await loadDocumentsSources(foundDocumentsPaths);
 
       if (outputSchema) {
-        validateGraphQlDocuments(outputSchema, additionalDocs);
+        const errors = validateGraphQlDocuments(outputSchema, additionalDocs);
+        checkValidationErrors(errors, !config.watch);
       }
 
       outputDocuments = [...rootDocuments, ...additionalDocs];
@@ -124,7 +135,11 @@ export async function executeCodegen(config: Types.Config): Promise<FileOutput[]
       filename,
       plugins: normalizedPluginsArray,
       schema: outputSchema,
-      documents: outputDocuments
+      documents: outputDocuments,
+      inheritedConfig: {
+        ...rootConfig,
+        ...outputFileTemplateConfig
+      }
     });
     result.push(output);
   }
@@ -140,7 +155,13 @@ export async function generateOutput(options: GenerateOutputOptions): Promise<Fi
     const pluginConfig = plugin[name];
     const result = await executePlugin({
       name,
-      config: pluginConfig,
+      config:
+        typeof pluginConfig !== 'object'
+          ? pluginConfig
+          : {
+              ...options.inheritedConfig,
+              ...(pluginConfig as object)
+            },
       schema: options.schema,
       documents: options.documents
     });
@@ -148,7 +169,7 @@ export async function generateOutput(options: GenerateOutputOptions): Promise<Fi
     output += result;
   }
 
-  return { filename: options.filename, content: output };
+  return { filename: options.filename, content: output.trim() };
 }
 
 export async function getPluginByName(name: string): Promise<{ plugin: PluginFunction }> {

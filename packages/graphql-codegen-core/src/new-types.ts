@@ -26,6 +26,7 @@ export namespace Types {
     documents?: InstanceOrArray<OperationDocument>;
     schema?: InstanceOrArray<Schema>;
     plugins: OutputConfig;
+    config?: { [key: string]: any };
   };
 
   /* Require Extensions */
@@ -37,6 +38,7 @@ export namespace Types {
     require?: RequireExtension;
     mergeSchemaFiles?: string;
     documents?: InstanceOrArray<OperationDocument>;
+    config?: { [key: string]: any };
     generates: { [filename: string]: OutputConfig | ConfiguredOutput };
     overwrite?: boolean;
     watch?: boolean;

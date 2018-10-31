@@ -1,6 +1,8 @@
 import * as commander from 'commander';
 import { getGraphQLProjectConfig, ConfigNotFoundError } from 'graphql-config';
 import { Types } from 'graphql-codegen-core';
+import { existsSync, readFileSync } from 'fs';
+import { join } from 'path';
 
 export interface CLIOptions {
   schema?: string;
@@ -18,6 +20,7 @@ export interface CLIOptions {
   watch?: boolean;
   silent?: boolean;
   mergeSchema?: string;
+  templateConfig?: { [key: string]: any };
 }
 
 function collect<T>(val: T, memo: T[]) {
@@ -104,27 +107,45 @@ export const validateCliOptions = (options: CLIOptions) => {
   }
 };
 
-function transformTemplatesToPlugins(options: CLIOptions): any[] {
+function transformTemplatesToPlugins(
+  options: CLIOptions,
+  templateSpecificConfig: { [key: string]: any } = {}
+): Types.ConfiguredOutput {
   if (options.template === 'ts' || options.template === 'typescript') {
-    return [
-      {
-        'typescript-common': {},
-        'typescript-client': {},
-        'typescript-server': {}
-      }
-    ];
+    return {
+      config: templateSpecificConfig,
+      plugins: [
+        templateSpecificConfig.printTime ? 'time' : null,
+        'typescript-common',
+        options.skipDocuments ? null : 'typescript-client',
+        options.skipSchema ? null : 'typescript-server'
+      ].filter(s => s)
+    };
   }
 
-  return [];
+  return { plugins: [] };
 }
 
 export function createConfigFromOldCli(options: CLIOptions): Types.Config {
   validateCliOptions(options);
 
+  let rootConfig: { [key: string]: any } = {};
+  const configPath = options.config ? options.config : existsSync(join(process.cwd(), './gql-gen.json'));
+
+  if (configPath && typeof configPath === 'string') {
+    const rawObj = JSON.parse(readFileSync(configPath, 'utf-8'));
+    rootConfig = (rawObj || {}).generatorConfig || {};
+  }
+
   const configObject: Types.Config = {
     schema: [options.schema, options.clientSchema].filter(s => s),
+    documents: options.args || [],
+    config: rootConfig,
     generates: {
-      [options.out]: transformTemplatesToPlugins(options)
+      [options.out]: transformTemplatesToPlugins(options, {
+        ...rootConfig,
+        ...(options.templateConfig || {})
+      })
     },
     silent: options.silent,
     watch: options.watch,

@@ -1,7 +1,6 @@
 import { FileOutput, Types } from 'graphql-codegen-core';
 import { executeCodegen } from './codegen';
 import { fileExists } from './utils/file-exists';
-import spinner from './spinner';
 import { writeFileSync } from 'fs';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
@@ -17,7 +16,7 @@ export async function generate(config: Types.Config, saveToFile = true): Promise
           return;
         }
 
-        const content = result.content.trim();
+        const content = result.content || '';
 
         if (content.length === 0) {
           // spinner.succeed(`Generated file skipped (empty): ${result.filename}`);
