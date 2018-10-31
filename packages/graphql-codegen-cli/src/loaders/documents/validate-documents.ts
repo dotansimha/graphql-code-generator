@@ -1,6 +1,6 @@
 import { validate, GraphQLSchema, GraphQLError, specifiedRules } from 'graphql';
 import { DocumentFile } from 'graphql-codegen-core';
-import { cliError } from '../../old-cli-config';
+import { cliError } from '../../utils/cli-error';
 
 const rulesToIgnore = ['KnownFragmentNames', 'NoUnusedFragments', 'NoUnusedVariables', 'KnownDirectives'];
 const effectiveRules = specifiedRules.filter((f: Function) => !rulesToIgnore.includes(f.name));

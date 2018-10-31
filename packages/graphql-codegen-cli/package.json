@@ -41,30 +41,6 @@
     "url": "https://github.com/dotansimha/graphql-codegen/issues"
   },
   "homepage": "https://github.com/dotansimha/graphql-codegen#readme",
-  "jest": {
-    "verbose": true,
-    "collectCoverage": true,
-    "collectCoverageFrom": [
-      "src/**/*.ts"
-    ],
-    "coverageDirectory": "./tests/coverage",
-    "coveragePathIgnorePatterns": [
-      "/node_modules/",
-      ".*?handlebars-helpers.*?",
-      "src/index.ts",
-      "src/types.ts"
-    ],
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
-    ],
-    "transform": {
-      "^.+\\.(ts|tsx)$": "<rootDir>/tests/jest.typescript.js"
-    },
-    "testRegex": "tests/.*\\.spec.ts$",
-    "testEnvironment": "node"
-  },
   "peerDependencies": {
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0"
   },
@@ -97,8 +73,7 @@
     "@types/fb-watchman": "2.0.0",
     "@types/ora": "1.3.4",
     "@types/pify": "3.0.2",
-    "graphql-codegen-typescript-template": "0.12.6",
-    "graphql-codegen-typescript-template-multiple": "0.9.4",
+    "ts-jest": "23.10.4",
     "common-tags": "1.8.0"
   },
   "main": "./dist/index.js",

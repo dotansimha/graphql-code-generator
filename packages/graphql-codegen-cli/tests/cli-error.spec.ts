@@ -1,19 +1,14 @@
-import { getLogger } from 'graphql-codegen-core';
-import { cliError } from '../src/codegen';
+import { cliError } from '../src/utils/cli-error';
 
 describe('cliError', () => {
-  let spyLogger: jest.SpyInstance;
   let spyProcessExit: jest.SpyInstance;
 
   beforeEach(() => {
-    spyLogger = jest.spyOn(getLogger(), 'error');
-    spyLogger.mockImplementation();
     spyProcessExit = jest.spyOn(process, 'exit');
     spyProcessExit.mockImplementation();
   });
 
   afterEach(() => {
-    spyLogger.mockRestore();
     spyProcessExit.mockRestore();
   });
 
@@ -22,7 +17,6 @@ describe('cliError', () => {
 
     cliError(new Error(msg));
 
-    expect(spyLogger).toBeCalledWith(msg);
     expect(spyProcessExit).toBeCalledWith(1);
   });
 
@@ -31,7 +25,6 @@ describe('cliError', () => {
 
     cliError(msg);
 
-    expect(spyLogger).toBeCalledWith(msg);
     expect(spyProcessExit).toBeCalledWith(1);
   });
 
@@ -42,7 +35,6 @@ describe('cliError', () => {
 
     cliError(obj);
 
-    expect(spyLogger).toBeCalledWith(JSON.stringify(obj));
     expect(spyProcessExit).toBeCalledWith(1);
   });
 });

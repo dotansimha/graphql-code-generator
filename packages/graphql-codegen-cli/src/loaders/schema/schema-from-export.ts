@@ -4,7 +4,6 @@ import isValidPath = require('is-valid-path');
 import { buildASTSchema, buildClientSchema, DocumentNode, GraphQLSchema, IntrospectionQuery, parse } from 'graphql';
 import { debugLog, Types } from 'graphql-codegen-core';
 import { SchemaLoader } from './schema-loader';
-import spinner from '../../spinner';
 export class SchemaFromExport implements SchemaLoader {
   canHandle(pointerToSchema: string): boolean {
     const fullPath = isAbsolute(pointerToSchema) ? pointerToSchema : resolvePath(process.cwd(), pointerToSchema);

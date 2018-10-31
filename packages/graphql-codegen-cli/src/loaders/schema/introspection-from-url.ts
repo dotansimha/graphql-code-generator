@@ -9,7 +9,6 @@ import { post } from 'request';
 import { SchemaLoader } from './schema-loader';
 import { GraphQLSchema } from 'graphql';
 import { isUri } from 'valid-url';
-import spinner from '../../spinner';
 
 export class IntrospectionFromUrlLoader implements SchemaLoader {
   canHandle(pointerToSchema: string): boolean {

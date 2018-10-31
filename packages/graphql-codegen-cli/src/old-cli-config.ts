@@ -3,6 +3,7 @@ import { getGraphQLProjectConfig, ConfigNotFoundError } from 'graphql-config';
 import { Types } from 'graphql-codegen-core';
 import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
+import { cliError } from './utils/cli-error';
 
 export interface CLIOptions {
   schema?: string;
@@ -64,26 +65,6 @@ export const initCLI = (args: any): CLIOptions => {
     .parse(args);
 
   return (commander as any) as CLIOptions;
-};
-
-export const cliError = (err: any, exitOnError = true) => {
-  let msg: string;
-
-  if (err instanceof Error) {
-    msg = err.message || err.toString();
-  } else if (typeof err === 'string') {
-    msg = err;
-  } else {
-    msg = JSON.stringify(err);
-  }
-
-  console['error'](msg);
-
-  if (exitOnError) {
-    process.exit(1);
-  }
-
-  return;
 };
 
 export const validateCliOptions = (options: CLIOptions) => {

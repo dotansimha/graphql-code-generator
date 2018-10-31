@@ -4,7 +4,6 @@ import { SchemaLoader } from './schema-loader';
 import { existsSync, readFileSync } from 'fs';
 import isValidPath = require('is-valid-path');
 import { extname, isAbsolute, resolve as resolvePath } from 'path';
-import spinner from '../../spinner';
 
 export class IntrospectionFromFileLoader implements SchemaLoader {
   stripBOM(content: string) {

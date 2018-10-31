@@ -1,6 +1,8 @@
 import { executeCodegen } from '../src/codegen';
 import { createConfigFromOldCli } from '../src/old-cli-config';
 
+declare let global: any;
+
 describe('executeWithOptions', () => {
   it('execute the correct results when using schema with json file', async () => {
     const result = await executeCodegen(

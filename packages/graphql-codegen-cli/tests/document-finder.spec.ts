@@ -7,8 +7,13 @@ describe('extractDocumentStringFromCodeFile', () => {
   function extract(fileName: string) {
     const fileContent = fs.readFileSync(`./tests/test-files/${fileName}`).toString();
     const doc = extractDocumentStringFromCodeFile(fileContent);
-    expect(tryParse(doc)).not.toThrow();
-    return doc.trim();
+
+    if (doc) {
+      expect(tryParse(doc)).not.toThrow();
+      return doc.trim();
+    }
+
+    return null;
   }
 
   function tryParse(doc: string) {
