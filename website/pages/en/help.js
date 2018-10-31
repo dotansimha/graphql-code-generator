@@ -30,7 +30,15 @@ class Help extends React.Component {
           <div className="helpSubtitle">Get our team's help with Apollo, GraphQL and GraphQL Modules. Whether you’re just getting started or rolling out GraphQL across your whole organization, we can help with architectural design, implementation and education.</div>
           <ContactForm />
           <script src={`${siteConfig.baseUrl}lib/sweetalert2.all.min.js`} />
-          {toInlineScript(`utils/validations.js`)}
+          {toInlineScript('./utils/validations')}
+          {toInlineScript('./core/help/ContactFormController')}
+          {toInlineScript(function () {
+            const ContactFormController = require('./core/help/ContactFormController')
+
+            document.querySelectorAll('.ContactForm').forEach((contactForm) => {
+              ContactFormController.inject(contactForm)
+            })
+          })}
         </Container>
       </div>
     )
