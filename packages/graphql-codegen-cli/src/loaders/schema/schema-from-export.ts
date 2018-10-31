@@ -13,9 +13,9 @@ export class SchemaFromExport implements SchemaLoader {
   }
 
   handle(file: string, config: Types.Config, schemaOptions: any): Promise<GraphQLSchema> {
-    spinner.info(
-      `Loading GraphQL schema object, text, ast, or introspection json from JavaScript ES6 export: ${file}...`
-    );
+    // spinner.info(
+    //   `Loading GraphQL schema object, text, ast, or introspection json from JavaScript ES6 export: ${file}...`
+    // );
 
     return new Promise<GraphQLSchema>(async (resolve, reject) => {
       const fullPath = isAbsolute(file) ? file : resolvePath(process.cwd(), file);

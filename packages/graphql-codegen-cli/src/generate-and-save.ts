@@ -13,19 +13,19 @@ export async function generate(config: Types.Config, saveToFile = true): Promise
     await Promise.all(
       outputFiles.map(async (result: FileOutput) => {
         if (!config.overwrite && fileExists(result.filename)) {
-          spinner.succeed(`Generated file skipped (already exists, and no-overwrite flag is ON): ${result.filename}`);
+          // spinner.succeed(`Generated file skipped (already exists, and no-overwrite flag is ON): ${result.filename}`);
           return;
         }
 
         const content = result.content.trim();
 
         if (content.length === 0) {
-          spinner.succeed(`Generated file skipped (empty): ${result.filename}`);
+          // spinner.succeed(`Generated file skipped (empty): ${result.filename}`);
           return;
         }
 
         writeFileSync(result.filename, result.content);
-        spinner.succeed(`Generated file written to ${result.filename}`);
+        // spinner.succeed(`Generated file written to ${result.filename}`);
       })
     );
   }

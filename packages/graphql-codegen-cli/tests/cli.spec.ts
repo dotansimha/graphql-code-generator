@@ -1,5 +1,4 @@
 import { executeCodegen } from '../src/codegen';
-import { getLogger, useWinstonLogger } from 'graphql-codegen-core';
 import { createConfigFromOldCli } from '../src/old-cli-config';
 
 describe('executeWithOptions', () => {

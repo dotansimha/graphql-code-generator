@@ -17,7 +17,7 @@ export class IntrospectionFromUrlLoader implements SchemaLoader {
   }
 
   handle(url: string, config: Types.Config, schemaOptions: any): Promise<GraphQLSchema> {
-    spinner.info(`Loading GraphQL Introspection from remote: ${url}...`);
+    // spinner.info(`Loading GraphQL Introspection from remote: ${url}...`);
 
     let splittedHeaders = (schemaOptions.headers || [])
       .map((header: string) => {

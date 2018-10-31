@@ -1,7 +1,6 @@
 import * as commander from 'commander';
 import { getGraphQLProjectConfig, ConfigNotFoundError } from 'graphql-config';
 import { Types } from 'graphql-codegen-core';
-import spinner from './spinner';
 
 export interface CLIOptions {
   schema?: string;
@@ -65,7 +64,6 @@ export const initCLI = (args: any): CLIOptions => {
 };
 
 export const cliError = (err: any, exitOnError = true) => {
-  spinner.fail();
   let msg: string;
 
   if (err instanceof Error) {

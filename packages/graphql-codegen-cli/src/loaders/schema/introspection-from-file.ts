@@ -28,7 +28,7 @@ export class IntrospectionFromFileLoader implements SchemaLoader {
   }
 
   handle(pointerToSchema: string, config: Types.Config, schemaOptions: any): Promise<GraphQLSchema> {
-    spinner.info(`Loading GraphQL Introspection from file: ${pointerToSchema}...`);
+    // spinner.info(`Loading GraphQL Introspection from file: ${pointerToSchema}...`);
 
     return new Promise<GraphQLSchema>((resolve, reject) => {
       const fullPath = isAbsolute(pointerToSchema) ? pointerToSchema : resolvePath(process.cwd(), pointerToSchema);
