@@ -44,7 +44,6 @@ const siteConfig = {
   headerLinks: [
     {doc: 'templates/apollo-angular', label: 'Docs'},
     {page: 'help', label: 'Help'},
-    {blog: true, label: 'Blog'},
   ],
 
   // If you have users set above, you add it here:
