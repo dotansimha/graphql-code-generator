@@ -2,6 +2,7 @@ import { DocumentNode, Source, parse, DocumentFile } from 'graphql-codegen-core'
 import * as fs from 'fs';
 import * as path from 'path';
 import { extractDocumentStringFromCodeFile } from '../../utils/document-finder';
+import { DetailedError } from '../../errors';
 
 export const loadFileContent = (filePath: string): DocumentNode | null => {
   if (fs.existsSync(filePath)) {
@@ -20,7 +21,12 @@ export const loadFileContent = (filePath: string): DocumentNode | null => {
       return null;
     }
   } else {
-    throw new Error(`Document file ${filePath} does not exists!`);
+    throw new DetailedError(`
+
+      Failed to load a document.
+      Document file ${filePath} does not exists.
+
+    `);
   }
 };
 

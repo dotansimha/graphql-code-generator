@@ -26,6 +26,5 @@ export type SubscriptionResolver<Result, Parent = any, Context = any, Args = nev
   | ((...args: any[]) => ISubscriptionResolverObject<Result, Parent, Context, Args>)
   | ISubscriptionResolverObject<Result, Parent, Context, Args>;
 
-{{#each types}}
-{{~> resolver }}
-{{/each}}
+
+{{{ importMappers types }}}

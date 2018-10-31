@@ -1,3 +1,6 @@
+{{#ifCond operations.length '!==' 0}}
+{{{ blockComment 'START: Apollo Angular template' }}}
+
 import { Injectable } from '@angular/core';
 import * as Apollo from 'apollo-angular';
 
@@ -22,3 +25,6 @@ import gql from 'graphql-tag';
         {{{ namedClient this }}}
     }
 {{/each}}
+
+{{{ blockComment 'END: Apollo Angular template' }}}
+{{/ifCond}}

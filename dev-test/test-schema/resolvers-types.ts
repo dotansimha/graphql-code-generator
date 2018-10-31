@@ -66,14 +66,14 @@ export interface UserByIdQueryArgs {
 // ====================================================
 
 export namespace QueryResolvers {
-  export interface Resolvers<Context = any> {
-    allUsers?: AllUsersResolver<(User | null)[], any, Context>;
+  export interface Resolvers<Context = any, TypeParent = never> {
+    allUsers?: AllUsersResolver<(User | null)[], TypeParent, Context>;
 
-    userById?: UserByIdResolver<User | null, any, Context>;
+    userById?: UserByIdResolver<User | null, TypeParent, Context>;
   }
 
-  export type AllUsersResolver<R = (User | null)[], Parent = any, Context = any> = Resolver<R, Parent, Context>;
-  export type UserByIdResolver<R = User | null, Parent = any, Context = any> = Resolver<
+  export type AllUsersResolver<R = (User | null)[], Parent = never, Context = any> = Resolver<R, Parent, Context>;
+  export type UserByIdResolver<R = User | null, Parent = never, Context = any> = Resolver<
     R,
     Parent,
     Context,
@@ -85,15 +85,15 @@ export namespace QueryResolvers {
 }
 
 export namespace UserResolvers {
-  export interface Resolvers<Context = any> {
-    id?: IdResolver<number, any, Context>;
+  export interface Resolvers<Context = any, TypeParent = User> {
+    id?: IdResolver<number, TypeParent, Context>;
 
-    name?: NameResolver<string, any, Context>;
+    name?: NameResolver<string, TypeParent, Context>;
 
-    email?: EmailResolver<string, any, Context>;
+    email?: EmailResolver<string, TypeParent, Context>;
   }
 
-  export type IdResolver<R = number, Parent = any, Context = any> = Resolver<R, Parent, Context>;
-  export type NameResolver<R = string, Parent = any, Context = any> = Resolver<R, Parent, Context>;
-  export type EmailResolver<R = string, Parent = any, Context = any> = Resolver<R, Parent, Context>;
+  export type IdResolver<R = number, Parent = User, Context = any> = Resolver<R, Parent, Context>;
+  export type NameResolver<R = string, Parent = User, Context = any> = Resolver<R, Parent, Context>;
+  export type EmailResolver<R = string, Parent = User, Context = any> = Resolver<R, Parent, Context>;
 }
