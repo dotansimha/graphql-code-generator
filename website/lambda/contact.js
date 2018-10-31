@@ -1,4 +1,5 @@
 const sendMail = require('sendmail')()
+
 const { validateEmail, validateLength } = require('../utils/validations')
 
 exports.handler = (event, context, callback) => {
@@ -42,9 +43,9 @@ exports.handler = (event, context, callback) => {
   }
 
   const descriptor = {
-    from: `"${body.email}" <no-reply@gql-modules.com>`,
+    from: `"${body.email}" <no-reply@graphql-code-generator.com>`,
     to: process.env.CONTACT_EMAIL,
-    subject: `${body.name} sent you a message from gql-modules.com`,
+    subject: `${body.name} sent you a message from graphql-code-generator.com`,
     text: body.details,
   }
 
