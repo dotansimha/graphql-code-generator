@@ -18,7 +18,7 @@ const users = [
     infoLink: 'https://www.facebook.com',
     pinned: true,
   },
-];
+]
 
 const siteConfig = {
   title: 'GraphQL Code Generator', // Title for your website.
@@ -50,7 +50,7 @@ const siteConfig = {
   users,
 
   /* path to images for header/footer */
-  headerIcon: 'img/gqlgen-logo.png',
+  headerIcon: 'img/gqlgen-sticker.png',
   footerIcon: 'img/gqlgen-logo.png',
   favicon: 'img/favicon.png',
 
@@ -97,6 +97,6 @@ const siteConfig = {
   // You may provide arbitrary config keys to be used as needed by your
   // template. For example, if you need your repo's URL...
   //   repoUrl: 'https://github.com/facebook/test-site',
-};
+}
 
-module.exports = siteConfig;
+module.exports = siteConfig
