@@ -1,4 +1,3 @@
-import { CLIOptions } from './cli-options';
 import { loadDocumentsSources } from './loaders/documents/document-loader';
 import { documentsFromGlobs } from './utils/documents-glob';
 import { IntrospectionFromFileLoader } from './loaders/schema/introspection-from-file';
@@ -6,6 +5,7 @@ import { IntrospectionFromUrlLoader } from './loaders/schema/introspection-from-
 import { SchemaFromTypedefs } from './loaders/schema/schema-from-typedefs';
 import { SchemaFromExport } from './loaders/schema/schema-from-export';
 import { DetailedError } from './errors';
+import { CLIOptions, createConfigFromOldCli } from './old-cli-config';
 
 const schemaHandlers = [
   new IntrospectionFromUrlLoader(),
@@ -17,7 +17,7 @@ const schemaHandlers = [
 export async function loadSchema(pointToSchema: string, options: CLIOptions & { [key: string]: any }) {
   for (const handler of schemaHandlers) {
     if (await handler.canHandle(pointToSchema)) {
-      return handler.handle(pointToSchema, options);
+      return handler.handle(pointToSchema, createConfigFromOldCli(options), null);
     }
   }
 
@@ -37,5 +37,6 @@ export async function loadSchema(pointToSchema: string, options: CLIOptions & { 
 
 export async function loadDocuments(documents: string[]) {
   const foundDocumentsPaths = await documentsFromGlobs(documents);
+
   return loadDocumentsSources(foundDocumentsPaths);
 }

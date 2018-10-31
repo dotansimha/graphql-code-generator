@@ -1,5 +1,14 @@
-import { AstNode, Document, TemplateDocumentFileReference } from 'graphql-codegen-core';
+import { AstNode, Document } from 'graphql-codegen-core';
 import { resolve, extname, basename } from 'path';
+
+export interface TemplateDocumentFileReference {
+  relative: string;
+  absolute: string;
+  cwd: string;
+  filename: string;
+  extension: string;
+  documents: AstNode[];
+}
 
 function getFileAttrs(
   filePath: string

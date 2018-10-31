@@ -1,6 +1,15 @@
 import { SafeString } from 'handlebars';
 import { Field, Type } from 'graphql-codegen-core';
 import { GraphQLSchema } from 'graphql';
+import { convertedType, getFieldType as fieldType } from 'graphql-codegen-typescript-common';
+import { pickMapper } from './mappers';
+
+export const getFieldType = convert => (field: Field, options: Handlebars.HelperOptions) => {
+  const config = options.data.root.config || {};
+  const mapper = pickMapper(field.type, config.mappers || {});
+
+  return mapper ? fieldType(field, mapper.type, options) : convertedType(field, options, convert);
+};
 
 export const getFieldResolverName = convert => (name: string) => {
   return `${convert(name)}Resolver`;

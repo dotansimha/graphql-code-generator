@@ -220,15 +220,6 @@ export interface Variable {
   isEnum: boolean;
 }
 
-export interface TemplateDocumentFileReference {
-  relative: string;
-  absolute: string;
-  cwd: string;
-  filename: string;
-  extension: string;
-  documents: AstNode[];
-}
-
 export interface Document {
   fragments: Fragment[];
   operations: Operation[];

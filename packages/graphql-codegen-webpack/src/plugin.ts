@@ -1,11 +1,16 @@
-import { generate, CLIOptions, loadSchema, loadDocuments } from 'graphql-code-generator';
-import { documentsFromGlobs } from 'graphql-code-generator/dist/utils/documents-glob';
 import { resolve } from 'path';
 import { printSchema, print } from 'graphql';
 import { compilation, compiler } from 'webpack';
-
 import { WatchFileSystem } from './watch-fs';
 import { checksum } from './utils';
+import {
+  CLIOptions,
+  documentsFromGlobs,
+  createConfigFromOldCli,
+  loadDocuments,
+  loadSchema,
+  generate
+} from 'graphql-code-generator';
 
 export class GraphQLCodegenPlugin {
   pluginName = 'GraphQLCodeGeneratorPlugin';
@@ -33,13 +38,12 @@ export class GraphQLCodegenPlugin {
     });
 
     compiler.hooks.beforeCompile.tapPromise(this.pluginName, () => this.generate());
-
     compiler.hooks.afterCompile.tapPromise(this.pluginName, compilation => this.includeDocuments(compilation));
   }
 
   private async generate() {
     if (await this.shouldGenerate()) {
-      await generate(this.options, true);
+      await generate(createConfigFromOldCli(this.options), true);
     }
   }
 
@@ -51,7 +55,7 @@ export class GraphQLCodegenPlugin {
     if (this.options.args) {
       const documents = await loadDocuments(this.options.args);
 
-      const documentsChecksum = checksum(documents.map(doc => print(doc.content)).join('\n'));
+      const documentsChecksum = checksum(documents.map((doc: any) => print(doc.content)).join('\n'));
 
       const changed = documentsChecksum === this.documentsChecksum;
       this.documentsChecksum = documentsChecksum;
@@ -80,6 +84,8 @@ export class GraphQLCodegenPlugin {
 
     const found = await documentsFromGlobs(documents);
 
-    found.filter(file => !compilation.fileDependencies.has(file)).map(file => compilation.fileDependencies.add(file));
+    found
+      .filter((file: any) => !compilation.fileDependencies.has(file))
+      .map(file => compilation.fileDependencies.add(file));
   }
 }
