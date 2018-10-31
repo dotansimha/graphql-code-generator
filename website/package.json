@@ -1,6 +1,5 @@
 {
   "scripts": {
-    "examples": "docusaurus-examples",
     "start": "docusaurus-start",
     "build": "yarn build:app && yarn build:lambda",
     "build:app": "docusaurus-build",
