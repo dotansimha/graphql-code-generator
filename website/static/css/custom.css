@@ -139,6 +139,37 @@ textarea, input {
   font: inherit;
 }
 
+#footer {
+  pointer-events: auto;
+  padding-top: 16px !important;
+  padding-bottom: 8px !important;
+  display: flex;
+  justify-content: space-around;
+}
+
+#footer .nav-footer {
+  background-color: #13114a;
+}
+
+#footer .navCopyright {
+  font-family: "Montserrat";
+  font-size: 14px;
+  color: #b0b7dd;
+}
+
+#footer .navMenu {
+  display: flex;
+}
+
+#footer .navMenu > * {
+  margin-left: 25px;
+  font-family: "Montserrat";
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.64;
+  color: #ffffff;
+}
+
 .Button {
   background-color: transparent;
   cursor: pointer;
@@ -201,6 +232,13 @@ textarea, input {
 }
 
 @media only screen and (max-width: 1023px) {
+  #footer .navMenu {
+    display: none;
+  }
+
+  #footer .navCopyright > span:first-child {
+    display: none;
+  }
 }
 
 @media only screen and (min-width: 1400px) {
