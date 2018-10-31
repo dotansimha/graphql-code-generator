@@ -1,6 +1,6 @@
 {
   "name": "graphql-codegen-webpack",
-  "version": "0.12.6",
+  "version": "0.13.0",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -65,7 +65,7 @@
     "webpack": "^4.0.0"
   },
   "dependencies": {
-    "graphql-code-generator": "0.12.6"
+    "graphql-code-generator": "0.13.0"
   },
   "devDependencies": {
     "@types/webpack": "4.4.17"

@@ -1,6 +1,6 @@
 {
   "name": "graphql-codegen-graphql-files-typescript-modules",
-  "version": "0.12.6",
+  "version": "0.13.0",
   "description": "",
   "license": "MIT",
   "scripts": {
@@ -10,11 +10,11 @@
     "test": ""
   },
   "devDependencies": {
-    "codegen-templates-scripts": "0.12.6",
-    "graphql-codegen-core": "0.12.6",
-    "graphql-codegen-compiler": "0.12.6",
+    "@types/graphql": "14.0.3",
+    "codegen-templates-scripts": "0.13.0",
     "graphql": "14.0.2",
-    "@types/graphql": "14.0.3"
+    "graphql-codegen-compiler": "0.13.0",
+    "graphql-codegen-core": "0.13.0"
   },
   "main": "./dist/index.js",
   "typings": "dist/index.d.ts",

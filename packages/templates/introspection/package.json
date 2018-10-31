@@ -1,6 +1,6 @@
 {
   "name": "graphql-codegen-introspection-template",
-  "version": "0.12.6",
+  "version": "0.13.0",
   "description": "",
   "license": "MIT",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
@@ -11,9 +11,9 @@
     "test": "codegen-templates-scripts test"
   },
   "devDependencies": {
-    "codegen-templates-scripts": "0.12.6",
-    "graphql-codegen-compiler": "0.12.6",
-    "graphql-codegen-core": "0.12.6"
+    "codegen-templates-scripts": "0.13.0",
+    "graphql-codegen-compiler": "0.13.0",
+    "graphql-codegen-core": "0.13.0"
   },
   "main": "./dist/index.js",
   "typings": "dist/index.d.ts",
