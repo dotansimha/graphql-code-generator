@@ -81,6 +81,6 @@ export class FeedComponent {
 
 This generator supports custom config and output behavior. Use to following flags/environment variables to modify your output as you wish:
 
-### `noGraphqlTag` (or `CODEGEN_NO_GRAPHQL_TAG`, default value: `false`)
+- **`noGraphqlTag` (or `CODEGEN_NO_GRAPHQL_TAG`, default value: `false`)**
 
 This will cause the codegen to output parsed documents and not use a literal tag of `graphql-tag` package.

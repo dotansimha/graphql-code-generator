@@ -66,7 +66,7 @@ Now, add the directives to your GraphQL definitions, and generate your MongoDB m
 
 ## Directives
 
-### `@entity(embedded: Boolean, additionalFields: [AdditionalEntityFields])` (on `OBJECT`)
+- **`@entity(embedded: Boolean, additionalFields: [AdditionalEntityFields])` (on `OBJECT`)**
 
 Use this directive to declare that a specific GraphQL type should have a generated MongoDB models.
 
@@ -82,7 +82,7 @@ type User @entity(additionalFields: [
 }
 ```
 
-### `@column(name: string, overrideType: String, overrideIsArray: Boolean)` (on `FIELD_DEFINITION`)
+- **`@column(name: string, overrideType: String, overrideIsArray: Boolean)` (on `**FIELD_DEFINITION`)
 
 Use this directive to declare that a specific GraphQL field should be part of your generated MongoDB type.
 
@@ -92,19 +92,19 @@ Use this directive to declare that a specific GraphQL field should be part of yo
 
 > Note that if your property is an embedded entity, you should use `@embedded` instead.
 
-### `@id` (on `FIELD_DEFINITION`)
+- **`@id` (on `FIELD_DEFINITION`)**
 
 Use this directive on your field that turns into your MongoDB `_id`. Usually it's your `id` field of the GraphQL `type`.
 
-### `@link` (on `FIELD_DEFINITION`)
+- **`@link` (on `FIELD_DEFINITION`)**
 
 Use this directive to declare that a specific field is a link to another type in another table. This will use the `ObjectID` type in your generated result.
 
-### `@embedded` (on `FIELD_DEFINITION`)
+- **`@embedded` (on `FIELD_DEFINITION`)**
 
 Use this directive to declare that a specific field is integrated into the parent entity, and should be an object inside it.
 
-### `@map(path: String)` (on `FIELD_DEFINITION`)
+- **`@map(path: String)` (on `FIELD_DEFINITION`)**
 
 Use this directive to override the `path` or the name of the field. It's useful for creating a more complex object structure on the database.
 
@@ -128,7 +128,7 @@ export interface UserDbObject {
 }
 ```
 
-### `@abstractEntity(discriminatorField: String!)` (on `INTERFACE`)
+- **`@abstractEntity(discriminatorField: String!)` (on `INTERFACE`)**
 
 Use this directive on your GraphQL `interface`s to indicate that this interface is a common base for other database types.
 
@@ -163,7 +163,7 @@ export interface TextNotificationDbObject extends BaseNotificationDbInterface {
 }
 ```
 
-### `@union(discriminatorField: String)` (on `UNION`)
+- **`@union(discriminatorField: String)` (on `UNION`)**
 
 This directive is similar to `@abstractEntity`, but for unions (that not necessarily have common fields).
 
@@ -238,7 +238,7 @@ export interface ProfileDbObject {
 
 This generator supports custom config and output behavior. Use to following flags/environment variables to modify your output as you wish:
 
-### `schemaNamespace` (or `CODEGEN_SCHEMA_NAMESPACE`, default value: `null`)
+- **`schemaNamespace` (or `CODEGEN_SCHEMA_NAMESPACE`, default value: `null`)**
 
 This will cause the codegen to wrap the generated schema typings with a TypeScript namespace.
 
