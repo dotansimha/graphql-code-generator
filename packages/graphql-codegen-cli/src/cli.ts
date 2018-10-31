@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
-import { cliError, initCLI, createConfigFromOldCli } from './old-cli-config';
+import { initCLI, createConfigFromOldCli } from './old-cli-config';
 import { generate } from './generate-and-save';
+import { cliError } from './utils/cli-error';
 import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 import { Types } from 'graphql-codegen-core';

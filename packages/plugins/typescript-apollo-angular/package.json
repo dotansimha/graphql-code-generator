@@ -7,8 +7,7 @@
   "scripts": {
     "prepublishOnly": "yarn build",
     "build": "codegen-templates-scripts build",
-    "pretest": "yarn build",
-    "test": "codegen-templates-scripts test"
+    "pretest": "yarn build"
   },
   "dependencies": {
     "dependency-graph": "0.7.2",
