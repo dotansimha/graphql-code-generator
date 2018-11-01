@@ -27,12 +27,12 @@
         "title": "MongoDB TypeScript Models Template"
       },
       "templates/react-apollo-typescript": {
-        "title": "React/Apollo/Typescript Template"
+        "title": "React / Apollo / Typescript Template"
       },
       "templates/typescript-resolvers": {
         "title": "Typescript Resolvers Template"
       },
-      "templates/typescript": {
+      "templates/typescript-typings": {
         "title": "Typescript Typings Template"
       }
     },

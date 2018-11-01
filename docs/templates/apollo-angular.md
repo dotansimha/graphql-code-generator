@@ -1,49 +1,23 @@
 ---
 id: apollo-angular
-title: Apollo/Angular Template
+title: Apollo / Angular Template
 ---
 
-This template generates Apollo services (`Query`, `Mutation`, `Subscription`) with TypeScript typings.
-This template is extended version of TypeScript template, so the configuration is same with `graphql-codegen-typescript-template`.
+This template generates Apollo services (`Query`, `Mutation` and `Subscription`) with TypeScript typings. This template extends the basic TypeScript template [`graphql-codegen-typescript-template`](typescript-typings) and thus shares a similar configuration.
 
-It will generate a ready to use in your component, strongly typed Angular service, for every defined query, mutation or subscription.
+It will generate a strongly typed Angular service for every defined query, mutation or subscription. The generated Angular services are ready to inject and use within your Angular component.
 
-To learn about it, please read the ["Query, Mutation, Subscription services"](http://apollographql.com/docs/angular/basics/services.html) chapter of Apollo Angular documentation.
+To shed some more light regards this template, it's recommended to go through the ["Query, Mutation, Subscription services"](http://apollographql.com/docs/angular/basics/services.html) chapter of Apollo Angular docs.
 
-## Install
+## Installation
 
-All you need to do to use Apollo Angular template is to install two packages:
+Install using `npm` (or `yarn`):
 
-```bash
-npm install \
-  graphql-code-generator \
-  graphql-codegen-apollo-angular-template \
-  --save-dev
-```
-
-Now let’s set up a npm script to run gql-gen command:
-
-```bash
-gql-gen --schema https://fakerql.com/graphql --template graphql-codegen-apollo-angular-template --out ./src/generated/graphql.ts
-\"./src/**/*.graphql\"
-```
-
-It might seem like a lot but let’s split that into smaller pieces and explain each one of them.
-
-- **--schema** - path of a file with schema or an URL of a GraphQL endpoint
-- **--template** - name of a template, equals name of a package (in our case, apollo-angular template)
-- **--out** - path of an output file
-- glob based on which GraphQL Codegen will try to find documents
-
-## Client side schema
-
-Just add
-
-- **--clientSchema** - path of a file with schema
+    $ npm install graphql-codegen-apollo-angular-template
 
 ## Example
 
-You simply create a `.graphql` file and write a query:
+Simply create a `.graphql` file and write a random query like so:
 
 ```graphql
 query MyFeed {
@@ -54,7 +28,7 @@ query MyFeed {
 }
 ```
 
-By running `gql-gen` you get a file with types and services that you can use:
+Using `gql-gen` you can generate a file with types and services that you can use when coding an Angular component:
 
 ```ts
 import { MyFeedGQL } from './graphql';
@@ -77,10 +51,10 @@ export class FeedComponent {
 }
 ```
 
-## Generator Config
+## Configuration
 
-This generator supports custom config and output behavior. Use to following flags/environment variables to modify your output as you wish:
+The output of this template can be controlled using a specified config file which consists of the fields below. Each config field is followed by its matching environment variable, which can be used as an alternative method to control the template's behavior:
 
-- **`noGraphqlTag` (or `CODEGEN_NO_GRAPHQL_TAG`, default value: `false`)**
+#### `noGraphqlTag` (or `CODEGEN_NO_GRAPHQL_TAG`, default value: `false`)
 
-This will cause the codegen to output parsed documents and not use a literal tag of `graphql-tag` package.
+This will cause the codegen to output parsed documents and not use a literal tag of the `graphql-tag` package.

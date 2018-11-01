@@ -1,12 +1,20 @@
 ---
 id: react-apollo-typescript
-title: React/Apollo/Typescript Template
+title: React / Apollo / Typescript Template
 ---
 
-This template generates React Apollo components and HOC with TypeScript typings.
-This template is extended version of TypeScript template, so the configuration is same with `graphql-codegen-typescript-template`.
+This template generates React Apollo components and HOC with TypeScript typings. It extends the basic TypeScript template [`graphql-codegen-typescript-template`](typescript-typings) and thus shares a similar configuration.
 
-- Example Input
+## Installation
+
+Install using `npm` (or `yarn`):
+
+    $ npm install graphql-codegen-typescript-react-apollo-template
+
+
+## Usage
+
+For the given input:
 
 ```graphql
 query Test {
@@ -24,7 +32,7 @@ query Test {
 }
 ```
 
-- Example Usage
+We can use the generated code like this:
 
 ```tsx
   <Test.Component variables={...}>
@@ -32,7 +40,7 @@ query Test {
   </Test.Component>
 ```
 
-or
+Or if you prefer:
 
 ```tsx
   const withTestData = Test.HOC(...);

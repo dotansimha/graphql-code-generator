@@ -1,25 +1,27 @@
 ---
 id: typescript-resolvers
-title: Typescript Resolvers Template
+title: TypeScript Resolvers Template
 ---
 
-This template extends the [base TypeScript template](../typescript/) and adds Resolvers signature to the generated output.
+This template extends the basic TypeScript template [`graphql-codegen-typescript-template`](typescript-typings) and thus shares a similar configuration.
 
-## Requirements
+## Pre-Requirements
 
-To use this template, you need a TypeScript project. Also make sure to install `@types/graphql`.
+A TypeScript project with `@types/graphql` installed.
 
-## How to use?
+## Installation
 
-Start by using the template like any other Codegen template:
+Install using `npm` (or `yarn`):
 
-```
-gql-gen --template graphql-codegen-typescript-resolvers-template --schema schema.json --out ./src/resolvers-types.ts
-```
+    $ npm install graphql-codegen-typescript-resolvers-template
 
-> You don't need to specify GraphQL documents.
+## Usage
 
-Then, in your code, write your resolvers, and specify the object type by importing it from the generated file, according to the resolver you are writing:
+Run `gql-gen` as usual:
+
+    $ gql-gen --template graphql-codegen-typescript-resolvers-template --schema schema.json --out ./src/resolvers-types.ts
+
+Import the types from the generated file and use in the resolver:
 
 ```typescript
 import { QueryResolvers } from './resolvers-types';
@@ -29,9 +31,9 @@ export const resolvers: QueryResolvers.Resolvers = {
 };
 ```
 
-Now, your `root, args, context` will be types, and you'll get static type checking for the fields names, type and for the resolver return value.
+This will make the resolver fully typed and compatible with typescript compiler, including the handler's arguments and return value.
 
-## How it works?
+## How It Works
 
 It adds the generic resolvers signature to the top of the file:
 
@@ -78,7 +80,7 @@ type User {
 }
 ```
 
-Will output:
+Given the schema above, the output should be the following:
 
 ```typescript
 export namespace QueryResolvers {
@@ -114,11 +116,7 @@ export namespace UserResolvers {
 
 ## Template Customization
 
-This template extends the [base TypeScript template](../typescript/), so you can use any configuration variables that supported there.
-
-If you wish, you can customize the resolver signature by using the generic declaration and specifying other types.
-
-To set the interface/type of your GraphQL `Context`, you can use the generic of the generated interface:
+The generated resolver's signature type can be overridden or modified by taking advantage of the generic deceleration feature. Here's an example of how we can use a different type for the context:
 
 ```typescript
 import { QueryResolvers } from './resolvers-types';
@@ -129,13 +127,11 @@ export const resolvers: QueryResolvers.Resolvers<MyContext> = {
 };
 ```
 
-> If you wish, refer to "Custom Context Type" section to read how to set the context type to all generated resolvers without overriding it each time.
-
-Also, if you wish your field-resolver to return something else, you can override it like that: `UserResolvers.IdResolver<string, MyUser, MyContext>`.
+Field resolvers can be overriden or modfied as well. For an instance, if we would like to override the behavior of the `id` field's resolver type, we can take advantage of its corresponding generic type like so: `UserResolvers.IdResolver<string, MyUser, MyContext>`.
 
 ## Custom Context Type
 
-If you wish to use a custom type for your GraphQL context, and you don't want to specify it each time you declare your resolvers, you can do it by creating `gql-gen.json` file, and add the following:
+If you wish to use a custom type for your GraphQL context, yet you don't want to specify it each and every time you declare your resolvers, you can do it by creating a `gql-gen.json` file with the following contents:
 
 ```json
 {
@@ -144,4 +140,4 @@ If you wish to use a custom type for your GraphQL context, and you don't want to
 }
 ```
 
-And the codegen will set it automatically to this value instead of `any`.
+The JSON above should be used to modify the context type of the resolver.

@@ -57,7 +57,7 @@ interface PostsAuthorArgs {
 }
 ```
 
-### Available CLI Options
+## Available CLI Options
 
 GraphQL Code Generator is a CLI tool which can be installed using `npm` (or `yarn`):
 
@@ -85,9 +85,9 @@ And is available through `gql-gen`:
 | --no-overwrite      | void     | If specified, the generator will not override existing files                                                                                                                                                                                                                             |
 | -w --watch          | boolean  | Enables watch mode for regenerating documents from schema                                                                                                                                                                                                                                |
 | --silent            | boolean  | Does not print anything to the console                                                                                                                                                                                                                                                   |
-| documents...        | [String] | Space separated paths of `.graphql` files or code files (glob path is supported) that contains GraphQL documents inside strings, or with either `gql` or `graphql` tag (JavaScript), this field is optional - if no documents specified, only server side schema types will be generated |
+| documents...        | [String] | Space separated paths of `.graphql` files or code files (glob path is supported) that contain GraphQL documents inside strings, or with either `gql` or `graphql` tag (JavaScript), this field is optional - if no documents specified, only server side schema types will be generated  |
 
-### Available Templates
+## Available Templates
 
 As already mentioned, GraphQL Code Generator is not obligated into a single template of code and can operate based on a wide variety of templates. Some are already built-in, as they're likely to be used, and you can also define a custom code generation template by yourself.
 

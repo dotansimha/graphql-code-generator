@@ -3,11 +3,9 @@ id: mongodb-typescript-models
 title: MongoDB TypeScript Models Template
 ---
 
-This package generates TypeScript types for MongoDB server-side developers.
+This template would generate TypeScript types for MongoDB models, which makes it relevant for server-side development only. It uses GraphQL directives to declare the types you want to generate and use in your MongoDB backend.
 
-It uses GraphQL directives to declare the types you want to generate and use in your MongoDB.
-
-It take a declaration like this:
+Given the following GraphQL declaration:
 
 ```graphql
 type User @entity {
@@ -17,7 +15,7 @@ type User @entity {
 }
 ```
 
-And generates a TypeScript interface like this:
+We can have the following Typescript output:
 
 ```typescript
 import { ObjectID } from 'mongodb';
@@ -29,17 +27,17 @@ export interface UserDbObject {
 }
 ```
 
-So you can use it when you read/write to your database, and expect a specific structure.
+This interface can be used for db read/write purposes, thus making communication with the db much more consistent.
 
-## How to use?
+## Installation
 
-To use this package, install is using Yarn into your project, as a dependency:
+Install using `npm` (or `yarn`):
 
-```
-yarn add graphql-codegen-typescript-mongodb-template
-```
+    $ npm install graphql-codegen-typescript-mongodb-template
 
-Then, you need to add the directives declaration to your GraphQL Schema definition:
+## Usage
+
+Once installed, add the directives declaration to your GraphQL Schema definition:
 
 ```typescript
 import { makeExecutableSchema } from 'graphql-tools';
@@ -54,24 +52,20 @@ const schema = makeExecutableSchema({
 });
 ```
 
-Now, use this template with the GraphQL code generator:
+And generate code using `gql-gen`:
 
-```
-gql-gen --template graphql-codegen-typescript-mongodb-template --schema ./src/my-schema.js
-```
+    $ gql-gen --template graphql-codegen-typescript-mongodb-template --schema ./src/my-schema.js
 
-> IMPORTANT: Because of GraphQL behavior, you have to use --schema and provide a JavaScript export, otherwise you will lose your GraphQL Directives usage
-
-Now, add the directives to your GraphQL definitions, and generate your MongoDB models file.
+At this point, you can add the directives to your GraphQL definitions, and generate your MongoDB models file.
 
 ## Directives
 
-- **`@entity(embedded: Boolean, additionalFields: [AdditionalEntityFields])` (on `OBJECT`)**
+#### `@entity(embedded: Boolean, additionalFields: [AdditionalEntityFields])` (on `OBJECT`)
 
-Use this directive to declare that a specific GraphQL type should have a generated MongoDB models.
+Use this directive to specify which GraphQL type should have generated MongoDB models.
 
-- `embedded: Boolean` - specify this to declare that this entity turns into an object inside another entity. For example, if you want your structure to be `{ _id: string, username: string, profile: { name: string }}`, then your GraphQL type `Profile` should be an embedded type.
-- `additionalFields: [AdditionalEntityFields]` - specify any additional fields that you with to add to your MongoDB object, and are not part of your public GraphQL schema.
+- `embedded: Boolean` - use this option to declare target entity as child of a greater entity. For example, given the following structure `{ _id: string, username: string, profile: { name: string }}`, the GraphQL type `Profile` should be declared as embedded.
+- `additionalFields: [AdditionalEntityFields]` - specify any additional fields that you would like to add to your MongoDB object, and are not a part of your public GraphQL schema.
 
 ```graphql
 type User @entity(additionalFields: [
@@ -82,35 +76,35 @@ type User @entity(additionalFields: [
 }
 ```
 
-- **`@column(name: string, overrideType: String, overrideIsArray: Boolean)` (on `**FIELD_DEFINITION`)
+#### `@column(name: string, overrideType: String, overrideIsArray: Boolean)` (on `FIELD_DEFINITION`)
 
-Use this directive to declare that a specific GraphQL field should be part of your generated MongoDB type.
+Use this directive to declare a specific GraphQL field as part of your generated MongoDB type.
 
-- `overrideType: String` - use this to override the type of the field, for example, if you persist dates as `Date` but expose them as `String`.
-- `overrideIsArray: Boolean` - specify `true`/`false` to override the generated result and force it to generate an array type (or not).
-- `name: String` - you can specify the name of the field as you wish to have it on your DB - it could be also a path (`a.b.c`). This is a shortcut for `@map` directive.
+- `overrideType: String` - use this to override the type of the field; for example, if you store dates as `Date` but expose them as `String`.
+- `overrideIsArray: Boolean` - if true, override generated result and force generate it as an array type.
+- `name: String` - a projection field name that would appear in the DB. This can be either a consistent string or a path (`a.b.c`). This is a shortcut for the `@map` directive.
 
-> Note that if your property is an embedded entity, you should use `@embedded` instead.
+> ⚠ If target property is an embedded entity, you should use `@embedded` instead.
 
-- **`@id` (on `FIELD_DEFINITION`)**
+#### `@id` (on `FIELD_DEFINITION`)
 
-Use this directive on your field that turns into your MongoDB `_id`. Usually it's your `id` field of the GraphQL `type`.
+Use this directive on the filed that should be mapped to a MongoDB `_id`. By default, it should be the `id` field of the GraphQL `type`.
 
-- **`@link` (on `FIELD_DEFINITION`)**
+#### `@link` (on `FIELD_DEFINITION`)
 
-Use this directive to declare that a specific field is a link to another type in another table. This will use the `ObjectID` type in your generated result.
+Use this directive to declare that a specific field is a link to another type in another table. This will use the `ObjectID` type in the generated result.
 
-- **`@embedded` (on `FIELD_DEFINITION`)**
+#### `@embedded` (on `FIELD_DEFINITION`)
 
-Use this directive to declare that a specific field is integrated into the parent entity, and should be an object inside it.
+use this option to declare target entity as child of a greater entity.
 
-- **`@map(path: String)` (on `FIELD_DEFINITION`)**
+#### `@map(path: String)` (on `FIELD_DEFINITION`)
 
-Use this directive to override the `path` or the name of the field. It's useful for creating a more complex object structure on the database.
+Use this directive to override the path or the name of the target field. This would come in handy whenever we would like to create a more complex object structure in the database;
+for example, if you wish to project a field as `username` on your schema, but store it as `credentials.username` in your DB.
+You can either specify the name of the field, or a path to which will lead to its corresponding field in the DB.
 
-For example, if you wish to expose a field as `username` on your schema, but persist it in `credentials.username` on your DB.
-
-You can either specify the name of the field, or a `path` to it to generate an object.
+Given the following GraphQL schema:
 
 ```graphql
 type User @entity {
@@ -118,7 +112,7 @@ type User @entity {
 }
 ```
 
-Will output:
+The output should be:
 
 ```typescript
 export interface UserDbObject {
@@ -128,11 +122,10 @@ export interface UserDbObject {
 }
 ```
 
-- **`@abstractEntity(discriminatorField: String!)` (on `INTERFACE`)**
+#### `@abstractEntity(discriminatorField: String!)` (on `INTERFACE`)
 
-Use this directive on your GraphQL `interface`s to indicate that this interface is a common base for other database types.
-
-Specify `discriminatorField` to tell the generator what is the name of the field you are using on your database to identify how which object is implementing the interface.
+Use this directive on a GraphQL interface to mark it as a basis for other database types.
+The `discriminatorField` argument is mandatory and will tell the generator what field name in the database determines what interface the target object is implementing.
 
 For example:
 
@@ -163,11 +156,12 @@ export interface TextNotificationDbObject extends BaseNotificationDbInterface {
 }
 ```
 
-- **`@union(discriminatorField: String)` (on `UNION`)**
+#### `@union(discriminatorField: String)` (on `UNION`)
 
-This directive is similar to `@abstractEntity`, but for unions (that not necessarily have common fields).
+This directive is similar to `@abstractEntity`, but for unions (that don't necessarily have any common fields).
+The `discriminatorField` argument is mandatory and will tell the generator what field name in the database determines what interface the target object is implementing.
 
-Specify `discriminatorField` to tell the generator what is the name of the field you are using on your database to identify how which object is implementing the interface.
+Given the following GraphQL schema:
 
 ```graphql
 type A @entity {
@@ -181,7 +175,7 @@ type B @entity {
 union PossibleType = A | B @union(discriminatorField: "entityType")
 ```
 
-You will get:
+The output should be:
 
 ```typescript
 export interface ADbObject {
@@ -195,9 +189,9 @@ export interface BDbObject {
 export type PossibleType = { entityType: string } & (ADbObject | BDbObject);
 ```
 
-## Simple Example
+## Example
 
-For example, if you have a `User` (that matches to `users` table), `Profile` (which is part of your `User`) and `Friends` which is an array of `ObjectID` inside your user, use the following schema:
+Given the following GraphQL types:
 
 ```
 type User @entity {
@@ -215,7 +209,7 @@ type Profile @entity(embedded: true) {
 }
 ```
 
-The output will be:
+The generated MongoDB models should look like so:
 
 ```typescript
 import { ObjectID } from 'mongodb';
@@ -234,12 +228,10 @@ export interface ProfileDbObject {
 }
 ```
 
-## Generator Config
+## Configuration
 
-This generator supports custom config and output behavior. Use to following flags/environment variables to modify your output as you wish:
+The output of this template can be controlled using a specified config file which consists of the fields below. Each config field is followed by its matching environment variable, which can be used as an alternative method to control the template's behavior:
 
-- **`schemaNamespace` (or `CODEGEN_SCHEMA_NAMESPACE`, default value: `null`)**
+#### `schemaNamespace` (or `CODEGEN_SCHEMA_NAMESPACE`, default value: `null`)
 
-This will cause the codegen to wrap the generated schema typings with a TypeScript namespace.
-
-Use this feature if you need to run the codegen on multiple schemas, but getting a unified types (read more [here](https://www.typescriptlang.org/docs/handbook/declaration-merging.html))
+This will tell the codegen to wrap the generated schema typings with a TypeScript namespace. Note that even though we run this command on multiple schemas, the output types will be merged and not separated. For more information regards declaration merging, see [reference](https://www.typescriptlang.org/docs/handbook/declaration-merging.html).
