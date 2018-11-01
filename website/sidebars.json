@@ -9,8 +9,12 @@
       "templates/mongodb-typescript-models",
       "templates/react-apollo-typescript",
       "templates/typescript-resolvers",
-      "templates/typescript-typings",
-      "templates/custom"
+      "templates/typescript-typings"
+    ],
+    "Custom Templates": [
+      "custom-templates/integration",
+      "custom-templates/package",
+      "custom-templates/pre-processor"
     ]
   }
 }

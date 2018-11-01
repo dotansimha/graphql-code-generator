@@ -95,15 +95,21 @@ Here are some general usage patterns which might come in handy:
 
 - With local introspection JSON file, generate TypeScript types:
 
-    $ gql-gen --schema mySchema.json --template graphql-codegen-typescript-template --out ./typings/ "./src/**/*.graphql"
+```
+$ gql-gen --schema mySchema.json --template graphql-codegen-typescript-template --out ./typings/ "./src/**/*.graphql"
+```
 
 - With local introspection JSON file, generate TypeScript files, from GraphQL documents inside code files (`.ts`):
 
-    $ gql-gen --schema mySchema.json --template graphql-codegen-typescript-template --out ./typings/ "./src/**/*.ts"
+```
+$ gql-gen --schema mySchema.json --template graphql-codegen-typescript-template --out ./typings/ "./src/**/*.ts"
+```
 
 - With remote GraphQL endpoint that requires Authorization, generate TypeScript types:
 
-    $ gql-gen --schema http://localhost:3010/graphql --header "Authorization: MY_KEY" --template graphql-codegen-typescript-template --out ./typings/ "./src/**/*.graphql"
+```
+$ gql-gen --schema http://localhost:3010/graphql --header "Authorization: MY_KEY" --template graphql-codegen-typescript-template --out ./typings/ "./src/**/*.graphql"
+```
 
 ### Runtime Usage
 
@@ -190,8 +196,8 @@ Usage is pretty straight forward.
 | -r, --require        | String   | Path to a `require` extension. See [reference](https://gist.github.com/jamestalmage/df922691475cff66c7e6) for more info                                                                                                                                              |
 | -h, --header         | String   | Header to add to the introspection HTTP request when using remote endpoint                                                                                                                                                                                           |
 | -t, --template       | String   | Template name, for example: "typescript" (not required when using `--project`)                                                                                                                                                                                       |
-| -p, --project        | String   | Project directory with templates (see [custom template building page](../templates/custom.md))                                                                                                                                                                       |
-| --config             | String   | Path to project config JSON file (see [custom template building page](../templates/custom.md)). Defaults to `gql-gen.json`                                                                                                                                           |
+| -p, --project        | String   | Project directory with templates (see [custom template building page](../templates/custom))                                                                                                                                                                          |
+| --config             | String   | Path to project config JSON file (see [custom template building page](../templates/custom)). Defaults to `gql-gen.json`                                                                                                                                              |
 | -o, --out            | String   | Path to output file/directory. When using single-file generator specify filename, and when using multiple-files generator specify a directory                                                                                                                        |
 | -m, --skip-schema    | void     | If specified, server side schema won't be generated through the template (enums won't be omitted)                                                                                                                                                                    |
 | -c, --skip-documents | void     | If specified, client side documents won't be generated through the template                                                                                                                                                                                          |
@@ -209,12 +215,12 @@ The following table includes all the usable templates along with a brief descrip
 
 | Language                                | Purpose                                                          | Package Name & Docs                                                                                 |
 | --------------------------------------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
-| TypeScript                              | Generating server-side TypeScript types, and client-side typings | [`graphql-codegen-typescript-template`](../templates/typescript-typings.md)                         |
-| MongoDB TypeScript Models               | Generating server-side TypeScript types, with MongoDB models     | [`graphql-codegen-typescript-mongodb-template`](../templates/mongodb-typescript-models.md)          |
-| Apollo Angular                          | Generating TypeScript types, and Apollo Angular Services         | [`graphql-codegen-apollo-angular-template`](../templates/apollo-angular.md)                         |
-| React / Apollo / TypeScript             | Generating TypeScript types, and React Apollo Components         | [`graphql-codegen-typescript-react-apollo-template`](../templates/react-apollo-typescript.md)       |
-| TypeScript modules for `.graphql` files | Generating `declare module` for `.graphql` files                 | [`graphql-codegen-graphql-files-typescript-modules`](../templates/graphql-typescript-modules.md)    |
-| TypeScript Resolvers signature          | Generating TypeScript signature for server-side resolvers        | [`graphql-codegen-typescript-resolvers-template`](../templates/typescript-resolvers.md)             |
+| TypeScript                              | Generate server-side TypeScript types, and client-side typings   | [`graphql-codegen-typescript-template`](../templates/typescript-typings.md)                         |
+| MongoDB TypeScript Models               | Generate server-side TypeScript types, with MongoDB models       | [`graphql-codegen-typescript-mongodb-template`](../templates/mongodb-typescript-models.md)          |
+| Apollo Angular                          | Generate TypeScript types, and Apollo Angular Services           | [`graphql-codegen-apollo-angular-template`](../templates/apollo-angular.md)                         |
+| React Apollo TypeScript                 | Generate TypeScript types, and React Apollo Components           | [`graphql-codegen-typescript-react-apollo-template`](../templates/react-apollo-typescript.md)       |
+| TypeScript modules for `.graphql` files | Generate `declare module` for `.graphql` files                   | [`graphql-codegen-graphql-files-typescript-modules`](../templates/graphql-typescript-modules.md)    |
+| TypeScript Resolvers signature          | Generate TypeScript signature for server-side resolvers          | [`graphql-codegen-typescript-resolvers-template`](../templates/typescript-resolvers.md)             |
 
 In addition, you can also define custom code template as described in [this doc page](../templates/custom.md).
 

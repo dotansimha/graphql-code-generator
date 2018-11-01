@@ -5,32 +5,35 @@
     "previous": "Previous",
     "tagline": "GraphQL oriented websites generations made simple",
     "docs": {
-      "introduction/getting-started": {
-        "title": "Getting Started"
+      "custom-templates/integration": {
+        "title": "Project Integration"
+      },
+      "custom-templates/package": {
+        "title": "Template as NPM Package"
+      },
+      "custom-templates/pre-processor": {
+        "title": "Template as Pre-Processor"
       },
       "introduction/overview": {
         "title": "Overview"
       },
       "templates/apollo-angular": {
-        "title": "Apollo / Angular Template"
-      },
-      "templates/custom": {
-        "title": "templates/custom"
+        "title": "Apollo Angular"
       },
       "templates/graphql-typescript-modules": {
-        "title": "GraphQL Typescript Modules Template"
+        "title": "GraphQL Typescript Modules"
       },
       "templates/mongodb-typescript-models": {
-        "title": "MongoDB TypeScript Models Template"
+        "title": "MongoDB TypeScript Models"
       },
       "templates/react-apollo-typescript": {
-        "title": "React / Apollo / Typescript Template"
+        "title": "React Apollo Typescript"
       },
       "templates/typescript-resolvers": {
-        "title": "TypeScript Resolvers Template"
+        "title": "TypeScript Resolvers"
       },
       "templates/typescript-typings": {
-        "title": "Basic TypeScript Typings Template"
+        "title": "Basic TypeScript Typings"
       }
     },
     "links": {
@@ -39,7 +42,8 @@
     },
     "categories": {
       "Introduction": "Introduction",
-      "Built-In Templates": "Built-In Templates"
+      "Built-In Templates": "Built-In Templates",
+      "Custom Templates": "Custom Templates"
     }
   },
   "pages-strings": {

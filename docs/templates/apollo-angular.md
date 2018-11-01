@@ -1,6 +1,6 @@
 ---
 id: apollo-angular
-title: Apollo / Angular Template
+title: Apollo Angular
 ---
 
 This template generates Apollo services (`Query`, `Mutation` and `Subscription`) with TypeScript typings. This template extends the basic TypeScript template [`graphql-codegen-typescript-template`](typescript-typings) and thus shares a similar configuration.
@@ -55,6 +55,6 @@ export class FeedComponent {
 
 The output of this template can be controlled using a specified config file which consists of the fields below. Each config field is followed by its matching environment variable, which can be used as an alternative method to control the template's behavior:
 
-#### `noGraphqlTag` (or `CODEGEN_NO_GRAPHQL_TAG`, default value: `false`)
+#### `noGraphqlTag, CODEGEN_NO_GRAPHQL_TAG` (default value: `false`)
 
 This will cause the codegen to output parsed documents and not use a literal tag of the `graphql-tag` package.

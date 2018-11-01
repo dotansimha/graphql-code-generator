@@ -1,6 +1,6 @@
 ---
 id: react-apollo-typescript
-title: React / Apollo / Typescript Template
+title: React Apollo Typescript
 ---
 
 This template generates React Apollo components and HOC with TypeScript typings. It extends the basic TypeScript template [`graphql-codegen-typescript-template`](typescript-typings) and thus shares a similar configuration.

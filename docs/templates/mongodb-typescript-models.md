@@ -1,6 +1,6 @@
 ---
 id: mongodb-typescript-models
-title: MongoDB TypeScript Models Template
+title: MongoDB TypeScript Models
 ---
 
 This template would generate TypeScript types for MongoDB models, which makes it relevant for server-side development only. It uses GraphQL directives to declare the types you want to generate and use in your MongoDB backend.
@@ -232,6 +232,6 @@ export interface ProfileDbObject {
 
 The output of this template can be controlled using a specified config file which consists of the fields below. Each config field is followed by its matching environment variable, which can be used as an alternative method to control the template's behavior:
 
-#### `schemaNamespace` (or `CODEGEN_SCHEMA_NAMESPACE`, default value: `null`)
+#### `schemaNamespace`, `CODEGEN_SCHEMA_NAMESPACE` (default value: `null`)
 
 This will tell the codegen to wrap the generated schema typings with a TypeScript namespace. Note that even though we run this command on multiple schemas, the output types will be merged and not separated. For more information regards declaration merging, see [reference](https://www.typescriptlang.org/docs/handbook/declaration-merging.html).
