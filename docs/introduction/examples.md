@@ -1,4 +1,0 @@
----
-id: examples
-title: Examples
----

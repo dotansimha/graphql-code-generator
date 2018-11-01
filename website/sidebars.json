@@ -1,9 +1,7 @@
 {
   "docs": {
     "Introduction": [
-      "introduction/overview",
-      "introduction/getting-started",
-      "introduction/examples"
+      "introduction/overview"
     ],
     "Built-In Templates": [
       "templates/apollo-angular",

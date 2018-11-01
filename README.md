@@ -112,6 +112,16 @@ Alternatively, you may go through the following **Medium articles:**
 
 - [**GraphQL Code Generator v0.11** - Generate React and Angular Apollo Components, Resolver signatures and much more!](https://medium.com/the-guild/graphql-code-generator-v0-11-15bb9b02899e)
 
+### Troubleshoot
+
+For a full debug report please run GraphQL codegen like so:
+
+    $ DEBUG=true gql-gel ...
+
+This will help us better analyze and understand the problem when you're submitting an issue.
+
 ### License
+
+[![GitHub license](https://img.shields.io/badge/license-MIT-lightgrey.svg?maxAge=2592000)](https://raw.githubusercontent.com/apollostack/apollo-ios/master/LICENSE)
 
 MIT
