@@ -1,5 +1,6 @@
 import * as path from 'path';
 import * as fs from 'fs';
+import * as importFrom from 'import-from';
 
 export function resolveExternalModuleAndFn(pointer: string): any {
   const patternArr = pointer.split('#');
@@ -7,11 +8,10 @@ export function resolveExternalModuleAndFn(pointer: string): any {
   const functionName = patternArr[1];
   const localFilePath = path.resolve(process.cwd(), moduleName);
   const localFileExists = fs.existsSync(localFilePath);
-  const toLoad = localFileExists ? localFilePath : moduleName;
-  const loadedModule = require(toLoad);
+  const loadedModule = localFileExists ? require(localFilePath) : importFrom(process.cwd(), moduleName);
 
   if (!(functionName in loadedModule)) {
-    throw new Error(`${functionName} couldn't be found in ${loadedModule}`);
+    throw new Error(`${functionName} couldn't be found in module ${moduleName}!`);
   }
 
   return loadedModule[functionName];

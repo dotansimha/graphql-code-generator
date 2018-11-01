@@ -14,8 +14,10 @@ export * from './helpers';
 export interface TypeScriptCommonConfig {
   namingConvention?: string;
   constEnums?: boolean;
+  enumsAsTypes?: boolean;
   immutableTypes?: boolean;
   interfacePrefix?: string;
+  enums?: { [enumName: string]: { [valueName: string]: string } };
   scalars?: { [scalarName: string]: string };
 }
 
@@ -28,7 +30,7 @@ export const DEFAULT_SCALARS = {
 };
 
 export function initCommonTemplate(hbs, schema, config) {
-  const scalars = config.scalars || DEFAULT_SCALARS;
+  const scalars = { ...DEFAULT_SCALARS, ...(config.scalars || {}) };
   const convert = config.namingConvention ? resolveExternalModuleAndFn(config.namingConvention) : pascalCase;
   hbs.registerPartial('enum', enumTemplate);
   hbs.registerPartial('type', type);

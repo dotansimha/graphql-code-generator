@@ -6,13 +6,15 @@
   "license": "MIT",
   "scripts": {
     "prepublishOnly": "yarn build",
-    "build": "codegen-templates-scripts build",
-    "pretest": "yarn build"
+    "build": "tsc"
   },
   "dependencies": {
+    "import-from": "2.1.0",
     "graphql-codegen-core": "0.13.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "typescript": "3.1.5"
+  },
   "main": "./dist/index.js",
   "typings": "dist/index.d.ts",
   "typescript": {
