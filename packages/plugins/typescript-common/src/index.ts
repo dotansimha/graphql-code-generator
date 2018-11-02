@@ -13,6 +13,7 @@ export * from './helpers';
 
 export interface TypeScriptCommonConfig {
   namingConvention?: string;
+  avoidOptionals?: boolean;
   constEnums?: boolean;
   enumsAsTypes?: boolean;
   immutableTypes?: boolean;
@@ -46,6 +47,7 @@ export function initCommonTemplate(hbs, schema, config) {
   hbs.registerHelper('times', helpers.times);
   hbs.registerHelper('stringify', helpers.stringify);
   hbs.registerHelper('ifDirective', helpers.ifDirective);
+  hbs.registerHelper('ifCond', helpers.ifCond);
   hbs.registerHelper('unlessDirective', helpers.unlessDirective);
   hbs.registerHelper('toPrimitive', type => scalars[type] || type || '');
 
