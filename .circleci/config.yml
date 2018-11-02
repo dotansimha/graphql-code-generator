@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:10.12.0-browsers
+      - image: circleci/node:10.13.0-browsers
     steps:
       - checkout
       - restore_cache:
