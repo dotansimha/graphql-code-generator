@@ -74,12 +74,10 @@ export const getType = (convert: Function) => (type: Field, options: Handlebars.
 
 export function convertedType(type: Field, options: Handlebars.HelperOptions, convert, skipConversion = false) {
   const baseType = type.type;
-  const underscorePrefix = type.type.match(/^[\_]+/) || '';
   const config = options.data.root.config || {};
   const realType =
     options.data.root.primitives[baseType] ||
-    `${type.isScalar ? '' : config.interfacePrefix || ''}${underscorePrefix +
-      (skipConversion ? baseType : convert(baseType))}`;
+    `${type.isScalar ? '' : config.interfacePrefix || ''}${skipConversion ? baseType : convert(baseType)}`;
 
   return getFieldType(type, realType, options);
 }

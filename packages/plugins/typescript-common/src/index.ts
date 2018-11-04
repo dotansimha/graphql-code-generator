@@ -32,7 +32,19 @@ export const DEFAULT_SCALARS = {
 
 export function initCommonTemplate(hbs, schema, config) {
   const scalars = { ...DEFAULT_SCALARS, ...(config.scalars || {}) };
-  const convert = config.namingConvention ? resolveExternalModuleAndFn(config.namingConvention) : pascalCase;
+  const baseConvertFn = config.namingConvention ? resolveExternalModuleAndFn(config.namingConvention) : pascalCase;
+  const convert = (str: string): string => {
+    if (str.charAt(0) === '_') {
+      const after = str.replace(
+        /^(_*)(.*)/,
+        (_match, underscorePrefix, typeName) => `${underscorePrefix}${baseConvertFn(typeName || '')}`
+      );
+
+      return after;
+    }
+
+    return baseConvertFn(str);
+  };
   hbs.registerPartial('enum', enumTemplate);
   hbs.registerPartial('type', type);
   hbs.registerHelper('blockComment', helpers.blockComment);
