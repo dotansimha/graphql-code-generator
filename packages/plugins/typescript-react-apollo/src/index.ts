@@ -8,6 +8,7 @@ import { generateFragments, gql } from './helpers';
 
 export interface TypeScriptReactApolloConfig extends TypeScriptCommonConfig {
   noGraphqlTag?: boolean;
+  noNamespaces?: boolean;
   noHOC?: boolean;
 }
 
