@@ -1,5 +1,5 @@
-import { FileOutput, GraphQLSchema, DocumentFile, Types, PluginFunction } from 'graphql-codegen-core';
-import { mergeSchemas as remoteMergeSchemas } from 'graphql-tools';
+import { FileOutput, GraphQLSchema, DocumentFile, Types, CodegenPlugin } from 'graphql-codegen-core';
+import { mergeSchemas as remoteMergeSchemas, makeExecutableSchema } from 'graphql-tools';
 import { normalizeOutputParam, normalizeInstanceOrArray, normalizeConfig } from './helpers';
 import { IntrospectionFromUrlLoader } from './loaders/schema/introspection-from-url';
 import { IntrospectionFromFileLoader } from './loaders/schema/introspection-from-file';
@@ -22,6 +22,8 @@ export interface ExecutePluginOptions {
   config: Types.PluginConfig;
   schema: GraphQLSchema;
   documents: DocumentFile[];
+  outputFilename: string;
+  allPlugins: Types.ConfiguredPlugin[];
 }
 
 const schemaHandlers = [
@@ -163,7 +165,9 @@ export async function generateOutput(options: GenerateOutputOptions): Promise<Fi
               ...(pluginConfig as object)
             },
       schema: options.schema,
-      documents: options.documents
+      documents: options.documents,
+      outputFilename: options.filename,
+      allPlugins: options.plugins
     });
 
     output += result;
@@ -172,7 +176,7 @@ export async function generateOutput(options: GenerateOutputOptions): Promise<Fi
   return { filename: options.filename, content: output.trim() };
 }
 
-export async function getPluginByName(name: string): Promise<{ plugin: PluginFunction }> {
+export async function getPluginByName(name: string): Promise<CodegenPlugin> {
   const possibleNames = [
     `graphql-codegen-${name}`,
     `graphql-codegen-${name}-template`,
@@ -183,7 +187,7 @@ export async function getPluginByName(name: string): Promise<{ plugin: PluginFun
 
   for (const packageName of possibleNames) {
     try {
-      return require(packageName) as { plugin: PluginFunction };
+      return require(packageName) as CodegenPlugin;
     } catch (e) {}
   }
 
@@ -193,5 +197,33 @@ export async function getPluginByName(name: string): Promise<{ plugin: PluginFun
 export async function executePlugin(options: ExecutePluginOptions): Promise<string> {
   const pluginPackage = await getPluginByName(options.name);
 
-  return pluginPackage.plugin(options.schema, options.documents, options.config);
+  const schema = !pluginPackage.addToSchema
+    ? options.schema
+    : await mergeSchemas([
+        options.schema,
+        makeExecutableSchema({
+          typeDefs: pluginPackage.addToSchema,
+          allowUndefinedInResolve: true,
+          resolverValidationOptions: {
+            requireResolversForResolveType: false,
+            requireResolversForAllFields: false,
+            requireResolversForNonScalar: false,
+            requireResolversForArgs: false
+          }
+        })
+      ]);
+
+  if (pluginPackage.validate && typeof pluginPackage.validate === 'function') {
+    try {
+      await pluginPackage.validate(
+        schema,
+        options.documents,
+        options.config,
+        options.outputFilename,
+        options.allPlugins
+      );
+    } catch (e) {}
+  }
+
+  return pluginPackage.plugin(schema, options.documents, options.config);
 }

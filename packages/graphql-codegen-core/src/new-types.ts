@@ -1,4 +1,4 @@
-import { GraphQLSchema } from 'graphql';
+import { GraphQLSchema, DocumentNode } from 'graphql';
 import { DocumentFile } from './types';
 
 export namespace Types {
@@ -46,4 +46,21 @@ export namespace Types {
   }
 }
 
-export type PluginFunction<T = any> = (schema: GraphQLSchema, documents: DocumentFile[], config: T) => Promise<string>;
+export type PluginFunction<T = any> = (
+  schema: GraphQLSchema,
+  documents: DocumentFile[],
+  config: T
+) => Promise<string> | string;
+export type PluginValidateFn<T = any> = (
+  schema: GraphQLSchema,
+  documents: DocumentFile[],
+  config: T,
+  outputFile: string,
+  allPlugins: Types.ConfiguredPlugin[]
+) => Promise<void> | void;
+
+export interface CodegenPlugin<T = any> {
+  plugin: PluginFunction<T>;
+  addToSchema?: string | DocumentNode;
+  validate?: PluginValidateFn;
+}
