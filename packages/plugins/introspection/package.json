@@ -6,6 +6,7 @@
   "license": "MIT",
   "scripts": {
     "prepublishOnly": "yarn build",
+    "test": "codegen-templates-scripts test",
     "build": "codegen-templates-scripts build",
     "pretest": "yarn build"
   },
