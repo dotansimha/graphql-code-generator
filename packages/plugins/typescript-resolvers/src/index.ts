@@ -7,10 +7,12 @@ import * as resolver from './resolver.handlebars';
 import { getFieldResolverName, getFieldResolver, getFieldType } from './helpers';
 import { pickMapper } from './mappers';
 import { importMappers } from './import-mappers';
+import { getParentType } from './parent-type';
 
 export interface TypeScriptServerResolversConfig extends TypeScriptCommonConfig {
   noNamespaces?: boolean;
-  contextType: string;
+  contextType?: string;
+  mappers?: { [name: string]: string };
 }
 
 export const plugin: PluginFunction<TypeScriptServerResolversConfig> = async (
@@ -23,6 +25,7 @@ export const plugin: PluginFunction<TypeScriptServerResolversConfig> = async (
   Handlebars.registerHelper('getFieldResolverName', getFieldResolverName(convert));
   Handlebars.registerHelper('getFieldResolver', getFieldResolver(convert));
   Handlebars.registerHelper('pickMapper', pickMapper);
+  Handlebars.registerHelper('getParentType', getParentType(convert));
   Handlebars.registerHelper('getFieldType', getFieldType(convert));
   Handlebars.registerHelper('importMappers', importMappers);
 

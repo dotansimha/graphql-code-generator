@@ -1,4 +1,5 @@
 import { GraphQLResolveInfo } from 'graphql';
+{{{ importMappers types }}}
 
 export type Resolver<Result, Parent = any, Context = any, Args = never> = (
   parent: Parent,
@@ -26,5 +27,6 @@ export type SubscriptionResolver<Result, Parent = any, Context = any, Args = nev
   | ((...args: any[]) => ISubscriptionResolverObject<Result, Parent, Context, Args>)
   | ISubscriptionResolverObject<Result, Parent, Context, Args>;
 
-
-{{{ importMappers types }}}
+{{#each types}}
+{{~> resolver }}
+{{/each}}
