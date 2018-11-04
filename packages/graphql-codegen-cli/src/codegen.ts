@@ -8,6 +8,7 @@ import { SchemaFromExport } from './loaders/schema/schema-from-export';
 import { documentsFromGlobs } from './utils/documents-glob';
 import { loadDocumentsSources } from './loaders/documents/document-loader';
 import { validateGraphQlDocuments, checkValidationErrors } from './loaders/documents/validate-documents';
+import { prettify } from './utils/prettier';
 
 export interface GenerateOutputOptions {
   filename: string;
@@ -173,7 +174,7 @@ export async function generateOutput(options: GenerateOutputOptions): Promise<Fi
     output += result;
   }
 
-  return { filename: options.filename, content: output.trim() };
+  return { filename: options.filename, content: await prettify(options.filename, output) };
 }
 
 export async function getPluginByName(name: string): Promise<CodegenPlugin> {
