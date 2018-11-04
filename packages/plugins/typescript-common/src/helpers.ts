@@ -1,5 +1,15 @@
 import { Field } from 'graphql-codegen-core';
 import { SafeString } from 'handlebars';
+import * as Handlebars from 'handlebars';
+
+export function getScalarType(type: string, options: Handlebars.HelperOptions) {
+  const config = options.data.root.config || {};
+  if (config.scalars && type in config.scalars) {
+    return config.scalars[type as string];
+  } else {
+    return 'any';
+  }
+}
 
 export function getEnumValue(type: string, name: string, options: Handlebars.HelperOptions) {
   const config = options.data.root.config || {};

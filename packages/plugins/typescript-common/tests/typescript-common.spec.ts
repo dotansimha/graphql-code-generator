@@ -237,4 +237,46 @@ describe('TypeScript Common', () => {
       `);
     });
   });
+
+  describe('Scalars', () => {
+    it('Should generate correctly scalars without definition of it', async () => {
+      const content = await plugin(
+        buildSchema(`
+        type Query {
+          fieldTest: [Date]
+        }
+        
+        scalar Date
+      `),
+        [],
+        {}
+      );
+
+      expect(content).toBeSimilarStringTo(`
+      export type Date = any;
+      `);
+    });
+
+    it('Should generate correctly scalars with custom scalar type', async () => {
+      const content = await plugin(
+        buildSchema(`
+        type Query {
+          fieldTest: [Date]
+        }
+        
+        scalar Date
+      `),
+        [],
+        {
+          scalars: {
+            Date: 'MyCustomDate'
+          }
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+      export type Date = MyCustomDate;
+      `);
+    });
+  });
 });

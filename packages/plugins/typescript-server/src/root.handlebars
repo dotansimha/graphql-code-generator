@@ -1,10 +1,5 @@
 {{#if @root.config.schemaNamespace ~}}export namespace {{@root.config.schemaNamespace}} { {{/if}}
 {{{ blockCommentIf 'Scalars' scalars }}}
-{{#each scalars}}
-
-{{ toComment description }}
-{{#ifCond (convert name) "!==" (getScalarType name) }}export type {{ convert name }} = {{ getScalarType name }};{{/ifCond}}
-{{/each}}
 
 {{{ blockCommentIf 'Interfaces' interfaces }}}
 {{#each interfaces}}

@@ -7,7 +7,7 @@ import * as type from './type.handlebars';
 import * as rootTemplate from './root.handlebars';
 import * as Handlebars from 'handlebars';
 import { pascalCase } from 'change-case';
-import { getOptionals, getType, getEnumValue } from './helpers';
+import { getOptionals, getType, getEnumValue, getScalarType } from './helpers';
 
 export * from './helpers';
 
@@ -60,6 +60,7 @@ export function initCommonTemplate(hbs, schema, config) {
   hbs.registerHelper('stringify', helpers.stringify);
   hbs.registerHelper('ifDirective', helpers.ifDirective);
   hbs.registerHelper('ifCond', helpers.ifCond);
+  hbs.registerHelper('getScalarType', getScalarType);
   hbs.registerHelper('unlessDirective', helpers.unlessDirective);
   hbs.registerHelper('toPrimitive', type => scalars[type] || type || '');
 

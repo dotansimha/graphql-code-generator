@@ -3,7 +3,6 @@ import { PluginFunction, DocumentFile, schemaToTemplateContext } from 'graphql-c
 import { GraphQLSchema } from 'graphql';
 import * as Handlebars from 'handlebars';
 import * as rootTemplate from './root.handlebars';
-import { getScalarType } from './helpers';
 
 export interface TypeScriptServerConfig extends TypeScriptCommonConfig {
   schemaNamespace?: string;
@@ -14,7 +13,6 @@ export const plugin: PluginFunction<TypeScriptServerConfig> = async (
   documents: DocumentFile[],
   config: TypeScriptServerConfig
 ): Promise<string> => {
-  Handlebars.registerHelper('getScalarType', getScalarType);
   const { templateContext } = initCommonTemplate(Handlebars, schema, config);
 
   return Handlebars.compile(rootTemplate)(templateContext);

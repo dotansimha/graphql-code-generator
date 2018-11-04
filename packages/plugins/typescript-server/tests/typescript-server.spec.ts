@@ -3,7 +3,7 @@ import { GraphQLSchema } from 'graphql';
 import { makeExecutableSchema } from 'graphql-tools';
 import { plugin } from '../dist';
 
-describe('TypeScript Common', () => {
+describe('TypeScript Server', () => {
   function buildSchema(ast: string): GraphQLSchema {
     return makeExecutableSchema({
       typeDefs: ast,
@@ -158,58 +158,6 @@ describe('TypeScript Common', () => {
     });
   });
 
-  describe('Scalars', () => {
-    it('Should generate correctly scalars without definition of it', async () => {
-      const content = await plugin(
-        buildSchema(`
-        type Query {
-          fieldTest: [Date]
-        }
-        
-        scalar Date
-      `),
-        [],
-        {}
-      );
-
-      expect(content).toBeSimilarStringTo(`
-      export type Date = any;
-      `);
-      expect(content).toBeSimilarStringTo(`
-      export interface Query {
-        fieldTest?: (Date | null)[] | null;
-      }
-      `);
-    });
-
-    it('Should generate correctly scalars with custom scalar type', async () => {
-      const content = await plugin(
-        buildSchema(`
-        type Query {
-          fieldTest: [Date]
-        }
-        
-        scalar Date
-      `),
-        [],
-        {
-          scalars: {
-            Date: 'MyCustomDate'
-          }
-        }
-      );
-
-      expect(content).toBeSimilarStringTo(`
-      export type Date = MyCustomDate;
-      `);
-      expect(content).toBeSimilarStringTo(`
-      export interface Query {
-        fieldTest?: (MyCustomDate | null)[] | null;
-      }
-      `);
-    });
-  });
-
   describe('Interface', () => {
     it('Should generate correctly when using simple type that extends interface', async () => {
       const content = await plugin(
@@ -265,8 +213,6 @@ describe('TypeScript Common', () => {
         {}
       );
 
-      expect(content).toContain('export type AbText = any;');
-      expect(content).toContain('export type BbText = any;');
       expect(content).toBeSimilarStringTo(`
       export interface Query {
         fieldTest?: (CbText | null)[] | null;
@@ -291,8 +237,6 @@ describe('TypeScript Common', () => {
         { namingConvention: 'change-case#lowerCase' }
       );
 
-      expect(content).toContain('export type abtext = any;');
-      expect(content).toContain('export type bbtext = any;');
       expect(content).toBeSimilarStringTo(`
       export interface query {
         fieldTest?: (cbtext | null)[] | null;
@@ -428,6 +372,52 @@ describe('TypeScript Common', () => {
           /** field-description */
           fieldTest?: string | null;
         }`);
+    });
+  });
+
+  describe('Scalars', () => {
+    it('Should generate correctly scalars without definition of it', async () => {
+      const content = await plugin(
+        buildSchema(`
+        type Query {
+          fieldTest: [Date]
+        }
+        
+        scalar Date
+      `),
+        [],
+        {}
+      );
+
+      expect(content).toBeSimilarStringTo(`
+      export interface Query {
+        fieldTest?: (Date | null)[] | null;
+      }
+      `);
+    });
+
+    it('Should generate correctly scalars with custom scalar type', async () => {
+      const content = await plugin(
+        buildSchema(`
+        type Query {
+          fieldTest: [Date]
+        }
+        
+        scalar Date
+      `),
+        [],
+        {
+          scalars: {
+            Date: 'MyCustomDate'
+          }
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+      export interface Query {
+        fieldTest?: (MyCustomDate | null)[] | null;
+      }
+      `);
     });
   });
 });
