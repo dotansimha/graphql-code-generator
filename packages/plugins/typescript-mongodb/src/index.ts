@@ -15,6 +15,7 @@ import { isPrimitive } from './helpers/is-primitive';
 import isArray from './helpers/is-array';
 import filterModelFields from './helpers/filter-model-fields';
 import { entityFields } from './helpers/entity-fields';
+import gql from 'graphql-tag';
 
 export interface TypeScriptMongoDbConfig extends TypeScriptCommonConfig {}
 
@@ -23,7 +24,7 @@ export const plugin: PluginFunction<TypeScriptMongoDbConfig> = async (
   documents: DocumentFile[],
   config: TypeScriptMongoDbConfig
 ): Promise<string> => {
-  const { templateContext, scalars } = initCommonTemplate(Handlebars, schema, config);
+  const { templateContext, scalars, convert } = initCommonTemplate(Handlebars, schema, config);
   Handlebars.registerPartial('enum', enumTemplate);
   Handlebars.registerPartial('scalar', scalar);
   Handlebars.registerPartial('type', type);
@@ -32,7 +33,7 @@ export const plugin: PluginFunction<TypeScriptMongoDbConfig> = async (
   Handlebars.registerPartial('inputType', inputType);
   Handlebars.registerPartial('interface', interfaceTemplate);
 
-  Handlebars.registerHelper('entityFields', entityFields);
+  Handlebars.registerHelper('entityFields', entityFields(convert));
   Handlebars.registerHelper('filterModelFields', filterModelFields);
   Handlebars.registerHelper('ifNotRootType', ifNotRootType);
   Handlebars.registerHelper('isPrimitive', isPrimitive(scalars));
@@ -40,3 +41,19 @@ export const plugin: PluginFunction<TypeScriptMongoDbConfig> = async (
 
   return Handlebars.compile(index)(templateContext);
 };
+
+export const addToSchema = gql`
+  directive @union(discriminatorField: String) on UNION
+  directive @abstractEntity(discriminatorField: String!) on INTERFACE
+  directive @entity(embedded: Boolean, additionalFields: [AdditionalEntityFields]) on OBJECT
+  directive @column(name: String, overrideType: String, overrideIsArray: Boolean) on FIELD_DEFINITION
+  directive @id on FIELD_DEFINITION
+  directive @link on FIELD_DEFINITION
+  directive @embedded on FIELD_DEFINITION
+  directive @map(path: String!) on FIELD_DEFINITION
+  # Inputs
+  input AdditionalEntityFields {
+    path: String
+    type: String
+  }
+`;

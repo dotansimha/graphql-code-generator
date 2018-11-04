@@ -16,26 +16,32 @@ const ID_FIELD_NAME = '_id';
 const ENUM_TYPE = 'string';
 const ID_TYPE = 'ObjectID';
 
-function appendField(obj: object, field: string, value: string, mapDirectiveValue: null | { path: string } = null) {
+const appendField = convert => (
+  obj: object,
+  field: string,
+  value: string,
+  mapDirectiveValue: null | { path: string } = null
+) => {
   if (mapDirectiveValue) {
     set(obj, mapDirectiveValue.path, value);
   } else {
     set(obj, field, value);
   }
-}
+};
 
 type FieldsResult = { [name: string]: string | FieldsResult };
 
-function buildFieldDef(type: string, field: Field, options: Handlebars.HelperOptions): string {
+const buildFieldDef = convert => (type: string, field: Field, options: Handlebars.HelperOptions): string => {
   return convertedType(
     {
       ...field,
       type
     },
     options,
+    convert,
     true
   );
-}
+};
 
 function convertToInterfaceDefinition(type: Type | Interface, obj: FieldsResult, root = true): string {
   if (typeof obj === 'string') {
@@ -59,38 +65,47 @@ function convertToInterfaceDefinition(type: Type | Interface, obj: FieldsResult,
   return `${appendExtensions}{\n${result.join('\n')}\n}`;
 }
 
-export function entityFields(type: Type | Interface, options: Handlebars.HelperOptions, returnRaw = false) {
+export const entityFields = convert => (
+  type: Type | Interface,
+  options: Handlebars.HelperOptions,
+  returnRaw = false
+) => {
   if (type && (type.directives[ENTITY_DIRECTIVE] || type.directives[ABSTRACT_ENTITY_DIRECTIVE])) {
     const allFields = type.fields || [];
     const finalResult: FieldsResult = {};
 
     if (type.directives[ABSTRACT_ENTITY_DIRECTIVE] && type.directives[ABSTRACT_ENTITY_DIRECTIVE].discriminatorField) {
-      appendField(finalResult, type.directives[ABSTRACT_ENTITY_DIRECTIVE].discriminatorField, 'string');
+      appendField(convert)(finalResult, type.directives[ABSTRACT_ENTITY_DIRECTIVE].discriminatorField, 'string');
     }
 
     for (const field of allFields) {
       if (field.directives[ID_DIRECTIVE]) {
-        appendField(
+        appendField(convert)(
           finalResult,
           ID_FIELD_NAME,
-          buildFieldDef(ID_TYPE, field, options),
+          buildFieldDef(convert)(ID_TYPE, field, options),
           field.directives[MAP_DIRECTIVE]
         );
       } else if (field.directives[LINK_DIRECTIVE]) {
-        appendField(finalResult, field.name, buildFieldDef(ID_TYPE, field, options), field.directives[MAP_DIRECTIVE]);
+        appendField(convert)(
+          finalResult,
+          field.name,
+          buildFieldDef(convert)(ID_TYPE, field, options),
+          field.directives[MAP_DIRECTIVE]
+        );
       } else if (field.directives[COLUMN_DIRECTIVE]) {
         if (field.isEnum) {
-          appendField(
+          appendField(convert)(
             finalResult,
             field.name,
-            buildFieldDef(ENUM_TYPE, field, options),
+            buildFieldDef(convert)(ENUM_TYPE, field, options),
             field.directives[MAP_DIRECTIVE]
           );
         } else {
-          appendField(
+          appendField(convert)(
             finalResult,
             field.directives[COLUMN_DIRECTIVE].name ? field.directives[COLUMN_DIRECTIVE].name : field.name,
-            buildFieldDef(
+            buildFieldDef(convert)(
               field.directives[COLUMN_DIRECTIVE].overrideType
                 ? field.directives[COLUMN_DIRECTIVE].overrideType
                 : field.type,
@@ -107,10 +122,10 @@ export function entityFields(type: Type | Interface, options: Handlebars.HelperO
           );
         }
       } else if (field.directives[EMBEDDED_DIRECTIVE]) {
-        appendField(
+        appendField(convert)(
           finalResult,
           field.name,
-          buildFieldDef(`${field.type}DbObject`, field, options),
+          buildFieldDef(convert)(`${field.type}DbObject`, field, options),
           field.directives[MAP_DIRECTIVE]
         );
       }
@@ -121,7 +136,7 @@ export function entityFields(type: Type | Interface, options: Handlebars.HelperO
 
     if (additionalFields.length > 0) {
       for (const field of additionalFields) {
-        appendField(finalResult, field.path, field.type);
+        appendField(convert)(finalResult, field.path, field.type);
       }
     }
 
@@ -133,4 +148,4 @@ export function entityFields(type: Type | Interface, options: Handlebars.HelperO
   }
 
   return '';
-}
+};
