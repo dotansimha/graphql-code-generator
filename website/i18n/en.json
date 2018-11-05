@@ -5,35 +5,35 @@
     "previous": "Previous",
     "tagline": "GraphQL oriented websites generations made simple",
     "docs": {
-      "custom-templates/integration": {
-        "title": "Project Integration"
+      "custom-output/function": {
+        "title": "Custom Code Generating Function"
       },
-      "custom-templates/package": {
-        "title": "Template as NPM Package"
+      "custom-output/package": {
+        "title": "Writing a Template NPM Package"
       },
-      "custom-templates/pre-processor": {
-        "title": "Template as Pre-Processor"
+      "custom-output/template": {
+        "title": "Custom Output Template"
       },
       "introduction/overview": {
-        "title": "Overview"
+        "title": "GraphQL Code Generator"
       },
       "templates/apollo-angular": {
-        "title": "Apollo Angular"
+        "title": "Apollo Angular Template"
       },
       "templates/graphql-typescript-modules": {
-        "title": "GraphQL Typescript Modules"
+        "title": "GraphQL Typescript Modules Template"
       },
       "templates/mongodb-typescript-models": {
-        "title": "MongoDB TypeScript Models"
+        "title": "MongoDB TypeScript Models Template"
       },
       "templates/react-apollo-typescript": {
-        "title": "React Apollo Typescript"
+        "title": "React Apollo Typescript Template"
       },
       "templates/typescript-resolvers": {
-        "title": "TypeScript Resolvers"
+        "title": "TypeScript Resolvers Template"
       },
       "templates/typescript-typings": {
-        "title": "Basic TypeScript Typings"
+        "title": "Basic TypeScript Typings Template"
       }
     },
     "links": {
@@ -43,7 +43,7 @@
     "categories": {
       "Introduction": "Introduction",
       "Built-In Templates": "Built-In Templates",
-      "Custom Templates": "Custom Templates"
+      "Custom Output": "Custom Output"
     }
   },
   "pages-strings": {

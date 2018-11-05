@@ -1,6 +1,6 @@
 ---
 id: typescript-typings
-title: Basic TypeScript Typings
+title: Basic TypeScript Typings Template
 ---
 
 This is the most basic TypeScript template and it can generate typings which can be used both in client and server, given a GraphQL schema.

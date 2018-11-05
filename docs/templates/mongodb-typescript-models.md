@@ -1,6 +1,6 @@
 ---
 id: mongodb-typescript-models
-title: MongoDB TypeScript Models
+title: MongoDB TypeScript Models Template
 ---
 
 This template would generate TypeScript types for MongoDB models, which makes it relevant for server-side development only. It uses GraphQL directives to declare the types you want to generate and use in your MongoDB backend.

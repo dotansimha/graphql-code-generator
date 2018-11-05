@@ -1,6 +1,6 @@
 ---
 id: overview
-title: Overview
+title: GraphQL Code Generator
 ---
 
 GraphQL Code Generator is a CLI tool that can generate TypeScript typings out of a GraphQL schema. When we develop a GraphQL backend, there would be many instances where we would find ourselves writing the same things which are already described by the GraphQL schema, only in a different format; for example: resolver signatures, MongoDB models, Angular services etc.
@@ -222,7 +222,7 @@ The following table includes all the usable templates along with a brief descrip
 | TypeScript modules for `.graphql` files | Generate `declare module` for `.graphql` files                   | [`graphql-codegen-graphql-files-typescript-modules`](../templates/graphql-typescript-modules.md)    |
 | TypeScript Resolvers signature          | Generate TypeScript signature for server-side resolvers          | [`graphql-codegen-typescript-resolvers-template`](../templates/typescript-resolvers.md)             |
 
-In addition, you can also define custom code template as described in [this doc page](../templates/custom.md).
+In addition, you can also define custom code template as described in [this doc page](../custom-output/package.md).
 
 > ⚠ Swift and Flow code generators were deprecated since version `0.5.5` and should be available to use again soon.
 

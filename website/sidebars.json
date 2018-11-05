@@ -11,10 +11,10 @@
       "templates/typescript-resolvers",
       "templates/typescript-typings"
     ],
-    "Custom Templates": [
-      "custom-templates/integration",
-      "custom-templates/package",
-      "custom-templates/pre-processor"
+    "Custom Output": [
+      "custom-output/function",
+      "custom-output/package",
+      "custom-output/template"
     ]
   }
 }

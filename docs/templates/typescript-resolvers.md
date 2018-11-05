@@ -1,6 +1,6 @@
 ---
 id: typescript-resolvers
-title: TypeScript Resolvers
+title: TypeScript Resolvers Template
 ---
 
 This template extends the basic TypeScript template [`graphql-codegen-typescript-template`](typescript-typings) and thus shares a similar configuration.
