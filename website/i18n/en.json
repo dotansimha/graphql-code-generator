@@ -5,17 +5,23 @@
     "previous": "Previous",
     "tagline": "GraphQL oriented websites generations made simple",
     "docs": {
-      "custom-output/function": {
+      "cli/index": {
+        "title": "How to Use CLI?"
+      },
+      "custom-codegen/function": {
         "title": "Custom Code Generating Function"
       },
-      "custom-output/package": {
-        "title": "Writing a Template NPM Package"
+      "custom-codegen/index": {
+        "title": "What are Code Generators?"
       },
-      "custom-output/template": {
-        "title": "Custom Output Template"
+      "custom-codegen/package": {
+        "title": "Custom Code Generating NPM Package"
       },
-      "introduction/overview": {
-        "title": "GraphQL Code Generator"
+      "custom-codegen/template": {
+        "title": "Custom Code Generating Template"
+      },
+      "getting-started/index": {
+        "title": "What is GraphQL Code Generator?"
       },
       "templates/apollo-angular": {
         "title": "Apollo Angular Template"
@@ -41,9 +47,10 @@
       "Help": "Help"
     },
     "categories": {
-      "Introduction": "Introduction",
+      "Getting Started": "Getting Started",
+      "CLI": "CLI",
       "Built-In Templates": "Built-In Templates",
-      "Custom Output": "Custom Output"
+      "Custom Code Generators": "Custom Code Generators"
     }
   },
   "pages-strings": {

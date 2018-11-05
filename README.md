@@ -78,47 +78,13 @@ interface PostsAuthorArgs {
 
 ### Links
 
-To get a grasp of what GraphQL Code Generator is all about, it's recommended to go through the **docs:**
-
-#### [Introduction](./docs/introduction)
-
-- [Overview](./docs/introduction/overview.md)
-
-- [Getting Started](./docs/introduction/getting-started.md)
-
-- [Example Use Cases](./docs/introduction/examples.md)
-
-#### [Built-In Templates](./docs/templates)
-
-- [Apollo/Angular Template](./docs/templates/apollo-angular.md)
-
-- [GraphQL Typescript Modules Template](./docs/templates/graphql-typescript-modules.md)
-
-- [Mongodb Typescript Models Template](./docs/templates/mongodb-typescript-models.md)
-
-- [React/Apollo/Typescript Template](./docs/templates/react-apollo-typescript.md)
-
-- [Typescript Resolvers Template](./docs/templates/typescript-resolvers.md)
-
-- [Typescript Typings Template](./docs/templates/typescript-typings.md)
-
-- [Using a Custom Template](./docs/templates/custom.md)
-
-Alternatively, you may go through the following **Medium articles:**
+Besides our [docs page](https://graphql-code-generator.com/docs/getting-started/index), feel free to go through our published Medium articles to get a better grasp of what GraphQL Code Generator is all about:
 
 - [**GraphQL Code-Generator** - The True GraphQL-First platform](https://medium.com/@dotansimha/graphql-code-generator-a34e3785e6fb)
 
 - [**GraphQL Code-Generator v0.9** - What's new?](https://medium.com/@dotansimha/whats-new-in-graphql-code-generator-0-9-0-dba6c9e365d)
 
 - [**GraphQL Code Generator v0.11** - Generate React and Angular Apollo Components, Resolver signatures and much more!](https://medium.com/the-guild/graphql-code-generator-v0-11-15bb9b02899e)
-
-### Troubleshoot
-
-For a full debug report please run GraphQL codegen like so:
-
-    $ DEBUG=true gql-gel ...
-
-This will help us better analyze and understand the problem when you're submitting an issue.
 
 ### License
 

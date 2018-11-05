@@ -1,6 +1,6 @@
 ---
 id: template
-title: Custom Output Template
+title: Custom Code Generating Template
 ---
 
 Based on your needs, you can define a custom [Handlebars template](https://handlebarsjs.com/) that will generate code. The given data models will be based on the parsed data by GraphQL Code Generator.

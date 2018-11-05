@@ -1,6 +1,6 @@
 ---
 id: package
-title: Writing a Template NPM Package
+title: Custom Code Generating NPM Package
 ---
 
 Nothing actually really stops you from writing a custom template NPM package yourself, but we've decided to ease stuff on you. We've created a CLI tool called `codegen-templates-scripts` will download and setup a boilerplate for your package.

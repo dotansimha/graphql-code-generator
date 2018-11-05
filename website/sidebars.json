@@ -1,20 +1,25 @@
 {
   "docs": {
-    "Introduction": [
-      "introduction/overview"
+    "Getting Started": [
+      "getting-started/index"
     ],
-    "Built-In Templates": [
-      "templates/apollo-angular",
-      "templates/graphql-typescript-modules",
+    "CLI": [
+      "cli/index"
+    ],
+    "Predefined Templates": [
+      "templates/index",
+      "templates/typescript-typings",
       "templates/mongodb-typescript-models",
+      "templates/apollo-angular",
       "templates/react-apollo-typescript",
-      "templates/typescript-resolvers",
-      "templates/typescript-typings"
+      "templates/graphql-typescript-modules",
+      "templates/typescript-resolvers"
     ],
-    "Custom Output": [
-      "custom-output/function",
-      "custom-output/package",
-      "custom-output/template"
+    "Custom Code Generators": [
+      "custom-codegen/index",
+      "custom-codegen/template",
+      "custom-codegen/function",
+      "custom-codegen/package"
     ]
   }
 }
