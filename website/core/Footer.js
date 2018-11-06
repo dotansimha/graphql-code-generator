@@ -7,6 +7,8 @@
 
 const React = require('react')
 
+const siteConfig = require('../siteConfig')
+
 class Footer extends React.Component {
   docUrl(doc, language) {
     const baseUrl = this.props.config.baseUrl
@@ -32,16 +34,16 @@ class Footer extends React.Component {
           )}
         </a>
         <div className="navMenu">
-          <a>
-            GETTING STARTED
+          <a href={siteConfig.githubUrl}>
+            TRY IT OUT
           </a>
           <span>⦁</span>
-          <a>
-            DOCUMENTATION
+          <a href={`${siteConfig.baseUrl}docs/getting-started`}>
+            VIEW DOCS
           </a>
           <span>⦁</span>
-          <a>
-            API REFERENCE
+          <a href={`${siteConfig.baseUrl}help`}>
+            CONTACT US
           </a>
         </div>
         <div className="navCopyright">
