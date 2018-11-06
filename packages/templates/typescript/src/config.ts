@@ -8,8 +8,6 @@ import * as enumTemplate from './enum.handlebars';
 import { EInputType, GeneratorConfig } from 'graphql-codegen-core';
 import { getType } from './helpers/get-type';
 import { getOptionals } from './helpers/get-optionals';
-import { getFieldResolver } from './helpers/get-field-resolver';
-import { getFieldResolverName } from './helpers/get-field-resolver-name';
 import { isPrimitiveType } from './helpers/is-primitive-type';
 import { getScalarType } from './helpers/get-scalar-type';
 import { shouldHavePrefix } from './helpers/should-have-prefix';
@@ -36,13 +34,12 @@ export const config: GeneratorConfig = {
   },
   customHelpers: {
     convertedType: getType,
-    getFieldResolver,
-    getFieldResolverName,
     getOptionals,
     isPrimitiveType,
     getScalarType,
     shouldHavePrefix,
     getEnumValue
   },
+  // KAMIL: why? Do we have a default now?
   outFile: 'types.ts'
 };
