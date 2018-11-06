@@ -42,7 +42,7 @@ const siteConfig = {
 
   // For no header links in the top nav bar -> headerLinks: [],
   headerLinks: [
-    {doc: 'templates/apollo-angular', label: 'Docs'},
+    {doc: "getting-started/index", label: 'Docs'},
     {page: 'help', label: 'Help'},
   ],
 

@@ -3,7 +3,7 @@
   "localized-strings": {
     "next": "Next",
     "previous": "Previous",
-    "tagline": "GraphQL oriented websites generations made simple",
+    "tagline": "Generate code from your GraphQL schema with a single function call",
     "docs": {
       "cli/index": {
         "title": "How to Use CLI?"

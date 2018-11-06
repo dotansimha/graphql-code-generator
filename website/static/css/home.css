@@ -16,3 +16,41 @@
   width: 150px;
   margin: 10px;
 }
+
+.mainContainer .cliTitle {
+  color: var(--primary-color);
+  font-family: monospace;
+  text-align: center;
+  font-weight: 500;
+}
+
+.mainContainer .cliTitle .cursor {
+  background-color: var(--primary-color);
+  height: 1.2em;
+  width: 0.6em;
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.2em) translateX(0.1em);
+  animation-duration: 1.2s;
+  animation-name: stutter;
+  animation-iteration-count: infinite;
+}
+
+@keyframes stutter {
+  0% {opacity: 0 }
+  1% {opacity: 1 }
+  50% { opacity: 1 }
+  51% { opacity: 0 }
+  100% { opacity: 0 }
+}
+
+@media only screen and (min-device-width: 360px) and (max-device-width: 736px) {
+  .homeContainer .pluginRowBlock {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mainContainer {
+    display: none;
+  }
+}

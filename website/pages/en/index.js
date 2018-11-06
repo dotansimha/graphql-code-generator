@@ -84,6 +84,14 @@ class HomeSplash extends React.Component {
   }
 }
 
+const CLIDemo = () => (
+  <div className="cliDemoSection">
+    <h1 className="cliTitle">
+      <span>$ gql-gen --schema schema.graphql --template ts</span><div className="cursor" />
+    </h1>
+  </div>
+)
+
 const Block = props => (
   <Container
     padding={['bottom', 'top']}
@@ -101,7 +109,7 @@ class Index extends React.Component {
       <div>
         <HomeSplash language={language} />
         <div className="mainContainer">
-          {/*Content goes here*/}
+          <CLIDemo />
         </div>
       </div>
     )
