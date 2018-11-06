@@ -1,0 +1,18 @@
+.homeContainer .projectTitle img {
+  width: 100%;
+  max-width: 512px;
+}
+
+.homeContainer .projectTitle small {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 14px;
+  margin-bottom: 14px;
+  line-height: 1.4;
+}
+
+.homeContainer .buttonWrapper .button {
+  width: 150px;
+  margin: 10px;
+}

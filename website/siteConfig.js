@@ -22,7 +22,7 @@ const users = [
 
 const siteConfig = {
   title: 'GraphQL Code Generator', // Title for your website.
-  tagline: 'GraphQL oriented websites generations made simple',
+  tagline: 'Generate code from your GraphQL schema with a single function call',
   url: 'https://graphql-code-generator.com', // Your website URL
   baseUrl: '/', // Base URL for your project */
   // For github.io type URLs, you would set the url and baseUrl like:
@@ -50,8 +50,8 @@ const siteConfig = {
   users,
 
   /* path to images for header/footer */
-  headerIcon: 'img/gqlgen-sticker.png',
-  footerIcon: 'img/gqlgen-logo.png',
+  headerIcon: 'img/gql-codegen-icon.svg',
+  footerIcon: 'img/gql-codegen-logo.svg',
   favicon: 'img/favicon.png',
 
   /* Colors for website */
@@ -91,8 +91,8 @@ const siteConfig = {
   cleanUrl: true,
 
   // Open Graph and Twitter card images.
-  ogImage: 'img/docusaurus.png',
-  twitterImage: 'img/docusaurus.png',
+  ogImage: 'img/gql-codegen-cover.svg',
+  twitterImage: 'img/gql-codegen-cover.svg',
 
   // You may provide arbitrary config keys to be used as needed by your
   // template. For example, if you need your repo's URL...

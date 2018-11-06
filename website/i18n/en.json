@@ -29,6 +29,9 @@
       "templates/graphql-typescript-modules": {
         "title": "GraphQL Typescript Modules Template"
       },
+      "templates/index": {
+        "title": "What are Templates?"
+      },
       "templates/mongodb-typescript-models": {
         "title": "MongoDB TypeScript Models Template"
       },
@@ -49,7 +52,7 @@
     "categories": {
       "Getting Started": "Getting Started",
       "CLI": "CLI",
-      "Built-In Templates": "Built-In Templates",
+      "Predefined Templates": "Predefined Templates",
       "Custom Code Generators": "Custom Code Generators"
     }
   },

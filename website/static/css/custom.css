@@ -2,6 +2,9 @@
 
 @charset "UTF-8";
 
+/* Add imports here */
+
+@import "home.css";
 @import "help.css";
 
 /* source: https://fonts.googleapis.com/css?family=Montserrat:400,600,700 */
@@ -145,6 +148,10 @@ textarea, input {
   padding-bottom: 8px !important;
   display: flex;
   justify-content: space-around;
+}
+
+#footer img {
+  width: auto;
 }
 
 #footer .nav-footer {
