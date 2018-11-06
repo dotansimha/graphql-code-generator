@@ -14,6 +14,7 @@ const Container = CompLibrary.Container
 const GridBlock = CompLibrary.GridBlock
 
 const siteConfig = require(`${process.cwd()}/siteConfig.js`)
+const IODemo = require(`${process.cwd()}/core/home/IODemo`)
 
 function imgUrl(img) {
   return `${siteConfig.baseUrl}img/${img}`
@@ -89,6 +90,7 @@ const CLIDemo = () => (
     <h1 className="cliTitle">
       <span>$ gql-gen --schema schema.graphql --template ts</span><div className="cursor" />
     </h1>
+    <IODemo />
   </div>
 )
 

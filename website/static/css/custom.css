@@ -177,6 +177,15 @@ textarea, input {
   color: #ffffff;
 }
 
+.mainContainer .docs-next {
+  float: right;
+  clear: right;
+}
+
+.mainContainer .docs-prev {
+  float: left;
+}
+
 .Button {
   background-color: transparent;
   cursor: pointer;

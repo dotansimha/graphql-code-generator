@@ -30,18 +30,47 @@
   width: 0.6em;
   display: inline-block;
   opacity: 0;
-  transform: translateY(0.2em) translateX(0.1em);
+  transform: translateY(0.2em);
   animation-duration: 1.2s;
   animation-name: stutter;
   animation-iteration-count: infinite;
 }
 
+.IODemo {
+  margin-top: 70px;
+  margin-bottom: 50px;
+  display: flow-root;
+}
+
+.IODemo .hljs-comment {
+  color: var(--primary-color);
+}
+
+.IODemo-in {
+  float: left;
+  width: 50%;
+}
+
+.IODemo-in > pre {
+  border-right: .5px solid gray;
+  border-style: dashed;
+}
+
+.IODemo-out {
+  float: left;
+  width: 50%;
+}
+
+.IODemo-out > pre {
+  border-left: .5px solid gray;
+  border-style: dashed;
+}
+
 @keyframes stutter {
   0% {opacity: 0 }
-  1% {opacity: 1 }
+  0.1% {opacity: 1 }
   50% { opacity: 1 }
-  51% { opacity: 0 }
-  100% { opacity: 0 }
+  50.1% { opacity: 0 }
 }
 
 @media only screen and (min-device-width: 360px) and (max-device-width: 736px) {
@@ -50,7 +79,7 @@
     flex-direction: column;
   }
 
-  .mainContainer {
+  .mainContainer .cliDemoSection {
     display: none;
   }
 }

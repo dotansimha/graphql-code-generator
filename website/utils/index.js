@@ -2,6 +2,39 @@ const React = require('react')
 
 const validations = exports.validations = require('./validations')
 
+// Will use the shortest indention as an axis
+const freeText = exports.freeText = (text) => {
+  if (text instanceof Array) {
+    text = text.join('')
+  }
+
+  // This will allow inline text generation with external functions, same as ctrl+shift+c
+  // As long as we surround the inline text with ==>text<==
+  text = text.replace(
+    /( *)==>((?:.|\n)*?)<==/g,
+    (match, baseIndent, content) =>
+  {
+    return content
+      .split('\n')
+      .map(line => `${baseIndent}${line}`)
+      .join('\n')
+  })
+
+  const lines = text.split('\n')
+
+  const minIndent = lines.filter(line => line.trim()).reduce((minIndent, line) => {
+    const currIndent = line.match(/^ */)[0].length
+
+    return currIndent < minIndent ? currIndent : minIndent
+  }, Infinity)
+
+  return lines
+    .map(line => line.slice(minIndent))
+    .join('\n')
+    .trim()
+    .replace(/\n +\n/g, '\n\n')
+}
+
 // foo_barBaz -> ['foo', 'bar', 'Baz']
 const splitWords = exports.splitWords = (str) => {
   return str
