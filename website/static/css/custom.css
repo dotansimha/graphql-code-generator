@@ -186,6 +186,10 @@ textarea, input {
   float: left;
 }
 
+.headerTitleWithLogo {
+  font-weight: 500;
+}
+
 .Button {
   background-color: transparent;
   cursor: pointer;
