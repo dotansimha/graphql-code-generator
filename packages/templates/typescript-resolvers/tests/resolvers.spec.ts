@@ -144,6 +144,43 @@ describe('Resolvers', () => {
       `);
   });
 
+  it('should provide a generic type of arguments in noNamespaces', async () => {
+    const { context } = compileAndBuildContext(`
+        type Query {
+          fieldTest(last: Int!, sort: String): String
+        }
+        
+        schema {
+          query: Query
+        }
+      `);
+
+    const compiled = await compileTemplate(
+      {
+        ...config,
+        config: {
+          noNamespaces: true
+        }
+      },
+      context
+    );
+
+    const content = compiled[0].content;
+
+    expect(content).toBeSimilarStringTo(`
+      export interface QueryResolvers<Context = any, TypeParent = never> {
+        fieldTest?: QueryFieldTestResolver<string | null, TypeParent, Context>;
+      }
+    
+      export type QueryFieldTestResolver<R = string | null, Parent = never, Context = any> = Resolver<R, Parent, Context, QueryFieldTestArgs>;
+          
+      export interface QueryFieldTestArgs {
+        last: number;
+        sort?: string | null;
+      }
+    `);
+  });
+
   it('should handle subscription', async () => {
     const { context } = compileAndBuildContext(`
         type Subscription {

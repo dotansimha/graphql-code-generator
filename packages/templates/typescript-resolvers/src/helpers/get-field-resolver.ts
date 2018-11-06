@@ -3,13 +3,12 @@ import { Field, Type, toPascalCase } from 'graphql-codegen-core';
 import { GraphQLSchema } from 'graphql';
 
 export function getFieldResolver(field: Field, type: Type, options: Handlebars.HelperOptions) {
-  const config = options.data.root.config || {};
   if (!field) {
     return '';
   }
 
-  let result;
   let resolver: string;
+  const config = options.data.root.config || {};
   const schema: GraphQLSchema = options.data.root.rawSchema;
   const subscriptionType = schema.getSubscriptionType();
   const isSubscription = subscriptionType && subscriptionType.name === type.name;
@@ -20,11 +19,13 @@ export function getFieldResolver(field: Field, type: Type, options: Handlebars.H
     resolver = 'Resolver';
   }
 
-  if (field.hasArguments && !config.noNamespaces) {
-    result = `${resolver}<R, Parent, Context, ${toPascalCase(field.name)}Args>`;
-  } else {
-    result = `${resolver}<R, Parent, Context>`;
+  const generics: string[] = ['R', 'Parent', 'Context'];
+
+  if (field.hasArguments) {
+    const prefix = config.noNamespaces ? toPascalCase(type.name) : '';
+
+    generics.push(`${prefix}${toPascalCase(field.name)}Args`);
   }
 
-  return new SafeString(result);
+  return new SafeString(`${resolver}<${generics.join(', ')}>`);
 }
