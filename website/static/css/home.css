@@ -38,7 +38,7 @@
 
 .IODemo {
   margin-top: 70px;
-  margin-bottom: 50px;
+  margin-bottom: 100px;
   display: flow-root;
 }
 
@@ -66,8 +66,40 @@
   border-style: dashed;
 }
 
+.FeatureCards {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin-bottom: 30px;
+}
+
+.FeatureCard {
+  width: 200px;
+  text-align: center;
+}
+
+.FeatureCard object {
+  height: 100px;
+  width: 100px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: white;
+  border: 4px solid var(--primary-color);
+  padding: 4px;
+  border-radius: 50%;
+}
+
+.FeatureCard div {
+  margin-top: 20px;
+  color: #677897;
+  font-size: 1.05em;
+  text-align: justify;
+  font-size: 1.1em;
+}
+
 @keyframes stutter {
-  0% {opacity: 0 }
+  0% { opacity: 0 }
   0.1% {opacity: 1 }
   50% { opacity: 1 }
   50.1% { opacity: 0 }
@@ -81,5 +113,17 @@
 
   .mainContainer .cliDemoSection {
     display: none;
+  }
+
+  .FeatureCards {
+    flex-direction: column;
+  }
+
+  .FeatureCard {
+    width: calc(100% - 60px);
+    margin-left: 30px;
+    margin-top: 20px;
+    margin-bottom: 50px;
+    font-size: 1em;
   }
 }

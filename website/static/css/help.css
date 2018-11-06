@@ -2,10 +2,11 @@
   margin-top: 50px;
   text-align: justify;
   font-size: 34px;
-  color: #243265;
+  color: #677897;
 }
 
 .helpSubtitle {
+  text-align: justify;
   margin-top: 20px;
   font-size: 16px;
   color: #677897;
@@ -28,7 +29,7 @@
   text-transform: uppercase;
   font-size: 24px;
   text-align: center;
-  color: #243265;
+  color: #677897;
   background-color: white;
 }
 

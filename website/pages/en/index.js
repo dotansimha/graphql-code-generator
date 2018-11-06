@@ -15,6 +15,7 @@ const GridBlock = CompLibrary.GridBlock
 
 const siteConfig = require(`${process.cwd()}/siteConfig.js`)
 const IODemo = require(`${process.cwd()}/core/home/IODemo`)
+const FeatureCards = require(`${process.cwd()}/core/home/FeatureCards`)
 
 function imgUrl(img) {
   return `${siteConfig.baseUrl}img/${img}`
@@ -112,6 +113,7 @@ class Index extends React.Component {
         <HomeSplash language={language} />
         <div className="mainContainer">
           <CLIDemo />
+          <FeatureCards />
         </div>
       </div>
     )
