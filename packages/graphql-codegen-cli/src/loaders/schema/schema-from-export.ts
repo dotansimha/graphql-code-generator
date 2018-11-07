@@ -6,7 +6,7 @@ import { buildASTSchema, buildClientSchema, DocumentNode, GraphQLSchema, Introsp
 import { debugLog } from 'graphql-codegen-core';
 import { SchemaLoader } from './schema-loader';
 import { CLIOptions } from '../../cli-options';
-import spinner from '../../spinner';
+import { getSpinner } from '../../spinner';
 import { DetailedError } from '../../errors';
 
 export class SchemaFromExport implements SchemaLoader {
@@ -17,7 +17,7 @@ export class SchemaFromExport implements SchemaLoader {
   }
 
   handle(file: string, _cliOptions: CLIOptions): Promise<GraphQLSchema> {
-    spinner.info(
+    getSpinner().info(
       `Loading GraphQL schema object, text, ast, or introspection json from JavaScript ES6 export: ${file}...`
     );
 

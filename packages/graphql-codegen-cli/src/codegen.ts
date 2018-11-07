@@ -28,7 +28,7 @@ import { makeExecutableSchema } from 'graphql-tools';
 import { SchemaTemplateContext } from 'graphql-codegen-core/dist/types';
 import { loadSchema, loadDocuments } from './load';
 import { DetailedError } from './errors';
-import spinner from './spinner';
+import { disableSpinner, getSpinner } from './spinner';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
@@ -89,7 +89,7 @@ export const initCLI = (args: any): CLIOptions => {
 };
 
 export const cliError = (err: any, exitOnError = true) => {
-  spinner.fail();
+  getSpinner().fail();
   let msg: string;
 
   if (err instanceof Error) {
@@ -112,6 +112,7 @@ export const cliError = (err: any, exitOnError = true) => {
 export const validateCliOptions = (options: CLIOptions) => {
   if (options.silent) {
     setSilentLogger();
+    disableSpinner();
   } else {
     useWinstonLogger();
   }
@@ -175,7 +176,7 @@ export const validateCliOptions = (options: CLIOptions) => {
 };
 
 export const executeWithOptions = async (options: CLIOptions & { [key: string]: any }): Promise<FileOutput[]> => {
-  spinner.start('Validating options');
+  getSpinner().start('Validating options');
   validateCliOptions(options);
 
   const schema = options.schema;
@@ -195,7 +196,7 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
   let templateConfig: GeneratorConfig | CustomProcessingFunction | null = null;
 
   if (template && template !== '') {
-    spinner.log(`Loading template: ${template}`);
+    getSpinner().log(`Loading template: ${template}`);
     debugLog(`[executeWithOptions] using template: ${template}`);
 
     // Backward compatibility for older versions
@@ -205,12 +206,12 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
       template === 'typescript' ||
       template === 'typescript-single'
     ) {
-      spinner.warn(
+      getSpinner().warn(
         `You are using the old template name, please install it from NPM and use it by it's new name: "graphql-codegen-typescript-template"`
       );
       template = 'graphql-codegen-typescript-template';
     } else if (template === 'ts-multiple' || template === 'typescript-multiple') {
-      spinner.warn(
+      getSpinner().warn(
         `You are using the old template name, please install it from NPM and use it by it's new name: "graphql-codegen-typescript-template-multiple"`
       );
       template = 'graphql-codegen-typescript-template-multiple';
@@ -227,7 +228,7 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
       }
 
       templateConfig = templateFromExport.default || templateFromExport.config || templateFromExport;
-      spinner.succeed();
+      getSpinner().succeed();
     } catch (e) {
       throw new DetailedError(`
 
@@ -259,7 +260,7 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
   }
 
   if (project && project !== '') {
-    spinner.log(`Using project: ${project}`);
+    getSpinner().log(`Using project: ${project}`);
     if (config === null) {
       throw new DetailedError(
         `
@@ -310,7 +311,7 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
       customHelpers: resolvedHelpers
     };
   }
-  spinner.succeed();
+  getSpinner().succeed();
 
   const relevantEnvVars = Object.keys(process.env)
     .filter(name => name.startsWith('CODEGEN_'))
@@ -348,15 +349,15 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
     };
 
     if (templateConfig.deprecationNote) {
-      spinner.warn(`Template ${template} is deprecated: ${templateConfig.deprecationNote}`);
+      getSpinner().warn(`Template ${template} is deprecated: ${templateConfig.deprecationNote}`);
     }
 
     if (templateConfig.addToSchema) {
       const asArray = Array.isArray(templateConfig.addToSchema)
         ? templateConfig.addToSchema
         : [templateConfig.addToSchema];
-      addToSchema = asArray.map(
-        (extension: string | DocumentNode) => (typeof extension === 'string' ? parse(extension) : extension)
+      addToSchema = asArray.map((extension: string | DocumentNode) =>
+        typeof extension === 'string' ? parse(extension) : extension
       );
     }
 
@@ -378,10 +379,10 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
     const schemas: (GraphQLSchema | Promise<GraphQLSchema>)[] = [];
 
     try {
-      spinner.log('Loading remote schema');
+      getSpinner().log('Loading remote schema');
       debugLog(`[executeWithOptions] Schema is being loaded `);
       schemas.push(loadSchema(schema, options));
-      spinner.succeed();
+      getSpinner().succeed();
     } catch (e) {
       debugLog(`[executeWithOptions] Failed to load schema`, e);
       cliError(`
@@ -408,11 +409,11 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
     }
 
     if (clientSchema) {
-      spinner.log('Loading client schema');
+      getSpinner().log('Loading client schema');
       try {
         debugLog(`[executeWithOptions] Client Schema is being loaded `);
         schemas.push(loadSchema(clientSchema, options));
-        spinner.succeed();
+        getSpinner().succeed();
       } catch (e) {
         debugLog(`[executeWithOptions] Failed to load client schema`, e);
         cliError(`
@@ -468,7 +469,7 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
     const hasDocuments = documents.length;
 
     if (hasDocuments) {
-      spinner.log('Loading documents');
+      getSpinner().log('Loading documents');
     }
 
     const documentsFiles = await loadDocuments(documents);
@@ -509,10 +510,10 @@ export const executeWithOptions = async (options: CLIOptions & { [key: string]: 
     const transformedDocuments = transformDocumentsFiles(graphQlSchema, documentsFiles);
 
     if (hasDocuments) {
-      spinner.succeed();
+      getSpinner().succeed();
     }
 
-    spinner.log(`Compiling template: ${template}`);
+    getSpinner().log(`Compiling template: ${template}`);
 
     try {
       return compileTemplate(templateConfig, context, [transformedDocuments], {
