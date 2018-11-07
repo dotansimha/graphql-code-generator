@@ -184,3 +184,22 @@
     text-align: justify;
   }
 }
+
+@media only screen and (min-device-width: 737px) {
+  .FeatureCards-details {
+    float: left;
+  }
+
+  .FeatureCards-cards {
+    width: calc(100% - 500px);
+    padding-left: 100px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    justify-content: space-between;
+    float: right;
+  }
+
+  .FeatureCard {
+    margin: 50px;
+  }
+}
