@@ -2,15 +2,12 @@ import { FileOutput, GraphQLSchema, DocumentFile, Types, CodegenPlugin } from 'g
 import { mergeSchemas as remoteMergeSchemas, makeExecutableSchema } from 'graphql-tools';
 import * as Listr from 'listr';
 import { normalizeOutputParam, normalizeInstanceOrArray, normalizeConfig } from './helpers';
-import { IntrospectionFromUrlLoader } from './loaders/schema/introspection-from-url';
-import { IntrospectionFromFileLoader } from './loaders/schema/introspection-from-file';
-import { SchemaFromTypedefs } from './loaders/schema/schema-from-typedefs';
-import { SchemaFromExport } from './loaders/schema/schema-from-export';
 import { documentsFromGlobs } from './utils/documents-glob';
 import { loadDocumentsSources } from './loaders/documents/document-loader';
 import { validateGraphQlDocuments, checkValidationErrors } from './loaders/documents/validate-documents';
 import { prettify } from './utils/prettier';
 import { Renderer } from './utils/listr-renderer';
+import { loadSchema } from './load';
 
 export interface GenerateOutputOptions {
   filename: string;
@@ -28,33 +25,6 @@ export interface ExecutePluginOptions {
   outputFilename: string;
   allPlugins: Types.ConfiguredPlugin[];
 }
-
-const schemaHandlers = [
-  new IntrospectionFromUrlLoader(),
-  new IntrospectionFromFileLoader(),
-  new SchemaFromTypedefs(),
-  new SchemaFromExport()
-];
-
-const loadSchema = async (schemaDef: Types.Schema, config: Types.Config): Promise<GraphQLSchema> => {
-  for (const handler of schemaHandlers) {
-    let pointToSchema: string = null;
-    let options: any = {};
-
-    if (typeof schemaDef === 'string') {
-      pointToSchema = schemaDef as string;
-    } else if (typeof schemaDef === 'object') {
-      pointToSchema = Object.keys(schemaDef)[0];
-      options = schemaDef[pointToSchema];
-    }
-
-    if (await handler.canHandle(pointToSchema)) {
-      return handler.handle(pointToSchema, config, options);
-    }
-  }
-
-  throw new Error(`Could not handle schema: ${schemaDef}`);
-};
 
 async function mergeSchemas(schemas: GraphQLSchema[]): Promise<GraphQLSchema> {
   if (schemas.length === 0) {
