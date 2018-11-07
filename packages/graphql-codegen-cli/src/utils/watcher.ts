@@ -2,7 +2,7 @@ import { executeCodegen } from '../codegen';
 import { FileOutput, getLogger, Types } from 'graphql-codegen-core';
 import * as watchman from 'fb-watchman';
 import * as pify from 'pify';
-import { normalizeInstanceOrArray } from '../helpers';
+import { normalizeInstanceOrArray, normalizeOutputParam } from '../helpers';
 import isValidPath = require('is-valid-path');
 import * as isGlob from 'is-glob';
 
@@ -13,10 +13,16 @@ const getMatch = (doc: string) => {
 
 export const createWatcher = (config: Types.Config, onNext: (result: FileOutput[]) => Promise<FileOutput[]>) => {
   const files: string[] = [];
-  // TODO: add nested documents
   const documents = normalizeInstanceOrArray(config.documents);
-  // TODO: add nested schemas
   const schemas = normalizeInstanceOrArray<Types.Schema>(config.schema);
+
+  // Add schemas and documents from "generates"
+  Object.keys(config.generates)
+    .map(filename => normalizeOutputParam(config.generates[filename]))
+    .forEach(conf => {
+      schemas.push(...normalizeInstanceOrArray<Types.Schema>(conf.schema));
+      documents.push(...normalizeInstanceOrArray<Types.OperationDocument>(conf.documents));
+    });
 
   if (documents) {
     files.push(...documents);
