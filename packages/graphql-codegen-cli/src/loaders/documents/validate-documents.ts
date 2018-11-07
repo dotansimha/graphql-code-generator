@@ -1,6 +1,6 @@
 import { validate, GraphQLSchema, GraphQLError, specifiedRules } from 'graphql';
 import { DocumentFile } from 'graphql-codegen-core';
-import { cliError } from '../../utils/cli-error';
+import { DetailedError } from '../../errors';
 
 const rulesToIgnore = ['KnownFragmentNames', 'NoUnusedFragments', 'NoUnusedVariables', 'KnownDirectives'];
 const effectiveRules = specifiedRules.filter((f: Function) => !rulesToIgnore.includes(f.name));
@@ -21,7 +21,7 @@ export const validateGraphQlDocuments = (
     }))
     .filter(r => r.errors.length > 0);
 
-export function checkValidationErrors(loadDocumentErrors: ReadonlyArray<LoadDocumentError>, exitOnError = true): void {
+export function checkValidationErrors(loadDocumentErrors: ReadonlyArray<LoadDocumentError>): void | never {
   if (loadDocumentErrors.length > 0) {
     const errors: string[] = [];
     let errorCount = 0;
@@ -36,15 +36,15 @@ export function checkValidationErrors(loadDocumentErrors: ReadonlyArray<LoadDocu
       }
     }
 
-    cliError(
+    throw new DetailedError(
+      `Found ${errorCount} errors in your documents`,
       `
-        Found ${errorCount} errors.
-        GraphQL Code Generator validated your GraphQL documents against the schema.
-        Please fix following errors and run codegen again:
-        ${errors.join('')}
+      Found ${errorCount} errors.
+      GraphQL Code Generator validated your GraphQL documents against the schema.
+      Please fix following errors and run codegen again:
+      ${errors.join('')}
 
-      `,
-      exitOnError
+    `
     );
   }
 }

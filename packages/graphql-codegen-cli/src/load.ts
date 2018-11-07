@@ -21,7 +21,9 @@ export async function loadSchema(pointToSchema: string, options: CLIOptions & { 
     }
   }
 
-  throw new DetailedError(`
+  throw new DetailedError(
+    'Failed to load schema',
+    `
     Failed to load schema from ${pointToSchema}.
 
     GraphQL Code Generator supports:
@@ -32,7 +34,8 @@ export async function loadSchema(pointToSchema: string, options: CLIOptions & { 
 
     Try to use one of above options and run codegen again.
 
-  `);
+  `
+  );
 }
 
 export async function loadDocuments(documents: string[]) {

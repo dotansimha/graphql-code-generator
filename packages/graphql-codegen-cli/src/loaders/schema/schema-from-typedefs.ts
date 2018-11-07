@@ -21,7 +21,9 @@ export class SchemaFromTypedefs implements SchemaLoader {
     const globFiles = glob.sync(globPath, { cwd: process.cwd() });
 
     if (!globFiles || globFiles.length === 0) {
-      throw new DetailedError(`
+      throw new DetailedError(
+        'Unable to find matching files',
+        `
       
         Unable to find matching files for glob: ${globPath}
 
@@ -38,7 +40,8 @@ export class SchemaFromTypedefs implements SchemaLoader {
             ...
           });
 
-      `);
+      `
+      );
     }
 
     let mergeLogic = <T = any>(arr: T[]) => arr;
@@ -48,7 +51,9 @@ export class SchemaFromTypedefs implements SchemaLoader {
       const mergeModuleName = patternArr[0];
       const mergeFunctionName = patternArr[1];
       if (!mergeModuleName || !mergeFunctionName) {
-        throw new DetailedError(`
+        throw new DetailedError(
+          `You have to specify your merge logic with 'mergeSchema' option`,
+          `
 
           You have to specify your merge logic with 'mergeSchema' option.
 
@@ -71,13 +76,16 @@ export class SchemaFromTypedefs implements SchemaLoader {
               ...
             });
 
-        `);
+        `
+        );
       }
       const localFilePath = path.resolve(process.cwd(), mergeModuleName);
       const localFileExists = fs.existsSync(localFilePath);
       const mergeModule = require(localFileExists ? localFilePath : mergeModuleName);
       if (!(mergeFunctionName in mergeModule)) {
-        throw new DetailedError(`
+        throw new DetailedError(
+          `Provided function couldn't be found`,
+          `
         
           Provided ${mergeFunctionName} function couldn't be found in ${mergeModule}
 
@@ -85,7 +93,8 @@ export class SchemaFromTypedefs implements SchemaLoader {
 
             export const ${mergeFunctionName} ...
 
-        `);
+        `
+        );
       }
       mergeLogic = mergeModule[mergeFunctionName];
     }
