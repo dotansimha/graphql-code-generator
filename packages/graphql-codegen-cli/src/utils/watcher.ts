@@ -70,7 +70,7 @@ export const createWatcher = (config: Types.Config, onNext: (result: FileOutput[
     // it doesn't matter what has changed, need to run whole process anyway
     client.on('subscription', () => {
       if (!isShutdown) {
-        executeCodegen(config).then(onNext);
+        executeCodegen(config).then(onNext, () => Promise.resolve());
       }
     });
 
