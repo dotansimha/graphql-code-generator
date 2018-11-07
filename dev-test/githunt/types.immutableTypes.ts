@@ -279,7 +279,7 @@ export namespace CurrentUserForProfile {
   };
 }
 
-export namespace Feed {
+export namespace GetFeed {
   export type Variables = {
     readonly type: FeedType;
     readonly offset?: number | null;

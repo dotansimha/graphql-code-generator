@@ -32,9 +32,9 @@ declare module '*/current-user.query.graphql' {
 declare module '*/feed.query.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
-  const Feed: DocumentNode;
+  const GetFeed: DocumentNode;
 
-  export { Feed };
+  export { GetFeed };
 
   export default defaultDocument;
 }

@@ -279,7 +279,7 @@ export namespace CurrentUserForProfile {
   };
 }
 
-export namespace Feed {
+export namespace GetFeed {
   export type Variables = {
     type: FeedType;
     offset?: number | null;
@@ -640,9 +640,9 @@ export namespace CurrentUserForProfile {
     return ReactApollo.graphql<TProps, Query, Variables>(Document, operationOptions);
   }
 }
-export namespace Feed {
+export namespace GetFeed {
   export const Document = gql`
-    query Feed($type: FeedType!, $offset: Int, $limit: Int) {
+    query GetFeed($type: FeedType!, $offset: Int, $limit: Int) {
       currentUser {
         login
       }
