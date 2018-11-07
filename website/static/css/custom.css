@@ -322,11 +322,15 @@ svg {
   .nav-site-internal {
     margin: 0 !important;
     float: right;
-    width: calc(100% - 200px) !important;
+    width: calc(100% - 220px) !important;
   }
 
   .navigationSlider a {
     background-color: #f6f8f9;
+  }
+
+  .navigationSlider .slidingNav ul {
+    background-color: unset !important;
   }
 }
 
