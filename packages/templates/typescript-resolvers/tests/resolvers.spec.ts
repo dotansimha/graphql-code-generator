@@ -50,7 +50,7 @@ describe('Resolvers', () => {
         args: Args,
         context: Context,
         info: GraphQLResolveInfo
-      ): AsyncIterator<R | Result>;
+      ): AsyncIterator<R | Result> | Promise<AsyncIterator<R | Result>>;
       resolve?<R = Result, P = Parent>(
         parent: P,
         args: Args,
