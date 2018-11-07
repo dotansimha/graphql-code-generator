@@ -440,3 +440,326 @@ export type VoteButtonsVote = {
 
   vote_value: number;
 };
+
+import * as ReactApollo from 'react-apollo';
+import * as React from 'react';
+
+import gql from 'graphql-tag';
+
+// ====================================================
+// Fragments
+// ====================================================
+
+export const CommentsPageCommentFragmentDoc = gql`
+  fragment CommentsPageComment on Comment {
+    id
+    postedBy {
+      login
+      html_url
+    }
+    createdAt
+    content
+  }
+`;
+
+export const VoteButtonsFragmentDoc = gql`
+  fragment VoteButtons on Entry {
+    score
+    vote {
+      vote_value
+    }
+  }
+`;
+
+export const RepoInfoFragmentDoc = gql`
+  fragment RepoInfo on Entry {
+    createdAt
+    repository {
+      description
+      stargazers_count
+      open_issues_count
+    }
+    postedBy {
+      html_url
+      login
+    }
+  }
+`;
+
+export const FeedEntryFragmentDoc = gql`
+  fragment FeedEntry on Entry {
+    id
+    commentCount
+    repository {
+      full_name
+      html_url
+      owner {
+        avatar_url
+      }
+    }
+    ...VoteButtons
+    ...RepoInfo
+  }
+
+  ${VoteButtonsFragmentDoc}
+  ${RepoInfoFragmentDoc}
+`;
+
+// ====================================================
+// Components
+// ====================================================
+
+export const OnCommentAddedDocument = gql`
+  subscription onCommentAdded($repoFullName: String!) {
+    commentAdded(repoFullName: $repoFullName) {
+      id
+      postedBy {
+        login
+        html_url
+      }
+      createdAt
+      content
+    }
+  }
+`;
+export class OnCommentAddedComponent extends React.Component<
+  Partial<ReactApollo.SubscriptionProps<OnCommentAddedSubscription, OnCommentAddedVariables>>
+> {
+  render() {
+    return (
+      <ReactApollo.Subscription<OnCommentAddedSubscription, OnCommentAddedVariables>
+        subscription={OnCommentAddedDocument}
+        {...(this as any)['props'] as any}
+      />
+    );
+  }
+}
+export function OnCommentAddedHOC<TProps = any>(
+  operationOptions:
+    | ReactApollo.OperationOption<
+        TProps,
+        OnCommentAddedSubscription,
+        OnCommentAddedVariables,
+        Partial<ReactApollo.DataProps<OnCommentAddedSubscription, OnCommentAddedVariables>>
+      >
+    | undefined
+) {
+  return ReactApollo.graphql<TProps, OnCommentAddedSubscription, OnCommentAddedVariables>(
+    OnCommentAddedDocument,
+    operationOptions
+  );
+}
+export const CommentDocument = gql`
+  query Comment($repoFullName: String!, $limit: Int, $offset: Int) {
+    currentUser {
+      login
+      html_url
+    }
+    entry(repoFullName: $repoFullName) {
+      id
+      postedBy {
+        login
+        html_url
+      }
+      createdAt
+      comments(limit: $limit, offset: $offset) {
+        ...CommentsPageComment
+      }
+      commentCount
+      repository {
+        full_name
+        html_url
+        ... on Repository {
+          description
+          open_issues_count
+          stargazers_count
+        }
+      }
+    }
+  }
+
+  ${CommentsPageCommentFragmentDoc}
+`;
+export class CommentComponent extends React.Component<Partial<ReactApollo.QueryProps<CommentQuery, CommentVariables>>> {
+  render() {
+    return (
+      <ReactApollo.Query<CommentQuery, CommentVariables> query={CommentDocument} {...(this as any)['props'] as any} />
+    );
+  }
+}
+export function CommentHOC<TProps = any>(
+  operationOptions:
+    | ReactApollo.OperationOption<
+        TProps,
+        CommentQuery,
+        CommentVariables,
+        Partial<ReactApollo.DataProps<CommentQuery, CommentVariables>>
+      >
+    | undefined
+) {
+  return ReactApollo.graphql<TProps, CommentQuery, CommentVariables>(CommentDocument, operationOptions);
+}
+export const CurrentUserForProfileDocument = gql`
+  query CurrentUserForProfile {
+    currentUser {
+      login
+      avatar_url
+    }
+  }
+`;
+export class CurrentUserForProfileComponent extends React.Component<
+  Partial<ReactApollo.QueryProps<CurrentUserForProfileQuery, CurrentUserForProfileVariables>>
+> {
+  render() {
+    return (
+      <ReactApollo.Query<CurrentUserForProfileQuery, CurrentUserForProfileVariables>
+        query={CurrentUserForProfileDocument}
+        {...(this as any)['props'] as any}
+      />
+    );
+  }
+}
+export function CurrentUserForProfileHOC<TProps = any>(
+  operationOptions:
+    | ReactApollo.OperationOption<
+        TProps,
+        CurrentUserForProfileQuery,
+        CurrentUserForProfileVariables,
+        Partial<ReactApollo.DataProps<CurrentUserForProfileQuery, CurrentUserForProfileVariables>>
+      >
+    | undefined
+) {
+  return ReactApollo.graphql<TProps, CurrentUserForProfileQuery, CurrentUserForProfileVariables>(
+    CurrentUserForProfileDocument,
+    operationOptions
+  );
+}
+export const FeedDocument = gql`
+  query Feed($type: FeedType!, $offset: Int, $limit: Int) {
+    currentUser {
+      login
+    }
+    feed(type: $type, offset: $offset, limit: $limit) {
+      ...FeedEntry
+    }
+  }
+
+  ${FeedEntryFragmentDoc}
+`;
+export class FeedComponent extends React.Component<Partial<ReactApollo.QueryProps<FeedQuery, FeedVariables>>> {
+  render() {
+    return <ReactApollo.Query<FeedQuery, FeedVariables> query={FeedDocument} {...(this as any)['props'] as any} />;
+  }
+}
+export function FeedHOC<TProps = any>(
+  operationOptions:
+    | ReactApollo.OperationOption<
+        TProps,
+        FeedQuery,
+        FeedVariables,
+        Partial<ReactApollo.DataProps<FeedQuery, FeedVariables>>
+      >
+    | undefined
+) {
+  return ReactApollo.graphql<TProps, FeedQuery, FeedVariables>(FeedDocument, operationOptions);
+}
+export const SubmitRepositoryDocument = gql`
+  mutation submitRepository($repoFullName: String!) {
+    submitRepository(repoFullName: $repoFullName) {
+      createdAt
+    }
+  }
+`;
+export class SubmitRepositoryComponent extends React.Component<
+  Partial<ReactApollo.MutationProps<SubmitRepositoryMutation, SubmitRepositoryVariables>>
+> {
+  render() {
+    return (
+      <ReactApollo.Mutation<SubmitRepositoryMutation, SubmitRepositoryVariables>
+        mutation={SubmitRepositoryDocument}
+        {...(this as any)['props'] as any}
+      />
+    );
+  }
+}
+export function SubmitRepositoryHOC<TProps = any>(
+  operationOptions:
+    | ReactApollo.OperationOption<
+        TProps,
+        SubmitRepositoryMutation,
+        SubmitRepositoryVariables,
+        Partial<ReactApollo.MutateProps<SubmitRepositoryMutation, SubmitRepositoryVariables>>
+      >
+    | undefined
+) {
+  return ReactApollo.graphql<TProps, SubmitRepositoryMutation, SubmitRepositoryVariables>(
+    SubmitRepositoryDocument,
+    operationOptions
+  );
+}
+export const SubmitCommentDocument = gql`
+  mutation submitComment($repoFullName: String!, $commentContent: String!) {
+    submitComment(repoFullName: $repoFullName, commentContent: $commentContent) {
+      ...CommentsPageComment
+    }
+  }
+
+  ${CommentsPageCommentFragmentDoc}
+`;
+export class SubmitCommentComponent extends React.Component<
+  Partial<ReactApollo.MutationProps<SubmitCommentMutation, SubmitCommentVariables>>
+> {
+  render() {
+    return (
+      <ReactApollo.Mutation<SubmitCommentMutation, SubmitCommentVariables>
+        mutation={SubmitCommentDocument}
+        {...(this as any)['props'] as any}
+      />
+    );
+  }
+}
+export function SubmitCommentHOC<TProps = any>(
+  operationOptions:
+    | ReactApollo.OperationOption<
+        TProps,
+        SubmitCommentMutation,
+        SubmitCommentVariables,
+        Partial<ReactApollo.MutateProps<SubmitCommentMutation, SubmitCommentVariables>>
+      >
+    | undefined
+) {
+  return ReactApollo.graphql<TProps, SubmitCommentMutation, SubmitCommentVariables>(
+    SubmitCommentDocument,
+    operationOptions
+  );
+}
+export const VoteDocument = gql`
+  mutation vote($repoFullName: String!, $type: VoteType!) {
+    vote(repoFullName: $repoFullName, type: $type) {
+      score
+      id
+      vote {
+        vote_value
+      }
+    }
+  }
+`;
+export class VoteComponent extends React.Component<Partial<ReactApollo.MutationProps<VoteMutation, VoteVariables>>> {
+  render() {
+    return (
+      <ReactApollo.Mutation<VoteMutation, VoteVariables> mutation={VoteDocument} {...(this as any)['props'] as any} />
+    );
+  }
+}
+export function VoteHOC<TProps = any>(
+  operationOptions:
+    | ReactApollo.OperationOption<
+        TProps,
+        VoteMutation,
+        VoteVariables,
+        Partial<ReactApollo.MutateProps<VoteMutation, VoteVariables>>
+      >
+    | undefined
+) {
+  return ReactApollo.graphql<TProps, VoteMutation, VoteVariables>(VoteDocument, operationOptions);
+}
