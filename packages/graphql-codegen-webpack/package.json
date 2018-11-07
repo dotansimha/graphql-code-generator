@@ -68,7 +68,7 @@
     "graphql-code-generator": "0.13.0"
   },
   "devDependencies": {
-    "@types/webpack": "4.4.17"
+    "@types/webpack": "4.4.18"
   },
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts",
