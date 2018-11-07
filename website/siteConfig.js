@@ -92,8 +92,8 @@ const siteConfig = {
   cleanUrl: true,
 
   // Open Graph and Twitter card images.
-  ogImage: 'img/gql-codegen-cover.svg',
-  twitterImage: 'img/gql-codegen-cover.svg',
+  ogImage: 'img/gql-codegen-cover.png',
+  twitterImage: 'img/gql-codegen-cover.png',
 
   // You may provide arbitrary config keys to be used as needed by your
   // template. For example, if you need your repo's URL...
