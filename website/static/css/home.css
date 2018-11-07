@@ -1,3 +1,7 @@
+.homeContainer {
+  background-color: #f6f8f9;
+}
+
 .homeContainer .projectTitle img {
   width: 100%;
   max-width: 512px;

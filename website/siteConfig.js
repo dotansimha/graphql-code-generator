@@ -50,7 +50,7 @@ const siteConfig = {
   users,
 
   /* path to images for header/footer */
-  headerIcon: 'img/gql-codegen-icon.svg',
+  headerIcon: 'img/gql-codegen-horizontal.svg',
   footerIcon: 'img/gql-codegen-logo.svg',
   favicon: 'img/favicon.png',
 

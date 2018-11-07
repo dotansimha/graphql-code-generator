@@ -144,26 +144,28 @@ textarea, input {
   font: inherit;
 }
 
+svg {
+  font-family: "Montserrat", sans-serif;
+}
+
 #footer {
   pointer-events: auto;
   padding-top: 16px !important;
   padding-bottom: 8px !important;
   display: flex;
   justify-content: space-around;
+  background-color: white;
+  background-color: #f6f8f9;
 }
 
 #footer img {
   width: auto;
 }
 
-#footer .nav-footer {
-  background-color: #13114a;
-}
-
 #footer .navCopyright {
   font-family: "Montserrat";
   font-size: 14px;
-  color: #b0b7dd;
+  color: var(--secondary-text-color);
 }
 
 #footer .navMenu {
@@ -172,11 +174,48 @@ textarea, input {
 
 #footer .navMenu > * {
   margin-left: 25px;
-  font-family: "Montserrat";
   font-size: 16px;
   font-weight: 500;
   line-height: 1.64;
-  color: #ffffff;
+  color: var(--primary-text-color);
+}
+
+.fixedHeaderContainer {
+  padding-top: 25px;
+  padding-bottom: 25px;
+  z-index: 99;
+  position: relative;
+}
+
+.navPusher {
+  padding-top: 0;
+  position: static;
+}
+
+.fixedHeaderContainer {
+  background-color: #f6f8f9;
+}
+
+.fixedHeaderContainer a {
+  color: var(--primary-text-color) !important;
+}
+
+.nav-site-internal a:hover {
+  background-color: #f6f8f9 !important;
+}
+
+.nav-site-internal .siteNavItemActive a {
+  color: var(--primary-color) !important;
+  background-color: #f6f8f9 !important;
+}
+
+.nav-site-internal .siteNavGroupActive a {
+  color: var(--primary-color) !important;
+  background-color: #f6f8f9 !important;
+}
+
+.headerTitleWithLogo {
+  display: none !important;
 }
 
 .mainContainer .docs-next {
@@ -186,10 +225,6 @@ textarea, input {
 
 .mainContainer .docs-prev {
   float: left;
-}
-
-.headerTitleWithLogo {
-  font-weight: 500;
 }
 
 .Button {
@@ -260,6 +295,38 @@ textarea, input {
 
   #footer .navCopyright > span:first-child {
     display: none;
+  }
+
+  header {
+    position: static !important;
+  }
+
+  header .navigationSlider {
+    position: static;
+  }
+
+  header .slidingNav {
+    position: absolute !important;
+  }
+
+  .docsNavContainer {
+    position: absolute;
+  }
+
+  .fixedHeaderContainer {
+    padding: 0;
+    padding-top: 8px;
+    background-color: #f6f8f9;
+  }
+
+  .nav-site-internal {
+    margin: 0 !important;
+    float: right;
+    width: calc(100% - 200px) !important;
+  }
+
+  .navigationSlider a {
+    background-color: #f6f8f9;
   }
 }
 
