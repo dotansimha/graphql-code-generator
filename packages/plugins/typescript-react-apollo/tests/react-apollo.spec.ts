@@ -102,7 +102,7 @@ describe('Components', () => {
           return (
               <ReactApollo.Query<Query, Variables>
               query={ Document }
-              {...this['props'] as any}
+              {...(this as any)['props'] as any}
                           />
                 );
               }
