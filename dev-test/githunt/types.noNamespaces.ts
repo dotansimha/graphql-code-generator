@@ -273,27 +273,27 @@ export type CurrentUserForProfileCurrentUser = {
   avatar_url: string;
 };
 
-export type FeedVariables = {
+export type GetFeedVariables = {
   type: FeedType;
   offset?: number | null;
   limit?: number | null;
 };
 
-export type FeedQuery = {
+export type GetFeedQuery = {
   __typename?: 'Query';
 
-  currentUser?: FeedCurrentUser | null;
+  currentUser?: GetFeedCurrentUser | null;
 
-  feed?: FeedFeed[] | null;
+  feed?: GetFeedFeed[] | null;
 };
 
-export type FeedCurrentUser = {
+export type GetFeedCurrentUser = {
   __typename?: 'User';
 
   login: string;
 };
 
-export type FeedFeed = FeedEntryFragment;
+export type GetFeedFeed = FeedEntryFragment;
 
 export type SubmitRepositoryVariables = {
   repoFullName: string;

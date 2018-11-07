@@ -273,27 +273,27 @@ export type CurrentUserForProfileCurrentUser = {
   avatar_url: string;
 };
 
-export type FeedVariables = {
+export type GetFeedVariables = {
   type: FeedType;
   offset?: number | null;
   limit?: number | null;
 };
 
-export type FeedQuery = {
+export type GetFeedQuery = {
   __typename?: 'Query';
 
-  currentUser?: FeedCurrentUser | null;
+  currentUser?: GetFeedCurrentUser | null;
 
-  feed?: FeedFeed[] | null;
+  feed?: GetFeedFeed[] | null;
 };
 
-export type FeedCurrentUser = {
+export type GetFeedCurrentUser = {
   __typename?: 'User';
 
   login: string;
 };
 
-export type FeedFeed = FeedEntryFragment;
+export type GetFeedFeed = FeedEntryFragment;
 
 export type SubmitRepositoryVariables = {
   repoFullName: string;
@@ -634,8 +634,8 @@ export function CurrentUserForProfileHOC<TProps = any>(
     operationOptions
   );
 }
-export const FeedDocument = gql`
-  query Feed($type: FeedType!, $offset: Int, $limit: Int) {
+export const GetFeedDocument = gql`
+  query GetFeed($type: FeedType!, $offset: Int, $limit: Int) {
     currentUser {
       login
     }
@@ -646,22 +646,24 @@ export const FeedDocument = gql`
 
   ${FeedEntryFragmentDoc}
 `;
-export class FeedComponent extends React.Component<Partial<ReactApollo.QueryProps<FeedQuery, FeedVariables>>> {
+export class GetFeedComponent extends React.Component<Partial<ReactApollo.QueryProps<GetFeedQuery, GetFeedVariables>>> {
   render() {
-    return <ReactApollo.Query<FeedQuery, FeedVariables> query={FeedDocument} {...(this as any)['props'] as any} />;
+    return (
+      <ReactApollo.Query<GetFeedQuery, GetFeedVariables> query={GetFeedDocument} {...(this as any)['props'] as any} />
+    );
   }
 }
-export function FeedHOC<TProps = any>(
+export function GetFeedHOC<TProps = any>(
   operationOptions:
     | ReactApollo.OperationOption<
         TProps,
-        FeedQuery,
-        FeedVariables,
-        Partial<ReactApollo.DataProps<FeedQuery, FeedVariables>>
+        GetFeedQuery,
+        GetFeedVariables,
+        Partial<ReactApollo.DataProps<GetFeedQuery, GetFeedVariables>>
       >
     | undefined
 ) {
-  return ReactApollo.graphql<TProps, FeedQuery, FeedVariables>(FeedDocument, operationOptions);
+  return ReactApollo.graphql<TProps, GetFeedQuery, GetFeedVariables>(GetFeedDocument, operationOptions);
 }
 export const SubmitRepositoryDocument = gql`
   mutation submitRepository($repoFullName: String!) {
