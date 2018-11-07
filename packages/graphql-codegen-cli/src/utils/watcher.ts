@@ -1,8 +1,8 @@
-import { executeWithOptions } from '../codegen';
-import { FileOutput, getLogger } from 'graphql-codegen-core';
+import { executeCodegen } from '../codegen';
+import { FileOutput, getLogger, Types } from 'graphql-codegen-core';
 import * as watchman from 'fb-watchman';
 import * as pify from 'pify';
-import { CLIOptions } from '..';
+import { normalizeInstanceOrArray } from '../helpers';
 import isValidPath = require('is-valid-path');
 import * as isGlob from 'is-glob';
 
@@ -11,16 +11,22 @@ const getMatch = (doc: string) => {
   return ['match', doc.replace(/^\.\//, ''), 'wholename'];
 };
 
-export const createWatcher = (options: CLIOptions, onNext: (result: FileOutput[]) => Promise<FileOutput[]>) => {
-  const { args, schema } = options;
+export const createWatcher = (config: Types.Config, onNext: (result: FileOutput[]) => Promise<FileOutput[]>) => {
   const files: string[] = [];
-  if (args) {
-    files.push(...args);
+  // TODO: add nested documents
+  const documents = normalizeInstanceOrArray(config.documents);
+  // TODO: add nested schemas
+  const schemas = normalizeInstanceOrArray<Types.Schema>(config.schema);
+
+  if (documents) {
+    files.push(...documents);
   }
 
-  if (isGlob(schema) || isValidPath(schema)) {
-    files.push(schema);
-  }
+  schemas.forEach((schema: string) => {
+    if (isGlob(schema) || isValidPath(schema)) {
+      files.push(schema);
+    }
+  });
 
   const client = pify(new watchman.Client());
 
@@ -58,7 +64,7 @@ export const createWatcher = (options: CLIOptions, onNext: (result: FileOutput[]
     // it doesn't matter what has changed, need to run whole process anyway
     client.on('subscription', () => {
       if (!isShutdown) {
-        executeWithOptions(options).then(onNext);
+        executeCodegen(config).then(onNext);
       }
     });
 
@@ -68,10 +74,11 @@ export const createWatcher = (options: CLIOptions, onNext: (result: FileOutput[]
 
   // the promise never resolves to keep process running
   return new Promise((_, reject) => {
-    executeWithOptions(options)
+    executeCodegen(config)
       .then(onNext)
       .then(runWatcher)
       .catch(err => {
+        // TODO: don't reject when first run failed
         client.end();
         reject(err);
       });

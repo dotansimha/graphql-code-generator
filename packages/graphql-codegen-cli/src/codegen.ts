@@ -10,7 +10,6 @@ import { documentsFromGlobs } from './utils/documents-glob';
 import { loadDocumentsSources } from './loaders/documents/document-loader';
 import { validateGraphQlDocuments, checkValidationErrors } from './loaders/documents/validate-documents';
 import { prettify } from './utils/prettier';
-import { cliError } from './utils/cli-error';
 import { Renderer } from './utils/listr-renderer';
 
 export interface GenerateOutputOptions {
@@ -68,6 +67,20 @@ async function mergeSchemas(schemas: GraphQLSchema[]): Promise<GraphQLSchema> {
 }
 
 export async function executeCodegen(config: Types.Config): Promise<FileOutput[]> {
+  function wrapTask(task: () => void | Promise<void>, source?: string) {
+    return async () => {
+      try {
+        await task();
+      } catch (error) {
+        if (source) {
+          error.source = source;
+        }
+
+        throw error;
+      }
+    };
+  }
+
   const result: FileOutput[] = [];
   const commonListrOptions = {
     exitOnError: true
@@ -145,23 +158,13 @@ export async function executeCodegen(config: Types.Config): Promise<FileOutput[]
   listr.add({
     title: 'Load schema',
     enabled: ctx => ctx.hasSchemas,
-    task: loadRootSchema
+    task: wrapTask(loadRootSchema)
   });
 
   listr.add({
     title: 'Load documents',
     enabled: ctx => ctx.hasDocuments,
-    task: async () => {
-      try {
-        await loadRootDocuments();
-      } catch (error) {
-        if (!config.watch) {
-          throw error;
-        } else {
-          cliError(error, true);
-        }
-      }
-    }
+    task: wrapTask(loadRootDocuments)
   });
 
   listr.add({
@@ -218,41 +221,16 @@ export async function executeCodegen(config: Types.Config): Promise<FileOutput[]
                 {
                   title: 'Add related schemas',
                   enabled: () => outputSpecificSchemas.length > 0,
-                  task: async () => {
-                    try {
-                      await addSchema();
-                    } catch (error) {
-                      error.source = filename;
-                      throw error;
-                    }
-                  }
+                  task: wrapTask(addSchema, filename)
                 },
                 {
                   title: 'Add related documents',
                   enabled: () => outputSpecificDocuments.length > 0,
-                  task: async () => {
-                    try {
-                      await addDocuments();
-                    } catch (error) {
-                      if (!config.watch) {
-                        error.source = filename;
-                        throw error;
-                      } else {
-                        cliError(error, true);
-                      }
-                    }
-                  }
+                  task: wrapTask(addDocuments, filename)
                 },
                 {
                   title: 'Generate',
-                  task: async () => {
-                    try {
-                      await doGenerateOutput();
-                    } catch (error) {
-                      error.source = filename;
-                      throw error;
-                    }
-                  }
+                  task: wrapTask(doGenerateOutput, filename)
                 }
               ],
               {

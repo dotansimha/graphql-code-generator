@@ -1,9 +1,9 @@
 overwrite: true
 watch: true
+schema: ./dev-test/githunt/schema.json
+documents: ./dev-test/githunt/**/*.graphql
 generates:
   ./dev-test/githunt/types.ts:
-    schema: ./dev-test/githunt/schema.json
-    documents: ./dev-test/githunt/**/*.graphql
     plugins:
       - typescript-common
       - typescript-client
