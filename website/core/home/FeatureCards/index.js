@@ -8,7 +8,7 @@ const FeatureCards = (props) => (
     <div className="FeatureCards-details">
       <h4>FEATURES</h4>
       <h3>What you can get from our code generator</h3>
-      <div>We collected and distilled the knowledge of several experienced Code Generator up there and improve it for professionals use that generate Graph QL schema definitions to turn generate to full functionality.</div>
+      <div>We've made sure to provide you with the most high quality features possible based on our experience with GraphQL. We've also based our implementation on existing code generators (such as <a href="https://github.com/swagger-api/swagger-codegen">Swagger</a>) which have proven themselves to be successful over time.</div>
     </div>
     <div className="FeatureCards-cards">
       <FeatureCard iconSrc={`${siteConfig.baseUrl}img/gear.svg`} title="Generate Code Instantly" description="Generate code out of your GraphQL schema with a single function call regardless of your environment or code format" />
