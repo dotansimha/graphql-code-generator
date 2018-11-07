@@ -16,7 +16,7 @@ export const operationOptionsType = convert => ({ name, operationType }: any, op
                                             ${noNamespaces ? convert(name) : ''}Mutation, 
                                             ${noNamespaces ? convert(name) : ''}Variables
                                             >
-                    >
+                    > & TChildProps
                 > | undefined
         `;
   } else {
@@ -30,7 +30,7 @@ export const operationOptionsType = convert => ({ name, operationType }: any, op
                                             ${noNamespaces ? convert(name) : ''}${convert(operationType)}, 
                                             ${noNamespaces ? convert(name) : ''}Variables
                                         >
-                        >
+                        > & TChildProps
                 > | undefined
         `;
   }

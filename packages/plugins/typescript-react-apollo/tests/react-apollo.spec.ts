@@ -130,7 +130,7 @@ describe('Components', () => {
     const content = await plugin(schema, [{ filePath: '', content: documents }], {});
 
     expect(content).toBeSimilarStringTo(`
-        export function HOC<TProps = any>(operationOptions: 
+        export function HOC<TProps = any, TChildProps = any>(operationOptions: 
                 ReactApollo.OperationOption<
                     TProps, 
                     Query, 
@@ -140,15 +140,28 @@ describe('Components', () => {
                                                 Query, 
                                                 Variables
                                             >
-                            >
+                            > & TChildProps
                     > | undefined
             ){
-            return ReactApollo.graphql<TProps, Query, Variables>(
+            return ReactApollo.graphql<TProps, Query, Variables, 
+                ReactApollo.OperationOption<
+                    TProps, 
+                    Query, 
+                    Variables, 
+                    Partial<
+                        ReactApollo.DataProps<
+                                                Query, 
+                                                Variables
+                                            >
+                            > & TChildProps
+                    > | undefined
+            >(
                 Document,
                 operationOptions
             );
-
-    `);
+        };
+    }
+`);
   });
 
   it('should generate Document variables for inline fragments', async () => {

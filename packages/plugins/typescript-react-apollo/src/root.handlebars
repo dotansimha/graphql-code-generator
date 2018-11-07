@@ -26,8 +26,8 @@ export namespace {{convert name}} {
         }
     }
     {{#unless @root.config.noHOC}}
-    export function {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}HOC<TProps = any>(operationOptions: {{{operationOptionsType this}}}){
-        return ReactApollo.graphql<TProps, {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}{{convert operationType}}, {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}Variables>(
+    export function {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}HOC<TProps = any, TChildProp = any>(operationOptions: {{{operationOptionsType this}}}){
+        return ReactApollo.graphql<TProps, {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}{{convert operationType}}, {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}Variables, {{{operationOptionsType this}}}>(
             {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}Document,
             operationOptions
         );
