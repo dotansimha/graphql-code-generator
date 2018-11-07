@@ -203,7 +203,7 @@
     width: calc(100% - 40px);
     padding: 0;
     margin: 0 20px;
-    text-align: justify;
+    text-align: center;
     margin-bottom: 50px;
   }
 
@@ -228,7 +228,7 @@
   }
 
   .FeatureCard-description {
-    text-align: justify;
+    text-align: center;
   }
 
   .CompanyCards {
