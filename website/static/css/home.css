@@ -67,35 +67,68 @@
 }
 
 .FeatureCards {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
   margin-bottom: 30px;
 }
 
+.FeatureCards-details {
+  width: 100%;
+  padding: 0 50px;
+  margin-bottom: 100px;
+  width: 500px;
+  text-align: justify;
+}
+
+.FeatureCards-details h4 {
+  color: var(--primary-color);
+  font-size: .8em;
+}
+
+.FeatureCards-details h3 {
+  color: var(--primary-text-color);
+  font-size: 1.7em;
+  margin-top: 0;
+}
+
+.FeatureCards-details div {
+  color: var(--secondary-text-color);
+  font-size: 1em;
+}
+
+.FeatureCards-cards {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
 .FeatureCard {
-  width: 200px;
+  width: 255px;
   text-align: center;
 }
 
-.FeatureCard object {
-  height: 100px;
-  width: 100px;
+.FeatureCard-icon {
+  height: 65px;
+  width: 65px;
   display: block;
-  margin-left: auto;
-  margin-right: auto;
   background-color: white;
-  border: 4px solid var(--primary-color);
+  border: 1px solid silver;
   padding: 4px;
-  border-radius: 50%;
+  border-radius: 5px;
 }
 
-.FeatureCard div {
+.FeatureCard-title {
+  font-size: 1em;
+  color: var(--primary-text-color);
+  text-align: left;
   margin-top: 20px;
-  color: #677897;
-  font-size: 1.05em;
+  font-weight: 600;
+}
+
+.FeatureCard-description {
+  margin-top: 10px;
+  color: var(--secondary-text-color);
+  text-align: left;
+  font-size: .85em;
   text-align: justify;
-  font-size: 1.1em;
 }
 
 @keyframes stutter {
@@ -115,7 +148,15 @@
     display: none;
   }
 
-  .FeatureCards {
+  .FeatureCards-details {
+    width: calc(100% - 40px);
+    padding: 0;
+    margin: 0 20px;
+    text-align: justify;
+    margin-bottom: 50px;
+  }
+
+  .FeatureCards-cards {
     flex-direction: column;
   }
 
@@ -124,6 +165,18 @@
     margin-left: 30px;
     margin-top: 20px;
     margin-bottom: 50px;
-    font-size: 1em;
+  }
+
+  .FeatureCard-icon {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .FeatureCard-title {
+    text-align: center;
+  }
+
+  .FeatureCard-description {
+    text-align: justify;
   }
 }
