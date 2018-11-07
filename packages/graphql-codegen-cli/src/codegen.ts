@@ -11,6 +11,7 @@ import { loadDocumentsSources } from './loaders/documents/document-loader';
 import { validateGraphQlDocuments, checkValidationErrors } from './loaders/documents/validate-documents';
 import { prettify } from './utils/prettier';
 import { Renderer } from './utils/listr-renderer';
+import { DetailedError } from './errors';
 
 export interface GenerateOutputOptions {
   filename: string;
@@ -294,10 +295,37 @@ export async function getPluginByName(name: string): Promise<CodegenPlugin> {
   for (const packageName of possibleNames) {
     try {
       return require(packageName) as CodegenPlugin;
-    } catch (e) {}
+    } catch (err) {
+      if (err.message.indexOf(`Cannot find module '${packageName}'`) === -1) {
+        throw new DetailedError(
+          `Unable to load template plugin matching ${name}`,
+          `
+            Unable to load template plugin matching '${name}'.
+            Reason: 
+              ${err.message}
+          `
+        );
+      }
+    }
   }
 
-  throw new Error(`Unable to find template plugin matching ${name}!`);
+  const possibleNamesMsg = possibleNames
+    .map(name =>
+      `
+      - ${name}
+  `.trimRight()
+    )
+    .join('');
+
+  throw new DetailedError(
+    `Unable to find template plugin matching ${name}`,
+    `
+      Unable to find template plugin matching '${name}'
+      Install one of the following packages:
+      
+      ${possibleNamesMsg}
+    `
+  );
 }
 
 export async function executePlugin(options: ExecutePluginOptions): Promise<string> {
