@@ -89,7 +89,7 @@
     "mkdirp": "0.5.1",
     "ora": "3.0.0",
     "pify": "4.0.1",
-    "prettier": "1.14.3",
+    "prettier": "1.15.1",
     "request": "2.88.0",
     "valid-url": "1.0.9"
   },
