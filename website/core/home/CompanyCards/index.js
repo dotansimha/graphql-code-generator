@@ -7,7 +7,7 @@ const CompanyCards = (props) => (
   <div className="CompanyCards">
     <div className="CompanyCards-details">
       <h4>COMPANIES</h4>
-      <h3>Is Enterprise Proven</h3>
+      <h3>Is enterprise proven</h3>
       <div>GraphQL Code Generator is not just a concept, it works, and has proven itself to integrate flawlessly with the demanding enviroments of various enterprise companies.</div>
     </div>
     <div className="CompanyCards-cards">

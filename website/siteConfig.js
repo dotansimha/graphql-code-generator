@@ -51,8 +51,8 @@ const siteConfig = {
   users,
 
   /* path to images for header/footer */
-  headerIcon: 'img/gql-codegen-horizontal.svg',
-  footerIcon: 'img/gql-codegen-horizontal.svg',
+  headerIcon: 'img/gql-codegen-horizontal.png',
+  footerIcon: 'img/gql-codegen-horizontal.png',
   favicon: 'img/favicon.png',
 
   /* Colors for website */
