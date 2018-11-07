@@ -81,10 +81,9 @@ export const createWatcher = (config: Types.Config, onNext: (result: FileOutput[
   // the promise never resolves to keep process running
   return new Promise((_, reject) => {
     executeCodegen(config)
-      .then(onNext)
+      .then(onNext, () => Promise.resolve())
       .then(runWatcher)
       .catch(err => {
-        // TODO: don't reject when first run failed
         client.end();
         reject(err);
       });
