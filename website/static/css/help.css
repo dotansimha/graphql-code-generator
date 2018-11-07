@@ -108,13 +108,24 @@
 }
 
 @media only screen and (min-device-width: 360px) and (max-device-width: 736px) {
+  .helpPostHeader h2 {
+    text-align: center;
+  }
+
+  .helpPostHeader h1 {
+    color: var(--primary-text-color);
+    text-align: center;
+  }
+
   .helpTitle {
     font-size: 25px;
+    text-align: center;
   }
 
   .helpSubtitle {
     font-size: 14px;
     width: 100%;
+    text-align: center;
   }
 
   .ContactForm {

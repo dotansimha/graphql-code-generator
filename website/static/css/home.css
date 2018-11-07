@@ -256,6 +256,12 @@
   }
 }
 
+@media only screen and (max-device-width: 736px) {
+  .CompanyCards {
+    margin-bottom: 50px;
+  }
+}
+
 @media only screen and (min-device-width: 737px) {
   .FeatureCards-details {
     float: left;
