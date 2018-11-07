@@ -8,8 +8,9 @@ const TextInput = require('../TextInput')
 
 const siteConfig = require(`${process.cwd()}/siteConfig`)
 
-const githubIcon = `${siteConfig.baseUrl}img/github.svg`
-const mediumIcon = `${siteConfig.baseUrl}img/medium.svg`
+const githubIcon = `${siteConfig.baseUrl}img/socials/github.svg`
+const mediumIcon = `${siteConfig.baseUrl}img/socials/medium.svg`
+const twitterIcon = `${siteConfig.baseUrl}img/socials/twitter.svg`
 
 module.exports = class extends React.Component {
   render() {
@@ -33,6 +34,7 @@ module.exports = class extends React.Component {
           <div className="_bottom">
             <Hyperlink className="_channel" href={siteConfig.githubUrl}><img src={githubIcon} alt="github" /></Hyperlink>
             <Hyperlink className="_channel" href={siteConfig.mediumUrl}><img src={mediumIcon} alt="medium" /></Hyperlink>
+            <Hyperlink className="_channel" href={siteConfig.twitterUrl}><img src={twitterIcon} alt="twitter" /></Hyperlink>
             <Button className="_send-button" />
           </div>
           <div className="_error-message" />

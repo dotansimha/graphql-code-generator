@@ -79,6 +79,7 @@
 
 .ContactForm > ._form > ._bottom > ._channel > img {
   margin: 0;
+  height: 26px;
 }
 
 .ContactForm > ._form > ._bottom > ._send-button {
@@ -150,10 +151,7 @@
 }
 
 @media only screen and (max-width: 1023px) {
-}
-
-@media only screen and (min-width: 1400px) {
-}
-
-@media only screen and (min-width: 1500px) {
+  .ContactForm > ._form > ._bottom > ._send-button {
+    width: 130px;
+  }
 }
