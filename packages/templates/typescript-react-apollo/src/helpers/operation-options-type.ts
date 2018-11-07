@@ -20,8 +20,8 @@ export function operationOptionsType({ name, operationType }: any, options: Hand
     return `
             ReactApollo.OperationOption<
                 TProps, 
-                ${toPascalCase(operationType)}, 
-                Variables, 
+                ${noNamespaces ? toPascalCase(name) : ''}${toPascalCase(operationType)}, 
+                ${noNamespaces ? toPascalCase(name) : ''}Variables, 
                 Partial<
                     ReactApollo.DataProps<
                                             ${noNamespaces ? toPascalCase(name) : ''}${toPascalCase(operationType)}, 
