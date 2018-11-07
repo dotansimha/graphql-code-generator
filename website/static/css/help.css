@@ -1,15 +1,24 @@
+.helpPostHeader h2 {
+  color: var(--primary-color);
+  font-size: 1em;
+}
+
+.helpPostHeader h1 {
+  color: var(--primary-text-color);
+}
+
 .helpTitle {
   margin-top: 50px;
   text-align: justify;
   font-size: 34px;
-  color: #677897;
+  color: var(--primary-text-color);
 }
 
 .helpSubtitle {
   text-align: justify;
   margin-top: 20px;
   font-size: 16px;
-  color: #677897;
+  color: var(--secondary-text-color);
   width: 500px;
 }
 
@@ -29,7 +38,7 @@
   text-transform: uppercase;
   font-size: 24px;
   text-align: center;
-  color: #677897;
+  color: var(--primary-text-color);
   background-color: white;
 }
 
