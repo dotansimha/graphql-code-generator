@@ -32,14 +32,14 @@ export interface ColorInput {
 
 /** The episodes in the Star Wars trilogy */
 export enum Episode {
-  NEWHOPE = 'NEWHOPE',
-  EMPIRE = 'EMPIRE',
-  JEDI = 'JEDI'
+  Newhope = 'NEWHOPE',
+  Empire = 'EMPIRE',
+  Jedi = 'JEDI'
 }
 /** Units of height */
 export enum LengthUnit {
-  METER = 'METER',
-  FOOT = 'FOOT'
+  Meter = 'METER',
+  Foot = 'FOOT'
 }
 
 // ====================================================

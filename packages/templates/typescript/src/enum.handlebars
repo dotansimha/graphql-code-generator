@@ -4,7 +4,7 @@ export type {{@root.config.interfacePrefix}}{{ toPascalCase name }} = {{#each va
 {{else}}
 export {{#if @root.config.constEnums }}const {{/if}}enum {{@root.config.interfacePrefix}}{{ toPascalCase name }} {
 {{#each values }}
-  {{value}} = {{{ getEnumValue ../name value }}},
+  {{ toPascalCase value}} = {{{ getEnumValue ../name value }}},
 {{/each}}
 }
 {{/if}}

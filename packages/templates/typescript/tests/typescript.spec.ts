@@ -333,20 +333,20 @@ describe('TypeScript template', () => {
 
       expect(content).toBeSimilarStringTo(`
         export enum A {
-          ONE = 1,
-          TWO = 2,
+          One = 1,
+          Two = 2,
         }
       `);
       expect(content).toBeSimilarStringTo(`
         export enum B {
-          LUKE = "luke",
-          YODA = "yoda",
+          Luke = "luke",
+          Yoda = "yoda",
         }
       `);
       expect(content).toBeSimilarStringTo(`
         export enum C {
-          FOO = "FOO",
-          BAR = "BAR",
+          Foo = "FOO",
+          Bar = "BAR",
         }
       `);
     });
@@ -997,17 +997,17 @@ describe('TypeScript template', () => {
       expect(content).toBeSimilarStringTo(`
         /** A list of options for the sort order of the feed */
         export enum FeedType {
-          HOT = "HOT",
-          NEW = "NEW",
-          TOP = "TOP",
+          Hot = "HOT",
+          New = "NEW",
+          Top = "TOP",
         }
       `);
       expect(content).toBeSimilarStringTo(`
         /** The type of vote to record, when submitting a vote */
         export enum VoteType {
-          UP = "UP",
-          DOWN = "DOWN",
-          CANCEL = "CANCEL",
+          Up = "UP",
+          Down = "DOWN",
+          Cancel = "CANCEL",
         }
       `);
       expect(content).toBeSimilarStringTo(`
@@ -1071,17 +1071,17 @@ describe('TypeScript template', () => {
       expect(content).toBeSimilarStringTo(`
         /** A list of options for the sort order of the feed */
         export enum FeedType {
-          HOT = "HOT",
-          NEW = "NEW",
-          TOP = "TOP",
+          Hot = "HOT",
+          New = "NEW",
+          Top = "TOP",
         }
       `);
       expect(content).toBeSimilarStringTo(`
         /** The type of vote to record, when submitting a vote */
         export enum VoteType {
-          UP = "UP",
-          DOWN = "DOWN",
-          CANCEL = "CANCEL",
+          Up = "UP",
+          Down = "DOWN",
+          Cancel = "CANCEL",
         }
       `);
       expect(content).toBeSimilarStringTo(`
@@ -1249,17 +1249,17 @@ describe('TypeScript template', () => {
       expect(content).toBeSimilarStringTo(`
         /** A list of options for the sort order of the feed */
         export enum FeedType {
-          HOT = "HOT",
-          NEW = "NEW",
-          TOP = "TOP",
+          Hot = "HOT",
+          New = "NEW",
+          Top = "TOP",
         }
       `);
       expect(content).toBeSimilarStringTo(`
         /** The type of vote to record, when submitting a vote */
         export enum VoteType {
-          UP = "UP",
-          DOWN = "DOWN",
-          CANCEL = "CANCEL",
+          Up = "UP",
+          Down = "DOWN",
+          Cancel = "CANCEL",
         }
       `);
       expect(content).toBeSimilarStringTo(`
@@ -1419,17 +1419,17 @@ describe('TypeScript template', () => {
       expect(content).toBeSimilarStringTo(`
         /** A list of options for the sort order of the feed */
         export enum FeedType {
-          HOT = "HOT",
-          NEW = "NEW",
-          TOP = "TOP",
+          Hot = "HOT",
+          New = "NEW",
+          Top = "TOP",
         }
       `);
       expect(content).toBeSimilarStringTo(`
         /** The type of vote to record, when submitting a vote */
         export enum VoteType {
-          UP = "UP",
-          DOWN = "DOWN",
-          CANCEL = "CANCEL",
+          Up = "UP",
+          Down = "DOWN",
+          Cancel = "CANCEL",
         }
       `);
       expect(content).toBeSimilarStringTo(`
@@ -1501,17 +1501,17 @@ describe('TypeScript template', () => {
       expect(content).toBeSimilarStringTo(`
         /** A list of options for the sort order of the feed */
         export enum FeedType {
-          HOT = "HOT",
-          NEW = "NEW",
-          TOP = "TOP",
+          Hot = "HOT",
+          New = "NEW",
+          Top = "TOP",
         }
       `);
       expect(content).toBeSimilarStringTo(`
         /** The type of vote to record, when submitting a vote */
         export enum VoteType {
-          UP = "UP",
-          DOWN = "DOWN",
-          CANCEL = "CANCEL",
+          Up = "UP",
+          Down = "DOWN",
+          Cancel = "CANCEL",
         }
       `);
       expect(content).toBeSimilarStringTo(`
@@ -1598,17 +1598,17 @@ describe('TypeScript template', () => {
       expect(content).toBeSimilarStringTo(`
         /** A list of options for the sort order of the feed */
         export enum FeedType {
-          HOT = "HOT",
-          NEW = "NEW",
-          TOP = "TOP",
+          Hot = "HOT",
+          New = "NEW",
+          Top = "TOP",
         }
       `);
       expect(content).toBeSimilarStringTo(`
         /** The type of vote to record, when submitting a vote */
         export enum VoteType {
-          UP = "UP",
-          DOWN = "DOWN",
-          CANCEL = "CANCEL",
+          Up = "UP",
+          Down = "DOWN",
+          Cancel = "CANCEL",
         }
       `);
       expect(content).toBeSimilarStringTo(`
@@ -1670,17 +1670,17 @@ describe('TypeScript template', () => {
       expect(content).toBeSimilarStringTo(`
         /** A list of options for the sort order of the feed */
         export const enum FeedType {
-          HOT = "HOT",
-          NEW = "NEW",
-          TOP = "TOP",
+          Hot = "HOT",
+          New = "NEW",
+          Top = "TOP",
         }
       `);
       expect(content).toBeSimilarStringTo(`
         /** The type of vote to record, when submitting a vote */
         export const enum VoteType {
-          UP = "UP",
-          DOWN = "DOWN",
-          CANCEL = "CANCEL",
+          Up = "UP",
+          Down = "DOWN",
+          Cancel = "CANCEL",
         }
       `);
     });
