@@ -7,6 +7,11 @@ import { parseConfigFile } from './yml';
 
 export function getCustomConfig(): string | null | never {
   const [, , flag, filepath] = process.argv;
+
+  if (!flag) {
+    return null;
+  }
+
   const flagIsConfig = ['--config', '-c'].includes(flag.toLocaleLowerCase());
   const hasFilepath = typeof filepath === 'string' && filepath.length > 0;
   const noOtherFlags = process.argv.length === 4;
