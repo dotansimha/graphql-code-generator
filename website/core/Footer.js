@@ -41,7 +41,7 @@ const Footer = (props) => (
       © The Guild 2018
     </div>
     <div className="navMessage">
-      GraphQL Code Generator is licensed under MIT and can be used free of charge and no restrictions
+      GraphQL Code Generator is licensed under MIT and can be used free of charge with no restrictions
     </div>
   </footer>
 )

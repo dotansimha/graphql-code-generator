@@ -48,6 +48,11 @@ Button.defaultProps = {
 
 const SplashContainer = props => (
   <div className="homeContainer">
+    <img className="desktop-only" src={`${siteConfig.baseUrl}img/hexagons/blue.svg`} style={{ position: 'absolute', left: '350px', top: '100px', height: '30px' }} />
+    <img className="desktop-only" src={`${siteConfig.baseUrl}img/hexagons/pink.svg`} style={{ position: 'absolute', left: '100px', top: '200px', height: '150px' }} />
+    <img className="desktop-only" src={`${siteConfig.baseUrl}img/hexagons/blue.svg`} style={{ position: 'absolute', left: '250px', top: '450px', height: '70px' }} />
+    <img className="desktop-only" src={`${siteConfig.baseUrl}img/hexagons/pink.svg`} style={{ position: 'absolute', right: '300px', top: '150px', height: '70px' }} />
+    <img className="desktop-only" src={`${siteConfig.baseUrl}img/hexagons/blue.svg`} style={{ position: 'absolute', right: '200px', top: '350px', height: '100px' }} />
     <div className="homeSplashFade">
       <div className="wrapper homeWrapper">{props.children}</div>
     </div>

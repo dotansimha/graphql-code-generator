@@ -323,6 +323,10 @@ svg {
 }
 
 @media only screen and (max-width: 1023px) {
+  .desktop-only {
+    display: none;
+  }
+
   #footer .navMenu {
     display: none;
   }
