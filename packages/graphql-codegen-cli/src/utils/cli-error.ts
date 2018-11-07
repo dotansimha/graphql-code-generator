@@ -1,4 +1,4 @@
-export const cliError = (err: any, exitOnError = true) => {
+export function cliError(err: any, exitOnError = true) {
   let msg: string;
 
   if (err instanceof Error) {
@@ -16,4 +16,4 @@ export const cliError = (err: any, exitOnError = true) => {
   }
 
   return;
-};
+}

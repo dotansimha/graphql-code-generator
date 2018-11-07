@@ -21,12 +21,15 @@ export const loadFileContent = (filePath: string): DocumentNode | null => {
       return null;
     }
   } else {
-    throw new DetailedError(`
+    throw new DetailedError(
+      'Failed to load a document',
+      `
 
       Failed to load a document.
       Document file ${filePath} does not exists.
 
-    `);
+      `
+    );
   }
 };
 
