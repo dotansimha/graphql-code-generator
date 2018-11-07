@@ -313,9 +313,6 @@ svg {
   text-decoration: none;
 }
 
-@media only screen and (min-device-width: 360px) and (max-device-width: 736px) {
-}
-
 @media only screen and (min-width: 1024px) {
   .navCopyrightMobile {
     display: none;
@@ -333,6 +330,42 @@ svg {
 
   #footer .navCopyright > span:first-child {
     display: none;
+  }
+
+  #footer.nav-footer {
+    margin: 0 20px;
+    padding-top: 0;
+    line-height: 0;
+    position: relative;
+  }
+
+  #footer .nav-footer-image {
+    position: absolute;
+    top: 15px;
+  }
+
+  #footer .navSocials {
+    display: none;
+  }
+
+  #footer .navMenu {
+    display: none;
+  }
+
+  #footer .navMessage {
+    display: none;
+  }
+
+  #footer .navCopyrightDesktop {
+    display: none;
+  }
+
+  #footer .navCopyright {
+    float: right;
+    margin: 0 !important;
+    text-align: right;
+    width: fit-content !important;
+    font-size: .8em;
   }
 
   header {
@@ -370,46 +403,4 @@ svg {
   .navigationSlider .slidingNav ul {
     background-color: unset !important;
   }
-
-  #footer.nav-footer {
-    margin: 0 20px;
-    padding-top: 0;
-    line-height: 0;
-    position: relative;
-  }
-
-  .nav-footer-image {
-    position: absolute;
-    top: 15px;
-  }
-
-  .navSocials {
-    display: none;
-  }
-
-  .navMenu {
-    display: none;
-  }
-
-  .navMessage {
-    display: none;
-  }
-
-  .navCopyrightDesktop {
-    display: none;
-  }
-
-  .navCopyright {
-    float: right;
-    margin: 0 !important;
-    text-align: right;
-    width: fit-content !important;
-    font-size: .8em;
-  }
-}
-
-@media only screen and (min-width: 1400px) {
-}
-
-@media only screen and (min-width: 1500px) {
 }
