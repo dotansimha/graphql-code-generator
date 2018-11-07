@@ -6,68 +6,68 @@ import { checksum } from './utils';
 import {
   CLIOptions,
   documentsFromGlobs,
+  createConfig,
   createConfigFromOldCli,
+  normalizeInstanceOrArray,
+  normalizeOutputParam,
   loadDocuments,
   loadSchema,
   generate
 } from 'graphql-code-generator';
+import { Types } from 'graphql-codegen-core';
 
 export class GraphQLCodegenPlugin {
   pluginName = 'GraphQLCodeGeneratorPlugin';
-  outputFile: string;
-  schemaLocation: string;
   schemaChecksum = '';
   documentsChecksum = '';
+  documents: string[] = [];
+  schemaLocations: Types.Schema[] = [];
+  outputFiles: string[] = [];
+  config: Types.Config;
 
-  constructor(private options: CLIOptions) {
-    this.outputFile = resolve(process.cwd(), this.options.out);
-    this.schemaLocation = resolve(process.cwd(), this.options.schema);
+  constructor(config?: string);
+  constructor(options: CLIOptions);
+  constructor(configOrOptions?: string | CLIOptions) {
+    if (typeof configOrOptions === 'object') {
+      this.config = createConfigFromOldCli(configOrOptions);
+      this.outputFiles = [resolve(process.cwd(), configOrOptions.out)];
+      this.schemaLocations = [resolve(process.cwd(), configOrOptions.schema)];
+    } else {
+      this.config = createConfig(configOrOptions);
+      this.schemaLocations = normalizeInstanceOrArray<Types.Schema>(this.config.schema);
+    }
   }
 
   public apply(compiler: compiler.Compiler) {
-    compiler.hooks.watchRun.tap(this.pluginName, () => {
-      this.options.exitOnError = false;
-    });
+    // compiler.hooks.watchRun.tap(this.pluginName, () => {
+    //   this.options.exitOnError = false;
+    // });
 
     compiler.hooks.afterEnvironment.tap(this.pluginName, () => {
       (compiler as any).watchFileSystem = new WatchFileSystem(
         compiler,
         (compiler as any).watchFileSystem,
-        this.outputFile
+        this.outputFiles
       );
     });
 
     compiler.hooks.beforeCompile.tapPromise(this.pluginName, () => this.generate());
-    compiler.hooks.afterCompile.tapPromise(this.pluginName, compilation => this.includeDocuments(compilation));
+    // compiler.hooks.afterCompile.tapPromise(this.pluginName, compilation => this.includeDocuments(compilation));
   }
 
   private async generate() {
     if (await this.shouldGenerate()) {
-      await generate(createConfigFromOldCli(this.options), true);
+      await generate(this.config, true);
     }
   }
 
   private async shouldGenerate(): Promise<boolean> {
-    return !(await this.didDocumentsChanged()) || !(await this.didSchemaChanged());
-  }
-
-  private async didDocumentsChanged(): Promise<boolean> {
-    if (this.options.args) {
-      const documents = await loadDocuments(this.options.args);
-
-      const documentsChecksum = checksum(documents.map((doc: any) => print(doc.content)).join('\n'));
-
-      const changed = documentsChecksum === this.documentsChecksum;
-      this.documentsChecksum = documentsChecksum;
-
-      return changed;
-    }
-
-    return false;
+    return true;
+    // return !(await this.didDocumentsChanged()) || !(await this.didSchemaChanged());
   }
 
   private async didSchemaChanged(): Promise<boolean> {
-    const schemaChecksum = checksum(printSchema(await loadSchema(this.schemaLocation, this.options)));
+    const schemaChecksum = checksum(printSchema(await loadSchema(this.schemaLocations, this.config)));
 
     const changed = schemaChecksum === this.schemaChecksum;
     this.schemaChecksum = schemaChecksum;
@@ -75,17 +75,17 @@ export class GraphQLCodegenPlugin {
     return changed;
   }
 
-  private async includeDocuments(compilation: compilation.Compilation) {
-    const documents = this.options.args;
+  // private async includeDocuments(/*compilation: compilation.Compilation*/) {
+  //   // const documents = this.options.args;
 
-    if (!documents) {
-      return;
-    }
+  //   // if (!documents) {
+  //   //   return;
+  //   // }
 
-    const found = await documentsFromGlobs(documents);
+  //   // const found = await documentsFromGlobs(documents);
 
-    found
-      .filter((file: any) => !compilation.fileDependencies.has(file))
-      .map(file => compilation.fileDependencies.add(file));
-  }
+  //   // found
+  //   //   .filter((file: any) => !compilation.fileDependencies.has(file))
+  //   //   .map(file => compilation.fileDependencies.add(file));
+  // }
 }

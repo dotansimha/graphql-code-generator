@@ -4,7 +4,7 @@ import { join, resolve } from 'path';
 import { Types } from 'graphql-codegen-core';
 import { parseConfigFile } from './yml';
 
-function getCustomConfig(): string | null | never {
+export function getCustomConfig(): string | null | never {
   const [, , flag, filepath] = process.argv;
   const flagIsConfig = ['--config', '-c'].includes(flag.toLocaleLowerCase());
   const hasFilepath = typeof filepath === 'string' && filepath.length > 0;
@@ -43,8 +43,7 @@ function loadAndParseConfig(filepath: string): Types.Config | never {
   }
 }
 
-export function createConfig(): Types.Config | never {
-  const customConfigPath = getCustomConfig();
+export function createConfig(customConfigPath?: string): Types.Config | never {
   const locations: string[] = [join(process.cwd(), './codegen.yml'), join(process.cwd(), './codegen.json')];
 
   if (customConfigPath) {

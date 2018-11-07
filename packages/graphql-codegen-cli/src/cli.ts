@@ -2,8 +2,8 @@
 
 import { generate } from './generate-and-save';
 import { cliError } from './utils/cli-error';
-import { createConfig } from './config';
+import { createConfig, getCustomConfig } from './config';
 
-generate(createConfig())
+generate(createConfig(getCustomConfig()))
   .then(() => {})
   .catch(cliError);
