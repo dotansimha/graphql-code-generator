@@ -72,6 +72,8 @@
 
 .FeatureCards {
   margin-bottom: 30px;
+  display: inline-block;
+  width: 100%;
 }
 
 .FeatureCards-details {
@@ -135,6 +137,51 @@
   text-align: justify;
 }
 
+.CompanyCards {
+  width: 100%;
+  margin-bottom: 100px;
+  display: inline-block;
+  background-color: #f6f8f9;
+}
+
+.CompanyCards-details {
+  width: 100%;
+  padding: 0 50px;
+  margin-top: 50px;
+  width: 650px;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.CompanyCards-details h4 {
+  color: var(--primary-color);
+  font-size: .8em;
+}
+
+.CompanyCards-details h3 {
+  color: var(--primary-text-color);
+  font-size: 1.7em;
+  margin-top: 0;
+}
+
+.CompanyCards-details div {
+  color: var(--secondary-text-color);
+  font-size: 1em;
+}
+
+.CompanyCards-cards {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.CompanyCard {
+  border-radius: 50%;
+  box-shadow: 0 10px 26px 0 rgba(186, 186, 186, 0.12);
+  background-color: #ffffff;
+}
+
 @keyframes stutter {
   0% { opacity: 0 }
   0.1% {opacity: 1 }
@@ -183,6 +230,29 @@
   .FeatureCard-description {
     text-align: justify;
   }
+
+  .CompanyCards {
+    width: 100%;
+    padding: 0;
+    padding-bottom: 50px;
+  }
+
+  .CompanyCards-details {
+    width: 100%;
+    padding: 0 20px;
+  }
+
+  .CompanyCards-cards {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .CompanyCard {
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+  }
 }
 
 @media only screen and (min-device-width: 737px) {
@@ -201,5 +271,9 @@
 
   .FeatureCard {
     margin: 50px;
+  }
+
+  .CompanyCard {
+    transform: translateY(50px);
   }
 }
