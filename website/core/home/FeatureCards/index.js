@@ -14,6 +14,7 @@ const FeatureCards = (props) => (
       <FeatureCard iconSrc={`${siteConfig.baseUrl}img/gear.svg`} title="Generate Code Instantly" description="Generate code out of your GraphQL schema with a single function call regardless of your environment or code format" />
       <FeatureCard iconSrc={`${siteConfig.baseUrl}img/eye.svg`} title="Watch for Changes" description="Watch for changes in your GraphQL schema and automatically generate code as you go using a Webpack plug-in" />
       <FeatureCard iconSrc={`${siteConfig.baseUrl}img/puzzle.svg`} title="Use Right Away" description="Pick one of our pre-defined code generating templates based on your needs or write one of your own using a boilerplate" />
+      <FeatureCard iconSrc={`${siteConfig.baseUrl}img/more-options.svg`} title="Much More!" description="You can generate your resolvers, your typescript interfaces, query builders, mutations, filters and more!" />
     </div>
   </div>
 )
