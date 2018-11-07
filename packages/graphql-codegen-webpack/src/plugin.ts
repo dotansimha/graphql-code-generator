@@ -24,6 +24,7 @@ export class GraphQLCodegenPlugin {
   schemaLocations: Types.Schema[] = [];
   outputFiles: string[] = [];
   config: Types.Config;
+  watch = false;
 
   constructor(config?: string);
   constructor(options: CLIOptions);
@@ -36,6 +37,9 @@ export class GraphQLCodegenPlugin {
   }
 
   public apply(compiler: compiler.Compiler) {
+    compiler.hooks.watchRun.tap(this.pluginName, () => {
+      this.watch = true;
+    });
     compiler.hooks.afterEnvironment.tap(this.pluginName, () => {
       (compiler as any).watchFileSystem = new WatchFileSystem(
         compiler,
@@ -76,7 +80,15 @@ export class GraphQLCodegenPlugin {
 
   private async generate() {
     if (await this.shouldGenerate()) {
-      await generate(this.config, true);
+      try {
+        await generate(this.config, true);
+      } catch (error) {
+        if (this.watch) {
+          // tslint:disable-next-line
+          console.error(error.details || error);
+        }
+        throw error;
+      }
     }
   }
 
