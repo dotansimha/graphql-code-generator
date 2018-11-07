@@ -235,6 +235,7 @@
     width: 100%;
     padding: 0;
     padding-bottom: 50px;
+    margin-bottom: 0;
   }
 
   .CompanyCards-details {

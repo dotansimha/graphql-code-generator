@@ -8,51 +8,42 @@
 const React = require('react')
 
 const siteConfig = require('../siteConfig')
+const Hyperlink = require('./Hyperlink')
 
-class Footer extends React.Component {
-  docUrl(doc, language) {
-    const baseUrl = this.props.config.baseUrl
-    return `${baseUrl}docs/${language ? `${language}/` : ''}${doc}`
-  }
-
-  pageUrl(doc, language) {
-    const baseUrl = this.props.config.baseUrl
-    return baseUrl + (language ? `${language}/` : '') + doc
-  }
-
-  render() {
-    return (
-      <footer className="nav-footer" id="footer">
-        <a href={this.props.config.baseUrl} className="nav-home">
-          {this.props.config.footerIcon && (
-            <img
-              src={this.props.config.baseUrl + this.props.config.footerIcon}
-              alt={this.props.config.title}
-              width="145"
-              height="23"
-            />
-          )}
-        </a>
-        <div className="navMenu">
-          <a href={siteConfig.githubUrl}>
-            TRY IT OUT
-          </a>
-          <span>⦁</span>
-          <a href={`${siteConfig.baseUrl}docs/getting-started`}>
-            VIEW DOCS
-          </a>
-          <span>⦁</span>
-          <a href={`${siteConfig.baseUrl}help`}>
-            CONTACT US
-          </a>
-        </div>
-        <div className="navCopyright">
-          <span>All rights reserved </span>
-          <span>© 2018 The Guild</span>
-        </div>
-      </footer>
-    )
-  }
-}
+const Footer = (props) => (
+  <footer className="nav-footer" id="footer">
+    <a href={props.config.baseUrl} className="nav-home">
+      <img
+        className="nav-footer-image"
+        src={props.config.baseUrl + props.config.footerIcon}
+        alt={props.config.title}
+        width="145"
+        height="23"
+      />
+    </a>
+    <div className="navSocials">
+      <Hyperlink className="_channel" href={siteConfig.githubUrl}><img src={`${props.config.baseUrl}img/socials/github.svg`} alt="github" /></Hyperlink>
+      <Hyperlink className="_channel" href={siteConfig.mediumUrl}><img src={`${props.config.baseUrl}img/socials/medium.svg`} alt="medium" /></Hyperlink>
+      <Hyperlink className="_channel" href={siteConfig.twitterUrl}><img src={`${props.config.baseUrl}img/socials/twitter.svg`} alt="twitter" /></Hyperlink>
+    </div>
+    <div className="navMenu">
+      <a href={`${siteConfig.baseUrl}docs/getting-started`}>
+        Docs
+      </a>
+      <a href={`${siteConfig.baseUrl}help`}>
+        Help
+      </a>
+    </div>
+    <div className="navCopyright navCopyrightDesktop">
+      © Copyrights by The Guild, all rights reserved
+    </div>
+    <div className="navCopyright navCopyrightMobile">
+      © The Guild 2018
+    </div>
+    <div className="navMessage">
+      GraphQL Code Generator is licensed under MIT and can be used free of charge and no restrictions
+    </div>
+  </footer>
+)
 
 module.exports = Footer

@@ -32,6 +32,7 @@ const siteConfig = {
   // Media URLs that will be referenced by the views
   githubUrl: 'https://github.com/dotansimha/graphql-code-generator',
   mediumUrl: 'https://medium.com/the-guild',
+  twitterUrl: 'https://twitter.com/UriGoldshtein',
 
   // Used for publishing and more
   projectName: 'graphql-code-generator',
@@ -51,7 +52,7 @@ const siteConfig = {
 
   /* path to images for header/footer */
   headerIcon: 'img/gql-codegen-horizontal.svg',
-  footerIcon: 'img/gql-codegen-logo.svg',
+  footerIcon: 'img/gql-codegen-horizontal.svg',
   favicon: 'img/favicon.png',
 
   /* Colors for website */

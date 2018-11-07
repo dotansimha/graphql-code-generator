@@ -150,34 +150,65 @@ svg {
 
 #footer {
   pointer-events: auto;
-  padding-top: 16px !important;
-  padding-bottom: 8px !important;
-  display: flex;
   justify-content: space-around;
   background-color: white;
-  background-color: #f6f8f9;
+  height: fit-content !important;
+  margin: 0 50px;
+  padding-top: 30px !important;
+  border-top: 1px solid #dfe8ef;
 }
 
-#footer img {
-  width: auto;
+#footer .nav-footer-image {
+  width: 180px;
+  height: auto;
+  float: left;
 }
 
-#footer .navCopyright {
-  font-family: "Montserrat";
-  font-size: 14px;
-  color: var(--secondary-text-color);
+#footer .navSocials {
+  margin-left: auto;
+  margin-right: auto;
+  width: fit-content;
+}
+
+#footer .navSocials a {
+  width: fit-content;
+  height: fit-content;
+  display: content;
+  float: left;
+  margin: 0 10px;
+}
+
+#footer .navSocials a img {
+  height: 35px;
 }
 
 #footer .navMenu {
-  display: flex;
+  float: right;
+  height: 34px;
 }
 
-#footer .navMenu > * {
-  margin-left: 25px;
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 1.64;
+#footer .navMenu a {
   color: var(--primary-text-color);
+  margin-left: 20px;
+  font-size: 1em;
+  line-height: 34px;
+}
+
+#footer .navCopyright {
+  width: 100%;
+  margin-top: 80px;
+  margin-bottom: 10px;
+  text-align: center;
+  color: var(--primary-text-color);
+}
+
+#footer .navMessage {
+  width: 500px;
+  color: var(--secondary-text-color);
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: .9em;
 }
 
 .fixedHeaderContainer {
@@ -286,6 +317,9 @@ svg {
 }
 
 @media only screen and (min-width: 1024px) {
+  .navCopyrightMobile {
+    display: none;
+  }
 }
 
 @media only screen and (max-width: 1023px) {
@@ -331,6 +365,42 @@ svg {
 
   .navigationSlider .slidingNav ul {
     background-color: unset !important;
+  }
+
+  #footer.nav-footer {
+    margin: 0 20px;
+    padding-top: 0;
+    line-height: 0;
+    position: relative;
+  }
+
+  .nav-footer-image {
+    position: absolute;
+    top: 15px;
+  }
+
+  .navSocials {
+    display: none;
+  }
+
+  .navMenu {
+    display: none;
+  }
+
+  .navMessage {
+    display: none;
+  }
+
+  .navCopyrightDesktop {
+    display: none;
+  }
+
+  .navCopyright {
+    float: right;
+    margin: 0 !important;
+    text-align: right;
+    width: fit-content !important;
+    font-size: .8em;
   }
 }
 
