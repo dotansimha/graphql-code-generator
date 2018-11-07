@@ -2,6 +2,7 @@ import { initCLI, createConfigFromOldCli } from './old-cli-config';
 import { existsSync, readFileSync } from 'fs';
 import { join, resolve } from 'path';
 import { Types } from 'graphql-codegen-core';
+import { DetailedError } from './errors';
 import { parseConfigFile } from './yml';
 
 function getCustomConfig(): string | null | never {
@@ -14,13 +15,16 @@ function getCustomConfig(): string | null | never {
     const configPath = resolve(process.cwd(), filepath);
 
     if (!existsSync(configPath)) {
-      throw new Error(`
+      throw new DetailedError(
+        `Config ${configPath} does not exist`,
+        `
         Config ${configPath} does not exist.
 
           $ gql-gen --config ${configPath}
 
         Please make sure the --config points to a correct file.
-      `);
+      `
+      );
     }
 
     return configPath;
@@ -37,9 +41,12 @@ function loadAndParseConfig(filepath: string): Types.Config | never {
     case 'json':
       return JSON.parse(readFileSync(filepath, 'utf-8'));
     default:
-      throw new Error(`
+      throw new DetailedError(
+        `Extension '${ext}' is not supported`,
+        `
         Config ${filepath} couldn't be parsed. Extension '${ext}' is not supported.
-      `);
+      `
+      );
   }
 }
 
