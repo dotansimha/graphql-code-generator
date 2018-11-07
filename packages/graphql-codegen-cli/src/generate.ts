@@ -7,7 +7,7 @@ import { CLIOptions } from './cli-options';
 import { createWatcher } from './utils/watcher';
 import { setLogger, setSilentLogger, useWinstonLogger } from 'graphql-codegen-core';
 import { Logger } from 'ts-log';
-import spinner from './spinner';
+import { disableSpinner, getSpinner } from './spinner';
 
 interface GenerateOptions extends CLIOptions {
   logger?: Logger;
@@ -17,11 +17,14 @@ interface GenerateOptions extends CLIOptions {
 export async function generate(options: GenerateOptions, saveToFile = true): Promise<FileOutput[] | any> {
   if (options.silent) {
     setSilentLogger();
+    disableSpinner();
   } else if (options.logger) {
     setLogger(options.logger);
   } else {
     useWinstonLogger();
   }
+
+  const spinner = getSpinner();
 
   const writeOutput = async (generationResult: FileOutput[]): Promise<FileOutput[]> => {
     if (!saveToFile) {

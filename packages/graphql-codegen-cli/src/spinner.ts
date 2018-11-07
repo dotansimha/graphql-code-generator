@@ -1,9 +1,28 @@
 import * as ora from 'ora';
 
 const instance = ora();
+let enabled = true;
 let lastMsg: string = null;
 
-export default {
+interface Spinner {
+  start(msg: string): void;
+  log(msg: string): void;
+  succeed(msg?: string): void;
+  fail(msg?: string): void;
+  info(msg: string): void;
+  warn(msg: string): void;
+}
+
+const dummySpinner: Spinner = {
+  start() {},
+  log() {},
+  succeed() {},
+  fail() {},
+  info() {},
+  warn() {}
+};
+
+const spinner: Spinner = {
   start(msg: string) {
     instance.start(msg);
     lastMsg = msg;
@@ -32,3 +51,15 @@ export default {
     this.start(lastMsg);
   }
 };
+
+export function disableSpinner() {
+  enabled = false;
+}
+
+export function getSpinner() {
+  if (enabled) {
+    return spinner;
+  }
+
+  return dummySpinner;
+}

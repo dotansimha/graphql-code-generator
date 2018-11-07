@@ -5,7 +5,7 @@ import { existsSync, readFileSync } from 'fs';
 import isValidPath = require('is-valid-path');
 import { extname, isAbsolute, resolve as resolvePath } from 'path';
 import { CLIOptions } from '../../cli-options';
-import spinner from '../../spinner';
+import { getSpinner } from '../../spinner';
 import { DetailedError } from '../../errors';
 
 export class IntrospectionFromFileLoader implements SchemaLoader {
@@ -30,7 +30,7 @@ export class IntrospectionFromFileLoader implements SchemaLoader {
   }
 
   async handle(pointerToSchema: string, _cliOptions: CLIOptions): Promise<GraphQLSchema> {
-    spinner.info(`Loading GraphQL Introspection from file: ${pointerToSchema}...`);
+    getSpinner().info(`Loading GraphQL Introspection from file: ${pointerToSchema}...`);
 
     const fullPath = isAbsolute(pointerToSchema) ? pointerToSchema : resolvePath(process.cwd(), pointerToSchema);
 
