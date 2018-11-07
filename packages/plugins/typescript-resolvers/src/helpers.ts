@@ -16,13 +16,12 @@ export const getFieldResolverName = convert => (name: string) => {
 };
 
 export const getFieldResolver = convert => (field: Field, type: Type, options: Handlebars.HelperOptions) => {
-  const config = options.data.root.config || {};
   if (!field) {
     return '';
   }
 
-  let result;
   let resolver: string;
+  const config = options.data.root.config || {};
   const schema: GraphQLSchema = options.data.root.rawSchema;
   const subscriptionType = schema.getSubscriptionType();
   const isSubscription = subscriptionType && subscriptionType.name === type.name;
@@ -33,11 +32,12 @@ export const getFieldResolver = convert => (field: Field, type: Type, options: H
     resolver = 'Resolver';
   }
 
-  if (field.hasArguments && !config.noNamespaces) {
-    result = `${resolver}<R, Parent, Context, ${convert(field.name)}Args>`;
-  } else {
-    result = `${resolver}<R, Parent, Context>`;
+  const generics: string[] = ['R', 'Parent', 'Context'];
+
+  if (field.hasArguments) {
+    const prefix = config.noNamespaces ? convert(type.name) : '';
+    generics.push(`${prefix}${convert(field.name)}Args`);
   }
 
-  return new SafeString(result);
+  return new SafeString(`${resolver}<${generics.join(', ')}>`);
 };

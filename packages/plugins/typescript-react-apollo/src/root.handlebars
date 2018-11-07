@@ -20,13 +20,13 @@ export namespace {{convert name}} {
             return (
                 <ReactApollo.{{ convert operationType }}<{{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}{{convert operationType}}, {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}Variables>
                 {{ toLowerCase operationType }}={ {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}Document }
-                {...this['props'] as any}
+                    {...(this as any)['props'] as any}
                 />
             );
         }
     }
     {{#unless @root.config.noHOC}}
-    export function {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}HOC<TProps = any, OperationOptions = ReactApollo.OperationOption<TProps, {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}{{convert operationType}}, {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}Variables>>(operationOptions: OperationOptions){
+    export function {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}HOC<TProps = any>(operationOptions: {{{operationOptionsType this}}}){
         return ReactApollo.graphql<TProps, {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}{{convert operationType}}, {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}Variables>(
             {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}Document,
             operationOptions

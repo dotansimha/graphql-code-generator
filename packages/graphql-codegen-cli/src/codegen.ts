@@ -1,5 +1,6 @@
 import { FileOutput, GraphQLSchema, DocumentFile, Types, CodegenPlugin } from 'graphql-codegen-core';
 import { mergeSchemas as remoteMergeSchemas, makeExecutableSchema } from 'graphql-tools';
+import * as Listr from 'listr';
 import { normalizeOutputParam, normalizeInstanceOrArray, normalizeConfig } from './helpers';
 import { IntrospectionFromUrlLoader } from './loaders/schema/introspection-from-url';
 import { IntrospectionFromFileLoader } from './loaders/schema/introspection-from-file';
@@ -9,6 +10,8 @@ import { documentsFromGlobs } from './utils/documents-glob';
 import { loadDocumentsSources } from './loaders/documents/document-loader';
 import { validateGraphQlDocuments, checkValidationErrors } from './loaders/documents/validate-documents';
 import { prettify } from './utils/prettier';
+import { Renderer } from './utils/listr-renderer';
+import { DetailedError } from './errors';
 
 export interface GenerateOutputOptions {
   filename: string;
@@ -65,87 +68,190 @@ async function mergeSchemas(schemas: GraphQLSchema[]): Promise<GraphQLSchema> {
 }
 
 export async function executeCodegen(config: Types.Config): Promise<FileOutput[]> {
-  const result = [];
+  function wrapTask(task: () => void | Promise<void>, source?: string) {
+    return async () => {
+      try {
+        await task();
+      } catch (error) {
+        if (source) {
+          error.source = source;
+        }
 
-  /* Load Require extensions */
-  const requireExtensions = normalizeInstanceOrArray<string>(config.require);
-  requireExtensions.forEach(mod => require(mod));
-
-  /* Root templates-config */
-  const rootConfig = config.config || {};
-
-  /* Normalize root "schema" field */
-  const schemas = normalizeInstanceOrArray<Types.Schema>(config.schema);
-
-  /* Normalize root "documents" field */
-  const documents = normalizeInstanceOrArray<Types.OperationDocument>(config.documents);
-
-  /* Normalize "generators" field */
-  let generates: { [filename: string]: Types.ConfiguredOutput } = {};
-  for (const filename of Object.keys(config.generates)) {
-    generates[filename] = normalizeOutputParam(config.generates[filename]);
+        throw error;
+      }
+    };
   }
 
-  /* Load root schemas */
-  const rootSchema = await mergeSchemas(
-    await Promise.all(schemas.map(pointToScehma => loadSchema(pointToScehma, config)))
-  );
+  const result: FileOutput[] = [];
+  const commonListrOptions = {
+    exitOnError: true
+  };
+  const verboseOptions = {
+    ...commonListrOptions,
+    renderer: 'verbose',
+    nonTTYRenderer: 'verbose'
+  };
+  const listrOptions: any = {
+    ...commonListrOptions,
+    renderer: Renderer,
+    collapse: true,
+    clearOutput: false
+  };
+  const listr = new Listr(process.env.VERBOSE || process.env.NODE_ENV === 'test' ? verboseOptions : listrOptions);
 
-  /* Load root documents */
+  let rootConfig: {
+    [key: string]: any;
+  } = {};
+  let schemas: Types.Schema[];
+  let documents: Types.OperationDocument[];
+  let generates: { [filename: string]: Types.ConfiguredOutput } = {};
+  let rootSchema: GraphQLSchema;
   let rootDocuments: DocumentFile[] = [];
 
-  if (documents.length > 0) {
-    const foundDocumentsPaths = await documentsFromGlobs(documents);
-    rootDocuments = await loadDocumentsSources(foundDocumentsPaths);
+  function normalize() {
+    /* Load Require extensions */
+    const requireExtensions = normalizeInstanceOrArray<string>(config.require);
+    requireExtensions.forEach(mod => require(mod));
 
-    if (rootSchema) {
-      const errors = validateGraphQlDocuments(rootSchema, rootDocuments);
-      checkValidationErrors(errors, !config.watch);
+    /* Root templates-config */
+    rootConfig = config.config || {};
+
+    /* Normalize root "schema" field */
+    schemas = normalizeInstanceOrArray<Types.Schema>(config.schema);
+
+    /* Normalize root "documents" field */
+    documents = normalizeInstanceOrArray<Types.OperationDocument>(config.documents);
+
+    /* Normalize "generators" field */
+    for (const filename of Object.keys(config.generates)) {
+      generates[filename] = normalizeOutputParam(config.generates[filename]);
     }
   }
 
-  /* Iterate through all output files, and execute each template piece */
-  for (let filename of Object.keys(generates)) {
-    const outputConfig = generates[filename];
-    const outputFileTemplateConfig = outputConfig.config || {};
-    let outputSchema = rootSchema;
-    let outputDocuments: DocumentFile[] = rootDocuments;
-
-    const outputSpecificSchemas = normalizeInstanceOrArray<Types.Schema>(outputConfig.schema);
-    if (outputSpecificSchemas.length > 0) {
-      outputSchema = await mergeSchemas([
-        rootSchema,
-        ...(await Promise.all(outputSpecificSchemas.map(pointToScehma => loadSchema(pointToScehma, config))))
-      ]);
-    }
-
-    const outputSpecificDocuments = normalizeInstanceOrArray<Types.OperationDocument>(outputConfig.documents);
-
-    if (outputSpecificDocuments.length > 0) {
-      const foundDocumentsPaths = await documentsFromGlobs(outputSpecificDocuments);
-      const additionalDocs = await loadDocumentsSources(foundDocumentsPaths);
-
-      if (outputSchema) {
-        const errors = validateGraphQlDocuments(outputSchema, additionalDocs);
-        checkValidationErrors(errors, !config.watch);
-      }
-
-      outputDocuments = [...rootDocuments, ...additionalDocs];
-    }
-
-    const normalizedPluginsArray = normalizeConfig(outputConfig.plugins);
-    const output = await generateOutput({
-      filename,
-      plugins: normalizedPluginsArray,
-      schema: outputSchema,
-      documents: outputDocuments,
-      inheritedConfig: {
-        ...rootConfig,
-        ...outputFileTemplateConfig
-      }
-    });
-    result.push(output);
+  async function loadRootSchema() {
+    /* Load root schemas */
+    rootSchema = await mergeSchemas(await Promise.all(schemas.map(pointToScehma => loadSchema(pointToScehma, config))));
   }
+
+  async function loadRootDocuments() {
+    /* Load root documents */
+    if (documents.length > 0) {
+      const foundDocumentsPaths = await documentsFromGlobs(documents);
+      rootDocuments = await loadDocumentsSources(foundDocumentsPaths);
+
+      if (rootSchema) {
+        const errors = validateGraphQlDocuments(rootSchema, rootDocuments);
+        checkValidationErrors(errors);
+      }
+    }
+  }
+
+  listr.add({
+    title: 'Parse configuration',
+    task: ctx => {
+      normalize();
+
+      ctx.hasSchemas = schemas.length > 0;
+      ctx.hasDocuments = documents.length > 0;
+    }
+  });
+
+  listr.add({
+    title: 'Load schema',
+    enabled: ctx => ctx.hasSchemas,
+    task: wrapTask(loadRootSchema)
+  });
+
+  listr.add({
+    title: 'Load documents',
+    enabled: ctx => ctx.hasDocuments,
+    task: wrapTask(loadRootDocuments)
+  });
+
+  listr.add({
+    title: 'Generate outputs',
+    task: () => {
+      return new Listr(
+        Object.keys(generates).map<Listr.ListrTask>((filename, i) => ({
+          title: `Generate ${filename}`,
+          task: () => {
+            const outputConfig = generates[filename];
+            const outputFileTemplateConfig = outputConfig.config || {};
+            let outputSchema = rootSchema;
+            let outputDocuments: DocumentFile[] = rootDocuments;
+
+            const outputSpecificSchemas = normalizeInstanceOrArray<Types.Schema>(outputConfig.schema);
+            const outputSpecificDocuments = normalizeInstanceOrArray<Types.OperationDocument>(outputConfig.documents);
+
+            async function addSchema() {
+              outputSchema = await mergeSchemas([
+                rootSchema,
+                ...(await Promise.all(outputSpecificSchemas.map(pointToScehma => loadSchema(pointToScehma, config))))
+              ]);
+            }
+
+            async function addDocuments() {
+              const foundDocumentsPaths = await documentsFromGlobs(outputSpecificDocuments);
+              const additionalDocs = await loadDocumentsSources(foundDocumentsPaths);
+
+              if (outputSchema) {
+                const errors = validateGraphQlDocuments(outputSchema, additionalDocs);
+                checkValidationErrors(errors);
+              }
+
+              outputDocuments = [...rootDocuments, ...additionalDocs];
+            }
+
+            async function doGenerateOutput() {
+              const normalizedPluginsArray = normalizeConfig(outputConfig.plugins);
+              const output = await generateOutput({
+                filename,
+                plugins: normalizedPluginsArray,
+                schema: outputSchema,
+                documents: outputDocuments,
+                inheritedConfig: {
+                  ...rootConfig,
+                  ...outputFileTemplateConfig
+                }
+              });
+              result.push(output);
+            }
+
+            return new Listr(
+              [
+                {
+                  title: 'Add related schemas',
+                  enabled: () => outputSpecificSchemas.length > 0,
+                  task: wrapTask(addSchema, filename)
+                },
+                {
+                  title: 'Add related documents',
+                  enabled: () => outputSpecificDocuments.length > 0,
+                  task: wrapTask(addDocuments, filename)
+                },
+                {
+                  title: 'Generate',
+                  task: wrapTask(doGenerateOutput, filename)
+                }
+              ],
+              {
+                // it stops when one of tasks failed
+                exitOnError: true
+              }
+            );
+          }
+        })),
+        {
+          // it doesn't stop when one of tasks failed, to finish at least some of outputs
+          exitOnError: false,
+          // run 4 at once
+          concurrent: 4
+        }
+      );
+    }
+  });
+
+  await listr.run();
 
   return result;
 }
@@ -189,10 +295,37 @@ export async function getPluginByName(name: string): Promise<CodegenPlugin> {
   for (const packageName of possibleNames) {
     try {
       return require(packageName) as CodegenPlugin;
-    } catch (e) {}
+    } catch (err) {
+      if (err.message.indexOf(`Cannot find module '${packageName}'`) === -1) {
+        throw new DetailedError(
+          `Unable to load template plugin matching ${name}`,
+          `
+            Unable to load template plugin matching '${name}'.
+            Reason: 
+              ${err.message}
+          `
+        );
+      }
+    }
   }
 
-  throw new Error(`Unable to find template plugin matching ${name}!`);
+  const possibleNamesMsg = possibleNames
+    .map(name =>
+      `
+      - ${name}
+  `.trimRight()
+    )
+    .join('');
+
+  throw new DetailedError(
+    `Unable to find template plugin matching ${name}`,
+    `
+      Unable to find template plugin matching '${name}'
+      Install one of the following packages:
+      
+      ${possibleNamesMsg}
+    `
+  );
 }
 
 export async function executePlugin(options: ExecutePluginOptions): Promise<string> {

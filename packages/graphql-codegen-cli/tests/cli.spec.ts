@@ -17,19 +17,20 @@ describe('executeWithOptions', () => {
   });
 
   it('execute the throw an error when a document is not valid', async () => {
-    let spyProcessExit: jest.SpyInstance = jest.spyOn(process, 'exit');
-    spyProcessExit.mockImplementation();
+    try {
+      await executeCodegen(
+        createConfigFromOldCli({
+          silent: false,
+          schema: './tests/test-documents/schema.graphql',
+          template: 'graphql-codegen-typescript-template',
+          args: ['./tests/test-documents/invalid-fields.graphql']
+        })
+      );
 
-    await executeCodegen(
-      createConfigFromOldCli({
-        silent: false,
-        schema: './tests/test-documents/schema.graphql',
-        template: 'graphql-codegen-typescript-template',
-        args: ['./tests/test-documents/invalid-fields.graphql']
-      })
-    );
-
-    expect(spyProcessExit).toBeCalled();
+      throw new Error('Should not be here');
+    } catch (error) {
+      expect(error.message).not.toMatch('Should not be here');
+    }
   });
 
   it('execute the correct results when using schema with js file', async () => {

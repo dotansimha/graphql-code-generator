@@ -4,7 +4,7 @@ import { flattenTypes } from 'graphql-codegen-plugin-helpers';
 import { GraphQLSchema } from 'graphql';
 import * as Handlebars from 'handlebars';
 import * as rootTemplate from './root.handlebars';
-import { generateFragments, gql } from './helpers';
+import { generateFragments, gql, operationOptionsType } from './helpers';
 
 export interface TypeScriptReactApolloConfig extends TypeScriptCommonConfig {
   noGraphqlTag?: boolean;
@@ -22,6 +22,7 @@ export const plugin: PluginFunction<TypeScriptReactApolloConfig> = async (
   const flattenDocuments = flattenTypes(transformedDocuments);
   Handlebars.registerHelper('generateFragments', generateFragments(convert));
   Handlebars.registerHelper('gql', gql(convert));
+  Handlebars.registerHelper('operationOptionsType', operationOptionsType(convert));
 
   const hbsContext = {
     ...templateContext,
