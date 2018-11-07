@@ -474,4 +474,35 @@ describe('Resolvers', () => {
       }
     `);
   });
+
+  it('should provide a generic type of arguments in noNamespaces', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: `
+        type Query {
+          fieldTest(last: Int!, sort: String): String
+        }
+        
+        schema {
+          query: Query
+        }
+      `
+    });
+
+    const content = await plugin(testSchema, [], {
+      noNamespaces: true
+    });
+
+    expect(content).toBeSimilarStringTo(`
+      export interface QueryResolvers<Context = any, TypeParent = never> {
+        fieldTest?: QueryFieldTestResolver<string | null, TypeParent, Context>;
+      }
+    
+      export type QueryFieldTestResolver<R = string | null, Parent = never, Context = any> = Resolver<R, Parent, Context, QueryFieldTestArgs>;
+          
+      export interface QueryFieldTestArgs {
+        last: number;
+        sort?: string | null;
+      }
+    `);
+  });
 });
