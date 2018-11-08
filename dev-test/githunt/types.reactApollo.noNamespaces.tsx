@@ -674,6 +674,7 @@ export class SubmitRepositoryComponent extends React.Component<
 export type SubmitRepositoryProps = Partial<
   ReactApollo.MutateProps<SubmitRepositoryMutation, SubmitRepositoryVariables>
 >;
+export type SubmitRepositoryMutationFn = ReactApollo.MutationFn<SubmitRepositoryMutation, SubmitRepositoryVariables>;
 export function SubmitRepositoryHOC<TProps>(
   operationOptions:
     | ReactApollo.OperationOption<TProps, SubmitRepositoryMutation, SubmitRepositoryVariables, SubmitRepositoryProps>
@@ -706,6 +707,7 @@ export class SubmitCommentComponent extends React.Component<
   }
 }
 export type SubmitCommentProps = Partial<ReactApollo.MutateProps<SubmitCommentMutation, SubmitCommentVariables>>;
+export type SubmitCommentMutationFn = ReactApollo.MutationFn<SubmitCommentMutation, SubmitCommentVariables>;
 export function SubmitCommentHOC<TProps>(
   operationOptions:
     | ReactApollo.OperationOption<TProps, SubmitCommentMutation, SubmitCommentVariables, SubmitCommentProps>
@@ -735,6 +737,7 @@ export class VoteComponent extends React.Component<Partial<ReactApollo.MutationP
   }
 }
 export type VoteProps = Partial<ReactApollo.MutateProps<VoteMutation, VoteVariables>>;
+export type VoteMutationFn = ReactApollo.MutationFn<VoteMutation, VoteVariables>;
 export function VoteHOC<TProps>(
   operationOptions: ReactApollo.OperationOption<TProps, VoteMutation, VoteVariables, VoteProps> | undefined
 ) {
