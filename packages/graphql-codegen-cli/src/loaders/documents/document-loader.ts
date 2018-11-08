@@ -4,12 +4,14 @@ import * as path from 'path';
 import { extractDocumentStringFromCodeFile } from '../../utils/document-finder';
 import { DetailedError } from '../../errors';
 
+export const graphQLExtensions = ['.graphql', '.graphqls', '.gql'];
+
 export const loadFileContent = (filePath: string): DocumentNode | null => {
   if (fs.existsSync(filePath)) {
     const fileContent = fs.readFileSync(filePath, 'utf8');
     const fileExt = path.extname(filePath);
 
-    if (fileExt === '.graphql' || fileExt === '.gql') {
+    if (graphQLExtensions.includes(fileExt)) {
       return parse(new Source(fileContent, filePath));
     }
 

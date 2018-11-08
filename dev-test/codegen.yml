@@ -6,6 +6,12 @@ generates:
       - typescript-common
       - typescript-server
       - typescript-resolvers
+  ./dev-test/test-schema/resolvers-root.ts:
+    schema: ./dev-test/test-schema/schema-with-root.graphql
+    plugins: 
+      - typescript-common
+      - typescript-server
+      - typescript-resolvers
   ./dev-test/test-schema/typings.ts:
     schema: ./dev-test/test-schema/schema.json
     plugins: 
