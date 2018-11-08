@@ -98,6 +98,9 @@ const siteConfig = {
   // You may provide arbitrary config keys to be used as needed by your
   // template. For example, if you need your repo's URL...
   //   repoUrl: 'https://github.com/facebook/test-site',
+
+  gaGtag: true,
+  gaTrackingId: 'UA-128969121-3',
 }
 
 module.exports = siteConfig
