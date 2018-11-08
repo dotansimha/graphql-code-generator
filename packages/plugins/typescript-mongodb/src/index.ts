@@ -25,6 +25,8 @@ export const plugin: PluginFunction<TypeScriptMongoDbConfig> = async (
   config: TypeScriptMongoDbConfig
 ): Promise<string> => {
   const { templateContext, scalars, convert } = initCommonTemplate(Handlebars, schema, config);
+  // KAMIL: I think we don't need to generate enums, scalars, types, unions etc
+  // because it's a part of typescript-common
   Handlebars.registerPartial('enum', enumTemplate);
   Handlebars.registerPartial('scalar', scalar);
   Handlebars.registerPartial('type', type);
