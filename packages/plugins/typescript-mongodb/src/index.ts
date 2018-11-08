@@ -1,5 +1,5 @@
 import { TypeScriptCommonConfig, initCommonTemplate } from 'graphql-codegen-typescript-common';
-import { PluginFunction, DocumentFile } from 'graphql-codegen-core';
+import { PluginFunction, DocumentFile, toPascalCase } from 'graphql-codegen-core';
 import { GraphQLSchema } from 'graphql';
 import * as Handlebars from 'handlebars';
 import * as enumTemplate from './templates/enum.handlebars';
@@ -38,11 +38,12 @@ export const plugin: PluginFunction<TypeScriptMongoDbConfig> = async (
   Handlebars.registerHelper('ifNotRootType', ifNotRootType);
   Handlebars.registerHelper('isPrimitive', isPrimitive(scalars));
   Handlebars.registerHelper('isArray', isArray);
+  Handlebars.registerHelper('toPascalCase', toPascalCase);
 
   return Handlebars.compile(index)(templateContext);
 };
 
-export const addToSchema = gql`
+const addToSchema = gql`
   directive @union(discriminatorField: String) on UNION
   directive @abstractEntity(discriminatorField: String!) on INTERFACE
   directive @entity(embedded: Boolean, additionalFields: [AdditionalEntityFields]) on OBJECT
@@ -57,3 +58,6 @@ export const addToSchema = gql`
     type: String
   }
 `;
+
+export { addToSchema };
+export { addToSchema as DIRECTIVES };
