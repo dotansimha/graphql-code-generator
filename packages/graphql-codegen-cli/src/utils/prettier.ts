@@ -10,6 +10,7 @@ const EXTENSION_TO_PARSER = {
   flow: 'flow',
   gql: 'graphql',
   graphql: 'graphql',
+  graphqls: 'graphql',
   css: 'postcss',
   scss: 'postcss',
   less: 'postcss',
