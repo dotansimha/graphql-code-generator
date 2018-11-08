@@ -9,11 +9,10 @@
     "build": "codegen-templates-scripts build",
     "pretest": "yarn build"
   },
-  "peerDependencies": {
-    "graphql-codegen-core": "^0.13.0"
+  "dependencies": {
+    "graphql-codegen-core": "0.13.0"
   },
   "devDependencies": {
-    "graphql-codegen-core": "0.13.0",
     "codegen-templates-scripts": "0.13.0",
     "graphql": "14.0.2"
   },
