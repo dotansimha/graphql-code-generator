@@ -117,13 +117,19 @@ export class GetMessagesComponent extends React.Component<
     );
   }
 }
-export type GetMessagesProps = Partial<ReactApollo.DataProps<GetMessagesQuery, GetMessagesVariables>>;
-export function GetMessagesHOC<TProps>(
+export type GetMessagesProps<TChildProps = any> = Partial<
+  ReactApollo.DataProps<GetMessagesQuery, GetMessagesVariables>
+> &
+  TChildProps;
+export function GetMessagesHOC<TProps, TChildProps = any>(
   operationOptions:
-    | ReactApollo.OperationOption<TProps, GetMessagesQuery, GetMessagesVariables, GetMessagesProps>
+    | ReactApollo.OperationOption<TProps, GetMessagesQuery, GetMessagesVariables, GetMessagesProps<TChildProps>>
     | undefined
 ) {
-  return ReactApollo.graphql<TProps, GetMessagesQuery, GetMessagesVariables>(GetMessagesDocument, operationOptions);
+  return ReactApollo.graphql<TProps, GetMessagesQuery, GetMessagesVariables, GetMessagesProps<TChildProps>>(
+    GetMessagesDocument,
+    operationOptions
+  );
 }
 export const CreateMessageDocument = gql`
   mutation CreateMessage($args: CreateMessageInput!) {
@@ -144,14 +150,22 @@ export class CreateMessageComponent extends React.Component<
     );
   }
 }
-export type CreateMessageProps = Partial<ReactApollo.MutateProps<CreateMessageMutation, CreateMessageVariables>>;
+export type CreateMessageProps<TChildProps = any> = Partial<
+  ReactApollo.MutateProps<CreateMessageMutation, CreateMessageVariables>
+> &
+  TChildProps;
 export type CreateMessageMutationFn = ReactApollo.MutationFn<CreateMessageMutation, CreateMessageVariables>;
-export function CreateMessageHOC<TProps>(
+export function CreateMessageHOC<TProps, TChildProps = any>(
   operationOptions:
-    | ReactApollo.OperationOption<TProps, CreateMessageMutation, CreateMessageVariables, CreateMessageProps>
+    | ReactApollo.OperationOption<
+        TProps,
+        CreateMessageMutation,
+        CreateMessageVariables,
+        CreateMessageProps<TChildProps>
+      >
     | undefined
 ) {
-  return ReactApollo.graphql<TProps, CreateMessageMutation, CreateMessageVariables>(
+  return ReactApollo.graphql<TProps, CreateMessageMutation, CreateMessageVariables, CreateMessageProps<TChildProps>>(
     CreateMessageDocument,
     operationOptions
   );
@@ -175,12 +189,18 @@ export class DeclineComponent extends React.Component<
     );
   }
 }
-export type DeclineProps = Partial<ReactApollo.MutateProps<DeclineMutation, DeclineVariables>>;
+export type DeclineProps<TChildProps = any> = Partial<ReactApollo.MutateProps<DeclineMutation, DeclineVariables>> &
+  TChildProps;
 export type DeclineMutationFn = ReactApollo.MutationFn<DeclineMutation, DeclineVariables>;
-export function DeclineHOC<TProps>(
-  operationOptions: ReactApollo.OperationOption<TProps, DeclineMutation, DeclineVariables, DeclineProps> | undefined
+export function DeclineHOC<TProps, TChildProps = any>(
+  operationOptions:
+    | ReactApollo.OperationOption<TProps, DeclineMutation, DeclineVariables, DeclineProps<TChildProps>>
+    | undefined
 ) {
-  return ReactApollo.graphql<TProps, DeclineMutation, DeclineVariables>(DeclineDocument, operationOptions);
+  return ReactApollo.graphql<TProps, DeclineMutation, DeclineVariables, DeclineProps<TChildProps>>(
+    DeclineDocument,
+    operationOptions
+  );
 }
 export const ApproveDocument = gql`
   mutation Approve($id: ID!) {
@@ -201,12 +221,18 @@ export class ApproveComponent extends React.Component<
     );
   }
 }
-export type ApproveProps = Partial<ReactApollo.MutateProps<ApproveMutation, ApproveVariables>>;
+export type ApproveProps<TChildProps = any> = Partial<ReactApollo.MutateProps<ApproveMutation, ApproveVariables>> &
+  TChildProps;
 export type ApproveMutationFn = ReactApollo.MutationFn<ApproveMutation, ApproveVariables>;
-export function ApproveHOC<TProps>(
-  operationOptions: ReactApollo.OperationOption<TProps, ApproveMutation, ApproveVariables, ApproveProps> | undefined
+export function ApproveHOC<TProps, TChildProps = any>(
+  operationOptions:
+    | ReactApollo.OperationOption<TProps, ApproveMutation, ApproveVariables, ApproveProps<TChildProps>>
+    | undefined
 ) {
-  return ReactApollo.graphql<TProps, ApproveMutation, ApproveVariables>(ApproveDocument, operationOptions);
+  return ReactApollo.graphql<TProps, ApproveMutation, ApproveVariables, ApproveProps<TChildProps>>(
+    ApproveDocument,
+    operationOptions
+  );
 }
 export const EscalateDocument = gql`
   mutation Escalate($id: ID!) {
@@ -227,10 +253,16 @@ export class EscalateComponent extends React.Component<
     );
   }
 }
-export type EscalateProps = Partial<ReactApollo.MutateProps<EscalateMutation, EscalateVariables>>;
+export type EscalateProps<TChildProps = any> = Partial<ReactApollo.MutateProps<EscalateMutation, EscalateVariables>> &
+  TChildProps;
 export type EscalateMutationFn = ReactApollo.MutationFn<EscalateMutation, EscalateVariables>;
-export function EscalateHOC<TProps>(
-  operationOptions: ReactApollo.OperationOption<TProps, EscalateMutation, EscalateVariables, EscalateProps> | undefined
+export function EscalateHOC<TProps, TChildProps = any>(
+  operationOptions:
+    | ReactApollo.OperationOption<TProps, EscalateMutation, EscalateVariables, EscalateProps<TChildProps>>
+    | undefined
 ) {
-  return ReactApollo.graphql<TProps, EscalateMutation, EscalateVariables>(EscalateDocument, operationOptions);
+  return ReactApollo.graphql<TProps, EscalateMutation, EscalateVariables, EscalateProps<TChildProps>>(
+    EscalateDocument,
+    operationOptions
+  );
 }
