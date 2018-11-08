@@ -94,10 +94,12 @@ describe('executeWithOptions', () => {
   });
 
   it('execute the correct results when using schema with graphql file and schema object in it', async () => {
-    const result = await executeWithOptions({
-      schema: '../../dev-test/test-schema/schema-with-root.graphql',
-      template: 'ts'
-    });
+    const result = await executeCodegen(
+      createConfigFromOldCli({
+        schema: '../../dev-test/test-schema/schema-with-root.graphql',
+        template: 'ts'
+      })
+    );
 
     expect(result.length).toBe(1);
   });
