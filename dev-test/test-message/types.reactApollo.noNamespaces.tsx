@@ -145,6 +145,7 @@ export class CreateMessageComponent extends React.Component<
   }
 }
 export type CreateMessageProps = Partial<ReactApollo.MutateProps<CreateMessageMutation, CreateMessageVariables>>;
+export type CreateMessageMutationFn = ReactApollo.MutationFn<CreateMessageMutation, CreateMessageVariables>;
 export function CreateMessageHOC<TProps>(
   operationOptions:
     | ReactApollo.OperationOption<TProps, CreateMessageMutation, CreateMessageVariables, CreateMessageProps>
@@ -175,6 +176,7 @@ export class DeclineComponent extends React.Component<
   }
 }
 export type DeclineProps = Partial<ReactApollo.MutateProps<DeclineMutation, DeclineVariables>>;
+export type DeclineMutationFn = ReactApollo.MutationFn<DeclineMutation, DeclineVariables>;
 export function DeclineHOC<TProps>(
   operationOptions: ReactApollo.OperationOption<TProps, DeclineMutation, DeclineVariables, DeclineProps> | undefined
 ) {
@@ -200,6 +202,7 @@ export class ApproveComponent extends React.Component<
   }
 }
 export type ApproveProps = Partial<ReactApollo.MutateProps<ApproveMutation, ApproveVariables>>;
+export type ApproveMutationFn = ReactApollo.MutationFn<ApproveMutation, ApproveVariables>;
 export function ApproveHOC<TProps>(
   operationOptions: ReactApollo.OperationOption<TProps, ApproveMutation, ApproveVariables, ApproveProps> | undefined
 ) {
@@ -225,6 +228,7 @@ export class EscalateComponent extends React.Component<
   }
 }
 export type EscalateProps = Partial<ReactApollo.MutateProps<EscalateMutation, EscalateVariables>>;
+export type EscalateMutationFn = ReactApollo.MutationFn<EscalateMutation, EscalateVariables>;
 export function EscalateHOC<TProps>(
   operationOptions: ReactApollo.OperationOption<TProps, EscalateMutation, EscalateVariables, EscalateProps> | undefined
 ) {

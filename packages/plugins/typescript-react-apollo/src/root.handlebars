@@ -27,6 +27,9 @@ export namespace {{convert name}} {
     }
     {{#unless @root.config.noHOC}}
     export type {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}Props = {{{propsType this}}};
+    {{#ifCond operationType '===' 'mutation'}}
+    export type {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}MutationFn = ReactApollo.MutationFn<{{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}{{convert operationType}}, {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}Variables>;
+    {{/ifCond}}
     export function {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}HOC<TProps>(operationOptions: 
             ReactApollo.OperationOption<
                 TProps, 

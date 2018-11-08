@@ -526,6 +526,7 @@ export namespace SubmitRepository {
     }
   }
   export type Props = Partial<ReactApollo.MutateProps<Mutation, Variables>>;
+  export type MutationFn = ReactApollo.MutationFn<Mutation, Variables>;
   export function HOC<TProps>(
     operationOptions: ReactApollo.OperationOption<TProps, Mutation, Variables, Props> | undefined
   ) {
@@ -548,6 +549,7 @@ export namespace SubmitComment {
     }
   }
   export type Props = Partial<ReactApollo.MutateProps<Mutation, Variables>>;
+  export type MutationFn = ReactApollo.MutationFn<Mutation, Variables>;
   export function HOC<TProps>(
     operationOptions: ReactApollo.OperationOption<TProps, Mutation, Variables, Props> | undefined
   ) {
@@ -572,6 +574,7 @@ export namespace Vote {
     }
   }
   export type Props = Partial<ReactApollo.MutateProps<Mutation, Variables>>;
+  export type MutationFn = ReactApollo.MutationFn<Mutation, Variables>;
   export function HOC<TProps>(
     operationOptions: ReactApollo.OperationOption<TProps, Mutation, Variables, Props> | undefined
   ) {
