@@ -11,10 +11,15 @@ import { CLIOptions } from '../../cli-options';
 import * as path from 'path';
 import * as fs from 'fs';
 import { DetailedError } from '../../errors';
+import { graphQLExtensions } from '../documents/document-loader';
+
+function isGraphQLFile(globPath: string): boolean {
+  return graphQLExtensions.some(ext => globPath.endsWith(ext));
+}
 
 export class SchemaFromTypedefs implements SchemaLoader {
   canHandle(globPath: string): boolean {
-    return isGlob(globPath) || (isValidPath(globPath) && globPath.endsWith('.graphql'));
+    return isGlob(globPath) || (isValidPath(globPath) && isGraphQLFile(globPath));
   }
 
   handle(globPath: string, cliOptions: CLIOptions): GraphQLSchema {
