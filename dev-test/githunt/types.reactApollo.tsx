@@ -410,11 +410,14 @@ export namespace OnCommentAdded {
   `;
   export class Component extends React.Component<Partial<ReactApollo.SubscriptionProps<Subscription, Variables>>> {
     render() {
-      return <ReactApollo.Subscription<Subscription, Variables> subscription={Document} {...this['props'] as any} />;
+      return (
+        <ReactApollo.Subscription<Subscription, Variables> subscription={Document} {...(this as any)['props'] as any} />
+      );
     }
   }
-  export function HOC<TProps = any, OperationOptions = ReactApollo.OperationOption<TProps, Subscription, Variables>>(
-    operationOptions: OperationOptions
+  export type Props = Partial<ReactApollo.DataProps<Subscription, Variables>>;
+  export function HOC<TProps>(
+    operationOptions: ReactApollo.OperationOption<TProps, Subscription, Variables, Props> | undefined
   ) {
     return ReactApollo.graphql<TProps, Subscription, Variables>(Document, operationOptions);
   }
@@ -453,11 +456,12 @@ export namespace Comment {
   `;
   export class Component extends React.Component<Partial<ReactApollo.QueryProps<Query, Variables>>> {
     render() {
-      return <ReactApollo.Query<Query, Variables> query={Document} {...this['props'] as any} />;
+      return <ReactApollo.Query<Query, Variables> query={Document} {...(this as any)['props'] as any} />;
     }
   }
-  export function HOC<TProps = any, OperationOptions = ReactApollo.OperationOption<TProps, Query, Variables>>(
-    operationOptions: OperationOptions
+  export type Props = Partial<ReactApollo.DataProps<Query, Variables>>;
+  export function HOC<TProps>(
+    operationOptions: ReactApollo.OperationOption<TProps, Query, Variables, Props> | undefined
   ) {
     return ReactApollo.graphql<TProps, Query, Variables>(Document, operationOptions);
   }
@@ -473,11 +477,12 @@ export namespace CurrentUserForProfile {
   `;
   export class Component extends React.Component<Partial<ReactApollo.QueryProps<Query, Variables>>> {
     render() {
-      return <ReactApollo.Query<Query, Variables> query={Document} {...this['props'] as any} />;
+      return <ReactApollo.Query<Query, Variables> query={Document} {...(this as any)['props'] as any} />;
     }
   }
-  export function HOC<TProps = any, OperationOptions = ReactApollo.OperationOption<TProps, Query, Variables>>(
-    operationOptions: OperationOptions
+  export type Props = Partial<ReactApollo.DataProps<Query, Variables>>;
+  export function HOC<TProps>(
+    operationOptions: ReactApollo.OperationOption<TProps, Query, Variables, Props> | undefined
   ) {
     return ReactApollo.graphql<TProps, Query, Variables>(Document, operationOptions);
   }
@@ -497,11 +502,12 @@ export namespace Feed {
   `;
   export class Component extends React.Component<Partial<ReactApollo.QueryProps<Query, Variables>>> {
     render() {
-      return <ReactApollo.Query<Query, Variables> query={Document} {...this['props'] as any} />;
+      return <ReactApollo.Query<Query, Variables> query={Document} {...(this as any)['props'] as any} />;
     }
   }
-  export function HOC<TProps = any, OperationOptions = ReactApollo.OperationOption<TProps, Query, Variables>>(
-    operationOptions: OperationOptions
+  export type Props = Partial<ReactApollo.DataProps<Query, Variables>>;
+  export function HOC<TProps>(
+    operationOptions: ReactApollo.OperationOption<TProps, Query, Variables, Props> | undefined
   ) {
     return ReactApollo.graphql<TProps, Query, Variables>(Document, operationOptions);
   }
@@ -516,11 +522,12 @@ export namespace SubmitRepository {
   `;
   export class Component extends React.Component<Partial<ReactApollo.MutationProps<Mutation, Variables>>> {
     render() {
-      return <ReactApollo.Mutation<Mutation, Variables> mutation={Document} {...this['props'] as any} />;
+      return <ReactApollo.Mutation<Mutation, Variables> mutation={Document} {...(this as any)['props'] as any} />;
     }
   }
-  export function HOC<TProps = any, OperationOptions = ReactApollo.OperationOption<TProps, Mutation, Variables>>(
-    operationOptions: OperationOptions
+  export type Props = Partial<ReactApollo.MutateProps<Mutation, Variables>>;
+  export function HOC<TProps>(
+    operationOptions: ReactApollo.OperationOption<TProps, Mutation, Variables, Props> | undefined
   ) {
     return ReactApollo.graphql<TProps, Mutation, Variables>(Document, operationOptions);
   }
@@ -537,11 +544,12 @@ export namespace SubmitComment {
   `;
   export class Component extends React.Component<Partial<ReactApollo.MutationProps<Mutation, Variables>>> {
     render() {
-      return <ReactApollo.Mutation<Mutation, Variables> mutation={Document} {...this['props'] as any} />;
+      return <ReactApollo.Mutation<Mutation, Variables> mutation={Document} {...(this as any)['props'] as any} />;
     }
   }
-  export function HOC<TProps = any, OperationOptions = ReactApollo.OperationOption<TProps, Mutation, Variables>>(
-    operationOptions: OperationOptions
+  export type Props = Partial<ReactApollo.MutateProps<Mutation, Variables>>;
+  export function HOC<TProps>(
+    operationOptions: ReactApollo.OperationOption<TProps, Mutation, Variables, Props> | undefined
   ) {
     return ReactApollo.graphql<TProps, Mutation, Variables>(Document, operationOptions);
   }
@@ -560,11 +568,12 @@ export namespace Vote {
   `;
   export class Component extends React.Component<Partial<ReactApollo.MutationProps<Mutation, Variables>>> {
     render() {
-      return <ReactApollo.Mutation<Mutation, Variables> mutation={Document} {...this['props'] as any} />;
+      return <ReactApollo.Mutation<Mutation, Variables> mutation={Document} {...(this as any)['props'] as any} />;
     }
   }
-  export function HOC<TProps = any, OperationOptions = ReactApollo.OperationOption<TProps, Mutation, Variables>>(
-    operationOptions: OperationOptions
+  export type Props = Partial<ReactApollo.MutateProps<Mutation, Variables>>;
+  export function HOC<TProps>(
+    operationOptions: ReactApollo.OperationOption<TProps, Mutation, Variables, Props> | undefined
   ) {
     return ReactApollo.graphql<TProps, Mutation, Variables>(Document, operationOptions);
   }

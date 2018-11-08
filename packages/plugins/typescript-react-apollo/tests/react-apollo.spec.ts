@@ -130,24 +130,18 @@ describe('Components', () => {
     const content = await plugin(schema, [{ filePath: '', content: documents }], {});
 
     expect(content).toBeSimilarStringTo(`
-        export function HOC<TProps = any>(operationOptions: 
-                ReactApollo.OperationOption<
-                    TProps, 
-                    Query, 
-                    Variables, 
-                    Partial<
-                        ReactApollo.DataProps<
-                                                Query, 
-                                                Variables
-                                            >
-                            >
-                    > | undefined
-            ){
-            return ReactApollo.graphql<TProps, Query, Variables>(
-                Document,
-                operationOptions
-            );
-
+          export function HOC<TProps>(operationOptions:
+              ReactApollo.OperationOption<
+                  TProps,
+                  Query,
+                  Variables,
+                  Props
+              > | undefined){
+          return ReactApollo.graphql<TProps, Query, Variables>(
+              Document,
+              operationOptions
+          );
+        };
     `);
   });
 

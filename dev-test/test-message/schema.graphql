@@ -1,0 +1,24 @@
+type Message {
+  id: String!
+
+}
+
+type Query {
+  messages(tab: String!): [Message]
+}
+
+input CreateMessageInput {
+  description: String!
+}
+
+type Mutation {
+  createMessage(args: CreateMessageInput!): Message
+  approve(id: ID!): Message
+  decline(id: ID!, reason: String!): Message
+  escalate(id: ID!): Message
+}
+
+schema {
+  query: Query
+  mutation: Mutation
+}

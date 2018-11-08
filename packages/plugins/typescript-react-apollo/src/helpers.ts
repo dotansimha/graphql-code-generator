@@ -3,35 +3,25 @@ import gqlTag from 'graphql-tag';
 import { Operation } from 'graphql-codegen-core';
 import { Fragment } from 'graphql-codegen-core';
 
-export const operationOptionsType = convert => ({ name, operationType }: any, options: Handlebars.HelperOptions) => {
+export const propsType = convert => ({ name, operationType }: any, options: Handlebars.HelperOptions) => {
   const { noNamespaces } = options.data.root.config || { noNamespaces: false };
   if (operationType === 'mutation') {
     return `
-            ReactApollo.OperationOption<
-                TProps, 
-                ${noNamespaces ? convert(name) : ''}Mutation, 
-                ${noNamespaces ? convert(name) : ''}Variables, 
-                Partial<
-                    ReactApollo.MutateProps<
-                                            ${noNamespaces ? convert(name) : ''}Mutation, 
-                                            ${noNamespaces ? convert(name) : ''}Variables
-                                            >
-                    >
-                > | undefined
+            Partial<
+                ReactApollo.MutateProps<
+                                        ${noNamespaces ? convert(name) : ''}Mutation, 
+                                        ${noNamespaces ? convert(name) : ''}Variables
+                                        >
+                >
         `;
   } else {
     return `
-            ReactApollo.OperationOption<
-                TProps, 
-                ${noNamespaces ? convert(name) : ''}${convert(operationType)}, 
-                ${noNamespaces ? convert(name) : ''}Variables, 
-                Partial<
-                    ReactApollo.DataProps<
-                                            ${noNamespaces ? convert(name) : ''}${convert(operationType)}, 
-                                            ${noNamespaces ? convert(name) : ''}Variables
-                                        >
-                        >
-                > | undefined
+            Partial<
+                ReactApollo.DataProps<
+                                        ${noNamespaces ? convert(name) : ''}${convert(operationType)}, 
+                                        ${noNamespaces ? convert(name) : ''}Variables
+                                    >
+                    >
         `;
   }
 };
