@@ -10,13 +10,16 @@
     "test": "codegen-templates-scripts test",
     "pretest": "yarn build"
   },
+  "peerDependencies": {
+    "graphql-tag": "^2.0.0"
+  },
   "dependencies": {
     "dependency-graph": "0.7.2",
+    "graphql-codegen-plugin-helpers": "0.13.0",
     "graphql-codegen-typescript-common": "0.13.0"
   },
   "devDependencies": {
     "graphql-codegen-plugin-handlebars-helpers": "0.13.0",
-    "graphql-codegen-plugin-helpers": "0.13.0",
     "codegen-templates-scripts": "0.13.0",
     "graphql": "14.0.2",
     "graphql-codegen-core": "0.13.0"

@@ -9,9 +9,10 @@
     "build": "codegen-templates-scripts build",
     "pretest": "yarn build"
   },
-  "dependencies": {},
+  "dependencies": {
+    "moment": "2.22.2"
+  },
   "devDependencies": {
-    "moment": "2.22.2",
     "codegen-templates-scripts": "0.13.0",
     "graphql": "14.0.2",
     "graphql-codegen-core": "0.13.0"

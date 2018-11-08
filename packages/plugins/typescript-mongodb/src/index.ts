@@ -1,5 +1,5 @@
 import { TypeScriptCommonConfig, initCommonTemplate } from 'graphql-codegen-typescript-common';
-import { PluginFunction, DocumentFile, schemaToTemplateContext } from 'graphql-codegen-core';
+import { PluginFunction, DocumentFile } from 'graphql-codegen-core';
 import { GraphQLSchema } from 'graphql';
 import * as Handlebars from 'handlebars';
 import * as enumTemplate from './templates/enum.handlebars';

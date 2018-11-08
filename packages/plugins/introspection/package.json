@@ -10,7 +10,9 @@
     "build": "codegen-templates-scripts build",
     "pretest": "yarn build"
   },
-  "dependencies": {},
+  "peerDependencies": {
+    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0"
+  },
   "devDependencies": {
     "codegen-templates-scripts": "0.13.0",
     "graphql": "14.0.2",
