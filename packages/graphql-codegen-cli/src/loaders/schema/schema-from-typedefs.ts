@@ -17,6 +17,18 @@ function isGraphQLFile(globPath: string): boolean {
   return graphQLExtensions.some(ext => globPath.endsWith(ext));
 }
 
+function loadSchemaFile(filepath: string): string {
+  const content = fs.readFileSync(filepath, {
+    encoding: 'utf-8'
+  });
+
+  if (/^\# import /i.test(content.trimLeft())) {
+    return importSchema(filepath);
+  }
+
+  return content;
+}
+
 export class SchemaFromTypedefs implements SchemaLoader {
   canHandle(globPath: string): boolean {
     return isGlob(globPath) || (isValidPath(globPath) && isGraphQLFile(globPath));
@@ -98,7 +110,7 @@ export class SchemaFromTypedefs implements SchemaLoader {
     const typeDefs =
       globFiles.length > 1
         ? mergeLogic(globFiles.map(filePath => readFileSync(filePath, 'utf-8')))
-        : importSchema(globFiles[0]);
+        : loadSchemaFile(globFiles[0]);
 
     return makeExecutableSchema({
       typeDefs,

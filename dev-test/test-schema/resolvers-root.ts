@@ -35,20 +35,20 @@ export type SubscriptionResolver<Result, Parent = any, Context = any, Args = nev
 // Types
 // ====================================================
 
+export interface QueryRoot {
+  allUsers: (User | null)[];
+
+  userById?: User | null;
+  /** Generates a new answer for the guessing game */
+  answer: number[];
+}
+
 export interface User {
   id: number;
 
   name: string;
 
   email: string;
-}
-
-export interface QueryRoot {
-  allUsers: (User | null)[];
-
-  userById?: User | null;
-
-  answer: number[];
 }
 
 export interface SubscriptionRoot {
@@ -71,6 +71,29 @@ export interface UserByIdQueryRootArgs {
 // Resolvers
 // ====================================================
 
+export namespace QueryRootResolvers {
+  export interface Resolvers<Context = any, TypeParent = never> {
+    allUsers?: AllUsersResolver<(User | null)[], TypeParent, Context>;
+
+    userById?: UserByIdResolver<User | null, TypeParent, Context>;
+    /** Generates a new answer for the guessing game */
+    answer?: AnswerResolver<number[], TypeParent, Context>;
+  }
+
+  export type AllUsersResolver<R = (User | null)[], Parent = never, Context = any> = Resolver<R, Parent, Context>;
+  export type UserByIdResolver<R = User | null, Parent = never, Context = any> = Resolver<
+    R,
+    Parent,
+    Context,
+    UserByIdArgs
+  >;
+  export interface UserByIdArgs {
+    id: number;
+  }
+
+  export type AnswerResolver<R = number[], Parent = never, Context = any> = Resolver<R, Parent, Context>;
+}
+
 export namespace UserResolvers {
   export interface Resolvers<Context = any, TypeParent = User> {
     id?: IdResolver<number, TypeParent, Context>;
@@ -85,33 +108,14 @@ export namespace UserResolvers {
   export type EmailResolver<R = string, Parent = User, Context = any> = Resolver<R, Parent, Context>;
 }
 
-export namespace QueryRootResolvers {
-  export interface Resolvers<Context = any, TypeParent = QueryRoot> {
-    allUsers?: AllUsersResolver<(User | null)[], TypeParent, Context>;
-
-    userById?: UserByIdResolver<User | null, TypeParent, Context>;
-
-    answer?: AnswerResolver<number[], TypeParent, Context>;
-  }
-
-  export type AllUsersResolver<R = (User | null)[], Parent = QueryRoot, Context = any> = Resolver<R, Parent, Context>;
-  export type UserByIdResolver<R = User | null, Parent = QueryRoot, Context = any> = Resolver<
-    R,
-    Parent,
-    Context,
-    UserByIdArgs
-  >;
-  export interface UserByIdArgs {
-    id: number;
-  }
-
-  export type AnswerResolver<R = number[], Parent = QueryRoot, Context = any> = Resolver<R, Parent, Context>;
-}
-
 export namespace SubscriptionRootResolvers {
-  export interface Resolvers<Context = any, TypeParent = SubscriptionRoot> {
+  export interface Resolvers<Context = any, TypeParent = never> {
     newUser?: NewUserResolver<User | null, TypeParent, Context>;
   }
 
-  export type NewUserResolver<R = User | null, Parent = SubscriptionRoot, Context = any> = Resolver<R, Parent, Context>;
+  export type NewUserResolver<R = User | null, Parent = never, Context = any> = SubscriptionResolver<
+    R,
+    Parent,
+    Context
+  >;
 }
