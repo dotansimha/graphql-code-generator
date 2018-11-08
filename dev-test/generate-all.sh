@@ -26,4 +26,5 @@ CODEGEN_NO_NAMESPACES=true node packages/graphql-codegen-cli/dist/cli.js --templ
 node packages/graphql-codegen-cli/dist/cli.js --template graphql-codegen-typescript-template --skip-schema --schema ./dev-test/star-wars/schema.json --out ./dev-test/star-wars/types.skipSchema.ts "./dev-test/star-wars/**/*.graphql"
 node packages/graphql-codegen-cli/dist/cli.js --template graphql-codegen-typescript-template-multiple --schema ./dev-test/star-wars/schema.json --out ./dev-test/star-wars/ts-multiple/ "./dev-test/star-wars/**/*.graphql"
 
+CODEGEN_NO_NAMESPACES=true node packages/graphql-codegen-cli/dist/cli.js --template graphql-codegen-typescript-react-apollo-template --schema ./dev-test/test-message/schema.graphql --out ./dev-test/test-message/types.reactApollo.noNamespaces.tsx "./dev-test/test-message/documents.ts"
 
