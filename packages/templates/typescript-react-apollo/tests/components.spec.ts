@@ -121,7 +121,7 @@ describe('Components', () => {
           }
         `);
   });
-  it.skip('should generate HOCs', async () => {
+  it('should generate HOCs', async () => {
     const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
     const context = schemaToTemplateContext(schema);
 
@@ -146,12 +146,18 @@ describe('Components', () => {
     const content = compiled[0].content;
 
     expect(content).toBeSimilarStringTo(`
-      export function HOC<TProps = any, OperationOptions = ReactApollo.OperationOption<TProps, Query, Variables>>(operationOptions: OperationOptions){
-        return ReactApollo.graphql<TProps, Query, Variables>(
-          Document, 
-          operationOptions
-        );
-      };
+          export function HOC<TProps>(operationOptions:
+              ReactApollo.OperationOption<
+                  TProps,
+                  Query,
+                  Variables,
+                  Props
+              > | undefined){
+          return ReactApollo.graphql<TProps, Query, Variables>(
+              Document,
+              operationOptions
+          );
+        };
     `);
   });
   it('should generate Document variables for inline fragments', async () => {
