@@ -146,14 +146,14 @@ describe('Components', () => {
     const content = compiled[0].content;
 
     expect(content).toBeSimilarStringTo(`
-          export function HOC<TProps>(operationOptions:
+          export function HOC<TProps, TChildProps = any>(operationOptions:
               ReactApollo.OperationOption<
                   TProps,
                   Query,
                   Variables,
-                  Props
+                  Props<TChildProps>
               > | undefined){
-          return ReactApollo.graphql<TProps, Query, Variables>(
+          return ReactApollo.graphql<TProps, Query, Variables, Props<TChildProps>>(
               Document,
               operationOptions
           );
