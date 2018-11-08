@@ -15,6 +15,8 @@ import {
   generate
 } from 'graphql-code-generator';
 import { Types } from 'graphql-codegen-core';
+import { isUri } from 'valid-url';
+import { isAbsolute } from 'path';
 
 export class GraphQLCodegenPlugin {
   pluginName = 'GraphQLCodeGeneratorPlugin';
@@ -49,7 +51,10 @@ export class GraphQLCodegenPlugin {
     });
 
     compiler.hooks.beforeCompile.tapPromise(this.pluginName, () => this.generate());
-    compiler.hooks.afterCompile.tapPromise(this.pluginName, compilation => this.includeDocuments(compilation));
+    compiler.hooks.afterCompile.tapPromise(this.pluginName, async compilation => {
+      await this.includeDocuments(compilation);
+      await this.includeSchemas(compilation);
+    });
   }
 
   private initLegacy(options: CLIOptions) {
@@ -83,10 +88,10 @@ export class GraphQLCodegenPlugin {
       try {
         await generate(this.config, true);
       } catch (error) {
-        if (this.watch) {
-          // tslint:disable-next-line
-          console.error(error.details || error);
-        }
+        // if (this.watch) {
+        //   // tslint:disable-next-line
+        //   console.error(error.details || error);
+        // }
         throw error;
       }
     }
@@ -123,6 +128,18 @@ export class GraphQLCodegenPlugin {
     return false;
   }
 
+  private async includeSchemas(compilation: compilation.Compilation) {
+    if (!this.schemaLocations || !this.schemaLocations.length) {
+      return;
+    }
+
+    this.schemaLocations
+      .filter(isFilepath)
+      .map(file => (isAbsolute(file) ? file : resolve(process.cwd(), file)))
+      .filter(file => !compilation.fileDependencies.has(file))
+      .forEach(file => compilation.fileDependencies.add(file));
+  }
+
   private async includeDocuments(compilation: compilation.Compilation) {
     if (!this.documentLocations || !this.documentLocations.length) {
       return;
@@ -131,7 +148,11 @@ export class GraphQLCodegenPlugin {
     const found = await documentsFromGlobs(this.documentLocations);
 
     found
-      .filter((file: any) => !compilation.fileDependencies.has(file))
-      .map(file => compilation.fileDependencies.add(file));
+      .filter(file => !compilation.fileDependencies.has(file))
+      .forEach(file => compilation.fileDependencies.add(file));
   }
+}
+
+function isFilepath(schema: Types.Schema): schema is string {
+  return typeof schema === 'string' && !isUri(schema);
 }
