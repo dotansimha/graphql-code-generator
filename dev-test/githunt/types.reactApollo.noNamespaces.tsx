@@ -534,14 +534,10 @@ export class OnCommentAddedComponent extends React.Component<
     );
   }
 }
-export function OnCommentAddedHOC<TProps = any>(
+export type OnCommentAddedProps = Partial<ReactApollo.DataProps<OnCommentAddedSubscription, OnCommentAddedVariables>>;
+export function OnCommentAddedHOC<TProps>(
   operationOptions:
-    | ReactApollo.OperationOption<
-        TProps,
-        OnCommentAddedSubscription,
-        OnCommentAddedVariables,
-        Partial<ReactApollo.DataProps<OnCommentAddedSubscription, OnCommentAddedVariables>>
-      >
+    | ReactApollo.OperationOption<TProps, OnCommentAddedSubscription, OnCommentAddedVariables, OnCommentAddedProps>
     | undefined
 ) {
   return ReactApollo.graphql<TProps, OnCommentAddedSubscription, OnCommentAddedVariables>(
@@ -587,15 +583,9 @@ export class CommentComponent extends React.Component<Partial<ReactApollo.QueryP
     );
   }
 }
-export function CommentHOC<TProps = any>(
-  operationOptions:
-    | ReactApollo.OperationOption<
-        TProps,
-        CommentQuery,
-        CommentVariables,
-        Partial<ReactApollo.DataProps<CommentQuery, CommentVariables>>
-      >
-    | undefined
+export type CommentProps = Partial<ReactApollo.DataProps<CommentQuery, CommentVariables>>;
+export function CommentHOC<TProps>(
+  operationOptions: ReactApollo.OperationOption<TProps, CommentQuery, CommentVariables, CommentProps> | undefined
 ) {
   return ReactApollo.graphql<TProps, CommentQuery, CommentVariables>(CommentDocument, operationOptions);
 }
@@ -619,13 +609,16 @@ export class CurrentUserForProfileComponent extends React.Component<
     );
   }
 }
-export function CurrentUserForProfileHOC<TProps = any>(
+export type CurrentUserForProfileProps = Partial<
+  ReactApollo.DataProps<CurrentUserForProfileQuery, CurrentUserForProfileVariables>
+>;
+export function CurrentUserForProfileHOC<TProps>(
   operationOptions:
     | ReactApollo.OperationOption<
         TProps,
         CurrentUserForProfileQuery,
         CurrentUserForProfileVariables,
-        Partial<ReactApollo.DataProps<CurrentUserForProfileQuery, CurrentUserForProfileVariables>>
+        CurrentUserForProfileProps
       >
     | undefined
 ) {
@@ -653,15 +646,9 @@ export class GetFeedComponent extends React.Component<Partial<ReactApollo.QueryP
     );
   }
 }
-export function GetFeedHOC<TProps = any>(
-  operationOptions:
-    | ReactApollo.OperationOption<
-        TProps,
-        GetFeedQuery,
-        GetFeedVariables,
-        Partial<ReactApollo.DataProps<GetFeedQuery, GetFeedVariables>>
-      >
-    | undefined
+export type GetFeedProps = Partial<ReactApollo.DataProps<GetFeedQuery, GetFeedVariables>>;
+export function GetFeedHOC<TProps>(
+  operationOptions: ReactApollo.OperationOption<TProps, GetFeedQuery, GetFeedVariables, GetFeedProps> | undefined
 ) {
   return ReactApollo.graphql<TProps, GetFeedQuery, GetFeedVariables>(GetFeedDocument, operationOptions);
 }
@@ -684,14 +671,12 @@ export class SubmitRepositoryComponent extends React.Component<
     );
   }
 }
-export function SubmitRepositoryHOC<TProps = any>(
+export type SubmitRepositoryProps = Partial<
+  ReactApollo.MutateProps<SubmitRepositoryMutation, SubmitRepositoryVariables>
+>;
+export function SubmitRepositoryHOC<TProps>(
   operationOptions:
-    | ReactApollo.OperationOption<
-        TProps,
-        SubmitRepositoryMutation,
-        SubmitRepositoryVariables,
-        Partial<ReactApollo.MutateProps<SubmitRepositoryMutation, SubmitRepositoryVariables>>
-      >
+    | ReactApollo.OperationOption<TProps, SubmitRepositoryMutation, SubmitRepositoryVariables, SubmitRepositoryProps>
     | undefined
 ) {
   return ReactApollo.graphql<TProps, SubmitRepositoryMutation, SubmitRepositoryVariables>(
@@ -720,14 +705,10 @@ export class SubmitCommentComponent extends React.Component<
     );
   }
 }
-export function SubmitCommentHOC<TProps = any>(
+export type SubmitCommentProps = Partial<ReactApollo.MutateProps<SubmitCommentMutation, SubmitCommentVariables>>;
+export function SubmitCommentHOC<TProps>(
   operationOptions:
-    | ReactApollo.OperationOption<
-        TProps,
-        SubmitCommentMutation,
-        SubmitCommentVariables,
-        Partial<ReactApollo.MutateProps<SubmitCommentMutation, SubmitCommentVariables>>
-      >
+    | ReactApollo.OperationOption<TProps, SubmitCommentMutation, SubmitCommentVariables, SubmitCommentProps>
     | undefined
 ) {
   return ReactApollo.graphql<TProps, SubmitCommentMutation, SubmitCommentVariables>(
@@ -753,15 +734,9 @@ export class VoteComponent extends React.Component<Partial<ReactApollo.MutationP
     );
   }
 }
-export function VoteHOC<TProps = any>(
-  operationOptions:
-    | ReactApollo.OperationOption<
-        TProps,
-        VoteMutation,
-        VoteVariables,
-        Partial<ReactApollo.MutateProps<VoteMutation, VoteVariables>>
-      >
-    | undefined
+export type VoteProps = Partial<ReactApollo.MutateProps<VoteMutation, VoteVariables>>;
+export function VoteHOC<TProps>(
+  operationOptions: ReactApollo.OperationOption<TProps, VoteMutation, VoteVariables, VoteProps> | undefined
 ) {
   return ReactApollo.graphql<TProps, VoteMutation, VoteVariables>(VoteDocument, operationOptions);
 }
