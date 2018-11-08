@@ -19,7 +19,8 @@ module.exports = {
     'graphql-codegen-core',
     'graphql-tag',
     'lodash',
-    'graphql-codegen-plugin-helpers'
+    'graphql-codegen-plugin-helpers',
+    'moment'
   ],
   resolve: {
     mainFields: ['browser', 'main', 'module'],
