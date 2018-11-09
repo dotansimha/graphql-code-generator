@@ -1,5 +1,5 @@
 ---
-id: cli
+id: cli-commands
 title: CLI Commands
 ---
 

@@ -9,16 +9,16 @@ The general purpose of GraphQL Code Generator is to parse GraphQL syntax, transf
 
 Below is table with lists all available templates which can be installed via NPM, along with a short description. If you're looking for anything specific, we might already have the solution:
 
-| Format                                  | Purpose                                                          | Package Name & Docs                                                                                   |
-| --------------------------------------- | ---------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| TypeScript Common                       | Generate server-side TypeScript types, and client-side typings   | [`graphql-codegen-typescript-common`](./templates/typescript-common.md)                               |
-| TypeScript Client                       | Generate server-side TypeScript types, and client-side typings   | [`graphql-codegen-typescript-client`](./templates/typescript-client.md)                               |
-| TypeScript Server                       | Generate server-side TypeScript types, and client-side typings   | [`graphql-codegen-typescript-server`](./templates/typescript-server.md)                               |
-| TypeScript Resolvers                    | Generate server-side TypeScript types, and client-side typings   | [`graphql-codegen-typescript-resolvers`](./templates/typescript-resolvers.md)                         |
-| TypeScript Apollo Angular               | Generate server-side TypeScript types, and client-side typings   | [`graphql-codegen-typescript-apollo-angular`](./templates/typescript-apollo-angular.md)               |
-| TypeScript React Apollo                 | Generate server-side TypeScript types, and client-side typings   | [`graphql-codegen-typescript-react-apollo`](./templates/typescript-react-apollo.md)                   |
-| TypeScript MongoDB                      | Generate server-side TypeScript types, and client-side typings   | [`graphql-codegen-typescript-mongodb`](./templates/typescript-mongodb.md)                             |
-| TypeScript GraphQL Files Modules        | Generate server-side TypeScript types, and client-side typings   | [`graphql-codegen-typescript-graphql-files-modules`](./templates/typescript-graphql-files-modules.md) |
+| Format                                  | Purpose                                                              | Package Name & Docs                                                                                   |
+| --------------------------------------- | -------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| TypeScript Common                       | Generate server-side TypeScript types, and client-side typings       | [`graphql-codegen-typescript-common`](./templates/typescript-common.md)                               |
+| TypeScript Client                       | Generate client specific TypeScript types                            | [`graphql-codegen-typescript-client`](./templates/typescript-client.md)                               |
+| TypeScript Server                       | Generate server specific TypeScript types                            | [`graphql-codegen-typescript-server`](./templates/typescript-server.md)                               |
+| TypeScript Resolvers                    | Generate TypeScript signature for server-side resolvers              | [`graphql-codegen-typescript-resolvers`](./templates/typescript-resolvers.md)                         |
+| TypeScript Apollo Angular               | Generate TypeScript types, and Apollo Angular Services               | [`graphql-codegen-typescript-apollo-angular`](./templates/typescript-apollo-angular.md)               |
+| TypeScript React Apollo                 | Generate TypeScript types, and React Apollo Components               | [`graphql-codegen-typescript-react-apollo`](./templates/typescript-react-apollo.md)                   |
+| TypeScript MongoDB                      | Generate Generate server-side TypeScript types, with MongoDB models  | [`graphql-codegen-typescript-mongodb`](./templates/typescript-mongodb.md)                             |
+| TypeScript GraphQL Files Modules        | Generate `declare module` for `.graphql` files                       | [`graphql-codegen-typescript-graphql-files-modules`](./templates/typescript-graphql-files-modules.md) |
 
 In addition, you can build your own code generating templates based on your specific needs. For more information, check [this doc page](../custom-codegen/template).
 
