@@ -1,6 +1,6 @@
 ---
-id: mongodb-typescript-models
-title: MongoDB TypeScript Models Template
+id: typescript-mongodb
+title: Typescript MongoDB
 ---
 
 This template would generate TypeScript types for MongoDB models, which makes it relevant for server-side development only. It uses GraphQL directives to declare the types you want to generate and use in your MongoDB backend.
@@ -33,7 +33,7 @@ This interface can be used for db read/write purposes, thus making communication
 
 Install using `npm` (or `yarn`):
 
-    $ npm install graphql-codegen-typescript-mongodb-template
+    $ npm install graphql-codegen-typescript-mongodb
 
 ## Usage
 

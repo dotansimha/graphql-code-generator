@@ -1,6 +1,6 @@
 ---
-id: graphql-typescript-modules
-title: GraphQL Typescript Modules Template
+id: typescript-graphql-files-modules
+title: TypeScript GraphQL Files Modules
 ---
 
 This template generates TypeScript typings for `.graphql` files containing GraphQL documents, which later on can be consumed using [`graphql-tag/loader`](https://github.com/apollographql/graphql-tag#webpack-preprocessing-with-graphql-tagloader), and get type-check and type-safety for your imports. This means that any time you import objects from `.graphql` files, your IDE will provide auto-complete.
@@ -17,7 +17,7 @@ To use this template, make sure you are using [`graphql-tag/loader`](https://git
 
 Install using `npm` (or `yarn`):
 
-    $ npm install graphql-codegen-graphql-files-typescript-modules
+    $ npm install graphql-codegen-typescript-graphql-files-modules
 
 ## Example
 

@@ -1,9 +1,9 @@
 ---
 id: typescript-resolvers
-title: TypeScript Resolvers Template
+title: TypeScript Resolvers
 ---
 
-This template extends the basic TypeScript template [`graphql-codegen-typescript-template`](typescript-typings) and thus shares a similar configuration.
+This template extends the basic TypeScript template [`graphql-codegen-typescript-common`](typescript-typings) and thus shares a similar configuration.
 
 ## Pre-Requirements
 
@@ -13,13 +13,13 @@ A TypeScript project with `@types/graphql` installed.
 
 Install using `npm` (or `yarn`):
 
-    $ npm install graphql-codegen-typescript-resolvers-template
+    $ npm install graphql-codegen-typescript-resolvers
 
 ## Usage
 
 Run `gql-gen` as usual:
 
-    $ gql-gen --template graphql-codegen-typescript-resolvers-template --schema schema.json --out ./src/resolvers-types.ts
+    $ gql-gen --template graphql-codegen-typescript-resolvers --schema schema.json --out ./src/resolvers-types.ts
 
 Import the types from the generated file and use in the resolver:
 

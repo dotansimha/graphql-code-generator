@@ -1,9 +1,9 @@
 ---
-id: apollo-angular
-title: Apollo Angular Template
+id: typescript-apollo-angular
+title: Typescript Apollo Angular
 ---
 
-This template generates Apollo services (`Query`, `Mutation` and `Subscription`) with TypeScript typings. This template extends the basic TypeScript template [`graphql-codegen-typescript-template`](typescript-typings) and thus shares a similar configuration.
+This template generates Apollo services (`Query`, `Mutation` and `Subscription`) with TypeScript typings. This template extends the basic TypeScript template [`graphql-codegen-apollo-angular`](typescript-typings) and thus shares a similar configuration.
 
 It will generate a strongly typed Angular service for every defined query, mutation or subscription. The generated Angular services are ready to inject and use within your Angular component.
 
@@ -13,7 +13,7 @@ To shed some more light regards this template, it's recommended to go through th
 
 Install using `npm` (or `yarn`):
 
-    $ npm install graphql-codegen-apollo-angular-template
+    $ npm install graphql-codegen-typescript-apollo-angular
 
 ## Example
 
