@@ -36,7 +36,13 @@ Here are the supported options that you can define in the config file (see [sour
 
 - **`generates` (required)** - A map where the key represents an output path for the generated code and the value represents a set of options which are relevant for that specific file. Below are the possible options that can be specified:
 
-  - **`generates.plugins` (required)** - A list of plug-ins to use when generating the file. Templates are also considered as plug-ins and they can be specified in this section, such as `typescript-common` or `typescript-mongodb`. A full list of supported templates can be found [here](../templates).
+  - **`generates.plugins` (required)** - A list of plug-ins to use when generating the file. Templates are also considered as plug-ins and they can be specified in this section, such as `typescript-common` or `typescript-mongodb`. A full list of supported templates can be found [here](../templates). Additional plug-ins can be specified to affect the code generation behavior as detailed blow:
+
+    - **`generates.plugins.add`** - A code string to append to the top of the generated file; for example: `// tslint:disable` to disable linting for that file.
+
+    - **`generates.plugins.time`** - Print the time it took to generate the file in the specified [MonentJS format](https://momentjs.com/) using the `format` property.
+
+    - **`generates.plugins.schema-ast`** - Print the AST of the schema for the generated file. Very useful for troubleshooting and debugging.
 
   - **`generates.documents`** - Same as root `documents`.
 
