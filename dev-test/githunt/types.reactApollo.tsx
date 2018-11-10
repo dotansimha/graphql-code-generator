@@ -410,13 +410,16 @@ export namespace OnCommentAdded {
   `;
   export class Component extends React.Component<Partial<ReactApollo.SubscriptionProps<Subscription, Variables>>> {
     render() {
-      return <ReactApollo.Subscription<Subscription, Variables> subscription={Document} {...this['props'] as any} />;
+      return (
+        <ReactApollo.Subscription<Subscription, Variables> subscription={Document} {...(this as any)['props'] as any} />
+      );
     }
   }
-  export function HOC<TProps = any, OperationOptions = ReactApollo.OperationOption<TProps, Subscription, Variables>>(
-    operationOptions: OperationOptions
+  export type Props<TChildProps = any> = Partial<ReactApollo.DataProps<Subscription, Variables>> & TChildProps;
+  export function HOC<TProps, TChildProps = any>(
+    operationOptions: ReactApollo.OperationOption<TProps, Subscription, Variables, Props<TChildProps>> | undefined
   ) {
-    return ReactApollo.graphql<TProps, Subscription, Variables>(Document, operationOptions);
+    return ReactApollo.graphql<TProps, Subscription, Variables, Props<TChildProps>>(Document, operationOptions);
   }
 }
 export namespace Comment {
@@ -453,13 +456,14 @@ export namespace Comment {
   `;
   export class Component extends React.Component<Partial<ReactApollo.QueryProps<Query, Variables>>> {
     render() {
-      return <ReactApollo.Query<Query, Variables> query={Document} {...this['props'] as any} />;
+      return <ReactApollo.Query<Query, Variables> query={Document} {...(this as any)['props'] as any} />;
     }
   }
-  export function HOC<TProps = any, OperationOptions = ReactApollo.OperationOption<TProps, Query, Variables>>(
-    operationOptions: OperationOptions
+  export type Props<TChildProps = any> = Partial<ReactApollo.DataProps<Query, Variables>> & TChildProps;
+  export function HOC<TProps, TChildProps = any>(
+    operationOptions: ReactApollo.OperationOption<TProps, Query, Variables, Props<TChildProps>> | undefined
   ) {
-    return ReactApollo.graphql<TProps, Query, Variables>(Document, operationOptions);
+    return ReactApollo.graphql<TProps, Query, Variables, Props<TChildProps>>(Document, operationOptions);
   }
 }
 export namespace CurrentUserForProfile {
@@ -473,13 +477,14 @@ export namespace CurrentUserForProfile {
   `;
   export class Component extends React.Component<Partial<ReactApollo.QueryProps<Query, Variables>>> {
     render() {
-      return <ReactApollo.Query<Query, Variables> query={Document} {...this['props'] as any} />;
+      return <ReactApollo.Query<Query, Variables> query={Document} {...(this as any)['props'] as any} />;
     }
   }
-  export function HOC<TProps = any, OperationOptions = ReactApollo.OperationOption<TProps, Query, Variables>>(
-    operationOptions: OperationOptions
+  export type Props<TChildProps = any> = Partial<ReactApollo.DataProps<Query, Variables>> & TChildProps;
+  export function HOC<TProps, TChildProps = any>(
+    operationOptions: ReactApollo.OperationOption<TProps, Query, Variables, Props<TChildProps>> | undefined
   ) {
-    return ReactApollo.graphql<TProps, Query, Variables>(Document, operationOptions);
+    return ReactApollo.graphql<TProps, Query, Variables, Props<TChildProps>>(Document, operationOptions);
   }
 }
 export namespace Feed {
@@ -497,13 +502,14 @@ export namespace Feed {
   `;
   export class Component extends React.Component<Partial<ReactApollo.QueryProps<Query, Variables>>> {
     render() {
-      return <ReactApollo.Query<Query, Variables> query={Document} {...this['props'] as any} />;
+      return <ReactApollo.Query<Query, Variables> query={Document} {...(this as any)['props'] as any} />;
     }
   }
-  export function HOC<TProps = any, OperationOptions = ReactApollo.OperationOption<TProps, Query, Variables>>(
-    operationOptions: OperationOptions
+  export type Props<TChildProps = any> = Partial<ReactApollo.DataProps<Query, Variables>> & TChildProps;
+  export function HOC<TProps, TChildProps = any>(
+    operationOptions: ReactApollo.OperationOption<TProps, Query, Variables, Props<TChildProps>> | undefined
   ) {
-    return ReactApollo.graphql<TProps, Query, Variables>(Document, operationOptions);
+    return ReactApollo.graphql<TProps, Query, Variables, Props<TChildProps>>(Document, operationOptions);
   }
 }
 export namespace SubmitRepository {
@@ -516,13 +522,15 @@ export namespace SubmitRepository {
   `;
   export class Component extends React.Component<Partial<ReactApollo.MutationProps<Mutation, Variables>>> {
     render() {
-      return <ReactApollo.Mutation<Mutation, Variables> mutation={Document} {...this['props'] as any} />;
+      return <ReactApollo.Mutation<Mutation, Variables> mutation={Document} {...(this as any)['props'] as any} />;
     }
   }
-  export function HOC<TProps = any, OperationOptions = ReactApollo.OperationOption<TProps, Mutation, Variables>>(
-    operationOptions: OperationOptions
+  export type Props<TChildProps = any> = Partial<ReactApollo.MutateProps<Mutation, Variables>> & TChildProps;
+  export type MutationFn = ReactApollo.MutationFn<Mutation, Variables>;
+  export function HOC<TProps, TChildProps = any>(
+    operationOptions: ReactApollo.OperationOption<TProps, Mutation, Variables, Props<TChildProps>> | undefined
   ) {
-    return ReactApollo.graphql<TProps, Mutation, Variables>(Document, operationOptions);
+    return ReactApollo.graphql<TProps, Mutation, Variables, Props<TChildProps>>(Document, operationOptions);
   }
 }
 export namespace SubmitComment {
@@ -537,13 +545,15 @@ export namespace SubmitComment {
   `;
   export class Component extends React.Component<Partial<ReactApollo.MutationProps<Mutation, Variables>>> {
     render() {
-      return <ReactApollo.Mutation<Mutation, Variables> mutation={Document} {...this['props'] as any} />;
+      return <ReactApollo.Mutation<Mutation, Variables> mutation={Document} {...(this as any)['props'] as any} />;
     }
   }
-  export function HOC<TProps = any, OperationOptions = ReactApollo.OperationOption<TProps, Mutation, Variables>>(
-    operationOptions: OperationOptions
+  export type Props<TChildProps = any> = Partial<ReactApollo.MutateProps<Mutation, Variables>> & TChildProps;
+  export type MutationFn = ReactApollo.MutationFn<Mutation, Variables>;
+  export function HOC<TProps, TChildProps = any>(
+    operationOptions: ReactApollo.OperationOption<TProps, Mutation, Variables, Props<TChildProps>> | undefined
   ) {
-    return ReactApollo.graphql<TProps, Mutation, Variables>(Document, operationOptions);
+    return ReactApollo.graphql<TProps, Mutation, Variables, Props<TChildProps>>(Document, operationOptions);
   }
 }
 export namespace Vote {
@@ -560,12 +570,14 @@ export namespace Vote {
   `;
   export class Component extends React.Component<Partial<ReactApollo.MutationProps<Mutation, Variables>>> {
     render() {
-      return <ReactApollo.Mutation<Mutation, Variables> mutation={Document} {...this['props'] as any} />;
+      return <ReactApollo.Mutation<Mutation, Variables> mutation={Document} {...(this as any)['props'] as any} />;
     }
   }
-  export function HOC<TProps = any, OperationOptions = ReactApollo.OperationOption<TProps, Mutation, Variables>>(
-    operationOptions: OperationOptions
+  export type Props<TChildProps = any> = Partial<ReactApollo.MutateProps<Mutation, Variables>> & TChildProps;
+  export type MutationFn = ReactApollo.MutationFn<Mutation, Variables>;
+  export function HOC<TProps, TChildProps = any>(
+    operationOptions: ReactApollo.OperationOption<TProps, Mutation, Variables, Props<TChildProps>> | undefined
   ) {
-    return ReactApollo.graphql<TProps, Mutation, Variables>(Document, operationOptions);
+    return ReactApollo.graphql<TProps, Mutation, Variables, Props<TChildProps>>(Document, operationOptions);
   }
 }

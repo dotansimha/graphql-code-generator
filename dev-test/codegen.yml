@@ -6,6 +6,12 @@ generates:
       - typescript-common
       - typescript-server
       - typescript-resolvers
+  ./dev-test/test-schema/resolvers-root.ts:
+    schema: ./dev-test/test-schema/schema-with-root.graphql
+    plugins: 
+      - typescript-common
+      - typescript-server
+      - typescript-resolvers
   ./dev-test/test-schema/typings.ts:
     schema: ./dev-test/test-schema/schema.json
     plugins: 
@@ -78,6 +84,16 @@ generates:
       - typescript-common
       - typescript-client
       - typescript-react-apollo
+  ./dev-test/githunt/types.reactApollo.noNamespaces.tsx:
+    schema: ./dev-test/githunt/schema.json
+    documents: ./dev-test/githunt/**/*.graphql
+    config:
+      noNamespaces: true
+    plugins:
+      - add: // tslint:disable
+      - typescript-common
+      - typescript-client
+      - typescript-react-apollo
   ./dev-test/star-wars/types.ts:
     schema: ./dev-test/star-wars/schema.json
     documents: ./dev-test/star-wars/**/*.graphql
@@ -122,3 +138,14 @@ generates:
     plugins:
       - typescript-common
       - typescript-client
+  ./dev-test/test-message/types.reactApollo.noNamespaces.tsx:
+    schema: ./dev-test/test-message/schema.graphql
+    documents: ./dev-test/test-message/documents.ts
+    config:
+      noNamespaces: true
+    plugins:
+      - add: // tslint:disable
+      - typescript-common
+      - typescript-client
+      - typescript-react-apollo
+

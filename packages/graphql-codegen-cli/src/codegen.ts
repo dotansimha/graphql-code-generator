@@ -63,7 +63,8 @@ export async function executeCodegen(config: Types.Config): Promise<FileOutput[]
   };
   const listrOptions: any = {
     ...commonListrOptions,
-    renderer: Renderer,
+    renderer: config.silent ? 'silent' : Renderer,
+    nonTTYRenderer: config.silent ? 'silent' : 'default',
     collapse: true,
     clearOutput: false
   };

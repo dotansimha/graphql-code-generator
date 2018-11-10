@@ -6,6 +6,8 @@ export interface Query {
   allUsers: (User | null)[];
 
   userById?: User | null;
+  /** Generates a new answer for the guessing game */
+  answer: number[];
 }
 
 export interface User {
@@ -14,6 +16,10 @@ export interface User {
   name: string;
 
   email: string;
+}
+
+export interface Subscription {
+  newUser?: User | null;
 }
 
 // ====================================================
@@ -57,6 +63,8 @@ export namespace QueryResolvers {
     allUsers?: AllUsersResolver<(User | null)[], TypeParent, Context>;
 
     userById?: UserByIdResolver<User | null, TypeParent, Context>;
+    /** Generates a new answer for the guessing game */
+    answer?: AnswerResolver<number[], TypeParent, Context>;
   }
 
   export type AllUsersResolver<R = (User | null)[], Parent = never, Context = any> = Resolver<R, Parent, Context>;
@@ -69,6 +77,8 @@ export namespace QueryResolvers {
   export interface UserByIdArgs {
     id: number;
   }
+
+  export type AnswerResolver<R = number[], Parent = never, Context = any> = Resolver<R, Parent, Context>;
 }
 
 export namespace UserResolvers {
@@ -83,4 +93,16 @@ export namespace UserResolvers {
   export type IdResolver<R = number, Parent = User, Context = any> = Resolver<R, Parent, Context>;
   export type NameResolver<R = string, Parent = User, Context = any> = Resolver<R, Parent, Context>;
   export type EmailResolver<R = string, Parent = User, Context = any> = Resolver<R, Parent, Context>;
+}
+
+export namespace SubscriptionResolvers {
+  export interface Resolvers<Context = any, TypeParent = never> {
+    newUser?: NewUserResolver<User | null, TypeParent, Context>;
+  }
+
+  export type NewUserResolver<R = User | null, Parent = never, Context = any> = SubscriptionResolver<
+    R,
+    Parent,
+    Context
+  >;
 }
