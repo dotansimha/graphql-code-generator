@@ -18,6 +18,10 @@ import { Types } from 'graphql-codegen-core';
 import { isUri } from 'valid-url';
 import { isAbsolute } from 'path';
 
+function forceAbsoulePath(filepath: string) {
+  return isAbsolute(filepath) ? filepath : resolve(process.cwd(), filepath);
+}
+
 export class GraphQLCodegenPlugin {
   pluginName = 'GraphQLCodeGeneratorPlugin';
   schemaChecksum = '';
@@ -59,14 +63,14 @@ export class GraphQLCodegenPlugin {
 
   private initLegacy(options: CLIOptions) {
     this.config = createConfigFromOldCli(options);
-    this.outputFiles = [resolve(process.cwd(), options.out)];
-    this.schemaLocations = [resolve(process.cwd(), options.schema)];
+    this.outputFiles = [forceAbsoulePath(options.out)];
+    this.schemaLocations = [forceAbsoulePath(options.schema)];
     this.documentLocations = options.args;
   }
 
   private init(configPath?: string) {
     this.config = createConfig(configPath);
-    this.outputFiles = Object.keys(this.config.generates);
+    this.outputFiles = Object.keys(this.config.generates).map(forceAbsoulePath);
     this.schemaLocations = normalizeInstanceOrArray<Types.Schema>(this.config.schema);
     this.documentLocations = normalizeInstanceOrArray(this.config.documents);
 
@@ -135,7 +139,7 @@ export class GraphQLCodegenPlugin {
 
     this.schemaLocations
       .filter(isFilepath)
-      .map(file => (isAbsolute(file) ? file : resolve(process.cwd(), file)))
+      .map(forceAbsoulePath)
       .filter(file => !compilation.fileDependencies.has(file))
       .forEach(file => compilation.fileDependencies.add(file));
   }
@@ -148,6 +152,7 @@ export class GraphQLCodegenPlugin {
     const found = await documentsFromGlobs(this.documentLocations);
 
     found
+      .map(forceAbsoulePath)
       .filter(file => !compilation.fileDependencies.has(file))
       .forEach(file => compilation.fileDependencies.add(file));
   }
