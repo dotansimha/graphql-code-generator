@@ -31,7 +31,7 @@
     "@types/glob": "7.1.1",
     "@types/jest": "23.3.9",
     "@types/mkdirp": "0.5.2",
-    "@types/node": "10.12.3",
+    "@types/node": "10.12.5",
     "@types/request": "2.48.1",
     "@types/common-tags": "1.4.0",
     "@types/graphql": "14.0.3",
