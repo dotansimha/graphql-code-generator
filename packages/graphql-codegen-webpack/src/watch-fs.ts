@@ -1,12 +1,10 @@
-const log = console['log'];
-
 export class WatchFileSystem {
   constructor(private compiler: any, private wfs: any, private ignoredFiles: string[]) {}
 
   watch(files: string[], dirs: any, missing: any, startTime: any, options: any, callback: any, callbackUndelayed: any) {
     const notIgnored = (path: string) => !this.ignoredFiles.includes(path);
 
-    return this.wfs.watch(
+    const watcher = this.wfs.watch(
       files.filter(notIgnored),
       dirs,
       missing,
@@ -51,5 +49,18 @@ export class WatchFileSystem {
       },
       callbackUndelayed
     );
+
+    return {
+      close: () => watcher.close(),
+      pause: () => watcher.pause(),
+      getContextTimestamps: () => watcher.getContextTimestamps(),
+      getFileTimestamps: () => {
+        const fileTimestamps = watcher.getFileTimestamps();
+        this.ignoredFiles.forEach(ignored => {
+          fileTimestamps.set(ignored, new Date().getTime());
+        });
+        return fileTimestamps;
+      }
+    };
   }
 }

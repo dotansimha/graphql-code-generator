@@ -11,7 +11,6 @@
     "lint": "tslint src/**/*.ts",
     "prebuild": "yarn clean && yarn lint",
     "build": "tsc",
-    "postbuild": "cp -R /Users/kamilkisiela/Repo/dotansimha/graphql-code-generator/packages/graphql-codegen-webpack/dist /Users/kamilkisiela/Repo/kamilkisiela/graphql-webpack/node_modules/graphql-codegen-webpack",
     "prestart": "yarn build",
     "start": "cd dist && node index.js",
     "debug": "cd dist && node --inspect --debug-brk index.js",
