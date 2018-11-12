@@ -149,20 +149,6 @@ export async function executeCodegen(config: Types.Config): Promise<FileOutput[]
     /* Normalize root "schema" field */
     schemas = normalizeInstanceOrArray<Types.Schema>(config.schema);
 
-    if (schemas.length === 0) {
-      throw new DetailedError(
-        'Invalid Codegen Configuration!',
-        `
-        Please make sure that your codegen config file contains the "schema" field.
-        
-        It should looks like that:
-
-        schema:
-          - my-schema.graphql
-        `
-      );
-    }
-
     /* Normalize root "documents" field */
     documents = normalizeInstanceOrArray<Types.OperationDocument>(config.documents);
 
@@ -214,7 +200,11 @@ export async function executeCodegen(config: Types.Config): Promise<FileOutput[]
 
   async function loadRootSchema() {
     /* Load root schemas */
-    rootSchema = await mergeSchemas(await Promise.all(schemas.map(pointToScehma => loadSchema(pointToScehma, config))));
+    if (schemas.length) {
+      rootSchema = await mergeSchemas(
+        await Promise.all(schemas.map(pointToScehma => loadSchema(pointToScehma, config)))
+      );
+    }
   }
 
   async function loadRootDocuments() {
