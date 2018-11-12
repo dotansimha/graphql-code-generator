@@ -1,3 +1,5 @@
+import { DocumentFromString } from './loaders/documents/document-from-string';
+import { SchemaFromString } from './loaders/schema/schema-from-string';
 import { FileOutput, GraphQLSchema, DocumentFile, Types, CodegenPlugin } from 'graphql-codegen-core';
 import { mergeSchemas as remoteMergeSchemas, makeExecutableSchema } from 'graphql-tools';
 import * as Listr from 'listr';
@@ -6,12 +8,11 @@ import { IntrospectionFromUrlLoader } from './loaders/schema/introspection-from-
 import { IntrospectionFromFileLoader } from './loaders/schema/introspection-from-file';
 import { SchemaFromTypedefs } from './loaders/schema/schema-from-typedefs';
 import { SchemaFromExport } from './loaders/schema/schema-from-export';
-import { documentsFromGlobs } from './utils/documents-glob';
-import { loadDocumentsSources } from './loaders/documents/document-loader';
 import { validateGraphQlDocuments, checkValidationErrors } from './loaders/documents/validate-documents';
 import { prettify } from './utils/prettier';
 import { Renderer } from './utils/listr-renderer';
 import { DetailedError } from './errors';
+import { DocumentsFromGlob } from './loaders/documents/documents-from-glob';
 
 export interface GenerateOutputOptions {
   filename: string;
@@ -30,12 +31,25 @@ export interface ExecutePluginOptions {
   allPlugins: Types.ConfiguredPlugin[];
 }
 
+const documentsHandlers = [new DocumentFromString(), new DocumentsFromGlob()];
+
 const schemaHandlers = [
   new IntrospectionFromUrlLoader(),
   new IntrospectionFromFileLoader(),
+  new SchemaFromString(),
   new SchemaFromTypedefs(),
   new SchemaFromExport()
 ];
+
+const loadDocuments = async (documentDef: string, config: Types.Config): Promise<DocumentFile[]> => {
+  for (const handler of documentsHandlers) {
+    if (await handler.canHandle(documentDef)) {
+      return handler.handle(documentDef, config);
+    }
+  }
+
+  return [];
+};
 
 const loadSchema = async (schemaDef: Types.Schema, config: Types.Config): Promise<GraphQLSchema> => {
   for (const handler of schemaHandlers) {
@@ -54,7 +68,22 @@ const loadSchema = async (schemaDef: Types.Schema, config: Types.Config): Promis
     }
   }
 
-  throw new Error(`Could not handle schema: ${schemaDef}`);
+  throw new DetailedError(
+    'Failed to load schema',
+    `
+    Failed to load schema from ${schemaDef}.
+
+    GraphQL Code Generator supports:
+      - ES Modules and CommonJS exports
+      - Introspection JSON File
+      - URL of GraphQL endpoint
+      - Multiple files with type definitions
+      - String in config file
+
+    Try to use one of above options and run codegen again.
+
+  `
+  );
 };
 
 async function mergeSchemas(schemas: GraphQLSchema[]): Promise<GraphQLSchema> {
@@ -137,8 +166,13 @@ export async function executeCodegen(config: Types.Config): Promise<FileOutput[]
   async function loadRootDocuments() {
     /* Load root documents */
     if (documents.length > 0) {
-      const foundDocumentsPaths = await documentsFromGlobs(documents);
-      rootDocuments = await loadDocumentsSources(foundDocumentsPaths);
+      for (const docDef of documents) {
+        const documents = await loadDocuments(docDef, config);
+
+        if (documents.length > 0) {
+          rootDocuments.push(...documents);
+        }
+      }
 
       if (rootSchema) {
         const errors = validateGraphQlDocuments(rootSchema, rootDocuments);
@@ -192,8 +226,15 @@ export async function executeCodegen(config: Types.Config): Promise<FileOutput[]
             }
 
             async function addDocuments() {
-              const foundDocumentsPaths = await documentsFromGlobs(outputSpecificDocuments);
-              const additionalDocs = await loadDocumentsSources(foundDocumentsPaths);
+              const additionalDocs = [];
+
+              for (const docDef of outputSpecificDocuments) {
+                const documents = await loadDocuments(docDef, config);
+
+                if (documents.length > 0) {
+                  additionalDocs.push(...documents);
+                }
+              }
 
               if (outputSchema) {
                 const errors = validateGraphQlDocuments(outputSchema, additionalDocs);
