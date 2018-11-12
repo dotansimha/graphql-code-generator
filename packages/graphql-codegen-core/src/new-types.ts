@@ -34,7 +34,7 @@ export namespace Types {
 
   /* Config Definition */
   export interface Config {
-    schema: InstanceOrArray<Schema>;
+    schema?: InstanceOrArray<Schema>;
     require?: RequireExtension;
     mergeSchemaFiles?: string;
     documents?: InstanceOrArray<OperationDocument>;
