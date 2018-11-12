@@ -113,7 +113,10 @@ describe('Codegen Executor', () => {
       try {
         await executeCodegen({
           generates: {
-            'out.ts': ['typescript-common', 'typescript-server']
+            'out.ts': {
+              schema: SIMPLE_TEST_SCHEMA,
+              plugins: ['typescript-common', 'typescript-server']
+            }
           }
         } as any);
 
