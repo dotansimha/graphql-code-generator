@@ -149,12 +149,66 @@ export async function executeCodegen(config: Types.Config): Promise<FileOutput[]
     /* Normalize root "schema" field */
     schemas = normalizeInstanceOrArray<Types.Schema>(config.schema);
 
+    if (schemas.length === 0) {
+      throw new DetailedError(
+        'Invalid Codegen Configuration!',
+        `
+        Please make sure that your codegen config file contains the "schema" field.
+        
+        It should looks like that:
+
+        schema:
+          - my-schema.graphql
+        `
+      );
+    }
+
     /* Normalize root "documents" field */
     documents = normalizeInstanceOrArray<Types.OperationDocument>(config.documents);
 
     /* Normalize "generators" field */
-    for (const filename of Object.keys(config.generates)) {
+    const generateKeys = Object.keys(config.generates);
+
+    if (generateKeys.length === 0) {
+      throw new DetailedError(
+        'Invalid Codegen Configuration!',
+        `
+        Please make sure that your codegen config file contains the "generates" field, with a specification for the plugins you need.
+        
+        It should looks like that:
+
+        schema:
+          - my-schema.graphql
+        generates:
+          my-file.ts:
+            - plugin1
+            - plugin2
+            - plugin3
+        `
+      );
+    }
+
+    for (const filename of generateKeys) {
       generates[filename] = normalizeOutputParam(config.generates[filename]);
+
+      if (generates[filename].plugins.length === 0) {
+        throw new DetailedError(
+          'Invalid Codegen Configuration!',
+          `
+          Please make sure that your codegen config file has defined plugins list for output "${filename}".
+          
+          It should looks like that:
+  
+          schema:
+            - my-schema.graphql
+          generates:
+            my-file.ts:
+              - plugin1
+              - plugin2
+              - plugin3
+          `
+        );
+      }
     }
   }
 
