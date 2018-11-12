@@ -1,4 +1,5 @@
-import { executeCodegen } from '../src/codegen';
+import { makeExecutableSchema } from 'graphql-tools';
+import { executeCodegen, mergeSchemas } from '../src/codegen';
 
 const SHOULD_NOT_THROW_STRING = 'SHOULD_NOT_THROW';
 const SIMPLE_TEST_SCHEMA = `type MyType { f: String } type Query { f: String }`;
@@ -373,5 +374,26 @@ describe('Codegen Executor', () => {
     });
   });
 
-  describe('Schema Merging', () => {});
+  describe('Schema Merging', () => {
+    it('should merge schemas and keep their directives', async () => {
+      const merged = await mergeSchemas([
+        makeExecutableSchema({ typeDefs: SIMPLE_TEST_SCHEMA }),
+        makeExecutableSchema({
+          typeDefs: `
+            directive @id on FIELD_DEFINITION
+
+            type Post {
+              id: String @id
+            }
+          `
+        })
+      ]);
+
+      const directives = merged.getDirectives().map(({ name }) => name);
+      const post = merged.getType('Post');
+
+      expect(directives).toContainEqual('id');
+      expect(post.astNode.directives.map(({ name }) => name.value)).toContainEqual('id');
+    });
+  });
 });

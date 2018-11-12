@@ -86,7 +86,7 @@ const loadSchema = async (schemaDef: Types.Schema, config: Types.Config): Promis
   );
 };
 
-async function mergeSchemas(schemas: GraphQLSchema[]): Promise<GraphQLSchema> {
+export async function mergeSchemas(schemas: GraphQLSchema[]): Promise<GraphQLSchema> {
   if (schemas.length === 0) {
     return null;
   } else if (schemas.length === 1) {
