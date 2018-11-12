@@ -375,7 +375,7 @@ describe('Codegen Executor', () => {
   });
 
   describe('Schema Merging', () => {
-    it('should merge schemas and keep their directives', async () => {
+    it('should keep definitions of all directives', async () => {
       const merged = await mergeSchemas([
         makeExecutableSchema({ typeDefs: SIMPLE_TEST_SCHEMA }),
         makeExecutableSchema({
@@ -389,11 +389,24 @@ describe('Codegen Executor', () => {
         })
       ]);
 
-      const directives = merged.getDirectives().map(({ name }) => name);
-      const post = merged.getType('Post');
+      expect(merged.getDirectives().map(({ name }) => name)).toContainEqual('id');
+    });
 
-      expect(directives).toContainEqual('id');
-      expect(post.astNode.directives.map(({ name }) => name.value)).toContainEqual('id');
+    it('should keep directives in types', async () => {
+      const merged = await mergeSchemas([
+        makeExecutableSchema({ typeDefs: SIMPLE_TEST_SCHEMA }),
+        makeExecutableSchema({
+          typeDefs: `
+            directive @id on FIELD_DEFINITION
+
+            type Post {
+              id: String @id
+            }
+          `
+        })
+      ]);
+
+      expect(merged.getType('Post').astNode.directives.map(({ name }) => name.value)).toContainEqual('id');
     });
   });
 });
