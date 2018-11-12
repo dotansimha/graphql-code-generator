@@ -109,7 +109,7 @@ describe('Codegen Executor', () => {
       expect(output.length).toBe(1);
     });
 
-    it('Should throw when schema field is missing', async () => {
+    it('Should not throw when schema field is missing', async () => {
       try {
         await executeCodegen({
           generates: {
@@ -120,7 +120,7 @@ describe('Codegen Executor', () => {
         throw new Error(SHOULD_NOT_THROW_STRING);
       } catch (e) {
         expect(e.message).not.toBe(SHOULD_NOT_THROW_STRING);
-        expect(e.message).toBe('Invalid Codegen Configuration!');
+        expect(e.message).not.toBe('Invalid Codegen Configuration!');
       }
     });
 
