@@ -59,7 +59,7 @@
     ],
     "*.{js,json,css,md,ts,tsx}": [
       "prettier --write",
-      "git add"
+      "git add -f"
     ]
   },
   "resolutions": {

@@ -1,25 +1,15 @@
-const renderMarkdown = require('docusaurus/lib/core/renderMarkdown')
-const fs = require('fs')
-const React = require('react')
-
-const { freeText } = require('../../../utils')
-
-const input = fs.readFileSync(`${__dirname}/in.graphql`).toString()
-const output = fs.readFileSync(`${__dirname}/out.ts`).toString()
-
-const Code = (props) => {
-  const code = renderMarkdown(`\`\`\`${props.ext}\n${freeText(props.body)}\n\`\`\``)
-
-  return (
-    <div dangerouslySetInnerHTML={{ __html: code }} className={props.className} style={props.style} />
-  )
-}
+const React = require('react');
 
 const IODemo = () => (
   <div className="IODemo">
-    <Code className="IODemo-in" ext="graphql" body={input} />
-    <Code className="IODemo-out" ext="typescript" body={output} />
+    <iframe
+      src={'http://localhost:3000/live-demo.html'}
+      style={{
+        width: '100vw',
+        height: '350px'
+      }}
+    />
   </div>
-)
+);
 
-module.exports = IODemo
+module.exports = IODemo;

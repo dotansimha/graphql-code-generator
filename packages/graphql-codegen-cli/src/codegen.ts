@@ -1,17 +1,19 @@
-import { FileOutput, GraphQLSchema, DocumentFile, Types, CodegenPlugin } from 'graphql-codegen-core';
-import { mergeSchemas as remoteMergeSchemas, makeExecutableSchema } from 'graphql-tools';
+import { CodegenPlugin, DocumentFile, FileOutput, GraphQLSchema, Types } from 'graphql-codegen-core';
+import { makeExecutableSchema, mergeSchemas as remoteMergeSchemas } from 'graphql-tools';
 import * as Listr from 'listr';
-import { normalizeOutputParam, normalizeInstanceOrArray, normalizeConfig } from './helpers';
+import { normalizeConfig, normalizeInstanceOrArray, normalizeOutputParam } from './helpers';
 import { IntrospectionFromUrlLoader } from './loaders/schema/introspection-from-url';
 import { IntrospectionFromFileLoader } from './loaders/schema/introspection-from-file';
 import { SchemaFromTypedefs } from './loaders/schema/schema-from-typedefs';
 import { SchemaFromExport } from './loaders/schema/schema-from-export';
 import { documentsFromGlobs } from './utils/documents-glob';
 import { loadDocumentsSources } from './loaders/documents/document-loader';
-import { validateGraphQlDocuments, checkValidationErrors } from './loaders/documents/validate-documents';
+import { checkValidationErrors, validateGraphQlDocuments } from './loaders/documents/validate-documents';
 import { prettify } from './utils/prettier';
 import { Renderer } from './utils/listr-renderer';
 import { DetailedError } from './errors';
+import { SchemaFromString } from './loaders/schema/schema-from-string';
+import { parse } from 'graphql';
 
 export interface GenerateOutputOptions {
   filename: string;
@@ -33,6 +35,7 @@ export interface ExecutePluginOptions {
 const schemaHandlers = [
   new IntrospectionFromUrlLoader(),
   new IntrospectionFromFileLoader(),
+  new SchemaFromString(),
   new SchemaFromTypedefs(),
   new SchemaFromExport()
 ];
@@ -137,8 +140,20 @@ export async function executeCodegen(config: Types.Config): Promise<FileOutput[]
   async function loadRootDocuments() {
     /* Load root documents */
     if (documents.length > 0) {
-      const foundDocumentsPaths = await documentsFromGlobs(documents);
-      rootDocuments = await loadDocumentsSources(foundDocumentsPaths);
+      const globs = [];
+      const docs = [];
+
+      for (const doc of documents) {
+        try {
+          const parsed = parse(doc);
+          docs.push({ filePath: 'unnamed.graphql', content: parsed });
+        } catch (e) {
+          globs.push(doc);
+        }
+      }
+
+      const foundDocumentsPaths = await documentsFromGlobs(globs);
+      rootDocuments = [...docs, ...(await loadDocumentsSources(foundDocumentsPaths))];
 
       if (rootSchema) {
         const errors = validateGraphQlDocuments(rootSchema, rootDocuments);

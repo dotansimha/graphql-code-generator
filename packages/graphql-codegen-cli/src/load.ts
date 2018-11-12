@@ -6,10 +6,12 @@ import { SchemaFromTypedefs } from './loaders/schema/schema-from-typedefs';
 import { SchemaFromExport } from './loaders/schema/schema-from-export';
 import { DetailedError } from './errors';
 import { CLIOptions, createConfigFromOldCli } from './old-cli-config';
+import { SchemaFromString } from './loaders/schema/schema-from-string';
 
 const schemaHandlers = [
   new IntrospectionFromUrlLoader(),
   new IntrospectionFromFileLoader(),
+  new SchemaFromString(),
   new SchemaFromTypedefs(),
   new SchemaFromExport()
 ];

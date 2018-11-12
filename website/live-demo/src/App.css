@@ -1,0 +1,21 @@
+.container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: stretch;
+  height: 100vh;
+}
+
+.column {
+  flex: 1;
+  height: 100vh;
+}
+
+.query-editor {
+  flex: 1;
+  position: relative;
+  height: 100vh;
+}
+
+.CodeMirror {
+  height: 100vh;
+}
