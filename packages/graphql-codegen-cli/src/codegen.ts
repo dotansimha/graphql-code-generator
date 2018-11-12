@@ -427,6 +427,23 @@ export async function getPluginByName(name: string): Promise<CodegenPlugin> {
 export async function executePlugin(options: ExecutePluginOptions): Promise<string> {
   const pluginPackage = await getPluginByName(options.name);
 
+  if (!pluginPackage.plugin || typeof pluginPackage.plugin !== 'function') {
+    throw new DetailedError(
+      `Invalid Custom Plugin "${options.name}"`,
+      `
+      Plugin ${options.name} does not export a valid JS object with "plugin" function.
+
+      Make sure your custom plugin is written in the following form:
+
+      module.exports = {
+        plugin: (schema, documents, config) => {
+          return 'my-custom-plugin-content';
+        },
+      };
+      `
+    );
+  }
+
   const schema = !pluginPackage.addToSchema
     ? options.schema
     : await mergeSchemas([
@@ -452,7 +469,14 @@ export async function executePlugin(options: ExecutePluginOptions): Promise<stri
         options.outputFilename,
         options.allPlugins
       );
-    } catch (e) {}
+    } catch (e) {
+      throw new DetailedError(
+        `Plugin "${options.name}" validation failed:`,
+        `
+          ${e.message}
+        `
+      );
+    }
   }
 
   return pluginPackage.plugin(schema, options.documents, options.config);

@@ -19,6 +19,36 @@ describe('Codegen Executor', () => {
       expect(output[1].filename).toBe('out2.ts');
     });
 
+    it('Should load require extensions', async () => {
+      expect((global as any).dummyWasLoaded).toBeFalsy();
+      const output = await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        require: '../tests/dummy-require.js',
+        generates: {
+          'out1.ts': ['typescript-common']
+        }
+      });
+
+      expect(output.length).toBe(1);
+      expect((global as any).dummyWasLoaded).toBeTruthy();
+    });
+
+    it('Should throw when require extension is invalid', async () => {
+      try {
+        await executeCodegen({
+          schema: SIMPLE_TEST_SCHEMA,
+          require: 'tests/missing.js',
+          generates: {
+            'out1.ts': ['typescript-common']
+          }
+        });
+
+        throw new Error(SHOULD_NOT_THROW_STRING);
+      } catch (e) {
+        expect(e.message).not.toBe(SHOULD_NOT_THROW_STRING);
+      }
+    });
+
     it('Should accept plugins as object', async () => {
       const output = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
@@ -266,4 +296,64 @@ describe('Codegen Executor', () => {
       expect(output[1].content).toContain('export namespace Root');
     });
   });
+
+  describe('Plugin loading', () => {
+    it('Should load custom plugin from local file', async () => {
+      const output = await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        generates: {
+          'out1.ts': ['../tests/custom-plugins/basic.js']
+        }
+      });
+
+      expect(output.length).toBe(1);
+      expect(output[0].content).toContain('plugin');
+    });
+
+    it('Should throw when custom plugin is not valid', async () => {
+      try {
+        await executeCodegen({
+          schema: SIMPLE_TEST_SCHEMA,
+          generates: {
+            'out1.ts': ['../tests/custom-plugins/invalid.js']
+          }
+        });
+        throw new Error(SHOULD_NOT_THROW_STRING);
+      } catch (e) {
+        expect(e.message).not.toBe(SHOULD_NOT_THROW_STRING);
+        expect(e.errors[0].message).toContain('Invalid Custom Plugin');
+        expect(e.errors[0].details).toContain('does not export a valid JS object with');
+      }
+    });
+
+    it('Should execute custom plugin validation and throw when it fails', async () => {
+      try {
+        await executeCodegen({
+          schema: SIMPLE_TEST_SCHEMA,
+          generates: {
+            'out1.ts': ['../tests/custom-plugins/validation.js']
+          }
+        });
+        throw new Error(SHOULD_NOT_THROW_STRING);
+      } catch (e) {
+        expect(e.message).not.toBe(SHOULD_NOT_THROW_STRING);
+        expect(e.errors[0].message).toContain('validation failed');
+        expect(e.errors[0].details).toContain('Invalid!');
+      }
+    });
+
+    it('Should allow plugins to extend schema', async () => {
+      const output = await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        generates: {
+          'out1.ts': ['../tests/custom-plugins/extends-schema.js']
+        }
+      });
+
+      expect(output[0].content).toContain('MyType,');
+      expect(output[0].content).toContain('Extension;');
+    });
+  });
+
+  describe('Schema Merging', () => {});
 });
