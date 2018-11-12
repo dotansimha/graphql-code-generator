@@ -115,19 +115,29 @@ export async function executeCodegen(config: Types.Config): Promise<FileOutput[]
   const commonListrOptions = {
     exitOnError: true
   };
-  const verboseOptions = {
-    ...commonListrOptions,
-    renderer: 'verbose',
-    nonTTYRenderer: 'verbose'
-  };
-  const listrOptions: any = {
-    ...commonListrOptions,
-    renderer: config.silent ? 'silent' : Renderer,
-    nonTTYRenderer: config.silent ? 'silent' : 'default',
-    collapse: true,
-    clearOutput: false
-  };
-  const listr = new Listr(process.env.VERBOSE || process.env.NODE_ENV === 'test' ? verboseOptions : listrOptions);
+  let listr: Listr;
+
+  if (process.env.VERBOSE) {
+    listr = new Listr({
+      ...commonListrOptions,
+      renderer: 'verbose',
+      nonTTYRenderer: 'verbose'
+    });
+  } else if (process.env.NODE_ENV === 'test') {
+    listr = new Listr({
+      ...commonListrOptions,
+      renderer: 'silent',
+      nonTTYRenderer: 'silent'
+    });
+  } else {
+    listr = new Listr({
+      ...commonListrOptions,
+      renderer: config.silent ? 'silent' : Renderer,
+      nonTTYRenderer: config.silent ? 'silent' : 'default',
+      collapse: true,
+      clearOutput: false
+    } as any);
+  }
 
   let rootConfig: {
     [key: string]: any;
@@ -195,6 +205,25 @@ export async function executeCodegen(config: Types.Config): Promise<FileOutput[]
           `
         );
       }
+    }
+
+    if (schemas.length === 0 && Object.keys(generates).some(filename => generates[filename].schema.length === 0)) {
+      throw new DetailedError(
+        'Invalid Codegen Configuration!',
+        `
+        Please make sure that your codegen config file contains either the "schema" field 
+        or every generated file has its own "schema" field.
+        
+        It should looks like that:
+        schema:
+          - my-schema.graphql
+
+        or:
+        generates:
+          path/to/output:
+            schema: my-schema.graphql
+      `
+      );
     }
   }
 

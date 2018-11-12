@@ -111,7 +111,7 @@ describe('Codegen Executor', () => {
 
     it('Should not throw when every output has a schema and there is no root schema', async () => {
       try {
-        await executeCodegen({
+        const output = await executeCodegen({
           generates: {
             'out.ts': {
               schema: SIMPLE_TEST_SCHEMA,
@@ -120,14 +120,14 @@ describe('Codegen Executor', () => {
           }
         } as any);
 
-        throw new Error(SHOULD_NOT_THROW_STRING);
+        expect(output.length).toBe(1);
       } catch (e) {
         expect(e.message).not.toBe(SHOULD_NOT_THROW_STRING);
         expect(e.message).not.toBe('Invalid Codegen Configuration!');
       }
     });
 
-    it('Should throw when there is no root schema and some outputs have not defined one', async () => {
+    it('Should throw when there is no root schema and some outputs have not defined its own schema', async () => {
       try {
         await executeCodegen({
           generates: {
@@ -137,8 +137,8 @@ describe('Codegen Executor', () => {
 
         throw new Error(SHOULD_NOT_THROW_STRING);
       } catch (e) {
-        expect(e.message).not.toBe(SHOULD_NOT_THROW_STRING);
         expect(e.message).toBe('Invalid Codegen Configuration!');
+        expect(e.message).not.toBe(SHOULD_NOT_THROW_STRING);
       }
     });
 
