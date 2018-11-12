@@ -7,7 +7,6 @@ import { GraphQLSchema } from 'graphql';
 import * as glob from 'glob';
 import { makeExecutableSchema } from 'graphql-tools';
 import { readFileSync } from 'fs';
-import { importSchema } from 'graphql-import';
 import * as path from 'path';
 import * as fs from 'fs';
 import { DetailedError } from '../../errors';
@@ -23,6 +22,8 @@ function loadSchemaFile(filepath: string): string {
   });
 
   if (/^\# import /i.test(content.trimLeft())) {
+    const { importSchema } = require('graphql-import');
+
     return importSchema(filepath);
   }
 
