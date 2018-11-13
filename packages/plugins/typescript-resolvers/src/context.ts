@@ -1,6 +1,6 @@
 export function importContext(options: Handlebars.HelperOptions): string {
   const config = options.data.root.config || {};
-  const contextType: string | undefined = config.contextType || {};
+  const contextType: string | undefined = config.contextType;
 
   if (typeof contextType !== 'string') {
     return '';
@@ -17,7 +17,7 @@ export function importContext(options: Handlebars.HelperOptions): string {
 
 export function getContext(options: Handlebars.HelperOptions): string {
   const config = options.data.root.config || {};
-  const contextType: string | undefined = config.contextType || {};
+  const contextType: string | undefined = config.contextType;
 
   if (typeof contextType !== 'string') {
     return '{}';
