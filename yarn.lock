@@ -45,6 +45,11 @@
   dependencies:
     any-observable "^0.3.0"
 
+"@types/anymatch@*":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@types/anymatch/-/anymatch-1.3.0.tgz#d1d55958d1fccc5527d4aba29fc9c4b942f563ff"
+  integrity sha512-7WcbyctkE8GTzogDb0ulRAEw7v8oIS54ft9mQTU7PfM0hp5e+8kpa+HeQ7IQrFbKtJXBKcZ4bh+Em9dTw5L6AQ==
+
 "@types/babel-types@*":
   version "7.0.4"
   resolved "https://registry.yarnpkg.com/@types/babel-types/-/babel-types-7.0.4.tgz#bfd5b0d0d1ba13e351dff65b6e52783b816826c8"
@@ -203,11 +208,12 @@
   resolved "https://registry.yarnpkg.com/@types/valid-url/-/valid-url-1.0.2.tgz#60fa435ce24bfd5ba107b8d2a80796aeaf3a8f45"
   integrity sha1-YPpDXOJL/VuhB7jSqAeWrq86j0U=
 
-"@types/webpack@4.4.18":
-  version "4.4.18"
-  resolved "https://registry.yarnpkg.com/@types/webpack/-/webpack-4.4.18.tgz#e3e04725ce1289b31b365e92058320706f502a08"
-  integrity sha512-BWm0KlzpZnKcnnuhcIxiGnBSgkOy9A2XpQTRYf5qZ1y2P2moLJ6jz+/smK/k3oT6vAVslBKVJAaOHE60sDvvjA==
+"@types/webpack@4.4.19":
+  version "4.4.19"
+  resolved "https://registry.yarnpkg.com/@types/webpack/-/webpack-4.4.19.tgz#6019c1825af582219011eaa6cdc179f2d57835f0"
+  integrity sha512-vO/PuQ9iF9Gy8spN8RUUjt5reu9Z+Tb7iWxeAopCmXaIZaIsOgtY5U6UE2ELlcRUBO1HbNWhy+lQE9G92IJcmQ==
   dependencies:
+    "@types/anymatch" "*"
     "@types/node" "*"
     "@types/tapable" "*"
     "@types/uglify-js" "*"
