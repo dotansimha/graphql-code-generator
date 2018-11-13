@@ -6,7 +6,7 @@ import { pickMapper } from './mappers';
 
 export const getFieldType = convert => (field: Field, options: Handlebars.HelperOptions) => {
   const config = options.data.root.config || {};
-  const mapper = pickMapper(field.type, config.mappers || {});
+  const mapper = pickMapper(field.type, config.mappers || {}, options);
 
   return mapper ? fieldType(field, mapper.type, options) : convertedType(field, options, convert);
 };

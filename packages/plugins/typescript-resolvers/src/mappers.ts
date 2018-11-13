@@ -12,7 +12,7 @@ function isExternal(value: string) {
   return value.includes('#');
 }
 
-function parseMapper(mapper: string): Mapper {
+export function parseMapper(mapper: string): Mapper {
   if (isExternal(mapper)) {
     const [source, type] = mapper.split('#');
     return {
@@ -28,8 +28,14 @@ function parseMapper(mapper: string): Mapper {
   };
 }
 
-export function pickMapper(name: string, map: ParentsMap): Mapper | undefined {
+export function pickMapper(name: string, map: ParentsMap, options: Handlebars.HelperOptions): Mapper | undefined {
+  const config = options.data.root.config || {};
+  const defaultMapper: string | undefined = config.defaultMapper;
   const mapper = map[name];
+
+  if (!mapper && defaultMapper) {
+    return parseMapper(defaultMapper);
+  }
 
   if (!mapper) {
     return undefined;

@@ -14,6 +14,7 @@ export interface TypeScriptServerResolversConfig extends TypeScriptCommonConfig 
   noNamespaces?: boolean;
   contextType?: string;
   mappers?: { [name: string]: string };
+  defaultMapper?: string;
 }
 
 export const plugin: PluginFunction<TypeScriptServerResolversConfig> = async (

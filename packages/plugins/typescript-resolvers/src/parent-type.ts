@@ -17,7 +17,7 @@ function isRootType(type: Type, schema: GraphQLSchema) {
 export const getParentType = convert => (type: Type, options: Handlebars.HelperOptions) => {
   const config = options.data.root.config || {};
   const schema: GraphQLSchema = options.data.root.rawSchema;
-  const mapper = pickMapper(type.name, config.mappers || {});
+  const mapper = pickMapper(type.name, config.mappers || {}, options);
   const name = mapper ? mapper.type : `${config.interfacePrefix || ''}${convert(type.name)}`;
 
   return isRootType(type, schema) ? '{}' : name;
