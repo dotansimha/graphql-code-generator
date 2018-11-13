@@ -1,6 +1,8 @@
 import { GraphQLResolveInfo } from 'graphql';
 {{{ importMappers types }}}
 
+{{{ importContext }}}
+
 export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
   parent: Parent,
   args: Args,

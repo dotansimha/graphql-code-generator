@@ -2,7 +2,7 @@
 {{#unless @root.config.noNamespaces}}
 export namespace {{ convert name }}Resolvers {
 {{/unless}}
-  export interface {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}Resolvers<Context = {{#if @root.config.contextType}}{{@root.config.contextType}}{{else}}{}{{/if}}, TypeParent = {{ getParentType this }}> {
+  export interface {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}Resolvers<Context = {{{ getContext }}}, TypeParent = {{ getParentType this }}> {
     {{#each fields}}
     {{ toComment description }}
     {{ name }}?: {{#if @root.config.noNamespaces}}{{ convert ../name }}{{/if}}{{ getFieldResolverName name }}<{{ getFieldType this }}, TypeParent, Context>;
@@ -11,7 +11,7 @@ export namespace {{ convert name }}Resolvers {
 
   {{#each fields}}
 
-  export type {{#if @root.config.noNamespaces}}{{ convert ../name }}{{/if}}{{ getFieldResolverName name }}<R = {{ getFieldType this }}, Parent = {{ getParentType ../this }}, Context = {{#if @root.config.contextType}}{{@root.config.contextType}}{{else}}{}{{/if}}> = {{ getFieldResolver this ../this }};
+  export type {{#if @root.config.noNamespaces}}{{ convert ../name }}{{/if}}{{ getFieldResolverName name }}<R = {{ getFieldType this }}, Parent = {{ getParentType ../this }}, Context = {{{ getContext }}}> = {{ getFieldResolver this ../this }};
 
   {{~# if hasArguments }}
 

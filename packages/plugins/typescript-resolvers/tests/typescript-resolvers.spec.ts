@@ -181,6 +181,34 @@ describe('Resolvers', () => {
       `);
   });
 
+  it('should override custom context with type from a module', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: `
+        type Query {
+          fieldTest: String 
+        }
+        
+        schema {
+          query: Query
+        }
+      `
+    });
+
+    const content = await plugin(testSchema, [], { contextType: './path/to/types#MyContext' });
+
+    expect(content).toBeSimilarStringTo(`
+        import { MyContext } from './path/to/types';
+      `);
+
+    expect(content).toBeSimilarStringTo(`
+        export interface Resolvers<Context = MyContext, TypeParent = {}> {
+          fieldTest?: FieldTestResolver<string | null, TypeParent, Context>;
+        }
+
+        export type FieldTestResolver<R = string | null, Parent = {}, Context = MyContext> = Resolver<R, Parent, Context>;
+      `);
+  });
+
   it('should handle snake case and convert it to pascal case', async () => {
     const testSchema = makeExecutableSchema({
       typeDefs: `
