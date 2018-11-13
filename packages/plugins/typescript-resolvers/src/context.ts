@@ -1,3 +1,5 @@
+import { parseMapper } from './mappers';
+
 export function importContext(options: Handlebars.HelperOptions): string {
   const config = options.data.root.config || {};
   const contextType: string | undefined = config.contextType;
@@ -6,13 +8,13 @@ export function importContext(options: Handlebars.HelperOptions): string {
     return '';
   }
 
-  if (contextType.indexOf('#') === -1) {
-    return contextType;
+  const mapper = parseMapper(contextType);
+
+  if (!mapper.isExternal) {
+    return mapper.type;
   }
 
-  const [path, type] = contextType.split('#');
-
-  return `import { ${type} } from '${path}';`;
+  return `import { ${mapper.type} } from '${mapper.source}';`;
 }
 
 export function getContext(options: Handlebars.HelperOptions): string {
@@ -23,11 +25,7 @@ export function getContext(options: Handlebars.HelperOptions): string {
     return '{}';
   }
 
-  if (contextType.indexOf('#') === -1) {
-    return contextType;
-  }
+  const mapper = parseMapper(contextType);
 
-  const [, type] = contextType.split('#');
-
-  return type;
+  return mapper.type;
 }
