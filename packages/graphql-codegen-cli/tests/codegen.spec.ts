@@ -1,5 +1,6 @@
 import { makeExecutableSchema } from 'graphql-tools';
 import { executeCodegen, mergeSchemas } from '../src/codegen';
+import { GraphQLObjectType } from 'graphql';
 
 const SHOULD_NOT_THROW_STRING = 'SHOULD_NOT_THROW';
 const SIMPLE_TEST_SCHEMA = `type MyType { f: String } type Query { f: String }`;
@@ -398,15 +399,27 @@ describe('Codegen Executor', () => {
         makeExecutableSchema({
           typeDefs: `
             directive @id on FIELD_DEFINITION
+            directive @test on OBJECT
 
-            type Post {
+            type Post @test {
               id: String @id
+            }
+
+            type Query {
+              posts: [Post]
+            }
+
+            schema {
+              query: Query
             }
           `
         })
       ]);
 
-      expect(merged.getType('Post').astNode.directives.map(({ name }) => name.value)).toContainEqual('id');
+      expect(merged.getType('Post').astNode.directives.map(({ name }) => name.value)).toContainEqual('test');
+      expect(
+        (merged.getType('Post') as GraphQLObjectType).getFields()['id'].astNode.directives.map(({ name }) => name.value)
+      ).toContainEqual('id');
     });
   });
 });
