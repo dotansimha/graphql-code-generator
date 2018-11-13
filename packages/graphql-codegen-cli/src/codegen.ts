@@ -1,7 +1,7 @@
 import { DocumentFromString } from './loaders/documents/document-from-string';
 import { SchemaFromString } from './loaders/schema/schema-from-string';
 import { FileOutput, GraphQLSchema, DocumentFile, Types, CodegenPlugin } from 'graphql-codegen-core';
-import { mergeSchemas as remoteMergeSchemas, makeExecutableSchema } from 'graphql-tools';
+import { makeExecutableSchema } from 'graphql-tools';
 import * as Listr from 'listr';
 import { normalizeOutputParam, normalizeInstanceOrArray, normalizeConfig } from './helpers';
 import { IntrospectionFromUrlLoader } from './loaders/schema/introspection-from-url';
@@ -13,6 +13,7 @@ import { prettify } from './utils/prettier';
 import { Renderer } from './utils/listr-renderer';
 import { DetailedError } from './errors';
 import { DocumentsFromGlob } from './loaders/documents/documents-from-glob';
+import { mergeGraphQLSchemas } from '@graphql-modules/epoxy';
 
 export interface GenerateOutputOptions {
   filename: string;
@@ -86,13 +87,24 @@ const loadSchema = async (schemaDef: Types.Schema, config: Types.Config): Promis
   );
 };
 
-async function mergeSchemas(schemas: GraphQLSchema[]): Promise<GraphQLSchema> {
+export async function mergeSchemas(schemas: GraphQLSchema[]): Promise<GraphQLSchema> {
   if (schemas.length === 0) {
     return null;
   } else if (schemas.length === 1) {
     return schemas[0];
   } else {
-    return remoteMergeSchemas({ schemas: schemas.filter(s => s) });
+    const mergedSchemaString = mergeGraphQLSchemas(schemas.filter(s => s));
+
+    return makeExecutableSchema({
+      typeDefs: mergedSchemaString,
+      allowUndefinedInResolve: true,
+      resolverValidationOptions: {
+        requireResolversForResolveType: false,
+        requireResolversForAllFields: false,
+        requireResolversForNonScalar: false,
+        requireResolversForArgs: false
+      }
+    });
   }
 }
 

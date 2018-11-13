@@ -1,4 +1,6 @@
-import { executeCodegen } from '../src/codegen';
+import { makeExecutableSchema } from 'graphql-tools';
+import { executeCodegen, mergeSchemas } from '../src/codegen';
+import { GraphQLObjectType } from 'graphql';
 
 const SHOULD_NOT_THROW_STRING = 'SHOULD_NOT_THROW';
 const SIMPLE_TEST_SCHEMA = `type MyType { f: String } type Query { f: String }`;
@@ -373,5 +375,51 @@ describe('Codegen Executor', () => {
     });
   });
 
-  describe('Schema Merging', () => {});
+  describe('Schema Merging', () => {
+    it('should keep definitions of all directives', async () => {
+      const merged = await mergeSchemas([
+        makeExecutableSchema({ typeDefs: SIMPLE_TEST_SCHEMA }),
+        makeExecutableSchema({
+          typeDefs: `
+            directive @id on FIELD_DEFINITION
+
+            type Post {
+              id: String @id
+            }
+          `
+        })
+      ]);
+
+      expect(merged.getDirectives().map(({ name }) => name)).toContainEqual('id');
+    });
+
+    it('should keep directives in types', async () => {
+      const merged = await mergeSchemas([
+        makeExecutableSchema({ typeDefs: SIMPLE_TEST_SCHEMA }),
+        makeExecutableSchema({
+          typeDefs: `
+            directive @id on FIELD_DEFINITION
+            directive @test on OBJECT
+
+            type Post @test {
+              id: String @id
+            }
+
+            type Query {
+              posts: [Post]
+            }
+
+            schema {
+              query: Query
+            }
+          `
+        })
+      ]);
+
+      expect(merged.getType('Post').astNode.directives.map(({ name }) => name.value)).toContainEqual('test');
+      expect(
+        (merged.getType('Post') as GraphQLObjectType).getFields()['id'].astNode.directives.map(({ name }) => name.value)
+      ).toContainEqual('id');
+    });
+  });
 });

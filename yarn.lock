@@ -18,23 +18,22 @@
     esutils "^2.0.2"
     js-tokens "^4.0.0"
 
-"@graphql-modules/epoxy@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@graphql-modules/epoxy/-/epoxy-0.2.0.tgz#7c30441884cdf5becc45886ede2cea0a1c3867b7"
-  integrity sha512-insqjiO6VZj/zMNKjNueIHG1LzB7CnhdtZ2l8SNyuYyGgsnYVCsMcz989eeWqcAuAPV/rTkAoiq8dBusnSkw0w==
+"@graphql-modules/epoxy@0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@graphql-modules/epoxy/-/epoxy-0.2.1.tgz#2e00b3f0fde2578d8f9a2a6227546e9c4d171a18"
+  integrity sha512-ZxEZoCr+pasNax+WYAjtd88QX+C9RtUgbS5qorvvC3p93+uSz/NfEAYiwvKo1/amPZ5gXGeKbVUqdZQi66hJRQ==
   dependencies:
-    "@graphql-modules/logger" "0.2.0"
+    "@graphql-modules/logger" "0.2.1"
     "@types/deepmerge" "2.1.0"
     deepmerge "2.2.1"
     graphql-tools "4.0.3"
     tslib "1.9.3"
 
-"@graphql-modules/logger@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@graphql-modules/logger/-/logger-0.2.0.tgz#7e665b1227e5dd6c033a241ad8d071dd1677b078"
-  integrity sha512-7ndnfbeaKV9yHrLTHl+P5SL8bLt3fvD/kx6gjWdXikp3NoCFjdBVb0jb7APCpvJKupigDrdWnRu+K7h0M1yWYw==
+"@graphql-modules/logger@0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@graphql-modules/logger/-/logger-0.2.1.tgz#eda291e715b9e5763d7739a5eaf601f1e2e56fd7"
+  integrity sha512-h1myhWv12y+aadlFmCBmQLaXUvCC0JacMFEfU1E4Ziy+mJlYuE3z8pwJ1qTp+sRLUZo79gXNGndxwnaaSUNE9w==
   dependencies:
-    moment "2.22.2"
     tslib "1.9.3"
     winston "3.1.0"
 
