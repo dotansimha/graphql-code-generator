@@ -1,6 +1,6 @@
 import { Type } from 'graphql-codegen-core';
 import { GraphQLSchema, GraphQLObjectType } from 'graphql';
-import { pickMapper } from './mappers';
+import { pickMapper, useDefaultMapper } from './mappers';
 
 function getRootTypeNames(schema: GraphQLSchema): string[] {
   const query = ((schema.getQueryType() || {}) as GraphQLObjectType).name;
@@ -18,7 +18,16 @@ export const getParentType = convert => (type: Type, options: Handlebars.HelperO
   const config = options.data.root.config || {};
   const schema: GraphQLSchema = options.data.root.rawSchema;
   const mapper = pickMapper(type.name, config.mappers || {}, options);
-  const name = mapper ? mapper.type : `${config.interfacePrefix || ''}${convert(type.name)}`;
+  const defaultMapper = useDefaultMapper(type, options);
+  let name: string;
+
+  if (mapper) {
+    name = mapper.type;
+  } else if (defaultMapper) {
+    name = defaultMapper.type;
+  } else {
+    name = `${config.interfacePrefix || ''}${convert(type.name)}`;
+  }
 
   return isRootType(type, schema) ? '{}' : name;
 };
