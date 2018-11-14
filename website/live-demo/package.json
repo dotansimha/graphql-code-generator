@@ -2,6 +2,7 @@
   "name": "live-demo",
   "version": "0.1.0",
   "private": true,
+  "homepage": "/live-demo/",
   "dependencies": {
     "react": "16.6.1",
     "react-dom": "16.6.1",
@@ -25,8 +26,8 @@
     "prettier": "1.15.2"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build"
+    "start": "NODE_OPTIONS=--max_old_space_size=8192 react-scripts start",
+    "build": "NODE_OPTIONS=--max_old_space_size=8192 react-scripts build"
   },
   "eslintConfig": {
     "extends": "react-app"
