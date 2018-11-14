@@ -4,6 +4,7 @@ import { Types } from 'graphql-codegen-core';
 import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 import { cliError } from './utils/cli-error';
+import * as YAML from 'json-to-pretty-yaml';
 
 export interface CLIOptions {
   schema?: string;
@@ -93,7 +94,11 @@ function transformTemplatesToPlugins(
   options: CLIOptions,
   templateSpecificConfig: { [key: string]: any } = {}
 ): Types.ConfiguredOutput {
-  if (options.template === 'ts' || options.template === 'typescript') {
+  if (
+    options.template === 'ts' ||
+    options.template === 'typescript' ||
+    options.template === 'graphql-codegen-typescript-template'
+  ) {
     return {
       config: templateSpecificConfig,
       plugins: [
@@ -102,6 +107,65 @@ function transformTemplatesToPlugins(
         options.skipDocuments ? null : 'typescript-client',
         options.skipSchema ? null : 'typescript-server'
       ].filter(s => s)
+    };
+  } else if (
+    options.template === 'typescript-resolvers' ||
+    options.template === 'graphql-codegen-typescript-resolvers-template'
+  ) {
+    return {
+      config: templateSpecificConfig,
+      plugins: [templateSpecificConfig.printTime ? 'time' : null, 'typescript-common', 'typescript-resolvers'].filter(
+        s => s
+      )
+    };
+  } else if (
+    options.template === 'typescript-mongodb' ||
+    options.template === 'graphql-codegen-typescript-mongodb-template'
+  ) {
+    return {
+      config: templateSpecificConfig,
+      plugins: [
+        templateSpecificConfig.printTime ? 'time' : null,
+        'typescript-common',
+        'typescript-server',
+        'typescript-mongodb'
+      ].filter(s => s)
+    };
+  } else if (options.template === 'apollo-angular' || options.template === 'graphql-codegen-apollo-angular-template') {
+    return {
+      config: templateSpecificConfig,
+      plugins: [
+        templateSpecificConfig.printTime ? 'time' : null,
+        'typescript-common',
+        'typescript-client',
+        'typescript-apollo-angular'
+      ].filter(s => s)
+    };
+  } else if (
+    options.template === 'react-apollo' ||
+    options.template === 'graphql-codegen-typescript-react-apollo-template'
+  ) {
+    return {
+      config: templateSpecificConfig,
+      plugins: [
+        templateSpecificConfig.printTime ? 'time' : null,
+        'typescript-common',
+        'typescript-client',
+        'typescript-react-apollo'
+      ].filter(s => s)
+    };
+  } else if (options.template === 'introspection' || options.template === 'graphql-codegen-introspection-template') {
+    return {
+      config: templateSpecificConfig,
+      plugins: ['introspection'].filter(s => s)
+    };
+  } else if (
+    options.template === 'graphql-files-typescript' ||
+    options.template === 'graphql-codegen-graphql-files-typescript-modules'
+  ) {
+    return {
+      config: templateSpecificConfig,
+      plugins: ['typescript-graphql-files-modules'].filter(s => s)
     };
   }
 
@@ -133,6 +197,14 @@ export function createConfigFromOldCli(options: CLIOptions): Types.Config {
     watch: options.watch,
     require: options.require
   };
+
+  console['warn'](`
+  Note: You are using the old API of graphql-code-generator. You can easily migrate by creating "codegen.yml" file in your project with the following content:
+  
+${YAML.stringify(configObject)}
+
+  Then, make sure that your script is executing just "gql-gen" (without any cli flags).
+  `);
 
   return configObject;
 }

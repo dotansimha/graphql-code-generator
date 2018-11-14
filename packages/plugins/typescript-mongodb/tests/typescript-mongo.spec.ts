@@ -1,3 +1,4 @@
+import 'graphql-codegen-core/dist/testing';
 import {
   GraphQLSchema,
   makeExecutableSchema,
@@ -20,13 +21,7 @@ describe('Types', () => {
           }
          
           ${typeDefs}
-          
-          schema {
-            query: Query
-          }
-      `,
-      resolvers: {},
-      allowUndefinedInResolve: true
+      `
     }) as GraphQLSchema;
 
     return {
@@ -142,5 +137,23 @@ describe('Types', () => {
 
     const fieldsMappingTypeString = entityFields(pascalCase)(type1, hbsContext, false);
     expect(fieldsMappingTypeString).toContain('extends BaseEntityDbInterface');
+  });
+
+  it('should', async () => {
+    const { schema } = compileAndBuildContext(`
+      type Entity1 @entity {
+        id: ID! @id
+        title: String! @column
+      }
+    `);
+
+    const content = await plugin(schema, [], {});
+
+    expect(content).toBeSimilarStringTo(`
+      export interface Entity1DbObject {
+        _id: ObjectID
+        title: string
+      }
+    `);
   });
 });

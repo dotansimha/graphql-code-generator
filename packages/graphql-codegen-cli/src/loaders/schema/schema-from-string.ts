@@ -1,8 +1,8 @@
 import { Types } from 'graphql-codegen-core';
 import { SchemaLoader } from './schema-loader';
+import isValidPath = require('is-valid-path');
 import { GraphQLSchema, parse } from 'graphql';
 import { makeExecutableSchema } from 'graphql-tools';
-import isValidPath = require('is-valid-path');
 
 export class SchemaFromString implements SchemaLoader {
   canHandle(str: string): boolean {
@@ -19,16 +19,12 @@ export class SchemaFromString implements SchemaLoader {
     }
   }
 
-  handle(src: string, config: Types.Config, schemaOptions: any): GraphQLSchema {
-    try {
-      return makeExecutableSchema({
-        typeDefs: [src],
-        allowUndefinedInResolve: true,
-        resolvers: {},
-        resolverValidationOptions: { requireResolversForResolveType: false }
-      });
-    } catch (e) {
-      return null;
-    }
+  handle(str: string, config: Types.Config, schemaOptions: any): GraphQLSchema {
+    return makeExecutableSchema({
+      typeDefs: [str],
+      allowUndefinedInResolve: true,
+      resolvers: {},
+      resolverValidationOptions: { requireResolversForResolveType: false }
+    });
   }
 }

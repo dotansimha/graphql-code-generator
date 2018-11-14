@@ -18,23 +18,22 @@
     esutils "^2.0.2"
     js-tokens "^4.0.0"
 
-"@graphql-modules/epoxy@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@graphql-modules/epoxy/-/epoxy-0.2.0.tgz#7c30441884cdf5becc45886ede2cea0a1c3867b7"
-  integrity sha512-insqjiO6VZj/zMNKjNueIHG1LzB7CnhdtZ2l8SNyuYyGgsnYVCsMcz989eeWqcAuAPV/rTkAoiq8dBusnSkw0w==
+"@graphql-modules/epoxy@0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@graphql-modules/epoxy/-/epoxy-0.2.1.tgz#2e00b3f0fde2578d8f9a2a6227546e9c4d171a18"
+  integrity sha512-ZxEZoCr+pasNax+WYAjtd88QX+C9RtUgbS5qorvvC3p93+uSz/NfEAYiwvKo1/amPZ5gXGeKbVUqdZQi66hJRQ==
   dependencies:
-    "@graphql-modules/logger" "0.2.0"
+    "@graphql-modules/logger" "0.2.1"
     "@types/deepmerge" "2.1.0"
     deepmerge "2.2.1"
     graphql-tools "4.0.3"
     tslib "1.9.3"
 
-"@graphql-modules/logger@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@graphql-modules/logger/-/logger-0.2.0.tgz#7e665b1227e5dd6c033a241ad8d071dd1677b078"
-  integrity sha512-7ndnfbeaKV9yHrLTHl+P5SL8bLt3fvD/kx6gjWdXikp3NoCFjdBVb0jb7APCpvJKupigDrdWnRu+K7h0M1yWYw==
+"@graphql-modules/logger@0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@graphql-modules/logger/-/logger-0.2.1.tgz#eda291e715b9e5763d7739a5eaf601f1e2e56fd7"
+  integrity sha512-h1myhWv12y+aadlFmCBmQLaXUvCC0JacMFEfU1E4Ziy+mJlYuE3z8pwJ1qTp+sRLUZo79gXNGndxwnaaSUNE9w==
   dependencies:
-    moment "2.22.2"
     tslib "1.9.3"
     winston "3.1.0"
 
@@ -188,37 +187,15 @@
     "@types/node" "*"
     "@types/tough-cookie" "*"
 
-"@types/tapable@*":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@types/tapable/-/tapable-1.0.4.tgz#b4ffc7dc97b498c969b360a41eee247f82616370"
-  integrity sha512-78AdXtlhpCHT0K3EytMpn4JNxaf5tbqbLcbIRoQIHzpTIyjpxLQKRoxU55ujBXAtg3Nl2h/XWvfDa9dsMOd0pQ==
-
 "@types/tough-cookie@*":
   version "2.3.3"
   resolved "https://registry.yarnpkg.com/@types/tough-cookie/-/tough-cookie-2.3.3.tgz#7f226d67d654ec9070e755f46daebf014628e9d9"
   integrity sha512-MDQLxNFRLasqS4UlkWMSACMKeSm1x4Q3TxzUC7KQUsh6RK1ZrQ0VEyE3yzXcBu+K8ejVj4wuX32eUG02yNp+YQ==
 
-"@types/uglify-js@*":
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/@types/uglify-js/-/uglify-js-3.0.4.tgz#96beae23df6f561862a830b4288a49e86baac082"
-  integrity sha512-SudIN9TRJ+v8g5pTG8RRCqfqTMNqgWCKKd3vtynhGzkIIjxaicNAMuY5TRadJ6tzDu3Dotf3ngaMILtmOdmWEQ==
-  dependencies:
-    source-map "^0.6.1"
-
 "@types/valid-url@1.0.2":
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@types/valid-url/-/valid-url-1.0.2.tgz#60fa435ce24bfd5ba107b8d2a80796aeaf3a8f45"
   integrity sha1-YPpDXOJL/VuhB7jSqAeWrq86j0U=
-
-"@types/webpack@4.4.18":
-  version "4.4.18"
-  resolved "https://registry.yarnpkg.com/@types/webpack/-/webpack-4.4.18.tgz#e3e04725ce1289b31b365e92058320706f502a08"
-  integrity sha512-BWm0KlzpZnKcnnuhcIxiGnBSgkOy9A2XpQTRYf5qZ1y2P2moLJ6jz+/smK/k3oT6vAVslBKVJAaOHE60sDvvjA==
-  dependencies:
-    "@types/node" "*"
-    "@types/tapable" "*"
-    "@types/uglify-js" "*"
-    source-map "^0.6.0"
 
 "@webassemblyjs/ast@1.7.11":
   version "1.7.11"
@@ -4099,6 +4076,14 @@ json-stringify-safe@^5.0.1, json-stringify-safe@~5.0.1:
   resolved "https://registry.yarnpkg.com/json-stringify-safe/-/json-stringify-safe-5.0.1.tgz#1296a2d58fd45f19a0f6ce01d65701e2c735b6eb"
   integrity sha1-Epai1Y/UXxmg9s4B1lcB4sc1tus=
 
+json-to-pretty-yaml@1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/json-to-pretty-yaml/-/json-to-pretty-yaml-1.2.2.tgz#f4cd0bd0a5e8fe1df25aaf5ba118b099fd992d5b"
+  integrity sha1-9M0L0KXo/h3yWq9boRiwmf2ZLVs=
+  dependencies:
+    remedial "^1.0.7"
+    remove-trailing-spaces "^1.0.6"
+
 json5@2.x:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/json5/-/json5-2.1.0.tgz#e7a0c62c48285c628d20a10b85c89bb807c32850"
@@ -5824,10 +5809,20 @@ registry-url@^3.0.3:
   dependencies:
     rc "^1.0.1"
 
+remedial@^1.0.7:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/remedial/-/remedial-1.0.8.tgz#a5e4fd52a0e4956adbaf62da63a5a46a78c578a0"
+  integrity sha512-/62tYiOe6DzS5BqVsNpH/nkGlX45C/Sp6V+NtiN6JQNS1Viay7cWkazmRkrQrdFj2eshDe96SIQNIoMxqhzBOg==
+
 remove-trailing-separator@^1.0.1:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/remove-trailing-separator/-/remove-trailing-separator-1.1.0.tgz#c24bce2a283adad5bc3f58e0d48249b92379d8ef"
   integrity sha1-wkvOKig62tW8P1jg1IJJuSN52O8=
+
+remove-trailing-spaces@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/remove-trailing-spaces/-/remove-trailing-spaces-1.0.6.tgz#4255277eac5359a505cadd064d360603678a0b29"
+  integrity sha1-QlUnfqxTWaUFyt0GTTYGA2eKCyk=
 
 repeat-element@^1.1.2:
   version "1.1.3"

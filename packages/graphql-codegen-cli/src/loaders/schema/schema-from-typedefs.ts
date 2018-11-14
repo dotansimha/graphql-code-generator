@@ -7,11 +7,10 @@ import { GraphQLSchema } from 'graphql';
 import * as glob from 'glob';
 import { makeExecutableSchema } from 'graphql-tools';
 import { readFileSync } from 'fs';
-import { importSchema } from 'graphql-import';
 import * as path from 'path';
 import * as fs from 'fs';
 import { DetailedError } from '../../errors';
-import { graphQLExtensions } from '../documents/document-loader';
+import { graphQLExtensions } from '../documents/documents-from-glob';
 
 function isGraphQLFile(globPath: string): boolean {
   return graphQLExtensions.some(ext => globPath.endsWith(ext));
@@ -23,6 +22,8 @@ function loadSchemaFile(filepath: string): string {
   });
 
   if (/^\# import /i.test(content.trimLeft())) {
+    const { importSchema } = require('graphql-import');
+
     return importSchema(filepath);
   }
 
@@ -42,21 +43,7 @@ export class SchemaFromTypedefs implements SchemaLoader {
         'Unable to find matching files',
         `
       
-        Unable to find matching files for glob: ${globPath}
-
-        Please check following:
-
-        CLI: 
-          
-          $ gql-gen --schema ${globPath} ...
-
-        API:
-          
-          generate({
-            schema: '${globPath}',
-            ...
-          });
-
+        Unable to find matching files for glob: ${globPath} in directory: ${process.cwd()}
       `
       );
     }

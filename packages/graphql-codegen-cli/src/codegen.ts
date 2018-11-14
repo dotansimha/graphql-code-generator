@@ -1,19 +1,13 @@
-import { CodegenPlugin, DocumentFile, FileOutput, GraphQLSchema, Types } from 'graphql-codegen-core';
-import { makeExecutableSchema, mergeSchemas as remoteMergeSchemas } from 'graphql-tools';
+import { FileOutput, GraphQLSchema, DocumentFile, Types, CodegenPlugin } from 'graphql-codegen-core';
+import { makeExecutableSchema } from 'graphql-tools';
 import * as Listr from 'listr';
-import { normalizeConfig, normalizeInstanceOrArray, normalizeOutputParam } from './helpers';
-import { IntrospectionFromUrlLoader } from './loaders/schema/introspection-from-url';
-import { IntrospectionFromFileLoader } from './loaders/schema/introspection-from-file';
-import { SchemaFromTypedefs } from './loaders/schema/schema-from-typedefs';
-import { SchemaFromExport } from './loaders/schema/schema-from-export';
-import { documentsFromGlobs } from './utils/documents-glob';
-import { loadDocumentsSources } from './loaders/documents/document-loader';
-import { checkValidationErrors, validateGraphQlDocuments } from './loaders/documents/validate-documents';
+import { normalizeOutputParam, normalizeInstanceOrArray, normalizeConfig } from './helpers';
+import { validateGraphQlDocuments, checkValidationErrors } from './loaders/documents/validate-documents';
 import { prettify } from './utils/prettier';
 import { Renderer } from './utils/listr-renderer';
 import { DetailedError } from './errors';
-import { SchemaFromString } from './loaders/schema/schema-from-string';
-import { parse } from 'graphql';
+import { loadSchema, loadDocuments } from './load';
+import { mergeSchemas } from './merge-schemas';
 
 export interface GenerateOutputOptions {
   filename: string;
@@ -30,44 +24,6 @@ export interface ExecutePluginOptions {
   documents: DocumentFile[];
   outputFilename: string;
   allPlugins: Types.ConfiguredPlugin[];
-}
-
-const schemaHandlers = [
-  new IntrospectionFromUrlLoader(),
-  new IntrospectionFromFileLoader(),
-  new SchemaFromString(),
-  new SchemaFromTypedefs(),
-  new SchemaFromExport()
-];
-
-const loadSchema = async (schemaDef: Types.Schema, config: Types.Config): Promise<GraphQLSchema> => {
-  for (const handler of schemaHandlers) {
-    let pointToSchema: string = null;
-    let options: any = {};
-
-    if (typeof schemaDef === 'string') {
-      pointToSchema = schemaDef as string;
-    } else if (typeof schemaDef === 'object') {
-      pointToSchema = Object.keys(schemaDef)[0];
-      options = schemaDef[pointToSchema];
-    }
-
-    if (await handler.canHandle(pointToSchema)) {
-      return handler.handle(pointToSchema, config, options);
-    }
-  }
-
-  throw new Error(`Could not handle schema: ${schemaDef}`);
-};
-
-async function mergeSchemas(schemas: GraphQLSchema[]): Promise<GraphQLSchema> {
-  if (schemas.length === 0) {
-    return null;
-  } else if (schemas.length === 1) {
-    return schemas[0];
-  } else {
-    return remoteMergeSchemas({ schemas: schemas.filter(s => s) });
-  }
 }
 
 export async function executeCodegen(config: Types.Config): Promise<FileOutput[]> {
@@ -89,19 +45,29 @@ export async function executeCodegen(config: Types.Config): Promise<FileOutput[]
   const commonListrOptions = {
     exitOnError: true
   };
-  const verboseOptions = {
-    ...commonListrOptions,
-    renderer: 'verbose',
-    nonTTYRenderer: 'verbose'
-  };
-  const listrOptions: any = {
-    ...commonListrOptions,
-    renderer: config.silent ? 'silent' : Renderer,
-    nonTTYRenderer: config.silent ? 'silent' : 'default',
-    collapse: true,
-    clearOutput: false
-  };
-  const listr = new Listr(process.env.VERBOSE || process.env.NODE_ENV === 'test' ? verboseOptions : listrOptions);
+  let listr: Listr;
+
+  if (process.env.VERBOSE) {
+    listr = new Listr({
+      ...commonListrOptions,
+      renderer: 'verbose',
+      nonTTYRenderer: 'verbose'
+    });
+  } else if (process.env.NODE_ENV === 'test') {
+    listr = new Listr({
+      ...commonListrOptions,
+      renderer: 'silent',
+      nonTTYRenderer: 'silent'
+    });
+  } else {
+    listr = new Listr({
+      ...commonListrOptions,
+      renderer: config.silent ? 'silent' : Renderer,
+      nonTTYRenderer: config.silent ? 'silent' : 'default',
+      collapse: true,
+      clearOutput: false
+    } as any);
+  }
 
   let rootConfig: {
     [key: string]: any;
@@ -127,33 +93,89 @@ export async function executeCodegen(config: Types.Config): Promise<FileOutput[]
     documents = normalizeInstanceOrArray<Types.OperationDocument>(config.documents);
 
     /* Normalize "generators" field */
-    for (const filename of Object.keys(config.generates)) {
+    const generateKeys = Object.keys(config.generates);
+
+    if (generateKeys.length === 0) {
+      throw new DetailedError(
+        'Invalid Codegen Configuration!',
+        `
+        Please make sure that your codegen config file contains the "generates" field, with a specification for the plugins you need.
+        
+        It should looks like that:
+
+        schema:
+          - my-schema.graphql
+        generates:
+          my-file.ts:
+            - plugin1
+            - plugin2
+            - plugin3
+        `
+      );
+    }
+
+    for (const filename of generateKeys) {
       generates[filename] = normalizeOutputParam(config.generates[filename]);
+
+      if (generates[filename].plugins.length === 0) {
+        throw new DetailedError(
+          'Invalid Codegen Configuration!',
+          `
+          Please make sure that your codegen config file has defined plugins list for output "${filename}".
+          
+          It should looks like that:
+  
+          schema:
+            - my-schema.graphql
+          generates:
+            my-file.ts:
+              - plugin1
+              - plugin2
+              - plugin3
+          `
+        );
+      }
+    }
+
+    if (schemas.length === 0 && Object.keys(generates).some(filename => generates[filename].schema.length === 0)) {
+      throw new DetailedError(
+        'Invalid Codegen Configuration!',
+        `
+        Please make sure that your codegen config file contains either the "schema" field 
+        or every generated file has its own "schema" field.
+        
+        It should looks like that:
+        schema:
+          - my-schema.graphql
+
+        or:
+        generates:
+          path/to/output:
+            schema: my-schema.graphql
+      `
+      );
     }
   }
 
   async function loadRootSchema() {
     /* Load root schemas */
-    rootSchema = await mergeSchemas(await Promise.all(schemas.map(pointToScehma => loadSchema(pointToScehma, config))));
+    if (schemas.length) {
+      rootSchema = await mergeSchemas(
+        await Promise.all(schemas.map(pointToScehma => loadSchema(pointToScehma, config)))
+      );
+    }
   }
 
   async function loadRootDocuments() {
     /* Load root documents */
     if (documents.length > 0) {
-      const globs = [];
-      const docs = [];
+      for (const docDef of documents) {
+        const documents = await loadDocuments(docDef, config);
 
-      for (const doc of documents) {
-        try {
-          const parsed = parse(doc);
-          docs.push({ filePath: 'unnamed.graphql', content: parsed });
-        } catch (e) {
-          globs.push(doc);
+        if (documents.length > 0) {
+          rootDocuments.push(...documents);
         }
       }
-
-      const foundDocumentsPaths = await documentsFromGlobs(globs);
-      rootDocuments = [...docs, ...(await loadDocumentsSources(foundDocumentsPaths))];
 
       if (rootSchema) {
         const errors = validateGraphQlDocuments(rootSchema, rootDocuments);
@@ -207,8 +229,15 @@ export async function executeCodegen(config: Types.Config): Promise<FileOutput[]
             }
 
             async function addDocuments() {
-              const foundDocumentsPaths = await documentsFromGlobs(outputSpecificDocuments);
-              const additionalDocs = await loadDocumentsSources(foundDocumentsPaths);
+              const additionalDocs = [];
+
+              for (const docDef of outputSpecificDocuments) {
+                const documents = await loadDocuments(docDef, config);
+
+                if (documents.length > 0) {
+                  additionalDocs.push(...documents);
+                }
+              }
 
               if (outputSchema) {
                 const errors = validateGraphQlDocuments(outputSchema, additionalDocs);
@@ -347,6 +376,23 @@ export async function getPluginByName(name: string): Promise<CodegenPlugin> {
 export async function executePlugin(options: ExecutePluginOptions): Promise<string> {
   const pluginPackage = await getPluginByName(options.name);
 
+  if (!pluginPackage.plugin || typeof pluginPackage.plugin !== 'function') {
+    throw new DetailedError(
+      `Invalid Custom Plugin "${options.name}"`,
+      `
+      Plugin ${options.name} does not export a valid JS object with "plugin" function.
+
+      Make sure your custom plugin is written in the following form:
+
+      module.exports = {
+        plugin: (schema, documents, config) => {
+          return 'my-custom-plugin-content';
+        },
+      };
+      `
+    );
+  }
+
   const schema = !pluginPackage.addToSchema
     ? options.schema
     : await mergeSchemas([
@@ -372,7 +418,14 @@ export async function executePlugin(options: ExecutePluginOptions): Promise<stri
         options.outputFilename,
         options.allPlugins
       );
-    } catch (e) {}
+    } catch (e) {
+      throw new DetailedError(
+        `Plugin "${options.name}" validation failed:`,
+        `
+          ${e.message}
+        `
+      );
+    }
   }
 
   return pluginPackage.plugin(schema, options.documents, options.config);
