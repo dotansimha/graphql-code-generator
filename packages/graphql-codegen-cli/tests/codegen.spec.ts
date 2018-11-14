@@ -1,5 +1,6 @@
 import { makeExecutableSchema } from 'graphql-tools';
-import { executeCodegen, mergeSchemas } from '../src/codegen';
+import { executeCodegen } from '../src/codegen';
+import { mergeSchemas } from '../src/merge-schemas';
 import { GraphQLObjectType } from 'graphql';
 
 const SHOULD_NOT_THROW_STRING = 'SHOULD_NOT_THROW';
@@ -420,6 +421,223 @@ describe('Codegen Executor', () => {
       expect(
         (merged.getType('Post') as GraphQLObjectType).getFields()['id'].astNode.directives.map(({ name }) => name.value)
       ).toContainEqual('id');
+    });
+  });
+
+  describe('Custom schema loader', () => {
+    it('Should allow custom loaders to load schema on root level', async () => {
+      await executeCodegen({
+        schema: [
+          {
+            './tests/test-documents/schema.graphql': {
+              loader: '../tests/custom-loaders/custom-schema-loader.js'
+            }
+          }
+        ],
+        generates: {
+          'out1.ts': ['typescript-common']
+        }
+      });
+
+      expect((global as any).CUSTOM_SCHEMA_LOADER_CALLED).toBeTruthy();
+    });
+
+    it('Should allow custom loaders to load schema on output level', async () => {
+      await executeCodegen({
+        generates: {
+          'out1.ts': {
+            schema: [
+              {
+                './tests/test-documents/schema.graphql': {
+                  loader: '../tests/custom-loaders/custom-schema-loader.js'
+                }
+              }
+            ],
+            plugins: ['typescript-common']
+          }
+        }
+      });
+
+      expect((global as any).CUSTOM_SCHEMA_LOADER_CALLED).toBeTruthy();
+    });
+
+    it('Should throw when invalid return value from loader', async () => {
+      try {
+        await executeCodegen({
+          schema: [
+            {
+              './tests/test-documents/schema.graphql': {
+                loader: '../tests/custom-loaders/invalid-return-value-schema-loader.js'
+              }
+            }
+          ],
+          generates: {
+            'out1.ts': ['typescript-common']
+          }
+        });
+
+        throw new Error(SHOULD_NOT_THROW_STRING);
+      } catch (e) {
+        expect(e.message).toBe('Failed to load custom schema loader');
+        expect(e.details).toContain('Return value of a custom schema loader must be of type');
+      }
+    });
+
+    it('Should throw when invalid module specified as loader', async () => {
+      try {
+        await executeCodegen({
+          schema: [
+            {
+              './tests/test-documents/schema.graphql': {
+                loader: '../tests/custom-loaders/non-existing.js'
+              }
+            }
+          ],
+          generates: {
+            'out1.ts': ['typescript-common']
+          }
+        });
+
+        throw new Error(SHOULD_NOT_THROW_STRING);
+      } catch (e) {
+        expect(e.message).toBe('Failed to load custom schema loader');
+        expect(e.details).toContain('Cannot find module');
+      }
+    });
+
+    it('Should throw when invalid file declaration', async () => {
+      try {
+        await executeCodegen({
+          schema: [
+            {
+              './tests/test-documents/schema.graphql': {
+                loader: '../tests/custom-loaders/invalid-export.js'
+              }
+            }
+          ],
+          generates: {
+            'out1.ts': ['typescript-common']
+          }
+        });
+
+        throw new Error(SHOULD_NOT_THROW_STRING);
+      } catch (e) {
+        expect(e.message).toBe('Failed to load custom schema loader');
+        expect(e.details).toContain(
+          'Unable to find a loader function! Make sure to export a default function from your file'
+        );
+      }
+    });
+  });
+
+  describe('Custom documents loader', () => {
+    it('Should allow to use custom documents loader on root level', async () => {
+      await executeCodegen({
+        schema: ['./tests/test-documents/schema.graphql'],
+        documents: [
+          {
+            './tests/test-documents/valid.graphql': {
+              loader: '../tests/custom-loaders/custom-documents-loader.js'
+            }
+          }
+        ],
+        generates: {
+          'out1.ts': ['typescript-common']
+        }
+      });
+
+      expect((global as any).CUSTOM_DOCUMENT_LOADER_CALLED).toBeTruthy();
+    });
+
+    it('Should allow custom loaders to load documents on output level', async () => {
+      await executeCodegen({
+        schema: ['./tests/test-documents/schema.graphql'],
+        generates: {
+          'out1.ts': {
+            documents: [
+              {
+                './tests/test-documents/valid.graphql': {
+                  loader: '../tests/custom-loaders/custom-documents-loader.js'
+                }
+              }
+            ],
+            plugins: ['typescript-common']
+          }
+        }
+      });
+
+      expect((global as any).CUSTOM_DOCUMENT_LOADER_CALLED).toBeTruthy();
+    });
+
+    it('Should throw when invalid return value from custom documents loader', async () => {
+      try {
+        await executeCodegen({
+          schema: ['./tests/test-documents/schema.graphql'],
+          documents: [
+            {
+              './tests/test-documents/valid.graphql': {
+                loader: '../tests/custom-loaders/invalid-return-value-documents-loader.js'
+              }
+            }
+          ],
+          generates: {
+            'out1.ts': ['typescript-common']
+          }
+        });
+
+        throw new Error(SHOULD_NOT_THROW_STRING);
+      } catch (e) {
+        expect(e.message).toBe('Failed to load custom documents loader');
+        expect(e.details).toContain('Return value of a custom schema loader must be an Array of');
+      }
+    });
+
+    it('Should throw when invalid module specified as loader', async () => {
+      try {
+        await executeCodegen({
+          schema: ['./tests/test-documents/schema.graphql'],
+          documents: [
+            {
+              './tests/test-documents/valid.graphql': {
+                loader: '../tests/custom-loaders/non-existing.js'
+              }
+            }
+          ],
+          generates: {
+            'out1.ts': ['typescript-common']
+          }
+        });
+
+        throw new Error(SHOULD_NOT_THROW_STRING);
+      } catch (e) {
+        expect(e.message).toBe('Failed to load custom documents loader');
+        expect(e.details).toContain('Cannot find module');
+      }
+    });
+
+    it('Should throw when invalid file declaration', async () => {
+      try {
+        await executeCodegen({
+          schema: ['./tests/test-documents/schema.graphql'],
+          documents: [
+            {
+              './tests/test-documents/valid.graphql': {
+                loader: '../tests/custom-loaders/invalid-export.js'
+              }
+            }
+          ],
+          generates: {
+            'out1.ts': ['typescript-common']
+          }
+        });
+
+        throw new Error(SHOULD_NOT_THROW_STRING);
+      } catch (e) {
+        expect(e.message).toBe('Failed to load custom documents loader');
+        expect(e.details).toContain(
+          'Unable to find a loader function! Make sure to export a default function from your file'
+        );
+      }
     });
   });
 });
