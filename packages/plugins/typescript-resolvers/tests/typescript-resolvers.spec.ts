@@ -503,6 +503,97 @@ describe('Resolvers', () => {
     `);
   });
 
+  it('should use default mapper for non mapped types (external)', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: `
+        type Query {
+          post: Post
+        }
+
+        type Post {
+          id: String
+        }
+        
+        schema {
+          query: Query
+        }
+      `
+    });
+
+    const content = await plugin(testSchema, [], {
+      defaultMapper: './interfaces#AnyParent'
+    });
+
+    expect(content).toBeSimilarStringTo(`
+      import { AnyParent } from './interfaces';
+    `);
+
+    expect(content).toBeSimilarStringTo(`
+      export namespace QueryResolvers {
+        export interface Resolvers<Context = {}, TypeParent = {}> {
+          post?: PostResolver<AnyParent | null, TypeParent, Context>;
+        }
+
+        export type PostResolver<R = AnyParent | null, Parent = {}, Context = {}> = Resolver<R, Parent, Context>;
+      }
+    `);
+
+    // should get AnyParent as a parent and result shouldn't use AnyParent
+    expect(content).toBeSimilarStringTo(`
+      export namespace PostResolvers {
+        export interface Resolvers<Context = {}, TypeParent = AnyParent> {
+          id?: IdResolver<string | null, TypeParent, Context>;
+        }
+
+        export type IdResolver<R = string | null, Parent = AnyParent, Context = {}> = Resolver<R, Parent, Context>;
+      }
+    `);
+  });
+
+  it('should use default mapper for non mapped types (primitive)', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: `
+        type Query {
+          post: Post
+        }
+
+        type Post {
+          id: String
+        }
+        
+        schema {
+          query: Query
+        }
+      `
+    });
+
+    const content = await plugin(testSchema, [], {
+      defaultMapper: 'any'
+    });
+
+    // should check field's result and match it with provided parents
+    expect(content).toBeSimilarStringTo(`
+      export namespace QueryResolvers {
+        export interface Resolvers<Context = {}, TypeParent = {}> {
+          post?: PostResolver<any | null, TypeParent, Context>;
+        }
+
+        export type PostResolver<R = any | null, Parent = {}, Context = {}> = Resolver<R, Parent, Context>;
+      }
+    `);
+
+    // should check if type has a defined parent and use it as TypeParent
+    expect(content).toBeSimilarStringTo(`
+      export namespace PostResolvers {
+        export interface Resolvers<Context = {}, TypeParent = any> {
+          id?: IdResolver<string | null, TypeParent, Context>;
+        }
+
+        export type IdResolver<R = string | null, Parent = any, Context = {}> = Resolver<R, Parent, Context>;
+      }
+    `);
+  });
+
   it('should provide a generic type of arguments in noNamespaces', async () => {
     const testSchema = makeExecutableSchema({
       typeDefs: `
