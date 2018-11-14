@@ -8,9 +8,11 @@
 [renovate-badge]: https://img.shields.io/badge/renovate-app-blue.svg
 [renovate-app]: https://renovateapp.com/
 
-GraphQL Code Generator is a CLI tool that can generate code out of your GraphQL schema. When we develop a GraphQL backend, there would be many instances where we would find ourselves writing the same things which are already described by the GraphQL schema, only in a different format; for example: [Typescript typings](https://www.typescriptlang.org/), [Mongoose models](https://mongoosejs.com/), and more.
+GraphQL Code Generator is a tool that generates code out of your GraphQL schema. Whether you are developing a frontend or backend, you can utilize GraphQL Code Generator to generate output from your GraphQL Schema and GraphQL Documents (query/mutation/subscription/fragment).
 
-GraphQL Code Generator was built to address exactly that. By analyzing the schema and parsing it, GraphQL Code Generator can output code at a wide variety of formats, based on pre-defined templates or based on custom user-defined ones. Regardless of the language that you're using, GraphlQL Code Generator got you covered.
+By analyzing the schema and documents and parsing it, GraphQL Code Generator can output code at a wide variety of formats, based on pre-defined templates or based on custom user-defined ones. Regardless of the language that you're using, GraphlQL Code Generator got you covered.
+
+GraphQL Code Generator let you choose the output that you need, based on _plugins_, which are very flexible and customizable. You can also write your own _plugins_ to generate custom outputs that matches your needs.
 
 <p align="center">
     <img src="https://github.com/dotansimha/graphql-code-generator/blob/master/logo.png?raw=true" />
@@ -22,9 +24,19 @@ Install using `npm` (or `yarn`):
 
     $ npm install graphql-code-generator
 
-Generate code using `gql-gen`:
+Create a basic `codegen.yml` configuration file, point to your schema, and pick the plugins you wish to use. For example:
 
-    $ gql-gen --url http://localhost:3000/graphql --template ts --out ./src/types.d.ts
+```yml
+schema: http://localhost:3000/graphql
+generates:
+  src/types.ts:
+    - typescript-common
+    - typescript-server
+```
+
+Then, run the code-generator using `gql-gen`:
+
+    $ gql-gen
 
 The command above may fetch (for example) the following GraphQL schema:
 

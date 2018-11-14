@@ -6,14 +6,16 @@ export namespace Types {
   export type InstanceOrArray<T> = T | T[];
 
   /* Schema Definition */
+  export type SchemaWithLoader = { [schemaString: string]: { loader: string } };
   export type UrlSchema = string | { [url: string]: { headers?: { [headerName: string]: string } } };
   export type LocalSchemaPath = string;
   export type SchemaGlobPath = string;
-  export type Schema = UrlSchema | LocalSchemaPath | SchemaGlobPath;
+  export type Schema = UrlSchema | LocalSchemaPath | SchemaGlobPath | SchemaWithLoader;
 
   /* Document Definitions */
   export type OperationDocumentGlobPath = string;
-  export type OperationDocument = OperationDocumentGlobPath;
+  export type CustomDocumentLoader = { [path: string]: { loader: string } };
+  export type OperationDocument = OperationDocumentGlobPath | CustomDocumentLoader;
 
   /* Plugin Definition */
   export type PluginConfig = InstanceOrArray<string> | { [key: string]: any };

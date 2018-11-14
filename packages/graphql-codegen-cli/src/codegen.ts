@@ -1,19 +1,13 @@
-import { DocumentFromString } from './loaders/documents/document-from-string';
-import { SchemaFromString } from './loaders/schema/schema-from-string';
 import { FileOutput, GraphQLSchema, DocumentFile, Types, CodegenPlugin } from 'graphql-codegen-core';
 import { makeExecutableSchema } from 'graphql-tools';
 import * as Listr from 'listr';
 import { normalizeOutputParam, normalizeInstanceOrArray, normalizeConfig } from './helpers';
-import { IntrospectionFromUrlLoader } from './loaders/schema/introspection-from-url';
-import { IntrospectionFromFileLoader } from './loaders/schema/introspection-from-file';
-import { SchemaFromTypedefs } from './loaders/schema/schema-from-typedefs';
-import { SchemaFromExport } from './loaders/schema/schema-from-export';
 import { validateGraphQlDocuments, checkValidationErrors } from './loaders/documents/validate-documents';
 import { prettify } from './utils/prettier';
 import { Renderer } from './utils/listr-renderer';
 import { DetailedError } from './errors';
-import { DocumentsFromGlob } from './loaders/documents/documents-from-glob';
-import { mergeGraphQLSchemas } from '@graphql-modules/epoxy';
+import { loadSchema, loadDocuments } from './load';
+import { mergeSchemas } from './merge-schemas';
 
 export interface GenerateOutputOptions {
   filename: string;
@@ -30,82 +24,6 @@ export interface ExecutePluginOptions {
   documents: DocumentFile[];
   outputFilename: string;
   allPlugins: Types.ConfiguredPlugin[];
-}
-
-const documentsHandlers = [new DocumentFromString(), new DocumentsFromGlob()];
-
-const schemaHandlers = [
-  new IntrospectionFromUrlLoader(),
-  new IntrospectionFromFileLoader(),
-  new SchemaFromString(),
-  new SchemaFromTypedefs(),
-  new SchemaFromExport()
-];
-
-const loadDocuments = async (documentDef: string, config: Types.Config): Promise<DocumentFile[]> => {
-  for (const handler of documentsHandlers) {
-    if (await handler.canHandle(documentDef)) {
-      return handler.handle(documentDef, config);
-    }
-  }
-
-  return [];
-};
-
-const loadSchema = async (schemaDef: Types.Schema, config: Types.Config): Promise<GraphQLSchema> => {
-  for (const handler of schemaHandlers) {
-    let pointToSchema: string = null;
-    let options: any = {};
-
-    if (typeof schemaDef === 'string') {
-      pointToSchema = schemaDef as string;
-    } else if (typeof schemaDef === 'object') {
-      pointToSchema = Object.keys(schemaDef)[0];
-      options = schemaDef[pointToSchema];
-    }
-
-    if (await handler.canHandle(pointToSchema)) {
-      return handler.handle(pointToSchema, config, options);
-    }
-  }
-
-  throw new DetailedError(
-    'Failed to load schema',
-    `
-    Failed to load schema from ${schemaDef}.
-
-    GraphQL Code Generator supports:
-      - ES Modules and CommonJS exports
-      - Introspection JSON File
-      - URL of GraphQL endpoint
-      - Multiple files with type definitions
-      - String in config file
-
-    Try to use one of above options and run codegen again.
-
-  `
-  );
-};
-
-export async function mergeSchemas(schemas: GraphQLSchema[]): Promise<GraphQLSchema> {
-  if (schemas.length === 0) {
-    return null;
-  } else if (schemas.length === 1) {
-    return schemas[0];
-  } else {
-    const mergedSchemaString = mergeGraphQLSchemas(schemas.filter(s => s));
-
-    return makeExecutableSchema({
-      typeDefs: mergedSchemaString,
-      allowUndefinedInResolve: true,
-      resolverValidationOptions: {
-        requireResolversForResolveType: false,
-        requireResolversForAllFields: false,
-        requireResolversForNonScalar: false,
-        requireResolversForArgs: false
-      }
-    });
-  }
 }
 
 export async function executeCodegen(config: Types.Config): Promise<FileOutput[]> {
