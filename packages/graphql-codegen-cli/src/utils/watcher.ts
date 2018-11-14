@@ -12,8 +12,8 @@ const getMatch = (doc: string) => {
 };
 
 export const createWatcher = (config: Types.Config, onNext: (result: FileOutput[]) => Promise<FileOutput[]>) => {
-  const files: string[] = [];
-  const documents = normalizeInstanceOrArray(config.documents);
+  const files: Types.OperationDocument[] = [];
+  const documents = normalizeInstanceOrArray<Types.OperationDocument>(config.documents);
   const schemas = normalizeInstanceOrArray<Types.Schema>(config.schema);
 
   // Add schemas and documents from "generates"
