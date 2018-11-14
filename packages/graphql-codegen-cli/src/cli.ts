@@ -5,5 +5,7 @@ import { cliError } from './utils/cli-error';
 import { createConfig } from './config';
 
 generate(createConfig())
-  .then(() => {})
+  .then(() => {
+    process.exit(0);
+  })
   .catch(cliError);
