@@ -14,6 +14,7 @@ export interface GenerateOutputOptions {
   plugins: Types.ConfiguredPlugin[];
   schema: GraphQLSchema;
   documents: DocumentFile[];
+  pluginLoader: Types.PluginLoaderFn;
   inheritedConfig: { [key: string]: any };
 }
 
@@ -24,6 +25,7 @@ export interface ExecutePluginOptions {
   documents: DocumentFile[];
   outputFilename: string;
   allPlugins: Types.ConfiguredPlugin[];
+  pluginLoader: Types.PluginLoaderFn;
 }
 
 export async function executeCodegen(config: Types.Config): Promise<FileOutput[]> {
@@ -257,7 +259,8 @@ export async function executeCodegen(config: Types.Config): Promise<FileOutput[]
                 inheritedConfig: {
                   ...rootConfig,
                   ...outputFileTemplateConfig
-                }
+                },
+                pluginLoader: config.pluginLoader || require
               });
               result.push(output);
             }
@@ -319,7 +322,8 @@ export async function generateOutput(options: GenerateOutputOptions): Promise<Fi
       schema: options.schema,
       documents: options.documents,
       outputFilename: options.filename,
-      allPlugins: options.plugins
+      allPlugins: options.plugins,
+      pluginLoader: options.pluginLoader
     });
 
     output += result;
@@ -328,7 +332,7 @@ export async function generateOutput(options: GenerateOutputOptions): Promise<Fi
   return { filename: options.filename, content: await prettify(options.filename, output) };
 }
 
-export async function getPluginByName(name: string): Promise<CodegenPlugin> {
+export async function getPluginByName(name: string, pluginLoader: Types.PluginLoaderFn): Promise<CodegenPlugin> {
   const possibleNames = [
     `graphql-codegen-${name}`,
     `graphql-codegen-${name}-template`,
@@ -339,7 +343,7 @@ export async function getPluginByName(name: string): Promise<CodegenPlugin> {
 
   for (const packageName of possibleNames) {
     try {
-      return require(packageName) as CodegenPlugin;
+      return pluginLoader(packageName) as CodegenPlugin;
     } catch (err) {
       if (err.message.indexOf(`Cannot find module '${packageName}'`) === -1) {
         throw new DetailedError(
@@ -374,9 +378,9 @@ export async function getPluginByName(name: string): Promise<CodegenPlugin> {
 }
 
 export async function executePlugin(options: ExecutePluginOptions): Promise<string> {
-  const pluginPackage = await getPluginByName(options.name);
+  const pluginPackage = await getPluginByName(options.name, options.pluginLoader);
 
-  if (!pluginPackage.plugin || typeof pluginPackage.plugin !== 'function') {
+  if (!pluginPackage || !pluginPackage.plugin || typeof pluginPackage.plugin !== 'function') {
     throw new DetailedError(
       `Invalid Custom Plugin "${options.name}"`,
       `

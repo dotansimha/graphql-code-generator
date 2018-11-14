@@ -13,6 +13,8 @@
 .query-editor {
   flex: 1;
   position: relative;
+  max-width: 25vw;
+  overflow: scroll;
   height: 100vh;
 }
 

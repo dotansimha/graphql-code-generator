@@ -1,3 +1,5 @@
+import { isBrowser, isNode } from './is-browser';
+
 export function cliError(err: any, exitOnError = true) {
   let msg: string;
 
@@ -11,8 +13,12 @@ export function cliError(err: any, exitOnError = true) {
 
   console['error'](msg);
 
-  if (exitOnError) {
+  if (exitOnError && isNode) {
     process.exit(1);
+
+    return;
+  } else if (exitOnError && isBrowser) {
+    throw err;
   }
 
   return;

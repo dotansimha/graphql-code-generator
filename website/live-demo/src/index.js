@@ -1,7 +1,13 @@
+import 'any-observable/register/zen';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
+
+process.stdout = {
+  isTTY: false,
+  write: () => null
+};
 
 require('codemirror/addon/hint/show-hint');
 require('codemirror/addon/comment/comment');
