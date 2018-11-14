@@ -20,5 +20,5 @@ export const getParentType = convert => (type: Type, options: Handlebars.HelperO
   const mapper = pickMapper(type.name, config.mappers || {});
   const name = mapper ? mapper.type : `${config.interfacePrefix || ''}${convert(type.name)}`;
 
-  return isRootType(type, schema) ? 'never' : name;
+  return isRootType(type, schema) ? '{}' : name;
 };

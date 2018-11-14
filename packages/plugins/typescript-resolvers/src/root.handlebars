@@ -1,7 +1,9 @@
 import { GraphQLResolveInfo } from 'graphql';
 {{{ importMappers types }}}
 
-export type Resolver<Result, Parent = any, Context = any, Args = never> = (
+{{{ importContext }}}
+
+export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
   parent: Parent,
   args: Args,
   context: Context,
@@ -23,7 +25,7 @@ export interface ISubscriptionResolverObject<Result, Parent, Context, Args> {
   ): R | Result | Promise<R | Result>;
 }
 
-export type SubscriptionResolver<Result, Parent = any, Context = any, Args = never> =
+export type SubscriptionResolver<Result, Parent = {}, Context = {}, Args = {}> =
   | ((...args: any[]) => ISubscriptionResolverObject<Result, Parent, Context, Args>)
   | ISubscriptionResolverObject<Result, Parent, Context, Args>;
 

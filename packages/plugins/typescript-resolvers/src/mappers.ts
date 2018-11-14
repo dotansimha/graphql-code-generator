@@ -12,7 +12,7 @@ function isExternal(value: string) {
   return value.includes('#');
 }
 
-function parseMapper(mapper: string): Mapper {
+export function parseMapper(mapper: string): Mapper {
   if (isExternal(mapper)) {
     const [source, type] = mapper.split('#');
     return {
