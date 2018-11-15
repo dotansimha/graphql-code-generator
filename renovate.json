@@ -1,5 +1,10 @@
 {
-  "extends": [
-    "config:base"
+  "extends": ["config:base"],
+  "circleci": true,
+  "pathRules": [
+    {
+      "paths": ["website/package.json"],
+      "extends": ["config:base"]
+    }
   ]
 }
