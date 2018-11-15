@@ -8,6 +8,10 @@ import MagicIcon from './magic.svg';
 import CodegenLogo from './logo.svg';
 import GraphQLLogo from './GraphQL_Logo.svg';
 import { EXAMPLES } from './examples';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 
 const plugins = [
   require('prettier/parser-graphql'),
@@ -22,6 +26,8 @@ const EXT_TO_FORMATTER = {
   'd.ts': 'typescript',
   json: 'json'
 };
+
+const DEFAULT_EXAMPLE = 'typescript-server';
 
 const pluginsMap = {
   'graphql-codegen-typescript-common': require('graphql-codegen-typescript-common'),
@@ -41,12 +47,17 @@ const pluginsMap = {
 class App extends Component {
   state = {
     output: '',
-    config: EXAMPLES['typescript-server'].config,
-    schema: EXAMPLES['typescript-server'].schema,
-    documents: EXAMPLES['typescript-server'].document
+    config: '',
+    schema: '',
+    documents: '',
+    example: DEFAULT_EXAMPLE
   };
 
   update = field => value => this.setState({ [field]: value });
+
+  componentWillMount() {
+    this.setState(EXAMPLES[DEFAULT_EXAMPLE].state);
+  }
 
   componentDidMount() {
     this.generate();
@@ -109,6 +120,13 @@ class App extends Component {
       });
   };
 
+  handleChange = event => {
+    const key = event.target.value;
+    this.setState({ example: key, ...EXAMPLES[key].state }, () => {
+      this.generate();
+    });
+  };
+
   render() {
     let mode = null;
 
@@ -119,40 +137,57 @@ class App extends Component {
     } catch (e) {}
 
     return (
-      <div className="container">
-        <div className="column">
-          <div className="title">
-            <img className="logo" alt={'GraphQL'} src={GraphQLLogo} />
-            <span className={'icon-text'}>Schema</span>
-          </div>
-          <Editor lang={'graphql'} onEdit={this.update('schema')} value={this.state.schema} />
+      <div>
+        <div className={'picker'}>
+          <FormControl>
+            <InputLabel htmlFor="example">Choose Example</InputLabel>
+            <Select
+              value={this.state.example}
+              onChange={this.handleChange}
+              inputProps={{
+                name: 'example',
+                id: 'example'
+              }}
+            >
+              {Object.keys(EXAMPLES).map(name => (
+                <MenuItem key={name} value={name}>
+                  {EXAMPLES[name].name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </div>
-        <div className="column">
-          <div className="title">
-            <img className="logo" alt={'GraphQL'} src={GraphQLLogo} />
-            <span className={'icon-text'}>Documents</span>
+        <div className="container">
+          <div className="column" style={{ width: '20vw' }}>
+            <div className="title">
+              <img className="logo" alt={'GraphQL'} src={GraphQLLogo} />
+              <span className={'icon-text'}>Schema</span>
+            </div>
+            <Editor lang={'graphql'} onEdit={this.update('schema')} value={this.state.schema} />
           </div>
-          <Editor lang={'graphql'} onEdit={this.update('documents')} value={this.state.documents} />
-        </div>
-        <div className="column">
-          <div className="title">
-            <img className="logo" alt={'Codegen'} src={CodegenLogo} />
-            <span className={'icon-text'}>Config</span>
+          <div className="column" style={{ width: '20vw' }}>
+            <div className="title">
+              <img className="logo" alt={'GraphQL'} src={GraphQLLogo} />
+              <span className={'icon-text'}>Documents</span>
+            </div>
+            <Editor lang={'graphql'} onEdit={this.update('documents')} value={this.state.documents} />
           </div>
-          <Editor lang={'yaml'} onEdit={this.update('config')} value={this.state.config} />
-        </div>
-        <div className="generate-container">
-          <button onClick={this.generate}>
-            <span>Generate</span>
-            <img src={MagicIcon} alt={'Generate'} />
-          </button>
-        </div>
-        <div className="column">
-          <div className="title">
-            <img className="logo" alt={'Codegen'} src={CodegenLogo} />
-            <span className={'icon-text'}>Output</span>
+          <div className="column" style={{ width: '20vw' }}>
+            <div className="title">
+              <img className="logo" alt={'Codegen'} src={CodegenLogo} />
+              <span className={'icon-text'}>Config</span>
+            </div>
+            <Editor lang={'yaml'} onEdit={this.update('config')} value={this.state.config} />
           </div>
-          <Editor lang={mode} readOnly={true} onEdit={this.update('output')} value={this.state.output} />
+          <div className="column" style={{ width: '40vw' }}>
+            <div className="title">
+              <button onClick={this.generate}>
+                <span className={'generate-text'}>Generate</span>
+                <img src={MagicIcon} alt={'Generate'} />
+              </button>
+            </div>
+            <Editor lang={mode} readOnly={true} onEdit={this.update('output')} value={this.state.output} />
+          </div>
         </div>
       </div>
     );

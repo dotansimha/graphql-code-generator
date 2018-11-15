@@ -3,10 +3,10 @@ const React = require('react');
 const IODemo = () => (
   <div className="IODemo">
     <iframe
-      src={'/live-demo/'}
+      src={'http://localhost:3000'}
       style={{
         width: '100vw',
-        height: '350px'
+        height: '500px'
       }}
     />
   </div>

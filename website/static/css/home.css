@@ -41,8 +41,6 @@
 }
 
 .IODemo {
-  margin-top: 70px;
-  margin-bottom: 100px;
   display: flow-root;
 }
 
@@ -56,7 +54,7 @@
 }
 
 .IODemo-in > pre {
-  border-right: .5px solid gray;
+  border-right: 0.5px solid gray;
   border-style: dashed;
 }
 
@@ -66,7 +64,7 @@
 }
 
 .IODemo-out > pre {
-  border-left: .5px solid gray;
+  border-left: 0.5px solid gray;
   border-style: dashed;
 }
 
@@ -86,7 +84,7 @@
 
 .FeatureCards-details h4 {
   color: var(--primary-color);
-  font-size: .8em;
+  font-size: 0.8em;
 }
 
 .FeatureCards-details h3 {
@@ -133,7 +131,7 @@
   margin-top: 10px;
   color: var(--secondary-text-color);
   text-align: left;
-  font-size: .85em;
+  font-size: 0.85em;
   text-align: justify;
 }
 
@@ -156,7 +154,7 @@
 
 .CompanyCards-details h4 {
   color: var(--primary-color);
-  font-size: .8em;
+  font-size: 0.8em;
 }
 
 .CompanyCards-details h3 {
@@ -183,10 +181,18 @@
 }
 
 @keyframes stutter {
-  0% { opacity: 0 }
-  0.1% {opacity: 1 }
-  50% { opacity: 1 }
-  50.1% { opacity: 0 }
+  0% {
+    opacity: 0;
+  }
+  0.1% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 1;
+  }
+  50.1% {
+    opacity: 0;
+  }
 }
 
 @media only screen and (min-device-width: 360px) and (max-device-width: 736px) {

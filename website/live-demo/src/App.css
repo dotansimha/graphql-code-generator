@@ -2,13 +2,13 @@
   display: flex;
   align-items: flex-start;
   justify-content: stretch;
-  height: 95vh;
+  border-top: 1px solid #e5e5e5;
+  margin-top: 3px;
 }
 
 .column {
   flex: 1;
-  height: 95vh;
-  border-left: 1px solid #e5e5e5;
+  height: 85vh;
 }
 
 .logo {
@@ -25,7 +25,7 @@
   line-height: normal;
   letter-spacing: normal;
   color: #33475c;
-  height: 5vh;
+  height: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -39,31 +39,22 @@
 .query-editor {
   flex: 1;
   position: relative;
-  max-width: 25vw;
   overflow: scroll;
-  height: 95vh;
 }
 
 .CodeMirror {
-  height: 94vh;
-}
-
-.generate-container {
-  justify-content: center;
-  align-items: center;
-  height: 95vh;
+  height: 70vh;
   border-left: 1px solid #e5e5e5;
-  display: flex;
 }
 
-.generate-container button {
-  width: 160px;
+.column button {
+  margin-left: 5px;
+  margin-right: 5px;
+  width: 90%;
   height: 40px;
   border-radius: 5px;
   box-shadow: 6px 6px 0 0 rgba(51, 71, 92, 0.09);
   background-color: #ec51ba;
-  margin-left: 5px;
-  margin-right: 5px;
   font-size: 14px;
   font-weight: normal;
   font-style: normal;
@@ -72,9 +63,18 @@
   letter-spacing: normal;
   text-align: center;
   color: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
   cursor: pointer;
   outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.generate-text {
+  margin-right: 10px;
+}
+
+.picker {
+  padding-left: 30px;
+  padding-bottom: 5px;
 }
