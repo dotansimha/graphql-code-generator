@@ -1,20 +1,16 @@
 {
   "docs": {
-    "Getting Started": [
-      "getting-started/index",
-      "getting-started/cli-commands",
-      "getting-started/codegen-config"
-    ],
-    "Predefined Templates": [
-      "templates/index",
-      "templates/typescript-common",
-      "templates/typescript-client",
-      "templates/typescript-server",
-      "templates/typescript-resolvers",
-      "templates/typescript-graphql-files-modules",
-      "templates/typescript-mongodb",
-      "templates/typescript-react-apollo",
-      "templates/typescript-apollo-angular"
+    "Getting Started": ["getting-started/index", "getting-started/cli-commands", "getting-started/codegen-config"],
+    "Plugins": [
+      "plugins/index",
+      "plugins/typescript-common",
+      "plugins/typescript-client",
+      "plugins/typescript-server",
+      "plugins/typescript-resolvers",
+      "plugins/typescript-graphql-files-modules",
+      "plugins/typescript-mongodb",
+      "plugins/typescript-react-apollo",
+      "plugins/typescript-apollo-angular"
     ],
     "Custom Code Generators": [
       "custom-codegen/index",
