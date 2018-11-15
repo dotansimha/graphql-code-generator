@@ -32,19 +32,14 @@ export const gql = convert => (operation: Operation, operations: Operation[], op
   return 'gql`' + doc + '`';
 };
 
-function includeFragments(fragments: string[]): string;
-function includeFragments(fragments: string[], operation: string): string;
-function includeFragments(fragments: string[], operation?: string): string | string[] {
-  if (fragments && !operation) {
+function includeFragments(fragments: string[]): string {
+  if (fragments) {
     return `
       ${fragments
         .filter((name, i, all) => all.indexOf(name) === i)
         .map(name => '${' + name + '}')
         .join('\n')}
     `;
-  }
-
-  if (fragments && operation) {
   }
 
   return '';
