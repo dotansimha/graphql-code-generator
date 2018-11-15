@@ -14,11 +14,11 @@
     "build-live-demo": "cd live-demo && yarn build && cp -r ./build/* ../static/live-demo"
   },
   "devDependencies": {
-    "babel-preset-minify": "^0.5.0",
-    "docusaurus": "^1.5.0",
-    "netlify-lambda": "^1.0.2"
+    "babel-preset-minify": "0.5.0",
+    "docusaurus": "1.5.1",
+    "netlify-lambda": "1.0.3"
   },
   "dependencies": {
-    "sendmail": "^1.4.1"
+    "sendmail": "1.4.1"
   }
 }
