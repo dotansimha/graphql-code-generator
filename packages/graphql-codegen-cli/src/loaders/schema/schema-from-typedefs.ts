@@ -1,3 +1,4 @@
+import { Types } from 'graphql-codegen-core';
 import { SchemaLoader } from './schema-loader';
 import * as isGlob from 'is-glob';
 import isValidPath = require('is-valid-path');
@@ -6,12 +7,10 @@ import { GraphQLSchema } from 'graphql';
 import * as glob from 'glob';
 import { makeExecutableSchema } from 'graphql-tools';
 import { readFileSync } from 'fs';
-import { importSchema } from 'graphql-import';
-import { CLIOptions } from '../../cli-options';
 import * as path from 'path';
 import * as fs from 'fs';
 import { DetailedError } from '../../errors';
-import { graphQLExtensions } from '../documents/document-loader';
+import { graphQLExtensions } from '../documents/documents-from-glob';
 
 function isGraphQLFile(globPath: string): boolean {
   return graphQLExtensions.some(ext => globPath.endsWith(ext));
@@ -23,6 +22,8 @@ function loadSchemaFile(filepath: string): string {
   });
 
   if (/^\# import /i.test(content.trimLeft())) {
+    const { importSchema } = require('graphql-import');
+
     return importSchema(filepath);
   }
 
@@ -34,38 +35,29 @@ export class SchemaFromTypedefs implements SchemaLoader {
     return isGlob(globPath) || (isValidPath(globPath) && isGraphQLFile(globPath));
   }
 
-  handle(globPath: string, cliOptions: CLIOptions): GraphQLSchema {
+  handle(globPath: string, config: Types.Config, schemaOptions: any): GraphQLSchema {
     const globFiles = glob.sync(globPath, { cwd: process.cwd() });
 
     if (!globFiles || globFiles.length === 0) {
-      throw new DetailedError(`
+      throw new DetailedError(
+        'Unable to find matching files',
+        `
       
-        Unable to find matching files for glob: ${globPath}
-
-        Please check following:
-
-        CLI: 
-          
-          $ gql-gen --schema ${globPath} ...
-
-        API:
-          
-          generate({
-            schema: '${globPath}',
-            ...
-          });
-
-      `);
+        Unable to find matching files for glob: ${globPath} in directory: ${process.cwd()}
+      `
+      );
     }
 
     let mergeLogic = <T = any>(arr: T[]) => arr;
 
-    if ('mergeSchema' in cliOptions) {
-      const patternArr = cliOptions.mergeSchema.split('#');
+    if ('mergeSchemaFiles' in config) {
+      const patternArr = config.mergeSchemaFiles.split('#');
       const mergeModuleName = patternArr[0];
       const mergeFunctionName = patternArr[1];
       if (!mergeModuleName || !mergeFunctionName) {
-        throw new DetailedError(`
+        throw new DetailedError(
+          `You have to specify your merge logic with 'mergeSchema' option`,
+          `
 
           You have to specify your merge logic with 'mergeSchema' option.
 
@@ -88,13 +80,16 @@ export class SchemaFromTypedefs implements SchemaLoader {
               ...
             });
 
-        `);
+        `
+        );
       }
       const localFilePath = path.resolve(process.cwd(), mergeModuleName);
       const localFileExists = fs.existsSync(localFilePath);
       const mergeModule = require(localFileExists ? localFilePath : mergeModuleName);
       if (!(mergeFunctionName in mergeModule)) {
-        throw new DetailedError(`
+        throw new DetailedError(
+          `Provided function couldn't be found`,
+          `
         
           Provided ${mergeFunctionName} function couldn't be found in ${mergeModule}
 
@@ -102,7 +97,8 @@ export class SchemaFromTypedefs implements SchemaLoader {
 
             export const ${mergeFunctionName} ...
 
-        `);
+        `
+        );
       }
       mergeLogic = mergeModule[mergeFunctionName];
     }

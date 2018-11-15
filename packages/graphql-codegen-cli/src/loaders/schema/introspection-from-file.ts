@@ -1,12 +1,9 @@
-import { introspectionToGraphQLSchema, validateIntrospection } from 'graphql-codegen-core';
+import { introspectionToGraphQLSchema, validateIntrospection, Types } from 'graphql-codegen-core';
 import { GraphQLSchema } from 'graphql';
 import { SchemaLoader } from './schema-loader';
 import { existsSync, readFileSync } from 'fs';
 import isValidPath = require('is-valid-path');
 import { extname, isAbsolute, resolve as resolvePath } from 'path';
-import { CLIOptions } from '../../cli-options';
-import { getSpinner } from '../../spinner';
-import { DetailedError } from '../../errors';
 
 export class IntrospectionFromFileLoader implements SchemaLoader {
   stripBOM(content: string) {
@@ -29,29 +26,35 @@ export class IntrospectionFromFileLoader implements SchemaLoader {
     return isValidPath(pointerToSchema) && existsSync(pointerToSchema) && extname(pointerToSchema) === '.json';
   }
 
-  async handle(pointerToSchema: string, _cliOptions: CLIOptions): Promise<GraphQLSchema> {
-    getSpinner().info(`Loading GraphQL Introspection from file: ${pointerToSchema}...`);
+  handle(pointerToSchema: string, config: Types.Config, schemaOptions: any): Promise<GraphQLSchema> {
+    // spinner.info(`Loading GraphQL Introspection from file: ${pointerToSchema}...`);
 
-    const fullPath = isAbsolute(pointerToSchema) ? pointerToSchema : resolvePath(process.cwd(), pointerToSchema);
+    return new Promise<GraphQLSchema>((resolve, reject) => {
+      const fullPath = isAbsolute(pointerToSchema) ? pointerToSchema : resolvePath(process.cwd(), pointerToSchema);
 
-    if (existsSync(fullPath)) {
-      const fileContent = readFileSync(fullPath, 'utf8');
+      if (existsSync(fullPath)) {
+        try {
+          const fileContent = readFileSync(fullPath, 'utf8');
 
-      if (!fileContent) {
-        throw new DetailedError(`Unable to read local introspection file: ${fullPath}`);
+          if (!fileContent) {
+            reject(`Unable to read local introspection file: ${fullPath}`);
+          }
+
+          let introspection = this.parseBOM(fileContent);
+
+          if (introspection.data) {
+            introspection = introspection.data;
+          }
+
+          validateIntrospection(introspection);
+
+          resolve(introspectionToGraphQLSchema(introspection));
+        } catch (e) {
+          reject(e);
+        }
+      } else {
+        reject(`Unable to locate local introspection file: ${fullPath}`);
       }
-
-      let introspection = this.parseBOM(fileContent);
-
-      if (introspection.data) {
-        introspection = introspection.data;
-      }
-
-      validateIntrospection(introspection);
-
-      return introspectionToGraphQLSchema(introspection);
-    }
-
-    throw new DetailedError(`Unable to locate local introspection file: ${fullPath}`);
+    });
   }
 }

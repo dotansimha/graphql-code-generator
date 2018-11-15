@@ -1,4 +1,4 @@
-/*tslint:disable*/
+// tslint:disable
 declare module '*/comment-added.subscription.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
@@ -32,9 +32,9 @@ declare module '*/current-user.query.graphql' {
 declare module '*/feed.query.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
-  const GetFeed: DocumentNode;
+  const Feed: DocumentNode;
 
-  export { GetFeed };
+  export { Feed };
 
   export default defaultDocument;
 }

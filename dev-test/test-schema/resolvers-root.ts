@@ -1,4 +1,35 @@
-/* tslint:disable */
+// ====================================================
+// Types
+// ====================================================
+
+export interface Query {
+  allUsers: (User | null)[];
+
+  userById?: User | null;
+  /** Generates a new answer for the guessing game */
+  answer: number[];
+}
+
+export interface User {
+  id: number;
+
+  name: string;
+
+  email: string;
+}
+
+export interface Subscription {
+  newUser?: User | null;
+}
+
+// ====================================================
+// Arguments
+// ====================================================
+
+export interface UserByIdQueryArgs {
+  id: number;
+}
+
 import { GraphQLResolveInfo } from 'graphql';
 
 export type Resolver<Result, Parent = any, Context = any, Args = never> = (
@@ -27,51 +58,7 @@ export type SubscriptionResolver<Result, Parent = any, Context = any, Args = nev
   | ((...args: any[]) => ISubscriptionResolverObject<Result, Parent, Context, Args>)
   | ISubscriptionResolverObject<Result, Parent, Context, Args>;
 
-// ====================================================
-// START: Typescript template
-// ====================================================
-
-// ====================================================
-// Types
-// ====================================================
-
-export interface QueryRoot {
-  allUsers: (User | null)[];
-
-  userById?: User | null;
-  /** Generates a new answer for the guessing game */
-  answer: number[];
-}
-
-export interface User {
-  id: number;
-
-  name: string;
-
-  email: string;
-}
-
-export interface SubscriptionRoot {
-  newUser?: User | null;
-}
-
-// ====================================================
-// Arguments
-// ====================================================
-
-export interface UserByIdQueryRootArgs {
-  id: number;
-}
-
-// ====================================================
-// END: Typescript template
-// ====================================================
-
-// ====================================================
-// Resolvers
-// ====================================================
-
-export namespace QueryRootResolvers {
+export namespace QueryResolvers {
   export interface Resolvers<Context = any, TypeParent = never> {
     allUsers?: AllUsersResolver<(User | null)[], TypeParent, Context>;
 
@@ -108,7 +95,7 @@ export namespace UserResolvers {
   export type EmailResolver<R = string, Parent = User, Context = any> = Resolver<R, Parent, Context>;
 }
 
-export namespace SubscriptionRootResolvers {
+export namespace SubscriptionResolvers {
   export interface Resolvers<Context = any, TypeParent = never> {
     newUser?: NewUserResolver<User | null, TypeParent, Context>;
   }

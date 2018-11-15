@@ -1,0 +1,406 @@
+/* your custom css */
+
+@charset "UTF-8";
+
+/* Add imports here */
+
+@import "home.css";
+@import "help.css";
+
+/* source: https://fonts.googleapis.com/css?family=Montserrat:400,600,700 */
+/* cyrillic-ext */
+@font-face {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Montserrat Regular"), local("Montserrat-Regular"), url(https://fonts.gstatic.com/s/montserrat/v12/JTUSjIg1_i6t8kCHKm459WRhyzbi.woff2) format("woff2");
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Montserrat Regular"), local("Montserrat-Regular"), url(https://fonts.gstatic.com/s/montserrat/v12/JTUSjIg1_i6t8kCHKm459W1hyzbi.woff2) format("woff2");
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Montserrat Regular"), local("Montserrat-Regular"), url(https://fonts.gstatic.com/s/montserrat/v12/JTUSjIg1_i6t8kCHKm459WZhyzbi.woff2) format("woff2");
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Montserrat Regular"), local("Montserrat-Regular"), url(https://fonts.gstatic.com/s/montserrat/v12/JTUSjIg1_i6t8kCHKm459Wdhyzbi.woff2) format("woff2");
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Montserrat Regular"), local("Montserrat-Regular"), url(https://fonts.gstatic.com/s/montserrat/v12/JTUSjIg1_i6t8kCHKm459Wlhyw.woff2) format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 600;
+  src: local("Montserrat SemiBold"), local("Montserrat-SemiBold"), url(https://fonts.gstatic.com/s/montserrat/v12/JTURjIg1_i6t8kCHKm45_bZF3gTD_u50.woff2) format("woff2");
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 600;
+  src: local("Montserrat SemiBold"), local("Montserrat-SemiBold"), url(https://fonts.gstatic.com/s/montserrat/v12/JTURjIg1_i6t8kCHKm45_bZF3g3D_u50.woff2) format("woff2");
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 600;
+  src: local("Montserrat SemiBold"), local("Montserrat-SemiBold"), url(https://fonts.gstatic.com/s/montserrat/v12/JTURjIg1_i6t8kCHKm45_bZF3gbD_u50.woff2) format("woff2");
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 600;
+  src: local("Montserrat SemiBold"), local("Montserrat-SemiBold"), url(https://fonts.gstatic.com/s/montserrat/v12/JTURjIg1_i6t8kCHKm45_bZF3gfD_u50.woff2) format("woff2");
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 600;
+  src: local("Montserrat SemiBold"), local("Montserrat-SemiBold"), url(https://fonts.gstatic.com/s/montserrat/v12/JTURjIg1_i6t8kCHKm45_bZF3gnD_g.woff2) format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 700;
+  src: local("Montserrat Bold"), local("Montserrat-Bold"), url(https://fonts.gstatic.com/s/montserrat/v12/JTURjIg1_i6t8kCHKm45_dJE3gTD_u50.woff2) format("woff2");
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 700;
+  src: local("Montserrat Bold"), local("Montserrat-Bold"), url(https://fonts.gstatic.com/s/montserrat/v12/JTURjIg1_i6t8kCHKm45_dJE3g3D_u50.woff2) format("woff2");
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 700;
+  src: local("Montserrat Bold"), local("Montserrat-Bold"), url(https://fonts.gstatic.com/s/montserrat/v12/JTURjIg1_i6t8kCHKm45_dJE3gbD_u50.woff2) format("woff2");
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 700;
+  src: local("Montserrat Bold"), local("Montserrat-Bold"), url(https://fonts.gstatic.com/s/montserrat/v12/JTURjIg1_i6t8kCHKm45_dJE3gfD_u50.woff2) format("woff2");
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 700;
+  src: local("Montserrat Bold"), local("Montserrat-Bold"), url(https://fonts.gstatic.com/s/montserrat/v12/JTURjIg1_i6t8kCHKm45_dJE3gnD_g.woff2) format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  --primary-color: #e15799;
+  --secondary-color: #64bae9;
+  --primary-text-color: #33475c;
+  --secondary-text-color: #868686;
+}
+
+body {
+  font-family: "Montserrat", sans-serif;
+}
+
+textarea, input {
+  font: inherit;
+}
+
+svg {
+  font-family: "Montserrat", sans-serif;
+}
+
+#footer {
+  pointer-events: auto;
+  justify-content: space-around;
+  background-color: white;
+  height: fit-content !important;
+  margin: 0 50px;
+  padding-top: 30px !important;
+  border-top: 1px solid #dfe8ef;
+}
+
+#footer .nav-footer-image {
+  width: 180px;
+  height: auto;
+  float: left;
+}
+
+#footer .navSocials {
+  margin-left: auto;
+  margin-right: auto;
+  width: fit-content;
+}
+
+#footer .navSocials a {
+  width: fit-content;
+  height: fit-content;
+  display: content;
+  float: left;
+  margin: 0 10px;
+}
+
+#footer .navSocials a img {
+  height: 35px;
+}
+
+#footer .navMenu {
+  float: right;
+  height: 34px;
+}
+
+#footer .navMenu a {
+  color: var(--primary-text-color);
+  margin-left: 20px;
+  font-size: 1em;
+  line-height: 34px;
+}
+
+#footer .navCopyright {
+  width: 100%;
+  margin-top: 80px;
+  margin-bottom: 10px;
+  text-align: center;
+  color: var(--primary-text-color);
+}
+
+#footer .navMessage {
+  width: 500px;
+  color: var(--secondary-text-color);
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: .9em;
+}
+
+.fixedHeaderContainer {
+  padding-top: 25px;
+  padding-bottom: 25px;
+  z-index: 99;
+  position: relative;
+}
+
+.navPusher {
+  padding-top: 0;
+  position: static;
+}
+
+.fixedHeaderContainer {
+  background-color: #f6f8f9;
+}
+
+.fixedHeaderContainer a {
+  color: var(--primary-text-color) !important;
+}
+
+.nav-site-internal a:hover {
+  background-color: #f6f8f9 !important;
+}
+
+.nav-site-internal .siteNavItemActive a {
+  color: var(--primary-color) !important;
+  background-color: #f6f8f9 !important;
+}
+
+.nav-site-internal .siteNavGroupActive a {
+  color: var(--primary-color) !important;
+  background-color: #f6f8f9 !important;
+}
+
+.headerTitleWithLogo {
+  display: none !important;
+}
+
+.mainContainer .docs-next {
+  float: right;
+  clear: right;
+}
+
+.mainContainer .docs-prev {
+  float: left;
+}
+
+.Button {
+  background-color: transparent;
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+.TextArea > ._label {
+  display: inline-block;
+  margin-left: 10px;
+  transform: translateY(14px);
+  padding: 0 10px;
+  width: fit-content;
+  font-size: 14px;
+  font-style: normal;
+  font-stretch: normal;
+  color: #afbed1;
+  background-color: white;
+}
+
+.TextArea > ._input {
+  width: 100%;
+  height: 100%;
+  display: block;
+  padding: 10px;
+  resize: none;
+  border: solid 1px rgba(120, 151, 188, 0.3);
+}
+
+.TextInput > ._label {
+  display: inline-block;
+  margin-left: 10px;
+  transform: translateY(14px);
+  padding: 0 10px;
+  width: fit-content;
+  font-size: 14px;
+  font-style: normal;
+  font-stretch: normal;
+  color: #afbed1;
+  background-color: white;
+}
+
+.TextInput > ._input {
+  width: 100%;
+  display: block;
+  padding: 10px;
+  resize: none;
+  border: solid 1px rgba(120, 151, 188, 0.3);
+}
+
+.Hyperlink {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+@media only screen and (min-width: 1024px) {
+  .navCopyrightMobile {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 1023px) {
+  .desktop-only {
+    display: none;
+  }
+
+  #footer .navMenu {
+    display: none;
+  }
+
+  #footer .navCopyright > span:first-child {
+    display: none;
+  }
+
+  #footer.nav-footer {
+    margin: 0 20px;
+    padding-top: 0;
+    line-height: 0;
+    position: relative;
+  }
+
+  #footer .nav-footer-image {
+    position: absolute;
+    top: 15px;
+  }
+
+  #footer .navSocials {
+    display: none;
+  }
+
+  #footer .navMenu {
+    display: none;
+  }
+
+  #footer .navMessage {
+    display: none;
+  }
+
+  #footer .navCopyrightDesktop {
+    display: none;
+  }
+
+  #footer .navCopyright {
+    float: right;
+    margin: 0 !important;
+    text-align: right;
+    width: fit-content !important;
+    font-size: .8em;
+  }
+
+  header {
+    position: static !important;
+  }
+
+  header .navigationSlider {
+    position: static;
+  }
+
+  header .slidingNav {
+    position: absolute !important;
+  }
+
+  .docsNavContainer {
+    position: absolute;
+  }
+
+  .fixedHeaderContainer {
+    padding: 0;
+    padding-top: 8px;
+    background-color: #f6f8f9;
+  }
+
+  .nav-site-internal {
+    margin: 0 !important;
+    float: right;
+    width: calc(100% - 220px) !important;
+  }
+
+  .navigationSlider a {
+    background-color: #f6f8f9;
+  }
+
+  .navigationSlider .slidingNav ul {
+    background-color: unset !important;
+  }
+}

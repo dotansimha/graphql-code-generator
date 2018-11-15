@@ -1,25 +1,19 @@
-/* tslint:disable */
-
-// ====================================================
-// START: Typescript template
-// ====================================================
-
 // ====================================================
 // Types
 // ====================================================
 
 export interface Query {
-  readonly allUsers: ReadonlyArray<User | null>;
+  allUsers: (User | null)[];
 
-  readonly userById?: User | null;
+  userById?: User | null;
 }
 
 export interface User {
-  readonly id: number;
+  id: number;
 
-  readonly name: string;
+  name: string;
 
-  readonly email: string;
+  email: string;
 }
 
 // ====================================================
@@ -29,7 +23,3 @@ export interface User {
 export interface UserByIdQueryArgs {
   id: number;
 }
-
-// ====================================================
-// END: Typescript template
-// ====================================================

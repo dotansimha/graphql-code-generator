@@ -1,6 +1,0 @@
-node_modules
-npm-debug.log
-dist
-temp
-yarn-error.log
-tests/coverage/

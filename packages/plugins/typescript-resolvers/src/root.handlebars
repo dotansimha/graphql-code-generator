@@ -1,0 +1,34 @@
+import { GraphQLResolveInfo } from 'graphql';
+{{{ importMappers types }}}
+
+{{{ importContext }}}
+
+export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
+  parent: Parent,
+  args: Args,
+  context: Context,
+  info: GraphQLResolveInfo
+) => Promise<Result> | Result;
+
+export interface ISubscriptionResolverObject<Result, Parent, Context, Args> {
+  subscribe<R = Result, P = Parent>(
+    parent: P,
+    args: Args,
+    context: Context,
+    info: GraphQLResolveInfo
+  ): AsyncIterator<R | Result> | Promise<AsyncIterator<R | Result>>;
+  resolve?<R = Result, P = Parent>(
+    parent: P,
+    args: Args,
+    context: Context,
+    info: GraphQLResolveInfo
+  ): R | Result | Promise<R | Result>;
+}
+
+export type SubscriptionResolver<Result, Parent = {}, Context = {}, Args = {}> =
+  | ((...args: any[]) => ISubscriptionResolverObject<Result, Parent, Context, Args>)
+  | ISubscriptionResolverObject<Result, Parent, Context, Args>;
+
+{{#each types}}
+{{~> resolver }}
+{{/each}}

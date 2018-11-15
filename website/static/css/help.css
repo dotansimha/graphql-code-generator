@@ -1,0 +1,165 @@
+.helpPostHeader h2 {
+  color: var(--primary-color);
+  font-size: 1em;
+}
+
+.helpPostHeader h1 {
+  color: var(--primary-text-color);
+}
+
+.helpTitle {
+  margin-top: 50px;
+  text-align: justify;
+  font-size: 34px;
+  color: var(--primary-text-color);
+}
+
+.helpSubtitle {
+  text-align: justify;
+  margin-top: 20px;
+  font-size: 16px;
+  color: var(--secondary-text-color);
+  width: 500px;
+}
+
+.ContactForm {
+  margin-top: 100px;
+  margin-left: 50px;
+  margin-right: 50px;
+  border-top: solid 1px #d4dde9;
+}
+
+.ContactForm > ._title {
+  width: fit-content;
+  padding: 0 10px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: -18px;
+  text-transform: uppercase;
+  font-size: 24px;
+  text-align: center;
+  color: var(--primary-text-color);
+  background-color: white;
+}
+
+.ContactForm > ._form {
+  width: 580px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 30px;
+}
+
+.ContactForm > ._form > ._name {
+  width: calc(50% - 10px);
+  margin-right: 10px;
+  float: left;
+}
+
+.ContactForm > ._form > ._email {
+  width: calc(50% - 10px);
+  margin-left: 10px;
+  float: left;
+}
+
+.ContactForm > ._form > ._details {
+  height: 200px;
+}
+
+.ContactForm > ._form > ._bottom {
+  width: 100%;
+  margin-top: 90px;
+}
+
+.ContactForm > ._form > ._bottom > ._channel {
+  float: left;
+  width: 26px;
+  height: 100%;
+  margin-right: 20px;
+}
+
+.ContactForm > ._form > ._bottom > ._channel > img {
+  margin: 0;
+  height: 26px;
+}
+
+.ContactForm > ._form > ._bottom > ._send-button {
+  width: 180px;
+  height: 45px;
+  float: right;
+  text-transform: uppercase;
+  border-radius: 4px;
+  background-color: var(--primary-color);
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.ContactForm > ._form > ._bottom > ._send-button._sending {
+  color: gray;
+  background-color: silver;
+  cursor: default;
+}
+
+.ContactForm > ._form > ._error-message {
+  width: 100%;
+  margin-top: 15px;
+  float: left;
+  color: red;
+}
+
+@media only screen and (min-device-width: 360px) and (max-device-width: 736px) {
+  .helpPostHeader h2 {
+    text-align: center;
+  }
+
+  .helpPostHeader h1 {
+    color: var(--primary-text-color);
+    text-align: center;
+  }
+
+  .helpTitle {
+    font-size: 25px;
+    text-align: center;
+  }
+
+  .helpSubtitle {
+    font-size: 14px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .ContactForm {
+    margin: 0 15px;
+    margin-top: 50px;
+    margin-bottom: 150px;
+  }
+
+  .ContactForm br {
+    display: none;
+  }
+
+  .ContactForm > ._form {
+    width: 100%;
+  }
+
+  .ContactForm > ._form > ._name {
+    width: 100%;
+    float: unset;
+  }
+
+  .ContactForm > ._form > ._email {
+    width: 100%;
+    float: unset;
+    margin: 0;
+  }
+
+  .ContactForm > ._form > ._bottom {
+    margin-top: 50px;
+  }
+}
+
+@media only screen and (max-width: 1023px) {
+  .ContactForm > ._form > ._bottom > ._send-button {
+    width: 130px;
+  }
+}

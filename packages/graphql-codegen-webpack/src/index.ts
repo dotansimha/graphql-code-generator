@@ -1,1 +1,0 @@
-export { GraphQLCodegenPlugin } from './plugin';

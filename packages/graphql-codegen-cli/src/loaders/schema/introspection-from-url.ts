@@ -2,24 +2,23 @@ import {
   debugLog,
   introspectionQuery,
   introspectionToGraphQLSchema,
-  validateIntrospection
+  validateIntrospection,
+  Types
 } from 'graphql-codegen-core';
 import { post } from 'request';
 import { SchemaLoader } from './schema-loader';
 import { GraphQLSchema } from 'graphql';
 import { isUri } from 'valid-url';
-import { CLIOptions } from '../../cli-options';
-import { getSpinner } from '../../spinner';
 
 export class IntrospectionFromUrlLoader implements SchemaLoader {
   canHandle(pointerToSchema: string): boolean {
     return !!isUri(pointerToSchema);
   }
 
-  handle(url: string, cliOptions: CLIOptions): Promise<GraphQLSchema> {
-    getSpinner().info(`Loading GraphQL Introspection from remote: ${url}...`);
+  handle(url: string, config: Types.Config, schemaOptions: any): Promise<GraphQLSchema> {
+    // spinner.info(`Loading GraphQL Introspection from remote: ${url}...`);
 
-    let splittedHeaders = (cliOptions.header || [])
+    let splittedHeaders = (schemaOptions.headers || [])
       .map((header: string) => {
         const result = header.match(/^(.*?)[:=]{1}(.*?)$/);
 
@@ -34,12 +33,12 @@ export class IntrospectionFromUrlLoader implements SchemaLoader {
 
         return null;
       })
-      .filter(item => item);
+      .filter((item: any) => item);
 
     let extraHeaders = {
       Accept: 'application/json',
       'Content-Type': 'application/json',
-      ...splittedHeaders.reduce((prev, item) => ({ ...prev, ...item }), {})
+      ...splittedHeaders.reduce((prev: any, item: any) => ({ ...prev, ...item }), {})
     };
 
     debugLog(`Executing POST to ${url} with headers: `, extraHeaders);

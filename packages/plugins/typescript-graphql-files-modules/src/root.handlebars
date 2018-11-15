@@ -1,0 +1,14 @@
+{{#each files}} 
+declare module '*/{{ filename }}' {
+    import { DocumentNode } from 'graphql';
+    const defaultDocument: DocumentNode;
+    {{#each documents}}{{#if operationType}}const {{ name }}: DocumentNode;{{/if}}{{/each}}
+    
+    export {
+      {{#each documents}}{{#if operationType}}{{ name }},{{/if}}{{/each}}
+    };
+
+    export default defaultDocument;
+}
+
+{{/each}}

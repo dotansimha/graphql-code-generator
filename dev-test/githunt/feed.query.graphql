@@ -1,4 +1,4 @@
-query GetFeed($type: FeedType!, $offset: Int, $limit: Int) {
+query Feed($type: FeedType!, $offset: Int, $limit: Int) {
   currentUser {
     login
   }

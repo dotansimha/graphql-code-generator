@@ -1,1 +1,3 @@
-node packages/graphql-codegen-cli/dist/cli.js --template graphql-codegen-typescript-template --schema ./dev-test/githunt/schema.json --out ./dev-test/githunt/types.ts "./dev-test/githunt/**/*.graphql" -w
+#/bin/sh
+
+node packages/graphql-codegen-cli/dist/cli.js --config ./dev-test/codegen-watch.yml

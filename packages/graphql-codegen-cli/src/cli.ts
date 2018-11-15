@@ -1,8 +1,11 @@
 #!/usr/bin/env node
 
-import { initCLI, cliError } from './codegen';
-import { generate } from './generate';
+import { generate } from './generate-and-save';
+import { cliError } from './utils/cli-error';
+import { createConfig } from './config';
 
-const options = initCLI(process.argv);
-
-generate(options).catch(cliError);
+generate(createConfig())
+  .then(() => {
+    process.exit(0);
+  })
+  .catch(cliError);

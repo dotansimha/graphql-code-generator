@@ -6,7 +6,7 @@ describe('schema from typedefs', () => {
     const handler = new SchemaFromTypedefs();
     const canHandle = handler.canHandle(glob);
     expect(canHandle).toBeTruthy();
-    const built = handler.handle(glob, {});
+    const built = handler.handle(glob, {} as any, null);
     expect(built.getTypeMap()['User']).toBeDefined();
     expect(built.getTypeMap()['Query']).toBeDefined();
   });
@@ -16,7 +16,7 @@ describe('schema from typedefs', () => {
     const handler = new SchemaFromTypedefs();
     const canHandle = handler.canHandle(schemaPath);
     expect(canHandle).toBeTruthy();
-    const built = handler.handle(schemaPath, {});
+    const built = handler.handle(schemaPath, {} as any, null);
     expect(built.getTypeMap()['User']).toBeDefined();
     expect(built.getTypeMap()['Query']).toBeDefined();
   });

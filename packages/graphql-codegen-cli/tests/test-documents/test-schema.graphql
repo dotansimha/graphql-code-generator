@@ -1,0 +1,18 @@
+type Query {
+    f(a: Filter): String
+    b: MyType
+}
+
+input Filter {
+    id: String!
+}
+
+type MyType {
+    t: MyEnum!
+}
+
+enum MyEnum {
+    A,
+    B,
+    C
+}

@@ -1,0 +1,30 @@
+{{#ifCond operations.length '!==' 0}}
+{{{ blockComment 'START: Apollo Angular template' }}}
+
+import { Injectable } from '@angular/core';
+import * as Apollo from 'apollo-angular';
+
+{{#unless @root.config.noGraphqlTag}}
+import gql from 'graphql-tag';
+{{/unless}}
+
+{{{ importNgModules operations }}}
+
+{{{ blockCommentIf 'GraphQL Fragments' fragments }}}
+
+{{{ generateFragments fragments }}}
+
+{{{ blockCommentIf 'Apollo Services' operations }}}
+
+{{#each operations}}
+    @Injectable({
+        providedIn: {{{ providedIn this }}}
+    })
+    export class {{ convert name }}GQL extends Apollo.{{convert operationType}}<{{ convert name }}{{#unless @root.config.noNamespaces}}.{{/unless}}{{ convert operationType }}, {{ convert name }}{{#unless @root.config.noNamespaces}}.{{/unless}}Variables> {
+        document: any = {{{ gql this }}}
+        {{{ namedClient this }}}
+    }
+{{/each}}
+
+{{{ blockComment 'END: Apollo Angular template' }}}
+{{/ifCond}}

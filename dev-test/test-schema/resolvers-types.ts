@@ -1,4 +1,29 @@
-/* tslint:disable */
+// ====================================================
+// Types
+// ====================================================
+
+export interface Query {
+  allUsers: (User | null)[];
+
+  userById?: User | null;
+}
+
+export interface User {
+  id: number;
+
+  name: string;
+
+  email: string;
+}
+
+// ====================================================
+// Arguments
+// ====================================================
+
+export interface UserByIdQueryArgs {
+  id: number;
+}
+
 import { GraphQLResolveInfo } from 'graphql';
 
 export type Resolver<Result, Parent = any, Context = any, Args = never> = (
@@ -26,44 +51,6 @@ export interface ISubscriptionResolverObject<Result, Parent, Context, Args> {
 export type SubscriptionResolver<Result, Parent = any, Context = any, Args = never> =
   | ((...args: any[]) => ISubscriptionResolverObject<Result, Parent, Context, Args>)
   | ISubscriptionResolverObject<Result, Parent, Context, Args>;
-
-// ====================================================
-// START: Typescript template
-// ====================================================
-
-// ====================================================
-// Types
-// ====================================================
-
-export interface Query {
-  allUsers: (User | null)[];
-
-  userById?: User | null;
-}
-
-export interface User {
-  id: number;
-
-  name: string;
-
-  email: string;
-}
-
-// ====================================================
-// Arguments
-// ====================================================
-
-export interface UserByIdQueryArgs {
-  id: number;
-}
-
-// ====================================================
-// END: Typescript template
-// ====================================================
-
-// ====================================================
-// Resolvers
-// ====================================================
 
 export namespace QueryResolvers {
   export interface Resolvers<Context = any, TypeParent = never> {

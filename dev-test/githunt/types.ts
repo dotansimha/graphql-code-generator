@@ -1,145 +1,3 @@
-/* tslint:disable */
-
-// ====================================================
-// START: Typescript template
-// ====================================================
-
-// ====================================================
-// Types
-// ====================================================
-
-export interface Query {
-  /** A feed of repository submissions */
-  feed?: (Entry | null)[] | null;
-  /** A single entry */
-  entry?: Entry | null;
-  /** Return the currently logged in user, or null if nobody is logged in */
-  currentUser?: User | null;
-}
-/** Information about a GitHub repository submitted to GitHunt */
-export interface Entry {
-  /** Information about the repository from GitHub */
-  repository: Repository;
-  /** The GitHub user who submitted this entry */
-  postedBy: User;
-  /** A timestamp of when the entry was submitted */
-  createdAt: number;
-  /** The score of this repository, upvotes - downvotes */
-  score: number;
-  /** The hot score of this repository */
-  hotScore: number;
-  /** Comments posted about this repository */
-  comments: (Comment | null)[];
-  /** The number of comments posted about this repository */
-  commentCount: number;
-  /** The SQL ID of this entry */
-  id: number;
-  /** XXX to be changed */
-  vote: Vote;
-}
-/** A repository object from the GitHub API. This uses the exact field names returned by theGitHub API for simplicity, even though the convention for GraphQL is usually to camel case. */
-export interface Repository {
-  /** Just the name of the repository, e.g. GitHunt-API */
-  name: string;
-  /** The full name of the repository with the username, e.g. apollostack/GitHunt-API */
-  full_name: string;
-  /** The description of the repository */
-  description?: string | null;
-  /** The link to the repository on GitHub */
-  html_url: string;
-  /** The number of people who have starred this repository on GitHub */
-  stargazers_count: number;
-  /** The number of open issues on this repository on GitHub */
-  open_issues_count?: number | null;
-  /** The owner of this repository on GitHub, e.g. apollostack */
-  owner?: User | null;
-}
-/** A user object from the GitHub API. This uses the exact field names returned from the GitHub API. */
-export interface User {
-  /** The name of the user, e.g. apollostack */
-  login: string;
-  /** The URL to a directly embeddable image for this user's avatar */
-  avatar_url: string;
-  /** The URL of this user's GitHub page */
-  html_url: string;
-}
-/** A comment about an entry, submitted by a user */
-export interface Comment {
-  /** The SQL ID of this entry */
-  id: number;
-  /** The GitHub user who posted the comment */
-  postedBy: User;
-  /** A timestamp of when the comment was posted */
-  createdAt: number;
-  /** The text of the comment */
-  content: string;
-  /** The repository which this comment is about */
-  repoName: string;
-}
-/** XXX to be removed */
-export interface Vote {
-  vote_value: number;
-}
-
-export interface Mutation {
-  /** Submit a new repository, returns the new submission */
-  submitRepository?: Entry | null;
-  /** Vote on a repository submission, returns the submission that was voted on */
-  vote?: Entry | null;
-  /** Comment on a repository, returns the new comment */
-  submitComment?: Comment | null;
-}
-
-export interface Subscription {
-  /** Subscription fires on every comment added */
-  commentAdded?: Comment | null;
-}
-
-// ====================================================
-// Arguments
-// ====================================================
-
-export interface FeedQueryArgs {
-  /** The sort order for the feed */
-  type: FeedType;
-  /** The number of items to skip, for pagination */
-  offset?: number | null;
-  /** The number of items to fetch starting from the offset, for pagination */
-  limit?: number | null;
-}
-export interface EntryQueryArgs {
-  /** The full repository name from GitHub, e.g. "apollostack/GitHunt-API" */
-  repoFullName: string;
-}
-export interface CommentsEntryArgs {
-  limit?: number | null;
-
-  offset?: number | null;
-}
-export interface SubmitRepositoryMutationArgs {
-  /** The full repository name from GitHub, e.g. "apollostack/GitHunt-API" */
-  repoFullName: string;
-}
-export interface VoteMutationArgs {
-  /** The full repository name from GitHub, e.g. "apollostack/GitHunt-API" */
-  repoFullName: string;
-  /** The type of vote - UP, DOWN, or CANCEL */
-  type: VoteType;
-}
-export interface SubmitCommentMutationArgs {
-  /** The full repository name from GitHub, e.g. "apollostack/GitHunt-API" */
-  repoFullName: string;
-  /** The text content for the new comment */
-  commentContent: string;
-}
-export interface CommentAddedSubscriptionArgs {
-  repoFullName: string;
-}
-
-// ====================================================
-// Enums
-// ====================================================
-
 /** A list of options for the sort order of the feed */
 export enum FeedType {
   HOT = 'HOT',
@@ -152,10 +10,6 @@ export enum VoteType {
   DOWN = 'DOWN',
   CANCEL = 'CANCEL'
 }
-
-// ====================================================
-// END: Typescript template
-// ====================================================
 
 // ====================================================
 // Documents
@@ -279,7 +133,7 @@ export namespace CurrentUserForProfile {
   };
 }
 
-export namespace GetFeed {
+export namespace Feed {
   export type Variables = {
     type: FeedType;
     offset?: number | null;

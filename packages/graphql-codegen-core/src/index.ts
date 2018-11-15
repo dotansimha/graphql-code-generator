@@ -6,6 +6,7 @@ export { validateIntrospection, introspectionToGraphQLSchema } from './utils/int
 export { parse } from './utils/parse';
 export { toPascalCase } from './utils/to-pascal-case';
 export * from './types';
+export * from './new-types';
 export { debugLog } from './debugging';
 export {
   DocumentNode,

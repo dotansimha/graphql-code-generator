@@ -1,587 +1,436 @@
-import { validateGraphQlDocuments } from './loaders/documents/validate-documents';
-import * as commander from 'commander';
-import * as path from 'path';
-import * as fs from 'fs';
-import * as mkdirp from 'mkdirp';
-import chalk from 'chalk';
-import { DocumentNode, extendSchema, GraphQLSchema, parse } from 'graphql';
-import { getGraphQLProjectConfig, ConfigNotFoundError } from 'graphql-config';
-
-import { scanForTemplatesInPath } from './loaders/template/templates-scanner';
-import { ALLOWED_CUSTOM_TEMPLATE_EXT, compileTemplate } from 'graphql-codegen-compiler';
-import {
-  CustomProcessingFunction,
-  debugLog,
-  EInputType,
-  FileOutput,
-  GeneratorConfig,
-  getLogger,
-  isGeneratorConfig,
-  schemaToTemplateContext,
-  setSilentLogger,
-  transformDocumentsFiles,
-  useWinstonLogger
-} from 'graphql-codegen-core';
-import { CLIOptions } from './cli-options';
-import { mergeGraphQLSchemas } from '@graphql-modules/epoxy';
+import { FileOutput, GraphQLSchema, DocumentFile, Types, CodegenPlugin } from 'graphql-codegen-core';
 import { makeExecutableSchema } from 'graphql-tools';
-import { SchemaTemplateContext } from 'graphql-codegen-core/dist/types';
-import { loadSchema, loadDocuments } from './load';
+import * as Listr from 'listr';
+import { normalizeOutputParam, normalizeInstanceOrArray, normalizeConfig } from './helpers';
+import { validateGraphQlDocuments, checkValidationErrors } from './loaders/documents/validate-documents';
+import { prettify } from './utils/prettier';
+import { Renderer } from './utils/listr-renderer';
 import { DetailedError } from './errors';
-import { disableSpinner, getSpinner } from './spinner';
+import { loadSchema, loadDocuments } from './load';
+import { mergeSchemas } from './merge-schemas';
 
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-
-interface GqlGenConfig {
-  flattenTypes?: boolean;
-  primitives?: {
-    String: string;
-    Int: string;
-    Float: string;
-    Boolean: string;
-    ID: string;
-  };
-  customHelpers?: { [helperName: string]: string };
-  generatorConfig?: { [configName: string]: any };
+export interface GenerateOutputOptions {
+  filename: string;
+  plugins: Types.ConfiguredPlugin[];
+  schema: GraphQLSchema;
+  documents: DocumentFile[];
+  pluginLoader: Types.PluginLoaderFn;
+  inheritedConfig: { [key: string]: any };
 }
 
-function collect<T>(val: T, memo: T[]) {
-  memo.push(val);
-
-  return memo;
+export interface ExecutePluginOptions {
+  name: string;
+  config: Types.PluginConfig;
+  schema: GraphQLSchema;
+  documents: DocumentFile[];
+  outputFilename: string;
+  allPlugins: Types.ConfiguredPlugin[];
+  pluginLoader: Types.PluginLoaderFn;
 }
 
-export const initCLI = (args: any): CLIOptions => {
-  commander
-    .usage('gql-gen [options]')
-    .option(
-      '-s, --schema <path>',
-      'Path to GraphQL schema: local JSON file, GraphQL endpoint, local file that exports GraphQLSchema/AST/JSON'
-    )
-    .option(
-      '-cs, --clientSchema <path>',
-      'Path to GraphQL client schema: local JSON file, local file that exports GraphQLSchema/AST/JSON'
-    )
-    .option(
-      '-h, --header [header]',
-      'Header to add to the introspection HTTP request when using --url/--schema with url',
-      collect,
-      []
-    )
-    .option(
-      '-t, --template <template-name>',
-      'Language/platform name templates, or a name of NPM modules that `export default` GqlGenConfig object'
-    )
-    .option('-p, --project <project-path>', 'Project path(s) to scan for custom template files')
-    .option('--config <json-file>', 'Codegen configuration file, defaults to: ./gql-gen.json')
-    .option('-m, --skip-schema', 'Generates only client side documents, without server side schema types')
-    .option('-c, --skip-documents', 'Generates only server side schema types, without client side documents')
-    .option('-o, --out <path>', 'Output file(s) path', String, './')
-    .option('-r, --require [require]', 'module to preload (option can be repeated)', collect, [])
-    .option('-ow, --no-overwrite', 'Skip file writing if the output file(s) already exists in path')
-    .option('-w, --watch', 'Watch for changes and execute generation automatically')
-    .option('--silent', 'Does not print anything to the console')
-    .option('-ms, --merge-schema <merge-logic>', 'Merge schemas with custom logic')
-    .arguments('<options> [documents...]')
-    .parse(args);
-
-  return (commander as any) as CLIOptions;
-};
-
-export const cliError = (err: any, exitOnError = true) => {
-  getSpinner().fail();
-  let msg: string;
-
-  if (err instanceof Error) {
-    msg = err.message || err.toString();
-  } else if (typeof err === 'string') {
-    msg = err;
-  } else {
-    msg = JSON.stringify(err);
-  }
-
-  getLogger().error(msg);
-
-  if (exitOnError) {
-    process.exit(1);
-  }
-
-  return;
-};
-
-export const validateCliOptions = (options: CLIOptions) => {
-  if (options.silent) {
-    setSilentLogger();
-    disableSpinner();
-  } else {
-    useWinstonLogger();
-  }
-
-  const schema = options.schema;
-  const template = options.template;
-  const project = options.project;
-
-  if (!schema) {
-    try {
-      const graphqlProjectConfig = getGraphQLProjectConfig(project);
-      options.schema = graphqlProjectConfig.schemaPath;
-    } catch (e) {
-      if (e instanceof ConfigNotFoundError) {
-        cliError(`
-          
-          Flag ${chalk.bold('--schema')} is missing.
-          
-          Schema points to one of following:
-            - url of a GraphQL server
-            - path to a .graphql file with GraphQL Schema
-            - path to a introspection file
-          
-
-          CLI example:
-            
-            $ gql-gen --schema ./schema.json ...
-          
-          API example:
-            
-            generate({
-              schema: './schema.json',
-              ...
-            });
-
-        `);
-      }
-    }
-  }
-
-  if (!template && !project) {
-    cliError(`
-      
-      Please specify the template.
-      
-      A template matches an npm package's name.
-
-      CLI example:
-            
-        $ gql-gen --template graphql-codegen-typescript-template ...
-          
-      API example:
-            
-        generate({
-          template: 'graphql-codegen-typescript-template',
-          ...
-        });
-
-    `);
-  }
-};
-
-export const executeWithOptions = async (options: CLIOptions & { [key: string]: any }): Promise<FileOutput[]> => {
-  getSpinner().start('Validating options');
-  validateCliOptions(options);
-
-  const schema = options.schema;
-  const clientSchema = options.clientSchema;
-  const documents: string[] = options.args || [];
-  let template = options.template;
-  const project = options.project;
-  const gqlGenConfigFilePath = options.config || './gql-gen.json';
-  const out = options.out || './';
-  const generateSchema: boolean = !options.skipSchema;
-  const generateDocuments: boolean = !options.skipDocuments;
-  const modulesToRequire: string[] = options.require || [];
-  const exitOnError = typeof options.exitOnError === 'undefined' ? true : options.exitOnError;
-
-  modulesToRequire.forEach(mod => require(mod));
-
-  let templateConfig: GeneratorConfig | CustomProcessingFunction | null = null;
-
-  if (template && template !== '') {
-    getSpinner().log(`Loading template: ${template}`);
-    debugLog(`[executeWithOptions] using template: ${template}`);
-
-    // Backward compatibility for older versions
-    if (
-      template === 'ts' ||
-      template === 'ts-single' ||
-      template === 'typescript' ||
-      template === 'typescript-single'
-    ) {
-      getSpinner().warn(
-        `You are using the old template name, please install it from NPM and use it by it's new name: "graphql-codegen-typescript-template"`
-      );
-      template = 'graphql-codegen-typescript-template';
-    } else if (template === 'ts-multiple' || template === 'typescript-multiple') {
-      getSpinner().warn(
-        `You are using the old template name, please install it from NPM and use it by it's new name: "graphql-codegen-typescript-template-multiple"`
-      );
-      template = 'graphql-codegen-typescript-template-multiple';
-    }
-
-    const localFilePath = path.resolve(process.cwd(), template);
-    const localFileExists = fs.existsSync(localFilePath);
-
-    try {
-      const templateFromExport = require(localFileExists ? localFilePath : template);
-
-      if (!templateFromExport) {
-        throw new Error();
-      }
-
-      templateConfig = templateFromExport.default || templateFromExport.config || templateFromExport;
-      getSpinner().succeed();
-    } catch (e) {
-      throw new DetailedError(`
-
-        Unknown codegen template: "${template}"
-
-        Please make sure it's installed using npm or yarn.
-
-          $ yarn add ${template} -D
-
-          OR
-
-          $ npm install ${template} -D
-
-        Template should match package's name.
-
-      `);
-    }
-  }
-
-  debugLog(`[executeWithOptions] using project: ${project}`);
-
-  const configPath = path.resolve(process.cwd(), gqlGenConfigFilePath);
-  let config: GqlGenConfig = null;
-
-  if (fs.existsSync(configPath)) {
-    getLogger().info(`Loading config file from: ${configPath}`);
-    config = JSON.parse(fs.readFileSync(configPath).toString()) as GqlGenConfig;
-    debugLog(`[executeWithOptions] Got project config JSON: ${JSON.stringify(config)}`);
-  }
-
-  if (project && project !== '') {
-    getSpinner().log(`Using project: ${project}`);
-    if (config === null) {
-      throw new DetailedError(
-        `
-          To use project feature, please specify ${chalk.bold('path to the config file')} or create ${chalk.bold(
-          'gql-gen.json'
-        )} in your project root
-
-          If config file is different then gql-gen.json do the following.
-
-          CLI example:
-
-            $ gql-gen --config ./my-gql-gen.json
-
-          API example:
-
-            generate({
-              config: './my-gql-gen.json'
-            });
-        `
-      );
-    }
-
-    const templates = scanForTemplatesInPath(project, ALLOWED_CUSTOM_TEMPLATE_EXT);
-    const resolvedHelpers: { [key: string]: Function } = {};
-
-    Object.keys(config.customHelpers || {}).map(helperName => {
-      const filePath = config.customHelpers[helperName];
-      const resolvedPath = path.isAbsolute(filePath) ? filePath : path.resolve(process.cwd(), filePath);
-
-      if (fs.existsSync(resolvedPath)) {
-        const requiredFile = require(resolvedPath);
-
-        if (requiredFile && typeof requiredFile === 'function') {
-          resolvedHelpers[helperName] = requiredFile;
-        } else {
-          throw new DetailedError(`Custom template file ${resolvedPath} does not have a default export function.`);
-        }
-      } else {
-        throw new DetailedError(`Custom template file ${helperName} does not exists in path: ${resolvedPath}`);
-      }
-    });
-
-    templateConfig = {
-      inputType: EInputType.PROJECT,
-      templates,
-      flattenTypes: config.flattenTypes,
-      primitives: config.primitives,
-      customHelpers: resolvedHelpers
-    };
-  }
-  getSpinner().succeed();
-
-  const relevantEnvVars = Object.keys(process.env)
-    .filter(name => name.startsWith('CODEGEN_'))
-    .reduce(
-      (prev, name) => {
-        const cleanName = name
-          .replace('CODEGEN_', '')
-          .toLowerCase()
-          .replace(/[-_]+/g, ' ')
-          .replace(/[^\w\s]/g, '')
-          .replace(/ (.)/g, res => res.toUpperCase())
-          .replace(/ /g, '');
-        let value: any = process.env[name];
-
-        if (value === 'true') {
-          value = true;
-        } else if (value === 'false') {
-          value = false;
-        }
-
-        prev[cleanName] = value;
-
-        return prev;
-      },
-      {} as GeneratorConfig['config']
-    );
-
-  let addToSchema: DocumentNode[] = [];
-
-  if (isGeneratorConfig(templateConfig)) {
-    templateConfig.config = {
-      ...(config && config.generatorConfig ? config.generatorConfig || {} : {}),
-      ...(options && options['templateConfig'] ? options['templateConfig'] : {}),
-      ...(relevantEnvVars || {})
-    };
-
-    if (templateConfig.deprecationNote) {
-      getSpinner().warn(`Template ${template} is deprecated: ${templateConfig.deprecationNote}`);
-    }
-
-    if (templateConfig.addToSchema) {
-      const asArray = Array.isArray(templateConfig.addToSchema)
-        ? templateConfig.addToSchema
-        : [templateConfig.addToSchema];
-      addToSchema = asArray.map((extension: string | DocumentNode) =>
-        typeof extension === 'string' ? parse(extension) : extension
-      );
-    }
-
-    if (config) {
-      if ('flattenTypes' in config) {
-        templateConfig.flattenTypes = config.flattenTypes;
-      }
-
-      if ('primitives' in config) {
-        templateConfig.primitives = {
-          ...templateConfig.primitives,
-          ...config.primitives
-        };
-      }
-    }
-  }
-
-  const executeGeneration = async () => {
-    const schemas: (GraphQLSchema | Promise<GraphQLSchema>)[] = [];
-
-    try {
-      getSpinner().log('Loading remote schema');
-      debugLog(`[executeWithOptions] Schema is being loaded `);
-      schemas.push(loadSchema(schema, options));
-      getSpinner().succeed();
-    } catch (e) {
-      debugLog(`[executeWithOptions] Failed to load schema`, e);
-      cliError(`
-      
-        ${chalk.bold('Invalid schema provided.')}
-        Please use a path to local file, HTTP endpoint or a glob expression.
-
-        Local file should export a string, GraphQLSchema object or should be a .graphql file.
-        GraphQL Code Generator accepts: ES6 modules and CommonJS modules.
-        It should either export schema with the ${chalk.italic('schema')} variable or with default export.
-
-        CLI example:
-
-          $ gql-gen --schema ./path/to/schema.json ...
-
-        API example:
-
-          generate({
-            schema: './path/to/schema.json',
-            ...
-          });
-
-      `);
-    }
-
-    if (clientSchema) {
-      getSpinner().log('Loading client schema');
+export async function executeCodegen(config: Types.Config): Promise<FileOutput[]> {
+  function wrapTask(task: () => void | Promise<void>, source?: string) {
+    return async () => {
       try {
-        debugLog(`[executeWithOptions] Client Schema is being loaded `);
-        schemas.push(loadSchema(clientSchema, options));
-        getSpinner().succeed();
-      } catch (e) {
-        debugLog(`[executeWithOptions] Failed to load client schema`, e);
-        cliError(`
-        
-          ${chalk.bold('Invalid client schema.')}
-          Please use a path to local file or a glob expression.
-
-          Local file should export a string, GraphQLSchema object or should be a .graphql file.
-          GraphQL Code Generator accepts: ES6 modules and CommonJS modules.
-          It should either export schema with the ${chalk.italic('schema')} variable or with default export.
-
-          CLI example:
-
-            $ gql-gen --clientSchema ./path/to/schema.json
-
-          API example:
-
-            generate({
-              clientSchema: './path/to/schema.json',
-              ...
-            });
-
-        `);
-      }
-    }
-
-    const allSchemas = await Promise.all(schemas);
-
-    let graphQlSchema =
-      allSchemas.length === 1
-        ? allSchemas[0]
-        : makeExecutableSchema({ typeDefs: mergeGraphQLSchemas(allSchemas), allowUndefinedInResolve: true });
-
-    if (addToSchema && addToSchema.length > 0) {
-      for (const extension of addToSchema) {
-        debugLog(`Extending GraphQL Schema with: `, extension);
-        graphQlSchema = extendSchema(graphQlSchema, extension);
-      }
-    }
-
-    if (process.env.VERBOSE !== undefined) {
-      getLogger().info(`GraphQL Schema is: `, graphQlSchema);
-    }
-
-    const context = schemaToTemplateContext(graphQlSchema);
-    debugLog(`[executeWithOptions] Schema template context build, the result is: `);
-    Object.keys(context).forEach((key: keyof SchemaTemplateContext) => {
-      if (Array.isArray(context[key])) {
-        debugLog(`Total of ${key}: ${(context[key] as any[]).length}`);
-      }
-    });
-
-    const hasDocuments = documents.length;
-
-    if (hasDocuments) {
-      getSpinner().log('Loading documents');
-    }
-
-    const documentsFiles = await loadDocuments(documents);
-    const loadDocumentErrors = validateGraphQlDocuments(graphQlSchema, documentsFiles);
-
-    if (loadDocumentErrors.length > 0) {
-      const errors: string[] = [];
-      let errorCount = 0;
-
-      for (const loadDocumentError of loadDocumentErrors) {
-        for (const graphQLError of loadDocumentError.errors) {
-          errors.push(`
-
-            ${loadDocumentError.filePath}: 
-              ${graphQLError.message}
-
-          `);
-          errorCount++;
+        await task();
+      } catch (error) {
+        if (source) {
+          error.source = source;
         }
+
+        throw error;
       }
+    };
+  }
 
-      cliError(
+  const result: FileOutput[] = [];
+  const commonListrOptions = {
+    exitOnError: true
+  };
+  let listr: Listr;
+
+  if (process.env.VERBOSE) {
+    listr = new Listr({
+      ...commonListrOptions,
+      renderer: 'verbose',
+      nonTTYRenderer: 'verbose'
+    });
+  } else if (process.env.NODE_ENV === 'test') {
+    listr = new Listr({
+      ...commonListrOptions,
+      renderer: 'silent',
+      nonTTYRenderer: 'silent'
+    });
+  } else {
+    listr = new Listr({
+      ...commonListrOptions,
+      renderer: config.silent ? 'silent' : Renderer,
+      nonTTYRenderer: config.silent ? 'silent' : 'default',
+      collapse: true,
+      clearOutput: false
+    } as any);
+  }
+
+  let rootConfig: {
+    [key: string]: any;
+  } = {};
+  let schemas: Types.Schema[];
+  let documents: Types.OperationDocument[];
+  let generates: { [filename: string]: Types.ConfiguredOutput } = {};
+  let rootSchema: GraphQLSchema;
+  let rootDocuments: DocumentFile[] = [];
+
+  function normalize() {
+    /* Load Require extensions */
+    const requireExtensions = normalizeInstanceOrArray<string>(config.require);
+    requireExtensions.forEach(mod => require(mod));
+
+    /* Root templates-config */
+    rootConfig = config.config || {};
+
+    /* Normalize root "schema" field */
+    schemas = normalizeInstanceOrArray<Types.Schema>(config.schema);
+
+    /* Normalize root "documents" field */
+    documents = normalizeInstanceOrArray<Types.OperationDocument>(config.documents);
+
+    /* Normalize "generators" field */
+    const generateKeys = Object.keys(config.generates);
+
+    if (generateKeys.length === 0) {
+      throw new DetailedError(
+        'Invalid Codegen Configuration!',
         `
-
-          Found ${errorCount} errors.
-
-          GraphQL Code Generator validated your GraphQL documents against the schema.
-          Please fix following errors and run codegen again:
-
-
-          ${errors.join('')}
+        Please make sure that your codegen config file contains the "generates" field, with a specification for the plugins you need.
         
-        `,
-        options.watch ? false : exitOnError
+        It should looks like that:
+
+        schema:
+          - my-schema.graphql
+        generates:
+          my-file.ts:
+            - plugin1
+            - plugin2
+            - plugin3
+        `
       );
     }
 
-    const transformedDocuments = transformDocumentsFiles(graphQlSchema, documentsFiles);
+    for (const filename of generateKeys) {
+      generates[filename] = normalizeOutputParam(config.generates[filename]);
 
-    if (hasDocuments) {
-      getSpinner().succeed();
-    }
-
-    getSpinner().log(`Compiling template: ${template}`);
-
-    try {
-      return compileTemplate(templateConfig, context, [transformedDocuments], {
-        generateSchema,
-        generateDocuments
-      });
-    } catch (error) {
-      throw new DetailedError(`
-        Failed to compile ${template} template.
-
-        In most cases it's related to the configuration and the GraphQL schema.
-
-          ${error.message}
-
-      `);
-    }
-  };
-
-  const normalizeOutput = (item: FileOutput) => {
-    let resultName = item.filename;
-
-    if (!path.isAbsolute(resultName)) {
-      const resolved = path.resolve(process.cwd(), out);
-
-      if (fs.existsSync(resolved)) {
-        const stats = fs.lstatSync(resolved);
-
-        if (stats.isDirectory()) {
-          resultName = path.resolve(resolved, item.filename);
-        } else if (stats.isFile()) {
-          resultName = resolved;
-        }
-      } else {
-        if (out.endsWith('/')) {
-          resultName = path.resolve(resolved, item.filename);
-        } else {
-          resultName = resolved;
-        }
+      if (generates[filename].plugins.length === 0) {
+        throw new DetailedError(
+          'Invalid Codegen Configuration!',
+          `
+          Please make sure that your codegen config file has defined plugins list for output "${filename}".
+          
+          It should looks like that:
+  
+          schema:
+            - my-schema.graphql
+          generates:
+            my-file.ts:
+              - plugin1
+              - plugin2
+              - plugin3
+          `
+        );
       }
     }
 
-    const resultDir = path.dirname(resultName);
-    mkdirp.sync(resultDir);
-
-    return {
-      content: item.content,
-      filename: resultName
-    };
-  };
-
-  try {
-    const output = await executeGeneration();
-
-    return output.map(normalizeOutput);
-  } catch (error) {
-    if (error instanceof DetailedError) {
-      throw error;
-    } else {
+    if (schemas.length === 0 && Object.keys(generates).some(filename => generates[filename].schema.length === 0)) {
       throw new DetailedError(
+        'Invalid Codegen Configuration!',
         `
+        Please make sure that your codegen config file contains either the "schema" field 
+        or every generated file has its own "schema" field.
         
-        Failed to finish the task:
+        It should looks like that:
+        schema:
+          - my-schema.graphql
 
-        ${error.message}
-
-      `,
-        error
+        or:
+        generates:
+          path/to/output:
+            schema: my-schema.graphql
+      `
       );
     }
   }
-};
+
+  async function loadRootSchema() {
+    /* Load root schemas */
+    if (schemas.length) {
+      rootSchema = await mergeSchemas(
+        await Promise.all(schemas.map(pointToScehma => loadSchema(pointToScehma, config)))
+      );
+    }
+  }
+
+  async function loadRootDocuments() {
+    /* Load root documents */
+    if (documents.length > 0) {
+      for (const docDef of documents) {
+        const documents = await loadDocuments(docDef, config);
+
+        if (documents.length > 0) {
+          rootDocuments.push(...documents);
+        }
+      }
+
+      if (rootSchema) {
+        const errors = validateGraphQlDocuments(rootSchema, rootDocuments);
+        checkValidationErrors(errors);
+      }
+    }
+  }
+
+  listr.add({
+    title: 'Parse configuration',
+    task: ctx => {
+      normalize();
+
+      ctx.hasSchemas = schemas.length > 0;
+      ctx.hasDocuments = documents.length > 0;
+    }
+  });
+
+  listr.add({
+    title: 'Load schema',
+    enabled: ctx => ctx.hasSchemas,
+    task: wrapTask(loadRootSchema)
+  });
+
+  listr.add({
+    title: 'Load documents',
+    enabled: ctx => ctx.hasDocuments,
+    task: wrapTask(loadRootDocuments)
+  });
+
+  listr.add({
+    title: 'Generate outputs',
+    task: () => {
+      return new Listr(
+        Object.keys(generates).map<Listr.ListrTask>((filename, i) => ({
+          title: `Generate ${filename}`,
+          task: () => {
+            const outputConfig = generates[filename];
+            const outputFileTemplateConfig = outputConfig.config || {};
+            let outputSchema = rootSchema;
+            let outputDocuments: DocumentFile[] = rootDocuments;
+
+            const outputSpecificSchemas = normalizeInstanceOrArray<Types.Schema>(outputConfig.schema);
+            const outputSpecificDocuments = normalizeInstanceOrArray<Types.OperationDocument>(outputConfig.documents);
+
+            async function addSchema() {
+              outputSchema = await mergeSchemas([
+                rootSchema,
+                ...(await Promise.all(outputSpecificSchemas.map(pointToScehma => loadSchema(pointToScehma, config))))
+              ]);
+            }
+
+            async function addDocuments() {
+              const additionalDocs = [];
+
+              for (const docDef of outputSpecificDocuments) {
+                const documents = await loadDocuments(docDef, config);
+
+                if (documents.length > 0) {
+                  additionalDocs.push(...documents);
+                }
+              }
+
+              if (outputSchema) {
+                const errors = validateGraphQlDocuments(outputSchema, additionalDocs);
+                checkValidationErrors(errors);
+              }
+
+              outputDocuments = [...rootDocuments, ...additionalDocs];
+            }
+
+            async function doGenerateOutput() {
+              const normalizedPluginsArray = normalizeConfig(outputConfig.plugins);
+              const output = await generateOutput({
+                filename,
+                plugins: normalizedPluginsArray,
+                schema: outputSchema,
+                documents: outputDocuments,
+                inheritedConfig: {
+                  ...rootConfig,
+                  ...outputFileTemplateConfig
+                },
+                pluginLoader: config.pluginLoader || require
+              });
+              result.push(output);
+            }
+
+            return new Listr(
+              [
+                {
+                  title: 'Add related schemas',
+                  enabled: () => outputSpecificSchemas.length > 0,
+                  task: wrapTask(addSchema, filename)
+                },
+                {
+                  title: 'Add related documents',
+                  enabled: () => outputSpecificDocuments.length > 0,
+                  task: wrapTask(addDocuments, filename)
+                },
+                {
+                  title: 'Generate',
+                  task: wrapTask(doGenerateOutput, filename)
+                }
+              ],
+              {
+                // it stops when one of tasks failed
+                exitOnError: true
+              }
+            );
+          }
+        })),
+        {
+          // it doesn't stop when one of tasks failed, to finish at least some of outputs
+          exitOnError: false,
+          // run 4 at once
+          concurrent: 4
+        }
+      );
+    }
+  });
+
+  await listr.run();
+
+  return result;
+}
+
+export async function generateOutput(options: GenerateOutputOptions): Promise<FileOutput> {
+  let output = '';
+
+  for (const plugin of options.plugins) {
+    const name = Object.keys(plugin)[0];
+    const pluginConfig = plugin[name];
+    const result = await executePlugin({
+      name,
+      config:
+        typeof pluginConfig !== 'object'
+          ? pluginConfig
+          : {
+              ...options.inheritedConfig,
+              ...(pluginConfig as object)
+            },
+      schema: options.schema,
+      documents: options.documents,
+      outputFilename: options.filename,
+      allPlugins: options.plugins,
+      pluginLoader: options.pluginLoader
+    });
+
+    output += result;
+  }
+
+  return { filename: options.filename, content: await prettify(options.filename, output) };
+}
+
+export async function getPluginByName(name: string, pluginLoader: Types.PluginLoaderFn): Promise<CodegenPlugin> {
+  const possibleNames = [
+    `graphql-codegen-${name}`,
+    `graphql-codegen-${name}-template`,
+    `codegen-${name}`,
+    `codegen-${name}-template`,
+    name
+  ];
+
+  for (const packageName of possibleNames) {
+    try {
+      return pluginLoader(packageName) as CodegenPlugin;
+    } catch (err) {
+      if (err.message.indexOf(`Cannot find module '${packageName}'`) === -1) {
+        throw new DetailedError(
+          `Unable to load template plugin matching ${name}`,
+          `
+            Unable to load template plugin matching '${name}'.
+            Reason: 
+              ${err.message}
+          `
+        );
+      }
+    }
+  }
+
+  const possibleNamesMsg = possibleNames
+    .map(name =>
+      `
+      - ${name}
+  `.trimRight()
+    )
+    .join('');
+
+  throw new DetailedError(
+    `Unable to find template plugin matching ${name}`,
+    `
+      Unable to find template plugin matching '${name}'
+      Install one of the following packages:
+      
+      ${possibleNamesMsg}
+    `
+  );
+}
+
+export async function executePlugin(options: ExecutePluginOptions): Promise<string> {
+  const pluginPackage = await getPluginByName(options.name, options.pluginLoader);
+
+  if (!pluginPackage || !pluginPackage.plugin || typeof pluginPackage.plugin !== 'function') {
+    throw new DetailedError(
+      `Invalid Custom Plugin "${options.name}"`,
+      `
+      Plugin ${options.name} does not export a valid JS object with "plugin" function.
+
+      Make sure your custom plugin is written in the following form:
+
+      module.exports = {
+        plugin: (schema, documents, config) => {
+          return 'my-custom-plugin-content';
+        },
+      };
+      `
+    );
+  }
+
+  const schema = !pluginPackage.addToSchema
+    ? options.schema
+    : await mergeSchemas([
+        options.schema,
+        makeExecutableSchema({
+          typeDefs: pluginPackage.addToSchema,
+          allowUndefinedInResolve: true,
+          resolverValidationOptions: {
+            requireResolversForResolveType: false,
+            requireResolversForAllFields: false,
+            requireResolversForNonScalar: false,
+            requireResolversForArgs: false
+          }
+        })
+      ]);
+
+  if (pluginPackage.validate && typeof pluginPackage.validate === 'function') {
+    try {
+      await pluginPackage.validate(
+        schema,
+        options.documents,
+        options.config,
+        options.outputFilename,
+        options.allPlugins
+      );
+    } catch (e) {
+      throw new DetailedError(
+        `Plugin "${options.name}" validation failed:`,
+        `
+          ${e.message}
+        `
+      );
+    }
+  }
+
+  return pluginPackage.plugin(schema, options.documents, options.config);
+}

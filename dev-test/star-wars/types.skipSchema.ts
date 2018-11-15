@@ -1,13 +1,3 @@
-/* tslint:disable */
-
-// ====================================================
-// START: Typescript template
-// ====================================================
-
-// ====================================================
-// InputTypes
-// ====================================================
-
 /** The input object sent when someone is creating a new review */
 export interface ReviewInput {
   /** 0-5 stars */
@@ -25,11 +15,6 @@ export interface ColorInput {
 
   blue: number;
 }
-
-// ====================================================
-// Enums
-// ====================================================
-
 /** The episodes in the Star Wars trilogy */
 export enum Episode {
   NEWHOPE = 'NEWHOPE',
@@ -41,10 +26,6 @@ export enum LengthUnit {
   METER = 'METER',
   FOOT = 'FOOT'
 }
-
-// ====================================================
-// END: Typescript template
-// ====================================================
 
 // ====================================================
 // Documents

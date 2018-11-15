@@ -1,0 +1,50 @@
+{
+  "name": "graphql-codegen-typescript-mongodb",
+  "version": "0.13.0",
+  "description": "graphql-codegen-cli template for TypeScript typings for both client side and server side",
+  "repository": "git@github.com:dotansimha/graphql-code-generator.git",
+  "license": "MIT",
+  "scripts": {
+    "prepublishOnly": "yarn build",
+    "build": "codegen-templates-scripts build",
+    "test": "codegen-templates-scripts test",
+    "pretest": "yarn build"
+  },
+  "peerDependencies": {
+    "graphql-tag": "^2.0.0"
+  },
+  "dependencies": {
+    "graphql-codegen-core": "0.13.0",
+    "graphql-codegen-plugin-helpers": "0.13.0",
+    "graphql-codegen-typescript-common": "0.13.0"
+  },
+  "devDependencies": {
+    "graphql-codegen-plugin-handlebars-helpers": "0.13.0",
+    "codegen-templates-scripts": "0.13.0",
+    "graphql": "14.0.2"
+  },
+  "main": "./dist/index.js",
+  "typings": "dist/index.d.ts",
+  "typescript": {
+    "definition": "dist/index.d.ts"
+  },
+  "jest": {
+    "globals": {
+      "ts-jest": {
+        "enableTsDiagnostics": false
+      }
+    },
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{{#each inputTypes}}
+  {{~> type }}
+{{/each}}
+{{#each enums}}
+  {{~> enum }}
+{{/each}}
+{{#each scalars}}
+
+{{ toComment description }}
+{{#ifCond (convert name) "!==" (getScalarType name) }}export type {{ convert name }} = {{ getScalarType name }};{{/ifCond}}
+{{/each}}

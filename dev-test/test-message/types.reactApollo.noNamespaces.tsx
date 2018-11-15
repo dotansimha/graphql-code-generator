@@ -1,64 +1,8 @@
-/* tslint:disable */
-
-// ====================================================
-// START: Typescript template
-// ====================================================
-
-// ====================================================
-// Types
-// ====================================================
-
-export interface Query {
-  messages?: Message[] | null;
-}
-
-export interface Message {
-  id: string;
-}
-
-export interface Mutation {
-  createMessage?: Message | null;
-
-  approve?: Message | null;
-
-  decline?: Message | null;
-
-  escalate?: Message | null;
-}
-
-// ====================================================
-// InputTypes
-// ====================================================
+// tslint:disable
 
 export interface CreateMessageInput {
   description: string;
 }
-
-// ====================================================
-// Arguments
-// ====================================================
-
-export interface MessagesQueryArgs {
-  tab: string;
-}
-export interface CreateMessageMutationArgs {
-  args: CreateMessageInput;
-}
-export interface ApproveMutationArgs {
-  id: string;
-}
-export interface DeclineMutationArgs {
-  id: string;
-
-  reason: string;
-}
-export interface EscalateMutationArgs {
-  id: string;
-}
-
-// ====================================================
-// END: Typescript template
-// ====================================================
 
 // ====================================================
 // Documents

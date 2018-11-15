@@ -1,14 +1,9 @@
 import { existsSync } from 'fs';
 import { extname, isAbsolute, resolve as resolvePath } from 'path';
 import isValidPath = require('is-valid-path');
-import chalk from 'chalk';
 import { buildASTSchema, buildClientSchema, DocumentNode, GraphQLSchema, IntrospectionQuery, parse } from 'graphql';
-import { debugLog } from 'graphql-codegen-core';
+import { debugLog, Types } from 'graphql-codegen-core';
 import { SchemaLoader } from './schema-loader';
-import { CLIOptions } from '../../cli-options';
-import { getSpinner } from '../../spinner';
-import { DetailedError } from '../../errors';
-
 export class SchemaFromExport implements SchemaLoader {
   canHandle(pointerToSchema: string): boolean {
     const fullPath = isAbsolute(pointerToSchema) ? pointerToSchema : resolvePath(process.cwd(), pointerToSchema);
@@ -16,10 +11,10 @@ export class SchemaFromExport implements SchemaLoader {
     return isValidPath(pointerToSchema) && existsSync(fullPath) && extname(pointerToSchema) !== '.json';
   }
 
-  handle(file: string, _cliOptions: CLIOptions): Promise<GraphQLSchema> {
-    getSpinner().info(
-      `Loading GraphQL schema object, text, ast, or introspection json from JavaScript ES6 export: ${file}...`
-    );
+  handle(file: string, config: Types.Config, schemaOptions: any): Promise<GraphQLSchema> {
+    // spinner.info(
+    //   `Loading GraphQL schema object, text, ast, or introspection json from JavaScript ES6 export: ${file}...`
+    // );
 
     return new Promise<GraphQLSchema>(async (resolve, reject) => {
       const fullPath = isAbsolute(file) ? file : resolvePath(process.cwd(), file);
@@ -53,52 +48,17 @@ export class SchemaFromExport implements SchemaLoader {
               }
             } else {
               reject(
-                new Error(`
-                  Invalid export from file: ${fullPath}
-                  Use either ${chalk.bold('default export')} or export ${chalk.bold('schema')} variable.
-
-                  Example:
-
-                    export default ...;
-
-                    OR
-
-                    export const schema = ...;
-
-                `)
+                new Error(`Invalid export from export file ${fullPath}: missing default export or 'schema' export!`)
               );
             }
           } else {
-            reject(
-              new Error(`
-            
-              Invalid export from file: ${fullPath}
-
-              You forgot to export schema.
-              Use either ${chalk.bold('default export')} or export ${chalk.bold('schema')} variable.
-
-              Example:
-
-                export default ...;
-
-                OR
-
-                export const schema = ...;
-
-            `)
-            );
+            reject(new Error(`Invalid export from export file ${fullPath}: empty export!`));
           }
         } catch (e) {
           reject(e);
         }
       } else {
-        reject(`
-        
-          Unable to locate introspection from export file: ${fullPath}
-
-          File probably does not exist.
-
-        `);
+        reject(`Unable to locate introspection from export file: ${fullPath}`);
       }
     });
   }
@@ -136,22 +96,7 @@ export class SchemaFromExport implements SchemaLoader {
       } else if (this.isSchemaJson(schema)) {
         resolve(buildClientSchema(schema.data));
       } else {
-        reject(
-          new DetailedError(`
-            
-            Unexpected schema type provided.
-
-            Should be one of following:
-              - exported GraphQLSchema object
-              - exported string wrapped by the 'gql' tag
-              - string without the 'gql' tag
-              - .graphql file with schema
-              - JSON file with introspection
-
-            Please provide correct schema and run codegen again.
-          
-        `)
-        );
+        reject(new Error('Unexpected schema type provided!'));
       }
     });
   }
