@@ -86,7 +86,7 @@ Although can be used directly, it's recommended to add the code generation task 
 GraphQL Code Generator looks for `codegen.yml` and `codegen.json` files by default, one might look like this:
 
 ```yaml
-schema: url http://localhost:3000/graphql
+schema: http://localhost:3000/graphql
 overwrite: true
 generates:
   ./src/types.d.ts:
@@ -126,7 +126,7 @@ async function doSomething() {
 
 The `generate` function accepts two parameters:
 
-- `options: CLIOptions & { logger: Logger }`
+- `options`
 - `saveToFile: boolean`
 
 The return value should be of type `Promise<FileOutput[]>`.
