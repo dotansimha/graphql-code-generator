@@ -1,10 +1,10 @@
 import * as commander from 'commander';
-import { getGraphQLProjectConfig, ConfigNotFoundError } from 'graphql-config';
 import { Types } from 'graphql-codegen-core';
 import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 import { cliError } from './utils/cli-error';
 import * as YAML from 'json-to-pretty-yaml';
+import { isNode } from './utils/is-browser';
 
 export interface CLIOptions {
   schema?: string;
@@ -74,7 +74,9 @@ export const validateCliOptions = (options: CLIOptions) => {
   const template = options.template;
   const project = options.project;
 
-  if (!schema) {
+  if (!schema && isNode) {
+    const { getGraphQLProjectConfig, ConfigNotFoundError } = require('graphql-config');
+
     try {
       const graphqlProjectConfig = getGraphQLProjectConfig(project);
       options.schema = graphqlProjectConfig.schemaPath;

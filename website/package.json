@@ -1,13 +1,17 @@
 {
   "scripts": {
     "start": "docusaurus-start",
+    "prebuild": "yarn build-live-demo",
+    "prestart": "yarn build-live-demo",
     "build": "yarn build:app && yarn build:lambda",
     "build:app": "docusaurus-build",
     "build:lambda": "netlify-lambda build lambda",
+    "serve:lambda": "netlify-lambda serve",
     "publish-gh-pages": "docusaurus-publish",
     "write-translations": "docusaurus-write-translations",
     "version": "docusaurus-version",
-    "rename-version": "docusaurus-rename-version"
+    "rename-version": "docusaurus-rename-version",
+    "build-live-demo": "cd live-demo && yarn build && cp -r ./build/* ../static/live-demo"
   },
   "devDependencies": {
     "babel-preset-minify": "^0.5.0",

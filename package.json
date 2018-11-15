@@ -6,9 +6,9 @@
   "license": "MIT",
   "scripts": {
     "clean": "lerna clean --yes && rm -rf node_modules",
-    "build": "lerna run build",
-    "test": "lerna run test",
-    "lint": "lerna run lint",
+    "build": "lerna run build --ignore live-demo",
+    "test": "lerna run test --ignore live-demo",
+    "lint": "lerna run lint --ignore live-demo",
     "precommit": "lint-staged",
     "test-and-build": "yarn test && yarn build",
     "prerelease": "yarn test-and-build",
@@ -22,7 +22,8 @@
   "workspaces": [
     "packages/*",
     "packages/utils/*",
-    "packages/plugins/*"
+    "packages/plugins/*",
+    "website/live-demo"
   ],
   "dependencies": {
     "lerna": "2.11.0"
@@ -59,7 +60,7 @@
     ],
     "*.{js,json,css,md,ts,tsx}": [
       "prettier --write",
-      "git add"
+      "git add -f"
     ]
   },
   "resolutions": {

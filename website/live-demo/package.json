@@ -1,0 +1,42 @@
+{
+  "name": "live-demo",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": "/live-demo/",
+  "dependencies": {
+    "react": "16.6.1",
+    "react-dom": "16.6.1",
+    "react-scripts-rewired": "2.1.1",
+    "codemirror": "5.41.0",
+    "codemirror-graphql": "0.8.3",
+    "js-yaml": "3.12.0",
+    "graphql-code-generator": "0.13.0",
+    "graphql-codegen-typescript-common": "0.13.0",
+    "graphql-codegen-typescript-client": "0.13.0",
+    "graphql-codegen-typescript-server": "0.13.0",
+    "graphql-codegen-add": "0.13.0",
+    "graphql-codegen-time": "0.13.0",
+    "graphql-codegen-introspection": "0.13.0",
+    "graphql-codegen-schema-ast": "0.13.0",
+    "graphql-codegen-typescript-apollo-angular": "0.13.0",
+    "graphql-codegen-typescript-graphql-files-modules": "0.13.0",
+    "graphql-codegen-typescript-mongodb": "0.13.0",
+    "graphql-codegen-typescript-react-apollo": "0.13.0",
+    "graphql-codegen-typescript-resolvers": "0.13.0",
+    "prettier": "1.15.2",
+    "@material-ui/core": "3.5.1"
+  },
+  "scripts": {
+    "start": "NODE_OPTIONS=--max_old_space_size=8192 react-scripts start",
+    "build": "NODE_OPTIONS=--max_old_space_size=8192 react-scripts build"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}

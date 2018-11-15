@@ -1,5 +1,5 @@
 import { TypeScriptCommonConfig, initCommonTemplate } from 'graphql-codegen-typescript-common';
-import { PluginFunction, DocumentFile, toPascalCase } from 'graphql-codegen-core';
+import { PluginValidateFn, PluginFunction, DocumentFile, toPascalCase } from 'graphql-codegen-core';
 import { GraphQLSchema } from 'graphql';
 import * as Handlebars from 'handlebars';
 import * as enumTemplate from './templates/enum.handlebars';
@@ -16,6 +16,7 @@ import isArray from './helpers/is-array';
 import filterModelFields from './helpers/filter-model-fields';
 import { entityFields } from './helpers/entity-fields';
 import gql from 'graphql-tag';
+import { extname } from 'path';
 
 export interface TypeScriptMongoDbConfig extends TypeScriptCommonConfig {}
 
@@ -63,3 +64,14 @@ const addToSchema = gql`
 
 export { addToSchema };
 export { addToSchema as DIRECTIVES };
+
+export const validate: PluginValidateFn<any> = async (
+  schema: GraphQLSchema,
+  documents: DocumentFile[],
+  config: any,
+  outputFile: string
+) => {
+  if (extname(outputFile) !== '.ts') {
+    throw new Error(`Plugin "typescript-mongodb" requires extension to be ".ts"!`);
+  }
+};

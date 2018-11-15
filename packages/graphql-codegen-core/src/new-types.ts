@@ -34,6 +34,9 @@ export namespace Types {
   /* Require Extensions */
   export type RequireExtension = InstanceOrArray<string>;
 
+  /* Plugin Loader */
+  export type PluginLoaderFn = (pluginName: string) => CodegenPlugin | Promise<CodegenPlugin>;
+
   /* Config Definition */
   export interface Config {
     schema?: InstanceOrArray<Schema>;
@@ -45,6 +48,7 @@ export namespace Types {
     overwrite?: boolean;
     watch?: boolean;
     silent?: boolean;
+    pluginLoader?: PluginLoaderFn;
   }
 }
 

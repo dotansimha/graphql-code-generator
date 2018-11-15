@@ -1,4 +1,3 @@
-import * as prettier from 'prettier';
 import * as path from 'path';
 
 const EXTENSION_TO_PARSER = {
@@ -22,20 +21,27 @@ const EXTENSION_TO_PARSER = {
 
 export async function prettify(filePath: string, content: string): Promise<string> {
   try {
-    const fileExtension = path.extname(filePath).slice(1) as keyof typeof EXTENSION_TO_PARSER;
-    const parser = EXTENSION_TO_PARSER[fileExtension];
-    const { ignored } = await prettier.getFileInfo(filePath, { ignorePath: '.prettierignore' });
+    const prettierPath = require.resolve('prettier');
 
-    if (ignored) {
-      return content;
+    if (prettierPath) {
+      const prettier = require('prettier');
+      const fileExtension = path.extname(filePath).slice(1) as keyof typeof EXTENSION_TO_PARSER;
+      const parser = EXTENSION_TO_PARSER[fileExtension];
+      const { ignored } = await prettier.getFileInfo(filePath, { ignorePath: '.prettierignore' });
+
+      if (ignored) {
+        return content;
+      }
+
+      const config = await prettier.resolveConfig(filePath, { useCache: true, editorconfig: true });
+
+      return prettier.format(content, {
+        parser,
+        ...(config || {})
+      } as any);
     }
 
-    const config = await prettier.resolveConfig(filePath, { useCache: true, editorconfig: true });
-
-    return prettier.format(content, {
-      parser,
-      ...(config || {})
-    } as any);
+    return content;
   } catch (e) {
     return content;
   }

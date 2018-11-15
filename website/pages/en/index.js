@@ -5,29 +5,29 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require('react')
+const React = require('react');
 
-const CompLibrary = require('../../core/CompLibrary.js')
+const CompLibrary = require('../../core/CompLibrary.js');
 
-const MarkdownBlock = CompLibrary.MarkdownBlock /* Used to read markdown */
-const Container = CompLibrary.Container
-const GridBlock = CompLibrary.GridBlock
+const MarkdownBlock = CompLibrary.MarkdownBlock; /* Used to read markdown */
+const Container = CompLibrary.Container;
+const GridBlock = CompLibrary.GridBlock;
 
-const siteConfig = require(`${process.cwd()}/siteConfig.js`)
-const IODemo = require(`${process.cwd()}/core/home/IODemo`)
-const FeatureCards = require(`${process.cwd()}/core/home/FeatureCards`)
-const CompanyCards = require(`${process.cwd()}/core/home/CompanyCards`)
+const siteConfig = require(`${process.cwd()}/siteConfig.js`);
+const IODemo = require(`${process.cwd()}/core/home/IODemo`);
+const FeatureCards = require(`${process.cwd()}/core/home/FeatureCards`);
+const CompanyCards = require(`${process.cwd()}/core/home/CompanyCards`);
 
 function imgUrl(img) {
-  return `${siteConfig.baseUrl}img/${img}`
+  return `${siteConfig.baseUrl}img/${img}`;
 }
 
 function docUrl(doc, language) {
-  return `${siteConfig.baseUrl}docs/${language ? `${language}/` : ''}${doc}`
+  return `${siteConfig.baseUrl}docs/${language ? `${language}/` : ''}${doc}`;
 }
 
 function pageUrl(page, language) {
-  return siteConfig.baseUrl + (language ? `${language}/` : '') + page
+  return siteConfig.baseUrl + (language ? `${language}/` : '') + page;
 }
 
 class Button extends React.Component {
@@ -38,33 +38,53 @@ class Button extends React.Component {
           {this.props.children}
         </a>
       </div>
-    )
+    );
   }
 }
 
 Button.defaultProps = {
-  target: '_self',
-}
+  target: '_self'
+};
 
 const SplashContainer = props => (
   <div className="homeContainer">
-    <img className="desktop-only" src={`${siteConfig.baseUrl}img/hexagons/blue.svg`} style={{ position: 'absolute', left: '350px', top: '100px', height: '30px' }} />
-    <img className="desktop-only" src={`${siteConfig.baseUrl}img/hexagons/pink.svg`} style={{ position: 'absolute', left: '100px', top: '200px', height: '150px' }} />
-    <img className="desktop-only" src={`${siteConfig.baseUrl}img/hexagons/blue.svg`} style={{ position: 'absolute', left: '250px', top: '450px', height: '70px' }} />
-    <img className="desktop-only" src={`${siteConfig.baseUrl}img/hexagons/pink.svg`} style={{ position: 'absolute', right: '300px', top: '150px', height: '70px' }} />
-    <img className="desktop-only" src={`${siteConfig.baseUrl}img/hexagons/blue.svg`} style={{ position: 'absolute', right: '200px', top: '350px', height: '100px' }} />
+    <img
+      className="desktop-only"
+      src={`${siteConfig.baseUrl}img/hexagons/blue.svg`}
+      style={{ position: 'absolute', left: '350px', top: '100px', height: '30px' }}
+    />
+    <img
+      className="desktop-only"
+      src={`${siteConfig.baseUrl}img/hexagons/pink.svg`}
+      style={{ position: 'absolute', left: '100px', top: '200px', height: '150px' }}
+    />
+    <img
+      className="desktop-only"
+      src={`${siteConfig.baseUrl}img/hexagons/blue.svg`}
+      style={{ position: 'absolute', left: '250px', top: '450px', height: '70px' }}
+    />
+    <img
+      className="desktop-only"
+      src={`${siteConfig.baseUrl}img/hexagons/pink.svg`}
+      style={{ position: 'absolute', right: '300px', top: '150px', height: '70px' }}
+    />
+    <img
+      className="desktop-only"
+      src={`${siteConfig.baseUrl}img/hexagons/blue.svg`}
+      style={{ position: 'absolute', right: '200px', top: '350px', height: '100px' }}
+    />
     <div className="homeSplashFade">
       <div className="wrapper homeWrapper">{props.children}</div>
     </div>
   </div>
-)
+);
 
 const ProjectTitle = () => (
   <h2 className="projectTitle">
     <img src={siteConfig.ogImage} />
     <small>{siteConfig.tagline}</small>
   </h2>
-)
+);
 
 const PromoSection = props => (
   <div className="section promoSection">
@@ -72,47 +92,45 @@ const PromoSection = props => (
       <div className="pluginRowBlock">{props.children}</div>
     </div>
   </div>
-)
+);
 
 class HomeSplash extends React.Component {
   render() {
-    const language = this.props.language || ''
     return (
       <SplashContainer>
         <div className="inner">
           <ProjectTitle />
           <PromoSection>
-            <Button href={siteConfig.githubUrl}>Try It Out</Button>
+            <Button href={'#live-demo'}>Try It Out</Button>
             <Button href={`${siteConfig.baseUrl}docs/getting-started`}>View Docs</Button>
             <Button href={`${siteConfig.baseUrl}help`}>Contact Us</Button>
           </PromoSection>
         </div>
       </SplashContainer>
-    )
+    );
   }
 }
 
 const CLIDemo = () => (
   <div className="cliDemoSection">
     <h1 className="cliTitle">
-      <span>$ gql-gen --schema schema.graphql --template ts</span><div className="cursor" />
+      <div id="live-demo" />
+      <span>$ gql-gen </span>
+      <div className="cursor" />
     </h1>
     <IODemo />
   </div>
-)
+);
 
 const Block = props => (
-  <Container
-    padding={['bottom', 'top']}
-    id={props.id}
-    background={props.background}>
+  <Container padding={['bottom', 'top']} id={props.id} background={props.background}>
     <GridBlock align="center" contents={props.children} layout={props.layout} />
   </Container>
-)
+);
 
 class Index extends React.Component {
   render() {
-    const language = this.props.language || ''
+    const language = this.props.language || '';
 
     return (
       <div>
@@ -123,8 +141,8 @@ class Index extends React.Component {
           <CompanyCards />
         </div>
       </div>
-    )
+    );
   }
 }
 
-module.exports = Index
+module.exports = Index;
