@@ -12,7 +12,9 @@ export class Editor extends React.Component {
       autoCloseBrackets: true,
       matchBrackets: true,
       showCursorWhenSelecting: true,
-      readOnly: this.props.readOnly ? 'nocursor' : false
+      readOnly: this.props.readOnly ? 'nocursor' : false,
+      gutters: ['CodeMirror-lint-markers'],
+      lint: true
     });
 
     this.editor.on('change', this._onEdit);

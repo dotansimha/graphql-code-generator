@@ -2,12 +2,12 @@
   display: flex;
   align-items: flex-start;
   justify-content: stretch;
-  height: 100vh;
+  height: 95vh;
 }
 
 .column {
   flex: 1;
-  height: 100vh;
+  height: 95vh;
 }
 
 .query-editor {
@@ -15,9 +15,9 @@
   position: relative;
   max-width: 25vw;
   overflow: scroll;
-  height: 100vh;
+  height: 95vh;
 }
 
 .CodeMirror {
-  height: 100vh;
+  height: 95vh;
 }

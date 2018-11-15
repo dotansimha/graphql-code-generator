@@ -34,36 +34,46 @@ const pluginsMap = {
   'graphql-codegen-typescript-resolvers': require('graphql-codegen-typescript-resolvers')
 };
 
-class App extends Component {
-  state = {
-    output: '',
-    config: `
-generates:
+const DEFAULT_CONFIG = `generates:
   live-demo-test.ts:
     - typescript-common
     - typescript-client
-    - typescript-server
-    `,
-    schema: `
-type Query {
+    - typescript-server`;
+
+const DEFAULT_SCHEMA = `type Query {
   f: String
-}
-    `,
-    documents: `
-query f {
+}`;
+
+const DEFAULT_DOC = `query f {
   f
-}
-    `
+}`;
+
+class App extends Component {
+  state = {
+    output: '',
+    config: DEFAULT_CONFIG,
+    schema: DEFAULT_SCHEMA,
+    documents: DEFAULT_DOC
   };
 
   update = field => value => this.setState({ [field]: value });
 
+  componentDidMount() {
+    this.generate();
+  }
+
+  getMode(config) {
+    const out = Object.keys(config.generates)[0].split('.');
+    const ext = out[out.length - 1];
+
+    return EXT_TO_FORMATTER[ext];
+  }
+
   prettify(str, config) {
     try {
-      const out = Object.keys(config.generates)[0].split('.');
-      const ext = out[out.length - 1];
+      const mode = this.getMode(config) || 'typescript';
 
-      return prettier.format(str, { parser: EXT_TO_FORMATTER[ext] || 'typescript', plugins });
+      return prettier.format(str, { parser: mode, plugins });
     } catch (e) {
       return str;
     }
@@ -84,17 +94,40 @@ query f {
         this.setState({ output: this.prettify(content, config) });
       })
       .catch(e => {
-        this.setState({
-          output: `
+        if (e.details) {
+          this.setState({
+            output: `
         ${e.message}:
         
         ${e.details}
         `
-        });
+          });
+        } else if (e.errors) {
+          this.setState({
+            output: e.errors
+              .map(
+                subError => `${subError.message}: 
+  ${subError.details}`
+              )
+              .join('\n')
+          });
+        } else {
+          this.setState({
+            output: e.message
+          });
+        }
       });
   };
 
   render() {
+    let mode = null;
+
+    try {
+      const config = safeLoad(this.state.config || '');
+      mode = this.getMode(config) || 'typescript';
+      mode = mode === 'typescript' ? 'text/typescript' : mode;
+    } catch (e) {}
+
     return (
       <div className="container">
         <div className="column">
@@ -108,7 +141,7 @@ query f {
         </div>
         <div className="column">
           <button onClick={this.generate}>generate</button>
-          <Editor readOnly={true} onEdit={this.update('output')} value={this.state.output} />
+          <Editor lang={mode} readOnly={true} onEdit={this.update('output')} value={this.state.output} />
         </div>
       </div>
     );
