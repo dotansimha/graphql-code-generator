@@ -8,6 +8,32 @@
 .column {
   flex: 1;
   height: 95vh;
+  border-left: 1px solid #e5e5e5;
+}
+
+.logo {
+  height: 35px;
+  width: 35px;
+  margin-right: 3px;
+}
+
+.title {
+  font-size: 16px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #33475c;
+  height: 5vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.icon-text {
+  flex: 0;
 }
 
 .query-editor {
@@ -19,5 +45,36 @@
 }
 
 .CodeMirror {
+  height: 94vh;
+}
+
+.generate-container {
+  justify-content: center;
+  align-items: center;
   height: 95vh;
+  border-left: 1px solid #e5e5e5;
+  display: flex;
+}
+
+.generate-container button {
+  width: 160px;
+  height: 40px;
+  border-radius: 5px;
+  box-shadow: 6px 6px 0 0 rgba(51, 71, 92, 0.09);
+  background-color: #ec51ba;
+  margin-left: 5px;
+  margin-right: 5px;
+  font-size: 14px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: center;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  cursor: pointer;
+  outline: none;
 }

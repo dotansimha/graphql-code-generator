@@ -5,6 +5,7 @@ body,
 html,
 .root {
   height: 100vh;
+  overflow: hidden;
 }
 
 body {

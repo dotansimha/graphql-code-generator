@@ -4,6 +4,10 @@ import { Editor } from './editor.component';
 import { executeCodegen } from 'graphql-code-generator';
 import { safeLoad } from 'js-yaml';
 import * as prettier from 'prettier/standalone';
+import MagicIcon from './magic.svg';
+import CodegenLogo from './logo.svg';
+import GraphQLLogo from './GraphQL_Logo.svg';
+import { EXAMPLES } from './examples';
 
 const plugins = [
   require('prettier/parser-graphql'),
@@ -34,26 +38,12 @@ const pluginsMap = {
   'graphql-codegen-typescript-resolvers': require('graphql-codegen-typescript-resolvers')
 };
 
-const DEFAULT_CONFIG = `generates:
-  live-demo-test.ts:
-    - typescript-common
-    - typescript-client
-    - typescript-server`;
-
-const DEFAULT_SCHEMA = `type Query {
-  f: String
-}`;
-
-const DEFAULT_DOC = `query f {
-  f
-}`;
-
 class App extends Component {
   state = {
     output: '',
-    config: DEFAULT_CONFIG,
-    schema: DEFAULT_SCHEMA,
-    documents: DEFAULT_DOC
+    config: EXAMPLES['typescript-server'].config,
+    schema: EXAMPLES['typescript-server'].schema,
+    documents: EXAMPLES['typescript-server'].document
   };
 
   update = field => value => this.setState({ [field]: value });
@@ -131,16 +121,37 @@ class App extends Component {
     return (
       <div className="container">
         <div className="column">
+          <div className="title">
+            <img className="logo" alt={'GraphQL'} src={GraphQLLogo} />
+            <span className={'icon-text'}>Schema</span>
+          </div>
           <Editor lang={'graphql'} onEdit={this.update('schema')} value={this.state.schema} />
         </div>
         <div className="column">
+          <div className="title">
+            <img className="logo" alt={'GraphQL'} src={GraphQLLogo} />
+            <span className={'icon-text'}>Documents</span>
+          </div>
           <Editor lang={'graphql'} onEdit={this.update('documents')} value={this.state.documents} />
         </div>
         <div className="column">
+          <div className="title">
+            <img className="logo" alt={'Codegen'} src={CodegenLogo} />
+            <span className={'icon-text'}>Config</span>
+          </div>
           <Editor lang={'yaml'} onEdit={this.update('config')} value={this.state.config} />
         </div>
+        <div className="generate-container">
+          <button onClick={this.generate}>
+            <span>Generate</span>
+            <img src={MagicIcon} alt={'Generate'} />
+          </button>
+        </div>
         <div className="column">
-          <button onClick={this.generate}>generate</button>
+          <div className="title">
+            <img className="logo" alt={'Codegen'} src={CodegenLogo} />
+            <span className={'icon-text'}>Output</span>
+          </div>
           <Editor lang={mode} readOnly={true} onEdit={this.update('output')} value={this.state.output} />
         </div>
       </div>
