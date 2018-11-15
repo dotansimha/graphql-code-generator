@@ -3,9 +3,7 @@ id: codegen-config
 title: Codegen Options Config
 ---
 
-When we have a large amount of options to provide in order to generate some code, the CLI can get pretty inconvenient. This can happen mostly in large scale projects where the GraphQL schema is pretty complex and we would like to generate a lot of different formats. Luckily we've already thought about it and prepared our code generator.
-
-To solve that issue you can list all your option in a `yml` or `json` config file, where it's gonna look much cleaner visually and would be easier to maintain. The config file is based on the [available CLI options](./cli-commands), so there isn't much of a difference except for few tweaks here in there.
+Having a config file fits well when we have a large amount of options to provide in order to generate some code. This can happen mostly in large scale projects where the GraphQL schema is pretty complex and we would like to generate a lot of different formats.
 
 To generate code from a config file, you can simply create a `codegen.yml` or `codegen.json` file and run `$ gql-gen`. The CLI will automatically detect the defined config file and will generate code accordingly. In addition, you can also define a path to your config file with the `--config` options, like so:
 
@@ -36,7 +34,7 @@ Here are the supported options that you can define in the config file (see [sour
 
 - **`generates` (required)** - A map where the key represents an output path for the generated code and the value represents a set of options which are relevant for that specific file. Below are the possible options that can be specified:
 
-  - **`generates.plugins` (required)** - A list of plug-ins to use when generating the file. Templates are also considered as plug-ins and they can be specified in this section, such as `typescript-common` or `typescript-mongodb`. A full list of supported templates can be found [here](../templates). Additional plug-ins can be specified to affect the code generation behavior as detailed blow:
+  - **`generates.plugins` (required)** - A list of plug-ins to use when generating the file. Templates are also considered as plug-ins and they can be specified in this section, such as `typescript-common` or `typescript-mongodb`. A full list of supported plugins can be found [here](../plugins). Additional plug-ins can be specified to affect the code generation behavior as detailed blow:
 
     - **`generates.plugins.add`** - A code string to append to the top of the generated file; for example: `// tslint:disable` to disable linting for that file.
 

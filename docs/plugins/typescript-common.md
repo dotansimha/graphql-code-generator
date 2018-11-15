@@ -3,7 +3,7 @@ id: typescript-common
 title: TypeScript Common
 ---
 
-This is the most basic TypeScript template and it can generate typings which can be used both in client and server, given a GraphQL schema.
+This is the most basic TypeScript plugin and it can generate typings which can be used both in client and server, given a GraphQL schema.
 
 ## Installation
 
@@ -13,7 +13,7 @@ Install using `npm` (or `yarn`):
 
 ## Configuration
 
-The output of this template can be controlled using a specified config file which consists of the fields below. Each config field is followed by its matching environment variable, which can be used as an alternative method to control the template's behavior:
+The output of this plugin can be controlled using a specified config file which consists of the fields below. Each config field is followed by its matching environment variable, which can be used as an alternative method to control the template's behavior:
 
 #### `printTime`, `CODEGEN_PRINT_TIME` (default value: `false`)
 
@@ -23,10 +23,16 @@ Add the generation time to the top of the generated file.
 
 Add the specified lines of code to the top of the generated file.
 
-```json
-prepend: [
-    "// My Comment",
-    "// My Other Comment"
+```yaml
+# ...
+generates:
+  path/to/file.ts:
+    plugins:
+      - typescript-common
+    config:
+      prepend:
+        - // My Comment
+        - // My Other Comment
 ]
 ```
 
@@ -34,25 +40,35 @@ prepend: [
 
 Will map scalars to the predefined types.
 
-```json
-    scalars: {
-        "Date": "Date"
-    }
+```yaml
+# ...
+generates:
+  path/to/file.ts:
+    plugins:
+      - typescript-common
+    config:
+      scalars:
+        Date: Date
+]
 ```
 
 #### Combination of `prepend` and `scalars`
 
 `prepend` and `scalars` options can be combined to map custom types to scalars.
 
-```json
-    prepend: [
-        "import { CustomScalarType } from './custom-types';"
-        "import { AnotherCustomScalarType } from './another-custom-types';"
-    ],
-    scalars: {
-        "CustomScalar": "CustomScalarType",
-        "AnotherCustomScalar": "AnotherCustomScalarType"
-    }
+```yaml
+# ...
+generates:
+  path/to/file.ts:
+    plugins:
+      - typescript-common
+    config:
+      prepend:
+        - import { CustomScalarType } from './custom-types';
+        - import { AnotherCustomScalarType } from './another-custom-types';
+      scalars:
+        CustomScalar: CustomScalarType
+        AnotherCustomScalar: AnotherCustomScalarType
 ```
 
 #### `avoidOptionals`, `CODEGEN_AVOID_OPTIONALS` (default value: `false`)
