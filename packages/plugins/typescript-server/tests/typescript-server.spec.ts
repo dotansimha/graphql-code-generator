@@ -24,11 +24,11 @@ describe('TypeScript Server', () => {
     }
 
     type Query {
-      fieldTest: String 
+      fieldTest: String
     }
 
     type Immut {
-      fieldTest: String 
+      fieldTest: String
       fieldTestMandatory: String!
       arrayTest1: [String]
       arrayTest2: [String]!
@@ -46,29 +46,27 @@ describe('TypeScript Server', () => {
   });
 
   describe('Unions', () => {
-    it('Should generate unions correctly', async () => {
-      const content = await plugin(
-        buildSchema(`
-          type Query {
-            fieldTest: C!
-          }
-          
-          type A {
-            f1: String
-          }
-          
-          type B {
-            f2: String
-          }
-          
-          # Union description
-          union C = A | B
-        `),
-        [],
-        {}
-      );
+    const schema = buildSchema(`
+      type Query {
+        fieldTest: C!
+      }
 
-      expect(content).toBeSimilarStringTo(`  
+      type A {
+        f1: String
+      }
+
+      type B {
+        f2: String
+      }
+
+      # Union description
+      union C = A | B
+    `);
+
+    it('Should generate unions correctly', async () => {
+      const content = await plugin(schema, [], {});
+
+      expect(content).toBeSimilarStringTo(`
         export interface Query {
           fieldTest: C;
         }
@@ -88,6 +86,30 @@ describe('TypeScript Server', () => {
         export type C = A | B;
       `);
     });
+
+    it('Should generate unions correctly with interfacePrefix', async () => {
+      const content = await plugin(schema, [], { interfacePrefix: 'Gql' });
+
+      expect(content).toBeSimilarStringTo(`
+        export interface GqlQuery {
+          fieldTest: C;
+        }
+      `);
+      expect(content).toBeSimilarStringTo(`
+        export interface GqlA {
+          f1?: string | null;
+        }
+      `);
+      expect(content).toBeSimilarStringTo(`
+        export interface GqlB {
+          f2?: string | null;
+        }
+      `);
+      expect(content).toBeSimilarStringTo(`
+        /** Union description */
+        export type GqlC = GqlA | GqlB;
+      `);
+    });
   });
 
   describe('Arguments', () => {
@@ -97,12 +119,12 @@ describe('TypeScript Server', () => {
         type Query {
           fieldTest(myArgument: T!): Return
         }
-        
+
         type Return {
           ok: Boolean!
           msg: String!
         }
-        
+
         input T {
           f1: String
           f2: Int!
@@ -118,13 +140,13 @@ describe('TypeScript Server', () => {
 
       expect(content).toBeSimilarStringTo(`
        export interface Query {
-          fieldTest?: Return | null; 
+          fieldTest?: Return | null;
         }
       `);
       expect(content).toBeSimilarStringTo(`
         export interface Return {
-          ok: boolean; 
-          msg: string; 
+          ok: boolean;
+          msg: string;
         }
       `);
       expect(content).toBeSimilarStringTo(`
@@ -165,11 +187,11 @@ describe('TypeScript Server', () => {
         type Query {
           fieldTest: A!
         }
-        
+
         interface Base {
           f1: String
         }
-        
+
         type A implements Base {
           f1: String
           f2: String
@@ -253,7 +275,7 @@ describe('TypeScript Server', () => {
           type Query {
             fieldTest: String
           }
-          
+
           type T {
             f1: String
             f2: Int
@@ -282,14 +304,14 @@ describe('TypeScript Server', () => {
         type Query {
           fieldTest: T
         }
-        
+
         type T {
           f1: [String]
           f2: Int!
           f3: A
           f4: [[[String]]]
         }
-        
+
         type A {
           f4: T
         }
@@ -331,10 +353,10 @@ describe('TypeScript Server', () => {
         export interface Immut {
           readonly fieldTest?: string | null;
           readonly fieldTestMandatory: string;
-          readonly arrayTest1?: ReadonlyArray<string | null> | null; 
-          readonly arrayTest2: ReadonlyArray<string | null>; 
-          readonly arrayTest3: ReadonlyArray<string>; 
-          readonly arrayTest4?: ReadonlyArray<string> | null; 
+          readonly arrayTest1?: ReadonlyArray<string | null> | null;
+          readonly arrayTest2: ReadonlyArray<string | null>;
+          readonly arrayTest3: ReadonlyArray<string>;
+          readonly arrayTest4?: ReadonlyArray<string> | null;
         }
       `);
     });
@@ -355,9 +377,9 @@ describe('TypeScript Server', () => {
       # type-description
       type Query {
         # field-description
-        fieldTest: String 
+        fieldTest: String
       }
-      
+
       schema {
         query: Query
       }
@@ -382,7 +404,7 @@ describe('TypeScript Server', () => {
         type Query {
           fieldTest: [Date]
         }
-        
+
         scalar Date
       `),
         [],
@@ -402,7 +424,7 @@ describe('TypeScript Server', () => {
         type Query {
           fieldTest: [Date]
         }
-        
+
         scalar Date
       `),
         [],
