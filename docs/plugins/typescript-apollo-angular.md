@@ -43,7 +43,7 @@ import { MyFeedGQL, Feed } from './graphql';
   `
 })
 export class FeedComponent {
-  feed: Observable<Feed>;
+  feed: Observable<Feed[]>;
 
   constructor(feedGQL: MyFeedGQL) {
     this.feed = feedGQL.watch().valueChanges.pipe(map(result => result.data.feed));
