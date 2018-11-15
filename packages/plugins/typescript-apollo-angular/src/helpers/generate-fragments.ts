@@ -37,7 +37,7 @@ export const generateFragments = convert => (fragments: any[], options: any): st
       cachedFragments[fragment.name] = fragment;
 
       return `
-          export const ${toFragmentName(convert)(fragment.name)} = ${gql(convert)(fragment, options)};
+          export const ${toFragmentName(convert)(fragment.name)} = ${gql(convert)(fragment, fragments, options)};
       `;
     } else {
       if (fragment.document !== cached.document) {

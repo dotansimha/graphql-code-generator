@@ -2,7 +2,7 @@ import 'graphql-codegen-core/dist/testing';
 import { gql, introspectionToGraphQLSchema, schemaToTemplateContext, transformDocument } from 'graphql-codegen-core';
 import { plugin, addToSchema } from '../dist';
 import * as fs from 'fs';
-import { DocumentNode, extendSchema } from 'graphql';
+import { extendSchema, print } from 'graphql';
 
 describe('Components', () => {
   const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
@@ -41,6 +41,43 @@ describe('Components', () => {
       })
       export class MyFeedGQL extends Apollo.Query
     `);
+  });
+
+  it('should generate Component with noGraphqlTag = true and fragments', async () => {
+    const query = gql`
+      query MyFeed {
+        feed {
+          id
+          commentCount
+          repository {
+            ...RepositoryInfo
+          }
+        }
+      }
+    `;
+    const fragment = gql`
+      fragment RepositoryInfo on Repository {
+        full_name
+        html_url
+        owner {
+          avatar_url
+        }
+      }
+    `;
+
+    const content = await plugin(schema, [{ filePath: '', content: fragment }, { filePath: '', content: query }], {
+      noGraphqlTag: true
+    });
+
+    const docR = /document: any = ([^;]+)/gm;
+    const doc = docR.exec(content)[1];
+
+    expect(print(JSON.parse(doc))).toBe(
+      print(gql`
+        ${query}
+        ${fragment}
+      `)
+    );
   });
 
   it('should generate correct Component when noNamespaces enabled', async () => {
@@ -133,7 +170,7 @@ describe('Components', () => {
     `);
 
     expect(content).toBeSimilarStringTo(`
-      document: any = ${JSON.stringify(query)}
+      document: any = ${JSON.stringify(query)};
     `);
   });
 
