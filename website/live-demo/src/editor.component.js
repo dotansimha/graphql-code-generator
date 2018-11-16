@@ -11,6 +11,8 @@ export class Editor extends React.Component {
       keyMap: 'sublime',
       autoCloseBrackets: true,
       matchBrackets: true,
+      indentWithTabs: false,
+      indentUnit: 2,
       showCursorWhenSelecting: true,
       readOnly: this.props.readOnly ? 'nocursor' : false,
       gutters: ['CodeMirror-lint-markers']

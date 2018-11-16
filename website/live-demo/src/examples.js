@@ -4,14 +4,14 @@ const plugins = [require('prettier/parser-graphql'), require('prettier/parser-ya
 
 function f(strings) {
   try {
-    return prettier.format(strings[0], { parser: 'graphql', plugins });
+    return prettier.format(strings[0], { parser: 'graphql', plugins, tabWidth: 2 });
   } catch (e) {
     return strings[0];
   }
 }
 
 function yaml(strings) {
-  return prettier.format(strings[0], { parser: 'yaml', plugins });
+  return prettier.format(strings[0], { parser: 'yaml', plugins, tabWidth: 2 });
 }
 
 const TS_SCHEMA = f`
@@ -58,6 +58,8 @@ export const EXAMPLES = {
       config: yaml`
         generates:
           server-types.ts:
+            - add: "/* tslint:disable */"
+            - time
             - typescript-common
             - typescript-server`,
       schema: TS_SCHEMA,
@@ -70,6 +72,7 @@ export const EXAMPLES = {
       config: yaml`
         generates:
           client-types.ts:
+            - add: "// THIS IS A GENERATED FILE, DO NOT EDIT IT!"
             - typescript-common
             - typescript-client`,
       schema: TS_SCHEMA,

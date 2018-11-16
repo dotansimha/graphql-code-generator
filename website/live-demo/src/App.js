@@ -27,7 +27,7 @@ const EXT_TO_FORMATTER = {
   json: 'json'
 };
 
-const DEFAULT_EXAMPLE = 'typescript-server';
+const DEFAULT_EXAMPLE = 'typescript-client';
 
 const pluginsMap = {
   'graphql-codegen-typescript-common': require('graphql-codegen-typescript-common'),
@@ -81,43 +81,51 @@ class App extends Component {
   }
 
   generate = () => {
-    const config = safeLoad(this.state.config || '');
+    try {
+      const cleanTabs = this.state.config.replace(/\t/g, '  ');
+      const prettyYaml = prettier.format(cleanTabs, { parser: 'yaml', plugins, tabWidth: 2 });
+      const config = safeLoad(prettyYaml);
 
-    const fullConfig = {
-      pluginLoader: m => pluginsMap[m] || null,
-      schema: [this.state.schema],
-      documents: this.state.documents,
-      ...config
-    };
+      const fullConfig = {
+        pluginLoader: m => pluginsMap[m] || null,
+        schema: [this.state.schema],
+        documents: this.state.documents,
+        ...config
+      };
 
-    executeCodegen(fullConfig)
-      .then(([{ content }]) => {
-        this.setState({ output: this.prettify(content, config) });
-      })
-      .catch(e => {
-        if (e.details) {
-          this.setState({
-            output: `
+      executeCodegen(fullConfig)
+        .then(([{ content }]) => {
+          this.setState({ output: this.prettify(content, config) });
+        })
+        .catch(e => {
+          if (e.details) {
+            this.setState({
+              output: `
         ${e.message}:
         
         ${e.details}
         `
-          });
-        } else if (e.errors) {
-          this.setState({
-            output: e.errors
-              .map(
-                subError => `${subError.message}: 
+            });
+          } else if (e.errors) {
+            this.setState({
+              output: e.errors
+                .map(
+                  subError => `${subError.message}: 
   ${subError.details}`
-              )
-              .join('\n')
-          });
-        } else {
-          this.setState({
-            output: e.message
-          });
-        }
+                )
+                .join('\n')
+            });
+          } else {
+            this.setState({
+              output: e.message
+            });
+          }
+        });
+    } catch (e) {
+      this.setState({
+        output: e.message
       });
+    }
   };
 
   handleChange = event => {
@@ -158,28 +166,28 @@ class App extends Component {
           </FormControl>
         </div>
         <div className="container">
-          <div className="column" style={{ width: '20vw' }}>
+          <div className="column" style={{ minWidth: '22vw', maxWidth: '22vw' }}>
             <div className="title">
               <img className="logo" alt={'GraphQL'} src={GraphQLLogo} />
               <span className={'icon-text'}>Schema</span>
             </div>
             <Editor lang={'graphql'} onEdit={this.update('schema')} value={this.state.schema} />
           </div>
-          <div className="column" style={{ width: '20vw' }}>
+          <div className="column" style={{ minWidth: '22vw', maxWidth: '22vw' }}>
             <div className="title">
               <img className="logo" alt={'GraphQL'} src={GraphQLLogo} />
               <span className={'icon-text'}>Documents</span>
             </div>
             <Editor lang={'graphql'} onEdit={this.update('documents')} value={this.state.documents} />
           </div>
-          <div className="column" style={{ width: '20vw' }}>
+          <div className="column" style={{ minWidth: '22vw', maxWidth: '22vw' }}>
             <div className="title">
               <img className="logo" alt={'Codegen'} src={CodegenLogo} />
               <span className={'icon-text'}>Config</span>
             </div>
             <Editor lang={'yaml'} onEdit={this.update('config')} value={this.state.config} />
           </div>
-          <div className="column" style={{ width: '40vw' }}>
+          <div className="column" style={{ minWidth: '34vw', maxWidth: '34vw' }}>
             <div className="title">
               <button onClick={this.generate}>
                 <span className={'generate-text'}>Generate</span>

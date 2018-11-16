@@ -8,7 +8,11 @@ export const plugin: PluginFunction<AddPluginConfig> = async (
   documents: DocumentFile[],
   config: AddPluginConfig
 ): Promise<string> => {
-  const asArray = Array.isArray(config) ? config : [config];
+  const asArray = Array.isArray(config)
+    ? config
+    : typeof config === 'object'
+    ? Object.keys(config).map(k => config[k])
+    : [config];
 
   return asArray.filter(a => a).join('\r\n') + '\r\n';
 };
