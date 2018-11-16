@@ -4,8 +4,8 @@
   "private": true,
   "homepage": "/live-demo/",
   "dependencies": {
-    "react": "16.6.1",
-    "react-dom": "16.6.1",
+    "react": "16.6.3",
+    "react-dom": "16.6.3",
     "react-scripts-rewired": "2.1.1",
     "codemirror": "5.41.0",
     "codemirror-graphql": "0.8.3",
