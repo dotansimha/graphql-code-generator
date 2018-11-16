@@ -26,6 +26,9 @@
       "getting-started/index": {
         "title": "What is GraphQL Code Generator?"
       },
+      "migration/from-0-13": {
+        "title": "Migration from 0.13"
+      },
       "plugins/index": {
         "title": "What are Plugins?"
       },
@@ -61,7 +64,8 @@
     "categories": {
       "Getting Started": "Getting Started",
       "Plugins": "Plugins",
-      "Custom Code Generators": "Custom Code Generators"
+      "Custom Code Generators": "Custom Code Generators",
+      "Migration": "Migration"
     }
   },
   "pages-strings": {

@@ -17,6 +17,7 @@
       "custom-codegen/template",
       "custom-codegen/function",
       "custom-codegen/package"
-    ]
+    ],
+    "Migration": ["migration/from-0-13"]
   }
 }

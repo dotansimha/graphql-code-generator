@@ -174,6 +174,34 @@ function transformTemplatesToPlugins(
   return { plugins: [] };
 }
 
+function getConfigFromEnvVars() {
+  return Object.keys(process.env)
+    .filter(name => name.startsWith('CODEGEN_'))
+    .reduce(
+      (prev, name) => {
+        const cleanName = name
+          .replace('CODEGEN_', '')
+          .toLowerCase()
+          .replace(/[-_]+/g, ' ')
+          .replace(/[^\w\s]/g, '')
+          .replace(/ (.)/g, res => res.toUpperCase())
+          .replace(/ /g, '');
+        let value: any = process.env[name];
+
+        if (value === 'true') {
+          value = true;
+        } else if (value === 'false') {
+          value = false;
+        }
+
+        prev[cleanName] = value;
+
+        return prev;
+      },
+      {} as any
+    );
+}
+
 export function createConfigFromOldCli(options: CLIOptions): Types.Config {
   validateCliOptions(options);
 
@@ -184,6 +212,12 @@ export function createConfigFromOldCli(options: CLIOptions): Types.Config {
     const rawObj = JSON.parse(readFileSync(configPath, 'utf-8'));
     rootConfig = (rawObj || {}).generatorConfig || {};
   }
+
+  const envVarsConfig = getConfigFromEnvVars();
+  rootConfig = {
+    ...rootConfig,
+    ...envVarsConfig
+  };
 
   const configObject: Types.Config = {
     schema: [options.schema, options.clientSchema].filter(s => s),
