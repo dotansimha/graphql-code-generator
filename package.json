@@ -17,13 +17,15 @@
     "release:canary": "lerna publish --force-publish=\"*\" --canary --exact",
     "ci:release:canary": "lerna publish --force-publish=\"*\" --canary --exact --yes",
     "generate:examples": "./dev-test/generate-all.sh",
-    "build-website": "cd website && yarn && yarn build"
+    "build-website": "cd website && yarn && yarn build",
+    "prepublish": "node packages/old-templates/create.js"
   },
   "workspaces": [
     "packages/*",
     "packages/utils/*",
     "packages/plugins/*",
-    "website/live-demo"
+    "website/live-demo",
+    "packages/old-templates/*"
   ],
   "dependencies": {
     "lerna": "2.11.0"

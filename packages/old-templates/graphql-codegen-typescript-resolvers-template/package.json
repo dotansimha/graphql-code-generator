@@ -1,0 +1,9 @@
+{
+  "name": "graphql-codegen-typescript-resolvers-template",
+  "version": "0.14.0-alpha.a1c4e35d",
+  "dependencies": {
+    "graphql-codegen-typescript-common": "0.14.0-alpha.a1c4e35d",
+    "graphql-codegen-typescript-resolvers": "0.14.0-alpha.a1c4e35d",
+    "graphql-codegen-typescript-server": "0.14.0-alpha.a1c4e35d"
+  }
+}
