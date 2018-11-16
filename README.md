@@ -8,11 +8,15 @@
 [renovate-badge]: https://img.shields.io/badge/renovate-app-blue.svg
 [renovate-app]: https://renovateapp.com/
 
+[graphql-code-generator.com](https://graphql-code-generator.com)
+
 GraphQL Code Generator is a tool that generates code out of your GraphQL schema. Whether you are developing a frontend or backend, you can utilize GraphQL Code Generator to generate output from your GraphQL Schema and GraphQL Documents (query/mutation/subscription/fragment).
 
 By analyzing the schema and documents and parsing it, GraphQL Code Generator can output code at a wide variety of formats, based on pre-defined templates or based on custom user-defined ones. Regardless of the language that you're using, GraphlQL Code Generator got you covered.
 
 GraphQL Code Generator let you choose the output that you need, based on _plugins_, which are very flexible and customizable. You can also write your own _plugins_ to generate custom outputs that matches your needs.
+
+You can try this tool live on your browser and see some useful examples. Check out [GraphQL Code Generator Live Examples](https://graphql-code-generator.com/#live-demo).
 
 <p align="center">
     <img src="https://github.com/dotansimha/graphql-code-generator/blob/master/logo.png?raw=true" />
