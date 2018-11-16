@@ -1,6 +1,6 @@
 {
   "docs": {
-    "Getting Started": ["getting-started/index", "getting-started/cli-commands", "getting-started/codegen-config"],
+    "Getting Started": ["getting-started/index", "getting-started/codegen-config"],
     "Plugins": [
       "plugins/index",
       "plugins/typescript-common",
