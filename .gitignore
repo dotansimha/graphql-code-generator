@@ -7,3 +7,4 @@ node_modules
 website/build
 website/functions
 website/i18n
+website/static/live-demo
