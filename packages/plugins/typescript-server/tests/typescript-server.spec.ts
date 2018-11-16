@@ -92,7 +92,7 @@ describe('TypeScript Server', () => {
 
       expect(content).toBeSimilarStringTo(`
         export interface GqlQuery {
-          fieldTest: C;
+          fieldTest: GqlC;
         }
       `);
       expect(content).toBeSimilarStringTo(`
