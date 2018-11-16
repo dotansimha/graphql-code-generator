@@ -5,7 +5,7 @@ title: What is GraphQL Code Generator?
 
 GraphQL Code Generator is a CLI tool that can generate TypeScript typings out of a GraphQL schema. When we develop a GraphQL backend, there would be many instances where we would find ourselves writing the same things which are already described by the GraphQL schema, only in a different format; for example: resolver signatures, MongoDB models, Angular services etc.
 
-GraphQL Code Generator was built to address exactly that. By analyzing the schema and parsing it, GraphQL Code Generator can output code at a wide variety of formats, based on pre-defined templates or based on custom user-defined ones. Regardless of the language that you're using, GraphlQL Code Generator got you covered.
+GraphQL Code Generator was built to address exactly that. By analyzing the schema and parsing it, GraphQL Code Generator can output code at a wide variety of formats, based on pre-defined plugins or based on custom user-defined ones. Regardless of the language that you're using, GraphlQL Code Generator got you covered.
 
 For example, given the following schema:
 
@@ -65,22 +65,34 @@ First we gotta make sure that the basic GraphQL package is within our dependenci
 
     $ npm install graphql
 
-The we can install GraphQL Code Generator using `npm` (or `yarn`):
+The we can install GraphQL Code Generator using `yarn` (or `npm`):
 
-    $ npm install --save-dev graphql-code-generator
+    $ npm install -D graphql-code-generator
 
-GraphQL Code Generator's behavior is bound into templates, thus we will need to install one:
+GraphQL Code Generator's behavior is bound into plugins, thus we will need to install few:
 
-    $ npm install --save-dev graphql-codegen-typescript-template
+    $ npm install -D graphql-codegen-typescript-common graphql-codegen-typescript-server
 
 Although can be used directly, it's recommended to add the code generation task as an `npm` script in `package.json`. This way we won't have to install GraphQL Code Generator globally:
 
 ```json
 {
   "scripts": {
-    "generate": "gql-gen --url http://localhost:3000/graphql --template ts --out ./src/types.d.ts"
+    "generate": "gql-gen"
   }
 }
+```
+
+GraphQL Code Generator looks for `codegen.yml` and `codegen.json` files by default, one might look like this:
+
+```yaml
+schema: http://localhost:3000/graphql
+overwrite: true
+generates:
+  ./src/types.d.ts:
+    plugins:
+      - typescript-common
+      - typescript-server
 ```
 
 By running the following command the GraphQL schema will be fetched from the route endpoint and the typescript definitions would be generated in the specified destination:
@@ -96,63 +108,28 @@ There are different methods to use GraphQL Code Generator besides the [CLI](../c
 We can `require()` (or `import`) `graphql-code-generator` directly with Node.JS:
 
 ```js
-const { generate } = require('graphql-code-generator');
+import { generate } from 'graphql-code-generator';
 
 async function doSomething() {
   const generatedFiles = await generate({
     schema: 'http://127.0.0.1:3000/graphql',
-    template: 'typescript',
-    out: process.cwd() + '/models/',
-    args: ['./src/**/*.graphql']
-  });
+    overwrite: true
+    documents: './src/**/*.graphql',
+    generates: {
+      [process.cwd() + '/models/']: {
+        plugins: ['typescript-common', 'typescript-server']
+      }
+    }
+  }, true);
 }
 ```
 
 The `generate` function accepts two parameters:
 
-- `options: CLIOptions & { logger: Logger }`
+- `options`
 - `saveToFile: boolean`
 
 The return value should be of type `Promise<FileOutput[]>`.
-
-### Using with Webpack
-
-GraphQL codegen can be integrated with Webpack using the `graphql-codegen-webpack` package:
-
-```js
-const { GraphQLCodegenPlugin } = require('graphql-codegen-webpack');
-
-module.exports = {
-  mode: 'development',
-  devtool: 'inline-source-map',
-  entry: './src/index.ts',
-  output: {
-    filename: 'bundle.js'
-  },
-  resolve: {
-    extensions: ['.ts', '.ts', '.js', '.mjs']
-  },
-  plugins: [
-    // GraphQL Code Generator
-    new GraphQLCodegenPlugin({
-      schema: 'src/schema.graphql',
-      template: 'graphql-codegen-typescript-template',
-      out: 'src/types.ts',
-      overwrite: true
-    })
-  ],
-  module: {
-    rules: [
-      { test: /\.ts$/, loader: 'ts-loader' },
-      {
-        test: /\.mjs$/,
-        include: /node_modules/,
-        type: 'javascript/auto'
-      }
-    ]
-  }
-};
-```
 
 ### Using With Other Environments
 

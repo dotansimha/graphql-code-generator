@@ -3,7 +3,7 @@ id: typescript-mongodb
 title: Typescript MongoDB
 ---
 
-This template would generate TypeScript types for MongoDB models, which makes it relevant for server-side development only. It uses GraphQL directives to declare the types you want to generate and use in your MongoDB backend.
+This plugin would generate TypeScript types for MongoDB models, which makes it relevant for server-side development only. It uses GraphQL directives to declare the types you want to generate and use in your MongoDB backend.
 
 Given the following GraphQL declaration:
 
@@ -54,7 +54,16 @@ const schema = makeExecutableSchema({
 
 And generate code using `gql-gen`:
 
-    $ gql-gen --template graphql-codegen-typescript-mongodb-template --schema ./src/my-schema.js
+```yaml
+schema: ./src/my-schema.js
+require:
+  - ts-node/register
+overwrite: true
+generates:
+  ./src/generated/graphql.ts:
+    plugins:
+      - typescript-mongodb
+```
 
 At this point, you can add the directives to your GraphQL definitions, and generate your MongoDB models file.
 

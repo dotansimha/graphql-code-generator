@@ -26,31 +26,31 @@
       "getting-started/index": {
         "title": "What is GraphQL Code Generator?"
       },
-      "templates/index": {
-        "title": "What are Templates?"
+      "plugins/index": {
+        "title": "What are Plugins?"
       },
-      "templates/typescript-apollo-angular": {
+      "plugins/typescript-apollo-angular": {
         "title": "Typescript Apollo Angular"
       },
-      "templates/typescript-client": {
+      "plugins/typescript-client": {
         "title": "Typescript Client"
       },
-      "templates/typescript-common": {
+      "plugins/typescript-common": {
         "title": "TypeScript Common"
       },
-      "templates/typescript-graphql-files-modules": {
+      "plugins/typescript-graphql-files-modules": {
         "title": "TypeScript GraphQL Files Modules"
       },
-      "templates/typescript-mongodb": {
+      "plugins/typescript-mongodb": {
         "title": "Typescript MongoDB"
       },
-      "templates/typescript-react-apollo": {
+      "plugins/typescript-react-apollo": {
         "title": "TypeScript React Apollo"
       },
-      "templates/typescript-resolvers": {
+      "plugins/typescript-resolvers": {
         "title": "TypeScript Resolvers"
       },
-      "templates/typescript-server": {
+      "plugins/typescript-server": {
         "title": "TypeScript Server"
       }
     },
@@ -60,7 +60,7 @@
     },
     "categories": {
       "Getting Started": "Getting Started",
-      "Predefined Templates": "Predefined Templates",
+      "Plugins": "Plugins",
       "Custom Code Generators": "Custom Code Generators"
     }
   },
