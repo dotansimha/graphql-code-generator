@@ -12,11 +12,12 @@
       "plugins/typescript-react-apollo",
       "plugins/typescript-apollo-angular"
     ],
-    "Custom Code Generators": [
+    "Custom Code-Generator Plugins": [
       "custom-codegen/index",
-      "custom-codegen/template",
-      "custom-codegen/function",
-      "custom-codegen/package"
+      "custom-codegen/write-your-plugin",
+      "custom-codegen/validate-configuration",
+      "custom-codegen/extend-schema",
+      "custom-codegen/using-handlebars"
     ],
     "Migration": ["migration/from-0-13"]
   }

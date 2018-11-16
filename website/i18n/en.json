@@ -5,17 +5,20 @@
     "previous": "Previous",
     "tagline": "Generate code from your GraphQL schema with a single function call",
     "docs": {
-      "custom-codegen/function": {
-        "title": "Custom Code Generating Function"
+      "custom-codegen/extend-schema": {
+        "title": "How to extend the GraphQL Schema?"
       },
       "custom-codegen/index": {
-        "title": "What are Code Generators?"
+        "title": "What are Plugins?"
       },
-      "custom-codegen/package": {
-        "title": "Custom Code Generating NPM Package"
+      "custom-codegen/using-handlebars": {
+        "title": "Using Handlebars"
       },
-      "custom-codegen/template": {
-        "title": "Custom Code Generating Template"
+      "custom-codegen/validate-configuration": {
+        "title": "Validate Plugin Configuration"
+      },
+      "custom-codegen/write-your-plugin": {
+        "title": "Write your first Plugin"
       },
       "getting-started/cli-commands": {
         "title": "CLI Commands"
@@ -64,7 +67,7 @@
     "categories": {
       "Getting Started": "Getting Started",
       "Plugins": "Plugins",
-      "Custom Code Generators": "Custom Code Generators",
+      "Custom Code-Generator Plugins": "Custom Code-Generator Plugins",
       "Migration": "Migration"
     }
   },

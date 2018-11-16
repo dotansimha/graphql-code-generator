@@ -1,14 +1,14 @@
 ---
 id: index
-title: What are Code Generators?
+title: What are Plugins?
 ---
 
-The general purpose of GraphQL Code Generator is to parse GraphQL syntax, transform it into an AST and then output it into desired formats which can vary. Since there can be potentially infinite amount of formats, we've made it possible to build custom code generators. The code generators are simply handlers which will respond to the parsed data and will output it based on your implementation.
+The general purpose of GraphQL Code Generator is to parse GraphQL syntax, transform it into an AST and then output it into desired formats which can vary. Since there can be potentially infinite amount of formats, we've made it possible to build custom code generators.
 
-## Available Code Generation Methods
+The code generators are simply handlers which will respond to the parsed data and will output it based on your implementation.
 
-There are few methods to generate code, each one has a different level of complexity. Below are all possible methods, listed from the most simple to the most robust one:
+GraphQL Code Generator triggers plugins with `GraphQLSchema` object, GraphQL documents and the configuration the user has passed, and expects them to return `string` (or, `Promise<string>`) and then it appends this value to the output.
 
-- [Custom code generating template](./template) - Generate code using a Handlebars template.
-- [Custom code generating function](./function) - Generate code using a function which will transform the AST.
-- [Custom code generating NPM package](./package) - Export your code generating logic into an external NPM package.
+Writing your own plugins could be useful for things such as new language tempalte, customizing existing plugin, adding custom context to output files and more.
+
+It's easy to write and test codegen plugins, and you can learn how to write your own.
