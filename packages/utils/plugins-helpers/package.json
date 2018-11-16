@@ -1,6 +1,6 @@
 {
   "name": "graphql-codegen-plugin-helpers",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "description": "graphql-codegen-cli template for TypeScript typings for both client side and server side",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
@@ -9,8 +9,8 @@
     "build": "tsc"
   },
   "dependencies": {
-    "import-from": "2.1.0",
-    "graphql-codegen-core": "0.13.0"
+    "graphql-codegen-core": "0.14.0",
+    "import-from": "2.1.0"
   },
   "devDependencies": {
     "typescript": "3.1.6"

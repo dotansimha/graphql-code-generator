@@ -1,6 +1,6 @@
 {
   "name": "graphql-code-generator",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "license": "MIT",
   "bin": {
     "gql-gen": "dist/cli.js"
@@ -45,9 +45,6 @@
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0"
   },
   "dependencies": {
-    "json-to-pretty-yaml": "1.2.2",
-    "js-yaml": "3.12.0",
-    "graphql-config": "2.2.1",
     "@graphql-modules/epoxy": "0.2.3",
     "@graphql-modules/logger": "0.2.3",
     "@types/babylon": "6.16.4",
@@ -60,11 +57,14 @@
     "commander": "2.19.0",
     "fb-watchman": "2.0.0",
     "glob": "7.1.3",
-    "graphql-codegen-core": "0.13.0",
+    "graphql-codegen-core": "0.14.0",
+    "graphql-config": "2.2.1",
     "graphql-import": "0.7.1",
     "indent-string": "3.2.0",
     "is-glob": "4.0.0",
     "is-valid-path": "0.1.1",
+    "js-yaml": "3.12.0",
+    "json-to-pretty-yaml": "1.2.2",
     "listr": "0.14.2",
     "log-update": "2.3.0",
     "mkdirp": "0.5.1",
@@ -74,19 +74,19 @@
     "valid-url": "1.0.9"
   },
   "devDependencies": {
-    "@types/js-yaml": "3.11.2",
     "@types/chalk": "2.2.0",
     "@types/fb-watchman": "2.0.0",
+    "@types/js-yaml": "3.11.2",
     "@types/listr": "0.13.0",
     "@types/log-update": "2.0.0",
     "@types/pify": "3.0.2",
-    "ts-jest": "23.10.4",
     "common-tags": "1.8.0",
-    "graphql-codegen-typescript-common": "0.13.0",
-    "graphql-codegen-typescript-client": "0.13.0",
-    "graphql-codegen-typescript-server": "0.13.0",
-    "graphql-codegen-add": "0.13.0",
-    "graphql-codegen-time": "0.13.0"
+    "graphql-codegen-add": "0.14.0",
+    "graphql-codegen-time": "0.14.0",
+    "graphql-codegen-typescript-client": "0.14.0",
+    "graphql-codegen-typescript-common": "0.14.0",
+    "graphql-codegen-typescript-server": "0.14.0",
+    "ts-jest": "23.10.4"
   },
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts",
