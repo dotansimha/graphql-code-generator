@@ -32,7 +32,7 @@ describe('TypeScript Client', () => {
       }
       export type Query = {
         __typename?: "Query";
-        feed?: (Feed | null)[] | null;
+        feed: (Feed | null)[] | null;
       }
       export type Feed = {
         __typename?: "Entry";
@@ -44,7 +44,7 @@ describe('TypeScript Client', () => {
         __typename?: "Repository";
         full_name: string; 
         html_url: string; 
-        owner?: Owner | null; 
+        owner: Owner | null; 
       }
       export type Owner = {
         __typename?: "User";
@@ -144,14 +144,14 @@ describe('TypeScript Client', () => {
 
         export type Query = {
           __typename?: "Query";
-          me?: Me | null;
+          me: Me | null;
         }
 
         export type Me = {
           __typename?: "User";
           id: number;
-          profile?: Profile | null;
-          favFriend?: FavFriend | null;
+          profile: Profile | null;
+          favFriend: FavFriend | null;
         }
 
         export type Profile = {
@@ -162,8 +162,8 @@ describe('TypeScript Client', () => {
         export type FavFriend = {
           __typename?: "User";
           id: number;
-          profile?: _Profile | null;
-          favFriend?: _FavFriend | null;
+          profile: _Profile | null;
+          favFriend: _FavFriend | null;
         }
 
         export type _Profile = {
@@ -174,7 +174,7 @@ describe('TypeScript Client', () => {
         export type _FavFriend = {
           __typename?: "User";
           id: number;
-          profile?: __Profile | null;
+          profile: __Profile | null;
         }
         
         export type __Profile = {
@@ -209,7 +209,7 @@ describe('TypeScript Client', () => {
       }
       export type Query = {
         __typename?: "Query";
-        feed?: (Feed | null)[] | null;
+        feed: (Feed | null)[] | null;
       }
       export type Feed = {
         __typename?: "Entry";
@@ -221,7 +221,7 @@ describe('TypeScript Client', () => {
         __typename?: "Repository";
         full_name: string; 
         html_url: string; 
-        owner?: Owner | null; 
+        owner: Owner | null; 
       }
       export type Owner = {
         __typename?: "User";
@@ -259,7 +259,7 @@ describe('TypeScript Client', () => {
           }
           export type Query = {
             __typename?: "Query";
-            feed?: (Feed | null)[] | null;
+            feed: (Feed | null)[] | null;
           }
           export type Feed = {
             __typename?: "Entry";
@@ -278,7 +278,7 @@ describe('TypeScript Client', () => {
           export type Fragment = {
             __typename?: "Repository";
             html_url: string; 
-            owner?: Owner | null; 
+            owner: Owner | null; 
           }
           export type Owner = {
             __typename?: "User";
@@ -330,7 +330,7 @@ describe('TypeScript Client', () => {
     expect(content).toBeSimilarStringTo(`
     export type MeQuery = {
       __typename?: "Query";
-      me?: MeMe | null;
+      me: MeMe | null;
     }
   `);
 
@@ -338,8 +338,8 @@ describe('TypeScript Client', () => {
     export type MeMe = {
       __typename?: "User";
       id: number;
-      data?: Json | null;
-      access?: Access | null;
+      data: Json | null;
+      access: Access | null;
     }
   `);
   });
@@ -373,7 +373,7 @@ describe('TypeScript Client', () => {
   
     export type MyFeedQuery = {
       __typename?: "Query";
-      feed?: MyFeedFeed[] | null;
+      feed: MyFeedFeed[] | null;
     }
   
     export type MyFeedFeed = {
@@ -395,7 +395,7 @@ describe('TypeScript Client', () => {
   
     export type MyFeed_RepositoryInlineFragment = {
       __typename?: "Repository";
-      owner?: MyFeedOwner | null; 
+      owner: MyFeedOwner | null; 
     }
   
     export type MyFeedOwner = {
@@ -435,7 +435,7 @@ describe('TypeScript Client', () => {
     
       export type Query = {
         __typename?: "Query";
-        feed?: (Feed | null)[] | null;
+        feed: (Feed | null)[] | null;
       }
     
       export type Feed = {
@@ -457,7 +457,7 @@ describe('TypeScript Client', () => {
     
       export type _RepositoryInlineFragment = {
         __typename?: "Repository";
-        owner?: Owner | null; 
+        owner: Owner | null; 
       }
     
       export type Owner = {
@@ -553,7 +553,7 @@ describe('TypeScript Client', () => {
     }
     export type MyFeedQuery = {
       __typename?: "Query";
-      feed?: MyFeedFeed[] | null;
+      feed: MyFeedFeed[] | null;
     }
     export type MyFeedFeed = {
       __typename?: "Entry";
@@ -570,7 +570,7 @@ describe('TypeScript Client', () => {
     export type RepoFieldsFragment = {
       __typename?: "Repository";
       html_url: string; 
-      owner?: RepoFieldsOwner | null; 
+      owner: RepoFieldsOwner | null; 
     }
     export type RepoFieldsOwner = {
       __typename?: "User";
