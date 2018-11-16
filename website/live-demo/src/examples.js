@@ -96,7 +96,7 @@ export const EXAMPLES = {
     state: {
       config: yaml`
         generates:
-          components.ts:
+          components.tsx:
             plugins:
               - typescript-react-apollo`,
       schema: TS_SCHEMA,
