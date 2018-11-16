@@ -48,7 +48,7 @@
     "json-to-pretty-yaml": "1.2.2",
     "js-yaml": "3.12.0",
     "graphql-config": "2.2.1",
-    "@graphql-modules/epoxy": "0.2.1",
+    "@graphql-modules/epoxy": "0.2.3",
     "@graphql-modules/logger": "0.2.3",
     "@types/babylon": "6.16.4",
     "@types/is-glob": "4.0.0",
