@@ -10,3 +10,9 @@ A plugin that should be loaded if generating typescript code that should be rele
 Install using `npm` (or `yarn`):
 
     $ npm install graphql-codegen-typescript-server
+
+### Configuration
+
+#### `schemaNamespace`
+
+Specify this configuration field to wrap your entire types with a specific TypeScript `namespace`.
