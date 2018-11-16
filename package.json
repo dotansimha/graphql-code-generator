@@ -13,12 +13,11 @@
     "test-and-build": "yarn test && yarn build",
     "prerelease": "yarn test-and-build",
     "prerelease:canary": "yarn test-and-build",
-    "release": "lerna publish --exact --force-publish=\"*\"",
-    "release:canary": "lerna publish --force-publish=\"*\" --canary --exact",
-    "ci:release:canary": "lerna publish --force-publish=\"*\" --canary --exact --yes",
+    "release": "lerna publish --exact --force-publish=\"*\" --ignore live-demo",
+    "release:canary": "lerna publish --force-publish=\"*\" --canary --exact --ignore live-demo",
+    "ci:release:canary": "lerna publish --force-publish=\"*\" --canary --exact --yes --ignore live-demo",
     "generate:examples": "./dev-test/generate-all.sh",
-    "build-website": "cd website && yarn && yarn build",
-    "prepublish": "node packages/old-templates/create.js"
+    "build-website": "cd website && yarn && yarn build"
   },
   "workspaces": [
     "packages/*",
