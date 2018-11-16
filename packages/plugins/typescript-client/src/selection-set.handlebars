@@ -1,4 +1,4 @@
 {{#each fields}}
 {{ toComment description }}
-{{#if @root.config.immutableTypes }}readonly {{/if}}{{ name }}{{ getOptionals this }}: {{#if (shouldHavePrefix this) }} {{convert ../prefix}}{{#if config.noNamespaces}}{{ name }}{{/if}}{{/if}}{{ convertedType this }};
+{{#if @root.config.immutableTypes }}readonly {{/if}}{{ name }}: {{#if (shouldHavePrefix this) }} {{convert ../prefix}}{{#if config.noNamespaces}}{{ name }}{{/if}}{{/if}}{{ convertedType this }};
 {{/each}}
