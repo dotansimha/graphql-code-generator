@@ -1,0 +1,7 @@
+schema: https://0vw9j9w0l5.lp.gql.zone/graphql
+documents: ./src/**/*.graphql
+generates:
+  src/generated-models.tsx:
+    - typescript-common
+    - typescript-client
+    - typescript-react-apollo
