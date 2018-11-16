@@ -101,6 +101,8 @@ export const EXAMPLES = {
         generates:
           components.tsx:
             plugins:
+              - typescript-common
+              - typescript-client
               - typescript-react-apollo`,
       schema: TS_SCHEMA,
       documents: TS_QUERY
@@ -113,6 +115,8 @@ export const EXAMPLES = {
         generates:
           components.ts:
             plugins:
+              - typescript-common
+              - typescript-client
               - typescript-apollo-angular`,
       schema: TS_SCHEMA,
       documents: TS_QUERY
