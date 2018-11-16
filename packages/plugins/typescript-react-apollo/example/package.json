@@ -21,12 +21,12 @@
     "tslint-react": "3.6.0",
     "@types/graphql": "14.0.0",
     "@types/jest": "23.3.2",
-    "@types/node": "^10.7.1",
-    "@types/react": "^16.4.11",
-    "@types/react-dom": "^16.0.7",
-    "concurrently": "^3.6.1",
+    "@types/node": "10.12.9",
+    "@types/react": "16.7.6",
+    "@types/react-dom": "16.0.9",
+    "concurrently": "3.6.1",
     "graphql-code-generator": "0.14.0",
     "graphql-codegen-typescript-react-apollo-template": "0.14.0",
-    "typescript": "^3.0.1"
+    "typescript": "3.1.6"
   }
 }
