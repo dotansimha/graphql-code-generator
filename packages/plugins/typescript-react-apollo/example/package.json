@@ -19,7 +19,7 @@
     "generate-types": "node node_modules/.bin/gql-gen"
   },
   "devDependencies": {
-    "@types/graphql": "14.0.0",
+    "@types/graphql": "14.0.3",
     "@types/jest": "23.3.2",
     "@types/node": "^10.7.1",
     "@types/react": "^16.4.11",
