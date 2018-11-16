@@ -28,7 +28,7 @@ export interface {{ convert name }}{{ convert ../name }}Args {
 {{{ blockCommentIf 'Unions' unions }}}
 {{#each unions}}
 {{ toComment description }}
-export type {{ convert name }} = {{#each possibleTypes}}{{ convert this}}{{#unless @last}} | {{/unless}}{{/each}};
+export type {{@root.config.interfacePrefix}}{{ convert name }} = {{#each possibleTypes}}{{@root.config.interfacePrefix}}{{ convert this}}{{#unless @last}} | {{/unless}}{{/each}};
 
 {{/each}}
 {{#if @root.config.schemaNamespace ~}} } {{~/if}}
