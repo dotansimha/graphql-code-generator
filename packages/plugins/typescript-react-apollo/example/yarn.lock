@@ -18,24 +18,15 @@
     esutils "^2.0.2"
     js-tokens "^4.0.0"
 
-"@graphql-modules/epoxy@0.2.3":
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/@graphql-modules/epoxy/-/epoxy-0.2.3.tgz#8e1b1e85c9c1b15f773d27b9eff85e8d1419b436"
-  integrity sha512-0GE5Jx5ESEqW9ftQmgGfANPyNUYd6pbMQBlkTOgmRvBh14IEM0ixqSiYCxDXtHvz/3Azb6KmSQJfQwFtuPQoSQ==
+"@graphql-modules/epoxy@0.2.4":
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/@graphql-modules/epoxy/-/epoxy-0.2.4.tgz#0571e232d4aa48d21c0213dab2c75e91fd04f129"
+  integrity sha512-Ha1xwivxTdiVUArFsVgvvxUccirnFvRF48RJHfftYnudg7uZEOXLNzpZ55mbkjNqeWujdox5IrRZcaBHU0/cVA==
   dependencies:
-    "@graphql-modules/logger" "0.2.3"
     "@types/deepmerge" "2.1.0"
     deepmerge "2.2.1"
     graphql-tools "4.0.3"
     tslib "1.9.3"
-
-"@graphql-modules/logger@0.2.3":
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/@graphql-modules/logger/-/logger-0.2.3.tgz#6513c9fd4a0cb76228b54bc16d3d54e35f52ca15"
-  integrity sha512-VotXEIJIOCJCFgU1PpYAnSqcnLjPADPOpKDFNjYVwsKont+GXCDp5guocH9vlLP7xgu1ospgTUOc7H42a+tnbQ==
-  dependencies:
-    tslib "1.9.3"
-    winston "3.1.0"
 
 "@samverschueren/stream-to-observable@^0.3.0":
   version "0.3.0"
@@ -91,10 +82,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.9.tgz#a07bfa74331471e1dc22a47eb72026843f7b95c8"
   integrity sha512-eajkMXG812/w3w4a1OcBlaTwsFPO5F7fJ/amy+tieQxEMWBlbV1JGSjkFM+zkHNf81Cad+dfIRA+IBkvmvdAeA==
 
-"@types/prettier@1.13.2":
-  version "1.13.2"
-  resolved "https://registry.yarnpkg.com/@types/prettier/-/prettier-1.13.2.tgz#ffe96278e712a8d4e467e367a338b05e22872646"
-  integrity sha512-k6MCN8WuDiCj6O+UJsVMbrreZxkbrhQbO02oDj6yuRu8UAkp0MDdEcDKif8/gBKuJbT84kkO+VHQAqXkumEklg==
+"@types/prettier@1.15.0":
+  version "1.15.0"
+  resolved "https://registry.yarnpkg.com/@types/prettier/-/prettier-1.15.0.tgz#1c3e97298dec7614a6ff35b705815391630adfaa"
+  integrity sha512-WXGqbiMxDxPYjkK1NUDc4dsC1SGZQ3fPZRoSsOXSO+edScRvCptf8XAogn5Ohf1r3BXjrjVZP8JucmwD5raDQg==
 
 "@types/prop-types@*":
   version "15.5.6"
@@ -3822,16 +3813,15 @@ graphql-anywhere@^4.1.0-alpha.0:
   dependencies:
     apollo-utilities "^1.0.25"
 
-graphql-code-generator@0.14.0:
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/graphql-code-generator/-/graphql-code-generator-0.14.0.tgz#7b1fd197d2cd50cc5d6b8dc83bc1013a9386d1d2"
-  integrity sha512-GTovLG3tAWu/ejutLbHczmB3HP+2oyGN3puje+FyWmASaZLSM9U95EtfUFRmmH2fUDCq3eNkksJD1Xta4Sk57g==
+graphql-code-generator@0.14.1:
+  version "0.14.1"
+  resolved "https://registry.yarnpkg.com/graphql-code-generator/-/graphql-code-generator-0.14.1.tgz#6e91a76d05dba1bd13bddfe45799bffa959224ae"
+  integrity sha512-3tCBx94lz+93oXHHIvtuqWm3PfungZ7SiskwcKZO5PJHv4f0BxCLHOT9B6EEdvqVAIAnSRdZTvqj+hHJwWXfTQ==
   dependencies:
-    "@graphql-modules/epoxy" "0.2.3"
-    "@graphql-modules/logger" "0.2.3"
+    "@graphql-modules/epoxy" "0.2.4"
     "@types/babylon" "6.16.4"
     "@types/is-glob" "4.0.0"
-    "@types/prettier" "1.13.2"
+    "@types/prettier" "1.15.0"
     "@types/valid-url" "1.0.2"
     babel-types "7.0.0-beta.3"
     babylon "7.0.0-beta.47"
@@ -3839,7 +3829,7 @@ graphql-code-generator@0.14.0:
     commander "2.19.0"
     fb-watchman "2.0.0"
     glob "7.1.3"
-    graphql-codegen-core "0.14.0"
+    graphql-codegen-core "0.14.1"
     graphql-config "2.2.1"
     graphql-import "0.7.1"
     indent-string "3.2.0"
@@ -3854,19 +3844,6 @@ graphql-code-generator@0.14.0:
     prettier "1.15.2"
     request "2.88.0"
     valid-url "1.0.9"
-
-graphql-codegen-core@0.14.0:
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/graphql-codegen-core/-/graphql-codegen-core-0.14.0.tgz#c147d80892a30677935a7abbda7760f5057bf444"
-  integrity sha512-b5vRNceAWoiwxZw6UI2ZAUJqNWWBpMwKXGP8Ldal52TLPjDLxD/EcE3ptwzKysgkvlNJ7r8ziGhl1wpa3wxkEA==
-  dependencies:
-    chalk "2.4.1"
-    change-case "3.0.2"
-    common-tags "1.8.0"
-    graphql-tag "2.10.0"
-    graphql-tools "4.0.3"
-    ts-log "2.1.3"
-    winston "3.1.0"
 
 graphql-codegen-core@0.14.1:
   version "0.14.1"
