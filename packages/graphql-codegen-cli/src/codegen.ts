@@ -8,6 +8,7 @@ import { Renderer } from './utils/listr-renderer';
 import { DetailedError } from './errors';
 import { loadSchema, loadDocuments } from './load';
 import { mergeSchemas } from './merge-schemas';
+import { GraphQLError } from 'graphql';
 
 export interface GenerateOutputOptions {
   filename: string;
@@ -34,7 +35,7 @@ export async function executeCodegen(config: Types.Config): Promise<FileOutput[]
       try {
         await task();
       } catch (error) {
-        if (source) {
+        if (source && !(error instanceof GraphQLError)) {
           error.source = source;
         }
 
