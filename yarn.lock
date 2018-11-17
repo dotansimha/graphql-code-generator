@@ -840,12 +840,11 @@
   resolved "https://registry.yarnpkg.com/@csstools/convert-colors/-/convert-colors-1.4.0.tgz#ad495dc41b12e75d588c6db8b9834f08fa131eb7"
   integrity sha512-5a6wqoJV/xEdbRNKVo6I4hO3VjyDq//8q2f9I6PBAvMesJHFauXDorcNCsr9RzvsZnaWi5NYCcfyqP1QeFHFbw==
 
-"@graphql-modules/epoxy@0.2.3":
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/@graphql-modules/epoxy/-/epoxy-0.2.3.tgz#8e1b1e85c9c1b15f773d27b9eff85e8d1419b436"
-  integrity sha512-0GE5Jx5ESEqW9ftQmgGfANPyNUYd6pbMQBlkTOgmRvBh14IEM0ixqSiYCxDXtHvz/3Azb6KmSQJfQwFtuPQoSQ==
+"@graphql-modules/epoxy@0.2.4":
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/@graphql-modules/epoxy/-/epoxy-0.2.4.tgz#0571e232d4aa48d21c0213dab2c75e91fd04f129"
+  integrity sha512-Ha1xwivxTdiVUArFsVgvvxUccirnFvRF48RJHfftYnudg7uZEOXLNzpZ55mbkjNqeWujdox5IrRZcaBHU0/cVA==
   dependencies:
-    "@graphql-modules/logger" "0.2.3"
     "@types/deepmerge" "2.1.0"
     deepmerge "2.2.1"
     graphql-tools "4.0.3"
