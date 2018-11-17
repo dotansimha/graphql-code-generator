@@ -20,14 +20,23 @@
       "custom-codegen/write-your-plugin": {
         "title": "Write your first Plugin"
       },
-      "getting-started/cli-commands": {
-        "title": "CLI Commands"
-      },
       "getting-started/codegen-config": {
         "title": "Codegen Options Config"
       },
+      "getting-started/config-field": {
+        "title": "`config` field"
+      },
+      "getting-started/documents-field": {
+        "title": "`documents` field"
+      },
       "getting-started/index": {
         "title": "What is GraphQL Code Generator?"
+      },
+      "getting-started/require-field": {
+        "title": "`require` field"
+      },
+      "getting-started/schema-field": {
+        "title": "`schema` field"
       },
       "migration/from-0-13": {
         "title": "Migration from 0.13"

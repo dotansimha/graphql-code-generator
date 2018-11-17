@@ -13,12 +13,10 @@ Here's an example for a possible config file:
 
 ```yml
 schema: http://localhost:3000/graphql
+documents: ./src/**/*.graphql
 overwrite: true
-watch: true
 generates:
-  ./dev-test/githunt/types.ts:
-    schema: ./dev-test/githunt/schema.json
-    documents: ./dev-test/githunt/**/*.graphql
+  ./src/types.ts:
     plugins:
       - typescript-common
       - typescript-client
@@ -30,31 +28,25 @@ A more robust config file can be seen [here](https://github.com/dotansimha/graph
 
 Here are the supported options that you can define in the config file (see [source code](https://github.com/dotansimha/graphql-code-generator/blob/70003040cfc3bf01a3d8eea9d4b2b5adec4ef77a/packages/graphql-codegen-core/src/new-types.ts#L36)):
 
-- **`schema` (required)** - A URL to your GraphQL endpoint, a local path or a glob pattern to your GraphQL schema to generate code from. This can also be an array which specifies multiple schemas to generate code from.
+- [**`schema` (required)**](./schema-field#root-level) - A URL to your GraphQL endpoint, a local path to `.graphql` file, a glob pattern to your GraphQL schema files, or a JavaScript file that exports the schema to generate code from. This can also be an array which specifies multiple schemas to generate code from. [You can read more about the supported formats here](./schema-field#available-formats)
+
+- [**`documents`**](./documents-field#root-level) - Array of paths or glob patterns for files which export GraphQL documents using a `gql` tag or a plain string; for example: `./src/**/*.graphql`. You can also provide this options with a string instead of an array, in case you're dealing with a single document. [You can read more about the supported formats here](./documents-field#available-formats)
 
 - **`generates` (required)** - A map where the key represents an output path for the generated code and the value represents a set of options which are relevant for that specific file. Below are the possible options that can be specified:
 
-  - **`generates.plugins` (required)** - A list of plug-ins to use when generating the file. Templates are also considered as plug-ins and they can be specified in this section, such as `typescript-common` or `typescript-mongodb`. A full list of supported plugins can be found [here](../plugins). Additional plug-ins can be specified to affect the code generation behavior as detailed blow:
+  - **`generates.plugins` (required)** - A list of plug-ins to use when generating the file. Templates are also considered as plug-ins and they can be specified in this section. A full list of supported plugins can be found [here](../plugins). You can also point to a custom plugin in a local file (see [Custom Plugins](../custom-codegen/index) section)
 
-    - **`generates.plugins.add`** - A code string to append to the top of the generated file; for example: `// tslint:disable` to disable linting for that file.
+  - [**`generates.documents`**](./documents-field#output-file-level) - Same as root `documents`, be applies only for the specific output file.
 
-    - **`generates.plugins.time`** - Print the time it took to generate the file in the specified [MonentJS format](https://momentjs.com/) using the `format` property.
+  - [**`generates.schema`**](./schema-field#output-file-level) - Same as root `schema`, be applies only for the specific output file.
 
-    - **`generates.plugins.schema-ast`** - Print the AST of the schema for the generated file. Very useful for troubleshooting and debugging.
+  - [**`generates.config`**](./config-field#output-level) - Same as root `config`, be applies only for the specific output file.
 
-  - **`generates.documents`** - Same as root `documents`.
+- [**`require`**](./require-field) - A path to a file which defines custom Node.JS `require()` handlers for custom file extensions. This is essential if the code generator has to go through files which require other files in an unsupported format (by default). See [more information](https://gist.github.com/jamestalmage/df922691475cff66c7e6).
 
-  - **`generates.schema`** - Same as root `schema`.
+- **`mergeSchemaFiles`** - A name of a modules along with its exported merge function name. Use the following pattern: `moduleName#mergeFunctionExportedFromThisModule`. This will be used to merge and build your GraphQL schema when you specify a glob to multiple `.graphql`
 
-  - **`generates.config`** - Same as root `config`.
-
-- **`documents`** - Array of paths or glob patterns for files which export GraphQL documents using a `gql` tag or a plain string; for example: `./src/**/*.graphql`. You can also provide this options with a string instead of an array, in case you're dealing with a single document.
-
-- **`require`** - A path to a file which defines custom Node.JS `require()` handlers for custom file extensions. This is essential if the code generator has to go through files which require other files in an unsupported format (by default). See [more information](https://gist.github.com/jamestalmage/df922691475cff66c7e6).
-
-- **`mergeSchemaFiles`** - A name of a modules along with its exported merge function name. Use the following pattern: `moduleName#mergeFunctionExportedFromThisModule`.
-
-- **`config`** - Options that we would like to provide to the specified plug-ins, such as `avoidOptionals` or `imutableTypes`. The options may vary depends on what plug-ins you specified. Read the documentation of that specific plug-in for more information.
+- [**`config`**](./config-field#root-level) - Options that we would like to provide to the specified plug-ins. The options may vary depends on what plug-ins you specified. Read the documentation of that specific plug-in for more information. [You can read more about how to pass configuration to plugins here](./config-field)
 
 - **`overwrite`** - A flag to overwrite files in case they're already exist when generating code.
 

@@ -1,6 +1,13 @@
 {
   "docs": {
-    "Getting Started": ["getting-started/index", "getting-started/codegen-config"],
+    "Getting Started": [
+      "getting-started/index",
+      "getting-started/codegen-config",
+      "getting-started/schema-field",
+      "getting-started/documents-field",
+      "getting-started/config-field",
+      "getting-started/require-field"
+    ],
     "Plugins": [
       "plugins/index",
       "plugins/typescript-common",
