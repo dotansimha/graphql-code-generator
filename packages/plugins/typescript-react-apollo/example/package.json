@@ -24,7 +24,7 @@
     "@types/node": "10.12.9",
     "@types/react": "16.7.6",
     "@types/react-dom": "16.0.9",
-    "concurrently": "3.6.1",
+    "concurrently": "4.0.1",
     "graphql-code-generator": "0.14.0",
     "graphql-codegen-typescript-react-apollo-template": "0.14.0",
     "tslint-react": "3.6.0",
