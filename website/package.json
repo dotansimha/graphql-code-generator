@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "dev": "docusaurus-start",
     "start": "docusaurus-start",
     "prestart": "yarn live-demo:dev",
     "build": "yarn build:app && yarn live-demo:prod && yarn build:lambda",
