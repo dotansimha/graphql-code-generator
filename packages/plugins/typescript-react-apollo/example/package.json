@@ -1,5 +1,5 @@
 {
-  "name": "gql-codegen-react-example",
+  "name": "graphql-codegen-typescript-react-apollo-example",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -9,18 +9,16 @@
     "graphql-tag": "2.10.0",
     "react": "16.5.0",
     "react-apollo": "2.3.1",
-    "react-dom": "16.5.0",
-    "react-scripts-ts": "2.17.0"
+    "react-dom": "16.6.3",
+    "react-scripts": "2.1.1"
   },
   "scripts": {
-    "start": "concurrently \"yarn generate-types -w\" \"react-scripts-ts start\"",
-    "build": "react-scripts-ts build",
-    "eject": "react-scripts-ts eject",
-    "generate-types": "node node_modules/.bin/gql-gen"
+    "start": "concurrently \"gql-gen\" \"react-scripts start\"",
+    "build": "react-scripts build",
+    "eject": "react-scripts eject"
   },
   "devDependencies": {
     "@types/graphql": "14.0.3",
-    "@types/jest": "23.3.2",
     "@types/node": "10.12.9",
     "@types/react": "16.7.6",
     "@types/react-dom": "16.0.9",
@@ -29,5 +27,11 @@
     "graphql-codegen-typescript-react-apollo-template": "0.14.1",
     "tslint-react": "3.6.0",
     "typescript": "3.1.6"
-  }
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }

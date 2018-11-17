@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { AllPostsWithFragment, UpvotePost } from '../../generated-models';
+import { AllPostsWithFragmentComponent, UpvotePostComponent } from '../../generated-models';
 
 export class TestWithFragment extends React.Component {
   render() {
     return (
-      <AllPostsWithFragment.Component>
+      <AllPostsWithFragmentComponent>
         {({ loading, error, data }) => {
           if (loading) {
             return 'Loading...';
@@ -22,18 +22,18 @@ export class TestWithFragment extends React.Component {
                     post.author && (
                       <li key={post.id}>
                         {post.title} by {post.author.firstName} {post.author.lastName} ({post.votes} votes){' '}
-                        <UpvotePost.Component>
+                        <UpvotePostComponent>
                           {upvotePost => (
                             <button onClick={() => upvotePost({ variables: { postId: post.id } })}>Upvote</button>
                           )}
-                        </UpvotePost.Component>
+                        </UpvotePostComponent>
                       </li>
                     )
                 )}
             </ul>
           );
         }}
-      </AllPostsWithFragment.Component>
+      </AllPostsWithFragmentComponent>
     );
   }
 }

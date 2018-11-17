@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { AllPosts, UpvotePost } from '../../generated-models';
+import { AllPostsComponent, UpvotePostComponent } from '../../generated-models';
 
 export class TestWithComponent extends React.Component {
   render() {
     return (
-      <AllPosts.Component>
+      <AllPostsComponent>
         {({ data, error, loading }) => {
           if (error || loading) return '...';
 
@@ -18,18 +18,18 @@ export class TestWithComponent extends React.Component {
                     post.author && (
                       <li key={post.id}>
                         {post.title} by {post.author.firstName} {post.author.lastName} ({post.votes} votes){' '}
-                        <UpvotePost.Component>
+                        <UpvotePostComponent>
                           {upvotePost => (
                             <button onClick={() => upvotePost({ variables: { postId: post.id } })}>Upvote</button>
                           )}
-                        </UpvotePost.Component>
+                        </UpvotePostComponent>
                       </li>
                     )
                 )}
             </ul>
           );
         }}
-      </AllPosts.Component>
+      </AllPostsComponent>
     );
   }
 }

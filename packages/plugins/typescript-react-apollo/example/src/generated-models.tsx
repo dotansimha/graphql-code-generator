@@ -1,289 +1,235 @@
-/* tslint:disable */
-import { GraphQLResolveInfo } from 'graphql';
+// ====================================================
+// Documents
+// ====================================================
 
-export type Resolver<Result, Parent = any, Context = any, Args = any> = (
-  parent: Parent,
-  args: Args,
-  context: Context,
-  info: GraphQLResolveInfo
-) => Promise<Result> | Result;
+export type AllPostsVariables = {};
 
-export type SubscriptionResolver<Result, Parent = any, Context = any, Args = any> = {
-  subscribe<R = Result, P = Parent>(
-    parent: P,
-    args: Args,
-    context: Context,
-    info: GraphQLResolveInfo
-  ): AsyncIterator<R | Result>;
-  resolve?<R = Result, P = Parent>(
-    parent: P,
-    args: Args,
-    context: Context,
-    info: GraphQLResolveInfo
-  ): R | Result | Promise<R | Result>;
+export type AllPostsQuery = {
+  __typename?: 'Query';
+
+  posts: AllPostsPosts[] | null;
 };
 
-/** The `Upload` scalar type represents a file upload promise that resolves an object containing `stream`, `filename`, `mimetype` and `encoding`. */
-export type Upload = any;
+export type AllPostsPosts = {
+  __typename?: 'Post';
 
-export interface Query {
-  posts?: (Post | null)[] | null;
-  author?: Author | null;
-}
-
-export interface Post {
   id: number;
-  title?: string | null;
-  author?: Author | null;
-  votes?: number | null;
-}
 
-export interface Author {
-  id: number;
-  firstName?: string | null;
-  lastName?: string | null;
-  posts?: (Post | null)[] | null;
-}
+  title: string | null;
 
-export interface Mutation {
-  upvotePost?: Post | null;
-}
-export interface AuthorQueryArgs {
+  votes: number | null;
+
+  author: AllPostsAuthor | null;
+};
+
+export type AllPostsAuthor = {
+  __typename?: 'Author';
+
   id: number;
-}
-export interface UpvotePostMutationArgs {
+
+  firstName: string | null;
+
+  lastName: string | null;
+};
+
+export type AllPostsWithFragmentVariables = {};
+
+export type AllPostsWithFragmentQuery = {
+  __typename?: 'Query';
+
+  posts: AllPostsWithFragmentPosts[] | null;
+};
+
+export type AllPostsWithFragmentPosts = PostFragmentFragment;
+
+export type UpvotePostVariables = {
   postId: number;
-}
+};
 
-export enum CacheControlScope {
-  PUBLIC = 'PUBLIC',
-  PRIVATE = 'PRIVATE'
-}
+export type UpvotePostMutation = {
+  __typename?: 'Mutation';
 
-export namespace QueryResolvers {
-  export interface Resolvers<Context = any> {
-    posts?: PostsResolver<(Post | null)[] | null, any, Context>;
-    author?: AuthorResolver<Author | null, any, Context>;
-  }
+  upvotePost: UpvotePostUpvotePost | null;
+};
 
-  export type PostsResolver<R = (Post | null)[] | null, Parent = any, Context = any> = Resolver<R, Parent, Context>;
-  export type AuthorResolver<R = Author | null, Parent = any, Context = any> = Resolver<R, Parent, Context, AuthorArgs>;
-  export interface AuthorArgs {
-    id: number;
-  }
-}
+export type UpvotePostUpvotePost = {
+  __typename?: 'Post';
 
-export namespace PostResolvers {
-  export interface Resolvers<Context = any> {
-    id?: IdResolver<number, any, Context>;
-    title?: TitleResolver<string | null, any, Context>;
-    author?: AuthorResolver<Author | null, any, Context>;
-    votes?: VotesResolver<number | null, any, Context>;
-  }
+  id: number;
 
-  export type IdResolver<R = number, Parent = any, Context = any> = Resolver<R, Parent, Context>;
-  export type TitleResolver<R = string | null, Parent = any, Context = any> = Resolver<R, Parent, Context>;
-  export type AuthorResolver<R = Author | null, Parent = any, Context = any> = Resolver<R, Parent, Context>;
-  export type VotesResolver<R = number | null, Parent = any, Context = any> = Resolver<R, Parent, Context>;
-}
+  votes: number | null;
+};
 
-export namespace AuthorResolvers {
-  export interface Resolvers<Context = any> {
-    id?: IdResolver<number, any, Context>;
-    firstName?: FirstNameResolver<string | null, any, Context>;
-    lastName?: LastNameResolver<string | null, any, Context>;
-    posts?: PostsResolver<(Post | null)[] | null, any, Context>;
-  }
+export type PostFragmentFragment = {
+  __typename?: 'Post';
 
-  export type IdResolver<R = number, Parent = any, Context = any> = Resolver<R, Parent, Context>;
-  export type FirstNameResolver<R = string | null, Parent = any, Context = any> = Resolver<R, Parent, Context>;
-  export type LastNameResolver<R = string | null, Parent = any, Context = any> = Resolver<R, Parent, Context>;
-  export type PostsResolver<R = (Post | null)[] | null, Parent = any, Context = any> = Resolver<R, Parent, Context>;
-}
+  id: number;
 
-export namespace MutationResolvers {
-  export interface Resolvers<Context = any> {
-    upvotePost?: UpvotePostResolver<Post | null, any, Context>;
-  }
+  title: string | null;
 
-  export type UpvotePostResolver<R = Post | null, Parent = any, Context = any> = Resolver<
-    R,
-    Parent,
-    Context,
-    UpvotePostArgs
-  >;
-  export interface UpvotePostArgs {
-    postId: number;
-  }
-}
+  votes: number | null;
 
-export namespace AllPosts {
-  export type Variables = {};
+  author: PostFragmentAuthor | null;
+};
 
-  export type Query = {
-    __typename?: 'Query';
-    posts?: (Posts | null)[] | null;
-  };
+export type PostFragmentAuthor = AuthorFragmentFragment;
 
-  export type Posts = {
-    __typename?: 'Post';
-    id: number;
-    title?: string | null;
-    votes?: number | null;
-    author?: Author | null;
-  };
+export type AuthorFragmentFragment = {
+  __typename?: 'Author';
 
-  export type Author = {
-    __typename?: 'Author';
-    id: number;
-    firstName?: string | null;
-    lastName?: string | null;
-  };
-}
+  id: number;
 
-export namespace AllPostsWithFragment {
-  export type Variables = {};
+  firstName: string | null;
 
-  export type Query = {
-    __typename?: 'Query';
-    posts?: (Posts | null)[] | null;
-  };
-
-  export type Posts = PostFragment.Fragment;
-}
-
-export namespace UpvotePost {
-  export type Variables = {
-    postId: number;
-  };
-
-  export type Mutation = {
-    __typename?: 'Mutation';
-    upvotePost?: UpvotePost | null;
-  };
-
-  export type UpvotePost = {
-    __typename?: 'Post';
-    id: number;
-    votes?: number | null;
-  };
-}
-
-export namespace PostFragment {
-  export type Fragment = {
-    __typename?: 'Post';
-    id: number;
-    title?: string | null;
-    votes?: number | null;
-    author?: Author | null;
-  };
-
-  export type Author = AuthorFragment.Fragment;
-}
-
-export namespace AuthorFragment {
-  export type Fragment = {
-    __typename?: 'Author';
-    id: number;
-    firstName?: string | null;
-    lastName?: string | null;
-  };
-}
+  lastName: string | null;
+};
 
 import * as ReactApollo from 'react-apollo';
 import * as React from 'react';
 
 import gql from 'graphql-tag';
 
-export namespace AuthorFragment {
-  export const Document = gql`
-    fragment AuthorFragment on Author {
-      id
-      firstName
-      lastName
-    }
-  `;
-}
+// ====================================================
+// Fragments
+// ====================================================
 
-export namespace PostFragment {
-  export const Document = gql`
-    fragment PostFragment on Post {
+export const AuthorFragmentFragmentDoc = gql`
+  fragment AuthorFragment on Author {
+    id
+    firstName
+    lastName
+  }
+`;
+
+export const PostFragmentFragmentDoc = gql`
+  fragment PostFragment on Post {
+    id
+    title
+    votes
+    author {
+      ...AuthorFragment
+    }
+  }
+
+  ${AuthorFragmentFragmentDoc}
+`;
+
+// ====================================================
+// Components
+// ====================================================
+
+export const AllPostsDocument = gql`
+  query allPosts {
+    posts {
       id
       title
       votes
       author {
-        ...AuthorFragment
-      }
-    }
-
-    ${AuthorFragment.Document}
-  `;
-}
-
-export namespace AllPosts {
-  export const Document = gql`
-    query allPosts {
-      posts {
         id
-        title
-        votes
-        author {
-          id
-          firstName
-          lastName
-        }
+        firstName
+        lastName
       }
     }
-  `;
-  export class Component extends React.Component<Partial<ReactApollo.QueryProps<Query, Variables>>> {
-    render() {
-      return <ReactApollo.Query<Query, Variables> query={Document} {...this['props'] as any} />;
-    }
   }
-  export function HOC<TProps = any, OperationOptions = ReactApollo.OperationOption<TProps, Query, Variables>>(
-    operationOptions: OperationOptions
-  ) {
-    return ReactApollo.graphql<TProps, Query, Variables>(Document, operationOptions);
+`;
+export class AllPostsComponent extends React.Component<
+  Partial<ReactApollo.QueryProps<AllPostsQuery, AllPostsVariables>>
+> {
+  render() {
+    return (
+      <ReactApollo.Query<AllPostsQuery, AllPostsVariables>
+        query={AllPostsDocument}
+        {...(this as any)['props'] as any}
+      />
+    );
   }
 }
-export namespace AllPostsWithFragment {
-  export const Document = gql`
-    query allPostsWithFragment {
-      posts {
-        ...PostFragment
-      }
+export type AllPostsProps<TChildProps = any> = Partial<ReactApollo.DataProps<AllPostsQuery, AllPostsVariables>> &
+  TChildProps;
+export function AllPostsHOC<TProps, TChildProps = any>(
+  operationOptions:
+    | ReactApollo.OperationOption<TProps, AllPostsQuery, AllPostsVariables, AllPostsProps<TChildProps>>
+    | undefined
+) {
+  return ReactApollo.graphql<TProps, AllPostsQuery, AllPostsVariables, AllPostsProps<TChildProps>>(
+    AllPostsDocument,
+    operationOptions
+  );
+}
+export const AllPostsWithFragmentDocument = gql`
+  query allPostsWithFragment {
+    posts {
+      ...PostFragment
     }
+  }
 
-    ${PostFragment.Document}
-  `;
-  export class Component extends React.Component<Partial<ReactApollo.QueryProps<Query, Variables>>> {
-    render() {
-      return <ReactApollo.Query<Query, Variables> query={Document} {...this['props'] as any} />;
-    }
-  }
-  export function HOC<TProps = any, OperationOptions = ReactApollo.OperationOption<TProps, Query, Variables>>(
-    operationOptions: OperationOptions
-  ) {
-    return ReactApollo.graphql<TProps, Query, Variables>(Document, operationOptions);
+  ${PostFragmentFragmentDoc}
+`;
+export class AllPostsWithFragmentComponent extends React.Component<
+  Partial<ReactApollo.QueryProps<AllPostsWithFragmentQuery, AllPostsWithFragmentVariables>>
+> {
+  render() {
+    return (
+      <ReactApollo.Query<AllPostsWithFragmentQuery, AllPostsWithFragmentVariables>
+        query={AllPostsWithFragmentDocument}
+        {...(this as any)['props'] as any}
+      />
+    );
   }
 }
-export namespace UpvotePost {
-  export const Document = gql`
-    mutation upvotePost($postId: Int!) {
-      upvotePost(postId: $postId) {
-        id
-        votes
-      }
-    }
-  `;
-  export class Component extends React.Component<Partial<ReactApollo.MutationProps<Mutation, Variables>>> {
-    render() {
-      return <ReactApollo.Mutation<Mutation, Variables> mutation={Document} {...this['props'] as any} />;
+export type AllPostsWithFragmentProps<TChildProps = any> = Partial<
+  ReactApollo.DataProps<AllPostsWithFragmentQuery, AllPostsWithFragmentVariables>
+> &
+  TChildProps;
+export function AllPostsWithFragmentHOC<TProps, TChildProps = any>(
+  operationOptions:
+    | ReactApollo.OperationOption<
+        TProps,
+        AllPostsWithFragmentQuery,
+        AllPostsWithFragmentVariables,
+        AllPostsWithFragmentProps<TChildProps>
+      >
+    | undefined
+) {
+  return ReactApollo.graphql<
+    TProps,
+    AllPostsWithFragmentQuery,
+    AllPostsWithFragmentVariables,
+    AllPostsWithFragmentProps<TChildProps>
+  >(AllPostsWithFragmentDocument, operationOptions);
+}
+export const UpvotePostDocument = gql`
+  mutation upvotePost($postId: Int!) {
+    upvotePost(postId: $postId) {
+      id
+      votes
     }
   }
-  export function HOC<TProps = any, OperationOptions = ReactApollo.OperationOption<TProps, Mutation, Variables>>(
-    operationOptions: OperationOptions
-  ) {
-    return ReactApollo.graphql<TProps, Mutation, Variables>(Document, operationOptions);
+`;
+export class UpvotePostComponent extends React.Component<
+  Partial<ReactApollo.MutationProps<UpvotePostMutation, UpvotePostVariables>>
+> {
+  render() {
+    return (
+      <ReactApollo.Mutation<UpvotePostMutation, UpvotePostVariables>
+        mutation={UpvotePostDocument}
+        {...(this as any)['props'] as any}
+      />
+    );
   }
+}
+export type UpvotePostProps<TChildProps = any> = Partial<
+  ReactApollo.MutateProps<UpvotePostMutation, UpvotePostVariables>
+> &
+  TChildProps;
+export type UpvotePostMutationFn = ReactApollo.MutationFn<UpvotePostMutation, UpvotePostVariables>;
+export function UpvotePostHOC<TProps, TChildProps = any>(
+  operationOptions:
+    | ReactApollo.OperationOption<TProps, UpvotePostMutation, UpvotePostVariables, UpvotePostProps<TChildProps>>
+    | undefined
+) {
+  return ReactApollo.graphql<TProps, UpvotePostMutation, UpvotePostVariables, UpvotePostProps<TChildProps>>(
+    UpvotePostDocument,
+    operationOptions
+  );
 }
