@@ -1071,10 +1071,10 @@
   resolved "https://registry.yarnpkg.com/@types/pify/-/pify-3.0.2.tgz#1bc75dac43e31dba981c37e0a08edddc1b49cd39"
   integrity sha512-a5AKF1/9pCU3HGMkesgY6LsBdXHUY3WU+I2qgpU0J+I8XuJA1aFr59eS84/HP0+dxsyBSNbt+4yGI2adUpHwSg==
 
-"@types/prettier@1.15.0":
-  version "1.15.0"
-  resolved "https://registry.yarnpkg.com/@types/prettier/-/prettier-1.15.0.tgz#1c3e97298dec7614a6ff35b705815391630adfaa"
-  integrity sha512-WXGqbiMxDxPYjkK1NUDc4dsC1SGZQ3fPZRoSsOXSO+edScRvCptf8XAogn5Ohf1r3BXjrjVZP8JucmwD5raDQg==
+"@types/prettier@1.15.1":
+  version "1.15.1"
+  resolved "https://registry.yarnpkg.com/@types/prettier/-/prettier-1.15.1.tgz#224240202de3fda93165be826bd2f66e5759f746"
+  integrity sha512-e8gYOt6EQQXlpoUGn3KDU9I9/ao/Layl92WgcPRxYYLw2TsuVkRGu5D/5viVPl1IL3nd/4oXw7bL/3MRh2MM1g==
 
 "@types/prop-types@*":
   version "15.5.6"
