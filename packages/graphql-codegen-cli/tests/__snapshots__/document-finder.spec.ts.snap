@@ -1,5 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`extractDocumentStringFromCodeFile Dont parse string interpolations which ends with graphql 1`] = `null`;
+
 exports[`extractDocumentStringFromCodeFile JS file with query shorthand syntax 1`] = `
 "{
     books {
