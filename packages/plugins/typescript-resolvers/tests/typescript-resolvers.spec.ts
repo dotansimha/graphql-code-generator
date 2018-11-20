@@ -602,7 +602,11 @@ describe('Resolvers', () => {
         }
 
         type RootMutation {
-          upvotePost(id: String!): Post
+          upvotePost(id: String!): UpvotePostPayload
+        }
+
+        type UpvotePostPayload {
+          post: Post
         }
 
         type Post {
@@ -623,20 +627,33 @@ describe('Resolvers', () => {
       }
     });
 
-    // RootMutation             should have {} as a parent
-    // RootMutation.upvotePost  should return the PostEntity
+    // RootMutation             should expect {} as a parent
     // RootMutation.upvotePost  should expect {} as a parent
+    // RootMutation.upvotePost  should return the UpvotePostPayload
     expect(content).toBeSimilarStringTo(`
       export namespace RootMutationResolvers {
         export interface Resolvers<Context = {}, TypeParent = {}> {
-          upvotePost?: UpvotePostResolver<PostEntity | null, TypeParent, Context>;
+          upvotePost?: UpvotePostResolver<UpvotePostPayload | null, TypeParent, Context>;
         }
         
-        export type UpvotePostResolver<R = PostEntity | null, Parent = {}, Context = {}> = Resolver<R, Parent, Context, UpvotePostArgs>;
+        export type UpvotePostResolver<R = UpvotePostPayload | null, Parent = {}, Context = {}> = Resolver<R, Parent, Context, UpvotePostArgs>;
         
         export interface UpvotePostArgs {
           id: string;
         }
+      }
+    `);
+
+    // UpvotePostPayload        should expect UpvotePostPayload as parent
+    // UpvotePostPayload.post   should expect UpvotePostPayload as parent
+    // UpvotePostPayload.post   should return PostEntity
+    expect(content).toBeSimilarStringTo(`
+      export namespace UpvotePostPayloadResolvers {
+        export interface Resolvers<Context = {}, TypeParent = UpvotePostPayload> {
+          post?: PostResolver<PostEntity | null, TypeParent, Context>;
+        }
+
+        export type PostResolver<R = PostEntity | null, Parent = UpvotePostPayload, Context = {}> = Resolver<R, Parent, Context>;
       }
     `);
   });
