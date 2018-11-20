@@ -468,7 +468,7 @@ describe('TypeScript Client', () => {
   `);
   });
 
-  it('Should separate fragments with |', async () => {
+  it('Should group fragments by type', async () => {
     const testSchema = makeExecutableSchema({
       resolverValidationOptions: {
         requireResolversForResolveType: false
@@ -521,9 +521,10 @@ describe('TypeScript Client', () => {
     `;
 
     const content = await plugin(testSchema, [{ filePath: '', content: query }], {});
+
     expect(content).toBeSimilarStringTo(`
-    export type Extra = PhotoFragment.Fragment | SportFragment.Fragment | SportInlineFragment | PhotoInlineFragment
-  `);
+      export type Extra = ((SportInlineFragment & SportFragment.Fragment) | (PhotoInlineFragment & PhotoFragment.Fragment))
+    `);
   });
 
   it('Should generate simple Query with Fragment spread and handle noNamespaces', async () => {
