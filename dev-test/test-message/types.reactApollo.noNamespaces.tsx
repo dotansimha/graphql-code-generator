@@ -15,7 +15,7 @@ export type GetMessagesVariables = {
 export type GetMessagesQuery = {
   __typename?: 'Query';
 
-  messages?: GetMessagesMessages[] | null;
+  messages: GetMessagesMessages[] | null;
 };
 
 export type GetMessagesMessages = {
@@ -31,7 +31,7 @@ export type CreateMessageVariables = {
 export type CreateMessageMutation = {
   __typename?: 'Mutation';
 
-  createMessage?: CreateMessageCreateMessage | null;
+  createMessage: CreateMessageCreateMessage | null;
 };
 
 export type CreateMessageCreateMessage = {
@@ -48,7 +48,7 @@ export type DeclineVariables = {
 export type DeclineMutation = {
   __typename?: 'Mutation';
 
-  decline?: DeclineDecline | null;
+  decline: DeclineDecline | null;
 };
 
 export type DeclineDecline = {
@@ -64,7 +64,7 @@ export type ApproveVariables = {
 export type ApproveMutation = {
   __typename?: 'Mutation';
 
-  approve?: ApproveApprove | null;
+  approve: ApproveApprove | null;
 };
 
 export type ApproveApprove = {
@@ -80,7 +80,7 @@ export type EscalateVariables = {
 export type EscalateMutation = {
   __typename?: 'Mutation';
 
-  escalate?: EscalateEscalate | null;
+  escalate: EscalateEscalate | null;
 };
 
 export type EscalateEscalate = {

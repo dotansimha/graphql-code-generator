@@ -1,14 +1,14 @@
 /** A list of options for the sort order of the feed */
 export enum FeedType {
-  HOT = 'HOT',
-  NEW = 'NEW',
-  TOP = 'TOP'
+  Hot = 'HOT',
+  New = 'NEW',
+  Top = 'TOP'
 }
 /** The type of vote to record, when submitting a vote */
 export enum VoteType {
-  UP = 'UP',
-  DOWN = 'DOWN',
-  CANCEL = 'CANCEL'
+  Up = 'UP',
+  Down = 'DOWN',
+  Cancel = 'CANCEL'
 }
 
 // ====================================================
@@ -23,7 +23,7 @@ export namespace OnCommentAdded {
   export type Subscription = {
     __typename?: 'Subscription';
 
-    commentAdded?: CommentAdded | null;
+    commentAdded: CommentAdded | null;
   };
 
   export type CommentAdded = {
@@ -57,9 +57,9 @@ export namespace Comment {
   export type Query = {
     __typename?: 'Query';
 
-    currentUser?: CurrentUser | null;
+    currentUser: CurrentUser | null;
 
-    entry?: Entry | null;
+    entry: Entry | null;
   };
 
   export type CurrentUser = {
@@ -107,9 +107,9 @@ export namespace Comment {
   export type RepositoryInlineFragment = {
     __typename?: 'Repository';
 
-    description?: string | null;
+    description: string | null;
 
-    open_issues_count?: number | null;
+    open_issues_count: number | null;
 
     stargazers_count: number;
   };
@@ -121,7 +121,7 @@ export namespace CurrentUserForProfile {
   export type Query = {
     __typename?: 'Query';
 
-    currentUser?: CurrentUser | null;
+    currentUser: CurrentUser | null;
   };
 
   export type CurrentUser = {
@@ -143,9 +143,9 @@ export namespace Feed {
   export type Query = {
     __typename?: 'Query';
 
-    currentUser?: CurrentUser | null;
+    currentUser: CurrentUser | null;
 
-    feed?: (Feed | null)[] | null;
+    feed: (Feed | null)[] | null;
   };
 
   export type CurrentUser = {
@@ -165,7 +165,7 @@ export namespace SubmitRepository {
   export type Mutation = {
     __typename?: 'Mutation';
 
-    submitRepository?: SubmitRepository | null;
+    submitRepository: SubmitRepository | null;
   };
 
   export type SubmitRepository = {
@@ -184,7 +184,7 @@ export namespace SubmitComment {
   export type Mutation = {
     __typename?: 'Mutation';
 
-    submitComment?: SubmitComment | null;
+    submitComment: SubmitComment | null;
   };
 
   export type SubmitComment = CommentsPageComment.Fragment;
@@ -199,7 +199,7 @@ export namespace Vote {
   export type Mutation = {
     __typename?: 'Mutation';
 
-    vote?: Vote | null;
+    vote: Vote | null;
   };
 
   export type Vote = {
@@ -261,7 +261,7 @@ export namespace FeedEntry {
 
     html_url: string;
 
-    owner?: Owner | null;
+    owner: Owner | null;
   };
 
   export type Owner = {
@@ -285,11 +285,11 @@ export namespace RepoInfo {
   export type Repository = {
     __typename?: 'Repository';
 
-    description?: string | null;
+    description: string | null;
 
     stargazers_count: number;
 
-    open_issues_count?: number | null;
+    open_issues_count: number | null;
   };
 
   export type PostedBy = {

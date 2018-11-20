@@ -1,14 +1,14 @@
 /** A list of options for the sort order of the feed */
 export enum FeedType {
-  HOT = 'HOT',
-  NEW = 'NEW',
-  TOP = 'TOP'
+  Hot = 'HOT',
+  New = 'NEW',
+  Top = 'TOP'
 }
 /** The type of vote to record, when submitting a vote */
 export enum VoteType {
-  UP = 'UP',
-  DOWN = 'DOWN',
-  CANCEL = 'CANCEL'
+  Up = 'UP',
+  Down = 'DOWN',
+  Cancel = 'CANCEL'
 }
 
 // ====================================================
@@ -23,7 +23,7 @@ export namespace OnCommentAdded {
   export type Subscription = {
     readonly __typename?: 'Subscription';
 
-    readonly commentAdded?: CommentAdded | null;
+    readonly commentAdded: CommentAdded | null;
   };
 
   export type CommentAdded = {
@@ -57,9 +57,9 @@ export namespace Comment {
   export type Query = {
     readonly __typename?: 'Query';
 
-    readonly currentUser?: CurrentUser | null;
+    readonly currentUser: CurrentUser | null;
 
-    readonly entry?: Entry | null;
+    readonly entry: Entry | null;
   };
 
   export type CurrentUser = {
@@ -107,9 +107,9 @@ export namespace Comment {
   export type RepositoryInlineFragment = {
     readonly __typename?: 'Repository';
 
-    readonly description?: string | null;
+    readonly description: string | null;
 
-    readonly open_issues_count?: number | null;
+    readonly open_issues_count: number | null;
 
     readonly stargazers_count: number;
   };
@@ -121,7 +121,7 @@ export namespace CurrentUserForProfile {
   export type Query = {
     readonly __typename?: 'Query';
 
-    readonly currentUser?: CurrentUser | null;
+    readonly currentUser: CurrentUser | null;
   };
 
   export type CurrentUser = {
@@ -143,9 +143,9 @@ export namespace Feed {
   export type Query = {
     readonly __typename?: 'Query';
 
-    readonly currentUser?: CurrentUser | null;
+    readonly currentUser: CurrentUser | null;
 
-    readonly feed?: ReadonlyArray<Feed | null> | null;
+    readonly feed: ReadonlyArray<Feed | null> | null;
   };
 
   export type CurrentUser = {
@@ -165,7 +165,7 @@ export namespace SubmitRepository {
   export type Mutation = {
     readonly __typename?: 'Mutation';
 
-    readonly submitRepository?: SubmitRepository | null;
+    readonly submitRepository: SubmitRepository | null;
   };
 
   export type SubmitRepository = {
@@ -184,7 +184,7 @@ export namespace SubmitComment {
   export type Mutation = {
     readonly __typename?: 'Mutation';
 
-    readonly submitComment?: SubmitComment | null;
+    readonly submitComment: SubmitComment | null;
   };
 
   export type SubmitComment = CommentsPageComment.Fragment;
@@ -199,7 +199,7 @@ export namespace Vote {
   export type Mutation = {
     readonly __typename?: 'Mutation';
 
-    readonly vote?: Vote | null;
+    readonly vote: Vote | null;
   };
 
   export type Vote = {
@@ -261,7 +261,7 @@ export namespace FeedEntry {
 
     readonly html_url: string;
 
-    readonly owner?: Owner | null;
+    readonly owner: Owner | null;
   };
 
   export type Owner = {
@@ -285,11 +285,11 @@ export namespace RepoInfo {
   export type Repository = {
     readonly __typename?: 'Repository';
 
-    readonly description?: string | null;
+    readonly description: string | null;
 
     readonly stargazers_count: number;
 
-    readonly open_issues_count?: number | null;
+    readonly open_issues_count: number | null;
   };
 
   export type PostedBy = {

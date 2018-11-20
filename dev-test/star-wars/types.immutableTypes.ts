@@ -17,14 +17,14 @@ export interface ColorInput {
 }
 /** The episodes in the Star Wars trilogy */
 export enum Episode {
-  NEWHOPE = 'NEWHOPE',
-  EMPIRE = 'EMPIRE',
-  JEDI = 'JEDI'
+  Newhope = 'NEWHOPE',
+  Empire = 'EMPIRE',
+  Jedi = 'JEDI'
 }
 /** Units of height */
 export enum LengthUnit {
-  METER = 'METER',
-  FOOT = 'FOOT'
+  Meter = 'METER',
+  Foot = 'FOOT'
 }
 
 // ====================================================
@@ -40,7 +40,7 @@ export namespace CreateReviewForEpisode {
   export type Mutation = {
     readonly __typename?: 'Mutation';
 
-    readonly createReview?: CreateReview | null;
+    readonly createReview: CreateReview | null;
   };
 
   export type CreateReview = {
@@ -48,7 +48,7 @@ export namespace CreateReviewForEpisode {
 
     readonly stars: number;
 
-    readonly commentary?: string | null;
+    readonly commentary: string | null;
   };
 }
 
@@ -60,7 +60,7 @@ export namespace HeroAndFriendsNames {
   export type Query = {
     readonly __typename?: 'Query';
 
-    readonly hero?: Hero | null;
+    readonly hero: Hero | null;
   };
 
   export type Hero = {
@@ -68,7 +68,7 @@ export namespace HeroAndFriendsNames {
 
     readonly name: string;
 
-    readonly friends?: ReadonlyArray<Friends | null> | null;
+    readonly friends: ReadonlyArray<Friends | null> | null;
   };
 
   export type Friends = {
@@ -84,7 +84,7 @@ export namespace HeroAppearsIn {
   export type Query = {
     readonly __typename?: 'Query';
 
-    readonly hero?: Hero | null;
+    readonly hero: Hero | null;
   };
 
   export type Hero = {
@@ -104,7 +104,7 @@ export namespace HeroDetails {
   export type Query = {
     readonly __typename?: 'Query';
 
-    readonly hero?: Hero | null;
+    readonly hero: Hero | null;
   };
 
   export type Hero = {
@@ -116,13 +116,13 @@ export namespace HeroDetails {
   export type HumanInlineFragment = {
     readonly __typename?: 'Human';
 
-    readonly height?: number | null;
+    readonly height: number | null;
   };
 
   export type DroidInlineFragment = {
     readonly __typename?: 'Droid';
 
-    readonly primaryFunction?: string | null;
+    readonly primaryFunction: string | null;
   };
 }
 
@@ -134,7 +134,7 @@ export namespace HeroDetailsWithFragment {
   export type Query = {
     readonly __typename?: 'Query';
 
-    readonly hero?: Hero | null;
+    readonly hero: Hero | null;
   };
 
   export type Hero = HeroDetails.Fragment;
@@ -148,7 +148,7 @@ export namespace HeroName {
   export type Query = {
     readonly __typename?: 'Query';
 
-    readonly hero?: Hero | null;
+    readonly hero: Hero | null;
   };
 
   export type Hero = {
@@ -167,7 +167,7 @@ export namespace HeroNameConditionalInclusion {
   export type Query = {
     readonly __typename?: 'Query';
 
-    readonly hero?: Hero | null;
+    readonly hero: Hero | null;
   };
 
   export type Hero = {
@@ -186,7 +186,7 @@ export namespace HeroNameConditionalExclusion {
   export type Query = {
     readonly __typename?: 'Query';
 
-    readonly hero?: Hero | null;
+    readonly hero: Hero | null;
   };
 
   export type Hero = {
@@ -204,7 +204,7 @@ export namespace HeroParentTypeDependentField {
   export type Query = {
     readonly __typename?: 'Query';
 
-    readonly hero?: Hero | null;
+    readonly hero: Hero | null;
   };
 
   export type Hero = {
@@ -216,7 +216,7 @@ export namespace HeroParentTypeDependentField {
   export type HumanInlineFragment = {
     readonly __typename?: 'Human';
 
-    readonly friends?: ReadonlyArray<Friends | null> | null;
+    readonly friends: ReadonlyArray<Friends | null> | null;
   };
 
   export type Friends = {
@@ -228,13 +228,13 @@ export namespace HeroParentTypeDependentField {
   export type _HumanInlineFragment = {
     readonly __typename?: 'Human';
 
-    readonly height?: number | null;
+    readonly height: number | null;
   };
 
   export type DroidInlineFragment = {
     readonly __typename?: 'Droid';
 
-    readonly friends?: ReadonlyArray<_Friends | null> | null;
+    readonly friends: ReadonlyArray<_Friends | null> | null;
   };
 
   export type _Friends = {
@@ -246,7 +246,7 @@ export namespace HeroParentTypeDependentField {
   export type __HumanInlineFragment = {
     readonly __typename?: 'Human';
 
-    readonly height?: number | null;
+    readonly height: number | null;
   };
 }
 
@@ -258,7 +258,7 @@ export namespace HeroTypeDependentAliasedField {
   export type Query = {
     readonly __typename?: 'Query';
 
-    readonly hero?: Hero | null;
+    readonly hero: Hero | null;
   };
 
   export type Hero = HumanInlineFragment | DroidInlineFragment;
@@ -266,13 +266,13 @@ export namespace HeroTypeDependentAliasedField {
   export type HumanInlineFragment = {
     readonly __typename?: 'Human';
 
-    readonly property?: string | null;
+    readonly property: string | null;
   };
 
   export type DroidInlineFragment = {
     readonly __typename?: 'Droid';
 
-    readonly property?: string | null;
+    readonly property: string | null;
   };
 }
 
@@ -282,7 +282,7 @@ export namespace HumanWithNullHeight {
   export type Query = {
     readonly __typename?: 'Query';
 
-    readonly human?: Human | null;
+    readonly human: Human | null;
   };
 
   export type Human = {
@@ -290,7 +290,7 @@ export namespace HumanWithNullHeight {
 
     readonly name: string;
 
-    readonly mass?: number | null;
+    readonly mass: number | null;
   };
 }
 
@@ -300,9 +300,9 @@ export namespace TwoHeroes {
   export type Query = {
     readonly __typename?: 'Query';
 
-    readonly r2?: R2 | null;
+    readonly r2: R2 | null;
 
-    readonly luke?: Luke | null;
+    readonly luke: Luke | null;
   };
 
   export type R2 = {
@@ -328,12 +328,12 @@ export namespace HeroDetails {
   export type HumanInlineFragment = {
     readonly __typename?: 'Human';
 
-    readonly height?: number | null;
+    readonly height: number | null;
   };
 
   export type DroidInlineFragment = {
     readonly __typename?: 'Droid';
 
-    readonly primaryFunction?: string | null;
+    readonly primaryFunction: string | null;
   };
 }
