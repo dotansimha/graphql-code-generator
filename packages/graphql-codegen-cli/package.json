@@ -73,7 +73,6 @@
     "valid-url": "1.0.9"
   },
   "devDependencies": {
-    "@types/chalk": "2.2.0",
     "@types/fb-watchman": "2.0.0",
     "@types/js-yaml": "3.11.2",
     "@types/listr": "0.13.0",

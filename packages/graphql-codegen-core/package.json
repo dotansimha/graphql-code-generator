@@ -59,9 +59,6 @@
       "node"
     ]
   },
-  "devDependencies": {
-    "@types/chalk": "2.2.0"
-  },
   "dependencies": {
     "chalk": "2.4.1",
     "change-case": "3.0.2",
