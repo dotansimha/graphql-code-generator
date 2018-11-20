@@ -594,6 +594,53 @@ describe('Resolvers', () => {
     `);
   });
 
+  it('make sure mappers work with mutations', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: `
+        type Query {
+          post: Post
+        }
+
+        type RootMutation {
+          upvotePost(id: String!): Post
+        }
+
+        type Post {
+          id: String
+        }
+        
+        schema {
+          query: Query
+          mutation: RootMutation
+        }
+      `
+    });
+
+    const content = await plugin(testSchema, [], {
+      mappers: {
+        // whenever there's something receives or resolves a Post, use PostEntity
+        Post: 'PostEntity'
+      }
+    });
+
+    // RootMutation             should have {} as a parent
+    // RootMutation.upvotePost  should return the PostEntity
+    // RootMutation.upvotePost  should expect {} as a parent
+    expect(content).toBeSimilarStringTo(`
+      export namespace RootMutationResolvers {
+        export interface Resolvers<Context = {}, TypeParent = {}> {
+          upvotePost?: UpvotePostResolver<PostEntity | null, TypeParent, Context>;
+        }
+        
+        export type UpvotePostResolver<R = PostEntity | null, Parent = {}, Context = {}> = Resolver<R, Parent, Context, UpvotePostArgs>;
+        
+        export interface UpvotePostArgs {
+          id: string;
+        }
+      }
+    `);
+  });
+
   it('should provide a generic type of arguments in noNamespaces', async () => {
     const testSchema = makeExecutableSchema({
       typeDefs: `
