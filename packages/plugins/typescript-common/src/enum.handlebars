@@ -4,7 +4,7 @@ export type {{@root.config.interfacePrefix}}{{ convert name }} = {{#each values 
 {{else}}
 export {{#if @root.config.constEnums }}const {{/if}}enum {{@root.config.interfacePrefix}}{{ convert name }} {
 {{#each values }}
-  {{value}} = {{{ getEnumValue ../name value }}},
+  {{ convert value }} = {{{ getEnumValue ../name value }}},
 {{/each}}
 }
 {{/if}}

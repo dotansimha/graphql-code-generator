@@ -1,15 +1,15 @@
 // tslint:disable
 /** A list of options for the sort order of the feed */
 export enum FeedType {
-  HOT = 'HOT',
-  NEW = 'NEW',
-  TOP = 'TOP'
+  Hot = 'HOT',
+  New = 'NEW',
+  Top = 'TOP'
 }
 /** The type of vote to record, when submitting a vote */
 export enum VoteType {
-  UP = 'UP',
-  DOWN = 'DOWN',
-  CANCEL = 'CANCEL'
+  Up = 'UP',
+  Down = 'DOWN',
+  Cancel = 'CANCEL'
 }
 
 // ====================================================
@@ -23,7 +23,7 @@ export type OnCommentAddedVariables = {
 export type OnCommentAddedSubscription = {
   __typename?: 'Subscription';
 
-  commentAdded?: OnCommentAddedCommentAdded | null;
+  commentAdded: OnCommentAddedCommentAdded | null;
 };
 
 export type OnCommentAddedCommentAdded = {
@@ -55,9 +55,9 @@ export type CommentVariables = {
 export type CommentQuery = {
   __typename?: 'Query';
 
-  currentUser?: CommentCurrentUser | null;
+  currentUser: CommentCurrentUser | null;
 
-  entry?: CommentEntry | null;
+  entry: CommentEntry | null;
 };
 
 export type CommentCurrentUser = {
@@ -105,9 +105,9 @@ export type CommentRepository = {
 export type CommentRepositoryInlineFragment = {
   __typename?: 'Repository';
 
-  description?: string | null;
+  description: string | null;
 
-  open_issues_count?: number | null;
+  open_issues_count: number | null;
 
   stargazers_count: number;
 };
@@ -117,7 +117,7 @@ export type CurrentUserForProfileVariables = {};
 export type CurrentUserForProfileQuery = {
   __typename?: 'Query';
 
-  currentUser?: CurrentUserForProfileCurrentUser | null;
+  currentUser: CurrentUserForProfileCurrentUser | null;
 };
 
 export type CurrentUserForProfileCurrentUser = {
@@ -137,9 +137,9 @@ export type FeedVariables = {
 export type FeedQuery = {
   __typename?: 'Query';
 
-  currentUser?: FeedCurrentUser | null;
+  currentUser: FeedCurrentUser | null;
 
-  feed?: FeedFeed[] | null;
+  feed: FeedFeed[] | null;
 };
 
 export type FeedCurrentUser = {
@@ -157,7 +157,7 @@ export type SubmitRepositoryVariables = {
 export type SubmitRepositoryMutation = {
   __typename?: 'Mutation';
 
-  submitRepository?: SubmitRepositorySubmitRepository | null;
+  submitRepository: SubmitRepositorySubmitRepository | null;
 };
 
 export type SubmitRepositorySubmitRepository = {
@@ -174,7 +174,7 @@ export type SubmitCommentVariables = {
 export type SubmitCommentMutation = {
   __typename?: 'Mutation';
 
-  submitComment?: SubmitCommentSubmitComment | null;
+  submitComment: SubmitCommentSubmitComment | null;
 };
 
 export type SubmitCommentSubmitComment = CommentsPageCommentFragment;
@@ -187,7 +187,7 @@ export type VoteVariables = {
 export type VoteMutation = {
   __typename?: 'Mutation';
 
-  vote?: VoteVote | null;
+  vote: VoteVote | null;
 };
 
 export type VoteVote = {
@@ -245,7 +245,7 @@ export type FeedEntryRepository = {
 
   html_url: string;
 
-  owner?: FeedEntryOwner | null;
+  owner: FeedEntryOwner | null;
 };
 
 export type FeedEntryOwner = {
@@ -267,11 +267,11 @@ export type RepoInfoFragment = {
 export type RepoInfoRepository = {
   __typename?: 'Repository';
 
-  description?: string | null;
+  description: string | null;
 
   stargazers_count: number;
 
-  open_issues_count?: number | null;
+  open_issues_count: number | null;
 };
 
 export type RepoInfoPostedBy = {

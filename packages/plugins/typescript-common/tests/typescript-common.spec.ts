@@ -85,8 +85,8 @@ describe('TypeScript Common', () => {
 
       expect(content).toBeSimilarStringTo(`
         export enum A {
-          ONE = "ONE",
-          TWO = "TWO",
+          One = "ONE",
+          Two = "TWO",
         }
       `);
     });
@@ -102,8 +102,8 @@ describe('TypeScript Common', () => {
 
       expect(content).toBeSimilarStringTo(`
         export const enum A {
-          ONE = "ONE",
-          TWO = "TWO",
+          One = "ONE",
+          Two = "TWO",
         }`);
     });
 
@@ -112,8 +112,8 @@ describe('TypeScript Common', () => {
 
       expect(content).toBeSimilarStringTo(`
         export enum PrefA {
-          ONE = "ONE",
-          TWO = "TWO",
+          One = "ONE",
+          Two = "TWO",
         }`);
     });
 
@@ -129,8 +129,8 @@ describe('TypeScript Common', () => {
 
       expect(content).toBeSimilarStringTo(`
         export enum A {
-          ONE = 1,
-          TWO = 2,
+          One = 1,
+          Two = 2,
         }`);
     });
 
@@ -150,8 +150,8 @@ describe('TypeScript Common', () => {
       expect(content).toBeSimilarStringTo(`
         /** MyEnumA */
         export enum A {
-          ONE = "ONE",
-          TWO = "TWO",
+          One = "ONE",
+          Two = "TWO",
         }`);
     });
   });

@@ -17,14 +17,14 @@ export interface ColorInput {
 }
 /** The episodes in the Star Wars trilogy */
 export enum Episode {
-  NEWHOPE = 'NEWHOPE',
-  EMPIRE = 'EMPIRE',
-  JEDI = 'JEDI'
+  Newhope = 'NEWHOPE',
+  Empire = 'EMPIRE',
+  Jedi = 'JEDI'
 }
 /** Units of height */
 export enum LengthUnit {
-  METER = 'METER',
-  FOOT = 'FOOT'
+  Meter = 'METER',
+  Foot = 'FOOT'
 }
 
 // ====================================================
@@ -40,7 +40,7 @@ export namespace CreateReviewForEpisode {
   export type Mutation = {
     __typename?: 'Mutation';
 
-    createReview?: CreateReview | null;
+    createReview: CreateReview | null;
   };
 
   export type CreateReview = {
@@ -48,7 +48,7 @@ export namespace CreateReviewForEpisode {
 
     stars: number;
 
-    commentary?: string | null;
+    commentary: string | null;
   };
 }
 
@@ -60,7 +60,7 @@ export namespace HeroAndFriendsNames {
   export type Query = {
     __typename?: 'Query';
 
-    hero?: Hero | null;
+    hero: Hero | null;
   };
 
   export type Hero = {
@@ -68,7 +68,7 @@ export namespace HeroAndFriendsNames {
 
     name: string;
 
-    friends?: (Friends | null)[] | null;
+    friends: (Friends | null)[] | null;
   };
 
   export type Friends = {
@@ -84,7 +84,7 @@ export namespace HeroAppearsIn {
   export type Query = {
     __typename?: 'Query';
 
-    hero?: Hero | null;
+    hero: Hero | null;
   };
 
   export type Hero = {
@@ -104,7 +104,7 @@ export namespace HeroDetails {
   export type Query = {
     __typename?: 'Query';
 
-    hero?: Hero | null;
+    hero: Hero | null;
   };
 
   export type Hero = {
@@ -116,13 +116,13 @@ export namespace HeroDetails {
   export type HumanInlineFragment = {
     __typename?: 'Human';
 
-    height?: number | null;
+    height: number | null;
   };
 
   export type DroidInlineFragment = {
     __typename?: 'Droid';
 
-    primaryFunction?: string | null;
+    primaryFunction: string | null;
   };
 }
 
@@ -134,7 +134,7 @@ export namespace HeroDetailsWithFragment {
   export type Query = {
     __typename?: 'Query';
 
-    hero?: Hero | null;
+    hero: Hero | null;
   };
 
   export type Hero = HeroDetails.Fragment;
@@ -148,7 +148,7 @@ export namespace HeroName {
   export type Query = {
     __typename?: 'Query';
 
-    hero?: Hero | null;
+    hero: Hero | null;
   };
 
   export type Hero = {
@@ -167,7 +167,7 @@ export namespace HeroNameConditionalInclusion {
   export type Query = {
     __typename?: 'Query';
 
-    hero?: Hero | null;
+    hero: Hero | null;
   };
 
   export type Hero = {
@@ -186,7 +186,7 @@ export namespace HeroNameConditionalExclusion {
   export type Query = {
     __typename?: 'Query';
 
-    hero?: Hero | null;
+    hero: Hero | null;
   };
 
   export type Hero = {
@@ -204,7 +204,7 @@ export namespace HeroParentTypeDependentField {
   export type Query = {
     __typename?: 'Query';
 
-    hero?: Hero | null;
+    hero: Hero | null;
   };
 
   export type Hero = {
@@ -216,7 +216,7 @@ export namespace HeroParentTypeDependentField {
   export type HumanInlineFragment = {
     __typename?: 'Human';
 
-    friends?: (Friends | null)[] | null;
+    friends: (Friends | null)[] | null;
   };
 
   export type Friends = {
@@ -228,13 +228,13 @@ export namespace HeroParentTypeDependentField {
   export type _HumanInlineFragment = {
     __typename?: 'Human';
 
-    height?: number | null;
+    height: number | null;
   };
 
   export type DroidInlineFragment = {
     __typename?: 'Droid';
 
-    friends?: (_Friends | null)[] | null;
+    friends: (_Friends | null)[] | null;
   };
 
   export type _Friends = {
@@ -246,7 +246,7 @@ export namespace HeroParentTypeDependentField {
   export type __HumanInlineFragment = {
     __typename?: 'Human';
 
-    height?: number | null;
+    height: number | null;
   };
 }
 
@@ -258,7 +258,7 @@ export namespace HeroTypeDependentAliasedField {
   export type Query = {
     __typename?: 'Query';
 
-    hero?: Hero | null;
+    hero: Hero | null;
   };
 
   export type Hero = HumanInlineFragment | DroidInlineFragment;
@@ -266,13 +266,13 @@ export namespace HeroTypeDependentAliasedField {
   export type HumanInlineFragment = {
     __typename?: 'Human';
 
-    property?: string | null;
+    property: string | null;
   };
 
   export type DroidInlineFragment = {
     __typename?: 'Droid';
 
-    property?: string | null;
+    property: string | null;
   };
 }
 
@@ -282,7 +282,7 @@ export namespace HumanWithNullHeight {
   export type Query = {
     __typename?: 'Query';
 
-    human?: Human | null;
+    human: Human | null;
   };
 
   export type Human = {
@@ -290,7 +290,7 @@ export namespace HumanWithNullHeight {
 
     name: string;
 
-    mass?: number | null;
+    mass: number | null;
   };
 }
 
@@ -300,9 +300,9 @@ export namespace TwoHeroes {
   export type Query = {
     __typename?: 'Query';
 
-    r2?: R2 | null;
+    r2: R2 | null;
 
-    luke?: Luke | null;
+    luke: Luke | null;
   };
 
   export type R2 = {
@@ -328,12 +328,12 @@ export namespace HeroDetails {
   export type HumanInlineFragment = {
     __typename?: 'Human';
 
-    height?: number | null;
+    height: number | null;
   };
 
   export type DroidInlineFragment = {
     __typename?: 'Droid';
 
-    primaryFunction?: string | null;
+    primaryFunction: string | null;
   };
 }
