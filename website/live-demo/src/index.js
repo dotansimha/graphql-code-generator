@@ -7,7 +7,7 @@ import * as jsYaml from 'js-yaml';
 
 window.jsyaml = jsYaml;
 
-process.stdout = {
+process.stdout = process.stderr = {
   isTTY: false,
   write: () => null
 };
