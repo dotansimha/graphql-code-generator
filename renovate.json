@@ -1,6 +1,7 @@
 {
   "extends": ["config:base"],
   "circleci": true,
+  "ignorePaths": ["packages/plugins/typescript-react-apollo/example/"],
   "pathRules": [
     {
       "paths": ["website/package.json"],

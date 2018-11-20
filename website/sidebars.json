@@ -19,6 +19,7 @@
       "plugins/typescript-react-apollo",
       "plugins/typescript-apollo-angular"
     ],
+    "Integrations": ["integrations/apollo-link-state", "integrations/create-react-app"],
     "Custom Code-Generator Plugins": [
       "custom-codegen/index",
       "custom-codegen/write-your-plugin",

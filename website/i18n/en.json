@@ -38,6 +38,12 @@
       "getting-started/schema-field": {
         "title": "`schema` field"
       },
+      "integrations/apollo-link-state": {
+        "title": "apollo-link-state"
+      },
+      "integrations/create-react-app": {
+        "title": "Create-React-App"
+      },
       "migration/from-0-13": {
         "title": "Migration from 0.13"
       },
@@ -71,11 +77,13 @@
     },
     "links": {
       "Docs": "Docs",
+      "GitHub": "GitHub",
       "Help": "Help"
     },
     "categories": {
       "Getting Started": "Getting Started",
       "Plugins": "Plugins",
+      "Integrations": "Integrations",
       "Custom Code-Generator Plugins": "Custom Code-Generator Plugins",
       "Migration": "Migration"
     }
