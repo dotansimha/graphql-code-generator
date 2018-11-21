@@ -2,6 +2,7 @@ import { makeExecutableSchema } from 'graphql-tools';
 import { executeCodegen } from '../src/codegen';
 import { mergeSchemas } from '../src/merge-schemas';
 import { GraphQLObjectType } from 'graphql';
+import { FileOutput } from 'graphql-codegen-core';
 
 const SHOULD_NOT_THROW_STRING = 'SHOULD_NOT_THROW';
 const SIMPLE_TEST_SCHEMA = `type MyType { f: String } type Query { f: String }`;
@@ -214,16 +215,22 @@ describe('Codegen Executor', () => {
     });
 
     it('Should be able to use root schema object (in apollo-angular)', async () => {
-      const output = await executeCodegen({
-        schema: `
-          type RootQuery { f: String }
-          schema { query: RootQuery }
-        `,
-        documents: `query q { f }`,
-        generates: {
-          'out1.ts': ['typescript-common', 'typescript-client', 'typescript-apollo-angular']
-        }
-      });
+      let output: FileOutput[];
+
+      try {
+        output = await executeCodegen({
+          schema: `
+            type RootQuery { f: String }
+            schema { query: RootQuery }
+          `,
+          documents: `query q { f }`,
+          generates: {
+            'out1.ts': ['typescript-common', 'typescript-client', 'typescript-apollo-angular']
+          }
+        });
+      } catch (e) {
+        throw new Error(SHOULD_NOT_THROW_STRING);
+      }
 
       expect(output.length).toBe(1);
       expect(output[0].filename).toBe('out1.ts');
