@@ -212,6 +212,22 @@ describe('Codegen Executor', () => {
       expect(output[0].content).toContain('export namespace Q');
       expect(output[0].content).toContain('export namespace Root');
     });
+
+    it('Should be able to use root schema object (in apollo-angular)', async () => {
+      const output = await executeCodegen({
+        schema: `
+          type RootQuery { f: String }
+          schema { query: RootQuery }
+        `,
+        documents: `query q { f }`,
+        generates: {
+          'out1.ts': ['typescript-common', 'typescript-client', 'typescript-apollo-angular']
+        }
+      });
+
+      expect(output.length).toBe(1);
+      expect(output[0].filename).toBe('out1.ts');
+    });
   });
 
   describe('Plugin Configuration', () => {
