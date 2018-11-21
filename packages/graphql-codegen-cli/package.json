@@ -45,7 +45,7 @@
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0"
   },
   "dependencies": {
-    "@graphql-modules/epoxy": "0.2.7",
+    "@graphql-modules/epoxy": "0.2.8",
     "@types/babylon": "6.16.4",
     "@types/is-glob": "4.0.0",
     "@types/prettier": "1.15.1",
