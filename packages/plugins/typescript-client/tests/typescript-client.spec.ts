@@ -386,7 +386,7 @@ describe('TypeScript Client', () => {
     export type MyFeedRepository = {
       __typename?: MyFeedRepositoryInlineFragment["__typename"] | MyFeed_RepositoryInlineFragment["__typename"];
       html_url: string; 
-    } & (MyFeedRepositoryInlineFragment | MyFeed_RepositoryInlineFragment)
+    } & (MyFeedRepositoryInlineFragment & MyFeed_RepositoryInlineFragment)
   
     export type MyFeedRepositoryInlineFragment = {
       __typename?: "Repository";
@@ -448,7 +448,7 @@ describe('TypeScript Client', () => {
       export type Repository = {
         __typename?: RepositoryInlineFragment["__typename"] | _RepositoryInlineFragment["__typename"];
         html_url: string; 
-      } & (RepositoryInlineFragment | _RepositoryInlineFragment)
+      } & (RepositoryInlineFragment & _RepositoryInlineFragment)
     
       export type RepositoryInlineFragment = {
         __typename?: "Repository";
@@ -468,7 +468,7 @@ describe('TypeScript Client', () => {
   `);
   });
 
-  it('Should separate fragments with |', async () => {
+  it('Should group fragments by type', async () => {
     const testSchema = makeExecutableSchema({
       resolverValidationOptions: {
         requireResolversForResolveType: false
@@ -521,9 +521,10 @@ describe('TypeScript Client', () => {
     `;
 
     const content = await plugin(testSchema, [{ filePath: '', content: query }], {});
+
     expect(content).toBeSimilarStringTo(`
-    export type Extra = PhotoFragment.Fragment | SportFragment.Fragment | SportInlineFragment | PhotoInlineFragment
-  `);
+      export type Extra = ((SportInlineFragment & SportFragment.Fragment) | (PhotoInlineFragment & PhotoFragment.Fragment))
+    `);
   });
 
   it('Should generate simple Query with Fragment spread and handle noNamespaces', async () => {

@@ -89,7 +89,8 @@ export function flattenSelectionSet(selectionSet: SelectionSetItem[], result: Fl
       }
     } else if (isInlineFragmentNode(item)) {
       const model = buildModelFromInlineFragment(item, result);
-      item.onType = model.modelType;
+      item.name = model.modelType;
+      item.onType = model.schemaBaseType;
       result.push(model);
 
       flattenSelectionSet(item.selectionSet, result);
