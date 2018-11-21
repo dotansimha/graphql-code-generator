@@ -594,6 +594,70 @@ describe('Resolvers', () => {
     `);
   });
 
+  it('make sure mappers work with mutations', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: `
+        type Query {
+          post: Post
+        }
+
+        type RootMutation {
+          upvotePost(id: String!): UpvotePostPayload
+        }
+
+        type UpvotePostPayload {
+          post: Post
+        }
+
+        type Post {
+          id: String
+        }
+        
+        schema {
+          query: Query
+          mutation: RootMutation
+        }
+      `
+    });
+
+    const content = await plugin(testSchema, [], {
+      mappers: {
+        // whenever there's something receives or resolves a Post, use PostEntity
+        Post: 'PostEntity'
+      }
+    });
+
+    // RootMutation             should expect {} as a parent
+    // RootMutation.upvotePost  should expect {} as a parent
+    // RootMutation.upvotePost  should return the UpvotePostPayload
+    expect(content).toBeSimilarStringTo(`
+      export namespace RootMutationResolvers {
+        export interface Resolvers<Context = {}, TypeParent = {}> {
+          upvotePost?: UpvotePostResolver<UpvotePostPayload | null, TypeParent, Context>;
+        }
+        
+        export type UpvotePostResolver<R = UpvotePostPayload | null, Parent = {}, Context = {}> = Resolver<R, Parent, Context, UpvotePostArgs>;
+        
+        export interface UpvotePostArgs {
+          id: string;
+        }
+      }
+    `);
+
+    // UpvotePostPayload        should expect UpvotePostPayload as parent
+    // UpvotePostPayload.post   should expect UpvotePostPayload as parent
+    // UpvotePostPayload.post   should return PostEntity
+    expect(content).toBeSimilarStringTo(`
+      export namespace UpvotePostPayloadResolvers {
+        export interface Resolvers<Context = {}, TypeParent = UpvotePostPayload> {
+          post?: PostResolver<PostEntity | null, TypeParent, Context>;
+        }
+
+        export type PostResolver<R = PostEntity | null, Parent = UpvotePostPayload, Context = {}> = Resolver<R, Parent, Context>;
+      }
+    `);
+  });
+
   it('should provide a generic type of arguments in noNamespaces', async () => {
     const testSchema = makeExecutableSchema({
       typeDefs: `
