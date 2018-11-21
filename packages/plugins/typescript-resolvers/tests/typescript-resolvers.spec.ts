@@ -172,6 +172,18 @@ describe('Resolvers', () => {
 
     const content = await plugin(testSchema, [], { contextType: 'MyContext' });
 
+    // make sure nothing was imported
+    expect(content).toBeSimilarStringTo(`
+      import { GraphQLResolveInfo } from 'graphql';
+
+      export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
+        parent: Parent,
+        args: Args,
+        context: Context,
+        info: GraphQLResolveInfo
+      ) => Promise<Result> | Result;
+    `);
+
     expect(content).toBeSimilarStringTo(`
         export interface Resolvers<Context = MyContext, TypeParent = {}> {
           fieldTest?: FieldTestResolver<string | null, TypeParent, Context>;
@@ -570,6 +582,18 @@ describe('Resolvers', () => {
     const content = await plugin(testSchema, [], {
       defaultMapper: 'any'
     });
+
+    // make sure nothing was imported
+    expect(content).toBeSimilarStringTo(`
+      import { GraphQLResolveInfo } from 'graphql';
+
+      export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
+        parent: Parent,
+        args: Args,
+        context: Context,
+        info: GraphQLResolveInfo
+      ) => Promise<Result> | Result;
+    `);
 
     // should check field's result and match it with provided parents
     expect(content).toBeSimilarStringTo(`
