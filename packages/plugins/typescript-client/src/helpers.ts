@@ -27,7 +27,7 @@ function nameFragment(
     return convert(fragment.fragmentName) + (noNamespaces ? '' : '.') + 'Fragment';
   }
 
-  return (noNamespaces ? convert(prefix) : '') + fragment.onType;
+  return (noNamespaces ? convert(prefix) : '') + fragment.name;
 }
 
 function isFragmentSpread(
@@ -45,8 +45,8 @@ export function fragments(convert: (str: string) => string) {
     } = {};
 
     operation.inlineFragments.forEach(fragment => {
-      // FIX: somehow `fragment.onType` has `InlineFragment` suffix
-      const type = fragment.onType.replace('InlineFragment', '');
+      const type = fragment.onType;
+
       if (!fragmentsByType[type]) {
         fragmentsByType[type] = [];
       }
