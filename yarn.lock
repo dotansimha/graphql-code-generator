@@ -840,10 +840,10 @@
   resolved "https://registry.yarnpkg.com/@csstools/convert-colors/-/convert-colors-1.4.0.tgz#ad495dc41b12e75d588c6db8b9834f08fa131eb7"
   integrity sha512-5a6wqoJV/xEdbRNKVo6I4hO3VjyDq//8q2f9I6PBAvMesJHFauXDorcNCsr9RzvsZnaWi5NYCcfyqP1QeFHFbw==
 
-"@graphql-modules/epoxy@0.2.6":
-  version "0.2.6"
-  resolved "https://registry.yarnpkg.com/@graphql-modules/epoxy/-/epoxy-0.2.6.tgz#117fd0857dd99e7cc08bc5a22511c26bbb1f7f89"
-  integrity sha512-6kwM5jsVSQpn3+UR5NPuCss+s9qSBS3sWUFCSFMBEjRDcgwCDE8L9eVqT3U9FD4ZPGCSclna+b+Dt+S9w012dA==
+"@graphql-modules/epoxy@0.2.8":
+  version "0.2.8"
+  resolved "https://registry.yarnpkg.com/@graphql-modules/epoxy/-/epoxy-0.2.8.tgz#caa32611858990d3a1caaa00946102925a562be6"
+  integrity sha512-Zu6TWzrcNUdIXFPyI+n8N69xme11C2Wvg0cMCcxmQiAVwd1hgXCUbALA4IEYpCxg6uZ4Ssb/INDtmjjcdYXrlw==
   dependencies:
     "@types/deepmerge" "2.1.0"
     deepmerge "2.2.1"
@@ -11337,10 +11337,10 @@ ts-jest@23.10.4:
     semver "^5.5"
     yargs-parser "10.x"
 
-ts-log@2.1.3:
-  version "2.1.3"
-  resolved "https://registry.yarnpkg.com/ts-log/-/ts-log-2.1.3.tgz#9e30aca1baffe7693a2e4142b8f07ecb01cb8340"
-  integrity sha512-VIk9+hzE80UjhJcSANst8LGRBpfNh32y9d3LVDMtEqcEb1x0hB71IO0aObNcLJ5VpK5tKeF9uI4pwEco03SkwA==
+ts-log@2.1.4:
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/ts-log/-/ts-log-2.1.4.tgz#063c5ad1cbab5d49d258d18015963489fb6fb59a"
+  integrity sha512-P1EJSoyV+N3bR/IWFeAqXzKPZwHpnLY6j7j58mAvewHRipo+BQM2Y1f9Y9BjEQznKwgqqZm7H8iuixmssU7tYQ==
 
 tslib@1.9.3, tslib@^1.8.0, tslib@^1.8.1, tslib@^1.9.0:
   version "1.9.3"
