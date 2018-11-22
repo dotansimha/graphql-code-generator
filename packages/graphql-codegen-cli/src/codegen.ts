@@ -6,7 +6,7 @@ import { Renderer } from './utils/listr-renderer';
 import { DetailedError } from './errors';
 import { loadSchema, loadDocuments } from './load';
 import { mergeSchemas } from './merge-schemas';
-import { GraphQLError, DocumentNode, visit } from 'graphql';
+import { GraphQLError, GraphQLSchema, DocumentNode, visit } from 'graphql';
 import { executePlugin } from './execute-plugin';
 
 export interface GenerateOutputOptions {
