@@ -18,27 +18,18 @@ export class IntrospectionFromUrlLoader implements SchemaLoader {
   handle(url: string, config: Types.Config, schemaOptions: any): Promise<GraphQLSchema> {
     // spinner.info(`Loading GraphQL Introspection from remote: ${url}...`);
 
-    let splittedHeaders = (schemaOptions.headers || [])
-      .map((header: string) => {
-        const result = header.match(/^(.*?)[:=]{1}(.*?)$/);
+    let headers = {};
 
-        if (result && result.length > 0) {
-          const name = result[1];
-          const value = result[2];
-
-          return {
-            [name]: value
-          };
-        }
-
-        return null;
-      })
-      .filter((item: any) => item);
+    if (Array.isArray(schemaOptions.headers)) {
+      headers = schemaOptions.headers.reduce((prev: object, v: object) => ({ ...prev, ...v }), {});
+    } else if (typeof schemaOptions.headers === 'object') {
+      headers = schemaOptions.headers;
+    }
 
     let extraHeaders = {
       Accept: 'application/json',
       'Content-Type': 'application/json',
-      ...splittedHeaders.reduce((prev: any, item: any) => ({ ...prev, ...item }), {})
+      ...headers
     };
 
     debugLog(`Executing POST to ${url} with headers: `, extraHeaders);
