@@ -37,6 +37,16 @@ export type TypeResolveFn<Types, Parent = {}, Context = {}> = (
   info: GraphQLResolveInfo
 ) => Maybe<Types>;
 
+export type NextResolverFn<T> = () => Promise<T>;
+
+export type DirectiveResolverFn<TResult, TArgs = {}, TContext = {}> = (
+  next: NextResolverFn,
+  source: any,
+  args: TArgs,
+  context: TContext,
+  info: GraphQLResolveInfo,
+) => TResult | Promise<TResult>;
+
 {{#each types}}
 {{~> resolver }}
 {{/each}}
@@ -47,4 +57,8 @@ export type TypeResolveFn<Types, Parent = {}, Context = {}> = (
 
 {{#each unions}}
 {{~> resolveType }}
+{{/each}}
+
+{{#each definedDirectives}}
+{{~> directive}}
 {{/each}}

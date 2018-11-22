@@ -830,4 +830,98 @@ describe('Resolvers', () => {
       export type EntryResolveType<R = 'Post' | 'Comment', Parent = Post | Comment, Context = {}> = TypeResolveFn<R, Parent, Context>;
     `);
   });
+
+  it('should create NextResolverFn and DirectiveResolverFn', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: `
+        type Query {
+          field: String
+        }
+        
+        schema {
+          query: Query
+        }
+      `
+    });
+
+    const content = await plugin(testSchema, [], {});
+
+    expect(content).toBeSimilarStringTo(`
+      export type NextResolverFn<T> = () => Promise<T>;
+      
+      export type DirectiveResolverFn<TResult, TArgs = {}, TContext = {}> = (
+        next: NextResolverFn,
+        source: any,
+        args: TArgs,
+        context: TContext,
+        info: GraphQLResolveInfo,
+      ) => TResult | Promise<TResult>;
+    `);
+  });
+
+  it('should create a type that maches DirectiveResolverFn from graphql-tools', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: `
+        type Post {
+          title: String
+          text: String
+        }
+        
+        type Query {
+          post: Post
+        }
+        
+        schema {
+          query: Query
+        }
+      `
+    });
+
+    const content = await plugin(testSchema, [], {});
+
+    expect(content).toBeSimilarStringTo(`
+      export type NextResolverFn<T> = () => Promise<T>;
+      
+      export type DirectiveResolverFn<TResult, TArgs = {}, TContext = {}> = (
+        next: NextResolverFn,
+        source: any,
+        args: TArgs,
+        context: TContext,
+        info: GraphQLResolveInfo,
+      ) => TResult | Promise<TResult>;
+    `);
+  });
+
+  it('should create a resolver for a directive and its arguments', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: `
+        directive @modify(limit: Int) on FIELD_DEFINITION
+
+        type Post {
+          title: String
+          text: String
+        }
+        
+        type Query {
+          post: Post
+        }
+        
+        schema {
+          query: Query
+        }
+      `
+    });
+
+    const content = await plugin(testSchema, [], {});
+
+    expect(content).toBeSimilarStringTo(`
+      export type ModifyDirectiveResolver<Result> = DirectiveResolverFn<Result, ModifyDirectiveArgs, {}>;
+    `);
+
+    expect(content).toBeSimilarStringTo(`
+      export interface ModifyDirectiveArgs {
+        limit?: number | null;
+      }
+    `);
+  });
 });

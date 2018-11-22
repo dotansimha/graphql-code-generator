@@ -1,0 +1,13 @@
+{{ toComment description }}
+export type {{ convert name }}DirectiveResolver<Result> = DirectiveResolverFn<Result, {{#if hasArguments}}{{ convert name }}DirectiveArgs{{else}}{}{{/if}}, {{{ getContext }}}>;
+
+{{~# if hasArguments }}
+
+export interface {{ convert name }}DirectiveArgs {
+{{#each arguments}}
+  {{ toComment description }}
+  {{ name }}{{ getOptionals this }}: {{ convertedType this }};
+{{/each}}
+}
+
+{{/if}}
