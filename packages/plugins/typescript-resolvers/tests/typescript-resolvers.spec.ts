@@ -755,7 +755,7 @@ describe('Resolvers', () => {
     `);
   });
 
-  it('should create a type with __resolveType for Unions and Interfaces', async () => {
+  it('should create a type with __resolveType for a union', async () => {
     const testSchema = makeExecutableSchema({
       typeDefs: `
         type Post {
@@ -779,6 +779,7 @@ describe('Resolvers', () => {
         }
       `
     });
+
     const content = await plugin(testSchema, [], {});
 
     expect(content).toBeSimilarStringTo(`
@@ -789,6 +790,44 @@ describe('Resolvers', () => {
         
         export type ResolveType<R = 'Post' | 'Comment', Parent = Post | Comment, Context = {}> = TypeResolveFn<R, Parent, Context>;
       }
+    `);
+  });
+
+  it('should create a type with __resolveType for a union (with noNamespaces)', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: `
+        type Post {
+          title: String
+          text: String
+        }
+
+        type Comment {
+          text: String
+        }
+
+        union Entry = Post | Comment
+
+        type Query {
+          feed: Entry
+
+        }
+        
+        schema {
+          query: Query
+        }
+      `
+    });
+
+    const content = await plugin(testSchema, [], {
+      noNamespaces: true
+    });
+
+    expect(content).toBeSimilarStringTo(`
+      export interface EntryResolvers {
+        __resolveType: EntryResolveType;
+      }
+      
+      export type EntryResolveType<R = 'Post' | 'Comment', Parent = Post | Comment, Context = {}> = TypeResolveFn<R, Parent, Context>;
     `);
   });
 });
