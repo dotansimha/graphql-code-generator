@@ -1,5 +1,5 @@
-import stripComments from './strip-comments';
 import { parse } from 'graphql-codegen-core';
+import gqlPluck from 'graphql-tag-pluck';
 
 export const extractDocumentStringFromCodeFile = (fileContent: string): string | void => {
   try {
@@ -9,30 +9,6 @@ export const extractDocumentStringFromCodeFile = (fileContent: string): string |
       return fileContent;
     }
   } catch (e) {
-    try {
-      fileContent = stripComments(fileContent, { sourceType: 'module' });
-    } catch (e) {
-      try {
-        fileContent = stripComments(fileContent);
-      } catch (e) {
-        // nothing to to here
-      }
-    }
-
-    let matches = fileContent.match(/(gql|graphql)[(]?`([\s\S\n\r.]*?)`/gm);
-
-    if (matches === null) {
-      matches = fileContent.match(/(['"`](query|subscription|fragment|mutation) .*?['"`])/gm);
-    }
-
-    const result = (matches || [])
-      .map(item => item.replace(/\$\{.*?\}/g, '').replace(/(gql|graphql|[(]?`)/g, ''))
-      .join();
-
-    if (!result || result === '') {
-      return null;
-    } else {
-      return result;
-    }
+    return gqlPluck.fromCodeString.sync(fileContent) || null;
   }
 };

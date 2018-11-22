@@ -73,4 +73,10 @@ describe('extractDocumentStringFromCodeFile', () => {
     expect(doc).toEqual(graphql);
     expect(doc).toMatchSnapshot();
   });
+
+  it('Do not parse string interpolations which ends with graphql', () => {
+    const doc = extract('16.ts');
+    expect(doc).toEqual(null);
+    expect(doc).toMatchSnapshot();
+  });
 });
