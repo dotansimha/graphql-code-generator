@@ -8,7 +8,7 @@ import { Renderer } from './utils/listr-renderer';
 import { DetailedError } from './errors';
 import { loadSchema, loadDocuments } from './load';
 import { mergeSchemas } from './merge-schemas';
-import { GraphQLError } from 'graphql';
+import { GraphQLError, visit } from 'graphql';
 
 export interface GenerateOutputOptions {
   filename: string;
@@ -305,8 +305,64 @@ export async function executeCodegen(config: Types.Config): Promise<FileOutput[]
   return result;
 }
 
+function validateDocuments(schema: GraphQLSchema, files: DocumentFile[]) {
+  // duplicated names
+  const operationMap: {
+    [name: string]: string[];
+  } = {};
+
+  files.forEach(file => {
+    visit(file.content, {
+      OperationDefinition(node) {
+        if (typeof node.name !== 'undefined') {
+          if (!operationMap[node.name.value]) {
+            operationMap[node.name.value] = [];
+          }
+
+          operationMap[node.name.value].push(file.filePath);
+        }
+      }
+    });
+  });
+
+  const names = Object.keys(operationMap);
+
+  if (names.length) {
+    const duplicated = names.filter(name => operationMap[name].length > 1);
+
+    if (!duplicated.length) {
+      return;
+    }
+
+    const list = duplicated
+      .map(name =>
+        `
+      * ${name} found in:
+        ${operationMap[name]
+          .map(filepath => {
+            return `
+            - ${filepath}
+          `.trimRight();
+          })
+          .join('')}
+  `.trimRight()
+      )
+      .join('');
+    throw new DetailedError(
+      `Not all operations have an unique name: ${duplicated.join(', ')}`,
+      `
+        Not all operations have an unique name
+
+        ${list}
+      `
+    );
+  }
+}
+
 export async function generateOutput(options: GenerateOutputOptions): Promise<FileOutput> {
   let output = '';
+
+  validateDocuments(options.schema, options.documents);
 
   for (const plugin of options.plugins) {
     const name = Object.keys(plugin)[0];
