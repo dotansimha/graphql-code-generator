@@ -579,4 +579,128 @@ describe('TypeScript Client', () => {
     }
 `);
   });
+
+  it('should generate correctly when using immutableTypes and noNamespace', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: gql`
+        type Country {
+          id: Int!
+          code: String!
+          name: String!
+        }
+
+        type CountriesPayload {
+          countries: [Country!]
+        }
+
+        type Query {
+          countries: CountriesPayload!
+        }
+      `
+    });
+    const query = gql`
+      query Countries {
+        countries {
+          countries {
+            code
+            name
+          }
+        }
+      }
+    `;
+
+    const content = await plugin(testSchema, [{ filePath: '', content: query }], {
+      immutableTypes: true,
+      noNamespaces: true
+    });
+
+    expect(content).toBeSimilarStringTo(`
+      export type CountriesCountries = {
+        readonly __typename?: "CountriesPayload";
+        readonly countries:  ReadonlyArray<Countries_Countries> | null;
+      }
+    `);
+  });
+
+  it('should generate correctly when using immutableTypes', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: gql`
+        type Country {
+          id: Int!
+          code: String!
+          name: String!
+        }
+
+        type CountriesPayload {
+          countries: [Country!]
+        }
+
+        type Query {
+          countries: CountriesPayload!
+        }
+      `
+    });
+    const query = gql`
+      query Countries {
+        countries {
+          countries {
+            code
+            name
+          }
+        }
+      }
+    `;
+
+    const content = await plugin(testSchema, [{ filePath: '', content: query }], {
+      immutableTypes: true
+    });
+
+    expect(content).toBeSimilarStringTo(`
+      export type Countries = {
+        readonly __typename?: "CountriesPayload";
+        readonly countries:  ReadonlyArray<_Countries> | null;
+      }
+    `);
+  });
+
+  it('should generate correctly when using noNamespace', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: gql`
+        type Country {
+          id: Int!
+          code: String!
+          name: String!
+        }
+
+        type CountriesPayload {
+          countries: [Country!]
+        }
+
+        type Query {
+          countries: CountriesPayload!
+        }
+      `
+    });
+    const query = gql`
+      query Countries {
+        countries {
+          countries {
+            code
+            name
+          }
+        }
+      }
+    `;
+
+    const content = await plugin(testSchema, [{ filePath: '', content: query }], {
+      noNamespaces: true
+    });
+
+    expect(content).toBeSimilarStringTo(`
+      export type CountriesCountries = {
+        __typename?: "CountriesPayload";
+        countries: Countries_Countries[] | null;
+      }
+    `);
+  });
 });

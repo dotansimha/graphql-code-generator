@@ -1,3 +1,6 @@
+import { getFieldType } from 'graphql-codegen-typescript-common';
+import { SafeString } from 'handlebars';
+
 import {
   Field,
   Operation,
@@ -6,11 +9,11 @@ import {
   Fragment
 } from 'graphql-codegen-core';
 
-export function shouldHavePrefix(type: Field, options: Handlebars.HelperOptions) {
+export function shouldHavePrefix(field: Field, options: Handlebars.HelperOptions) {
   const config = options.data.root.config || {};
-  const nonPrefixable = type.isEnum || type.isUnion || type.isScalar;
+  const nonPrefixable = field.isEnum || field.isUnion || field.isScalar;
 
-  return config.noNamespaces === true && !isPrimitiveType(type, options) && !nonPrefixable;
+  return config.noNamespaces === true && !isPrimitiveType(field, options) && !nonPrefixable;
 }
 
 export function isPrimitiveType(type: Field, options: Handlebars.HelperOptions) {
@@ -85,5 +88,24 @@ export function fragments(convert: (str: string) => string) {
     }
 
     return output.join('');
+  };
+}
+
+export function convertedFieldType(convert) {
+  return (field: Field, prefix: string, options: Handlebars.HelperOptions) => {
+    const config = options.data.root.config || {};
+    let realType = '';
+
+    if (shouldHavePrefix(field, options)) {
+      realType = convert(prefix);
+
+      if (config.noNamespaces) {
+        realType += field.type;
+      }
+    } else {
+      realType = field.type;
+    }
+
+    return new SafeString(getFieldType(field, realType, options));
   };
 }
