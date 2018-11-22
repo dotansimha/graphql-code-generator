@@ -124,8 +124,6 @@ export interface SelectionSetInlineFragment extends SelectionSetItem {
   selectionSet: SelectionSetItem[];
   onType: string;
   name: string;
-  isAliased: boolean;
-  schemaFieldName: string;
   fields: SelectionSetFieldNode[];
   fragmentsSpread: SelectionSetFragmentSpread[];
   inlineFragments: SelectionSetInlineFragment[];
@@ -141,6 +139,8 @@ export interface SelectionSetFragmentSpread extends SelectionSetItem {
 export interface SelectionSetFieldNode extends SelectionSetItem {
   selectionSet: SelectionSetItem[];
   name: string;
+  isAliased: boolean;
+  schemaFieldName: string;
   type: string;
   isRequired: boolean;
   isArray: boolean;
