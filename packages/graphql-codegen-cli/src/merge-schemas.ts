@@ -1,24 +1,26 @@
-import { GraphQLSchema } from 'graphql';
+import { GraphQLSchema, DocumentNode } from 'graphql';
 import { mergeGraphQLSchemas } from '@graphql-modules/epoxy';
 import { makeExecutableSchema } from 'graphql-tools';
 
-export async function mergeSchemas(schemas: GraphQLSchema[]): Promise<GraphQLSchema> {
-  if (schemas.length === 0) {
-    return null;
-  } else if (schemas.length === 1) {
-    return schemas[0];
-  } else {
-    const mergedSchemaString = mergeGraphQLSchemas(schemas.filter(s => s));
+export function mergeSchemas(schemas: Array<string | GraphQLSchema | DocumentNode>): DocumentNode {
+  const schemasArr = schemas.filter(s => s);
 
-    return makeExecutableSchema({
-      typeDefs: mergedSchemaString,
-      allowUndefinedInResolve: true,
-      resolverValidationOptions: {
-        requireResolversForResolveType: false,
-        requireResolversForAllFields: false,
-        requireResolversForNonScalar: false,
-        requireResolversForArgs: false
-      }
-    });
+  if (schemasArr.length === 0) {
+    return null;
+  } else {
+    return mergeGraphQLSchemas(schemasArr);
   }
+}
+
+export function buildSchema(node: DocumentNode): GraphQLSchema {
+  return makeExecutableSchema({
+    typeDefs: node,
+    allowUndefinedInResolve: true,
+    resolverValidationOptions: {
+      requireResolversForResolveType: false,
+      requireResolversForAllFields: false,
+      requireResolversForNonScalar: false,
+      requireResolversForArgs: false
+    }
+  });
 }
