@@ -1,23 +1,21 @@
-import { initCLI, createConfigFromOldCli } from './old-cli-config';
+import { initCLI, createConfigFromOldCli, CLIOptions } from './old-cli-config';
 import { existsSync, readFileSync } from 'fs';
 import { join, resolve } from 'path';
 import { Types } from 'graphql-codegen-core';
 import { DetailedError } from './errors';
 import { parseConfigFile } from './yml';
+import { Command } from 'commander';
 
-function getCustomConfig(): string | null | never {
-  const [, , flag, filepath] = process.argv;
+export type YamlCliFlags = {
+  config: string;
+  watch: boolean;
+} & Partial<CLIOptions>;
 
-  if (!flag) {
-    return null;
-  }
+function getCustomConfigPath(cliFlags: YamlCliFlags): string | null | never {
+  const configFile = cliFlags.config;
 
-  const flagIsConfig = ['--config', '-c'].includes(flag.toLocaleLowerCase());
-  const hasFilepath = typeof filepath === 'string' && filepath.length > 0;
-  const noOtherFlags = process.argv.length === 4;
-
-  if (flagIsConfig && hasFilepath && noOtherFlags) {
-    const configPath = resolve(process.cwd(), filepath);
+  if (configFile) {
+    const configPath = resolve(process.cwd(), configFile);
 
     if (!existsSync(configPath)) {
       throw new DetailedError(
@@ -55,19 +53,46 @@ function loadAndParseConfig(filepath: string): Types.Config | never {
   }
 }
 
-export function createConfig(): Types.Config | never {
-  const customConfigPath = getCustomConfig();
-  const locations: string[] = [join(process.cwd(), './codegen.yml'), join(process.cwd(), './codegen.json')];
+export function createConfig(argv = process.argv): Types.Config | never {
+  const cliFlags = (new Command()
+    .usage('gql-gen [options]')
+    .allowUnknownOption(true)
+    .option(
+      '-c, --config <path>',
+      'Path to GraphQL codegen YAML config file, defaults to "codegen.yml" on the current directory'
+    )
+    .option('-w, --watch', 'Watch for changes and execute generation automatically')
+    .option('-o, --overwrite', 'Overwrites existing files')
+    .parse(argv) as any) as Command & YamlCliFlags;
 
-  if (customConfigPath) {
-    locations.unshift(customConfigPath);
+  const isUsingOldApi =
+    cliFlags.rawArgs.includes('--template') ||
+    cliFlags.rawArgs.includes('-t') ||
+    cliFlags.rawArgs.includes('--schema') ||
+    cliFlags.rawArgs.includes('--s');
+
+  if (isUsingOldApi) {
+    return createConfigFromOldCli(initCLI(argv));
+  } else {
+    const customConfigPath = getCustomConfigPath(cliFlags);
+    const locations: string[] = [join(process.cwd(), './codegen.yml'), join(process.cwd(), './codegen.json')];
+
+    if (customConfigPath) {
+      locations.unshift(customConfigPath);
+    }
+
+    const filepath = locations.find(existsSync);
+
+    const parsedConfigFile = loadAndParseConfig(filepath);
+
+    if (cliFlags.watch === true) {
+      parsedConfigFile.watch = cliFlags.watch;
+    }
+
+    if (cliFlags.overwrite === true) {
+      parsedConfigFile.overwrite = cliFlags.overwrite;
+    }
+
+    return parsedConfigFile;
   }
-
-  const filepath = locations.find(existsSync);
-
-  if (!filepath) {
-    return createConfigFromOldCli(initCLI(process.argv));
-  }
-
-  return loadAndParseConfig(filepath);
 }

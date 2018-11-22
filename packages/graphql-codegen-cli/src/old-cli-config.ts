@@ -1,4 +1,4 @@
-import * as commander from 'commander';
+import { Command } from 'commander';
 import { Types } from 'graphql-codegen-core';
 import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
@@ -33,7 +33,7 @@ function collect<T>(val: T, memo: T[]) {
 }
 
 export const initCLI = (args: any): CLIOptions => {
-  commander
+  const command = new Command()
     .usage('gql-gen [options]')
     .option(
       '-s, --schema <path>',
@@ -66,7 +66,7 @@ export const initCLI = (args: any): CLIOptions => {
     .arguments('<options> [documents...]')
     .parse(args);
 
-  return (commander as any) as CLIOptions;
+  return (command as any) as CLIOptions;
 };
 
 export const validateCliOptions = (options: CLIOptions) => {
@@ -171,7 +171,7 @@ function transformTemplatesToPlugins(
     };
   }
 
-  return { plugins: [] };
+  return { plugins: [options.template].filter(a => a) };
 }
 
 function getConfigFromEnvVars() {
@@ -219,8 +219,24 @@ export function createConfigFromOldCli(options: CLIOptions): Types.Config {
     ...envVarsConfig
   };
 
+  let schema: Types.Schema = options.schema;
+
+  if (options.header && Array.isArray(options.header) && options.header.length > 0) {
+    schema = {
+      [options.schema]: {
+        headers: options.header.reduce((prev, h) => {
+          const splitted = h.split(':').map(p => p.trim());
+          const name = splitted[0];
+          const value = splitted[1];
+
+          return { ...prev, [name]: value };
+        }, {})
+      }
+    };
+  }
+
   const configObject: Types.Config = {
-    schema: [options.schema, options.clientSchema].filter(s => s),
+    schema: [schema, options.clientSchema].filter(s => s),
     documents: options.args || [],
     config: rootConfig,
     generates: {
