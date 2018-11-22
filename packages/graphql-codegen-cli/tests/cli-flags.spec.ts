@@ -4,24 +4,21 @@ import { join } from 'path';
 
 const mockFsFile = (file: string, content: string) => require('fs').__setMockFiles(file, content);
 const resetFs = () => require('fs').__resetMockFiles();
+const mockConfig = (str: string, file = './codegen.yml') => mockFsFile(join(process.cwd(), file), str);
 const createArgv = (str = ''): string[] => {
   const result = ['node', 'fake.js'];
   const regexp = /([^\s'"]+(['"])([^\2]*?)\2)|[^\s'"]+|(['"])([^\4]*?)\4/gi;
 
   let match;
   do {
-    // Each call to exec returns the next regex match as an array
     match = regexp.exec(str);
     if (match !== null) {
-      // Index 1 in the array is the captured group if it exists
-      // Index 0 is the matched text, which we use if no captured group exists
       result.push(match[1] || match[5] || match[0]);
     }
   } while (match !== null);
 
   return result;
 };
-const mockConfig = (str: string, file = './codegen.yml') => mockFsFile(join(process.cwd(), file), str);
 
 describe.only('CLI Flags', () => {
   beforeEach(() => {

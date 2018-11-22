@@ -1,6 +1,6 @@
 import { makeExecutableSchema } from 'graphql-tools';
 import { executeCodegen } from '../src/codegen';
-import { mergeSchemas } from '../src/merge-schemas';
+import { mergeSchemas, buildSchema } from '../src/merge-schemas';
 import { GraphQLObjectType } from 'graphql';
 
 const SHOULD_NOT_THROW_STRING = 'SHOULD_NOT_THROW';
@@ -378,27 +378,30 @@ describe('Codegen Executor', () => {
 
   describe('Schema Merging', () => {
     it('should keep definitions of all directives', async () => {
-      const merged = await mergeSchemas([
-        makeExecutableSchema({ typeDefs: SIMPLE_TEST_SCHEMA }),
-        makeExecutableSchema({
-          typeDefs: `
+      const merged = buildSchema(
+        await mergeSchemas([
+          makeExecutableSchema({ typeDefs: SIMPLE_TEST_SCHEMA }),
+          makeExecutableSchema({
+            typeDefs: `
             directive @id on FIELD_DEFINITION
 
             type Post {
               id: String @id
             }
           `
-        })
-      ]);
+          })
+        ])
+      );
 
       expect(merged.getDirectives().map(({ name }) => name)).toContainEqual('id');
     });
 
     it('should keep directives in types', async () => {
-      const merged = await mergeSchemas([
-        makeExecutableSchema({ typeDefs: SIMPLE_TEST_SCHEMA }),
-        makeExecutableSchema({
-          typeDefs: `
+      const merged = buildSchema(
+        await mergeSchemas([
+          makeExecutableSchema({ typeDefs: SIMPLE_TEST_SCHEMA }),
+          makeExecutableSchema({
+            typeDefs: `
             directive @id on FIELD_DEFINITION
             directive @test on OBJECT
 
@@ -414,8 +417,9 @@ describe('Codegen Executor', () => {
               query: Query
             }
           `
-        })
-      ]);
+          })
+        ])
+      );
 
       expect(merged.getType('Post').astNode.directives.map(({ name }) => name.value)).toContainEqual('test');
       expect(
@@ -477,7 +481,8 @@ describe('Codegen Executor', () => {
         });
 
         throw new Error(SHOULD_NOT_THROW_STRING);
-      } catch (e) {
+      } catch (listrError) {
+        const e = listrError.errors[0];
         expect(e.message).toBe('Failed to load custom schema loader');
         expect(e.details).toContain('Return value of a custom schema loader must be of type');
       }
@@ -499,7 +504,8 @@ describe('Codegen Executor', () => {
         });
 
         throw new Error(SHOULD_NOT_THROW_STRING);
-      } catch (e) {
+      } catch (listrError) {
+        const e = listrError.errors[0];
         expect(e.message).toBe('Failed to load custom schema loader');
         expect(e.details).toContain('Cannot find module');
       }
@@ -521,7 +527,8 @@ describe('Codegen Executor', () => {
         });
 
         throw new Error(SHOULD_NOT_THROW_STRING);
-      } catch (e) {
+      } catch (listrError) {
+        const e = listrError.errors[0];
         expect(e.message).toBe('Failed to load custom schema loader');
         expect(e.details).toContain(
           'Unable to find a loader function! Make sure to export a default function from your file'
@@ -586,7 +593,8 @@ describe('Codegen Executor', () => {
         });
 
         throw new Error(SHOULD_NOT_THROW_STRING);
-      } catch (e) {
+      } catch (listrError) {
+        const e = listrError.errors[0];
         expect(e.message).toBe('Failed to load custom documents loader');
         expect(e.details).toContain('Return value of a custom schema loader must be an Array of');
       }
@@ -609,7 +617,8 @@ describe('Codegen Executor', () => {
         });
 
         throw new Error(SHOULD_NOT_THROW_STRING);
-      } catch (e) {
+      } catch (listrError) {
+        const e = listrError.errors[0];
         expect(e.message).toBe('Failed to load custom documents loader');
         expect(e.details).toContain('Cannot find module');
       }
@@ -632,7 +641,8 @@ describe('Codegen Executor', () => {
         });
 
         throw new Error(SHOULD_NOT_THROW_STRING);
-      } catch (e) {
+      } catch (listrError) {
+        const e = listrError.errors[0];
         expect(e.message).toBe('Failed to load custom documents loader');
         expect(e.details).toContain(
           'Unable to find a loader function! Make sure to export a default function from your file'

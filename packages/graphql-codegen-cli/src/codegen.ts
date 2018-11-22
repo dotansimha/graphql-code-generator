@@ -1,32 +1,21 @@
-import { FileOutput, GraphQLSchema, DocumentFile, Types, CodegenPlugin } from 'graphql-codegen-core';
-import { makeExecutableSchema } from 'graphql-tools';
+import { FileOutput, DocumentFile, Types } from 'graphql-codegen-core';
 import * as Listr from 'listr';
 import { normalizeOutputParam, normalizeInstanceOrArray, normalizeConfig } from './helpers';
-import { validateGraphQlDocuments, checkValidationErrors } from './loaders/documents/validate-documents';
 import { prettify } from './utils/prettier';
 import { Renderer } from './utils/listr-renderer';
 import { DetailedError } from './errors';
 import { loadSchema, loadDocuments } from './load';
 import { mergeSchemas } from './merge-schemas';
-import { GraphQLError } from 'graphql';
+import { GraphQLError, DocumentNode } from 'graphql';
+import { executePlugin } from './execute-plugin';
 
 export interface GenerateOutputOptions {
   filename: string;
   plugins: Types.ConfiguredPlugin[];
-  schema: GraphQLSchema;
+  schema: DocumentNode;
   documents: DocumentFile[];
   pluginLoader: Types.PluginLoaderFn;
   inheritedConfig: { [key: string]: any };
-}
-
-export interface ExecutePluginOptions {
-  name: string;
-  config: Types.PluginConfig;
-  schema: GraphQLSchema;
-  documents: DocumentFile[];
-  outputFilename: string;
-  allPlugins: Types.ConfiguredPlugin[];
-  pluginLoader: Types.PluginLoaderFn;
 }
 
 export async function executeCodegen(config: Types.Config): Promise<FileOutput[]> {
@@ -72,14 +61,10 @@ export async function executeCodegen(config: Types.Config): Promise<FileOutput[]
     } as any);
   }
 
-  let rootConfig: {
-    [key: string]: any;
-  } = {};
-  let schemas: Types.Schema[];
-  let documents: Types.OperationDocument[];
+  let rootConfig: { [key: string]: any } = {};
+  let rootSchemas: Types.Schema[];
+  let rootDocuments: Types.OperationDocument[];
   let generates: { [filename: string]: Types.ConfiguredOutput } = {};
-  let rootSchema: GraphQLSchema;
-  let rootDocuments: DocumentFile[] = [];
 
   function normalize() {
     /* Load Require extensions */
@@ -90,10 +75,10 @@ export async function executeCodegen(config: Types.Config): Promise<FileOutput[]
     rootConfig = config.config || {};
 
     /* Normalize root "schema" field */
-    schemas = normalizeInstanceOrArray<Types.Schema>(config.schema);
+    rootSchemas = normalizeInstanceOrArray<Types.Schema>(config.schema);
 
     /* Normalize root "documents" field */
-    documents = normalizeInstanceOrArray<Types.OperationDocument>(config.documents);
+    rootDocuments = normalizeInstanceOrArray<Types.OperationDocument>(config.documents);
 
     /* Normalize "generators" field */
     const generateKeys = Object.keys(config.generates);
@@ -140,7 +125,7 @@ export async function executeCodegen(config: Types.Config): Promise<FileOutput[]
       }
     }
 
-    if (schemas.length === 0 && Object.keys(generates).some(filename => generates[filename].schema.length === 0)) {
+    if (rootSchemas.length === 0 && Object.keys(generates).some(filename => generates[filename].schema.length === 0)) {
       throw new DetailedError(
         'Invalid Codegen Configuration!',
         `
@@ -160,53 +145,9 @@ export async function executeCodegen(config: Types.Config): Promise<FileOutput[]
     }
   }
 
-  async function loadRootSchema() {
-    /* Load root schemas */
-    if (schemas.length) {
-      rootSchema = await mergeSchemas(
-        await Promise.all(schemas.map(pointToScehma => loadSchema(pointToScehma, config)))
-      );
-    }
-  }
-
-  async function loadRootDocuments() {
-    /* Load root documents */
-    if (documents.length > 0) {
-      for (const docDef of documents) {
-        const documents = await loadDocuments(docDef, config);
-
-        if (documents.length > 0) {
-          rootDocuments.push(...documents);
-        }
-      }
-
-      if (rootSchema) {
-        const errors = validateGraphQlDocuments(rootSchema, rootDocuments);
-        checkValidationErrors(errors);
-      }
-    }
-  }
-
   listr.add({
     title: 'Parse configuration',
-    task: ctx => {
-      normalize();
-
-      ctx.hasSchemas = schemas.length > 0;
-      ctx.hasDocuments = documents.length > 0;
-    }
-  });
-
-  listr.add({
-    title: 'Load schema',
-    enabled: ctx => ctx.hasSchemas,
-    task: wrapTask(loadRootSchema)
-  });
-
-  listr.add({
-    title: 'Load documents',
-    enabled: ctx => ctx.hasDocuments,
-    task: wrapTask(loadRootDocuments)
+    task: () => normalize()
   });
 
   listr.add({
@@ -218,69 +159,57 @@ export async function executeCodegen(config: Types.Config): Promise<FileOutput[]
           task: () => {
             const outputConfig = generates[filename];
             const outputFileTemplateConfig = outputConfig.config || {};
-            let outputSchema = rootSchema;
-            let outputDocuments: DocumentFile[] = rootDocuments;
-
+            const outputDocuments: DocumentFile[] = [];
+            let outputSchema: DocumentNode;
             const outputSpecificSchemas = normalizeInstanceOrArray<Types.Schema>(outputConfig.schema);
             const outputSpecificDocuments = normalizeInstanceOrArray<Types.OperationDocument>(outputConfig.documents);
-
-            async function addSchema() {
-              outputSchema = await mergeSchemas([
-                rootSchema,
-                ...(await Promise.all(outputSpecificSchemas.map(pointToScehma => loadSchema(pointToScehma, config))))
-              ]);
-            }
-
-            async function addDocuments() {
-              const additionalDocs = [];
-
-              for (const docDef of outputSpecificDocuments) {
-                const documents = await loadDocuments(docDef, config);
-
-                if (documents.length > 0) {
-                  additionalDocs.push(...documents);
-                }
-              }
-
-              if (outputSchema) {
-                const errors = validateGraphQlDocuments(outputSchema, additionalDocs);
-                checkValidationErrors(errors);
-              }
-
-              outputDocuments = [...rootDocuments, ...additionalDocs];
-            }
-
-            async function doGenerateOutput() {
-              const normalizedPluginsArray = normalizeConfig(outputConfig.plugins);
-              const output = await generateOutput({
-                filename,
-                plugins: normalizedPluginsArray,
-                schema: outputSchema,
-                documents: outputDocuments,
-                inheritedConfig: {
-                  ...rootConfig,
-                  ...outputFileTemplateConfig
-                },
-                pluginLoader: config.pluginLoader || require
-              });
-              result.push(output);
-            }
 
             return new Listr(
               [
                 {
-                  title: 'Add related schemas',
-                  enabled: () => outputSpecificSchemas.length > 0,
-                  task: wrapTask(addSchema, filename)
+                  title: 'Load GraphQL schemas',
+                  task: wrapTask(async () => {
+                    const allSchemas = [
+                      ...rootSchemas.map(pointToScehma => loadSchema(pointToScehma, config)),
+                      ...outputSpecificSchemas.map(pointToScehma => loadSchema(pointToScehma, config))
+                    ];
+
+                    if (allSchemas.length > 0) {
+                      outputSchema = await mergeSchemas(await Promise.all(allSchemas));
+                    }
+                  }, filename)
                 },
                 {
-                  title: 'Add related documents',
-                  enabled: () => outputSpecificDocuments.length > 0,
-                  task: wrapTask(addDocuments, filename)
+                  title: 'Load GraphQL documents',
+                  task: wrapTask(async () => {
+                    const allDocuments = [...rootDocuments, ...outputSpecificDocuments];
+
+                    for (const docDef of allDocuments) {
+                      const documents = await loadDocuments(docDef, config);
+
+                      if (documents.length > 0) {
+                        outputDocuments.push(...documents);
+                      }
+                    }
+                  }, filename)
                 },
                 {
                   title: 'Generate',
-                  task: wrapTask(doGenerateOutput, filename)
+                  task: wrapTask(async () => {
+                    const normalizedPluginsArray = normalizeConfig(outputConfig.plugins);
+                    const output = await generateOutput({
+                      filename,
+                      plugins: normalizedPluginsArray,
+                      schema: outputSchema,
+                      documents: outputDocuments,
+                      inheritedConfig: {
+                        ...rootConfig,
+                        ...outputFileTemplateConfig
+                      },
+                      pluginLoader: config.pluginLoader || require
+                    });
+                    result.push(output);
+                  }, filename)
                 }
               ],
               {
@@ -331,107 +260,4 @@ export async function generateOutput(options: GenerateOutputOptions): Promise<Fi
   }
 
   return { filename: options.filename, content: await prettify(options.filename, output) };
-}
-
-export async function getPluginByName(name: string, pluginLoader: Types.PluginLoaderFn): Promise<CodegenPlugin> {
-  const possibleNames = [
-    `graphql-codegen-${name}`,
-    `graphql-codegen-${name}-template`,
-    `codegen-${name}`,
-    `codegen-${name}-template`,
-    name
-  ];
-
-  for (const packageName of possibleNames) {
-    try {
-      return pluginLoader(packageName) as CodegenPlugin;
-    } catch (err) {
-      if (err.message.indexOf(`Cannot find module '${packageName}'`) === -1) {
-        throw new DetailedError(
-          `Unable to load template plugin matching ${name}`,
-          `
-            Unable to load template plugin matching '${name}'.
-            Reason: 
-              ${err.message}
-          `
-        );
-      }
-    }
-  }
-
-  const possibleNamesMsg = possibleNames
-    .map(name =>
-      `
-      - ${name}
-  `.trimRight()
-    )
-    .join('');
-
-  throw new DetailedError(
-    `Unable to find template plugin matching ${name}`,
-    `
-      Unable to find template plugin matching '${name}'
-      Install one of the following packages:
-      
-      ${possibleNamesMsg}
-    `
-  );
-}
-
-export async function executePlugin(options: ExecutePluginOptions): Promise<string> {
-  const pluginPackage = await getPluginByName(options.name, options.pluginLoader);
-
-  if (!pluginPackage || !pluginPackage.plugin || typeof pluginPackage.plugin !== 'function') {
-    throw new DetailedError(
-      `Invalid Custom Plugin "${options.name}"`,
-      `
-      Plugin ${options.name} does not export a valid JS object with "plugin" function.
-
-      Make sure your custom plugin is written in the following form:
-
-      module.exports = {
-        plugin: (schema, documents, config) => {
-          return 'my-custom-plugin-content';
-        },
-      };
-      `
-    );
-  }
-
-  const schema = !pluginPackage.addToSchema
-    ? options.schema
-    : await mergeSchemas([
-        options.schema,
-        makeExecutableSchema({
-          typeDefs: pluginPackage.addToSchema,
-          allowUndefinedInResolve: true,
-          resolverValidationOptions: {
-            requireResolversForResolveType: false,
-            requireResolversForAllFields: false,
-            requireResolversForNonScalar: false,
-            requireResolversForArgs: false
-          }
-        })
-      ]);
-
-  if (pluginPackage.validate && typeof pluginPackage.validate === 'function') {
-    try {
-      await pluginPackage.validate(
-        schema,
-        options.documents,
-        options.config,
-        options.outputFilename,
-        options.allPlugins
-      );
-    } catch (e) {
-      throw new DetailedError(
-        `Plugin "${options.name}" validation failed:`,
-        `
-          ${e.message}
-        `
-      );
-    }
-  }
-
-  return pluginPackage.plugin(schema, options.documents, options.config);
 }

@@ -83,6 +83,15 @@ export function createConfig(argv = process.argv): Types.Config | never {
 
     const filepath = locations.find(existsSync);
 
+    if (!filepath) {
+      throw new DetailedError(
+        `Unable to find Codegen config file!`,
+        `
+        Please make sure that you have a configuration file under the current directory! 
+      `
+      );
+    }
+
     const parsedConfigFile = loadAndParseConfig(filepath);
 
     if (cliFlags.watch === true) {
