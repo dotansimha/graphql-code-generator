@@ -712,4 +712,83 @@ describe('Resolvers', () => {
       }
     `);
   });
+
+  it('should have Maybe type', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: `
+        type Query {
+          fieldTest(last: Int!, sort: String): String
+        }
+        
+        schema {
+          query: Query
+        }
+      `
+    });
+    const content = await plugin(testSchema, [], {});
+
+    expect(content).toBeSimilarStringTo(`
+      type Maybe<T> = T | null | undefined;
+    `);
+  });
+
+  it('should define TypeResolveFn', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: `
+        type Query {
+          fieldTest(last: Int!, sort: String): String
+        }
+        
+        schema {
+          query: Query
+        }
+      `
+    });
+    const content = await plugin(testSchema, [], {});
+
+    expect(content).toBeSimilarStringTo(`
+      export type TypeResolveFn<Types, Parent = {}, Context = {}> = (
+        parent: Parent,
+        context: Context,
+        info: GraphQLResolveInfo
+      ) => Maybe<Types>;
+    `);
+  });
+
+  it('should create a type with __resolveType for Unions and Interfaces', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: `
+        type Post {
+          title: String
+          text: String
+        }
+
+        type Comment {
+          text: String
+        }
+
+        union Entry = Post | Comment
+
+        type Query {
+          feed: Entry
+
+        }
+        
+        schema {
+          query: Query
+        }
+      `
+    });
+    const content = await plugin(testSchema, [], {});
+
+    expect(content).toBeSimilarStringTo(`
+      export namespace EntryResolvers {
+        export interface Resolvers {
+          __resolveType: ResolveType;
+        }
+        
+        export type ResolveType<R = 'Post' | 'Comment', Parent = Post | Comment, Context = {}> = TypeResolveFn<R, Parent, Context>;
+      }
+    `);
+  });
 });

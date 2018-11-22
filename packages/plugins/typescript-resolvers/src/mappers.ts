@@ -1,4 +1,5 @@
 import { Field, Type } from 'graphql-codegen-core';
+import { GraphQLNamedType } from 'graphql';
 
 export interface ParentsMap {
   [key: string]: string;
@@ -36,14 +37,17 @@ export function pickMapper(entity: string, map: ParentsMap, options: Handlebars.
   return mapper ? parseMapper(mapper) : undefined;
 }
 
-export function useDefaultMapper(entity: Field | Type, options: Handlebars.HelperOptions): Mapper | undefined {
+export function useDefaultMapper(
+  entity: Field | Type | GraphQLNamedType,
+  options: Handlebars.HelperOptions
+): Mapper | undefined {
   const config = options.data.root.config || {};
   const defaultMapper: string | undefined = config.defaultMapper;
 
   return defaultMapper && canUseDefault(entity) ? parseMapper(defaultMapper) : undefined;
 }
 
-function canUseDefault(entity: Field | Type): boolean {
+function canUseDefault(entity: Field | Type | GraphQLNamedType): boolean {
   if (isField(entity)) {
     return entity.isUnion || entity.isType || entity.isInterface;
   }

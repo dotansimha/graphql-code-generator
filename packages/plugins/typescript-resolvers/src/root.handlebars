@@ -29,6 +29,22 @@ export type SubscriptionResolver<Result, Parent = {}, Context = {}, Args = {}> =
   | ((...args: any[]) => ISubscriptionResolverObject<Result, Parent, Context, Args>)
   | ISubscriptionResolverObject<Result, Parent, Context, Args>;
 
+type Maybe<T> = T | null | undefined;
+
+export type TypeResolveFn<Types, Parent = {}, Context = {}> = (
+  parent: Parent,
+  context: Context,
+  info: GraphQLResolveInfo
+) => Maybe<Types>;
+
 {{#each types}}
 {{~> resolver }}
+{{/each}}
+
+{{#each interfaces}}
+{{~> resolveType }}
+{{/each}}
+
+{{#each unions}}
+{{~> resolveType }}
 {{/each}}
