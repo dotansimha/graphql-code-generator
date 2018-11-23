@@ -22,7 +22,7 @@ describe('Resolvers', () => {
   it('should contain the Resolver type', async () => {
     const content = await plugin(schema, [], {});
 
-    expect(content).toBeSimilarStringTo(`import { GraphQLResolveInfo } from 'graphql';`);
+    expect(content).toBeSimilarStringTo(`import { GraphQLResolveInfo, GraphQLScalarTypeConfig } from 'graphql';`);
     expect(content).toBeSimilarStringTo(`
     export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
       parent: Parent,
@@ -174,7 +174,7 @@ describe('Resolvers', () => {
 
     // make sure nothing was imported
     expect(content).toBeSimilarStringTo(`
-      import { GraphQLResolveInfo } from 'graphql';
+      import { GraphQLResolveInfo, GraphQLScalarTypeConfig } from 'graphql';
 
       export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
         parent: Parent,
@@ -585,7 +585,7 @@ describe('Resolvers', () => {
 
     // make sure nothing was imported
     expect(content).toBeSimilarStringTo(`
-      import { GraphQLResolveInfo } from 'graphql';
+      import { GraphQLResolveInfo, GraphQLScalarTypeConfig } from 'graphql';
 
       export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
         parent: Parent,
@@ -921,6 +921,42 @@ describe('Resolvers', () => {
     expect(content).toBeSimilarStringTo(`
       export interface ModifyDirectiveArgs {
         limit?: number | null;
+      }
+    `);
+  });
+
+  it('should create a resolver for a scalar', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: `
+        scalar JSON
+        scalar Date
+
+        type Query {
+          post: JSON
+          date: Date
+        }
+        
+        schema {
+          query: Query
+        }
+      `
+    });
+
+    const content = await plugin(testSchema, [], {
+      scalars: {
+        JSON: 'Object'
+      }
+    });
+
+    // XXX: `any` becasue right now we can't tell in which form we ship it to the client
+    expect(content).toBeSimilarStringTo(`
+      export interface JSONScalarConfig extends GraphQLScalarTypeConfig<Json, any> {
+        name: 'JSON'
+      }
+    `);
+    expect(content).toBeSimilarStringTo(`
+      export interface DateScalarConfig extends GraphQLScalarTypeConfig<Date, any> {
+        name: 'Date'
       }
     `);
   });

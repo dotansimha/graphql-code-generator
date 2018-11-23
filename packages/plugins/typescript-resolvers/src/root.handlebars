@@ -1,4 +1,4 @@
-import { GraphQLResolveInfo } from 'graphql';
+import { GraphQLResolveInfo, GraphQLScalarTypeConfig } from 'graphql';
 {{{ importMappers types }}}
 
 {{{ importContext }}}
@@ -61,4 +61,8 @@ export type DirectiveResolverFn<TResult, TArgs = {}, TContext = {}> = (
 
 {{#each definedDirectives}}
 {{~> directive}}
+{{/each}}
+
+{{#each scalars}}
+{{~> scalar}}
 {{/each}}

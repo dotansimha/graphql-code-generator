@@ -6,6 +6,7 @@ import * as rootTemplate from './root.handlebars';
 import * as resolver from './resolver.handlebars';
 import * as resolveType from './resolve-type.handlebars';
 import * as directive from './directive.handlebars';
+import * as scalar from './scalar.handlebars';
 import { getFieldResolverName, getFieldResolver, getFieldType, getTypenames } from './helpers';
 import { importMappers } from './import-mappers';
 import { importContext, getContext } from './context';
@@ -27,6 +28,7 @@ export const plugin: PluginFunction<TypeScriptServerResolversConfig> = async (
   Handlebars.registerPartial('resolver', resolver);
   Handlebars.registerPartial('resolveType', resolveType);
   Handlebars.registerPartial('directive', directive);
+  Handlebars.registerPartial('scalar', scalar);
   Handlebars.registerHelper('getFieldResolverName', getFieldResolverName(convert));
   Handlebars.registerHelper('getFieldResolver', getFieldResolver(convert));
   Handlebars.registerHelper('getTypenames', getTypenames);
