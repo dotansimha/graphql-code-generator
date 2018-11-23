@@ -95,6 +95,7 @@ export function convertedFieldType(convert) {
   return (field: Field, prefix: string, options: Handlebars.HelperOptions) => {
     const config = options.data.root.config || {};
     let realType = '';
+    const primitiveType = isPrimitiveType(field, options);
 
     if (shouldHavePrefix(field, options)) {
       realType = convert(prefix);
@@ -102,8 +103,10 @@ export function convertedFieldType(convert) {
       if (config.noNamespaces) {
         realType += field.type;
       }
+    } else if (primitiveType) {
+      realType = primitiveType;
     } else {
-      realType = field.type;
+      realType = convert(field.type);
     }
 
     return new SafeString(getFieldType(field, realType, options));
