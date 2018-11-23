@@ -4841,9 +4841,9 @@ graphql-request@^1.5.0:
   dependencies:
     cross-fetch "2.2.2"
 
-graphql-tag-pluck@0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/graphql-tag-pluck/-/graphql-tag-pluck-0.2.1.tgz#db6ebfe72e3c91ddf728a07c8f304420cdd3c47b"
+graphql-tag-pluck@0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/graphql-tag-pluck/-/graphql-tag-pluck-0.2.2.tgz#e2e163a235936dd63aedf51479760d6f0facde24"
   dependencies:
     "@babel/core" "^7.1.6"
     "@babel/plugin-proposal-class-properties" "^7.0.0"
@@ -4864,6 +4864,7 @@ graphql-tag-pluck@0.2.1:
     "@babel/plugin-syntax-import-meta" "^7.0.0"
     "@babel/preset-typescript" "^7.1.0"
     lodash.mergewith "^4.6.1"
+    source-map-support "0.5.0"
 
 graphql-tag@2.10.0:
   version "2.10.0"
@@ -9472,6 +9473,12 @@ source-map-resolve@^0.5.0:
     resolve-url "^0.2.1"
     source-map-url "^0.4.0"
     urix "^0.1.0"
+
+source-map-support@0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.5.0.tgz#2018a7ad2bdf8faf2691e5fddab26bed5a2bacab"
+  dependencies:
+    source-map "^0.6.0"
 
 source-map-support@^0.4.15:
   version "0.4.18"
