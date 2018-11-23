@@ -235,6 +235,25 @@ describe('Codegen Executor', () => {
       expect(output.length).toBe(1);
       expect(output[0].filename).toBe('out1.ts');
     });
+
+    it('Should throw on duplicated names', async () => {
+      try {
+        await executeCodegen({
+          schema: `
+            type RootQuery { f: String }
+            schema { query: RootQuery }
+          `,
+          documents: [`query q { f }`, `query q { f }`],
+          generates: {
+            'out1.ts': ['typescript-common']
+          }
+        });
+        throw new Error(SHOULD_NOT_THROW_STRING);
+      } catch (e) {
+        expect(e).not.toEqual(SHOULD_NOT_THROW_STRING);
+        expect(e.errors[0].message).toContain('Not all operations have an unique name: q');
+      }
+    });
   });
 
   describe('Plugin Configuration', () => {
