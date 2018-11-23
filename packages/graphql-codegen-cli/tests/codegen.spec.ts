@@ -365,7 +365,7 @@ describe('Codegen Executor', () => {
       const output = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         generates: {
-          'out1.ts': ['../tests/custom-plugins/basic.js']
+          'out1.ts': ['./tests/custom-plugins/basic.js']
         }
       });
 
@@ -378,7 +378,7 @@ describe('Codegen Executor', () => {
         await executeCodegen({
           schema: SIMPLE_TEST_SCHEMA,
           generates: {
-            'out1.ts': ['../tests/custom-plugins/invalid.js']
+            'out1.ts': ['./tests/custom-plugins/invalid.js']
           }
         });
         throw new Error(SHOULD_NOT_THROW_STRING);
@@ -394,7 +394,7 @@ describe('Codegen Executor', () => {
         await executeCodegen({
           schema: SIMPLE_TEST_SCHEMA,
           generates: {
-            'out1.ts': ['../tests/custom-plugins/validation.js']
+            'out1.ts': ['./tests/custom-plugins/validation.js']
           }
         });
         throw new Error(SHOULD_NOT_THROW_STRING);
@@ -409,7 +409,7 @@ describe('Codegen Executor', () => {
       const output = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         generates: {
-          'out1.ts': ['../tests/custom-plugins/extends-schema.js']
+          'out1.ts': ['./tests/custom-plugins/extends-schema.js']
         }
       });
 
