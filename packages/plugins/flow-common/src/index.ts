@@ -3,6 +3,7 @@ import { visit } from 'graphql';
 import { flowCommonPluginLeaveHandler } from './visitor';
 
 export type ScalarsMap = { [name: string]: string };
+export type EnumValuesMap = { [key: string]: string };
 
 const DEFAULT_SCALARS = {
   ID: 'string',
@@ -15,6 +16,7 @@ const DEFAULT_SCALARS = {
 export interface FlowCommonPluginConfig {
   scalars?: ScalarsMap;
   namingConvention?: string;
+  enumValues?: EnumValuesMap;
 }
 
 export const plugin: PluginFunction<FlowCommonPluginConfig> = (
@@ -22,13 +24,13 @@ export const plugin: PluginFunction<FlowCommonPluginConfig> = (
   documents: DocumentFile[],
   config: FlowCommonPluginConfig
 ) => {
-  const result = `// @flow`;
-  const scalars: ScalarsMap = { ...DEFAULT_SCALARS, ...(config.scalars || {}) };
+  let result = `// @flow\n\n`;
 
-  visit(schema.astNode, {
+  result += visit(schema.astNode, {
     leave: flowCommonPluginLeaveHandler({
-      scalars,
-      convert: str => str
+      scalars: { ...DEFAULT_SCALARS, ...(config.scalars || {}) },
+      convert: str => str,
+      enumValues: config.enumValues || {}
     })
   });
 
