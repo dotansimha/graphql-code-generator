@@ -1,6 +1,5 @@
 import { Types, DocumentFile, CodegenPlugin } from 'graphql-codegen-core';
 import { DocumentNode, GraphQLSchema } from 'graphql';
-import isValidPath = require('is-valid-path');
 import { resolve } from 'path';
 import { DetailedError } from './errors';
 import { mergeSchemas, buildSchema } from './merge-schemas';
@@ -24,12 +23,9 @@ export async function getPluginByName(name: string, pluginLoader: Types.PluginLo
     `codegen-${name}-template`,
     name
   ];
+  const possibleModules = possibleNames.concat(resolve(process.cwd(), name));
 
-  for (const packageName of possibleNames) {
-    // Make a filepath relative
-    const moduleName =
-      packageName.indexOf('./') !== -1 && isValidPath(packageName) ? resolve(process.cwd(), packageName) : packageName;
-
+  for (const moduleName of possibleModules) {
     try {
       return pluginLoader(moduleName) as CodegenPlugin;
     } catch (err) {
