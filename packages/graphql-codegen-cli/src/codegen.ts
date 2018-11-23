@@ -6,7 +6,7 @@ import { Renderer } from './utils/listr-renderer';
 import { DetailedError } from './errors';
 import { loadSchema, loadDocuments } from './load';
 import { mergeSchemas } from './merge-schemas';
-import { GraphQLError, GraphQLSchema, DocumentNode, visit } from 'graphql';
+import { GraphQLError, DocumentNode, visit } from 'graphql';
 import { executePlugin } from './execute-plugin';
 
 export interface GenerateOutputOptions {
@@ -234,7 +234,7 @@ export async function executeCodegen(config: Types.Config): Promise<FileOutput[]
   return result;
 }
 
-function validateDocuments(schema: GraphQLSchema, files: DocumentFile[]) {
+function validateDocuments(schema: DocumentNode, files: DocumentFile[]) {
   // duplicated names
   const operationMap: {
     [name: string]: string[];
