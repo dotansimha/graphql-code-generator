@@ -102,7 +102,7 @@ export namespace Comment {
     full_name: string;
 
     html_url: string;
-  } & (RepositoryInlineFragment);
+  } & RepositoryInlineFragment;
 
   export type RepositoryInlineFragment = {
     __typename?: 'Repository';
@@ -242,17 +242,15 @@ export namespace CommentsPageComment {
 }
 
 export namespace FeedEntry {
-  export type Fragment =
-    | {
-        __typename?: 'Entry';
+  export type Fragment = {
+    __typename?: 'Entry';
 
-        id: number;
+    id: number;
 
-        commentCount: number;
+    commentCount: number;
 
-        repository: Repository;
-      } & VoteButtons.Fragment
-    | RepoInfo.Fragment;
+    repository: Repository;
+  } & (VoteButtons.Fragment & RepoInfo.Fragment);
 
   export type Repository = {
     __typename?: 'Repository';

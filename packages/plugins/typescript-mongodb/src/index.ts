@@ -2,11 +2,8 @@ import { TypeScriptCommonConfig, initCommonTemplate } from 'graphql-codegen-type
 import { PluginValidateFn, PluginFunction, DocumentFile, toPascalCase } from 'graphql-codegen-core';
 import { GraphQLSchema } from 'graphql';
 import * as Handlebars from 'handlebars';
-import * as enumTemplate from './templates/enum.handlebars';
 import * as index from './templates/index.handlebars';
-import * as inputType from './templates/inputType.handlebars';
 import * as interfaceTemplate from './templates/interface.handlebars';
-import * as scalar from './templates/scalar.handlebars';
 import * as type from './templates/type.handlebars';
 import * as union from './templates/union.handlebars';
 import * as schemaTemplate from './templates/schema.handlebars';
@@ -28,12 +25,9 @@ export const plugin: PluginFunction<TypeScriptMongoDbConfig> = async (
   const { templateContext, scalars, convert } = initCommonTemplate(Handlebars, schema, config);
   // KAMIL: I think we don't need to generate enums, scalars, types, unions etc
   // because it's a part of typescript-common
-  Handlebars.registerPartial('enum', enumTemplate);
-  Handlebars.registerPartial('scalar', scalar);
   Handlebars.registerPartial('type', type);
   Handlebars.registerPartial('union', union);
   Handlebars.registerPartial('schema', schemaTemplate);
-  Handlebars.registerPartial('inputType', inputType);
   Handlebars.registerPartial('interface', interfaceTemplate);
 
   Handlebars.registerHelper('entityFields', entityFields(convert));

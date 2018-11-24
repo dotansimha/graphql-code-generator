@@ -3,18 +3,21 @@ generates:
   ./dev-test/test-schema/resolvers-types.ts:
     schema: ./dev-test/test-schema/schema.json 
     plugins: 
+      - add: // tslint:disable
       - typescript-common
       - typescript-server
       - typescript-resolvers
   ./dev-test/test-schema/resolvers-root.ts:
     schema: ./dev-test/test-schema/schema-with-root.graphql
     plugins: 
+      - add: // tslint:disable
       - typescript-common
       - typescript-server
       - typescript-resolvers
   ./dev-test/test-schema/typings.ts:
     schema: ./dev-test/test-schema/schema.json
     plugins: 
+      - add: // tslint:disable
       - typescript-common
       - typescript-server
       - typescript-resolvers
@@ -41,6 +44,14 @@ generates:
   ./dev-test/githunt/types.ts:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
+    plugins:
+      - typescript-common
+      - typescript-client
+  ./dev-test/githunt/types.enumsAsTypes.ts:
+    schema: ./dev-test/githunt/schema.json
+    documents: ./dev-test/githunt/**/*.graphql
+    config: 
+      enumsAsTypes: true
     plugins:
       - typescript-common
       - typescript-client
@@ -148,4 +159,14 @@ generates:
       - typescript-common
       - typescript-client
       - typescript-react-apollo
-
+  ./dev-test/test-mongodb/types.ts:
+    schema: ./dev-test/test-mongodb/schema.graphql
+    config:
+      scalars:
+        Date: Date
+    plugins: 
+      - add: // tslint:disable
+      - typescript-common
+      - typescript-server
+      - typescript-mongodb
+      - typescript-resolvers

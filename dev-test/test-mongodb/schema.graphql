@@ -1,0 +1,67 @@
+directive @union(discriminatorField: String) on UNION
+directive @abstractEntity(discriminatorField: String!) on INTERFACE
+directive @entity(embedded: Boolean, additionalFields: [AdditionalEntityFields]) on OBJECT
+directive @column(name: String, overrideType: String, overrideIsArray: Boolean) on FIELD_DEFINITION
+directive @id on FIELD_DEFINITION
+directive @link on FIELD_DEFINITION
+directive @embedded on FIELD_DEFINITION
+directive @map(path: String!) on FIELD_DEFINITION
+# Inputs
+input AdditionalEntityFields {
+    path: String
+    type: String
+}
+
+enum Role {
+    ADMIN
+    WRITER
+    READER
+}
+
+scalar Date
+
+type Post @entity {
+  id: ID @id
+  title: String @column
+  content: String @column
+  createdAt: Date @column
+  author: User @link @map(path: "userId")
+}
+
+interface User @abstractEntity(discriminatorField: "role") {
+    id: ID @id
+    username: String @column
+    role: Role @column
+    likedPosts: [Post]
+    followerUsers(skip: Int, limit: Int): [User]
+    followingUsers(skip: Int, limit: Int): [User] @link @map(path: "followingUserIds")
+}
+
+type AdminUser implements User @entity {
+    id: ID @id
+    username: String @column
+    role: Role @column
+    likedPosts: [Post]
+    followerUsers(skip: Int, limit: Int): [User]
+    followingUsers(skip: Int, limit: Int): [User] @link @map(path: "followingUserIds")
+    posts(skip: Int, limit: Int): [Post]
+}
+
+type WriterUser @entity {
+    id: ID @id
+    username: String @column
+    role: Role @column
+    likedPosts(skip: Int, limit: Int): [Post]
+    followerUsers(skip: Int, limit: Int): [User]
+    followingUsers(skip: Int, limit: Int): [User] @link @map(path: "followingUserIds")
+    posts(skip: Int, limit: Int): [Post]
+}
+
+type ReaderUser @entity {
+    id: ID @id
+    username: String @column
+    role: Role @column
+    likedPosts(skip: Int, limit: Int): [Post]
+    followerUsers(skip: Int, limit: Int): [User]
+    followingUsers(skip: Int, limit: Int): [User] @link @map(path: "followingUserIds")
+}
