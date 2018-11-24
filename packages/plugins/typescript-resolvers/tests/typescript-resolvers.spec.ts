@@ -22,7 +22,7 @@ describe('Resolvers', () => {
   it('should contain the Resolver type', async () => {
     const content = await plugin(schema, [], {});
 
-    expect(content).toBeSimilarStringTo(`import { GraphQLResolveInfo } from 'graphql';`);
+    expect(content).toBeSimilarStringTo(`import { GraphQLResolveInfo, GraphQLScalarTypeConfig } from 'graphql';`);
     expect(content).toBeSimilarStringTo(`
     export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
       parent: Parent,
@@ -174,7 +174,7 @@ describe('Resolvers', () => {
 
     // make sure nothing was imported
     expect(content).toBeSimilarStringTo(`
-      import { GraphQLResolveInfo } from 'graphql';
+      import { GraphQLResolveInfo, GraphQLScalarTypeConfig } from 'graphql';
 
       export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
         parent: Parent,
@@ -585,7 +585,7 @@ describe('Resolvers', () => {
 
     // make sure nothing was imported
     expect(content).toBeSimilarStringTo(`
-      import { GraphQLResolveInfo } from 'graphql';
+      import { GraphQLResolveInfo, GraphQLScalarTypeConfig } from 'graphql';
 
       export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
         parent: Parent,
@@ -709,6 +709,254 @@ describe('Resolvers', () => {
       export interface QueryFieldTestArgs {
         last: number;
         sort?: string | null;
+      }
+    `);
+  });
+
+  it('should have Maybe type', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: `
+        type Query {
+          fieldTest(last: Int!, sort: String): String
+        }
+        
+        schema {
+          query: Query
+        }
+      `
+    });
+    const content = await plugin(testSchema, [], {});
+
+    expect(content).toBeSimilarStringTo(`
+      type Maybe<T> = T | null | undefined;
+    `);
+  });
+
+  it('should define TypeResolveFn', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: `
+        type Query {
+          fieldTest(last: Int!, sort: String): String
+        }
+        
+        schema {
+          query: Query
+        }
+      `
+    });
+    const content = await plugin(testSchema, [], {});
+
+    expect(content).toBeSimilarStringTo(`
+      export type TypeResolveFn<Types, Parent = {}, Context = {}> = (
+        parent: Parent,
+        context: Context,
+        info: GraphQLResolveInfo
+      ) => Maybe<Types>;
+    `);
+  });
+
+  it('should create a type with __resolveType for a union', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: `
+        type Post {
+          title: String
+          text: String
+        }
+
+        type Comment {
+          text: String
+        }
+
+        union Entry = Post | Comment
+
+        type Query {
+          feed: Entry
+
+        }
+        
+        schema {
+          query: Query
+        }
+      `
+    });
+
+    const content = await plugin(testSchema, [], {});
+
+    expect(content).toBeSimilarStringTo(`
+      export namespace EntryResolvers {
+        export interface Resolvers {
+          __resolveType: ResolveType;
+        }
+        
+        export type ResolveType<R = 'Post' | 'Comment', Parent = Post | Comment, Context = {}> = TypeResolveFn<R, Parent, Context>;
+      }
+    `);
+  });
+
+  it('should create a type with __resolveType for a union (with noNamespaces)', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: `
+        type Post {
+          title: String
+          text: String
+        }
+
+        type Comment {
+          text: String
+        }
+
+        union Entry = Post | Comment
+
+        type Query {
+          feed: Entry
+
+        }
+        
+        schema {
+          query: Query
+        }
+      `
+    });
+
+    const content = await plugin(testSchema, [], {
+      noNamespaces: true
+    });
+
+    expect(content).toBeSimilarStringTo(`
+      export interface EntryResolvers {
+        __resolveType: EntryResolveType;
+      }
+      
+      export type EntryResolveType<R = 'Post' | 'Comment', Parent = Post | Comment, Context = {}> = TypeResolveFn<R, Parent, Context>;
+    `);
+  });
+
+  it('should create NextResolverFn and DirectiveResolverFn', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: `
+        type Query {
+          field: String
+        }
+        
+        schema {
+          query: Query
+        }
+      `
+    });
+
+    const content = await plugin(testSchema, [], {});
+
+    expect(content).toBeSimilarStringTo(`
+      export type NextResolverFn<T> = () => Promise<T>;
+      
+      export type DirectiveResolverFn<TResult, TArgs = {}, TContext = {}> = (
+        next: NextResolverFn,
+        source: any,
+        args: TArgs,
+        context: TContext,
+        info: GraphQLResolveInfo,
+      ) => TResult | Promise<TResult>;
+    `);
+  });
+
+  it('should create a type that maches DirectiveResolverFn from graphql-tools', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: `
+        type Post {
+          title: String
+          text: String
+        }
+        
+        type Query {
+          post: Post
+        }
+        
+        schema {
+          query: Query
+        }
+      `
+    });
+
+    const content = await plugin(testSchema, [], {});
+
+    expect(content).toBeSimilarStringTo(`
+      export type NextResolverFn<T> = () => Promise<T>;
+      
+      export type DirectiveResolverFn<TResult, TArgs = {}, TContext = {}> = (
+        next: NextResolverFn,
+        source: any,
+        args: TArgs,
+        context: TContext,
+        info: GraphQLResolveInfo,
+      ) => TResult | Promise<TResult>;
+    `);
+  });
+
+  it('should create a resolver for a directive and its arguments', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: `
+        directive @modify(limit: Int) on FIELD_DEFINITION
+
+        type Post {
+          title: String
+          text: String
+        }
+        
+        type Query {
+          post: Post
+        }
+        
+        schema {
+          query: Query
+        }
+      `
+    });
+
+    const content = await plugin(testSchema, [], {});
+
+    expect(content).toBeSimilarStringTo(`
+      export type ModifyDirectiveResolver<Result> = DirectiveResolverFn<Result, ModifyDirectiveArgs, {}>;
+    `);
+
+    expect(content).toBeSimilarStringTo(`
+      export interface ModifyDirectiveArgs {
+        limit?: number | null;
+      }
+    `);
+  });
+
+  it('should create a resolver for a scalar', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: `
+        scalar JSON
+        scalar Date
+
+        type Query {
+          post: JSON
+          date: Date
+        }
+        
+        schema {
+          query: Query
+        }
+      `
+    });
+
+    const content = await plugin(testSchema, [], {
+      scalars: {
+        JSON: 'Object'
+      }
+    });
+
+    // XXX: `any` becasue right now we can't tell in which form we ship it to the client
+    expect(content).toBeSimilarStringTo(`
+      export interface JSONScalarConfig extends GraphQLScalarTypeConfig<Json, any> {
+        name: 'JSON'
+      }
+    `);
+    expect(content).toBeSimilarStringTo(`
+      export interface DateScalarConfig extends GraphQLScalarTypeConfig<Date, any> {
+        name: 'Date'
       }
     `);
   });

@@ -1,5 +1,5 @@
 import { SafeString } from 'handlebars';
-import { Field, Type } from 'graphql-codegen-core';
+import { Field, Type, Interface, Union } from 'graphql-codegen-core';
 import { GraphQLSchema } from 'graphql';
 import { convertedType, getFieldType as fieldType } from 'graphql-codegen-typescript-common';
 import { pickMapper, useDefaultMapper } from './mappers';
@@ -50,3 +50,19 @@ export const getFieldResolver = convert => (field: Field, type: Type, options: H
 
   return new SafeString(`${resolver}<${generics.join(', ')}>`);
 };
+
+export function getTypenames(entity: Interface | Union): string {
+  let types: string[] = [];
+
+  if (isInterface(entity)) {
+    types = entity.implementingTypes;
+  } else {
+    types = entity.possibleTypes;
+  }
+
+  return types.map(t => `'${t}'`).join(' | ');
+}
+
+export function isInterface(entity: any): entity is Interface {
+  return typeof (entity as Interface).implementingTypes !== 'undefined';
+}

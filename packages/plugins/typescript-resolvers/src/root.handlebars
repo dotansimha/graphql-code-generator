@@ -1,4 +1,4 @@
-import { GraphQLResolveInfo } from 'graphql';
+import { GraphQLResolveInfo, GraphQLScalarTypeConfig } from 'graphql';
 {{{ importMappers types }}}
 
 {{{ importContext }}}
@@ -29,6 +29,40 @@ export type SubscriptionResolver<Result, Parent = {}, Context = {}, Args = {}> =
   | ((...args: any[]) => ISubscriptionResolverObject<Result, Parent, Context, Args>)
   | ISubscriptionResolverObject<Result, Parent, Context, Args>;
 
+type Maybe<T> = T | null | undefined;
+
+export type TypeResolveFn<Types, Parent = {}, Context = {}> = (
+  parent: Parent,
+  context: Context,
+  info: GraphQLResolveInfo
+) => Maybe<Types>;
+
+export type NextResolverFn<T> = () => Promise<T>;
+
+export type DirectiveResolverFn<TResult, TArgs = {}, TContext = {}> = (
+  next: NextResolverFn,
+  source: any,
+  args: TArgs,
+  context: TContext,
+  info: GraphQLResolveInfo,
+) => TResult | Promise<TResult>;
+
 {{#each types}}
 {{~> resolver }}
+{{/each}}
+
+{{#each interfaces}}
+{{~> resolveType }}
+{{/each}}
+
+{{#each unions}}
+{{~> resolveType }}
+{{/each}}
+
+{{#each definedDirectives}}
+{{~> directive}}
+{{/each}}
+
+{{#each scalars}}
+{{~> scalar}}
 {{/each}}

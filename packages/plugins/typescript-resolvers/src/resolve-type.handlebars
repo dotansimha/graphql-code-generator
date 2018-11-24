@@ -1,0 +1,12 @@
+{{ toComment description }}
+{{#unless @root.config.noNamespaces}}
+export namespace {{ convert name }}Resolvers {
+{{/unless}}
+  export interface {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}Resolvers {
+    __resolveType: {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}ResolveType;
+  }
+  export type {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}ResolveType<R = {{{ getTypenames this }}}, Parent = {{{ getParentTypes this }}}, Context = {{{ getContext }}}> = TypeResolveFn<R, Parent, Context>;
+  
+{{#unless @root.config.noNamespaces}}
+}
+{{/unless}}
