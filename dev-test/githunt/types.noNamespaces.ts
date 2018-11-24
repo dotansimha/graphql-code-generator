@@ -99,7 +99,7 @@ export type CommentRepository = {
   full_name: string;
 
   html_url: string;
-} & (CommentRepositoryInlineFragment);
+} & CommentRepositoryInlineFragment;
 
 export type CommentRepositoryInlineFragment = {
   __typename?: 'Repository';
@@ -225,17 +225,15 @@ export type CommentsPageCommentPostedBy = {
   html_url: string;
 };
 
-export type FeedEntryFragment =
-  | {
-      __typename?: 'Entry';
+export type FeedEntryFragment = {
+  __typename?: 'Entry';
 
-      id: number;
+  id: number;
 
-      commentCount: number;
+  commentCount: number;
 
-      repository: FeedEntryRepository;
-    } & VoteButtonsFragment
-  | RepoInfoFragment;
+  repository: FeedEntryRepository;
+} & (VoteButtonsFragment & RepoInfoFragment);
 
 export type FeedEntryRepository = {
   __typename?: 'Repository';

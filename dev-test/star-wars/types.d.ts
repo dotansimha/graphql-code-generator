@@ -216,7 +216,7 @@ export namespace HeroParentTypeDependentField {
     __typename?: _HumanInlineFragment['__typename'];
 
     name: string;
-  } & (_HumanInlineFragment);
+  } & _HumanInlineFragment;
 
   export type _HumanInlineFragment = {
     __typename?: 'Human';
@@ -234,7 +234,7 @@ export namespace HeroParentTypeDependentField {
     __typename?: __HumanInlineFragment['__typename'];
 
     name: string;
-  } & (__HumanInlineFragment);
+  } & __HumanInlineFragment;
 
   export type __HumanInlineFragment = {
     __typename?: 'Human';

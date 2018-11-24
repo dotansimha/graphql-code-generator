@@ -850,7 +850,7 @@ describe('Resolvers', () => {
       export type NextResolverFn<T> = () => Promise<T>;
       
       export type DirectiveResolverFn<TResult, TArgs = {}, TContext = {}> = (
-        next: NextResolverFn,
+        next: NextResolverFn<TResult>,
         source: any,
         args: TArgs,
         context: TContext,
@@ -883,7 +883,7 @@ describe('Resolvers', () => {
       export type NextResolverFn<T> = () => Promise<T>;
       
       export type DirectiveResolverFn<TResult, TArgs = {}, TContext = {}> = (
-        next: NextResolverFn,
+        next: NextResolverFn<TResult>,
         source: any,
         args: TArgs,
         context: TContext,

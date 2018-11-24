@@ -102,7 +102,7 @@ export namespace Comment {
     readonly full_name: string;
 
     readonly html_url: string;
-  } & (RepositoryInlineFragment);
+  } & RepositoryInlineFragment;
 
   export type RepositoryInlineFragment = {
     readonly __typename?: 'Repository';
@@ -242,17 +242,15 @@ export namespace CommentsPageComment {
 }
 
 export namespace FeedEntry {
-  export type Fragment =
-    | {
-        readonly __typename?: 'Entry';
+  export type Fragment = {
+    readonly __typename?: 'Entry';
 
-        readonly id: number;
+    readonly id: number;
 
-        readonly commentCount: number;
+    readonly commentCount: number;
 
-        readonly repository: Repository;
-      } & VoteButtons.Fragment
-    | RepoInfo.Fragment;
+    readonly repository: Repository;
+  } & (VoteButtons.Fragment & RepoInfo.Fragment);
 
   export type Repository = {
     readonly __typename?: 'Repository';

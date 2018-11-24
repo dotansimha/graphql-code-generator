@@ -223,7 +223,7 @@ export namespace HeroParentTypeDependentField {
     readonly __typename?: _HumanInlineFragment['__typename'];
 
     readonly name: string;
-  } & (_HumanInlineFragment);
+  } & _HumanInlineFragment;
 
   export type _HumanInlineFragment = {
     readonly __typename?: 'Human';
@@ -241,7 +241,7 @@ export namespace HeroParentTypeDependentField {
     readonly __typename?: __HumanInlineFragment['__typename'];
 
     readonly name: string;
-  } & (__HumanInlineFragment);
+  } & __HumanInlineFragment;
 
   export type __HumanInlineFragment = {
     readonly __typename?: 'Human';
