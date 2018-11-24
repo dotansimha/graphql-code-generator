@@ -1,5 +1,6 @@
 import { Types, DocumentFile, CodegenPlugin } from 'graphql-codegen-core';
 import { DocumentNode, GraphQLSchema } from 'graphql';
+import { resolve } from 'path';
 import { DetailedError } from './errors';
 import { mergeSchemas, buildSchema } from './merge-schemas';
 import { validateGraphQlDocuments, checkValidationErrors } from './loaders/documents/validate-documents';
@@ -22,12 +23,13 @@ export async function getPluginByName(name: string, pluginLoader: Types.PluginLo
     `codegen-${name}-template`,
     name
   ];
+  const possibleModules = possibleNames.concat(resolve(process.cwd(), name));
 
-  for (const packageName of possibleNames) {
+  for (const moduleName of possibleModules) {
     try {
-      return pluginLoader(packageName) as CodegenPlugin;
+      return pluginLoader(moduleName) as CodegenPlugin;
     } catch (err) {
-      if (err.message.indexOf(`Cannot find module '${packageName}'`) === -1) {
+      if (err.message.indexOf(`Cannot find module '${moduleName}'`) === -1) {
         throw new DetailedError(
           `Unable to load template plugin matching ${name}`,
           `
