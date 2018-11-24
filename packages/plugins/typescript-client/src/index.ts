@@ -5,7 +5,7 @@ import { GraphQLSchema } from 'graphql';
 import * as Handlebars from 'handlebars';
 import * as rootTemplate from './root.handlebars';
 import * as selectionSet from './selection-set.handlebars';
-import { shouldHavePrefix, fragments } from './helpers';
+import { shouldHavePrefix, fragments, convertedFieldType } from './helpers';
 
 export interface TypeScriptClientConfig extends TypeScriptCommonConfig {
   noNamespaces?: boolean;
@@ -23,6 +23,7 @@ export const plugin: PluginFunction<TypeScriptClientConfig> = async (
   Handlebars.registerPartial('selectionSet', selectionSet);
   Handlebars.registerHelper('shouldHavePrefix', shouldHavePrefix);
   Handlebars.registerHelper('fragments', fragments(convert));
+  Handlebars.registerHelper('convertedFieldType', convertedFieldType(convert));
 
   const hbsContext = {
     ...templateContext,
