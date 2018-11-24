@@ -1,8 +1,10 @@
+import { NameNode } from 'graphql';
+
 export function block(array) {
   return array && array.length !== 0 ? '{\n' + array.join('\n') + '\n}' : '';
 }
 
-export function wrapWithSingleQuotes(str: string): string {
+export function wrapWithSingleQuotes(str: string | NameNode): string {
   return `'${str}'`;
 }
 
@@ -45,7 +47,7 @@ export class DeclarationBlock {
     return this;
   }
 
-  withName(name: string): DeclarationBlock {
+  withName(name: string | NameNode): DeclarationBlock {
     this._name = name;
 
     return this;
