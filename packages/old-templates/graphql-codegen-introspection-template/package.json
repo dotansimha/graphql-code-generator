@@ -1,7 +1,7 @@
 {
   "name": "graphql-codegen-introspection-template",
-  "version": "0.14.1",
+  "version": "0.14.2",
   "dependencies": {
-    "graphql-codegen-introspection": "0.14.1"
+    "graphql-codegen-introspection": "0.14.2"
   }
 }
