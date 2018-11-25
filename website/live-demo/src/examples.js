@@ -136,29 +136,45 @@ export const EXAMPLES = {
       documents: TS_QUERY
     }
   },
-  // 'typescript-mongo': {
-  //   name: 'MongoDB Models',
-  //   state: {
-  //     config: yaml`
-  //       generates:
-  //         models.ts:
-  //           - typescript-mongodb`,
-  //     schema: f`
-  //       type User @entity {
-  //         id: ID! @id
-  //         username: @column
-  //         email: @column @map(path: "login.email")
-  //       }
-  //
-  //       type Query {
-  //          me: User
-  //          user(id: ID!): User
-  //          allUsers: [User]
-  //       }
-  //     `,
-  //     documents: TS_QUERY,
-  //   },
-  // },
+  'typescript-mongo': {
+    name: 'MongoDB Models',
+    state: {
+      config: yaml`
+        generates:
+          models.ts:
+            - typescript-mongodb`,
+      schema: f`
+      type User @entity {
+        id: ID! @id
+        username: String! @column
+        email: String! @column @map(path: "login.email")
+        profile: Profile! @column
+        chats: [Chat!]! @link
+      }
+      
+      type Profile @entity(embedded: true, additionalFields: [
+        { path: "dateOfBirth", type: "string" }
+      ]) {
+        name: String! @column
+        age: Int
+      }
+      
+      type Chat @entity {
+        id: ID! @id
+        users: [User!]! @link
+        messages: [ChatMessage!]!
+      }
+      
+      type ChatMessage @entity {
+        id: ID! @id
+        chat: Chat! @link
+        content: String! @column
+        author: User! @link
+      }      
+      `,
+      documents: ''
+    }
+  },
   introspection: {
     name: 'Introspection JSON',
     state: {

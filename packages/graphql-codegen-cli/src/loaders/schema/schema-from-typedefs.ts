@@ -2,9 +2,8 @@ import { Types } from 'graphql-codegen-core';
 import { SchemaLoader } from './schema-loader';
 import * as isGlob from 'is-glob';
 import isValidPath = require('is-valid-path');
-import { GraphQLSchema } from 'graphql';
+import { DocumentNode, parse } from 'graphql';
 import * as glob from 'glob';
-import { makeExecutableSchema } from 'graphql-tools';
 import { readFileSync } from 'fs';
 import * as fs from 'fs';
 import { DetailedError } from '../../errors';
@@ -34,7 +33,7 @@ export class SchemaFromTypedefs implements SchemaLoader {
     return isGlob(globPath) || (isValidPath(globPath) && isGraphQLFile(globPath));
   }
 
-  handle(globPath: string, config: Types.Config, schemaOptions: any): GraphQLSchema {
+  handle(globPath: string, config: Types.Config, schemaOptions: any): DocumentNode {
     const globFiles = glob.sync(globPath, { cwd: process.cwd() });
 
     if (!globFiles || globFiles.length === 0) {
@@ -47,16 +46,10 @@ export class SchemaFromTypedefs implements SchemaLoader {
       );
     }
 
-    const documentNode =
-      globFiles.length > 1
-        ? mergeGraphQLSchemas(globFiles.map(filePath => readFileSync(filePath, 'utf-8')))
-        : loadSchemaFile(globFiles[0]);
-
-    return makeExecutableSchema({
-      typeDefs: documentNode,
-      allowUndefinedInResolve: true,
-      resolvers: {},
-      resolverValidationOptions: { requireResolversForResolveType: false }
-    });
+    if (globFiles.length > 1) {
+      return mergeGraphQLSchemas(globFiles.map(filePath => readFileSync(filePath, 'utf-8')));
+    } else {
+      return parse(loadSchemaFile(globFiles[0]));
+    }
   }
 }

@@ -1,5 +1,5 @@
 import { Types, DocumentFile } from 'graphql-codegen-core';
-import { GraphQLSchema } from 'graphql';
+import { GraphQLSchema, DocumentNode } from 'graphql';
 import { DetailedError } from './errors';
 import { IntrospectionFromUrlLoader } from './loaders/schema/introspection-from-url';
 import { IntrospectionFromFileLoader } from './loaders/schema/introspection-from-file';
@@ -33,7 +33,10 @@ const schemaHandlers = [
   new SchemaFromExport()
 ];
 
-export const loadSchema = async (schemaDef: Types.Schema, config: Types.Config): Promise<GraphQLSchema> => {
+export const loadSchema = async (
+  schemaDef: Types.Schema,
+  config: Types.Config
+): Promise<GraphQLSchema | DocumentNode> => {
   if (
     typeof schemaDef === 'object' &&
     schemaDef[Object.keys(schemaDef)[0]] &&
