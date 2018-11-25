@@ -43,6 +43,8 @@ function loadAndParseConfig(filepath: string): Types.Config | never {
       return parseConfigFile(readFileSync(filepath, 'utf-8'));
     case 'json':
       return JSON.parse(readFileSync(filepath, 'utf-8'));
+    case 'js':
+      return require(resolve(process.cwd(), filepath));
     default:
       throw new DetailedError(
         `Extension '${ext}' is not supported`,
