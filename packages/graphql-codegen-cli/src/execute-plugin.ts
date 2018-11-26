@@ -2,7 +2,7 @@ import { Types, DocumentFile, CodegenPlugin } from 'graphql-codegen-core';
 import { DocumentNode, GraphQLSchema } from 'graphql';
 import { resolve } from 'path';
 import { DetailedError } from './errors';
-import { mergeSchemas, buildSchema } from './merge-schemas';
+import { buildSchema } from './merge-schemas';
 import { validateGraphQlDocuments, checkValidationErrors } from './loaders/documents/validate-documents';
 
 export interface ExecutePluginOptions {
@@ -12,7 +12,6 @@ export interface ExecutePluginOptions {
   documents: DocumentFile[];
   outputFilename: string;
   allPlugins: Types.ConfiguredPlugin[];
-  pluginLoader: Types.PluginLoaderFn;
 }
 
 export async function getPluginByName(name: string, pluginLoader: Types.PluginLoaderFn): Promise<CodegenPlugin> {
@@ -61,9 +60,7 @@ export async function getPluginByName(name: string, pluginLoader: Types.PluginLo
   );
 }
 
-export async function executePlugin(options: ExecutePluginOptions): Promise<string> {
-  const pluginPackage = await getPluginByName(options.name, options.pluginLoader);
-
+export async function executePlugin(options: ExecutePluginOptions, pluginPackage: CodegenPlugin): Promise<string> {
   if (!pluginPackage || !pluginPackage.plugin || typeof pluginPackage.plugin !== 'function') {
     throw new DetailedError(
       `Invalid Custom Plugin "${options.name}"`,
@@ -81,10 +78,7 @@ export async function executePlugin(options: ExecutePluginOptions): Promise<stri
     );
   }
 
-  const astNode: DocumentNode = !pluginPackage.addToSchema
-    ? options.schema
-    : mergeSchemas([options.schema, pluginPackage.addToSchema]);
-  const outputSchema: GraphQLSchema = buildSchema(astNode);
+  const outputSchema: GraphQLSchema = buildSchema(options.schema);
 
   if (outputSchema && options.documents.length > 0) {
     const errors = validateGraphQlDocuments(outputSchema, options.documents);
