@@ -1023,20 +1023,20 @@
   resolved "https://registry.yarnpkg.com/@csstools/convert-colors/-/convert-colors-1.4.0.tgz#ad495dc41b12e75d588c6db8b9834f08fa131eb7"
   integrity sha512-5a6wqoJV/xEdbRNKVo6I4hO3VjyDq//8q2f9I6PBAvMesJHFauXDorcNCsr9RzvsZnaWi5NYCcfyqP1QeFHFbw==
 
-"@graphql-modules/epoxy@0.2.4":
-  version "0.2.4"
-  resolved "https://registry.yarnpkg.com/@graphql-modules/epoxy/-/epoxy-0.2.4.tgz#0571e232d4aa48d21c0213dab2c75e91fd04f129"
-  integrity sha512-Ha1xwivxTdiVUArFsVgvvxUccirnFvRF48RJHfftYnudg7uZEOXLNzpZ55mbkjNqeWujdox5IrRZcaBHU0/cVA==
+"@graphql-modules/epoxy@0.2.10":
+  version "0.2.10"
+  resolved "https://registry.yarnpkg.com/@graphql-modules/epoxy/-/epoxy-0.2.10.tgz#e22ea51a90f778c04a71066da56b5bf3e1b4cf78"
+  integrity sha512-iSGin0p09f9n7qP10WQ3A5FQ7Oj1TnU+xsDvTjpK/iTGg2EXB16X376EZhbhizu3LWOa/MW6IgoLGMhcJa6oFA==
   dependencies:
     "@types/deepmerge" "2.1.0"
     deepmerge "2.2.1"
     graphql-tools "4.0.3"
     tslib "1.9.3"
 
-"@graphql-modules/epoxy@0.2.9":
-  version "0.2.9"
-  resolved "https://registry.yarnpkg.com/@graphql-modules/epoxy/-/epoxy-0.2.9.tgz#808a8ff22f28ccac19622c1ca25b6d4e12eb5d7c"
-  integrity sha512-XCRAcojm3rmi3WTEDMRjnnAxg363/nHq0dO1H4qNe2RfiE10nBEHyUF1x0iEhsHlsqQMN4ZeRjLxpRE0arU8dw==
+"@graphql-modules/epoxy@0.2.4":
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/@graphql-modules/epoxy/-/epoxy-0.2.4.tgz#0571e232d4aa48d21c0213dab2c75e91fd04f129"
+  integrity sha512-Ha1xwivxTdiVUArFsVgvvxUccirnFvRF48RJHfftYnudg7uZEOXLNzpZ55mbkjNqeWujdox5IrRZcaBHU0/cVA==
   dependencies:
     "@types/deepmerge" "2.1.0"
     deepmerge "2.2.1"
