@@ -7,7 +7,7 @@ import { DetailedError } from './errors';
 import { loadSchema, loadDocuments } from './load';
 import { mergeSchemas } from './merge-schemas';
 import { GraphQLError, DocumentNode, visit } from 'graphql';
-import { executePlugin } from './execute-plugin';
+import { executePlugin, getPluginByName } from './execute-plugin';
 
 export interface GenerateOutputOptions {
   filename: string;
@@ -293,24 +293,37 @@ export async function generateOutput(options: GenerateOutputOptions): Promise<Fi
 
   validateDocuments(options.schema, options.documents);
 
-  for (const plugin of options.plugins) {
+  const pluginsPackages = await Promise.all(
+    options.plugins.map(plugin => getPluginByName(Object.keys(plugin)[0], options.pluginLoader))
+  );
+
+  // merged schema with parts added by plugins
+  const schema = pluginsPackages.reduce((merged, plugin) => {
+    return !plugin.addToSchema ? merged : mergeSchemas([options.schema, plugin.addToSchema]);
+  }, options.schema);
+
+  for (let i = 0; i < options.plugins.length; i++) {
+    const plugin = options.plugins[i];
+    const pluginPackage = pluginsPackages[i];
     const name = Object.keys(plugin)[0];
     const pluginConfig = plugin[name];
-    const result = await executePlugin({
-      name,
-      config:
-        typeof pluginConfig !== 'object'
-          ? pluginConfig
-          : {
-              ...options.inheritedConfig,
-              ...(pluginConfig as object)
-            },
-      schema: options.schema,
-      documents: options.documents,
-      outputFilename: options.filename,
-      allPlugins: options.plugins,
-      pluginLoader: options.pluginLoader
-    });
+    const result = await executePlugin(
+      {
+        name,
+        config:
+          typeof pluginConfig !== 'object'
+            ? pluginConfig
+            : {
+                ...options.inheritedConfig,
+                ...(pluginConfig as object)
+              },
+        schema,
+        documents: options.documents,
+        outputFilename: options.filename,
+        allPlugins: options.plugins
+      },
+      pluginPackage
+    );
 
     output += result;
   }
