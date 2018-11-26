@@ -409,12 +409,13 @@ describe('Codegen Executor', () => {
       const output = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         generates: {
-          'out1.ts': ['./tests/custom-plugins/extends-schema.js']
+          'out1.ts': ['./tests/custom-plugins/extends-schema.js', './tests/custom-plugins/checks-extended-schema.js']
         }
       });
 
       expect(output[0].content).toContain('MyType,');
-      expect(output[0].content).toContain('Extension;');
+      expect(output[0].content).toContain('Extension');
+      expect(output[0].content).toContain(`Should have the Extension type: 'Extension'`);
     });
   });
 
