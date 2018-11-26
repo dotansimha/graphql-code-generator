@@ -298,8 +298,8 @@ export async function generateOutput(options: GenerateOutputOptions): Promise<Fi
   );
 
   // merged schema with parts added by plugins
-  const schema = pluginsPackages.reduce((merged, plugin) => {
-    return !plugin.addToSchema ? merged : mergeSchemas([options.schema, plugin.addToSchema]);
+  const schema = pluginsPackages.reduce((schema, plugin) => {
+    return !plugin.addToSchema ? schema : mergeSchemas([schema, plugin.addToSchema]);
   }, options.schema);
 
   for (let i = 0; i < options.plugins.length; i++) {
