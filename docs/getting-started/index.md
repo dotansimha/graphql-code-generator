@@ -113,7 +113,7 @@ import { generate } from 'graphql-code-generator';
 async function doSomething() {
   const generatedFiles = await generate({
     schema: 'http://127.0.0.1:3000/graphql',
-    overwrite: true
+    overwrite: true,
     documents: './src/**/*.graphql',
     generates: {
       [process.cwd() + '/models/']: {
