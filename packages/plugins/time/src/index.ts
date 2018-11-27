@@ -24,5 +24,5 @@ export const plugin: PluginFunction<TimePluginConfig> = async (
     config = null;
   }
 
-  return '// ' + message + moment().format(format) + '\r\n';
+  return '// ' + message + moment().format(format) + '\n';
 };

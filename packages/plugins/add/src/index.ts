@@ -3,6 +3,8 @@ import { PluginFunction, DocumentFile } from 'graphql-codegen-core';
 
 export type AddPluginConfig = string | string[];
 
+const nl = '\n';
+
 export const plugin: PluginFunction<AddPluginConfig> = async (
   schema: GraphQLSchema,
   documents: DocumentFile[],
@@ -14,5 +16,5 @@ export const plugin: PluginFunction<AddPluginConfig> = async (
     ? Object.keys(config).map(k => config[k])
     : [config];
 
-  return asArray.filter(a => a).join('\r\n') + '\r\n';
+  return asArray.filter(a => a).join(nl) + nl;
 };
