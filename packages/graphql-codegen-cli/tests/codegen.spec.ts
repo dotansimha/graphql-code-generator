@@ -469,6 +469,27 @@ describe('Codegen Executor', () => {
         (merged.getType('Post') as GraphQLObjectType).getFields()['id'].astNode.directives.map(({ name }) => name.value)
       ).toContainEqual('id');
     });
+
+    it('should keep scalars', async () => {
+      const schemaA = SIMPLE_TEST_SCHEMA;
+      const schemaB = `
+        scalar UniqueID
+
+        type Post {
+          id: UniqueID
+        }
+      `;
+      const schemaC = makeExecutableSchema({
+        typeDefs: `
+          scalar NotUniqueID
+        `
+      });
+
+      const merged = buildSchema(await mergeSchemas([schemaA, schemaB, schemaC]));
+
+      expect(merged.getType('UniqueID')).toBeDefined();
+      expect(merged.getType('NotUniqueID')).toBeDefined();
+    });
   });
 
   describe('Custom schema loader', () => {
