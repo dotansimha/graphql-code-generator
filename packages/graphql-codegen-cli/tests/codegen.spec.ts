@@ -1,7 +1,7 @@
 import { makeExecutableSchema } from 'graphql-tools';
 import { executeCodegen } from '../src/codegen';
 import { mergeSchemas, buildSchema } from '../src/merge-schemas';
-import { GraphQLObjectType } from 'graphql';
+import { GraphQLObjectType, parse, print } from 'graphql';
 import { FileOutput } from 'graphql-codegen-core';
 
 const SHOULD_NOT_THROW_STRING = 'SHOULD_NOT_THROW';
@@ -479,16 +479,42 @@ describe('Codegen Executor', () => {
           id: UniqueID
         }
       `;
-      const schemaC = makeExecutableSchema({
-        typeDefs: `
-          scalar NotUniqueID
-        `
+      const schemaC = parse(`
+        scalar NotUniqueID
+      `);
+
+      const merged = await mergeSchemas([schemaA, schemaB, schemaC]);
+
+      expect(print(merged)).toContain('scalar UniqueID');
+      expect(print(merged)).toContain('scalar NotUniqueID');
+
+      const schema = buildSchema(merged);
+
+      expect(schema.getType('UniqueID')).toBeDefined();
+      expect(schema.getType('NotUniqueID')).toBeDefined();
+    });
+
+    it('should keep scalars when executing codegen', async () => {
+      const schemaA = SIMPLE_TEST_SCHEMA;
+      const schemaB = `
+        scalar UniqueID
+
+        type Post {
+          id: UniqueID
+        }
+      `;
+
+      const output = await executeCodegen({
+        schema: [schemaA, schemaB],
+        generates: {
+          'out1.ts': {
+            plugins: ['typescript-common']
+          }
+        }
       });
 
-      const merged = buildSchema(await mergeSchemas([schemaA, schemaB, schemaC]));
-
-      expect(merged.getType('UniqueID')).toBeDefined();
-      expect(merged.getType('NotUniqueID')).toBeDefined();
+      expect(output.length).toBe(1);
+      expect(output[0].content).toContain('type UniqueId = any');
     });
   });
 
