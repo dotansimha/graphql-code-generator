@@ -1,9 +1,9 @@
 {
   "name": "graphql-codegen-typescript-react-apollo-template",
-  "version": "0.14.2",
+  "version": "0.14.3",
   "dependencies": {
-    "graphql-codegen-typescript-client": "0.14.2",
-    "graphql-codegen-typescript-common": "0.14.2",
-    "graphql-codegen-typescript-react-apollo": "0.14.2"
+    "graphql-codegen-typescript-client": "0.14.3",
+    "graphql-codegen-typescript-common": "0.14.3",
+    "graphql-codegen-typescript-react-apollo": "0.14.3"
   }
 }

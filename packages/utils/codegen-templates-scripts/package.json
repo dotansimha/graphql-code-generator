@@ -1,6 +1,6 @@
 {
   "name": "codegen-templates-scripts",
-  "version": "0.14.2",
+  "version": "0.14.3",
   "main": "cli.js",
   "license": "MIT",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
