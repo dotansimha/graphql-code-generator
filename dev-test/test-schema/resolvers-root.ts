@@ -4,12 +4,8 @@
 // Types
 // ====================================================
 
-export interface QueryRoot {
-  allUsers: (User | null)[];
-
-  userById?: User | null;
-
-  answer: number[];
+export interface SubscriptionRoot {
+  newUser?: User | null;
 }
 
 export interface User {
@@ -20,8 +16,12 @@ export interface User {
   email: string;
 }
 
-export interface SubscriptionRoot {
-  newUser?: User | null;
+export interface QueryRoot {
+  allUsers: (User | null)[];
+
+  userById?: User | null;
+  /** Generates a new answer for the guessing game */
+  answer: number[];
 }
 
 // ====================================================
@@ -78,22 +78,12 @@ export type DirectiveResolverFn<TResult, TArgs = {}, TContext = {}> = (
   info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
-export namespace QueryRootResolvers {
+export namespace SubscriptionRootResolvers {
   export interface Resolvers<Context = {}, TypeParent = {}> {
-    allUsers?: AllUsersResolver<(User | null)[], TypeParent, Context>;
-
-    userById?: UserByIdResolver<User | null, TypeParent, Context>;
-
-    answer?: AnswerResolver<number[], TypeParent, Context>;
+    newUser?: NewUserResolver<User | null, TypeParent, Context>;
   }
 
-  export type AllUsersResolver<R = (User | null)[], Parent = {}, Context = {}> = Resolver<R, Parent, Context>;
-  export type UserByIdResolver<R = User | null, Parent = {}, Context = {}> = Resolver<R, Parent, Context, UserByIdArgs>;
-  export interface UserByIdArgs {
-    id: number;
-  }
-
-  export type AnswerResolver<R = number[], Parent = {}, Context = {}> = Resolver<R, Parent, Context>;
+  export type NewUserResolver<R = User | null, Parent = {}, Context = {}> = Resolver<R, Parent, Context>;
 }
 
 export namespace UserResolvers {
@@ -110,12 +100,27 @@ export namespace UserResolvers {
   export type EmailResolver<R = string, Parent = User, Context = {}> = Resolver<R, Parent, Context>;
 }
 
-export namespace SubscriptionRootResolvers {
-  export interface Resolvers<Context = {}, TypeParent = {}> {
-    newUser?: NewUserResolver<User | null, TypeParent, Context>;
+export namespace QueryRootResolvers {
+  export interface Resolvers<Context = {}, TypeParent = QueryRoot> {
+    allUsers?: AllUsersResolver<(User | null)[], TypeParent, Context>;
+
+    userById?: UserByIdResolver<User | null, TypeParent, Context>;
+    /** Generates a new answer for the guessing game */
+    answer?: AnswerResolver<number[], TypeParent, Context>;
   }
 
-  export type NewUserResolver<R = User | null, Parent = {}, Context = {}> = SubscriptionResolver<R, Parent, Context>;
+  export type AllUsersResolver<R = (User | null)[], Parent = QueryRoot, Context = {}> = Resolver<R, Parent, Context>;
+  export type UserByIdResolver<R = User | null, Parent = QueryRoot, Context = {}> = Resolver<
+    R,
+    Parent,
+    Context,
+    UserByIdArgs
+  >;
+  export interface UserByIdArgs {
+    id: number;
+  }
+
+  export type AnswerResolver<R = number[], Parent = QueryRoot, Context = {}> = Resolver<R, Parent, Context>;
 }
 
 /** Directs the executor to skip this field or fragment when the `if` argument is true. */
@@ -137,4 +142,13 @@ export type DeprecatedDirectiveResolver<Result> = DirectiveResolverFn<Result, De
 export interface DeprecatedDirectiveArgs {
   /** Explains why this element was deprecated, usually also including a suggestion for how to access supported similar data. Formatted using the Markdown syntax (as specified by [CommonMark](https://commonmark.org/). */
   reason?: string | null;
+}
+
+export interface AllResolvers {
+  SubscriptionRoot: SubscriptionRootResolversResolvers;
+  User: UserResolversResolvers;
+  QueryRoot: QueryRootResolversResolvers;
+  Skip: SkipResolversResolvers;
+  Include: IncludeResolversResolvers;
+  Deprecated: DeprecatedResolversResolvers;
 }
