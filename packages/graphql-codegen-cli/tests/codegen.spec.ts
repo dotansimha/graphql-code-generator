@@ -254,6 +254,32 @@ describe('Codegen Executor', () => {
         expect(e.errors[0].message).toContain('Not all operations have an unique name: q');
       }
     });
+
+    it('should handle gql tag in ts with with nested fragment', async () => {
+      const result = await executeCodegen({
+        schema: ['./tests/test-documents/schema.graphql'],
+        documents: ['./tests/test-documents/my-fragment.ts', './tests/test-documents/query-with-my-fragment.ts'],
+        generates: {
+          'out1.ts': ['typescript-common', 'typescript-client']
+        }
+      });
+
+      expect(result[0].content).toContain('MyQuery');
+      expect(result[0].filename).toEqual('out1.ts');
+    });
+
+    it('should handle gql tag in js with with nested fragment', async () => {
+      const result = await executeCodegen({
+        schema: ['./tests/test-documents/schema.graphql'],
+        documents: ['./tests/test-documents/js-query-with-my-fragment.js', './tests/test-documents/js-my-fragment.js'],
+        generates: {
+          'out1.ts': ['typescript-common', 'typescript-client']
+        }
+      });
+
+      expect(result[0].content).toContain('MyQuery');
+      expect(result[0].filename).toEqual('out1.ts');
+    });
   });
 
   describe('Plugin Configuration', () => {
