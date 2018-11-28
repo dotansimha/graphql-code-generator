@@ -14,5 +14,5 @@ type CType {
 
 type DType {
     field1: String
-    field2: number
+    field2: Int
 }

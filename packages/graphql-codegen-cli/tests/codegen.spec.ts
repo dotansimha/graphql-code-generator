@@ -267,7 +267,7 @@ describe('Codegen Executor', () => {
       expect(result[0].filename).toEqual('out1.ts');
     });
 
-    it.only('should handle gql tag in ts with with multiple nested fragment', async () => {
+    it('should handle gql tag in ts with with multiple nested fragment', async () => {
       const result = await executeCodegen({
         schema: ['./tests/test-documents/schema.graphql'],
         documents: ['./tests/test-documents/my-fragment.ts', './tests/test-documents/query-with-my-fragment.ts'],
