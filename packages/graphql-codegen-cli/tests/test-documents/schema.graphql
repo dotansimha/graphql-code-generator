@@ -1,5 +1,5 @@
 type Query {
-    fieldA: String
+    fieldA(a: String): String
     fieldB: MyType
 }
 
