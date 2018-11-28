@@ -1,9 +1,18 @@
 type Query {
     fieldA(a: String): String
     fieldB: MyType
+    fieldC: CType
 }
 
 type MyType {
     fieldC: Int
 }
 
+type CType {
+    item: DType
+}
+
+type DType {
+    field1: String
+    field2: number
+}
