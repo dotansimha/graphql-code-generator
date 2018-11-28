@@ -1023,10 +1023,10 @@
   resolved "https://registry.yarnpkg.com/@csstools/convert-colors/-/convert-colors-1.4.0.tgz#ad495dc41b12e75d588c6db8b9834f08fa131eb7"
   integrity sha512-5a6wqoJV/xEdbRNKVo6I4hO3VjyDq//8q2f9I6PBAvMesJHFauXDorcNCsr9RzvsZnaWi5NYCcfyqP1QeFHFbw==
 
-"@graphql-modules/epoxy@0.2.10":
-  version "0.2.10"
-  resolved "https://registry.yarnpkg.com/@graphql-modules/epoxy/-/epoxy-0.2.10.tgz#e22ea51a90f778c04a71066da56b5bf3e1b4cf78"
-  integrity sha512-iSGin0p09f9n7qP10WQ3A5FQ7Oj1TnU+xsDvTjpK/iTGg2EXB16X376EZhbhizu3LWOa/MW6IgoLGMhcJa6oFA==
+"@graphql-modules/epoxy@0.2.12":
+  version "0.2.12"
+  resolved "https://registry.yarnpkg.com/@graphql-modules/epoxy/-/epoxy-0.2.12.tgz#7ae167b9596f3031e37b8221d1c0ff785cd9087e"
+  integrity sha512-dwHv830z956SgSpZiOq8Om47l/iZ4pja5UyN2pUaKvjUGpheZqg63+42ZY4d126433VW8s4bVVmOkcjEcr18FQ==
   dependencies:
     "@types/deepmerge" "2.1.0"
     deepmerge "2.2.1"
