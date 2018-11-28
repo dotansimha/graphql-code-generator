@@ -1,8 +1,8 @@
 {
   "name": "graphql-codegen-graphql-files-typescript-modules",
-  "version": "0.14.3",
+  "version": "0.14.4",
   "dependencies": {
-    "graphql-codegen-typescript-common": "0.14.3",
-    "graphql-codegen-typescript-graphql-files-modules": "0.14.3"
+    "graphql-codegen-typescript-common": "0.14.4",
+    "graphql-codegen-typescript-graphql-files-modules": "0.14.4"
   }
 }
