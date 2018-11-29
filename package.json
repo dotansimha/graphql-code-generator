@@ -40,7 +40,7 @@
     "husky": "1.2.0",
     "lint-staged": "8.1.0",
     "tslint": "5.11.0",
-    "typescript": "3.1.6",
+    "typescript": "3.2.1",
     "graphql": "14.0.2",
     "graphql-tag": "2.10.0",
     "jest": "23.6.0",
