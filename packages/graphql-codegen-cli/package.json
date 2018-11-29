@@ -61,6 +61,7 @@
     "graphql-import": "0.7.1",
     "graphql-tag-pluck": "0.2.4",
     "indent-string": "3.2.0",
+    "inquirer": "6.2.0",
     "is-glob": "4.0.0",
     "is-valid-path": "0.1.1",
     "js-yaml": "3.12.0",
@@ -75,6 +76,7 @@
   },
   "devDependencies": {
     "@types/fb-watchman": "2.0.0",
+    "@types/inquirer": "0.0.43",
     "@types/js-yaml": "3.11.2",
     "@types/listr": "0.13.0",
     "@types/log-update": "2.0.0",
