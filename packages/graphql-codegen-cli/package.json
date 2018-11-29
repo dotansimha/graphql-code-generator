@@ -1,6 +1,6 @@
 {
   "name": "graphql-code-generator",
-  "version": "0.14.4",
+  "version": "0.14.5",
   "license": "MIT",
   "bin": {
     "gql-gen": "dist/cli.js"
@@ -56,7 +56,7 @@
     "commander": "2.19.0",
     "fb-watchman": "2.0.0",
     "glob": "7.1.3",
-    "graphql-codegen-core": "0.14.4",
+    "graphql-codegen-core": "0.14.5",
     "graphql-config": "2.2.1",
     "graphql-import": "0.7.1",
     "graphql-tag-pluck": "0.2.4",
@@ -80,11 +80,11 @@
     "@types/log-update": "2.0.0",
     "@types/pify": "3.0.2",
     "common-tags": "1.8.0",
-    "graphql-codegen-add": "0.14.4",
-    "graphql-codegen-time": "0.14.4",
-    "graphql-codegen-typescript-client": "0.14.4",
-    "graphql-codegen-typescript-common": "0.14.4",
-    "graphql-codegen-typescript-server": "0.14.4",
+    "graphql-codegen-add": "0.14.5",
+    "graphql-codegen-time": "0.14.5",
+    "graphql-codegen-typescript-client": "0.14.5",
+    "graphql-codegen-typescript-common": "0.14.5",
+    "graphql-codegen-typescript-server": "0.14.5",
     "ts-jest": "23.10.5"
   },
   "main": "./dist/index.js",
