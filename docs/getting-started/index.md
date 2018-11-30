@@ -135,4 +135,4 @@ The return value should be of type `Promise<FileOutput[]>`.
 
 Although GraphQL codegen was built on top of Node.JS it is still fully compatible with other environments by installing it globally and the right command to your build process:
 
-    $ sudo npm install graphql-code-generator
+    $ sudo npm install -g graphql-code-generator
