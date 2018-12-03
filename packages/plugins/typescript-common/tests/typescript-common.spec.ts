@@ -91,6 +91,17 @@ describe('TypeScript Common', () => {
       `);
     });
 
+    it('Should generate enum values matching source casing with disableEnumNamingConvention', async () => {
+      const content = await plugin(schema, [], { disableEnumNamingConvention: true });
+
+      expect(content).toBeSimilarStringTo(`
+        export enum A {
+          ONE = "ONE",
+          TWO = "TWO",
+        }
+      `);
+    });
+
     it('Should generate enums as types with enumsAsTypes', async () => {
       const content = await plugin(schema, [], { enumsAsTypes: true });
 
@@ -162,12 +173,12 @@ describe('TypeScript Common', () => {
 
       expect(content).toBeSimilarStringTo(`
         export interface T {
-          f1?: string | null; 
-          f2: number; 
-          f3?: (string | null)[] | null; 
-          f4: (string | null)[]; 
-          f5: string[]; 
-          f6?: string[] | null; 
+          f1?: string | null;
+          f2: number;
+          f3?: (string | null)[] | null;
+          f4: (string | null)[];
+          f5: string[];
+          f6?: string[] | null;
         }
       `);
     });
@@ -177,8 +188,8 @@ describe('TypeScript Common', () => {
 
       expect(content).toBeSimilarStringTo(`
         export interface T {
-          readonly f1?: string | null; 
-          readonly f2: number; 
+          readonly f1?: string | null;
+          readonly f2: number;
           readonly f3?: ReadonlyArray<string | null> | null;
           readonly f4: ReadonlyArray<string | null>;
           readonly f5: ReadonlyArray<string>;
@@ -190,10 +201,10 @@ describe('TypeScript Common', () => {
     it('Should generate input type description', async () => {
       const content = await plugin(
         buildSchema(`
-      # inputTypeDesc 
+      # inputTypeDesc
       input T {
         f: String!
-      }  
+      }
       `),
         [],
         {}
@@ -202,7 +213,7 @@ describe('TypeScript Common', () => {
       expect(content).toBeSimilarStringTo(`
         /** inputTypeDesc */
         export interface T {
-          f: string; 
+          f: string;
         }
       `);
     });
@@ -212,12 +223,12 @@ describe('TypeScript Common', () => {
 
       expect(content).toBeSimilarStringTo(`
       export interface PreT {
-        f1?: string | null; 
-        f2: number; 
-        f3?: (string | null)[] | null; 
-        f4: (string | null)[]; 
-        f5: string[]; 
-        f6?: string[] | null; 
+        f1?: string | null;
+        f2: number;
+        f3?: (string | null)[] | null;
+        f4: (string | null)[];
+        f5: string[];
+        f6?: string[] | null;
       }
       `);
     });
@@ -227,12 +238,12 @@ describe('TypeScript Common', () => {
 
       expect(content).toBeSimilarStringTo(`
       export interface T {
-        f1?: boop | null; 
-        f2: number; 
-        f3?: (boop | null)[] | null; 
-        f4: (boop | null)[]; 
-        f5: boop[]; 
-        f6?: boop[] | null; 
+        f1?: boop | null;
+        f2: number;
+        f3?: (boop | null)[] | null;
+        f4: (boop | null)[];
+        f5: boop[];
+        f6?: boop[] | null;
       }
       `);
     });
@@ -245,7 +256,7 @@ describe('TypeScript Common', () => {
         type Query {
           fieldTest: [Date]
         }
-        
+
         scalar Date
       `),
         [],
@@ -263,7 +274,7 @@ describe('TypeScript Common', () => {
         type Query {
           fieldTest: [Date]
         }
-        
+
         scalar Date
       `),
         [],

@@ -13,6 +13,7 @@ export * from './helpers';
 
 export interface TypeScriptCommonConfig {
   namingConvention?: string;
+  disableEnumNamingConvention?: boolean;
   avoidOptionals?: boolean;
   constEnums?: boolean;
   enumsAsTypes?: boolean;
@@ -45,12 +46,19 @@ export function initCommonTemplate(hbs, schema, config) {
 
     return baseConvertFn(str);
   };
+  const convertEnumValue = (str: string): string => {
+    if (config.disableEnumNamingConvention) {
+      return str;
+    }
+    return convert(str);
+  };
   hbs.registerPartial('enum', enumTemplate);
   hbs.registerPartial('type', type);
   hbs.registerHelper('blockComment', helpers.blockComment);
   hbs.registerHelper('blockCommentIf', helpers.blockCommentIf);
   hbs.registerHelper('toComment', helpers.toComment);
   hbs.registerHelper('convert', convert);
+  hbs.registerHelper('convertEnumValue', convertEnumValue);
   hbs.registerHelper('getOptionals', getOptionals);
   hbs.registerHelper('getEnumValue', getEnumValue);
   hbs.registerHelper('convertedType', getType(convert));
