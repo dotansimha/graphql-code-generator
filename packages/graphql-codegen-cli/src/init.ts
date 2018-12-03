@@ -2,8 +2,9 @@ import * as inquirer from 'inquirer';
 import chalk from 'chalk';
 import { Types } from 'graphql-codegen-core';
 import { resolve, relative } from 'path';
-import { writeFileSync } from 'fs';
+import { writeFileSync, readFileSync } from 'fs';
 import * as YAML from 'json-to-pretty-yaml';
+import * as detectIndent from 'detect-indent';
 
 interface PluginOption {
   name: string;
@@ -28,49 +29,49 @@ function log(...msgs: string[]) {
 
 const plugins: Array<PluginOption> = [
   {
-    name: 'TypeScript Common',
+    name: `TypeScript Common ${chalk.italic('(required by client and server plugins)')}`,
     package: 'graphql-codegen-typescript-common',
     value: 'typescript-common',
     tags: [Tags.typescript, Tags.client, Tags.server]
   },
   {
-    name: 'TypeScript Client',
+    name: `TypeScript Client ${chalk.italic('(operations and fragments)')}`,
     package: 'graphql-codegen-typescript-client',
     value: 'typescript-client',
     tags: [Tags.typescript, Tags.client]
   },
   {
-    name: 'TypeScript Server',
+    name: `TypeScript Server ${chalk.italic('(GraphQL Schema)')}`,
     package: 'graphql-codegen-typescript-server',
     value: 'typescript-server',
     tags: [Tags.typescript, Tags.client, Tags.server]
   },
   {
-    name: 'TypeScript Resolvers',
+    name: `TypeScript Resolvers ${chalk.italic('(strongly typed resolve functions)')}`,
     package: 'graphql-codegen-typescript-resolvers',
     value: 'typescript-resolvers',
     tags: [Tags.typescript, Tags.server]
   },
   {
-    name: 'TypeScript Apollo Angular',
+    name: `TypeScript Apollo Angular ${chalk.italic('(GQL services)')}`,
     package: 'graphql-codegen-typescript-apollo-angular',
     value: 'typescript-apollo-angular',
     tags: [Tags.typescript, Tags.angular, Tags.client]
   },
   {
-    name: 'TypeScript React Apollo',
+    name: `TypeScript React Apollo ${chalk.italic('(typed components and HOCs)')}`,
     package: 'graphql-codegen-typescript-react-apollo',
     value: 'typescript-react-apollo',
     tags: [Tags.typescript, Tags.react, Tags.client]
   },
   {
-    name: 'TypeScript MongoDB',
+    name: `TypeScript MongoDB ${chalk.italic('(typed MongoDB objects)')}`,
     package: 'graphql-codegen-typescript-mongodb',
     value: 'typescript-mongodb',
     tags: [Tags.typescript, Tags.mongodb, Tags.server]
   },
   {
-    name: 'TypeScript GraphQL files modules',
+    name: `TypeScript GraphQL files modules ${chalk.italic('(declarations for .graphql files)')}`,
     package: 'graphql-codegen-graphql-files-modules',
     value: 'typescript-graphql-files-modules',
     tags: [Tags.typescript, Tags.client]
@@ -79,128 +80,195 @@ const plugins: Array<PluginOption> = [
 
 const targets = [Tags.client, Tags.server];
 
-interface Answers {
-  format: 'JSON' | 'YAML';
-  target: Tags.client | Tags.server;
-  plugins: Tags[];
+interface CommonAnswers {
+  config: string;
+  plugins: PluginOption[];
   schema: string;
-  hasDocuments: boolean;
-  documents?: string;
-  generate: string;
+  output: string;
+  script: string;
+  introspection: boolean;
 }
 
-const askForFormat: inquirer.Question<Answers> = {
-  type: 'list',
-  name: 'format',
-  message: 'In which format?',
-  choices: ['JSON', 'YAML']
-};
+interface ServerAnswers extends CommonAnswers {
+  target: Tags.server;
+}
 
-const askForTarget: inquirer.Question<Answers> = {
-  type: 'list',
-  name: 'target',
-  message: 'Target?',
-  choices: targets
-};
+interface ClientAnswers extends CommonAnswers {
+  target: Tags.client;
+  documents: string;
+}
 
-const askForPlugins: inquirer.Question<Answers> = {
-  type: 'checkbox',
-  name: 'plugins',
-  message: 'Pick plugins:',
-  choices: answers => {
-    return plugins
-      .filter(p => p.tags.includes(answers.target))
-      .map(p => {
-        return {
-          name: p.name,
-          value: p.value
-        };
-      });
-  },
-  validate: (plugins: any[]) => plugins.length > 0
-};
-
-const askForSchema: inquirer.Question<Answers> = {
-  type: 'input',
-  name: 'schema',
-  message: 'Point to schema:',
-  suffix: chalk.grey(' (path or url)'),
-  validate: (str: string) => str.length > 0
-};
-
-const askForDocuments: inquirer.Question<Answers>[] = [
-  {
-    type: 'confirm',
-    name: 'hasDocuments',
-    message: `Includes documents?`,
-    suffix: chalk.grey(' hit enter for YES'),
-    default: true,
-    when: answers => answers.target === Tags.client
-  },
-  {
-    type: 'input',
-    name: 'documents',
-    message: 'Where are documents?:',
-    suffix: chalk.grey(' hit enter for **/*.graphql'),
-    when: answers => answers.hasDocuments === true,
-    default: '**/*.graphql',
-    validate: (str: string) => str.length > 0
-  }
-];
-
-const askForOutput: inquirer.Question<Answers> = {
-  type: 'input',
-  name: 'generate',
-  message: 'Where to write the output (path):',
-  validate: (str: string) => str.length > 0
-};
+type Answers = ServerAnswers | ClientAnswers;
 
 export async function init() {
   log(`
     Welcome to ${chalk.bold('GraphQL Code Generator')}!
-    Answer few questions and we will generate a config for you.
+    Answer few questions and we will setup everything for you.
   `);
 
-  const answers = await inquirer.prompt([
-    askForTarget,
-    askForPlugins,
-    askForSchema,
-    ...askForDocuments,
-    askForOutput,
-    askForFormat
+  const answers = await inquirer.prompt<Answers>([
+    {
+      type: 'list',
+      name: 'target',
+      message: 'What is your target?',
+      choices: targets
+    },
+    {
+      type: 'input',
+      name: 'schema',
+      message: 'How can I access the schema?:',
+      suffix: chalk.grey(' (path or url)'),
+      default: 'https://localhost:4000', // matches Apollo Server's default
+      validate: (str: string) => str.length > 0
+    },
+    {
+      type: 'input',
+      name: 'documents',
+      message: 'Where can I find operations and fragments?:',
+      when: answers => answers.target === Tags.client,
+      default: '**/*.graphql',
+      validate: (str: string) => str.length > 0
+    },
+    {
+      type: 'checkbox',
+      name: 'plugins',
+      message: 'Pick plugins:',
+      choices: answers => {
+        return plugins
+          .filter(p => p.tags.includes(answers.target))
+          .map(p => {
+            return {
+              name: p.name,
+              value: p
+            };
+          });
+      },
+      validate: (plugins: any[]) => plugins.length > 0
+    },
+    {
+      type: 'input',
+      name: 'output',
+      message: 'Where to write the output:',
+      default: 'src/generated/graphql.ts',
+      validate: (str: string) => str.length > 0
+    },
+    {
+      type: 'confirm',
+      name: 'introspection',
+      message: 'Do you want to generate an introspection file?'
+    },
+    {
+      type: 'input',
+      name: 'config',
+      message: 'How to name the config file?',
+      default: 'codegen.yml',
+      validate: (str: string) => {
+        const isNotEmpty = str.length > 0;
+        const hasCorrectExtension = ['json', 'yml', 'yaml'].some(ext => str.toLocaleLowerCase().endsWith(`.${ext}`));
+
+        return isNotEmpty && hasCorrectExtension;
+      }
+    },
+    {
+      type: 'input',
+      name: 'script',
+      message: 'What script in package.json should run the codegen?',
+      validate: (str: string) => str.length > 0
+    }
   ]);
 
+  // define config
   const config: Types.Config = {
     overwrite: true,
     schema: answers.schema,
-    documents: answers.documents,
+    documents: answers.target === Tags.client ? answers.documents : null,
     generates: {
-      [answers.generate]: {
-        plugins: answers.plugins
+      [answers.output]: {
+        plugins: answers.plugins.map(p => p.value)
       }
     }
   };
 
-  const ext = answers.format === 'JSON' ? 'json' : 'yml';
-  const content = answers.format === 'JSON' ? JSON.stringify(config) : YAML.stringify(config);
-  const fullpath = resolve(process.cwd(), `codegen.${ext}`);
-  const relativepath = relative(process.cwd(), `codegen.${ext}`);
+  // introspection
+  if (answers.introspection) {
+    addIntrospection(config);
+  }
 
-  writeFileSync(fullpath, content, {
+  // config file
+  const { relativePath } = writeConfig(answers, config);
+
+  // write package.json
+  writePackage(answers, relativePath);
+
+  // Emit status to the terminal
+  log(`
+    Config file generated at ${chalk.bold(relativePath)}
+    
+      ${chalk.bold('$ npm install')}
+
+    To install the plugins.
+
+      ${chalk.bold(`$ npm run ${answers.script}`)}
+
+    To run GraphQL Code Generator.
+  `);
+}
+
+// adds an introspection to `generates`
+function addIntrospection(config: Types.Config) {
+  config.generates['./graphql.schema.json'] = {
+    plugins: ['introspection']
+  };
+}
+
+// Parses config and writes it to a file
+function writeConfig(answers: Answers, config: Types.Config) {
+  const ext = answers.config.toLocaleLowerCase().endsWith('.json') ? 'json' : 'yml';
+  const content = ext === 'json' ? JSON.stringify(config) : YAML.stringify(config);
+  const fullPath = resolve(process.cwd(), answers.config);
+  const relativePath = relative(process.cwd(), answers.config);
+
+  writeFileSync(fullPath, content, {
     encoding: 'utf-8'
   });
 
-  log(`
-    Config file generated at ${chalk.bold(relativepath)}
-    You can now add a script in package.json
+  return {
+    relativePath,
+    fullPath
+  };
+}
 
-    ${chalk.italic(`
-      {
-        "scripts": {
-          ...
-          "generate": "gql-gen"
-        }
-      }
-    `)}
-  `);
+// Updates package.json (script and plugins as dependencies)
+function writePackage(answers: Answers, configLocation: string) {
+  // script
+  const pkgPath = resolve(process.cwd(), 'package.json');
+  const pkgContent = readFileSync(pkgPath, {
+    encoding: 'utf-8'
+  });
+  const pkg = JSON.parse(pkgContent);
+  const { indent } = detectIndent(pkgContent);
+
+  if (!pkg.scripts) {
+    pkg.scripts = {};
+  }
+
+  pkg.scripts[answers.script] = `gql-gen --config ${configLocation}`;
+
+  // plugin
+  if (!pkg.devDependencies) {
+    pkg.devDependencies = {};
+  }
+
+  // read codegen's version
+  const { version } = JSON.parse(
+    readFileSync(resolve(__dirname, '../package.json'), {
+      encoding: 'utf-8'
+    })
+  );
+
+  answers.plugins.forEach(plugin => {
+    pkg.devDependencies[plugin.package] = version;
+  });
+
+  writeFileSync(pkgPath, JSON.stringify(pkg, null, indent));
 }
