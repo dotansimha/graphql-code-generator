@@ -1,18 +1,22 @@
 import { executeCodegen } from '../codegen';
 import { FileOutput, getLogger, Types } from 'graphql-codegen-core';
-import * as watchman from 'fb-watchman';
-import * as pify from 'pify';
+import * as chokidar from 'chokidar';
 import { normalizeInstanceOrArray, normalizeOutputParam } from '../helpers';
 import isValidPath = require('is-valid-path');
 import * as isGlob from 'is-glob';
+import * as logSymbols from 'log-symbols';
 
-const getMatch = (doc: string) => {
-  // strip leading `./` from pattern, it doesn't work with that
-  return ['match', doc.replace(/^\.\//, ''), 'wholename'];
-};
+function log(msg: string) {
+  // double spaces to inline the message with Listr
+  getLogger().info(`  ${msg}`);
+}
+
+function emitWatching() {
+  log(`${logSymbols.info} Watching for changes...`);
+}
 
 export const createWatcher = (config: Types.Config, onNext: (result: FileOutput[]) => Promise<FileOutput[]>) => {
-  const files: Types.OperationDocument[] = [];
+  const files: string[] = [];
   const documents = normalizeInstanceOrArray<Types.OperationDocument>(config.documents);
   const schemas = normalizeInstanceOrArray<Types.Schema>(config.schema);
 
@@ -25,7 +29,13 @@ export const createWatcher = (config: Types.Config, onNext: (result: FileOutput[
     });
 
   if (documents) {
-    files.push(...documents);
+    documents.forEach(doc => {
+      if (typeof doc === 'string') {
+        files.push(doc);
+      } else {
+        files.push(...Object.keys(doc));
+      }
+    });
   }
 
   schemas.forEach((schema: string) => {
@@ -34,43 +44,38 @@ export const createWatcher = (config: Types.Config, onNext: (result: FileOutput[
     }
   });
 
-  const client = pify(new watchman.Client());
-
+  let watcher: chokidar.FSWatcher;
   const runWatcher = async () => {
-    const { version } = await client.capabilityCheck({
-      optional: [],
-      required: ['relative_root', 'wildmatch']
+    emitWatching();
+
+    watcher = chokidar.watch(files, {
+      persistent: true,
+      ignoreInitial: true,
+      followSymlinks: true,
+      cwd: process.cwd(),
+      disableGlobbing: false,
+      usePolling: true,
+      interval: 100,
+      binaryInterval: 300,
+      depth: 99,
+      awaitWriteFinish: true,
+      ignorePermissionErrors: false,
+      atomic: true
     });
-    getLogger().info(`Watching for changes with watchman v${version}...`);
-
-    const { warning, watch, relative_path = '' } = await client.command(['watch-project', process.cwd()]);
-    if (warning) {
-      getLogger().warn(warning);
-    }
-
-    const { clock } = await client.command(['clock', watch]);
-
-    const sub = {
-      relative_root: relative_path,
-      expression: ['allof', ['anyof', ...files.map(getMatch)], ['not', 'empty'], ['type', 'f']],
-      fields: ['name', 'size', 'mtime_ms', 'exists'],
-      since: clock
-    };
-
-    const { subscribe } = await client.command(['subscribe', watch, 'codegen', sub]);
 
     let isShutdown = false;
     const shutdown = async () => {
       isShutdown = true;
-      getLogger().info('Shutting down watch...');
-      await client.command(['unsubscribe', watch, subscribe]);
-      client.end();
+      log(`Shutting down watch...`);
+      watcher.close();
     };
 
     // it doesn't matter what has changed, need to run whole process anyway
-    client.on('subscription', () => {
+    watcher.on('all', () => {
       if (!isShutdown) {
-        executeCodegen(config).then(onNext, () => Promise.resolve());
+        executeCodegen(config)
+          .then(onNext, () => Promise.resolve())
+          .then(() => emitWatching());
       }
     });
 
@@ -84,7 +89,7 @@ export const createWatcher = (config: Types.Config, onNext: (result: FileOutput[
       .then(onNext, () => Promise.resolve())
       .then(runWatcher)
       .catch(err => {
-        client.end();
+        watcher.close();
         reject(err);
       });
   });
