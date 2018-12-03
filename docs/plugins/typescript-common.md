@@ -27,6 +27,10 @@ You can override the naming conversion by pointing to a specific function in a m
 
 This will effect all the name conversions of the module.
 
+#### `disableEnumNamingConvention` (default value: `false`)
+
+Set this option to `true` to make enum values follow the naming convention of the source, as opposed to being converted to the `namingConvention` specified above.
+
 #### `scalars`
 
 Will map scalars to the predefined types.
