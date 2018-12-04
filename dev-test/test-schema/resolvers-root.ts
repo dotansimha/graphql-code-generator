@@ -8,7 +8,7 @@ export interface QueryRoot {
   allUsers: (User | null)[];
 
   userById?: User | null;
-
+  /** Generates a new answer for the guessing game */
   answer: number[];
 }
 
@@ -83,7 +83,7 @@ export namespace QueryRootResolvers {
     allUsers?: AllUsersResolver<(User | null)[], TypeParent, Context>;
 
     userById?: UserByIdResolver<User | null, TypeParent, Context>;
-
+    /** Generates a new answer for the guessing game */
     answer?: AnswerResolver<number[], TypeParent, Context>;
   }
 
