@@ -23,7 +23,7 @@
     "graphql-codegen-typescript-mongodb": "0.14.1",
     "graphql-codegen-typescript-react-apollo": "0.14.1",
     "graphql-codegen-typescript-resolvers": "0.14.1",
-    "prettier": "1.15.2",
+    "prettier": "1.15.3",
     "@material-ui/core": "3.6.1"
   },
   "scripts": {
