@@ -1,6 +1,5 @@
 import { executeCodegen } from '../codegen';
 import { FileOutput, getLogger, Types } from 'graphql-codegen-core';
-import * as chokidar from 'chokidar';
 import { normalizeInstanceOrArray, normalizeOutputParam } from '../helpers';
 import isValidPath = require('is-valid-path');
 import * as isGlob from 'is-glob';
@@ -44,8 +43,10 @@ export const createWatcher = (config: Types.Config, onNext: (result: FileOutput[
     }
   });
 
-  let watcher: chokidar.FSWatcher;
+  let watcher: any;
+
   const runWatcher = async () => {
+    const chokidar = require('chokidar');
     emitWatching();
 
     watcher = chokidar.watch(files, {
