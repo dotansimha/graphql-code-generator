@@ -288,6 +288,70 @@ describe('TypeScript Client', () => {
       `);
   });
 
+  it('should preserve a prefix for Unions', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: gql`
+        schema {
+          query: Query
+        }
+
+        type Query {
+          me: User
+          user(id: ID!): User
+        }
+
+        type Pizza {
+          dough: String!
+          toppings: [String!]
+        }
+
+        type Hamburger {
+          patty: String!
+          toppings: [String!]
+        }
+
+        union FavoriteFood = Pizza | Hamburger
+
+        type User {
+          id: ID!
+          favoriteFood: FavoriteFood!
+        }
+      `
+    });
+
+    const query = gql`
+      query findUser($userId: ID!) {
+        user(id: $userId) {
+          id
+          favoriteFood {
+            ... on Pizza {
+              dough
+              toppings
+            }
+            ... on Hamburger {
+              patty
+              toppings
+            }
+          }
+        }
+      }
+    `;
+
+    const content = await plugin(testSchema, [{ filePath: '', content: query }], { noNamespaces: true });
+
+    expect(content).toBeSimilarStringTo(`
+      export type FindUserUser = {
+        __typename?: "User";
+        id: string;
+        favoriteFood: FindUserFavoriteFood;
+      }
+    `);
+
+    expect(content).toBeSimilarStringTo(`
+      export type FindUserFavoriteFood =
+    `);
+  });
+
   it('Should generate correctly when using scalar and noNamespace', async () => {
     const testSchema = makeExecutableSchema({
       typeDefs: gql`
