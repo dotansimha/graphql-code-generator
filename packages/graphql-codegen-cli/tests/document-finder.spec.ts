@@ -5,8 +5,9 @@ import { extractDocumentStringFromCodeFile } from '../src/utils/document-finder'
 
 describe('extractDocumentStringFromCodeFile', () => {
   function extract(fileName: string) {
-    const fileContent = fs.readFileSync(`./tests/test-files/${fileName}`).toString();
-    const doc = extractDocumentStringFromCodeFile(fileContent);
+    const filepath = `./tests/test-files/${fileName}`;
+    const fileContent = fs.readFileSync(filepath).toString();
+    const doc = extractDocumentStringFromCodeFile(new Source(fileContent, filepath));
 
     if (doc) {
       expect(tryParse(doc)).not.toThrow();

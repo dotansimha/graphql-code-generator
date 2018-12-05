@@ -41,7 +41,7 @@ export class DocumentsFromGlob implements DocumentLoader {
         return parse(new Source(fileContent, filePath));
       }
 
-      const foundDoc = extractDocumentStringFromCodeFile(fileContent);
+      const foundDoc = extractDocumentStringFromCodeFile(new Source(fileContent, filePath));
 
       if (foundDoc) {
         return parse(new Source(foundDoc, filePath));
