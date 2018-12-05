@@ -249,6 +249,33 @@ describe('Flow Plugin', () => {
     });
   });
 
+  describe('Union', () => {
+    it('Should build union as type correctly', () => {
+      const ast = parse(`
+      type MyType {
+        foo: String!
+      }
+
+      type MyOtherType {
+        bar: String!
+      }
+      
+      union MyUnion = MyType | MyOtherType
+      `);
+      const result = visit(ast, {
+        leave: new FlowCommonVisitor({
+          namingConvention: null,
+          scalars: { String: 'string' },
+          enumValues: {}
+        })
+      });
+
+      expect(result.definitions[2]).toBeSimilarStringTo(`
+      export type MyUnion = MyType | MyOtherType;
+    `);
+    });
+  });
+
   describe('Interface', () => {
     it('Should build interface correctly', () => {
       const ast = parse(`

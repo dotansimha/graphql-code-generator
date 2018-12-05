@@ -13,7 +13,8 @@ import {
   ListTypeNode,
   ObjectTypeDefinitionNode,
   FieldDefinitionNode,
-  InterfaceTypeDefinitionNode
+  InterfaceTypeDefinitionNode,
+  UnionTypeDefinitionNode
 } from 'graphql/language/ast';
 
 const DEFAULT_SCALARS = {
@@ -94,6 +95,16 @@ export class FlowCommonVisitor {
 
   FieldDefinition = (node: FieldDefinitionNode): string => {
     return indent(`${node.name}: ${node.type},`);
+  };
+
+  UnionTypeDefinition = (node: UnionTypeDefinitionNode): string => {
+    const possibleTypes = node.types.map(name => ((name as any) as string).replace('?', '')).join(' | ');
+
+    return new DeclarationBlock()
+      .export()
+      .asKind('type')
+      .withName(node.name)
+      .withContent(possibleTypes).string;
   };
 
   ObjectTypeDefinition = (node: ObjectTypeDefinitionNode): string => {
