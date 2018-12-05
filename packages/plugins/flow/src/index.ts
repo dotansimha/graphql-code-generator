@@ -18,3 +18,6 @@ export const plugin: PluginFunction<FlowCommonPluginConfig> = (
 
   return result + visitorResult.definitions.join('\n');
 };
+
+export { DEFAULT_SCALARS } from './visitor';
+export * from './utils';

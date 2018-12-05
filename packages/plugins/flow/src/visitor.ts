@@ -17,7 +17,7 @@ import {
   UnionTypeDefinitionNode
 } from 'graphql/language/ast';
 
-const DEFAULT_SCALARS = {
+export const DEFAULT_SCALARS = {
   ID: 'string',
   String: 'string',
   Boolean: 'boolean',
