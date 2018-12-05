@@ -76,6 +76,10 @@ export class DeclarationBlock {
     }
 
     if (this._block) {
+      if (this._content) {
+        result += this._content;
+      }
+
       result += `{
 ${this._block}
 }`;

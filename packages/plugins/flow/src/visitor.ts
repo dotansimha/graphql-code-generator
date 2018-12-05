@@ -8,7 +8,13 @@ import {
 } from 'graphql';
 import { DeclarationBlock, wrapWithSingleQuotes, breakLine, indent } from './utils';
 import { ScalarsMap, EnumValuesMap } from './index';
-import { NonNullTypeNode, ListTypeNode } from 'graphql/language/ast';
+import {
+  NonNullTypeNode,
+  ListTypeNode,
+  ObjectTypeDefinitionNode,
+  FieldDefinitionNode,
+  InterfaceTypeDefinitionNode
+} from 'graphql/language/ast';
 
 const DEFAULT_SCALARS = {
   ID: 'string',
@@ -84,6 +90,32 @@ export class FlowCommonVisitor {
 
   InputValueDefinition = (node: InputValueDefinitionNode): string => {
     return indent(`${node.name}: ${node.type},`);
+  };
+
+  FieldDefinition = (node: FieldDefinitionNode): string => {
+    return indent(`${node.name}: ${node.type},`);
+  };
+
+  ObjectTypeDefinition = (node: ObjectTypeDefinitionNode): string => {
+    const interfaces =
+      node.interfaces && node.interfaces.length > 0
+        ? node.interfaces.map(name => ((name as any) as string).replace('?', '')).join(' & ') + ' & '
+        : '';
+
+    return new DeclarationBlock()
+      .export()
+      .asKind('type')
+      .withName(node.name)
+      .withContent(interfaces)
+      .withBlock(node.fields.join('\n')).string;
+  };
+
+  InterfaceTypeDefinition = (node: InterfaceTypeDefinitionNode): string => {
+    return new DeclarationBlock()
+      .export()
+      .asKind('type')
+      .withName(node.name)
+      .withBlock(node.fields.join('\n')).string;
   };
 
   EnumTypeDefinition = (node: EnumTypeDefinitionNode): string => {
