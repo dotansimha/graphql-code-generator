@@ -1,6 +1,7 @@
 import 'graphql-codegen-core/dist/testing';
 import { parse, visit } from 'graphql';
 import { FlowCommonVisitor } from '../src/visitor';
+import { validateFlow } from '../../flow-documents/tests/validate-flow';
 
 describe('Flow Plugin', () => {
   const SCALARS = {};
@@ -14,13 +15,15 @@ describe('Flow Plugin', () => {
 
       expect(result.definitions[0]).toBeSimilarStringTo(`
         export const MyEnumValues = {
-          A = 'A',
-          B = 'B',
-          C = 'C'
+          A: 'A',
+          B: 'B',
+          C: 'C'
         };
 
         export type MyEnum = $Values<typeof MyEnumValues>;
       `);
+
+      validateFlow(result.definitions[0]);
     });
 
     it('Should build enum correctly with custom values', () => {
@@ -35,13 +38,15 @@ describe('Flow Plugin', () => {
 
       expect(result.definitions[0]).toBeSimilarStringTo(`
         export const MyEnumValues = {
-          A = 'SomeValue',
-          B = 'TEST',
-          C = 'C'
+          A: 'SomeValue',
+          B: 'TEST',
+          C: 'C'
         };
 
         export type MyEnum = $Values<typeof MyEnumValues>;
       `);
+
+      validateFlow(result.definitions[0]);
     });
   });
 
@@ -55,6 +60,8 @@ describe('Flow Plugin', () => {
       expect(result.definitions[0]).toBeSimilarStringTo(`
         export type A = any;
       `);
+
+      validateFlow(result.definitions[0]);
     });
 
     it('Should build enum correctly with custom values', () => {
@@ -73,6 +80,8 @@ describe('Flow Plugin', () => {
       expect(result.definitions[0]).toBeSimilarStringTo(`
         export type A = MyCustomType;
       `);
+
+      validateFlow(result.definitions[0]);
     });
   });
 
@@ -121,6 +130,9 @@ describe('Flow Plugin', () => {
           l: Array<Array<string>>,
         };
       `);
+
+      validateFlow(result.definitions[0]);
+      validateFlow(result.definitions[1]);
     });
   });
 
@@ -145,6 +157,7 @@ describe('Flow Plugin', () => {
           bar: string,
         };
       `);
+      validateFlow(result.definitions[0]);
     });
 
     it('Should build type correctly when implementing interface', () => {
@@ -175,6 +188,8 @@ describe('Flow Plugin', () => {
           foo: string,
         };
       `);
+      validateFlow(result.definitions[0]);
+      validateFlow(result.definitions[1]);
     });
 
     it('Should build type correctly when implementing multiple interfaces', () => {
@@ -216,6 +231,9 @@ describe('Flow Plugin', () => {
           bar: string,
         };
       `);
+      validateFlow(result.definitions[0]);
+      validateFlow(result.definitions[1]);
+      validateFlow(result.definitions[2]);
     });
 
     it('Should build type correctly with links between types', () => {
@@ -246,6 +264,8 @@ describe('Flow Plugin', () => {
           bar: string,
         };
       `);
+      validateFlow(result.definitions[0]);
+      validateFlow(result.definitions[1]);
     });
   });
 
@@ -273,6 +293,9 @@ describe('Flow Plugin', () => {
       expect(result.definitions[2]).toBeSimilarStringTo(`
       export type MyUnion = MyType | MyOtherType;
     `);
+      validateFlow(result.definitions[0]);
+      validateFlow(result.definitions[1]);
+      validateFlow(result.definitions[2]);
     });
   });
 
@@ -297,6 +320,7 @@ describe('Flow Plugin', () => {
           bar: string,
         };
       `);
+      validateFlow(result.definitions[0]);
     });
   });
 });

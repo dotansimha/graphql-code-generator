@@ -15,6 +15,8 @@
     "graphql-codegen-plugin-helpers": "0.14.5"
   },
   "devDependencies": {
+    "flow-parser": "0.87.0",
+    "flow": "0.2.3",
     "codegen-templates-scripts": "0.14.5",
     "graphql": "14.0.2"
   },

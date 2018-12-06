@@ -140,7 +140,7 @@ export class FlowCommonVisitor {
         node.values
           .map(enumOption =>
             indent(
-              `${enumOption.name} = ${wrapWithSingleQuotes(
+              `${enumOption.name}: ${wrapWithSingleQuotes(
                 this._parsedCommonConfig.enumValues[(enumOption.name as any) as string] || enumOption.name
               )}`
             )

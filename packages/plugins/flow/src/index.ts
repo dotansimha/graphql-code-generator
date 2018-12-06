@@ -20,13 +20,7 @@ export const plugin: PluginFunction<FlowCommonPluginConfig> = (
     })
   );
 
-  return (
-    result +
-    visitorResult
-      .map(result => result.definitions)
-      .reduce((prev, definitions) => [...prev, ...definitions], [])
-      .join('\n')
-  );
+  return result + visitorResult.join('\n');
 };
 
 export { DEFAULT_SCALARS } from './visitor';
