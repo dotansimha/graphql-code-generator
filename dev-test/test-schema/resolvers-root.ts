@@ -1,11 +1,5 @@
 // tslint:disable
 
-export type Date = any;
-
-// ====================================================
-// Scalars
-// ====================================================
-
 // ====================================================
 // Types
 // ====================================================
@@ -145,15 +139,10 @@ export interface DeprecatedDirectiveArgs {
   reason?: string | null;
 }
 
-export interface DateScalarConfig extends GraphQLScalarTypeConfig<Date, any> {
-  name: 'Date';
-}
-
 export interface IResolvers {
   QueryRoot?: QueryRootResolvers.Resolvers;
   User?: UserResolvers.Resolvers;
   SubscriptionRoot?: SubscriptionRootResolvers.Resolvers;
-  Date?: GraphQLScalarType;
 }
 
 export interface IDirectiveResolvers<Result> {

@@ -20,5 +20,3 @@ schema {
   query: QueryRoot
   subscription: SubscriptionRoot
 }
-
-scalar Date

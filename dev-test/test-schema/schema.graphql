@@ -13,4 +13,3 @@ type Query {
   answer: [Int!]!
 }
 
-scalar Date

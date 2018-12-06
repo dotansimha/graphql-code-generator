@@ -7,5 +7,3 @@ type Query {
   # Generates a new answer for the guessing game
   answer: [Int!]!
 }
-
-scalar Date
