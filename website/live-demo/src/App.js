@@ -30,6 +30,8 @@ const EXT_TO_FORMATTER = {
 const DEFAULT_EXAMPLE = 'typescript-client';
 
 const pluginsMap = {
+  'graphql-codegen-flow': require('graphql-codegen-flow'),
+  'graphql-codegen-flow-documents': require('graphql-codegen-flow-documents'),
   'graphql-codegen-typescript-common': require('graphql-codegen-typescript-common'),
   'graphql-codegen-typescript-client': require('graphql-codegen-typescript-client'),
   'graphql-codegen-typescript-server': require('graphql-codegen-typescript-server'),

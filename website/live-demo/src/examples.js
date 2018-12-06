@@ -66,6 +66,17 @@ export const EXAMPLES = {
       documents: ''
     }
   },
+  flow: {
+    name: 'Flow (Types)',
+    state: {
+      config: yaml`
+        generates:
+          server-types.ts:
+            - flow`,
+      schema: TS_SCHEMA,
+      documents: ''
+    }
+  },
   'typescript-client': {
     name: 'TypeScript (Client)',
     state: {

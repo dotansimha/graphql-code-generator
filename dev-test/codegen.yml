@@ -7,6 +7,10 @@ generates:
       - typescript-common
       - typescript-server
       - typescript-resolvers
+  ./dev-test/test-schema/flow-types.flow.js:
+    schema: ./dev-test/test-schema/schema.json 
+    plugins: 
+      - flow
   ./dev-test/test-schema/resolvers-root.ts:
     schema: ./dev-test/test-schema/schema-with-root.graphql
     plugins: 
@@ -41,6 +45,11 @@ generates:
     plugins:
       - add: // tslint:disable
       - typescript-graphql-files-modules
+  ./dev-test/githunt/flow.flow.js:
+    schema: ./dev-test/githunt/schema.json
+    documents: ./dev-test/githunt/**/*.graphql
+    plugins:
+      - flow
   ./dev-test/githunt/types.ts:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql

@@ -16,7 +16,7 @@ const p = o => inspect(o, { showHidden: false, depth: null });
 
 export class SelectionSetToObject {
   private _primitiveFields: string[] = [];
-  private _linksFields: { name: string; type: string; selectionSet: string }[] = [];
+  private _linksFields: { name: string; type: string; selectionSet: string; rawType: any }[] = [];
 
   constructor(
     private _scalarsMap,
@@ -35,7 +35,8 @@ export class SelectionSetToObject {
 
   _collectField(field: FieldNode) {
     const schemaField = this._parentSchemaType.getFields()[field.name.value];
-    const typeName = this._getBaseType(schemaField.type).name;
+    const baseType = this._getBaseType(schemaField.type);
+    const typeName = baseType.name;
 
     if (this._scalarsMap[typeName]) {
       this._primitiveFields.push(field.name.value);
@@ -50,7 +51,8 @@ export class SelectionSetToObject {
       this._linksFields.push({
         name: field.name.value,
         type: typeName,
-        selectionSet: selectionSetToObject.string
+        selectionSet: selectionSetToObject.string,
+        rawType: baseType
       });
     }
   }

@@ -1,5 +1,5 @@
 // tslint:disable
-/** Inputs */
+
 export interface AdditionalEntityFields {
   path?: string | null;
 

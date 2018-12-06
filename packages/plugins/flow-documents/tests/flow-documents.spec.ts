@@ -22,6 +22,10 @@ describe('Flow Documents Plugin', () => {
       type Query {
         me: User
         dummy: String
+        dummyNonNull: String!
+        dummyArray: [String]
+        dummyNonNullArray: [String]!
+        dummyNonNullArrayWithValues: [String!]!
       }
 
       schema {
@@ -44,6 +48,27 @@ describe('Flow Documents Plugin', () => {
       expect(result.definitions[0]).toBeSimilarStringTo(`export type DummyQuery = ($Pick<Query, { dummy: * }>);`);
 
       validateFlow(result.definitions[0]);
+    });
+
+    it.only('Should build a basic selection set based on basic query - including array and non-null', () => {
+      const ast = parse(`
+        query dummyTest {
+          dummy
+          dummyNonNull
+          dummyArray
+          dummyNonNullArray
+          dummyNonNullArrayWithValues
+        }
+      `);
+      const result = visit(ast, {
+        leave: new FlowDocumentsVisitor(schema, { scalars: {} })
+      });
+
+      // console.log(result.definitions[0]);
+
+      // expect(result.definitions[0]).toBeSimilarStringTo(`export type DummyQuery = ($Pick<Query, { dummy: * }>);`);
+
+      // validateFlow(result.definitions[0]);
     });
 
     it('Should build a basic selection set based on a query with inner fields', () => {
