@@ -22,7 +22,9 @@ describe('Resolvers', () => {
   it('should contain the Resolver type', async () => {
     const content = await plugin(schema, [], {});
 
-    expect(content).toBeSimilarStringTo(`import { GraphQLResolveInfo, GraphQLScalarTypeConfig } from 'graphql';`);
+    expect(content).toBeSimilarStringTo(
+      `import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';`
+    );
     expect(content).toBeSimilarStringTo(`
     export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
       parent: Parent,
@@ -174,7 +176,7 @@ describe('Resolvers', () => {
 
     // make sure nothing was imported
     expect(content).toBeSimilarStringTo(`
-      import { GraphQLResolveInfo, GraphQLScalarTypeConfig } from 'graphql';
+      import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 
       export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
         parent: Parent,
@@ -585,7 +587,7 @@ describe('Resolvers', () => {
 
     // make sure nothing was imported
     expect(content).toBeSimilarStringTo(`
-      import { GraphQLResolveInfo, GraphQLScalarTypeConfig } from 'graphql';
+      import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 
       export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
         parent: Parent,
@@ -957,6 +959,55 @@ describe('Resolvers', () => {
     expect(content).toBeSimilarStringTo(`
       export interface DateScalarConfig extends GraphQLScalarTypeConfig<Date, any> {
         name: 'Date'
+      }
+    `);
+  });
+
+  it('should generate Resolvers interface', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: `
+
+        directive @modify(limit: Int) on FIELD_DEFINITION
+
+        scalar Date
+
+        type Query {
+          post: Post
+        }
+
+        type Post {
+          id: String
+          author: User
+        }
+
+        type User {
+          id: String
+          name: String
+        }
+        
+        schema {
+          query: Query
+        }
+      `
+    });
+
+    const content = await plugin(testSchema, [], { noNamespaces: true, scalars: { Date: 'Date' } });
+
+    expect(content).toBeSimilarStringTo(`
+      export interface IResolvers {
+        Query?: QueryResolversResolvers;
+        Post?: PostResolversResolvers;
+        User?: UserResolversResolvers;
+        Date?: GraphQLScalarType;
+      }
+    `);
+
+    expect(content).toBeSimilarStringTo(`
+      export interface IDirectiveResolvers<Result> {
+        modify?: ModifyDirectiveResolver<Result>;
+        skip?: SkipDirectiveResolver<Result>;
+        include?: IncludeDirectiveResolver<Result>;
+        deprecated?: DeprecatedDirectiveResolver<Result>;
       }
     `);
   });

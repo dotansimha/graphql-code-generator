@@ -111,16 +111,19 @@ We can `require()` (or `import`) `graphql-code-generator` directly with Node.JS:
 import { generate } from 'graphql-code-generator';
 
 async function doSomething() {
-  const generatedFiles = await generate({
-    schema: 'http://127.0.0.1:3000/graphql',
-    overwrite: true,
-    documents: './src/**/*.graphql',
-    generates: {
-      [process.cwd() + '/models/']: {
-        plugins: ['typescript-common', 'typescript-server']
+  const generatedFiles = await generate(
+    {
+      schema: 'http://127.0.0.1:3000/graphql',
+      overwrite: true,
+      documents: './src/**/*.graphql',
+      generates: {
+        [process.cwd() + '/models/']: {
+          plugins: ['typescript-common', 'typescript-server']
+        }
       }
-    }
-  }, true);
+    },
+    true
+  );
 }
 ```
 
