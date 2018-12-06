@@ -50,6 +50,7 @@ generates:
     documents: ./dev-test/githunt/**/*.graphql
     plugins:
       - flow
+      - flow-documents
   ./dev-test/githunt/types.ts:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql

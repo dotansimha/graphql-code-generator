@@ -4,9 +4,6 @@ import {
   Kind,
   FieldNode,
   GraphQLObjectType,
-  GraphQLOutputType,
-  NonNullTypeNode,
-  ListTypeNode,
   GraphQLNonNull,
   GraphQLList
 } from 'graphql';
@@ -16,7 +13,8 @@ const p = o => inspect(o, { showHidden: false, depth: null });
 
 export class SelectionSetToObject {
   private _primitiveFields: string[] = [];
-  private _linksFields: { name: string; type: string; selectionSet: string; rawType: any }[] = [];
+  private _primitiveAliasedFields: { alias: string; fieldName: string }[] = [];
+  private _linksFields: { alias: string; name: string; type: string; selectionSet: string; rawType: any }[] = [];
 
   constructor(
     private _scalarsMap,
@@ -39,16 +37,24 @@ export class SelectionSetToObject {
     const typeName = baseType.name;
 
     if (this._scalarsMap[typeName]) {
-      this._primitiveFields.push(field.name.value);
+      if (field.alias && field.alias.value) {
+        this._primitiveAliasedFields.push({
+          fieldName: field.name.value,
+          alias: field.alias.value
+        });
+      } else {
+        this._primitiveFields.push(field.name.value);
+      }
     } else {
       const selectionSetToObject = new SelectionSetToObject(
         this._scalarsMap,
         this._schema,
-        schemaField.type as any,
+        baseType,
         field.selectionSet
       );
 
       this._linksFields.push({
+        alias: field.alias ? field.alias.value : null,
         name: field.name.value,
         type: typeName,
         selectionSet: selectionSetToObject.string,
@@ -77,9 +83,17 @@ export class SelectionSetToObject {
           .join(', ')} }>`
       : null;
     const linksFields = this._linksFields.length
-      ? `{ ${this._linksFields.map(field => `${field.name}: ${field.selectionSet}`).join(', ')} }`
+      ? `{ ${this._linksFields.map(field => `${field.alias || field.name}: ${field.selectionSet}`).join(', ')} }`
       : null;
-    const fieldsSet = [baseFields, linksFields].filter(f => f);
+    const aliasBaseFields = this._primitiveAliasedFields.length
+      ? `{ ${this._primitiveAliasedFields
+          .map(
+            aliasedField =>
+              `${aliasedField.alias}: $ElementType<${this._parentSchemaType}, '${aliasedField.fieldName}'>`
+          )
+          .join(', ')} }`
+      : null;
+    const fieldsSet = [baseFields, aliasBaseFields, linksFields].filter(f => f);
 
     return `(${fieldsSet.join(' & ')})`;
   }
