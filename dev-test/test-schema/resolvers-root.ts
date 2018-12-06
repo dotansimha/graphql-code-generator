@@ -1,11 +1,21 @@
 // tslint:disable
 
+export type Date = any;
+
+// ====================================================
+// Scalars
+// ====================================================
+
 // ====================================================
 // Types
 // ====================================================
 
-export interface SubscriptionRoot {
-  newUser?: User | null;
+export interface QueryRoot {
+  allUsers: (User | null)[];
+
+  userById?: User | null;
+  /** Generates a new answer for the guessing game */
+  answer: number[];
 }
 
 export interface User {
@@ -16,12 +26,8 @@ export interface User {
   email: string;
 }
 
-export interface QueryRoot {
-  allUsers: (User | null)[];
-
-  userById?: User | null;
-  /** Generates a new answer for the guessing game */
-  answer: number[];
+export interface SubscriptionRoot {
+  newUser?: User | null;
 }
 
 // ====================================================
@@ -32,7 +38,7 @@ export interface UserByIdQueryRootArgs {
   id: number;
 }
 
-import { GraphQLResolveInfo, GraphQLScalarTypeConfig } from 'graphql';
+import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 
 export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
   parent: Parent,
@@ -78,12 +84,22 @@ export type DirectiveResolverFn<TResult, TArgs = {}, TContext = {}> = (
   info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
-export namespace SubscriptionRootResolvers {
+export namespace QueryRootResolvers {
   export interface Resolvers<Context = {}, TypeParent = {}> {
-    newUser?: NewUserResolver<User | null, TypeParent, Context>;
+    allUsers?: AllUsersResolver<(User | null)[], TypeParent, Context>;
+
+    userById?: UserByIdResolver<User | null, TypeParent, Context>;
+    /** Generates a new answer for the guessing game */
+    answer?: AnswerResolver<number[], TypeParent, Context>;
   }
 
-  export type NewUserResolver<R = User | null, Parent = {}, Context = {}> = Resolver<R, Parent, Context>;
+  export type AllUsersResolver<R = (User | null)[], Parent = {}, Context = {}> = Resolver<R, Parent, Context>;
+  export type UserByIdResolver<R = User | null, Parent = {}, Context = {}> = Resolver<R, Parent, Context, UserByIdArgs>;
+  export interface UserByIdArgs {
+    id: number;
+  }
+
+  export type AnswerResolver<R = number[], Parent = {}, Context = {}> = Resolver<R, Parent, Context>;
 }
 
 export namespace UserResolvers {
@@ -100,27 +116,12 @@ export namespace UserResolvers {
   export type EmailResolver<R = string, Parent = User, Context = {}> = Resolver<R, Parent, Context>;
 }
 
-export namespace QueryRootResolvers {
-  export interface Resolvers<Context = {}, TypeParent = QueryRoot> {
-    allUsers?: AllUsersResolver<(User | null)[], TypeParent, Context>;
-
-    userById?: UserByIdResolver<User | null, TypeParent, Context>;
-    /** Generates a new answer for the guessing game */
-    answer?: AnswerResolver<number[], TypeParent, Context>;
+export namespace SubscriptionRootResolvers {
+  export interface Resolvers<Context = {}, TypeParent = {}> {
+    newUser?: NewUserResolver<User | null, TypeParent, Context>;
   }
 
-  export type AllUsersResolver<R = (User | null)[], Parent = QueryRoot, Context = {}> = Resolver<R, Parent, Context>;
-  export type UserByIdResolver<R = User | null, Parent = QueryRoot, Context = {}> = Resolver<
-    R,
-    Parent,
-    Context,
-    UserByIdArgs
-  >;
-  export interface UserByIdArgs {
-    id: number;
-  }
-
-  export type AnswerResolver<R = number[], Parent = QueryRoot, Context = {}> = Resolver<R, Parent, Context>;
+  export type NewUserResolver<R = User | null, Parent = {}, Context = {}> = SubscriptionResolver<R, Parent, Context>;
 }
 
 /** Directs the executor to skip this field or fragment when the `if` argument is true. */
@@ -144,11 +145,19 @@ export interface DeprecatedDirectiveArgs {
   reason?: string | null;
 }
 
-export interface AllResolvers {
-  SubscriptionRoot: SubscriptionRootResolversResolvers;
-  User: UserResolversResolvers;
-  QueryRoot: QueryRootResolversResolvers;
-  Skip: SkipResolversResolvers;
-  Include: IncludeResolversResolvers;
-  Deprecated: DeprecatedResolversResolvers;
+export interface DateScalarConfig extends GraphQLScalarTypeConfig<Date, any> {
+  name: 'Date';
+}
+
+export interface IResolvers {
+  QueryRoot?: QueryRootResolvers.Resolvers;
+  User?: UserResolvers.Resolvers;
+  SubscriptionRoot?: SubscriptionRootResolvers.Resolvers;
+  Date?: GraphQLScalarType;
+}
+
+export interface IDirectiveResolvers<Result> {
+  skip?: SkipDirectiveResolver<Result>;
+  include?: IncludeDirectiveResolver<Result>;
+  deprecated?: DeprecatedDirectiveResolver<Result>;
 }

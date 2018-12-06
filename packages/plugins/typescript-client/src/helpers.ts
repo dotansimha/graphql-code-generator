@@ -11,7 +11,7 @@ import {
 
 export function shouldHavePrefix(field: Field, options: Handlebars.HelperOptions) {
   const config = options.data.root.config || {};
-  const nonPrefixable = field.isEnum || field.isUnion || field.isScalar;
+  const nonPrefixable = field.isEnum || field.isScalar;
 
   return config.noNamespaces === true && !isPrimitiveType(field, options) && !nonPrefixable;
 }

@@ -111,16 +111,19 @@ We can `require()` (or `import`) `graphql-code-generator` directly with Node.JS:
 import { generate } from 'graphql-code-generator';
 
 async function doSomething() {
-  const generatedFiles = await generate({
-    schema: 'http://127.0.0.1:3000/graphql',
-    overwrite: true,
-    documents: './src/**/*.graphql',
-    generates: {
-      [process.cwd() + '/models/']: {
-        plugins: ['typescript-common', 'typescript-server']
+  const generatedFiles = await generate(
+    {
+      schema: 'http://127.0.0.1:3000/graphql',
+      overwrite: true,
+      documents: './src/**/*.graphql',
+      generates: {
+        [process.cwd() + '/models/']: {
+          plugins: ['typescript-common', 'typescript-server']
+        }
       }
-    }
-  }, true);
+    },
+    true
+  );
 }
 ```
 
@@ -135,4 +138,4 @@ The return value should be of type `Promise<FileOutput[]>`.
 
 Although GraphQL codegen was built on top of Node.JS it is still fully compatible with other environments by installing it globally and the right command to your build process:
 
-    $ sudo npm install graphql-code-generator
+    $ sudo npm install -g graphql-code-generator
