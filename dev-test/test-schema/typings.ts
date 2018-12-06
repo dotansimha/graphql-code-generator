@@ -26,7 +26,7 @@ export interface UserByIdQueryArgs {
   id: number;
 }
 
-import { GraphQLResolveInfo, GraphQLScalarTypeConfig } from 'graphql';
+import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 
 export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
   parent: Parent,
@@ -119,4 +119,15 @@ export type DeprecatedDirectiveResolver<Result> = DirectiveResolverFn<Result, De
 export interface DeprecatedDirectiveArgs {
   /** Explains why this element was deprecated, usually also including a suggestion for how to access supported similar data. Formatted using the Markdown syntax (as specified by [CommonMark](https://commonmark.org/). */
   reason?: string | null;
+}
+
+export interface IResolvers {
+  Query?: QueryResolvers.Resolvers;
+  User?: UserResolvers.Resolvers;
+}
+
+export interface IDirectiveResolvers<Result> {
+  skip?: SkipDirectiveResolver<Result>;
+  include?: IncludeDirectiveResolver<Result>;
+  deprecated?: DeprecatedDirectiveResolver<Result>;
 }

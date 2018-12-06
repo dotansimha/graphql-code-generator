@@ -26,7 +26,7 @@ export interface UserByIdQueryArgs {
   id: number;
 }
 
-import { GraphQLResolveInfo, GraphQLScalarTypeConfig } from 'graphql';
+import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 
 export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
   parent: Parent,
@@ -121,10 +121,13 @@ export interface DeprecatedDirectiveArgs {
   reason?: string | null;
 }
 
-export interface AllResolvers {
-  Query: QueryResolversResolvers;
-  User: UserResolversResolvers;
-  Skip: SkipResolversResolvers;
-  Include: IncludeResolversResolvers;
-  Deprecated: DeprecatedResolversResolvers;
+export interface IResolvers {
+  Query?: QueryResolvers.Resolvers;
+  User?: UserResolvers.Resolvers;
+}
+
+export interface IDirectiveResolvers<Result> {
+  skip?: SkipDirectiveResolver<Result>;
+  include?: IncludeDirectiveResolver<Result>;
+  deprecated?: DeprecatedDirectiveResolver<Result>;
 }

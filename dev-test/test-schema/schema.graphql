@@ -12,3 +12,5 @@ type Query {
   # guessing game
   answer: [Int!]!
 }
+
+scalar Date
