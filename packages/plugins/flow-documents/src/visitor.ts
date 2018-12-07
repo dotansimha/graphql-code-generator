@@ -45,11 +45,20 @@ export class FlowDocumentsVisitor {
       operationRootType,
       node.selectionSet
     );
+    const visitedOperationVariables = '';
 
-    return new DeclarationBlock()
+    const operationResult = new DeclarationBlock()
       .export()
       .asKind('type')
       .withName(name + pascalCase(node.operation))
       .withContent(selectionSet.string).string;
+
+    const operationVariables = new DeclarationBlock()
+      .export()
+      .asKind('type')
+      .withName(name + pascalCase(node.operation) + 'Variables')
+      .withContent(visitedOperationVariables).string;
+
+    return [operationVariables, operationResult].join('\n\n');
   };
 }

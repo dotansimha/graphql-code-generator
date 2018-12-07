@@ -24,6 +24,14 @@ describe('Flow Documents Plugin', () => {
         firstName: String!
       }
 
+      type Mutation {
+        login(username: String!, password: String!): User
+      }
+
+      type Subscription {
+        userCreated: User
+      }
+
       type Query {
         me: User
         dummy: String
@@ -36,11 +44,35 @@ describe('Flow Documents Plugin', () => {
 
       schema {
         query: Query
+        mutation: Mutation
+        subscription: Subscription
       }
     `
   });
 
   describe('Query/Mutation/Subscription', () => {
+    it('Should detect Mutation correctly', () => {
+      const ast = parse(`
+        mutation login {
+          login(username: "1", password: "2") {
+            id
+            username
+            profile {
+              age
+            }
+          }
+        }
+      `);
+      const result = visit(ast, {
+        leave: new FlowDocumentsVisitor(schema, { scalars: {} })
+      });
+
+      expect(result.definitions[0]).toBeSimilarStringTo(
+        `export type LoginMutation = ({ login: ($Pick<User, { id: *, username: * }> & { profile: ($Pick<Profile, { age: * }>) }) });`
+      );
+      validateFlow(result.definitions[0]);
+    });
+
     it('Should build a basic selection set based on basic query on GitHub schema', () => {
       const ast = parse(`
         query me($repoFullName: String!) {
