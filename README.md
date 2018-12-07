@@ -107,6 +107,7 @@ Besides our [docs page](https://graphql-code-generator.com/docs/getting-started/
 Feel free to open issues and pull requests. We're always welcome support from the community.
 
 To run this project locally:
+
 - Use Node >= 8
 - Make sure that you have the latest Yarn version (https://yarnpkg.com/lang/en/docs/install/)
 - Clone this repo using `git clone`

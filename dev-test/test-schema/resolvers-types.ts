@@ -8,6 +8,8 @@ export interface Query {
   allUsers: (User | null)[];
 
   userById?: User | null;
+
+  answer: number[];
 }
 
 export interface User {
@@ -77,6 +79,8 @@ export namespace QueryResolvers {
     allUsers?: AllUsersResolver<(User | null)[], TypeParent, Context>;
 
     userById?: UserByIdResolver<User | null, TypeParent, Context>;
+
+    answer?: AnswerResolver<number[], TypeParent, Context>;
   }
 
   export type AllUsersResolver<R = (User | null)[], Parent = {}, Context = {}> = Resolver<R, Parent, Context>;
@@ -84,6 +88,8 @@ export namespace QueryResolvers {
   export interface UserByIdArgs {
     id: number;
   }
+
+  export type AnswerResolver<R = number[], Parent = {}, Context = {}> = Resolver<R, Parent, Context>;
 }
 
 export namespace UserResolvers {
