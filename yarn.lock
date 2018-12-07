@@ -1085,9 +1085,9 @@
     "@types/events" "*"
     "@types/node" "*"
 
-"@types/common-tags@1.4.0":
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/@types/common-tags/-/common-tags-1.4.0.tgz#28c1be61e352dde38936018984e2885caef087c1"
+"@types/common-tags@1.8.0":
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/@types/common-tags/-/common-tags-1.8.0.tgz#79d55e748d730b997be5b7fce4b74488d8b26a6b"
 
 "@types/deepmerge@2.1.0":
   version "2.1.0"
