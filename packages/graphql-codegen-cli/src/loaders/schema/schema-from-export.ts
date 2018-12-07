@@ -4,6 +4,8 @@ import isValidPath = require('is-valid-path');
 import { buildASTSchema, buildClientSchema, DocumentNode, GraphQLSchema, IntrospectionQuery, parse } from 'graphql';
 import { debugLog, Types } from 'graphql-codegen-core';
 import { SchemaLoader } from './schema-loader';
+import { DetailedError } from '../../errors';
+
 export class SchemaFromExport implements SchemaLoader {
   canHandle(pointerToSchema: string): boolean {
     const fullPath = isAbsolute(pointerToSchema) ? pointerToSchema : resolvePath(process.cwd(), pointerToSchema);
@@ -11,56 +13,44 @@ export class SchemaFromExport implements SchemaLoader {
     return isValidPath(pointerToSchema) && existsSync(fullPath) && extname(pointerToSchema) !== '.json';
   }
 
-  handle(file: string, config: Types.Config, schemaOptions: any): Promise<GraphQLSchema> {
+  async handle(file: string, config: Types.Config, schemaOptions: any): Promise<GraphQLSchema> {
     // spinner.info(
     //   `Loading GraphQL schema object, text, ast, or introspection json from JavaScript ES6 export: ${file}...`
     // );
 
-    return new Promise<GraphQLSchema>(async (resolve, reject) => {
-      const fullPath = isAbsolute(file) ? file : resolvePath(process.cwd(), file);
+    const fullPath = isAbsolute(file) ? file : resolvePath(process.cwd(), file);
 
-      if (existsSync(fullPath)) {
-        try {
-          const exports = require(fullPath);
+    if (existsSync(fullPath)) {
+      try {
+        const exports = require(fullPath);
 
-          if (exports) {
-            let rawExport = exports.default || exports.schema || exports;
+        if (exports) {
+          let rawExport = exports.default || exports.schema || exports;
 
-            if (rawExport) {
-              let schema;
+          if (rawExport) {
+            let schema = await rawExport;
 
-              if (this.isPromise(rawExport)) {
-                schema = await rawExport;
-              } else {
-                schema = rawExport;
-              }
+            try {
+              const schemaResult = await this.resolveSchema(schema);
 
-              try {
-                const schemaResult = await this.resolveSchema(schema);
+              return schemaResult;
+            } catch (e) {
+              debugLog('Unexpected exception while trying to figure out the schema: ', e);
 
-                resolve(schemaResult);
-              } catch (e) {
-                debugLog('Unexpected exception while trying to figure out the schema: ', e);
-
-                reject(new Error('Exported schema must be of type GraphQLSchema, text, AST, or introspection JSON.'));
-
-                return;
-              }
-            } else {
-              reject(
-                new Error(`Invalid export from export file ${fullPath}: missing default export or 'schema' export!`)
-              );
+              throw new Error('Exported schema must be of type GraphQLSchema, text, AST, or introspection JSON.');
             }
           } else {
-            reject(new Error(`Invalid export from export file ${fullPath}: empty export!`));
+            throw new Error(`Invalid export from export file ${fullPath}: missing default export or 'schema' export!`);
           }
-        } catch (e) {
-          reject(e);
+        } else {
+          throw new Error(`Invalid export from export file ${fullPath}: empty export!`);
         }
-      } else {
-        reject(`Unable to locate introspection from export file: ${fullPath}`);
+      } catch (e) {
+        throw new DetailedError(e.message, e.stack, fullPath);
       }
-    });
+    } else {
+      throw new Error(`Unable to locate introspection from export file: ${fullPath}`);
+    }
   }
 
   isSchemaText(obj: any): obj is string {
@@ -84,20 +74,18 @@ export class SchemaFromExport implements SchemaLoader {
     return !!obj && (typeof obj === 'object' || typeof obj === 'function') && typeof obj.then === 'function';
   }
 
-  resolveSchema(schema: any): Promise<any> {
-    return new Promise<any>((resolve, reject) => {
-      if (this.isSchemaObject(schema)) {
-        resolve(schema);
-      } else if (this.isSchemaAst(schema)) {
-        resolve(buildASTSchema(schema));
-      } else if (this.isSchemaText(schema)) {
-        const ast = parse(schema);
-        resolve(buildASTSchema(ast));
-      } else if (this.isSchemaJson(schema)) {
-        resolve(buildClientSchema(schema.data));
-      } else {
-        reject(new Error('Unexpected schema type provided!'));
-      }
-    });
+  async resolveSchema(schema: any): Promise<any> {
+    if (this.isSchemaObject(schema)) {
+      return schema;
+    } else if (this.isSchemaAst(schema)) {
+      return buildASTSchema(schema);
+    } else if (this.isSchemaText(schema)) {
+      const ast = parse(schema);
+      return buildASTSchema(ast);
+    } else if (this.isSchemaJson(schema)) {
+      return buildClientSchema(schema.data);
+    } else {
+      throw new Error('Unexpected schema type provided!');
+    }
   }
 }
