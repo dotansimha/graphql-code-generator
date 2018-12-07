@@ -12,3 +12,4 @@ type Query {
   # guessing game
   answer: [Int!]!
 }
+

@@ -1,4 +1,4 @@
-import { GraphQLResolveInfo, GraphQLScalarTypeConfig } from 'graphql';
+import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 {{{ importMappers types }}}
 
 {{{ importContext }}}
@@ -66,3 +66,24 @@ export type DirectiveResolverFn<TResult, TArgs = {}, TContext = {}> = (
 {{#each scalars}}
 {{~> scalar}}
 {{/each}}
+
+export interface IResolvers {
+  {{#each types}}
+    {{ convert name }}?: {{ convert name }}Resolvers{{#unless @root.config.noNamespaces}}.{{/unless}}Resolvers;
+  {{/each}}
+  {{#each interfaces}}
+    {{ convert name }}?: {{ convert name }}Resolvers{{#unless @root.config.noNamespaces}}.{{/unless}}Resolvers;
+  {{/each}}
+  {{#each unions}}
+    {{ convert name }}?: {{ convert name }}Resolvers{{#unless @root.config.noNamespaces}}.{{/unless}}Resolvers;
+  {{/each}}
+  {{#each scalars}}
+    {{ convert name }}?: GraphQLScalarType;
+  {{/each}}
+}
+
+export interface IDirectiveResolvers<Result> {
+  {{#each definedDirectives}}
+    {{ name }}?: {{ convert name }}DirectiveResolver<Result>;
+  {{/each}}
+}

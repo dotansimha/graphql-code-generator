@@ -188,7 +188,7 @@ export interface ReaderUserDbObject {
   role: string | null;
   followingUserIds: (ObjectID | null)[] | null;
 }
-import { GraphQLResolveInfo, GraphQLScalarTypeConfig } from 'graphql';
+import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 
 export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
   parent: Parent,
@@ -504,4 +504,27 @@ export interface DeprecatedDirectiveArgs {
 
 export interface DateScalarConfig extends GraphQLScalarTypeConfig<Date, any> {
   name: 'Date';
+}
+
+export interface IResolvers {
+  Post?: PostResolvers.Resolvers;
+  AdminUser?: AdminUserResolvers.Resolvers;
+  WriterUser?: WriterUserResolvers.Resolvers;
+  ReaderUser?: ReaderUserResolvers.Resolvers;
+  User?: UserResolvers.Resolvers;
+  Date?: GraphQLScalarType;
+}
+
+export interface IDirectiveResolvers<Result> {
+  union?: UnionDirectiveResolver<Result>;
+  abstractEntity?: AbstractEntityDirectiveResolver<Result>;
+  entity?: EntityDirectiveResolver<Result>;
+  column?: ColumnDirectiveResolver<Result>;
+  id?: IdDirectiveResolver<Result>;
+  link?: LinkDirectiveResolver<Result>;
+  embedded?: EmbeddedDirectiveResolver<Result>;
+  map?: MapDirectiveResolver<Result>;
+  skip?: SkipDirectiveResolver<Result>;
+  include?: IncludeDirectiveResolver<Result>;
+  deprecated?: DeprecatedDirectiveResolver<Result>;
 }
