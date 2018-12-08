@@ -50,76 +50,7 @@ describe('Flow Documents Plugin', () => {
     `
   });
 
-  describe('Fragment', () => {
-    it('Should detect Mutation correctly', () => {
-      const ast = parse(`
-        fragment UserFields on User {
-          id
-          username
-          profile {
-            age
-          }
-        }
-      `);
-      const result = visit(ast, {
-        leave: new FlowDocumentsVisitor(schema, { scalars: {} })
-      });
-
-      expect(result.definitions[0]).toBeSimilarStringTo(
-        `export type UserFieldsFragment = ($Pick<User, { id: *, username: * }> & { profile: ($Pick<Profile, { age: * }>) });`
-      );
-      validateFlow(result.definitions[0]);
-    });
-  });
-
-  describe('Query/Mutation/Subscription', () => {
-    it('Should detect Mutation correctly', () => {
-      const ast = parse(`
-        mutation login {
-          login(username: "1", password: "2") {
-            id
-            username
-            profile {
-              age
-            }
-          }
-        }
-      `);
-      const result = visit(ast, {
-        leave: new FlowDocumentsVisitor(schema, { scalars: {} })
-      });
-
-      expect(result.definitions[0]).toBeSimilarStringTo(
-        `export type LoginMutation = ({ login: ($Pick<User, { id: *, username: * }> & { profile: ($Pick<Profile, { age: * }>) }) });`
-      );
-      validateFlow(result.definitions[0]);
-    });
-
-    it('Should handle operation variables correctly', () => {
-      const ast = parse(`
-        query testQuery($username: String, $email: String, $password: String!, $input: InputType, $mandatoryInput: InputType!, $testArray: [String], $requireString: [String]!, $innerRequired: [String!]!) {
-          dummy
-        }
-      `);
-      const result = visit(ast, {
-        leave: new FlowDocumentsVisitor(schema, { scalars: {} })
-      });
-
-      expect(result.definitions[0]).toBeSimilarStringTo(
-        `export type TestQueryQueryVariables = {
-          username?: ?string,
-          email?: ?string,
-          password: string,
-          input?: ?InputType,
-          mandatoryInput: InputType,
-          testArray?: ?Array<?string>,
-          requireString: Array<?string>,
-          innerRequired: Array<string>
-        };`
-      );
-      validateFlow(result.definitions[0]);
-    });
-
+  describe('Selection Set', () => {
     it('Should build a basic selection set based on basic query on GitHub schema', () => {
       const ast = parse(`
         query me($repoFullName: String!) {
@@ -205,6 +136,123 @@ describe('Flow Documents Plugin', () => {
         `export type CurrentUserQuery = ({ me: ($Pick<User, { id: *, username: * }> & { profile: ($Pick<Profile, { age: * }>) }) });`
       );
 
+      validateFlow(result.definitions[0]);
+    });
+  });
+
+  describe('Fragment Definition', () => {
+    it('Should build fragment definition correctly - with name and selection set', () => {
+      const ast = parse(`
+        fragment UserFields on User {
+          id
+          username
+          profile {
+            age
+          }
+        }
+      `);
+      const result = visit(ast, {
+        leave: new FlowDocumentsVisitor(schema, { scalars: {} })
+      });
+
+      expect(result.definitions[0]).toBeSimilarStringTo(
+        `export type UserFieldsFragment = ($Pick<User, { id: *, username: * }> & { profile: ($Pick<Profile, { age: * }>) });`
+      );
+      validateFlow(result.definitions[0]);
+    });
+  });
+
+  describe('Operation Definition', () => {
+    it('Should detect Mutation correctly', () => {
+      const ast = parse(`
+        mutation login {
+          login(username: "1", password: "2") {
+            id
+            username
+            profile {
+              age
+            }
+          }
+        }
+      `);
+      const result = visit(ast, {
+        leave: new FlowDocumentsVisitor(schema, { scalars: {} })
+      });
+
+      expect(result.definitions[0]).toBeSimilarStringTo(
+        `export type LoginMutation = ({ login: ($Pick<User, { id: *, username: * }> & { profile: ($Pick<Profile, { age: * }>) }) });`
+      );
+      validateFlow(result.definitions[0]);
+    });
+
+    it('Should detect Query correctly', () => {
+      const ast = parse(`
+        query test {
+          dummy
+        }
+      `);
+      const result = visit(ast, {
+        leave: new FlowDocumentsVisitor(schema, { scalars: {} })
+      });
+
+      expect(result.definitions[0]).toBeSimilarStringTo(`export type TestQuery = ($Pick<Query, { dummy: * }>);`);
+      validateFlow(result.definitions[0]);
+    });
+
+    it('Should detect Subscription correctly', () => {
+      const ast = parse(`
+        subscription test {
+          userCreated {
+            id
+          }
+        }
+      `);
+      const result = visit(ast, {
+        leave: new FlowDocumentsVisitor(schema, { scalars: {} })
+      });
+
+      expect(result.definitions[0]).toBeSimilarStringTo(
+        `export type TestSubscription = ({ userCreated: ($Pick<User, { id: * }>) });`
+      );
+      validateFlow(result.definitions[0]);
+    });
+
+    it('Should handle operation variables correctly', () => {
+      const ast = parse(`
+        query testQuery($username: String, $email: String, $password: String!, $input: InputType, $mandatoryInput: InputType!, $testArray: [String], $requireString: [String]!, $innerRequired: [String!]!) {
+          dummy
+        }
+      `);
+      const result = visit(ast, {
+        leave: new FlowDocumentsVisitor(schema, { scalars: {} })
+      });
+
+      expect(result.definitions[0]).toBeSimilarStringTo(
+        `export type TestQueryQueryVariables = {
+          username?: ?string,
+          email?: ?string,
+          password: string,
+          input?: ?InputType,
+          mandatoryInput: InputType,
+          testArray?: ?Array<?string>,
+          requireString: Array<?string>,
+          innerRequired: Array<string>
+        };`
+      );
+      validateFlow(result.definitions[0]);
+    });
+
+    it('Should create empty variables when there are no operation variables', () => {
+      const ast = parse(`
+        query testQuery {
+          dummy
+        }
+      `);
+      const result = visit(ast, {
+        leave: new FlowDocumentsVisitor(schema, { scalars: {} })
+      });
+
+      expect(result.definitions[0]).toBeSimilarStringTo(`export type TestQueryQueryVariables = {};`);
       validateFlow(result.definitions[0]);
     });
   });
