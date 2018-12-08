@@ -1,11 +1,11 @@
-import { GraphQLSchema, VariableDefinitionNode, Kind, TypeNode } from 'graphql';
-import { ScalarsMap, indent } from 'graphql-codegen-flow';
+import { VariableDefinitionNode, Kind, TypeNode } from 'graphql';
+import { indent } from 'graphql-codegen-flow';
 import { getBaseTypeNode } from './utils';
+import { FlowDocumentsVisitor } from './visitor';
 
 export class OperationVariablesToObject {
   constructor(
-    private _scalarsMap: ScalarsMap,
-    private _schema: GraphQLSchema,
+    private _visitorInstance: FlowDocumentsVisitor,
     private _variablesNode: ReadonlyArray<VariableDefinitionNode>
   ) {}
 
@@ -30,7 +30,9 @@ export class OperationVariablesToObject {
       .map(variable => {
         const baseType = getBaseTypeNode(variable.type);
         const typeName = baseType.name.value;
-        const typeValue = this._scalarsMap[typeName] ? this._scalarsMap[typeName] : baseType.name.value;
+        const typeValue = this._visitorInstance.scalars[typeName]
+          ? this._visitorInstance.scalars[typeName]
+          : baseType.name.value;
 
         return indent(
           `${variable.variable.name.value}${variable.type.kind === Kind.NON_NULL_TYPE ? '' : '?'}: ${this.wrapType(

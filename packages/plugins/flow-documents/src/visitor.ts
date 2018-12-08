@@ -1,17 +1,8 @@
-import {
-  GraphQLSchema,
-  FieldNode,
-  SelectionSetNode,
-  GraphQLType,
-  visit,
-  GraphQLObjectType,
-  FragmentDefinitionNode
-} from 'graphql';
-import { DeclarationBlock, wrapWithSingleQuotes, indent, DEFAULT_SCALARS } from 'graphql-codegen-flow';
+import { GraphQLSchema, GraphQLObjectType, FragmentDefinitionNode } from 'graphql';
+import { DeclarationBlock, DEFAULT_SCALARS } from 'graphql-codegen-flow';
 import { ScalarsMap } from './index';
 import { OperationDefinitionNode } from 'graphql';
-import { pascalCase, pascal } from 'change-case';
-import { inspect } from 'util';
+import { pascalCase } from 'change-case';
 import { SelectionSetToObject } from './selection-set-to-object';
 import { OperationVariablesToObject } from './operation-variables-to-object';
 
@@ -33,12 +24,20 @@ export class FlowDocumentsVisitor {
     };
   }
 
-  private convert(name: string): string {
+  public convert(name: string): string {
     return pascalCase(name);
   }
 
-  private getFragmentName(nodeName: string): string {
+  public getFragmentName(nodeName: string): string {
     return this.convert(nodeName) + 'Fragment';
+  }
+
+  public get schema(): GraphQLSchema {
+    return this._schema;
+  }
+
+  public get scalars(): ScalarsMap {
+    return this._parsedConfig.scalars;
   }
 
   private handleAnonymouseOperation(name: string | null): string {
@@ -51,12 +50,7 @@ export class FlowDocumentsVisitor {
 
   FragmentDefinition = (node: FragmentDefinitionNode): string => {
     const fragmentRootType = this._schema.getType(node.typeCondition.name.value) as GraphQLObjectType;
-    const selectionSet = new SelectionSetToObject(
-      this._parsedConfig.scalars,
-      this._schema,
-      fragmentRootType,
-      node.selectionSet
-    );
+    const selectionSet = new SelectionSetToObject(this, fragmentRootType, node.selectionSet);
 
     return new DeclarationBlock()
       .export()
@@ -68,17 +62,8 @@ export class FlowDocumentsVisitor {
   OperationDefinition = (node: OperationDefinitionNode): string => {
     const name = this.handleAnonymouseOperation(node.name && node.name.value ? node.name.value : null);
     const operationRootType = this._schema.getType(pascalCase(node.operation)) as GraphQLObjectType;
-    const selectionSet = new SelectionSetToObject(
-      this._parsedConfig.scalars,
-      this._schema,
-      operationRootType,
-      node.selectionSet
-    );
-    const visitedOperationVariables = new OperationVariablesToObject(
-      this._parsedConfig.scalars,
-      this._schema,
-      node.variableDefinitions
-    );
+    const selectionSet = new SelectionSetToObject(this, operationRootType, node.selectionSet);
+    const visitedOperationVariables = new OperationVariablesToObject(this, node.variableDefinitions);
 
     const operationResult = new DeclarationBlock()
       .export()

@@ -1,17 +1,6 @@
-import {
-  SelectionSetNode,
-  GraphQLSchema,
-  Kind,
-  FieldNode,
-  GraphQLObjectType,
-  GraphQLNonNull,
-  GraphQLList,
-  isScalarType,
-  isUnionType,
-  isEnumType
-} from 'graphql';
-import { ScalarsMap } from 'graphql-codegen-flow';
+import { SelectionSetNode, Kind, FieldNode, isScalarType, isUnionType, isEnumType } from 'graphql';
 import { getBaseType, GraphQLBaseType } from './utils';
+import { FlowDocumentsVisitor } from './visitor';
 
 export class SelectionSetToObject {
   private _primitiveFields: string[] = [];
@@ -19,8 +8,7 @@ export class SelectionSetToObject {
   private _linksFields: { alias: string; name: string; type: string; selectionSet: string; rawType: any }[] = [];
 
   constructor(
-    private _scalarsMap: ScalarsMap,
-    private _schema: GraphQLSchema,
+    private _visitorInstance: FlowDocumentsVisitor,
     private _parentSchemaType: GraphQLBaseType,
     private _selectionSet: SelectionSetNode
   ) {}
@@ -34,7 +22,7 @@ export class SelectionSetToObject {
       const baseType = getBaseType(schemaField.type);
       const typeName = baseType.name;
 
-      if (this._scalarsMap[typeName]) {
+      if (this._visitorInstance.scalars[typeName]) {
         if (field.alias && field.alias.value) {
           this._primitiveAliasedFields.push({
             fieldName: field.name.value,
@@ -44,12 +32,7 @@ export class SelectionSetToObject {
           this._primitiveFields.push(field.name.value);
         }
       } else {
-        const selectionSetToObject = new SelectionSetToObject(
-          this._scalarsMap,
-          this._schema,
-          baseType,
-          field.selectionSet
-        );
+        const selectionSetToObject = new SelectionSetToObject(this._visitorInstance, baseType, field.selectionSet);
 
         this._linksFields.push({
           alias: field.alias ? field.alias.value : null,
