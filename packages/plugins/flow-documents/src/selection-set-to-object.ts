@@ -5,11 +5,13 @@ import {
   FieldNode,
   GraphQLObjectType,
   GraphQLNonNull,
-  GraphQLList
+  GraphQLList,
+  isScalarType,
+  isUnionType,
+  isEnumType
 } from 'graphql';
-import { inspect } from 'util';
-
-const p = o => inspect(o, { showHidden: false, depth: null });
+import { ScalarsMap } from 'graphql-codegen-flow';
+import { getBaseType, GraphQLBaseType } from './utils';
 
 export class SelectionSetToObject {
   private _primitiveFields: string[] = [];
@@ -17,49 +19,46 @@ export class SelectionSetToObject {
   private _linksFields: { alias: string; name: string; type: string; selectionSet: string; rawType: any }[] = [];
 
   constructor(
-    private _scalarsMap,
+    private _scalarsMap: ScalarsMap,
     private _schema: GraphQLSchema,
-    private _parentSchemaType: GraphQLObjectType,
+    private _parentSchemaType: GraphQLBaseType,
     private _selectionSet: SelectionSetNode
   ) {}
 
-  _getBaseType(type: any): GraphQLObjectType {
-    if (type instanceof GraphQLNonNull || type instanceof GraphQLList) {
-      return this._getBaseType(type.ofType);
-    } else {
-      return type;
-    }
-  }
-
   _collectField(field: FieldNode) {
-    const schemaField = this._parentSchemaType.getFields()[field.name.value];
-    const baseType = this._getBaseType(schemaField.type);
-    const typeName = baseType.name;
-
-    if (this._scalarsMap[typeName]) {
-      if (field.alias && field.alias.value) {
-        this._primitiveAliasedFields.push({
-          fieldName: field.name.value,
-          alias: field.alias.value
-        });
-      } else {
-        this._primitiveFields.push(field.name.value);
-      }
+    if (isUnionType(this._parentSchemaType)) {
+    } else if (isScalarType(this._parentSchemaType)) {
+    } else if (isEnumType(this._parentSchemaType)) {
     } else {
-      const selectionSetToObject = new SelectionSetToObject(
-        this._scalarsMap,
-        this._schema,
-        baseType,
-        field.selectionSet
-      );
+      const schemaField = this._parentSchemaType.getFields()[field.name.value];
+      const baseType = getBaseType(schemaField.type);
+      const typeName = baseType.name;
 
-      this._linksFields.push({
-        alias: field.alias ? field.alias.value : null,
-        name: field.name.value,
-        type: typeName,
-        selectionSet: selectionSetToObject.string,
-        rawType: baseType
-      });
+      if (this._scalarsMap[typeName]) {
+        if (field.alias && field.alias.value) {
+          this._primitiveAliasedFields.push({
+            fieldName: field.name.value,
+            alias: field.alias.value
+          });
+        } else {
+          this._primitiveFields.push(field.name.value);
+        }
+      } else {
+        const selectionSetToObject = new SelectionSetToObject(
+          this._scalarsMap,
+          this._schema,
+          baseType,
+          field.selectionSet
+        );
+
+        this._linksFields.push({
+          alias: field.alias ? field.alias.value : null,
+          name: field.name.value,
+          type: typeName,
+          selectionSet: selectionSetToObject.string,
+          rawType: baseType
+        });
+      }
     }
   }
 

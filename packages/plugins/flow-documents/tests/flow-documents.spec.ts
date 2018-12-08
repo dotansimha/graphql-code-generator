@@ -73,6 +73,31 @@ describe('Flow Documents Plugin', () => {
       validateFlow(result.definitions[0]);
     });
 
+    it('Should handle operation variables correctly', () => {
+      const ast = parse(`
+        query testQuery($username: String, $email: String, $password: String!, $input: InputType, $mandatoryInput: InputType!, $testArray: [String], $requireString: [String]!, $innerRequired: [String!]!) {
+          dummy
+        }
+      `);
+      const result = visit(ast, {
+        leave: new FlowDocumentsVisitor(schema, { scalars: {} })
+      });
+
+      expect(result.definitions[0]).toBeSimilarStringTo(
+        `export type TestQueryQueryVariables = {
+          username?: ?string,
+          email?: ?string,
+          password: string,
+          input?: ?InputType,
+          mandatoryInput: InputType,
+          testArray?: ?Array<?string>,
+          requireString: Array<?string>,
+          innerRequired: Array<string>
+        };`
+      );
+      validateFlow(result.definitions[0]);
+    });
+
     it('Should build a basic selection set based on basic query on GitHub schema', () => {
       const ast = parse(`
         query me($repoFullName: String!) {
@@ -94,6 +119,11 @@ describe('Flow Documents Plugin', () => {
         leave: new FlowDocumentsVisitor(gitHuntSchema, { scalars: {} })
       });
 
+      expect(result.definitions[0]).toBeSimilarStringTo(
+        `export type MeQueryVariables = {
+          repoFullName: string
+        };`
+      );
       expect(result.definitions[0]).toBeSimilarStringTo(
         `export type MeQuery = ({ currentUser: ($Pick<User, { login: *, html_url: * }>), entry: ($Pick<Entry, { id: *, createdAt: * }> & { postedBy: ($Pick<User, { login: *, html_url: * }>) }) });`
       );

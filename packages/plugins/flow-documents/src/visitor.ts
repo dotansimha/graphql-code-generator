@@ -5,6 +5,7 @@ import { OperationDefinitionNode } from 'graphql';
 import { pascalCase, pascal } from 'change-case';
 import { inspect } from 'util';
 import { SelectionSetToObject } from './selection-set-to-object';
+import { OperationVariablesToObject } from './operation-variables-to-object';
 
 export interface ParsedDocumentsConfig {
   scalars: ScalarsMap;
@@ -45,7 +46,11 @@ export class FlowDocumentsVisitor {
       operationRootType,
       node.selectionSet
     );
-    const visitedOperationVariables = '';
+    const visitedOperationVariables = new OperationVariablesToObject(
+      this._parsedConfig.scalars,
+      this._schema,
+      node.variableDefinitions
+    );
 
     const operationResult = new DeclarationBlock()
       .export()
@@ -53,12 +58,14 @@ export class FlowDocumentsVisitor {
       .withName(name + pascalCase(node.operation))
       .withContent(selectionSet.string).string;
 
-    const operationVariables = new DeclarationBlock()
-      .export()
-      .asKind('type')
-      .withName(name + pascalCase(node.operation) + 'Variables')
-      .withContent(visitedOperationVariables).string;
+    const operationVariables = !visitedOperationVariables
+      ? null
+      : new DeclarationBlock()
+          .export()
+          .asKind('type')
+          .withName(name + pascalCase(node.operation) + 'Variables')
+          .withBlock(visitedOperationVariables.string).string;
 
-    return [operationVariables, operationResult].join('\n\n');
+    return [operationVariables, operationResult].filter(r => r).join('\n\n');
   };
 }
