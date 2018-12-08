@@ -50,6 +50,28 @@ describe('Flow Documents Plugin', () => {
     `
   });
 
+  describe('Fragment', () => {
+    it('Should detect Mutation correctly', () => {
+      const ast = parse(`
+        fragment UserFields on User {
+          id
+          username
+          profile {
+            age
+          }
+        }
+      `);
+      const result = visit(ast, {
+        leave: new FlowDocumentsVisitor(schema, { scalars: {} })
+      });
+
+      expect(result.definitions[0]).toBeSimilarStringTo(
+        `export type UserFieldsFragment = ($Pick<User, { id: *, username: * }> & { profile: ($Pick<Profile, { age: * }>) });`
+      );
+      validateFlow(result.definitions[0]);
+    });
+  });
+
   describe('Query/Mutation/Subscription', () => {
     it('Should detect Mutation correctly', () => {
       const ast = parse(`

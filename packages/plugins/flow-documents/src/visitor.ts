@@ -1,4 +1,12 @@
-import { GraphQLSchema, FieldNode, SelectionSetNode, GraphQLType, visit, GraphQLObjectType } from 'graphql';
+import {
+  GraphQLSchema,
+  FieldNode,
+  SelectionSetNode,
+  GraphQLType,
+  visit,
+  GraphQLObjectType,
+  FragmentDefinitionNode
+} from 'graphql';
 import { DeclarationBlock, wrapWithSingleQuotes, indent, DEFAULT_SCALARS } from 'graphql-codegen-flow';
 import { ScalarsMap } from './index';
 import { OperationDefinitionNode } from 'graphql';
@@ -29,13 +37,33 @@ export class FlowDocumentsVisitor {
     return pascalCase(name);
   }
 
-  private handleAnonymouseOperation(name: string | null) {
+  private getFragmentName(nodeName: string): string {
+    return this.convert(nodeName) + 'Fragment';
+  }
+
+  private handleAnonymouseOperation(name: string | null): string {
     if (name) {
       return this.convert(name);
     }
 
     return `Unnamed_${this._unnamedCounter++}_`;
   }
+
+  FragmentDefinition = (node: FragmentDefinitionNode): string => {
+    const fragmentRootType = this._schema.getType(node.typeCondition.name.value) as GraphQLObjectType;
+    const selectionSet = new SelectionSetToObject(
+      this._parsedConfig.scalars,
+      this._schema,
+      fragmentRootType,
+      node.selectionSet
+    );
+
+    return new DeclarationBlock()
+      .export()
+      .asKind('type')
+      .withName(this.getFragmentName(node.name.value))
+      .withContent(selectionSet.string).string;
+  };
 
   OperationDefinition = (node: OperationDefinitionNode): string => {
     const name = this.handleAnonymouseOperation(node.name && node.name.value ? node.name.value : null);
