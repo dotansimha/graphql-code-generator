@@ -1,13 +1,12 @@
-import { VariableDefinitionNode, Kind, TypeNode } from 'graphql';
-import { indent } from 'graphql-codegen-flow';
-import { getBaseTypeNode } from './utils';
-import { FlowDocumentsVisitor } from './visitor';
+import { Kind, TypeNode, VariableNode, NameNode } from 'graphql';
+import { indent, getBaseTypeNode } from './utils';
+import { BasicFlowVisitor } from './visitor';
 
-export class OperationVariablesToObject {
-  constructor(
-    private _visitorInstance: FlowDocumentsVisitor,
-    private _variablesNode: ReadonlyArray<VariableDefinitionNode>
-  ) {}
+export class OperationVariablesToObject<
+  Visitor extends BasicFlowVisitor,
+  DefinitionType extends { name?: NameNode; variable?: VariableNode; type: TypeNode }
+> {
+  constructor(private _visitorInstance: Visitor, private _variablesNode: ReadonlyArray<DefinitionType>) {}
 
   private wrapType(baseType: string, typeNode: TypeNode): string {
     if (typeNode.kind === Kind.NON_NULL_TYPE) {
@@ -19,6 +18,16 @@ export class OperationVariablesToObject {
     } else {
       return `?${baseType}`;
     }
+  }
+
+  getName(node: DefinitionType): string {
+    if (node.name) {
+      return node.name.value;
+    } else if (node.variable) {
+      return node.variable.name.value;
+    }
+
+    return null;
   }
 
   get string(): string {
@@ -35,7 +44,7 @@ export class OperationVariablesToObject {
           : baseType.name.value;
 
         return indent(
-          `${variable.variable.name.value}${variable.type.kind === Kind.NON_NULL_TYPE ? '' : '?'}: ${this.wrapType(
+          `${this.getName(variable)}${variable.type.kind === Kind.NON_NULL_TYPE ? '' : '?'}: ${this.wrapType(
             typeValue,
             variable.type
           )}`

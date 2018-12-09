@@ -8,10 +8,7 @@ import {
   GraphQLUnionType,
   GraphQLEnumType,
   isListType,
-  isNonNullType,
-  TypeNode,
-  NamedTypeNode,
-  Kind
+  isNonNullType
 } from 'graphql';
 
 function isWrapperType(t: GraphQLOutputType): t is GraphQLNonNull<any> | GraphQLList<any> {
@@ -31,12 +28,4 @@ export function getBaseType(type: GraphQLOutputType): GraphQLBaseType {
   } else {
     return type;
   }
-}
-
-export function getBaseTypeNode(typeNode: TypeNode): NamedTypeNode {
-  if (typeNode.kind === Kind.LIST_TYPE || typeNode.kind === Kind.NON_NULL_TYPE) {
-    return getBaseTypeNode(typeNode.type);
-  }
-
-  return typeNode;
 }

@@ -1,4 +1,4 @@
-import { NameNode } from 'graphql';
+import { NameNode, Kind, TypeNode, NamedTypeNode } from 'graphql';
 
 export function block(array) {
   return array && array.length !== 0 ? '{\n' + array.join('\n') + '\n}' : '';
@@ -91,4 +91,12 @@ ${this._block}
 
     return result + ';\n';
   }
+}
+
+export function getBaseTypeNode(typeNode: TypeNode): NamedTypeNode {
+  if (typeNode.kind === Kind.LIST_TYPE || typeNode.kind === Kind.NON_NULL_TYPE) {
+    return getBaseTypeNode(typeNode.type);
+  }
+
+  return typeNode;
 }

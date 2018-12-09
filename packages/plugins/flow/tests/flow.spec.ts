@@ -1,16 +1,58 @@
 import 'graphql-codegen-core/dist/testing';
 import { parse, visit } from 'graphql';
-import { FlowCommonVisitor } from '../src/visitor';
+import { FlowVisitor } from '../src/visitor';
 import { validateFlow } from '../../flow-documents/tests/validate-flow';
 
 describe('Flow Plugin', () => {
   const SCALARS = {};
 
+  describe('Arguments', () => {
+    it('Should generate correctly types for field arguments - with basic fields', () => {
+      const ast = parse(`type MyType { foo(a: String!, b: String, c: [String], d: [Int!]!): String }`);
+      const result = visit(ast, {
+        leave: new FlowVisitor({ namingConvention: null, scalars: SCALARS, enumValues: {} })
+      });
+
+      expect(result.definitions[0]).toBeSimilarStringTo(`
+        export type MyTypeFooArgs = {
+          a: string,
+          b?: ?string,
+          c?: ?Array<?string>,
+          d: Array<number>
+        };
+    `);
+
+      validateFlow(result.definitions[0]);
+    });
+
+    it('Should generate correctly types for field arguments - with input type', () => {
+      const ast = parse(
+        `input MyInput { f: String } type MyType { foo(a: MyInput, b: MyInput!, c: [MyInput], d: [MyInput]!, e: [MyInput!]!): String }`
+      );
+      const result = visit(ast, {
+        leave: new FlowVisitor({ namingConvention: null, scalars: SCALARS, enumValues: {} })
+      });
+
+      expect(result.definitions[1]).toBeSimilarStringTo(`
+        export type MyTypeFooArgs = {
+          a?: ?MyInput,
+          b: MyInput,
+          c?: ?Array<?MyInput>,
+          d: Array<?MyInput>,
+          e: Array<MyInput>
+        };
+    `);
+
+      validateFlow(result.definitions[0]);
+      validateFlow(result.definitions[1]);
+    });
+  });
+
   describe('Enum', () => {
     it('Should build basic enum correctly', () => {
       const ast = parse(`enum MyEnum { A, B, C }`);
       const result = visit(ast, {
-        leave: new FlowCommonVisitor({ namingConvention: null, scalars: SCALARS, enumValues: {} })
+        leave: new FlowVisitor({ namingConvention: null, scalars: SCALARS, enumValues: {} })
       });
 
       expect(result.definitions[0]).toBeSimilarStringTo(`
@@ -29,7 +71,7 @@ describe('Flow Plugin', () => {
     it('Should build enum correctly with custom values', () => {
       const ast = parse(`enum MyEnum { A, B, C }`);
       const result = visit(ast, {
-        leave: new FlowCommonVisitor({
+        leave: new FlowVisitor({
           namingConvention: null,
           scalars: SCALARS,
           enumValues: { A: 'SomeValue', B: 'TEST' }
@@ -54,7 +96,7 @@ describe('Flow Plugin', () => {
     it('Should build basic scalar correctly as any', () => {
       const ast = parse(`scalar A`);
       const result = visit(ast, {
-        leave: new FlowCommonVisitor({ namingConvention: null, scalars: SCALARS, enumValues: {} })
+        leave: new FlowVisitor({ namingConvention: null, scalars: SCALARS, enumValues: {} })
       });
 
       expect(result.definitions[0]).toBeSimilarStringTo(`
@@ -67,7 +109,7 @@ describe('Flow Plugin', () => {
     it('Should build enum correctly with custom values', () => {
       const ast = parse(`scalar A`);
       const result = visit(ast, {
-        leave: new FlowCommonVisitor({
+        leave: new FlowVisitor({
           namingConvention: null,
           scalars: {
             ...SCALARS,
@@ -107,7 +149,7 @@ describe('Flow Plugin', () => {
           l: [[String!]!]!
         }`);
       const result = visit(ast, {
-        leave: new FlowCommonVisitor({
+        leave: new FlowVisitor({
           namingConvention: null,
           scalars: { String: 'string', Int: 'number' },
           enumValues: {}
@@ -144,7 +186,7 @@ describe('Flow Plugin', () => {
           bar: String!
         }`);
       const result = visit(ast, {
-        leave: new FlowCommonVisitor({
+        leave: new FlowVisitor({
           namingConvention: null,
           scalars: { String: 'string' },
           enumValues: {}
@@ -171,7 +213,7 @@ describe('Flow Plugin', () => {
         }
         `);
       const result = visit(ast, {
-        leave: new FlowCommonVisitor({
+        leave: new FlowVisitor({
           namingConvention: null,
           scalars: { String: 'string' },
           enumValues: {}
@@ -208,7 +250,7 @@ describe('Flow Plugin', () => {
         }
         `);
       const result = visit(ast, {
-        leave: new FlowCommonVisitor({
+        leave: new FlowVisitor({
           namingConvention: null,
           scalars: { String: 'string' },
           enumValues: {}
@@ -247,7 +289,7 @@ describe('Flow Plugin', () => {
         }
         `);
       const result = visit(ast, {
-        leave: new FlowCommonVisitor({
+        leave: new FlowVisitor({
           namingConvention: null,
           scalars: { String: 'string' },
           enumValues: {}
@@ -283,7 +325,7 @@ describe('Flow Plugin', () => {
       union MyUnion = MyType | MyOtherType
       `);
       const result = visit(ast, {
-        leave: new FlowCommonVisitor({
+        leave: new FlowVisitor({
           namingConvention: null,
           scalars: { String: 'string' },
           enumValues: {}
@@ -307,7 +349,7 @@ describe('Flow Plugin', () => {
           bar: String!
         }`);
       const result = visit(ast, {
-        leave: new FlowCommonVisitor({
+        leave: new FlowVisitor({
           namingConvention: null,
           scalars: { String: 'string' },
           enumValues: {}

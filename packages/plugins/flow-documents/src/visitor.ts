@@ -1,10 +1,9 @@
-import { GraphQLSchema, GraphQLObjectType, FragmentDefinitionNode } from 'graphql';
-import { DeclarationBlock, DEFAULT_SCALARS } from 'graphql-codegen-flow';
+import { GraphQLSchema, GraphQLObjectType, FragmentDefinitionNode, VariableDefinitionNode } from 'graphql';
+import { BasicFlowVisitor, OperationVariablesToObject, DeclarationBlock, DEFAULT_SCALARS } from 'graphql-codegen-flow';
 import { ScalarsMap } from './index';
 import { OperationDefinitionNode } from 'graphql';
 import { pascalCase } from 'change-case';
 import { SelectionSetToObject } from './selection-set-to-object';
-import { OperationVariablesToObject } from './operation-variables-to-object';
 
 export interface ParsedDocumentsConfig {
   scalars: ScalarsMap;
@@ -14,7 +13,7 @@ export interface FlowDocumentsPluginConfig {
   scalars?: ScalarsMap;
 }
 
-export class FlowDocumentsVisitor {
+export class FlowDocumentsVisitor implements BasicFlowVisitor {
   private _parsedConfig: ParsedDocumentsConfig;
   private _unnamedCounter = 1;
 
@@ -63,7 +62,10 @@ export class FlowDocumentsVisitor {
     const name = this.handleAnonymouseOperation(node.name && node.name.value ? node.name.value : null);
     const operationRootType = this._schema.getType(pascalCase(node.operation)) as GraphQLObjectType;
     const selectionSet = new SelectionSetToObject(this, operationRootType, node.selectionSet);
-    const visitedOperationVariables = new OperationVariablesToObject(this, node.variableDefinitions);
+    const visitedOperationVariables = new OperationVariablesToObject<FlowDocumentsVisitor, VariableDefinitionNode>(
+      this,
+      node.variableDefinitions
+    );
 
     const operationResult = new DeclarationBlock()
       .export()

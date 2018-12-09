@@ -8,6 +8,8 @@ import {
 } from 'graphql';
 import { DeclarationBlock, wrapWithSingleQuotes, breakLine, indent } from './utils';
 import { ScalarsMap, EnumValuesMap } from './index';
+import { OperationVariablesToObject } from './variables-to-object';
+import { pascalCase } from 'change-case';
 import {
   NonNullTypeNode,
   ListTypeNode,
@@ -24,26 +26,34 @@ export const DEFAULT_SCALARS = {
   Int: 'number',
   Float: 'number'
 };
-export interface ParsedCommonConfig {
+export interface ParsedConfig {
   scalars: ScalarsMap;
   enumValues: EnumValuesMap;
   convert: (str: string) => string;
 }
 
-export interface FlowCommonPluginConfig {
+export interface BasicFlowVisitor {
+  scalars: ScalarsMap;
+}
+
+export interface FlowPluginConfig {
   scalars?: ScalarsMap;
   namingConvention?: string;
   enumValues?: EnumValuesMap;
 }
-export class FlowCommonVisitor {
-  private _parsedCommonConfig: ParsedCommonConfig;
+export class FlowVisitor implements BasicFlowVisitor {
+  private _parsedConfig: ParsedConfig;
 
-  constructor(pluginConfig: FlowCommonPluginConfig) {
-    this._parsedCommonConfig = {
+  constructor(pluginConfig: FlowPluginConfig) {
+    this._parsedConfig = {
       scalars: { ...DEFAULT_SCALARS, ...(pluginConfig.scalars || {}) },
-      convert: str => str,
+      convert: str => pascalCase(str),
       enumValues: pluginConfig.enumValues || {}
     };
+  }
+
+  get scalars(): ScalarsMap {
+    return this._parsedConfig.scalars;
   }
 
   ScalarTypeDefinition = (node: ScalarTypeDefinitionNode): string => {
@@ -51,12 +61,12 @@ export class FlowCommonVisitor {
       .export()
       .asKind('type')
       .withName(node.name)
-      .withContent(this._parsedCommonConfig.scalars[(node.name as any) as string] || 'any').string;
+      .withContent(this._parsedConfig.scalars[(node.name as any) as string] || 'any').string;
   };
 
   NamedType = (node: NamedTypeNode): string => {
     const asString = (node.name as any) as string;
-    const type = this._parsedCommonConfig.scalars[asString] || asString;
+    const type = this._parsedConfig.scalars[asString] || asString;
 
     return `?${type}`;
   };
@@ -107,18 +117,37 @@ export class FlowCommonVisitor {
       .withContent(possibleTypes).string;
   };
 
-  ObjectTypeDefinition = (node: ObjectTypeDefinitionNode): string => {
+  ObjectTypeDefinition = (node: ObjectTypeDefinitionNode, key, parent): string => {
     const interfaces =
       node.interfaces && node.interfaces.length > 0
         ? node.interfaces.map(name => ((name as any) as string).replace('?', '')).join(' & ') + ' & '
         : '';
 
-    return new DeclarationBlock()
+    const typeDefinition = new DeclarationBlock()
       .export()
       .asKind('type')
       .withName(node.name)
       .withContent(interfaces)
       .withBlock(node.fields.join('\n')).string;
+
+    const original = parent[key];
+    const fieldsWithArguments = original.fields.filter(field => field.arguments && field.arguments.length > 0);
+    const fieldsArguments = fieldsWithArguments.map(field => {
+      const name =
+        this._parsedConfig.convert(original.name.value) + this._parsedConfig.convert(field.name.value) + 'Args';
+      const transformedArguments = new OperationVariablesToObject<FlowVisitor, InputValueDefinitionNode>(
+        this,
+        field.arguments
+      );
+
+      return new DeclarationBlock()
+        .export()
+        .asKind('type')
+        .withName(name)
+        .withBlock(transformedArguments.string).string;
+    });
+
+    return [typeDefinition, ...fieldsArguments].filter(f => f).join('\n\n');
   };
 
   InterfaceTypeDefinition = (node: InterfaceTypeDefinitionNode): string => {
@@ -141,7 +170,7 @@ export class FlowCommonVisitor {
           .map(enumOption =>
             indent(
               `${enumOption.name}: ${wrapWithSingleQuotes(
-                this._parsedCommonConfig.enumValues[(enumOption.name as any) as string] || enumOption.name
+                this._parsedConfig.enumValues[(enumOption.name as any) as string] || enumOption.name
               )}`
             )
           )
