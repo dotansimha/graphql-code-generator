@@ -5,7 +5,7 @@ import { FlowDocumentsVisitor } from './visitor';
 export class SelectionSetToObject {
   private _primitiveFields: string[] = [];
   private _primitiveAliasedFields: { alias: string; fieldName: string }[] = [];
-  private _linksFields: { alias: string; name: string; type: string; selectionSet: string; rawType: any }[] = [];
+  private _linksFields: { alias: string; name: string; type: string; selectionSet: string }[] = [];
 
   constructor(
     private _visitorInstance: FlowDocumentsVisitor,
@@ -38,8 +38,7 @@ export class SelectionSetToObject {
           alias: field.alias ? field.alias.value : null,
           name: field.name.value,
           type: typeName,
-          selectionSet: selectionSetToObject.string,
-          rawType: baseType
+          selectionSet: selectionSetToObject.string
         });
       }
     }
