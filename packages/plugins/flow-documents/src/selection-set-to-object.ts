@@ -6,9 +6,11 @@ import {
   isUnionType,
   isEnumType,
   FragmentSpreadNode,
-  InlineFragmentNode
+  InlineFragmentNode,
+  GraphQLNamedType,
+  isInputObjectType
 } from 'graphql';
-import { getBaseType, GraphQLBaseType } from './utils';
+import { getBaseType } from './utils';
 import { FlowDocumentsVisitor } from './visitor';
 
 export class SelectionSetToObject {
@@ -16,11 +18,11 @@ export class SelectionSetToObject {
   private _primitiveAliasedFields: { alias: string; fieldName: string }[] = [];
   private _linksFields: { alias: string; name: string; type: string; selectionSet: string }[] = [];
   private _fragmentSpreads: string[] = [];
-  private _inlineFragments: string[] = [];
+  private _inlineFragments: { [onType: string]: string[] } = {};
 
   constructor(
     private _visitorInstance: FlowDocumentsVisitor,
-    private _parentSchemaType: GraphQLBaseType,
+    private _parentSchemaType: GraphQLNamedType,
     private _selectionSet: SelectionSetNode
   ) {}
 
@@ -29,6 +31,7 @@ export class SelectionSetToObject {
     if (isUnionType(this._parentSchemaType)) {
     } else if (isScalarType(this._parentSchemaType)) {
     } else if (isEnumType(this._parentSchemaType)) {
+    } else if (isInputObjectType(this._parentSchemaType)) {
     } else {
       const schemaField = this._parentSchemaType.getFields()[field.name.value];
       const baseType = getBaseType(schemaField.type);
@@ -61,7 +64,23 @@ export class SelectionSetToObject {
   }
 
   _collectInlineFragment(node: InlineFragmentNode) {
-    // TODO: implement
+    const onType = node.typeCondition.name.value;
+    const schemaType = this._visitorInstance.schema.getType(onType);
+    const selectionSet = new SelectionSetToObject(this._visitorInstance, schemaType, node.selectionSet);
+
+    if (!this._inlineFragments[onType]) {
+      this._inlineFragments[onType] = [];
+    }
+
+    this._inlineFragments[onType].push(selectionSet.string);
+  }
+
+  get inlineFragmentsString(): string | null {
+    const allPossibleTypes = Object.keys(this._inlineFragments).map(typeName =>
+      this._inlineFragments[typeName].join(' & ')
+    );
+
+    return allPossibleTypes.length === 0 ? null : `(${allPossibleTypes.join(' | ')})`;
   }
 
   get string(): string {
@@ -101,8 +120,15 @@ export class SelectionSetToObject {
           )
           .join(', ')} }`
       : null;
-    const fieldsSet = [baseFields, aliasBaseFields, linksFields].filter(f => f);
+    const inlineFragments = this.inlineFragmentsString;
+    const fieldsSet = [baseFields, aliasBaseFields, linksFields, inlineFragments].filter(f => f);
 
-    return `(${fieldsSet.join(' & ')})`;
+    if (fieldsSet.length === 0) {
+      return '';
+    } else if (fieldsSet.length === 1) {
+      return fieldsSet[0];
+    } else {
+      return `(${fieldsSet.join(' & ')})`;
+    }
   }
 }

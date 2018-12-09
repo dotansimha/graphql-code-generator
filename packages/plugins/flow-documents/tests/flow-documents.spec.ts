@@ -32,8 +32,28 @@ describe('Flow Documents Plugin', () => {
         userCreated: User
       }
 
+      interface Notifiction {
+        id: ID!
+      }
+
+      type TextNotification implements Notifiction {
+        id: ID!
+        text: String!
+      }
+
+      type ImageNotification implements Notifiction {
+        id: ID!
+        imageUrl: String!
+        metadata: ImageMetadata!
+      }
+
+      type ImageMetadata {
+        createdBy: String!
+      }
+
       type Query {
         me: User
+        notifications: [Notifiction!]!
         dummy: String
         dummyNonNull: String!
         dummyArray: [String]
@@ -51,6 +71,59 @@ describe('Flow Documents Plugin', () => {
   });
 
   describe('Selection Set', () => {
+    it('Should support intefaces correctly when used with inline fragments', () => {
+      const ast = parse(`
+      query notifications {
+        notifications {
+          id
+
+          ... on TextNotification {
+            text
+          }
+
+          ... on ImageNotification {
+            imageUrl
+            metadata {
+              createdBy
+            }
+          }
+        }
+      }
+    `);
+      const result = visit(ast, {
+        leave: new FlowDocumentsVisitor(schema, { scalars: {} })
+      });
+
+      expect(result.definitions[0]).toBeSimilarStringTo(
+        `export type NotificationsQuery = { notifications: ($Pick<Notifiction, { id: * }> & ($Pick<TextNotification, { text: * }> | ($Pick<ImageNotification, { imageUrl: * }> & { metadata: $Pick<ImageMetadata, { createdBy: * }> }))) };`
+      );
+      validateFlow(result.definitions[0]);
+    });
+
+    it('Should support inline fragments', () => {
+      const ast = parse(`
+        query currentUser {
+          me {
+            id
+            ... on User {
+              username
+              profile {
+                age
+              }
+            }
+          }
+        }
+    `);
+      const result = visit(ast, {
+        leave: new FlowDocumentsVisitor(schema, { scalars: {} })
+      });
+
+      expect(result.definitions[0]).toBeSimilarStringTo(
+        `export type CurrentUserQuery = { me: ($Pick<User, { id: * }> & (($Pick<User, { username: * }> & { profile: $Pick<Profile, { age: * }> }))) };`
+      );
+      validateFlow(result.definitions[0]);
+    });
+
     it('Should build a basic selection set based on basic query on GitHub schema', () => {
       const ast = parse(`
         query me($repoFullName: String!) {
@@ -78,7 +151,7 @@ describe('Flow Documents Plugin', () => {
         };`
       );
       expect(result.definitions[0]).toBeSimilarStringTo(
-        `export type MeQuery = ({ currentUser: ($Pick<User, { login: *, html_url: * }>), entry: ($Pick<Entry, { id: *, createdAt: * }> & { postedBy: ($Pick<User, { login: *, html_url: * }>) }) });`
+        `export type MeQuery = { currentUser: $Pick<User, { login: *, html_url: * }>, entry: ($Pick<Entry, { id: *, createdAt: * }> & { postedBy: $Pick<User, { login: *, html_url: * }> }) };`
       );
       validateFlow(result.definitions[0]);
     });
@@ -93,7 +166,7 @@ describe('Flow Documents Plugin', () => {
         leave: new FlowDocumentsVisitor(schema, { scalars: {} })
       });
 
-      expect(result.definitions[0]).toBeSimilarStringTo(`export type DummyQuery = ($Pick<Query, { dummy: * }>);`);
+      expect(result.definitions[0]).toBeSimilarStringTo(`export type DummyQuery = $Pick<Query, { dummy: * }>;`);
       validateFlow(result.definitions[0]);
     });
 
@@ -111,7 +184,7 @@ describe('Flow Documents Plugin', () => {
       });
 
       expect(result.definitions[0]).toBeSimilarStringTo(
-        `export type DummyQuery = ({ customName: $ElementType<Query, 'dummy'> } & { customName2: ($Pick<Profile, { age: * }>) });`
+        `export type DummyQuery = ({ customName: $ElementType<Query, 'dummy'> } & { customName2: $Pick<Profile, { age: * }> });`
       );
       validateFlow(result.definitions[0]);
     });
@@ -133,7 +206,7 @@ describe('Flow Documents Plugin', () => {
       });
 
       expect(result.definitions[0]).toBeSimilarStringTo(
-        `export type CurrentUserQuery = ({ me: ($Pick<User, { id: *, username: * }> & { profile: ($Pick<Profile, { age: * }>) }) });`
+        `export type CurrentUserQuery = { me: ($Pick<User, { id: *, username: * }> & { profile: $Pick<Profile, { age: * }> }) };`
       );
 
       validateFlow(result.definitions[0]);
@@ -156,7 +229,7 @@ describe('Flow Documents Plugin', () => {
       });
 
       expect(result.definitions[0]).toBeSimilarStringTo(
-        `export type UserFieldsFragment = ($Pick<User, { id: *, username: * }> & { profile: ($Pick<Profile, { age: * }>) });`
+        `export type UserFieldsFragment = ($Pick<User, { id: *, username: * }> & { profile: $Pick<Profile, { age: * }> });`
       );
       validateFlow(result.definitions[0]);
     });
@@ -180,7 +253,7 @@ describe('Flow Documents Plugin', () => {
       });
 
       expect(result.definitions[0]).toBeSimilarStringTo(
-        `export type LoginMutation = ({ login: ($Pick<User, { id: *, username: * }> & { profile: ($Pick<Profile, { age: * }>) }) });`
+        `export type LoginMutation = { login: ($Pick<User, { id: *, username: * }> & { profile: $Pick<Profile, { age: * }> }) };`
       );
       validateFlow(result.definitions[0]);
     });
@@ -195,7 +268,7 @@ describe('Flow Documents Plugin', () => {
         leave: new FlowDocumentsVisitor(schema, { scalars: {} })
       });
 
-      expect(result.definitions[0]).toBeSimilarStringTo(`export type TestQuery = ($Pick<Query, { dummy: * }>);`);
+      expect(result.definitions[0]).toBeSimilarStringTo(`export type TestQuery = $Pick<Query, { dummy: * }>;`);
       validateFlow(result.definitions[0]);
     });
 
@@ -212,7 +285,7 @@ describe('Flow Documents Plugin', () => {
       });
 
       expect(result.definitions[0]).toBeSimilarStringTo(
-        `export type TestSubscription = ({ userCreated: ($Pick<User, { id: * }>) });`
+        `export type TestSubscription = { userCreated: $Pick<User, { id: * }> };`
       );
       validateFlow(result.definitions[0]);
     });

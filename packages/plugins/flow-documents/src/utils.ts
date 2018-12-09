@@ -1,28 +1,10 @@
-import {
-  GraphQLObjectType,
-  GraphQLOutputType,
-  GraphQLNonNull,
-  GraphQLList,
-  GraphQLScalarType,
-  GraphQLInterfaceType,
-  GraphQLUnionType,
-  GraphQLEnumType,
-  isListType,
-  isNonNullType
-} from 'graphql';
+import { GraphQLOutputType, GraphQLNonNull, GraphQLList, isListType, isNonNullType, GraphQLNamedType } from 'graphql';
 
 function isWrapperType(t: GraphQLOutputType): t is GraphQLNonNull<any> | GraphQLList<any> {
   return isListType(t) || isNonNullType(t);
 }
 
-export type GraphQLBaseType =
-  | GraphQLScalarType
-  | GraphQLObjectType
-  | GraphQLInterfaceType
-  | GraphQLUnionType
-  | GraphQLEnumType;
-
-export function getBaseType(type: GraphQLOutputType): GraphQLBaseType {
+export function getBaseType(type: GraphQLOutputType): GraphQLNamedType {
   if (isWrapperType(type)) {
     return getBaseType(type.ofType);
   } else {
