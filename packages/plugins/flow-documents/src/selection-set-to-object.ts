@@ -1,4 +1,13 @@
-import { SelectionSetNode, Kind, FieldNode, isScalarType, isUnionType, isEnumType } from 'graphql';
+import {
+  SelectionSetNode,
+  Kind,
+  FieldNode,
+  isScalarType,
+  isUnionType,
+  isEnumType,
+  FragmentSpreadNode,
+  InlineFragmentNode
+} from 'graphql';
 import { getBaseType, GraphQLBaseType } from './utils';
 import { FlowDocumentsVisitor } from './visitor';
 
@@ -6,6 +15,8 @@ export class SelectionSetToObject {
   private _primitiveFields: string[] = [];
   private _primitiveAliasedFields: { alias: string; fieldName: string }[] = [];
   private _linksFields: { alias: string; name: string; type: string; selectionSet: string }[] = [];
+  private _fragmentSpreads: string[] = [];
+  private _inlineFragments: string[] = [];
 
   constructor(
     private _visitorInstance: FlowDocumentsVisitor,
@@ -14,6 +25,7 @@ export class SelectionSetToObject {
   ) {}
 
   _collectField(field: FieldNode) {
+    // TODO: Replace if
     if (isUnionType(this._parentSchemaType)) {
     } else if (isScalarType(this._parentSchemaType)) {
     } else if (isEnumType(this._parentSchemaType)) {
@@ -44,6 +56,14 @@ export class SelectionSetToObject {
     }
   }
 
+  _collectFragmentSpread(node: FragmentSpreadNode) {
+    // TODO: implement
+  }
+
+  _collectInlineFragment(node: InlineFragmentNode) {
+    // TODO: implement
+  }
+
   get string(): string {
     if (!this._selectionSet || !this._selectionSet.selections || this._selectionSet.selections.length === 0) {
       return '';
@@ -55,6 +75,13 @@ export class SelectionSetToObject {
       switch (selection.kind) {
         case Kind.FIELD:
           this._collectField(selection as FieldNode);
+          break;
+        case Kind.FRAGMENT_SPREAD:
+          this._collectFragmentSpread(selection as FragmentSpreadNode);
+          break;
+        case Kind.INLINE_FRAGMENT:
+          this._collectInlineFragment(selection as InlineFragmentNode);
+          break;
       }
     }
 
