@@ -51,8 +51,11 @@ describe('Flow Documents Plugin', () => {
         createdBy: String!
       }
 
+      union MyUnion = User | Profile
+
       type Query {
         me: User
+        unionTest: MyUnion
         notifications: [Notifiction!]!
         dummy: String
         dummyNonNull: String!
@@ -96,6 +99,30 @@ describe('Flow Documents Plugin', () => {
 
       expect(result.definitions[0]).toBeSimilarStringTo(
         `export type NotificationsQuery = { notifications: ($Pick<Notifiction, { id: * }> & ($Pick<TextNotification, { text: * }> | ($Pick<ImageNotification, { imageUrl: * }> & { metadata: $Pick<ImageMetadata, { createdBy: * }> }))) };`
+      );
+      validateFlow(result.definitions[0]);
+    });
+
+    it('Should support union correctly when used with inline fragments', () => {
+      const ast = parse(`
+        query unionTest {
+          unionTest {
+            ... on User {
+              id
+            }
+
+            ... on Profile {
+              age
+            }
+          }
+        }
+    `);
+      const result = visit(ast, {
+        leave: new FlowDocumentsVisitor(schema, { scalars: {} })
+      });
+
+      expect(result.definitions[0]).toBeSimilarStringTo(
+        `export type UnionTestQuery = { unionTest: ($Pick<User, { id: * }> | $Pick<Profile, { age: * }>) };`
       );
       validateFlow(result.definitions[0]);
     });
