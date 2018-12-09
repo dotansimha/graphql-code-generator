@@ -10,7 +10,7 @@ import {
   GraphQLNamedType,
   isInputObjectType
 } from 'graphql';
-import { getBaseType } from './utils';
+import { getBaseType, quoteIfNeeded } from './utils';
 import { FlowDocumentsVisitor } from './visitor';
 
 export class SelectionSetToObject {
@@ -60,7 +60,7 @@ export class SelectionSetToObject {
   }
 
   _collectFragmentSpread(node: FragmentSpreadNode) {
-    // TODO: implement
+    this._fragmentSpreads.push(node.name.value);
   }
 
   _collectInlineFragment(node: InlineFragmentNode) {
@@ -121,14 +121,14 @@ export class SelectionSetToObject {
           .join(', ')} }`
       : null;
     const inlineFragments = this.inlineFragmentsString;
-    const fieldsSet = [baseFields, aliasBaseFields, linksFields, inlineFragments].filter(f => f);
+    const fragmentSpreads = quoteIfNeeded(
+      this._fragmentSpreads.map(fragmentName => this._visitorInstance.getFragmentName(fragmentName)),
+      ' & '
+    );
+    const fieldsSet = [fragmentSpreads, baseFields, aliasBaseFields, linksFields, inlineFragments].filter(
+      f => f && f !== ''
+    );
 
-    if (fieldsSet.length === 0) {
-      return '';
-    } else if (fieldsSet.length === 1) {
-      return fieldsSet[0];
-    } else {
-      return `(${fieldsSet.join(' & ')})`;
-    }
+    return quoteIfNeeded(fieldsSet, ' & ');
   }
 }

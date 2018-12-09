@@ -74,6 +74,90 @@ describe('Flow Documents Plugin', () => {
   });
 
   describe('Selection Set', () => {
+    it('Should support fragment spread correctly with simple type with no other fields', () => {
+      const ast = parse(`
+        fragment UserFields on User {
+          id
+          username
+          profile {
+            age
+          }
+        }
+
+        query me {
+          me {
+            ...UserFields
+          }
+        }
+    `);
+      const result = visit(ast, {
+        leave: new FlowDocumentsVisitor(schema, { scalars: {} })
+      });
+
+      expect(result.definitions[1]).toBeSimilarStringTo(`export type MeQuery = { me: UserFieldsFragment };`);
+      validateFlow(result.definitions[0]);
+      validateFlow(result.definitions[1]);
+    });
+
+    it('Should support fragment spread correctly with simple type with other fields', () => {
+      const ast = parse(`
+        fragment UserFields on User {
+          id
+          profile {
+            age
+          }
+        }
+
+        query me {
+          me {
+            ...UserFields
+            username
+          }
+        }
+    `);
+      const result = visit(ast, {
+        leave: new FlowDocumentsVisitor(schema, { scalars: {} })
+      });
+
+      expect(result.definitions[1]).toBeSimilarStringTo(
+        `export type MeQuery = { me: (UserFieldsFragment & $Pick<User, { username: * }>) };`
+      );
+      validateFlow(result.definitions[0]);
+      validateFlow(result.definitions[1]);
+    });
+
+    it('Should support fragment spread correctly with multiple fragment spread', () => {
+      const ast = parse(`
+        fragment UserFields on User {
+          id
+        }
+
+        fragment UserProfile on User {
+          profile {
+            age
+          }
+        }
+
+        query me {
+          me {
+            ...UserFields
+            ...UserProfile
+            username
+          }
+        }
+    `);
+      const result = visit(ast, {
+        leave: new FlowDocumentsVisitor(schema, { scalars: {} })
+      });
+
+      expect(result.definitions[2]).toBeSimilarStringTo(
+        `export type MeQuery = { me: ((UserFieldsFragment & UserProfileFragment) & $Pick<User, { username: * }>) };`
+      );
+      validateFlow(result.definitions[0]);
+      validateFlow(result.definitions[1]);
+      validateFlow(result.definitions[2]);
+    });
+
     it('Should support intefaces correctly when used with inline fragments', () => {
       const ast = parse(`
       query notifications {
