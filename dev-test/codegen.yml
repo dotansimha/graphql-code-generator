@@ -1,7 +1,7 @@
 overwrite: true
 generates:
   ./dev-test/test-schema/resolvers-types.ts:
-    schema: ./dev-test/test-schema/schema.json 
+    schema: ./dev-test/test-schema/schema-text.js 
     plugins: 
       - add: // tslint:disable
       - typescript-common

@@ -68,7 +68,9 @@ export const loadSchema = async (
         Failed to load schema from ${pointToSchema} using loader "${loaderString}":
     
         ${e.message}
-      `
+        ${e.stack}
+      `,
+        `${pointToSchema} using loader "${loaderString}"`
       );
     }
   }
