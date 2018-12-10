@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "flow-parser": "0.87.0",
-    "flow": "0.2.3",
+    "flow-bin": "0.87.0",
     "codegen-templates-scripts": "0.14.5",
     "graphql": "14.0.2"
   },

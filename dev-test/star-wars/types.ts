@@ -9,6 +9,7 @@ export interface ReviewInput {
 }
 /** The input object sent when passing a color */
 export interface ColorInput {
+
   red: number;
 
   green: number;
@@ -19,17 +20,20 @@ export interface ColorInput {
 export enum Episode {
   Newhope = 'NEWHOPE',
   Empire = 'EMPIRE',
-  Jedi = 'JEDI'
+  Jedi = 'JEDI',
 }
 /** Units of height */
 export enum LengthUnit {
   Meter = 'METER',
-  Foot = 'FOOT'
+  Foot = 'FOOT',
 }
+
 
 // ====================================================
 // Documents
 // ====================================================
+
+
 
 export namespace CreateReviewForEpisode {
   export type Variables = {
@@ -79,7 +83,8 @@ export namespace HeroAndFriendsNames {
 }
 
 export namespace HeroAppearsIn {
-  export type Variables = {};
+  export type Variables = {
+  };
 
   export type Query = {
     __typename?: 'Query';
@@ -111,7 +116,7 @@ export namespace HeroDetails {
     __typename?: HumanInlineFragment['__typename'] | DroidInlineFragment['__typename'];
 
     name: string;
-  } & (HumanInlineFragment | DroidInlineFragment);
+  }  & (HumanInlineFragment | DroidInlineFragment);
 
   export type HumanInlineFragment = {
     __typename?: 'Human';
@@ -211,7 +216,7 @@ export namespace HeroParentTypeDependentField {
     __typename?: HumanInlineFragment['__typename'] | DroidInlineFragment['__typename'];
 
     name: string;
-  } & (HumanInlineFragment | DroidInlineFragment);
+  }  & (HumanInlineFragment | DroidInlineFragment);
 
   export type HumanInlineFragment = {
     __typename?: 'Human';
@@ -223,7 +228,7 @@ export namespace HeroParentTypeDependentField {
     __typename?: _HumanInlineFragment['__typename'];
 
     name: string;
-  } & _HumanInlineFragment;
+  }  & _HumanInlineFragment;
 
   export type _HumanInlineFragment = {
     __typename?: 'Human';
@@ -241,7 +246,7 @@ export namespace HeroParentTypeDependentField {
     __typename?: __HumanInlineFragment['__typename'];
 
     name: string;
-  } & __HumanInlineFragment;
+  }  & __HumanInlineFragment;
 
   export type __HumanInlineFragment = {
     __typename?: 'Human';
@@ -261,7 +266,7 @@ export namespace HeroTypeDependentAliasedField {
     hero: Hero | null;
   };
 
-  export type Hero = HumanInlineFragment | DroidInlineFragment;
+  export type Hero = (HumanInlineFragment | DroidInlineFragment);
 
   export type HumanInlineFragment = {
     __typename?: 'Human';
@@ -277,7 +282,8 @@ export namespace HeroTypeDependentAliasedField {
 }
 
 export namespace HumanWithNullHeight {
-  export type Variables = {};
+  export type Variables = {
+  };
 
   export type Query = {
     __typename?: 'Query';
@@ -295,7 +301,8 @@ export namespace HumanWithNullHeight {
 }
 
 export namespace TwoHeroes {
-  export type Variables = {};
+  export type Variables = {
+  };
 
   export type Query = {
     __typename?: 'Query';
@@ -337,3 +344,4 @@ export namespace HeroDetails {
     primaryFunction: string | null;
   };
 }
+

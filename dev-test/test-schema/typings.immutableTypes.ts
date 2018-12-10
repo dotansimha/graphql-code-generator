@@ -1,14 +1,26 @@
+
+
+
+
+
+
+
 // ====================================================
 // Types
 // ====================================================
 
+
+
 export interface Query {
+
   allUsers: (User | null)[];
 
   userById?: User | null;
 }
 
+
 export interface User {
+
   id: number;
 
   name: string;
@@ -16,10 +28,15 @@ export interface User {
   email: string;
 }
 
+
+
 // ====================================================
 // Arguments
 // ====================================================
 
 export interface UserByIdQueryArgs {
+
   id: number;
 }
+
+

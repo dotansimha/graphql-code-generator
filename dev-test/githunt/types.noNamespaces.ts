@@ -2,293 +2,298 @@
 export enum FeedType {
   Hot = 'HOT',
   New = 'NEW',
-  Top = 'TOP'
+  Top = 'TOP',
 }
 /** The type of vote to record, when submitting a vote */
 export enum VoteType {
   Up = 'UP',
   Down = 'DOWN',
-  Cancel = 'CANCEL'
+  Cancel = 'CANCEL',
 }
+
 
 // ====================================================
 // Documents
 // ====================================================
 
-export type OnCommentAddedVariables = {
-  repoFullName: string;
-};
 
-export type OnCommentAddedSubscription = {
-  __typename?: 'Subscription';
 
-  commentAdded: OnCommentAddedCommentAdded | null;
-};
+  export type OnCommentAddedVariables = {
+    repoFullName: string;
+  };
 
-export type OnCommentAddedCommentAdded = {
-  __typename?: 'Comment';
+  export type OnCommentAddedSubscription = {
+    __typename?: 'Subscription';
 
-  id: number;
+    commentAdded: OnCommentAddedCommentAdded | null;
+  };
 
-  postedBy: OnCommentAddedPostedBy;
+  export type OnCommentAddedCommentAdded = {
+    __typename?: 'Comment';
 
-  createdAt: number;
+    id: number;
 
-  content: string;
-};
+    postedBy: OnCommentAddedPostedBy;
 
-export type OnCommentAddedPostedBy = {
-  __typename?: 'User';
+    createdAt: number;
 
-  login: string;
+    content: string;
+  };
 
-  html_url: string;
-};
+  export type OnCommentAddedPostedBy = {
+    __typename?: 'User';
 
-export type CommentVariables = {
-  repoFullName: string;
-  limit?: number | null;
-  offset?: number | null;
-};
+    login: string;
 
-export type CommentQuery = {
-  __typename?: 'Query';
+    html_url: string;
+  };
 
-  currentUser: CommentCurrentUser | null;
+  export type CommentVariables = {
+    repoFullName: string;
+    limit?: number | null;
+    offset?: number | null;
+  };
 
-  entry: CommentEntry | null;
-};
+  export type CommentQuery = {
+    __typename?: 'Query';
 
-export type CommentCurrentUser = {
-  __typename?: 'User';
+    currentUser: CommentCurrentUser | null;
 
-  login: string;
+    entry: CommentEntry | null;
+  };
 
-  html_url: string;
-};
+  export type CommentCurrentUser = {
+    __typename?: 'User';
 
-export type CommentEntry = {
-  __typename?: 'Entry';
+    login: string;
 
-  id: number;
+    html_url: string;
+  };
 
-  postedBy: CommentPostedBy;
+  export type CommentEntry = {
+    __typename?: 'Entry';
 
-  createdAt: number;
+    id: number;
 
-  comments: CommentComments[];
+    postedBy: CommentPostedBy;
 
-  commentCount: number;
+    createdAt: number;
 
-  repository: CommentRepository;
-};
+    comments: CommentComments[];
 
-export type CommentPostedBy = {
-  __typename?: 'User';
+    commentCount: number;
 
-  login: string;
+    repository: CommentRepository;
+  };
 
-  html_url: string;
-};
+  export type CommentPostedBy = {
+    __typename?: 'User';
 
-export type CommentComments = CommentsPageCommentFragment;
+    login: string;
 
-export type CommentRepository = {
-  __typename?: CommentRepositoryInlineFragment['__typename'];
+    html_url: string;
+  };
 
-  full_name: string;
+  export type CommentComments = CommentsPageCommentFragment;
 
-  html_url: string;
-} & CommentRepositoryInlineFragment;
+  export type CommentRepository = {
+    __typename?: CommentRepositoryInlineFragment['__typename'];
 
-export type CommentRepositoryInlineFragment = {
-  __typename?: 'Repository';
+    full_name: string;
 
-  description: string | null;
+    html_url: string;
+  }  & CommentRepositoryInlineFragment;
 
-  open_issues_count: number | null;
+  export type CommentRepositoryInlineFragment = {
+    __typename?: 'Repository';
 
-  stargazers_count: number;
-};
+    description: string | null;
 
-export type CurrentUserForProfileVariables = {};
+    open_issues_count: number | null;
 
-export type CurrentUserForProfileQuery = {
-  __typename?: 'Query';
+    stargazers_count: number;
+  };
 
-  currentUser: CurrentUserForProfileCurrentUser | null;
-};
+  export type CurrentUserForProfileVariables = {
+  };
 
-export type CurrentUserForProfileCurrentUser = {
-  __typename?: 'User';
+  export type CurrentUserForProfileQuery = {
+    __typename?: 'Query';
 
-  login: string;
+    currentUser: CurrentUserForProfileCurrentUser | null;
+  };
 
-  avatar_url: string;
-};
+  export type CurrentUserForProfileCurrentUser = {
+    __typename?: 'User';
 
-export type FeedVariables = {
-  type: FeedType;
-  offset?: number | null;
-  limit?: number | null;
-};
+    login: string;
 
-export type FeedQuery = {
-  __typename?: 'Query';
+    avatar_url: string;
+  };
 
-  currentUser: FeedCurrentUser | null;
+  export type FeedVariables = {
+    type: FeedType;
+    offset?: number | null;
+    limit?: number | null;
+  };
 
-  feed: FeedFeed[] | null;
-};
+  export type FeedQuery = {
+    __typename?: 'Query';
 
-export type FeedCurrentUser = {
-  __typename?: 'User';
+    currentUser: FeedCurrentUser | null;
 
-  login: string;
-};
+    feed: FeedFeed[] | null;
+  };
 
-export type FeedFeed = FeedEntryFragment;
+  export type FeedCurrentUser = {
+    __typename?: 'User';
 
-export type SubmitRepositoryVariables = {
-  repoFullName: string;
-};
+    login: string;
+  };
 
-export type SubmitRepositoryMutation = {
-  __typename?: 'Mutation';
+  export type FeedFeed = FeedEntryFragment;
 
-  submitRepository: SubmitRepositorySubmitRepository | null;
-};
+  export type SubmitRepositoryVariables = {
+    repoFullName: string;
+  };
 
-export type SubmitRepositorySubmitRepository = {
-  __typename?: 'Entry';
+  export type SubmitRepositoryMutation = {
+    __typename?: 'Mutation';
 
-  createdAt: number;
-};
+    submitRepository: SubmitRepositorySubmitRepository | null;
+  };
 
-export type SubmitCommentVariables = {
-  repoFullName: string;
-  commentContent: string;
-};
+  export type SubmitRepositorySubmitRepository = {
+    __typename?: 'Entry';
 
-export type SubmitCommentMutation = {
-  __typename?: 'Mutation';
+    createdAt: number;
+  };
 
-  submitComment: SubmitCommentSubmitComment | null;
-};
+  export type SubmitCommentVariables = {
+    repoFullName: string;
+    commentContent: string;
+  };
 
-export type SubmitCommentSubmitComment = CommentsPageCommentFragment;
+  export type SubmitCommentMutation = {
+    __typename?: 'Mutation';
 
-export type VoteVariables = {
-  repoFullName: string;
-  type: VoteType;
-};
+    submitComment: SubmitCommentSubmitComment | null;
+  };
 
-export type VoteMutation = {
-  __typename?: 'Mutation';
+  export type SubmitCommentSubmitComment = CommentsPageCommentFragment;
 
-  vote: VoteVote | null;
-};
+  export type VoteVariables = {
+    repoFullName: string;
+    type: VoteType;
+  };
 
-export type VoteVote = {
-  __typename?: 'Entry';
+  export type VoteMutation = {
+    __typename?: 'Mutation';
 
-  score: number;
+    vote: VoteVote | null;
+  };
 
-  id: number;
+  export type VoteVote = {
+    __typename?: 'Entry';
 
-  vote: Vote_Vote;
-};
+    score: number;
 
-export type Vote_Vote = {
-  __typename?: 'Vote';
+    id: number;
 
-  vote_value: number;
-};
+    vote: Vote_Vote;
+  };
 
-export type CommentsPageCommentFragment = {
-  __typename?: 'Comment';
+  export type Vote_Vote = {
+    __typename?: 'Vote';
 
-  id: number;
+    vote_value: number;
+  };
 
-  postedBy: CommentsPageCommentPostedBy;
+  export type CommentsPageCommentFragment = {
+    __typename?: 'Comment';
 
-  createdAt: number;
+    id: number;
 
-  content: string;
-};
+    postedBy: CommentsPageCommentPostedBy;
 
-export type CommentsPageCommentPostedBy = {
-  __typename?: 'User';
+    createdAt: number;
 
-  login: string;
+    content: string;
+  };
 
-  html_url: string;
-};
+  export type CommentsPageCommentPostedBy = {
+    __typename?: 'User';
 
-export type FeedEntryFragment = {
-  __typename?: 'Entry';
+    login: string;
 
-  id: number;
+    html_url: string;
+  };
 
-  commentCount: number;
+  export type FeedEntryFragment = {
+    __typename?: 'Entry';
 
-  repository: FeedEntryRepository;
-} & (VoteButtonsFragment & RepoInfoFragment);
+    id: number;
 
-export type FeedEntryRepository = {
-  __typename?: 'Repository';
+    commentCount: number;
 
-  full_name: string;
+    repository: FeedEntryRepository;
+  } & (VoteButtonsFragment & RepoInfoFragment);
 
-  html_url: string;
+  export type FeedEntryRepository = {
+    __typename?: 'Repository';
 
-  owner: FeedEntryOwner | null;
-};
+    full_name: string;
 
-export type FeedEntryOwner = {
-  __typename?: 'User';
+    html_url: string;
 
-  avatar_url: string;
-};
+    owner: FeedEntryOwner | null;
+  };
 
-export type RepoInfoFragment = {
-  __typename?: 'Entry';
+  export type FeedEntryOwner = {
+    __typename?: 'User';
 
-  createdAt: number;
+    avatar_url: string;
+  };
 
-  repository: RepoInfoRepository;
+  export type RepoInfoFragment = {
+    __typename?: 'Entry';
 
-  postedBy: RepoInfoPostedBy;
-};
+    createdAt: number;
 
-export type RepoInfoRepository = {
-  __typename?: 'Repository';
+    repository: RepoInfoRepository;
 
-  description: string | null;
+    postedBy: RepoInfoPostedBy;
+  };
 
-  stargazers_count: number;
+  export type RepoInfoRepository = {
+    __typename?: 'Repository';
 
-  open_issues_count: number | null;
-};
+    description: string | null;
 
-export type RepoInfoPostedBy = {
-  __typename?: 'User';
+    stargazers_count: number;
 
-  html_url: string;
+    open_issues_count: number | null;
+  };
 
-  login: string;
-};
+  export type RepoInfoPostedBy = {
+    __typename?: 'User';
 
-export type VoteButtonsFragment = {
-  __typename?: 'Entry';
+    html_url: string;
 
-  score: number;
+    login: string;
+  };
 
-  vote: VoteButtonsVote;
-};
+  export type VoteButtonsFragment = {
+    __typename?: 'Entry';
 
-export type VoteButtonsVote = {
-  __typename?: 'Vote';
+    score: number;
 
-  vote_value: number;
-};
+    vote: VoteButtonsVote;
+  };
+
+  export type VoteButtonsVote = {
+    __typename?: 'Vote';
+
+    vote_value: number;
+  };
+

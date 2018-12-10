@@ -1,32 +1,50 @@
 // tslint:disable
 
+
+
+
+
+
+
 // ====================================================
 // Types
 // ====================================================
 
-export interface Query {
-  allUsers: (User | null)[];
 
+
+export interface Query {
+  
+  allUsers: (User | null)[];
+  
   userById?: User | null;
 }
 
+
 export interface User {
+  
   id: number;
-
+  
   name: string;
-
+  
   email: string;
 }
+
+
 
 // ====================================================
 // Arguments
 // ====================================================
 
 export interface UserByIdQueryArgs {
+  
   id: number;
 }
 
+
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
+
+
+
 
 export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
   parent: Parent,
@@ -69,36 +87,46 @@ export type DirectiveResolverFn<TResult, TArgs = {}, TContext = {}> = (
   source: any,
   args: TArgs,
   context: TContext,
-  info: GraphQLResolveInfo
+  info: GraphQLResolveInfo,
 ) => TResult | Promise<TResult>;
+
 
 export namespace QueryResolvers {
   export interface Resolvers<Context = {}, TypeParent = {}> {
+    
     allUsers?: AllUsersResolver<(User | null)[], TypeParent, Context>;
-
+    
     userById?: UserByIdResolver<User | null, TypeParent, Context>;
   }
+
 
   export type AllUsersResolver<R = (User | null)[], Parent = {}, Context = {}> = Resolver<R, Parent, Context>;
   export type UserByIdResolver<R = User | null, Parent = {}, Context = {}> = Resolver<R, Parent, Context, UserByIdArgs>;
   export interface UserByIdArgs {
+    
     id: number;
   }
+
+  
 }
 
 export namespace UserResolvers {
   export interface Resolvers<Context = {}, TypeParent = User> {
+    
     id?: IdResolver<number, TypeParent, Context>;
-
+    
     name?: NameResolver<string, TypeParent, Context>;
-
+    
     email?: EmailResolver<string, TypeParent, Context>;
   }
 
+
   export type IdResolver<R = number, Parent = User, Context = {}> = Resolver<R, Parent, Context>;
   export type NameResolver<R = string, Parent = User, Context = {}> = Resolver<R, Parent, Context>;
-  export type EmailResolver<R = string, Parent = User, Context = {}> = Resolver<R, Parent, Context>;
+  export type EmailResolver<R = string, Parent = User, Context = {}> = Resolver<R, Parent, Context>;  
 }
+
+
 
 /** Directs the executor to skip this field or fragment when the `if` argument is true. */
 export type SkipDirectiveResolver<Result> = DirectiveResolverFn<Result, SkipDirectiveArgs, {}>;
@@ -121,13 +149,15 @@ export interface DeprecatedDirectiveArgs {
   reason?: string | null;
 }
 
+
+
 export interface IResolvers {
-  Query?: QueryResolvers.Resolvers;
-  User?: UserResolvers.Resolvers;
+    Query?: QueryResolvers.Resolvers;
+    User?: UserResolvers.Resolvers;
 }
 
 export interface IDirectiveResolvers<Result> {
-  skip?: SkipDirectiveResolver<Result>;
-  include?: IncludeDirectiveResolver<Result>;
-  deprecated?: DeprecatedDirectiveResolver<Result>;
+    skip?: SkipDirectiveResolver<Result>;
+    include?: IncludeDirectiveResolver<Result>;
+    deprecated?: DeprecatedDirectiveResolver<Result>;
 }

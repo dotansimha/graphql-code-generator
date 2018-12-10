@@ -1,6 +1,7 @@
-import { PluginFunction, GraphQLSchema, DocumentFile } from 'graphql-codegen-core';
-import { visit } from 'graphql';
+import { DocumentFile, GraphQLSchema, PluginFunction } from 'graphql-codegen-core';
+import { parse, printSchema, visit } from 'graphql';
 import { FlowPluginConfig, FlowVisitor } from './visitor';
+
 export { DEFAULT_SCALARS } from './visitor';
 export * from './utils';
 export * from './variables-to-object';
@@ -15,14 +16,12 @@ export const plugin: PluginFunction<FlowPluginConfig> = (
   config: FlowPluginConfig
 ) => {
   const result = `/* @flow */\n\n`;
-  const allTypes = Object.values(schema.getTypeMap())
-    .filter(type => type.astNode)
-    .map(type => type.astNode);
-  const visitorResult = allTypes.map(astNode =>
-    visit(astNode, {
-      leave: new FlowVisitor(config)
-    })
-  );
+  const printedSchema = printSchema(schema);
+  const astNode = parse(printedSchema);
 
-  return result + visitorResult.join('\n');
+  const visitorResult = visit(astNode, {
+    leave: new FlowVisitor(config)
+  });
+
+  return result + visitorResult.definitions.join('\n');
 };

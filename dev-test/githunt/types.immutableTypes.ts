@@ -2,18 +2,21 @@
 export enum FeedType {
   Hot = 'HOT',
   New = 'NEW',
-  Top = 'TOP'
+  Top = 'TOP',
 }
 /** The type of vote to record, when submitting a vote */
 export enum VoteType {
   Up = 'UP',
   Down = 'DOWN',
-  Cancel = 'CANCEL'
+  Cancel = 'CANCEL',
 }
+
 
 // ====================================================
 // Documents
 // ====================================================
+
+
 
 export namespace OnCommentAdded {
   export type Variables = {
@@ -102,7 +105,7 @@ export namespace Comment {
     readonly full_name: string;
 
     readonly html_url: string;
-  } & RepositoryInlineFragment;
+  }  & RepositoryInlineFragment;
 
   export type RepositoryInlineFragment = {
     readonly __typename?: 'Repository';
@@ -116,7 +119,8 @@ export namespace Comment {
 }
 
 export namespace CurrentUserForProfile {
-  export type Variables = {};
+  export type Variables = {
+  };
 
   export type Query = {
     readonly __typename?: 'Query';
@@ -314,3 +318,4 @@ export namespace VoteButtons {
     readonly vote_value: number;
   };
 }
+

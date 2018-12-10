@@ -9,6 +9,7 @@ export interface ReviewInput {
 }
 /** The input object sent when passing a color */
 export interface ColorInput {
+
   readonly red: number;
 
   readonly green: number;
@@ -19,17 +20,20 @@ export interface ColorInput {
 export enum Episode {
   Newhope = 'NEWHOPE',
   Empire = 'EMPIRE',
-  Jedi = 'JEDI'
+  Jedi = 'JEDI',
 }
 /** Units of height */
 export enum LengthUnit {
   Meter = 'METER',
-  Foot = 'FOOT'
+  Foot = 'FOOT',
 }
+
 
 // ====================================================
 // Documents
 // ====================================================
+
+
 
 export namespace CreateReviewForEpisode {
   export type Variables = {
@@ -79,7 +83,8 @@ export namespace HeroAndFriendsNames {
 }
 
 export namespace HeroAppearsIn {
-  export type Variables = {};
+  export type Variables = {
+  };
 
   export type Query = {
     readonly __typename?: 'Query';
@@ -111,7 +116,7 @@ export namespace HeroDetails {
     readonly __typename?: HumanInlineFragment['__typename'] | DroidInlineFragment['__typename'];
 
     readonly name: string;
-  } & (HumanInlineFragment | DroidInlineFragment);
+  }  & (HumanInlineFragment | DroidInlineFragment);
 
   export type HumanInlineFragment = {
     readonly __typename?: 'Human';
@@ -211,7 +216,7 @@ export namespace HeroParentTypeDependentField {
     readonly __typename?: HumanInlineFragment['__typename'] | DroidInlineFragment['__typename'];
 
     readonly name: string;
-  } & (HumanInlineFragment | DroidInlineFragment);
+  }  & (HumanInlineFragment | DroidInlineFragment);
 
   export type HumanInlineFragment = {
     readonly __typename?: 'Human';
@@ -223,7 +228,7 @@ export namespace HeroParentTypeDependentField {
     readonly __typename?: _HumanInlineFragment['__typename'];
 
     readonly name: string;
-  } & _HumanInlineFragment;
+  }  & _HumanInlineFragment;
 
   export type _HumanInlineFragment = {
     readonly __typename?: 'Human';
@@ -241,7 +246,7 @@ export namespace HeroParentTypeDependentField {
     readonly __typename?: __HumanInlineFragment['__typename'];
 
     readonly name: string;
-  } & __HumanInlineFragment;
+  }  & __HumanInlineFragment;
 
   export type __HumanInlineFragment = {
     readonly __typename?: 'Human';
@@ -261,7 +266,7 @@ export namespace HeroTypeDependentAliasedField {
     readonly hero: Hero | null;
   };
 
-  export type Hero = HumanInlineFragment | DroidInlineFragment;
+  export type Hero = (HumanInlineFragment | DroidInlineFragment);
 
   export type HumanInlineFragment = {
     readonly __typename?: 'Human';
@@ -277,7 +282,8 @@ export namespace HeroTypeDependentAliasedField {
 }
 
 export namespace HumanWithNullHeight {
-  export type Variables = {};
+  export type Variables = {
+  };
 
   export type Query = {
     readonly __typename?: 'Query';
@@ -295,7 +301,8 @@ export namespace HumanWithNullHeight {
 }
 
 export namespace TwoHeroes {
-  export type Variables = {};
+  export type Variables = {
+  };
 
   export type Query = {
     readonly __typename?: 'Query';
@@ -337,3 +344,4 @@ export namespace HeroDetails {
     readonly primaryFunction: string | null;
   };
 }
+
