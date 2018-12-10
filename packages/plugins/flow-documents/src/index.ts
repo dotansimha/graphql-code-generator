@@ -9,7 +9,7 @@ export const plugin: PluginFunction<FlowDocumentsPluginConfig> = (
   documents: DocumentFile[],
   config: FlowDocumentsPluginConfig
 ) => {
-  let result = `type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;\n\n`;
+  let prefix = `type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;\n`;
 
   const allAst = concatAST(
     documents.reduce((prev, v) => {
@@ -21,5 +21,5 @@ export const plugin: PluginFunction<FlowDocumentsPluginConfig> = (
     leave: new FlowDocumentsVisitor(schema, config)
   });
 
-  return result + visitorResult.definitions.join('\n');
+  return [prefix, ...visitorResult.definitions].join('\n');
 };

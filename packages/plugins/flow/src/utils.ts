@@ -1,4 +1,16 @@
-import { NameNode, Kind, TypeNode, NamedTypeNode } from 'graphql';
+import {
+  NameNode,
+  Kind,
+  TypeNode,
+  NamedTypeNode,
+  GraphQLNamedType,
+  GraphQLOutputType,
+  isNonNullType,
+  GraphQLObjectType,
+  GraphQLNonNull,
+  GraphQLList,
+  isListType
+} from 'graphql';
 
 export function block(array) {
   return array && array.length !== 0 ? '{\n' + array.join('\n') + '\n}' : '';
@@ -99,4 +111,31 @@ export function getBaseTypeNode(typeNode: TypeNode): NamedTypeNode {
   }
 
   return typeNode;
+}
+
+export function wrapAstTypeWithModifiers(baseType: string, typeNode: TypeNode): string {
+  if (typeNode.kind === Kind.NON_NULL_TYPE) {
+    return wrapAstTypeWithModifiers(baseType, typeNode.type).substr(1);
+  } else if (typeNode.kind === Kind.LIST_TYPE) {
+    const innerType = wrapAstTypeWithModifiers(baseType, typeNode.type);
+
+    return `?Array<${innerType}>`;
+  } else {
+    return `?${baseType}`;
+  }
+}
+
+export function wrapTypeWithModifiers(
+  baseType: string,
+  type: GraphQLObjectType | GraphQLNonNull<GraphQLObjectType> | GraphQLList<GraphQLObjectType>
+): string {
+  if (isNonNullType(type)) {
+    return wrapTypeWithModifiers(baseType, type.ofType).substr(1);
+  } else if (isListType(type)) {
+    const innerType = wrapTypeWithModifiers(baseType, type.ofType);
+
+    return `?Array<${innerType}>`;
+  } else {
+    return `?${baseType}`;
+  }
 }

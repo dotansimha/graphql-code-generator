@@ -8,10 +8,12 @@ import {
   FragmentSpreadNode,
   InlineFragmentNode,
   GraphQLNamedType,
-  isInputObjectType
+  isInputObjectType,
+  isObjectType
 } from 'graphql';
 import { getBaseType, quoteIfNeeded } from './utils';
 import { FlowDocumentsVisitor } from './visitor';
+import { wrapTypeWithModifiers } from 'graphql-codegen-flow';
 
 export class SelectionSetToObject {
   private _primitiveFields: string[] = [];
@@ -28,13 +30,10 @@ export class SelectionSetToObject {
 
   _collectField(field: FieldNode) {
     // TODO: Replace if
-    if (isUnionType(this._parentSchemaType)) {
-    } else if (isScalarType(this._parentSchemaType)) {
-    } else if (isEnumType(this._parentSchemaType)) {
-    } else if (isInputObjectType(this._parentSchemaType)) {
-    } else {
+    if (isObjectType(this._parentSchemaType)) {
       const schemaField = this._parentSchemaType.getFields()[field.name.value];
-      const baseType = getBaseType(schemaField.type);
+      const rawType = schemaField.type as any;
+      const baseType = getBaseType(rawType);
       const typeName = baseType.name;
 
       if (this._visitorInstance.scalars[typeName]) {
@@ -53,7 +52,7 @@ export class SelectionSetToObject {
           alias: field.alias ? field.alias.value : null,
           name: field.name.value,
           type: typeName,
-          selectionSet: selectionSetToObject.string
+          selectionSet: wrapTypeWithModifiers(selectionSetToObject.string, rawType)
         });
       }
     }

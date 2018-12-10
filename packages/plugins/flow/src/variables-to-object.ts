@@ -1,5 +1,5 @@
 import { Kind, TypeNode, VariableNode, NameNode } from 'graphql';
-import { indent, getBaseTypeNode } from './utils';
+import { indent, getBaseTypeNode, wrapAstTypeWithModifiers } from './utils';
 import { BasicFlowVisitor } from './visitor';
 
 export class OperationVariablesToObject<
@@ -7,18 +7,6 @@ export class OperationVariablesToObject<
   DefinitionType extends { name?: NameNode; variable?: VariableNode; type: TypeNode }
 > {
   constructor(private _visitorInstance: Visitor, private _variablesNode: ReadonlyArray<DefinitionType>) {}
-
-  private wrapType(baseType: string, typeNode: TypeNode): string {
-    if (typeNode.kind === Kind.NON_NULL_TYPE) {
-      return this.wrapType(baseType, typeNode.type).substr(1);
-    } else if (typeNode.kind === Kind.LIST_TYPE) {
-      const innerType = this.wrapType(baseType, typeNode.type);
-
-      return `?Array<${innerType}>`;
-    } else {
-      return `?${baseType}`;
-    }
-  }
 
   getName(node: DefinitionType): string {
     if (node.name) {
@@ -44,7 +32,7 @@ export class OperationVariablesToObject<
           : baseType.name.value;
 
         return indent(
-          `${this.getName(variable)}${variable.type.kind === Kind.NON_NULL_TYPE ? '' : '?'}: ${this.wrapType(
+          `${this.getName(variable)}${variable.type.kind === Kind.NON_NULL_TYPE ? '' : '?'}: ${wrapAstTypeWithModifiers(
             typeValue,
             variable.type
           )}`
