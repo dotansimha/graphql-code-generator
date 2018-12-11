@@ -35,7 +35,7 @@
     "@types/mkdirp": "0.5.2",
     "@types/node": "10.12.12",
     "@types/request": "2.48.1",
-    "@types/common-tags": "1.4.0",
+    "@types/common-tags": "1.8.0",
     "@types/graphql": "14.0.3",
     "husky": "1.2.0",
     "lint-staged": "8.1.0",
