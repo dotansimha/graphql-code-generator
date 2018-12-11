@@ -1,3 +1,4 @@
+import { resolveExternalModuleAndFn } from 'graphql-codegen-plugin-helpers';
 import {
   EnumTypeDefinitionNode,
   ScalarTypeDefinitionNode,
@@ -7,7 +8,7 @@ import {
   NameNode
 } from 'graphql';
 import { DeclarationBlock, wrapWithSingleQuotes, breakLine, indent } from './utils';
-import { ScalarsMap, EnumValuesMap } from './index';
+import { ScalarsMap, EnumValuesMap, FlowPluginConfig } from './index';
 import { OperationVariablesToObject } from './variables-to-object';
 import { pascalCase } from 'change-case';
 import {
@@ -30,26 +31,34 @@ export interface ParsedConfig {
   scalars: ScalarsMap;
   enumValues: EnumValuesMap;
   convert: (str: string) => string;
+  typesPrefix: string;
 }
 
 export interface BasicFlowVisitor {
   scalars: ScalarsMap;
 }
 
-export interface FlowPluginConfig {
-  scalars?: ScalarsMap;
-  namingConvention?: string;
-  enumValues?: EnumValuesMap;
+export function toPascalCase(str: string) {
+  return str
+    .split('_')
+    .map(s => pascalCase(s))
+    .join('_');
 }
+
 export class FlowVisitor implements BasicFlowVisitor {
   private _parsedConfig: ParsedConfig;
 
   constructor(pluginConfig: FlowPluginConfig) {
     this._parsedConfig = {
       scalars: { ...DEFAULT_SCALARS, ...(pluginConfig.scalars || {}) },
-      convert: str => pascalCase(str),
-      enumValues: pluginConfig.enumValues || {}
+      convert: pluginConfig.namingConvention ? resolveExternalModuleAndFn(pluginConfig.namingConvention) : toPascalCase,
+      enumValues: pluginConfig.enumValues || {},
+      typesPrefix: pluginConfig.typesPrefix || ''
     };
+  }
+
+  private _convertName(name: any, addPrefix = true): string {
+    return (addPrefix ? this._parsedConfig.typesPrefix : '') + this._parsedConfig.convert(name);
   }
 
   get scalars(): ScalarsMap {
@@ -60,13 +69,13 @@ export class FlowVisitor implements BasicFlowVisitor {
     return new DeclarationBlock()
       .export()
       .asKind('type')
-      .withName(node.name)
+      .withName(this._convertName(node.name))
       .withContent(this._parsedConfig.scalars[(node.name as any) as string] || 'any').string;
   };
 
   NamedType = (node: NamedTypeNode): string => {
     const asString = (node.name as any) as string;
-    const type = this._parsedConfig.scalars[asString] || asString;
+    const type = this._parsedConfig.scalars[asString] || this._convertName(asString);
 
     return `?${type}`;
   };
@@ -95,7 +104,7 @@ export class FlowVisitor implements BasicFlowVisitor {
     return new DeclarationBlock()
       .export()
       .asKind('type')
-      .withName(node.name)
+      .withName(this._convertName(node.name))
       .withBlock(node.fields.join('\n')).string;
   };
 
@@ -113,7 +122,7 @@ export class FlowVisitor implements BasicFlowVisitor {
     return new DeclarationBlock()
       .export()
       .asKind('type')
-      .withName(node.name)
+      .withName(this._convertName(node.name))
       .withContent(possibleTypes).string;
   };
 
@@ -126,15 +135,14 @@ export class FlowVisitor implements BasicFlowVisitor {
     const typeDefinition = new DeclarationBlock()
       .export()
       .asKind('type')
-      .withName(node.name)
+      .withName(this._convertName(node.name))
       .withContent(interfaces)
       .withBlock(node.fields.join('\n')).string;
 
     const original = parent[key];
     const fieldsWithArguments = original.fields.filter(field => field.arguments && field.arguments.length > 0);
     const fieldsArguments = fieldsWithArguments.map(field => {
-      const name =
-        this._parsedConfig.convert(original.name.value) + this._parsedConfig.convert(field.name.value) + 'Args';
+      const name = original.name.value + this._convertName(field.name.value, false) + 'Args';
       const transformedArguments = new OperationVariablesToObject<FlowVisitor, InputValueDefinitionNode>(
         this,
         field.arguments
@@ -143,7 +151,7 @@ export class FlowVisitor implements BasicFlowVisitor {
       return new DeclarationBlock()
         .export()
         .asKind('type')
-        .withName(name)
+        .withName(this._convertName(name))
         .withBlock(transformedArguments.string).string;
     });
 
@@ -154,7 +162,7 @@ export class FlowVisitor implements BasicFlowVisitor {
     return new DeclarationBlock()
       .export()
       .asKind('type')
-      .withName(node.name)
+      .withName(this._convertName(node.name))
       .withBlock(node.fields.join('\n')).string;
   };
 
@@ -164,12 +172,12 @@ export class FlowVisitor implements BasicFlowVisitor {
     const enumValues = new DeclarationBlock()
       .export()
       .asKind('const')
-      .withName(enumValuesName)
+      .withName(this._convertName(enumValuesName))
       .withBlock(
         node.values
           .map(enumOption =>
             indent(
-              `${enumOption.name}: ${wrapWithSingleQuotes(
+              `${this._convertName(enumOption.name)}: ${wrapWithSingleQuotes(
                 this._parsedConfig.enumValues[(enumOption.name as any) as string] || enumOption.name
               )}`
             )
@@ -180,9 +188,9 @@ export class FlowVisitor implements BasicFlowVisitor {
     const enumType = new DeclarationBlock()
       .export()
       .asKind('type')
-      .withName(node.name)
-      .withContent(`$Values<typeof ${enumValuesName}>`).string;
+      .withName(this._convertName(node.name))
+      .withContent(`$Values<typeof ${this._convertName(enumValuesName)}>`).string;
 
-    return enumValues + enumType;
+    return [enumValues, enumType].join('\n\n');
   };
 }

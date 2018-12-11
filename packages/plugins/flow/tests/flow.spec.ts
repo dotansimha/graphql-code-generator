@@ -6,11 +6,258 @@ import { validateFlow } from '../../flow-documents/tests/validate-flow';
 describe('Flow Plugin', () => {
   const SCALARS = {};
 
+  describe('Naming Convention & Types Prefix', () => {
+    it('Should use custom namingConvention for type name and args typename', () => {
+      const ast = parse(`type MyType { foo(a: String!, b: String, c: [String], d: [Int!]!): String }`);
+      const result = visit(ast, {
+        leave: new FlowVisitor({ namingConvention: 'change-case#lowerCase' })
+      });
+
+      expect(result.definitions[0]).toBeSimilarStringTo(`
+        export type mytypefooargs = {
+          a: string,
+          b?: ?string,
+          c?: ?Array<?string>,
+          d: Array<number>
+        };
+    `);
+      expect(result.definitions[0]).toBeSimilarStringTo(`
+        export type mytype = {
+          foo: ?string,
+        };
+    `);
+
+      validateFlow(result.definitions[0]);
+    });
+
+    it('Should use custom namingConvention and add custom prefix', () => {
+      const ast = parse(`type MyType { foo(a: String!, b: String, c: [String], d: [Int!]!): String }`);
+      const result = visit(ast, {
+        leave: new FlowVisitor({ namingConvention: 'change-case#lowerCase', typesPrefix: 'I' })
+      });
+
+      expect(result.definitions[0]).toBeSimilarStringTo(`
+        export type Imytypefooargs = {
+          a: string,
+          b?: ?string,
+          c?: ?Array<?string>,
+          d: Array<number>
+        };
+      `);
+
+      expect(result.definitions[0]).toBeSimilarStringTo(`
+        export type Imytype = {
+          foo: ?string,
+        };
+      `);
+
+      validateFlow(result.definitions[0]);
+    });
+
+    const ast = parse(`
+    enum MyEnum {
+      A
+      B
+      C
+    }
+
+    type MyType {
+      f: String
+      bar: MyEnum
+      b_a_r: String
+      myOtherField: String
+    }
+
+    type My_Type {
+      linkTest: MyType
+    }
+
+    union MyUnion = My_Type | MyType
+
+    interface Some_Interface {
+      id: ID!
+    }
+
+    type Impl1 implements Some_Interface {
+      id: ID!
+    }
+
+    type Impl_2 implements Some_Interface {
+      id: ID!
+    }
+
+    type impl_3 implements Some_Interface {
+      id: ID!
+    }
+
+    type Query {
+      something: MyUnion
+      use_interface: Some_Interface
+    }
+  `);
+
+    it('Should generate correct values when using links between types - lowerCase', () => {
+      const result = visit(ast, {
+        leave: new FlowVisitor({ namingConvention: 'change-case#lowerCase' })
+      }).definitions.join('\n');
+
+      expect(result).toBeSimilarStringTo(`
+        export const myenumvalues = {
+          a: 'A',
+          b: 'B',
+          c: 'C'
+        };
+    
+        export type myenum = $Values<typeof myenumvalues>;
+    
+        export type mytype = {
+          f: ?string,
+          bar: ?myenum,
+          b_a_r: ?string,
+          myOtherField: ?string,
+        };
+    
+        export type my_type = {
+          linkTest: ?mytype,
+        };
+    
+        export type myunion = my_type | mytype;
+    
+        export type some_interface = {
+          id: string,
+        };
+    
+        export type impl1 = some_interface & {
+          id: string,
+        };
+    
+        export type impl_2 = some_interface & {
+          id: string,
+        };
+    
+        export type impl_3 = some_interface & {
+          id: string,
+        };
+    
+        export type query = {
+          something: ?myunion,
+          use_interface: ?some_interface,
+        };
+      `);
+
+      validateFlow(result);
+    });
+
+    it('Should generate correct values when using links between types - pascalCase (default)', () => {
+      const result = visit(ast, {
+        leave: new FlowVisitor({})
+      }).definitions.join('\n');
+
+      expect(result).toBeSimilarStringTo(`
+      export const MyEnumValues = {
+        A: 'A',
+        B: 'B',
+        C: 'C'
+      };
+  
+      export type MyEnum = $Values<typeof MyEnumValues>;
+  
+      export type MyType = {
+        f: ?string,
+        bar: ?MyEnum,
+        b_a_r: ?string,
+        myOtherField: ?string,
+      };
+  
+      export type My_Type = {
+        linkTest: ?MyType,
+      };
+  
+      export type MyUnion = My_Type | MyType;
+  
+      export type Some_Interface = {
+        id: string,
+      };
+  
+      export type Impl1 = Some_Interface & {
+        id: string,
+      };
+  
+      export type Impl_2 = Some_Interface & {
+        id: string,
+      };
+  
+      export type Impl_3 = Some_Interface & {
+        id: string,
+      };
+  
+      export type Query = {
+        something: ?MyUnion,
+        use_interface: ?Some_Interface,
+      };
+      `);
+
+      validateFlow(result);
+    });
+
+    it('Should generate correct values when using links between types - pascalCase (default) with custom prefix', () => {
+      const result = visit(ast, {
+        leave: new FlowVisitor({ typesPrefix: 'I' })
+      }).definitions.join('\n');
+
+      expect(result).toBeSimilarStringTo(`
+      export const IMyEnumValues = {
+        IA: 'A',
+        IB: 'B',
+        IC: 'C'
+      };
+  
+      export type IMyEnum = $Values<typeof IMyEnumValues>;
+  
+      export type IMyType = {
+        f: ?string,
+        bar: ?IMyEnum,
+        b_a_r: ?string,
+        myOtherField: ?string,
+      };
+  
+      export type IMy_Type = {
+        linkTest: ?IMyType,
+      };
+  
+      export type IMyUnion = IMy_Type | IMyType;
+  
+      export type ISome_Interface = {
+        id: string,
+      };
+  
+      export type IImpl1 = ISome_Interface & {
+        id: string,
+      };
+  
+      export type IImpl_2 = ISome_Interface & {
+        id: string,
+      };
+  
+      export type IImpl_3 = ISome_Interface & {
+        id: string,
+      };
+  
+      export type IQuery = {
+        something: ?IMyUnion,
+        use_interface: ?ISome_Interface,
+      };
+      `);
+
+      validateFlow(result);
+    });
+  });
+
   describe('Arguments', () => {
     it('Should generate correctly types for field arguments - with basic fields', () => {
       const ast = parse(`type MyType { foo(a: String!, b: String, c: [String], d: [Int!]!): String }`);
       const result = visit(ast, {
-        leave: new FlowVisitor({ namingConvention: null, scalars: SCALARS, enumValues: {} })
+        leave: new FlowVisitor({ namingConvention: null })
       });
 
       expect(result.definitions[0]).toBeSimilarStringTo(`
@@ -30,7 +277,7 @@ describe('Flow Plugin', () => {
         `input MyInput { f: String } type MyType { foo(a: MyInput, b: MyInput!, c: [MyInput], d: [MyInput]!, e: [MyInput!]!): String }`
       );
       const result = visit(ast, {
-        leave: new FlowVisitor({ namingConvention: null, scalars: SCALARS, enumValues: {} })
+        leave: new FlowVisitor({ namingConvention: null })
       });
 
       expect(result.definitions[1]).toBeSimilarStringTo(`
@@ -52,7 +299,7 @@ describe('Flow Plugin', () => {
     it('Should build basic enum correctly', () => {
       const ast = parse(`enum MyEnum { A, B, C }`);
       const result = visit(ast, {
-        leave: new FlowVisitor({ namingConvention: null, scalars: SCALARS, enumValues: {} })
+        leave: new FlowVisitor({ namingConvention: null })
       });
 
       expect(result.definitions[0]).toBeSimilarStringTo(`
@@ -96,7 +343,7 @@ describe('Flow Plugin', () => {
     it('Should build basic scalar correctly as any', () => {
       const ast = parse(`scalar A`);
       const result = visit(ast, {
-        leave: new FlowVisitor({ namingConvention: null, scalars: SCALARS, enumValues: {} })
+        leave: new FlowVisitor({ namingConvention: null })
       });
 
       expect(result.definitions[0]).toBeSimilarStringTo(`

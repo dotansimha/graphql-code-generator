@@ -1,6 +1,6 @@
 import { DocumentFile, GraphQLSchema, PluginFunction } from 'graphql-codegen-core';
 import { parse, printSchema, visit } from 'graphql';
-import { FlowPluginConfig, FlowVisitor } from './visitor';
+import { FlowVisitor } from './visitor';
 
 export { DEFAULT_SCALARS } from './visitor';
 export * from './utils';
@@ -9,6 +9,13 @@ export * from './visitor';
 
 export type ScalarsMap = { [name: string]: string };
 export type EnumValuesMap = { [key: string]: string };
+
+export interface FlowPluginConfig {
+  scalars?: ScalarsMap;
+  namingConvention?: string;
+  enumValues?: EnumValuesMap;
+  typesPrefix?: string;
+}
 
 export const plugin: PluginFunction<FlowPluginConfig> = (
   schema: GraphQLSchema,
