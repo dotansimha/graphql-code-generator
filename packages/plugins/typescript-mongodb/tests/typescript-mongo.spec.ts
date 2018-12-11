@@ -147,7 +147,14 @@ describe('Types', () => {
       }
     `);
 
-    const content = await plugin(schema, [], {});
+    const content = await plugin(
+      schema,
+      [],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
       export interface Entity1DbObject {

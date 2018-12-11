@@ -39,7 +39,14 @@ describe('TypeScript Server', () => {
 
   describe('Config', () => {
     it('Should wrap with namepsace when schemaNamespace is specified', async () => {
-      const content = await plugin(schema, [], { schemaNamespace: 'Models' });
+      const content = await plugin(
+        schema,
+        [],
+        { schemaNamespace: 'Models' },
+        {
+          outputFile: 'graphql.ts'
+        }
+      );
 
       expect(content).toContain(`export namespace Models {`);
     });
@@ -64,7 +71,14 @@ describe('TypeScript Server', () => {
     `);
 
     it('Should generate unions correctly', async () => {
-      const content = await plugin(schema, [], {});
+      const content = await plugin(
+        schema,
+        [],
+        {},
+        {
+          outputFile: 'graphql.ts'
+        }
+      );
 
       expect(content).toBeSimilarStringTo(`
         export interface Query {
@@ -88,7 +102,14 @@ describe('TypeScript Server', () => {
     });
 
     it('Should generate unions correctly with interfacePrefix', async () => {
-      const content = await plugin(schema, [], { interfacePrefix: 'Gql' });
+      const content = await plugin(
+        schema,
+        [],
+        { interfacePrefix: 'Gql' },
+        {
+          outputFile: 'graphql.ts'
+        }
+      );
 
       expect(content).toBeSimilarStringTo(`
         export interface GqlQuery {
@@ -135,7 +156,10 @@ describe('TypeScript Server', () => {
         }
       `),
         [],
-        {}
+        {},
+        {
+          outputFile: 'graphql.ts'
+        }
       );
 
       expect(content).toBeSimilarStringTo(`
@@ -164,7 +188,10 @@ describe('TypeScript Server', () => {
         }
       `),
         [],
-        {}
+        {},
+        {
+          outputFile: 'graphql.ts'
+        }
       );
 
       expect(content).toBeSimilarStringTo(`
@@ -198,7 +225,10 @@ describe('TypeScript Server', () => {
         }
       `),
         [],
-        {}
+        {},
+        {
+          outputFile: 'graphql.ts'
+        }
       );
 
       expect(content).toBeSimilarStringTo(`
@@ -232,7 +262,10 @@ describe('TypeScript Server', () => {
         scalar BBText
       `),
         [],
-        {}
+        {},
+        {
+          outputFile: 'graphql.ts'
+        }
       );
 
       expect(content).toBeSimilarStringTo(`
@@ -256,7 +289,10 @@ describe('TypeScript Server', () => {
         scalar BBText
       `),
         [],
-        { namingConvention: 'change-case#lowerCase' }
+        { namingConvention: 'change-case#lowerCase' },
+        {
+          outputFile: 'graphql.ts'
+        }
       );
 
       expect(content).toBeSimilarStringTo(`
@@ -282,7 +318,10 @@ describe('TypeScript Server', () => {
           }
       `),
         [],
-        {}
+        {},
+        {
+          outputFile: 'graphql.ts'
+        }
       );
 
       expect(content).toBeSimilarStringTo(`
@@ -317,7 +356,10 @@ describe('TypeScript Server', () => {
         }
       `),
         [],
-        {}
+        {},
+        {
+          outputFile: 'graphql.ts'
+        }
       );
 
       expect(content).toBeSimilarStringTo(`
@@ -341,7 +383,14 @@ describe('TypeScript Server', () => {
     });
 
     it('Should handle immutable type correctly with immutableTypes', async () => {
-      const content = await plugin(schema, [], { immutableTypes: true });
+      const content = await plugin(
+        schema,
+        [],
+        { immutableTypes: true },
+        {
+          outputFile: 'graphql.ts'
+        }
+      );
 
       expect(content).toBeSimilarStringTo(`
         export interface Bar {
@@ -362,7 +411,14 @@ describe('TypeScript Server', () => {
     });
 
     it('Should generate the correct output when using avoidOptionals=true', async () => {
-      const content = await plugin(schema, [], { avoidOptionals: true });
+      const content = await plugin(
+        schema,
+        [],
+        { avoidOptionals: true },
+        {
+          outputFile: 'graphql.ts'
+        }
+      );
 
       expect(content).toBeSimilarStringTo(`
         export interface Bar {
@@ -385,7 +441,10 @@ describe('TypeScript Server', () => {
       }
     `),
         [],
-        {}
+        {},
+        {
+          outputFile: 'graphql.ts'
+        }
       );
 
       expect(content).toBeSimilarStringTo(`/** type-description */`);
@@ -408,7 +467,10 @@ describe('TypeScript Server', () => {
         scalar Date
       `),
         [],
-        {}
+        {},
+        {
+          outputFile: 'graphql.ts'
+        }
       );
 
       expect(content).toBeSimilarStringTo(`
@@ -432,6 +494,9 @@ describe('TypeScript Server', () => {
           scalars: {
             Date: 'MyCustomDate'
           }
+        },
+        {
+          outputFile: 'graphql.ts'
         }
       );
 

@@ -41,14 +41,28 @@ describe('TypeScript Common', () => {
 
   describe('namingConvention', () => {
     it('Should use pascal case by default', async () => {
-      const content = await plugin(schema, [], {});
+      const content = await plugin(
+        schema,
+        [],
+        {},
+        {
+          outputFile: 'graphql.ts'
+        }
+      );
 
       expect(content).not.toContain(`myTypeNOnStandart`);
       expect(content).toContain(`MyTypeNOnStandart`);
     });
 
     it('Should use different naming when overridden', async () => {
-      const content = await plugin(schema, [], { namingConvention: 'change-case#lowerCase' });
+      const content = await plugin(
+        schema,
+        [],
+        { namingConvention: 'change-case#lowerCase' },
+        {
+          outputFile: 'graphql.ts'
+        }
+      );
 
       expect(content).not.toContain(`myTypeNOnStandart`);
       expect(content).toContain(`mytypenonstandart`);
@@ -57,7 +71,14 @@ describe('TypeScript Common', () => {
     it('Should throw when module does not exists', async () => {
       let thrown = false;
       try {
-        await plugin(schema, [], { namingConvention: 'oops#boop' });
+        await plugin(
+          schema,
+          [],
+          { namingConvention: 'oops#boop' },
+          {
+            outputFile: 'graphql.ts'
+          }
+        );
       } catch (e) {
         thrown = true;
         expect(e.message).toContain(`Cannot find module`);
@@ -69,7 +90,14 @@ describe('TypeScript Common', () => {
     it('Should throw when method does not exists', async () => {
       let thrown = false;
       try {
-        await plugin(schema, [], { namingConvention: 'change-case#boop' });
+        await plugin(
+          schema,
+          [],
+          { namingConvention: 'change-case#boop' },
+          {
+            outputFile: 'graphql.ts'
+          }
+        );
       } catch (e) {
         thrown = true;
         expect(e.message).toContain(`boop couldn't be found in module change-case!`);
@@ -81,7 +109,14 @@ describe('TypeScript Common', () => {
 
   describe('Enums', () => {
     it('Should generate enums as interface by default', async () => {
-      const content = await plugin(schema, [], {});
+      const content = await plugin(
+        schema,
+        [],
+        {},
+        {
+          outputFile: 'graphql.ts'
+        }
+      );
 
       expect(content).toBeSimilarStringTo(`
         export enum A {
@@ -92,13 +127,27 @@ describe('TypeScript Common', () => {
     });
 
     it('Should generate enums as types with enumsAsTypes', async () => {
-      const content = await plugin(schema, [], { enumsAsTypes: true });
+      const content = await plugin(
+        schema,
+        [],
+        { enumsAsTypes: true },
+        {
+          outputFile: 'graphql.ts'
+        }
+      );
 
       expect(content).toBeSimilarStringTo(`export type A = "ONE" | "TWO";`);
     });
 
     it('Should generate const enums as types with constEnums', async () => {
-      const content = await plugin(schema, [], { constEnums: true });
+      const content = await plugin(
+        schema,
+        [],
+        { constEnums: true },
+        {
+          outputFile: 'graphql.ts'
+        }
+      );
 
       expect(content).toBeSimilarStringTo(`
         export const enum A {
@@ -108,7 +157,14 @@ describe('TypeScript Common', () => {
     });
 
     it('Should generate correct enum names with interfacePrefix', async () => {
-      const content = await plugin(schema, [], { interfacePrefix: 'Pref' });
+      const content = await plugin(
+        schema,
+        [],
+        { interfacePrefix: 'Pref' },
+        {
+          outputFile: 'graphql.ts'
+        }
+      );
 
       expect(content).toBeSimilarStringTo(`
         export enum PrefA {
@@ -118,14 +174,21 @@ describe('TypeScript Common', () => {
     });
 
     it('Should generate the correct output with custom enums value', async () => {
-      const content = await plugin(schema, [], {
-        enums: {
-          A: {
-            ONE: '1',
-            TWO: '2'
+      const content = await plugin(
+        schema,
+        [],
+        {
+          enums: {
+            A: {
+              ONE: '1',
+              TWO: '2'
+            }
           }
+        },
+        {
+          outputFile: 'graphql.ts'
         }
-      });
+      );
 
       expect(content).toBeSimilarStringTo(`
         export enum A {
@@ -144,7 +207,10 @@ describe('TypeScript Common', () => {
       }
       `),
         [],
-        {}
+        {},
+        {
+          outputFile: 'graphql.ts'
+        }
       );
 
       expect(content).toBeSimilarStringTo(`
@@ -158,7 +224,14 @@ describe('TypeScript Common', () => {
 
   describe('Input Types', () => {
     it('Should generate input type fields correctly', async () => {
-      const content = await plugin(schema, [], {});
+      const content = await plugin(
+        schema,
+        [],
+        {},
+        {
+          outputFile: 'graphql.ts'
+        }
+      );
 
       expect(content).toBeSimilarStringTo(`
         export interface T {
@@ -173,7 +246,14 @@ describe('TypeScript Common', () => {
     });
 
     it('Should generate input type fields correctly when immutableTypes is set', async () => {
-      const content = await plugin(schema, [], { immutableTypes: true });
+      const content = await plugin(
+        schema,
+        [],
+        { immutableTypes: true },
+        {
+          outputFile: 'graphql.ts'
+        }
+      );
 
       expect(content).toBeSimilarStringTo(`
         export interface T {
@@ -196,7 +276,10 @@ describe('TypeScript Common', () => {
       }  
       `),
         [],
-        {}
+        {},
+        {
+          outputFile: 'graphql.ts'
+        }
       );
 
       expect(content).toBeSimilarStringTo(`
@@ -208,7 +291,14 @@ describe('TypeScript Common', () => {
     });
 
     it('Should the correct prefix when interfacePrefix is set', async () => {
-      const content = await plugin(schema, [], { interfacePrefix: 'Pre' });
+      const content = await plugin(
+        schema,
+        [],
+        { interfacePrefix: 'Pre' },
+        {
+          outputFile: 'graphql.ts'
+        }
+      );
 
       expect(content).toBeSimilarStringTo(`
       export interface PreT {
@@ -223,7 +313,14 @@ describe('TypeScript Common', () => {
     });
 
     it('Should the correct prefix when scalars is set', async () => {
-      const content = await plugin(schema, [], { scalars: { String: 'boop' } });
+      const content = await plugin(
+        schema,
+        [],
+        { scalars: { String: 'boop' } },
+        {
+          outputFile: 'graphql.ts'
+        }
+      );
 
       expect(content).toBeSimilarStringTo(`
       export interface T {
@@ -249,7 +346,10 @@ describe('TypeScript Common', () => {
         scalar Date
       `),
         [],
-        {}
+        {},
+        {
+          outputFile: 'graphql.ts'
+        }
       );
 
       expect(content).toBeSimilarStringTo(`
@@ -271,6 +371,9 @@ describe('TypeScript Common', () => {
           scalars: {
             Date: 'MyCustomDate'
           }
+        },
+        {
+          outputFile: 'graphql.ts'
         }
       );
 
