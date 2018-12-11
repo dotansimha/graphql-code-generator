@@ -4727,9 +4727,9 @@ graphql-request@^1.5.0:
   dependencies:
     cross-fetch "2.2.2"
 
-graphql-tag-pluck@0.3.1:
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/graphql-tag-pluck/-/graphql-tag-pluck-0.3.1.tgz#e44951b30725a0cb2c7c8223b54c035694538114"
+graphql-tag-pluck@0.3.3:
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/graphql-tag-pluck/-/graphql-tag-pluck-0.3.3.tgz#00f4284f3848b3ed0798ec5541c17f6e8b92363e"
   dependencies:
     "@babel/parser" "^7.2.0"
     "@babel/traverse" "^7.1.6"
