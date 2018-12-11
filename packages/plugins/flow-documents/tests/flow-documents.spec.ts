@@ -182,7 +182,7 @@ describe('Flow Documents Plugin', () => {
       });
 
       expect(result.definitions[0]).toBeSimilarStringTo(
-        'export type NotificationsQuery = { notifications: Array<($Pick<TextNotification, { text: * }> | ($Pick<ImageNotification, { imageUrl: * }> & { metadata: $Pick<ImageMetadata,{ createdBy: * }> }))> };'
+        'export type NotificationsQuery = { notifications: Array<($Pick<TextNotification, { text: * }> | ($Pick<ImageNotification, { imageUrl: * }> & { metadata: $Pick<ImageMetadata, { createdBy: * }> }))> }'
       );
       validateFlow(result.definitions[0]);
     });
