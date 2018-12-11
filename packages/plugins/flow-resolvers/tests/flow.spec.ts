@@ -1,6 +1,6 @@
 import 'graphql-codegen-core/dist/testing';
+import { FlowResolversVisitor } from './../src/visitor';
 import { parse, visit } from 'graphql';
-import { validateFlow } from './validate-flow';
 
 describe('Flow Resolvers Plugin', () => {
   it('', () => {
