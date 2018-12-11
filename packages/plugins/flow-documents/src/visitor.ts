@@ -1,16 +1,13 @@
 import { GraphQLSchema, GraphQLObjectType, FragmentDefinitionNode, VariableDefinitionNode } from 'graphql';
 import { BasicFlowVisitor, OperationVariablesToObject, DeclarationBlock, DEFAULT_SCALARS } from 'graphql-codegen-flow';
-import { ScalarsMap } from './index';
+import { ScalarsMap, FlowDocumentsPluginConfig } from './index';
 import { OperationDefinitionNode } from 'graphql';
 import { pascalCase } from 'change-case';
 import { SelectionSetToObject } from './selection-set-to-object';
 
 export interface ParsedDocumentsConfig {
   scalars: ScalarsMap;
-}
-
-export interface FlowDocumentsPluginConfig {
-  scalars?: ScalarsMap;
+  addTypename: boolean;
 }
 
 export class FlowDocumentsVisitor implements BasicFlowVisitor {
@@ -19,6 +16,7 @@ export class FlowDocumentsVisitor implements BasicFlowVisitor {
 
   constructor(private _schema: GraphQLSchema, pluginConfig: FlowDocumentsPluginConfig) {
     this._parsedConfig = {
+      addTypename: !pluginConfig.skipTypename,
       scalars: { ...DEFAULT_SCALARS, ...(pluginConfig.scalars || {}) }
     };
   }
@@ -37,6 +35,10 @@ export class FlowDocumentsVisitor implements BasicFlowVisitor {
 
   public get scalars(): ScalarsMap {
     return this._parsedConfig.scalars;
+  }
+
+  public get addTypename(): boolean {
+    return this._parsedConfig.addTypename;
   }
 
   private handleAnonymouseOperation(name: string | null): string {

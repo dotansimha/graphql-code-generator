@@ -73,6 +73,121 @@ describe('Flow Documents Plugin', () => {
     `
   });
 
+  describe('__typename', () => {
+    it('Should skip __typename when skipTypename is set to true', () => {
+      const ast = parse(`
+        query {
+          dummy
+        }
+      `);
+      const result = visit(ast, {
+        leave: new FlowDocumentsVisitor(schema, { scalars: {}, skipTypename: true })
+      });
+      expect(result.definitions[0]).not.toContain(`__typename`);
+      validateFlow(result.definitions[0]);
+    });
+
+    it('Should add __typename as non-optional when explicitly specified', () => {
+      const ast = parse(`
+        query {
+          __typename
+          dummy
+        }
+      `);
+      const result = visit(ast, {
+        leave: new FlowDocumentsVisitor(schema, { scalars: {} })
+      });
+      expect(result.definitions[0]).toBeSimilarStringTo(
+        `export type Unnamed_1_Query = ({ __typename: 'Query' } & $Pick<Query, { dummy: * }>);`
+      );
+      validateFlow(result.definitions[0]);
+    });
+
+    it('Should add __typename as optional when its not specified', () => {
+      const ast = parse(`
+        query {
+          dummy
+        }
+      `);
+      const result = visit(ast, {
+        leave: new FlowDocumentsVisitor(schema, { scalars: {} })
+      });
+      expect(result.definitions[0]).toBeSimilarStringTo(
+        `export type Unnamed_1_Query = ({ __typename?: 'Query' } & $Pick<Query, { dummy: * }>);`
+      );
+      validateFlow(result.definitions[0]);
+    });
+
+    it('Should add __typename as non-optional when its explictly specified, even if skipTypename is true', () => {
+      const ast = parse(`
+        query {
+          __typename
+          dummy
+        }
+      `);
+      const result = visit(ast, {
+        leave: new FlowDocumentsVisitor(schema, { scalars: {}, skipTypename: true })
+      });
+      expect(result.definitions[0]).toBeSimilarStringTo(
+        `export type Unnamed_1_Query = ({ __typename: 'Query' } & $Pick<Query, { dummy: * }>);`
+      );
+      validateFlow(result.definitions[0]);
+    });
+
+    it('Should add __typename correctly when unions are in use', () => {
+      const ast = parse(`
+        query unionTest {
+          unionTest {
+            ... on User {
+              id
+            }
+
+            ... on Profile {
+              age
+            }
+          }
+        }
+    `);
+      const result = visit(ast, {
+        leave: new FlowDocumentsVisitor(schema, { scalars: {} })
+      });
+
+      expect(result.definitions[0]).toBeSimilarStringTo(
+        `export type UnionTestQuery = ({ __typename?: 'Query' } & { unionTest: ?(({ __typename?: 'User' } & $Pick<User, { id: * }>) | ({ __typename?: 'Profile' } & $Pick<Profile, { age: * }>)) });`
+      );
+      validateFlow(result.definitions[0]);
+    });
+
+    it('Should add __typename correctly when interfaces are in use', () => {
+      const ast = parse(`
+        query notifications {
+          notifications {
+            id
+
+            ... on TextNotification {
+              text
+            }
+  
+            ... on ImageNotification {
+              imageUrl
+              metadata {
+                createdBy
+              }
+            }
+          }
+        }
+    `);
+      const result = visit(ast, {
+        leave: new FlowDocumentsVisitor(schema, { scalars: {} })
+      });
+
+      expect(result.definitions[0]).toBeSimilarStringTo(
+        `export type NotificationsQuery = ({ __typename?: 'Query' } & { notifications: Array<($Pick<Notifiction, { id: * }> & (({ __typename?: 'TextNotification' } & $Pick<TextNotification, { text: * }>) | ({ __typename?: 'ImageNotification' } & $Pick<ImageNotification, { imageUrl: * }> & { metadata: ({ __typename?: 'ImageMetadata' } & $Pick<ImageMetadata, { createdBy: * }>) })))> });`
+      );
+      validateFlow(result.definitions[0]);
+    });
+  });
+
   describe('Unnamed Documents', () => {
     it('Should handle unnamed documents correctly', () => {
       const ast = parse(`
@@ -81,7 +196,7 @@ describe('Flow Documents Plugin', () => {
         }
       `);
       const result = visit(ast, {
-        leave: new FlowDocumentsVisitor(schema, { scalars: {} })
+        leave: new FlowDocumentsVisitor(schema, { scalars: {}, skipTypename: true })
       });
 
       expect(result.definitions[0]).toBeSimilarStringTo(`export type Unnamed_1_Query = $Pick<Query, { dummy: * }>;`);
@@ -100,7 +215,7 @@ describe('Flow Documents Plugin', () => {
         }
       `);
       const result = visit(ast, {
-        leave: new FlowDocumentsVisitor(schema, { scalars: {} })
+        leave: new FlowDocumentsVisitor(schema, { scalars: {}, skipTypename: true })
       });
 
       expect(result.definitions[0]).toBeSimilarStringTo(`export type Unnamed_1_Query = $Pick<Query, { dummy: * }>;`);
@@ -130,7 +245,7 @@ describe('Flow Documents Plugin', () => {
         }
     `);
       const result = visit(ast, {
-        leave: new FlowDocumentsVisitor(schema, { scalars: {} })
+        leave: new FlowDocumentsVisitor(schema, { scalars: {}, skipTypename: true })
       });
 
       expect(result.definitions[1]).toBeSimilarStringTo(`export type MeQuery = { me: ?UserFieldsFragment };`);
@@ -155,11 +270,11 @@ describe('Flow Documents Plugin', () => {
         }
     `);
       const result = visit(ast, {
-        leave: new FlowDocumentsVisitor(schema, { scalars: {} })
+        leave: new FlowDocumentsVisitor(schema, { scalars: {}, skipTypename: true })
       });
 
       expect(result.definitions[1]).toBeSimilarStringTo(
-        `export type MeQuery = { me: ?(UserFieldsFragment & $Pick<User, { username: * }>) };`
+        `export type MeQuery = { me: ?($Pick<User, { username: * }> & UserFieldsFragment) };`
       );
       validateFlow(result.definitions[0]);
       validateFlow(result.definitions[1]);
@@ -186,11 +301,11 @@ describe('Flow Documents Plugin', () => {
         }
     `);
       const result = visit(ast, {
-        leave: new FlowDocumentsVisitor(schema, { scalars: {} })
+        leave: new FlowDocumentsVisitor(schema, { scalars: {}, skipTypename: true })
       });
 
       expect(result.definitions[2]).toBeSimilarStringTo(
-        `export type MeQuery = { me: ?((UserFieldsFragment & UserProfileFragment) & $Pick<User, { username: * }>) };`
+        `export type MeQuery = { me: ?($Pick<User, { username: * }> & (UserFieldsFragment & UserProfileFragment)) };`
       );
       validateFlow(result.definitions[0]);
       validateFlow(result.definitions[1]);
@@ -217,11 +332,11 @@ describe('Flow Documents Plugin', () => {
       }
     `);
       const result = visit(ast, {
-        leave: new FlowDocumentsVisitor(schema, { scalars: {} })
+        leave: new FlowDocumentsVisitor(schema, { scalars: {}, skipTypename: true })
       });
 
       expect(result.definitions[0]).toBeSimilarStringTo(
-        'export type NotificationsQuery = { notifications: Array<($Pick<TextNotification, { text: * }> | ($Pick<ImageNotification, { imageUrl: * }> & { metadata: $Pick<ImageMetadata, { createdBy: * }> }))> }'
+        'export type NotificationsQuery = { notifications: Array<($Pick<Notifiction, { id: * }> & ($Pick<TextNotification, { text: * }> | ($Pick<ImageNotification, { imageUrl: * }> & { metadata: $Pick<ImageMetadata, { createdBy: * }> })))> };'
       );
       validateFlow(result.definitions[0]);
     });
@@ -241,7 +356,7 @@ describe('Flow Documents Plugin', () => {
         }
     `);
       const result = visit(ast, {
-        leave: new FlowDocumentsVisitor(schema, { scalars: {} })
+        leave: new FlowDocumentsVisitor(schema, { scalars: {}, skipTypename: true })
       });
 
       expect(result.definitions[0]).toBeSimilarStringTo(
@@ -265,7 +380,7 @@ describe('Flow Documents Plugin', () => {
         }
     `);
       const result = visit(ast, {
-        leave: new FlowDocumentsVisitor(schema, { scalars: {} })
+        leave: new FlowDocumentsVisitor(schema, { scalars: {}, skipTypename: true })
       });
 
       expect(result.definitions[0]).toBeSimilarStringTo(
@@ -292,7 +407,7 @@ describe('Flow Documents Plugin', () => {
         }
       `);
       const result = visit(ast, {
-        leave: new FlowDocumentsVisitor(gitHuntSchema, { scalars: {} })
+        leave: new FlowDocumentsVisitor(gitHuntSchema, { scalars: {}, skipTypename: true })
       });
 
       expect(result.definitions[0]).toBeSimilarStringTo(
@@ -313,7 +428,7 @@ describe('Flow Documents Plugin', () => {
         }
       `);
       const result = visit(ast, {
-        leave: new FlowDocumentsVisitor(schema, { scalars: {} })
+        leave: new FlowDocumentsVisitor(schema, { scalars: {}, skipTypename: true })
       });
 
       expect(result.definitions[0]).toBeSimilarStringTo(`export type DummyQuery = $Pick<Query, { dummy: * }>;`);
@@ -330,7 +445,7 @@ describe('Flow Documents Plugin', () => {
         }
       `);
       const result = visit(ast, {
-        leave: new FlowDocumentsVisitor(schema, { scalars: {} })
+        leave: new FlowDocumentsVisitor(schema, { scalars: {}, skipTypename: true })
       });
 
       expect(result.definitions[0]).toBeSimilarStringTo(
@@ -352,7 +467,7 @@ describe('Flow Documents Plugin', () => {
         }
       `);
       const result = visit(ast, {
-        leave: new FlowDocumentsVisitor(schema, { scalars: {} })
+        leave: new FlowDocumentsVisitor(schema, { scalars: {}, skipTypename: true })
       });
 
       expect(result.definitions[0]).toBeSimilarStringTo(
@@ -375,7 +490,7 @@ describe('Flow Documents Plugin', () => {
         }
       `);
       const result = visit(ast, {
-        leave: new FlowDocumentsVisitor(schema, { scalars: {} })
+        leave: new FlowDocumentsVisitor(schema, { scalars: {}, skipTypename: true })
       });
 
       expect(result.definitions[0]).toBeSimilarStringTo(
@@ -399,7 +514,7 @@ describe('Flow Documents Plugin', () => {
         }
       `);
       const result = visit(ast, {
-        leave: new FlowDocumentsVisitor(schema, { scalars: {} })
+        leave: new FlowDocumentsVisitor(schema, { scalars: {}, skipTypename: true })
       });
 
       expect(result.definitions[0]).toBeSimilarStringTo(
@@ -415,7 +530,7 @@ describe('Flow Documents Plugin', () => {
         }
       `);
       const result = visit(ast, {
-        leave: new FlowDocumentsVisitor(schema, { scalars: {} })
+        leave: new FlowDocumentsVisitor(schema, { scalars: {}, skipTypename: true })
       });
 
       expect(result.definitions[0]).toBeSimilarStringTo(`export type TestQuery = $Pick<Query, { dummy: * }>;`);
@@ -431,7 +546,7 @@ describe('Flow Documents Plugin', () => {
         }
       `);
       const result = visit(ast, {
-        leave: new FlowDocumentsVisitor(schema, { scalars: {} })
+        leave: new FlowDocumentsVisitor(schema, { scalars: {}, skipTypename: true })
       });
 
       expect(result.definitions[0]).toBeSimilarStringTo(
@@ -447,7 +562,7 @@ describe('Flow Documents Plugin', () => {
         }
       `);
       const result = visit(ast, {
-        leave: new FlowDocumentsVisitor(schema, { scalars: {} })
+        leave: new FlowDocumentsVisitor(schema, { scalars: {}, skipTypename: true })
       });
 
       expect(result.definitions[0]).toBeSimilarStringTo(
@@ -472,7 +587,7 @@ describe('Flow Documents Plugin', () => {
         }
       `);
       const result = visit(ast, {
-        leave: new FlowDocumentsVisitor(schema, { scalars: {} })
+        leave: new FlowDocumentsVisitor(schema, { scalars: {}, skipTypename: true })
       });
 
       expect(result.definitions[0]).toBeSimilarStringTo(`export type TestQueryQueryVariables = {};`);

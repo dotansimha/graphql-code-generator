@@ -2,14 +2,12 @@ import {
   SelectionSetNode,
   Kind,
   FieldNode,
-  isScalarType,
-  isUnionType,
-  isEnumType,
   FragmentSpreadNode,
   InlineFragmentNode,
   GraphQLNamedType,
-  isInputObjectType,
-  isObjectType
+  isObjectType,
+  isUnionType,
+  isInterfaceType
 } from 'graphql';
 import { getBaseType, quoteIfNeeded } from './utils';
 import { FlowDocumentsVisitor } from './visitor';
@@ -21,6 +19,7 @@ export class SelectionSetToObject {
   private _linksFields: { alias: string; name: string; type: string; selectionSet: string }[] = [];
   private _fragmentSpreads: string[] = [];
   private _inlineFragments: { [onType: string]: string[] } = {};
+  private _queriedForTypename = false;
 
   constructor(
     private _visitorInstance: FlowDocumentsVisitor,
@@ -29,8 +28,13 @@ export class SelectionSetToObject {
   ) {}
 
   _collectField(field: FieldNode) {
-    // TODO: Replace if
-    if (isObjectType(this._parentSchemaType)) {
+    if (field.name.value === '__typename') {
+      this._queriedForTypename = true;
+
+      return;
+    }
+
+    if (isObjectType(this._parentSchemaType) || isInterfaceType(this._parentSchemaType)) {
       const schemaField = this._parentSchemaType.getFields()[field.name.value];
       const rawType = schemaField.type as any;
       const baseType = getBaseType(rawType);
@@ -82,6 +86,20 @@ export class SelectionSetToObject {
     return allPossibleTypes.length === 0 ? null : `(${allPossibleTypes.join(' | ')})`;
   }
 
+  private _buildTypeNameField(): string | null {
+    const possibleTypes = [];
+
+    if (!isUnionType(this._parentSchemaType) && !isInterfaceType(this._parentSchemaType)) {
+      possibleTypes.push(this._parentSchemaType.name);
+    }
+
+    if (possibleTypes.length === 0) {
+      return null;
+    }
+
+    return `{ __typename${this._queriedForTypename ? '' : '?'}: ${possibleTypes.map(t => `'${t}'`).join(' | ')} }`;
+  }
+
   get string(): string {
     if (!this._selectionSet || !this._selectionSet.selections || this._selectionSet.selections.length === 0) {
       return '';
@@ -103,6 +121,7 @@ export class SelectionSetToObject {
       }
     }
 
+    const typeName = this._visitorInstance.addTypename || this._queriedForTypename ? this._buildTypeNameField() : null;
     const baseFields = this._primitiveFields.length
       ? `$Pick<${this._parentSchemaType.name}, { ${this._primitiveFields
           .map(fieldName => `${fieldName}: *`)
@@ -124,7 +143,7 @@ export class SelectionSetToObject {
       this._fragmentSpreads.map(fragmentName => this._visitorInstance.getFragmentName(fragmentName)),
       ' & '
     );
-    const fieldsSet = [fragmentSpreads, baseFields, aliasBaseFields, linksFields, inlineFragments].filter(
+    const fieldsSet = [typeName, baseFields, aliasBaseFields, linksFields, fragmentSpreads, inlineFragments].filter(
       f => f && f !== ''
     );
 
