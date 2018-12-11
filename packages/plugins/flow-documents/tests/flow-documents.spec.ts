@@ -73,6 +73,45 @@ describe('Flow Documents Plugin', () => {
     `
   });
 
+  describe('Unnamed Documents', () => {
+    it('Should handle unnamed documents correctly', () => {
+      const ast = parse(`
+        query {
+          dummy
+        }
+      `);
+      const result = visit(ast, {
+        leave: new FlowDocumentsVisitor(schema, { scalars: {} })
+      });
+
+      expect(result.definitions[0]).toBeSimilarStringTo(`export type Unnamed_1_Query = $Pick<Query, { dummy: * }>;`);
+      expect(result.definitions[0]).toBeSimilarStringTo(`export type Unnamed_1_QueryVariables = {};`);
+      validateFlow(result.definitions[0]);
+    });
+
+    it('Should handle unnamed documents correctly with multiple documents', () => {
+      const ast = parse(`
+        query {
+          dummy
+        }
+
+        query {
+          dummy
+        }
+      `);
+      const result = visit(ast, {
+        leave: new FlowDocumentsVisitor(schema, { scalars: {} })
+      });
+
+      expect(result.definitions[0]).toBeSimilarStringTo(`export type Unnamed_1_Query = $Pick<Query, { dummy: * }>;`);
+      expect(result.definitions[0]).toBeSimilarStringTo(`export type Unnamed_1_QueryVariables = {};`);
+      validateFlow(result.definitions[0]);
+      expect(result.definitions[1]).toBeSimilarStringTo(`export type Unnamed_2_Query = $Pick<Query, { dummy: * }>;`);
+      expect(result.definitions[1]).toBeSimilarStringTo(`export type Unnamed_2_QueryVariables = {};`);
+      validateFlow(result.definitions[1]);
+    });
+  });
+
   describe('Selection Set', () => {
     it('Should support fragment spread correctly with simple type with no other fields', () => {
       const ast = parse(`
