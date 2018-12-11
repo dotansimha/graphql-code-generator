@@ -7,7 +7,7 @@ import {
   NamedTypeNode,
   NameNode
 } from 'graphql';
-import { DeclarationBlock, wrapWithSingleQuotes, breakLine, indent } from './utils';
+import { DeclarationBlock, wrapWithSingleQuotes, breakLine, indent, toPascalCase } from './utils';
 import { ScalarsMap, EnumValuesMap, FlowPluginConfig } from './index';
 import { OperationVariablesToObject } from './variables-to-object';
 import { pascalCase } from 'change-case';
@@ -38,21 +38,14 @@ export interface BasicFlowVisitor {
   scalars: ScalarsMap;
 }
 
-export function toPascalCase(str: string) {
-  return str
-    .split('_')
-    .map(s => pascalCase(s))
-    .join('_');
-}
-
 export class FlowVisitor implements BasicFlowVisitor {
   private _parsedConfig: ParsedConfig;
 
   constructor(pluginConfig: FlowPluginConfig) {
     this._parsedConfig = {
       scalars: { ...DEFAULT_SCALARS, ...(pluginConfig.scalars || {}) },
-      convert: pluginConfig.namingConvention ? resolveExternalModuleAndFn(pluginConfig.namingConvention) : toPascalCase,
       enumValues: pluginConfig.enumValues || {},
+      convert: pluginConfig.namingConvention ? resolveExternalModuleAndFn(pluginConfig.namingConvention) : toPascalCase,
       typesPrefix: pluginConfig.typesPrefix || ''
     };
   }

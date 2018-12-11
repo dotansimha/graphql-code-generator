@@ -123,7 +123,7 @@ export class SelectionSetToObject {
 
     const typeName = this._visitorInstance.addTypename || this._queriedForTypename ? this._buildTypeNameField() : null;
     const baseFields = this._primitiveFields.length
-      ? `$Pick<${this._parentSchemaType.name}, { ${this._primitiveFields
+      ? `$Pick<${this._visitorInstance.convertName(this._parentSchemaType.name)}, { ${this._primitiveFields
           .map(fieldName => `${fieldName}: *`)
           .join(', ')} }>`
       : null;
@@ -134,7 +134,9 @@ export class SelectionSetToObject {
       ? `{ ${this._primitiveAliasedFields
           .map(
             aliasedField =>
-              `${aliasedField.alias}: $ElementType<${this._parentSchemaType}, '${aliasedField.fieldName}'>`
+              `${aliasedField.alias}: $ElementType<${this._visitorInstance.convertName(
+                this._parentSchemaType.name
+              )}, '${aliasedField.fieldName}'>`
           )
           .join(', ')} }`
       : null;

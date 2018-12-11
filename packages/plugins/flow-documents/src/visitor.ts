@@ -1,13 +1,22 @@
 import { GraphQLSchema, GraphQLObjectType, FragmentDefinitionNode, VariableDefinitionNode } from 'graphql';
-import { BasicFlowVisitor, OperationVariablesToObject, DeclarationBlock, DEFAULT_SCALARS } from 'graphql-codegen-flow';
+import {
+  BasicFlowVisitor,
+  OperationVariablesToObject,
+  DeclarationBlock,
+  DEFAULT_SCALARS,
+  toPascalCase
+} from 'graphql-codegen-flow';
 import { ScalarsMap, FlowDocumentsPluginConfig } from './index';
 import { OperationDefinitionNode } from 'graphql';
 import { pascalCase } from 'change-case';
 import { SelectionSetToObject } from './selection-set-to-object';
+import { resolveExternalModuleAndFn } from 'graphql-codegen-plugin-helpers';
 
 export interface ParsedDocumentsConfig {
   scalars: ScalarsMap;
   addTypename: boolean;
+  convert: (str: string) => string;
+  typesPrefix: string;
 }
 
 export class FlowDocumentsVisitor implements BasicFlowVisitor {
@@ -17,16 +26,18 @@ export class FlowDocumentsVisitor implements BasicFlowVisitor {
   constructor(private _schema: GraphQLSchema, pluginConfig: FlowDocumentsPluginConfig) {
     this._parsedConfig = {
       addTypename: !pluginConfig.skipTypename,
-      scalars: { ...DEFAULT_SCALARS, ...(pluginConfig.scalars || {}) }
+      scalars: { ...DEFAULT_SCALARS, ...(pluginConfig.scalars || {}) },
+      convert: pluginConfig.namingConvention ? resolveExternalModuleAndFn(pluginConfig.namingConvention) : toPascalCase,
+      typesPrefix: pluginConfig.typesPrefix || ''
     };
   }
 
-  public convert(name: string): string {
-    return pascalCase(name);
+  public convertName(name: any, addPrefix = true): string {
+    return (addPrefix ? this._parsedConfig.typesPrefix : '') + this._parsedConfig.convert(name);
   }
 
   public getFragmentName(nodeName: string): string {
-    return this.convert(nodeName) + 'Fragment';
+    return this.convertName(nodeName + 'Fragment');
   }
 
   public get schema(): GraphQLSchema {
@@ -43,10 +54,10 @@ export class FlowDocumentsVisitor implements BasicFlowVisitor {
 
   private handleAnonymouseOperation(name: string | null): string {
     if (name) {
-      return this.convert(name);
+      return this.convertName(name);
     }
 
-    return `Unnamed_${this._unnamedCounter++}_`;
+    return this.convertName(`Unnamed_${this._unnamedCounter++}_`);
   }
 
   FragmentDefinition = (node: FragmentDefinitionNode): string => {
@@ -72,7 +83,7 @@ export class FlowDocumentsVisitor implements BasicFlowVisitor {
     const operationResult = new DeclarationBlock()
       .export()
       .asKind('type')
-      .withName(name + pascalCase(node.operation))
+      .withName(this.convertName(name + pascalCase(node.operation)))
       .withContent(selectionSet.string).string;
 
     const operationVariables = !visitedOperationVariables
@@ -80,7 +91,7 @@ export class FlowDocumentsVisitor implements BasicFlowVisitor {
       : new DeclarationBlock()
           .export()
           .asKind('type')
-          .withName(name + pascalCase(node.operation) + 'Variables')
+          .withName(this.convertName(name + pascalCase(node.operation) + 'Variables'))
           .withBlock(visitedOperationVariables.string).string;
 
     return [operationVariables, operationResult].filter(r => r).join('\n\n');

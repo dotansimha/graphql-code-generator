@@ -1,10 +1,9 @@
+import { pascalCase } from 'change-case';
 import {
   NameNode,
   Kind,
   TypeNode,
   NamedTypeNode,
-  GraphQLNamedType,
-  GraphQLOutputType,
   isNonNullType,
   GraphQLObjectType,
   GraphQLNonNull,
@@ -138,4 +137,11 @@ export function wrapTypeWithModifiers(
   } else {
     return `?${baseType}`;
   }
+}
+
+export function toPascalCase(str: string) {
+  return str
+    .split('_')
+    .map(s => pascalCase(s))
+    .join('_');
 }

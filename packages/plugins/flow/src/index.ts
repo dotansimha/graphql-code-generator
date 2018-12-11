@@ -12,8 +12,8 @@ export type EnumValuesMap = { [key: string]: string };
 
 export interface FlowPluginConfig {
   scalars?: ScalarsMap;
-  namingConvention?: string;
   enumValues?: EnumValuesMap;
+  namingConvention?: string;
   typesPrefix?: string;
 }
 

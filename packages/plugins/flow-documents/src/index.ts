@@ -5,6 +5,8 @@ import { FlowDocumentsVisitor } from './visitor';
 export interface FlowDocumentsPluginConfig {
   scalars?: ScalarsMap;
   skipTypename?: boolean;
+  namingConvention?: string;
+  typesPrefix?: string;
 }
 
 export type ScalarsMap = { [name: string]: string };
