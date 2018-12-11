@@ -54,7 +54,10 @@ export namespace Types {
 export type PluginFunction<T = any> = (
   schema: GraphQLSchema,
   documents: DocumentFile[],
-  config: T
+  config: T,
+  info: {
+    outputFile: string;
+  }
 ) => Promise<string> | string;
 export type PluginValidateFn<T = any> = (
   schema: GraphQLSchema,
