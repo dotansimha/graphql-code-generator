@@ -104,5 +104,7 @@ export async function executePlugin(options: ExecutePluginOptions, pluginPackage
     }
   }
 
-  return pluginPackage.plugin(outputSchema, options.documents, options.config);
+  return pluginPackage.plugin(outputSchema, options.documents, options.config, {
+    outputFile: options.outputFilename
+  });
 }

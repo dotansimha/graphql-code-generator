@@ -1,13 +1,13 @@
 {
-  "name": "graphql-codegen-schema-ast",
+  "name": "graphql-codegen-fragment-matcher",
   "version": "0.14.5",
   "description": "graphql-codegen-cli template for TypeScript typings for both client side and server side",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
   "scripts": {
     "prepublishOnly": "yarn build",
-    "build": "codegen-templates-scripts build",
     "test": "codegen-templates-scripts test",
+    "build": "codegen-templates-scripts build",
     "pretest": "yarn build"
   },
   "peerDependencies": {
@@ -16,7 +16,8 @@
   "devDependencies": {
     "codegen-templates-scripts": "0.14.5",
     "graphql": "14.0.2",
-    "graphql-codegen-core": "0.14.5"
+    "graphql-codegen-core": "0.14.5",
+    "graphql-tag": "2.10.0"
   },
   "main": "./dist/index.js",
   "typings": "dist/index.d.ts",

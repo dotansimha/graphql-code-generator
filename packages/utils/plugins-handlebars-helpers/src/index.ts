@@ -1,5 +1,5 @@
 import { SafeString } from 'handlebars';
-import { oneLineTrim } from 'common-tags';
+import { oneLine } from 'common-tags';
 
 function blockComment(str: string) {
   if (!str || str === '') {
@@ -10,7 +10,7 @@ function blockComment(str: string) {
     [
       '\n',
       '// ====================================================',
-      '// ' + oneLineTrim`${str || ''}`,
+      '// ' + oneLine`${str || ''}`,
       '// ====================================================',
       '\n'
     ].join('\n')
@@ -69,7 +69,7 @@ export const helpers = {
       return '';
     }
 
-    return new SafeString('/** ' + oneLineTrim`${str || ''}` + ' */');
+    return new SafeString('/** ' + oneLine`${str || ''}` + ' */');
   },
   toLowerCase(str: string) {
     return (str || '').toLowerCase();

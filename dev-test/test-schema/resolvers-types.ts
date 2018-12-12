@@ -8,6 +8,8 @@ export interface Query {
   allUsers: (User | null)[];
 
   userById?: User | null;
+
+  answer: number[];
 }
 
 export interface User {
@@ -26,7 +28,7 @@ export interface UserByIdQueryArgs {
   id: number;
 }
 
-import { GraphQLResolveInfo, GraphQLScalarTypeConfig } from 'graphql';
+import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 
 export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
   parent: Parent,
@@ -77,6 +79,8 @@ export namespace QueryResolvers {
     allUsers?: AllUsersResolver<(User | null)[], TypeParent, Context>;
 
     userById?: UserByIdResolver<User | null, TypeParent, Context>;
+
+    answer?: AnswerResolver<number[], TypeParent, Context>;
   }
 
   export type AllUsersResolver<R = (User | null)[], Parent = {}, Context = {}> = Resolver<R, Parent, Context>;
@@ -84,6 +88,8 @@ export namespace QueryResolvers {
   export interface UserByIdArgs {
     id: number;
   }
+
+  export type AnswerResolver<R = number[], Parent = {}, Context = {}> = Resolver<R, Parent, Context>;
 }
 
 export namespace UserResolvers {
@@ -119,4 +125,15 @@ export type DeprecatedDirectiveResolver<Result> = DirectiveResolverFn<Result, De
 export interface DeprecatedDirectiveArgs {
   /** Explains why this element was deprecated, usually also including a suggestion for how to access supported similar data. Formatted using the Markdown syntax (as specified by [CommonMark](https://commonmark.org/). */
   reason?: string | null;
+}
+
+export interface IResolvers {
+  Query?: QueryResolvers.Resolvers;
+  User?: UserResolvers.Resolvers;
+}
+
+export interface IDirectiveResolvers<Result> {
+  skip?: SkipDirectiveResolver<Result>;
+  include?: IncludeDirectiveResolver<Result>;
+  deprecated?: DeprecatedDirectiveResolver<Result>;
 }

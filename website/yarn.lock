@@ -2647,10 +2647,10 @@ dkim-signer@^0.2.2:
   dependencies:
     libmime "^2.0.3"
 
-docusaurus@1.5.1:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/docusaurus/-/docusaurus-1.5.1.tgz#ce1dc0f3531d6812f2b4a9e9a0151d885d076d78"
-  integrity sha512-pRDFZDAw7Kgxqzr9imlMACjwXvpfXI6wR8WrWibJUSs8cOfvXCMCEicWdpCfJaJhblWGfFkydG7ZZhows/SAzw==
+docusaurus@1.6.2:
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/docusaurus/-/docusaurus-1.6.2.tgz#60d581955fb9f28afb6e9cdea17c5c0cbf1784ec"
+  integrity sha512-I7ku328iQ3BAvnxVzVef8LR+Ek4BEWvao0W3JjnGrz/ZS3p+mIV2A9rF3B3yxvkTW4gofRpH+A8fN/UKi2r+1w==
   dependencies:
     "@babel/core" "^7.0.0"
     "@babel/plugin-proposal-class-properties" "^7.0.0"
@@ -5293,10 +5293,10 @@ neo-async@^2.5.0:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.0.tgz#b9d15e4d71c6762908654b5183ed38b753340835"
   integrity sha512-MFh0d/Wa7vkKO3Y3LlacqAEeHK0mckVqzDieUKTT+KGxi+zIpeVsFxymkIiRpbpDziHc290Xr9A1O4Om7otoRA==
 
-netlify-lambda@1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/netlify-lambda/-/netlify-lambda-1.0.3.tgz#25e6858a00e7df80bbaf46efd524a43bcad7b056"
-  integrity sha512-4Q6NLtXaRI+g/T5dr3F7DkEUkWEapX378lJMWhGufwyFtrYEslzWzlwrQIXc+huekMUlGoalWK/C9Ce2a/nHYA==
+netlify-lambda@1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/netlify-lambda/-/netlify-lambda-1.1.0.tgz#e90aeba39e2e427eb040df0522e6050280f68f56"
+  integrity sha512-ctZPhBWIu4/1aKdnraeLP1nNfdHug0J38rqOvEYeWNRB9bqMfTGf1A0wN+o4YLeuGPoCyKecfARWEB1E+flJFQ==
   dependencies:
     "@babel/core" "^7.0.0"
     "@babel/plugin-proposal-class-properties" "^7.0.0"

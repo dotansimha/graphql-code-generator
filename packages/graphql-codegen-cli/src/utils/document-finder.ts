@@ -1,14 +1,15 @@
 import { parse } from 'graphql-codegen-core';
+import { Source } from 'graphql';
 import gqlPluck from 'graphql-tag-pluck';
 
-export const extractDocumentStringFromCodeFile = (fileContent: string): string | void => {
+export function extractDocumentStringFromCodeFile(source: Source): string | void {
   try {
-    const parsed = parse(fileContent);
+    const parsed = parse(source.body);
 
     if (parsed) {
-      return fileContent;
+      return source.body;
     }
   } catch (e) {
-    return gqlPluck.fromCodeString.sync(fileContent) || null;
+    return gqlPluck.fromFile.sync(source.name) || null;
   }
-};
+}
