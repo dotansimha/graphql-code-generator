@@ -3,6 +3,8 @@ import { SafeString } from 'handlebars';
 import * as Handlebars from 'handlebars';
 
 export function defineMaybe(options: Handlebars.HelperOptions): string {
+  const config = options.data.root.config || {};
+
   return `export type Maybe<T> = T | null;`;
 }
 

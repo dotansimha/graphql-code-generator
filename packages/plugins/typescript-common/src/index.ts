@@ -7,13 +7,14 @@ import * as type from './type.handlebars';
 import * as rootTemplate from './root.handlebars';
 import * as Handlebars from 'handlebars';
 import { pascalCase } from 'change-case';
-import { getOptionals, getType, getEnumValue, getScalarType } from './helpers';
+import { getOptionals, getType, getEnumValue, getScalarType, defineMaybe } from './helpers';
 
 export * from './helpers';
 
 export interface TypeScriptCommonConfig {
   namingConvention?: string;
   avoidOptionals?: boolean;
+  optionalType?: string;
   constEnums?: boolean;
   enumsAsTypes?: boolean;
   immutableTypes?: boolean;
@@ -47,6 +48,7 @@ export function initCommonTemplate(hbs, schema, config) {
   };
   hbs.registerPartial('enum', enumTemplate);
   hbs.registerPartial('type', type);
+  hbs.registerHelper('defineMaybe', defineMaybe);
   hbs.registerHelper('blockComment', helpers.blockComment);
   hbs.registerHelper('blockCommentIf', helpers.blockCommentIf);
   hbs.registerHelper('toComment', helpers.toComment);
