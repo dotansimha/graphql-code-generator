@@ -1,13 +1,14 @@
 // tslint:disable
+export type Maybe<T> = T | null;
 
 // ====================================================
 // Types
 // ====================================================
 
 export interface Query {
-  allUsers: (User | null)[];
+  allUsers: (Maybe<User>)[];
 
-  userById?: User | null;
+  userById?: Maybe<User>;
 }
 
 export interface User {
@@ -54,8 +55,6 @@ export type SubscriptionResolver<Result, Parent = {}, Context = {}, Args = {}> =
   | ((...args: any[]) => ISubscriptionResolverObject<Result, Parent, Context, Args>)
   | ISubscriptionResolverObject<Result, Parent, Context, Args>;
 
-type Maybe<T> = T | null | undefined;
-
 export type TypeResolveFn<Types, Parent = {}, Context = {}> = (
   parent: Parent,
   context: Context,
@@ -74,13 +73,13 @@ export type DirectiveResolverFn<TResult, TArgs = {}, TContext = {}> = (
 
 export namespace QueryResolvers {
   export interface Resolvers<Context = {}, TypeParent = {}> {
-    allUsers?: AllUsersResolver<(User | null)[], TypeParent, Context>;
+    allUsers?: AllUsersResolver<(Maybe<User>)[], TypeParent, Context>;
 
-    userById?: UserByIdResolver<User | null, TypeParent, Context>;
+    userById?: UserByIdResolver<Maybe<User>, TypeParent, Context>;
   }
 
-  export type AllUsersResolver<R = (User | null)[], Parent = {}, Context = {}> = Resolver<R, Parent, Context>;
-  export type UserByIdResolver<R = User | null, Parent = {}, Context = {}> = Resolver<R, Parent, Context, UserByIdArgs>;
+  export type AllUsersResolver<R = (Maybe<User>)[], Parent = {}, Context = {}> = Resolver<R, Parent, Context>;
+  export type UserByIdResolver<R = Maybe<User>, Parent = {}, Context = {}> = Resolver<R, Parent, Context, UserByIdArgs>;
   export interface UserByIdArgs {
     id: number;
   }
@@ -118,7 +117,7 @@ export interface IncludeDirectiveArgs {
 export type DeprecatedDirectiveResolver<Result> = DirectiveResolverFn<Result, DeprecatedDirectiveArgs, {}>;
 export interface DeprecatedDirectiveArgs {
   /** Explains why this element was deprecated, usually also including a suggestion for how to access supported similar data. Formatted using the Markdown syntax (as specified by [CommonMark](https://commonmark.org/). */
-  reason?: string | null;
+  reason?: Maybe<string>;
 }
 
 export interface IResolvers {

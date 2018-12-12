@@ -1,11 +1,13 @@
+export type Maybe<T> = T | null;
+
 /** The input object sent when someone is creating a new review */
 export interface ReviewInput {
   /** 0-5 stars */
   readonly stars: number;
   /** Comment about the movie, optional */
-  readonly commentary?: string | null;
+  readonly commentary?: Maybe<string>;
   /** Favorite color, optional */
-  readonly favoriteColor?: ColorInput | null;
+  readonly favoriteColor?: Maybe<ColorInput>;
 }
 /** The input object sent when passing a color */
 export interface ColorInput {
@@ -40,7 +42,7 @@ export namespace CreateReviewForEpisode {
   export type Mutation = {
     readonly __typename?: 'Mutation';
 
-    readonly createReview: CreateReview | null;
+    readonly createReview: Maybe<CreateReview>;
   };
 
   export type CreateReview = {
@@ -48,19 +50,19 @@ export namespace CreateReviewForEpisode {
 
     readonly stars: number;
 
-    readonly commentary: string | null;
+    readonly commentary: Maybe<string>;
   };
 }
 
 export namespace HeroAndFriendsNames {
   export type Variables = {
-    readonly episode?: Episode | null;
+    readonly episode?: Maybe<Episode>;
   };
 
   export type Query = {
     readonly __typename?: 'Query';
 
-    readonly hero: Hero | null;
+    readonly hero: Maybe<Hero>;
   };
 
   export type Hero = {
@@ -68,7 +70,7 @@ export namespace HeroAndFriendsNames {
 
     readonly name: string;
 
-    readonly friends: ReadonlyArray<Friends | null> | null;
+    readonly friends: Maybe<ReadonlyArray<Maybe<Friends>>>;
   };
 
   export type Friends = {
@@ -84,7 +86,7 @@ export namespace HeroAppearsIn {
   export type Query = {
     readonly __typename?: 'Query';
 
-    readonly hero: Hero | null;
+    readonly hero: Maybe<Hero>;
   };
 
   export type Hero = {
@@ -92,19 +94,19 @@ export namespace HeroAppearsIn {
 
     readonly name: string;
 
-    readonly appearsIn: ReadonlyArray<Episode | null>;
+    readonly appearsIn: ReadonlyArray<Maybe<Episode>>;
   };
 }
 
 export namespace HeroDetails {
   export type Variables = {
-    readonly episode?: Episode | null;
+    readonly episode?: Maybe<Episode>;
   };
 
   export type Query = {
     readonly __typename?: 'Query';
 
-    readonly hero: Hero | null;
+    readonly hero: Maybe<Hero>;
   };
 
   export type Hero = {
@@ -116,25 +118,25 @@ export namespace HeroDetails {
   export type HumanInlineFragment = {
     readonly __typename?: 'Human';
 
-    readonly height: number | null;
+    readonly height: Maybe<number>;
   };
 
   export type DroidInlineFragment = {
     readonly __typename?: 'Droid';
 
-    readonly primaryFunction: string | null;
+    readonly primaryFunction: Maybe<string>;
   };
 }
 
 export namespace HeroDetailsWithFragment {
   export type Variables = {
-    readonly episode?: Episode | null;
+    readonly episode?: Maybe<Episode>;
   };
 
   export type Query = {
     readonly __typename?: 'Query';
 
-    readonly hero: Hero | null;
+    readonly hero: Maybe<Hero>;
   };
 
   export type Hero = HeroDetails.Fragment;
@@ -142,13 +144,13 @@ export namespace HeroDetailsWithFragment {
 
 export namespace HeroName {
   export type Variables = {
-    readonly episode?: Episode | null;
+    readonly episode?: Maybe<Episode>;
   };
 
   export type Query = {
     readonly __typename?: 'Query';
 
-    readonly hero: Hero | null;
+    readonly hero: Maybe<Hero>;
   };
 
   export type Hero = {
@@ -160,14 +162,14 @@ export namespace HeroName {
 
 export namespace HeroNameConditionalInclusion {
   export type Variables = {
-    readonly episode?: Episode | null;
+    readonly episode?: Maybe<Episode>;
     readonly includeName: boolean;
   };
 
   export type Query = {
     readonly __typename?: 'Query';
 
-    readonly hero: Hero | null;
+    readonly hero: Maybe<Hero>;
   };
 
   export type Hero = {
@@ -179,14 +181,14 @@ export namespace HeroNameConditionalInclusion {
 
 export namespace HeroNameConditionalExclusion {
   export type Variables = {
-    readonly episode?: Episode | null;
+    readonly episode?: Maybe<Episode>;
     readonly skipName: boolean;
   };
 
   export type Query = {
     readonly __typename?: 'Query';
 
-    readonly hero: Hero | null;
+    readonly hero: Maybe<Hero>;
   };
 
   export type Hero = {
@@ -198,13 +200,13 @@ export namespace HeroNameConditionalExclusion {
 
 export namespace HeroParentTypeDependentField {
   export type Variables = {
-    readonly episode?: Episode | null;
+    readonly episode?: Maybe<Episode>;
   };
 
   export type Query = {
     readonly __typename?: 'Query';
 
-    readonly hero: Hero | null;
+    readonly hero: Maybe<Hero>;
   };
 
   export type Hero = {
@@ -216,7 +218,7 @@ export namespace HeroParentTypeDependentField {
   export type HumanInlineFragment = {
     readonly __typename?: 'Human';
 
-    readonly friends: ReadonlyArray<Friends | null> | null;
+    readonly friends: Maybe<ReadonlyArray<Maybe<Friends>>>;
   };
 
   export type Friends = {
@@ -228,13 +230,13 @@ export namespace HeroParentTypeDependentField {
   export type _HumanInlineFragment = {
     readonly __typename?: 'Human';
 
-    readonly height: number | null;
+    readonly height: Maybe<number>;
   };
 
   export type DroidInlineFragment = {
     readonly __typename?: 'Droid';
 
-    readonly friends: ReadonlyArray<_Friends | null> | null;
+    readonly friends: Maybe<ReadonlyArray<Maybe<_Friends>>>;
   };
 
   export type _Friends = {
@@ -246,19 +248,19 @@ export namespace HeroParentTypeDependentField {
   export type __HumanInlineFragment = {
     readonly __typename?: 'Human';
 
-    readonly height: number | null;
+    readonly height: Maybe<number>;
   };
 }
 
 export namespace HeroTypeDependentAliasedField {
   export type Variables = {
-    readonly episode?: Episode | null;
+    readonly episode?: Maybe<Episode>;
   };
 
   export type Query = {
     readonly __typename?: 'Query';
 
-    readonly hero: Hero | null;
+    readonly hero: Maybe<Hero>;
   };
 
   export type Hero = HumanInlineFragment | DroidInlineFragment;
@@ -266,13 +268,13 @@ export namespace HeroTypeDependentAliasedField {
   export type HumanInlineFragment = {
     readonly __typename?: 'Human';
 
-    readonly property: string | null;
+    readonly property: Maybe<string>;
   };
 
   export type DroidInlineFragment = {
     readonly __typename?: 'Droid';
 
-    readonly property: string | null;
+    readonly property: Maybe<string>;
   };
 }
 
@@ -282,7 +284,7 @@ export namespace HumanWithNullHeight {
   export type Query = {
     readonly __typename?: 'Query';
 
-    readonly human: Human | null;
+    readonly human: Maybe<Human>;
   };
 
   export type Human = {
@@ -290,7 +292,7 @@ export namespace HumanWithNullHeight {
 
     readonly name: string;
 
-    readonly mass: number | null;
+    readonly mass: Maybe<number>;
   };
 }
 
@@ -300,9 +302,9 @@ export namespace TwoHeroes {
   export type Query = {
     readonly __typename?: 'Query';
 
-    readonly r2: R2 | null;
+    readonly r2: Maybe<R2>;
 
-    readonly luke: Luke | null;
+    readonly luke: Maybe<Luke>;
   };
 
   export type R2 = {
@@ -328,12 +330,12 @@ export namespace HeroDetails {
   export type HumanInlineFragment = {
     readonly __typename?: 'Human';
 
-    readonly height: number | null;
+    readonly height: Maybe<number>;
   };
 
   export type DroidInlineFragment = {
     readonly __typename?: 'Droid';
 
-    readonly primaryFunction: string | null;
+    readonly primaryFunction: Maybe<string>;
   };
 }
