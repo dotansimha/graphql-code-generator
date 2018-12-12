@@ -36,6 +36,10 @@ describe('Flow Resolvers Plugin', () => {
     }
 
     union MyUnion = MyType | MyOtherType
+
+    scalar MyScalar
+
+    directive @myDirective(arg: String!, arg2: String!) on FIELD
     `
     });
     const result = plugin(schema, [], {}, { outputFile: '' });
@@ -43,6 +47,10 @@ describe('Flow Resolvers Plugin', () => {
     expect(result).toBeSimilarStringTo(`
       export interface MyOtherTypeResolvers<Context = any, ParentType = MyOtherType> {
         bar?: Resolver<string, ParentType, Context>,
+      };
+
+      export type MyScalarScalarConfig extends GraphQLScalarTypeConfig<MyScalar, any> = {
+        name: 'MyScalar'
       };
 
       export interface MyTypeResolvers<Context = any, ParentType = MyType> {

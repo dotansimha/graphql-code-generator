@@ -10,6 +10,10 @@ export class OperationVariablesToObject<
 
   getName(node: DefinitionType): string {
     if (node.name) {
+      if (typeof node.name === 'string') {
+        return node.name;
+      }
+
       return node.name.value;
     } else if (node.variable) {
       return node.variable.name.value;
@@ -25,11 +29,9 @@ export class OperationVariablesToObject<
 
     return this._variablesNode
       .map(variable => {
-        const baseType = getBaseTypeNode(variable.type);
-        const typeName = baseType.name.value;
-        const typeValue = this._visitorInstance.scalars[typeName]
-          ? this._visitorInstance.scalars[typeName]
-          : baseType.name.value;
+        const baseType = typeof variable.type === 'string' ? variable.type : getBaseTypeNode(variable.type);
+        const typeName = typeof baseType === 'string' ? baseType : baseType.name.value;
+        const typeValue = this._visitorInstance.scalars[typeName] ? this._visitorInstance.scalars[typeName] : typeName;
 
         return indent(
           `${this.getName(variable)}${variable.type.kind === Kind.NON_NULL_TYPE ? '' : '?'}: ${wrapAstTypeWithModifiers(

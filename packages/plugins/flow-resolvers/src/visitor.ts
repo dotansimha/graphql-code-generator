@@ -5,7 +5,8 @@ import {
   toPascalCase,
   DeclarationBlock,
   BasicFlowVisitor,
-  ScalarsMap
+  ScalarsMap,
+  OperationVariablesToObject
 } from 'graphql-codegen-flow';
 import {
   ObjectTypeDefinitionNode,
@@ -15,10 +16,13 @@ import {
   NonNullTypeNode,
   NamedTypeNode,
   InterfaceTypeDefinitionNode,
-  UnionTypeDefinitionNode
+  UnionTypeDefinitionNode,
+  ScalarTypeDefinitionNode,
+  DirectiveDefinitionNode,
+  InputValueDefinitionNode
 } from 'graphql/language/ast';
 import { FlowResolversPluginConfig } from './index';
-import { GraphQLSchema, GraphQLInterfaceType, GraphQLObjectType } from 'graphql';
+import { GraphQLSchema, GraphQLObjectType } from 'graphql';
 
 export interface ParsedConfig {
   scalars: ScalarsMap;
@@ -115,6 +119,30 @@ export class FlowResolversVisitor implements BasicFlowVisitor {
       .asKind('interface')
       .withName(name, `<Context = ${this._parsedConfig.contextType}, ParentType = ${node.name}>`)
       .withBlock(indent(`__resolveType: TypeResolveFn<${possibleTypes}>`)).string;
+  };
+
+  ScalarTypeDefinition = (node: ScalarTypeDefinitionNode): string => {
+    const baseName = this._convertName(node.name);
+
+    return new DeclarationBlock()
+      .export()
+      .asKind('type')
+      .withName(this._convertName(node.name + 'ScalarConfig'), ` extends GraphQLScalarTypeConfig<${baseName}, any>`)
+      .withBlock(indent(`name: '${node.name}'`)).string;
+  };
+
+  DirectiveDefinition = (node: DirectiveDefinitionNode): string => {
+    const directiveName = this._convertName(node.name + 'DirectiveResolver');
+    const hasArguments = node.arguments && node.arguments.length > 0;
+    const directiveArgs = hasArguments
+      ? new OperationVariablesToObject<FlowResolversVisitor, InputValueDefinitionNode>(this, node.arguments).string
+      : '';
+
+    return new DeclarationBlock()
+      .export()
+      .asKind('type')
+      .withName(directiveName, '<Result>')
+      .withContent(`DirectiveResolverFn<Result, { ${directiveArgs} }, ${this._parsedConfig.contextType}>`).string;
   };
 
   InterfaceTypeDefinition = (node: InterfaceTypeDefinitionNode): string => {

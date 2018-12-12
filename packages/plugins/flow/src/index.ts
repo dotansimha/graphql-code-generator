@@ -23,7 +23,6 @@ export const plugin: PluginFunction<FlowPluginConfig> = (
   config: FlowPluginConfig
 ) => {
   const result = `/* @flow */\n\n`;
-  const subscrpitionType = schema.getSubscriptionType();
   const printedSchema = printSchema(schema);
   const astNode = parse(printedSchema);
 
