@@ -15,7 +15,7 @@ export function importFromGraphQL(options: Handlebars.HelperOptions) {
 }
 
 export const getFieldType = convert => (field: Field, options: Handlebars.HelperOptions) => {
-  const config = options.data.root || {};
+  const config = options.data.root.config || {};
   const mapper = pickMapper(field.type, config.mappers || {}, options);
   const defaultMapper = useDefaultMapper(field, options);
 
