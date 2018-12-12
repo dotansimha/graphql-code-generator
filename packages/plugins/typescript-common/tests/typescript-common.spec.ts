@@ -39,6 +39,21 @@ describe('TypeScript Common', () => {
     }
     `);
 
+  it('should have correct Maybe type', async () => {
+    const content = await plugin(
+      schema,
+      [],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
+
+    expect(content).toBeSimilarStringTo(`
+      type Maybe<T> = T | null;
+    `);
+  });
+
   describe('namingConvention', () => {
     it('Should use pascal case by default', async () => {
       const content = await plugin(
