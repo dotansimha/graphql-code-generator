@@ -4,8 +4,18 @@ import { GraphQLSchema } from 'graphql';
 import { convertedType, getFieldType as fieldType } from 'graphql-codegen-typescript-common';
 import { pickMapper, useDefaultMapper } from './mappers';
 
+export function importFromGraphQL(options: Handlebars.HelperOptions) {
+  const imports: string[] = ['GraphQLResolveInfo'];
+
+  if (options.data.root.hasScalars) {
+    imports.push('GraphQLScalarType', 'GraphQLScalarTypeConfig');
+  }
+
+  return `import { ${imports.join(', ')} } from 'graphql';`;
+}
+
 export const getFieldType = convert => (field: Field, options: Handlebars.HelperOptions) => {
-  const config = options.data.root.config || {};
+  const config = options.data.root || {};
   const mapper = pickMapper(field.type, config.mappers || {}, options);
   const defaultMapper = useDefaultMapper(field, options);
 

@@ -29,9 +29,7 @@ describe('Resolvers', () => {
       }
     );
 
-    expect(content).toBeSimilarStringTo(
-      `import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';`
-    );
+    expect(content).toBeSimilarStringTo(`import { GraphQLResolveInfo } from 'graphql';`);
     expect(content).toBeSimilarStringTo(`
     export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
       parent: Parent,
@@ -227,7 +225,7 @@ describe('Resolvers', () => {
 
     // make sure nothing was imported
     expect(content).toBeSimilarStringTo(`
-      import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
+      import { GraphQLResolveInfo } from 'graphql';
 
       export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
         parent: Parent,
@@ -701,7 +699,7 @@ describe('Resolvers', () => {
 
     // make sure nothing was imported
     expect(content).toBeSimilarStringTo(`
-      import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
+      import { GraphQLResolveInfo } from 'graphql';
 
       export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
         parent: Parent,
@@ -1134,6 +1132,11 @@ describe('Resolvers', () => {
       }
     );
 
+    // should import GraphQLScalarType and GraphQLScalarTypeConfig
+    expect(content).toBeSimilarStringTo(`
+      import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
+    `);
+
     // XXX: `any` becasue right now we can't tell in which form we ship it to the client
     expect(content).toBeSimilarStringTo(`
       export interface JSONScalarConfig extends GraphQLScalarTypeConfig<Json, any> {
@@ -1145,6 +1148,32 @@ describe('Resolvers', () => {
         name: 'Date'
       }
     `);
+  });
+
+  it('should import GraphQL types for scalars only if schema has scalars', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: `
+        type Query {
+          field: String
+        }
+        
+        schema {
+          query: Query
+        }
+      `
+    });
+
+    const content = await plugin(
+      testSchema,
+      [],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
+
+    expect(content).not.toContain('GraphQLScalarType');
+    expect(content).not.toContain('GraphQLScalarTypeConfig');
   });
 
   it('should generate Resolvers interface', async () => {
