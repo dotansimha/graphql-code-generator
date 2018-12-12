@@ -10,7 +10,7 @@ interface PluginOption {
   name: string;
   package: string;
   value: string;
-  tags: Tags[];
+  available(tags: Tags[]): boolean;
 }
 
 enum Tags {
@@ -18,8 +18,7 @@ enum Tags {
   server = 'Server',
   typescript = 'TypeScript',
   angular = 'Angular',
-  react = 'React',
-  mongodb = 'MongoDB'
+  react = 'React'
 }
 
 function log(...msgs: string[]) {
@@ -32,73 +31,72 @@ const plugins: Array<PluginOption> = [
     name: `TypeScript Common ${chalk.italic('(required by client and server plugins)')}`,
     package: 'graphql-codegen-typescript-common',
     value: 'typescript-common',
-    tags: [Tags.typescript, Tags.client, Tags.server]
+    available: () => true
   },
   {
     name: `TypeScript Client ${chalk.italic('(operations and fragments)')}`,
     package: 'graphql-codegen-typescript-client',
     value: 'typescript-client',
-    tags: [Tags.typescript, Tags.client]
+    available: tags => tags.some(tag => [Tags.client].includes(tag))
   },
   {
     name: `TypeScript Server ${chalk.italic('(GraphQL Schema)')}`,
     package: 'graphql-codegen-typescript-server',
     value: 'typescript-server',
-    tags: [Tags.typescript, Tags.client, Tags.server]
+    available: tags => tags.some(tag => [Tags.client, Tags.server].includes(tag))
   },
   {
     name: `TypeScript Resolvers ${chalk.italic('(strongly typed resolve functions)')}`,
     package: 'graphql-codegen-typescript-resolvers',
     value: 'typescript-resolvers',
-    tags: [Tags.typescript, Tags.server]
+    available: tags => tags.some(tag => [Tags.server].includes(tag))
   },
   {
     name: `TypeScript Apollo Angular ${chalk.italic('(GQL services)')}`,
     package: 'graphql-codegen-typescript-apollo-angular',
     value: 'typescript-apollo-angular',
-    tags: [Tags.typescript, Tags.angular, Tags.client]
+    available: tags => {
+      const hasAngular = tags.includes(Tags.angular);
+      const noReact = !tags.includes(Tags.react);
+
+      return hasAngular && noReact;
+    }
   },
   {
     name: `TypeScript React Apollo ${chalk.italic('(typed components and HOCs)')}`,
     package: 'graphql-codegen-typescript-react-apollo',
     value: 'typescript-react-apollo',
-    tags: [Tags.typescript, Tags.react, Tags.client]
+    available: tags => {
+      const hasReact = tags.includes(Tags.react);
+      const noAngular = !tags.includes(Tags.angular);
+
+      return hasReact && noAngular;
+    }
   },
   {
     name: `TypeScript MongoDB ${chalk.italic('(typed MongoDB objects)')}`,
     package: 'graphql-codegen-typescript-mongodb',
     value: 'typescript-mongodb',
-    tags: [Tags.typescript, Tags.mongodb, Tags.server]
+    available: tags => tags.includes(Tags.server)
   },
   {
     name: `TypeScript GraphQL files modules ${chalk.italic('(declarations for .graphql files)')}`,
     package: 'graphql-codegen-graphql-files-modules',
     value: 'typescript-graphql-files-modules',
-    tags: [Tags.typescript, Tags.client]
+    available: tags => tags.includes(Tags.client)
   }
 ];
 
-const targets = [Tags.client, Tags.server];
-
-interface CommonAnswers {
+interface Answers {
+  targets: Tags[];
   config: string;
   plugins: PluginOption[];
   schema: string;
+  documents?: string;
   output: string;
   script: string;
   introspection: boolean;
 }
-
-interface ServerAnswers extends CommonAnswers {
-  target: Tags.server;
-}
-
-interface ClientAnswers extends CommonAnswers {
-  target: Tags.client;
-  documents: string;
-}
-
-type Answers = ServerAnswers | ClientAnswers;
 
 export async function init() {
   log(`
@@ -106,17 +104,44 @@ export async function init() {
     Answer few questions and we will setup everything for you.
   `);
 
+  const possibleTargets = await guessTargets();
+
   const answers = await inquirer.prompt<Answers>([
     {
-      type: 'list',
-      name: 'target',
-      message: 'What is your target?',
-      choices: targets
+      type: 'checkbox',
+      name: 'targets',
+      message: `What type of application are you building?`,
+      choices: [
+        {
+          name: 'Backend - API or server',
+          key: 'backend',
+          value: [Tags.server],
+          checked: possibleTargets.Server
+        },
+        {
+          name: 'Application built with Angular',
+          key: 'angular',
+          value: [Tags.angular, Tags.client],
+          checked: possibleTargets.Angular
+        },
+        {
+          name: 'Application built with React',
+          key: 'react',
+          value: [Tags.react, Tags.client],
+          checked: possibleTargets.React
+        },
+        {
+          name: 'Application built with other framework or vanilla JS',
+          key: 'client',
+          value: [Tags.client],
+          checked: false
+        }
+      ]
     },
     {
       type: 'input',
       name: 'schema',
-      message: 'How can I access the schema?:',
+      message: 'Where is your schema?:',
       suffix: chalk.grey(' (path or url)'),
       default: 'https://localhost:4000', // matches Apollo Server's default
       validate: (str: string) => str.length > 0
@@ -124,8 +149,8 @@ export async function init() {
     {
       type: 'input',
       name: 'documents',
-      message: 'Where can I find operations and fragments?:',
-      when: answers => answers.target === Tags.client,
+      message: 'Where are your operations and fragments?:',
+      when: answers => answers.targets.includes(Tags.client),
       default: '**/*.graphql',
       validate: (str: string) => str.length > 0
     },
@@ -134,12 +159,17 @@ export async function init() {
       name: 'plugins',
       message: 'Pick plugins:',
       choices: answers => {
+        // flatten targets
+        // I can't find an API in Inquirer that would do that
+        answers.targets = [].concat(...answers.targets);
+
         return plugins
-          .filter(p => p.tags.includes(answers.target))
-          .map(p => {
+          .filter(p => p.available(answers.targets))
+          .map<inquirer.ChoiceType>(p => {
             return {
               name: p.name,
-              value: p
+              value: p,
+              checked: p.value === 'typescript-common'
             };
           });
       },
@@ -181,7 +211,7 @@ export async function init() {
   const config: Types.Config = {
     overwrite: true,
     schema: answers.schema,
-    documents: answers.target === Tags.client ? answers.documents : null,
+    documents: answers.targets.includes(Tags.client) ? answers.documents : null,
     generates: {
       [answers.output]: {
         plugins: answers.plugins.map(p => p.value)
@@ -271,4 +301,36 @@ function writePackage(answers: Answers, configLocation: string) {
   });
 
   writeFileSync(pkgPath, JSON.stringify(pkg, null, indent));
+}
+
+async function guessTargets(): Promise<Record<Tags, boolean>> {
+  const pkg = JSON.parse(
+    readFileSync(resolve(process.cwd(), 'package.json'), {
+      encoding: 'utf-8'
+    })
+  );
+  const dependencies = Object.keys({
+    ...pkg.dependencies,
+    ...pkg.devDependencies
+  });
+
+  return {
+    [Tags.angular]: isAngular(dependencies),
+    [Tags.react]: isReact(dependencies),
+    [Tags.client]: false,
+    [Tags.server]: false,
+    [Tags.typescript]: isTypescript(dependencies)
+  };
+}
+
+function isAngular(dependencies: string[]): boolean {
+  return dependencies.includes('@angular/core');
+}
+
+function isReact(dependencies: string[]): boolean {
+  return dependencies.includes('react');
+}
+
+function isTypescript(dependencies: string[]): boolean {
+  return dependencies.includes('typescript');
 }
