@@ -87,21 +87,21 @@ describe('Types', () => {
     const fieldsMapping = entityFields(pascalCase)(type, hbsContext, true);
 
     expect(fieldsMapping).toEqual({
-      _id: 'ObjectID | null',
-      name: 'string | null',
-      gender: 'string | null',
-      someLink: 'ObjectID | null',
-      multipleLinks: '(ObjectID | null)[] | null',
-      profile: { inner: { field: 'string | null' } },
-      columnWithOverride: 'number | null',
-      arrayColumn: '(number | null)[] | null',
-      myInnerArray: '(number | null)[] | null',
+      _id: 'Maybe<ObjectID>',
+      name: 'Maybe<string>',
+      gender: 'Maybe<string>',
+      someLink: 'Maybe<ObjectID>',
+      multipleLinks: 'Maybe<(Maybe<ObjectID>)[]>',
+      profile: { inner: { field: 'Maybe<string>' } },
+      columnWithOverride: 'Maybe<number>',
+      arrayColumn: 'Maybe<(Maybe<number>)[]>',
+      myInnerArray: 'Maybe<(Maybe<number>)[]>',
       basicEmbedded: 'EmbeddedTypeDbObject',
       arrayEmbedded: 'EmbeddedTypeDbObject[]',
-      nullableEmbedded: '(EmbeddedTypeDbObject | null)[] | null',
-      innerEmbedded: { moreLevel: 'EmbeddedTypeDbObject | null' },
-      overriddedArray: 'string[] | null',
-      other_name: 'string | null',
+      nullableEmbedded: 'Maybe<(Maybe<EmbeddedTypeDbObject>)[]>',
+      innerEmbedded: { moreLevel: 'Maybe<EmbeddedTypeDbObject>' },
+      overriddedArray: 'Maybe<string[]>',
+      other_name: 'Maybe<string>',
       nonSchemaField: 'string'
     });
   });

@@ -39,7 +39,7 @@ describe('TypeScript Client', () => {
       }
       export type Query = {
         __typename?: "Query";
-        feed: (Feed | null)[] | null;
+        feed: Maybe<(Maybe<Feed>)[]>;
       }
       export type Feed = {
         __typename?: "Entry";
@@ -51,7 +51,7 @@ describe('TypeScript Client', () => {
         __typename?: "Repository";
         full_name: string; 
         html_url: string; 
-        owner: Owner | null; 
+        owner: Maybe<Owner>; 
       }
       export type Owner = {
         __typename?: "User";
@@ -165,14 +165,14 @@ describe('TypeScript Client', () => {
 
         export type Query = {
           __typename?: "Query";
-          me: Me | null;
+          me: Maybe<Me>;
         }
 
         export type Me = {
           __typename?: "User";
           id: number;
-          profile: Profile | null;
-          favFriend: FavFriend | null;
+          profile: Maybe<Profile>;
+          favFriend: Maybe<FavFriend>;
         }
 
         export type Profile = {
@@ -183,8 +183,8 @@ describe('TypeScript Client', () => {
         export type FavFriend = {
           __typename?: "User";
           id: number;
-          profile: _Profile | null;
-          favFriend: _FavFriend | null;
+          profile: Maybe<_Profile>;
+          favFriend: Maybe<_FavFriend>;
         }
 
         export type _Profile = {
@@ -195,7 +195,7 @@ describe('TypeScript Client', () => {
         export type _FavFriend = {
           __typename?: "User";
           id: number;
-          profile: __Profile | null;
+          profile: Maybe<__Profile>;
         }
         
         export type __Profile = {
@@ -237,7 +237,7 @@ describe('TypeScript Client', () => {
       }
       export type Query = {
         __typename?: "Query";
-        feed: (Feed | null)[] | null;
+        feed: Maybe<(Maybe<Feed>)[]>;
       }
       export type Feed = {
         __typename?: "Entry";
@@ -249,7 +249,7 @@ describe('TypeScript Client', () => {
         __typename?: "Repository";
         full_name: string; 
         html_url: string; 
-        owner: Owner | null; 
+        owner: Maybe<Owner>; 
       }
       export type Owner = {
         __typename?: "User";
@@ -294,7 +294,7 @@ describe('TypeScript Client', () => {
           }
           export type Query = {
             __typename?: "Query";
-            feed: (Feed | null)[] | null;
+            feed: Maybe<(Maybe<Feed>)[]>;
           }
           export type Feed = {
             __typename?: "Entry";
@@ -313,7 +313,7 @@ describe('TypeScript Client', () => {
           export type Fragment = {
             __typename?: "Repository";
             html_url: string; 
-            owner: Owner | null; 
+            owner: Maybe<Owner>; 
           }
           export type Owner = {
             __typename?: "User";
@@ -443,7 +443,7 @@ describe('TypeScript Client', () => {
     expect(content).toBeSimilarStringTo(`
     export type MeQuery = {
       __typename?: "Query";
-      me: MeMe | null;
+      me: Maybe<MeMe>;
     }
   `);
 
@@ -451,8 +451,8 @@ describe('TypeScript Client', () => {
     export type MeMe = {
       __typename?: "User";
       id: number;
-      data: Json | null;
-      access: Access | null;
+      data: Maybe<Json>;
+      access: Maybe<Access>;
     }
   `);
   });
@@ -493,7 +493,7 @@ describe('TypeScript Client', () => {
   
     export type MyFeedQuery = {
       __typename?: "Query";
-      feed: MyFeedFeed[] | null;
+      feed: Maybe<MyFeedFeed[]>;
     }
   
     export type MyFeedFeed = {
@@ -515,7 +515,7 @@ describe('TypeScript Client', () => {
   
     export type MyFeed_RepositoryInlineFragment = {
       __typename?: "Repository";
-      owner: MyFeedOwner | null; 
+      owner: Maybe<MyFeedOwner>; 
     }
   
     export type MyFeedOwner = {
@@ -562,7 +562,7 @@ describe('TypeScript Client', () => {
     
       export type Query = {
         __typename?: "Query";
-        feed: (Feed | null)[] | null;
+        feed: Maybe<(Maybe<Feed>)[]>;
       }
     
       export type Feed = {
@@ -584,7 +584,7 @@ describe('TypeScript Client', () => {
     
       export type _RepositoryInlineFragment = {
         __typename?: "Repository";
-        owner: Owner | null; 
+        owner: Maybe<Owner>; 
       }
     
       export type Owner = {
@@ -695,7 +695,7 @@ describe('TypeScript Client', () => {
     }
     export type MyFeedQuery = {
       __typename?: "Query";
-      feed: MyFeedFeed[] | null;
+      feed: Maybe<MyFeedFeed[]>;
     }
     export type MyFeedFeed = {
       __typename?: "Entry";
@@ -712,7 +712,7 @@ describe('TypeScript Client', () => {
     export type RepoFieldsFragment = {
       __typename?: "Repository";
       html_url: string; 
-      owner: RepoFieldsOwner | null; 
+      owner: Maybe<RepoFieldsOwner>; 
     }
     export type RepoFieldsOwner = {
       __typename?: "User";
@@ -765,7 +765,7 @@ describe('TypeScript Client', () => {
     expect(content).toBeSimilarStringTo(`
       export type CountriesCountries = {
         readonly __typename?: "CountriesPayload";
-        readonly countries:  ReadonlyArray<Countries_Countries> | null;
+        readonly countries:  Maybe<ReadonlyArray<Countries_Countries>>;
       }
     `);
   });
@@ -813,7 +813,7 @@ describe('TypeScript Client', () => {
     expect(content).toBeSimilarStringTo(`
       export type Countries = {
         readonly __typename?: "CountriesPayload";
-        readonly countries:  ReadonlyArray<_Countries> | null;
+        readonly countries:  Maybe<ReadonlyArray<_Countries>>;
       }
     `);
   });
@@ -861,7 +861,7 @@ describe('TypeScript Client', () => {
     expect(content).toBeSimilarStringTo(`
       export type CountriesCountries = {
         __typename?: "CountriesPayload";
-        countries: Countries_Countries[] | null;
+        countries: Maybe<Countries_Countries[]>;
       }
     `);
   });

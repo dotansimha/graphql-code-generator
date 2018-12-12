@@ -2,6 +2,14 @@ import { Field } from 'graphql-codegen-core';
 import { SafeString } from 'handlebars';
 import * as Handlebars from 'handlebars';
 
+export function defineMaybe(options: Handlebars.HelperOptions): string {
+  return `export type Maybe<T> = T | null;`;
+}
+
+export function useMaybe(type: string): string {
+  return `Maybe<${type}>`;
+}
+
 export function getScalarType(type: string, options: Handlebars.HelperOptions) {
   const config = options.data.root.config || {};
   if (config.scalars && type in config.scalars) {
@@ -30,7 +38,7 @@ export function getFieldType(field: Field, realType: string, options: Handlebars
     const dimension = field.dimensionOfArray + 1;
 
     if (field.isNullableArray && !config.noNamespaces) {
-      result = useImmutable ? [realType, 'null'].join(' | ') : `(${[realType, 'null'].join(' | ')})`;
+      result = useImmutable ? useMaybe(realType) : `(${useMaybe(realType)})`;
     }
 
     if (useImmutable) {
@@ -40,7 +48,7 @@ export function getFieldType(field: Field, realType: string, options: Handlebars
     }
 
     if (!field.isRequired) {
-      result = [result, 'null'].join(' | ');
+      result = useMaybe(result);
     }
 
     return result;
@@ -48,7 +56,7 @@ export function getFieldType(field: Field, realType: string, options: Handlebars
     if (field.isRequired) {
       return realType;
     } else {
-      return [realType, 'null'].join(' | ');
+      return useMaybe(realType);
     }
   }
 }

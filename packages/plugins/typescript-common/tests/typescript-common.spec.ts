@@ -235,12 +235,12 @@ describe('TypeScript Common', () => {
 
       expect(content).toBeSimilarStringTo(`
         export interface T {
-          f1?: string | null; 
+          f1?: Maybe<string>; 
           f2: number; 
-          f3?: (string | null)[] | null; 
-          f4: (string | null)[]; 
+          f3?: Maybe<(Maybe<string>)[]>; 
+          f4: (Maybe<string>)[]; 
           f5: string[]; 
-          f6?: string[] | null; 
+          f6?: Maybe<string[]>; 
         }
       `);
     });
@@ -257,12 +257,12 @@ describe('TypeScript Common', () => {
 
       expect(content).toBeSimilarStringTo(`
         export interface T {
-          readonly f1?: string | null; 
+          readonly f1?: Maybe<string>; 
           readonly f2: number; 
-          readonly f3?: ReadonlyArray<string | null> | null;
-          readonly f4: ReadonlyArray<string | null>;
+          readonly f3?: Maybe<ReadonlyArray<Maybe<string>>>;
+          readonly f4: ReadonlyArray<Maybe<string>>;
           readonly f5: ReadonlyArray<string>;
-          readonly f6?: ReadonlyArray<string> | null;
+          readonly f6?: Maybe<ReadonlyArray<string>>;
         }
       `);
     });
@@ -302,12 +302,12 @@ describe('TypeScript Common', () => {
 
       expect(content).toBeSimilarStringTo(`
       export interface PreT {
-        f1?: string | null; 
+        f1?: Maybe<string>; 
         f2: number; 
-        f3?: (string | null)[] | null; 
-        f4: (string | null)[]; 
+        f3?:  Maybe<(Maybe<string>)[]>; 
+        f4: (Maybe<string>)[]; 
         f5: string[]; 
-        f6?: string[] | null; 
+        f6?: Maybe<string[]>; 
       }
       `);
     });
@@ -324,12 +324,12 @@ describe('TypeScript Common', () => {
 
       expect(content).toBeSimilarStringTo(`
       export interface T {
-        f1?: boop | null; 
+        f1?: Maybe<boop>; 
         f2: number; 
-        f3?: (boop | null)[] | null; 
-        f4: (boop | null)[]; 
+        f3?: Maybe<(Maybe<boop>)[]>; 
+        f4: (Maybe<boop>)[]; 
         f5: boop[]; 
-        f6?: boop[] | null; 
+        f6?: Maybe<boop[]>; 
       }
       `);
     });

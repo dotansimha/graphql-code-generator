@@ -87,12 +87,12 @@ describe('TypeScript Server', () => {
       `);
       expect(content).toBeSimilarStringTo(`
         export interface A {
-          f1?: string | null;
+          f1?: Maybe<string>;
         }
       `);
       expect(content).toBeSimilarStringTo(`
         export interface B {
-          f2?: string | null;
+          f2?: Maybe<string>;
         }
       `);
       expect(content).toBeSimilarStringTo(`
@@ -118,12 +118,12 @@ describe('TypeScript Server', () => {
       `);
       expect(content).toBeSimilarStringTo(`
         export interface GqlA {
-          f1?: string | null;
+          f1?: Maybe<string>;
         }
       `);
       expect(content).toBeSimilarStringTo(`
         export interface GqlB {
-          f2?: string | null;
+          f2?: Maybe<string>;
         }
       `);
       expect(content).toBeSimilarStringTo(`
@@ -164,7 +164,7 @@ describe('TypeScript Server', () => {
 
       expect(content).toBeSimilarStringTo(`
        export interface Query {
-          fieldTest?: Return | null;
+          fieldTest?: Maybe<Return>;
         }
       `);
       expect(content).toBeSimilarStringTo(`
@@ -201,7 +201,7 @@ describe('TypeScript Server', () => {
       `);
       expect(content).toBeSimilarStringTo(`
         export interface FieldTestQueryArgs {
-          arg1?: string | null;
+          arg1?: Maybe<string>;
         }
       `);
     });
@@ -233,13 +233,13 @@ describe('TypeScript Server', () => {
 
       expect(content).toBeSimilarStringTo(`
       export interface Base {
-        f1?: string | null;
+        f1?: Maybe<string>;
       }
       `);
       expect(content).toBeSimilarStringTo(`
       export interface A extends Base {
-        f1?: string | null;
-        f2?: string | null;
+        f1?: Maybe<string>;
+        f2?: Maybe<string>;
       }
       `);
       expect(content).toBeSimilarStringTo(`
@@ -270,7 +270,7 @@ describe('TypeScript Server', () => {
 
       expect(content).toBeSimilarStringTo(`
       export interface Query {
-        fieldTest?: (CbText | null)[] | null;
+        fieldTest?: Maybe<(Maybe<CbText>)[]>;
       }
     `);
       expect(content).toBeSimilarStringTo(`
@@ -297,7 +297,7 @@ describe('TypeScript Server', () => {
 
       expect(content).toBeSimilarStringTo(`
       export interface query {
-        fieldTest?: (cbtext | null)[] | null;
+        fieldTest?: Maybe<(Maybe<cbtext>)[]>;
       }
     `);
       expect(content).toBeSimilarStringTo(`
@@ -326,13 +326,13 @@ describe('TypeScript Server', () => {
 
       expect(content).toBeSimilarStringTo(`
         export interface Query {
-          fieldTest?: string | null;
+          fieldTest?: Maybe<string>;
         }
       `);
       expect(content).toBeSimilarStringTo(`
         export interface T {
-          f1?: string | null;
-          f2?: number | null;
+          f1?: Maybe<string>;
+          f2?: Maybe<number>;
         }
       `);
     });
@@ -364,20 +364,20 @@ describe('TypeScript Server', () => {
 
       expect(content).toBeSimilarStringTo(`
       export interface Query {
-        fieldTest?: T | null;
+        fieldTest?: Maybe<T>;
       }
       `);
       expect(content).toBeSimilarStringTo(`
       export interface A {
-        f4?: T | null;
+        f4?: Maybe<T>;
       }
       `);
       expect(content).toBeSimilarStringTo(`
         export interface T {
-          f1?: (string | null)[] | null;
+          f1?: Maybe<(Maybe<string>)[]>;
           f2: number;
-          f3?: A | null;
-          f4?: (string | null)[][][] | null;
+          f3?: Maybe<A>;
+          f4?: Maybe<(Maybe<string>)[][][]>;
         }
       `);
     });
@@ -394,18 +394,18 @@ describe('TypeScript Server', () => {
 
       expect(content).toBeSimilarStringTo(`
         export interface Bar {
-          readonly qux?: string | null;
+          readonly qux?: Maybe<string>;
         }
       `);
 
       expect(content).toBeSimilarStringTo(`
         export interface Immut {
-          readonly fieldTest?: string | null;
+          readonly fieldTest?: Maybe<string>;
           readonly fieldTestMandatory: string;
-          readonly arrayTest1?: ReadonlyArray<string | null> | null;
-          readonly arrayTest2: ReadonlyArray<string | null>;
+          readonly arrayTest1?: Maybe<ReadonlyArray<Maybe<string>>>;
+          readonly arrayTest2: ReadonlyArray<Maybe<string>>;
           readonly arrayTest3: ReadonlyArray<string>;
-          readonly arrayTest4?: ReadonlyArray<string> | null;
+          readonly arrayTest4?: Maybe<ReadonlyArray<string>>;
         }
       `);
     });
@@ -422,7 +422,7 @@ describe('TypeScript Server', () => {
 
       expect(content).toBeSimilarStringTo(`
         export interface Bar {
-          qux: string | null;
+          qux: Maybe<string>;
         }
       `);
     });
@@ -451,7 +451,7 @@ describe('TypeScript Server', () => {
       expect(content).toBeSimilarStringTo(`
         export interface Query {
           /** field-description */
-          fieldTest?: string | null;
+          fieldTest?: Maybe<string>;
         }`);
     });
   });
@@ -475,7 +475,7 @@ describe('TypeScript Server', () => {
 
       expect(content).toBeSimilarStringTo(`
       export interface Query {
-        fieldTest?: (Date | null)[] | null;
+        fieldTest?: Maybe<(Maybe<Date>)[]>;
       }
       `);
     });
@@ -502,7 +502,7 @@ describe('TypeScript Server', () => {
 
       expect(content).toBeSimilarStringTo(`
       export interface Query {
-        fieldTest?: (MyCustomDate | null)[] | null;
+        fieldTest?: Maybe<(Maybe<MyCustomDate>)[]>;
       }
       `);
     });
