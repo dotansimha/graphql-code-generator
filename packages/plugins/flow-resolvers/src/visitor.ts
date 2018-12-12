@@ -13,9 +13,11 @@ import {
   NameNode,
   ListTypeNode,
   NonNullTypeNode,
-  NamedTypeNode
+  NamedTypeNode,
+  InterfaceTypeDefinitionNode
 } from 'graphql/language/ast';
 import { FlowResolversPluginConfig } from './index';
+import { GraphQLSchema, GraphQLInterfaceType, GraphQLObjectType } from 'graphql';
 
 export interface ParsedConfig {
   scalars: ScalarsMap;
@@ -28,7 +30,7 @@ export interface ParsedConfig {
 export class FlowResolversVisitor implements BasicFlowVisitor {
   private _parsedConfig: ParsedConfig;
 
-  constructor(pluginConfig: FlowResolversPluginConfig, private _subscriptionTypeName: string | null = null) {
+  constructor(pluginConfig: FlowResolversPluginConfig, private _schema: GraphQLSchema) {
     this._parsedConfig = {
       contextType: pluginConfig.contextType || 'any',
       mapping: pluginConfig.mapping || {},
@@ -77,26 +79,48 @@ export class FlowResolversVisitor implements BasicFlowVisitor {
   FieldDefinition = (node: FieldDefinitionNode) => {
     const hasArguments = node.arguments && node.arguments.length > 0;
 
-    return (parent, isSubscriptionType) =>
-      indent(
+    return parentName => {
+      const subscriptionType = this._schema.getSubscriptionType();
+      const isSubscriptionType = subscriptionType && subscriptionType.name === parentName;
+
+      return indent(
         `${node.name}?: ${isSubscriptionType ? 'SubscriptionResolver' : 'Resolver'}<${node.type}, ParentType, Context${
-          hasArguments ? `, ${parent + this._convertName(node.name, false) + 'Args'}` : ''
+          hasArguments ? `, ${parentName + this._convertName(node.name, false) + 'Args'}` : ''
         }>,`
       );
+    };
   };
 
   ObjectTypeDefinition = (node: ObjectTypeDefinitionNode) => {
-    const name = toPascalCase(node.name + 'Resolvers');
+    const name = this._convertName(node.name + 'Resolvers');
     const block = new DeclarationBlock()
       .export()
       .asKind('interface')
       .withName(name, `<Context = ${this._parsedConfig.contextType}, ParentType = ${node.name}>`)
-      .withBlock(
-        node.fields
-          .map((f: any) => f(node.name, ((node.name as any) as string) === this._subscriptionTypeName))
-          .join('\n')
-      );
+      .withBlock(node.fields.map((f: any) => f(node.name)).join('\n'));
 
     return block.string;
+  };
+
+  InterfaceTypeDefinition = (node: InterfaceTypeDefinitionNode): string => {
+    const name = this._convertName(node.name + 'Resolvers');
+    const allTypesMap = this._schema.getTypeMap();
+    const implementingTypes: string[] = [];
+
+    for (const graphqlType of Object.values(allTypesMap)) {
+      if (graphqlType instanceof GraphQLObjectType) {
+        const allInterfaces = graphqlType.getInterfaces();
+        if (allInterfaces.find(int => int.name === ((node.name as any) as string))) {
+          implementingTypes.push(graphqlType.name);
+        }
+      }
+    }
+
+    return new DeclarationBlock()
+      .export()
+      .asKind('interface')
+      .withName(name, `<Context = ${this._parsedConfig.contextType}, ParentType = ${node.name}>`)
+      .withBlock(indent(`__resolveType: TypeResolveFn<${implementingTypes.map(name => `'${name}'`).join(' | ')}>`))
+      .string;
   };
 }

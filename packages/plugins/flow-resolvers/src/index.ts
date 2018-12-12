@@ -58,29 +58,27 @@ export type SubscriptionResolver<Result, Parent = {}, Context = {}, Args = {}> =
   | ISubscriptionResolverObject<Result, Parent, Context, Args>;
 
 export type TypeResolveFn<Types, Parent = {}, Context = {}> = (
-  parent: Parent,
-  context: Context,
-  info: GraphQLResolveInfo
+  parent?: Parent,
+  context?: Context,
+  info?: GraphQLResolveInfo
 ) => ?Types;
 
 export type NextResolverFn<T> = () => Promise<T>;
 
 export type DirectiveResolverFn<TResult, TArgs = {}, TContext = {}> = (
-  next: NextResolverFn<TResult>,
-  source: any,
-  args: TArgs,
-  context: TContext,
-  info: GraphQLResolveInfo
+  next?: NextResolverFn<TResult>,
+  source?: any,
+  args?: TArgs,
+  context?: TContext,
+  info?: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 `;
 
-  const subscriptionType = schema.getSubscriptionType();
   const printedSchema = printSchema(schema);
   const astNode = parse(printedSchema);
-
   const visitorResult = visit(astNode, {
-    leave: new FlowResolversVisitor(config, subscriptionType && subscriptionType.name)
+    leave: new FlowResolversVisitor(config, schema)
   });
 
-  return result + visitorResult.definitions.join('\n');
+  return result + '\n' + visitorResult.definitions.join('\n');
 };
