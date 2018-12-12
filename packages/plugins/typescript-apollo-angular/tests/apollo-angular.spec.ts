@@ -18,7 +18,14 @@ describe('Components', () => {
       }
     `;
 
-    const content = await plugin(rootSchema, [{ filePath: '', content: query }], {});
+    const content = await plugin(
+      rootSchema,
+      [{ filePath: '', content: query }],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
       @Injectable({
@@ -45,7 +52,14 @@ describe('Components', () => {
       }
     `;
 
-    const content = await plugin(schema, [{ filePath: '', content: query }], { noGraphqlTag: true });
+    const content = await plugin(
+      schema,
+      [{ filePath: '', content: query }],
+      { noGraphqlTag: true },
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
       import * as Apollo from 'apollo-angular';
@@ -86,9 +100,16 @@ describe('Components', () => {
       }
     `;
 
-    const content = await plugin(schema, [{ filePath: '', content: fragment }, { filePath: '', content: query }], {
-      noGraphqlTag: true
-    });
+    const content = await plugin(
+      schema,
+      [{ filePath: '', content: fragment }, { filePath: '', content: query }],
+      {
+        noGraphqlTag: true
+      },
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     const docR = /document: any = ([^;]+)/gm;
     const doc = docR.exec(content)[1];
@@ -118,10 +139,17 @@ describe('Components', () => {
       }
     `;
 
-    const content = await plugin(schema, [{ filePath: '', content: query }], {
-      noNamespaces: true,
-      noGraphqlTag: true
-    });
+    const content = await plugin(
+      schema,
+      [{ filePath: '', content: query }],
+      {
+        noNamespaces: true,
+        noGraphqlTag: true
+      },
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
       @Injectable({
@@ -148,7 +176,14 @@ describe('Components', () => {
       }
     `;
 
-    const content = await plugin(schema, [{ filePath: '', content: query }], {});
+    const content = await plugin(
+      schema,
+      [{ filePath: '', content: query }],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
       @Injectable({
@@ -177,10 +212,17 @@ describe('Components', () => {
 
     // location might be different so let's skip it
     delete query.loc;
-    const rawContent = await plugin(schema, [{ filePath: '', content: query }], {
-      noNamespaces: true,
-      noGraphqlTag: true
-    });
+    const rawContent = await plugin(
+      schema,
+      [{ filePath: '', content: query }],
+      {
+        noNamespaces: true,
+        noGraphqlTag: true
+      },
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
     const content = rawContent.replace(/,"loc":{"start":\d+,"end":\d+}}\s+}/, '}');
 
     expect(content).toBeSimilarStringTo(`
@@ -212,7 +254,14 @@ describe('Components', () => {
       }
     `;
 
-    const content = await plugin(schema, [{ filePath: '', content: query }], {});
+    const content = await plugin(
+      schema,
+      [{ filePath: '', content: query }],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
       document: any = gql\` query MyFeed {
@@ -255,7 +304,14 @@ describe('Components', () => {
 
     const documents = [repositoryWithOwner, feedWithRepository, myFeed];
     const files = documents.map(query => ({ filePath: '', content: query }));
-    const content = await plugin(schema, files, {});
+    const content = await plugin(
+      schema,
+      files,
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
       document: any = gql\` query MyFeed {
@@ -300,7 +356,14 @@ describe('Components', () => {
       }
     `;
 
-    const content = await plugin(schema, [{ filePath: '', content: myFeed }], {});
+    const content = await plugin(
+      schema,
+      [{ filePath: '', content: myFeed }],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
       document: any = gql\` query MyFeed {
@@ -325,7 +388,14 @@ describe('Components', () => {
         }
       }
     `);
-    const content = await plugin(modifiedSchema, [{ filePath: '', content: myFeed }], {});
+    const content = await plugin(
+      modifiedSchema,
+      [{ filePath: '', content: myFeed }],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
     expect(content).toMatch(`import { ${moduleName} } from '${modulePath}'`);
 
     expect(content).toBeSimilarStringTo(`
@@ -357,7 +427,14 @@ describe('Components', () => {
       }
     `);
 
-    const content = await plugin(modifiedSchema, [{ filePath: '', content: myFeed }], {});
+    const content = await plugin(
+      modifiedSchema,
+      [{ filePath: '', content: myFeed }],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
       document: any = gql\` query MyFeed {
@@ -392,7 +469,14 @@ describe('Components', () => {
     `;
 
     const documents = [simpleFeed, myFeed];
-    const content = await plugin(schema, documents.map(content => ({ content, filePath: '' })), {});
+    const content = await plugin(
+      schema,
+      documents.map(content => ({ content, filePath: '' })),
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
       document: any = gql\` query MyFeed {
@@ -434,7 +518,14 @@ describe('Components', () => {
       }
     `;
 
-    const content = await plugin(schema, [{ filePath: '', content: myFeed }], {});
+    const content = await plugin(
+      schema,
+      [{ filePath: '', content: myFeed }],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
     const feedWithRepositoryPos = content.indexOf('fragment FeedWithRepository');
     const repositoryWithOwnerPos = content.indexOf('fragment RepositoryWithOwner');
 
@@ -459,7 +550,14 @@ describe('Components', () => {
       }
     `;
 
-    const content = await plugin(schema, [{ filePath: '', content: myFeed }], {});
+    const content = await plugin(
+      schema,
+      [{ filePath: '', content: myFeed }],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo('// START: Apollo Angular template');
     expect(content).toBeSimilarStringTo('// GraphQL Fragments');
@@ -468,7 +566,14 @@ describe('Components', () => {
   });
 
   it(`should skip if there's no operations`, async () => {
-    const content = await plugin(schema, [], {});
+    const content = await plugin(
+      schema,
+      [],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).not.toContain('// START: Apollo Angular template');
     expect(content).not.toContain('// END: Apollo Angular template');
