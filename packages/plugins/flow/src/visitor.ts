@@ -7,10 +7,9 @@ import {
   NamedTypeNode,
   NameNode
 } from 'graphql';
-import { DeclarationBlock, wrapWithSingleQuotes, breakLine, indent, toPascalCase } from './utils';
+import { DeclarationBlock, wrapWithSingleQuotes, indent, toPascalCase } from './utils';
 import { ScalarsMap, EnumValuesMap, FlowPluginConfig } from './index';
 import { OperationVariablesToObject } from './variables-to-object';
-import { pascalCase } from 'change-case';
 import {
   NonNullTypeNode,
   ListTypeNode,

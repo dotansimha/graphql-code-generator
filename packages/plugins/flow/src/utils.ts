@@ -33,6 +33,7 @@ export class DeclarationBlock {
   _kind = null;
   _content = null;
   _block = null;
+  _nameGenerics = null;
 
   export(exp = true): DeclarationBlock {
     this._export = exp;
@@ -58,8 +59,9 @@ export class DeclarationBlock {
     return this;
   }
 
-  withName(name: string | NameNode): DeclarationBlock {
+  withName(name: string | NameNode, generics: string | null = null): DeclarationBlock {
     this._name = name;
+    this._nameGenerics = generics;
 
     return this;
   }
@@ -80,7 +82,7 @@ export class DeclarationBlock {
       }
 
       if (this._name) {
-        name = this._name + ' ';
+        name = this._name + (this._nameGenerics || '') + ' ';
       }
 
       result += this._kind + ' ' + name + extra;
