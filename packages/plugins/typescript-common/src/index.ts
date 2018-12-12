@@ -14,7 +14,6 @@ export * from './helpers';
 export interface TypeScriptCommonConfig {
   namingConvention?: string;
   avoidOptionals?: boolean;
-  optionalType?: string;
   constEnums?: boolean;
   enumsAsTypes?: boolean;
   immutableTypes?: boolean;
