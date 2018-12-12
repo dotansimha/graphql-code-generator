@@ -14,7 +14,8 @@ import {
   ListTypeNode,
   NonNullTypeNode,
   NamedTypeNode,
-  InterfaceTypeDefinitionNode
+  InterfaceTypeDefinitionNode,
+  UnionTypeDefinitionNode
 } from 'graphql/language/ast';
 import { FlowResolversPluginConfig } from './index';
 import { GraphQLSchema, GraphQLInterfaceType, GraphQLObjectType } from 'graphql';
@@ -100,6 +101,20 @@ export class FlowResolversVisitor implements BasicFlowVisitor {
       .withBlock(node.fields.map((f: any) => f(node.name)).join('\n'));
 
     return block.string;
+  };
+
+  UnionTypeDefinition = (node: UnionTypeDefinitionNode): string => {
+    const name = this._convertName(node.name + 'Resolvers');
+    const possibleTypes = node.types
+      .map(name => ((name as any) as string).replace('?', ''))
+      .map(f => `'${f}'`)
+      .join(' | ');
+
+    return new DeclarationBlock()
+      .export()
+      .asKind('interface')
+      .withName(name, `<Context = ${this._parsedConfig.contextType}, ParentType = ${node.name}>`)
+      .withBlock(indent(`__resolveType: TypeResolveFn<${possibleTypes}>`)).string;
   };
 
   InterfaceTypeDefinition = (node: InterfaceTypeDefinitionNode): string => {

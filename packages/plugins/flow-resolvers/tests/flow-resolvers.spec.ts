@@ -34,36 +34,42 @@ describe('Flow Resolvers Plugin', () => {
     type SomeNode implements Node {
       id: ID!
     }
+
+    union MyUnion = MyType | MyOtherType
     `
     });
     const result = plugin(schema, [], {}, { outputFile: '' });
 
     expect(result).toBeSimilarStringTo(`
-    export interface MyOtherTypeResolvers<Context = any, ParentType = MyOtherType> {
-      bar?: Resolver<string, ParentType, Context>,
-    };
+      export interface MyOtherTypeResolvers<Context = any, ParentType = MyOtherType> {
+        bar?: Resolver<string, ParentType, Context>,
+      };
 
-    export interface MyTypeResolvers<Context = any, ParentType = MyType> {
-      foo?: Resolver<string, ParentType, Context>,
-      otherType?: Resolver<?MyOtherType, ParentType, Context>,
-      withArgs?: Resolver<?string, ParentType, Context, MyTypeWithArgsArgs>,
-    };
+      export interface MyTypeResolvers<Context = any, ParentType = MyType> {
+        foo?: Resolver<string, ParentType, Context>,
+        otherType?: Resolver<?MyOtherType, ParentType, Context>,
+        withArgs?: Resolver<?string, ParentType, Context, MyTypeWithArgsArgs>,
+      };
 
-    export interface NodeResolvers<Context = any, ParentType = Node> {
-      __resolveType: TypeResolveFn<'SomeNode'>
-    };
+      export interface MyUnionResolvers<Context = any, ParentType = MyUnion> {
+        __resolveType: TypeResolveFn<'MyType' | 'MyOtherType'>
+      };
 
-    export interface QueryResolvers<Context = any, ParentType = Query> {
-      something?: Resolver<MyType, ParentType, Context>,
-    };
+      export interface NodeResolvers<Context = any, ParentType = Node> {
+        __resolveType: TypeResolveFn<'SomeNode'>
+      };
 
-    export interface SomeNodeResolvers<Context = any, ParentType = SomeNode> {
-      id?: Resolver<string, ParentType, Context>,
-    };
+      export interface QueryResolvers<Context = any, ParentType = Query> {
+        something?: Resolver<MyType, ParentType, Context>,
+      };
 
-    export interface SubscriptionResolvers<Context = any, ParentType = Subscription> {
-      somethingChanged?: SubscriptionResolver<?MyOtherType, ParentType, Context>,
-    };
+      export interface SomeNodeResolvers<Context = any, ParentType = SomeNode> {
+        id?: Resolver<string, ParentType, Context>,
+      };
+
+      export interface SubscriptionResolvers<Context = any, ParentType = Subscription> {
+        somethingChanged?: SubscriptionResolver<?MyOtherType, ParentType, Context>,
+      };
     `);
   });
 });
