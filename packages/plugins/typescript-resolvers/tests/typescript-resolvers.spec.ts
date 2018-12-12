@@ -20,7 +20,14 @@ describe('Resolvers', () => {
   });
 
   it('should contain the Resolver type', async () => {
-    const content = await plugin(schema, [], {});
+    const content = await plugin(
+      schema,
+      [],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(
       `import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';`
@@ -55,7 +62,14 @@ describe('Resolvers', () => {
   });
 
   it('should make fields optional', async () => {
-    const content = await plugin(schema, [], {});
+    const content = await plugin(
+      schema,
+      [],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
         export namespace QueryResolvers {
@@ -66,7 +80,14 @@ describe('Resolvers', () => {
   });
 
   it('should provide a generic type of result', async () => {
-    const content = await plugin(schema, [], {});
+    const content = await plugin(
+      schema,
+      [],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
         export namespace QueryResolvers {
@@ -91,7 +112,14 @@ describe('Resolvers', () => {
       `
     });
 
-    const content = await plugin(testSchema, [], {});
+    const content = await plugin(
+      testSchema,
+      [],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
         export namespace QueryResolvers {
@@ -122,7 +150,16 @@ describe('Resolvers', () => {
       `
     });
 
-    const content = stripBlockComments(await plugin(testSchema, [], {}));
+    const content = stripBlockComments(
+      await plugin(
+        testSchema,
+        [],
+        {},
+        {
+          outputFile: 'graphql.ts'
+        }
+      )
+    );
 
     expect(content).toBeSimilarStringTo(`
       export namespace SubscriptionResolvers {
@@ -148,7 +185,14 @@ describe('Resolvers', () => {
       `
     });
 
-    const content = await plugin(testSchema, [], { noNamespaces: true });
+    const content = await plugin(
+      testSchema,
+      [],
+      { noNamespaces: true },
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
         export interface QueryResolvers<Context = {}, TypeParent = {}> {
@@ -172,7 +216,14 @@ describe('Resolvers', () => {
       `
     });
 
-    const content = await plugin(testSchema, [], { contextType: 'MyContext' });
+    const content = await plugin(
+      testSchema,
+      [],
+      { contextType: 'MyContext' },
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     // make sure nothing was imported
     expect(content).toBeSimilarStringTo(`
@@ -208,7 +259,14 @@ describe('Resolvers', () => {
       `
     });
 
-    const content = await plugin(testSchema, [], { contextType: './path/to/types#MyContext' });
+    const content = await plugin(
+      testSchema,
+      [],
+      { contextType: './path/to/types#MyContext' },
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
         import { MyContext } from './path/to/types';
@@ -245,7 +303,14 @@ describe('Resolvers', () => {
     `
     });
 
-    const content = await plugin(testSchema, [], {});
+    const content = await plugin(
+      testSchema,
+      [],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
       export type SnakeCaseRootQueryResolver<R = SnakeCaseResult | null, Parent = {}, Context = {}> = Resolver<R, Parent, Context, SnakeCaseRootQueryArgs>;
@@ -266,7 +331,14 @@ describe('Resolvers', () => {
     `
     });
 
-    const content = await plugin(testSchema, [], { scalars: { ID: 'number' } });
+    const content = await plugin(
+      testSchema,
+      [],
+      { scalars: { ID: 'number' } },
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`id?: IdResolver<number, TypeParent, Context>;`);
   });
@@ -294,7 +366,14 @@ describe('Resolvers', () => {
       `
     });
 
-    const content = await plugin(testSchema, [], {});
+    const content = await plugin(
+      testSchema,
+      [],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
       export namespace QueryResolvers {
@@ -354,7 +433,14 @@ describe('Resolvers', () => {
       `
     });
 
-    const content = await plugin(testSchema, [], { noNamespaces: true });
+    const content = await plugin(
+      testSchema,
+      [],
+      { noNamespaces: true },
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
       export interface QueryResolvers<Context = {}, TypeParent = {}> {
@@ -414,14 +500,21 @@ describe('Resolvers', () => {
     //   id: string;
     //   author: string;
     // }
-    const content = await plugin(testSchema, [], {
-      mappers: {
-        // it means that User type expects UserParent to be a parent
-        User: './interfaces#UserParent',
-        // it means that Post type expects UserParent to be a parent
-        Post: './interfaces#PostParent'
+    const content = await plugin(
+      testSchema,
+      [],
+      {
+        mappers: {
+          // it means that User type expects UserParent to be a parent
+          User: './interfaces#UserParent',
+          // it means that Post type expects UserParent to be a parent
+          Post: './interfaces#PostParent'
+        }
+      },
+      {
+        outputFile: 'graphql.ts'
       }
-    });
+    );
 
     // import parents
     // merge duplicates into single module
@@ -487,12 +580,19 @@ describe('Resolvers', () => {
       `
     });
 
-    const content = await plugin(testSchema, [], {
-      mappers: {
-        // it means that Post type expects Post to be a parent
-        Post: 'Post'
+    const content = await plugin(
+      testSchema,
+      [],
+      {
+        mappers: {
+          // it means that Post type expects Post to be a parent
+          Post: 'Post'
+        }
+      },
+      {
+        outputFile: 'graphql.ts'
       }
-    });
+    );
 
     // should check field's result and match it with provided parents
     expect(content).toBeSimilarStringTo(`
@@ -534,9 +634,16 @@ describe('Resolvers', () => {
       `
     });
 
-    const content = await plugin(testSchema, [], {
-      defaultMapper: './interfaces#AnyParent'
-    });
+    const content = await plugin(
+      testSchema,
+      [],
+      {
+        defaultMapper: './interfaces#AnyParent'
+      },
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
       import { AnyParent } from './interfaces';
@@ -581,9 +688,16 @@ describe('Resolvers', () => {
       `
     });
 
-    const content = await plugin(testSchema, [], {
-      defaultMapper: 'any'
-    });
+    const content = await plugin(
+      testSchema,
+      [],
+      {
+        defaultMapper: 'any'
+      },
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     // make sure nothing was imported
     expect(content).toBeSimilarStringTo(`
@@ -646,12 +760,19 @@ describe('Resolvers', () => {
       `
     });
 
-    const content = await plugin(testSchema, [], {
-      mappers: {
-        // whenever there's something receives or resolves a Post, use PostEntity
-        Post: 'PostEntity'
+    const content = await plugin(
+      testSchema,
+      [],
+      {
+        mappers: {
+          // whenever there's something receives or resolves a Post, use PostEntity
+          Post: 'PostEntity'
+        }
+      },
+      {
+        outputFile: 'graphql.ts'
       }
-    });
+    );
 
     // RootMutation             should expect {} as a parent
     // RootMutation.upvotePost  should expect {} as a parent
@@ -697,9 +818,16 @@ describe('Resolvers', () => {
       `
     });
 
-    const content = await plugin(testSchema, [], {
-      noNamespaces: true
-    });
+    const content = await plugin(
+      testSchema,
+      [],
+      {
+        noNamespaces: true
+      },
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
       export interface QueryResolvers<Context = {}, TypeParent = {}> {
@@ -727,7 +855,14 @@ describe('Resolvers', () => {
         }
       `
     });
-    const content = await plugin(testSchema, [], {});
+    const content = await plugin(
+      testSchema,
+      [],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
       type Maybe<T> = T | null | undefined;
@@ -746,7 +881,14 @@ describe('Resolvers', () => {
         }
       `
     });
-    const content = await plugin(testSchema, [], {});
+    const content = await plugin(
+      testSchema,
+      [],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
       export type TypeResolveFn<Types, Parent = {}, Context = {}> = (
@@ -782,7 +924,14 @@ describe('Resolvers', () => {
       `
     });
 
-    const content = await plugin(testSchema, [], {});
+    const content = await plugin(
+      testSchema,
+      [],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
       export namespace EntryResolvers {
@@ -820,9 +969,16 @@ describe('Resolvers', () => {
       `
     });
 
-    const content = await plugin(testSchema, [], {
-      noNamespaces: true
-    });
+    const content = await plugin(
+      testSchema,
+      [],
+      {
+        noNamespaces: true
+      },
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
       export interface EntryResolvers {
@@ -846,7 +1002,14 @@ describe('Resolvers', () => {
       `
     });
 
-    const content = await plugin(testSchema, [], {});
+    const content = await plugin(
+      testSchema,
+      [],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
       export type NextResolverFn<T> = () => Promise<T>;
@@ -879,7 +1042,14 @@ describe('Resolvers', () => {
       `
     });
 
-    const content = await plugin(testSchema, [], {});
+    const content = await plugin(
+      testSchema,
+      [],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
       export type NextResolverFn<T> = () => Promise<T>;
@@ -914,7 +1084,14 @@ describe('Resolvers', () => {
       `
     });
 
-    const content = await plugin(testSchema, [], {});
+    const content = await plugin(
+      testSchema,
+      [],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
       export type ModifyDirectiveResolver<Result> = DirectiveResolverFn<Result, ModifyDirectiveArgs, {}>;
@@ -944,11 +1121,18 @@ describe('Resolvers', () => {
       `
     });
 
-    const content = await plugin(testSchema, [], {
-      scalars: {
-        JSON: 'Object'
+    const content = await plugin(
+      testSchema,
+      [],
+      {
+        scalars: {
+          JSON: 'Object'
+        }
+      },
+      {
+        outputFile: 'graphql.ts'
       }
-    });
+    );
 
     // XXX: `any` becasue right now we can't tell in which form we ship it to the client
     expect(content).toBeSimilarStringTo(`
@@ -991,7 +1175,14 @@ describe('Resolvers', () => {
       `
     });
 
-    const content = await plugin(testSchema, [], { noNamespaces: true, scalars: { Date: 'Date' } });
+    const content = await plugin(
+      testSchema,
+      [],
+      { noNamespaces: true, scalars: { Date: 'Date' } },
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
       export interface IResolvers {

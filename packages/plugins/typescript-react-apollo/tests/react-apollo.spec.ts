@@ -24,7 +24,14 @@ describe('Components', () => {
       }
     `;
 
-    const content = await plugin(schema, [{ filePath: '', content: documents }], {});
+    const content = await plugin(
+      schema,
+      [{ filePath: '', content: documents }],
+      {},
+      {
+        outputFile: 'graphql.tsx'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
             import * as ReactApollo from 'react-apollo';
@@ -56,7 +63,14 @@ describe('Components', () => {
       }
     `;
 
-    const content = await plugin(schema, [{ filePath: '', content: documents }], {});
+    const content = await plugin(
+      schema,
+      [{ filePath: '', content: documents }],
+      {},
+      {
+        outputFile: 'graphql.tsx'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
         export const Document =  gql\`
@@ -94,7 +108,14 @@ describe('Components', () => {
       }
     `;
 
-    const content = await plugin(schema, [{ filePath: '', content: documents }], {});
+    const content = await plugin(
+      schema,
+      [{ filePath: '', content: documents }],
+      {},
+      {
+        outputFile: 'graphql.tsx'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
     export class Component extends React.Component<Partial<ReactApollo.QueryProps<Query, Variables>>> {
@@ -127,7 +148,14 @@ describe('Components', () => {
       }
     `;
 
-    const content = await plugin(schema, [{ filePath: '', content: documents }], {});
+    const content = await plugin(
+      schema,
+      [{ filePath: '', content: documents }],
+      {},
+      {
+        outputFile: 'graphql.tsx'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
           export function HOC<TProps, TChildProps = any>(operationOptions:
@@ -176,7 +204,14 @@ describe('Components', () => {
       ${feedWithRepository}
     `;
 
-    const content = await plugin(schema, [{ filePath: '', content: myFeed }], {});
+    const content = await plugin(
+      schema,
+      [{ filePath: '', content: myFeed }],
+      {},
+      {
+        outputFile: 'graphql.tsx'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
       export namespace FeedWithRepository {
@@ -240,7 +275,14 @@ describe('Components', () => {
       ${feedWithRepository}
     `;
 
-    const content = await plugin(schema, [{ filePath: '', content: myFeed }], {});
+    const content = await plugin(
+      schema,
+      [{ filePath: '', content: myFeed }],
+      {},
+      {
+        outputFile: 'graphql.tsx'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
         export const Document = gql\`
@@ -272,7 +314,14 @@ describe('Components', () => {
       }
     `;
     const documents = [simpleFeed, myFeed];
-    const content = await plugin(schema, documents.map(content => ({ content, filePath: '' })), {});
+    const content = await plugin(
+      schema,
+      documents.map(content => ({ content, filePath: '' })),
+      {},
+      {
+        outputFile: 'graphql.tsx'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
       const Document = gql\` query MyFeed {
@@ -313,7 +362,14 @@ describe('Components', () => {
       }
     `;
     const documents = [myFeed];
-    const content = await plugin(schema, documents.map(content => ({ content, filePath: '' })), {});
+    const content = await plugin(
+      schema,
+      documents.map(content => ({ content, filePath: '' })),
+      {},
+      {
+        outputFile: 'graphql.tsx'
+      }
+    );
 
     const feedWithRepositoryPos = content.indexOf('fragment FeedWithRepository');
     const repositoryWithOwnerPos = content.indexOf('fragment RepositoryWithOwner');
@@ -350,7 +406,14 @@ describe('Components', () => {
       }
     `;
 
-    const content = await plugin(testSchema, [{ filePath: '', content: query }], {});
+    const content = await plugin(
+      testSchema,
+      [{ filePath: '', content: query }],
+      {},
+      {
+        outputFile: 'graphql.tsx'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
       export namespace Event {
@@ -387,7 +450,14 @@ describe('Components', () => {
   });
 
   it(`should skip if there's no operations`, async () => {
-    const content = await plugin(schema, [], { noNamespaces: true });
+    const content = await plugin(
+      schema,
+      [],
+      { noNamespaces: true },
+      {
+        outputFile: 'graphql.tsx'
+      }
+    );
 
     expect(content).not.toContain(`import * as ReactApollo from 'react-apollo';`);
     expect(content).not.toContain(`import * as React from 'react';`);

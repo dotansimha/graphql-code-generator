@@ -24,7 +24,14 @@ describe('TypeScript Client', () => {
       }
     `;
 
-    const content = await plugin(schema, [{ filePath: '', content: query }], {});
+    const content = await plugin(
+      schema,
+      [{ filePath: '', content: query }],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
     export namespace MyFeed {
@@ -86,7 +93,14 @@ describe('TypeScript Client', () => {
       }
     `;
 
-    const content = await plugin(testSchema, [{ filePath: '', content: query }], {});
+    const content = await plugin(
+      testSchema,
+      [{ filePath: '', content: query }],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
     expect(content).not.toContain('export namespace my_fragment {');
     expect(content).not.toContain('export type VE2User = {');
     expect(content).toContain('export namespace MyFragment {');
@@ -135,7 +149,14 @@ describe('TypeScript Client', () => {
       }
     `;
 
-    const content = await plugin(testSchema, [{ filePath: '', content: query }], {});
+    const content = await plugin(
+      testSchema,
+      [{ filePath: '', content: query }],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
       export namespace Me {
@@ -201,7 +222,14 @@ describe('TypeScript Client', () => {
       }
     `;
 
-    const content = await plugin(schema, [{ filePath: '', content: query }], {});
+    const content = await plugin(
+      schema,
+      [{ filePath: '', content: query }],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
     export namespace AnonymousQuery_1 {
@@ -251,7 +279,14 @@ describe('TypeScript Client', () => {
       }
     `;
 
-    const content = await plugin(schema, [{ filePath: '', content: query }], {});
+    const content = await plugin(
+      schema,
+      [{ filePath: '', content: query }],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
         export namespace MyFeed {
@@ -337,7 +372,14 @@ describe('TypeScript Client', () => {
       }
     `;
 
-    const content = await plugin(testSchema, [{ filePath: '', content: query }], { noNamespaces: true });
+    const content = await plugin(
+      testSchema,
+      [{ filePath: '', content: query }],
+      { noNamespaces: true },
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
       export type FindUserUser = {
@@ -384,7 +426,14 @@ describe('TypeScript Client', () => {
       }
     `;
 
-    const content = await plugin(testSchema, [{ filePath: '', content: query }], { noNamespaces: true });
+    const content = await plugin(
+      testSchema,
+      [{ filePath: '', content: query }],
+      { noNamespaces: true },
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
     export type MeVariables = {
@@ -429,7 +478,14 @@ describe('TypeScript Client', () => {
       }
     `;
 
-    const content = await plugin(schema, [{ filePath: '', content: query }], { noNamespaces: true });
+    const content = await plugin(
+      schema,
+      [{ filePath: '', content: query }],
+      { noNamespaces: true },
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
     export type MyFeedVariables = {
@@ -490,7 +546,14 @@ describe('TypeScript Client', () => {
       }
     `;
 
-    const content = await plugin(schema, [{ filePath: '', content: query }], {});
+    const content = await plugin(
+      schema,
+      [{ filePath: '', content: query }],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
     export namespace MyFeed {
@@ -584,7 +647,14 @@ describe('TypeScript Client', () => {
       }
     `;
 
-    const content = await plugin(testSchema, [{ filePath: '', content: query }], {});
+    const content = await plugin(
+      testSchema,
+      [{ filePath: '', content: query }],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
       export type Extra = ((SportInlineFragment & SportFragment.Fragment) | (PhotoInlineFragment & PhotoFragment.Fragment))
@@ -611,7 +681,14 @@ describe('TypeScript Client', () => {
       }
     `;
 
-    const content = await plugin(schema, [{ filePath: '', content: query }], { noNamespaces: true });
+    const content = await plugin(
+      schema,
+      [{ filePath: '', content: query }],
+      { noNamespaces: true },
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
     export type MyFeedVariables = {
@@ -673,10 +750,17 @@ describe('TypeScript Client', () => {
       }
     `;
 
-    const content = await plugin(testSchema, [{ filePath: '', content: query }], {
-      immutableTypes: true,
-      noNamespaces: true
-    });
+    const content = await plugin(
+      testSchema,
+      [{ filePath: '', content: query }],
+      {
+        immutableTypes: true,
+        noNamespaces: true
+      },
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
       export type CountriesCountries = {
@@ -715,9 +799,16 @@ describe('TypeScript Client', () => {
       }
     `;
 
-    const content = await plugin(testSchema, [{ filePath: '', content: query }], {
-      immutableTypes: true
-    });
+    const content = await plugin(
+      testSchema,
+      [{ filePath: '', content: query }],
+      {
+        immutableTypes: true
+      },
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
       export type Countries = {
@@ -756,9 +847,16 @@ describe('TypeScript Client', () => {
       }
     `;
 
-    const content = await plugin(testSchema, [{ filePath: '', content: query }], {
-      noNamespaces: true
-    });
+    const content = await plugin(
+      testSchema,
+      [{ filePath: '', content: query }],
+      {
+        noNamespaces: true
+      },
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
 
     expect(content).toBeSimilarStringTo(`
       export type CountriesCountries = {
