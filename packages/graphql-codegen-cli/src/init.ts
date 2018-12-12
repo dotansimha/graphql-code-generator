@@ -84,6 +84,12 @@ const plugins: Array<PluginOption> = [
     package: 'graphql-codegen-graphql-files-modules',
     value: 'typescript-graphql-files-modules',
     available: tags => tags.includes(Tags.client)
+  },
+  {
+    name: `Introspection Fragment Matcher ${chalk.italic('(for Apollo Client)')}`,
+    package: 'graphql-codegen-fragment-matcher',
+    value: 'fragment-matcher',
+    available: tags => tags.includes(Tags.client)
   }
 ];
 
