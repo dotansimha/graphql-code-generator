@@ -49,9 +49,9 @@ export class FlowVisitor implements BasicFlowVisitor {
     };
   }
 
-  private _convertName(name: any, addPrefix = true): string {
+  private _convertName = (name: any, addPrefix = true): string => {
     return (addPrefix ? this._parsedConfig.typesPrefix : '') + this._parsedConfig.convert(name);
-  }
+  };
 
   get scalars(): ScalarsMap {
     return this._parsedConfig.scalars;
@@ -137,7 +137,8 @@ export class FlowVisitor implements BasicFlowVisitor {
       const name = original.name.value + this._convertName(field.name.value, false) + 'Args';
       const transformedArguments = new OperationVariablesToObject<FlowVisitor, InputValueDefinitionNode>(
         this,
-        field.arguments
+        field.arguments,
+        this._convertName
       );
 
       return new DeclarationBlock()

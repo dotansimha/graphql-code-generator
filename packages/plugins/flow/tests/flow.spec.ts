@@ -293,6 +293,34 @@ describe('Flow Plugin', () => {
       validateFlow(result.definitions[0]);
       validateFlow(result.definitions[1]);
     });
+
+    it('Should add custom prefix for mutation arguments', () => {
+      const ast = parse(`input Input { name: String } type Mutation { foo(id: String, input: Input): String }`);
+      const result = visit(ast, {
+        leave: new FlowVisitor({ typesPrefix: 'T' })
+      });
+
+      expect(result.definitions[0]).toBeSimilarStringTo(`
+        export type TInput = {
+          name: ?string,
+        };
+      `);
+
+      expect(result.definitions[1]).toBeSimilarStringTo(`
+        export type TMutation = {
+          foo: ?string,
+        };
+
+
+        export type TMutationFooArgs = {
+          id?: ?string,
+          input?: ?TInput
+        };
+      `);
+
+      validateFlow(result.definitions[0]);
+      validateFlow(result.definitions[1]);
+    });
   });
 
   describe('Enum', () => {

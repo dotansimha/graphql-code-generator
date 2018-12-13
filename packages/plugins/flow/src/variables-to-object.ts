@@ -6,7 +6,11 @@ export class OperationVariablesToObject<
   Visitor extends BasicFlowVisitor,
   DefinitionType extends { name?: NameNode; variable?: VariableNode; type: TypeNode }
 > {
-  constructor(private _visitorInstance: Visitor, private _variablesNode: ReadonlyArray<DefinitionType>) {}
+  constructor(
+    private _visitorInstance: Visitor,
+    private _variablesNode: ReadonlyArray<DefinitionType>,
+    private _convertName: (name: any, addPrefix: boolean) => string
+  ) {}
 
   getName(node: DefinitionType): string {
     if (node.name) {
@@ -31,7 +35,9 @@ export class OperationVariablesToObject<
       .map(variable => {
         const baseType = typeof variable.type === 'string' ? variable.type : getBaseTypeNode(variable.type);
         const typeName = typeof baseType === 'string' ? baseType : baseType.name.value;
-        const typeValue = this._visitorInstance.scalars[typeName] ? this._visitorInstance.scalars[typeName] : typeName;
+        const typeValue = this._visitorInstance.scalars[typeName]
+          ? this._visitorInstance.scalars[typeName]
+          : this._convertName(typeName, true);
 
         return indent(
           `${this.getName(variable)}${variable.type.kind === Kind.NON_NULL_TYPE ? '' : '?'}: ${wrapAstTypeWithModifiers(
