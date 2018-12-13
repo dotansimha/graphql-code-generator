@@ -6,7 +6,9 @@ import {
   DeclarationBlock,
   BasicFlowVisitor,
   ScalarsMap,
-  OperationVariablesToObject
+  OperationVariablesToObject,
+  getBaseTypeNode,
+  wrapAstTypeWithModifiers
 } from 'graphql-codegen-flow';
 import {
   ObjectTypeDefinitionNode,
@@ -65,8 +67,7 @@ export class FlowResolversVisitor implements BasicFlowVisitor {
 
   NamedType = (node: NamedTypeNode): string => {
     const asString = (node.name as any) as string;
-    const type =
-      this._parsedConfig.mapping[asString] || this._parsedConfig.scalars[asString] || this._convertName(asString);
+    const type = this._parsedConfig.scalars[asString] || this._convertName(asString);
 
     return `?${type}`;
   };
@@ -81,15 +82,20 @@ export class FlowResolversVisitor implements BasicFlowVisitor {
     return asString;
   };
 
-  FieldDefinition = (node: FieldDefinitionNode) => {
+  FieldDefinition = (node: FieldDefinitionNode, key, parent) => {
     const hasArguments = node.arguments && node.arguments.length > 0;
 
     return parentName => {
+      const original = parent[key];
+      const realType = getBaseTypeNode(original.type).name.value;
+      const mappedType = this._parsedConfig.mapping[realType]
+        ? wrapAstTypeWithModifiers(this._parsedConfig.mapping[realType], original.type)
+        : node.type;
       const subscriptionType = this._schema.getSubscriptionType();
       const isSubscriptionType = subscriptionType && subscriptionType.name === parentName;
 
       return indent(
-        `${node.name}?: ${isSubscriptionType ? 'SubscriptionResolver' : 'Resolver'}<${node.type}, ParentType, Context${
+        `${node.name}?: ${isSubscriptionType ? 'SubscriptionResolver' : 'Resolver'}<${mappedType}, ParentType, Context${
           hasArguments ? `, ${parentName + this._convertName(node.name, false) + 'Args'}` : ''
         }>,`
       );
@@ -98,10 +104,14 @@ export class FlowResolversVisitor implements BasicFlowVisitor {
 
   ObjectTypeDefinition = (node: ObjectTypeDefinitionNode) => {
     const name = this._convertName(node.name + 'Resolvers');
+    const type =
+      this._parsedConfig.mapping[node.name as any] ||
+      this._parsedConfig.scalars[node.name as any] ||
+      this._convertName(node.name);
     const block = new DeclarationBlock()
       .export()
       .asKind('interface')
-      .withName(name, `<Context = ${this._parsedConfig.contextType}, ParentType = ${node.name}>`)
+      .withName(name, `<Context = ${this._parsedConfig.contextType}, ParentType = ${type}>`)
       .withBlock(node.fields.map((f: any) => f(node.name)).join('\n'));
 
     return block.string;

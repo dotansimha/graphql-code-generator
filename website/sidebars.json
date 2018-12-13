@@ -17,7 +17,13 @@
       "plugins/typescript-graphql-files-modules",
       "plugins/typescript-mongodb",
       "plugins/typescript-react-apollo",
-      "plugins/typescript-apollo-angular"
+      "plugins/typescript-apollo-angular",
+      "plugins/flow",
+      "plugins/flow-resolvers",
+      "plugins/flow-documents",
+      "plugins/fragment-matcher",
+      "plugins/add",
+      "plugins/time"
     ],
     "Integrations": ["integrations/apollo-link-state", "integrations/create-react-app"],
     "Custom Code-Generator Plugins": [

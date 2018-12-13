@@ -6,78 +6,133 @@ import { makeExecutableSchema } from 'graphql-tools';
 import { plugin } from '../src';
 
 describe('Flow Resolvers Plugin', () => {
+  const schema = makeExecutableSchema({
+    typeDefs: `
+      type MyType {
+        foo: String!
+        otherType: MyOtherType
+        withArgs(arg: String, arg2: String!): String
+      }
+
+      type MyOtherType {
+        bar: String!
+      }
+
+      type Query {
+        something: MyType!
+      }
+
+      type Subscription {
+        somethingChanged: MyOtherType
+      }
+      
+      interface Node {
+        id: ID!
+      }
+
+      type SomeNode implements Node {
+        id: ID!
+      }
+
+      union MyUnion = MyType | MyOtherType
+
+      scalar MyScalar
+
+      directive @myDirective(arg: String!, arg2: String!) on FIELD
+  `
+  });
+
   it('Should generate basic type resolvers', () => {
-    const schema = makeExecutableSchema({
-      typeDefs: `
-    type MyType {
-      foo: String!
-      otherType: MyOtherType
-      withArgs(arg: String, arg2: String!): String
-    }
-
-    type MyOtherType {
-      bar: String!
-    }
-
-    type Query {
-      something: MyType!
-    }
-
-    type Subscription {
-      somethingChanged: MyOtherType
-    }
-    
-    interface Node {
-      id: ID!
-    }
-
-    type SomeNode implements Node {
-      id: ID!
-    }
-
-    union MyUnion = MyType | MyOtherType
-
-    scalar MyScalar
-
-    directive @myDirective(arg: String!, arg2: String!) on FIELD
-    `
-    });
     const result = plugin(schema, [], {}, { outputFile: '' });
 
     expect(result).toBeSimilarStringTo(`
-      export interface MyOtherTypeResolvers<Context = any, ParentType = MyOtherType> {
-        bar?: Resolver<string, ParentType, Context>,
-      };
+    export type MyDirectiveDirectiveResolver<Result> = DirectiveResolverFn<Result, {   arg?: ?string,
+      arg2?: ?string }, any>;
 
-      export type MyScalarScalarConfig extends GraphQLScalarTypeConfig<MyScalar, any> = {
-        name: 'MyScalar'
-      };
+    export interface MyOtherTypeResolvers<Context = any, ParentType = MyOtherType> {
+      bar?: Resolver<string, ParentType, Context>,
+    }
 
-      export interface MyTypeResolvers<Context = any, ParentType = MyType> {
-        foo?: Resolver<string, ParentType, Context>,
-        otherType?: Resolver<?MyOtherType, ParentType, Context>,
-        withArgs?: Resolver<?string, ParentType, Context, MyTypeWithArgsArgs>,
-      };
+    export type MyScalarScalarConfig extends GraphQLScalarTypeConfig<MyScalar, any> = {
+      name: 'MyScalar'
+    };
 
-      export interface MyUnionResolvers<Context = any, ParentType = MyUnion> {
-        __resolveType: TypeResolveFn<'MyType' | 'MyOtherType'>
-      };
+    export interface MyTypeResolvers<Context = any, ParentType = MyType> {
+      foo?: Resolver<string, ParentType, Context>,
+      otherType?: Resolver<?MyOtherType, ParentType, Context>,
+      withArgs?: Resolver<?string, ParentType, Context, MyTypeWithArgsArgs>,
+    }
 
-      export interface NodeResolvers<Context = any, ParentType = Node> {
-        __resolveType: TypeResolveFn<'SomeNode'>
-      };
+    export interface MyUnionResolvers<Context = any, ParentType = MyUnion> {
+      __resolveType: TypeResolveFn<'MyType' | 'MyOtherType'>
+    }
 
-      export interface QueryResolvers<Context = any, ParentType = Query> {
-        something?: Resolver<MyType, ParentType, Context>,
-      };
+    export interface NodeResolvers<Context = any, ParentType = Node> {
+      __resolveType: TypeResolveFn<'SomeNode'>
+    }
 
-      export interface SomeNodeResolvers<Context = any, ParentType = SomeNode> {
-        id?: Resolver<string, ParentType, Context>,
-      };
+    export interface QueryResolvers<Context = any, ParentType = Query> {
+      something?: Resolver<MyType, ParentType, Context>,
+    }
 
-      export interface SubscriptionResolvers<Context = any, ParentType = Subscription> {
-        somethingChanged?: SubscriptionResolver<?MyOtherType, ParentType, Context>,
-      };
+    export interface SomeNodeResolvers<Context = any, ParentType = SomeNode> {
+      id?: Resolver<string, ParentType, Context>,
+    }
+
+    export interface SubscriptionResolvers<Context = any, ParentType = Subscription> {
+      somethingChanged?: SubscriptionResolver<?MyOtherType, ParentType, Context>,
+    }
+    `);
+  });
+  it('Should generate basic type resolvers with mapping', () => {
+    const result = plugin(
+      schema,
+      [],
+      {
+        mapping: {
+          MyOtherType: 'MyCustomOtherType'
+        }
+      },
+      { outputFile: '' }
+    );
+
+    expect(result).toBeSimilarStringTo(`
+    export type MyDirectiveDirectiveResolver<Result> = DirectiveResolverFn<Result, {   arg?: ?string,
+      arg2?: ?string }, any>;
+
+    export interface MyOtherTypeResolvers<Context = any, ParentType = MyCustomOtherType> {
+      bar?: Resolver<string, ParentType, Context>,
+    }
+
+    export type MyScalarScalarConfig extends GraphQLScalarTypeConfig<MyScalar, any> = {
+      name: 'MyScalar'
+    };
+
+    export interface MyTypeResolvers<Context = any, ParentType = MyType> {
+      foo?: Resolver<string, ParentType, Context>,
+      otherType?: Resolver<?MyCustomOtherType, ParentType, Context>,
+      withArgs?: Resolver<?string, ParentType, Context, MyTypeWithArgsArgs>,
+    }
+
+    export interface MyUnionResolvers<Context = any, ParentType = MyUnion> {
+      __resolveType: TypeResolveFn<'MyType' | 'MyOtherType'>
+    }
+
+    export interface NodeResolvers<Context = any, ParentType = Node> {
+      __resolveType: TypeResolveFn<'SomeNode'>
+    }
+
+    export interface QueryResolvers<Context = any, ParentType = Query> {
+      something?: Resolver<MyType, ParentType, Context>,
+    }
+
+    export interface SomeNodeResolvers<Context = any, ParentType = SomeNode> {
+      id?: Resolver<string, ParentType, Context>,
+    }
+
+    export interface SubscriptionResolvers<Context = any, ParentType = Subscription> {
+      somethingChanged?: SubscriptionResolver<?MyCustomOtherType, ParentType, Context>,
+    }
     `);
   });
 });
