@@ -69,6 +69,18 @@ The we can install GraphQL Code Generator using `yarn` (or `npm`):
 
     $ npm install -D graphql-code-generator
 
+## Initialization Wizard
+
+GraphQL Code Generator lets you setup everything by simply running the following command:
+
+    $ gql-gen init
+
+Question by question, it will guide you through the whole process of setting up a schema, selecting plugins, picking a destination of a generated file and a lot more.
+
+If you don't want to use the wizard, we've got you covered, just continue reading the next sections.
+
+## Setup
+
 GraphQL Code Generator's behavior is bound into plugins, thus we will need to install few:
 
     $ npm install -D graphql-codegen-typescript-common graphql-codegen-typescript-server
