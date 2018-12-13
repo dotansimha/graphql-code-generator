@@ -35,6 +35,10 @@ export function getFieldType(field: Field, realType: string, options: Handlebars
   const config = options.data.root.config || {};
   const useImmutable = !!config.immutableTypes;
 
+  function extendType(type: string) {
+    return field.hasDefaultValue ? type : useMaybe(type);
+  }
+
   if (field.isArray) {
     let result = realType;
 
@@ -51,7 +55,7 @@ export function getFieldType(field: Field, realType: string, options: Handlebars
     }
 
     if (!field.isRequired) {
-      result = useMaybe(result);
+      result = extendType(result);
     }
 
     return result;
@@ -59,7 +63,7 @@ export function getFieldType(field: Field, realType: string, options: Handlebars
     if (field.isRequired) {
       return realType;
     } else {
-      return useMaybe(realType);
+      return extendType(realType);
     }
   }
 }

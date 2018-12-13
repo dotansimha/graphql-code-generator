@@ -36,6 +36,7 @@ describe('TypeScript Common', () => {
       f4: [String]!
       f5: [String!]!
       f6: [String!]
+      f7: Int = 42
     }
     `);
 
@@ -273,6 +274,7 @@ describe('TypeScript Common', () => {
           f4: (Maybe<string>)[]; 
           f5: string[]; 
           f6?: Maybe<string[]>; 
+          f7?: number;
         }
       `);
     });
@@ -295,6 +297,7 @@ describe('TypeScript Common', () => {
           readonly f4: ReadonlyArray<Maybe<string>>;
           readonly f5: ReadonlyArray<string>;
           readonly f6?: Maybe<ReadonlyArray<string>>;
+          readonly f7?: number;
         }
       `);
     });
@@ -340,6 +343,7 @@ describe('TypeScript Common', () => {
         f4: (Maybe<string>)[]; 
         f5: string[]; 
         f6?: Maybe<string[]>; 
+        f7?: number;
       }
       `);
     });
@@ -361,7 +365,8 @@ describe('TypeScript Common', () => {
         f3?: Maybe<(Maybe<boop>)[]>; 
         f4: (Maybe<boop>)[]; 
         f5: boop[]; 
-        f6?: Maybe<boop[]>; 
+        f6?: Maybe<boop[]>;
+        f7?: number; 
       }
       `);
     });
