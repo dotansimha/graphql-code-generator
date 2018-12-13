@@ -1,26 +1,16 @@
-
-
-
-
-
-
+export type Maybe<T> = T | null;
 
 // ====================================================
 // Types
 // ====================================================
 
-
-
 export interface Query {
+  allUsers: (Maybe<User>)[];
 
-  allUsers: (User | null)[];
-
-  userById?: User | null;
+  userById?: Maybe<User>;
 }
 
-
 export interface User {
-
   id: number;
 
   name: string;
@@ -28,15 +18,10 @@ export interface User {
   email: string;
 }
 
-
-
 // ====================================================
 // Arguments
 // ====================================================
 
 export interface UserByIdQueryArgs {
-
   id: number;
 }
-
-

@@ -1,3 +1,5 @@
+export type Maybe<T> = T | null;
+
 /** A list of options for the sort order of the feed */
 export enum FeedType {
   Hot = 'HOT',
@@ -26,7 +28,7 @@ export namespace OnCommentAdded {
   export type Subscription = {
     __typename?: 'Subscription';
 
-    commentAdded: CommentAdded | null;
+    commentAdded: Maybe<CommentAdded>;
   };
 
   export type CommentAdded = {
@@ -53,16 +55,16 @@ export namespace OnCommentAdded {
 export namespace Comment {
   export type Variables = {
     repoFullName: string;
-    limit: number | null;
-    offset: number | null;
+    limit: Maybe<number>;
+    offset: Maybe<number>;
   };
 
   export type Query = {
     __typename?: 'Query';
 
-    currentUser: CurrentUser | null;
+    currentUser: Maybe<CurrentUser>;
 
-    entry: Entry | null;
+    entry: Maybe<Entry>;
   };
 
   export type CurrentUser = {
@@ -82,7 +84,7 @@ export namespace Comment {
 
     createdAt: number;
 
-    comments: (Comments | null)[];
+    comments: (Maybe<Comments>)[];
 
     commentCount: number;
 
@@ -110,9 +112,9 @@ export namespace Comment {
   export type RepositoryInlineFragment = {
     __typename?: 'Repository';
 
-    description: string | null;
+    description: Maybe<string>;
 
-    open_issues_count: number | null;
+    open_issues_count: Maybe<number>;
 
     stargazers_count: number;
   };
@@ -125,7 +127,7 @@ export namespace CurrentUserForProfile {
   export type Query = {
     __typename?: 'Query';
 
-    currentUser: CurrentUser | null;
+    currentUser: Maybe<CurrentUser>;
   };
 
   export type CurrentUser = {
@@ -140,16 +142,16 @@ export namespace CurrentUserForProfile {
 export namespace Feed {
   export type Variables = {
     type: FeedType;
-    offset: number | null;
-    limit: number | null;
+    offset: Maybe<number>;
+    limit: Maybe<number>;
   };
 
   export type Query = {
     __typename?: 'Query';
 
-    currentUser: CurrentUser | null;
+    currentUser: Maybe<CurrentUser>;
 
-    feed: (Feed | null)[] | null;
+    feed: Maybe<(Maybe<Feed>)[]>;
   };
 
   export type CurrentUser = {
@@ -169,7 +171,7 @@ export namespace SubmitRepository {
   export type Mutation = {
     __typename?: 'Mutation';
 
-    submitRepository: SubmitRepository | null;
+    submitRepository: Maybe<SubmitRepository>;
   };
 
   export type SubmitRepository = {
@@ -188,7 +190,7 @@ export namespace SubmitComment {
   export type Mutation = {
     __typename?: 'Mutation';
 
-    submitComment: SubmitComment | null;
+    submitComment: Maybe<SubmitComment>;
   };
 
   export type SubmitComment = CommentsPageComment.Fragment;
@@ -203,7 +205,7 @@ export namespace Vote {
   export type Mutation = {
     __typename?: 'Mutation';
 
-    vote: Vote | null;
+    vote: Maybe<Vote>;
   };
 
   export type Vote = {
@@ -263,7 +265,7 @@ export namespace FeedEntry {
 
     html_url: string;
 
-    owner: Owner | null;
+    owner: Maybe<Owner>;
   };
 
   export type Owner = {
@@ -287,11 +289,11 @@ export namespace RepoInfo {
   export type Repository = {
     __typename?: 'Repository';
 
-    description: string | null;
+    description: Maybe<string>;
 
     stargazers_count: number;
 
-    open_issues_count: number | null;
+    open_issues_count: Maybe<number>;
   };
 
   export type PostedBy = {

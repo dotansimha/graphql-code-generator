@@ -161,8 +161,8 @@ describe('executeWithOptions', () => {
         const content = result[0].content;
 
         expect(content).toMatch('export interface Post');
-        expect(content).toMatch('allPosts: (Post | null)[];');
-        expect(content).toMatch('allPosts: (Post | null)[];');
+        expect(content).toMatch('allPosts: Maybe<Post>[];');
+        expect(content).toMatch('allPosts: Maybe<Post>[];');
 
         expect(result.length).toBe(1);
       });
@@ -177,7 +177,7 @@ describe('executeWithOptions', () => {
         })
       );
 
-      expect(result[0].content).toBe('');
+      expect(result[0].content.trim()).toBe('export type Maybe<T> = T | null;');
     });
 
     it('execute the correct results when using skipDocuments', async () => {

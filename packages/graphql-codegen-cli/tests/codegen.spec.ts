@@ -305,6 +305,18 @@ describe('Codegen Executor', () => {
       expect(result[0].content).toContain('MyQuery');
       expect(result[0].filename).toEqual('out1.ts');
     });
+
+    it('should handle multiple fragments with the same name, but one is commented out', async () => {
+      const result = await executeCodegen({
+        schema: ['./tests/test-documents/schema.graphql'],
+        documents: ['./tests/test-documents/query-with-commented-fragment.ts'],
+        generates: {
+          'out1.ts': ['typescript-common', 'typescript-client']
+        }
+      });
+      expect(result[0].content).toContain('MyQuery');
+      expect(result[0].filename).toEqual('out1.ts');
+    });
   });
 
   describe('Plugin Configuration', () => {

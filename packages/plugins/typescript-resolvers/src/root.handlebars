@@ -1,4 +1,5 @@
-import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
+{{{ importFromGraphQL }}}
+
 {{{ importMappers types }}}
 
 {{{ importContext }}}
@@ -28,8 +29,6 @@ export interface ISubscriptionResolverObject<Result, Parent, Context, Args> {
 export type SubscriptionResolver<Result, Parent = {}, Context = {}, Args = {}> =
   | ((...args: any[]) => ISubscriptionResolverObject<Result, Parent, Context, Args>)
   | ISubscriptionResolverObject<Result, Parent, Context, Args>;
-
-type Maybe<T> = T | null | undefined;
 
 export type TypeResolveFn<Types, Parent = {}, Context = {}> = (
   parent: Parent,

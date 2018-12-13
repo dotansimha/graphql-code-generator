@@ -1,58 +1,39 @@
 // tslint:disable
-
-
-
-
-
-
+export type Maybe<T> = T | null;
 
 // ====================================================
 // Types
 // ====================================================
 
-
-
 export interface QueryRoot {
-  
-  allUsers: (User | null)[];
-  
-  userById?: User | null;
+  allUsers: (Maybe<User>)[];
+
+  userById?: Maybe<User>;
   /** Generates a new answer for the guessing game */
   answer: number[];
 }
 
-
 export interface User {
-  
   id: number;
-  
+
   name: string;
-  
+
   email: string;
 }
 
-
 export interface SubscriptionRoot {
-  
-  newUser?: User | null;
+  newUser?: Maybe<User>;
 }
-
-
 
 // ====================================================
 // Arguments
 // ====================================================
 
 export interface UserByIdQueryRootArgs {
-  
   id: number;
 }
 
-
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
-
-
-
 
 export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
   parent: Parent,
@@ -80,8 +61,6 @@ export type SubscriptionResolver<Result, Parent = {}, Context = {}, Args = {}> =
   | ((...args: any[]) => ISubscriptionResolverObject<Result, Parent, Context, Args>)
   | ISubscriptionResolverObject<Result, Parent, Context, Args>;
 
-type Maybe<T> = T | null | undefined;
-
 export type TypeResolveFn<Types, Parent = {}, Context = {}> = (
   parent: Parent,
   context: Context,
@@ -95,59 +74,48 @@ export type DirectiveResolverFn<TResult, TArgs = {}, TContext = {}> = (
   source: any,
   args: TArgs,
   context: TContext,
-  info: GraphQLResolveInfo,
+  info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
-
 
 export namespace QueryRootResolvers {
   export interface Resolvers<Context = {}, TypeParent = {}> {
-    
-    allUsers?: AllUsersResolver<(User | null)[], TypeParent, Context>;
-    
-    userById?: UserByIdResolver<User | null, TypeParent, Context>;
+    allUsers?: AllUsersResolver<(Maybe<User>)[], TypeParent, Context>;
+
+    userById?: UserByIdResolver<Maybe<User>, TypeParent, Context>;
     /** Generates a new answer for the guessing game */
     answer?: AnswerResolver<number[], TypeParent, Context>;
   }
 
-
-  export type AllUsersResolver<R = (User | null)[], Parent = {}, Context = {}> = Resolver<R, Parent, Context>;
-  export type UserByIdResolver<R = User | null, Parent = {}, Context = {}> = Resolver<R, Parent, Context, UserByIdArgs>;
+  export type AllUsersResolver<R = (Maybe<User>)[], Parent = {}, Context = {}> = Resolver<R, Parent, Context>;
+  export type UserByIdResolver<R = Maybe<User>, Parent = {}, Context = {}> = Resolver<R, Parent, Context, UserByIdArgs>;
   export interface UserByIdArgs {
-    
     id: number;
   }
 
-
-  export type AnswerResolver<R = number[], Parent = {}, Context = {}> = Resolver<R, Parent, Context>;  
+  export type AnswerResolver<R = number[], Parent = {}, Context = {}> = Resolver<R, Parent, Context>;
 }
 
 export namespace UserResolvers {
   export interface Resolvers<Context = {}, TypeParent = User> {
-    
     id?: IdResolver<number, TypeParent, Context>;
-    
+
     name?: NameResolver<string, TypeParent, Context>;
-    
+
     email?: EmailResolver<string, TypeParent, Context>;
   }
 
-
   export type IdResolver<R = number, Parent = User, Context = {}> = Resolver<R, Parent, Context>;
   export type NameResolver<R = string, Parent = User, Context = {}> = Resolver<R, Parent, Context>;
-  export type EmailResolver<R = string, Parent = User, Context = {}> = Resolver<R, Parent, Context>;  
+  export type EmailResolver<R = string, Parent = User, Context = {}> = Resolver<R, Parent, Context>;
 }
 
 export namespace SubscriptionRootResolvers {
   export interface Resolvers<Context = {}, TypeParent = {}> {
-    
-    newUser?: NewUserResolver<User | null, TypeParent, Context>;
+    newUser?: NewUserResolver<Maybe<User>, TypeParent, Context>;
   }
 
-
-  export type NewUserResolver<R = User | null, Parent = {}, Context = {}> = SubscriptionResolver<R, Parent, Context>;  
+  export type NewUserResolver<R = Maybe<User>, Parent = {}, Context = {}> = SubscriptionResolver<R, Parent, Context>;
 }
-
-
 
 /** Directs the executor to skip this field or fragment when the `if` argument is true. */
 export type SkipDirectiveResolver<Result> = DirectiveResolverFn<Result, SkipDirectiveArgs, {}>;
@@ -167,19 +135,17 @@ export interface IncludeDirectiveArgs {
 export type DeprecatedDirectiveResolver<Result> = DirectiveResolverFn<Result, DeprecatedDirectiveArgs, {}>;
 export interface DeprecatedDirectiveArgs {
   /** Explains why this element was deprecated, usually also including a suggestion for how to access supported similar data. Formatted using the Markdown syntax (as specified by [CommonMark](https://commonmark.org/). */
-  reason?: string | null;
+  reason?: Maybe<string>;
 }
 
-
-
 export interface IResolvers {
-    QueryRoot?: QueryRootResolvers.Resolvers;
-    User?: UserResolvers.Resolvers;
-    SubscriptionRoot?: SubscriptionRootResolvers.Resolvers;
+  QueryRoot?: QueryRootResolvers.Resolvers;
+  User?: UserResolvers.Resolvers;
+  SubscriptionRoot?: SubscriptionRootResolvers.Resolvers;
 }
 
 export interface IDirectiveResolvers<Result> {
-    skip?: SkipDirectiveResolver<Result>;
-    include?: IncludeDirectiveResolver<Result>;
-    deprecated?: DeprecatedDirectiveResolver<Result>;
+  skip?: SkipDirectiveResolver<Result>;
+  include?: IncludeDirectiveResolver<Result>;
+  deprecated?: DeprecatedDirectiveResolver<Result>;
 }

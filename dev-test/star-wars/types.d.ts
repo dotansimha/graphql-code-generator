@@ -1,11 +1,13 @@
+export type Maybe<T> = T | null;
+
 /** The input object sent when someone is creating a new review */
 export interface ReviewInput {
   /** 0-5 stars */
   stars: number;
   /** Comment about the movie, optional */
-  commentary?: string | null;
+  commentary?: Maybe<string>;
   /** Favorite color, optional */
-  favoriteColor?: ColorInput | null;
+  favoriteColor?: Maybe<ColorInput>;
 }
 /** The input object sent when passing a color */
 export interface ColorInput {
@@ -37,7 +39,7 @@ export namespace CreateReviewForEpisode {
   export type Mutation = {
     __typename?: 'Mutation';
 
-    createReview: CreateReview | null;
+    createReview: Maybe<CreateReview>;
   };
 
   export type CreateReview = {
@@ -45,19 +47,19 @@ export namespace CreateReviewForEpisode {
 
     stars: number;
 
-    commentary: string | null;
+    commentary: Maybe<string>;
   };
 }
 
 export namespace HeroAndFriendsNames {
   export type Variables = {
-    episode?: Episode | null;
+    episode?: Maybe<Episode>;
   };
 
   export type Query = {
     __typename?: 'Query';
 
-    hero: Hero | null;
+    hero: Maybe<Hero>;
   };
 
   export type Hero = {
@@ -65,7 +67,7 @@ export namespace HeroAndFriendsNames {
 
     name: string;
 
-    friends: (Friends | null)[] | null;
+    friends: Maybe<(Maybe<Friends>)[]>;
   };
 
   export type Friends = {
@@ -82,7 +84,7 @@ export namespace HeroAppearsIn {
   export type Query = {
     __typename?: 'Query';
 
-    hero: Hero | null;
+    hero: Maybe<Hero>;
   };
 
   export type Hero = {
@@ -90,19 +92,19 @@ export namespace HeroAppearsIn {
 
     name: string;
 
-    appearsIn: (Episode | null)[];
+    appearsIn: (Maybe<Episode>)[];
   };
 }
 
 export namespace HeroDetails {
   export type Variables = {
-    episode?: Episode | null;
+    episode?: Maybe<Episode>;
   };
 
   export type Query = {
     __typename?: 'Query';
 
-    hero: Hero | null;
+    hero: Maybe<Hero>;
   };
 
   export type Hero = {
@@ -114,25 +116,25 @@ export namespace HeroDetails {
   export type HumanInlineFragment = {
     __typename?: 'Human';
 
-    height: number | null;
+    height: Maybe<number>;
   };
 
   export type DroidInlineFragment = {
     __typename?: 'Droid';
 
-    primaryFunction: string | null;
+    primaryFunction: Maybe<string>;
   };
 }
 
 export namespace HeroDetailsWithFragment {
   export type Variables = {
-    episode?: Episode | null;
+    episode?: Maybe<Episode>;
   };
 
   export type Query = {
     __typename?: 'Query';
 
-    hero: Hero | null;
+    hero: Maybe<Hero>;
   };
 
   export type Hero = HeroDetails.Fragment;
@@ -140,13 +142,13 @@ export namespace HeroDetailsWithFragment {
 
 export namespace HeroName {
   export type Variables = {
-    episode?: Episode | null;
+    episode?: Maybe<Episode>;
   };
 
   export type Query = {
     __typename?: 'Query';
 
-    hero: Hero | null;
+    hero: Maybe<Hero>;
   };
 
   export type Hero = {
@@ -158,14 +160,14 @@ export namespace HeroName {
 
 export namespace HeroNameConditionalInclusion {
   export type Variables = {
-    episode?: Episode | null;
+    episode?: Maybe<Episode>;
     includeName: boolean;
   };
 
   export type Query = {
     __typename?: 'Query';
 
-    hero: Hero | null;
+    hero: Maybe<Hero>;
   };
 
   export type Hero = {
@@ -177,14 +179,14 @@ export namespace HeroNameConditionalInclusion {
 
 export namespace HeroNameConditionalExclusion {
   export type Variables = {
-    episode?: Episode | null;
+    episode?: Maybe<Episode>;
     skipName: boolean;
   };
 
   export type Query = {
     __typename?: 'Query';
 
-    hero: Hero | null;
+    hero: Maybe<Hero>;
   };
 
   export type Hero = {
@@ -196,13 +198,13 @@ export namespace HeroNameConditionalExclusion {
 
 export namespace HeroParentTypeDependentField {
   export type Variables = {
-    episode?: Episode | null;
+    episode?: Maybe<Episode>;
   };
 
   export type Query = {
     __typename?: 'Query';
 
-    hero: Hero | null;
+    hero: Maybe<Hero>;
   };
 
   export type Hero = {
@@ -214,7 +216,7 @@ export namespace HeroParentTypeDependentField {
   export type HumanInlineFragment = {
     __typename?: 'Human';
 
-    friends: (Friends | null)[] | null;
+    friends: Maybe<(Maybe<Friends>)[]>;
   };
 
   export type Friends = {
@@ -226,13 +228,13 @@ export namespace HeroParentTypeDependentField {
   export type _HumanInlineFragment = {
     __typename?: 'Human';
 
-    height: number | null;
+    height: Maybe<number>;
   };
 
   export type DroidInlineFragment = {
     __typename?: 'Droid';
 
-    friends: (_Friends | null)[] | null;
+    friends: Maybe<(Maybe<_Friends>)[]>;
   };
 
   export type _Friends = {
@@ -244,19 +246,19 @@ export namespace HeroParentTypeDependentField {
   export type __HumanInlineFragment = {
     __typename?: 'Human';
 
-    height: number | null;
+    height: Maybe<number>;
   };
 }
 
 export namespace HeroTypeDependentAliasedField {
   export type Variables = {
-    episode?: Episode | null;
+    episode?: Maybe<Episode>;
   };
 
   export type Query = {
     __typename?: 'Query';
 
-    hero: Hero | null;
+    hero: Maybe<Hero>;
   };
 
   export type Hero = (HumanInlineFragment | DroidInlineFragment);
@@ -264,13 +266,13 @@ export namespace HeroTypeDependentAliasedField {
   export type HumanInlineFragment = {
     __typename?: 'Human';
 
-    property: string | null;
+    property: Maybe<string>;
   };
 
   export type DroidInlineFragment = {
     __typename?: 'Droid';
 
-    property: string | null;
+    property: Maybe<string>;
   };
 }
 
@@ -281,7 +283,7 @@ export namespace HumanWithNullHeight {
   export type Query = {
     __typename?: 'Query';
 
-    human: Human | null;
+    human: Maybe<Human>;
   };
 
   export type Human = {
@@ -289,7 +291,7 @@ export namespace HumanWithNullHeight {
 
     name: string;
 
-    mass: number | null;
+    mass: Maybe<number>;
   };
 }
 
@@ -300,9 +302,9 @@ export namespace TwoHeroes {
   export type Query = {
     __typename?: 'Query';
 
-    r2: R2 | null;
+    r2: Maybe<R2>;
 
-    luke: Luke | null;
+    luke: Maybe<Luke>;
   };
 
   export type R2 = {
@@ -328,13 +330,13 @@ export namespace HeroDetails {
   export type HumanInlineFragment = {
     __typename?: 'Human';
 
-    height: number | null;
+    height: Maybe<number>;
   };
 
   export type DroidInlineFragment = {
     __typename?: 'Droid';
 
-    primaryFunction: string | null;
+    primaryFunction: Maybe<string>;
   };
 }
 

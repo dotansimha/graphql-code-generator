@@ -7,7 +7,7 @@ import * as resolver from './resolver.handlebars';
 import * as resolveType from './resolve-type.handlebars';
 import * as directive from './directive.handlebars';
 import * as scalar from './scalar.handlebars';
-import { getFieldResolverName, getFieldResolver, getFieldType, getTypenames } from './helpers';
+import { getFieldResolverName, getFieldResolver, getFieldType, getTypenames, importFromGraphQL } from './helpers';
 import { importMappers } from './import-mappers';
 import { importContext, getContext } from './context';
 import { getParentType, getParentTypes } from './parent-type';
@@ -37,6 +37,7 @@ export const plugin: PluginFunction<TypeScriptServerResolversConfig> = async (
   Handlebars.registerHelper('getFieldType', getFieldType(convert));
   Handlebars.registerHelper('importMappers', importMappers);
   Handlebars.registerHelper('importContext', importContext);
+  Handlebars.registerHelper('importFromGraphQL', importFromGraphQL);
   Handlebars.registerHelper('getContext', getContext);
 
   return Handlebars.compile(rootTemplate)(templateContext);

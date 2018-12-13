@@ -1,3 +1,5 @@
+export type Maybe<T> = T | null;
+
 /** A list of options for the sort order of the feed */
 export enum FeedType {
   Hot = 'HOT',
@@ -26,7 +28,7 @@ export namespace OnCommentAdded {
   export type Subscription = {
     readonly __typename?: 'Subscription';
 
-    readonly commentAdded: CommentAdded | null;
+    readonly commentAdded: Maybe<CommentAdded>;
   };
 
   export type CommentAdded = {
@@ -53,16 +55,16 @@ export namespace OnCommentAdded {
 export namespace Comment {
   export type Variables = {
     readonly repoFullName: string;
-    readonly limit?: number | null;
-    readonly offset?: number | null;
+    readonly limit?: Maybe<number>;
+    readonly offset?: Maybe<number>;
   };
 
   export type Query = {
     readonly __typename?: 'Query';
 
-    readonly currentUser: CurrentUser | null;
+    readonly currentUser: Maybe<CurrentUser>;
 
-    readonly entry: Entry | null;
+    readonly entry: Maybe<Entry>;
   };
 
   export type CurrentUser = {
@@ -82,7 +84,7 @@ export namespace Comment {
 
     readonly createdAt: number;
 
-    readonly comments: ReadonlyArray<Comments | null>;
+    readonly comments: ReadonlyArray<Maybe<Comments>>;
 
     readonly commentCount: number;
 
@@ -110,9 +112,9 @@ export namespace Comment {
   export type RepositoryInlineFragment = {
     readonly __typename?: 'Repository';
 
-    readonly description: string | null;
+    readonly description: Maybe<string>;
 
-    readonly open_issues_count: number | null;
+    readonly open_issues_count: Maybe<number>;
 
     readonly stargazers_count: number;
   };
@@ -125,7 +127,7 @@ export namespace CurrentUserForProfile {
   export type Query = {
     readonly __typename?: 'Query';
 
-    readonly currentUser: CurrentUser | null;
+    readonly currentUser: Maybe<CurrentUser>;
   };
 
   export type CurrentUser = {
@@ -140,16 +142,16 @@ export namespace CurrentUserForProfile {
 export namespace Feed {
   export type Variables = {
     readonly type: FeedType;
-    readonly offset?: number | null;
-    readonly limit?: number | null;
+    readonly offset?: Maybe<number>;
+    readonly limit?: Maybe<number>;
   };
 
   export type Query = {
     readonly __typename?: 'Query';
 
-    readonly currentUser: CurrentUser | null;
+    readonly currentUser: Maybe<CurrentUser>;
 
-    readonly feed: ReadonlyArray<Feed | null> | null;
+    readonly feed: Maybe<ReadonlyArray<Maybe<Feed>>>;
   };
 
   export type CurrentUser = {
@@ -169,7 +171,7 @@ export namespace SubmitRepository {
   export type Mutation = {
     readonly __typename?: 'Mutation';
 
-    readonly submitRepository: SubmitRepository | null;
+    readonly submitRepository: Maybe<SubmitRepository>;
   };
 
   export type SubmitRepository = {
@@ -188,7 +190,7 @@ export namespace SubmitComment {
   export type Mutation = {
     readonly __typename?: 'Mutation';
 
-    readonly submitComment: SubmitComment | null;
+    readonly submitComment: Maybe<SubmitComment>;
   };
 
   export type SubmitComment = CommentsPageComment.Fragment;
@@ -203,7 +205,7 @@ export namespace Vote {
   export type Mutation = {
     readonly __typename?: 'Mutation';
 
-    readonly vote: Vote | null;
+    readonly vote: Maybe<Vote>;
   };
 
   export type Vote = {
@@ -263,7 +265,7 @@ export namespace FeedEntry {
 
     readonly html_url: string;
 
-    readonly owner: Owner | null;
+    readonly owner: Maybe<Owner>;
   };
 
   export type Owner = {
@@ -287,11 +289,11 @@ export namespace RepoInfo {
   export type Repository = {
     readonly __typename?: 'Repository';
 
-    readonly description: string | null;
+    readonly description: Maybe<string>;
 
     readonly stargazers_count: number;
 
-    readonly open_issues_count: number | null;
+    readonly open_issues_count: Maybe<number>;
   };
 
   export type PostedBy = {
