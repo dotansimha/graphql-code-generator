@@ -1,5 +1,5 @@
 import 'graphql-codegen-core/dist/testing';
-import { buildASTSchema, execute, parse } from 'graphql';
+import { buildASTSchema } from 'graphql';
 import gql from 'graphql-tag';
 import { plugin, validate } from '../dist';
 
@@ -23,30 +23,32 @@ const schema = buildASTSchema(gql`
   }
 `);
 
-async function instrospect() {
-  const introspection = await execute({
-    schema,
-    document: parse(`
-      {
-        __schema {
-          types {
-            kind
-            name
-            possibleTypes {
-              name
+// should only contain Unions and Interfaces
+const introspection = JSON.stringify(
+  {
+    __schema: {
+      types: [
+        {
+          kind: 'UNION',
+          name: 'People',
+          possibleTypes: [
+            {
+              name: 'Character'
+            },
+            {
+              name: 'Jedi'
+            },
+            {
+              name: 'Droid'
             }
-          }
+          ]
         }
-      }
-    `)
-  });
-
-  return introspection.data;
-}
-
-function printJSON(data: any) {
-  return JSON.stringify(data, null, 2);
-}
+      ]
+    }
+  },
+  null,
+  2
+);
 
 describe('Fragment Matcher Plugin', () => {
   describe('validate', () => {
@@ -93,9 +95,8 @@ describe('Fragment Matcher Plugin', () => {
           outputFile: 'foo.json'
         }
       );
-      const introspection = await instrospect();
 
-      expect(content).toEqual(printJSON(introspection));
+      expect(content).toEqual(introspection);
     });
   });
 
@@ -117,9 +118,8 @@ describe('Fragment Matcher Plugin', () => {
           outputFile: 'foo.jsx'
         }
       );
-      const introspection = await instrospect();
       const output = `
-        export default ${printJSON(introspection)}
+        export default ${introspection}
       `;
 
       expect(jsContent).toBeSimilarStringTo(output);
@@ -147,9 +147,8 @@ describe('Fragment Matcher Plugin', () => {
           outputFile: 'foo.jsx'
         }
       );
-      const introspection = await instrospect();
       const output = `
-        module.exports = ${printJSON(introspection)}
+        module.exports = ${introspection}
       `;
 
       expect(jsContent).toBeSimilarStringTo(output);
@@ -175,7 +174,6 @@ describe('Fragment Matcher Plugin', () => {
           outputFile: 'foo.tsx'
         }
       );
-      const introspection = await instrospect();
       const output = `
         export interface IntrospectionResultData {
           __schema: {
@@ -189,7 +187,7 @@ describe('Fragment Matcher Plugin', () => {
           };
         }
 
-        const result: IntrospectionResultData = ${printJSON(introspection)};  
+        const result: IntrospectionResultData = ${introspection};  
 
         export default result;
       `;
