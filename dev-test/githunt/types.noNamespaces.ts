@@ -1,3 +1,5 @@
+export type Maybe<T> = T | null;
+
 /** A list of options for the sort order of the feed */
 export enum FeedType {
   Hot = 'HOT',
@@ -22,7 +24,7 @@ export type OnCommentAddedVariables = {
 export type OnCommentAddedSubscription = {
   __typename?: 'Subscription';
 
-  commentAdded: OnCommentAddedCommentAdded | null;
+  commentAdded: Maybe<OnCommentAddedCommentAdded>;
 };
 
 export type OnCommentAddedCommentAdded = {
@@ -47,16 +49,16 @@ export type OnCommentAddedPostedBy = {
 
 export type CommentVariables = {
   repoFullName: string;
-  limit?: number | null;
-  offset?: number | null;
+  limit?: Maybe<number>;
+  offset?: Maybe<number>;
 };
 
 export type CommentQuery = {
   __typename?: 'Query';
 
-  currentUser: CommentCurrentUser | null;
+  currentUser: Maybe<CommentCurrentUser>;
 
-  entry: CommentEntry | null;
+  entry: Maybe<CommentEntry>;
 };
 
 export type CommentCurrentUser = {
@@ -104,9 +106,9 @@ export type CommentRepository = {
 export type CommentRepositoryInlineFragment = {
   __typename?: 'Repository';
 
-  description: string | null;
+  description: Maybe<string>;
 
-  open_issues_count: number | null;
+  open_issues_count: Maybe<number>;
 
   stargazers_count: number;
 };
@@ -116,7 +118,7 @@ export type CurrentUserForProfileVariables = {};
 export type CurrentUserForProfileQuery = {
   __typename?: 'Query';
 
-  currentUser: CurrentUserForProfileCurrentUser | null;
+  currentUser: Maybe<CurrentUserForProfileCurrentUser>;
 };
 
 export type CurrentUserForProfileCurrentUser = {
@@ -129,16 +131,16 @@ export type CurrentUserForProfileCurrentUser = {
 
 export type FeedVariables = {
   type: FeedType;
-  offset?: number | null;
-  limit?: number | null;
+  offset?: Maybe<number>;
+  limit?: Maybe<number>;
 };
 
 export type FeedQuery = {
   __typename?: 'Query';
 
-  currentUser: FeedCurrentUser | null;
+  currentUser: Maybe<FeedCurrentUser>;
 
-  feed: FeedFeed[] | null;
+  feed: Maybe<FeedFeed[]>;
 };
 
 export type FeedCurrentUser = {
@@ -156,7 +158,7 @@ export type SubmitRepositoryVariables = {
 export type SubmitRepositoryMutation = {
   __typename?: 'Mutation';
 
-  submitRepository: SubmitRepositorySubmitRepository | null;
+  submitRepository: Maybe<SubmitRepositorySubmitRepository>;
 };
 
 export type SubmitRepositorySubmitRepository = {
@@ -173,7 +175,7 @@ export type SubmitCommentVariables = {
 export type SubmitCommentMutation = {
   __typename?: 'Mutation';
 
-  submitComment: SubmitCommentSubmitComment | null;
+  submitComment: Maybe<SubmitCommentSubmitComment>;
 };
 
 export type SubmitCommentSubmitComment = CommentsPageCommentFragment;
@@ -186,7 +188,7 @@ export type VoteVariables = {
 export type VoteMutation = {
   __typename?: 'Mutation';
 
-  vote: VoteVote | null;
+  vote: Maybe<VoteVote>;
 };
 
 export type VoteVote = {
@@ -242,7 +244,7 @@ export type FeedEntryRepository = {
 
   html_url: string;
 
-  owner: FeedEntryOwner | null;
+  owner: Maybe<FeedEntryOwner>;
 };
 
 export type FeedEntryOwner = {
@@ -264,11 +266,11 @@ export type RepoInfoFragment = {
 export type RepoInfoRepository = {
   __typename?: 'Repository';
 
-  description: string | null;
+  description: Maybe<string>;
 
   stargazers_count: number;
 
-  open_issues_count: number | null;
+  open_issues_count: Maybe<number>;
 };
 
 export type RepoInfoPostedBy = {

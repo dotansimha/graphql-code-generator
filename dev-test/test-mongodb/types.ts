@@ -1,9 +1,10 @@
 // tslint:disable
+export type Maybe<T> = T | null;
 
 export interface AdditionalEntityFields {
-  path?: string | null;
+  path?: Maybe<string>;
 
-  type?: string | null;
+  type?: Maybe<string>;
 }
 
 export enum Role {
@@ -21,17 +22,17 @@ export enum Role {
 // ====================================================
 
 export interface User {
-  id?: string | null;
+  id?: Maybe<string>;
 
-  username?: string | null;
+  username?: Maybe<string>;
 
-  role?: Role | null;
+  role?: Maybe<Role>;
 
-  likedPosts?: (Post | null)[] | null;
+  likedPosts?: Maybe<(Maybe<Post>)[]>;
 
-  followerUsers?: (User | null)[] | null;
+  followerUsers?: Maybe<(Maybe<User>)[]>;
 
-  followingUsers?: (User | null)[] | null;
+  followingUsers?: Maybe<(Maybe<User>)[]>;
 }
 
 // ====================================================
@@ -39,61 +40,61 @@ export interface User {
 // ====================================================
 
 export interface Post {
-  id?: string | null;
+  id?: Maybe<string>;
 
-  title?: string | null;
+  title?: Maybe<string>;
 
-  content?: string | null;
+  content?: Maybe<string>;
 
-  createdAt?: Date | null;
+  createdAt?: Maybe<Date>;
 
-  author?: User | null;
+  author?: Maybe<User>;
 }
 
 export interface AdminUser extends User {
-  id?: string | null;
+  id?: Maybe<string>;
 
-  username?: string | null;
+  username?: Maybe<string>;
 
-  role?: Role | null;
+  role?: Maybe<Role>;
 
-  likedPosts?: (Post | null)[] | null;
+  likedPosts?: Maybe<(Maybe<Post>)[]>;
 
-  followerUsers?: (User | null)[] | null;
+  followerUsers?: Maybe<(Maybe<User>)[]>;
 
-  followingUsers?: (User | null)[] | null;
+  followingUsers?: Maybe<(Maybe<User>)[]>;
 
-  posts?: (Post | null)[] | null;
+  posts?: Maybe<(Maybe<Post>)[]>;
 }
 
 export interface WriterUser {
-  id?: string | null;
+  id?: Maybe<string>;
 
-  username?: string | null;
+  username?: Maybe<string>;
 
-  role?: Role | null;
+  role?: Maybe<Role>;
 
-  likedPosts?: (Post | null)[] | null;
+  likedPosts?: Maybe<(Maybe<Post>)[]>;
 
-  followerUsers?: (User | null)[] | null;
+  followerUsers?: Maybe<(Maybe<User>)[]>;
 
-  followingUsers?: (User | null)[] | null;
+  followingUsers?: Maybe<(Maybe<User>)[]>;
 
-  posts?: (Post | null)[] | null;
+  posts?: Maybe<(Maybe<Post>)[]>;
 }
 
 export interface ReaderUser {
-  id?: string | null;
+  id?: Maybe<string>;
 
-  username?: string | null;
+  username?: Maybe<string>;
 
-  role?: Role | null;
+  role?: Maybe<Role>;
 
-  likedPosts?: (Post | null)[] | null;
+  likedPosts?: Maybe<(Maybe<Post>)[]>;
 
-  followerUsers?: (User | null)[] | null;
+  followerUsers?: Maybe<(Maybe<User>)[]>;
 
-  followingUsers?: (User | null)[] | null;
+  followingUsers?: Maybe<(Maybe<User>)[]>;
 }
 
 // ====================================================
@@ -101,92 +102,92 @@ export interface ReaderUser {
 // ====================================================
 
 export interface FollowerUsersAdminUserArgs {
-  skip?: number | null;
+  skip?: Maybe<number>;
 
-  limit?: number | null;
+  limit?: Maybe<number>;
 }
 export interface FollowingUsersAdminUserArgs {
-  skip?: number | null;
+  skip?: Maybe<number>;
 
-  limit?: number | null;
+  limit?: Maybe<number>;
 }
 export interface PostsAdminUserArgs {
-  skip?: number | null;
+  skip?: Maybe<number>;
 
-  limit?: number | null;
+  limit?: Maybe<number>;
 }
 export interface LikedPostsWriterUserArgs {
-  skip?: number | null;
+  skip?: Maybe<number>;
 
-  limit?: number | null;
+  limit?: Maybe<number>;
 }
 export interface FollowerUsersWriterUserArgs {
-  skip?: number | null;
+  skip?: Maybe<number>;
 
-  limit?: number | null;
+  limit?: Maybe<number>;
 }
 export interface FollowingUsersWriterUserArgs {
-  skip?: number | null;
+  skip?: Maybe<number>;
 
-  limit?: number | null;
+  limit?: Maybe<number>;
 }
 export interface PostsWriterUserArgs {
-  skip?: number | null;
+  skip?: Maybe<number>;
 
-  limit?: number | null;
+  limit?: Maybe<number>;
 }
 export interface LikedPostsReaderUserArgs {
-  skip?: number | null;
+  skip?: Maybe<number>;
 
-  limit?: number | null;
+  limit?: Maybe<number>;
 }
 export interface FollowerUsersReaderUserArgs {
-  skip?: number | null;
+  skip?: Maybe<number>;
 
-  limit?: number | null;
+  limit?: Maybe<number>;
 }
 export interface FollowingUsersReaderUserArgs {
-  skip?: number | null;
+  skip?: Maybe<number>;
 
-  limit?: number | null;
+  limit?: Maybe<number>;
 }
 
 import { ObjectID } from 'mongodb';
 
 export interface UserDbInterface {
-  role: string | null;
-  _id: ObjectID | null;
-  username: string | null;
-  followingUserIds: (ObjectID | null)[] | null;
+  role: Maybe<string>;
+  _id: Maybe<ObjectID>;
+  username: Maybe<string>;
+  followingUserIds: Maybe<(Maybe<ObjectID>)[]>;
 }
 
 export interface PostDbObject {
-  _id: ObjectID | null;
-  title: string | null;
-  content: string | null;
-  createdAt: Date | null;
-  userId: ObjectID | null;
+  _id: Maybe<ObjectID>;
+  title: Maybe<string>;
+  content: Maybe<string>;
+  createdAt: Maybe<Date>;
+  userId: Maybe<ObjectID>;
 }
 
 export interface AdminUserDbObject extends UserDbInterface {
-  _id: ObjectID | null;
-  username: string | null;
-  role: string | null;
-  followingUserIds: (ObjectID | null)[] | null;
+  _id: Maybe<ObjectID>;
+  username: Maybe<string>;
+  role: Maybe<string>;
+  followingUserIds: Maybe<(Maybe<ObjectID>)[]>;
 }
 
 export interface WriterUserDbObject {
-  _id: ObjectID | null;
-  username: string | null;
-  role: string | null;
-  followingUserIds: (ObjectID | null)[] | null;
+  _id: Maybe<ObjectID>;
+  username: Maybe<string>;
+  role: Maybe<string>;
+  followingUserIds: Maybe<(Maybe<ObjectID>)[]>;
 }
 
 export interface ReaderUserDbObject {
-  _id: ObjectID | null;
-  username: string | null;
-  role: string | null;
-  followingUserIds: (ObjectID | null)[] | null;
+  _id: Maybe<ObjectID>;
+  username: Maybe<string>;
+  role: Maybe<string>;
+  followingUserIds: Maybe<(Maybe<ObjectID>)[]>;
 }
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 
@@ -216,8 +217,6 @@ export type SubscriptionResolver<Result, Parent = {}, Context = {}, Args = {}> =
   | ((...args: any[]) => ISubscriptionResolverObject<Result, Parent, Context, Args>)
   | ISubscriptionResolverObject<Result, Parent, Context, Args>;
 
-type Maybe<T> = T | null | undefined;
-
 export type TypeResolveFn<Types, Parent = {}, Context = {}> = (
   parent: Parent,
   context: Context,
@@ -236,207 +235,207 @@ export type DirectiveResolverFn<TResult, TArgs = {}, TContext = {}> = (
 
 export namespace PostResolvers {
   export interface Resolvers<Context = {}, TypeParent = Post> {
-    id?: IdResolver<string | null, TypeParent, Context>;
+    id?: IdResolver<Maybe<string>, TypeParent, Context>;
 
-    title?: TitleResolver<string | null, TypeParent, Context>;
+    title?: TitleResolver<Maybe<string>, TypeParent, Context>;
 
-    content?: ContentResolver<string | null, TypeParent, Context>;
+    content?: ContentResolver<Maybe<string>, TypeParent, Context>;
 
-    createdAt?: CreatedAtResolver<Date | null, TypeParent, Context>;
+    createdAt?: CreatedAtResolver<Maybe<Date>, TypeParent, Context>;
 
-    author?: AuthorResolver<User | null, TypeParent, Context>;
+    author?: AuthorResolver<Maybe<User>, TypeParent, Context>;
   }
 
-  export type IdResolver<R = string | null, Parent = Post, Context = {}> = Resolver<R, Parent, Context>;
-  export type TitleResolver<R = string | null, Parent = Post, Context = {}> = Resolver<R, Parent, Context>;
-  export type ContentResolver<R = string | null, Parent = Post, Context = {}> = Resolver<R, Parent, Context>;
-  export type CreatedAtResolver<R = Date | null, Parent = Post, Context = {}> = Resolver<R, Parent, Context>;
-  export type AuthorResolver<R = User | null, Parent = Post, Context = {}> = Resolver<R, Parent, Context>;
+  export type IdResolver<R = Maybe<string>, Parent = Post, Context = {}> = Resolver<R, Parent, Context>;
+  export type TitleResolver<R = Maybe<string>, Parent = Post, Context = {}> = Resolver<R, Parent, Context>;
+  export type ContentResolver<R = Maybe<string>, Parent = Post, Context = {}> = Resolver<R, Parent, Context>;
+  export type CreatedAtResolver<R = Maybe<Date>, Parent = Post, Context = {}> = Resolver<R, Parent, Context>;
+  export type AuthorResolver<R = Maybe<User>, Parent = Post, Context = {}> = Resolver<R, Parent, Context>;
 }
 
 export namespace AdminUserResolvers {
   export interface Resolvers<Context = {}, TypeParent = AdminUser> {
-    id?: IdResolver<string | null, TypeParent, Context>;
+    id?: IdResolver<Maybe<string>, TypeParent, Context>;
 
-    username?: UsernameResolver<string | null, TypeParent, Context>;
+    username?: UsernameResolver<Maybe<string>, TypeParent, Context>;
 
-    role?: RoleResolver<Role | null, TypeParent, Context>;
+    role?: RoleResolver<Maybe<Role>, TypeParent, Context>;
 
-    likedPosts?: LikedPostsResolver<(Post | null)[] | null, TypeParent, Context>;
+    likedPosts?: LikedPostsResolver<Maybe<(Maybe<Post>)[]>, TypeParent, Context>;
 
-    followerUsers?: FollowerUsersResolver<(User | null)[] | null, TypeParent, Context>;
+    followerUsers?: FollowerUsersResolver<Maybe<(Maybe<User>)[]>, TypeParent, Context>;
 
-    followingUsers?: FollowingUsersResolver<(User | null)[] | null, TypeParent, Context>;
+    followingUsers?: FollowingUsersResolver<Maybe<(Maybe<User>)[]>, TypeParent, Context>;
 
-    posts?: PostsResolver<(Post | null)[] | null, TypeParent, Context>;
+    posts?: PostsResolver<Maybe<(Maybe<Post>)[]>, TypeParent, Context>;
   }
 
-  export type IdResolver<R = string | null, Parent = AdminUser, Context = {}> = Resolver<R, Parent, Context>;
-  export type UsernameResolver<R = string | null, Parent = AdminUser, Context = {}> = Resolver<R, Parent, Context>;
-  export type RoleResolver<R = Role | null, Parent = AdminUser, Context = {}> = Resolver<R, Parent, Context>;
-  export type LikedPostsResolver<R = (Post | null)[] | null, Parent = AdminUser, Context = {}> = Resolver<
+  export type IdResolver<R = Maybe<string>, Parent = AdminUser, Context = {}> = Resolver<R, Parent, Context>;
+  export type UsernameResolver<R = Maybe<string>, Parent = AdminUser, Context = {}> = Resolver<R, Parent, Context>;
+  export type RoleResolver<R = Maybe<Role>, Parent = AdminUser, Context = {}> = Resolver<R, Parent, Context>;
+  export type LikedPostsResolver<R = Maybe<(Maybe<Post>)[]>, Parent = AdminUser, Context = {}> = Resolver<
     R,
     Parent,
     Context
   >;
-  export type FollowerUsersResolver<R = (User | null)[] | null, Parent = AdminUser, Context = {}> = Resolver<
+  export type FollowerUsersResolver<R = Maybe<(Maybe<User>)[]>, Parent = AdminUser, Context = {}> = Resolver<
     R,
     Parent,
     Context,
     FollowerUsersArgs
   >;
   export interface FollowerUsersArgs {
-    skip?: number | null;
+    skip?: Maybe<number>;
 
-    limit?: number | null;
+    limit?: Maybe<number>;
   }
 
-  export type FollowingUsersResolver<R = (User | null)[] | null, Parent = AdminUser, Context = {}> = Resolver<
+  export type FollowingUsersResolver<R = Maybe<(Maybe<User>)[]>, Parent = AdminUser, Context = {}> = Resolver<
     R,
     Parent,
     Context,
     FollowingUsersArgs
   >;
   export interface FollowingUsersArgs {
-    skip?: number | null;
+    skip?: Maybe<number>;
 
-    limit?: number | null;
+    limit?: Maybe<number>;
   }
 
-  export type PostsResolver<R = (Post | null)[] | null, Parent = AdminUser, Context = {}> = Resolver<
+  export type PostsResolver<R = Maybe<(Maybe<Post>)[]>, Parent = AdminUser, Context = {}> = Resolver<
     R,
     Parent,
     Context,
     PostsArgs
   >;
   export interface PostsArgs {
-    skip?: number | null;
+    skip?: Maybe<number>;
 
-    limit?: number | null;
+    limit?: Maybe<number>;
   }
 }
 
 export namespace WriterUserResolvers {
   export interface Resolvers<Context = {}, TypeParent = WriterUser> {
-    id?: IdResolver<string | null, TypeParent, Context>;
+    id?: IdResolver<Maybe<string>, TypeParent, Context>;
 
-    username?: UsernameResolver<string | null, TypeParent, Context>;
+    username?: UsernameResolver<Maybe<string>, TypeParent, Context>;
 
-    role?: RoleResolver<Role | null, TypeParent, Context>;
+    role?: RoleResolver<Maybe<Role>, TypeParent, Context>;
 
-    likedPosts?: LikedPostsResolver<(Post | null)[] | null, TypeParent, Context>;
+    likedPosts?: LikedPostsResolver<Maybe<(Maybe<Post>)[]>, TypeParent, Context>;
 
-    followerUsers?: FollowerUsersResolver<(User | null)[] | null, TypeParent, Context>;
+    followerUsers?: FollowerUsersResolver<Maybe<(Maybe<User>)[]>, TypeParent, Context>;
 
-    followingUsers?: FollowingUsersResolver<(User | null)[] | null, TypeParent, Context>;
+    followingUsers?: FollowingUsersResolver<Maybe<(Maybe<User>)[]>, TypeParent, Context>;
 
-    posts?: PostsResolver<(Post | null)[] | null, TypeParent, Context>;
+    posts?: PostsResolver<Maybe<(Maybe<Post>)[]>, TypeParent, Context>;
   }
 
-  export type IdResolver<R = string | null, Parent = WriterUser, Context = {}> = Resolver<R, Parent, Context>;
-  export type UsernameResolver<R = string | null, Parent = WriterUser, Context = {}> = Resolver<R, Parent, Context>;
-  export type RoleResolver<R = Role | null, Parent = WriterUser, Context = {}> = Resolver<R, Parent, Context>;
-  export type LikedPostsResolver<R = (Post | null)[] | null, Parent = WriterUser, Context = {}> = Resolver<
+  export type IdResolver<R = Maybe<string>, Parent = WriterUser, Context = {}> = Resolver<R, Parent, Context>;
+  export type UsernameResolver<R = Maybe<string>, Parent = WriterUser, Context = {}> = Resolver<R, Parent, Context>;
+  export type RoleResolver<R = Maybe<Role>, Parent = WriterUser, Context = {}> = Resolver<R, Parent, Context>;
+  export type LikedPostsResolver<R = Maybe<(Maybe<Post>)[]>, Parent = WriterUser, Context = {}> = Resolver<
     R,
     Parent,
     Context,
     LikedPostsArgs
   >;
   export interface LikedPostsArgs {
-    skip?: number | null;
+    skip?: Maybe<number>;
 
-    limit?: number | null;
+    limit?: Maybe<number>;
   }
 
-  export type FollowerUsersResolver<R = (User | null)[] | null, Parent = WriterUser, Context = {}> = Resolver<
+  export type FollowerUsersResolver<R = Maybe<(Maybe<User>)[]>, Parent = WriterUser, Context = {}> = Resolver<
     R,
     Parent,
     Context,
     FollowerUsersArgs
   >;
   export interface FollowerUsersArgs {
-    skip?: number | null;
+    skip?: Maybe<number>;
 
-    limit?: number | null;
+    limit?: Maybe<number>;
   }
 
-  export type FollowingUsersResolver<R = (User | null)[] | null, Parent = WriterUser, Context = {}> = Resolver<
+  export type FollowingUsersResolver<R = Maybe<(Maybe<User>)[]>, Parent = WriterUser, Context = {}> = Resolver<
     R,
     Parent,
     Context,
     FollowingUsersArgs
   >;
   export interface FollowingUsersArgs {
-    skip?: number | null;
+    skip?: Maybe<number>;
 
-    limit?: number | null;
+    limit?: Maybe<number>;
   }
 
-  export type PostsResolver<R = (Post | null)[] | null, Parent = WriterUser, Context = {}> = Resolver<
+  export type PostsResolver<R = Maybe<(Maybe<Post>)[]>, Parent = WriterUser, Context = {}> = Resolver<
     R,
     Parent,
     Context,
     PostsArgs
   >;
   export interface PostsArgs {
-    skip?: number | null;
+    skip?: Maybe<number>;
 
-    limit?: number | null;
+    limit?: Maybe<number>;
   }
 }
 
 export namespace ReaderUserResolvers {
   export interface Resolvers<Context = {}, TypeParent = ReaderUser> {
-    id?: IdResolver<string | null, TypeParent, Context>;
+    id?: IdResolver<Maybe<string>, TypeParent, Context>;
 
-    username?: UsernameResolver<string | null, TypeParent, Context>;
+    username?: UsernameResolver<Maybe<string>, TypeParent, Context>;
 
-    role?: RoleResolver<Role | null, TypeParent, Context>;
+    role?: RoleResolver<Maybe<Role>, TypeParent, Context>;
 
-    likedPosts?: LikedPostsResolver<(Post | null)[] | null, TypeParent, Context>;
+    likedPosts?: LikedPostsResolver<Maybe<(Maybe<Post>)[]>, TypeParent, Context>;
 
-    followerUsers?: FollowerUsersResolver<(User | null)[] | null, TypeParent, Context>;
+    followerUsers?: FollowerUsersResolver<Maybe<(Maybe<User>)[]>, TypeParent, Context>;
 
-    followingUsers?: FollowingUsersResolver<(User | null)[] | null, TypeParent, Context>;
+    followingUsers?: FollowingUsersResolver<Maybe<(Maybe<User>)[]>, TypeParent, Context>;
   }
 
-  export type IdResolver<R = string | null, Parent = ReaderUser, Context = {}> = Resolver<R, Parent, Context>;
-  export type UsernameResolver<R = string | null, Parent = ReaderUser, Context = {}> = Resolver<R, Parent, Context>;
-  export type RoleResolver<R = Role | null, Parent = ReaderUser, Context = {}> = Resolver<R, Parent, Context>;
-  export type LikedPostsResolver<R = (Post | null)[] | null, Parent = ReaderUser, Context = {}> = Resolver<
+  export type IdResolver<R = Maybe<string>, Parent = ReaderUser, Context = {}> = Resolver<R, Parent, Context>;
+  export type UsernameResolver<R = Maybe<string>, Parent = ReaderUser, Context = {}> = Resolver<R, Parent, Context>;
+  export type RoleResolver<R = Maybe<Role>, Parent = ReaderUser, Context = {}> = Resolver<R, Parent, Context>;
+  export type LikedPostsResolver<R = Maybe<(Maybe<Post>)[]>, Parent = ReaderUser, Context = {}> = Resolver<
     R,
     Parent,
     Context,
     LikedPostsArgs
   >;
   export interface LikedPostsArgs {
-    skip?: number | null;
+    skip?: Maybe<number>;
 
-    limit?: number | null;
+    limit?: Maybe<number>;
   }
 
-  export type FollowerUsersResolver<R = (User | null)[] | null, Parent = ReaderUser, Context = {}> = Resolver<
+  export type FollowerUsersResolver<R = Maybe<(Maybe<User>)[]>, Parent = ReaderUser, Context = {}> = Resolver<
     R,
     Parent,
     Context,
     FollowerUsersArgs
   >;
   export interface FollowerUsersArgs {
-    skip?: number | null;
+    skip?: Maybe<number>;
 
-    limit?: number | null;
+    limit?: Maybe<number>;
   }
 
-  export type FollowingUsersResolver<R = (User | null)[] | null, Parent = ReaderUser, Context = {}> = Resolver<
+  export type FollowingUsersResolver<R = Maybe<(Maybe<User>)[]>, Parent = ReaderUser, Context = {}> = Resolver<
     R,
     Parent,
     Context,
     FollowingUsersArgs
   >;
   export interface FollowingUsersArgs {
-    skip?: number | null;
+    skip?: Maybe<number>;
 
-    limit?: number | null;
+    limit?: Maybe<number>;
   }
 }
 
@@ -449,7 +448,7 @@ export namespace UserResolvers {
 
 export type UnionDirectiveResolver<Result> = DirectiveResolverFn<Result, UnionDirectiveArgs, {}>;
 export interface UnionDirectiveArgs {
-  discriminatorField?: string | null;
+  discriminatorField?: Maybe<string>;
 }
 
 export type AbstractEntityDirectiveResolver<Result> = DirectiveResolverFn<Result, AbstractEntityDirectiveArgs, {}>;
@@ -459,18 +458,18 @@ export interface AbstractEntityDirectiveArgs {
 
 export type EntityDirectiveResolver<Result> = DirectiveResolverFn<Result, EntityDirectiveArgs, {}>;
 export interface EntityDirectiveArgs {
-  embedded?: boolean | null;
+  embedded?: Maybe<boolean>;
 
-  additionalFields?: (AdditionalEntityFields | null)[] | null;
+  additionalFields?: Maybe<(Maybe<AdditionalEntityFields>)[]>;
 }
 
 export type ColumnDirectiveResolver<Result> = DirectiveResolverFn<Result, ColumnDirectiveArgs, {}>;
 export interface ColumnDirectiveArgs {
-  name?: string | null;
+  name?: Maybe<string>;
 
-  overrideType?: string | null;
+  overrideType?: Maybe<string>;
 
-  overrideIsArray?: boolean | null;
+  overrideIsArray?: Maybe<boolean>;
 }
 
 export type IdDirectiveResolver<Result> = DirectiveResolverFn<Result, {}, {}>;
@@ -499,7 +498,7 @@ export interface IncludeDirectiveArgs {
 export type DeprecatedDirectiveResolver<Result> = DirectiveResolverFn<Result, DeprecatedDirectiveArgs, {}>;
 export interface DeprecatedDirectiveArgs {
   /** Explains why this element was deprecated, usually also including a suggestion for how to access supported similar data. Formatted using the Markdown syntax (as specified by [CommonMark](https://commonmark.org/). */
-  reason?: string | null;
+  reason?: Maybe<string>;
 }
 
 export interface DateScalarConfig extends GraphQLScalarTypeConfig<Date, any> {

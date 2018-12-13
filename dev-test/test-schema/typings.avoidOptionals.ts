@@ -1,11 +1,13 @@
+export type Maybe<T> = T | null;
+
 // ====================================================
 // Types
 // ====================================================
 
 export interface Query {
-  allUsers: (User | null)[];
+  allUsers: (Maybe<User>)[];
 
-  userById: User | null;
+  userById: Maybe<User>;
 }
 
 export interface User {
