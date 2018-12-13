@@ -507,4 +507,31 @@ describe('TypeScript Server', () => {
       `);
     });
   });
+
+  it('should generate correctly when using a Query with some fields and variables', async () => {
+    const content = await plugin(
+      buildSchema(`
+        type Query {
+          fieldTest(limit: Int = 42): [String]
+        }
+    `),
+      [],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
+
+    expect(content).toBeSimilarStringTo(`
+      export interface Query {
+        fieldTest?: Maybe<(Maybe<string>)[]>;
+      }
+    `);
+
+    expect(content).toBeSimilarStringTo(`
+      export interface FieldTestQueryArgs {
+        limit?: number;
+      }
+    `);
+  });
 });

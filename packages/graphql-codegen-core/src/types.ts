@@ -31,6 +31,7 @@ export interface Argument extends AstNode {
   isUnion: boolean;
   isInputType: boolean;
   isEnum: boolean;
+  hasDefaultValue: boolean;
 }
 
 export interface Field extends AstNode {
