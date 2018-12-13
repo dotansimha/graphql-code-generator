@@ -112,6 +112,10 @@ export async function init() {
 
   const possibleTargets = await guessTargets();
 
+  function normalizeTargets(targets: Tags[] | Tags[][]): Tags[] {
+    return [].concat(...targets);
+  }
+
   const answers = await inquirer.prompt<Answers>([
     {
       type: 'checkbox',
@@ -156,7 +160,13 @@ export async function init() {
       type: 'input',
       name: 'documents',
       message: 'Where are your operations and fragments?:',
-      when: answers => answers.targets.includes(Tags.client),
+      when: answers => {
+        // flatten targets
+        // I can't find an API in Inquirer that would do that
+        answers.targets = normalizeTargets(answers.targets);
+
+        return answers.targets.includes(Tags.client);
+      },
       default: '**/*.graphql',
       validate: (str: string) => str.length > 0
     },
@@ -165,10 +175,6 @@ export async function init() {
       name: 'plugins',
       message: 'Pick plugins:',
       choices: answers => {
-        // flatten targets
-        // I can't find an API in Inquirer that would do that
-        answers.targets = [].concat(...answers.targets);
-
         return plugins
           .filter(p => p.available(answers.targets))
           .map<inquirer.ChoiceType>(p => {
