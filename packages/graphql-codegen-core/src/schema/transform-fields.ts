@@ -9,7 +9,10 @@ import {
   GraphQLNamedType,
   GraphQLScalarType,
   GraphQLUnionType,
-  GraphQLEnumType
+  GraphQLEnumType,
+  GraphQLInputFieldMap,
+  GraphQLInputField,
+  isInputType
 } from 'graphql';
 import { objectMapToArray } from '../utils/object-map-to-array';
 import { Field, FieldType } from '../types';
@@ -21,10 +24,10 @@ import { getDirectives } from '../utils/get-directives';
 
 export function resolveFields(
   schema: GraphQLSchema,
-  rawFields: GraphQLFieldMap<any, any>,
+  rawFields: GraphQLFieldMap<any, any> | GraphQLInputFieldMap,
   _parent: GraphQLObjectType | GraphQLInterfaceType | GraphQLInputObjectType
 ): Field[] {
-  const fieldsArray = objectMapToArray<GraphQLField<any, any>>(rawFields);
+  const fieldsArray = objectMapToArray<GraphQLField<any, any> | GraphQLInputField>(rawFields);
 
   return fieldsArray.map<Field>(
     (item: { key: string; value: GraphQLField<any, any> }): Field => {
@@ -33,6 +36,11 @@ export function resolveFields(
       const namedType = getNamedType(item.value.type);
       const indicators = resolveTypeIndicators(namedType);
       const directives = getDirectives(schema, item.value);
+      let hasDefaultValue = false;
+
+      if (isInputField(item.value)) {
+        hasDefaultValue = !!item.value.defaultValue;
+      }
 
       debugLog(`[resolveFields] transformed field ${item.value.name} of type ${type}, resolved type is: `, type);
 
@@ -54,6 +62,7 @@ export function resolveFields(
         isUnion: indicators.isUnion,
         isInputType: indicators.isInputType,
         isType: indicators.isType,
+        hasDefaultValue,
         directives,
         usesDirectives: Object.keys(directives).length > 0
       };
@@ -76,4 +85,8 @@ function toFieldType(schema: GraphQLSchema, type: GraphQLNamedType): FieldType {
   };
 
   return Object.keys(typeMap).find(fieldType => typeMap[fieldType]()) as FieldType;
+}
+
+function isInputField(field: any): field is GraphQLInputField {
+  return isInputType(field.type);
 }
