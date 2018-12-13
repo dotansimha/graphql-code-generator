@@ -25,7 +25,6 @@ export const plugin: PluginFunction<FlowResolversPluginConfig> = (
 
   const result = `
 import { ${imports.join(', ')} } from 'graphql';
-import { ScalarsMap } from 'graphql-codegen-flow';
 
 export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
   parent?: Parent,

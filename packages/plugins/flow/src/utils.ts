@@ -102,7 +102,7 @@ ${this._block}
       result += '{}';
     }
 
-    return result + ';\n';
+    return result + (this._kind === 'interface' ? '' : ';') + '\n';
   }
 }
 

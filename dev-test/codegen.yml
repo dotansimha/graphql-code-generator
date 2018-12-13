@@ -1,40 +1,41 @@
 overwrite: true
 generates:
   ./dev-test/test-schema/resolvers-types.ts:
-    schema: ./dev-test/test-schema/schema-text.js 
-    plugins: 
+    schema: ./dev-test/test-schema/schema-text.js
+    plugins:
       - add: // tslint:disable
       - typescript-common
       - typescript-server
       - typescript-resolvers
   ./dev-test/test-schema/flow-types.flow.js:
-    schema: ./dev-test/test-schema/schema.json 
-    plugins: 
+    schema: ./dev-test/test-schema/schema.json
+    plugins:
       - flow
+      - flow-resolvers
   ./dev-test/test-schema/resolvers-root.ts:
     schema: ./dev-test/test-schema/schema-with-root.graphql
-    plugins: 
+    plugins:
       - add: // tslint:disable
       - typescript-common
       - typescript-server
       - typescript-resolvers
   ./dev-test/test-schema/typings.ts:
     schema: ./dev-test/test-schema/schema.json
-    plugins: 
+    plugins:
       - add: // tslint:disable
       - typescript-common
       - typescript-server
       - typescript-resolvers
   ./dev-test/test-schema/typings.avoidOptionals.ts:
     schema: ./dev-test/test-schema/schema.json
-    config: 
+    config:
       avoidOptionals: true
     plugins:
       - typescript-common
       - typescript-server
   ./dev-test/test-schema/typings.immutableTypes.ts:
     schema: ./dev-test/test-schema/schema.json
-    config: 
+    config:
       imutableTypes: true
     plugins:
       - typescript-common
@@ -60,7 +61,7 @@ generates:
   ./dev-test/githunt/types.enumsAsTypes.ts:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
-    config: 
+    config:
       enumsAsTypes: true
     plugins:
       - typescript-common
@@ -68,7 +69,7 @@ generates:
   ./dev-test/githunt/types.d.ts:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
-    config: 
+    config:
       enumsAsTypes: true
     plugins:
       - typescript-common
@@ -76,7 +77,7 @@ generates:
   ./dev-test/githunt/types.avoidOptionals.ts:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
-    config: 
+    config:
       avoidOptionals: true
     plugins:
       - typescript-common
@@ -84,7 +85,7 @@ generates:
   ./dev-test/githunt/types.immutableTypes.ts:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
-    config: 
+    config:
       immutableTypes: true
     plugins:
       - typescript-common
@@ -92,7 +93,7 @@ generates:
   ./dev-test/githunt/types.noNamespaces.ts:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
-    config: 
+    config:
       noNamespaces: true
     plugins:
       - typescript-common
@@ -124,7 +125,7 @@ generates:
   ./dev-test/star-wars/types.d.ts:
     schema: ./dev-test/star-wars/schema.json
     documents: ./dev-test/star-wars/**/*.graphql
-    config: 
+    config:
       enumsAsTypes: true
     plugins:
       - typescript-common
@@ -132,7 +133,7 @@ generates:
   ./dev-test/star-wars/types.avoidOptionals.ts:
     schema: ./dev-test/star-wars/schema.json
     documents: ./dev-test/star-wars/**/*.graphql
-    config: 
+    config:
       avoidOptionals: true
     plugins:
       - typescript-common
@@ -140,7 +141,7 @@ generates:
   ./dev-test/star-wars/types.immutableTypes.ts:
     schema: ./dev-test/star-wars/schema.json
     documents: ./dev-test/star-wars/**/*.graphql
-    config: 
+    config:
       immutableTypes: true
     plugins:
       - typescript-common
@@ -148,7 +149,7 @@ generates:
   ./dev-test/star-wars/types.noNamespaces.ts:
     schema: ./dev-test/star-wars/schema.json
     documents: ./dev-test/star-wars/**/*.graphql
-    config: 
+    config:
       immutableTypes: true
     plugins:
       - typescript-common
@@ -174,7 +175,7 @@ generates:
     config:
       scalars:
         Date: Date
-    plugins: 
+    plugins:
       - add: // tslint:disable
       - typescript-common
       - typescript-server
