@@ -7,9 +7,9 @@
     "forin": true,
     "indent": [true, "spaces"],
     "label-position": true,
-    "max-line-length": [true, 180],
+    "max-line-length": [false],
     "member-access": false,
-    "member-ordering": [true, "public-before-private", "static-before-instance", "variables-before-functions"],
+    "member-ordering": [true, "static-before-instance", "variables-before-functions"],
     "no-arg": true,
     "no-bitwise": true,
     "no-console": true,
@@ -31,9 +31,9 @@
     "one-line": [true, "check-open-brace", "check-whitespace"],
     "quotemark": [true, "single"],
     "radix": false,
-    "semicolon": true,
+    "semicolon": [true, "ignore-bound-class-methods"],
     "triple-equals": [true, "allow-null-check"],
-    "variable-name": [true, "check-format", "allow-leading-underscore"],
+    "variable-name": [true, "check-format", "allow-leading-underscore", "allow-pascal-case"],
     "whitespace": [true, "check-branch", "check-decl", "check-operator", "check-separator", "check-type"]
   }
 }

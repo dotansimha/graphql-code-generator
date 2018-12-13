@@ -47,8 +47,26 @@
       "migration/from-0-13": {
         "title": "Migration from 0.13"
       },
+      "plugins/add": {
+        "title": "Add"
+      },
+      "plugins/flow-documents": {
+        "title": "Flow Documents"
+      },
+      "plugins/flow-resolvers": {
+        "title": "Flow Resolvers"
+      },
+      "plugins/flow": {
+        "title": "Flow Types"
+      },
+      "plugins/fragment-matcher": {
+        "title": "Fragment Matcher"
+      },
       "plugins/index": {
         "title": "Available Plugins"
+      },
+      "plugins/time": {
+        "title": "Time"
       },
       "plugins/typescript-apollo-angular": {
         "title": "Typescript Apollo Angular"

@@ -19,7 +19,7 @@ Install using `npm` (or `yarn`):
 
 ## Configuration
 
-The output of this plugin can be controlled using a specified config file which consists of the fields below. Each config field is followed by its matching environment variable, which can be used as an alternative method to control the template's behavior:
+The output of this plugin can be controlled using a specified config file which consists of the fields below.
 
 #### `namingConvention` (default value: `pascalCase`)
 
@@ -40,7 +40,6 @@ generates:
     config:
       scalars:
         Date: Date
-]
 ```
 
 > You can also override built-in scalars, such as `String`.
@@ -52,6 +51,22 @@ This will cause the generator to avoid using TypeScript optionals (`?`), so the 
 #### `enumsAsTypes` (default value: `false`)
 
 Will generate the declared enums as TypeScript types. This is useful if you can't use `.ts` extension.
+
+#### `enumValues` (default value: `{}`)
+
+Use this feature to set custom values for you GraphQL enums.
+
+```yaml
+# ...
+generates:
+  path/to/file.ts:
+    plugins:
+      - typescript-common
+    config:
+      enumValues:
+        MyEnum:
+          A: 'foo'
+```
 
 #### `immutableTypes` (default value: `false`)
 

@@ -1,7 +1,7 @@
 {
   "name": "graphql-codegen-fragment-matcher",
   "version": "0.14.5",
-  "description": "graphql-codegen-cli template for TypeScript typings for both client side and server side",
+  "description": "graphql-code-generate plugin for generating fragments matcher introspection file",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
   "scripts": {
