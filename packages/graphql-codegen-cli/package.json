@@ -62,7 +62,7 @@
     "graphql-import": "0.7.1",
     "graphql-tag-pluck": "0.3.3",
     "indent-string": "3.2.0",
-    "inquirer": "6.2.0",
+    "inquirer": "6.2.1",
     "is-glob": "4.0.0",
     "is-valid-path": "0.1.1",
     "js-yaml": "3.12.0",
