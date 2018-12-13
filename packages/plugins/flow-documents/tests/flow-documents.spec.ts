@@ -17,6 +17,7 @@ describe('Flow Documents Plugin', () => {
         username: String!
         email: String!
         profile: Profile
+        role: Role
       }
 
       type Profile {
@@ -49,6 +50,11 @@ describe('Flow Documents Plugin', () => {
 
       type ImageMetadata {
         createdBy: String!
+      }
+
+      enum Role {
+        USER
+        ADMIN
       }
 
       union MyUnion = User | Profile
@@ -297,6 +303,7 @@ describe('Flow Documents Plugin', () => {
           profile {
             age
           }
+          role
         }
 
         query me {
@@ -521,6 +528,7 @@ describe('Flow Documents Plugin', () => {
           me {
             id
             username
+            role
             profile {
               age
             }
@@ -532,7 +540,7 @@ describe('Flow Documents Plugin', () => {
       });
 
       expect(result.definitions[0]).toBeSimilarStringTo(
-        `export type CurrentUserQuery = { me: ?($Pick<User, { id: *, username: * }> & { profile: ?$Pick<Profile, { age: * }> }) };`
+        `export type CurrentUserQuery = { me: ?($Pick<User, { id: *, username: *, role: * }> & { profile: ?$Pick<Profile, { age: * }> }) };`
       );
 
       validateFlow(result.definitions[0]);

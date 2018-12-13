@@ -16,6 +16,7 @@
     "graphql-code-generator": "0.14.5",
     "graphql-codegen-flow": "0.14.5",
     "graphql-codegen-flow-documents": "0.14.5",
+    "graphql-codegen-flow-resolvers": "0.14.5",
     "graphql-codegen-typescript-common": "0.14.5",
     "graphql-codegen-typescript-client": "0.14.5",
     "graphql-codegen-typescript-server": "0.14.5",

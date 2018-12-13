@@ -79,5 +79,5 @@ export type DirectiveResolverFn<TResult, TArgs = {}, TContext = {}> = (
     leave: new FlowResolversVisitor(config, schema)
   });
 
-  return result + '\n' + visitorResult.definitions.join('\n');
+  return result + '\n' + visitorResult.definitions.filter(d => typeof d === 'string').join('\n');
 };

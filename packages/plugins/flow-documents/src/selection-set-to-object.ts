@@ -7,7 +7,8 @@ import {
   GraphQLNamedType,
   isObjectType,
   isUnionType,
-  isInterfaceType
+  isInterfaceType,
+  isEnumType
 } from 'graphql';
 import { getBaseType, quoteIfNeeded } from './utils';
 import { FlowDocumentsVisitor } from './visitor';
@@ -40,7 +41,7 @@ export class SelectionSetToObject {
       const baseType = getBaseType(rawType);
       const typeName = baseType.name;
 
-      if (this._visitorInstance.scalars[typeName]) {
+      if (this._visitorInstance.scalars[typeName] || isEnumType(baseType)) {
         if (field.alias && field.alias.value) {
           this._primitiveAliasedFields.push({
             fieldName: field.name.value,

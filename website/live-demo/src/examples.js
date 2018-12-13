@@ -66,17 +66,6 @@ export const EXAMPLES = {
       documents: ''
     }
   },
-  flow: {
-    name: 'Flow (Types)',
-    state: {
-      config: yaml`
-        generates:
-          server-types.ts:
-            - flow`,
-      schema: TS_SCHEMA,
-      documents: ''
-    }
-  },
   'typescript-client': {
     name: 'TypeScript (Client)',
     state: {
@@ -106,7 +95,7 @@ export const EXAMPLES = {
     }
   },
   'react-apollo': {
-    name: 'React-Apollo Components',
+    name: 'TypeScript React-Apollo Components',
     state: {
       config: yaml`
         generates:
@@ -120,7 +109,7 @@ export const EXAMPLES = {
     }
   },
   'apollo-angular': {
-    name: 'Apollo-Angular Components',
+    name: 'TypeScript Apollo-Angular Components',
     state: {
       config: yaml`
         generates:
@@ -143,6 +132,44 @@ export const EXAMPLES = {
               - typescript-common
               - typescript-server
               - typescript-resolvers`,
+      schema: TS_SCHEMA,
+      documents: TS_QUERY
+    }
+  },
+  flow: {
+    name: 'Flow (Types)',
+    state: {
+      config: yaml`
+        generates:
+          types.flow.js:
+            - flow
+            `,
+      schema: TS_SCHEMA,
+      documents: ''
+    }
+  },
+  flowResolvers: {
+    name: 'Flow (resolvers signature)',
+    state: {
+      config: yaml`
+        generates:
+          resolvers.flow.js:
+            - flow
+            - flow-resolvers
+            `,
+      schema: TS_SCHEMA,
+      documents: ''
+    }
+  },
+  flowDocuments: {
+    name: 'Flow (Types and documents)',
+    state: {
+      config: yaml`
+        generates:
+          types.flow.js:
+            - flow
+            - flow-documents
+            `,
       schema: TS_SCHEMA,
       documents: TS_QUERY
     }
