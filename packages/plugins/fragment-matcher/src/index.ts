@@ -2,14 +2,16 @@ import { GraphQLSchema, parse, execute } from 'graphql';
 import { PluginFunction, PluginValidateFn, DocumentFile } from 'graphql-codegen-core';
 import { extname } from 'path';
 
-export interface IntrospectionResultData {
+interface IntrospectionResultData {
   __schema: {
     types: {
       kind: string;
       name: string;
-      possibleTypes: {
-        name: string;
-      }[];
+      possibleTypes:
+        | {
+            name: string;
+          }[]
+        | null;
     }[];
   };
 }
@@ -35,7 +37,7 @@ export const plugin: PluginFunction = async (
     ...pluginConfig
   };
 
-  const introspection = await execute({
+  const introspection = await execute<IntrospectionResultData>({
     schema,
     document: parse(`
       {
@@ -53,15 +55,27 @@ export const plugin: PluginFunction = async (
   });
   const ext = extname(info.outputFile).toLowerCase();
 
+  if (!introspection.data) {
+    throw new Error(`Plugin "fragment-matcher" couldn't introspect the schema`);
+  }
+
+  const filteredData: IntrospectionResultData = {
+    __schema: {
+      ...introspection.data.__schema,
+      types: introspection.data.__schema.types.filter(type => type.kind === 'UNION' || type.kind === 'INTERFACE')
+    }
+  };
+  const content = JSON.stringify(filteredData, null, 2);
+
   if (extensions.json.includes(ext)) {
-    return JSON.stringify(introspection.data, null, 2);
+    return content;
   }
 
   if (extensions.js.includes(ext)) {
     const defaultExportStatement = config.module === 'es2015' ? `export default` : 'module.exports =';
 
     return `
-      ${defaultExportStatement} ${JSON.stringify(introspection.data, null, 2)}
+      ${defaultExportStatement} ${content}
     `;
   }
 
@@ -79,7 +93,7 @@ export const plugin: PluginFunction = async (
         };
       }
 
-      const result: IntrospectionResultData = ${JSON.stringify(introspection.data, null, 2)};
+      const result: IntrospectionResultData = ${content};
 
       export default result;
     `;
