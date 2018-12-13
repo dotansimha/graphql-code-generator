@@ -1189,9 +1189,9 @@ describe('Resolvers', () => {
 
     expect(content).toBeSimilarStringTo(`
       export interface IResolvers {
-        Query?: QueryResolversResolvers;
-        Post?: PostResolversResolvers;
-        User?: UserResolversResolvers;
+        Query?: QueryResolvers;
+        Post?: PostResolvers;
+        User?: UserResolvers;
         Date?: GraphQLScalarType;
       }
     `);
