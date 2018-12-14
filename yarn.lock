@@ -5555,14 +5555,15 @@ graphql-request@^1.5.0:
   dependencies:
     cross-fetch "2.2.2"
 
-graphql-tag-pluck@0.3.3:
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/graphql-tag-pluck/-/graphql-tag-pluck-0.3.3.tgz#00f4284f3848b3ed0798ec5541c17f6e8b92363e"
-  integrity sha512-i/ciMZXiRfgocDk8si4SyMaxGOGUdGZVx+19/LhLKpqhS/zi+k8ipzJnaB9gNfjobqASkcc8aSopCNb5kpWeRA==
+graphql-tag-pluck@0.3.4:
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/graphql-tag-pluck/-/graphql-tag-pluck-0.3.4.tgz#6b9c5d825d399dca0c6c9c294174a7d2165aeb74"
+  integrity sha512-R/O9CjRfR12exHJb1huEisu9HdDp6sIDmemqc6VRz3pjE0jeEKk0lnvvw0SHOZYwcug27WzPe9I5StULLvmxCA==
   dependencies:
     "@babel/parser" "^7.2.0"
     "@babel/traverse" "^7.1.6"
     "@babel/types" "^7.2.0"
+    source-map-support "^0.5.9"
 
 graphql-tag@2.10.0:
   version "2.10.0"
@@ -10912,7 +10913,7 @@ source-map-support@^0.4.15:
   dependencies:
     source-map "^0.5.6"
 
-source-map-support@^0.5.3, source-map-support@^0.5.6, source-map-support@~0.5.6:
+source-map-support@^0.5.3, source-map-support@^0.5.6, source-map-support@^0.5.9, source-map-support@~0.5.6:
   version "0.5.9"
   resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.5.9.tgz#41bc953b2534267ea2d605bccfa7bfa3111ced5f"
   integrity sha512-gR6Rw4MvUlYy83vP0vxoVNzM6t8MUXqNuRsuBmBHQDu1Fh6X015FrLdgoDKcNdkwGubozq0P4N0Q37UyFVr1EA==
