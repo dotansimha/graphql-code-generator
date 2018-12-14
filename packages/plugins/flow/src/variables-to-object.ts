@@ -31,7 +31,9 @@ export class OperationVariablesToObject<
       .map(variable => {
         const baseType = typeof variable.type === 'string' ? variable.type : getBaseTypeNode(variable.type);
         const typeName = typeof baseType === 'string' ? baseType : baseType.name.value;
-        const typeValue = this._visitorInstance.scalars[typeName] ? this._visitorInstance.scalars[typeName] : typeName;
+        const typeValue = this._visitorInstance.scalars[typeName]
+          ? this._visitorInstance.scalars[typeName]
+          : this._visitorInstance.convertName(typeName, true);
 
         return indent(
           `${this.getName(variable)}${variable.type.kind === Kind.NON_NULL_TYPE ? '' : '?'}: ${wrapAstTypeWithModifiers(
