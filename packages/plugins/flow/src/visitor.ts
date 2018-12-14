@@ -35,6 +35,7 @@ export interface ParsedConfig {
 
 export interface BasicFlowVisitor {
   scalars: ScalarsMap;
+  convertName: (name: any, addPrefix: boolean) => string;
 }
 
 export class FlowVisitor implements BasicFlowVisitor {
@@ -49,9 +50,9 @@ export class FlowVisitor implements BasicFlowVisitor {
     };
   }
 
-  private _convertName = (name: any, addPrefix = true): string => {
+  convertName(name: any, addPrefix = true): string {
     return (addPrefix ? this._parsedConfig.typesPrefix : '') + this._parsedConfig.convert(name);
-  };
+  }
 
   get scalars(): ScalarsMap {
     return this._parsedConfig.scalars;
@@ -61,13 +62,13 @@ export class FlowVisitor implements BasicFlowVisitor {
     return new DeclarationBlock()
       .export()
       .asKind('type')
-      .withName(this._convertName(node.name))
+      .withName(this.convertName(node.name))
       .withContent(this._parsedConfig.scalars[(node.name as any) as string] || 'any').string;
   };
 
   NamedType = (node: NamedTypeNode): string => {
     const asString = (node.name as any) as string;
-    const type = this._parsedConfig.scalars[asString] || this._convertName(asString);
+    const type = this._parsedConfig.scalars[asString] || this.convertName(asString);
 
     return `?${type}`;
   };
@@ -96,7 +97,7 @@ export class FlowVisitor implements BasicFlowVisitor {
     return new DeclarationBlock()
       .export()
       .asKind('type')
-      .withName(this._convertName(node.name))
+      .withName(this.convertName(node.name))
       .withBlock(node.fields.join('\n')).string;
   };
 
@@ -114,7 +115,7 @@ export class FlowVisitor implements BasicFlowVisitor {
     return new DeclarationBlock()
       .export()
       .asKind('type')
-      .withName(this._convertName(node.name))
+      .withName(this.convertName(node.name))
       .withContent(possibleTypes).string;
   };
 
@@ -127,24 +128,23 @@ export class FlowVisitor implements BasicFlowVisitor {
     const typeDefinition = new DeclarationBlock()
       .export()
       .asKind('type')
-      .withName(this._convertName(node.name))
+      .withName(this.convertName(node.name))
       .withContent(interfaces)
       .withBlock(node.fields.join('\n')).string;
 
     const original = parent[key];
     const fieldsWithArguments = original.fields.filter(field => field.arguments && field.arguments.length > 0);
     const fieldsArguments = fieldsWithArguments.map(field => {
-      const name = original.name.value + this._convertName(field.name.value, false) + 'Args';
+      const name = original.name.value + this.convertName(field.name.value, false) + 'Args';
       const transformedArguments = new OperationVariablesToObject<FlowVisitor, InputValueDefinitionNode>(
         this,
-        field.arguments,
-        this._convertName
+        field.arguments
       );
 
       return new DeclarationBlock()
         .export()
         .asKind('type')
-        .withName(this._convertName(name))
+        .withName(this.convertName(name))
         .withBlock(transformedArguments.string).string;
     });
 
@@ -155,7 +155,7 @@ export class FlowVisitor implements BasicFlowVisitor {
     return new DeclarationBlock()
       .export()
       .asKind('type')
-      .withName(this._convertName(node.name))
+      .withName(this.convertName(node.name))
       .withBlock(node.fields.join('\n')).string;
   };
 
@@ -165,12 +165,12 @@ export class FlowVisitor implements BasicFlowVisitor {
     const enumValues = new DeclarationBlock()
       .export()
       .asKind('const')
-      .withName(this._convertName(enumValuesName))
+      .withName(this.convertName(enumValuesName))
       .withBlock(
         node.values
           .map(enumOption =>
             indent(
-              `${this._convertName(enumOption.name)}: ${wrapWithSingleQuotes(
+              `${this.convertName(enumOption.name)}: ${wrapWithSingleQuotes(
                 this._parsedConfig.enumValues[(enumOption.name as any) as string] || enumOption.name
               )}`
             )
@@ -181,8 +181,8 @@ export class FlowVisitor implements BasicFlowVisitor {
     const enumType = new DeclarationBlock()
       .export()
       .asKind('type')
-      .withName(this._convertName(node.name))
-      .withContent(`$Values<typeof ${this._convertName(enumValuesName)}>`).string;
+      .withName(this.convertName(node.name))
+      .withContent(`$Values<typeof ${this.convertName(enumValuesName)}>`).string;
 
     return [enumValues, enumType].join('\n\n');
   };
