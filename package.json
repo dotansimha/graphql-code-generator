@@ -37,7 +37,7 @@
     "@types/request": "2.48.1",
     "@types/common-tags": "1.8.0",
     "@types/graphql": "14.0.3",
-    "husky": "1.2.0",
+    "husky": "1.2.1",
     "lint-staged": "8.1.0",
     "tslint": "5.11.0",
     "typescript": "3.2.2",
