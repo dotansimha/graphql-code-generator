@@ -1124,10 +1124,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.12.tgz#e15a9d034d9210f00320ef718a50c4a799417c47"
   integrity sha512-Pr+6JRiKkfsFvmU/LK68oBRCQeEg36TyAbPhc2xpez24OOZZCuoIhWGTd39VZy6nGafSbxzGouFPTFD/rR1A0A==
 
-"@types/node@10.12.15":
-  version "10.12.15"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.15.tgz#20e85651b62fd86656e57c9c9bc771ab1570bc59"
-  integrity sha512-9kROxduaN98QghwwHmxXO2Xz3MaWf+I1sLVAA6KJDF5xix+IyXVhds0MAfdNwtcpSrzhaTsNB0/jnL86fgUhqA==
+"@types/node@10.12.14":
+  version "10.12.14"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.14.tgz#c03b6380c5c301be0499ecd143b99b76ebe45678"
+  integrity sha512-0rVcFRhM93kRGAU88ASCjX9Y3FWDCh+33G5Z5evpKOea4xcpLqDGwmo64+DjgaSezTN5j9KdnUzvxhOw7fNciQ==
 
 "@types/prettier@1.15.2":
   version "1.15.2"
@@ -1738,15 +1738,7 @@ anymatch@^2.0.0:
     micromatch "^3.1.4"
     normalize-path "^2.1.1"
 
-apollo-link@1.2.5:
-  version "1.2.5"
-  resolved "https://registry.yarnpkg.com/apollo-link/-/apollo-link-1.2.5.tgz#f54932d6b8f1412a35e088bc199a116bce3f1f16"
-  integrity sha512-GJHEE4B06oEB58mpRRwW6ISyvgX2aCqCLjpcE3M/6/4e+ZVeX7fRGpMJJDq2zZ8n7qWdrEuY315JfxzpsJmUhA==
-  dependencies:
-    apollo-utilities "^1.0.0"
-    zen-observable-ts "^0.8.12"
-
-apollo-link@^1.2.3:
+apollo-link@1.2.4, apollo-link@^1.2.3:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/apollo-link/-/apollo-link-1.2.4.tgz#ab4d21d2e428db848e88b5e8f4adc717b19c954b"
   integrity sha512-B1z+9H2nTyWEhMXRFSnoZ1vSuAYP+V/EdUJvRx9uZ8yuIBZMm6reyVtr1n0BWlKeSFyPieKJy2RLzmITAAQAMQ==
@@ -1999,10 +1991,10 @@ awesome-typescript-loader@5.2.1:
     source-map-support "^0.5.3"
     webpack-log "^1.2.0"
 
-aws-sdk@2.376.0:
-  version "2.376.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.376.0.tgz#21baebe889a46b6ed2e5cc87b490bed3c5ca9184"
-  integrity sha512-7/xsLzgF0GJIFTy2qPmn+dFLQoBpWponm+FS9aHUmjI0UMiTieBJzHUSZ8BHIY/4JukBLc3B5hL5evW+NS4pzw==
+aws-sdk@2.375.0:
+  version "2.375.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.375.0.tgz#84b19fb1e45455e7e435d7e13ed8ddc29a949ee5"
+  integrity sha512-p0rRNstWUushzMlafNzQiPPucI/9PFe5hpZ0eKDSenZQD6DUmnXGEYwIwJ1KOZ0l7u1GBSgPdKswZglprZVXSA==
   dependencies:
     buffer "4.9.1"
     events "1.1.1"
@@ -3453,7 +3445,7 @@ cosmiconfig@^4.0.0:
     parse-json "^4.0.0"
     require-from-string "^2.0.1"
 
-cosmiconfig@^5.0.0, cosmiconfig@^5.0.5, cosmiconfig@^5.0.6, cosmiconfig@^5.0.7:
+cosmiconfig@^5.0.0, cosmiconfig@^5.0.5, cosmiconfig@^5.0.6:
   version "5.0.7"
   resolved "https://registry.yarnpkg.com/cosmiconfig/-/cosmiconfig-5.0.7.tgz#39826b292ee0d78eda137dfa3173bd1c21a43b04"
   integrity sha512-PcLqxTKiDmNT6pSpy4N6KtuPwb53W+2tzNvwOZw0WH9N6O0vLIBq0x8aj8Oj75ere4YcGi48bDFCL+3fRJdlNA==
@@ -5079,10 +5071,10 @@ flatten@^1.0.2:
   resolved "https://registry.yarnpkg.com/flatten/-/flatten-1.0.2.tgz#dae46a9d78fbe25292258cc1e780a41d95c03782"
   integrity sha1-2uRqnXj74lKSJYzB54CkHZXAN4I=
 
-flow-bin@0.88.0:
-  version "0.88.0"
-  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.88.0.tgz#e4c7bd93da2331f6ac1733fbe484b1b0c52eb548"
-  integrity sha512-SnUCuhHP0JZaXQ83w4iTthfTInAg8DIBZCo1xIqDhFmQ6XNEMYMwYhPoMQyELRrkbTpyCYmf4g93y0UQw0dibw==
+flow-bin@0.89.0:
+  version "0.89.0"
+  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.89.0.tgz#6bd29c2af7e0f429797f820662f33749105c32fa"
+  integrity sha512-DkO4PsXYrl53V6G5+t5HbRMC5ajYUQej2LEGPUZ+j9okTb41Sn5j9vfxsCpXMEAslYnQoysHhYu4GUZsQX/DrQ==
 
 flow-parser@0.89.0:
   version "0.89.0"
@@ -5961,12 +5953,12 @@ https-browserify@^1.0.0:
   resolved "https://registry.yarnpkg.com/https-browserify/-/https-browserify-1.0.0.tgz#ec06c10e0a34c0f2faf199f7fd7fc78fffd03c73"
   integrity sha1-7AbBDgo0wPL68Zn3/X/Hj//QPHM=
 
-husky@1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/husky/-/husky-1.2.1.tgz#33628f7013e345c1790a4dbe4642ad047f772dee"
-  integrity sha512-4Ylal3HWhnDvIszuiyLoVrSGI7QLg/ogkNCoHE34c+yZYzb9kBZNrlTOsdw92cGi3cJT8pPb6CdVfxFkLnc8Dg==
+husky@1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/husky/-/husky-1.2.0.tgz#d631dda1e4a9ee8ba69a10b0c51a0e2c66e711e5"
+  integrity sha512-/ib3+iycykXC0tYIxsyqierikVa9DA2DrT32UEirqNEFVqOj1bFMTgP3jAz8HM7FgC/C8pc/BTUa9MV2GEkZaA==
   dependencies:
-    cosmiconfig "^5.0.7"
+    cosmiconfig "^5.0.6"
     execa "^1.0.0"
     find-up "^3.0.0"
     get-stdin "^6.0.0"
@@ -12678,13 +12670,6 @@ zen-observable-ts@^0.8.11:
   version "0.8.11"
   resolved "https://registry.yarnpkg.com/zen-observable-ts/-/zen-observable-ts-0.8.11.tgz#d54a27cd17dc4b4bb6bd008e5c096af7fcb068a9"
   integrity sha512-8bs7rgGV4kz5iTb9isudkuQjtWwPnQ8lXq6/T76vrepYZVMsDEv6BXaEA+DHdJSK3KVLduagi9jSpSAJ5NgKHw==
-  dependencies:
-    zen-observable "^0.8.0"
-
-zen-observable-ts@^0.8.12:
-  version "0.8.12"
-  resolved "https://registry.yarnpkg.com/zen-observable-ts/-/zen-observable-ts-0.8.12.tgz#38810d98645285c074775ab26b69992cc847c830"
-  integrity sha512-wwqbD6K6CqDd1T67UFg4hgDqnu2YAnFJDCPYmwN/N6Yfa+2QgoSp+nJomh+FWUdOc1A+553/ElvfoW8Vc/vsLg==
   dependencies:
     zen-observable "^0.8.0"
 
