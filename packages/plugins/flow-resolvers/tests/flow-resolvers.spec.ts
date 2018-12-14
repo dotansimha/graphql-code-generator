@@ -38,7 +38,7 @@ describe('Flow Resolvers Plugin', () => {
 
       scalar MyScalar
 
-      directive @myDirective(arg: String!, arg2: String!) on FIELD
+      directive @myDirective(arg: Int!, arg2: String!, arg3: Boolean!) on FIELD
   `
   });
 
@@ -46,8 +46,8 @@ describe('Flow Resolvers Plugin', () => {
     const result = plugin(schema, [], {}, { outputFile: '' });
 
     expect(result).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveResolver<Result> = DirectiveResolverFn<Result, {   arg?: ?string,
-      arg2?: ?string }, any>;
+    export type MyDirectiveDirectiveResolver<Result> = DirectiveResolverFn<Result, {   arg?: ?number,
+      arg2?: ?string, arg3?: ?boolean }, any>;
 
     export interface MyOtherTypeResolvers<Context = any, ParentType = MyOtherType> {
       bar?: Resolver<string, ParentType, Context>,
@@ -97,8 +97,8 @@ describe('Flow Resolvers Plugin', () => {
     );
 
     expect(result).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveResolver<Result> = DirectiveResolverFn<Result, {   arg?: ?string,
-      arg2?: ?string }, any>;
+    export type MyDirectiveDirectiveResolver<Result> = DirectiveResolverFn<Result, {   arg?: ?number,
+      arg2?: ?string, arg3?: ?boolean }, any>;
 
     export interface MyOtherTypeResolvers<Context = any, ParentType = MyCustomOtherType> {
       bar?: Resolver<string, ParentType, Context>,

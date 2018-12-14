@@ -24,7 +24,10 @@ export const DEFAULT_SCALARS = {
   String: 'string',
   Boolean: 'boolean',
   Int: 'number',
-  Float: 'number'
+  Float: 'number',
+  string: 'string',
+  number: 'number',
+  boolean: 'boolean'
 };
 export interface ParsedConfig {
   scalars: ScalarsMap;

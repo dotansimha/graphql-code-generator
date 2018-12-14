@@ -51,7 +51,7 @@ export class FlowResolversVisitor implements BasicFlowVisitor {
     return this._parsedConfig.scalars;
   }
 
-  private _convertName(name: any, addPrefix = true): string {
+  convertName(name: any, addPrefix = true): string {
     return (addPrefix ? this._parsedConfig.typesPrefix : '') + this._parsedConfig.convert(name);
   }
 
@@ -67,7 +67,7 @@ export class FlowResolversVisitor implements BasicFlowVisitor {
 
   NamedType = (node: NamedTypeNode): string => {
     const asString = (node.name as any) as string;
-    const type = this._parsedConfig.scalars[asString] || this._convertName(asString);
+    const type = this._parsedConfig.scalars[asString] || this.convertName(asString);
 
     return `?${type}`;
   };
@@ -96,18 +96,18 @@ export class FlowResolversVisitor implements BasicFlowVisitor {
 
       return indent(
         `${node.name}?: ${isSubscriptionType ? 'SubscriptionResolver' : 'Resolver'}<${mappedType}, ParentType, Context${
-          hasArguments ? `, ${parentName + this._convertName(node.name, false) + 'Args'}` : ''
+          hasArguments ? `, ${parentName + this.convertName(node.name, false) + 'Args'}` : ''
         }>,`
       );
     };
   };
 
   ObjectTypeDefinition = (node: ObjectTypeDefinitionNode) => {
-    const name = this._convertName(node.name + 'Resolvers');
+    const name = this.convertName(node.name + 'Resolvers');
     const type =
       this._parsedConfig.mapping[node.name as any] ||
       this._parsedConfig.scalars[node.name as any] ||
-      this._convertName(node.name);
+      this.convertName(node.name);
     const block = new DeclarationBlock()
       .export()
       .asKind('interface')
@@ -118,7 +118,7 @@ export class FlowResolversVisitor implements BasicFlowVisitor {
   };
 
   UnionTypeDefinition = (node: UnionTypeDefinitionNode): string => {
-    const name = this._convertName(node.name + 'Resolvers');
+    const name = this.convertName(node.name + 'Resolvers');
     const possibleTypes = node.types
       .map(name => ((name as any) as string).replace('?', ''))
       .map(f => `'${f}'`)
@@ -132,17 +132,17 @@ export class FlowResolversVisitor implements BasicFlowVisitor {
   };
 
   ScalarTypeDefinition = (node: ScalarTypeDefinitionNode): string => {
-    const baseName = this._convertName(node.name);
+    const baseName = this.convertName(node.name);
 
     return new DeclarationBlock()
       .export()
       .asKind('type')
-      .withName(this._convertName(node.name + 'ScalarConfig'), ` extends GraphQLScalarTypeConfig<${baseName}, any>`)
+      .withName(this.convertName(node.name + 'ScalarConfig'), ` extends GraphQLScalarTypeConfig<${baseName}, any>`)
       .withBlock(indent(`name: '${node.name}'`)).string;
   };
 
   DirectiveDefinition = (node: DirectiveDefinitionNode): string => {
-    const directiveName = this._convertName(node.name + 'DirectiveResolver');
+    const directiveName = this.convertName(node.name + 'DirectiveResolver');
     const hasArguments = node.arguments && node.arguments.length > 0;
     const directiveArgs = hasArguments
       ? new OperationVariablesToObject<FlowResolversVisitor, InputValueDefinitionNode>(this, node.arguments).string
@@ -156,7 +156,7 @@ export class FlowResolversVisitor implements BasicFlowVisitor {
   };
 
   InterfaceTypeDefinition = (node: InterfaceTypeDefinitionNode): string => {
-    const name = this._convertName(node.name + 'Resolvers');
+    const name = this.convertName(node.name + 'Resolvers');
     const allTypesMap = this._schema.getTypeMap();
     const implementingTypes: string[] = [];
 
