@@ -51,7 +51,7 @@ export class FlowResolversVisitor implements BasicFlowVisitor {
     return this._parsedConfig.scalars;
   }
 
-  convertName(name: any, addPrefix = true): string {
+  public convertName(name: any, addPrefix = true): string {
     return (addPrefix ? this._parsedConfig.typesPrefix : '') + this._parsedConfig.convert(name);
   }
 
