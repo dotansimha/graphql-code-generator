@@ -16,7 +16,7 @@
 {{~#each types}}
   {{~#each fields}}
     {{~# if hasArguments }}
-export interface {{ convert name }}{{ convert ../name }}Args {
+export interface {{@root.config.interfacePrefix}}{{ convert name }}{{ convert ../name }}Args {
 {{#each arguments}}
   {{ toComment description }}
   {{ name }}{{ getOptionals this }}: {{ convertedType this }};
