@@ -3,7 +3,6 @@ import { Field, Type, Interface, Union } from 'graphql-codegen-core';
 import { GraphQLSchema } from 'graphql';
 import { convertedType, getFieldType as fieldType } from 'graphql-codegen-typescript-common';
 import { pickMapper, useDefaultMapper } from './mappers';
-import { TypeScriptServerResolversConfig } from '.';
 
 export function importFromGraphQL(options: Handlebars.HelperOptions) {
   const imports: string[] = ['GraphQLResolveInfo'];

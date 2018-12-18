@@ -242,7 +242,7 @@ Field resolvers will be modfied as well.
 
 ## Field Resolver Name Prefix
 
-When using `noNamespace` option, you can add a prefix to field resolver name, in order to avoid conflicts in the schema.
+When using `noNamespace` option, you can add a prefix to field resolver name, in order to avoid conflicts in the generated typescript declarations.
 
 ```yaml
 # ...
@@ -255,4 +255,4 @@ generates:
       - typescript-resolvers
 ```
 
-And it will generate Field Resolver like `Post_IdResolver` instead of `PostIdResolver`
+And it will generate Field Resolver like `PostFieldIdResolver` instead of `PostIdResolver`
