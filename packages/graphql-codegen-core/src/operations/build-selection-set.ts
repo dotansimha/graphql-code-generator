@@ -80,6 +80,7 @@ export function buildSelectionSet(
             isNullableArray: resolvedType.isNullableArray,
             isArray: resolvedType.isArray,
             dimensionOfArray: resolvedType.dimensionOfArray,
+            hasTypename: hasTypename(fieldNode),
             isEnum: indicators.isEnum,
             isScalar: indicators.isScalar,
             isInterface: indicators.isInterface,
@@ -112,7 +113,8 @@ export function buildSelectionSet(
             isLeaf: childSelectionSet.length === 0,
             selectionSet: childSelectionSet,
             ...separateSelectionSet(childSelectionSet),
-            onType: fieldNode.typeCondition.name.value
+            onType: fieldNode.typeCondition.name.value,
+            hasTypename: hasTypename(fieldNode)
           } as SelectionSetInlineFragment;
         } else {
           throw new Error(`Unexpected GraphQL type: ${(selectionNode as any).kind}!`);
@@ -120,4 +122,11 @@ export function buildSelectionSet(
       }
     )
     .filter(item => item); // filter to remove null types
+}
+
+function hasTypename(fieldNode: FieldNode | InlineFragmentNode): boolean {
+  return (
+    fieldNode.selectionSet &&
+    fieldNode.selectionSet.selections.some(f => f.kind === 'Field' && f.name.value === '__typename')
+  );
 }

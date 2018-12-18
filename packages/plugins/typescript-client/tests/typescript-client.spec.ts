@@ -865,4 +865,96 @@ describe('TypeScript Client', () => {
       }
     `);
   });
+
+  it('should make __typename non optional when requested', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: gql`
+        type Post {
+          title: String
+        }
+
+        type Query {
+          post: Post!
+        }
+      `
+    });
+    const query = gql`
+      query Post {
+        post {
+          __typename
+          title
+        }
+      }
+    `;
+
+    const content = await plugin(
+      testSchema,
+      [{ filePath: '', content: query }],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
+
+    expect(content).toBeSimilarStringTo(`
+      export type Query = {
+        __typename?: "Query";
+        post: Post;
+      }
+    `);
+
+    expect(content).toBeSimilarStringTo(`
+      export type Post = {
+        __typename: "Post";
+        title: Maybe<string>;
+      }
+    `);
+  });
+
+  it('should make __typename non optional when requested within an inline fragment', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: gql`
+        type Post {
+          title: String
+        }
+
+        type Query {
+          post: Post!
+        }
+      `
+    });
+    const query = gql`
+      query Post {
+        post {
+          ... on Post {
+            __typename
+            title
+          }
+        }
+      }
+    `;
+
+    const content = await plugin(
+      testSchema,
+      [{ filePath: '', content: query }],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
+
+    expect(content).toBeSimilarStringTo(`
+      export type Query = {
+        __typename?: "Query";
+        post: Post;
+      }
+    `);
+
+    expect(content).toBeSimilarStringTo(`
+      export type PostInlineFragment = {
+        __typename: "Post";
+        title: Maybe<string>;
+      }
+    `);
+  });
 });
