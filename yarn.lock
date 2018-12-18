@@ -5557,10 +5557,10 @@ graphql-request@^1.5.0:
   dependencies:
     cross-fetch "2.2.2"
 
-graphql-tag-pluck@0.3.4:
-  version "0.3.4"
-  resolved "https://registry.yarnpkg.com/graphql-tag-pluck/-/graphql-tag-pluck-0.3.4.tgz#6b9c5d825d399dca0c6c9c294174a7d2165aeb74"
-  integrity sha512-R/O9CjRfR12exHJb1huEisu9HdDp6sIDmemqc6VRz3pjE0jeEKk0lnvvw0SHOZYwcug27WzPe9I5StULLvmxCA==
+graphql-tag-pluck@0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/graphql-tag-pluck/-/graphql-tag-pluck-0.4.1.tgz#efbf0832d245dbe6e720d19ae4d5c95f844e274e"
+  integrity sha512-cmXbXHbfBhDicn1w2JZZrUDdQkftw436I7+8ORT3btBWsvR9qhXaPUVzJvbNIltVti/IJZKjzLBr3+rdv8uZ8A==
   dependencies:
     "@babel/parser" "^7.2.0"
     "@babel/traverse" "^7.1.6"
