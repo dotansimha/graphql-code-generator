@@ -16,6 +16,20 @@ describe('schema from typedefs', () => {
     expect(schema.getTypeMap()['Query']).toBeDefined();
   });
 
+  it('should work with graphql-tag', () => {
+    const schemaPath = './tests/test-files/schema-dir/*.ts';
+    const handler = new SchemaFromTypedefs();
+    const canHandle = handler.canHandle(schemaPath);
+
+    expect(canHandle).toBeTruthy();
+
+    const built = handler.handle(schemaPath, {} as any, null);
+    const schema = buildASTSchema(built);
+
+    expect(schema.getTypeMap()['User']).toBeDefined();
+    expect(schema.getTypeMap()['Query']).toBeDefined();
+  });
+
   it('should work with import notations', () => {
     const schemaPath = './tests/test-files/schema-dir/query.graphql';
     const handler = new SchemaFromTypedefs();
