@@ -1,11 +1,11 @@
 import { Types } from 'graphql-codegen-core';
 import { SchemaLoader } from './schema-loader';
-import isValidPath = require('is-valid-path');
 import { parse, DocumentNode } from 'graphql';
+import isGlob = require('is-glob');
 
 export class SchemaFromString implements SchemaLoader {
   canHandle(str: string): boolean {
-    if (isValidPath(str)) {
+    if (isGlob(str) || /\.[a-z0-9]+$/i.test(str)) {
       return false;
     }
 
