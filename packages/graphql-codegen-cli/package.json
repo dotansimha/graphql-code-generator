@@ -60,7 +60,7 @@
     "graphql-codegen-core": "0.15.1",
     "graphql-config": "2.2.1",
     "graphql-import": "0.7.1",
-    "graphql-tag-pluck": "0.4.1",
+    "graphql-tag-pluck": "0.4.4",
     "indent-string": "3.2.0",
     "inquirer": "6.2.1",
     "is-glob": "4.0.0",
