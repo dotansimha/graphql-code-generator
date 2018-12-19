@@ -59,6 +59,14 @@ export function fragments(convert: (str: string) => string) {
     operation.fragmentsSpread.forEach(fragment => {
       const def = fragments.find(f => f.name === fragment.fragmentName);
 
+      if (!def) {
+        throw new Error(
+          `A fragment spread you used "${
+            fragment.fragmentName
+          }" could not found. Please make sure that it's loaded as a GraphQL document!`
+        );
+      }
+
       if (!fragmentsByType[def.onType]) {
         fragmentsByType[def.onType] = [];
       }
