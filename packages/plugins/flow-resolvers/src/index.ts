@@ -1,6 +1,6 @@
 import { ScalarsMap } from 'graphql-codegen-flow';
 import { DocumentFile, GraphQLSchema, PluginFunction } from 'graphql-codegen-core';
-import { parse, printSchema, visit } from 'graphql';
+import { isScalarType, parse, printSchema, visit } from 'graphql';
 import { FlowResolversVisitor } from './visitor';
 
 export interface FlowResolversPluginConfig {
@@ -17,14 +17,16 @@ export const plugin: PluginFunction<FlowResolversPluginConfig> = (
   config: FlowResolversPluginConfig
 ) => {
   const imports = ['GraphQLResolveInfo'];
-  const hasScalars = false;
+  const hasScalars = Object.values(schema.getTypeMap())
+    .filter(t => t.astNode)
+    .some(isScalarType);
 
   if (hasScalars) {
-    imports.push('GraphQLScalarType', 'GraphQLScalarTypeConfig');
+    imports.push('GraphQLScalarTypeConfig');
   }
 
   const result = `
-import { ${imports.join(', ')} } from 'graphql';
+import { ${imports.join(', ')} } from 'graphql/type';
 
 export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
   parent?: Parent,

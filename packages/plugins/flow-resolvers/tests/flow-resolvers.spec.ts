@@ -1,9 +1,7 @@
 import 'graphql-codegen-core/dist/testing';
-import { FlowResolversVisitor } from '../src/visitor';
-import { parse, visit, printSchema } from 'graphql';
-import { validateFlow } from './validate-flow';
 import { makeExecutableSchema } from 'graphql-tools';
 import { plugin } from '../src';
+import { typeDefs } from '../../../graphql-codegen-cli/tests/test-files/schema-dir/schema';
 
 describe('Flow Resolvers Plugin', () => {
   const schema = makeExecutableSchema({
@@ -53,9 +51,9 @@ describe('Flow Resolvers Plugin', () => {
       bar?: Resolver<string, ParentType, Context>,
     }
 
-    export type MyScalarScalarConfig extends GraphQLScalarTypeConfig<MyScalar, any> = {
+    export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<MyScalar, any> {
       name: 'MyScalar'
-    };
+    }
 
     export interface MyTypeResolvers<Context = any, ParentType = MyType> {
       foo?: Resolver<string, ParentType, Context>,
@@ -84,6 +82,21 @@ describe('Flow Resolvers Plugin', () => {
     }
     `);
   });
+
+  it('Should generate the correct imports when schema has scalars', () => {
+    const result = plugin(makeExecutableSchema({ typeDefs: `scalar MyScalar` }), [], {}, { outputFile: '' });
+
+    expect(result).toBeSimilarStringTo(`import { GraphQLResolveInfo, GraphQLScalarTypeConfig } from 'graphql/type';`);
+  });
+
+  it('Should generate the correct imports when schema has no scalars', () => {
+    const result = plugin(makeExecutableSchema({ typeDefs: `type MyType { f: String }` }), [], {}, { outputFile: '' });
+
+    expect(result).not.toBeSimilarStringTo(
+      `import { GraphQLResolveInfo, GraphQLScalarTypeConfig } from 'graphql/type';`
+    );
+  });
+
   it('Should generate basic type resolvers with mapping', () => {
     const result = plugin(
       schema,
@@ -104,9 +117,9 @@ describe('Flow Resolvers Plugin', () => {
       bar?: Resolver<string, ParentType, Context>,
     }
 
-    export type MyScalarScalarConfig extends GraphQLScalarTypeConfig<MyScalar, any> = {
+    export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<MyScalar, any> {
       name: 'MyScalar'
-    };
+    }
 
     export interface MyTypeResolvers<Context = any, ParentType = MyType> {
       foo?: Resolver<string, ParentType, Context>,
