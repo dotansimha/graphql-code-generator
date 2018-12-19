@@ -28,9 +28,9 @@ const documentsHandlers = [new DocumentFromString(), new DocumentsFromGlob()];
 const schemaHandlers = [
   new IntrospectionFromUrlLoader(),
   new IntrospectionFromFileLoader(),
+  new SchemaFromString(),
   new SchemaFromTypedefs(),
-  new SchemaFromExport(),
-  new SchemaFromString()
+  new SchemaFromExport()
 ];
 
 export const loadSchema = async (

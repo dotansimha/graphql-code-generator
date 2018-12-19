@@ -1,11 +1,10 @@
 import { Types } from 'graphql-codegen-core';
 import { SchemaLoader } from './schema-loader';
 import { parse, DocumentNode } from 'graphql';
-import isGlob = require('is-glob');
 
 export class SchemaFromString implements SchemaLoader {
   canHandle(str: string): boolean {
-    if (isGlob(str) || /\.[a-z0-9]+$/i.test(str)) {
+    if (/\.[a-z0-9]+$/i.test(str)) {
       return false;
     }
 
