@@ -7,8 +7,8 @@
     "aws-sdk": "2.379.0"
   },
   "dependencies": {
-    "react": "16.6.3",
-    "react-dom": "16.6.3",
+    "react": "16.7.0",
+    "react-dom": "16.7.0",
     "react-scripts-rewired": "2.1.1",
     "codemirror": "5.42.0",
     "codemirror-graphql": "0.8.3",
