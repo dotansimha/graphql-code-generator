@@ -4,6 +4,11 @@ import { parse, DocumentNode } from 'graphql';
 
 export class SchemaFromString implements SchemaLoader {
   canHandle(str: string): boolean {
+    // XXX: is-valid-path or is-glob treat SDL as a valid path
+    // (`scalar Date` for example)
+    // this why checking the extension is fast enough
+    // and prevent from parsing the string in order to find out
+    // if the string is a SDL
     if (/\.[a-z0-9]+$/i.test(str)) {
       return false;
     }
