@@ -1069,10 +1069,10 @@
   resolved "https://registry.yarnpkg.com/@types/jest/-/jest-23.3.10.tgz#4897974cc317bf99d4fe6af1efa15957fa9c94de"
   integrity sha512-DC8xTuW/6TYgvEg3HEXS7cu9OijFqprVDXXiOcdOKZCU/5PJNLZU37VVvmZHdtMiGOa8wAA/We+JzbdxFzQTRQ==
 
-"@types/js-yaml@3.11.2":
-  version "3.11.2"
-  resolved "https://registry.yarnpkg.com/@types/js-yaml/-/js-yaml-3.11.2.tgz#699ad86054cc20043c30d66a6fcde30bbf5d3d5e"
-  integrity sha512-JRDtMPEqXrzfuYAdqbxLot1GvAr/QvicIZAnOAigZaj8xVMhuSJTg/xsv9E1TvyL+wujYhRLx9ZsQ0oFOSmwyA==
+"@types/js-yaml@3.11.3":
+  version "3.11.3"
+  resolved "https://registry.yarnpkg.com/@types/js-yaml/-/js-yaml-3.11.3.tgz#2937dda4905832e513e5cf2432c2c642c3c4f6da"
+  integrity sha512-e9Yo56L5zm5WpPevPueOuMxB5oIQus9FMxZlZviOowxANARrbfhP/oPM5850wIZzxiWMHCfrEa26Dskc/UZdcQ==
 
 "@types/jss@^9.5.6":
   version "9.5.7"
