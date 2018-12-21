@@ -951,9 +951,9 @@
   version "23.3.10"
   resolved "https://registry.yarnpkg.com/@types/jest/-/jest-23.3.10.tgz#4897974cc317bf99d4fe6af1efa15957fa9c94de"
 
-"@types/js-yaml@3.11.3":
-  version "3.11.3"
-  resolved "https://registry.yarnpkg.com/@types/js-yaml/-/js-yaml-3.11.3.tgz#2937dda4905832e513e5cf2432c2c642c3c4f6da"
+"@types/js-yaml@3.11.4":
+  version "3.11.4"
+  resolved "https://registry.yarnpkg.com/@types/js-yaml/-/js-yaml-3.11.4.tgz#c4323304673278b8406bccb63bbf577342dbbdba"
 
 "@types/jss@^9.5.6":
   version "9.5.7"
