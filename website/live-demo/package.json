@@ -10,7 +10,7 @@
     "react": "16.7.0",
     "react-dom": "16.7.0",
     "react-scripts-rewired": "2.1.1",
-    "codemirror": "5.42.0",
+    "codemirror": "5.42.2",
     "codemirror-graphql": "0.8.3",
     "js-yaml": "3.12.0",
     "graphql-code-generator": "0.15.0",
