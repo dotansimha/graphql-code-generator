@@ -1,7 +1,6 @@
 import 'graphql-codegen-core/dist/testing';
 import { makeExecutableSchema } from 'graphql-tools';
 import { plugin } from '../src';
-import { typeDefs } from '../../../graphql-codegen-cli/tests/test-files/schema-dir/schema';
 
 describe('Flow Resolvers Plugin', () => {
   const schema = makeExecutableSchema({
@@ -86,15 +85,13 @@ describe('Flow Resolvers Plugin', () => {
   it('Should generate the correct imports when schema has scalars', () => {
     const result = plugin(makeExecutableSchema({ typeDefs: `scalar MyScalar` }), [], {}, { outputFile: '' });
 
-    expect(result).toBeSimilarStringTo(`import { GraphQLResolveInfo, GraphQLScalarTypeConfig } from 'graphql/type';`);
+    expect(result).toBeSimilarStringTo(`import { GraphQLResolveInfo, GraphQLScalarTypeConfig } from 'graphql';`);
   });
 
   it('Should generate the correct imports when schema has no scalars', () => {
     const result = plugin(makeExecutableSchema({ typeDefs: `type MyType { f: String }` }), [], {}, { outputFile: '' });
 
-    expect(result).not.toBeSimilarStringTo(
-      `import { GraphQLResolveInfo, GraphQLScalarTypeConfig } from 'graphql/type';`
-    );
+    expect(result).not.toBeSimilarStringTo(`import { GraphQLResolveInfo, GraphQLScalarTypeConfig } from 'graphql';`);
   });
 
   it('Should generate basic type resolvers with mapping', () => {
