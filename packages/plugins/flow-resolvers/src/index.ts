@@ -26,7 +26,7 @@ export const plugin: PluginFunction<FlowResolversPluginConfig> = (
   }
 
   const result = `
-import { ${imports.join(', ')} } from 'graphql/type';
+import { ${imports.join(', ')} } from 'graphql';
 
 export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
   parent?: Parent,
@@ -36,17 +36,17 @@ export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
 ) => Promise<Result> | Result;
 
 export type SubscriptionSubscribeFn<Result, Parent, Context, Args> = (
-  parent: Parent,
-  args: Args,
-  context: Context,
-  info: GraphQLResolveInfo
+  parent?: Parent,
+  args?: Args,
+  context?: Context,
+  info?: GraphQLResolveInfo
 ) => AsyncIterator<Result> | Promise<AsyncIterator<Result>>;
 
 export type SubscriptionResolveFn<Result, Parent, Context, Args> = (
-  parent: Parent,
-  args: Args,
-  context: Context,
-  info: GraphQLResolveInfo
+  parent?: Parent,
+  args?: Args,
+  context?: Context,
+  info?: GraphQLResolveInfo
 ) => Result | Promise<Result>;
 
 export interface ISubscriptionResolverObject<Result, Parent, Context, Args> {
@@ -77,9 +77,9 @@ export type DirectiveResolverFn<TResult, TArgs = {}, TContext = {}> = (
 
   const printedSchema = printSchema(schema);
   const astNode = parse(printedSchema);
-  const visitorResult = visit(astNode, {
-    leave: new FlowResolversVisitor(config, schema)
-  });
+  const visitor = new FlowResolversVisitor(config, schema);
+  const visitorResult = visit(astNode, { leave: visitor });
+  const rootResolver = visitor.rootResolver;
 
-  return result + '\n' + visitorResult.definitions.filter(d => typeof d === 'string').join('\n');
+  return [result, ...visitorResult.definitions.filter(d => typeof d === 'string'), rootResolver].join('\n');
 };
