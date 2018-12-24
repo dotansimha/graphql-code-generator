@@ -785,6 +785,15 @@
     graphql-tools "4.0.3"
     tslib "1.9.3"
 
+"@graphql-modules/epoxy@0.2.18":
+  version "0.2.18"
+  resolved "https://registry.yarnpkg.com/@graphql-modules/epoxy/-/epoxy-0.2.18.tgz#58ea584e57e0573d804ee39e34ee2fad604ba63a"
+  integrity sha512-I5h45JKZXABJgKPnMIS7EwLDCIqvC53V/I1f35+uzo5a7Np4ItXvwYZXxNlTg+sbcSIhizA5q9XwwaMrOhOzqg==
+  dependencies:
+    deepmerge "3.0.0"
+    graphql-tools "4.0.3"
+    tslib "1.9.3"
+
 "@iamstarkov/listr-update-renderer@0.4.1":
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/@iamstarkov/listr-update-renderer/-/listr-update-renderer-0.4.1.tgz#d7c48092a2dcf90fd672b6c8b458649cb350c77e"
@@ -3398,7 +3407,7 @@ deepmerge@2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/deepmerge/-/deepmerge-2.2.1.tgz#5d3ff22a01c00f645405a2fbc17d0778a1801170"
 
-deepmerge@^3.0.0:
+deepmerge@3.0.0, deepmerge@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/deepmerge/-/deepmerge-3.0.0.tgz#ca7903b34bfa1f8c2eab6779280775a411bfc6ba"
 
@@ -10425,6 +10434,7 @@ unzip-response@^2.0.1:
 upath@1.1.0, upath@^1.0.5:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/upath/-/upath-1.1.0.tgz#35256597e46a581db4793d0ce47fa9aebfc9fabd"
+  integrity sha512-bzpH/oBhoS/QI/YtbkqCg6VEiPYjSZtrHQM6/QnJS6OL9pKUFLqb3aFh4Scvwm45+7iAgiMkLhSbaZxUqmrprw==
 
 upper-case-first@^1.1.0, upper-case-first@^1.1.2:
   version "1.1.2"
