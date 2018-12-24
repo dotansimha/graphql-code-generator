@@ -1,6 +1,6 @@
 {
   "name": "graphql-codegen-schema-ast",
-  "version": "0.15.1",
+  "version": "0.15.2",
   "description": "graphql-codegen-cli template for TypeScript typings for both client side and server side",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
@@ -14,9 +14,9 @@
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0"
   },
   "devDependencies": {
-    "codegen-templates-scripts": "0.15.1",
+    "codegen-templates-scripts": "0.15.2",
     "graphql": "14.0.2",
-    "graphql-codegen-core": "0.15.1"
+    "graphql-codegen-core": "0.15.2"
   },
   "main": "./dist/index.js",
   "typings": "dist/index.d.ts",

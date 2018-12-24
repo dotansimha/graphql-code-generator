@@ -1,6 +1,6 @@
 {
   "name": "graphql-codegen-typescript-react-apollo",
-  "version": "0.15.1",
+  "version": "0.15.2",
   "description": "graphql-codegen-cli template for TypeScript typings for both client side and server side",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
@@ -14,14 +14,14 @@
     "graphql-tag": "^2.0.0"
   },
   "dependencies": {
-    "graphql-codegen-core": "0.15.1",
-    "graphql-codegen-plugin-helpers": "0.15.1",
-    "graphql-codegen-typescript-common": "0.15.1"
+    "graphql-codegen-core": "0.15.2",
+    "graphql-codegen-plugin-helpers": "0.15.2",
+    "graphql-codegen-typescript-common": "0.15.2"
   },
   "devDependencies": {
-    "codegen-templates-scripts": "0.15.1",
+    "codegen-templates-scripts": "0.15.2",
     "graphql": "14.0.2",
-    "graphql-codegen-plugin-handlebars-helpers": "0.15.1"
+    "graphql-codegen-plugin-handlebars-helpers": "0.15.2"
   },
   "main": "./dist/index.js",
   "typings": "dist/index.d.ts",
