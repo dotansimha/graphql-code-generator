@@ -1,5 +1,15 @@
 import gql from 'graphql-tag';
 
+namespace Foo {
+  export const foo = 12;
+
+  export const query = gql`
+    query myQueryInNamespace {
+      fieldA
+    }
+  `;
+}
+
 interface ModuleWithProviders {
   ngModule: string;
 }
@@ -7,7 +17,8 @@ interface ModuleWithProviders {
 export class FooModule {
   static forRoot() {
     return <ModuleWithProviders>{
-      ngModule: 'foo'
+      ngModule: 'foo',
+      value: Foo.foo
     };
   }
 }

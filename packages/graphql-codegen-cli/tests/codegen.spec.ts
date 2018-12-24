@@ -316,6 +316,7 @@ describe('Codegen Executor', () => {
       });
 
       expect(result[0].content).toContain('MyQuery');
+      expect(result[0].content).toContain('MyQueryInNamespace');
       expect(result[0].filename).toEqual('out1.ts');
     });
 
