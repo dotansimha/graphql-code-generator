@@ -160,6 +160,19 @@ describe('Codegen Executor', () => {
         expect(e.message).toBe('Invalid Codegen Configuration!');
       }
     });
+
+    it('should handle extend keyword when GraphQLSchema is used', async () => {
+      const output = await executeCodegen({
+        schema: './tests/test-files/schema-dir/with-extend.js',
+        generates: {
+          'out.ts': ['typescript-common', 'typescript-server']
+        }
+      });
+
+      expect(output.length).toBe(1);
+      expect(output[0].filename).toBe('out.ts');
+      expect(output[0].content).toContain('hello?: Maybe<string>');
+    });
   });
 
   describe('Per-output options', () => {

@@ -136,7 +136,7 @@ export class FlowResolversVisitor implements BasicFlowVisitor {
 
     return new DeclarationBlock()
       .export()
-      .asKind('type')
+      .asKind('interface')
       .withName(this.convertName(node.name + 'ScalarConfig'), ` extends GraphQLScalarTypeConfig<${baseName}, any>`)
       .withBlock(indent(`name: '${node.name}'`)).string;
   };

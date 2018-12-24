@@ -37,6 +37,7 @@ export interface FlattenModel {
   hasFragmentsSpread: boolean;
   hasFields: boolean;
   hasInlineFragments: boolean;
+  hasTypename: boolean;
 }
 
 export const handleNameDuplications = (name: string, existing: FlattenModel[]): string => {
@@ -58,7 +59,8 @@ function buildModelFromField(field: SelectionSetFieldNode, result: FlattenModel[
     inlineFragments: field.inlineFragments,
     hasFields: field.hasFields,
     hasFragmentsSpread: field.hasFragmentsSpread,
-    hasInlineFragments: field.hasInlineFragments
+    hasInlineFragments: field.hasInlineFragments,
+    hasTypename: field.hasTypename
   };
 }
 
@@ -73,7 +75,8 @@ function buildModelFromInlineFragment(fragment: SelectionSetInlineFragment, resu
     inlineFragments: fragment.inlineFragments,
     hasFields: fragment.hasFields,
     hasFragmentsSpread: fragment.hasFragmentsSpread,
-    hasInlineFragments: fragment.hasInlineFragments
+    hasInlineFragments: fragment.hasInlineFragments,
+    hasTypename: fragment.hasTypename
   };
 }
 

@@ -132,6 +132,7 @@ export interface SelectionSetInlineFragment extends SelectionSetItem {
   hasFragmentsSpread: boolean;
   hasInlineFragments: boolean;
   hasFields: boolean;
+  hasTypename: boolean;
 }
 
 export interface SelectionSetFragmentSpread extends SelectionSetItem {
@@ -155,6 +156,7 @@ export interface SelectionSetFieldNode extends SelectionSetItem {
   hasFragmentsSpread: boolean;
   hasInlineFragments: boolean;
   hasFields: boolean;
+  hasTypename: boolean;
 
   isType: boolean;
   isScalar: boolean;
