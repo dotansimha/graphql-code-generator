@@ -4,13 +4,13 @@
   "private": true,
   "homepage": "/live-demo/",
   "devDependencies": {
-    "aws-sdk": "2.379.0"
+    "aws-sdk": "2.382.0"
   },
   "dependencies": {
-    "react": "16.6.3",
-    "react-dom": "16.6.3",
+    "react": "16.7.0",
+    "react-dom": "16.7.0",
     "react-scripts-rewired": "2.1.1",
-    "codemirror": "5.42.0",
+    "codemirror": "5.42.2",
     "codemirror-graphql": "0.8.3",
     "js-yaml": "3.12.0",
     "graphql-code-generator": "0.15.0",
@@ -30,7 +30,7 @@
     "graphql-codegen-typescript-react-apollo": "0.15.0",
     "graphql-codegen-typescript-resolvers": "0.15.0",
     "prettier": "1.15.3",
-    "@material-ui/core": "3.7.0"
+    "@material-ui/core": "3.7.1"
   },
   "scripts": {
     "start": "NODE_OPTIONS=--max_old_space_size=8192 react-scripts start",
