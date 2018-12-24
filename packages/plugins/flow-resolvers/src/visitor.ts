@@ -36,6 +36,7 @@ export interface ParsedConfig {
 
 export class FlowResolversVisitor implements BasicFlowVisitor {
   private _parsedConfig: ParsedConfig;
+  private _collectedResolvers: { [key: string]: string } = {};
 
   constructor(pluginConfig: FlowResolversPluginConfig, private _schema: GraphQLSchema) {
     this._parsedConfig = {
@@ -53,6 +54,22 @@ export class FlowResolversVisitor implements BasicFlowVisitor {
 
   public convertName(name: any, addPrefix = true): string {
     return (addPrefix ? this._parsedConfig.typesPrefix : '') + this._parsedConfig.convert(name);
+  }
+
+  public get rootResolver(): string {
+    return new DeclarationBlock()
+      .export()
+      .asKind('interface')
+      .withName(this.convertName('ResolversRoot'))
+      .withBlock(
+        Object.keys(this._collectedResolvers)
+          .map(schemaTypeName => {
+            const resolverType = this._collectedResolvers[schemaTypeName];
+
+            return indent(`${schemaTypeName}?: ${resolverType}<>,`);
+          })
+          .join('\n')
+      ).string;
   }
 
   Name = (node: NameNode): string => {
@@ -114,6 +131,8 @@ export class FlowResolversVisitor implements BasicFlowVisitor {
       .withName(name, `<Context = ${this._parsedConfig.contextType}, ParentType = ${type}>`)
       .withBlock(node.fields.map((f: any) => f(node.name)).join('\n'));
 
+    this._collectedResolvers[node.name as any] = name;
+
     return block.string;
   };
 
@@ -123,6 +142,8 @@ export class FlowResolversVisitor implements BasicFlowVisitor {
       .map(name => ((name as any) as string).replace('?', ''))
       .map(f => `'${f}'`)
       .join(' | ');
+
+    this._collectedResolvers[node.name as any] = name;
 
     return new DeclarationBlock()
       .export()
@@ -159,6 +180,8 @@ export class FlowResolversVisitor implements BasicFlowVisitor {
     const name = this.convertName(node.name + 'Resolvers');
     const allTypesMap = this._schema.getTypeMap();
     const implementingTypes: string[] = [];
+
+    this._collectedResolvers[node.name as any] = name;
 
     for (const graphqlType of Object.values(allTypesMap)) {
       if (graphqlType instanceof GraphQLObjectType) {
