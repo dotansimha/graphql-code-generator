@@ -2,25 +2,25 @@
 {{#each operations }}
 
 {{#unless @root.config.noNamespaces}}
-export namespace {{ convert name }} {
+export namespace {{ convert name 'typeNames' }} {
 {{/unless}}
-  export type {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}Variables = {
+  export type {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Variables = {
   {{#each variables}}
     {{#if @root.config.immutableTypes }}readonly {{/if}}{{ name }}{{ getOptionals this }}: {{ convertedType this }};
   {{/each}}
   }
 
-  export type {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}{{ convert operationType }} ={{#if hasFields}} {
+  export type {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}{{ convert operationType 'typeNames' }} ={{#if hasFields}} {
     {{#if @root.config.immutableTypes }}readonly {{/if}}__typename?: "{{ convert operationType }}";
     {{> selectionSet fields=fields prefix=name }}
   }{{/if}}{{{ fragments this name ../fragments }}}
   {{#each innerModels }}
 
-  export type {{#if @root.config.noNamespaces}}{{ convert ../name }}{{/if}}{{ convert modelType }} ={{#if hasFields}} {
+  export type {{#if @root.config.noNamespaces}}{{ convert ../name 'typeNames' }}{{/if}}{{ convert modelType 'typeNames' }} ={{#if hasFields}} {
   {{#unless hasInlineFragments}}
     {{#if @root.config.immutableTypes }}readonly {{/if}}__typename{{#unless hasTypename}}?{{/unless}}: "{{ schemaBaseType }}";
   {{else}}
-    {{#if @root.config.immutableTypes }}readonly {{/if}}__typename{{#unless hasTypename}}?{{/unless}}: {{#each inlineFragments}}{{#if @root.config.noNamespaces}}{{ convert ../../name }}{{/if}}{{name}}["__typename"]{{#unless @last}} | {{/unless}}{{/each}};
+    {{#if @root.config.immutableTypes }}readonly {{/if}}__typename{{#unless hasTypename}}?{{/unless}}: {{#each inlineFragments}}{{#if @root.config.noNamespaces}}{{ convert ../../name 'typeNames' }}{{/if}}{{name}}["__typename"]{{#unless @last}} | {{/unless}}{{/each}};
   {{/unless}}
     {{> selectionSet fields=fields prefix=../name }}
   }{{/if}} {{{ fragments this ../name ../../fragments }}}
@@ -32,19 +32,19 @@ export namespace {{ convert name }} {
 {{#each fragments }}
 
 {{#unless @root.config.noNamespaces}}
-export namespace {{ convert name }} {
+export namespace {{ convert name 'typeNames' }} {
 {{/unless}}
-  export type {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}Fragment ={{#if hasFields}} {
+  export type {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Fragment ={{#if hasFields}} {
     {{#if @root.config.immutableTypes }}readonly {{/if}}__typename?: "{{ onType }}";
     {{> selectionSet fields=fields prefix=name }}
   }{{/if}}{{{ fragments this name ../fragments }}}
   {{#each innerModels }}
 
-  export type {{#if @root.config.noNamespaces}}{{ convert ../name }}{{/if}}{{ convert modelType }} ={{#if hasFields}} {
+  export type {{#if @root.config.noNamespaces}}{{ convert ../name 'typeNames' }}{{/if}}{{ convert modelType 'typeNames' }} ={{#if hasFields}} {
   {{#unless hasInlineFragments}}
     {{#if @root.config.immutableTypes }}readonly {{/if}}__typename{{#unless hasTypename}}?{{/unless}}: "{{ schemaBaseType }}";
   {{else}}
-    {{#if @root.config.immutableTypes }}readonly {{/if}}__typename{{#unless hasTypename}}?{{/unless}}: {{#each inlineFragments}}{{#if @root.config.noNamespaces}}{{ convert ../name }}{{/if}}{{name}}["__typename"]{{#unless @last}} | {{/unless}}{{/each}};
+    {{#if @root.config.immutableTypes }}readonly {{/if}}__typename{{#unless hasTypename}}?{{/unless}}: {{#each inlineFragments}}{{#if @root.config.noNamespaces}}{{ convert ../name 'typeNames' }}{{/if}}{{name}}["__typename"]{{#unless @last}} | {{/unless}}{{/each}};
   {{/unless}}
     {{> selectionSet fields=fields prefix=../name }}
   }{{/if}}{{{ fragments this ../name ../../fragments }}}

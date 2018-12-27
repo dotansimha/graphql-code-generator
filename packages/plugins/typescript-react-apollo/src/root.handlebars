@@ -14,31 +14,31 @@ import gql from 'graphql-tag';
     {{#unless @root.config.noNamespaces}}
 export namespace {{convert name}} {
     {{/unless}}
-    export const {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}Document = {{{ gql this }}};
-     export class {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}Component extends React.Component<Partial<ReactApollo.{{ convert operationType }}Props<{{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}{{convert operationType}}, {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}Variables>>> {
+    export const {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Document = {{{ gql this }}};
+     export class {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Component extends React.Component<Partial<ReactApollo.{{ convert operationType 'typeNames' }}Props<{{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}{{ convert operationType 'typeNames' }}, {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Variables>>> {
         render(){
             return (
-                <ReactApollo.{{ convert operationType }}<{{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}{{convert operationType}}, {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}Variables>
-                {{ toLowerCase operationType }}={ {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}Document }
+                <ReactApollo.{{ convert operationType 'typeNames' }}<{{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}{{convert operationType}}, {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Variables>
+                {{ toLowerCase operationType }}={ {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Document }
                 {...(this as any)['props'] as any}
                 />
             );
         }
     }
     {{#unless @root.config.noHOC}}
-    export type {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}Props<TChildProps = any> = {{{propsType this}}} & TChildProps;
+    export type {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Props<TChildProps = any> = {{{propsType this}}} & TChildProps;
     {{#ifCond operationType '===' 'mutation'}}
-    export type {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}MutationFn = ReactApollo.MutationFn<{{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}{{convert operationType}}, {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}Variables>;
+    export type {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}MutationFn = ReactApollo.MutationFn<{{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}{{convert operationType}}, {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Variables>;
     {{/ifCond}}
-    export function {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}HOC<TProps, TChildProps = any>(operationOptions: 
+    export function {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}HOC<TProps, TChildProps = any>(operationOptions: 
             ReactApollo.OperationOption<
                 TProps, 
-                {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}{{convert operationType}},
-                {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}Variables,
-                {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}Props<TChildProps>
+                {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}{{convert operationType}},
+                {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Variables,
+                {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Props<TChildProps>
             > | undefined){
-        return ReactApollo.graphql<TProps, {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}{{convert operationType}}, {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}Variables, {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}Props<TChildProps>>(
-            {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}Document,
+        return ReactApollo.graphql<TProps, {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}{{convert operationType 'typeNames' }}, {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Variables, {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Props<TChildProps>>(
+            {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Document,
             operationOptions
         );
     };

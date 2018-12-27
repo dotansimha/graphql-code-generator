@@ -102,7 +102,7 @@ export function convertedType(type: Field, options: Handlebars.HelperOptions, co
   const config = options.data.root.config || {};
   const realType =
     options.data.root.primitives[baseType] ||
-    `${type.isScalar ? '' : config.interfacePrefix || ''}${skipConversion ? baseType : convert(baseType)}`;
+    `${type.isScalar ? '' : config.interfacePrefix || ''}${skipConversion ? baseType : convert(baseType, 'typeNames')}`;
 
   return getFieldType(type, realType, options);
 }

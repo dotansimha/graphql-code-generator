@@ -1,10 +1,10 @@
 {{{ toComment description }}}
 {{#if @root.config.enumsAsTypes }}
-export type {{@root.config.interfacePrefix}}{{ convert name }} = {{#each values }}{{{ getEnumValue ../name value }}}{{#unless @last}} | {{/unless}}{{/each}};
+export type {{@root.config.interfacePrefix}}{{ convert name 'typeNames' }} = {{#each values }}{{{ getEnumValue ../name value }}}{{#unless @last}} | {{/unless}}{{/each}};
 {{else}}
-export {{#if @root.config.constEnums }}const {{/if}}enum {{@root.config.interfacePrefix}}{{ convert name }} {
+export {{#if @root.config.constEnums }}const {{/if}}enum {{@root.config.interfacePrefix}}{{ convert name 'typeNames' }} {
 {{#each values }}
-  {{ convert value }} = {{{ getEnumValue ../name value }}},
+  {{ convert value 'enumValues' }} = {{{ getEnumValue ../name value }}},
 {{/each}}
 }
 {{/if}}
