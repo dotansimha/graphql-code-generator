@@ -15,5 +15,17 @@ export const config: Config = {
       '../node_modules/apollo-utilities/lib/index.js': ['default']
     },
     extensions: ['.js', '.mjs']
-  } as any
+  } as any,
+  plugins: [
+    {
+      transform(source, id) {
+        return {
+          code: source
+            .replace(`var wrap = require('optimism').wrap;`, '')
+            .replace('export { wrap }', 'export { wrap } from "optimism";'),
+          id
+        };
+      }
+    }
+  ]
 };
