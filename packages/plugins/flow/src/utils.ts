@@ -31,6 +31,7 @@ export class DeclarationBlock {
   _export = false;
   _name = null;
   _kind = null;
+  _methodName = null;
   _content = null;
   _block = null;
   _nameGenerics = null;
@@ -43,6 +44,12 @@ export class DeclarationBlock {
 
   asKind(kind): DeclarationBlock {
     this._kind = kind;
+
+    return this;
+  }
+
+  withMethodCall(methodName: string): DeclarationBlock {
+    this._methodName = methodName;
 
     return this;
   }
@@ -93,9 +100,15 @@ export class DeclarationBlock {
         result += this._content;
       }
 
-      result += `{
+      if (this._methodName) {
+        result += `${this._methodName}({
+${this._block}
+})`;
+      } else {
+        result += `{
 ${this._block}
 }`;
+      }
     } else if (this._content) {
       result += this._content;
     } else if (this._kind) {

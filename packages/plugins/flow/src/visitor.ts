@@ -169,6 +169,7 @@ export class FlowVisitor implements BasicFlowVisitor {
       .export()
       .asKind('const')
       .withName(this.convertName(enumValuesName))
+      .withMethodCall('Object.freeze')
       .withBlock(
         node.values
           .map(enumOption =>
