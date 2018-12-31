@@ -102,11 +102,11 @@ describe('Flow Plugin', () => {
       }).definitions.join('\n');
 
       expect(result).toBeSimilarStringTo(`
-        export const myenumvalues = {
+        export const myenumvalues = Object.freeze({
           a: 'A',
           b: 'B',
           c: 'C'
-        };
+        });
     
         export type myenum = $Values<typeof myenumvalues>;
     
@@ -154,11 +154,11 @@ describe('Flow Plugin', () => {
       }).definitions.join('\n');
 
       expect(result).toBeSimilarStringTo(`
-      export const MyEnumValues = {
+      export const MyEnumValues = Object.freeze({
         A: 'A',
         B: 'B',
         C: 'C'
-      };
+      });
   
       export type MyEnum = $Values<typeof MyEnumValues>;
   
@@ -206,11 +206,11 @@ describe('Flow Plugin', () => {
       }).definitions.join('\n');
 
       expect(result).toBeSimilarStringTo(`
-      export const IMyEnumValues = {
+      export const IMyEnumValues = Object.freeze({
         IA: 'A',
         IB: 'B',
         IC: 'C'
-      };
+      });
   
       export type IMyEnum = $Values<typeof IMyEnumValues>;
   
@@ -331,11 +331,11 @@ describe('Flow Plugin', () => {
       });
 
       expect(result.definitions[0]).toBeSimilarStringTo(`
-        export const MyEnumValues = {
+        export const MyEnumValues = Object.freeze({
           A: 'A',
           B: 'B',
           C: 'C'
-        };
+        });
 
         export type MyEnum = $Values<typeof MyEnumValues>;
       `);
@@ -354,11 +354,11 @@ describe('Flow Plugin', () => {
       });
 
       expect(result.definitions[0]).toBeSimilarStringTo(`
-        export const MyEnumValues = {
+        export const MyEnumValues = Object.freeze({
           A: 'SomeValue',
           B: 'TEST',
           C: 'C'
-        };
+        });
 
         export type MyEnum = $Values<typeof MyEnumValues>;
       `);
