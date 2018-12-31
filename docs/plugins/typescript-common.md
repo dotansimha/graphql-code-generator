@@ -72,9 +72,6 @@ generates:
 
 This will cause the codegen to output `readonly` properties and `ReadonlyArray`.
 
-#### `schemaNamespace` (default value: `false`)
-
-This will cause the codegen to wrap the generated schema typings with a TypeScript namespace.
 
 #### `interfacePrefix` (default value: '')
 
