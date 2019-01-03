@@ -113,7 +113,7 @@ export class FlowResolversVisitor implements BasicFlowVisitor {
 
       return indent(
         `${node.name}?: ${isSubscriptionType ? 'SubscriptionResolver' : 'Resolver'}<${mappedType}, ParentType, Context${
-          hasArguments ? `, ${parentName + this.convertName(node.name, false) + 'Args'}` : ''
+          hasArguments ? `, ${this.convertName(parentName, true) + this.convertName(node.name, false) + 'Args'}` : ''
         }>,`
       );
     };
