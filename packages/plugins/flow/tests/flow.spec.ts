@@ -640,4 +640,24 @@ describe('Flow Plugin', () => {
       validateFlow(result.definitions[0]);
     });
   });
+
+  describe('Directives', () => {
+    it('Should handle directive declarations correctly', () => {
+      const ast = parse(`
+        directive @simple on FIELD_DEFINITION
+        directive @withArgument(arg: Int!) on FIELD_DEFINITION
+        directive @objSimple on OBJECT
+        directive @universal on OBJECT | FIELD_DEFINITION | ENUM_VALUE
+      `);
+
+      const result = visit(ast, {
+        leave: new FlowVisitor({
+          namingConvention: null
+        })
+      });
+
+      expect(result.definitions[0]).toBeSimilarStringTo('');
+      validateFlow(result.definitions[0]);
+    });
+  });
 });

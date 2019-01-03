@@ -16,7 +16,8 @@ import {
   ObjectTypeDefinitionNode,
   FieldDefinitionNode,
   InterfaceTypeDefinitionNode,
-  UnionTypeDefinitionNode
+  UnionTypeDefinitionNode,
+  DirectiveDefinitionNode
 } from 'graphql/language/ast';
 
 export const DEFAULT_SCALARS = {
@@ -67,6 +68,10 @@ export class FlowVisitor implements BasicFlowVisitor {
       .asKind('type')
       .withName(this.convertName(node.name))
       .withContent(this._parsedConfig.scalars[(node.name as any) as string] || 'any').string;
+  };
+
+  DirectiveDefinition = (node: DirectiveDefinitionNode): string => {
+    return '';
   };
 
   NamedType = (node: NamedTypeNode): string => {
