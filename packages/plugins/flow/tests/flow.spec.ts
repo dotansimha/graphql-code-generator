@@ -272,6 +272,23 @@ describe('Flow Plugin', () => {
       validateFlow(result.definitions[0]);
     });
 
+    it('Should generate correctly types for field arguments - with default value', () => {
+      const ast = parse(`type MyType { foo(a: String = "default", b: String! = "default", c: String): String }`);
+      const result = visit(ast, {
+        leave: new FlowVisitor({ namingConvention: null })
+      });
+
+      expect(result.definitions[0]).toBeSimilarStringTo(`
+        export type MyTypeFooArgs = {
+          a: string,
+          b: string,
+          c?: ?string
+        };
+    `);
+
+      validateFlow(result.definitions[0]);
+    });
+
     it('Should generate correctly types for field arguments - with input type', () => {
       const ast = parse(
         `input MyInput { f: String } type MyType { foo(a: MyInput, b: MyInput!, c: [MyInput], d: [MyInput]!, e: [MyInput!]!): String }`
