@@ -16,13 +16,13 @@ export const plugin: PluginFunction<FlowResolversPluginConfig> = (
   documents: DocumentFile[],
   config: FlowResolversPluginConfig
 ) => {
-  const imports = ['GraphQLResolveInfo'];
+  const imports = ['type GraphQLResolveInfo'];
   const hasScalars = Object.values(schema.getTypeMap())
     .filter(t => t.astNode)
     .some(isScalarType);
 
   if (hasScalars) {
-    imports.push('GraphQLScalarTypeConfig');
+    imports.push('type GraphQLScalarTypeConfig');
   }
 
   const result = `
