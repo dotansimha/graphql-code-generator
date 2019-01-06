@@ -27,7 +27,7 @@
     "graphql-code-generator": "0.15.1",
     "graphql-codegen-add": "0.15.1",
     "graphql-codegen-typescript-client": "0.15.1",
-    "graphql-codegen-typescript-common": "0.15.1",
+    "graphql-codegen-typescript-common": "0.15.2",
     "rollup-plugin-commonjs": "9.2.0"
   },
   "repository": {
