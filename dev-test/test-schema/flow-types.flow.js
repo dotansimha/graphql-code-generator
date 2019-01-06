@@ -16,7 +16,7 @@ export type User = {
   email: string,
 };
 
-import { GraphQLResolveInfo } from 'graphql';
+import { GraphQLResolveInfo } from 'graphql/type';
 
 export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
   parent?: Parent,
