@@ -1348,17 +1348,30 @@ graphql-code-generator@0.15.1:
     request "2.88.0"
     valid-url "1.0.9"
 
-graphql-codegen-add@0.15.1:
-  version "0.15.1"
-  resolved "https://registry.yarnpkg.com/graphql-codegen-add/-/graphql-codegen-add-0.15.1.tgz#64dffafa3af7cd513bdb46366bfc2240489c0251"
-  integrity sha512-c4++aAi3fqYljXSk+08NsqkktCevTvyt5m+AvMrVCLlRBk5yCD89xCxo65L4g0dDhItrp9RVjFTBuwOYsR+5lw==
+graphql-codegen-add@0.15.2:
+  version "0.15.2"
+  resolved "https://registry.yarnpkg.com/graphql-codegen-add/-/graphql-codegen-add-0.15.2.tgz#d447e57dc1db4b385882ce6307d047563ff63d2d"
+  integrity sha512-KWadUZpbTY/ssRI6rlRuugcSYc7UhcaXm9GoyfhRSdZgH1wIlpRv0kp0lKbo+JpXDcTykm8ggvb3Au9TdGQzhw==
   dependencies:
-    graphql-codegen-core "0.15.1"
+    graphql-codegen-core "0.15.2"
 
 graphql-codegen-core@0.15.1:
   version "0.15.1"
   resolved "https://registry.yarnpkg.com/graphql-codegen-core/-/graphql-codegen-core-0.15.1.tgz#c9f74218827933dc2f97ebf2583daefd419bf144"
   integrity sha512-emcKKInAfV5AJGH6Lp/WmkSpyCB9QVn0RqXnrw89HA7T8B3TgXF5jr62qpaev5n+vXhSeor9ImvF157b4nClFQ==
+  dependencies:
+    chalk "2.4.1"
+    change-case "3.0.2"
+    common-tags "1.8.0"
+    graphql-tag "2.10.0"
+    graphql-tools "4.0.3"
+    ts-log "2.1.4"
+    winston "3.1.0"
+
+graphql-codegen-core@0.15.2:
+  version "0.15.2"
+  resolved "https://registry.yarnpkg.com/graphql-codegen-core/-/graphql-codegen-core-0.15.2.tgz#f97ff2bcedddf8ce0623e21afef586f7249c453b"
+  integrity sha512-kMzeu4TSLVeYqhwBP1cRqHHpNhszC1jG00oKN2qmQ0jWpjiR8LymXrYHI7sYY+/+q2ASGRQhok9um8OgD2DsLw==
   dependencies:
     chalk "2.4.1"
     change-case "3.0.2"
