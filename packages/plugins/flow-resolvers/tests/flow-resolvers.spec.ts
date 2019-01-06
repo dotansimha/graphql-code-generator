@@ -22,7 +22,7 @@ describe('Flow Resolvers Plugin', () => {
       type Subscription {
         somethingChanged: MyOtherType
       }
-      
+
       interface Node {
         id: ID!
       }
@@ -144,5 +144,16 @@ describe('Flow Resolvers Plugin', () => {
       somethingChanged?: SubscriptionResolver<?MyCustomOtherType, ParentType, Context>,
     }
     `);
+  });
+
+  it('Should generate the correct resolver args type names when typesPrefix is specified', () => {
+    const result = plugin(
+      makeExecutableSchema({ typeDefs: `type MyType { f(a: String): String }` }),
+      [],
+      { typesPrefix: 'T' },
+      { outputFile: '' }
+    );
+
+    expect(result).toBeSimilarStringTo(`f?: Resolver<?string, ParentType, Context, TMyTypeFArgs>,`);
   });
 });
