@@ -66,15 +66,15 @@ export type DirectiveResolverFn<TResult, TArgs = {}, TContext = {}> = (
 {{~> scalar}}
 {{/each}}
 
-export interface IResolvers {
+export interface IResolvers<Context = {{{ getContext }}}> {
   {{#each types}}
-    {{ convert name }}?: {{ convert name }}Resolvers{{#unless @root.config.noNamespaces}}.Resolvers{{/unless}};
+    {{ convert name }}?: {{ convert name }}Resolvers{{#unless @root.config.noNamespaces}}.Resolvers{{/unless}}<Context>;
   {{/each}}
   {{#each interfaces}}
-    {{ convert name }}?: {{ convert name }}Resolvers{{#unless @root.config.noNamespaces}}.Resolvers{{/unless}};
+    {{ convert name }}?: {{ convert name }}Resolvers{{#unless @root.config.noNamespaces}}.Resolvers{{/unless}}<Context>;
   {{/each}}
   {{#each unions}}
-    {{ convert name }}?: {{ convert name }}Resolvers{{#unless @root.config.noNamespaces}}.Resolvers{{/unless}};
+    {{ convert name }}?: {{ convert name }}Resolvers{{#unless @root.config.noNamespaces}}.Resolvers{{/unless}}<Context>;
   {{/each}}
   {{#each scalars}}
     {{ convert name }}?: GraphQLScalarType;
