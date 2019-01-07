@@ -52,9 +52,9 @@ This will cause the generator to avoid using TypeScript optionals (`?`), so the 
 
 Will generate the declared enums as TypeScript types. This is useful if you can't use `.ts` extension.
 
-#### `enumValues` (default value: `{}`)
+#### `enums` (default value: `{}`)
 
-Use this feature to set custom values for you GraphQL enums.
+Use this feature to set custom values for your GraphQL enums.
 
 ```yaml
 # ...
@@ -63,7 +63,7 @@ generates:
     plugins:
       - typescript-common
     config:
-      enumValues:
+      enums:
         MyEnum:
           A: 'foo'
 ```
@@ -71,7 +71,6 @@ generates:
 #### `immutableTypes` (default value: `false`)
 
 This will cause the codegen to output `readonly` properties and `ReadonlyArray`.
-
 
 #### `interfacePrefix` (default value: '')
 
