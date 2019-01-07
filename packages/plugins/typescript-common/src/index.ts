@@ -36,10 +36,14 @@ export const DEFAULT_SCALARS = {
   ID: 'string'
 };
 
+function identity(str: any) {
+  return str;
+}
+
 export function initCommonTemplate(hbs, schema, config: TypeScriptCommonConfig) {
   const scalars = { ...DEFAULT_SCALARS, ...(config.scalars || {}) };
   let namingConventionMap: TypeScriptNamingConventionMap;
-  if (config.namingConvention === 'undefined') {
+  if (config.namingConvention === undefined) {
     namingConventionMap = {
       default: 'change-case#pascalCase',
       enumValues: 'change-case#pascalCase',
@@ -58,9 +62,14 @@ export function initCommonTemplate(hbs, schema, config: TypeScriptCommonConfig) 
       typeNames: config.namingConvention.typeNames || config.namingConvention.default || 'change-case#pascalCase'
     };
   }
-  const convert = (str: string, kind: keyof TypeScriptNamingConventionMap = 'default'): string => {
+  const convert = (str: string, kind?: keyof TypeScriptNamingConventionMap): string => {
+    const convention = namingConventionMap[kind || 'default'];
+
     const baseConvertFn =
-      namingConventionMap[kind] === 'keep' ? str => str : resolveExternalModuleAndFn(namingConventionMap[kind]);
+      convention === undefined || convention === 'keep'
+        ? identity
+        : resolveExternalModuleAndFn(namingConventionMap[kind]);
+
     if (str.charAt(0) === '_') {
       const after = str.replace(
         /^(_*)(.*)/,
