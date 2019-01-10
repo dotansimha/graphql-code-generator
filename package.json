@@ -51,7 +51,7 @@
     "awesome-typescript-loader": "5.2.1",
     "raw-loader": "1.0.0",
     "webpack": "4.28.3",
-    "webpack-cli": "3.2.0",
+    "webpack-cli": "3.2.1",
     "webpack-node-externals": "1.7.2"
   },
   "lint-staged": {
