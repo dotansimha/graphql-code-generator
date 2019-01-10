@@ -31,7 +31,7 @@
   },
   "devDependencies": {
     "@types/glob": "7.1.1",
-    "@types/jest": "23.3.11",
+    "@types/jest": "23.3.12",
     "@types/mkdirp": "0.5.2",
     "@types/node": "10.12.18",
     "@types/request": "2.48.1",
@@ -51,7 +51,7 @@
     "awesome-typescript-loader": "5.2.1",
     "raw-loader": "1.0.0",
     "webpack": "4.28.3",
-    "webpack-cli": "3.2.0",
+    "webpack-cli": "3.2.1",
     "webpack-node-externals": "1.7.2"
   },
   "lint-staged": {
