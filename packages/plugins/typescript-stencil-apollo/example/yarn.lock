@@ -106,14 +106,14 @@
   dependencies:
     any-observable "^0.3.0"
 
-"@stencil/core@0.16.1":
-  version "0.16.1"
-  resolved "https://registry.yarnpkg.com/@stencil/core/-/core-0.16.1.tgz#2a5c1bf26cce0bda16984e5b0f4cfb4f2c7bf605"
-  integrity sha512-jymevKeKRiv97OHovkjtDLwe7zRWuc9nn19faXDzfFOV66IszvROLWMWMyBJpOqPu5eDSxwunW5sbg6oflCu3A==
+"@stencil/core@0.16.2":
+  version "0.16.2"
+  resolved "https://registry.yarnpkg.com/@stencil/core/-/core-0.16.2.tgz#80e037ba014055a05da0320ca54c490fc8c44d06"
+  integrity sha512-0ZhsWeyS9UOEgomFdUfDUqFY/Wyn/vUxvGL34Q0/WZxa351c7INaP2yUAwC2uW3oX74/y6vzLtY1jMmlOq4Huw==
   dependencies:
     chokidar "2.0.3"
     jsdom "11.11.0"
-    typescript "~3.1.6"
+    typescript "3.2.2"
 
 "@types/async@2.0.50":
   version "2.0.50"
@@ -3190,15 +3190,10 @@ type-check@~0.3.2:
   dependencies:
     prelude-ls "~1.1.2"
 
-typescript@^3.2.2:
+typescript@3.2.2, typescript@^3.2.2:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.2.2.tgz#fe8101c46aa123f8353523ebdcf5730c2ae493e5"
   integrity sha512-VCj5UiSyHBjwfYacmDuc/NOk4QQixbE+Wn7MFJuS0nRuPQbof132Pw4u53dm264O8LPc2MVsc7RJNml5szurkg==
-
-typescript@~3.1.6:
-  version "3.1.6"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.1.6.tgz#b6543a83cfc8c2befb3f4c8fba6896f5b0c9be68"
-  integrity sha512-tDMYfVtvpb96msS1lDX9MEdHrW4yOuZ4Kdc4Him9oU796XldPYF/t2+uKoX0BBa0hXXwDlqYQbXY5Rzjzc5hBA==
 
 union-value@^1.0.0:
   version "1.0.0"
