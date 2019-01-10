@@ -4,7 +4,7 @@
   "private": true,
   "homepage": "/live-demo/",
   "devDependencies": {
-    "aws-sdk": "2.384.0"
+    "aws-sdk": "2.385.0"
   },
   "dependencies": {
     "react": "16.7.0",
@@ -30,7 +30,7 @@
     "graphql-codegen-typescript-react-apollo": "0.15.0",
     "graphql-codegen-typescript-resolvers": "0.15.0",
     "prettier": "1.15.3",
-    "@material-ui/core": "3.8.1"
+    "@material-ui/core": "3.8.3"
   },
   "scripts": {
     "start": "NODE_OPTIONS=--max_old_space_size=8192 react-scripts start",
