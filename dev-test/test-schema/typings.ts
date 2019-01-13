@@ -152,9 +152,9 @@ export interface DeprecatedDirectiveArgs {
 
 
 
-export interface IResolvers {
-    Query?: QueryResolvers.Resolvers;
-    User?: UserResolvers.Resolvers;
+export interface IResolvers<Context = {}> {
+    Query?: QueryResolvers.Resolvers<Context>;
+    User?: UserResolvers.Resolvers<Context>;
 }
 
 export interface IDirectiveResolvers<Result> {

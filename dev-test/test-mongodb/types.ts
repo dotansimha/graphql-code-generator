@@ -542,12 +542,12 @@ export interface DateScalarConfig extends GraphQLScalarTypeConfig<Date, any> {
   name: 'Date'
 }
 
-export interface IResolvers {
-    Post?: PostResolvers.Resolvers;
-    AdminUser?: AdminUserResolvers.Resolvers;
-    WriterUser?: WriterUserResolvers.Resolvers;
-    ReaderUser?: ReaderUserResolvers.Resolvers;
-    User?: UserResolvers.Resolvers;
+export interface IResolvers<Context = {}> {
+    Post?: PostResolvers.Resolvers<Context>;
+    AdminUser?: AdminUserResolvers.Resolvers<Context>;
+    WriterUser?: WriterUserResolvers.Resolvers<Context>;
+    ReaderUser?: ReaderUserResolvers.Resolvers<Context>;
+    User?: UserResolvers.Resolvers<Context>;
     Date?: GraphQLScalarType;
 }
 

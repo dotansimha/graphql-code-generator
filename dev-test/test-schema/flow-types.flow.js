@@ -16,7 +16,7 @@ export type User = {
   email: string,
 };
 
-import { GraphQLResolveInfo } from 'graphql/type';
+import { type GraphQLResolveInfo } from 'graphql';
 
 export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
   parent?: Parent,
@@ -26,17 +26,17 @@ export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
 ) => Promise<Result> | Result;
 
 export type SubscriptionSubscribeFn<Result, Parent, Context, Args> = (
-  parent: Parent,
-  args: Args,
-  context: Context,
-  info: GraphQLResolveInfo
+  parent?: Parent,
+  args?: Args,
+  context?: Context,
+  info?: GraphQLResolveInfo
 ) => AsyncIterator<Result> | Promise<AsyncIterator<Result>>;
 
 export type SubscriptionResolveFn<Result, Parent, Context, Args> = (
-  parent: Parent,
-  args: Args,
-  context: Context,
-  info: GraphQLResolveInfo
+  parent?: Parent,
+  args?: Args,
+  context?: Context,
+  info?: GraphQLResolveInfo
 ) => Result | Promise<Result>;
 
 export interface ISubscriptionResolverObject<Result, Parent, Context, Args> {
@@ -73,4 +73,9 @@ export interface UserResolvers<Context = any, ParentType = User> {
   id?: Resolver<number, ParentType, Context>,
   name?: Resolver<string, ParentType, Context>,
   email?: Resolver<string, ParentType, Context>,
+}
+
+export interface ResolversRoot {
+  Query?: QueryResolvers<>,
+  User?: UserResolvers<>,
 }

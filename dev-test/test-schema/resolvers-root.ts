@@ -173,10 +173,10 @@ export interface DeprecatedDirectiveArgs {
 
 
 
-export interface IResolvers {
-    QueryRoot?: QueryRootResolvers.Resolvers;
-    User?: UserResolvers.Resolvers;
-    SubscriptionRoot?: SubscriptionRootResolvers.Resolvers;
+export interface IResolvers<Context = {}> {
+    QueryRoot?: QueryRootResolvers.Resolvers<Context>;
+    User?: UserResolvers.Resolvers<Context>;
+    SubscriptionRoot?: SubscriptionRootResolvers.Resolvers<Context>;
 }
 
 export interface IDirectiveResolvers<Result> {
