@@ -114,7 +114,9 @@ export class FlowVisitor implements BasicFlowVisitor {
   };
 
   FieldDefinition = (node: FieldDefinitionNode): string => {
-    return indent(`${node.name}: ${node.type},`);
+    const typeString = (node.type as any) as string;
+    const namePostfix = typeString.charAt(0) === '?' ? '?' : '';
+    return indent(`${node.name}${namePostfix}: ${typeString},`);
   };
 
   UnionTypeDefinition = (node: UnionTypeDefinitionNode): string => {

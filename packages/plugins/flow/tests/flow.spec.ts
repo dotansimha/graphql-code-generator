@@ -23,7 +23,7 @@ describe('Flow Plugin', () => {
     `);
       expect(result.definitions[0]).toBeSimilarStringTo(`
         export type mytype = {
-          foo: ?string,
+          foo?: ?string,
         };
     `);
 
@@ -47,7 +47,7 @@ describe('Flow Plugin', () => {
 
       expect(result.definitions[0]).toBeSimilarStringTo(`
         export type Imytype = {
-          foo: ?string,
+          foo?: ?string,
         };
       `);
 
@@ -111,14 +111,14 @@ describe('Flow Plugin', () => {
         export type myenum = $Values<typeof myenumvalues>;
     
         export type mytype = {
-          f: ?string,
-          bar: ?myenum,
-          b_a_r: ?string,
-          myOtherField: ?string,
+          f?: ?string,
+          bar?: ?myenum,
+          b_a_r?: ?string,
+          myOtherField?: ?string,
         };
     
         export type my_type = {
-          linkTest: ?mytype,
+          linkTest?: ?mytype,
         };
     
         export type myunion = my_type | mytype;
@@ -140,8 +140,8 @@ describe('Flow Plugin', () => {
         };
     
         export type query = {
-          something: ?myunion,
-          use_interface: ?some_interface,
+          something?: ?myunion,
+          use_interface?: ?some_interface,
         };
       `);
 
@@ -163,14 +163,14 @@ describe('Flow Plugin', () => {
       export type MyEnum = $Values<typeof MyEnumValues>;
   
       export type MyType = {
-        f: ?string,
-        bar: ?MyEnum,
-        b_a_r: ?string,
-        myOtherField: ?string,
+        f?: ?string,
+        bar?: ?MyEnum,
+        b_a_r?: ?string,
+        myOtherField?: ?string,
       };
   
       export type My_Type = {
-        linkTest: ?MyType,
+        linkTest?: ?MyType,
       };
   
       export type MyUnion = My_Type | MyType;
@@ -192,8 +192,8 @@ describe('Flow Plugin', () => {
       };
   
       export type Query = {
-        something: ?MyUnion,
-        use_interface: ?Some_Interface,
+        something?: ?MyUnion,
+        use_interface?: ?Some_Interface,
       };
       `);
 
@@ -215,14 +215,14 @@ describe('Flow Plugin', () => {
       export type IMyEnum = $Values<typeof IMyEnumValues>;
   
       export type IMyType = {
-        f: ?string,
-        bar: ?IMyEnum,
-        b_a_r: ?string,
-        myOtherField: ?string,
+        f?: ?string,
+        bar?: ?IMyEnum,
+        b_a_r?: ?string,
+        myOtherField?: ?string,
       };
   
       export type IMy_Type = {
-        linkTest: ?IMyType,
+        linkTest?: ?IMyType,
       };
   
       export type IMyUnion = IMy_Type | IMyType;
@@ -244,8 +244,8 @@ describe('Flow Plugin', () => {
       };
   
       export type IQuery = {
-        something: ?IMyUnion,
-        use_interface: ?ISome_Interface,
+        something?: ?IMyUnion,
+        use_interface?: ?ISome_Interface,
       };
       `);
 
@@ -325,7 +325,7 @@ describe('Flow Plugin', () => {
 
       expect(result.definitions[1]).toBeSimilarStringTo(`
         export type TMutation = {
-          foo: ?string,
+          foo?: ?string,
         };
 
 
@@ -487,7 +487,7 @@ describe('Flow Plugin', () => {
 
       expect(result.definitions[0]).toBeSimilarStringTo(`
         export type MyType = {
-          foo: ?string,
+          foo?: ?string,
           bar: string,
         };
       `);
@@ -650,7 +650,7 @@ describe('Flow Plugin', () => {
 
       expect(result.definitions[0]).toBeSimilarStringTo(`
         export type MyInterface = {
-          foo: ?string,
+          foo?: ?string,
           bar: string,
         };
       `);
