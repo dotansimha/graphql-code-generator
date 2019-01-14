@@ -22,7 +22,7 @@
     "stencil-apollo": "0.0.1"
   },
   "devDependencies": {
-    "@stencil/core": "0.16.2",
+    "@stencil/core": "0.16.3",
     "@types/graphql": "14.0.3",
     "graphql-code-generator": "0.15.2",
     "graphql-codegen-add": "0.15.2",
