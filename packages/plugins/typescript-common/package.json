@@ -11,7 +11,7 @@
     "test": "codegen-templates-scripts test"
   },
   "dependencies": {
-    "change-case": "3.0.2",
+    "change-case": "3.1.0",
     "common-tags": "1.8.0",
     "graphql-codegen-core": "0.15.2",
     "graphql-codegen-plugin-helpers": "0.15.2"
