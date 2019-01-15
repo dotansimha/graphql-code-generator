@@ -106,10 +106,10 @@
   dependencies:
     any-observable "^0.3.0"
 
-"@stencil/core@0.16.2":
-  version "0.16.2"
-  resolved "https://registry.yarnpkg.com/@stencil/core/-/core-0.16.2.tgz#80e037ba014055a05da0320ca54c490fc8c44d06"
-  integrity sha512-0ZhsWeyS9UOEgomFdUfDUqFY/Wyn/vUxvGL34Q0/WZxa351c7INaP2yUAwC2uW3oX74/y6vzLtY1jMmlOq4Huw==
+"@stencil/core@0.16.3":
+  version "0.16.3"
+  resolved "https://registry.yarnpkg.com/@stencil/core/-/core-0.16.3.tgz#bd72881dd1f7685e6ddde71cc92d6dd824972f12"
+  integrity sha512-+xXzSiCIu1tedsaGCMDhQykXlepj1jLxK+Dav77TpGgTn390jsl4QOVzt58wmuaa7Rj0dqXIOulmqV3uHhuerg==
   dependencies:
     chokidar "2.0.3"
     jsdom "11.11.0"
