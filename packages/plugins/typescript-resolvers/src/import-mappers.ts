@@ -5,6 +5,11 @@ interface Modules {
   [path: string]: string[];
 }
 
+function extractVariable(type: string) {
+  const m = /^[^\[\.]+/.exec(type);
+  return m ? m[0] : type;
+}
+
 export function importMappers(types: Type[], options: Handlebars.HelperOptions) {
   const config = options.data.root.config || {};
   const mappers = config.mappers || {};
@@ -28,13 +33,15 @@ export function importMappers(types: Type[], options: Handlebars.HelperOptions) 
       // and if is used
       if (mapper && mapper.isExternal && availableTypes.includes(type)) {
         const path = mapper.source;
+        const variable = extractVariable(mapper.type);
+
         if (!modules[path]) {
           modules[path] = [];
         }
 
         // checks for duplicates
-        if (!modules[path].includes(mapper.type)) {
-          modules[path].push(mapper.type);
+        if (!modules[path].includes(variable)) {
+          modules[path].push(variable);
         }
       }
     }
