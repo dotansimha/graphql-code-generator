@@ -17,6 +17,7 @@ export interface TypeScriptServerResolversConfig extends TypeScriptCommonConfig 
   contextType?: string;
   mappers?: { [name: string]: string };
   defaultMapper?: string;
+  fieldResolverNamePrefix?: string;
 }
 
 export const plugin: PluginFunction<TypeScriptServerResolversConfig> = async (
@@ -29,7 +30,7 @@ export const plugin: PluginFunction<TypeScriptServerResolversConfig> = async (
   Handlebars.registerPartial('resolveType', resolveType);
   Handlebars.registerPartial('directive', directive);
   Handlebars.registerPartial('scalar', scalar);
-  Handlebars.registerHelper('getFieldResolverName', getFieldResolverName(convert));
+  Handlebars.registerHelper('getFieldResolverName', getFieldResolverName(convert, config));
   Handlebars.registerHelper('getFieldResolver', getFieldResolver(convert));
   Handlebars.registerHelper('getTypenames', getTypenames);
   Handlebars.registerHelper('getParentType', getParentType(convert));

@@ -239,3 +239,20 @@ export const resolvers: QueryResolvers.Resolvers = {
 ```
 
 Field resolvers will be modfied as well.
+
+## Field Resolver Name Prefix
+
+When using `noNamespace` option, you can add a prefix to field resolver name, in order to avoid conflicts in the generated typescript declarations.
+
+```yaml
+# ...
+generates:
+  path/to/file.ts:
+    config:
+      noNamespace: true
+      fieldResolverNamePrefix: Field
+    plugins:
+      - typescript-resolvers
+```
+
+And it will generate Field Resolver like `PostFieldIdResolver` instead of `PostIdResolver`

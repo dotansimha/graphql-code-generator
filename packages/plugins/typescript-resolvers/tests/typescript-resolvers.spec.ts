@@ -1240,4 +1240,59 @@ describe('Resolvers', () => {
       }
     `);
   });
+
+  it('should insert Field Resolvers prefix if configured', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: `
+        type Query {
+          user: User
+          post: UserPost
+        }
+
+        type User {
+          postId: String
+          post: Post
+        } 
+
+        type UserPost {
+          id: String
+        }
+
+        type Post {
+          id: String
+        }
+        
+        schema {
+          query: Query
+        }
+      `
+    });
+
+    const content = await plugin(
+      testSchema,
+      [],
+      { noNamespaces: true, fieldResolverNamePrefix: '_' },
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
+
+    expect(content).toBeSimilarStringTo(`
+      export interface UserResolvers<Context = {}, TypeParent = User> {
+        postId?: User_PostIdResolver<Maybe<string>, TypeParent, Context>;
+        post?: User_PostResolver<Maybe<Post>, TypeParent, Context>;
+      }
+
+      export type User_PostIdResolver<R = Maybe<string>, Parent = User, Context = {}> = Resolver<R, Parent, Context>;
+      export type User_PostResolver<R = Maybe<Post>, Parent = User, Context = {}> = Resolver<R, Parent, Context>;
+    `);
+
+    expect(content).toBeSimilarStringTo(`
+      export interface UserPostResolvers<Context = {}, TypeParent = UserPost> {
+        id?: UserPost_IdResolver<Maybe<string>, TypeParent, Context>;
+      }
+
+      export type UserPost_IdResolver<R = Maybe<string>, Parent = UserPost, Context = {}> = Resolver<R, Parent, Context>;
+    `);
+  });
 });
