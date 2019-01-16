@@ -41,7 +41,7 @@
     "lint-staged": "8.1.0",
     "tslint": "5.12.1",
     "typescript": "3.2.2",
-    "graphql": "14.1.0",
+    "graphql": "14.1.1",
     "graphql-tag": "2.10.0",
     "jest": "23.6.0",
     "rimraf": "2.6.3",

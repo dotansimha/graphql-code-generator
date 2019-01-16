@@ -18,7 +18,7 @@
     "codegen-templates-scripts": "0.15.2",
     "flow-bin": "0.90.0",
     "flow-parser": "0.90.0",
-    "graphql": "14.1.0"
+    "graphql": "14.1.1"
   },
   "main": "./dist/index.js",
   "typings": "dist/index.d.ts",
