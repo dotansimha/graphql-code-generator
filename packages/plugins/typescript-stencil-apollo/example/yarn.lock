@@ -94,9 +94,9 @@
   dependencies:
     any-observable "^0.3.0"
 
-"@stencil/core@0.16.3":
-  version "0.16.3"
-  resolved "https://registry.yarnpkg.com/@stencil/core/-/core-0.16.3.tgz#bd72881dd1f7685e6ddde71cc92d6dd824972f12"
+"@stencil/core@0.16.4":
+  version "0.16.4"
+  resolved "https://registry.yarnpkg.com/@stencil/core/-/core-0.16.4.tgz#cd9ae10f97ab56526a220b3162822d59e6fda043"
   dependencies:
     chokidar "2.0.3"
     jsdom "11.11.0"
