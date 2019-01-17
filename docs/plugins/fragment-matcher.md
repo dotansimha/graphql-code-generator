@@ -17,6 +17,10 @@ Install using `npm` (or `yarn`):
 
 ## Configuration
 
+Fragment Matcher plugin accepts a TypeScript / JavaScript or a JSON file as an output _(`.ts, .tsx, .js, .jsx, .json`)_.
+
+Both in TypeScript and JavaScript a default export is being used.
+
 ```yaml
 generates:
   ./src/introspection-result.ts:
