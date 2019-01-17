@@ -11,7 +11,7 @@ export namespace {{ convert name 'typeNames' }} {
   }
 
   export type {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}{{ convert operationType 'typeNames' }} ={{#if hasFields}} {
-    {{#if @root.config.immutableTypes }}readonly {{/if}}__typename?: "{{ convert operationType }}";
+    {{#if @root.config.immutableTypes }}readonly {{/if}}__typename?: "{{ convert operationType 'typeNames' }}";
     {{> selectionSet fields=fields prefix=name }}
   }{{/if}}{{{ fragments this name ../fragments }}}
   {{#each innerModels }}
