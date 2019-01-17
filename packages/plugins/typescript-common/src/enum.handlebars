@@ -1,12 +1,14 @@
 {{{ toComment description }}}
 {{#with (importEnum name) }}
-  import {{#if type}}{ {{type}}{{#ifCond type "!=" (concat @root.config.interfacePrefix (convert name))}} as {{@root.config.interfacePrefix}}{{ convert name }}{{/ifCond}} }{{else}}{{@root.config.interfacePrefix}}{{ convert name }}{{/if}} from "{{file}}"
+  {{#if file}}
+    import {{#if type}}{ {{type}}{{#ifCond type "!=" (concat @root.config.interfacePrefix (convert name))}} as {{@root.config.interfacePrefix}}{{ convert name }}{{/ifCond}} }{{else}}{{@root.config.interfacePrefix}}{{ convert name }}{{/if}} from "{{file}}"
 
-  export type {{@root.config.interfacePrefix}}{{ convert (concat name "ValueMap")}} = {
-    {{#each ../values}}
-      {{{ value }}}: {{@root.config.interfacePrefix}}{{ convert ../name }},
-    {{/each}}
-  }
+    export type {{@root.config.interfacePrefix}}{{ convert (concat name "ValueMap")}} = {
+      {{#each ../values}}
+        {{{ value }}}: {{@root.config.interfacePrefix}}{{ convert ../name }},
+      {{/each}}
+    }
+  {{/if}}
 
 {{else}}
   {{#if @root.config.enumsAsTypes }}

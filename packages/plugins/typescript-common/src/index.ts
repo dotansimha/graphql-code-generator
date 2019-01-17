@@ -19,7 +19,7 @@ export interface TypeScriptCommonConfig {
   enumsAsTypes?: boolean;
   immutableTypes?: boolean;
   interfacePrefix?: string;
-  enums?: { [enumName: string]: { [valueName: string]: string } | string };
+  enums?: { [enumName: string]: { [valueName: string]: string } | string | null };
   scalars?: { [scalarName: string]: string };
 }
 

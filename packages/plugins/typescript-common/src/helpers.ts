@@ -30,18 +30,26 @@ export function getScalarType(type: string, options: Handlebars.HelperOptions) {
 
 export function importEnum(name: string, options: Handlebars.HelperOptions) {
   const config = options.data.root.config || {};
-  if (!config.enums || typeof config.enums[name] !== 'string') {
-    return undefined;
+  const definition = config.enums && config.enums[name];
+
+  if (typeof definition === 'string') {
+    // filename specified with optional type name
+    const [file, type] = config.enums[name].split('#');
+    return { name, file, type };
   }
 
-  const [file, type] = config.enums[name].split('#');
+  if (typeof definition === 'object' && definition === null) {
+    // empty definition: don't generate anything
+    return {};
+  }
 
-  return { name, file, type };
+  // fall through to normal or value-mapped generation
+  return undefined;
 }
 
 export function getEnumValue(type: string, name: string, options: Handlebars.HelperOptions) {
   const config = options.data.root.config || {};
-  if (config.enums && type in config.enums && name in config.enums[type]) {
+  if (config.enums && config.enums[type] != null && name in config.enums[type]) {
     return config.enums[type][name];
   } else {
     return `"${name}"`;

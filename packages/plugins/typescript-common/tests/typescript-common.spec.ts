@@ -370,6 +370,37 @@ describe('TypeScript Common', () => {
           }
         `);
       });
+
+      it('Should skip generation of an empty definition', async () => {
+        const content = await plugin(
+          schema,
+          [],
+          {
+            enums: {
+              A: null
+            }
+          },
+          {
+            outputFile: 'graphql.ts'
+          }
+        );
+
+        expect(content).not.toBeSimilarStringTo(`
+          import A from
+        `);
+
+        expect(content).not.toBeSimilarStringTo(`
+          import { A 
+        `);
+
+        expect(content).not.toBeSimilarStringTo(`
+          export enum A {"
+        `);
+
+        expect(content).not.toBeSimilarStringTo(`
+          export type AValueMap {"
+        `);
+      });
     });
 
     it('Should generate the correct description for enums', async () => {
