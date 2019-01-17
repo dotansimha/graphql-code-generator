@@ -35,19 +35,18 @@ export class Renderer {
 
     // show errors
     if (err) {
-      const indentSize = 2;
       const errorCount = err.errors ? err.errors.length : 0;
 
       if (errorCount > 0) {
-        const count = chalk.red.bold(`Found ${errorCount} error${errorCount > 1 ? 's' : ''}`);
+        const count = indentString(chalk.red.bold(`Found ${errorCount} error${errorCount > 1 ? 's' : ''}`), 1);
         const details = err.errors
           .map(error => (isDetailedError(error) ? error.details : error))
           .map((msg, i) => {
-            msg = chalk.gray(indentString(stripIndent(`${msg}`), indentSize));
+            msg = chalk.gray(indentString(stripIndent(`${msg}`), 4));
             const source = (err.errors[i] as any).source;
 
             if (source) {
-              const title = `${logSymbol.error} ${source}`;
+              const title = indentString(`${logSymbol.error} ${source}`, 2);
 
               return [title, msg].join('\n');
             }
@@ -55,7 +54,7 @@ export class Renderer {
             return msg;
           })
           .join('\n\n');
-        logUpdate(['', count, details].join('\n\n'));
+        logUpdate(['', count, details, ''].join('\n\n'));
       } else {
         logUpdate(chalk.red.bold(err.message));
       }
