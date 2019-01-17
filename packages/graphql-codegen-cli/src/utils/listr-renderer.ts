@@ -41,12 +41,7 @@ export class Renderer {
       if (errorCount > 0) {
         const count = chalk.red.bold(`Found ${errorCount} error${errorCount > 1 ? 's' : ''}`);
         const details = err.errors
-          .map(error => {
-            if (isDetailedError(error)) {
-              return error.details;
-            }
-            return error;
-          })
+          .map(error => (isDetailedError(error) ? error.details : error))
           .map((msg, i) => {
             msg = chalk.gray(indentString(stripIndent(`${msg}`), indentSize));
             const source = (err.errors[i] as any).source;
@@ -67,7 +62,5 @@ export class Renderer {
     }
 
     logUpdate.done();
-
-    logger.emit();
   }
 }
