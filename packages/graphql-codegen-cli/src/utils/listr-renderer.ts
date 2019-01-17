@@ -6,6 +6,7 @@ import * as UpdateRenderer from 'listr-update-renderer';
 import { stripIndent } from 'common-tags';
 import { ListrTask } from 'listr';
 import { DetailedError, isDetailedError } from '../errors';
+import { Source } from 'graphql';
 
 export class Renderer {
   private updateRenderer: any;
@@ -42,11 +43,13 @@ export class Renderer {
         const details = err.errors
           .map(error => (isDetailedError(error) ? error.details : error))
           .map((msg, i) => {
+            const source: string | Source | undefined = (err.errors[i] as any).source;
+
             msg = chalk.gray(indentString(stripIndent(`${msg}`), 4));
-            const source = (err.errors[i] as any).source;
 
             if (source) {
-              const title = indentString(`${logSymbol.error} ${source}`, 2);
+              const sourceOfError = typeof source === 'string' ? source : source.name;
+              const title = indentString(`${logSymbol.error} ${sourceOfError}`, 2);
 
               return [title, msg].join('\n');
             }
