@@ -37,10 +37,10 @@ export function checkValidationErrors(loadDocumentErrors: ReadonlyArray<LoadDocu
     }
 
     throw new DetailedError(
-      `Found ${errorCount} errors in your documents`,
+      `Found ${errorCount} error${errorCount > 1 ? 's' : ''} in your documents`,
       `
-      Found ${errorCount} errors.
-      GraphQL Code Generator validated your GraphQL documents against the schema.
+      Found ${errorCount} error${errorCount > 1 ? 's' : ''}.
+      Operations and fragments were validated against the schema.
       Please fix following errors and run codegen again:
       ${errors.join('')}
 

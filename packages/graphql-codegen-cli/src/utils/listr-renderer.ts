@@ -1,9 +1,11 @@
 import chalk from 'chalk';
 import * as logUpdate from 'log-update';
-import * as identString from 'indent-string';
+import * as indentString from 'indent-string';
+import * as logSymbol from 'log-symbols';
 import * as UpdateRenderer from 'listr-update-renderer';
-import { DetailedError, isDetailedError } from '../errors';
+import { stripIndent } from 'common-tags';
 import { ListrTask } from 'listr';
+import { DetailedError, isDetailedError } from '../errors';
 
 export class Renderer {
   private updateRenderer: any;
@@ -33,8 +35,11 @@ export class Renderer {
 
     // show errors
     if (err) {
-      if (err.errors && err.errors.length) {
-        const count = identString(chalk.red.bold(`We found ${err.errors.length} errors`), 4);
+      const indentSize = 2;
+      const errorCount = err.errors ? err.errors.length : 0;
+
+      if (errorCount > 0) {
+        const count = chalk.red.bold(`Found ${errorCount} error${errorCount > 1 ? 's' : ''}`);
         const details = err.errors
           .map(error => {
             if (isDetailedError(error)) {
@@ -43,14 +48,18 @@ export class Renderer {
             return error;
           })
           .map((msg, i) => {
+            msg = chalk.gray(indentString(stripIndent(`${msg}`), indentSize));
             const source = (err.errors[i] as any).source;
+
             if (source) {
-              const title = identString(chalk.red(`Failed to generate ${source}`), 4);
+              const title = `${logSymbol.error} ${source}`;
+
               return [title, msg].join('\n');
             }
+
             return msg;
           })
-          .join('\n');
+          .join('\n\n');
         logUpdate(['', count, details].join('\n\n'));
       } else {
         logUpdate(chalk.red.bold(err.message));
@@ -58,5 +67,7 @@ export class Renderer {
     }
 
     logUpdate.done();
+
+    logger.emit();
   }
 }
