@@ -16,7 +16,8 @@ import {
   ObjectTypeDefinitionNode,
   FieldDefinitionNode,
   InterfaceTypeDefinitionNode,
-  UnionTypeDefinitionNode
+  UnionTypeDefinitionNode,
+  DirectiveDefinitionNode
 } from 'graphql/language/ast';
 
 export const DEFAULT_SCALARS = {
@@ -69,6 +70,10 @@ export class FlowVisitor implements BasicFlowVisitor {
       .withContent(this._parsedConfig.scalars[(node.name as any) as string] || 'any').string;
   };
 
+  DirectiveDefinition = (node: DirectiveDefinitionNode): string => {
+    return '';
+  };
+
   NamedType = (node: NamedTypeNode): string => {
     const asString = (node.name as any) as string;
     const type = this._parsedConfig.scalars[asString] || this.convertName(asString);
@@ -109,7 +114,9 @@ export class FlowVisitor implements BasicFlowVisitor {
   };
 
   FieldDefinition = (node: FieldDefinitionNode): string => {
-    return indent(`${node.name}: ${node.type},`);
+    const typeString = (node.type as any) as string;
+    const namePostfix = typeString.charAt(0) === '?' ? '?' : '';
+    return indent(`${node.name}${namePostfix}: ${typeString},`);
   };
 
   UnionTypeDefinition = (node: UnionTypeDefinitionNode): string => {
@@ -169,6 +176,7 @@ export class FlowVisitor implements BasicFlowVisitor {
       .export()
       .asKind('const')
       .withName(this.convertName(enumValuesName))
+      .withMethodCall('Object.freeze')
       .withBlock(
         node.values
           .map(enumOption =>

@@ -534,7 +534,7 @@ export interface IncludeDirectiveArgs {
 export type DeprecatedDirectiveResolver<Result> = DirectiveResolverFn<Result, DeprecatedDirectiveArgs, {}>;
 export interface DeprecatedDirectiveArgs {
   /** Explains why this element was deprecated, usually also including a suggestion for how to access supported similar data. Formatted using the Markdown syntax (as specified by [CommonMark](https://commonmark.org/). */
-  reason?: Maybe<string>;
+  reason?: string;
 }
 
 
@@ -542,12 +542,12 @@ export interface DateScalarConfig extends GraphQLScalarTypeConfig<Date, any> {
   name: 'Date'
 }
 
-export interface IResolvers {
-    Post?: PostResolvers.Resolvers;
-    AdminUser?: AdminUserResolvers.Resolvers;
-    WriterUser?: WriterUserResolvers.Resolvers;
-    ReaderUser?: ReaderUserResolvers.Resolvers;
-    User?: UserResolvers.Resolvers;
+export interface IResolvers<Context = {}> {
+    Post?: PostResolvers.Resolvers<Context>;
+    AdminUser?: AdminUserResolvers.Resolvers<Context>;
+    WriterUser?: WriterUserResolvers.Resolvers<Context>;
+    ReaderUser?: ReaderUserResolvers.Resolvers<Context>;
+    User?: UserResolvers.Resolvers<Context>;
     Date?: GraphQLScalarType;
 }
 

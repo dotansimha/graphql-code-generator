@@ -22,7 +22,7 @@ describe('Flow Resolvers Plugin', () => {
       type Subscription {
         somethingChanged: MyOtherType
       }
-      
+
       interface Node {
         id: ID!
       }
@@ -85,13 +85,17 @@ describe('Flow Resolvers Plugin', () => {
   it('Should generate the correct imports when schema has scalars', () => {
     const result = plugin(makeExecutableSchema({ typeDefs: `scalar MyScalar` }), [], {}, { outputFile: '' });
 
-    expect(result).toBeSimilarStringTo(`import { GraphQLResolveInfo, GraphQLScalarTypeConfig } from 'graphql';`);
+    expect(result).toBeSimilarStringTo(
+      `import { type GraphQLResolveInfo, type GraphQLScalarTypeConfig } from 'graphql';`
+    );
   });
 
   it('Should generate the correct imports when schema has no scalars', () => {
     const result = plugin(makeExecutableSchema({ typeDefs: `type MyType { f: String }` }), [], {}, { outputFile: '' });
 
-    expect(result).not.toBeSimilarStringTo(`import { GraphQLResolveInfo, GraphQLScalarTypeConfig } from 'graphql';`);
+    expect(result).not.toBeSimilarStringTo(
+      `import { type GraphQLResolveInfo, type GraphQLScalarTypeConfig } from 'graphql';`
+    );
   });
 
   it('Should generate basic type resolvers with mapping', () => {
@@ -144,5 +148,16 @@ describe('Flow Resolvers Plugin', () => {
       somethingChanged?: SubscriptionResolver<?MyCustomOtherType, ParentType, Context>,
     }
     `);
+  });
+
+  it('Should generate the correct resolver args type names when typesPrefix is specified', () => {
+    const result = plugin(
+      makeExecutableSchema({ typeDefs: `type MyType { f(a: String): String }` }),
+      [],
+      { typesPrefix: 'T' },
+      { outputFile: '' }
+    );
+
+    expect(result).toBeSimilarStringTo(`f?: Resolver<?string, ParentType, Context, TMyTypeFArgs>,`);
   });
 });

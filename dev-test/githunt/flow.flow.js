@@ -26,11 +26,11 @@ export type EntryCommentsArgs = {
   offset?: ?number
 };
 
-export const FeedTypeValues = {
+export const FeedTypeValues = Object.freeze({
   Hot: 'HOT', 
   New: 'NEW', 
   Top: 'TOP'
-};
+});
 
 
 export type FeedType = $Values<typeof FeedTypeValues>;
@@ -105,11 +105,11 @@ export type Vote = {
   vote_value: number,
 };
 
-export const VoteTypeValues = {
+export const VoteTypeValues = Object.freeze({
   Up: 'UP', 
   Down: 'DOWN', 
   Cancel: 'CANCEL'
-};
+});
 
 
 export type VoteType = $Values<typeof VoteTypeValues>;

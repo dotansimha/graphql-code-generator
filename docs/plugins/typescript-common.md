@@ -72,10 +72,6 @@ generates:
 
 This will cause the codegen to output `readonly` properties and `ReadonlyArray`.
 
-#### `schemaNamespace` (default value: `false`)
-
-This will cause the codegen to wrap the generated schema typings with a TypeScript namespace.
-
 #### `interfacePrefix` (default value: '')
 
 This will cause the codegen to prefix graphql type interfaces with the given value (if `I` is defined as prefix, type `Foo` will be generated as an interface named `IFoo`). Use this flag if you would like to run the codegen on multiple schemas. Note that even though we run this command on multiple schemas, the output types will be merged and not separated. For more information regards declaration merging, see [reference](https://www.typescriptlang.org/docs/handbook/declaration-merging.html).

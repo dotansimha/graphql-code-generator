@@ -81,7 +81,7 @@ const plugins: Array<PluginOption> = [
   },
   {
     name: `TypeScript GraphQL files modules ${chalk.italic('(declarations for .graphql files)')}`,
-    package: 'graphql-codegen-graphql-files-modules',
+    package: 'graphql-codegen-typescript-graphql-files-modules',
     value: 'typescript-graphql-files-modules',
     available: tags => tags.includes(Tags.client)
   },

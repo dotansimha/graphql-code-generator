@@ -144,10 +144,10 @@ If you schema has a different, or complicated way of loading, you can specify a 
 
 ```yml
 schema:
-    - http://localhost:3000/graphql
-        loader: my-url-loader.js
-    - schema.graphql
-        loader: my-file-loader.js
+  - http://localhost:3000/graphql:
+      loader: my-url-loader.js
+  - schema.graphql:
+      loader: my-file-loader.js
 ```
 
 Your custom loader should export a default function, and return `GraphQLSchema` object. For example:

@@ -4586,6 +4586,11 @@ jsprim@^1.2.2:
     json-schema "0.2.3"
     verror "1.10.0"
 
+jwt-decode@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/jwt-decode/-/jwt-decode-2.2.0.tgz#7d86bd56679f58ce6a84704a657dd392bba81a79"
+  integrity sha1-fYa9VmefWM5qhHBKZX3TkruoGnk=
+
 kind-of@^3.0.2, kind-of@^3.0.3, kind-of@^3.2.0:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-3.2.2.tgz#31ea21a734bab9bbb0f32466d893aea51e4a3c64"
@@ -5293,10 +5298,10 @@ neo-async@^2.5.0:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.0.tgz#b9d15e4d71c6762908654b5183ed38b753340835"
   integrity sha512-MFh0d/Wa7vkKO3Y3LlacqAEeHK0mckVqzDieUKTT+KGxi+zIpeVsFxymkIiRpbpDziHc290Xr9A1O4Om7otoRA==
 
-netlify-lambda@1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/netlify-lambda/-/netlify-lambda-1.1.1.tgz#6f824502f1ed7c3aa2267edea673060b3e3639c9"
-  integrity sha512-/wfjyDLBk4Qfatl7UYJfsV5oArJEbGwLf/IO6V/ii0FvtMDfVbILZSICeuZqLiQgHHYGmTe1wrqZPGBiBdZ28A==
+netlify-lambda@1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/netlify-lambda/-/netlify-lambda-1.2.0.tgz#8e9bf370c81e2b4e335442ccf67ff2583df34c48"
+  integrity sha512-hYbh/niRAB9347Ix7flWdtzfMvq0vyOOB2003Xt/UfV5+SSyzSM8Pksj+KIk3HMwc2zkj9W3P0EKv6nS3ie15w==
   dependencies:
     "@babel/core" "^7.0.0"
     "@babel/plugin-proposal-class-properties" "^7.0.0"
@@ -5308,6 +5313,7 @@ netlify-lambda@1.1.1:
     commander "^2.17.1"
     express "^4.16.3"
     express-logging "^1.1.1"
+    jwt-decode "^2.2.0"
     toml "^2.3.3"
     webpack "^4.17.1"
     webpack-merge "^4.1.4"

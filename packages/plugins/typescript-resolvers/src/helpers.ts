@@ -30,8 +30,8 @@ export const getFieldType = convert => (field: Field, options: Handlebars.Helper
   return convertedType(field, options, convert);
 };
 
-export const getFieldResolverName = convert => (name: string) => {
-  return `${convert(name)}Resolver`;
+export const getFieldResolverName = (convert, config) => (name: string) => {
+  return `${config.fieldResolverNamePrefix || ''}${convert(name)}Resolver`;
 };
 
 export const getFieldResolver = convert => (field: Field, type: Type, options: Handlebars.HelperOptions) => {

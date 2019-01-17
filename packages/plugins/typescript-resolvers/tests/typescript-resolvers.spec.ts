@@ -37,7 +37,7 @@ describe('Resolvers', () => {
       context: Context,
       info: GraphQLResolveInfo
     ) => Promise<Result> | Result;
-    
+
     export interface ISubscriptionResolverObject<Result, Parent, Context, Args> {
       subscribe<R = Result, P = Parent>(
         parent: P,
@@ -52,7 +52,7 @@ describe('Resolvers', () => {
         info: GraphQLResolveInfo
       ): R | Result | Promise<R | Result>;
     }
-    
+
     export type SubscriptionResolver<Result, Parent = {}, Context = {}, Args = {}> =
       | ((...args: any[]) => ISubscriptionResolverObject<Result, Parent, Context, Args>)
       | ISubscriptionResolverObject<Result, Parent, Context, Args>;
@@ -103,7 +103,7 @@ describe('Resolvers', () => {
         type Query {
           fieldTest(last: Int!, sort: String): String
         }
-        
+
         schema {
           query: Query
         }
@@ -124,9 +124,9 @@ describe('Resolvers', () => {
           export interface Resolvers<Context = {}, TypeParent = {}> {
             fieldTest?: FieldTestResolver<Maybe<string>, TypeParent, Context>;
           }
-    
+
           export type FieldTestResolver<R = Maybe<string>, Parent = {}, Context = {}> = Resolver<R, Parent, Context, FieldTestArgs>;
-          
+
           export interface FieldTestArgs {
             last: number;
             sort?: Maybe<string>;
@@ -139,9 +139,9 @@ describe('Resolvers', () => {
     const testSchema = makeExecutableSchema({
       typeDefs: `
         type Subscription {
-          fieldTest: String 
+          fieldTest: String
         }
-        
+
         schema {
           subscription: Subscription
         }
@@ -174,9 +174,9 @@ describe('Resolvers', () => {
     const testSchema = makeExecutableSchema({
       typeDefs: `
         type Query {
-          fieldTest: String 
+          fieldTest: String
         }
-        
+
         schema {
           query: Query
         }
@@ -205,9 +205,9 @@ describe('Resolvers', () => {
     const testSchema = makeExecutableSchema({
       typeDefs: `
         type Query {
-          fieldTest: String 
+          fieldTest: String
         }
-        
+
         schema {
           query: Query
         }
@@ -248,9 +248,9 @@ describe('Resolvers', () => {
     const testSchema = makeExecutableSchema({
       typeDefs: `
         type Query {
-          fieldTest: String 
+          fieldTest: String
         }
-        
+
         schema {
           query: Query
         }
@@ -284,7 +284,7 @@ describe('Resolvers', () => {
       typeDefs: `
       type snake_case_arg {
         test: String
-      }  
+      }
 
       type snake_case_result {
         test: String
@@ -325,7 +325,7 @@ describe('Resolvers', () => {
       typeDefs: `
       type TestType {
         id: ID!
-      }  
+      }
     `
     });
 
@@ -357,7 +357,7 @@ describe('Resolvers', () => {
           id: String
           name: String
         }
-        
+
         schema {
           query: Query
         }
@@ -378,7 +378,7 @@ describe('Resolvers', () => {
         export interface Resolvers<Context = {}, TypeParent = {}> {
           post?: PostResolver<Maybe<Post>, TypeParent, Context>;
         }
-  
+
         export type PostResolver<R = Maybe<Post>, Parent = {}, Context = {}> = Resolver<R, Parent, Context>;
       }
     `);
@@ -424,7 +424,7 @@ describe('Resolvers', () => {
           id: String
           name: String
         }
-        
+
         schema {
           query: Query
         }
@@ -486,7 +486,7 @@ describe('Resolvers', () => {
           name: String
           post: Post
         }
-        
+
         schema {
           query: Query
         }
@@ -571,7 +571,7 @@ describe('Resolvers', () => {
         type Post {
           id: String
         }
-        
+
         schema {
           query: Query
         }
@@ -625,7 +625,7 @@ describe('Resolvers', () => {
         type Post {
           id: String
         }
-        
+
         schema {
           query: Query
         }
@@ -669,6 +669,41 @@ describe('Resolvers', () => {
     `);
   });
 
+  it('should use variable from mapper only', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: `
+        type Query {
+          post: Post
+        }
+
+        type Post {
+          id: String
+        }
+
+        schema {
+          query: Query
+        }
+      `
+    });
+
+    const content = await plugin(
+      testSchema,
+      [],
+      {
+        mappers: {
+          Post: './interfaces#Post.Model'
+        }
+      },
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
+
+    expect(content).toBeSimilarStringTo(`
+      import { Post } from './interfaces';
+    `);
+  });
+
   it('should use default mapper for non mapped types (primitive)', async () => {
     const testSchema = makeExecutableSchema({
       typeDefs: `
@@ -679,7 +714,7 @@ describe('Resolvers', () => {
         type Post {
           id: String
         }
-        
+
         schema {
           query: Query
         }
@@ -750,7 +785,7 @@ describe('Resolvers', () => {
         type Post {
           id: String
         }
-        
+
         schema {
           query: Query
           mutation: RootMutation
@@ -780,9 +815,9 @@ describe('Resolvers', () => {
         export interface Resolvers<Context = {}, TypeParent = {}> {
           upvotePost?: UpvotePostResolver<Maybe<UpvotePostPayload>, TypeParent, Context>;
         }
-        
+
         export type UpvotePostResolver<R = Maybe<UpvotePostPayload>, Parent = {}, Context = {}> = Resolver<R, Parent, Context, UpvotePostArgs>;
-        
+
         export interface UpvotePostArgs {
           id: string;
         }
@@ -809,7 +844,7 @@ describe('Resolvers', () => {
         type Query {
           fieldTest(last: Int!, sort: String): String
         }
-        
+
         schema {
           query: Query
         }
@@ -831,9 +866,9 @@ describe('Resolvers', () => {
       export interface QueryResolvers<Context = {}, TypeParent = {}> {
         fieldTest?: QueryFieldTestResolver<Maybe<string>, TypeParent, Context>;
       }
-    
+
       export type QueryFieldTestResolver<R = Maybe<string>, Parent = {}, Context = {}> = Resolver<R, Parent, Context, QueryFieldTestArgs>;
-          
+
       export interface QueryFieldTestArgs {
         last: number;
         sort?: Maybe<string>;
@@ -847,7 +882,7 @@ describe('Resolvers', () => {
         type Query {
           fieldTest(last: Int!, sort: String): String
         }
-        
+
         schema {
           query: Query
         }
@@ -889,7 +924,7 @@ describe('Resolvers', () => {
           feed: Entry
 
         }
-        
+
         schema {
           query: Query
         }
@@ -910,7 +945,7 @@ describe('Resolvers', () => {
         export interface Resolvers {
           __resolveType: ResolveType;
         }
-        
+
         export type ResolveType<R = 'Post' | 'Comment', Parent = Post | Comment, Context = {}> = TypeResolveFn<R, Parent, Context>;
       }
     `);
@@ -934,7 +969,7 @@ describe('Resolvers', () => {
           feed: Entry
 
         }
-        
+
         schema {
           query: Query
         }
@@ -956,7 +991,7 @@ describe('Resolvers', () => {
       export interface EntryResolvers {
         __resolveType: EntryResolveType;
       }
-      
+
       export type EntryResolveType<R = 'Post' | 'Comment', Parent = Post | Comment, Context = {}> = TypeResolveFn<R, Parent, Context>;
     `);
   });
@@ -967,7 +1002,7 @@ describe('Resolvers', () => {
         type Query {
           field: String
         }
-        
+
         schema {
           query: Query
         }
@@ -985,7 +1020,7 @@ describe('Resolvers', () => {
 
     expect(content).toBeSimilarStringTo(`
       export type NextResolverFn<T> = () => Promise<T>;
-      
+
       export type DirectiveResolverFn<TResult, TArgs = {}, TContext = {}> = (
         next: NextResolverFn<TResult>,
         source: any,
@@ -1003,11 +1038,11 @@ describe('Resolvers', () => {
           title: String
           text: String
         }
-        
+
         type Query {
           post: Post
         }
-        
+
         schema {
           query: Query
         }
@@ -1025,7 +1060,7 @@ describe('Resolvers', () => {
 
     expect(content).toBeSimilarStringTo(`
       export type NextResolverFn<T> = () => Promise<T>;
-      
+
       export type DirectiveResolverFn<TResult, TArgs = {}, TContext = {}> = (
         next: NextResolverFn<TResult>,
         source: any,
@@ -1045,11 +1080,11 @@ describe('Resolvers', () => {
           title: String
           text: String
         }
-        
+
         type Query {
           post: Post
         }
-        
+
         schema {
           query: Query
         }
@@ -1086,7 +1121,7 @@ describe('Resolvers', () => {
           post: JSON
           date: Date
         }
-        
+
         schema {
           query: Query
         }
@@ -1130,7 +1165,7 @@ describe('Resolvers', () => {
         type Query {
           field: String
         }
-        
+
         schema {
           query: Query
         }
@@ -1171,7 +1206,7 @@ describe('Resolvers', () => {
           id: String
           name: String
         }
-        
+
         schema {
           query: Query
         }
@@ -1188,10 +1223,10 @@ describe('Resolvers', () => {
     );
 
     expect(content).toBeSimilarStringTo(`
-      export interface IResolvers {
-        Query?: QueryResolvers;
-        Post?: PostResolvers;
-        User?: UserResolvers;
+      export interface IResolvers<Context = {}> {
+        Query?: QueryResolvers<Context>;
+        Post?: PostResolvers<Context>;
+        User?: UserResolvers<Context>;
         Date?: GraphQLScalarType;
       }
     `);
@@ -1203,6 +1238,61 @@ describe('Resolvers', () => {
         include?: IncludeDirectiveResolver<Result>;
         deprecated?: DeprecatedDirectiveResolver<Result>;
       }
+    `);
+  });
+
+  it('should insert Field Resolvers prefix if configured', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: `
+        type Query {
+          user: User
+          post: UserPost
+        }
+
+        type User {
+          postId: String
+          post: Post
+        } 
+
+        type UserPost {
+          id: String
+        }
+
+        type Post {
+          id: String
+        }
+        
+        schema {
+          query: Query
+        }
+      `
+    });
+
+    const content = await plugin(
+      testSchema,
+      [],
+      { noNamespaces: true, fieldResolverNamePrefix: '_' },
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
+
+    expect(content).toBeSimilarStringTo(`
+      export interface UserResolvers<Context = {}, TypeParent = User> {
+        postId?: User_PostIdResolver<Maybe<string>, TypeParent, Context>;
+        post?: User_PostResolver<Maybe<Post>, TypeParent, Context>;
+      }
+
+      export type User_PostIdResolver<R = Maybe<string>, Parent = User, Context = {}> = Resolver<R, Parent, Context>;
+      export type User_PostResolver<R = Maybe<Post>, Parent = User, Context = {}> = Resolver<R, Parent, Context>;
+    `);
+
+    expect(content).toBeSimilarStringTo(`
+      export interface UserPostResolvers<Context = {}, TypeParent = UserPost> {
+        id?: UserPost_IdResolver<Maybe<string>, TypeParent, Context>;
+      }
+
+      export type UserPost_IdResolver<R = Maybe<string>, Parent = UserPost, Context = {}> = Resolver<R, Parent, Context>;
     `);
   });
 });

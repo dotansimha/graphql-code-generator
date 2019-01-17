@@ -152,14 +152,14 @@ export interface IncludeDirectiveArgs {
 export type DeprecatedDirectiveResolver<Result> = DirectiveResolverFn<Result, DeprecatedDirectiveArgs, {}>;
 export interface DeprecatedDirectiveArgs {
   /** Explains why this element was deprecated, usually also including a suggestion for how to access supported similar data. Formatted using the Markdown syntax (as specified by [CommonMark](https://commonmark.org/). */
-  reason?: Maybe<string>;
+  reason?: string;
 }
 
 
 
-export interface IResolvers {
-    Query?: QueryResolvers.Resolvers;
-    User?: UserResolvers.Resolvers;
+export interface IResolvers<Context = {}> {
+    Query?: QueryResolvers.Resolvers<Context>;
+    User?: UserResolvers.Resolvers<Context>;
 }
 
 export interface IDirectiveResolvers<Result> {
