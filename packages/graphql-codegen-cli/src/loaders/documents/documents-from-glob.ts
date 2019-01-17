@@ -1,6 +1,6 @@
 import { DocumentLoader } from './document-loader';
 import { parse, Source, DocumentNode } from 'graphql';
-import { Types, DocumentFile } from 'graphql-codegen-core';
+import { Types, DocumentFile, debugLog } from 'graphql-codegen-core';
 import * as isGlob from 'is-glob';
 import * as glob from 'glob';
 import { existsSync, readFileSync } from 'fs';
@@ -24,6 +24,7 @@ export class DocumentsFromGlob implements DocumentLoader {
         }
 
         if (!files || files.length === 0) {
+          debugLog(`[Document Loader] No files matched for glob expression: ${documentGlob}`);
           console['warn'](`No files matched for glob expression: ${documentGlob}`);
         }
 
@@ -68,6 +69,7 @@ export class DocumentsFromGlob implements DocumentLoader {
   }
 
   async handle(doc: string, config: Types.Config): Promise<DocumentFile[]> {
+    debugLog(`[Document Loader] Handling ${doc}`);
     const foundDocumentsPaths = await this.documentsFromGlobs(doc);
 
     return this.loadDocumentsSources(foundDocumentsPaths);

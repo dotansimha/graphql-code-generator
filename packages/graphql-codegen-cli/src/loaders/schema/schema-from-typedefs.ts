@@ -1,4 +1,4 @@
-import { Types } from 'graphql-codegen-core';
+import { Types, debugLog } from 'graphql-codegen-core';
 import { SchemaLoader } from './schema-loader';
 import * as isGlob from 'is-glob';
 import isValidPath = require('is-valid-path');
@@ -21,6 +21,7 @@ function loadSchemaFile(filepath: string): string {
   });
 
   if (/^\# import /i.test(content.trimLeft())) {
+    debugLog(`[Schema Loader] Using 'graphql-import' package`);
     const { importSchema } = require('graphql-import');
 
     return importSchema(filepath);

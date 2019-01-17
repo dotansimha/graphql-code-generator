@@ -7,7 +7,7 @@ export { parse } from './utils/parse';
 export { toPascalCase } from './utils/to-pascal-case';
 export * from './types';
 export * from './yml-config-types';
-export { debugLog } from './debugging';
+export { debugLog, printLogs, resetLogs } from './debugging';
 export {
   DocumentNode,
   Source,

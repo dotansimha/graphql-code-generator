@@ -7,6 +7,7 @@ import { stripIndent } from 'common-tags';
 import { ListrTask } from 'listr';
 import { DetailedError, isDetailedError } from '../errors';
 import { Source } from 'graphql';
+import { debugLog, printLogs } from 'graphql-codegen-core';
 
 export class Renderer {
   private updateRenderer: any;
@@ -41,7 +42,11 @@ export class Renderer {
       if (errorCount > 0) {
         const count = indentString(chalk.red.bold(`Found ${errorCount} error${errorCount > 1 ? 's' : ''}`), 1);
         const details = err.errors
-          .map(error => (isDetailedError(error) ? error.details : error))
+          .map(error => {
+            debugLog(`[CLI] Exited with an error`, error);
+
+            return isDetailedError(error) ? error.details : error;
+          })
           .map((msg, i) => {
             const source: string | Source | undefined = (err.errors[i] as any).source;
 
@@ -64,5 +69,7 @@ export class Renderer {
     }
 
     logUpdate.done();
+
+    printLogs();
   }
 }
