@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "apollo-boost": "0.1.23",
-    "graphql": "14.1.0",
+    "graphql": "14.1.1",
     "graphql-tag": "2.10.0",
     "stencil-apollo": "0.0.1"
   },
