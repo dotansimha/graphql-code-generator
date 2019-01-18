@@ -981,9 +981,9 @@
   version "23.3.12"
   resolved "https://registry.yarnpkg.com/@types/jest/-/jest-23.3.12.tgz#7e0ced251fa94c3bc2d1023d4b84b2992fa06376"
 
-"@types/js-yaml@3.11.4":
-  version "3.11.4"
-  resolved "https://registry.yarnpkg.com/@types/js-yaml/-/js-yaml-3.11.4.tgz#c4323304673278b8406bccb63bbf577342dbbdba"
+"@types/js-yaml@3.12.0":
+  version "3.12.0"
+  resolved "https://registry.yarnpkg.com/@types/js-yaml/-/js-yaml-3.12.0.tgz#3494ce97358e2675e24e97a747ec23478eeaf8b6"
 
 "@types/jss@^9.5.6":
   version "9.5.7"
