@@ -4,7 +4,7 @@
   "private": true,
   "homepage": "/live-demo/",
   "devDependencies": {
-    "aws-sdk": "2.389.0"
+    "aws-sdk": "2.391.0"
   },
   "dependencies": {
     "react": "16.7.0",
