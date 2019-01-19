@@ -102,10 +102,6 @@
     jsdom "11.11.0"
     typescript "3.2.2"
 
-"@types/async@2.0.50":
-  version "2.0.50"
-  resolved "https://registry.yarnpkg.com/@types/async/-/async-2.0.50.tgz#117540e026d64e1846093abbd5adc7e27fda7bcb"
-
 "@types/babel-types@*":
   version "7.0.4"
   resolved "https://registry.yarnpkg.com/@types/babel-types/-/babel-types-7.0.4.tgz#bfd5b0d0d1ba13e351dff65b6e52783b816826c8"
@@ -213,46 +209,48 @@ anymatch@^2.0.0:
     micromatch "^3.1.4"
     normalize-path "^2.1.1"
 
-apollo-boost@0.1.23:
-  version "0.1.23"
-  resolved "https://registry.yarnpkg.com/apollo-boost/-/apollo-boost-0.1.23.tgz#9a9b806cfdc1d29b0b09b1ef0a15fde2e71c92bd"
+apollo-boost@0.1.27:
+  version "0.1.27"
+  resolved "https://registry.yarnpkg.com/apollo-boost/-/apollo-boost-0.1.27.tgz#77cc796359503a330d5b31780043430afed47899"
   dependencies:
-    apollo-cache "^1.1.22"
-    apollo-cache-inmemory "^1.3.12"
-    apollo-client "^2.4.8"
+    apollo-cache "^1.1.25"
+    apollo-cache-inmemory "^1.4.2"
+    apollo-client "^2.4.12"
     apollo-link "^1.0.6"
     apollo-link-error "^1.0.3"
     apollo-link-http "^1.3.1"
     apollo-link-state "^0.4.0"
     graphql-tag "^2.4.2"
+    tslib "^1.9.3"
 
-apollo-cache-inmemory@^1.3.12:
-  version "1.3.12"
-  resolved "https://registry.yarnpkg.com/apollo-cache-inmemory/-/apollo-cache-inmemory-1.3.12.tgz#cf7ef7c15730d0b6787d79047d5c06087ac31991"
+apollo-cache-inmemory@^1.4.2:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/apollo-cache-inmemory/-/apollo-cache-inmemory-1.4.2.tgz#c91aeb4adff45cdc7872d603cbff055fa9cd5021"
   dependencies:
-    apollo-cache "^1.1.22"
-    apollo-utilities "^1.0.27"
-    optimism "^0.6.8"
+    apollo-cache "^1.1.25"
+    apollo-utilities "^1.1.2"
+    optimism "^0.6.9"
+    tslib "^1.9.3"
 
-apollo-cache@1.1.22, apollo-cache@^1.1.22:
-  version "1.1.22"
-  resolved "https://registry.yarnpkg.com/apollo-cache/-/apollo-cache-1.1.22.tgz#d4682ea6e8b2508a934f61c2fd9e36b4a65041d9"
+apollo-cache@1.1.25, apollo-cache@^1.1.25:
+  version "1.1.25"
+  resolved "https://registry.yarnpkg.com/apollo-cache/-/apollo-cache-1.1.25.tgz#87a15a2a19993bb07234ccee6839b59d6fb49ac5"
   dependencies:
-    apollo-utilities "^1.0.27"
+    apollo-utilities "^1.1.2"
+    tslib "^1.9.3"
 
-apollo-client@^2.4.8:
-  version "2.4.8"
-  resolved "https://registry.yarnpkg.com/apollo-client/-/apollo-client-2.4.8.tgz#3a798f1076243465a59061d44d11bd030b68deb9"
+apollo-client@^2.4.12:
+  version "2.4.12"
+  resolved "https://registry.yarnpkg.com/apollo-client/-/apollo-client-2.4.12.tgz#9fa15f502d04f8cc788a9fbb825163b437681504"
   dependencies:
     "@types/zen-observable" "^0.8.0"
-    apollo-cache "1.1.22"
+    apollo-cache "1.1.25"
     apollo-link "^1.0.0"
     apollo-link-dedup "^1.0.0"
-    apollo-utilities "1.0.27"
+    apollo-utilities "1.1.2"
     symbol-observable "^1.0.2"
+    tslib "^1.9.3"
     zen-observable "^0.8.0"
-  optionalDependencies:
-    "@types/async" "2.0.50"
 
 apollo-link-dedup@^1.0.0:
   version "1.0.13"
@@ -294,7 +292,14 @@ apollo-link@^1.0.0, apollo-link@^1.0.6, apollo-link@^1.2.3, apollo-link@^1.2.6:
     apollo-utilities "^1.0.0"
     zen-observable-ts "^0.8.13"
 
-apollo-utilities@1.0.27, apollo-utilities@^1.0.0, apollo-utilities@^1.0.1, apollo-utilities@^1.0.27, apollo-utilities@^1.0.8:
+apollo-utilities@1.1.2, apollo-utilities@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/apollo-utilities/-/apollo-utilities-1.1.2.tgz#aa5eca9d1f1eb721c381a22e0dde03559d856db3"
+  dependencies:
+    fast-json-stable-stringify "^2.0.0"
+    tslib "^1.9.3"
+
+apollo-utilities@^1.0.0, apollo-utilities@^1.0.1, apollo-utilities@^1.0.27, apollo-utilities@^1.0.8:
   version "1.0.27"
   resolved "https://registry.yarnpkg.com/apollo-utilities/-/apollo-utilities-1.0.27.tgz#77c550f9086552376eca3a48e234a1466b5b057e"
   dependencies:
@@ -1235,6 +1240,10 @@ graphql-tag@2.10.0, graphql-tag@^2.4.2:
   version "2.10.0"
   resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.10.0.tgz#87da024be863e357551b2b8700e496ee2d4353ae"
 
+graphql-tag@2.10.1:
+  version "2.10.1"
+  resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.10.1.tgz#10aa41f1cd8fae5373eaf11f1f67260a3cad5e02"
+
 graphql-tools@4.0.3:
   version "4.0.3"
   resolved "https://registry.yarnpkg.com/graphql-tools/-/graphql-tools-4.0.3.tgz#23b5cb52c519212b1b2e4630a361464396ad264b"
@@ -2065,9 +2074,9 @@ onetime@^2.0.0:
   dependencies:
     mimic-fn "^1.0.0"
 
-optimism@^0.6.8:
-  version "0.6.8"
-  resolved "https://registry.yarnpkg.com/optimism/-/optimism-0.6.8.tgz#0780b546da8cd0a72e5207e0c3706c990c8673a6"
+optimism@^0.6.9:
+  version "0.6.9"
+  resolved "https://registry.yarnpkg.com/optimism/-/optimism-0.6.9.tgz#19258ff8b3be0cea29ac35f06bff818e026e30bb"
   dependencies:
     immutable-tuple "^0.4.9"
 
@@ -2698,7 +2707,7 @@ ts-log@2.1.4:
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/ts-log/-/ts-log-2.1.4.tgz#063c5ad1cbab5d49d258d18015963489fb6fb59a"
 
-tslib@1.9.3, tslib@^1.9.0:
+tslib@1.9.3, tslib@^1.9.0, tslib@^1.9.3:
   version "1.9.3"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.9.3.tgz#d7e4dd79245d85428c4d7e4822a79917954ca286"
 

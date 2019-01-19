@@ -16,9 +16,9 @@
     "test.watch": "jest --watch"
   },
   "dependencies": {
-    "apollo-boost": "0.1.23",
+    "apollo-boost": "0.1.27",
     "graphql": "14.1.1",
-    "graphql-tag": "2.10.0",
+    "graphql-tag": "2.10.1",
     "stencil-apollo": "0.0.1"
   },
   "devDependencies": {
