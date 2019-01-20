@@ -24,9 +24,9 @@
   "devDependencies": {
     "@stencil/core": "0.17.0",
     "@types/graphql": "14.0.5",
-    "graphql-code-generator": "0.15.2",
-    "graphql-codegen-add": "0.15.2",
-    "graphql-codegen-typescript-client": "0.15.2",
+    "graphql-code-generator": "0.16.0",
+    "graphql-codegen-add": "0.16.0",
+    "graphql-codegen-typescript-client": "0.16.0",
     "graphql-codegen-typescript-common": "0.16.0",
     "rollup-plugin-commonjs": "9.2.0"
   },
