@@ -60,7 +60,7 @@ export function initCommonTemplate(hbs, schema, config: TypeScriptCommonConfig) 
   }
   const convert = (str: string, kind: keyof TypeScriptNamingConventionMap = 'default'): string => {
     const baseConvertFn =
-      namingConventionMap[kind] === 'keep'
+      !namingConventionMap[kind] || namingConventionMap[kind] === 'keep'
         ? (str: string) => str
         : resolveExternalModuleAndFn(namingConventionMap[kind]);
     if (str.charAt(0) === '_') {
