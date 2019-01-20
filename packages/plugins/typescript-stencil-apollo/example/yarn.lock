@@ -1192,11 +1192,11 @@ graphql-code-generator@0.15.2:
     request "2.88.0"
     valid-url "1.0.9"
 
-graphql-codegen-add@0.15.2:
-  version "0.15.2"
-  resolved "https://registry.yarnpkg.com/graphql-codegen-add/-/graphql-codegen-add-0.15.2.tgz#d447e57dc1db4b385882ce6307d047563ff63d2d"
+graphql-codegen-add@0.16.0:
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/graphql-codegen-add/-/graphql-codegen-add-0.16.0.tgz#f1c19166d12a4174c597719b42facb7502b04fc8"
   dependencies:
-    graphql-codegen-core "0.15.2"
+    graphql-codegen-core "0.16.0"
 
 graphql-codegen-core@0.15.2:
   version "0.15.2"
