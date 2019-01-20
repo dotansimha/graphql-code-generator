@@ -19,16 +19,16 @@ export interface ColorInput {
   readonly blue: number;
 }
 /** The episodes in the Star Wars trilogy */
-export enum Episode {
-  Newhope = 'NEWHOPE',
-  Empire = 'EMPIRE',
-  Jedi = 'JEDI',
-}
+  export enum Episode {
+    Newhope = 'NEWHOPE',
+    Empire = 'EMPIRE',
+    Jedi = 'JEDI',
+  }
 /** Units of height */
-export enum LengthUnit {
-  Meter = 'METER',
-  Foot = 'FOOT',
-}
+  export enum LengthUnit {
+    Meter = 'METER',
+    Foot = 'FOOT',
+  }
 
 
 // ====================================================
