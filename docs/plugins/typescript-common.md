@@ -27,6 +27,34 @@ You can override the naming conversion by pointing to a specific function in a m
 
 This will effect all the name conversions of the module.
 
+You can either specify a string pointing to a method in a module (or a file) in order to apply it to all names:
+
+```yaml
+# ...
+generates:
+  path/to/file.ts:
+    plugins:
+      - typescript-common
+    config:
+      namingConvention: change-case#lowerCase
+```
+
+Or, an object with a method per output type (the allowed values are `default`, `enumValues` and `typeNames`):
+
+```yaml
+# ...
+generates:
+  path/to/file.ts:
+    plugins:
+      - typescript-common
+    config:
+      namingConvention:
+        default: change-case#pascalCase
+        enumValues: change-case#upperCase
+```
+
+> The example above will use `pascalCase` as default, and `upperCase` for the enum values.
+
 #### `scalars`
 
 Will map scalars to the predefined types.

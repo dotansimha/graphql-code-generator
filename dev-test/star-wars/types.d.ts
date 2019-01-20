@@ -19,9 +19,9 @@ export interface ColorInput {
   blue: number;
 }
 /** The episodes in the Star Wars trilogy */
-export type Episode = 'NEWHOPE' | 'EMPIRE' | 'JEDI';
+  export type Episode = 'NEWHOPE' | 'EMPIRE' | 'JEDI';
 /** Units of height */
-export type LengthUnit = 'METER' | 'FOOT';
+  export type LengthUnit = 'METER' | 'FOOT';
 
 
 // ====================================================

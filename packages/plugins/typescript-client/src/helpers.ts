@@ -21,16 +21,16 @@ export function isPrimitiveType(type: Field, options: Handlebars.HelperOptions) 
 }
 
 function nameFragment(
-  convert: (str: string) => string,
+  convert: (str: string, kind: string) => string,
   prefix: string,
   fragment: SelectionSetFragmentSpread | SelectionSetInlineFragment,
   noNamespaces: boolean
 ) {
   if (isFragmentSpread(fragment)) {
-    return convert(fragment.fragmentName) + (noNamespaces ? '' : '.') + 'Fragment';
+    return convert(fragment.fragmentName, 'typeNames') + (noNamespaces ? '' : '.') + 'Fragment';
   }
 
-  return (noNamespaces ? convert(prefix) : '') + fragment.name;
+  return (noNamespaces ? convert(prefix, 'typeNames') : '') + fragment.name;
 }
 
 function isFragmentSpread(
@@ -106,7 +106,7 @@ export function convertedFieldType(convert) {
     const primitiveType = isPrimitiveType(field, options);
 
     if (shouldHavePrefix(field, options)) {
-      realType = convert(prefix);
+      realType = convert(prefix, 'typeNames');
 
       if (config.noNamespaces) {
         realType += field.type;
@@ -114,7 +114,7 @@ export function convertedFieldType(convert) {
     } else if (primitiveType) {
       realType = primitiveType;
     } else {
-      realType = convert(field.type);
+      realType = convert(field.type, 'typeNames');
     }
 
     return new SafeString(getFieldType(field, realType, options));

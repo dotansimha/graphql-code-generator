@@ -9,11 +9,11 @@ export interface AdditionalEntityFields {
   type?: Maybe<string>;
 }
 
-export enum Role {
-  Admin = "ADMIN",
-  Writer = "WRITER",
-  Reader = "READER",
-}
+  export enum Role {
+    Admin = "ADMIN",
+    Writer = "WRITER",
+    Reader = "READER",
+  }
 
 
 

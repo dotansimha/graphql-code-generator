@@ -2,7 +2,7 @@
 
 export type Query = {
   allUsers: Array<?User>,
-  userById: ?User,
+  userById?: ?User,
 };
 
 

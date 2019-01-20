@@ -1,9 +1,9 @@
 export type Maybe<T> = T | null;
 
 /** A list of options for the sort order of the feed */
-export type FeedType = 'HOT' | 'NEW' | 'TOP';
+  export type FeedType = 'HOT' | 'NEW' | 'TOP';
 /** The type of vote to record, when submitting a vote */
-export type VoteType = 'UP' | 'DOWN' | 'CANCEL';
+  export type VoteType = 'UP' | 'DOWN' | 'CANCEL';
 
 
 // ====================================================

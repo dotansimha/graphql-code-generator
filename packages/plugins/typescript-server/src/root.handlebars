@@ -16,7 +16,7 @@
 {{~#each types}}
   {{~#each fields}}
     {{~# if hasArguments }}
-export interface {{@root.config.interfacePrefix}}{{ convert name }}{{ convert ../name }}Args {
+export interface {{@root.config.interfacePrefix}}{{ convert name 'typeNames' }}{{ convert ../name 'typeNames' }}Args {
 {{#each arguments}}
   {{ toComment description }}
   {{ name }}{{ getOptionals this }}: {{ convertedType this }};
@@ -28,7 +28,7 @@ export interface {{@root.config.interfacePrefix}}{{ convert name }}{{ convert ..
 {{{ blockCommentIf 'Unions' unions }}}
 {{#each unions}}
 {{ toComment description }}
-export type {{@root.config.interfacePrefix}}{{ convert name }} = {{#each possibleTypes}}{{@root.config.interfacePrefix}}{{ convert this}}{{#unless @last}} | {{/unless}}{{/each}};
+export type {{@root.config.interfacePrefix}}{{ convert name 'typeNames' }} = {{#each possibleTypes}}{{@root.config.interfacePrefix}}{{ convert this 'typeNames' }}{{#unless @last}} | {{/unless}}{{/each}};
 
 {{/each}}
 {{#if @root.config.schemaNamespace ~}} } {{~/if}}

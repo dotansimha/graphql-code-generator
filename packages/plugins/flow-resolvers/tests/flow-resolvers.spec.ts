@@ -85,13 +85,17 @@ describe('Flow Resolvers Plugin', () => {
   it('Should generate the correct imports when schema has scalars', () => {
     const result = plugin(makeExecutableSchema({ typeDefs: `scalar MyScalar` }), [], {}, { outputFile: '' });
 
-    expect(result).toBeSimilarStringTo(`import { type GraphQLResolveInfo, type GraphQLScalarTypeConfig } from 'graphql';`);
+    expect(result).toBeSimilarStringTo(
+      `import { type GraphQLResolveInfo, type GraphQLScalarTypeConfig } from 'graphql';`
+    );
   });
 
   it('Should generate the correct imports when schema has no scalars', () => {
     const result = plugin(makeExecutableSchema({ typeDefs: `type MyType { f: String }` }), [], {}, { outputFile: '' });
 
-    expect(result).not.toBeSimilarStringTo(`import { type GraphQLResolveInfo, type GraphQLScalarTypeConfig } from 'graphql';`);
+    expect(result).not.toBeSimilarStringTo(
+      `import { type GraphQLResolveInfo, type GraphQLScalarTypeConfig } from 'graphql';`
+    );
   });
 
   it('Should generate basic type resolvers with mapping', () => {

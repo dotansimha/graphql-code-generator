@@ -9,5 +9,5 @@
 {{#each scalars}}
 
 {{ toComment description }}
-{{#ifCond (convert name) "!==" (getScalarType name) }}export type {{ convert name }} = {{ getScalarType name }};{{/ifCond}}
+{{#ifCond (convert name 'typeNames' ) "!==" (getScalarType name) }}export type {{ convert name 'typeNames' }} = {{ getScalarType name }};{{/ifCond}}
 {{/each}}

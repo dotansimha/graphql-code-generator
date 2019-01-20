@@ -6,13 +6,18 @@ import * as enumTemplate from './enum.handlebars';
 import * as type from './type.handlebars';
 import * as rootTemplate from './root.handlebars';
 import * as Handlebars from 'handlebars';
-import { pascalCase } from 'change-case';
 import { getOptionals, getType, getEnumValue, getScalarType, defineMaybe, importEnum, concat } from './helpers';
 
 export * from './helpers';
 
+export interface TypeScriptNamingConventionMap {
+  default?: string;
+  enumValues?: string;
+  typeNames?: string;
+}
+
 export interface TypeScriptCommonConfig {
-  namingConvention?: string;
+  namingConvention?: string | TypeScriptNamingConventionMap;
   avoidOptionals?: boolean;
   optionalType?: string;
   constEnums?: boolean;
@@ -31,10 +36,33 @@ export const DEFAULT_SCALARS = {
   ID: 'string'
 };
 
-export function initCommonTemplate(hbs, schema, config) {
+export function initCommonTemplate(hbs, schema, config: TypeScriptCommonConfig) {
   const scalars = { ...DEFAULT_SCALARS, ...(config.scalars || {}) };
-  const baseConvertFn = config.namingConvention ? resolveExternalModuleAndFn(config.namingConvention) : pascalCase;
-  const convert = (str: string): string => {
+  let namingConventionMap: TypeScriptNamingConventionMap;
+  if (typeof config.namingConvention === 'undefined') {
+    namingConventionMap = {
+      default: 'change-case#pascalCase',
+      enumValues: 'change-case#pascalCase',
+      typeNames: 'change-case#pascalCase'
+    };
+  } else if (typeof config.namingConvention === 'string') {
+    namingConventionMap = {
+      default: config.namingConvention,
+      enumValues: config.namingConvention,
+      typeNames: config.namingConvention
+    };
+  } else {
+    namingConventionMap = {
+      default: config.namingConvention.default || 'change-case#pascalCase',
+      enumValues: config.namingConvention.enumValues || config.namingConvention.default || 'change-case#pascalCase',
+      typeNames: config.namingConvention.typeNames || config.namingConvention.default || 'change-case#pascalCase'
+    };
+  }
+  const convert = (str: string, kind: keyof TypeScriptNamingConventionMap = 'default'): string => {
+    const baseConvertFn =
+      !namingConventionMap[kind] || namingConventionMap[kind] === 'keep'
+        ? (str: string) => str
+        : resolveExternalModuleAndFn(namingConventionMap[kind]);
     if (str.charAt(0) === '_') {
       const after = str.replace(
         /^(_*)(.*)/,

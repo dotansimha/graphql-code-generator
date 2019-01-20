@@ -1,17 +1,17 @@
 export type Maybe<T> = T | null;
 
 /** A list of options for the sort order of the feed */
-export enum FeedType {
-  Hot = 'HOT',
-  New = 'NEW',
-  Top = 'TOP',
-}
+  export enum FeedType {
+    Hot = 'HOT',
+    New = 'NEW',
+    Top = 'TOP',
+  }
 /** The type of vote to record, when submitting a vote */
-export enum VoteType {
-  Up = 'UP',
-  Down = 'DOWN',
-  Cancel = 'CANCEL',
-}
+  export enum VoteType {
+    Up = 'UP',
+    Down = 'DOWN',
+    Cancel = 'CANCEL',
+  }
 
 
 // ====================================================

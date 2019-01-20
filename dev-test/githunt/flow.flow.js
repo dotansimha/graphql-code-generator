@@ -36,9 +36,9 @@ export const FeedTypeValues = Object.freeze({
 export type FeedType = $Values<typeof FeedTypeValues>;
 
 export type Mutation = {
-  submitRepository: ?Entry,
-  vote: ?Entry,
-  submitComment: ?Comment,
+  submitRepository?: ?Entry,
+  vote?: ?Entry,
+  submitComment?: ?Comment,
 };
 
 
@@ -59,9 +59,9 @@ export type MutationSubmitCommentArgs = {
 };
 
 export type Query = {
-  feed: ?Array<?Entry>,
-  entry: ?Entry,
-  currentUser: ?User,
+  feed?: ?Array<?Entry>,
+  entry?: ?Entry,
+  currentUser?: ?User,
 };
 
 
@@ -79,15 +79,15 @@ export type QueryEntryArgs = {
 export type Repository = {
   name: string,
   full_name: string,
-  description: ?string,
+  description?: ?string,
   html_url: string,
   stargazers_count: number,
-  open_issues_count: ?number,
-  owner: ?User,
+  open_issues_count?: ?number,
+  owner?: ?User,
 };
 
 export type Subscription = {
-  commentAdded: ?Comment,
+  commentAdded?: ?Comment,
 };
 
 

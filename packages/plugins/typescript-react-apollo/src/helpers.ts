@@ -9,8 +9,8 @@ export const propsType = convert => ({ name, operationType }: any, options: Hand
     return `
             Partial<
                 ReactApollo.MutateProps<
-                                        ${noNamespaces ? convert(name) : ''}Mutation, 
-                                        ${noNamespaces ? convert(name) : ''}Variables
+                                        ${noNamespaces ? convert(name, 'typeNames') : ''}Mutation, 
+                                        ${noNamespaces ? convert(name, 'typeNames') : ''}Variables
                                         >
                 >
         `;
@@ -18,8 +18,8 @@ export const propsType = convert => ({ name, operationType }: any, options: Hand
     return `
             Partial<
                 ReactApollo.DataProps<
-                                        ${noNamespaces ? convert(name) : ''}${convert(operationType)}, 
-                                        ${noNamespaces ? convert(name) : ''}Variables
+                                        ${noNamespaces ? convert(name, 'typeNames') : ''}${convert(operationType)}, 
+                                        ${noNamespaces ? convert(name, 'typeNames') : ''}Variables
                                     >
                     >
         `;
@@ -53,7 +53,7 @@ export const generateFragments = convert => (fragments: Fragment[], options: Han
     if (!cached) {
       cachedFragments[fragment.name] = fragment;
       const config = options.data.root.config || {};
-      const pascalCasedFragmentName = convert(fragment.name);
+      const pascalCasedFragmentName = convert(fragment.name, 'typeNames');
       // fooBar, FooBar and foo_bar may cause conflict due to the pascalCase.
       // Because all of them will have same namespace FooBar
       if (config.noNamespaces) {
@@ -111,8 +111,8 @@ export const toFragmentName = convert => (fragmentName: string, options: Handleb
   const config = options.data.root.config || {};
 
   if (config.noNamespaces) {
-    return convert(`${fragmentName}FragmentDoc`);
+    return convert(`${fragmentName}FragmentDoc`, 'typeNames');
   } else {
-    return convert(fragmentName) + '.FragmentDoc';
+    return convert(fragmentName, 'typeNames') + '.FragmentDoc';
   }
 };
