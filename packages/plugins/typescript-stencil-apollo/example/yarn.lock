@@ -1158,9 +1158,9 @@ graphql-anywhere@^4.1.0-alpha.0:
   dependencies:
     apollo-utilities "^1.0.27"
 
-graphql-code-generator@0.15.2:
-  version "0.15.2"
-  resolved "https://registry.yarnpkg.com/graphql-code-generator/-/graphql-code-generator-0.15.2.tgz#7ffe5b70e8f442c9dffe608f1e013984813783db"
+graphql-code-generator@0.16.0:
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/graphql-code-generator/-/graphql-code-generator-0.16.0.tgz#557531c85fdf0a92213f3144e835add946d41923"
   dependencies:
     "@graphql-modules/epoxy" "0.2.18"
     "@types/babylon" "6.16.4"
@@ -1169,26 +1169,26 @@ graphql-code-generator@0.15.2:
     "@types/valid-url" "1.0.2"
     babel-types "7.0.0-beta.3"
     babylon "7.0.0-beta.47"
-    chalk "2.4.1"
+    chalk "2.4.2"
     chokidar "2.0.4"
     commander "2.19.0"
     detect-indent "5.0.0"
     glob "7.1.3"
-    graphql-codegen-core "0.15.2"
+    graphql-codegen-core "0.16.0"
     graphql-config "2.2.1"
     graphql-import "0.7.1"
-    graphql-tag-pluck "0.4.4"
+    graphql-tag-pluck "0.5.0"
     indent-string "3.2.0"
     inquirer "6.2.1"
     is-glob "4.0.0"
     is-valid-path "0.1.1"
-    js-yaml "3.12.0"
+    js-yaml "3.12.1"
     json-to-pretty-yaml "1.2.2"
     listr "0.14.3"
     log-symbols "2.2.0"
     log-update "2.3.0"
     mkdirp "0.5.1"
-    prettier "1.15.3"
+    prettier "1.16.0"
     request "2.88.0"
     valid-url "1.0.9"
 
@@ -1285,9 +1285,9 @@ graphql-request@^1.5.0:
   dependencies:
     cross-fetch "2.2.2"
 
-graphql-tag-pluck@0.4.4:
-  version "0.4.4"
-  resolved "https://registry.yarnpkg.com/graphql-tag-pluck/-/graphql-tag-pluck-0.4.4.tgz#4494c0e13d10aa9a36cea2704218940a1af47170"
+graphql-tag-pluck@0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/graphql-tag-pluck/-/graphql-tag-pluck-0.5.0.tgz#81f5dee3a6ca829f205ab032336be7b107398b2e"
   dependencies:
     "@babel/parser" "^7.2.0"
     "@babel/traverse" "^7.1.6"
@@ -1663,7 +1663,14 @@ js-tokens@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-4.0.0.tgz#19203fb59991df98e3a287050d4647cdeaf32499"
 
-js-yaml@3.12.0, js-yaml@^3.10.0:
+js-yaml@3.12.1:
+  version "3.12.1"
+  resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.12.1.tgz#295c8632a18a23e054cf5c9d3cecafe678167600"
+  dependencies:
+    argparse "^1.0.7"
+    esprima "^4.0.0"
+
+js-yaml@^3.10.0:
   version "3.12.0"
   resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.12.0.tgz#eaed656ec8344f10f527c6bfa1b6e2244de167d1"
   dependencies:
@@ -2237,9 +2244,9 @@ preserve@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/preserve/-/preserve-0.2.0.tgz#815ed1f6ebc65926f865b310c0713bcb3315ce4b"
 
-prettier@1.15.3:
-  version "1.15.3"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.15.3.tgz#1feaac5bdd181237b54dbe65d874e02a1472786a"
+prettier@1.16.0:
+  version "1.16.0"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.16.0.tgz#104dd25f5ee3d0c9d0a6ce4bb40ced8481d51219"
 
 process-nextick-args@~2.0.0:
   version "2.0.0"
