@@ -79,7 +79,7 @@
     "@types/chokidar": "1.7.5",
     "@types/detect-indent": "5.0.0",
     "@types/inquirer": "0.0.43",
-    "@types/js-yaml": "3.11.4",
+    "@types/js-yaml": "3.12.0",
     "@types/listr": "0.13.0",
     "@types/log-symbols": "2.0.0",
     "@types/log-update": "2.0.0",

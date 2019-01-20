@@ -1,4 +1,4 @@
-import { FileOutput, DocumentFile, Types } from 'graphql-codegen-core';
+import { FileOutput, DocumentFile, Types, debugLog } from 'graphql-codegen-core';
 import * as Listr from 'listr';
 import { normalizeOutputParam, normalizeInstanceOrArray, normalizeConfig } from './helpers';
 import { prettify } from './utils/prettier';
@@ -169,6 +169,7 @@ export async function executeCodegen(config: Types.Config): Promise<FileOutput[]
                 {
                   title: 'Load GraphQL schemas',
                   task: wrapTask(async () => {
+                    debugLog(`[CLI] Loading Schemas`);
                     const allSchemas = [
                       ...rootSchemas.map(pointToScehma => loadSchema(pointToScehma, config)),
                       ...outputSpecificSchemas.map(pointToScehma => loadSchema(pointToScehma, config))
@@ -182,6 +183,7 @@ export async function executeCodegen(config: Types.Config): Promise<FileOutput[]
                 {
                   title: 'Load GraphQL documents',
                   task: wrapTask(async () => {
+                    debugLog(`[CLI] Loading Documents`);
                     const allDocuments = [...rootDocuments, ...outputSpecificDocuments];
 
                     for (const docDef of allDocuments) {
@@ -196,6 +198,7 @@ export async function executeCodegen(config: Types.Config): Promise<FileOutput[]
                 {
                   title: 'Generate',
                   task: wrapTask(async () => {
+                    debugLog(`[CLI] Generating output`);
                     const normalizedPluginsArray = normalizeConfig(outputConfig.plugins);
                     const output = await generateOutput({
                       filename,
@@ -307,6 +310,9 @@ export async function generateOutput(options: GenerateOutputOptions): Promise<Fi
     const pluginPackage = pluginsPackages[i];
     const name = Object.keys(plugin)[0];
     const pluginConfig = plugin[name];
+
+    debugLog(`[CLI] Running plugin: ${name}`);
+
     const result = await executePlugin(
       {
         name,
@@ -324,6 +330,8 @@ export async function generateOutput(options: GenerateOutputOptions): Promise<Fi
       },
       pluginPackage
     );
+
+    debugLog(`[CLI] Completed executing plugin: ${name}`);
 
     output += result;
   }

@@ -1,5 +1,5 @@
 import { executeCodegen } from '../codegen';
-import { FileOutput, getLogger, Types } from 'graphql-codegen-core';
+import { FileOutput, getLogger, Types, debugLog } from 'graphql-codegen-core';
 import { normalizeInstanceOrArray, normalizeOutputParam } from '../helpers';
 import isValidPath = require('is-valid-path');
 import * as isGlob from 'is-glob';
@@ -15,6 +15,7 @@ function emitWatching() {
 }
 
 export const createWatcher = (config: Types.Config, onNext: (result: FileOutput[]) => Promise<FileOutput[]>) => {
+  debugLog(`[Watcher] Starting watcher...`);
   const files: string[] = [];
   const documents = normalizeInstanceOrArray<Types.OperationDocument>(config.documents);
   const schemas = normalizeInstanceOrArray<Types.Schema>(config.schema);
@@ -64,9 +65,12 @@ export const createWatcher = (config: Types.Config, onNext: (result: FileOutput[
       atomic: true
     });
 
+    debugLog(`[Watcher] Started`);
+
     let isShutdown = false;
     const shutdown = async () => {
       isShutdown = true;
+      debugLog(`[Watcher] Shutting down`);
       log(`Shutting down watch...`);
       watcher.close();
     };

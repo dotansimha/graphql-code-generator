@@ -63,7 +63,7 @@
     "chalk": "2.4.2",
     "change-case": "3.1.0",
     "common-tags": "1.8.0",
-    "graphql-tag": "2.10.0",
+    "graphql-tag": "2.10.1",
     "graphql-tools": "4.0.3",
     "ts-log": "2.1.4",
     "winston": "3.1.0"

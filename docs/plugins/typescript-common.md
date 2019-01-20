@@ -52,9 +52,11 @@ This will cause the generator to avoid using TypeScript optionals (`?`), so the 
 
 Will generate the declared enums as TypeScript types. This is useful if you can't use `.ts` extension.
 
-#### `enumValues` (default value: `{}`)
+#### `enums` (default value: `{}`)
 
-Use this feature to set custom values for you GraphQL enums.
+Use this feature to set custom values for your GraphQL enums, reuse an existing enum, or skip generation entirely.
+
+##### Custom values:
 
 ```yaml
 # ...
@@ -63,10 +65,47 @@ generates:
     plugins:
       - typescript-common
     config:
-      enumValues:
+      enums:
         MyEnum:
           A: 'foo'
 ```
+
+##### Existing enum:
+
+```yaml
+# ...
+generates:
+  path/to/file.ts:
+    plugins:
+      - typescript-common
+    config:
+      enums:
+        MyEnum: ./path/to/enum#MyEnum
+```
+
+Note:
+
+- The file path is relative to the generated output file.
+- Another type named `MyEnumValueMap` will also be generated which allows you to map the GraphQL API enum values to internal values if needed.
+- This option supercedes `enumsAsTypes` for this enum.
+
+##### Skip generation:
+
+```yaml
+# ...
+generates:
+  path/to/file.ts:
+    plugins:
+      - typescript-common
+    config:
+      enums:
+        MyEnum: # empty
+```
+
+Note:
+
+- No `MyEnum` type will be generated at all, and you can use the `add` plugin to manually define or import it.
+- This option supercedes `enumsAsTypes` for this enum.
 
 #### `immutableTypes` (default value: `false`)
 

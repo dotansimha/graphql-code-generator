@@ -10,6 +10,10 @@ export function extractDocumentStringFromCodeFile(source: Source): string | void
       return source.body;
     }
   } catch (e) {
-    return gqlPluck.fromFile.sync(source.name) || null;
+    try {
+      return gqlPluck.fromFile.sync(source.name) || null;
+    } catch (e) {
+      throw new e.constructor(`${e.message} at ${source.name}`);
+    }
   }
 }

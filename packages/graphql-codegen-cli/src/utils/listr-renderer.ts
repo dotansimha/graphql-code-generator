@@ -1,9 +1,13 @@
 import chalk from 'chalk';
 import * as logUpdate from 'log-update';
-import * as identString from 'indent-string';
+import * as indentString from 'indent-string';
+import * as logSymbol from 'log-symbols';
 import * as UpdateRenderer from 'listr-update-renderer';
-import { DetailedError, isDetailedError } from '../errors';
+import { stripIndent } from 'common-tags';
 import { ListrTask } from 'listr';
+import { DetailedError, isDetailedError } from '../errors';
+import { Source } from 'graphql';
+import { debugLog, printLogs } from 'graphql-codegen-core';
 
 export class Renderer {
   private updateRenderer: any;
@@ -33,30 +37,39 @@ export class Renderer {
 
     // show errors
     if (err) {
-      if (err.errors && err.errors.length) {
-        const count = identString(chalk.red.bold(`We found ${err.errors.length} errors`), 4);
+      const errorCount = err.errors ? err.errors.length : 0;
+
+      if (errorCount > 0) {
+        const count = indentString(chalk.red.bold(`Found ${errorCount} error${errorCount > 1 ? 's' : ''}`), 1);
         const details = err.errors
           .map(error => {
-            if (isDetailedError(error)) {
-              return error.details;
-            }
-            return error;
+            debugLog(`[CLI] Exited with an error`, error);
+
+            return isDetailedError(error) ? error.details : error;
           })
           .map((msg, i) => {
-            const source = (err.errors[i] as any).source;
+            const source: string | Source | undefined = (err.errors[i] as any).source;
+
+            msg = chalk.gray(indentString(stripIndent(`${msg}`), 4));
+
             if (source) {
-              const title = identString(chalk.red(`Failed to generate ${source}`), 4);
+              const sourceOfError = typeof source === 'string' ? source : source.name;
+              const title = indentString(`${logSymbol.error} ${sourceOfError}`, 2);
+
               return [title, msg].join('\n');
             }
+
             return msg;
           })
-          .join('\n');
-        logUpdate(['', count, details].join('\n\n'));
+          .join('\n\n');
+        logUpdate(['', count, details, ''].join('\n\n'));
       } else {
         logUpdate(chalk.red.bold(err.message));
       }
     }
 
     logUpdate.done();
+
+    printLogs();
   }
 }
