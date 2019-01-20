@@ -230,6 +230,179 @@ describe('TypeScript Common', () => {
         }`);
     });
 
+    describe('When imported', () => {
+      it('Should import the default export', async () => {
+        const content = await plugin(
+          schema,
+          [],
+          {
+            enums: {
+              A: 'some/path'
+            }
+          },
+          {
+            outputFile: 'graphql.ts'
+          }
+        );
+
+        expect(content).toBeSimilarStringTo(`
+          import A from "some/path"
+        `);
+      });
+
+      it('Should import a named export', async () => {
+        const content = await plugin(
+          schema,
+          [],
+          {
+            enums: {
+              A: 'some/path#A'
+            }
+          },
+          {
+            outputFile: 'graphql.ts'
+          }
+        );
+
+        expect(content).toBeSimilarStringTo(`
+          import { A } from "some/path"
+        `);
+      });
+
+      it('Should import an aliased named export', async () => {
+        const content = await plugin(
+          schema,
+          [],
+          {
+            enums: {
+              A: 'some/path#MyCustomA'
+            }
+          },
+          {
+            outputFile: 'graphql.ts'
+          }
+        );
+
+        expect(content).toBeSimilarStringTo(`
+          import { MyCustomA as A } from "some/path"
+        `);
+      });
+
+      it('Should import the default export with interfacePrefix', async () => {
+        const content = await plugin(
+          schema,
+          [],
+          {
+            interfacePrefix: 'Pref',
+            enums: {
+              A: 'some/path'
+            }
+          },
+          {
+            outputFile: 'graphql.ts'
+          }
+        );
+
+        expect(content).toBeSimilarStringTo(`
+          import PrefA from "some/path"
+        `);
+      });
+
+      it('Should import a named export with interfacePrefix', async () => {
+        const content = await plugin(
+          schema,
+          [],
+          {
+            interfacePrefix: 'Pref',
+            enums: {
+              A: 'some/path#A'
+            }
+          },
+          {
+            outputFile: 'graphql.ts'
+          }
+        );
+
+        expect(content).toBeSimilarStringTo(`
+          import { A as PrefA } from "some/path"
+        `);
+      });
+
+      it('Should import an aliased named export with interfacePrefix', async () => {
+        const content = await plugin(
+          schema,
+          [],
+          {
+            interfacePrefix: 'Pref',
+            enums: {
+              A: 'some/path#MyCustomA'
+            }
+          },
+          {
+            outputFile: 'graphql.ts'
+          }
+        );
+
+        expect(content).toBeSimilarStringTo(`
+          import { MyCustomA as PrefA } from "some/path"
+        `);
+      });
+
+      it('Should generate the value map with interfacePrefix', async () => {
+        const content = await plugin(
+          schema,
+          [],
+          {
+            interfacePrefix: 'Pref',
+            enums: {
+              A: 'some/path#MyCustomA'
+            }
+          },
+          {
+            outputFile: 'graphql.ts'
+          }
+        );
+
+        expect(content).toBeSimilarStringTo(`
+          export type PrefAValueMap = {
+            ONE: PrefA,
+            TWO: PrefA,
+          }
+        `);
+      });
+
+      it('Should skip generation of an empty definition', async () => {
+        const content = await plugin(
+          schema,
+          [],
+          {
+            enums: {
+              A: null
+            }
+          },
+          {
+            outputFile: 'graphql.ts'
+          }
+        );
+
+        expect(content).not.toBeSimilarStringTo(`
+          import A from
+        `);
+
+        expect(content).not.toBeSimilarStringTo(`
+          import { A 
+        `);
+
+        expect(content).not.toBeSimilarStringTo(`
+          export enum A {"
+        `);
+
+        expect(content).not.toBeSimilarStringTo(`
+          export type AValueMap {"
+        `);
+      });
+    });
+
     it('Should generate the correct description for enums', async () => {
       const content = await plugin(
         buildSchema(`

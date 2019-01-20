@@ -7,7 +7,7 @@ import * as type from './type.handlebars';
 import * as rootTemplate from './root.handlebars';
 import * as Handlebars from 'handlebars';
 import { pascalCase } from 'change-case';
-import { getOptionals, getType, getEnumValue, getScalarType, defineMaybe } from './helpers';
+import { getOptionals, getType, getEnumValue, getScalarType, defineMaybe, importEnum, concat } from './helpers';
 
 export * from './helpers';
 
@@ -19,7 +19,7 @@ export interface TypeScriptCommonConfig {
   enumsAsTypes?: boolean;
   immutableTypes?: boolean;
   interfacePrefix?: string;
-  enums?: { [enumName: string]: { [valueName: string]: string } };
+  enums?: { [enumName: string]: { [valueName: string]: string } | string | null };
   scalars?: { [scalarName: string]: string };
 }
 
@@ -48,6 +48,7 @@ export function initCommonTemplate(hbs, schema, config) {
   };
   hbs.registerPartial('enum', enumTemplate);
   hbs.registerPartial('type', type);
+  hbs.registerHelper('concat', concat);
   hbs.registerHelper('defineMaybe', defineMaybe);
   hbs.registerHelper('blockComment', helpers.blockComment);
   hbs.registerHelper('blockCommentIf', helpers.blockCommentIf);
@@ -55,6 +56,7 @@ export function initCommonTemplate(hbs, schema, config) {
   hbs.registerHelper('convert', convert);
   hbs.registerHelper('getOptionals', getOptionals);
   hbs.registerHelper('getEnumValue', getEnumValue);
+  hbs.registerHelper('importEnum', importEnum);
   hbs.registerHelper('convertedType', getType(convert));
   hbs.registerHelper('toLowerCase', helpers.toLowerCase);
   hbs.registerHelper('toUpperCase', helpers.toUpperCase);

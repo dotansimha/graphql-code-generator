@@ -2,6 +2,12 @@ import { Field } from 'graphql-codegen-core';
 import { SafeString } from 'handlebars';
 import * as Handlebars from 'handlebars';
 
+export function concat(...args: string[]) {
+  args.pop(); // HBS options passed as last argument
+
+  return args.join('');
+}
+
 export function defineMaybe(options: Handlebars.HelperOptions): string {
   const config = options.data.root.config || {};
   const optionalType = config.optionalType || 'null';
@@ -22,9 +28,28 @@ export function getScalarType(type: string, options: Handlebars.HelperOptions) {
   }
 }
 
+export function importEnum(name: string, options: Handlebars.HelperOptions) {
+  const config = options.data.root.config || {};
+  const definition = config.enums && config.enums[name];
+
+  if (typeof definition === 'string') {
+    // filename specified with optional type name
+    const [file, type] = config.enums[name].split('#');
+    return { name, file, type };
+  }
+
+  if (typeof definition === 'object' && definition === null) {
+    // empty definition: don't generate anything
+    return {};
+  }
+
+  // fall through to normal or value-mapped generation
+  return undefined;
+}
+
 export function getEnumValue(type: string, name: string, options: Handlebars.HelperOptions) {
   const config = options.data.root.config || {};
-  if (config.enums && type in config.enums && name in config.enums[type]) {
+  if (config.enums && config.enums[type] != null && name in config.enums[type]) {
     return config.enums[type][name];
   } else {
     return `"${name}"`;
