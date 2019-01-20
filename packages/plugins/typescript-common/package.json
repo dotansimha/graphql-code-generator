@@ -1,6 +1,6 @@
 {
   "name": "graphql-codegen-typescript-common",
-  "version": "0.15.2",
+  "version": "0.16.0",
   "description": "graphql-codegen-cli template for TypeScript typings for both client side and server side",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
@@ -13,13 +13,13 @@
   "dependencies": {
     "change-case": "3.1.0",
     "common-tags": "1.8.0",
-    "graphql-codegen-core": "0.15.2",
-    "graphql-codegen-plugin-helpers": "0.15.2"
+    "graphql-codegen-core": "0.16.0",
+    "graphql-codegen-plugin-helpers": "0.16.0"
   },
   "devDependencies": {
-    "codegen-templates-scripts": "0.15.2",
+    "codegen-templates-scripts": "0.16.0",
     "graphql": "14.1.1",
-    "graphql-codegen-plugin-handlebars-helpers": "0.15.2"
+    "graphql-codegen-plugin-handlebars-helpers": "0.16.0"
   },
   "main": "./dist/index.js",
   "typings": "dist/index.d.ts",
