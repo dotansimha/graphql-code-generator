@@ -36,11 +36,11 @@ Here are the supported options that you can define in the config file (see [sour
 
   - **`generates.plugins` (required)** - A list of plug-ins to use when generating the file. Templates are also considered as plug-ins and they can be specified in this section. A full list of supported plugins can be found [here](../plugins). You can also point to a custom plugin in a local file (see [Custom Plugins](../custom-codegen/index) section)
 
-  - [**`generates.documents`**](./documents-field#output-file-level) - Same as root `documents`, be applies only for the specific output file.
+  - [**`generates.documents`**](./documents-field#output-file-level) - Same as root `documents`, but applies only for the specific output file.
 
-  - [**`generates.schema`**](./schema-field#output-file-level) - Same as root `schema`, be applies only for the specific output file.
+  - [**`generates.schema`**](./schema-field#output-file-level) - Same as root `schema`, but applies only for the specific output file.
 
-  - [**`generates.config`**](./config-field#output-level) - Same as root `config`, be applies only for the specific output file.
+  - [**`generates.config`**](./config-field#output-level) - Same as root `config`, but applies only for the specific output file.
 
 - [**`require`**](./require-field) - A path to a file which defines custom Node.JS `require()` handlers for custom file extensions. This is essential if the code generator has to go through files which require other files in an unsupported format (by default). See [more information](https://gist.github.com/jamestalmage/df922691475cff66c7e6).
 
