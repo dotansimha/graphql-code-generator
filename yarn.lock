@@ -797,11 +797,11 @@
     graphql-tools "4.0.3"
     tslib "1.9.3"
 
-"@graphql-modules/epoxy@0.2.18":
-  version "0.2.18"
-  resolved "https://registry.yarnpkg.com/@graphql-modules/epoxy/-/epoxy-0.2.18.tgz#58ea584e57e0573d804ee39e34ee2fad604ba63a"
+"@graphql-modules/epoxy@0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@graphql-modules/epoxy/-/epoxy-0.3.0.tgz#2ec10d92d871d449458f4740c25cf6f3fa4ffe24"
   dependencies:
-    deepmerge "3.0.0"
+    deepmerge "3.1.0"
     graphql-tools "4.0.3"
     tslib "1.9.3"
 
@@ -3499,7 +3499,11 @@ deepmerge@2.2.1, deepmerge@^2.0.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/deepmerge/-/deepmerge-2.2.1.tgz#5d3ff22a01c00f645405a2fbc17d0778a1801170"
 
-deepmerge@3.0.0, deepmerge@^3.0.0:
+deepmerge@3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/deepmerge/-/deepmerge-3.1.0.tgz#a612626ce4803da410d77554bfd80361599c034d"
+
+deepmerge@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/deepmerge/-/deepmerge-3.0.0.tgz#ca7903b34bfa1f8c2eab6779280775a411bfc6ba"
 
