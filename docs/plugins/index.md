@@ -3,11 +3,11 @@ id: index
 title: Available Plugins
 ---
 
-The general purpose of GraphQL Code Generator is to parse GraphQL syntax, transform it into an AST and then output it into desired formats which can vary. Since there can be potentially infinite amount of formats, we can't predict them all. However, some formats are more likely to be used, thus, we've prepared pre-defined code generation plugins which are built for these formats.
+The general purpose of GraphQL Code Generator is to parse GraphQL syntax, transform it into an AST and then output it into desired formats which can vary. Since there can potentially be an infinite number of formats, we can't predict them all. However, some formats are more likely to be used, thus, we've prepared pre-defined code generation plugins which are built for these formats.
 
 ## Available Plugins
 
-Below is table with lists all available plugins which can be installed via NPM, along with a short description. If you're looking for anything specific, we might already have the solution:
+Below is a table that lists all available plugins which can be installed via NPM, along with a short description. If you're looking for anything specific, we might already have the solution:
 
 | Format                             | Purpose                                                                                                        | Package Name & Docs                                                                         |
 | ---------------------------------- | -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
@@ -30,7 +30,7 @@ In addition, you can build your own code generating plugins based on your specif
 
 ## How to use Plugins
 
-To use a plugin, install it's package from `npm`, then add it to your YML config file:
+To use a plugin, install its package from `npm`, then add it to your YML config file:
 
 ```yml
 schema: my-schema.graphql
@@ -39,9 +39,9 @@ generates:
     - plugin-name-here
 ```
 
-## Configure Plugin
+## Configure Plugins
 
-To pass configuration to plugin, do the following:
+To pass configuration to a plugin, do the following:
 
 ```yml
 schema: my-schema.graphql
@@ -51,7 +51,7 @@ generates:
         configKey: configValue
 ```
 
-You can also pass the same configuration value for multiple plugins:
+You can also pass the same configuration value to multiple plugins:
 
 ```yml
 schema: my-schema.graphql
@@ -64,4 +64,4 @@ generates:
       - plugin2-name-here
 ```
 
-You can find a the supported configuration for each plugins in it's page / `README` file.
+You can find the supported configuration for each plugin in its page / `README` file.
