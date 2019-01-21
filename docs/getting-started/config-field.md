@@ -9,7 +9,7 @@ It's a basic Key->Value map.
 
 ### Root Level
 
-If you specify it in your root level, all plugins, of all output files with get the config value:
+If you specify it in your root level, all plugins, of all output files will get the config value:
 
 ```yml
 schema: schema.graphql
