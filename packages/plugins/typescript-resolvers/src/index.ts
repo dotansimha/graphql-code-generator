@@ -13,6 +13,7 @@ import { importContext, getContext } from './context';
 import { getParentType, getParentTypes } from './parent-type';
 
 export interface TypeScriptServerResolversConfig extends TypeScriptCommonConfig {
+  strict?: boolean;
   noNamespaces?: boolean;
   contextType?: string;
   mappers?: { [name: string]: string };
