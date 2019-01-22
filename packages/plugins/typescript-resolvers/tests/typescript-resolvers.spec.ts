@@ -1252,7 +1252,7 @@ describe('Resolvers', () => {
         type User {
           postId: String
           post: Post
-        } 
+        }
 
         type UserPost {
           id: String
@@ -1261,7 +1261,7 @@ describe('Resolvers', () => {
         type Post {
           id: String
         }
-        
+
         schema {
           query: Query
         }
@@ -1293,6 +1293,24 @@ describe('Resolvers', () => {
       }
 
       export type UserPost_IdResolver<R = Maybe<string>, Parent = UserPost, Context = {}> = Resolver<R, Parent, Context>;
+    `);
+  });
+
+  it('should output strict resolvers', async () => {
+    const content = await plugin(
+      schema,
+      [],
+      { strict: true },
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
+
+    expect(content).toBeSimilarStringTo(`
+      export namespace QueryResolvers {
+        export interface Resolvers<Context = {}, TypeParent = {}> {
+          fieldTest: FieldTestResolver<Maybe<string>, TypeParent, Context>;
+        }
     `);
   });
 });
