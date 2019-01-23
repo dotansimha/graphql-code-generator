@@ -71,10 +71,10 @@ export interface IResolvers<Context = {{{ getContext }}}> {
     {{ convert name 'typeNames'}}{{#unless @root.config.strict}}?{{/unless}}: {{ convert name 'typeNames'}}Resolvers{{#unless @root.config.noNamespaces}}.Resolvers{{/unless}}<Context>;
   {{/each}}
   {{#each interfaces}}
-    {{ convert name 'typeNames'}}{{#unless @root.config.strict}}?{{/unless}}: {{ convert name 'typeNames'}}Resolvers{{#unless @root.config.noNamespaces}}.Resolvers{{/unless}}<Context>;
+    {{ convert name 'typeNames'}}{{#unless @root.config.strict}}?{{/unless}}: {{ convert name 'typeNames'}}Resolvers{{#unless @root.config.noNamespaces}}.Resolvers{{/unless}};
   {{/each}}
   {{#each unions}}
-    {{ convert name 'typeNames'}}{{#unless @root.config.strict}}?{{/unless}}: {{ convert name 'typeNames'}}Resolvers{{#unless @root.config.noNamespaces}}.Resolvers{{/unless}}<Context>;
+    {{ convert name 'typeNames'}}{{#unless @root.config.strict}}?{{/unless}}: {{ convert name 'typeNames'}}Resolvers{{#unless @root.config.noNamespaces}}.Resolvers{{/unless}};
   {{/each}}
   {{#each scalars}}
     {{ convert name 'typeNames'}}{{#unless @root.config.strict}}?{{/unless}}: GraphQLScalarType;
