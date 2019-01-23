@@ -1,6 +1,7 @@
 import 'graphql-codegen-core/dist/testing';
 import { plugin } from '../dist';
 import { makeExecutableSchema } from 'graphql-codegen-core';
+import { buildSchema } from 'graphql';
 
 function stripBlockComments(input: string): string {
   return input.replace(/^\/\/ [=]+\n\/\/ .*\n\/\/ [=]+/gim, '');
@@ -1312,5 +1313,64 @@ describe('Resolvers', () => {
           fieldTest: FieldTestResolver<Maybe<string>, TypeParent, Context>;
         }
     `);
+  });
+
+  describe('enums should stay consistent with common plugin', () => {
+    const testSchema = buildSchema(`
+      enum FOODEnum {
+        PIZZA,
+        BURGER,
+      }
+
+      type Query {
+        fieldTest: FOODEnum
+      }
+
+      schema {
+        query: Query
+      }
+    `);
+
+    it('should match default naming convention', async () => {
+      const content = await plugin(
+        testSchema,
+        [],
+        {},
+        {
+          outputFile: 'graphql.ts'
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+        fieldTest?: FieldTestResolver<Maybe<FoodEnum>, TypeParent, Context>;
+      `);
+
+      expect(content).toBeSimilarStringTo(`
+        export type FieldTestResolver<R = Maybe<FoodEnum>, Parent = {}, Context = {}> = Resolver<R, Parent, Context>;
+      `);
+    });
+
+    it('should match custom naming convention', async () => {
+      const content = await plugin(
+        testSchema,
+        [],
+        {
+          namingConvention: {
+            typeNames: 'change-case#upperCase'
+          }
+        },
+        {
+          outputFile: 'graphql.ts'
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+        fieldTest?: FieldTestResolver<Maybe<FOODENUM>, TypeParent, Context>;
+      `);
+
+      expect(content).toBeSimilarStringTo(`
+        export type FieldTestResolver<R = Maybe<FOODENUM>, Parent = {}, Context = {}> = Resolver<R, Parent, Context>;
+      `);
+    });
   });
 });
