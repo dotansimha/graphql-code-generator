@@ -1,11 +1,11 @@
 {{{ toComment description }}}
 {{#with (importEnum name) }}
   {{#if file}}
-    import {{#if type}}{ {{type}}{{#ifCond type "!=" (concat @root.config.interfacePrefix (convert name 'typeNames'))}} as {{@root.config.interfacePrefix}}{{ convert name }}{{/ifCond}} }{{else}}{{@root.config.interfacePrefix}}{{ convert name }}{{/if}} from "{{file}}"
+    import {{#if type}}{ {{type}}{{#ifCond type "!=" (concat @root.config.interfacePrefix (convert name 'typeNames'))}} as {{@root.config.interfacePrefix}}{{ convert name 'typeNames' }}{{/ifCond}} }{{else}}{{@root.config.interfacePrefix}}{{ convert name 'typeNames' }}{{/if}} from "{{file}}"
 
     export type {{@root.config.interfacePrefix}}{{ convert (concat name "ValueMap") 'typeNames'}} = {
       {{#each ../values}}
-        {{{ value }}}: {{@root.config.interfacePrefix}}{{ convert ../name }},
+        {{{ value }}}: {{@root.config.interfacePrefix}}{{ convert ../name 'typeNames' }},
       {{/each}}
     }
   {{/if}}
@@ -14,7 +14,7 @@
   {{#if @root.config.enumsAsTypes }}
   export type {{@root.config.interfacePrefix}}{{ convert name 'typeNames' }} = {{#each values }}{{{ getEnumValue ../name value }}}{{#unless @last}} | {{/unless}}{{/each}};
   {{else}}
-  export {{#if @root.config.constEnums }}const {{/if}}enum {{@root.config.interfacePrefix}}{{ convert name }} {
+  export {{#if @root.config.constEnums }}const {{/if}}enum {{@root.config.interfacePrefix}}{{ convert name 'typeNames' }} {
   {{#each values }}
     {{ convert value 'enumValues' }} = {{{ getEnumValue ../name value }}},
   {{/each}}

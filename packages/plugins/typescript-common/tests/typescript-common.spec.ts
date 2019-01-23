@@ -24,9 +24,9 @@ describe('TypeScript Common', () => {
       f: String
     }
 
-    enum A {
-      ONE,
-      TWO,
+    enum FOODEnum {
+      PIZZA,
+      BURGER,
     }
 
     input T {
@@ -85,6 +85,51 @@ describe('TypeScript Common', () => {
 
       expect(content).not.toContain(`myTypeNOnStandart`);
       expect(content).toContain(`MyTypeNOnStandart`);
+    });
+
+    it('Should generate enums in PascalCase by default', async () => {
+      const content = await plugin(
+        buildSchema(`
+          enum FOODEnum {
+            PIZZA,
+            BURGER,
+          }
+        `),
+        [],
+        {},
+        {
+          outputFile: 'graphql.ts'
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+        export enum FoodEnum {
+          Pizza = "PIZZA",
+          Burger = "BURGER",
+        }
+      `);
+    });
+
+    it('Should generate enums in PascalCase by default when enumsAsTypes is used', async () => {
+      const content = await plugin(
+        buildSchema(`
+          enum FOODEnum {
+            PIZZA,
+            BURGER,
+          }
+        `),
+        [],
+        {
+          enumsAsTypes: true
+        },
+        {
+          outputFile: 'graphql.ts'
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+        export type FoodEnum = "PIZZA" | "BURGER";
+      `);
     });
 
     it('Should use different naming when overridden', async () => {
@@ -152,9 +197,9 @@ describe('TypeScript Common', () => {
       );
 
       expect(content).toBeSimilarStringTo(`
-        export enum A {
-          One = "ONE",
-          Two = "TWO",
+        export enum FoodEnum {
+          Pizza = "PIZZA",
+          Burger = "BURGER",
         }
       `);
     });
@@ -169,7 +214,7 @@ describe('TypeScript Common', () => {
         }
       );
 
-      expect(content).toBeSimilarStringTo(`export type A = "ONE" | "TWO";`);
+      expect(content).toBeSimilarStringTo(`export type FoodEnum = "PIZZA" | "BURGER";`);
     });
 
     it('Should generate const enums as types with constEnums', async () => {
@@ -183,9 +228,9 @@ describe('TypeScript Common', () => {
       );
 
       expect(content).toBeSimilarStringTo(`
-        export const enum A {
-          One = "ONE",
-          Two = "TWO",
+        export const enum FoodEnum {
+          Pizza = "PIZZA",
+          Burger = "BURGER",
         }`);
     });
 
@@ -200,9 +245,9 @@ describe('TypeScript Common', () => {
       );
 
       expect(content).toBeSimilarStringTo(`
-        export enum PrefA {
-          One = "ONE",
-          Two = "TWO",
+        export enum PrefFoodEnum {
+          Pizza = "PIZZA",
+          Burger = "BURGER",
         }`);
     });
 
@@ -212,9 +257,9 @@ describe('TypeScript Common', () => {
         [],
         {
           enums: {
-            A: {
-              ONE: '1',
-              TWO: '2'
+            FOODEnum: {
+              PIZZA: 'pizza',
+              BURGER: 'burger'
             }
           }
         },
@@ -224,9 +269,9 @@ describe('TypeScript Common', () => {
       );
 
       expect(content).toBeSimilarStringTo(`
-        export enum A {
-          One = 1,
-          Two = 2,
+        export enum FoodEnum {
+          Pizza = pizza,
+          Burger = burger,
         }`);
     });
 
@@ -237,7 +282,7 @@ describe('TypeScript Common', () => {
           [],
           {
             enums: {
-              A: 'some/path'
+              FOODEnum: 'some/path'
             }
           },
           {
@@ -246,7 +291,7 @@ describe('TypeScript Common', () => {
         );
 
         expect(content).toBeSimilarStringTo(`
-          import A from "some/path"
+          import FoodEnum from "some/path"
         `);
       });
 
@@ -256,7 +301,7 @@ describe('TypeScript Common', () => {
           [],
           {
             enums: {
-              A: 'some/path#A'
+              FOODEnum: 'some/path#A'
             }
           },
           {
@@ -265,7 +310,7 @@ describe('TypeScript Common', () => {
         );
 
         expect(content).toBeSimilarStringTo(`
-          import { A } from "some/path"
+          import { A as FoodEnum } from "some/path"
         `);
       });
 
@@ -275,7 +320,7 @@ describe('TypeScript Common', () => {
           [],
           {
             enums: {
-              A: 'some/path#MyCustomA'
+              FOODEnum: 'some/path#MyCustomA'
             }
           },
           {
@@ -284,7 +329,7 @@ describe('TypeScript Common', () => {
         );
 
         expect(content).toBeSimilarStringTo(`
-          import { MyCustomA as A } from "some/path"
+          import { MyCustomA as FoodEnum } from "some/path"
         `);
       });
 
@@ -295,7 +340,7 @@ describe('TypeScript Common', () => {
           {
             interfacePrefix: 'Pref',
             enums: {
-              A: 'some/path'
+              FOODEnum: 'some/path'
             }
           },
           {
@@ -304,7 +349,7 @@ describe('TypeScript Common', () => {
         );
 
         expect(content).toBeSimilarStringTo(`
-          import PrefA from "some/path"
+          import PrefFoodEnum from "some/path"
         `);
       });
 
@@ -315,7 +360,7 @@ describe('TypeScript Common', () => {
           {
             interfacePrefix: 'Pref',
             enums: {
-              A: 'some/path#A'
+              FOODEnum: 'some/path#A'
             }
           },
           {
@@ -324,7 +369,7 @@ describe('TypeScript Common', () => {
         );
 
         expect(content).toBeSimilarStringTo(`
-          import { A as PrefA } from "some/path"
+          import { A as PrefFoodEnum } from "some/path"
         `);
       });
 
@@ -335,7 +380,7 @@ describe('TypeScript Common', () => {
           {
             interfacePrefix: 'Pref',
             enums: {
-              A: 'some/path#MyCustomA'
+              FOODEnum: 'some/path#MyCustomA'
             }
           },
           {
@@ -344,7 +389,7 @@ describe('TypeScript Common', () => {
         );
 
         expect(content).toBeSimilarStringTo(`
-          import { MyCustomA as PrefA } from "some/path"
+          import { MyCustomA as PrefFoodEnum } from "some/path"
         `);
       });
 
@@ -355,7 +400,7 @@ describe('TypeScript Common', () => {
           {
             interfacePrefix: 'Pref',
             enums: {
-              A: 'some/path#MyCustomA'
+              FOODEnum: 'some/path#MyCustomA'
             }
           },
           {
@@ -364,9 +409,9 @@ describe('TypeScript Common', () => {
         );
 
         expect(content).toBeSimilarStringTo(`
-          export type PrefAValueMap = {
-            ONE: PrefA,
-            TWO: PrefA,
+          export type PrefFoodEnumValueMap = {
+            PIZZA: PrefFoodEnum,
+            BURGER: PrefFoodEnum,
           }
         `);
       });
@@ -377,7 +422,7 @@ describe('TypeScript Common', () => {
           [],
           {
             enums: {
-              A: null
+              FOODEnum: null
             }
           },
           {
@@ -386,19 +431,19 @@ describe('TypeScript Common', () => {
         );
 
         expect(content).not.toBeSimilarStringTo(`
-          import A from
+          import FoodEnum from
         `);
 
         expect(content).not.toBeSimilarStringTo(`
-          import { A 
+          import { FoodEnum 
         `);
 
         expect(content).not.toBeSimilarStringTo(`
-          export enum A {"
+          export enum FoodEnum {"
         `);
 
         expect(content).not.toBeSimilarStringTo(`
-          export type AValueMap {"
+          export type FoodEnumValueMap {"
         `);
       });
     });
@@ -407,9 +452,9 @@ describe('TypeScript Common', () => {
       const content = await plugin(
         buildSchema(`
       # MyEnumA
-      enum A {
-        ONE,
-        TWO,
+      enum FoodEnum {
+        PIZZA,
+        BURGER,
       }
       `),
         [],
@@ -421,9 +466,9 @@ describe('TypeScript Common', () => {
 
       expect(content).toBeSimilarStringTo(`
         /** MyEnumA */
-        export enum A {
-          One = "ONE",
-          Two = "TWO",
+        export enum FoodEnum {
+          Pizza = "PIZZA",
+          Burger = "BURGER",
         }`);
     });
   });
