@@ -14,20 +14,20 @@ export function importFromGraphQL(options: Handlebars.HelperOptions) {
   return `import { ${imports.join(', ')} } from 'graphql';`;
 }
 
-export const getFieldType = convert => (field: Field, options: Handlebars.HelperOptions) => {
+export const getFieldType = (convert, isPartial = false) => (field: Field, options: Handlebars.HelperOptions) => {
   const config = options.data.root.config || {};
   const mapper = pickMapper(field.type, config.mappers || {}, options);
   const defaultMapper = useDefaultMapper(field, options);
 
   if (mapper) {
-    return fieldType(field, mapper.type, options);
+    return fieldType(field, mapper.type, options, isPartial);
   }
 
   if (defaultMapper) {
-    return fieldType(field, defaultMapper.type, options);
+    return fieldType(field, defaultMapper.type, options, isPartial);
   }
 
-  return convertedType(field, options, convert);
+  return convertedType(field, options, convert, false, isPartial);
 };
 
 export const getFieldResolverName = (convert, config) => (name: string) => {

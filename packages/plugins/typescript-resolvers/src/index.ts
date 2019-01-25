@@ -37,6 +37,7 @@ export const plugin: PluginFunction<TypeScriptServerResolversConfig> = async (
   Handlebars.registerHelper('getParentType', getParentType(convert));
   Handlebars.registerHelper('getParentTypes', getParentTypes(convert));
   Handlebars.registerHelper('getFieldType', getFieldType(convert));
+  Handlebars.registerHelper('getPartialFieldType', getFieldType(convert, true));
   Handlebars.registerHelper('importMappers', importMappers);
   Handlebars.registerHelper('importContext', importContext);
   Handlebars.registerHelper('importFromGraphQL', importFromGraphQL);

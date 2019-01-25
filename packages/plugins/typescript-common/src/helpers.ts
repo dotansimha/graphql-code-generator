@@ -56,7 +56,7 @@ export function getEnumValue(type: string, name: string, options: Handlebars.Hel
   }
 }
 
-export function getFieldType(field: Field, realType: string, options: Handlebars.HelperOptions) {
+export function getFieldType(field: Field, realType: string, options: Handlebars.HelperOptions, isPartial = false) {
   const config = options.data.root.config || {};
   const useImmutable = !!config.immutableTypes;
 
@@ -64,6 +64,9 @@ export function getFieldType(field: Field, realType: string, options: Handlebars
     return field.hasDefaultValue ? type : useMaybe(type);
   }
 
+  if (isPartial) {
+    realType = `Partial<${realType}>`;
+  }
   if (field.isArray) {
     let result = realType;
 
@@ -122,12 +125,18 @@ export const getType = (convert: Function) => (type: Field, options: Handlebars.
   return new SafeString(result);
 };
 
-export function convertedType(type: Field, options: Handlebars.HelperOptions, convert, skipConversion = false) {
+export function convertedType(
+  type: Field,
+  options: Handlebars.HelperOptions,
+  convert,
+  skipConversion = false,
+  isPartial = false
+) {
   const baseType = type.type;
   const config = options.data.root.config || {};
   const realType =
     options.data.root.primitives[baseType] ||
     `${type.isScalar ? '' : config.interfacePrefix || ''}${skipConversion ? baseType : convert(baseType, 'typeNames')}`;
 
-  return getFieldType(type, realType, options);
+  return getFieldType(type, realType, options, isPartial);
 }
