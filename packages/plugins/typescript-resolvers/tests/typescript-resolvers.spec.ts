@@ -1235,7 +1235,7 @@ describe('Resolvers', () => {
         Post?: PostResolvers<Context>;
         User?: UserResolvers<Context>;
         Node?: NodeResolvers;
-        PostOrUser: PostOrUserResolvers;
+        PostOrUser?: PostOrUserResolvers;
         Date?: GraphQLScalarType;
       }
     `);
