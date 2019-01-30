@@ -1,5 +1,5 @@
-import { PluginFunction, GraphQLSchema, DocumentFile } from 'graphql-codegen-core';
-import { visit, concatAST } from 'graphql';
+import { PluginFunction, DocumentFile } from 'graphql-codegen-core';
+import { visit, concatAST, GraphQLSchema } from 'graphql';
 import { FlowDocumentsVisitor } from './visitor';
 
 export interface FlowDocumentsPluginConfig {

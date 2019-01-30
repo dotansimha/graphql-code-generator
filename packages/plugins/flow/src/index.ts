@@ -1,5 +1,5 @@
-import { DocumentFile, GraphQLSchema, PluginFunction } from 'graphql-codegen-core';
-import { parse, printSchema, visit } from 'graphql';
+import { DocumentFile, PluginFunction } from 'graphql-codegen-core';
+import { parse, printSchema, visit, GraphQLSchema } from 'graphql';
 import { FlowVisitor } from './visitor';
 
 export { DEFAULT_SCALARS } from './visitor';

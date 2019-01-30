@@ -1,14 +1,13 @@
 import gql from 'graphql-tag';
-import { GraphQLSchema } from 'graphql';
+import { GraphQLSchema, buildClientSchema } from 'graphql';
 import * as fs from 'fs';
-import { introspectionToGraphQLSchema } from '../src/utils/introspection-to-schema';
 import { transformVariables } from '../src/operations/transform-variables';
 
 describe('transformVariables', () => {
   let schema: GraphQLSchema;
 
   beforeAll(() => {
-    schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('../../dev-test/githunt/schema.json').toString()));
+    schema = buildClientSchema(JSON.parse(fs.readFileSync('../../dev-test/githunt/schema.json').toString()));
   });
 
   it('should return empty array when where are no variables', () => {

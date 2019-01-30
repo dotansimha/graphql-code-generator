@@ -3,7 +3,7 @@ import { Argument } from '../types';
 import { resolveType } from './resolve-type';
 import { resolveTypeIndicators } from './resolve-type-indicators';
 import { debugLog } from '../debugging';
-import { getDirectives } from '../utils/get-directives';
+import { getDirectives } from 'graphql-toolkit';
 
 export function resolveArguments(schema: GraphQLSchema, args: GraphQLArgument[]): Argument[] {
   return args.map(

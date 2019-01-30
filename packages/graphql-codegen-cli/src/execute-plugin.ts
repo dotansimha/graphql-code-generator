@@ -3,7 +3,7 @@ import { DocumentNode, GraphQLSchema } from 'graphql';
 import { resolve } from 'path';
 import { DetailedError } from './errors';
 import { buildSchema } from './merge-schemas';
-import { validateGraphQlDocuments, checkValidationErrors } from './loaders/documents/validate-documents';
+import { validateGraphQlDocuments, checkValidationErrors } from 'graphql-toolkit';
 
 export interface ExecutePluginOptions {
   name: string;

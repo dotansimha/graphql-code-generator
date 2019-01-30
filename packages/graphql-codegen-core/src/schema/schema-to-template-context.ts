@@ -17,7 +17,7 @@ import { transformInterface } from './transform-interface';
 import { transformScalar } from './transform-scalar';
 import { debugLog } from '../debugging';
 import { transformDirectives } from './transform-directives';
-import { getDirectives } from '../utils/get-directives';
+import { getDirectives } from 'graphql-toolkit';
 
 const GRAPHQL_PRIMITIVES = ['String', 'Int', 'Boolean', 'ID', 'Float'];
 type GraphQLTypesMap = { [typeName: string]: GraphQLNamedType };

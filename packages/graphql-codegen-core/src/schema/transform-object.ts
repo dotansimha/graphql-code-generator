@@ -2,7 +2,7 @@ import { GraphQLInputObjectType, GraphQLObjectType, GraphQLSchema } from 'graphq
 import { resolveFields } from './transform-fields';
 import { Type } from '../types';
 import { debugLog } from '../debugging';
-import { getDirectives } from '../utils/get-directives';
+import { getDirectives } from 'graphql-toolkit';
 
 export function transformGraphQLObject(
   schema: GraphQLSchema,

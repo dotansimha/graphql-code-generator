@@ -1,15 +1,12 @@
 import 'graphql-codegen-core/dist/testing';
-import { parse, visit } from 'graphql';
+import { parse, visit, buildClientSchema } from 'graphql';
 import { FlowDocumentsVisitor } from '../src/visitor';
 import { makeExecutableSchema } from 'graphql-tools';
 import { validateFlow } from './validate-flow';
 import { readFileSync } from 'fs';
-import { introspectionToGraphQLSchema } from 'graphql-codegen-core';
 
 describe('Flow Documents Plugin', () => {
-  const gitHuntSchema = introspectionToGraphQLSchema(
-    JSON.parse(readFileSync('../../../dev-test/githunt/schema.json', 'utf-8'))
-  );
+  const gitHuntSchema = buildClientSchema(JSON.parse(readFileSync('../../../dev-test/githunt/schema.json', 'utf-8')));
   const schema = makeExecutableSchema({
     typeDefs: `
       type User {

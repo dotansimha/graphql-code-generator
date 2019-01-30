@@ -2,8 +2,7 @@ import { GraphQLInterfaceType, GraphQLSchema } from 'graphql';
 import { Interface } from '../types';
 import { resolveFields } from './transform-fields';
 import { debugLog } from '../debugging';
-import { getDirectives } from '../utils/get-directives';
-import { getImplementingTypes } from './implementing-types';
+import { getDirectives, getImplementingTypes } from 'graphql-toolkit';
 
 export function transformInterface(schema: GraphQLSchema, gqlInterface: GraphQLInterfaceType): Interface {
   debugLog(`[transformInterface] transformed interface ${gqlInterface.name}`);

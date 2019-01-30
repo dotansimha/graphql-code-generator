@@ -1,14 +1,10 @@
 import 'graphql-codegen-core/dist/testing';
-import {
-  GraphQLSchema,
-  makeExecutableSchema,
-  SchemaTemplateContext,
-  schemaToTemplateContext
-} from 'graphql-codegen-core';
+import { SchemaTemplateContext, schemaToTemplateContext } from 'graphql-codegen-core';
 import { entityFields } from '../src/helpers/entity-fields';
 import { addToSchema, plugin } from '../dist';
 import { pascalCase } from 'change-case';
-import { print } from 'graphql';
+import { print, GraphQLSchema } from 'graphql';
+import { makeExecutableSchema } from 'graphql-tools';
 
 describe('Types', () => {
   const compileAndBuildContext = (typeDefs: string): { context: SchemaTemplateContext; schema: GraphQLSchema } => {

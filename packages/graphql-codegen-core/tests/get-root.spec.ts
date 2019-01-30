@@ -1,14 +1,13 @@
 import gql from 'graphql-tag';
-import { GraphQLSchema } from 'graphql';
+import { GraphQLSchema, buildClientSchema } from 'graphql';
 import * as fs from 'fs';
-import { introspectionToGraphQLSchema } from '../src/utils/introspection-to-schema';
 import { getRoot } from '../src/utils/get-root';
 
 describe('getRoot', () => {
   let schema: GraphQLSchema;
 
   beforeAll(() => {
-    schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('../../dev-test/githunt/schema.json').toString()));
+    schema = buildClientSchema(JSON.parse(fs.readFileSync('../../dev-test/githunt/schema.json').toString()));
   });
 
   it('should return root Query type', () => {

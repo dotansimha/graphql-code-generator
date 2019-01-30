@@ -1,4 +1,4 @@
-import { makeExecutableSchema } from 'graphql-codegen-core';
+import { makeExecutableSchema } from 'graphql-tools';
 import { introspectionFromSchema } from 'graphql';
 import { plugin } from '../dist';
 

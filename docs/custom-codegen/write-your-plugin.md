@@ -15,7 +15,7 @@ module.exports = {
 };
 ```
 
-The exported object should match the [`CodegenPlugin`](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/graphql-codegen-core/src/new-types.ts#L68-L72) interface.
+The exported object should match the [`CodegenPlugin`](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/graphql-codegen-core/src/yml-config-types.ts#L68-L72) interface.
 
 Now, let's try to load and use it with the codegen. Specify the path to your `.js` file in your `codegen.yml` config file:
 
