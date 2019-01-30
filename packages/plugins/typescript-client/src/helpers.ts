@@ -1,6 +1,5 @@
 import { getFieldType } from 'graphql-codegen-typescript-common';
 import { SafeString } from 'handlebars';
-
 import {
   Field,
   Operation,

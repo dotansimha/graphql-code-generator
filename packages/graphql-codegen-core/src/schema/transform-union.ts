@@ -1,7 +1,7 @@
 import { GraphQLSchema, GraphQLUnionType } from 'graphql';
 import { Union } from '../types';
 import { debugLog } from '../debugging';
-import { getDirectives } from '../utils/get-directives';
+import { getDirectives } from 'graphql-toolkit';
 
 export function transformUnion(schema: GraphQLSchema, union: GraphQLUnionType): Union {
   debugLog(`[transformUnion] transformed union ${union.name}`);

@@ -5,10 +5,18 @@ import { buildSelectionSet, separateSelectionSet } from './build-selection-set';
 import { transformVariables } from './transform-variables';
 import { debugLog } from '../debugging';
 import { print } from 'graphql/language/printer';
-import { getDirectives } from '../utils/get-directives';
+import { getDirectives } from 'graphql-toolkit';
 
-export function transformOperation(schema: GraphQLSchema, operationNode: OperationDefinitionNode, overrideName?: string | null): Operation {
-  const name = overrideName ? overrideName : operationNode.name && operationNode.name.value ? operationNode.name.value : '';
+export function transformOperation(
+  schema: GraphQLSchema,
+  operationNode: OperationDefinitionNode,
+  overrideName?: string | null
+): Operation {
+  const name = overrideName
+    ? overrideName
+    : operationNode.name && operationNode.name.value
+    ? operationNode.name.value
+    : '';
   debugLog(`[transformOperation] transforming operation ${name} of type ${operationNode.operation}`);
 
   const root = getRoot(schema, operationNode);

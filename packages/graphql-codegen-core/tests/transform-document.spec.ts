@@ -1,7 +1,6 @@
 import * as fs from 'fs';
 import gql from 'graphql-tag';
-import { introspectionToGraphQLSchema } from '../src/utils/introspection-to-schema';
-import { GraphQLSchema } from 'graphql';
+import { GraphQLSchema, buildClientSchema } from 'graphql';
 import { transformDocument, transformDocumentsFiles } from '../src/operations/transform-document';
 import { SelectionSetFieldNode, SelectionSetFragmentSpread, SelectionSetInlineFragment } from '../src/types';
 
@@ -9,7 +8,7 @@ describe('transformDocument', () => {
   let schema: GraphQLSchema;
 
   beforeAll(() => {
-    schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('../../dev-test/githunt/schema.json').toString()));
+    schema = buildClientSchema(JSON.parse(fs.readFileSync('../../dev-test/githunt/schema.json').toString()));
   });
 
   it('should handle multiple files correctly', () => {

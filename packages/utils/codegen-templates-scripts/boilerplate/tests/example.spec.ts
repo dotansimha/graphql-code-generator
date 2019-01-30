@@ -1,4 +1,6 @@
-import { gql, GraphQLSchema, makeExecutableSchema } from 'graphql-codegen-core';
+import { makeExecutableSchema } from 'graphql-tools';
+import gql from 'graphql-tag';
+import { GraphQLSchema } from 'graphql';
 
 describe('Tests Example', () => {
   const testSchema = gql`

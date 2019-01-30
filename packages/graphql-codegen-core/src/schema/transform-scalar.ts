@@ -1,7 +1,7 @@
 import { GraphQLScalarType, GraphQLSchema } from 'graphql';
 import { Scalar } from '../types';
 import { debugLog } from '../debugging';
-import { getDirectives } from '../utils/get-directives';
+import { getDirectives } from 'graphql-toolkit';
 
 export function transformScalar(schema: GraphQLSchema, scalar: GraphQLScalarType): Scalar {
   debugLog(`[transformInterface] transformed custom scalar ${scalar.name}`);

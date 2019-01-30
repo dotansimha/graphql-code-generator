@@ -1,6 +1,6 @@
 import { ScalarsMap } from 'graphql-codegen-flow';
-import { DocumentFile, GraphQLSchema, PluginFunction } from 'graphql-codegen-core';
-import { isScalarType, parse, printSchema, visit } from 'graphql';
+import { DocumentFile, PluginFunction } from 'graphql-codegen-core';
+import { isScalarType, parse, printSchema, visit, GraphQLSchema } from 'graphql';
 import { FlowResolversVisitor } from './visitor';
 
 export interface FlowResolversPluginConfig {

@@ -1,6 +1,6 @@
 import 'graphql-codegen-core/dist/testing';
 import { plugin } from '../dist';
-import { makeExecutableSchema } from 'graphql-codegen-core';
+import { makeExecutableSchema } from 'graphql-tools';
 import { buildSchema } from 'graphql';
 
 function stripBlockComments(input: string): string {

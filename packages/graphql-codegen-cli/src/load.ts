@@ -1,13 +1,7 @@
+import { loadSchema as loadSchemaToolkit, loadDocuments as loadDocumentsToolkit } from 'graphql-toolkit';
 import { Types, DocumentFile } from 'graphql-codegen-core';
 import { GraphQLSchema, DocumentNode } from 'graphql';
 import { DetailedError } from './errors';
-import { IntrospectionFromUrlLoader } from './loaders/schema/introspection-from-url';
-import { IntrospectionFromFileLoader } from './loaders/schema/introspection-from-file';
-import { SchemaFromString } from './loaders/schema/schema-from-string';
-import { SchemaFromTypedefs } from './loaders/schema/schema-from-typedefs';
-import { SchemaFromExport } from './loaders/schema/schema-from-export';
-import { DocumentFromString } from './loaders/documents/document-from-string';
-import { DocumentsFromGlob } from './loaders/documents/documents-from-glob';
 
 function getCustomLoaderByPath(path: string): any {
   const requiredModule = require(path);
@@ -22,16 +16,6 @@ function getCustomLoaderByPath(path: string): any {
 
   return null;
 }
-
-const documentsHandlers = [new DocumentFromString(), new DocumentsFromGlob()];
-
-const schemaHandlers = [
-  new IntrospectionFromUrlLoader(),
-  new IntrospectionFromFileLoader(),
-  new SchemaFromString(),
-  new SchemaFromTypedefs(),
-  new SchemaFromExport()
-];
 
 export const loadSchema = async (
   schemaDef: Types.Schema,
@@ -75,7 +59,7 @@ export const loadSchema = async (
     }
   }
 
-  for (const handler of schemaHandlers) {
+  try {
     let pointToSchema: string = null;
     let options: any = {};
 
@@ -86,27 +70,25 @@ export const loadSchema = async (
       options = schemaDef[pointToSchema];
     }
 
-    if (await handler.canHandle(pointToSchema)) {
-      return handler.handle(pointToSchema, config, options);
-    }
+    return loadSchemaToolkit(pointToSchema, options);
+  } catch (e) {
+    throw new DetailedError(
+      'Failed to load schema',
+      `
+        Failed to load schema from ${schemaDef}.
+    
+        GraphQL Code Generator supports:
+          - ES Modules and CommonJS exports
+          - Introspection JSON File
+          - URL of GraphQL endpoint
+          - Multiple files with type definitions
+          - String in config file
+    
+        Try to use one of above options and run codegen again.
+    
+      `
+    );
   }
-
-  throw new DetailedError(
-    'Failed to load schema',
-    `
-      Failed to load schema from ${schemaDef}.
-  
-      GraphQL Code Generator supports:
-        - ES Modules and CommonJS exports
-        - Introspection JSON File
-        - URL of GraphQL endpoint
-        - Multiple files with type definitions
-        - String in config file
-  
-      Try to use one of above options and run codegen again.
-  
-    `
-  );
 };
 
 export const loadDocuments = async (
@@ -151,11 +133,5 @@ export const loadDocuments = async (
     }
   }
 
-  for (const handler of documentsHandlers) {
-    if (await handler.canHandle(documentDef as string)) {
-      return handler.handle(documentDef as string, config);
-    }
-  }
-
-  return [];
+  return loadDocumentsToolkit(documentDef as string);
 };

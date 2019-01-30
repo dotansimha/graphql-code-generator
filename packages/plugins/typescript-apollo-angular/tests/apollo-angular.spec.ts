@@ -1,11 +1,11 @@
 import 'graphql-codegen-core/dist/testing';
-import { gql, introspectionToGraphQLSchema, schemaToTemplateContext, transformDocument } from 'graphql-codegen-core';
 import { plugin, addToSchema } from '../dist';
 import * as fs from 'fs';
-import { extendSchema, print, buildSchema } from 'graphql';
+import { extendSchema, print, buildSchema, buildClientSchema } from 'graphql';
+import gql from 'graphql-tag';
 
 describe('Components', () => {
-  const schema = introspectionToGraphQLSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
+  const schema = buildClientSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
 
   it('should be able to use root schema object', async () => {
     const rootSchema = buildSchema(`

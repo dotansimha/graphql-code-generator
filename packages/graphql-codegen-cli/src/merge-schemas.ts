@@ -1,5 +1,5 @@
 import { GraphQLSchema, DocumentNode } from 'graphql';
-import { mergeGraphQLSchemas } from '@graphql-modules/epoxy';
+import { mergeGraphQLSchemas } from 'graphql-toolkit';
 import { makeExecutableSchema } from 'graphql-tools';
 
 export function mergeSchemas(schemas: Array<string | GraphQLSchema | DocumentNode>): DocumentNode {

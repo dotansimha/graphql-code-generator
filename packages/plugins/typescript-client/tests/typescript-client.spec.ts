@@ -1,11 +1,12 @@
 import 'graphql-codegen-core/dist/testing';
-import { introspectionToGraphQLSchema, makeExecutableSchema } from 'graphql-codegen-core';
+import { makeExecutableSchema } from 'graphql-tools';
 import { readFileSync } from 'fs';
 import { plugin } from '../dist';
 import gql from 'graphql-tag';
+import { buildClientSchema } from 'graphql';
 
 describe('TypeScript Client', () => {
-  const schema = introspectionToGraphQLSchema(JSON.parse(readFileSync('./tests/files/schema.json', 'utf-8')));
+  const schema = buildClientSchema(JSON.parse(readFileSync('./tests/files/schema.json', 'utf-8')));
 
   it('Should generate simple Query correctly', async () => {
     const query = gql`

@@ -20,7 +20,7 @@ import { resolveType } from './resolve-type';
 import { resolveArguments } from './resolve-arguments';
 import { resolveTypeIndicators } from './resolve-type-indicators';
 import { debugLog } from '../debugging';
-import { getDirectives } from '../utils/get-directives';
+import { getDirectives } from 'graphql-toolkit';
 
 export function resolveFields(
   schema: GraphQLSchema,
