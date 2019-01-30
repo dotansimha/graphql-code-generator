@@ -1186,7 +1186,7 @@ describe('Resolvers', () => {
     expect(content).not.toContain('GraphQLScalarTypeConfig');
   });
 
-  it.only('should generate Resolvers interface', async () => {
+  it('should generate Resolvers interface', async () => {
     const testSchema = makeExecutableSchema({
       typeDefs: `
 
