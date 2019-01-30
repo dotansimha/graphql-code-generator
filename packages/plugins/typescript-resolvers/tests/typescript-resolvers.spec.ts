@@ -1186,7 +1186,7 @@ describe('Resolvers', () => {
     expect(content).not.toContain('GraphQLScalarTypeConfig');
   });
 
-  it('should generate Resolvers interface', async () => {
+  it.only('should generate Resolvers interface', async () => {
     const testSchema = makeExecutableSchema({
       typeDefs: `
 
@@ -1196,14 +1196,20 @@ describe('Resolvers', () => {
 
         type Query {
           post: Post
+          entity: PostOrUser
         }
 
-        type Post {
+        interface Node {
           id: String
+        }
+
+        union PostOrUser = Post | User
+
+        type Post implements Node {
           author: User
         }
 
-        type User {
+        type User implements Node {
           id: String
           name: String
         }
@@ -1228,6 +1234,8 @@ describe('Resolvers', () => {
         Query?: QueryResolvers<Context>;
         Post?: PostResolvers<Context>;
         User?: UserResolvers<Context>;
+        Node?: NodeResolvers;
+        PostOrUser: PostOrUserResolvers;
         Date?: GraphQLScalarType;
       }
     `);
