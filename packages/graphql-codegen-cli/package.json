@@ -75,7 +75,7 @@
     "log-symbols": "2.2.0",
     "log-update": "2.3.0",
     "mkdirp": "0.5.1",
-    "prettier": "1.16.1",
+    "prettier": "1.16.2",
     "request": "2.88.0",
     "valid-url": "1.0.9"
   },
