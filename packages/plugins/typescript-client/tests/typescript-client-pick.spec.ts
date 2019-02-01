@@ -163,7 +163,7 @@ describe('TypeScript Client', () => {
     }`);
   });
 
-  it.skip('Should generate anonymous Query correctly', async () => {
+  it('Should generate anonymous Query correctly', async () => {
     const query = gql`
       query {
         feed {
@@ -193,26 +193,13 @@ describe('TypeScript Client', () => {
     export namespace AnonymousQuery_1 {
       export type Variables = {
       }
-      export type Query = {
+      export type Query =  {
         __typename?: "Query";
-        feed: Maybe<(Maybe<Feed>)[]>;
+        feed: Maybe<(Pick<Entry,'id'|'commentCount'>
+        & { repository: Pick<Repository,'full_name'|'html_url'>
+        & { owner: Pick<User,'avatar_url'> } })[]>
       }
-      export type Feed = {
-        __typename?: "Entry";
-        id: number; 
-        commentCount: number; 
-        repository: Repository; 
-      }
-      export type Repository = {
-        __typename?: "Repository";
-        full_name: string; 
-        html_url: string; 
-        owner: Maybe<Owner>; 
-      }
-      export type Owner = {
-        __typename?: "User";
-        avatar_url: string; 
-      }
+
     }`);
   });
 
