@@ -1,0 +1,2 @@
+{{#if isArray}}({{/if}}Pick<{{ convert raw 'typeNames' }},{{#each this.fields}}{{#unless hasFields}}{{#unless @first}}|{{/unless}}'{{name}}'{{#unless @first}}>{{/unless}}{{#if @../last}}{{#if @last}}>{{/if}}{{/if}}{{else}} 
+    & { {{name}}: {{> selectionSetPick }} }{{/unless}}{{/each}}{{#if isArray}})[]{{/if}}

@@ -8,7 +8,7 @@ import { buildClientSchema } from 'graphql';
 describe('TypeScript Client', () => {
   const schema = buildClientSchema(JSON.parse(readFileSync('./tests/files/schema.json', 'utf-8')));
 
-  it.skip('Should generate simple Query correctly', async () => {
+  it('Should generate simple Query correctly', async () => {
     const query = gql`
       query myFeed {
         feed {
@@ -38,26 +38,13 @@ describe('TypeScript Client', () => {
     export namespace MyFeed {
       export type Variables = {
       }
-      export type Query = {
+      export type Query =  {
         __typename?: "Query";
-        feed: Maybe<(Maybe<Feed>)[]>;
+        feed: Maybe<(Pick<Entry,'id'|'commentCount'>
+        & { repository: Pick<Repository,'full_name'|'html_url'>
+        & { owner: Pick<User,'avatar_url'> } })[]>
       }
-      export type Feed = {
-        __typename?: "Entry";
-        id: number; 
-        commentCount: number; 
-        repository: Repository; 
-      }
-      export type Repository = {
-        __typename?: "Repository";
-        full_name: string; 
-        html_url: string; 
-        owner: Maybe<Owner>; 
-      }
-      export type Owner = {
-        __typename?: "User";
-        avatar_url: string; 
-      }
+
     }
   `);
   });

@@ -4,7 +4,9 @@ import { flattenTypes } from 'graphql-codegen-plugin-helpers';
 import { GraphQLSchema } from 'graphql';
 import * as Handlebars from 'handlebars';
 import * as rootTemplate from './root.handlebars';
+import * as rootTemplatePick from './root-pick.handlebars';
 import * as selectionSet from './selection-set.handlebars';
+import * as selectionSetPick from './selection-set-pick.handlebars';
 import { shouldHavePrefix, fragments, convertedFieldType } from './helpers';
 
 export interface TypeScriptClientConfig extends TypeScriptCommonConfig {
@@ -21,6 +23,7 @@ export const plugin: PluginFunction<TypeScriptClientConfig> = async (
   const flattenDocuments = flattenTypes(transformedDocuments);
 
   Handlebars.registerPartial('selectionSet', selectionSet);
+  Handlebars.registerPartial('selectionSetPick', selectionSetPick);
   Handlebars.registerHelper('shouldHavePrefix', shouldHavePrefix);
   Handlebars.registerHelper('fragments', fragments(convert));
   Handlebars.registerHelper('convertedFieldType', convertedFieldType(convert));
@@ -30,5 +33,5 @@ export const plugin: PluginFunction<TypeScriptClientConfig> = async (
     ...flattenDocuments
   };
 
-  return Handlebars.compile(rootTemplate)(hbsContext);
+  return Handlebars.compile(rootTemplatePick)(hbsContext);
 };
