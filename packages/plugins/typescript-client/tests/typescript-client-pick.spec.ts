@@ -95,7 +95,7 @@ describe('TypeScript Client', () => {
     expect(content).toContain('export type Ve2User = {');
   });
 
-  it.skip('Should generate nested types', async () => {
+  it('Should generate nested types', async () => {
     const testSchema = makeExecutableSchema({
       typeDefs: `
         type User {
@@ -147,50 +147,20 @@ describe('TypeScript Client', () => {
     );
 
     expect(content).toBeSimilarStringTo(`
-      export namespace Me {
-        export type Variables = {
-        }
+    export namespace Me {
+      export type Variables = {
+      }
+      export type Query =  {
+        __typename?: "Query";
+        me: Maybe<Pick<User,'id'
+        & { profile: Pick<Profile,'name' }
+        & { favFriend: Pick<User,'id'
+        & { profile: Pick<Profile,'email' }
+        & { favFriend: Pick<User,'id'
+        & { profile: Pick<Profile,'email'> } } }>
+      }
 
-        export type Query = {
-          __typename?: "Query";
-          me: Maybe<Me>;
-        }
-
-        export type Me = {
-          __typename?: "User";
-          id: number;
-          profile: Maybe<Profile>;
-          favFriend: Maybe<FavFriend>;
-        }
-
-        export type Profile = {
-          __typename?: "Profile";
-          name: string;
-        }
-
-        export type FavFriend = {
-          __typename?: "User";
-          id: number;
-          profile: Maybe<_Profile>;
-          favFriend: Maybe<_FavFriend>;
-        }
-
-        export type _Profile = {
-          __typename?: "Profile";
-          email: string;
-        }
-        
-        export type _FavFriend = {
-          __typename?: "User";
-          id: number;
-          profile: Maybe<__Profile>;
-        }
-        
-        export type __Profile = {
-          __typename?: "Profile";
-          email: string;
-        }
-      }`);
+    }`);
   });
 
   it.skip('Should generate anonymous Query correctly', async () => {
