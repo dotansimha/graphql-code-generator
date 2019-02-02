@@ -40,13 +40,27 @@ describe('TypeScript Client', () => {
       }
       export type Query =  {
         __typename?: "Query";
-        feed: Maybe<(Pick<Entry,'id'|'commentCount'>
-        & { repository: Pick<Repository,'full_name'|'html_url'>
-        & { owner: Pick<User,'avatar_url'> } })[]>
+        feed: Maybe<(
+            Pick<Entry,'id'>
+        &
+            Pick<Entry,'commentCount'>
+        &
+            { repository:
+            Pick<Repository,'full_name'>
+        &
+            Pick<Repository,'html_url'>
+        &
+            { owner:
+            Pick<User,'avatar_url'>
+
+     }
+
+     }
+
+    )[]>
       }
 
-    }
-  `);
+    }`);
   });
 
   it.skip('Should generate and convert names correctly', async () => {
@@ -152,18 +166,41 @@ describe('TypeScript Client', () => {
       }
       export type Query =  {
         __typename?: "Query";
-        me: Maybe<Pick<User,'id'
-        & { profile: Pick<Profile,'name' }
-        & { favFriend: Pick<User,'id'
-        & { profile: Pick<Profile,'email' }
-        & { favFriend: Pick<User,'id'
-        & { profile: Pick<Profile,'email'> } } }>
+        me: Maybe<
+            Pick<User,'id'>
+        &
+            { profile:
+            Pick<Profile,'name'>
+
+     }
+        &
+            { favFriend:
+            Pick<User,'id'>
+        &
+            { profile:
+            Pick<Profile,'email'>
+
+     }
+        &
+            { favFriend:
+            Pick<User,'id'>
+        &
+            { profile:
+            Pick<Profile,'email'>
+
+     }
+
+     }
+
+     }
+
+    >
       }
 
     }`);
   });
 
-  it('Should generate anonymous Query correctly', async () => {
+  it.skip('Should generate anonymous Query correctly', async () => {
     const query = gql`
       query {
         feed {
@@ -763,7 +800,7 @@ describe('TypeScript Client', () => {
     `);
   });
 
-  it.skip('should generate correctly when using noNamespace', async () => {
+  it('should generate correctly when using noNamespace', async () => {
     const testSchema = makeExecutableSchema({
       typeDefs: gql`
         type Country {
@@ -804,11 +841,18 @@ describe('TypeScript Client', () => {
     );
 
     expect(content).toBeSimilarStringTo(`
-      export type CountriesCountries = {
-        __typename?: "CountriesPayload";
-        countries: Maybe<Countries_Countries[]>;
-      }
-    `);
+    export type CountriesQuery =  {
+      __typename?: "Query";
+      countries: Maybe<
+          { countries: (
+          Pick<Country,'code'>
+      &
+          Pick<Country,'name'>
+
+  )[] }
+
+  >
+    }`);
   });
 
   it.skip('should make __typename non optional when requested', async () => {
