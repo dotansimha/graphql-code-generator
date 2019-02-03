@@ -1,6 +1,6 @@
 {
   "name": "graphql-codegen-typescript-apollo-angular",
-  "version": "0.16.0",
+  "version": "0.16.1",
   "description": "graphql-codegen-cli template for TypeScript typings for both client side and server side",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
@@ -15,14 +15,14 @@
   },
   "dependencies": {
     "dependency-graph": "0.8.0",
-    "graphql-codegen-plugin-helpers": "0.16.0",
-    "graphql-codegen-typescript-common": "0.16.0"
+    "graphql-codegen-plugin-helpers": "0.16.1",
+    "graphql-codegen-typescript-common": "0.16.1"
   },
   "devDependencies": {
-    "codegen-templates-scripts": "0.16.0",
+    "codegen-templates-scripts": "0.16.1",
     "graphql": "14.1.1",
-    "graphql-codegen-core": "0.16.0",
-    "graphql-codegen-plugin-handlebars-helpers": "0.16.0"
+    "graphql-codegen-core": "0.16.1",
+    "graphql-codegen-plugin-handlebars-helpers": "0.16.1"
   },
   "main": "./dist/index.js",
   "typings": "dist/index.d.ts",

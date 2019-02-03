@@ -1,6 +1,6 @@
 {
   "name": "graphql-codegen-plugin-handlebars-helpers",
-  "version": "0.16.0",
+  "version": "0.16.1",
   "description": "graphql-codegen-cli template for TypeScript typings for both client side and server side",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
