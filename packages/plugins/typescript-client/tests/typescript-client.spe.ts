@@ -8,7 +8,7 @@ import { buildClientSchema } from 'graphql';
 describe('TypeScript Client', () => {
   const schema = buildClientSchema(JSON.parse(readFileSync('./tests/files/schema.json', 'utf-8')));
 
-  it.skip('Should generate simple Query correctly', async () => {
+  it('Should generate simple Query correctly', async () => {
     const query = gql`
       query myFeed {
         feed {
@@ -62,7 +62,7 @@ describe('TypeScript Client', () => {
   `);
   });
 
-  it.skip('Should generate and convert names correctly', async () => {
+  it('Should generate and convert names correctly', async () => {
     const testSchema = makeExecutableSchema({
       typeDefs: `
       type User_Special {
@@ -108,7 +108,7 @@ describe('TypeScript Client', () => {
     expect(content).toContain('export type Ve2User = {');
   });
 
-  it.skip('Should generate nested types', async () => {
+  it('Should generate nested types', async () => {
     const testSchema = makeExecutableSchema({
       typeDefs: `
         type User {
@@ -206,7 +206,7 @@ describe('TypeScript Client', () => {
       }`);
   });
 
-  it.skip('Should generate anonymous Query correctly', async () => {
+  it('Should generate anonymous Query correctly', async () => {
     const query = gql`
       query {
         feed {
@@ -259,7 +259,7 @@ describe('TypeScript Client', () => {
     }`);
   });
 
-  it.skip('Should generate simple Query with Fragment spread correctly', async () => {
+  it('Should generate simple Query with Fragment spread correctly', async () => {
     const query = gql`
       query myFeed {
         feed {
@@ -324,7 +324,7 @@ describe('TypeScript Client', () => {
       `);
   });
 
-  it.skip('should preserve a prefix for Unions', async () => {
+  it('should preserve a prefix for Unions', async () => {
     const testSchema = makeExecutableSchema({
       typeDefs: gql`
         schema {
@@ -395,7 +395,7 @@ describe('TypeScript Client', () => {
     `);
   });
 
-  it.skip('Should generate correctly when using scalar and noNamespace', async () => {
+  it('Should generate correctly when using scalar and noNamespace', async () => {
     const testSchema = makeExecutableSchema({
       typeDefs: gql`
         scalar JSON
@@ -458,7 +458,7 @@ describe('TypeScript Client', () => {
   `);
   });
 
-  it.skip('Should generate simple Query with inline Fragment and handle noNamespaces', async () => {
+  it('Should generate simple Query with inline Fragment and handle noNamespaces', async () => {
     const query = gql`
       query myFeed {
         feed {
@@ -526,7 +526,7 @@ describe('TypeScript Client', () => {
 `);
   });
 
-  it.skip('Should generate simple Query with inline Fragment', async () => {
+  it('Should generate simple Query with inline Fragment', async () => {
     const query = gql`
       query myFeed {
         feed {
@@ -596,7 +596,7 @@ describe('TypeScript Client', () => {
   `);
   });
 
-  it.skip('Should group fragments by type', async () => {
+  it('Should group fragments by type', async () => {
     const testSchema = makeExecutableSchema({
       resolverValidationOptions: {
         requireResolversForResolveType: false
@@ -662,7 +662,7 @@ describe('TypeScript Client', () => {
     `);
   });
 
-  it.skip('Should generate simple Query with Fragment spread and handle noNamespaces', async () => {
+  it('Should generate simple Query with Fragment spread and handle noNamespaces', async () => {
     const query = gql`
       query myFeed {
         feed {
@@ -722,7 +722,7 @@ describe('TypeScript Client', () => {
 `);
   });
 
-  it.skip('should generate correctly when using immutableTypes and noNamespace', async () => {
+  it('should generate correctly when using immutableTypes and noNamespace', async () => {
     const testSchema = makeExecutableSchema({
       typeDefs: gql`
         type Country {
@@ -771,7 +771,7 @@ describe('TypeScript Client', () => {
     `);
   });
 
-  it.skip('should generate correctly when using immutableTypes', async () => {
+  it('should generate correctly when using immutableTypes', async () => {
     const testSchema = makeExecutableSchema({
       typeDefs: gql`
         type Country {
@@ -819,7 +819,7 @@ describe('TypeScript Client', () => {
     `);
   });
 
-  it.skip('should generate correctly when using noNamespace', async () => {
+  it('should generate correctly when using noNamespace', async () => {
     const testSchema = makeExecutableSchema({
       typeDefs: gql`
         type Country {
@@ -867,7 +867,7 @@ describe('TypeScript Client', () => {
     `);
   });
 
-  it.skip('should make __typename non optional when requested', async () => {
+  it('should make __typename non optional when requested', async () => {
     const testSchema = makeExecutableSchema({
       typeDefs: gql`
         type Post {
@@ -912,7 +912,7 @@ describe('TypeScript Client', () => {
     `);
   });
 
-  it.skip('should make __typename non optional when requested within an inline fragment', async () => {
+  it('should make __typename non optional when requested within an inline fragment', async () => {
     const testSchema = makeExecutableSchema({
       typeDefs: gql`
         type Post {
