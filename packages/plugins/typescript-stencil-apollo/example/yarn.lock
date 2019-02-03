@@ -94,9 +94,9 @@
   dependencies:
     any-observable "^0.3.0"
 
-"@stencil/core@0.17.0":
-  version "0.17.0"
-  resolved "https://registry.yarnpkg.com/@stencil/core/-/core-0.17.0.tgz#df9672c40422e88f2474c0546c5106f53d245e16"
+"@stencil/core@0.17.1":
+  version "0.17.1"
+  resolved "https://registry.yarnpkg.com/@stencil/core/-/core-0.17.1.tgz#041bdacdd2bdbdadd5b7bd1ef9f8cbd667010d57"
   dependencies:
     chokidar "2.0.3"
     jsdom "11.11.0"
@@ -497,14 +497,6 @@ caseless@~0.12.0:
   version "0.12.0"
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
 
-chalk@2.4.1, chalk@^2.0.0, chalk@^2.0.1, chalk@^2.4.1:
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.4.1.tgz#18c49ab16a037b6eb0152cc83e3471338215b66e"
-  dependencies:
-    ansi-styles "^3.2.1"
-    escape-string-regexp "^1.0.5"
-    supports-color "^5.3.0"
-
 chalk@2.4.2:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.4.2.tgz#cd42541677a54333cf541a49108c1432b44c9424"
@@ -523,28 +515,13 @@ chalk@^1.0.0, chalk@^1.1.3:
     strip-ansi "^3.0.0"
     supports-color "^2.0.0"
 
-change-case@3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/change-case/-/change-case-3.0.2.tgz#fd48746cce02f03f0a672577d1d3a8dc2eceb037"
+chalk@^2.0.0, chalk@^2.0.1, chalk@^2.4.1:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.4.1.tgz#18c49ab16a037b6eb0152cc83e3471338215b66e"
   dependencies:
-    camel-case "^3.0.0"
-    constant-case "^2.0.0"
-    dot-case "^2.1.0"
-    header-case "^1.0.0"
-    is-lower-case "^1.1.0"
-    is-upper-case "^1.1.0"
-    lower-case "^1.1.1"
-    lower-case-first "^1.0.0"
-    no-case "^2.3.2"
-    param-case "^2.1.0"
-    pascal-case "^2.0.0"
-    path-case "^2.1.0"
-    sentence-case "^2.1.0"
-    snake-case "^2.1.0"
-    swap-case "^1.1.0"
-    title-case "^2.1.0"
-    upper-case "^1.1.1"
-    upper-case-first "^1.1.0"
+    ansi-styles "^3.2.1"
+    escape-string-regexp "^1.0.5"
+    supports-color "^5.3.0"
 
 change-case@3.1.0:
   version "3.1.0"
@@ -1158,9 +1135,9 @@ graphql-anywhere@^4.1.0-alpha.0:
   dependencies:
     apollo-utilities "^1.0.27"
 
-graphql-code-generator@0.15.2:
-  version "0.15.2"
-  resolved "https://registry.yarnpkg.com/graphql-code-generator/-/graphql-code-generator-0.15.2.tgz#7ffe5b70e8f442c9dffe608f1e013984813783db"
+graphql-code-generator@0.16.0:
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/graphql-code-generator/-/graphql-code-generator-0.16.0.tgz#557531c85fdf0a92213f3144e835add946d41923"
   dependencies:
     "@graphql-modules/epoxy" "0.2.18"
     "@types/babylon" "6.16.4"
@@ -1169,46 +1146,34 @@ graphql-code-generator@0.15.2:
     "@types/valid-url" "1.0.2"
     babel-types "7.0.0-beta.3"
     babylon "7.0.0-beta.47"
-    chalk "2.4.1"
+    chalk "2.4.2"
     chokidar "2.0.4"
     commander "2.19.0"
     detect-indent "5.0.0"
     glob "7.1.3"
-    graphql-codegen-core "0.15.2"
+    graphql-codegen-core "0.16.0"
     graphql-config "2.2.1"
     graphql-import "0.7.1"
-    graphql-tag-pluck "0.4.4"
+    graphql-tag-pluck "0.5.0"
     indent-string "3.2.0"
     inquirer "6.2.1"
     is-glob "4.0.0"
     is-valid-path "0.1.1"
-    js-yaml "3.12.0"
+    js-yaml "3.12.1"
     json-to-pretty-yaml "1.2.2"
     listr "0.14.3"
     log-symbols "2.2.0"
     log-update "2.3.0"
     mkdirp "0.5.1"
-    prettier "1.15.3"
+    prettier "1.16.0"
     request "2.88.0"
     valid-url "1.0.9"
 
-graphql-codegen-add@0.15.2:
-  version "0.15.2"
-  resolved "https://registry.yarnpkg.com/graphql-codegen-add/-/graphql-codegen-add-0.15.2.tgz#d447e57dc1db4b385882ce6307d047563ff63d2d"
+graphql-codegen-add@0.16.0:
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/graphql-codegen-add/-/graphql-codegen-add-0.16.0.tgz#f1c19166d12a4174c597719b42facb7502b04fc8"
   dependencies:
-    graphql-codegen-core "0.15.2"
-
-graphql-codegen-core@0.15.2:
-  version "0.15.2"
-  resolved "https://registry.yarnpkg.com/graphql-codegen-core/-/graphql-codegen-core-0.15.2.tgz#f97ff2bcedddf8ce0623e21afef586f7249c453b"
-  dependencies:
-    chalk "2.4.1"
-    change-case "3.0.2"
-    common-tags "1.8.0"
-    graphql-tag "2.10.0"
-    graphql-tools "4.0.3"
-    ts-log "2.1.4"
-    winston "3.1.0"
+    graphql-codegen-core "0.16.0"
 
 graphql-codegen-core@0.16.0:
   version "0.16.0"
@@ -1222,13 +1187,6 @@ graphql-codegen-core@0.16.0:
     ts-log "2.1.4"
     winston "3.1.0"
 
-graphql-codegen-plugin-helpers@0.15.2:
-  version "0.15.2"
-  resolved "https://registry.yarnpkg.com/graphql-codegen-plugin-helpers/-/graphql-codegen-plugin-helpers-0.15.2.tgz#824e9003950412f12ccbc436577d11edb5f51fae"
-  dependencies:
-    graphql-codegen-core "0.15.2"
-    import-from "2.1.0"
-
 graphql-codegen-plugin-helpers@0.16.0:
   version "0.16.0"
   resolved "https://registry.yarnpkg.com/graphql-codegen-plugin-helpers/-/graphql-codegen-plugin-helpers-0.16.0.tgz#1b662df373b393d021499247e650f12bb22c1878"
@@ -1236,22 +1194,13 @@ graphql-codegen-plugin-helpers@0.16.0:
     graphql-codegen-core "0.16.0"
     import-from "2.1.0"
 
-graphql-codegen-typescript-client@0.15.2:
-  version "0.15.2"
-  resolved "https://registry.yarnpkg.com/graphql-codegen-typescript-client/-/graphql-codegen-typescript-client-0.15.2.tgz#37fab175306e37a2b814f84361f1ec4c3db06dc1"
+graphql-codegen-typescript-client@0.16.0:
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/graphql-codegen-typescript-client/-/graphql-codegen-typescript-client-0.16.0.tgz#65e0ded7671c6c1039b897def53cf3a73f280a96"
   dependencies:
-    graphql-codegen-core "0.15.2"
-    graphql-codegen-plugin-helpers "0.15.2"
-    graphql-codegen-typescript-common "0.15.2"
-
-graphql-codegen-typescript-common@0.15.2:
-  version "0.15.2"
-  resolved "https://registry.yarnpkg.com/graphql-codegen-typescript-common/-/graphql-codegen-typescript-common-0.15.2.tgz#9368ca0d9a4f2938823d3dc80b364cd337c686df"
-  dependencies:
-    change-case "3.0.2"
-    common-tags "1.8.0"
-    graphql-codegen-core "0.15.2"
-    graphql-codegen-plugin-helpers "0.15.2"
+    graphql-codegen-core "0.16.0"
+    graphql-codegen-plugin-helpers "0.16.0"
+    graphql-codegen-typescript-common "0.16.0"
 
 graphql-codegen-typescript-common@0.16.0:
   version "0.16.0"
@@ -1285,9 +1234,9 @@ graphql-request@^1.5.0:
   dependencies:
     cross-fetch "2.2.2"
 
-graphql-tag-pluck@0.4.4:
-  version "0.4.4"
-  resolved "https://registry.yarnpkg.com/graphql-tag-pluck/-/graphql-tag-pluck-0.4.4.tgz#4494c0e13d10aa9a36cea2704218940a1af47170"
+graphql-tag-pluck@0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/graphql-tag-pluck/-/graphql-tag-pluck-0.5.0.tgz#81f5dee3a6ca829f205ab032336be7b107398b2e"
   dependencies:
     "@babel/parser" "^7.2.0"
     "@babel/traverse" "^7.1.6"
@@ -1295,13 +1244,13 @@ graphql-tag-pluck@0.4.4:
     source-map-support "^0.5.9"
     typescript "^3.2.2"
 
-graphql-tag@2.10.0, graphql-tag@^2.4.2:
-  version "2.10.0"
-  resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.10.0.tgz#87da024be863e357551b2b8700e496ee2d4353ae"
-
 graphql-tag@2.10.1:
   version "2.10.1"
   resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.10.1.tgz#10aa41f1cd8fae5373eaf11f1f67260a3cad5e02"
+
+graphql-tag@^2.4.2:
+  version "2.10.0"
+  resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.10.0.tgz#87da024be863e357551b2b8700e496ee2d4353ae"
 
 graphql-tools@4.0.3:
   version "4.0.3"
@@ -1663,7 +1612,14 @@ js-tokens@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-4.0.0.tgz#19203fb59991df98e3a287050d4647cdeaf32499"
 
-js-yaml@3.12.0, js-yaml@^3.10.0:
+js-yaml@3.12.1:
+  version "3.12.1"
+  resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.12.1.tgz#295c8632a18a23e054cf5c9d3cecafe678167600"
+  dependencies:
+    argparse "^1.0.7"
+    esprima "^4.0.0"
+
+js-yaml@^3.10.0:
   version "3.12.0"
   resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.12.0.tgz#eaed656ec8344f10f527c6bfa1b6e2244de167d1"
   dependencies:
@@ -2237,9 +2193,9 @@ preserve@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/preserve/-/preserve-0.2.0.tgz#815ed1f6ebc65926f865b310c0713bcb3315ce4b"
 
-prettier@1.15.3:
-  version "1.15.3"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.15.3.tgz#1feaac5bdd181237b54dbe65d874e02a1472786a"
+prettier@1.16.0:
+  version "1.16.0"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.16.0.tgz#104dd25f5ee3d0c9d0a6ce4bb40ced8481d51219"
 
 process-nextick-args@~2.0.0:
   version "2.0.0"
