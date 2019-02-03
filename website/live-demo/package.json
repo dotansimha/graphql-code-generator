@@ -1,10 +1,11 @@
 {
   "name": "live-demo",
-  "version": "0.15.0",
+  "version": "0.16.1",
   "private": true,
   "homepage": "/live-demo/",
   "devDependencies": {
-    "aws-sdk": "2.395.0"
+    "aws-sdk": "2.395.0",
+    "source-map-explorer": "1.6.0"
   },
   "dependencies": {
     "react": "16.7.0",
@@ -13,28 +14,29 @@
     "codemirror": "5.43.0",
     "codemirror-graphql": "0.8.3",
     "js-yaml": "3.12.1",
-    "graphql-code-generator": "0.15.0",
-    "graphql-codegen-flow": "0.15.0",
-    "graphql-codegen-flow-documents": "0.15.0",
-    "graphql-codegen-flow-resolvers": "0.15.0",
-    "graphql-codegen-typescript-common": "0.15.0",
-    "graphql-codegen-typescript-client": "0.15.0",
-    "graphql-codegen-typescript-server": "0.15.0",
-    "graphql-codegen-add": "0.15.0",
-    "graphql-codegen-time": "0.15.0",
-    "graphql-codegen-introspection": "0.15.0",
-    "graphql-codegen-schema-ast": "0.15.0",
-    "graphql-codegen-typescript-apollo-angular": "0.15.0",
-    "graphql-codegen-typescript-graphql-files-modules": "0.15.0",
-    "graphql-codegen-typescript-mongodb": "0.15.0",
-    "graphql-codegen-typescript-react-apollo": "0.15.0",
-    "graphql-codegen-typescript-resolvers": "0.15.0",
+    "graphql-code-generator": "0.16.1",
+    "graphql-codegen-flow": "0.16.1",
+    "graphql-codegen-flow-documents": "0.16.1",
+    "graphql-codegen-flow-resolvers": "0.16.1",
+    "graphql-codegen-typescript-common": "0.16.1",
+    "graphql-codegen-typescript-client": "0.16.1",
+    "graphql-codegen-typescript-server": "0.16.1",
+    "graphql-codegen-add": "0.16.1",
+    "graphql-codegen-time": "0.16.1",
+    "graphql-codegen-introspection": "0.16.1",
+    "graphql-codegen-schema-ast": "0.16.1",
+    "graphql-codegen-typescript-apollo-angular": "0.16.1",
+    "graphql-codegen-typescript-graphql-files-modules": "0.16.1",
+    "graphql-codegen-typescript-mongodb": "0.16.1",
+    "graphql-codegen-typescript-react-apollo": "0.16.1",
+    "graphql-codegen-typescript-resolvers": "0.16.1",
     "prettier": "1.16.3",
     "@material-ui/core": "3.9.1"
   },
   "scripts": {
+    "analyze": "source-map-explorer build/static/js/main.*",
     "start": "NODE_OPTIONS=--max_old_space_size=8192 react-scripts start",
-    "build": "NODE_OPTIONS=--max_old_space_size=8192 react-scripts build"
+    "build": "GENERATE_SOURCEMAP=false NODE_OPTIONS=--max_old_space_size=8192 react-scripts build"
   },
   "eslintConfig": {
     "extends": "react-app"
