@@ -1,6 +1,6 @@
 ---
 id: typescript-mongodb
-title: Typescript MongoDB
+title: TypeScript MongoDB
 ---
 
 This plugin would generate TypeScript types for MongoDB models, which makes it relevant for server-side development only. It uses GraphQL directives to declare the types you want to generate and use in your MongoDB backend.

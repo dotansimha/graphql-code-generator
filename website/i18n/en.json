@@ -26,11 +26,17 @@
       "getting-started/config-field": {
         "title": "`config` field"
       },
+      "getting-started/development-workflow": {
+        "title": "Development Workflow"
+      },
       "getting-started/documents-field": {
         "title": "`documents` field"
       },
       "getting-started/index": {
         "title": "What is GraphQL Code Generator?"
+      },
+      "getting-started/programmatic-usage": {
+        "title": "Programmatic Usage"
       },
       "getting-started/require-field": {
         "title": "`require` field"
@@ -65,6 +71,9 @@
       "plugins/index": {
         "title": "Available Plugins"
       },
+      "plugins/schema-ast": {
+        "title": "Schema AST"
+      },
       "plugins/time": {
         "title": "Time"
       },
@@ -81,7 +90,7 @@
         "title": "TypeScript GraphQL Files Modules"
       },
       "plugins/typescript-mongodb": {
-        "title": "Typescript MongoDB"
+        "title": "TypeScript MongoDB"
       },
       "plugins/typescript-react-apollo": {
         "title": "TypeScript React Apollo"

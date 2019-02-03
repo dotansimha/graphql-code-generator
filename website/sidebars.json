@@ -6,7 +6,9 @@
       "getting-started/schema-field",
       "getting-started/documents-field",
       "getting-started/config-field",
-      "getting-started/require-field"
+      "getting-started/require-field",
+      "getting-started/development-workflow",
+      "getting-started/programmatic-usage"
     ],
     "Plugins": [
       "plugins/index",
@@ -23,7 +25,8 @@
       "plugins/flow-documents",
       "plugins/fragment-matcher",
       "plugins/add",
-      "plugins/time"
+      "plugins/time",
+      "plugins/schema-ast"
     ],
     "Integrations": ["integrations/apollo-link-state", "integrations/create-react-app"],
     "Custom Code-Generator Plugins": [
