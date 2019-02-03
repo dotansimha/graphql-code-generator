@@ -47,7 +47,7 @@
   "dependencies": {
     "listr-update-renderer": "0.5.0",
     "change-case": "3.1.0",
-    "graphql-toolkit": "0.0.3",
+    "graphql-toolkit": "0.0.5",
     "@types/babylon": "6.16.4",
     "@types/is-glob": "4.0.0",
     "@types/prettier": "1.15.2",
