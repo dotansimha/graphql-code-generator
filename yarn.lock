@@ -5217,10 +5217,10 @@ flatten@^1.0.2:
   resolved "https://registry.yarnpkg.com/flatten/-/flatten-1.0.2.tgz#dae46a9d78fbe25292258cc1e780a41d95c03782"
   integrity sha1-2uRqnXj74lKSJYzB54CkHZXAN4I=
 
-flow-bin@0.90.0:
-  version "0.90.0"
-  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.90.0.tgz#733b6d29a8c8a22b9a5d273611d9a8402faf3445"
-  integrity sha512-/syDchjhLLL7nELK1ggyWJifGXuMCTz74kvkjR1t9DcmasMrilLl9qAAotsACcNb98etEEJpsCrvP7WL64kadw==
+flow-bin@0.92.0:
+  version "0.92.0"
+  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.92.0.tgz#f5bf3e808b17b480e067ac673829ca715a168bea"
+  integrity sha512-3ErXSAXZZlLV5/QPlaUDCWlDUXop1SiH32ifXL3SEiBwsmGbudCLim+HFVZfkegrn1nB4TcNSkMWtW8SnMPyAQ==
 
 flow-parser@0.91.0:
   version "0.91.0"
