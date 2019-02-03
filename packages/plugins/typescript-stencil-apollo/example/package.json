@@ -24,7 +24,7 @@
   "devDependencies": {
     "@stencil/core": "0.17.1",
     "@types/graphql": "14.0.5",
-    "graphql-code-generator": "0.16.0",
+    "graphql-code-generator": "0.16.1",
     "graphql-codegen-add": "0.16.0",
     "graphql-codegen-typescript-client": "0.16.0",
     "graphql-codegen-typescript-common": "0.16.0",
