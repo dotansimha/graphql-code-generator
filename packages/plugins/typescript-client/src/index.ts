@@ -7,7 +7,7 @@ import * as rootTemplate from './root.handlebars';
 import * as rootTemplatePick from './root-pick.handlebars';
 import * as selectionSet from './selection-set.handlebars';
 import * as selectionSetPick from './selection-set-pick.handlebars';
-import { shouldHavePrefix, fragments, convertedFieldType } from './helpers';
+import { shouldHavePrefix, fragments, convertedFieldType, mergeFragments } from './helpers';
 
 export interface TypeScriptClientConfig extends TypeScriptCommonConfig {
   noNamespaces?: boolean;
@@ -27,6 +27,7 @@ export const plugin: PluginFunction<TypeScriptClientConfig> = async (
   Handlebars.registerHelper('shouldHavePrefix', shouldHavePrefix);
   Handlebars.registerHelper('fragments', fragments(convert));
   Handlebars.registerHelper('convertedFieldType', convertedFieldType(convert));
+  Handlebars.registerHelper('mergeFragments', mergeFragments);
 
   const hbsContext = {
     ...templateContext,

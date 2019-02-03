@@ -1,10 +1,1 @@
-{{#if isArray}}({{/if}}
-{{#each fields}}
-    {{#if hasFields}}
-        { {{name}}: {{> selectionSetPick }} }
-    {{else}}
-        Pick<{{ convert ../raw 'typeNames' }},'{{name}}'>
-    {{/if}}
-    {{#unless @last}}&{{/unless}}
-{{/each}}
-{{#if isArray}})[]{{/if}}
+{{#if isArray}}({{/if}}{{#each fields}}{{#if hasFields}}{ {{name}}: {{> selectionSetPick }} }{{else}}Pick<{{ convert ../raw 'typeNames' }},'{{name}}'>{{/if}}{{#unless @last}} & {{/unless}}{{/each}}{{#if isArray}})[]{{/if}}

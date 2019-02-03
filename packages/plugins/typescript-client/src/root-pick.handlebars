@@ -12,7 +12,7 @@ export namespace {{ convert name 'typeNames' }} {
   export type {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}{{ convert operationType 'typeNames'}} = {{#if hasFields}} {
     {{#if @root.config.immutableTypes }}readonly {{/if}}__typename?: "{{ convert operationType 'typeNames' }}";
     {{#each fields }}
-    {{name}}: Maybe<{{> selectionSetPick }}>
+    {{#if @root.config.immutableTypes }}readonly {{/if}}{{name}}: Maybe<{{> selectionSetPick this=(mergeFragments this) }}>
     {{/each }}
   }
   {{/if}}

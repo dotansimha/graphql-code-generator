@@ -5,7 +5,8 @@ import {
   Operation,
   SelectionSetFragmentSpread,
   SelectionSetInlineFragment,
-  Fragment
+  Fragment,
+  SelectionSetFieldNode
 } from 'graphql-codegen-core';
 
 export function shouldHavePrefix(field: Field, options: Handlebars.HelperOptions) {
@@ -118,4 +119,63 @@ export function convertedFieldType(convert) {
 
     return new SafeString(getFieldType(field, realType, options));
   };
+}
+
+export function mergeFragments (obj: SelectionSetFieldNode, options: Handlebars.HelperOptions) {
+  const parseInlineFragment = (obj: SelectionSetFieldNode) => {
+    const { inlineFragments } = obj;
+    const fields = inlineFragments.map(({fields}) => fields);
+    const concatFields = obj.fields.concat(...fields);
+    const result = {...obj, fields: concatFields, hasFields: true, hasInlineFragments: false, inlineFragments: []};
+    return result;
+  };
+  const parseFragmentSpreadEntries = (obj: SelectionSetFragmentSpread, fragments: SelectionSetInlineFragment[]) => {
+    const [fragment] = fragments.filter(f => f.name === obj.fragmentName);
+    return fragment.fields;
+  };
+  const parseFragmentSpread = (obj: SelectionSetFieldNode, fragments: SelectionSetInlineFragment[]) => {
+    const { fragmentsSpread } = obj;
+    const fragmentFields = fragmentsSpread.map(fragmentSpread => parseFragmentSpreadEntries(fragmentSpread, fragments));
+    const concatFields = obj.fields.concat(...fragmentFields);
+    const result = {...obj, fields: concatFields, hasFields: true, hasFragmentsSpread: false, fragmentsSpread: []};
+    return result;
+
+  };
+  const parseFields = (fields: SelectionSetFieldNode[], index: number, fieldParsed: SelectionSetFieldNode | any) => {
+    const fieldsArr = [...fields[index].fields, ...fieldParsed.fields];
+    const fieldsParsed = Object.values(fieldsArr.reduce((acc, field) => {
+      acc[field.name] = field;
+      return acc;
+    }, {}));
+    fields[index] = {...fieldParsed, fields: fieldsParsed};
+  };
+
+  const mergeFragmentsFields = (fields: SelectionSetFieldNode[], fragments: SelectionSetInlineFragment[]) => {
+    fields.forEach((field: any, index) => {
+      if (field.hasFields) {
+        mergeFragmentsFields(field.fields, fragments);
+      }
+      if (field.hasInlineFragments) {
+        const fieldParsed = parseInlineFragment(field);
+        parseFields(fields, index, fieldParsed);
+      }
+      if (field.hasFragmentsSpread) {
+        const fieldParsed = parseFragmentSpread(field, fragments);
+        parseFields(fields, index, fieldParsed);
+      }
+    });
+    return fields;
+  };
+
+  const mergeFragmentsRoot = (obj: SelectionSetFieldNode, fragments: (SelectionSetFragmentSpread[] | SelectionSetInlineFragment[] | any)) => {
+    if (obj.hasFields) {
+      obj.fields = mergeFragmentsFields(obj.fields, fragments);
+    } else if (obj.hasInlineFragments) {
+      obj = parseInlineFragment(obj);
+    } else if (obj.hasFragmentsSpread) {
+      obj = parseFragmentSpread(obj, fragments);
+    }
+    return obj;
+  };
+  mergeFragmentsRoot(obj, options.data.root.fragments);
 }
