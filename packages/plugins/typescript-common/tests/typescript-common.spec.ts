@@ -496,6 +496,30 @@ describe('TypeScript Common', () => {
         }
       `);
     });
+    it('Should generate input type fields correctly when noNamespaces is true', async () => {
+      const content = await plugin(
+        schema,
+        [],
+        {
+          noNamespaces: true
+        },
+        {
+          outputFile: 'graphql.ts'
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+        export interface T {
+          f1?: Maybe<string>; 
+          f2: number; 
+          f3?: Maybe<(Maybe<string>)[]>; 
+          f4: (Maybe<string>)[]; 
+          f5: string[]; 
+          f6?: Maybe<string[]>; 
+          f7?: number;
+        }
+      `);
+    });
 
     it('Should generate input type fields correctly when immutableTypes is set', async () => {
       const content = await plugin(

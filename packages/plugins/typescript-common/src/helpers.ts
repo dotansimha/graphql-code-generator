@@ -69,7 +69,7 @@ export function getFieldType(field: Field, realType: string, options: Handlebars
 
     const dimension = field.dimensionOfArray + 1;
 
-    if (field.isNullableArray && !config.noNamespaces) {
+    if (field.isNullableArray) {
       result = useImmutable ? useMaybe(realType) : `(${useMaybe(realType)})`;
     }
 

@@ -494,7 +494,7 @@ describe('TypeScript Client', () => {
   
     export type MyFeedQuery = {
       __typename?: "Query";
-      feed: Maybe<MyFeedFeed[]>;
+      feed: Maybe<(Maybe<MyFeedFeed>)[]>;
     }
   
     export type MyFeedFeed = {
@@ -696,7 +696,7 @@ describe('TypeScript Client', () => {
     }
     export type MyFeedQuery = {
       __typename?: "Query";
-      feed: Maybe<MyFeedFeed[]>;
+      feed: Maybe<(Maybe<MyFeedFeed>)[]>;
     }
     export type MyFeedFeed = {
       __typename?: "Entry";
