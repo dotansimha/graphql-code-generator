@@ -4550,9 +4550,10 @@ flow-bin@0.92.0:
   version "0.92.0"
   resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.92.0.tgz#f5bf3e808b17b480e067ac673829ca715a168bea"
 
-flow-parser@0.92.0:
-  version "0.92.0"
-  resolved "https://registry.yarnpkg.com/flow-parser/-/flow-parser-0.92.0.tgz#bddbc1d262556ed9b3383899512f9f729304063f"
+flow-parser@0.92.1:
+  version "0.92.1"
+  resolved "https://registry.yarnpkg.com/flow-parser/-/flow-parser-0.92.1.tgz#c81fb52b202c7b1195f253bb01ac6dd2f5c15dfc"
+  integrity sha512-l6rlAGgMTTRYPOj5XUzbCeZB2bsK2cimPcoQD06YtQC2BI2wu9AhMQH+FkKV2Kd1Aa9EMNxVyF05QzNaiYdObQ==
 
 flush-write-stream@^1.0.0:
   version "1.0.3"
