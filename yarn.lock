@@ -967,7 +967,6 @@
 "@types/jest@23.3.14":
   version "23.3.14"
   resolved "https://registry.yarnpkg.com/@types/jest/-/jest-23.3.14.tgz#37daaf78069e7948520474c87b80092ea912520a"
-  integrity sha512-Q5hTcfdudEL2yOmluA1zaSyPbzWPmJ3XfSWeP3RyoYvS9hnje1ZyagrZOuQ6+1nQC1Gw+7gap3pLNL3xL6UBug==
 
 "@types/js-yaml@3.12.0":
   version "3.12.0"
@@ -1767,7 +1766,6 @@ awesome-typescript-loader@5.2.1:
 aws-sdk@2.396.0:
   version "2.396.0"
   resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.396.0.tgz#3c4cd63c1a07731bbbf1fb17ea6a77d47619ecfb"
-  integrity sha512-HZMt+LP68cC4m7re4ujOAhJD7xfu6okoLk4bD6ZssxV1pBZNlfaJ/6MbscCxsXEQvvlE558QfzN+x/FujH80Ig==
   dependencies:
     buffer "4.9.1"
     events "1.1.1"
@@ -4552,7 +4550,6 @@ flow-bin@0.92.0:
 flow-parser@0.92.1:
   version "0.92.1"
   resolved "https://registry.yarnpkg.com/flow-parser/-/flow-parser-0.92.1.tgz#c81fb52b202c7b1195f253bb01ac6dd2f5c15dfc"
-  integrity sha512-l6rlAGgMTTRYPOj5XUzbCeZB2bsK2cimPcoQD06YtQC2BI2wu9AhMQH+FkKV2Kd1Aa9EMNxVyF05QzNaiYdObQ==
 
 flush-write-stream@^1.0.0:
   version "1.0.3"
@@ -6744,10 +6741,6 @@ levn@^0.3.0, levn@~0.3.0:
   dependencies:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
-
-lightercollective@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/lightercollective/-/lightercollective-0.1.0.tgz#70df102c530dcb8d0ccabfe6175a8d00d5f61300"
 
 lint-staged@8.1.3:
   version "8.1.3"
@@ -10861,19 +10854,17 @@ webpack-cli@3.1.2:
     v8-compile-cache "^2.0.2"
     yargs "^12.0.2"
 
-webpack-cli@3.2.1:
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/webpack-cli/-/webpack-cli-3.2.1.tgz#779c696c82482491f0803907508db2e276ed3b61"
+webpack-cli@3.2.3:
+  version "3.2.3"
+  resolved "https://registry.yarnpkg.com/webpack-cli/-/webpack-cli-3.2.3.tgz#13653549adfd8ccd920ad7be1ef868bacc22e346"
   dependencies:
     chalk "^2.4.1"
     cross-spawn "^6.0.5"
     enhanced-resolve "^4.1.0"
     findup-sync "^2.0.0"
     global-modules "^1.0.0"
-    global-modules-path "^2.3.0"
     import-local "^2.0.0"
     interpret "^1.1.0"
-    lightercollective "^0.1.0"
     loader-utils "^1.1.0"
     supports-color "^5.5.0"
     v8-compile-cache "^2.0.2"
