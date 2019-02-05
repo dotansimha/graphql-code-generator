@@ -31,7 +31,7 @@
   },
   "devDependencies": {
     "@types/glob": "7.1.1",
-    "@types/jest": "23.3.13",
+    "@types/jest": "24.0.0",
     "@types/mkdirp": "0.5.2",
     "@types/node": "10.12.21",
     "@types/request": "2.48.1",
