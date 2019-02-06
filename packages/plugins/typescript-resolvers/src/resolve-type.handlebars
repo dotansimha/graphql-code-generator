@@ -5,7 +5,7 @@ export namespace {{ convert name 'typeNames'}}Resolvers {
   export interface {{#if @root.config.noNamespaces}}{{ convert name 'typeNames'}}{{/if}}Resolvers {
     __resolveType: {{#if @root.config.noNamespaces}}{{ convert name 'typeNames'}}{{/if}}ResolveType;
   }
-  export type {{#if @root.config.noNamespaces}}{{ convert name 'typeNames'}}{{/if}}ResolveType<R = {{{ getTypenames this }}}, Parent = {{{ getParentTypes this }}}, Context = {{{ getContext }}}> = TypeResolveFn<R, Parent, Context>;
+  export type {{#if @root.config.noNamespaces}}{{ convert name 'typeNames'}}{{/if}}ResolveType<R = {{{ getTypenames this }}}, Parent = {{{ getParentTypes this }}}, TContext = {{{ getContext }}}> = TypeResolveFn<R, Parent, TContext>;
   
 {{#unless @root.config.noNamespaces}}
 }
