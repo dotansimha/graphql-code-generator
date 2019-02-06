@@ -1,4 +1,4 @@
-import { Type } from 'graphql-codegen-core';
+import { Type, Interface } from 'graphql-codegen-core';
 import { pickMapper, parseMapper } from './mappers';
 
 interface Modules {
@@ -10,12 +10,13 @@ function extractVariable(type: string) {
   return m ? m[0] : type;
 }
 
-export function importMappers(types: Type[], options: Handlebars.HelperOptions) {
+export function importMappers(types: Type[], interfaces: Interface[], options: Handlebars.HelperOptions) {
   const config = options.data.root.config || {};
   const mappers = config.mappers || {};
   const defaultMapper: string | undefined = config.defaultMapper;
   const modules: Modules = {};
   const availableTypes = types.map(t => t.name);
+  const availableInterfaces = interfaces.map(iface => iface.name);
 
   if (defaultMapper) {
     const mapper = parseMapper(defaultMapper);
@@ -31,7 +32,7 @@ export function importMappers(types: Type[], options: Handlebars.HelperOptions) 
 
       // checks if mapper comes from a module
       // and if is used
-      if (mapper && mapper.isExternal && availableTypes.includes(type)) {
+      if (mapper && mapper.isExternal && (availableTypes.includes(type) || availableInterfaces.includes(type))) {
         const path = mapper.source;
         const variable = extractVariable(mapper.type);
 
