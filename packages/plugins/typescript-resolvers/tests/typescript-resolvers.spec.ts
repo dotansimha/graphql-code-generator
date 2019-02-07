@@ -1382,3 +1382,52 @@ describe('Resolvers', () => {
     });
   });
 });
+
+describe('And Interfaces should be imported when used in mapping', () => {
+  const testSchema = makeExecutableSchema({
+    typeDefs: `
+      type Query {
+        post: Post
+      }
+
+      type Post {
+        id: String
+        author: User
+      }
+
+      interface User {
+        id: String
+        name: String
+        post: Post
+      }
+
+      schema {
+        query: Query
+      }
+    `
+  });
+
+  it('should import interface mapping', async () => {
+    const content = await plugin(
+      testSchema,
+      [],
+      {
+        mappers: {
+          // it means that User type expects UserParent to be a parent
+          User: './interfaces#UserParent',
+          // it means that Post type expects UserParent to be a parent
+          Post: './interfaces#PostParent'
+        }
+      },
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
+
+    // import parents
+    // merge duplicates into single module
+    expect(content).toBeSimilarStringTo(`
+      import { UserParent, PostParent } from './interfaces';
+    `);
+  });
+});
