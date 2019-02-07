@@ -12,7 +12,7 @@
   "dependencies": {
     "change-case": "3.1.0",
     "common-tags": "1.8.0",
-    "handlebars": "4.0.12"
+    "handlebars": "4.1.0"
   },
   "devDependencies": {
     "@types/common-tags": "1.8.0",
