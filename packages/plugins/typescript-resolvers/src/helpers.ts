@@ -51,7 +51,7 @@ export const getFieldResolver = convert => (field: Field, type: Type, options: H
     resolver = 'Resolver';
   }
 
-  const generics: string[] = ['R', 'Parent', 'Context'];
+  const generics: string[] = ['R', 'Parent', 'TContext'];
 
   if (field.hasArguments) {
     const prefix = config.noNamespaces ? convert(type.name, 'typeNames') : '';

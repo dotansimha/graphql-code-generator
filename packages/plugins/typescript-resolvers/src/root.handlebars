@@ -4,35 +4,35 @@
 
 {{{ importContext }}}
 
-export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
+export type Resolver<Result, Parent = {}, TContext = {}, Args = {}> = (
   parent: Parent,
   args: Args,
-  context: Context,
+  context: TContext,
   info: GraphQLResolveInfo
 ) => Promise<Result> | Result;
 
-export interface ISubscriptionResolverObject<Result, Parent, Context, Args> {
+export interface ISubscriptionResolverObject<Result, Parent, TContext, Args> {
   subscribe<R = Result, P = Parent>(
     parent: P,
     args: Args,
-    context: Context,
+    context: TContext,
     info: GraphQLResolveInfo
   ): AsyncIterator<R | Result> | Promise<AsyncIterator<R | Result>>;
   resolve?<R = Result, P = Parent>(
     parent: P,
     args: Args,
-    context: Context,
+    context: TContext,
     info: GraphQLResolveInfo
   ): R | Result | Promise<R | Result>;
 }
 
-export type SubscriptionResolver<Result, Parent = {}, Context = {}, Args = {}> =
-  | ((...args: any[]) => ISubscriptionResolverObject<Result, Parent, Context, Args>)
-  | ISubscriptionResolverObject<Result, Parent, Context, Args>;
+export type SubscriptionResolver<Result, Parent = {}, TContext = {}, Args = {}> =
+  | ((...args: any[]) => ISubscriptionResolverObject<Result, Parent, TContext, Args>)
+  | ISubscriptionResolverObject<Result, Parent, TContext, Args>;
 
-export type TypeResolveFn<Types, Parent = {}, Context = {}> = (
+export type TypeResolveFn<Types, Parent = {}, TContext = {}> = (
   parent: Parent,
-  context: Context,
+  context: TContext,
   info: GraphQLResolveInfo
 ) => Maybe<Types>;
 
@@ -66,9 +66,9 @@ export type DirectiveResolverFn<TResult, TArgs = {}, TContext = {}> = (
 {{~> scalar}}
 {{/each}}
 
-export interface IResolvers<Context = {{{ getContext }}}> {
+export interface IResolvers<TContext = {{{ getContext }}}> {
   {{#each types}}
-    {{ convert name 'typeNames'}}{{#unless @root.config.strict}}?{{/unless}}: {{ convert name 'typeNames'}}Resolvers{{#unless @root.config.noNamespaces}}.Resolvers{{/unless}}<Context>;
+    {{ convert name 'typeNames'}}{{#unless @root.config.strict}}?{{/unless}}: {{ convert name 'typeNames'}}Resolvers{{#unless @root.config.noNamespaces}}.Resolvers{{/unless}}<TContext>;
   {{/each}}
   {{#each interfaces}}
     {{ convert name 'typeNames'}}{{#unless @root.config.strict}}?{{/unless}}: {{ convert name 'typeNames'}}Resolvers{{#unless @root.config.noNamespaces}}.Resolvers{{/unless}};
