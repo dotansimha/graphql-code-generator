@@ -11,6 +11,7 @@ export interface TypeScriptReactApolloConfig extends TypeScriptCommonConfig {
   noGraphqlTag?: boolean;
   noNamespaces?: boolean;
   noHOC?: boolean;
+  withHooks?: boolean;
 }
 
 export const plugin: PluginFunction<TypeScriptReactApolloConfig> = async (

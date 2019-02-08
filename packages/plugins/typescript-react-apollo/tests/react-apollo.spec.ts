@@ -464,4 +464,94 @@ describe('Components', () => {
     expect(content).not.toContain(`import * as React from 'react';`);
     expect(content).not.toContain(`import gql from 'graphql-tag';`);
   });
+
+  it('should import ReactApolloHooks dependencies', async () => {
+    const documents = gql`
+      query {
+        feed {
+          id
+          commentCount
+          repository {
+            full_name
+            html_url
+            owner {
+              avatar_url
+            }
+          }
+        }
+      }
+    `;
+
+    const content = await plugin(
+      schema,
+      [{ filePath: '', content: documents }],
+      { withHooks: true },
+      {
+        outputFile: 'graphql.tsx'
+      }
+    );
+
+    expect(content).toBeSimilarStringTo(`
+        import { 
+          useQuery as useApolloQuery, 
+          useMutation as useApolloMutation,
+          QueryHookOptions,
+          MutationHookOptions 
+        } from 'react-apollo-hooks';
+    `);
+  });
+
+  it('should generate Hooks', async () => {
+    const documents = gql`
+      query {
+        feed {
+          id
+          commentCount
+          repository {
+            full_name
+            html_url
+            owner {
+              avatar_url
+            }
+          }
+        }
+      }
+
+      mutation($name: String) {
+        submitRepository(repoFullName: $name)
+      }
+    `;
+
+    const content = await plugin(
+      schema,
+      [{ filePath: '', content: documents }],
+      { withHooks: true },
+      {
+        outputFile: 'graphql.tsx'
+      }
+    );
+
+    expect(content).toBeSimilarStringTo(`
+          export function useQuery(baseOptions?: QueryHookOptions<
+                Variables
+            >) {
+          return useApolloQuery<
+            Query, 
+            Variables
+          >(Document, baseOptions);
+        };
+    `);
+
+    expect(content).toBeSimilarStringTo(`
+          export function useMutation(baseOptions?: MutationHookOptions<
+                Mutation,
+                Variables
+            >) {
+          return useApolloMutation<
+            Mutation, 
+            Variables
+          >(Document, baseOptions);
+        };
+    `);
+  });
 });

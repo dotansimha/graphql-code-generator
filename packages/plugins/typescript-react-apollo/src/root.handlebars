@@ -2,6 +2,14 @@
 import * as ReactApollo from 'react-apollo';
 import * as React from 'react';
 
+{{#if @root.config.withHooks}}
+import { 
+    useQuery as useApolloQuery, 
+    useMutation as useApolloMutation,
+    QueryHookOptions,
+    MutationHookOptions 
+} from 'react-apollo-hooks';
+{{/if}}
 {{#unless @root.config.noGraphqlTag}}
 import gql from 'graphql-tag';
 {{/unless}}
@@ -43,6 +51,17 @@ export namespace {{convert name 'typeNames' }} {
         );
     };
     {{/unless}}
+    {{#if @root.config.withHooks}}
+    export function use{{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}{{convert operationType 'typeNames'}}(baseOptions?: {{convert operationType 'typeNames'}}HookOptions<
+            {{#ifCond operationType '===' 'mutation'}}{{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}{{convert operationType 'typeNames'}},
+            {{/ifCond}}{{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Variables
+        >) {
+        return useApollo{{convert operationType 'typeNames'}}<
+            {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}{{convert operationType 'typeNames'}},
+            {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Variables
+        >({{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Document, baseOptions);
+    };
+    {{/if}}
     {{#unless @root.config.noNamespaces}}
 }
     {{/unless}}
