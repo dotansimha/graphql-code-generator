@@ -1013,9 +1013,9 @@
   version "10.12.21"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.21.tgz#7e8a0c34cf29f4e17a36e9bd0ea72d45ba03908e"
 
-"@types/prettier@1.15.2":
-  version "1.15.2"
-  resolved "https://registry.yarnpkg.com/@types/prettier/-/prettier-1.15.2.tgz#91594ea7cb6f3b1f7ea69f32621246654c7cc231"
+"@types/prettier@1.16.0":
+  version "1.16.0"
+  resolved "https://registry.yarnpkg.com/@types/prettier/-/prettier-1.16.0.tgz#ee6190019ed78c41a22c3d8a2e7ebc4015e2e022"
 
 "@types/prop-types@*":
   version "15.5.8"
