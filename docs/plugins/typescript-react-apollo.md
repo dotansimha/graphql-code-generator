@@ -44,3 +44,15 @@ Or if you prefer:
 ```tsx
   const withTestData = Test.HOC(...);
 ```
+
+## Configuration
+
+#### `withHooks` (default value: `false`)
+
+This will cause the codegen to add React **Hooks** implementations, to be used in conjunction with [`react-apollo-hooks`](https://github.com/trojanowski/react-apollo-hooks). The generated code will wrap base `useQuery` and `useMutation` hooks with TypeScript typings.
+
+You can use the generated hook in your Functional Component like this:
+
+```tsx
+  const { data, loading, error } = Test.useQuery(...);
+```
