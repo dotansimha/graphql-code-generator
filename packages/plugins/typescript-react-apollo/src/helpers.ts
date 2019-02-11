@@ -117,7 +117,7 @@ export const toFragmentName = convert => (fragmentName: string, options: Handleb
   }
 };
 
-export const shouldOutputHook = (operation: Operation, options: Handlebars.HelperOptions): boolean => {
+export const shouldOutputHook = (operationType: string, options: Handlebars.HelperOptions): boolean => {
   const config = options.data.root.config || {};
-  return operation.operationType !== 'subscription' || config.withSubscriptionHooks;
+  return operationType !== 'subscription' || config.withSubscriptionHooks;
 };
