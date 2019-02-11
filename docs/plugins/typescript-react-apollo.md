@@ -54,5 +54,32 @@ This will cause the codegen to add React **Hooks** implementations, to be used i
 You can use the generated hook in your Functional Component like this:
 
 ```tsx
-  const { data, loading, error } = Test.useQuery(...);
+  const { data, loading, error } = Test.use(...);
 ```
+
+Or if you are using `noNamespaces` option:
+
+```tsx
+  const { data, loading, error } = useTest(...);
+```
+
+#### `withSubscriptionHooks` (default value: `false`)
+
+This will cause the codegen to add React **Hooks** even for _Subscriptions_. Since they are not included in the `react-apollo-hooks` package, the option
+is separated.
+
+In order to use this flag, you should add a `importUseSubscriptionFrom` option specifying the path (relative to generated file) where the `useSubscription` function may be found.
+
+For example if you have defined `useSubscription` in the `react-apollo-subscriptions.tsx` file, you can use:
+
+```yaml
+withHooks: true
+withSubscriptionHooks: true
+importUseSubscriptionFrom: './react-apollo-subscriptions'
+```
+
+> This feature is experimental. You can find an actual implementation [here](https://github.com/Urigo/WhatsApp-Clone-Client-React/blob/master/src/polyfills/react-apollo-hooks.ts) or from [this issue](https://github.com/trojanowski/react-apollo-hooks/pull/37) on `react-apollo-hooks`.
+
+#### `importUseSubscriptionFrom`
+
+See `withSubscriptionHooks`.

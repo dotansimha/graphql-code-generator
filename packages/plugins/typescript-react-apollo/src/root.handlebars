@@ -10,6 +10,12 @@ import {
     MutationHookOptions 
 } from 'react-apollo-hooks';
 {{/if}}
+{{#if @root.config.withSubscriptionHooks}}
+import { 
+    useSubscription as useApolloSubscription,
+    SubscriptionHookOptions
+} from '{{ @root.config.importUseSubscriptionFrom }}';
+{{/if}}
 {{#unless @root.config.noGraphqlTag}}
 import gql from 'graphql-tag';
 {{/unless}}
@@ -52,8 +58,9 @@ export namespace {{convert name 'typeNames' }} {
     };
     {{/unless}}
     {{#if @root.config.withHooks}}
-    export function use{{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}{{convert operationType 'typeNames'}}(baseOptions?: {{convert operationType 'typeNames'}}HookOptions<
-            {{#ifCond operationType '===' 'mutation'}}{{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}{{convert operationType 'typeNames'}},
+    {{#if (shouldOutputHook operationType) }}
+    export function use{{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}(baseOptions?: {{convert operationType 'typeNames'}}HookOptions<
+            {{#ifCond operationType '!==' 'query'}}{{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}{{convert operationType 'typeNames'}},
             {{/ifCond}}{{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Variables
         >) {
         return useApollo{{convert operationType 'typeNames'}}<
@@ -61,6 +68,7 @@ export namespace {{convert name 'typeNames' }} {
             {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Variables
         >({{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Document, baseOptions);
     };
+    {{/if}}
     {{/if}}
     {{#unless @root.config.noNamespaces}}
 }

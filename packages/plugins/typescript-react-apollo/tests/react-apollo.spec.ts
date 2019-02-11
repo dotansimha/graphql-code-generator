@@ -532,7 +532,7 @@ describe('Components', () => {
     );
 
     expect(content).toBeSimilarStringTo(`
-          export function useQuery(baseOptions?: QueryHookOptions<
+          export function use(baseOptions?: QueryHookOptions<
                 Variables
             >) {
           return useApolloQuery<
@@ -543,7 +543,7 @@ describe('Components', () => {
     `);
 
     expect(content).toBeSimilarStringTo(`
-          export function useMutation(baseOptions?: MutationHookOptions<
+          export function use(baseOptions?: MutationHookOptions<
                 Mutation,
                 Variables
             >) {
@@ -552,6 +552,49 @@ describe('Components', () => {
             Variables
           >(Document, baseOptions);
         };
+    `);
+  });
+
+  it('should generate Subscription Hooks if config is enabled', async () => {
+    const documents = gql`
+      subscription ListenToComments($name: String) {
+        commentAdded(repoFullName: $name) {
+          id
+        }
+      }
+    `;
+
+    const content = await plugin(
+      schema,
+      [{ filePath: '', content: documents }],
+      {
+        noNamespaces: true,
+        withHooks: true,
+        withSubscriptionHooks: true,
+        importUseSubscriptionFrom: './addons/ras'
+      },
+      {
+        outputFile: 'graphql.tsx'
+      }
+    );
+
+    expect(content).toBeSimilarStringTo(`
+          export function useListenToComments(baseOptions?: SubscriptionHookOptions<
+              ListenToCommentsSubscription,
+              ListenToCommentsVariables
+            >) {
+          return useApolloSubscription<
+            ListenToCommentsSubscription, 
+            ListenToCommentsVariables
+          >(ListenToCommentsDocument, baseOptions);
+        };
+    `);
+
+    expect(content).toBeSimilarStringTo(`
+      import { 
+          useSubscription as useApolloSubscription, 
+          SubscriptionHookOptions
+      } from './addons/ras';
     `);
   });
 });
