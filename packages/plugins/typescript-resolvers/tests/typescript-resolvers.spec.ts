@@ -12,6 +12,7 @@ describe('Resolvers', () => {
     typeDefs: `
       type Query {
         fieldTest: String
+        methodTest(value: [String]): [String]
       }
 
       schema {
@@ -74,6 +75,7 @@ describe('Resolvers', () => {
         export namespace QueryResolvers {
           export interface Resolvers<TContext = {}, TypeParent = {}> {
             fieldTest?: FieldTestResolver<Maybe<string>, TypeParent, TContext>;
+            methodTest?: MethodTestResolver<Maybe<Iterable<Maybe<string>>>, TypeParent, TContext>;
           }
         `);
   });
@@ -92,8 +94,13 @@ describe('Resolvers', () => {
         export namespace QueryResolvers {
           export interface Resolvers<TContext = {}, TypeParent = {}> {
             fieldTest?: FieldTestResolver<Maybe<string>, TypeParent, TContext>;
+            methodTest?: MethodTestResolver<Maybe<Iterable<Maybe<string>>>, TypeParent, TContext>;
           }
           export type FieldTestResolver<R = Maybe<string>, Parent = {}, TContext = {}> = Resolver<R, Parent, TContext>;
+          export type MethodTestResolver<R = Maybe<Iterable<Maybe<string>>>, Parent = {}, TContext = {}> = Resolver<R, Parent, TContext, MethodTestArgs>;
+          export interface MethodTestArgs {
+            value?: Maybe<(Maybe<string>)[]>;
+          }
         }
       `);
   });
@@ -1319,6 +1326,7 @@ describe('Resolvers', () => {
       export namespace QueryResolvers {
         export interface Resolvers<TContext = {}, TypeParent = {}> {
           fieldTest: FieldTestResolver<Maybe<string>, TypeParent, TContext>;
+          methodTest: MethodTestResolver<Maybe<Iterable<Maybe<string>>>, TypeParent, TContext>;
         }
     `);
   });

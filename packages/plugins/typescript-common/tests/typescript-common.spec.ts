@@ -435,7 +435,7 @@ describe('TypeScript Common', () => {
         `);
 
         expect(content).not.toBeSimilarStringTo(`
-          import { FoodEnum 
+          import { FoodEnum
         `);
 
         expect(content).not.toBeSimilarStringTo(`
@@ -486,12 +486,12 @@ describe('TypeScript Common', () => {
 
       expect(content).toBeSimilarStringTo(`
         export interface T {
-          f1?: Maybe<string>; 
-          f2: number; 
-          f3?: Maybe<(Maybe<string>)[]>; 
-          f4: (Maybe<string>)[]; 
-          f5: string[]; 
-          f6?: Maybe<string[]>; 
+          f1?: Maybe<string>;
+          f2: number;
+          f3?: Maybe<(Maybe<string>)[]>;
+          f4: (Maybe<string>)[];
+          f5: string[];
+          f6?: Maybe<string[]>;
           f7?: number;
         }
       `);
@@ -510,12 +510,12 @@ describe('TypeScript Common', () => {
 
       expect(content).toBeSimilarStringTo(`
         export interface T {
-          f1?: Maybe<string>; 
-          f2: number; 
-          f3?: Maybe<(Maybe<string>)[]>; 
-          f4: (Maybe<string>)[]; 
-          f5: string[]; 
-          f6?: Maybe<string[]>; 
+          f1?: Maybe<string>;
+          f2: number;
+          f3?: Maybe<(Maybe<string>)[]>;
+          f4: (Maybe<string>)[];
+          f5: string[];
+          f6?: Maybe<string[]>;
           f7?: number;
         }
       `);
@@ -533,8 +533,8 @@ describe('TypeScript Common', () => {
 
       expect(content).toBeSimilarStringTo(`
         export interface T {
-          readonly f1?: Maybe<string>; 
-          readonly f2: number; 
+          readonly f1?: Maybe<string>;
+          readonly f2: number;
           readonly f3?: Maybe<ReadonlyArray<Maybe<string>>>;
           readonly f4: ReadonlyArray<Maybe<string>>;
           readonly f5: ReadonlyArray<string>;
@@ -547,10 +547,10 @@ describe('TypeScript Common', () => {
     it('Should generate input type description', async () => {
       const content = await plugin(
         buildSchema(`
-      # inputTypeDesc 
+      # inputTypeDesc
       input T {
         f: String!
-      }  
+      }
       `),
         [],
         {},
@@ -562,7 +562,7 @@ describe('TypeScript Common', () => {
       expect(content).toBeSimilarStringTo(`
         /** inputTypeDesc */
         export interface T {
-          f: string; 
+          f: string;
         }
       `);
     });
@@ -579,12 +579,12 @@ describe('TypeScript Common', () => {
 
       expect(content).toBeSimilarStringTo(`
       export interface PreT {
-        f1?: Maybe<string>; 
-        f2: number; 
-        f3?:  Maybe<(Maybe<string>)[]>; 
-        f4: (Maybe<string>)[]; 
-        f5: string[]; 
-        f6?: Maybe<string[]>; 
+        f1?: Maybe<string>;
+        f2: number;
+        f3?:  Maybe<(Maybe<string>)[]>;
+        f4: (Maybe<string>)[];
+        f5: string[];
+        f6?: Maybe<string[]>;
         f7?: number;
       }
       `);
@@ -602,13 +602,13 @@ describe('TypeScript Common', () => {
 
       expect(content).toBeSimilarStringTo(`
       export interface T {
-        f1?: Maybe<boop>; 
-        f2: number; 
-        f3?: Maybe<(Maybe<boop>)[]>; 
-        f4: (Maybe<boop>)[]; 
-        f5: boop[]; 
+        f1?: Maybe<boop>;
+        f2: number;
+        f3?: Maybe<(Maybe<boop>)[]>;
+        f4: (Maybe<boop>)[];
+        f5: boop[];
         f6?: Maybe<boop[]>;
-        f7?: number; 
+        f7?: number;
       }
       `);
     });
@@ -621,7 +621,7 @@ describe('TypeScript Common', () => {
         type Query {
           fieldTest: [Date]
         }
-        
+
         scalar Date
       `),
         [],
@@ -642,7 +642,7 @@ describe('TypeScript Common', () => {
         type Query {
           fieldTest: [Date]
         }
-        
+
         scalar Date
       `),
         [],

@@ -20,14 +20,14 @@ export const getFieldType = convert => (field: Field, options: Handlebars.Helper
   const defaultMapper = useDefaultMapper(field, options);
 
   if (mapper) {
-    return fieldType(field, mapper.type, options);
+    return fieldType(field, mapper.type, options, true);
   }
 
   if (defaultMapper) {
-    return fieldType(field, defaultMapper.type, options);
+    return fieldType(field, defaultMapper.type, options, true);
   }
 
-  return convertedType(field, options, convert);
+  return convertedType(field, options, convert, undefined, true);
 };
 
 export const getFieldResolverName = (convert, config) => (name: string) => {

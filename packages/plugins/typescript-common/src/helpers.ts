@@ -56,7 +56,7 @@ export function getEnumValue(type: string, name: string, options: Handlebars.Hel
   }
 }
 
-export function getFieldType(field: Field, realType: string, options: Handlebars.HelperOptions) {
+export function getFieldType(field: Field, realType: string, options: Handlebars.HelperOptions, isReturn = false) {
   const config = options.data.root.config || {};
   const useImmutable = !!config.immutableTypes;
 
@@ -70,13 +70,15 @@ export function getFieldType(field: Field, realType: string, options: Handlebars
     const dimension = field.dimensionOfArray + 1;
 
     if (field.isNullableArray) {
-      result = useImmutable ? useMaybe(realType) : `(${useMaybe(realType)})`;
+      result = useMaybe(realType);
     }
 
-    if (useImmutable) {
+    if (isReturn) {
+      result = `${new Array(dimension).join('Iterable<')}${result}${new Array(dimension).join('>')}`;
+    } else if (useImmutable) {
       result = `${new Array(dimension).join('ReadonlyArray<')}${result}${new Array(dimension).join('>')}`;
     } else {
-      result = `${result}${new Array(dimension).join('[]')}`;
+      result = `${field.isNullableArray ? `(${result})` : result}${new Array(dimension).join('[]')}`;
     }
 
     if (!field.isRequired) {
@@ -122,12 +124,18 @@ export const getType = (convert: Function) => (type: Field, options: Handlebars.
   return new SafeString(result);
 };
 
-export function convertedType(type: Field, options: Handlebars.HelperOptions, convert, skipConversion = false) {
+export function convertedType(
+  type: Field,
+  options: Handlebars.HelperOptions,
+  convert,
+  skipConversion = false,
+  isReturn = false
+) {
   const baseType = type.type;
   const config = options.data.root.config || {};
   const realType =
     options.data.root.primitives[baseType] ||
     `${type.isScalar ? '' : config.interfacePrefix || ''}${skipConversion ? baseType : convert(baseType, 'typeNames')}`;
 
-  return getFieldType(type, realType, options);
+  return getFieldType(type, realType, options, isReturn);
 }
