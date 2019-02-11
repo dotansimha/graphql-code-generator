@@ -11,6 +11,7 @@ export interface TypeScriptReactApolloConfig extends TypeScriptCommonConfig {
   noGraphqlTag?: boolean;
   noNamespaces?: boolean;
   noHOC?: boolean;
+  noComponents?: boolean;
   withHooks?: boolean;
   withSubscriptionHooks?: boolean;
   importUseSubscriptionFrom?: string;

@@ -27,8 +27,9 @@ import gql from 'graphql-tag';
 {{#each operations }}
     {{#unless @root.config.noNamespaces}}
 export namespace {{convert name 'typeNames' }} {
-    {{/unless}}
+    {{/unless}}    
     export const {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Document = {{{ gql this }}};
+    {{#unless @root.config.noComponents}}
      export class {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Component extends React.Component<Partial<ReactApollo.{{ convert operationType 'typeNames' }}Props<{{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}{{ convert operationType 'typeNames' }}, {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Variables>>> {
         render(){
             return (
@@ -39,6 +40,7 @@ export namespace {{convert name 'typeNames' }} {
             );
         }
     }
+    {{/unless}}
     {{#unless @root.config.noHOC}}
     export type {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Props<TChildProps = any> = {{{propsType this}}} & TChildProps;
     {{#ifCond operationType '===' 'mutation'}}

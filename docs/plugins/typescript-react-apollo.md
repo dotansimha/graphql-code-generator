@@ -47,6 +47,14 @@ Or if you prefer:
 
 ## Configuration
 
+#### `noHOC` (default value: `false`)
+
+This will disable the higher order components generation.
+
+#### `noComponents` (default value: `false`)
+
+This will cause the code generator to _omit_ React **Components**. So, in case you are just using _hooks_, you can disable the Components setting this option to `true`.
+
 #### `withHooks` (default value: `false`)
 
 This will cause the codegen to add React **Hooks** implementations, to be used in conjunction with [`react-apollo-hooks`](https://github.com/trojanowski/react-apollo-hooks). The generated code will wrap base `useQuery` and `useMutation` hooks with TypeScript typings.
@@ -68,7 +76,7 @@ Or if you are using `noNamespaces` option:
 This will cause the codegen to add React **Hooks** even for _Subscriptions_. Since they are not included in the `react-apollo-hooks` package, the option
 is separated.
 
-In order to use this flag, you should add a `importUseSubscriptionFrom` option specifying the path (relative to generated file) where the `useSubscription` function may be found.
+In order to use this flag, you should add a `importUseSubscriptionFrom` option specifying the path (relative to generated file) where the `useSubscription` function and the `SubscriptionHookOptions<T, TVariables>` type may be found.
 
 For example if you have defined `useSubscription` in the `react-apollo-subscriptions.tsx` file, you can use:
 
