@@ -12,7 +12,7 @@
     "raw-loader": "1.0.0",
     "rimraf": "2.6.3",
     "ts-jest": "23.10.5",
-    "typescript": "3.3.1",
+    "typescript": "3.3.3",
     "webpack": "4.29.3",
     "webpack-cli": "3.2.3",
     "webpack-node-externals": "1.7.2"
