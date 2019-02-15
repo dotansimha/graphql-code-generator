@@ -84,7 +84,7 @@ export class DeclarationBlock {
       (this._block &&
         this._block
           .split('\n')
-          .map((item: string): string => `  +${item.substr(2)}`)
+          .map((item: string): string => `${' '.repeat(item.search(/\S|$/))}+${item.substr(item.search(/\S|$/))}`)
           .join('\n')) ||
       ''
     );

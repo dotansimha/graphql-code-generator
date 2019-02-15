@@ -8,7 +8,7 @@ import {
   NameNode
 } from 'graphql';
 import { DeclarationBlock, wrapWithSingleQuotes, indent, toPascalCase } from './utils';
-import { ScalarsMap, EnumValuesMap, FlowPluginConfig, plugin, OutputOptions } from './index';
+import { ScalarsMap, EnumValuesMap, FlowPluginConfig, OutputOptions } from './index';
 import { OperationVariablesToObject } from './variables-to-object';
 import {
   NonNullTypeNode,
