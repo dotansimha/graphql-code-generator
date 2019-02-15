@@ -10,6 +10,7 @@ import {
   GraphQLList,
   isListType
 } from 'graphql';
+import { OutputOptions } from './index';
 
 export function block(array) {
   return array && array.length !== 0 ? '{\n' + array.join('\n') + '\n}' : '';
@@ -35,6 +36,11 @@ export class DeclarationBlock {
   _content = null;
   _block = null;
   _nameGenerics = null;
+  _outputOptions = null;
+
+  constructor(outputOptions: OutputOptions) {
+    this._outputOptions = outputOptions;
+  }
 
   export(exp = true): DeclarationBlock {
     this._export = exp;
@@ -73,7 +79,21 @@ export class DeclarationBlock {
     return this;
   }
 
+  getFlowReadOnlyTypeBlock(): string {
+    return (
+      (this._block &&
+        this._block
+          .split('\n')
+          .map((item: string): string => `${' '.repeat(item.search(/\S|$/))}+${item.substr(item.search(/\S|$/))}`)
+          .join('\n')) ||
+      ''
+    );
+  }
+
   public get string(): string {
+    const useFlowExactObject: boolean = this._outputOptions.indexOf('useFlowExactObjects') > -1;
+    const useFlowReadOnlyTypes: boolean = this._outputOptions.indexOf('useFlowReadOnlyTypes') > -1;
+    const block: string = this._block && useFlowReadOnlyTypes ? this.getFlowReadOnlyTypeBlock() : this._block;
     let result = '';
 
     if (this._export) {
@@ -95,19 +115,19 @@ export class DeclarationBlock {
       result += this._kind + ' ' + name + extra;
     }
 
-    if (this._block) {
+    if (block) {
       if (this._content) {
         result += this._content;
       }
 
       if (this._methodName) {
         result += `${this._methodName}({
-${this._block}
+${block}
 })`;
       } else {
-        result += `{
-${this._block}
-}`;
+        result += `{${useFlowExactObject ? '|' : ''}
+${block}
+${useFlowExactObject ? '|' : ''}}`;
       }
     } else if (this._content) {
       result += this._content;

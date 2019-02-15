@@ -1,4 +1,5 @@
 import { PluginFunction, DocumentFile } from 'graphql-codegen-core';
+import { OutputOptions } from 'graphql-codegen-flow';
 import { visit, concatAST, GraphQLSchema } from 'graphql';
 import { FlowDocumentsVisitor } from './visitor';
 
@@ -7,6 +8,7 @@ export interface FlowDocumentsPluginConfig {
   skipTypename?: boolean;
   namingConvention?: string;
   typesPrefix?: string;
+  outputOptions?: OutputOptions;
 }
 
 export type ScalarsMap = { [name: string]: string };

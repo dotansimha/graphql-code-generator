@@ -6,6 +6,7 @@ import {
   DeclarationBlock,
   BasicFlowVisitor,
   ScalarsMap,
+  OutputOptions,
   OperationVariablesToObject,
   getBaseTypeNode,
   wrapAstTypeWithModifiers
@@ -24,7 +25,7 @@ import {
   InputValueDefinitionNode
 } from 'graphql/language/ast';
 import { FlowResolversPluginConfig } from './index';
-import { GraphQLSchema, GraphQLObjectType } from 'graphql';
+import { GraphQLSchema, GraphQLObjectType, isOutputType } from 'graphql';
 
 export interface ParsedConfig {
   scalars: ScalarsMap;
@@ -32,6 +33,7 @@ export interface ParsedConfig {
   typesPrefix: string;
   contextType: string;
   mapping: { [typeName: string]: string };
+  outputOptions: OutputOptions;
 }
 
 export class FlowResolversVisitor implements BasicFlowVisitor {
@@ -44,7 +46,8 @@ export class FlowResolversVisitor implements BasicFlowVisitor {
       mapping: pluginConfig.mapping || {},
       scalars: { ...DEFAULT_SCALARS, ...(pluginConfig.scalars || {}) },
       convert: pluginConfig.namingConvention ? resolveExternalModuleAndFn(pluginConfig.namingConvention) : toPascalCase,
-      typesPrefix: pluginConfig.typesPrefix || ''
+      typesPrefix: pluginConfig.typesPrefix || '',
+      outputOptions: pluginConfig.outputOptions || []
     };
   }
 
@@ -57,7 +60,7 @@ export class FlowResolversVisitor implements BasicFlowVisitor {
   }
 
   public get rootResolver(): string {
-    return new DeclarationBlock()
+    return new DeclarationBlock(this._parsedConfig.outputOptions)
       .export()
       .asKind('interface')
       .withName(this.convertName('ResolversRoot'))
@@ -125,7 +128,7 @@ export class FlowResolversVisitor implements BasicFlowVisitor {
       this._parsedConfig.mapping[node.name as any] ||
       this._parsedConfig.scalars[node.name as any] ||
       this.convertName(node.name);
-    const block = new DeclarationBlock()
+    const block = new DeclarationBlock(this._parsedConfig.outputOptions)
       .export()
       .asKind('interface')
       .withName(name, `<Context = ${this._parsedConfig.contextType}, ParentType = ${type}>`)
@@ -145,7 +148,7 @@ export class FlowResolversVisitor implements BasicFlowVisitor {
 
     this._collectedResolvers[node.name as any] = name;
 
-    return new DeclarationBlock()
+    return new DeclarationBlock(this._parsedConfig.outputOptions)
       .export()
       .asKind('interface')
       .withName(name, `<Context = ${this._parsedConfig.contextType}, ParentType = ${node.name}>`)
@@ -155,7 +158,7 @@ export class FlowResolversVisitor implements BasicFlowVisitor {
   ScalarTypeDefinition = (node: ScalarTypeDefinitionNode): string => {
     const baseName = this.convertName(node.name);
 
-    return new DeclarationBlock()
+    return new DeclarationBlock(this._parsedConfig.outputOptions)
       .export()
       .asKind('interface')
       .withName(this.convertName(node.name + 'ScalarConfig'), ` extends GraphQLScalarTypeConfig<${baseName}, any>`)
@@ -169,7 +172,7 @@ export class FlowResolversVisitor implements BasicFlowVisitor {
       ? new OperationVariablesToObject<FlowResolversVisitor, InputValueDefinitionNode>(this, node.arguments).string
       : '';
 
-    return new DeclarationBlock()
+    return new DeclarationBlock(this._parsedConfig.outputOptions)
       .export()
       .asKind('type')
       .withName(directiveName, '<Result>')
@@ -192,7 +195,7 @@ export class FlowResolversVisitor implements BasicFlowVisitor {
       }
     }
 
-    return new DeclarationBlock()
+    return new DeclarationBlock(this._parsedConfig.outputOptions)
       .export()
       .asKind('interface')
       .withName(name, `<Context = ${this._parsedConfig.contextType}, ParentType = ${node.name}>`)
