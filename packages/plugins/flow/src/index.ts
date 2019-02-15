@@ -9,12 +9,14 @@ export * from './visitor';
 
 export type ScalarsMap = { [name: string]: string };
 export type EnumValuesMap = { [key: string]: string };
+export type OutputOptions = Array<'useFlowExactObjects' | 'useFlowReadOnlyTypes'>;
 
 export interface FlowPluginConfig {
   scalars?: ScalarsMap;
   enumValues?: EnumValuesMap;
   namingConvention?: string;
   typesPrefix?: string;
+  outputOptions?: OutputOptions;
 }
 
 export const plugin: PluginFunction<FlowPluginConfig> = (

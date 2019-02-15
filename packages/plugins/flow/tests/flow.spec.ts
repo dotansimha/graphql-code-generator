@@ -677,4 +677,48 @@ describe('Flow Plugin', () => {
       validateFlow(result.definitions[0]);
     });
   });
+
+  describe('Output options', () => {
+    it('Should respect flow option useFlowExactObjects', () => {
+      const ast = parse(`
+        interface MyInterface {
+          foo: String
+          bar: String!
+        }`);
+      const result = visit(ast, {
+        leave: new FlowVisitor({
+          outputOptions: ['useFlowExactObjects']
+        })
+      });
+
+      expect(result.definitions[0]).toBeSimilarStringTo(`
+        export type MyInterface = {|
+          foo?: ?string,
+          bar: string,
+        |};
+      `);
+      validateFlow(result.definitions[0]);
+    });
+
+    it('Should respect flow option useFlowReadOnlyTypes', () => {
+      const ast = parse(`
+        interface MyInterface {
+          foo: String
+          bar: String!
+        }`);
+      const result = visit(ast, {
+        leave: new FlowVisitor({
+          outputOptions: ['useFlowReadOnlyTypes']
+        })
+      });
+
+      expect(result.definitions[0]).toBeSimilarStringTo(`
+        export type MyInterface = {
+          +foo?: ?string,
+          +bar: string,
+        };
+      `);
+      validateFlow(result.definitions[0]);
+    });
+  });
 });
