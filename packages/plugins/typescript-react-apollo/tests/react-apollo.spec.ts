@@ -597,4 +597,43 @@ describe('Components', () => {
       } from './addons/ras';
     `);
   });
+
+  it('should skip import React and ReactApollo if only hooks are used', async () => {
+    const documents = gql`
+      query {
+        feed {
+          id
+          commentCount
+          repository {
+            full_name
+            html_url
+            owner {
+              avatar_url
+            }
+          }
+        }
+      }
+    `;
+
+    const content = await plugin(
+      schema,
+      [{ filePath: '', content: documents }],
+      {
+        withHooks: true,
+        noHOC: true,
+        noComponents: true
+      },
+      {
+        outputFile: 'graphql.tsx'
+      }
+    );
+
+    expect(content).not.toBeSimilarStringTo(`
+      import * as ReactApollo from 'react-apollo';
+    `);
+
+    expect(content).not.toBeSimilarStringTo(`
+      import * as React from 'react';
+    `);
+  });
 });

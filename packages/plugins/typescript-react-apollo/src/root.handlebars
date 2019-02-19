@@ -1,7 +1,8 @@
 {{#ifCond operations.length '!==' 0}}
+{{#unless @root.config.noComponents}}
 import * as ReactApollo from 'react-apollo';
 import * as React from 'react';
-
+{{/unless}}
 {{#if @root.config.withHooks}}
 import { 
     useQuery as useApolloQuery, 
