@@ -492,12 +492,7 @@ describe('Components', () => {
     );
 
     expect(content).toBeSimilarStringTo(`
-        import { 
-          useQuery as useApolloQuery, 
-          useMutation as useApolloMutation,
-          QueryHookOptions,
-          MutationHookOptions 
-        } from 'react-apollo-hooks';
+        import * as ReactApolloHooks from 'react-apollo-hooks';
     `);
   });
 
@@ -532,10 +527,10 @@ describe('Components', () => {
     );
 
     expect(content).toBeSimilarStringTo(`
-          export function use(baseOptions?: QueryHookOptions<
+          export function use(baseOptions?: ReactApolloHooks.QueryHookOptions<
                 Variables
             >) {
-          return useApolloQuery<
+          return ReactApolloHooks.useQuery<
             Query, 
             Variables
           >(Document, baseOptions);
@@ -543,11 +538,11 @@ describe('Components', () => {
     `);
 
     expect(content).toBeSimilarStringTo(`
-          export function use(baseOptions?: MutationHookOptions<
+          export function use(baseOptions?: ReactApolloHooks.MutationHookOptions<
                 Mutation,
                 Variables
             >) {
-          return useApolloMutation<
+          return ReactApolloHooks.useMutation<
             Mutation, 
             Variables
           >(Document, baseOptions);
@@ -579,11 +574,11 @@ describe('Components', () => {
     );
 
     expect(content).toBeSimilarStringTo(`
-          export function useListenToComments(baseOptions?: SubscriptionHookOptions<
+          export function useListenToComments(baseOptions?: SubscriptionHooks.SubscriptionHookOptions<
               ListenToCommentsSubscription,
               ListenToCommentsVariables
             >) {
-          return useApolloSubscription<
+          return SubscriptionHooks.useSubscription<
             ListenToCommentsSubscription, 
             ListenToCommentsVariables
           >(ListenToCommentsDocument, baseOptions);
@@ -591,10 +586,7 @@ describe('Components', () => {
     `);
 
     expect(content).toBeSimilarStringTo(`
-      import { 
-          useSubscription as useApolloSubscription, 
-          SubscriptionHookOptions
-      } from './addons/ras';
+      import * as SubscriptionHooks from './addons/ras';
     `);
   });
 
