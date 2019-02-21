@@ -678,7 +678,7 @@ describe('Flow Documents Plugin', () => {
       const result = visit(ast, {
         leave: new FlowDocumentsVisitor(schema, {
           skipTypename: true,
-          outputOptions: ['useFlowExactObjects']
+          useFlowExactObjects: true
         })
       });
 
@@ -705,7 +705,7 @@ describe('Flow Documents Plugin', () => {
       const result = visit(ast, {
         leave: new FlowDocumentsVisitor(schema, {
           skipTypename: true,
-          outputOptions: ['useFlowReadOnlyTypes']
+          useFlowReadOnlyTypes: true
         })
       });
 

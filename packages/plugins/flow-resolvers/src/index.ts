@@ -1,4 +1,4 @@
-import { ScalarsMap, OutputOptions } from 'graphql-codegen-flow';
+import { ScalarsMap } from 'graphql-codegen-flow';
 import { DocumentFile, PluginFunction } from 'graphql-codegen-core';
 import { isScalarType, parse, printSchema, visit, GraphQLSchema } from 'graphql';
 import { FlowResolversVisitor } from './visitor';
@@ -9,7 +9,8 @@ export interface FlowResolversPluginConfig {
   scalars?: ScalarsMap;
   namingConvention?: string;
   typesPrefix?: string;
-  outputOptions?: OutputOptions;
+  useFlowExactObjects?: boolean;
+  useFlowReadOnlyTypes?: boolean;
 }
 
 export const plugin: PluginFunction<FlowResolversPluginConfig> = (

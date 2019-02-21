@@ -10,7 +10,7 @@ import {
   GraphQLList,
   isListType
 } from 'graphql';
-import { OutputOptions } from './index';
+import { FlowPluginConfig } from './index';
 
 export function block(array) {
   return array && array.length !== 0 ? '{\n' + array.join('\n') + '\n}' : '';
@@ -36,10 +36,10 @@ export class DeclarationBlock {
   _content = null;
   _block = null;
   _nameGenerics = null;
-  _outputOptions = null;
+  _config = null;
 
-  constructor(outputOptions: OutputOptions) {
-    this._outputOptions = outputOptions;
+  constructor(config: FlowPluginConfig) {
+    this._config = config;
   }
 
   export(exp = true): DeclarationBlock {
@@ -91,8 +91,8 @@ export class DeclarationBlock {
   }
 
   public get string(): string {
-    const useFlowExactObject: boolean = this._outputOptions.indexOf('useFlowExactObjects') > -1;
-    const useFlowReadOnlyTypes: boolean = this._outputOptions.indexOf('useFlowReadOnlyTypes') > -1;
+    const useFlowExactObject: boolean = this._config.useFlowExactObjects || false;
+    const useFlowReadOnlyTypes: boolean = this._config.useFlowReadOnlyTypes || false;
     const block: string = this._block && useFlowReadOnlyTypes ? this.getFlowReadOnlyTypeBlock() : this._block;
     let result = '';
 

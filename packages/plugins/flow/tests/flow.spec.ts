@@ -687,7 +687,7 @@ describe('Flow Plugin', () => {
         }`);
       const result = visit(ast, {
         leave: new FlowVisitor({
-          outputOptions: ['useFlowExactObjects']
+          useFlowExactObjects: true
         })
       });
 
@@ -708,7 +708,7 @@ describe('Flow Plugin', () => {
         }`);
       const result = visit(ast, {
         leave: new FlowVisitor({
-          outputOptions: ['useFlowReadOnlyTypes']
+          useFlowReadOnlyTypes: true
         })
       });
 

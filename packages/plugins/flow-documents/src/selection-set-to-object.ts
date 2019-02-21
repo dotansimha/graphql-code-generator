@@ -107,10 +107,8 @@ export class SelectionSetToObject {
     }
 
     const { selections } = this._selectionSet;
-    const useFlowExactObject: boolean =
-      this._visitorInstance.parsedConfig.outputOptions.indexOf('useFlowExactObjects') > -1;
-    const useFlowReadOnlyTypes: boolean =
-      this._visitorInstance.parsedConfig.outputOptions.indexOf('useFlowReadOnlyTypes') > -1;
+    const useFlowExactObject: boolean = this._visitorInstance.parsedConfig.useFlowExactObjects;
+    const useFlowReadOnlyTypes: boolean = this._visitorInstance.parsedConfig.useFlowReadOnlyTypes;
 
     for (const selection of selections) {
       switch (selection.kind) {
