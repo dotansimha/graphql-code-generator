@@ -6,6 +6,7 @@ import * as Handlebars from 'handlebars';
 import * as rootTemplate from './root.handlebars';
 import { generateFragments, gql } from './helpers';
 import { extname } from 'path';
+import { pascalCase } from 'change-case';
 
 export interface TypeScriptStencilApolloConfig extends TypeScriptCommonConfig {
   noGraphqlTag?: boolean;
@@ -22,6 +23,7 @@ export const plugin: PluginFunction<TypeScriptStencilApolloConfig> = async (
   const flattenDocuments = flattenTypes(transformedDocuments);
   Handlebars.registerHelper('generateFragments', generateFragments(convert));
   Handlebars.registerHelper('gql', gql(convert));
+  Handlebars.registerHelper('toPascalCase', pascalCase);
 
   const hbsContext = {
     ...templateContext,

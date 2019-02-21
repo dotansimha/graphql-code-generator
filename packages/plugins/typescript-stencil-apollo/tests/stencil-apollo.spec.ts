@@ -91,7 +91,7 @@ describe('Components', () => {
       }
     `;
 
-    const content = await plugin(schema, [{ filePath: '', content: documents }], {});
+    const content = await plugin(schema, [{ filePath: '', content: documents }], {}, { outputFile: '' });
 
     expect(content).toBeSimilarStringTo(`
         export interface ComponentProps {

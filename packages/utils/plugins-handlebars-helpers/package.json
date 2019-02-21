@@ -12,11 +12,10 @@
   "dependencies": {
     "change-case": "3.1.0",
     "common-tags": "1.8.0",
-    "handlebars": "4.0.12"
+    "handlebars": "4.1.0"
   },
   "devDependencies": {
-    "@types/common-tags": "1.8.0",
-    "@types/handlebars": "4.0.40"
+    "@types/common-tags": "1.8.0"
   },
   "main": "./dist/index.js",
   "typings": "dist/index.d.ts",

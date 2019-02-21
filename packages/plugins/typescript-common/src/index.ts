@@ -60,12 +60,20 @@ export function initCommonTemplate(hbs, schema, config: TypeScriptCommonConfig) 
     };
   }
   const convert = (str: string, kind: keyof TypeScriptNamingConventionMap = 'default'): string => {
+    // Workaround for use-case as `{{ convert something }}` without specifying. The "kind" arguemnt
+    // will contains the "options" value of Handlebars, in this case we need to override it to be "default".
+
+    if (typeof kind === 'object') {
+      kind = 'default';
+    }
+
     const baseConvertFn =
       !namingConventionMap[kind] || namingConventionMap[kind] === 'keep'
         ? (str: string) => str
         : typeof namingConventionMap[kind] === 'string'
         ? resolveExternalModuleAndFn(namingConventionMap[kind] as string)
         : namingConventionMap[kind];
+
     if (str.charAt(0) === '_') {
       const after = str.replace(
         /^(_*)(.*)/,
