@@ -3939,6 +3939,10 @@ ee-first@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
 
+ejs@^2.6.1:
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/ejs/-/ejs-2.6.1.tgz#498ec0d495655abc6f23cd61868d926464071aa0"
+
 electron-to-chromium@^1.3.103, electron-to-chromium@^1.3.62:
   version "1.3.109"
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.109.tgz#ee04a55a5157a5580a5ea88e526b02c84a3a7bc8"
@@ -9571,10 +9575,6 @@ rimraf@2.6.3, rimraf@^2.2.8, rimraf@^2.5.4, rimraf@^2.6.1, rimraf@^2.6.2, rimraf
   dependencies:
     glob "^7.1.3"
 
-rimraf@~2.2.6:
-  version "2.2.8"
-  resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-2.2.8.tgz#e439be2aaee327321952730f99a8929e4fc50582"
-
 ripemd160@^2.0.0, ripemd160@^2.0.1:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/ripemd160/-/ripemd160-2.0.2.tgz#a1c1a6f624751577ba5d07914cbc92850585890c"
@@ -9949,18 +9949,18 @@ source-list-map@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/source-list-map/-/source-list-map-2.0.1.tgz#3993bd873bfc48479cca9ea3a547835c7c154b34"
 
-source-map-explorer@1.6.0:
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/source-map-explorer/-/source-map-explorer-1.6.0.tgz#46d6de167b7aff1c4f14d0ee3b6c8beca186f075"
+source-map-explorer@1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/source-map-explorer/-/source-map-explorer-1.7.0.tgz#d6ff79eaf11990223c35ced78788c09d6e864968"
   dependencies:
     btoa "^1.1.2"
     convert-source-map "^1.1.1"
     docopt "^0.6.2"
+    ejs "^2.6.1"
     glob "^7.1.2"
     opn "^5.3.0"
     source-map "^0.5.1"
-    temp "^0.8.3"
-    underscore "^1.8.3"
+    temp "^0.9.0"
 
 source-map-resolve@^0.5.0:
   version "0.5.2"
@@ -10381,12 +10381,11 @@ temp-write@^3.3.0:
     temp-dir "^1.0.0"
     uuid "^3.0.1"
 
-temp@^0.8.3:
-  version "0.8.3"
-  resolved "https://registry.yarnpkg.com/temp/-/temp-0.8.3.tgz#e0c6bc4d26b903124410e4fed81103014dfc1f59"
+temp@^0.9.0:
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/temp/-/temp-0.9.0.tgz#61391795a11bd9738d4c4d7f55f012cb8f55edaa"
   dependencies:
-    os-tmpdir "^1.0.0"
-    rimraf "~2.2.6"
+    rimraf "~2.6.2"
 
 tempfile@^1.1.1:
   version "1.1.1"
@@ -10715,10 +10714,6 @@ uglifyjs-webpack-plugin@^1.2.4:
     uglify-es "^3.3.4"
     webpack-sources "^1.1.0"
     worker-farm "^1.5.2"
-
-underscore@^1.8.3:
-  version "1.9.1"
-  resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.9.1.tgz#06dce34a0e68a7babc29b365b8e74b8925203961"
 
 unicode-canonical-property-names-ecmascript@^1.0.4:
   version "1.0.4"
