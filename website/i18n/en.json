@@ -71,6 +71,9 @@
       "plugins/index": {
         "title": "Available Plugins"
       },
+      "plugins/reason-client": {
+        "title": "Reason Client"
+      },
       "plugins/schema-ast": {
         "title": "Schema AST"
       },

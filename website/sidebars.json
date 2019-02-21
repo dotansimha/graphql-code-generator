@@ -26,7 +26,8 @@
       "plugins/fragment-matcher",
       "plugins/add",
       "plugins/time",
-      "plugins/schema-ast"
+      "plugins/schema-ast",
+      "plugins/reason-client"
     ],
     "Integrations": ["integrations/apollo-link-state", "integrations/create-react-app"],
     "Custom Code-Generator Plugins": [
