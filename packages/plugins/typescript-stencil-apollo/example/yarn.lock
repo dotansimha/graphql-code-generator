@@ -1169,15 +1169,28 @@ graphql-code-generator@0.16.1:
     request "2.88.0"
     valid-url "1.0.9"
 
-graphql-codegen-add@0.16.1:
-  version "0.16.1"
-  resolved "https://registry.yarnpkg.com/graphql-codegen-add/-/graphql-codegen-add-0.16.1.tgz#976fee807423520314bdcdec7176260d13cfc3f6"
+graphql-codegen-add@0.17.0:
+  version "0.17.0"
+  resolved "https://registry.yarnpkg.com/graphql-codegen-add/-/graphql-codegen-add-0.17.0.tgz#b7ceb77f5328ed25fc4c097023b61e05cd903f16"
   dependencies:
-    graphql-codegen-core "0.16.1"
+    graphql-codegen-core "0.17.0"
 
 graphql-codegen-core@0.16.1:
   version "0.16.1"
   resolved "https://registry.yarnpkg.com/graphql-codegen-core/-/graphql-codegen-core-0.16.1.tgz#3ffe1b901cc8dd5afa53006f17d9114f15a114f1"
+  dependencies:
+    chalk "2.4.2"
+    change-case "3.1.0"
+    common-tags "1.8.0"
+    graphql-tag "2.10.1"
+    graphql-toolkit "0.0.5"
+    graphql-tools "4.0.4"
+    ts-log "2.1.4"
+    winston "3.2.1"
+
+graphql-codegen-core@0.17.0:
+  version "0.17.0"
+  resolved "https://registry.yarnpkg.com/graphql-codegen-core/-/graphql-codegen-core-0.17.0.tgz#e0e23cf0e1138ff3e75912604cf04aae82aa27be"
   dependencies:
     chalk "2.4.2"
     change-case "3.1.0"
