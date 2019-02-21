@@ -1013,9 +1013,9 @@
   version "10.12.26"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.26.tgz#2dec19f1f7981c95cb54bab8f618ecb5dc983d0e"
 
-"@types/prettier@1.16.1":
-  version "1.16.1"
-  resolved "https://registry.yarnpkg.com/@types/prettier/-/prettier-1.16.1.tgz#328d1c9b54402e44119398bcb6a31b7bbd606d59"
+"@types/prettier@1.16.0":
+  version "1.16.0"
+  resolved "https://registry.yarnpkg.com/@types/prettier/-/prettier-1.16.0.tgz#ee6190019ed78c41a22c3d8a2e7ebc4015e2e022"
 
 "@types/prop-types@*":
   version "15.5.8"
@@ -1895,9 +1895,9 @@ awesome-typescript-loader@5.2.1:
     source-map-support "^0.5.3"
     webpack-log "^1.2.0"
 
-aws-sdk@2.401.0:
-  version "2.401.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.401.0.tgz#867fd36fa4fc789da8b7c1c387f4ca41b757af75"
+aws-sdk@2.407.0:
+  version "2.407.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.407.0.tgz#667d7f847e7f9b34cf57fa5e7c70e5f12637f72b"
   dependencies:
     buffer "4.9.1"
     events "1.1.1"
@@ -4696,6 +4696,10 @@ flat-cache@^1.2.1:
 flatten@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/flatten/-/flatten-1.0.2.tgz#dae46a9d78fbe25292258cc1e780a41d95c03782"
+
+flow-bin@0.92.1:
+  version "0.92.1"
+  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.92.1.tgz#32c136c07235f30c42dc0549a0790f370fad4070"
 
 flow-bin@0.93.0:
   version "0.93.0"
