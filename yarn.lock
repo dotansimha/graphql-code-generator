@@ -945,9 +945,9 @@
     "@types/minimatch" "*"
     "@types/node" "*"
 
-"@types/graphql@14.0.5":
-  version "14.0.5"
-  resolved "https://registry.yarnpkg.com/@types/graphql/-/graphql-14.0.5.tgz#e696292fd2d77dc168b5b791710f83463aa39abd"
+"@types/graphql@14.0.7":
+  version "14.0.7"
+  resolved "https://registry.yarnpkg.com/@types/graphql/-/graphql-14.0.7.tgz#daa09397220a68ce1cbb3f76a315ff3cd92312f6"
 
 "@types/handlebars@4.0.40":
   version "4.0.40"
