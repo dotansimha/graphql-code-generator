@@ -4,13 +4,17 @@ import { flattenTypes } from 'graphql-codegen-plugin-helpers';
 import { GraphQLSchema } from 'graphql';
 import * as Handlebars from 'handlebars';
 import * as rootTemplate from './root.handlebars';
-import { generateFragments, gql, propsType } from './helpers';
+import { generateFragments, gql, propsType, shouldOutputHook, hooksNamespace } from './helpers';
 import { extname } from 'path';
 
 export interface TypeScriptReactApolloConfig extends TypeScriptCommonConfig {
   noGraphqlTag?: boolean;
   noNamespaces?: boolean;
   noHOC?: boolean;
+  noComponents?: boolean;
+  withHooks?: boolean;
+  withSubscriptionHooks?: boolean;
+  importUseSubscriptionFrom?: string;
 }
 
 export const plugin: PluginFunction<TypeScriptReactApolloConfig> = async (
@@ -24,6 +28,8 @@ export const plugin: PluginFunction<TypeScriptReactApolloConfig> = async (
   Handlebars.registerHelper('generateFragments', generateFragments(convert));
   Handlebars.registerHelper('gql', gql(convert));
   Handlebars.registerHelper('propsType', propsType(convert));
+  Handlebars.registerHelper('shouldOutputHook', shouldOutputHook);
+  Handlebars.registerHelper('hooksNamespace', hooksNamespace);
 
   const hbsContext = {
     ...templateContext,
@@ -41,5 +47,11 @@ export const validate: PluginValidateFn<any> = async (
 ) => {
   if (extname(outputFile) !== '.tsx') {
     throw new Error(`Plugin "react-apollo" requires extension to be ".tsx"!`);
+  }
+
+  if (config.withSubscriptionHooks && !config.importUseSubscriptionFrom) {
+    throw new Error(
+      `Plugin "react-apollo" requires "importUseSubscriptionFrom" option if "withSubscriptionHooks" is enabled.`
+    );
   }
 };

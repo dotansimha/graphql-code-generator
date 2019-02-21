@@ -464,4 +464,168 @@ describe('Components', () => {
     expect(content).not.toContain(`import * as React from 'react';`);
     expect(content).not.toContain(`import gql from 'graphql-tag';`);
   });
+
+  it('should import ReactApolloHooks dependencies', async () => {
+    const documents = gql`
+      query {
+        feed {
+          id
+          commentCount
+          repository {
+            full_name
+            html_url
+            owner {
+              avatar_url
+            }
+          }
+        }
+      }
+    `;
+
+    const content = await plugin(
+      schema,
+      [{ filePath: '', content: documents }],
+      { withHooks: true },
+      {
+        outputFile: 'graphql.tsx'
+      }
+    );
+
+    expect(content).toBeSimilarStringTo(`
+        import * as ReactApolloHooks from 'react-apollo-hooks';
+    `);
+  });
+
+  it('should generate Hooks', async () => {
+    const documents = gql`
+      query {
+        feed {
+          id
+          commentCount
+          repository {
+            full_name
+            html_url
+            owner {
+              avatar_url
+            }
+          }
+        }
+      }
+
+      mutation($name: String) {
+        submitRepository(repoFullName: $name)
+      }
+    `;
+
+    const content = await plugin(
+      schema,
+      [{ filePath: '', content: documents }],
+      { withHooks: true },
+      {
+        outputFile: 'graphql.tsx'
+      }
+    );
+
+    expect(content).toBeSimilarStringTo(`
+          export function use(baseOptions?: ReactApolloHooks.QueryHookOptions<
+                Variables
+            >) {
+          return ReactApolloHooks.useQuery<
+            Query, 
+            Variables
+          >(Document, baseOptions);
+        };
+    `);
+
+    expect(content).toBeSimilarStringTo(`
+          export function use(baseOptions?: ReactApolloHooks.MutationHookOptions<
+                Mutation,
+                Variables
+            >) {
+          return ReactApolloHooks.useMutation<
+            Mutation, 
+            Variables
+          >(Document, baseOptions);
+        };
+    `);
+  });
+
+  it('should generate Subscription Hooks if config is enabled', async () => {
+    const documents = gql`
+      subscription ListenToComments($name: String) {
+        commentAdded(repoFullName: $name) {
+          id
+        }
+      }
+    `;
+
+    const content = await plugin(
+      schema,
+      [{ filePath: '', content: documents }],
+      {
+        noNamespaces: true,
+        withHooks: true,
+        withSubscriptionHooks: true,
+        importUseSubscriptionFrom: './addons/ras'
+      },
+      {
+        outputFile: 'graphql.tsx'
+      }
+    );
+
+    expect(content).toBeSimilarStringTo(`
+          export function useListenToComments(baseOptions?: SubscriptionHooks.SubscriptionHookOptions<
+              ListenToCommentsSubscription,
+              ListenToCommentsVariables
+            >) {
+          return SubscriptionHooks.useSubscription<
+            ListenToCommentsSubscription, 
+            ListenToCommentsVariables
+          >(ListenToCommentsDocument, baseOptions);
+        };
+    `);
+
+    expect(content).toBeSimilarStringTo(`
+      import * as SubscriptionHooks from './addons/ras';
+    `);
+  });
+
+  it('should skip import React and ReactApollo if only hooks are used', async () => {
+    const documents = gql`
+      query {
+        feed {
+          id
+          commentCount
+          repository {
+            full_name
+            html_url
+            owner {
+              avatar_url
+            }
+          }
+        }
+      }
+    `;
+
+    const content = await plugin(
+      schema,
+      [{ filePath: '', content: documents }],
+      {
+        withHooks: true,
+        noHOC: true,
+        noComponents: true
+      },
+      {
+        outputFile: 'graphql.tsx'
+      }
+    );
+
+    expect(content).not.toBeSimilarStringTo(`
+      import * as ReactApollo from 'react-apollo';
+    `);
+
+    expect(content).not.toBeSimilarStringTo(`
+      import * as React from 'react';
+    `);
+  });
 });

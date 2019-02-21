@@ -1,7 +1,14 @@
 {{#ifCond operations.length '!==' 0}}
+{{#unless @root.config.noComponents}}
 import * as ReactApollo from 'react-apollo';
 import * as React from 'react';
-
+{{/unless}}
+{{#if @root.config.withHooks}}
+import * as ReactApolloHooks from 'react-apollo-hooks';
+{{/if}}
+{{#if @root.config.withSubscriptionHooks}}
+import * as SubscriptionHooks from '{{ @root.config.importUseSubscriptionFrom }}';
+{{/if}}
 {{#unless @root.config.noGraphqlTag}}
 import gql from 'graphql-tag';
 {{/unless}}
@@ -13,8 +20,9 @@ import gql from 'graphql-tag';
 {{#each operations }}
     {{#unless @root.config.noNamespaces}}
 export namespace {{convert name 'typeNames' }} {
-    {{/unless}}
+    {{/unless}}    
     export const {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Document = {{{ gql this }}};
+    {{#unless @root.config.noComponents}}
      export class {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Component extends React.Component<Partial<ReactApollo.{{ convert operationType 'typeNames' }}Props<{{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}{{ convert operationType 'typeNames' }}, {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Variables>>> {
         render(){
             return (
@@ -25,6 +33,7 @@ export namespace {{convert name 'typeNames' }} {
             );
         }
     }
+    {{/unless}}
     {{#unless @root.config.noHOC}}
     export type {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Props<TChildProps = any> = {{{propsType this}}} & TChildProps;
     {{#ifCond operationType '===' 'mutation'}}
@@ -43,6 +52,19 @@ export namespace {{convert name 'typeNames' }} {
         );
     };
     {{/unless}}
+    {{#if @root.config.withHooks}}
+    {{#if (shouldOutputHook operationType) }}
+    export function use{{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}(baseOptions?: {{hooksNamespace operationType}}.{{convert operationType 'typeNames'}}HookOptions<
+            {{#ifCond operationType '!==' 'query'}}{{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}{{convert operationType 'typeNames'}},
+            {{/ifCond}}{{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Variables
+        >) {
+        return {{hooksNamespace operationType}}.use{{convert operationType 'typeNames'}}<
+            {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}{{convert operationType 'typeNames'}},
+            {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Variables
+        >({{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Document, baseOptions);
+    };
+    {{/if}}
+    {{/if}}
     {{#unless @root.config.noNamespaces}}
 }
     {{/unless}}

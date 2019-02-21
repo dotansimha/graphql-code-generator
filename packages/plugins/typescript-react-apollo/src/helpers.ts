@@ -116,3 +116,12 @@ export const toFragmentName = convert => (fragmentName: string, options: Handleb
     return convert(fragmentName, 'typeNames') + '.FragmentDoc';
   }
 };
+
+export const shouldOutputHook = (operationType: string, options: Handlebars.HelperOptions): boolean => {
+  const config = options.data.root.config || {};
+  return operationType !== 'subscription' || config.withSubscriptionHooks;
+};
+
+export const hooksNamespace = (operationType: string): string => {
+  return operationType === 'subscription' ? 'SubscriptionHooks' : 'ReactApolloHooks';
+};
