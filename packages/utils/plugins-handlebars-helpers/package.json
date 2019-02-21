@@ -15,8 +15,7 @@
     "handlebars": "4.1.0"
   },
   "devDependencies": {
-    "@types/common-tags": "1.8.0",
-    "@types/handlebars": "4.0.40"
+    "@types/common-tags": "1.8.0"
   },
   "main": "./dist/index.js",
   "typings": "dist/index.d.ts",
