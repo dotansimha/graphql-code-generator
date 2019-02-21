@@ -8,8 +8,8 @@
     "source-map-explorer": "1.6.0"
   },
   "dependencies": {
-    "react": "16.8.1",
-    "react-dom": "16.8.1",
+    "react": "16.8.2",
+    "react-dom": "16.8.2",
     "react-scripts-rewired": "2.1.3",
     "codemirror": "5.43.0",
     "codemirror-graphql": "0.8.3",
