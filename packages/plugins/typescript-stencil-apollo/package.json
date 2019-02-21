@@ -1,6 +1,6 @@
 {
   "name": "graphql-codegen-typescript-stencil-apollo",
-  "version": "0.16.1",
+  "version": "0.17.0",
   "description": "graphql-codegen-cli template for TypeScript typings for both client side and server side",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
@@ -15,15 +15,15 @@
   },
   "dependencies": {
     "dependency-graph": "^0.8.0",
-    "graphql-codegen-core": "0.16.1",
-    "graphql-codegen-plugin-helpers": "0.16.1",
-    "graphql-codegen-typescript-common": "0.16.1"
+    "graphql-codegen-core": "0.17.0",
+    "graphql-codegen-plugin-helpers": "0.17.0",
+    "graphql-codegen-typescript-common": "0.17.0"
   },
   "devDependencies": {
     "@types/node": "10.12.26",
-    "codegen-templates-scripts": "0.16.1",
+    "codegen-templates-scripts": "0.17.0",
     "graphql": "14.1.1",
-    "graphql-codegen-plugin-handlebars-helpers": "0.16.1"
+    "graphql-codegen-plugin-handlebars-helpers": "0.17.0"
   },
   "main": "./dist/index.js",
   "typings": "dist/index.d.ts",
