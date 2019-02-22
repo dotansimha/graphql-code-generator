@@ -531,7 +531,7 @@ describe('Components', () => {
                 Variables
             >) {
           return ReactApolloHooks.useQuery<
-            Query, 
+            Query,
             Variables
           >(Document, baseOptions);
         };
@@ -543,7 +543,7 @@ describe('Components', () => {
                 Variables
             >) {
           return ReactApolloHooks.useMutation<
-            Mutation, 
+            Mutation,
             Variables
           >(Document, baseOptions);
         };
@@ -579,7 +579,7 @@ describe('Components', () => {
               ListenToCommentsVariables
             >) {
           return SubscriptionHooks.useSubscription<
-            ListenToCommentsSubscription, 
+            ListenToCommentsSubscription,
             ListenToCommentsVariables
           >(ListenToCommentsDocument, baseOptions);
         };
@@ -588,6 +588,43 @@ describe('Components', () => {
     expect(content).toBeSimilarStringTo(`
       import * as SubscriptionHooks from './addons/ras';
     `);
+  });
+
+  it('should generate Subscription Hooks if config is enabled without importUseSubscriptionFrom', async () => {
+    const documents = gql`
+      subscription ListenToComments($name: String) {
+        commentAdded(repoFullName: $name) {
+          id
+        }
+      }
+    `;
+
+    const content = await plugin(
+      schema,
+      [{ filePath: '', content: documents }],
+      {
+        noNamespaces: true,
+        withHooks: true,
+        withSubscriptionHooks: true
+      },
+      {
+        outputFile: 'graphql.tsx'
+      }
+    );
+
+    expect(content).toBeSimilarStringTo(`
+          export function useListenToComments(baseOptions?: ReactApolloHooks.SubscriptionHookOptions<
+              ListenToCommentsSubscription,
+              ListenToCommentsVariables
+            >) {
+          return ReactApolloHooks.useSubscription<
+            ListenToCommentsSubscription,
+            ListenToCommentsVariables
+          >(ListenToCommentsDocument, baseOptions);
+        };
+    `);
+
+    expect(content).not.toBeSimilarStringTo(`import * as SubscriptionHooks`);
   });
 
   it('should skip import React and ReactApollo if only hooks are used', async () => {

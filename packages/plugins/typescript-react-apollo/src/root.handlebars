@@ -6,7 +6,7 @@ import * as React from 'react';
 {{#if @root.config.withHooks}}
 import * as ReactApolloHooks from 'react-apollo-hooks';
 {{/if}}
-{{#if @root.config.withSubscriptionHooks}}
+{{#if @root.config.importUseSubscriptionFrom}}
 import * as SubscriptionHooks from '{{ @root.config.importUseSubscriptionFrom }}';
 {{/if}}
 {{#unless @root.config.noGraphqlTag}}
@@ -20,7 +20,7 @@ import gql from 'graphql-tag';
 {{#each operations }}
     {{#unless @root.config.noNamespaces}}
 export namespace {{convert name 'typeNames' }} {
-    {{/unless}}    
+    {{/unless}}
     export const {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Document = {{{ gql this }}};
     {{#unless @root.config.noComponents}}
      export class {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Component extends React.Component<Partial<ReactApollo.{{ convert operationType 'typeNames' }}Props<{{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}{{ convert operationType 'typeNames' }}, {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Variables>>> {
@@ -39,9 +39,9 @@ export namespace {{convert name 'typeNames' }} {
     {{#ifCond operationType '===' 'mutation'}}
     export type {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}MutationFn = ReactApollo.MutationFn<{{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}{{convert operationType 'typeNames'}}, {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Variables>;
     {{/ifCond}}
-    export function {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}HOC<TProps, TChildProps = any>(operationOptions: 
+    export function {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}HOC<TProps, TChildProps = any>(operationOptions:
             ReactApollo.OperationOption<
-                TProps, 
+                TProps,
                 {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}{{convert operationType 'typeNames'}},
                 {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Variables,
                 {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Props<TChildProps>

@@ -48,10 +48,4 @@ export const validate: PluginValidateFn<any> = async (
   if (extname(outputFile) !== '.tsx') {
     throw new Error(`Plugin "react-apollo" requires extension to be ".tsx"!`);
   }
-
-  if (config.withSubscriptionHooks && !config.importUseSubscriptionFrom) {
-    throw new Error(
-      `Plugin "react-apollo" requires "importUseSubscriptionFrom" option if "withSubscriptionHooks" is enabled.`
-    );
-  }
 };

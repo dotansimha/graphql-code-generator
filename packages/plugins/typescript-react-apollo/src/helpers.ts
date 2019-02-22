@@ -9,7 +9,7 @@ export const propsType = convert => ({ name, operationType }: any, options: Hand
     return `
             Partial<
                 ReactApollo.MutateProps<
-                                        ${noNamespaces ? convert(name, 'typeNames') : ''}Mutation, 
+                                        ${noNamespaces ? convert(name, 'typeNames') : ''}Mutation,
                                         ${noNamespaces ? convert(name, 'typeNames') : ''}Variables
                                         >
                 >
@@ -18,7 +18,7 @@ export const propsType = convert => ({ name, operationType }: any, options: Hand
     return `
             Partial<
                 ReactApollo.DataProps<
-                                        ${noNamespaces ? convert(name, 'typeNames') : ''}${convert(operationType)}, 
+                                        ${noNamespaces ? convert(name, 'typeNames') : ''}${convert(operationType)},
                                         ${noNamespaces ? convert(name, 'typeNames') : ''}Variables
                                     >
                     >
@@ -122,6 +122,10 @@ export const shouldOutputHook = (operationType: string, options: Handlebars.Help
   return operationType !== 'subscription' || config.withSubscriptionHooks;
 };
 
-export const hooksNamespace = (operationType: string): string => {
-  return operationType === 'subscription' ? 'SubscriptionHooks' : 'ReactApolloHooks';
+export const hooksNamespace = (operationType: string, options: Handlebars.HelperOptions): string => {
+  const config = options.data.root.config || {};
+
+  return operationType === 'subscription' && config.importUseSubscriptionFrom
+    ? 'SubscriptionHooks'
+    : 'ReactApolloHooks';
 };
