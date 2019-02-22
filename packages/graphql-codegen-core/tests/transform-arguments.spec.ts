@@ -171,4 +171,28 @@ describe('resolveArguments', () => {
     expect(result[0].isArray).toBeFalsy();
     expect(result[0].isRequired).toBeFalsy();
   });
+
+  it('should resolve correctly when using arguments with default values', () => {
+    const parsed = parseAndBuildSchema<GraphQLObjectType>(
+      `
+      type A {
+        f1(offset: Int = 0, limit: Int = 50): String
+      }
+    `,
+      'A'
+    );
+
+    const args = parsed.getFields()['f1'].args;
+    const result = resolveArguments({} as any, args);
+
+    expect(result.length).toBe(2);
+
+    expect(result[0].name).toBe('offset');
+    expect(result[0].type).toBe('Int');
+    expect(result[0].hasDefaultValue).toBe(true);
+
+    expect(result[1].name).toBe('limit');
+    expect(result[1].type).toBe('Int');
+    expect(result[1].hasDefaultValue).toBe(true);
+  });
 });
