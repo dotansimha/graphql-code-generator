@@ -6,9 +6,6 @@ import * as React from 'react';
 {{#if @root.config.withHooks}}
 import * as ReactApolloHooks from 'react-apollo-hooks';
 {{/if}}
-{{#if @root.config.withSubscriptionHooks}}
-import * as SubscriptionHooks from '{{ @root.config.importUseSubscriptionFrom }}';
-{{/if}}
 {{#unless @root.config.noGraphqlTag}}
 import gql from 'graphql-tag';
 {{/unless}}
@@ -54,11 +51,11 @@ export namespace {{convert name 'typeNames' }} {
     {{/unless}}
     {{#if @root.config.withHooks}}
     {{#if (shouldOutputHook operationType) }}
-    export function use{{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}(baseOptions?: {{hooksNamespace operationType}}.{{convert operationType 'typeNames'}}HookOptions<
+    export function use{{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}(baseOptions?: ReactApolloHooks.{{convert operationType 'typeNames'}}HookOptions<
             {{#ifCond operationType '!==' 'query'}}{{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}{{convert operationType 'typeNames'}},
             {{/ifCond}}{{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Variables
         >) {
-        return {{hooksNamespace operationType}}.use{{convert operationType 'typeNames'}}<
+        return ReactApolloHooks.use{{convert operationType 'typeNames'}}<
             {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}{{convert operationType 'typeNames'}},
             {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Variables
         >({{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Document, baseOptions);
