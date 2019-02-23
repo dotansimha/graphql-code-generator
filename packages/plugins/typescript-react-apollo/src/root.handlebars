@@ -10,7 +10,7 @@ import * as ReactApolloHooks from 'react-apollo-hooks';
 import * as SubscriptionHooks from '{{ @root.config.importUseSubscriptionFrom }}';
 {{/if}}
 {{#unless @root.config.noGraphqlTag}}
-import gql from 'graphql-tag';
+{{{gqlImport this}}};
 {{/unless}}
 
 {{ blockCommentIf 'Fragments' fragments }}

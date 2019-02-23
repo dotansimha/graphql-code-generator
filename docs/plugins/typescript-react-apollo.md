@@ -47,6 +47,11 @@ Or if you prefer:
 
 ## Configuration
 
+#### `gqlImport` (default value: `import gql from 'graphql-tag'`)
+
+Customize from where will be `gql` imported. This is useful if you want to use eg. `graphql.macro` for inlining documents.
+Note that you need to write whole import line, eg. `import { gql } from 'graphql.macro'`.
+
 #### `noHOC` (default value: `false`)
 
 This will disable the higher order components generation.
