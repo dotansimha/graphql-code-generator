@@ -49,12 +49,11 @@ Or if you prefer:
 
 #### `gqlImport` (default value: `import gql from 'graphql-tag'`)
 
-Customize from where will be `gql` imported. This is useful if you want to use eg. `graphql.macro` for inlining documents.
-Note that you need to write whole import line, eg. `import { gql } from 'graphql.macro'`.
+Customize from which module will `gql` be imported from. This is useful if you want to use modules other than `graphql-tag`, e.g. `graphql.macro`. You can also control the imported GraphQL-parse function identifier e.g. `gatsby#graphql`, which will result in `import { graphql as gql } from 'gatsby'`.
 
 #### `noHOC` (default value: `false`)
 
-This will disable the higher order components generation.
+This will disable the higher order components generation.sable the higher order components generation by setting this option to `false`.
 
 #### `noComponents` (default value: `false`)
 
@@ -79,7 +78,3 @@ Or if you are using `noNamespaces` option:
 #### `hooksImportFrom` (default value: `react-apollo-hooks`)
 
 You can specify alternative module that is exports `useQuery` `useMutation` and `useSubscription`. This is useful for further abstraction of some common tasks (eg. error handling). Filepath relative to generated file can be also specified.
-
-#### `withSubscriptionHooks` (default value: `false`)
-
-This will cause the codegen to add React **Hooks** even for _Subscriptions_. 

@@ -4,16 +4,14 @@ import { flattenTypes } from 'graphql-codegen-plugin-helpers';
 import { GraphQLSchema } from 'graphql';
 import * as Handlebars from 'handlebars';
 import * as rootTemplate from './root.handlebars';
-import { generateFragments, gql, propsType, shouldOutputHook, hooksImport, gqlImport } from './helpers';
+import { generateFragments, gql, propsType, getImports } from './helpers';
 import { extname } from 'path';
 
 export interface TypeScriptReactApolloConfig extends TypeScriptCommonConfig {
-  noGraphqlTag?: boolean;
   noNamespaces?: boolean;
   noHOC?: boolean;
   noComponents?: boolean;
   withHooks?: boolean;
-  withSubscriptionHooks?: boolean;
   hooksImportFrom?: string;
   gqlImport?: string;
 }
@@ -21,7 +19,7 @@ export interface TypeScriptReactApolloConfig extends TypeScriptCommonConfig {
 export const plugin: PluginFunction<TypeScriptReactApolloConfig> = async (
   schema: GraphQLSchema,
   documents: DocumentFile[],
-  config: TypeScriptReactApolloConfig
+  config: TypeScriptReactApolloConfig = {}
 ): Promise<string> => {
   const { templateContext, convert } = initCommonTemplate(Handlebars, schema, config);
   const transformedDocuments = transformDocumentsFiles(schema, documents);
@@ -29,9 +27,7 @@ export const plugin: PluginFunction<TypeScriptReactApolloConfig> = async (
   Handlebars.registerHelper('generateFragments', generateFragments(convert));
   Handlebars.registerHelper('gql', gql(convert));
   Handlebars.registerHelper('propsType', propsType(convert));
-  Handlebars.registerHelper('shouldOutputHook', shouldOutputHook);
-  Handlebars.registerHelper('hooksImport', hooksImport);
-  Handlebars.registerHelper('gqlImport', gqlImport);
+  Handlebars.registerHelper('getImports', getImports);
 
   const hbsContext = {
     ...templateContext,
