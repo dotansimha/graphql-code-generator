@@ -125,3 +125,8 @@ export const shouldOutputHook = (operationType: string, options: Handlebars.Help
 export const hooksNamespace = (operationType: string): string => {
   return operationType === 'subscription' ? 'SubscriptionHooks' : 'ReactApolloHooks';
 };
+
+export const hooksImport = (operationType: string, options: Handlebars.HelperOptions): string => {
+  const config = options.data.root.config || {};
+  return config.hooksImportFrom || 'react-apollo-hooks';
+};

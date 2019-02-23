@@ -71,6 +71,10 @@ Or if you are using `noNamespaces` option:
   const { data, loading, error } = useTest(...);
 ```
 
+#### `hooksImportFrom` (default value: `react-apollo-hooks`)
+
+You can specify alternative module that is exports `useQuery` `useMutation` and `useSubscription`. This is useful for further abstraction of some common tasks (eg. error handling). Filepath relative to generated file can be also specified.
+
 #### `withSubscriptionHooks` (default value: `false`)
 
 This will cause the codegen to add React **Hooks** even for _Subscriptions_. Since they are not included in the `react-apollo-hooks` package, the option
