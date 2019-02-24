@@ -17,6 +17,8 @@ export interface ParsedDocumentsConfig {
   addTypename: boolean;
   convert: (str: string) => string;
   typesPrefix: string;
+  useFlowExactObjects: boolean;
+  useFlowReadOnlyTypes: boolean;
 }
 
 export class FlowDocumentsVisitor implements BasicFlowVisitor {
@@ -28,7 +30,9 @@ export class FlowDocumentsVisitor implements BasicFlowVisitor {
       addTypename: !pluginConfig.skipTypename,
       scalars: { ...DEFAULT_SCALARS, ...(pluginConfig.scalars || {}) },
       convert: pluginConfig.namingConvention ? resolveExternalModuleAndFn(pluginConfig.namingConvention) : toPascalCase,
-      typesPrefix: pluginConfig.typesPrefix || ''
+      typesPrefix: pluginConfig.typesPrefix || '',
+      useFlowExactObjects: pluginConfig.useFlowExactObjects || false,
+      useFlowReadOnlyTypes: pluginConfig.useFlowReadOnlyTypes || false
     };
   }
 
@@ -38,6 +42,10 @@ export class FlowDocumentsVisitor implements BasicFlowVisitor {
 
   public getFragmentName(nodeName: string): string {
     return this.convertName(nodeName + 'Fragment');
+  }
+
+  public get parsedConfig(): ParsedDocumentsConfig {
+    return this._parsedConfig;
   }
 
   public get schema(): GraphQLSchema {
@@ -64,7 +72,7 @@ export class FlowDocumentsVisitor implements BasicFlowVisitor {
     const fragmentRootType = this._schema.getType(node.typeCondition.name.value) as GraphQLObjectType;
     const selectionSet = new SelectionSetToObject(this, fragmentRootType, node.selectionSet);
 
-    return new DeclarationBlock()
+    return new DeclarationBlock(this._parsedConfig)
       .export()
       .asKind('type')
       .withName(this.getFragmentName(node.name.value))
@@ -80,7 +88,7 @@ export class FlowDocumentsVisitor implements BasicFlowVisitor {
       node.variableDefinitions
     );
 
-    const operationResult = new DeclarationBlock()
+    const operationResult = new DeclarationBlock(this._parsedConfig)
       .export()
       .asKind('type')
       .withName(this.convertName(name + pascalCase(node.operation)))
@@ -88,7 +96,7 @@ export class FlowDocumentsVisitor implements BasicFlowVisitor {
 
     const operationVariables = !visitedOperationVariables
       ? null
-      : new DeclarationBlock()
+      : new DeclarationBlock(this._parsedConfig)
           .export()
           .asKind('type')
           .withName(this.convertName(name + pascalCase(node.operation) + 'Variables'))

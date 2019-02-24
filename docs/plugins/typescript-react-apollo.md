@@ -47,6 +47,11 @@ Or if you prefer:
 
 ## Configuration
 
+#### `gqlImport` (default value: `import gql from 'graphql-tag'`)
+
+Customize from where will be `gql` imported. This is useful if you want to use eg. `graphql.macro` for inlining documents.
+Note that you need to write whole import line, eg. `import { gql } from 'graphql.macro'`.
+
 #### `noHOC` (default value: `false`)
 
 This will disable the higher order components generation.
@@ -77,21 +82,4 @@ You can specify alternative module that is exports `useQuery` `useMutation` and 
 
 #### `withSubscriptionHooks` (default value: `false`)
 
-This will cause the codegen to add React **Hooks** even for _Subscriptions_. Since they are not included in the `react-apollo-hooks` package, the option
-is separated.
-
-In order to use this flag, you should add a `importUseSubscriptionFrom` option specifying the path (relative to generated file) where the `useSubscription` function and the `SubscriptionHookOptions<T, TVariables>` type may be found.
-
-For example if you have defined `useSubscription` in the `react-apollo-subscriptions.tsx` file, you can use:
-
-```yaml
-withHooks: true
-withSubscriptionHooks: true
-importUseSubscriptionFrom: './react-apollo-subscriptions'
-```
-
-> This feature is experimental. You can find an actual implementation [here](https://github.com/Urigo/WhatsApp-Clone-Client-React/blob/master/src/polyfills/react-apollo-hooks.ts) or from [this issue](https://github.com/trojanowski/react-apollo-hooks/pull/37) on `react-apollo-hooks`.
-
-#### `importUseSubscriptionFrom`
-
-See `withSubscriptionHooks`.
+This will cause the codegen to add React **Hooks** even for _Subscriptions_. 

@@ -12,7 +12,7 @@ export function resolveArguments(schema: GraphQLSchema, args: GraphQLArgument[])
       const namedType = getNamedType(arg.type);
       const indicators = resolveTypeIndicators(namedType);
       const directives = getDirectives(schema, arg);
-      const hasDefaultValue = !!arg.defaultValue;
+      const hasDefaultValue = arg.defaultValue != null;
 
       debugLog(`[resolveArguments] resolving argument ${arg.name} of type ${type.name}...`);
 

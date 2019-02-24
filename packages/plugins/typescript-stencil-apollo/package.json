@@ -20,7 +20,7 @@
     "graphql-codegen-typescript-common": "0.17.0"
   },
   "devDependencies": {
-    "@types/node": "10.12.26",
+    "@types/node": "10.12.27",
     "codegen-templates-scripts": "0.17.0",
     "graphql": "14.1.1",
     "graphql-codegen-plugin-handlebars-helpers": "0.17.0"

@@ -465,6 +465,27 @@ describe('Components', () => {
     expect(content).not.toContain(`import gql from 'graphql-tag';`);
   });
 
+  it(`should use gql import from gqlImport config option`, async () => {
+    const documents = gql`
+      query {
+        feed {
+          id
+        }
+      }
+    `;
+
+    const content = await plugin(
+      schema,
+      [{ filePath: '', content: documents }],
+      { gqlImport: 'import { gql } from graphql.macro' },
+      {
+        outputFile: 'graphql.tsx'
+      }
+    );
+
+    expect(content).toContain(`import { gql } from graphql.macro;`);
+  });
+
   it('should import ReactApolloHooks dependencies', async () => {
     const documents = gql`
       query {
@@ -597,7 +618,6 @@ describe('Components', () => {
         noNamespaces: true,
         withHooks: true,
         withSubscriptionHooks: true,
-        importUseSubscriptionFrom: './addons/ras'
       },
       {
         outputFile: 'graphql.tsx'
@@ -605,19 +625,15 @@ describe('Components', () => {
     );
 
     expect(content).toBeSimilarStringTo(`
-          export function useListenToComments(baseOptions?: SubscriptionHooks.SubscriptionHookOptions<
+          export function useListenToComments(baseOptions?: ReactApolloHooks.SubscriptionHookOptions<
               ListenToCommentsSubscription,
               ListenToCommentsVariables
             >) {
-          return SubscriptionHooks.useSubscription<
+          return ReactApolloHooks.useSubscription<
             ListenToCommentsSubscription, 
             ListenToCommentsVariables
           >(ListenToCommentsDocument, baseOptions);
         };
-    `);
-
-    expect(content).toBeSimilarStringTo(`
-      import * as SubscriptionHooks from './addons/ras';
     `);
   });
 

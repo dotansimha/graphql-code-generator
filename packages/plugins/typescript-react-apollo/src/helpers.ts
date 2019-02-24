@@ -122,8 +122,9 @@ export const shouldOutputHook = (operationType: string, options: Handlebars.Help
   return operationType !== 'subscription' || config.withSubscriptionHooks;
 };
 
-export const hooksNamespace = (operationType: string): string => {
-  return operationType === 'subscription' ? 'SubscriptionHooks' : 'ReactApolloHooks';
+export const gqlImport = (operationType: string, options: Handlebars.HelperOptions): string => {
+  const config = options.data.root.config || {};
+  return config.gqlImport || 'import gql from \'graphql-tag\'';
 };
 
 export const hooksImport = (operationType: string, options: Handlebars.HelperOptions): string => {
