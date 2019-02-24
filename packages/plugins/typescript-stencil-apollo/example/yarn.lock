@@ -2588,9 +2588,9 @@ stealthy-require@^1.1.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/stealthy-require/-/stealthy-require-1.1.1.tgz#35b09875b4ff49f26a777e509b3090a3226bf24b"
 
-stencil-apollo@0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/stencil-apollo/-/stencil-apollo-0.0.1.tgz#612fa241811575c623a92cf6a98264df306b35dd"
+stencil-apollo@0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/stencil-apollo/-/stencil-apollo-0.0.2.tgz#4cf4ac6a188b8068a4bad15c6f3a9bb07fd4102b"
 
 string-width@^1.0.1:
   version "1.0.2"
