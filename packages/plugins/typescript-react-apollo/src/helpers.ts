@@ -119,7 +119,7 @@ export const toFragmentName = convert => (fragmentName: string, options: Handleb
 
 export const gqlImport = (operationType: string, options: Handlebars.HelperOptions): string => {
   const config = options.data.root.config || {};
-  return config.gqlImport || "import gql from 'graphql-tag'";
+  return config.gqlImport || 'import gql from \'graphql-tag\'';
 };
 
 export const getImports = (options: Handlebars.HelperOptions) => {
@@ -134,4 +134,5 @@ export const getImports = (options: Handlebars.HelperOptions) => {
   if (config.withHooks) {
     imports += typeof config.withHooks === 'string' ? config.withHooks : 'react-apollo-hooks';
   }
+  return imports;
 };
