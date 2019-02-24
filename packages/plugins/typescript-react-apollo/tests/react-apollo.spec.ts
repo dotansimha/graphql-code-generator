@@ -571,7 +571,7 @@ describe('Components', () => {
     `);
   });
 
-  it('should generate Subscription Hooks if config is enabled', async () => {
+  it('should generate Subscription Hooks', async () => {
     const documents = gql`
       subscription ListenToComments($name: String) {
         commentAdded(repoFullName: $name) {
@@ -585,8 +585,7 @@ describe('Components', () => {
       [{ filePath: '', content: documents }],
       {
         noNamespaces: true,
-        withHooks: true,
-        withSubscriptionHooks: true,
+        withHooks: true
       },
       {
         outputFile: 'graphql.tsx'
@@ -628,8 +627,8 @@ describe('Components', () => {
       [{ filePath: '', content: documents }],
       {
         withHooks: true,
-        noHOC: true,
-        noComponents: true
+        withHOC: false,
+        withComponents: false
       },
       {
         outputFile: 'graphql.tsx'
@@ -642,6 +641,36 @@ describe('Components', () => {
 
     expect(content).not.toBeSimilarStringTo(`
       import * as React from 'react';
+    `);
+  });
+  it('should import ReactApolloHooks from hooksImportFrom config option', async () => {
+    const documents = gql`
+      query {
+        feed {
+          id
+          commentCount
+          repository {
+            full_name
+            html_url
+            owner {
+              avatar_url
+            }
+          }
+        }
+      }
+    `;
+
+    const content = await plugin(
+      schema,
+      [{ filePath: '', content: documents }],
+      { withHooks: 'custom-apollo-hooks' },
+      {
+        outputFile: 'graphql.tsx'
+      }
+    );
+
+    expect(content).toBeSimilarStringTo(`
+        import * as ReactApolloHooks from 'custom-apollo-hooks';
     `);
   });
 });

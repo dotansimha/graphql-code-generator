@@ -1,11 +1,5 @@
 {{#ifCond operations.length '!==' 0}}
-{{#unless @root.config.noComponents}}
-import * as ReactApollo from 'react-apollo';
-import * as React from 'react';
-{{/unless}}
-{{#if @root.config.withHooks}}
-import * as ReactApolloHooks from 'react-apollo-hooks';
-{{/if}}
+{{{getImports}}}
 {{#unless @root.config.noGraphqlTag}}
 {{{gqlImport this}}};
 {{/unless}}
@@ -19,7 +13,7 @@ import * as ReactApolloHooks from 'react-apollo-hooks';
 export namespace {{convert name 'typeNames' }} {
     {{/unless}}    
     export const {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Document = {{{ gql this }}};
-    {{#unless @root.config.noComponents}}
+    {{#if @root.config.withComponents}}
      export class {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Component extends React.Component<Partial<ReactApollo.{{ convert operationType 'typeNames' }}Props<{{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}{{ convert operationType 'typeNames' }}, {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Variables>>> {
         render(){
             return (
@@ -30,8 +24,8 @@ export namespace {{convert name 'typeNames' }} {
             );
         }
     }
-    {{/unless}}
-    {{#unless @root.config.noHOC}}
+    {{/if}}
+    {{#if @root.config.withHOC}}
     export type {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Props<TChildProps = any> = {{{propsType this}}} & TChildProps;
     {{#ifCond operationType '===' 'mutation'}}
     export type {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}MutationFn = ReactApollo.MutationFn<{{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}{{convert operationType 'typeNames'}}, {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Variables>;
@@ -48,9 +42,8 @@ export namespace {{convert name 'typeNames' }} {
             operationOptions
         );
     };
-    {{/unless}}
+    {{/if}}
     {{#if @root.config.withHooks}}
-    {{#if (shouldOutputHook operationType) }}
     export function use{{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}(baseOptions?: ReactApolloHooks.{{convert operationType 'typeNames'}}HookOptions<
             {{#ifCond operationType '!==' 'query'}}{{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}{{convert operationType 'typeNames'}},
             {{/ifCond}}{{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Variables
@@ -60,7 +53,6 @@ export namespace {{convert name 'typeNames' }} {
             {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Variables
         >({{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Document, baseOptions);
     };
-    {{/if}}
     {{/if}}
     {{#unless @root.config.noNamespaces}}
 }
