@@ -13,7 +13,7 @@
     "import-from": "2.1.0"
   },
   "devDependencies": {
-    "typescript": "3.3.3"
+    "typescript": "3.3.3333"
   },
   "main": "./dist/index.js",
   "typings": "dist/index.d.ts",
