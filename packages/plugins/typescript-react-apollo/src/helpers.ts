@@ -121,3 +121,8 @@ export const shouldOutputHook = (operationType: string, options: Handlebars.Help
   const config = options.data.root.config || {};
   return operationType !== 'subscription' || config.withSubscriptionHooks;
 };
+
+export const gqlImport = (operationType: string, options: Handlebars.HelperOptions): string => {
+  const config = options.data.root.config || {};
+  return config.gqlImport || 'import gql from \'graphql-tag\'';
+};

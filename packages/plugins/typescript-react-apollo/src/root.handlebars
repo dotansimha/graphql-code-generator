@@ -7,7 +7,7 @@ import * as React from 'react';
 import * as ReactApolloHooks from 'react-apollo-hooks';
 {{/if}}
 {{#unless @root.config.noGraphqlTag}}
-import gql from 'graphql-tag';
+{{{gqlImport this}}};
 {{/unless}}
 
 {{ blockCommentIf 'Fragments' fragments }}
