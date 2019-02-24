@@ -7,6 +7,8 @@ export interface FlowDocumentsPluginConfig {
   skipTypename?: boolean;
   namingConvention?: string;
   typesPrefix?: string;
+  useFlowExactObjects?: boolean;
+  useFlowReadOnlyTypes?: boolean;
 }
 
 export type ScalarsMap = { [name: string]: string };

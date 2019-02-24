@@ -15,6 +15,8 @@ export interface FlowPluginConfig {
   enumValues?: EnumValuesMap;
   namingConvention?: string;
   typesPrefix?: string;
+  useFlowExactObjects?: boolean;
+  useFlowReadOnlyTypes?: boolean;
 }
 
 export const plugin: PluginFunction<FlowPluginConfig> = (

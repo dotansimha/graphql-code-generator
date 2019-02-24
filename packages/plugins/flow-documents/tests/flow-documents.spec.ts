@@ -660,4 +660,60 @@ describe('Flow Documents Plugin', () => {
       validateFlow(result.definitions[0]);
     });
   });
+
+  describe('Output options', () => {
+    it('Should respect flow option useFlowExactObjects', () => {
+      const ast = parse(`
+        query currentUser {
+          me {
+            id
+            username
+            role
+            profile {
+              age
+            }
+          }
+        }
+      `);
+      const result = visit(ast, {
+        leave: new FlowDocumentsVisitor(schema, {
+          skipTypename: true,
+          useFlowExactObjects: true
+        })
+      });
+
+      expect(result.definitions[0]).toBeSimilarStringTo(
+        `export type CurrentUserQuery = {| me: ?($Pick<User, {| id: *, username: *, role: * |}> & {| profile: ?$Pick<Profile, {| age: * |}> |}) |};`
+      );
+
+      validateFlow(result.definitions[0]);
+    });
+
+    it('Should respect flow option useFlowReadOnlyTypes', () => {
+      const ast = parse(`
+        query currentUser {
+          me {
+            id
+            username
+            role
+            profile {
+              age
+            }
+          }
+        }
+      `);
+      const result = visit(ast, {
+        leave: new FlowDocumentsVisitor(schema, {
+          skipTypename: true,
+          useFlowReadOnlyTypes: true
+        })
+      });
+
+      expect(result.definitions[0]).toBeSimilarStringTo(
+        `export type CurrentUserQuery = { +me: ?($Pick<User, { +id: *, +username: *, +role: * }> & { +profile: ?$Pick<Profile, { +age: * }> }) };`
+      );
+
+      validateFlow(result.definitions[0]);
+    });
+  });
 });

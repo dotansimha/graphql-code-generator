@@ -35,6 +35,8 @@ export interface ParsedConfig {
   enumValues: EnumValuesMap;
   convert: (str: string) => string;
   typesPrefix: string;
+  useFlowExactObjects: boolean;
+  useFlowReadOnlyTypes: boolean;
 }
 
 export interface BasicFlowVisitor {
@@ -50,7 +52,9 @@ export class FlowVisitor implements BasicFlowVisitor {
       scalars: { ...DEFAULT_SCALARS, ...(pluginConfig.scalars || {}) },
       enumValues: pluginConfig.enumValues || {},
       convert: pluginConfig.namingConvention ? resolveExternalModuleAndFn(pluginConfig.namingConvention) : toPascalCase,
-      typesPrefix: pluginConfig.typesPrefix || ''
+      typesPrefix: pluginConfig.typesPrefix || '',
+      useFlowExactObjects: pluginConfig.useFlowExactObjects || false,
+      useFlowReadOnlyTypes: pluginConfig.useFlowReadOnlyTypes || false
     };
   }
 
@@ -63,7 +67,7 @@ export class FlowVisitor implements BasicFlowVisitor {
   }
 
   ScalarTypeDefinition = (node: ScalarTypeDefinitionNode): string => {
-    return new DeclarationBlock()
+    return new DeclarationBlock(this._parsedConfig)
       .export()
       .asKind('type')
       .withName(this.convertName(node.name))
@@ -102,7 +106,7 @@ export class FlowVisitor implements BasicFlowVisitor {
   };
 
   InputObjectTypeDefinition = (node: InputObjectTypeDefinitionNode): string => {
-    return new DeclarationBlock()
+    return new DeclarationBlock(this._parsedConfig)
       .export()
       .asKind('type')
       .withName(this.convertName(node.name))
@@ -122,7 +126,7 @@ export class FlowVisitor implements BasicFlowVisitor {
   UnionTypeDefinition = (node: UnionTypeDefinitionNode): string => {
     const possibleTypes = node.types.map(name => ((name as any) as string).replace('?', '')).join(' | ');
 
-    return new DeclarationBlock()
+    return new DeclarationBlock(this._parsedConfig)
       .export()
       .asKind('type')
       .withName(this.convertName(node.name))
@@ -135,7 +139,7 @@ export class FlowVisitor implements BasicFlowVisitor {
         ? node.interfaces.map(name => ((name as any) as string).replace('?', '')).join(' & ') + ' & '
         : '';
 
-    const typeDefinition = new DeclarationBlock()
+    const typeDefinition = new DeclarationBlock(this._parsedConfig)
       .export()
       .asKind('type')
       .withName(this.convertName(node.name))
@@ -151,7 +155,7 @@ export class FlowVisitor implements BasicFlowVisitor {
         field.arguments
       );
 
-      return new DeclarationBlock()
+      return new DeclarationBlock(this._parsedConfig)
         .export()
         .asKind('type')
         .withName(this.convertName(name))
@@ -162,7 +166,7 @@ export class FlowVisitor implements BasicFlowVisitor {
   };
 
   InterfaceTypeDefinition = (node: InterfaceTypeDefinitionNode): string => {
-    return new DeclarationBlock()
+    return new DeclarationBlock(this._parsedConfig)
       .export()
       .asKind('type')
       .withName(this.convertName(node.name))
@@ -172,7 +176,7 @@ export class FlowVisitor implements BasicFlowVisitor {
   EnumTypeDefinition = (node: EnumTypeDefinitionNode): string => {
     const enumValuesName = `${node.name}Values`;
 
-    const enumValues = new DeclarationBlock()
+    const enumValues = new DeclarationBlock(this._parsedConfig)
       .export()
       .asKind('const')
       .withName(this.convertName(enumValuesName))
@@ -189,7 +193,7 @@ export class FlowVisitor implements BasicFlowVisitor {
           .join(', \n')
       ).string;
 
-    const enumType = new DeclarationBlock()
+    const enumType = new DeclarationBlock(this._parsedConfig)
       .export()
       .asKind('type')
       .withName(this.convertName(node.name))
