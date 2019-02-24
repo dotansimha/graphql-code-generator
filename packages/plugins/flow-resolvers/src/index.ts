@@ -9,6 +9,8 @@ export interface FlowResolversPluginConfig {
   scalars?: ScalarsMap;
   namingConvention?: string;
   typesPrefix?: string;
+  useFlowExactObjects?: boolean;
+  useFlowReadOnlyTypes?: boolean;
 }
 
 export const plugin: PluginFunction<FlowResolversPluginConfig> = (

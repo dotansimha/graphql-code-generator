@@ -107,6 +107,8 @@ export class SelectionSetToObject {
     }
 
     const { selections } = this._selectionSet;
+    const useFlowExactObject: boolean = this._visitorInstance.parsedConfig.useFlowExactObjects;
+    const useFlowReadOnlyTypes: boolean = this._visitorInstance.parsedConfig.useFlowReadOnlyTypes;
 
     for (const selection of selections) {
       switch (selection.kind) {
@@ -124,22 +126,28 @@ export class SelectionSetToObject {
 
     const typeName = this._visitorInstance.addTypename || this._queriedForTypename ? this._buildTypeNameField() : null;
     const baseFields = this._primitiveFields.length
-      ? `$Pick<${this._visitorInstance.convertName(this._parentSchemaType.name)}, { ${this._primitiveFields
-          .map(fieldName => `${fieldName}: *`)
-          .join(', ')} }>`
+      ? `$Pick<${this._visitorInstance.convertName(this._parentSchemaType.name)}, {${
+          useFlowExactObject ? '|' : ''
+        } ${this._primitiveFields.map(fieldName => `${useFlowReadOnlyTypes ? '+' : ''}${fieldName}: *`).join(', ')} ${
+          useFlowExactObject ? '|' : ''
+        }}>`
       : null;
     const linksFields = this._linksFields.length
-      ? `{ ${this._linksFields.map(field => `${field.alias || field.name}: ${field.selectionSet}`).join(', ')} }`
+      ? `{${useFlowExactObject ? '|' : ''} ${this._linksFields
+          .map(field => `${useFlowReadOnlyTypes ? '+' : ''}${field.alias || field.name}: ${field.selectionSet}`)
+          .join(', ')} ${useFlowExactObject ? '|' : ''}}`
       : null;
     const aliasBaseFields = this._primitiveAliasedFields.length
-      ? `{ ${this._primitiveAliasedFields
+      ? `{${useFlowExactObject ? '|' : ''} ${this._primitiveAliasedFields
           .map(
             aliasedField =>
-              `${aliasedField.alias}: $ElementType<${this._visitorInstance.convertName(
-                this._parentSchemaType.name
-              )}, '${aliasedField.fieldName}'>`
+              `${useFlowReadOnlyTypes ? '+' : ''}${
+                aliasedField.alias
+              }: $ElementType<${this._visitorInstance.convertName(this._parentSchemaType.name)}, '${
+                aliasedField.fieldName
+              }'>`
           )
-          .join(', ')} }`
+          .join(', ')} ${useFlowExactObject ? '|' : ''}}`
       : null;
     const inlineFragments = this.inlineFragmentsString;
     const fragmentSpreads = quoteIfNeeded(
