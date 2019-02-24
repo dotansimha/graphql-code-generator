@@ -477,13 +477,13 @@ describe('Components', () => {
     const content = await plugin(
       schema,
       [{ filePath: '', content: documents }],
-      { gqlImport: 'import { gql } from graphql.macro' },
+      { gqlImport: 'graphql.macro#gql' },
       {
         outputFile: 'graphql.tsx'
       }
     );
 
-    expect(content).toContain(`import { gql } from graphql.macro;`);
+    expect(content).toContain(`import { gql } from 'graphql.macro';`);
   });
 
   it('should import ReactApolloHooks dependencies', async () => {

@@ -117,22 +117,32 @@ export const toFragmentName = convert => (fragmentName: string, options: Handleb
   }
 };
 
-export const gqlImport = (operationType: string, options: Handlebars.HelperOptions): string => {
-  const config = options.data.root.config || {};
-  return config.gqlImport || 'import gql from \'graphql-tag\'';
+export const parseImport = (importStr: string) => {
+  const [moduleName, propName] = importStr.split('#');
+  return {
+    moduleName,
+    propName
+  };
 };
 
-export const getImports = (options: Handlebars.HelperOptions) => {
-  let imports = '';
+export const getImports = (operationType: string, options: Handlebars.HelperOptions) => {
   const config = options.data.root.config || {};
+  const gqlImport = parseImport(config.gqlImport || 'graphql-tag');
+  let imports = `
+    import ${
+      gqlImport.propName ? `{ ${gqlImport.propName === 'gql' ? 'gql' : `${gqlImport.propName} as gql`} }` : 'gql'
+    } from '${gqlImport.moduleName}';
+  `;
   if (config.withComponents) {
-    imports += `import * as React from 'react';`;
+    imports += `import * as React from 'react';\n`;
   }
   if (config.withComponents || config.withHOC) {
-    imports += `import * as ReactApollo from 'react-apollo';`;
+    imports += `import * as ReactApollo from 'react-apollo';\n`;
   }
   if (config.withHooks) {
-    imports += typeof config.withHooks === 'string' ? config.withHooks : 'react-apollo-hooks';
+    imports += `import * as ReactApolloHooks from '${
+      typeof config.withHooks === 'string' ? config.withHooks : 'react-apollo-hooks'
+    }';\n`;
   }
   return imports;
 };

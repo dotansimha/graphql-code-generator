@@ -1,8 +1,5 @@
 {{#ifCond operations.length '!==' 0}}
-{{{getImports}}}
-{{#unless @root.config.noGraphqlTag}}
-{{{gqlImport this}}};
-{{/unless}}
+{{{getImports this}}}
 
 {{ blockCommentIf 'Fragments' fragments }}
 {{{generateFragments fragments}}}
