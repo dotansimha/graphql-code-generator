@@ -83,7 +83,7 @@ export const gql = convert => (operation: Operation, options: Handlebars.HelperO
     ${includeFragments(transformFragments(convert)(operation.document, options))}
   `;
 
-  return config.noGraphqlTag ? JSON.stringify(gqlTag(doc)) : 'gql`' + doc + '`';
+  return config.gqlImport ? JSON.stringify(gqlTag(doc)) : 'gql`' + doc + '`';
 };
 
 function includeFragments(fragments: string[]): string {
