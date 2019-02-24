@@ -566,7 +566,6 @@ describe('Components', () => {
         noNamespaces: true,
         withHooks: true,
         withSubscriptionHooks: true,
-        importUseSubscriptionFrom: './addons/ras'
       },
       {
         outputFile: 'graphql.tsx'
@@ -574,19 +573,15 @@ describe('Components', () => {
     );
 
     expect(content).toBeSimilarStringTo(`
-          export function useListenToComments(baseOptions?: SubscriptionHooks.SubscriptionHookOptions<
+          export function useListenToComments(baseOptions?: ReactApolloHooks.SubscriptionHookOptions<
               ListenToCommentsSubscription,
               ListenToCommentsVariables
             >) {
-          return SubscriptionHooks.useSubscription<
+          return ReactApolloHooks.useSubscription<
             ListenToCommentsSubscription, 
             ListenToCommentsVariables
           >(ListenToCommentsDocument, baseOptions);
         };
-    `);
-
-    expect(content).toBeSimilarStringTo(`
-      import * as SubscriptionHooks from './addons/ras';
     `);
   });
 
