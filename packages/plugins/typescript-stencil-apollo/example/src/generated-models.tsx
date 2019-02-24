@@ -1,4 +1,13 @@
 /* tslint:disable */
+export type Maybe<T> = T | null;
+
+export enum CacheControlScope {
+  Public = 'PUBLIC',
+  Private = 'PRIVATE'
+}
+
+/** The `Upload` scalar type represents a file upload. */
+export type Upload = any;
 
 // ====================================================
 // Documents
@@ -10,7 +19,7 @@ export namespace AllPosts {
   export type Query = {
     __typename?: 'Query';
 
-    posts: (Posts | null)[] | null;
+    posts: Maybe<(Maybe<Posts>)[]>;
   };
 
   export type Posts = {
@@ -18,11 +27,11 @@ export namespace AllPosts {
 
     id: number;
 
-    title: string | null;
+    title: Maybe<string>;
 
-    votes: number | null;
+    votes: Maybe<number>;
 
-    author: Author | null;
+    author: Maybe<Author>;
   };
 
   export type Author = {
@@ -30,9 +39,9 @@ export namespace AllPosts {
 
     id: number;
 
-    firstName: string | null;
+    firstName: Maybe<string>;
 
-    lastName: string | null;
+    lastName: Maybe<string>;
   };
 }
 
@@ -44,7 +53,7 @@ export namespace UpvotePost {
   export type Mutation = {
     __typename?: 'Mutation';
 
-    upvotePost: UpvotePost | null;
+    upvotePost: Maybe<UpvotePost>;
   };
 
   export type UpvotePost = {
@@ -52,11 +61,9 @@ export namespace UpvotePost {
 
     id: number;
 
-    votes: number | null;
+    votes: Maybe<number>;
   };
 }
-
-import { FunctionalComponent } from '@stencil/core';
 
 import gql from 'graphql-tag';
 
@@ -83,13 +90,7 @@ export namespace AllPosts {
     variables?: Variables;
     onReady?: import('stencil-apollo/dist/types/components/apollo-query/types').OnQueryReadyFn<Query, Variables>;
   }
-  export const Component: FunctionalComponent<ComponentProps> = (props, children) => {
-    return (
-      <apollo-query query={Document} {...props}>
-        {children}
-      </apollo-query>
-    );
-  };
+  export const Component = (props: ComponentProps) => <apollo-query query={Document} {...props} />;
 }
 export namespace UpvotePost {
   export const Document = gql`
@@ -107,11 +108,5 @@ export namespace UpvotePost {
       Variables
     >;
   }
-  export const Component: FunctionalComponent<ComponentProps> = (props, children) => {
-    return (
-      <apollo-mutation mutation={Document} {...props}>
-        {children}
-      </apollo-mutation>
-    );
-  };
+  export const Component = (props: ComponentProps) => <apollo-mutation mutation={Document} {...props} />;
 }

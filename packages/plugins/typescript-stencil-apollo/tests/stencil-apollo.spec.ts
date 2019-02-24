@@ -28,10 +28,6 @@ describe('Components', () => {
     const content = await plugin(schema, [{ filePath: '', content: documents }], {});
 
     expect(content).toBeSimilarStringTo(`
-        import { FunctionalComponent } from '@stencil/core';
-      `);
-
-    expect(content).toBeSimilarStringTo(`
         import gql from 'graphql-tag';
       `);
   });
@@ -98,17 +94,8 @@ describe('Components', () => {
           variables ?: Variables;
           onReady ?: import('stencil-apollo/dist/types/components/apollo-query/types').OnQueryReadyFn<Query, Variables>;
       }
-      export const Component: FunctionalComponent<ComponentProps> = (props, children) => {
-          return (
-              <apollo-query
-              query={ Document }
-              {...props}
-              >
-                  {children}
-              </apollo-query>
-          );
-      }
-        `);
+      export const Component = (props: ComponentProps) => <apollo-query query={ Document } {...props} />;
+      `);
   });
 
   it('should generate Document variables for inline fragments', async () => {
@@ -355,7 +342,6 @@ describe('Components', () => {
   it(`should skip if there's no operations`, async () => {
     const content = await plugin(schema, [], { noNamespaces: true });
 
-    expect(content).not.toContain(`import { FunctionalComponent } from '@stencil/core';`);
     expect(content).not.toContain(`import gql from 'graphql-tag';`);
   });
 });

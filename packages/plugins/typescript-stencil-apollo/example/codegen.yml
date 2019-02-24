@@ -1,5 +1,5 @@
 overwrite: true
-schema: https://0vw9j9w0l5.lp.gql.zone/graphql
+schema: https://graphql-voter-app.herokuapp.com/
 documents: ./src/**/*.graphql
 generates:
   ./src/generated-models.tsx:

@@ -17,18 +17,17 @@
   },
   "dependencies": {
     "apollo-boost": "0.1.28",
-    "graphql": "14.1.1",
     "graphql-tag": "2.10.1",
-    "stencil-apollo": "0.0.1"
+    "stencil-apollo": "0.0.2"
   },
   "devDependencies": {
     "@stencil/core": "0.18.0",
     "@types/graphql": "14.0.7",
-    "graphql-code-generator": "0.16.1",
-    "graphql-codegen-add": "0.16.1",
-    "graphql-codegen-typescript-client": "0.16.1",
-    "graphql-codegen-typescript-common": "0.16.1",
-    "rollup-plugin-commonjs": "9.2.1"
+    "graphql-code-generator": "0.17.0",
+    "graphql-codegen-add": "0.17.0",
+    "graphql-codegen-typescript-client": "0.17.0",
+    "graphql-codegen-typescript-common": "0.17.0",
+    "graphql-codegen-typescript-stencil-apollo": "0.17.0"
   },
   "repository": {
     "type": "git",

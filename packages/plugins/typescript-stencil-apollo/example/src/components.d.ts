@@ -17,26 +17,15 @@ export namespace Components {
     first?: string;
     last?: string;
   }
-
-  interface MyComponent {
-    first: string;
-    last: string;
-  }
-  interface MyComponentAttributes extends StencilHTMLAttributes {
-    first?: string;
-    last?: string;
-  }
 }
 
 declare global {
   interface StencilElementInterfaces {
     MyComponentWithCodegen: Components.MyComponentWithCodegen;
-    MyComponent: Components.MyComponent;
   }
 
   interface StencilIntrinsicElements {
     'my-component-with-codegen': Components.MyComponentWithCodegenAttributes;
-    'my-component': Components.MyComponentAttributes;
   }
 
   interface HTMLMyComponentWithCodegenElement extends Components.MyComponentWithCodegen, HTMLStencilElement {}
@@ -45,20 +34,12 @@ declare global {
     new (): HTMLMyComponentWithCodegenElement;
   };
 
-  interface HTMLMyComponentElement extends Components.MyComponent, HTMLStencilElement {}
-  var HTMLMyComponentElement: {
-    prototype: HTMLMyComponentElement;
-    new (): HTMLMyComponentElement;
-  };
-
   interface HTMLElementTagNameMap {
     'my-component-with-codegen': HTMLMyComponentWithCodegenElement;
-    'my-component': HTMLMyComponentElement;
   }
 
   interface ElementTagNameMap {
     'my-component-with-codegen': HTMLMyComponentWithCodegenElement;
-    'my-component': HTMLMyComponentElement;
   }
 
   export namespace JSX {

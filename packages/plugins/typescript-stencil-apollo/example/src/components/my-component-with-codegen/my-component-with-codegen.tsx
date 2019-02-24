@@ -3,7 +3,7 @@ import ApolloClient from 'apollo-boost';
 import { UpvotePost, AllPosts } from '../../generated-models';
 
 const client = new ApolloClient({
-  uri: 'https://0vw9j9w0l5.lp.gql.zone/graphql'
+  uri: 'https://graphql-voter-app.herokuapp.com/'
 });
 
 @Component({
