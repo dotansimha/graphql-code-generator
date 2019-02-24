@@ -52,13 +52,13 @@ Or if you prefer:
 Customize from where will be `gql` imported. This is useful if you want to use eg. `graphql.macro` for inlining documents.
 Note that you need to write whole import line, eg. `import { gql } from 'graphql.macro'`.
 
-#### `noHOC` (default value: `false`)
+#### `withHOC` (default value: `true`)
 
-This will disable the higher order components generation.
+This will disable the higher order components generation by setting this option to `false`.
 
-#### `noComponents` (default value: `false`)
+#### `withComponents` (default value: `true`)
 
-This will cause the code generator to _omit_ React **Components**. So, in case you are just using _hooks_, you can disable the Components setting this option to `true`.
+This will cause the code generator to _omit_ React **Components**. So, in case you are just using _hooks_, you can disable the Components setting this option to `false`.
 
 #### `withHooks` (default value: `false`)
 
@@ -76,6 +76,4 @@ Or if you are using `noNamespaces` option:
   const { data, loading, error } = useTest(...);
 ```
 
-#### `withSubscriptionHooks` (default value: `false`)
-
-This will cause the codegen to add React **Hooks** even for _Subscriptions_. 
+You can specify alternative module that is exports `useQuery` `useMutation` and `useSubscription`. This is useful for further abstraction of some common tasks (eg. error handling). Filepath relative to generated file can be also specified. But if you provide only `true`, it will use `react-apollo-hooks` by default.

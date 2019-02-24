@@ -117,12 +117,21 @@ export const toFragmentName = convert => (fragmentName: string, options: Handleb
   }
 };
 
-export const shouldOutputHook = (operationType: string, options: Handlebars.HelperOptions): boolean => {
-  const config = options.data.root.config || {};
-  return operationType !== 'subscription' || config.withSubscriptionHooks;
-};
-
 export const gqlImport = (operationType: string, options: Handlebars.HelperOptions): string => {
   const config = options.data.root.config || {};
-  return config.gqlImport || 'import gql from \'graphql-tag\'';
+  return config.gqlImport || "import gql from 'graphql-tag'";
+};
+
+export const getImports = (options: Handlebars.HelperOptions) => {
+  let imports = '';
+  const config = options.data.root.config || {};
+  if (config.withComponents) {
+    imports += `import * as React from 'react';`;
+  }
+  if (config.withComponents || config.withHOC) {
+    imports += `import * as ReactApollo from 'react-apollo';`;
+  }
+  if (config.withHooks) {
+    imports += typeof config.withHooks === 'string' ? config.withHooks : 'react-apollo-hooks';
+  }
 };
