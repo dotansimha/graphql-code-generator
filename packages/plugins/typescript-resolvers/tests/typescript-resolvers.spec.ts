@@ -1230,23 +1230,23 @@ describe('Resolvers', () => {
     );
 
     expect(content).toBeSimilarStringTo(`
-      export interface IResolvers<TContext = {}> {
+      export type IResolvers<TContext = {}> = {
         Query?: QueryResolvers<TContext>;
         Post?: PostResolvers<TContext>;
         User?: UserResolvers<TContext>;
         Node?: NodeResolvers;
         PostOrUser?: PostOrUserResolvers;
         Date?: GraphQLScalarType;
-      }
+      } & { [typeName: string] : never };
     `);
 
     expect(content).toBeSimilarStringTo(`
-      export interface IDirectiveResolvers<Result> {
+      export interface IDirectiveResolvers<Result> = {
         modify?: ModifyDirectiveResolver<Result>;
         skip?: SkipDirectiveResolver<Result>;
         include?: IncludeDirectiveResolver<Result>;
         deprecated?: DeprecatedDirectiveResolver<Result>;
-      }
+      } & { [directiveName: string] : never };
     `);
   });
 
