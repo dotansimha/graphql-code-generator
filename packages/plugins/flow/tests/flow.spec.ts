@@ -6,6 +6,50 @@ import { validateFlow } from '../../flow-documents/tests/validate-flow';
 describe('Flow Plugin', () => {
   const SCALARS = {};
 
+  describe('Output options', () => {
+    it('Should respect flow option useFlowExactObjects', () => {
+      const ast = parse(`
+        interface MyInterface {
+          foo: String
+          bar: String!
+        }`);
+      const result = visit(ast, {
+        leave: new FlowVisitor({
+          useFlowExactObjects: true
+        })
+      });
+
+      expect(result.definitions[0]).toBeSimilarStringTo(`
+        export type MyInterface = {|
+          foo?: ?string,
+          bar: string,
+        |};
+      `);
+      validateFlow(result.definitions[0]);
+    });
+
+    it('Should respect flow option useFlowReadOnlyTypes', () => {
+      const ast = parse(`
+        interface MyInterface {
+          foo: String
+          bar: String!
+        }`);
+      const result = visit(ast, {
+        leave: new FlowVisitor({
+          useFlowReadOnlyTypes: true
+        })
+      });
+
+      expect(result.definitions[0]).toBeSimilarStringTo(`
+        export type MyInterface = {
+          +foo?: ?string,
+          +bar: string,
+        };
+      `);
+      validateFlow(result.definitions[0]);
+    });
+  });
+
   describe('Naming Convention & Types Prefix', () => {
     it('Should use custom namingConvention for type name and args typename', () => {
       const ast = parse(`type MyType { foo(a: String!, b: String, c: [String], d: [Int!]!): String }`);
