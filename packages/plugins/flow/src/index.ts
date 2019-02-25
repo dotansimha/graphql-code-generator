@@ -1,17 +1,12 @@
 import { DocumentFile, PluginFunction } from 'graphql-codegen-core';
 import { parse, printSchema, visit, GraphQLSchema } from 'graphql';
 import { FlowVisitor } from './visitor';
-import { ScalarsMap, EnumValuesMap } from 'graphql-codegen-visitor-plugin-common';
-
+import { RawConfig } from 'graphql-codegen-visitor-plugin-common';
 export { DEFAULT_SCALARS } from 'graphql-codegen-visitor-plugin-common/src/scalars';
 export * from 'graphql-codegen-visitor-plugin-common/src/variables-to-object';
 export * from './visitor';
 
-export interface FlowPluginConfig {
-  scalars?: ScalarsMap;
-  enumValues?: EnumValuesMap;
-  namingConvention?: string;
-  typesPrefix?: string;
+export interface FlowPluginConfig extends RawConfig {
   useFlowExactObjects?: boolean;
   useFlowReadOnlyTypes?: boolean;
 }

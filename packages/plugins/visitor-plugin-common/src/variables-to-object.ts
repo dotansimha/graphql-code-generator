@@ -1,5 +1,4 @@
 import { Kind, TypeNode, VariableNode, NameNode, ValueNode } from 'graphql';
-import { wrapAstTypeWithModifiers } from './utils';
 import { indent, getBaseTypeNode } from './utils';
 import { ScalarsMap, ConvertNameFn } from './types';
 
