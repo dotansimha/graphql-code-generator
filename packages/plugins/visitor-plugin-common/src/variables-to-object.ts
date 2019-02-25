@@ -1,9 +1,9 @@
 import { Kind, TypeNode, VariableNode, NameNode, ValueNode } from 'graphql';
-import { indent, getBaseTypeNode, wrapAstTypeWithModifiers } from './utils';
-import { BasicFlowVisitor } from './visitor';
+import { wrapAstTypeWithModifiers } from './utils';
+import { indent, getBaseTypeNode } from './utils';
+import { ScalarsMap, ConvertNameFn } from './types';
 
 export class OperationVariablesToObject<
-  Visitor extends BasicFlowVisitor,
   DefinitionType extends {
     name?: NameNode;
     variable?: VariableNode;
@@ -11,7 +11,12 @@ export class OperationVariablesToObject<
     defaultValue?: ValueNode;
   }
 > {
-  constructor(private _visitorInstance: Visitor, private _variablesNode: ReadonlyArray<DefinitionType>) {}
+  constructor(
+    private _scalars: ScalarsMap,
+    private _convertName: ConvertNameFn,
+    private _variablesNode: ReadonlyArray<DefinitionType>,
+    private _wrapAstTypeWithModifiers: Function
+  ) {}
 
   getName(node: DefinitionType): string {
     if (node.name) {
@@ -36,12 +41,10 @@ export class OperationVariablesToObject<
       .map(variable => {
         const baseType = typeof variable.type === 'string' ? variable.type : getBaseTypeNode(variable.type);
         const typeName = typeof baseType === 'string' ? baseType : baseType.name.value;
-        const typeValue = this._visitorInstance.scalars[typeName]
-          ? this._visitorInstance.scalars[typeName]
-          : this._visitorInstance.convertName(typeName, true);
+        const typeValue = this._scalars[typeName] ? this._scalars[typeName] : this._convertName(typeName, true);
 
         const fieldName = this.getName(variable);
-        const fieldType = wrapAstTypeWithModifiers(typeValue, variable.type);
+        const fieldType = this._wrapAstTypeWithModifiers(typeValue, variable.type);
 
         const hasDefaultValue = variable.defaultValue != null && typeof variable.defaultValue !== 'undefined';
         const isNonNullType = variable.type.kind === Kind.NON_NULL_TYPE;
@@ -52,7 +55,5 @@ export class OperationVariablesToObject<
         return indent(`${formattedFieldString}: ${formattedTypeString}`);
       })
       .join(',\n');
-
-    return '';
   }
 }
