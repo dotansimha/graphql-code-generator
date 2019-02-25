@@ -2,7 +2,11 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as importFrom from 'import-from';
 
-export function resolveExternalModuleAndFn(pointer: string): any {
+export function resolveExternalModuleAndFn(pointer: any): any {
+  if (typeof pointer === 'function') {
+    return pointer;
+  }
+
   const patternArr = pointer.split('#');
   const moduleName = patternArr[0];
   const functionName = patternArr[1];

@@ -12,6 +12,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import { pascalCase } from 'change-case';
 
 const plugins = [
   require('prettier/parser-graphql'),
@@ -88,6 +89,7 @@ class App extends Component {
       const cleanTabs = this.state.config.replace(/\t/g, '  ');
       const prettyYaml = prettier.format(cleanTabs, { parser: 'yaml', plugins, tabWidth: 2 });
       const config = safeLoad(prettyYaml);
+      config.namingConvention = pascalCase;
 
       const fullConfig = {
         pluginLoader: m => pluginsMap[m] || null,
