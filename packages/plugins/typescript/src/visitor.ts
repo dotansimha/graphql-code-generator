@@ -2,6 +2,7 @@ import { indent, BaseVisitor, ParsedConfig } from 'graphql-codegen-visitor-plugi
 import { TypeScriptPluginConfig } from './index';
 import * as autoBind from 'auto-bind';
 import { FieldDefinitionNode, NamedTypeNode, ListTypeNode, NonNullTypeNode } from 'graphql';
+import { wrapAstTypeWithModifiers } from '../../visitor-plugin-common/src/utils';
 
 export interface TypeScriptPluginParsedConfig extends ParsedConfig {
   avoidOptionals: boolean;
@@ -16,6 +17,10 @@ export class TsVisitor extends BaseVisitor<TypeScriptPluginConfig, TypeScriptPlu
     } as TypeScriptPluginParsedConfig);
 
     autoBind(this);
+    this.setDeclarationBlockConfig({
+      enumNameValueSeparator: ' =',
+      wrapAstTypeWithModifiers: wrapAstTypeWithModifiers('')
+    });
   }
 
   private clearOptional(str: string): string {

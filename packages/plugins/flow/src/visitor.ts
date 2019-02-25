@@ -33,7 +33,8 @@ export class FlowVisitor extends BaseVisitor<FlowPluginConfig, FlowPluginParsedC
     autoBind(this);
 
     this.setDeclarationBlockConfig({
-      blockWrapper: this.config.useFlowExactObjects ? '|' : ''
+      blockWrapper: this.config.useFlowExactObjects ? '|' : '',
+      wrapAstTypeWithModifiers: wrapAstTypeWithModifiers('?')
     });
   }
 
@@ -70,13 +71,6 @@ export class FlowVisitor extends BaseVisitor<FlowPluginConfig, FlowPluginParsedC
     return indent(`${this.config.useFlowReadOnlyTypes ? '+' : ''}${node.name}${namePostfix}: ${typeString},`);
   }
 
-  UnionTypeDefinition(node: UnionTypeDefinitionNode): string {
-    return super.UnionTypeDefinition({
-      ...node,
-      types: node.types.map(name => ((name as any) as string).replace('?', '')) as any
-    });
-  }
-
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: number | string, parent: any): string {
     return super.ObjectTypeDefinition(
       {
@@ -87,8 +81,7 @@ export class FlowVisitor extends BaseVisitor<FlowPluginConfig, FlowPluginParsedC
             : ([] as any)
       },
       key,
-      parent,
-      wrapAstTypeWithModifiers('?')
+      parent
     );
   }
 

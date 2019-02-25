@@ -44,7 +44,9 @@ export interface RawConfig {
 
 export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig extends ParsedConfig = ParsedConfig> {
   protected _parsedConfig: TPluginConfig;
-  protected _declarationBlockConfig: DeclarationBlockConfig = {};
+  protected _declarationBlockConfig: DeclarationBlockConfig = {
+    wrapAstTypeWithModifiers: wrapAstTypeWithModifiers('')
+  };
 
   constructor(rawConfig: TRawConfig, additionalConfig: TPluginConfig, defaultScalars: ScalarsMap = DEFAULT_SCALARS) {
     this._parsedConfig = {
@@ -119,8 +121,9 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
     return indent(`${node.name}: ${typeString},`);
   }
 
-  UnionTypeDefinition(node: UnionTypeDefinitionNode): string {
-    const possibleTypes = node.types.join(' | ');
+  UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number, parent: any): string {
+    const originalNode = parent[key] as UnionTypeDefinitionNode;
+    const possibleTypes = originalNode.types.map(t => this.convertName(t.name.value)).join(' | ');
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
@@ -129,12 +132,7 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
       .withContent(possibleTypes).string;
   }
 
-  ObjectTypeDefinition(
-    node: ObjectTypeDefinitionNode,
-    key: number | string,
-    parent: any,
-    _wrapAstTypeWithModifiers = wrapAstTypeWithModifiers('')
-  ): string {
+  ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: number | string, parent: any): string {
     const originalNode = parent[key] as ObjectTypeDefinitionNode;
     const interfaces =
       originalNode.interfaces && node.interfaces.length > 0
@@ -156,7 +154,7 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
         this.scalars,
         this.convertName,
         field.arguments,
-        _wrapAstTypeWithModifiers
+        this._declarationBlockConfig.wrapAstTypeWithModifiers
       );
 
       return new DeclarationBlock(this._declarationBlockConfig)
@@ -168,7 +166,6 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
 
     return [typeDefinition, ...fieldsArguments].filter(f => f).join('\n\n');
   }
-
   InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode): string {
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
@@ -186,9 +183,9 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
         node.values
           .map(enumOption =>
             indent(
-              `${this.convertName(enumOption.name)}: ${wrapWithSingleQuotes(
-                this.config.enumValues[(enumOption.name as any) as string] || enumOption.name
-              )}`
+              `${this.convertName(enumOption.name)}${
+                this._declarationBlockConfig.enumNameValueSeparator
+              } ${wrapWithSingleQuotes(this.config.enumValues[(enumOption.name as any) as string] || enumOption.name)}`
             )
           )
           .join(', \n')
