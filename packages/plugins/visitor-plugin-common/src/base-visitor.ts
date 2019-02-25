@@ -1,5 +1,12 @@
 import { ScalarsMap, EnumValuesMap } from './types';
-import { toPascalCase, DeclarationBlock, indent, wrapAstTypeWithModifiers, wrapWithSingleQuotes } from './utils';
+import {
+  toPascalCase,
+  DeclarationBlock,
+  indent,
+  wrapAstTypeWithModifiers,
+  wrapWithSingleQuotes,
+  DeclarationBlockConfig
+} from './utils';
 import { resolveExternalModuleAndFn } from 'graphql-codegen-plugin-helpers';
 import * as autoBind from 'auto-bind';
 import {
@@ -37,6 +44,7 @@ export interface RawConfig {
 
 export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig extends ParsedConfig = ParsedConfig> {
   protected _parsedConfig: TPluginConfig;
+  protected _declarationBlockConfig: DeclarationBlockConfig = {};
 
   constructor(rawConfig: TRawConfig, additionalConfig: TPluginConfig, defaultScalars: ScalarsMap = DEFAULT_SCALARS) {
     this._parsedConfig = {
@@ -48,6 +56,10 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
     };
 
     autoBind(this);
+  }
+
+  setDeclarationBlockConfig(config: DeclarationBlockConfig): void {
+    this._declarationBlockConfig = config || {};
   }
 
   get config(): TPluginConfig {
@@ -86,7 +98,7 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
   }
 
   InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode): string {
-    return new DeclarationBlock()
+    return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
       .withName(this.convertName(node.name))
@@ -110,7 +122,7 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
   UnionTypeDefinition(node: UnionTypeDefinitionNode): string {
     const possibleTypes = node.types.join(' | ');
 
-    return new DeclarationBlock()
+    return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
       .withName(this.convertName(node.name))
@@ -128,7 +140,7 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
         ? node.interfaces.map(name => (name as any) as string).join(' & ') + ' & '
         : '';
 
-    const typeDefinition = new DeclarationBlock()
+    const typeDefinition = new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
       .withName(this.convertName(node.name))
@@ -146,7 +158,7 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
         _wrapAstTypeWithModifiers
       );
 
-      return new DeclarationBlock()
+      return new DeclarationBlock(this._declarationBlockConfig)
         .export()
         .asKind('type')
         .withName(this.convertName(name))
@@ -157,7 +169,7 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
   }
 
   InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode): string {
-    return new DeclarationBlock()
+    return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
       .withName(this.convertName(node.name))
@@ -165,7 +177,7 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
-    return new DeclarationBlock()
+    return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('enum')
       .withName(this.convertName(node.name))
