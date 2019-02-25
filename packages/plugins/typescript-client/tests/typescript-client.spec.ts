@@ -458,6 +458,61 @@ describe('TypeScript Client', () => {
   `);
   });
 
+  it('Should generate correctly when using enums and interfacePrefix', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: gql`
+        enum Access {
+          Read
+          Write
+          All
+        }
+
+        type User {
+          access: Access
+        }
+
+        type Query {
+          me: User
+        }
+      `
+    });
+    const query = gql`
+      query me {
+        me {
+          access
+        }
+      }
+    `;
+
+    const content = await plugin(
+      testSchema,
+      [{ filePath: '', content: query }],
+      { interfacePrefix: 'PREFIX_' },
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
+
+    console['log'](content);
+
+    expect(content).toBeSimilarStringTo(`
+      export namespace Me {
+        export type Variables = {
+        }
+      
+        export type Query = {
+          __typename?: "Query";
+          me: Maybe<Me>;
+        }
+      
+        export type Me = {
+          __typename?: "User";
+          access: Maybe<PREFIX_Access>;
+        } 
+      }
+    `);
+  });
+
   it('Should generate simple Query with inline Fragment and handle noNamespaces', async () => {
     const query = gql`
       query myFeed {
