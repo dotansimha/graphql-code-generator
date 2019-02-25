@@ -1,27 +1,20 @@
 {
-  "name": "graphql-codegen-flow",
-  "version": "0.18.0",
-  "description": "GraphQL Code Generator plugin for generating Flow types",
-  "repository": "git@github.com:dotansimha/graphql-code-generator.git",
+  "name": "graphql-codegen-visitor-plugin-common",
+  "version": "0.17.0",
   "license": "MIT",
   "scripts": {
-    "prepublishOnly": "yarn build",
-    "build": "tsc",
-    "pretest": "yarn build",
-    "test": "jest"
+    "build": "tsc"
   },
   "dependencies": {
-    "graphql-codegen-visitor-plugin-common": "0.18.0",
-    "graphql-codegen-core": "0.18.0",
-    "graphql-codegen-plugin-helpers": "0.18.0"
+    "auto-bind": "2.0.0"
+  },
+  "peerDependencies": {
+    "graphql": "14.1.1"
   },
   "devDependencies": {
-    "flow-bin": "0.94.0",
-    "flow-parser": "0.94.0",
+    "typescript": "3.3.3333",
     "graphql": "14.1.1",
-    "jest": "24.1.0",
-    "ts-jest": "24.0.0",
-    "typescript": "3.3.3333"
+    "@types/graphql": "14.0.7"
   },
   "main": "./dist/index.js",
   "typings": "dist/index.d.ts",
