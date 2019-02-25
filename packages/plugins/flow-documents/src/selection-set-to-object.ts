@@ -12,7 +12,7 @@ import {
 } from 'graphql';
 import { getBaseType, quoteIfNeeded } from './utils';
 import { FlowDocumentsVisitor } from './visitor';
-import { wrapTypeWithModifiers } from 'graphql-codegen-flow';
+import { wrapTypeWithModifiers } from 'graphql-codegen-visitor-plugin-common';
 
 export class SelectionSetToObject {
   private _primitiveFields: string[] = [];
@@ -57,7 +57,7 @@ export class SelectionSetToObject {
           alias: field.alias ? field.alias.value : null,
           name: field.name.value,
           type: typeName,
-          selectionSet: wrapTypeWithModifiers(selectionSetToObject.string, rawType)
+          selectionSet: wrapTypeWithModifiers('?')(selectionSetToObject.string, rawType)
         });
       }
     }
