@@ -4,12 +4,11 @@ import {
   indent,
   toPascalCase,
   DeclarationBlock,
-  BasicFlowVisitor,
   ScalarsMap,
   OperationVariablesToObject,
   getBaseTypeNode,
   wrapAstTypeWithModifiers
-} from 'graphql-codegen-flow';
+} from 'graphql-codegen-visitor-plugin-common';
 import {
   ObjectTypeDefinitionNode,
   FieldDefinitionNode,
@@ -24,7 +23,8 @@ import {
   InputValueDefinitionNode
 } from 'graphql/language/ast';
 import { FlowResolversPluginConfig } from './index';
-import { GraphQLSchema, GraphQLObjectType, isOutputType } from 'graphql';
+import { GraphQLSchema, GraphQLObjectType } from 'graphql';
+import * as autoBind from 'auto-bind';
 
 export interface ParsedConfig {
   scalars: ScalarsMap;
@@ -32,11 +32,9 @@ export interface ParsedConfig {
   typesPrefix: string;
   contextType: string;
   mapping: { [typeName: string]: string };
-  useFlowExactObjects: boolean;
-  useFlowReadOnlyTypes: boolean;
 }
 
-export class FlowResolversVisitor implements BasicFlowVisitor {
+export class FlowResolversVisitor {
   private _parsedConfig: ParsedConfig;
   private _collectedResolvers: { [key: string]: string } = {};
 
@@ -46,10 +44,9 @@ export class FlowResolversVisitor implements BasicFlowVisitor {
       mapping: pluginConfig.mapping || {},
       scalars: { ...DEFAULT_SCALARS, ...(pluginConfig.scalars || {}) },
       convert: pluginConfig.namingConvention ? resolveExternalModuleAndFn(pluginConfig.namingConvention) : toPascalCase,
-      typesPrefix: pluginConfig.typesPrefix || '',
-      useFlowExactObjects: pluginConfig.useFlowExactObjects || false,
-      useFlowReadOnlyTypes: pluginConfig.useFlowReadOnlyTypes || false
+      typesPrefix: pluginConfig.typesPrefix || ''
     };
+    autoBind(this);
   }
 
   get scalars(): ScalarsMap {
@@ -61,7 +58,7 @@ export class FlowResolversVisitor implements BasicFlowVisitor {
   }
 
   public get rootResolver(): string {
-    return new DeclarationBlock(this._parsedConfig)
+    return new DeclarationBlock()
       .export()
       .asKind('interface')
       .withName(this.convertName('ResolversRoot'))
@@ -110,7 +107,7 @@ export class FlowResolversVisitor implements BasicFlowVisitor {
       const original = parent[key];
       const realType = getBaseTypeNode(original.type).name.value;
       const mappedType = this._parsedConfig.mapping[realType]
-        ? wrapAstTypeWithModifiers(this._parsedConfig.mapping[realType], original.type)
+        ? wrapAstTypeWithModifiers('?')(this._parsedConfig.mapping[realType], original.type)
         : node.type;
       const subscriptionType = this._schema.getSubscriptionType();
       const isSubscriptionType = subscriptionType && subscriptionType.name === parentName;
@@ -129,7 +126,7 @@ export class FlowResolversVisitor implements BasicFlowVisitor {
       this._parsedConfig.mapping[node.name as any] ||
       this._parsedConfig.scalars[node.name as any] ||
       this.convertName(node.name);
-    const block = new DeclarationBlock(this._parsedConfig)
+    const block = new DeclarationBlock()
       .export()
       .asKind('interface')
       .withName(name, `<Context = ${this._parsedConfig.contextType}, ParentType = ${type}>`)
@@ -149,7 +146,7 @@ export class FlowResolversVisitor implements BasicFlowVisitor {
 
     this._collectedResolvers[node.name as any] = name;
 
-    return new DeclarationBlock(this._parsedConfig)
+    return new DeclarationBlock()
       .export()
       .asKind('interface')
       .withName(name, `<Context = ${this._parsedConfig.contextType}, ParentType = ${node.name}>`)
@@ -159,7 +156,7 @@ export class FlowResolversVisitor implements BasicFlowVisitor {
   ScalarTypeDefinition = (node: ScalarTypeDefinitionNode): string => {
     const baseName = this.convertName(node.name);
 
-    return new DeclarationBlock(this._parsedConfig)
+    return new DeclarationBlock()
       .export()
       .asKind('interface')
       .withName(this.convertName(node.name + 'ScalarConfig'), ` extends GraphQLScalarTypeConfig<${baseName}, any>`)
@@ -170,10 +167,15 @@ export class FlowResolversVisitor implements BasicFlowVisitor {
     const directiveName = this.convertName(node.name + 'DirectiveResolver');
     const hasArguments = node.arguments && node.arguments.length > 0;
     const directiveArgs = hasArguments
-      ? new OperationVariablesToObject<FlowResolversVisitor, InputValueDefinitionNode>(this, node.arguments).string
+      ? new OperationVariablesToObject<InputValueDefinitionNode>(
+          this._parsedConfig.scalars,
+          this.convertName,
+          node.arguments,
+          wrapAstTypeWithModifiers('?')
+        ).string
       : '';
 
-    return new DeclarationBlock(this._parsedConfig)
+    return new DeclarationBlock()
       .export()
       .asKind('type')
       .withName(directiveName, '<Result>')
@@ -196,7 +198,7 @@ export class FlowResolversVisitor implements BasicFlowVisitor {
       }
     }
 
-    return new DeclarationBlock(this._parsedConfig)
+    return new DeclarationBlock()
       .export()
       .asKind('interface')
       .withName(name, `<Context = ${this._parsedConfig.contextType}, ParentType = ${node.name}>`)
