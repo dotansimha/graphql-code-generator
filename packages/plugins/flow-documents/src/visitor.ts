@@ -1,16 +1,17 @@
 import { GraphQLSchema, GraphQLObjectType, FragmentDefinitionNode, VariableDefinitionNode } from 'graphql';
 import {
-  BasicFlowVisitor,
-  OperationVariablesToObject,
+  wrapAstTypeWithModifiers,
   DeclarationBlock,
-  DEFAULT_SCALARS,
-  toPascalCase
-} from 'graphql-codegen-flow';
+  toPascalCase,
+  OperationVariablesToObject,
+  DEFAULT_SCALARS
+} from 'graphql-codegen-visitor-plugin-common';
 import { ScalarsMap, FlowDocumentsPluginConfig } from './index';
 import { OperationDefinitionNode } from 'graphql';
 import { pascalCase } from 'change-case';
 import { SelectionSetToObject } from './selection-set-to-object';
 import { resolveExternalModuleAndFn } from 'graphql-codegen-plugin-helpers';
+import * as authBind from 'auto-bind';
 
 export interface ParsedDocumentsConfig {
   scalars: ScalarsMap;
@@ -21,7 +22,7 @@ export interface ParsedDocumentsConfig {
   useFlowReadOnlyTypes: boolean;
 }
 
-export class FlowDocumentsVisitor implements BasicFlowVisitor {
+export class FlowDocumentsVisitor {
   private _parsedConfig: ParsedDocumentsConfig;
   private _unnamedCounter = 1;
 
@@ -34,6 +35,7 @@ export class FlowDocumentsVisitor implements BasicFlowVisitor {
       useFlowExactObjects: pluginConfig.useFlowExactObjects || false,
       useFlowReadOnlyTypes: pluginConfig.useFlowReadOnlyTypes || false
     };
+    authBind(this);
   }
 
   public convertName(name: any, addPrefix = true): string {
@@ -83,9 +85,11 @@ export class FlowDocumentsVisitor implements BasicFlowVisitor {
     const name = this.handleAnonymouseOperation(node.name && node.name.value ? node.name.value : null);
     const operationRootType = this._schema.getType(pascalCase(node.operation)) as GraphQLObjectType;
     const selectionSet = new SelectionSetToObject(this, operationRootType, node.selectionSet);
-    const visitedOperationVariables = new OperationVariablesToObject<FlowDocumentsVisitor, VariableDefinitionNode>(
-      this,
-      node.variableDefinitions
+    const visitedOperationVariables = new OperationVariablesToObject<VariableDefinitionNode>(
+      this._parsedConfig.scalars,
+      this.convertName,
+      node.variableDefinitions,
+      wrapAstTypeWithModifiers('?')
     );
 
     const operationResult = new DeclarationBlock(this._parsedConfig)
