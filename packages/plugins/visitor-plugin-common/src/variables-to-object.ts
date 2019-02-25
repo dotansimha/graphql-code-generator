@@ -1,6 +1,7 @@
 import { Kind, TypeNode, VariableNode, NameNode, ValueNode } from 'graphql';
 import { indent, getBaseTypeNode } from './utils';
 import { ScalarsMap, ConvertNameFn } from './types';
+import * as autoBind from 'auto-bind';
 
 export class OperationVariablesToObject<
   DefinitionType extends {
@@ -15,7 +16,9 @@ export class OperationVariablesToObject<
     private _convertName: ConvertNameFn,
     private _variablesNode: ReadonlyArray<DefinitionType>,
     private _wrapAstTypeWithModifiers: Function
-  ) {}
+  ) {
+    autoBind(this);
+  }
 
   getName(node: DefinitionType): string {
     if (node.name) {
