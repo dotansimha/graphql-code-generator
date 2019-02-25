@@ -13,19 +13,32 @@ import {
   BaseVisitor,
   DeclarationBlock,
   wrapWithSingleQuotes,
-  indent
+  indent,
+  ParsedConfig
 } from 'graphql-codegen-visitor-plugin-common';
 import * as autoBind from 'auto-bind';
 import { FlowPluginConfig } from './index';
 
-export class FlowVisitor extends BaseVisitor {
+export interface FlowPluginParsedConfig extends ParsedConfig {
+  useFlowExactObjects: boolean;
+  useFlowReadOnlyTypes: boolean;
+}
+
+export class FlowVisitor extends BaseVisitor<FlowPluginConfig, FlowPluginParsedConfig> {
   constructor(pluginConfig: FlowPluginConfig) {
-    super(pluginConfig, null);
+    super(pluginConfig, {
+      useFlowExactObjects: pluginConfig.useFlowExactObjects || false,
+      useFlowReadOnlyTypes: pluginConfig.useFlowReadOnlyTypes || false
+    } as FlowPluginParsedConfig);
     autoBind(this);
+
+    this.setDeclarationBlockConfig({
+      blockWrapper: this.config.useFlowExactObjects ? '|' : ''
+    });
   }
 
   public ScalarTypeDefinition = (node: ScalarTypeDefinitionNode): string => {
-    return new DeclarationBlock()
+    return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
       .withName(this.convertName(node.name))
@@ -54,7 +67,7 @@ export class FlowVisitor extends BaseVisitor {
     const typeString = (node.type as any) as string;
     const namePostfix = typeString.charAt(0) === '?' ? '?' : '';
 
-    return indent(`${node.name}${namePostfix}: ${typeString},`);
+    return indent(`${this.config.useFlowReadOnlyTypes ? '+' : ''}${node.name}${namePostfix}: ${typeString},`);
   }
 
   UnionTypeDefinition(node: UnionTypeDefinitionNode): string {
@@ -82,7 +95,7 @@ export class FlowVisitor extends BaseVisitor {
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
     const enumValuesName = `${node.name}Values`;
 
-    const enumValues = new DeclarationBlock()
+    const enumValues = new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('const')
       .withName(this.convertName(enumValuesName))
@@ -99,7 +112,7 @@ export class FlowVisitor extends BaseVisitor {
           .join(', \n')
       ).string;
 
-    const enumType = new DeclarationBlock()
+    const enumType = new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
       .withName(this.convertName(node.name))
