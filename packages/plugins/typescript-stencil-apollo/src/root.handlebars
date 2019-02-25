@@ -1,5 +1,4 @@
 {{#ifCond operations.length '!==' 0}}
-import { FunctionalComponent } from '@stencil/core';
 
 {{#unless @root.config.noGraphqlTag}}
 import gql from 'graphql-tag';
@@ -14,20 +13,11 @@ import gql from 'graphql-tag';
 export namespace {{convert name 'typeNames'}} {
     {{/unless}}
     export const {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Document = {{{ gql this }}};
-    export interface ComponentProps {
+    export interface {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}ComponentProps {
         variables ?: {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Variables;
         onReady ?: import('stencil-apollo/dist/types/components/apollo-{{ toLowerCase operationType }}/types').On{{ toPascalCase operationType }}ReadyFn<{{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}{{ toPascalCase operationType }}, {{#if @root.config.noNamespaces}}{{ convert name }}{{/if}}Variables>;
     }
-     export const {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Component: FunctionalComponent<ComponentProps> = (props, children) => {
-        return (
-            <apollo-{{ toLowerCase operationType }}
-            {{ toLowerCase operationType }}={ {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Document }
-            {...props}
-            >
-                {children}
-            </apollo-{{ toLowerCase operationType }}>
-        );
-    }
+     export const {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Component = (props: {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}ComponentProps) => <apollo-{{ toLowerCase operationType }} {{ toLowerCase operationType }}={ {{#if @root.config.noNamespaces}}{{ convert name 'typeNames' }}{{/if}}Document } {...props} />;
     {{#unless @root.config.noNamespaces}}
 }
     {{/unless}}
