@@ -471,14 +471,18 @@ describe('TypeScript Client', () => {
           access: Access
         }
 
+        input Filter {
+          match: String!
+        }
+
         type Query {
-          me: User
+          users(filter: Filter!): [User]
         }
       `
     });
     const query = gql`
-      query me {
-        me {
+      query users($filter: Filter!) {
+        users(filter: $filter) {
           access
         }
       }
@@ -493,20 +497,21 @@ describe('TypeScript Client', () => {
       }
     );
 
-    console['log'](content);
-
     expect(content).toBeSimilarStringTo(`
-      export namespace Me {
+      export namespace Users {
         export type Variables = {
+          filter: PREFIX_Filter;
         }
       
         export type Query = {
           __typename?: "Query";
-          me: Maybe<Me>;
+          
+          users: Maybe<(Maybe<Users>)[]>;
         }
       
-        export type Me = {
+        export type Users = {
           __typename?: "User";
+          
           access: Maybe<PREFIX_Access>;
         } 
       }
