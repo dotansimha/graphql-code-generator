@@ -42,10 +42,16 @@ export const plugin: PluginFunction<TypeScriptReactApolloConfig> = async (
 export const validate: PluginValidateFn<any> = async (
   schema: GraphQLSchema,
   documents: DocumentFile[],
-  config: any,
+  config: TypeScriptReactApolloConfig,
   outputFile: string
 ) => {
-  if (extname(outputFile) !== '.tsx') {
-    throw new Error(`Plugin "react-apollo" requires extension to be ".tsx"!`);
+  if (config.noComponents) {
+    if (extname(outputFile) !== '.ts') {
+      throw new Error(`Plugin "react-apollo" requires extension to be ".ts"!`);
+    }
+  } else {
+    if (extname(outputFile) !== '.tsx') {
+      throw new Error(`Plugin "react-apollo" with components requires extension to be ".tsx"!`);
+    }
   }
 };
