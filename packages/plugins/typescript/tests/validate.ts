@@ -61,6 +61,6 @@ export function validateTs(
   });
 
   if (errors && errors.length > 0) {
-    throw new Error(errors.join(''));
+    throw new Error(errors.join('\n'));
   }
 }

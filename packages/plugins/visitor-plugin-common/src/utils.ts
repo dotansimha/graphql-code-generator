@@ -29,6 +29,8 @@ export function indent(str: string): string {
 
 export interface DeclarationBlockConfig {
   blockWrapper?: string;
+  enumNameValueSeparator?: string;
+  wrapAstTypeWithModifiers?: Function;
 }
 
 export class DeclarationBlock {
@@ -43,6 +45,7 @@ export class DeclarationBlock {
   constructor(private _config: DeclarationBlockConfig) {
     this._config = {
       blockWrapper: '',
+      enumNameValueSeparator: ':',
       ...this._config
     };
   }
