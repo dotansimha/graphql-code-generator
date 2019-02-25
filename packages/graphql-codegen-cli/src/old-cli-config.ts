@@ -3,7 +3,7 @@ import { Types } from 'graphql-codegen-core';
 import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 import { cliError } from './utils/cli-error';
-import * as YAML from 'json-to-pretty-yaml';
+import YAML from 'json-to-pretty-yaml';
 import { isNode } from './utils/is-browser';
 
 export interface CLIOptions {

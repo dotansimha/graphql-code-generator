@@ -1,9 +1,9 @@
 import { executeCodegen } from '../codegen';
 import { FileOutput, getLogger, Types, debugLog } from 'graphql-codegen-core';
 import { normalizeInstanceOrArray, normalizeOutputParam } from '../helpers';
-import isValidPath = require('is-valid-path');
-import * as isGlob from 'is-glob';
-import * as logSymbols from 'log-symbols';
+import isValidPath from 'is-valid-path';
+import isGlob from 'is-glob';
+import logSymbols from 'log-symbols';
 
 function log(msg: string) {
   // double spaces to inline the message with Listr

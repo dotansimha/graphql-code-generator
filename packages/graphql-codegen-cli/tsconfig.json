@@ -5,6 +5,7 @@
     "target": "es2018",
     "lib": ["es6", "esnext", "es2015", "dom"],
     "moduleResolution": "node",
+    "esModuleInterop": true,
     "emitDecoratorMetadata": true,
     "sourceMap": true,
     "declaration": true,

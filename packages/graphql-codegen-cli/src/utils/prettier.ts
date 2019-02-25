@@ -1,4 +1,4 @@
-import * as path from 'path';
+import path from 'path';
 
 const EXTENSION_TO_PARSER = {
   ts: 'typescript',

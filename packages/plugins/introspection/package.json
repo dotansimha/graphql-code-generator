@@ -7,7 +7,7 @@
   "scripts": {
     "prepublishOnly": "yarn build",
     "test": "codegen-templates-scripts test",
-    "build": "codegen-templates-scripts build && tsc -p tsconfig.es2015.json",
+    "build": "codegen-templates-scripts build",
     "pretest": "yarn build"
   },
   "peerDependencies": {
@@ -19,7 +19,6 @@
     "graphql-codegen-core": "0.17.0"
   },
   "main": "./dist/index.js",
-  "module": "./dist/es2015/index.js",
   "typings": "dist/index.d.ts",
   "typescript": {
     "definition": "dist/index.d.ts"
