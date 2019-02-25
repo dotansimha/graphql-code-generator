@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "prepublishOnly": "yarn build",
-    "build": "codegen-templates-scripts build",
+    "build": "codegen-templates-scripts build && tsc -p tsconfig.es2015.json",
     "test": "codegen-templates-scripts test",
     "pretest": "yarn build"
   },
@@ -25,6 +25,7 @@
     "graphql-codegen-plugin-handlebars-helpers": "0.17.0"
   },
   "main": "./dist/index.js",
+  "module": "./dist/es2015/index.js",
   "typings": "dist/index.d.ts",
   "typescript": {
     "definition": "dist/index.d.ts"

@@ -6,16 +6,18 @@
   "license": "MIT",
   "scripts": {
     "prepublishOnly": "yarn build",
-    "build": "tsc"
+    "build": "tsc && tsc -p tsconfig.es2015.json"
   },
   "dependencies": {
     "graphql-codegen-core": "0.17.0",
+    "tslib": "1.9.3",
     "import-from": "2.1.0"
   },
   "devDependencies": {
     "typescript": "3.3.3333"
   },
   "main": "./dist/index.js",
+  "module": "./dist/es2015/index.js",
   "typings": "dist/index.d.ts",
   "typescript": {
     "definition": "dist/index.d.ts"

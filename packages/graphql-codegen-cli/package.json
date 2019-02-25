@@ -13,7 +13,7 @@
     "clean": "rimraf ./dist",
     "lint": "tslint src/**/*.ts",
     "prebuild": "yarn clean && yarn lint",
-    "build": "tsc",
+    "build": "tsc && tsc -p tsconfig.es2015.json",
     "prestart": "yarn build",
     "start": "cd dist && node index.js",
     "debug": "cd dist && node --inspect --debug-brk index.js",
@@ -77,6 +77,7 @@
     "mkdirp": "0.5.1",
     "prettier": "1.16.4",
     "request": "2.88.0",
+    "tslib": "1.9.3",
     "valid-url": "1.0.9"
   },
   "devDependencies": {
@@ -95,6 +96,7 @@
     "ts-jest": "24.0.0"
   },
   "main": "./dist/index.js",
+  "module": "./dist/es2015/index.js",
   "typings": "./dist/index.d.ts",
   "typescript": {
     "definition": "./dist/index.d.ts"

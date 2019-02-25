@@ -2,12 +2,11 @@
   "name": "graphql-codegen-core",
   "version": "0.17.0",
   "description": "GraphQL types and code generator based on schema",
-  "main": "dist/index.js",
   "scripts": {
     "clean": "rimraf ./dist",
     "lint": "tslint src/**/*.ts",
     "prebuild": "yarn clean && yarn lint",
-    "build": "tsc",
+    "build": "tsc && tsc -p tsconfig.es2015.json",
     "prestart": "yarn build",
     "start": "cd dist && node gql-gen.js",
     "debug": "cd dist && node --inspect --debug-brk gql-gen.js",
@@ -67,11 +66,14 @@
     "graphql-toolkit": "0.0.5",
     "graphql-tools": "4.0.4",
     "ts-log": "2.1.4",
+    "tslib": "1.9.3",
     "winston": "3.2.1"
   },
   "peerDependencies": {
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0"
   },
+  "main": "dist/index.js",
+  "module": "./dist/es2015/index.js",
   "typings": "dist/index.d.ts",
   "typescript": {
     "definition": "dist/index.d.ts"

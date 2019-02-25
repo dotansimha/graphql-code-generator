@@ -2,7 +2,7 @@
   "compilerOptions": {
     "experimentalDecorators": true,
     "module": "commonjs",
-    "target": "es5",
+    "target": "es2018",
     "lib": ["es6", "esnext", "es2015"],
     "suppressImplicitAnyIndexErrors": true,
     "moduleResolution": "node",
@@ -15,7 +15,8 @@
     "alwaysStrict": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true
+    "noUnusedParameters": true,
+    "importHelpers": true
   },
   "exclude": ["node_modules", "tests", "dist"]
 }

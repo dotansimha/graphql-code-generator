@@ -2,7 +2,7 @@
   "compilerOptions": {
     "experimentalDecorators": true,
     "module": "commonjs",
-    "target": "es5",
+    "target": "es2018",
     "lib": ["es6", "esnext", "es2015"],
     "suppressImplicitAnyIndexErrors": true,
     "moduleResolution": "node",
@@ -17,7 +17,8 @@
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "importHelpers": true
   },
   "files": ["src/index.ts", "src/testing/index.ts"],
   "exclude": ["node_modules"]
