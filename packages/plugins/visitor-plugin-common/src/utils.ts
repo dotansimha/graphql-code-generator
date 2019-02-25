@@ -150,36 +150,36 @@ export function getBaseTypeNode(typeNode: TypeNode): NamedTypeNode {
   return typeNode;
 }
 
-export function wrapAstTypeWithModifiers(baseType: string, typeNode: TypeNode): string {
-  if (typeNode.kind === Kind.NON_NULL_TYPE) {
-    return wrapAstTypeWithModifiers(baseType, typeNode.type).substr(1);
-  } else if (typeNode.kind === Kind.LIST_TYPE) {
-    const innerType = wrapAstTypeWithModifiers(baseType, typeNode.type);
-
-    return `?Array<${innerType}>`;
-  } else {
-    return `?${baseType}`;
-  }
-}
-
-export function wrapTypeWithModifiers(
-  baseType: string,
-  type: GraphQLObjectType | GraphQLNonNull<GraphQLObjectType> | GraphQLList<GraphQLObjectType>
-): string {
-  if (isNonNullType(type)) {
-    return wrapTypeWithModifiers(baseType, type.ofType).substr(1);
-  } else if (isListType(type)) {
-    const innerType = wrapTypeWithModifiers(baseType, type.ofType);
-
-    return `?Array<${innerType}>`;
-  } else {
-    return `?${baseType}`;
-  }
-}
-
 export function toPascalCase(str: string) {
   return str
     .split('_')
     .map(s => pascalCase(s))
     .join('_');
 }
+
+export const wrapAstTypeWithModifiers = (prefix = '') => (baseType: string, typeNode: TypeNode): string => {
+  if (typeNode.kind === Kind.NON_NULL_TYPE) {
+    return wrapAstTypeWithModifiers(prefix)(baseType, typeNode.type).substr(1);
+  } else if (typeNode.kind === Kind.LIST_TYPE) {
+    const innerType = wrapAstTypeWithModifiers(prefix)(baseType, typeNode.type);
+
+    return `${prefix}Array<${innerType}>`;
+  } else {
+    return `${prefix}${baseType}`;
+  }
+};
+
+export const wrapTypeWithModifiers = (prefix = '') => (
+  baseType: string,
+  type: GraphQLObjectType | GraphQLNonNull<GraphQLObjectType> | GraphQLList<GraphQLObjectType>
+): string => {
+  if (isNonNullType(type)) {
+    return wrapTypeWithModifiers(prefix)(baseType, type.ofType).substr(1);
+  } else if (isListType(type)) {
+    const innerType = wrapTypeWithModifiers(prefix)(baseType, type.ofType);
+
+    return `${prefix}Array<${innerType}>`;
+  } else {
+    return `${prefix}${baseType}`;
+  }
+};
