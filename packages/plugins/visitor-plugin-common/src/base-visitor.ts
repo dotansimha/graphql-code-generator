@@ -135,9 +135,10 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
     parent: any,
     _wrapAstTypeWithModifiers = wrapAstTypeWithModifiers('')
   ): string {
+    const originalNode = parent[key] as ObjectTypeDefinitionNode;
     const interfaces =
-      node.interfaces && node.interfaces.length > 0
-        ? node.interfaces.map(name => (name as any) as string).join(' & ') + ' & '
+      originalNode.interfaces && node.interfaces.length > 0
+        ? originalNode.interfaces.map(i => this.convertName(i.name.value)).join(' & ') + ' & '
         : '';
 
     const typeDefinition = new DeclarationBlock(this._declarationBlockConfig)

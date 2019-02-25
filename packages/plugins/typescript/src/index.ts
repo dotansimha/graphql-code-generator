@@ -1,13 +1,11 @@
 import { DocumentFile, PluginFunction } from 'graphql-codegen-core';
 import { parse, printSchema, visit, GraphQLSchema } from 'graphql';
-import { ScalarsMap, EnumValuesMap } from 'graphql-codegen-visitor-plugin-common';
+import { RawConfig } from 'graphql-codegen-visitor-plugin-common';
 import { TsVisitor } from './visitor';
 
-export interface TypeScriptPluginConfig {
-  scalars?: ScalarsMap;
-  enumValues?: EnumValuesMap;
-  namingConvention?: string;
-  typesPrefix?: string;
+export interface TypeScriptPluginConfig extends RawConfig {
+  avoidOptionals?: boolean;
+  maybeValue?: string;
 }
 
 export const plugin: PluginFunction<TypeScriptPluginConfig> = (
@@ -15,12 +13,11 @@ export const plugin: PluginFunction<TypeScriptPluginConfig> = (
   documents: DocumentFile[],
   config: TypeScriptPluginConfig
 ) => {
+  const visitor = new TsVisitor(config) as any;
   const printedSchema = printSchema(schema);
   const astNode = parse(printedSchema);
+  const header = `type Maybe<T> = ${visitor.config.maybeValue};`;
+  const visitorResult = visit(astNode, { leave: visitor });
 
-  const visitorResult = visit(astNode, {
-    leave: new TsVisitor(config) as any
-  });
-
-  return visitorResult.definitions.join('\n');
+  return [header, ...visitorResult.definitions].join('\n');
 };
