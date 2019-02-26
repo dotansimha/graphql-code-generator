@@ -30,7 +30,6 @@ export function indent(str: string): string {
 export interface DeclarationBlockConfig {
   blockWrapper?: string;
   enumNameValueSeparator?: string;
-  wrapAstTypeWithModifiers?: Function;
 }
 
 export class DeclarationBlock {
@@ -147,18 +146,6 @@ export function toPascalCase(str: string) {
     .map(s => pascalCase(s))
     .join('_');
 }
-
-export const wrapAstTypeWithModifiers = (prefix = '') => (baseType: string, typeNode: TypeNode): string => {
-  if (typeNode.kind === Kind.NON_NULL_TYPE) {
-    return wrapAstTypeWithModifiers(prefix)(baseType, typeNode.type).substr(1);
-  } else if (typeNode.kind === Kind.LIST_TYPE) {
-    const innerType = wrapAstTypeWithModifiers(prefix)(baseType, typeNode.type);
-
-    return `${prefix}Array<${innerType}>`;
-  } else {
-    return `${prefix}${baseType}`;
-  }
-};
 
 export const wrapTypeWithModifiers = (prefix = '') => (
   baseType: string,

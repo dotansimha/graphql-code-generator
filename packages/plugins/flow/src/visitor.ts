@@ -9,7 +9,6 @@ import {
   NamedTypeNode
 } from 'graphql';
 import {
-  wrapAstTypeWithModifiers,
   BaseVisitor,
   DeclarationBlock,
   wrapWithSingleQuotes,
@@ -18,6 +17,7 @@ import {
 } from 'graphql-codegen-visitor-plugin-common';
 import * as autoBind from 'auto-bind';
 import { FlowPluginConfig } from './index';
+import { FlowOperationVariablesToObject } from './flow-variables-to-object';
 
 export interface FlowPluginParsedConfig extends ParsedConfig {
   useFlowExactObjects: boolean;
@@ -32,9 +32,9 @@ export class FlowVisitor extends BaseVisitor<FlowPluginConfig, FlowPluginParsedC
     } as FlowPluginParsedConfig);
     autoBind(this);
 
+    this.setArgumentsTransformer(new FlowOperationVariablesToObject(this.config.scalars, this.convertName));
     this.setDeclarationBlockConfig({
-      blockWrapper: this.config.useFlowExactObjects ? '|' : '',
-      wrapAstTypeWithModifiers: wrapAstTypeWithModifiers('?')
+      blockWrapper: this.config.useFlowExactObjects ? '|' : ''
     });
   }
 
