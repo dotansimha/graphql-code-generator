@@ -1,12 +1,9 @@
 import { PluginFunction, DocumentFile } from 'graphql-codegen-core';
 import { visit, concatAST, GraphQLSchema } from 'graphql';
 import { FlowDocumentsVisitor } from './visitor';
+import { RawDocumentsConfig } from 'graphql-codegen-visitor-plugin-common';
 
-export interface FlowDocumentsPluginConfig {
-  scalars?: ScalarsMap;
-  skipTypename?: boolean;
-  namingConvention?: string;
-  typesPrefix?: string;
+export interface FlowDocumentsPluginConfig extends RawDocumentsConfig {
   useFlowExactObjects?: boolean;
   useFlowReadOnlyTypes?: boolean;
 }
