@@ -604,13 +604,13 @@ describe('TypeScript Documents Plugin', async () => {
 
       expect(result).toBeSimilarStringTo(
         `export type TestQueryQueryVariables = {
-          username?: ?string,
-          email?: ?string,
+          username?: Maybe<string>,
+          email?: Maybe<string>,
           password: string,
-          input?: ?InputType,
+          input?: Maybe<InputType>,
           mandatoryInput: InputType,
-          testArray?: ?Array<?string>,
-          requireString: Array<?string>,
+          testArray?: Maybe<Array<Maybe<string>>>,
+          requireString: Array<Maybe<string>>,
           innerRequired: Array<string>
         };`
       );
