@@ -2,7 +2,7 @@ import { indent, BaseVisitor, ParsedConfig } from 'graphql-codegen-visitor-plugi
 import { TypeScriptPluginConfig } from './index';
 import * as autoBind from 'auto-bind';
 import { FieldDefinitionNode, NamedTypeNode, ListTypeNode, NonNullTypeNode } from 'graphql';
-import { wrapAstTypeWithModifiers } from '../../visitor-plugin-common/src/utils';
+import { TypeScriptOperationVariablesToObject } from './typescript-variables-to-object';
 
 export interface TypeScriptPluginParsedConfig extends ParsedConfig {
   avoidOptionals: boolean;
@@ -11,15 +11,21 @@ export interface TypeScriptPluginParsedConfig extends ParsedConfig {
 
 export class TsVisitor extends BaseVisitor<TypeScriptPluginConfig, TypeScriptPluginParsedConfig> {
   constructor(pluginConfig: TypeScriptPluginConfig = {}) {
-    super(pluginConfig, {
-      avoidOptionals: pluginConfig.avoidOptionals || false,
-      maybeValue: pluginConfig.maybeValue || 'T | null'
-    } as TypeScriptPluginParsedConfig);
+    super(
+      pluginConfig,
+      {
+        avoidOptionals: pluginConfig.avoidOptionals || false,
+        maybeValue: pluginConfig.maybeValue || 'T | null'
+      } as TypeScriptPluginParsedConfig,
+      null
+    );
 
     autoBind(this);
+    this.setArgumentsTransformer(
+      new TypeScriptOperationVariablesToObject(this.scalars, this.convertName, this.config.avoidOptionals)
+    );
     this.setDeclarationBlockConfig({
-      enumNameValueSeparator: ' =',
-      wrapAstTypeWithModifiers: wrapAstTypeWithModifiers('')
+      enumNameValueSeparator: ' ='
     });
   }
 

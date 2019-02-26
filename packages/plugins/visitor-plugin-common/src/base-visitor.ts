@@ -1,12 +1,5 @@
 import { ScalarsMap, EnumValuesMap } from './types';
-import {
-  toPascalCase,
-  DeclarationBlock,
-  indent,
-  wrapAstTypeWithModifiers,
-  wrapWithSingleQuotes,
-  DeclarationBlockConfig
-} from './utils';
+import { toPascalCase, DeclarationBlock, indent, wrapWithSingleQuotes, DeclarationBlockConfig } from './utils';
 import { resolveExternalModuleAndFn } from 'graphql-codegen-plugin-helpers';
 import * as autoBind from 'auto-bind';
 import {
@@ -44,13 +37,12 @@ export interface RawConfig {
 
 export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig extends ParsedConfig = ParsedConfig> {
   protected _parsedConfig: TPluginConfig;
-  protected _declarationBlockConfig: DeclarationBlockConfig = {
-    wrapAstTypeWithModifiers: wrapAstTypeWithModifiers('')
-  };
+  protected _argumentsTransformer: OperationVariablesToObject;
+  protected _declarationBlockConfig: DeclarationBlockConfig = {};
 
   constructor(rawConfig: TRawConfig, additionalConfig: TPluginConfig, defaultScalars: ScalarsMap = DEFAULT_SCALARS) {
     this._parsedConfig = {
-      scalars: { ...defaultScalars, ...(rawConfig.scalars || {}) },
+      scalars: { ...(defaultScalars || DEFAULT_SCALARS), ...(rawConfig.scalars || {}) },
       enumValues: rawConfig.enumValues || {},
       convert: rawConfig.namingConvention ? resolveExternalModuleAndFn(rawConfig.namingConvention) : toPascalCase,
       typesPrefix: rawConfig.typesPrefix || '',
@@ -58,10 +50,15 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
     };
 
     autoBind(this);
+    this._argumentsTransformer = new OperationVariablesToObject(this.scalars, this.convertName);
   }
 
   setDeclarationBlockConfig(config: DeclarationBlockConfig): void {
-    this._declarationBlockConfig = config || {};
+    this._declarationBlockConfig = config;
+  }
+
+  setArgumentsTransformer(argumentsTransfomer: OperationVariablesToObject): void {
+    this._argumentsTransformer = argumentsTransfomer;
   }
 
   get config(): TPluginConfig {
@@ -150,18 +147,12 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
     const fieldsWithArguments = original.fields.filter(field => field.arguments && field.arguments.length > 0);
     const fieldsArguments = fieldsWithArguments.map(field => {
       const name = original.name.value + this.convertName(field.name.value, false) + 'Args';
-      const transformedArguments = new OperationVariablesToObject<InputValueDefinitionNode>(
-        this.scalars,
-        this.convertName,
-        field.arguments,
-        this._declarationBlockConfig.wrapAstTypeWithModifiers
-      );
 
       return new DeclarationBlock(this._declarationBlockConfig)
         .export()
         .asKind('type')
         .withName(this.convertName(name))
-        .withBlock(transformedArguments.string).string;
+        .withBlock(this._argumentsTransformer.transform<InputValueDefinitionNode>(field.arguments)).string;
     });
 
     return [typeDefinition, ...fieldsArguments].filter(f => f).join('\n\n');

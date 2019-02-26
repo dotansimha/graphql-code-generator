@@ -284,41 +284,49 @@ describe('TypeScript', () => {
       const result = await plugin(schema, [], { namingConvention: 'change-case#lowerCase' }, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(`
-        export enum myenumvalues {
+        export enum myenum {
           a = 'A',
           b = 'B',
           c = 'C'
         }
-    
+        `);
+      expect(result).toBeSimilarStringTo(`
         export type mytype = {
           f?: Maybe<string>,
           bar?: Maybe<myenum>,
           b_a_r?: Maybe<string>,
           myOtherField?: Maybe<string>,
         };
-    
+        `);
+      expect(result).toBeSimilarStringTo(`
         export type my_type = {
           linkTest?: Maybe<mytype>,
         };
-    
+        `);
+      expect(result).toBeSimilarStringTo(`
         export type myunion = my_type | mytype;
-    
+        `);
+      expect(result).toBeSimilarStringTo(`
         export type some_interface = {
           id: string,
         };
-    
+        `);
+      expect(result).toBeSimilarStringTo(`
         export type impl1 = some_interface & {
           id: string,
         };
-    
+        `);
+      expect(result).toBeSimilarStringTo(`
         export type impl_2 = some_interface & {
           id: string,
         };
-    
+        `);
+      expect(result).toBeSimilarStringTo(`
         export type impl_3 = some_interface & {
           id: string,
         };
-    
+        `);
+      expect(result).toBeSimilarStringTo(`
         export type query = {
           something?: Maybe<myunion>,
           use_interface?: Maybe<some_interface>,
@@ -337,36 +345,44 @@ describe('TypeScript', () => {
         B = 'B',
         C = 'C'
       }
-  
+      `);
+      expect(result).toBeSimilarStringTo(`
       export type MyType = {
         f?: Maybe<string>,
         bar?: Maybe<MyEnum>,
         b_a_r?: Maybe<string>,
         myOtherField?: Maybe<string>,
       };
-  
+      `);
+      expect(result).toBeSimilarStringTo(`
       export type My_Type = {
         linkTest?: Maybe<MyType>,
       };
-  
+      `);
+      expect(result).toBeSimilarStringTo(`
       export type MyUnion = My_Type | MyType;
-  
+      `);
+      expect(result).toBeSimilarStringTo(`
       export type Some_Interface = {
         id: string,
       };
-  
+      `);
+      expect(result).toBeSimilarStringTo(`
       export type Impl1 = Some_Interface & {
         id: string,
       };
-  
+      `);
+      expect(result).toBeSimilarStringTo(`
       export type Impl_2 = Some_Interface & {
         id: string,
       };
-  
+      `);
+      expect(result).toBeSimilarStringTo(`
       export type Impl_3 = Some_Interface & {
         id: string,
       };
-  
+      `);
+      expect(result).toBeSimilarStringTo(`
       export type Query = {
         something?: Maybe<MyUnion>,
         use_interface?: Maybe<Some_Interface>,
@@ -384,37 +400,42 @@ describe('TypeScript', () => {
         IA = 'A',
         IB = 'B',
         IC = 'C'
-      }
-  
+      };`);
+
+      expect(result).toBeSimilarStringTo(`
       export type IMyType = {
         f?: Maybe<string>,
         bar?: Maybe<IMyEnum>,
         b_a_r?: Maybe<string>,
         myOtherField?: Maybe<string>,
-      };
-  
+      };`);
+      expect(result).toBeSimilarStringTo(`
       export type IMy_Type = {
         linkTest?: Maybe<IMyType>,
       };
-  
-      export type IMyUnion = IMy_Type | IMyType;
-  
+  `);
+      expect(result).toBeSimilarStringTo(`export type IMyUnion = IMy_Type | IMyType;`);
+      expect(result).toBeSimilarStringTo(`
       export type ISome_Interface = {
         id: string,
       };
-  
+      `);
+      expect(result).toBeSimilarStringTo(`
       export type IImpl1 = ISome_Interface & {
         id: string,
       };
-  
+      `);
+      expect(result).toBeSimilarStringTo(`
       export type IImpl_2 = ISome_Interface & {
         id: string,
       };
-  
+      `);
+      expect(result).toBeSimilarStringTo(`
       export type IImpl_3 = ISome_Interface & {
         id: string,
       };
-  
+      `);
+      expect(result).toBeSimilarStringTo(`
       export type IQuery = {
         something?: Maybe<IMyUnion>,
         use_interface?: Maybe<ISome_Interface>,
@@ -497,8 +518,8 @@ describe('TypeScript', () => {
         };
 
         export type TMutationFooArgs = {
-          id?: string,
-          input?: TInput
+          id?: Maybe<string>,
+          input?: Maybe<TInput>
         };
       `);
 
