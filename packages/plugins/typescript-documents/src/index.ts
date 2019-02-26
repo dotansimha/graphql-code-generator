@@ -3,7 +3,9 @@ import { visit, concatAST, GraphQLSchema } from 'graphql';
 import { TypeScriptDocumentsVisitor } from './visitor';
 import { RawDocumentsConfig } from 'graphql-codegen-visitor-plugin-common';
 
-export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {}
+export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
+  avoidOptionals?: boolean;
+}
 
 export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig> = (
   schema: GraphQLSchema,

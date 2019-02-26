@@ -1,21 +1,31 @@
 import { GraphQLSchema } from 'graphql';
 import { ParsedDocumentsConfig, BaseDocumentsVisitor } from 'graphql-codegen-visitor-plugin-common';
-import { FlowOperationVariablesToObject } from '../../flow/src/flow-variables-to-object';
 import { TypeScriptSelectionSetToObject } from './ts-selection-set-to-object';
 import { TypeScriptDocumentsPluginConfig } from './index';
+import { TypeScriptOperationVariablesToObject } from 'graphql-codegen-typescript';
 
-export interface TypeScriptDocumentsParsedConfig extends ParsedDocumentsConfig {}
+export interface TypeScriptDocumentsParsedConfig extends ParsedDocumentsConfig {
+  avoidOptionals: boolean;
+}
 
 export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
   TypeScriptDocumentsPluginConfig,
   TypeScriptDocumentsParsedConfig
 > {
   constructor(schema: GraphQLSchema, config: TypeScriptDocumentsPluginConfig) {
-    super(config, null, schema);
+    super(
+      config,
+      {
+        avoidOptionals: config.avoidOptionals || false
+      } as any,
+      schema
+    );
 
     this.setSelectionSetHandler(
       new TypeScriptSelectionSetToObject(this.scalars, this.schema, this.convertName, this.config.addTypename)
     );
-    this.setVariablesTransformer(new FlowOperationVariablesToObject(this.scalars, this.convertName));
+    this.setVariablesTransformer(
+      new TypeScriptOperationVariablesToObject(this.scalars, this.convertName, this.config.avoidOptionals)
+    );
   }
 }
