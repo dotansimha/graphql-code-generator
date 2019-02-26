@@ -1,12 +1,12 @@
 import 'graphql-codegen-core/dist/testing';
-import { parse, visit, buildClientSchema } from 'graphql';
-import { TypeScriptDocumentsVisitor } from '../src/visitor';
+import { parse, buildClientSchema } from 'graphql';
 import { makeExecutableSchema } from 'graphql-tools';
 import { readFileSync } from 'fs';
 import { plugin } from '../src/index';
 import { validateTs } from '../../typescript/tests/validate';
+import { plugin as tsPlugin } from '../../typescript/src/index';
 
-describe('TypeScript Documents Plugin', () => {
+describe('TypeScript Documents Plugin', async () => {
   const gitHuntSchema = buildClientSchema(JSON.parse(readFileSync('../../../dev-test/githunt/schema.json', 'utf-8')));
   const schema = makeExecutableSchema({
     typeDefs: `
@@ -77,6 +77,9 @@ describe('TypeScript Documents Plugin', () => {
     `
   });
 
+  const validate = async (content: string, config: any = {}) =>
+    validateTs((await tsPlugin(schema, [], config, { outputFile: '' })) + '\n' + content);
+
   describe('Naming Convention & Types Prefix', () => {
     it('Should allow custom naming and point to the correct type', async () => {
       const ast = parse(`
@@ -97,16 +100,13 @@ describe('TypeScript Documents Plugin', () => {
         }
       }
   `);
-      const result = await plugin(
-        schema,
-        [{ filePath: 'test-file.ts', content: ast }],
-        { namingConvention: 'change-case#lowerCase' },
-        { outputFile: '' }
-      );
+      const config = { namingConvention: 'change-case#lowerCase' };
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(
         `export type notificationsquery = ({ __typename?: 'Query' } & { notifications: Array<(Pick<notifiction, 'id'> & (({ __typename?: 'TextNotification' } & Pick<textnotification, 'text'>) | ({ __typename?: 'ImageNotification' } & Pick<imagenotification, 'imageUrl'> & { metadata: ({ __typename?: 'ImageMetadata' } & Pick<imagemetadata, 'createdBy'>) })))> });`
       );
+      await validate(result, config);
     });
 
     it('Should allow custom naming and point to the correct type - with custom prefix', async () => {
@@ -129,17 +129,14 @@ describe('TypeScript Documents Plugin', () => {
       }
   `);
 
-      const result = await plugin(
-        schema,
-        [{ filePath: 'test-file.ts', content: ast }],
-        { typesPrefix: 'i', namingConvention: 'change-case#lowerCase' },
-        { outputFile: '' }
-      );
+      const config = { typesPrefix: 'i', namingConvention: 'change-case#lowerCase' };
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(`export type iinotificationsqueryvariables = {};`);
       expect(result).toBeSimilarStringTo(
         `export type iinotificationsquery = ({ __typename?: 'Query' } & { notifications: Array<(Pick<inotifiction, 'id'> & (({ __typename?: 'TextNotification' } & Pick<itextnotification, 'text'>) | ({ __typename?: 'ImageNotification' } & Pick<iimagenotification, 'imageUrl'> & { metadata: ({ __typename?: 'ImageMetadata' } & Pick<iimagemetadata, 'createdBy'>) })))> });`
       );
+      validate(result, config);
     });
   });
 
@@ -150,14 +147,11 @@ describe('TypeScript Documents Plugin', () => {
           dummy
         }
       `);
-      const result = await plugin(
-        schema,
-        [{ filePath: 'test-file.ts', content: ast }],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const config = { skipTypename: true };
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
       expect(result).not.toContain(`__typename`);
+      validate(result, config);
     });
 
     it('Should add __typename as non-optional when explicitly specified', async () => {
@@ -167,10 +161,12 @@ describe('TypeScript Documents Plugin', () => {
           dummy
         }
       `);
-      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], {}, { outputFile: '' });
+      const config = {};
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
       expect(result).toBeSimilarStringTo(
         `export type Unnamed_1_Query = ({ __typename: 'Query' } & Pick<Query, 'dummy'>);`
       );
+      validate(result, config);
     });
 
     it('Should add __typename as optional when its not specified', async () => {
@@ -179,10 +175,12 @@ describe('TypeScript Documents Plugin', () => {
           dummy
         }
       `);
-      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], {}, { outputFile: '' });
+      const config = {};
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
       expect(result).toBeSimilarStringTo(
         `export type Unnamed_1_Query = ({ __typename?: 'Query' } & Pick<Query, 'dummy'>);`
       );
+      validate(result, config);
     });
 
     it('Should add __typename as non-optional when its explictly specified, even if skipTypename is true', async () => {
@@ -192,16 +190,13 @@ describe('TypeScript Documents Plugin', () => {
           dummy
         }
       `);
-      const result = await plugin(
-        schema,
-        [{ filePath: 'test-file.ts', content: ast }],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const config = { skipTypename: true };
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(
         `export type Unnamed_1_Query = ({ __typename: 'Query' } & Pick<Query, 'dummy'>);`
       );
+      validate(result, config);
     });
 
     it('Should add __typename correctly when unions are in use', async () => {
@@ -218,10 +213,12 @@ describe('TypeScript Documents Plugin', () => {
           }
         }
     `);
-      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], {}, { outputFile: '' });
+      const config = {};
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
       expect(result).toBeSimilarStringTo(
         `export type UnionTestQuery = ({ __typename?: 'Query' } & { unionTest: Maybe<(({ __typename?: 'User' } & Pick<User, 'id'>) | ({ __typename?: 'Profile' } & Pick<Profile, 'age'>))> });`
       );
+      validate(result, config);
     });
 
     it('Should add __typename correctly when interfaces are in use', async () => {
@@ -243,10 +240,12 @@ describe('TypeScript Documents Plugin', () => {
           }
         }
     `);
-      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], {}, { outputFile: '' });
+      const config = {};
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
       expect(result).toBeSimilarStringTo(
         `export type NotificationsQuery = ({ __typename?: 'Query' } & { notifications: Array<(Pick<Notifiction, 'id'> & (({ __typename?: 'TextNotification' } & Pick<TextNotification, 'text'>) | ({ __typename?: 'ImageNotification' } & Pick<ImageNotification, 'imageUrl'> & { metadata: ({ __typename?: 'ImageMetadata' } & Pick<ImageMetadata, 'createdBy'>) })))> });`
       );
+      validate(result, config);
     });
   });
 
@@ -257,14 +256,11 @@ describe('TypeScript Documents Plugin', () => {
           dummy
         }
       `);
-      const result = await plugin(
-        schema,
-        [{ filePath: 'test-file.ts', content: ast }],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const config = { skipTypename: true };
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
       expect(result).toBeSimilarStringTo(`export type Unnamed_1_Query = Pick<Query, 'dummy'>;`);
       expect(result).toBeSimilarStringTo(`export type Unnamed_1_QueryVariables = {};`);
+      validate(result, config);
     });
 
     it('Should handle unnamed documents correctly with multiple documents', async () => {
@@ -277,17 +273,14 @@ describe('TypeScript Documents Plugin', () => {
           dummy
         }
       `);
-      const result = await plugin(
-        schema,
-        [{ filePath: 'test-file.ts', content: ast }],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const config = { skipTypename: true };
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(`export type Unnamed_1_Query = Pick<Query, 'dummy'>;`);
       expect(result).toBeSimilarStringTo(`export type Unnamed_1_QueryVariables = {};`);
       expect(result).toBeSimilarStringTo(`export type Unnamed_2_Query = Pick<Query, 'dummy'>;`);
       expect(result).toBeSimilarStringTo(`export type Unnamed_2_QueryVariables = {};`);
+      validate(result, config);
     });
   });
 
@@ -309,13 +302,10 @@ describe('TypeScript Documents Plugin', () => {
           }
         }
     `);
-      const result = await plugin(
-        schema,
-        [{ filePath: 'test-file.ts', content: ast }],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const config = { skipTypename: true };
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
       expect(result).toBeSimilarStringTo(`export type MeQuery = { me: Maybe<UserFieldsFragment> };`);
+      validate(result, config);
     });
 
     it('Should support fragment spread correctly with simple type with other fields', async () => {
@@ -334,16 +324,13 @@ describe('TypeScript Documents Plugin', () => {
           }
         }
     `);
-      const result = await plugin(
-        schema,
-        [{ filePath: 'test-file.ts', content: ast }],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const config = { skipTypename: true };
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(
         `export type MeQuery = { me: Maybe<(Pick<User, 'username'> & UserFieldsFragment)> };`
       );
+      validate(result, config);
     });
 
     it('Should support fragment spread correctly with multiple fragment spread', async () => {
@@ -366,16 +353,13 @@ describe('TypeScript Documents Plugin', () => {
           }
         }
     `);
-      const result = await plugin(
-        schema,
-        [{ filePath: 'test-file.ts', content: ast }],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const config = { skipTypename: true };
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(
         `export type MeQuery = { me: Maybe<(Pick<User, 'username'> & (UserFieldsFragment & UserProfileFragment))> };`
       );
+      validate(result, config);
     });
 
     it('Should support interfaces correctly when used with inline fragments', async () => {
@@ -398,15 +382,12 @@ describe('TypeScript Documents Plugin', () => {
       }
     `);
 
-      const result = await plugin(
-        schema,
-        [{ filePath: 'test-file.ts', content: ast }],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const config = { skipTypename: true };
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
       expect(result).toBeSimilarStringTo(
         `export type NotificationsQuery = { notifications: Array<(Pick<Notifiction, 'id'> & (Pick<TextNotification, 'text'> | (Pick<ImageNotification, 'imageUrl'> & { metadata: Pick<ImageMetadata, 'createdBy'> })))> };`
       );
+      validate(result, config);
     });
 
     it('Should support union correctly when used with inline fragments', async () => {
@@ -423,16 +404,13 @@ describe('TypeScript Documents Plugin', () => {
           }
         }
     `);
-      const result = await plugin(
-        schema,
-        [{ filePath: 'test-file.ts', content: ast }],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const config = { skipTypename: true };
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(
         `export type UnionTestQuery = { unionTest: Maybe<(Pick<User, 'id'> | Pick<Profile, 'age'>)> };`
       );
+      validate(result, config);
     });
 
     it('Should support inline fragments', async () => {
@@ -449,15 +427,12 @@ describe('TypeScript Documents Plugin', () => {
           }
         }
     `);
-      const result = await plugin(
-        schema,
-        [{ filePath: 'test-file.ts', content: ast }],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const config = { skipTypename: true };
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
       expect(result).toBeSimilarStringTo(
         `export type CurrentUserQuery = { me: Maybe<(Pick<User, 'id'> & ((Pick<User, 'username'> & { profile: Maybe<Pick<Profile, 'age'>> })))> };`
       );
+      validate(result, config);
     });
 
     it('Should build a basic selection set based on basic query on GitHub schema', async () => {
@@ -477,12 +452,10 @@ describe('TypeScript Documents Plugin', () => {
           }
         }
       `);
-      const result = await plugin(
-        gitHuntSchema,
-        [{ filePath: 'test-file.ts', content: ast }],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const config = { skipTypename: true };
+      const result = await plugin(gitHuntSchema, [{ filePath: 'test-file.ts', content: ast }], config, {
+        outputFile: ''
+      });
 
       expect(result).toBeSimilarStringTo(
         `export type MeQueryVariables = {
@@ -492,6 +465,7 @@ describe('TypeScript Documents Plugin', () => {
       expect(result).toBeSimilarStringTo(
         `export type MeQuery = { currentUser: Maybe<Pick<User, 'login' | 'html_url'>>, entry: Maybe<(Pick<Entry, 'id' | 'createdAt'> & { postedBy: Pick<User, 'login' | 'html_url'> })> };`
       );
+      validate(result, config);
     });
 
     it('Should build a basic selection set based on basic query', async () => {
@@ -500,14 +474,11 @@ describe('TypeScript Documents Plugin', () => {
           dummy
         }
       `);
-      const result = await plugin(
-        schema,
-        [{ filePath: 'test-file.ts', content: ast }],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const config = { skipTypename: true };
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(`export type DummyQuery = Pick<Query, 'dummy'>;`);
+      validate(result, config);
     });
 
     it('Should build a basic selection set based on basic query with field aliasing for basic scalar', async () => {
@@ -519,16 +490,13 @@ describe('TypeScript Documents Plugin', () => {
           }
         }
       `);
-      const result = await plugin(
-        schema,
-        [{ filePath: 'test-file.ts', content: ast }],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const config = { skipTypename: true };
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(
         `export type DummyQuery = ({ customName: Query['dummy'] } & { customName2: Maybe<Pick<Profile, 'age'>> });`
       );
+      validate(result, config);
     });
 
     it('Should build a basic selection set based on a query with inner fields', async () => {
@@ -544,16 +512,13 @@ describe('TypeScript Documents Plugin', () => {
           }
         }
       `);
-      const result = await plugin(
-        schema,
-        [{ filePath: 'test-file.ts', content: ast }],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const config = { skipTypename: true };
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(
         `export type CurrentUserQuery = { me: Maybe<(Pick<User, 'id' | 'username' | 'role'> & { profile: Maybe<Pick<Profile, 'age'>> })> };`
       );
+      validate(result, config);
     });
   });
 
@@ -568,16 +533,13 @@ describe('TypeScript Documents Plugin', () => {
           }
         }
       `);
-      const result = await plugin(
-        schema,
-        [{ filePath: 'test-file.ts', content: ast }],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const config = { skipTypename: true };
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(
         `export type UserFieldsFragment = (Pick<User, 'id' | 'username'> & { profile: Maybe<Pick<Profile, 'age'>> });`
       );
+      validate(result, config);
     });
   });
 
@@ -594,16 +556,13 @@ describe('TypeScript Documents Plugin', () => {
           }
         }
       `);
-      const result = await plugin(
-        schema,
-        [{ filePath: 'test-file.ts', content: ast }],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const config = { skipTypename: true };
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(
         `export type LoginMutation = { login: Maybe<(Pick<User, 'id' | 'username'> & { profile: Maybe<Pick<Profile, 'age'>> })> };`
       );
+      validate(result, config);
     });
 
     it('Should detect Query correctly', async () => {
@@ -612,14 +571,11 @@ describe('TypeScript Documents Plugin', () => {
           dummy
         }
       `);
-      const result = await plugin(
-        schema,
-        [{ filePath: 'test-file.ts', content: ast }],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const config = { skipTypename: true };
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(`export type TestQuery = Pick<Query, 'dummy'>;`);
+      validate(result, config);
     });
 
     it('Should detect Subscription correctly', async () => {
@@ -630,14 +586,11 @@ describe('TypeScript Documents Plugin', () => {
           }
         }
       `);
-      const result = await plugin(
-        schema,
-        [{ filePath: 'test-file.ts', content: ast }],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const config = { skipTypename: true };
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(`export type TestSubscription = { userCreated: Maybe<Pick<User, 'id'>> };`);
+      validate(result, config);
     });
 
     it('Should handle operation variables correctly', async () => {
@@ -646,12 +599,8 @@ describe('TypeScript Documents Plugin', () => {
           dummy
         }
       `);
-      const result = await plugin(
-        schema,
-        [{ filePath: 'test-file.ts', content: ast }],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const config = { skipTypename: true };
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(
         `export type TestQueryQueryVariables = {
@@ -665,6 +614,7 @@ describe('TypeScript Documents Plugin', () => {
           innerRequired: Array<string>
         };`
       );
+      validate(result, config);
     });
 
     it('Should create empty variables when there are no operation variables', async () => {
@@ -673,14 +623,11 @@ describe('TypeScript Documents Plugin', () => {
           dummy
         }
       `);
-      const result = await plugin(
-        schema,
-        [{ filePath: 'test-file.ts', content: ast }],
-        { skipTypename: true },
-        { outputFile: '' }
-      );
+      const config = { skipTypename: true };
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(`export type TestQueryQueryVariables = {};`);
+      validate(result, config);
     });
   });
 });
