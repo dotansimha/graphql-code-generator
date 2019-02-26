@@ -3,24 +3,19 @@ import { indent, getBaseTypeNode } from './utils';
 import { ScalarsMap, ConvertNameFn } from './types';
 import * as autoBind from 'auto-bind';
 
-export class OperationVariablesToObject<
-  DefinitionType extends {
-    name?: NameNode;
-    variable?: VariableNode;
-    type: TypeNode;
-    defaultValue?: ValueNode;
-  }
-> {
-  constructor(
-    private _scalars: ScalarsMap,
-    private _convertName: ConvertNameFn,
-    private _variablesNode: ReadonlyArray<DefinitionType>,
-    private _wrapAstTypeWithModifiers: Function
-  ) {
+export interface InterfaceOrVariable {
+  name?: NameNode;
+  variable?: VariableNode;
+  type: TypeNode;
+  defaultValue?: ValueNode;
+}
+
+export class OperationVariablesToObject {
+  constructor(protected _scalars: ScalarsMap, protected _convertName: ConvertNameFn) {
     autoBind(this);
   }
 
-  getName(node: DefinitionType): string {
+  getName<TDefinitionType extends InterfaceOrVariable>(node: TDefinitionType): string {
     if (node.name) {
       if (typeof node.name === 'string') {
         return node.name;
@@ -34,28 +29,48 @@ export class OperationVariablesToObject<
     return null;
   }
 
-  get string(): string {
-    if (!this._variablesNode || this._variablesNode.length === 0) {
+  transform<TDefinitionType extends InterfaceOrVariable>(variablesNode: ReadonlyArray<TDefinitionType>): string {
+    if (!variablesNode || variablesNode.length === 0) {
       return null;
     }
 
-    return this._variablesNode
-      .map(variable => {
-        const baseType = typeof variable.type === 'string' ? variable.type : getBaseTypeNode(variable.type);
-        const typeName = typeof baseType === 'string' ? baseType : baseType.name.value;
-        const typeValue = this._scalars[typeName] ? this._scalars[typeName] : this._convertName(typeName, true);
+    return variablesNode.map(variable => indent(this.transformVariable(variable))).join(',\n');
+  }
 
-        const fieldName = this.getName(variable);
-        const fieldType = this._wrapAstTypeWithModifiers(typeValue, variable.type);
+  protected transformVariable<TDefinitionType extends InterfaceOrVariable>(variable: TDefinitionType): string {
+    const baseType = typeof variable.type === 'string' ? variable.type : getBaseTypeNode(variable.type);
+    const typeName = typeof baseType === 'string' ? baseType : baseType.name.value;
+    const typeValue = this._scalars[typeName] ? this._scalars[typeName] : this._convertName(typeName, true);
 
-        const hasDefaultValue = variable.defaultValue != null && typeof variable.defaultValue !== 'undefined';
-        const isNonNullType = variable.type.kind === Kind.NON_NULL_TYPE;
+    const fieldName = this.getName(variable);
+    const fieldType = this.wrapAstTypeWithModifiers(typeValue, variable.type);
 
-        const formattedFieldString = hasDefaultValue || isNonNullType ? fieldName : `${fieldName}?`;
-        const formattedTypeString = hasDefaultValue && !isNonNullType ? fieldType.substring(1) : fieldType;
+    const hasDefaultValue = variable.defaultValue != null && typeof variable.defaultValue !== 'undefined';
+    const isNonNullType = variable.type.kind === Kind.NON_NULL_TYPE;
 
-        return indent(`${formattedFieldString}: ${formattedTypeString}`);
-      })
-      .join(',\n');
+    const formattedFieldString = this.formatFieldString(fieldName, isNonNullType, hasDefaultValue);
+    const formattedTypeString = this.formatTypeString(fieldType, isNonNullType, hasDefaultValue);
+
+    return `${formattedFieldString}: ${formattedTypeString}`;
+  }
+
+  protected wrapAstTypeWithModifiers(baseType: string, typeNode: TypeNode): string {
+    if (typeNode.kind === Kind.NON_NULL_TYPE) {
+      return this.wrapAstTypeWithModifiers(baseType, typeNode.type);
+    } else if (typeNode.kind === Kind.LIST_TYPE) {
+      const innerType = this.wrapAstTypeWithModifiers(baseType, typeNode.type);
+
+      return `Array<${innerType}>`;
+    } else {
+      return baseType;
+    }
+  }
+
+  protected formatFieldString(fieldName: string, isNonNullType: boolean, hasDefaultValue: boolean): string {
+    return fieldName;
+  }
+
+  protected formatTypeString(fieldType: string, isNonNullType: boolean, hasDefaultValue: boolean): string {
+    return fieldType;
   }
 }
