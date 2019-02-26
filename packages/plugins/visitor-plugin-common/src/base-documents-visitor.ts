@@ -10,7 +10,7 @@ import {
   OperationDefinitionNode,
   VariableDefinitionNode
 } from 'graphql';
-import { SelectionSetToObject, ISelectionSetToObjectClass } from './selection-set-to-object';
+import { SelectionSetToObject } from './selection-set-to-object';
 import { OperationVariablesToObject } from './variables-to-object';
 
 export interface ParsedDocumentsConfig {
@@ -35,13 +35,13 @@ export class BaseDocumentsVisitor<
   protected _declarationBlockConfig: DeclarationBlockConfig = {};
   protected _unnamedCounter = 1;
   protected _variablesTransfomer: OperationVariablesToObject;
+  protected _selectionSetToObject: SelectionSetToObject;
 
   constructor(
     rawConfig: TRawConfig,
     additionalConfig: TPluginConfig,
     protected _schema: GraphQLSchema,
-    defaultScalars: ScalarsMap = DEFAULT_SCALARS,
-    protected _selectionSetToObjectClass: ISelectionSetToObjectClass = SelectionSetToObject
+    defaultScalars: ScalarsMap = DEFAULT_SCALARS
   ) {
     this._parsedConfig = {
       addTypename: !rawConfig.skipTypename,
@@ -53,6 +53,10 @@ export class BaseDocumentsVisitor<
 
     autoBind(this);
     this._variablesTransfomer = new OperationVariablesToObject(this.scalars, this.convertName);
+  }
+
+  setSelectionSetHandler(handler: SelectionSetToObject) {
+    this._selectionSetToObject = handler;
   }
 
   setDeclarationBlockConfig(config: DeclarationBlockConfig): void {
@@ -93,14 +97,7 @@ export class BaseDocumentsVisitor<
 
   FragmentDefinition = (node: FragmentDefinitionNode): string => {
     const fragmentRootType = this._schema.getType(node.typeCondition.name.value) as GraphQLObjectType;
-    const selectionSet = new this._selectionSetToObjectClass(
-      this.scalars,
-      this.schema,
-      this.convertName,
-      this.config.addTypename,
-      fragmentRootType,
-      node.selectionSet
-    );
+    const selectionSet = this._selectionSetToObject.createNext(fragmentRootType, node.selectionSet);
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
@@ -112,14 +109,7 @@ export class BaseDocumentsVisitor<
   OperationDefinition = (node: OperationDefinitionNode): string => {
     const name = this.handleAnonymouseOperation(node.name && node.name.value ? node.name.value : null);
     const operationRootType = this._schema.getType(toPascalCase(node.operation)) as GraphQLObjectType;
-    const selectionSet = new this._selectionSetToObjectClass(
-      this.scalars,
-      this.schema,
-      this.convertName,
-      this.config.addTypename,
-      operationRootType,
-      node.selectionSet
-    );
+    const selectionSet = this._selectionSetToObject.createNext(operationRootType, node.selectionSet);
     const visitedOperationVariables = this._variablesTransfomer.transform<VariableDefinitionNode>(
       node.variableDefinitions
     );

@@ -8,8 +8,6 @@ export interface FlowDocumentsPluginConfig extends RawDocumentsConfig {
   useFlowReadOnlyTypes?: boolean;
 }
 
-export type ScalarsMap = { [name: string]: string };
-
 export const plugin: PluginFunction<FlowDocumentsPluginConfig> = (
   schema: GraphQLSchema,
   documents: DocumentFile[],
