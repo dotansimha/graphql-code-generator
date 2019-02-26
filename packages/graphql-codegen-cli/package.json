@@ -68,7 +68,7 @@
     "inquirer": "6.2.2",
     "is-glob": "4.0.0",
     "is-valid-path": "0.1.1",
-    "js-yaml": "3.12.1",
+    "js-yaml": "3.12.2",
     "json-to-pretty-yaml": "1.2.2",
     "listr": "0.14.3",
     "listr-update-renderer": "0.5.0",
