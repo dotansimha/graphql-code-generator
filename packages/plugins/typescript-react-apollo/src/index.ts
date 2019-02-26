@@ -46,12 +46,12 @@ export const validate: PluginValidateFn<any> = async (
   outputFile: string
 ) => {
   if (config.noComponents) {
-    if (extname(outputFile) !== '.ts') {
-      throw new Error(`Plugin "react-apollo" requires extension to be ".ts"!`);
+    if (extname(outputFile) !== '.ts' && extname(outputFile) !== '.tsx') {
+      throw new Error(`Plugin "react-apollo" with "noComponents" requires extension to be ".ts" or ".tsx"!`);
     }
   } else {
     if (extname(outputFile) !== '.tsx') {
-      throw new Error(`Plugin "react-apollo" with components requires extension to be ".tsx"!`);
+      throw new Error(`Plugin "react-apollo" requires extension to be ".tsx"!`);
     }
   }
 };
