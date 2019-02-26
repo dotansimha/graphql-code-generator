@@ -1241,7 +1241,7 @@ describe('Resolvers', () => {
     `);
 
     expect(content).toBeSimilarStringTo(`
-      export interface IDirectiveResolvers<Result> = {
+      export type IDirectiveResolvers<Result> = {
         modify?: ModifyDirectiveResolver<Result>;
         skip?: SkipDirectiveResolver<Result>;
         include?: IncludeDirectiveResolver<Result>;
