@@ -1,4 +1,4 @@
-import { OperationVariablesToObject, ScalarsMap, ConvertNameFn } from 'graphql-codegen-visitor-plugin-common';
+import { OperationVariablesToObject } from 'graphql-codegen-visitor-plugin-common';
 import { TypeNode, Kind } from 'graphql';
 
 export class FlowOperationVariablesToObject extends OperationVariablesToObject {
