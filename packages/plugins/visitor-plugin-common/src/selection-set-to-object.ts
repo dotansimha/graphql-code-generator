@@ -21,17 +21,6 @@ export type LinkField = { alias: string; name: string; type: string; selectionSe
 export type FragmentSpreadField = string;
 export type InlineFragmentField = { [onType: string]: string[] };
 
-export interface ISelectionSetToObjectClass {
-  new (
-    _scalars: ScalarsMap,
-    _schema: GraphQLSchema,
-    _convertName: ConvertNameFn,
-    _addTypename: boolean,
-    _parentSchemaType: GraphQLNamedType,
-    _selectionSet: SelectionSetNode
-  ): SelectionSetToObject;
-}
-
 export class SelectionSetToObject {
   protected _primitiveFields: PrimitiveField[] = [];
   protected _primitiveAliasedFields: PrimitiveAliasedFields[] = [];
@@ -45,12 +34,12 @@ export class SelectionSetToObject {
     protected _schema: GraphQLSchema,
     protected _convertName: ConvertNameFn,
     protected _addTypename: boolean,
-    protected _parentSchemaType: GraphQLNamedType,
-    protected _selectionSet: SelectionSetNode
+    protected _parentSchemaType?: GraphQLNamedType,
+    protected _selectionSet?: SelectionSetNode
   ) {}
 
-  protected getClassCreator(): ISelectionSetToObjectClass {
-    throw new Error(`You must override getClassCreator in your SelectionSetToObject implementation!`);
+  public createNext(parentSchemaType: GraphQLNamedType, selectionSet: SelectionSetNode): SelectionSetToObject {
+    throw new Error(`You must override createNext in your SelectionSetToObject implementation!`);
   }
 
   protected wrapTypeWithModifiers(
@@ -83,14 +72,7 @@ export class SelectionSetToObject {
           this._primitiveFields.push(field.name.value);
         }
       } else {
-        const selectionSetToObject = new (this.getClassCreator())(
-          this._scalars,
-          this._schema,
-          this._convertName,
-          this._addTypename,
-          baseType,
-          field.selectionSet
-        );
+        const selectionSetToObject = this.createNext(baseType, field.selectionSet);
 
         this._linksFields.push({
           alias: field.alias ? field.alias.value : null,
@@ -109,14 +91,7 @@ export class SelectionSetToObject {
   _collectInlineFragment(node: InlineFragmentNode) {
     const onType = node.typeCondition.name.value;
     const schemaType = this._schema.getType(onType);
-    const selectionSet = new (this.getClassCreator())(
-      this._scalars,
-      this._schema,
-      this._convertName,
-      this._addTypename,
-      schemaType,
-      node.selectionSet
-    );
+    const selectionSet = this.createNext(schemaType, node.selectionSet);
 
     if (!this._inlineFragments[onType]) {
       this._inlineFragments[onType] = [];
@@ -183,7 +158,7 @@ export class SelectionSetToObject {
       return null;
     }
 
-    return `Pick<${parentName}, ${fields.map(field => `'${field}'`).join(' | ')} }>`;
+    return `Pick<${parentName}, ${fields.map(field => `'${field}'`).join(' | ')}>`;
   }
 
   protected buildAliasedPrimitiveFields(parentName: string, fields: PrimitiveAliasedFields[]): string | null {
