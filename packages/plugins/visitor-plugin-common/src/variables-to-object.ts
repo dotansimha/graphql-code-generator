@@ -55,15 +55,7 @@ export class OperationVariablesToObject {
   }
 
   protected wrapAstTypeWithModifiers(baseType: string, typeNode: TypeNode): string {
-    if (typeNode.kind === Kind.NON_NULL_TYPE) {
-      return this.wrapAstTypeWithModifiers(baseType, typeNode.type);
-    } else if (typeNode.kind === Kind.LIST_TYPE) {
-      const innerType = this.wrapAstTypeWithModifiers(baseType, typeNode.type);
-
-      return `Array<${innerType}>`;
-    } else {
-      return baseType;
-    }
+    throw new Error(`You must override "wrapAstTypeWithModifiers" of OperationVariablesToObject!`);
   }
 
   protected formatFieldString(fieldName: string, isNonNullType: boolean, hasDefaultValue: boolean): string {
