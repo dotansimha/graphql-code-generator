@@ -2,7 +2,7 @@ import { GraphQLSchema } from 'graphql';
 import { FlowDocumentsPluginConfig } from './index';
 import { ParsedDocumentsConfig, BaseDocumentsVisitor } from 'graphql-codegen-visitor-plugin-common';
 import { FlowSelectionSetToObject } from './flow-selection-set-to-object';
-import { FlowOperationVariablesToObject } from '../../flow/src/flow-variables-to-object';
+import { FlowOperationVariablesToObject } from 'graphql-codegen-flow';
 
 export interface FlowDocumentsParsedConfig extends ParsedDocumentsConfig {
   useFlowExactObjects: boolean;

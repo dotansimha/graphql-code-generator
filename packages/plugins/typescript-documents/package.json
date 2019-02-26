@@ -11,6 +11,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "graphql-codegen-typescript": "0.17.0",
     "graphql-codegen-visitor-plugin-common": "0.17.0",
     "graphql-codegen-core": "0.17.0",
     "graphql-codegen-plugin-helpers": "0.17.0"
