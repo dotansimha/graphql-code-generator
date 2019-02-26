@@ -4,7 +4,7 @@ import * as ReactApollo from 'react-apollo';
 import * as React from 'react';
 {{/unless}}
 {{#if @root.config.withHooks}}
-import * as ReactApolloHooks from 'react-apollo-hooks';
+import * as ReactApolloHooks from '{{{hooksImport this}}}';
 {{/if}}
 {{#unless @root.config.noGraphqlTag}}
 {{{gqlImport this}}};

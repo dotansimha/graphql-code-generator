@@ -4,7 +4,7 @@ import { flattenTypes } from 'graphql-codegen-plugin-helpers';
 import { GraphQLSchema } from 'graphql';
 import * as Handlebars from 'handlebars';
 import * as rootTemplate from './root.handlebars';
-import { generateFragments, gql, propsType, shouldOutputHook, gqlImport } from './helpers';
+import { generateFragments, gql, propsType, shouldOutputHook, hooksImport, gqlImport } from './helpers';
 import { extname } from 'path';
 
 export interface TypeScriptReactApolloConfig extends TypeScriptCommonConfig {
@@ -14,6 +14,7 @@ export interface TypeScriptReactApolloConfig extends TypeScriptCommonConfig {
   noComponents?: boolean;
   withHooks?: boolean;
   withSubscriptionHooks?: boolean;
+  hooksImportFrom?: string;
   gqlImport?: string;
 }
 
@@ -29,6 +30,7 @@ export const plugin: PluginFunction<TypeScriptReactApolloConfig> = async (
   Handlebars.registerHelper('gql', gql(convert));
   Handlebars.registerHelper('propsType', propsType(convert));
   Handlebars.registerHelper('shouldOutputHook', shouldOutputHook);
+  Handlebars.registerHelper('hooksImport', hooksImport);
   Handlebars.registerHelper('gqlImport', gqlImport);
 
   const hbsContext = {
