@@ -54,7 +54,7 @@ export class OperationVariablesToObject {
     return `${formattedFieldString}: ${formattedTypeString}`;
   }
 
-  protected wrapAstTypeWithModifiers(baseType: string, typeNode: TypeNode): string {
+  public wrapAstTypeWithModifiers(baseType: string, typeNode: TypeNode): string {
     throw new Error(`You must override "wrapAstTypeWithModifiers" of OperationVariablesToObject!`);
   }
 
