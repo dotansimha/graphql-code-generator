@@ -1,17 +1,9 @@
-import { ScalarsMap } from 'graphql-codegen-visitor-plugin-common';
+import { RawResolversConfig } from 'graphql-codegen-visitor-plugin-common';
 import { DocumentFile, PluginFunction } from 'graphql-codegen-core';
 import { isScalarType, parse, printSchema, visit, GraphQLSchema } from 'graphql';
 import { FlowResolversVisitor } from './visitor';
 
-export interface FlowResolversPluginConfig {
-  contextType?: string;
-  mapping?: { [typeName: string]: string };
-  scalars?: ScalarsMap;
-  namingConvention?: string;
-  typesPrefix?: string;
-  useFlowExactObjects?: boolean;
-  useFlowReadOnlyTypes?: boolean;
-}
+export interface FlowResolversPluginConfig extends RawResolversConfig {}
 
 export const plugin: PluginFunction<FlowResolversPluginConfig> = (
   schema: GraphQLSchema,
