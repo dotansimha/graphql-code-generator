@@ -25,6 +25,7 @@ export namespace Types {
   /* Output Definition */
   export type OutputConfig = InstanceOrArray<NamedPlugin | ConfiguredPlugin>;
   export type ConfiguredOutput = {
+    overwrite?: boolean;
     documents?: InstanceOrArray<OperationDocument>;
     schema?: InstanceOrArray<Schema>;
     plugins: OutputConfig;

@@ -1,8 +1,7 @@
-import { FileOutput, Types } from 'graphql-codegen-core';
+import { FileOutput, Types, debugLog } from 'graphql-codegen-core';
 import { executeCodegen } from './codegen';
 import { createWatcher } from './utils/watcher';
-import { fileExists } from './utils/file-exists';
-import { writeFileSync } from 'fs';
+import fs from './utils/file-system';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
@@ -14,7 +13,7 @@ export async function generate(config: Types.Config, saveToFile = true): Promise
 
     await Promise.all(
       generationResult.map(async (result: FileOutput) => {
-        if (!config.overwrite && fileExists(result.filename)) {
+        if (!shouldOverwrite(config, result.filename) && fs.fileExists(result.filename)) {
           return;
         }
 
@@ -24,7 +23,7 @@ export async function generate(config: Types.Config, saveToFile = true): Promise
           return;
         }
 
-        writeFileSync(result.filename, result.content);
+        fs.writeSync(result.filename, result.content);
       })
     );
 
@@ -41,4 +40,24 @@ export async function generate(config: Types.Config, saveToFile = true): Promise
   await writeOutput(outputFiles);
 
   return outputFiles;
+}
+
+function shouldOverwrite(config: Types.Config, outputPath: string): boolean {
+  const globalValue = !!config.overwrite;
+  const outputConfig = config.generates[outputPath];
+
+  if (!outputConfig) {
+    debugLog(`Couldn't find a config of ${outputPath}`);
+    return globalValue;
+  }
+
+  if (isConfiguredOutput(outputConfig) && typeof outputConfig.overwrite === 'boolean') {
+    return outputConfig.overwrite;
+  }
+
+  return globalValue;
+}
+
+function isConfiguredOutput(output: any): output is Types.ConfiguredOutput {
+  return typeof output.plugins !== 'undefined';
 }
