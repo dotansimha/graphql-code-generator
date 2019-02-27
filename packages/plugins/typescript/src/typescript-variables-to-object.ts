@@ -14,7 +14,7 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
     return str;
   }
 
-  protected wrapAstTypeWithModifiers(baseType: string, typeNode: TypeNode): string {
+  public wrapAstTypeWithModifiers(baseType: string, typeNode: TypeNode): string {
     if (typeNode.kind === Kind.NON_NULL_TYPE) {
       const type = this.wrapAstTypeWithModifiers(baseType, typeNode.type);
 
