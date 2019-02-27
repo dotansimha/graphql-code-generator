@@ -1018,4 +1018,51 @@ describe('TypeScript Client', () => {
       }
     `);
   });
+
+  it('avoid duplicates - each type name should be unique', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: gql`
+        type DeleteMutation {
+          deleted: Boolean!
+        }
+
+        type UpdateMutation {
+          updated: Boolean!
+        }
+
+        union MessageMutationType = DeleteMutation | UpdateMutation
+
+        type Query {
+          dummy: String
+        }
+
+        type Mutation {
+          mutation(message: String!, type: String!): MessageMutationType!
+        }
+      `
+    });
+    const query = gql`
+      mutation SubmitMessage($message: String!) {
+        mutation(message: $message) {
+          ... on DeleteMutation {
+            deleted
+          }
+          ... on UpdateMutation {
+            updated
+          }
+        }
+      }
+    `;
+
+    const content = await plugin(
+      testSchema,
+      [{ filePath: '', content: query }],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
+
+    expect(content.match(/type Mutation\b/g)).toHaveLength(1);
+  });
 });

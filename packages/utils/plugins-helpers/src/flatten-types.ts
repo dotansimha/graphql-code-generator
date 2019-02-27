@@ -40,8 +40,10 @@ export interface FlattenModel {
   hasTypename: boolean;
 }
 
+const operationTypes = ['query', 'mutation', 'subscription'].map(name => pascalCase(name));
+
 export const handleNameDuplications = (name: string, existing: FlattenModel[]): string => {
-  if (existing.find(model => model.modelType === name)) {
+  if (operationTypes.includes(name) || existing.find(model => model.modelType === name)) {
     return handleNameDuplications('_' + name, existing);
   }
 
@@ -84,6 +86,7 @@ export function flattenSelectionSet(selectionSet: SelectionSetItem[], result: Fl
   selectionSet.forEach((item: SelectionSetItem) => {
     if (isFieldNode(item)) {
       if (item.selectionSet.length > 0) {
+        // here
         const model = buildModelFromField(item, result);
         item.type = model.modelType;
         result.push(model);
@@ -91,6 +94,7 @@ export function flattenSelectionSet(selectionSet: SelectionSetItem[], result: Fl
         flattenSelectionSet(item.selectionSet, result);
       }
     } else if (isInlineFragmentNode(item)) {
+      // here
       const model = buildModelFromInlineFragment(item, result);
       item.name = model.modelType;
       item.onType = model.schemaBaseType;
