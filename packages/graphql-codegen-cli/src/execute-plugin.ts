@@ -3,7 +3,7 @@ import { DocumentNode, GraphQLSchema } from 'graphql';
 import { resolve } from 'path';
 import { DetailedError } from './errors';
 import { buildSchema } from './merge-schemas';
-import { validateGraphQlDocuments, checkValidationErrors } from 'graphql-toolkit';
+import { validateGraphQlDocuments } from 'graphql-toolkit';
 
 export interface ExecutePluginOptions {
   name: string;
@@ -33,7 +33,7 @@ export async function getPluginByName(name: string, pluginLoader: Types.PluginLo
           `Unable to load template plugin matching ${name}`,
           `
               Unable to load template plugin matching '${name}'.
-              Reason: 
+              Reason:
                 ${err.message}
             `
         );
@@ -54,7 +54,7 @@ export async function getPluginByName(name: string, pluginLoader: Types.PluginLo
     `
         Unable to find template plugin matching '${name}'
         Install one of the following packages:
-        
+
         ${possibleNamesMsg}
       `
   );
@@ -66,9 +66,9 @@ export async function executePlugin(options: ExecutePluginOptions, pluginPackage
       `Invalid Custom Plugin "${options.name}"`,
       `
         Plugin ${options.name} does not export a valid JS object with "plugin" function.
-  
+
         Make sure your custom plugin is written in the following form:
-  
+
         module.exports = {
           plugin: (schema, documents, config) => {
             return 'my-custom-plugin-content';
@@ -82,7 +82,20 @@ export async function executePlugin(options: ExecutePluginOptions, pluginPackage
 
   if (outputSchema && options.documents.length > 0) {
     const errors = validateGraphQlDocuments(outputSchema, options.documents);
-    checkValidationErrors(errors);
+    if (errors.length > 0) {
+      const detailedErrors = errors.flatMap(({ errors, filePath }) =>
+        errors.map(({ message, locations }) => {
+          const errorLocations = locations.map(({ line, column }) => `${line}:${column}`).join(', ');
+
+          return `
+              ${filePath}:${errorLocations}:
+                ${message}
+          `;
+        })
+      );
+
+      throw new DetailedError(`Your documents contain errors`, detailedErrors.join('\n'));
+    }
   }
 
   if (pluginPackage.validate && typeof pluginPackage.validate === 'function') {
