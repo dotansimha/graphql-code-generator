@@ -21,7 +21,7 @@ export interface CreateMessageInput {
   export type GetMessagesQuery = {
     __typename?: "Query";
     
-    messages: Maybe<GetMessagesMessages[]>;
+    messages: Maybe<(Maybe<GetMessagesMessages>)[]>;
   }
 
   export type GetMessagesMessages = {
@@ -95,10 +95,11 @@ export interface CreateMessageInput {
     id: string;
   } 
 
-import * as ReactApollo from 'react-apollo';
-import * as React from 'react';
 
-import gql from 'graphql-tag';
+    import gql from 'graphql-tag';
+  import * as React from 'react';
+import * as ReactApollo from 'react-apollo';
+
 
 
 

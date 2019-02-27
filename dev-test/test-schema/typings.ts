@@ -49,35 +49,35 @@ import { GraphQLResolveInfo } from 'graphql';
 
 
 
-export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
+export type Resolver<Result, Parent = {}, TContext = {}, Args = {}> = (
   parent: Parent,
   args: Args,
-  context: Context,
+  context: TContext,
   info: GraphQLResolveInfo
 ) => Promise<Result> | Result;
 
-export interface ISubscriptionResolverObject<Result, Parent, Context, Args> {
+export interface ISubscriptionResolverObject<Result, Parent, TContext, Args> {
   subscribe<R = Result, P = Parent>(
     parent: P,
     args: Args,
-    context: Context,
+    context: TContext,
     info: GraphQLResolveInfo
   ): AsyncIterator<R | Result> | Promise<AsyncIterator<R | Result>>;
   resolve?<R = Result, P = Parent>(
     parent: P,
     args: Args,
-    context: Context,
+    context: TContext,
     info: GraphQLResolveInfo
   ): R | Result | Promise<R | Result>;
 }
 
-export type SubscriptionResolver<Result, Parent = {}, Context = {}, Args = {}> =
-  | ((...args: any[]) => ISubscriptionResolverObject<Result, Parent, Context, Args>)
-  | ISubscriptionResolverObject<Result, Parent, Context, Args>;
+export type SubscriptionResolver<Result, Parent = {}, TContext = {}, Args = {}> =
+  | ((...args: any[]) => ISubscriptionResolverObject<Result, Parent, TContext, Args>)
+  | ISubscriptionResolverObject<Result, Parent, TContext, Args>;
 
-export type TypeResolveFn<Types, Parent = {}, Context = {}> = (
+export type TypeResolveFn<Types, Parent = {}, TContext = {}> = (
   parent: Parent,
-  context: Context,
+  context: TContext,
   info: GraphQLResolveInfo
 ) => Maybe<Types>;
 
@@ -93,38 +93,38 @@ export type DirectiveResolverFn<TResult, TArgs = {}, TContext = {}> = (
 
 
 export namespace QueryResolvers {
-  export interface Resolvers<Context = {}, TypeParent = {}> {
+  export interface Resolvers<TContext = {}, TypeParent = {}> {
     
-    allUsers?: AllUsersResolver<(Maybe<User>)[], TypeParent, Context>;
+    allUsers?: AllUsersResolver<(Maybe<User>)[], TypeParent, TContext>;
     
-    userById?: UserByIdResolver<Maybe<User>, TypeParent, Context>;
+    userById?: UserByIdResolver<Maybe<User>, TypeParent, TContext>;
   }
 
 
-  export type AllUsersResolver<R = (Maybe<User>)[], Parent = {}, Context = {}> = Resolver<R, Parent, Context>;
-  export type UserByIdResolver<R = Maybe<User>, Parent = {}, Context = {}> = Resolver<R, Parent, Context, UserByIdArgs>;
+  export type AllUsersResolver<R = (Maybe<User>)[], Parent = {}, TContext = {}> = Resolver<R, Parent, TContext>;
+  export type UserByIdResolver<R = Maybe<User>, Parent = {}, TContext = {}> = Resolver<R, Parent, TContext, UserByIdArgs>;
   export interface UserByIdArgs {
     
     id: number;
   }
 
-  
+
 }
 
 export namespace UserResolvers {
-  export interface Resolvers<Context = {}, TypeParent = User> {
+  export interface Resolvers<TContext = {}, TypeParent = User> {
     
-    id?: IdResolver<number, TypeParent, Context>;
+    id?: IdResolver<number, TypeParent, TContext>;
     
-    name?: NameResolver<string, TypeParent, Context>;
+    name?: NameResolver<string, TypeParent, TContext>;
     
-    email?: EmailResolver<string, TypeParent, Context>;
+    email?: EmailResolver<string, TypeParent, TContext>;
   }
 
 
-  export type IdResolver<R = number, Parent = User, Context = {}> = Resolver<R, Parent, Context>;
-  export type NameResolver<R = string, Parent = User, Context = {}> = Resolver<R, Parent, Context>;
-  export type EmailResolver<R = string, Parent = User, Context = {}> = Resolver<R, Parent, Context>;  
+  export type IdResolver<R = number, Parent = User, TContext = {}> = Resolver<R, Parent, TContext>;
+  export type NameResolver<R = string, Parent = User, TContext = {}> = Resolver<R, Parent, TContext>;
+  export type EmailResolver<R = string, Parent = User, TContext = {}> = Resolver<R, Parent, TContext>;
 }
 
 
@@ -152,13 +152,13 @@ export interface DeprecatedDirectiveArgs {
 
 
 
-export interface IResolvers<Context = {}> {
-    Query?: QueryResolvers.Resolvers<Context>;
-    User?: UserResolvers.Resolvers<Context>;
-}
+export type IResolvers<TContext = {}> = {
+    Query?: QueryResolvers.Resolvers<TContext>;
+    User?: UserResolvers.Resolvers<TContext>;
+} & { [typeName: string] : never };
 
-export interface IDirectiveResolvers<Result> {
+export type IDirectiveResolvers<Result> = {
     skip?: SkipDirectiveResolver<Result>;
     include?: IncludeDirectiveResolver<Result>;
     deprecated?: DeprecatedDirectiveResolver<Result>;
-}
+} & { [directiveName: string] : never };
