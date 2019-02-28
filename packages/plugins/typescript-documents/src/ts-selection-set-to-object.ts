@@ -16,6 +16,7 @@ export class TypeScriptSelectionSetToObject extends SelectionSetToObject {
     _schema: GraphQLSchema,
     _convertName: ConvertNameFn,
     _addTypename: boolean,
+    private _immutableTypes: boolean,
     _parentSchemaType?: GraphQLNamedType,
     _selectionSet?: SelectionSetNode
   ) {
@@ -28,6 +29,7 @@ export class TypeScriptSelectionSetToObject extends SelectionSetToObject {
       this._schema,
       this._convertName,
       this._addTypename,
+      this._immutableTypes,
       parentSchemaType,
       selectionSet
     );
@@ -41,6 +43,10 @@ export class TypeScriptSelectionSetToObject extends SelectionSetToObject {
     return str;
   }
 
+  protected formatNamedField(name: string): string {
+    return this._immutableTypes ? `readonly ${name}` : name;
+  }
+
   protected wrapTypeWithModifiers(
     baseType: string,
     type: GraphQLObjectType | GraphQLNonNull<GraphQLObjectType> | GraphQLList<GraphQLObjectType>
@@ -50,7 +56,7 @@ export class TypeScriptSelectionSetToObject extends SelectionSetToObject {
     } else if (isListType(type)) {
       const innerType = this.wrapTypeWithModifiers(baseType, type.ofType);
 
-      return `Maybe<Array<${innerType}>>`;
+      return `Maybe<${this._immutableTypes ? 'ReadonlyArray' : 'Array'}<${innerType}>>`;
     } else {
       return `Maybe<${baseType}>`;
     }

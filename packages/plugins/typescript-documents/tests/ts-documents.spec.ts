@@ -80,6 +80,36 @@ describe('TypeScript Documents Plugin', async () => {
   const validate = async (content: string, config: any = {}, pluginSchema = schema) =>
     validateTs((await tsPlugin(pluginSchema, [], config, { outputFile: '' })) + '\n' + content);
 
+  describe('Config', () => {
+    it('Should generate the correct output when using immutableTypes config', async () => {
+      const ast = parse(`
+      query notifications {
+        notifications {
+          id
+
+          ... on TextNotification {
+            text
+          }
+
+          ... on ImageNotification {
+            imageUrl
+            metadata {
+              createdBy
+            }
+          }
+        }
+      }
+  `);
+      const config = { namingConvention: 'change-case#lowerCase', immutableTypes: true };
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
+
+      expect(result).toBeSimilarStringTo(
+        `export type notificationsquery = ({ readonly __typename?: 'Query' } & { readonly notifications: ReadonlyArray<(Pick<notifiction, 'id'> & (({ readonly __typename?: 'TextNotification' } & Pick<textnotification, 'text'>) | ({ readonly __typename?: 'ImageNotification' } & Pick<imagenotification, 'imageUrl'> & { readonly metadata: ({ readonly __typename?: 'ImageMetadata' } & Pick<imagemetadata, 'createdBy'>) })))> });`
+      );
+      await validate(result, config);
+    });
+  });
+
   describe('Naming Convention & Types Prefix', () => {
     it('Should allow custom naming and point to the correct type', async () => {
       const ast = parse(`

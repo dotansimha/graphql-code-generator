@@ -150,7 +150,9 @@ export class SelectionSetToObject {
       return null;
     }
 
-    return `{ __typename${this._queriedForTypename ? '' : '?'}: ${possibleTypes.map(t => `'${t}'`).join(' | ')} }`;
+    return `{ ${this.formatNamedField('__typename')}${this._queriedForTypename ? '' : '?'}: ${possibleTypes
+      .map(t => `'${t}'`)
+      .join(' | ')} }`;
   }
 
   protected buildPrimitiveFields(parentName: string, fields: PrimitiveField[]): string | null {
@@ -167,8 +169,12 @@ export class SelectionSetToObject {
     }
 
     return `{ ${fields
-      .map(aliasedField => `${aliasedField.alias}: ${parentName}['${aliasedField.fieldName}']`)
+      .map(aliasedField => `${this.formatNamedField(aliasedField.alias)}: ${parentName}['${aliasedField.fieldName}']`)
       .join(', ')} }`;
+  }
+
+  protected formatNamedField(name: string): string {
+    return name;
   }
 
   protected buildLinkFields(fields: LinkField[]): string | null {
@@ -176,7 +182,9 @@ export class SelectionSetToObject {
       return null;
     }
 
-    return `{ ${fields.map(field => `${field.alias || field.name}: ${field.selectionSet}`).join(', ')} }`;
+    return `{ ${fields
+      .map(field => `${this.formatNamedField(field.alias || field.name)}: ${field.selectionSet}`)
+      .join(', ')} }`;
   }
 
   protected buildInlineFragments(inlineFragments: InlineFragmentField): string | null {
