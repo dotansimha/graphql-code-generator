@@ -5,6 +5,7 @@ import { TypeScriptResolversVisitor } from './visitor';
 
 export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
   avoidOptionals?: boolean;
+  immutableTypes?: boolean;
 }
 
 export const plugin: PluginFunction<TypeScriptResolversPluginConfig> = (
