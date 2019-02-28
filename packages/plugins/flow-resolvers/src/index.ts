@@ -19,7 +19,7 @@ export const plugin: PluginFunction<FlowResolversPluginConfig> = (
     imports.push('type GraphQLScalarTypeConfig');
   }
 
-  const result = `
+  const header = `
 import { ${imports.join(', ')} } from 'graphql';
 
 export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
@@ -73,7 +73,12 @@ export type DirectiveResolverFn<TResult, TArgs = {}, TContext = {}> = (
   const astNode = parse(printedSchema);
   const visitor = new FlowResolversVisitor(config, schema);
   const visitorResult = visit(astNode, { leave: visitor });
-  const rootResolver = visitor.rootResolver;
+  const { rootResolver, mappersImports } = visitor;
 
-  return [result, ...visitorResult.definitions.filter(d => typeof d === 'string'), rootResolver].join('\n');
+  return [
+    ...mappersImports,
+    header,
+    ...visitorResult.definitions.filter(d => typeof d === 'string'),
+    rootResolver
+  ].join('\n');
 };
