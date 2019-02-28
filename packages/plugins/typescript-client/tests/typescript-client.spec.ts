@@ -1019,6 +1019,51 @@ describe('TypeScript Client', () => {
     `);
   });
 
+  it('should use __typename in fragments when requested', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: gql`
+        type Post {
+          title: String
+        }
+
+        type Query {
+          post: Post!
+        }
+      `
+    });
+    const query = gql`
+      query Post {
+        post {
+          ... on Post {
+            __typename
+          }
+        }
+      }
+    `;
+
+    const content = await plugin(
+      testSchema,
+      [{ filePath: '', content: query }],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
+
+    expect(content).toBeSimilarStringTo(`
+      export type Query = {
+        __typename?: "Query";
+        post: Post;
+      }
+    `);
+
+    expect(content).toBeSimilarStringTo(`
+      export type PostInlineFragment = {
+        __typename: "Post";
+      }
+    `);
+  });
+
   it('avoid duplicates - each type name should be unique', async () => {
     const testSchema = makeExecutableSchema({
       typeDefs: gql`
