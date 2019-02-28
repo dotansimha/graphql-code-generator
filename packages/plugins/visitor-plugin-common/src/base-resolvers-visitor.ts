@@ -20,17 +20,25 @@ import {
 import { DirectiveDefinitionNode, GraphQLObjectType, InputValueDefinitionNode } from 'graphql';
 import { OperationVariablesToObject } from './variables-to-object';
 
+interface ParsedMapper {
+  isExternal: boolean;
+  type: string;
+  source?: string;
+}
+
 export interface ParsedResolversConfig {
   scalars: ScalarsMap;
   convert: (str: string) => string;
   typesPrefix: string;
   contextType: string;
-  mapping: { [typeName: string]: string };
+  mappers: {
+    [typeName: string]: ParsedMapper;
+  };
 }
 
 export interface RawResolversConfig {
   contextType?: string;
-  mapping?: { [typeName: string]: string };
+  mappers?: { [typeName: string]: string };
   scalars?: ScalarsMap;
   namingConvention?: string;
   typesPrefix?: string;
@@ -56,12 +64,44 @@ export class BaseResolversVisitor<
       convert: rawConfig.namingConvention ? resolveExternalModuleAndFn(rawConfig.namingConvention) : toPascalCase,
       typesPrefix: rawConfig.typesPrefix || '',
       contextType: rawConfig.contextType || 'any',
-      mapping: rawConfig.mapping || {},
+      mappers: this.transformMappers(rawConfig.mappers || {}),
       ...((additionalConfig || {}) as any)
     };
 
     autoBind(this);
     this._variablesTransfomer = new OperationVariablesToObject(this.scalars, this.convertName);
+  }
+
+  private isExternalMapper(value: string): boolean {
+    return value.includes('#');
+  }
+
+  private parseMapper(mapper: string): ParsedMapper {
+    if (this.isExternalMapper(mapper)) {
+      const [source, type] = mapper.split('#');
+      return {
+        isExternal: true,
+        source,
+        type
+      };
+    }
+
+    return {
+      isExternal: false,
+      type: mapper
+    };
+  }
+
+  private transformMappers(rawMappers: TRawConfig['mappers']): TPluginConfig['mappers'] {
+    const result: TPluginConfig['mappers'] = {};
+
+    Object.keys(rawMappers).forEach(gqlTypeName => {
+      const mapperDef = rawMappers[gqlTypeName];
+      const parsedMapper = this.parseMapper(mapperDef);
+      result[gqlTypeName] = parsedMapper;
+    });
+
+    return result;
   }
 
   public get config(): TPluginConfig {
@@ -72,12 +112,34 @@ export class BaseResolversVisitor<
     return this._schema;
   }
 
-  get scalars(): ScalarsMap {
+  public get scalars(): ScalarsMap {
     return this.config.scalars;
   }
 
+  public get mappersImports(): string[] {
+    const groupedMappers: { [sourceFile: string]: string[] } = {};
+
+    Object.keys(this.config.mappers)
+      .filter(gqlTypeName => this.config.mappers[gqlTypeName].isExternal)
+      .forEach(gqlTypeName => {
+        const mapper = this.config.mappers[gqlTypeName];
+
+        if (!groupedMappers[mapper.source]) {
+          groupedMappers[mapper.source] = [];
+        }
+
+        groupedMappers[mapper.source].push(mapper.type);
+      });
+
+    return Object.keys(groupedMappers).map(source => this.buildMapperImport(source, groupedMappers[source]));
+  }
+
+  protected buildMapperImport(source: string, types: string[]): string {
+    return `import { ${types.join(', ')} } from '${source}';`;
+  }
+
   public convertName(name: any, addPrefix = true): string {
-    return (addPrefix ? this._parsedConfig.typesPrefix : '') + this._parsedConfig.convert(name);
+    return (addPrefix ? this.config.typesPrefix : '') + this.config.convert(name);
   }
 
   setDeclarationBlockConfig(config: DeclarationBlockConfig): void {
@@ -120,7 +182,7 @@ export class BaseResolversVisitor<
 
   NamedType(node: NamedTypeNode): string {
     const asString = (node.name as any) as string;
-    const type = this._parsedConfig.scalars[asString] || this.convertName(asString);
+    const type = this.config.scalars[asString] || this.convertName(asString);
 
     return `${type}`;
   }
@@ -137,8 +199,8 @@ export class BaseResolversVisitor<
     return parentName => {
       const original = parent[key];
       const realType = getBaseTypeNode(original.type).name.value;
-      const mappedType = this._parsedConfig.mapping[realType]
-        ? this._variablesTransfomer.wrapAstTypeWithModifiers(this._parsedConfig.mapping[realType], original.type)
+      const mappedType = this.config.mappers[realType]
+        ? this._variablesTransfomer.wrapAstTypeWithModifiers(this.config.mappers[realType].type, original.type)
         : node.type;
       const subscriptionType = this._schema.getSubscriptionType();
       const isSubscriptionType = subscriptionType && subscriptionType.name === parentName;
@@ -153,14 +215,18 @@ export class BaseResolversVisitor<
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode) {
     const name = this.convertName(node.name + 'Resolvers');
-    const type =
-      this._parsedConfig.mapping[node.name as any] ||
-      this._parsedConfig.scalars[node.name as any] ||
-      this.convertName(node.name);
+    let type: string = null;
+
+    if (this.config.mappers[node.name as any]) {
+      type = this.config.mappers[node.name as any].type;
+    } else {
+      type = this.config.scalars[node.name as any] || this.convertName(node.name);
+    }
+
     const block = new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('interface')
-      .withName(name, `<Context = ${this._parsedConfig.contextType}, ParentType = ${type}>`)
+      .withName(name, `<Context = ${this.config.contextType}, ParentType = ${type}>`)
       .withBlock(node.fields.map((f: any) => f(node.name)).join('\n'));
 
     this._collectedResolvers[node.name as any] = name;
@@ -181,7 +247,7 @@ export class BaseResolversVisitor<
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('interface')
-      .withName(name, `<Context = ${this._parsedConfig.contextType}, ParentType = ${node.name}>`)
+      .withName(name, `<Context = ${this.config.contextType}, ParentType = ${node.name}>`)
       .withBlock(indent(`__resolveType: TypeResolveFn<${possibleTypes}>`)).string;
   }
 
@@ -206,7 +272,7 @@ export class BaseResolversVisitor<
       .export()
       .asKind('type')
       .withName(directiveName, '<Result>')
-      .withContent(`DirectiveResolverFn<Result, { ${directiveArgs} }, ${this._parsedConfig.contextType}>`).string;
+      .withContent(`DirectiveResolverFn<Result, { ${directiveArgs} }, ${this.config.contextType}>`).string;
   }
 
   InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode): string {
@@ -228,7 +294,7 @@ export class BaseResolversVisitor<
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('interface')
-      .withName(name, `<Context = ${this._parsedConfig.contextType}, ParentType = ${node.name}>`)
+      .withName(name, `<Context = ${this.config.contextType}, ParentType = ${node.name}>`)
       .withBlock(indent(`__resolveType: TypeResolveFn<${implementingTypes.map(name => `'${name}'`).join(' | ')}>`))
       .string;
   }

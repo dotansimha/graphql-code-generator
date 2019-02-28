@@ -1,46 +1,87 @@
-import { TypeScriptCommonConfig, initCommonTemplate } from 'graphql-codegen-typescript-common';
-import { PluginFunction, DocumentFile } from 'graphql-codegen-core';
-import { GraphQLSchema } from 'graphql';
-import * as Handlebars from 'handlebars';
-import * as rootTemplate from './root.handlebars';
-import * as resolver from './resolver.handlebars';
-import * as resolveType from './resolve-type.handlebars';
-import * as directive from './directive.handlebars';
-import * as scalar from './scalar.handlebars';
-import { getFieldResolverName, getFieldResolver, getFieldType, getTypenames, importFromGraphQL } from './helpers';
-import { importMappers } from './import-mappers';
-import { importContext, getContext } from './context';
-import { getParentType, getParentTypes } from './parent-type';
+import { RawResolversConfig } from 'graphql-codegen-visitor-plugin-common';
+import { DocumentFile, PluginFunction } from 'graphql-codegen-core';
+import { isScalarType, parse, printSchema, visit, GraphQLSchema } from 'graphql';
+import { TypeScriptResolversVisitor } from './visitor';
 
-export interface TypeScriptServerResolversConfig extends TypeScriptCommonConfig {
-  strict?: boolean;
-  noNamespaces?: boolean;
-  contextType?: string;
-  mappers?: { [name: string]: string };
-  defaultMapper?: string;
-  fieldResolverNamePrefix?: string;
+export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
+  avoidOptionals?: boolean;
 }
 
-export const plugin: PluginFunction<TypeScriptServerResolversConfig> = async (
+export const plugin: PluginFunction<TypeScriptResolversPluginConfig> = (
   schema: GraphQLSchema,
   documents: DocumentFile[],
-  config: TypeScriptServerResolversConfig
-): Promise<string> => {
-  const { templateContext, convert } = initCommonTemplate(Handlebars, schema, config);
-  Handlebars.registerPartial('resolver', resolver);
-  Handlebars.registerPartial('resolveType', resolveType);
-  Handlebars.registerPartial('directive', directive);
-  Handlebars.registerPartial('scalar', scalar);
-  Handlebars.registerHelper('getFieldResolverName', getFieldResolverName(convert, config));
-  Handlebars.registerHelper('getFieldResolver', getFieldResolver(convert));
-  Handlebars.registerHelper('getTypenames', getTypenames);
-  Handlebars.registerHelper('getParentType', getParentType(convert));
-  Handlebars.registerHelper('getParentTypes', getParentTypes(convert));
-  Handlebars.registerHelper('getFieldType', getFieldType(convert));
-  Handlebars.registerHelper('importMappers', importMappers);
-  Handlebars.registerHelper('importContext', importContext);
-  Handlebars.registerHelper('importFromGraphQL', importFromGraphQL);
-  Handlebars.registerHelper('getContext', getContext);
+  config: TypeScriptResolversPluginConfig
+) => {
+  const imports = ['GraphQLResolveInfo'];
+  const hasScalars = Object.values(schema.getTypeMap())
+    .filter(t => t.astNode)
+    .some(isScalarType);
 
-  return Handlebars.compile(rootTemplate)(templateContext);
+  if (hasScalars) {
+    imports.push('GraphQLScalarType', 'GraphQLScalarTypeConfig');
+  }
+
+  const visitor = new TypeScriptResolversVisitor(config, schema);
+
+  const header = `
+import { ${imports.join(', ')} } from 'graphql';
+
+export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
+  parent?: Parent,
+  args?: Args,
+  context?: Context,
+  info?: GraphQLResolveInfo
+) => Promise<Result> | Result;
+
+export type SubscriptionSubscribeFn<Result, Parent, Context, Args> = (
+  parent?: Parent,
+  args?: Args,
+  context?: Context,
+  info?: GraphQLResolveInfo
+) => AsyncIterator<Result> | Promise<AsyncIterator<Result>>;
+
+export type SubscriptionResolveFn<Result, Parent, Context, Args> = (
+  parent?: Parent,
+  args?: Args,
+  context?: Context,
+  info?: GraphQLResolveInfo
+) => Result | Promise<Result>;
+
+export interface ISubscriptionResolverObject<Result, Parent, Context, Args> {
+  subscribe: SubscriptionSubscribeFn<Result, Parent, Context, Args>;
+  resolve?: SubscriptionResolveFn<Result, Parent, Context, Args>;
+}
+
+export type SubscriptionResolver<Result, Parent = {}, Context = {}, Args = {}> =
+  | ((...args: any[]) => ISubscriptionResolverObject<Result, Parent, Context, Args>)
+  | ISubscriptionResolverObject<Result, Parent, Context, Args>;
+
+export type TypeResolveFn<Types, Parent = {}, Context = {}> = (
+  parent?: Parent,
+  context?: Context,
+  info?: GraphQLResolveInfo
+) => Maybe<Types>;
+
+export type NextResolverFn<T> = () => Promise<T>;
+
+export type DirectiveResolverFn<TResult, TArgs = {}, TContext = {}> = (
+  next?: NextResolverFn<TResult>,
+  source?: any,
+  args?: TArgs,
+  context?: TContext,
+  info?: GraphQLResolveInfo
+) => TResult | Promise<TResult>;
+`;
+
+  const printedSchema = printSchema(schema);
+  const astNode = parse(printedSchema);
+  const visitorResult = visit(astNode, { leave: visitor });
+  const { rootResolver, mappersImports } = visitor;
+
+  return [
+    ...mappersImports,
+    header,
+    ...visitorResult.definitions.filter(d => typeof d === 'string'),
+    rootResolver
+  ].join('\n');
 };
