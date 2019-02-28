@@ -1,11 +1,13 @@
-import { indent, BaseVisitor, ParsedConfig } from 'graphql-codegen-visitor-plugin-common';
+import { DeclarationBlock, indent, BaseVisitor, ParsedConfig } from 'graphql-codegen-visitor-plugin-common';
 import { TypeScriptPluginConfig } from './index';
 import * as autoBind from 'auto-bind';
-import { FieldDefinitionNode, NamedTypeNode, ListTypeNode, NonNullTypeNode } from 'graphql';
+import { FieldDefinitionNode, NamedTypeNode, ListTypeNode, NonNullTypeNode, EnumTypeDefinitionNode } from 'graphql';
 import { TypeScriptOperationVariablesToObject } from './typescript-variables-to-object';
 
 export interface TypeScriptPluginParsedConfig extends ParsedConfig {
   avoidOptionals: boolean;
+  constEnums: boolean;
+  enumsAsTypes: boolean;
   maybeValue: string;
 }
 
@@ -15,7 +17,9 @@ export class TsVisitor extends BaseVisitor<TypeScriptPluginConfig, TypeScriptPlu
       pluginConfig,
       {
         avoidOptionals: pluginConfig.avoidOptionals || false,
-        maybeValue: pluginConfig.maybeValue || 'T | null'
+        maybeValue: pluginConfig.maybeValue || 'T | null',
+        constEnums: pluginConfig.constEnums || false,
+        enumsAsTypes: pluginConfig.enumsAsTypes || false
       } as TypeScriptPluginParsedConfig,
       null
     );
@@ -57,5 +61,23 @@ export class TsVisitor extends BaseVisitor<TypeScriptPluginConfig, TypeScriptPlu
     const addOptionalSign = !this.config.avoidOptionals && originalFieldNode.type.kind !== 'NonNullType';
 
     return indent(`${node.name}${addOptionalSign ? '?' : ''}: ${typeString},`);
+  }
+
+  EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
+    if (this.config.enumsAsTypes) {
+      return new DeclarationBlock(this._declarationBlockConfig)
+        .export()
+        .asKind('type')
+        .withName(this.convertName(node.name))
+        .withContent(
+          node.values.map(v => `'${this.config.enumValues[(v.name as any) as string] || v.name}'`).join(' | ')
+        ).string;
+    } else {
+      return new DeclarationBlock(this._declarationBlockConfig)
+        .export()
+        .asKind(this.config.constEnums ? 'const enum' : 'enum')
+        .withName(this.convertName(node.name))
+        .withBlock(this.buildEnumValuesBlock(node.values)).string;
+    }
   }
 }
