@@ -1,4 +1,4 @@
-import { GraphQLField, GraphQLInterfaceType, GraphQLObjectType, GraphQLType, FieldNode } from 'graphql';
+import { GraphQLField, GraphQLType, FieldNode, isObjectType, isInterfaceType } from 'graphql';
 
 export function getFieldDef(parentType: GraphQLType, fieldAST: FieldNode): GraphQLField<any, any> {
   const name = fieldAST.name.value;
@@ -7,7 +7,7 @@ export function getFieldDef(parentType: GraphQLType, fieldAST: FieldNode): Graph
     return null;
   }
 
-  if (parentType instanceof GraphQLObjectType || parentType instanceof GraphQLInterfaceType) {
+  if (isObjectType(parentType) || isInterfaceType(parentType)) {
     return parentType.getFields()[name];
   }
 
