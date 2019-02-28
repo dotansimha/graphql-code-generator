@@ -151,4 +151,17 @@ describe.only('CLI Flags', () => {
     const config = createConfig(args);
     expect(config.overwrite).toBeTruthy();
   });
+
+  it('Should interpolate environmental variables in YML', () => {
+    process.env['SCHEMA_PATH'] = 'schema-env.graphql';
+    mockConfig(`
+        schema: \${SCHEMA_PATH}
+        generates:
+            file.ts:
+                - plugin
+    `);
+    const args = createArgv('--overwrite');
+    const config = createConfig(args);
+    expect(config.schema).toBe('schema-env.graphql');
+  });
 });
