@@ -35,6 +35,14 @@ function isMetadataFieldName(name: string) {
   return ['__schema', '__type'].includes(name);
 }
 
+function isRootType(type: GraphQLNamedType, schema: GraphQLSchema): type is GraphQLObjectType {
+  return (
+    isEqualType(type, schema.getQueryType()) ||
+    isEqualType(type, schema.getMutationType()) ||
+    isEqualType(type, schema.getSubscriptionType())
+  );
+}
+
 export function separateSelectionSet(selectionSet: SelectionSetItem[]): any {
   const fields = selectionSet.filter(n => isFieldNode(n));
   const fragmentsSpread = selectionSet.filter(n => isFragmentSpreadNode(n));
@@ -124,7 +132,11 @@ export function buildSelectionSet(
           const name = fieldNode.alias && fieldNode.alias.value ? fieldNode.alias.value : fieldNode.name.value;
           debugLog(`[buildSelectionSet] transforming FIELD with name ${name}`);
 
-          if (isEqualType(schema.getQueryType(), rootObject) && isMetadataFieldName(fieldNode.name.value)) {
+          // Kamil: `__query` and `__type` metadata fields are available only in root types.
+          // Or I'm wrong and maybe just in Query type?
+          // Or I'm completely wrong and even outside of root types?
+          // So many unanswered questions...
+          if (isRootType(rootObject, schema) && isMetadataFieldName(fieldNode.name.value)) {
             return buildMetadata(schema, fieldNode);
           }
 
