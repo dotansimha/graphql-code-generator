@@ -5,6 +5,7 @@ import { RawDocumentsConfig } from 'graphql-codegen-visitor-plugin-common';
 
 export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
   avoidOptionals?: boolean;
+  immutableTypes?: boolean;
 }
 
 export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig> = (

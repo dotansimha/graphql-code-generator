@@ -1,7 +1,0 @@
-{{ toComment description }}
-export interface {{@root.config.interfacePrefix}}{{ convert name 'typeNames' }}{{#if hasInterfaces}} extends {{#each interfaces}}{{@root.config.interfacePrefix}}{{ convert this 'typeNames' }}{{#unless @last}},{{/unless}}{{/each}}{{/if}} {
-{{#each fields}}
-  {{ toComment description }}
-  {{#if @root.config.immutableTypes }}readonly {{/if}}{{ name }}{{ getOptionals this }}: {{ convertedType this }};
-{{/each}}
-}
