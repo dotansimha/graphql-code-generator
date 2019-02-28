@@ -8,6 +8,7 @@ export interface TypeScriptPluginConfig extends RawConfig {
   avoidOptionals?: boolean;
   constEnums?: boolean;
   enumsAsTypes?: boolean;
+  immutableTypes?: boolean;
   maybeValue?: string;
 }
 

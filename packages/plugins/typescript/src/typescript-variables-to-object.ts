@@ -2,7 +2,12 @@ import { OperationVariablesToObject, ScalarsMap, ConvertNameFn } from 'graphql-c
 import { TypeNode, Kind } from 'graphql';
 
 export class TypeScriptOperationVariablesToObject extends OperationVariablesToObject {
-  constructor(_scalars: ScalarsMap, _convertName: ConvertNameFn, private _avoidOptionals: boolean) {
+  constructor(
+    _scalars: ScalarsMap,
+    _convertName: ConvertNameFn,
+    private _avoidOptionals: boolean,
+    private _immutableTypes: boolean
+  ) {
     super(_scalars, _convertName);
   }
 
@@ -22,7 +27,7 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
     } else if (typeNode.kind === Kind.LIST_TYPE) {
       const innerType = this.wrapAstTypeWithModifiers(baseType, typeNode.type);
 
-      return `Maybe<Array<${innerType}>>`;
+      return `Maybe<${this._immutableTypes ? 'ReadonlyArray' : 'Array'}<${innerType}>>`;
     } else {
       return `Maybe<${baseType}>`;
     }
