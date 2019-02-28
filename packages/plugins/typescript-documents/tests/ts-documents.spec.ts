@@ -77,8 +77,8 @@ describe('TypeScript Documents Plugin', async () => {
     `
   });
 
-  const validate = async (content: string, config: any = {}) =>
-    validateTs((await tsPlugin(schema, [], config, { outputFile: '' })) + '\n' + content);
+  const validate = async (content: string, config: any = {}, pluginSchema = schema) =>
+    validateTs((await tsPlugin(pluginSchema, [], config, { outputFile: '' })) + '\n' + content);
 
   describe('Naming Convention & Types Prefix', () => {
     it('Should allow custom naming and point to the correct type', async () => {
@@ -465,7 +465,7 @@ describe('TypeScript Documents Plugin', async () => {
       expect(result).toBeSimilarStringTo(
         `export type MeQuery = { currentUser: Maybe<Pick<User, 'login' | 'html_url'>>, entry: Maybe<(Pick<Entry, 'id' | 'createdAt'> & { postedBy: Pick<User, 'login' | 'html_url'> })> };`
       );
-      validate(result, config);
+      validate(result, config, gitHuntSchema);
     });
 
     it('Should build a basic selection set based on basic query', async () => {

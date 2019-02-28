@@ -10,7 +10,8 @@ import {
   NameNode,
   InputObjectTypeDefinitionNode,
   InputValueDefinitionNode,
-  EnumTypeDefinitionNode
+  EnumTypeDefinitionNode,
+  ScalarTypeDefinitionNode
 } from 'graphql';
 import {
   FieldDefinitionNode,
@@ -157,12 +158,21 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
 
     return [typeDefinition, ...fieldsArguments].filter(f => f).join('\n\n');
   }
+
   InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode): string {
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
       .withName(this.convertName(node.name))
       .withBlock(node.fields.join('\n')).string;
+  }
+
+  ScalarTypeDefinition(node: ScalarTypeDefinitionNode): string {
+    return new DeclarationBlock(this._declarationBlockConfig)
+      .export()
+      .asKind('type')
+      .withName(this.convertName(node.name))
+      .withContent(this.config.scalars[node.name as any] || 'any').string;
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
