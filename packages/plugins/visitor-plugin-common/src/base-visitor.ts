@@ -17,7 +17,8 @@ import {
   FieldDefinitionNode,
   UnionTypeDefinitionNode,
   ObjectTypeDefinitionNode,
-  InterfaceTypeDefinitionNode
+  InterfaceTypeDefinitionNode,
+  EnumValueDefinitionNode
 } from 'graphql/language/ast';
 import { OperationVariablesToObject } from './variables-to-object';
 import { DEFAULT_SCALARS } from './scalars';
@@ -180,16 +181,18 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
       .export()
       .asKind('enum')
       .withName(this.convertName(node.name))
-      .withBlock(
-        node.values
-          .map(enumOption =>
-            indent(
-              `${this.convertName(enumOption.name)}${
-                this._declarationBlockConfig.enumNameValueSeparator
-              } ${wrapWithSingleQuotes(this.config.enumValues[(enumOption.name as any) as string] || enumOption.name)}`
-            )
-          )
-          .join(', \n')
-      ).string;
+      .withBlock(this.buildEnumValuesBlock(node.values)).string;
+  }
+
+  protected buildEnumValuesBlock(values: ReadonlyArray<EnumValueDefinitionNode>): string {
+    return values
+      .map(enumOption =>
+        indent(
+          `${this.convertName(enumOption.name)}${
+            this._declarationBlockConfig.enumNameValueSeparator
+          } ${wrapWithSingleQuotes(this.config.enumValues[(enumOption.name as any) as string] || enumOption.name)}`
+        )
+      )
+      .join(', \n');
   }
 }
