@@ -36,10 +36,14 @@ export function resolveFields(
       const namedType = getNamedType(item.value.type);
       const indicators = resolveTypeIndicators(namedType);
       const directives = getDirectives(schema, item.value);
+
+      let defaultValue = null;
+
       let hasDefaultValue = false;
 
       if (isInputField(item.value)) {
-        hasDefaultValue = !!item.value.defaultValue;
+        defaultValue = item.value.defaultValue;
+        hasDefaultValue = defaultValue != null && typeof defaultValue !== 'undefined';
       }
 
       debugLog(`[resolveFields] transformed field ${item.value.name} of type ${type}, resolved type is: `, type);
@@ -63,6 +67,7 @@ export function resolveFields(
         isInputType: indicators.isInputType,
         isType: indicators.isType,
         hasDefaultValue,
+        defaultValue,
         directives,
         usesDirectives: Object.keys(directives).length > 0
       };

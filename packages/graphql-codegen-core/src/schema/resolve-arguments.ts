@@ -12,7 +12,8 @@ export function resolveArguments(schema: GraphQLSchema, args: GraphQLArgument[])
       const namedType = getNamedType(arg.type);
       const indicators = resolveTypeIndicators(namedType);
       const directives = getDirectives(schema, arg);
-      const hasDefaultValue = arg.defaultValue != null;
+      const defaultValue = arg.defaultValue;
+      const hasDefaultValue = defaultValue != null;
 
       debugLog(`[resolveArguments] resolving argument ${arg.name} of type ${type.name}...`);
 
@@ -33,7 +34,8 @@ export function resolveArguments(schema: GraphQLSchema, args: GraphQLArgument[])
         isType: indicators.isType,
         directives,
         usesDirectives: Object.keys(directives).length > 0,
-        hasDefaultValue
+        hasDefaultValue,
+        defaultValue
       };
     }
   );

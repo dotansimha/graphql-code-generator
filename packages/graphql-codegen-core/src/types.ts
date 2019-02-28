@@ -32,6 +32,7 @@ export interface Argument extends AstNode {
   isInputType: boolean;
   isEnum: boolean;
   hasDefaultValue: boolean;
+  defaultValue: boolean;
 }
 
 export interface Field extends AstNode {
@@ -47,6 +48,7 @@ export interface Field extends AstNode {
   isNullableArray: boolean;
   hasArguments: boolean;
   hasDefaultValue: boolean;
+  defaultValue: boolean;
   isType: boolean;
   isScalar: boolean;
   isInterface: boolean;

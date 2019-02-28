@@ -43,7 +43,7 @@ export class OperationVariablesToObject<
         const fieldName = this.getName(variable);
         const fieldType = wrapAstTypeWithModifiers(typeValue, variable.type);
 
-        const hasDefaultValue = !!variable.defaultValue;
+        const hasDefaultValue = variable.defaultValue != null && typeof variable.defaultValue !== 'undefined';
         const isNonNullType = variable.type.kind === Kind.NON_NULL_TYPE;
 
         const formattedFieldString = hasDefaultValue || isNonNullType ? fieldName : `${fieldName}?`;

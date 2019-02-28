@@ -190,9 +190,11 @@ describe('resolveArguments', () => {
     expect(result[0].name).toBe('offset');
     expect(result[0].type).toBe('Int');
     expect(result[0].hasDefaultValue).toBe(true);
+    expect(result[0].defaultValue).toBe(0);
 
     expect(result[1].name).toBe('limit');
     expect(result[1].type).toBe('Int');
     expect(result[1].hasDefaultValue).toBe(true);
+    expect(result[1].defaultValue).toBe(50);
   });
 });
