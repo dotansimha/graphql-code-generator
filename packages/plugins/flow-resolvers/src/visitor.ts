@@ -18,6 +18,10 @@ export class FlowResolversVisitor extends BaseResolversVisitor<FlowResolversPlug
     return `${schemaTypeName}?: ${resolverType}<>,`;
   }
 
+  protected buildMapperImport(source: string, types: string[]): string {
+    return `import { ${types.map(t => `type ${t}`).join(', ')} } from '${source}';`;
+  }
+
   ListType(node: ListTypeNode): string {
     return `?${super.ListType(node)}`;
   }
