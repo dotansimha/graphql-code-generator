@@ -26,7 +26,7 @@ You can try this tool live on your browser and see some useful examples. Check o
 
 Install using `npm` (or `yarn`):
 
-    $ npm install graphql-code-generator
+    $ npm install -g graphql-code-generator
 
 GraphQL Code Generator lets you setup everything by simply running the following command:
 
