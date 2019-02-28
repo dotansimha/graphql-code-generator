@@ -49,6 +49,14 @@ export namespace Types {
     watch?: boolean;
     silent?: boolean;
     pluginLoader?: PluginLoaderFn;
+    pluckConfig?: {
+      modules?: Array<{
+        name: string;
+        identifier?: string;
+      }>;
+      magicComment?: string;
+      globalIdentifier?: string;
+    };
   }
 }
 
