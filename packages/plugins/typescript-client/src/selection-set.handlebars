@@ -1,4 +1,0 @@
-{{#each fields}}
-{{ toComment description }}
-{{#if @root.config.immutableTypes }}readonly {{/if}}{{ name }}: {{ convertedFieldType this ../prefix }};
-{{/each}}
