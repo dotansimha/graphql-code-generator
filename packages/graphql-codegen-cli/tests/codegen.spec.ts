@@ -331,6 +331,39 @@ describe('Codegen Executor', () => {
       expect(result[0].content).toContain('MyQuery');
       expect(result[0].filename).toEqual('out1.ts');
     });
+
+    it('should handle graphql-tag and gatsby by default', async () => {
+      const result = await executeCodegen({
+        schema: ['./tests/test-documents/schema.graphql'],
+        documents: ['./tests/test-documents/gatsby-and-custom-parsers.ts'],
+        generates: {
+          'out1.ts': ['typescript-common', 'typescript-client']
+        }
+      });
+
+      expect(result[0].content).toContain('FragmentA'); // import gql from 'graphql-tag'
+      expect(result[0].content).toContain('FragmentB'); // import { graphql } from 'gatsby'
+    });
+
+    it('should handle custom graphql string parsers', async () => {
+      const result = await executeCodegen({
+        schema: ['./tests/test-documents/schema.graphql'],
+        documents: ['./tests/test-documents/gatsby-and-custom-parsers.ts'],
+        generates: {
+          'out1.ts': ['typescript-common', 'typescript-client']
+        },
+        pluckConfig: {
+          modules: [
+            {
+              name: 'custom-graphql-parser',
+              identifier: 'parser'
+            }
+          ]
+        }
+      });
+
+      expect(result[0].content).toContain('FragmentC'); // import { parser } from 'custom-graphql-parser';
+    });
   });
 
   describe('Plugin Configuration', () => {
