@@ -1,14 +1,14 @@
 import { GraphQLSchema, DocumentNode } from 'graphql';
-import { mergeGraphQLSchemas } from 'graphql-toolkit';
+import { mergeTypeDefs } from 'graphql-toolkit';
 import { makeExecutableSchema } from 'graphql-tools';
 
 export function mergeSchemas(schemas: Array<string | GraphQLSchema | DocumentNode>): DocumentNode {
-  const schemasArr = schemas.filter(s => s);
+  const compactSchemas = schemas.filter(s => s);
 
-  if (schemasArr.length === 0) {
+  if (compactSchemas.length === 0) {
     return null;
   } else {
-    return mergeGraphQLSchemas(schemasArr);
+    return mergeTypeDefs(compactSchemas);
   }
 }
 
