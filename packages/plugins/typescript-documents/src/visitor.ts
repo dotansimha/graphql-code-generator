@@ -6,6 +6,7 @@ import { TypeScriptOperationVariablesToObject } from 'graphql-codegen-typescript
 
 export interface TypeScriptDocumentsParsedConfig extends ParsedDocumentsConfig {
   avoidOptionals: boolean;
+  immutableTypes: boolean;
 }
 
 export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
@@ -16,16 +17,28 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
     super(
       config,
       {
-        avoidOptionals: config.avoidOptionals || false
+        avoidOptionals: config.avoidOptionals || false,
+        immutableTypes: config.immutableTypes || false
       } as any,
       schema
     );
 
     this.setSelectionSetHandler(
-      new TypeScriptSelectionSetToObject(this.scalars, this.schema, this.convertName, this.config.addTypename)
+      new TypeScriptSelectionSetToObject(
+        this.scalars,
+        this.schema,
+        this.convertName,
+        this.config.addTypename,
+        this.config.immutableTypes
+      )
     );
     this.setVariablesTransformer(
-      new TypeScriptOperationVariablesToObject(this.scalars, this.convertName, this.config.avoidOptionals)
+      new TypeScriptOperationVariablesToObject(
+        this.scalars,
+        this.convertName,
+        this.config.avoidOptionals,
+        this.config.immutableTypes
+      )
     );
   }
 }
