@@ -137,5 +137,12 @@ export const loadDocuments = async (
     }
   }
 
-  return loadDocumentsToolkit(documentDef as string, config.pluckConfig || {});
+  return loadDocumentsToolkit(
+    documentDef as string,
+    config.pluckConfig
+      ? {
+          tagPluck: config.pluckConfig
+        }
+      : {}
+  );
 };
