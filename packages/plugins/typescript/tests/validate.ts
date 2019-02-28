@@ -7,12 +7,17 @@ export function validateTs(
   options: ts.CompilerOptions = {
     noEmitOnError: true,
     noImplicitAny: true,
-    maxNodeModuleJsDepth: 1,
+    moduleResolution: ts.ModuleResolutionKind.NodeJs,
+    experimentalDecorators: true,
+    emitDecoratorMetadata: true,
     target: ts.ScriptTarget.ES5,
+    typeRoots: [path.resolve(require.resolve('typescript'), '../../../@types/')],
     lib: [
       path.join(path.dirname(require.resolve('typescript')), 'lib.es5.d.ts'),
       path.join(path.dirname(require.resolve('typescript')), 'lib.dom.d.ts'),
-      path.join(path.dirname(require.resolve('typescript')), 'lib.scripthost.d.ts')
+      path.join(path.dirname(require.resolve('typescript')), 'lib.scripthost.d.ts'),
+      path.join(path.dirname(require.resolve('typescript')), 'lib.es2015.d.ts'),
+      path.join(path.dirname(require.resolve('typescript')), 'lib.esnext.asynciterable.d.ts')
     ],
     module: ts.ModuleKind.CommonJS
   }
@@ -60,7 +65,9 @@ export function validateTs(
     }
   });
 
-  if (errors && errors.length > 0) {
-    throw new Error(errors.join('\n'));
+  const relevantErrors = errors.filter(e => !e.includes('Cannot find module'));
+
+  if (relevantErrors && relevantErrors.length > 0) {
+    throw new Error(relevantErrors.join('\n'));
   }
 }
