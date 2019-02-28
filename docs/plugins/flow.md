@@ -64,6 +64,54 @@ generates:
           A: 'foo'
 ```
 
+#### `useFlowExactObjects`
+
+Use this feature to get [exact typed](https://flow.org/en/docs/types/objects/#toc-exact-object-types) values.
+
+```yaml
+# ...
+generates:
+  path/to/file.flow.js:
+    plugins:
+      - flow
+    config:
+      useFlowExactObject: true
+```
+
+##### output
+
+```
+# ...
+type Person (|
+  name?: string,
+  age?: number,
+|);
+```
+
+#### `useFlowReadOnlyTypes`
+
+Use this feature to get [read-only](https://flow.org/en/docs/types/utilities/#toc-readonly) typed values.
+
+```yaml
+# ...
+generates:
+  path/to/file.flow.js:
+    plugins:
+      - flow
+    config:
+      useFlowReadOnlyTypes: true
+```
+
+##### output
+
+```
+# ...
+type Person (
+  +name?: string,
+  +age?: number,
+);
+```
+
 ## Custom Scalars Types with `add` Plugin
 
 `scalars` option can be combined to map custom types to scalars, but in order to use it, you need to use the [add](/docs/plugins/add) plugin, and inject your custom imports to the output file:

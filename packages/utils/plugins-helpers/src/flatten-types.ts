@@ -40,8 +40,10 @@ export interface FlattenModel {
   hasTypename: boolean;
 }
 
+const operationTypes = ['query', 'mutation', 'subscription'].map(name => pascalCase(name));
+
 export const handleNameDuplications = (name: string, existing: FlattenModel[]): string => {
-  if (existing.find(model => model.modelType === name)) {
+  if (operationTypes.includes(name) || existing.find(model => model.modelType === name)) {
     return handleNameDuplications('_' + name, existing);
   }
 

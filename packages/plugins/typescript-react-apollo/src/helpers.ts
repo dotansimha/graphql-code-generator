@@ -83,7 +83,7 @@ export const gql = convert => (operation: Operation, options: Handlebars.HelperO
     ${includeFragments(transformFragments(convert)(operation.document, options))}
   `;
 
-  return config.noGraphqlTag ? JSON.stringify(gqlTag(doc)) : 'gql`' + doc + '`';
+  return config.gqlImport ? JSON.stringify(gqlTag(doc)) : 'gql`' + doc + '`';
 };
 
 function includeFragments(fragments: string[]): string {
@@ -117,12 +117,36 @@ export const toFragmentName = convert => (fragmentName: string, options: Handleb
   }
 };
 
-export const shouldOutputHook = (operationType: string, options: Handlebars.HelperOptions): boolean => {
-  const config = options.data.root.config || {};
-  return operationType !== 'subscription' || config.withSubscriptionHooks;
+export const parseImport = (importStr: string) => {
+  const [moduleName, propName] = importStr.split('#');
+  return {
+    moduleName,
+    propName
+  };
 };
 
-export const gqlImport = (operationType: string, options: Handlebars.HelperOptions): string => {
+export const hooksNamespace = (operationType: string): string => {
+  return operationType === 'subscription' ? 'SubscriptionHooks' : 'ReactApolloHooks';
+};
+
+export const getImports = (operationType: string, options: Handlebars.HelperOptions) => {
   const config = options.data.root.config || {};
-  return config.gqlImport || 'import gql from \'graphql-tag\'';
+  const gqlImport = parseImport(config.gqlImport || 'graphql-tag');
+  let imports = `
+    import ${
+      gqlImport.propName ? `{ ${gqlImport.propName === 'gql' ? 'gql' : `${gqlImport.propName} as gql`} }` : 'gql'
+    } from '${gqlImport.moduleName}';
+  `;
+  if (!config.noComponents) {
+    imports += `import * as React from 'react';\n`;
+  }
+  if (!config.noComponents || !config.noHOC) {
+    imports += `import * as ReactApollo from 'react-apollo';\n`;
+  }
+  if (config.withHooks) {
+    imports += `import * as ReactApolloHooks from '${
+      typeof config.hooksImportFrom === 'string' ? config.hooksImportFrom : 'react-apollo-hooks'
+    }';\n`;
+  }
+  return imports;
 };

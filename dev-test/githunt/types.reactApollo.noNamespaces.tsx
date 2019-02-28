@@ -82,7 +82,7 @@ export type Maybe<T> = T | null;
     
     createdAt: number;
     
-    comments: CommentComments[];
+    comments: (Maybe<CommentComments>)[];
     
     commentCount: number;
     
@@ -145,7 +145,7 @@ export type Maybe<T> = T | null;
     
     currentUser: Maybe<FeedCurrentUser>;
     
-    feed: Maybe<FeedFeed[]>;
+    feed: Maybe<(Maybe<FeedFeed>)[]>;
   }
 
   export type FeedCurrentUser = {
@@ -300,10 +300,11 @@ export type Maybe<T> = T | null;
     vote_value: number;
   }
 
-import * as ReactApollo from 'react-apollo';
-import * as React from 'react';
 
-import gql from 'graphql-tag';
+    import gql from 'graphql-tag';
+  import * as React from 'react';
+import * as ReactApollo from 'react-apollo';
+
 
 
 

@@ -14,7 +14,7 @@
     "ts-jest": "24.0.0",
     "typescript": "3.3.3333",
     "tslib": "1.9.3",
-    "webpack": "4.29.5",
+    "webpack": "4.29.6",
     "webpack-cli": "3.2.3",
     "webpack-node-externals": "1.7.2"
   },

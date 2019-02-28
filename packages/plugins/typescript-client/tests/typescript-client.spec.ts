@@ -458,6 +458,66 @@ describe('TypeScript Client', () => {
   `);
   });
 
+  it('Should generate correctly when using enums and interfacePrefix', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: gql`
+        enum Access {
+          Read
+          Write
+          All
+        }
+
+        type User {
+          access: Access
+        }
+
+        input Filter {
+          match: String!
+        }
+
+        type Query {
+          users(filter: Filter!): [User]
+        }
+      `
+    });
+    const query = gql`
+      query users($filter: Filter!) {
+        users(filter: $filter) {
+          access
+        }
+      }
+    `;
+
+    const content = await plugin(
+      testSchema,
+      [{ filePath: '', content: query }],
+      { interfacePrefix: 'PREFIX_' },
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
+
+    expect(content).toBeSimilarStringTo(`
+      export namespace Users {
+        export type Variables = {
+          filter: PREFIX_Filter;
+        }
+      
+        export type Query = {
+          __typename?: "Query";
+          
+          users: Maybe<(Maybe<Users>)[]>;
+        }
+      
+        export type Users = {
+          __typename?: "User";
+          
+          access: Maybe<PREFIX_Access>;
+        } 
+      }
+    `);
+  });
+
   it('Should generate simple Query with inline Fragment and handle noNamespaces', async () => {
     const query = gql`
       query myFeed {
@@ -957,5 +1017,52 @@ describe('TypeScript Client', () => {
         title: Maybe<string>;
       }
     `);
+  });
+
+  it('avoid duplicates - each type name should be unique', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: gql`
+        type DeleteMutation {
+          deleted: Boolean!
+        }
+
+        type UpdateMutation {
+          updated: Boolean!
+        }
+
+        union MessageMutationType = DeleteMutation | UpdateMutation
+
+        type Query {
+          dummy: String
+        }
+
+        type Mutation {
+          mutation(message: String!, type: String!): MessageMutationType!
+        }
+      `
+    });
+    const query = gql`
+      mutation SubmitMessage($message: String!) {
+        mutation(message: $message) {
+          ... on DeleteMutation {
+            deleted
+          }
+          ... on UpdateMutation {
+            updated
+          }
+        }
+      }
+    `;
+
+    const content = await plugin(
+      testSchema,
+      [{ filePath: '', content: query }],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
+
+    expect(content.match(/type Mutation\b/g)).toHaveLength(1);
   });
 });

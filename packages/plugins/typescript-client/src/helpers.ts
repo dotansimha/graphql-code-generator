@@ -8,6 +8,7 @@ import {
   Fragment
 } from 'graphql-codegen-core';
 
+// it's not a config.interfacePrefix, it's document related
 export function shouldHavePrefix(field: Field, options: Handlebars.HelperOptions) {
   const config = options.data.root.config || {};
   const nonPrefixable = field.isEnum || field.isScalar;
@@ -112,6 +113,8 @@ export function convertedFieldType(convert) {
       }
     } else if (primitiveType) {
       realType = primitiveType;
+    } else if (field.isEnum) {
+      realType = (config.interfacePrefix || '') + convert(field.type, 'typeNames');
     } else {
       realType = convert(field.type, 'typeNames');
     }

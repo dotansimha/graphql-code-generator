@@ -66,7 +66,7 @@ export type DirectiveResolverFn<TResult, TArgs = {}, TContext = {}> = (
 {{~> scalar}}
 {{/each}}
 
-export interface IResolvers<TContext = {{{ getContext }}}> {
+export type IResolvers<TContext = {{{ getContext }}}> = {
   {{#each types}}
     {{ convert name 'typeNames'}}{{#unless @root.config.strict}}?{{/unless}}: {{ convert name 'typeNames'}}Resolvers{{#unless @root.config.noNamespaces}}.Resolvers{{/unless}}<TContext>;
   {{/each}}
@@ -79,10 +79,10 @@ export interface IResolvers<TContext = {{{ getContext }}}> {
   {{#each scalars}}
     {{ convert name 'typeNames'}}{{#unless @root.config.strict}}?{{/unless}}: GraphQLScalarType;
   {{/each}}
-}
+} & { [typeName: string] : never };
 
-export interface IDirectiveResolvers<Result> {
+export type IDirectiveResolvers<Result> = {
   {{#each definedDirectives}}
     {{ name }}{{#unless @root.config.strict}}?{{/unless}}: {{ convert name 'typeNames'}}DirectiveResolver<Result>;
   {{/each}}
-}
+} & { [directiveName: string] : never };

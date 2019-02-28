@@ -477,13 +477,13 @@ describe('Components', () => {
     const content = await plugin(
       schema,
       [{ filePath: '', content: documents }],
-      { gqlImport: 'import { gql } from graphql.macro' },
+      { gqlImport: 'graphql.macro#gql' },
       {
         outputFile: 'graphql.tsx'
       }
     );
 
-    expect(content).toContain(`import { gql } from graphql.macro;`);
+    expect(content).toContain(`import { gql } from 'graphql.macro';`);
   });
 
   it('should import ReactApolloHooks dependencies', async () => {
@@ -514,6 +514,37 @@ describe('Components', () => {
 
     expect(content).toBeSimilarStringTo(`
         import * as ReactApolloHooks from 'react-apollo-hooks';
+    `);
+  });
+
+  it('should import ReactApolloHooks from hooksImportFrom config option', async () => {
+    const documents = gql`
+      query {
+        feed {
+          id
+          commentCount
+          repository {
+            full_name
+            html_url
+            owner {
+              avatar_url
+            }
+          }
+        }
+      }
+    `;
+
+    const content = await plugin(
+      schema,
+      [{ filePath: '', content: documents }],
+      { withHooks: true, hooksImportFrom: 'custom-apollo-hooks' },
+      {
+        outputFile: 'graphql.tsx'
+      }
+    );
+
+    expect(content).toBeSimilarStringTo(`
+        import * as ReactApolloHooks from 'custom-apollo-hooks';
     `);
   });
 
@@ -571,7 +602,7 @@ describe('Components', () => {
     `);
   });
 
-  it('should generate Subscription Hooks if config is enabled', async () => {
+  it('should generate Subscription Hooks', async () => {
     const documents = gql`
       subscription ListenToComments($name: String) {
         commentAdded(repoFullName: $name) {
@@ -585,8 +616,7 @@ describe('Components', () => {
       [{ filePath: '', content: documents }],
       {
         noNamespaces: true,
-        withHooks: true,
-        withSubscriptionHooks: true,
+        withHooks: true
       },
       {
         outputFile: 'graphql.tsx'
@@ -642,6 +672,36 @@ describe('Components', () => {
 
     expect(content).not.toBeSimilarStringTo(`
       import * as React from 'react';
+    `);
+  });
+  it('should import ReactApolloHooks from hooksImportFrom config option', async () => {
+    const documents = gql`
+      query {
+        feed {
+          id
+          commentCount
+          repository {
+            full_name
+            html_url
+            owner {
+              avatar_url
+            }
+          }
+        }
+      }
+    `;
+
+    const content = await plugin(
+      schema,
+      [{ filePath: '', content: documents }],
+      { withHooks: true, hooksImportFrom: 'custom-apollo-hooks' },
+      {
+        outputFile: 'graphql.tsx'
+      }
+    );
+
+    expect(content).toBeSimilarStringTo(`
+        import * as ReactApolloHooks from 'custom-apollo-hooks';
     `);
   });
 });

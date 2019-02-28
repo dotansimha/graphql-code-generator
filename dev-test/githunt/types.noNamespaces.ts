@@ -81,7 +81,7 @@ export type Maybe<T> = T | null;
 
     createdAt: number;
 
-    comments: CommentComments[];
+    comments: (Maybe<CommentComments>)[];
 
     commentCount: number;
 
@@ -144,7 +144,7 @@ export type Maybe<T> = T | null;
 
     currentUser: Maybe<FeedCurrentUser>;
 
-    feed: Maybe<FeedFeed[]>;
+    feed: Maybe<(Maybe<FeedFeed>)[]>;
   };
 
   export type FeedCurrentUser = {

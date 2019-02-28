@@ -21,7 +21,7 @@ export interface CreateMessageInput {
   export type GetMessagesQuery = {
     __typename?: "Query";
     
-    messages: Maybe<GetMessagesMessages[]>;
+    messages: Maybe<(Maybe<GetMessagesMessages>)[]>;
   }
 
   export type GetMessagesMessages = {
@@ -95,7 +95,6 @@ export interface CreateMessageInput {
     id: string;
   } 
 
-import { FunctionalComponent } from '@stencil/core';
 
 import gql from 'graphql-tag';
 
@@ -119,20 +118,11 @@ import gql from 'graphql-tag';
       
     
   `;
-    export interface ComponentProps {
+    export interface GetMessagesComponentProps {
         variables ?: GetMessagesVariables;
         onReady ?: import('stencil-apollo/dist/types/components/apollo-query/types').OnQueryReadyFn<GetMessagesQuery, GetMessagesVariables>;
     }
-     export const GetMessagesComponent: FunctionalComponent<ComponentProps> = (props, children) => {
-        return (
-            <apollo-query
-            query={ GetMessagesDocument }
-            {...props}
-            >
-                {children}
-            </apollo-query>
-        );
-    }
+     export const GetMessagesComponent = (props: GetMessagesComponentProps) => <apollo-query query={ GetMessagesDocument } {...props} />;
     export const CreateMessageDocument = gql`
     mutation CreateMessage($args: CreateMessageInput!) {
   createMessage(args: $args) {
@@ -143,20 +133,11 @@ import gql from 'graphql-tag';
       
     
   `;
-    export interface ComponentProps {
+    export interface CreateMessageComponentProps {
         variables ?: CreateMessageVariables;
         onReady ?: import('stencil-apollo/dist/types/components/apollo-mutation/types').OnMutationReadyFn<CreateMessageMutation, CreateMessageVariables>;
     }
-     export const CreateMessageComponent: FunctionalComponent<ComponentProps> = (props, children) => {
-        return (
-            <apollo-mutation
-            mutation={ CreateMessageDocument }
-            {...props}
-            >
-                {children}
-            </apollo-mutation>
-        );
-    }
+     export const CreateMessageComponent = (props: CreateMessageComponentProps) => <apollo-mutation mutation={ CreateMessageDocument } {...props} />;
     export const DeclineDocument = gql`
     mutation Decline($id: ID!, $reason: String!) {
   decline(id: $id, reason: $reason) {
@@ -167,20 +148,11 @@ import gql from 'graphql-tag';
       
     
   `;
-    export interface ComponentProps {
+    export interface DeclineComponentProps {
         variables ?: DeclineVariables;
         onReady ?: import('stencil-apollo/dist/types/components/apollo-mutation/types').OnMutationReadyFn<DeclineMutation, DeclineVariables>;
     }
-     export const DeclineComponent: FunctionalComponent<ComponentProps> = (props, children) => {
-        return (
-            <apollo-mutation
-            mutation={ DeclineDocument }
-            {...props}
-            >
-                {children}
-            </apollo-mutation>
-        );
-    }
+     export const DeclineComponent = (props: DeclineComponentProps) => <apollo-mutation mutation={ DeclineDocument } {...props} />;
     export const ApproveDocument = gql`
     mutation Approve($id: ID!) {
   approve(id: $id) {
@@ -191,20 +163,11 @@ import gql from 'graphql-tag';
       
     
   `;
-    export interface ComponentProps {
+    export interface ApproveComponentProps {
         variables ?: ApproveVariables;
         onReady ?: import('stencil-apollo/dist/types/components/apollo-mutation/types').OnMutationReadyFn<ApproveMutation, ApproveVariables>;
     }
-     export const ApproveComponent: FunctionalComponent<ComponentProps> = (props, children) => {
-        return (
-            <apollo-mutation
-            mutation={ ApproveDocument }
-            {...props}
-            >
-                {children}
-            </apollo-mutation>
-        );
-    }
+     export const ApproveComponent = (props: ApproveComponentProps) => <apollo-mutation mutation={ ApproveDocument } {...props} />;
     export const EscalateDocument = gql`
     mutation Escalate($id: ID!) {
   escalate(id: $id) {
@@ -215,17 +178,8 @@ import gql from 'graphql-tag';
       
     
   `;
-    export interface ComponentProps {
+    export interface EscalateComponentProps {
         variables ?: EscalateVariables;
         onReady ?: import('stencil-apollo/dist/types/components/apollo-mutation/types').OnMutationReadyFn<EscalateMutation, EscalateVariables>;
     }
-     export const EscalateComponent: FunctionalComponent<ComponentProps> = (props, children) => {
-        return (
-            <apollo-mutation
-            mutation={ EscalateDocument }
-            {...props}
-            >
-                {children}
-            </apollo-mutation>
-        );
-    }
+     export const EscalateComponent = (props: EscalateComponentProps) => <apollo-mutation mutation={ EscalateDocument } {...props} />;
