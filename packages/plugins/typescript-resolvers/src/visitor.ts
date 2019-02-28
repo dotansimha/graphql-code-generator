@@ -7,6 +7,7 @@ import { TypeScriptOperationVariablesToObject } from 'graphql-codegen-typescript
 
 export interface ParsedTypeScriptResolversConfig extends ParsedResolversConfig {
   avoidOptionals: boolean;
+  immutableTypes: boolean;
 }
 
 export class TypeScriptResolversVisitor extends BaseResolversVisitor<
@@ -17,13 +18,19 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
     super(
       pluginConfig,
       {
-        avoidOptionals: pluginConfig.avoidOptionals || false
+        avoidOptionals: pluginConfig.avoidOptionals || false,
+        immutableTypes: pluginConfig.immutableTypes || false
       } as any,
       schema
     );
     autoBind(this);
     this.setVariablesTransformer(
-      new TypeScriptOperationVariablesToObject(this.config.scalars, this.convertName, this.config.avoidOptionals)
+      new TypeScriptOperationVariablesToObject(
+        this.config.scalars,
+        this.convertName,
+        this.config.avoidOptionals,
+        this.config.immutableTypes
+      )
     );
   }
 
@@ -41,6 +48,10 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
 
   ListType(node: ListTypeNode): string {
     return `Maybe<${super.ListType(node)}>`;
+  }
+
+  protected wrapWithListType(str: string): string {
+    return `${this.config.immutableTypes ? 'ReadonlyArray' : 'Array'}<${str}>`;
   }
 
   NamedType(node: NamedTypeNode): string {

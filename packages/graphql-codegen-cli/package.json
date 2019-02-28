@@ -87,11 +87,6 @@
     "@types/listr": "0.13.0",
     "@types/log-symbols": "2.0.0",
     "@types/log-update": "2.0.0",
-    "graphql-codegen-add": "0.18.0",
-    "graphql-codegen-time": "0.18.0",
-    "graphql-codegen-typescript-client": "0.18.0",
-    "graphql-codegen-typescript-common": "0.18.0",
-    "graphql-codegen-typescript-server": "0.18.0",
     "ts-jest": "24.0.0"
   },
   "main": "./dist/index.js",
