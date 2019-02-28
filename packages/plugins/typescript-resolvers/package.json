@@ -1,24 +1,28 @@
 {
   "name": "graphql-codegen-typescript-resolvers",
   "version": "0.18.0",
-  "description": "graphql-codegen-cli template for TypeScript typings for both client side and server side",
+  "description": "GraphQL Codegen pluginfor TypeScript typings for resolvers signature",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
   "scripts": {
     "prepublishOnly": "yarn build",
-    "build": "codegen-templates-scripts build",
-    "test": "codegen-templates-scripts test",
-    "pretest": "yarn build"
+    "build": "tsc",
+    "pretest": "yarn build",
+    "test": "jest"
   },
   "dependencies": {
-    "graphql-codegen-plugin-helpers": "0.18.0",
-    "graphql-codegen-typescript-common": "0.18.0"
+    "graphql-codegen-core": "0.18.0",
+    "graphql-codegen-typescript": "0.18.0",
+    "graphql-codegen-visitor-plugin-common": "0.18.0",
+    "graphql-codegen-plugin-helpers": "0.18.0"
   },
   "devDependencies": {
-    "codegen-templates-scripts": "0.18.0",
-    "graphql": "14.1.1",
-    "graphql-codegen-core": "0.18.0",
-    "graphql-codegen-plugin-handlebars-helpers": "0.18.0"
+    "jest": "24.1.0",
+    "ts-jest": "24.0.0",
+    "typescript": "3.3.3333",
+    "flow-bin": "0.94.0",
+    "flow-parser": "0.94.0",
+    "graphql": "14.1.1"
   },
   "main": "./dist/index.js",
   "typings": "dist/index.d.ts",
