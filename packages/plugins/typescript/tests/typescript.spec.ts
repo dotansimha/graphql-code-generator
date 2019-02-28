@@ -1,6 +1,5 @@
 import 'graphql-codegen-core/dist/testing';
-import { parse, visit, buildSchema } from 'graphql';
-import { TsVisitor } from '../src/visitor';
+import { buildSchema } from 'graphql';
 import { validateTs } from './validate';
 import { plugin } from '../src/index';
 
@@ -22,49 +21,64 @@ describe('TypeScript', () => {
       `);
       validateTs(result);
     });
-  });
 
-  it('Should use const enums when constEnums is set', async () => {
-    const schema = buildSchema(`
+    it('Should build type correctly when specified with immutableTypes config', async () => {
+      const schema = buildSchema(`
+        type MyType {
+          foo: [String!]!
+        }`);
+      const result = await plugin(schema, [], { immutableTypes: true }, { outputFile: '' });
+
+      expect(result).toBeSimilarStringTo(`
+        export type MyType = {
+          readonly foo: ReadonlyArray<string>,
+        };
+      `);
+      validateTs(result);
+    });
+
+    it('Should use const enums when constEnums is set', async () => {
+      const schema = buildSchema(`
       enum MyEnum {
         A
       }`);
-    const result = await plugin(schema, [], { constEnums: true }, { outputFile: '' });
+      const result = await plugin(schema, [], { constEnums: true }, { outputFile: '' });
 
-    expect(result).toBeSimilarStringTo(`
+      expect(result).toBeSimilarStringTo(`
       export const enum MyEnum {
         A = 'A'
       };
     `);
-    validateTs(result);
-  });
+      validateTs(result);
+    });
 
-  it('Should use enum as type when enumsAsTypes is set', async () => {
-    const schema = buildSchema(`
+    it('Should use enum as type when enumsAsTypes is set', async () => {
+      const schema = buildSchema(`
       enum MyEnum {
         A
         B
       }`);
-    const result = await plugin(schema, [], { enumsAsTypes: true }, { outputFile: '' });
+      const result = await plugin(schema, [], { enumsAsTypes: true }, { outputFile: '' });
 
-    expect(result).toBeSimilarStringTo(`
+      expect(result).toBeSimilarStringTo(`
       export type MyEnum = 'A' | 'B';
     `);
-    validateTs(result);
-  });
+      validateTs(result);
+    });
 
-  it('Should use enum as type when enumsAsTypes is set and also enumValues', async () => {
-    const schema = buildSchema(`
+    it('Should use enum as type when enumsAsTypes is set and also enumValues', async () => {
+      const schema = buildSchema(`
       enum MyEnum {
         A
         B
       }`);
-    const result = await plugin(schema, [], { enumValues: { A: 'BOOP' }, enumsAsTypes: true }, { outputFile: '' });
+      const result = await plugin(schema, [], { enumValues: { A: 'BOOP' }, enumsAsTypes: true }, { outputFile: '' });
 
-    expect(result).toBeSimilarStringTo(`
+      expect(result).toBeSimilarStringTo(`
       export type MyEnum = 'BOOP' | 'B';
     `);
-    validateTs(result);
+      validateTs(result);
+    });
   });
 
   describe('Object (type)', () => {
