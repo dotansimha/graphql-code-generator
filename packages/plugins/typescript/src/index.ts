@@ -6,6 +6,8 @@ export * from './typescript-variables-to-object';
 
 export interface TypeScriptPluginConfig extends RawConfig {
   avoidOptionals?: boolean;
+  constEnums?: boolean;
+  enumsAsTypes?: boolean;
   maybeValue?: string;
 }
 

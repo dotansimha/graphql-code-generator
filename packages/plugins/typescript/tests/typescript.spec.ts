@@ -24,6 +24,49 @@ describe('TypeScript', () => {
     });
   });
 
+  it('Should use const enums when constEnums is set', async () => {
+    const schema = buildSchema(`
+      enum MyEnum {
+        A
+      }`);
+    const result = await plugin(schema, [], { constEnums: true }, { outputFile: '' });
+
+    expect(result).toBeSimilarStringTo(`
+      export const enum MyEnum {
+        A = 'A'
+      };
+    `);
+    validateTs(result);
+  });
+
+  it('Should use enum as type when enumsAsTypes is set', async () => {
+    const schema = buildSchema(`
+      enum MyEnum {
+        A
+        B
+      }`);
+    const result = await plugin(schema, [], { enumsAsTypes: true }, { outputFile: '' });
+
+    expect(result).toBeSimilarStringTo(`
+      export type MyEnum = 'A' | 'B';
+    `);
+    validateTs(result);
+  });
+
+  it('Should use enum as type when enumsAsTypes is set and also enumValues', async () => {
+    const schema = buildSchema(`
+      enum MyEnum {
+        A
+        B
+      }`);
+    const result = await plugin(schema, [], { enumValues: { A: 'BOOP' }, enumsAsTypes: true }, { outputFile: '' });
+
+    expect(result).toBeSimilarStringTo(`
+      export type MyEnum = 'BOOP' | 'B';
+    `);
+    validateTs(result);
+  });
+
   describe('Object (type)', () => {
     it('Should build type correctly', async () => {
       const schema = buildSchema(`
