@@ -8,6 +8,7 @@ export interface TypeScriptPluginParsedConfig extends ParsedConfig {
   avoidOptionals: boolean;
   constEnums: boolean;
   enumsAsTypes: boolean;
+  immutableTypes: boolean;
   maybeValue: string;
 }
 
@@ -19,14 +20,20 @@ export class TsVisitor extends BaseVisitor<TypeScriptPluginConfig, TypeScriptPlu
         avoidOptionals: pluginConfig.avoidOptionals || false,
         maybeValue: pluginConfig.maybeValue || 'T | null',
         constEnums: pluginConfig.constEnums || false,
-        enumsAsTypes: pluginConfig.enumsAsTypes || false
+        enumsAsTypes: pluginConfig.enumsAsTypes || false,
+        immutableTypes: pluginConfig.immutableTypes || false
       } as TypeScriptPluginParsedConfig,
       null
     );
 
     autoBind(this);
     this.setArgumentsTransformer(
-      new TypeScriptOperationVariablesToObject(this.scalars, this.convertName, this.config.avoidOptionals)
+      new TypeScriptOperationVariablesToObject(
+        this.scalars,
+        this.convertName,
+        this.config.avoidOptionals,
+        this.config.immutableTypes
+      )
     );
     this.setDeclarationBlockConfig({
       enumNameValueSeparator: ' ='
@@ -49,6 +56,10 @@ export class TsVisitor extends BaseVisitor<TypeScriptPluginConfig, TypeScriptPlu
     return `Maybe<${super.ListType(node)}>`;
   }
 
+  protected wrapWithListType(str: string): string {
+    return `${this.config.immutableTypes ? 'ReadonlyArray' : 'Array'}<${str}>`;
+  }
+
   NonNullType(node: NonNullTypeNode): string {
     const baseValue = super.NonNullType(node);
 
@@ -60,7 +71,9 @@ export class TsVisitor extends BaseVisitor<TypeScriptPluginConfig, TypeScriptPlu
     const originalFieldNode = parent[key] as FieldDefinitionNode;
     const addOptionalSign = !this.config.avoidOptionals && originalFieldNode.type.kind !== 'NonNullType';
 
-    return indent(`${node.name}${addOptionalSign ? '?' : ''}: ${typeString},`);
+    return indent(
+      `${this.config.immutableTypes ? 'readonly ' : ''}${node.name}${addOptionalSign ? '?' : ''}: ${typeString},`
+    );
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {

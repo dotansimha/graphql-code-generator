@@ -89,7 +89,11 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
   ListType(node: ListTypeNode): string {
     const asString = (node.type as any) as string;
 
-    return `Array<${asString}>`;
+    return this.wrapWithListType(asString);
+  }
+
+  protected wrapWithListType(str: string): string {
+    return `Array<${str}>`;
   }
 
   NonNullType(node: NonNullTypeNode): string {
