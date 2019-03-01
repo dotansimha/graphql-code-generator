@@ -70,6 +70,10 @@ export const loadSchema = async (
       options = schemaDef[pointToSchema];
     }
 
+    if (config.pluckConfig) {
+      options.tagPluck = config.pluckConfig;
+    }
+
     return loadSchemaToolkit(pointToSchema, options);
   } catch (e) {
     throw new DetailedError(
@@ -133,5 +137,12 @@ export const loadDocuments = async (
     }
   }
 
-  return loadDocumentsToolkit(documentDef as string);
+  return loadDocumentsToolkit(
+    documentDef as string,
+    config.pluckConfig
+      ? {
+          tagPluck: config.pluckConfig
+        }
+      : {}
+  );
 };

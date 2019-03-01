@@ -331,6 +331,77 @@ describe('Codegen Executor', () => {
       expect(result[0].content).toContain('MyQuery');
       expect(result[0].filename).toEqual('out1.ts');
     });
+
+    it('should handle graphql-tag and gatsby by default (documents)', async () => {
+      const result = await executeCodegen({
+        schema: ['./tests/test-documents/schema.graphql'],
+        documents: ['./tests/test-documents/gatsby-and-custom-parsers.ts'],
+        generates: {
+          'out1.ts': ['typescript-common', 'typescript-client']
+        }
+      });
+
+      expect(result[0].content).toContain('FragmentA'); // import gql from 'graphql-tag'
+      expect(result[0].content).toContain('FragmentB'); // import { graphql } from 'gatsby'
+    });
+
+    it('should handle custom graphql string parsers (documents)', async () => {
+      const result = await executeCodegen({
+        schema: ['./tests/test-documents/schema.graphql'],
+        documents: ['./tests/test-documents/gatsby-and-custom-parsers.ts'],
+        generates: {
+          'out1.ts': ['typescript-common', 'typescript-client']
+        },
+        pluckConfig: {
+          modules: [
+            {
+              name: 'custom-graphql-parser',
+              identifier: 'parser'
+            }
+          ]
+        }
+      });
+
+      expect(result[0].content).toContain('FragmentC'); // import { parser } from 'custom-graphql-parser';
+    });
+
+    it('should handle graphql-tag and gatsby by default (schema)', async () => {
+      const result = await executeCodegen({
+        schema: './tests/test-files/schema-dir/gatsby-and-custom-parsers/*.ts',
+        generates: {
+          'out1.ts': ['typescript-common', 'typescript-server']
+        }
+      });
+
+      const content = result[0].content;
+
+      expect(content).toContain('Used graphql-tag'); // import gql from 'graphql-tag'
+      expect(content).toContain('Used gatsby'); // import { graphql } from 'gatsby'
+      expect(content).not.toContain('Used custom parser');
+    });
+
+    it('should handle custom graphql string parsers (schema)', async () => {
+      const result = await executeCodegen({
+        schema: './tests/test-files/schema-dir/gatsby-and-custom-parsers/*.ts',
+        generates: {
+          'out1.ts': ['typescript-common', 'typescript-server']
+        },
+        pluckConfig: {
+          modules: [
+            {
+              name: 'custom-graphql-parser',
+              identifier: 'parser'
+            }
+          ]
+        }
+      });
+
+      const content = result[0].content;
+
+      expect(content).toContain('Used custom parser'); // import { parser } from 'custom-graphql-parser';
+      expect(content).not.toContain('Used graphql-tag');
+      expect(content).not.toContain('Used gatsby');
+    });
   });
 
   describe('Plugin Configuration', () => {
