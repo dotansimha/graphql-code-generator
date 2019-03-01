@@ -171,8 +171,6 @@ export interface DeprecatedDirectiveArgs {
   reason?: string;
 }
 
-
-
 export type IResolvers<TContext = {}> = {
     QueryRoot?: QueryRootResolvers.Resolvers<TContext>;
     User?: UserResolvers.Resolvers<TContext>;
