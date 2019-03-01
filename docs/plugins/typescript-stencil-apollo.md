@@ -1,6 +1,6 @@
 ---
-id: typescript-react-apollo
-title: TypeScript React Apollo
+id: typescript-stencil-apollo
+title: TypeScript Stencil Apollo
 ---
 
 This plugin generates Stencil Apollo functional components typings. It extends the basic TypeScript template [`graphql-codegen-typescript-common`](typescript-typings) and thus shares a similar configuration.
