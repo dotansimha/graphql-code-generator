@@ -8,10 +8,22 @@ import {
   FragmentDefinitionNode,
   GraphQLObjectType,
   OperationDefinitionNode,
-  VariableDefinitionNode
+  VariableDefinitionNode,
+  OperationTypeNode
 } from 'graphql';
 import { SelectionSetToObject } from './selection-set-to-object';
 import { OperationVariablesToObject } from './variables-to-object';
+
+function getRootType(operation: OperationTypeNode, schema: GraphQLSchema) {
+  switch (operation) {
+    case 'query':
+      return schema.getQueryType();
+    case 'mutation':
+      return schema.getMutationType();
+    case 'subscription':
+      return schema.getSubscriptionType();
+  }
+}
 
 export interface ParsedDocumentsConfig {
   scalars: ScalarsMap;
@@ -108,7 +120,7 @@ export class BaseDocumentsVisitor<
 
   OperationDefinition = (node: OperationDefinitionNode): string => {
     const name = this.handleAnonymouseOperation(node.name && node.name.value ? node.name.value : null);
-    const operationRootType = this._schema.getType(toPascalCase(node.operation)) as GraphQLObjectType;
+    const operationRootType = getRootType(node.operation, this._schema);
     const selectionSet = this._selectionSetToObject.createNext(operationRootType, node.selectionSet);
     const visitedOperationVariables = this._variablesTransfomer.transform<VariableDefinitionNode>(
       node.variableDefinitions

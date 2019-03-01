@@ -711,5 +711,139 @@ describe('TypeScript Documents Plugin', async () => {
       `)
       );
     });
+
+    it('should use __typename in fragments when requested', async () => {
+      const testSchema = makeExecutableSchema({
+        typeDefs: parse(/* GraphQL */ `
+          type Post {
+            title: String
+          }
+          type Query {
+            post: Post!
+          }
+        `)
+      });
+      const query = parse(/* GraphQL */ `
+        query Post {
+          post {
+            ... on Post {
+              __typename
+            }
+          }
+        }
+      `);
+
+      const content = await plugin(
+        testSchema,
+        [{ filePath: '', content: query }],
+        {},
+        {
+          outputFile: 'graphql.ts'
+        }
+      );
+
+      expect(format(content)).toBeSimilarStringTo(
+        format(`
+          export type PostQuery = { __typename?: 'Query' } & { post: { __typename?: 'Post' } & ({ __typename: 'Post' }) };
+        `)
+      );
+    });
+
+    it('should handle introspection types (__schema)', async () => {
+      const testSchema = makeExecutableSchema({
+        typeDefs: parse(/* GraphQL */ `
+          type Post {
+            title: String
+          }
+          type Query {
+            post: Post!
+          }
+        `)
+      });
+      const query = parse(/* GraphQL */ `
+        query Info {
+          __schema {
+            queryType {
+              fields {
+                name
+              }
+            }
+          }
+        }
+      `);
+
+      const content = await plugin(
+        testSchema,
+        [{ filePath: '', content: query }],
+        {},
+        {
+          outputFile: 'graphql.ts'
+        }
+      );
+
+      expect(format(content)).toBeSimilarStringTo(
+        format(`
+          export type InfoQuery = { __typename?: 'Query' } & {
+            __schema: { __typename?: '__Schema' } & {
+              queryType: { __typename?: '__Type' } & { fields: Maybe<Array<{ __typename?: '__Field' } & Pick<__Field, 'name'>>> };
+            };
+          };
+        `)
+      );
+    });
+
+    it('should handle introspection types (__type)', async () => {
+      const testSchema = makeExecutableSchema({
+        typeDefs: parse(/* GraphQL */ `
+          type Post {
+            title: String
+          }
+          type Query {
+            post: Post!
+          }
+        `)
+      });
+      const query = parse(/* GraphQL */ `
+        query Info {
+          __type(name: "Post") {
+            name
+            fields {
+              name
+              type {
+                name
+                kind
+              }
+            }
+          }
+        }
+      `);
+
+      const content = await plugin(
+        testSchema,
+        [{ filePath: '', content: query }],
+        {},
+        {
+          outputFile: 'graphql.ts'
+        }
+      );
+
+      expect(format(content)).toBeSimilarStringTo(
+        format(`
+        export type InfoQuery = { __typename?: 'Query' } & {
+          __type: Maybe<
+            { __typename?: '__Type' } & Pick<__Type, 'name'> & {
+                fields: Maybe<
+                  Array<
+                    { __typename?: '__Field' } & Pick<__Field, 'name'> & {
+                        type: { __typename?: '__Type' } & Pick<__Type, 'name' | 'kind'>;
+                      }
+                  >
+                >;
+              }
+          >;
+        };
+      `)
+      );
+    });
   });
 });
