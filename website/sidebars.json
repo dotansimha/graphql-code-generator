@@ -20,6 +20,7 @@
       "plugins/typescript-mongodb",
       "plugins/typescript-react-apollo",
       "plugins/typescript-apollo-angular",
+      "plugins/typescript-stencil-apollo",
       "plugins/flow",
       "plugins/flow-resolvers",
       "plugins/flow-documents",
