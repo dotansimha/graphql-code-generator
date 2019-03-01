@@ -2,6 +2,7 @@ import 'graphql-codegen-core/dist/testing';
 import { parse, buildClientSchema } from 'graphql';
 import { makeExecutableSchema } from 'graphql-tools';
 import { readFileSync } from 'fs';
+import { format } from 'prettier';
 import { plugin } from '../src/index';
 import { validateTs } from '../../typescript/tests/validate';
 import { plugin as tsPlugin } from '../../typescript/src/index';
@@ -658,6 +659,57 @@ describe('TypeScript Documents Plugin', async () => {
 
       expect(result).toBeSimilarStringTo(`export type TestQueryQueryVariables = {};`);
       validate(result, config);
+    });
+
+    it('avoid duplicates - each type name should be unique', async () => {
+      const testSchema = makeExecutableSchema({
+        typeDefs: parse(/* GraphQL */ `
+          type DeleteMutation {
+            deleted: Boolean!
+          }
+          type UpdateMutation {
+            updated: Boolean!
+          }
+          union MessageMutationType = DeleteMutation | UpdateMutation
+          type Query {
+            dummy: String
+          }
+          type Mutation {
+            mutation(message: String!, type: String!): MessageMutationType!
+          }
+        `)
+      });
+      const query = parse(/* GraphQL */ `
+        mutation SubmitMessage($message: String!) {
+          mutation(message: $message) {
+            ... on DeleteMutation {
+              deleted
+            }
+            ... on UpdateMutation {
+              updated
+            }
+          }
+        }
+      `);
+
+      const content = await plugin(
+        testSchema,
+        [{ filePath: '', content: query }],
+        {},
+        {
+          outputFile: 'graphql.ts'
+        }
+      );
+
+      expect(format(content)).toBeSimilarStringTo(
+        format(`
+          type SubmitMessageMutation = { __typename?: 'Mutation' } & {
+            mutation:
+              | ({ __typename?: 'DeleteMutation' } & Pick<DeleteMutation, 'deleted'>)
+              | ({ __typename?: 'UpdateMutation' } & Pick<UpdateMutation, 'updated'>);
+          };
+      `)
+      );
     });
   });
 });
