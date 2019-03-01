@@ -1,6 +1,6 @@
 {
   "name": "graphql-codegen-typescript-documents",
-  "version": "0.17.0",
+  "version": "0.18.0",
   "description": "GraphQL Code Generator plugin for generating TypeScript types for GraphQL queries, mutations, subscriptions and fragments",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
@@ -11,10 +11,10 @@
     "test": "jest"
   },
   "dependencies": {
-    "graphql-codegen-typescript": "0.17.0",
-    "graphql-codegen-visitor-plugin-common": "0.17.0",
-    "graphql-codegen-core": "0.17.0",
-    "graphql-codegen-plugin-helpers": "0.17.0"
+    "graphql-codegen-typescript": "0.18.0",
+    "graphql-codegen-visitor-plugin-common": "0.18.0",
+    "graphql-codegen-core": "0.18.0",
+    "graphql-codegen-plugin-helpers": "0.18.0"
   },
   "devDependencies": {
     "graphql": "14.1.1",
