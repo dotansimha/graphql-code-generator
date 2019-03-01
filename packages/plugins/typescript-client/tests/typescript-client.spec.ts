@@ -1019,6 +1019,184 @@ describe('TypeScript Client', () => {
     `);
   });
 
+  it('should use __typename in fragments when requested', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: gql`
+        type Post {
+          title: String
+        }
+
+        type Query {
+          post: Post!
+        }
+      `
+    });
+    const query = gql`
+      query Post {
+        post {
+          ... on Post {
+            __typename
+          }
+        }
+      }
+    `;
+
+    const content = await plugin(
+      testSchema,
+      [{ filePath: '', content: query }],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
+
+    expect(content).toBeSimilarStringTo(`
+      export type Query = {
+        __typename?: "Query";
+        post: Post;
+      }
+    `);
+
+    expect(content).toBeSimilarStringTo(`
+      export type PostInlineFragment = {
+        __typename: "Post";
+      }
+    `);
+  });
+
+  it('should handle introspection types (__schema)', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: gql`
+        type Post {
+          title: String
+        }
+
+        type Query {
+          post: Post!
+        }
+      `
+    });
+    const query = gql`
+      query Info {
+        __schema {
+          queryType {
+            fields {
+              name
+            }
+          }
+        }
+      }
+    `;
+
+    const content = await plugin(
+      testSchema,
+      [{ filePath: '', content: query }],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
+
+    expect(content).toBeSimilarStringTo(`
+      export namespace Info {
+        export type Variables = {
+        }
+      
+        export type Query = {
+          __typename?: "Query";
+          
+          __schema: Schema;
+        }
+      
+        export type Schema = {
+          __typename?: "__Schema";
+          
+          queryType: QueryType;
+        } 
+      
+        export type QueryType = {
+          __typename?: "__Type";
+          
+          fields: Maybe<Fields[]>;
+        } 
+      
+        export type Fields = {
+          __typename?: "__Field";
+          
+          name: string;
+        } 
+      }
+    `);
+  });
+
+  it('should handle introspection types (__type)', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: gql`
+        type Post {
+          title: String
+        }
+
+        type Query {
+          post: Post!
+        }
+      `
+    });
+    const query = gql`
+      query Info {
+        __type(name: "Post") {
+          name
+          fields {
+            name
+            type {
+              name
+              kind
+            }
+          }
+        }
+      }
+    `;
+
+    const content = await plugin(
+      testSchema,
+      [{ filePath: '', content: query }],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
+
+    expect(content).toBeSimilarStringTo(`
+      export namespace Info {
+        export type Variables = {
+        }
+
+        export type Query = {
+          __typename?: "Query";
+          __type: Maybe<Type>;
+        }
+
+        export type Type = {
+          __typename?: "__Type";
+          
+          name: Maybe<string>;
+          fields: Maybe<Fields[]>;
+        } 
+
+        export type Fields = {
+          __typename?: "__Field";
+          name: string;
+          type: _Type;
+        } 
+
+        export type _Type = {
+          __typename?: "__Type";
+          name: Maybe<string>;
+          kind: __TypeKind;
+        } 
+      }
+    `);
+  });
+
   it('avoid duplicates - each type name should be unique', async () => {
     const testSchema = makeExecutableSchema({
       typeDefs: gql`

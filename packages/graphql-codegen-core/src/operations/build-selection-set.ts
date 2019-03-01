@@ -13,16 +13,35 @@ import {
   FragmentSpreadNode,
   getNamedType,
   GraphQLSchema,
-  GraphQLType,
   InlineFragmentNode,
   SelectionNode,
   SelectionSetNode,
-  typeFromAST
+  typeFromAST,
+  isEqualType,
+  GraphQLNamedType,
+  GraphQLObjectType,
+  __Schema,
+  __Type,
+  SchemaMetaFieldDef,
+  TypeMetaFieldDef,
+  GraphQLField
 } from 'graphql';
 import { getFieldDef } from '../utils/get-field-def';
 import { resolveType } from '../schema/resolve-type';
 import { debugLog } from '../debugging';
 import { resolveTypeIndicators } from '../schema/resolve-type-indicators';
+
+function isMetadataFieldName(name: string) {
+  return ['__schema', '__type'].includes(name);
+}
+
+function isRootType(type: GraphQLNamedType, schema: GraphQLSchema): type is GraphQLObjectType {
+  return (
+    isEqualType(type, schema.getQueryType()) ||
+    isEqualType(type, schema.getMutationType()) ||
+    isEqualType(type, schema.getSubscriptionType())
+  );
+}
 
 export function separateSelectionSet(selectionSet: SelectionSetItem[]): any {
   const fields = selectionSet.filter(n => isFieldNode(n));
@@ -39,9 +58,70 @@ export function separateSelectionSet(selectionSet: SelectionSetItem[]): any {
   };
 }
 
+const metadataObjectMap: Record<string, GraphQLObjectType> = {
+  __schema: __Schema,
+  __type: __Type
+};
+const metadataFieldMap: Record<string, GraphQLField<any, any>> = {
+  __schema: SchemaMetaFieldDef,
+  __type: TypeMetaFieldDef
+};
+
+export function buildMetadata(schema: GraphQLSchema, fieldNode: FieldNode): SelectionSetItem {
+  const name = fieldNode.name.value;
+  const type = metadataObjectMap[name];
+  const field = metadataFieldMap[name];
+
+  return resolveFieldNode(
+    schema,
+    fieldNode,
+    field,
+    fieldNode.alias && fieldNode.alias.value ? fieldNode.alias.value : fieldNode.name.value,
+    type
+  );
+}
+
+function resolveFieldNode(
+  schema: GraphQLSchema,
+  fieldNode: FieldNode,
+  field: GraphQLField<any, any>,
+  name: string,
+  type: GraphQLNamedType
+): SelectionSetItem {
+  const resolvedType = resolveType(field.type);
+  const childSelectionSet = buildSelectionSet(schema, type, fieldNode.selectionSet);
+  const namedType = type;
+  const indicators = resolveTypeIndicators(namedType);
+
+  return {
+    isField: true,
+    isFragmentSpread: false,
+    isInlineFragment: false,
+    isLeaf: childSelectionSet.length === 0,
+    schemaFieldName: fieldNode.name.value,
+    name,
+    isAliased: fieldNode.alias && fieldNode.alias.value,
+    selectionSet: childSelectionSet,
+    ...separateSelectionSet(childSelectionSet),
+    type: resolvedType.name,
+    raw: resolvedType.raw,
+    isRequired: resolvedType.isRequired,
+    isNullableArray: resolvedType.isNullableArray,
+    isArray: resolvedType.isArray,
+    dimensionOfArray: resolvedType.dimensionOfArray,
+    hasTypename: hasTypename(fieldNode),
+    isEnum: indicators.isEnum,
+    isScalar: indicators.isScalar,
+    isInterface: indicators.isInterface,
+    isUnion: indicators.isUnion,
+    isInputType: indicators.isInputType,
+    isType: indicators.isType
+  } as SelectionSetFieldNode;
+}
+
 export function buildSelectionSet(
   schema: GraphQLSchema,
-  rootObject: GraphQLType,
+  rootObject: GraphQLNamedType,
   node: SelectionSetNode
 ): SelectionSetItem[] {
   return ((node && node.selections ? node.selections : []) as SelectionNode[])
@@ -51,6 +131,15 @@ export function buildSelectionSet(
           const fieldNode = selectionNode as FieldNode;
           const name = fieldNode.alias && fieldNode.alias.value ? fieldNode.alias.value : fieldNode.name.value;
           debugLog(`[buildSelectionSet] transforming FIELD with name ${name}`);
+
+          // Kamil: `__query` and `__type` metadata fields are available only in root types.
+          // Or I'm wrong and maybe just in Query type?
+          // Or I'm completely wrong and even outside of root types?
+          // So many unanswered questions...
+          if (isRootType(rootObject, schema) && isMetadataFieldName(fieldNode.name.value)) {
+            return buildMetadata(schema, fieldNode);
+          }
+
           const field = getFieldDef(rootObject, fieldNode);
 
           if (!field) {
@@ -59,35 +148,7 @@ export function buildSelectionSet(
             return null;
           }
 
-          const resolvedType = resolveType(field.type);
-          const childSelectionSet = buildSelectionSet(schema, getNamedType(field.type), fieldNode.selectionSet);
-          const namedType = getNamedType(field.type);
-          const indicators = resolveTypeIndicators(namedType);
-
-          return {
-            isField: true,
-            isFragmentSpread: false,
-            isInlineFragment: false,
-            isLeaf: childSelectionSet.length === 0,
-            schemaFieldName: fieldNode.name.value,
-            name,
-            isAliased: fieldNode.alias && fieldNode.alias.value,
-            selectionSet: childSelectionSet,
-            ...separateSelectionSet(childSelectionSet),
-            type: resolvedType.name,
-            raw: resolvedType.raw,
-            isRequired: resolvedType.isRequired,
-            isNullableArray: resolvedType.isNullableArray,
-            isArray: resolvedType.isArray,
-            dimensionOfArray: resolvedType.dimensionOfArray,
-            hasTypename: hasTypename(fieldNode),
-            isEnum: indicators.isEnum,
-            isScalar: indicators.isScalar,
-            isInterface: indicators.isInterface,
-            isUnion: indicators.isUnion,
-            isInputType: indicators.isInputType,
-            isType: indicators.isType
-          } as SelectionSetFieldNode;
+          return resolveFieldNode(schema, fieldNode, field, name, getNamedType(field.type));
         } else if (selectionNode.kind === Kind.FRAGMENT_SPREAD) {
           const fieldNode = selectionNode as FragmentSpreadNode;
           debugLog(`[buildSelectionSet] transforming FRAGMENT_SPREAD with name ${fieldNode.name.value}...`);
