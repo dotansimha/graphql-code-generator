@@ -44,6 +44,10 @@ export const createWatcher = (config: Types.Config, onNext: (result: FileOutput[
     }
   });
 
+  if (typeof config.watch !== 'boolean') {
+    files.push(...normalizeInstanceOrArray<string>(config.watch));
+  }
+
   let watcher: any;
 
   const runWatcher = async () => {

@@ -46,7 +46,7 @@ export namespace Types {
     config?: { [key: string]: any };
     generates: { [filename: string]: OutputConfig | ConfiguredOutput };
     overwrite?: boolean;
-    watch?: boolean;
+    watch?: boolean | string | string[];
     silent?: boolean;
     pluginLoader?: PluginLoaderFn;
   }
