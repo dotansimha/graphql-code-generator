@@ -9,7 +9,11 @@ import {
   isUnionType,
   isInterfaceType,
   isEnumType,
-  GraphQLSchema
+  GraphQLSchema,
+  isEqualType,
+  GraphQLField,
+  SchemaMetaFieldDef,
+  TypeMetaFieldDef
 } from 'graphql';
 import { getBaseType, quoteIfNeeded } from './utils';
 import { ScalarsMap, ConvertNameFn } from './types';
@@ -20,6 +24,23 @@ export type PrimitiveAliasedFields = { alias: string; fieldName: string };
 export type LinkField = { alias: string; name: string; type: string; selectionSet: string };
 export type FragmentSpreadField = string;
 export type InlineFragmentField = { [onType: string]: string[] };
+
+function isMetadataFieldName(name: string) {
+  return ['__schema', '__type'].includes(name);
+}
+
+function isRootType(type: GraphQLNamedType, schema: GraphQLSchema): type is GraphQLObjectType {
+  return (
+    isEqualType(type, schema.getQueryType()) ||
+    isEqualType(type, schema.getMutationType()) ||
+    isEqualType(type, schema.getSubscriptionType())
+  );
+}
+
+const metadataFieldMap: Record<string, GraphQLField<any, any>> = {
+  __schema: SchemaMetaFieldDef,
+  __type: TypeMetaFieldDef
+};
 
 export class SelectionSetToObject {
   protected _primitiveFields: PrimitiveField[] = [];
@@ -57,7 +78,14 @@ export class SelectionSetToObject {
     }
 
     if (isObjectType(this._parentSchemaType) || isInterfaceType(this._parentSchemaType)) {
-      const schemaField = this._parentSchemaType.getFields()[field.name.value];
+      let schemaField: GraphQLField<any, any>;
+
+      if (isRootType(this._parentSchemaType, this._schema) && isMetadataFieldName(field.name.value)) {
+        schemaField = metadataFieldMap[field.name.value];
+      } else {
+        schemaField = this._parentSchemaType.getFields()[field.name.value];
+      }
+
       const rawType = schemaField.type as any;
       const baseType = getBaseType(rawType);
       const typeName = baseType.name;
