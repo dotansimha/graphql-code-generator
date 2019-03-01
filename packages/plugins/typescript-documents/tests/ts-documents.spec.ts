@@ -845,5 +845,55 @@ describe('TypeScript Documents Plugin', async () => {
       `)
       );
     });
+
+    it('Should generate correctly when using enums and typesPrefix', async () => {
+      const testSchema = makeExecutableSchema({
+        typeDefs: parse(/* GraphQL */ `
+          enum Access {
+            Read
+            Write
+            All
+          }
+          type User {
+            access: Access
+          }
+          input Filter {
+            match: String!
+          }
+          type Query {
+            users(filter: Filter!): [User]
+          }
+        `)
+      });
+      const query = parse(/* GraphQL */ `
+        query users($filter: Filter!) {
+          users(filter: $filter) {
+            access
+          }
+        }
+      `);
+
+      const content = await plugin(
+        testSchema,
+        [{ filePath: '', content: query }],
+        { typesPrefix: 'PREFIX_' },
+        {
+          outputFile: 'graphql.ts'
+        }
+      );
+
+      // Kamil: is `PREFIX_Prefix_*` correct?
+      expect(format(content)).toBeSimilarStringTo(
+        format(`
+          export type PREFIX_Prefix_UsersQueryVariables = {
+            filter: PREFIX_Filter;
+          };
+          
+          export type PREFIX_Prefix_UsersQuery = { __typename?: 'Query' } & {
+            users: Maybe<Array<Maybe<{ __typename?: 'User' } & Pick<PREFIX_User, 'access'>>>>;
+          };      
+      `)
+      );
+    });
   });
 });
