@@ -79,7 +79,7 @@ export type IResolvers<TContext = {{{ getContext }}}> = {
   {{#each scalars}}
     {{ convert name 'typeNames'}}{{#unless @root.config.strict}}?{{/unless}}: GraphQLScalarType;
   {{/each}}
-} &  & { [typeName: string] : { [ fieldName: string ]: ( Resolver<any, any, TContext, any> | SubscriptionResolver<any, any, TContext, any> ) } }
+} &  & { [typeName: string] : { [ fieldName: string ]: ( Resolver<any, any, TContext, any> | SubscriptionResolver<any, any, TContext, any> ) } };
 
 export type IDirectiveResolvers<Result> = {
   {{#each definedDirectives}}
