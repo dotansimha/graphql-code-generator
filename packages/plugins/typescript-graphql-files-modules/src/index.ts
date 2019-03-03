@@ -1,14 +1,46 @@
-import { DocumentFile, PluginFunction, PluginValidateFn, transformDocumentsFiles } from 'graphql-codegen-core';
-import { buildFilesArray } from 'graphql-codegen-plugin-helpers';
-import { GraphQLSchema } from 'graphql';
-import * as Handlebars from 'handlebars';
-import * as rootTemplate from './root.handlebars';
+import { basename } from 'path';
+import { DocumentFile, PluginFunction, PluginValidateFn } from 'graphql-codegen-core';
+import { GraphQLSchema, OperationDefinitionNode } from 'graphql';
 
 export const plugin: PluginFunction = async (schema: GraphQLSchema, documents: DocumentFile[]): Promise<string> => {
-  const transformedDocuments = transformDocumentsFiles(schema, documents);
-  const files = buildFilesArray(transformedDocuments);
+  const mappedDocuments: { [fileName: string]: OperationDefinitionNode[] } = documents.reduce(
+    (prev, documentRecord) => {
+      const fileName = basename(documentRecord.filePath);
 
-  return Handlebars.compile(rootTemplate)({ files });
+      if (!prev[fileName]) {
+        prev[fileName] = [];
+      }
+
+      prev[fileName].push(
+        ...documentRecord.content.definitions.filter(
+          document => document.kind === 'OperationDefinition' || document.kind === 'FragmentDefinition'
+        )
+      );
+
+      return prev;
+    },
+    {}
+  );
+
+  return Object.keys(mappedDocuments)
+    .filter(fileName => mappedDocuments[fileName].length > 0)
+    .map(fileName => {
+      const operations = mappedDocuments[fileName];
+
+      return `
+declare module '*/${fileName}' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  ${operations
+    .filter(d => d.name && d.name.value)
+    .map(d => `export const ${d.name.value}: DocumentNode;`)
+    .join('\n')}
+
+  export default defaultDocument;
+}
+    `;
+    })
+    .join('\n');
 };
 
 export const validate: PluginValidateFn<any> = async (
