@@ -33,7 +33,7 @@
     "@types/glob": "7.1.1",
     "@types/jest": "24.0.9",
     "@types/mkdirp": "0.5.2",
-    "@types/node": "10.12.27",
+    "@types/node": "10.12.29",
     "@types/request": "2.48.1",
     "@types/common-tags": "1.8.0",
     "@types/graphql": "14.0.7",
