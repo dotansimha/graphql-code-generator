@@ -9,7 +9,7 @@
     "label-position": true,
     "max-line-length": [false],
     "member-access": false,
-    "member-ordering": [true, "static-before-instance", "variables-before-functions"],
+    "member-ordering": [false],
     "no-arg": true,
     "no-bitwise": true,
     "no-console": true,
