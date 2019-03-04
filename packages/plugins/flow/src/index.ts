@@ -1,12 +1,12 @@
 import { DocumentFile, PluginFunction } from 'graphql-codegen-core';
 import { parse, printSchema, visit, GraphQLSchema } from 'graphql';
 import { FlowVisitor } from './visitor';
-import { RawConfig } from 'graphql-codegen-visitor-plugin-common';
+import { RawTypesConfig } from 'graphql-codegen-visitor-plugin-common';
 
 export * from './visitor';
 export * from './flow-variables-to-object';
 
-export interface FlowPluginConfig extends RawConfig {
+export interface FlowPluginConfig extends RawTypesConfig {
   useFlowExactObjects?: boolean;
   useFlowReadOnlyTypes?: boolean;
 }

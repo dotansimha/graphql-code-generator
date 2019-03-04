@@ -1,6 +1,6 @@
 import 'graphql-codegen-core/dist/testing';
 import { makeExecutableSchema } from 'graphql-tools';
-import { plugin } from '../dist';
+import { plugin } from '../src/index';
 import * as fs from 'fs';
 import gql from 'graphql-tag';
 import { buildClientSchema } from 'graphql';
