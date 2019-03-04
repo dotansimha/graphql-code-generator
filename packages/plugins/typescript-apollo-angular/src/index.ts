@@ -22,7 +22,7 @@ export const plugin: PluginFunction<TypeScriptApolloAngularConfig> = async (
   documents: DocumentFile[],
   config: TypeScriptApolloAngularConfig
 ): Promise<string> => {
-  const { templateContext, convert } = initCommonTemplate(Handlebars, schema, config);
+  const { templateContext, convert } = initCommonTemplate(Handlebars, schema, documents, config);
   const transformedDocuments = transformDocumentsFiles(schema, documents);
   const flattenDocuments = flattenTypes(transformedDocuments);
   Handlebars.registerHelper('importNgModules', importNgModules);

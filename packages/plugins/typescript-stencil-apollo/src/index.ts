@@ -18,7 +18,7 @@ export const plugin: PluginFunction<TypeScriptStencilApolloConfig> = async (
   documents: DocumentFile[],
   config: TypeScriptStencilApolloConfig
 ): Promise<string> => {
-  const { templateContext, convert } = initCommonTemplate(Handlebars, schema, config);
+  const { templateContext, convert } = initCommonTemplate(Handlebars, schema, documents, config);
   const transformedDocuments = transformDocumentsFiles(schema, documents);
   const flattenDocuments = flattenTypes(transformedDocuments);
   Handlebars.registerHelper('generateFragments', generateFragments(convert));
