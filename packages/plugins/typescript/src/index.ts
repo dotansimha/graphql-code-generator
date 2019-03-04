@@ -1,10 +1,10 @@
 import { DocumentFile, PluginFunction } from 'graphql-codegen-core';
 import { parse, printSchema, visit, GraphQLSchema } from 'graphql';
-import { RawConfig } from 'graphql-codegen-visitor-plugin-common';
+import { RawTypesConfig } from 'graphql-codegen-visitor-plugin-common';
 import { TsVisitor } from './visitor';
 export * from './typescript-variables-to-object';
 
-export interface TypeScriptPluginConfig extends RawConfig {
+export interface TypeScriptPluginConfig extends RawTypesConfig {
   avoidOptionals?: boolean;
   constEnums?: boolean;
   enumsAsTypes?: boolean;
