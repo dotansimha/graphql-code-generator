@@ -81,7 +81,7 @@ export type IResolvers<TContext = {{{ getContext }}}> = {
   {{/each}}
 } & { [typeName: string] : { [ fieldName: string ]: ( Resolver<any, any, TContext, any> | SubscriptionResolver<any, any, TContext, any> ) } };
 
-export type IDirectiveResolvers<Result> = {
+export type IDirectiveResolvers<Result, TContext = {{{ getContext }}}> = {
   {{#each definedDirectives}}
     {{ name }}{{#unless @root.config.strict}}?{{/unless}}: {{ convert name 'typeNames'}}DirectiveResolver<Result>;
   {{/each}}

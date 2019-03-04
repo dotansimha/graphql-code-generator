@@ -1241,7 +1241,7 @@ describe('Resolvers', () => {
     `);
 
     expect(content).toBeSimilarStringTo(`
-      export type IDirectiveResolvers<Result> = {
+      export type IDirectiveResolvers<Result, TContext = {}> = {
         modify?: ModifyDirectiveResolver<Result>;
         skip?: SkipDirectiveResolver<Result>;
         include?: IncludeDirectiveResolver<Result>;
