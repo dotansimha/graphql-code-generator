@@ -16,7 +16,7 @@ export const plugin: PluginFunction<TypeScriptClientConfig> = async (
   documents: DocumentFile[],
   config: TypeScriptClientConfig
 ): Promise<string> => {
-  const { templateContext, convert } = initCommonTemplate(Handlebars, schema, config);
+  const { templateContext, convert } = initCommonTemplate(Handlebars, schema, documents, config);
   const transformedDocuments = transformDocumentsFiles(schema, documents);
   const flattenDocuments = flattenTypes(transformedDocuments);
 

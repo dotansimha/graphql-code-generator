@@ -26,7 +26,7 @@ export const plugin: PluginFunction<TypeScriptServerResolversConfig> = async (
   documents: DocumentFile[],
   config: TypeScriptServerResolversConfig
 ): Promise<string> => {
-  const { templateContext, convert } = initCommonTemplate(Handlebars, schema, config);
+  const { templateContext, convert } = initCommonTemplate(Handlebars, schema, documents, config);
   Handlebars.registerPartial('resolver', resolver);
   Handlebars.registerPartial('resolveType', resolveType);
   Handlebars.registerPartial('directive', directive);

@@ -37,7 +37,7 @@ export const DEFAULT_SCALARS = {
   ID: 'string'
 };
 
-export function initCommonTemplate(hbs, schema, config: TypeScriptCommonConfig) {
+export function initCommonTemplate(hbs, schema, documents: DocumentFile[], config: TypeScriptCommonConfig) {
   const scalars = { ...DEFAULT_SCALARS, ...(config.scalars || {}) };
   let namingConventionMap: TypeScriptNamingConventionMap;
   if (typeof config.namingConvention === 'undefined') {
@@ -107,7 +107,7 @@ export function initCommonTemplate(hbs, schema, config: TypeScriptCommonConfig) 
   hbs.registerHelper('unlessDirective', helpers.unlessDirective);
   hbs.registerHelper('toPrimitive', type => scalars[type] || type || '');
 
-  const templateContext = schemaToTemplateContext(schema);
+  const templateContext = schemaToTemplateContext(schema, documents);
 
   return {
     templateContext: {
@@ -125,7 +125,7 @@ export const plugin: PluginFunction<TypeScriptCommonConfig> = async (
   documents: DocumentFile[],
   config: TypeScriptCommonConfig
 ): Promise<string> => {
-  const { templateContext } = initCommonTemplate(Handlebars, schema, config);
+  const { templateContext } = initCommonTemplate(Handlebars, schema, documents, config);
 
   return Handlebars.compile(rootTemplate)(templateContext);
 };

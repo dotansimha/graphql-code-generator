@@ -6,9 +6,15 @@ import {
   GraphQLObjectType,
   GraphQLScalarType,
   GraphQLSchema,
-  GraphQLUnionType
+  GraphQLUnionType,
+  visitWithTypeInfo,
+  TypeInfo,
+  visit,
+  getNamedType,
+  isIntrospectionType,
+  isEnumType
 } from 'graphql';
-import { SchemaTemplateContext } from '../types';
+import { SchemaTemplateContext, DocumentFile } from '../types';
 import { objectMapToArray } from '../utils/object-map-to-array';
 import { transformGraphQLObject } from './transform-object';
 import { transformGraphQLEnum } from './transform-enum';
@@ -22,16 +28,18 @@ import { getDirectives } from 'graphql-toolkit';
 const GRAPHQL_PRIMITIVES = ['String', 'Int', 'Boolean', 'ID', 'Float'];
 type GraphQLTypesMap = { [typeName: string]: GraphQLNamedType };
 
-const clearTypes = (typesMap: GraphQLTypesMap): GraphQLTypesMap =>
+const clearTypes = (typesMap: GraphQLTypesMap, forcedTypes: string[]): GraphQLTypesMap =>
   Object.keys(typesMap)
-    .filter(key => !GRAPHQL_PRIMITIVES.includes(key) && !key.startsWith('__'))
+    .filter(key => forcedTypes.includes(key) || (!GRAPHQL_PRIMITIVES.includes(key) && !key.startsWith('__')))
     .reduce((obj, key) => {
       obj[key] = typesMap[key];
       return obj;
     }, {});
 
-export function schemaToTemplateContext(schema: GraphQLSchema): SchemaTemplateContext {
+export function schemaToTemplateContext(schema: GraphQLSchema, documents?: DocumentFile[]): SchemaTemplateContext {
   debugLog('[schemaToTemplateContext] started...');
+
+  const introspectionTypesToInclude = includeIntrospectionTypes(schema, documents);
 
   const directives = getDirectives(schema, schema);
   const result: SchemaTemplateContext = {
@@ -56,7 +64,7 @@ export function schemaToTemplateContext(schema: GraphQLSchema): SchemaTemplateCo
   };
 
   const rawTypesMap = schema.getTypeMap();
-  const typesMap = clearTypes(rawTypesMap);
+  const typesMap = clearTypes(rawTypesMap, introspectionTypesToInclude.map(t => t.name));
   const typesArray = objectMapToArray<GraphQLNamedType>(typesMap);
 
   debugLog(`[schemaToTemplateContext] Got total of ${typesArray.length} types in the GraphQL schema`);
@@ -97,4 +105,25 @@ export function schemaToTemplateContext(schema: GraphQLSchema): SchemaTemplateCo
   debugLog(`[schemaToTemplateContext] done, results is: `, result);
 
   return result;
+}
+
+function includeIntrospectionTypes(schema: GraphQLSchema, documents?: DocumentFile[]): GraphQLNamedType[] {
+  let typesToInclude: GraphQLNamedType[] = [];
+
+  if (documents) {
+    const typeInfo = new TypeInfo(schema);
+    const visitor = visitWithTypeInfo(typeInfo, {
+      Field() {
+        const type = getNamedType(typeInfo.getType());
+
+        if (isIntrospectionType(type) && isEnumType(type) && !typesToInclude.includes(type)) {
+          typesToInclude.push(type);
+        }
+      }
+    });
+
+    documents.forEach(doc => visit(doc.content, visitor));
+  }
+
+  return typesToInclude;
 }

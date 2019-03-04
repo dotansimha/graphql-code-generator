@@ -1,5 +1,5 @@
 import 'graphql-codegen-core/dist/testing';
-import { GraphQLSchema } from 'graphql';
+import { GraphQLSchema, parse } from 'graphql';
 import { makeExecutableSchema } from 'graphql-tools';
 import { plugin } from '../dist';
 
@@ -660,5 +660,55 @@ describe('TypeScript Common', () => {
       export type Date = MyCustomDate;
       `);
     });
+  });
+
+  it('should handle introspection types (__TypeKind)', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: /* GraphQL */ `
+        type Post {
+          title: String
+        }
+
+        type Query {
+          post: Post!
+        }
+      `
+    });
+    const query = parse(/* GraphQL */ `
+      query Info {
+        __type(name: "Post") {
+          name
+          fields {
+            name
+            type {
+              name
+              kind
+            }
+          }
+        }
+      }
+    `);
+
+    const content = await plugin(
+      testSchema,
+      [{ filePath: '', content: query }],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
+
+    expect(content).toBeSimilarStringTo(`
+      export enum __TypeKind {
+        Scalar = "SCALAR",
+        Object = "OBJECT",
+        Interface = "INTERFACE",
+        Union = "UNION",
+        Enum = "ENUM",
+        InputObject = "INPUT_OBJECT",
+        List = "LIST",
+        NonNull = "NON_NULL",
+      }
+    `);
   });
 });
