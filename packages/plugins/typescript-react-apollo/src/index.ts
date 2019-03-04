@@ -24,7 +24,7 @@ export const plugin: PluginFunction<ReactApolloRawPluginConfig> = (
     }, [])
   );
   const allFragments = allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[];
-  const visitor = new ReactApolloVisitor(schema, allFragments, config) as any;
+  const visitor = new ReactApolloVisitor(allFragments, config) as any;
   const visitorResult = visit(allAst, { leave: visitor });
 
   return [visitor.imports, visitor.fragments, ...visitorResult.definitions.filter(t => typeof t === 'string')].join(
