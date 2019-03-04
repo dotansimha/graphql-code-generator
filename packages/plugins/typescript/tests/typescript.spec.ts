@@ -1,5 +1,5 @@
 import 'graphql-codegen-core/dist/testing';
-import { buildSchema } from 'graphql';
+import { buildSchema, parse } from 'graphql';
 import { validateTs } from './validate';
 import { plugin } from '../src/index';
 
@@ -78,6 +78,46 @@ describe('TypeScript', () => {
       export type MyEnum = 'BOOP' | 'B';
     `);
       validateTs(result);
+    });
+
+    it('should handle introspection types (like __TypeKind)', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Post {
+          title: String
+        }
+        type Query {
+          post: Post!
+        }
+      `);
+      const query = parse(/* GraphQL */ `
+        query Info {
+          __type(name: "Post") {
+            name
+            fields {
+              name
+              type {
+                name
+                kind
+              }
+            }
+          }
+        }
+      `);
+
+      const content = await plugin(
+        testSchema,
+        [{ filePath: '', content: query }],
+        {},
+        {
+          outputFile: 'graphql.ts'
+        }
+      );
+
+      console['log'](content);
+
+      expect(content).toBeSimilarStringTo(`
+        export type __Type = {
+      `);
     });
   });
 

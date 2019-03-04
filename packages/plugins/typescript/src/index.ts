@@ -1,7 +1,7 @@
 import { DocumentFile, PluginFunction } from 'graphql-codegen-core';
-import { parse, printSchema, visit, GraphQLSchema } from 'graphql';
+import { printSchema, parse, visit, GraphQLSchema } from 'graphql';
 import { RawTypesConfig } from 'graphql-codegen-visitor-plugin-common';
-import { TsVisitor } from './visitor';
+import { TsVisitor, includeIntrospectionDefinitions } from './visitor';
 export * from './typescript-variables-to-object';
 
 export interface TypeScriptPluginConfig extends RawTypesConfig {
@@ -19,9 +19,10 @@ export const plugin: PluginFunction<TypeScriptPluginConfig> = (
 ) => {
   const visitor = new TsVisitor(config) as any;
   const printedSchema = printSchema(schema);
-  const astNode = parse(printedSchema);
   const header = `type Maybe<T> = ${visitor.config.maybeValue};`;
-  const visitorResult = visit(astNode, { leave: visitor });
+
+  const visitorResult = visit(parse(printedSchema), { leave: visitor });
+  includeIntrospectionDefinitions(schema, documents, config);
 
   return [header, ...visitorResult.definitions].join('\n');
 };
