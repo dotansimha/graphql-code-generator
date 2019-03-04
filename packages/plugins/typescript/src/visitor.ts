@@ -1,10 +1,10 @@
-import { DeclarationBlock, indent, BaseVisitor, ParsedConfig } from 'graphql-codegen-visitor-plugin-common';
+import { DeclarationBlock, indent, BaseTypesVisitor, ParsedTypesConfig } from 'graphql-codegen-visitor-plugin-common';
 import { TypeScriptPluginConfig } from './index';
 import * as autoBind from 'auto-bind';
 import { FieldDefinitionNode, NamedTypeNode, ListTypeNode, NonNullTypeNode, EnumTypeDefinitionNode } from 'graphql';
 import { TypeScriptOperationVariablesToObject } from './typescript-variables-to-object';
 
-export interface TypeScriptPluginParsedConfig extends ParsedConfig {
+export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
   avoidOptionals: boolean;
   constEnums: boolean;
   enumsAsTypes: boolean;
@@ -12,7 +12,7 @@ export interface TypeScriptPluginParsedConfig extends ParsedConfig {
   maybeValue: string;
 }
 
-export class TsVisitor extends BaseVisitor<TypeScriptPluginConfig, TypeScriptPluginParsedConfig> {
+export class TsVisitor extends BaseTypesVisitor<TypeScriptPluginConfig, TypeScriptPluginParsedConfig> {
   constructor(pluginConfig: TypeScriptPluginConfig = {}) {
     super(
       pluginConfig,

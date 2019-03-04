@@ -3,28 +3,27 @@ import {
   ListTypeNode,
   ObjectTypeDefinitionNode,
   FieldDefinitionNode,
-  UnionTypeDefinitionNode,
   EnumTypeDefinitionNode,
   ScalarTypeDefinitionNode,
   NamedTypeNode
 } from 'graphql';
 import {
-  BaseVisitor,
+  BaseTypesVisitor,
   DeclarationBlock,
   wrapWithSingleQuotes,
   indent,
-  ParsedConfig
+  ParsedTypesConfig
 } from 'graphql-codegen-visitor-plugin-common';
 import * as autoBind from 'auto-bind';
 import { FlowPluginConfig } from './index';
 import { FlowOperationVariablesToObject } from './flow-variables-to-object';
 
-export interface FlowPluginParsedConfig extends ParsedConfig {
+export interface FlowPluginParsedConfig extends ParsedTypesConfig {
   useFlowExactObjects: boolean;
   useFlowReadOnlyTypes: boolean;
 }
 
-export class FlowVisitor extends BaseVisitor<FlowPluginConfig, FlowPluginParsedConfig> {
+export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginParsedConfig> {
   constructor(pluginConfig: FlowPluginConfig) {
     super(pluginConfig, {
       useFlowExactObjects: pluginConfig.useFlowExactObjects || false,
