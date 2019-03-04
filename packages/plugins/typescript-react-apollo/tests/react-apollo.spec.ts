@@ -5,7 +5,7 @@ import { parse, buildSchema } from 'graphql';
 describe('React Apollo', () => {
   const schema = buildSchema(`type Query { something: MyType } type MyType { a: String }`);
   const basicDoc = parse(/* GraphQL */ `
-    query {
+    query test {
       feed {
         id
         commentCount
@@ -142,6 +142,87 @@ describe('React Apollo', () => {
         ...MyOtherFragment
       }
       \${MyOtherFragmentFragmentDoc}\`;`);
+    });
+  });
+
+  describe('Component', () => {
+    it('should generate Document variable', async () => {
+      const content = await plugin(
+        schema,
+        [{ filePath: '', content: basicDoc }],
+        {},
+        {
+          outputFile: 'graphql.tsx'
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+          export const TestDocument =  gql\`
+          query test {
+            feed {
+              id
+              commentCount
+              repository {
+                full_name
+                html_url
+                owner {
+                  avatar_url
+                }
+              }
+            }
+          }
+          \`;
+        `);
+    });
+
+    it('should generate Component', async () => {
+      const content = await plugin(
+        schema,
+        [{ filePath: '', content: basicDoc }],
+        {},
+        {
+          outputFile: 'graphql.tsx'
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+      export class TestComponent extends React.Component<Partial<ReactApollo.QueryProps<TestQuery, TestQueryVariables>>> {
+        render() {
+            return (
+                <ReactApollo.Query<TestQuery, TestQueryVariables>
+                query={TestDocument}
+                {...(this as any)['props'] as any}
+                            />
+                  );
+                }
+            }
+          `);
+    });
+  });
+
+  describe('HOC', () => {
+    it('should generate HOCs', async () => {
+      const content = await plugin(
+        schema,
+        [{ filePath: '', content: basicDoc }],
+        {},
+        {
+          outputFile: 'graphql.tsx'
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(
+        `export type TestProps<TChildProps = any> = Partial<ReactApollo.DataProps<TestQuery, TestQueryVariables>> & TChildProps;`
+      );
+
+      expect(content)
+        .toBeSimilarStringTo(`export function TestHOC<TProps, TChildProps = any>(operationOptions: ReactApollo.OperationOption<
+  TProps,
+  TestQuery,
+  TestQueryVariables,
+  TestProps<TChildProps>> | undefined) {
+    return ReactApollo.graphql<TProps, TestQuery, TestQueryVariables, TestProps<TChildProps>>(TestDocument, operationOptions);
+};`);
     });
   });
 });

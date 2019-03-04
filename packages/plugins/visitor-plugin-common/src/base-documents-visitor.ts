@@ -107,7 +107,7 @@ export class BaseDocumentsVisitor<
     return this.convertName(`Unnamed_${this._unnamedCounter++}_`);
   }
 
-  FragmentDefinition = (node: FragmentDefinitionNode): string => {
+  FragmentDefinition(node: FragmentDefinitionNode): string {
     const fragmentRootType = this._schema.getType(node.typeCondition.name.value) as GraphQLObjectType;
     const selectionSet = this._selectionSetToObject.createNext(fragmentRootType, node.selectionSet);
 
@@ -116,9 +116,9 @@ export class BaseDocumentsVisitor<
       .asKind('type')
       .withName(this.convertName(node.name.value + 'Fragment', true))
       .withContent(selectionSet.string).string;
-  };
+  }
 
-  OperationDefinition = (node: OperationDefinitionNode): string => {
+  OperationDefinition(node: OperationDefinitionNode): string {
     const name = this.handleAnonymouseOperation(node.name && node.name.value ? node.name.value : null);
     const operationRootType = getRootType(node.operation, this._schema);
     const selectionSet = this._selectionSetToObject.createNext(operationRootType, node.selectionSet);
@@ -139,5 +139,5 @@ export class BaseDocumentsVisitor<
       .withBlock(visitedOperationVariables).string;
 
     return [operationVariables, operationResult].filter(r => r).join('\n\n');
-  };
+  }
 }

@@ -4,6 +4,8 @@ import * as autoBind from 'auto-bind';
 import { GraphQLSchema, FragmentDefinitionNode, print, OperationDefinitionNode } from 'graphql';
 import { DepGraph } from 'dependency-graph';
 import gqlTag from 'graphql-tag';
+import { pascalCase } from 'change-case';
+import { toPascalCase } from 'graphql-codegen-core';
 
 export interface ReactApolloPluginConfig extends ParsedConfig {
   noHOC: boolean;
@@ -14,11 +16,7 @@ export interface ReactApolloPluginConfig extends ParsedConfig {
 }
 
 export class ReactApolloVisitor extends BaseVisitor<ReactApolloRawPluginConfig, ReactApolloPluginConfig> {
-  constructor(
-    private _schema: GraphQLSchema,
-    private _fragments: FragmentDefinitionNode[],
-    rawConfig: ReactApolloRawPluginConfig
-  ) {
+  constructor(private _fragments: FragmentDefinitionNode[], rawConfig: ReactApolloRawPluginConfig) {
     super(rawConfig, {
       noHOC: rawConfig.noHOC || false,
       noComponents: rawConfig.noComponents || false,
@@ -105,6 +103,7 @@ ${this._includeFragments(this._transformFragments(node))}`;
 
   private _parseImport(importStr: string) {
     const [moduleName, propName] = importStr.split('#');
+
     return {
       moduleName,
       propName
@@ -116,8 +115,7 @@ ${this._includeFragments(this._transformFragments(node))}`;
     let imports = `
 import ${
       gqlImport.propName ? `{ ${gqlImport.propName === 'gql' ? 'gql' : `${gqlImport.propName} as gql`} }` : 'gql'
-    } from '${gqlImport.moduleName}';
-      `;
+    } from '${gqlImport.moduleName}';\n`;
 
     if (!this.config.noComponents) {
       imports += `import * as React from 'react';\n`;
@@ -134,5 +132,89 @@ import ${
     }
 
     return imports;
+  }
+
+  private _buildHocProps(operationName: string, operationType: string): string {
+    const typeVariableName = this.convertName(operationName + toPascalCase(operationType));
+    const variablesVarName = this.convertName(operationName + toPascalCase(operationType) + 'Variables');
+    const argType = operationType === 'mutation' ? 'MutateProps' : 'DataProps';
+
+    return `Partial<ReactApollo.${argType}<${typeVariableName}, ${variablesVarName}>>`;
+  }
+
+  private _buildOperationHoc(
+    node: OperationDefinitionNode,
+    documentVariableName: string,
+    operationResultType: string,
+    operationVariablesTypes: string
+  ): string {
+    const operationName: string = this.convertName(node.name.value);
+    const propsTypeName: string = operationName + 'Props';
+
+    const propsVar = `export type ${propsTypeName}<TChildProps = any> = ${this._buildHocProps(
+      node.name.value,
+      node.operation
+    )} & TChildProps;`;
+
+    const mutationFn =
+      node.operation === 'mutation'
+        ? `export type ${this.convertName(
+            node.name.value + 'MutationFn'
+          )} = ReactApollo.MutationFn<${operationResultType}, ${operationVariablesTypes}>;`
+        : null;
+
+    const hocString = `export function ${operationName}HOC<TProps, TChildProps = any>(operationOptions: ReactApollo.OperationOption<
+  TProps, 
+  ${operationResultType},
+  ${operationVariablesTypes},
+  ${propsTypeName}<TChildProps>> | undefined) {
+    return ReactApollo.graphql<TProps, ${operationResultType}, ${operationVariablesTypes}, ${propsTypeName}<TChildProps>>(${documentVariableName}, operationOptions);
+};`;
+
+    return [propsVar, mutationFn, hocString].filter(a => a).join('\n');
+  }
+
+  private _buildComponent(
+    node: OperationDefinitionNode,
+    documentVariableName: string,
+    operationType: string,
+    operationResultType: string,
+    operationVariablesTypes: string
+  ): string {
+    const componentName: string = this.convertName(node.name.value + 'Component');
+
+    return `
+export class ${componentName} extends React.Component<Partial<ReactApollo.${operationType}Props<${operationResultType}, ${operationVariablesTypes}>>> {
+  render() {
+      return (
+          <ReactApollo.${operationType}<${operationResultType}, ${operationVariablesTypes}>
+          ${node.operation}={${documentVariableName}}
+          {...(this as any)['props'] as any}
+          />
+      );
+  }
+}`;
+  }
+
+  OperationDefinition(node: OperationDefinitionNode): string {
+    if (!node.name || !node.name.value) {
+      return null;
+    }
+
+    const documentVariableName = this.convertName(node.name.value + 'Document');
+    const documentString = `export const ${documentVariableName} = ${this._gql(node)};`;
+    const operationType: string = toPascalCase(node.operation);
+    const operationResultType: string = this.convertName(node.name.value + operationType);
+    const operationVariablesTypes: string = this.convertName(node.name.value + operationType + 'Variables');
+
+    const component = this.config.noComponents
+      ? null
+      : this._buildComponent(node, documentVariableName, operationType, operationResultType, operationVariablesTypes);
+    const hoc = this.config.noHOC
+      ? null
+      : this._buildOperationHoc(node, documentVariableName, operationResultType, operationVariablesTypes);
+    const hooks = this.config.withHooks ? `` : null;
+
+    return [documentString, component, hoc, hooks].filter(a => a).join('\n');
   }
 }
