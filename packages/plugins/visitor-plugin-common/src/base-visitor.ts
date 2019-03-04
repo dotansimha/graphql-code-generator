@@ -1,26 +1,7 @@
-import { ScalarsMap, EnumValuesMap } from './types';
-import { toPascalCase, DeclarationBlock, indent, wrapWithSingleQuotes, DeclarationBlockConfig } from './utils';
+import { ScalarsMap } from './types';
+import { toPascalCase, DeclarationBlockConfig } from './utils';
 import { resolveExternalModuleAndFn } from 'graphql-codegen-plugin-helpers';
 import * as autoBind from 'auto-bind';
-import {
-  NamedTypeNode,
-  ListTypeNode,
-  NonNullTypeNode,
-  DirectiveDefinitionNode,
-  NameNode,
-  InputObjectTypeDefinitionNode,
-  InputValueDefinitionNode,
-  EnumTypeDefinitionNode,
-  ScalarTypeDefinitionNode
-} from 'graphql';
-import {
-  FieldDefinitionNode,
-  UnionTypeDefinitionNode,
-  ObjectTypeDefinitionNode,
-  InterfaceTypeDefinitionNode,
-  EnumValueDefinitionNode
-} from 'graphql/language/ast';
-import { OperationVariablesToObject } from './variables-to-object';
 import { DEFAULT_SCALARS } from './scalars';
 
 export interface ParsedConfig {
