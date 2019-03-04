@@ -171,13 +171,11 @@ export interface DeprecatedDirectiveArgs {
   reason?: string;
 }
 
-
-
 export type IResolvers<TContext = {}> = {
     QueryRoot?: QueryRootResolvers.Resolvers<TContext>;
     User?: UserResolvers.Resolvers<TContext>;
     SubscriptionRoot?: SubscriptionRootResolvers.Resolvers<TContext>;
-} & { [typeName: string] : never };
+} & { [typeName: string] : { [ fieldName: string ]: ( Resolver<any, any, TContext, any> | SubscriptionResolver<any, any, TContext, any> ) } };
 
 export type IDirectiveResolvers<Result> = {
     skip?: SkipDirectiveResolver<Result>;

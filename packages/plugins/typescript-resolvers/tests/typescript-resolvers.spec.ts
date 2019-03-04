@@ -1237,16 +1237,16 @@ describe('Resolvers', () => {
         Node?: NodeResolvers;
         PostOrUser?: PostOrUserResolvers;
         Date?: GraphQLScalarType;
-      } & { [typeName: string] : never };
+      } & { [typeName: string] : { [ fieldName: string ]: ( Resolver<any, any, TContext, any> | SubscriptionResolver<any, any, TContext, any> ) } };
     `);
 
     expect(content).toBeSimilarStringTo(`
-      export type IDirectiveResolvers<Result> = {
+      export type IDirectiveResolvers<Result, TContext = {}> = {
         modify?: ModifyDirectiveResolver<Result>;
         skip?: SkipDirectiveResolver<Result>;
         include?: IncludeDirectiveResolver<Result>;
         deprecated?: DeprecatedDirectiveResolver<Result>;
-      } & { [directiveName: string] : never };
+      } & { [directiveName: string] : DirectiveResolverFn<any, any, TContext> };
     `);
   });
 
