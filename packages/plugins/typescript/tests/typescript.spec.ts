@@ -80,7 +80,7 @@ describe('TypeScript', () => {
       validateTs(result);
     });
 
-    it.only('should handle introspection types (like __TypeKind)', async () => {
+    it('should handle introspection types (like __TypeKind)', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         type Post {
           title: String
@@ -113,10 +113,17 @@ describe('TypeScript', () => {
         }
       );
 
-      console['log'](content);
-
       expect(content).toBeSimilarStringTo(`
-        export type __Type = {
+        export enum __TypeKind {
+          Scalar = 'SCALAR', 
+          Object = 'OBJECT', 
+          Interface = 'INTERFACE', 
+          Union = 'UNION', 
+          Enum = 'ENUM', 
+          Input_Object = 'INPUT_OBJECT', 
+          List = 'LIST', 
+          Non_Null = 'NON_NULL'
+        };
       `);
     });
   });

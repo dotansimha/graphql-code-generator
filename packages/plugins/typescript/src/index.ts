@@ -10,7 +10,8 @@ import {
   getNamedType,
   isIntrospectionType,
   isEnumType,
-  printIntrospectionSchema
+  printIntrospectionSchema,
+  DocumentNode
 } from 'graphql';
 import { RawTypesConfig } from 'graphql-codegen-visitor-plugin-common';
 import { TsVisitor } from './visitor';
@@ -35,16 +36,16 @@ export const plugin: PluginFunction<TypeScriptPluginConfig> = (
   const header = `type Maybe<T> = ${visitor.config.maybeValue};`;
 
   const visitorResult = visit(parse(printedSchema), { leave: visitor });
-  includeIntrospectionDefinitions(schema, documents, config);
+  const introspectionDefinitions = includeIntrospectionDefinitions(schema, documents, config);
 
-  return [header, ...visitorResult.definitions].join('\n');
+  return [header, ...visitorResult.definitions, ...introspectionDefinitions].join('\n');
 };
 
 function includeIntrospectionDefinitions(
   schema: GraphQLSchema,
   documents: DocumentFile[],
   config: TypeScriptPluginConfig
-) {
+): string[] {
   const typeInfo = new TypeInfo(schema);
   const typesToInclude: GraphQLNamedType[] = [];
   const documentsVisitor = visitWithTypeInfo(typeInfo, {
@@ -60,7 +61,7 @@ function includeIntrospectionDefinitions(
   documents.forEach(doc => visit(doc.content, documentsVisitor));
 
   const visitor = new TsIntrospectionVisitor(typesToInclude, new TsVisitor(config));
-  const result = visit(parse(printIntrospectionSchema(schema)), { leave: visitor });
+  const result: DocumentNode = visit(parse(printIntrospectionSchema(schema)), { leave: visitor });
 
-  return result;
+  return result.definitions as any;
 }

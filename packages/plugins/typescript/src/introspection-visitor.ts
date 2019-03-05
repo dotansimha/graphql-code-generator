@@ -7,20 +7,30 @@ export class TsIntrospectionVisitor {
   private tsVisitor: TsVisitor;
 
   constructor(typesToInclude: GraphQLNamedType[], tsVisitor: TsVisitor) {
-    autoBind(this);
     this.typesToInclude = typesToInclude;
     this.tsVisitor = tsVisitor;
+    autoBind(this);
   }
 
   Name(node: NameNode): string {
-    return this.tsVisitor.Name(node);
+    return node.value;
+  }
+
+  DirectiveDefinition() {
+    return null;
+  }
+
+  ObjectTypeDefinition() {
+    return null;
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
-    if (this.typesToInclude.some(type => type.name === node.name.value)) {
+    const name: string = node.name as any;
+
+    if (this.typesToInclude.some(type => type.name === name)) {
       return this.tsVisitor.EnumTypeDefinition(node);
     }
 
-    return ``;
+    return null;
   }
 }
