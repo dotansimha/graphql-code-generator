@@ -1,5 +1,5 @@
 import 'graphql-codegen-core/dist/testing';
-import { parse, buildClientSchema } from 'graphql';
+import { parse, buildClientSchema, buildSchema } from 'graphql';
 import { makeExecutableSchema } from 'graphql-tools';
 import { readFileSync } from 'fs';
 import { format } from 'prettier';
@@ -844,6 +844,66 @@ describe('TypeScript Documents Plugin', async () => {
         };
       `)
       );
+    });
+
+    it('should handle introspection types (like __TypeKind)', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Post {
+          title: String
+        }
+        type Query {
+          post: Post!
+        }
+      `);
+      const query = parse(/* GraphQL */ `
+        query Info {
+          __type(name: "Post") {
+            name
+            fields {
+              name
+              type {
+                name
+                kind
+              }
+            }
+          }
+        }
+      `);
+
+      const coreContent = await tsPlugin(
+        testSchema,
+        [{ filePath: '', content: query }],
+        {},
+        {
+          outputFile: 'graphql.ts'
+        }
+      );
+
+      const pluginContent = await plugin(
+        testSchema,
+        [{ filePath: '', content: query }],
+        {},
+        {
+          outputFile: 'graphql.ts'
+        }
+      );
+
+      const content = [coreContent, pluginContent].join('\n');
+
+      expect(content).toBeSimilarStringTo(`
+        export enum __TypeKind {
+          Scalar = 'SCALAR', 
+          Object = 'OBJECT', 
+          Interface = 'INTERFACE', 
+          Union = 'UNION', 
+          Enum = 'ENUM', 
+          Input_Object = 'INPUT_OBJECT', 
+          List = 'LIST', 
+          Non_Null = 'NON_NULL'
+        };
+      `);
+
+      validateTs(content);
     });
 
     it('Should generate correctly when using enums and typesPrefix', async () => {
