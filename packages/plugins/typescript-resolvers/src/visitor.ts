@@ -43,14 +43,14 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
       .getRootResolver()
       .replace(
         '};',
-        '} & { [typeName: string] : { [ fieldName: string ]: ( Resolver<any, any, Context, any> | SubscriptionResolver<any, any, Context, any> ) } } ;'
+        '} & { [typeName: string] : { [ fieldName: string ]: ( Resolver<any, any, Context, any> | SubscriptionResolver<any, any, Context, any> ) } };'
       );
   }
 
   getAllDirectiveResolvers(): string {
     return super
       .getAllDirectiveResolvers()
-      .replace('};', '} & { [directiveName: string]: DirectiveResolverFn<any, any, Context> } ;');
+      .replace('};', '} & { [directiveName: string]: DirectiveResolverFn<any, any, Context> };');
   }
 
   private clearOptional(str: string): string {

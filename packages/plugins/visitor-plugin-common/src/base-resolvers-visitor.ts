@@ -51,7 +51,7 @@ export class BaseResolversVisitor<
   protected _parsedConfig: TPluginConfig;
   protected _declarationBlockConfig: DeclarationBlockConfig = {};
   protected _collectedResolvers: { [key: string]: string } = {};
-  protected _collectedDirectiveResolvers = new Array<String>();
+  protected _collectedDirectiveResolvers: { [key: string]: string } = {};
   protected _variablesTransfomer: OperationVariablesToObject;
 
   constructor(
@@ -175,11 +175,11 @@ export class BaseResolversVisitor<
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
-      .withName(this.convertName('IDirectiveResolvers'), `<Context = ${this.config.contextType}>`)
+      .withName(this.convertName('IDirectiveResolvers'))
       .withBlock(
         Object.keys(this._collectedDirectiveResolvers)
           .map(schemaTypeName => {
-            const resolverType = this._collectedResolvers[schemaTypeName];
+            const resolverType = this._collectedDirectiveResolvers[schemaTypeName];
 
             return indent(this.formatRootResolver(schemaTypeName, resolverType));
           })
