@@ -225,4 +225,58 @@ describe('TypeScript Resolvers Plugin', () => {
     expect(result).toBeSimilarStringTo(`f?: Resolver<Maybe<string>, ParentType, Context, TMyTypeFArgs>,`);
     await validate(result, config, testSchema);
   });
+  it('should generate Resolvers interface', async () => {
+    const testSchema = makeExecutableSchema({
+      typeDefs: `
+        directive @modify(limit: Int) on FIELD_DEFINITION
+        scalar Date
+        type Query {
+          post: Post
+          entity: PostOrUser
+        }
+        interface Node {
+          id: String
+        }
+        union PostOrUser = Post | User
+        type Post implements Node {
+          author: User
+        }
+        type User implements Node {
+          id: String
+          name: String
+        }
+        schema {
+          query: Query
+        }
+      `
+    });
+
+    const content = await plugin(
+      testSchema,
+      [],
+      { scalars: { Date: 'Date' } },
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
+
+    expect(content).toBeSimilarStringTo(`
+      export type IResolvers<Context = {}> = {
+        Query?: QueryResolvers<Context>;
+        Post?: PostResolvers<Context>;
+        User?: UserResolvers<Context>;
+        Node?: NodeResolvers;
+        PostOrUser?: PostOrUserResolvers;
+        Date?: GraphQLScalarType;
+      } & { [typeName: string] : { [ fieldName: string ]: ( Resolver<any, any, Context, any> | SubscriptionResolver<any, any, Context, any> ) } };
+    `);
+
+    expect(content).toBeSimilarStringTo(`
+      export type IDirectiveResolvers<Result, Context = {}> = {
+        skip?: SkipDirectiveResolver<Result>;
+        include?: IncludeDirectiveResolver<Result>;
+        deprecated?: DeprecatedDirectiveResolver<Result>;
+      } & { [directiveName: string] : DirectiveResolverFn<any, any, Context> };
+    `);
+  });
 });

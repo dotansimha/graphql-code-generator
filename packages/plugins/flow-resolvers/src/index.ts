@@ -60,11 +60,11 @@ export type TypeResolveFn<Types, Parent = {}, Context = {}> = (
 
 export type NextResolverFn<T> = () => Promise<T>;
 
-export type DirectiveResolverFn<TResult, TArgs = {}, TContext = {}> = (
+export type DirectiveResolverFn<TResult, TArgs = {}, Context = {}> = (
   next?: NextResolverFn<TResult>,
   source?: any,
   args?: TArgs,
-  context?: TContext,
+  context?: Context,
   info?: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 `;
