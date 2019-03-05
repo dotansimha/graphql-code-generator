@@ -41,7 +41,7 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
-      .withName(this.convertName(node.name))
+      .withName(this.convertName(node))
       .withContent(this.scalars[(node.name as any) as string] || 'any').string;
   };
 
@@ -85,18 +85,20 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
-    const enumValuesName = `${node.name}Values`;
+    const enumValuesName = this.convertName(node, {
+      suffix: 'Values'
+    });
 
     const enumValues = new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('const')
-      .withName(this.convertName(enumValuesName))
+      .withName(enumValuesName)
       .withMethodCall('Object.freeze')
       .withBlock(
         node.values
           .map(enumOption =>
             indent(
-              `${this.convertName(enumOption.name)}: ${wrapWithSingleQuotes(
+              `${this.convertName(enumOption)}: ${wrapWithSingleQuotes(
                 this._parsedConfig.enumValues[(enumOption.name as any) as string] || enumOption.name
               )}`
             )
@@ -107,8 +109,8 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
     const enumType = new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
-      .withName(this.convertName(node.name))
-      .withContent(`$Values<typeof ${this.convertName(enumValuesName)}>`).string;
+      .withName(this.convertName(node))
+      .withContent(`$Values<typeof ${enumValuesName}>`).string;
 
     return [enumValues, enumType].join('\n\n');
   }
