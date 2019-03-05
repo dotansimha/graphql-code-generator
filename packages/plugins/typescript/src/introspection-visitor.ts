@@ -1,4 +1,12 @@
-import { GraphQLNamedType, EnumTypeDefinitionNode, NameNode } from 'graphql';
+import {
+  GraphQLNamedType,
+  EnumTypeDefinitionNode,
+  NameNode,
+  ObjectTypeDefinitionNode,
+  NonNullTypeNode,
+  ListTypeNode,
+  NamedTypeNode
+} from 'graphql';
 import { TsVisitor } from './visitor';
 import * as autoBind from 'auto-bind';
 
@@ -20,7 +28,13 @@ export class TsIntrospectionVisitor {
     return null;
   }
 
-  ObjectTypeDefinition() {
+  ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: string | number, parent: any) {
+    const name: string = node.name as any;
+
+    if (this.typesToInclude.some(type => type.name === name)) {
+      return this.tsVisitor.ObjectTypeDefinition(node, key, parent);
+    }
+
     return null;
   }
 
