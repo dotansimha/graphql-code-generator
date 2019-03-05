@@ -1,27 +1,34 @@
 import { BaseVisitor, ParsedConfig } from 'graphql-codegen-visitor-plugin-common';
 import { ReactApolloRawPluginConfig } from './index';
 import * as autoBind from 'auto-bind';
-import { GraphQLSchema, FragmentDefinitionNode, print, OperationDefinitionNode } from 'graphql';
+import { FragmentDefinitionNode, print, OperationDefinitionNode } from 'graphql';
 import { DepGraph } from 'dependency-graph';
 import gqlTag from 'graphql-tag';
-import { pascalCase } from 'change-case';
 import { toPascalCase } from 'graphql-codegen-core';
 
 export interface ReactApolloPluginConfig extends ParsedConfig {
-  noHOC: boolean;
-  noComponents: boolean;
+  withHOC: boolean;
+  withComponent: boolean;
   withHooks: boolean;
   hooksImportFrom: string;
   gqlImport: string;
 }
 
+const getConfigValue = <T = any>(value: T, defaultValue: T): T => {
+  if (value === null || value === undefined) {
+    return defaultValue;
+  }
+
+  return value;
+};
+
 export class ReactApolloVisitor extends BaseVisitor<ReactApolloRawPluginConfig, ReactApolloPluginConfig> {
   constructor(private _fragments: FragmentDefinitionNode[], rawConfig: ReactApolloRawPluginConfig) {
     super(rawConfig, {
-      noHOC: rawConfig.noHOC || false,
-      noComponents: rawConfig.noComponents || false,
-      withHooks: rawConfig.withHooks || false,
-      hooksImportFrom: rawConfig.hooksImportFrom || 'react-apollo-hooks',
+      withHOC: getConfigValue(rawConfig.withHOC, true),
+      withComponent: getConfigValue(rawConfig.withComponent, true),
+      withHooks: getConfigValue(rawConfig.withHooks, false),
+      hooksImportFrom: getConfigValue(rawConfig.hooksImportFrom, 'react-apollo-hooks'),
       gqlImport: rawConfig.gqlImport || null
     } as any);
 
@@ -117,11 +124,11 @@ import ${
       gqlImport.propName ? `{ ${gqlImport.propName === 'gql' ? 'gql' : `${gqlImport.propName} as gql`} }` : 'gql'
     } from '${gqlImport.moduleName}';\n`;
 
-    if (!this.config.noComponents) {
+    if (this.config.withComponent) {
       imports += `import * as React from 'react';\n`;
     }
 
-    if (!this.config.noComponents || !this.config.noHOC) {
+    if (this.config.withComponent || this.config.withHOC) {
       imports += `import * as ReactApollo from 'react-apollo';\n`;
     }
 
@@ -196,6 +203,21 @@ export class ${componentName} extends React.Component<Partial<ReactApollo.${oper
 }`;
   }
 
+  private _buildHooks(
+    node: OperationDefinitionNode,
+    operationType: string,
+    documentVariableName: string,
+    operationResultType: string,
+    operationVariablesTypes: string
+  ): string {
+    return `
+export function use${operationResultType}(baseOptions?: ReactApolloHooks.${operationType}HookOptions<${
+      node.operation !== 'query' ? `${operationResultType}, ` : ''
+    }${operationVariablesTypes}>) {
+  return ReactApolloHooks.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, baseOptions);
+};`;
+  }
+
   OperationDefinition(node: OperationDefinitionNode): string {
     if (!node.name || !node.name.value) {
       return null;
@@ -207,13 +229,15 @@ export class ${componentName} extends React.Component<Partial<ReactApollo.${oper
     const operationResultType: string = this.convertName(node.name.value + operationType);
     const operationVariablesTypes: string = this.convertName(node.name.value + operationType + 'Variables');
 
-    const component = this.config.noComponents
-      ? null
-      : this._buildComponent(node, documentVariableName, operationType, operationResultType, operationVariablesTypes);
-    const hoc = this.config.noHOC
-      ? null
-      : this._buildOperationHoc(node, documentVariableName, operationResultType, operationVariablesTypes);
-    const hooks = this.config.withHooks ? `` : null;
+    const component = this.config.withComponent
+      ? this._buildComponent(node, documentVariableName, operationType, operationResultType, operationVariablesTypes)
+      : null;
+    const hoc = this.config.withHOC
+      ? this._buildOperationHoc(node, documentVariableName, operationResultType, operationVariablesTypes)
+      : null;
+    const hooks = this.config.withHooks
+      ? this._buildHooks(node, operationType, documentVariableName, operationResultType, operationVariablesTypes)
+      : null;
 
     return [documentString, component, hoc, hooks].filter(a => a).join('\n');
   }
