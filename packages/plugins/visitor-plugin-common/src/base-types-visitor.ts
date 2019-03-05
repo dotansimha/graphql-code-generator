@@ -67,7 +67,7 @@ export class BaseTypesVisitor<
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
-      .withName(this.convertName(node.name))
+      .withName(this.convertName(node))
       .withBlock(node.fields.join('\n')).string;
   }
 
@@ -87,12 +87,12 @@ export class BaseTypesVisitor<
 
   UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number, parent: any): string {
     const originalNode = parent[key] as UnionTypeDefinitionNode;
-    const possibleTypes = originalNode.types.map(t => this.convertName(t.name.value)).join(' | ');
+    const possibleTypes = originalNode.types.map(t => this.convertName(t)).join(' | ');
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
-      .withName(this.convertName(node.name))
+      .withName(this.convertName(node))
       .withContent(possibleTypes).string;
   }
 
@@ -100,20 +100,25 @@ export class BaseTypesVisitor<
     const originalNode = parent[key] as ObjectTypeDefinitionNode;
     const interfaces =
       originalNode.interfaces && node.interfaces.length > 0
-        ? originalNode.interfaces.map(i => this.convertName(i.name.value)).join(' & ') + ' & '
+        ? originalNode.interfaces.map(i => this.convertName(i)).join(' & ') + ' & '
         : '';
 
     const typeDefinition = new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
-      .withName(this.convertName(node.name))
+      .withName(this.convertName(node))
       .withContent(interfaces)
       .withBlock(node.fields.join('\n')).string;
 
     const original = parent[key];
     const fieldsWithArguments = original.fields.filter(field => field.arguments && field.arguments.length > 0);
     const fieldsArguments = fieldsWithArguments.map(field => {
-      const name = original.name.value + this.convertName(field.name.value, false) + 'Args';
+      const name =
+        original.name.value +
+        this.convertName(field, {
+          useTypesPrefix: false
+        }) +
+        'Args';
 
       return new DeclarationBlock(this._declarationBlockConfig)
         .export()
@@ -129,7 +134,7 @@ export class BaseTypesVisitor<
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
-      .withName(this.convertName(node.name))
+      .withName(this.convertName(node))
       .withBlock(node.fields.join('\n')).string;
   }
 
@@ -137,7 +142,7 @@ export class BaseTypesVisitor<
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
-      .withName(this.convertName(node.name))
+      .withName(this.convertName(node))
       .withContent(this.config.scalars[node.name as any] || 'any').string;
   }
 
@@ -145,7 +150,7 @@ export class BaseTypesVisitor<
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('enum')
-      .withName(this.convertName(node.name))
+      .withName(this.convertName(node))
       .withBlock(this.buildEnumValuesBlock(node.values)).string;
   }
 
@@ -153,9 +158,9 @@ export class BaseTypesVisitor<
     return values
       .map(enumOption =>
         indent(
-          `${this.convertName(enumOption.name)}${
-            this._declarationBlockConfig.enumNameValueSeparator
-          } ${wrapWithSingleQuotes(this.config.enumValues[(enumOption.name as any) as string] || enumOption.name)}`
+          `${this.convertName(enumOption)}${this._declarationBlockConfig.enumNameValueSeparator} ${wrapWithSingleQuotes(
+            this.config.enumValues[(enumOption.name as any) as string] || enumOption.name
+          )}`
         )
       )
       .join(', \n');
@@ -166,8 +171,7 @@ export class BaseTypesVisitor<
   }
 
   NamedType(node: NamedTypeNode): string {
-    const asString = (node.name as any) as string;
-    const type = this.scalars[asString] || this.convertName(asString);
+    const type = this.scalars[(node.name as any) as string] || this.convertName(node);
 
     return type;
   }

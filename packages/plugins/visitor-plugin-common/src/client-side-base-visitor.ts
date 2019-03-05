@@ -155,13 +155,19 @@ import ${
       return null;
     }
 
-    const documentVariableName = this.convertName(node.name.value + 'Document');
+    const documentVariableName = this.convertName(node, {
+      suffix: 'Document'
+    });
     const documentString = `export const ${documentVariableName}${
       this.config.noGraphQLTag ? ': DocumentNode' : ''
     } = ${this._gql(node)};`;
     const operationType: string = toPascalCase(node.operation);
-    const operationResultType: string = this.convertName(node.name.value + operationType);
-    const operationVariablesTypes: string = this.convertName(node.name.value + operationType + 'Variables');
+    const operationResultType: string = this.convertName(node, {
+      suffix: operationType
+    });
+    const operationVariablesTypes: string = this.convertName(node, {
+      suffix: operationType + 'Variables'
+    });
 
     const additional = this.buildOperation(
       node,
