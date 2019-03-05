@@ -10,7 +10,8 @@ import {
   getNamedType,
   isIntrospectionType,
   DocumentNode,
-  printIntrospectionSchema
+  printIntrospectionSchema,
+  isObjectType
 } from 'graphql';
 import { RawTypesConfig } from 'graphql-codegen-visitor-plugin-common';
 import { TsVisitor } from './visitor';
@@ -46,21 +47,47 @@ function includeIntrospectionDefinitions(
   config: TypeScriptPluginConfig
 ): string[] {
   const typeInfo = new TypeInfo(schema);
-  const typesToInclude: GraphQLNamedType[] = [];
+  const usedTypes: GraphQLNamedType[] = [];
   const documentsVisitor = visitWithTypeInfo(typeInfo, {
     Field() {
       const type = getNamedType(typeInfo.getType());
 
-      if (isIntrospectionType(type) && !typesToInclude.includes(type)) {
-        typesToInclude.push(type);
+      if (isIntrospectionType(type) && !usedTypes.includes(type)) {
+        usedTypes.push(type);
       }
     }
   });
 
   documents.forEach(doc => visit(doc.content, documentsVisitor));
 
-  const visitor = new TsIntrospectionVisitor(typesToInclude, new TsVisitor(config));
+  const typesToInclude: GraphQLNamedType[] = [];
+
+  usedTypes.forEach(type => {
+    collectTypes(type);
+  });
+
+  const visitor = new TsIntrospectionVisitor(config, typesToInclude);
   const result: DocumentNode = visit(parse(printIntrospectionSchema(schema)), { leave: visitor });
+
+  // recursively go through each `usedTypes` and their children and collect all used types
+  // we don't care about Interfaces, Unions and others, but Objects and Enums
+  function collectTypes(type: GraphQLNamedType): void {
+    if (typesToInclude.includes(type)) {
+      return;
+    }
+
+    typesToInclude.push(type);
+
+    if (isObjectType(type)) {
+      const fields = type.getFields();
+
+      Object.keys(fields).forEach(key => {
+        const field = fields[key];
+        const type = getNamedType(field.type);
+        collectTypes(type);
+      });
+    }
+  }
 
   return result.definitions as any[];
 }
