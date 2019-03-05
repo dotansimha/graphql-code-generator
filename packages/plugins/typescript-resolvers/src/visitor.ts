@@ -50,7 +50,7 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
   getAllDirectiveResolvers(): string {
     return super
       .getAllDirectiveResolvers()
-      .replace('};', '} & { [directiveName: string]: DirectiveResolverFn<any, any, Context> };');
+      .replace('};', '} & { [directiveName: string]: DirectiveResolverFn<any, any, Context, any> };');
   }
 
   private clearOptional(str: string): string {

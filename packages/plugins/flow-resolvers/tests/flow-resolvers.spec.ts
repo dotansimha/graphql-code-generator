@@ -43,8 +43,8 @@ describe('Flow Resolvers Plugin', () => {
     const result = plugin(schema, [], {}, { outputFile: '' });
 
     expect(result).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveResolver<Result> = DirectiveResolverFn<Result, {   arg?: ?number,
-      arg2?: ?string, arg3?: ?boolean }, any>;
+    export type MyDirectiveDirectiveResolver<Result, Parent, Context = any, Args = {   arg?: ?number,
+      arg2?: ?string, arg3?: ?boolean }> = DirectiveResolverFn<Result, Parent, Context, Args>;
 
     export interface MyOtherTypeResolvers<Context = any, ParentType = MyOtherType> {
       bar?: Resolver<string, ParentType, Context>,
@@ -111,8 +111,8 @@ describe('Flow Resolvers Plugin', () => {
     );
 
     expect(result).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveResolver<Result> = DirectiveResolverFn<Result, {   arg?: ?number,
-      arg2?: ?string, arg3?: ?boolean }, any>;
+    export type MyDirectiveDirectiveResolver<Result, Parent, Context = any, Args = {   arg?: ?number,
+      arg2?: ?string, arg3?: ?boolean }> = DirectiveResolverFn<Result, Parent, Context, Args>;
 
     export interface MyOtherTypeResolvers<Context = any, ParentType = MyCustomOtherType> {
       bar?: Resolver<string, ParentType, Context>,
@@ -164,8 +164,8 @@ describe('Flow Resolvers Plugin', () => {
 
     expect(result).toBeSimilarStringTo(`import { type MyCustomOtherType } from './some-file';`);
     expect(result).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveResolver<Result> = DirectiveResolverFn<Result, {   arg?: ?number,
-      arg2?: ?string, arg3?: ?boolean }, any>;
+    export type MyDirectiveDirectiveResolver<Result, Parent, Context = any, Args = {   arg?: ?number,
+      arg2?: ?string, arg3?: ?boolean }> = DirectiveResolverFn<Result, Parent, Context, Args>;
 
     export interface MyOtherTypeResolvers<Context = any, ParentType = MyCustomOtherType> {
       bar?: Resolver<string, ParentType, Context>,
