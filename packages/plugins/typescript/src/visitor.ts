@@ -1,25 +1,8 @@
 import { DeclarationBlock, indent, BaseTypesVisitor, ParsedTypesConfig } from 'graphql-codegen-visitor-plugin-common';
 import { TypeScriptPluginConfig } from './index';
 import * as autoBind from 'auto-bind';
-import {
-  FieldDefinitionNode,
-  NamedTypeNode,
-  ListTypeNode,
-  NonNullTypeNode,
-  EnumTypeDefinitionNode,
-  visit,
-  TypeInfo,
-  GraphQLSchema,
-  getNamedType,
-  isIntrospectionType,
-  isEnumType,
-  GraphQLNamedType,
-  visitWithTypeInfo,
-  printIntrospectionSchema,
-  parse
-} from 'graphql';
+import { FieldDefinitionNode, NamedTypeNode, ListTypeNode, NonNullTypeNode, EnumTypeDefinitionNode } from 'graphql';
 import { TypeScriptOperationVariablesToObject } from './typescript-variables-to-object';
-import { DocumentFile } from 'graphql-codegen-core';
 
 export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
   avoidOptionals: boolean;
@@ -110,47 +93,4 @@ export class TsVisitor extends BaseTypesVisitor<TypeScriptPluginConfig, TypeScri
         .withBlock(this.buildEnumValuesBlock(node.values)).string;
     }
   }
-}
-
-export class TsIntrospectionVisitor {
-  private typesToInclude: GraphQLNamedType[] = [];
-  private tsVisitor: TsVisitor;
-
-  constructor(typesToInclude: GraphQLNamedType[], tsVisitor: TsVisitor) {
-    this.typesToInclude = typesToInclude;
-    this.tsVisitor = tsVisitor;
-  }
-
-  EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
-    if (this.typesToInclude.some(type => type.name === node.name.value)) {
-      return this.tsVisitor.EnumTypeDefinition(node);
-    }
-
-    return ``;
-  }
-}
-
-export function includeIntrospectionDefinitions(
-  schema: GraphQLSchema,
-  documents: DocumentFile[],
-  config: TypeScriptPluginConfig
-) {
-  const typeInfo = new TypeInfo(schema);
-  const typesToInclude: GraphQLNamedType[] = [];
-  const documentsVisitor = visitWithTypeInfo(typeInfo, {
-    Field() {
-      const type = getNamedType(typeInfo.getType());
-
-      if (isIntrospectionType(type) && isEnumType(type) && !typesToInclude.includes(type)) {
-        typesToInclude.push(type);
-      }
-    }
-  });
-
-  documents.forEach(doc => visit(doc.content, documentsVisitor));
-
-  const visitor = new TsIntrospectionVisitor(typesToInclude, new TsVisitor(config));
-  const result = visit(parse(printIntrospectionSchema(schema)), visitor);
-
-  return result;
 }

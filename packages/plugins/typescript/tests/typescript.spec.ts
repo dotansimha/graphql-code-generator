@@ -80,7 +80,7 @@ describe('TypeScript', () => {
       validateTs(result);
     });
 
-    it('should handle introspection types (like __TypeKind)', async () => {
+    it.only('should handle introspection types (like __TypeKind)', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         type Post {
           title: String
