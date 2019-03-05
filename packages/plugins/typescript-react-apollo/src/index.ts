@@ -6,8 +6,8 @@ import { PluginValidateFn } from '../../../graphql-codegen-core/src/yml-config-t
 import { extname } from 'path';
 
 export interface ReactApolloRawPluginConfig extends RawConfig {
-  noHOC?: boolean;
-  noComponents?: boolean;
+  withHOC?: boolean;
+  withComponent?: boolean;
   withHooks?: boolean;
   hooksImportFrom?: string;
   gqlImport?: string;
@@ -23,6 +23,12 @@ export const plugin: PluginFunction<ReactApolloRawPluginConfig> = (
       return [...prev, v.content];
     }, [])
   );
+  const operationsCount = allAst.definitions.filter(d => d.kind === Kind.OPERATION_DEFINITION);
+
+  if (operationsCount.length === 0) {
+    return '';
+  }
+
   const allFragments = allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[];
   const visitor = new ReactApolloVisitor(allFragments, config) as any;
   const visitorResult = visit(allAst, { leave: visitor });
@@ -38,7 +44,7 @@ export const validate: PluginValidateFn<any> = async (
   config: ReactApolloRawPluginConfig,
   outputFile: string
 ) => {
-  if (config.noComponents) {
+  if (config.withComponent === false) {
     if (extname(outputFile) !== '.ts' && extname(outputFile) !== '.tsx') {
       throw new Error(`Plugin "react-apollo" with "noComponents" requires extension to be ".ts" or ".tsx"!`);
     }
