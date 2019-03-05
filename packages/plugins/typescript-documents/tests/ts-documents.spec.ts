@@ -942,14 +942,13 @@ describe('TypeScript Documents Plugin', async () => {
         }
       );
 
-      // Kamil: is `PREFIX_Prefix_*` correct?
       expect(format(content)).toBeSimilarStringTo(
         format(`
-          export type PREFIX_Prefix_UsersQueryVariables = {
+          export type PREFIX_UsersQueryVariables = {
             filter: PREFIX_Filter;
           };
           
-          export type PREFIX_Prefix_UsersQuery = { __typename?: 'Query' } & {
+          export type PREFIX_UsersQuery = { __typename?: 'Query' } & {
             users: Maybe<Array<Maybe<{ __typename?: 'User' } & Pick<PREFIX_User, 'access'>>>>;
           };      
       `)
