@@ -51,6 +51,7 @@ export class BaseResolversVisitor<
   protected _parsedConfig: TPluginConfig;
   protected _declarationBlockConfig: DeclarationBlockConfig = {};
   protected _collectedResolvers: { [key: string]: string } = {};
+  protected _collectedDirectiveResolvers = new Array<String>();
   protected _variablesTransfomer: OperationVariablesToObject;
 
   constructor(
@@ -150,11 +151,11 @@ export class BaseResolversVisitor<
     this._variablesTransfomer = variablesTransfomer;
   }
 
-  public get rootResolver(): string {
+  public getRootResolver(): string {
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
-      .asKind('interface')
-      .withName(this.convertName('ResolversRoot'))
+      .asKind('type')
+      .withName(this.convertName('IResolvers'), `<Context = ${this.config.contextType}>`)
       .withBlock(
         Object.keys(this._collectedResolvers)
           .map(schemaTypeName => {
@@ -168,6 +169,22 @@ export class BaseResolversVisitor<
 
   protected formatRootResolver(schemaTypeName: string, resolverType: string): string {
     return `${schemaTypeName}?: ${resolverType},`;
+  }
+
+  public getAllDirectiveResolvers(): string {
+    return new DeclarationBlock(this._declarationBlockConfig)
+      .export()
+      .asKind('type')
+      .withName(this.convertName('IDirectiveResolvers'), `<Context = ${this.config.contextType}>`)
+      .withBlock(
+        Object.keys(this._collectedDirectiveResolvers)
+          .map(schemaTypeName => {
+            const resolverType = this._collectedResolvers[schemaTypeName];
+
+            return indent(this.formatRootResolver(schemaTypeName, resolverType));
+          })
+          .join('\n')
+      ).string;
   }
 
   Name(node: NameNode): string {
@@ -267,6 +284,8 @@ export class BaseResolversVisitor<
     const directiveArgs = hasArguments
       ? this._variablesTransfomer.transform<InputValueDefinitionNode>(node.arguments)
       : '';
+
+    this._collectedDirectiveResolvers[node.name as any] = directiveName;
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()

@@ -35,7 +35,22 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
   }
 
   protected formatRootResolver(schemaTypeName: string, resolverType: string): string {
-    return `${schemaTypeName}?: ${resolverType},`;
+    return `${schemaTypeName}?: ${resolverType}<Context>,`;
+  }
+
+  getRootResolver(): string {
+    return super
+      .getRootResolver()
+      .replace(
+        '};',
+        '} & { [typeName: string] : { [ fieldName: string ]: ( Resolver<any, any, Context, any> | SubscriptionResolver<any, any, Context, any> ) } } ;'
+      );
+  }
+
+  getAllDirectiveResolvers(): string {
+    return super
+      .getAllDirectiveResolvers()
+      .replace('};', '} & { [directiveName: string]: DirectiveResolverFn<any, any, Context> } ;');
   }
 
   private clearOptional(str: string): string {

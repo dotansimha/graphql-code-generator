@@ -75,7 +75,9 @@ export interface UserResolvers<Context = any, ParentType = User> {
   email?: Resolver<string, ParentType, Context>,
 }
 
-export interface ResolversRoot {
+export type IResolvers<Context = any> = {
   Query?: QueryResolvers<>,
   User?: UserResolvers<>,
-}
+};
+
+export type IDirectiveResolvers<Context = any> = {};

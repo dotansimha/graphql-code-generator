@@ -1,9 +1,0 @@
-overwrite: true
-watch: true
-generates:
-  ./dev-test/githunt/types.ts:
-    schema: ./dev-test/githunt/schema.json
-    documents: ./dev-test/githunt/**/*.graphql
-    plugins:
-      - typescript-common
-      - typescript-client
