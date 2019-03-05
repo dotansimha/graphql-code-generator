@@ -107,12 +107,15 @@ export class BaseDocumentsVisitor<
     const name = node.name && node.name.value;
 
     if (name) {
-      return this.convertName(node);
+      return this.convertName(node, {
+        useTypesPrefix: false
+      });
     }
 
     return this.convertName(this._unnamedCounter++ + '', {
       prefix: 'Unnamed_',
-      suffix: '_'
+      suffix: '_',
+      useTypesPrefix: false
     });
   }
 
