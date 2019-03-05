@@ -1,8 +1,7 @@
-import { resolveExternalModuleAndFn } from 'graphql-codegen-plugin-helpers';
 import * as autoBind from 'auto-bind';
 import { DEFAULT_SCALARS } from './scalars';
-import { ScalarsMap } from './types';
-import { toPascalCase, DeclarationBlock, DeclarationBlockConfig, indent, getBaseTypeNode } from './utils';
+import { ScalarsMap, NamingConvention, ConvertFn, ConvertOptions } from './types';
+import { DeclarationBlock, DeclarationBlockConfig, indent, getBaseTypeNode } from './utils';
 import {
   NameNode,
   ListTypeNode,
@@ -19,6 +18,8 @@ import {
 } from 'graphql/language/ast';
 import { DirectiveDefinitionNode, GraphQLObjectType, InputValueDefinitionNode } from 'graphql';
 import { OperationVariablesToObject } from './variables-to-object';
+import { convertFactory } from './naming';
+import { BaseVisitorConvertOptions } from './base-visitor';
 
 interface ParsedMapper {
   isExternal: boolean;
@@ -28,7 +29,7 @@ interface ParsedMapper {
 
 export interface ParsedResolversConfig {
   scalars: ScalarsMap;
-  convert: (str: string) => string;
+  convert: ConvertFn;
   typesPrefix: string;
   contextType: string;
   mappers: {
@@ -40,7 +41,7 @@ export interface RawResolversConfig {
   contextType?: string;
   mappers?: { [typeName: string]: string };
   scalars?: ScalarsMap;
-  namingConvention?: string;
+  namingConvention?: NamingConvention;
   typesPrefix?: string;
 }
 
@@ -62,7 +63,7 @@ export class BaseResolversVisitor<
   ) {
     this._parsedConfig = {
       scalars: { ...(defaultScalars || DEFAULT_SCALARS), ...(rawConfig.scalars || {}) },
-      convert: rawConfig.namingConvention ? resolveExternalModuleAndFn(rawConfig.namingConvention) : toPascalCase,
+      convert: convertFactory(rawConfig),
       typesPrefix: rawConfig.typesPrefix || '',
       contextType: rawConfig.contextType || 'any',
       mappers: this.transformMappers(rawConfig.mappers || {}),
@@ -139,8 +140,9 @@ export class BaseResolversVisitor<
     return `import { ${types.join(', ')} } from '${source}';`;
   }
 
-  public convertName(name: any, addPrefix = true): string {
-    return (addPrefix ? this.config.typesPrefix : '') + this.config.convert(name);
+  public convertName(name: any, options?: ConvertOptions & BaseVisitorConvertOptions): string {
+    const useTypesPrefix = options && typeof options.useTypesPrefix === 'boolean' ? options.useTypesPrefix : true;
+    return (useTypesPrefix ? this.config.typesPrefix : '') + this.config.convert(name, options);
   }
 
   setDeclarationBlockConfig(config: DeclarationBlockConfig): void {
@@ -198,8 +200,7 @@ export class BaseResolversVisitor<
   }
 
   NamedType(node: NamedTypeNode): string {
-    const asString = (node.name as any) as string;
-    const type = this.config.scalars[asString] || this.convertName(asString);
+    const type = this.config.scalars[(node.name as any) as string] || this.convertName(node);
 
     return `${type}`;
   }
@@ -213,7 +214,7 @@ export class BaseResolversVisitor<
   FieldDefinition(node: FieldDefinitionNode, key: string | number, parent: any) {
     const hasArguments = node.arguments && node.arguments.length > 0;
 
-    return parentName => {
+    return (parentName: string) => {
       const original = parent[key];
       const realType = getBaseTypeNode(original.type).name.value;
       const mappedType = this.config.mappers[realType]
@@ -224,20 +225,30 @@ export class BaseResolversVisitor<
 
       return indent(
         `${node.name}?: ${isSubscriptionType ? 'SubscriptionResolver' : 'Resolver'}<${mappedType}, ParentType, Context${
-          hasArguments ? `, ${this.convertName(parentName, true) + this.convertName(node.name, false) + 'Args'}` : ''
+          hasArguments
+            ? `, ${this.convertName(parentName, {
+                useTypesPrefix: true
+              }) +
+                this.convertName(node.name, {
+                  useTypesPrefix: false
+                }) +
+                'Args'}`
+            : ''
         }>,`
       );
     };
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode) {
-    const name = this.convertName(node.name + 'Resolvers');
+    const name = this.convertName(node, {
+      suffix: 'Resolvers'
+    });
     let type: string = null;
 
     if (this.config.mappers[node.name as any]) {
       type = this.config.mappers[node.name as any].type;
     } else {
-      type = this.config.scalars[node.name as any] || this.convertName(node.name);
+      type = this.config.scalars[node.name as any] || this.convertName(node);
     }
 
     const block = new DeclarationBlock(this._declarationBlockConfig)
@@ -252,10 +263,12 @@ export class BaseResolversVisitor<
   }
 
   UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number, parent: any): string {
-    const name = this.convertName(node.name + 'Resolvers');
+    const name = this.convertName(node, {
+      suffix: 'Resolvers'
+    });
     const originalNode = parent[key] as UnionTypeDefinitionNode;
     const possibleTypes = originalNode.types
-      .map(node => this.convertName(node.name.value))
+      .map(node => this.convertName(node))
       .map(f => `'${f}'`)
       .join(' | ');
 
@@ -269,19 +282,26 @@ export class BaseResolversVisitor<
   }
 
   ScalarTypeDefinition(node: ScalarTypeDefinitionNode): string {
-    const baseName = this.convertName(node.name);
+    const baseName = this.convertName(node);
 
     this._collectedResolvers[node.name as any] = 'GraphQLScalarType';
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('interface')
-      .withName(this.convertName(node.name + 'ScalarConfig'), ` extends GraphQLScalarTypeConfig<${baseName}, any>`)
+      .withName(
+        this.convertName(node, {
+          suffix: 'ScalarConfig'
+        }),
+        ` extends GraphQLScalarTypeConfig<${baseName}, any>`
+      )
       .withBlock(indent(`name: '${node.name}'`)).string;
   }
 
   DirectiveDefinition(node: DirectiveDefinitionNode): string {
-    const directiveName = this.convertName(node.name + 'DirectiveResolver');
+    const directiveName = this.convertName(node, {
+      suffix: 'DirectiveResolver'
+    });
     const hasArguments = node.arguments && node.arguments.length > 0;
     const directiveArgs = hasArguments
       ? this._variablesTransfomer.transform<InputValueDefinitionNode>(node.arguments)
@@ -297,7 +317,9 @@ export class BaseResolversVisitor<
   }
 
   InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode): string {
-    const name = this.convertName(node.name + 'Resolvers');
+    const name = this.convertName(node, {
+      suffix: 'Resolvers'
+    });
     const allTypesMap = this._schema.getTypeMap();
     const implementingTypes: string[] = [];
 

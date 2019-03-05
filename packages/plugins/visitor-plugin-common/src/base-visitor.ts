@@ -1,18 +1,23 @@
-import { ScalarsMap } from './types';
-import { toPascalCase, DeclarationBlockConfig } from './utils';
-import { resolveExternalModuleAndFn } from 'graphql-codegen-plugin-helpers';
+import { ScalarsMap, NamingConvention, ConvertFn, ConvertOptions } from './types';
+import { DeclarationBlockConfig } from './utils';
 import * as autoBind from 'auto-bind';
 import { DEFAULT_SCALARS } from './scalars';
+import { convertFactory } from './naming';
+import { ASTNode } from 'graphql';
+
+export interface BaseVisitorConvertOptions {
+  useTypesPrefix?: boolean;
+}
 
 export interface ParsedConfig {
   scalars: ScalarsMap;
-  convert: (str: string) => string;
+  convert: ConvertFn;
   typesPrefix: string;
 }
 
 export interface RawConfig {
   scalars?: ScalarsMap;
-  namingConvention?: string;
+  namingConvention?: NamingConvention;
   typesPrefix?: string;
 }
 
@@ -23,7 +28,7 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
   constructor(rawConfig: TRawConfig, additionalConfig: TPluginConfig, defaultScalars: ScalarsMap = DEFAULT_SCALARS) {
     this._parsedConfig = {
       scalars: { ...(defaultScalars || DEFAULT_SCALARS), ...(rawConfig.scalars || {}) },
-      convert: rawConfig.namingConvention ? resolveExternalModuleAndFn(rawConfig.namingConvention) : toPascalCase,
+      convert: convertFactory(rawConfig),
       typesPrefix: rawConfig.typesPrefix || '',
       ...((additionalConfig || {}) as any)
     };
@@ -39,7 +44,8 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
     return this.config.scalars;
   }
 
-  convertName(name: any, addPrefix = true): string {
-    return (addPrefix ? this.config.typesPrefix : '') + this.config.convert(name);
+  convertName(node: ASTNode | string, options?: BaseVisitorConvertOptions & ConvertOptions): string {
+    const useTypesPrefix = typeof (options && options.useTypesPrefix) === 'boolean' ? options.useTypesPrefix : true;
+    return (useTypesPrefix ? this.config.typesPrefix : '') + this.config.convert(node, options);
   }
 }

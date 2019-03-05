@@ -1,4 +1,4 @@
-import { ScalarsMap } from './types';
+import { ScalarsMap, NamingConvention, ConvertFn, ConvertOptions } from './types';
 import * as autoBind from 'auto-bind';
 import { resolveExternalModuleAndFn } from 'graphql-codegen-plugin-helpers';
 import { DEFAULT_SCALARS } from './scalars';
@@ -9,10 +9,13 @@ import {
   GraphQLObjectType,
   OperationDefinitionNode,
   VariableDefinitionNode,
-  OperationTypeNode
+  OperationTypeNode,
+  ASTNode
 } from 'graphql';
 import { SelectionSetToObject } from './selection-set-to-object';
 import { OperationVariablesToObject } from './variables-to-object';
+import { convertFactory } from './naming';
+import { BaseVisitorConvertOptions } from './base-visitor';
 
 function getRootType(operation: OperationTypeNode, schema: GraphQLSchema) {
   switch (operation) {
@@ -27,14 +30,14 @@ function getRootType(operation: OperationTypeNode, schema: GraphQLSchema) {
 
 export interface ParsedDocumentsConfig {
   scalars: ScalarsMap;
-  convert: (str: string) => string;
+  convert: ConvertFn<ConvertOptions>;
   typesPrefix: string;
   addTypename: boolean;
 }
 
 export interface RawDocumentsConfig {
   scalars?: ScalarsMap;
-  namingConvention?: string;
+  namingConvention?: NamingConvention;
   typesPrefix?: string;
   skipTypename?: boolean;
 }
@@ -58,7 +61,7 @@ export class BaseDocumentsVisitor<
     this._parsedConfig = {
       addTypename: !rawConfig.skipTypename,
       scalars: { ...(defaultScalars || DEFAULT_SCALARS), ...(rawConfig.scalars || {}) },
-      convert: rawConfig.namingConvention ? resolveExternalModuleAndFn(rawConfig.namingConvention) : toPascalCase,
+      convert: convertFactory(rawConfig),
       typesPrefix: rawConfig.typesPrefix || '',
       ...((additionalConfig || {}) as any)
     };
@@ -79,8 +82,9 @@ export class BaseDocumentsVisitor<
     this._variablesTransfomer = variablesTransfomer;
   }
 
-  public convertName(name: any, addPrefix = true): string {
-    return (addPrefix ? this._parsedConfig.typesPrefix : '') + this._parsedConfig.convert(name);
+  public convertName(node: ASTNode | string, options?: ConvertOptions & BaseVisitorConvertOptions): string {
+    const useTypesPrefix = options && typeof options.useTypesPrefix === 'boolean' ? options.useTypesPrefix : true;
+    return (useTypesPrefix ? this._parsedConfig.typesPrefix : '') + this._parsedConfig.convert(node, options);
   }
 
   public get config(): TPluginConfig {
@@ -99,12 +103,17 @@ export class BaseDocumentsVisitor<
     return this._parsedConfig.addTypename;
   }
 
-  private handleAnonymouseOperation(name: string | null): string {
+  private handleAnonymouseOperation(node: OperationDefinitionNode): string {
+    const name = node.name && node.name.value;
+
     if (name) {
-      return this.convertName(name);
+      return this.convertName(node);
     }
 
-    return this.convertName(`Unnamed_${this._unnamedCounter++}_`);
+    return this.convertName(this._unnamedCounter++ + '', {
+      prefix: 'Unnamed_',
+      suffix: '_'
+    });
   }
 
   FragmentDefinition(node: FragmentDefinitionNode): string {
@@ -114,12 +123,17 @@ export class BaseDocumentsVisitor<
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
-      .withName(this.convertName(node.name.value + 'Fragment', true))
+      .withName(
+        this.convertName(node, {
+          useTypesPrefix: true,
+          suffix: 'Fragment'
+        })
+      )
       .withContent(selectionSet.string).string;
   }
 
   OperationDefinition(node: OperationDefinitionNode): string {
-    const name = this.handleAnonymouseOperation(node.name && node.name.value ? node.name.value : null);
+    const name = this.handleAnonymouseOperation(node);
     const operationRootType = getRootType(node.operation, this._schema);
     const selectionSet = this._selectionSetToObject.createNext(operationRootType, node.selectionSet);
     const visitedOperationVariables = this._variablesTransfomer.transform<VariableDefinitionNode>(
@@ -129,13 +143,21 @@ export class BaseDocumentsVisitor<
     const operationResult = new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
-      .withName(this.convertName(name + toPascalCase(node.operation)))
+      .withName(
+        this.convertName(name, {
+          suffix: toPascalCase(node.operation)
+        })
+      )
       .withContent(selectionSet.string).string;
 
     const operationVariables = new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
-      .withName(this.convertName(name + toPascalCase(node.operation) + 'Variables'))
+      .withName(
+        this.convertName(name, {
+          suffix: toPascalCase(node.operation) + 'Variables'
+        })
+      )
       .withBlock(visitedOperationVariables).string;
 
     return [operationVariables, operationResult].filter(r => r).join('\n\n');
