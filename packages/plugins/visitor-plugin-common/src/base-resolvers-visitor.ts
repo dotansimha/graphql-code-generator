@@ -271,6 +271,8 @@ export class BaseResolversVisitor<
   ScalarTypeDefinition(node: ScalarTypeDefinitionNode): string {
     const baseName = this.convertName(node.name);
 
+    this._collectedResolvers[node.name as any] = 'GraphQLScalarType';
+
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('interface')

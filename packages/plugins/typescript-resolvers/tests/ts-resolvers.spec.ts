@@ -265,8 +265,8 @@ describe('TypeScript Resolvers Plugin', () => {
         Query?: QueryResolvers<Context>;
         Post?: PostResolvers<Context>;
         User?: UserResolvers<Context>;
-        Node?: NodeResolvers;
-        PostOrUser?: PostOrUserResolvers;
+        Node?: NodeResolvers<Context>;
+        PostOrUser?: PostOrUserResolvers<Context>;
         Date?: GraphQLScalarType;
       } & { [typeName: string] : { [ fieldName: string ]: ( Resolver<any, any, Context, any> | SubscriptionResolver<any, any, Context, any> ) } };
     `);
