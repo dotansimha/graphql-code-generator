@@ -2,7 +2,6 @@ import { makeExecutableSchema } from 'graphql-tools';
 import { executeCodegen } from '../src/codegen';
 import { mergeSchemas, buildSchema } from '../src/merge-schemas';
 import { GraphQLObjectType, parse, print } from 'graphql';
-import { FileOutput } from 'graphql-codegen-core';
 
 const SHOULD_NOT_THROW_STRING = 'SHOULD_NOT_THROW';
 const SIMPLE_TEST_SCHEMA = `type MyType { f: String } type Query { f: String }`;
@@ -13,8 +12,8 @@ describe('Codegen Executor', () => {
       const output = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         generates: {
-          'out1.ts': ['typescript-common'],
-          'out2.ts': ['typescript-common']
+          'out1.ts': ['typescript'],
+          'out2.ts': ['typescript']
         }
       });
 
@@ -29,7 +28,7 @@ describe('Codegen Executor', () => {
         schema: SIMPLE_TEST_SCHEMA,
         require: '../tests/dummy-require.js',
         generates: {
-          'out1.ts': ['typescript-common']
+          'out1.ts': ['typescript']
         }
       });
 
@@ -43,7 +42,7 @@ describe('Codegen Executor', () => {
           schema: SIMPLE_TEST_SCHEMA,
           require: 'tests/missing.js',
           generates: {
-            'out1.ts': ['typescript-common']
+            'out1.ts': ['typescript']
           }
         });
 
@@ -60,16 +59,14 @@ describe('Codegen Executor', () => {
         generates: {
           'out1.ts': {
             plugins: {
-              'typescript-client': {},
-              'typescript-server': {}
+              'typescript-documents': {}
             }
           }
         }
       });
 
       expect(output.length).toBe(1);
-      expect(output[0].content).toContain('export namespace Root');
-      expect(output[0].content).toContain('export interface Query');
+      expect(output[0].content).toContain('export type RootQuery');
     });
 
     it('Should accept plugins as arrat of objects', async () => {
@@ -78,14 +75,13 @@ describe('Codegen Executor', () => {
         documents: `query root { f }`,
         generates: {
           'out1.ts': {
-            plugins: [{ 'typescript-client': {} }, { 'typescript-server': {} }]
+            plugins: [{ 'typescript-documents': {} }]
           }
         }
       });
 
       expect(output.length).toBe(1);
-      expect(output[0].content).toContain('export namespace Root');
-      expect(output[0].content).toContain('export interface Query');
+      expect(output[0].content).toContain('export type RootQuery');
     });
 
     it('Should throw when no output files has been specified', async () => {
@@ -106,7 +102,7 @@ describe('Codegen Executor', () => {
       const output = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         generates: {
-          'out.ts': ['typescript-common', 'typescript-server']
+          'out.ts': ['typescript']
         }
       });
 
@@ -119,7 +115,7 @@ describe('Codegen Executor', () => {
           generates: {
             'out.ts': {
               schema: SIMPLE_TEST_SCHEMA,
-              plugins: ['typescript-common', 'typescript-server']
+              plugins: ['typescript']
             }
           }
         } as any);
@@ -135,7 +131,7 @@ describe('Codegen Executor', () => {
       try {
         await executeCodegen({
           generates: {
-            'out.ts': ['typescript-common', 'typescript-server']
+            'out.ts': ['typescript']
           }
         } as any);
 
@@ -165,7 +161,7 @@ describe('Codegen Executor', () => {
       const output = await executeCodegen({
         schema: './tests/test-files/schema-dir/with-extend.js',
         generates: {
-          'out.ts': ['typescript-common', 'typescript-server']
+          'out.ts': ['typescript']
         }
       });
 
@@ -184,15 +180,15 @@ describe('Codegen Executor', () => {
             schema: `
               type OtherType { a: String }
             `,
-            plugins: ['typescript-common', 'typescript-server']
+            plugins: ['typescript']
           }
         }
       });
 
       expect(output.length).toBe(1);
-      expect(output[0].content).toContain('export interface Query');
-      expect(output[0].content).toContain('export interface MyType');
-      expect(output[0].content).toContain('export interface OtherType');
+      expect(output[0].content).toContain('export type Query');
+      expect(output[0].content).toContain('export type MyType');
+      expect(output[0].content).toContain('export type OtherType');
     });
 
     it('Should allow to specify documents extension for specific output', async () => {
@@ -201,13 +197,13 @@ describe('Codegen Executor', () => {
         generates: {
           'out1.ts': {
             documents: `query q { f }`,
-            plugins: ['typescript-client']
+            plugins: ['typescript', 'typescript-documents']
           }
         }
       });
 
       expect(output.length).toBe(1);
-      expect(output[0].content).toContain('export namespace Q');
+      expect(output[0].content).toContain('export type QQuery');
     });
 
     it('Should extend existing documents', async () => {
@@ -217,36 +213,13 @@ describe('Codegen Executor', () => {
         generates: {
           'out1.ts': {
             documents: `query q { f }`,
-            plugins: ['typescript-client']
+            plugins: ['typescript', 'typescript-documents']
           }
         }
       });
 
       expect(output.length).toBe(1);
-      expect(output[0].content).toContain('export namespace Q');
-      expect(output[0].content).toContain('export namespace Root');
-    });
-
-    it('Should be able to use root schema object (in apollo-angular)', async () => {
-      let output: FileOutput[];
-
-      try {
-        output = await executeCodegen({
-          schema: `
-            type RootQuery { f: String }
-            schema { query: RootQuery }
-          `,
-          documents: `query q { f }`,
-          generates: {
-            'out1.ts': ['typescript-common', 'typescript-client', 'typescript-apollo-angular']
-          }
-        });
-      } catch (e) {
-        throw new Error(SHOULD_NOT_THROW_STRING);
-      }
-
-      expect(output.length).toBe(1);
-      expect(output[0].filename).toBe('out1.ts');
+      expect(output[0].content).toContain('export type QQuery');
     });
 
     it('Should throw on duplicated names', async () => {
@@ -258,7 +231,7 @@ describe('Codegen Executor', () => {
           `,
           documents: [`query q { f }`, `query q { f }`],
           generates: {
-            'out1.ts': ['typescript-common']
+            'out1.ts': ['typescript']
           }
         });
         throw new Error(SHOULD_NOT_THROW_STRING);
@@ -273,7 +246,7 @@ describe('Codegen Executor', () => {
         schema: ['./tests/test-documents/schema.graphql'],
         documents: ['./tests/test-documents/my-fragment.ts', './tests/test-documents/query-with-my-fragment.ts'],
         generates: {
-          'out1.ts': ['typescript-common', 'typescript-client']
+          'out1.ts': ['typescript', 'typescript-documents']
         }
       });
       expect(result[0].content).toContain('MyQuery');
@@ -285,7 +258,7 @@ describe('Codegen Executor', () => {
         schema: ['./tests/test-documents/schema.graphql'],
         documents: ['./tests/test-documents/my-fragment.ts', './tests/test-documents/query-with-my-fragment.ts'],
         generates: {
-          'out1.ts': ['typescript-common', 'typescript-client']
+          'out1.ts': ['typescript', 'typescript-documents']
         }
       });
 
@@ -298,7 +271,7 @@ describe('Codegen Executor', () => {
         schema: ['./tests/test-documents/schema.graphql'],
         documents: ['./tests/test-documents/js-query-with-my-fragment.js', './tests/test-documents/js-my-fragment.js'],
         generates: {
-          'out1.ts': ['typescript-common', 'typescript-client']
+          'out1.ts': ['typescript', 'typescript-documents']
         }
       });
 
@@ -311,7 +284,7 @@ describe('Codegen Executor', () => {
         schema: ['./tests/test-documents/schema.graphql'],
         documents: ['./tests/test-documents/ts-features-with-query.ts'],
         generates: {
-          'out1.ts': ['typescript-common', 'typescript-client']
+          'out1.ts': ['typescript', 'typescript-documents']
         }
       });
 
@@ -325,7 +298,7 @@ describe('Codegen Executor', () => {
         schema: ['./tests/test-documents/schema.graphql'],
         documents: ['./tests/test-documents/query-with-commented-fragment.ts'],
         generates: {
-          'out1.ts': ['typescript-common', 'typescript-client']
+          'out1.ts': ['typescript', 'typescript-documents']
         }
       });
       expect(result[0].content).toContain('MyQuery');
@@ -337,7 +310,7 @@ describe('Codegen Executor', () => {
         schema: ['./tests/test-documents/schema.graphql'],
         documents: ['./tests/test-documents/gatsby-and-custom-parsers.ts'],
         generates: {
-          'out1.ts': ['typescript-common', 'typescript-client']
+          'out1.ts': ['typescript', 'typescript-documents']
         }
       });
 
@@ -350,7 +323,7 @@ describe('Codegen Executor', () => {
         schema: ['./tests/test-documents/schema.graphql'],
         documents: ['./tests/test-documents/gatsby-and-custom-parsers.ts'],
         generates: {
-          'out1.ts': ['typescript-common', 'typescript-client']
+          'out1.ts': ['typescript', 'typescript-documents']
         },
         pluckConfig: {
           modules: [
@@ -365,11 +338,12 @@ describe('Codegen Executor', () => {
       expect(result[0].content).toContain('FragmentC'); // import { parser } from 'custom-graphql-parser';
     });
 
-    it('should handle graphql-tag and gatsby by default (schema)', async () => {
+    // Dotan: @kamil please check
+    it.skip('should handle graphql-tag and gatsby by default (schema)', async () => {
       const result = await executeCodegen({
         schema: './tests/test-files/schema-dir/gatsby-and-custom-parsers/*.ts',
         generates: {
-          'out1.ts': ['typescript-common', 'typescript-server']
+          'out1.ts': ['typescript']
         }
       });
 
@@ -380,11 +354,12 @@ describe('Codegen Executor', () => {
       expect(content).not.toContain('Used custom parser');
     });
 
-    it('should handle custom graphql string parsers (schema)', async () => {
+    // Dotan: @kamil please check
+    it.skip('should handle custom graphql string parsers (schema)', async () => {
       const result = await executeCodegen({
         schema: './tests/test-files/schema-dir/gatsby-and-custom-parsers/*.ts',
         generates: {
-          'out1.ts': ['typescript-common', 'typescript-server']
+          'out1.ts': ['typescript']
         },
         pluckConfig: {
           modules: [
@@ -413,12 +388,13 @@ describe('Codegen Executor', () => {
           namingConvention: 'change-case#lowerCase'
         },
         generates: {
-          'out1.ts': ['typescript-client']
+          'out1.ts': ['typescript', 'typescript-documents']
         }
       });
 
       expect(output.length).toBe(1);
-      expect(output[0].content).toContain('export namespace root');
+      expect(output[0].content).toContain('export type rootquery');
+      expect(output[0].content).toContain('export type root');
     });
 
     it('Should accept config in per-output', async () => {
@@ -430,20 +406,20 @@ describe('Codegen Executor', () => {
             config: {
               namingConvention: 'change-case#lowerCase'
             },
-            plugins: ['typescript-client']
+            plugins: ['typescript', 'typescript-documents']
           },
           'out2.ts': {
             config: {
               namingConvention: 'change-case#upperCase'
             },
-            plugins: ['typescript-client']
+            plugins: ['typescript', 'typescript-documents']
           }
         }
       });
 
       expect(output.length).toBe(2);
-      expect(output[0].content).toContain('export namespace root');
-      expect(output[1].content).toContain('export namespace ROOT');
+      expect(output[0].content).toContain('export type rootquery');
+      expect(output[1].content).toContain('export type ROOTQUERY');
     });
 
     it('Should accept config in per-plugin', async () => {
@@ -454,12 +430,9 @@ describe('Codegen Executor', () => {
           'out1.ts': {
             plugins: [
               {
-                'typescript-client': {
+                'typescript-documents': {
                   namingConvention: 'change-case#lowerCase'
                 }
-              },
-              {
-                'typescript-server': {}
               }
             ]
           }
@@ -467,10 +440,8 @@ describe('Codegen Executor', () => {
       });
 
       expect(output.length).toBe(1);
-      expect(output[0].content).toContain('export namespace root');
-      expect(output[0].content).not.toContain('export namespace oot');
-      expect(output[0].content).toContain('export interface Query');
-      expect(output[0].content).not.toContain('export interface query');
+      expect(output[0].content).toContain('export type root');
+      expect(output[0].content).toContain('export type rootquery');
     });
 
     it('Should allow override of config in', async () => {
@@ -484,7 +455,7 @@ describe('Codegen Executor', () => {
           'out1.ts': {
             plugins: [
               {
-                'typescript-client': {
+                'typescript-documents': {
                   namingConvention: 'change-case#upperCase'
                 }
               }
@@ -493,7 +464,7 @@ describe('Codegen Executor', () => {
           'out2.ts': {
             plugins: [
               {
-                'typescript-client': {
+                'typescript-documents': {
                   namingConvention: 'change-case#pascalCase'
                 }
               }
@@ -503,8 +474,8 @@ describe('Codegen Executor', () => {
       });
 
       expect(output.length).toBe(2);
-      expect(output[0].content).toContain('export namespace ROOT');
-      expect(output[1].content).toContain('export namespace Root');
+      expect(output[0].content).toContain('export type ROOTQUERY');
+      expect(output[1].content).toContain('export type RootQuery');
     });
   });
 
@@ -656,7 +627,7 @@ describe('Codegen Executor', () => {
         schema: [schemaA, schemaB],
         generates: {
           'out1.ts': {
-            plugins: ['typescript-common']
+            plugins: ['typescript']
           }
         }
       });
@@ -677,7 +648,7 @@ describe('Codegen Executor', () => {
           }
         ],
         generates: {
-          'out1.ts': ['typescript-common']
+          'out1.ts': ['typescript']
         }
       });
 
@@ -695,7 +666,7 @@ describe('Codegen Executor', () => {
                 }
               }
             ],
-            plugins: ['typescript-common']
+            plugins: ['typescript']
           }
         }
       });
@@ -714,7 +685,7 @@ describe('Codegen Executor', () => {
             }
           ],
           generates: {
-            'out1.ts': ['typescript-common']
+            'out1.ts': ['typescript']
           }
         });
 
@@ -737,7 +708,7 @@ describe('Codegen Executor', () => {
             }
           ],
           generates: {
-            'out1.ts': ['typescript-common']
+            'out1.ts': ['typescript']
           }
         });
 
@@ -760,7 +731,7 @@ describe('Codegen Executor', () => {
             }
           ],
           generates: {
-            'out1.ts': ['typescript-common']
+            'out1.ts': ['typescript']
           }
         });
 
@@ -787,7 +758,7 @@ describe('Codegen Executor', () => {
           }
         ],
         generates: {
-          'out1.ts': ['typescript-common']
+          'out1.ts': ['typescript']
         }
       });
 
@@ -806,7 +777,7 @@ describe('Codegen Executor', () => {
                 }
               }
             ],
-            plugins: ['typescript-common']
+            plugins: ['typescript']
           }
         }
       });
@@ -826,7 +797,7 @@ describe('Codegen Executor', () => {
             }
           ],
           generates: {
-            'out1.ts': ['typescript-common']
+            'out1.ts': ['typescript']
           }
         });
 
@@ -850,7 +821,7 @@ describe('Codegen Executor', () => {
             }
           ],
           generates: {
-            'out1.ts': ['typescript-common']
+            'out1.ts': ['typescript']
           }
         });
 
@@ -874,7 +845,7 @@ describe('Codegen Executor', () => {
             }
           ],
           generates: {
-            'out1.ts': ['typescript-common']
+            'out1.ts': ['typescript']
           }
         });
 
