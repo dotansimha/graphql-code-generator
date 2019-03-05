@@ -261,21 +261,19 @@ describe('TypeScript Resolvers Plugin', () => {
     );
 
     expect(content).toBeSimilarStringTo(`
-      export type IResolvers<Context = {}> = {
-        Query?: QueryResolvers<Context>;
-        Post?: PostResolvers<Context>;
-        User?: UserResolvers<Context>;
-        Node?: NodeResolvers<Context>;
-        PostOrUser?: PostOrUserResolvers<Context>;
-        Date?: GraphQLScalarType;
-      } & { [typeName: string] : { [ fieldName: string ]: ( Resolver<any, any, Context, any> | SubscriptionResolver<any, any, Context, any> ) } };
+    export type IResolvers<Context = any> = {
+      lerna ERR!       Date?: GraphQLScalarType<Context>,
+      lerna ERR!       Node?: NodeResolvers<Context>,
+      lerna ERR!       Post?: PostResolvers<Context>,
+      lerna ERR!       PostOrUser?: PostOrUserResolvers<Context>,
+      lerna ERR!       Query?: QueryResolvers<Context>,
+      lerna ERR!       User?: UserResolvers<Context>,
+      lerna ERR!     } & { [typeName: string] : { [ fieldName: string ]: ( Resolver<any, any, Context, any> | SubscriptionResolver<any, any, Context, any> ) } };
     `);
 
     expect(content).toBeSimilarStringTo(`
-      export type IDirectiveResolvers<Result, Context = {}> = {
-        skip?: SkipDirectiveResolver<Result>;
-        include?: IncludeDirectiveResolver<Result>;
-        deprecated?: DeprecatedDirectiveResolver<Result>;
+      export type IDirectiveResolvers<Context = {}> = {
+        modify?: ModifyDirectiveResolver<Context>;
       } & { [directiveName: string] : DirectiveResolverFn<any, any, Context> };
     `);
   });
