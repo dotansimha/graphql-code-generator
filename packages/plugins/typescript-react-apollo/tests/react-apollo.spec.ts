@@ -1,10 +1,15 @@
 import 'graphql-codegen-core/dist/testing';
 import { plugin } from '../src/index';
-import { parse, buildSchema } from 'graphql';
+import { parse, buildSchema, GraphQLSchema, buildClientSchema } from 'graphql';
 import gql from 'graphql-tag';
+import { DocumentFile } from 'graphql-codegen-core';
+import { plugin as tsPlugin } from '../../typescript/src/index';
+import { plugin as tsDocumentsPlugin } from '../../typescript-documents/src/index';
+import { validateTs } from '../../typescript/tests/validate';
+import { readFileSync } from 'fs';
 
 describe('React Apollo', () => {
-  const schema = buildSchema(`type Query { something: MyType } type MyType { a: String }`);
+  const schema = buildClientSchema(JSON.parse(readFileSync('../../../dev-test/githunt/schema.json').toString()));
   const basicDoc = parse(/* GraphQL */ `
     query test {
       feed {
@@ -21,6 +26,18 @@ describe('React Apollo', () => {
     }
   `);
 
+  const validateTypeScript = async (
+    output: string,
+    testSchema: GraphQLSchema,
+    documents: DocumentFile[],
+    config: any
+  ) => {
+    const tsOutput = await tsPlugin(testSchema, documents, config, { outputFile: '' });
+    const tsDocumentsOutput = await tsDocumentsPlugin(testSchema, documents, config, { outputFile: '' });
+    const merged = [tsOutput, tsDocumentsOutput, output].join('\n');
+    validateTs(merged, undefined, true);
+  };
+
   it(`should skip if there's no operations`, async () => {
     const content = await plugin(
       schema,
@@ -34,13 +51,15 @@ describe('React Apollo', () => {
     expect(content).not.toContain(`import * as ReactApollo from 'react-apollo';`);
     expect(content).not.toContain(`import * as React from 'react';`);
     expect(content).not.toContain(`import gql from 'graphql-tag';`);
+    await validateTypeScript(content, schema, [], {});
   });
 
   describe('Imports', () => {
     it('should import React and ReactApollo dependencies', async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
       const content = await plugin(
         schema,
-        [{ filePath: '', content: basicDoc }],
+        docs,
         {},
         {
           outputFile: 'graphql.tsx'
@@ -50,12 +69,32 @@ describe('React Apollo', () => {
       expect(content).toBeSimilarStringTo(`import * as ReactApollo from 'react-apollo';`);
       expect(content).toBeSimilarStringTo(`import * as React from 'react';`);
       expect(content).toBeSimilarStringTo(`import gql from 'graphql-tag';`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should import DocumentNode when using noGraphQLTag', async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
+      const content = await plugin(
+        schema,
+        docs,
+        {
+          noGraphQLTag: true
+        },
+        {
+          outputFile: 'graphql.tsx'
+        }
+      );
+
+      expect(content).toContain(`import { DocumentNode } from 'graphql';`);
+      expect(content).not.toBeSimilarStringTo(`import gql from 'graphql-tag';`);
+      await validateTypeScript(content, schema, docs, {});
     });
 
     it(`should use gql import from gqlImport config option`, async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
       const content = await plugin(
         schema,
-        [{ filePath: '', content: basicDoc }],
+        docs,
         { gqlImport: 'graphql.macro#gql' },
         {
           outputFile: 'graphql.tsx'
@@ -63,12 +102,14 @@ describe('React Apollo', () => {
       );
 
       expect(content).toContain(`import { gql } from 'graphql.macro';`);
+      await validateTypeScript(content, schema, docs, {});
     });
 
     it('should import ReactApolloHooks dependencies', async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
       const content = await plugin(
         schema,
-        [{ filePath: '', content: basicDoc }],
+        docs,
         { withHooks: true },
         {
           outputFile: 'graphql.tsx'
@@ -76,12 +117,14 @@ describe('React Apollo', () => {
       );
 
       expect(content).toBeSimilarStringTo(`import * as ReactApolloHooks from 'react-apollo-hooks';`);
+      await validateTypeScript(content, schema, docs, {});
     });
 
     it('should import ReactApolloHooks from hooksImportFrom config option', async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
       const content = await plugin(
         schema,
-        [{ filePath: '', content: basicDoc }],
+        docs,
         { withHooks: true, hooksImportFrom: 'custom-apollo-hooks' },
         {
           outputFile: 'graphql.tsx'
@@ -89,12 +132,14 @@ describe('React Apollo', () => {
       );
 
       expect(content).toBeSimilarStringTo(`import * as ReactApolloHooks from 'custom-apollo-hooks';`);
+      await validateTypeScript(content, schema, docs, {});
     });
 
     it('should skip import React and ReactApollo if only hooks are used', async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
       const content = await plugin(
         schema,
-        [{ filePath: '', content: basicDoc }],
+        docs,
         {
           withHooks: true,
           withHOC: false,
@@ -107,83 +152,37 @@ describe('React Apollo', () => {
 
       expect(content).not.toBeSimilarStringTo(`import * as ReactApollo from 'react-apollo';`);
       expect(content).not.toBeSimilarStringTo(`import * as React from 'react';`);
+      await validateTypeScript(content, schema, docs, {});
     });
   });
 
   describe('Fragments', () => {
     it('Should generate basic fragments documents correctly', async () => {
-      const result = await plugin(
-        schema,
-        [
-          {
-            filePath: 'a.graphql',
-            content: parse(/* GraphQL */ `
-              fragment MyFragment on MyType {
-                a
-              }
+      const docs = [
+        {
+          filePath: 'a.graphql',
+          content: parse(/* GraphQL */ `
+            fragment MyFragment on Repository {
+              full_name
+            }
 
-              query {
-                a
+            query {
+              feed {
+                id
               }
-            `)
-          }
-        ],
-        {},
-        { outputFile: '' }
-      );
+            }
+          `)
+        }
+      ];
+      const result = await plugin(schema, docs, {}, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(`
       export const MyFragmentFragmentDoc = gql\`
-      fragment MyFragment on MyType {
-        a
+      fragment MyFragment on Repository {
+        full_name
       }
       \`;`);
-    });
-
-    it('Should generate fragments when they are refering to each other', async () => {
-      const result = await plugin(
-        schema,
-        [
-          {
-            filePath: 'a.graphql',
-            content: parse(/* GraphQL */ `
-              fragment MyFragment on MyType {
-                a
-                ...MyOtherFragment
-              }
-
-              query {
-                a
-              }
-            `)
-          },
-          {
-            filePath: 'b.graphql',
-            content: parse(/* GraphQL */ `
-              fragment MyOtherFragment on MyType {
-                a
-              }
-            `)
-          }
-        ],
-        {},
-        { outputFile: '' }
-      );
-
-      expect(result).toBeSimilarStringTo(`
-      export const MyOtherFragmentFragmentDoc = gql\`
-      fragment MyOtherFragment on MyType {
-        a
-      }
-      \`;`);
-
-      expect(result).toBeSimilarStringTo(`
-      export const MyFragmentFragmentDoc = gql\`
-      fragment MyFragment on MyType {
-        a
-        ...MyOtherFragment
-      }
-      \${MyOtherFragmentFragmentDoc}\`;`);
+      await validateTypeScript(result, schema, docs, {});
     });
 
     it('should generate Document variables for inline fragments', async () => {
@@ -217,9 +216,11 @@ describe('React Apollo', () => {
         ${feedWithRepository}
       `;
 
+      const docs = [{ filePath: '', content: myFeed }];
+
       const content = await plugin(
         schema,
-        [{ filePath: '', content: myFeed }],
+        docs,
         {},
         {
           outputFile: 'graphql.tsx'
@@ -252,29 +253,30 @@ query MyFeed {
   }
 }
 \${FeedWithRepositoryFragmentDoc}\`;`);
+      await validateTypeScript(content, schema, docs, {});
     });
 
     it('should avoid generating duplicate fragments', async () => {
       const simpleFeed = gql`
-        fragment SimpleFeed on FeedType {
+        fragment Item on FeedType {
           id
-          commentCount
         }
       `;
       const myFeed = gql`
         query MyFeed {
           feed {
-            ...SimpleFeed
+            ...Item
           }
-          allFeeds {
-            ...SimpleFeed
+          allFeeds: feed {
+            ...Item
           }
         }
       `;
       const documents = [simpleFeed, myFeed];
+      const docs = documents.map(content => ({ content, filePath: '' }));
       const content = await plugin(
         schema,
-        documents.map(content => ({ content, filePath: '' })),
+        docs,
         {},
         {
           outputFile: 'graphql.tsx'
@@ -285,20 +287,20 @@ query MyFeed {
         export const MyFeedDocument = gql\`
         query MyFeed {
             feed {
-              ...SimpleFeed
+              ...Item
             }
-            allFeeds {
-              ...SimpleFeed
+            allFeeds: feed {
+              ...Item
             }
           }
-          \${SimpleFeedFragmentDoc}\``);
+          \${ItemFragmentDoc}\``);
       expect(content).toBeSimilarStringTo(`
-        export const SimpleFeedFragmentDoc = gql\`
-        fragment SimpleFeed on FeedType {
+        export const ItemFragmentDoc = gql\`
+        fragment Item on FeedType {
           id
-          commentCount
         }
 \`;`);
+      await validateTypeScript(content, schema, docs, {});
     });
 
     it('Should generate fragments in proper order (when one depends on other)', async () => {
@@ -319,9 +321,10 @@ query MyFeed {
         }
       `;
       const documents = [myFeed];
+      const docs = documents.map(content => ({ content, filePath: '' }));
       const content = await plugin(
         schema,
-        documents.map(content => ({ content, filePath: '' })),
+        docs,
         {},
         {
           outputFile: 'graphql.tsx'
@@ -331,14 +334,16 @@ query MyFeed {
       const feedWithRepositoryPos = content.indexOf('fragment FeedWithRepository');
       const repositoryWithOwnerPos = content.indexOf('fragment RepositoryWithOwner');
       expect(repositoryWithOwnerPos).toBeLessThan(feedWithRepositoryPos);
+      await validateTypeScript(content, schema, docs, {});
     });
   });
 
   describe('Component', () => {
     it('should generate Document variable', async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
       const content = await plugin(
         schema,
-        [{ filePath: '', content: basicDoc }],
+        docs,
         {},
         {
           outputFile: 'graphql.tsx'
@@ -362,12 +367,31 @@ query MyFeed {
           }
           \`;
         `);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should generate Document variable with noGraphQlTag', async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
+      const content = await plugin(
+        schema,
+        docs,
+        {
+          noGraphQLTag: true
+        },
+        {
+          outputFile: 'graphql.tsx'
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`export const TestDocument: DocumentNode = {"kind":"Document","defin`);
+      await validateTypeScript(content, schema, docs, {});
     });
 
     it('should generate Component', async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
       const content = await plugin(
         schema,
-        [{ filePath: '', content: basicDoc }],
+        docs,
         {},
         {
           outputFile: 'graphql.tsx'
@@ -378,20 +402,18 @@ query MyFeed {
       export class TestComponent extends React.Component<Partial<ReactApollo.QueryProps<TestQuery, TestQueryVariables>>> {
         render() {
             return (
-                <ReactApollo.Query<TestQuery, TestQueryVariables>
-                query={TestDocument}
-                {...(this as any)['props'] as any}
-                            />
-                  );
-                }
-            }
-          `);
+                <ReactApollo.Query<TestQuery, TestQueryVariables> query={TestDocument} {...(this as any)['props'] as any} />
+            );
+        }
+      }`);
+      await validateTypeScript(content, schema, docs, {});
     });
 
     it('should not generate Component', async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
       const content = await plugin(
         schema,
-        [{ filePath: '', content: basicDoc }],
+        docs,
         { withComponent: false },
         {
           outputFile: 'graphql.tsx'
@@ -399,14 +421,16 @@ query MyFeed {
       );
 
       expect(content).not.toContain(`export class TestComponent`);
+      await validateTypeScript(content, schema, docs, {});
     });
   });
 
   describe('HOC', () => {
     it('should generate HOCs', async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
       const content = await plugin(
         schema,
-        [{ filePath: '', content: basicDoc }],
+        docs,
         {},
         {
           outputFile: 'graphql.tsx'
@@ -425,12 +449,14 @@ query MyFeed {
   TestProps<TChildProps>> | undefined) {
     return ReactApollo.graphql<TProps, TestQuery, TestQueryVariables, TestProps<TChildProps>>(TestDocument, operationOptions);
 };`);
+      await validateTypeScript(content, schema, docs, {});
     });
 
     it('should not generate HOCs', async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
       const content = await plugin(
         schema,
-        [{ filePath: '', content: basicDoc }],
+        docs,
         { withHOC: false },
         {
           outputFile: 'graphql.tsx'
@@ -439,6 +465,7 @@ query MyFeed {
 
       expect(content).not.toContain(`export type TestProps`);
       expect(content).not.toContain(`export function TestHOC`);
+      await validateTypeScript(content, schema, docs, {});
     });
   });
 
@@ -460,13 +487,16 @@ query MyFeed {
         }
 
         mutation submitRepository($name: String) {
-          submitRepository(repoFullName: $name)
+          submitRepository(repoFullName: $name) {
+            id
+          }
         }
       `);
+      const docs = [{ filePath: '', content: documents }];
 
       const content = await plugin(
         schema,
-        [{ filePath: '', content: documents }],
+        docs,
         { withHooks: true, withComponent: false, withHOC: false },
         {
           outputFile: 'graphql.tsx'
@@ -482,12 +512,14 @@ export function useFeedQuery(baseOptions?: ReactApolloHooks.QueryHookOptions<Fee
 export function useSubmitRepositoryMutation(baseOptions?: ReactApolloHooks.MutationHookOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>) {
   return ReactApolloHooks.useMutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(SubmitRepositoryDocument, baseOptions);
 };`);
+      await validateTypeScript(content, schema, docs, {});
     });
 
     it('Should not generate hooks for query and mutation', async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
       const content = await plugin(
         schema,
-        [{ filePath: '', content: basicDoc }],
+        docs,
         { withHooks: false },
         {
           outputFile: 'graphql.tsx'
@@ -495,6 +527,7 @@ export function useSubmitRepositoryMutation(baseOptions?: ReactApolloHooks.Mutat
       );
 
       expect(content).not.toContain(`export function useTestQuery`);
+      await validateTypeScript(content, schema, docs, {});
     });
 
     it('Should generate subscription hooks', async () => {
@@ -506,9 +539,11 @@ export function useSubmitRepositoryMutation(baseOptions?: ReactApolloHooks.Mutat
         }
       `);
 
+      const docs = [{ filePath: '', content: documents }];
+
       const content = await plugin(
         schema,
-        [{ filePath: '', content: documents }],
+        docs,
         {
           withHooks: true,
           withComponent: false,
@@ -523,6 +558,7 @@ export function useSubmitRepositoryMutation(baseOptions?: ReactApolloHooks.Mutat
 export function useListenToCommentsSubscription(baseOptions?: ReactApolloHooks.SubscriptionHookOptions<ListenToCommentsSubscription, ListenToCommentsSubscriptionVariables>) {
   return ReactApolloHooks.useSubscription<ListenToCommentsSubscription, ListenToCommentsSubscriptionVariables>(ListenToCommentsDocument, baseOptions);
 };`);
+      await validateTypeScript(content, schema, docs, {});
     });
   });
 });

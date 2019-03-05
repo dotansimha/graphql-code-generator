@@ -10,6 +10,7 @@ export interface ReactApolloPluginConfig extends ParsedConfig {
   withHOC: boolean;
   withComponent: boolean;
   withHooks: boolean;
+  noGraphQLTag: boolean;
   hooksImportFrom: string;
   gqlImport: string;
 }
@@ -28,6 +29,7 @@ export class ReactApolloVisitor extends BaseVisitor<ReactApolloRawPluginConfig, 
       withHOC: getConfigValue(rawConfig.withHOC, true),
       withComponent: getConfigValue(rawConfig.withComponent, true),
       withHooks: getConfigValue(rawConfig.withHooks, false),
+      noGraphQLTag: getConfigValue(rawConfig.noGraphQLTag, false),
       hooksImportFrom: getConfigValue(rawConfig.hooksImportFrom, 'react-apollo-hooks'),
       gqlImport: rawConfig.gqlImport || null
     } as any);
@@ -63,13 +65,17 @@ export class ReactApolloVisitor extends BaseVisitor<ReactApolloRawPluginConfig, 
 ${print(node)}
 ${this._includeFragments(this._transformFragments(node))}`;
 
-    return this.config.gqlImport ? JSON.stringify(gqlTag(doc)) : 'gql`' + doc + '`';
+    if (this.config.noGraphQLTag) {
+      return JSON.stringify(gqlTag(doc));
+    }
+
+    return 'gql`' + doc + '`';
   }
 
   private _generateFragment(fragmentDocument: FragmentDefinitionNode): string | void {
     const name = this._getFragmentName(fragmentDocument);
 
-    return `export const ${name} = ${this._gql(fragmentDocument)};`;
+    return `export const ${name}${this.config.noGraphQLTag ? ': DocumentNode' : ''} = ${this._gql(fragmentDocument)};`;
   }
 
   get fragments(): string {
@@ -119,26 +125,34 @@ ${this._includeFragments(this._transformFragments(node))}`;
 
   get imports(): string {
     const gqlImport = this._parseImport(this.config.gqlImport || 'graphql-tag');
-    let imports = `
+    let imports = [];
+
+    if (!this.config.noGraphQLTag) {
+      imports.push(`
 import ${
-      gqlImport.propName ? `{ ${gqlImport.propName === 'gql' ? 'gql' : `${gqlImport.propName} as gql`} }` : 'gql'
-    } from '${gqlImport.moduleName}';\n`;
+        gqlImport.propName ? `{ ${gqlImport.propName === 'gql' ? 'gql' : `${gqlImport.propName} as gql`} }` : 'gql'
+      } from '${gqlImport.moduleName}';`);
+    } else {
+      imports.push(`import { DocumentNode } from 'graphql';`);
+    }
 
     if (this.config.withComponent) {
-      imports += `import * as React from 'react';\n`;
+      imports.push(`import * as React from 'react';`);
     }
 
     if (this.config.withComponent || this.config.withHOC) {
-      imports += `import * as ReactApollo from 'react-apollo';\n`;
+      imports.push(`import * as ReactApollo from 'react-apollo';`);
     }
 
     if (this.config.withHooks) {
-      imports += `import * as ReactApolloHooks from '${
-        typeof this.config.hooksImportFrom === 'string' ? this.config.hooksImportFrom : 'react-apollo-hooks'
-      }';\n`;
+      imports.push(
+        `import * as ReactApolloHooks from '${
+          typeof this.config.hooksImportFrom === 'string' ? this.config.hooksImportFrom : 'react-apollo-hooks'
+        }';`
+      );
     }
 
-    return imports;
+    return imports.join('\n');
   }
 
   private _buildHocProps(operationName: string, operationType: string): string {
@@ -194,10 +208,9 @@ import ${
 export class ${componentName} extends React.Component<Partial<ReactApollo.${operationType}Props<${operationResultType}, ${operationVariablesTypes}>>> {
   render() {
       return (
-          <ReactApollo.${operationType}<${operationResultType}, ${operationVariablesTypes}>
-          ${node.operation}={${documentVariableName}}
-          {...(this as any)['props'] as any}
-          />
+          <ReactApollo.${operationType}<${operationResultType}, ${operationVariablesTypes}> ${
+      node.operation
+    }={${documentVariableName}} {...(this as any)['props'] as any} />
       );
   }
 }`;
@@ -224,7 +237,9 @@ export function use${operationResultType}(baseOptions?: ReactApolloHooks.${opera
     }
 
     const documentVariableName = this.convertName(node.name.value + 'Document');
-    const documentString = `export const ${documentVariableName} = ${this._gql(node)};`;
+    const documentString = `export const ${documentVariableName}${
+      this.config.noGraphQLTag ? ': DocumentNode' : ''
+    } = ${this._gql(node)};`;
     const operationType: string = toPascalCase(node.operation);
     const operationResultType: string = this.convertName(node.name.value + operationType);
     const operationVariablesTypes: string = this.convertName(node.name.value + operationType + 'Variables');

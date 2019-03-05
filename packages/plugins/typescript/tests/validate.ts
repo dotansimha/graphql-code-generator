@@ -12,18 +12,23 @@ export function validateTs(
     emitDecoratorMetadata: true,
     target: ts.ScriptTarget.ES5,
     typeRoots: [path.resolve(require.resolve('typescript'), '../../../@types/')],
+    jsx: ts.JsxEmit.Preserve,
+    allowJs: true,
     lib: [
       path.join(path.dirname(require.resolve('typescript')), 'lib.es5.d.ts'),
+      path.join(path.dirname(require.resolve('typescript')), 'lib.es6.d.ts'),
       path.join(path.dirname(require.resolve('typescript')), 'lib.dom.d.ts'),
       path.join(path.dirname(require.resolve('typescript')), 'lib.scripthost.d.ts'),
       path.join(path.dirname(require.resolve('typescript')), 'lib.es2015.d.ts'),
       path.join(path.dirname(require.resolve('typescript')), 'lib.esnext.asynciterable.d.ts')
     ],
-    module: ts.ModuleKind.CommonJS
-  }
+    module: ts.ModuleKind.ESNext
+  },
+  isTsx = false
 ): void {
+  const testFile = `test-file.${isTsx ? 'tsx' : 'ts'}`;
   const host = ts.createCompilerHost(options);
-  let program = ts.createProgram(['test-file.ts'], options, {
+  let program = ts.createProgram([testFile], options, {
     ...host,
     getSourceFile: (
       fileName: string,
@@ -31,7 +36,7 @@ export function validateTs(
       onError?: (message: string) => void,
       shouldCreateNewSourceFile?: boolean
     ) => {
-      if (fileName === 'test-file.ts') {
+      if (fileName === testFile) {
         return ts.createSourceFile(fileName, contents, options.target);
       }
 
