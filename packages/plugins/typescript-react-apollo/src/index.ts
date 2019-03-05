@@ -1,11 +1,10 @@
-import { DocumentFile, PluginFunction } from 'graphql-codegen-core';
-import { parse, printSchema, visit, GraphQLSchema, concatAST, Kind, FragmentDefinitionNode } from 'graphql';
-import { RawConfig } from 'graphql-codegen-visitor-plugin-common';
+import { DocumentFile, PluginValidateFn, PluginFunction } from 'graphql-codegen-core';
+import { visit, GraphQLSchema, concatAST, Kind, FragmentDefinitionNode } from 'graphql';
+import { RawClientSideBasePluginConfig } from 'graphql-codegen-visitor-plugin-common';
 import { ReactApolloVisitor } from './visitor';
-import { PluginValidateFn } from '../../../graphql-codegen-core/src/yml-config-types';
 import { extname } from 'path';
 
-export interface ReactApolloRawPluginConfig extends RawConfig {
+export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfig {
   withHOC?: boolean;
   withComponent?: boolean;
   withHooks?: boolean;
@@ -34,9 +33,11 @@ export const plugin: PluginFunction<ReactApolloRawPluginConfig> = (
   const visitor = new ReactApolloVisitor(allFragments, config) as any;
   const visitorResult = visit(allAst, { leave: visitor });
 
-  return [visitor.imports, visitor.fragments, ...visitorResult.definitions.filter(t => typeof t === 'string')].join(
-    '\n'
-  );
+  return [
+    visitor.getImports(),
+    visitor.fragments,
+    ...visitorResult.definitions.filter(t => typeof t === 'string')
+  ].join('\n');
 };
 
 export const validate: PluginValidateFn<any> = async (

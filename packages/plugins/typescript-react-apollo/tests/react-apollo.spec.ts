@@ -1,6 +1,6 @@
 import 'graphql-codegen-core/dist/testing';
 import { plugin } from '../src/index';
-import { parse, buildSchema, GraphQLSchema, buildClientSchema } from 'graphql';
+import { parse, GraphQLSchema, buildClientSchema } from 'graphql';
 import gql from 'graphql-tag';
 import { DocumentFile } from 'graphql-codegen-core';
 import { plugin as tsPlugin } from '../../typescript/src/index';
