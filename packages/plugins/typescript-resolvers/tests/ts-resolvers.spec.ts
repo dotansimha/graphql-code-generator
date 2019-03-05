@@ -262,10 +262,10 @@ describe('TypeScript Resolvers Plugin', () => {
 
     expect(content).toBeSimilarStringTo(`
     export type IResolvers<Context = any> = {
-      lerna ERR!       Date?: GraphQLScalarType<Context>,
-      lerna ERR!       Node?: NodeResolvers<Context>,
+      lerna ERR!       Date?: GraphQLScalarType,
+      lerna ERR!       Node?: NodeResolvers,
       lerna ERR!       Post?: PostResolvers<Context>,
-      lerna ERR!       PostOrUser?: PostOrUserResolvers<Context>,
+      lerna ERR!       PostOrUser?: PostOrUserResolvers,
       lerna ERR!       Query?: QueryResolvers<Context>,
       lerna ERR!       User?: UserResolvers<Context>,
       lerna ERR!     } & { [typeName: string] : { [ fieldName: string ]: ( Resolver<any, any, Context, any> | SubscriptionResolver<any, any, Context, any> ) } };
