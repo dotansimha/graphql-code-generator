@@ -180,3 +180,24 @@ generates:
       - typescript-common
       - typescript-client
       - typescript-react-apollo
+  ./dev-test/test-message/types.stencilApollo.noNamespaces.tsx:
+    schema: ./dev-test/test-message/schema.graphql
+    documents: ./dev-test/test-message/documents.ts
+    config:
+      noNamespaces: true
+    plugins:
+      - add: // tslint:disable
+      - typescript-common
+      - typescript-client
+      - typescript-stencil-apollo
+  ./dev-test/test-mongodb/types.ts:
+    schema: ./dev-test/test-mongodb/schema.graphql
+    config:
+      scalars:
+        Date: Date
+    plugins:
+      - add: // tslint:disable
+      - typescript-common
+      - typescript-server
+      - typescript-mongodb
+      - typescript-resolvers
