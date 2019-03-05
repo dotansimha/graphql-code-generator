@@ -11,6 +11,7 @@ export interface ReactApolloRawPluginConfig extends RawConfig {
   withHooks?: boolean;
   hooksImportFrom?: string;
   gqlImport?: string;
+  noGraphQLTag?: boolean;
 }
 
 export const plugin: PluginFunction<ReactApolloRawPluginConfig> = (
