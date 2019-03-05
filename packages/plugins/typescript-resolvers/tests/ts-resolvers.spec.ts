@@ -51,8 +51,8 @@ describe('TypeScript Resolvers Plugin', () => {
     const result = await plugin(schema, [], {}, { outputFile: '' });
 
     expect(result).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveResolver<Result> = DirectiveResolverFn<Result, {   arg?: Maybe<number>,
-      arg2?: Maybe<string>, arg3?: Maybe<boolean> }, any>;
+    export type MyDirectiveDirectiveResolver<Result, Parent, Context = any, Args = {   arg?: Maybe<number>,
+      arg2?: Maybe<string>, arg3?: Maybe<boolean> }> = DirectiveResolverFn<Result, Parent, Context, Args>;
 
     export interface MyOtherTypeResolvers<Context = any, ParentType = MyOtherType> {
       bar?: Resolver<string, ParentType, Context>,
@@ -123,8 +123,8 @@ describe('TypeScript Resolvers Plugin', () => {
     );
 
     expect(result).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveResolver<Result> = DirectiveResolverFn<Result, {   arg?: Maybe<number>,
-      arg2?: Maybe<string>, arg3?: Maybe<boolean> }, any>;
+    export type MyDirectiveDirectiveResolver<Result, Parent, Context = any, Args = {   arg?: Maybe<number>,
+      arg2?: Maybe<string>, arg3?: Maybe<boolean> }> = DirectiveResolverFn<Result, Parent, Context, Args>;
 
     export interface MyOtherTypeResolvers<Context = any, ParentType = MyCustomOtherType> {
       bar?: Resolver<string, ParentType, Context>,
@@ -177,8 +177,8 @@ describe('TypeScript Resolvers Plugin', () => {
 
     expect(result).toBeSimilarStringTo(`import { MyCustomOtherType } from './my-file';`);
     expect(result).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveResolver<Result> = DirectiveResolverFn<Result, {   arg?: Maybe<number>,
-      arg2?: Maybe<string>, arg3?: Maybe<boolean> }, any>;
+    export type MyDirectiveDirectiveResolver<Result, Parent, Context = any, Args = {   arg?: Maybe<number>,
+      arg2?: Maybe<string>, arg3?: Maybe<boolean> }> = DirectiveResolverFn<Result, Parent, Context, Args>;
 
     export interface MyOtherTypeResolvers<Context = any, ParentType = MyCustomOtherType> {
       bar?: Resolver<string, ParentType, Context>,
@@ -262,19 +262,19 @@ describe('TypeScript Resolvers Plugin', () => {
 
     expect(content).toBeSimilarStringTo(`
     export type IResolvers<Context = any> = {
-      lerna ERR!       Date?: GraphQLScalarType,
-      lerna ERR!       Node?: NodeResolvers,
-      lerna ERR!       Post?: PostResolvers<Context>,
-      lerna ERR!       PostOrUser?: PostOrUserResolvers,
-      lerna ERR!       Query?: QueryResolvers<Context>,
-      lerna ERR!       User?: UserResolvers<Context>,
-      lerna ERR!     } & { [typeName: string] : { [ fieldName: string ]: ( Resolver<any, any, Context, any> | SubscriptionResolver<any, any, Context, any> ) } };
+           Date?: GraphQLScalarType,
+           Node?: NodeResolvers,
+           Post?: PostResolvers<Context>,
+           PostOrUser?: PostOrUserResolvers,
+           Query?: QueryResolvers<Context>,
+           User?: UserResolvers<Context>,
+         } & { [typeName: string] : { [ fieldName: string ]: ( Resolver<any, any, Context, any> | SubscriptionResolver<any, any, Context, any> ) } };
     `);
 
     expect(content).toBeSimilarStringTo(`
-      export type IDirectiveResolvers<Context = {}> = {
-        modify?: ModifyDirectiveResolver<Context>;
-      } & { [directiveName: string] : DirectiveResolverFn<any, any, Context> };
+      export type IDirectiveResolvers<Context = any> = {
+        modify?: ModifyDirectiveResolver<any, any, Context>,
+      } & { [directiveName: string]: DirectiveResolverFn<any, any, Context, any> };
     `);
   });
 });

@@ -65,13 +65,13 @@ export type TypeResolveFn<Types, Parent = {}, Context = {}> = (
 
 export type NextResolverFn<T> = () => Promise<T>;
 
-export type DirectiveResolverFn<TResult, TArgs = {}, Context = {}> = (
-  next?: NextResolverFn<TResult>,
-  source?: any,
-  args?: TArgs,
+export type DirectiveResolverFn<Result = {}, Parent = {}, Context = {}, Args = {}> = (
+  next?: NextResolverFn<Result>,
+  parent?: Parent,
+  args?: Args,
   context?: Context,
   info?: GraphQLResolveInfo
-) => TResult | Promise<TResult>;
+) => Result | Promise<Result>;
 `;
 
   const printedSchema = printSchema(schema);

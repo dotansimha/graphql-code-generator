@@ -175,7 +175,7 @@ export class BaseResolversVisitor<
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
-      .withName(this.convertName('IDirectiveResolvers'))
+      .withName(this.convertName('IDirectiveResolvers'), `<Context = ${this.config.contextType}>`)
       .withBlock(
         Object.keys(this._collectedDirectiveResolvers)
           .map(schemaTypeName => {
@@ -287,13 +287,13 @@ export class BaseResolversVisitor<
       ? this._variablesTransfomer.transform<InputValueDefinitionNode>(node.arguments)
       : '';
 
-    this._collectedDirectiveResolvers[node.name as any] = directiveName;
+    this._collectedDirectiveResolvers[node.name as any] = directiveName + '<any, any, Context>';
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
-      .withName(directiveName, '<Result>')
-      .withContent(`DirectiveResolverFn<Result, { ${directiveArgs} }, ${this.config.contextType}>`).string;
+      .withName(directiveName, `<Result, Parent, Context = ${this.config.contextType}, Args = { ${directiveArgs} }>`)
+      .withContent(`DirectiveResolverFn<Result, Parent, Context, Args>`).string;
   }
 
   InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode): string {
