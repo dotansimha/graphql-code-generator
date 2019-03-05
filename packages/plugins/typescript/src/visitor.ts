@@ -81,7 +81,7 @@ export class TsVisitor extends BaseTypesVisitor<TypeScriptPluginConfig, TypeScri
       return new DeclarationBlock(this._declarationBlockConfig)
         .export()
         .asKind('type')
-        .withName(this.convertName(node.name))
+        .withName(this.convertName(node))
         .withContent(
           node.values.map(v => `'${this.config.enumValues[(v.name as any) as string] || v.name}'`).join(' | ')
         ).string;
@@ -89,7 +89,7 @@ export class TsVisitor extends BaseTypesVisitor<TypeScriptPluginConfig, TypeScri
       return new DeclarationBlock(this._declarationBlockConfig)
         .export()
         .asKind(this.config.constEnums ? 'const enum' : 'enum')
-        .withName(this.convertName(node.name))
+        .withName(this.convertName(node))
         .withBlock(this.buildEnumValuesBlock(node.values)).string;
     }
   }
