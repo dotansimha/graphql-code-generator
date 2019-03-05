@@ -83,10 +83,6 @@ export function convertFactory(config: { namingConvention?: NamingConvention }):
     const kind = getKind(node);
     const str = [prefix || '', getName(node), suffix || ''].join('');
 
-    if (kind === 'enumValues') {
-      return resolveConventionName('typeNames')(str);
-    }
-
-    return resolveConventionName('enumValues')(str);
+    return resolveConventionName(kind)(str);
   };
 }
