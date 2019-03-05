@@ -9,7 +9,6 @@ import {
   visitWithTypeInfo,
   getNamedType,
   isIntrospectionType,
-  isEnumType,
   DocumentNode,
   printIntrospectionSchema
 } from 'graphql';
@@ -52,7 +51,7 @@ function includeIntrospectionDefinitions(
     Field() {
       const type = getNamedType(typeInfo.getType());
 
-      if (isIntrospectionType(type) && isEnumType(type) && !typesToInclude.includes(type)) {
+      if (isIntrospectionType(type) && !typesToInclude.includes(type)) {
         typesToInclude.push(type);
       }
     }

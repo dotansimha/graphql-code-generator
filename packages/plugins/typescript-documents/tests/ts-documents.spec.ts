@@ -846,7 +846,7 @@ describe('TypeScript Documents Plugin', async () => {
       );
     });
 
-    it('should handle introspection types (like __TypeKind)', async () => {
+    it.only('should handle introspection types (like __TypeKind)', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         type Post {
           title: String
@@ -889,6 +889,8 @@ describe('TypeScript Documents Plugin', async () => {
       );
 
       const content = [coreContent, pluginContent].join('\n');
+
+      console['log'](content);
 
       expect(content).toBeSimilarStringTo(`
         export enum __TypeKind {
