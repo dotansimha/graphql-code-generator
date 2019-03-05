@@ -246,7 +246,7 @@ export class BaseResolversVisitor<
       .withName(name, `<Context = ${this.config.contextType}, ParentType = ${type}>`)
       .withBlock(node.fields.map((f: any) => f(node.name)).join('\n'));
 
-    this._collectedResolvers[node.name as any] = name;
+    this._collectedResolvers[node.name as any] = name + '<Context>';
 
     return block.string;
   }

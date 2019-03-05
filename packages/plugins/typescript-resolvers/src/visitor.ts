@@ -35,7 +35,7 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
   }
 
   protected formatRootResolver(schemaTypeName: string, resolverType: string): string {
-    return `${schemaTypeName}?: ${resolverType}<Context>,`;
+    return `${schemaTypeName}?: ${resolverType},`;
   }
 
   getRootResolver(): string {
