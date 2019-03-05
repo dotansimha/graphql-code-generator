@@ -1,140 +1,35 @@
-import { BaseVisitor, ParsedConfig } from 'graphql-codegen-visitor-plugin-common';
+import {
+  ClientSideBaseVisitor,
+  ClientSideBasePluginConfig,
+  getConfigValue
+} from 'graphql-codegen-visitor-plugin-common';
 import { ReactApolloRawPluginConfig } from './index';
 import * as autoBind from 'auto-bind';
 import { FragmentDefinitionNode, print, OperationDefinitionNode } from 'graphql';
-import { DepGraph } from 'dependency-graph';
-import gqlTag from 'graphql-tag';
 import { toPascalCase } from 'graphql-codegen-core';
 
-export interface ReactApolloPluginConfig extends ParsedConfig {
+export interface ReactApolloPluginConfig extends ClientSideBasePluginConfig {
   withHOC: boolean;
   withComponent: boolean;
   withHooks: boolean;
-  noGraphQLTag: boolean;
   hooksImportFrom: string;
-  gqlImport: string;
 }
 
-const getConfigValue = <T = any>(value: T, defaultValue: T): T => {
-  if (value === null || value === undefined) {
-    return defaultValue;
-  }
-
-  return value;
-};
-
-export class ReactApolloVisitor extends BaseVisitor<ReactApolloRawPluginConfig, ReactApolloPluginConfig> {
-  constructor(private _fragments: FragmentDefinitionNode[], rawConfig: ReactApolloRawPluginConfig) {
-    super(rawConfig, {
+export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPluginConfig, ReactApolloPluginConfig> {
+  constructor(fragments: FragmentDefinitionNode[], rawConfig: ReactApolloRawPluginConfig) {
+    super(fragments, rawConfig, {
       withHOC: getConfigValue(rawConfig.withHOC, true),
       withComponent: getConfigValue(rawConfig.withComponent, true),
       withHooks: getConfigValue(rawConfig.withHooks, false),
-      noGraphQLTag: getConfigValue(rawConfig.noGraphQLTag, false),
-      hooksImportFrom: getConfigValue(rawConfig.hooksImportFrom, 'react-apollo-hooks'),
-      gqlImport: rawConfig.gqlImport || null
+      hooksImportFrom: getConfigValue(rawConfig.hooksImportFrom, 'react-apollo-hooks')
     } as any);
 
     autoBind(this);
   }
 
-  private _getFragmentName(fragment: FragmentDefinitionNode | string): string {
-    return (typeof fragment === 'string' ? fragment : fragment.name.value) + 'FragmentDoc';
-  }
-
-  private _extractFragments(document: FragmentDefinitionNode | OperationDefinitionNode): string[] | undefined {
-    return (print(document).match(/\.\.\.[a-z0-9\_]+/gi) || []).map(name => name.replace('...', ''));
-  }
-
-  private _transformFragments(document: FragmentDefinitionNode | OperationDefinitionNode): string[] | undefined {
-    return this._extractFragments(document).map(document => this._getFragmentName(document));
-  }
-
-  private _includeFragments(fragments: string[]): string {
-    if (fragments) {
-      return `${fragments
-        .filter((name, i, all) => all.indexOf(name) === i)
-        .map(name => '${' + name + '}')
-        .join('\n')}`;
-    }
-
-    return '';
-  }
-
-  private _gql(node: FragmentDefinitionNode | OperationDefinitionNode): string {
-    const doc = `
-${print(node)}
-${this._includeFragments(this._transformFragments(node))}`;
-
-    if (this.config.noGraphQLTag) {
-      return JSON.stringify(gqlTag(doc));
-    }
-
-    return 'gql`' + doc + '`';
-  }
-
-  private _generateFragment(fragmentDocument: FragmentDefinitionNode): string | void {
-    const name = this._getFragmentName(fragmentDocument);
-
-    return `export const ${name}${this.config.noGraphQLTag ? ': DocumentNode' : ''} = ${this._gql(fragmentDocument)};`;
-  }
-
-  get fragments(): string {
-    if (this._fragments.length === 0) {
-      return '';
-    }
-
-    const graph = new DepGraph<FragmentDefinitionNode>({ circular: true });
-
-    for (const fragment of this._fragments) {
-      if (graph.hasNode(fragment.name.value)) {
-        const cachedAsString = print(graph.getNodeData(fragment.name.value));
-        const asString = print(fragment);
-
-        if (cachedAsString !== asString) {
-          throw new Error(`Duplicated fragment called '${fragment.name}'!`);
-        }
-      }
-
-      graph.addNode(fragment.name.value, fragment);
-    }
-
-    this._fragments.forEach(fragment => {
-      const depends = this._extractFragments(fragment);
-
-      if (depends) {
-        depends.forEach(name => {
-          graph.addDependency(fragment.name.value, name);
-        });
-      }
-    });
-
-    return graph
-      .overallOrder()
-      .map(name => this._generateFragment(graph.getNodeData(name)))
-      .join('\n');
-  }
-
-  private _parseImport(importStr: string) {
-    const [moduleName, propName] = importStr.split('#');
-
-    return {
-      moduleName,
-      propName
-    };
-  }
-
-  get imports(): string {
-    const gqlImport = this._parseImport(this.config.gqlImport || 'graphql-tag');
-    let imports = [];
-
-    if (!this.config.noGraphQLTag) {
-      imports.push(`
-import ${
-        gqlImport.propName ? `{ ${gqlImport.propName === 'gql' ? 'gql' : `${gqlImport.propName} as gql`} }` : 'gql'
-      } from '${gqlImport.moduleName}';`);
-    } else {
-      imports.push(`import { DocumentNode } from 'graphql';`);
-    }
+  public getImports(): string {
+    const baseImports = super.getImports();
+    const imports = [];
 
     if (this.config.withComponent) {
       imports.push(`import * as React from 'react';`);
@@ -152,7 +47,7 @@ import ${
       );
     }
 
-    return imports.join('\n');
+    return [baseImports, ...imports].join('\n');
   }
 
   private _buildHocProps(operationName: string, operationType: string): string {
@@ -231,19 +126,13 @@ export function use${operationResultType}(baseOptions?: ReactApolloHooks.${opera
 };`;
   }
 
-  OperationDefinition(node: OperationDefinitionNode): string {
-    if (!node.name || !node.name.value) {
-      return null;
-    }
-
-    const documentVariableName = this.convertName(node.name.value + 'Document');
-    const documentString = `export const ${documentVariableName}${
-      this.config.noGraphQLTag ? ': DocumentNode' : ''
-    } = ${this._gql(node)};`;
-    const operationType: string = toPascalCase(node.operation);
-    const operationResultType: string = this.convertName(node.name.value + operationType);
-    const operationVariablesTypes: string = this.convertName(node.name.value + operationType + 'Variables');
-
+  protected buildOperation(
+    node: OperationDefinitionNode,
+    documentVariableName: string,
+    operationType: string,
+    operationResultType: string,
+    operationVariablesTypes: string
+  ): string {
     const component = this.config.withComponent
       ? this._buildComponent(node, documentVariableName, operationType, operationResultType, operationVariablesTypes)
       : null;
@@ -254,6 +143,6 @@ export function use${operationResultType}(baseOptions?: ReactApolloHooks.${opera
       ? this._buildHooks(node, operationType, documentVariableName, operationResultType, operationVariablesTypes)
       : null;
 
-    return [documentString, component, hoc, hooks].filter(a => a).join('\n');
+    return [component, hoc, hooks].filter(a => a).join('\n');
   }
 }

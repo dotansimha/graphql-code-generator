@@ -17,6 +17,14 @@ function isWrapperType(t: GraphQLOutputType): t is GraphQLNonNull<any> | GraphQL
   return isListType(t) || isNonNullType(t);
 }
 
+export const getConfigValue = <T = any>(value: T, defaultValue: T): T => {
+  if (value === null || value === undefined) {
+    return defaultValue;
+  }
+
+  return value;
+};
+
 export function getBaseType(type: GraphQLOutputType): GraphQLNamedType {
   if (isWrapperType(type)) {
     return getBaseType(type.ofType);
