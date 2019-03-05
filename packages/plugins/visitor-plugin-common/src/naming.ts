@@ -76,9 +76,6 @@ export function convertFactory(config: { namingConvention?: NamingConvention }):
     return config.namingConvention[type] as any;
   }
 
-  const convertTypeName = resolveConventionName('typeNames');
-  const convertEnumValues = resolveConventionName('enumValues');
-
   return (node, opts) => {
     const prefix = opts && opts.prefix;
     const suffix = opts && opts.suffix;
@@ -87,9 +84,9 @@ export function convertFactory(config: { namingConvention?: NamingConvention }):
     const str = [prefix || '', getName(node), suffix || ''].join('');
 
     if (kind === 'enumValues') {
-      return convertEnumValues(str);
+      return resolveConventionName('typeNames')(str);
     }
 
-    return convertTypeName(str);
+    return resolveConventionName('enumValues')(str);
   };
 }
