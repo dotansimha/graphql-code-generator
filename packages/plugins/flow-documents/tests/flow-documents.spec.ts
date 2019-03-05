@@ -131,7 +131,7 @@ describe('Flow Documents Plugin', () => {
 
       expect(result.definitions[0]).toBeSimilarStringTo(`export type inotificationsqueryvariables = {};`);
       expect(result.definitions[0]).toBeSimilarStringTo(
-        `export type inotificationsquery = ({ __typename?: 'Query' } & { notifications: Array<($Pick<inotifiction, { id: * }> & (({ __typename?: 'TextNotification' } & $Pick<itextnotification, { text: * }>) | ({ __typename?: 'ImageNotification' } & $Pick<iimagenotification, { imageUrl: * }> & { metadata: ({ __typename?: 'ImageMetadata' } & $Pick<iimagemetadata, { createdBy: * }>) })))> });`
+        `export type inotificationsquery = ({ __typename?: 'Query' } & { notifications: Array<($Pick<inotifiction, { id: * }> & (({ __typename?: 'TextNotification' } & $Pick<itextnotification, { text: * }>) | ({ __typename?: 'ImageNotification' } & $Pick<imagenotification, { imageUrl: * }> & { metadata: ({ __typename?: 'ImageMetadata' } & $Pick<imagemetadata, { createdBy: * }>) })))> });`
       );
       validateFlow(result.definitions[0]);
     });
