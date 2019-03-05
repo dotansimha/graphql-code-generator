@@ -1,27 +1,16 @@
-import {
-  GraphQLNamedType,
-  EnumTypeDefinitionNode,
-  NameNode,
-  ObjectTypeDefinitionNode,
-  NonNullTypeNode,
-  ListTypeNode,
-  NamedTypeNode
-} from 'graphql';
+import { GraphQLNamedType, EnumTypeDefinitionNode, ObjectTypeDefinitionNode } from 'graphql';
 import { TsVisitor } from './visitor';
+import { TypeScriptPluginConfig } from './index';
 import * as autoBind from 'auto-bind';
 
-export class TsIntrospectionVisitor {
+export class TsIntrospectionVisitor extends TsVisitor {
   private typesToInclude: GraphQLNamedType[] = [];
-  private tsVisitor: TsVisitor;
 
-  constructor(typesToInclude: GraphQLNamedType[], tsVisitor: TsVisitor) {
+  constructor(pluginConfig: TypeScriptPluginConfig = {}, typesToInclude: GraphQLNamedType[]) {
+    super(pluginConfig);
+
     this.typesToInclude = typesToInclude;
-    this.tsVisitor = tsVisitor;
     autoBind(this);
-  }
-
-  Name(node: NameNode): string {
-    return node.value;
   }
 
   DirectiveDefinition() {
@@ -32,7 +21,7 @@ export class TsIntrospectionVisitor {
     const name: string = node.name as any;
 
     if (this.typesToInclude.some(type => type.name === name)) {
-      return this.tsVisitor.ObjectTypeDefinition(node, key, parent);
+      return super.ObjectTypeDefinition(node, key, parent);
     }
 
     return null;
@@ -42,7 +31,7 @@ export class TsIntrospectionVisitor {
     const name: string = node.name as any;
 
     if (this.typesToInclude.some(type => type.name === name)) {
-      return this.tsVisitor.EnumTypeDefinition(node);
+      return super.EnumTypeDefinition(node);
     }
 
     return null;
