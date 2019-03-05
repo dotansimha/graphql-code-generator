@@ -1,3 +1,3 @@
 #/bin/sh
 
-node packages/graphql-codegen-cli/dist/cli.js --config ./dev-test/codegen-watch.yml
+node packages/graphql-codegen-cli/dist/cli.js --config ./dev-test/codegen.yml -w

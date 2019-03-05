@@ -65,11 +65,11 @@ export type TypeResolveFn<Types, Parent = {}, Context = {}> = (
 
 export type NextResolverFn<T> = () => Promise<T>;
 
-export type DirectiveResolverFn<TResult, TArgs = {}, TContext = {}> = (
+export type DirectiveResolverFn<TResult, TArgs = {}, Context = {}> = (
   next?: NextResolverFn<TResult>,
   source?: any,
   args?: TArgs,
-  context?: TContext,
+  context?: Context,
   info?: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 `;
@@ -77,12 +77,13 @@ export type DirectiveResolverFn<TResult, TArgs = {}, TContext = {}> = (
   const printedSchema = printSchema(schema);
   const astNode = parse(printedSchema);
   const visitorResult = visit(astNode, { leave: visitor });
-  const { rootResolver, mappersImports } = visitor;
+  const { getRootResolver, getAllDirectiveResolvers, mappersImports } = visitor;
 
   return [
     ...mappersImports,
     header,
     ...visitorResult.definitions.filter(d => typeof d === 'string'),
-    rootResolver
+    getRootResolver(),
+    getAllDirectiveResolvers()
   ].join('\n');
 };

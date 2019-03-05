@@ -73,12 +73,13 @@ export type DirectiveResolverFn<TResult, TArgs = {}, TContext = {}> = (
   const astNode = parse(printedSchema);
   const visitor = new FlowResolversVisitor(config, schema);
   const visitorResult = visit(astNode, { leave: visitor });
-  const { rootResolver, mappersImports } = visitor;
+  const { getRootResolver, getAllDirectiveResolvers, mappersImports } = visitor;
 
   return [
     ...mappersImports,
     header,
     ...visitorResult.definitions.filter(d => typeof d === 'string'),
-    rootResolver
+    getRootResolver(),
+    getAllDirectiveResolvers()
   ].join('\n');
 };
