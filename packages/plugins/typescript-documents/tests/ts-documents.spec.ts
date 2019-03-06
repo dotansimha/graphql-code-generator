@@ -163,9 +163,9 @@ describe('TypeScript Documents Plugin', async () => {
       const config = { typesPrefix: 'i', namingConvention: 'change-case#lowerCase' };
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
-      expect(result).toBeSimilarStringTo(`export type iinotificationsqueryvariables = {};`);
+      expect(result).toBeSimilarStringTo(`export type inotificationsqueryvariables = {};`);
       expect(result).toBeSimilarStringTo(
-        `export type iinotificationsquery = ({ __typename?: 'Query' } & { notifications: Array<(Pick<inotifiction, 'id'> & (({ __typename?: 'TextNotification' } & Pick<itextnotification, 'text'>) | ({ __typename?: 'ImageNotification' } & Pick<iimagenotification, 'imageUrl'> & { metadata: ({ __typename?: 'ImageMetadata' } & Pick<iimagemetadata, 'createdBy'>) })))> });`
+        `export type inotificationsquery = ({ __typename?: 'Query' } & { notifications: Array<(Pick<inotifiction, 'id'> & (({ __typename?: 'TextNotification' } & Pick<itextnotification, 'text'>) | ({ __typename?: 'ImageNotification' } & Pick<iimagenotification, 'imageUrl'> & { metadata: ({ __typename?: 'ImageMetadata' } & Pick<iimagemetadata, 'createdBy'>) })))> });`
       );
       validate(result, config);
     });
@@ -942,14 +942,13 @@ describe('TypeScript Documents Plugin', async () => {
         }
       );
 
-      // Kamil: is `PREFIX_Prefix_*` correct?
       expect(format(content)).toBeSimilarStringTo(
         format(`
-          export type PREFIX_Prefix_UsersQueryVariables = {
+          export type PREFIX_UsersQueryVariables = {
             filter: PREFIX_Filter;
           };
           
-          export type PREFIX_Prefix_UsersQuery = { __typename?: 'Query' } & {
+          export type PREFIX_UsersQuery = { __typename?: 'Query' } & {
             users: Maybe<Array<Maybe<{ __typename?: 'User' } & Pick<PREFIX_User, 'access'>>>>;
           };      
       `)
