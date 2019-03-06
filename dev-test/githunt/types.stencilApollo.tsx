@@ -169,8 +169,6 @@ export type VoteMutationVariables = {
 export type VoteMutation = ({ __typename?: 'Mutation' } & { vote: Maybe<({ __typename?: 'Entry' } & Pick<Entry, 'score' | 'id'> & { vote: ({ __typename?: 'Vote' } & Pick<Vote, 'vote_value'>) })> });
 
 import gql from 'graphql-tag';
-import * as React from 'react';
-import * as ReactApollo from 'react-apollo';
 export const CommentsPageCommentFragmentDoc = gql`
     fragment CommentsPageComment on Comment {
   id
@@ -234,21 +232,14 @@ export const OnCommentAddedDocument = gql`
 }
     `;
 
-export class OnCommentAddedComponent extends React.Component<Partial<ReactApollo.SubscriptionProps<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>>> {
-  render() {
-      return (
-          <ReactApollo.Subscription<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables> subscription={OnCommentAddedDocument} {...(this as any)['props'] as any} />
-      );
-  }
-}
-export type OnCommentAddedProps<TChildProps = any> = Partial<ReactApollo.DataProps<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>> & TChildProps;
-export function OnCommentAddedHOC<TProps, TChildProps = any>(operationOptions: ReactApollo.OperationOption<
-  TProps, 
-  OnCommentAddedSubscription,
-  OnCommentAddedSubscriptionVariables,
-  OnCommentAddedProps<TChildProps>> | undefined) {
-    return ReactApollo.graphql<TProps, OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables, OnCommentAddedProps<TChildProps>>(OnCommentAddedDocument, operationOptions);
-};
+        export type OnCommentAddedProps = {
+            variables ?: OnCommentAddedSubscriptionVariables;
+            onReady ?: import('stencil-apollo/dist/types/components/apollo-subscription/types').OnSubscriptionReadyFn<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>;
+        };
+      
+
+        export const OnCommentAddedComponent = (props: OnCommentAddedProps) => <apollo-subscription subscription={ OnCommentAddedDocument } { ...props } />;
+      
 export const CommentDocument = gql`
     query Comment($repoFullName: String!, $limit: Int, $offset: Int) {
   currentUser {
@@ -279,21 +270,14 @@ export const CommentDocument = gql`
 }
     ${CommentsPageCommentFragmentDoc}`;
 
-export class CommentComponent extends React.Component<Partial<ReactApollo.QueryProps<CommentQuery, CommentQueryVariables>>> {
-  render() {
-      return (
-          <ReactApollo.Query<CommentQuery, CommentQueryVariables> query={CommentDocument} {...(this as any)['props'] as any} />
-      );
-  }
-}
-export type CommentProps<TChildProps = any> = Partial<ReactApollo.DataProps<CommentQuery, CommentQueryVariables>> & TChildProps;
-export function CommentHOC<TProps, TChildProps = any>(operationOptions: ReactApollo.OperationOption<
-  TProps, 
-  CommentQuery,
-  CommentQueryVariables,
-  CommentProps<TChildProps>> | undefined) {
-    return ReactApollo.graphql<TProps, CommentQuery, CommentQueryVariables, CommentProps<TChildProps>>(CommentDocument, operationOptions);
-};
+        export type CommentProps = {
+            variables ?: CommentQueryVariables;
+            onReady ?: import('stencil-apollo/dist/types/components/apollo-query/types').OnQueryReadyFn<CommentQuery, CommentQueryVariables>;
+        };
+      
+
+        export const CommentComponent = (props: CommentProps) => <apollo-query query={ CommentDocument } { ...props } />;
+      
 export const CurrentUserForProfileDocument = gql`
     query CurrentUserForProfile {
   currentUser {
@@ -303,21 +287,14 @@ export const CurrentUserForProfileDocument = gql`
 }
     `;
 
-export class CurrentUserForProfileComponent extends React.Component<Partial<ReactApollo.QueryProps<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>>> {
-  render() {
-      return (
-          <ReactApollo.Query<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables> query={CurrentUserForProfileDocument} {...(this as any)['props'] as any} />
-      );
-  }
-}
-export type CurrentUserForProfileProps<TChildProps = any> = Partial<ReactApollo.DataProps<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>> & TChildProps;
-export function CurrentUserForProfileHOC<TProps, TChildProps = any>(operationOptions: ReactApollo.OperationOption<
-  TProps, 
-  CurrentUserForProfileQuery,
-  CurrentUserForProfileQueryVariables,
-  CurrentUserForProfileProps<TChildProps>> | undefined) {
-    return ReactApollo.graphql<TProps, CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables, CurrentUserForProfileProps<TChildProps>>(CurrentUserForProfileDocument, operationOptions);
-};
+        export type CurrentUserForProfileProps = {
+            variables ?: CurrentUserForProfileQueryVariables;
+            onReady ?: import('stencil-apollo/dist/types/components/apollo-query/types').OnQueryReadyFn<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>;
+        };
+      
+
+        export const CurrentUserForProfileComponent = (props: CurrentUserForProfileProps) => <apollo-query query={ CurrentUserForProfileDocument } { ...props } />;
+      
 export const FeedDocument = gql`
     query Feed($type: FeedType!, $offset: Int, $limit: Int) {
   currentUser {
@@ -329,21 +306,14 @@ export const FeedDocument = gql`
 }
     ${FeedEntryFragmentDoc}`;
 
-export class FeedComponent extends React.Component<Partial<ReactApollo.QueryProps<FeedQuery, FeedQueryVariables>>> {
-  render() {
-      return (
-          <ReactApollo.Query<FeedQuery, FeedQueryVariables> query={FeedDocument} {...(this as any)['props'] as any} />
-      );
-  }
-}
-export type FeedProps<TChildProps = any> = Partial<ReactApollo.DataProps<FeedQuery, FeedQueryVariables>> & TChildProps;
-export function FeedHOC<TProps, TChildProps = any>(operationOptions: ReactApollo.OperationOption<
-  TProps, 
-  FeedQuery,
-  FeedQueryVariables,
-  FeedProps<TChildProps>> | undefined) {
-    return ReactApollo.graphql<TProps, FeedQuery, FeedQueryVariables, FeedProps<TChildProps>>(FeedDocument, operationOptions);
-};
+        export type FeedProps = {
+            variables ?: FeedQueryVariables;
+            onReady ?: import('stencil-apollo/dist/types/components/apollo-query/types').OnQueryReadyFn<FeedQuery, FeedQueryVariables>;
+        };
+      
+
+        export const FeedComponent = (props: FeedProps) => <apollo-query query={ FeedDocument } { ...props } />;
+      
 export const SubmitRepositoryDocument = gql`
     mutation submitRepository($repoFullName: String!) {
   submitRepository(repoFullName: $repoFullName) {
@@ -352,22 +322,14 @@ export const SubmitRepositoryDocument = gql`
 }
     `;
 
-export class SubmitRepositoryComponent extends React.Component<Partial<ReactApollo.MutationProps<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>>> {
-  render() {
-      return (
-          <ReactApollo.Mutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables> mutation={SubmitRepositoryDocument} {...(this as any)['props'] as any} />
-      );
-  }
-}
-export type SubmitRepositoryProps<TChildProps = any> = Partial<ReactApollo.MutateProps<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>> & TChildProps;
-export type SubmitRepositoryMutationFn = ReactApollo.MutationFn<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>;
-export function SubmitRepositoryHOC<TProps, TChildProps = any>(operationOptions: ReactApollo.OperationOption<
-  TProps, 
-  SubmitRepositoryMutation,
-  SubmitRepositoryMutationVariables,
-  SubmitRepositoryProps<TChildProps>> | undefined) {
-    return ReactApollo.graphql<TProps, SubmitRepositoryMutation, SubmitRepositoryMutationVariables, SubmitRepositoryProps<TChildProps>>(SubmitRepositoryDocument, operationOptions);
-};
+        export type SubmitRepositoryProps = {
+            variables ?: SubmitRepositoryMutationVariables;
+            onReady ?: import('stencil-apollo/dist/types/components/apollo-mutation/types').OnMutationReadyFn<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>;
+        };
+      
+
+        export const SubmitRepositoryComponent = (props: SubmitRepositoryProps) => <apollo-mutation mutation={ SubmitRepositoryDocument } { ...props } />;
+      
 export const SubmitCommentDocument = gql`
     mutation submitComment($repoFullName: String!, $commentContent: String!) {
   submitComment(repoFullName: $repoFullName, commentContent: $commentContent) {
@@ -376,22 +338,14 @@ export const SubmitCommentDocument = gql`
 }
     ${CommentsPageCommentFragmentDoc}`;
 
-export class SubmitCommentComponent extends React.Component<Partial<ReactApollo.MutationProps<SubmitCommentMutation, SubmitCommentMutationVariables>>> {
-  render() {
-      return (
-          <ReactApollo.Mutation<SubmitCommentMutation, SubmitCommentMutationVariables> mutation={SubmitCommentDocument} {...(this as any)['props'] as any} />
-      );
-  }
-}
-export type SubmitCommentProps<TChildProps = any> = Partial<ReactApollo.MutateProps<SubmitCommentMutation, SubmitCommentMutationVariables>> & TChildProps;
-export type SubmitCommentMutationFn = ReactApollo.MutationFn<SubmitCommentMutation, SubmitCommentMutationVariables>;
-export function SubmitCommentHOC<TProps, TChildProps = any>(operationOptions: ReactApollo.OperationOption<
-  TProps, 
-  SubmitCommentMutation,
-  SubmitCommentMutationVariables,
-  SubmitCommentProps<TChildProps>> | undefined) {
-    return ReactApollo.graphql<TProps, SubmitCommentMutation, SubmitCommentMutationVariables, SubmitCommentProps<TChildProps>>(SubmitCommentDocument, operationOptions);
-};
+        export type SubmitCommentProps = {
+            variables ?: SubmitCommentMutationVariables;
+            onReady ?: import('stencil-apollo/dist/types/components/apollo-mutation/types').OnMutationReadyFn<SubmitCommentMutation, SubmitCommentMutationVariables>;
+        };
+      
+
+        export const SubmitCommentComponent = (props: SubmitCommentProps) => <apollo-mutation mutation={ SubmitCommentDocument } { ...props } />;
+      
 export const VoteDocument = gql`
     mutation vote($repoFullName: String!, $type: VoteType!) {
   vote(repoFullName: $repoFullName, type: $type) {
@@ -404,19 +358,11 @@ export const VoteDocument = gql`
 }
     `;
 
-export class VoteComponent extends React.Component<Partial<ReactApollo.MutationProps<VoteMutation, VoteMutationVariables>>> {
-  render() {
-      return (
-          <ReactApollo.Mutation<VoteMutation, VoteMutationVariables> mutation={VoteDocument} {...(this as any)['props'] as any} />
-      );
-  }
-}
-export type VoteProps<TChildProps = any> = Partial<ReactApollo.MutateProps<VoteMutation, VoteMutationVariables>> & TChildProps;
-export type VoteMutationFn = ReactApollo.MutationFn<VoteMutation, VoteMutationVariables>;
-export function VoteHOC<TProps, TChildProps = any>(operationOptions: ReactApollo.OperationOption<
-  TProps, 
-  VoteMutation,
-  VoteMutationVariables,
-  VoteProps<TChildProps>> | undefined) {
-    return ReactApollo.graphql<TProps, VoteMutation, VoteMutationVariables, VoteProps<TChildProps>>(VoteDocument, operationOptions);
-};
+        export type VoteProps = {
+            variables ?: VoteMutationVariables;
+            onReady ?: import('stencil-apollo/dist/types/components/apollo-mutation/types').OnMutationReadyFn<VoteMutation, VoteMutationVariables>;
+        };
+      
+
+        export const VoteComponent = (props: VoteProps) => <apollo-mutation mutation={ VoteDocument } { ...props } />;
+      

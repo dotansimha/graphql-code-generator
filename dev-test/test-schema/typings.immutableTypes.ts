@@ -1,44 +1,16 @@
-export type Maybe<T> = T | null;
+type Maybe<T> = T | null;
+export type Query = {
+  allUsers: Array<Maybe<User>>,
+  userById?: Maybe<User>,
+};
 
 
+export type QueryUserByIdArgs = {
+  id: number
+};
 
-
-
-
-
-
-// ====================================================
-// Types
-// ====================================================
-
-
-
-export interface Query {
-
-  allUsers: (Maybe<User>)[];
-
-  userById?: Maybe<User>;
-}
-
-
-export interface User {
-
-  id: number;
-
-  name: string;
-
-  email: string;
-}
-
-
-
-// ====================================================
-// Arguments
-// ====================================================
-
-export interface UserByIdQueryArgs {
-
-  id: number;
-}
-
-
+export type User = {
+  id: number,
+  name: string,
+  email: string,
+};

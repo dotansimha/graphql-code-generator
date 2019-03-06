@@ -66,12 +66,6 @@ This will cause the codegen to add React **Hooks** implementations, to be used i
 You can use the generated hook in your Functional Component like this:
 
 ```tsx
-  const { data, loading, error } = Test.use(...);
-```
-
-Or if you are using `noNamespaces` option:
-
-```tsx
   const { data, loading, error } = useTest(...);
 ```
 
