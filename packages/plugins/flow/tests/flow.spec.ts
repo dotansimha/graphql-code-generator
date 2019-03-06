@@ -705,7 +705,14 @@ describe('Flow Plugin', () => {
         interface MyInterface {
           foo: String
           bar: String!
-        }`);
+        }
+
+        enum MyEnum {
+          A
+          B
+          C
+        }  
+      `);
       const result = visit(ast, {
         leave: new FlowVisitor({
           useFlowReadOnlyTypes: true
@@ -718,7 +725,19 @@ describe('Flow Plugin', () => {
           +bar: string,
         };
       `);
+
+      expect(result.definitions[1]).toBeSimilarStringTo(`
+        export const MyEnumValues = Object.freeze({
+          A: 'A',
+          B: 'B',
+          C: 'C'
+        });
+
+        export type MyEnum = $Values<typeof MyEnumValues>;
+      `);
+
       validateFlow(result.definitions[0]);
+      validateFlow(result.definitions[1]);
     });
   });
 });

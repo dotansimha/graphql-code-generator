@@ -93,7 +93,10 @@ export class DeclarationBlock {
   public get string(): string {
     const useFlowExactObject: boolean = this._config.useFlowExactObjects || false;
     const useFlowReadOnlyTypes: boolean = this._config.useFlowReadOnlyTypes || false;
-    const block: string = this._block && useFlowReadOnlyTypes ? this.getFlowReadOnlyTypeBlock() : this._block;
+    const block: string =
+      this._block && useFlowReadOnlyTypes && this._methodName !== 'Object.freeze'
+        ? this.getFlowReadOnlyTypeBlock()
+        : this._block;
     let result = '';
 
     if (this._export) {
