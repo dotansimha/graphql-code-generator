@@ -171,6 +171,7 @@ export type VoteMutation = ({ __typename?: 'Mutation' } & { vote: Maybe<({ __typ
 import gql from 'graphql-tag';
 import * as React from 'react';
 import * as ReactApollo from 'react-apollo';
+import * as ReactApolloHooks from 'react-apollo-hooks';
 export const CommentsPageCommentFragmentDoc = gql`
     fragment CommentsPageComment on Comment {
   id
@@ -249,6 +250,10 @@ export function OnCommentAddedHOC<TProps, TChildProps = any>(operationOptions: R
   OnCommentAddedProps<TChildProps>> | undefined) {
     return ReactApollo.graphql<TProps, OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables, OnCommentAddedProps<TChildProps>>(OnCommentAddedDocument, operationOptions);
 };
+
+export function useOnCommentAddedSubscription(baseOptions?: ReactApolloHooks.SubscriptionHookOptions<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>) {
+  return ReactApolloHooks.useSubscription<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>(OnCommentAddedDocument, baseOptions);
+};
 export const CommentDocument = gql`
     query Comment($repoFullName: String!, $limit: Int, $offset: Int) {
   currentUser {
@@ -294,6 +299,10 @@ export function CommentHOC<TProps, TChildProps = any>(operationOptions: ReactApo
   CommentProps<TChildProps>> | undefined) {
     return ReactApollo.graphql<TProps, CommentQuery, CommentQueryVariables, CommentProps<TChildProps>>(CommentDocument, operationOptions);
 };
+
+export function useCommentQuery(baseOptions?: ReactApolloHooks.QueryHookOptions<CommentQueryVariables>) {
+  return ReactApolloHooks.useQuery<CommentQuery, CommentQueryVariables>(CommentDocument, baseOptions);
+};
 export const CurrentUserForProfileDocument = gql`
     query CurrentUserForProfile {
   currentUser {
@@ -317,6 +326,10 @@ export function CurrentUserForProfileHOC<TProps, TChildProps = any>(operationOpt
   CurrentUserForProfileQueryVariables,
   CurrentUserForProfileProps<TChildProps>> | undefined) {
     return ReactApollo.graphql<TProps, CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables, CurrentUserForProfileProps<TChildProps>>(CurrentUserForProfileDocument, operationOptions);
+};
+
+export function useCurrentUserForProfileQuery(baseOptions?: ReactApolloHooks.QueryHookOptions<CurrentUserForProfileQueryVariables>) {
+  return ReactApolloHooks.useQuery<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>(CurrentUserForProfileDocument, baseOptions);
 };
 export const FeedDocument = gql`
     query Feed($type: FeedType!, $offset: Int, $limit: Int) {
@@ -344,6 +357,10 @@ export function FeedHOC<TProps, TChildProps = any>(operationOptions: ReactApollo
   FeedProps<TChildProps>> | undefined) {
     return ReactApollo.graphql<TProps, FeedQuery, FeedQueryVariables, FeedProps<TChildProps>>(FeedDocument, operationOptions);
 };
+
+export function useFeedQuery(baseOptions?: ReactApolloHooks.QueryHookOptions<FeedQueryVariables>) {
+  return ReactApolloHooks.useQuery<FeedQuery, FeedQueryVariables>(FeedDocument, baseOptions);
+};
 export const SubmitRepositoryDocument = gql`
     mutation submitRepository($repoFullName: String!) {
   submitRepository(repoFullName: $repoFullName) {
@@ -368,6 +385,10 @@ export function SubmitRepositoryHOC<TProps, TChildProps = any>(operationOptions:
   SubmitRepositoryProps<TChildProps>> | undefined) {
     return ReactApollo.graphql<TProps, SubmitRepositoryMutation, SubmitRepositoryMutationVariables, SubmitRepositoryProps<TChildProps>>(SubmitRepositoryDocument, operationOptions);
 };
+
+export function useSubmitRepositoryMutation(baseOptions?: ReactApolloHooks.MutationHookOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>) {
+  return ReactApolloHooks.useMutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(SubmitRepositoryDocument, baseOptions);
+};
 export const SubmitCommentDocument = gql`
     mutation submitComment($repoFullName: String!, $commentContent: String!) {
   submitComment(repoFullName: $repoFullName, commentContent: $commentContent) {
@@ -391,6 +412,10 @@ export function SubmitCommentHOC<TProps, TChildProps = any>(operationOptions: Re
   SubmitCommentMutationVariables,
   SubmitCommentProps<TChildProps>> | undefined) {
     return ReactApollo.graphql<TProps, SubmitCommentMutation, SubmitCommentMutationVariables, SubmitCommentProps<TChildProps>>(SubmitCommentDocument, operationOptions);
+};
+
+export function useSubmitCommentMutation(baseOptions?: ReactApolloHooks.MutationHookOptions<SubmitCommentMutation, SubmitCommentMutationVariables>) {
+  return ReactApolloHooks.useMutation<SubmitCommentMutation, SubmitCommentMutationVariables>(SubmitCommentDocument, baseOptions);
 };
 export const VoteDocument = gql`
     mutation vote($repoFullName: String!, $type: VoteType!) {
@@ -419,4 +444,8 @@ export function VoteHOC<TProps, TChildProps = any>(operationOptions: ReactApollo
   VoteMutationVariables,
   VoteProps<TChildProps>> | undefined) {
     return ReactApollo.graphql<TProps, VoteMutation, VoteMutationVariables, VoteProps<TChildProps>>(VoteDocument, operationOptions);
+};
+
+export function useVoteMutation(baseOptions?: ReactApolloHooks.MutationHookOptions<VoteMutation, VoteMutationVariables>) {
+  return ReactApolloHooks.useMutation<VoteMutation, VoteMutationVariables>(VoteDocument, baseOptions);
 };

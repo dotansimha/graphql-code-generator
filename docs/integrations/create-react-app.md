@@ -14,8 +14,6 @@ schema: http://my-server/graphql
 documents: 'src/**/*.graphql'
 generates:
   components.tsx:
-    config:
-      noNamespaces: true
     plugins:
       - typescript-common
       - typescript-client

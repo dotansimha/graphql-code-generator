@@ -6,19 +6,18 @@
   "license": "MIT",
   "scripts": {
     "prepublishOnly": "yarn build",
-    "build": "codegen-templates-scripts build",
-    "test": "codegen-templates-scripts test",
-    "pretest": "yarn build"
+    "build": "tsc",
+    "pretest": "yarn build",
+    "test": "jest"
   },
   "peerDependencies": {
     "graphql-tag": "^2.0.0",
     "stencil-apollo": "^0.0.2"
   },
   "dependencies": {
-    "dependency-graph": "^0.8.0",
+    "graphql-codegen-visitor-plugin-common": "0.18.0",
     "graphql-codegen-core": "0.18.0",
-    "graphql-codegen-plugin-helpers": "0.18.0",
-    "graphql-codegen-typescript-common": "0.18.0"
+    "graphql-codegen-plugin-helpers": "0.18.0"
   },
   "devDependencies": {
     "@types/node": "10.12.30",

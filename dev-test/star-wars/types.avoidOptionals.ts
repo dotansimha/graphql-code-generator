@@ -1,349 +1,242 @@
-export type Maybe<T> = T | null;
+type Maybe<T> = T | null;
+export type Character = {
+  id: string,
+  name: string,
+  friends: Maybe<Array<Maybe<Character>>>,
+  friendsConnection: FriendsConnection,
+  appearsIn: Array<Maybe<Episode>>,
+};
 
-/** The input object sent when someone is creating a new review */
-export interface ReviewInput {
-  /** 0-5 stars */
-  stars: number;
-  /** Comment about the movie, optional */
-  commentary: Maybe<string>;
-  /** Favorite color, optional */
-  favoriteColor: Maybe<ColorInput>;
-}
-/** The input object sent when passing a color */
-export interface ColorInput {
+export type ColorInput = {
+  red: number,
+  green: number,
+  blue: number,
+};
 
-  red: number;
-
-  green: number;
-
-  blue: number;
-}
-/** The episodes in the Star Wars trilogy */
-  export enum Episode {
-    Newhope = 'NEWHOPE',
-    Empire = 'EMPIRE',
-    Jedi = 'JEDI',
-  }
-/** Units of height */
-  export enum LengthUnit {
-    Meter = 'METER',
-    Foot = 'FOOT',
-  }
+export type Droid = Character & {
+  id: string,
+  name: string,
+  friends: Maybe<Array<Maybe<Character>>>,
+  friendsConnection: FriendsConnection,
+  appearsIn: Array<Maybe<Episode>>,
+  primaryFunction: Maybe<string>,
+};
 
 
-// ====================================================
-// Documents
-// ====================================================
+export type DroidFriendsConnectionArgs = {
+  first: Maybe<number>,
+  after: Maybe<string>
+};
 
-
-
-export namespace CreateReviewForEpisode {
-  export type Variables = {
-    episode: Episode;
-    review: ReviewInput;
-  };
-
-  export type Mutation = {
-    __typename?: 'Mutation';
-
-    createReview: Maybe<CreateReview>;
-  };
-
-  export type CreateReview = {
-    __typename?: 'Review';
-
-    stars: number;
-
-    commentary: Maybe<string>;
-  };
+export enum Episode {
+  Newhope = 'NEWHOPE',
+  Empire = 'EMPIRE',
+  Jedi = 'JEDI'
 }
 
-export namespace HeroAndFriendsNames {
-  export type Variables = {
-    episode: Maybe<Episode>;
-  };
+export type FriendsConnection = {
+  totalCount: Maybe<number>,
+  edges: Maybe<Array<Maybe<FriendsEdge>>>,
+  friends: Maybe<Array<Maybe<Character>>>,
+  pageInfo: PageInfo,
+};
 
-  export type Query = {
-    __typename?: 'Query';
+export type FriendsEdge = {
+  cursor: string,
+  node: Maybe<Character>,
+};
 
-    hero: Maybe<Hero>;
-  };
+export type Human = Character & {
+  id: string,
+  name: string,
+  homePlanet: Maybe<string>,
+  height: Maybe<number>,
+  mass: Maybe<number>,
+  friends: Maybe<Array<Maybe<Character>>>,
+  friendsConnection: FriendsConnection,
+  appearsIn: Array<Maybe<Episode>>,
+  starships: Maybe<Array<Maybe<Starship>>>,
+};
 
-  export type Hero = {
-    __typename?: 'Character';
 
-    name: string;
+export type HumanHeightArgs = {
+  unit: LengthUnit
+};
 
-    friends: Maybe<(Maybe<Friends>)[]>;
-  };
 
-  export type Friends = {
-    __typename?: 'Character';
+export type HumanFriendsConnectionArgs = {
+  first: Maybe<number>,
+  after: Maybe<string>
+};
 
-    name: string;
-  };
+export enum LengthUnit {
+  Meter = 'METER',
+  Foot = 'FOOT'
 }
 
-export namespace HeroAppearsIn {
-  export type Variables = {
-  };
+export type Mutation = {
+  createReview: Maybe<Review>,
+};
 
-  export type Query = {
-    __typename?: 'Query';
 
-    hero: Maybe<Hero>;
-  };
+export type MutationCreateReviewArgs = {
+  episode: Maybe<Episode>,
+  review: ReviewInput
+};
 
-  export type Hero = {
-    __typename?: 'Character';
+export type PageInfo = {
+  startCursor: Maybe<string>,
+  endCursor: Maybe<string>,
+  hasNextPage: boolean,
+};
 
-    name: string;
+export type Query = {
+  hero: Maybe<Character>,
+  reviews: Maybe<Array<Maybe<Review>>>,
+  search: Maybe<Array<Maybe<SearchResult>>>,
+  character: Maybe<Character>,
+  droid: Maybe<Droid>,
+  human: Maybe<Human>,
+  starship: Maybe<Starship>,
+};
 
-    appearsIn: (Maybe<Episode>)[];
-  };
-}
 
-export namespace HeroDetails {
-  export type Variables = {
-    episode: Maybe<Episode>;
-  };
+export type QueryHeroArgs = {
+  episode: Maybe<Episode>
+};
 
-  export type Query = {
-    __typename?: 'Query';
 
-    hero: Maybe<Hero>;
-  };
+export type QueryReviewsArgs = {
+  episode: Episode
+};
 
-  export type Hero = {
-    __typename?: HumanInlineFragment['__typename'] | DroidInlineFragment['__typename'];
 
-    name: string;
-  }  & (HumanInlineFragment | DroidInlineFragment);
+export type QuerySearchArgs = {
+  text: Maybe<string>
+};
 
-  export type HumanInlineFragment = {
-    __typename?: 'Human';
 
-    height: Maybe<number>;
-  };
+export type QueryCharacterArgs = {
+  id: string
+};
 
-  export type DroidInlineFragment = {
-    __typename?: 'Droid';
 
-    primaryFunction: Maybe<string>;
-  };
-}
+export type QueryDroidArgs = {
+  id: string
+};
 
-export namespace HeroDetailsWithFragment {
-  export type Variables = {
-    episode: Maybe<Episode>;
-  };
 
-  export type Query = {
-    __typename?: 'Query';
+export type QueryHumanArgs = {
+  id: string
+};
 
-    hero: Maybe<Hero>;
-  };
 
-  export type Hero = HeroDetails.Fragment;
-}
+export type QueryStarshipArgs = {
+  id: string
+};
 
-export namespace HeroName {
-  export type Variables = {
-    episode: Maybe<Episode>;
-  };
+export type Review = {
+  stars: number,
+  commentary: Maybe<string>,
+};
 
-  export type Query = {
-    __typename?: 'Query';
+export type ReviewInput = {
+  stars: number,
+  commentary: Maybe<string>,
+  favoriteColor: Maybe<ColorInput>,
+};
 
-    hero: Maybe<Hero>;
-  };
+export type SearchResult = Human | Droid | Starship;
 
-  export type Hero = {
-    __typename?: 'Character';
+export type Starship = {
+  id: string,
+  name: string,
+  length: Maybe<number>,
+};
 
-    name: string;
-  };
-}
 
-export namespace HeroNameConditionalInclusion {
-  export type Variables = {
-    episode: Maybe<Episode>;
-    includeName: boolean;
-  };
+export type StarshipLengthArgs = {
+  unit: LengthUnit
+};
+export type CreateReviewForEpisodeMutationVariables = {
+  episode: Episode,
+  review: ReviewInput
+};
 
-  export type Query = {
-    __typename?: 'Query';
 
-    hero: Maybe<Hero>;
-  };
+export type CreateReviewForEpisodeMutation = ({ __typename?: 'Mutation' } & { createReview: Maybe<({ __typename?: 'Review' } & Pick<Review, 'stars' | 'commentary'>)> });
 
-  export type Hero = {
-    __typename?: 'Character';
+export type HeroAndFriendsNamesQueryVariables = {
+  episode: Maybe<Episode>
+};
 
-    name: string;
-  };
-}
 
-export namespace HeroNameConditionalExclusion {
-  export type Variables = {
-    episode: Maybe<Episode>;
-    skipName: boolean;
-  };
+export type HeroAndFriendsNamesQuery = ({ __typename?: 'Query' } & { hero: Maybe<(Pick<Character, 'name'> & { friends: Maybe<Array<Maybe<Pick<Character, 'name'>>>> })> });
 
-  export type Query = {
-    __typename?: 'Query';
+export type HeroAppearsInQueryVariables = {};
 
-    hero: Maybe<Hero>;
-  };
 
-  export type Hero = {
-    __typename?: 'Character';
+export type HeroAppearsInQuery = ({ __typename?: 'Query' } & { hero: Maybe<Pick<Character, 'name' | 'appearsIn'>> });
 
-    name: string;
-  };
-}
+export type HeroDetailsQueryVariables = {
+  episode: Maybe<Episode>
+};
 
-export namespace HeroParentTypeDependentField {
-  export type Variables = {
-    episode: Maybe<Episode>;
-  };
 
-  export type Query = {
-    __typename?: 'Query';
+export type HeroDetailsQuery = ({ __typename?: 'Query' } & { hero: Maybe<(Pick<Character, 'name'> & (({ __typename?: 'Human' } & Pick<Human, 'height'>) | ({ __typename?: 'Droid' } & Pick<Droid, 'primaryFunction'>)))> });
 
-    hero: Maybe<Hero>;
-  };
+export type HeroDetailsWithFragmentQueryVariables = {
+  episode: Maybe<Episode>
+};
 
-  export type Hero = {
-    __typename?: HumanInlineFragment['__typename'] | DroidInlineFragment['__typename'];
 
-    name: string;
-  }  & (HumanInlineFragment | DroidInlineFragment);
+export type HeroDetailsWithFragmentQuery = ({ __typename?: 'Query' } & { hero: Maybe<HeroDetailsFragment> });
 
-  export type HumanInlineFragment = {
-    __typename?: 'Human';
+export type HeroDetailsFragment = (Pick<Character, 'name'> & (({ __typename?: 'Human' } & Pick<Human, 'height'>) | ({ __typename?: 'Droid' } & Pick<Droid, 'primaryFunction'>)));
 
-    friends: Maybe<(Maybe<Friends>)[]>;
-  };
+export type HeroNameQueryVariables = {
+  episode: Maybe<Episode>
+};
 
-  export type Friends = {
-    __typename?: _HumanInlineFragment['__typename'];
 
-    name: string;
-  }  & _HumanInlineFragment;
+export type HeroNameQuery = ({ __typename?: 'Query' } & { hero: Maybe<Pick<Character, 'name'>> });
 
-  export type _HumanInlineFragment = {
-    __typename?: 'Human';
+export type HeroNameConditionalInclusionQueryVariables = {
+  episode: Maybe<Episode>,
+  includeName: boolean
+};
 
-    height: Maybe<number>;
-  };
 
-  export type DroidInlineFragment = {
-    __typename?: 'Droid';
+export type HeroNameConditionalInclusionQuery = ({ __typename?: 'Query' } & { hero: Maybe<Pick<Character, 'name'>> });
 
-    friends: Maybe<(Maybe<_Friends>)[]>;
-  };
+export type HeroNameConditionalExclusionQueryVariables = {
+  episode: Maybe<Episode>,
+  skipName: boolean
+};
 
-  export type _Friends = {
-    __typename?: __HumanInlineFragment['__typename'];
 
-    name: string;
-  }  & __HumanInlineFragment;
+export type HeroNameConditionalExclusionQuery = ({ __typename?: 'Query' } & { hero: Maybe<Pick<Character, 'name'>> });
 
-  export type __HumanInlineFragment = {
-    __typename?: 'Human';
+export type HeroParentTypeDependentFieldQueryVariables = {
+  episode: Maybe<Episode>
+};
 
-    height: Maybe<number>;
-  };
-}
 
-export namespace HeroTypeDependentAliasedField {
-  export type Variables = {
-    episode: Maybe<Episode>;
-  };
+export type HeroParentTypeDependentFieldQuery = ({ __typename?: 'Query' } & { hero: Maybe<(Pick<Character, 'name'> & (({ __typename?: 'Human' } & { friends: Maybe<Array<Maybe<(Pick<Character, 'name'> & (({ __typename?: 'Human' } & Pick<Human, 'height'>)))>>> }) | ({ __typename?: 'Droid' } & { friends: Maybe<Array<Maybe<(Pick<Character, 'name'> & (({ __typename?: 'Human' } & Pick<Human, 'height'>)))>>> })))> });
 
-  export type Query = {
-    __typename?: 'Query';
+export type HeroTypeDependentAliasedFieldQueryVariables = {
+  episode: Maybe<Episode>
+};
 
-    hero: Maybe<Hero>;
-  };
 
-  export type Hero = (HumanInlineFragment | DroidInlineFragment);
+export type HeroTypeDependentAliasedFieldQuery = ({ __typename?: 'Query' } & { hero: Maybe<(({ __typename?: 'Human' } & { property: Human['homePlanet'] }) | ({ __typename?: 'Droid' } & { property: Droid['primaryFunction'] }))> });
 
-  export type HumanInlineFragment = {
-    __typename?: 'Human';
+export type HumanWithNullHeightQueryVariables = {};
 
-    property: Maybe<string>;
-  };
 
-  export type DroidInlineFragment = {
-    __typename?: 'Droid';
+export type HumanWithNullHeightQuery = ({ __typename?: 'Query' } & { human: Maybe<({ __typename?: 'Human' } & Pick<Human, 'name' | 'mass'>)> });
 
-    property: Maybe<string>;
-  };
-}
+export type TwoHeroesQueryVariables = {};
 
-export namespace HumanWithNullHeight {
-  export type Variables = {
-  };
 
-  export type Query = {
-    __typename?: 'Query';
-
-    human: Maybe<Human>;
-  };
-
-  export type Human = {
-    __typename?: 'Human';
-
-    name: string;
-
-    mass: Maybe<number>;
-  };
-}
-
-export namespace TwoHeroes {
-  export type Variables = {
-  };
-
-  export type Query = {
-    __typename?: 'Query';
-
-    r2: Maybe<R2>;
-
-    luke: Maybe<Luke>;
-  };
-
-  export type R2 = {
-    __typename?: 'Character';
-
-    name: string;
-  };
-
-  export type Luke = {
-    __typename?: 'Character';
-
-    name: string;
-  };
-}
-
-export namespace HeroDetails {
-  export type Fragment = {
-    __typename?: 'Character';
-
-    name: string;
-  } & (HumanInlineFragment | DroidInlineFragment);
-
-  export type HumanInlineFragment = {
-    __typename?: 'Human';
-
-    height: Maybe<number>;
-  };
-
-  export type DroidInlineFragment = {
-    __typename?: 'Droid';
-
-    primaryFunction: Maybe<string>;
-  };
-}
-
+export type TwoHeroesQuery = ({ __typename?: 'Query' } & { r2: Maybe<Pick<Character, 'name'>>, luke: Maybe<Pick<Character, 'name'>> });

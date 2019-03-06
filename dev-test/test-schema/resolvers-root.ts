@@ -1,57 +1,28 @@
 // tslint:disable
-export type Maybe<T> = T | null;
+type Maybe<T> = T | null;
+[object Object]
+export type QueryRoot = {
+  allUsers: Array<Maybe<User>>,
+  userById?: Maybe<User>,
+  answer: Array<number>,
+};
 
 
+export type QueryRootUserByIdArgs = {
+  id: number
+};
 
+export type SubscriptionRoot = {
+  newUser?: Maybe<User>,
+};
 
+export type User = {
+  id: number,
+  name: string,
+  email: string,
+};
 
-
-
-
-// ====================================================
-// Types
-// ====================================================
-
-
-
-export interface QueryRoot {
-  
-  allUsers: (Maybe<User>)[];
-  
-  userById?: Maybe<User>;
-  /** Generates a new answer for the guessing game */
-  answer: number[];
-}
-
-
-export interface User {
-  
-  id: number;
-  
-  name: string;
-  
-  email: string;
-}
-
-
-export interface SubscriptionRoot {
-  
-  newUser?: Maybe<User>;
-}
-
-
-
-// ====================================================
-// Arguments
-// ====================================================
-
-export interface UserByIdQueryRootArgs {
-  
-  id: number;
-}
-
-
-
+[object Object]
 import { GraphQLResolveInfo } from 'graphql';
 
 export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
@@ -92,13 +63,13 @@ export type TypeResolveFn<Types, Parent = {}, Context = {}> = (
 
 export type NextResolverFn<T> = () => Promise<T>;
 
-export type DirectiveResolverFn<TResult, TArgs = {}, Context = {}> = (
-  next?: NextResolverFn<TResult>,
-  source?: any,
-  args?: TArgs,
+export type DirectiveResolverFn<Result = {}, Parent = {}, Context = {}, Args = {}> = (
+  next?: NextResolverFn<Result>,
+  parent?: Parent,
+  args?: Args,
   context?: Context,
   info?: GraphQLResolveInfo
-) => TResult | Promise<TResult>;
+) => Result | Promise<Result>;
 
 export interface QueryRootResolvers<Context = any, ParentType = QueryRoot> {
   allUsers?: Resolver<Array<Maybe<User>>, ParentType, Context>,
@@ -120,6 +91,6 @@ export type IResolvers<Context = any> = {
   QueryRoot?: QueryRootResolvers<Context>,
   SubscriptionRoot?: SubscriptionRootResolvers<Context>,
   User?: UserResolvers<Context>,
-} & { [typeName: string] : { [ fieldName: string ]: ( Resolver<any, any, Context, any> | SubscriptionResolver<any, any, Context, any> ) } } ;
+} & { [typeName: string] : { [ fieldName: string ]: ( Resolver<any, any, Context, any> | SubscriptionResolver<any, any, Context, any> ) } };
 
-export type IDirectiveResolvers<Context = any> = {} & { [directiveName: string]: DirectiveResolverFn<any, any, Context> } ;
+export type IDirectiveResolvers<Context = any> = {} & { [directiveName: string]: DirectiveResolverFn<any, any, Context, any> };

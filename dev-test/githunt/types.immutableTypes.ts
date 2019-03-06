@@ -1,323 +1,168 @@
-export type Maybe<T> = T | null;
+type Maybe<T> = T | null;
+export type Comment = {
+  readonly id: number,
+  readonly postedBy: User,
+  readonly createdAt: number,
+  readonly content: string,
+  readonly repoName: string,
+};
 
-/** A list of options for the sort order of the feed */
-  export enum FeedType {
-    Hot = 'HOT',
-    New = 'NEW',
-    Top = 'TOP',
-  }
-/** The type of vote to record, when submitting a vote */
-  export enum VoteType {
-    Up = 'UP',
-    Down = 'DOWN',
-    Cancel = 'CANCEL',
-  }
+export type Entry = {
+  readonly repository: Repository,
+  readonly postedBy: User,
+  readonly createdAt: number,
+  readonly score: number,
+  readonly hotScore: number,
+  readonly comments: ReadonlyArray<Maybe<Comment>>,
+  readonly commentCount: number,
+  readonly id: number,
+  readonly vote: Vote,
+};
 
 
-// ====================================================
-// Documents
-// ====================================================
+export type EntryCommentsArgs = {
+  limit?: Maybe<number>,
+  offset?: Maybe<number>
+};
 
-
-
-export namespace OnCommentAdded {
-  export type Variables = {
-    readonly repoFullName: string;
-  };
-
-  export type Subscription = {
-    readonly __typename?: 'Subscription';
-
-    readonly commentAdded: Maybe<CommentAdded>;
-  };
-
-  export type CommentAdded = {
-    readonly __typename?: 'Comment';
-
-    readonly id: number;
-
-    readonly postedBy: PostedBy;
-
-    readonly createdAt: number;
-
-    readonly content: string;
-  };
-
-  export type PostedBy = {
-    readonly __typename?: 'User';
-
-    readonly login: string;
-
-    readonly html_url: string;
-  };
+export enum FeedType {
+  Hot = 'HOT',
+  New = 'NEW',
+  Top = 'TOP'
 }
 
-export namespace Comment {
-  export type Variables = {
-    readonly repoFullName: string;
-    readonly limit?: Maybe<number>;
-    readonly offset?: Maybe<number>;
-  };
+export type Mutation = {
+  readonly submitRepository?: Maybe<Entry>,
+  readonly vote?: Maybe<Entry>,
+  readonly submitComment?: Maybe<Comment>,
+};
 
-  export type Query = {
-    readonly __typename?: 'Query';
 
-    readonly currentUser: Maybe<CurrentUser>;
+export type MutationSubmitRepositoryArgs = {
+  repoFullName: string
+};
 
-    readonly entry: Maybe<Entry>;
-  };
 
-  export type CurrentUser = {
-    readonly __typename?: 'User';
+export type MutationVoteArgs = {
+  repoFullName: string,
+  type: VoteType
+};
 
-    readonly login: string;
 
-    readonly html_url: string;
-  };
+export type MutationSubmitCommentArgs = {
+  repoFullName: string,
+  commentContent: string
+};
 
-  export type Entry = {
-    readonly __typename?: 'Entry';
+export type Query = {
+  readonly feed?: Maybe<ReadonlyArray<Maybe<Entry>>>,
+  readonly entry?: Maybe<Entry>,
+  readonly currentUser?: Maybe<User>,
+};
 
-    readonly id: number;
 
-    readonly postedBy: PostedBy;
+export type QueryFeedArgs = {
+  type: FeedType,
+  offset?: Maybe<number>,
+  limit?: Maybe<number>
+};
 
-    readonly createdAt: number;
 
-    readonly comments: ReadonlyArray<Maybe<Comments>>;
+export type QueryEntryArgs = {
+  repoFullName: string
+};
 
-    readonly commentCount: number;
+export type Repository = {
+  readonly name: string,
+  readonly full_name: string,
+  readonly description?: Maybe<string>,
+  readonly html_url: string,
+  readonly stargazers_count: number,
+  readonly open_issues_count?: Maybe<number>,
+  readonly owner?: Maybe<User>,
+};
 
-    readonly repository: Repository;
-  };
+export type Subscription = {
+  readonly commentAdded?: Maybe<Comment>,
+};
 
-  export type PostedBy = {
-    readonly __typename?: 'User';
 
-    readonly login: string;
+export type SubscriptionCommentAddedArgs = {
+  repoFullName: string
+};
 
-    readonly html_url: string;
-  };
+export type User = {
+  readonly login: string,
+  readonly avatar_url: string,
+  readonly html_url: string,
+};
 
-  export type Comments = CommentsPageComment.Fragment;
+export type Vote = {
+  readonly vote_value: number,
+};
 
-  export type Repository = {
-    readonly __typename?: RepositoryInlineFragment['__typename'];
-
-    readonly full_name: string;
-
-    readonly html_url: string;
-  }  & RepositoryInlineFragment;
-
-  export type RepositoryInlineFragment = {
-    readonly __typename?: 'Repository';
-
-    readonly description: Maybe<string>;
-
-    readonly open_issues_count: Maybe<number>;
-
-    readonly stargazers_count: number;
-  };
+export enum VoteType {
+  Up = 'UP',
+  Down = 'DOWN',
+  Cancel = 'CANCEL'
 }
+export type OnCommentAddedSubscriptionVariables = {
+  repoFullName: string
+};
 
-export namespace CurrentUserForProfile {
-  export type Variables = {
-  };
 
-  export type Query = {
-    readonly __typename?: 'Query';
+export type OnCommentAddedSubscription = ({ readonly __typename?: 'Subscription' } & { readonly commentAdded: Maybe<({ readonly __typename?: 'Comment' } & Pick<Comment, 'id' | 'createdAt' | 'content'> & { readonly postedBy: ({ readonly __typename?: 'User' } & Pick<User, 'login' | 'html_url'>) })> });
 
-    readonly currentUser: Maybe<CurrentUser>;
-  };
+export type CommentQueryVariables = {
+  repoFullName: string,
+  limit?: Maybe<number>,
+  offset?: Maybe<number>
+};
 
-  export type CurrentUser = {
-    readonly __typename?: 'User';
 
-    readonly login: string;
+export type CommentQuery = ({ readonly __typename?: 'Query' } & { readonly currentUser: Maybe<({ readonly __typename?: 'User' } & Pick<User, 'login' | 'html_url'>)>, readonly entry: Maybe<({ readonly __typename?: 'Entry' } & Pick<Entry, 'id' | 'createdAt' | 'commentCount'> & { readonly postedBy: ({ readonly __typename?: 'User' } & Pick<User, 'login' | 'html_url'>), readonly comments: ReadonlyArray<Maybe<({ readonly __typename?: 'Comment' } & CommentsPageCommentFragment)>>, readonly repository: ({ readonly __typename?: 'Repository' } & Pick<Repository, 'full_name' | 'html_url'> & (({ readonly __typename?: 'Repository' } & Pick<Repository, 'description' | 'open_issues_count' | 'stargazers_count'>))) })> });
 
-    readonly avatar_url: string;
-  };
-}
+export type CommentsPageCommentFragment = ({ readonly __typename?: 'Comment' } & Pick<Comment, 'id' | 'createdAt' | 'content'> & { readonly postedBy: ({ readonly __typename?: 'User' } & Pick<User, 'login' | 'html_url'>) });
 
-export namespace Feed {
-  export type Variables = {
-    readonly type: FeedType;
-    readonly offset?: Maybe<number>;
-    readonly limit?: Maybe<number>;
-  };
+export type CurrentUserForProfileQueryVariables = {};
 
-  export type Query = {
-    readonly __typename?: 'Query';
 
-    readonly currentUser: Maybe<CurrentUser>;
+export type CurrentUserForProfileQuery = ({ readonly __typename?: 'Query' } & { readonly currentUser: Maybe<({ readonly __typename?: 'User' } & Pick<User, 'login' | 'avatar_url'>)> });
 
-    readonly feed: Maybe<ReadonlyArray<Maybe<Feed>>>;
-  };
+export type FeedEntryFragment = ({ readonly __typename?: 'Entry' } & Pick<Entry, 'id' | 'commentCount'> & { readonly repository: ({ readonly __typename?: 'Repository' } & Pick<Repository, 'full_name' | 'html_url'> & { readonly owner: Maybe<({ readonly __typename?: 'User' } & Pick<User, 'avatar_url'>)> }) } & (VoteButtonsFragment & RepoInfoFragment));
 
-  export type CurrentUser = {
-    readonly __typename?: 'User';
+export type FeedQueryVariables = {
+  type: FeedType,
+  offset?: Maybe<number>,
+  limit?: Maybe<number>
+};
 
-    readonly login: string;
-  };
 
-  export type Feed = FeedEntry.Fragment;
-}
+export type FeedQuery = ({ readonly __typename?: 'Query' } & { readonly currentUser: Maybe<({ readonly __typename?: 'User' } & Pick<User, 'login'>)>, readonly feed: Maybe<ReadonlyArray<Maybe<({ readonly __typename?: 'Entry' } & FeedEntryFragment)>>> });
 
-export namespace SubmitRepository {
-  export type Variables = {
-    readonly repoFullName: string;
-  };
+export type SubmitRepositoryMutationVariables = {
+  repoFullName: string
+};
 
-  export type Mutation = {
-    readonly __typename?: 'Mutation';
 
-    readonly submitRepository: Maybe<SubmitRepository>;
-  };
+export type SubmitRepositoryMutation = ({ readonly __typename?: 'Mutation' } & { readonly submitRepository: Maybe<({ readonly __typename?: 'Entry' } & Pick<Entry, 'createdAt'>)> });
 
-  export type SubmitRepository = {
-    readonly __typename?: 'Entry';
+export type RepoInfoFragment = ({ readonly __typename?: 'Entry' } & Pick<Entry, 'createdAt'> & { readonly repository: ({ readonly __typename?: 'Repository' } & Pick<Repository, 'description' | 'stargazers_count' | 'open_issues_count'>), readonly postedBy: ({ readonly __typename?: 'User' } & Pick<User, 'html_url' | 'login'>) });
 
-    readonly createdAt: number;
-  };
-}
+export type SubmitCommentMutationVariables = {
+  repoFullName: string,
+  commentContent: string
+};
 
-export namespace SubmitComment {
-  export type Variables = {
-    readonly repoFullName: string;
-    readonly commentContent: string;
-  };
 
-  export type Mutation = {
-    readonly __typename?: 'Mutation';
+export type SubmitCommentMutation = ({ readonly __typename?: 'Mutation' } & { readonly submitComment: Maybe<({ readonly __typename?: 'Comment' } & CommentsPageCommentFragment)> });
 
-    readonly submitComment: Maybe<SubmitComment>;
-  };
+export type VoteButtonsFragment = ({ readonly __typename?: 'Entry' } & Pick<Entry, 'score'> & { readonly vote: ({ readonly __typename?: 'Vote' } & Pick<Vote, 'vote_value'>) });
 
-  export type SubmitComment = CommentsPageComment.Fragment;
-}
+export type VoteMutationVariables = {
+  repoFullName: string,
+  type: VoteType
+};
 
-export namespace Vote {
-  export type Variables = {
-    readonly repoFullName: string;
-    readonly type: VoteType;
-  };
 
-  export type Mutation = {
-    readonly __typename?: 'Mutation';
-
-    readonly vote: Maybe<Vote>;
-  };
-
-  export type Vote = {
-    readonly __typename?: 'Entry';
-
-    readonly score: number;
-
-    readonly id: number;
-
-    readonly vote: _Vote;
-  };
-
-  export type _Vote = {
-    readonly __typename?: 'Vote';
-
-    readonly vote_value: number;
-  };
-}
-
-export namespace CommentsPageComment {
-  export type Fragment = {
-    readonly __typename?: 'Comment';
-
-    readonly id: number;
-
-    readonly postedBy: PostedBy;
-
-    readonly createdAt: number;
-
-    readonly content: string;
-  };
-
-  export type PostedBy = {
-    readonly __typename?: 'User';
-
-    readonly login: string;
-
-    readonly html_url: string;
-  };
-}
-
-export namespace FeedEntry {
-  export type Fragment = {
-    readonly __typename?: 'Entry';
-
-    readonly id: number;
-
-    readonly commentCount: number;
-
-    readonly repository: Repository;
-  } & (VoteButtons.Fragment & RepoInfo.Fragment);
-
-  export type Repository = {
-    readonly __typename?: 'Repository';
-
-    readonly full_name: string;
-
-    readonly html_url: string;
-
-    readonly owner: Maybe<Owner>;
-  };
-
-  export type Owner = {
-    readonly __typename?: 'User';
-
-    readonly avatar_url: string;
-  };
-}
-
-export namespace RepoInfo {
-  export type Fragment = {
-    readonly __typename?: 'Entry';
-
-    readonly createdAt: number;
-
-    readonly repository: Repository;
-
-    readonly postedBy: PostedBy;
-  };
-
-  export type Repository = {
-    readonly __typename?: 'Repository';
-
-    readonly description: Maybe<string>;
-
-    readonly stargazers_count: number;
-
-    readonly open_issues_count: Maybe<number>;
-  };
-
-  export type PostedBy = {
-    readonly __typename?: 'User';
-
-    readonly html_url: string;
-
-    readonly login: string;
-  };
-}
-
-export namespace VoteButtons {
-  export type Fragment = {
-    readonly __typename?: 'Entry';
-
-    readonly score: number;
-
-    readonly vote: Vote;
-  };
-
-  export type Vote = {
-    readonly __typename?: 'Vote';
-
-    readonly vote_value: number;
-  };
-}
-
+export type VoteMutation = ({ readonly __typename?: 'Mutation' } & { readonly vote: Maybe<({ readonly __typename?: 'Entry' } & Pick<Entry, 'score' | 'id'> & { readonly vote: ({ readonly __typename?: 'Vote' } & Pick<Vote, 'vote_value'>) })> });
