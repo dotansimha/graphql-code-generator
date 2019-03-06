@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import * as logUpdate from 'log-update';
+import logUpdate from 'log-update';
 import * as indentString from 'indent-string';
 import * as logSymbol from 'log-symbols';
 import * as UpdateRenderer from 'listr-update-renderer';
