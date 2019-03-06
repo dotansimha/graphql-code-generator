@@ -11,6 +11,8 @@
     "test": "jest"
   },
   "dependencies": {
+    "esm": "3.2.11",
+    "tslib": "1.9.3",
     "graphql-codegen-core": "0.18.0",
     "graphql-codegen-flow": "0.18.0",
     "graphql-codegen-visitor-plugin-common": "0.18.0",
@@ -24,7 +26,8 @@
     "flow-parser": "0.94.0",
     "graphql": "14.1.1"
   },
-  "main": "./dist/index.js",
+  "main": "cjs/index.js",
+  "module": "dist/index.js",
   "typings": "dist/index.d.ts",
   "typescript": {
     "definition": "dist/index.d.ts"

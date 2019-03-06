@@ -1,10 +1,10 @@
-import * as inquirer from 'inquirer';
+import inquirer from 'inquirer';
 import chalk from 'chalk';
 import { Types } from 'graphql-codegen-core';
 import { resolve, relative } from 'path';
 import { writeFileSync, readFileSync } from 'fs';
-import * as YAML from 'json-to-pretty-yaml';
-import * as detectIndent from 'detect-indent';
+import YAML from 'json-to-pretty-yaml';
+import detectIndent from 'detect-indent';
 
 interface PluginOption {
   name: string;

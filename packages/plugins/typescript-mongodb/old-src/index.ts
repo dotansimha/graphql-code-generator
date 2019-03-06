@@ -1,12 +1,12 @@
 import { TypeScriptCommonConfig, initCommonTemplate } from 'graphql-codegen-typescript-common';
 import { PluginValidateFn, PluginFunction, DocumentFile, toPascalCase } from 'graphql-codegen-core';
 import { GraphQLSchema } from 'graphql';
-import * as Handlebars from 'handlebars';
-import * as index from './templates/index.handlebars';
-import * as interfaceTemplate from './templates/interface.handlebars';
-import * as type from './templates/type.handlebars';
-import * as union from './templates/union.handlebars';
-import * as schemaTemplate from './templates/schema.handlebars';
+import Handlebars from 'handlebars';
+import index from './templates/index.handlebars';
+import interfaceTemplate from './templates/interface.handlebars';
+import type from './templates/type.handlebars';
+import union from './templates/union.handlebars';
+import schemaTemplate from './templates/schema.handlebars';
 import ifNotRootType from './helpers/if-not-root-type';
 import { isPrimitive } from './helpers/is-primitive';
 import isArray from './helpers/is-array';

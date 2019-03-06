@@ -4,10 +4,10 @@ import {
   getConfigValue
 } from 'graphql-codegen-visitor-plugin-common';
 import { StencilApolloRawPluginConfig, StencilComponentType } from './index';
-import * as autoBind from 'auto-bind';
+import autoBind from 'auto-bind';
 import { FragmentDefinitionNode, print, OperationDefinitionNode } from 'graphql';
 import { toPascalCase } from 'graphql-codegen-core';
-import * as changeCase from 'change-case';
+import changeCase from 'change-case';
 
 export interface StencilApolloPluginConfig extends ClientSideBasePluginConfig {
   componentType: StencilComponentType;

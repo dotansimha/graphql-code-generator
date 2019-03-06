@@ -1,4 +1,4 @@
-import * as fs from 'fs';
+import fs from 'fs';
 import gql from 'graphql-tag';
 import { GraphQLSchema, buildClientSchema } from 'graphql';
 import { transformDocument, transformDocumentsFiles } from '../src/operations/transform-document';

@@ -6,6 +6,8 @@
     "build": "tsc"
   },
   "dependencies": {
+    "esm": "3.2.11",
+    "tslib": "1.9.3",
     "graphql-codegen-core": "0.18.0",
     "auto-bind": "2.0.0",
     "graphql-tag": "2.10.1",
@@ -19,7 +21,8 @@
     "graphql": "14.1.1",
     "@types/graphql": "14.0.7"
   },
-  "main": "./dist/index.js",
+  "main": "cjs/index.js",
+  "module": "dist/index.js",
   "typings": "dist/index.d.ts",
   "typescript": {
     "definition": "dist/index.d.ts"

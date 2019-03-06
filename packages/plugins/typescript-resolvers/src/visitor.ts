@@ -1,7 +1,7 @@
 import { ListTypeNode, NamedTypeNode, NonNullTypeNode } from 'graphql/language/ast';
 import { TypeScriptResolversPluginConfig } from './index';
 import { GraphQLSchema } from 'graphql';
-import * as autoBind from 'auto-bind';
+import autoBind from 'auto-bind';
 import { ParsedResolversConfig, BaseResolversVisitor } from 'graphql-codegen-visitor-plugin-common';
 import { TypeScriptOperationVariablesToObject } from 'graphql-codegen-typescript';
 

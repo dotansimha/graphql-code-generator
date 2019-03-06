@@ -1,4 +1,4 @@
-import * as autoBind from 'auto-bind';
+import autoBind from 'auto-bind';
 import { DEFAULT_SCALARS } from './scalars';
 import { ScalarsMap, NamingConvention, ConvertFn, ConvertOptions } from './types';
 import { DeclarationBlock, DeclarationBlockConfig, indent, getBaseTypeNode } from './utils';

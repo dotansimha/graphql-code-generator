@@ -2,7 +2,8 @@
   "name": "graphql-codegen-core",
   "version": "0.18.0",
   "description": "GraphQL types and code generator based on schema",
-  "main": "dist/index.js",
+  "main": "cjs/index.js",
+  "module": "dist/index.js",
   "scripts": {
     "clean": "rimraf ./dist",
     "lint": "tslint src/**/*.ts",
@@ -60,6 +61,8 @@
     ]
   },
   "dependencies": {
+    "esm": "3.2.11",
+    "tslib": "1.9.3",
     "chalk": "2.4.2",
     "change-case": "3.1.0",
     "common-tags": "1.8.0",

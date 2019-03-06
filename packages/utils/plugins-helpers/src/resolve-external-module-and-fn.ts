@@ -1,6 +1,6 @@
-import * as path from 'path';
-import * as fs from 'fs';
-import * as importFrom from 'import-from';
+import path from 'path';
+import fs from 'fs';
+import importFrom from 'import-from';
 
 export function resolveExternalModuleAndFn(pointer: any): any {
   if (typeof pointer === 'function') {

@@ -6,18 +6,26 @@
   "license": "MIT",
   "scripts": {
     "prepublishOnly": "yarn build",
-    "build": "codegen-templates-scripts build",
+    "build": "tsc",
     "pretest": "yarn build"
   },
   "dependencies": {
-    "moment": "2.24.0"
+    "esm": "3.2.11",
+    "tslib": "1.9.3",
+    "moment": "2.24.0",
+    "graphql-codegen-core": "0.18.0",
+    "graphql-codegen-plugin-helpers": "0.18.0"
   },
   "devDependencies": {
-    "codegen-templates-scripts": "0.18.0",
-    "graphql": "14.1.1",
-    "graphql-codegen-core": "0.18.0"
+    "jest": "24.1.0",
+    "ts-jest": "24.0.0",
+    "typescript": "3.3.3333",
+    "flow-bin": "0.94.0",
+    "flow-parser": "0.94.0",
+    "graphql": "14.1.1"
   },
-  "main": "./dist/index.js",
+  "main": "cjs/index.js",
+  "module": "dist/index.js",
   "typings": "dist/index.d.ts",
   "typescript": {
     "definition": "dist/index.d.ts"

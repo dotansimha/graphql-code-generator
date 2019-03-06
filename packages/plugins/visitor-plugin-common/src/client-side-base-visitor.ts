@@ -1,5 +1,5 @@
 import { BaseVisitor, ParsedConfig, RawConfig } from './index';
-import * as autoBind from 'auto-bind';
+import autoBind from 'auto-bind';
 import { FragmentDefinitionNode, print, OperationDefinitionNode } from 'graphql';
 import { DepGraph } from 'dependency-graph';
 import gqlTag from 'graphql-tag';

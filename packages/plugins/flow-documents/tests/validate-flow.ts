@@ -1,4 +1,4 @@
-import * as flow from 'flow-parser';
+import flow from 'flow-parser';
 
 export function validateFlow(code: string) {
   const result = flow.parse(code);
