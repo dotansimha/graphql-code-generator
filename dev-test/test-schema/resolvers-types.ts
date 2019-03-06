@@ -1,50 +1,21 @@
 // tslint:disable
-export type Maybe<T> = T | null;
+type Maybe<T> = T | null;
+export type Query = {
+  allUsers: Array<Maybe<User>>,
+  userById?: Maybe<User>,
+  answer: Array<number>,
+};
 
 
+export type QueryUserByIdArgs = {
+  id: number
+};
 
-
-
-
-
-
-// ====================================================
-// Types
-// ====================================================
-
-
-
-export interface Query {
-  
-  allUsers: (Maybe<User>)[];
-  
-  userById?: Maybe<User>;
-  
-  answer: number[];
-}
-
-
-export interface User {
-  
-  id: number;
-  
-  name: string;
-  
-  email: string;
-}
-
-
-
-// ====================================================
-// Arguments
-// ====================================================
-
-export interface UserByIdQueryArgs {
-  
-  id: number;
-}
-
-
+export type User = {
+  id: number,
+  name: string,
+  email: string,
+};
 
 import { GraphQLResolveInfo } from 'graphql';
 
@@ -86,13 +57,13 @@ export type TypeResolveFn<Types, Parent = {}, Context = {}> = (
 
 export type NextResolverFn<T> = () => Promise<T>;
 
-export type DirectiveResolverFn<TResult, TArgs = {}, Context = {}> = (
-  next?: NextResolverFn<TResult>,
-  source?: any,
-  args?: TArgs,
+export type DirectiveResolverFn<Result = {}, Parent = {}, Context = {}, Args = {}> = (
+  next?: NextResolverFn<Result>,
+  parent?: Parent,
+  args?: Args,
   context?: Context,
   info?: GraphQLResolveInfo
-) => TResult | Promise<TResult>;
+) => Result | Promise<Result>;
 
 export interface QueryResolvers<Context = any, ParentType = Query> {
   allUsers?: Resolver<Array<Maybe<User>>, ParentType, Context>,
@@ -109,6 +80,6 @@ export interface UserResolvers<Context = any, ParentType = User> {
 export type IResolvers<Context = any> = {
   Query?: QueryResolvers<Context>,
   User?: UserResolvers<Context>,
-} & { [typeName: string] : { [ fieldName: string ]: ( Resolver<any, any, Context, any> | SubscriptionResolver<any, any, Context, any> ) } } ;
+} & { [typeName: string] : { [ fieldName: string ]: ( Resolver<any, any, Context, any> | SubscriptionResolver<any, any, Context, any> ) } };
 
-export type IDirectiveResolvers<Context = any> = {} & { [directiveName: string]: DirectiveResolverFn<any, any, Context> } ;
+export type IDirectiveResolvers<Context = any> = {} & { [directiveName: string]: DirectiveResolverFn<any, any, Context, any> };

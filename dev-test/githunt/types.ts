@@ -1,323 +1,168 @@
-export type Maybe<T> = T | null;
+type Maybe<T> = T | null;
+export type Comment = {
+  id: number,
+  postedBy: User,
+  createdAt: number,
+  content: string,
+  repoName: string,
+};
 
-/** A list of options for the sort order of the feed */
-  export enum FeedType {
-    Hot = 'HOT',
-    New = 'NEW',
-    Top = 'TOP',
-  }
-/** The type of vote to record, when submitting a vote */
-  export enum VoteType {
-    Up = 'UP',
-    Down = 'DOWN',
-    Cancel = 'CANCEL',
-  }
+export type Entry = {
+  repository: Repository,
+  postedBy: User,
+  createdAt: number,
+  score: number,
+  hotScore: number,
+  comments: Array<Maybe<Comment>>,
+  commentCount: number,
+  id: number,
+  vote: Vote,
+};
 
 
-// ====================================================
-// Documents
-// ====================================================
+export type EntryCommentsArgs = {
+  limit?: Maybe<number>,
+  offset?: Maybe<number>
+};
 
-
-
-export namespace OnCommentAdded {
-  export type Variables = {
-    repoFullName: string;
-  };
-
-  export type Subscription = {
-    __typename?: 'Subscription';
-
-    commentAdded: Maybe<CommentAdded>;
-  };
-
-  export type CommentAdded = {
-    __typename?: 'Comment';
-
-    id: number;
-
-    postedBy: PostedBy;
-
-    createdAt: number;
-
-    content: string;
-  };
-
-  export type PostedBy = {
-    __typename?: 'User';
-
-    login: string;
-
-    html_url: string;
-  };
+export enum FeedType {
+  Hot = 'HOT',
+  New = 'NEW',
+  Top = 'TOP'
 }
 
-export namespace Comment {
-  export type Variables = {
-    repoFullName: string;
-    limit?: Maybe<number>;
-    offset?: Maybe<number>;
-  };
+export type Mutation = {
+  submitRepository?: Maybe<Entry>,
+  vote?: Maybe<Entry>,
+  submitComment?: Maybe<Comment>,
+};
 
-  export type Query = {
-    __typename?: 'Query';
 
-    currentUser: Maybe<CurrentUser>;
+export type MutationSubmitRepositoryArgs = {
+  repoFullName: string
+};
 
-    entry: Maybe<Entry>;
-  };
 
-  export type CurrentUser = {
-    __typename?: 'User';
+export type MutationVoteArgs = {
+  repoFullName: string,
+  type: VoteType
+};
 
-    login: string;
 
-    html_url: string;
-  };
+export type MutationSubmitCommentArgs = {
+  repoFullName: string,
+  commentContent: string
+};
 
-  export type Entry = {
-    __typename?: 'Entry';
+export type Query = {
+  feed?: Maybe<Array<Maybe<Entry>>>,
+  entry?: Maybe<Entry>,
+  currentUser?: Maybe<User>,
+};
 
-    id: number;
 
-    postedBy: PostedBy;
+export type QueryFeedArgs = {
+  type: FeedType,
+  offset?: Maybe<number>,
+  limit?: Maybe<number>
+};
 
-    createdAt: number;
 
-    comments: (Maybe<Comments>)[];
+export type QueryEntryArgs = {
+  repoFullName: string
+};
 
-    commentCount: number;
+export type Repository = {
+  name: string,
+  full_name: string,
+  description?: Maybe<string>,
+  html_url: string,
+  stargazers_count: number,
+  open_issues_count?: Maybe<number>,
+  owner?: Maybe<User>,
+};
 
-    repository: Repository;
-  };
+export type Subscription = {
+  commentAdded?: Maybe<Comment>,
+};
 
-  export type PostedBy = {
-    __typename?: 'User';
 
-    login: string;
+export type SubscriptionCommentAddedArgs = {
+  repoFullName: string
+};
 
-    html_url: string;
-  };
+export type User = {
+  login: string,
+  avatar_url: string,
+  html_url: string,
+};
 
-  export type Comments = CommentsPageComment.Fragment;
+export type Vote = {
+  vote_value: number,
+};
 
-  export type Repository = {
-    __typename?: RepositoryInlineFragment['__typename'];
-
-    full_name: string;
-
-    html_url: string;
-  }  & RepositoryInlineFragment;
-
-  export type RepositoryInlineFragment = {
-    __typename?: 'Repository';
-
-    description: Maybe<string>;
-
-    open_issues_count: Maybe<number>;
-
-    stargazers_count: number;
-  };
+export enum VoteType {
+  Up = 'UP',
+  Down = 'DOWN',
+  Cancel = 'CANCEL'
 }
+export type OnCommentAddedSubscriptionVariables = {
+  repoFullName: string
+};
 
-export namespace CurrentUserForProfile {
-  export type Variables = {
-  };
 
-  export type Query = {
-    __typename?: 'Query';
+export type OnCommentAddedSubscription = ({ __typename?: 'Subscription' } & { commentAdded: Maybe<({ __typename?: 'Comment' } & Pick<Comment, 'id' | 'createdAt' | 'content'> & { postedBy: ({ __typename?: 'User' } & Pick<User, 'login' | 'html_url'>) })> });
 
-    currentUser: Maybe<CurrentUser>;
-  };
+export type CommentQueryVariables = {
+  repoFullName: string,
+  limit?: Maybe<number>,
+  offset?: Maybe<number>
+};
 
-  export type CurrentUser = {
-    __typename?: 'User';
 
-    login: string;
+export type CommentQuery = ({ __typename?: 'Query' } & { currentUser: Maybe<({ __typename?: 'User' } & Pick<User, 'login' | 'html_url'>)>, entry: Maybe<({ __typename?: 'Entry' } & Pick<Entry, 'id' | 'createdAt' | 'commentCount'> & { postedBy: ({ __typename?: 'User' } & Pick<User, 'login' | 'html_url'>), comments: Array<Maybe<({ __typename?: 'Comment' } & CommentsPageCommentFragment)>>, repository: ({ __typename?: 'Repository' } & Pick<Repository, 'full_name' | 'html_url'> & (({ __typename?: 'Repository' } & Pick<Repository, 'description' | 'open_issues_count' | 'stargazers_count'>))) })> });
 
-    avatar_url: string;
-  };
-}
+export type CommentsPageCommentFragment = ({ __typename?: 'Comment' } & Pick<Comment, 'id' | 'createdAt' | 'content'> & { postedBy: ({ __typename?: 'User' } & Pick<User, 'login' | 'html_url'>) });
 
-export namespace Feed {
-  export type Variables = {
-    type: FeedType;
-    offset?: Maybe<number>;
-    limit?: Maybe<number>;
-  };
+export type CurrentUserForProfileQueryVariables = {};
 
-  export type Query = {
-    __typename?: 'Query';
 
-    currentUser: Maybe<CurrentUser>;
+export type CurrentUserForProfileQuery = ({ __typename?: 'Query' } & { currentUser: Maybe<({ __typename?: 'User' } & Pick<User, 'login' | 'avatar_url'>)> });
 
-    feed: Maybe<(Maybe<Feed>)[]>;
-  };
+export type FeedEntryFragment = ({ __typename?: 'Entry' } & Pick<Entry, 'id' | 'commentCount'> & { repository: ({ __typename?: 'Repository' } & Pick<Repository, 'full_name' | 'html_url'> & { owner: Maybe<({ __typename?: 'User' } & Pick<User, 'avatar_url'>)> }) } & (VoteButtonsFragment & RepoInfoFragment));
 
-  export type CurrentUser = {
-    __typename?: 'User';
+export type FeedQueryVariables = {
+  type: FeedType,
+  offset?: Maybe<number>,
+  limit?: Maybe<number>
+};
 
-    login: string;
-  };
 
-  export type Feed = FeedEntry.Fragment;
-}
+export type FeedQuery = ({ __typename?: 'Query' } & { currentUser: Maybe<({ __typename?: 'User' } & Pick<User, 'login'>)>, feed: Maybe<Array<Maybe<({ __typename?: 'Entry' } & FeedEntryFragment)>>> });
 
-export namespace SubmitRepository {
-  export type Variables = {
-    repoFullName: string;
-  };
+export type SubmitRepositoryMutationVariables = {
+  repoFullName: string
+};
 
-  export type Mutation = {
-    __typename?: 'Mutation';
 
-    submitRepository: Maybe<SubmitRepository>;
-  };
+export type SubmitRepositoryMutation = ({ __typename?: 'Mutation' } & { submitRepository: Maybe<({ __typename?: 'Entry' } & Pick<Entry, 'createdAt'>)> });
 
-  export type SubmitRepository = {
-    __typename?: 'Entry';
+export type RepoInfoFragment = ({ __typename?: 'Entry' } & Pick<Entry, 'createdAt'> & { repository: ({ __typename?: 'Repository' } & Pick<Repository, 'description' | 'stargazers_count' | 'open_issues_count'>), postedBy: ({ __typename?: 'User' } & Pick<User, 'html_url' | 'login'>) });
 
-    createdAt: number;
-  };
-}
+export type SubmitCommentMutationVariables = {
+  repoFullName: string,
+  commentContent: string
+};
 
-export namespace SubmitComment {
-  export type Variables = {
-    repoFullName: string;
-    commentContent: string;
-  };
 
-  export type Mutation = {
-    __typename?: 'Mutation';
+export type SubmitCommentMutation = ({ __typename?: 'Mutation' } & { submitComment: Maybe<({ __typename?: 'Comment' } & CommentsPageCommentFragment)> });
 
-    submitComment: Maybe<SubmitComment>;
-  };
+export type VoteButtonsFragment = ({ __typename?: 'Entry' } & Pick<Entry, 'score'> & { vote: ({ __typename?: 'Vote' } & Pick<Vote, 'vote_value'>) });
 
-  export type SubmitComment = CommentsPageComment.Fragment;
-}
+export type VoteMutationVariables = {
+  repoFullName: string,
+  type: VoteType
+};
 
-export namespace Vote {
-  export type Variables = {
-    repoFullName: string;
-    type: VoteType;
-  };
 
-  export type Mutation = {
-    __typename?: 'Mutation';
-
-    vote: Maybe<Vote>;
-  };
-
-  export type Vote = {
-    __typename?: 'Entry';
-
-    score: number;
-
-    id: number;
-
-    vote: _Vote;
-  };
-
-  export type _Vote = {
-    __typename?: 'Vote';
-
-    vote_value: number;
-  };
-}
-
-export namespace CommentsPageComment {
-  export type Fragment = {
-    __typename?: 'Comment';
-
-    id: number;
-
-    postedBy: PostedBy;
-
-    createdAt: number;
-
-    content: string;
-  };
-
-  export type PostedBy = {
-    __typename?: 'User';
-
-    login: string;
-
-    html_url: string;
-  };
-}
-
-export namespace FeedEntry {
-  export type Fragment = {
-    __typename?: 'Entry';
-
-    id: number;
-
-    commentCount: number;
-
-    repository: Repository;
-  } & (VoteButtons.Fragment & RepoInfo.Fragment);
-
-  export type Repository = {
-    __typename?: 'Repository';
-
-    full_name: string;
-
-    html_url: string;
-
-    owner: Maybe<Owner>;
-  };
-
-  export type Owner = {
-    __typename?: 'User';
-
-    avatar_url: string;
-  };
-}
-
-export namespace RepoInfo {
-  export type Fragment = {
-    __typename?: 'Entry';
-
-    createdAt: number;
-
-    repository: Repository;
-
-    postedBy: PostedBy;
-  };
-
-  export type Repository = {
-    __typename?: 'Repository';
-
-    description: Maybe<string>;
-
-    stargazers_count: number;
-
-    open_issues_count: Maybe<number>;
-  };
-
-  export type PostedBy = {
-    __typename?: 'User';
-
-    html_url: string;
-
-    login: string;
-  };
-}
-
-export namespace VoteButtons {
-  export type Fragment = {
-    __typename?: 'Entry';
-
-    score: number;
-
-    vote: Vote;
-  };
-
-  export type Vote = {
-    __typename?: 'Vote';
-
-    vote_value: number;
-  };
-}
-
+export type VoteMutation = ({ __typename?: 'Mutation' } & { vote: Maybe<({ __typename?: 'Entry' } & Pick<Entry, 'score' | 'id'> & { vote: ({ __typename?: 'Vote' } & Pick<Vote, 'vote_value'>) })> });

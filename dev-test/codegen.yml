@@ -4,8 +4,7 @@ generates:
     schema: ./dev-test/test-schema/schema-text.js
     plugins:
       - add: // tslint:disable
-      - typescript-common
-      - typescript-server
+      - typescript
       - typescript-resolvers
   ./dev-test/test-schema/flow-types.flow.js:
     schema: ./dev-test/test-schema/schema.json
@@ -16,30 +15,26 @@ generates:
     schema: ./dev-test/test-schema/schema-with-root.graphql
     plugins:
       - add: // tslint:disable
-      - typescript-common
-      - typescript-server
+      - typescript
       - typescript-resolvers
   ./dev-test/test-schema/typings.ts:
     schema: ./dev-test/test-schema/schema.json
     plugins:
       - add: // tslint:disable
-      - typescript-common
-      - typescript-server
+      - typescript
       - typescript-resolvers
   ./dev-test/test-schema/typings.avoidOptionals.ts:
     schema: ./dev-test/test-schema/schema.json
     config:
       avoidOptionals: true
     plugins:
-      - typescript-common
-      - typescript-server
+      - typescript
   ./dev-test/test-schema/typings.immutableTypes.ts:
     schema: ./dev-test/test-schema/schema.json
     config:
       imutableTypes: true
     plugins:
-      - typescript-common
-      - typescript-server
+      - typescript
   ./dev-test/githunt/graphql-declared-modules.d.ts:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
@@ -56,148 +51,109 @@ generates:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
     plugins:
-      - typescript-common
-      - typescript-client
+      - typescript
+      - typescript-documents
   ./dev-test/githunt/types.enumsAsTypes.ts:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
     config:
       enumsAsTypes: true
     plugins:
-      - typescript-common
-      - typescript-client
+      - typescript
+      - typescript-documents
   ./dev-test/githunt/types.d.ts:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
     config:
       enumsAsTypes: true
     plugins:
-      - typescript-common
-      - typescript-client
+      - typescript
+      - typescript-documents
   ./dev-test/githunt/types.avoidOptionals.ts:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
     config:
       avoidOptionals: true
     plugins:
-      - typescript-common
-      - typescript-client
+      - typescript
+      - typescript-documents
   ./dev-test/githunt/types.immutableTypes.ts:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
     config:
       immutableTypes: true
     plugins:
-      - typescript-common
-      - typescript-client
-  ./dev-test/githunt/types.noNamespaces.ts:
-    schema: ./dev-test/githunt/schema.json
-    documents: ./dev-test/githunt/**/*.graphql
-    config:
-      noNamespaces: true
-    plugins:
-      - typescript-common
-      - typescript-client
+      - typescript
+      - typescript-documents
   ./dev-test/githunt/types.reactApollo.tsx:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
     plugins:
       - add: // tslint:disable
-      - typescript-common
-      - typescript-client
+      - typescript
+      - typescript-documents
       - typescript-react-apollo
-  ./dev-test/githunt/types.reactApollo.noNamespaces.tsx:
+  ./dev-test/githunt/types.reactApollo.hooks.tsx:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
-    config:
-      noNamespaces: true
     plugins:
       - add: // tslint:disable
-      - typescript-common
-      - typescript-client
+      - typescript
+      - typescript-documents
       - typescript-react-apollo
+    config:
+      withHooks: true
+  ./dev-test/githunt/types.stencilApollo.tsx:
+    schema: ./dev-test/githunt/schema.json
+    documents: ./dev-test/githunt/**/*.graphql
+    plugins:
+      - add: // tslint:disable
+      - typescript
+      - typescript-documents
+      - typescript-stencil-apollo
+  ./dev-test/githunt/types.stencilApollo.class.tsx:
+    schema: ./dev-test/githunt/schema.json
+    documents: ./dev-test/githunt/**/*.graphql
+    plugins:
+      - add: // tslint:disable
+      - typescript
+      - typescript-documents
+      - typescript-stencil-apollo
+    config: 
+      componentType: class
   ./dev-test/star-wars/types.ts:
     schema: ./dev-test/star-wars/schema.json
     documents: ./dev-test/star-wars/**/*.graphql
     plugins:
-      - typescript-common
-      - typescript-client
-  ./dev-test/star-wars/types.uppercase-enums.ts:
-    schema: ./dev-test/star-wars/schema.json
-    plugins:
-      - add: // tslint:disable
-      - typescript-common
-      - typescript-server
-    config:
-      namingConvention:
-        default: change-case#pascalCase
-        enumValues: change-case#upperCase
+      - typescript
+      - typescript-documents
   ./dev-test/star-wars/types.d.ts:
     schema: ./dev-test/star-wars/schema.json
     documents: ./dev-test/star-wars/**/*.graphql
     config:
       enumsAsTypes: true
     plugins:
-      - typescript-common
-      - typescript-client
+      - typescript
+      - typescript-documents
   ./dev-test/star-wars/types.avoidOptionals.ts:
     schema: ./dev-test/star-wars/schema.json
     documents: ./dev-test/star-wars/**/*.graphql
     config:
       avoidOptionals: true
     plugins:
-      - typescript-common
-      - typescript-client
+      - typescript
+      - typescript-documents
   ./dev-test/star-wars/types.immutableTypes.ts:
     schema: ./dev-test/star-wars/schema.json
     documents: ./dev-test/star-wars/**/*.graphql
     config:
       immutableTypes: true
     plugins:
-      - typescript-common
-      - typescript-client
-  ./dev-test/star-wars/types.noNamespaces.ts:
-    schema: ./dev-test/star-wars/schema.json
-    documents: ./dev-test/star-wars/**/*.graphql
-    config:
-      immutableTypes: true
-    plugins:
-      - typescript-common
-      - typescript-client
+      - typescript
+      - typescript-documents
   ./dev-test/star-wars/types.skipSchema.ts:
     schema: ./dev-test/star-wars/schema.json
     documents: ./dev-test/star-wars/**/*.graphql
     plugins:
-      - typescript-common
-      - typescript-client
-  ./dev-test/test-message/types.reactApollo.noNamespaces.tsx:
-    schema: ./dev-test/test-message/schema.graphql
-    documents: ./dev-test/test-message/documents.ts
-    config:
-      noNamespaces: true
-    plugins:
-      - add: // tslint:disable
-      - typescript-common
-      - typescript-client
-      - typescript-react-apollo
-  ./dev-test/test-message/types.stencilApollo.noNamespaces.tsx:
-    schema: ./dev-test/test-message/schema.graphql
-    documents: ./dev-test/test-message/documents.ts
-    config:
-      noNamespaces: true
-    plugins:
-      - add: // tslint:disable
-      - typescript-common
-      - typescript-client
-      - typescript-stencil-apollo
-  ./dev-test/test-mongodb/types.ts:
-    schema: ./dev-test/test-mongodb/schema.graphql
-    config:
-      scalars:
-        Date: Date
-    plugins:
-      - add: // tslint:disable
-      - typescript-common
-      - typescript-server
-      - typescript-mongodb
-      - typescript-resolvers
+      - typescript
+      - typescript-documents
