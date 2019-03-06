@@ -14,8 +14,8 @@ interface PluginOption {
 }
 
 enum Tags {
-  client = 'Client',
-  server = 'Server',
+  browser = 'Browser',
+  node = 'Node',
   typescript = 'TypeScript',
   angular = 'Angular',
   react = 'React'
@@ -26,7 +26,7 @@ function log(...msgs: string[]) {
   console.log(...msgs);
 }
 
-const plugins: Array<PluginOption> = [
+export const plugins: Array<PluginOption> = [
   {
     name: `TypeScript Common ${chalk.italic('(required by client and server plugins)')}`,
     package: 'graphql-codegen-typescript-common',
@@ -37,19 +37,19 @@ const plugins: Array<PluginOption> = [
     name: `TypeScript Client ${chalk.italic('(operations and fragments)')}`,
     package: 'graphql-codegen-typescript-client',
     value: 'typescript-client',
-    available: tags => tags.some(tag => [Tags.client].includes(tag))
+    available: tags => tags.some(tag => [Tags.browser].includes(tag))
   },
   {
     name: `TypeScript Server ${chalk.italic('(GraphQL Schema)')}`,
     package: 'graphql-codegen-typescript-server',
     value: 'typescript-server',
-    available: tags => tags.some(tag => [Tags.client, Tags.server].includes(tag))
+    available: tags => tags.some(tag => [Tags.browser, Tags.node].includes(tag))
   },
   {
     name: `TypeScript Resolvers ${chalk.italic('(strongly typed resolve functions)')}`,
     package: 'graphql-codegen-typescript-resolvers',
     value: 'typescript-resolvers',
-    available: tags => tags.some(tag => [Tags.server].includes(tag))
+    available: tags => tags.some(tag => [Tags.node].includes(tag))
   },
   {
     name: `TypeScript Apollo Angular ${chalk.italic('(GQL services)')}`,
@@ -77,23 +77,23 @@ const plugins: Array<PluginOption> = [
     name: `TypeScript MongoDB ${chalk.italic('(typed MongoDB objects)')}`,
     package: 'graphql-codegen-typescript-mongodb',
     value: 'typescript-mongodb',
-    available: tags => tags.includes(Tags.server)
+    available: tags => tags.includes(Tags.node)
   },
   {
     name: `TypeScript GraphQL files modules ${chalk.italic('(declarations for .graphql files)')}`,
     package: 'graphql-codegen-typescript-graphql-files-modules',
     value: 'typescript-graphql-files-modules',
-    available: tags => tags.includes(Tags.client)
+    available: tags => tags.includes(Tags.browser)
   },
   {
     name: `Introspection Fragment Matcher ${chalk.italic('(for Apollo Client)')}`,
     package: 'graphql-codegen-fragment-matcher',
     value: 'fragment-matcher',
-    available: tags => tags.includes(Tags.client)
+    available: tags => tags.includes(Tags.browser)
   }
 ];
 
-interface Answers {
+export interface Answers {
   targets: Tags[];
   config: string;
   plugins: PluginOption[];
@@ -125,25 +125,25 @@ export async function init() {
         {
           name: 'Backend - API or server',
           key: 'backend',
-          value: [Tags.server],
-          checked: possibleTargets.Server
+          value: [Tags.node],
+          checked: possibleTargets.Node
         },
         {
           name: 'Application built with Angular',
           key: 'angular',
-          value: [Tags.angular, Tags.client],
+          value: [Tags.angular, Tags.browser],
           checked: possibleTargets.Angular
         },
         {
           name: 'Application built with React',
           key: 'react',
-          value: [Tags.react, Tags.client],
+          value: [Tags.react, Tags.browser],
           checked: possibleTargets.React
         },
         {
           name: 'Application built with other framework or vanilla JS',
           key: 'client',
-          value: [Tags.client],
+          value: [Tags.browser],
           checked: false
         }
       ]
@@ -165,7 +165,7 @@ export async function init() {
         // I can't find an API in Inquirer that would do that
         answers.targets = normalizeTargets(answers.targets);
 
-        return answers.targets.includes(Tags.client);
+        return answers.targets.includes(Tags.browser);
       },
       default: '**/*.graphql',
       validate: (str: string) => str.length > 0
@@ -223,7 +223,7 @@ export async function init() {
   const config: Types.Config = {
     overwrite: true,
     schema: answers.schema,
-    documents: answers.targets.includes(Tags.client) ? answers.documents : null,
+    documents: answers.targets.includes(Tags.browser) ? answers.documents : null,
     generates: {
       [answers.output]: {
         plugins: answers.plugins.map(p => p.value)
@@ -315,7 +315,7 @@ function writePackage(answers: Answers, configLocation: string) {
   writeFileSync(pkgPath, JSON.stringify(pkg, null, indent));
 }
 
-async function guessTargets(): Promise<Record<Tags, boolean>> {
+export async function guessTargets(): Promise<Record<Tags, boolean>> {
   const pkg = JSON.parse(
     readFileSync(resolve(process.cwd(), 'package.json'), {
       encoding: 'utf-8'
@@ -329,8 +329,8 @@ async function guessTargets(): Promise<Record<Tags, boolean>> {
   return {
     [Tags.angular]: isAngular(dependencies),
     [Tags.react]: isReact(dependencies),
-    [Tags.client]: false,
-    [Tags.server]: false,
+    [Tags.browser]: false,
+    [Tags.node]: false,
     [Tags.typescript]: isTypescript(dependencies)
   };
 }
