@@ -1,4 +1,4 @@
-import 'graphql-codegen-core/dist/testing';
+import 'graphql-codegen-testing';
 import gql from 'graphql-tag';
 import { plugin, addToSchema } from '../src/index';
 import { parse, GraphQLSchema, buildClientSchema, buildSchema, extendSchema } from 'graphql';

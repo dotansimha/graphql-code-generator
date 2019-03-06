@@ -1,4 +1,4 @@
-import 'graphql-codegen-core/dist/testing';
+import 'graphql-codegen-testing';
 import { parse, visit, buildClientSchema } from 'graphql';
 import { FlowDocumentsVisitor } from '../src/visitor';
 import { makeExecutableSchema } from 'graphql-tools';

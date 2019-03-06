@@ -1,4 +1,4 @@
-import 'graphql-codegen-core/dist/testing';
+import 'graphql-codegen-testing';
 import { makeExecutableSchema } from 'graphql-tools';
 import { plugin } from '../src';
 import { plugin as tsPlugin } from '../../typescript/src/index';

@@ -1,7 +1,7 @@
-import 'graphql-codegen-core/dist/testing';
+import 'graphql-codegen-testing';
 import { buildASTSchema } from 'graphql';
 import gql from 'graphql-tag';
-import { plugin, validate } from '../dist';
+import { plugin, validate } from '../src';
 
 const schema = buildASTSchema(gql`
   type Character {

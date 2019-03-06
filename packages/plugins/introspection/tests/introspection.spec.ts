@@ -1,6 +1,6 @@
 import { makeExecutableSchema } from 'graphql-tools';
 import { introspectionFromSchema } from 'graphql';
-import { plugin } from '../dist';
+import { plugin } from '../src';
 
 describe('Introspection template', () => {
   it('should output a JSON file', async () => {
