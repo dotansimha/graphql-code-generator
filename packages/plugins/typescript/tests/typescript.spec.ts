@@ -79,6 +79,99 @@ describe('TypeScript', () => {
     `);
       validateTs(result);
     });
+
+    it('Should use custom namingConvention for enums (keep)', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        enum Foo {
+          YES
+          NO
+        }
+        type MyType {
+          foo(a: String!, b: String, c: [String], d: [Int!]!): Foo
+        }
+      `);
+      const result = await plugin(
+        schema,
+        [],
+        {
+          namingConvention: {
+            typeNames: 'change-case#lowerCase',
+            enumValues: 'keep'
+          }
+        },
+        { outputFile: '' }
+      );
+
+      expect(result).toBeSimilarStringTo(`
+        export enum foo {
+          YES = 'YES', 
+          NO = 'NO'
+        };
+      `);
+
+      expect(result).toBeSimilarStringTo(`
+        export type mytypefooargs = {
+          a: string,
+          b?: Maybe<string>,
+          c?: Maybe<Array<Maybe<string>>>,
+          d: Array<number>
+        };
+    `);
+      expect(result).toBeSimilarStringTo(`
+        export type mytype = {
+          foo?: Maybe<foo>,
+        };
+    `);
+
+      validateTs(result);
+    });
+
+    it('Should use custom namingConvention for enums', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        enum Foo {
+          YES
+          NO
+        }
+        type MyType {
+          foo(a: String!, b: String, c: [String], d: [Int!]!): Foo
+        }
+      `);
+      const result = await plugin(
+        schema,
+        [],
+        {
+          namingConvention: {
+            typeNames: 'keep',
+            enumValues: 'change-case#lowerCase'
+          }
+        },
+        { outputFile: '' }
+      );
+
+      expect(result).toBeSimilarStringTo(`
+        export enum Foo {
+          yes = 'YES', 
+          no = 'NO'
+        };
+      `);
+
+      expect(result).toBeSimilarStringTo(`
+        export type MyTypefooArgs = {
+          a: string,
+          b?: Maybe<string>,
+          c?: Maybe<Array<Maybe<string>>>,
+          d: Array<number>
+        };
+      `);
+
+      expect(result).toBeSimilarStringTo(`
+        export type MyType = {
+          foo?: Maybe<Foo>,
+        };
+      `);
+
+      validateTs(result);
+    });
   });
 
   describe('Object (type)', () => {

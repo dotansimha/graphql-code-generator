@@ -18,6 +18,7 @@ import {
 import { getBaseType, quoteIfNeeded } from './utils';
 import { ScalarsMap, ConvertNameFn } from './types';
 import { GraphQLObjectType, GraphQLNonNull, GraphQLList, isNonNullType, isListType } from 'graphql';
+import { BaseVisitorConvertOptions } from './base-visitor';
 
 export type PrimitiveField = string;
 export type PrimitiveAliasedFields = { alias: string; fieldName: string };
@@ -53,7 +54,7 @@ export class SelectionSetToObject {
   constructor(
     protected _scalars: ScalarsMap,
     protected _schema: GraphQLSchema,
-    protected _convertName: ConvertNameFn,
+    protected _convertName: ConvertNameFn<BaseVisitorConvertOptions>,
     protected _addTypename: boolean,
     protected _parentSchemaType?: GraphQLNamedType,
     protected _selectionSet?: SelectionSetNode
@@ -149,7 +150,9 @@ export class SelectionSetToObject {
       }
     }
 
-    const parentName = this._convertName(this._parentSchemaType.name, true);
+    const parentName = this._convertName(this._parentSchemaType.name, {
+      useTypesPrefix: true
+    });
     const typeName = this._addTypename || this._queriedForTypename ? this.buildTypeNameField() : null;
     const baseFields = this.buildPrimitiveFields(parentName, this._primitiveFields);
     const aliasBaseFields = this.buildAliasedPrimitiveFields(parentName, this._primitiveAliasedFields);
@@ -227,7 +230,12 @@ export class SelectionSetToObject {
     }
 
     return quoteIfNeeded(
-      fragmentsSpread.map(fragmentName => this._convertName(fragmentName + 'Fragment', true)),
+      fragmentsSpread.map(fragmentName =>
+        this._convertName(fragmentName, {
+          suffix: 'Fragment',
+          useTypesPrefix: true
+        })
+      ),
       ' & '
     );
   }
