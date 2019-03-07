@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import logUpdate from 'log-update';
 import indentString from 'indent-string';
-import logSymbol from 'log-symbols';
+import * as logSymbol from 'log-symbols';
 import UpdateRenderer from 'listr-update-renderer';
 import { stripIndent } from 'common-tags';
 import { ListrTask } from 'listr';

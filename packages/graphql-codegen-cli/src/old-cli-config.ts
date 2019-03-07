@@ -3,8 +3,8 @@ import { Types } from 'graphql-codegen-core';
 import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 import { cliError } from './utils/cli-error';
-import YAML from 'json-to-pretty-yaml';
 import { isNode } from './utils/is-browser';
+import { stringify } from 'json-to-pretty-yaml';
 
 export interface CLIOptions {
   schema?: string;
@@ -253,7 +253,7 @@ export function createConfigFromOldCli(options: CLIOptions): Types.Config {
   console['warn'](`
   Note: You are using the old API of graphql-code-generator. You can easily migrate by creating "codegen.yml" file in your project with the following content:
   
-${YAML.stringify(configObject)}
+${stringify(configObject)}
 
   Then, make sure that your script is executing just "gql-gen" (without any cli flags).
   `);

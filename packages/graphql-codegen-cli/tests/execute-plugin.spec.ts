@@ -1,5 +1,5 @@
 import { parse } from 'graphql';
-import typescriptClientPlugin from 'graphql-codegen-typescript-client';
+import * as typescriptClientPlugin from 'graphql-codegen-typescript-client';
 import { executePlugin } from '../src/execute-plugin';
 
 describe('executePlugin', () => {

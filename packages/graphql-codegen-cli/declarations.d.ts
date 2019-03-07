@@ -1,7 +1,7 @@
 declare function isValidPath(path: string): boolean;
 
 declare module 'is-valid-path' {
-  export = isValidPath;
+  export default isValidPath;
 }
 
 declare module 'listr-update-renderer';

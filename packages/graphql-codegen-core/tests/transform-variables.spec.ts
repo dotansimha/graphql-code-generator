@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 import { GraphQLSchema, buildClientSchema } from 'graphql';
-import fs from 'fs';
+import * as fs from 'fs';
 import { transformVariables } from '../src/operations/transform-variables';
 
 describe('transformVariables', () => {

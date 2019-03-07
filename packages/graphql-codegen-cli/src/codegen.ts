@@ -66,10 +66,12 @@ export async function executeCodegen(config: Types.Config): Promise<FileOutput[]
   let rootDocuments: Types.OperationDocument[];
   let generates: { [filename: string]: Types.ConfiguredOutput } = {};
 
-  function normalize() {
+  async function normalize() {
     /* Load Require extensions */
     const requireExtensions = normalizeInstanceOrArray<string>(config.require);
-    requireExtensions.forEach(mod => require(mod));
+    for (const mod of requireExtensions) {
+      await import(mod);
+    }
 
     /* Root templates-config */
     rootConfig = config.config || {};

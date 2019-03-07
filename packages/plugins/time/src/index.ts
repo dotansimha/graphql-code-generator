@@ -1,6 +1,6 @@
 import { GraphQLSchema } from 'graphql';
 import { PluginFunction, DocumentFile } from 'graphql-codegen-core';
-import moment from 'moment';
+import * as moment from 'moment';
 
 export type TimePluginConfig = string | { format: string; message: string };
 

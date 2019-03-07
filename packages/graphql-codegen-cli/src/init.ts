@@ -1,10 +1,10 @@
-import inquirer from 'inquirer';
+import * as inquirer from 'inquirer';
 import chalk from 'chalk';
 import { Types } from 'graphql-codegen-core';
 import { resolve, relative } from 'path';
 import { writeFileSync, readFileSync } from 'fs';
-import YAML from 'json-to-pretty-yaml';
-import detectIndent from 'detect-indent';
+import * as detectIndent from 'detect-indent';
+import { stringify } from 'json-to-pretty-yaml';
 
 interface PluginOption {
   name: string;
@@ -266,7 +266,7 @@ function addIntrospection(config: Types.Config) {
 // Parses config and writes it to a file
 function writeConfig(answers: Answers, config: Types.Config) {
   const ext = answers.config.toLocaleLowerCase().endsWith('.json') ? 'json' : 'yml';
-  const content = ext === 'json' ? JSON.stringify(config) : YAML.stringify(config);
+  const content = ext === 'json' ? JSON.stringify(config) : stringify(config);
   const fullPath = resolve(process.cwd(), answers.config);
   const relativePath = relative(process.cwd(), answers.config);
 

@@ -1,4 +1,4 @@
-import fs from 'fs';
+import * as fs from 'fs';
 import { fileExists } from './file-exists';
 
 export default {

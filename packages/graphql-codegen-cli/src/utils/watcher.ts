@@ -3,7 +3,7 @@ import { FileOutput, getLogger, Types, debugLog } from 'graphql-codegen-core';
 import { normalizeInstanceOrArray, normalizeOutputParam } from '../helpers';
 import isValidPath from 'is-valid-path';
 import isGlob from 'is-glob';
-import logSymbols from 'log-symbols';
+import * as logSymbols from 'log-symbols';
 
 function log(msg: string) {
   // double spaces to inline the message with Listr
@@ -51,7 +51,7 @@ export const createWatcher = (config: Types.Config, onNext: (result: FileOutput[
   let watcher: any;
 
   const runWatcher = async () => {
-    const chokidar = require('chokidar');
+    const chokidar = await import('chokidar');
     emitWatching();
 
     watcher = chokidar.watch(files, {

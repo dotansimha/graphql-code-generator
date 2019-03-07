@@ -1,4 +1,4 @@
-import path from 'path';
+import * as path from 'path';
 
 const EXTENSION_TO_PARSER = {
   ts: 'typescript',
@@ -24,7 +24,7 @@ export async function prettify(filePath: string, content: string): Promise<strin
     const prettierPath = require.resolve('prettier');
 
     if (prettierPath) {
-      const prettier = require('prettier');
+      const prettier = await import('prettier');
       const fileExtension = path.extname(filePath).slice(1) as keyof typeof EXTENSION_TO_PARSER;
       const parser = EXTENSION_TO_PARSER[fileExtension];
       const { ignored } = await prettier.getFileInfo(filePath, { ignorePath: '.prettierignore' });

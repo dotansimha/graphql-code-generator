@@ -1,6 +1,6 @@
-import ts from 'typescript';
-import fs from 'fs';
-import path from 'path';
+import * as ts from 'typescript';
+import * as fs from 'fs';
+import * as path from 'path';
 
 export function validateTs(
   contents: string,

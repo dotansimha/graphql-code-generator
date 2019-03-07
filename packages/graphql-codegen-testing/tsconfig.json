@@ -1,9 +1,8 @@
 {
   "compilerOptions": {
-    "esModuleInterop": true,
     "importHelpers": true,
     "experimentalDecorators": true,
-    "module": "es2015",
+    "module": "esnext",
     "target": "es2018",
     "lib": ["es6", "esnext", "es2015"],
     "suppressImplicitAnyIndexErrors": true,

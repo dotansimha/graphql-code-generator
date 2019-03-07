@@ -3,8 +3,8 @@ import { Types, DocumentFile } from 'graphql-codegen-core';
 import { GraphQLSchema, DocumentNode } from 'graphql';
 import { DetailedError } from './errors';
 
-function getCustomLoaderByPath(path: string): any {
-  const requiredModule = require(path);
+async function getCustomLoaderByPath(path: string): Promise<any> {
+  const requiredModule = await import(path);
 
   if (requiredModule && requiredModule.default && typeof requiredModule.default === 'function') {
     return requiredModule.default;
@@ -32,7 +32,7 @@ export const loadSchema = async (
     const loaderString = defObject.loader;
 
     try {
-      const customSchemaLoader = getCustomLoaderByPath(loaderString);
+      const customSchemaLoader = await getCustomLoaderByPath(loaderString);
 
       if (customSchemaLoader) {
         const returnedSchema = await customSchemaLoader(pointToSchema, config, defObject);
@@ -110,7 +110,7 @@ export const loadDocuments = async (
     const loaderString = defObject.loader;
 
     try {
-      const customDocumentLoader = getCustomLoaderByPath(loaderString);
+      const customDocumentLoader = await getCustomLoaderByPath(loaderString);
 
       if (customDocumentLoader) {
         const returned = await customDocumentLoader(pointToDoc, config);

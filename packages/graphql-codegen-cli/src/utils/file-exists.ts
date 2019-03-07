@@ -1,4 +1,4 @@
-import fs from 'fs';
+import * as fs from 'fs';
 
 export function fileExists(filePath: string): boolean {
   try {
