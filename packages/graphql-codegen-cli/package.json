@@ -61,7 +61,7 @@
     "graphql-codegen-core": "0.18.0",
     "graphql-config": "2.2.1",
     "graphql-import": "0.7.1",
-    "graphql-tag-pluck": "0.6.0",
+    "graphql-tag-pluck": "0.7.0",
     "graphql-toolkit": "0.2.0",
     "graphql-tools": "4.0.4",
     "indent-string": "3.2.0",
