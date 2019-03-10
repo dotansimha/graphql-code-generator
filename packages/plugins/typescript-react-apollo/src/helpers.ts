@@ -138,7 +138,7 @@ export const getImports = (operationType: string, options: Handlebars.HelperOpti
   let imports = '';
   if (typeof config.gqlImport === 'undefined' || typeof config.gqlImport === 'string') {
     const gqlImport = parseImport(config.gqlImport || 'graphql-tag');
-    let imports = `
+    imports += `
       import ${
         gqlImport.propName ? `{ ${gqlImport.propName === 'gql' ? 'gql' : `${gqlImport.propName} as gql`} }` : 'gql'
       } from '${gqlImport.moduleName}';
