@@ -83,7 +83,11 @@ export const gql = convert => (operation: Operation, options: Handlebars.HelperO
     ${includeFragments(transformFragments(convert)(operation.document, options))}
   `;
 
-  return config.gqlImport ? JSON.stringify(gqlTag(doc)) : 'gql`' + doc + '`';
+  if (typeof config.gqlImport === 'boolean' && !config.gqlImport) {
+    return JSON.stringify(gqlTag(doc));
+  }
+
+  return 'gql`' + doc + '`';
 };
 
 function includeFragments(fragments: string[]): string {
@@ -131,12 +135,15 @@ export const hooksNamespace = (operationType: string): string => {
 
 export const getImports = (operationType: string, options: Handlebars.HelperOptions) => {
   const config = options.data.root.config || {};
-  const gqlImport = parseImport(config.gqlImport || 'graphql-tag');
-  let imports = `
-    import ${
-      gqlImport.propName ? `{ ${gqlImport.propName === 'gql' ? 'gql' : `${gqlImport.propName} as gql`} }` : 'gql'
-    } from '${gqlImport.moduleName}';
-  `;
+  let imports = '';
+  if (typeof config.gqlImport === 'undefined' || typeof config.gqlImport === 'string') {
+    const gqlImport = parseImport(config.gqlImport || 'graphql-tag');
+    let imports = `
+      import ${
+        gqlImport.propName ? `{ ${gqlImport.propName === 'gql' ? 'gql' : `${gqlImport.propName} as gql`} }` : 'gql'
+      } from '${gqlImport.moduleName}';
+    `;
+  }
   if (!config.noComponents) {
     imports += `import * as React from 'react';\n`;
   }
