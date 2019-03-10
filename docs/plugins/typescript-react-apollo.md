@@ -47,9 +47,10 @@ Or if you prefer:
 
 ## Configuration
 
-#### `gqlImport` (default value: `import gql from 'graphql-tag'`)
+#### `gqlImport` (default value: `graphql-tag`)
 
 Customize from which module will `gql` be imported from. This is useful if you want to use modules other than `graphql-tag`, e.g. `graphql.macro`. You can also control the imported GraphQL-parse function identifier e.g. `gatsby#graphql`, which will result in `import { graphql as gql } from 'gatsby'`.
+If you specify a value of this option as `false` GraphQL queries will be compiled to GraphQL AST at generate-time.
 
 #### `noHOC` (default value: `false`)
 
