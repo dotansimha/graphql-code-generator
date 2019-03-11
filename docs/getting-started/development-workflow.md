@@ -23,7 +23,7 @@ If you wish to run the codegen before starting your server/app, you can use `pre
 
 This way, the codegen will generate the output according to your configuration before each time you run `dev` or `start` scripts.
 
-It's alse useful to run the codegen during your continuous integration flow and make sure that you code always compiles with the generated output, this way you can detect breaking changes in your GraphQL schema and GraphQL documents.
+It's also useful to run the codegen during your continuous integration flow and make sure that you code always compiles with the generated output, this way you can detect breaking changes in your GraphQL schema and GraphQL documents.
 
 ### Watch Mode
 
