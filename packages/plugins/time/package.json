@@ -5,24 +5,19 @@
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
   "scripts": {
-    "prepublishOnly": "yarn build",
     "build": "tsc"
   },
   "dependencies": {
-    "esm": "3.2.11",
-    "tslib": "1.9.3",
-    "moment": "2.24.0",
     "graphql-codegen-core": "0.18.0",
-    "graphql-codegen-plugin-helpers": "0.18.0"
+    "moment": "2.24.0"
   },
   "devDependencies": {
-    "graphql-codegen-testing": "0.18.0",
-    "jest": "24.1.0",
-    "ts-jest": "24.0.0",
+    "graphql": "14.1.1",
     "typescript": "3.3.3333",
-    "flow-bin": "0.94.0",
-    "flow-parser": "0.94.0",
-    "graphql": "14.1.1"
+    "graphql-tag": "2.10.1"
+  },
+  "peerDependencies": {
+    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0"
   },
   "main": "cjs/index.js",
   "module": "dist/index.js",

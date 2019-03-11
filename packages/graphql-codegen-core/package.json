@@ -7,11 +7,7 @@
   "scripts": {
     "clean": "rimraf ./dist",
     "lint": "tslint src/**/*.ts",
-    "prebuild": "yarn clean && yarn lint",
     "build": "tsc",
-    "prestart": "yarn build",
-    "start": "cd dist && node gql-gen.js",
-    "debug": "cd dist && node --inspect --debug-brk gql-gen.js",
     "test": "jest --no-cache --verbose --runInBand"
   },
   "repository": {

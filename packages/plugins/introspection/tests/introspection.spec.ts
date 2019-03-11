@@ -16,7 +16,7 @@ describe('Introspection template', () => {
           `
     });
 
-    const content = await plugin(schema);
+    const content = await plugin(schema, [], {}, { outputFile: '' });
     const introspection = JSON.stringify(introspectionFromSchema(schema, { descriptions: true }));
     expect(introspection).toEqual(content);
   });

@@ -5,7 +5,6 @@
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
   "scripts": {
-    "prepublishOnly": "yarn build",
     "build": "tsc"
   },
   "dependencies": {

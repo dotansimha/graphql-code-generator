@@ -5,7 +5,6 @@
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
   "scripts": {
-    "prepublishOnly": "yarn build",
     "build": "tsc"
   },
   "dependencies": {
@@ -15,40 +14,13 @@
     "graphql-codegen-plugin-helpers": "0.18.0"
   },
   "devDependencies": {
-    "jest": "24.1.0",
-    "ts-jest": "24.0.0",
-    "typescript": "3.3.3333",
-    "flow-bin": "0.94.0",
-    "flow-parser": "0.94.0",
     "graphql": "14.1.1",
-    "graphql-codegen-testing": "0.18.0"
+    "typescript": "3.3.3333"
   },
   "main": "cjs/index.js",
   "module": "dist/index.js",
   "typings": "dist/index.d.ts",
   "typescript": {
     "definition": "dist/index.d.ts"
-  },
-  "jest": {
-    "globals": {
-      "ts-jest": {
-        "enableTsDiagnostics": false,
-        "tsConfig": {
-          "esModuleInterop": true
-        }
-      }
-    },
-    "transform": {
-      "^.+\\.tsx?$": "ts-jest"
-    },
-    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "jsx",
-      "json",
-      "node"
-    ]
   }
 }
