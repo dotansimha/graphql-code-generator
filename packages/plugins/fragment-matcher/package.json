@@ -5,19 +5,22 @@
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
   "scripts": {
-    "prepublishOnly": "yarn build",
-    "test": "codegen-templates-scripts test",
-    "build": "codegen-templates-scripts build",
-    "pretest": "yarn build"
+    "build": "tsc",
+    "pretest": "yarn build",
+    "test": "jest"
+  },
+  "dependencies": {
+    "graphql-codegen-core": "0.18.0"
+  },
+  "devDependencies": {
+    "graphql": "14.1.1",
+    "jest": "24.1.0",
+    "ts-jest": "24.0.0",
+    "typescript": "3.3.3333",
+    "graphql-tag": "2.10.1"
   },
   "peerDependencies": {
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0"
-  },
-  "devDependencies": {
-    "codegen-templates-scripts": "0.18.0",
-    "graphql": "14.1.1",
-    "graphql-codegen-core": "0.18.0",
-    "graphql-tag": "2.10.1"
   },
   "main": "./dist/index.js",
   "typings": "dist/index.d.ts",

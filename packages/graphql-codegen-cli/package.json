@@ -12,11 +12,8 @@
   "scripts": {
     "clean": "rimraf ./dist",
     "lint": "tslint src/**/*.ts",
-    "prebuild": "yarn clean && yarn lint",
+    "prebuild": "yarn clean",
     "build": "tsc",
-    "prestart": "yarn build",
-    "start": "cd dist && node index.js",
-    "debug": "cd dist && node --inspect --debug-brk index.js",
     "test": "jest --no-cache --verbose --runInBand"
   },
   "keywords": [
