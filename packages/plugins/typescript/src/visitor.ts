@@ -12,8 +12,11 @@ export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
   maybeValue: string;
 }
 
-export class TsVisitor extends BaseTypesVisitor<TypeScriptPluginConfig, TypeScriptPluginParsedConfig> {
-  constructor(pluginConfig: TypeScriptPluginConfig = {}) {
+export class TsVisitor<
+  TRawConfig extends TypeScriptPluginConfig = TypeScriptPluginConfig,
+  TParsedConfig extends TypeScriptPluginParsedConfig = TypeScriptPluginParsedConfig
+> extends BaseTypesVisitor<TRawConfig, TParsedConfig> {
+  constructor(pluginConfig: TRawConfig, additionalConfig: Partial<TParsedConfig> = {}) {
     super(
       pluginConfig,
       {
@@ -21,8 +24,9 @@ export class TsVisitor extends BaseTypesVisitor<TypeScriptPluginConfig, TypeScri
         maybeValue: pluginConfig.maybeValue || 'T | null',
         constEnums: pluginConfig.constEnums || false,
         enumsAsTypes: pluginConfig.enumsAsTypes || false,
-        immutableTypes: pluginConfig.immutableTypes || false
-      } as TypeScriptPluginParsedConfig,
+        immutableTypes: pluginConfig.immutableTypes || false,
+        ...(additionalConfig || {})
+      } as TParsedConfig,
       null
     );
 

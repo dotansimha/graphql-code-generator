@@ -7,7 +7,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dotansimha/graphql-codegen.git"
+    "url": "git+https://github.com/dotansimha/graphql-code-generator.git"
   },
   "scripts": {
     "clean": "rimraf ./dist",
@@ -63,8 +63,8 @@
     "graphql-codegen-core": "0.18.0",
     "graphql-config": "2.2.1",
     "graphql-import": "0.7.1",
-    "graphql-tag-pluck": "0.6.0",
-    "graphql-toolkit": "0.2.0",
+    "graphql-tag-pluck": "0.7.0",
+    "graphql-toolkit": "0.2.4",
     "graphql-tools": "4.0.4",
     "indent-string": "3.2.0",
     "inquirer": "6.2.2",

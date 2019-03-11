@@ -28,7 +28,8 @@
     "typescript": "3.3.3333",
     "flow-bin": "0.94.0",
     "flow-parser": "0.94.0",
-    "graphql": "14.1.1"
+    "graphql": "14.1.1",
+    "@types/node": "10.12.30"
   },
   "main": "cjs/index.js",
   "module": "dist/index.js",
