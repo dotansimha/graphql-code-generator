@@ -7,7 +7,6 @@
   "scripts": {
     "prepublishOnly": "yarn build",
     "build": "tsc",
-    "pretest": "yarn build",
     "test": "jest"
   },
   "dependencies": {
@@ -33,7 +32,10 @@
   "jest": {
     "globals": {
       "ts-jest": {
-        "enableTsDiagnostics": false
+        "enableTsDiagnostics": false,
+        "tsConfig": {
+          "esModuleInterop": true
+        }
       }
     },
     "transform": {

@@ -39,7 +39,10 @@
   "jest": {
     "globals": {
       "ts-jest": {
-        "enableTsDiagnostics": false
+        "enableTsDiagnostics": false,
+        "tsConfig": {
+          "esModuleInterop": true
+        }
       }
     },
     "transform": {

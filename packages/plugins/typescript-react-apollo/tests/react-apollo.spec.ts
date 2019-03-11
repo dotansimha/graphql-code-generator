@@ -55,7 +55,7 @@ describe('React Apollo', () => {
   });
 
   describe('Imports', () => {
-    it('should imports React and ReactApollo dependencies', async () => {
+    it('should import React and ReactApollo dependencies', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
       const content = await plugin(
         schema,
@@ -105,7 +105,7 @@ describe('React Apollo', () => {
       await validateTypeScript(content, schema, docs, {});
     });
 
-    it('should imports ReactApolloHooks dependencies', async () => {
+    it('should import ReactApolloHooks dependencies', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
       const content = await plugin(
         schema,
@@ -120,7 +120,7 @@ describe('React Apollo', () => {
       await validateTypeScript(content, schema, docs, {});
     });
 
-    it('should imports ReactApolloHooks from hooksImportFrom config option', async () => {
+    it('should import ReactApolloHooks from hooksImportFrom config option', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
       const content = await plugin(
         schema,
@@ -135,7 +135,7 @@ describe('React Apollo', () => {
       await validateTypeScript(content, schema, docs, {});
     });
 
-    it('should skip import * as React and ReactApollo if only hooks are used', async () => {
+    it('should skip import React and ReactApollo if only hooks are used', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
       const content = await plugin(
         schema,
