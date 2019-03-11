@@ -4,7 +4,7 @@ import { parse, GraphQLSchema, buildClientSchema } from 'graphql';
 import gql from 'graphql-tag';
 import { DocumentFile } from 'graphql-codegen-core';
 import { plugin as tsPlugin } from '../../typescript/src/index';
-import { plugin as tsDocumentsPlugin } from '../../typescript-documents/src/index';
+import { plugin as tsDocumentsPlugin } from '../../typescript-operations/src/index';
 import { validateTs } from '../../typescript/tests/validate';
 import { readFileSync } from 'fs';
 

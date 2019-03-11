@@ -5,7 +5,7 @@ import { makeExecutableSchema } from 'graphql-tools';
 import { validateFlow } from './validate-flow';
 import { readFileSync } from 'fs';
 
-describe('Flow Documents Plugin', () => {
+describe('Flow Operations Plugin', () => {
   const gitHuntSchema = buildClientSchema(JSON.parse(readFileSync('../../../dev-test/githunt/schema.json', 'utf-8')));
   const schema = makeExecutableSchema({
     typeDefs: `
