@@ -1,6 +1,5 @@
 // tslint:disable
 type Maybe<T> = T | null;
-[object Object]
 export type QueryRoot = {
   allUsers: Array<Maybe<User>>,
   userById?: Maybe<User>,

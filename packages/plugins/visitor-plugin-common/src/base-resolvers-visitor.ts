@@ -341,4 +341,8 @@ export class BaseResolversVisitor<
       .withBlock(indent(`__resolveType: TypeResolveFn<${implementingTypes.map(name => `'${name}'`).join(' | ')}>`))
       .string;
   }
+
+  SchemaDefinition() {
+    return null;
+  }
 }
