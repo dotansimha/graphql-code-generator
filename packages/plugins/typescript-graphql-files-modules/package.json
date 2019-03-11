@@ -6,8 +6,7 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc",
-    "test": "jest",
-    "pretest": "yarn build"
+    "test": "jest"
   },
   "dependencies": {
     "graphql-codegen-core": "0.18.0"

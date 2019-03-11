@@ -6,7 +6,6 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc",
-    "pretest": "yarn build",
     "test": "jest"
   },
   "peerDependencies": {
