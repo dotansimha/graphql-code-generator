@@ -10,6 +10,7 @@ describe('TypeScript Mongo', () => {
       name: String @column
       gender: Gender @column
       someLink: LinkType @link
+      linkWithoutDirective: LinkType
       multipleLinks: [LinkType] @link
       fieldWithMap: String @column @map(path: "profile.inner.field")
       columnWithOverride: String @column(overrideType: "number")
@@ -44,10 +45,7 @@ describe('TypeScript Mongo', () => {
     }
   `);
 
-  // console.log(schema.getType('User').astNode.directives);
-
   it('Should generate the correct name for type', async () => {
     const result = await plugin(schema, [], {}, { outputFile: '' });
-    // console.log(result);
   });
 });
