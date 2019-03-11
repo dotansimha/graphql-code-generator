@@ -7,7 +7,7 @@ import { plugin } from '../src/index';
 import { validateTs } from '../../typescript/tests/validate';
 import { plugin as tsPlugin } from '../../typescript/src/index';
 
-describe('TypeScript Documents Plugin', async () => {
+describe('TypeScript Operations Plugin', async () => {
   const gitHuntSchema = buildClientSchema(JSON.parse(readFileSync('../../../dev-test/githunt/schema.json', 'utf-8')));
   const schema = makeExecutableSchema({
     typeDefs: `

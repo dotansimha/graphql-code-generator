@@ -52,7 +52,7 @@ generates:
     documents: ./dev-test/githunt/**/*.graphql
     plugins:
       - typescript
-      - typescript-documents
+      - typescript-operations
   ./dev-test/githunt/types.enumsAsTypes.ts:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
@@ -60,7 +60,7 @@ generates:
       enumsAsTypes: true
     plugins:
       - typescript
-      - typescript-documents
+      - typescript-operations
   ./dev-test/githunt/types.d.ts:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
@@ -68,7 +68,7 @@ generates:
       enumsAsTypes: true
     plugins:
       - typescript
-      - typescript-documents
+      - typescript-operations
   ./dev-test/githunt/types.avoidOptionals.ts:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
@@ -76,7 +76,7 @@ generates:
       avoidOptionals: true
     plugins:
       - typescript
-      - typescript-documents
+      - typescript-operations
   ./dev-test/githunt/types.immutableTypes.ts:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
@@ -84,14 +84,14 @@ generates:
       immutableTypes: true
     plugins:
       - typescript
-      - typescript-documents
+      - typescript-operations
   ./dev-test/githunt/types.reactApollo.tsx:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
     plugins:
       - add: // tslint:disable
       - typescript
-      - typescript-documents
+      - typescript-operations
       - typescript-react-apollo
   ./dev-test/githunt/types.reactApollo.hooks.tsx:
     schema: ./dev-test/githunt/schema.json
@@ -99,7 +99,7 @@ generates:
     plugins:
       - add: // tslint:disable
       - typescript
-      - typescript-documents
+      - typescript-operations
       - typescript-react-apollo
     config:
       withHooks: true
@@ -109,7 +109,7 @@ generates:
     plugins:
       - add: // tslint:disable
       - typescript
-      - typescript-documents
+      - typescript-operations
       - typescript-stencil-apollo
   ./dev-test/githunt/types.stencilApollo.class.tsx:
     schema: ./dev-test/githunt/schema.json
@@ -117,7 +117,7 @@ generates:
     plugins:
       - add: // tslint:disable
       - typescript
-      - typescript-documents
+      - typescript-operations
       - typescript-stencil-apollo
     config: 
       componentType: class
@@ -126,7 +126,7 @@ generates:
     documents: ./dev-test/star-wars/**/*.graphql
     plugins:
       - typescript
-      - typescript-documents
+      - typescript-operations
   ./dev-test/star-wars/types.d.ts:
     schema: ./dev-test/star-wars/schema.json
     documents: ./dev-test/star-wars/**/*.graphql
@@ -134,7 +134,7 @@ generates:
       enumsAsTypes: true
     plugins:
       - typescript
-      - typescript-documents
+      - typescript-operations
   ./dev-test/star-wars/types.avoidOptionals.ts:
     schema: ./dev-test/star-wars/schema.json
     documents: ./dev-test/star-wars/**/*.graphql
@@ -142,7 +142,7 @@ generates:
       avoidOptionals: true
     plugins:
       - typescript
-      - typescript-documents
+      - typescript-operations
   ./dev-test/star-wars/types.immutableTypes.ts:
     schema: ./dev-test/star-wars/schema.json
     documents: ./dev-test/star-wars/**/*.graphql
@@ -150,10 +150,10 @@ generates:
       immutableTypes: true
     plugins:
       - typescript
-      - typescript-documents
+      - typescript-operations
   ./dev-test/star-wars/types.skipSchema.ts:
     schema: ./dev-test/star-wars/schema.json
     documents: ./dev-test/star-wars/**/*.graphql
     plugins:
       - typescript
-      - typescript-documents
+      - typescript-operations

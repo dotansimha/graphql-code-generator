@@ -1,7 +1,7 @@
 {
-  "name": "graphql-codegen-typescript-documents",
+  "name": "graphql-codegen-flow-operations",
   "version": "0.18.0",
-  "description": "GraphQL Code Generator plugin for generating TypeScript types for GraphQL queries, mutations, subscriptions and fragments",
+  "description": "GraphQL Code Generator plugin for generating Flow types for GraphQL operations (query/mutation/subscription/fragment)",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
   "scripts": {
@@ -10,12 +10,14 @@
     "test": "jest"
   },
   "dependencies": {
-    "graphql-codegen-typescript": "0.18.0",
+    "graphql-codegen-flow": "0.18.0",
     "graphql-codegen-visitor-plugin-common": "0.18.0",
     "graphql-codegen-core": "0.18.0",
     "graphql-codegen-plugin-helpers": "0.18.0"
   },
   "devDependencies": {
+    "flow-bin": "0.94.0",
+    "flow-parser": "0.94.0",
     "graphql": "14.1.1",
     "jest": "24.1.0",
     "ts-jest": "24.0.0",
