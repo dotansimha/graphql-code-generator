@@ -43,7 +43,7 @@
     "typescript": "3.3.3333",
     "graphql": "14.1.1",
     "graphql-tag": "2.10.1",
-    "jest": "24.1.0",
+    "jest": "24.3.1",
     "rimraf": "2.6.3",
     "ts-jest": "24.0.0",
     "graphql-tools": "4.0.4",
