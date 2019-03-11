@@ -17,6 +17,7 @@ import { RawTypesConfig } from 'graphql-codegen-visitor-plugin-common';
 import { TsVisitor } from './visitor';
 import { TsIntrospectionVisitor } from './introspection-visitor';
 export * from './typescript-variables-to-object';
+export * from './visitor';
 
 export interface TypeScriptPluginConfig extends RawTypesConfig {
   avoidOptionals?: boolean;
