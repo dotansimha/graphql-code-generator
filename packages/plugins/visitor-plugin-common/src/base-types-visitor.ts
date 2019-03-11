@@ -185,6 +185,10 @@ export class BaseTypesVisitor<
     return this.wrapWithListType(asString);
   }
 
+  SchemaDefinition() {
+    return null;
+  }
+
   protected wrapWithListType(str: string): string {
     return `Array<${str}>`;
   }
