@@ -29,21 +29,15 @@ function log(...msgs: string[]) {
 const plugins: Array<PluginOption> = [
   {
     name: `TypeScript Common ${chalk.italic('(required by client and server plugins)')}`,
-    package: 'graphql-codegen-typescript-common',
-    value: 'typescript-common',
+    package: 'graphql-codegen-typescript',
+    value: 'typescript',
     available: () => true
   },
   {
-    name: `TypeScript Client ${chalk.italic('(operations and fragments)')}`,
-    package: 'graphql-codegen-typescript-client',
+    name: `TypeScript Documents ${chalk.italic('(operations and fragments)')}`,
+    package: 'graphql-codegen-typescript-documents',
     value: 'typescript-client',
     available: tags => tags.some(tag => [Tags.client].includes(tag))
-  },
-  {
-    name: `TypeScript Server ${chalk.italic('(GraphQL Schema)')}`,
-    package: 'graphql-codegen-typescript-server',
-    value: 'typescript-server',
-    available: tags => tags.some(tag => [Tags.client, Tags.server].includes(tag))
   },
   {
     name: `TypeScript Resolvers ${chalk.italic('(strongly typed resolve functions)')}`,
@@ -181,7 +175,7 @@ export async function init() {
             return {
               name: p.name,
               value: p,
-              checked: p.value === 'typescript-common'
+              checked: p.value === 'typescript'
             };
           });
       },

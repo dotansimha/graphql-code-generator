@@ -46,6 +46,8 @@ generates:
     await generate(ymlConfig);
     expect(true).toBeFalsy();
   } catch (e) {
+    // tslint:disable-next-line:no-console
+    console.error(e);
     expect(e.errors[0].message).toBe(
       `A fragment spread you used "authFragments" could not found. Please make sure that it's loaded as a GraphQL document!`
     );
