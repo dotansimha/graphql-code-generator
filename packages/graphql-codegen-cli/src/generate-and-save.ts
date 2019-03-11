@@ -1,7 +1,7 @@
 import { FileOutput, Types, debugLog } from 'graphql-codegen-core';
 import { executeCodegen } from './codegen';
 import { createWatcher } from './utils/watcher';
-import fs from './utils/file-system';
+import { fileExists, writeSync } from './utils/file-system';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
@@ -13,7 +13,7 @@ export async function generate(config: Types.Config, saveToFile = true): Promise
 
     await Promise.all(
       generationResult.map(async (result: FileOutput) => {
-        if (!shouldOverwrite(config, result.filename) && fs.fileExists(result.filename)) {
+        if (!shouldOverwrite(config, result.filename) && fileExists(result.filename)) {
           return;
         }
 
@@ -23,7 +23,7 @@ export async function generate(config: Types.Config, saveToFile = true): Promise
           return;
         }
 
-        fs.writeSync(result.filename, result.content);
+        writeSync(result.filename, result.content);
       })
     );
 

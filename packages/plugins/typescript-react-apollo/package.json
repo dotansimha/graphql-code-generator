@@ -7,7 +7,6 @@
   "scripts": {
     "prepublishOnly": "yarn build",
     "build": "tsc",
-    "pretest": "yarn build",
     "test": "jest"
   },
   "peerDependencies": {

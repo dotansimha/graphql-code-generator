@@ -6,8 +6,7 @@
   "license": "MIT",
   "scripts": {
     "prepublishOnly": "yarn build",
-    "build": "tsc",
-    "pretest": "yarn build"
+    "build": "tsc"
   },
   "dependencies": {
     "esm": "3.2.11",

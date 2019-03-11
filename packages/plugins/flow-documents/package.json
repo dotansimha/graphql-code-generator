@@ -7,7 +7,6 @@
   "scripts": {
     "prepublishOnly": "yarn build",
     "build": "tsc",
-    "pretest": "yarn build",
     "test": "jest"
   },
   "dependencies": {
@@ -19,7 +18,6 @@
     "graphql-codegen-plugin-helpers": "0.18.0"
   },
   "devDependencies": {
-    "graphql-codegen-testing": "0.18.0",
     "flow-bin": "0.94.0",
     "flow-parser": "0.94.0",
     "graphql": "14.1.1",

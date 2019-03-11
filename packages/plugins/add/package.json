@@ -6,8 +6,7 @@
   "license": "MIT",
   "scripts": {
     "prepublishOnly": "yarn build",
-    "build": "tsc",
-    "pretest": "yarn build"
+    "build": "tsc"
   },
   "dependencies": {
     "esm": "3.2.11",
@@ -16,7 +15,6 @@
     "graphql-codegen-plugin-helpers": "0.18.0"
   },
   "devDependencies": {
-    "graphql-codegen-testing": "0.18.0",
     "jest": "24.1.0",
     "ts-jest": "24.0.0",
     "typescript": "3.3.3333",
