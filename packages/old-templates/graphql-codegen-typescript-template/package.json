@@ -1,9 +1,0 @@
-{
-  "name": "graphql-codegen-typescript-template",
-  "version": "0.18.0",
-  "dependencies": {
-    "graphql-codegen-typescript-client": "0.18.0",
-    "graphql-codegen-typescript-common": "0.18.0",
-    "graphql-codegen-typescript-server": "0.18.0"
-  }
-}
