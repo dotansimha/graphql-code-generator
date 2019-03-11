@@ -21,6 +21,7 @@ import {
   ListTypeNode
 } from 'graphql';
 import { DEFAULT_SCALARS } from './scalars';
+import { ASTNode } from 'graphql';
 
 export interface ParsedTypesConfig extends ParsedConfig {
   enumValues: EnumValuesMap;
@@ -170,10 +171,12 @@ export class BaseTypesVisitor<
     return '';
   }
 
-  NamedType(node: NamedTypeNode): string {
-    const type = this.scalars[(node.name as any) as string] || this.convertName(node);
+  protected _getTypeForNode(node: NamedTypeNode): string {
+    return this.scalars[(node.name as any) as string] || this.convertName(node);
+  }
 
-    return type;
+  NamedType(node: NamedTypeNode): string {
+    return this._getTypeForNode(node);
   }
 
   ListType(node: ListTypeNode): string {

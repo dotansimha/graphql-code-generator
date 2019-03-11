@@ -40,21 +40,16 @@ export const plugin: PluginFunction<TypeScriptMongoDbConfig> = async (
   return Handlebars.compile(index)(templateContext);
 };
 
-const addToSchema = gql`
-  directive @union(discriminatorField: String) on UNION
-  directive @abstractEntity(discriminatorField: String!) on INTERFACE
-  directive @entity(embedded: Boolean, additionalFields: [AdditionalEntityFields]) on OBJECT
-  directive @column(name: String, overrideType: String, overrideIsArray: Boolean) on FIELD_DEFINITION
-  directive @id on FIELD_DEFINITION
-  directive @link on FIELD_DEFINITION
-  directive @embedded on FIELD_DEFINITION
-  directive @map(path: String!) on FIELD_DEFINITION
-  # Inputs
-  input AdditionalEntityFields {
-    path: String
-    type: String
-  }
-`;
+export const DIRECTIVES_NAMES = {
+  ID: 'id',
+  ENTITY: 'entity',
+  ABSTRACT_ENTITY: 'abstractEntity',
+  UNION: 'union',
+  LINK: 'link',
+  COLUMN: 'column',
+  EMBEDDED: 'embedded',
+  MAP: 'map'
+};
 
 export { addToSchema };
 export { addToSchema as DIRECTIVES };

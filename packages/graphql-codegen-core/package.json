@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dotansimha/graphql-codegen.git"
+    "url": "git+https://github.com/dotansimha/graphql-code-generator.git"
   },
   "keywords": [
     "gql",
@@ -64,7 +64,7 @@
     "change-case": "3.1.0",
     "common-tags": "1.8.0",
     "graphql-tag": "2.10.1",
-    "graphql-toolkit": "0.2.0",
+    "graphql-toolkit": "0.2.4",
     "graphql-tools": "4.0.4",
     "ts-log": "2.1.4",
     "winston": "3.2.1"
