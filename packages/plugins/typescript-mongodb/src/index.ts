@@ -1,31 +1,31 @@
-import { TypeScriptPluginConfig } from 'graphql-codegen-typescript';
+import { RawConfig } from 'graphql-codegen-visitor-plugin-common';
 import { DocumentFile, PluginFunction, PluginValidateFn } from 'graphql-codegen-core';
 import { parse, visit, GraphQLSchema } from 'graphql';
 import { printSchemaWithDirectives } from 'graphql-toolkit';
-import { TsMongoVisitor } from './visitor';
 import { extname } from 'path';
 import gql from 'graphql-tag';
+import { TsMongoVisitor } from './visitor';
 
-export interface TypeScriptPluginConfig extends TypeScriptPluginConfig {
+export interface TypeScriptMongoPluginConfig extends RawConfig {
   dbTypeSuffix?: string;
   dbInterfaceSuffix?: string;
   objectIdType?: string;
   idFieldName?: string;
   enumsAsString?: boolean;
+  avoidOptionals?: boolean;
 }
 
-export const plugin: PluginFunction<TypeScriptPluginConfig> = (
+export const plugin: PluginFunction<TypeScriptMongoPluginConfig> = (
   schema: GraphQLSchema,
   documents: DocumentFile[],
-  config: TypeScriptPluginConfig
+  config: TypeScriptMongoPluginConfig
 ) => {
-  const visitor = new TsMongoVisitor(schema, config) as any;
+  const visitor = new TsMongoVisitor(schema, config);
   const printedSchema = printSchemaWithDirectives(schema);
   const astNode = parse(printedSchema);
-  const header = `type Maybe<T> = ${visitor.config.maybeValue};`;
-  const visitorResult = visit(astNode, { leave: visitor });
+  const visitorResult = visit(astNode, { leave: visitor as any });
 
-  return [header, ...visitorResult.definitions.filter(d => typeof d === 'string')].join('\n');
+  return visitorResult.definitions.filter(d => typeof d === 'string').join('\n');
 };
 
 export enum Directives {
@@ -40,10 +40,12 @@ export enum Directives {
 }
 
 export const addToSchema = gql`
-  directive @${Directives.UNION}(discriminatorField: String) on UNION
-  directive @${Directives.ABSTRACT_ENTITY}(discriminatorField: String!) on INTERFACE
+  directive @${Directives.UNION}(discriminatorField: String, additionalFields: [AdditionalEntityFields]) on UNION
+  directive @${
+    Directives.ABSTRACT_ENTITY
+  }(discriminatorField: String!, additionalFields: [AdditionalEntityFields]) on INTERFACE
   directive @${Directives.ENTITY}(embedded: Boolean, additionalFields: [AdditionalEntityFields]) on OBJECT
-  directive @${Directives.COLUMN}(name: String, overrideType: String, overrideIsArray: Boolean) on FIELD_DEFINITION
+  directive @${Directives.COLUMN}(overrideType: String) on FIELD_DEFINITION
   directive @${Directives.ID} on FIELD_DEFINITION
   directive @${Directives.LINK} on FIELD_DEFINITION
   directive @${Directives.EMBEDDED} on FIELD_DEFINITION
