@@ -1,4 +1,4 @@
-import { initCLI, createConfigFromOldCli, CLIOptions } from './old-cli-config';
+// import { initCLI, createConfigFromOldCli, CLIOptions } from './old-cli-config';
 import { existsSync, readFileSync } from 'fs';
 import { join, resolve } from 'path';
 import { Types } from 'graphql-codegen-plugin-helpers';
@@ -9,7 +9,8 @@ import { Command } from 'commander';
 export type YamlCliFlags = {
   config: string;
   watch: boolean;
-} & Partial<CLIOptions>;
+  overwrite: boolean;
+};
 
 function getCustomConfigPath(cliFlags: YamlCliFlags): string | null | never {
   const configFile = cliFlags.config;
@@ -67,43 +68,33 @@ export function createConfig(argv = process.argv): Types.Config | never {
     .option('-o, --overwrite', 'Overwrites existing files')
     .parse(argv) as any) as Command & YamlCliFlags;
 
-  const isUsingOldApi =
-    cliFlags.rawArgs.includes('--template') ||
-    cliFlags.rawArgs.includes('-t') ||
-    cliFlags.rawArgs.includes('--schema') ||
-    cliFlags.rawArgs.includes('--s');
+  const customConfigPath = getCustomConfigPath(cliFlags);
+  const locations: string[] = [join(process.cwd(), './codegen.yml'), join(process.cwd(), './codegen.json')];
 
-  if (isUsingOldApi) {
-    return createConfigFromOldCli(initCLI(argv));
-  } else {
-    const customConfigPath = getCustomConfigPath(cliFlags);
-    const locations: string[] = [join(process.cwd(), './codegen.yml'), join(process.cwd(), './codegen.json')];
+  if (customConfigPath) {
+    locations.unshift(customConfigPath);
+  }
 
-    if (customConfigPath) {
-      locations.unshift(customConfigPath);
-    }
+  const filepath = locations.find(existsSync);
 
-    const filepath = locations.find(existsSync);
-
-    if (!filepath) {
-      throw new DetailedError(
-        `Unable to find Codegen config file!`,
-        `
+  if (!filepath) {
+    throw new DetailedError(
+      `Unable to find Codegen config file!`,
+      `
         Please make sure that you have a configuration file under the current directory! 
       `
-      );
-    }
-
-    const parsedConfigFile = loadAndParseConfig(filepath);
-
-    if (cliFlags.watch === true) {
-      parsedConfigFile.watch = cliFlags.watch;
-    }
-
-    if (cliFlags.overwrite === true) {
-      parsedConfigFile.overwrite = cliFlags.overwrite;
-    }
-
-    return parsedConfigFile;
+    );
   }
+
+  const parsedConfigFile = loadAndParseConfig(filepath);
+
+  if (cliFlags.watch === true) {
+    parsedConfigFile.watch = cliFlags.watch;
+  }
+
+  if (cliFlags.overwrite === true) {
+    parsedConfigFile.overwrite = cliFlags.overwrite;
+  }
+
+  return parsedConfigFile;
 }
