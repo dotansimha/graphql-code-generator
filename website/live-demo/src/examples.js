@@ -52,44 +52,28 @@ const TS_QUERY = f`
   `;
 
 export const EXAMPLES = {
-  'typescript-server': {
-    name: 'TypeScript (Server)',
+  typescript: {
+    name: 'TypeScript',
     state: {
       config: yaml`
         generates:
           server-types.ts:
             - add: "/* tslint:disable */"
             - time
-            - typescript-common
-            - typescript-server`,
+            - typescript`,
       schema: TS_SCHEMA,
       documents: ''
     }
   },
-  'typescript-client': {
-    name: 'TypeScript (Client)',
+  'typescript-operations': {
+    name: 'TypeScript (Types and documents)',
     state: {
       config: yaml`
         generates:
           client-types.ts:
             - add: "// THIS IS A GENERATED FILE, DO NOT EDIT IT!"
-            - typescript-common
-            - typescript-client`,
-      schema: TS_SCHEMA,
-      documents: TS_QUERY
-    }
-  },
-  'typescript-client-no-namespaces': {
-    name: 'TypeScript (Client, no namespaces)',
-    state: {
-      config: yaml`
-        generates:
-          client-types.ts:
-            config: 
-              noNamespaces: true
-            plugins:
-              - typescript-common
-              - typescript-client`,
+            - typescript
+            - typescript-operations`,
       schema: TS_SCHEMA,
       documents: TS_QUERY
     }
@@ -101,8 +85,8 @@ export const EXAMPLES = {
         generates:
           components.tsx:
             plugins:
-              - typescript-common
-              - typescript-client
+              - typescript
+              - typescript-operations
               - typescript-react-apollo`,
       schema: TS_SCHEMA,
       documents: TS_QUERY
@@ -115,9 +99,23 @@ export const EXAMPLES = {
         generates:
           components.ts:
             plugins:
-              - typescript-common
-              - typescript-client
+              - typescript
+              - typescript-operations
               - typescript-apollo-angular`,
+      schema: TS_SCHEMA,
+      documents: TS_QUERY
+    }
+  },
+  'stencil-apollo': {
+    name: 'TypeScript Stencil Apollo Components',
+    state: {
+      config: yaml`
+        generates:
+          components.ts:
+            plugins:
+              - typescript
+              - typescript-operations
+              - typescript-stencil-apollo`,
       schema: TS_SCHEMA,
       documents: TS_QUERY
     }
@@ -129,8 +127,7 @@ export const EXAMPLES = {
         generates:
           resolvers.ts:
             plugins:
-              - typescript-common
-              - typescript-server
+              - typescript
               - typescript-resolvers`,
       schema: TS_SCHEMA,
       documents: TS_QUERY
@@ -168,7 +165,7 @@ export const EXAMPLES = {
         generates:
           types.flow.js:
             - flow
-            - flow-documents
+            - flow-operations
             `,
       schema: TS_SCHEMA,
       documents: TS_QUERY

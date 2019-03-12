@@ -9,6 +9,8 @@ import { mergeSchemas } from './merge-schemas';
 import { GraphQLError, DocumentNode, visit } from 'graphql';
 import { executePlugin, getPluginByName } from './execute-plugin';
 
+export const defaultPluginLoader = (mod: string) => import(mod);
+
 export interface GenerateOutputOptions {
   filename: string;
   plugins: Types.ConfiguredPlugin[];
@@ -211,7 +213,7 @@ export async function executeCodegen(config: Types.Config): Promise<FileOutput[]
                         ...rootConfig,
                         ...outputFileTemplateConfig
                       },
-                      pluginLoader: config.pluginLoader || require
+                      pluginLoader: config.pluginLoader || defaultPluginLoader
                     });
                     result.push(output);
                   }, filename)

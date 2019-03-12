@@ -1,8 +1,31 @@
 import React from 'react';
-import CodeMirror from 'codemirror';
 
 export class Editor extends React.Component {
-  componentDidMount() {
+  async componentDidMount() {
+    const [{ default: CodeMirror }] = await Promise.all([
+      import('codemirror'),
+      import('codemirror/addon/lint/lint'),
+      import('codemirror/addon/lint/yaml-lint'),
+      import('codemirror/addon/hint/show-hint'),
+      import('codemirror/addon/comment/comment'),
+      import('codemirror/addon/edit/matchbrackets'),
+      import('codemirror/addon/edit/closebrackets'),
+      import('codemirror/addon/fold/foldgutter'),
+      import('codemirror/addon/fold/brace-fold'),
+      import('codemirror/addon/search/search'),
+      import('codemirror/addon/search/searchcursor'),
+      import('codemirror/addon/search/jump-to-line'),
+      import('codemirror/addon/dialog/dialog'),
+      import('codemirror/addon/lint/lint'),
+      import('codemirror/mode/yaml/yaml'),
+      import('codemirror/mode/javascript/javascript'),
+      import('codemirror/keymap/sublime'),
+      import('codemirror-graphql/hint'),
+      import('codemirror-graphql/lint'),
+      import('codemirror-graphql/info'),
+      import('codemirror-graphql/jump'),
+      import('codemirror-graphql/mode')
+    ]);
     this.editor = CodeMirror(this._node, {
       value: this.props.value || '',
       lineNumbers: true,

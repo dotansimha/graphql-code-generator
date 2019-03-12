@@ -103,6 +103,9 @@
       },
       "plugins/typescript-server": {
         "title": "TypeScript Server"
+      },
+      "plugins/typescript-stencil-apollo": {
+        "title": "TypeScript Stencil Apollo"
       }
     },
     "links": {
