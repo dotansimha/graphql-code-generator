@@ -107,11 +107,11 @@ export const EXAMPLES = {
     }
   },
   'stencil-apollo': {
-    name: 'TypeScript Stencil Apollo Components',
+    name: 'TypeScript Stencil-Apollo Components',
     state: {
       config: yaml`
         generates:
-          components.ts:
+          components.tsx:
             plugins:
               - typescript
               - typescript-operations
