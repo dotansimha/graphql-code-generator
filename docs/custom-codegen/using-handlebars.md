@@ -11,7 +11,7 @@ You can do it like that:
 
 ```js
 const { schemaToTemplateContext } = require('graphql-codegen-core');
-const { compile } = require('Handlebars');
+const { compile } = require('handlebars');
 
 module.exports = {
   plugin: (schema, documents, config) => {
@@ -28,7 +28,7 @@ You can also do the same for your documents, by doing:
 
 ```js
 const { schemaToTemplateContext, transformDocumentsFiles } = require('graphql-codegen-core');
-const { compile } = require('Handlebars');
+const { compile } = require('handlebars');
 
 module.exports = {
   plugin: (schema, documents, config) => {
