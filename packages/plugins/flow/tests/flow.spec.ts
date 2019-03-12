@@ -1,7 +1,7 @@
 import 'graphql-codegen-testing';
 import { parse, visit } from 'graphql';
 import { FlowVisitor } from '../src/visitor';
-import { validateFlow } from '../../flow-documents/tests/validate-flow';
+import { validateFlow } from '../../flow-operations/tests/validate-flow';
 
 describe('Flow Plugin', () => {
   const SCALARS = {};

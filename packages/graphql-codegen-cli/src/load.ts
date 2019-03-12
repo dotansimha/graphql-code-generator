@@ -1,5 +1,5 @@
 import { loadSchema as loadSchemaToolkit, loadDocuments as loadDocumentsToolkit } from 'graphql-toolkit';
-import { Types, DocumentFile } from 'graphql-codegen-core';
+import { Types, DocumentFile } from 'graphql-codegen-plugin-helpers';
 import { GraphQLSchema, DocumentNode } from 'graphql';
 import { DetailedError } from './errors';
 

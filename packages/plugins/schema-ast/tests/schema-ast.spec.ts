@@ -1,5 +1,5 @@
 import { validate } from '../src/index';
-import { Types } from 'graphql-codegen-core';
+import { Types } from 'graphql-codegen-plugin-helpers';
 
 const SHOULD_THROW_ERROR = 'SHOULD_THROW_ERROR';
 

@@ -1,6 +1,0 @@
-../graphql-codegen-generators/dev-test
-src
-node_modules
-tests
-!dist
-!cjs

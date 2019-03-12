@@ -15,7 +15,6 @@
     "esm": "3.2.11",
     "tslib": "1.9.3",
     "graphql-codegen-visitor-plugin-common": "0.18.0",
-    "graphql-codegen-core": "0.18.0",
     "graphql-codegen-plugin-helpers": "0.18.0"
   },
   "devDependencies": {

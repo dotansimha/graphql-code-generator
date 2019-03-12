@@ -1,4 +1,4 @@
-import { FileOutput, Types, debugLog } from 'graphql-codegen-core';
+import { FileOutput, Types, debugLog } from 'graphql-codegen-plugin-helpers';
 import { executeCodegen } from './codegen';
 import { createWatcher } from './utils/watcher';
 import { fileExists, writeSync } from './utils/file-system';

@@ -10,7 +10,6 @@
   "dependencies": {
     "esm": "3.2.11",
     "tslib": "1.9.3",
-    "graphql-codegen-core": "0.18.0",
     "graphql-codegen-plugin-helpers": "0.18.0"
   },
   "devDependencies": {

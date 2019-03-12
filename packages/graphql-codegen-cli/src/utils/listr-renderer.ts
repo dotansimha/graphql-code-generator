@@ -7,7 +7,7 @@ import { stripIndent } from 'common-tags';
 import { ListrTask } from 'listr';
 import { DetailedError, isDetailedError } from '../errors';
 import { Source } from 'graphql';
-import { debugLog, printLogs } from 'graphql-codegen-core';
+import { debugLog, printLogs } from 'graphql-codegen-plugin-helpers';
 
 export class Renderer {
   private updateRenderer: any;

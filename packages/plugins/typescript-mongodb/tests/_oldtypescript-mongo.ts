@@ -1,5 +1,5 @@
 import 'graphql-codegen-testing';
-import { SchemaTemplateContext, schemaToTemplateContext } from 'graphql-codegen-core';
+import { SchemaTemplateContext, schemaToTemplateContext } from 'graphql-codegen-plugin-helpers';
 import { entityFields } from '../src/helpers/entity-fields';
 import { addToSchema, plugin } from '../src';
 import { pascalCase } from 'change-case';

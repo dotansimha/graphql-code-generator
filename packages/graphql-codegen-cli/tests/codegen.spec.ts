@@ -59,7 +59,7 @@ describe('Codegen Executor', () => {
         generates: {
           'out1.ts': {
             plugins: {
-              'typescript-documents': {}
+              'typescript-operations': {}
             }
           }
         }
@@ -75,7 +75,7 @@ describe('Codegen Executor', () => {
         documents: `query root { f }`,
         generates: {
           'out1.ts': {
-            plugins: [{ 'typescript-documents': {} }]
+            plugins: [{ 'typescript-operations': {} }]
           }
         }
       });
@@ -197,7 +197,7 @@ describe('Codegen Executor', () => {
         generates: {
           'out1.ts': {
             documents: `query q { f }`,
-            plugins: ['typescript', 'typescript-documents']
+            plugins: ['typescript', 'typescript-operations']
           }
         }
       });
@@ -213,7 +213,7 @@ describe('Codegen Executor', () => {
         generates: {
           'out1.ts': {
             documents: `query q { f }`,
-            plugins: ['typescript', 'typescript-documents']
+            plugins: ['typescript', 'typescript-operations']
           }
         }
       });
@@ -246,7 +246,7 @@ describe('Codegen Executor', () => {
         schema: ['./tests/test-documents/schema.graphql'],
         documents: ['./tests/test-documents/my-fragment.ts', './tests/test-documents/query-with-my-fragment.ts'],
         generates: {
-          'out1.ts': ['typescript', 'typescript-documents']
+          'out1.ts': ['typescript', 'typescript-operations']
         }
       });
       expect(result[0].content).toContain('MyQuery');
@@ -258,7 +258,7 @@ describe('Codegen Executor', () => {
         schema: ['./tests/test-documents/schema.graphql'],
         documents: ['./tests/test-documents/my-fragment.ts', './tests/test-documents/query-with-my-fragment.ts'],
         generates: {
-          'out1.ts': ['typescript', 'typescript-documents']
+          'out1.ts': ['typescript', 'typescript-operations']
         }
       });
 
@@ -271,7 +271,7 @@ describe('Codegen Executor', () => {
         schema: ['./tests/test-documents/schema.graphql'],
         documents: ['./tests/test-documents/js-query-with-my-fragment.js', './tests/test-documents/js-my-fragment.js'],
         generates: {
-          'out1.ts': ['typescript', 'typescript-documents']
+          'out1.ts': ['typescript', 'typescript-operations']
         }
       });
 
@@ -284,7 +284,7 @@ describe('Codegen Executor', () => {
         schema: ['./tests/test-documents/schema.graphql'],
         documents: ['./tests/test-documents/ts-features-with-query.ts'],
         generates: {
-          'out1.ts': ['typescript', 'typescript-documents']
+          'out1.ts': ['typescript', 'typescript-operations']
         }
       });
 
@@ -298,7 +298,7 @@ describe('Codegen Executor', () => {
         schema: ['./tests/test-documents/schema.graphql'],
         documents: ['./tests/test-documents/query-with-commented-fragment.ts'],
         generates: {
-          'out1.ts': ['typescript', 'typescript-documents']
+          'out1.ts': ['typescript', 'typescript-operations']
         }
       });
       expect(result[0].content).toContain('MyQuery');
@@ -310,7 +310,7 @@ describe('Codegen Executor', () => {
         schema: ['./tests/test-documents/schema.graphql'],
         documents: ['./tests/test-documents/gatsby-and-custom-parsers.ts'],
         generates: {
-          'out1.ts': ['typescript', 'typescript-documents']
+          'out1.ts': ['typescript', 'typescript-operations']
         }
       });
 
@@ -323,7 +323,7 @@ describe('Codegen Executor', () => {
         schema: ['./tests/test-documents/schema.graphql'],
         documents: ['./tests/test-documents/gatsby-and-custom-parsers.ts'],
         generates: {
-          'out1.ts': ['typescript', 'typescript-documents']
+          'out1.ts': ['typescript', 'typescript-operations']
         },
         pluckConfig: {
           modules: [
@@ -388,7 +388,7 @@ describe('Codegen Executor', () => {
           namingConvention: 'change-case#lowerCase'
         },
         generates: {
-          'out1.ts': ['typescript', 'typescript-documents']
+          'out1.ts': ['typescript', 'typescript-operations']
         }
       });
 
@@ -406,13 +406,13 @@ describe('Codegen Executor', () => {
             config: {
               namingConvention: 'change-case#lowerCase'
             },
-            plugins: ['typescript', 'typescript-documents']
+            plugins: ['typescript', 'typescript-operations']
           },
           'out2.ts': {
             config: {
               namingConvention: 'change-case#upperCase'
             },
-            plugins: ['typescript', 'typescript-documents']
+            plugins: ['typescript', 'typescript-operations']
           }
         }
       });
@@ -430,7 +430,7 @@ describe('Codegen Executor', () => {
           'out1.ts': {
             plugins: [
               {
-                'typescript-documents': {
+                'typescript-operations': {
                   namingConvention: 'change-case#lowerCase'
                 }
               }
@@ -455,7 +455,7 @@ describe('Codegen Executor', () => {
           'out1.ts': {
             plugins: [
               {
-                'typescript-documents': {
+                'typescript-operations': {
                   namingConvention: 'change-case#upperCase'
                 }
               }
@@ -464,7 +464,7 @@ describe('Codegen Executor', () => {
           'out2.ts': {
             plugins: [
               {
-                'typescript-documents': {
+                'typescript-operations': {
                   namingConvention: 'change-case#pascalCase'
                 }
               }

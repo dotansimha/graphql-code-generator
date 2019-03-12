@@ -1,5 +1,5 @@
 import { executeCodegen } from '../codegen';
-import { FileOutput, getLogger, Types, debugLog } from 'graphql-codegen-core';
+import { FileOutput, getLogger, Types, debugLog } from 'graphql-codegen-plugin-helpers';
 import { normalizeInstanceOrArray, normalizeOutputParam } from '../helpers';
 import isValidPath from 'is-valid-path';
 import isGlob from 'is-glob';

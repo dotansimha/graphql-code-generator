@@ -17,7 +17,6 @@
     "graphql-toolkit": "0.2.4",
     "graphql-codegen-typescript": "0.18.0",
     "graphql-codegen-visitor-plugin-common": "0.18.0",
-    "graphql-codegen-core": "0.18.0",
     "graphql-codegen-plugin-helpers": "0.18.0"
   },
   "devDependencies": {

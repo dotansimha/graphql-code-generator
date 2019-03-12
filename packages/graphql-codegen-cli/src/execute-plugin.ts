@@ -1,4 +1,4 @@
-import { Types, DocumentFile, CodegenPlugin } from 'graphql-codegen-core';
+import { Types, DocumentFile, CodegenPlugin } from 'graphql-codegen-plugin-helpers';
 import { DocumentNode, GraphQLSchema } from 'graphql';
 import { resolve } from 'path';
 import { DetailedError } from './errors';

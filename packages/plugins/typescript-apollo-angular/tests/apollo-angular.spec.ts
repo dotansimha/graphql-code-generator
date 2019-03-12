@@ -2,9 +2,9 @@ import 'graphql-codegen-testing';
 import gql from 'graphql-tag';
 import { plugin, addToSchema } from '../src/index';
 import { parse, GraphQLSchema, buildClientSchema, buildSchema, extendSchema } from 'graphql';
-import { DocumentFile } from 'graphql-codegen-core';
+import { DocumentFile } from 'graphql-codegen-plugin-helpers';
 import { plugin as tsPlugin } from '../../typescript/src/index';
-import { plugin as tsDocumentsPlugin } from '../../typescript-documents/src/index';
+import { plugin as tsDocumentsPlugin } from '../../typescript-operations/src/index';
 import { validateTs } from '../../typescript/tests/validate';
 import { readFileSync } from 'fs';
 
