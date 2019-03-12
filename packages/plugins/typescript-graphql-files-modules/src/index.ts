@@ -1,5 +1,5 @@
 import { basename } from 'path';
-import { DocumentFile, PluginFunction, PluginValidateFn } from 'graphql-codegen-core';
+import { DocumentFile, PluginFunction, PluginValidateFn } from 'graphql-codegen-plugin-helpers';
 import { GraphQLSchema, OperationDefinitionNode } from 'graphql';
 
 export const plugin: PluginFunction = async (schema: GraphQLSchema, documents: DocumentFile[]): Promise<string> => {

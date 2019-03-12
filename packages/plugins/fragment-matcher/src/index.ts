@@ -1,5 +1,5 @@
 import { GraphQLSchema, parse, execute } from 'graphql';
-import { PluginFunction, PluginValidateFn, DocumentFile } from 'graphql-codegen-core';
+import { PluginFunction, PluginValidateFn, DocumentFile } from 'graphql-codegen-plugin-helpers';
 import { extname } from 'path';
 
 interface IntrospectionResultData {

@@ -1,4 +1,4 @@
-import 'graphql-codegen-core/dist/testing';
+import 'graphql-codegen-plugin-helpers/dist/testing';
 import { parse, visit } from 'graphql';
 import { FlowVisitor } from '../src/visitor';
 import { validateFlow } from '../../flow-operations/tests/validate-flow';

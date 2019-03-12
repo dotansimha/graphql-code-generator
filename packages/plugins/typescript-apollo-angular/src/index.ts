@@ -1,4 +1,4 @@
-import { DocumentFile, PluginValidateFn, PluginFunction } from 'graphql-codegen-core';
+import { DocumentFile, PluginValidateFn, PluginFunction } from 'graphql-codegen-plugin-helpers';
 import { visit, GraphQLSchema, concatAST, Kind, FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
 import { RawClientSideBasePluginConfig } from 'graphql-codegen-visitor-plugin-common';
 import { ApolloAngularVisitor } from './visitor';

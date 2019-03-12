@@ -1,4 +1,4 @@
-import { PluginFunction, DocumentFile } from 'graphql-codegen-core';
+import { PluginFunction, DocumentFile } from 'graphql-codegen-plugin-helpers';
 import { visit, concatAST, GraphQLSchema } from 'graphql';
 import { TypeScriptDocumentsVisitor } from './visitor';
 import { RawDocumentsConfig } from 'graphql-codegen-visitor-plugin-common';

@@ -1,4 +1,4 @@
-import { DocumentFile, PluginFunction } from 'graphql-codegen-core';
+import { DocumentFile, PluginFunction } from 'graphql-codegen-plugin-helpers';
 import { parse, printSchema, visit, GraphQLSchema } from 'graphql';
 import { FlowVisitor } from './visitor';
 import { RawTypesConfig } from 'graphql-codegen-visitor-plugin-common';

@@ -1,7 +1,7 @@
 import { initCLI, createConfigFromOldCli, CLIOptions } from './old-cli-config';
 import { existsSync, readFileSync } from 'fs';
 import { join, resolve } from 'path';
-import { Types } from 'graphql-codegen-core';
+import { Types } from 'graphql-codegen-plugin-helpers';
 import { DetailedError } from './errors';
 import { parseConfigFile } from './yml';
 import { Command } from 'commander';

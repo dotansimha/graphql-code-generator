@@ -1,5 +1,5 @@
 import { Command } from 'commander';
-import { Types } from 'graphql-codegen-core';
+import { Types } from 'graphql-codegen-plugin-helpers';
 import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 import { cliError } from './utils/cli-error';
