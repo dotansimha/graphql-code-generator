@@ -1,4 +1,4 @@
-import { FileOutput, DocumentFile, Types, debugLog } from 'graphql-codegen-core';
+import { FileOutput, DocumentFile, Types, debugLog } from 'graphql-codegen-plugin-helpers';
 import * as Listr from 'listr';
 import { normalizeOutputParam, normalizeInstanceOrArray, normalizeConfig } from './helpers';
 import { prettify } from './utils/prettier';

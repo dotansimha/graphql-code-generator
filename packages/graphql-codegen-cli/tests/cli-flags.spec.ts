@@ -25,50 +25,6 @@ describe.only('CLI Flags', () => {
     resetFs();
   });
 
-  it('Should detect old cli flags and convert them correctly', () => {
-    const args = createArgv('--template my-template --schema a.graphql --out out.ts');
-    const config = createConfig(args);
-
-    expect(config).toEqual({
-      config: {},
-      require: [],
-      documents: [],
-      schema: ['a.graphql'],
-      generates: {
-        'out.ts': {
-          plugins: ['my-template']
-        }
-      }
-    });
-  });
-
-  it('Should detect old cli flags and convert them correctly using header field', () => {
-    const args = createArgv(
-      '--template my-template --schema http://localhost:3000/graphql --header "Foo: bar" --out out.ts'
-    );
-    const config = createConfig(args);
-
-    expect(config).toEqual({
-      config: {},
-      require: [],
-      documents: [],
-      schema: [
-        {
-          'http://localhost:3000/graphql': {
-            headers: {
-              Foo: 'bar'
-            }
-          }
-        }
-      ],
-      generates: {
-        'out.ts': {
-          plugins: ['my-template']
-        }
-      }
-    });
-  });
-
   it('Should create basic config using new yml API', () => {
     mockConfig(`
         schema: schema.graphql

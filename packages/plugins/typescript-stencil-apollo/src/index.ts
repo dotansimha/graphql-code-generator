@@ -1,4 +1,4 @@
-import { DocumentFile, PluginValidateFn, PluginFunction } from 'graphql-codegen-core';
+import { DocumentFile, PluginValidateFn, PluginFunction } from 'graphql-codegen-plugin-helpers';
 import { visit, GraphQLSchema, concatAST, Kind, FragmentDefinitionNode } from 'graphql';
 import { RawClientSideBasePluginConfig } from 'graphql-codegen-visitor-plugin-common';
 import { StencilApolloVisitor } from './visitor';

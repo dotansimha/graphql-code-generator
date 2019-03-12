@@ -1,7 +1,14 @@
 import { DeclarationBlock, indent, BaseTypesVisitor, ParsedTypesConfig } from 'graphql-codegen-visitor-plugin-common';
 import { TypeScriptPluginConfig } from './index';
 import * as autoBind from 'auto-bind';
-import { FieldDefinitionNode, NamedTypeNode, ListTypeNode, NonNullTypeNode, EnumTypeDefinitionNode } from 'graphql';
+import {
+  FieldDefinitionNode,
+  NamedTypeNode,
+  ListTypeNode,
+  NonNullTypeNode,
+  EnumTypeDefinitionNode,
+  Kind
+} from 'graphql';
 import { TypeScriptOperationVariablesToObject } from './typescript-variables-to-object';
 
 export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
@@ -73,7 +80,7 @@ export class TsVisitor<
   FieldDefinition(node: FieldDefinitionNode, key?: number | string, parent?: any): string {
     const typeString = (node.type as any) as string;
     const originalFieldNode = parent[key] as FieldDefinitionNode;
-    const addOptionalSign = !this.config.avoidOptionals && originalFieldNode.type.kind !== 'NonNullType';
+    const addOptionalSign = !this.config.avoidOptionals && originalFieldNode.type.kind !== Kind.NON_NULL_TYPE;
 
     return indent(
       `${this.config.immutableTypes ? 'readonly ' : ''}${node.name}${addOptionalSign ? '?' : ''}: ${typeString},`

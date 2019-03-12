@@ -6,7 +6,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "graphql-codegen-core": "0.18.0",
+    "graphql-codegen-plugin-helpers": "0.18.0",
     "auto-bind": "2.0.0",
     "graphql-tag": "2.10.1",
     "dependency-graph": "0.8.0"

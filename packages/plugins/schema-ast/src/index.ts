@@ -1,5 +1,5 @@
 import { GraphQLSchema, printSchema } from 'graphql';
-import { DocumentFile, PluginFunction, PluginValidateFn, Types } from 'graphql-codegen-core';
+import { DocumentFile, PluginFunction, PluginValidateFn, Types } from 'graphql-codegen-plugin-helpers';
 import { extname } from 'path';
 
 export const plugin: PluginFunction = async (schema: GraphQLSchema): Promise<string> => {

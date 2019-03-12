@@ -2316,6 +2316,13 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
+bdd-stdin@0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/bdd-stdin/-/bdd-stdin-0.2.0.tgz#04e66aa480e0e0df861e288a4062fb8557db2441"
+  integrity sha1-BOZqpIDg4N+GHiiKQGL7hVfbJEE=
+  dependencies:
+    mock-stdin "0.3.0"
+
 bfj@6.1.1:
   version "6.1.1"
   resolved "https://registry.yarnpkg.com/bfj/-/bfj-6.1.1.tgz#05a3b7784fbd72cfa3c22e56002ef99336516c48"
@@ -5182,6 +5189,29 @@ got@^6.7.1:
 graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.6:
   version "4.1.15"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.15.tgz#ffb703e1066e8a0eeaa4c8b80ba9253eeefbfb00"
+
+graphql-codegen-core@0.18.0:
+  version "0.18.0"
+  resolved "https://registry.yarnpkg.com/graphql-codegen-core/-/graphql-codegen-core-0.18.0.tgz#4ddeae8b0ee06041d255b5f6e55e6f48ca9ca316"
+  integrity sha512-XzFJoPtsIT8ww6FzFODUlD4h8ycyIKRGIhA86KY738vDcQogMr3Ejh0ntHZq6Y/zLtEiaieXSlXb7OymVN3vbA==
+  dependencies:
+    chalk "2.4.2"
+    change-case "3.1.0"
+    common-tags "1.8.0"
+    graphql-tag "2.10.1"
+    graphql-toolkit "0.2.0"
+    graphql-tools "4.0.4"
+    ts-log "2.1.4"
+    winston "3.2.1"
+
+graphql-codegen-flow-documents@0.18.0:
+  version "0.18.0"
+  resolved "https://registry.yarnpkg.com/graphql-codegen-flow-documents/-/graphql-codegen-flow-documents-0.18.0.tgz#d9cb075ec6f443f47f0d63cf5f2da9862924e8f2"
+  integrity sha512-FfWUaJdLG4JAlaW5LNoeZIjhsInQUwTYo7MASYOxvxfTNkiWR1IGZLWt6s8+gUOpgABAr4s9uJuJsP+OPt5RCw==
+  dependencies:
+    graphql-codegen-core "0.18.0"
+    graphql-codegen-flow "0.18.0"
+    graphql-codegen-plugin-helpers "0.18.0"
 
 graphql-codegen-plugin-handlebars-helpers@0.18.0:
   version "0.18.0"
@@ -8358,6 +8388,11 @@ mkdirp@0.5.1, mkdirp@0.5.x, mkdirp@0.x, mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-0.5.1.tgz#30057438eac6cf7f8c4767f38648d6697d75c903"
   dependencies:
     minimist "0.0.8"
+
+mock-stdin@0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/mock-stdin/-/mock-stdin-0.3.0.tgz#f40d2a513a114e6d547480625b5ef5190744bd4d"
+  integrity sha1-9A0qUToRTm1UdIBiW171GQdEvU0=
 
 modify-values@^1.0.0:
   version "1.0.1"

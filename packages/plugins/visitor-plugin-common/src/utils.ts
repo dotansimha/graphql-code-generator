@@ -55,8 +55,8 @@ export function breakLine(str: string): string {
   return str + '\n';
 }
 
-export function indent(str: string): string {
-  return '  ' + str;
+export function indent(str: string, count = 1): string {
+  return new Array(count).fill('  ').join('') + str;
 }
 
 export interface DeclarationBlockConfig {

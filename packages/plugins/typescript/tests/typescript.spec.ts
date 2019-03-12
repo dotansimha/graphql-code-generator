@@ -1,4 +1,4 @@
-import 'graphql-codegen-core/dist/testing';
+import 'graphql-codegen-plugin-helpers/dist/testing';
 import { buildSchema, parse } from 'graphql';
 import { validateTs } from './validate';
 import { plugin } from '../src/index';
@@ -754,5 +754,38 @@ describe('TypeScript', () => {
 
       validateTs(result);
     });
+  });
+
+  it('should not have [object Object]', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type User {
+        id: Int!
+        name: String!
+        email: String!
+      }
+
+      type QueryRoot {
+        allUsers: [User]!
+        userById(id: Int!): User
+
+        # Generates a new answer for the guessing game
+        answer: [Int!]!
+      }
+
+      type SubscriptionRoot {
+        newUser: User
+      }
+
+      schema {
+        query: QueryRoot
+        subscription: SubscriptionRoot
+      }
+    `);
+
+    const content = await plugin(schema, [], {}, { outputFile: '' });
+
+    expect(content).not.toContainEqual('[object Object]');
+
+    validateTs(content);
   });
 });
