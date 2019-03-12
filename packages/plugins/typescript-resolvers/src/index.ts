@@ -1,5 +1,5 @@
 import { RawResolversConfig } from 'graphql-codegen-visitor-plugin-common';
-import { DocumentFile, PluginFunction } from 'graphql-codegen-core';
+import { DocumentFile, PluginFunction } from 'graphql-codegen-plugin-helpers';
 import { isScalarType, parse, printSchema, visit, GraphQLSchema } from 'graphql';
 import { TypeScriptResolversVisitor } from './visitor';
 

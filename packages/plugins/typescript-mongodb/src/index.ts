@@ -1,5 +1,5 @@
 import { RawConfig } from 'graphql-codegen-visitor-plugin-common';
-import { DocumentFile, PluginFunction, PluginValidateFn } from 'graphql-codegen-core';
+import { DocumentFile, PluginFunction, PluginValidateFn } from 'graphql-codegen-plugin-helpers';
 import { parse, visit, GraphQLSchema } from 'graphql';
 import { printSchemaWithDirectives } from 'graphql-toolkit';
 import { extname } from 'path';

@@ -1,4 +1,4 @@
-import 'graphql-codegen-core/dist/testing';
+import 'graphql-codegen-plugin-helpers/dist/testing';
 import { buildASTSchema } from 'graphql';
 import gql from 'graphql-tag';
 import { plugin, validate } from '../dist';

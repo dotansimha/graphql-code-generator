@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import { resolve, relative } from 'path';
 import { writeFileSync, readFileSync } from 'fs';
-import { Types } from 'graphql-codegen-core';
+import { Types } from 'graphql-codegen-plugin-helpers';
 import * as YAML from 'json-to-pretty-yaml';
 import * as detectIndent from 'detect-indent';
 import { Answers } from './types';

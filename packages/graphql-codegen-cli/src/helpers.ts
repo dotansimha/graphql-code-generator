@@ -1,4 +1,4 @@
-import { Types } from 'graphql-codegen-core';
+import { Types } from 'graphql-codegen-plugin-helpers';
 
 export function isOutputConfigArray(type: any): type is Types.OutputConfig[] {
   return Array.isArray(type);

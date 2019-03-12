@@ -3,7 +3,7 @@ import * as autoBind from 'auto-bind';
 import { FragmentDefinitionNode, print, OperationDefinitionNode } from 'graphql';
 import { DepGraph } from 'dependency-graph';
 import gqlTag from 'graphql-tag';
-import { toPascalCase } from 'graphql-codegen-core';
+import { toPascalCase } from 'graphql-codegen-plugin-helpers';
 import { getConfigValue } from './utils';
 
 export interface RawClientSideBasePluginConfig extends RawConfig {

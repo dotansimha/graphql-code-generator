@@ -6,7 +6,7 @@ import {
 import { ReactApolloRawPluginConfig } from './index';
 import * as autoBind from 'auto-bind';
 import { FragmentDefinitionNode, print, OperationDefinitionNode } from 'graphql';
-import { toPascalCase } from 'graphql-codegen-core';
+import { toPascalCase } from 'graphql-codegen-plugin-helpers';
 
 export interface ReactApolloPluginConfig extends ClientSideBasePluginConfig {
   withHOC: boolean;

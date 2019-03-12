@@ -1,4 +1,4 @@
-import 'graphql-codegen-core/dist/testing';
+import 'graphql-codegen-plugin-helpers/dist/testing';
 import { plugin, StencilComponentType } from '../src/index';
 import { buildClientSchema } from 'graphql';
 import gql from 'graphql-tag';

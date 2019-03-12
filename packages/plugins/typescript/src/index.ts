@@ -1,4 +1,4 @@
-import { DocumentFile, PluginFunction } from 'graphql-codegen-core';
+import { DocumentFile, PluginFunction } from 'graphql-codegen-plugin-helpers';
 import {
   parse,
   printSchema,
