@@ -1,9 +1,9 @@
 ---
-id: flow-documents
-title: Flow Documents
+id: flow-operations
+title: Flow Operations
 ---
 
-The `graphql-codegen-flow-documents` plugin generates Flow types based on your `GraphQLSchema` and your GraphQL documents.
+The `graphql-codegen-flow-operations` plugin generates Flow types based on your `GraphQLSchema` and your GraphQL operations and fragments.
 
 It generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.
 
@@ -13,7 +13,7 @@ This plugin requires you to use `graphql-codegen-flow` as well, because it depen
 
 Install using `npm` (or `yarn`):
 
-    $ npm install graphql-codegen-flow-documents
+    $ npm install graphql-codegen-flow-operations
 
 ### Examples
 

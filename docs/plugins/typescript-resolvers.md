@@ -25,7 +25,7 @@ overwrite: true
 generates:
   ./src/resolvers-types.ts:
     plugins:
-      - typescript-common
+      - typescript
       - typescript-resolvers
 ```
 

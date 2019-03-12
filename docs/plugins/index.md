@@ -25,7 +25,7 @@ Below is a table that lists all available plugins which can be installed via NPM
 | `time`                             | Add the generation time to the output file                                                                     | [`graphql-codegen-time`](./time.md)                                                         |
 | `flow`                             | Generate types for Flow type based on your GraphQL schema                                                      | [`graphql-codegen-flow`](./flow.md)                                                         |
 | `flow-resolvers`                   | Generate resolvers signature for Flow                                                                          | [`graphql-codegen-flow-resolvers`](./flow-resolvers.md)                                     |
-| `flow-documents`                   | Generate types for Flow type based on your GraphQL documents                                                   | [`graphql-codegen-flow-documents`](./flow-documents.md)                                     |
+| `flow-operations`                  | Generate types for Flow type based on your GraphQL operations                                                  | [`graphql-codegen-flow-operations`](./flow-operations.md)                                   |
 | `reason-client`                    | Generate ReasonML types based on your GraphQL schema for use in a client application                           | [`graphql-codegen-reason-client`](./reason-client.md)                                       |
 
 In addition, you can build your own code generating plugins based on your specific needs. For more information, check [this doc page](../custom-codegen/index).

@@ -26,7 +26,7 @@ For example, let's add a custom `@directive` that tells the codegen to ignore a 
 
 ```js
 module.exports = {
-  plugin: (schema, documents, config) => {
+  plugin: (schema, documents, config, info) => {
     const typesMap = schema.getTypeMap();
 
     return Object.keys(typesMap)

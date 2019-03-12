@@ -1,15 +1,15 @@
 ---
-id: typescript-client
-title: Typescript Client
+id: typescript-operations
+title: Typescript Operations
 ---
 
-A plugin that should be loaded if generating typescript code that should be relevant for client. Must be loaded with [`typescript-common`](./typescript-common).
+A plugin that should be loaded if generating typescript code that should be relevant for client. Must be loaded with [`typescript`](./typescript).
 
 ### Installation
 
 Install using `npm` (or `yarn`):
 
-    $ npm install graphql-codegen-typescript-client
+    $ npm install graphql-codegen-typescript-operations
 
 ### Examples
 

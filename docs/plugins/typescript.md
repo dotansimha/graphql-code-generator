@@ -1,6 +1,6 @@
 ---
-id: typescript-common
-title: TypeScript Common
+id: typescript
+title: TypeScrip
 ---
 
 This is the most basic TypeScript plugin and it can generate typings which can be used both in client and server, given a GraphQL schema.

@@ -36,6 +36,6 @@ Next, update your NPM scripts to run `gql-gen` only, without any cli-flags:
 
 Now, replace your deprecated `templates` packages with the new `plugins` packages.
 
-For example, if you were using `graphql-codegen-typescript-template`, you should replace it with: `graphql-codegen-typescript-client`, `graphql-codegen-typescript-common` and `graphql-codegen-typescript-server`.
+For example, if you were using `graphql-codegen-typescript-template`, you should replace it with: `graphql-codegen-typescript`, and `graphql-codegen-typescript-operations`.
 
 Note sure which new packages you need to use now? [You can take a look here](https://github.com/dotansimha/graphql-code-generator/tree/master/packages/old-templates). Under each directory you'll find a `package.json` pointing to the new packages names.

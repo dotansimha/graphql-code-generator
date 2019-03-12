@@ -21,8 +21,8 @@ documents: src/**/*.graphql
 generates:
   ./src/types.ts:
     plugins:
-      - typescript-common
-      - typescript-client
+      - typescript
+      - typescript-operations
 ```
 
 ### Output-file level
@@ -35,8 +35,8 @@ generates:
   ./src/types1.ts:
     documents: src/**/*.graphql
     plugins:
-      - typescript-common
-      - typescript-client
+      - typescript
+      - typescript-operations
 ```
 
 ### Document Scanner

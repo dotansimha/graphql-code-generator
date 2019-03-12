@@ -19,5 +19,5 @@ generates:
   path/to/file.ts:
     plugins:
       - time
-      - typescript-common
+      - typescript
 ```
