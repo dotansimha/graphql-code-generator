@@ -22,7 +22,7 @@ describe('generate-and-save', () => {
             schema: `
             type OtherType { a: String }
           `,
-            plugins: ['typescript-common', 'typescript-server']
+            plugins: ['typescript']
           }
         }
       },
@@ -51,7 +51,7 @@ describe('generate-and-save', () => {
             schema: `
             type OtherType { a: String }
           `,
-            plugins: ['typescript-common', 'typescript-server']
+            plugins: ['typescript']
           }
         }
       },
@@ -78,7 +78,7 @@ describe('generate-and-save', () => {
             schema: `
             type OtherType { a: String }
           `,
-            plugins: ['typescript-common', 'typescript-server']
+            plugins: ['typescript']
           }
         }
       },
@@ -106,7 +106,7 @@ describe('generate-and-save', () => {
             schema: `
             type OtherType { a: String }
           `,
-            plugins: ['typescript-common', 'typescript-server']
+            plugins: ['typescript']
           }
         }
       },
@@ -135,7 +135,7 @@ describe('generate-and-save', () => {
             schema: `
             type OtherType { a: String }
           `,
-            plugins: ['typescript-common', 'typescript-server']
+            plugins: ['typescript']
           }
         }
       },
