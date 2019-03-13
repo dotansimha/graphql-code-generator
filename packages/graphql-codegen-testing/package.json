@@ -5,63 +5,22 @@
   "main": "cjs/index.js",
   "module": "dist/index.js",
   "scripts": {
-    "clean": "rimraf ./dist",
-    "lint": "tslint src/**/*.ts",
-    "prebuild": "yarn clean && yarn lint",
-    "build": "tsc",
-    "prestart": "yarn build",
-    "test": "jest --no-cache --verbose --runInBand"
+    "build": "tsc"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/dotansimha/graphql-codegen.git"
-  },
-  "keywords": [
-    "gql",
-    "generator",
-    "code",
-    "types",
-    "interfaces",
-    "graphql",
-    "codegen",
-    "apollo",
-    "node",
-    "typescript",
-    "ts",
-    "flow",
-    "types",
-    "d.ts",
-    "typings"
-  ],
+  "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "author": "Dotan Simha <dotansimha@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/dotansimha/graphql-codegen/issues"
+    "url": "https://github.com/dotansimha/graphql-code-generator/issues"
   },
-  "homepage": "https://github.com/dotansimha/graphql-codegen#readme",
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
-  },
-  "jest": {
-    "transform": {
-      "^.+\\.tsx?$": "ts-jest"
-    },
-    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "jsx",
-      "json",
-      "node"
-    ]
-  },
+  "homepage": "https://github.com/dotansimha/graphql-code-generator#readme",
   "dependencies": {
     "esm": "3.2.11",
     "tslib": "1.9.3",
     "common-tags": "1.8.0"
+  },
+  "devDependencies": {
+    "typescript": "3.3.3333"
   },
   "typings": "dist/index.d.ts",
   "typescript": {
