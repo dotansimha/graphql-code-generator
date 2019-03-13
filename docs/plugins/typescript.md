@@ -3,15 +3,15 @@ id: typescript
 title: TypeScrip
 ---
 
-This is the most basic TypeScript plugin and it can generate typings which can be used both in client and server, given a GraphQL schema.
+This is the most basic TypeScript plugin and it can generate typings based on `GraphQLSchema`, which can be used by any other typescript related plugin.
 
-It generated types for enums, scalars and input types - because those are relevant for both client-side and server-side.
+It generates types for your entire schema: types, input types, enums, interfaces, scalars and unions.
 
 ## Installation
 
 Install using `npm` (or `yarn`):
 
-    $ npm install graphql-codegen-typescript-common
+    $ npm install graphql-codegen-typescript
 
 ### Examples
 
@@ -34,26 +34,26 @@ You can either specify a string pointing to a method in a module (or a file) in 
 generates:
   path/to/file.ts:
     plugins:
-      - typescript-common
+      - typescript
     config:
       namingConvention: change-case#lowerCase
 ```
 
-Or, an object with a method per output type (the allowed values are `default`, `enumValues` and `typeNames`):
+Or, an object with a method per output type (the allowed values are `enumValues` and `typeNames`):
 
 ```yaml
 # ...
 generates:
   path/to/file.ts:
     plugins:
-      - typescript-common
+      - typescript
     config:
       namingConvention:
-        default: change-case#pascalCase
+        typeNames: change-case#pascalCase
         enumValues: change-case#upperCase
 ```
 
-> The example above will use `pascalCase` as default, and `upperCase` for the enum values.
+> The example above will use `pascalCase` for most cases, and `upperCase` for the enum values.
 
 #### `scalars`
 
@@ -64,7 +64,7 @@ Will map scalars to the predefined types.
 generates:
   path/to/file.ts:
     plugins:
-      - typescript-common
+      - typescript
     config:
       scalars:
         Date: Date
@@ -91,7 +91,7 @@ Use this feature to set custom values for your GraphQL enums, reuse an existing 
 generates:
   path/to/file.ts:
     plugins:
-      - typescript-common
+      - typescript
     config:
       enums:
         MyEnum:
@@ -105,7 +105,7 @@ generates:
 generates:
   path/to/file.ts:
     plugins:
-      - typescript-common
+      - typescript
     config:
       enums:
         MyEnum: ./path/to/enum#MyEnum
@@ -124,7 +124,7 @@ Note:
 generates:
   path/to/file.ts:
     plugins:
-      - typescript-common
+      - typescript
     config:
       enums:
         MyEnum: # empty
@@ -139,7 +139,7 @@ Note:
 
 This will cause the codegen to output `readonly` properties and `ReadonlyArray`.
 
-#### `interfacePrefix` (default value: '')
+#### `typesPrefix` (default value: '')
 
 This will cause the codegen to prefix graphql type interfaces with the given value (if `I` is defined as prefix, type `Foo` will be generated as an interface named `IFoo`). Use this flag if you would like to run the codegen on multiple schemas. Note that even though we run this command on multiple schemas, the output types will be merged and not separated. For more information regards declaration merging, see [reference](https://www.typescriptlang.org/docs/handbook/declaration-merging.html).
 

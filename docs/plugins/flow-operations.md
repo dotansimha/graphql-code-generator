@@ -46,7 +46,6 @@ generates:
     config:
       scalars:
         Date: Date
-]
 ```
 
 > You can also override built-in scalars, such as `String`.

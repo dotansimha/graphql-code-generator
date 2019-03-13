@@ -51,6 +51,21 @@ Or if you prefer:
 
 Customize from which module will `gql` be imported from. This is useful if you want to use modules other than `graphql-tag`, e.g. `graphql.macro`. You can also control the imported GraphQL-parse function identifier e.g. `gatsby#graphql`, which will result in `import { graphql as gql } from 'gatsby'`.
 
+#### `noGraphqlTag` (default value: `false`)
+
+This will cause the codegen to output parsed documents and not use a literal tag of the `graphql-tag` package.
+
+```yaml
+# ...
+generates:
+  path/to/output:
+    config:
+      noGraphqlTag: true
+    plugins:
+      - typescript-react-apollo
+      # ...
+```
+
 #### `noHOC` (default value: `false`)
 
 This will disable the higher order components generation.sable the higher order components generation by setting this option to `false`.
