@@ -1,4 +1,4 @@
-import 'graphql-codegen-plugin-helpers/dist/testing';
+import 'graphql-codegen-testing';
 import { parse, buildClientSchema, buildSchema } from 'graphql';
 import { makeExecutableSchema } from 'graphql-tools';
 import { readFileSync } from 'fs';

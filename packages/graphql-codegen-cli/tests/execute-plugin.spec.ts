@@ -7,10 +7,7 @@ describe('executePlugin', () => {
     const options = {
       allPlugins: [
         {
-          'typescript-common': {}
-        },
-        {
-          'typescript-client': {}
+          typescript: {}
         }
       ],
       config: {},
@@ -46,7 +43,7 @@ describe('executePlugin', () => {
           `)
         }
       ],
-      name: 'typescript-client',
+      name: 'typescript',
       outputFilename: 'a/random/path/output.ts'
     };
 

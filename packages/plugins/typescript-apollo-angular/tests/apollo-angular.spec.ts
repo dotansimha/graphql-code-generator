@@ -1,4 +1,4 @@
-import 'graphql-codegen-plugin-helpers/dist/testing';
+import 'graphql-codegen-testing';
 import gql from 'graphql-tag';
 import { plugin, addToSchema } from '../src/index';
 import { parse, GraphQLSchema, buildClientSchema, buildSchema, extendSchema } from 'graphql';
@@ -97,7 +97,7 @@ describe('Apollo Angular', () => {
         }
       );
 
-      expect(content).toBeSimilarStringTo(`import * as Apollo from 'apollo-angular';`);
+      expect(content).toBeSimilarStringTo(`import Apollo from 'apollo-angular';`);
       expect(content).toBeSimilarStringTo(`import { Injectable } from '@angular/core';`);
       await validateTypeScript(content, schema, docs, {});
     });

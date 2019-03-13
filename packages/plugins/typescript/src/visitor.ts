@@ -1,6 +1,7 @@
 import { DeclarationBlock, indent, BaseTypesVisitor, ParsedTypesConfig } from 'graphql-codegen-visitor-plugin-common';
 import { TypeScriptPluginConfig } from './index';
-import * as autoBind from 'auto-bind';
+import autoBind from 'auto-bind';
+
 import {
   FieldDefinitionNode,
   NamedTypeNode,

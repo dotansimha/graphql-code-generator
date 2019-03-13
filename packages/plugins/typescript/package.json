@@ -9,16 +9,20 @@
     "test": "jest"
   },
   "dependencies": {
+    "esm": "3.2.11",
+    "tslib": "1.9.3",
     "graphql-codegen-visitor-plugin-common": "0.18.0",
     "graphql-codegen-plugin-helpers": "0.18.0"
   },
   "devDependencies": {
+    "graphql-codegen-testing": "0.18.0",
     "graphql": "14.1.1",
     "jest": "24.1.0",
     "ts-jest": "24.0.0",
     "typescript": "3.3.3333"
   },
-  "main": "./dist/index.js",
+  "main": "cjs/index.js",
+  "module": "dist/index.js",
   "typings": "dist/index.d.ts",
   "typescript": {
     "definition": "dist/index.d.ts"
@@ -26,7 +30,10 @@
   "jest": {
     "globals": {
       "ts-jest": {
-        "enableTsDiagnostics": false
+        "enableTsDiagnostics": false,
+        "tsConfig": {
+          "esModuleInterop": true
+        }
       }
     },
     "transform": {

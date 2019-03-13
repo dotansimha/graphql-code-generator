@@ -1,8 +1,8 @@
 import chalk from 'chalk';
 import logUpdate from 'log-update';
-import * as indentString from 'indent-string';
+import indentString from 'indent-string';
 import * as logSymbol from 'log-symbols';
-import * as UpdateRenderer from 'listr-update-renderer';
+import UpdateRenderer from 'listr-update-renderer';
 import { stripIndent } from 'common-tags';
 import { ListrTask } from 'listr';
 import { DetailedError, isDetailedError } from '../errors';

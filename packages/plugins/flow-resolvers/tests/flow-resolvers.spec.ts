@@ -1,4 +1,4 @@
-import 'graphql-codegen-plugin-helpers/dist/testing';
+import 'graphql-codegen-testing';
 import { makeExecutableSchema } from 'graphql-tools';
 import { plugin } from '../src';
 

@@ -1,4 +1,4 @@
-import 'graphql-codegen-plugin-helpers/dist/testing';
+import 'graphql-codegen-testing';
 import { plugin, addToSchema } from './../src/index';
 import { buildSchema, print } from 'graphql';
 

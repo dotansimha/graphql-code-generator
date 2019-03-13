@@ -8,13 +8,16 @@
     "build": "tsc"
   },
   "dependencies": {
+    "esm": "3.2.11",
+    "tslib": "1.9.3",
     "graphql-codegen-plugin-helpers": "0.18.0"
   },
   "devDependencies": {
     "graphql": "14.1.1",
     "typescript": "3.3.3333"
   },
-  "main": "./dist/index.js",
+  "main": "cjs/index.js",
+  "module": "dist/index.js",
   "typings": "dist/index.d.ts",
   "typescript": {
     "definition": "dist/index.d.ts"

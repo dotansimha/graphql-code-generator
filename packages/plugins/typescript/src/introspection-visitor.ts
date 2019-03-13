@@ -1,7 +1,7 @@
 import { GraphQLNamedType, EnumTypeDefinitionNode, ObjectTypeDefinitionNode } from 'graphql';
 import { TsVisitor } from './visitor';
 import { TypeScriptPluginConfig } from './index';
-import * as autoBind from 'auto-bind';
+import autoBind from 'auto-bind';
 
 export class TsIntrospectionVisitor extends TsVisitor {
   private typesToInclude: GraphQLNamedType[] = [];

@@ -1,9 +1,6 @@
-import * as fs from 'fs';
-import { fileExists } from './file-exists';
+import { writeFileSync } from 'fs';
+export { fileExists } from './file-exists';
 
-export default {
-  writeSync(filepath: string, content: string) {
-    fs.writeFileSync(filepath, content);
-  },
-  fileExists
-};
+export function writeSync(filepath: string, content: string) {
+  writeFileSync(filepath, content);
+}

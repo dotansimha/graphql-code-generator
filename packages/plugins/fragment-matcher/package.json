@@ -12,6 +12,8 @@
     "graphql-codegen-plugin-helpers": "0.18.0"
   },
   "devDependencies": {
+    "esm": "3.2.11",
+    "tslib": "1.9.3",
     "graphql": "14.1.1",
     "jest": "24.1.0",
     "ts-jest": "24.0.0",
@@ -29,7 +31,10 @@
   "jest": {
     "globals": {
       "ts-jest": {
-        "enableTsDiagnostics": false
+        "enableTsDiagnostics": false,
+        "tsConfig": {
+          "esModuleInterop": true
+        }
       }
     },
     "transform": {

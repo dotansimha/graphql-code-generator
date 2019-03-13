@@ -1,4 +1,4 @@
-import 'graphql-codegen-plugin-helpers/dist/testing';
+import 'graphql-codegen-testing';
 import { plugin } from '../src/index';
 import { parse } from 'graphql';
 import { validateTs } from '../../typescript/tests/validate';

@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "importHelpers": true,
+    "experimentalDecorators": true,
+    "module": "esnext",
+    "target": "es2018",
+    "lib": ["es6", "esnext", "es2015"],
+    "suppressImplicitAnyIndexErrors": true,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "sourceMap": true,
+    "declaration": true,
+    "outDir": "./dist/",
+    "rootDir": "./src/",
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "resolveJsonModule": true
+  },
+  "files": ["src/index.ts"],
+  "exclude": ["node_modules"]
+}

@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
+    "importHelpers": true,
     "experimentalDecorators": true,
-    "module": "commonjs",
-    "target": "es5",
+    "module": "esnext",
+    "target": "es2018",
     "lib": ["es6", "esnext", "es2015"],
     "suppressImplicitAnyIndexErrors": true,
     "moduleResolution": "node",

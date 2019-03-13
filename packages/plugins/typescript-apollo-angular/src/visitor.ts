@@ -1,5 +1,5 @@
 import { ClientSideBaseVisitor } from 'graphql-codegen-visitor-plugin-common';
-import * as autoBind from 'auto-bind';
+import autoBind from 'auto-bind';
 import { parse, FragmentDefinitionNode, OperationDefinitionNode, print, Kind } from 'graphql';
 
 const R_MOD = /module\:\s*"([^"]+)"/; // matches: module: "..."
@@ -18,7 +18,7 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor {
 
   public getImports(): string {
     const baseImports = super.getImports();
-    const imports = [`import { Injectable } from '@angular/core';`, `import * as Apollo from 'apollo-angular';`];
+    const imports = [`import { Injectable } from '@angular/core';`, `import Apollo from 'apollo-angular';`];
 
     const defs: Record<string, { path: string; module: string }> = {};
 

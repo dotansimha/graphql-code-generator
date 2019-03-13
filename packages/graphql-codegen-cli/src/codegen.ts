@@ -1,5 +1,5 @@
 import { FileOutput, DocumentFile, Types, debugLog } from 'graphql-codegen-plugin-helpers';
-import * as Listr from 'listr';
+import Listr from 'listr';
 import { normalizeOutputParam, normalizeInstanceOrArray, normalizeConfig } from './helpers';
 import { prettify } from './utils/prettier';
 import { Renderer } from './utils/listr-renderer';
@@ -8,6 +8,8 @@ import { loadSchema, loadDocuments } from './load';
 import { mergeSchemas } from './merge-schemas';
 import { GraphQLError, DocumentNode, visit } from 'graphql';
 import { executePlugin, getPluginByName } from './execute-plugin';
+
+export const defaultPluginLoader = (mod: string) => import(mod);
 
 export interface GenerateOutputOptions {
   filename: string;
@@ -66,10 +68,12 @@ export async function executeCodegen(config: Types.Config): Promise<FileOutput[]
   let rootDocuments: Types.OperationDocument[];
   let generates: { [filename: string]: Types.ConfiguredOutput } = {};
 
-  function normalize() {
+  async function normalize() {
     /* Load Require extensions */
     const requireExtensions = normalizeInstanceOrArray<string>(config.require);
-    requireExtensions.forEach(mod => require(mod));
+    for (const mod of requireExtensions) {
+      await import(mod);
+    }
 
     /* Root templates-config */
     rootConfig = config.config || {};
@@ -209,7 +213,7 @@ export async function executeCodegen(config: Types.Config): Promise<FileOutput[]
                         ...rootConfig,
                         ...outputFileTemplateConfig
                       },
-                      pluginLoader: config.pluginLoader || require
+                      pluginLoader: config.pluginLoader || defaultPluginLoader
                     });
                     result.push(output);
                   }, filename)

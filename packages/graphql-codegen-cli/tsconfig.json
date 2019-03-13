@@ -1,8 +1,10 @@
 {
   "compilerOptions": {
+    "importHelpers": true,
     "experimentalDecorators": true,
-    "module": "commonjs",
-    "target": "es5",
+    "allowSyntheticDefaultImports": true,
+    "module": "esnext",
+    "target": "es2018",
     "lib": ["es6", "esnext", "es2015", "dom"],
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,

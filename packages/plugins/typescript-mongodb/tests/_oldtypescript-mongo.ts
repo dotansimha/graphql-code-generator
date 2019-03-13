@@ -1,7 +1,7 @@
-import 'graphql-codegen-plugin-helpers/dist/testing';
+import 'graphql-codegen-testing';
 import { SchemaTemplateContext, schemaToTemplateContext } from 'graphql-codegen-plugin-helpers';
 import { entityFields } from '../src/helpers/entity-fields';
-import { addToSchema, plugin } from '../dist';
+import { addToSchema, plugin } from '../src';
 import { pascalCase } from 'change-case';
 import { print, GraphQLSchema } from 'graphql';
 import { makeExecutableSchema } from 'graphql-tools';

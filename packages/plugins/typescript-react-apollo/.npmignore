@@ -2,4 +2,5 @@ src
 node_modules
 tests
 !dist
+!cjs
 example

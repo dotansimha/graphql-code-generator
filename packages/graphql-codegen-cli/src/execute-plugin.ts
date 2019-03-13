@@ -26,7 +26,7 @@ export async function getPluginByName(name: string, pluginLoader: Types.PluginLo
 
   for (const moduleName of possibleModules) {
     try {
-      return pluginLoader(moduleName) as CodegenPlugin;
+      return (await pluginLoader(moduleName)) as CodegenPlugin;
     } catch (err) {
       if (err.message.indexOf(`Cannot find module '${moduleName}'`) === -1) {
         throw new DetailedError(
