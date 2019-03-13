@@ -40,7 +40,7 @@ If you don't want to use the wizard, create a basic `codegen.yml` configuration 
 schema: http://localhost:3000/graphql
 generates:
   src/types.ts:
-    - typescript-common
+    - typescript
     - typescript-server
 ```
 
