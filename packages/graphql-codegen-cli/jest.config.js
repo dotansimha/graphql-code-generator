@@ -3,9 +3,7 @@ module.exports = {
   testEnvironment: 'node',
   globals: {
     'ts-jest': {
-      tsConfig: {
-        esModuleInterop: true
-      }
+      tsConfig: {}
     }
   }
 };

@@ -1,5 +1,5 @@
 import { ClientSideBaseVisitor } from 'graphql-codegen-visitor-plugin-common';
-import autoBind from 'auto-bind';
+import * as autoBind from 'auto-bind';
 import { parse, FragmentDefinitionNode, OperationDefinitionNode, print, Kind } from 'graphql';
 
 const R_MOD = /module\:\s*"([^"]+)"/; // matches: module: "..."

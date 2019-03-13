@@ -2,7 +2,6 @@
   "compilerOptions": {
     "importHelpers": true,
     "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
     "experimentalDecorators": true,
     "module": "esnext",
     "target": "es2018",

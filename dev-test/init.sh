@@ -1,3 +1,3 @@
 #/bin/sh
 
-node packages/graphql-codegen-cli/dist/cli.js init
+node packages/graphql-codegen-cli/dist/commonjs/cli.js init

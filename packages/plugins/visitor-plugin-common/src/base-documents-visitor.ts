@@ -1,6 +1,5 @@
 import { ScalarsMap, NamingConvention, ConvertFn, ConvertOptions } from './types';
-import autoBind from 'auto-bind';
-import { resolveExternalModuleAndFn } from 'graphql-codegen-plugin-helpers';
+import * as autoBind from 'auto-bind';
 import { DEFAULT_SCALARS } from './scalars';
 import { toPascalCase, DeclarationBlock, DeclarationBlockConfig } from './utils';
 import {

@@ -9,7 +9,7 @@ import {
   indent
 } from 'graphql-codegen-visitor-plugin-common';
 import { TypeScriptOperationVariablesToObject } from 'graphql-codegen-typescript';
-import autoBind from 'auto-bind';
+import * as autoBind from 'auto-bind';
 import { Directives, TypeScriptMongoPluginConfig } from './index';
 import {
   DirectiveNode,
