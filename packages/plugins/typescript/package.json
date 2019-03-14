@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc",
-    "test": "jest"
+    "test": "jest --config ../../../jest.config.js"
   },
   "dependencies": {
     "esm": "3.2.11",
@@ -26,27 +26,5 @@
   "typings": "dist/index.d.ts",
   "typescript": {
     "definition": "dist/index.d.ts"
-  },
-  "jest": {
-    "globals": {
-      "ts-jest": {
-        "enableTsDiagnostics": false,
-        "tsConfig": {
-          "esModuleInterop": true
-        }
-      }
-    },
-    "transform": {
-      "^.+\\.tsx?$": "ts-jest"
-    },
-    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "jsx",
-      "json",
-      "node"
-    ]
   }
 }

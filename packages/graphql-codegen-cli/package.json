@@ -14,7 +14,7 @@
     "lint": "tslint src/**/*.ts",
     "prebuild": "yarn clean",
     "build": "tsc",
-    "test": "jest --no-cache --verbose --runInBand"
+    "test": "jest --config ../../jest.config.js"
   },
   "keywords": [
     "gql",
