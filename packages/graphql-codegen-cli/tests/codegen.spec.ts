@@ -1,7 +1,6 @@
-import { makeExecutableSchema } from 'graphql-tools';
+import { GraphQLObjectType, buildSchema, buildASTSchema, parse, print } from 'graphql';
+import { mergeSchemas } from 'graphql-codegen-core';
 import { executeCodegen } from '../src/codegen';
-import { mergeSchemas, buildSchema } from '../src/merge-schemas';
-import { GraphQLObjectType, parse, print } from 'graphql';
 
 const SHOULD_NOT_THROW_STRING = 'SHOULD_NOT_THROW';
 const SIMPLE_TEST_SCHEMA = `type MyType { f: String } type Query { f: String }`;
@@ -540,18 +539,16 @@ describe('Codegen Executor', () => {
 
   describe('Schema Merging', () => {
     it('should keep definitions of all directives', async () => {
-      const merged = buildSchema(
+      const merged = buildASTSchema(
         await mergeSchemas([
-          makeExecutableSchema({ typeDefs: SIMPLE_TEST_SCHEMA }),
-          makeExecutableSchema({
-            typeDefs: `
+          buildSchema(SIMPLE_TEST_SCHEMA),
+          buildSchema(/* GraphQL */ `
             directive @id on FIELD_DEFINITION
 
             type Post {
               id: String @id
             }
-          `
-          })
+          `)
         ])
       );
 
@@ -559,11 +556,10 @@ describe('Codegen Executor', () => {
     });
 
     it('should keep directives in types', async () => {
-      const merged = buildSchema(
+      const merged = buildASTSchema(
         await mergeSchemas([
-          makeExecutableSchema({ typeDefs: SIMPLE_TEST_SCHEMA }),
-          makeExecutableSchema({
-            typeDefs: `
+          buildSchema(SIMPLE_TEST_SCHEMA),
+          buildSchema(/* GraphQL */ `
             directive @id on FIELD_DEFINITION
             directive @test on OBJECT
 
@@ -578,8 +574,7 @@ describe('Codegen Executor', () => {
             schema {
               query: Query
             }
-          `
-          })
+          `)
         ])
       );
 
@@ -607,7 +602,7 @@ describe('Codegen Executor', () => {
       expect(print(merged)).toContain('scalar UniqueID');
       expect(print(merged)).toContain('scalar NotUniqueID');
 
-      const schema = buildSchema(merged);
+      const schema = buildASTSchema(merged);
 
       expect(schema.getType('UniqueID')).toBeDefined();
       expect(schema.getType('NotUniqueID')).toBeDefined();
