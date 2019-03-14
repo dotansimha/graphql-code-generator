@@ -27,8 +27,8 @@ export type EntryCommentsArgs = {
 };
 
 export enum FeedType {
-  Hot = 'HOT', 
-  New = 'NEW', 
+  Hot = 'HOT',
+  New = 'NEW',
   Top = 'TOP'
 }
 
@@ -103,8 +103,8 @@ export type Vote = {
 };
 
 export enum VoteType {
-  Up = 'UP', 
-  Down = 'DOWN', 
+  Up = 'UP',
+  Down = 'DOWN',
   Cancel = 'CANCEL'
 }
 export type OnCommentAddedSubscriptionVariables = {
