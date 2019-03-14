@@ -502,8 +502,6 @@ describe('Codegen Executor', () => {
         });
         throw new Error(SHOULD_NOT_THROW_STRING);
       } catch (e) {
-        // tslint:disable-next-line:no-console
-        console.log(e);
         expect(e.message).not.toBe(SHOULD_NOT_THROW_STRING);
         expect(e.errors[0].message).toContain('Invalid Custom Plugin');
         expect(e.errors[0].details).toContain('does not export a valid JS object with');

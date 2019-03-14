@@ -31,8 +31,7 @@
   "jest": {
     "globals": {
       "ts-jest": {
-        "enableTsDiagnostics": false,
-        "tsConfig": {}
+        "enableTsDiagnostics": false
       }
     },
     "transform": {

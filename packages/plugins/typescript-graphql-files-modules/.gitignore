@@ -1,6 +1,5 @@
 node_modules
 npm-debug.log
 dist
-cjs
 temp
 yarn-error.log
