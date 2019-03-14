@@ -24,8 +24,9 @@ export const plugin: PluginFunction<TypeScriptMongoPluginConfig> = (
   const printedSchema = printSchemaWithDirectives(schema);
   const astNode = parse(printedSchema);
   const visitorResult = visit(astNode, { leave: visitor as any });
+  const header = visitor.objectIdImport;
 
-  return visitorResult.definitions.filter(d => typeof d === 'string').join('\n');
+  return [header, ...visitorResult.definitions.filter(d => typeof d === 'string')].join('\n');
 };
 
 export enum Directives {

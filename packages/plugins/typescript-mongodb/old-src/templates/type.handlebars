@@ -1,6 +1,0 @@
-{{#ifNotRootType this }}
-{{#ifDirective this "entity" }}
-
-export interface {{ ../name }}DbObject {{{ entityFields ../this }}}
-{{/ifDirective}}
-{{/ifNotRootType}}

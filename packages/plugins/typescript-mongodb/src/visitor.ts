@@ -28,12 +28,30 @@ export interface TypeScriptMongoPluginParsedConfig extends ParsedConfig {
   dbTypeSuffix: string;
   dbInterfaceSuffix: string;
   objectIdType: string;
+  objectIdImport: string;
   idFieldName: string;
   enumsAsString: boolean;
   avoidOptionals: boolean;
 }
 
 type Directivable = { directives?: ReadonlyArray<DirectiveNode> };
+
+function resolveObjectId(pointer: string | null | undefined): { identifier: string; module: string } {
+  if (!pointer) {
+    return { identifier: 'ObjectID', module: 'mongodb' };
+  }
+
+  if (pointer.includes('#')) {
+    const [path, module] = pointer.split('#');
+
+    return { identifier: path, module };
+  }
+
+  return {
+    identifier: pointer,
+    module: null
+  };
+}
 
 export class TsMongoVisitor extends BaseVisitor<TypeScriptMongoPluginConfig, TypeScriptMongoPluginParsedConfig> {
   private _variablesTransformer: TypeScriptOperationVariablesToObject;
@@ -42,13 +60,22 @@ export class TsMongoVisitor extends BaseVisitor<TypeScriptMongoPluginConfig, Typ
     super(pluginConfig, ({
       dbTypeSuffix: pluginConfig.dbTypeSuffix || 'DbObject',
       dbInterfaceSuffix: pluginConfig.dbInterfaceSuffix || 'DbInterface',
-      objectIdType: pluginConfig.objectIdType || 'ObjectID',
+      objectIdType: resolveObjectId(pluginConfig.objectIdType).identifier,
+      objectIdImport: resolveObjectId(pluginConfig.objectIdType).module,
       idFieldName: pluginConfig.idFieldName || '_id',
       enumsAsString: getConfigValue<boolean>(pluginConfig.enumsAsString, true),
       avoidOptionals: getConfigValue<boolean>(pluginConfig.avoidOptionals, false)
     } as Partial<TypeScriptMongoPluginParsedConfig>) as any);
     autoBind(this);
     this._variablesTransformer = new TypeScriptOperationVariablesToObject(this.scalars, this.convertName, false, false);
+  }
+
+  public get objectIdImport(): string {
+    if (this.config.objectIdImport === null) {
+      return null;
+    }
+
+    return `import { ${this.config.objectIdType} } from '${this.config.objectIdImport}';`;
   }
 
   private _resolveDirectiveValue<T>(valueNode: ValueNode): T | undefined | null {
