@@ -1,22 +1,17 @@
-const { makeExecutableSchema } = require('graphql-tools');
+const { buildSchema } = require('graphql');
 
-const schema = makeExecutableSchema({
-  typeDefs: [
-    `
-    type User {
-      a: String
-    }
-    
-    type Query {
-      user: User
-    }
-  `,
-    `
-    extend type Query {
-      hello: String
-    }
-  `
-  ]
-});
+const schema = buildSchema(/* GraphQL */ `
+  type User {
+    a: String
+  }
+
+  type Query {
+    user: User
+  }
+
+  extend type Query {
+    hello: String
+  }
+`);
 
 module.exports = schema;

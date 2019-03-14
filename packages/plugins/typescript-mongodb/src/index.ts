@@ -40,7 +40,7 @@ export enum Directives {
   MAP = 'map'
 }
 
-export const addToSchema = gql`
+export const DIRECTIVES = gql`
   directive @${Directives.UNION}(discriminatorField: String, additionalFields: [AdditionalEntityFields]) on UNION
   directive @${
     Directives.ABSTRACT_ENTITY
@@ -57,6 +57,8 @@ export const addToSchema = gql`
     type: String
   }
 `;
+
+export const addToSchema = DIRECTIVES;
 
 export const validate: PluginValidateFn<any> = async (
   schema: GraphQLSchema,

@@ -1,43 +1,41 @@
 import 'graphql-codegen-testing';
-import { makeExecutableSchema } from 'graphql-tools';
+import { buildSchema } from 'graphql';
 import { plugin } from '../src';
 
 describe('Flow Resolvers Plugin', () => {
-  const schema = makeExecutableSchema({
-    typeDefs: `
-      type MyType {
-        foo: String!
-        otherType: MyOtherType
-        withArgs(arg: String, arg2: String!): String
-      }
+  const schema = buildSchema(/* GraphQL */ `
+    type MyType {
+      foo: String!
+      otherType: MyOtherType
+      withArgs(arg: String, arg2: String!): String
+    }
 
-      type MyOtherType {
-        bar: String!
-      }
+    type MyOtherType {
+      bar: String!
+    }
 
-      type Query {
-        something: MyType!
-      }
+    type Query {
+      something: MyType!
+    }
 
-      type Subscription {
-        somethingChanged: MyOtherType
-      }
+    type Subscription {
+      somethingChanged: MyOtherType
+    }
 
-      interface Node {
-        id: ID!
-      }
+    interface Node {
+      id: ID!
+    }
 
-      type SomeNode implements Node {
-        id: ID!
-      }
+    type SomeNode implements Node {
+      id: ID!
+    }
 
-      union MyUnion = MyType | MyOtherType
+    union MyUnion = MyType | MyOtherType
 
-      scalar MyScalar
+    scalar MyScalar
 
-      directive @myDirective(arg: Int!, arg2: String!, arg3: Boolean!) on FIELD
-  `
-  });
+    directive @myDirective(arg: Int!, arg2: String!, arg3: Boolean!) on FIELD
+  `);
 
   it('Should generate basic type resolvers', () => {
     const result = plugin(schema, [], {}, { outputFile: '' });
@@ -83,7 +81,7 @@ describe('Flow Resolvers Plugin', () => {
   });
 
   it('Should generate the correct imports when schema has scalars', () => {
-    const result = plugin(makeExecutableSchema({ typeDefs: `scalar MyScalar` }), [], {}, { outputFile: '' });
+    const result = plugin(buildSchema(`scalar MyScalar`), [], {}, { outputFile: '' });
 
     expect(result).toBeSimilarStringTo(
       `import { type GraphQLResolveInfo, type GraphQLScalarTypeConfig } from 'graphql';`
@@ -91,7 +89,7 @@ describe('Flow Resolvers Plugin', () => {
   });
 
   it('Should generate the correct imports when schema has no scalars', () => {
-    const result = plugin(makeExecutableSchema({ typeDefs: `type MyType { f: String }` }), [], {}, { outputFile: '' });
+    const result = plugin(buildSchema(`type MyType { f: String }`), [], {}, { outputFile: '' });
 
     expect(result).not.toBeSimilarStringTo(
       `import { type GraphQLResolveInfo, type GraphQLScalarTypeConfig } from 'graphql';`
@@ -204,7 +202,7 @@ describe('Flow Resolvers Plugin', () => {
   });
   it('Should generate the correct resolver args type names when typesPrefix is specified', () => {
     const result = plugin(
-      makeExecutableSchema({ typeDefs: `type MyType { f(a: String): String }` }),
+      buildSchema(`type MyType { f(a: String): String }`),
       [],
       { typesPrefix: 'T' },
       { outputFile: '' }

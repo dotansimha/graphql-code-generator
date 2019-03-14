@@ -1,82 +1,80 @@
 import 'graphql-codegen-testing';
 import { parse, buildClientSchema, buildSchema } from 'graphql';
-import { makeExecutableSchema } from 'graphql-tools';
 import { readFileSync } from 'fs';
 import { format } from 'prettier';
 import { plugin } from '../src/index';
 import { validateTs } from '../../typescript/tests/validate';
 import { plugin as tsPlugin } from '../../typescript/src/index';
 
-describe('TypeScript Operations Plugin', async () => {
+describe('TypeScript Operations Plugin', () => {
   const gitHuntSchema = buildClientSchema(JSON.parse(readFileSync('../../../dev-test/githunt/schema.json', 'utf-8')));
-  const schema = makeExecutableSchema({
-    typeDefs: `
-      type User {
-        id: ID!
-        username: String!
-        email: String!
-        profile: Profile
-        role: Role
-      }
 
-      type Profile {
-        age: Int
-        firstName: String!
-      }
+  const schema = buildSchema(/* GraphQL */ `
+    type User {
+      id: ID!
+      username: String!
+      email: String!
+      profile: Profile
+      role: Role
+    }
 
-      type Mutation {
-        login(username: String!, password: String!): User
-      }
+    type Profile {
+      age: Int
+      firstName: String!
+    }
 
-      type Subscription {
-        userCreated: User
-      }
+    type Mutation {
+      login(username: String!, password: String!): User
+    }
 
-      interface Notifiction {
-        id: ID!
-      }
+    type Subscription {
+      userCreated: User
+    }
 
-      type TextNotification implements Notifiction {
-        id: ID!
-        text: String!
-      }
+    interface Notifiction {
+      id: ID!
+    }
 
-      type ImageNotification implements Notifiction {
-        id: ID!
-        imageUrl: String!
-        metadata: ImageMetadata!
-      }
+    type TextNotification implements Notifiction {
+      id: ID!
+      text: String!
+    }
 
-      type ImageMetadata {
-        createdBy: String!
-      }
+    type ImageNotification implements Notifiction {
+      id: ID!
+      imageUrl: String!
+      metadata: ImageMetadata!
+    }
 
-      enum Role {
-        USER
-        ADMIN
-      }
+    type ImageMetadata {
+      createdBy: String!
+    }
 
-      union MyUnion = User | Profile
+    enum Role {
+      USER
+      ADMIN
+    }
 
-      type Query {
-        me: User
-        unionTest: MyUnion
-        notifications: [Notifiction!]!
-        dummy: String
-        dummyNonNull: String!
-        dummyArray: [String]
-        dummyNonNullArray: [String]!
-        dummyNonNullArrayWithValues: [String!]!
-        dummyWithType: Profile
-      }
+    union MyUnion = User | Profile
 
-      schema {
-        query: Query
-        mutation: Mutation
-        subscription: Subscription
-      }
-    `
-  });
+    type Query {
+      me: User
+      unionTest: MyUnion
+      notifications: [Notifiction!]!
+      dummy: String
+      dummyNonNull: String!
+      dummyArray: [String]
+      dummyNonNullArray: [String]!
+      dummyNonNullArrayWithValues: [String!]!
+      dummyWithType: Profile
+    }
+
+    schema {
+      query: Query
+      mutation: Mutation
+      subscription: Subscription
+    }
+  `);
 
   const validate = async (content: string, config: any = {}, pluginSchema = schema) =>
     validateTs((await tsPlugin(pluginSchema, [], config, { outputFile: '' })) + '\n' + content);
@@ -662,23 +660,21 @@ describe('TypeScript Operations Plugin', async () => {
     });
 
     it('avoid duplicates - each type name should be unique', async () => {
-      const testSchema = makeExecutableSchema({
-        typeDefs: parse(/* GraphQL */ `
-          type DeleteMutation {
-            deleted: Boolean!
-          }
-          type UpdateMutation {
-            updated: Boolean!
-          }
-          union MessageMutationType = DeleteMutation | UpdateMutation
-          type Query {
-            dummy: String
-          }
-          type Mutation {
-            mutation(message: String!, type: String!): MessageMutationType!
-          }
-        `)
-      });
+      const testSchema = buildSchema(/* GraphQL */ `
+        type DeleteMutation {
+          deleted: Boolean!
+        }
+        type UpdateMutation {
+          updated: Boolean!
+        }
+        union MessageMutationType = DeleteMutation | UpdateMutation
+        type Query {
+          dummy: String
+        }
+        type Mutation {
+          mutation(message: String!, type: String!): MessageMutationType!
+        }
+      `);
       const query = parse(/* GraphQL */ `
         mutation SubmitMessage($message: String!) {
           mutation(message: $message) {
@@ -713,16 +709,14 @@ describe('TypeScript Operations Plugin', async () => {
     });
 
     it('should use __typename in fragments when requested', async () => {
-      const testSchema = makeExecutableSchema({
-        typeDefs: parse(/* GraphQL */ `
-          type Post {
-            title: String
-          }
-          type Query {
-            post: Post!
-          }
-        `)
-      });
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Post {
+          title: String
+        }
+        type Query {
+          post: Post!
+        }
+      `);
       const query = parse(/* GraphQL */ `
         query Post {
           post {
@@ -750,16 +744,14 @@ describe('TypeScript Operations Plugin', async () => {
     });
 
     it('should handle introspection types (__schema)', async () => {
-      const testSchema = makeExecutableSchema({
-        typeDefs: parse(/* GraphQL */ `
-          type Post {
-            title: String
-          }
-          type Query {
-            post: Post!
-          }
-        `)
-      });
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Post {
+          title: String
+        }
+        type Query {
+          post: Post!
+        }
+      `);
       const query = parse(/* GraphQL */ `
         query Info {
           __schema {
@@ -793,16 +785,14 @@ describe('TypeScript Operations Plugin', async () => {
     });
 
     it('should handle introspection types (__type)', async () => {
-      const testSchema = makeExecutableSchema({
-        typeDefs: parse(/* GraphQL */ `
-          type Post {
-            title: String
-          }
-          type Query {
-            post: Post!
-          }
-        `)
-      });
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Post {
+          title: String
+        }
+        type Query {
+          post: Post!
+        }
+      `);
       const query = parse(/* GraphQL */ `
         query Info {
           __type(name: "Post") {
@@ -900,31 +890,29 @@ describe('TypeScript Operations Plugin', async () => {
           Input_Object = 'INPUT_OBJECT', 
           List = 'LIST', 
           Non_Null = 'NON_NULL'
-        };
+        }
       `);
 
       validateTs(content);
     });
 
     it('Should generate correctly when using enums and typesPrefix', async () => {
-      const testSchema = makeExecutableSchema({
-        typeDefs: parse(/* GraphQL */ `
-          enum Access {
-            Read
-            Write
-            All
-          }
-          type User {
-            access: Access
-          }
-          input Filter {
-            match: String!
-          }
-          type Query {
-            users(filter: Filter!): [User]
-          }
-        `)
-      });
+      const testSchema = buildSchema(/* GraphQL */ `
+        enum Access {
+          Read
+          Write
+          All
+        }
+        type User {
+          access: Access
+        }
+        input Filter {
+          match: String!
+        }
+        type Query {
+          users(filter: Filter!): [User]
+        }
+      `);
       const query = parse(/* GraphQL */ `
         query users($filter: Filter!) {
           users(filter: $filter) {

@@ -1,45 +1,43 @@
 import 'graphql-codegen-testing';
-import { makeExecutableSchema } from 'graphql-tools';
+import { buildSchema } from 'graphql';
 import { plugin } from '../src';
 import { plugin as tsPlugin } from '../../typescript/src/index';
 import { validateTs } from '../../typescript/tests/validate';
 
 describe('TypeScript Resolvers Plugin', () => {
-  const schema = makeExecutableSchema({
-    typeDefs: `
-      type MyType {
-        foo: String!
-        otherType: MyOtherType
-        withArgs(arg: String, arg2: String!): String
-      }
+  const schema = buildSchema(/* GraphQL */ `
+    type MyType {
+      foo: String!
+      otherType: MyOtherType
+      withArgs(arg: String, arg2: String!): String
+    }
 
-      type MyOtherType {
-        bar: String!
-      }
+    type MyOtherType {
+      bar: String!
+    }
 
-      type Query {
-        something: MyType!
-      }
+    type Query {
+      something: MyType!
+    }
 
-      type Subscription {
-        somethingChanged: MyOtherType
-      }
+    type Subscription {
+      somethingChanged: MyOtherType
+    }
 
-      interface Node {
-        id: ID!
-      }
+    interface Node {
+      id: ID!
+    }
 
-      type SomeNode implements Node {
-        id: ID!
-      }
+    type SomeNode implements Node {
+      id: ID!
+    }
 
-      union MyUnion = MyType | MyOtherType
+    union MyUnion = MyType | MyOtherType
 
-      scalar MyScalar
+    scalar MyScalar
 
-      directive @myDirective(arg: Int!, arg2: String!, arg3: Boolean!) on FIELD
-  `
-  });
+    directive @myDirective(arg: Int!, arg2: String!, arg3: Boolean!) on FIELD
+  `);
 
   const validate = async (content: string, config: any = {}, pluginSchema = schema) => {
     const mergedContent = (await tsPlugin(pluginSchema, [], config, { outputFile: '' })) + '\n' + content;
@@ -93,7 +91,7 @@ describe('TypeScript Resolvers Plugin', () => {
   });
 
   it('Should generate the correct imports when schema has scalars', async () => {
-    const testSchema = makeExecutableSchema({ typeDefs: `scalar MyScalar` });
+    const testSchema = buildSchema(`scalar MyScalar`);
     const result = await plugin(testSchema, [], {}, { outputFile: '' });
 
     expect(result).toBeSimilarStringTo(
@@ -103,7 +101,7 @@ describe('TypeScript Resolvers Plugin', () => {
   });
 
   it('Should generate the correct imports when schema has no scalars', async () => {
-    const testSchema = makeExecutableSchema({ typeDefs: `type MyType { f: String }` });
+    const testSchema = buildSchema(`type MyType { f: String }`);
     const result = await plugin(testSchema, [], {}, { outputFile: '' });
 
     expect(result).not.toBeSimilarStringTo(`import { GraphQLResolveInfo, GraphQLScalarTypeConfig } from 'graphql';`);
@@ -218,7 +216,7 @@ describe('TypeScript Resolvers Plugin', () => {
   });
 
   it('Should generate the correct resolver args type names when typesPrefix is specified', async () => {
-    const testSchema = makeExecutableSchema({ typeDefs: `type MyType { f(a: String): String }` });
+    const testSchema = buildSchema(`type MyType { f(a: String): String }`);
     const config = { typesPrefix: 'T' };
     const result = await plugin(testSchema, [], config, { outputFile: '' });
 
@@ -226,30 +224,28 @@ describe('TypeScript Resolvers Plugin', () => {
     await validate(result, config, testSchema);
   });
   it('should generate Resolvers interface', async () => {
-    const testSchema = makeExecutableSchema({
-      typeDefs: `
-        directive @modify(limit: Int) on FIELD_DEFINITION
-        scalar Date
-        type Query {
-          post: Post
-          entity: PostOrUser
-        }
-        interface Node {
-          id: String
-        }
-        union PostOrUser = Post | User
-        type Post implements Node {
-          author: User
-        }
-        type User implements Node {
-          id: String
-          name: String
-        }
-        schema {
-          query: Query
-        }
-      `
-    });
+    const testSchema = buildSchema(/* GraphQL */ `
+      directive @modify(limit: Int) on FIELD_DEFINITION
+      scalar Date
+      type Query {
+        post: Post
+        entity: PostOrUser
+      }
+      interface Node {
+        id: String
+      }
+      union PostOrUser = Post | User
+      type Post implements Node {
+        author: User
+      }
+      type User implements Node {
+        id: String
+        name: String
+      }
+      schema {
+        query: Query
+      }
+    `);
 
     const content = await plugin(
       testSchema,

@@ -1,80 +1,77 @@
 import 'graphql-codegen-testing';
-import { parse, visit, buildClientSchema } from 'graphql';
+import { parse, visit, buildClientSchema, buildSchema } from 'graphql';
 import { FlowDocumentsVisitor } from '../src/visitor';
-import { makeExecutableSchema } from 'graphql-tools';
 import { validateFlow } from './validate-flow';
 import { readFileSync } from 'fs';
 
 describe('Flow Operations Plugin', () => {
   const gitHuntSchema = buildClientSchema(JSON.parse(readFileSync('../../../dev-test/githunt/schema.json', 'utf-8')));
-  const schema = makeExecutableSchema({
-    typeDefs: `
-      type User {
-        id: ID!
-        username: String!
-        email: String!
-        profile: Profile
-        role: Role
-      }
+  const schema = buildSchema(/* GraphQL */ `
+    type User {
+      id: ID!
+      username: String!
+      email: String!
+      profile: Profile
+      role: Role
+    }
 
-      type Profile {
-        age: Int
-        firstName: String!
-      }
+    type Profile {
+      age: Int
+      firstName: String!
+    }
 
-      type Mutation {
-        login(username: String!, password: String!): User
-      }
+    type Mutation {
+      login(username: String!, password: String!): User
+    }
 
-      type Subscription {
-        userCreated: User
-      }
+    type Subscription {
+      userCreated: User
+    }
 
-      interface Notifiction {
-        id: ID!
-      }
+    interface Notifiction {
+      id: ID!
+    }
 
-      type TextNotification implements Notifiction {
-        id: ID!
-        text: String!
-      }
+    type TextNotification implements Notifiction {
+      id: ID!
+      text: String!
+    }
 
-      type ImageNotification implements Notifiction {
-        id: ID!
-        imageUrl: String!
-        metadata: ImageMetadata!
-      }
+    type ImageNotification implements Notifiction {
+      id: ID!
+      imageUrl: String!
+      metadata: ImageMetadata!
+    }
 
-      type ImageMetadata {
-        createdBy: String!
-      }
+    type ImageMetadata {
+      createdBy: String!
+    }
 
-      enum Role {
-        USER
-        ADMIN
-      }
+    enum Role {
+      USER
+      ADMIN
+    }
 
-      union MyUnion = User | Profile
+    union MyUnion = User | Profile
 
-      type Query {
-        me: User
-        unionTest: MyUnion
-        notifications: [Notifiction!]!
-        dummy: String
-        dummyNonNull: String!
-        dummyArray: [String]
-        dummyNonNullArray: [String]!
-        dummyNonNullArrayWithValues: [String!]!
-        dummyWithType: Profile
-      }
+    type Query {
+      me: User
+      unionTest: MyUnion
+      notifications: [Notifiction!]!
+      dummy: String
+      dummyNonNull: String!
+      dummyArray: [String]
+      dummyNonNullArray: [String]!
+      dummyNonNullArrayWithValues: [String!]!
+      dummyWithType: Profile
+    }
 
-      schema {
-        query: Query
-        mutation: Mutation
-        subscription: Subscription
-      }
-    `
-  });
+    schema {
+      query: Query
+      mutation: Mutation
+      subscription: Subscription
+    }
+  `);
 
   describe('Naming Convention & Types Prefix', () => {
     it('Should allow custom naming and point to the correct type', () => {

@@ -110,21 +110,17 @@ schema: schema.js
 ```
 
 ```javascript
-import { makeExecutableSchema } from 'graphql-tools';
+const { buildSchema } = require('graphql');
 
-const schema = makeExecutableSchema({
-  typeDefs: `
-        type MyType {
-            foo: String!
-        }
+module.exports = buildSchema(/* GraphQL */ `
+  type MyType {
+    foo: String!
+  }
 
-        type Query {
-            myType: MyType!
-        }
-    `
-});
-
-export default schema;
+  type Query {
+    myType: MyType!
+  }
+`);
 ```
 
 > You can also import from TypeScript files, but don't forget to specify [require field](./require-field).
@@ -152,10 +148,10 @@ schema:
 Your custom loader should export a default function, and return `GraphQLSchema` object. For example:
 
 ```js
-const { makeExecutableSchema } = require('graphql-tools');
+const { buildSchema } = require('graphql');
 const { readFileSync } = require('fs');
 
 module.exports = function(schemaString, config) {
-  return makeExecutableSchema({ typeDefs: readFileSync(schemaString, { encoding: 'utf-8' }) });
+  return buildSchema(readFileSync(schemaString, { encoding: 'utf-8' }));
 };
 ```
