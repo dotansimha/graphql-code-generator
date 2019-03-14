@@ -29,7 +29,6 @@
     "graphql-codegen-typescript-graphql-files-modules": "0.18.0",
     "graphql-codegen-typescript-mongodb": "0.18.0",
     "graphql-codegen-typescript-react-apollo": "0.18.0",
-    "prettier": "1.16.4",
     "@material-ui/core": "3.9.2"
   },
   "scripts": {
