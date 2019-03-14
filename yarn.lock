@@ -4883,11 +4883,6 @@ eslint@5.6.0:
     table "^4.0.3"
     text-table "^0.2.0"
 
-esm@3.2.11:
-  version "3.2.11"
-  resolved "https://registry.yarnpkg.com/esm/-/esm-3.2.11.tgz#f6ac0c7fbb682324e80f48950130f5a5fe953f35"
-  integrity sha512-OhgzK4tmov6Ih2gQ28k8e5kV07sGgEKG+ys3PqbDd2FBXpsZkGpFotFbrm0+KmuD2ktaV4hdPYQTDMpq9FjeTA==
-
 espree@^4.0.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/espree/-/espree-4.1.0.tgz#728d5451e0fd156c04384a7ad89ed51ff54eb25f"
@@ -5987,27 +5982,10 @@ graphql-tag@2.10.1:
   resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.10.1.tgz#10aa41f1cd8fae5373eaf11f1f67260a3cad5e02"
   integrity sha512-jApXqWBzNXQ8jYa/HLkZJaVw9jgwNqZkywa2zfFn16Iv1Zb7ELNHkJaXHR7Quvd5SIGsy6Ny7SUKATgnu05uEg==
 
-graphql-toolkit@0.2.4:
-  version "0.2.4"
-  resolved "https://registry.yarnpkg.com/graphql-toolkit/-/graphql-toolkit-0.2.4.tgz#64228f442fc451b68ad4eef51a475e28409a0c89"
-  integrity sha512-J0wYb7ucO86LkiJw5WPiVqcTcKw/XfZ6/GukG5XXDhLRXZWDxMzIB754zvU4s8LZM9F1So94nFmdJOKdqH2W/Q==
-  dependencies:
-    aggregate-error "2.2.0"
-    deepmerge "3.2.0"
-    glob "7.1.3"
-    graphql-import "0.7.1"
-    graphql-tag-pluck "0.7.0"
-    is-glob "4.0.0"
-    is-valid-path "0.1.1"
-    lodash "4.17.11"
-    request "2.88.0"
-    tslib "^1.9.3"
-    valid-url "1.0.9"
-
-graphql-toolkit@0.2.5:
-  version "0.2.5"
-  resolved "https://registry.yarnpkg.com/graphql-toolkit/-/graphql-toolkit-0.2.5.tgz#b824095ed84c97c33e89a8c7ebef2242f89dd1f2"
-  integrity sha512-CSmIx4nxXDc+XX4y4U6SuIj5abxo9ge66YAveWelo8h6kpGTlxsYiyS7L0r3KxJE7irbGHbJbbzZzjx3C9a2Qw==
+graphql-toolkit@0.2.6:
+  version "0.2.6"
+  resolved "https://registry.yarnpkg.com/graphql-toolkit/-/graphql-toolkit-0.2.6.tgz#539f82450c85d81ecb81b5c825d0c7271b458ece"
+  integrity sha512-VqvsKHYxKW3/qoJIaO17JH6AfClHcPvZRMN2rG/y6fsTKCyCCS7P1+7aKu6RPUwFkW+reqxxrXjEGOG2bkCcMQ==
   dependencies:
     aggregate-error "2.2.0"
     deepmerge "3.2.0"

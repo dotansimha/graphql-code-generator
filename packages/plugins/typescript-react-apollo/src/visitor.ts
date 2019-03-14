@@ -4,7 +4,7 @@ import {
   getConfigValue
 } from 'graphql-codegen-visitor-plugin-common';
 import { ReactApolloRawPluginConfig } from './index';
-import autoBind from 'auto-bind';
+import * as autoBind from 'auto-bind';
 import { FragmentDefinitionNode, print, OperationDefinitionNode } from 'graphql';
 import { toPascalCase } from 'graphql-codegen-plugin-helpers';
 

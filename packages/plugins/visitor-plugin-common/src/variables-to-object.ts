@@ -2,7 +2,7 @@ import { Kind, TypeNode, VariableNode, NameNode, ValueNode } from 'graphql';
 import { indent, getBaseTypeNode } from './utils';
 import { ScalarsMap, ConvertNameFn } from './types';
 import { BaseVisitorConvertOptions } from './base-visitor';
-import autoBind from 'auto-bind';
+import * as autoBind from 'auto-bind';
 
 export interface InterfaceOrVariable {
   name?: NameNode;
