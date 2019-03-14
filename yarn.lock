@@ -5972,10 +5972,10 @@ graphql-tag@2.10.1:
   resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.10.1.tgz#10aa41f1cd8fae5373eaf11f1f67260a3cad5e02"
   integrity sha512-jApXqWBzNXQ8jYa/HLkZJaVw9jgwNqZkywa2zfFn16Iv1Zb7ELNHkJaXHR7Quvd5SIGsy6Ny7SUKATgnu05uEg==
 
-graphql-toolkit@0.2.6-907be90.0:
-  version "0.2.6-907be90.0"
-  resolved "https://registry.yarnpkg.com/graphql-toolkit/-/graphql-toolkit-0.2.6-907be90.0.tgz#0d73ff128aa4b7c8b513dd093589138af3b2fbd9"
-  integrity sha512-3JaUBo8swAmSIGETmWuMXv5s4LW4yper3is48/38glqLXz/00WQp6ZMIcosXuW6PSsOqkVXiDnn1PoxZSoTY7g==
+graphql-toolkit@0.2.6:
+  version "0.2.6"
+  resolved "https://registry.yarnpkg.com/graphql-toolkit/-/graphql-toolkit-0.2.6.tgz#539f82450c85d81ecb81b5c825d0c7271b458ece"
+  integrity sha512-VqvsKHYxKW3/qoJIaO17JH6AfClHcPvZRMN2rG/y6fsTKCyCCS7P1+7aKu6RPUwFkW+reqxxrXjEGOG2bkCcMQ==
   dependencies:
     aggregate-error "2.2.0"
     deepmerge "3.2.0"
