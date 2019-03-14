@@ -3,7 +3,7 @@ id: typescript-react-apollo
 title: TypeScript React Apollo
 ---
 
-This plugin generates React Apollo components and HOC with TypeScript typings. It extends the basic TypeScript template [`graphql-codegen-typescript-common`](typescript-typings) and thus shares a similar configuration.
+This plugin generates React Apollo components and HOC with TypeScript typings. It extends the basic TypeScript template [`graphql-codegen-typescript`](typescript-typings) and thus shares a similar configuration.
 
 ## Installation
 
@@ -50,6 +50,21 @@ Or if you prefer:
 #### `gqlImport` (default value: `import gql from 'graphql-tag'`)
 
 Customize from which module will `gql` be imported from. This is useful if you want to use modules other than `graphql-tag`, e.g. `graphql.macro`. You can also control the imported GraphQL-parse function identifier e.g. `gatsby#graphql`, which will result in `import { graphql as gql } from 'gatsby'`.
+
+#### `noGraphqlTag` (default value: `false`)
+
+This will cause the codegen to output parsed documents and not use a literal tag of the `graphql-tag` package.
+
+```yaml
+# ...
+generates:
+  path/to/output:
+    config:
+      noGraphqlTag: true
+    plugins:
+      - typescript-react-apollo
+      # ...
+```
 
 #### `noHOC` (default value: `false`)
 

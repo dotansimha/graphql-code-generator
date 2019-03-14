@@ -11,7 +11,7 @@ To add your plugin validation method, export a function called `validate` from y
 
 ```js
 module.exports = {
-  plugin: (schema, documents, config) => {
+  plugin: (schema, documents, config, info) => {
     const typesMap = schema.getTypeMap();
 
     return Object.keys(typesMap).join('\n');
@@ -28,7 +28,7 @@ You can now check the schema, documents, configuration, output file and sibling 
 
 ```js
 module.exports = {
-  plugin: (schema, documents, config) => {
+  plugin: (schema, documents, config, info) => {
     const typesMap = schema.getTypeMap();
 
     return Object.keys(typesMap).join('\n');

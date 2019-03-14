@@ -21,5 +21,5 @@ generates:
   path/to/file.ts:
     plugins:
       - add: '// THIS IS A GENERATED FILE'
-      - typescript-common
+      - typescript
 ```

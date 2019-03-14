@@ -53,10 +53,9 @@ schema: 'server/src/**/*.graphql'
 documents: 'client/src/**/*.graphql'
 generates:
   client/src/models.ts:
-    - typescript-common
-    - typescript-client
+    - typescript
+    - typescript-operations
   server/src/models.ts:
-    - typescript-common
-    - typescript-server
+    - typescript
     - typescript-resolvers
 ```

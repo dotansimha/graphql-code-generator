@@ -25,7 +25,7 @@ overwrite: true
 generates:
   ./src/resolvers-types.ts:
     plugins:
-      - typescript-common
+      - typescript
       - typescript-resolvers
 ```
 
@@ -34,7 +34,7 @@ Import the types from the generated file and use in the resolver:
 ```typescript
 import { QueryResolvers } from './resolvers-types';
 
-export const resolvers: QueryResolvers.Resolvers = {
+export const resolvers: QueryResolvers = {
   myQuery: (root, args, context) => {}
 };
 ```
@@ -91,29 +91,16 @@ type User {
 Given the schema above, the output should be the following:
 
 ```typescript
-export namespace QueryResolvers {
-  export interface Resolvers<Context = {}, TypeParent = {}> {
-    allUsers?: AllUsersResolver<(User | null)[], TypeParent, Context>;
-    userById?: UserByIdResolver<User | null, TypeParent, Context>;
-  }
-
-  export type AllUsersResolver<R = (User | null)[], Parent = {}, Context = {}> = Resolver<R, Parent, Context>;
-  export type UserByIdResolver<R = User | null, Parent = {}, Context = {}> = Resolver<R, Parent, Context, UserByIdArgs>;
-  export interface UserByIdArgs {
-    id: number;
-  }
+export interface QueryResolvers<Context = any, ParentType = Query> {
+  allUsers?: Resolver<Array<Maybe<User>>, ParentType, Context>;
+  userById?: Resolver<Maybe<User>, ParentType, Context, QueryUserByIdArgs>;
+  answer?: Resolver<Array<number>, ParentType, Context>;
 }
 
-export namespace UserResolvers {
-  export interface Resolvers<Context = {}, TypeParent = User> {
-    id?: IdResolver<number, TypeParent, {}>;
-    name?: NameResolver<string, TypeParent, {}>;
-    email?: EmailResolver<string, TypeParent, {}>;
-  }
-
-  export type IdResolver<R = number, Parent = User, Context = {}> = Resolver<R, Parent, Context>;
-  export type NameResolver<R = string, Parent = User, Context = {}> = Resolver<R, Parent, Context>;
-  export type EmailResolver<R = string, Parent = User, Context = {}> = Resolver<R, Parent, Context>;
+export interface UserResolvers<Context = any, ParentType = User> {
+  id?: Resolver<number, ParentType, Context>;
+  name?: Resolver<string, ParentType, Context>;
+  email?: Resolver<string, ParentType, Context>;
 }
 ```
 
@@ -228,31 +215,23 @@ generates:
       - typescript-resolvers
 ```
 
+```typescript
+export interface MyContext {
+  authToken: string;
+}
+```
+
 The config above will make every resolver to have `MyContext` as a context type.
 
 ```typescript
 import { QueryResolvers } from './resolvers-types';
 
-export const resolvers: QueryResolvers.Resolvers = {
-  myQuery: (root, args, context) => {}
+export const resolvers: QueryResolvers = {
+  myQuery: (root, args, context) => {
+    const { authToken } = context;
+    // ...
+  }
 };
 ```
 
 Field resolvers will be modfied as well.
-
-## Field Resolver Name Prefix
-
-When using `noNamespace` option, you can add a prefix to field resolver name, in order to avoid conflicts in the generated typescript declarations.
-
-```yaml
-# ...
-generates:
-  path/to/file.ts:
-    config:
-      noNamespace: true
-      fieldResolverNamePrefix: Field
-    plugins:
-      - typescript-resolvers
-```
-
-And it will generate Field Resolver like `PostFieldIdResolver` instead of `PostIdResolver`

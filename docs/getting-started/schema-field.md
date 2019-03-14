@@ -18,8 +18,7 @@ schema: http://localhost:3000/graphql
 generates:
   ./src/types.ts:
     plugins:
-      - typescript-common
-      - typescript-server
+      - typescript
 ```
 
 ### Output-file level
@@ -31,11 +30,11 @@ generates:
   ./src/types1.ts:
     schema: http://server1.com/graphql
     plugins:
-      - typescript-common
+      - typescript
   ./src/types2.ts:
     schema: http://server2.com/graphql
     plugins:
-      - typescript-common
+      - typescript
 ```
 
 ### Multiple schemas and client-side schema
@@ -49,8 +48,8 @@ generates:
   ./src/types.ts:
     schema: ./schema.graphql
     plugins:
-      - typescript-common
-      - typescript-client
+      - typescript
+      - typescript-operations
 ```
 
 > It's also useful if you have a remote schema coming from a server, and a client-side schema that available in your client-side.
