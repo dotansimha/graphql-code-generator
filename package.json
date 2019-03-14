@@ -47,7 +47,7 @@
     "rimraf": "2.6.3",
     "ts-jest": "24.0.0",
     "graphql-tools": "4.0.4",
-    "apollo-link": "1.2.9",
+    "apollo-link": "1.2.10",
     "awesome-typescript-loader": "5.2.1",
     "raw-loader": "1.0.0",
     "webpack": "4.29.6",
