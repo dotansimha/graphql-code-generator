@@ -5,14 +5,13 @@
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -m esnext --outDir dist/esnext && tsc -m commonjs --outDir dist/commonjs",
     "test": "jest"
   },
   "dependencies": {
     "graphql-codegen-plugin-helpers": "0.18.0"
   },
   "devDependencies": {
-    "esm": "3.2.11",
     "tslib": "1.9.3",
     "graphql": "14.1.1",
     "jest": "24.1.0",
@@ -24,17 +23,14 @@
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0"
   },
   "main": "./dist/index.js",
-  "typings": "dist/index.d.ts",
+  "typings": "dist/esnext/index.d.ts",
   "typescript": {
-    "definition": "dist/index.d.ts"
+    "definition": "dist/esnext/index.d.ts"
   },
   "jest": {
     "globals": {
       "ts-jest": {
-        "enableTsDiagnostics": false,
-        "tsConfig": {
-          "esModuleInterop": true
-        }
+        "enableTsDiagnostics": false
       }
     },
     "transform": {

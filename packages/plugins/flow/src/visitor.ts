@@ -14,7 +14,7 @@ import {
   indent,
   ParsedTypesConfig
 } from 'graphql-codegen-visitor-plugin-common';
-import autoBind from 'auto-bind';
+import * as autoBind from 'auto-bind';
 import { FlowPluginConfig } from './index';
 import { FlowOperationVariablesToObject } from './flow-variables-to-object';
 
