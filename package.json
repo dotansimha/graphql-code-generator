@@ -23,8 +23,7 @@
     "packages/*",
     "packages/utils/*",
     "packages/plugins/*",
-    "website/live-demo",
-    "packages/old-templates/*"
+    "website/live-demo"
   ],
   "dependencies": {
     "lerna": "2.11.0"
