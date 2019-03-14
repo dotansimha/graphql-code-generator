@@ -4,19 +4,20 @@
     "experimentalDecorators": true,
     "module": "esnext",
     "target": "es2018",
-    "lib": ["es6", "esnext", "es2015"],
+    "lib": ["es6", "esnext", "es2015", "dom"],
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "sourceMap": true,
     "declaration": true,
-    "outDir": "./dist/",
+    "outDir": "./dist",
     "rootDir": "./src",
     "noImplicitAny": true,
     "noImplicitThis": true,
     "alwaysStrict": true,
     "noImplicitReturns": true,
-    "noUnusedLocals": false,
+    "noUnusedLocals": true,
     "noUnusedParameters": false
   },
-  "exclude": ["node_modules", "tests", "dist"]
+  "files": ["src/index.ts"],
+  "exclude": ["node_modules"]
 }
