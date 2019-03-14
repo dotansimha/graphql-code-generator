@@ -5,7 +5,7 @@
   "main": "dist/commonjs/index.js",
   "module": "dist/esnext/index.js",
   "scripts": {
-    "build": "tsc -m esnext --outDir dist/esnext && tsc -m commonjs --outDir dist/commonjs"
+    "build": "node_modules/.bin/tsc -m esnext --outDir dist/esnext && tsc -m commonjs --outDir dist/commonjs"
   },
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "author": "Dotan Simha <dotansimha@gmail.com>",
