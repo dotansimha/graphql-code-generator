@@ -1,6 +1,6 @@
 import { parse } from 'graphql';
-import * as typescriptClientPlugin from 'graphql-codegen-typescript-operations';
 import { executePlugin } from '../src/execute-plugin';
+import * as typescriptClientPlugin from 'graphql-codegen-typescript-operations';
 
 describe('executePlugin', () => {
   it('Should throw a detailed error message with source file and position for an invalid GraphQL document', () => {
@@ -11,7 +11,7 @@ describe('executePlugin', () => {
         }
       ],
       config: {},
-      schema: parse(`
+      schema: parse(/* GraphQL */ `
         type Character {
           id: ID!
           name: String!
