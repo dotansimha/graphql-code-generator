@@ -11,15 +11,6 @@ import { getPluginByName } from './plugins';
 
 export const defaultPluginLoader = (mod: string) => import(mod);
 
-export interface GenerateOutputOptions {
-  filename: string;
-  plugins: Types.ConfiguredPlugin[];
-  schema: DocumentNode;
-  documents: DocumentFile[];
-  pluginLoader: Types.PluginLoaderFn;
-  inheritedConfig: { [key: string]: any };
-}
-
 export async function executeCodegen(config: Types.Config): Promise<FileOutput[]> {
   function wrapTask(task: () => void | Promise<void>, source?: string) {
     return async () => {

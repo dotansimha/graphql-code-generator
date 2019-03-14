@@ -1,6 +1,6 @@
 import { GraphQLObjectType, buildSchema, buildASTSchema, parse, print } from 'graphql';
 import { mergeSchemas } from 'graphql-codegen-core';
-import { executeCodegen } from '../src/codegen';
+import { executeCodegen } from '../src';
 
 const SHOULD_NOT_THROW_STRING = 'SHOULD_NOT_THROW';
 const SIMPLE_TEST_SCHEMA = `type MyType { f: String } type Query { f: String }`;

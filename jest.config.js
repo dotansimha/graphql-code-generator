@@ -4,10 +4,7 @@ module.exports = {
   rootDir: process.cwd(),
   globals: {
     'ts-jest': {
-      diagnostics: false,
-      tsConfig: {
-        esModuleInterop: true
-      }
+      diagnostics: false
     }
   }
 };
