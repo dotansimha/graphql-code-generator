@@ -81,9 +81,9 @@ If you don't want to use the wizard, we've got you covered, just continue readin
 
 ## Setup
 
-GraphQL Code Generator's behavior is bound into plugins, thus we will need to install few:
+GraphQL Code Generator's behavior is bound into plugins, thus we will need to install one of them:
 
-    $ npm install -D graphql-codegen-typescript-common graphql-codegen-typescript-server
+    $ npm install -D graphql-codegen-typescript
 
 Although can be used directly, it's recommended to add the code generation task as an `npm` script in `package.json`. This way we won't have to install GraphQL Code Generator globally:
 
@@ -103,8 +103,7 @@ overwrite: true
 generates:
   ./src/types.d.ts:
     plugins:
-      - typescript-common
-      - typescript-server
+      - typescript
 ```
 
 By running the following command the GraphQL schema will be fetched from the route endpoint and the typescript definitions would be generated in the specified destination:
@@ -130,7 +129,7 @@ async function doSomething() {
       documents: './src/**/*.graphql',
       generates: {
         [process.cwd() + '/models/']: {
-          plugins: ['typescript-common', 'typescript-server']
+          plugins: ['typescript']
         }
       }
     },

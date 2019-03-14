@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import { Editor } from './editor.component';
-import { executeCodegen } from 'graphql-code-generator';
 import { safeLoad } from 'js-yaml';
-import * as prettier from 'prettier/standalone';
 import MagicIcon from './magic.svg';
 import CodegenLogo from './logo.svg';
 import GraphQLLogo from './GraphQL_Logo.svg';
@@ -14,13 +12,6 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import { pascalCase } from 'change-case';
 
-const plugins = [
-  require('prettier/parser-graphql'),
-  require('prettier/parser-babylon'),
-  require('prettier/parser-yaml'),
-  require('prettier/parser-typescript')
-];
-
 const EXT_TO_FORMATTER = {
   ts: 'typescript',
   graphql: 'graphql',
@@ -28,24 +19,37 @@ const EXT_TO_FORMATTER = {
   json: 'json'
 };
 
-const DEFAULT_EXAMPLE = 'typescript-client';
+const DEFAULT_EXAMPLE = 'typescript';
+
+const getPrettierPlugins = async mode => {
+  switch (mode) {
+    case 'graphql':
+      return [await import('prettier/parser-graphql')];
+    case 'yaml':
+      return [await import('prettier/parser-yaml')];
+    case 'typescript':
+      return [await import('prettier/parser-typescript')];
+    default:
+      return [await import('prettier/parser-babylon')];
+  }
+};
 
 const pluginsMap = {
-  'graphql-codegen-flow': require('graphql-codegen-flow'),
-  'graphql-codegen-flow-documents': require('graphql-codegen-flow-documents'),
-  'graphql-codegen-flow-resolvers': require('graphql-codegen-flow-resolvers'),
-  'graphql-codegen-typescript-common': require('graphql-codegen-typescript-common'),
-  'graphql-codegen-typescript-client': require('graphql-codegen-typescript-client'),
-  'graphql-codegen-typescript-server': require('graphql-codegen-typescript-server'),
-  'graphql-codegen-add': require('graphql-codegen-add'),
-  'graphql-codegen-time': require('graphql-codegen-time'),
-  'graphql-codegen-introspection': require('graphql-codegen-introspection'),
-  'graphql-codegen-schema-ast': require('graphql-codegen-schema-ast'),
-  'graphql-codegen-typescript-apollo-angular': require('graphql-codegen-typescript-apollo-angular'),
-  'graphql-codegen-typescript-graphql-files-modules': require('graphql-codegen-typescript-graphql-files-modules'),
-  'graphql-codegen-typescript-mongodb': require('graphql-codegen-typescript-mongodb'),
-  'graphql-codegen-typescript-react-apollo': require('graphql-codegen-typescript-react-apollo'),
-  'graphql-codegen-typescript-resolvers': require('graphql-codegen-typescript-resolvers')
+  'graphql-codegen-flow': () => import('graphql-codegen-flow'),
+  'graphql-codegen-flow-operations': () => import('graphql-codegen-flow-operations'),
+  'graphql-codegen-flow-resolvers': () => import('graphql-codegen-flow-resolvers'),
+  'graphql-codegen-typescript': () => import('graphql-codegen-typescript'),
+  'graphql-codegen-typescript-operations': () => import('graphql-codegen-typescript-operations'),
+  'graphql-codegen-typescript-resolvers': () => import('graphql-codegen-typescript-resolvers'),
+  'graphql-codegen-typescript-apollo-angular': () => import('graphql-codegen-typescript-apollo-angular'),
+  'graphql-codegen-typescript-react-apollo': () => import('graphql-codegen-typescript-react-apollo'),
+  'graphql-codegen-typescript-stencil-apollo': () => import('graphql-codegen-typescript-stencil-apollo'),
+  'graphql-codegen-typescript-graphql-files-modules': () => import('graphql-codegen-typescript-graphql-files-modules'),
+  'graphql-codegen-typescript-mongodb': () => import('graphql-codegen-typescript-mongodb'),
+  'graphql-codegen-add': () => import('graphql-codegen-add'),
+  'graphql-codegen-time': () => import('graphql-codegen-time'),
+  'graphql-codegen-introspection': () => import('graphql-codegen-introspection'),
+  'graphql-codegen-schema-ast': () => import('graphql-codegen-schema-ast')
 };
 
 class App extends Component {
@@ -74,62 +78,60 @@ class App extends Component {
     return EXT_TO_FORMATTER[ext];
   }
 
-  prettify(str, config) {
+  async prettify(str, config, tabWidth) {
     try {
       const mode = this.getMode(config) || 'typescript';
-
-      return prettier.format(str, { parser: mode, plugins });
+      const prettier = await import('prettier/standalone');
+      return prettier.format(str, { parser: mode, plugins: await getPrettierPlugins(mode), tabWidth });
     } catch (e) {
       return str;
     }
   }
 
-  generate = () => {
+  generate = async () => {
     try {
       const cleanTabs = this.state.config.replace(/\t/g, '  ');
-      const prettyYaml = prettier.format(cleanTabs, { parser: 'yaml', plugins, tabWidth: 2 });
+      const prettier = await import('prettier/standalone');
+      const prettyYaml = prettier.format(cleanTabs, {
+        parser: 'yaml',
+        plugins: await getPrettierPlugins('yaml'),
+        tabWidth: 2
+      });
       const config = safeLoad(prettyYaml);
       config.namingConvention = pascalCase;
 
       const fullConfig = {
-        pluginLoader: m => pluginsMap[m] || null,
+        pluginLoader: m => (m in pluginsMap ? pluginsMap[m]() : null || null),
         schema: [this.state.schema],
         documents: this.state.documents,
         ...config
       };
-
-      executeCodegen(fullConfig)
-        .then(([{ content }]) => {
-          this.setState({ output: this.prettify(content, config) });
-        })
-        .catch(e => {
-          if (e.details) {
-            this.setState({
-              output: `
-        ${e.message}:
-        
-        ${e.details}
-        `
-            });
-          } else if (e.errors) {
-            this.setState({
-              output: e.errors
-                .map(
-                  subError => `${subError.message}: 
-  ${subError.details}`
-                )
-                .join('\n')
-            });
-          } else {
-            this.setState({
-              output: e.message
-            });
-          }
-        });
+      const { executeCodegen } = await import('graphql-code-generator');
+      const [{ content }] = await executeCodegen(fullConfig);
+      this.setState({ output: await this.prettify(content, config) });
     } catch (e) {
-      this.setState({
-        output: e.message
-      });
+      if (e.details) {
+        this.setState({
+          output: `
+    ${e.message}:
+    
+    ${e.details}
+    `
+        });
+      } else if (e.errors) {
+        this.setState({
+          output: e.errors
+            .map(
+              subError => `${subError.message}: 
+${subError.details}`
+            )
+            .join('\n')
+        });
+      } else {
+        this.setState({
+          output: e.message
+        });
+      }
     }
   };
 

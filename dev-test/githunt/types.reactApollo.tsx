@@ -1,343 +1,177 @@
 // tslint:disable
-export type Maybe<T> = T | null;
+type Maybe<T> = T | null;
+export type Comment = {
+  id: number,
+  postedBy: User,
+  createdAt: number,
+  content: string,
+  repoName: string,
+};
 
-/** A list of options for the sort order of the feed */
-  export enum FeedType {
-    Hot = "HOT",
-    New = "NEW",
-    Top = "TOP",
-  }
-/** The type of vote to record, when submitting a vote */
-  export enum VoteType {
-    Up = "UP",
-    Down = "DOWN",
-    Cancel = "CANCEL",
-  }
+export type Entry = {
+  repository: Repository,
+  postedBy: User,
+  createdAt: number,
+  score: number,
+  hotScore: number,
+  comments: Array<Maybe<Comment>>,
+  commentCount: number,
+  id: number,
+  vote: Vote,
+};
 
 
-// ====================================================
-// Documents
-// ====================================================
+export type EntryCommentsArgs = {
+  limit?: Maybe<number>,
+  offset?: Maybe<number>
+};
 
-
-
-export namespace OnCommentAdded {
-  export type Variables = {
-    repoFullName: string;
-  }
-
-  export type Subscription = {
-    __typename?: "Subscription";
-    
-    commentAdded: Maybe<CommentAdded>;
-  }
-
-  export type CommentAdded = {
-    __typename?: "Comment";
-    
-    id: number;
-    
-    postedBy: PostedBy;
-    
-    createdAt: number;
-    
-    content: string;
-  } 
-
-  export type PostedBy = {
-    __typename?: "User";
-    
-    login: string;
-    
-    html_url: string;
-  } 
+export enum FeedType {
+  Hot = 'HOT', 
+  New = 'NEW', 
+  Top = 'TOP'
 }
 
-export namespace Comment {
-  export type Variables = {
-    repoFullName: string;
-    limit?: Maybe<number>;
-    offset?: Maybe<number>;
-  }
+export type Mutation = {
+  submitRepository?: Maybe<Entry>,
+  vote?: Maybe<Entry>,
+  submitComment?: Maybe<Comment>,
+};
 
-  export type Query = {
-    __typename?: "Query";
-    
-    currentUser: Maybe<CurrentUser>;
-    
-    entry: Maybe<Entry>;
-  }
 
-  export type CurrentUser = {
-    __typename?: "User";
-    
-    login: string;
-    
-    html_url: string;
-  } 
+export type MutationSubmitRepositoryArgs = {
+  repoFullName: string
+};
 
-  export type Entry = {
-    __typename?: "Entry";
-    
-    id: number;
-    
-    postedBy: PostedBy;
-    
-    createdAt: number;
-    
-    comments: (Maybe<Comments>)[];
-    
-    commentCount: number;
-    
-    repository: Repository;
-  } 
 
-  export type PostedBy = {
-    __typename?: "User";
-    
-    login: string;
-    
-    html_url: string;
-  } 
+export type MutationVoteArgs = {
+  repoFullName: string,
+  type: VoteType
+};
 
-  export type Comments = CommentsPageComment.Fragment
 
-  export type Repository = {
-    __typename?: RepositoryInlineFragment["__typename"];
-    
-    full_name: string;
-    
-    html_url: string;
-  }  & RepositoryInlineFragment
+export type MutationSubmitCommentArgs = {
+  repoFullName: string,
+  commentContent: string
+};
 
-  export type RepositoryInlineFragment = {
-    __typename?: "Repository";
-    
-    description: Maybe<string>;
-    
-    open_issues_count: Maybe<number>;
-    
-    stargazers_count: number;
-  } 
+export type Query = {
+  feed?: Maybe<Array<Maybe<Entry>>>,
+  entry?: Maybe<Entry>,
+  currentUser?: Maybe<User>,
+};
+
+
+export type QueryFeedArgs = {
+  type: FeedType,
+  offset?: Maybe<number>,
+  limit?: Maybe<number>
+};
+
+
+export type QueryEntryArgs = {
+  repoFullName: string
+};
+
+export type Repository = {
+  name: string,
+  full_name: string,
+  description?: Maybe<string>,
+  html_url: string,
+  stargazers_count: number,
+  open_issues_count?: Maybe<number>,
+  owner?: Maybe<User>,
+};
+
+export type Subscription = {
+  commentAdded?: Maybe<Comment>,
+};
+
+
+export type SubscriptionCommentAddedArgs = {
+  repoFullName: string
+};
+
+export type User = {
+  login: string,
+  avatar_url: string,
+  html_url: string,
+};
+
+export type Vote = {
+  vote_value: number,
+};
+
+export enum VoteType {
+  Up = 'UP', 
+  Down = 'DOWN', 
+  Cancel = 'CANCEL'
 }
-
-export namespace CurrentUserForProfile {
-  export type Variables = {
-  }
-
-  export type Query = {
-    __typename?: "Query";
-    
-    currentUser: Maybe<CurrentUser>;
-  }
-
-  export type CurrentUser = {
-    __typename?: "User";
-    
-    login: string;
-    
-    avatar_url: string;
-  } 
-}
-
-export namespace Feed {
-  export type Variables = {
-    type: FeedType;
-    offset?: Maybe<number>;
-    limit?: Maybe<number>;
-  }
-
-  export type Query = {
-    __typename?: "Query";
-    
-    currentUser: Maybe<CurrentUser>;
-    
-    feed: Maybe<(Maybe<Feed>)[]>;
-  }
-
-  export type CurrentUser = {
-    __typename?: "User";
-    
-    login: string;
-  } 
-
-  export type Feed = FeedEntry.Fragment
-}
-
-export namespace SubmitRepository {
-  export type Variables = {
-    repoFullName: string;
-  }
-
-  export type Mutation = {
-    __typename?: "Mutation";
-    
-    submitRepository: Maybe<SubmitRepository>;
-  }
-
-  export type SubmitRepository = {
-    __typename?: "Entry";
-    
-    createdAt: number;
-  } 
-}
-
-export namespace SubmitComment {
-  export type Variables = {
-    repoFullName: string;
-    commentContent: string;
-  }
-
-  export type Mutation = {
-    __typename?: "Mutation";
-    
-    submitComment: Maybe<SubmitComment>;
-  }
-
-  export type SubmitComment = CommentsPageComment.Fragment
-}
-
-export namespace Vote {
-  export type Variables = {
-    repoFullName: string;
-    type: VoteType;
-  }
-
-  export type Mutation = {
-    __typename?: "Mutation";
-    
-    vote: Maybe<Vote>;
-  }
-
-  export type Vote = {
-    __typename?: "Entry";
-    
-    score: number;
-    
-    id: number;
-    
-    vote: _Vote;
-  } 
-
-  export type _Vote = {
-    __typename?: "Vote";
-    
-    vote_value: number;
-  } 
-}
-
-export namespace CommentsPageComment {
-  export type Fragment = {
-    __typename?: "Comment";
-    
-    id: number;
-    
-    postedBy: PostedBy;
-    
-    createdAt: number;
-    
-    content: string;
-  }
-
-  export type PostedBy = {
-    __typename?: "User";
-    
-    login: string;
-    
-    html_url: string;
-  }
-}
-
-export namespace FeedEntry {
-  export type Fragment = {
-    __typename?: "Entry";
-    
-    id: number;
-    
-    commentCount: number;
-    
-    repository: Repository;
-  } & (VoteButtons.Fragment & RepoInfo.Fragment)
-
-  export type Repository = {
-    __typename?: "Repository";
-    
-    full_name: string;
-    
-    html_url: string;
-    
-    owner: Maybe<Owner>;
-  }
-
-  export type Owner = {
-    __typename?: "User";
-    
-    avatar_url: string;
-  }
-}
-
-export namespace RepoInfo {
-  export type Fragment = {
-    __typename?: "Entry";
-    
-    createdAt: number;
-    
-    repository: Repository;
-    
-    postedBy: PostedBy;
-  }
-
-  export type Repository = {
-    __typename?: "Repository";
-    
-    description: Maybe<string>;
-    
-    stargazers_count: number;
-    
-    open_issues_count: Maybe<number>;
-  }
-
-  export type PostedBy = {
-    __typename?: "User";
-    
-    html_url: string;
-    
-    login: string;
-  }
-}
-
-export namespace VoteButtons {
-  export type Fragment = {
-    __typename?: "Entry";
-    
-    score: number;
-    
-    vote: Vote;
-  }
-
-  export type Vote = {
-    __typename?: "Vote";
-    
-    vote_value: number;
-  }
-}
+export type OnCommentAddedSubscriptionVariables = {
+  repoFullName: string
+};
 
 
-    import gql from 'graphql-tag';
-  import * as React from 'react';
+export type OnCommentAddedSubscription = ({ __typename?: 'Subscription' } & { commentAdded: Maybe<({ __typename?: 'Comment' } & Pick<Comment, 'id' | 'createdAt' | 'content'> & { postedBy: ({ __typename?: 'User' } & Pick<User, 'login' | 'html_url'>) })> });
+
+export type CommentQueryVariables = {
+  repoFullName: string,
+  limit?: Maybe<number>,
+  offset?: Maybe<number>
+};
+
+
+export type CommentQuery = ({ __typename?: 'Query' } & { currentUser: Maybe<({ __typename?: 'User' } & Pick<User, 'login' | 'html_url'>)>, entry: Maybe<({ __typename?: 'Entry' } & Pick<Entry, 'id' | 'createdAt' | 'commentCount'> & { postedBy: ({ __typename?: 'User' } & Pick<User, 'login' | 'html_url'>), comments: Array<Maybe<({ __typename?: 'Comment' } & CommentsPageCommentFragment)>>, repository: ({ __typename?: 'Repository' } & Pick<Repository, 'full_name' | 'html_url'> & (({ __typename?: 'Repository' } & Pick<Repository, 'description' | 'open_issues_count' | 'stargazers_count'>))) })> });
+
+export type CommentsPageCommentFragment = ({ __typename?: 'Comment' } & Pick<Comment, 'id' | 'createdAt' | 'content'> & { postedBy: ({ __typename?: 'User' } & Pick<User, 'login' | 'html_url'>) });
+
+export type CurrentUserForProfileQueryVariables = {};
+
+
+export type CurrentUserForProfileQuery = ({ __typename?: 'Query' } & { currentUser: Maybe<({ __typename?: 'User' } & Pick<User, 'login' | 'avatar_url'>)> });
+
+export type FeedEntryFragment = ({ __typename?: 'Entry' } & Pick<Entry, 'id' | 'commentCount'> & { repository: ({ __typename?: 'Repository' } & Pick<Repository, 'full_name' | 'html_url'> & { owner: Maybe<({ __typename?: 'User' } & Pick<User, 'avatar_url'>)> }) } & (VoteButtonsFragment & RepoInfoFragment));
+
+export type FeedQueryVariables = {
+  type: FeedType,
+  offset?: Maybe<number>,
+  limit?: Maybe<number>
+};
+
+
+export type FeedQuery = ({ __typename?: 'Query' } & { currentUser: Maybe<({ __typename?: 'User' } & Pick<User, 'login'>)>, feed: Maybe<Array<Maybe<({ __typename?: 'Entry' } & FeedEntryFragment)>>> });
+
+export type SubmitRepositoryMutationVariables = {
+  repoFullName: string
+};
+
+
+export type SubmitRepositoryMutation = ({ __typename?: 'Mutation' } & { submitRepository: Maybe<({ __typename?: 'Entry' } & Pick<Entry, 'createdAt'>)> });
+
+export type RepoInfoFragment = ({ __typename?: 'Entry' } & Pick<Entry, 'createdAt'> & { repository: ({ __typename?: 'Repository' } & Pick<Repository, 'description' | 'stargazers_count' | 'open_issues_count'>), postedBy: ({ __typename?: 'User' } & Pick<User, 'html_url' | 'login'>) });
+
+export type SubmitCommentMutationVariables = {
+  repoFullName: string,
+  commentContent: string
+};
+
+
+export type SubmitCommentMutation = ({ __typename?: 'Mutation' } & { submitComment: Maybe<({ __typename?: 'Comment' } & CommentsPageCommentFragment)> });
+
+export type VoteButtonsFragment = ({ __typename?: 'Entry' } & Pick<Entry, 'score'> & { vote: ({ __typename?: 'Vote' } & Pick<Vote, 'vote_value'>) });
+
+export type VoteMutationVariables = {
+  repoFullName: string,
+  type: VoteType
+};
+
+
+export type VoteMutation = ({ __typename?: 'Mutation' } & { vote: Maybe<({ __typename?: 'Entry' } & Pick<Entry, 'score' | 'id'> & { vote: ({ __typename?: 'Vote' } & Pick<Vote, 'vote_value'>) })> });
+
+import gql from 'graphql-tag';
+import * as React from 'react';
 import * as ReactApollo from 'react-apollo';
-
-
-
-
-// ====================================================
-// Fragments
-// ====================================================
-
-
-
-          export namespace CommentsPageComment {
-            export const FragmentDoc = gql`
+export const CommentsPageCommentFragmentDoc = gql`
     fragment CommentsPageComment on Comment {
   id
   postedBy {
@@ -347,30 +181,16 @@ import * as ReactApollo from 'react-apollo';
   createdAt
   content
 }
-    
-      
-    
-  `;
-          }
-        
-
-          export namespace VoteButtons {
-            export const FragmentDoc = gql`
+    `;
+export const VoteButtonsFragmentDoc = gql`
     fragment VoteButtons on Entry {
   score
   vote {
     vote_value
   }
 }
-    
-      
-    
-  `;
-          }
-        
-
-          export namespace RepoInfo {
-            export const FragmentDoc = gql`
+    `;
+export const RepoInfoFragmentDoc = gql`
     fragment RepoInfo on Entry {
   createdAt
   repository {
@@ -383,15 +203,8 @@ import * as ReactApollo from 'react-apollo';
     login
   }
 }
-    
-      
-    
-  `;
-          }
-        
-
-          export namespace FeedEntry {
-            export const FragmentDoc = gql`
+    `;
+export const FeedEntryFragmentDoc = gql`
     fragment FeedEntry on Entry {
   id
   commentCount
@@ -405,23 +218,9 @@ import * as ReactApollo from 'react-apollo';
   ...VoteButtons
   ...RepoInfo
 }
-    
-      ${VoteButtons.FragmentDoc}
-${RepoInfo.FragmentDoc}
-    
-  `;
-          }
-        
-
-
-
-// ====================================================
-// Components
-// ====================================================
-
-
-export namespace OnCommentAdded {
-    export const Document = gql`
+    ${VoteButtonsFragmentDoc}
+${RepoInfoFragmentDoc}`;
+export const OnCommentAddedDocument = gql`
     subscription onCommentAdded($repoFullName: String!) {
   commentAdded(repoFullName: $repoFullName) {
     id
@@ -433,43 +232,24 @@ export namespace OnCommentAdded {
     content
   }
 }
-    
-      
-    
-  `;
-     export class Component extends React.Component<Partial<ReactApollo.SubscriptionProps<Subscription, Variables>>> {
-        render(){
-            return (
-                <ReactApollo.Subscription<Subscription, Variables>
-                subscription={ Document }
-                {...(this as any)['props'] as any}
-                />
-            );
-        }
-    }
-    export type Props<TChildProps = any> = 
-            Partial<
-                ReactApollo.DataProps<
-                                        Subscription, 
-                                        Variables
-                                    >
-                    >
-         & TChildProps;
-    export function HOC<TProps, TChildProps = any>(operationOptions: 
-            ReactApollo.OperationOption<
-                TProps, 
-                Subscription,
-                Variables,
-                Props<TChildProps>
-            > | undefined){
-        return ReactApollo.graphql<TProps, Subscription, Variables, Props<TChildProps>>(
-            Document,
-            operationOptions
-        );
-    };
+    `;
+
+export class OnCommentAddedComponent extends React.Component<Partial<ReactApollo.SubscriptionProps<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>>> {
+  render() {
+      return (
+          <ReactApollo.Subscription<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables> subscription={OnCommentAddedDocument} {...(this as any)['props'] as any} />
+      );
+  }
 }
-export namespace Comment {
-    export const Document = gql`
+export type OnCommentAddedProps<TChildProps = any> = Partial<ReactApollo.DataProps<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>> & TChildProps;
+export function OnCommentAddedHOC<TProps, TChildProps = any>(operationOptions: ReactApollo.OperationOption<
+  TProps, 
+  OnCommentAddedSubscription,
+  OnCommentAddedSubscriptionVariables,
+  OnCommentAddedProps<TChildProps>> | undefined) {
+    return ReactApollo.graphql<TProps, OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables, OnCommentAddedProps<TChildProps>>(OnCommentAddedDocument, operationOptions);
+};
+export const CommentDocument = gql`
     query Comment($repoFullName: String!, $limit: Int, $offset: Int) {
   currentUser {
     login
@@ -497,86 +277,48 @@ export namespace Comment {
     }
   }
 }
-    
-      ${CommentsPageComment.FragmentDoc}
-    
-  `;
-     export class Component extends React.Component<Partial<ReactApollo.QueryProps<Query, Variables>>> {
-        render(){
-            return (
-                <ReactApollo.Query<Query, Variables>
-                query={ Document }
-                {...(this as any)['props'] as any}
-                />
-            );
-        }
-    }
-    export type Props<TChildProps = any> = 
-            Partial<
-                ReactApollo.DataProps<
-                                        Query, 
-                                        Variables
-                                    >
-                    >
-         & TChildProps;
-    export function HOC<TProps, TChildProps = any>(operationOptions: 
-            ReactApollo.OperationOption<
-                TProps, 
-                Query,
-                Variables,
-                Props<TChildProps>
-            > | undefined){
-        return ReactApollo.graphql<TProps, Query, Variables, Props<TChildProps>>(
-            Document,
-            operationOptions
-        );
-    };
+    ${CommentsPageCommentFragmentDoc}`;
+
+export class CommentComponent extends React.Component<Partial<ReactApollo.QueryProps<CommentQuery, CommentQueryVariables>>> {
+  render() {
+      return (
+          <ReactApollo.Query<CommentQuery, CommentQueryVariables> query={CommentDocument} {...(this as any)['props'] as any} />
+      );
+  }
 }
-export namespace CurrentUserForProfile {
-    export const Document = gql`
+export type CommentProps<TChildProps = any> = Partial<ReactApollo.DataProps<CommentQuery, CommentQueryVariables>> & TChildProps;
+export function CommentHOC<TProps, TChildProps = any>(operationOptions: ReactApollo.OperationOption<
+  TProps, 
+  CommentQuery,
+  CommentQueryVariables,
+  CommentProps<TChildProps>> | undefined) {
+    return ReactApollo.graphql<TProps, CommentQuery, CommentQueryVariables, CommentProps<TChildProps>>(CommentDocument, operationOptions);
+};
+export const CurrentUserForProfileDocument = gql`
     query CurrentUserForProfile {
   currentUser {
     login
     avatar_url
   }
 }
-    
-      
-    
-  `;
-     export class Component extends React.Component<Partial<ReactApollo.QueryProps<Query, Variables>>> {
-        render(){
-            return (
-                <ReactApollo.Query<Query, Variables>
-                query={ Document }
-                {...(this as any)['props'] as any}
-                />
-            );
-        }
-    }
-    export type Props<TChildProps = any> = 
-            Partial<
-                ReactApollo.DataProps<
-                                        Query, 
-                                        Variables
-                                    >
-                    >
-         & TChildProps;
-    export function HOC<TProps, TChildProps = any>(operationOptions: 
-            ReactApollo.OperationOption<
-                TProps, 
-                Query,
-                Variables,
-                Props<TChildProps>
-            > | undefined){
-        return ReactApollo.graphql<TProps, Query, Variables, Props<TChildProps>>(
-            Document,
-            operationOptions
-        );
-    };
+    `;
+
+export class CurrentUserForProfileComponent extends React.Component<Partial<ReactApollo.QueryProps<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>>> {
+  render() {
+      return (
+          <ReactApollo.Query<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables> query={CurrentUserForProfileDocument} {...(this as any)['props'] as any} />
+      );
+  }
 }
-export namespace Feed {
-    export const Document = gql`
+export type CurrentUserForProfileProps<TChildProps = any> = Partial<ReactApollo.DataProps<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>> & TChildProps;
+export function CurrentUserForProfileHOC<TProps, TChildProps = any>(operationOptions: ReactApollo.OperationOption<
+  TProps, 
+  CurrentUserForProfileQuery,
+  CurrentUserForProfileQueryVariables,
+  CurrentUserForProfileProps<TChildProps>> | undefined) {
+    return ReactApollo.graphql<TProps, CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables, CurrentUserForProfileProps<TChildProps>>(CurrentUserForProfileDocument, operationOptions);
+};
+export const FeedDocument = gql`
     query Feed($type: FeedType!, $offset: Int, $limit: Int) {
   currentUser {
     login
@@ -585,129 +327,72 @@ export namespace Feed {
     ...FeedEntry
   }
 }
-    
-      ${FeedEntry.FragmentDoc}
-    
-  `;
-     export class Component extends React.Component<Partial<ReactApollo.QueryProps<Query, Variables>>> {
-        render(){
-            return (
-                <ReactApollo.Query<Query, Variables>
-                query={ Document }
-                {...(this as any)['props'] as any}
-                />
-            );
-        }
-    }
-    export type Props<TChildProps = any> = 
-            Partial<
-                ReactApollo.DataProps<
-                                        Query, 
-                                        Variables
-                                    >
-                    >
-         & TChildProps;
-    export function HOC<TProps, TChildProps = any>(operationOptions: 
-            ReactApollo.OperationOption<
-                TProps, 
-                Query,
-                Variables,
-                Props<TChildProps>
-            > | undefined){
-        return ReactApollo.graphql<TProps, Query, Variables, Props<TChildProps>>(
-            Document,
-            operationOptions
-        );
-    };
+    ${FeedEntryFragmentDoc}`;
+
+export class FeedComponent extends React.Component<Partial<ReactApollo.QueryProps<FeedQuery, FeedQueryVariables>>> {
+  render() {
+      return (
+          <ReactApollo.Query<FeedQuery, FeedQueryVariables> query={FeedDocument} {...(this as any)['props'] as any} />
+      );
+  }
 }
-export namespace SubmitRepository {
-    export const Document = gql`
+export type FeedProps<TChildProps = any> = Partial<ReactApollo.DataProps<FeedQuery, FeedQueryVariables>> & TChildProps;
+export function FeedHOC<TProps, TChildProps = any>(operationOptions: ReactApollo.OperationOption<
+  TProps, 
+  FeedQuery,
+  FeedQueryVariables,
+  FeedProps<TChildProps>> | undefined) {
+    return ReactApollo.graphql<TProps, FeedQuery, FeedQueryVariables, FeedProps<TChildProps>>(FeedDocument, operationOptions);
+};
+export const SubmitRepositoryDocument = gql`
     mutation submitRepository($repoFullName: String!) {
   submitRepository(repoFullName: $repoFullName) {
     createdAt
   }
 }
-    
-      
-    
-  `;
-     export class Component extends React.Component<Partial<ReactApollo.MutationProps<Mutation, Variables>>> {
-        render(){
-            return (
-                <ReactApollo.Mutation<Mutation, Variables>
-                mutation={ Document }
-                {...(this as any)['props'] as any}
-                />
-            );
-        }
-    }
-    export type Props<TChildProps = any> = 
-            Partial<
-                ReactApollo.MutateProps<
-                                        Mutation, 
-                                        Variables
-                                        >
-                >
-         & TChildProps;
-    export type MutationFn = ReactApollo.MutationFn<Mutation, Variables>;
-    export function HOC<TProps, TChildProps = any>(operationOptions: 
-            ReactApollo.OperationOption<
-                TProps, 
-                Mutation,
-                Variables,
-                Props<TChildProps>
-            > | undefined){
-        return ReactApollo.graphql<TProps, Mutation, Variables, Props<TChildProps>>(
-            Document,
-            operationOptions
-        );
-    };
+    `;
+
+export class SubmitRepositoryComponent extends React.Component<Partial<ReactApollo.MutationProps<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>>> {
+  render() {
+      return (
+          <ReactApollo.Mutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables> mutation={SubmitRepositoryDocument} {...(this as any)['props'] as any} />
+      );
+  }
 }
-export namespace SubmitComment {
-    export const Document = gql`
+export type SubmitRepositoryProps<TChildProps = any> = Partial<ReactApollo.MutateProps<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>> & TChildProps;
+export type SubmitRepositoryMutationFn = ReactApollo.MutationFn<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>;
+export function SubmitRepositoryHOC<TProps, TChildProps = any>(operationOptions: ReactApollo.OperationOption<
+  TProps, 
+  SubmitRepositoryMutation,
+  SubmitRepositoryMutationVariables,
+  SubmitRepositoryProps<TChildProps>> | undefined) {
+    return ReactApollo.graphql<TProps, SubmitRepositoryMutation, SubmitRepositoryMutationVariables, SubmitRepositoryProps<TChildProps>>(SubmitRepositoryDocument, operationOptions);
+};
+export const SubmitCommentDocument = gql`
     mutation submitComment($repoFullName: String!, $commentContent: String!) {
   submitComment(repoFullName: $repoFullName, commentContent: $commentContent) {
     ...CommentsPageComment
   }
 }
-    
-      ${CommentsPageComment.FragmentDoc}
-    
-  `;
-     export class Component extends React.Component<Partial<ReactApollo.MutationProps<Mutation, Variables>>> {
-        render(){
-            return (
-                <ReactApollo.Mutation<Mutation, Variables>
-                mutation={ Document }
-                {...(this as any)['props'] as any}
-                />
-            );
-        }
-    }
-    export type Props<TChildProps = any> = 
-            Partial<
-                ReactApollo.MutateProps<
-                                        Mutation, 
-                                        Variables
-                                        >
-                >
-         & TChildProps;
-    export type MutationFn = ReactApollo.MutationFn<Mutation, Variables>;
-    export function HOC<TProps, TChildProps = any>(operationOptions: 
-            ReactApollo.OperationOption<
-                TProps, 
-                Mutation,
-                Variables,
-                Props<TChildProps>
-            > | undefined){
-        return ReactApollo.graphql<TProps, Mutation, Variables, Props<TChildProps>>(
-            Document,
-            operationOptions
-        );
-    };
+    ${CommentsPageCommentFragmentDoc}`;
+
+export class SubmitCommentComponent extends React.Component<Partial<ReactApollo.MutationProps<SubmitCommentMutation, SubmitCommentMutationVariables>>> {
+  render() {
+      return (
+          <ReactApollo.Mutation<SubmitCommentMutation, SubmitCommentMutationVariables> mutation={SubmitCommentDocument} {...(this as any)['props'] as any} />
+      );
+  }
 }
-export namespace Vote {
-    export const Document = gql`
+export type SubmitCommentProps<TChildProps = any> = Partial<ReactApollo.MutateProps<SubmitCommentMutation, SubmitCommentMutationVariables>> & TChildProps;
+export type SubmitCommentMutationFn = ReactApollo.MutationFn<SubmitCommentMutation, SubmitCommentMutationVariables>;
+export function SubmitCommentHOC<TProps, TChildProps = any>(operationOptions: ReactApollo.OperationOption<
+  TProps, 
+  SubmitCommentMutation,
+  SubmitCommentMutationVariables,
+  SubmitCommentProps<TChildProps>> | undefined) {
+    return ReactApollo.graphql<TProps, SubmitCommentMutation, SubmitCommentMutationVariables, SubmitCommentProps<TChildProps>>(SubmitCommentDocument, operationOptions);
+};
+export const VoteDocument = gql`
     mutation vote($repoFullName: String!, $type: VoteType!) {
   vote(repoFullName: $repoFullName, type: $type) {
     score
@@ -717,39 +402,21 @@ export namespace Vote {
     }
   }
 }
-    
-      
-    
-  `;
-     export class Component extends React.Component<Partial<ReactApollo.MutationProps<Mutation, Variables>>> {
-        render(){
-            return (
-                <ReactApollo.Mutation<Mutation, Variables>
-                mutation={ Document }
-                {...(this as any)['props'] as any}
-                />
-            );
-        }
-    }
-    export type Props<TChildProps = any> = 
-            Partial<
-                ReactApollo.MutateProps<
-                                        Mutation, 
-                                        Variables
-                                        >
-                >
-         & TChildProps;
-    export type MutationFn = ReactApollo.MutationFn<Mutation, Variables>;
-    export function HOC<TProps, TChildProps = any>(operationOptions: 
-            ReactApollo.OperationOption<
-                TProps, 
-                Mutation,
-                Variables,
-                Props<TChildProps>
-            > | undefined){
-        return ReactApollo.graphql<TProps, Mutation, Variables, Props<TChildProps>>(
-            Document,
-            operationOptions
-        );
-    };
+    `;
+
+export class VoteComponent extends React.Component<Partial<ReactApollo.MutationProps<VoteMutation, VoteMutationVariables>>> {
+  render() {
+      return (
+          <ReactApollo.Mutation<VoteMutation, VoteMutationVariables> mutation={VoteDocument} {...(this as any)['props'] as any} />
+      );
+  }
 }
+export type VoteProps<TChildProps = any> = Partial<ReactApollo.MutateProps<VoteMutation, VoteMutationVariables>> & TChildProps;
+export type VoteMutationFn = ReactApollo.MutationFn<VoteMutation, VoteMutationVariables>;
+export function VoteHOC<TProps, TChildProps = any>(operationOptions: ReactApollo.OperationOption<
+  TProps, 
+  VoteMutation,
+  VoteMutationVariables,
+  VoteProps<TChildProps>> | undefined) {
+    return ReactApollo.graphql<TProps, VoteMutation, VoteMutationVariables, VoteProps<TChildProps>>(VoteDocument, operationOptions);
+};

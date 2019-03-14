@@ -1,42 +1,49 @@
-import { initCommonTemplate, TypeScriptCommonConfig } from 'graphql-codegen-typescript-common';
-import { DocumentFile, PluginFunction, PluginValidateFn, transformDocumentsFiles } from 'graphql-codegen-core';
-import { flattenTypes } from 'graphql-codegen-plugin-helpers';
-import { GraphQLSchema } from 'graphql';
-import * as Handlebars from 'handlebars';
-import * as rootTemplate from './root.handlebars';
-import { generateFragments, gql } from './helpers';
+import { DocumentFile, PluginValidateFn, PluginFunction } from 'graphql-codegen-plugin-helpers';
+import { visit, GraphQLSchema, concatAST, Kind, FragmentDefinitionNode } from 'graphql';
+import { RawClientSideBasePluginConfig } from 'graphql-codegen-visitor-plugin-common';
+import { StencilApolloVisitor } from './visitor';
 import { extname } from 'path';
-import { pascalCase } from 'change-case';
 
-export interface TypeScriptStencilApolloConfig extends TypeScriptCommonConfig {
-  noGraphqlTag?: boolean;
-  noNamespaces?: boolean;
+export enum StencilComponentType {
+  functional = 'functional',
+  class = 'class'
 }
 
-export const plugin: PluginFunction<TypeScriptStencilApolloConfig> = async (
+export interface StencilApolloRawPluginConfig extends RawClientSideBasePluginConfig {
+  componentType?: StencilComponentType;
+}
+
+export const plugin: PluginFunction<StencilApolloRawPluginConfig> = (
   schema: GraphQLSchema,
   documents: DocumentFile[],
-  config: TypeScriptStencilApolloConfig
-): Promise<string> => {
-  const { templateContext, convert } = initCommonTemplate(Handlebars, schema, documents, config);
-  const transformedDocuments = transformDocumentsFiles(schema, documents);
-  const flattenDocuments = flattenTypes(transformedDocuments);
-  Handlebars.registerHelper('generateFragments', generateFragments(convert));
-  Handlebars.registerHelper('gql', gql(convert));
-  Handlebars.registerHelper('toPascalCase', pascalCase);
+  config: StencilApolloRawPluginConfig
+) => {
+  const allAst = concatAST(
+    documents.reduce((prev, v) => {
+      return [...prev, v.content];
+    }, [])
+  );
+  const operationsCount = allAst.definitions.filter(d => d.kind === Kind.OPERATION_DEFINITION);
 
-  const hbsContext = {
-    ...templateContext,
-    ...flattenDocuments
-  };
+  if (operationsCount.length === 0) {
+    return '';
+  }
 
-  return Handlebars.compile(rootTemplate)(hbsContext);
+  const allFragments = allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[];
+  const visitor = new StencilApolloVisitor(allFragments, config) as any;
+  const visitorResult = visit(allAst, { leave: visitor });
+
+  return [
+    visitor.getImports(),
+    visitor.fragments,
+    ...visitorResult.definitions.filter(t => typeof t === 'string')
+  ].join('\n');
 };
 
 export const validate: PluginValidateFn<any> = async (
   schema: GraphQLSchema,
   documents: DocumentFile[],
-  config: any,
+  config: StencilApolloRawPluginConfig,
   outputFile: string
 ) => {
   if (extname(outputFile) !== '.tsx') {

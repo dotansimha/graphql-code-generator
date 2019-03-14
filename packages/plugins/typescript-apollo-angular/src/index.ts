@@ -1,42 +1,35 @@
-import { initCommonTemplate, TypeScriptCommonConfig } from 'graphql-codegen-typescript-common';
-import { DocumentFile, PluginFunction, PluginValidateFn, transformDocumentsFiles } from 'graphql-codegen-core';
-import { flattenTypes } from 'graphql-codegen-plugin-helpers';
-import { GraphQLSchema } from 'graphql';
-import * as Handlebars from 'handlebars';
-import * as rootTemplate from './root.handlebars';
-import { importNgModules } from './helpers/import-ng-modules';
-import { gql as gqlHelper } from './helpers/gql';
-import gql from 'graphql-tag';
-import { generateFragments } from './helpers/generate-fragments';
-import { providedIn } from './helpers/provided-in';
-import { namedClient } from './helpers/named-client';
+import { DocumentFile, PluginValidateFn, PluginFunction } from 'graphql-codegen-plugin-helpers';
+import { visit, GraphQLSchema, concatAST, Kind, FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
+import { RawClientSideBasePluginConfig } from 'graphql-codegen-visitor-plugin-common';
+import { ApolloAngularVisitor } from './visitor';
 import { extname } from 'path';
+import gql from 'graphql-tag';
 
-export interface TypeScriptApolloAngularConfig extends TypeScriptCommonConfig {
-  noNamespaces?: boolean;
-  noGraphqlTag?: boolean;
-}
-
-export const plugin: PluginFunction<TypeScriptApolloAngularConfig> = async (
+export const plugin: PluginFunction<RawClientSideBasePluginConfig> = (
   schema: GraphQLSchema,
   documents: DocumentFile[],
-  config: TypeScriptApolloAngularConfig
-): Promise<string> => {
-  const { templateContext, convert } = initCommonTemplate(Handlebars, schema, documents, config);
-  const transformedDocuments = transformDocumentsFiles(schema, documents);
-  const flattenDocuments = flattenTypes(transformedDocuments);
-  Handlebars.registerHelper('importNgModules', importNgModules);
-  Handlebars.registerHelper('gql', gqlHelper(convert));
-  Handlebars.registerHelper('providedIn', providedIn);
-  Handlebars.registerHelper('namedClient', namedClient);
-  Handlebars.registerHelper('generateFragments', generateFragments(convert));
+  config: RawClientSideBasePluginConfig
+) => {
+  const allAst = concatAST(
+    documents.reduce((prev, v) => {
+      return [...prev, v.content];
+    }, [])
+  );
+  const operations = allAst.definitions.filter(d => d.kind === Kind.OPERATION_DEFINITION) as OperationDefinitionNode[];
 
-  const hbsContext = {
-    ...templateContext,
-    ...flattenDocuments
-  };
+  if (operations.length === 0) {
+    return '';
+  }
 
-  return Handlebars.compile(rootTemplate)(hbsContext);
+  const allFragments = allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[];
+  const visitor = new ApolloAngularVisitor(allFragments, operations, config) as any;
+  const visitorResult = visit(allAst, { leave: visitor });
+
+  return [
+    visitor.getImports(),
+    visitor.fragments,
+    ...visitorResult.definitions.filter(t => typeof t === 'string')
+  ].join('\n');
 };
 
 export const addToSchema = gql`

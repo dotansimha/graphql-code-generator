@@ -1,17 +1,9 @@
-import { ScalarsMap } from 'graphql-codegen-flow';
-import { DocumentFile, PluginFunction } from 'graphql-codegen-core';
+import { RawResolversConfig } from 'graphql-codegen-visitor-plugin-common';
+import { DocumentFile, PluginFunction } from 'graphql-codegen-plugin-helpers';
 import { isScalarType, parse, printSchema, visit, GraphQLSchema } from 'graphql';
 import { FlowResolversVisitor } from './visitor';
 
-export interface FlowResolversPluginConfig {
-  contextType?: string;
-  mapping?: { [typeName: string]: string };
-  scalars?: ScalarsMap;
-  namingConvention?: string;
-  typesPrefix?: string;
-  useFlowExactObjects?: boolean;
-  useFlowReadOnlyTypes?: boolean;
-}
+export interface FlowResolversPluginConfig extends RawResolversConfig {}
 
 export const plugin: PluginFunction<FlowResolversPluginConfig> = (
   schema: GraphQLSchema,
@@ -27,7 +19,7 @@ export const plugin: PluginFunction<FlowResolversPluginConfig> = (
     imports.push('type GraphQLScalarTypeConfig');
   }
 
-  const result = `
+  const header = `
 import { ${imports.join(', ')} } from 'graphql';
 
 export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
@@ -68,20 +60,26 @@ export type TypeResolveFn<Types, Parent = {}, Context = {}> = (
 
 export type NextResolverFn<T> = () => Promise<T>;
 
-export type DirectiveResolverFn<TResult, TArgs = {}, TContext = {}> = (
-  next?: NextResolverFn<TResult>,
-  source?: any,
-  args?: TArgs,
-  context?: TContext,
+export type DirectiveResolverFn<Result = {}, Parent = {}, Args = {}, Context = {}> = (
+  next?: NextResolverFn<Result>,
+  parent?: Parent,
+  args?: Args,
+  context?: Context,
   info?: GraphQLResolveInfo
-) => TResult | Promise<TResult>;
+) => Result | Promise<Result>;
 `;
 
   const printedSchema = printSchema(schema);
   const astNode = parse(printedSchema);
   const visitor = new FlowResolversVisitor(config, schema);
   const visitorResult = visit(astNode, { leave: visitor });
-  const rootResolver = visitor.rootResolver;
+  const { getRootResolver, getAllDirectiveResolvers, mappersImports } = visitor;
 
-  return [result, ...visitorResult.definitions.filter(d => typeof d === 'string'), rootResolver].join('\n');
+  return [
+    ...mappersImports,
+    header,
+    ...visitorResult.definitions.filter(d => typeof d === 'string'),
+    getRootResolver(),
+    getAllDirectiveResolvers()
+  ].join('\n');
 };

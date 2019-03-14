@@ -1,0 +1,28 @@
+{
+  "name": "graphql-codegen-testing",
+  "version": "0.18.0",
+  "description": "GraphQL Codegen Testing Utils",
+  "main": "dist/commonjs/index.js",
+  "module": "dist/esnext/index.js",
+  "scripts": {
+    "build": "node_modules/.bin/tsc -m esnext --outDir dist/esnext && tsc -m commonjs --outDir dist/commonjs"
+  },
+  "repository": "git@github.com:dotansimha/graphql-code-generator.git",
+  "author": "Dotan Simha <dotansimha@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dotansimha/graphql-code-generator/issues"
+  },
+  "homepage": "https://github.com/dotansimha/graphql-code-generator#readme",
+  "dependencies": {
+    "tslib": "1.9.3",
+    "common-tags": "1.8.0"
+  },
+  "devDependencies": {
+    "typescript": "3.3.3333"
+  },
+  "typings": "dist/esnext/index.d.ts",
+  "typescript": {
+    "definition": "dist/esnext/index.d.ts"
+  }
+}

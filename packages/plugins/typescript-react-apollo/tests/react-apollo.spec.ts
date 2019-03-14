@@ -1,81 +1,358 @@
-import 'graphql-codegen-core/dist/testing';
-import { makeExecutableSchema } from 'graphql-tools';
-import { plugin } from '../dist';
-import * as fs from 'fs';
+import 'graphql-codegen-testing';
+import { plugin } from '../src/index';
+import { parse, GraphQLSchema, buildClientSchema } from 'graphql';
 import gql from 'graphql-tag';
-import { buildClientSchema } from 'graphql';
+import { DocumentFile } from 'graphql-codegen-plugin-helpers';
+import { plugin as tsPlugin } from '../../typescript/src/index';
+import { plugin as tsDocumentsPlugin } from '../../typescript-operations/src/index';
+import { validateTs } from '../../typescript/tests/validate';
+import { readFileSync } from 'fs';
 
-describe('Components', () => {
-  const schema = buildClientSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
-
-  it('should import React and ReactApollo dependencies', async () => {
-    const documents = gql`
-      query {
-        feed {
-          id
-          commentCount
-          repository {
-            full_name
-            html_url
-            owner {
-              avatar_url
-            }
+describe('React Apollo', () => {
+  const schema = buildClientSchema(JSON.parse(readFileSync('../../../dev-test/githunt/schema.json').toString()));
+  const basicDoc = parse(/* GraphQL */ `
+    query test {
+      feed {
+        id
+        commentCount
+        repository {
+          full_name
+          html_url
+          owner {
+            avatar_url
           }
         }
       }
-    `;
+    }
+  `);
 
+  const validateTypeScript = async (
+    output: string,
+    testSchema: GraphQLSchema,
+    documents: DocumentFile[],
+    config: any
+  ) => {
+    const tsOutput = await tsPlugin(testSchema, documents, config, { outputFile: '' });
+    const tsDocumentsOutput = await tsDocumentsPlugin(testSchema, documents, config, { outputFile: '' });
+    const merged = [tsOutput, tsDocumentsOutput, output].join('\n');
+    validateTs(merged, undefined, true);
+  };
+
+  it(`should skip if there's no operations`, async () => {
     const content = await plugin(
       schema,
-      [{ filePath: '', content: documents }],
+      [],
       {},
       {
         outputFile: 'graphql.tsx'
       }
     );
 
-    expect(content).toBeSimilarStringTo(`
-            import * as ReactApollo from 'react-apollo';
-          `);
-
-    expect(content).toBeSimilarStringTo(`
-            import * as React from 'react';
-          `);
-
-    expect(content).toBeSimilarStringTo(`
-        import gql from 'graphql-tag';
-      `);
+    expect(content).not.toContain(`import * as ReactApollo from 'react-apollo';`);
+    expect(content).not.toContain(`import * as React from 'react';`);
+    expect(content).not.toContain(`import gql from 'graphql-tag';`);
+    await validateTypeScript(content, schema, [], {});
   });
 
-  it('should generate Document variable', async () => {
-    const documents = gql`
-      query {
-        feed {
-          id
-          commentCount
-          repository {
-            full_name
-            html_url
-            owner {
-              avatar_url
+  describe('Imports', () => {
+    it('should import React and ReactApollo dependencies', async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
+      const content = await plugin(
+        schema,
+        docs,
+        {},
+        {
+          outputFile: 'graphql.tsx'
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`import * as ReactApollo from 'react-apollo';`);
+      expect(content).toBeSimilarStringTo(`import * as React from 'react';`);
+      expect(content).toBeSimilarStringTo(`import gql from 'graphql-tag';`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should import DocumentNode when using noGraphQLTag', async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
+      const content = await plugin(
+        schema,
+        docs,
+        {
+          noGraphQLTag: true
+        },
+        {
+          outputFile: 'graphql.tsx'
+        }
+      );
+
+      expect(content).toContain(`import { DocumentNode } from 'graphql';`);
+      expect(content).not.toBeSimilarStringTo(`import gql from 'graphql-tag';`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it(`should use gql import from gqlImport config option`, async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
+      const content = await plugin(
+        schema,
+        docs,
+        { gqlImport: 'graphql.macro#gql' },
+        {
+          outputFile: 'graphql.tsx'
+        }
+      );
+
+      expect(content).toContain(`import { gql } from 'graphql.macro';`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should import ReactApolloHooks dependencies', async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
+      const content = await plugin(
+        schema,
+        docs,
+        { withHooks: true },
+        {
+          outputFile: 'graphql.tsx'
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`import * as ReactApolloHooks from 'react-apollo-hooks';`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should import ReactApolloHooks from hooksImportFrom config option', async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
+      const content = await plugin(
+        schema,
+        docs,
+        { withHooks: true, hooksImportFrom: 'custom-apollo-hooks' },
+        {
+          outputFile: 'graphql.tsx'
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`import * as ReactApolloHooks from 'custom-apollo-hooks';`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should skip import React and ReactApollo if only hooks are used', async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
+      const content = await plugin(
+        schema,
+        docs,
+        {
+          withHooks: true,
+          withHOC: false,
+          withComponent: false
+        },
+        {
+          outputFile: 'graphql.tsx'
+        }
+      );
+
+      expect(content).not.toBeSimilarStringTo(`import * as ReactApollo from 'react-apollo';`);
+      expect(content).not.toBeSimilarStringTo(`import * as React from 'react';`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+  });
+
+  describe('Fragments', () => {
+    it('Should generate basic fragments documents correctly', async () => {
+      const docs = [
+        {
+          filePath: 'a.graphql',
+          content: parse(/* GraphQL */ `
+            fragment MyFragment on Repository {
+              full_name
             }
+
+            query {
+              feed {
+                id
+              }
+            }
+          `)
+        }
+      ];
+      const result = await plugin(schema, docs, {}, { outputFile: '' });
+
+      expect(result).toBeSimilarStringTo(`
+      export const MyFragmentFragmentDoc = gql\`
+      fragment MyFragment on Repository {
+        full_name
+      }
+      \`;`);
+      await validateTypeScript(result, schema, docs, {});
+    });
+
+    it('should generate Document variables for inline fragments', async () => {
+      const repositoryWithOwner = gql`
+        fragment RepositoryWithOwner on Repository {
+          full_name
+          html_url
+          owner {
+            avatar_url
           }
         }
-      }
-    `;
+      `;
+      const feedWithRepository = gql`
+        fragment FeedWithRepository on FeedType {
+          id
+          commentCount
+          repository(search: "phrase") {
+            ...RepositoryWithOwner
+          }
+        }
 
-    const content = await plugin(
-      schema,
-      [{ filePath: '', content: documents }],
-      {},
-      {
-        outputFile: 'graphql.tsx'
-      }
-    );
+        ${repositoryWithOwner}
+      `;
+      const myFeed = gql`
+        query MyFeed {
+          feed {
+            ...FeedWithRepository
+          }
+        }
 
-    expect(content).toBeSimilarStringTo(`
-        export const Document =  gql\`
-           {
+        ${feedWithRepository}
+      `;
+
+      const docs = [{ filePath: '', content: myFeed }];
+
+      const content = await plugin(
+        schema,
+        docs,
+        {},
+        {
+          outputFile: 'graphql.tsx'
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`export const FeedWithRepositoryFragmentDoc = gql\`
+fragment FeedWithRepository on FeedType {
+  id
+  commentCount
+  repository(search: "phrase") {
+    ...RepositoryWithOwner
+  }
+}
+\${RepositoryWithOwnerFragmentDoc}\`;`);
+      expect(content).toBeSimilarStringTo(`export const RepositoryWithOwnerFragmentDoc = gql\`
+fragment RepositoryWithOwner on Repository {
+  full_name
+  html_url
+  owner {
+    avatar_url
+  }
+}
+\`;`);
+
+      expect(content).toBeSimilarStringTo(`export const MyFeedDocument = gql\`
+query MyFeed {
+  feed {
+    ...FeedWithRepository
+  }
+}
+\${FeedWithRepositoryFragmentDoc}\`;`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should avoid generating duplicate fragments', async () => {
+      const simpleFeed = gql`
+        fragment Item on FeedType {
+          id
+        }
+      `;
+      const myFeed = gql`
+        query MyFeed {
+          feed {
+            ...Item
+          }
+          allFeeds: feed {
+            ...Item
+          }
+        }
+      `;
+      const documents = [simpleFeed, myFeed];
+      const docs = documents.map(content => ({ content, filePath: '' }));
+      const content = await plugin(
+        schema,
+        docs,
+        {},
+        {
+          outputFile: 'graphql.tsx'
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+        export const MyFeedDocument = gql\`
+        query MyFeed {
+            feed {
+              ...Item
+            }
+            allFeeds: feed {
+              ...Item
+            }
+          }
+          \${ItemFragmentDoc}\``);
+      expect(content).toBeSimilarStringTo(`
+        export const ItemFragmentDoc = gql\`
+        fragment Item on FeedType {
+          id
+        }
+\`;`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('Should generate fragments in proper order (when one depends on other)', async () => {
+      const myFeed = gql`
+        fragment FeedWithRepository on FeedType {
+          id
+          repository {
+            ...RepositoryWithOwner
+          }
+        }
+        fragment RepositoryWithOwner on Repository {
+          full_name
+        }
+        query MyFeed {
+          feed {
+            ...FeedWithRepository
+          }
+        }
+      `;
+      const documents = [myFeed];
+      const docs = documents.map(content => ({ content, filePath: '' }));
+      const content = await plugin(
+        schema,
+        docs,
+        {},
+        {
+          outputFile: 'graphql.tsx'
+        }
+      );
+
+      const feedWithRepositoryPos = content.indexOf('fragment FeedWithRepository');
+      const repositoryWithOwnerPos = content.indexOf('fragment RepositoryWithOwner');
+      expect(repositoryWithOwnerPos).toBeLessThan(feedWithRepositoryPos);
+      await validateTypeScript(content, schema, docs, {});
+    });
+  });
+
+  describe('Component', () => {
+    it('should generate Document variable', async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
+      const content = await plugin(
+        schema,
+        docs,
+        {},
+        {
+          outputFile: 'graphql.tsx'
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+          export const TestDocument =  gql\`
+          query test {
             feed {
               id
               commentCount
@@ -88,620 +365,200 @@ describe('Components', () => {
               }
             }
           }
-        \`;
-      `);
-  });
-
-  it('should generate Component', async () => {
-    const documents = gql`
-      query {
-        feed {
-          id
-          commentCount
-          repository {
-            full_name
-            html_url
-            owner {
-              avatar_url
-            }
-          }
-        }
-      }
-    `;
-
-    const content = await plugin(
-      schema,
-      [{ filePath: '', content: documents }],
-      {},
-      {
-        outputFile: 'graphql.tsx'
-      }
-    );
-
-    expect(content).toBeSimilarStringTo(`
-    export class Component extends React.Component<Partial<ReactApollo.QueryProps<Query, Variables>>> {
-      render(){
-          return (
-              <ReactApollo.Query<Query, Variables>
-              query={ Document }
-              {...(this as any)['props'] as any}
-                          />
-                );
-              }
-          }
+          \`;
         `);
-  });
-
-  it('should generate HOCs', async () => {
-    const documents = gql`
-      query {
-        feed {
-          id
-          commentCount
-          repository {
-            full_name
-            html_url
-            owner {
-              avatar_url
-            }
-          }
-        }
-      }
-    `;
-
-    const content = await plugin(
-      schema,
-      [{ filePath: '', content: documents }],
-      {},
-      {
-        outputFile: 'graphql.tsx'
-      }
-    );
-
-    expect(content).toBeSimilarStringTo(`
-          export function HOC<TProps, TChildProps = any>(operationOptions:
-              ReactApollo.OperationOption<
-                  TProps,
-                  Query,
-                  Variables,
-                  Props<TChildProps>
-              > | undefined){
-          return ReactApollo.graphql<TProps, Query, Variables, Props<TChildProps>>(
-              Document,
-              operationOptions
-          );
-        };
-    `);
-  });
-
-  it('should generate Document variables for inline fragments', async () => {
-    const repositoryWithOwner = gql`
-      fragment RepositoryWithOwner on Repository {
-        full_name
-        html_url
-        owner {
-          avatar_url
-        }
-      }
-    `;
-    const feedWithRepository = gql`
-      fragment FeedWithRepository on FeedType {
-        id
-        commentCount
-        repository(search: "phrase") {
-          ...RepositoryWithOwner
-        }
-      }
-
-      ${repositoryWithOwner}
-    `;
-    const myFeed = gql`
-      query MyFeed {
-        feed {
-          ...FeedWithRepository
-        }
-      }
-
-      ${feedWithRepository}
-    `;
-
-    const content = await plugin(
-      schema,
-      [{ filePath: '', content: myFeed }],
-      {},
-      {
-        outputFile: 'graphql.tsx'
-      }
-    );
-
-    expect(content).toBeSimilarStringTo(`
-      export namespace FeedWithRepository {
-        export const FragmentDoc = gql\`
-          fragment FeedWithRepository on FeedType {
-            id
-            commentCount
-            repository(search: "phrase") {
-              ...RepositoryWithOwner
-            }
-          }
-
-          \${RepositoryWithOwner.FragmentDoc}
-
-        \`;
-      }
-      `);
-    expect(content).toBeSimilarStringTo(`
-      export namespace RepositoryWithOwner {
-        export const FragmentDoc = gql\`
-          fragment RepositoryWithOwner on Repository {
-            full_name
-            html_url
-            owner {
-              avatar_url
-            }
-          }
-        \`;
-      }
-    `);
-  });
-
-  it('should embed inline fragments inside query document', async () => {
-    const repositoryWithOwner = gql`
-      fragment RepositoryWithOwner on Repository {
-        full_name
-        html_url
-        owner {
-          avatar_url
-        }
-      }
-    `;
-    const feedWithRepository = gql`
-      fragment FeedWithRepository on FeedType {
-        id
-        commentCount
-        repository(search: "phrase") {
-          ...RepositoryWithOwner
-        }
-      }
-
-      ${repositoryWithOwner}
-    `;
-    const myFeed = gql`
-      query MyFeed {
-        feed {
-          ...FeedWithRepository
-        }
-      }
-
-      ${feedWithRepository}
-    `;
-
-    const content = await plugin(
-      schema,
-      [{ filePath: '', content: myFeed }],
-      {},
-      {
-        outputFile: 'graphql.tsx'
-      }
-    );
-
-    expect(content).toBeSimilarStringTo(`
-        export const Document = gql\`
-          query MyFeed {
-            feed {
-              ...FeedWithRepository
-            }
-          }
-
-          \${FeedWithRepository.FragmentDoc}
-        \`;
-      `);
-  });
-  it('no duplicated fragments', async () => {
-    const simpleFeed = gql`
-      fragment SimpleFeed on FeedType {
-        id
-        commentCount
-      }
-    `;
-    const myFeed = gql`
-      query MyFeed {
-        feed {
-          ...SimpleFeed
-        }
-        allFeeds {
-          ...SimpleFeed
-        }
-      }
-    `;
-    const documents = [simpleFeed, myFeed];
-    const content = await plugin(
-      schema,
-      documents.map(content => ({ content, filePath: '' })),
-      {},
-      {
-        outputFile: 'graphql.tsx'
-      }
-    );
-
-    expect(content).toBeSimilarStringTo(`
-      const Document = gql\` query MyFeed {
-          feed {
-            ...SimpleFeed
-          }
-          allFeeds {
-            ...SimpleFeed
-          }
-        }
-        \${SimpleFeed.FragmentDoc}
-      \`
-    `);
-    expect(content).toBeSimilarStringTo(`
-      const FragmentDoc = gql\` fragment SimpleFeed on FeedType {
-        id
-        commentCount
-      }
-      \`;
-    `);
-  });
-
-  it('write fragments in proper order (when one depends on other)', async () => {
-    const myFeed = gql`
-      fragment FeedWithRepository on FeedType {
-        id
-        repository {
-          ...RepositoryWithOwner
-        }
-      }
-      fragment RepositoryWithOwner on Repository {
-        full_name
-      }
-      query MyFeed {
-        feed {
-          ...FeedWithRepository
-        }
-      }
-    `;
-    const documents = [myFeed];
-    const content = await plugin(
-      schema,
-      documents.map(content => ({ content, filePath: '' })),
-      {},
-      {
-        outputFile: 'graphql.tsx'
-      }
-    );
-
-    const feedWithRepositoryPos = content.indexOf('fragment FeedWithRepository');
-    const repositoryWithOwnerPos = content.indexOf('fragment RepositoryWithOwner');
-    expect(repositoryWithOwnerPos).toBeLessThan(feedWithRepositoryPos);
-  });
-
-  it('Issue 702 - handle duplicated documents when fragment and query have the same name', async () => {
-    const testSchema = makeExecutableSchema({
-      typeDefs: `
-        type Event {
-          type: String!
-          name: String!
-        }
-
-        type Query {
-          events: [Event]
-        }
-
-        schema {
-          query: Query
-        }
-      `
+      await validateTypeScript(content, schema, docs, {});
     });
 
-    const query = gql`
-      fragment event on Event {
-        name
-      }
-
-      query event {
-        events {
-          ...event
+    it('should generate Document variable with noGraphQlTag', async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
+      const content = await plugin(
+        schema,
+        docs,
+        {
+          noGraphQLTag: true
+        },
+        {
+          outputFile: 'graphql.tsx'
         }
-      }
-    `;
+      );
 
-    const content = await plugin(
-      testSchema,
-      [{ filePath: '', content: query }],
-      {},
-      {
-        outputFile: 'graphql.tsx'
-      }
-    );
+      expect(content).toBeSimilarStringTo(`export const TestDocument: DocumentNode = {"kind":"Document","defin`);
+      await validateTypeScript(content, schema, docs, {});
+    });
 
-    expect(content).toBeSimilarStringTo(`
-      export namespace Event {
-        export const FragmentDoc = gql\`
-          fragment event on Event {
-            name
-          }
-        \`;
-      }
-    `);
-
-    expect(content).toBeSimilarStringTo(`
-      export namespace Event {
-        export const FragmentDoc = gql\`
-          fragment event on Event {
-            name
-          }
-        \`;
-      }
-    `);
-
-    expect(content).toBeSimilarStringTo(`
-      export namespace Event {
-        export const Document = gql\`
-          query event {
-            events {
-              ...event
-            }
-          }
-
-          \${Event.FragmentDoc}
-      \`;
-    `);
-  });
-
-  it(`should skip if there's no operations`, async () => {
-    const content = await plugin(
-      schema,
-      [],
-      { noNamespaces: true },
-      {
-        outputFile: 'graphql.tsx'
-      }
-    );
-
-    expect(content).not.toContain(`import * as ReactApollo from 'react-apollo';`);
-    expect(content).not.toContain(`import * as React from 'react';`);
-    expect(content).not.toContain(`import gql from 'graphql-tag';`);
-  });
-
-  it(`should use gql import from gqlImport config option`, async () => {
-    const documents = gql`
-      query {
-        feed {
-          id
+    it('should generate Component', async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
+      const content = await plugin(
+        schema,
+        docs,
+        {},
+        {
+          outputFile: 'graphql.tsx'
         }
-      }
-    `;
+      );
 
-    const content = await plugin(
-      schema,
-      [{ filePath: '', content: documents }],
-      { gqlImport: 'graphql.macro#gql' },
-      {
-        outputFile: 'graphql.tsx'
-      }
-    );
-
-    expect(content).toContain(`import { gql } from 'graphql.macro';`);
-  });
-
-  it('should import ReactApolloHooks dependencies', async () => {
-    const documents = gql`
-      query {
-        feed {
-          id
-          commentCount
-          repository {
-            full_name
-            html_url
-            owner {
-              avatar_url
-            }
-          }
+      expect(content).toBeSimilarStringTo(`
+      export class TestComponent extends React.Component<Partial<ReactApollo.QueryProps<TestQuery, TestQueryVariables>>> {
+        render() {
+            return (
+                <ReactApollo.Query<TestQuery, TestQueryVariables> query={TestDocument} {...(this as any)['props'] as any} />
+            );
         }
-      }
-    `;
+      }`);
+      await validateTypeScript(content, schema, docs, {});
+    });
 
-    const content = await plugin(
-      schema,
-      [{ filePath: '', content: documents }],
-      { withHooks: true },
-      {
-        outputFile: 'graphql.tsx'
-      }
-    );
+    it('should not generate Component', async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
+      const content = await plugin(
+        schema,
+        docs,
+        { withComponent: false },
+        {
+          outputFile: 'graphql.tsx'
+        }
+      );
 
-    expect(content).toBeSimilarStringTo(`
-        import * as ReactApolloHooks from 'react-apollo-hooks';
-    `);
+      expect(content).not.toContain(`export class TestComponent`);
+      await validateTypeScript(content, schema, docs, {});
+    });
   });
 
-  it('should import ReactApolloHooks from hooksImportFrom config option', async () => {
-    const documents = gql`
-      query {
-        feed {
-          id
-          commentCount
-          repository {
-            full_name
-            html_url
-            owner {
-              avatar_url
+  describe('HOC', () => {
+    it('should generate HOCs', async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
+      const content = await plugin(
+        schema,
+        docs,
+        {},
+        {
+          outputFile: 'graphql.tsx'
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(
+        `export type TestProps<TChildProps = any> = Partial<ReactApollo.DataProps<TestQuery, TestQueryVariables>> & TChildProps;`
+      );
+
+      expect(content)
+        .toBeSimilarStringTo(`export function TestHOC<TProps, TChildProps = any>(operationOptions: ReactApollo.OperationOption<
+  TProps,
+  TestQuery,
+  TestQueryVariables,
+  TestProps<TChildProps>> | undefined) {
+    return ReactApollo.graphql<TProps, TestQuery, TestQueryVariables, TestProps<TChildProps>>(TestDocument, operationOptions);
+};`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should not generate HOCs', async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
+      const content = await plugin(
+        schema,
+        docs,
+        { withHOC: false },
+        {
+          outputFile: 'graphql.tsx'
+        }
+      );
+
+      expect(content).not.toContain(`export type TestProps`);
+      expect(content).not.toContain(`export function TestHOC`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+  });
+
+  describe('Hooks', () => {
+    it('Should generate hooks for query and mutation', async () => {
+      const documents = parse(/* GraphQL */ `
+        query feed {
+          feed {
+            id
+            commentCount
+            repository {
+              full_name
+              html_url
+              owner {
+                avatar_url
+              }
             }
           }
         }
-      }
-    `;
 
-    const content = await plugin(
-      schema,
-      [{ filePath: '', content: documents }],
-      { withHooks: true, hooksImportFrom: 'custom-apollo-hooks' },
-      {
-        outputFile: 'graphql.tsx'
-      }
-    );
-
-    expect(content).toBeSimilarStringTo(`
-        import * as ReactApolloHooks from 'custom-apollo-hooks';
-    `);
-  });
-
-  it('should generate Hooks', async () => {
-    const documents = gql`
-      query {
-        feed {
-          id
-          commentCount
-          repository {
-            full_name
-            html_url
-            owner {
-              avatar_url
-            }
+        mutation submitRepository($name: String) {
+          submitRepository(repoFullName: $name) {
+            id
           }
         }
-      }
+      `);
+      const docs = [{ filePath: '', content: documents }];
 
-      mutation($name: String) {
-        submitRepository(repoFullName: $name)
-      }
-    `;
-
-    const content = await plugin(
-      schema,
-      [{ filePath: '', content: documents }],
-      { withHooks: true },
-      {
-        outputFile: 'graphql.tsx'
-      }
-    );
-
-    expect(content).toBeSimilarStringTo(`
-          export function use(baseOptions?: ReactApolloHooks.QueryHookOptions<
-                Variables
-            >) {
-          return ReactApolloHooks.useQuery<
-            Query, 
-            Variables
-          >(Document, baseOptions);
-        };
-    `);
-
-    expect(content).toBeSimilarStringTo(`
-          export function use(baseOptions?: ReactApolloHooks.MutationHookOptions<
-                Mutation,
-                Variables
-            >) {
-          return ReactApolloHooks.useMutation<
-            Mutation, 
-            Variables
-          >(Document, baseOptions);
-        };
-    `);
-  });
-
-  it('should generate Subscription Hooks', async () => {
-    const documents = gql`
-      subscription ListenToComments($name: String) {
-        commentAdded(repoFullName: $name) {
-          id
+      const content = await plugin(
+        schema,
+        docs,
+        { withHooks: true, withComponent: false, withHOC: false },
+        {
+          outputFile: 'graphql.tsx'
         }
-      }
-    `;
+      );
 
-    const content = await plugin(
-      schema,
-      [{ filePath: '', content: documents }],
-      {
-        noNamespaces: true,
-        withHooks: true
-      },
-      {
-        outputFile: 'graphql.tsx'
-      }
-    );
+      expect(content).toBeSimilarStringTo(`
+export function useFeedQuery(baseOptions?: ReactApolloHooks.QueryHookOptions<FeedQueryVariables>) {
+  return ReactApolloHooks.useQuery<FeedQuery, FeedQueryVariables>(FeedDocument, baseOptions);
+};`);
 
-    expect(content).toBeSimilarStringTo(`
-          export function useListenToComments(baseOptions?: ReactApolloHooks.SubscriptionHookOptions<
-              ListenToCommentsSubscription,
-              ListenToCommentsVariables
-            >) {
-          return ReactApolloHooks.useSubscription<
-            ListenToCommentsSubscription, 
-            ListenToCommentsVariables
-          >(ListenToCommentsDocument, baseOptions);
-        };
-    `);
-  });
+      expect(content).toBeSimilarStringTo(`
+export function useSubmitRepositoryMutation(baseOptions?: ReactApolloHooks.MutationHookOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>) {
+  return ReactApolloHooks.useMutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(SubmitRepositoryDocument, baseOptions);
+};`);
+      await validateTypeScript(content, schema, docs, {});
+    });
 
-  it('should skip import React and ReactApollo if only hooks are used', async () => {
-    const documents = gql`
-      query {
-        feed {
-          id
-          commentCount
-          repository {
-            full_name
-            html_url
-            owner {
-              avatar_url
-            }
+    it('Should not generate hooks for query and mutation', async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
+      const content = await plugin(
+        schema,
+        docs,
+        { withHooks: false },
+        {
+          outputFile: 'graphql.tsx'
+        }
+      );
+
+      expect(content).not.toContain(`export function useTestQuery`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('Should generate subscription hooks', async () => {
+      const documents = parse(/* GraphQL */ `
+        subscription ListenToComments($name: String) {
+          commentAdded(repoFullName: $name) {
+            id
           }
         }
-      }
-    `;
+      `);
 
-    const content = await plugin(
-      schema,
-      [{ filePath: '', content: documents }],
-      {
-        withHooks: true,
-        noHOC: true,
-        noComponents: true
-      },
-      {
-        outputFile: 'graphql.tsx'
-      }
-    );
+      const docs = [{ filePath: '', content: documents }];
 
-    expect(content).not.toBeSimilarStringTo(`
-      import * as ReactApollo from 'react-apollo';
-    `);
-
-    expect(content).not.toBeSimilarStringTo(`
-      import * as React from 'react';
-    `);
-  });
-  it('should import ReactApolloHooks from hooksImportFrom config option', async () => {
-    const documents = gql`
-      query {
-        feed {
-          id
-          commentCount
-          repository {
-            full_name
-            html_url
-            owner {
-              avatar_url
-            }
-          }
+      const content = await plugin(
+        schema,
+        docs,
+        {
+          withHooks: true,
+          withComponent: false,
+          withHOC: false
+        },
+        {
+          outputFile: 'graphql.tsx'
         }
-      }
-    `;
+      );
 
-    const content = await plugin(
-      schema,
-      [{ filePath: '', content: documents }],
-      { withHooks: true, hooksImportFrom: 'custom-apollo-hooks' },
-      {
-        outputFile: 'graphql.tsx'
-      }
-    );
-
-    expect(content).toBeSimilarStringTo(`
-        import * as ReactApolloHooks from 'custom-apollo-hooks';
-    `);
+      expect(content).toBeSimilarStringTo(`
+export function useListenToCommentsSubscription(baseOptions?: ReactApolloHooks.SubscriptionHookOptions<ListenToCommentsSubscription, ListenToCommentsSubscriptionVariables>) {
+  return ReactApolloHooks.useSubscription<ListenToCommentsSubscription, ListenToCommentsSubscriptionVariables>(ListenToCommentsDocument, baseOptions);
+};`);
+      await validateTypeScript(content, schema, docs, {});
+    });
   });
 });

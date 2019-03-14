@@ -18,8 +18,8 @@ overwrite: true
 generates:
   ./src/types.ts:
     plugins:
-      - typescript-common
-      - typescript-client
+      - typescript
+      - typescript-operations
 ```
 
 A more robust config file can be seen [here](https://github.com/dotansimha/graphql-code-generator/blob/70003040cfc3bf01a3d8eea9d4b2b5adec4ef77a/dev-test/codegen.yml).

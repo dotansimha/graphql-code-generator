@@ -1,8 +1,8 @@
 import { executeCodegen } from '../codegen';
-import { FileOutput, getLogger, Types, debugLog } from 'graphql-codegen-core';
+import { FileOutput, getLogger, Types, debugLog } from 'graphql-codegen-plugin-helpers';
 import { normalizeInstanceOrArray, normalizeOutputParam } from '../helpers';
-import isValidPath = require('is-valid-path');
-import * as isGlob from 'is-glob';
+import * as isValidPath from 'is-valid-path';
+import isGlob from 'is-glob';
 import * as logSymbols from 'log-symbols';
 
 function log(msg: string) {
@@ -51,7 +51,7 @@ export const createWatcher = (config: Types.Config, onNext: (result: FileOutput[
   let watcher: any;
 
   const runWatcher = async () => {
-    const chokidar = require('chokidar');
+    const chokidar = await import('chokidar');
     emitWatching();
 
     watcher = chokidar.watch(files, {

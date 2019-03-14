@@ -39,7 +39,7 @@ So let's use a very basic method from `GraphQLSchema`, and return a list of all 
 
 ```js
 module.exports = {
-  plugin: (schema, documents, config) => {
+  plugin: (schema, documents, config, info) => {
     const typesMap = schema.getTypeMap();
 
     return Object.keys(typesMap).join('\n');
@@ -59,7 +59,7 @@ Let's print a list of all documents files, and the name of operations in this fi
 
 ```js
 module.exports = {
-  plugin: (schema, documents, config) => {
+  plugin: (schema, documents, config, info) => {
     return documents
       .map(doc => {
         const docsNames = doc.definitions.map(def => def.name.value);
@@ -92,7 +92,11 @@ And then, you can use in your plugin:
 
 ```js
 module.exports = {
-  plugin: (schema, documents, config) => {
+  plugin: (schema, documents, config, info) => {
+    if (extname(info.outputFile) === '.graphql') {
+      return 'baz';
+    }
+
     if (config.myConfig === 'some-value') {
       return 'foo';
     } else {

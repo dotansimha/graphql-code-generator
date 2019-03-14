@@ -1,21 +1,17 @@
 {
   "name": "graphql-codegen-core",
   "version": "0.18.0",
-  "description": "GraphQL types and code generator based on schema",
-  "main": "dist/index.js",
-  "scripts": {
-    "clean": "rimraf ./dist",
-    "lint": "tslint src/**/*.ts",
-    "prebuild": "yarn clean && yarn lint",
-    "build": "tsc",
-    "prestart": "yarn build",
-    "start": "cd dist && node gql-gen.js",
-    "debug": "cd dist && node --inspect --debug-brk gql-gen.js",
-    "test": "jest --no-cache --verbose --runInBand"
-  },
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dotansimha/graphql-code-generator.git"
+  },
+  "scripts": {
+    "clean": "rimraf ./dist",
+    "lint": "tslint src/**/*.ts",
+    "prebuild": "yarn clean",
+    "build": "tsc -m esnext --outDir dist/esnext && tsc -m commonjs --outDir dist/commonjs",
+    "test": "jest --config ../../jest.config.js"
   },
   "keywords": [
     "gql",
@@ -35,45 +31,26 @@
     "typings"
   ],
   "author": "Dotan Simha <dotansimha@gmail.com>",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/dotansimha/graphql-codegen/issues"
   },
   "homepage": "https://github.com/dotansimha/graphql-codegen#readme",
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
-  },
-  "jest": {
-    "transform": {
-      "^.+\\.tsx?$": "ts-jest"
-    },
-    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "jsx",
-      "json",
-      "node"
-    ]
-  },
-  "dependencies": {
-    "chalk": "2.4.2",
-    "change-case": "3.1.0",
-    "common-tags": "1.8.0",
-    "graphql-tag": "2.10.1",
-    "graphql-toolkit": "0.2.6",
-    "graphql-tools": "4.0.4",
-    "ts-log": "2.1.4",
-    "winston": "3.2.1"
-  },
   "peerDependencies": {
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0"
   },
-  "typings": "dist/index.d.ts",
+  "dependencies": {
+    "graphql-codegen-plugin-helpers": "0.18.0",
+    "graphql-toolkit": "0.2.6",
+    "tslib": "1.9.3"
+  },
+  "devDependencies": {
+    "ts-jest": "24.0.0"
+  },
+  "sideEffects": false,
+  "main": "dist/commonjs/index.js",
+  "module": "dist/esnext/index.js",
+  "typings": "dist/esnext/index.d.ts",
   "typescript": {
-    "definition": "dist/index.d.ts"
+    "definition": "dist/esnext/index.d.ts"
   }
 }

@@ -1,162 +1,209 @@
-import 'graphql-codegen-core/dist/testing';
-import { SchemaTemplateContext, schemaToTemplateContext } from 'graphql-codegen-core';
-import { entityFields } from '../src/helpers/entity-fields';
-import { addToSchema, plugin } from '../dist';
-import { pascalCase } from 'change-case';
-import { print, GraphQLSchema } from 'graphql';
-import { makeExecutableSchema } from 'graphql-tools';
+import 'graphql-codegen-testing';
+import { plugin, addToSchema } from './../src/index';
+import { buildSchema, print, GraphQLSchema } from 'graphql';
+import { plugin as tsPlugin } from '../../typescript/src/index';
+import { validateTs } from '../../typescript/tests/validate';
 
-describe('Types', () => {
-  const compileAndBuildContext = (typeDefs: string): { context: SchemaTemplateContext; schema: GraphQLSchema } => {
-    const schema = makeExecutableSchema({
-      typeDefs: `
-          ${print(addToSchema)}
-          
-          type Query {
-            dummy: String 
-          }
-         
-          ${typeDefs}
-      `
-    }) as GraphQLSchema;
-
-    return {
-      schema,
-      context: schemaToTemplateContext(schema)
-    };
+describe('TypeScript Mongo', () => {
+  const validate = async (content: string, schema: GraphQLSchema, config: any) => {
+    const tsPluginOutput = await tsPlugin(schema, [], config, { outputFile: '' });
+    const result = [tsPluginOutput, content].join('\n');
+    await validateTs(result);
   };
 
-  const hbsContext: any = {
-    data: {
-      root: {
-        primitives: {
-          String: 'string',
-          Int: 'number',
-          Float: 'number',
-          Boolean: 'boolean',
-          ID: 'string'
-        }
-      }
+  const schema = buildSchema(/* GraphQL */ `
+    ${print(addToSchema)}
+
+    type User @entity(additionalFields: [{ path: "nonSchemaField", type: "string" }]) {
+      id: ID @id
+      name: String @column
+      gender: Gender @column
+      someLink: LinkType @link
+      linkWithoutDirective: LinkType
+      multipleLinks: [LinkType] @link
+      fieldWithMap: String @column @map(path: "profile.inner.field")
+      columnWithOverride: String @column(overrideType: "number")
+      requiredField: String!
+      arrayColumn: [Int] @column
+      arrayColumnMap: [Int] @column @map(path: "myInnerArray")
+      basicEmbedded: EmbeddedType! @embedded
+      arrayEmbedded: [EmbeddedType!]! @embedded
+      nullableEmbedded: [EmbeddedType] @embedded
+      mappedEmbedded: EmbeddedType @embedded @map(path: "innerEmbedded.moreLevel")
+      changeName: String @column @map(path: "other_name")
     }
-  };
 
-  it('should resolve type and fields correctly', async () => {
-    const { context } = compileAndBuildContext(`
-          type User @entity(additionalFields: [
-            { path: "nonSchemaField", type: "string" }
-          ]) {
-              id: ID @id
-              name: String @column
-              gender: Gender @column
-              someLink: LinkType @link
-              multipleLinks: [LinkType] @link
-              fieldWithMap: String @column @map(path: "profile.inner.field")
-              columnWithOverride: String @column(overrideType: "number")
-              requiredField: String!
-              arrayColumn: [Int] @column
-              arrayColumnMap: [Int] @column @map(path: "myInnerArray")
-              basicEmbedded: EmbeddedType! @embedded
-              arrayEmbedded: [EmbeddedType!]! @embedded
-              nullableEmbedded: [EmbeddedType] @embedded
-              mappedEmbedded: EmbeddedType @embedded @map(path: "innerEmbedded.moreLevel")
-              overriddedArray: String @column(overrideIsArray: true)
-              changeName: String @column(name: "other_name")
-          }
-          
-          type EmbeddedType @entity(embedded: true) {
-            eField: String
-            eField2: Int!
-          }
-          
-          type LinkType @entity {
-            id: ID @id
-          }
-          
-          enum Gender {
-            MALE
-            FEMALE
-            OTHER
-          }
-        `);
+    type EmbeddedType @entity {
+      eField: String @column
+      eField2: Int! @column
+    }
 
-    const type = context.types.find(t => t.name === 'User');
-    const fieldsMapping = entityFields(pascalCase)(type, hbsContext, true);
+    type LinkType @entity {
+      id: ID @id
+    }
 
-    expect(fieldsMapping).toEqual({
-      _id: 'Maybe<ObjectID>',
-      name: 'Maybe<string>',
-      gender: 'Maybe<string>',
-      someLink: 'Maybe<ObjectID>',
-      multipleLinks: 'Maybe<(Maybe<ObjectID>)[]>',
-      profile: { inner: { field: 'Maybe<string>' } },
-      columnWithOverride: 'Maybe<number>',
-      arrayColumn: 'Maybe<(Maybe<number>)[]>',
-      myInnerArray: 'Maybe<(Maybe<number>)[]>',
-      basicEmbedded: 'EmbeddedTypeDbObject',
-      arrayEmbedded: 'EmbeddedTypeDbObject[]',
-      nullableEmbedded: 'Maybe<(Maybe<EmbeddedTypeDbObject>)[]>',
-      innerEmbedded: { moreLevel: 'Maybe<EmbeddedTypeDbObject>' },
-      overriddedArray: 'Maybe<string[]>',
-      other_name: 'Maybe<string>',
-      nonSchemaField: 'string'
+    enum Gender {
+      MALE
+      FEMALE
+      OTHER
+    }
+
+    type Query {
+      me: User!
+      feed: [FeedItem!]!
+      search: [SearchResult!]!
+    }
+
+    interface FeedItem @abstractEntity(discriminatorField: "kind") {
+      id: ID! @id
+      content: String! @column
+    }
+
+    type Post implements FeedItem @entity {
+      id: ID! @id
+      content: String! @column
+      author: User! @link
+    }
+
+    union SearchResult @union(discriminatorField: "entityType") = Post | User
+  `);
+
+  describe('Config', () => {
+    it('Should accept dbTypeSuffix', async () => {
+      const result = await plugin(schema, [], { dbTypeSuffix: 'Obj' }, { outputFile: '' });
+      expect(result).toContain('export type UserObj = {');
+      expect(result).toContain('export type EmbeddedTypeObj = {');
+      expect(result).toContain('export type LinkTypeObj = {');
+      await validate(result, schema, {});
+    });
+
+    it('Should accept dbInterfaceSuffix', async () => {
+      const result = await plugin(schema, [], { dbInterfaceSuffix: 'InterfaceObj' }, { outputFile: '' });
+      expect(result).toContain(`export type FeedItemInterfaceObj = {`);
+      expect(result).toContain(`export type PostDbObject = FeedItemInterfaceObj & {`);
+      await validate(result, schema, {});
+    });
+
+    it('Should allow to customize objectIdType import with basic type', async () => {
+      const result = await plugin(schema, [], { objectIdType: 'string' }, { outputFile: '' });
+      expect(result).toContain(`_id: string`);
+      expect(result).not.toContain(`ObjectID`);
+      await validate(result, schema, {});
+    });
+
+    it('Should allow to customize objectIdType import with custom import', async () => {
+      const result = await plugin(schema, [], { objectIdType: 'ObjectId#bson' }, { outputFile: '' });
+      expect(result).toContain(`_id: ObjectId`);
+      expect(result).not.toContain(`ObjectID`);
+      expect(result).toContain(`import { ObjectId } from 'bson';`);
+      await validate(result, schema, {});
+    });
+
+    it('Should allow to customize idFieldName', async () => {
+      const result = await plugin(schema, [], { idFieldName: 'id' }, { outputFile: '' });
+      expect(result).toContain(`id: ObjectID`);
+      expect(result).not.toContain(`_id`);
+      await validate(result, schema, {});
+    });
+
+    it('Should allow to customize enumsAsString', async () => {
+      const result = await plugin(schema, [], { enumsAsString: false }, { outputFile: '' });
+      expect(result).not.toContain('gender?: Maybe<string>');
+      expect(result).toContain('gender?: Maybe<Gender>');
+      await validate(result, schema, {});
+    });
+
+    it('Should allow to customize avoidOptionals', async () => {
+      const result = await plugin(schema, [], { avoidOptionals: true }, { outputFile: '' });
+      expect(result).not.toContain('?:');
+      await validate(result, schema, {});
+    });
+
+    it('Should allow to customize namingConvention', async () => {
+      const result = await plugin(schema, [], { namingConvention: 'change-case#lowerCase' }, { outputFile: '' });
+      expect(result).toContain('export type userdbobject = {');
+      expect(result).toContain(`export type feeditemdbinterface = {`);
+      await validate(result, schema, {});
     });
   });
 
-  it('should resolve type and fields correctly with interfaces', async () => {
-    const { context } = compileAndBuildContext(`
-          interface BaseEntity @abstractEntity(discriminatorField: "type") {
-            id: ID! @id
-            title: String! @column
-          }
-          
-          type Entity1 implements BaseEntity @entity {
-            id: ID! @id
-            title: String! @column
-          }
-        `);
-
-    const gqlInterface = context.interfaces.find(t => t.name === 'BaseEntity');
-    const type1 = context.types.find(t => t.name === 'Entity1');
-    const fieldsMappingInterface = entityFields(pascalCase)(gqlInterface, hbsContext, true);
-    const fieldsMappingType = entityFields(pascalCase)(type1, hbsContext, true);
-
-    expect(fieldsMappingInterface).toEqual({
-      type: 'string',
-      _id: 'ObjectID',
-      title: 'string'
+  describe('Output', () => {
+    it('Should compile TypeScript correctly', async () => {
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+      await validate(result, schema, {});
     });
 
-    expect(fieldsMappingType).toEqual({
-      _id: 'ObjectID',
-      title: 'string'
+    it('Should include only the relevant types', async () => {
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+      expect(result).toContain('export type UserDbObject = {');
+      expect(result).not.toContain('export type QueryDbObject = {');
     });
 
-    const fieldsMappingTypeString = entityFields(pascalCase)(type1, hbsContext, false);
-    expect(fieldsMappingTypeString).toContain('extends BaseEntityDbInterface');
-  });
+    it('Should generate output for interfaces with discriminatorField', async () => {
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+      expect(result).toContain(`export type FeedItemDbInterface = {`);
+      expect(result).toContain(`kind: string,`);
+    });
 
-  it('should', async () => {
-    const { schema } = compileAndBuildContext(`
-      type Entity1 @entity {
-        id: ID! @id
-        title: String! @column
-      }
-    `);
+    it('Should include a valid type when implementing interfaces', async () => {
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+      expect(result).toContain(`export type FeedItemDbInterface = {`);
+      expect(result).toContain(`export type PostDbObject = FeedItemDbInterface & {`);
+    });
 
-    const content = await plugin(
-      schema,
-      [],
-      {},
-      {
-        outputFile: 'graphql.ts'
-      }
-    );
+    it('Should include a valid union with discriminatorField', async () => {
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+      expect(result).toBeSimilarStringTo(`
+      export type SearchResultDbObject = (PostDbObject | UserDbObject) & {
+        entityType: string,
+      };`);
+    });
 
-    expect(content).toBeSimilarStringTo(`
-      export interface Entity1DbObject {
-        _id: ObjectID
-        title: string
-      }
-    `);
+    it('Should output the correct values for @id directive', async () => {
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+      expect(result).toContain('_id?: Maybe<ObjectID>'); // optional id
+    });
+
+    it('Should output the correct values for @column directive', async () => {
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+      expect(result).toContain('name?: Maybe<string>'); // optional scalar
+      expect(result).toContain('gender?: Maybe<string>'); // enum as string by default
+      expect(result).toContain(`arrayColumn?: Maybe<Array<Maybe<number>>>`); // simple @column with array
+      expect(result).toContain(`columnWithOverride?: number`); // override type
+    });
+
+    it('Should output the correct values for @link directive', async () => {
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+      expect(result).toContain(`someLink?: Maybe<LinkTypeDbObject['_id']>`); // link to another entity
+      expect(result).toContain(`multipleLinks?: Maybe<Array<Maybe<LinkTypeDbObject['_id']>>>`); // links array
+    });
+
+    it('Should output the correct values for @map directive', async () => {
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+      expect(result).toContain(`myInnerArray: Maybe<Array<Maybe<number>>>`); // simple @column with array and @map
+      expect(result).toContain(`other_name: Maybe<string>`); // simple @map scalar
+      expect(result).toBeSimilarStringTo(`
+      profile: {
+        inner: {
+          field: Maybe<string>,
+        },
+      },`); // custom @map with inner fields
+      expect(result).toBeSimilarStringTo(`
+      innerEmbedded: {
+        moreLevel: Maybe<EmbeddedTypeDbObject>,
+      },`); // embedded with @map
+    });
+
+    it('Should output the correct values for @embedded directive', async () => {
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+      expect(result).toContain(`basicEmbedded: EmbeddedTypeDbObject`); // embedded type
+      expect(result).toContain(`arrayEmbedded: Array<EmbeddedTypeDbObject>`); // embedded array
+      expect(result).toContain(`nullableEmbedded?: Maybe<Array<Maybe<EmbeddedTypeDbObject>>`); // optional array embedded
+    });
+
+    it('Should output the correct values with additionalFields', async () => {
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+      expect(result).toContain(`nonSchemaField: string`); // additional field
+    });
   });
 });

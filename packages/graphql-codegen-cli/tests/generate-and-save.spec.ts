@@ -1,5 +1,5 @@
 import { generate } from '../src/generate-and-save';
-import fs from '../src/utils/file-system';
+import * as fs from '../src/utils/file-system';
 
 const SIMPLE_TEST_SCHEMA = `type MyType { f: String } type Query { f: String }`;
 
@@ -22,7 +22,7 @@ describe('generate-and-save', () => {
             schema: `
             type OtherType { a: String }
           `,
-            plugins: ['typescript-common', 'typescript-server']
+            plugins: ['typescript']
           }
         }
       },
@@ -51,7 +51,7 @@ describe('generate-and-save', () => {
             schema: `
             type OtherType { a: String }
           `,
-            plugins: ['typescript-common', 'typescript-server']
+            plugins: ['typescript']
           }
         }
       },
@@ -78,7 +78,7 @@ describe('generate-and-save', () => {
             schema: `
             type OtherType { a: String }
           `,
-            plugins: ['typescript-common', 'typescript-server']
+            plugins: ['typescript']
           }
         }
       },
@@ -106,7 +106,7 @@ describe('generate-and-save', () => {
             schema: `
             type OtherType { a: String }
           `,
-            plugins: ['typescript-common', 'typescript-server']
+            plugins: ['typescript']
           }
         }
       },
@@ -135,7 +135,7 @@ describe('generate-and-save', () => {
             schema: `
             type OtherType { a: String }
           `,
-            plugins: ['typescript-common', 'typescript-server']
+            plugins: ['typescript']
           }
         }
       },

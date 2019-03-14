@@ -56,13 +56,13 @@ export type TypeResolveFn<Types, Parent = {}, Context = {}> = (
 
 export type NextResolverFn<T> = () => Promise<T>;
 
-export type DirectiveResolverFn<TResult, TArgs = {}, TContext = {}> = (
-  next?: NextResolverFn<TResult>,
-  source?: any,
-  args?: TArgs,
-  context?: TContext,
+export type DirectiveResolverFn<Result = {}, Parent = {}, Args = {}, Context = {}> = (
+  next?: NextResolverFn<Result>,
+  parent?: Parent,
+  args?: Args,
+  context?: Context,
   info?: GraphQLResolveInfo
-) => TResult | Promise<TResult>;
+) => Result | Promise<Result>;
 
 export interface QueryResolvers<Context = any, ParentType = Query> {
   allUsers?: Resolver<Array<?User>, ParentType, Context>,
@@ -75,7 +75,9 @@ export interface UserResolvers<Context = any, ParentType = User> {
   email?: Resolver<string, ParentType, Context>,
 }
 
-export interface ResolversRoot {
-  Query?: QueryResolvers<>,
-  User?: UserResolvers<>,
-}
+export type IResolvers<Context = any> = {
+  Query?: QueryResolvers<Context><>,
+  User?: UserResolvers<Context><>,
+};
+
+export type IDirectiveResolvers<Context = any> = {};

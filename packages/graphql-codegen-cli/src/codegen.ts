@@ -1,22 +1,15 @@
-import { FileOutput, DocumentFile, Types, debugLog } from 'graphql-codegen-core';
+import { FileOutput, DocumentFile, Types, debugLog, CodegenPlugin } from 'graphql-codegen-plugin-helpers';
+import { codegen, mergeSchemas } from 'graphql-codegen-core';
 import * as Listr from 'listr';
 import { normalizeOutputParam, normalizeInstanceOrArray, normalizeConfig } from './helpers';
 import { prettify } from './utils/prettier';
 import { Renderer } from './utils/listr-renderer';
 import { DetailedError } from './errors';
 import { loadSchema, loadDocuments } from './load';
-import { mergeSchemas } from './merge-schemas';
-import { GraphQLError, DocumentNode, visit } from 'graphql';
-import { executePlugin, getPluginByName } from './execute-plugin';
+import { GraphQLError, DocumentNode } from 'graphql';
+import { getPluginByName } from './plugins';
 
-export interface GenerateOutputOptions {
-  filename: string;
-  plugins: Types.ConfiguredPlugin[];
-  schema: DocumentNode;
-  documents: DocumentFile[];
-  pluginLoader: Types.PluginLoaderFn;
-  inheritedConfig: { [key: string]: any };
-}
+export const defaultPluginLoader = (mod: string) => import(mod);
 
 export async function executeCodegen(config: Types.Config): Promise<FileOutput[]> {
   function wrapTask(task: () => void | Promise<void>, source?: string) {
@@ -66,10 +59,12 @@ export async function executeCodegen(config: Types.Config): Promise<FileOutput[]
   let rootDocuments: Types.OperationDocument[];
   let generates: { [filename: string]: Types.ConfiguredOutput } = {};
 
-  function normalize() {
+  async function normalize() {
     /* Load Require extensions */
     const requireExtensions = normalizeInstanceOrArray<string>(config.require);
-    requireExtensions.forEach(mod => require(mod));
+    for (const mod of requireExtensions) {
+      await import(mod);
+    }
 
     /* Root templates-config */
     rootConfig = config.config || {};
@@ -200,18 +195,34 @@ export async function executeCodegen(config: Types.Config): Promise<FileOutput[]
                   task: wrapTask(async () => {
                     debugLog(`[CLI] Generating output`);
                     const normalizedPluginsArray = normalizeConfig(outputConfig.plugins);
-                    const output = await generateOutput({
+                    const pluginLoader = config.pluginLoader || defaultPluginLoader;
+                    const pluginPackages = await Promise.all(
+                      normalizedPluginsArray.map(plugin => getPluginByName(Object.keys(plugin)[0], pluginLoader))
+                    );
+                    const pluginMap: { [name: string]: CodegenPlugin } = {};
+
+                    pluginPackages.forEach((pluginPackage, i) => {
+                      const plugin = normalizedPluginsArray[i];
+                      const name = Object.keys(plugin)[0];
+
+                      pluginMap[name] = pluginPackage;
+                    });
+
+                    const output = await codegen({
                       filename,
                       plugins: normalizedPluginsArray,
                       schema: outputSchema,
                       documents: outputDocuments,
-                      inheritedConfig: {
+                      config: {
                         ...rootConfig,
                         ...outputFileTemplateConfig
                       },
-                      pluginLoader: config.pluginLoader || require
+                      pluginMap
                     });
-                    result.push(output);
+                    result.push({
+                      filename,
+                      content: await prettify(filename, output)
+                    });
                   }, filename)
                 }
               ],
@@ -235,106 +246,4 @@ export async function executeCodegen(config: Types.Config): Promise<FileOutput[]
   await listr.run();
 
   return result;
-}
-
-function validateDocuments(schema: DocumentNode, files: DocumentFile[]) {
-  // duplicated names
-  const operationMap: {
-    [name: string]: string[];
-  } = {};
-
-  files.forEach(file => {
-    visit(file.content, {
-      OperationDefinition(node) {
-        if (typeof node.name !== 'undefined') {
-          if (!operationMap[node.name.value]) {
-            operationMap[node.name.value] = [];
-          }
-
-          operationMap[node.name.value].push(file.filePath);
-        }
-      }
-    });
-  });
-
-  const names = Object.keys(operationMap);
-
-  if (names.length) {
-    const duplicated = names.filter(name => operationMap[name].length > 1);
-
-    if (!duplicated.length) {
-      return;
-    }
-
-    const list = duplicated
-      .map(name =>
-        `
-      * ${name} found in:
-        ${operationMap[name]
-          .map(filepath => {
-            return `
-            - ${filepath}
-          `.trimRight();
-          })
-          .join('')}
-  `.trimRight()
-      )
-      .join('');
-    throw new DetailedError(
-      `Not all operations have an unique name: ${duplicated.join(', ')}`,
-      `
-        Not all operations have an unique name
-
-        ${list}
-      `
-    );
-  }
-}
-
-export async function generateOutput(options: GenerateOutputOptions): Promise<FileOutput> {
-  let output = '';
-
-  validateDocuments(options.schema, options.documents);
-
-  const pluginsPackages = await Promise.all(
-    options.plugins.map(plugin => getPluginByName(Object.keys(plugin)[0], options.pluginLoader))
-  );
-
-  // merged schema with parts added by plugins
-  const schema = pluginsPackages.reduce((schema, plugin) => {
-    return !plugin.addToSchema ? schema : mergeSchemas([schema, plugin.addToSchema]);
-  }, options.schema);
-
-  for (let i = 0; i < options.plugins.length; i++) {
-    const plugin = options.plugins[i];
-    const pluginPackage = pluginsPackages[i];
-    const name = Object.keys(plugin)[0];
-    const pluginConfig = plugin[name];
-
-    debugLog(`[CLI] Running plugin: ${name}`);
-
-    const result = await executePlugin(
-      {
-        name,
-        config:
-          typeof pluginConfig !== 'object'
-            ? pluginConfig
-            : {
-                ...options.inheritedConfig,
-                ...(pluginConfig as object)
-              },
-        schema,
-        documents: options.documents,
-        outputFilename: options.filename,
-        allPlugins: options.plugins
-      },
-      pluginPackage
-    );
-
-    debugLog(`[CLI] Completed executing plugin: ${name}`);
-
-    output += result;
-  }
-
-  return { filename: options.filename, content: await prettify(options.filename, output) };
 }

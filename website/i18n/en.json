@@ -11,8 +11,8 @@
       "custom-codegen/index": {
         "title": "What are Plugins?"
       },
-      "custom-codegen/using-handlebars": {
-        "title": "Using Handlebars"
+      "custom-codegen/using-visitor": {
+        "title": "Visitor Pattern"
       },
       "custom-codegen/validate-configuration": {
         "title": "Validate Plugin Configuration"
@@ -56,8 +56,8 @@
       "plugins/add": {
         "title": "Add"
       },
-      "plugins/flow-documents": {
-        "title": "Flow Documents"
+      "plugins/flow-operations": {
+        "title": "Flow Operations"
       },
       "plugins/flow-resolvers": {
         "title": "Flow Resolvers"
@@ -83,17 +83,14 @@
       "plugins/typescript-apollo-angular": {
         "title": "Typescript Apollo Angular"
       },
-      "plugins/typescript-client": {
-        "title": "Typescript Client"
-      },
-      "plugins/typescript-common": {
-        "title": "TypeScript Common"
-      },
       "plugins/typescript-graphql-files-modules": {
         "title": "TypeScript GraphQL Files Modules"
       },
       "plugins/typescript-mongodb": {
         "title": "TypeScript MongoDB"
+      },
+      "plugins/typescript-operations": {
+        "title": "Typescript Operations"
       },
       "plugins/typescript-react-apollo": {
         "title": "TypeScript React Apollo"
@@ -101,8 +98,11 @@
       "plugins/typescript-resolvers": {
         "title": "TypeScript Resolvers"
       },
-      "plugins/typescript-server": {
-        "title": "TypeScript Server"
+      "plugins/typescript-stencil-apollo": {
+        "title": "TypeScript Stencil Apollo"
+      },
+      "plugins/typescript": {
+        "title": "TypeScrip"
       }
     },
     "links": {

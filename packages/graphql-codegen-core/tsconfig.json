@@ -1,24 +1,23 @@
 {
   "compilerOptions": {
+    "importHelpers": true,
     "experimentalDecorators": true,
-    "module": "commonjs",
-    "target": "es5",
-    "lib": ["es6", "esnext", "es2015"],
-    "suppressImplicitAnyIndexErrors": true,
+    "module": "esnext",
+    "target": "es2018",
+    "lib": ["es6", "esnext", "es2015", "dom"],
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "sourceMap": true,
     "declaration": true,
-    "outDir": "./dist/",
-    "rootDir": "./src/",
+    "outDir": "./dist",
+    "rootDir": "./src",
     "noImplicitAny": true,
     "noImplicitThis": true,
     "alwaysStrict": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "resolveJsonModule": true
+    "noUnusedParameters": false
   },
-  "files": ["src/index.ts", "src/testing/index.ts"],
+  "files": ["src/index.ts"],
   "exclude": ["node_modules"]
 }

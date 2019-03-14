@@ -1,16 +1,14 @@
-import 'graphql-codegen-core/dist/testing';
-import { makeExecutableSchema } from 'graphql-tools';
-import { plugin } from '../dist';
-import * as fs from 'fs';
+import 'graphql-codegen-testing';
+import { plugin, StencilComponentType } from '../src/index';
 import { buildClientSchema } from 'graphql';
 import gql from 'graphql-tag';
+import { readFileSync } from 'fs';
 
 describe('Components', () => {
-  const schema = buildClientSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
-
-  it('should import dependencies', async () => {
+  const schema = buildClientSchema(JSON.parse(readFileSync('../../../dev-test/githunt/schema.json').toString()));
+  it('should import dependencies if class components are generated', async () => {
     const documents = gql`
-      query {
+      query Feed {
         feed {
           id
           commentCount
@@ -25,16 +23,21 @@ describe('Components', () => {
       }
     `;
 
-    const content = await plugin(schema, [{ filePath: '', content: documents }], {});
+    const content = await plugin(
+      schema,
+      [{ filePath: '', content: documents }],
+      { componentType: StencilComponentType.class },
+      { outputFile: '' }
+    );
 
     expect(content).toBeSimilarStringTo(`
-        import gql from 'graphql-tag';
+        import { Component } from '@stencil/core';
       `);
   });
 
-  it('should generate Document variable', async () => {
+  it('should generate Functional Component', async () => {
     const documents = gql`
-      query {
+      query Feed {
         feed {
           id
           commentCount
@@ -49,299 +52,59 @@ describe('Components', () => {
       }
     `;
 
-    const content = await plugin(schema, [{ filePath: '', content: documents }], {});
+    const content = await plugin(
+      schema,
+      [{ filePath: '', content: documents }],
+      { componentType: StencilComponentType.functional },
+      { outputFile: '' }
+    );
 
     expect(content).toBeSimilarStringTo(`
-        export const Document =  gql\`
-           {
-            feed {
-              id
-              commentCount
-              repository {
-                full_name
-                html_url
-                owner {
-                  avatar_url
+        export type FeedProps = {
+            variables ?: FeedQueryVariables;
+            onReady ?: import('stencil-apollo/dist/types/components/apollo-query/types').OnQueryReadyFn<FeedQuery, FeedQueryVariables>;
+        };
+    `);
+
+    expect(content).toBeSimilarStringTo(`
+        export const FeedComponent = (props: FeedProps) => <apollo-query query={ FeedDocument } { ...props } />;
+    `);
+  });
+
+  it('should generate Class Component', async () => {
+    const documents = gql`
+      query Feed {
+        feed {
+          id
+          commentCount
+          repository {
+            full_name
+            html_url
+            owner {
+              avatar_url
+            }
+          }
+        }
+      }
+    `;
+
+    const content = await plugin(
+      schema,
+      [{ filePath: '', content: documents }],
+      { componentType: StencilComponentType.class },
+      { outputFile: '' }
+    );
+
+    expect(content).toBeSimilarStringTo(`
+            @Component({
+                tag: 'apollo-feed'
+            })
+            export class FeedComponent {
+                @Prop() onReady: import('stencil-apollo/dist/types/components/apollo-query/types').OnQueryReadyFn<FeedQuery, FeedQueryVariables>;
+                render() {
+                    return <apollo-query query={ FeedDocument } onReady={ this.onReady } />;
                 }
-              }
             }
-          }
-        \`;
       `);
-  });
-
-  it('should generate Component', async () => {
-    const documents = gql`
-      query {
-        feed {
-          id
-          commentCount
-          repository {
-            full_name
-            html_url
-            owner {
-              avatar_url
-            }
-          }
-        }
-      }
-    `;
-
-    const content = await plugin(schema, [{ filePath: '', content: documents }], {}, { outputFile: '' });
-
-    expect(content).toBeSimilarStringTo(`
-        export interface ComponentProps {
-          variables ?: Variables;
-          onReady ?: import('stencil-apollo/dist/types/components/apollo-query/types').OnQueryReadyFn<Query, Variables>;
-      }
-      export const Component = (props: ComponentProps) => <apollo-query query={ Document } {...props} />;
-      `);
-  });
-
-  it('should generate Document variables for inline fragments', async () => {
-    const repositoryWithOwner = gql`
-      fragment RepositoryWithOwner on Repository {
-        full_name
-        html_url
-        owner {
-          avatar_url
-        }
-      }
-    `;
-    const feedWithRepository = gql`
-      fragment FeedWithRepository on FeedType {
-        id
-        commentCount
-        repository(search: "phrase") {
-          ...RepositoryWithOwner
-        }
-      }
-
-      ${repositoryWithOwner}
-    `;
-    const myFeed = gql`
-      query MyFeed {
-        feed {
-          ...FeedWithRepository
-        }
-      }
-
-      ${feedWithRepository}
-    `;
-
-    const content = await plugin(schema, [{ filePath: '', content: myFeed }], {});
-
-    expect(content).toBeSimilarStringTo(`
-      export namespace FeedWithRepository {
-        export const FragmentDoc = gql\`
-          fragment FeedWithRepository on FeedType {
-            id
-            commentCount
-            repository(search: "phrase") {
-              ...RepositoryWithOwner
-            }
-          }
-
-          \${RepositoryWithOwner.FragmentDoc}
-
-        \`;
-      }
-      `);
-    expect(content).toBeSimilarStringTo(`
-      export namespace RepositoryWithOwner {
-        export const FragmentDoc = gql\`
-          fragment RepositoryWithOwner on Repository {
-            full_name
-            html_url
-            owner {
-              avatar_url
-            }
-          }
-        \`;
-      }
-    `);
-  });
-
-  it('should embed inline fragments inside query document', async () => {
-    const repositoryWithOwner = gql`
-      fragment RepositoryWithOwner on Repository {
-        full_name
-        html_url
-        owner {
-          avatar_url
-        }
-      }
-    `;
-    const feedWithRepository = gql`
-      fragment FeedWithRepository on FeedType {
-        id
-        commentCount
-        repository(search: "phrase") {
-          ...RepositoryWithOwner
-        }
-      }
-
-      ${repositoryWithOwner}
-    `;
-    const myFeed = gql`
-      query MyFeed {
-        feed {
-          ...FeedWithRepository
-        }
-      }
-
-      ${feedWithRepository}
-    `;
-
-    const content = await plugin(schema, [{ filePath: '', content: myFeed }], {});
-
-    expect(content).toBeSimilarStringTo(`
-        export const Document = gql\`
-          query MyFeed {
-            feed {
-              ...FeedWithRepository
-            }
-          }
-
-          \${FeedWithRepository.FragmentDoc}
-        \`;
-      `);
-  });
-  it('no duplicated fragments', async () => {
-    const simpleFeed = gql`
-      fragment SimpleFeed on FeedType {
-        id
-        commentCount
-      }
-    `;
-    const myFeed = gql`
-      query MyFeed {
-        feed {
-          ...SimpleFeed
-        }
-        allFeeds {
-          ...SimpleFeed
-        }
-      }
-    `;
-    const documents = [simpleFeed, myFeed];
-    const content = await plugin(schema, documents.map(content => ({ content, filePath: '' })), {});
-
-    expect(content).toBeSimilarStringTo(`
-      const Document = gql\` query MyFeed {
-          feed {
-            ...SimpleFeed
-          }
-          allFeeds {
-            ...SimpleFeed
-          }
-        }
-        \${SimpleFeed.FragmentDoc}
-      \`
-    `);
-    expect(content).toBeSimilarStringTo(`
-      const FragmentDoc = gql\` fragment SimpleFeed on FeedType {
-        id
-        commentCount
-      }
-      \`;
-    `);
-  });
-
-  it('write fragments in proper order (when one depends on other)', async () => {
-    const myFeed = gql`
-      fragment FeedWithRepository on FeedType {
-        id
-        repository {
-          ...RepositoryWithOwner
-        }
-      }
-      fragment RepositoryWithOwner on Repository {
-        full_name
-      }
-      query MyFeed {
-        feed {
-          ...FeedWithRepository
-        }
-      }
-    `;
-    const documents = [myFeed];
-    const content = await plugin(schema, documents.map(content => ({ content, filePath: '' })), {});
-
-    const feedWithRepositoryPos = content.indexOf('fragment FeedWithRepository');
-    const repositoryWithOwnerPos = content.indexOf('fragment RepositoryWithOwner');
-    expect(repositoryWithOwnerPos).toBeLessThan(feedWithRepositoryPos);
-  });
-
-  it('Issue 702 - handle duplicated documents when fragment and query have the same name', async () => {
-    const testSchema = makeExecutableSchema({
-      typeDefs: `
-        type Event {
-          type: String!
-          name: String!
-        }
-
-        type Query {
-          events: [Event]
-        }
-
-        schema {
-          query: Query
-        }
-      `
-    });
-
-    const query = gql`
-      fragment event on Event {
-        name
-      }
-
-      query event {
-        events {
-          ...event
-        }
-      }
-    `;
-
-    const content = await plugin(testSchema, [{ filePath: '', content: query }], {});
-
-    expect(content).toBeSimilarStringTo(`
-      export namespace Event {
-        export const FragmentDoc = gql\`
-          fragment event on Event {
-            name
-          }
-        \`;
-      }
-    `);
-
-    expect(content).toBeSimilarStringTo(`
-      export namespace Event {
-        export const FragmentDoc = gql\`
-          fragment event on Event {
-            name
-          }
-        \`;
-      }
-    `);
-
-    expect(content).toBeSimilarStringTo(`
-      export namespace Event {
-        export const Document = gql\`
-          query event {
-            events {
-              ...event
-            }
-          }
-
-          \${Event.FragmentDoc}
-      \`;
-    `);
-  });
-
-  it(`should skip if there's no operations`, async () => {
-    const content = await plugin(schema, [], { noNamespaces: true });
-
-    expect(content).not.toContain(`import gql from 'graphql-tag';`);
   });
 });

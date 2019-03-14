@@ -1,5 +1,6 @@
-../graphql-codegen-generators/dev-test
 src
 node_modules
 tests
 !dist
+jest.config.js
+tsconfig.json

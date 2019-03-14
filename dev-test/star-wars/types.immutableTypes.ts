@@ -1,349 +1,242 @@
-export type Maybe<T> = T | null;
+type Maybe<T> = T | null;
+export type Character = {
+  readonly id: string,
+  readonly name: string,
+  readonly friends?: Maybe<ReadonlyArray<Maybe<Character>>>,
+  readonly friendsConnection: FriendsConnection,
+  readonly appearsIn: ReadonlyArray<Maybe<Episode>>,
+};
 
-/** The input object sent when someone is creating a new review */
-export interface ReviewInput {
-  /** 0-5 stars */
-  readonly stars: number;
-  /** Comment about the movie, optional */
-  readonly commentary?: Maybe<string>;
-  /** Favorite color, optional */
-  readonly favoriteColor?: Maybe<ColorInput>;
-}
-/** The input object sent when passing a color */
-export interface ColorInput {
+export type ColorInput = {
+  red: number,
+  green: number,
+  blue: number,
+};
 
-  readonly red: number;
-
-  readonly green: number;
-
-  readonly blue: number;
-}
-/** The episodes in the Star Wars trilogy */
-  export enum Episode {
-    Newhope = 'NEWHOPE',
-    Empire = 'EMPIRE',
-    Jedi = 'JEDI',
-  }
-/** Units of height */
-  export enum LengthUnit {
-    Meter = 'METER',
-    Foot = 'FOOT',
-  }
+export type Droid = Character & {
+  readonly id: string,
+  readonly name: string,
+  readonly friends?: Maybe<ReadonlyArray<Maybe<Character>>>,
+  readonly friendsConnection: FriendsConnection,
+  readonly appearsIn: ReadonlyArray<Maybe<Episode>>,
+  readonly primaryFunction?: Maybe<string>,
+};
 
 
-// ====================================================
-// Documents
-// ====================================================
+export type DroidFriendsConnectionArgs = {
+  first?: Maybe<number>,
+  after?: Maybe<string>
+};
 
-
-
-export namespace CreateReviewForEpisode {
-  export type Variables = {
-    readonly episode: Episode;
-    readonly review: ReviewInput;
-  };
-
-  export type Mutation = {
-    readonly __typename?: 'Mutation';
-
-    readonly createReview: Maybe<CreateReview>;
-  };
-
-  export type CreateReview = {
-    readonly __typename?: 'Review';
-
-    readonly stars: number;
-
-    readonly commentary: Maybe<string>;
-  };
+export enum Episode {
+  Newhope = 'NEWHOPE',
+  Empire = 'EMPIRE',
+  Jedi = 'JEDI'
 }
 
-export namespace HeroAndFriendsNames {
-  export type Variables = {
-    readonly episode?: Maybe<Episode>;
-  };
+export type FriendsConnection = {
+  readonly totalCount?: Maybe<number>,
+  readonly edges?: Maybe<ReadonlyArray<Maybe<FriendsEdge>>>,
+  readonly friends?: Maybe<ReadonlyArray<Maybe<Character>>>,
+  readonly pageInfo: PageInfo,
+};
 
-  export type Query = {
-    readonly __typename?: 'Query';
+export type FriendsEdge = {
+  readonly cursor: string,
+  readonly node?: Maybe<Character>,
+};
 
-    readonly hero: Maybe<Hero>;
-  };
+export type Human = Character & {
+  readonly id: string,
+  readonly name: string,
+  readonly homePlanet?: Maybe<string>,
+  readonly height?: Maybe<number>,
+  readonly mass?: Maybe<number>,
+  readonly friends?: Maybe<ReadonlyArray<Maybe<Character>>>,
+  readonly friendsConnection: FriendsConnection,
+  readonly appearsIn: ReadonlyArray<Maybe<Episode>>,
+  readonly starships?: Maybe<ReadonlyArray<Maybe<Starship>>>,
+};
 
-  export type Hero = {
-    readonly __typename?: 'Character';
 
-    readonly name: string;
+export type HumanHeightArgs = {
+  unit: LengthUnit
+};
 
-    readonly friends: Maybe<ReadonlyArray<Maybe<Friends>>>;
-  };
 
-  export type Friends = {
-    readonly __typename?: 'Character';
+export type HumanFriendsConnectionArgs = {
+  first?: Maybe<number>,
+  after?: Maybe<string>
+};
 
-    readonly name: string;
-  };
+export enum LengthUnit {
+  Meter = 'METER',
+  Foot = 'FOOT'
 }
 
-export namespace HeroAppearsIn {
-  export type Variables = {
-  };
+export type Mutation = {
+  readonly createReview?: Maybe<Review>,
+};
 
-  export type Query = {
-    readonly __typename?: 'Query';
 
-    readonly hero: Maybe<Hero>;
-  };
+export type MutationCreateReviewArgs = {
+  episode?: Maybe<Episode>,
+  review: ReviewInput
+};
 
-  export type Hero = {
-    readonly __typename?: 'Character';
+export type PageInfo = {
+  readonly startCursor?: Maybe<string>,
+  readonly endCursor?: Maybe<string>,
+  readonly hasNextPage: boolean,
+};
 
-    readonly name: string;
+export type Query = {
+  readonly hero?: Maybe<Character>,
+  readonly reviews?: Maybe<ReadonlyArray<Maybe<Review>>>,
+  readonly search?: Maybe<ReadonlyArray<Maybe<SearchResult>>>,
+  readonly character?: Maybe<Character>,
+  readonly droid?: Maybe<Droid>,
+  readonly human?: Maybe<Human>,
+  readonly starship?: Maybe<Starship>,
+};
 
-    readonly appearsIn: ReadonlyArray<Maybe<Episode>>;
-  };
-}
 
-export namespace HeroDetails {
-  export type Variables = {
-    readonly episode?: Maybe<Episode>;
-  };
+export type QueryHeroArgs = {
+  episode?: Maybe<Episode>
+};
 
-  export type Query = {
-    readonly __typename?: 'Query';
 
-    readonly hero: Maybe<Hero>;
-  };
+export type QueryReviewsArgs = {
+  episode: Episode
+};
 
-  export type Hero = {
-    readonly __typename?: HumanInlineFragment['__typename'] | DroidInlineFragment['__typename'];
 
-    readonly name: string;
-  }  & (HumanInlineFragment | DroidInlineFragment);
+export type QuerySearchArgs = {
+  text?: Maybe<string>
+};
 
-  export type HumanInlineFragment = {
-    readonly __typename?: 'Human';
 
-    readonly height: Maybe<number>;
-  };
+export type QueryCharacterArgs = {
+  id: string
+};
 
-  export type DroidInlineFragment = {
-    readonly __typename?: 'Droid';
 
-    readonly primaryFunction: Maybe<string>;
-  };
-}
+export type QueryDroidArgs = {
+  id: string
+};
 
-export namespace HeroDetailsWithFragment {
-  export type Variables = {
-    readonly episode?: Maybe<Episode>;
-  };
 
-  export type Query = {
-    readonly __typename?: 'Query';
+export type QueryHumanArgs = {
+  id: string
+};
 
-    readonly hero: Maybe<Hero>;
-  };
 
-  export type Hero = HeroDetails.Fragment;
-}
+export type QueryStarshipArgs = {
+  id: string
+};
 
-export namespace HeroName {
-  export type Variables = {
-    readonly episode?: Maybe<Episode>;
-  };
+export type Review = {
+  readonly stars: number,
+  readonly commentary?: Maybe<string>,
+};
 
-  export type Query = {
-    readonly __typename?: 'Query';
+export type ReviewInput = {
+  stars: number,
+  commentary: Maybe<string>,
+  favoriteColor: Maybe<ColorInput>,
+};
 
-    readonly hero: Maybe<Hero>;
-  };
+export type SearchResult = Human | Droid | Starship;
 
-  export type Hero = {
-    readonly __typename?: 'Character';
+export type Starship = {
+  readonly id: string,
+  readonly name: string,
+  readonly length?: Maybe<number>,
+};
 
-    readonly name: string;
-  };
-}
 
-export namespace HeroNameConditionalInclusion {
-  export type Variables = {
-    readonly episode?: Maybe<Episode>;
-    readonly includeName: boolean;
-  };
+export type StarshipLengthArgs = {
+  unit: LengthUnit
+};
+export type CreateReviewForEpisodeMutationVariables = {
+  episode: Episode,
+  review: ReviewInput
+};
 
-  export type Query = {
-    readonly __typename?: 'Query';
 
-    readonly hero: Maybe<Hero>;
-  };
+export type CreateReviewForEpisodeMutation = ({ readonly __typename?: 'Mutation' } & { readonly createReview: Maybe<({ readonly __typename?: 'Review' } & Pick<Review, 'stars' | 'commentary'>)> });
 
-  export type Hero = {
-    readonly __typename?: 'Character';
+export type HeroAndFriendsNamesQueryVariables = {
+  episode?: Maybe<Episode>
+};
 
-    readonly name: string;
-  };
-}
 
-export namespace HeroNameConditionalExclusion {
-  export type Variables = {
-    readonly episode?: Maybe<Episode>;
-    readonly skipName: boolean;
-  };
+export type HeroAndFriendsNamesQuery = ({ readonly __typename?: 'Query' } & { readonly hero: Maybe<(Pick<Character, 'name'> & { readonly friends: Maybe<ReadonlyArray<Maybe<Pick<Character, 'name'>>>> })> });
 
-  export type Query = {
-    readonly __typename?: 'Query';
+export type HeroAppearsInQueryVariables = {};
 
-    readonly hero: Maybe<Hero>;
-  };
 
-  export type Hero = {
-    readonly __typename?: 'Character';
+export type HeroAppearsInQuery = ({ readonly __typename?: 'Query' } & { readonly hero: Maybe<Pick<Character, 'name' | 'appearsIn'>> });
 
-    readonly name: string;
-  };
-}
+export type HeroDetailsQueryVariables = {
+  episode?: Maybe<Episode>
+};
 
-export namespace HeroParentTypeDependentField {
-  export type Variables = {
-    readonly episode?: Maybe<Episode>;
-  };
 
-  export type Query = {
-    readonly __typename?: 'Query';
+export type HeroDetailsQuery = ({ readonly __typename?: 'Query' } & { readonly hero: Maybe<(Pick<Character, 'name'> & (({ readonly __typename?: 'Human' } & Pick<Human, 'height'>) | ({ readonly __typename?: 'Droid' } & Pick<Droid, 'primaryFunction'>)))> });
 
-    readonly hero: Maybe<Hero>;
-  };
+export type HeroDetailsWithFragmentQueryVariables = {
+  episode?: Maybe<Episode>
+};
 
-  export type Hero = {
-    readonly __typename?: HumanInlineFragment['__typename'] | DroidInlineFragment['__typename'];
 
-    readonly name: string;
-  }  & (HumanInlineFragment | DroidInlineFragment);
+export type HeroDetailsWithFragmentQuery = ({ readonly __typename?: 'Query' } & { readonly hero: Maybe<HeroDetailsFragment> });
 
-  export type HumanInlineFragment = {
-    readonly __typename?: 'Human';
+export type HeroDetailsFragment = (Pick<Character, 'name'> & (({ readonly __typename?: 'Human' } & Pick<Human, 'height'>) | ({ readonly __typename?: 'Droid' } & Pick<Droid, 'primaryFunction'>)));
 
-    readonly friends: Maybe<ReadonlyArray<Maybe<Friends>>>;
-  };
+export type HeroNameQueryVariables = {
+  episode?: Maybe<Episode>
+};
 
-  export type Friends = {
-    readonly __typename?: _HumanInlineFragment['__typename'];
 
-    readonly name: string;
-  }  & _HumanInlineFragment;
+export type HeroNameQuery = ({ readonly __typename?: 'Query' } & { readonly hero: Maybe<Pick<Character, 'name'>> });
 
-  export type _HumanInlineFragment = {
-    readonly __typename?: 'Human';
+export type HeroNameConditionalInclusionQueryVariables = {
+  episode?: Maybe<Episode>,
+  includeName: boolean
+};
 
-    readonly height: Maybe<number>;
-  };
 
-  export type DroidInlineFragment = {
-    readonly __typename?: 'Droid';
+export type HeroNameConditionalInclusionQuery = ({ readonly __typename?: 'Query' } & { readonly hero: Maybe<Pick<Character, 'name'>> });
 
-    readonly friends: Maybe<ReadonlyArray<Maybe<_Friends>>>;
-  };
+export type HeroNameConditionalExclusionQueryVariables = {
+  episode?: Maybe<Episode>,
+  skipName: boolean
+};
 
-  export type _Friends = {
-    readonly __typename?: __HumanInlineFragment['__typename'];
 
-    readonly name: string;
-  }  & __HumanInlineFragment;
+export type HeroNameConditionalExclusionQuery = ({ readonly __typename?: 'Query' } & { readonly hero: Maybe<Pick<Character, 'name'>> });
 
-  export type __HumanInlineFragment = {
-    readonly __typename?: 'Human';
+export type HeroParentTypeDependentFieldQueryVariables = {
+  episode?: Maybe<Episode>
+};
 
-    readonly height: Maybe<number>;
-  };
-}
 
-export namespace HeroTypeDependentAliasedField {
-  export type Variables = {
-    readonly episode?: Maybe<Episode>;
-  };
+export type HeroParentTypeDependentFieldQuery = ({ readonly __typename?: 'Query' } & { readonly hero: Maybe<(Pick<Character, 'name'> & (({ readonly __typename?: 'Human' } & { readonly friends: Maybe<ReadonlyArray<Maybe<(Pick<Character, 'name'> & (({ readonly __typename?: 'Human' } & Pick<Human, 'height'>)))>>> }) | ({ readonly __typename?: 'Droid' } & { readonly friends: Maybe<ReadonlyArray<Maybe<(Pick<Character, 'name'> & (({ readonly __typename?: 'Human' } & Pick<Human, 'height'>)))>>> })))> });
 
-  export type Query = {
-    readonly __typename?: 'Query';
+export type HeroTypeDependentAliasedFieldQueryVariables = {
+  episode?: Maybe<Episode>
+};
 
-    readonly hero: Maybe<Hero>;
-  };
 
-  export type Hero = (HumanInlineFragment | DroidInlineFragment);
+export type HeroTypeDependentAliasedFieldQuery = ({ readonly __typename?: 'Query' } & { readonly hero: Maybe<(({ readonly __typename?: 'Human' } & { readonly property: Human['homePlanet'] }) | ({ readonly __typename?: 'Droid' } & { readonly property: Droid['primaryFunction'] }))> });
 
-  export type HumanInlineFragment = {
-    readonly __typename?: 'Human';
+export type HumanWithNullHeightQueryVariables = {};
 
-    readonly property: Maybe<string>;
-  };
 
-  export type DroidInlineFragment = {
-    readonly __typename?: 'Droid';
+export type HumanWithNullHeightQuery = ({ readonly __typename?: 'Query' } & { readonly human: Maybe<({ readonly __typename?: 'Human' } & Pick<Human, 'name' | 'mass'>)> });
 
-    readonly property: Maybe<string>;
-  };
-}
+export type TwoHeroesQueryVariables = {};
 
-export namespace HumanWithNullHeight {
-  export type Variables = {
-  };
 
-  export type Query = {
-    readonly __typename?: 'Query';
-
-    readonly human: Maybe<Human>;
-  };
-
-  export type Human = {
-    readonly __typename?: 'Human';
-
-    readonly name: string;
-
-    readonly mass: Maybe<number>;
-  };
-}
-
-export namespace TwoHeroes {
-  export type Variables = {
-  };
-
-  export type Query = {
-    readonly __typename?: 'Query';
-
-    readonly r2: Maybe<R2>;
-
-    readonly luke: Maybe<Luke>;
-  };
-
-  export type R2 = {
-    readonly __typename?: 'Character';
-
-    readonly name: string;
-  };
-
-  export type Luke = {
-    readonly __typename?: 'Character';
-
-    readonly name: string;
-  };
-}
-
-export namespace HeroDetails {
-  export type Fragment = {
-    readonly __typename?: 'Character';
-
-    readonly name: string;
-  } & (HumanInlineFragment | DroidInlineFragment);
-
-  export type HumanInlineFragment = {
-    readonly __typename?: 'Human';
-
-    readonly height: Maybe<number>;
-  };
-
-  export type DroidInlineFragment = {
-    readonly __typename?: 'Droid';
-
-    readonly primaryFunction: Maybe<string>;
-  };
-}
-
+export type TwoHeroesQuery = ({ readonly __typename?: 'Query' } & { readonly r2: Maybe<Pick<Character, 'name'>>, readonly luke: Maybe<Pick<Character, 'name'>> });

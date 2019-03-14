@@ -1,569 +1,42 @@
-import 'graphql-codegen-core/dist/testing';
-import { plugin, addToSchema } from '../dist';
-import * as fs from 'fs';
-import { extendSchema, print, buildSchema, buildClientSchema } from 'graphql';
+import 'graphql-codegen-testing';
 import gql from 'graphql-tag';
+import { plugin, addToSchema } from '../src/index';
+import { parse, GraphQLSchema, buildClientSchema, buildSchema, extendSchema } from 'graphql';
+import { DocumentFile } from 'graphql-codegen-plugin-helpers';
+import { plugin as tsPlugin } from '../../typescript/src/index';
+import { plugin as tsDocumentsPlugin } from '../../typescript-operations/src/index';
+import { validateTs } from '../../typescript/tests/validate';
+import { readFileSync } from 'fs';
 
-describe('Components', () => {
-  const schema = buildClientSchema(JSON.parse(fs.readFileSync('./tests/files/schema.json').toString()));
-
-  it('should be able to use root schema object', async () => {
-    const rootSchema = buildSchema(`
-      type RootQuery { f: String }
-      schema { query: RootQuery }
-    `);
-    const query = gql`
-      query test {
-        f
-      }
-    `;
-
-    const content = await plugin(
-      rootSchema,
-      [{ filePath: '', content: query }],
-      {},
-      {
-        outputFile: 'graphql.ts'
-      }
-    );
-
-    expect(content).toBeSimilarStringTo(`
-      @Injectable({
-        providedIn: 'root'
-      })
-      export class TestGQL extends Apollo.Query
-    `);
-  });
-
-  it('should generate Component with noGraphqlTag = true', async () => {
-    const query = gql`
-      query MyFeed {
-        feed {
-          id
-          commentCount
-          repository {
-            full_name
-            html_url
-            owner {
-              avatar_url
-            }
-          }
-        }
-      }
-    `;
-
-    const content = await plugin(
-      schema,
-      [{ filePath: '', content: query }],
-      { noGraphqlTag: true },
-      {
-        outputFile: 'graphql.ts'
-      }
-    );
-
-    expect(content).toBeSimilarStringTo(`
-      import * as Apollo from 'apollo-angular';
-    `);
-    expect(content).not.toBeSimilarStringTo(`
-      import gql from 'graphql-tag';
-    `);
-    expect(content).toBeSimilarStringTo(`
-      import { Injectable } from '@angular/core';
-    `);
-    expect(content).toBeSimilarStringTo(`
-      @Injectable({
-        providedIn: 'root'
-      })
-      export class MyFeedGQL extends Apollo.Query
-    `);
-  });
-
-  it('should generate Component with noGraphqlTag = true and fragments', async () => {
-    const query = gql`
-      query MyFeed {
-        feed {
-          id
-          commentCount
-          repository {
-            ...RepositoryInfo
-          }
-        }
-      }
-    `;
-    const fragment = gql`
-      fragment RepositoryInfo on Repository {
-        full_name
-        html_url
-        owner {
-          avatar_url
-        }
-      }
-    `;
-
-    const content = await plugin(
-      schema,
-      [{ filePath: '', content: fragment }, { filePath: '', content: query }],
-      {
-        noGraphqlTag: true
-      },
-      {
-        outputFile: 'graphql.ts'
-      }
-    );
-
-    const docR = /document: any = ([^;]+)/gm;
-    const doc = docR.exec(content)[1];
-
-    expect(print(JSON.parse(doc))).toBe(
-      print(gql`
-        ${query}
-        ${fragment}
-      `)
-    );
-  });
-
-  it('should generate correct Component when noNamespaces enabled', async () => {
-    const query = gql`
-      query MyFeed {
-        feed {
-          id
-          commentCount
-          repository {
-            full_name
-            html_url
-            owner {
-              avatar_url
-            }
-          }
-        }
-      }
-    `;
-
-    const content = await plugin(
-      schema,
-      [{ filePath: '', content: query }],
-      {
-        noNamespaces: true,
-        noGraphqlTag: true
-      },
-      {
-        outputFile: 'graphql.ts'
-      }
-    );
-
-    expect(content).toBeSimilarStringTo(`
-      @Injectable({
-        providedIn: 'root'
-      })
-      export class MyFeedGQL extends Apollo.Query<MyFeedQuery, MyFeedVariables> {
-    `);
-  });
-
-  it('should generate correct Component when noNamespaces disabled', async () => {
-    const query = gql`
-      query MyFeed {
-        feed {
-          id
-          commentCount
-          repository {
-            full_name
-            html_url
-            owner {
-              avatar_url
-            }
-          }
-        }
-      }
-    `;
-
-    const content = await plugin(
-      schema,
-      [{ filePath: '', content: query }],
-      {},
-      {
-        outputFile: 'graphql.ts'
-      }
-    );
-
-    expect(content).toBeSimilarStringTo(`
-      @Injectable({
-        providedIn: 'root'
-      })
-      export class MyFeedGQL extends Apollo.Query<MyFeed.Query, MyFeed.Variables> {
-    `);
-  });
-
-  it('should use parsed document instead of graphql-tag', async () => {
-    const query = gql`
-      query MyFeed {
-        feed {
-          id
-          commentCount
-          repository {
-            full_name
-            html_url
-            owner {
-              avatar_url
-            }
-          }
-        }
-      }
-    `;
-
-    // location might be different so let's skip it
-    delete query.loc;
-    const rawContent = await plugin(
-      schema,
-      [{ filePath: '', content: query }],
-      {
-        noNamespaces: true,
-        noGraphqlTag: true
-      },
-      {
-        outputFile: 'graphql.ts'
-      }
-    );
-    const content = rawContent.replace(/,"loc":{"start":\d+,"end":\d+}}\s+}/, '}');
-
-    expect(content).toBeSimilarStringTo(`
-      @Injectable({
-        providedIn: 'root'
-      })
-      export class MyFeedGQL extends Apollo.Query<MyFeedQuery, MyFeedVariables> {
-    `);
-
-    expect(content).toBeSimilarStringTo(`
-      document: any = ${JSON.stringify(query)};
-    `);
-  });
-
-  it('should not escape html', async () => {
-    const query = gql`
-      query MyFeed {
-        feed(search: "phrase") {
-          id
-          commentCount
-          repository {
-            full_name
-            html_url
-            owner {
-              avatar_url
-            }
-          }
-        }
-      }
-    `;
-
-    const content = await plugin(
-      schema,
-      [{ filePath: '', content: query }],
-      {},
-      {
-        outputFile: 'graphql.ts'
-      }
-    );
-
-    expect(content).toBeSimilarStringTo(`
-      document: any = gql\` query MyFeed {
-    `);
-
-    expect(content.includes('&quot;')).toBe(false);
-    expect(content.includes('"phrase"')).toBe(true);
-  });
-
-  it('should handle fragments', async () => {
-    const repositoryWithOwner = gql`
-      fragment RepositoryWithOwner on Repository {
-        full_name
-        html_url
-        owner {
-          avatar_url
-        }
-      }
-    `;
-    const feedWithRepository = gql`
-      fragment FeedWithRepository on FeedType {
+describe('Apollo Angular', () => {
+  const schema = buildClientSchema(JSON.parse(readFileSync('../../../dev-test/githunt/schema.json').toString()));
+  const basicDoc = parse(/* GraphQL */ `
+    query test {
+      feed {
         id
         commentCount
-        repository(search: "phrase") {
-          ...RepositoryWithOwner
-        }
-      }
-
-      ${repositoryWithOwner}
-    `;
-    const myFeed = gql`
-      query MyFeed {
-        feed {
-          ...FeedWithRepository
-        }
-      }
-
-      ${feedWithRepository}
-    `;
-
-    const documents = [repositoryWithOwner, feedWithRepository, myFeed];
-    const files = documents.map(query => ({ filePath: '', content: query }));
-    const content = await plugin(
-      schema,
-      files,
-      {},
-      {
-        outputFile: 'graphql.ts'
-      }
-    );
-
-    expect(content).toBeSimilarStringTo(`
-      document: any = gql\` query MyFeed {
-          feed {
-            ...FeedWithRepository
-          }
-        }
-        \${FeedWithRepositoryFragment}
-      \`
-    `);
-
-    expect(content).toBeSimilarStringTo(`
-      const FeedWithRepositoryFragment = gql\` fragment FeedWithRepository on FeedType {
-        id
-        commentCount
-        repository(search: "phrase") {
-          ...RepositoryWithOwner
-        }
-      }
-      \${RepositoryWithOwnerFragment}
-      \`;
-    `);
-
-    expect(content).toBeSimilarStringTo(`
-      const RepositoryWithOwnerFragment = gql\` fragment RepositoryWithOwner on Repository {
+        repository {
           full_name
           html_url
           owner {
             avatar_url
           }
         }
-      \`;
-    `);
-  });
-
-  it('should handle @client', async () => {
-    const myFeed = gql`
-      query MyFeed {
-        feed @client {
-          id
-        }
       }
-    `;
+    }
+  `);
 
-    const content = await plugin(
-      schema,
-      [{ filePath: '', content: myFeed }],
-      {},
-      {
-        outputFile: 'graphql.ts'
-      }
-    );
-
-    expect(content).toBeSimilarStringTo(`
-      document: any = gql\` query MyFeed {
-          feed @client {
-            id
-          }
-        }
-      \`
-    `);
-  });
-
-  test('import NgModules and remove NgModule directive', async () => {
-    const modifiedSchema = extendSchema(schema, addToSchema);
-    expect(modifiedSchema.getDirective('NgModule').name).toBe('NgModule');
-    const modulePath = '../my/lazy-module';
-    const moduleName = 'LazyModule';
-
-    const myFeed = gql(`
-      query MyFeed {
-        feed @client @NgModule(module: "${modulePath}#${moduleName}") {
-          id
-        }
-      }
-    `);
-    const content = await plugin(
-      modifiedSchema,
-      [{ filePath: '', content: myFeed }],
-      {},
-      {
-        outputFile: 'graphql.ts'
-      }
-    );
-    expect(content).toMatch(`import { ${moduleName} } from '${modulePath}'`);
-
-    expect(content).toBeSimilarStringTo(`
-      @Injectable({
-        providedIn: ${moduleName}
-      })
-      export class MyFeedGQL
-    `);
-
-    expect(content).toBeSimilarStringTo(`
-      document: any = gql\` query MyFeed {
-        feed @client {
-          id
-        }
-      }
-      \`
-    `);
-  });
-
-  test('import namedClient and remove namedClient directive', async () => {
-    const modifiedSchema = extendSchema(schema, addToSchema);
-    expect(modifiedSchema.getDirective('namedClient').name).toBe('namedClient');
-
-    const myFeed = gql(`
-      query MyFeed {
-        feed @namedClient(name: "custom") {
-          id
-        }
-      }
-    `);
-
-    const content = await plugin(
-      modifiedSchema,
-      [{ filePath: '', content: myFeed }],
-      {},
-      {
-        outputFile: 'graphql.ts'
-      }
-    );
-
-    expect(content).toBeSimilarStringTo(`
-      document: any = gql\` query MyFeed {
-        feed {
-          id
-        }
-      }
-      \`
-    `);
-
-    expect(content).toBeSimilarStringTo(`
-      client = 'custom';
-    `);
-  });
-
-  it('no duplicated fragments', async () => {
-    const simpleFeed = gql`
-      fragment SimpleFeed on FeedType {
-        id
-        commentCount
-      }
-    `;
-    const myFeed = gql`
-      query MyFeed {
-        feed {
-          ...SimpleFeed
-        }
-        allFeeds {
-          ...SimpleFeed
-        }
-      }
-    `;
-
-    const documents = [simpleFeed, myFeed];
-    const content = await plugin(
-      schema,
-      documents.map(content => ({ content, filePath: '' })),
-      {},
-      {
-        outputFile: 'graphql.ts'
-      }
-    );
-
-    expect(content).toBeSimilarStringTo(`
-      document: any = gql\` query MyFeed {
-          feed {
-            ...SimpleFeed
-          }
-          allFeeds {
-            ...SimpleFeed
-          }
-        }
-        \${SimpleFeedFragment}
-      \`
-    `);
-
-    expect(content).toBeSimilarStringTo(`
-      const SimpleFeedFragment = gql\` fragment SimpleFeed on FeedType {
-        id
-        commentCount
-      }
-      \`;
-    `);
-  });
-
-  it('write fragments in proper order (when one depends on other)', async () => {
-    const myFeed = gql`
-      fragment FeedWithRepository on FeedType {
-        id
-        repository {
-          ...RepositoryWithOwner
-        }
-      }
-      fragment RepositoryWithOwner on Repository {
-        full_name
-      }
-      query MyFeed {
-        feed {
-          ...FeedWithRepository
-        }
-      }
-    `;
-
-    const content = await plugin(
-      schema,
-      [{ filePath: '', content: myFeed }],
-      {},
-      {
-        outputFile: 'graphql.ts'
-      }
-    );
-    const feedWithRepositoryPos = content.indexOf('fragment FeedWithRepository');
-    const repositoryWithOwnerPos = content.indexOf('fragment RepositoryWithOwner');
-
-    expect(repositoryWithOwnerPos).toBeLessThan(feedWithRepositoryPos);
-  });
-
-  it('should add comments (non-graphql)', async () => {
-    const myFeed = gql`
-      fragment FeedWithRepository on FeedType {
-        id
-        repository {
-          ...RepositoryWithOwner
-        }
-      }
-      fragment RepositoryWithOwner on Repository {
-        full_name
-      }
-      query MyFeed {
-        feed {
-          ...FeedWithRepository
-        }
-      }
-    `;
-
-    const content = await plugin(
-      schema,
-      [{ filePath: '', content: myFeed }],
-      {},
-      {
-        outputFile: 'graphql.ts'
-      }
-    );
-
-    expect(content).toBeSimilarStringTo('// START: Apollo Angular template');
-    expect(content).toBeSimilarStringTo('// GraphQL Fragments');
-    expect(content).toBeSimilarStringTo('// Apollo Services');
-    expect(content).toBeSimilarStringTo('// END: Apollo Angular template');
-  });
+  const validateTypeScript = async (
+    output: string,
+    testSchema: GraphQLSchema,
+    documents: DocumentFile[],
+    config: any
+  ) => {
+    const tsOutput = await tsPlugin(testSchema, documents, config, { outputFile: '' });
+    const tsDocumentsOutput = await tsDocumentsPlugin(testSchema, documents, config, { outputFile: '' });
+    const merged = [tsOutput, tsDocumentsOutput, output].join('\n');
+    validateTs(merged, undefined, true);
+  };
 
   it(`should skip if there's no operations`, async () => {
     const content = await plugin(
@@ -575,10 +48,180 @@ describe('Components', () => {
       }
     );
 
-    expect(content).not.toContain('// START: Apollo Angular template');
-    expect(content).not.toContain('// END: Apollo Angular template');
-    expect(content).not.toContain(`import * as Apollo from 'apollo-angular';`);
-    expect(content).not.toContain(`import gql from 'graphql-tag';`);
-    expect(content).not.toContain(`import { Injectable } from '@angular/core';`);
+    expect(content).toBe('');
+    await validateTypeScript(content, schema, [], {});
+  });
+
+  describe('Imports', () => {
+    it('should import DocumentNode when using noGraphQLTag', async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
+      const content = await plugin(
+        schema,
+        docs,
+        {
+          noGraphQLTag: true
+        },
+        {
+          outputFile: 'graphql.tsx'
+        }
+      );
+
+      expect(content).toContain(`import { DocumentNode } from 'graphql';`);
+      expect(content).not.toBeSimilarStringTo(`import gql from 'graphql-tag';`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it(`should use gql import from gqlImport config option`, async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
+      const content = await plugin(
+        schema,
+        docs,
+        { gqlImport: 'graphql.macro#gql' },
+        {
+          outputFile: 'graphql.tsx'
+        }
+      );
+
+      expect(content).toContain(`import { gql } from 'graphql.macro';`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it(`should add the correct angular imports`, async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
+      const content = await plugin(
+        schema,
+        docs,
+        {},
+        {
+          outputFile: 'graphql.tsx'
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`import Apollo from 'apollo-angular';`);
+      expect(content).toBeSimilarStringTo(`import { Injectable } from '@angular/core';`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('Should import NgModules and remove NgModule directive', async () => {
+      const modifiedSchema = extendSchema(schema, addToSchema);
+      expect(modifiedSchema.getDirective('NgModule').name).toBe('NgModule');
+      const modulePath = '../my/lazy-module';
+      const moduleName = 'LazyModule';
+
+      const myFeed = gql(`
+        query MyFeed {
+          feed @client @NgModule(module: "${modulePath}#${moduleName}") {
+            id
+          }
+        }
+      `);
+      const docs = [{ filePath: '', content: myFeed }];
+      const content = await plugin(
+        modifiedSchema,
+        docs,
+        {},
+        {
+          outputFile: 'graphql.ts'
+        }
+      );
+
+      expect(content).toMatch(`import { ${moduleName} } from '${modulePath}'`);
+      expect(content).toBeSimilarStringTo(`
+        @Injectable({
+          providedIn: ${moduleName}
+        })
+        export class MyFeedGQL
+      `);
+      expect(content).toBeSimilarStringTo(`document = MyFeedDocument;`);
+      expect(content).not.toContain('@NgModule');
+      expect(content).toContain('@client');
+      validateTypeScript(content, modifiedSchema, docs, {});
+    });
+
+    it('Should import namedClient and remove namedClient directive', async () => {
+      const modifiedSchema = extendSchema(schema, addToSchema);
+      expect(modifiedSchema.getDirective('namedClient').name).toBe('namedClient');
+
+      const myFeed = gql(`
+        query MyFeed {
+          feed @namedClient(name: "custom") {
+            id
+          }
+        }
+      `);
+
+      const docs = [{ filePath: '', content: myFeed }];
+      const content = await plugin(
+        modifiedSchema,
+        docs,
+        {},
+        {
+          outputFile: 'graphql.ts'
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`document = MyFeedDocument;`);
+
+      expect(content).toBeSimilarStringTo(`
+        client = 'custom';
+      `);
+      expect(content).not.toContain('@namedClient');
+      validateTypeScript(content, modifiedSchema, docs, {});
+    });
+  });
+
+  describe('Component', () => {
+    it('Should be able to use root schema object', async () => {
+      const rootSchema = buildSchema(`
+        type RootQuery { f: String }
+        schema { query: RootQuery }
+      `);
+      const query = gql`
+        query test {
+          f
+        }
+      `;
+      const docs = [{ filePath: '', content: query }];
+      const content = await plugin(
+        rootSchema,
+        docs,
+        {},
+        {
+          outputFile: 'graphql.ts'
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+        @Injectable({
+          providedIn: 'root'
+        })
+        export class TestGQL extends Apollo.Query
+      `);
+      validateTypeScript(content, rootSchema, docs, {});
+    });
+
+    it('Should handle @client', async () => {
+      const myFeed = gql`
+        query MyFeed {
+          feed @client {
+            id
+          }
+        }
+      `;
+
+      const docs = [{ filePath: '', content: myFeed }];
+      const content = await plugin(
+        schema,
+        docs,
+        {},
+        {
+          outputFile: 'graphql.ts'
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`document = MyFeedDocument;`);
+
+      validateTypeScript(content, schema, docs, {});
+    });
   });
 });

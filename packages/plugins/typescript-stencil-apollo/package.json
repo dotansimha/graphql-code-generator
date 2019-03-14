@@ -5,49 +5,33 @@
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
   "scripts": {
-    "prepublishOnly": "yarn build",
-    "build": "codegen-templates-scripts build",
-    "test": "codegen-templates-scripts test",
-    "pretest": "yarn build"
+    "build": "tsc -m esnext --outDir dist/esnext && tsc -m commonjs --outDir dist/commonjs",
+    "test": "jest --config ../../../jest.config.js"
   },
   "peerDependencies": {
     "graphql-tag": "^2.0.0",
     "stencil-apollo": "^0.0.2"
   },
   "dependencies": {
-    "dependency-graph": "^0.8.0",
-    "graphql-codegen-core": "0.18.0",
-    "graphql-codegen-plugin-helpers": "0.18.0",
-    "graphql-codegen-typescript-common": "0.18.0"
+    "tslib": "1.9.3",
+    "graphql-codegen-visitor-plugin-common": "0.18.0",
+    "graphql-codegen-plugin-helpers": "0.18.0"
   },
   "devDependencies": {
-    "@types/node": "10.14.1",
-    "codegen-templates-scripts": "0.18.0",
+    "graphql-codegen-testing": "0.18.0",
+    "jest": "24.1.0",
+    "ts-jest": "24.0.0",
+    "typescript": "3.3.3333",
+    "flow-bin": "0.94.0",
+    "flow-parser": "0.94.0",
     "graphql": "14.1.1",
-    "graphql-codegen-plugin-handlebars-helpers": "0.18.0"
+    "@types/node": "10.12.30"
   },
-  "main": "./dist/index.js",
-  "typings": "dist/index.d.ts",
+  "sideEffects": false,
+  "main": "dist/commonjs/index.js",
+  "module": "dist/esnext/index.js",
+  "typings": "dist/esnext/index.d.ts",
   "typescript": {
-    "definition": "dist/index.d.ts"
-  },
-  "jest": {
-    "globals": {
-      "ts-jest": {
-        "enableTsDiagnostics": false
-      }
-    },
-    "transform": {
-      "^.+\\.tsx?$": "ts-jest"
-    },
-    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "jsx",
-      "json",
-      "node"
-    ]
+    "definition": "dist/esnext/index.d.ts"
   }
 }

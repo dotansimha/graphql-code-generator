@@ -21,7 +21,7 @@ const config = {
   schema: ['schema.graphql'],
   generates: {
     'output.ts': {
-      plugins: ['typescript-common']
+      plugins: ['typescript']
     }
   }
 };
@@ -50,7 +50,7 @@ If you are using a different environment that doesn't able to use `require` (suc
 ```ts
 const config = {
   pluginLoader: pluginName => {
-    if (pluginName === 'typescript-common') {
+    if (pluginName === 'typescript') {
       return {
         plugin: () => {
           // overwrite plugin here
@@ -61,7 +61,7 @@ const config = {
   schema: ['schema.graphql'],
   generates: {
     'output.ts': {
-      plugins: ['typescript-common']
+      plugins: ['typescript']
     }
   }
 };
