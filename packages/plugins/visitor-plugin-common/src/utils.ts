@@ -160,7 +160,7 @@ ${this._config.blockWrapper}}`;
       result += '{}';
     }
 
-    return result + (this._kind === 'interface' ? '' : ';') + '\n';
+    return result + (this._kind === 'interface' || this._kind === 'enum' ? '' : ';') + '\n';
   }
 }
 

@@ -69,7 +69,7 @@ At this point, you can add the directives to your GraphQL definitions, and gener
 
 ## Directives
 
-#### `@entity(embedded: Boolean, additionalFields: [AdditionalEntityFields])` (on `OBJECT`)
+#### `@entity(additionalFields: [AdditionalEntityFields])` (on `OBJECT`)
 
 Use this directive to specify which GraphQL type should have generated MongoDB models.
 
@@ -85,13 +85,11 @@ type User @entity(additionalFields: [
 }
 ```
 
-#### `@column(name: string, overrideType: String, overrideIsArray: Boolean)` (on `FIELD_DEFINITION`)
+#### `@column(overrideType: String)` (on `FIELD_DEFINITION`)
 
 Use this directive to declare a specific GraphQL field as part of your generated MongoDB type.
 
 - `overrideType: String` - use this to override the type of the field; for example, if you store dates as `Date` but expose them as `String`.
-- `overrideIsArray: Boolean` - if true, override generated result and force generate it as an array type.
-- `name: String` - a projection field name that would appear in the DB. This can be either a consistent string or a path (`a.b.c`). This is a shortcut for the `@map` directive.
 
 > ⚠ If target property is an embedded entity, you should use `@embedded` instead.
 

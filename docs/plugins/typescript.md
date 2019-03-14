@@ -1,6 +1,6 @@
 ---
 id: typescript
-title: TypeScrip
+title: TypeScript
 ---
 
 This is the most basic TypeScript plugin and it can generate typings based on `GraphQLSchema`, which can be used by any other typescript related plugin.

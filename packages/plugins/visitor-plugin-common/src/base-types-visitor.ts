@@ -164,7 +164,7 @@ export class BaseTypesVisitor<
           )}`
         )
       )
-      .join(', \n');
+      .join(',\n');
   }
 
   DirectiveDefinition(node: DirectiveDefinitionNode): string {

@@ -35,7 +35,7 @@
       "custom-codegen/write-your-plugin",
       "custom-codegen/validate-configuration",
       "custom-codegen/extend-schema",
-      "custom-codegen/using-handlebars"
+      "custom-codegen/using-visitor"
     ],
     "Migration": ["migration/from-0-13"]
   }

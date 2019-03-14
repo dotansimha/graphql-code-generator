@@ -30,7 +30,7 @@ export enum FeedType {
   Hot = 'HOT', 
   New = 'NEW', 
   Top = 'TOP'
-};
+}
 
 export type Mutation = {
   submitRepository?: Maybe<Entry>,
@@ -106,7 +106,7 @@ export enum VoteType {
   Up = 'UP', 
   Down = 'DOWN', 
   Cancel = 'CANCEL'
-};
+}
 export type OnCommentAddedSubscriptionVariables = {
   repoFullName: string
 };

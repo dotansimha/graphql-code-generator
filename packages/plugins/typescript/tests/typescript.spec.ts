@@ -106,7 +106,7 @@ describe('TypeScript', () => {
         export enum foo {
           YES = 'YES', 
           NO = 'NO'
-        };
+        }
       `);
 
       expect(result).toBeSimilarStringTo(`
@@ -152,7 +152,7 @@ describe('TypeScript', () => {
         export enum Foo {
           yes = 'YES', 
           no = 'NO'
-        };
+        }
       `);
 
       expect(result).toBeSimilarStringTo(`
@@ -216,7 +216,7 @@ describe('TypeScript', () => {
           Input_Object = 'INPUT_OBJECT', 
           List = 'LIST', 
           Non_Null = 'NON_NULL'
-        };
+        }
       `);
     });
   });
@@ -597,7 +597,7 @@ describe('TypeScript', () => {
         IA = 'A',
         IB = 'B',
         IC = 'C'
-      };`);
+      }`);
 
       expect(result).toBeSimilarStringTo(`
       export type IMyType = {
