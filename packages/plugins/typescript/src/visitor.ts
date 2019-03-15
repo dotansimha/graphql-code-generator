@@ -54,7 +54,7 @@ export class TsVisitor<
 
   private clearOptional(str: string): string {
     if (str.startsWith('Maybe')) {
-      return str.replace(/Maybe<(.*?)>/, '$1');
+      return str.replace(/Maybe<(.*?)>$/, '$1');
     }
 
     return str;
