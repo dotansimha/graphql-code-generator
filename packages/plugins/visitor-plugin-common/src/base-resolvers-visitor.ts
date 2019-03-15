@@ -134,6 +134,10 @@ export class BaseResolversVisitor<
       });
 
     if (this.config.contextType.isExternal) {
+      if (!groupedMappers[this.config.contextType.source]) {
+        groupedMappers[this.config.contextType.source] = [];
+      }
+
       groupedMappers[this.config.contextType.source].push(this.config.contextType.type);
     }
 
