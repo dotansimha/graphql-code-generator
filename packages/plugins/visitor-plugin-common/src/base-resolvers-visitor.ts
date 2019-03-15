@@ -31,7 +31,7 @@ export interface ParsedResolversConfig {
   scalars: ScalarsMap;
   convert: ConvertFn;
   typesPrefix: string;
-  contextType: string;
+  contextType: ParsedMapper;
   mappers: {
     [typeName: string]: ParsedMapper;
   };
@@ -65,7 +65,7 @@ export class BaseResolversVisitor<
       scalars: { ...(defaultScalars || DEFAULT_SCALARS), ...(rawConfig.scalars || {}) },
       convert: convertFactory(rawConfig),
       typesPrefix: rawConfig.typesPrefix || '',
-      contextType: rawConfig.contextType || 'any',
+      contextType: this.parseMapper(rawConfig.contextType || 'any'),
       mappers: this.transformMappers(rawConfig.mappers || {}),
       ...((additionalConfig || {}) as any)
     };
@@ -133,6 +133,10 @@ export class BaseResolversVisitor<
         groupedMappers[mapper.source].push(mapper.type);
       });
 
+    if (this.config.contextType.isExternal) {
+      groupedMappers[this.config.contextType.source].push(this.config.contextType.type);
+    }
+
     return Object.keys(groupedMappers).map(source => this.buildMapperImport(source, groupedMappers[source]));
   }
 
@@ -157,7 +161,7 @@ export class BaseResolversVisitor<
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
-      .withName(this.convertName('IResolvers'), `<Context = ${this.config.contextType}>`)
+      .withName(this.convertName('IResolvers'), `<Context = ${this.config.contextType.type}>`)
       .withBlock(
         Object.keys(this._collectedResolvers)
           .map(schemaTypeName => {
@@ -177,7 +181,7 @@ export class BaseResolversVisitor<
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
-      .withName(this.convertName('IDirectiveResolvers'), `<Context = ${this.config.contextType}>`)
+      .withName(this.convertName('IDirectiveResolvers'), `<Context = ${this.config.contextType.type}>`)
       .withBlock(
         Object.keys(this._collectedDirectiveResolvers)
           .map(schemaTypeName => {
@@ -254,7 +258,7 @@ export class BaseResolversVisitor<
     const block = new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('interface')
-      .withName(name, `<Context = ${this.config.contextType}, ParentType = ${type}>`)
+      .withName(name, `<Context = ${this.config.contextType.type}, ParentType = ${type}>`)
       .withBlock(node.fields.map((f: any) => f(node.name)).join('\n'));
 
     this._collectedResolvers[node.name as any] = name + '<Context>';
@@ -277,7 +281,7 @@ export class BaseResolversVisitor<
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('interface')
-      .withName(name, `<Context = ${this.config.contextType}, ParentType = ${node.name}>`)
+      .withName(name, `<Context = ${this.config.contextType.type}, ParentType = ${node.name}>`)
       .withBlock(indent(`__resolveType: TypeResolveFn<${possibleTypes}>`)).string;
   }
 
@@ -312,7 +316,10 @@ export class BaseResolversVisitor<
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
-      .withName(directiveName, `<Result, Parent, Context = ${this.config.contextType}, Args = { ${directiveArgs} }>`)
+      .withName(
+        directiveName,
+        `<Result, Parent, Context = ${this.config.contextType.type}, Args = { ${directiveArgs} }>`
+      )
       .withContent(`DirectiveResolverFn<Result, Parent, Context, Args>`).string;
   }
 
@@ -337,7 +344,7 @@ export class BaseResolversVisitor<
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('interface')
-      .withName(name, `<Context = ${this.config.contextType}, ParentType = ${node.name}>`)
+      .withName(name, `<Context = ${this.config.contextType.type}, ParentType = ${node.name}>`)
       .withBlock(indent(`__resolveType: TypeResolveFn<${implementingTypes.map(name => `'${name}'`).join(' | ')}>`))
       .string;
   }
