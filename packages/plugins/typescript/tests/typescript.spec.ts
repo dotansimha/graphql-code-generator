@@ -705,7 +705,7 @@ describe('TypeScript', () => {
 
       expect(result).toBeSimilarStringTo(`
         export type TInput = {
-          name: Maybe<string>,
+          name?: Maybe<string>,
         };
       `);
 
