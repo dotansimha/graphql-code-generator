@@ -204,7 +204,7 @@ export class BaseResolversVisitor<
   ListType(node: ListTypeNode): string {
     const asString = (node.type as any) as string;
 
-    return `Array<${asString}>`;
+    return `ArrayOrIterable<${asString}>`;
   }
 
   NamedType(node: NamedTypeNode): string {

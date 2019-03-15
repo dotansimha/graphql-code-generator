@@ -273,4 +273,46 @@ describe('TypeScript Resolvers Plugin', () => {
       } & { [directiveName: string]: DirectiveResolverFn<any, any, Context, any> };
     `);
   });
+
+  it('should use Iterable on ListNodes', async () => {
+    const testSchema = buildSchema(/* GraphQL */ `
+      type Query {
+        foo: [User]
+        bar: [User!]
+        baz: [User!]!
+      }
+
+      type User {
+        id: ID!
+        name: String!
+      }
+    `);
+
+    const content = await plugin(
+      testSchema,
+      [],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
+
+    expect(content).toBeSimilarStringTo(`
+      export interface QueryResolvers<Context = any, ParentType = Query> {
+        foo?: Resolver<Maybe<ArrayOrIterable<Maybe<User>>>, ParentType, Context>,
+        bar?: Resolver<Maybe<ArrayOrIterable<User>>, ParentType, Context>,
+        baz?: Resolver<ArrayOrIterable<User>, ParentType, Context>,
+      }
+
+      export interface UserResolvers<Context = any, ParentType = User> {
+        id?: Resolver<string, ParentType, Context>,
+        name?: Resolver<string, ParentType, Context>,
+      }
+
+      export type IResolvers<Context = any> = {
+        Query?: QueryResolvers<Context>,
+        User?: UserResolvers<Context>,
+      } & { [typeName: string] : { [ fieldName: string ]: ( Resolver<any, any, Context, any> | SubscriptionResolver<any, any, Context, any> ) } };
+    `);
+  });
 });
