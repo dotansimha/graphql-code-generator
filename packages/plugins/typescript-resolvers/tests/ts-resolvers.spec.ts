@@ -282,13 +282,22 @@ describe('TypeScript Resolvers Plugin', () => {
         baz: [User!]!
       }
 
+      enum Role {
+        A
+        B
+        C
+        D
+      }
+
       type User {
         id: ID!
         name: String!
+        roles: [Role!]!
       }
     `);
 
-    const content = await plugin(
+    const tsContent = await tsPlugin(testSchema, [], {}, { outputFile: 'graphql.ts' });
+    const resolversContent = await plugin(
       testSchema,
       [],
       {},
@@ -296,6 +305,7 @@ describe('TypeScript Resolvers Plugin', () => {
         outputFile: 'graphql.ts'
       }
     );
+    const content = [tsContent, resolversContent].join('\n');
 
     expect(content).toBeSimilarStringTo(`
       export interface QueryResolvers<Context = any, ParentType = Query> {
@@ -307,6 +317,7 @@ describe('TypeScript Resolvers Plugin', () => {
       export interface UserResolvers<Context = any, ParentType = User> {
         id?: Resolver<string, ParentType, Context>,
         name?: Resolver<string, ParentType, Context>,
+        roles?: Resolver<ArrayOrIterable<Role>, ParentType, Context>,
       }
 
       export type IResolvers<Context = any> = {
@@ -314,5 +325,7 @@ describe('TypeScript Resolvers Plugin', () => {
         User?: UserResolvers<Context>,
       } & { [typeName: string] : { [ fieldName: string ]: ( Resolver<any, any, Context, any> | SubscriptionResolver<any, any, Context, any> ) } };
     `);
+
+    validateTs(content);
   });
 });
