@@ -109,6 +109,34 @@ describe('TypeScript Operations Plugin', () => {
     });
   });
 
+  describe('Scalars', () => {
+    it.only('Should include scalars when doing pick', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        scalar Date
+        type Query {
+          me: User
+        }
+        type User {
+          id: ID!
+          joinDate: Date!
+        }
+      `);
+
+      const doc = parse(/* GraphQL */ `
+        query {
+          me {
+            id
+            joinDate
+          }
+        }
+      `);
+      const config = {};
+      const result = await plugin(testSchema, [{ filePath: 'test-file.ts', content: doc }], config, { outputFile: '' });
+      expect(result).toContain(`Pick<User, 'id' | 'joinDate'>`);
+      await validate(result, config, testSchema);
+    });
+  });
+
   describe('Naming Convention & Types Prefix', () => {
     it('Should allow custom naming and point to the correct type', async () => {
       const ast = parse(`
