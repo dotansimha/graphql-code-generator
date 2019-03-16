@@ -74,7 +74,7 @@ generates:
       # ...
 ```
 
-#### `@NgModule` directive
+#### `NgModule`
 
 All generated services are defined with `@Injectable({ providedIn: 'root' })` and in most cases you don't need to overwrite it, because providing a service to the root injector is highly recommended. To customize that behavior you can use `@NgModule` directive, anywhere in an operation, to let the codegen know which injector should it use to create a service.
 
@@ -87,6 +87,14 @@ query feed {
     title
   }
 }
+```
+
+GraphQL Code Generator allows to define `ngModule` as part of the plugin's config so it's globally available:
+
+```yaml
+# ...
+config:
+  ngModule: ./path/to/module#MyModule
 ```
 
 #### `@namedClient` directive
@@ -102,4 +110,12 @@ query feed {
     title
   }
 }
+```
+
+You can define a global value of `namedClient`:
+
+```yaml
+# ...
+config:
+  namedClient: 'customName'
 ```

@@ -5,10 +5,15 @@ import { ApolloAngularVisitor } from './visitor';
 import { extname } from 'path';
 import gql from 'graphql-tag';
 
-export const plugin: PluginFunction<RawClientSideBasePluginConfig> = (
+export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginConfig {
+  ngModule?: string;
+  namedClient?: string;
+}
+
+export const plugin: PluginFunction<ApolloAngularRawPluginConfig> = (
   schema: GraphQLSchema,
   documents: DocumentFile[],
-  config: RawClientSideBasePluginConfig
+  config
 ) => {
   const allAst = concatAST(
     documents.reduce((prev, v) => {
@@ -40,7 +45,7 @@ export const addToSchema = gql`
 export const validate: PluginValidateFn<any> = async (
   schema: GraphQLSchema,
   documents: DocumentFile[],
-  config: any,
+  config,
   outputFile: string
 ) => {
   if (extname(outputFile) !== '.ts') {
