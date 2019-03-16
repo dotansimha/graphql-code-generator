@@ -224,4 +224,60 @@ describe('Apollo Angular', () => {
       validateTypeScript(content, schema, docs, {});
     });
   });
+
+  describe('configuration', () => {
+    it('should be allow to define namedClient and NgModule in config', async () => {
+      const modifiedSchema = extendSchema(schema, addToSchema);
+      const myFeed = gql(`
+        query MyFeed {
+          feed {
+            id
+          }
+        }
+      `);
+      const myExtraFeed = gql(`
+        query MyExtraFeed {
+          feed @NgModule(module: "./extra#ExtraModule") @namedClient(name: "extra") {
+            id
+          }
+        }
+      `);
+      const docs = [{ filePath: '', content: myFeed }, { filePath: 'a.ts', content: myExtraFeed }];
+      const content = await plugin(
+        modifiedSchema,
+        docs,
+        {
+          ngModule: './path/to/file#AppModule',
+          namedClient: 'custom'
+        },
+        {
+          outputFile: 'graphql.ts'
+        }
+      );
+
+      // NgModule
+      expect(content).toMatch(`import { AppModule } from './path/to/file'`);
+      expect(content).toBeSimilarStringTo(`
+        @Injectable({
+          providedIn: AppModule
+        })
+        export class MyFeedGQL
+      `);
+      expect(content).toMatch(`import { ExtraModule } from './extra'`);
+      expect(content).toBeSimilarStringTo(`
+        @Injectable({
+          providedIn: ExtraModule
+        })
+        export class MyExtraFeed
+      `);
+      expect(content).not.toContain('@NgModule');
+
+      // NamedClient
+      expect(content).toBeSimilarStringTo(`client = 'custom';`);
+      expect(content).toBeSimilarStringTo(`client = 'extra';`);
+      expect(content).not.toContain('@namedClient');
+
+      validateTypeScript(content, modifiedSchema, docs, {});
+    });
+  });
 });
