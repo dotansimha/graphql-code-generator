@@ -27,6 +27,8 @@ export const plugin: PluginFunction<TypeScriptResolversPluginConfig> = (
   const header = `
 import { ${imports.join(', ')} } from 'graphql';
 
+export type ArrayOrIterable<T> = Array<T> | Iterable<T>;
+
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent?: TParent,
   args?: TArgs,

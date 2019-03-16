@@ -22,6 +22,8 @@ export const plugin: PluginFunction<FlowResolversPluginConfig> = (
   const header = `
 import { ${imports.join(', ')} } from 'graphql';
 
+export type ArrayOrIterable<T> = Array<T> | Iterable<T>;
+
 export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
   parent?: Parent,
   args?: Args,

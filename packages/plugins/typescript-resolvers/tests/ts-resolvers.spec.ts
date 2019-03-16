@@ -273,4 +273,59 @@ describe('TypeScript Resolvers Plugin', () => {
       } & { [directiveName: string]: DirectiveResolverFn<any, any, Context, any> };
     `);
   });
+
+  it('should use Iterable on ListNodes', async () => {
+    const testSchema = buildSchema(/* GraphQL */ `
+      type Query {
+        foo: [User]
+        bar: [User!]
+        baz: [User!]!
+      }
+
+      enum Role {
+        A
+        B
+        C
+        D
+      }
+
+      type User {
+        id: ID!
+        name: String!
+        roles: [Role!]!
+      }
+    `);
+
+    const tsContent = await tsPlugin(testSchema, [], {}, { outputFile: 'graphql.ts' });
+    const resolversContent = await plugin(
+      testSchema,
+      [],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
+    const content = [tsContent, resolversContent].join('\n');
+
+    expect(content).toBeSimilarStringTo(`
+      export interface QueryResolvers<Context = any, ParentType = Query> {
+        foo?: Resolver<Maybe<ArrayOrIterable<Maybe<User>>>, ParentType, Context>,
+        bar?: Resolver<Maybe<ArrayOrIterable<User>>, ParentType, Context>,
+        baz?: Resolver<ArrayOrIterable<User>, ParentType, Context>,
+      }
+
+      export interface UserResolvers<Context = any, ParentType = User> {
+        id?: Resolver<string, ParentType, Context>,
+        name?: Resolver<string, ParentType, Context>,
+        roles?: Resolver<ArrayOrIterable<Role>, ParentType, Context>,
+      }
+
+      export type IResolvers<Context = any> = {
+        Query?: QueryResolvers<Context>,
+        User?: UserResolvers<Context>,
+      } & { [typeName: string] : { [ fieldName: string ]: ( Resolver<any, any, Context, any> | SubscriptionResolver<any, any, Context, any> ) } };
+    `);
+
+    validateTs(content);
+  });
 });
