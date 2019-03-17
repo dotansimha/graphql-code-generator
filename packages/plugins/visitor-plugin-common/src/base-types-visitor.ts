@@ -1,7 +1,7 @@
 import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor';
 import { EnumValuesMap, ScalarsMap } from './types';
 import { OperationVariablesToObject } from './variables-to-object';
-import { DeclarationBlockConfig, DeclarationBlock, indent, wrapWithSingleQuotes } from './utils';
+import { DeclarationBlockConfig, DeclarationBlock, indent, wrapWithSingleQuotes, buildScalars } from './utils';
 import {
   NonNullTypeNode,
   UnionTypeDefinitionNode,
@@ -19,11 +19,9 @@ import {
   EnumTypeDefinitionNode,
   DirectiveDefinitionNode,
   ListTypeNode,
-  isScalarType,
-  GraphQLScalarType
+  GraphQLSchema
 } from 'graphql';
 import { DEFAULT_SCALARS } from './scalars';
-import { GraphQLSchema } from 'graphql';
 
 export interface ParsedTypesConfig extends ParsedConfig {
   enumValues: EnumValuesMap;
@@ -31,23 +29,6 @@ export interface ParsedTypesConfig extends ParsedConfig {
 
 export interface RawTypesConfig extends RawConfig {
   enumValues?: EnumValuesMap;
-}
-
-function buildScalars(schema: GraphQLSchema, scalarsMapping: ScalarsMap): ScalarsMap {
-  const typeMap = schema.getTypeMap();
-  let result = { ...scalarsMapping };
-
-  Object.keys(typeMap)
-    .map(typeName => typeMap[typeName])
-    .filter(type => isScalarType(type))
-    .map((scalarType: GraphQLScalarType) => {
-      const name = scalarType.name;
-      const value = scalarsMapping[name] || 'any';
-
-      result[name] = value;
-    });
-
-  return result;
 }
 
 export class BaseTypesVisitor<

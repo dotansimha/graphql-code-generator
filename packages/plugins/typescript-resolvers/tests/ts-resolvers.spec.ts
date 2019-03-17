@@ -49,21 +49,21 @@ describe('TypeScript Resolvers Plugin', () => {
     const result = await plugin(schema, [], {}, { outputFile: '' });
 
     expect(result).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveResolver<Result, Parent, Context = any, Args = {   arg?: Maybe<number>,
-      arg2?: Maybe<string>, arg3?: Maybe<boolean> }> = DirectiveResolverFn<Result, Parent, Context, Args>;
+    export type MyDirectiveDirectiveResolver<Result, Parent, Context = any, Args = {   arg?: Maybe<Scalars['Int']>,
+      arg2?: Maybe<Scalars['String']>, arg3?: Maybe<Scalars['Boolean']> }> = DirectiveResolverFn<Result, Parent, Context, Args>;
 
     export interface MyOtherTypeResolvers<Context = any, ParentType = MyOtherType> {
-      bar?: Resolver<string, ParentType, Context>,
+      bar?: Resolver<Scalars['String'], ParentType, Context>,
     }
 
-    export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<MyScalar, any> {
+    export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<Scalars['MyScalar'], any> {
       name: 'MyScalar'
     }
 
     export interface MyTypeResolvers<Context = any, ParentType = MyType> {
-      foo?: Resolver<string, ParentType, Context>,
+      foo?: Resolver<Scalars['String'], ParentType, Context>,
       otherType?: Resolver<Maybe<MyOtherType>, ParentType, Context>,
-      withArgs?: Resolver<Maybe<string>, ParentType, Context, MyTypeWithArgsArgs>,
+      withArgs?: Resolver<Maybe<Scalars['String']>, ParentType, Context, MyTypeWithArgsArgs>,
     }
 
     export interface MyUnionResolvers<Context = any, ParentType = MyUnion> {
@@ -79,7 +79,7 @@ describe('TypeScript Resolvers Plugin', () => {
     }
 
     export interface SomeNodeResolvers<Context = any, ParentType = SomeNode> {
-      id?: Resolver<string, ParentType, Context>,
+      id?: Resolver<Scalars['ID'], ParentType, Context>,
     }
 
     export interface SubscriptionResolvers<Context = any, ParentType = Subscription> {
@@ -121,21 +121,21 @@ describe('TypeScript Resolvers Plugin', () => {
     );
 
     expect(result).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveResolver<Result, Parent, Context = any, Args = {   arg?: Maybe<number>,
-      arg2?: Maybe<string>, arg3?: Maybe<boolean> }> = DirectiveResolverFn<Result, Parent, Context, Args>;
+    export type MyDirectiveDirectiveResolver<Result, Parent, Context = any, Args = {   arg?: Maybe<Scalars['Int']>,
+      arg2?: Maybe<Scalars['String']>, arg3?: Maybe<Scalars['Boolean']> }> = DirectiveResolverFn<Result, Parent, Context, Args>;
 
     export interface MyOtherTypeResolvers<Context = any, ParentType = MyCustomOtherType> {
-      bar?: Resolver<string, ParentType, Context>,
+      bar?: Resolver<Scalars['String'], ParentType, Context>,
     }
 
-    export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<MyScalar, any> {
+    export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<Scalars['MyScalar'], any> {
       name: 'MyScalar'
     }
 
     export interface MyTypeResolvers<Context = any, ParentType = MyType> {
-      foo?: Resolver<string, ParentType, Context>,
+      foo?: Resolver<Scalars['String'], ParentType, Context>,
       otherType?: Resolver<Maybe<MyCustomOtherType>, ParentType, Context>,
-      withArgs?: Resolver<Maybe<string>, ParentType, Context, MyTypeWithArgsArgs>,
+      withArgs?: Resolver<Maybe<Scalars['String']>, ParentType, Context, MyTypeWithArgsArgs>,
     }
 
     export interface MyUnionResolvers<Context = any, ParentType = MyUnion> {
@@ -151,7 +151,7 @@ describe('TypeScript Resolvers Plugin', () => {
     }
 
     export interface SomeNodeResolvers<Context = any, ParentType = SomeNode> {
-      id?: Resolver<string, ParentType, Context>,
+      id?: Resolver<Scalars['ID'], ParentType, Context>,
     }
 
     export interface SubscriptionResolvers<Context = any, ParentType = Subscription> {
@@ -175,21 +175,21 @@ describe('TypeScript Resolvers Plugin', () => {
 
     expect(result).toBeSimilarStringTo(`import { MyCustomOtherType } from './my-file';`);
     expect(result).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveResolver<Result, Parent, Context = any, Args = {   arg?: Maybe<number>,
-      arg2?: Maybe<string>, arg3?: Maybe<boolean> }> = DirectiveResolverFn<Result, Parent, Context, Args>;
+    export type MyDirectiveDirectiveResolver<Result, Parent, Context = any, Args = {   arg?: Maybe<Scalars['Int']>,
+      arg2?: Maybe<Scalars['String']>, arg3?: Maybe<Scalars['Boolean']> }> = DirectiveResolverFn<Result, Parent, Context, Args>;
 
     export interface MyOtherTypeResolvers<Context = any, ParentType = MyCustomOtherType> {
-      bar?: Resolver<string, ParentType, Context>,
+      bar?: Resolver<Scalars['String'], ParentType, Context>,
     }
 
-    export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<MyScalar, any> {
+    export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<Scalars['MyScalar'], any> {
       name: 'MyScalar'
     }
 
     export interface MyTypeResolvers<Context = any, ParentType = MyType> {
-      foo?: Resolver<string, ParentType, Context>,
+      foo?: Resolver<Scalars['String'], ParentType, Context>,
       otherType?: Resolver<Maybe<MyCustomOtherType>, ParentType, Context>,
-      withArgs?: Resolver<Maybe<string>, ParentType, Context, MyTypeWithArgsArgs>,
+      withArgs?: Resolver<Maybe<Scalars['String']>, ParentType, Context, MyTypeWithArgsArgs>,
     }
 
     export interface MyUnionResolvers<Context = any, ParentType = MyUnion> {
@@ -205,7 +205,7 @@ describe('TypeScript Resolvers Plugin', () => {
     }
 
     export interface SomeNodeResolvers<Context = any, ParentType = SomeNode> {
-      id?: Resolver<string, ParentType, Context>,
+      id?: Resolver<Scalars['ID'], ParentType, Context>,
     }
 
     export interface SubscriptionResolvers<Context = any, ParentType = Subscription> {
@@ -220,7 +220,7 @@ describe('TypeScript Resolvers Plugin', () => {
     const config = { typesPrefix: 'T' };
     const result = await plugin(testSchema, [], config, { outputFile: '' });
 
-    expect(result).toBeSimilarStringTo(`f?: Resolver<Maybe<string>, ParentType, Context, TMyTypeFArgs>,`);
+    expect(result).toBeSimilarStringTo(`f?: Resolver<Maybe<Scalars['String']>, ParentType, Context, TMyTypeFArgs>,`);
     await validate(result, config, testSchema);
   });
   it('should generate Resolvers interface', async () => {
@@ -315,8 +315,8 @@ describe('TypeScript Resolvers Plugin', () => {
       }
 
       export interface UserResolvers<Context = any, ParentType = User> {
-        id?: Resolver<string, ParentType, Context>,
-        name?: Resolver<string, ParentType, Context>,
+        id?: Resolver<Scalars['ID'], ParentType, Context>,
+        name?: Resolver<Scalars['String'], ParentType, Context>,
         roles?: Resolver<ArrayOrIterable<Role>, ParentType, Context>,
       }
 
