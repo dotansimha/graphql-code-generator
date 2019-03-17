@@ -46,7 +46,7 @@ export class OperationVariablesToObject {
     const baseType = typeof variable.type === 'string' ? variable.type : getBaseTypeNode(variable.type);
     const typeName = typeof baseType === 'string' ? baseType : baseType.name.value;
     const typeValue = this._scalars[typeName]
-      ? this.getScalar(this._scalars[typeName])
+      ? this.getScalar(typeName)
       : this._convertName(baseType, {
           useTypesPrefix: true
         });
