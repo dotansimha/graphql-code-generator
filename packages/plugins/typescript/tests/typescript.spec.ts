@@ -221,6 +221,89 @@ describe('TypeScript', () => {
     });
   });
 
+  describe.only('Scalars', () => {
+    it('Should generate a scalars mapping correctly for built-in scalars', async () => {
+      const schema = buildSchema(`
+      type MyType {
+        foo: String
+        bar: String!
+      }`);
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+
+      expect(result).toBeSimilarStringTo(`
+      export type Scalars = {
+        ID: string,
+        String: string,
+        Boolean: boolean,
+        Int: number,
+        Float: number,
+      };`);
+
+      expect(result).toBeSimilarStringTo(`
+      export type MyType = {
+        foo?: Maybe<Scalars['String']>,
+        bar: Scalars['String'],
+      };`);
+      validateTs(result);
+    });
+
+    it('Should generate a scalars mapping correctly for custom scalars', async () => {
+      const schema = buildSchema(`
+      scalar MyScalar
+
+      type MyType {
+        foo: String
+        bar: MyScalar!
+      }`);
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+
+      expect(result).toBeSimilarStringTo(`
+      export type Scalars = {
+        ID: string,
+        String: string,
+        Boolean: boolean,
+        Int: number,
+        Float: number,
+        MyScalar: any,
+      };`);
+
+      expect(result).toBeSimilarStringTo(`
+      export type MyType = {
+        foo?: Maybe<Scalars['String']>,
+        bar: Scalars['MyScalar'],
+      };`);
+      validateTs(result);
+    });
+
+    it('Should generate a scalars mapping correctly for custom scalars with mapping', async () => {
+      const schema = buildSchema(`
+      scalar MyScalar
+
+      type MyType {
+        foo: String
+        bar: MyScalar!
+      }`);
+      const result = await plugin(schema, [], { scalars: { MyScalar: 'Date' } }, { outputFile: '' });
+
+      expect(result).toBeSimilarStringTo(`
+      export type Scalars = {
+        ID: string,
+        String: string,
+        Boolean: boolean,
+        Int: number,
+        Float: number,
+        MyScalar: Date,
+      };`);
+
+      expect(result).toBeSimilarStringTo(`
+      export type MyType = {
+        foo?: Maybe<Scalars['String']>,
+        bar: Scalars['MyScalar'],
+      };`);
+      validateTs(result);
+    });
+  });
+
   describe('Object (type)', () => {
     it('Should build type correctly', async () => {
       const schema = buildSchema(`

@@ -21,7 +21,7 @@ export const plugin: PluginFunction<FlowPluginConfig> = (
   const astNode = parse(printedSchema);
 
   const visitorResult = visit(astNode, {
-    leave: new FlowVisitor(config)
+    leave: new FlowVisitor(schema, config)
   });
 
   return result + visitorResult.definitions.join('\n');

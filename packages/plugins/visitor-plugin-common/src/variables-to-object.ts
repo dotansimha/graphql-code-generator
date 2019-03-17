@@ -38,14 +38,18 @@ export class OperationVariablesToObject {
     return variablesNode.map(variable => indent(this.transformVariable(variable))).join(',\n');
   }
 
+  protected getScalar(name: string): string {
+    return `Scalars['${name}']`;
+  }
+
   protected transformVariable<TDefinitionType extends InterfaceOrVariable>(variable: TDefinitionType): string {
     const baseType = typeof variable.type === 'string' ? variable.type : getBaseTypeNode(variable.type);
     const typeName = typeof baseType === 'string' ? baseType : baseType.name.value;
-    const typeValue =
-      this._scalars[typeName] ||
-      this._convertName(baseType, {
-        useTypesPrefix: true
-      });
+    const typeValue = this._scalars[typeName]
+      ? this.getScalar(this._scalars[typeName])
+      : this._convertName(baseType, {
+          useTypesPrefix: true
+        });
 
     const fieldName = this.getName(variable);
     const fieldType = this.wrapAstTypeWithModifiers(typeValue, variable.type);
