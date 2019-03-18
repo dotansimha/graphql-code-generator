@@ -18,6 +18,10 @@ export class FlowResolversVisitor extends BaseResolversVisitor<FlowResolversPlug
     return `${schemaTypeName}?: ${resolverType}<>,`;
   }
 
+  protected _getScalar(name: string): string {
+    return `$ElementType<Scalars, '${name}'>`;
+  }
+
   protected buildMapperImport(source: string, types: string[]): string {
     return `import { ${types.map(t => `type ${t}`).join(', ')} } from '${source}';`;
   }

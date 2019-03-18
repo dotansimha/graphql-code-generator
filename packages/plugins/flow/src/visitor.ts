@@ -42,14 +42,6 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
     return `$ElementType<Scalars, '${name}'>`;
   }
 
-  public ScalarTypeDefinition = (node: ScalarTypeDefinitionNode): string => {
-    return new DeclarationBlock(this._declarationBlockConfig)
-      .export()
-      .asKind('type')
-      .withName(this.convertName(node))
-      .withContent(this.scalars[(node.name as any) as string] || 'any').string;
-  };
-
   NamedType(node: NamedTypeNode): string {
     return `?${super.NamedType(node)}`;
   }

@@ -1,3 +1,4 @@
+import 'graphql-codegen-testing';
 import { GraphQLObjectType, buildSchema, buildASTSchema, parse, print } from 'graphql';
 import { mergeSchemas } from 'graphql-codegen-core';
 import { executeCodegen } from '../src';
@@ -166,7 +167,7 @@ describe('Codegen Executor', () => {
 
       expect(output.length).toBe(1);
       expect(output[0].filename).toBe('out.ts');
-      expect(output[0].content).toContain('hello?: Maybe<string>');
+      expect(output[0].content).toContain(`hello?: Maybe<Scalars['String']>`);
     });
   });
 
@@ -628,7 +629,14 @@ describe('Codegen Executor', () => {
       });
 
       expect(output.length).toBe(1);
-      expect(output[0].content).toContain('type UniqueId = any');
+      expect(output[0].content).toBeSimilarStringTo(`export type Scalars = {
+        ID: string;
+        String: string;
+        Boolean: boolean;
+        Int: number;
+        Float: number;
+        UniqueID: any;
+      };`);
     });
   });
 
