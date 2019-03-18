@@ -2,28 +2,28 @@
 
 
 export type Scalars = {
-  ID: string,
+          ID: string,
   String: string,
   Boolean: boolean,
   Int: number,
   Float: number,
-};
+        };
 
 export type Query = {
-  allUsers: Array<?User>,
+          allUsers: Array<?User>,
   userById?: ?User,
-};
+        };
 
 
 export type QueryUserByIdArgs = {
-  id: $ElementType<Scalars, 'Int'>
-};
+          id: $ElementType<Scalars, 'Int'>
+        };
 
 export type User = {
-  id: $ElementType<Scalars, 'Int'>,
+          id: $ElementType<Scalars, 'Int'>,
   name: $ElementType<Scalars, 'String'>,
   email: $ElementType<Scalars, 'String'>,
-};
+        };
 
 import { type GraphQLResolveInfo } from 'graphql';
 
@@ -75,20 +75,20 @@ export type DirectiveResolverFn<Result = {}, Parent = {}, Args = {}, Context = {
   info?: GraphQLResolveInfo
 ) => Result | Promise<Result>;
 
-export interface QueryResolvers<Context = any, ParentType = Query> {
-  allUsers?: Resolver<ArrayOrIterable<?User>, ParentType, Context>,
+export type QueryResolvers<Context = any, ParentType = Query> = {
+          allUsers?: Resolver<ArrayOrIterable<?User>, ParentType, Context>,
   userById?: Resolver<?User, ParentType, Context, QueryUserByIdArgs>,
-}
+        };
 
-export interface UserResolvers<Context = any, ParentType = User> {
-  id?: Resolver<$ElementType<Scalars, 'Int'>, ParentType, Context>,
+export type UserResolvers<Context = any, ParentType = User> = {
+          id?: Resolver<$ElementType<Scalars, 'Int'>, ParentType, Context>,
   name?: Resolver<$ElementType<Scalars, 'String'>, ParentType, Context>,
   email?: Resolver<$ElementType<Scalars, 'String'>, ParentType, Context>,
-}
+        };
 
 export type IResolvers<Context = any> = {
-  Query?: QueryResolvers<Context><>,
+          Query?: QueryResolvers<Context><>,
   User?: UserResolvers<Context><>,
-};
+        };
 
 export type IDirectiveResolvers<Context = any> = {};
