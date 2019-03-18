@@ -1,28 +1,36 @@
 type Maybe<T> = T | null;
+export type Scalars = {
+  ID: string,
+  String: string,
+  Boolean: boolean,
+  Int: number,
+  Float: number,
+};
+
 export type Comment = {
-  readonly id: number,
+  readonly id: Scalars['Int'],
   readonly postedBy: User,
-  readonly createdAt: number,
-  readonly content: string,
-  readonly repoName: string,
+  readonly createdAt: Scalars['Float'],
+  readonly content: Scalars['String'],
+  readonly repoName: Scalars['String'],
 };
 
 export type Entry = {
   readonly repository: Repository,
   readonly postedBy: User,
-  readonly createdAt: number,
-  readonly score: number,
-  readonly hotScore: number,
+  readonly createdAt: Scalars['Float'],
+  readonly score: Scalars['Int'],
+  readonly hotScore: Scalars['Float'],
   readonly comments: ReadonlyArray<Maybe<Comment>>,
-  readonly commentCount: number,
-  readonly id: number,
+  readonly commentCount: Scalars['Int'],
+  readonly id: Scalars['Int'],
   readonly vote: Vote,
 };
 
 
 export type EntryCommentsArgs = {
-  limit?: Maybe<number>,
-  offset?: Maybe<number>
+  limit?: Maybe<Scalars['Int']>,
+  offset?: Maybe<Scalars['Int']>
 };
 
 export enum FeedType {
@@ -39,19 +47,19 @@ export type Mutation = {
 
 
 export type MutationSubmitRepositoryArgs = {
-  repoFullName: string
+  repoFullName: Scalars['String']
 };
 
 
 export type MutationVoteArgs = {
-  repoFullName: string,
+  repoFullName: Scalars['String'],
   type: VoteType
 };
 
 
 export type MutationSubmitCommentArgs = {
-  repoFullName: string,
-  commentContent: string
+  repoFullName: Scalars['String'],
+  commentContent: Scalars['String']
 };
 
 export type Query = {
@@ -63,22 +71,22 @@ export type Query = {
 
 export type QueryFeedArgs = {
   type: FeedType,
-  offset?: Maybe<number>,
-  limit?: Maybe<number>
+  offset?: Maybe<Scalars['Int']>,
+  limit?: Maybe<Scalars['Int']>
 };
 
 
 export type QueryEntryArgs = {
-  repoFullName: string
+  repoFullName: Scalars['String']
 };
 
 export type Repository = {
-  readonly name: string,
-  readonly full_name: string,
-  readonly description?: Maybe<string>,
-  readonly html_url: string,
-  readonly stargazers_count: number,
-  readonly open_issues_count?: Maybe<number>,
+  readonly name: Scalars['String'],
+  readonly full_name: Scalars['String'],
+  readonly description?: Maybe<Scalars['String']>,
+  readonly html_url: Scalars['String'],
+  readonly stargazers_count: Scalars['Int'],
+  readonly open_issues_count?: Maybe<Scalars['Int']>,
   readonly owner?: Maybe<User>,
 };
 
@@ -88,17 +96,17 @@ export type Subscription = {
 
 
 export type SubscriptionCommentAddedArgs = {
-  repoFullName: string
+  repoFullName: Scalars['String']
 };
 
 export type User = {
-  readonly login: string,
-  readonly avatar_url: string,
-  readonly html_url: string,
+  readonly login: Scalars['String'],
+  readonly avatar_url: Scalars['String'],
+  readonly html_url: Scalars['String'],
 };
 
 export type Vote = {
-  readonly vote_value: number,
+  readonly vote_value: Scalars['Int'],
 };
 
 export enum VoteType {
@@ -107,16 +115,16 @@ export enum VoteType {
   Cancel = 'CANCEL'
 }
 export type OnCommentAddedSubscriptionVariables = {
-  repoFullName: string
+  repoFullName: Scalars['String']
 };
 
 
 export type OnCommentAddedSubscription = ({ readonly __typename?: 'Subscription' } & { readonly commentAdded: Maybe<({ readonly __typename?: 'Comment' } & Pick<Comment, 'id' | 'createdAt' | 'content'> & { readonly postedBy: ({ readonly __typename?: 'User' } & Pick<User, 'login' | 'html_url'>) })> });
 
 export type CommentQueryVariables = {
-  repoFullName: string,
-  limit?: Maybe<number>,
-  offset?: Maybe<number>
+  repoFullName: Scalars['String'],
+  limit?: Maybe<Scalars['Int']>,
+  offset?: Maybe<Scalars['Int']>
 };
 
 
@@ -133,15 +141,15 @@ export type FeedEntryFragment = ({ readonly __typename?: 'Entry' } & Pick<Entry,
 
 export type FeedQueryVariables = {
   type: FeedType,
-  offset?: Maybe<number>,
-  limit?: Maybe<number>
+  offset?: Maybe<Scalars['Int']>,
+  limit?: Maybe<Scalars['Int']>
 };
 
 
 export type FeedQuery = ({ readonly __typename?: 'Query' } & { readonly currentUser: Maybe<({ readonly __typename?: 'User' } & Pick<User, 'login'>)>, readonly feed: Maybe<ReadonlyArray<Maybe<({ readonly __typename?: 'Entry' } & FeedEntryFragment)>>> });
 
 export type SubmitRepositoryMutationVariables = {
-  repoFullName: string
+  repoFullName: Scalars['String']
 };
 
 
@@ -150,8 +158,8 @@ export type SubmitRepositoryMutation = ({ readonly __typename?: 'Mutation' } & {
 export type RepoInfoFragment = ({ readonly __typename?: 'Entry' } & Pick<Entry, 'createdAt'> & { readonly repository: ({ readonly __typename?: 'Repository' } & Pick<Repository, 'description' | 'stargazers_count' | 'open_issues_count'>), readonly postedBy: ({ readonly __typename?: 'User' } & Pick<User, 'html_url' | 'login'>) });
 
 export type SubmitCommentMutationVariables = {
-  repoFullName: string,
-  commentContent: string
+  repoFullName: Scalars['String'],
+  commentContent: Scalars['String']
 };
 
 
@@ -160,7 +168,7 @@ export type SubmitCommentMutation = ({ readonly __typename?: 'Mutation' } & { re
 export type VoteButtonsFragment = ({ readonly __typename?: 'Entry' } & Pick<Entry, 'score'> & { readonly vote: ({ readonly __typename?: 'Vote' } & Pick<Vote, 'vote_value'>) });
 
 export type VoteMutationVariables = {
-  repoFullName: string,
+  repoFullName: Scalars['String'],
   type: VoteType
 };
 
