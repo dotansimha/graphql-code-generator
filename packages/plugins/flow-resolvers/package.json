@@ -29,5 +29,8 @@
   "typings": "dist/esnext/index.d.ts",
   "typescript": {
     "definition": "dist/esnext/index.d.ts"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

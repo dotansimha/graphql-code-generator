@@ -25,29 +25,27 @@
     "packages/plugins/*",
     "website/live-demo"
   ],
-  "dependencies": {
-    "lerna": "2.11.0"
-  },
   "devDependencies": {
+    "@types/common-tags": "1.8.0",
     "@types/glob": "7.1.1",
+    "@types/graphql": "14.0.7",
     "@types/jest": "24.0.11",
     "@types/mkdirp": "0.5.2",
     "@types/node": "10.14.1",
     "@types/request": "2.48.1",
-    "@types/common-tags": "1.8.0",
-    "@types/graphql": "14.0.7",
-    "husky": "1.3.1",
-    "lint-staged": "8.1.5",
-    "tslint": "5.14.0",
-    "typescript": "3.3.3333",
+    "apollo-link": "1.2.11",
     "graphql": "14.1.1",
     "graphql-tag": "2.10.1",
+    "graphql-tools": "4.0.4",
+    "husky": "1.3.1",
     "jest": "24.5.0",
+    "lerna": "^3.13.1",
+    "lint-staged": "8.1.5",
+    "microbundle": "0.11.0",
     "rimraf": "2.6.3",
     "ts-jest": "24.0.0",
-    "graphql-tools": "4.0.4",
-    "apollo-link": "1.2.11",
-    "microbundle": "0.11.0"
+    "tslint": "5.14.0",
+    "typescript": "3.3.3333"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
