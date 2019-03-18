@@ -29,6 +29,8 @@ import { ${imports.join(', ')} } from 'graphql';
 
 export type ArrayOrIterable<T> = Array<T> | Iterable<T>;
 
+export type WithIndex<TObject> = TObject & {[key: string]: void};
+
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent?: TParent,
   args?: TArgs,
@@ -83,6 +85,8 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   context?: TContext,
   info?: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
+
+export type ResolversObject<TObject> = WithIndex<TObject>;
 `;
 
   const printedSchema = printSchema(schema);

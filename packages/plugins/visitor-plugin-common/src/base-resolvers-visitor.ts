@@ -217,7 +217,7 @@ export class BaseResolversVisitor<
 
     const block = new DeclarationBlock(this._declarationBlockConfig)
       .export()
-      .asKind('interface')
+      .asKind('type')
       .withName(name, `<Context = ${this.config.contextType.type}, ParentType = ${type}>`)
       .withBlock(node.fields.map((f: any) => f(node.name)).join('\n'));
 
@@ -240,7 +240,7 @@ export class BaseResolversVisitor<
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
-      .asKind('interface')
+      .asKind('type')
       .withName(name, `<Context = ${this.config.contextType.type}, ParentType = ${node.name}>`)
       .withBlock(indent(`__resolveType: TypeResolveFn<${possibleTypes}>`)).string;
   }
@@ -251,7 +251,12 @@ export class BaseResolversVisitor<
 
     this._collectedResolvers[node.name as any] = 'GraphQLScalarType';
 
-    return new DeclarationBlock(this._declarationBlockConfig)
+    return new DeclarationBlock({
+      ...this._declarationBlockConfig,
+      blockTransformer(block) {
+        return block;
+      }
+    })
       .export()
       .asKind('interface')
       .withName(
@@ -274,7 +279,12 @@ export class BaseResolversVisitor<
 
     this._collectedDirectiveResolvers[node.name as any] = directiveName + '<any, any, Context>';
 
-    return new DeclarationBlock(this._declarationBlockConfig)
+    return new DeclarationBlock({
+      ...this._declarationBlockConfig,
+      blockTransformer(block) {
+        return block;
+      }
+    })
       .export()
       .asKind('type')
       .withName(
@@ -304,7 +314,7 @@ export class BaseResolversVisitor<
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
-      .asKind('interface')
+      .asKind('type')
       .withName(name, `<Context = ${this.config.contextType.type}, ParentType = ${node.name}>`)
       .withBlock(
         [

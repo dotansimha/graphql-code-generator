@@ -31,25 +31,16 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
         this.config.immutableTypes
       )
     );
+
+    this._declarationBlockConfig = {
+      blockTransformer(block) {
+        return `ResolversObject<${block}>`;
+      }
+    };
   }
 
   protected formatRootResolver(schemaTypeName: string, resolverType: string): string {
     return `${schemaTypeName}?: ${resolverType},`;
-  }
-
-  getRootResolver(): string {
-    return super
-      .getRootResolver()
-      .replace(
-        '};',
-        '} & { [typeName: string] : { [ fieldName: string ]: ( Resolver<any, any, Context, any> | SubscriptionResolver<any, any, Context, any> ) } };'
-      );
-  }
-
-  getAllDirectiveResolvers(): string {
-    return super
-      .getAllDirectiveResolvers()
-      .replace('};', '} & { [directiveName: string]: DirectiveResolverFn<any, any, Context, any> };');
   }
 
   private clearOptional(str: string): string {
