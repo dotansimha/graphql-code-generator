@@ -53,9 +53,9 @@ describe('TypeScript Resolvers Plugin', () => {
       arg2?: Maybe<Scalars['String']>, arg3?: Maybe<Scalars['Boolean']> }> = DirectiveResolverFn<Result, Parent, Context, Args>;`);
 
     expect(result).toBeSimilarStringTo(`
-      export type MyOtherTypeResolvers<Context = any, ParentType = MyOtherType> = ResolversObject<{
+      export type MyOtherTypeResolvers<Context = any, ParentType = MyOtherType> = {
         bar?: Resolver<Scalars['String'], ParentType, Context>,
-      }>;
+      };
     `);
 
     expect(result)
