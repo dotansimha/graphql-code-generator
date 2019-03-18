@@ -1,16 +1,7 @@
-import { DeclarationBlock, indent, BaseTypesVisitor, ParsedTypesConfig } from 'graphql-codegen-visitor-plugin-common';
+import { DeclarationBlock, indent, BaseTypesVisitor, ParsedTypesConfig } from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptPluginConfig } from './index';
 import * as autoBind from 'auto-bind';
-import {
-  FieldDefinitionNode,
-  NamedTypeNode,
-  ListTypeNode,
-  NonNullTypeNode,
-  EnumTypeDefinitionNode,
-  Kind,
-  InputValueDefinitionNode,
-  GraphQLSchema
-} from 'graphql';
+import { FieldDefinitionNode, NamedTypeNode, ListTypeNode, NonNullTypeNode, EnumTypeDefinitionNode, Kind, InputValueDefinitionNode, GraphQLSchema } from 'graphql';
 import { TypeScriptOperationVariablesToObject } from './typescript-variables-to-object';
 
 export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
@@ -21,10 +12,7 @@ export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
   maybeValue: string;
 }
 
-export class TsVisitor<
-  TRawConfig extends TypeScriptPluginConfig = TypeScriptPluginConfig,
-  TParsedConfig extends TypeScriptPluginParsedConfig = TypeScriptPluginParsedConfig
-> extends BaseTypesVisitor<TRawConfig, TParsedConfig> {
+export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPluginConfig, TParsedConfig extends TypeScriptPluginParsedConfig = TypeScriptPluginParsedConfig> extends BaseTypesVisitor<TRawConfig, TParsedConfig> {
   constructor(schema: GraphQLSchema, pluginConfig: TRawConfig, additionalConfig: Partial<TParsedConfig> = {}) {
     super(schema, pluginConfig, {
       avoidOptionals: pluginConfig.avoidOptionals || false,
@@ -32,20 +20,13 @@ export class TsVisitor<
       constEnums: pluginConfig.constEnums || false,
       enumsAsTypes: pluginConfig.enumsAsTypes || false,
       immutableTypes: pluginConfig.immutableTypes || false,
-      ...(additionalConfig || {})
+      ...(additionalConfig || {}),
     } as TParsedConfig);
 
     autoBind(this);
-    this.setArgumentsTransformer(
-      new TypeScriptOperationVariablesToObject(
-        this.scalars,
-        this.convertName,
-        this.config.avoidOptionals,
-        this.config.immutableTypes
-      )
-    );
+    this.setArgumentsTransformer(new TypeScriptOperationVariablesToObject(this.scalars, this.convertName, this.config.avoidOptionals, this.config.immutableTypes));
     this.setDeclarationBlockConfig({
-      enumNameValueSeparator: ' ='
+      enumNameValueSeparator: ' =',
     });
   }
 
@@ -80,9 +61,7 @@ export class TsVisitor<
     const originalFieldNode = parent[key] as FieldDefinitionNode;
     const addOptionalSign = !this.config.avoidOptionals && originalFieldNode.type.kind !== Kind.NON_NULL_TYPE;
 
-    return indent(
-      `${this.config.immutableTypes ? 'readonly ' : ''}${node.name}${addOptionalSign ? '?' : ''}: ${typeString},`
-    );
+    return indent(`${this.config.immutableTypes ? 'readonly ' : ''}${node.name}${addOptionalSign ? '?' : ''}: ${typeString},`);
   }
 
   InputValueDefinition(node: InputValueDefinitionNode, key?: number | string, parent?: any): string {
@@ -98,9 +77,7 @@ export class TsVisitor<
         .export()
         .asKind('type')
         .withName(this.convertName(node))
-        .withContent(
-          node.values.map(v => `'${this.config.enumValues[(v.name as any) as string] || v.name}'`).join(' | ')
-        ).string;
+        .withContent(node.values.map(v => `'${this.config.enumValues[(v.name as any) as string] || v.name}'`).join(' | ')).string;
     } else {
       return new DeclarationBlock(this._declarationBlockConfig)
         .export()

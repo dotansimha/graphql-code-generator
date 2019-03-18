@@ -11,7 +11,7 @@ You can use this plugin to add custom code, imports, comments and more to your o
 
 Install using `npm` (or `yarn`):
 
-    $ npm install graphql-codegen-add
+    $ npm install @graphql-codegen/add
 
 ## Examples
 

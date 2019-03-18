@@ -1,7 +1,7 @@
 import { loadSchema as loadSchemaToolkit, loadDocuments as loadDocumentsToolkit } from 'graphql-toolkit';
-import { Types } from 'graphql-codegen-plugin-helpers';
+import { Types } from '@graphql-codegen/plugin-helpers';
 import { GraphQLSchema, DocumentNode } from 'graphql';
-import { DetailedError } from 'graphql-codegen-core';
+import { DetailedError } from '@graphql-codegen/core';
 
 async function getCustomLoaderByPath(path: string): Promise<any> {
   const requiredModule = await import(path);
@@ -17,16 +17,8 @@ async function getCustomLoaderByPath(path: string): Promise<any> {
   return null;
 }
 
-export const loadSchema = async (
-  schemaDef: Types.Schema,
-  config: Types.Config
-): Promise<GraphQLSchema | DocumentNode> => {
-  if (
-    typeof schemaDef === 'object' &&
-    schemaDef[Object.keys(schemaDef)[0]] &&
-    (schemaDef[Object.keys(schemaDef)[0]] as any).loader &&
-    typeof (schemaDef[Object.keys(schemaDef)[0]] as any).loader === 'string'
-  ) {
+export const loadSchema = async (schemaDef: Types.Schema, config: Types.Config): Promise<GraphQLSchema | DocumentNode> => {
+  if (typeof schemaDef === 'object' && schemaDef[Object.keys(schemaDef)[0]] && (schemaDef[Object.keys(schemaDef)[0]] as any).loader && typeof (schemaDef[Object.keys(schemaDef)[0]] as any).loader === 'string') {
     const pointToSchema = Object.keys(schemaDef)[0];
     const defObject: any = schemaDef[pointToSchema];
     const loaderString = defObject.loader;
@@ -95,16 +87,8 @@ export const loadSchema = async (
   }
 };
 
-export const loadDocuments = async (
-  documentDef: Types.OperationDocument,
-  config: Types.Config
-): Promise<Types.DocumentFile[]> => {
-  if (
-    typeof documentDef === 'object' &&
-    documentDef[Object.keys(documentDef)[0]] &&
-    (documentDef[Object.keys(documentDef)[0]] as any).loader &&
-    typeof (documentDef[Object.keys(documentDef)[0]] as any).loader === 'string'
-  ) {
+export const loadDocuments = async (documentDef: Types.OperationDocument, config: Types.Config): Promise<Types.DocumentFile[]> => {
+  if (typeof documentDef === 'object' && documentDef[Object.keys(documentDef)[0]] && (documentDef[Object.keys(documentDef)[0]] as any).loader && typeof (documentDef[Object.keys(documentDef)[0]] as any).loader === 'string') {
     const pointToDoc = Object.keys(documentDef)[0];
     const defObject: any = documentDef[pointToDoc];
     const loaderString = defObject.loader;
@@ -118,9 +102,7 @@ export const loadDocuments = async (
         if (returned && Array.isArray(returned)) {
           return returned;
         } else {
-          throw new Error(
-            `Return value of a custom schema loader must be an Array of: { filePath: string, content: DocumentNode }`
-          );
+          throw new Error(`Return value of a custom schema loader must be an Array of: { filePath: string, content: DocumentNode }`);
         }
       } else {
         throw new Error(`Unable to find a loader function! Make sure to export a default function from your file`);
@@ -141,7 +123,7 @@ export const loadDocuments = async (
     documentDef as string,
     config.pluckConfig
       ? {
-          tagPluck: config.pluckConfig
+          tagPluck: config.pluckConfig,
         }
       : {}
   );

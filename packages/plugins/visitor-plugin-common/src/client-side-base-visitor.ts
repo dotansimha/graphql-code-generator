@@ -3,7 +3,7 @@ import * as autoBind from 'auto-bind';
 import { FragmentDefinitionNode, print, OperationDefinitionNode } from 'graphql';
 import { DepGraph } from 'dependency-graph';
 import gqlTag from 'graphql-tag';
-import { toPascalCase } from 'graphql-codegen-plugin-helpers';
+import { toPascalCase } from '@graphql-codegen/plugin-helpers';
 import { getConfigValue } from './utils';
 
 export interface RawClientSideBasePluginConfig extends RawConfig {
@@ -16,19 +16,12 @@ export interface ClientSideBasePluginConfig extends ParsedConfig {
   gqlImport: string;
 }
 
-export class ClientSideBaseVisitor<
-  TRawConfig extends RawClientSideBasePluginConfig = RawClientSideBasePluginConfig,
-  TPluginConfig extends ClientSideBasePluginConfig = ClientSideBasePluginConfig
-> extends BaseVisitor<TRawConfig, TPluginConfig> {
-  constructor(
-    protected _fragments: FragmentDefinitionNode[],
-    rawConfig: TRawConfig,
-    additionalConfig: Partial<TPluginConfig>
-  ) {
+export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginConfig = RawClientSideBasePluginConfig, TPluginConfig extends ClientSideBasePluginConfig = ClientSideBasePluginConfig> extends BaseVisitor<TRawConfig, TPluginConfig> {
+  constructor(protected _fragments: FragmentDefinitionNode[], rawConfig: TRawConfig, additionalConfig: Partial<TPluginConfig>) {
     super(rawConfig, {
       noGraphQLTag: getConfigValue(rawConfig.noGraphQLTag, false),
       gqlImport: rawConfig.gqlImport || null,
-      ...additionalConfig
+      ...additionalConfig,
     } as any);
 
     autoBind(this);
@@ -120,7 +113,7 @@ export class ClientSideBaseVisitor<
 
     return {
       moduleName,
-      propName
+      propName,
     };
   }
 
@@ -130,9 +123,7 @@ export class ClientSideBaseVisitor<
 
     if (!this.config.noGraphQLTag) {
       imports.push(`
-import ${
-        gqlImport.propName ? `{ ${gqlImport.propName === 'gql' ? 'gql' : `${gqlImport.propName} as gql`} }` : 'gql'
-      } from '${gqlImport.moduleName}';`);
+import ${gqlImport.propName ? `{ ${gqlImport.propName === 'gql' ? 'gql' : `${gqlImport.propName} as gql`} }` : 'gql'} from '${gqlImport.moduleName}';`);
     } else {
       imports.push(`import { DocumentNode } from 'graphql';`);
     }
@@ -140,13 +131,7 @@ import ${
     return imports.join('\n');
   }
 
-  protected buildOperation(
-    node: OperationDefinitionNode,
-    documentVariableName: string,
-    operationType: string,
-    operationResultType: string,
-    operationVariablesTypes: string
-  ): string {
+  protected buildOperation(node: OperationDefinitionNode, documentVariableName: string, operationType: string, operationResultType: string, operationVariablesTypes: string): string {
     return null;
   }
 
@@ -156,26 +141,18 @@ import ${
     }
 
     const documentVariableName = this.convertName(node, {
-      suffix: 'Document'
+      suffix: 'Document',
     });
-    const documentString = `export const ${documentVariableName}${
-      this.config.noGraphQLTag ? ': DocumentNode' : ''
-    } = ${this._gql(node)};`;
+    const documentString = `export const ${documentVariableName}${this.config.noGraphQLTag ? ': DocumentNode' : ''} = ${this._gql(node)};`;
     const operationType: string = toPascalCase(node.operation);
     const operationResultType: string = this.convertName(node, {
-      suffix: operationType
+      suffix: operationType,
     });
     const operationVariablesTypes: string = this.convertName(node, {
-      suffix: operationType + 'Variables'
+      suffix: operationType + 'Variables',
     });
 
-    const additional = this.buildOperation(
-      node,
-      documentVariableName,
-      operationType,
-      operationResultType,
-      operationVariablesTypes
-    );
+    const additional = this.buildOperation(node, documentVariableName, operationType, operationResultType, operationVariablesTypes);
 
     return [documentString, additional].filter(a => a).join('\n');
   }

@@ -22,11 +22,11 @@ generates:
       - typescript-operations
 ```
 
-A more robust config file can be seen [here](https://github.com/dotansimha/graphql-code-generator/blob/70003040cfc3bf01a3d8eea9d4b2b5adec4ef77a/dev-test/codegen.yml).
+A more robust config file can be seen [here](https://github.com/dotansimha/graphql-code-generator/blob/master/dev-test/codegen.yml).
 
 ## Available Options
 
-Here are the supported options that you can define in the config file (see [source code](https://github.com/dotansimha/graphql-code-generator/blob/70003040cfc3bf01a3d8eea9d4b2b5adec4ef77a/packages/graphql-codegen-core/src/yml-config-types.ts#L36)):
+Here are the supported options that you can define in the config file (see [source code](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/utils/plugins-helpers/src/types.ts#L51)):
 
 - [**`schema` (required)**](./schema-field#root-level) - A URL to your GraphQL endpoint, a local path to `.graphql` file, a glob pattern to your GraphQL schema files, or a JavaScript file that exports the schema to generate code from. This can also be an array which specifies multiple schemas to generate code from. [You can read more about the supported formats here](./schema-field#available-formats)
 

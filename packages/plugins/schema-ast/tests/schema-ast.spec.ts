@@ -1,5 +1,5 @@
 import { validate } from '../src/index';
-import { Types } from 'graphql-codegen-plugin-helpers';
+import { Types } from '@graphql-codegen/plugin-helpers';
 
 const SHOULD_THROW_ERROR = 'SHOULD_THROW_ERROR';
 
@@ -9,8 +9,8 @@ describe('Schema AST', () => {
       const fileName = 'output.ts';
       const plugins: Types.ConfiguredPlugin[] = [
         {
-          'schema-ast': {}
-        }
+          'schema-ast': {},
+        },
       ];
 
       try {
@@ -27,11 +27,11 @@ describe('Schema AST', () => {
       const fileName = 'output.ts';
       const plugins: Types.ConfiguredPlugin[] = [
         {
-          add: {}
+          add: {},
         },
         {
-          'schema-ast': {}
-        }
+          'schema-ast': {},
+        },
       ];
 
       try {
@@ -45,8 +45,8 @@ describe('Schema AST', () => {
       const fileName = 'output.graphql';
       const plugins: Types.ConfiguredPlugin[] = [
         {
-          'schema-ast': {}
-        }
+          'schema-ast': {},
+        },
       ];
 
       try {

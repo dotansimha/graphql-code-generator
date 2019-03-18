@@ -1,4 +1,4 @@
-import { ClientSideBaseVisitor, ClientSideBasePluginConfig } from 'graphql-codegen-visitor-plugin-common';
+import { ClientSideBaseVisitor, ClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-common';
 import * as autoBind from 'auto-bind';
 import { FragmentDefinitionNode, OperationDefinitionNode, print, visit } from 'graphql';
 import { ApolloAngularRawPluginConfig } from './index';
@@ -15,18 +15,11 @@ export interface ApolloAngularPluginConfig extends ClientSideBasePluginConfig {
   namedClient?: string;
 }
 
-export class ApolloAngularVisitor extends ClientSideBaseVisitor<
-  ApolloAngularRawPluginConfig,
-  ApolloAngularPluginConfig
-> {
-  constructor(
-    fragments: FragmentDefinitionNode[],
-    private _allOperations: OperationDefinitionNode[],
-    rawConfig: ApolloAngularRawPluginConfig
-  ) {
+export class ApolloAngularVisitor extends ClientSideBaseVisitor<ApolloAngularRawPluginConfig, ApolloAngularPluginConfig> {
+  constructor(fragments: FragmentDefinitionNode[], private _allOperations: OperationDefinitionNode[], rawConfig: ApolloAngularRawPluginConfig) {
     super(fragments, rawConfig, {
       ngModule: rawConfig.ngModule,
-      namedClient: rawConfig.namedClient
+      namedClient: rawConfig.namedClient,
     });
 
     autoBind(this);
@@ -41,15 +34,13 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
     this._allOperations
       .filter(op => this._operationHasDirective(op, 'NgModule') || !!this.config.ngModule)
       .forEach(op => {
-        const def = this._operationHasDirective(op, 'NgModule')
-          ? this._extractNgModule(op)
-          : this._parseNgModule(this.config.ngModule);
+        const def = this._operationHasDirective(op, 'NgModule') ? this._extractNgModule(op) : this._parseNgModule(this.config.ngModule);
 
         // by setting key as link we easily get rid of duplicated imports
         // every path should be relative to the output file
         defs[def.link] = {
           path: def.path,
-          module: def.module
+          module: def.module,
         };
       });
 
@@ -73,7 +64,7 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
     return {
       path,
       module,
-      link
+      link,
     };
   }
 
@@ -89,7 +80,7 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
         if (node.name.value === directive) {
           found = true;
         }
-      }
+      },
     });
 
     return found;
@@ -150,20 +141,12 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
     return `'root'`;
   }
 
-  protected buildOperation(
-    node: OperationDefinitionNode,
-    documentVariableName: string,
-    operationType: string,
-    operationResultType: string,
-    operationVariablesTypes: string
-  ): string {
+  protected buildOperation(node: OperationDefinitionNode, documentVariableName: string, operationType: string, operationResultType: string, operationVariablesTypes: string): string {
     const content = `
   @Injectable({
     providedIn: ${this._providedIn(node)}
   })
-  export class ${this.convertName(
-    node
-  )}GQL extends Apollo.${operationType}<${operationResultType}, ${operationVariablesTypes}> {
+  export class ${this.convertName(node)}GQL extends Apollo.${operationType}<${operationResultType}, ${operationVariablesTypes}> {
     document = ${documentVariableName};
     ${this._namedClient(node)}
   }`;

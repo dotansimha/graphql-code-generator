@@ -1,4 +1,4 @@
-import 'graphql-codegen-testing';
+import '@graphql-codegen/testing';
 import { buildSchema } from 'graphql';
 import { plugin } from '../src';
 
@@ -48,8 +48,7 @@ describe('Flow Resolvers Plugin', () => {
       bar?: Resolver<$ElementType<Scalars, 'String'>, ParentType, Context>,
     }`);
 
-    expect(result)
-      .toBeSimilarStringTo(`export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<$ElementType<Scalars, 'MyScalar'>, any> {
+    expect(result).toBeSimilarStringTo(`export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<$ElementType<Scalars, 'MyScalar'>, any> {
       name: 'MyScalar'
     }`);
 
@@ -76,8 +75,7 @@ describe('Flow Resolvers Plugin', () => {
       id?: Resolver<$ElementType<Scalars, 'ID'>, ParentType, Context>,
     }`);
 
-    expect(result)
-      .toBeSimilarStringTo(`export interface SubscriptionResolvers<Context = any, ParentType = Subscription> {
+    expect(result).toBeSimilarStringTo(`export interface SubscriptionResolvers<Context = any, ParentType = Subscription> {
       somethingChanged?: SubscriptionResolver<?MyOtherType, ParentType, Context>,
     }`);
   });
@@ -85,17 +83,13 @@ describe('Flow Resolvers Plugin', () => {
   it('Should generate the correct imports when schema has scalars', () => {
     const result = plugin(buildSchema(`scalar MyScalar`), [], {}, { outputFile: '' });
 
-    expect(result).toBeSimilarStringTo(
-      `import { type GraphQLResolveInfo, type GraphQLScalarTypeConfig } from 'graphql';`
-    );
+    expect(result).toBeSimilarStringTo(`import { type GraphQLResolveInfo, type GraphQLScalarTypeConfig } from 'graphql';`);
   });
 
   it('Should generate the correct imports when schema has no scalars', () => {
     const result = plugin(buildSchema(`type MyType { f: String }`), [], {}, { outputFile: '' });
 
-    expect(result).not.toBeSimilarStringTo(
-      `import { type GraphQLResolveInfo, type GraphQLScalarTypeConfig } from 'graphql';`
-    );
+    expect(result).not.toBeSimilarStringTo(`import { type GraphQLResolveInfo, type GraphQLScalarTypeConfig } from 'graphql';`);
   });
 
   it('Should generate basic type resolvers with mapping', () => {
@@ -104,8 +98,8 @@ describe('Flow Resolvers Plugin', () => {
       [],
       {
         mappers: {
-          MyOtherType: 'MyCustomOtherType'
-        }
+          MyOtherType: 'MyCustomOtherType',
+        },
       },
       { outputFile: '' }
     );
@@ -157,8 +151,8 @@ describe('Flow Resolvers Plugin', () => {
       [],
       {
         mappers: {
-          MyOtherType: './some-file#MyCustomOtherType'
-        }
+          MyOtherType: './some-file#MyCustomOtherType',
+        },
       },
       { outputFile: '' }
     );
@@ -205,15 +199,8 @@ describe('Flow Resolvers Plugin', () => {
     `);
   });
   it('Should generate the correct resolver args type names when typesPrefix is specified', () => {
-    const result = plugin(
-      buildSchema(`type MyType { f(a: String): String }`),
-      [],
-      { typesPrefix: 'T' },
-      { outputFile: '' }
-    );
+    const result = plugin(buildSchema(`type MyType { f(a: String): String }`), [], { typesPrefix: 'T' }, { outputFile: '' });
 
-    expect(result).toBeSimilarStringTo(
-      `f?: Resolver<?$ElementType<Scalars, 'String'>, ParentType, Context, TMyTypeFArgs>,`
-    );
+    expect(result).toBeSimilarStringTo(`f?: Resolver<?$ElementType<Scalars, 'String'>, ParentType, Context, TMyTypeFArgs>,`);
   });
 });

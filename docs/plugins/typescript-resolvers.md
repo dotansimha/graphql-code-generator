@@ -13,7 +13,7 @@ A TypeScript project with `@types/graphql` installed.
 
 Install using `npm` (or `yarn`):
 
-    $ npm install graphql-codegen-typescript-resolvers
+    $ npm install @graphql-codegen/typescript-resolvers
 
 ## Usage
 
@@ -35,7 +35,7 @@ Import the types from the generated file and use in the resolver:
 import { QueryResolvers } from './resolvers-types';
 
 export const resolvers: QueryResolvers = {
-  myQuery: (root, args, context) => {}
+  myQuery: (root, args, context) => {},
 };
 ```
 
@@ -46,31 +46,14 @@ This will make the resolver fully typed and compatible with typescript compiler,
 It adds the generic resolvers signature to the top of the file:
 
 ```typescript
-export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
-  parent: Parent,
-  args: Args,
-  context: Context,
-  info: GraphQLResolveInfo
-) => Promise<Result> | Result;
+export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (parent: Parent, args: Args, context: Context, info: GraphQLResolveInfo) => Promise<Result> | Result;
 
 export interface ISubscriptionResolverObject<Result, Parent, Context, Args> {
-  subscribe<R = Result, P = Parent>(
-    parent: P,
-    args: Args,
-    context: Context,
-    info: GraphQLResolveInfo
-  ): AsyncIterator<R | Result>;
-  resolve?<R = Result, P = Parent>(
-    parent: P,
-    args: Args,
-    context: Context,
-    info: GraphQLResolveInfo
-  ): R | Result | Promise<R | Result>;
+  subscribe<R = Result, P = Parent>(parent: P, args: Args, context: Context, info: GraphQLResolveInfo): AsyncIterator<R | Result>;
+  resolve?<R = Result, P = Parent>(parent: P, args: Args, context: Context, info: GraphQLResolveInfo): R | Result | Promise<R | Result>;
 }
 
-export type SubscriptionResolver<Result, Parent = {}, Context = {}, Args = {}> =
-  | ((...args: any[]) => ISubscriptionResolverObject<Result, Parent, Context, Args>)
-  | ISubscriptionResolverObject<Result, Parent, Context, Args>;
+export type SubscriptionResolver<Result, Parent = {}, Context = {}, Args = {}> = ((...args: any[]) => ISubscriptionResolverObject<Result, Parent, Context, Args>) | ISubscriptionResolverObject<Result, Parent, Context, Args>;
 ```
 
 Then, it creates a default TypeScript resolvers signature, according to your GraphQL schema:
@@ -230,7 +213,7 @@ export const resolvers: QueryResolvers = {
   myQuery: (root, args, context) => {
     const { authToken } = context;
     // ...
-  }
+  },
 };
 ```
 

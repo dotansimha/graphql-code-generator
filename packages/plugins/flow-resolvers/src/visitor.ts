@@ -1,8 +1,8 @@
 import { FlowResolversPluginConfig } from './index';
 import { ListTypeNode, NamedTypeNode, NonNullTypeNode, GraphQLSchema } from 'graphql';
 import * as autoBind from 'auto-bind';
-import { ParsedResolversConfig, BaseResolversVisitor } from 'graphql-codegen-visitor-plugin-common';
-import { FlowOperationVariablesToObject } from 'graphql-codegen-flow';
+import { ParsedResolversConfig, BaseResolversVisitor } from '@graphql-codegen/visitor-plugin-common';
+import { FlowOperationVariablesToObject } from '@graphql-codegen/flow';
 
 export interface ParsedFlorResolversConfig extends ParsedResolversConfig {}
 

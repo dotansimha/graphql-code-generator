@@ -1,6 +1,6 @@
-import { Types, PluginValidateFn, PluginFunction } from 'graphql-codegen-plugin-helpers';
+import { Types, PluginValidateFn, PluginFunction } from '@graphql-codegen/plugin-helpers';
 import { visit, GraphQLSchema, concatAST, Kind, FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
-import { RawClientSideBasePluginConfig } from 'graphql-codegen-visitor-plugin-common';
+import { RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-common';
 import { ApolloAngularVisitor } from './visitor';
 import { extname } from 'path';
 import gql from 'graphql-tag';
@@ -10,11 +10,7 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
   namedClient?: string;
 }
 
-export const plugin: PluginFunction<ApolloAngularRawPluginConfig> = (
-  schema: GraphQLSchema,
-  documents: Types.DocumentFile[],
-  config
-) => {
+export const plugin: PluginFunction<ApolloAngularRawPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config) => {
   const allAst = concatAST(
     documents.reduce((prev, v) => {
       return [...prev, v.content];
@@ -30,11 +26,7 @@ export const plugin: PluginFunction<ApolloAngularRawPluginConfig> = (
   const visitor = new ApolloAngularVisitor(allFragments, operations, config) as any;
   const visitorResult = visit(allAst, { leave: visitor });
 
-  return [
-    visitor.getImports(),
-    visitor.fragments,
-    ...visitorResult.definitions.filter(t => typeof t === 'string')
-  ].join('\n');
+  return [visitor.getImports(), visitor.fragments, ...visitorResult.definitions.filter(t => typeof t === 'string')].join('\n');
 };
 
 export const addToSchema = gql`
@@ -42,12 +34,7 @@ export const addToSchema = gql`
   directive @namedClient(name: String!) on OBJECT | FIELD
 `;
 
-export const validate: PluginValidateFn<any> = async (
-  schema: GraphQLSchema,
-  documents: Types.DocumentFile[],
-  config,
-  outputFile: string
-) => {
+export const validate: PluginValidateFn<any> = async (schema: GraphQLSchema, documents: Types.DocumentFile[], config, outputFile: string) => {
   if (extname(outputFile) !== '.ts') {
     throw new Error(`Plugin "apollo-angular" requires extension to be ".ts"!`);
   }

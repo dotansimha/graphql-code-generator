@@ -1,25 +1,18 @@
-import {
-  ClientSideBaseVisitor,
-  ClientSideBasePluginConfig,
-  getConfigValue
-} from 'graphql-codegen-visitor-plugin-common';
+import { ClientSideBaseVisitor, ClientSideBasePluginConfig, getConfigValue } from '@graphql-codegen/visitor-plugin-common';
 import { StencilApolloRawPluginConfig, StencilComponentType } from './index';
 import * as autoBind from 'auto-bind';
-import { FragmentDefinitionNode, print, OperationDefinitionNode } from 'graphql';
-import { toPascalCase } from 'graphql-codegen-plugin-helpers';
+import { FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
+import { toPascalCase } from '@graphql-codegen/plugin-helpers';
 import * as changeCase from 'change-case';
 
 export interface StencilApolloPluginConfig extends ClientSideBasePluginConfig {
   componentType: StencilComponentType;
 }
 
-export class StencilApolloVisitor extends ClientSideBaseVisitor<
-  StencilApolloRawPluginConfig,
-  StencilApolloPluginConfig
-> {
+export class StencilApolloVisitor extends ClientSideBaseVisitor<StencilApolloRawPluginConfig, StencilApolloPluginConfig> {
   constructor(fragments: FragmentDefinitionNode[], rawConfig: StencilApolloRawPluginConfig) {
     super(fragments, rawConfig, {
-      componentType: getConfigValue(rawConfig.componentType, StencilComponentType.functional)
+      componentType: getConfigValue(rawConfig.componentType, StencilComponentType.functional),
     } as any);
 
     autoBind(this);
@@ -36,13 +29,7 @@ export class StencilApolloVisitor extends ClientSideBaseVisitor<
     return [baseImports, ...imports].join('\n');
   }
 
-  private _buildOperationFunctionalComponent(
-    node: OperationDefinitionNode,
-    documentVariableName: string,
-    operationType: string,
-    operationResultType: string,
-    operationVariablesTypes: string
-  ): string {
+  private _buildOperationFunctionalComponent(node: OperationDefinitionNode, documentVariableName: string, operationType: string, operationResultType: string, operationVariablesTypes: string): string {
     const operationName: string = this.convertName(node.name.value);
     const propsTypeName: string = this.convertName(operationName + 'Props');
     const apolloStencilComponentTag = changeCase.paramCase(`Apollo${operationType}`);
@@ -63,13 +50,7 @@ export class StencilApolloVisitor extends ClientSideBaseVisitor<
     return [propsVar, component].filter(a => a).join('\n');
   }
 
-  private _buildClassComponent(
-    node: OperationDefinitionNode,
-    documentVariableName: string,
-    operationType: string,
-    operationResultType: string,
-    operationVariablesTypes: string
-  ): string {
+  private _buildClassComponent(node: OperationDefinitionNode, documentVariableName: string, operationType: string, operationResultType: string, operationVariablesTypes: string): string {
     const componentName: string = this.convertName(node.name.value + 'Component');
     const apolloStencilComponentTag = changeCase.paramCase(`Apollo${operationType}`);
     const onReadySignature = toPascalCase(`On${operationType}ReadyFn`);
@@ -87,30 +68,12 @@ export class StencilApolloVisitor extends ClientSideBaseVisitor<
       `;
   }
 
-  protected buildOperation(
-    node: OperationDefinitionNode,
-    documentVariableName: string,
-    operationType: string,
-    operationResultType: string,
-    operationVariablesTypes: string
-  ): string {
+  protected buildOperation(node: OperationDefinitionNode, documentVariableName: string, operationType: string, operationResultType: string, operationVariablesTypes: string): string {
     switch (this.config.componentType) {
       case StencilComponentType.class:
-        return this._buildClassComponent(
-          node,
-          documentVariableName,
-          operationType,
-          operationResultType,
-          operationVariablesTypes
-        );
+        return this._buildClassComponent(node, documentVariableName, operationType, operationResultType, operationVariablesTypes);
       case StencilComponentType.functional:
-        return this._buildOperationFunctionalComponent(
-          node,
-          documentVariableName,
-          operationType,
-          operationResultType,
-          operationVariablesTypes
-        );
+        return this._buildOperationFunctionalComponent(node, documentVariableName, operationType, operationResultType, operationVariablesTypes);
       default:
         return '';
     }

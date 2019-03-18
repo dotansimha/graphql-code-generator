@@ -1,5 +1,5 @@
 import { executeCodegen } from '../codegen';
-import { Types } from 'graphql-codegen-plugin-helpers';
+import { Types } from '@graphql-codegen/plugin-helpers';
 import { normalizeInstanceOrArray, normalizeOutputParam } from '../helpers';
 import * as isValidPath from 'is-valid-path';
 import * as isGlob from 'is-glob';
@@ -16,10 +16,7 @@ function emitWatching() {
   log(`${logSymbols.info} Watching for changes...`);
 }
 
-export const createWatcher = (
-  config: Types.Config,
-  onNext: (result: Types.FileOutput[]) => Promise<Types.FileOutput[]>
-) => {
+export const createWatcher = (config: Types.Config, onNext: (result: Types.FileOutput[]) => Promise<Types.FileOutput[]>) => {
   debugLog(`[Watcher] Starting watcher...`);
   const files: string[] = [];
   const documents = normalizeInstanceOrArray<Types.OperationDocument>(config.documents);
@@ -71,7 +68,7 @@ export const createWatcher = (
       depth: 99,
       awaitWriteFinish: true,
       ignorePermissionErrors: false,
-      atomic: true
+      atomic: true,
     });
 
     debugLog(`[Watcher] Started`);

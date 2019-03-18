@@ -11,7 +11,7 @@ It generates types for your entire schema: types, input types, enums, interfaces
 
 Install using `npm` (or `yarn`):
 
-    $ npm install graphql-codegen-typescript
+    $ npm install @graphql-codegen/typescript
 
 ### Examples
 

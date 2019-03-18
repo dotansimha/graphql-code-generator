@@ -1,7 +1,7 @@
 {
-  "name": "graphql-codegen-plugin-helpers",
+  "name": "@graphql-codegen/plugin-helpers",
   "version": "0.18.0",
-  "description": "graphql-codegen-cli template for TypeScript typings for both client side and server side",
+  "description": "GraphQL Code Generator common utils and types",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
   "scripts": {

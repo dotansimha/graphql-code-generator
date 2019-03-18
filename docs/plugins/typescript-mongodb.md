@@ -33,7 +33,7 @@ This interface can be used for db read/write purposes, thus making communication
 
 Install using `npm` (or `yarn`):
 
-    $ npm install graphql-codegen-typescript-mongodb
+    $ npm install @graphql-codegen/typescript-mongodb
 
 ## Usage
 
@@ -41,14 +41,14 @@ Once installed, add the directives declaration to your GraphQL Schema definition
 
 ```typescript
 import { makeExecutableSchema } from 'graphql-tools';
-import { DIRECTIVES } from 'graphql-codegen-typescript-mongodb';
+import { DIRECTIVES } from '@graphql-codegen/typescript-mongodb';
 
 const schema = makeExecutableSchema({
   typeDefs: [
-    DIRECTIVES
+    DIRECTIVES,
     // the rest of your GraphQL types
   ],
-  resolvers
+  resolvers,
 });
 ```
 

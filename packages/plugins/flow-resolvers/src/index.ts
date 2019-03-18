@@ -1,15 +1,11 @@
-import { RawResolversConfig } from 'graphql-codegen-visitor-plugin-common';
-import { Types, PluginFunction } from 'graphql-codegen-plugin-helpers';
+import { RawResolversConfig } from '@graphql-codegen/visitor-plugin-common';
+import { Types, PluginFunction } from '@graphql-codegen/plugin-helpers';
 import { isScalarType, parse, printSchema, visit, GraphQLSchema } from 'graphql';
 import { FlowResolversVisitor } from './visitor';
 
 export interface FlowResolversPluginConfig extends RawResolversConfig {}
 
-export const plugin: PluginFunction<FlowResolversPluginConfig> = (
-  schema: GraphQLSchema,
-  documents: Types.DocumentFile[],
-  config: FlowResolversPluginConfig
-) => {
+export const plugin: PluginFunction<FlowResolversPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: FlowResolversPluginConfig) => {
   const imports = ['type GraphQLResolveInfo'];
   const hasScalars = Object.values(schema.getTypeMap())
     .filter(t => t.astNode)
@@ -77,11 +73,5 @@ export type DirectiveResolverFn<Result = {}, Parent = {}, Args = {}, Context = {
   const visitorResult = visit(astNode, { leave: visitor });
   const { getRootResolver, getAllDirectiveResolvers, mappersImports } = visitor;
 
-  return [
-    ...mappersImports,
-    header,
-    ...visitorResult.definitions.filter(d => typeof d === 'string'),
-    getRootResolver(),
-    getAllDirectiveResolvers()
-  ].join('\n');
+  return [...mappersImports, header, ...visitorResult.definitions.filter(d => typeof d === 'string'), getRootResolver(), getAllDirectiveResolvers()].join('\n');
 };

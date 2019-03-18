@@ -1,5 +1,5 @@
 import { GraphQLSchema, parse, execute } from 'graphql';
-import { PluginFunction, PluginValidateFn, Types } from 'graphql-codegen-plugin-helpers';
+import { PluginFunction, PluginValidateFn, Types } from '@graphql-codegen/plugin-helpers';
 import { extname } from 'path';
 
 interface IntrospectionResultData {
@@ -23,18 +23,13 @@ export interface FragmentMatcherConfig {
 const extensions = {
   ts: ['.ts', '.tsx'],
   js: ['.js', '.jsx'],
-  json: ['.json']
+  json: ['.json'],
 };
 
-export const plugin: PluginFunction = async (
-  schema: GraphQLSchema,
-  _documents,
-  pluginConfig: FragmentMatcherConfig,
-  info
-): Promise<string> => {
+export const plugin: PluginFunction = async (schema: GraphQLSchema, _documents, pluginConfig: FragmentMatcherConfig, info): Promise<string> => {
   const config: Required<FragmentMatcherConfig> = {
     module: 'es2015',
-    ...pluginConfig
+    ...pluginConfig,
   };
 
   const introspection = await execute<IntrospectionResultData>({
@@ -51,7 +46,7 @@ export const plugin: PluginFunction = async (
           }
         }
       }
-    `)
+    `),
   });
   const ext = extname(info.outputFile).toLowerCase();
 
@@ -62,8 +57,8 @@ export const plugin: PluginFunction = async (
   const filteredData: IntrospectionResultData = {
     __schema: {
       ...introspection.data.__schema,
-      types: introspection.data.__schema.types.filter(type => type.kind === 'UNION' || type.kind === 'INTERFACE')
-    }
+      types: introspection.data.__schema.types.filter(type => type.kind === 'UNION' || type.kind === 'INTERFACE'),
+    },
   };
   const content = JSON.stringify(filteredData, null, 2);
 
@@ -102,19 +97,12 @@ export const plugin: PluginFunction = async (
   throw new Error(`Extension ${ext} is not supported`);
 };
 
-export const validate: PluginValidateFn<any> = async (
-  _schema: GraphQLSchema,
-  _documents: Types.DocumentFile[],
-  config: FragmentMatcherConfig,
-  outputFile: string
-) => {
+export const validate: PluginValidateFn<any> = async (_schema: GraphQLSchema, _documents: Types.DocumentFile[], config: FragmentMatcherConfig, outputFile: string) => {
   const ext = extname(outputFile).toLowerCase();
   const all = Object.values(extensions).reduce((acc, exts) => [...acc, ...exts], []);
 
   if (!all.includes(ext)) {
-    throw new Error(
-      `Plugin "fragment-matcher" requires extension to be one of ${all.map(val => val.replace('.', '')).join(', ')}!`
-    );
+    throw new Error(`Plugin "fragment-matcher" requires extension to be one of ${all.map(val => val.replace('.', '')).join(', ')}!`);
   }
 
   if (config.module === 'commonjs' && extensions.ts.includes(ext)) {

@@ -1,5 +1,5 @@
-import { RawConfig } from 'graphql-codegen-visitor-plugin-common';
-import { Types, PluginFunction, PluginValidateFn } from 'graphql-codegen-plugin-helpers';
+import { RawConfig } from '@graphql-codegen/visitor-plugin-common';
+import { Types, PluginFunction, PluginValidateFn } from '@graphql-codegen/plugin-helpers';
 import { parse, visit, GraphQLSchema } from 'graphql';
 import { printSchemaWithDirectives } from 'graphql-toolkit';
 import { extname } from 'path';
@@ -15,11 +15,7 @@ export interface TypeScriptMongoPluginConfig extends RawConfig {
   avoidOptionals?: boolean;
 }
 
-export const plugin: PluginFunction<TypeScriptMongoPluginConfig> = (
-  schema: GraphQLSchema,
-  documents: Types.DocumentFile[],
-  config: TypeScriptMongoPluginConfig
-) => {
+export const plugin: PluginFunction<TypeScriptMongoPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: TypeScriptMongoPluginConfig) => {
   const visitor = new TsMongoVisitor(schema, config);
   const printedSchema = printSchemaWithDirectives(schema);
   const astNode = parse(printedSchema);
@@ -37,14 +33,12 @@ export enum Directives {
   LINK = 'link',
   COLUMN = 'column',
   EMBEDDED = 'embedded',
-  MAP = 'map'
+  MAP = 'map',
 }
 
 export const DIRECTIVES = gql`
   directive @${Directives.UNION}(discriminatorField: String, additionalFields: [AdditionalEntityFields]) on UNION
-  directive @${
-    Directives.ABSTRACT_ENTITY
-  }(discriminatorField: String!, additionalFields: [AdditionalEntityFields]) on INTERFACE
+  directive @${Directives.ABSTRACT_ENTITY}(discriminatorField: String!, additionalFields: [AdditionalEntityFields]) on INTERFACE
   directive @${Directives.ENTITY}(embedded: Boolean, additionalFields: [AdditionalEntityFields]) on OBJECT
   directive @${Directives.COLUMN}(overrideType: String) on FIELD_DEFINITION
   directive @${Directives.ID} on FIELD_DEFINITION
@@ -60,12 +54,7 @@ export const DIRECTIVES = gql`
 
 export const addToSchema = DIRECTIVES;
 
-export const validate: PluginValidateFn<any> = async (
-  schema: GraphQLSchema,
-  documents: Types.DocumentFile[],
-  config: any,
-  outputFile: string
-) => {
+export const validate: PluginValidateFn<any> = async (schema: GraphQLSchema, documents: Types.DocumentFile[], config: any, outputFile: string) => {
   if (extname(outputFile) !== '.ts') {
     throw new Error(`Plugin "typescript-mongodb" requires extension to be ".ts"!`);
   }

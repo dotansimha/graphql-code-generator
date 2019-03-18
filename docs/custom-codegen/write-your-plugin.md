@@ -11,11 +11,11 @@ To get started with writing your GraphQL Code-Generator Plugin, start by creatin
 module.exports = {
   plugin: (schema, documents, config) => {
     return 'Hi!';
-  }
+  },
 };
 ```
 
-The exported object should match the [`CodegenPlugin`](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/graphql-codegen-core/src/yml-config-types.ts#L68-L72) interface.
+The exported object should match the [`CodegenPlugin`](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/utils/plugins-helpers/src/types.ts#L89-L93) interface.
 
 Now, let's try to load and use it with the codegen. Specify the path to your `.js` file in your `codegen.yml` config file:
 
@@ -27,7 +27,7 @@ generates:
     - my-plugin.js
 ```
 
-Now, run the `graphql-code-generator` using `gql-gen` command, and it will create a file called `output.ts` with `Hi!`
+Now, run the `@graphql-codegen/cli` using `graphql-codegen` (or, `gql-gen`) command, and it will create a file called `output.ts` with `Hi!`
 
 ## Using the `GraphQLSchema`
 
@@ -43,7 +43,7 @@ module.exports = {
     const typesMap = schema.getTypeMap();
 
     return Object.keys(typesMap).join('\n');
-  }
+  },
 };
 ```
 
@@ -67,7 +67,7 @@ module.exports = {
         return `File ${doc.filePath} contains: ${docsNames.join(', ')}`;
       })
       .join('\n');
-  }
+  },
 };
 ```
 
@@ -102,7 +102,7 @@ module.exports = {
     } else {
       return 'bar';
     }
-  }
+  },
 };
 ```
 

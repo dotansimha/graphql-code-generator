@@ -13,7 +13,7 @@ To shed some more light regards this template, it's recommended to go through th
 
 Install using `npm` (or `yarn`):
 
-    $ npm install graphql-codegen-typescript-apollo-angular
+    $ npm install @graphql-codegen/typescript-apollo-angular
 
 ## Example
 
@@ -40,7 +40,7 @@ import { MyFeedGQL, Feed } from './graphql';
     <ul>
       <li *ngFor="let item of (feed | async)">{{ item.id }}</li>
     </ul>
-  `
+  `,
 })
 export class FeedComponent {
   feed: Observable<Feed[]>;

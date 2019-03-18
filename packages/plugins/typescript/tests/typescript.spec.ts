@@ -1,4 +1,4 @@
-import 'graphql-codegen-testing';
+import '@graphql-codegen/testing';
 import { buildSchema, parse } from 'graphql';
 import { validateTs } from './validate';
 import { plugin } from '../src/index';
@@ -18,9 +18,7 @@ describe('TypeScript', () => {
       }`);
 
       const result = await plugin(schema, [], {}, { outputFile: '' });
-      expect(result).toBeSimilarStringTo(
-        `export type Any = Scalars['String'] | Scalars['Int'] | Scalars['Float'] | Scalars['ID'];`
-      );
+      expect(result).toBeSimilarStringTo(`export type Any = Scalars['String'] | Scalars['Int'] | Scalars['Float'] | Scalars['ID'];`);
       expect(result).toBeSimilarStringTo(`
       export type CardEdge = {
         count: Scalars['Int'],
@@ -120,8 +118,8 @@ describe('TypeScript', () => {
         {
           namingConvention: {
             typeNames: 'change-case#lowerCase',
-            enumValues: 'keep'
-          }
+            enumValues: 'keep',
+          },
         },
         { outputFile: '' }
       );
@@ -166,8 +164,8 @@ describe('TypeScript', () => {
         {
           namingConvention: {
             typeNames: 'keep',
-            enumValues: 'change-case#lowerCase'
-          }
+            enumValues: 'change-case#lowerCase',
+          },
         },
         { outputFile: '' }
       );
@@ -226,7 +224,7 @@ describe('TypeScript', () => {
         [{ filePath: '', content: query }],
         {},
         {
-          outputFile: 'graphql.ts'
+          outputFile: 'graphql.ts',
         }
       );
 
@@ -517,12 +515,7 @@ describe('TypeScript', () => {
 
     it('Should use custom namingConvention and add custom prefix', async () => {
       const schema = buildSchema(`type MyType { foo(a: String!, b: String, c: [String], d: [Int!]!): String }`);
-      const result = await plugin(
-        schema,
-        [],
-        { namingConvention: 'change-case#lowerCase', typesPrefix: 'I' },
-        { outputFile: '' }
-      );
+      const result = await plugin(schema, [], { namingConvention: 'change-case#lowerCase', typesPrefix: 'I' }, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(`
         export type Imytypefooargs = {
@@ -769,9 +762,7 @@ describe('TypeScript', () => {
     });
 
     it('Should generate correctly types for field arguments - with default value', async () => {
-      const schema = buildSchema(
-        `type MyType { foo(a: String = "default", b: String! = "default", c: String): String }`
-      );
+      const schema = buildSchema(`type MyType { foo(a: String = "default", b: String! = "default", c: String): String }`);
       const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(`
@@ -786,9 +777,7 @@ describe('TypeScript', () => {
     });
 
     it('Should generate correctly types for field arguments - with input type', async () => {
-      const schema = buildSchema(
-        `input MyInput { f: String } type MyType { foo(a: MyInput, b: MyInput!, c: [MyInput], d: [MyInput]!, e: [MyInput!]!): String }`
-      );
+      const schema = buildSchema(`input MyInput { f: String } type MyType { foo(a: MyInput, b: MyInput!, c: [MyInput], d: [MyInput]!, e: [MyInput!]!): String }`);
       const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(`

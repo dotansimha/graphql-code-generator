@@ -1,38 +1,13 @@
-import { SelectionSetToObject, ConvertNameFn, ScalarsMap } from 'graphql-codegen-visitor-plugin-common';
-import {
-  GraphQLSchema,
-  GraphQLNamedType,
-  SelectionSetNode,
-  GraphQLObjectType,
-  GraphQLNonNull,
-  GraphQLList,
-  isNonNullType,
-  isListType
-} from 'graphql';
+import { SelectionSetToObject, ConvertNameFn, ScalarsMap } from '@graphql-codegen/visitor-plugin-common';
+import { GraphQLSchema, GraphQLNamedType, SelectionSetNode, GraphQLObjectType, GraphQLNonNull, GraphQLList, isNonNullType, isListType } from 'graphql';
 
 export class TypeScriptSelectionSetToObject extends SelectionSetToObject {
-  constructor(
-    _scalars: ScalarsMap,
-    _schema: GraphQLSchema,
-    _convertName: ConvertNameFn,
-    _addTypename: boolean,
-    private _immutableTypes: boolean,
-    _parentSchemaType?: GraphQLNamedType,
-    _selectionSet?: SelectionSetNode
-  ) {
+  constructor(_scalars: ScalarsMap, _schema: GraphQLSchema, _convertName: ConvertNameFn, _addTypename: boolean, private _immutableTypes: boolean, _parentSchemaType?: GraphQLNamedType, _selectionSet?: SelectionSetNode) {
     super(_scalars, _schema, _convertName, _addTypename, _parentSchemaType, _selectionSet);
   }
 
   public createNext(parentSchemaType: GraphQLNamedType, selectionSet: SelectionSetNode): SelectionSetToObject {
-    return new TypeScriptSelectionSetToObject(
-      this._scalars,
-      this._schema,
-      this._convertName,
-      this._addTypename,
-      this._immutableTypes,
-      parentSchemaType,
-      selectionSet
-    );
+    return new TypeScriptSelectionSetToObject(this._scalars, this._schema, this._convertName, this._addTypename, this._immutableTypes, parentSchemaType, selectionSet);
   }
 
   private clearOptional(str: string): string {
@@ -47,10 +22,7 @@ export class TypeScriptSelectionSetToObject extends SelectionSetToObject {
     return this._immutableTypes ? `readonly ${name}` : name;
   }
 
-  protected wrapTypeWithModifiers(
-    baseType: string,
-    type: GraphQLObjectType | GraphQLNonNull<GraphQLObjectType> | GraphQLList<GraphQLObjectType>
-  ): string {
+  protected wrapTypeWithModifiers(baseType: string, type: GraphQLObjectType | GraphQLNonNull<GraphQLObjectType> | GraphQLList<GraphQLObjectType>): string {
     if (isNonNullType(type)) {
       return this.clearOptional(this.wrapTypeWithModifiers(baseType, type.ofType));
     } else if (isListType(type)) {

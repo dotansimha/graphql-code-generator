@@ -67,13 +67,13 @@ First we gotta make sure that the basic GraphQL package is within our dependenci
 
 The we can install GraphQL Code Generator using `yarn` (or `npm`):
 
-    $ npm install -D graphql-code-generator
+    $ npm install -D @graphql-codegen/cli
 
 ## Initialization Wizard
 
 GraphQL Code Generator lets you setup everything by simply running the following command:
 
-    $ gql-gen init
+    $ graphql-codegen init
 
 Question by question, it will guide you through the whole process of setting up a schema, selecting and intalling plugins, picking a destination of a generated file and a lot more.
 
@@ -83,14 +83,14 @@ If you don't want to use the wizard, we've got you covered, just continue readin
 
 GraphQL Code Generator's behavior is bound into plugins, thus we will need to install one of them:
 
-    $ npm install -D graphql-codegen-typescript
+    $ npm install -D @graphql-codegen/typescript
 
 Although can be used directly, it's recommended to add the code generation task as an `npm` script in `package.json`. This way we won't have to install GraphQL Code Generator globally:
 
 ```json
 {
   "scripts": {
-    "generate": "gql-gen"
+    "generate": "graphql-codegen"
   }
 }
 ```
@@ -116,10 +116,10 @@ There are different methods to use GraphQL Code Generator besides the [CLI](../c
 
 ### Using in Runtime
 
-We can `require()` (or `import`) `graphql-code-generator` directly with Node.JS:
+We can `require()` (or `import`) `@graphql-codegen/core` directly with Node.JS:
 
 ```js
-import { generate } from 'graphql-code-generator';
+import { generate } from '@graphql-codegen/core';
 
 async function doSomething() {
   const generatedFiles = await generate(
@@ -129,9 +129,9 @@ async function doSomething() {
       documents: './src/**/*.graphql',
       generates: {
         [process.cwd() + '/models/']: {
-          plugins: ['typescript']
-        }
-      }
+          plugins: ['typescript'],
+        },
+      },
     },
     true
   );
@@ -144,9 +144,3 @@ The `generate` function accepts two parameters:
 - `saveToFile: boolean`
 
 The return value should be of type `Promise<FileOutput[]>`.
-
-### Using With Other Environments
-
-Although GraphQL codegen was built on top of Node.JS it is still fully compatible with other environments by installing it globally and the right command to your build process:
-
-    $ sudo npm install -g graphql-code-generator

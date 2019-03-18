@@ -9,7 +9,7 @@ title: Time
 
 Install using `npm` (or `yarn`):
 
-    $ npm install graphql-codegen-time
+    $ npm install @graphql-codegen/time
 
 ## Examples
 

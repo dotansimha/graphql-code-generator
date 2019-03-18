@@ -3,7 +3,7 @@ id: flow
 title: Flow Types
 ---
 
-The `graphql-codegen-flow` plugin generates Flow types based on your `GraphQLSchema`.
+The `@graphql-codegen/flow` plugin generates Flow types based on your `GraphQLSchema`.
 
 It generates types for your entire schema: types, input types, enum, interface, scalar and union.
 
@@ -11,7 +11,7 @@ It generates types for your entire schema: types, input types, enum, interface, 
 
 Install using `npm` (or `yarn`):
 
-    $ npm install graphql-codegen-flow
+    $ npm install @graphql-codegen/flow
 
 ### Examples
 

@@ -1,19 +1,6 @@
-import { Types, PluginFunction } from 'graphql-codegen-plugin-helpers';
-import {
-  parse,
-  printSchema,
-  visit,
-  GraphQLSchema,
-  TypeInfo,
-  GraphQLNamedType,
-  visitWithTypeInfo,
-  getNamedType,
-  isIntrospectionType,
-  DocumentNode,
-  printIntrospectionSchema,
-  isObjectType
-} from 'graphql';
-import { RawTypesConfig } from 'graphql-codegen-visitor-plugin-common';
+import { Types, PluginFunction } from '@graphql-codegen/plugin-helpers';
+import { parse, printSchema, visit, GraphQLSchema, TypeInfo, GraphQLNamedType, visitWithTypeInfo, getNamedType, isIntrospectionType, DocumentNode, printIntrospectionSchema, isObjectType } from 'graphql';
+import { RawTypesConfig } from '@graphql-codegen/visitor-plugin-common';
 import { TsVisitor } from './visitor';
 import { TsIntrospectionVisitor } from './introspection-visitor';
 export * from './typescript-variables-to-object';
@@ -27,11 +14,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
   maybeValue?: string;
 }
 
-export const plugin: PluginFunction<TypeScriptPluginConfig> = (
-  schema: GraphQLSchema,
-  documents: Types.DocumentFile[],
-  config: TypeScriptPluginConfig
-) => {
+export const plugin: PluginFunction<TypeScriptPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: TypeScriptPluginConfig) => {
   const visitor = new TsVisitor(schema, config);
   const printedSchema = printSchema(schema);
   const astNode = parse(printedSchema);
@@ -43,11 +26,7 @@ export const plugin: PluginFunction<TypeScriptPluginConfig> = (
   return [header, scalars, ...visitorResult.definitions, ...introspectionDefinitions].join('\n');
 };
 
-function includeIntrospectionDefinitions(
-  schema: GraphQLSchema,
-  documents: Types.DocumentFile[],
-  config: TypeScriptPluginConfig
-): string[] {
+function includeIntrospectionDefinitions(schema: GraphQLSchema, documents: Types.DocumentFile[], config: TypeScriptPluginConfig): string[] {
   const typeInfo = new TypeInfo(schema);
   const usedTypes: GraphQLNamedType[] = [];
   const documentsVisitor = visitWithTypeInfo(typeInfo, {
@@ -57,7 +36,7 @@ function includeIntrospectionDefinitions(
       if (isIntrospectionType(type) && !usedTypes.includes(type)) {
         usedTypes.push(type);
       }
-    }
+    },
   });
 
   documents.forEach(doc => visit(doc.content, documentsVisitor));

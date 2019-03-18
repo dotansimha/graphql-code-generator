@@ -1,6 +1,6 @@
-import { Types, PluginValidateFn, PluginFunction } from 'graphql-codegen-plugin-helpers';
+import { Types, PluginValidateFn, PluginFunction } from '@graphql-codegen/plugin-helpers';
 import { visit, GraphQLSchema, concatAST, Kind, FragmentDefinitionNode } from 'graphql';
-import { RawClientSideBasePluginConfig } from 'graphql-codegen-visitor-plugin-common';
+import { RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-common';
 import { ReactApolloVisitor } from './visitor';
 import { extname } from 'path';
 
@@ -13,11 +13,7 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
   noGraphQLTag?: boolean;
 }
 
-export const plugin: PluginFunction<ReactApolloRawPluginConfig> = (
-  schema: GraphQLSchema,
-  documents: Types.DocumentFile[],
-  config: ReactApolloRawPluginConfig
-) => {
+export const plugin: PluginFunction<ReactApolloRawPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: ReactApolloRawPluginConfig) => {
   const allAst = concatAST(
     documents.reduce((prev, v) => {
       return [...prev, v.content];
@@ -33,19 +29,10 @@ export const plugin: PluginFunction<ReactApolloRawPluginConfig> = (
   const visitor = new ReactApolloVisitor(allFragments, config) as any;
   const visitorResult = visit(allAst, { leave: visitor });
 
-  return [
-    visitor.getImports(),
-    visitor.fragments,
-    ...visitorResult.definitions.filter(t => typeof t === 'string')
-  ].join('\n');
+  return [visitor.getImports(), visitor.fragments, ...visitorResult.definitions.filter(t => typeof t === 'string')].join('\n');
 };
 
-export const validate: PluginValidateFn<any> = async (
-  schema: GraphQLSchema,
-  documents: Types.DocumentFile[],
-  config: ReactApolloRawPluginConfig,
-  outputFile: string
-) => {
+export const validate: PluginValidateFn<any> = async (schema: GraphQLSchema, documents: Types.DocumentFile[], config: ReactApolloRawPluginConfig, outputFile: string) => {
   if (config.withComponent === false) {
     if (extname(outputFile) !== '.ts' && extname(outputFile) !== '.tsx') {
       throw new Error(`Plugin "react-apollo" with "noComponents" requires extension to be ".ts" or ".tsx"!`);

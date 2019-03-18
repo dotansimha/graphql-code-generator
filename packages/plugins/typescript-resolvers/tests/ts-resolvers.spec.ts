@@ -1,4 +1,4 @@
-import 'graphql-codegen-testing';
+import '@graphql-codegen/testing';
 import { buildSchema } from 'graphql';
 import { plugin } from '../src';
 import { plugin as tsPlugin } from '../../typescript/src/index';
@@ -56,8 +56,7 @@ describe('TypeScript Resolvers Plugin', () => {
       bar?: Resolver<Scalars['String'], ParentType, Context>,
     }`);
 
-    expect(result)
-      .toBeSimilarStringTo(`export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<Scalars['MyScalar'], any> {
+    expect(result).toBeSimilarStringTo(`export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<Scalars['MyScalar'], any> {
       name: 'MyScalar'
     }`);
 
@@ -84,8 +83,7 @@ describe('TypeScript Resolvers Plugin', () => {
       id?: Resolver<Scalars['ID'], ParentType, Context>,
     }`);
 
-    expect(result)
-      .toBeSimilarStringTo(`export interface SubscriptionResolvers<Context = any, ParentType = Subscription> {
+    expect(result).toBeSimilarStringTo(`export interface SubscriptionResolvers<Context = any, ParentType = Subscription> {
       somethingChanged?: SubscriptionResolver<Maybe<MyOtherType>, ParentType, Context>,
     }`);
 
@@ -96,9 +94,7 @@ describe('TypeScript Resolvers Plugin', () => {
     const testSchema = buildSchema(`scalar MyScalar`);
     const result = await plugin(testSchema, [], {}, { outputFile: '' });
 
-    expect(result).toBeSimilarStringTo(
-      `import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';`
-    );
+    expect(result).toBeSimilarStringTo(`import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';`);
     await validate(result, {}, schema);
   });
 
@@ -116,8 +112,8 @@ describe('TypeScript Resolvers Plugin', () => {
       [],
       {
         mappers: {
-          MyOtherType: 'MyCustomOtherType'
-        }
+          MyOtherType: 'MyCustomOtherType',
+        },
       },
       { outputFile: '' }
     );
@@ -126,13 +122,11 @@ describe('TypeScript Resolvers Plugin', () => {
     export type MyDirectiveDirectiveResolver<Result, Parent, Context = any, Args = {   arg?: Maybe<Scalars['Int']>,
       arg2?: Maybe<Scalars['String']>, arg3?: Maybe<Scalars['Boolean']> }> = DirectiveResolverFn<Result, Parent, Context, Args>;`);
 
-    expect(result)
-      .toBeSimilarStringTo(`export interface MyOtherTypeResolvers<Context = any, ParentType = MyCustomOtherType> {
+    expect(result).toBeSimilarStringTo(`export interface MyOtherTypeResolvers<Context = any, ParentType = MyCustomOtherType> {
       bar?: Resolver<Scalars['String'], ParentType, Context>,
     }`);
 
-    expect(result)
-      .toBeSimilarStringTo(`export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<Scalars['MyScalar'], any> {
+    expect(result).toBeSimilarStringTo(`export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<Scalars['MyScalar'], any> {
       name: 'MyScalar'
     }`);
 
@@ -159,8 +153,7 @@ describe('TypeScript Resolvers Plugin', () => {
       id?: Resolver<Scalars['ID'], ParentType, Context>,
     }`);
 
-    expect(result)
-      .toBeSimilarStringTo(`export interface SubscriptionResolvers<Context = any, ParentType = Subscription> {
+    expect(result).toBeSimilarStringTo(`export interface SubscriptionResolvers<Context = any, ParentType = Subscription> {
       somethingChanged?: SubscriptionResolver<Maybe<MyCustomOtherType>, ParentType, Context>,
     }`);
     await validate(`type MyCustomOtherType = {}\n${result}`);
@@ -172,8 +165,8 @@ describe('TypeScript Resolvers Plugin', () => {
       [],
       {
         mappers: {
-          MyOtherType: './my-file#MyCustomOtherType'
-        }
+          MyOtherType: './my-file#MyCustomOtherType',
+        },
       },
       { outputFile: '' }
     );
@@ -183,13 +176,11 @@ describe('TypeScript Resolvers Plugin', () => {
     export type MyDirectiveDirectiveResolver<Result, Parent, Context = any, Args = {   arg?: Maybe<Scalars['Int']>,
       arg2?: Maybe<Scalars['String']>, arg3?: Maybe<Scalars['Boolean']> }> = DirectiveResolverFn<Result, Parent, Context, Args>;`);
 
-    expect(result)
-      .toBeSimilarStringTo(`export interface MyOtherTypeResolvers<Context = any, ParentType = MyCustomOtherType> {
+    expect(result).toBeSimilarStringTo(`export interface MyOtherTypeResolvers<Context = any, ParentType = MyCustomOtherType> {
       bar?: Resolver<Scalars['String'], ParentType, Context>,
     }`);
 
-    expect(result)
-      .toBeSimilarStringTo(`export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<Scalars['MyScalar'], any> {
+    expect(result).toBeSimilarStringTo(`export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<Scalars['MyScalar'], any> {
       name: 'MyScalar'
     }`);
 
@@ -216,8 +207,7 @@ describe('TypeScript Resolvers Plugin', () => {
       id?: Resolver<Scalars['ID'], ParentType, Context>,
     }`);
 
-    expect(result)
-      .toBeSimilarStringTo(`export interface SubscriptionResolvers<Context = any, ParentType = Subscription> {
+    expect(result).toBeSimilarStringTo(`export interface SubscriptionResolvers<Context = any, ParentType = Subscription> {
       somethingChanged?: SubscriptionResolver<Maybe<MyCustomOtherType>, ParentType, Context>,
     }`);
     await validate(result);
@@ -260,7 +250,7 @@ describe('TypeScript Resolvers Plugin', () => {
       [],
       { scalars: { Date: 'Date' } },
       {
-        outputFile: 'graphql.ts'
+        outputFile: 'graphql.ts',
       }
     );
 
@@ -310,7 +300,7 @@ describe('TypeScript Resolvers Plugin', () => {
       [],
       {},
       {
-        outputFile: 'graphql.ts'
+        outputFile: 'graphql.ts',
       }
     );
     const content = [tsContent, resolversContent].join('\n');

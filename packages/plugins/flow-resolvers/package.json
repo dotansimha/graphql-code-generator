@@ -1,5 +1,5 @@
 {
-  "name": "graphql-codegen-flow-resolvers",
+  "name": "@graphql-codegen/flow-resolvers",
   "version": "0.18.0",
   "description": "GraphQL Code Generator plugin for generating Flow types for GraphQL resolvers signature",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
@@ -10,12 +10,12 @@
   },
   "dependencies": {
     "tslib": "1.9.3",
-    "graphql-codegen-flow": "0.18.0",
-    "graphql-codegen-visitor-plugin-common": "0.18.0",
-    "graphql-codegen-plugin-helpers": "0.18.0"
+    "@graphql-codegen/flow": "0.18.0",
+    "@graphql-codegen/visitor-plugin-common": "0.18.0",
+    "@graphql-codegen/plugin-helpers": "0.18.0"
   },
   "devDependencies": {
-    "graphql-codegen-testing": "0.18.0",
+    "@graphql-codegen/testing": "0.18.0",
     "jest": "24.5.0",
     "ts-jest": "24.0.0",
     "typescript": "3.3.3333",

@@ -1,7 +1,7 @@
 {
-  "name": "graphql-codegen-typescript-mongodb",
+  "name": "@graphql-codegen/typescript-mongodb",
   "version": "0.18.0",
-  "description": "graphql-codegen-cli template for TypeScript typings for both client side and server side",
+  "description": "GraphQL Code Generator plugin for generting a ready-to-use ORM types for MongoDB",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
   "scripts": {
@@ -14,12 +14,12 @@
   "dependencies": {
     "tslib": "1.9.3",
     "graphql-toolkit": "0.2.6",
-    "graphql-codegen-typescript": "0.18.0",
-    "graphql-codegen-visitor-plugin-common": "0.18.0",
-    "graphql-codegen-plugin-helpers": "0.18.0"
+    "@graphql-codegen/typescript": "0.18.0",
+    "@graphql-codegen/visitor-plugin-common": "0.18.0",
+    "@graphql-codegen/plugin-helpers": "0.18.0"
   },
   "devDependencies": {
-    "graphql-codegen-testing": "0.18.0",
+    "@graphql-codegen/testing": "0.18.0",
     "jest": "24.5.0",
     "ts-jest": "24.0.0",
     "typescript": "3.3.3333",

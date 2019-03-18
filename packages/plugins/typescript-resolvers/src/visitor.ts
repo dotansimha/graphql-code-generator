@@ -1,36 +1,26 @@
 import { TypeScriptResolversPluginConfig } from './index';
 import { ListTypeNode, NamedTypeNode, NonNullTypeNode, GraphQLSchema } from 'graphql';
 import * as autoBind from 'auto-bind';
-import { ParsedResolversConfig, BaseResolversVisitor } from 'graphql-codegen-visitor-plugin-common';
-import { TypeScriptOperationVariablesToObject } from 'graphql-codegen-typescript';
+import { ParsedResolversConfig, BaseResolversVisitor } from '@graphql-codegen/visitor-plugin-common';
+import { TypeScriptOperationVariablesToObject } from '@graphql-codegen/typescript';
 
 export interface ParsedTypeScriptResolversConfig extends ParsedResolversConfig {
   avoidOptionals: boolean;
   immutableTypes: boolean;
 }
 
-export class TypeScriptResolversVisitor extends BaseResolversVisitor<
-  TypeScriptResolversPluginConfig,
-  ParsedTypeScriptResolversConfig
-> {
+export class TypeScriptResolversVisitor extends BaseResolversVisitor<TypeScriptResolversPluginConfig, ParsedTypeScriptResolversConfig> {
   constructor(pluginConfig: TypeScriptResolversPluginConfig, schema: GraphQLSchema) {
     super(
       pluginConfig,
       {
         avoidOptionals: pluginConfig.avoidOptionals || false,
-        immutableTypes: pluginConfig.immutableTypes || false
+        immutableTypes: pluginConfig.immutableTypes || false,
       } as any,
       schema
     );
     autoBind(this);
-    this.setVariablesTransformer(
-      new TypeScriptOperationVariablesToObject(
-        this.config.scalars,
-        this.convertName,
-        this.config.avoidOptionals,
-        this.config.immutableTypes
-      )
-    );
+    this.setVariablesTransformer(new TypeScriptOperationVariablesToObject(this.config.scalars, this.convertName, this.config.avoidOptionals, this.config.immutableTypes));
   }
 
   protected formatRootResolver(schemaTypeName: string, resolverType: string): string {
@@ -38,18 +28,11 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
   }
 
   getRootResolver(): string {
-    return super
-      .getRootResolver()
-      .replace(
-        '};',
-        '} & { [typeName: string] : { [ fieldName: string ]: ( Resolver<any, any, Context, any> | SubscriptionResolver<any, any, Context, any> ) } };'
-      );
+    return super.getRootResolver().replace('};', '} & { [typeName: string] : { [ fieldName: string ]: ( Resolver<any, any, Context, any> | SubscriptionResolver<any, any, Context, any> ) } };');
   }
 
   getAllDirectiveResolvers(): string {
-    return super
-      .getAllDirectiveResolvers()
-      .replace('};', '} & { [directiveName: string]: DirectiveResolverFn<any, any, Context, any> };');
+    return super.getAllDirectiveResolvers().replace('};', '} & { [directiveName: string]: DirectiveResolverFn<any, any, Context, any> };');
   }
 
   private clearOptional(str: string): string {

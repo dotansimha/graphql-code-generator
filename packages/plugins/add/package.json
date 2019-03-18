@@ -1,7 +1,7 @@
 {
-  "name": "graphql-codegen-add",
+  "name": "@graphql-codegen/add",
   "version": "0.18.0",
-  "description": "graphql-codegen-cli template for TypeScript typings for both client side and server side",
+  "description": "GraphQL Code Generator plugin for adding custom content to your output file",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
   "scripts": {
@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "tslib": "1.9.3",
-    "graphql-codegen-plugin-helpers": "0.18.0"
+    "@graphql-codegen/plugin-helpers": "0.18.0"
   },
   "devDependencies": {
     "graphql": "14.1.1",

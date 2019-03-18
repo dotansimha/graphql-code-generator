@@ -1,7 +1,7 @@
 {
-  "name": "graphql-codegen-typescript-graphql-files-modules",
+  "name": "@graphql-codegen/typescript-graphql-files-modules",
   "version": "0.18.0",
-  "description": "graphql-codegen-cli template for TypeScript typings for both client side and server side",
+  "description": "GraphQL Code Generator plugin for generating TypeScript module declarations based on GraphQL operations",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
   "scripts": {
@@ -10,10 +10,10 @@
   },
   "dependencies": {
     "tslib": "1.9.3",
-    "graphql-codegen-plugin-helpers": "0.18.0"
+    "@graphql-codegen/plugin-helpers": "0.18.0"
   },
   "devDependencies": {
-    "graphql-codegen-testing": "0.18.0",
+    "@graphql-codegen/testing": "0.18.0",
     "graphql": "14.1.1",
     "jest": "24.5.0",
     "ts-jest": "24.0.0",

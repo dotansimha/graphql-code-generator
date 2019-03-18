@@ -3,17 +3,17 @@ id: flow-resolvers
 title: Flow Resolvers
 ---
 
-The `graphql-codegen-flow-resolvers` plugin generates resolvers signature based on your `GraphQLSchema`.
+The `@graphql-codegen/flow-resolvers` plugin generates resolvers signature based on your `GraphQLSchema`.
 
 It generates types for your entire schema: types, input types, enum, interface, scalar and union.
 
-This plugin requires you to use `graphql-codegen-flow` as well, because it depends on it's types.
+This plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.
 
 ## Installation
 
 Install using `npm` (or `yarn`):
 
-    $ npm install graphql-codegen-flow-resolvers
+    $ npm install @graphql-codegen/flow-resolvers
 
 ### Examples
 

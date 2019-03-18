@@ -1,5 +1,5 @@
 import * as inquirer from 'inquirer';
-import { Types } from 'graphql-codegen-plugin-helpers';
+import { Types } from '@graphql-codegen/plugin-helpers';
 import { getQuestions } from './questions';
 import { guessTargets } from './targets';
 import { Answers, Tags } from './types';
@@ -27,9 +27,9 @@ export async function init() {
     documents: answers.targets.includes(Tags.browser) ? answers.documents : null,
     generates: {
       [answers.output]: {
-        plugins: answers.plugins.map(p => p.value)
-      }
-    }
+        plugins: answers.plugins.map(p => p.value),
+      },
+    },
   };
 
   // introspection
@@ -60,6 +60,6 @@ export async function init() {
 // adds an introspection to `generates`
 function addIntrospection(config: Types.Config) {
   config.generates['./graphql.schema.json'] = {
-    plugins: ['introspection']
+    plugins: ['introspection'],
   };
 }

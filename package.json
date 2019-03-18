@@ -1,5 +1,5 @@
 {
-  "name": "graphql-code-generator",
+  "name": "@graphql-codegen/root",
   "private": true,
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "author": "dotansimha <dotansimha@gmail.com>",
@@ -61,9 +61,5 @@
   },
   "resolutions": {
     "upath": "1.1.0"
-  },
-  "prettier": {
-    "printWidth": 120,
-    "singleQuote": true
   }
 }
