@@ -3,14 +3,6 @@ import { EnumValuesMap, ScalarsMap } from './types';
 import { OperationVariablesToObject } from './variables-to-object';
 import { DeclarationBlockConfig, DeclarationBlock, indent, wrapWithSingleQuotes, buildScalars } from './utils';
 import {
-  NonNullTypeNode,
-  UnionTypeDefinitionNode,
-  InterfaceTypeDefinitionNode,
-  ScalarTypeDefinitionNode,
-  EnumValueDefinitionNode,
-  NamedTypeNode
-} from 'graphql/language/ast';
-import {
   InputObjectTypeDefinitionNode,
   InputValueDefinitionNode,
   NameNode,
@@ -19,7 +11,13 @@ import {
   EnumTypeDefinitionNode,
   DirectiveDefinitionNode,
   ListTypeNode,
-  GraphQLSchema
+  GraphQLSchema,
+  NonNullTypeNode,
+  UnionTypeDefinitionNode,
+  InterfaceTypeDefinitionNode,
+  ScalarTypeDefinitionNode,
+  EnumValueDefinitionNode,
+  NamedTypeNode
 } from 'graphql';
 import { DEFAULT_SCALARS } from './scalars';
 

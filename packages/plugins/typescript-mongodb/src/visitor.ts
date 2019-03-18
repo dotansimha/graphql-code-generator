@@ -1,12 +1,10 @@
-import { UnionTypeDefinitionNode } from 'graphql/language/ast';
 import { FieldsTree } from './fields-tree';
 import {
   getBaseTypeNode,
   DeclarationBlock,
   getConfigValue,
   ParsedConfig,
-  BaseVisitor,
-  indent
+  BaseVisitor
 } from 'graphql-codegen-visitor-plugin-common';
 import { TypeScriptOperationVariablesToObject } from 'graphql-codegen-typescript';
 import * as autoBind from 'auto-bind';
@@ -20,7 +18,8 @@ import {
   Kind,
   ValueNode,
   isEnumType,
-  InterfaceTypeDefinitionNode
+  InterfaceTypeDefinitionNode,
+  UnionTypeDefinitionNode
 } from 'graphql';
 
 type AdditionalField = { path: string; type: string };

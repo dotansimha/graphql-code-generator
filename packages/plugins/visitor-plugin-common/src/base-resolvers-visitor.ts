@@ -9,14 +9,12 @@ import {
   NamedTypeNode,
   FieldDefinitionNode,
   ObjectTypeDefinitionNode,
-  GraphQLSchema
-} from 'graphql';
-import {
+  GraphQLSchema,
   NonNullTypeNode,
   UnionTypeDefinitionNode,
   ScalarTypeDefinitionNode,
   InterfaceTypeDefinitionNode
-} from 'graphql/language/ast';
+} from 'graphql';
 import { DirectiveDefinitionNode, GraphQLObjectType, InputValueDefinitionNode } from 'graphql';
 import { OperationVariablesToObject } from './variables-to-object';
 import { ParsedMapper, parseMapper, transformMappers } from './mappers';

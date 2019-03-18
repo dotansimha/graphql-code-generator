@@ -1,6 +1,5 @@
-import { ListTypeNode, NamedTypeNode, NonNullTypeNode } from 'graphql/language/ast';
 import { FlowResolversPluginConfig } from './index';
-import { GraphQLSchema } from 'graphql';
+import { ListTypeNode, NamedTypeNode, NonNullTypeNode, GraphQLSchema } from 'graphql';
 import * as autoBind from 'auto-bind';
 import { ParsedResolversConfig, BaseResolversVisitor } from 'graphql-codegen-visitor-plugin-common';
 import { FlowOperationVariablesToObject } from 'graphql-codegen-flow';
