@@ -1,9 +1,11 @@
 import { executeCodegen } from '../codegen';
-import { FileOutput, getLogger, Types, debugLog } from 'graphql-codegen-plugin-helpers';
+import { Types } from 'graphql-codegen-plugin-helpers';
 import { normalizeInstanceOrArray, normalizeOutputParam } from '../helpers';
 import * as isValidPath from 'is-valid-path';
 import * as isGlob from 'is-glob';
 import * as logSymbols from 'log-symbols';
+import { debugLog } from './debugging';
+import { getLogger } from './logger';
 
 function log(msg: string) {
   // double spaces to inline the message with Listr
@@ -14,7 +16,10 @@ function emitWatching() {
   log(`${logSymbols.info} Watching for changes...`);
 }
 
-export const createWatcher = (config: Types.Config, onNext: (result: FileOutput[]) => Promise<FileOutput[]>) => {
+export const createWatcher = (
+  config: Types.Config,
+  onNext: (result: Types.FileOutput[]) => Promise<Types.FileOutput[]>
+) => {
   debugLog(`[Watcher] Starting watcher...`);
   const files: string[] = [];
   const documents = normalizeInstanceOrArray<Types.OperationDocument>(config.documents);

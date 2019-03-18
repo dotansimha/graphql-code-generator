@@ -1,4 +1,4 @@
-import { DocumentFile, PluginValidateFn, PluginFunction } from 'graphql-codegen-plugin-helpers';
+import { Types, PluginValidateFn, PluginFunction } from 'graphql-codegen-plugin-helpers';
 import { visit, GraphQLSchema, concatAST, Kind, FragmentDefinitionNode } from 'graphql';
 import { RawClientSideBasePluginConfig } from 'graphql-codegen-visitor-plugin-common';
 import { StencilApolloVisitor } from './visitor';
@@ -15,7 +15,7 @@ export interface StencilApolloRawPluginConfig extends RawClientSideBasePluginCon
 
 export const plugin: PluginFunction<StencilApolloRawPluginConfig> = (
   schema: GraphQLSchema,
-  documents: DocumentFile[],
+  documents: Types.DocumentFile[],
   config: StencilApolloRawPluginConfig
 ) => {
   const allAst = concatAST(
@@ -42,7 +42,7 @@ export const plugin: PluginFunction<StencilApolloRawPluginConfig> = (
 
 export const validate: PluginValidateFn<any> = async (
   schema: GraphQLSchema,
-  documents: DocumentFile[],
+  documents: Types.DocumentFile[],
   config: StencilApolloRawPluginConfig,
   outputFile: string
 ) => {

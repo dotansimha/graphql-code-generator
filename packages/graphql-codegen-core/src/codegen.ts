@@ -1,4 +1,4 @@
-import { CodegenPlugin, DocumentFile, Types, debugLog } from 'graphql-codegen-plugin-helpers';
+import { CodegenPlugin, Types } from 'graphql-codegen-plugin-helpers';
 import { DocumentNode, visit } from 'graphql';
 import { mergeSchemas } from './merge-schemas';
 import { executePlugin } from './execute-plugin';
@@ -8,7 +8,7 @@ export async function codegen(options: {
   filename: string;
   plugins: Types.ConfiguredPlugin[];
   schema: DocumentNode;
-  documents: DocumentFile[];
+  documents: Types.DocumentFile[];
   config: { [key: string]: any };
   pluginMap: {
     [name: string]: CodegenPlugin;
@@ -31,8 +31,6 @@ export async function codegen(options: {
     const pluginPackage = options.pluginMap[name];
     const pluginConfig = plugin[name];
 
-    debugLog(`[CLI] Running plugin: ${name}`);
-
     const result = await executePlugin(
       {
         name,
@@ -51,15 +49,13 @@ export async function codegen(options: {
       pluginPackage
     );
 
-    debugLog(`[CLI] Completed executing plugin: ${name}`);
-
     output += result;
   }
 
   return output;
 }
 
-function validateDocuments(schema: DocumentNode, files: DocumentFile[]) {
+function validateDocuments(schema: DocumentNode, files: Types.DocumentFile[]) {
   // duplicated names
   const operationMap: {
     [name: string]: string[];

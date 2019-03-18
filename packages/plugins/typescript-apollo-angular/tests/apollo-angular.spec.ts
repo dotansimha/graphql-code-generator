@@ -2,7 +2,7 @@ import 'graphql-codegen-testing';
 import gql from 'graphql-tag';
 import { plugin, addToSchema } from '../src/index';
 import { parse, GraphQLSchema, buildClientSchema, buildSchema, extendSchema } from 'graphql';
-import { DocumentFile } from 'graphql-codegen-plugin-helpers';
+import { Types } from 'graphql-codegen-plugin-helpers';
 import { plugin as tsPlugin } from '../../typescript/src/index';
 import { plugin as tsDocumentsPlugin } from '../../typescript-operations/src/index';
 import { validateTs } from '../../typescript/tests/validate';
@@ -29,7 +29,7 @@ describe('Apollo Angular', () => {
   const validateTypeScript = async (
     output: string,
     testSchema: GraphQLSchema,
-    documents: DocumentFile[],
+    documents: Types.DocumentFile[],
     config: any
   ) => {
     const tsOutput = await tsPlugin(testSchema, documents, config, { outputFile: '' });

@@ -1,4 +1,4 @@
-import { PluginFunction, DocumentFile } from 'graphql-codegen-plugin-helpers';
+import { PluginFunction, Types } from 'graphql-codegen-plugin-helpers';
 import { visit, concatAST, GraphQLSchema } from 'graphql';
 import { FlowDocumentsVisitor } from './visitor';
 import { RawDocumentsConfig } from 'graphql-codegen-visitor-plugin-common';
@@ -10,7 +10,7 @@ export interface FlowDocumentsPluginConfig extends RawDocumentsConfig {
 
 export const plugin: PluginFunction<FlowDocumentsPluginConfig> = (
   schema: GraphQLSchema,
-  documents: DocumentFile[],
+  documents: Types.DocumentFile[],
   config: FlowDocumentsPluginConfig
 ) => {
   let prefix = `type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;\n`;

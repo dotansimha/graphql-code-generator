@@ -1,4 +1,4 @@
-import { DocumentFile, PluginValidateFn, PluginFunction } from 'graphql-codegen-plugin-helpers';
+import { Types, PluginValidateFn, PluginFunction } from 'graphql-codegen-plugin-helpers';
 import { visit, GraphQLSchema, concatAST, Kind, FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
 import { RawClientSideBasePluginConfig } from 'graphql-codegen-visitor-plugin-common';
 import { ApolloAngularVisitor } from './visitor';
@@ -12,7 +12,7 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
 
 export const plugin: PluginFunction<ApolloAngularRawPluginConfig> = (
   schema: GraphQLSchema,
-  documents: DocumentFile[],
+  documents: Types.DocumentFile[],
   config
 ) => {
   const allAst = concatAST(
@@ -44,7 +44,7 @@ export const addToSchema = gql`
 
 export const validate: PluginValidateFn<any> = async (
   schema: GraphQLSchema,
-  documents: DocumentFile[],
+  documents: Types.DocumentFile[],
   config,
   outputFile: string
 ) => {

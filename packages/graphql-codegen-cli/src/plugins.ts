@@ -1,6 +1,6 @@
 import { Types, CodegenPlugin } from 'graphql-codegen-plugin-helpers';
 import { resolve } from 'path';
-import { DetailedError } from './errors';
+import { DetailedError } from 'graphql-codegen-core';
 
 export async function getPluginByName(name: string, pluginLoader: Types.PluginLoaderFn): Promise<CodegenPlugin> {
   const possibleNames = [

@@ -5,9 +5,9 @@ import * as logSymbol from 'log-symbols';
 import * as UpdateRenderer from 'listr-update-renderer';
 import { stripIndent } from 'common-tags';
 import { ListrTask } from 'listr';
-import { DetailedError, isDetailedError } from '../errors';
+import { DetailedError, isDetailedError } from 'graphql-codegen-core';
 import { Source } from 'graphql';
-import { debugLog, printLogs } from 'graphql-codegen-plugin-helpers';
+import { debugLog, printLogs } from './debugging';
 
 export class Renderer {
   private updateRenderer: any;

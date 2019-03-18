@@ -1,5 +1,5 @@
 import { RawConfig } from 'graphql-codegen-visitor-plugin-common';
-import { DocumentFile, PluginFunction, PluginValidateFn } from 'graphql-codegen-plugin-helpers';
+import { Types, PluginFunction, PluginValidateFn } from 'graphql-codegen-plugin-helpers';
 import { parse, visit, GraphQLSchema } from 'graphql';
 import { printSchemaWithDirectives } from 'graphql-toolkit';
 import { extname } from 'path';
@@ -17,7 +17,7 @@ export interface TypeScriptMongoPluginConfig extends RawConfig {
 
 export const plugin: PluginFunction<TypeScriptMongoPluginConfig> = (
   schema: GraphQLSchema,
-  documents: DocumentFile[],
+  documents: Types.DocumentFile[],
   config: TypeScriptMongoPluginConfig
 ) => {
   const visitor = new TsMongoVisitor(schema, config);
@@ -62,7 +62,7 @@ export const addToSchema = DIRECTIVES;
 
 export const validate: PluginValidateFn<any> = async (
   schema: GraphQLSchema,
-  documents: DocumentFile[],
+  documents: Types.DocumentFile[],
   config: any,
   outputFile: string
 ) => {

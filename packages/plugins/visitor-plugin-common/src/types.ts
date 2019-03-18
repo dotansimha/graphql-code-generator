@@ -8,9 +8,11 @@ export interface ConvertOptions {
   prefix?: string;
   suffix?: string;
 }
+
 export type ConvertFn<T = {}> = (node: ASTNode | string, options?: ConvertOptions & T) => string;
 export type NamingConventionResolvePath = string; // module-name#exportedFunction
 export type NamingConvention = string | NamingConventionMap;
+
 export interface NamingConventionMap {
   enumValues?: 'keep' | NamingConventionResolvePath | Function;
   typeNames?: 'keep' | NamingConventionResolvePath | Function;

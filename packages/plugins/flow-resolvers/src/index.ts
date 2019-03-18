@@ -1,5 +1,5 @@
 import { RawResolversConfig } from 'graphql-codegen-visitor-plugin-common';
-import { DocumentFile, PluginFunction } from 'graphql-codegen-plugin-helpers';
+import { Types, PluginFunction } from 'graphql-codegen-plugin-helpers';
 import { isScalarType, parse, printSchema, visit, GraphQLSchema } from 'graphql';
 import { FlowResolversVisitor } from './visitor';
 
@@ -7,7 +7,7 @@ export interface FlowResolversPluginConfig extends RawResolversConfig {}
 
 export const plugin: PluginFunction<FlowResolversPluginConfig> = (
   schema: GraphQLSchema,
-  documents: DocumentFile[],
+  documents: Types.DocumentFile[],
   config: FlowResolversPluginConfig
 ) => {
   const imports = ['type GraphQLResolveInfo'];

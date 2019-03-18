@@ -77,7 +77,8 @@
     "prettier": "1.16.4",
     "request": "2.88.0",
     "tslib": "1.9.3",
-    "valid-url": "1.0.9"
+    "valid-url": "1.0.9",
+    "ts-log": "2.1.4"
   },
   "devDependencies": {
     "@types/chokidar": "1.7.5",

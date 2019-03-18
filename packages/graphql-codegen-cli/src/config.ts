@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from 'fs';
 import { join, resolve } from 'path';
 import { Types } from 'graphql-codegen-plugin-helpers';
-import { DetailedError } from './errors';
+import { DetailedError } from 'graphql-codegen-core';
 import { parseConfigFile } from './yml';
 import { Command } from 'commander';
 

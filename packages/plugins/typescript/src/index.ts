@@ -1,4 +1,4 @@
-import { DocumentFile, PluginFunction } from 'graphql-codegen-plugin-helpers';
+import { Types, PluginFunction } from 'graphql-codegen-plugin-helpers';
 import {
   parse,
   printSchema,
@@ -29,7 +29,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
 
 export const plugin: PluginFunction<TypeScriptPluginConfig> = (
   schema: GraphQLSchema,
-  documents: DocumentFile[],
+  documents: Types.DocumentFile[],
   config: TypeScriptPluginConfig
 ) => {
   const visitor = new TsVisitor(schema, config);
@@ -45,7 +45,7 @@ export const plugin: PluginFunction<TypeScriptPluginConfig> = (
 
 function includeIntrospectionDefinitions(
   schema: GraphQLSchema,
-  documents: DocumentFile[],
+  documents: Types.DocumentFile[],
   config: TypeScriptPluginConfig
 ): string[] {
   const typeInfo = new TypeInfo(schema);
