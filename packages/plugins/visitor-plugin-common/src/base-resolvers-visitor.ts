@@ -308,8 +308,12 @@ export class BaseResolversVisitor<
       .export()
       .asKind('interface')
       .withName(name, `<Context = ${this.config.contextType.type}, ParentType = ${node.name}>`)
-      .withBlock(indent(`__resolveType: TypeResolveFn<${implementingTypes.map(name => `'${name}'`).join(' | ')}>`))
-      .string;
+      .withBlock(
+        [
+          indent(`__resolveType: TypeResolveFn<${implementingTypes.map(name => `'${name}'`).join(' | ')}>,`),
+          ...(node.fields || []).map((f: any) => f(node.name))
+        ].join('\n')
+      ).string;
   }
 
   SchemaDefinition() {

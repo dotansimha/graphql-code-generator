@@ -64,7 +64,8 @@ describe('Flow Resolvers Plugin', () => {
     }`);
 
     expect(result).toBeSimilarStringTo(`export interface NodeResolvers<Context = any, ParentType = Node> {
-      __resolveType: TypeResolveFn<'SomeNode'>
+      __resolveType: TypeResolveFn<'SomeNode'>,
+      id?: Resolver<$ElementType<Scalars, 'ID'>, ParentType, Context>,
     }`);
 
     expect(result).toBeSimilarStringTo(`export interface QueryResolvers<Context = any, ParentType = Query> {
@@ -132,7 +133,8 @@ describe('Flow Resolvers Plugin', () => {
     }
 
     export interface NodeResolvers<Context = any, ParentType = Node> {
-      __resolveType: TypeResolveFn<'SomeNode'>
+      __resolveType: TypeResolveFn<'SomeNode'>,
+      id?: Resolver<$ElementType<Scalars, 'ID'>, ParentType, Context>,
     }
 
     export interface QueryResolvers<Context = any, ParentType = Query> {
@@ -185,7 +187,8 @@ describe('Flow Resolvers Plugin', () => {
     }
 
     export interface NodeResolvers<Context = any, ParentType = Node> {
-      __resolveType: TypeResolveFn<'SomeNode'>
+      __resolveType: TypeResolveFn<'SomeNode'>,
+      id?: Resolver<$ElementType<Scalars, 'ID'>, ParentType, Context>,
     }
 
     export interface QueryResolvers<Context = any, ParentType = Query> {
