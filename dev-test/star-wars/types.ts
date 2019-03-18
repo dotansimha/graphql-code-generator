@@ -1,31 +1,39 @@
 type Maybe<T> = T | null;
+export type Scalars = {
+  ID: string,
+  String: string,
+  Boolean: boolean,
+  Int: number,
+  Float: number,
+};
+
 export type Character = {
-  id: string,
-  name: string,
+  id: Scalars['ID'],
+  name: Scalars['String'],
   friends?: Maybe<Array<Maybe<Character>>>,
   friendsConnection: FriendsConnection,
   appearsIn: Array<Maybe<Episode>>,
 };
 
 export type ColorInput = {
-  red: number,
-  green: number,
-  blue: number,
+  red: Scalars['Int'],
+  green: Scalars['Int'],
+  blue: Scalars['Int'],
 };
 
 export type Droid = Character & {
-  id: string,
-  name: string,
+  id: Scalars['ID'],
+  name: Scalars['String'],
   friends?: Maybe<Array<Maybe<Character>>>,
   friendsConnection: FriendsConnection,
   appearsIn: Array<Maybe<Episode>>,
-  primaryFunction?: Maybe<string>,
+  primaryFunction?: Maybe<Scalars['String']>,
 };
 
 
 export type DroidFriendsConnectionArgs = {
-  first?: Maybe<number>,
-  after?: Maybe<string>
+  first?: Maybe<Scalars['Int']>,
+  after?: Maybe<Scalars['ID']>
 };
 
 export enum Episode {
@@ -35,23 +43,23 @@ export enum Episode {
 }
 
 export type FriendsConnection = {
-  totalCount?: Maybe<number>,
+  totalCount?: Maybe<Scalars['Int']>,
   edges?: Maybe<Array<Maybe<FriendsEdge>>>,
   friends?: Maybe<Array<Maybe<Character>>>,
   pageInfo: PageInfo,
 };
 
 export type FriendsEdge = {
-  cursor: string,
+  cursor: Scalars['ID'],
   node?: Maybe<Character>,
 };
 
 export type Human = Character & {
-  id: string,
-  name: string,
-  homePlanet?: Maybe<string>,
-  height?: Maybe<number>,
-  mass?: Maybe<number>,
+  id: Scalars['ID'],
+  name: Scalars['String'],
+  homePlanet?: Maybe<Scalars['String']>,
+  height?: Maybe<Scalars['Float']>,
+  mass?: Maybe<Scalars['Float']>,
   friends?: Maybe<Array<Maybe<Character>>>,
   friendsConnection: FriendsConnection,
   appearsIn: Array<Maybe<Episode>>,
@@ -65,8 +73,8 @@ export type HumanHeightArgs = {
 
 
 export type HumanFriendsConnectionArgs = {
-  first?: Maybe<number>,
-  after?: Maybe<string>
+  first?: Maybe<Scalars['Int']>,
+  after?: Maybe<Scalars['ID']>
 };
 
 export enum LengthUnit {
@@ -85,9 +93,9 @@ export type MutationCreateReviewArgs = {
 };
 
 export type PageInfo = {
-  startCursor?: Maybe<string>,
-  endCursor?: Maybe<string>,
-  hasNextPage: boolean,
+  startCursor?: Maybe<Scalars['ID']>,
+  endCursor?: Maybe<Scalars['ID']>,
+  hasNextPage: Scalars['Boolean'],
 };
 
 export type Query = {
@@ -112,46 +120,46 @@ export type QueryReviewsArgs = {
 
 
 export type QuerySearchArgs = {
-  text?: Maybe<string>
+  text?: Maybe<Scalars['String']>
 };
 
 
 export type QueryCharacterArgs = {
-  id: string
+  id: Scalars['ID']
 };
 
 
 export type QueryDroidArgs = {
-  id: string
+  id: Scalars['ID']
 };
 
 
 export type QueryHumanArgs = {
-  id: string
+  id: Scalars['ID']
 };
 
 
 export type QueryStarshipArgs = {
-  id: string
+  id: Scalars['ID']
 };
 
 export type Review = {
-  stars: number,
-  commentary?: Maybe<string>,
+  stars: Scalars['Int'],
+  commentary?: Maybe<Scalars['String']>,
 };
 
 export type ReviewInput = {
-  stars: number,
-  commentary: Maybe<string>,
-  favoriteColor: Maybe<ColorInput>,
+  stars: Scalars['Int'],
+  commentary?: Maybe<Scalars['String']>,
+  favoriteColor?: Maybe<ColorInput>,
 };
 
 export type SearchResult = Human | Droid | Starship;
 
 export type Starship = {
-  id: string,
-  name: string,
-  length?: Maybe<number>,
+  id: Scalars['ID'],
+  name: Scalars['String'],
+  length?: Maybe<Scalars['Float']>,
 };
 
 
@@ -203,7 +211,7 @@ export type HeroNameQuery = ({ __typename?: 'Query' } & { hero: Maybe<Pick<Chara
 
 export type HeroNameConditionalInclusionQueryVariables = {
   episode?: Maybe<Episode>,
-  includeName: boolean
+  includeName: Scalars['Boolean']
 };
 
 
@@ -211,7 +219,7 @@ export type HeroNameConditionalInclusionQuery = ({ __typename?: 'Query' } & { he
 
 export type HeroNameConditionalExclusionQueryVariables = {
   episode?: Maybe<Episode>,
-  skipName: boolean
+  skipName: Scalars['Boolean']
 };
 
 

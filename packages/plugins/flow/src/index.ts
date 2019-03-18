@@ -16,13 +16,14 @@ export const plugin: PluginFunction<FlowPluginConfig> = (
   documents: DocumentFile[],
   config: FlowPluginConfig
 ) => {
-  const result = `/* @flow */\n\n`;
+  const header = `/* @flow */\n\n`;
   const printedSchema = printSchema(schema);
   const astNode = parse(printedSchema);
+  const visitor = new FlowVisitor(schema, config);
 
   const visitorResult = visit(astNode, {
-    leave: new FlowVisitor(config)
+    leave: visitor
   });
 
-  return result + visitorResult.definitions.join('\n');
+  return [header, visitor.scalarsDefinition, ...visitorResult.definitions].join('\n');
 };

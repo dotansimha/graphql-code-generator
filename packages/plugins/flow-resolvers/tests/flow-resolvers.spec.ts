@@ -41,43 +41,45 @@ describe('Flow Resolvers Plugin', () => {
     const result = plugin(schema, [], {}, { outputFile: '' });
 
     expect(result).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveResolver<Result, Parent, Context = any, Args = {   arg?: ?number,
-      arg2?: ?string, arg3?: ?boolean }> = DirectiveResolverFn<Result, Parent, Context, Args>;
+    export type MyDirectiveDirectiveResolver<Result, Parent, Context = any, Args = {   arg?: ?$ElementType<Scalars, 'Int'>,
+      arg2?: ?$ElementType<Scalars, 'String'>, arg3?: ?$ElementType<Scalars, 'Boolean'> }> = DirectiveResolverFn<Result, Parent, Context, Args>;`);
 
-    export interface MyOtherTypeResolvers<Context = any, ParentType = MyOtherType> {
-      bar?: Resolver<string, ParentType, Context>,
-    }
+    expect(result).toBeSimilarStringTo(`export interface MyOtherTypeResolvers<Context = any, ParentType = MyOtherType> {
+      bar?: Resolver<$ElementType<Scalars, 'String'>, ParentType, Context>,
+    }`);
 
-    export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<MyScalar, any> {
+    expect(result)
+      .toBeSimilarStringTo(`export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<$ElementType<Scalars, 'MyScalar'>, any> {
       name: 'MyScalar'
-    }
+    }`);
 
-    export interface MyTypeResolvers<Context = any, ParentType = MyType> {
-      foo?: Resolver<string, ParentType, Context>,
+    expect(result).toBeSimilarStringTo(`export interface MyTypeResolvers<Context = any, ParentType = MyType> {
+      foo?: Resolver<$ElementType<Scalars, 'String'>, ParentType, Context>,
       otherType?: Resolver<?MyOtherType, ParentType, Context>,
-      withArgs?: Resolver<?string, ParentType, Context, MyTypeWithArgsArgs>,
-    }
+      withArgs?: Resolver<?$ElementType<Scalars, 'String'>, ParentType, Context, MyTypeWithArgsArgs>,
+    }`);
 
-    export interface MyUnionResolvers<Context = any, ParentType = MyUnion> {
+    expect(result).toBeSimilarStringTo(`export interface MyUnionResolvers<Context = any, ParentType = MyUnion> {
       __resolveType: TypeResolveFn<'MyType' | 'MyOtherType'>
-    }
+    }`);
 
-    export interface NodeResolvers<Context = any, ParentType = Node> {
-      __resolveType: TypeResolveFn<'SomeNode'>
-    }
+    expect(result).toBeSimilarStringTo(`export interface NodeResolvers<Context = any, ParentType = Node> {
+      __resolveType: TypeResolveFn<'SomeNode'>,
+      id?: Resolver<$ElementType<Scalars, 'ID'>, ParentType, Context>,
+    }`);
 
-    export interface QueryResolvers<Context = any, ParentType = Query> {
+    expect(result).toBeSimilarStringTo(`export interface QueryResolvers<Context = any, ParentType = Query> {
       something?: Resolver<MyType, ParentType, Context>,
-    }
+    }`);
 
-    export interface SomeNodeResolvers<Context = any, ParentType = SomeNode> {
-      id?: Resolver<string, ParentType, Context>,
-    }
+    expect(result).toBeSimilarStringTo(`export interface SomeNodeResolvers<Context = any, ParentType = SomeNode> {
+      id?: Resolver<$ElementType<Scalars, 'ID'>, ParentType, Context>,
+    }`);
 
-    export interface SubscriptionResolvers<Context = any, ParentType = Subscription> {
+    expect(result)
+      .toBeSimilarStringTo(`export interface SubscriptionResolvers<Context = any, ParentType = Subscription> {
       somethingChanged?: SubscriptionResolver<?MyOtherType, ParentType, Context>,
-    }
-    `);
+    }`);
   });
 
   it('Should generate the correct imports when schema has scalars', () => {
@@ -109,21 +111,21 @@ describe('Flow Resolvers Plugin', () => {
     );
 
     expect(result).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveResolver<Result, Parent, Context = any, Args = {   arg?: ?number,
-      arg2?: ?string, arg3?: ?boolean }> = DirectiveResolverFn<Result, Parent, Context, Args>;
+    export type MyDirectiveDirectiveResolver<Result, Parent, Context = any, Args = {   arg?: ?$ElementType<Scalars, 'Int'>,
+      arg2?: ?$ElementType<Scalars, 'String'>, arg3?: ?$ElementType<Scalars, 'Boolean'> }> = DirectiveResolverFn<Result, Parent, Context, Args>;
 
     export interface MyOtherTypeResolvers<Context = any, ParentType = MyCustomOtherType> {
-      bar?: Resolver<string, ParentType, Context>,
+      bar?: Resolver<$ElementType<Scalars, 'String'>, ParentType, Context>,
     }
 
-    export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<MyScalar, any> {
+    export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<$ElementType<Scalars, 'MyScalar'>, any> {
       name: 'MyScalar'
     }
 
     export interface MyTypeResolvers<Context = any, ParentType = MyType> {
-      foo?: Resolver<string, ParentType, Context>,
+      foo?: Resolver<$ElementType<Scalars, 'String'>, ParentType, Context>,
       otherType?: Resolver<?MyCustomOtherType, ParentType, Context>,
-      withArgs?: Resolver<?string, ParentType, Context, MyTypeWithArgsArgs>,
+      withArgs?: Resolver<?$ElementType<Scalars, 'String'>, ParentType, Context, MyTypeWithArgsArgs>,
     }
 
     export interface MyUnionResolvers<Context = any, ParentType = MyUnion> {
@@ -131,7 +133,8 @@ describe('Flow Resolvers Plugin', () => {
     }
 
     export interface NodeResolvers<Context = any, ParentType = Node> {
-      __resolveType: TypeResolveFn<'SomeNode'>
+      __resolveType: TypeResolveFn<'SomeNode'>,
+      id?: Resolver<$ElementType<Scalars, 'ID'>, ParentType, Context>,
     }
 
     export interface QueryResolvers<Context = any, ParentType = Query> {
@@ -139,7 +142,7 @@ describe('Flow Resolvers Plugin', () => {
     }
 
     export interface SomeNodeResolvers<Context = any, ParentType = SomeNode> {
-      id?: Resolver<string, ParentType, Context>,
+      id?: Resolver<$ElementType<Scalars, 'ID'>, ParentType, Context>,
     }
 
     export interface SubscriptionResolvers<Context = any, ParentType = Subscription> {
@@ -162,21 +165,21 @@ describe('Flow Resolvers Plugin', () => {
 
     expect(result).toBeSimilarStringTo(`import { type MyCustomOtherType } from './some-file';`);
     expect(result).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveResolver<Result, Parent, Context = any, Args = {   arg?: ?number,
-      arg2?: ?string, arg3?: ?boolean }> = DirectiveResolverFn<Result, Parent, Context, Args>;
+    export type MyDirectiveDirectiveResolver<Result, Parent, Context = any, Args = {   arg?: ?$ElementType<Scalars, 'Int'>,
+      arg2?: ?$ElementType<Scalars, 'String'>, arg3?: ?$ElementType<Scalars, 'Boolean'> }> = DirectiveResolverFn<Result, Parent, Context, Args>;
 
     export interface MyOtherTypeResolvers<Context = any, ParentType = MyCustomOtherType> {
-      bar?: Resolver<string, ParentType, Context>,
+      bar?: Resolver<$ElementType<Scalars, 'String'>, ParentType, Context>,
     }
 
-    export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<MyScalar, any> {
+    export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<$ElementType<Scalars, 'MyScalar'>, any> {
       name: 'MyScalar'
     }
 
     export interface MyTypeResolvers<Context = any, ParentType = MyType> {
-      foo?: Resolver<string, ParentType, Context>,
+      foo?: Resolver<$ElementType<Scalars, 'String'>, ParentType, Context>,
       otherType?: Resolver<?MyCustomOtherType, ParentType, Context>,
-      withArgs?: Resolver<?string, ParentType, Context, MyTypeWithArgsArgs>,
+      withArgs?: Resolver<?$ElementType<Scalars, 'String'>, ParentType, Context, MyTypeWithArgsArgs>,
     }
 
     export interface MyUnionResolvers<Context = any, ParentType = MyUnion> {
@@ -184,7 +187,8 @@ describe('Flow Resolvers Plugin', () => {
     }
 
     export interface NodeResolvers<Context = any, ParentType = Node> {
-      __resolveType: TypeResolveFn<'SomeNode'>
+      __resolveType: TypeResolveFn<'SomeNode'>,
+      id?: Resolver<$ElementType<Scalars, 'ID'>, ParentType, Context>,
     }
 
     export interface QueryResolvers<Context = any, ParentType = Query> {
@@ -192,7 +196,7 @@ describe('Flow Resolvers Plugin', () => {
     }
 
     export interface SomeNodeResolvers<Context = any, ParentType = SomeNode> {
-      id?: Resolver<string, ParentType, Context>,
+      id?: Resolver<$ElementType<Scalars, 'ID'>, ParentType, Context>,
     }
 
     export interface SubscriptionResolvers<Context = any, ParentType = Subscription> {
@@ -208,6 +212,8 @@ describe('Flow Resolvers Plugin', () => {
       { outputFile: '' }
     );
 
-    expect(result).toBeSimilarStringTo(`f?: Resolver<?string, ParentType, Context, TMyTypeFArgs>,`);
+    expect(result).toBeSimilarStringTo(
+      `f?: Resolver<?$ElementType<Scalars, 'String'>, ParentType, Context, TMyTypeFArgs>,`
+    );
   });
 });

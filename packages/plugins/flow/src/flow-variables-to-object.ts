@@ -10,6 +10,10 @@ export class FlowOperationVariablesToObject extends OperationVariablesToObject {
     return str;
   }
 
+  protected getScalar(name: string): string {
+    return `$ElementType<Scalars, '${name}'>`;
+  }
+
   public wrapAstTypeWithModifiers(baseType: string, typeNode: TypeNode): string {
     if (typeNode.kind === Kind.NON_NULL_TYPE) {
       const type = this.wrapAstTypeWithModifiers(baseType, typeNode.type);

@@ -3,8 +3,5 @@ export const DEFAULT_SCALARS = {
   String: 'string',
   Boolean: 'boolean',
   Int: 'number',
-  Float: 'number',
-  string: 'string',
-  number: 'number',
-  boolean: 'boolean'
+  Float: 'number'
 };

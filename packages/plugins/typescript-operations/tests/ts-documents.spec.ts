@@ -1,7 +1,6 @@
 import 'graphql-codegen-testing';
 import { parse, buildClientSchema, buildSchema } from 'graphql';
 import { readFileSync } from 'fs';
-import { format } from 'prettier';
 import { plugin } from '../src/index';
 import { validateTs } from '../../typescript/tests/validate';
 import { plugin as tsPlugin } from '../../typescript/src/index';
@@ -110,7 +109,7 @@ describe('TypeScript Operations Plugin', () => {
   });
 
   describe('Scalars', () => {
-    it.only('Should include scalars when doing pick', async () => {
+    it('Should include scalars when doing pick', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         scalar Date
         type Query {
@@ -516,7 +515,7 @@ describe('TypeScript Operations Plugin', () => {
 
       expect(result).toBeSimilarStringTo(
         `export type MeQueryVariables = {
-          repoFullName: string
+          repoFullName: Scalars['String']
         };`
       );
       expect(result).toBeSimilarStringTo(
@@ -661,14 +660,14 @@ describe('TypeScript Operations Plugin', () => {
 
       expect(result).toBeSimilarStringTo(
         `export type TestQueryQueryVariables = {
-          username?: Maybe<string>,
-          email?: Maybe<string>,
-          password: string,
+          username?: Maybe<Scalars['String']>,
+          email?: Maybe<Scalars['String']>,
+          password: Scalars['String'],
           input?: Maybe<InputType>,
           mandatoryInput: InputType,
-          testArray?: Maybe<Array<Maybe<string>>>,
-          requireString: Array<Maybe<string>>,
-          innerRequired: Array<string>
+          testArray?: Maybe<Array<Maybe<Scalars['String']>>>,
+          requireString: Array<Maybe<Scalars['String']>>,
+          innerRequired: Array<Scalars['String']>
         };`
       );
       validate(result, config);
@@ -725,14 +724,8 @@ describe('TypeScript Operations Plugin', () => {
         }
       );
 
-      expect(format(content)).toBeSimilarStringTo(
-        format(`
-          type SubmitMessageMutation = { __typename?: 'Mutation' } & {
-            mutation:
-              | ({ __typename?: 'DeleteMutation' } & Pick<DeleteMutation, 'deleted'>)
-              | ({ __typename?: 'UpdateMutation' } & Pick<UpdateMutation, 'updated'>);
-          };
-      `)
+      expect(content).toBeSimilarStringTo(
+        `export type SubmitMessageMutation = ({ __typename?: 'Mutation' } & { mutation: (({ __typename?: 'DeleteMutation' } & Pick<DeleteMutation, 'deleted'>) | ({ __typename?: 'UpdateMutation' } & Pick<UpdateMutation, 'updated'>)) });`
       );
     });
 
@@ -764,10 +757,8 @@ describe('TypeScript Operations Plugin', () => {
         }
       );
 
-      expect(format(content)).toBeSimilarStringTo(
-        format(`
-          export type PostQuery = { __typename?: 'Query' } & { post: { __typename?: 'Post' } & ({ __typename: 'Post' }) };
-        `)
+      expect(content).toBeSimilarStringTo(
+        `export type PostQuery = ({ __typename?: 'Query' } & { post: ({ __typename?: 'Post' } & ({ __typename: 'Post' })) });`
       );
     });
 
@@ -801,14 +792,8 @@ describe('TypeScript Operations Plugin', () => {
         }
       );
 
-      expect(format(content)).toBeSimilarStringTo(
-        format(`
-          export type InfoQuery = { __typename?: 'Query' } & {
-            __schema: { __typename?: '__Schema' } & {
-              queryType: { __typename?: '__Type' } & { fields: Maybe<Array<{ __typename?: '__Field' } & Pick<__Field, 'name'>>> };
-            };
-          };
-        `)
+      expect(content).toBeSimilarStringTo(
+        `export type InfoQuery = ({ __typename?: 'Query' } & { __schema: ({ __typename?: '__Schema' } & { queryType: ({ __typename?: '__Type' } & { fields: Maybe<Array<({ __typename?: '__Field' } & Pick<__Field, 'name'>)>> }) }) });`
       );
     });
 
@@ -845,22 +830,8 @@ describe('TypeScript Operations Plugin', () => {
         }
       );
 
-      expect(format(content)).toBeSimilarStringTo(
-        format(`
-        export type InfoQuery = { __typename?: 'Query' } & {
-          __type: Maybe<
-            { __typename?: '__Type' } & Pick<__Type, 'name'> & {
-                fields: Maybe<
-                  Array<
-                    { __typename?: '__Field' } & Pick<__Field, 'name'> & {
-                        type: { __typename?: '__Type' } & Pick<__Type, 'name' | 'kind'>;
-                      }
-                  >
-                >;
-              }
-          >;
-        };
-      `)
+      expect(content).toBeSimilarStringTo(
+        `export type InfoQuery = ({ __typename?: 'Query' } & { __type: Maybe<({ __typename?: '__Type' } & Pick<__Type, 'name'> & { fields: Maybe<Array<({ __typename?: '__Field' } & Pick<__Field, 'name'> & { type: ({ __typename?: '__Type' } & Pick<__Type, 'name' | 'kind'>) })>> })> });`
       );
     });
 
@@ -958,16 +929,11 @@ describe('TypeScript Operations Plugin', () => {
         }
       );
 
-      expect(format(content)).toBeSimilarStringTo(
-        format(`
-          export type PREFIX_UsersQueryVariables = {
-            filter: PREFIX_Filter;
-          };
-          
-          export type PREFIX_UsersQuery = { __typename?: 'Query' } & {
-            users: Maybe<Array<Maybe<{ __typename?: 'User' } & Pick<PREFIX_User, 'access'>>>>;
-          };      
-      `)
+      expect(content).toBeSimilarStringTo(`export type PREFIX_UsersQueryVariables = {
+        filter: PREFIX_Filter
+      };`);
+      expect(content).toBeSimilarStringTo(
+        `export type PREFIX_UsersQuery = ({ __typename?: 'Query' } & { users: Maybe<Array<Maybe<({ __typename?: 'User' } & Pick<PREFIX_User, 'access'>)>>> });`
       );
     });
   });

@@ -32,14 +32,15 @@ export const plugin: PluginFunction<TypeScriptPluginConfig> = (
   documents: DocumentFile[],
   config: TypeScriptPluginConfig
 ) => {
-  const visitor = new TsVisitor(config) as any;
+  const visitor = new TsVisitor(schema, config);
   const printedSchema = printSchema(schema);
   const astNode = parse(printedSchema);
   const header = `type Maybe<T> = ${visitor.config.maybeValue};`;
   const visitorResult = visit(astNode, { leave: visitor });
   const introspectionDefinitions = includeIntrospectionDefinitions(schema, documents, config);
+  const scalars = visitor.scalarsDefinition;
 
-  return [header, ...visitorResult.definitions, ...introspectionDefinitions].join('\n');
+  return [header, scalars, ...visitorResult.definitions, ...introspectionDefinitions].join('\n');
 };
 
 function includeIntrospectionDefinitions(
@@ -67,7 +68,7 @@ function includeIntrospectionDefinitions(
     collectTypes(type);
   });
 
-  const visitor = new TsIntrospectionVisitor(config, typesToInclude);
+  const visitor = new TsIntrospectionVisitor(schema, config, typesToInclude);
   const result: DocumentNode = visit(parse(printIntrospectionSchema(schema)), { leave: visitor });
 
   // recursively go through each `usedTypes` and their children and collect all used types

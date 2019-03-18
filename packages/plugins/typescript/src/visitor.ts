@@ -8,7 +8,8 @@ import {
   NonNullTypeNode,
   EnumTypeDefinitionNode,
   Kind,
-  InputValueDefinitionNode
+  InputValueDefinitionNode,
+  GraphQLSchema
 } from 'graphql';
 import { TypeScriptOperationVariablesToObject } from './typescript-variables-to-object';
 
@@ -24,19 +25,15 @@ export class TsVisitor<
   TRawConfig extends TypeScriptPluginConfig = TypeScriptPluginConfig,
   TParsedConfig extends TypeScriptPluginParsedConfig = TypeScriptPluginParsedConfig
 > extends BaseTypesVisitor<TRawConfig, TParsedConfig> {
-  constructor(pluginConfig: TRawConfig, additionalConfig: Partial<TParsedConfig> = {}) {
-    super(
-      pluginConfig,
-      {
-        avoidOptionals: pluginConfig.avoidOptionals || false,
-        maybeValue: pluginConfig.maybeValue || 'T | null',
-        constEnums: pluginConfig.constEnums || false,
-        enumsAsTypes: pluginConfig.enumsAsTypes || false,
-        immutableTypes: pluginConfig.immutableTypes || false,
-        ...(additionalConfig || {})
-      } as TParsedConfig,
-      null
-    );
+  constructor(schema: GraphQLSchema, pluginConfig: TRawConfig, additionalConfig: Partial<TParsedConfig> = {}) {
+    super(schema, pluginConfig, {
+      avoidOptionals: pluginConfig.avoidOptionals || false,
+      maybeValue: pluginConfig.maybeValue || 'T | null',
+      constEnums: pluginConfig.constEnums || false,
+      enumsAsTypes: pluginConfig.enumsAsTypes || false,
+      immutableTypes: pluginConfig.immutableTypes || false,
+      ...(additionalConfig || {})
+    } as TParsedConfig);
 
     autoBind(this);
     this.setArgumentsTransformer(

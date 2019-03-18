@@ -1,28 +1,36 @@
 type Maybe<T> = T | null;
+export type Scalars = {
+  ID: string,
+  String: string,
+  Boolean: boolean,
+  Int: number,
+  Float: number,
+};
+
 export type Comment = {
-  id: number,
+  id: Scalars['Int'],
   postedBy: User,
-  createdAt: number,
-  content: string,
-  repoName: string,
+  createdAt: Scalars['Float'],
+  content: Scalars['String'],
+  repoName: Scalars['String'],
 };
 
 export type Entry = {
   repository: Repository,
   postedBy: User,
-  createdAt: number,
-  score: number,
-  hotScore: number,
+  createdAt: Scalars['Float'],
+  score: Scalars['Int'],
+  hotScore: Scalars['Float'],
   comments: Array<Maybe<Comment>>,
-  commentCount: number,
-  id: number,
+  commentCount: Scalars['Int'],
+  id: Scalars['Int'],
   vote: Vote,
 };
 
 
 export type EntryCommentsArgs = {
-  limit?: Maybe<number>,
-  offset?: Maybe<number>
+  limit?: Maybe<Scalars['Int']>,
+  offset?: Maybe<Scalars['Int']>
 };
 
 export enum FeedType {
@@ -39,19 +47,19 @@ export type Mutation = {
 
 
 export type MutationSubmitRepositoryArgs = {
-  repoFullName: string
+  repoFullName: Scalars['String']
 };
 
 
 export type MutationVoteArgs = {
-  repoFullName: string,
+  repoFullName: Scalars['String'],
   type: VoteType
 };
 
 
 export type MutationSubmitCommentArgs = {
-  repoFullName: string,
-  commentContent: string
+  repoFullName: Scalars['String'],
+  commentContent: Scalars['String']
 };
 
 export type Query = {
@@ -63,22 +71,22 @@ export type Query = {
 
 export type QueryFeedArgs = {
   type: FeedType,
-  offset?: Maybe<number>,
-  limit?: Maybe<number>
+  offset?: Maybe<Scalars['Int']>,
+  limit?: Maybe<Scalars['Int']>
 };
 
 
 export type QueryEntryArgs = {
-  repoFullName: string
+  repoFullName: Scalars['String']
 };
 
 export type Repository = {
-  name: string,
-  full_name: string,
-  description?: Maybe<string>,
-  html_url: string,
-  stargazers_count: number,
-  open_issues_count?: Maybe<number>,
+  name: Scalars['String'],
+  full_name: Scalars['String'],
+  description?: Maybe<Scalars['String']>,
+  html_url: Scalars['String'],
+  stargazers_count: Scalars['Int'],
+  open_issues_count?: Maybe<Scalars['Int']>,
   owner?: Maybe<User>,
 };
 
@@ -88,17 +96,17 @@ export type Subscription = {
 
 
 export type SubscriptionCommentAddedArgs = {
-  repoFullName: string
+  repoFullName: Scalars['String']
 };
 
 export type User = {
-  login: string,
-  avatar_url: string,
-  html_url: string,
+  login: Scalars['String'],
+  avatar_url: Scalars['String'],
+  html_url: Scalars['String'],
 };
 
 export type Vote = {
-  vote_value: number,
+  vote_value: Scalars['Int'],
 };
 
 export enum VoteType {
@@ -107,16 +115,16 @@ export enum VoteType {
   Cancel = 'CANCEL'
 }
 export type OnCommentAddedSubscriptionVariables = {
-  repoFullName: string
+  repoFullName: Scalars['String']
 };
 
 
 export type OnCommentAddedSubscription = ({ __typename?: 'Subscription' } & { commentAdded: Maybe<({ __typename?: 'Comment' } & Pick<Comment, 'id' | 'createdAt' | 'content'> & { postedBy: ({ __typename?: 'User' } & Pick<User, 'login' | 'html_url'>) })> });
 
 export type CommentQueryVariables = {
-  repoFullName: string,
-  limit?: Maybe<number>,
-  offset?: Maybe<number>
+  repoFullName: Scalars['String'],
+  limit?: Maybe<Scalars['Int']>,
+  offset?: Maybe<Scalars['Int']>
 };
 
 
@@ -133,15 +141,15 @@ export type FeedEntryFragment = ({ __typename?: 'Entry' } & Pick<Entry, 'id' | '
 
 export type FeedQueryVariables = {
   type: FeedType,
-  offset?: Maybe<number>,
-  limit?: Maybe<number>
+  offset?: Maybe<Scalars['Int']>,
+  limit?: Maybe<Scalars['Int']>
 };
 
 
 export type FeedQuery = ({ __typename?: 'Query' } & { currentUser: Maybe<({ __typename?: 'User' } & Pick<User, 'login'>)>, feed: Maybe<Array<Maybe<({ __typename?: 'Entry' } & FeedEntryFragment)>>> });
 
 export type SubmitRepositoryMutationVariables = {
-  repoFullName: string
+  repoFullName: Scalars['String']
 };
 
 
@@ -150,8 +158,8 @@ export type SubmitRepositoryMutation = ({ __typename?: 'Mutation' } & { submitRe
 export type RepoInfoFragment = ({ __typename?: 'Entry' } & Pick<Entry, 'createdAt'> & { repository: ({ __typename?: 'Repository' } & Pick<Repository, 'description' | 'stargazers_count' | 'open_issues_count'>), postedBy: ({ __typename?: 'User' } & Pick<User, 'html_url' | 'login'>) });
 
 export type SubmitCommentMutationVariables = {
-  repoFullName: string,
-  commentContent: string
+  repoFullName: Scalars['String'],
+  commentContent: Scalars['String']
 };
 
 
@@ -160,7 +168,7 @@ export type SubmitCommentMutation = ({ __typename?: 'Mutation' } & { submitComme
 export type VoteButtonsFragment = ({ __typename?: 'Entry' } & Pick<Entry, 'score'> & { vote: ({ __typename?: 'Vote' } & Pick<Vote, 'vote_value'>) });
 
 export type VoteMutationVariables = {
-  repoFullName: string,
+  repoFullName: Scalars['String'],
   type: VoteType
 };
 
