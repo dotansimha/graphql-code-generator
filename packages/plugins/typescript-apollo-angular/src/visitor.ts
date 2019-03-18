@@ -1,10 +1,6 @@
-import {
-  ClientSideBaseVisitor,
-  ClientSideBasePluginConfig,
-  getConfigValue
-} from 'graphql-codegen-visitor-plugin-common';
+import { ClientSideBaseVisitor, ClientSideBasePluginConfig } from 'graphql-codegen-visitor-plugin-common';
 import * as autoBind from 'auto-bind';
-import { parse, FragmentDefinitionNode, OperationDefinitionNode, print } from 'graphql';
+import { FragmentDefinitionNode, OperationDefinitionNode, print, visit } from 'graphql';
 import { ApolloAngularRawPluginConfig } from './index';
 
 const R_MOD = /module\:\s*"([^"]+)"/; // matches: module: "..."
@@ -81,19 +77,33 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
     };
   }
 
-  private _operationHasDirective(operation: OperationDefinitionNode, directive: string) {
-    return print(operation).includes(`@${directive}`);
-  }
-
-  private _removeDirective(document: OperationDefinitionNode, directive: string): OperationDefinitionNode {
-    if (this._operationHasDirective(document, directive)) {
-      return parse(print(document).replace(R_DEF(directive), '')).definitions[0] as OperationDefinitionNode;
+  private _operationHasDirective(operation: string | OperationDefinitionNode, directive: string) {
+    if (typeof operation === 'string') {
+      return operation.includes(`@${directive}`);
     }
 
-    return parse(print(document)).definitions[0] as OperationDefinitionNode;
+    let found = false;
+
+    visit(operation, {
+      Directive(node) {
+        if (node.name.value === directive) {
+          found = true;
+        }
+      }
+    });
+
+    return found;
   }
 
-  private _removeDirectives(document: OperationDefinitionNode, directives: string[]): OperationDefinitionNode {
+  private _removeDirective(document: string, directive: string): string {
+    if (this._operationHasDirective(document, directive)) {
+      return document.replace(R_DEF(directive), '');
+    }
+
+    return document;
+  }
+
+  private _removeDirectives(document: string, directives: string[]): string {
     return directives.reduce((doc, directive) => this._removeDirective(doc, directive), document);
   }
 
@@ -108,9 +118,7 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
   }
 
   protected _prepareDocument(documentStr: string): string {
-    return print(
-      this._removeDirectives(parse(documentStr).definitions[0] as OperationDefinitionNode, ['NgModule', 'namedClient'])
-    );
+    return this._removeDirectives(documentStr, ['NgModule', 'namedClient']);
   }
 
   private _namedClient(operation: OperationDefinitionNode): string {
@@ -154,7 +162,7 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<
     providedIn: ${this._providedIn(node)}
   })
   export class ${this.convertName(
-    node.name.value
+    node
   )}GQL extends Apollo.${operationType}<${operationResultType}, ${operationVariablesTypes}> {
     document = ${documentVariableName};
     ${this._namedClient(node)}

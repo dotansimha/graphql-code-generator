@@ -280,4 +280,33 @@ describe('Apollo Angular', () => {
       validateTypeScript(content, modifiedSchema, docs, {});
     });
   });
+
+  describe('others', () => {
+    it('should handle fragments', async () => {
+      const myFeed = gql`
+        query MyFeed {
+          feed {
+            ...MyEntry
+          }
+        }
+
+        fragment MyEntry on Entry {
+          id
+          commentCount
+        }
+      `;
+
+      const docs = [{ filePath: '', content: myFeed }];
+      const content = await plugin(
+        schema,
+        docs,
+        {},
+        {
+          outputFile: 'graphql.ts'
+        }
+      );
+
+      validateTypeScript(content, schema, docs, {});
+    });
+  });
 });
