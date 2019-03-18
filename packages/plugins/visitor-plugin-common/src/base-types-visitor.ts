@@ -107,7 +107,9 @@ export class BaseTypesVisitor<
 
   UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number, parent: any): string {
     const originalNode = parent[key] as UnionTypeDefinitionNode;
-    const possibleTypes = originalNode.types.map(t => this.convertName(t)).join(' | ');
+    const possibleTypes = originalNode.types
+      .map(t => (this.scalars[t.name.value] ? this._getScalar(t.name.value) : this.convertName(t)))
+      .join(' | ');
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()

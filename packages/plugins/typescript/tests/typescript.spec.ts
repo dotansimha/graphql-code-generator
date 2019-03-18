@@ -4,6 +4,30 @@ import { validateTs } from './validate';
 import { plugin } from '../src/index';
 
 describe('TypeScript', () => {
+  describe('Issues', () => {
+    it('#1462 - Union of scalars and argument of directive', async () => {
+      const schema = buildSchema(`
+      union Any = String | Int | Float | ID
+
+      directive @default(
+        value: Any,
+      ) on ENUM_VALUE | FIELD_DEFINITION
+    
+      type CardEdge {
+        count: Int! @default(value: 1)
+      }`);
+
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+      expect(result).toBeSimilarStringTo(
+        `export type Any = Scalars['String'] | Scalars['Int'] | Scalars['Float'] | Scalars['ID'];`
+      );
+      expect(result).toBeSimilarStringTo(`
+      export type CardEdge = {
+        count: Scalars['Int'],
+      };`);
+      validateTs(result);
+    });
+  });
   describe('Config', () => {
     it('Should build type correctly when specified with avoidOptionals config', async () => {
       const schema = buildSchema(`
