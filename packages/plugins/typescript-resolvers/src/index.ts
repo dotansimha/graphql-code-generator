@@ -6,6 +6,7 @@ import { TypeScriptResolversVisitor } from './visitor';
 export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
   avoidOptionals?: boolean;
   immutableTypes?: boolean;
+  useIndexSignature?: boolean;
 }
 
 export const plugin: PluginFunction<TypeScriptResolversPluginConfig> = (
@@ -22,6 +23,13 @@ export const plugin: PluginFunction<TypeScriptResolversPluginConfig> = (
     imports.push('GraphQLScalarType', 'GraphQLScalarTypeConfig');
   }
 
+  const indexSignature = config.useIndexSignature
+    ? [
+        'export type WithIndex<TObject> = TObject & Record<string, any>;',
+        'export type ResolversObject<TObject> = WithIndex<TObject>;'
+      ].join('\n')
+    : '';
+
   const visitor = new TypeScriptResolversVisitor(config, schema);
 
   const header = `
@@ -29,7 +37,7 @@ import { ${imports.join(', ')} } from 'graphql';
 
 export type ArrayOrIterable<T> = Array<T> | Iterable<T>;
 
-export type WithIndex<TObject> = TObject & {[key: string]: void};
+${indexSignature}
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
@@ -85,8 +93,6 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   context: TContext,
   info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
-
-export type ResolversObject<TObject> = WithIndex<TObject>;
 `;
 
   const printedSchema = printSchema(schema);
