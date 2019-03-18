@@ -5,8 +5,9 @@ import {
 } from 'graphql-codegen-visitor-plugin-common';
 import { ReactApolloRawPluginConfig } from './index';
 import * as autoBind from 'auto-bind';
-import { FragmentDefinitionNode, print, OperationDefinitionNode } from 'graphql';
+import { FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
 import { toPascalCase } from 'graphql-codegen-plugin-helpers';
+import { titleCase } from 'change-case';
 
 export interface ReactApolloPluginConfig extends ClientSideBasePluginConfig {
   withHOC: boolean;
@@ -67,7 +68,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     const operationName: string = this.convertName(node.name.value);
     const propsTypeName: string = operationName + 'Props';
 
-    const propsVar = `export type ${propsTypeName}<TChildProps = any> = ${this._buildHocProps(
+    const propsVar = `export type ${propsTypeName}<TChildProps = {}> = ${this._buildHocProps(
       node.name.value,
       node.operation
     )} & TChildProps;`;
@@ -79,12 +80,14 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
           )} = ReactApollo.MutationFn<${operationResultType}, ${operationVariablesTypes}>;`
         : null;
 
-    const hocString = `export function ${operationName}HOC<TProps, TChildProps = any>(operationOptions: ReactApollo.OperationOption<
+    const hocString = `export function with${operationName}<TProps, TChildProps = {}>(operationOptions: ReactApollo.OperationOption<
   TProps, 
   ${operationResultType},
   ${operationVariablesTypes},
   ${propsTypeName}<TChildProps>> | undefined) {
-    return ReactApollo.graphql<TProps, ${operationResultType}, ${operationVariablesTypes}, ${propsTypeName}<TChildProps>>(${documentVariableName}, operationOptions);
+    return ReactApollo.with${titleCase(
+      node.operation
+    )}<TProps, ${operationResultType}, ${operationVariablesTypes}, ${propsTypeName}<TChildProps>>(${documentVariableName}, operationOptions);
 };`;
 
     return [propsVar, mutationFn, hocString].filter(a => a).join('\n');

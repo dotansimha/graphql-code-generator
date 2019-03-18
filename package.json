@@ -46,8 +46,11 @@
     "rimraf": "2.6.3",
     "ts-jest": "24.0.0",
     "graphql-tools": "4.0.4",
+    "react-apollo": "2.5.2",
+    "react-apollo-hooks": "0.4.3",
     "apollo-link": "1.2.11",
-    "microbundle": "0.11.0"
+    "microbundle": "0.11.0",
+    "apollo-server": "2.4.8"
   },
   "lint-staged": {
     "*.{ts,tsx}": [

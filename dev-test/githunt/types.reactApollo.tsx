@@ -249,13 +249,13 @@ export class OnCommentAddedComponent extends React.Component<Partial<ReactApollo
       );
   }
 }
-export type OnCommentAddedProps<TChildProps = any> = Partial<ReactApollo.DataProps<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>> & TChildProps;
-export function OnCommentAddedHOC<TProps, TChildProps = any>(operationOptions: ReactApollo.OperationOption<
+export type OnCommentAddedProps<TChildProps = {}> = Partial<ReactApollo.DataProps<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>> & TChildProps;
+export function withOnCommentAdded<TProps, TChildProps = {}>(operationOptions: ReactApollo.OperationOption<
   TProps, 
   OnCommentAddedSubscription,
   OnCommentAddedSubscriptionVariables,
   OnCommentAddedProps<TChildProps>> | undefined) {
-    return ReactApollo.graphql<TProps, OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables, OnCommentAddedProps<TChildProps>>(OnCommentAddedDocument, operationOptions);
+    return ReactApollo.withSubscription<TProps, OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables, OnCommentAddedProps<TChildProps>>(OnCommentAddedDocument, operationOptions);
 };
 export const CommentDocument = gql`
     query Comment($repoFullName: String!, $limit: Int, $offset: Int) {
@@ -294,13 +294,13 @@ export class CommentComponent extends React.Component<Partial<ReactApollo.QueryP
       );
   }
 }
-export type CommentProps<TChildProps = any> = Partial<ReactApollo.DataProps<CommentQuery, CommentQueryVariables>> & TChildProps;
-export function CommentHOC<TProps, TChildProps = any>(operationOptions: ReactApollo.OperationOption<
+export type CommentProps<TChildProps = {}> = Partial<ReactApollo.DataProps<CommentQuery, CommentQueryVariables>> & TChildProps;
+export function withComment<TProps, TChildProps = {}>(operationOptions: ReactApollo.OperationOption<
   TProps, 
   CommentQuery,
   CommentQueryVariables,
   CommentProps<TChildProps>> | undefined) {
-    return ReactApollo.graphql<TProps, CommentQuery, CommentQueryVariables, CommentProps<TChildProps>>(CommentDocument, operationOptions);
+    return ReactApollo.withQuery<TProps, CommentQuery, CommentQueryVariables, CommentProps<TChildProps>>(CommentDocument, operationOptions);
 };
 export const CurrentUserForProfileDocument = gql`
     query CurrentUserForProfile {
@@ -318,13 +318,13 @@ export class CurrentUserForProfileComponent extends React.Component<Partial<Reac
       );
   }
 }
-export type CurrentUserForProfileProps<TChildProps = any> = Partial<ReactApollo.DataProps<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>> & TChildProps;
-export function CurrentUserForProfileHOC<TProps, TChildProps = any>(operationOptions: ReactApollo.OperationOption<
+export type CurrentUserForProfileProps<TChildProps = {}> = Partial<ReactApollo.DataProps<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>> & TChildProps;
+export function withCurrentUserForProfile<TProps, TChildProps = {}>(operationOptions: ReactApollo.OperationOption<
   TProps, 
   CurrentUserForProfileQuery,
   CurrentUserForProfileQueryVariables,
   CurrentUserForProfileProps<TChildProps>> | undefined) {
-    return ReactApollo.graphql<TProps, CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables, CurrentUserForProfileProps<TChildProps>>(CurrentUserForProfileDocument, operationOptions);
+    return ReactApollo.withQuery<TProps, CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables, CurrentUserForProfileProps<TChildProps>>(CurrentUserForProfileDocument, operationOptions);
 };
 export const FeedDocument = gql`
     query Feed($type: FeedType!, $offset: Int, $limit: Int) {
@@ -344,13 +344,13 @@ export class FeedComponent extends React.Component<Partial<ReactApollo.QueryProp
       );
   }
 }
-export type FeedProps<TChildProps = any> = Partial<ReactApollo.DataProps<FeedQuery, FeedQueryVariables>> & TChildProps;
-export function FeedHOC<TProps, TChildProps = any>(operationOptions: ReactApollo.OperationOption<
+export type FeedProps<TChildProps = {}> = Partial<ReactApollo.DataProps<FeedQuery, FeedQueryVariables>> & TChildProps;
+export function withFeed<TProps, TChildProps = {}>(operationOptions: ReactApollo.OperationOption<
   TProps, 
   FeedQuery,
   FeedQueryVariables,
   FeedProps<TChildProps>> | undefined) {
-    return ReactApollo.graphql<TProps, FeedQuery, FeedQueryVariables, FeedProps<TChildProps>>(FeedDocument, operationOptions);
+    return ReactApollo.withQuery<TProps, FeedQuery, FeedQueryVariables, FeedProps<TChildProps>>(FeedDocument, operationOptions);
 };
 export const SubmitRepositoryDocument = gql`
     mutation submitRepository($repoFullName: String!) {
@@ -367,14 +367,14 @@ export class SubmitRepositoryComponent extends React.Component<Partial<ReactApol
       );
   }
 }
-export type SubmitRepositoryProps<TChildProps = any> = Partial<ReactApollo.MutateProps<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>> & TChildProps;
+export type SubmitRepositoryProps<TChildProps = {}> = Partial<ReactApollo.MutateProps<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>> & TChildProps;
 export type SubmitRepositoryMutationFn = ReactApollo.MutationFn<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>;
-export function SubmitRepositoryHOC<TProps, TChildProps = any>(operationOptions: ReactApollo.OperationOption<
+export function withSubmitRepository<TProps, TChildProps = {}>(operationOptions: ReactApollo.OperationOption<
   TProps, 
   SubmitRepositoryMutation,
   SubmitRepositoryMutationVariables,
   SubmitRepositoryProps<TChildProps>> | undefined) {
-    return ReactApollo.graphql<TProps, SubmitRepositoryMutation, SubmitRepositoryMutationVariables, SubmitRepositoryProps<TChildProps>>(SubmitRepositoryDocument, operationOptions);
+    return ReactApollo.withMutation<TProps, SubmitRepositoryMutation, SubmitRepositoryMutationVariables, SubmitRepositoryProps<TChildProps>>(SubmitRepositoryDocument, operationOptions);
 };
 export const SubmitCommentDocument = gql`
     mutation submitComment($repoFullName: String!, $commentContent: String!) {
@@ -391,14 +391,14 @@ export class SubmitCommentComponent extends React.Component<Partial<ReactApollo.
       );
   }
 }
-export type SubmitCommentProps<TChildProps = any> = Partial<ReactApollo.MutateProps<SubmitCommentMutation, SubmitCommentMutationVariables>> & TChildProps;
+export type SubmitCommentProps<TChildProps = {}> = Partial<ReactApollo.MutateProps<SubmitCommentMutation, SubmitCommentMutationVariables>> & TChildProps;
 export type SubmitCommentMutationFn = ReactApollo.MutationFn<SubmitCommentMutation, SubmitCommentMutationVariables>;
-export function SubmitCommentHOC<TProps, TChildProps = any>(operationOptions: ReactApollo.OperationOption<
+export function withSubmitComment<TProps, TChildProps = {}>(operationOptions: ReactApollo.OperationOption<
   TProps, 
   SubmitCommentMutation,
   SubmitCommentMutationVariables,
   SubmitCommentProps<TChildProps>> | undefined) {
-    return ReactApollo.graphql<TProps, SubmitCommentMutation, SubmitCommentMutationVariables, SubmitCommentProps<TChildProps>>(SubmitCommentDocument, operationOptions);
+    return ReactApollo.withMutation<TProps, SubmitCommentMutation, SubmitCommentMutationVariables, SubmitCommentProps<TChildProps>>(SubmitCommentDocument, operationOptions);
 };
 export const VoteDocument = gql`
     mutation vote($repoFullName: String!, $type: VoteType!) {
@@ -419,12 +419,12 @@ export class VoteComponent extends React.Component<Partial<ReactApollo.MutationP
       );
   }
 }
-export type VoteProps<TChildProps = any> = Partial<ReactApollo.MutateProps<VoteMutation, VoteMutationVariables>> & TChildProps;
+export type VoteProps<TChildProps = {}> = Partial<ReactApollo.MutateProps<VoteMutation, VoteMutationVariables>> & TChildProps;
 export type VoteMutationFn = ReactApollo.MutationFn<VoteMutation, VoteMutationVariables>;
-export function VoteHOC<TProps, TChildProps = any>(operationOptions: ReactApollo.OperationOption<
+export function withVote<TProps, TChildProps = {}>(operationOptions: ReactApollo.OperationOption<
   TProps, 
   VoteMutation,
   VoteMutationVariables,
   VoteProps<TChildProps>> | undefined) {
-    return ReactApollo.graphql<TProps, VoteMutation, VoteMutationVariables, VoteProps<TChildProps>>(VoteDocument, operationOptions);
+    return ReactApollo.withMutation<TProps, VoteMutation, VoteMutationVariables, VoteProps<TChildProps>>(VoteDocument, operationOptions);
 };
