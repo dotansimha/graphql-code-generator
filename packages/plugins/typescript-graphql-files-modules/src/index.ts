@@ -1,8 +1,11 @@
 import { basename } from 'path';
-import { DocumentFile, PluginFunction, PluginValidateFn } from 'graphql-codegen-plugin-helpers';
+import { Types, PluginFunction, PluginValidateFn } from 'graphql-codegen-plugin-helpers';
 import { GraphQLSchema, OperationDefinitionNode } from 'graphql';
 
-export const plugin: PluginFunction = async (schema: GraphQLSchema, documents: DocumentFile[]): Promise<string> => {
+export const plugin: PluginFunction = async (
+  schema: GraphQLSchema,
+  documents: Types.DocumentFile[]
+): Promise<string> => {
   const mappedDocuments: { [fileName: string]: OperationDefinitionNode[] } = documents.reduce(
     (prev, documentRecord) => {
       const fileName = basename(documentRecord.filePath);
@@ -45,7 +48,7 @@ declare module '*/${fileName}' {
 
 export const validate: PluginValidateFn<any> = async (
   schema: GraphQLSchema,
-  documents: DocumentFile[],
+  documents: Types.DocumentFile[],
   config: any,
   outputFile: string
 ) => {

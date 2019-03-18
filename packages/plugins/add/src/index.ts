@@ -1,5 +1,5 @@
 import { GraphQLSchema } from 'graphql';
-import { PluginFunction, DocumentFile } from 'graphql-codegen-plugin-helpers';
+import { PluginFunction, Types } from 'graphql-codegen-plugin-helpers';
 
 export type AddPluginConfig = string | string[];
 
@@ -7,7 +7,7 @@ const nl = '\n';
 
 export const plugin: PluginFunction<AddPluginConfig> = async (
   schema: GraphQLSchema,
-  documents: DocumentFile[],
+  documents: Types.DocumentFile[],
   config: AddPluginConfig
 ): Promise<string> => {
   const asArray = Array.isArray(config)

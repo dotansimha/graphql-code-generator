@@ -1,5 +1,5 @@
 import { GraphQLSchema, parse, execute } from 'graphql';
-import { PluginFunction, PluginValidateFn, DocumentFile } from 'graphql-codegen-plugin-helpers';
+import { PluginFunction, PluginValidateFn, Types } from 'graphql-codegen-plugin-helpers';
 import { extname } from 'path';
 
 interface IntrospectionResultData {
@@ -104,7 +104,7 @@ export const plugin: PluginFunction = async (
 
 export const validate: PluginValidateFn<any> = async (
   _schema: GraphQLSchema,
-  _documents: DocumentFile[],
+  _documents: Types.DocumentFile[],
   config: FragmentMatcherConfig,
   outputFile: string
 ) => {

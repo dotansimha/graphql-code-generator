@@ -49,43 +49,45 @@ describe('TypeScript Resolvers Plugin', () => {
     const result = await plugin(schema, [], {}, { outputFile: '' });
 
     expect(result).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveResolver<Result, Parent, Context = any, Args = {   arg?: Maybe<number>,
-      arg2?: Maybe<string>, arg3?: Maybe<boolean> }> = DirectiveResolverFn<Result, Parent, Context, Args>;
+    export type MyDirectiveDirectiveResolver<Result, Parent, Context = any, Args = {   arg?: Maybe<Scalars['Int']>,
+      arg2?: Maybe<Scalars['String']>, arg3?: Maybe<Scalars['Boolean']> }> = DirectiveResolverFn<Result, Parent, Context, Args>;`);
 
-    export interface MyOtherTypeResolvers<Context = any, ParentType = MyOtherType> {
-      bar?: Resolver<string, ParentType, Context>,
-    }
+    expect(result).toBeSimilarStringTo(`export interface MyOtherTypeResolvers<Context = any, ParentType = MyOtherType> {
+      bar?: Resolver<Scalars['String'], ParentType, Context>,
+    }`);
 
-    export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<MyScalar, any> {
+    expect(result)
+      .toBeSimilarStringTo(`export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<Scalars['MyScalar'], any> {
       name: 'MyScalar'
-    }
+    }`);
 
-    export interface MyTypeResolvers<Context = any, ParentType = MyType> {
-      foo?: Resolver<string, ParentType, Context>,
+    expect(result).toBeSimilarStringTo(`export interface MyTypeResolvers<Context = any, ParentType = MyType> {
+      foo?: Resolver<Scalars['String'], ParentType, Context>,
       otherType?: Resolver<Maybe<MyOtherType>, ParentType, Context>,
-      withArgs?: Resolver<Maybe<string>, ParentType, Context, MyTypeWithArgsArgs>,
-    }
+      withArgs?: Resolver<Maybe<Scalars['String']>, ParentType, Context, MyTypeWithArgsArgs>,
+    }`);
 
-    export interface MyUnionResolvers<Context = any, ParentType = MyUnion> {
+    expect(result).toBeSimilarStringTo(`export interface MyUnionResolvers<Context = any, ParentType = MyUnion> {
       __resolveType: TypeResolveFn<'MyType' | 'MyOtherType'>
-    }
+    }`);
 
-    export interface NodeResolvers<Context = any, ParentType = Node> {
-      __resolveType: TypeResolveFn<'SomeNode'>
-    }
+    expect(result).toBeSimilarStringTo(`export interface NodeResolvers<Context = any, ParentType = Node> {
+      __resolveType: TypeResolveFn<'SomeNode'>,
+      id?: Resolver<Scalars['ID'], ParentType, Context>,
+    }`);
 
-    export interface QueryResolvers<Context = any, ParentType = Query> {
+    expect(result).toBeSimilarStringTo(`export interface QueryResolvers<Context = any, ParentType = Query> {
       something?: Resolver<MyType, ParentType, Context>,
-    }
+    }`);
 
-    export interface SomeNodeResolvers<Context = any, ParentType = SomeNode> {
-      id?: Resolver<string, ParentType, Context>,
-    }
+    expect(result).toBeSimilarStringTo(`export interface SomeNodeResolvers<Context = any, ParentType = SomeNode> {
+      id?: Resolver<Scalars['ID'], ParentType, Context>,
+    }`);
 
-    export interface SubscriptionResolvers<Context = any, ParentType = Subscription> {
+    expect(result)
+      .toBeSimilarStringTo(`export interface SubscriptionResolvers<Context = any, ParentType = Subscription> {
       somethingChanged?: SubscriptionResolver<Maybe<MyOtherType>, ParentType, Context>,
-    }
-    `);
+    }`);
 
     await validate(result);
   });
@@ -121,43 +123,46 @@ describe('TypeScript Resolvers Plugin', () => {
     );
 
     expect(result).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveResolver<Result, Parent, Context = any, Args = {   arg?: Maybe<number>,
-      arg2?: Maybe<string>, arg3?: Maybe<boolean> }> = DirectiveResolverFn<Result, Parent, Context, Args>;
+    export type MyDirectiveDirectiveResolver<Result, Parent, Context = any, Args = {   arg?: Maybe<Scalars['Int']>,
+      arg2?: Maybe<Scalars['String']>, arg3?: Maybe<Scalars['Boolean']> }> = DirectiveResolverFn<Result, Parent, Context, Args>;`);
 
-    export interface MyOtherTypeResolvers<Context = any, ParentType = MyCustomOtherType> {
-      bar?: Resolver<string, ParentType, Context>,
-    }
+    expect(result)
+      .toBeSimilarStringTo(`export interface MyOtherTypeResolvers<Context = any, ParentType = MyCustomOtherType> {
+      bar?: Resolver<Scalars['String'], ParentType, Context>,
+    }`);
 
-    export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<MyScalar, any> {
+    expect(result)
+      .toBeSimilarStringTo(`export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<Scalars['MyScalar'], any> {
       name: 'MyScalar'
-    }
+    }`);
 
-    export interface MyTypeResolvers<Context = any, ParentType = MyType> {
-      foo?: Resolver<string, ParentType, Context>,
+    expect(result).toBeSimilarStringTo(`export interface MyTypeResolvers<Context = any, ParentType = MyType> {
+      foo?: Resolver<Scalars['String'], ParentType, Context>,
       otherType?: Resolver<Maybe<MyCustomOtherType>, ParentType, Context>,
-      withArgs?: Resolver<Maybe<string>, ParentType, Context, MyTypeWithArgsArgs>,
-    }
+      withArgs?: Resolver<Maybe<Scalars['String']>, ParentType, Context, MyTypeWithArgsArgs>,
+    }`);
 
-    export interface MyUnionResolvers<Context = any, ParentType = MyUnion> {
+    expect(result).toBeSimilarStringTo(`export interface MyUnionResolvers<Context = any, ParentType = MyUnion> {
       __resolveType: TypeResolveFn<'MyType' | 'MyOtherType'>
-    }
+    }`);
 
-    export interface NodeResolvers<Context = any, ParentType = Node> {
-      __resolveType: TypeResolveFn<'SomeNode'>
-    }
+    expect(result).toBeSimilarStringTo(`export interface NodeResolvers<Context = any, ParentType = Node> {
+      __resolveType: TypeResolveFn<'SomeNode'>,
+      id?: Resolver<Scalars['ID'], ParentType, Context>,
+    }`);
 
-    export interface QueryResolvers<Context = any, ParentType = Query> {
+    expect(result).toBeSimilarStringTo(`export interface QueryResolvers<Context = any, ParentType = Query> {
       something?: Resolver<MyType, ParentType, Context>,
-    }
+    }`);
 
-    export interface SomeNodeResolvers<Context = any, ParentType = SomeNode> {
-      id?: Resolver<string, ParentType, Context>,
-    }
+    expect(result).toBeSimilarStringTo(`export interface SomeNodeResolvers<Context = any, ParentType = SomeNode> {
+      id?: Resolver<Scalars['ID'], ParentType, Context>,
+    }`);
 
-    export interface SubscriptionResolvers<Context = any, ParentType = Subscription> {
+    expect(result)
+      .toBeSimilarStringTo(`export interface SubscriptionResolvers<Context = any, ParentType = Subscription> {
       somethingChanged?: SubscriptionResolver<Maybe<MyCustomOtherType>, ParentType, Context>,
-    }
-    `);
+    }`);
     await validate(`type MyCustomOtherType = {}\n${result}`);
   });
 
@@ -175,43 +180,46 @@ describe('TypeScript Resolvers Plugin', () => {
 
     expect(result).toBeSimilarStringTo(`import { MyCustomOtherType } from './my-file';`);
     expect(result).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveResolver<Result, Parent, Context = any, Args = {   arg?: Maybe<number>,
-      arg2?: Maybe<string>, arg3?: Maybe<boolean> }> = DirectiveResolverFn<Result, Parent, Context, Args>;
+    export type MyDirectiveDirectiveResolver<Result, Parent, Context = any, Args = {   arg?: Maybe<Scalars['Int']>,
+      arg2?: Maybe<Scalars['String']>, arg3?: Maybe<Scalars['Boolean']> }> = DirectiveResolverFn<Result, Parent, Context, Args>;`);
 
-    export interface MyOtherTypeResolvers<Context = any, ParentType = MyCustomOtherType> {
-      bar?: Resolver<string, ParentType, Context>,
-    }
+    expect(result)
+      .toBeSimilarStringTo(`export interface MyOtherTypeResolvers<Context = any, ParentType = MyCustomOtherType> {
+      bar?: Resolver<Scalars['String'], ParentType, Context>,
+    }`);
 
-    export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<MyScalar, any> {
+    expect(result)
+      .toBeSimilarStringTo(`export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<Scalars['MyScalar'], any> {
       name: 'MyScalar'
-    }
+    }`);
 
-    export interface MyTypeResolvers<Context = any, ParentType = MyType> {
-      foo?: Resolver<string, ParentType, Context>,
+    expect(result).toBeSimilarStringTo(`export interface MyTypeResolvers<Context = any, ParentType = MyType> {
+      foo?: Resolver<Scalars['String'], ParentType, Context>,
       otherType?: Resolver<Maybe<MyCustomOtherType>, ParentType, Context>,
-      withArgs?: Resolver<Maybe<string>, ParentType, Context, MyTypeWithArgsArgs>,
-    }
+      withArgs?: Resolver<Maybe<Scalars['String']>, ParentType, Context, MyTypeWithArgsArgs>,
+    }`);
 
-    export interface MyUnionResolvers<Context = any, ParentType = MyUnion> {
+    expect(result).toBeSimilarStringTo(`export interface MyUnionResolvers<Context = any, ParentType = MyUnion> {
       __resolveType: TypeResolveFn<'MyType' | 'MyOtherType'>
-    }
+    }`);
 
-    export interface NodeResolvers<Context = any, ParentType = Node> {
-      __resolveType: TypeResolveFn<'SomeNode'>
-    }
+    expect(result).toBeSimilarStringTo(`export interface NodeResolvers<Context = any, ParentType = Node> {
+      __resolveType: TypeResolveFn<'SomeNode'>,
+      id?: Resolver<Scalars['ID'], ParentType, Context>,
+    }`);
 
-    export interface QueryResolvers<Context = any, ParentType = Query> {
+    expect(result).toBeSimilarStringTo(`export interface QueryResolvers<Context = any, ParentType = Query> {
       something?: Resolver<MyType, ParentType, Context>,
-    }
+    }`);
 
-    export interface SomeNodeResolvers<Context = any, ParentType = SomeNode> {
-      id?: Resolver<string, ParentType, Context>,
-    }
+    expect(result).toBeSimilarStringTo(`export interface SomeNodeResolvers<Context = any, ParentType = SomeNode> {
+      id?: Resolver<Scalars['ID'], ParentType, Context>,
+    }`);
 
-    export interface SubscriptionResolvers<Context = any, ParentType = Subscription> {
+    expect(result)
+      .toBeSimilarStringTo(`export interface SubscriptionResolvers<Context = any, ParentType = Subscription> {
       somethingChanged?: SubscriptionResolver<Maybe<MyCustomOtherType>, ParentType, Context>,
-    }
-    `);
+    }`);
     await validate(result);
   });
 
@@ -220,7 +228,7 @@ describe('TypeScript Resolvers Plugin', () => {
     const config = { typesPrefix: 'T' };
     const result = await plugin(testSchema, [], config, { outputFile: '' });
 
-    expect(result).toBeSimilarStringTo(`f?: Resolver<Maybe<string>, ParentType, Context, TMyTypeFArgs>,`);
+    expect(result).toBeSimilarStringTo(`f?: Resolver<Maybe<Scalars['String']>, ParentType, Context, TMyTypeFArgs>,`);
     await validate(result, config, testSchema);
   });
   it('should generate Resolvers interface', async () => {
@@ -272,5 +280,60 @@ describe('TypeScript Resolvers Plugin', () => {
         modify?: ModifyDirectiveResolver<any, any, Context>,
       } & { [directiveName: string]: DirectiveResolverFn<any, any, Context, any> };
     `);
+  });
+
+  it('should use Iterable on ListNodes', async () => {
+    const testSchema = buildSchema(/* GraphQL */ `
+      type Query {
+        foo: [User]
+        bar: [User!]
+        baz: [User!]!
+      }
+
+      enum Role {
+        A
+        B
+        C
+        D
+      }
+
+      type User {
+        id: ID!
+        name: String!
+        roles: [Role!]!
+      }
+    `);
+
+    const tsContent = await tsPlugin(testSchema, [], {}, { outputFile: 'graphql.ts' });
+    const resolversContent = await plugin(
+      testSchema,
+      [],
+      {},
+      {
+        outputFile: 'graphql.ts'
+      }
+    );
+    const content = [tsContent, resolversContent].join('\n');
+
+    expect(content).toBeSimilarStringTo(`
+      export interface QueryResolvers<Context = any, ParentType = Query> {
+        foo?: Resolver<Maybe<ArrayOrIterable<Maybe<User>>>, ParentType, Context>,
+        bar?: Resolver<Maybe<ArrayOrIterable<User>>, ParentType, Context>,
+        baz?: Resolver<ArrayOrIterable<User>, ParentType, Context>,
+      }
+
+      export interface UserResolvers<Context = any, ParentType = User> {
+        id?: Resolver<Scalars['ID'], ParentType, Context>,
+        name?: Resolver<Scalars['String'], ParentType, Context>,
+        roles?: Resolver<ArrayOrIterable<Role>, ParentType, Context>,
+      }
+
+      export type IResolvers<Context = any> = {
+        Query?: QueryResolvers<Context>,
+        User?: UserResolvers<Context>,
+      } & { [typeName: string] : { [ fieldName: string ]: ( Resolver<any, any, Context, any> | SubscriptionResolver<any, any, Context, any> ) } };
+    `);
+
+    validateTs(content);
   });
 });

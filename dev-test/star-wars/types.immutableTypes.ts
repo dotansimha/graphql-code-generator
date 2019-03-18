@@ -1,31 +1,39 @@
 type Maybe<T> = T | null;
+export type Scalars = {
+  ID: string,
+  String: string,
+  Boolean: boolean,
+  Int: number,
+  Float: number,
+};
+
 export type Character = {
-  readonly id: string,
-  readonly name: string,
+  readonly id: Scalars['ID'],
+  readonly name: Scalars['String'],
   readonly friends?: Maybe<ReadonlyArray<Maybe<Character>>>,
   readonly friendsConnection: FriendsConnection,
   readonly appearsIn: ReadonlyArray<Maybe<Episode>>,
 };
 
 export type ColorInput = {
-  red: number,
-  green: number,
-  blue: number,
+  red: Scalars['Int'],
+  green: Scalars['Int'],
+  blue: Scalars['Int'],
 };
 
 export type Droid = Character & {
-  readonly id: string,
-  readonly name: string,
+  readonly id: Scalars['ID'],
+  readonly name: Scalars['String'],
   readonly friends?: Maybe<ReadonlyArray<Maybe<Character>>>,
   readonly friendsConnection: FriendsConnection,
   readonly appearsIn: ReadonlyArray<Maybe<Episode>>,
-  readonly primaryFunction?: Maybe<string>,
+  readonly primaryFunction?: Maybe<Scalars['String']>,
 };
 
 
 export type DroidFriendsConnectionArgs = {
-  first?: Maybe<number>,
-  after?: Maybe<string>
+  first?: Maybe<Scalars['Int']>,
+  after?: Maybe<Scalars['ID']>
 };
 
 export enum Episode {
@@ -35,23 +43,23 @@ export enum Episode {
 }
 
 export type FriendsConnection = {
-  readonly totalCount?: Maybe<number>,
+  readonly totalCount?: Maybe<Scalars['Int']>,
   readonly edges?: Maybe<ReadonlyArray<Maybe<FriendsEdge>>>,
   readonly friends?: Maybe<ReadonlyArray<Maybe<Character>>>,
   readonly pageInfo: PageInfo,
 };
 
 export type FriendsEdge = {
-  readonly cursor: string,
+  readonly cursor: Scalars['ID'],
   readonly node?: Maybe<Character>,
 };
 
 export type Human = Character & {
-  readonly id: string,
-  readonly name: string,
-  readonly homePlanet?: Maybe<string>,
-  readonly height?: Maybe<number>,
-  readonly mass?: Maybe<number>,
+  readonly id: Scalars['ID'],
+  readonly name: Scalars['String'],
+  readonly homePlanet?: Maybe<Scalars['String']>,
+  readonly height?: Maybe<Scalars['Float']>,
+  readonly mass?: Maybe<Scalars['Float']>,
   readonly friends?: Maybe<ReadonlyArray<Maybe<Character>>>,
   readonly friendsConnection: FriendsConnection,
   readonly appearsIn: ReadonlyArray<Maybe<Episode>>,
@@ -65,8 +73,8 @@ export type HumanHeightArgs = {
 
 
 export type HumanFriendsConnectionArgs = {
-  first?: Maybe<number>,
-  after?: Maybe<string>
+  first?: Maybe<Scalars['Int']>,
+  after?: Maybe<Scalars['ID']>
 };
 
 export enum LengthUnit {
@@ -85,9 +93,9 @@ export type MutationCreateReviewArgs = {
 };
 
 export type PageInfo = {
-  readonly startCursor?: Maybe<string>,
-  readonly endCursor?: Maybe<string>,
-  readonly hasNextPage: boolean,
+  readonly startCursor?: Maybe<Scalars['ID']>,
+  readonly endCursor?: Maybe<Scalars['ID']>,
+  readonly hasNextPage: Scalars['Boolean'],
 };
 
 export type Query = {
@@ -112,46 +120,46 @@ export type QueryReviewsArgs = {
 
 
 export type QuerySearchArgs = {
-  text?: Maybe<string>
+  text?: Maybe<Scalars['String']>
 };
 
 
 export type QueryCharacterArgs = {
-  id: string
+  id: Scalars['ID']
 };
 
 
 export type QueryDroidArgs = {
-  id: string
+  id: Scalars['ID']
 };
 
 
 export type QueryHumanArgs = {
-  id: string
+  id: Scalars['ID']
 };
 
 
 export type QueryStarshipArgs = {
-  id: string
+  id: Scalars['ID']
 };
 
 export type Review = {
-  readonly stars: number,
-  readonly commentary?: Maybe<string>,
+  readonly stars: Scalars['Int'],
+  readonly commentary?: Maybe<Scalars['String']>,
 };
 
 export type ReviewInput = {
-  stars: number,
-  commentary: Maybe<string>,
-  favoriteColor: Maybe<ColorInput>,
+  stars: Scalars['Int'],
+  commentary?: Maybe<Scalars['String']>,
+  favoriteColor?: Maybe<ColorInput>,
 };
 
 export type SearchResult = Human | Droid | Starship;
 
 export type Starship = {
-  readonly id: string,
-  readonly name: string,
-  readonly length?: Maybe<number>,
+  readonly id: Scalars['ID'],
+  readonly name: Scalars['String'],
+  readonly length?: Maybe<Scalars['Float']>,
 };
 
 
@@ -203,7 +211,7 @@ export type HeroNameQuery = ({ readonly __typename?: 'Query' } & { readonly hero
 
 export type HeroNameConditionalInclusionQueryVariables = {
   episode?: Maybe<Episode>,
-  includeName: boolean
+  includeName: Scalars['Boolean']
 };
 
 
@@ -211,7 +219,7 @@ export type HeroNameConditionalInclusionQuery = ({ readonly __typename?: 'Query'
 
 export type HeroNameConditionalExclusionQueryVariables = {
   episode?: Maybe<Episode>,
-  skipName: boolean
+  skipName: Scalars['Boolean']
 };
 
 

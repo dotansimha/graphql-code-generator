@@ -1,29 +1,38 @@
 /* @flow */
 
+
+export type Scalars = {
+  ID: string,
+  String: string,
+  Boolean: boolean,
+  Int: number,
+  Float: number,
+};
+
 export type Comment = {
-  id: number,
+  id: $ElementType<Scalars, 'Int'>,
   postedBy: User,
-  createdAt: number,
-  content: string,
-  repoName: string,
+  createdAt: $ElementType<Scalars, 'Float'>,
+  content: $ElementType<Scalars, 'String'>,
+  repoName: $ElementType<Scalars, 'String'>,
 };
 
 export type Entry = {
   repository: Repository,
   postedBy: User,
-  createdAt: number,
-  score: number,
-  hotScore: number,
+  createdAt: $ElementType<Scalars, 'Float'>,
+  score: $ElementType<Scalars, 'Int'>,
+  hotScore: $ElementType<Scalars, 'Float'>,
   comments: Array<?Comment>,
-  commentCount: number,
-  id: number,
+  commentCount: $ElementType<Scalars, 'Int'>,
+  id: $ElementType<Scalars, 'Int'>,
   vote: Vote,
 };
 
 
 export type EntryCommentsArgs = {
-  limit?: ?number,
-  offset?: ?number
+  limit?: ?$ElementType<Scalars, 'Int'>,
+  offset?: ?$ElementType<Scalars, 'Int'>
 };
 
 export const FeedTypeValues = Object.freeze({
@@ -43,19 +52,19 @@ export type Mutation = {
 
 
 export type MutationSubmitRepositoryArgs = {
-  repoFullName: string
+  repoFullName: $ElementType<Scalars, 'String'>
 };
 
 
 export type MutationVoteArgs = {
-  repoFullName: string,
+  repoFullName: $ElementType<Scalars, 'String'>,
   type: VoteType
 };
 
 
 export type MutationSubmitCommentArgs = {
-  repoFullName: string,
-  commentContent: string
+  repoFullName: $ElementType<Scalars, 'String'>,
+  commentContent: $ElementType<Scalars, 'String'>
 };
 
 export type Query = {
@@ -67,22 +76,22 @@ export type Query = {
 
 export type QueryFeedArgs = {
   type: FeedType,
-  offset?: ?number,
-  limit?: ?number
+  offset?: ?$ElementType<Scalars, 'Int'>,
+  limit?: ?$ElementType<Scalars, 'Int'>
 };
 
 
 export type QueryEntryArgs = {
-  repoFullName: string
+  repoFullName: $ElementType<Scalars, 'String'>
 };
 
 export type Repository = {
-  name: string,
-  full_name: string,
-  description?: ?string,
-  html_url: string,
-  stargazers_count: number,
-  open_issues_count?: ?number,
+  name: $ElementType<Scalars, 'String'>,
+  full_name: $ElementType<Scalars, 'String'>,
+  description?: ?$ElementType<Scalars, 'String'>,
+  html_url: $ElementType<Scalars, 'String'>,
+  stargazers_count: $ElementType<Scalars, 'Int'>,
+  open_issues_count?: ?$ElementType<Scalars, 'Int'>,
   owner?: ?User,
 };
 
@@ -92,17 +101,17 @@ export type Subscription = {
 
 
 export type SubscriptionCommentAddedArgs = {
-  repoFullName: string
+  repoFullName: $ElementType<Scalars, 'String'>
 };
 
 export type User = {
-  login: string,
-  avatar_url: string,
-  html_url: string,
+  login: $ElementType<Scalars, 'String'>,
+  avatar_url: $ElementType<Scalars, 'String'>,
+  html_url: $ElementType<Scalars, 'String'>,
 };
 
 export type Vote = {
-  vote_value: number,
+  vote_value: $ElementType<Scalars, 'Int'>,
 };
 
 export const VoteTypeValues = Object.freeze({
@@ -116,16 +125,16 @@ export type VoteType = $Values<typeof VoteTypeValues>;
 type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;
 
 export type OnCommentAddedSubscriptionVariables = {
-  repoFullName: string
+  repoFullName: $ElementType<Scalars, 'String'>
 };
 
 
 export type OnCommentAddedSubscription = ({ __typename?: 'Subscription' } & { commentAdded: ?({ __typename?: 'Comment' } & $Pick<Comment, { id: *, createdAt: *, content: * }> & { postedBy: ({ __typename?: 'User' } & $Pick<User, { login: *, html_url: * }>) }) });
 
 export type CommentQueryVariables = {
-  repoFullName: string,
-  limit?: ?number,
-  offset?: ?number
+  repoFullName: $ElementType<Scalars, 'String'>,
+  limit?: ?$ElementType<Scalars, 'Int'>,
+  offset?: ?$ElementType<Scalars, 'Int'>
 };
 
 
@@ -142,15 +151,15 @@ export type FeedEntryFragment = ({ __typename?: 'Entry' } & $Pick<Entry, { id: *
 
 export type FeedQueryVariables = {
   type: FeedType,
-  offset?: ?number,
-  limit?: ?number
+  offset?: ?$ElementType<Scalars, 'Int'>,
+  limit?: ?$ElementType<Scalars, 'Int'>
 };
 
 
 export type FeedQuery = ({ __typename?: 'Query' } & { currentUser: ?({ __typename?: 'User' } & $Pick<User, { login: * }>), feed: ?Array<?({ __typename?: 'Entry' } & FeedEntryFragment)> });
 
 export type SubmitRepositoryMutationVariables = {
-  repoFullName: string
+  repoFullName: $ElementType<Scalars, 'String'>
 };
 
 
@@ -159,8 +168,8 @@ export type SubmitRepositoryMutation = ({ __typename?: 'Mutation' } & { submitRe
 export type RepoInfoFragment = ({ __typename?: 'Entry' } & $Pick<Entry, { createdAt: * }> & { repository: ({ __typename?: 'Repository' } & $Pick<Repository, { description: *, stargazers_count: *, open_issues_count: * }>), postedBy: ({ __typename?: 'User' } & $Pick<User, { html_url: *, login: * }>) });
 
 export type SubmitCommentMutationVariables = {
-  repoFullName: string,
-  commentContent: string
+  repoFullName: $ElementType<Scalars, 'String'>,
+  commentContent: $ElementType<Scalars, 'String'>
 };
 
 
@@ -169,7 +178,7 @@ export type SubmitCommentMutation = ({ __typename?: 'Mutation' } & { submitComme
 export type VoteButtonsFragment = ({ __typename?: 'Entry' } & $Pick<Entry, { score: * }> & { vote: ({ __typename?: 'Vote' } & $Pick<Vote, { vote_value: * }>) });
 
 export type VoteMutationVariables = {
-  repoFullName: string,
+  repoFullName: $ElementType<Scalars, 'String'>,
   type: VoteType
 };
 

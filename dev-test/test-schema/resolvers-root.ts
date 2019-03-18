@@ -1,14 +1,22 @@
 // tslint:disable
 type Maybe<T> = T | null;
+export type Scalars = {
+  ID: string,
+  String: string,
+  Boolean: boolean,
+  Int: number,
+  Float: number,
+};
+
 export type QueryRoot = {
   allUsers: Array<Maybe<User>>,
   userById?: Maybe<User>,
-  answer: Array<number>,
+  answer: Array<Scalars['Int']>,
 };
 
 
 export type QueryRootUserByIdArgs = {
-  id: number
+  id: Scalars['Int']
 };
 
 export type SubscriptionRoot = {
@@ -16,12 +24,14 @@ export type SubscriptionRoot = {
 };
 
 export type User = {
-  id: number,
-  name: string,
-  email: string,
+  id: Scalars['Int'],
+  name: Scalars['String'],
+  email: Scalars['String'],
 };
 
 import { GraphQLResolveInfo } from 'graphql';
+
+export type ArrayOrIterable<T> = Array<T> | Iterable<T>;
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent?: TParent,
@@ -79,9 +89,9 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 ) => TResult | Promise<TResult>;
 
 export interface QueryRootResolvers<Context = any, ParentType = QueryRoot> {
-  allUsers?: Resolver<Array<Maybe<User>>, ParentType, Context>,
+  allUsers?: Resolver<ArrayOrIterable<Maybe<User>>, ParentType, Context>,
   userById?: Resolver<Maybe<User>, ParentType, Context, QueryRootUserByIdArgs>,
-  answer?: Resolver<Array<number>, ParentType, Context>,
+  answer?: Resolver<ArrayOrIterable<Scalars['Int']>, ParentType, Context>,
 }
 
 export interface SubscriptionRootResolvers<Context = any, ParentType = SubscriptionRoot> {
@@ -89,9 +99,9 @@ export interface SubscriptionRootResolvers<Context = any, ParentType = Subscript
 }
 
 export interface UserResolvers<Context = any, ParentType = User> {
-  id?: Resolver<number, ParentType, Context>,
-  name?: Resolver<string, ParentType, Context>,
-  email?: Resolver<string, ParentType, Context>,
+  id?: Resolver<Scalars['Int'], ParentType, Context>,
+  name?: Resolver<Scalars['String'], ParentType, Context>,
+  email?: Resolver<Scalars['String'], ParentType, Context>,
 }
 
 export type IResolvers<Context = any> = {

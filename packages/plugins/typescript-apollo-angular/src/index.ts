@@ -1,14 +1,19 @@
-import { DocumentFile, PluginValidateFn, PluginFunction } from 'graphql-codegen-plugin-helpers';
+import { Types, PluginValidateFn, PluginFunction } from 'graphql-codegen-plugin-helpers';
 import { visit, GraphQLSchema, concatAST, Kind, FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
 import { RawClientSideBasePluginConfig } from 'graphql-codegen-visitor-plugin-common';
 import { ApolloAngularVisitor } from './visitor';
 import { extname } from 'path';
 import gql from 'graphql-tag';
 
-export const plugin: PluginFunction<RawClientSideBasePluginConfig> = (
+export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginConfig {
+  ngModule?: string;
+  namedClient?: string;
+}
+
+export const plugin: PluginFunction<ApolloAngularRawPluginConfig> = (
   schema: GraphQLSchema,
-  documents: DocumentFile[],
-  config: RawClientSideBasePluginConfig
+  documents: Types.DocumentFile[],
+  config
 ) => {
   const allAst = concatAST(
     documents.reduce((prev, v) => {
@@ -39,8 +44,8 @@ export const addToSchema = gql`
 
 export const validate: PluginValidateFn<any> = async (
   schema: GraphQLSchema,
-  documents: DocumentFile[],
-  config: any,
+  documents: Types.DocumentFile[],
+  config,
   outputFile: string
 ) => {
   if (extname(outputFile) !== '.ts') {

@@ -1,15 +1,7 @@
 import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor';
 import { EnumValuesMap, ScalarsMap } from './types';
 import { OperationVariablesToObject } from './variables-to-object';
-import { DeclarationBlockConfig, DeclarationBlock, indent, wrapWithSingleQuotes } from './utils';
-import {
-  NonNullTypeNode,
-  UnionTypeDefinitionNode,
-  InterfaceTypeDefinitionNode,
-  ScalarTypeDefinitionNode,
-  EnumValueDefinitionNode,
-  NamedTypeNode
-} from 'graphql/language/ast';
+import { DeclarationBlockConfig, DeclarationBlock, indent, wrapWithSingleQuotes, buildScalars } from './utils';
 import {
   InputObjectTypeDefinitionNode,
   InputValueDefinitionNode,
@@ -18,10 +10,16 @@ import {
   ObjectTypeDefinitionNode,
   EnumTypeDefinitionNode,
   DirectiveDefinitionNode,
-  ListTypeNode
+  ListTypeNode,
+  GraphQLSchema,
+  NonNullTypeNode,
+  UnionTypeDefinitionNode,
+  InterfaceTypeDefinitionNode,
+  ScalarTypeDefinitionNode,
+  EnumValueDefinitionNode,
+  NamedTypeNode
 } from 'graphql';
 import { DEFAULT_SCALARS } from './scalars';
-import { ASTNode } from 'graphql';
 
 export interface ParsedTypesConfig extends ParsedConfig {
   enumValues: EnumValuesMap;
@@ -37,17 +35,36 @@ export class BaseTypesVisitor<
 > extends BaseVisitor<TRawConfig, TPluginConfig> {
   protected _argumentsTransformer: OperationVariablesToObject;
 
-  constructor(rawConfig: TRawConfig, additionalConfig: TPluginConfig, defaultScalars: ScalarsMap = DEFAULT_SCALARS) {
+  constructor(
+    protected _schema: GraphQLSchema,
+    rawConfig: TRawConfig,
+    additionalConfig: TPluginConfig,
+    defaultScalars: ScalarsMap = DEFAULT_SCALARS
+  ) {
     super(
       rawConfig,
       {
         enumValues: rawConfig.enumValues || {},
         ...additionalConfig
       },
-      defaultScalars
+      buildScalars(_schema, defaultScalars)
     );
 
     this._argumentsTransformer = new OperationVariablesToObject(this.scalars, this.convertName);
+  }
+
+  public get scalarsDefinition(): string {
+    const allScalars = Object.keys(this.config.scalars).map(scalarName => {
+      const scalarValue = this.config.scalars[scalarName];
+
+      return indent(`${scalarName}: ${scalarValue},`);
+    });
+
+    return new DeclarationBlock(this._declarationBlockConfig)
+      .export()
+      .asKind('type')
+      .withName('Scalars')
+      .withBlock(allScalars.join('\n')).string;
   }
 
   setDeclarationBlockConfig(config: DeclarationBlockConfig): void {
@@ -88,7 +105,9 @@ export class BaseTypesVisitor<
 
   UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number, parent: any): string {
     const originalNode = parent[key] as UnionTypeDefinitionNode;
-    const possibleTypes = originalNode.types.map(t => this.convertName(t)).join(' | ');
+    const possibleTypes = originalNode.types
+      .map(t => (this.scalars[t.name.value] ? this._getScalar(t.name.value) : this.convertName(t)))
+      .join(' | ');
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
@@ -140,11 +159,8 @@ export class BaseTypesVisitor<
   }
 
   ScalarTypeDefinition(node: ScalarTypeDefinitionNode): string {
-    return new DeclarationBlock(this._declarationBlockConfig)
-      .export()
-      .asKind('type')
-      .withName(this.convertName(node))
-      .withContent(this.config.scalars[node.name as any] || 'any').string;
+    // We empty this because we handle scalars in a different way, see constructor.
+    return '';
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
@@ -171,8 +187,18 @@ export class BaseTypesVisitor<
     return '';
   }
 
+  protected _getScalar(name: string): string {
+    return `Scalars['${name}']`;
+  }
+
   protected _getTypeForNode(node: NamedTypeNode): string {
-    return this.scalars[(node.name as any) as string] || this.convertName(node);
+    const typeAsString = (node.name as any) as string;
+
+    if (this.scalars[typeAsString]) {
+      return this._getScalar(typeAsString);
+    }
+
+    return this.convertName(node);
   }
 
   NamedType(node: NamedTypeNode): string {

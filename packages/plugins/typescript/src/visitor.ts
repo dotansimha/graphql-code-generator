@@ -1,14 +1,15 @@
 import { DeclarationBlock, indent, BaseTypesVisitor, ParsedTypesConfig } from 'graphql-codegen-visitor-plugin-common';
 import { TypeScriptPluginConfig } from './index';
 import * as autoBind from 'auto-bind';
-
 import {
   FieldDefinitionNode,
   NamedTypeNode,
   ListTypeNode,
   NonNullTypeNode,
   EnumTypeDefinitionNode,
-  Kind
+  Kind,
+  InputValueDefinitionNode,
+  GraphQLSchema
 } from 'graphql';
 import { TypeScriptOperationVariablesToObject } from './typescript-variables-to-object';
 
@@ -24,19 +25,15 @@ export class TsVisitor<
   TRawConfig extends TypeScriptPluginConfig = TypeScriptPluginConfig,
   TParsedConfig extends TypeScriptPluginParsedConfig = TypeScriptPluginParsedConfig
 > extends BaseTypesVisitor<TRawConfig, TParsedConfig> {
-  constructor(pluginConfig: TRawConfig, additionalConfig: Partial<TParsedConfig> = {}) {
-    super(
-      pluginConfig,
-      {
-        avoidOptionals: pluginConfig.avoidOptionals || false,
-        maybeValue: pluginConfig.maybeValue || 'T | null',
-        constEnums: pluginConfig.constEnums || false,
-        enumsAsTypes: pluginConfig.enumsAsTypes || false,
-        immutableTypes: pluginConfig.immutableTypes || false,
-        ...(additionalConfig || {})
-      } as TParsedConfig,
-      null
-    );
+  constructor(schema: GraphQLSchema, pluginConfig: TRawConfig, additionalConfig: Partial<TParsedConfig> = {}) {
+    super(schema, pluginConfig, {
+      avoidOptionals: pluginConfig.avoidOptionals || false,
+      maybeValue: pluginConfig.maybeValue || 'T | null',
+      constEnums: pluginConfig.constEnums || false,
+      enumsAsTypes: pluginConfig.enumsAsTypes || false,
+      immutableTypes: pluginConfig.immutableTypes || false,
+      ...(additionalConfig || {})
+    } as TParsedConfig);
 
     autoBind(this);
     this.setArgumentsTransformer(
@@ -54,7 +51,7 @@ export class TsVisitor<
 
   private clearOptional(str: string): string {
     if (str.startsWith('Maybe')) {
-      return str.replace(/Maybe<(.*?)>/, '$1');
+      return str.replace(/Maybe<(.*?)>$/, '$1');
     }
 
     return str;
@@ -86,6 +83,13 @@ export class TsVisitor<
     return indent(
       `${this.config.immutableTypes ? 'readonly ' : ''}${node.name}${addOptionalSign ? '?' : ''}: ${typeString},`
     );
+  }
+
+  InputValueDefinition(node: InputValueDefinitionNode, key?: number | string, parent?: any): string {
+    const originalFieldNode = parent[key] as FieldDefinitionNode;
+    const addOptionalSign = !this.config.avoidOptionals && originalFieldNode.type.kind !== Kind.NON_NULL_TYPE;
+
+    return indent(`${node.name}${addOptionalSign ? '?' : ''}: ${node.type},`);
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {

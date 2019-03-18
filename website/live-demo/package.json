@@ -4,8 +4,8 @@
   "private": true,
   "homepage": "/live-demo/",
   "devDependencies": {
-    "aws-sdk": "2.421.0",
-    "source-map-explorer": "1.7.0"
+    "aws-sdk": "2.422.0",
+    "source-map-explorer": "1.8.0"
   },
   "dependencies": {
     "react": "16.8.4",
@@ -29,7 +29,6 @@
     "graphql-codegen-typescript-graphql-files-modules": "0.18.0",
     "graphql-codegen-typescript-mongodb": "0.18.0",
     "graphql-codegen-typescript-react-apollo": "0.18.0",
-    "prettier": "1.16.4",
     "@material-ui/core": "3.9.2"
   },
   "scripts": {

@@ -14,7 +14,6 @@
     "tslib": "1.9.3",
     "change-case": "3.1.0",
     "common-tags": "1.8.0",
-    "ts-log": "2.1.4",
     "import-from": "2.1.0"
   },
   "devDependencies": {

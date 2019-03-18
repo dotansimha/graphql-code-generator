@@ -1,18 +1,21 @@
-import { FileOutput, Types, debugLog } from 'graphql-codegen-plugin-helpers';
+import { Types } from 'graphql-codegen-plugin-helpers';
 import { executeCodegen } from './codegen';
 import { createWatcher } from './utils/watcher';
 import { fileExists, writeSync } from './utils/file-system';
+import { sync as mkdirpSync } from 'mkdirp';
+import { dirname } from 'path';
+import { debugLog } from './utils/debugging';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
-export async function generate(config: Types.Config, saveToFile = true): Promise<FileOutput[] | any> {
-  async function writeOutput(generationResult: FileOutput[]) {
+export async function generate(config: Types.Config, saveToFile = true): Promise<Types.FileOutput[] | any> {
+  async function writeOutput(generationResult: Types.FileOutput[]) {
     if (!saveToFile) {
       return generationResult;
     }
 
     await Promise.all(
-      generationResult.map(async (result: FileOutput) => {
+      generationResult.map(async (result: Types.FileOutput) => {
         if (!shouldOverwrite(config, result.filename) && fileExists(result.filename)) {
           return;
         }
@@ -23,6 +26,8 @@ export async function generate(config: Types.Config, saveToFile = true): Promise
           return;
         }
 
+        const basedir = dirname(result.filename);
+        mkdirpSync(basedir);
         writeSync(result.filename, result.content);
       })
     );

@@ -46,6 +46,7 @@
     "@types/is-glob": "4.0.0",
     "@types/prettier": "1.16.1",
     "@types/valid-url": "1.0.2",
+    "@types/mkdirp": "0.5.2",
     "babel-types": "7.0.0-beta.3",
     "babylon": "7.0.0-beta.47",
     "chalk": "2.4.2",
@@ -76,7 +77,8 @@
     "prettier": "1.16.4",
     "request": "2.88.0",
     "tslib": "1.9.3",
-    "valid-url": "1.0.9"
+    "valid-url": "1.0.9",
+    "ts-log": "2.1.4"
   },
   "devDependencies": {
     "@types/chokidar": "1.7.5",

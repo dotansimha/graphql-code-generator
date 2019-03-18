@@ -1,6 +1,7 @@
-import { ClientSideBaseVisitor } from 'graphql-codegen-visitor-plugin-common';
+import { ClientSideBaseVisitor, ClientSideBasePluginConfig } from 'graphql-codegen-visitor-plugin-common';
 import * as autoBind from 'auto-bind';
-import { parse, FragmentDefinitionNode, OperationDefinitionNode, print, Kind } from 'graphql';
+import { FragmentDefinitionNode, OperationDefinitionNode, print, visit } from 'graphql';
+import { ApolloAngularRawPluginConfig } from './index';
 
 const R_MOD = /module\:\s*"([^"]+)"/; // matches: module: "..."
 const R_NAME = /name\:\s*"([^"]+)"/; // matches: name: "..."
@@ -9,9 +10,24 @@ function R_DEF(directive: string) {
   return new RegExp(`\\s+\\@${directive}\\([^)]+\\)`, 'gm');
 }
 
-export class ApolloAngularVisitor extends ClientSideBaseVisitor {
-  constructor(fragments: FragmentDefinitionNode[], private _allOperations: OperationDefinitionNode[], rawConfig) {
-    super(fragments, rawConfig, {});
+export interface ApolloAngularPluginConfig extends ClientSideBasePluginConfig {
+  ngModule?: string;
+  namedClient?: string;
+}
+
+export class ApolloAngularVisitor extends ClientSideBaseVisitor<
+  ApolloAngularRawPluginConfig,
+  ApolloAngularPluginConfig
+> {
+  constructor(
+    fragments: FragmentDefinitionNode[],
+    private _allOperations: OperationDefinitionNode[],
+    rawConfig: ApolloAngularRawPluginConfig
+  ) {
+    super(fragments, rawConfig, {
+      ngModule: rawConfig.ngModule,
+      namedClient: rawConfig.namedClient
+    });
 
     autoBind(this);
   }
@@ -23,9 +39,11 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor {
     const defs: Record<string, { path: string; module: string }> = {};
 
     this._allOperations
-      .filter(op => this._operationHasDirective(op, 'NgModule'))
+      .filter(op => this._operationHasDirective(op, 'NgModule') || !!this.config.ngModule)
       .forEach(op => {
-        const def = this._extractNgModule(op);
+        const def = this._operationHasDirective(op, 'NgModule')
+          ? this._extractNgModule(op)
+          : this._parseNgModule(this.config.ngModule);
 
         // by setting key as link we easily get rid of duplicated imports
         // every path should be relative to the output file
@@ -46,6 +64,10 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor {
 
   private _extractNgModule(operation: OperationDefinitionNode) {
     const [, link] = print(operation).match(R_MOD);
+    return this._parseNgModule(link);
+  }
+
+  private _parseNgModule(link: string) {
     const [path, module] = link.split('#');
 
     return {
@@ -55,19 +77,33 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor {
     };
   }
 
-  private _operationHasDirective(operation: OperationDefinitionNode, directive: string) {
-    return print(operation).includes(`@${directive}`);
-  }
-
-  private _removeDirective(document: OperationDefinitionNode, directive: string): OperationDefinitionNode {
-    if (this._operationHasDirective(document, directive)) {
-      return parse(print(document).replace(R_DEF(directive), '')).definitions[0] as OperationDefinitionNode;
+  private _operationHasDirective(operation: string | OperationDefinitionNode, directive: string) {
+    if (typeof operation === 'string') {
+      return operation.includes(`@${directive}`);
     }
 
-    return parse(print(document)).definitions[0] as OperationDefinitionNode;
+    let found = false;
+
+    visit(operation, {
+      Directive(node) {
+        if (node.name.value === directive) {
+          found = true;
+        }
+      }
+    });
+
+    return found;
   }
 
-  private _removeDirectives(document: OperationDefinitionNode, directives: string[]): OperationDefinitionNode {
+  private _removeDirective(document: string, directive: string): string {
+    if (this._operationHasDirective(document, directive)) {
+      return document.replace(R_DEF(directive), '');
+    }
+
+    return document;
+  }
+
+  private _removeDirectives(document: string, directives: string[]): string {
     return directives.reduce((doc, directive) => this._removeDirective(doc, directive), document);
   }
 
@@ -82,19 +118,19 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor {
   }
 
   protected _prepareDocument(documentStr: string): string {
-    return print(
-      this._removeDirectives(parse(documentStr).definitions[0] as OperationDefinitionNode, ['NgModule', 'namedClient'])
-    );
+    return this._removeDirectives(documentStr, ['NgModule', 'namedClient']);
   }
 
   private _namedClient(operation: OperationDefinitionNode): string {
-    if (!this._operationHasDirective(operation, 'namedClient')) {
-      return '';
+    let name: string;
+
+    if (this._operationHasDirective(operation, 'namedClient')) {
+      name = this._extractNamedClient(operation);
+    } else if (this.config.namedClient) {
+      name = this.config.namedClient;
     }
 
-    const name = this._extractNamedClient(operation);
-
-    return `client = '${name}';`;
+    return name ? `client = '${name}';` : '';
   }
 
   // tries to find namedClient directive and extract {name}
@@ -107,6 +143,8 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor {
   private _providedIn(operation: OperationDefinitionNode): string {
     if (this._operationHasDirective(operation, 'NgModule')) {
       return this._extractNgModule(operation).module;
+    } else if (this.config.ngModule) {
+      return this._parseNgModule(this.config.ngModule).module;
     }
 
     return `'root'`;
@@ -124,7 +162,7 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor {
     providedIn: ${this._providedIn(node)}
   })
   export class ${this.convertName(
-    node.name.value
+    node
   )}GQL extends Apollo.${operationType}<${operationResultType}, ${operationVariablesTypes}> {
     document = ${documentVariableName};
     ${this._namedClient(node)}

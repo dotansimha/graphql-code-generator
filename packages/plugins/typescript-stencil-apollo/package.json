@@ -22,10 +22,10 @@
     "jest": "24.5.0",
     "ts-jest": "24.0.0",
     "typescript": "3.3.3333",
-    "flow-bin": "0.94.0",
-    "flow-parser": "0.94.0",
+    "flow-bin": "0.95.1",
+    "flow-parser": "0.95.1",
     "graphql": "14.1.1",
-    "@types/node": "10.12.30"
+    "@types/node": "10.14.1"
   },
   "sideEffects": false,
   "main": "dist/commonjs/index.js",

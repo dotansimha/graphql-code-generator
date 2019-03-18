@@ -1,17 +1,17 @@
-import { FileOutput, DocumentFile, Types, debugLog, CodegenPlugin } from 'graphql-codegen-plugin-helpers';
-import { codegen, mergeSchemas } from 'graphql-codegen-core';
+import { Types, CodegenPlugin } from 'graphql-codegen-plugin-helpers';
+import { DetailedError, codegen, mergeSchemas } from 'graphql-codegen-core';
 import * as Listr from 'listr';
 import { normalizeOutputParam, normalizeInstanceOrArray, normalizeConfig } from './helpers';
 import { prettify } from './utils/prettier';
 import { Renderer } from './utils/listr-renderer';
-import { DetailedError } from './errors';
 import { loadSchema, loadDocuments } from './load';
 import { GraphQLError, DocumentNode } from 'graphql';
 import { getPluginByName } from './plugins';
+import { debugLog } from './utils/debugging';
 
 export const defaultPluginLoader = (mod: string) => import(mod);
 
-export async function executeCodegen(config: Types.Config): Promise<FileOutput[]> {
+export async function executeCodegen(config: Types.Config): Promise<Types.FileOutput[]> {
   function wrapTask(task: () => void | Promise<void>, source?: string) {
     return async () => {
       try {
@@ -26,7 +26,7 @@ export async function executeCodegen(config: Types.Config): Promise<FileOutput[]
     };
   }
 
-  const result: FileOutput[] = [];
+  const result: Types.FileOutput[] = [];
   const commonListrOptions = {
     exitOnError: true
   };
@@ -154,7 +154,7 @@ export async function executeCodegen(config: Types.Config): Promise<FileOutput[]
           task: () => {
             const outputConfig = generates[filename];
             const outputFileTemplateConfig = outputConfig.config || {};
-            const outputDocuments: DocumentFile[] = [];
+            const outputDocuments: Types.DocumentFile[] = [];
             let outputSchema: DocumentNode;
             const outputSpecificSchemas = normalizeInstanceOrArray<Types.Schema>(outputConfig.schema);
             const outputSpecificDocuments = normalizeInstanceOrArray<Types.OperationDocument>(outputConfig.documents);

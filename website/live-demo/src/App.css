@@ -77,4 +77,5 @@
 .picker {
   padding-left: 30px;
   padding-bottom: 5px;
+  white-space: nowrap;
 }

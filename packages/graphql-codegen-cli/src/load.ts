@@ -1,7 +1,7 @@
 import { loadSchema as loadSchemaToolkit, loadDocuments as loadDocumentsToolkit } from 'graphql-toolkit';
-import { Types, DocumentFile } from 'graphql-codegen-plugin-helpers';
+import { Types } from 'graphql-codegen-plugin-helpers';
 import { GraphQLSchema, DocumentNode } from 'graphql';
-import { DetailedError } from './errors';
+import { DetailedError } from 'graphql-codegen-core';
 
 async function getCustomLoaderByPath(path: string): Promise<any> {
   const requiredModule = await import(path);
@@ -98,7 +98,7 @@ export const loadSchema = async (
 export const loadDocuments = async (
   documentDef: Types.OperationDocument,
   config: Types.Config
-): Promise<DocumentFile[]> => {
+): Promise<Types.DocumentFile[]> => {
   if (
     typeof documentDef === 'object' &&
     documentDef[Object.keys(documentDef)[0]] &&

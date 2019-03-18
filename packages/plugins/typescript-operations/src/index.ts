@@ -1,4 +1,4 @@
-import { PluginFunction, DocumentFile } from 'graphql-codegen-plugin-helpers';
+import { PluginFunction, Types } from 'graphql-codegen-plugin-helpers';
 import { visit, concatAST, GraphQLSchema } from 'graphql';
 import { TypeScriptDocumentsVisitor } from './visitor';
 import { RawDocumentsConfig } from 'graphql-codegen-visitor-plugin-common';
@@ -10,7 +10,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
 
 export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig> = (
   schema: GraphQLSchema,
-  documents: DocumentFile[],
+  documents: Types.DocumentFile[],
   config: TypeScriptDocumentsPluginConfig
 ) => {
   const allAst = concatAST(

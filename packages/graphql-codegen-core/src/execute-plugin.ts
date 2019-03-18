@@ -1,4 +1,4 @@
-import { Types, DocumentFile, CodegenPlugin } from 'graphql-codegen-plugin-helpers';
+import { Types, CodegenPlugin } from 'graphql-codegen-plugin-helpers';
 import { DocumentNode, GraphQLSchema, buildASTSchema } from 'graphql';
 import { DetailedError } from './errors';
 import { validateGraphQlDocuments, checkValidationErrors } from 'graphql-toolkit';
@@ -7,7 +7,7 @@ export interface ExecutePluginOptions {
   name: string;
   config: Types.PluginConfig;
   schema: DocumentNode;
-  documents: DocumentFile[];
+  documents: Types.DocumentFile[];
   outputFilename: string;
   allPlugins: Types.ConfiguredPlugin[];
 }

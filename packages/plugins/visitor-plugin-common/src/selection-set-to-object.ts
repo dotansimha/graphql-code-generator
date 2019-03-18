@@ -13,11 +13,12 @@ import {
   isEqualType,
   GraphQLField,
   SchemaMetaFieldDef,
-  TypeMetaFieldDef
+  TypeMetaFieldDef,
+  isScalarType
 } from 'graphql';
 import { getBaseType, quoteIfNeeded } from './utils';
 import { ScalarsMap, ConvertNameFn } from './types';
-import { GraphQLObjectType, GraphQLNonNull, GraphQLList, isNonNullType, isListType } from 'graphql';
+import { GraphQLObjectType, GraphQLNonNull, GraphQLList } from 'graphql';
 import { BaseVisitorConvertOptions } from './base-visitor';
 
 export type PrimitiveField = string;
@@ -91,7 +92,7 @@ export class SelectionSetToObject {
       const baseType = getBaseType(rawType);
       const typeName = baseType.name;
 
-      if (this._scalars[typeName] || isEnumType(baseType)) {
+      if (this._scalars[typeName] || isEnumType(baseType) || isScalarType(baseType)) {
         if (field.alias && field.alias.value) {
           this._primitiveAliasedFields.push({
             fieldName: field.name.value,

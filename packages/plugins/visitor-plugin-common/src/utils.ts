@@ -10,8 +10,12 @@ import {
   GraphQLList,
   isListType,
   GraphQLOutputType,
-  GraphQLNamedType
+  GraphQLNamedType,
+  isScalarType,
+  GraphQLSchema,
+  GraphQLScalarType
 } from 'graphql';
+import { ScalarsMap } from './types';
 
 function isWrapperType(t: GraphQLOutputType): t is GraphQLNonNull<any> | GraphQLList<any> {
   return isListType(t) || isNonNullType(t);
@@ -193,3 +197,20 @@ export const wrapTypeWithModifiers = (prefix = '') => (
     return `${prefix}${baseType}`;
   }
 };
+
+export function buildScalars(schema: GraphQLSchema, scalarsMapping: ScalarsMap): ScalarsMap {
+  const typeMap = schema.getTypeMap();
+  let result = { ...scalarsMapping };
+
+  Object.keys(typeMap)
+    .map(typeName => typeMap[typeName])
+    .filter(type => isScalarType(type))
+    .map((scalarType: GraphQLScalarType) => {
+      const name = scalarType.name;
+      const value = scalarsMapping[name] || 'any';
+
+      result[name] = value;
+    });
+
+  return result;
+}

@@ -5,7 +5,8 @@ import {
   FieldDefinitionNode,
   EnumTypeDefinitionNode,
   ScalarTypeDefinitionNode,
-  NamedTypeNode
+  NamedTypeNode,
+  GraphQLSchema
 } from 'graphql';
 import {
   BaseTypesVisitor,
@@ -24,8 +25,8 @@ export interface FlowPluginParsedConfig extends ParsedTypesConfig {
 }
 
 export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginParsedConfig> {
-  constructor(pluginConfig: FlowPluginConfig) {
-    super(pluginConfig, {
+  constructor(schema: GraphQLSchema, pluginConfig: FlowPluginConfig) {
+    super(schema, pluginConfig, {
       useFlowExactObjects: pluginConfig.useFlowExactObjects || false,
       useFlowReadOnlyTypes: pluginConfig.useFlowReadOnlyTypes || false
     } as FlowPluginParsedConfig);
@@ -37,13 +38,9 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
     });
   }
 
-  public ScalarTypeDefinition = (node: ScalarTypeDefinitionNode): string => {
-    return new DeclarationBlock(this._declarationBlockConfig)
-      .export()
-      .asKind('type')
-      .withName(this.convertName(node))
-      .withContent(this.scalars[(node.name as any) as string] || 'any').string;
-  };
+  protected _getScalar(name: string): string {
+    return `$ElementType<Scalars, '${name}'>`;
+  }
 
   NamedType(node: NamedTypeNode): string {
     return `?${super.NamedType(node)}`;

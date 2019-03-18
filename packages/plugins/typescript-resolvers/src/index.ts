@@ -1,5 +1,5 @@
 import { RawResolversConfig } from 'graphql-codegen-visitor-plugin-common';
-import { DocumentFile, PluginFunction } from 'graphql-codegen-plugin-helpers';
+import { Types, PluginFunction } from 'graphql-codegen-plugin-helpers';
 import { isScalarType, parse, printSchema, visit, GraphQLSchema } from 'graphql';
 import { TypeScriptResolversVisitor } from './visitor';
 
@@ -10,7 +10,7 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
 
 export const plugin: PluginFunction<TypeScriptResolversPluginConfig> = (
   schema: GraphQLSchema,
-  documents: DocumentFile[],
+  documents: Types.DocumentFile[],
   config: TypeScriptResolversPluginConfig
 ) => {
   const imports = ['GraphQLResolveInfo'];
@@ -26,6 +26,8 @@ export const plugin: PluginFunction<TypeScriptResolversPluginConfig> = (
 
   const header = `
 import { ${imports.join(', ')} } from 'graphql';
+
+export type ArrayOrIterable<T> = Array<T> | Iterable<T>;
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent?: TParent,
