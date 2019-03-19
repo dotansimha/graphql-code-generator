@@ -40,7 +40,7 @@ Here are the supported options that you can define in the config file (see [sour
   - [**`generates.schema`**](./schema-field#output-file-level) - Same as root `schema`, but applies only for the specific output file.
 
   - [**`generates.config`**](./config-field#output-level) - Same as root `config`, but applies only for the specific output file.
-  -
+
   - [**`generates.overwrite`**](./config-field#output-level) - Same as root `overwrite`, but applies only for the specific output file.
 
 - [**`require`**](./require-field) - A path to a file which defines custom Node.JS `require()` handlers for custom file extensions. This is essential if the code generator has to go through files which require other files in an unsupported format (by default). See [more information](https://gist.github.com/jamestalmage/df922691475cff66c7e6).
@@ -60,5 +60,5 @@ Here are the supported options that you can define in the config file (see [sour
   - **`pluckConfig.modules`** - An array of `{ name: string, identifier: string }` that will be used to track down your `gql` usages and imports. Use this if your code files imports `gql` from another library, or you have a custom `gql` tag.
 
   - **`pluckConfig.magicComment`** - Configure the magic GraphQL comments to look for (the default is `/* GraphQL */`).
-  -
+
   - **`pluckConfig.globalIdentifier`** - Overrides the name of the default GraphQL name identifier.
