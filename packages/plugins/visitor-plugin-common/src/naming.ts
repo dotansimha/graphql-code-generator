@@ -1,5 +1,5 @@
 import { ASTNode } from 'graphql';
-import { resolveExternalModuleAndFn } from 'graphql-codegen-plugin-helpers';
+import { resolveExternalModuleAndFn } from '@graphql-codegen/plugin-helpers';
 import { NamingConventionMap, NamingConvention, ConvertFn } from './types';
 import { toPascalCase } from './utils';
 

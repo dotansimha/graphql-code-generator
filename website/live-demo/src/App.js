@@ -15,7 +15,7 @@ const EXT_TO_FORMATTER = {
   ts: 'typescript',
   graphql: 'graphql',
   'd.ts': 'typescript',
-  json: 'json'
+  json: 'json',
 };
 
 const DEFAULT_EXAMPLE = 'typescript';
@@ -33,21 +33,21 @@ function normalizeConfig(config) {
 }
 
 const pluginLoaderMap = {
-  flow: () => import('graphql-codegen-flow'),
-  'flow-operations': () => import('graphql-codegen-flow-operations'),
-  'flow-resolvers': () => import('graphql-codegen-flow-resolvers'),
-  typescript: () => import('graphql-codegen-typescript'),
-  'typescript-operations': () => import('graphql-codegen-typescript-operations'),
-  'typescript-resolvers': () => import('graphql-codegen-typescript-resolvers'),
-  'typescript-apollo-angular': () => import('graphql-codegen-typescript-apollo-angular'),
-  'typescript-react-apollo': () => import('graphql-codegen-typescript-react-apollo'),
-  'typescript-stencil-apollo': () => import('graphql-codegen-typescript-stencil-apollo'),
-  'typescript-graphql-files-modules': () => import('graphql-codegen-typescript-graphql-files-modules'),
-  'typescript-mongodb': () => import('graphql-codegen-typescript-mongodb'),
-  add: () => import('graphql-codegen-add'),
-  time: () => import('graphql-codegen-time'),
-  introspection: () => import('graphql-codegen-introspection'),
-  'schema-ast': () => import('graphql-codegen-schema-ast')
+  flow: () => import('@graphql-codegen/flow'),
+  'flow-operations': () => import('@graphql-codegen/flow-operations'),
+  'flow-resolvers': () => import('@graphql-codegen/flow-resolvers'),
+  typescript: () => import('@graphql-codegen/typescript'),
+  'typescript-operations': () => import('@graphql-codegen/typescript-operations'),
+  'typescript-resolvers': () => import('@graphql-codegen/typescript-resolvers'),
+  'typescript-apollo-angular': () => import('@graphql-codegen/typescript-apollo-angular'),
+  'typescript-react-apollo': () => import('@graphql-codegen/typescript-react-apollo'),
+  'typescript-stencil-apollo': () => import('@graphql-codegen/typescript-stencil-apollo'),
+  'typescript-graphql-files-modules': () => import('@graphql-codegen/typescript-graphql-files-modules'),
+  'typescript-mongodb': () => import('@graphql-codegen/typescript-mongodb'),
+  add: () => import('@graphql-codegen/add'),
+  time: () => import('@graphql-codegen/time'),
+  introspection: () => import('@graphql-codegen/introspection'),
+  'schema-ast': () => import('@graphql-codegen/schema-ast'),
 };
 
 class App extends Component {
@@ -56,7 +56,7 @@ class App extends Component {
     config: '',
     schema: '',
     documents: '',
-    example: DEFAULT_EXAMPLE
+    example: DEFAULT_EXAMPLE,
   };
 
   update = field => value => this.setState({ [field]: value });
@@ -82,7 +82,7 @@ class App extends Component {
       const { generates, ...rootConfig } = safeLoad(cleanTabs);
       const filename = Object.keys(generates)[0];
       const plugins = normalizeConfig(generates[filename].plugins || generates[filename]);
-      const { codegen } = await import('graphql-codegen-core');
+      const { codegen } = await import('@graphql-codegen/core');
       const { parse } = await import('graphql');
       const pluginMap = {};
       for (const pluginElement of plugins) {
@@ -96,14 +96,14 @@ class App extends Component {
         documents: this.state.documents
           ? [
               {
-                content: parse(this.state.documents)
-              }
+                content: parse(this.state.documents),
+              },
             ]
           : [],
         config: {
-          ...rootConfig
+          ...rootConfig,
         },
-        pluginMap
+        pluginMap,
       });
       this.setState({ output });
     } catch (e) {
@@ -114,7 +114,7 @@ class App extends Component {
     ${e.message}:
     
     ${e.details}
-    `
+    `,
         });
       } else if (e.errors) {
         this.setState({
@@ -123,11 +123,11 @@ class App extends Component {
               subError => `${subError.message}: 
 ${subError.details}`
             )
-            .join('\n')
+            .join('\n'),
         });
       } else {
         this.setState({
-          output: e.message
+          output: e.message,
         });
       }
     }
@@ -159,7 +159,7 @@ ${subError.details}`
               onChange={this.handleChange}
               inputProps={{
                 name: 'example',
-                id: 'example'
+                id: 'example',
               }}
             >
               {Object.keys(EXAMPLES).map(name => (

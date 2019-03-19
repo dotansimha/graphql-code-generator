@@ -1,6 +1,6 @@
-import 'graphql-codegen-testing';
+import '@graphql-codegen/testing';
 import { GraphQLObjectType, buildSchema, buildASTSchema, parse, print } from 'graphql';
-import { mergeSchemas } from 'graphql-codegen-core';
+import { mergeSchemas } from '@graphql-codegen/core';
 import { executeCodegen } from '../src';
 
 const SHOULD_NOT_THROW_STRING = 'SHOULD_NOT_THROW';
@@ -13,8 +13,8 @@ describe('Codegen Executor', () => {
         schema: SIMPLE_TEST_SCHEMA,
         generates: {
           'out1.ts': ['typescript'],
-          'out2.ts': ['typescript']
-        }
+          'out2.ts': ['typescript'],
+        },
       });
 
       expect(output.length).toBe(2);
@@ -28,8 +28,8 @@ describe('Codegen Executor', () => {
         schema: SIMPLE_TEST_SCHEMA,
         require: '../tests/dummy-require.js',
         generates: {
-          'out1.ts': ['typescript']
-        }
+          'out1.ts': ['typescript'],
+        },
       });
 
       expect(output.length).toBe(1);
@@ -42,8 +42,8 @@ describe('Codegen Executor', () => {
           schema: SIMPLE_TEST_SCHEMA,
           require: 'tests/missing.js',
           generates: {
-            'out1.ts': ['typescript']
-          }
+            'out1.ts': ['typescript'],
+          },
         });
 
         throw new Error(SHOULD_NOT_THROW_STRING);
@@ -59,10 +59,10 @@ describe('Codegen Executor', () => {
         generates: {
           'out1.ts': {
             plugins: {
-              'typescript-operations': {}
-            }
-          }
-        }
+              'typescript-operations': {},
+            },
+          },
+        },
       });
 
       expect(output.length).toBe(1);
@@ -75,9 +75,9 @@ describe('Codegen Executor', () => {
         documents: `query root { f }`,
         generates: {
           'out1.ts': {
-            plugins: [{ 'typescript-operations': {} }]
-          }
-        }
+            plugins: [{ 'typescript-operations': {} }],
+          },
+        },
       });
 
       expect(output.length).toBe(1);
@@ -88,7 +88,7 @@ describe('Codegen Executor', () => {
       try {
         await executeCodegen({
           schema: SIMPLE_TEST_SCHEMA,
-          generates: {}
+          generates: {},
         });
 
         throw new Error(SHOULD_NOT_THROW_STRING);
@@ -102,8 +102,8 @@ describe('Codegen Executor', () => {
       const output = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         generates: {
-          'out.ts': ['typescript']
-        }
+          'out.ts': ['typescript'],
+        },
       });
 
       expect(output.length).toBe(1);
@@ -115,9 +115,9 @@ describe('Codegen Executor', () => {
           generates: {
             'out.ts': {
               schema: SIMPLE_TEST_SCHEMA,
-              plugins: ['typescript']
-            }
-          }
+              plugins: ['typescript'],
+            },
+          },
         } as any);
 
         expect(output.length).toBe(1);
@@ -131,8 +131,8 @@ describe('Codegen Executor', () => {
       try {
         await executeCodegen({
           generates: {
-            'out.ts': ['typescript']
-          }
+            'out.ts': ['typescript'],
+          },
         } as any);
 
         throw new Error(SHOULD_NOT_THROW_STRING);
@@ -146,8 +146,8 @@ describe('Codegen Executor', () => {
       try {
         await executeCodegen({
           generates: {
-            'out.ts': []
-          }
+            'out.ts': [],
+          },
         } as any);
 
         throw new Error(SHOULD_NOT_THROW_STRING);
@@ -161,8 +161,8 @@ describe('Codegen Executor', () => {
       const output = await executeCodegen({
         schema: './tests/test-files/schema-dir/with-extend.js',
         generates: {
-          'out.ts': ['typescript']
-        }
+          'out.ts': ['typescript'],
+        },
       });
 
       expect(output.length).toBe(1);
@@ -180,9 +180,9 @@ describe('Codegen Executor', () => {
             schema: `
               type OtherType { a: String }
             `,
-            plugins: ['typescript']
-          }
-        }
+            plugins: ['typescript'],
+          },
+        },
       });
 
       expect(output.length).toBe(1);
@@ -197,9 +197,9 @@ describe('Codegen Executor', () => {
         generates: {
           'out1.ts': {
             documents: `query q { f }`,
-            plugins: ['typescript', 'typescript-operations']
-          }
-        }
+            plugins: ['typescript', 'typescript-operations'],
+          },
+        },
       });
 
       expect(output.length).toBe(1);
@@ -213,9 +213,9 @@ describe('Codegen Executor', () => {
         generates: {
           'out1.ts': {
             documents: `query q { f }`,
-            plugins: ['typescript', 'typescript-operations']
-          }
-        }
+            plugins: ['typescript', 'typescript-operations'],
+          },
+        },
       });
 
       expect(output.length).toBe(1);
@@ -231,8 +231,8 @@ describe('Codegen Executor', () => {
           `,
           documents: [`query q { f }`, `query q { f }`],
           generates: {
-            'out1.ts': ['typescript']
-          }
+            'out1.ts': ['typescript'],
+          },
         });
         throw new Error(SHOULD_NOT_THROW_STRING);
       } catch (e) {
@@ -246,8 +246,8 @@ describe('Codegen Executor', () => {
         schema: ['./tests/test-documents/schema.graphql'],
         documents: ['./tests/test-documents/my-fragment.ts', './tests/test-documents/query-with-my-fragment.ts'],
         generates: {
-          'out1.ts': ['typescript', 'typescript-operations']
-        }
+          'out1.ts': ['typescript', 'typescript-operations'],
+        },
       });
       expect(result[0].content).toContain('MyQuery');
       expect(result[0].filename).toEqual('out1.ts');
@@ -258,8 +258,8 @@ describe('Codegen Executor', () => {
         schema: ['./tests/test-documents/schema.graphql'],
         documents: ['./tests/test-documents/my-fragment.ts', './tests/test-documents/query-with-my-fragment.ts'],
         generates: {
-          'out1.ts': ['typescript', 'typescript-operations']
-        }
+          'out1.ts': ['typescript', 'typescript-operations'],
+        },
       });
 
       expect(result[0].content).toContain('MyQuery');
@@ -271,8 +271,8 @@ describe('Codegen Executor', () => {
         schema: ['./tests/test-documents/schema.graphql'],
         documents: ['./tests/test-documents/js-query-with-my-fragment.js', './tests/test-documents/js-my-fragment.js'],
         generates: {
-          'out1.ts': ['typescript', 'typescript-operations']
-        }
+          'out1.ts': ['typescript', 'typescript-operations'],
+        },
       });
 
       expect(result[0].content).toContain('MyQuery');
@@ -284,8 +284,8 @@ describe('Codegen Executor', () => {
         schema: ['./tests/test-documents/schema.graphql'],
         documents: ['./tests/test-documents/ts-features-with-query.ts'],
         generates: {
-          'out1.ts': ['typescript', 'typescript-operations']
-        }
+          'out1.ts': ['typescript', 'typescript-operations'],
+        },
       });
 
       expect(result[0].content).toContain('MyQuery');
@@ -298,8 +298,8 @@ describe('Codegen Executor', () => {
         schema: ['./tests/test-documents/schema.graphql'],
         documents: ['./tests/test-documents/query-with-commented-fragment.ts'],
         generates: {
-          'out1.ts': ['typescript', 'typescript-operations']
-        }
+          'out1.ts': ['typescript', 'typescript-operations'],
+        },
       });
       expect(result[0].content).toContain('MyQuery');
       expect(result[0].filename).toEqual('out1.ts');
@@ -310,8 +310,8 @@ describe('Codegen Executor', () => {
         schema: ['./tests/test-documents/schema.graphql'],
         documents: ['./tests/test-documents/gatsby-and-custom-parsers.ts'],
         generates: {
-          'out1.ts': ['typescript', 'typescript-operations']
-        }
+          'out1.ts': ['typescript', 'typescript-operations'],
+        },
       });
 
       expect(result[0].content).toContain('FragmentA'); // import gql from 'graphql-tag'
@@ -323,16 +323,16 @@ describe('Codegen Executor', () => {
         schema: ['./tests/test-documents/schema.graphql'],
         documents: ['./tests/test-documents/gatsby-and-custom-parsers.ts'],
         generates: {
-          'out1.ts': ['typescript', 'typescript-operations']
+          'out1.ts': ['typescript', 'typescript-operations'],
         },
         pluckConfig: {
           modules: [
             {
               name: 'custom-graphql-parser',
-              identifier: 'parser'
-            }
-          ]
-        }
+              identifier: 'parser',
+            },
+          ],
+        },
       });
 
       expect(result[0].content).toContain('FragmentC'); // import { parser } from 'custom-graphql-parser';
@@ -343,8 +343,8 @@ describe('Codegen Executor', () => {
       const result = await executeCodegen({
         schema: './tests/test-files/schema-dir/gatsby-and-custom-parsers/*.ts',
         generates: {
-          'out1.ts': ['typescript']
-        }
+          'out1.ts': ['typescript'],
+        },
       });
 
       const content = result[0].content;
@@ -359,16 +359,16 @@ describe('Codegen Executor', () => {
       const result = await executeCodegen({
         schema: './tests/test-files/schema-dir/gatsby-and-custom-parsers/*.ts',
         generates: {
-          'out1.ts': ['typescript']
+          'out1.ts': ['typescript'],
         },
         pluckConfig: {
           modules: [
             {
               name: 'custom-graphql-parser',
-              identifier: 'parser'
-            }
-          ]
-        }
+              identifier: 'parser',
+            },
+          ],
+        },
       });
 
       const content = result[0].content;
@@ -385,11 +385,11 @@ describe('Codegen Executor', () => {
         schema: SIMPLE_TEST_SCHEMA,
         documents: `query root { f }`,
         config: {
-          namingConvention: 'change-case#lowerCase'
+          namingConvention: 'change-case#lowerCase',
         },
         generates: {
-          'out1.ts': ['typescript', 'typescript-operations']
-        }
+          'out1.ts': ['typescript', 'typescript-operations'],
+        },
       });
 
       expect(output.length).toBe(1);
@@ -404,17 +404,17 @@ describe('Codegen Executor', () => {
         generates: {
           'out1.ts': {
             config: {
-              namingConvention: 'change-case#lowerCase'
+              namingConvention: 'change-case#lowerCase',
             },
-            plugins: ['typescript', 'typescript-operations']
+            plugins: ['typescript', 'typescript-operations'],
           },
           'out2.ts': {
             config: {
-              namingConvention: 'change-case#upperCase'
+              namingConvention: 'change-case#upperCase',
             },
-            plugins: ['typescript', 'typescript-operations']
-          }
-        }
+            plugins: ['typescript', 'typescript-operations'],
+          },
+        },
       });
 
       expect(output.length).toBe(2);
@@ -431,12 +431,12 @@ describe('Codegen Executor', () => {
             plugins: [
               {
                 'typescript-operations': {
-                  namingConvention: 'change-case#lowerCase'
-                }
-              }
-            ]
-          }
-        }
+                  namingConvention: 'change-case#lowerCase',
+                },
+              },
+            ],
+          },
+        },
       });
 
       expect(output.length).toBe(1);
@@ -449,28 +449,28 @@ describe('Codegen Executor', () => {
         schema: SIMPLE_TEST_SCHEMA,
         documents: `query root { f }`,
         config: {
-          namingConvention: 'change-case#lowerCase'
+          namingConvention: 'change-case#lowerCase',
         },
         generates: {
           'out1.ts': {
             plugins: [
               {
                 'typescript-operations': {
-                  namingConvention: 'change-case#upperCase'
-                }
-              }
-            ]
+                  namingConvention: 'change-case#upperCase',
+                },
+              },
+            ],
           },
           'out2.ts': {
             plugins: [
               {
                 'typescript-operations': {
-                  namingConvention: 'change-case#pascalCase'
-                }
-              }
-            ]
-          }
-        }
+                  namingConvention: 'change-case#pascalCase',
+                },
+              },
+            ],
+          },
+        },
       });
 
       expect(output.length).toBe(2);
@@ -484,8 +484,8 @@ describe('Codegen Executor', () => {
       const output = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         generates: {
-          'out1.ts': ['./tests/custom-plugins/basic.js']
-        }
+          'out1.ts': ['./tests/custom-plugins/basic.js'],
+        },
       });
 
       expect(output.length).toBe(1);
@@ -497,8 +497,8 @@ describe('Codegen Executor', () => {
         await executeCodegen({
           schema: SIMPLE_TEST_SCHEMA,
           generates: {
-            'out1.ts': ['./tests/custom-plugins/invalid.js']
-          }
+            'out1.ts': ['./tests/custom-plugins/invalid.js'],
+          },
         });
         throw new Error(SHOULD_NOT_THROW_STRING);
       } catch (e) {
@@ -513,8 +513,8 @@ describe('Codegen Executor', () => {
         await executeCodegen({
           schema: SIMPLE_TEST_SCHEMA,
           generates: {
-            'out1.ts': ['./tests/custom-plugins/validation.js']
-          }
+            'out1.ts': ['./tests/custom-plugins/validation.js'],
+          },
         });
         throw new Error(SHOULD_NOT_THROW_STRING);
       } catch (e) {
@@ -528,8 +528,8 @@ describe('Codegen Executor', () => {
       const output = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         generates: {
-          'out1.ts': ['./tests/custom-plugins/extends-schema.js', './tests/custom-plugins/checks-extended-schema.js']
-        }
+          'out1.ts': ['./tests/custom-plugins/extends-schema.js', './tests/custom-plugins/checks-extended-schema.js'],
+        },
       });
 
       expect(output[0].content).toContain('MyType,');
@@ -549,7 +549,7 @@ describe('Codegen Executor', () => {
             type Post {
               id: String @id
             }
-          `)
+          `),
         ])
       );
 
@@ -575,14 +575,12 @@ describe('Codegen Executor', () => {
             schema {
               query: Query
             }
-          `)
+          `),
         ])
       );
 
       expect(merged.getType('Post').astNode.directives.map(({ name }) => name.value)).toContainEqual('test');
-      expect(
-        (merged.getType('Post') as GraphQLObjectType).getFields()['id'].astNode.directives.map(({ name }) => name.value)
-      ).toContainEqual('id');
+      expect((merged.getType('Post') as GraphQLObjectType).getFields()['id'].astNode.directives.map(({ name }) => name.value)).toContainEqual('id');
     });
 
     it('should keep scalars', async () => {
@@ -623,9 +621,9 @@ describe('Codegen Executor', () => {
         schema: [schemaA, schemaB],
         generates: {
           'out1.ts': {
-            plugins: ['typescript']
-          }
-        }
+            plugins: ['typescript'],
+          },
+        },
       });
 
       expect(output.length).toBe(1);
@@ -646,13 +644,13 @@ describe('Codegen Executor', () => {
         schema: [
           {
             './tests/test-documents/schema.graphql': {
-              loader: '../tests/custom-loaders/custom-schema-loader.js'
-            }
-          }
+              loader: '../tests/custom-loaders/custom-schema-loader.js',
+            },
+          },
         ],
         generates: {
-          'out1.ts': ['typescript']
-        }
+          'out1.ts': ['typescript'],
+        },
       });
 
       expect((global as any).CUSTOM_SCHEMA_LOADER_CALLED).toBeTruthy();
@@ -665,13 +663,13 @@ describe('Codegen Executor', () => {
             schema: [
               {
                 './tests/test-documents/schema.graphql': {
-                  loader: '../tests/custom-loaders/custom-schema-loader.js'
-                }
-              }
+                  loader: '../tests/custom-loaders/custom-schema-loader.js',
+                },
+              },
             ],
-            plugins: ['typescript']
-          }
-        }
+            plugins: ['typescript'],
+          },
+        },
       });
 
       expect((global as any).CUSTOM_SCHEMA_LOADER_CALLED).toBeTruthy();
@@ -683,13 +681,13 @@ describe('Codegen Executor', () => {
           schema: [
             {
               './tests/test-documents/schema.graphql': {
-                loader: '../tests/custom-loaders/invalid-return-value-schema-loader.js'
-              }
-            }
+                loader: '../tests/custom-loaders/invalid-return-value-schema-loader.js',
+              },
+            },
           ],
           generates: {
-            'out1.ts': ['typescript']
-          }
+            'out1.ts': ['typescript'],
+          },
         });
 
         throw new Error(SHOULD_NOT_THROW_STRING);
@@ -706,13 +704,13 @@ describe('Codegen Executor', () => {
           schema: [
             {
               './tests/test-documents/schema.graphql': {
-                loader: '../tests/custom-loaders/non-existing.js'
-              }
-            }
+                loader: '../tests/custom-loaders/non-existing.js',
+              },
+            },
           ],
           generates: {
-            'out1.ts': ['typescript']
-          }
+            'out1.ts': ['typescript'],
+          },
         });
 
         throw new Error(SHOULD_NOT_THROW_STRING);
@@ -729,22 +727,20 @@ describe('Codegen Executor', () => {
           schema: [
             {
               './tests/test-documents/schema.graphql': {
-                loader: '../tests/custom-loaders/invalid-export.js'
-              }
-            }
+                loader: '../tests/custom-loaders/invalid-export.js',
+              },
+            },
           ],
           generates: {
-            'out1.ts': ['typescript']
-          }
+            'out1.ts': ['typescript'],
+          },
         });
 
         throw new Error(SHOULD_NOT_THROW_STRING);
       } catch (listrError) {
         const e = listrError.errors[0];
         expect(e.message).toBe('Failed to load custom schema loader');
-        expect(e.details).toContain(
-          'Unable to find a loader function! Make sure to export a default function from your file'
-        );
+        expect(e.details).toContain('Unable to find a loader function! Make sure to export a default function from your file');
       }
     });
   });
@@ -756,13 +752,13 @@ describe('Codegen Executor', () => {
         documents: [
           {
             './tests/test-documents/valid.graphql': {
-              loader: '../tests/custom-loaders/custom-documents-loader.js'
-            }
-          }
+              loader: '../tests/custom-loaders/custom-documents-loader.js',
+            },
+          },
         ],
         generates: {
-          'out1.ts': ['typescript']
-        }
+          'out1.ts': ['typescript'],
+        },
       });
 
       expect((global as any).CUSTOM_DOCUMENT_LOADER_CALLED).toBeTruthy();
@@ -776,13 +772,13 @@ describe('Codegen Executor', () => {
             documents: [
               {
                 './tests/test-documents/valid.graphql': {
-                  loader: '../tests/custom-loaders/custom-documents-loader.js'
-                }
-              }
+                  loader: '../tests/custom-loaders/custom-documents-loader.js',
+                },
+              },
             ],
-            plugins: ['typescript']
-          }
-        }
+            plugins: ['typescript'],
+          },
+        },
       });
 
       expect((global as any).CUSTOM_DOCUMENT_LOADER_CALLED).toBeTruthy();
@@ -795,13 +791,13 @@ describe('Codegen Executor', () => {
           documents: [
             {
               './tests/test-documents/valid.graphql': {
-                loader: '../tests/custom-loaders/invalid-return-value-documents-loader.js'
-              }
-            }
+                loader: '../tests/custom-loaders/invalid-return-value-documents-loader.js',
+              },
+            },
           ],
           generates: {
-            'out1.ts': ['typescript']
-          }
+            'out1.ts': ['typescript'],
+          },
         });
 
         throw new Error(SHOULD_NOT_THROW_STRING);
@@ -819,13 +815,13 @@ describe('Codegen Executor', () => {
           documents: [
             {
               './tests/test-documents/valid.graphql': {
-                loader: '../tests/custom-loaders/non-existing.js'
-              }
-            }
+                loader: '../tests/custom-loaders/non-existing.js',
+              },
+            },
           ],
           generates: {
-            'out1.ts': ['typescript']
-          }
+            'out1.ts': ['typescript'],
+          },
         });
 
         throw new Error(SHOULD_NOT_THROW_STRING);
@@ -843,22 +839,20 @@ describe('Codegen Executor', () => {
           documents: [
             {
               './tests/test-documents/valid.graphql': {
-                loader: '../tests/custom-loaders/invalid-export.js'
-              }
-            }
+                loader: '../tests/custom-loaders/invalid-export.js',
+              },
+            },
           ],
           generates: {
-            'out1.ts': ['typescript']
-          }
+            'out1.ts': ['typescript'],
+          },
         });
 
         throw new Error(SHOULD_NOT_THROW_STRING);
       } catch (listrError) {
         const e = listrError.errors[0];
         expect(e.message).toBe('Failed to load custom documents loader');
-        expect(e.details).toContain(
-          'Unable to find a loader function! Make sure to export a default function from your file'
-        );
+        expect(e.details).toContain('Unable to find a loader function! Make sure to export a default function from your file');
       }
     });
   });

@@ -1,21 +1,21 @@
 {
-  "name": "graphql-code-generator",
+  "name": "@graphql-codegen/root",
   "private": true,
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "author": "dotansimha <dotansimha@gmail.com>",
   "license": "MIT",
   "scripts": {
     "clean": "lerna clean --yes && rm -rf node_modules",
-    "build": "lerna run build --ignore live-demo",
-    "test": "lerna run test --ignore live-demo",
-    "lint": "lerna run lint --ignore live-demo",
+    "build": "lerna run build --ignore @graphql-codegen/live-demo",
+    "test": "lerna run test --ignore @graphql-codegen/live-demo",
+    "lint": "lerna run lint --ignore @graphql-codegen/live-demo",
     "precommit": "lint-staged",
     "test-and-build": "yarn test && yarn build",
     "prerelease": "yarn test-and-build",
     "prerelease:canary": "yarn test-and-build",
-    "release": "lerna publish --exact --force-publish=\"*\" --ignore live-demo",
-    "release:canary": "lerna publish --force-publish=\"*\" --canary --exact --ignore live-demo",
-    "ci:release:canary": "lerna publish --force-publish=\"*\" --canary --exact --yes --ignore live-demo",
+    "release": "lerna publish --exact --force-publish=\"*\" --ignore @graphql-codegen/live-demo",
+    "release:canary": "lerna publish --force-publish=\"*\" --canary --exact --ignore @graphql-codegen/live-demo",
+    "ci:release:canary": "lerna publish --force-publish=\"*\" --canary --exact --yes --ignore @graphql-codegen/live-demo",
     "generate:examples": "./dev-test/generate-all.sh",
     "build-website": "cd website && yarn && yarn build"
   },
@@ -25,31 +25,29 @@
     "packages/plugins/*",
     "website/live-demo"
   ],
-  "dependencies": {
-    "lerna": "2.11.0"
-  },
   "devDependencies": {
+    "@types/common-tags": "1.8.0",
     "@types/glob": "7.1.1",
+    "@types/graphql": "14.0.7",
     "@types/jest": "24.0.11",
     "@types/mkdirp": "0.5.2",
     "@types/node": "10.14.1",
     "@types/request": "2.48.1",
-    "@types/common-tags": "1.8.0",
-    "@types/graphql": "14.0.7",
-    "husky": "1.3.1",
-    "lint-staged": "8.1.5",
-    "tslint": "5.14.0",
-    "typescript": "3.3.3333",
+    "apollo-link": "1.2.11",
     "graphql": "14.1.1",
     "graphql-tag": "2.10.1",
+    "graphql-tools": "4.0.4",
+    "husky": "1.3.1",
     "jest": "24.5.0",
+    "lerna": "3.13.1",
+    "lint-staged": "8.1.5",
+    "microbundle": "0.11.0",
     "rimraf": "2.6.3",
     "ts-jest": "24.0.0",
-    "graphql-tools": "4.0.4",
+    "tslint": "5.14.0",
+    "typescript": "3.3.3333",
     "react-apollo": "2.5.2",
     "react-apollo-hooks": "0.4.3",
-    "apollo-link": "1.2.11",
-    "microbundle": "0.11.0",
     "apollo-server": "2.4.8"
   },
   "lint-staged": {
@@ -64,9 +62,5 @@
   },
   "resolutions": {
     "upath": "1.1.0"
-  },
-  "prettier": {
-    "printWidth": 120,
-    "singleQuote": true
   }
 }

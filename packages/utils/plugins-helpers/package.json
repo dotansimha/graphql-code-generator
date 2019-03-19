@@ -1,7 +1,7 @@
 {
-  "name": "graphql-codegen-plugin-helpers",
-  "version": "0.18.0",
-  "description": "graphql-codegen-cli template for TypeScript typings for both client side and server side",
+  "name": "@graphql-codegen/plugin-helpers",
+  "version": "1.0.0",
+  "description": "GraphQL Code Generator common utils and types",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
   "scripts": {
@@ -11,10 +11,10 @@
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0"
   },
   "dependencies": {
-    "tslib": "1.9.3",
     "change-case": "3.1.0",
     "common-tags": "1.8.0",
-    "import-from": "2.1.0"
+    "import-from": "2.1.0",
+    "tslib": "1.9.3"
   },
   "devDependencies": {
     "typescript": "3.3.3333"
@@ -25,5 +25,8 @@
   "typings": "dist/esnext/index.d.ts",
   "typescript": {
     "definition": "dist/esnext/index.d.ts"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

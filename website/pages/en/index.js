@@ -43,36 +43,16 @@ class Button extends React.Component {
 }
 
 Button.defaultProps = {
-  target: '_self'
+  target: '_self',
 };
 
 const SplashContainer = props => (
   <div className="homeContainer">
-    <img
-      className="desktop-only"
-      src={`${siteConfig.baseUrl}img/hexagons/blue.svg`}
-      style={{ position: 'absolute', left: '350px', top: '100px', height: '30px' }}
-    />
-    <img
-      className="desktop-only"
-      src={`${siteConfig.baseUrl}img/hexagons/pink.svg`}
-      style={{ position: 'absolute', left: '100px', top: '200px', height: '150px' }}
-    />
-    <img
-      className="desktop-only"
-      src={`${siteConfig.baseUrl}img/hexagons/blue.svg`}
-      style={{ position: 'absolute', left: '250px', top: '450px', height: '70px' }}
-    />
-    <img
-      className="desktop-only"
-      src={`${siteConfig.baseUrl}img/hexagons/pink.svg`}
-      style={{ position: 'absolute', right: '300px', top: '150px', height: '70px' }}
-    />
-    <img
-      className="desktop-only"
-      src={`${siteConfig.baseUrl}img/hexagons/blue.svg`}
-      style={{ position: 'absolute', right: '200px', top: '350px', height: '100px' }}
-    />
+    <img className="desktop-only" src={`${siteConfig.baseUrl}img/hexagons/blue.svg`} style={{ position: 'absolute', left: '350px', top: '100px', height: '30px' }} />
+    <img className="desktop-only" src={`${siteConfig.baseUrl}img/hexagons/pink.svg`} style={{ position: 'absolute', left: '100px', top: '200px', height: '150px' }} />
+    <img className="desktop-only" src={`${siteConfig.baseUrl}img/hexagons/blue.svg`} style={{ position: 'absolute', left: '250px', top: '450px', height: '70px' }} />
+    <img className="desktop-only" src={`${siteConfig.baseUrl}img/hexagons/pink.svg`} style={{ position: 'absolute', right: '300px', top: '150px', height: '70px' }} />
+    <img className="desktop-only" src={`${siteConfig.baseUrl}img/hexagons/blue.svg`} style={{ position: 'absolute', right: '200px', top: '350px', height: '100px' }} />
     <div className="homeSplashFade">
       <div className="wrapper homeWrapper">{props.children}</div>
     </div>
@@ -100,6 +80,9 @@ class HomeSplash extends React.Component {
       <SplashContainer>
         <div className="inner">
           <ProjectTitle />
+          <h2>
+            <a href={`${siteConfig.baseUrl}docs/migration/from-0-18`}>GraphQL Codegen 1.0 is here!</a>
+          </h2>
           <PromoSection>
             <Button href={'#live-demo'}>Try It Out</Button>
             <Button href={`${siteConfig.baseUrl}docs/getting-started`}>View Docs</Button>
@@ -115,7 +98,7 @@ const CLIDemo = () => (
   <div className="cliDemoSection">
     <h1 className="cliTitle">
       <div id="live-demo" />
-      <span>$ gql-gen </span>
+      <span>$ graphql-codegen </span>
       <div className="cursor" />
     </h1>
     <IODemo />

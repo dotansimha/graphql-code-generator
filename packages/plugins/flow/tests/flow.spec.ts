@@ -1,5 +1,5 @@
-import 'graphql-codegen-testing';
-import { parse, buildSchema, visit } from 'graphql';
+import '@graphql-codegen/testing';
+import { buildSchema } from 'graphql';
 import { plugin } from '../src/index';
 import { validateFlow } from './validate-flow';
 
@@ -80,12 +80,7 @@ describe('Flow Plugin', () => {
 
     it('Should use custom namingConvention and add custom prefix', async () => {
       const schema = buildSchema(`type MyType { foo(a: String!, b: String, c: [String], d: [Int!]!): String }`);
-      const result = await plugin(
-        schema,
-        [],
-        { namingConvention: 'change-case#lowerCase', typesPrefix: 'I' },
-        { outputFile: '' }
-      );
+      const result = await plugin(schema, [], { namingConvention: 'change-case#lowerCase', typesPrefix: 'I' }, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(`
         export type Imytypefooargs = {
@@ -312,9 +307,7 @@ describe('Flow Plugin', () => {
     });
 
     it('Should generate correctly types for field arguments - with default value', async () => {
-      const schema = buildSchema(
-        `type MyType { foo(a: String = "default", b: String! = "default", c: String): String }`
-      );
+      const schema = buildSchema(`type MyType { foo(a: String = "default", b: String! = "default", c: String): String }`);
       const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(`
@@ -329,9 +322,7 @@ describe('Flow Plugin', () => {
     });
 
     it('Should generate correctly types for field arguments - with input type', async () => {
-      const schema = buildSchema(
-        `input MyInput { f: String } type MyType { foo(a: MyInput, b: MyInput!, c: [MyInput], d: [MyInput]!, e: [MyInput!]!): String }`
-      );
+      const schema = buildSchema(`input MyInput { f: String } type MyType { foo(a: MyInput, b: MyInput!, c: [MyInput], d: [MyInput]!, e: [MyInput!]!): String }`);
       const result = await plugin(schema, [], {}, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(`
@@ -348,9 +339,7 @@ describe('Flow Plugin', () => {
     });
 
     it('Should add custom prefix for mutation arguments', async () => {
-      const schema = buildSchema(
-        `input Input { name: String } type Mutation { foo(id: String, input: Input): String }`
-      );
+      const schema = buildSchema(`input Input { name: String } type Mutation { foo(id: String, input: Input): String }`);
       const result = await plugin(schema, [], { typesPrefix: 'T' }, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(`

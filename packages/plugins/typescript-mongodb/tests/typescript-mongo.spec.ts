@@ -1,4 +1,4 @@
-import 'graphql-codegen-testing';
+import '@graphql-codegen/testing';
 import { plugin, addToSchema } from './../src/index';
 import { buildSchema, print, GraphQLSchema } from 'graphql';
 import { plugin as tsPlugin } from '../../typescript/src/index';

@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import { resolve, relative } from 'path';
 import { writeFileSync, readFileSync } from 'fs';
-import { Types } from 'graphql-codegen-plugin-helpers';
+import { Types } from '@graphql-codegen/plugin-helpers';
 import * as YAML from 'json-to-pretty-yaml';
 import * as detectIndent from 'detect-indent';
 import { Answers } from './types';
@@ -14,12 +14,12 @@ export function writeConfig(answers: Answers, config: Types.Config) {
   const relativePath = relative(process.cwd(), answers.config);
 
   writeFileSync(fullPath, content, {
-    encoding: 'utf-8'
+    encoding: 'utf-8',
   });
 
   return {
     relativePath,
-    fullPath
+    fullPath,
   };
 }
 
@@ -28,7 +28,7 @@ export function writePackage(answers: Answers, configLocation: string) {
   // script
   const pkgPath = resolve(process.cwd(), 'package.json');
   const pkgContent = readFileSync(pkgPath, {
-    encoding: 'utf-8'
+    encoding: 'utf-8',
   });
   const pkg = JSON.parse(pkgContent);
   const { indent } = detectIndent(pkgContent);
@@ -37,7 +37,7 @@ export function writePackage(answers: Answers, configLocation: string) {
     pkg.scripts = {};
   }
 
-  pkg.scripts[answers.script] = `gql-gen --config ${configLocation}`;
+  pkg.scripts[answers.script] = `graphql-codegen --config ${configLocation}`;
 
   // plugin
   if (!pkg.devDependencies) {
@@ -47,7 +47,7 @@ export function writePackage(answers: Answers, configLocation: string) {
   // read codegen's version
   const { version } = JSON.parse(
     readFileSync(resolve(__dirname, '../../package.json'), {
-      encoding: 'utf-8'
+      encoding: 'utf-8',
     })
   );
 

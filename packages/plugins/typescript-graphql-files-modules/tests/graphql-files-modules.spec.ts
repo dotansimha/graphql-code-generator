@@ -1,9 +1,9 @@
-import 'graphql-codegen-testing';
+import '@graphql-codegen/testing';
 import { plugin } from '../src/index';
 import { parse } from 'graphql';
 import { validateTs } from '../../typescript/tests/validate';
 
-describe('graphql-codegen-typescript-graphql-files-modules', () => {
+describe('graphql-codegen typescript-graphql-files-modules', () => {
   it('Should generate simple module with one file', async () => {
     const result = await plugin(
       null,
@@ -14,8 +14,8 @@ describe('graphql-codegen-typescript-graphql-files-modules', () => {
             query MyQuery {
               field
             }
-          `)
-        }
+          `),
+        },
       ],
       {},
       { outputFile: '' }
@@ -43,7 +43,7 @@ describe('graphql-codegen-typescript-graphql-files-modules', () => {
             query MyQuery {
               field
             }
-          `)
+          `),
         },
         {
           filePath: 'some/file/my-other-query.graphql',
@@ -51,8 +51,8 @@ describe('graphql-codegen-typescript-graphql-files-modules', () => {
             query OtherQuery {
               field
             }
-          `)
-        }
+          `),
+        },
       ],
       {},
       { outputFile: '' }
@@ -88,8 +88,8 @@ describe('graphql-codegen-typescript-graphql-files-modules', () => {
             query {
               field
             }
-          `)
-        }
+          `),
+        },
       ],
       {},
       { outputFile: '' }
@@ -120,8 +120,8 @@ describe('graphql-codegen-typescript-graphql-files-modules', () => {
             query OtherQuery {
               field
             }
-          `)
-        }
+          `),
+        },
       ],
       {},
       { outputFile: '' }
@@ -150,7 +150,7 @@ describe('graphql-codegen-typescript-graphql-files-modules', () => {
             query MyQuery {
               field
             }
-          `)
+          `),
         },
         {
           filePath: 'some/file-other-path/my-query.graphql',
@@ -158,8 +158,8 @@ describe('graphql-codegen-typescript-graphql-files-modules', () => {
             query OtherQuery {
               field
             }
-          `)
-        }
+          `),
+        },
       ],
       {},
       { outputFile: '' }

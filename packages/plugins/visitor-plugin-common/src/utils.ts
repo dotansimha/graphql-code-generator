@@ -1,20 +1,5 @@
 import { pascalCase } from 'change-case';
-import {
-  NameNode,
-  Kind,
-  TypeNode,
-  NamedTypeNode,
-  isNonNullType,
-  GraphQLObjectType,
-  GraphQLNonNull,
-  GraphQLList,
-  isListType,
-  GraphQLOutputType,
-  GraphQLNamedType,
-  isScalarType,
-  GraphQLSchema,
-  GraphQLScalarType
-} from 'graphql';
+import { NameNode, Kind, TypeNode, NamedTypeNode, isNonNullType, GraphQLObjectType, GraphQLNonNull, GraphQLList, isListType, GraphQLOutputType, GraphQLNamedType, isScalarType, GraphQLSchema, GraphQLScalarType } from 'graphql';
 import { ScalarsMap } from './types';
 
 function isWrapperType(t: GraphQLOutputType): t is GraphQLNonNull<any> | GraphQLList<any> {
@@ -65,6 +50,7 @@ export function indent(str: string, count = 1): string {
 
 export interface DeclarationBlockConfig {
   blockWrapper?: string;
+  blockTransformer?: (block: string) => string;
   enumNameValueSeparator?: string;
 }
 
@@ -80,8 +66,9 @@ export class DeclarationBlock {
   constructor(private _config: DeclarationBlockConfig) {
     this._config = {
       blockWrapper: '',
+      blockTransformer: block => block,
       enumNameValueSeparator: ':',
-      ...this._config
+      ...this._config,
     };
   }
 
@@ -149,14 +136,14 @@ export class DeclarationBlock {
         result += this._content;
       }
 
+      const before = '{' + this._config.blockWrapper;
+      const after = this._config.blockWrapper + '}';
+      const block = [before, this._block, after].join('\n');
+
       if (this._methodName) {
-        result += `${this._methodName}({${this._config.blockWrapper}
-${this._block}
-${this._config.blockWrapper}})`;
+        result += `${this._methodName}(${this._config.blockTransformer!(block)})`;
       } else {
-        result += `{${this._config.blockWrapper}
-${this._block}
-${this._config.blockWrapper}}`;
+        result += this._config.blockTransformer!(block);
       }
     } else if (this._content) {
       result += this._content;
@@ -183,10 +170,7 @@ export function toPascalCase(str: string) {
     .join('_');
 }
 
-export const wrapTypeWithModifiers = (prefix = '') => (
-  baseType: string,
-  type: GraphQLObjectType | GraphQLNonNull<GraphQLObjectType> | GraphQLList<GraphQLObjectType>
-): string => {
+export const wrapTypeWithModifiers = (prefix = '') => (baseType: string, type: GraphQLObjectType | GraphQLNonNull<GraphQLObjectType> | GraphQLList<GraphQLObjectType>): string => {
   if (isNonNullType(type)) {
     return wrapTypeWithModifiers(prefix)(baseType, type.ofType).substr(1);
   } else if (isListType(type)) {

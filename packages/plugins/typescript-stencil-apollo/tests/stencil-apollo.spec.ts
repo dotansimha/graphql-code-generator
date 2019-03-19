@@ -1,4 +1,4 @@
-import 'graphql-codegen-testing';
+import '@graphql-codegen/testing';
 import { plugin, StencilComponentType } from '../src/index';
 import { buildClientSchema } from 'graphql';
 import gql from 'graphql-tag';
@@ -23,12 +23,7 @@ describe('Components', () => {
       }
     `;
 
-    const content = await plugin(
-      schema,
-      [{ filePath: '', content: documents }],
-      { componentType: StencilComponentType.class },
-      { outputFile: '' }
-    );
+    const content = await plugin(schema, [{ filePath: '', content: documents }], { componentType: StencilComponentType.class }, { outputFile: '' });
 
     expect(content).toBeSimilarStringTo(`
         import { Component } from '@stencil/core';
@@ -52,12 +47,7 @@ describe('Components', () => {
       }
     `;
 
-    const content = await plugin(
-      schema,
-      [{ filePath: '', content: documents }],
-      { componentType: StencilComponentType.functional },
-      { outputFile: '' }
-    );
+    const content = await plugin(schema, [{ filePath: '', content: documents }], { componentType: StencilComponentType.functional }, { outputFile: '' });
 
     expect(content).toBeSimilarStringTo(`
         export type FeedProps = {
@@ -88,12 +78,7 @@ describe('Components', () => {
       }
     `;
 
-    const content = await plugin(
-      schema,
-      [{ filePath: '', content: documents }],
-      { componentType: StencilComponentType.class },
-      { outputFile: '' }
-    );
+    const content = await plugin(schema, [{ filePath: '', content: documents }], { componentType: StencilComponentType.class }, { outputFile: '' });
 
     expect(content).toBeSimilarStringTo(`
             @Component({

@@ -2,8 +2,10 @@
   "scripts": {
     "dev": "docusaurus-start",
     "start": "docusaurus-start",
+    "generate-config": "node generate-config.js",
+    "predev": "yarn generate-config",
     "prestart": "yarn live-demo:dev",
-    "build": "yarn build:app && yarn live-demo:prod && yarn build:lambda",
+    "build": "yarn generate-config && yarn build:app && yarn live-demo:prod && yarn build:lambda",
     "build:app": "docusaurus-build",
     "build:lambda": "netlify-lambda build lambda",
     "serve:lambda": "netlify-lambda serve",
@@ -15,6 +17,8 @@
     "live-demo:prod": "cd live-demo && yarn build && cp -r ./build ../build/graphql-code-generator/live-demo"
   },
   "devDependencies": {
+    "@graphql-codegen/config-markdown-generator": "../packages/utils/config-md-generator",
+    "remarkable-embed": "0.4.1",
     "babel-preset-minify": "0.5.0",
     "docusaurus": "1.7.2",
     "netlify-lambda": "1.4.3"

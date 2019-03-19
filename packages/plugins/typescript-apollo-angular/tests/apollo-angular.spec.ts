@@ -1,8 +1,8 @@
-import 'graphql-codegen-testing';
+import '@graphql-codegen/testing';
 import gql from 'graphql-tag';
 import { plugin, addToSchema } from '../src/index';
 import { parse, GraphQLSchema, buildClientSchema, buildSchema, extendSchema } from 'graphql';
-import { Types } from 'graphql-codegen-plugin-helpers';
+import { Types } from '@graphql-codegen/plugin-helpers';
 import { plugin as tsPlugin } from '../../typescript/src/index';
 import { plugin as tsDocumentsPlugin } from '../../typescript-operations/src/index';
 import { validateTs } from '../../typescript/tests/validate';
@@ -26,12 +26,7 @@ describe('Apollo Angular', () => {
     }
   `);
 
-  const validateTypeScript = async (
-    output: string,
-    testSchema: GraphQLSchema,
-    documents: Types.DocumentFile[],
-    config: any
-  ) => {
+  const validateTypeScript = async (output: string, testSchema: GraphQLSchema, documents: Types.DocumentFile[], config: any) => {
     const tsOutput = await tsPlugin(testSchema, documents, config, { outputFile: '' });
     const tsDocumentsOutput = await tsDocumentsPlugin(testSchema, documents, config, { outputFile: '' });
     const merged = [tsOutput, tsDocumentsOutput, output].join('\n');
@@ -44,7 +39,7 @@ describe('Apollo Angular', () => {
       [],
       {},
       {
-        outputFile: 'graphql.ts'
+        outputFile: 'graphql.ts',
       }
     );
 
@@ -59,10 +54,10 @@ describe('Apollo Angular', () => {
         schema,
         docs,
         {
-          noGraphQLTag: true
+          noGraphQLTag: true,
         },
         {
-          outputFile: 'graphql.tsx'
+          outputFile: 'graphql.tsx',
         }
       );
 
@@ -78,7 +73,7 @@ describe('Apollo Angular', () => {
         docs,
         { gqlImport: 'graphql.macro#gql' },
         {
-          outputFile: 'graphql.tsx'
+          outputFile: 'graphql.tsx',
         }
       );
 
@@ -93,7 +88,7 @@ describe('Apollo Angular', () => {
         docs,
         {},
         {
-          outputFile: 'graphql.tsx'
+          outputFile: 'graphql.tsx',
         }
       );
 
@@ -121,7 +116,7 @@ describe('Apollo Angular', () => {
         docs,
         {},
         {
-          outputFile: 'graphql.ts'
+          outputFile: 'graphql.ts',
         }
       );
 
@@ -156,7 +151,7 @@ describe('Apollo Angular', () => {
         docs,
         {},
         {
-          outputFile: 'graphql.ts'
+          outputFile: 'graphql.ts',
         }
       );
 
@@ -187,7 +182,7 @@ describe('Apollo Angular', () => {
         docs,
         {},
         {
-          outputFile: 'graphql.ts'
+          outputFile: 'graphql.ts',
         }
       );
 
@@ -215,7 +210,7 @@ describe('Apollo Angular', () => {
         docs,
         {},
         {
-          outputFile: 'graphql.ts'
+          outputFile: 'graphql.ts',
         }
       );
 
@@ -248,10 +243,10 @@ describe('Apollo Angular', () => {
         docs,
         {
           ngModule: './path/to/file#AppModule',
-          namedClient: 'custom'
+          namedClient: 'custom',
         },
         {
-          outputFile: 'graphql.ts'
+          outputFile: 'graphql.ts',
         }
       );
 
@@ -302,7 +297,7 @@ describe('Apollo Angular', () => {
         docs,
         {},
         {
-          outputFile: 'graphql.ts'
+          outputFile: 'graphql.ts',
         }
       );
 

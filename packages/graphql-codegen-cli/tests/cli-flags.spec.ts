@@ -20,7 +20,7 @@ const createArgv = (str = ''): string[] => {
   return result;
 };
 
-describe.only('CLI Flags', () => {
+describe('CLI Flags', () => {
   beforeEach(() => {
     resetFs();
   });
@@ -36,7 +36,7 @@ describe.only('CLI Flags', () => {
     const config = createConfig(args);
     expect(config).toEqual({
       schema: 'schema.graphql',
-      generates: { 'file.ts': ['plugin'] }
+      generates: { 'file.ts': ['plugin'] },
     });
   });
 
@@ -54,7 +54,7 @@ describe.only('CLI Flags', () => {
     const config = createConfig(args);
     expect(config).toEqual({
       schema: 'schema.graphql',
-      generates: { 'file.ts': ['plugin'] }
+      generates: { 'file.ts': ['plugin'] },
     });
   });
 

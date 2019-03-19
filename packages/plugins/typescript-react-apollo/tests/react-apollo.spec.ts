@@ -1,8 +1,8 @@
-import 'graphql-codegen-testing';
+import '@graphql-codegen/testing';
 import { plugin } from '../src/index';
 import { parse, GraphQLSchema, buildClientSchema } from 'graphql';
 import gql from 'graphql-tag';
-import { Types } from 'graphql-codegen-plugin-helpers';
+import { Types } from '@graphql-codegen/plugin-helpers';
 import { plugin as tsPlugin } from '../../typescript/src/index';
 import { plugin as tsDocumentsPlugin } from '../../typescript-operations/src/index';
 import { validateTs } from '../../typescript/tests/validate';
@@ -26,12 +26,7 @@ describe('React Apollo', () => {
     }
   `);
 
-  const validateTypeScript = async (
-    output: string,
-    testSchema: GraphQLSchema,
-    documents: Types.DocumentFile[],
-    config: any
-  ) => {
+  const validateTypeScript = async (output: string, testSchema: GraphQLSchema, documents: Types.DocumentFile[], config: any) => {
     const tsOutput = await tsPlugin(testSchema, documents, config, { outputFile: '' });
     const tsDocumentsOutput = await tsDocumentsPlugin(testSchema, documents, config, { outputFile: '' });
     const merged = [tsOutput, tsDocumentsOutput, output].join('\n');
@@ -44,7 +39,7 @@ describe('React Apollo', () => {
       [],
       {},
       {
-        outputFile: 'graphql.tsx'
+        outputFile: 'graphql.tsx',
       }
     );
 
@@ -62,7 +57,7 @@ describe('React Apollo', () => {
         docs,
         {},
         {
-          outputFile: 'graphql.tsx'
+          outputFile: 'graphql.tsx',
         }
       );
 
@@ -78,10 +73,10 @@ describe('React Apollo', () => {
         schema,
         docs,
         {
-          noGraphQLTag: true
+          noGraphQLTag: true,
         },
         {
-          outputFile: 'graphql.tsx'
+          outputFile: 'graphql.tsx',
         }
       );
 
@@ -97,7 +92,7 @@ describe('React Apollo', () => {
         docs,
         { gqlImport: 'graphql.macro#gql' },
         {
-          outputFile: 'graphql.tsx'
+          outputFile: 'graphql.tsx',
         }
       );
 
@@ -112,7 +107,7 @@ describe('React Apollo', () => {
         docs,
         { withHooks: true },
         {
-          outputFile: 'graphql.tsx'
+          outputFile: 'graphql.tsx',
         }
       );
 
@@ -127,7 +122,7 @@ describe('React Apollo', () => {
         docs,
         { withHooks: true, hooksImportFrom: 'custom-apollo-hooks' },
         {
-          outputFile: 'graphql.tsx'
+          outputFile: 'graphql.tsx',
         }
       );
 
@@ -143,10 +138,10 @@ describe('React Apollo', () => {
         {
           withHooks: true,
           withHOC: false,
-          withComponent: false
+          withComponent: false,
         },
         {
-          outputFile: 'graphql.tsx'
+          outputFile: 'graphql.tsx',
         }
       );
 
@@ -171,8 +166,8 @@ describe('React Apollo', () => {
                 id
               }
             }
-          `)
-        }
+          `),
+        },
       ];
       const result = await plugin(schema, docs, {}, { outputFile: '' });
 
@@ -223,7 +218,7 @@ describe('React Apollo', () => {
         docs,
         {},
         {
-          outputFile: 'graphql.tsx'
+          outputFile: 'graphql.tsx',
         }
       );
 
@@ -279,7 +274,7 @@ query MyFeed {
         docs,
         {},
         {
-          outputFile: 'graphql.tsx'
+          outputFile: 'graphql.tsx',
         }
       );
 
@@ -327,7 +322,7 @@ query MyFeed {
         docs,
         {},
         {
-          outputFile: 'graphql.tsx'
+          outputFile: 'graphql.tsx',
         }
       );
 
@@ -346,7 +341,7 @@ query MyFeed {
         docs,
         {},
         {
-          outputFile: 'graphql.tsx'
+          outputFile: 'graphql.tsx',
         }
       );
 
@@ -376,10 +371,10 @@ query MyFeed {
         schema,
         docs,
         {
-          noGraphQLTag: true
+          noGraphQLTag: true,
         },
         {
-          outputFile: 'graphql.tsx'
+          outputFile: 'graphql.tsx',
         }
       );
 
@@ -394,7 +389,7 @@ query MyFeed {
         docs,
         {},
         {
-          outputFile: 'graphql.tsx'
+          outputFile: 'graphql.tsx',
         }
       );
 
@@ -416,7 +411,7 @@ query MyFeed {
         docs,
         { withComponent: false },
         {
-          outputFile: 'graphql.tsx'
+          outputFile: 'graphql.tsx',
         }
       );
 
@@ -433,16 +428,13 @@ query MyFeed {
         docs,
         {},
         {
-          outputFile: 'graphql.tsx'
+          outputFile: 'graphql.tsx',
         }
       );
 
-      expect(content).toBeSimilarStringTo(
-        `export type TestProps<TChildProps = {}> = Partial<ReactApollo.DataProps<TestQuery, TestQueryVariables>> & TChildProps;`
-      );
+      expect(content).toBeSimilarStringTo(`export type TestProps<TChildProps = {}> = Partial<ReactApollo.DataProps<TestQuery, TestQueryVariables>> & TChildProps;`);
 
-      expect(content)
-        .toBeSimilarStringTo(`export function withTest<TProps, TChildProps = {}>(operationOptions: ReactApollo.OperationOption<
+      expect(content).toBeSimilarStringTo(`export function withTest<TProps, TChildProps = {}>(operationOptions: ReactApollo.OperationOption<
   TProps,
   TestQuery,
   TestQueryVariables,
@@ -459,7 +451,7 @@ query MyFeed {
         docs,
         { withHOC: false },
         {
-          outputFile: 'graphql.tsx'
+          outputFile: 'graphql.tsx',
         }
       );
 
@@ -499,7 +491,7 @@ query MyFeed {
         docs,
         { withHooks: true, withComponent: false, withHOC: false },
         {
-          outputFile: 'graphql.tsx'
+          outputFile: 'graphql.tsx',
         }
       );
 
@@ -522,7 +514,7 @@ export function useSubmitRepositoryMutation(baseOptions?: ReactApolloHooks.Mutat
         docs,
         { withHooks: false },
         {
-          outputFile: 'graphql.tsx'
+          outputFile: 'graphql.tsx',
         }
       );
 
@@ -547,10 +539,10 @@ export function useSubmitRepositoryMutation(baseOptions?: ReactApolloHooks.Mutat
         {
           withHooks: true,
           withComponent: false,
-          withHOC: false
+          withHOC: false,
         },
         {
-          outputFile: 'graphql.tsx'
+          outputFile: 'graphql.tsx',
         }
       );
 

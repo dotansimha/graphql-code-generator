@@ -15,7 +15,7 @@ type User @entity {
 }
 ```
 
-We can have the following Typescript output:
+We can have the following TypeScript output:
 
 ```typescript
 import { ObjectID } from 'mongodb';
@@ -31,9 +31,7 @@ This interface can be used for db read/write purposes, thus making communication
 
 ## Installation
 
-Install using `npm` (or `yarn`):
-
-    $ npm install graphql-codegen-typescript-mongodb
+    $ yarn add -D @graphql-codegen/typescript-mongodb
 
 ## Usage
 
@@ -41,14 +39,14 @@ Once installed, add the directives declaration to your GraphQL Schema definition
 
 ```typescript
 import { makeExecutableSchema } from 'graphql-tools';
-import { DIRECTIVES } from 'graphql-codegen-typescript-mongodb';
+import { DIRECTIVES } from '@graphql-codegen/typescript-mongodb';
 
 const schema = makeExecutableSchema({
   typeDefs: [
-    DIRECTIVES
+    DIRECTIVES,
     // the rest of your GraphQL types
   ],
-  resolvers
+  resolvers,
 });
 ```
 
@@ -58,10 +56,10 @@ And generate code using `gql-gen`:
 schema: ./src/my-schema.js
 require:
   - ts-node/register
-overwrite: true
 generates:
   ./src/generated/graphql.ts:
     plugins:
+      - typescript
       - typescript-mongodb
 ```
 
@@ -200,19 +198,19 @@ export type PossibleType = { entityType: string } & (ADbObject | BDbObject);
 
 Given the following GraphQL types:
 
-```
+```graphql
 type User @entity {
-    id: String! @id
-    username: String! @column
-    email: String! @column
-    profile: Profile! @embedded
-    friendsCount: Int! # this field won't get a generated MongoDB field
-    friends: [User]! @link
+  id: String! @id
+  username: String! @column
+  email: String! @column
+  profile: Profile! @embedded
+  friendsCount: Int! # this field won't get a generated MongoDB field
+  friends: [User]! @link
 }
 
 type Profile @entity(embedded: true) {
-    name: String! @column
-    age: Int! @column
+  name: String! @column
+  age: Int! @column
 }
 ```
 
@@ -237,8 +235,5 @@ export interface ProfileDbObject {
 
 ## Configuration
 
-The output of this template can be controlled using a specified config file which consists of the fields below. Each config field is followed by its matching environment variable, which can be used as an alternative method to control the template's behavior:
-
-#### `schemaNamespace`, `CODEGEN_SCHEMA_NAMESPACE` (default value: `null`)
-
-This will tell the codegen to wrap the generated schema typings with a TypeScript namespace. Note that even though we run this command on multiple schemas, the output types will be merged and not separated. For more information regards declaration merging, see [reference](https://www.typescriptlang.org/docs/handbook/declaration-merging.html).
+{@import: ../docs/generated-config/base-visitor.md}
+{@import: ../docs/generated-config/typescript-mongodb.md}

@@ -1,4 +1,4 @@
-import { Types, CodegenPlugin } from 'graphql-codegen-plugin-helpers';
+import { Types, CodegenPlugin } from '@graphql-codegen/plugin-helpers';
 import { DocumentNode, GraphQLSchema, buildASTSchema } from 'graphql';
 import { DetailedError } from './errors';
 import { validateGraphQlDocuments, checkValidationErrors } from 'graphql-toolkit';
@@ -39,13 +39,7 @@ export async function executePlugin(options: ExecutePluginOptions, plugin: Codeg
 
   if (plugin.validate && typeof plugin.validate === 'function') {
     try {
-      await plugin.validate(
-        outputSchema,
-        options.documents,
-        options.config,
-        options.outputFilename,
-        options.allPlugins
-      );
+      await plugin.validate(outputSchema, options.documents, options.config, options.outputFilename, options.allPlugins);
     } catch (e) {
       throw new DetailedError(
         `Plugin "${options.name}" validation failed:`,
@@ -57,6 +51,6 @@ export async function executePlugin(options: ExecutePluginOptions, plugin: Codeg
   }
 
   return plugin.plugin(outputSchema, options.documents, options.config, {
-    outputFile: options.outputFilename
+    outputFile: options.outputFilename,
   });
 }

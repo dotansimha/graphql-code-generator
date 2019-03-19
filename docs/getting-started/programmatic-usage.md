@@ -7,23 +7,22 @@ The Codegen has also a complete programmatic, you can use it if you need to cust
 
 ### Basic Programmatic Usage
 
-In order to use the programmatic API, start by importing `generate` from `graphql-code-generator`:
+In order to use the programmatic API, start by importing `generate` from `@graphql-codegen/core`:
 
 ```ts
-import { generate } from 'graphql-code-generator';
+import { generate } from '@graphql-codegen/core';
 ```
 
-Then, create a configuration object, match [`Types.Config`](https://github.com/dotansimha/graphql-code-generator/blob/2b6610b9a4770d76e3ef322ca3adfbd371dadf83/packages/graphql-codegen-core/src/yml-config-types.ts#L41-L52) from `graphql-code-generator`, for example:
+Then, create a configuration object, match [`Types.Config`](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/utils/plugins-helpers/src/types.ts#L51) from `@graphql-codegen/plugins-helpers`, for example:
 
 ```ts
 const config = {
-  overwrite: true,
   schema: ['schema.graphql'],
   generates: {
     'output.ts': {
-      plugins: ['typescript']
-    }
-  }
+      plugins: ['typescript'],
+    },
+  },
 };
 ```
 
@@ -54,15 +53,15 @@ const config = {
       return {
         plugin: () => {
           // overwrite plugin here
-        }
+        },
       };
     }
   },
   schema: ['schema.graphql'],
   generates: {
     'output.ts': {
-      plugins: ['typescript']
-    }
-  }
+      plugins: ['typescript'],
+    },
+  },
 };
 ```

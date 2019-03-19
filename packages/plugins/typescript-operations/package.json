@@ -1,6 +1,6 @@
 {
-  "name": "graphql-codegen-typescript-operations",
-  "version": "0.18.0",
+  "name": "@graphql-codegen/typescript-operations",
+  "version": "1.0.0",
   "description": "GraphQL Code Generator plugin for generating TypeScript types for GraphQL queries, mutations, subscriptions and fragments",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
@@ -9,13 +9,13 @@
     "test": "jest --config ../../../jest.config.js"
   },
   "dependencies": {
-    "tslib": "1.9.3",
-    "graphql-codegen-typescript": "0.18.0",
-    "graphql-codegen-visitor-plugin-common": "0.18.0",
-    "graphql-codegen-plugin-helpers": "0.18.0"
+    "@graphql-codegen/plugin-helpers": "1.0.0",
+    "@graphql-codegen/typescript": "1.0.0",
+    "@graphql-codegen/visitor-plugin-common": "1.0.0",
+    "tslib": "1.9.3"
   },
   "devDependencies": {
-    "graphql-codegen-testing": "0.18.0",
+    "@graphql-codegen/testing": "1.0.0",
     "graphql": "14.1.1",
     "jest": "24.5.0",
     "ts-jest": "24.0.0",
@@ -27,5 +27,8 @@
   "typings": "dist/esnext/index.d.ts",
   "typescript": {
     "definition": "dist/esnext/index.d.ts"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

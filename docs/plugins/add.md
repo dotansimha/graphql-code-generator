@@ -9,9 +9,7 @@ You can use this plugin to add custom code, imports, comments and more to your o
 
 ## Installation
 
-Install using `npm` (or `yarn`):
-
-    $ npm install graphql-codegen-add
+    $ yarn add -D @graphql-codegen/add
 
 ## Examples
 
