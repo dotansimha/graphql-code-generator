@@ -7,17 +7,10 @@ title: Time
 
 ## Installation
 
-Install using `npm` (or `yarn`):
+    $ yarn add -D @graphql-codegen/time
 
-    $ npm install graphql-codegen-time
+## Configuration
 
-## Examples
+You can either specify a `string` containting the moment format, or specify an object with the following:
 
-```yaml
-# ...
-generates:
-  path/to/file.ts:
-    plugins:
-      - time
-      - typescript
-```
+{@import: ../docs/generated-config/time.md}

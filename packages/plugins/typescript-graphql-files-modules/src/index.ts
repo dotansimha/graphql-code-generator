@@ -1,29 +1,19 @@
 import { basename } from 'path';
-import { Types, PluginFunction, PluginValidateFn } from 'graphql-codegen-plugin-helpers';
+import { Types, PluginFunction, PluginValidateFn } from '@graphql-codegen/plugin-helpers';
 import { GraphQLSchema, OperationDefinitionNode } from 'graphql';
 
-export const plugin: PluginFunction = async (
-  schema: GraphQLSchema,
-  documents: Types.DocumentFile[]
-): Promise<string> => {
-  const mappedDocuments: { [fileName: string]: OperationDefinitionNode[] } = documents.reduce(
-    (prev, documentRecord) => {
-      const fileName = basename(documentRecord.filePath);
+export const plugin: PluginFunction = async (schema: GraphQLSchema, documents: Types.DocumentFile[]): Promise<string> => {
+  const mappedDocuments: { [fileName: string]: OperationDefinitionNode[] } = documents.reduce((prev, documentRecord) => {
+    const fileName = basename(documentRecord.filePath);
 
-      if (!prev[fileName]) {
-        prev[fileName] = [];
-      }
+    if (!prev[fileName]) {
+      prev[fileName] = [];
+    }
 
-      prev[fileName].push(
-        ...documentRecord.content.definitions.filter(
-          document => document.kind === 'OperationDefinition' || document.kind === 'FragmentDefinition'
-        )
-      );
+    prev[fileName].push(...documentRecord.content.definitions.filter(document => document.kind === 'OperationDefinition' || document.kind === 'FragmentDefinition'));
 
-      return prev;
-    },
-    {}
-  );
+    return prev;
+  }, {});
 
   return Object.keys(mappedDocuments)
     .filter(fileName => mappedDocuments[fileName].length > 0)
@@ -46,12 +36,7 @@ declare module '*/${fileName}' {
     .join('\n');
 };
 
-export const validate: PluginValidateFn<any> = async (
-  schema: GraphQLSchema,
-  documents: Types.DocumentFile[],
-  config: any,
-  outputFile: string
-) => {
+export const validate: PluginValidateFn<any> = async (schema: GraphQLSchema, documents: Types.DocumentFile[], config: any, outputFile: string) => {
   if (!outputFile.endsWith('.d.ts')) {
     throw new Error(`Plugin "typescript-graphql-files-modules" requires extension to be ".d.ts"!`);
   }

@@ -1,7 +1,7 @@
 {
-  "name": "graphql-codegen-schema-ast",
+  "name": "@graphql-codegen/schema-ast",
   "version": "0.18.0",
-  "description": "graphql-codegen-cli template for TypeScript typings for both client side and server side",
+  "description": "GraphQL Code Generator plugin for generating a .graphql file from a given schema",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
   "scripts": {
@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "tslib": "1.9.3",
-    "graphql-codegen-plugin-helpers": "0.18.0"
+    "@graphql-codegen/plugin-helpers": "0.18.0"
   },
   "devDependencies": {
     "tslib": "1.9.3",
@@ -29,5 +29,8 @@
   "typings": "dist/esnext/index.d.ts",
   "typescript": {
     "definition": "dist/esnext/index.d.ts"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

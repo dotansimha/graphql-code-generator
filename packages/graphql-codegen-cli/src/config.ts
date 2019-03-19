@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from 'fs';
 import { join, resolve } from 'path';
-import { Types } from 'graphql-codegen-plugin-helpers';
-import { DetailedError } from 'graphql-codegen-core';
+import { Types } from '@graphql-codegen/plugin-helpers';
+import { DetailedError } from '@graphql-codegen/core';
 import { parseConfigFile } from './yml';
 import { Command } from 'commander';
 
@@ -59,10 +59,7 @@ export function createConfig(argv = process.argv): Types.Config | never {
   const cliFlags = (new Command()
     .usage('gql-gen [options]')
     .allowUnknownOption(true)
-    .option(
-      '-c, --config <path>',
-      'Path to GraphQL codegen YAML config file, defaults to "codegen.yml" on the current directory'
-    )
+    .option('-c, --config <path>', 'Path to GraphQL codegen YAML config file, defaults to "codegen.yml" on the current directory')
     .option('-w, --watch', 'Watch for changes and execute generation automatically')
     .option('-o, --overwrite', 'Overwrites existing files')
     .parse(argv) as any) as Command & YamlCliFlags;

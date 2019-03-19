@@ -17,7 +17,7 @@ import {
   InterfaceTypeDefinitionNode,
   ScalarTypeDefinitionNode,
   EnumValueDefinitionNode,
-  NamedTypeNode
+  NamedTypeNode,
 } from 'graphql';
 import { DEFAULT_SCALARS } from './scalars';
 
@@ -26,26 +26,31 @@ export interface ParsedTypesConfig extends ParsedConfig {
 }
 
 export interface RawTypesConfig extends RawConfig {
+  /**
+   * @name enumValues
+   * @type EnumValuesMap
+   * @description Overrides the default value of enum values declared in your GraphQL schema.
+   *
+   * @example
+   * ```yml
+   *   config:
+   *     enumValues:
+   *       MyEnum:
+   *         A: 'foo'
+   * ```
+   */
   enumValues?: EnumValuesMap;
 }
 
-export class BaseTypesVisitor<
-  TRawConfig extends RawTypesConfig = RawTypesConfig,
-  TPluginConfig extends ParsedTypesConfig = ParsedTypesConfig
-> extends BaseVisitor<TRawConfig, TPluginConfig> {
+export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig, TPluginConfig extends ParsedTypesConfig = ParsedTypesConfig> extends BaseVisitor<TRawConfig, TPluginConfig> {
   protected _argumentsTransformer: OperationVariablesToObject;
 
-  constructor(
-    protected _schema: GraphQLSchema,
-    rawConfig: TRawConfig,
-    additionalConfig: TPluginConfig,
-    defaultScalars: ScalarsMap = DEFAULT_SCALARS
-  ) {
+  constructor(protected _schema: GraphQLSchema, rawConfig: TRawConfig, additionalConfig: TPluginConfig, defaultScalars: ScalarsMap = DEFAULT_SCALARS) {
     super(
       rawConfig,
       {
         enumValues: rawConfig.enumValues || {},
-        ...additionalConfig
+        ...additionalConfig,
       },
       buildScalars(_schema, defaultScalars)
     );
@@ -105,9 +110,7 @@ export class BaseTypesVisitor<
 
   UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number, parent: any): string {
     const originalNode = parent[key] as UnionTypeDefinitionNode;
-    const possibleTypes = originalNode.types
-      .map(t => (this.scalars[t.name.value] ? this._getScalar(t.name.value) : this.convertName(t)))
-      .join(' | ');
+    const possibleTypes = originalNode.types.map(t => (this.scalars[t.name.value] ? this._getScalar(t.name.value) : this.convertName(t))).join(' | ');
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
@@ -118,10 +121,7 @@ export class BaseTypesVisitor<
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: number | string, parent: any): string {
     const originalNode = parent[key] as ObjectTypeDefinitionNode;
-    const interfaces =
-      originalNode.interfaces && node.interfaces.length > 0
-        ? originalNode.interfaces.map(i => this.convertName(i)).join(' & ') + ' & '
-        : '';
+    const interfaces = originalNode.interfaces && node.interfaces.length > 0 ? originalNode.interfaces.map(i => this.convertName(i)).join(' & ') + ' & ' : '';
 
     const typeDefinition = new DeclarationBlock(this._declarationBlockConfig)
       .export()
@@ -136,7 +136,7 @@ export class BaseTypesVisitor<
       const name =
         original.name.value +
         this.convertName(field, {
-          useTypesPrefix: false
+          useTypesPrefix: false,
         }) +
         'Args';
 
@@ -172,15 +172,7 @@ export class BaseTypesVisitor<
   }
 
   protected buildEnumValuesBlock(values: ReadonlyArray<EnumValueDefinitionNode>): string {
-    return values
-      .map(enumOption =>
-        indent(
-          `${this.convertName(enumOption)}${this._declarationBlockConfig.enumNameValueSeparator} ${wrapWithSingleQuotes(
-            this.config.enumValues[(enumOption.name as any) as string] || enumOption.name
-          )}`
-        )
-      )
-      .join(',\n');
+    return values.map(enumOption => indent(`${this.convertName(enumOption)}${this._declarationBlockConfig.enumNameValueSeparator} ${wrapWithSingleQuotes(this.config.enumValues[(enumOption.name as any) as string] || enumOption.name)}`)).join(',\n');
   }
 
   DirectiveDefinition(node: DirectiveDefinitionNode): string {

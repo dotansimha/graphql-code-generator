@@ -1,19 +1,68 @@
-import { RawResolversConfig } from 'graphql-codegen-visitor-plugin-common';
-import { Types, PluginFunction } from 'graphql-codegen-plugin-helpers';
+import { RawResolversConfig } from '@graphql-codegen/visitor-plugin-common';
+import { Types, PluginFunction } from '@graphql-codegen/plugin-helpers';
 import { isScalarType, parse, printSchema, visit, GraphQLSchema } from 'graphql';
 import { TypeScriptResolversVisitor } from './visitor';
 
 export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
+  /**
+   * @name avoidOptionals
+   * @type boolean
+   * @description This will cause the generator to avoid using TypeScript optionals (`?`),
+   * so the following definition: `type A { myField: String }` will output `myField: Maybe<string>`
+   * instead of `myField?: Maybe<string>`.
+   * @default false
+   *
+   * @example
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *    - typescript-resolvers
+   *  config:
+   *    avoidOptionals: true
+   * ```
+   */
   avoidOptionals?: boolean;
+  /**
+   * @name immutableTypes
+   * @type boolean
+   * @description Generates immutable types by adding `readonly` to properties and uses `ReadonlyArray`.
+   * @default false
+   *
+   * @example
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *    - typescript-resolvers
+   *  config:
+   *    immutableTypes: true
+   * ```
+   */
   immutableTypes?: boolean;
+  /**
+   * @name useIndexSignature
+   * @type boolean
+   * @description Adds an index signature to any generates resolver.
+   * @default false
+   *
+   * @example
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *    - typescript-resolvers
+   *  config:
+   *    useIndexSignature: true
+   * ```
+   */
   useIndexSignature?: boolean;
 }
 
-export const plugin: PluginFunction<TypeScriptResolversPluginConfig> = (
-  schema: GraphQLSchema,
-  documents: Types.DocumentFile[],
-  config: TypeScriptResolversPluginConfig
-) => {
+export const plugin: PluginFunction<TypeScriptResolversPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: TypeScriptResolversPluginConfig) => {
   const imports = ['GraphQLResolveInfo'];
   const hasScalars = Object.values(schema.getTypeMap())
     .filter(t => t.astNode)
@@ -23,12 +72,7 @@ export const plugin: PluginFunction<TypeScriptResolversPluginConfig> = (
     imports.push('GraphQLScalarType', 'GraphQLScalarTypeConfig');
   }
 
-  const indexSignature = config.useIndexSignature
-    ? [
-        'export type WithIndex<TObject> = TObject & Record<string, any>;',
-        'export type ResolversObject<TObject> = WithIndex<TObject>;'
-      ].join('\n')
-    : '';
+  const indexSignature = config.useIndexSignature ? ['export type WithIndex<TObject> = TObject & Record<string, any>;', 'export type ResolversObject<TObject> = WithIndex<TObject>;'].join('\n') : '';
 
   const visitor = new TypeScriptResolversVisitor(config, schema);
 
@@ -100,11 +144,5 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   const visitorResult = visit(astNode, { leave: visitor });
   const { getRootResolver, getAllDirectiveResolvers, mappersImports } = visitor;
 
-  return [
-    ...mappersImports,
-    header,
-    ...visitorResult.definitions.filter(d => typeof d === 'string'),
-    getRootResolver(),
-    getAllDirectiveResolvers()
-  ].join('\n');
+  return [...mappersImports, header, ...visitorResult.definitions.filter(d => typeof d === 'string'), getRootResolver(), getAllDirectiveResolvers()].join('\n');
 };

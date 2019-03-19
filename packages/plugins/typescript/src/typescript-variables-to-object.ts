@@ -1,13 +1,8 @@
-import { OperationVariablesToObject, ScalarsMap, ConvertNameFn } from 'graphql-codegen-visitor-plugin-common';
+import { OperationVariablesToObject, ScalarsMap, ConvertNameFn } from '@graphql-codegen/visitor-plugin-common';
 import { TypeNode, Kind } from 'graphql';
 
 export class TypeScriptOperationVariablesToObject extends OperationVariablesToObject {
-  constructor(
-    _scalars: ScalarsMap,
-    _convertName: ConvertNameFn,
-    private _avoidOptionals: boolean,
-    private _immutableTypes: boolean
-  ) {
+  constructor(_scalars: ScalarsMap, _convertName: ConvertNameFn, private _avoidOptionals: boolean, private _immutableTypes: boolean) {
     super(_scalars, _convertName);
   }
 

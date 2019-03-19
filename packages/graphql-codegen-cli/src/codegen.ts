@@ -1,5 +1,5 @@
-import { Types, CodegenPlugin } from 'graphql-codegen-plugin-helpers';
-import { DetailedError, codegen, mergeSchemas } from 'graphql-codegen-core';
+import { Types, CodegenPlugin } from '@graphql-codegen/plugin-helpers';
+import { DetailedError, codegen, mergeSchemas } from '@graphql-codegen/core';
 import * as Listr from 'listr';
 import { normalizeOutputParam, normalizeInstanceOrArray, normalizeConfig } from './helpers';
 import { prettify } from './utils/prettier';
@@ -28,7 +28,7 @@ export async function executeCodegen(config: Types.Config): Promise<Types.FileOu
 
   const result: Types.FileOutput[] = [];
   const commonListrOptions = {
-    exitOnError: true
+    exitOnError: true,
   };
   let listr: Listr;
 
@@ -36,13 +36,13 @@ export async function executeCodegen(config: Types.Config): Promise<Types.FileOu
     listr = new Listr({
       ...commonListrOptions,
       renderer: 'verbose',
-      nonTTYRenderer: 'verbose'
+      nonTTYRenderer: 'verbose',
     });
   } else if (process.env.NODE_ENV === 'test') {
     listr = new Listr({
       ...commonListrOptions,
       renderer: 'silent',
-      nonTTYRenderer: 'silent'
+      nonTTYRenderer: 'silent',
     });
   } else {
     listr = new Listr({
@@ -50,7 +50,7 @@ export async function executeCodegen(config: Types.Config): Promise<Types.FileOu
       renderer: config.silent ? 'silent' : Renderer,
       nonTTYRenderer: config.silent ? 'silent' : 'default',
       collapse: true,
-      clearOutput: false
+      clearOutput: false,
     } as any);
   }
 
@@ -142,7 +142,7 @@ export async function executeCodegen(config: Types.Config): Promise<Types.FileOu
 
   listr.add({
     title: 'Parse configuration',
-    task: () => normalize()
+    task: () => normalize(),
   });
 
   listr.add({
@@ -165,15 +165,12 @@ export async function executeCodegen(config: Types.Config): Promise<Types.FileOu
                   title: 'Load GraphQL schemas',
                   task: wrapTask(async () => {
                     debugLog(`[CLI] Loading Schemas`);
-                    const allSchemas = [
-                      ...rootSchemas.map(pointToScehma => loadSchema(pointToScehma, config)),
-                      ...outputSpecificSchemas.map(pointToScehma => loadSchema(pointToScehma, config))
-                    ];
+                    const allSchemas = [...rootSchemas.map(pointToScehma => loadSchema(pointToScehma, config)), ...outputSpecificSchemas.map(pointToScehma => loadSchema(pointToScehma, config))];
 
                     if (allSchemas.length > 0) {
                       outputSchema = await mergeSchemas(await Promise.all(allSchemas));
                     }
-                  }, filename)
+                  }, filename),
                 },
                 {
                   title: 'Load GraphQL documents',
@@ -188,7 +185,7 @@ export async function executeCodegen(config: Types.Config): Promise<Types.FileOu
                         outputDocuments.push(...documents);
                       }
                     }
-                  }, filename)
+                  }, filename),
                 },
                 {
                   title: 'Generate',
@@ -196,9 +193,7 @@ export async function executeCodegen(config: Types.Config): Promise<Types.FileOu
                     debugLog(`[CLI] Generating output`);
                     const normalizedPluginsArray = normalizeConfig(outputConfig.plugins);
                     const pluginLoader = config.pluginLoader || defaultPluginLoader;
-                    const pluginPackages = await Promise.all(
-                      normalizedPluginsArray.map(plugin => getPluginByName(Object.keys(plugin)[0], pluginLoader))
-                    );
+                    const pluginPackages = await Promise.all(normalizedPluginsArray.map(plugin => getPluginByName(Object.keys(plugin)[0], pluginLoader)));
                     const pluginMap: { [name: string]: CodegenPlugin } = {};
 
                     pluginPackages.forEach((pluginPackage, i) => {
@@ -215,32 +210,32 @@ export async function executeCodegen(config: Types.Config): Promise<Types.FileOu
                       documents: outputDocuments,
                       config: {
                         ...rootConfig,
-                        ...outputFileTemplateConfig
+                        ...outputFileTemplateConfig,
                       },
-                      pluginMap
+                      pluginMap,
                     });
                     result.push({
                       filename,
-                      content: await prettify(filename, output)
+                      content: await prettify(filename, output),
                     });
-                  }, filename)
-                }
+                  }, filename),
+                },
               ],
               {
                 // it stops when one of tasks failed
-                exitOnError: true
+                exitOnError: true,
               }
             );
-          }
+          },
         })),
         {
           // it doesn't stop when one of tasks failed, to finish at least some of outputs
           exitOnError: false,
           // run 4 at once
-          concurrent: 4
+          concurrent: 4,
         }
       );
-    }
+    },
   });
 
   await listr.run();

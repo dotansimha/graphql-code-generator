@@ -1,4 +1,4 @@
-import { Types } from 'graphql-codegen-plugin-helpers';
+import { Types } from '@graphql-codegen/plugin-helpers';
 import { executeCodegen } from './codegen';
 import { createWatcher } from './utils/watcher';
 import { fileExists, writeSync } from './utils/file-system';
@@ -48,7 +48,7 @@ export async function generate(config: Types.Config, saveToFile = true): Promise
 }
 
 function shouldOverwrite(config: Types.Config, outputPath: string): boolean {
-  const globalValue = !!config.overwrite;
+  const globalValue = config.overwrite === undefined ? true : !!config.overwrite;
   const outputConfig = config.generates[outputPath];
 
   if (!outputConfig) {

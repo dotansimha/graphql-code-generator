@@ -1,8 +1,8 @@
 import { TypeScriptResolversPluginConfig } from './index';
 import { ListTypeNode, NamedTypeNode, NonNullTypeNode, GraphQLSchema } from 'graphql';
 import * as autoBind from 'auto-bind';
-import { ParsedResolversConfig, BaseResolversVisitor } from 'graphql-codegen-visitor-plugin-common';
-import { TypeScriptOperationVariablesToObject } from 'graphql-codegen-typescript';
+import { ParsedResolversConfig, BaseResolversVisitor } from '@graphql-codegen/visitor-plugin-common';
+import { TypeScriptOperationVariablesToObject } from '@graphql-codegen/typescript';
 
 export interface ParsedTypeScriptResolversConfig extends ParsedResolversConfig {
   avoidOptionals: boolean;
@@ -10,35 +10,25 @@ export interface ParsedTypeScriptResolversConfig extends ParsedResolversConfig {
   useIndexSignature: boolean;
 }
 
-export class TypeScriptResolversVisitor extends BaseResolversVisitor<
-  TypeScriptResolversPluginConfig,
-  ParsedTypeScriptResolversConfig
-> {
+export class TypeScriptResolversVisitor extends BaseResolversVisitor<TypeScriptResolversPluginConfig, ParsedTypeScriptResolversConfig> {
   constructor(pluginConfig: TypeScriptResolversPluginConfig, schema: GraphQLSchema) {
     super(
       pluginConfig,
       {
         avoidOptionals: pluginConfig.avoidOptionals || false,
         immutableTypes: pluginConfig.immutableTypes || false,
-        useIndexSignature: pluginConfig.useIndexSignature || false
+        useIndexSignature: pluginConfig.useIndexSignature || false,
       } as any,
       schema
     );
     autoBind(this);
-    this.setVariablesTransformer(
-      new TypeScriptOperationVariablesToObject(
-        this.config.scalars,
-        this.convertName,
-        this.config.avoidOptionals,
-        this.config.immutableTypes
-      )
-    );
+    this.setVariablesTransformer(new TypeScriptOperationVariablesToObject(this.config.scalars, this.convertName, this.config.avoidOptionals, this.config.immutableTypes));
 
     if (this.config.useIndexSignature) {
       this._declarationBlockConfig = {
         blockTransformer(block) {
           return `ResolversObject<${block}>`;
-        }
+        },
       };
     }
   }

@@ -1,9 +1,11 @@
 {
-  "name": "graphql-code-generator",
+  "name": "@graphql-codegen/cli",
   "version": "0.18.0",
   "license": "MIT",
   "bin": {
-    "gql-gen": "dist/commonjs/cli.js"
+    "gql-gen": "dist/commonjs/cli.js",
+    "graphql-codegen": "dist/commonjs/cli.js",
+    "graphql-code-generator": "dist/commonjs/cli.js"
   },
   "repository": {
     "type": "git",
@@ -56,8 +58,8 @@
     "common-tags": "1.8.0",
     "detect-indent": "5.0.0",
     "glob": "7.1.3",
-    "graphql-codegen-core": "0.18.0",
-    "graphql-codegen-plugin-helpers": "0.18.0",
+    "@graphql-codegen/core": "0.18.0",
+    "@graphql-codegen/plugin-helpers": "0.18.0",
     "graphql-config": "2.2.1",
     "graphql-import": "0.7.1",
     "graphql-tag-pluck": "0.7.0",
@@ -95,5 +97,8 @@
   "typings": "dist/esnext/index.d.ts",
   "typescript": {
     "definition": "dist/esnext/index.d.ts"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

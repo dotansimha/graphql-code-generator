@@ -2,19 +2,10 @@ import { ScalarsMap, NamingConvention, ConvertFn, ConvertOptions } from './types
 import * as autoBind from 'auto-bind';
 import { DEFAULT_SCALARS } from './scalars';
 import { toPascalCase, DeclarationBlock, DeclarationBlockConfig } from './utils';
-import {
-  GraphQLSchema,
-  FragmentDefinitionNode,
-  GraphQLObjectType,
-  OperationDefinitionNode,
-  VariableDefinitionNode,
-  OperationTypeNode,
-  ASTNode
-} from 'graphql';
+import { GraphQLSchema, FragmentDefinitionNode, GraphQLObjectType, OperationDefinitionNode, VariableDefinitionNode, OperationTypeNode, ASTNode } from 'graphql';
 import { SelectionSetToObject } from './selection-set-to-object';
 import { OperationVariablesToObject } from './variables-to-object';
-import { convertFactory } from './naming';
-import { BaseVisitorConvertOptions } from './base-visitor';
+import { RawConfig, ParsedConfig, BaseVisitor, BaseVisitorConvertOptions } from './base-visitor';
 
 function getRootType(operation: OperationTypeNode, schema: GraphQLSchema) {
   switch (operation) {
@@ -27,43 +18,41 @@ function getRootType(operation: OperationTypeNode, schema: GraphQLSchema) {
   }
 }
 
-export interface ParsedDocumentsConfig {
-  scalars: ScalarsMap;
-  convert: ConvertFn<ConvertOptions>;
-  typesPrefix: string;
+export interface ParsedDocumentsConfig extends ParsedConfig {
   addTypename: boolean;
 }
 
-export interface RawDocumentsConfig {
-  scalars?: ScalarsMap;
-  namingConvention?: NamingConvention;
-  typesPrefix?: string;
+export interface RawDocumentsConfig extends RawConfig {
+  /**
+   * @name skipTypename
+   * @type boolean
+   * @default false
+   * @description Automatically adds `__typename` field to the generated types, even when they are not specified
+   * in the selection set.
+   *
+   * @example
+   * ```yml
+   * config:
+   *   skipTypename: true
+   * ```
+   */
   skipTypename?: boolean;
 }
 
-export class BaseDocumentsVisitor<
-  TRawConfig extends RawDocumentsConfig = RawDocumentsConfig,
-  TPluginConfig extends ParsedDocumentsConfig = ParsedDocumentsConfig
-> {
-  protected _parsedConfig: TPluginConfig;
-  protected _declarationBlockConfig: DeclarationBlockConfig = {};
+export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDocumentsConfig, TPluginConfig extends ParsedDocumentsConfig = ParsedDocumentsConfig> extends BaseVisitor<TRawConfig, TPluginConfig> {
   protected _unnamedCounter = 1;
   protected _variablesTransfomer: OperationVariablesToObject;
   protected _selectionSetToObject: SelectionSetToObject;
 
-  constructor(
-    rawConfig: TRawConfig,
-    additionalConfig: TPluginConfig,
-    protected _schema: GraphQLSchema,
-    defaultScalars: ScalarsMap = DEFAULT_SCALARS
-  ) {
-    this._parsedConfig = {
-      addTypename: !rawConfig.skipTypename,
-      scalars: { ...(defaultScalars || DEFAULT_SCALARS), ...(rawConfig.scalars || {}) },
-      convert: convertFactory(rawConfig),
-      typesPrefix: rawConfig.typesPrefix || '',
-      ...((additionalConfig || {}) as any)
-    };
+  constructor(rawConfig: TRawConfig, additionalConfig: TPluginConfig, protected _schema: GraphQLSchema, scalars: ScalarsMap = DEFAULT_SCALARS) {
+    super(
+      rawConfig,
+      {
+        addTypename: !rawConfig.skipTypename,
+        ...((additionalConfig || {}) as any),
+      } as any,
+      scalars
+    );
 
     autoBind(this);
     this._variablesTransfomer = new OperationVariablesToObject(this.scalars, this.convertName);
@@ -86,16 +75,8 @@ export class BaseDocumentsVisitor<
     return (useTypesPrefix ? this._parsedConfig.typesPrefix : '') + this._parsedConfig.convert(node, options);
   }
 
-  public get config(): TPluginConfig {
-    return this._parsedConfig;
-  }
-
   public get schema(): GraphQLSchema {
     return this._schema;
-  }
-
-  public get scalars(): ScalarsMap {
-    return this.config.scalars;
   }
 
   public get addTypename(): boolean {
@@ -107,14 +88,14 @@ export class BaseDocumentsVisitor<
 
     if (name) {
       return this.convertName(node, {
-        useTypesPrefix: false
+        useTypesPrefix: false,
       });
     }
 
     return this.convertName(this._unnamedCounter++ + '', {
       prefix: 'Unnamed_',
       suffix: '_',
-      useTypesPrefix: false
+      useTypesPrefix: false,
     });
   }
 
@@ -128,7 +109,7 @@ export class BaseDocumentsVisitor<
       .withName(
         this.convertName(node, {
           useTypesPrefix: true,
-          suffix: 'Fragment'
+          suffix: 'Fragment',
         })
       )
       .withContent(selectionSet.string).string;
@@ -138,16 +119,14 @@ export class BaseDocumentsVisitor<
     const name = this.handleAnonymouseOperation(node);
     const operationRootType = getRootType(node.operation, this._schema);
     const selectionSet = this._selectionSetToObject.createNext(operationRootType, node.selectionSet);
-    const visitedOperationVariables = this._variablesTransfomer.transform<VariableDefinitionNode>(
-      node.variableDefinitions
-    );
+    const visitedOperationVariables = this._variablesTransfomer.transform<VariableDefinitionNode>(node.variableDefinitions);
 
     const operationResult = new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
       .withName(
         this.convertName(name, {
-          suffix: toPascalCase(node.operation)
+          suffix: toPascalCase(node.operation),
         })
       )
       .withContent(selectionSet.string).string;
@@ -157,7 +136,7 @@ export class BaseDocumentsVisitor<
       .asKind('type')
       .withName(
         this.convertName(name, {
-          suffix: toPascalCase(node.operation) + 'Variables'
+          suffix: toPascalCase(node.operation) + 'Variables',
         })
       )
       .withBlock(visitedOperationVariables).string;

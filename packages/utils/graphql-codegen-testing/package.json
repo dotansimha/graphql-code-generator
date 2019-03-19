@@ -1,5 +1,5 @@
 {
-  "name": "graphql-codegen-testing",
+  "name": "@graphql-codegen/testing",
   "version": "0.18.0",
   "description": "GraphQL Codegen Testing Utils",
   "main": "dist/commonjs/index.js",
@@ -24,5 +24,8 @@
   "typings": "dist/esnext/index.d.ts",
   "typescript": {
     "definition": "dist/esnext/index.d.ts"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

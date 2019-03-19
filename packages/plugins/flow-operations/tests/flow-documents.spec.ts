@@ -1,4 +1,4 @@
-import 'graphql-codegen-testing';
+import '@graphql-codegen/testing';
 import { parse, visit, buildClientSchema, buildSchema } from 'graphql';
 import { plugin } from '../src/index';
 import { validateFlow } from '../../flow/tests/validate-flow';
@@ -98,8 +98,8 @@ describe('Flow Operations Plugin', () => {
         [
           {
             filePath: '',
-            content: ast
-          }
+            content: ast,
+          },
         ],
         { namingConvention: 'change-case#lowerCase' },
         { outputFile: '' }
@@ -135,8 +135,8 @@ describe('Flow Operations Plugin', () => {
         [
           {
             filePath: '',
-            content: ast
-          }
+            content: ast,
+          },
         ],
         { typesPrefix: 'i', namingConvention: 'change-case#lowerCase' },
         { outputFile: '' }
@@ -162,8 +162,8 @@ describe('Flow Operations Plugin', () => {
         [
           {
             filePath: '',
-            content: ast
-          }
+            content: ast,
+          },
         ],
         { skipTypename: true },
         { outputFile: '' }
@@ -184,15 +184,13 @@ describe('Flow Operations Plugin', () => {
         [
           {
             filePath: '',
-            content: ast
-          }
+            content: ast,
+          },
         ],
         {},
         { outputFile: '' }
       );
-      expect(result).toBeSimilarStringTo(
-        `export type Unnamed_1_Query = ({ __typename: 'Query' } & $Pick<Query, { dummy: * }>);`
-      );
+      expect(result).toBeSimilarStringTo(`export type Unnamed_1_Query = ({ __typename: 'Query' } & $Pick<Query, { dummy: * }>);`);
       validateFlow(result);
     });
 
@@ -207,15 +205,13 @@ describe('Flow Operations Plugin', () => {
         [
           {
             filePath: '',
-            content: ast
-          }
+            content: ast,
+          },
         ],
         {},
         { outputFile: '' }
       );
-      expect(result).toBeSimilarStringTo(
-        `export type Unnamed_1_Query = ({ __typename?: 'Query' } & $Pick<Query, { dummy: * }>);`
-      );
+      expect(result).toBeSimilarStringTo(`export type Unnamed_1_Query = ({ __typename?: 'Query' } & $Pick<Query, { dummy: * }>);`);
       validateFlow(result);
     });
 
@@ -231,15 +227,13 @@ describe('Flow Operations Plugin', () => {
         [
           {
             filePath: '',
-            content: ast
-          }
+            content: ast,
+          },
         ],
         { skipTypename: true },
         { outputFile: '' }
       );
-      expect(result).toBeSimilarStringTo(
-        `export type Unnamed_1_Query = ({ __typename: 'Query' } & $Pick<Query, { dummy: * }>);`
-      );
+      expect(result).toBeSimilarStringTo(`export type Unnamed_1_Query = ({ __typename: 'Query' } & $Pick<Query, { dummy: * }>);`);
       validateFlow(result);
     });
 
@@ -262,16 +256,14 @@ describe('Flow Operations Plugin', () => {
         [
           {
             filePath: '',
-            content: ast
-          }
+            content: ast,
+          },
         ],
         {},
         { outputFile: '' }
       );
 
-      expect(result).toBeSimilarStringTo(
-        `export type UnionTestQuery = ({ __typename?: 'Query' } & { unionTest: ?(({ __typename?: 'User' } & $Pick<User, { id: * }>) | ({ __typename?: 'Profile' } & $Pick<Profile, { age: * }>)) });`
-      );
+      expect(result).toBeSimilarStringTo(`export type UnionTestQuery = ({ __typename?: 'Query' } & { unionTest: ?(({ __typename?: 'User' } & $Pick<User, { id: * }>) | ({ __typename?: 'Profile' } & $Pick<Profile, { age: * }>)) });`);
       validateFlow(result);
     });
 
@@ -299,8 +291,8 @@ describe('Flow Operations Plugin', () => {
         [
           {
             filePath: '',
-            content: ast
-          }
+            content: ast,
+          },
         ],
         {},
         { outputFile: '' }
@@ -324,8 +316,8 @@ describe('Flow Operations Plugin', () => {
         [
           {
             filePath: '',
-            content: ast
-          }
+            content: ast,
+          },
         ],
         { skipTypename: true },
         { outputFile: '' }
@@ -351,8 +343,8 @@ describe('Flow Operations Plugin', () => {
         [
           {
             filePath: '',
-            content: ast
-          }
+            content: ast,
+          },
         ],
         { skipTypename: true },
         { outputFile: '' }
@@ -388,8 +380,8 @@ describe('Flow Operations Plugin', () => {
         [
           {
             filePath: '',
-            content: ast
-          }
+            content: ast,
+          },
         ],
         { skipTypename: true },
         { outputFile: '' }
@@ -420,16 +412,14 @@ describe('Flow Operations Plugin', () => {
         [
           {
             filePath: '',
-            content: ast
-          }
+            content: ast,
+          },
         ],
         { skipTypename: true },
         { outputFile: '' }
       );
 
-      expect(result).toBeSimilarStringTo(
-        `export type MeQuery = { me: ?($Pick<User, { username: * }> & UserFieldsFragment) };`
-      );
+      expect(result).toBeSimilarStringTo(`export type MeQuery = { me: ?($Pick<User, { username: * }> & UserFieldsFragment) };`);
       validateFlow(result);
     });
 
@@ -458,16 +448,14 @@ describe('Flow Operations Plugin', () => {
         [
           {
             filePath: '',
-            content: ast
-          }
+            content: ast,
+          },
         ],
         { skipTypename: true },
         { outputFile: '' }
       );
 
-      expect(result).toBeSimilarStringTo(
-        `export type MeQuery = { me: ?($Pick<User, { username: * }> & (UserFieldsFragment & UserProfileFragment)) };`
-      );
+      expect(result).toBeSimilarStringTo(`export type MeQuery = { me: ?($Pick<User, { username: * }> & (UserFieldsFragment & UserProfileFragment)) };`);
       validateFlow(result);
     });
 
@@ -495,8 +483,8 @@ describe('Flow Operations Plugin', () => {
         [
           {
             filePath: '',
-            content: ast
-          }
+            content: ast,
+          },
         ],
         { skipTypename: true },
         { outputFile: '' }
@@ -527,16 +515,14 @@ describe('Flow Operations Plugin', () => {
         [
           {
             filePath: '',
-            content: ast
-          }
+            content: ast,
+          },
         ],
         { skipTypename: true },
         { outputFile: '' }
       );
 
-      expect(result).toBeSimilarStringTo(
-        `export type UnionTestQuery = { unionTest: ?($Pick<User, { id: * }> | $Pick<Profile, { age: * }>) };`
-      );
+      expect(result).toBeSimilarStringTo(`export type UnionTestQuery = { unionTest: ?($Pick<User, { id: * }> | $Pick<Profile, { age: * }>) };`);
       validateFlow(result);
     });
 
@@ -559,16 +545,14 @@ describe('Flow Operations Plugin', () => {
         [
           {
             filePath: '',
-            content: ast
-          }
+            content: ast,
+          },
         ],
         { skipTypename: true },
         { outputFile: '' }
       );
 
-      expect(result).toBeSimilarStringTo(
-        `export type CurrentUserQuery = { me: ?($Pick<User, { id: * }> & (($Pick<User, { username: * }> & { profile: ?$Pick<Profile, { age: * }> }))) };`
-      );
+      expect(result).toBeSimilarStringTo(`export type CurrentUserQuery = { me: ?($Pick<User, { id: * }> & (($Pick<User, { username: * }> & { profile: ?$Pick<Profile, { age: * }> }))) };`);
       validateFlow(result);
     });
 
@@ -594,8 +578,8 @@ describe('Flow Operations Plugin', () => {
         [
           {
             filePath: '',
-            content: ast
-          }
+            content: ast,
+          },
         ],
         { skipTypename: true },
         { outputFile: '' }
@@ -605,9 +589,7 @@ describe('Flow Operations Plugin', () => {
           repoFullName: $ElementType<Scalars, 'String'>
         };`
       );
-      expect(result).toBeSimilarStringTo(
-        `export type MeQuery = { currentUser: ?$Pick<User, { login: *, html_url: * }>, entry: ?($Pick<Entry, { id: *, createdAt: * }> & { postedBy: $Pick<User, { login: *, html_url: * }> }) };`
-      );
+      expect(result).toBeSimilarStringTo(`export type MeQuery = { currentUser: ?$Pick<User, { login: *, html_url: * }>, entry: ?($Pick<Entry, { id: *, createdAt: * }> & { postedBy: $Pick<User, { login: *, html_url: * }> }) };`);
       validateFlow(result);
     });
 
@@ -622,8 +604,8 @@ describe('Flow Operations Plugin', () => {
         [
           {
             filePath: '',
-            content: ast
-          }
+            content: ast,
+          },
         ],
         { skipTypename: true },
         { outputFile: '' }
@@ -646,16 +628,14 @@ describe('Flow Operations Plugin', () => {
         [
           {
             filePath: '',
-            content: ast
-          }
+            content: ast,
+          },
         ],
         { skipTypename: true },
         { outputFile: '' }
       );
 
-      expect(result).toBeSimilarStringTo(
-        `export type DummyQuery = ({ customName: $ElementType<Query, 'dummy'> } & { customName2: ?$Pick<Profile, { age: * }> });`
-      );
+      expect(result).toBeSimilarStringTo(`export type DummyQuery = ({ customName: $ElementType<Query, 'dummy'> } & { customName2: ?$Pick<Profile, { age: * }> });`);
       validateFlow(result);
     });
 
@@ -677,16 +657,14 @@ describe('Flow Operations Plugin', () => {
         [
           {
             filePath: '',
-            content: ast
-          }
+            content: ast,
+          },
         ],
         { skipTypename: true },
         { outputFile: '' }
       );
 
-      expect(result).toBeSimilarStringTo(
-        `export type CurrentUserQuery = { me: ?($Pick<User, { id: *, username: *, role: * }> & { profile: ?$Pick<Profile, { age: * }> }) };`
-      );
+      expect(result).toBeSimilarStringTo(`export type CurrentUserQuery = { me: ?($Pick<User, { id: *, username: *, role: * }> & { profile: ?$Pick<Profile, { age: * }> }) };`);
 
       validateFlow(result);
     });
@@ -708,16 +686,14 @@ describe('Flow Operations Plugin', () => {
         [
           {
             filePath: '',
-            content: ast
-          }
+            content: ast,
+          },
         ],
         { skipTypename: true },
         { outputFile: '' }
       );
 
-      expect(result).toBeSimilarStringTo(
-        `export type UserFieldsFragment = ($Pick<User, { id: *, username: * }> & { profile: ?$Pick<Profile, { age: * }> });`
-      );
+      expect(result).toBeSimilarStringTo(`export type UserFieldsFragment = ($Pick<User, { id: *, username: * }> & { profile: ?$Pick<Profile, { age: * }> });`);
       validateFlow(result);
     });
   });
@@ -740,16 +716,14 @@ describe('Flow Operations Plugin', () => {
         [
           {
             filePath: '',
-            content: ast
-          }
+            content: ast,
+          },
         ],
         { skipTypename: true },
         { outputFile: '' }
       );
 
-      expect(result).toBeSimilarStringTo(
-        `export type LoginMutation = { login: ?($Pick<User, { id: *, username: * }> & { profile: ?$Pick<Profile, { age: * }> }) };`
-      );
+      expect(result).toBeSimilarStringTo(`export type LoginMutation = { login: ?($Pick<User, { id: *, username: * }> & { profile: ?$Pick<Profile, { age: * }> }) };`);
       validateFlow(result);
     });
 
@@ -764,8 +738,8 @@ describe('Flow Operations Plugin', () => {
         [
           {
             filePath: '',
-            content: ast
-          }
+            content: ast,
+          },
         ],
         { skipTypename: true },
         { outputFile: '' }
@@ -788,8 +762,8 @@ describe('Flow Operations Plugin', () => {
         [
           {
             filePath: '',
-            content: ast
-          }
+            content: ast,
+          },
         ],
         { skipTypename: true },
         { outputFile: '' }
@@ -809,8 +783,8 @@ describe('Flow Operations Plugin', () => {
         [
           {
             filePath: '',
-            content: ast
-          }
+            content: ast,
+          },
         ],
         { skipTypename: true },
         { outputFile: '' }
@@ -842,8 +816,8 @@ describe('Flow Operations Plugin', () => {
         [
           {
             filePath: '',
-            content: ast
-          }
+            content: ast,
+          },
         ],
         { skipTypename: true },
         { outputFile: '' }
@@ -873,16 +847,14 @@ describe('Flow Operations Plugin', () => {
         [
           {
             filePath: '',
-            content: ast
-          }
+            content: ast,
+          },
         ],
         { skipTypename: true, useFlowExactObjects: true },
         { outputFile: '' }
       );
 
-      expect(result).toBeSimilarStringTo(
-        `export type CurrentUserQuery = {| me: ?($Pick<User, {| id: *, username: *, role: * |}> & {| profile: ?$Pick<Profile, {| age: * |}> |}) |};`
-      );
+      expect(result).toBeSimilarStringTo(`export type CurrentUserQuery = {| me: ?($Pick<User, {| id: *, username: *, role: * |}> & {| profile: ?$Pick<Profile, {| age: * |}> |}) |};`);
 
       validateFlow(result);
     });
@@ -905,15 +877,13 @@ describe('Flow Operations Plugin', () => {
         [
           {
             filePath: '',
-            content: ast
-          }
+            content: ast,
+          },
         ],
         { skipTypename: true, useFlowReadOnlyTypes: true },
         { outputFile: '' }
       );
-      expect(result).toBeSimilarStringTo(
-        `export type CurrentUserQuery = { +me: ?($Pick<User, { +id: *, +username: *, +role: * }> & { +profile: ?$Pick<Profile, { +age: * }> }) };`
-      );
+      expect(result).toBeSimilarStringTo(`export type CurrentUserQuery = { +me: ?($Pick<User, { +id: *, +username: *, +role: * }> & { +profile: ?$Pick<Profile, { +age: * }> }) };`);
 
       validateFlow(result);
     });

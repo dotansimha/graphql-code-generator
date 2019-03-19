@@ -1,4 +1,4 @@
-import 'graphql-codegen-testing';
+import '@graphql-codegen/testing';
 import { buildASTSchema } from 'graphql';
 import gql from 'graphql-tag';
 import { plugin, validate } from '../src';
@@ -33,18 +33,18 @@ const introspection = JSON.stringify(
           name: 'People',
           possibleTypes: [
             {
-              name: 'Character'
+              name: 'Character',
             },
             {
-              name: 'Jedi'
+              name: 'Jedi',
             },
             {
-              name: 'Droid'
-            }
-          ]
-        }
-      ]
-    }
+              name: 'Droid',
+            },
+          ],
+        },
+      ],
+    },
   },
   null,
   2
@@ -92,7 +92,7 @@ describe('Fragment Matcher Plugin', () => {
         [],
         {},
         {
-          outputFile: 'foo.json'
+          outputFile: 'foo.json',
         }
       );
 
@@ -107,7 +107,7 @@ describe('Fragment Matcher Plugin', () => {
         [],
         {},
         {
-          outputFile: 'foo.js'
+          outputFile: 'foo.js',
         }
       );
       const jsxContent = await plugin(
@@ -115,7 +115,7 @@ describe('Fragment Matcher Plugin', () => {
         [],
         {},
         {
-          outputFile: 'foo.jsx'
+          outputFile: 'foo.jsx',
         }
       );
       const output = `
@@ -131,20 +131,20 @@ describe('Fragment Matcher Plugin', () => {
         schema,
         [],
         {
-          module: 'commonjs'
+          module: 'commonjs',
         },
         {
-          outputFile: 'foo.js'
+          outputFile: 'foo.js',
         }
       );
       const jsxContent = await plugin(
         schema,
         [],
         {
-          module: 'commonjs'
+          module: 'commonjs',
         },
         {
-          outputFile: 'foo.jsx'
+          outputFile: 'foo.jsx',
         }
       );
       const output = `
@@ -163,7 +163,7 @@ describe('Fragment Matcher Plugin', () => {
         [],
         {},
         {
-          outputFile: 'foo.ts'
+          outputFile: 'foo.ts',
         }
       );
       const tsxContent = await plugin(
@@ -171,7 +171,7 @@ describe('Fragment Matcher Plugin', () => {
         [],
         {},
         {
-          outputFile: 'foo.tsx'
+          outputFile: 'foo.tsx',
         }
       );
       const output = `
@@ -201,20 +201,20 @@ describe('Fragment Matcher Plugin', () => {
         schema,
         [],
         {
-          module: 'commonjs'
+          module: 'commonjs',
         },
         {
-          outputFile: 'foo.ts'
+          outputFile: 'foo.ts',
         }
       );
       const tsxContent = await plugin(
         schema,
         [],
         {
-          module: 'commonjs'
+          module: 'commonjs',
         },
         {
-          outputFile: 'foo.tsx'
+          outputFile: 'foo.tsx',
         }
       );
       const output = `

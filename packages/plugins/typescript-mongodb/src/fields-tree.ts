@@ -1,5 +1,5 @@
 import { set } from 'lodash';
-import { indent } from 'graphql-codegen-visitor-plugin-common';
+import { indent } from '@graphql-codegen/visitor-plugin-common';
 
 type FieldsResult = { [name: string]: string | FieldsResult };
 

@@ -1,20 +1,5 @@
 import { pascalCase } from 'change-case';
-import {
-  NameNode,
-  Kind,
-  TypeNode,
-  NamedTypeNode,
-  isNonNullType,
-  GraphQLObjectType,
-  GraphQLNonNull,
-  GraphQLList,
-  isListType,
-  GraphQLOutputType,
-  GraphQLNamedType,
-  isScalarType,
-  GraphQLSchema,
-  GraphQLScalarType
-} from 'graphql';
+import { NameNode, Kind, TypeNode, NamedTypeNode, isNonNullType, GraphQLObjectType, GraphQLNonNull, GraphQLList, isListType, GraphQLOutputType, GraphQLNamedType, isScalarType, GraphQLSchema, GraphQLScalarType } from 'graphql';
 import { ScalarsMap } from './types';
 
 function isWrapperType(t: GraphQLOutputType): t is GraphQLNonNull<any> | GraphQLList<any> {
@@ -83,7 +68,7 @@ export class DeclarationBlock {
       blockWrapper: '',
       blockTransformer: block => block,
       enumNameValueSeparator: ':',
-      ...this._config
+      ...this._config,
     };
   }
 
@@ -185,10 +170,7 @@ export function toPascalCase(str: string) {
     .join('_');
 }
 
-export const wrapTypeWithModifiers = (prefix = '') => (
-  baseType: string,
-  type: GraphQLObjectType | GraphQLNonNull<GraphQLObjectType> | GraphQLList<GraphQLObjectType>
-): string => {
+export const wrapTypeWithModifiers = (prefix = '') => (baseType: string, type: GraphQLObjectType | GraphQLNonNull<GraphQLObjectType> | GraphQLList<GraphQLObjectType>): string => {
   if (isNonNullType(type)) {
     return wrapTypeWithModifiers(prefix)(baseType, type.ofType).substr(1);
   } else if (isListType(type)) {

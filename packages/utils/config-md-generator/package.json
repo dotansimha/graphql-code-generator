@@ -1,0 +1,19 @@
+{
+  "name": "@graphql-codegen/config-markdown-generator",
+  "private": true,
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "tslib": "1.9.3",
+    "@microsoft/tsdoc": "0.12.8",
+    "typescript": "3.3.3333"
+  },
+  "devDependencies": {
+    "ts-node": "8.0.3"
+  }
+}

@@ -7,9 +7,7 @@ title: Schema AST
 
 ## Installation
 
-Install using `npm` (or `yarn`):
-
-    $ npm install graphql-codegen-schema-ast
+    $ yarn add -D @graphql-codegen/schema-ast
 
 ## Examples
 

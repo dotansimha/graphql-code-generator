@@ -1,4 +1,4 @@
-import { Types } from 'graphql-codegen-plugin-helpers';
+import { Types } from '@graphql-codegen/plugin-helpers';
 
 export function isOutputConfigArray(type: any): type is Types.OutputConfig[] {
   return Array.isArray(type);
@@ -13,7 +13,7 @@ export function normalizeOutputParam(config: Types.OutputConfig | Types.Configur
     return {
       documents: [],
       schema: [],
-      plugins: config
+      plugins: config,
     };
   } else if (isConfiguredOutput(config)) {
     return config;

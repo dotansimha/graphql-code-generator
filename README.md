@@ -18,19 +18,21 @@ GraphQL Code Generator let you choose the output that you need, based on _plugin
 
 You can try this tool live on your browser and see some useful examples. Check out [GraphQL Code Generator Live Examples](https://graphql-code-generator.com/#live-demo).
 
+We currently support and maintain [these plugins](https://graphql-code-generator.com/docs/plugins/) (TypeScript, Flow, React, Angular, MongoDB, Stencil, Reason and some more), and there is an active community that writes and maintains custom plugins.
+
 <p align="center">
     <img src="https://github.com/dotansimha/graphql-code-generator/blob/master/logo.png?raw=true" />
 </p>
 
 ### Quick Start
 
-Install using `npm` (or `yarn`):
+Install using `yarn`:
 
-    $ npm install graphql-code-generator
+    $ yarn add -D graphql @graphql-codegen/cli
 
 GraphQL Code Generator lets you setup everything by simply running the following command:
 
-    $ gql-gen init
+    $ graphql-codegen init
 
 Question by question, it will guide you through the whole process of setting up a schema, selecting plugins, picking a destination of a generated file and a lot more.
 
@@ -41,16 +43,15 @@ schema: http://localhost:3000/graphql
 generates:
   src/types.ts:
     - typescript
-    - typescript-server
 ```
 
 Then, run the code-generator using `gql-gen`:
 
-    $ gql-gen
+    $ graphql-codegen
 
 The command above may fetch (for example) the following GraphQL schema:
 
-```gql
+```graphql
 type Author {
   id: Int!
   firstName: String!
@@ -101,6 +102,8 @@ interface PostsAuthorArgs {
 ### Links
 
 Besides our [docs page](https://graphql-code-generator.com/docs/getting-started/index), feel free to go through our published Medium articles to get a better grasp of what GraphQL Code Generator is all about:
+
+- [All available plugins](https://graphql-code-generator.com/docs/plugins/)
 
 - [**GraphQL Code-Generator** - The True GraphQL-First platform](https://medium.com/@dotansimha/graphql-code-generator-a34e3785e6fb)
 

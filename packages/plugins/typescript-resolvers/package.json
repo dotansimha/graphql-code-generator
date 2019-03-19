@@ -1,7 +1,7 @@
 {
-  "name": "graphql-codegen-typescript-resolvers",
+  "name": "@graphql-codegen/typescript-resolvers",
   "version": "0.18.0",
-  "description": "GraphQL Codegen pluginfor TypeScript typings for resolvers signature",
+  "description": "GraphQL Code Generator plugin for generating TypeScript types for resolvers signature",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
   "scripts": {
@@ -10,12 +10,12 @@
   },
   "dependencies": {
     "tslib": "1.9.3",
-    "graphql-codegen-typescript": "0.18.0",
-    "graphql-codegen-visitor-plugin-common": "0.18.0",
-    "graphql-codegen-plugin-helpers": "0.18.0"
+    "@graphql-codegen/typescript": "0.18.0",
+    "@graphql-codegen/visitor-plugin-common": "0.18.0",
+    "@graphql-codegen/plugin-helpers": "0.18.0"
   },
   "devDependencies": {
-    "graphql-codegen-testing": "0.18.0",
+    "@graphql-codegen/testing": "0.18.0",
     "jest": "24.5.0",
     "ts-jest": "24.0.0",
     "typescript": "3.3.3333",
@@ -30,5 +30,8 @@
   "typings": "dist/esnext/index.d.ts",
   "typescript": {
     "definition": "dist/esnext/index.d.ts"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

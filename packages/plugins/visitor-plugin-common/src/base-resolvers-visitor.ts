@@ -1,64 +1,75 @@
-import { BaseVisitor } from './base-visitor';
+import { ParsedConfig, RawConfig, BaseVisitor } from './base-visitor';
 import * as autoBind from 'auto-bind';
 import { DEFAULT_SCALARS } from './scalars';
-import { ScalarsMap, NamingConvention, ConvertFn } from './types';
+import { ScalarsMap, ConvertFn } from './types';
 import { DeclarationBlock, DeclarationBlockConfig, indent, getBaseTypeNode, buildScalars } from './utils';
-import {
-  NameNode,
-  ListTypeNode,
-  NamedTypeNode,
-  FieldDefinitionNode,
-  ObjectTypeDefinitionNode,
-  GraphQLSchema,
-  NonNullTypeNode,
-  UnionTypeDefinitionNode,
-  ScalarTypeDefinitionNode,
-  InterfaceTypeDefinitionNode
-} from 'graphql';
+import { NameNode, ListTypeNode, NamedTypeNode, FieldDefinitionNode, ObjectTypeDefinitionNode, GraphQLSchema, NonNullTypeNode, UnionTypeDefinitionNode, ScalarTypeDefinitionNode, InterfaceTypeDefinitionNode } from 'graphql';
 import { DirectiveDefinitionNode, GraphQLObjectType, InputValueDefinitionNode } from 'graphql';
 import { OperationVariablesToObject } from './variables-to-object';
 import { ParsedMapper, parseMapper, transformMappers } from './mappers';
 
-export interface ParsedResolversConfig {
-  scalars: ScalarsMap;
-  convert: ConvertFn;
-  typesPrefix: string;
+export interface ParsedResolversConfig extends ParsedConfig {
   contextType: ParsedMapper;
   mappers: {
     [typeName: string]: ParsedMapper;
   };
 }
 
-export interface RawResolversConfig {
+export interface RawResolversConfig extends RawConfig {
+  /**
+   * @name contextType
+   * @type string
+   * @description Use this configuration to set a custom type for your `context`, and it will
+   * effect all the resolvers, without the need to override it using generics each time.
+   * If you wish to use an external type and import it from another file, you can use `add` plugin
+   * and add the required `import` statement, or you can use a `module#type` syntax.
+   *
+   * @example Custom Context Type
+   * ```yml
+   * plugins
+   *   config:
+   *     contextType: MyContext
+   * ```
+   * @example Custom Context Type
+   * ```yml
+   * plugins
+   *   config:
+   *     contextType: ./my-types#MyContext
+   * ```
+   */
   contextType?: string;
+  /**
+   * @name mappers
+   * @type Object
+   * @description Replaces a GraphQL type usage with a custom type, allowing you to return custom object from
+   * your resolvers.
+   * You can use a `module#type` syntax.
+   *
+   * @example Custom Context Type
+   * ```yml
+   * plugins
+   *   config:
+   *     mappers:
+   *       User: ./my-models#UserDbObject
+   * ```
+   */
   mappers?: { [typeName: string]: string };
-  scalars?: ScalarsMap;
-  namingConvention?: NamingConvention;
-  typesPrefix?: string;
 }
 
-export class BaseResolversVisitor<
-  TRawConfig extends RawResolversConfig = RawResolversConfig,
-  TPluginConfig extends ParsedResolversConfig = ParsedResolversConfig
-> extends BaseVisitor<TRawConfig, TPluginConfig> {
+export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawResolversConfig, TPluginConfig extends ParsedResolversConfig = ParsedResolversConfig> extends BaseVisitor<TRawConfig, TPluginConfig> {
   protected _parsedConfig: TPluginConfig;
   protected _declarationBlockConfig: DeclarationBlockConfig = {};
   protected _collectedResolvers: { [key: string]: string } = {};
   protected _collectedDirectiveResolvers: { [key: string]: string } = {};
   protected _variablesTransfomer: OperationVariablesToObject;
 
-  constructor(
-    rawConfig: TRawConfig,
-    additionalConfig: TPluginConfig,
-    private _schema: GraphQLSchema,
-    defaultScalars: ScalarsMap = DEFAULT_SCALARS
-  ) {
+  constructor(rawConfig: TRawConfig, additionalConfig: TPluginConfig, private _schema: GraphQLSchema, defaultScalars: ScalarsMap = DEFAULT_SCALARS) {
     super(
       rawConfig,
       {
         contextType: parseMapper(rawConfig.contextType || 'any'),
         mappers: transformMappers(rawConfig.mappers || {}),
-        ...(additionalConfig || {})
+        ...(additionalConfig || {}),
       } as any,
       buildScalars(_schema, defaultScalars)
     );
@@ -181,9 +192,7 @@ export class BaseResolversVisitor<
     return (parentName: string) => {
       const original = parent[key];
       const realType = getBaseTypeNode(original.type).name.value;
-      const mappedType = this.config.mappers[realType]
-        ? this._variablesTransfomer.wrapAstTypeWithModifiers(this.config.mappers[realType].type, original.type)
-        : node.type;
+      const mappedType = this.config.mappers[realType] ? this._variablesTransfomer.wrapAstTypeWithModifiers(this.config.mappers[realType].type, original.type) : node.type;
       const subscriptionType = this._schema.getSubscriptionType();
       const isSubscriptionType = subscriptionType && subscriptionType.name === parentName;
 
@@ -191,10 +200,10 @@ export class BaseResolversVisitor<
         `${node.name}?: ${isSubscriptionType ? 'SubscriptionResolver' : 'Resolver'}<${mappedType}, ParentType, Context${
           hasArguments
             ? `, ${this.convertName(parentName, {
-                useTypesPrefix: true
+                useTypesPrefix: true,
               }) +
                 this.convertName(node.name, {
-                  useTypesPrefix: false
+                  useTypesPrefix: false,
                 }) +
                 'Args'}`
             : ''
@@ -205,7 +214,7 @@ export class BaseResolversVisitor<
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode) {
     const name = this.convertName(node, {
-      suffix: 'Resolvers'
+      suffix: 'Resolvers',
     });
     let type: string = null;
 
@@ -228,7 +237,7 @@ export class BaseResolversVisitor<
 
   UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number, parent: any): string {
     const name = this.convertName(node, {
-      suffix: 'Resolvers'
+      suffix: 'Resolvers',
     });
     const originalNode = parent[key] as UnionTypeDefinitionNode;
     const possibleTypes = originalNode.types
@@ -255,13 +264,13 @@ export class BaseResolversVisitor<
       ...this._declarationBlockConfig,
       blockTransformer(block) {
         return block;
-      }
+      },
     })
       .export()
       .asKind('interface')
       .withName(
         this.convertName(node, {
-          suffix: 'ScalarConfig'
+          suffix: 'ScalarConfig',
         }),
         ` extends GraphQLScalarTypeConfig<${baseName}, any>`
       )
@@ -270,12 +279,10 @@ export class BaseResolversVisitor<
 
   DirectiveDefinition(node: DirectiveDefinitionNode): string {
     const directiveName = this.convertName(node, {
-      suffix: 'DirectiveResolver'
+      suffix: 'DirectiveResolver',
     });
     const hasArguments = node.arguments && node.arguments.length > 0;
-    const directiveArgs = hasArguments
-      ? this._variablesTransfomer.transform<InputValueDefinitionNode>(node.arguments)
-      : '';
+    const directiveArgs = hasArguments ? this._variablesTransfomer.transform<InputValueDefinitionNode>(node.arguments) : '';
 
     this._collectedDirectiveResolvers[node.name as any] = directiveName + '<any, any, Context>';
 
@@ -283,20 +290,17 @@ export class BaseResolversVisitor<
       ...this._declarationBlockConfig,
       blockTransformer(block) {
         return block;
-      }
+      },
     })
       .export()
       .asKind('type')
-      .withName(
-        directiveName,
-        `<Result, Parent, Context = ${this.config.contextType.type}, Args = { ${directiveArgs} }>`
-      )
+      .withName(directiveName, `<Result, Parent, Context = ${this.config.contextType.type}, Args = { ${directiveArgs} }>`)
       .withContent(`DirectiveResolverFn<Result, Parent, Context, Args>`).string;
   }
 
   InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode): string {
     const name = this.convertName(node, {
-      suffix: 'Resolvers'
+      suffix: 'Resolvers',
     });
     const allTypesMap = this._schema.getTypeMap();
     const implementingTypes: string[] = [];
@@ -316,12 +320,7 @@ export class BaseResolversVisitor<
       .export()
       .asKind('type')
       .withName(name, `<Context = ${this.config.contextType.type}, ParentType = ${node.name}>`)
-      .withBlock(
-        [
-          indent(`__resolveType: TypeResolveFn<${implementingTypes.map(name => `'${name}'`).join(' | ')}>,`),
-          ...(node.fields || []).map((f: any) => f(node.name))
-        ].join('\n')
-      ).string;
+      .withBlock([indent(`__resolveType: TypeResolveFn<${implementingTypes.map(name => `'${name}'`).join(' | ')}>,`), ...(node.fields || []).map((f: any) => f(node.name))].join('\n')).string;
   }
 
   SchemaDefinition() {

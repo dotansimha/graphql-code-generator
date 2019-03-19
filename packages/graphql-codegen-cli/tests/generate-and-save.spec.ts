@@ -22,9 +22,9 @@ describe('generate-and-save', () => {
             schema: `
             type OtherType { a: String }
           `,
-            plugins: ['typescript']
-          }
-        }
+            plugins: ['typescript'],
+          },
+        },
       },
       true
     );
@@ -51,9 +51,9 @@ describe('generate-and-save', () => {
             schema: `
             type OtherType { a: String }
           `,
-            plugins: ['typescript']
-          }
-        }
+            plugins: ['typescript'],
+          },
+        },
       },
       true
     );
@@ -78,9 +78,9 @@ describe('generate-and-save', () => {
             schema: `
             type OtherType { a: String }
           `,
-            plugins: ['typescript']
-          }
-        }
+            plugins: ['typescript'],
+          },
+        },
       },
       true
     );
@@ -106,9 +106,9 @@ describe('generate-and-save', () => {
             schema: `
             type OtherType { a: String }
           `,
-            plugins: ['typescript']
-          }
-        }
+            plugins: ['typescript'],
+          },
+        },
       },
       true
     );
@@ -120,7 +120,7 @@ describe('generate-and-save', () => {
     expect(writeSpy).not.toHaveBeenCalled();
   });
 
-  test('should not overwrite a file by default', async () => {
+  test('should overwrite a file by default', async () => {
     const filename = 'overwrite.ts';
     const writeSpy = jest.spyOn(fs, 'writeSync').mockImplementation();
     // forces file to exist
@@ -135,17 +135,15 @@ describe('generate-and-save', () => {
             schema: `
             type OtherType { a: String }
           `,
-            plugins: ['typescript']
-          }
-        }
+            plugins: ['typescript'],
+          },
+        },
       },
       true
     );
 
     expect(output.length).toBe(1);
-    // makes sure it checks if file is there
-    expect(fileExistsSpy).toHaveBeenCalledWith(filename);
     // makes sure it doesn't write a new file
-    expect(writeSpy).not.toHaveBeenCalled();
+    expect(writeSpy).toHaveBeenCalled();
   });
 });
