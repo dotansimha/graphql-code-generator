@@ -68,7 +68,7 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
     const originalFieldNode = parent[key] as FieldDefinitionNode;
     const addOptionalSign = !this.config.avoidOptionals && originalFieldNode.type.kind !== Kind.NON_NULL_TYPE;
 
-    return indent(`${node.name}${addOptionalSign ? '?' : ''}: ${node.type},`);
+    return indent(`${this.config.immutableTypes ? 'readonly ' : ''}${node.name}${addOptionalSign ? '?' : ''}: ${node.type},`);
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {

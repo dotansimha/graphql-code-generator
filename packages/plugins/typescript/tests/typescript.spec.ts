@@ -5,6 +5,21 @@ import { plugin } from '../src/index';
 
 describe('TypeScript', () => {
   describe('Issues', () => {
+    it('#1488 - Should generate readonly also in input types when immutableTypes is set', async () => {
+      const schema = buildSchema(`
+      input MyInput {
+        f: String!
+      }`);
+
+      const result = await plugin(schema, [], { immutableTypes: true }, { outputFile: '' });
+
+      expect(result).toBeSimilarStringTo(`
+      export type MyInput = {
+        readonly f: Scalars['String'],
+      };`);
+      validateTs(result);
+    });
+
     it('#1462 - Union of scalars and argument of directive', async () => {
       const schema = buildSchema(`
       union Any = String | Int | Float | ID
