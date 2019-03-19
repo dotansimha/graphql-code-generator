@@ -224,14 +224,14 @@ type ChatMessage @entity {
       documents: '',
     },
   },
-  'fragment-matcher': {
-    name: 'Fragment Matcher',
-    state: {
-      config: `generates:
-  fragment-matcher.json:
-    - fragment-matcher`,
-      schema: TS_SCHEMA,
-      documents: '',
-    },
-  },
+  // 'fragment-matcher': {
+  //   name: 'Fragment Matcher',
+  //   state: {
+  //     config: `generates:
+  // fragment-matcher.json:
+  //   - fragment-matcher`,
+  //     schema: TS_SCHEMA,
+  //     documents: '',
+  //   },
+  // },
 };

@@ -48,7 +48,6 @@ const pluginLoaderMap = {
   time: () => import('@graphql-codegen/time'),
   introspection: () => import('@graphql-codegen/introspection'),
   'schema-ast': () => import('@graphql-codegen/schema-ast'),
-  'fragment-matcher': () => import('@graphql-codegen/fragment-matcher'),
 };
 
 class App extends Component {
