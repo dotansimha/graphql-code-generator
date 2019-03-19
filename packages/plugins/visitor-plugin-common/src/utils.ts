@@ -151,17 +151,13 @@ export class DeclarationBlock {
         result += this._content;
       }
 
-      if (this._methodName) {
-        const block = `{${this._config.blockWrapper}
-        ${this._block}
-        ${this._config.blockWrapper}}`;
+      const before = '{' + this._config.blockWrapper;
+      const after = this._config.blockWrapper + '}';
+      const block = [before, this._block, after].join('\n');
 
+      if (this._methodName) {
         result += `${this._methodName}(${this._config.blockTransformer!(block)})`;
       } else {
-        const block = `{${this._config.blockWrapper}
-        ${this._block}
-        ${this._config.blockWrapper}}`;
-
         result += this._config.blockTransformer!(block);
       }
     } else if (this._content) {
