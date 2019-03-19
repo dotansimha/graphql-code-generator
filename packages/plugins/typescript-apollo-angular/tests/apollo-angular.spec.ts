@@ -30,7 +30,7 @@ describe('Apollo Angular', () => {
     const tsOutput = await tsPlugin(testSchema, documents, config, { outputFile: '' });
     const tsDocumentsOutput = await tsDocumentsPlugin(testSchema, documents, config, { outputFile: '' });
     const merged = [tsOutput, tsDocumentsOutput, output].join('\n');
-    validateTs(merged, undefined, true);
+    validateTs(merged, undefined, false);
   };
 
   it(`should skip if there's no operations`, async () => {
@@ -57,7 +57,7 @@ describe('Apollo Angular', () => {
           noGraphQLTag: true,
         },
         {
-          outputFile: 'graphql.tsx',
+          outputFile: 'graphql.ts'
         }
       );
 
@@ -73,7 +73,7 @@ describe('Apollo Angular', () => {
         docs,
         { gqlImport: 'graphql.macro#gql' },
         {
-          outputFile: 'graphql.tsx',
+          outputFile: 'graphql.ts'
         }
       );
 
@@ -88,7 +88,7 @@ describe('Apollo Angular', () => {
         docs,
         {},
         {
-          outputFile: 'graphql.tsx',
+          outputFile: 'graphql.ts'
         }
       );
 
