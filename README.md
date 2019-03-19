@@ -10,6 +10,12 @@
 
 [graphql-code-generator.com](https://graphql-code-generator.com)
 
+<p align="center">
+    <img src="https://github.com/dotansimha/graphql-code-generator/blob/master/logo.png?raw=true" />
+</p>
+
+[GraphQL Codegen 1.0 is here!](https://graphql-code-generator.com/docs/migration/from-0-18)
+
 GraphQL Code Generator is a tool that generates code out of your GraphQL schema. Whether you are developing a frontend or backend, you can utilize GraphQL Code Generator to generate output from your GraphQL Schema and GraphQL Documents (query/mutation/subscription/fragment).
 
 By analyzing the schema and documents and parsing it, GraphQL Code Generator can output code at a wide variety of formats, based on pre-defined templates or based on custom user-defined ones. Regardless of the language that you're using, GraphQL Code Generator got you covered.
@@ -19,10 +25,6 @@ GraphQL Code Generator let you choose the output that you need, based on _plugin
 You can try this tool live on your browser and see some useful examples. Check out [GraphQL Code Generator Live Examples](https://graphql-code-generator.com/#live-demo).
 
 We currently support and maintain [these plugins](https://graphql-code-generator.com/docs/plugins/) (TypeScript, Flow, React, Angular, MongoDB, Stencil, Reason and some more), and there is an active community that writes and maintains custom plugins.
-
-<p align="center">
-    <img src="https://github.com/dotansimha/graphql-code-generator/blob/master/logo.png?raw=true" />
-</p>
 
 ### Quick Start
 
@@ -45,7 +47,7 @@ generates:
     - typescript
 ```
 
-Then, run the code-generator using `gql-gen`:
+Then, run the code-generator using `graphql-codegen` command:
 
     $ graphql-codegen
 

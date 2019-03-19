@@ -26,7 +26,7 @@ query MyFeed {
 }
 ```
 
-Using `gql-gen` you can generate a file with typesand services that you can use when coding an Angular component:
+Using `graphql-codegen` you can generate a file with typesand services that you can use when coding an Angular component:
 
 ```yaml
 # ...

@@ -27,7 +27,7 @@ generates:
     - my-plugin.js
 ```
 
-Now, run the `@graphql-codegen/cli` using `graphql-codegen` (or, `gql-gen`) command, and it will create a file called `output.ts` with `Hi!`
+Now, run the `@graphql-codegen/cli` using `graphql-codegen` command, and it will create a file called `output.ts` with `Hi!`
 
 ## Using the `GraphQLSchema`
 

@@ -37,7 +37,7 @@ export function writePackage(answers: Answers, configLocation: string) {
     pkg.scripts = {};
   }
 
-  pkg.scripts[answers.script] = `gql-gen --config ${configLocation}`;
+  pkg.scripts[answers.script] = `graphql-codegen --config ${configLocation}`;
 
   // plugin
   if (!pkg.devDependencies) {

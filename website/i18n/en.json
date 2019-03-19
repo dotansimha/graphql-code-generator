@@ -132,7 +132,7 @@
         "title": "Time"
       },
       "plugins/typescript-apollo-angular": {
-        "title": "Typescript Apollo Angular"
+        "title": "TypeScript Apollo Angular"
       },
       "plugins/typescript-graphql-files-modules": {
         "title": "TypeScript GraphQL Files Modules"
@@ -141,7 +141,7 @@
         "title": "TypeScript MongoDB"
       },
       "plugins/typescript-operations": {
-        "title": "Typescript Operations"
+        "title": "TypeScript Operations"
       },
       "plugins/typescript-react-apollo": {
         "title": "TypeScript React Apollo"

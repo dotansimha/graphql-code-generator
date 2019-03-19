@@ -14,7 +14,7 @@ If you wish to run the codegen before starting your server/app, you can use `pre
   "scripts": {
     "dev": "nodemon app.js",
     "start": "node app.js",
-    "generate": "gql-gen",
+    "generate": "graphql-codegen",
     "prestart": "yarn generate",
     "predev": "yarn generate"
   }
@@ -36,7 +36,7 @@ You can either run it in a separate terminal session, or use tools like [`concur
   "scripts": {
     "dev": "concurrently \"nodemon app.js\" \"yarn generate --watch\"",
     "start": "node app.js",
-    "generate": "gql-gen",
+    "generate": "graphql-codegen",
     "prestart": "yarn generate"
   }
 }

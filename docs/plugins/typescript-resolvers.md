@@ -15,7 +15,7 @@ A TypeScript project with `@types/graphql` installed.
 
 ## Usage
 
-Run `gql-gen` as usual:
+Run `graphql-codegen` as usual:
 
 ```yaml
 schema: schema.json

@@ -23,13 +23,13 @@ The new CLI makes it much easier - it will show you how your `codegen.yml` f
 
 Now, create a file called `codegen.yml` with the content that the codegen suggests for you.
 
-Next, update your NPM scripts to run `gql-gen` only, without any cli-flags:
+Next, update your NPM scripts to run `graphql-codegen` only, without any cli-flags:
 
 ```json
 {
   "name": "my-project",
   "scripts": {
-    "generate": "gql-gen"
+    "generate": "graphql-codegen"
   }
 }
 ```

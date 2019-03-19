@@ -5,9 +5,9 @@ title: Codegen Options Config
 
 Having a config file fits well when we have a large amount of options to provide in order to generate some code. This can happen mostly in large scale projects where the GraphQL schema is pretty complex and we would like to generate a lot of different formats.
 
-To generate code from a config file, you can simply create a `codegen.yml` or `codegen.json` file and run `$ gql-gen`. The CLI will automatically detect the defined config file and will generate code accordingly. In addition, you can also define a path to your config file with the `--config` options, like so:
+To generate code from a config file, you can simply create a `codegen.yml` or `codegen.json` file and run `$ graphql-codegen`. The CLI will automatically detect the defined config file and will generate code accordingly. In addition, you can also define a path to your config file with the `--config` options, like so:
 
-    $ gql-gen --config ./path/to/config.yml
+    $ graphql-codegen --config ./path/to/config.yml
 
 Here's an example for a possible config file:
 
