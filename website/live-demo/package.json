@@ -13,7 +13,6 @@
     "@graphql-codegen/flow": "1.0.0",
     "@graphql-codegen/flow-operations": "1.0.0",
     "@graphql-codegen/flow-resolvers": "1.0.0",
-    "@graphql-codegen/fragment-matcher": "1.0.0",
     "@graphql-codegen/introspection": "1.0.0",
     "@graphql-codegen/schema-ast": "1.0.0",
     "@graphql-codegen/time": "1.0.0",
