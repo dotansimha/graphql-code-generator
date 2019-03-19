@@ -1,28 +1,28 @@
 // tslint:disable
 type Maybe<T> = T | null;
 export type Scalars = {
-          ID: string,
+  ID: string,
   String: string,
   Boolean: boolean,
   Int: number,
   Float: number,
-        };
+};
 
 export type Query = {
-          allUsers: Array<Maybe<User>>,
+  allUsers: Array<Maybe<User>>,
   userById?: Maybe<User>,
-        };
+};
 
 
 export type QueryUserByIdArgs = {
-          id: Scalars['Int']
-        };
+  id: Scalars['Int']
+};
 
 export type User = {
-          id: Scalars['Int'],
+  id: Scalars['Int'],
   name: Scalars['String'],
   email: Scalars['String'],
-        };
+};
 
 import { GraphQLResolveInfo } from 'graphql';
 
@@ -86,19 +86,19 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 ) => TResult | Promise<TResult>;
 
 export type QueryResolvers<Context = any, ParentType = Query> = {
-          allUsers?: Resolver<ArrayOrIterable<Maybe<User>>, ParentType, Context>,
+  allUsers?: Resolver<ArrayOrIterable<Maybe<User>>, ParentType, Context>,
   userById?: Resolver<Maybe<User>, ParentType, Context, QueryUserByIdArgs>,
-        };
+};
 
 export type UserResolvers<Context = any, ParentType = User> = {
-          id?: Resolver<Scalars['Int'], ParentType, Context>,
+  id?: Resolver<Scalars['Int'], ParentType, Context>,
   name?: Resolver<Scalars['String'], ParentType, Context>,
   email?: Resolver<Scalars['String'], ParentType, Context>,
-        };
+};
 
 export type IResolvers<Context = any> = {
-          Query?: QueryResolvers<Context>,
+  Query?: QueryResolvers<Context>,
   User?: UserResolvers<Context>,
-        };
+};
 
 export type IDirectiveResolvers<Context = any> = {};
