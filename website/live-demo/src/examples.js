@@ -1,11 +1,15 @@
-const TS_SCHEMA = `schema {
+const TS_SCHEMA = `scalar Date
+
+schema {
   query: Query
 }
 
 type Query {
-  me: User
+  me: User!
   user(id: ID!): User
   allUsers: [User]
+  search(term: String!): [SearchResult!]!
+  myChats: [Chat!]!
 }
 
 enum Role {
@@ -13,12 +17,32 @@ enum Role {
   ADMIN,
 }
 
-type User {
+interface Node {
+  id: ID!
+}
+
+union SearchResult = User | Chat | ChatMessage
+
+type User implements Node {
   id: ID!
   username: String!
   email: String!
   role: Role!
-}`;
+}
+
+type Chat implements Node {
+  id: ID!
+  users: [User!]!
+  messages: [ChatMessage!]!
+}
+
+type ChatMessage implements Node {
+  id: ID!
+  content: String!
+  time: Date!
+  user: User!
+}
+`;
 
 const TS_QUERY = `query findUser($userId: ID!) {
   user(id: $userId) {
@@ -34,28 +58,25 @@ fragment UserFields on User {
 
 export const EXAMPLES = {
   typescript: {
-    name: 'TypeScript Types',
+    name: 'TypeScript',
     state: {
       config: `generates:
   server-types.ts:
-    - add: "/* tslint:disable */"
-    - time
     - typescript`,
       schema: TS_SCHEMA,
-      documents: ''
-    }
+      documents: '',
+    },
   },
   'typescript-operations': {
-    name: 'TypeScript Types and Documents',
+    name: 'TypeScript Operations',
     state: {
       config: `generates:
   client-types.ts:
-    - add: "// THIS IS A GENERATED FILE, DO NOT EDIT IT!"
     - typescript
     - typescript-operations`,
       schema: TS_SCHEMA,
-      documents: TS_QUERY
-    }
+      documents: TS_QUERY,
+    },
   },
   'react-apollo': {
     name: 'TypeScript React-Apollo Components',
@@ -67,8 +88,8 @@ export const EXAMPLES = {
       - typescript-operations
       - typescript-react-apollo`,
       schema: TS_SCHEMA,
-      documents: TS_QUERY
-    }
+      documents: TS_QUERY,
+    },
   },
   'apollo-angular': {
     name: 'TypeScript Apollo-Angular Components',
@@ -80,8 +101,8 @@ export const EXAMPLES = {
       - typescript-operations
       - typescript-apollo-angular`,
       schema: TS_SCHEMA,
-      documents: TS_QUERY
-    }
+      documents: TS_QUERY,
+    },
   },
   'stencil-apollo': {
     name: 'TypeScript Stencil-Apollo Components',
@@ -93,8 +114,8 @@ export const EXAMPLES = {
       - typescript-operations
       - typescript-stencil-apollo`,
       schema: TS_SCHEMA,
-      documents: TS_QUERY
-    }
+      documents: TS_QUERY,
+    },
   },
   'typescript-server-resolvers': {
     name: 'TypeScript Resolvers Signature',
@@ -105,8 +126,8 @@ export const EXAMPLES = {
       - typescript
       - typescript-resolvers`,
       schema: TS_SCHEMA,
-      documents: TS_QUERY
-    }
+      documents: TS_QUERY,
+    },
   },
   flow: {
     name: 'Flow Types',
@@ -116,8 +137,8 @@ export const EXAMPLES = {
     - flow
     `,
       schema: TS_SCHEMA,
-      documents: ''
-    }
+      documents: '',
+    },
   },
   flowResolvers: {
     name: 'Flow Resolvers Signature',
@@ -128,11 +149,11 @@ export const EXAMPLES = {
     - flow-resolvers
     `,
       schema: TS_SCHEMA,
-      documents: ''
-    }
+      documents: '',
+    },
   },
   flowDocuments: {
-    name: 'Flow Types and Documents',
+    name: 'Flow Operations',
     state: {
       config: `generates:
   types.flow.js:
@@ -140,11 +161,11 @@ export const EXAMPLES = {
     - flow-operations
     `,
       schema: TS_SCHEMA,
-      documents: TS_QUERY
-    }
+      documents: TS_QUERY,
+    },
   },
   'typescript-mongo': {
-    name: 'MongoDB Models',
+    name: 'TypeScript MongoDB',
     state: {
       config: `generates:
   models.ts:
@@ -180,8 +201,8 @@ type ChatMessage @entity {
   author: User! @link
 }      
 `,
-      documents: ''
-    }
+      documents: '',
+    },
   },
   introspection: {
     name: 'Introspection JSON',
@@ -190,8 +211,8 @@ type ChatMessage @entity {
   schema.json:
     - introspection`,
       schema: TS_SCHEMA,
-      documents: ''
-    }
+      documents: '',
+    },
   },
   'schema-ast': {
     name: 'Schema AST',
@@ -200,7 +221,17 @@ type ChatMessage @entity {
   schema.graphql:
     - schema-ast`,
       schema: TS_SCHEMA,
-      documents: ''
-    }
-  }
+      documents: '',
+    },
+  },
+  'fragment-matcher': {
+    name: 'Fragment Matcher',
+    state: {
+      config: `generates:
+  fragment-matcher.json:
+    - fragment-matcher`,
+      schema: TS_SCHEMA,
+      documents: '',
+    },
+  },
 };

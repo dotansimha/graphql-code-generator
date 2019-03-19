@@ -1,6 +1,6 @@
 {
-  "name": "live-demo",
-  "version": "0.16.1",
+  "name": "@graphql-codegen/live-demo",
+  "version": "0.18.0",
   "private": true,
   "homepage": "/live-demo/",
   "devDependencies": {
@@ -18,6 +18,7 @@
     "@graphql-codegen/flow": "0.18.0",
     "@graphql-codegen/flow-operations": "0.18.0",
     "@graphql-codegen/flow-resolvers": "0.18.0",
+    "@graphql-codegen/fragment-matcher": "0.18.0",
     "@graphql-codegen/add": "0.18.0",
     "@graphql-codegen/time": "0.18.0",
     "@graphql-codegen/introspection": "0.18.0",
