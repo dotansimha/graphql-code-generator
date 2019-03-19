@@ -7,6 +7,7 @@ import { TypeScriptOperationVariablesToObject } from 'graphql-codegen-typescript
 export interface ParsedTypeScriptResolversConfig extends ParsedResolversConfig {
   avoidOptionals: boolean;
   immutableTypes: boolean;
+  useIndexSignature: boolean;
 }
 
 export class TypeScriptResolversVisitor extends BaseResolversVisitor<
@@ -18,7 +19,8 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
       pluginConfig,
       {
         avoidOptionals: pluginConfig.avoidOptionals || false,
-        immutableTypes: pluginConfig.immutableTypes || false
+        immutableTypes: pluginConfig.immutableTypes || false,
+        useIndexSignature: pluginConfig.useIndexSignature || false
       } as any,
       schema
     );
@@ -31,25 +33,18 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<
         this.config.immutableTypes
       )
     );
+
+    if (this.config.useIndexSignature) {
+      this._declarationBlockConfig = {
+        blockTransformer(block) {
+          return `ResolversObject<${block}>`;
+        }
+      };
+    }
   }
 
   protected formatRootResolver(schemaTypeName: string, resolverType: string): string {
     return `${schemaTypeName}?: ${resolverType},`;
-  }
-
-  getRootResolver(): string {
-    return super
-      .getRootResolver()
-      .replace(
-        '};',
-        '} & { [typeName: string] : { [ fieldName: string ]: ( Resolver<any, any, Context, any> | SubscriptionResolver<any, any, Context, any> ) } };'
-      );
-  }
-
-  getAllDirectiveResolvers(): string {
-    return super
-      .getAllDirectiveResolvers()
-      .replace('};', '} & { [directiveName: string]: DirectiveResolverFn<any, any, Context, any> };');
   }
 
   private clearOptional(str: string): string {

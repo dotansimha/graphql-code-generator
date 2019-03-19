@@ -65,6 +65,7 @@ export function indent(str: string, count = 1): string {
 
 export interface DeclarationBlockConfig {
   blockWrapper?: string;
+  blockTransformer?: (block: string) => string;
   enumNameValueSeparator?: string;
 }
 
@@ -80,6 +81,7 @@ export class DeclarationBlock {
   constructor(private _config: DeclarationBlockConfig) {
     this._config = {
       blockWrapper: '',
+      blockTransformer: block => block,
       enumNameValueSeparator: ':',
       ...this._config
     };
@@ -149,14 +151,14 @@ export class DeclarationBlock {
         result += this._content;
       }
 
+      const before = '{' + this._config.blockWrapper;
+      const after = this._config.blockWrapper + '}';
+      const block = [before, this._block, after].join('\n');
+
       if (this._methodName) {
-        result += `${this._methodName}({${this._config.blockWrapper}
-${this._block}
-${this._config.blockWrapper}})`;
+        result += `${this._methodName}(${this._config.blockTransformer!(block)})`;
       } else {
-        result += `{${this._config.blockWrapper}
-${this._block}
-${this._config.blockWrapper}}`;
+        result += this._config.blockTransformer!(block);
       }
     } else if (this._content) {
       result += this._content;
