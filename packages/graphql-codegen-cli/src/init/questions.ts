@@ -9,7 +9,8 @@ export function getQuestions(possibleTargets: Record<Tags, boolean>): inquirer.Q
       type: 'checkbox',
       name: 'targets',
       message: `What type of application are you building?`,
-      choices: getApplicationTypeChoices(possibleTargets)
+      choices: getApplicationTypeChoices(possibleTargets),
+      validate: (targets: any[]) => targets.length > 0
     },
     {
       type: 'input',
