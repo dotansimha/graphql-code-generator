@@ -1,6 +1,6 @@
 ---
 id: typescript-apollo-angular
-title: Typescript Apollo Angular
+title: TypeScript Apollo Angular
 ---
 
 This plugin generates Apollo services (`Query`, `Mutation` and `Subscription`) with TypeScript typings.

@@ -74,7 +74,7 @@ schema {
 }
 ```
 
-And generate the following Typescript typings:
+And generate the following TypeScript typings:
 
 ```ts
 interface Query {

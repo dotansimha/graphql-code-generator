@@ -99,7 +99,10 @@
         "title": "Create-React-App"
       },
       "migration/from-0-13": {
-        "title": "Migration from 0.13"
+        "title": "Migration from 0.13 to 0.18"
+      },
+      "migration/from-0-18": {
+        "title": "Migration to 1.0.0"
       },
       "plugins/add": {
         "title": "Add"

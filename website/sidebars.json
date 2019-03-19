@@ -30,13 +30,7 @@
       "plugins/reason-client"
     ],
     "Integrations": ["integrations/apollo-link-state", "integrations/create-react-app"],
-    "Custom Code-Generator Plugins": [
-      "custom-codegen/index",
-      "custom-codegen/write-your-plugin",
-      "custom-codegen/validate-configuration",
-      "custom-codegen/extend-schema",
-      "custom-codegen/using-visitor"
-    ],
-    "Migration": ["migration/from-0-13"]
+    "Custom Code-Generator Plugins": ["custom-codegen/index", "custom-codegen/write-your-plugin", "custom-codegen/validate-configuration", "custom-codegen/extend-schema", "custom-codegen/using-visitor"],
+    "Migration": ["migration/from-0-18", "migration/from-0-13"]
   }
 }

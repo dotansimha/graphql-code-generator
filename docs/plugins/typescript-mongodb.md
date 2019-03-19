@@ -15,7 +15,7 @@ type User @entity {
 }
 ```
 
-We can have the following Typescript output:
+We can have the following TypeScript output:
 
 ```typescript
 import { ObjectID } from 'mongodb';

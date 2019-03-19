@@ -1,6 +1,6 @@
 ---
 id: from-0-13
-title: Migration from 0.13
+title: Migration from 0.13 to 0.18
 ---
 
 ## What has changed?

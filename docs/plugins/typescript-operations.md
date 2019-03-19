@@ -1,6 +1,6 @@
 ---
 id: typescript-operations
-title: Typescript Operations
+title: TypeScript Operations
 ---
 
 The `@graphql-codegen/typescript-operations` plugin generates TypeScript types based on your `GraphQLSchema` and your GraphQL operations and fragments.
