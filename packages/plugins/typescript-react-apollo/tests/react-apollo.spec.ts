@@ -432,14 +432,14 @@ query MyFeed {
         }
       );
 
-      expect(content).toBeSimilarStringTo(`export type TestProps<TChildProps = any> = Partial<ReactApollo.DataProps<TestQuery, TestQueryVariables>> & TChildProps;`);
+      expect(content).toBeSimilarStringTo(`export type TestProps<TChildProps = {}> = Partial<ReactApollo.DataProps<TestQuery, TestQueryVariables>> & TChildProps;`);
 
-      expect(content).toBeSimilarStringTo(`export function TestHOC<TProps, TChildProps = any>(operationOptions: ReactApollo.OperationOption<
+      expect(content).toBeSimilarStringTo(`export function withTest<TProps, TChildProps = {}>(operationOptions: ReactApollo.OperationOption<
   TProps,
   TestQuery,
   TestQueryVariables,
   TestProps<TChildProps>> | undefined) {
-    return ReactApollo.graphql<TProps, TestQuery, TestQueryVariables, TestProps<TChildProps>>(TestDocument, operationOptions);
+    return ReactApollo.withQuery<TProps, TestQuery, TestQueryVariables, TestProps<TChildProps>>(TestDocument, operationOptions);
 };`);
       await validateTypeScript(content, schema, docs, {});
     });
