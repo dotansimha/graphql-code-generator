@@ -16,8 +16,61 @@ export interface ParsedConfig {
 }
 
 export interface RawConfig {
+  /**
+   * @name scalars
+   * @type ScalarsMap
+   * @description Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type.
+   *
+   * @example
+   * ```yml
+   * config:
+   *   scalars:
+   *     DateTime: Date
+   *     JSON: { [key: string]: any }
+   * ```
+   */
   scalars?: ScalarsMap;
+  /**
+   * @name namingConvention
+   * @type NamingConvention
+   * @default change-case#pascalCase
+   * @description Allow you to ovderride the naming convention of the output.
+   * You can either override all namings, or specify an object with specific custom naming convention per output.
+   * The format of the converter must be a valid `module#method`.
+   * Allowed values for specific output are: `typeNames`, `enumValues`.
+   * You can also use "keep" to keep all GraphQL names as-is.
+   *
+   * @example Override All Names
+   * ```yml
+   * config:
+   *   namingConvention: change-case#lowerCase
+   * ```
+   * @example Upper-case enum values
+   * ```yml
+   * config:
+   *   namingConvention:
+   *     typeNames: change-case#pascalCase
+   *     enumValues: change-case#upperCase
+   * ```
+   * @example Keep
+   * ```yml
+   * config:
+   *   namingConvention: keep
+   * ```
+   */
   namingConvention?: NamingConvention;
+  /**
+   * @name typesPrefix
+   * @type string
+   * @default ""
+   * @description Prefixes all the generated types.
+   *
+   * @example Add "I" Prefix
+   * ```yml
+   * config:
+   *   typesPrefix: I
+   * ```
+   */
   typesPrefix?: string;
 }
 
@@ -30,7 +83,7 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
       scalars: { ...(defaultScalars || DEFAULT_SCALARS), ...(rawConfig.scalars || {}) },
       convert: convertFactory(rawConfig),
       typesPrefix: rawConfig.typesPrefix || '',
-      ...((additionalConfig || {}) as any)
+      ...((additionalConfig || {}) as any),
     };
 
     autoBind(this);

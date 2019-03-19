@@ -20,6 +20,54 @@
       "custom-codegen/write-your-plugin": {
         "title": "Write your first Plugin"
       },
+      "generated-config/base-documents-visitor": {
+        "title": "generated-config/base-documents-visitor"
+      },
+      "generated-config/base-resolvers-visitor": {
+        "title": "generated-config/base-resolvers-visitor"
+      },
+      "generated-config/base-types-visitor": {
+        "title": "generated-config/base-types-visitor"
+      },
+      "generated-config/base-visitor": {
+        "title": "generated-config/base-visitor"
+      },
+      "generated-config/client-side-base-visitor": {
+        "title": "generated-config/client-side-base-visitor"
+      },
+      "generated-config/flow-operations": {
+        "title": "generated-config/flow-operations"
+      },
+      "generated-config/flow-resolvers": {
+        "title": "generated-config/flow-resolvers"
+      },
+      "generated-config/flow": {
+        "title": "generated-config/flow"
+      },
+      "generated-config/time": {
+        "title": "generated-config/time"
+      },
+      "generated-config/typescript-apollo-angular": {
+        "title": "generated-config/typescript-apollo-angular"
+      },
+      "generated-config/typescript-mongodb": {
+        "title": "generated-config/typescript-mongodb"
+      },
+      "generated-config/typescript-operations": {
+        "title": "generated-config/typescript-operations"
+      },
+      "generated-config/typescript-react-apollo": {
+        "title": "generated-config/typescript-react-apollo"
+      },
+      "generated-config/typescript-resolvers": {
+        "title": "generated-config/typescript-resolvers"
+      },
+      "generated-config/typescript-stencil-apollo": {
+        "title": "generated-config/typescript-stencil-apollo"
+      },
+      "generated-config/typescript": {
+        "title": "generated-config/typescript"
+      },
       "getting-started/codegen-config": {
         "title": "Codegen Options Config"
       },
@@ -102,7 +150,7 @@
         "title": "TypeScript Stencil Apollo"
       },
       "plugins/typescript": {
-        "title": "TypeScrip"
+        "title": "TypeScript"
       }
     },
     "links": {

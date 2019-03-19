@@ -15,9 +15,7 @@ To use this template, make sure you are using [`graphql-tag/loader`](https://git
 
 ## Installation
 
-Install using `npm` (or `yarn`):
-
-    $ npm install @graphql-codegen/typescript-graphql-files-modules
+    $ yarn add -D @graphql-codegen/typescript-graphql-files-modules
 
 ## Example
 

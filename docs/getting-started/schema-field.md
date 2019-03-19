@@ -43,7 +43,6 @@ You can also specify `schema` on both levels: root and output-file, and then Gra
 
 ```yml
 schema: http://localhost:3000/graphql
-overwrite: true
 generates:
   ./src/types.ts:
     schema: ./schema.graphql

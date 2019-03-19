@@ -11,10 +11,10 @@ This plugin requires you to use `@graphql-codegen/typescript` as well, because i
 
 ### Installation
 
-Install using `npm` (or `yarn`):
+    $ yarn add -D @graphql-codegen/typescript-operations
 
-    $ npm install @graphql-codegen/typescript-operations
+### Configuration
 
-### Examples
-
-- [Star Wars Schema](https://github.com/dotansimha/graphql-code-generator/blob/master/dev-test/star-wars/types.d.ts#L27)
+{@import: ../docs/generated-config/base-visitor.md}
+{@import: ../docs/generated-config/base-documents-visitor.md}
+{@import: ../docs/generated-config/typescript-operations.md}

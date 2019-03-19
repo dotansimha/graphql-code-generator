@@ -6,7 +6,29 @@ import { extname } from 'path';
 import gql from 'graphql-tag';
 
 export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginConfig {
+  /**
+   * @name ngModule
+   * @type string
+   * @description Allows to define `ngModule` as part of the plugin's config so it's globally available.
+   *
+   * @example graphql.macro
+   * ```yml
+   * config:
+   *   ngModule: ./path/to/module#MyModule
+   * ```
+   */
   ngModule?: string;
+  /**
+   * @name namedClient
+   * @type string
+   * @description Defined the global value of `namedClient`.
+   *
+   * @example graphql.macro
+   * ```yml
+   * config:
+   *   namedClient: 'customName'
+   * ```
+   */
   namedClient?: string;
 }
 

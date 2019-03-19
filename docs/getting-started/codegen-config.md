@@ -14,7 +14,6 @@ Here's an example for a possible config file:
 ```yml
 schema: http://localhost:3000/graphql
 documents: ./src/**/*.graphql
-overwrite: true
 generates:
   ./src/types.ts:
     plugins:
@@ -41,15 +40,25 @@ Here are the supported options that you can define in the config file (see [sour
   - [**`generates.schema`**](./schema-field#output-file-level) - Same as root `schema`, but applies only for the specific output file.
 
   - [**`generates.config`**](./config-field#output-level) - Same as root `config`, but applies only for the specific output file.
+  -
+  - [**`generates.overwrite`**](./config-field#output-level) - Same as root `overwrite`, but applies only for the specific output file.
 
 - [**`require`**](./require-field) - A path to a file which defines custom Node.JS `require()` handlers for custom file extensions. This is essential if the code generator has to go through files which require other files in an unsupported format (by default). See [more information](https://gist.github.com/jamestalmage/df922691475cff66c7e6).
 
-- **`mergeSchemaFiles`** - A name of a modules along with its exported merge function name. Use the following pattern: `moduleName#mergeFunctionExportedFromThisModule`. This will be used to merge and build your GraphQL schema when you specify a glob to multiple `.graphql`
-
 - [**`config`**](./config-field#root-level) - Options that we would like to provide to the specified plug-ins. The options may vary depends on what plug-ins you specified. Read the documentation of that specific plug-in for more information. [You can read more about how to pass configuration to plugins here](./config-field)
 
-- **`overwrite`** - A flag to overwrite files in case they're already exist when generating code.
+- **`overwrite`** - A flag to overwrite files in case they're already exist when generating code (`true` by default)
 
 - **`watch`** - A flag to watch for changes in the specified GraphQL schemas and re-generate code any that happens.
 
 - **`silent`** - A flag to not print errors in case they occur.
+
+- **`pluginLoader`** - If you are using the programmatic API in browser environment, you can override this configuration to load your plugins in a way different then `require`.
+
+- **`pluckConfig`** - Allow you to override the configuration for `graphql-tag-pluck` (the tool that extracts your GraphQL operations from your code files).
+
+  - **`pluckConfig.modules`** - An array of `{ name: string, identifier: string }` that will be used to track down your `gql` usages and imports. Use this if your code files imports `gql` from another library, or you have a custom `gql` tag.
+
+  - **`pluckConfig.magicComment`** - Configure the magic GraphQL comments to look for (the default is `/* GraphQL */`).
+  -
+  - **`pluckConfig.globalIdentifier`** - Overrides the name of the default GraphQL name identifier.

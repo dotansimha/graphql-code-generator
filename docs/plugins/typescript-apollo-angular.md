@@ -11,11 +11,9 @@ To shed some more light regards this template, it's recommended to go through th
 
 ## Installation
 
-Install using `npm` (or `yarn`):
+    $ yarn add -D @graphql-codegen/typescript-apollo-angular
 
-    $ npm install @graphql-codegen/typescript-apollo-angular
-
-## Example
+## How to use?
 
 Simply create a `.graphql` file and write a random query like so:
 
@@ -28,7 +26,19 @@ query MyFeed {
 }
 ```
 
-Using `gql-gen` you can generate a file with types and services that you can use when coding an Angular component:
+Using `gql-gen` you can generate a file with typesand services that you can use when coding an Angular component:
+
+```yaml
+# ...
+generates:
+  path/to/output.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-apollo-angular
+```
+
+Then, use it:
 
 ```ts
 import { MyFeedGQL, Feed } from './graphql';
@@ -51,30 +61,7 @@ export class FeedComponent {
 }
 ```
 
-## Configuration
-
-The output of this template can be controlled using a specified config file which consists of the fields below. Each config field is followed by its matching environment variable, which can be used as an alternative method to control the template's behavior:
-
-#### `gqlImport` (default value: `import gql from 'graphql-tag'`)
-
-Customize from which module will `gql` be imported from. This is useful if you want to use modules other than `graphql-tag`, e.g. `graphql.macro`. You can also control the imported GraphQL-parse function identifier e.g. `gatsby#graphql`, which will result in `import { graphql as gql } from 'gatsby'`.
-
-#### `noGraphqlTag` (default value: `false`)
-
-This will cause the codegen to output parsed documents and not use a literal tag of the `graphql-tag` package.
-
-```yaml
-# ...
-generates:
-  path/to/output:
-    config:
-      noGraphqlTag: true
-    plugins:
-      - typescript-apollo-angular
-      # ...
-```
-
-#### `NgModule`
+#### `@NgModule` directive
 
 All generated services are defined with `@Injectable({ providedIn: 'root' })` and in most cases you don't need to overwrite it, because providing a service to the root injector is highly recommended. To customize that behavior you can use `@NgModule` directive, anywhere in an operation, to let the codegen know which injector should it use to create a service.
 
@@ -87,14 +74,6 @@ query feed {
     title
   }
 }
-```
-
-GraphQL Code Generator allows to define `ngModule` as part of the plugin's config so it's globally available:
-
-```yaml
-# ...
-config:
-  ngModule: ./path/to/module#MyModule
 ```
 
 #### `@namedClient` directive
@@ -112,10 +91,8 @@ query feed {
 }
 ```
 
-You can define a global value of `namedClient`:
+## Configuration
 
-```yaml
-# ...
-config:
-  namedClient: 'customName'
-```
+{@import: ../docs/generated-config/base-visitor.md}
+{@import: ../docs/generated-config/client-side-base-visitor.md}
+{@import: ../docs/generated-config/typescript-apollo-angular.md}

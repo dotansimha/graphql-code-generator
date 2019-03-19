@@ -7,7 +7,39 @@ export * from './visitor';
 export * from './flow-variables-to-object';
 
 export interface FlowPluginConfig extends RawTypesConfig {
+  /**
+   * @name useFlowExactObjects
+   * @type boolean
+   * @description Generates Flow types as Exact types.
+   * @default false
+   *
+   * @example
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - flow
+   *  config:
+   *    useFlowExactObjects: true
+   * ```
+   */
   useFlowExactObjects?: boolean;
+  /**
+   * @name useFlowReadOnlyTypes
+   * @type boolean
+   * @description Generates read-only Flow types
+   * @default false
+   *
+   * @example
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - flow
+   *  config:
+   *    useFlowReadOnlyTypes: true
+   * ```
+   */
   useFlowReadOnlyTypes?: boolean;
 }
 

@@ -12,7 +12,38 @@ export interface RawClientSideBasePluginConfig extends RawConfig {
 }
 
 export interface ClientSideBasePluginConfig extends ParsedConfig {
+  /**
+   * @name noGraphQLTag
+   * @type boolean
+   * @default false
+   * @description Instead of adding gql tag with the GraphQL operation, it uses the percompiled JSON representation (DocumentNode)
+   * of the operation.
+   *
+   * @example
+   * ```yml
+   * config:
+   *   noGraphQLTag: true
+   * ```
+   */
   noGraphQLTag: boolean;
+  /**
+   * @name gqlImport
+   * @type string
+   * @default gql#graphql-tag
+   * @description Customize from which module will `gql` be imported from.
+   * This is useful if you want to use modules other than `graphql-tag`, e.g. `graphql.macro`.
+   *
+   * @example graphql.macro
+   * ```yml
+   * config:
+   *   gqlImport: graphql.macro#gql
+   * ```
+   * @example Gatsby
+   * ```yml
+   * config:
+   *   gqlImport: gatsby#graphql
+   * ```
+   */
   gqlImport: string;
 }
 

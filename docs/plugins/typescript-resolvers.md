@@ -11,9 +11,7 @@ A TypeScript project with `@types/graphql` installed.
 
 ## Installation
 
-Install using `npm` (or `yarn`):
-
-    $ npm install @graphql-codegen/typescript-resolvers
+    $ yarn add @graphql-codegen/typescript-resolvers
 
 ## Usage
 
@@ -21,7 +19,6 @@ Run `gql-gen` as usual:
 
 ```yaml
 schema: schema.json
-overwrite: true
 generates:
   ./src/resolvers-types.ts:
     plugins:
@@ -40,6 +37,12 @@ export const resolvers: QueryResolvers = {
 ```
 
 This will make the resolver fully typed and compatible with typescript compiler, including the handler's arguments and return value.
+
+## Configuration
+
+{@import: ../docs/generated-config/base-visitor.md}
+{@import: ../docs/generated-config/base-resolvers-visitor.md}
+{@import: ../docs/generated-config/typescript-resolvers.md}
 
 ## How It Works
 

@@ -9,10 +9,8 @@ A plugin for GraphQL Codegen to generate ReasonML types based on your GraphQL sc
 
 ## Installation
 
-Install using npm/yarn:
-
 ```shell
-yarn add graphql-codegen-reason-client -D
+yarn add -D graphql-codegen-reason-client
 ```
 
 ## Examples

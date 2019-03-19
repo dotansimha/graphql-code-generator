@@ -7,9 +7,7 @@ This plugin generates React Apollo components and HOC with TypeScript typings. I
 
 ## Installation
 
-Install using `npm` (or `yarn`):
-
-    $ npm install @graphql-codegen/typescript-react-apollo
+    $ yarn add @graphql-codegen/typescript-react-apollo
 
 ## Usage
 
@@ -47,43 +45,6 @@ Or if you prefer:
 
 ## Configuration
 
-#### `gqlImport` (default value: `import gql from 'graphql-tag'`)
-
-Customize from which module will `gql` be imported from. This is useful if you want to use modules other than `graphql-tag`, e.g. `graphql.macro`. You can also control the imported GraphQL-parse function identifier e.g. `gatsby#graphql`, which will result in `import { graphql as gql } from 'gatsby'`.
-
-#### `noGraphqlTag` (default value: `false`)
-
-This will cause the codegen to output parsed documents and not use a literal tag of the `graphql-tag` package.
-
-```yaml
-# ...
-generates:
-  path/to/output:
-    config:
-      noGraphqlTag: true
-    plugins:
-      - typescript-react-apollo
-      # ...
-```
-
-#### `noHOC` (default value: `false`)
-
-This will disable the higher order components generation.sable the higher order components generation by setting this option to `false`.
-
-#### `noComponents` (default value: `false`)
-
-This will cause the code generator to _omit_ React **Components**. So, in case you are just using _hooks_, you can disable the Components setting this option to `true`.
-
-#### `withHooks` (default value: `false`)
-
-This will cause the codegen to add React **Hooks** implementations, to be used in conjunction with [`react-apollo-hooks`](https://github.com/trojanowski/react-apollo-hooks). The generated code will wrap base `useQuery` and `useMutation` hooks with TypeScript typings.
-
-You can use the generated hook in your Functional Component like this:
-
-```tsx
-  const { data, loading, error } = useTest(...);
-```
-
-#### `hooksImportFrom` (default value: `react-apollo-hooks`)
-
-You can specify alternative module that is exports `useQuery` `useMutation` and `useSubscription`. This is useful for further abstraction of some common tasks (eg. error handling). Filepath relative to generated file can be also specified.
+{@import: ../docs/generated-config/base-visitor.md}
+{@import: ../docs/generated-config/client-side-base-visitor.md}
+{@import: ../docs/generated-config/typescript-react-apollo.md}

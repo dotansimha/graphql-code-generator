@@ -63,11 +63,11 @@ GraphQL codegen uses [prettier](https://github.com/prettier/prettier) inside the
 
 First we gotta make sure that the basic GraphQL package is within our dependencies, since GraphQL Code Generator is dependent on it:
 
-    $ npm install graphql
+    $ yarn add graphql
 
 The we can install GraphQL Code Generator using `yarn` (or `npm`):
 
-    $ npm install -D @graphql-codegen/cli
+    $ yarn add -D @graphql-codegen/cli
 
 ## Initialization Wizard
 
@@ -83,7 +83,7 @@ If you don't want to use the wizard, we've got you covered, just continue readin
 
 GraphQL Code Generator's behavior is bound into plugins, thus we will need to install one of them:
 
-    $ npm install -D @graphql-codegen/typescript
+    $ yarn add -D @graphql-codegen/typescript
 
 Although can be used directly, it's recommended to add the code generation task as an `npm` script in `package.json`. This way we won't have to install GraphQL Code Generator globally:
 
@@ -99,7 +99,6 @@ GraphQL Code Generator looks for `codegen.yml` and `codegen.json` files by defau
 
 ```yaml
 schema: http://localhost:3000/graphql
-overwrite: true
 generates:
   ./src/types.d.ts:
     plugins:
@@ -125,7 +124,6 @@ async function doSomething() {
   const generatedFiles = await generate(
     {
       schema: 'http://127.0.0.1:3000/graphql',
-      overwrite: true,
       documents: './src/**/*.graphql',
       generates: {
         [process.cwd() + '/models/']: {

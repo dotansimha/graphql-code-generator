@@ -17,7 +17,6 @@ Then, create a configuration object, match [`Types.Config`](https://github.com/d
 
 ```ts
 const config = {
-  overwrite: true,
   schema: ['schema.graphql'],
   generates: {
     'output.ts': {

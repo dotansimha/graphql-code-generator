@@ -7,9 +7,7 @@ This plugin generates Stencil Apollo functional components typings. It extends t
 
 ## Installation
 
-Install using `npm` (or `yarn`):
-
-    $ npm install @graphql-codegen/typescript-stencil-apollo
+    $ yarn add -D @graphql-codegen/typescript-stencil-apollo
 
 ## Usage
 
@@ -36,3 +34,9 @@ We can use the generated code like this:
 ```tsx
   <Test.Component variables={...} onReady={...} />
 ```
+
+## Configuration
+
+{@import: ../docs/generated-config/base-visitor.md}
+{@import: ../docs/generated-config/client-side-base-visitor.md}
+{@import: ../docs/generated-config/typescript-stencil-apollo.md}

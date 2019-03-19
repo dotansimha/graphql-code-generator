@@ -11,15 +11,15 @@ You can read more about it [in `apollo-client` documentation](https://www.apollo
 
 ## Installation
 
-Install using `npm` (or `yarn`):
-
-    $ npm install @graphql-codegen/fragment-matcher
+    $ yarn add -D @graphql-codegen/fragment-matcher
 
 ## Configuration
 
 Fragment Matcher plugin accepts a TypeScript / JavaScript or a JSON file as an output _(`.ts, .tsx, .js, .jsx, .json`)_.
 
 Both in TypeScript and JavaScript a default export is being used.
+
+The output is based on the output you choose for the output file name.
 
 ```yaml
 generates:
@@ -44,3 +44,5 @@ const cache = new InMemoryCache({
   fragmentMatcher,
 });
 ```
+
+> [Read more about fragment matcher and it's usage on Apollo Client](https://www.apollographql.com/docs/react/advanced/fragments.html#fragment-matcher)
