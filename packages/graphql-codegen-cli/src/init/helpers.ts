@@ -46,7 +46,7 @@ export function writePackage(answers: Answers, configLocation: string) {
 
   // read codegen's version
   const { version } = JSON.parse(
-    readFileSync(resolve(__dirname, '../../package.json'), {
+    readFileSync(resolve(__dirname, '../../../package.json'), {
       encoding: 'utf-8',
     })
   );
