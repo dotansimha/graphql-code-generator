@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/typescript-react-apollo",
-  "version": "0.18.0",
+  "version": "1.0.0",
   "description": "GraphQL Code Generator plugin for generating a ready-to-use React Components/HOC/Hooks based on GraphQL operations",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
@@ -12,18 +12,18 @@
     "graphql-tag": "^2.0.0"
   },
   "dependencies": {
-    "tslib": "1.9.3",
-    "@graphql-codegen/visitor-plugin-common": "0.18.0",
-    "@graphql-codegen/plugin-helpers": "0.18.0"
+    "@graphql-codegen/plugin-helpers": "1.0.0",
+    "@graphql-codegen/visitor-plugin-common": "1.0.0",
+    "tslib": "1.9.3"
   },
   "devDependencies": {
-    "@graphql-codegen/testing": "0.18.0",
-    "jest": "24.5.0",
-    "ts-jest": "24.0.0",
-    "typescript": "3.3.3333",
+    "@graphql-codegen/testing": "1.0.0",
     "flow-bin": "0.95.1",
     "flow-parser": "0.95.1",
-    "graphql": "14.1.1"
+    "graphql": "14.1.1",
+    "jest": "24.5.0",
+    "ts-jest": "24.0.0",
+    "typescript": "3.3.3333"
   },
   "sideEffects": false,
   "main": "dist/commonjs/index.js",
