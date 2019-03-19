@@ -45,7 +45,10 @@
     "rimraf": "2.6.3",
     "ts-jest": "24.0.0",
     "tslint": "5.14.0",
-    "typescript": "3.3.3333"
+    "typescript": "3.3.3333",
+    "react-apollo": "2.5.2",
+    "react-apollo-hooks": "0.4.3",
+    "apollo-server": "2.4.8"
   },
   "lint-staged": {
     "*.{ts,tsx}": [

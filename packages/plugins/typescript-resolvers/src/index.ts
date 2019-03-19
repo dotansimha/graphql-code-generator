@@ -42,6 +42,23 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    * ```
    */
   immutableTypes?: boolean;
+  /**
+   * @name useIndexSignature
+   * @type boolean
+   * @description Adds an index signature to any generates resolver.
+   * @default false
+   *
+   * @example
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *    - typescript-resolvers
+   *  config:
+   *    useIndexSignature: true
+   * ```
+   */
   useIndexSignature?: boolean;
 }
 
