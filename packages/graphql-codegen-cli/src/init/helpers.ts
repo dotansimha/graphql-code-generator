@@ -45,11 +45,15 @@ export function writePackage(answers: Answers, configLocation: string) {
   }
 
   // read codegen's version
-  const { version } = JSON.parse(
-    readFileSync(resolve(__dirname, '../../package.json'), {
-      encoding: 'utf-8',
-    })
-  );
+  let version: string;
+
+  try {
+    // Works in tests
+    version = require('../../package.json').version;
+  } catch (e) {
+    // Works in production (because of esm and cjs directories)
+    version = require('../../../package.json').version;
+  }
 
   answers.plugins.forEach(plugin => {
     pkg.devDependencies[plugin.package] = version;
