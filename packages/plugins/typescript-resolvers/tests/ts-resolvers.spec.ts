@@ -297,13 +297,13 @@ describe('TypeScript Resolvers Plugin', () => {
 
     expect(result).toBeSimilarStringTo(`
       export type MyUnionResolvers<Context = any, ParentType = MyUnion> = {
-        __resolveType: TypeResolveFn<'MyType' | 'MyOtherType'>
+        __resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, Context>
       };
     `);
 
     expect(result).toBeSimilarStringTo(`
       export type NodeResolvers<Context = any, ParentType = Node> = {
-        __resolveType: TypeResolveFn<'SomeNode'>,
+        __resolveType: TypeResolveFn<'SomeNode', ParentType, Context>,
         id?: Resolver<Scalars['ID'], ParentType, Context>,
       };
     `);
