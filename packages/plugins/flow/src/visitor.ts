@@ -1,5 +1,5 @@
-import { NonNullTypeNode, ListTypeNode, ObjectTypeDefinitionNode, FieldDefinitionNode, EnumTypeDefinitionNode, ScalarTypeDefinitionNode, NamedTypeNode, GraphQLSchema } from 'graphql';
-import { BaseTypesVisitor, DeclarationBlock, wrapWithSingleQuotes, indent, ParsedTypesConfig } from '@graphql-codegen/visitor-plugin-common';
+import { NonNullTypeNode, ListTypeNode, ObjectTypeDefinitionNode, FieldDefinitionNode, EnumTypeDefinitionNode, NamedTypeNode, GraphQLSchema } from 'graphql';
+import { BaseTypesVisitor, DeclarationBlock, wrapWithSingleQuotes, indent, ParsedTypesConfig, transformComment } from '@graphql-codegen/visitor-plugin-common';
 import * as autoBind from 'auto-bind';
 import { FlowPluginConfig } from './index';
 import { FlowOperationVariablesToObject } from './flow-variables-to-object';
@@ -48,8 +48,9 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
   FieldDefinition(node: FieldDefinitionNode): string {
     const typeString = (node.type as any) as string;
     const namePostfix = typeString.charAt(0) === '?' ? '?' : '';
+    const comment = transformComment((node.description as any) as string, 1);
 
-    return indent(`${this.config.useFlowReadOnlyTypes ? '+' : ''}${node.name}${namePostfix}: ${typeString},`);
+    return comment + indent(`${this.config.useFlowReadOnlyTypes ? '+' : ''}${node.name}${namePostfix}: ${typeString},`);
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: number | string, parent: any): string {
@@ -86,6 +87,7 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
       .withBlock(
         node.values
           .map(enumOption => {
+            const comment = transformComment((enumOption.description as any) as string, 1);
             const optionName = this.convertName(enumOption);
             let enumValue: string = (enumOption.name as any) as string;
 
@@ -93,7 +95,7 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
               enumValue = this.config.enumValues[typeName][enumValue];
             }
 
-            return indent(`${optionName}: ${wrapWithSingleQuotes(enumValue)}`);
+            return comment + indent(`${optionName}: ${wrapWithSingleQuotes(enumValue)}`);
           })
           .join(', \n')
       ).string;
@@ -102,6 +104,7 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
       .export()
       .asKind('type')
       .withName(this.convertName(node))
+      .withComment((node.description as any) as string)
       .withContent(`$Values<typeof ${enumValuesName}>`).string;
 
     return [enumValues, enumType].join('\n\n');
