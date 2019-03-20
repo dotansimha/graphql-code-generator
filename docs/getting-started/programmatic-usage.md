@@ -7,10 +7,10 @@ The Codegen has also a complete programmatic, you can use it if you need to cust
 
 ### Basic Programmatic Usage
 
-In order to use the programmatic API, start by importing `generate` from `@graphql-codegen/core`:
+In order to use the programmatic API, start by importing `codegen` from `@graphql-codegen/core`:
 
 ```ts
-import { generate } from '@graphql-codegen/core';
+import { codegen } from '@graphql-codegen/core';
 ```
 
 Then, create a configuration object, match [`Types.Config`](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/utils/plugins-helpers/src/types.ts#L51) from `@graphql-codegen/plugins-helpers`, for example:
@@ -26,18 +26,18 @@ const config = {
 };
 ```
 
-Then, provide the config object to `generate`:
+Then, provide the config object to `codegen`:
 
 ```ts
-const output = await generate(config);
+const output = await codegen(config);
 ```
 
-The output of `generate` is an array with the output file path and the file contant. It also saves the output to the file.
+The output of `codegen` is an array with the output file path and the file contant. It also saves the output to the file.
 
 If you wish not to save the output to a file, you can provide `false` as the 2nd argument:
 
 ```ts
-const output = await generate(config, false);
+const output = await codegen(config, false);
 ```
 
 ### Custom Plugin Loader
