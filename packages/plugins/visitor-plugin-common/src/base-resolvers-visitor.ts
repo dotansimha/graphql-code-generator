@@ -255,7 +255,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
       .export()
       .asKind('type')
       .withName(name, `<Context = ${this.config.contextType.type}, ParentType = ${node.name}>`)
-      .withBlock(indent(`__resolveType: TypeResolveFn<${possibleTypes}>`)).string;
+      .withBlock(indent(`__resolveType: TypeResolveFn<${possibleTypes}, ParentType, Context>`)).string;
   }
 
   ScalarTypeDefinition(node: ScalarTypeDefinitionNode): string {
@@ -324,7 +324,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
       .export()
       .asKind('type')
       .withName(name, `<Context = ${this.config.contextType.type}, ParentType = ${node.name}>`)
-      .withBlock([indent(`__resolveType: TypeResolveFn<${implementingTypes.map(name => `'${name}'`).join(' | ')}>,`), ...(node.fields || []).map((f: any) => f(node.name))].join('\n')).string;
+      .withBlock([indent(`__resolveType: TypeResolveFn<${implementingTypes.map(name => `'${name}'`).join(' | ')}, ParentType, Context>,`), ...(node.fields || []).map((f: any) => f(node.name))].join('\n')).string;
   }
 
   SchemaDefinition() {
