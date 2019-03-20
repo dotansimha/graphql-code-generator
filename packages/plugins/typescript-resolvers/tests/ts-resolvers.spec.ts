@@ -310,7 +310,7 @@ describe('TypeScript Resolvers Plugin', () => {
 
     expect(result).toBeSimilarStringTo(`
       export type QueryResolvers<Context = any, ParentType = Query> = {
-        something?: Resolver<MyType, ParentType, Context>,
+        something?: Resolver<MyCustomOtherType, ParentType, Context>,
       };
     `);
 
