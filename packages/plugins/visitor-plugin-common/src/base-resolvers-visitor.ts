@@ -145,19 +145,22 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
   }
 
   public getAllDirectiveResolvers(): string {
-    return new DeclarationBlock(this._declarationBlockConfig)
-      .export()
-      .asKind('type')
-      .withName(this.convertName('IDirectiveResolvers'), `<Context = ${this.config.contextType.type}>`)
-      .withBlock(
-        Object.keys(this._collectedDirectiveResolvers)
-          .map(schemaTypeName => {
-            const resolverType = this._collectedDirectiveResolvers[schemaTypeName];
+    if (Object.keys(this._collectedDirectiveResolvers).length) {
+      return new DeclarationBlock(this._declarationBlockConfig)
+        .export()
+        .asKind('type')
+        .withName(this.convertName('IDirectiveResolvers'), `<Context = ${this.config.contextType.type}>`)
+        .withBlock(
+          Object.keys(this._collectedDirectiveResolvers)
+            .map(schemaTypeName => {
+              const resolverType = this._collectedDirectiveResolvers[schemaTypeName];
 
-            return indent(this.formatRootResolver(schemaTypeName, resolverType));
-          })
-          .join('\n')
-      ).string;
+              return indent(this.formatRootResolver(schemaTypeName, resolverType));
+            })
+            .join('\n')
+        ).string;
+    }
+    return '';
   }
 
   Name(node: NameNode): string {
