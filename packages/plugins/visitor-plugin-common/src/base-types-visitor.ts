@@ -14,12 +14,13 @@ import {
   ObjectTypeDefinitionNode,
   ScalarTypeDefinitionNode,
   UnionTypeDefinitionNode,
+  StringValueNode,
 } from 'graphql';
 import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor';
 import { parseMapper } from './mappers';
 import { DEFAULT_SCALARS } from './scalars';
 import { EnumValuesMap, ScalarsMap } from './types';
-import { buildScalars, DeclarationBlock, DeclarationBlockConfig, indent, wrapWithSingleQuotes } from './utils';
+import { transformComment, buildScalars, DeclarationBlock, DeclarationBlockConfig, indent, wrapWithSingleQuotes } from './utils';
 import { OperationVariablesToObject } from './variables-to-object';
 
 export interface ParsedTypesConfig extends ParsedConfig {
@@ -70,14 +71,17 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
   public get scalarsDefinition(): string {
     const allScalars = Object.keys(this.config.scalars).map(scalarName => {
       const scalarValue = this.config.scalars[scalarName];
+      const scalarType = this._schema.getType(scalarName);
+      const comment = scalarType && scalarType.astNode && scalarType.description ? transformComment(scalarType.description, 1) : '';
 
-      return indent(`${scalarName}: ${scalarValue},`);
+      return comment + indent(`${scalarName}: ${scalarValue},`);
     });
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
       .withName('Scalars')
+      .withComment('All built-in and custom scalars, mapped to their actual values')
       .withBlock(allScalars.join('\n')).string;
   }
 
@@ -100,11 +104,14 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
       .export()
       .asKind('type')
       .withName(this.convertName(node))
+      .withComment((node.description as any) as string)
       .withBlock(node.fields.join('\n')).string;
   }
 
   InputValueDefinition(node: InputValueDefinitionNode): string {
-    return indent(`${node.name}: ${node.type},`);
+    const comment = transformComment((node.description as any) as string, 1);
+
+    return comment + indent(`${node.name}: ${node.type},`);
   }
 
   Name(node: NameNode): string {
@@ -113,8 +120,9 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
 
   FieldDefinition(node: FieldDefinitionNode): string {
     const typeString = (node.type as any) as string;
+    const comment = transformComment((node.description as any) as string, 1);
 
-    return indent(`${node.name}: ${typeString},`);
+    return comment + indent(`${node.name}: ${typeString},`);
   }
 
   UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number, parent: any): string {
@@ -125,6 +133,7 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
       .export()
       .asKind('type')
       .withName(this.convertName(node))
+      .withComment((node.description as any) as string)
       .withContent(possibleTypes).string;
   }
 
@@ -137,6 +146,7 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
       .asKind('type')
       .withName(this.convertName(node))
       .withContent(interfaces)
+      .withComment((node.description as any) as string)
       .withBlock(node.fields.join('\n')).string;
 
     const original = parent[key];
@@ -153,6 +163,7 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
         .export()
         .asKind('type')
         .withName(this.convertName(name))
+        .withComment((node.description as any) as string)
         .withBlock(this._argumentsTransformer.transform<InputValueDefinitionNode>(field.arguments)).string;
     });
 
@@ -164,6 +175,7 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
       .export()
       .asKind('type')
       .withName(this.convertName(node))
+      .withComment((node.description as any) as string)
       .withBlock(node.fields.join('\n')).string;
   }
 
@@ -209,20 +221,27 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
       .export()
       .asKind('enum')
       .withName(this.convertName(node))
+      .withComment((node.description as any) as string)
       .withBlock(this.buildEnumValuesBlock(enumName, node.values)).string;
+  }
+
+  // We are using it in order to transform "description" field
+  StringValue(node: StringValueNode): string {
+    return node.value;
   }
 
   protected buildEnumValuesBlock(typeName: string, values: ReadonlyArray<EnumValueDefinitionNode>): string {
     return values
       .map(enumOption => {
         const optionName = this.convertName(enumOption);
+        const comment = transformComment((enumOption.description as any) as string, 1);
         let enumValue: string = (enumOption.name as any) as string;
 
         if (this.config.enumValues[typeName] && typeof this.config.enumValues[typeName] === 'object' && this.config.enumValues[typeName][enumValue]) {
           enumValue = this.config.enumValues[typeName][enumValue];
         }
 
-        return indent(`${optionName}${this._declarationBlockConfig.enumNameValueSeparator} ${wrapWithSingleQuotes(enumValue)}`);
+        return comment + indent(`${optionName}${this._declarationBlockConfig.enumNameValueSeparator} ${wrapWithSingleQuotes(enumValue)}`);
       })
       .join(',\n');
   }

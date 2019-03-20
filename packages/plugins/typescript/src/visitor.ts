@@ -1,4 +1,4 @@
-import { wrapWithSingleQuotes, DeclarationBlock, indent, BaseTypesVisitor, ParsedTypesConfig } from '@graphql-codegen/visitor-plugin-common';
+import { transformComment, wrapWithSingleQuotes, DeclarationBlock, indent, BaseTypesVisitor, ParsedTypesConfig } from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptPluginConfig } from './index';
 import * as autoBind from 'auto-bind';
 import { FieldDefinitionNode, NamedTypeNode, ListTypeNode, NonNullTypeNode, EnumTypeDefinitionNode, Kind, InputValueDefinitionNode, GraphQLSchema } from 'graphql';
@@ -60,15 +60,17 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
     const typeString = (node.type as any) as string;
     const originalFieldNode = parent[key] as FieldDefinitionNode;
     const addOptionalSign = !this.config.avoidOptionals && originalFieldNode.type.kind !== Kind.NON_NULL_TYPE;
+    const comment = transformComment((node.description as any) as string, 1);
 
-    return indent(`${this.config.immutableTypes ? 'readonly ' : ''}${node.name}${addOptionalSign ? '?' : ''}: ${typeString},`);
+    return comment + indent(`${this.config.immutableTypes ? 'readonly ' : ''}${node.name}${addOptionalSign ? '?' : ''}: ${typeString},`);
   }
 
   InputValueDefinition(node: InputValueDefinitionNode, key?: number | string, parent?: any): string {
     const originalFieldNode = parent[key] as FieldDefinitionNode;
     const addOptionalSign = !this.config.avoidOptionals && originalFieldNode.type.kind !== Kind.NON_NULL_TYPE;
+    const comment = transformComment((node.description as any) as string, 1);
 
-    return indent(`${this.config.immutableTypes ? 'readonly ' : ''}${node.name}${addOptionalSign ? '?' : ''}: ${node.type},`);
+    return comment + indent(`${this.config.immutableTypes ? 'readonly ' : ''}${node.name}${addOptionalSign ? '?' : ''}: ${node.type},`);
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
@@ -83,25 +85,29 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
       return new DeclarationBlock(this._declarationBlockConfig)
         .export()
         .asKind('type')
+        .withComment((node.description as any) as string)
         .withName(this.convertName(node))
         .withContent(
-          node.values
-            .map(enumOption => {
-              let enumValue: string = (enumOption.name as any) as string;
+          '\n' +
+            node.values
+              .map(enumOption => {
+                let enumValue: string = (enumOption.name as any) as string;
+                const comment = transformComment((enumOption.description as any) as string, 1);
 
-              if (this.config.enumValues[enumName] && typeof this.config.enumValues[enumName] === 'object' && this.config.enumValues[enumName][enumValue]) {
-                enumValue = this.config.enumValues[enumName][enumValue];
-              }
+                if (this.config.enumValues[enumName] && typeof this.config.enumValues[enumName] === 'object' && this.config.enumValues[enumName][enumValue]) {
+                  enumValue = this.config.enumValues[enumName][enumValue];
+                }
 
-              return wrapWithSingleQuotes(enumValue);
-            })
-            .join(' | ')
+                return comment + indent(wrapWithSingleQuotes(enumValue));
+              })
+              .join(' |\n')
         ).string;
     } else {
       return new DeclarationBlock(this._declarationBlockConfig)
         .export()
         .asKind(this.config.constEnums ? 'const enum' : 'enum')
         .withName(this.convertName(node))
+        .withComment((node.description as any) as string)
         .withBlock(this.buildEnumValuesBlock(enumName, node.values)).string;
     }
   }

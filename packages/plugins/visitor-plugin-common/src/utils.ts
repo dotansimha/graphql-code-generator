@@ -54,6 +54,27 @@ export interface DeclarationBlockConfig {
   enumNameValueSeparator?: string;
 }
 
+export function transformComment(comment: string, indentLevel = 0): string {
+  if (!comment || comment === '') {
+    return '';
+  }
+
+  const lines = comment.split('\n');
+
+  return lines
+    .map((line, index) => {
+      const isLast = lines.length === index + 1;
+      const isFirst = index === 0;
+
+      if (isFirst && isLast) {
+        return indent(`/** ${comment} */\n`, indentLevel);
+      }
+
+      return indent(`${isFirst ? '/** ' : ' * '}${line}${isLast ? '\n */\n' : ''}`, indentLevel);
+    })
+    .join('\n');
+}
+
 export class DeclarationBlock {
   _export = false;
   _name = null;
@@ -62,6 +83,7 @@ export class DeclarationBlock {
   _content = null;
   _block = null;
   _nameGenerics = null;
+  _comment = null;
 
   constructor(private _config: DeclarationBlockConfig) {
     this._config = {
@@ -78,8 +100,16 @@ export class DeclarationBlock {
     return this;
   }
 
-  asKind(kind): DeclarationBlock {
+  asKind(kind: string): DeclarationBlock {
     this._kind = kind;
+
+    return this;
+  }
+
+  withComment(comment: string | null): DeclarationBlock {
+    if (comment) {
+      this._comment = transformComment(comment, 0);
+    }
 
     return this;
   }
@@ -151,7 +181,7 @@ export class DeclarationBlock {
       result += '{}';
     }
 
-    return result + (this._kind === 'interface' || this._kind === 'enum' ? '' : ';') + '\n';
+    return (this._comment ? this._comment : '') + result + (this._kind === 'interface' || this._kind === 'enum' ? '' : ';') + '\n';
   }
 }
 
