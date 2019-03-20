@@ -13,18 +13,24 @@ In order to use the programmatic API, start by importing `codegen` from `@graphq
 import { codegen } from '@graphql-codegen/core';
 ```
 
-Then, create a configuration object, match [`Types.Config`](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/utils/plugins-helpers/src/types.ts#L51) from `@graphql-codegen/plugins-helpers`, for example:
+Then, create a configuration object ([complete signature](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/graphql-codegen-core/src/codegen.ts#L7-L16)):
 
 ```ts
+import { buildSchema } from 'graphql';
+import { plugin as typescriptPlugin } from '@graphql-codegen/typescript';
+
 const config = {
-  schema: ['schema.graphql'],
-  generates: {
-    'output.ts': {
-      plugins: ['typescript'],
-    },
+  schema: buildSchema(`type A {}`)
+  plugins: {
+    typescript: {}, // Here you can pass configuration to the plugin
   },
+  pluginMap: {
+    typescript: typescriptPlugin,
+  }
 };
 ```
+
+> You need to import the plugin in your favorite way, you can also use `await import` to lazy load it.
 
 Then, provide the config object to `codegen`:
 
@@ -32,36 +38,6 @@ Then, provide the config object to `codegen`:
 const output = await codegen(config);
 ```
 
-The output of `codegen` is an array with the output file path and the file contant. It also saves the output to the file.
+The output of `codegen` is an array with the output file path and the file contant.
 
-If you wish not to save the output to a file, you can provide `false` as the 2nd argument:
-
-```ts
-const output = await codegen(config, false);
-```
-
-### Custom Plugin Loader
-
-By defaut, the codegen tries to find the specified plugins under `node_modules` by using `require` to load them.
-
-If you are using a different environment that doesn't able to use `require` (such as, client side packages that can't use require during runtime), you can specify a custom `pluginLoader` field in your config file, and load the plugins in your prefered way:
-
-```ts
-const config = {
-  pluginLoader: pluginName => {
-    if (pluginName === 'typescript') {
-      return {
-        plugin: () => {
-          // overwrite plugin here
-        },
-      };
-    }
-  },
-  schema: ['schema.graphql'],
-  generates: {
-    'output.ts': {
-      plugins: ['typescript'],
-    },
-  },
-};
-```
+> We are using this API in the live demo in GraphQL Code Generator website, [here is the code](https://github.com/dotansimha/graphql-code-generator/blob/master/website/live-demo/src/App.js#L79).
