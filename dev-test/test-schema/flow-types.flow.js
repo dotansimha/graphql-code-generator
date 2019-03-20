@@ -1,6 +1,8 @@
 /* @flow */
 
 
+
+/** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string,
   String: string,
@@ -91,4 +93,3 @@ export type IResolvers<Context = any> = {
   User?: UserResolvers<Context><>,
 };
 
-export type IDirectiveResolvers<Context = any> = {};

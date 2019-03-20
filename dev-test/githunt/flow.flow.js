@@ -1,6 +1,8 @@
 /* @flow */
 
 
+
+/** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string,
   String: string,
@@ -9,44 +11,68 @@ export type Scalars = {
   Float: number,
 };
 
+/** A comment about an entry, submitted by a user */
 export type Comment = {
+  /** The SQL ID of this entry */
   id: $ElementType<Scalars, 'Int'>,
+  /** The GitHub user who posted the comment */
   postedBy: User,
+  /** A timestamp of when the comment was posted */
   createdAt: $ElementType<Scalars, 'Float'>,
+  /** The text of the comment */
   content: $ElementType<Scalars, 'String'>,
+  /** The repository which this comment is about */
   repoName: $ElementType<Scalars, 'String'>,
 };
 
+/** Information about a GitHub repository submitted to GitHunt */
 export type Entry = {
+  /** Information about the repository from GitHub */
   repository: Repository,
+  /** The GitHub user who submitted this entry */
   postedBy: User,
+  /** A timestamp of when the entry was submitted */
   createdAt: $ElementType<Scalars, 'Float'>,
+  /** The score of this repository, upvotes - downvotes */
   score: $ElementType<Scalars, 'Int'>,
+  /** The hot score of this repository */
   hotScore: $ElementType<Scalars, 'Float'>,
+  /** Comments posted about this repository */
   comments: Array<?Comment>,
+  /** The number of comments posted about this repository */
   commentCount: $ElementType<Scalars, 'Int'>,
+  /** The SQL ID of this entry */
   id: $ElementType<Scalars, 'Int'>,
+  /** XXX to be changed */
   vote: Vote,
 };
 
 
+/** Information about a GitHub repository submitted to GitHunt */
 export type EntryCommentsArgs = {
   limit?: ?$ElementType<Scalars, 'Int'>,
   offset?: ?$ElementType<Scalars, 'Int'>
 };
 
 export const FeedTypeValues = Object.freeze({
+  /** Sort by a combination of freshness and score, using Reddit's algorithm */
   Hot: 'HOT', 
+  /** Newest entries first */
   New: 'NEW', 
+  /** Highest score entries first */
   Top: 'TOP'
 });
 
 
+/** A list of options for the sort order of the feed */
 export type FeedType = $Values<typeof FeedTypeValues>;
 
 export type Mutation = {
+  /** Submit a new repository, returns the new submission */
   submitRepository?: ?Entry,
+  /** Vote on a repository submission, returns the submission that was voted on */
   vote?: ?Entry,
+  /** Comment on a repository, returns the new comment */
   submitComment?: ?Comment,
 };
 
@@ -68,8 +94,11 @@ export type MutationSubmitCommentArgs = {
 };
 
 export type Query = {
+  /** A feed of repository submissions */
   feed?: ?Array<?Entry>,
+  /** A single entry */
   entry?: ?Entry,
+  /** Return the currently logged in user, or null if nobody is logged in */
   currentUser?: ?User,
 };
 
@@ -85,17 +114,28 @@ export type QueryEntryArgs = {
   repoFullName: $ElementType<Scalars, 'String'>
 };
 
+/** A repository object from the GitHub API. This uses the exact field names returned by the
+ * GitHub API for simplicity, even though the convention for GraphQL is usually to camel case.
+ */
 export type Repository = {
+  /** Just the name of the repository, e.g. GitHunt-API */
   name: $ElementType<Scalars, 'String'>,
+  /** The full name of the repository with the username, e.g. apollostack/GitHunt-API */
   full_name: $ElementType<Scalars, 'String'>,
+  /** The description of the repository */
   description?: ?$ElementType<Scalars, 'String'>,
+  /** The link to the repository on GitHub */
   html_url: $ElementType<Scalars, 'String'>,
+  /** The number of people who have starred this repository on GitHub */
   stargazers_count: $ElementType<Scalars, 'Int'>,
+  /** The number of open issues on this repository on GitHub */
   open_issues_count?: ?$ElementType<Scalars, 'Int'>,
+  /** The owner of this repository on GitHub, e.g. apollostack */
   owner?: ?User,
 };
 
 export type Subscription = {
+  /** Subscription fires on every comment added */
   commentAdded?: ?Comment,
 };
 
@@ -104,12 +144,17 @@ export type SubscriptionCommentAddedArgs = {
   repoFullName: $ElementType<Scalars, 'String'>
 };
 
+/** A user object from the GitHub API. This uses the exact field names returned from the GitHub API. */
 export type User = {
+  /** The name of the user, e.g. apollostack */
   login: $ElementType<Scalars, 'String'>,
+  /** The URL to a directly embeddable image for this user's avatar */
   avatar_url: $ElementType<Scalars, 'String'>,
+  /** The URL of this user's GitHub page */
   html_url: $ElementType<Scalars, 'String'>,
 };
 
+/** XXX to be removed */
 export type Vote = {
   vote_value: $ElementType<Scalars, 'Int'>,
 };
@@ -121,6 +166,7 @@ export const VoteTypeValues = Object.freeze({
 });
 
 
+/** The type of vote to record, when submitting a vote */
 export type VoteType = $Values<typeof VoteTypeValues>;
 type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;
 

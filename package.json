@@ -10,7 +10,7 @@
     "test": "lerna run test --ignore @graphql-codegen/live-demo",
     "lint": "lerna run lint --ignore @graphql-codegen/live-demo",
     "precommit": "lint-staged",
-    "test-and-build": "yarn test && yarn build",
+    "test-and-build": " yarn build && yarn test",
     "prerelease": "yarn test-and-build",
     "prerelease:canary": "yarn test-and-build",
     "release": "lerna publish --exact --force-publish=\"*\" --ignore @graphql-codegen/live-demo",
