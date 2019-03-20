@@ -251,7 +251,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
       .export()
       .asKind('type')
       .withName(name, `<Context = ${this.config.contextType.type}, ParentType = ${node.name}>`)
-      .withBlock(indent(`__resolveType: TypeResolveFn<${possibleTypes}, Context, ParentType>`)).string;
+      .withBlock(indent(`__resolveType: TypeResolveFn<${possibleTypes}, ParentType, Context>`)).string;
   }
 
   ScalarTypeDefinition(node: ScalarTypeDefinitionNode): string {
