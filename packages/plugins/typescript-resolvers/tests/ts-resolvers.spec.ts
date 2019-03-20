@@ -258,6 +258,76 @@ describe('TypeScript Resolvers Plugin', () => {
     await validate(result);
   });
 
+  it('Should generate basic type resolvers with external mappers using same imported type', async () => {
+    const result = await plugin(
+      schema,
+      [],
+      {
+        mappers: {
+          MyType: './my-file#MyCustomOtherType',
+          MyOtherType: './my-file#MyCustomOtherType',
+        },
+      },
+      { outputFile: '' }
+    );
+
+    expect(result).toBeSimilarStringTo(`import { MyCustomOtherType } from './my-file';`);
+    expect(result).toBeSimilarStringTo(`
+    export type MyDirectiveDirectiveResolver<Result, Parent, Context = any, Args = {   arg?: Maybe<Scalars['Int']>,
+      arg2?: Maybe<Scalars['String']>, arg3?: Maybe<Scalars['Boolean']> }> = DirectiveResolverFn<Result, Parent, Context, Args>;`);
+
+    expect(result).toBeSimilarStringTo(`
+        export type MyOtherTypeResolvers<Context = any, ParentType = MyCustomOtherType> = {
+          bar?: Resolver<Scalars['String'], ParentType, Context>,
+        };
+      `);
+
+    expect(result).toBeSimilarStringTo(`export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<Scalars['MyScalar'], any> {
+      name: 'MyScalar'
+        }
+      `);
+
+    expect(result).toBeSimilarStringTo(`
+      export type MyTypeResolvers<Context = any, ParentType = MyCustomOtherType> = {
+        foo?: Resolver<Scalars['String'], ParentType, Context>,
+        otherType?: Resolver<Maybe<MyCustomOtherType>, ParentType, Context>,
+        withArgs?: Resolver<Maybe<Scalars['String']>, ParentType, Context, MyTypeWithArgsArgs>,
+      };
+    `);
+
+    expect(result).toBeSimilarStringTo(`
+      export type MyUnionResolvers<Context = any, ParentType = MyUnion> = {
+        __resolveType: TypeResolveFn<'MyType' | 'MyOtherType'>
+      };
+    `);
+
+    expect(result).toBeSimilarStringTo(`
+      export type NodeResolvers<Context = any, ParentType = Node> = {
+        __resolveType: TypeResolveFn<'SomeNode'>,
+        id?: Resolver<Scalars['ID'], ParentType, Context>,
+      };
+    `);
+
+    expect(result).toBeSimilarStringTo(`
+      export type QueryResolvers<Context = any, ParentType = Query> = {
+        something?: Resolver<MyCustomOtherType, ParentType, Context>,
+      };
+    `);
+
+    expect(result).toBeSimilarStringTo(`
+      export type SomeNodeResolvers<Context = any, ParentType = SomeNode> = {
+        id?: Resolver<Scalars['ID'], ParentType, Context>,
+      };
+    `);
+
+    expect(result).toBeSimilarStringTo(`
+      export type SubscriptionResolvers<Context = any, ParentType = Subscription> = {
+        somethingChanged?: SubscriptionResolver<Maybe<MyCustomOtherType>, ParentType, Context>,
+      };
+    `);
+    await validate(result);
+  });
+
   it('Should generate the correct resolver args type names when typesPrefix is specified', async () => {
     const testSchema = buildSchema(`type MyType { f(a: String): String }`);
     const config = { typesPrefix: 'T' };

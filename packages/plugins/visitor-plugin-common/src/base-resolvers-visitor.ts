@@ -94,7 +94,9 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
           groupedMappers[mapper.source] = [];
         }
 
-        groupedMappers[mapper.source].push(mapper.type);
+        if (!groupedMappers[mapper.source].includes(mapper.type)) {
+          groupedMappers[mapper.source].push(mapper.type);
+        }
       });
 
     if (this.config.contextType.isExternal) {
@@ -102,7 +104,9 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
         groupedMappers[this.config.contextType.source] = [];
       }
 
-      groupedMappers[this.config.contextType.source].push(this.config.contextType.type);
+      if (!groupedMappers[this.config.contextType.source]) {
+        groupedMappers[this.config.contextType.source].push(this.config.contextType.type);
+      }
     }
 
     return Object.keys(groupedMappers).map(source => this.buildMapperImport(source, groupedMappers[source]));
