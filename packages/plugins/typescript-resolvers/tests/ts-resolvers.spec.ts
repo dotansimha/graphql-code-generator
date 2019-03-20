@@ -104,6 +104,132 @@ describe('TypeScript Resolvers Plugin', () => {
     await validate(result);
   });
 
+  it('Should allow to override context with simple identifier', async () => {
+    const result = await plugin(
+      schema,
+      [],
+      {
+        contextType: 'MyCustomContext',
+      },
+      { outputFile: '' }
+    );
+
+    expect(result).toBeSimilarStringTo(`
+    export type MyDirectiveDirectiveResolver<Result, Parent, Context = MyCustomContext, Args = {   arg?: Maybe<Scalars['Int']>,
+      arg2?: Maybe<Scalars['String']>, arg3?: Maybe<Scalars['Boolean']> }> = DirectiveResolverFn<Result, Parent, Context, Args>;`);
+
+    expect(result).toBeSimilarStringTo(`
+      export type MyOtherTypeResolvers<Context = MyCustomContext, ParentType = MyOtherType> = {
+        bar?: Resolver<Scalars['String'], ParentType, Context>,
+      };
+    `);
+
+    expect(result).toBeSimilarStringTo(`
+      export type MyTypeResolvers<Context = MyCustomContext, ParentType = MyType> = {
+        foo?: Resolver<Scalars['String'], ParentType, Context>,
+        otherType?: Resolver<Maybe<MyOtherType>, ParentType, Context>,
+        withArgs?: Resolver<Maybe<Scalars['String']>, ParentType, Context, MyTypeWithArgsArgs>,
+      };
+    `);
+
+    expect(result).toBeSimilarStringTo(`
+      export type MyUnionResolvers<Context = MyCustomContext, ParentType = MyUnion> = {
+        __resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, Context>
+      };
+    `);
+
+    expect(result).toBeSimilarStringTo(`
+      export type NodeResolvers<Context = MyCustomContext, ParentType = Node> = {
+        __resolveType: TypeResolveFn<'SomeNode', ParentType, Context>,
+        id?: Resolver<Scalars['ID'], ParentType, Context>,
+      };
+    `);
+
+    expect(result).toBeSimilarStringTo(`
+      export type QueryResolvers<Context = MyCustomContext, ParentType = Query> = {
+        something?: Resolver<MyType, ParentType, Context>,
+      };
+    `);
+
+    expect(result).toBeSimilarStringTo(`
+      export type SomeNodeResolvers<Context = MyCustomContext, ParentType = SomeNode> = {
+        id?: Resolver<Scalars['ID'], ParentType, Context>,
+      };
+    `);
+
+    expect(result).toBeSimilarStringTo(`
+      export type SubscriptionResolvers<Context = MyCustomContext, ParentType = Subscription> = {
+        somethingChanged?: SubscriptionResolver<Maybe<MyOtherType>, ParentType, Context>,
+      };
+    `);
+
+    await validate(`type MyCustomContext = {};\n` + result);
+  });
+
+  it('Should allow to override context with mapped context type', async () => {
+    const result = await plugin(
+      schema,
+      [],
+      {
+        contextType: './my-file#MyCustomContext',
+      },
+      { outputFile: '' }
+    );
+
+    expect(result).toBeSimilarStringTo(`import { MyCustomContext } from './my-file';`);
+
+    expect(result).toBeSimilarStringTo(`
+    export type MyDirectiveDirectiveResolver<Result, Parent, Context = MyCustomContext, Args = {   arg?: Maybe<Scalars['Int']>,
+      arg2?: Maybe<Scalars['String']>, arg3?: Maybe<Scalars['Boolean']> }> = DirectiveResolverFn<Result, Parent, Context, Args>;`);
+
+    expect(result).toBeSimilarStringTo(`
+      export type MyOtherTypeResolvers<Context = MyCustomContext, ParentType = MyOtherType> = {
+        bar?: Resolver<Scalars['String'], ParentType, Context>,
+      };
+    `);
+
+    expect(result).toBeSimilarStringTo(`
+      export type MyTypeResolvers<Context = MyCustomContext, ParentType = MyType> = {
+        foo?: Resolver<Scalars['String'], ParentType, Context>,
+        otherType?: Resolver<Maybe<MyOtherType>, ParentType, Context>,
+        withArgs?: Resolver<Maybe<Scalars['String']>, ParentType, Context, MyTypeWithArgsArgs>,
+      };
+    `);
+
+    expect(result).toBeSimilarStringTo(`
+      export type MyUnionResolvers<Context = MyCustomContext, ParentType = MyUnion> = {
+        __resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, Context>
+      };
+    `);
+
+    expect(result).toBeSimilarStringTo(`
+      export type NodeResolvers<Context = MyCustomContext, ParentType = Node> = {
+        __resolveType: TypeResolveFn<'SomeNode', ParentType, Context>,
+        id?: Resolver<Scalars['ID'], ParentType, Context>,
+      };
+    `);
+
+    expect(result).toBeSimilarStringTo(`
+      export type QueryResolvers<Context = MyCustomContext, ParentType = Query> = {
+        something?: Resolver<MyType, ParentType, Context>,
+      };
+    `);
+
+    expect(result).toBeSimilarStringTo(`
+      export type SomeNodeResolvers<Context = MyCustomContext, ParentType = SomeNode> = {
+        id?: Resolver<Scalars['ID'], ParentType, Context>,
+      };
+    `);
+
+    expect(result).toBeSimilarStringTo(`
+      export type SubscriptionResolvers<Context = MyCustomContext, ParentType = Subscription> = {
+        somethingChanged?: SubscriptionResolver<Maybe<MyOtherType>, ParentType, Context>,
+      };
+    `);
+
+    await validate(result);
+  });
+
   it('Should generate the correct imports when schema has scalars', async () => {
     const testSchema = buildSchema(`scalar MyScalar`);
     const result = await plugin(testSchema, [], {}, { outputFile: '' });

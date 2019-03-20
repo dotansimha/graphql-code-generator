@@ -104,9 +104,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
         groupedMappers[this.config.contextType.source] = [];
       }
 
-      if (!groupedMappers[this.config.contextType.source]) {
-        groupedMappers[this.config.contextType.source].push(this.config.contextType.type);
-      }
+      groupedMappers[this.config.contextType.source].push(this.config.contextType.type);
     }
 
     return Object.keys(groupedMappers).map(source => this.buildMapperImport(source, groupedMappers[source]));
