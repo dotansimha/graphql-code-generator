@@ -24,7 +24,7 @@
     "@graphql-codegen/typescript-react-apollo": "1.0.0",
     "@graphql-codegen/typescript-resolvers": "1.0.0",
     "@material-ui/core": "3.9.2",
-    "codemirror": "5.44.0",
+    "codemirror": "5.45.0",
     "codemirror-graphql": "0.8.3",
     "js-yaml": "3.12.2",
     "react": "16.8.4",
