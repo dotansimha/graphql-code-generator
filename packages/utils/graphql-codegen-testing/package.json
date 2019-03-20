@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/testing",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "GraphQL Codegen Testing Utils",
   "main": "dist/commonjs/index.js",
   "module": "dist/esnext/index.js",
