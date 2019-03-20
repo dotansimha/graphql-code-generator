@@ -14,6 +14,7 @@ import {
   ObjectTypeDefinitionNode,
   ScalarTypeDefinitionNode,
   UnionTypeDefinitionNode,
+  StringValueNode,
 } from 'graphql';
 import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor';
 import { parseMapper } from './mappers';
@@ -222,6 +223,11 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
       .withName(this.convertName(node))
       .withComment((node.description as any) as string)
       .withBlock(this.buildEnumValuesBlock(enumName, node.values)).string;
+  }
+
+  // We are using it in order to transform "description" field
+  StringValue(node: StringValueNode): string {
+    return node.value;
   }
 
   protected buildEnumValuesBlock(typeName: string, values: ReadonlyArray<EnumValueDefinitionNode>): string {

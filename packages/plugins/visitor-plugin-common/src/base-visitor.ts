@@ -3,7 +3,7 @@ import { DeclarationBlockConfig } from './utils';
 import * as autoBind from 'auto-bind';
 import { DEFAULT_SCALARS } from './scalars';
 import { convertFactory } from './naming';
-import { ASTNode, StringValueNode } from 'graphql';
+import { ASTNode } from 'graphql';
 
 export interface BaseVisitorConvertOptions {
   useTypesPrefix?: boolean;
@@ -95,10 +95,6 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
 
   get scalars(): ScalarsMap {
     return this.config.scalars;
-  }
-
-  StringValue(node: StringValueNode): string {
-    return node.value;
   }
 
   protected convertName(node: ASTNode | string, options?: BaseVisitorConvertOptions & ConvertOptions): string {
