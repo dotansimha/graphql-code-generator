@@ -53,5 +53,5 @@ export const plugin: PluginFunction<FlowPluginConfig> = (schema: GraphQLSchema, 
     leave: visitor,
   });
 
-  return [header, visitor.scalarsDefinition, ...visitorResult.definitions].join('\n');
+  return [header, visitor.getEnumsImports(), visitor.scalarsDefinition, ...visitorResult.definitions].join('\n');
 };

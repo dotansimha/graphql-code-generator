@@ -384,7 +384,7 @@ describe('Flow Plugin', () => {
 
     it('Should build enum correctly with custom values', async () => {
       const schema = buildSchema(`enum MyEnum { A, B, C }`);
-      const result = await plugin(schema, [], { enumValues: { A: 'SomeValue', B: 'TEST' } }, { outputFile: '' });
+      const result = await plugin(schema, [], { enumValues: { MyEnum: { A: 'SomeValue', B: 'TEST' } } }, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(`
         export const MyEnumValues = Object.freeze({
@@ -395,6 +395,26 @@ describe('Flow Plugin', () => {
 
         export type MyEnum = $Values<typeof MyEnumValues>;
       `);
+
+      validateFlow(result);
+    });
+
+    it('Should build enum correctly with custom values and map to external enum', async () => {
+      const schema = buildSchema(`enum MyEnum { A, B, C }`);
+      const result = await plugin(schema, [], { enumValues: { MyEnum: './my-file#MyEnum' } }, { outputFile: '' });
+
+      expect(result).not.toContain(`export type MyEnum`);
+      expect(result).toContain(`import { type MyEnum } from './my-file';`);
+
+      validateFlow(result);
+    });
+
+    it('Should build enum correctly with custom values and map to external enum with different identifier', async () => {
+      const schema = buildSchema(`enum MyEnum { A, B, C }`);
+      const result = await plugin(schema, [], { enumValues: { MyEnum: './my-file#MyCustomEnum' } }, { outputFile: '' });
+
+      expect(result).not.toContain(`export type MyEnum`);
+      expect(result).toContain(`import { type MyCustomEnum as MyEnum } from './my-file';`);
 
       validateFlow(result);
     });

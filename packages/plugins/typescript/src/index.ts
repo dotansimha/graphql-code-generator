@@ -101,12 +101,12 @@ export const plugin: PluginFunction<TypeScriptPluginConfig> = (schema: GraphQLSc
   const visitor = new TsVisitor(schema, config);
   const printedSchema = printSchema(schema);
   const astNode = parse(printedSchema);
-  const header = `type Maybe<T> = ${visitor.config.maybeValue};`;
+  const maybeValue = `type Maybe<T> = ${visitor.config.maybeValue};`;
   const visitorResult = visit(astNode, { leave: visitor });
   const introspectionDefinitions = includeIntrospectionDefinitions(schema, documents, config);
   const scalars = visitor.scalarsDefinition;
 
-  return [header, scalars, ...visitorResult.definitions, ...introspectionDefinitions].join('\n');
+  return [visitor.getEnumsImports(), maybeValue, scalars, ...visitorResult.definitions, ...introspectionDefinitions].join('\n');
 };
 
 function includeIntrospectionDefinitions(schema: GraphQLSchema, documents: Types.DocumentFile[], config: TypeScriptPluginConfig): string[] {

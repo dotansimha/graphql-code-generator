@@ -1,4 +1,4 @@
-import { DeclarationBlock, indent, BaseTypesVisitor, ParsedTypesConfig } from '@graphql-codegen/visitor-plugin-common';
+import { wrapWithSingleQuotes, DeclarationBlock, indent, BaseTypesVisitor, ParsedTypesConfig } from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptPluginConfig } from './index';
 import * as autoBind from 'auto-bind';
 import { FieldDefinitionNode, NamedTypeNode, ListTypeNode, NonNullTypeNode, EnumTypeDefinitionNode, Kind, InputValueDefinitionNode, GraphQLSchema } from 'graphql';
@@ -72,18 +72,37 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
+    const enumName = (node.name as any) as string;
+
+    // In case of mapped external enum string
+    if (this.config.enumValues[enumName] && typeof this.config.enumValues[enumName] === 'string') {
+      return null;
+    }
+
     if (this.config.enumsAsTypes) {
       return new DeclarationBlock(this._declarationBlockConfig)
         .export()
         .asKind('type')
         .withName(this.convertName(node))
-        .withContent(node.values.map(v => `'${this.config.enumValues[(v.name as any) as string] || v.name}'`).join(' | ')).string;
+        .withContent(
+          node.values
+            .map(enumOption => {
+              let enumValue: string = (enumOption.name as any) as string;
+
+              if (this.config.enumValues[enumName] && typeof this.config.enumValues[enumName] === 'object' && this.config.enumValues[enumName][enumValue]) {
+                enumValue = this.config.enumValues[enumName][enumValue];
+              }
+
+              return wrapWithSingleQuotes(enumValue);
+            })
+            .join(' | ')
+        ).string;
     } else {
       return new DeclarationBlock(this._declarationBlockConfig)
         .export()
         .asKind(this.config.constEnums ? 'const enum' : 'enum')
         .withName(this.convertName(node))
-        .withBlock(this.buildEnumValuesBlock(node.values)).string;
+        .withBlock(this.buildEnumValuesBlock(enumName, node.values)).string;
     }
   }
 }

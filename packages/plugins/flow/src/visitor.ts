@@ -63,7 +63,17 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
     );
   }
 
+  protected _buildEnumImport(identifier: string, source: string): string {
+    return `import { type ${identifier} } from '${source}';`;
+  }
+
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
+    const typeName = (node.name as any) as string;
+
+    if (this.config.enumValues[typeName] && typeof this.config.enumValues[typeName] === 'string') {
+      return null;
+    }
+
     const enumValuesName = this.convertName(node, {
       suffix: 'Values',
     });
@@ -73,7 +83,20 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
       .asKind('const')
       .withName(enumValuesName)
       .withMethodCall('Object.freeze')
-      .withBlock(node.values.map(enumOption => indent(`${this.convertName(enumOption)}: ${wrapWithSingleQuotes(this._parsedConfig.enumValues[(enumOption.name as any) as string] || enumOption.name)}`)).join(', \n')).string;
+      .withBlock(
+        node.values
+          .map(enumOption => {
+            const optionName = this.convertName(enumOption);
+            let enumValue: string = (enumOption.name as any) as string;
+
+            if (this.config.enumValues[typeName] && typeof this.config.enumValues[typeName] === 'object' && this.config.enumValues[typeName][enumValue]) {
+              enumValue = this.config.enumValues[typeName][enumValue];
+            }
+
+            return indent(`${optionName}: ${wrapWithSingleQuotes(enumValue)}`);
+          })
+          .join(', \n')
+      ).string;
 
     const enumType = new DeclarationBlock(this._declarationBlockConfig)
       .export()
