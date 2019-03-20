@@ -1,7 +1,7 @@
 import { FlowResolversPluginConfig } from './index';
-import { ListTypeNode, NamedTypeNode, NonNullTypeNode, GraphQLSchema } from 'graphql';
+import { ListTypeNode, NamedTypeNode, NonNullTypeNode, GraphQLSchema, ScalarTypeDefinitionNode } from 'graphql';
 import * as autoBind from 'auto-bind';
-import { ParsedResolversConfig, BaseResolversVisitor } from '@graphql-codegen/visitor-plugin-common';
+import { indent, ParsedResolversConfig, BaseResolversVisitor, DeclarationBlock } from '@graphql-codegen/visitor-plugin-common';
 import { FlowOperationVariablesToObject } from '@graphql-codegen/flow';
 
 export interface ParsedFlorResolversConfig extends ParsedResolversConfig {}
@@ -41,5 +41,26 @@ export class FlowResolversVisitor extends BaseResolversVisitor<FlowResolversPlug
     }
 
     return baseValue;
+  }
+
+  ScalarTypeDefinition(node: ScalarTypeDefinitionNode): string {
+    const nameAsString = (node.name as any) as string;
+    const baseName = this.scalars[nameAsString] ? this._getScalar(nameAsString) : this.convertName(node);
+    this._collectedResolvers[node.name as any] = 'GraphQLScalarType';
+
+    return new DeclarationBlock({
+      ...this._declarationBlockConfig,
+      blockTransformer(block) {
+        return block;
+      },
+    })
+      .export()
+      .asKind('type')
+      .withName(
+        this.convertName(node, {
+          suffix: 'ScalarConfig',
+        })
+      )
+      .withBlock([indent(`...GraphQLScalarTypeConfig<${baseName}, any>`), indent(`name: '${node.name}'`)].join(', \n')).string;
   }
 }

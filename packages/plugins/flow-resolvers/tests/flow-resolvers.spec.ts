@@ -48,9 +48,10 @@ describe('Flow Resolvers Plugin', () => {
       bar?: Resolver<$ElementType<Scalars, 'String'>, ParentType, Context>,
     }`);
 
-    expect(result).toBeSimilarStringTo(`export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<$ElementType<Scalars, 'MyScalar'>, any> {
+    expect(result).toBeSimilarStringTo(`export type MyScalarScalarConfig = {
+      ...GraphQLScalarTypeConfig<$ElementType<Scalars, 'MyScalar'>, any>, 
       name: 'MyScalar'
-    }`);
+    };`);
 
     expect(result).toBeSimilarStringTo(`export type MyTypeResolvers<Context = any, ParentType = MyType> = {
       foo?: Resolver<$ElementType<Scalars, 'String'>, ParentType, Context>,
@@ -113,11 +114,10 @@ describe('Flow Resolvers Plugin', () => {
         bar?: Resolver<$ElementType<Scalars, 'String'>, ParentType, Context>,
       }
     `);
-    expect(result).toBeSimilarStringTo(`
-      export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<$ElementType<Scalars, 'MyScalar'>, any> {
-        name: 'MyScalar'
-      }
-    `);
+    expect(result).toBeSimilarStringTo(`export type MyScalarScalarConfig = {
+      ...GraphQLScalarTypeConfig<$ElementType<Scalars, 'MyScalar'>, any>, 
+      name: 'MyScalar'
+    };`);
     expect(result).toBeSimilarStringTo(`
       export type MyTypeResolvers<Context = any, ParentType = MyType> = {
         foo?: Resolver<$ElementType<Scalars, 'String'>, ParentType, Context>,
@@ -175,11 +175,10 @@ describe('Flow Resolvers Plugin', () => {
         bar?: Resolver<$ElementType<Scalars, 'String'>, ParentType, Context>,
       }
     `);
-    expect(result).toBeSimilarStringTo(`
-      export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<$ElementType<Scalars, 'MyScalar'>, any> {
-        name: 'MyScalar'
-      }
-    `);
+    expect(result).toBeSimilarStringTo(`export type MyScalarScalarConfig = {
+      ...GraphQLScalarTypeConfig<$ElementType<Scalars, 'MyScalar'>, any>, 
+      name: 'MyScalar'
+    };`);
     expect(result).toBeSimilarStringTo(`
       export type MyTypeResolvers<Context = any, ParentType = MyType> = {
         foo?: Resolver<$ElementType<Scalars, 'String'>, ParentType, Context>,
