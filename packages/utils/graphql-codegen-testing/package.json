@@ -19,7 +19,7 @@
     "tslib": "1.9.3"
   },
   "devDependencies": {
-    "typescript": "3.3.3333"
+    "typescript": "3.3.4000"
   },
   "typings": "dist/esnext/index.d.ts",
   "typescript": {
