@@ -851,16 +851,25 @@ describe('TypeScript Operations Plugin', () => {
       const content = [coreContent, pluginContent].join('\n');
 
       expect(content).toBeSimilarStringTo(`
-        export enum __TypeKind {
-          Scalar = 'SCALAR', 
-          Object = 'OBJECT', 
-          Interface = 'INTERFACE', 
-          Union = 'UNION', 
-          Enum = 'ENUM', 
-          Input_Object = 'INPUT_OBJECT', 
-          List = 'LIST', 
-          Non_Null = 'NON_NULL'
-        }
+      /** An enum describing what kind of type a given \`__Type\` is. */
+      export enum __TypeKind {
+        /** Indicates this type is a scalar. */
+        Scalar = 'SCALAR',
+        /** Indicates this type is an object. \`fields\` and \`interfaces\` are valid fields. */
+        Object = 'OBJECT',
+        /** Indicates this type is an interface. \`fields\` and \`possibleTypes\` are valid fields. */
+        Interface = 'INTERFACE',
+        /** Indicates this type is a union. \`possibleTypes\` is a valid field. */
+        Union = 'UNION',
+        /** Indicates this type is an enum. \`enumValues\` is a valid field. */
+        Enum = 'ENUM',
+        /** Indicates this type is an input object. \`inputFields\` is a valid field. */
+        Input_Object = 'INPUT_OBJECT',
+        /** Indicates this type is a list. \`ofType\` is a valid field. */
+        List = 'LIST',
+        /** Indicates this type is a non-null. \`ofType\` is a valid field. */
+        Non_Null = 'NON_NULL'
+      }
       `);
 
       validateTs(content);
