@@ -27,7 +27,7 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<ApolloAngularRaw
 
   public getImports(): string {
     const baseImports = super.getImports();
-    const imports = [`import { Injectable } from '@angular/core';`, `import Apollo from 'apollo-angular';`];
+    const imports = [`import { Injectable } from '@angular/core';`, `import * as Apollo from 'apollo-angular';`];
 
     const defs: Record<string, { path: string; module: string }> = {};
 
