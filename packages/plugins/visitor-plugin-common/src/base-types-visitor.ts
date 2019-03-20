@@ -1,25 +1,26 @@
-import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor';
-import { EnumValuesMap, ScalarsMap } from './types';
-import { OperationVariablesToObject } from './variables-to-object';
-import { DeclarationBlockConfig, DeclarationBlock, indent, wrapWithSingleQuotes, buildScalars } from './utils';
 import {
+  DirectiveDefinitionNode,
+  EnumTypeDefinitionNode,
+  EnumValueDefinitionNode,
+  FieldDefinitionNode,
+  GraphQLSchema,
   InputObjectTypeDefinitionNode,
   InputValueDefinitionNode,
-  NameNode,
-  FieldDefinitionNode,
-  ObjectTypeDefinitionNode,
-  EnumTypeDefinitionNode,
-  DirectiveDefinitionNode,
-  ListTypeNode,
-  GraphQLSchema,
-  NonNullTypeNode,
-  UnionTypeDefinitionNode,
   InterfaceTypeDefinitionNode,
-  ScalarTypeDefinitionNode,
-  EnumValueDefinitionNode,
+  ListTypeNode,
   NamedTypeNode,
+  NameNode,
+  NonNullTypeNode,
+  ObjectTypeDefinitionNode,
+  ScalarTypeDefinitionNode,
+  UnionTypeDefinitionNode,
 } from 'graphql';
+import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor';
+import { parseMapper } from './mappers';
 import { DEFAULT_SCALARS } from './scalars';
+import { EnumValuesMap, ScalarsMap } from './types';
+import { buildScalars, DeclarationBlock, DeclarationBlockConfig, indent, wrapWithSingleQuotes } from './utils';
+import { OperationVariablesToObject } from './variables-to-object';
 
 export interface ParsedTypesConfig extends ParsedConfig {
   enumValues: EnumValuesMap;
@@ -30,13 +31,21 @@ export interface RawTypesConfig extends RawConfig {
    * @name enumValues
    * @type EnumValuesMap
    * @description Overrides the default value of enum values declared in your GraphQL schema.
+   * You can also map the entire enum to an external type by providing a string that of `module#type`.
    *
-   * @example
+   * @example With Custom Values
    * ```yml
    *   config:
    *     enumValues:
    *       MyEnum:
    *         A: 'foo'
+   * ```
+   *
+   * @example With External Enum
+   * ```yml
+   *   config:
+   *     enumValues:
+   *       MyEnum: ./my-file#MyCustomEnum
    * ```
    */
   enumValues?: EnumValuesMap;
@@ -163,16 +172,59 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
     return '';
   }
 
+  protected _buildEnumImport(identifier: string, source: string): string {
+    return `import { ${identifier} } from '${source}';`;
+  }
+
+  public getEnumsImports(): string {
+    return Object.keys(this.config.enumValues)
+      .map(enumName => {
+        const mappedValue = this.config.enumValues[enumName];
+
+        if (mappedValue && typeof mappedValue === 'string') {
+          const mapper = parseMapper(mappedValue);
+
+          if (mapper.isExternal) {
+            const identifier = mapper.type === enumName ? enumName : `${mapper.type} as ${enumName}`;
+
+            return this._buildEnumImport(identifier, mapper.source);
+          }
+        }
+
+        return null;
+      })
+      .filter(a => a)
+      .join('\n');
+  }
+
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
+    const enumName = (node.name as any) as string;
+
+    // In case of mapped external enum string
+    if (this.config.enumValues[enumName] && typeof this.config.enumValues[enumName] === 'string') {
+      return null;
+    }
+
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('enum')
       .withName(this.convertName(node))
-      .withBlock(this.buildEnumValuesBlock(node.values)).string;
+      .withBlock(this.buildEnumValuesBlock(enumName, node.values)).string;
   }
 
-  protected buildEnumValuesBlock(values: ReadonlyArray<EnumValueDefinitionNode>): string {
-    return values.map(enumOption => indent(`${this.convertName(enumOption)}${this._declarationBlockConfig.enumNameValueSeparator} ${wrapWithSingleQuotes(this.config.enumValues[(enumOption.name as any) as string] || enumOption.name)}`)).join(',\n');
+  protected buildEnumValuesBlock(typeName: string, values: ReadonlyArray<EnumValueDefinitionNode>): string {
+    return values
+      .map(enumOption => {
+        const optionName = this.convertName(enumOption);
+        let enumValue: string = (enumOption.name as any) as string;
+
+        if (this.config.enumValues[typeName] && typeof this.config.enumValues[typeName] === 'object' && this.config.enumValues[typeName][enumValue]) {
+          enumValue = this.config.enumValues[typeName][enumValue];
+        }
+
+        return indent(`${optionName}${this._declarationBlockConfig.enumNameValueSeparator} ${wrapWithSingleQuotes(enumValue)}`);
+      })
+      .join(',\n');
   }
 
   DirectiveDefinition(node: DirectiveDefinitionNode): string {

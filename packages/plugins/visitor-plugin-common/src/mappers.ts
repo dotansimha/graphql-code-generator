@@ -9,16 +9,17 @@ export interface ParsedMapper {
 export function parseMapper(mapper: string): ParsedMapper {
   if (isExternalMapper(mapper)) {
     const [source, type] = mapper.split('#');
+
     return {
       isExternal: true,
       source,
-      type
+      type,
     };
   }
 
   return {
     isExternal: false,
-    type: mapper
+    type: mapper,
   };
 }
 

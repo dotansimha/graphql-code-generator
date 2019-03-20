@@ -41,6 +41,7 @@ describe('TypeScript', () => {
       validateTs(result);
     });
   });
+
   describe('Config', () => {
     it('Should build type correctly when specified with avoidOptionals config', async () => {
       const schema = buildSchema(`
@@ -109,7 +110,7 @@ describe('TypeScript', () => {
         A
         B
       }`);
-      const result = await plugin(schema, [], { enumValues: { A: 'BOOP' }, enumsAsTypes: true }, { outputFile: '' });
+      const result = await plugin(schema, [], { enumValues: { MyEnum: { A: 'BOOP' } }, enumsAsTypes: true }, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(`
       export type MyEnum = 'BOOP' | 'B';
@@ -851,7 +852,7 @@ describe('TypeScript', () => {
 
     it('Should build enum correctly with custom values', async () => {
       const schema = buildSchema(`enum MyEnum { A, B, C }`);
-      const result = await plugin(schema, [], { enumValues: { A: 'SomeValue', B: 'TEST' } }, { outputFile: '' });
+      const result = await plugin(schema, [], { enumValues: { MyEnum: { A: 'SomeValue', B: 'TEST' } } }, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(`
         export enum MyEnum {
@@ -860,6 +861,26 @@ describe('TypeScript', () => {
           C = 'C'
         }
       `);
+
+      validateTs(result);
+    });
+
+    it('Should build enum correctly with custom imported enum', async () => {
+      const schema = buildSchema(`enum MyEnum { A, B, C }`);
+      const result = await plugin(schema, [], { enumValues: { MyEnum: './my-file#MyEnum' } }, { outputFile: '' });
+
+      expect(result).not.toContain(`export enum MyEnum`);
+      expect(result).toContain(`import { MyEnum } from './my-file';`);
+
+      validateTs(result);
+    });
+
+    it('Should build enum correctly with custom imported enum with different name', async () => {
+      const schema = buildSchema(`enum MyEnum { A, B, C }`);
+      const result = await plugin(schema, [], { enumValues: { MyEnum: './my-file#MyCustomEnum' } }, { outputFile: '' });
+
+      expect(result).not.toContain(`export enum MyEnum`);
+      expect(result).toContain(`import { MyCustomEnum as MyEnum } from './my-file';`);
 
       validateTs(result);
     });
