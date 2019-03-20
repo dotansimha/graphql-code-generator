@@ -388,6 +388,27 @@ describe('TypeScript Resolvers Plugin', () => {
     `);
   });
 
+  it('should not create IDirectiveResolvers if there is no directive defined in the schema', async () => {
+    const testSchema = buildSchema(/* GraphQL */ `
+      type Query {
+        foo: String
+      }
+    `);
+
+    const content = await plugin(
+      testSchema,
+      [],
+      { scalars: { Date: 'Date' } },
+      {
+        outputFile: 'graphql.ts',
+      }
+    );
+
+    expect(content).not.toBeSimilarStringTo(`
+      export type IDirectiveResolvers<Context = any> = {};
+    `);
+  });
+
   it('should use Iterable on ListNodes', async () => {
     const testSchema = buildSchema(/* GraphQL */ `
       type Query {
