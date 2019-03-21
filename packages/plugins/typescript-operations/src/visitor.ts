@@ -1,5 +1,5 @@
 import { GraphQLSchema } from 'graphql';
-import { ParsedDocumentsConfig, BaseDocumentsVisitor } from '@graphql-codegen/visitor-plugin-common';
+import { ParsedDocumentsConfig, BaseDocumentsVisitor, LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptSelectionSetToObject } from './ts-selection-set-to-object';
 import { TypeScriptDocumentsPluginConfig } from './index';
 import { TypeScriptOperationVariablesToObject } from '@graphql-codegen/typescript';
@@ -10,7 +10,7 @@ export interface TypeScriptDocumentsParsedConfig extends ParsedDocumentsConfig {
 }
 
 export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<TypeScriptDocumentsPluginConfig, TypeScriptDocumentsParsedConfig> {
-  constructor(schema: GraphQLSchema, config: TypeScriptDocumentsPluginConfig) {
+  constructor(schema: GraphQLSchema, config: TypeScriptDocumentsPluginConfig, allFragments: LoadedFragment[]) {
     super(
       config,
       {
@@ -20,7 +20,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<TypeScriptD
       schema
     );
 
-    this.setSelectionSetHandler(new TypeScriptSelectionSetToObject(this.scalars, this.schema, this.convertName, this.config.addTypename, this.config.immutableTypes));
+    this.setSelectionSetHandler(new TypeScriptSelectionSetToObject(this.scalars, this.schema, this.convertName, this.config.addTypename, allFragments, this.config.immutableTypes));
     this.setVariablesTransformer(new TypeScriptOperationVariablesToObject(this.scalars, this.convertName, this.config.avoidOptionals, this.config.immutableTypes));
   }
 }
