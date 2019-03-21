@@ -79,8 +79,6 @@ export const plugin: PluginFunction<TypeScriptResolversPluginConfig> = (schema: 
   const header = `
 import { ${imports.join(', ')} } from 'graphql';
 
-export type ArrayOrIterable<T> = Array<T> | Iterable<T>;
-
 ${indexSignature}
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
@@ -113,14 +111,14 @@ export type SubscriptionResolveFn<TResult, TParent, TContext, TArgs> = (
   info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
-export interface ISubscriptionResolverObject<TResult, TParent, TContext, TArgs> {
+export interface SubscriptionResolverObject<TResult, TParent, TContext, TArgs> {
   subscribe: SubscriptionSubscribeFn<TResult, TParent, TContext, TArgs>;
   resolve?: SubscriptionResolveFn<TResult, TParent, TContext, TArgs>;
 }
 
 export type SubscriptionResolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
-  | ((...args: any[]) => ISubscriptionResolverObject<TResult, TParent, TContext, TArgs>)
-  | ISubscriptionResolverObject<TResult, TParent, TContext, TArgs>;
+  | ((...args: any[]) => SubscriptionResolverObject<TResult, TParent, TContext, TArgs>)
+  | SubscriptionResolverObject<TResult, TParent, TContext, TArgs>;
 
 export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
   parent: TParent,

@@ -13,7 +13,7 @@ export interface ParsedResolversConfig extends ParsedConfig {
   mappers: {
     [typeName: string]: ParsedMapper;
   };
-  defaultMapper: ParsedMapper;
+  defaultMapper: ParsedMapper | null;
   avoidOptionals: boolean;
 }
 
@@ -181,19 +181,36 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
   }
 
   public getRootResolver(): string {
-    return new DeclarationBlock(this._declarationBlockConfig)
-      .export()
-      .asKind('type')
-      .withName(this.convertName('IResolvers'), `<Context = ${this.config.contextType.type}>`)
-      .withBlock(
-        Object.keys(this._collectedResolvers)
-          .map(schemaTypeName => {
-            const resolverType = this._collectedResolvers[schemaTypeName];
+    const name = this.convertName('Resolvers');
+    const contextType = `<Context = ${this.config.contextType.type}>`;
 
-            return indent(this.formatRootResolver(schemaTypeName, resolverType));
-          })
-          .join('\n')
-      ).string;
+    // This is here because we don't want to break IResolvers, so there is a mapping by default,
+    // and if the developer is overriding typesPrefix, it won't get generated at all.
+    const deprecatedIResolvers = !this.config.typesPrefix
+      ? `
+/**
+ * @deprecated
+ * Use "Resolvers" root object instead. If you wish to get "IResolvers", add "typesPrefix: I" to your config.
+*/
+export type IResolvers${contextType} = ${name}<Context>;`
+      : '';
+
+    return [
+      new DeclarationBlock(this._declarationBlockConfig)
+        .export()
+        .asKind('type')
+        .withName(name, contextType)
+        .withBlock(
+          Object.keys(this._collectedResolvers)
+            .map(schemaTypeName => {
+              const resolverType = this._collectedResolvers[schemaTypeName];
+
+              return indent(this.formatRootResolver(schemaTypeName, resolverType));
+            })
+            .join('\n')
+        ).string,
+      deprecatedIResolvers,
+    ].join('\n');
   }
 
   protected formatRootResolver(schemaTypeName: string, resolverType: string): string {
@@ -202,20 +219,38 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
 
   public getAllDirectiveResolvers(): string {
     if (Object.keys(this._collectedDirectiveResolvers).length) {
-      return new DeclarationBlock(this._declarationBlockConfig)
-        .export()
-        .asKind('type')
-        .withName(this.convertName('IDirectiveResolvers'), `<Context = ${this.config.contextType.type}>`)
-        .withBlock(
-          Object.keys(this._collectedDirectiveResolvers)
-            .map(schemaTypeName => {
-              const resolverType = this._collectedDirectiveResolvers[schemaTypeName];
+      const name = this.convertName('DirectiveResolvers');
+      const contextType = `<Context = ${this.config.contextType.type}>`;
 
-              return indent(this.formatRootResolver(schemaTypeName, resolverType));
-            })
-            .join('\n')
-        ).string;
+      // This is here because we don't want to break IResolvers, so there is a mapping by default,
+      // and if the developer is overriding typesPrefix, it won't get generated at all.
+      const deprecatedIResolvers = !this.config.typesPrefix
+        ? `
+/**
+* @deprecated
+* Use "DirectiveResolvers" root object instead. If you wish to get "IDirectiveResolvers", add "typesPrefix: I" to your config.
+*/
+export type IDirectiveResolvers${contextType} = ${name}<Context>;`
+        : '';
+
+      return [
+        new DeclarationBlock(this._declarationBlockConfig)
+          .export()
+          .asKind('type')
+          .withName(name, contextType)
+          .withBlock(
+            Object.keys(this._collectedDirectiveResolvers)
+              .map(schemaTypeName => {
+                const resolverType = this._collectedDirectiveResolvers[schemaTypeName];
+
+                return indent(this.formatRootResolver(schemaTypeName, resolverType));
+              })
+              .join('\n')
+          ).string,
+        deprecatedIResolvers,
+      ].join('\n');
     }
+
     return '';
   }
 
@@ -226,7 +261,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
   ListType(node: ListTypeNode): string {
     const asString = (node.type as any) as string;
 
-    return `ArrayOrIterable<${asString}>`;
+    return `Array<${asString}>`;
   }
 
   protected _getScalar(name: string): string {
@@ -249,13 +284,27 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
     return asString;
   }
 
+  protected getTypeToUse(name: string, node: { name: any }): string {
+    if (this.config.mappers[name]) {
+      return this.config.mappers[name].type;
+    } else if (this.config.defaultMapper) {
+      return this.config.defaultMapper.type;
+    } else if (this.config.scalars[name]) {
+      return this._getScalar(name);
+    }
+
+    return this.convertName(typeof node.name === 'string' ? node.name : node.name.value);
+  }
+
   FieldDefinition(node: FieldDefinitionNode, key: string | number, parent: any) {
     const hasArguments = node.arguments && node.arguments.length > 0;
 
     return (parentName: string) => {
       const original = parent[key];
-      const realType = getBaseTypeNode(original.type).name.value;
-      const mappedType = this.config.mappers[realType] ? this._variablesTransfomer.wrapAstTypeWithModifiers(this.config.mappers[realType].type, original.type) : node.type;
+      const baseType = getBaseTypeNode(original.type);
+      const realType = baseType.name.value;
+      const typeToUse = this.getTypeToUse(realType, baseType);
+      const mappedType = this._variablesTransfomer.wrapAstTypeWithModifiers(typeToUse, original.type);
       const subscriptionType = this._schema.getSubscriptionType();
       const isSubscriptionType = subscriptionType && subscriptionType.name === parentName;
 
@@ -275,17 +324,11 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
     };
   }
 
-  ObjectTypeDefinition(node: ObjectTypeDefinitionNode) {
+  ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: string | number, parent: any) {
     const name = this.convertName(node, {
       suffix: 'Resolvers',
     });
-    let type: string = null;
-
-    if (this.config.mappers[node.name as any]) {
-      type = this.config.mappers[node.name as any].type;
-    } else {
-      type = this.config.scalars[node.name as any] || this.convertName(node);
-    }
+    const type = this.getTypeToUse((node.name as any) as string, node);
 
     const block = new DeclarationBlock(this._declarationBlockConfig)
       .export()
@@ -309,11 +352,12 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
       .join(' | ');
 
     this._collectedResolvers[node.name as any] = name;
+    const type = this.getTypeToUse((node.name as any) as string, node);
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
-      .withName(name, `<Context = ${this.config.contextType.type}, ParentType = ${node.name}>`)
+      .withName(name, `<Context = ${this.config.contextType.type}, ParentType = ${type}>`)
       .withBlock(indent(`__resolveType: TypeResolveFn<${possibleTypes}, ParentType, Context>`)).string;
   }
 
@@ -379,10 +423,12 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
       }
     }
 
+    const type = this.getTypeToUse((node.name as any) as string, node);
+
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
-      .withName(name, `<Context = ${this.config.contextType.type}, ParentType = ${node.name}>`)
+      .withName(name, `<Context = ${this.config.contextType.type}, ParentType = ${type}>`)
       .withBlock([indent(`__resolveType: TypeResolveFn<${implementingTypes.map(name => `'${name}'`).join(' | ')}, ParentType, Context>,`), ...(node.fields || []).map((f: any) => f(node.name))].join('\n')).string;
   }
 

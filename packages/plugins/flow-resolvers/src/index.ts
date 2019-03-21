@@ -18,8 +18,6 @@ export const plugin: PluginFunction<FlowResolversPluginConfig> = (schema: GraphQ
   const header = `
 import { ${imports.join(', ')} } from 'graphql';
 
-export type ArrayOrIterable<T> = Array<T> | Iterable<T>;
-
 export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
   parent?: Parent,
   args?: Args,
