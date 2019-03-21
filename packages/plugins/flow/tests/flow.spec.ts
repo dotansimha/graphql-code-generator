@@ -5,6 +5,84 @@ import { validateFlow } from './validate-flow';
 
 describe('Flow Plugin', () => {
   describe('description to comment', () => {
+    it('Test for issue #1508', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        """
+        New user account input fields
+        """
+        input SignUpDetails {
+          """
+          First name
+          """
+          firstName: String!
+
+          """
+          Last name
+          """
+          lastName: String!
+
+          """
+          Email address
+          """
+          email: String!
+
+          """
+          User role
+          """
+          role: String!
+
+          """
+          A legit and secure password
+          """
+          password: String!
+
+          """
+          Repeat password
+          """
+          passwordRepeat: String!
+
+          """
+          Language
+          """
+          language: String = "en-US"
+
+          """
+          Timezone
+          """
+          timezone: String = "UTC"
+
+          """
+          CAPTCHA verification code
+          """
+          captcha: String
+        }
+      `);
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+
+      expect(result).toBeSimilarStringTo(`
+      /** New user account input fields */
+      export type SignUpDetails = {
+        /** First name */
+        firstName: $ElementType<Scalars, 'String'>,
+        /** Last name */
+        lastName: $ElementType<Scalars, 'String'>,
+        /** Email address */
+        email: $ElementType<Scalars, 'String'>,
+        /** User role */
+        role: $ElementType<Scalars, 'String'>,
+        /** A legit and secure password */
+        password: $ElementType<Scalars, 'String'>,
+        /** Repeat password */
+        passwordRepeat: $ElementType<Scalars, 'String'>,
+        /** Language */
+        language: ?$ElementType<Scalars, 'String'>,
+        /** Timezone */
+        timezone: ?$ElementType<Scalars, 'String'>,
+        /** CAPTCHA verification code */
+        captcha: ?$ElementType<Scalars, 'String'>,
+      };
+      `);
+    });
     it('Should include a description for Scalars type', async () => {
       const schema = buildSchema(/* GraphQL */ `
         "My custom scalar"
