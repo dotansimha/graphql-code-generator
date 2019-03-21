@@ -13,10 +13,6 @@ export class FlowResolversVisitor extends BaseResolversVisitor<FlowResolversPlug
     this.setVariablesTransformer(new FlowOperationVariablesToObject(this.config.scalars, this.convertName));
   }
 
-  protected formatRootResolver(schemaTypeName: string, resolverType: string): string {
-    return `${schemaTypeName}?: ${resolverType}<>,`;
-  }
-
   protected _getScalar(name: string): string {
     return `$ElementType<Scalars, '${name}'>`;
   }
