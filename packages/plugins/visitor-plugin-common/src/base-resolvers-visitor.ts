@@ -13,6 +13,7 @@ export interface ParsedResolversConfig extends ParsedConfig {
   mappers: {
     [typeName: string]: ParsedMapper;
   };
+  defaultMapper: ParsedMapper;
 }
 
 export interface RawResolversConfig extends RawConfig {
@@ -54,6 +55,28 @@ export interface RawResolversConfig extends RawConfig {
    * ```
    */
   mappers?: { [typeName: string]: string };
+  /**
+   * @name defaultMapper
+   * @type string
+   * @default any
+   * @description Allow you to set the default mapper when it's not being override by `mappers` or generics.
+   * You can specify a type name, or specify a string in `module#type` format.
+   *
+   * @example Replace any with object
+   * ```yml
+   * plugins
+   *   config:
+   *     defaultMapper: object
+   * ```
+   *
+   * @example Custom Base Object
+   * ```yml
+   * plugins
+   *   config:
+   *     defaultMapper: ./my-file#BaseObject
+   * ```
+   */
+  defaultMapper?: string;
 }
 
 export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawResolversConfig, TPluginConfig extends ParsedResolversConfig = ParsedResolversConfig> extends BaseVisitor<TRawConfig, TPluginConfig> {
@@ -68,6 +91,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
       rawConfig,
       {
         contextType: parseMapper(rawConfig.contextType || 'any'),
+        defaultMapper: parseMapper(rawConfig.defaultMapper || 'any'),
         mappers: transformMappers(rawConfig.mappers || {}),
         ...(additionalConfig || {}),
       } as any,
@@ -80,6 +104,10 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
 
   public get schema(): GraphQLSchema {
     return this._schema;
+  }
+
+  public get defaultMapperType(): string {
+    return this.config.defaultMapper.type;
   }
 
   public get mappersImports(): string[] {
@@ -105,6 +133,14 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
       }
 
       groupedMappers[this.config.contextType.source].push(this.config.contextType.type);
+    }
+
+    if (this.config.defaultMapper.isExternal) {
+      if (!groupedMappers[this.config.defaultMapper.source]) {
+        groupedMappers[this.config.defaultMapper.source] = [];
+      }
+
+      groupedMappers[this.config.defaultMapper.source].push(this.config.defaultMapper.type);
     }
 
     return Object.keys(groupedMappers).map(source => this.buildMapperImport(source, groupedMappers[source]));
