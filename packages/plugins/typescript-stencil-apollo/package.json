@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/typescript-stencil-apollo",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "GraphQL Code Generator plugin for generating Stencil Components based on GraphQL operations",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
@@ -13,12 +13,12 @@
     "stencil-apollo": "^0.0.2"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "1.0.2",
-    "@graphql-codegen/visitor-plugin-common": "1.0.2",
+    "@graphql-codegen/plugin-helpers": "1.0.3",
+    "@graphql-codegen/visitor-plugin-common": "1.0.3",
     "tslib": "1.9.3"
   },
   "devDependencies": {
-    "@graphql-codegen/testing": "1.0.2",
+    "@graphql-codegen/testing": "1.0.3",
     "@types/node": "10.14.2",
     "flow-bin": "0.95.1",
     "flow-parser": "0.95.1",
