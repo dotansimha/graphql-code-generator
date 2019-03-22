@@ -18,15 +18,14 @@ export async function codegen(options: {
 
   validateDocuments(options.schema, options.documents);
 
-  const plugins = Object.keys(options.pluginMap).map(key => options.pluginMap[key]);
+  const pluginPackages = Object.keys(options.pluginMap).map(key => options.pluginMap[key]);
 
   // merged schema with parts added by plugins
-  const schema = plugins.reduce((schema, plugin) => {
+  const schema = pluginPackages.reduce((schema, plugin) => {
     return !plugin.addToSchema ? schema : mergeSchemas([schema, plugin.addToSchema]);
   }, options.schema);
 
-  for (let i = 0; i < plugins.length; i++) {
-    const plugin = options.plugins[i];
+  for (const plugin of options.plugins) {
     const name = Object.keys(plugin)[0];
     const pluginPackage = options.pluginMap[name];
     const pluginConfig = plugin[name];
