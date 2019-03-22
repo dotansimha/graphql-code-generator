@@ -174,7 +174,7 @@ export type CommentQueryVariables = {
 };
 
 
-export type CommentQuery = ({ readonly __typename?: 'Query' } & { readonly currentUser: Maybe<({ readonly __typename?: 'User' } & Pick<User, 'login' | 'html_url'>)>, readonly entry: Maybe<({ readonly __typename?: 'Entry' } & Pick<Entry, 'id' | 'createdAt' | 'commentCount'> & { readonly postedBy: ({ readonly __typename?: 'User' } & Pick<User, 'login' | 'html_url'>), readonly comments: ReadonlyArray<Maybe<({ readonly __typename?: 'Comment' } & CommentsPageCommentFragment)>>, readonly repository: ({ readonly __typename?: 'Repository' } & Pick<Repository, 'full_name' | 'html_url'> & (({ readonly __typename?: 'Repository' } & Pick<Repository, 'description' | 'open_issues_count' | 'stargazers_count'>))) })> });
+export type CommentQuery = ({ readonly __typename?: 'Query' } & { readonly currentUser: Maybe<({ readonly __typename?: 'User' } & Pick<User, 'login' | 'html_url'>)>, readonly entry: Maybe<({ readonly __typename?: 'Entry' } & Pick<Entry, 'id' | 'createdAt' | 'commentCount'> & { readonly postedBy: ({ readonly __typename?: 'User' } & Pick<User, 'login' | 'html_url'>), readonly comments: ReadonlyArray<Maybe<({ readonly __typename?: 'Comment' } & CommentsPageCommentFragment)>>, readonly repository: ({ readonly __typename?: 'Repository' } & Pick<Repository, 'full_name' | 'html_url'> & ({ readonly __typename?: 'Repository' } & Pick<Repository, 'description' | 'open_issues_count' | 'stargazers_count'>)) })> });
 
 export type CommentsPageCommentFragment = ({ readonly __typename?: 'Comment' } & Pick<Comment, 'id' | 'createdAt' | 'content'> & { readonly postedBy: ({ readonly __typename?: 'User' } & Pick<User, 'login' | 'html_url'>) });
 
@@ -183,7 +183,7 @@ export type CurrentUserForProfileQueryVariables = {};
 
 export type CurrentUserForProfileQuery = ({ readonly __typename?: 'Query' } & { readonly currentUser: Maybe<({ readonly __typename?: 'User' } & Pick<User, 'login' | 'avatar_url'>)> });
 
-export type FeedEntryFragment = ({ readonly __typename?: 'Entry' } & Pick<Entry, 'id' | 'commentCount'> & { readonly repository: ({ readonly __typename?: 'Repository' } & Pick<Repository, 'full_name' | 'html_url'> & { readonly owner: Maybe<({ readonly __typename?: 'User' } & Pick<User, 'avatar_url'>)> }) } & (VoteButtonsFragment & RepoInfoFragment));
+export type FeedEntryFragment = ({ readonly __typename?: 'Entry' } & Pick<Entry, 'id' | 'commentCount'> & { readonly repository: ({ readonly __typename?: 'Repository' } & Pick<Repository, 'full_name' | 'html_url'> & { readonly owner: Maybe<({ readonly __typename?: 'User' } & Pick<User, 'avatar_url'>)> }) } & VoteButtonsFragment & RepoInfoFragment);
 
 export type FeedQueryVariables = {
   type: FeedType,

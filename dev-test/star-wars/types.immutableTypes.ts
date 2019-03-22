@@ -295,7 +295,7 @@ export type HeroParentTypeDependentFieldQueryVariables = {
 };
 
 
-export type HeroParentTypeDependentFieldQuery = ({ readonly __typename?: 'Query' } & { readonly hero: Maybe<(Pick<Character, 'name'> & (({ readonly __typename?: 'Human' } & { readonly friends: Maybe<ReadonlyArray<Maybe<(Pick<Character, 'name'> & (({ readonly __typename?: 'Human' } & Pick<Human, 'height'>)))>>> }) | ({ readonly __typename?: 'Droid' } & { readonly friends: Maybe<ReadonlyArray<Maybe<(Pick<Character, 'name'> & (({ readonly __typename?: 'Human' } & Pick<Human, 'height'>)))>>> })))> });
+export type HeroParentTypeDependentFieldQuery = ({ readonly __typename?: 'Query' } & { readonly hero: Maybe<(Pick<Character, 'name'> & (({ readonly __typename?: 'Human' } & { readonly friends: Maybe<ReadonlyArray<Maybe<(Pick<Character, 'name'> & ({ readonly __typename?: 'Human' } & Pick<Human, 'height'>))>>> }) | ({ readonly __typename?: 'Droid' } & { readonly friends: Maybe<ReadonlyArray<Maybe<(Pick<Character, 'name'> & ({ readonly __typename?: 'Human' } & Pick<Human, 'height'>))>>> })))> });
 
 export type HeroTypeDependentAliasedFieldQueryVariables = {
   episode?: Maybe<Episode>
