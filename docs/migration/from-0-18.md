@@ -55,9 +55,9 @@ So start by updating your `package.json`:
 ```json
 {
   "devDependencies": {
-    "@graphql-codegen/cli": "1.0.0",
-    "@graphql-codegen/typescript": "0.18.0",
-    "@graphql-codegen/typescript-operations": "0.18.0"
+    "@graphql-codegen/cli": "^1.0.0",
+    "@graphql-codegen/typescript": "^1.0.0",
+    "@graphql-codegen/typescript-operations": "^1.0.0"
   }
 }
 ```
