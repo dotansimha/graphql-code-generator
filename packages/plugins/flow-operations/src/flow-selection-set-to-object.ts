@@ -1,14 +1,23 @@
-import { SelectionSetToObject, PrimitiveField, PrimitiveAliasedFields, LinkField, ConvertNameFn, ScalarsMap } from '@graphql-codegen/visitor-plugin-common';
+import { SelectionSetToObject, PrimitiveField, PrimitiveAliasedFields, LinkField, ConvertNameFn, ScalarsMap, LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
 import { GraphQLObjectType, GraphQLNonNull, GraphQLList, isNonNullType, isListType, GraphQLSchema, GraphQLNamedType, SelectionSetNode } from 'graphql';
 import { FlowDocumentsParsedConfig } from './visitor';
 
 export class FlowSelectionSetToObject extends SelectionSetToObject {
-  constructor(_scalars: ScalarsMap, _schema: GraphQLSchema, _convertName: ConvertNameFn, _addTypename: boolean, private _visitorConfig: FlowDocumentsParsedConfig, _parentSchemaType?: GraphQLNamedType, _selectionSet?: SelectionSetNode) {
-    super(_scalars, _schema, _convertName, _addTypename, _parentSchemaType, _selectionSet);
+  constructor(
+    _scalars: ScalarsMap,
+    _schema: GraphQLSchema,
+    _convertName: ConvertNameFn,
+    _addTypename: boolean,
+    _loadedFragments: LoadedFragment[],
+    private _visitorConfig: FlowDocumentsParsedConfig,
+    _parentSchemaType?: GraphQLNamedType,
+    _selectionSet?: SelectionSetNode
+  ) {
+    super(_scalars, _schema, _convertName, _addTypename, _loadedFragments, _parentSchemaType, _selectionSet);
   }
 
   public createNext(parentSchemaType: GraphQLNamedType, selectionSet: SelectionSetNode): SelectionSetToObject {
-    return new FlowSelectionSetToObject(this._scalars, this._schema, this._convertName, this._addTypename, this._visitorConfig, parentSchemaType, selectionSet);
+    return new FlowSelectionSetToObject(this._scalars, this._schema, this._convertName, this._addTypename, this._loadedFragments, this._visitorConfig, parentSchemaType, selectionSet);
   }
 
   protected buildPrimitiveFields(parentName: string, fields: PrimitiveField[]): string | null {
