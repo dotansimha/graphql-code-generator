@@ -14,7 +14,7 @@ import {
   GraphQLField,
   SchemaMetaFieldDef,
   TypeMetaFieldDef,
-  isScalarType
+  isScalarType,
 } from 'graphql';
 import { getBaseType, quoteIfNeeded } from './utils';
 import { ScalarsMap, ConvertNameFn } from './types';
@@ -32,17 +32,15 @@ function isMetadataFieldName(name: string) {
 }
 
 function isRootType(type: GraphQLNamedType, schema: GraphQLSchema): type is GraphQLObjectType {
-  return (
-    isEqualType(type, schema.getQueryType()) ||
-    isEqualType(type, schema.getMutationType()) ||
-    isEqualType(type, schema.getSubscriptionType())
-  );
+  return isEqualType(type, schema.getQueryType()) || isEqualType(type, schema.getMutationType()) || isEqualType(type, schema.getSubscriptionType());
 }
 
 const metadataFieldMap: Record<string, GraphQLField<any, any>> = {
   __schema: SchemaMetaFieldDef,
-  __type: TypeMetaFieldDef
+  __type: TypeMetaFieldDef,
 };
+
+export type LoadedFragment = { name: string; onType: string };
 
 export class SelectionSetToObject {
   protected _primitiveFields: PrimitiveField[] = [];
@@ -57,6 +55,7 @@ export class SelectionSetToObject {
     protected _schema: GraphQLSchema,
     protected _convertName: ConvertNameFn<BaseVisitorConvertOptions>,
     protected _addTypename: boolean,
+    protected _loadedFragments: LoadedFragment[],
     protected _parentSchemaType?: GraphQLNamedType,
     protected _selectionSet?: SelectionSetNode
   ) {}
@@ -65,10 +64,7 @@ export class SelectionSetToObject {
     throw new Error(`You must override createNext in your SelectionSetToObject implementation!`);
   }
 
-  protected wrapTypeWithModifiers(
-    baseType: string,
-    type: GraphQLObjectType | GraphQLNonNull<GraphQLObjectType> | GraphQLList<GraphQLObjectType>
-  ): string {
+  protected wrapTypeWithModifiers(baseType: string, type: GraphQLObjectType | GraphQLNonNull<GraphQLObjectType> | GraphQLList<GraphQLObjectType>): string {
     throw new Error(`You must override wrapTypeWithModifiers in your SelectionSetToObject implementation!`);
   }
 
@@ -96,7 +92,7 @@ export class SelectionSetToObject {
         if (field.alias && field.alias.value) {
           this._primitiveAliasedFields.push({
             fieldName: field.name.value,
-            alias: field.alias.value
+            alias: field.alias.value,
           });
         } else {
           this._primitiveFields.push(field.name.value);
@@ -108,7 +104,7 @@ export class SelectionSetToObject {
           alias: field.alias ? field.alias.value : null,
           name: field.name.value,
           type: typeName,
-          selectionSet: this.wrapTypeWithModifiers(selectionSetToObject.string, rawType)
+          selectionSet: this.wrapTypeWithModifiers(selectionSetToObject.string, rawType),
         });
       }
     }
@@ -152,7 +148,7 @@ export class SelectionSetToObject {
     }
 
     const parentName = this._convertName(this._parentSchemaType.name, {
-      useTypesPrefix: true
+      useTypesPrefix: true,
     });
     const typeName = this._addTypename || this._queriedForTypename ? this.buildTypeNameField() : null;
     const baseFields = this.buildPrimitiveFields(parentName, this._primitiveFields);
@@ -160,9 +156,7 @@ export class SelectionSetToObject {
     const linksFields = this.buildLinkFields(this._linksFields);
     const inlineFragments = this.buildInlineFragments(this._inlineFragments);
     const fragmentSpreads = this.buildFragmentSpread(this._fragmentSpreads);
-    const fieldsSet = [typeName, baseFields, aliasBaseFields, linksFields, fragmentSpreads, inlineFragments].filter(
-      f => f && f !== ''
-    );
+    const fieldsSet = [typeName, baseFields, aliasBaseFields, linksFields, fragmentSpreads, inlineFragments].filter(f => f && f !== '');
 
     return this.mergeAllFields(fieldsSet);
   }
@@ -182,9 +176,7 @@ export class SelectionSetToObject {
       return null;
     }
 
-    return `{ ${this.formatNamedField('__typename')}${this._queriedForTypename ? '' : '?'}: ${possibleTypes
-      .map(t => `'${t}'`)
-      .join(' | ')} }`;
+    return `{ ${this.formatNamedField('__typename')}${this._queriedForTypename ? '' : '?'}: ${possibleTypes.map(t => `'${t}'`).join(' | ')} }`;
   }
 
   protected buildPrimitiveFields(parentName: string, fields: PrimitiveField[]): string | null {
@@ -200,9 +192,7 @@ export class SelectionSetToObject {
       return null;
     }
 
-    return `{ ${fields
-      .map(aliasedField => `${this.formatNamedField(aliasedField.alias)}: ${parentName}['${aliasedField.fieldName}']`)
-      .join(', ')} }`;
+    return `{ ${fields.map(aliasedField => `${this.formatNamedField(aliasedField.alias)}: ${parentName}['${aliasedField.fieldName}']`).join(', ')} }`;
   }
 
   protected formatNamedField(name: string): string {
@@ -214,15 +204,13 @@ export class SelectionSetToObject {
       return null;
     }
 
-    return `{ ${fields
-      .map(field => `${this.formatNamedField(field.alias || field.name)}: ${field.selectionSet}`)
-      .join(', ')} }`;
+    return `{ ${fields.map(field => `${this.formatNamedField(field.alias || field.name)}: ${field.selectionSet}`).join(', ')} }`;
   }
 
   protected buildInlineFragments(inlineFragments: InlineFragmentField): string | null {
     const allPossibleTypes = Object.keys(inlineFragments).map(typeName => inlineFragments[typeName].join(' & '));
 
-    return allPossibleTypes.length === 0 ? null : `(${allPossibleTypes.join(' | ')})`;
+    return quoteIfNeeded(allPossibleTypes, ' | ');
   }
 
   protected buildFragmentSpread(fragmentsSpread: FragmentSpreadField[]): string | null {
@@ -230,14 +218,32 @@ export class SelectionSetToObject {
       return null;
     }
 
-    return quoteIfNeeded(
-      fragmentsSpread.map(fragmentName =>
-        this._convertName(fragmentName, {
-          suffix: 'Fragment',
-          useTypesPrefix: true
-        })
-      ),
-      ' & '
+    const typeToFragment = fragmentsSpread.reduce(
+      (prev, fragmentName) => {
+        const fragmentDef = this._loadedFragments.find(r => r.name === fragmentName);
+
+        if (!prev[fragmentDef.onType]) {
+          prev[fragmentDef.onType] = [] as string[];
+        }
+
+        prev[fragmentDef.onType].push(fragmentName);
+
+        return prev;
+      },
+      {} as { [typeName: string]: FragmentSpreadField[] }
     );
+
+    const allPossibleTypes = Object.keys(typeToFragment).map(typeName =>
+      typeToFragment[typeName]
+        .map(fragmentName =>
+          this._convertName(fragmentName, {
+            suffix: 'Fragment',
+            useTypesPrefix: true,
+          })
+        )
+        .join(' & ')
+    );
+
+    return quoteIfNeeded(allPossibleTypes, ' | ');
   }
 }

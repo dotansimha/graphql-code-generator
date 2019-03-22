@@ -34,7 +34,7 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<TypeScriptR
   }
 
   protected formatRootResolver(schemaTypeName: string, resolverType: string): string {
-    return `${schemaTypeName}?: ${resolverType},`;
+    return `${schemaTypeName}${this.config.avoidOptionals ? '' : '?'}: ${resolverType},`;
   }
 
   private clearOptional(str: string): string {

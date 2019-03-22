@@ -29,8 +29,6 @@ export type User = {
 
 import { type GraphQLResolveInfo } from 'graphql';
 
-export type ArrayOrIterable<T> = Array<T> | Iterable<T>;
-
 export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
   parent?: Parent,
   args?: Args,
@@ -78,7 +76,7 @@ export type DirectiveResolverFn<Result = {}, Parent = {}, Args = {}, Context = {
 ) => Result | Promise<Result>;
 
 export type QueryResolvers<Context = any, ParentType = Query> = {
-  allUsers?: Resolver<ArrayOrIterable<?User>, ParentType, Context>,
+  allUsers?: Resolver<Array<?User>, ParentType, Context>,
   userById?: Resolver<?User, ParentType, Context, QueryUserByIdArgs>,
 };
 
@@ -88,8 +86,14 @@ export type UserResolvers<Context = any, ParentType = User> = {
   email?: Resolver<$ElementType<Scalars, 'String'>, ParentType, Context>,
 };
 
-export type IResolvers<Context = any> = {
-  Query?: QueryResolvers<Context><>,
-  User?: UserResolvers<Context><>,
+export type Resolvers<Context = any> = {
+  Query?: QueryResolvers<Context>,
+  User?: UserResolvers<Context>,
 };
 
+
+/**
+ * @deprecated
+ * Use "Resolvers" root object instead. If you wish to get "IResolvers", add "typesPrefix: I" to your config.
+*/
+export type IResolvers<Context = any> = Resolvers<Context>;

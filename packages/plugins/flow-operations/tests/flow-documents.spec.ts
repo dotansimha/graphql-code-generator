@@ -455,7 +455,7 @@ describe('Flow Operations Plugin', () => {
         { outputFile: '' }
       );
 
-      expect(result).toBeSimilarStringTo(`export type MeQuery = { me: ?($Pick<User, { username: * }> & (UserFieldsFragment & UserProfileFragment)) };`);
+      expect(result).toBeSimilarStringTo(`export type MeQuery = { me: ?($Pick<User, { username: * }> & UserFieldsFragment & UserProfileFragment) };`);
       validateFlow(result);
     });
 
@@ -552,7 +552,7 @@ describe('Flow Operations Plugin', () => {
         { outputFile: '' }
       );
 
-      expect(result).toBeSimilarStringTo(`export type CurrentUserQuery = { me: ?($Pick<User, { id: * }> & (($Pick<User, { username: * }> & { profile: ?$Pick<Profile, { age: * }> }))) };`);
+      expect(result).toBeSimilarStringTo(`export type CurrentUserQuery = { me: ?($Pick<User, { id: * }> & ($Pick<User, { username: * }> & { profile: ?$Pick<Profile, { age: * }> })) };`);
       validateFlow(result);
     });
 

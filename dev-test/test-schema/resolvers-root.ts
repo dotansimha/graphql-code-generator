@@ -33,8 +33,6 @@ export type User = {
 
 import { GraphQLResolveInfo } from 'graphql';
 
-export type ArrayOrIterable<T> = Array<T> | Iterable<T>;
-
 
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
@@ -67,14 +65,14 @@ export type SubscriptionResolveFn<TResult, TParent, TContext, TArgs> = (
   info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
-export interface ISubscriptionResolverObject<TResult, TParent, TContext, TArgs> {
+export interface SubscriptionResolverObject<TResult, TParent, TContext, TArgs> {
   subscribe: SubscriptionSubscribeFn<TResult, TParent, TContext, TArgs>;
   resolve?: SubscriptionResolveFn<TResult, TParent, TContext, TArgs>;
 }
 
 export type SubscriptionResolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
-  | ((...args: any[]) => ISubscriptionResolverObject<TResult, TParent, TContext, TArgs>)
-  | ISubscriptionResolverObject<TResult, TParent, TContext, TArgs>;
+  | ((...args: any[]) => SubscriptionResolverObject<TResult, TParent, TContext, TArgs>)
+  | SubscriptionResolverObject<TResult, TParent, TContext, TArgs>;
 
 export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
   parent: TParent,
@@ -93,9 +91,9 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 ) => TResult | Promise<TResult>;
 
 export type QueryRootResolvers<Context = any, ParentType = QueryRoot> = {
-  allUsers?: Resolver<ArrayOrIterable<Maybe<User>>, ParentType, Context>,
+  allUsers?: Resolver<Array<Maybe<User>>, ParentType, Context>,
   userById?: Resolver<Maybe<User>, ParentType, Context, QueryRootUserByIdArgs>,
-  answer?: Resolver<ArrayOrIterable<Scalars['Int']>, ParentType, Context>,
+  answer?: Resolver<Array<Scalars['Int']>, ParentType, Context>,
 };
 
 export type SubscriptionRootResolvers<Context = any, ParentType = SubscriptionRoot> = {
@@ -108,9 +106,15 @@ export type UserResolvers<Context = any, ParentType = User> = {
   email?: Resolver<Scalars['String'], ParentType, Context>,
 };
 
-export type IResolvers<Context = any> = {
+export type Resolvers<Context = any> = {
   QueryRoot?: QueryRootResolvers<Context>,
   SubscriptionRoot?: SubscriptionRootResolvers<Context>,
   User?: UserResolvers<Context>,
 };
 
+
+/**
+ * @deprecated
+ * Use "Resolvers" root object instead. If you wish to get "IResolvers", add "typesPrefix: I" to your config.
+*/
+export type IResolvers<Context = any> = Resolvers<Context>;

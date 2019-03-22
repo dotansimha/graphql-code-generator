@@ -1,7 +1,7 @@
 import { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
-import { visit, concatAST, GraphQLSchema } from 'graphql';
+import { visit, concatAST, GraphQLSchema, Kind, FragmentDefinitionNode } from 'graphql';
 import { FlowDocumentsVisitor } from './visitor';
-import { RawDocumentsConfig } from '@graphql-codegen/visitor-plugin-common';
+import { RawDocumentsConfig, LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
 
 export interface FlowDocumentsPluginConfig extends RawDocumentsConfig {
   /**
@@ -49,8 +49,10 @@ export const plugin: PluginFunction<FlowDocumentsPluginConfig> = (schema: GraphQ
     }, [])
   );
 
+  const allFragments: LoadedFragment[] = (allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[]).map(fragmentDef => ({ name: fragmentDef.name.value, onType: fragmentDef.typeCondition.name.value }));
+
   const visitorResult = visit(allAst, {
-    leave: new FlowDocumentsVisitor(schema, config),
+    leave: new FlowDocumentsVisitor(schema, config, allFragments),
   });
 
   return [prefix, ...visitorResult.definitions].join('\n');

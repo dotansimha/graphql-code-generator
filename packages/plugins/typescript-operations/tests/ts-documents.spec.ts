@@ -401,7 +401,107 @@ describe('TypeScript Operations Plugin', () => {
       const config = { skipTypename: true };
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
-      expect(result).toBeSimilarStringTo(`export type MeQuery = { me: Maybe<(Pick<User, 'username'> & (UserFieldsFragment & UserProfileFragment))> };`);
+      expect(result).toBeSimilarStringTo(`export type MeQuery = { me: Maybe<(Pick<User, 'username'> & UserFieldsFragment & UserProfileFragment)> };`);
+      validate(result, config);
+    });
+
+    it('Should generate the correct intersection for fragments when using with interfaces with different type', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        interface Base {
+          id: ID!
+        }
+
+        type A implements Base {
+          id: ID!
+          x: Int!
+        }
+
+        type B implements Base {
+          id: ID!
+          y: Int!
+        }
+
+        type Query {
+          b: Base
+        }
+      `);
+
+      const ast = parse(/* GraphQL */ `
+        query {
+          b {
+            ...a
+            ...b
+          }
+        }
+
+        fragment a on A {
+          id
+          x
+        }
+
+        fragment b on B {
+          id
+          y
+        }
+      `);
+      const config = { skipTypename: false };
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
+
+      expect(result).toBeSimilarStringTo(`
+      export type Unnamed_1_Query = ({ __typename?: 'Query' } & { b: Maybe<(AFragment | BFragment)> });
+
+      export type AFragment = ({ __typename?: 'A' } & Pick<A, 'id' | 'x'>);
+  
+      export type BFragment = ({ __typename?: 'B' } & Pick<B, 'id' | 'y'>);`);
+      validate(result, config);
+    });
+
+    it('Should generate the correct intersection for fragments when using with interfaces with same type', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        interface Base {
+          id: ID!
+        }
+
+        type A implements Base {
+          id: ID!
+          x: Int!
+        }
+
+        type B implements Base {
+          id: ID!
+          y: Int!
+        }
+
+        type Query {
+          b: Base
+        }
+      `);
+
+      const ast = parse(/* GraphQL */ `
+        query {
+          b {
+            ...a
+            ...b
+          }
+        }
+
+        fragment a on A {
+          id
+        }
+
+        fragment b on A {
+          x
+        }
+      `);
+      const config = { skipTypename: false };
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
+
+      expect(result).toBeSimilarStringTo(`
+      export type Unnamed_1_Query = ({ __typename?: 'Query' } & { b: Maybe<AFragment & BFragment> });
+    
+      export type AFragment = ({ __typename?: 'A' } & Pick<A, 'id'>);
+      
+      export type BFragment = ({ __typename?: 'A' } & Pick<A, 'x'>);`);
       validate(result, config);
     });
 
@@ -470,7 +570,7 @@ describe('TypeScript Operations Plugin', () => {
     `);
       const config = { skipTypename: true };
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
-      expect(result).toBeSimilarStringTo(`export type CurrentUserQuery = { me: Maybe<(Pick<User, 'id'> & ((Pick<User, 'username'> & { profile: Maybe<Pick<Profile, 'age'>> })))> };`);
+      expect(result).toBeSimilarStringTo(`export type CurrentUserQuery = { me: Maybe<(Pick<User, 'id'> & (Pick<User, 'username'> & { profile: Maybe<Pick<Profile, 'age'>> }))> };`);
       validate(result, config);
     });
 
@@ -730,7 +830,7 @@ describe('TypeScript Operations Plugin', () => {
         }
       );
 
-      expect(content).toBeSimilarStringTo(`export type PostQuery = ({ __typename?: 'Query' } & { post: ({ __typename?: 'Post' } & ({ __typename: 'Post' })) });`);
+      expect(content).toBeSimilarStringTo(`export type PostQuery = ({ __typename?: 'Query' } & { post: ({ __typename?: 'Post' } & { __typename: 'Post' }) });`);
     });
 
     it('should handle introspection types (__schema)', async () => {
