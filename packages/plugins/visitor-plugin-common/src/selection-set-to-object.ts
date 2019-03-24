@@ -15,6 +15,7 @@ import {
   SchemaMetaFieldDef,
   TypeMetaFieldDef,
   isScalarType,
+  print,
 } from 'graphql';
 import { getBaseType, quoteIfNeeded } from './utils';
 import { ScalarsMap, ConvertNameFn } from './types';
@@ -24,8 +25,7 @@ import { BaseVisitorConvertOptions } from './base-visitor';
 export type PrimitiveField = string;
 export type PrimitiveAliasedFields = { alias: string; fieldName: string };
 export type LinkField = { alias: string; name: string; type: string; selectionSet: string };
-export type FragmentSpreadField = string;
-export type InlineFragmentField = { [onType: string]: string[] };
+export type FragmentsMap = { [onType: string]: string[] };
 
 function isMetadataFieldName(name: string) {
   return ['__schema', '__type'].includes(name);
@@ -46,8 +46,7 @@ export class SelectionSetToObject {
   protected _primitiveFields: PrimitiveField[] = [];
   protected _primitiveAliasedFields: PrimitiveAliasedFields[] = [];
   protected _linksFields: LinkField[] = [];
-  protected _fragmentSpreads: FragmentSpreadField[] = [];
-  protected _inlineFragments: InlineFragmentField = {};
+  protected _fragments: FragmentsMap = {};
   protected _queriedForTypename = false;
 
   constructor(
@@ -111,19 +110,30 @@ export class SelectionSetToObject {
   }
 
   _collectFragmentSpread(node: FragmentSpreadNode) {
-    this._fragmentSpreads.push(node.name.value);
+    const loadedFragment = this._loadedFragments.find(f => f.name === node.name.value);
+
+    if (!this._fragments[loadedFragment.onType]) {
+      this._fragments[loadedFragment.onType] = [];
+    }
+
+    this._fragments[loadedFragment.onType].push(this._convertName(node.name.value, { useTypesPrefix: true, suffix: 'Fragment' }));
   }
 
   _collectInlineFragment(node: InlineFragmentNode) {
     const onType = node.typeCondition.name.value;
     const schemaType = this._schema.getType(onType);
-    const selectionSet = this.createNext(schemaType, node.selectionSet);
 
-    if (!this._inlineFragments[onType]) {
-      this._inlineFragments[onType] = [];
+    if (!schemaType) {
+      throw new Error(`Inline fragment refernces a GraphQL type "${onType}" that does not exists in your schema!`);
     }
 
-    this._inlineFragments[onType].push(selectionSet.string);
+    const selectionSet = this.createNext(schemaType, node.selectionSet);
+
+    if (!this._fragments[onType]) {
+      this._fragments[onType] = [];
+    }
+
+    this._fragments[onType].push(selectionSet.string);
   }
 
   get string(): string {
@@ -154,9 +164,8 @@ export class SelectionSetToObject {
     const baseFields = this.buildPrimitiveFields(parentName, this._primitiveFields);
     const aliasBaseFields = this.buildAliasedPrimitiveFields(parentName, this._primitiveAliasedFields);
     const linksFields = this.buildLinkFields(this._linksFields);
-    const inlineFragments = this.buildInlineFragments(this._inlineFragments);
-    const fragmentSpreads = this.buildFragmentSpread(this._fragmentSpreads);
-    const fieldsSet = [typeName, baseFields, aliasBaseFields, linksFields, fragmentSpreads, inlineFragments].filter(f => f && f !== '');
+    const fragments = this.buildFragments(this._fragments);
+    const fieldsSet = [typeName, baseFields, aliasBaseFields, linksFields, fragments].filter(f => f && f !== '');
 
     return this.mergeAllFields(fieldsSet);
   }
@@ -207,43 +216,53 @@ export class SelectionSetToObject {
     return `{ ${fields.map(field => `${this.formatNamedField(field.alias || field.name)}: ${field.selectionSet}`).join(', ')} }`;
   }
 
-  protected buildInlineFragments(inlineFragments: InlineFragmentField): string | null {
-    const allPossibleTypes = Object.keys(inlineFragments).map(typeName => inlineFragments[typeName].join(' & '));
+  protected buildFragments(fragments: FragmentsMap): string | null {
+    const interfaces: { [onType: string]: { fragments: string[]; implementingFragments: string[] } } = {};
+    const types: { [onType: string]: { fragments: string[]; implementingFragments: string[] } } = {};
+    const onInterfaces = Object.keys(fragments).filter(typeName => isInterfaceType(this._schema.getType(typeName)));
+    const onNonInterfaces = Object.keys(fragments).filter(typeName => !isInterfaceType(this._schema.getType(typeName)));
 
-    return quoteIfNeeded(allPossibleTypes, ' | ');
-  }
+    for (const typeName of onInterfaces) {
+      const interfaceFragments = fragments[typeName];
 
-  protected buildFragmentSpread(fragmentsSpread: FragmentSpreadField[]): string | null {
-    if (fragmentsSpread.length === 0) {
-      return null;
+      interfaces[typeName] = {
+        fragments: interfaceFragments,
+        implementingFragments: [],
+      };
     }
 
-    const typeToFragment = fragmentsSpread.reduce(
-      (prev, fragmentName) => {
-        const fragmentDef = this._loadedFragments.find(r => r.name === fragmentName);
+    for (const typeName of onNonInterfaces) {
+      const schemaType = this._schema.getType(typeName) as GraphQLObjectType;
 
-        if (!prev[fragmentDef.onType]) {
-          prev[fragmentDef.onType] = [] as string[];
+      if (!schemaType) {
+        throw new Error(`Inline fragment refernces a GraphQL type "${typeName}" that does not exists in your schema!`);
+      }
+
+      const typeFragments = fragments[typeName];
+      const interfacesFragments = schemaType.getInterfaces().filter(gqlInterface => !!interfaces[gqlInterface.name]);
+
+      if (interfacesFragments.length > 0) {
+        for (const relevantInterface of interfacesFragments) {
+          interfaces[relevantInterface.name].implementingFragments.push(...typeFragments);
         }
+      } else {
+        types[typeName] = {
+          fragments: typeFragments,
+          implementingFragments: [],
+        };
+      }
+    }
 
-        prev[fragmentDef.onType].push(fragmentName);
+    const mergedResult = { ...interfaces, ...types };
 
-        return prev;
-      },
-      {} as { [typeName: string]: FragmentSpreadField[] }
+    return quoteIfNeeded(
+      Object.keys(mergedResult).map(typeName => {
+        const baseFragments = quoteIfNeeded(mergedResult[typeName].fragments, ' & ');
+        const implementingFragments = quoteIfNeeded(mergedResult[typeName].implementingFragments, ' | ');
+
+        return quoteIfNeeded([baseFragments, implementingFragments].filter(a => a), ' & ');
+      }),
+      ' | '
     );
-
-    const allPossibleTypes = Object.keys(typeToFragment).map(typeName =>
-      typeToFragment[typeName]
-        .map(fragmentName =>
-          this._convertName(fragmentName, {
-            suffix: 'Fragment',
-            useTypesPrefix: true,
-          })
-        )
-        .join(' & ')
-    );
-
-    return quoteIfNeeded(allPossibleTypes, ' | ');
   }
 }

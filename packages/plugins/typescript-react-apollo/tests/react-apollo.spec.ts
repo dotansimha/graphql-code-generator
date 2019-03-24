@@ -191,7 +191,7 @@ describe('React Apollo', () => {
         }
       `;
       const feedWithRepository = gql`
-        fragment FeedWithRepository on FeedType {
+        fragment FeedWithRepository on Entry {
           id
           commentCount
           repository(search: "phrase") {
@@ -223,7 +223,7 @@ describe('React Apollo', () => {
       );
 
       expect(content).toBeSimilarStringTo(`export const FeedWithRepositoryFragmentDoc = gql\`
-fragment FeedWithRepository on FeedType {
+fragment FeedWithRepository on Entry {
   id
   commentCount
   repository(search: "phrase") {
@@ -253,7 +253,7 @@ query MyFeed {
 
     it('should avoid generating duplicate fragments', async () => {
       const simpleFeed = gql`
-        fragment Item on FeedType {
+        fragment Item on Entry {
           id
         }
       `;
@@ -291,7 +291,7 @@ query MyFeed {
           \${ItemFragmentDoc}\``);
       expect(content).toBeSimilarStringTo(`
         export const ItemFragmentDoc = gql\`
-        fragment Item on FeedType {
+        fragment Item on Entry {
           id
         }
 \`;`);
@@ -300,15 +300,17 @@ query MyFeed {
 
     it('Should generate fragments in proper order (when one depends on other)', async () => {
       const myFeed = gql`
-        fragment FeedWithRepository on FeedType {
+        fragment FeedWithRepository on Entry {
           id
           repository {
             ...RepositoryWithOwner
           }
         }
+
         fragment RepositoryWithOwner on Repository {
           full_name
         }
+
         query MyFeed {
           feed {
             ...FeedWithRepository

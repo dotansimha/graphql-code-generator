@@ -20,22 +20,21 @@ export function validateTs(
       path.join(path.dirname(require.resolve('typescript')), 'lib.dom.d.ts'),
       path.join(path.dirname(require.resolve('typescript')), 'lib.scripthost.d.ts'),
       path.join(path.dirname(require.resolve('typescript')), 'lib.es2015.d.ts'),
-      path.join(path.dirname(require.resolve('typescript')), 'lib.esnext.asynciterable.d.ts')
+      path.join(path.dirname(require.resolve('typescript')), 'lib.esnext.asynciterable.d.ts'),
     ],
-    module: ts.ModuleKind.ESNext
+    module: ts.ModuleKind.ESNext,
   },
   isTsx = false
 ): void {
+  if (process.env.SKIP_VALIDATION) {
+    return;
+  }
+
   const testFile = `test-file.${isTsx ? 'tsx' : 'ts'}`;
   const host = ts.createCompilerHost(options);
   let program = ts.createProgram([testFile], options, {
     ...host,
-    getSourceFile: (
-      fileName: string,
-      languageVersion: ts.ScriptTarget,
-      onError?: (message: string) => void,
-      shouldCreateNewSourceFile?: boolean
-    ) => {
+    getSourceFile: (fileName: string, languageVersion: ts.ScriptTarget, onError?: (message: string) => void, shouldCreateNewSourceFile?: boolean) => {
       if (fileName === testFile) {
         return ts.createSourceFile(fileName, contents, options.target);
       }
@@ -54,7 +53,7 @@ export function validateTs(
     },
     getNewLine: function() {
       return '\n';
-    }
+    },
   });
   let emitResult = program.emit();
   let allDiagnostics = emitResult.diagnostics;

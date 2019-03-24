@@ -455,7 +455,7 @@ describe('Flow Operations Plugin', () => {
         { outputFile: '' }
       );
 
-      expect(result).toBeSimilarStringTo(`export type MeQuery = { me: ?($Pick<User, { username: * }> & UserFieldsFragment & UserProfileFragment) };`);
+      expect(result).toBeSimilarStringTo(`export type MeQuery = { me: ?($Pick<User, { username: * }> & (UserFieldsFragment & UserProfileFragment)) };`);
       validateFlow(result);
     });
 
