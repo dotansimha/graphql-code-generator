@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "@graphql-codegen/testing": "1.0.3",
-    "@types/node": "10.14.2",
+    "@types/node": "10.14.3",
     "flow-bin": "0.95.1",
     "flow-parser": "0.95.2",
     "graphql": "14.1.1",
