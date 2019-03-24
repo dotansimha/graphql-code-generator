@@ -217,7 +217,7 @@ describe('TypeScript', () => {
       directive @default(
         value: Any,
       ) on ENUM_VALUE | FIELD_DEFINITION
-    
+
       type CardEdge {
         count: Int! @default(value: 1)
       }`);
@@ -332,7 +332,7 @@ describe('TypeScript', () => {
 
       expect(result).toBeSimilarStringTo(`
         export enum foo {
-          YES = 'YES', 
+          YES = 'YES',
           NO = 'NO'
         }
       `);
@@ -378,7 +378,7 @@ describe('TypeScript', () => {
 
       expect(result).toBeSimilarStringTo(`
         export enum Foo {
-          yes = 'YES', 
+          yes = 'YES',
           no = 'NO'
         }
       `);
@@ -625,7 +625,7 @@ describe('TypeScript', () => {
         type MyType {
           foo: MyOtherType!
         }
-        
+
         type MyOtherType {
           bar: String!
         }
@@ -656,7 +656,7 @@ describe('TypeScript', () => {
       type MyOtherType {
         bar: String!
       }
-      
+
       union MyUnion = MyType | MyOtherType
       `);
       const result = await plugin(schema, [], {}, { outputFile: '' });
@@ -909,9 +909,9 @@ describe('TypeScript', () => {
 
       expect(result).toBeSimilarStringTo(`
       export enum IMyEnum {
-        IA = 'A',
-        IB = 'B',
-        IC = 'C'
+        A = 'A',
+        B = 'B',
+        C = 'C'
       }`);
 
       expect(result).toBeSimilarStringTo(`

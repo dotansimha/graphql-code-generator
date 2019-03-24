@@ -420,6 +420,20 @@ query MyFeed {
       expect(content).not.toContain(`export class TestComponent`);
       await validateTypeScript(content, schema, docs, {});
     });
+
+    it('should not add typesPrefix to Component', async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
+      const content = await plugin(
+        schema,
+        docs,
+        { typesPrefix: 'I' },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      );
+
+      expect(content).not.toContain(`export class ITestComponent`);
+    });
   });
 
   describe('HOC', () => {
@@ -458,8 +472,23 @@ query MyFeed {
       );
 
       expect(content).not.toContain(`export type TestProps`);
-      expect(content).not.toContain(`export function TestHOC`);
+      expect(content).not.toContain(`export function withTest`);
       await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should not add typesPrefix to HOCs', async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
+      const content = await plugin(
+        schema,
+        docs,
+        { typesPrefix: 'I' },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      );
+
+      expect(content).toContain(`export type ITestProps`);
+      expect(content).toContain(`export function withTest`);
     });
   });
 
@@ -553,6 +582,20 @@ export function useListenToCommentsSubscription(baseOptions?: ReactApolloHooks.S
   return ReactApolloHooks.useSubscription<ListenToCommentsSubscription, ListenToCommentsSubscriptionVariables>(ListenToCommentsDocument, baseOptions);
 };`);
       await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('Should not add typesPrefix to hooks', async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
+      const content = await plugin(
+        schema,
+        docs,
+        { withHooks: true, typesPrefix: 'I' },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      );
+
+      expect(content).toContain(`export function useTestQuery`);
     });
   });
 });

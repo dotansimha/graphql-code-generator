@@ -171,14 +171,11 @@ import ${gqlImport.propName ? `{ ${gqlImport.propName === 'gql' ? 'gql' : `${gql
       return null;
     }
 
-    const documentName = this.convertName(node, {
+    const documentVariableName = this.convertName(node, {
       suffix: 'Document',
       useTypesPrefix: false,
     });
-    const documentVariableName = this.convertName(node, {
-      suffix: 'Document',
-    });
-    const documentString = `export const ${documentName}${this.config.noGraphQLTag ? ': DocumentNode' : ''} = ${this._gql(node)};`;
+    const documentString = `export const ${documentVariableName}${this.config.noGraphQLTag ? ': DocumentNode' : ''} = ${this._gql(node)};`;
     const operationType: string = toPascalCase(node.operation);
     const operationResultType: string = this.convertName(node, {
       suffix: operationType,
