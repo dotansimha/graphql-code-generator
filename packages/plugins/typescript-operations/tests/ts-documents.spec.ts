@@ -56,10 +56,13 @@ describe('TypeScript Operations Plugin', () => {
 
     union MyUnion = User | Profile
 
+    union AnyNotification = TextNotification | ImageNotification
+
     type Query {
       me: User
       unionTest: MyUnion
       notifications: [Notifiction!]!
+      mixedNotifications: [AnyNotification!]!
       dummy: String
       dummyNonNull: String!
       dummyArray: [String]
@@ -551,6 +554,31 @@ describe('TypeScript Operations Plugin', () => {
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(`export type UnionTestQuery = { unionTest: Maybe<(Pick<User, 'id'> | Pick<Profile, 'age'>)> };`);
+      validate(result, config);
+    });
+
+    it('Should support union correctly when used with inline fragments on types implementing common interface', async () => {
+      const ast = parse(`
+        query unionTest {
+          mixedNotifications {
+            ... on Notifiction {
+              id
+            }
+
+            ... on TextNotification {
+              text
+            }
+            
+            ... on ImageNotification {
+              imageUrl
+            }
+          }
+        }
+    `);
+      const config = { skipTypename: true };
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
+
+      expect(result).toBeSimilarStringTo(`export type UnionTestQuery = { mixedNotifications: Array<(Pick<Notifiction, 'id'> & (Pick<TextNotification, 'text'> | Pick<ImageNotification, 'imageUrl'>))> };`);
       validate(result, config);
     });
 
