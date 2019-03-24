@@ -52,15 +52,15 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
   }
 
   private _buildOperationHoc(node: OperationDefinitionNode, documentVariableName: string, operationResultType: string, operationVariablesTypes: string): string {
-    const operationName: string = this.convertName(node.name.value);
-    const propsTypeName: string = operationName + 'Props';
+    const operationName: string = this.convertName(node.name.value, { useTypesPrefix: false });
+    const propsTypeName: string = this.convertName(node.name.value, { suffix: 'Props' });
 
     const propsVar = `export type ${propsTypeName}<TChildProps = {}> = ${this._buildHocProps(node.name.value, node.operation)} & TChildProps;`;
 
     const mutationFn = node.operation === 'mutation' ? `export type ${this.convertName(node.name.value + 'MutationFn')} = ReactApollo.MutationFn<${operationResultType}, ${operationVariablesTypes}>;` : null;
 
     const hocString = `export function with${operationName}<TProps, TChildProps = {}>(operationOptions: ReactApollo.OperationOption<
-  TProps, 
+  TProps,
   ${operationResultType},
   ${operationVariablesTypes},
   ${propsTypeName}<TChildProps>> | undefined) {
@@ -71,7 +71,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
   }
 
   private _buildComponent(node: OperationDefinitionNode, documentVariableName: string, operationType: string, operationResultType: string, operationVariablesTypes: string): string {
-    const componentName: string = this.convertName(node.name.value + 'Component');
+    const componentName: string = this.convertName(node.name.value, { suffix: 'Component', useTypesPrefix: false });
 
     return `
 export class ${componentName} extends React.Component<Partial<ReactApollo.${operationType}Props<${operationResultType}, ${operationVariablesTypes}>>> {
@@ -84,8 +84,10 @@ export class ${componentName} extends React.Component<Partial<ReactApollo.${oper
   }
 
   private _buildHooks(node: OperationDefinitionNode, operationType: string, documentVariableName: string, operationResultType: string, operationVariablesTypes: string): string {
+    const operationName: string = this.convertName(node.name.value, { suffix: titleCase(operationType), useTypesPrefix: false });
+
     return `
-export function use${operationResultType}(baseOptions?: ReactApolloHooks.${operationType}HookOptions<${node.operation !== 'query' ? `${operationResultType}, ` : ''}${operationVariablesTypes}>) {
+export function use${operationName}(baseOptions?: ReactApolloHooks.${operationType}HookOptions<${node.operation !== 'query' ? `${operationResultType}, ` : ''}${operationVariablesTypes}>) {
   return ReactApolloHooks.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, baseOptions);
 };`;
   }
