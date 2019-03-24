@@ -555,7 +555,7 @@ describe('TypeScript Resolvers Plugin', () => {
         somethingChanged?: SubscriptionResolver<Maybe<MyOtherType>, ParentType, Context>,
       };
     `);
-    await validate(result);
+    await validate(`type MyNodeType = {};\n${result}`);
   });
 
   it('Should generate basic type resolvers with defaultMapper set to any', async () => {
