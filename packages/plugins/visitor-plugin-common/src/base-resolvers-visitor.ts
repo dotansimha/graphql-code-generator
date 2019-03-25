@@ -347,7 +347,7 @@ export type IDirectiveResolvers${contextType} = ${name}<Context>;`
     });
     const originalNode = parent[key] as UnionTypeDefinitionNode;
     const possibleTypes = originalNode.types
-      .map(node => this.convertName(node))
+      .map(node => node.name.value)
       .map(f => `'${f}'`)
       .join(' | ');
 
