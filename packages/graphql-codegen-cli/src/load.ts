@@ -119,6 +119,14 @@ export const loadDocuments = async (documentDef: Types.OperationDocument, config
     }
   }
 
+  const loadDocumentsToolkitConfig: any = {
+    ignore: Object.keys(config.generates),
+  };
+
+  if (config.pluckConfig) {
+    loadDocumentsToolkitConfig.tagPluck = config.pluckConfig;
+  }
+
   return loadDocumentsToolkit(
     documentDef as string,
     config.pluckConfig
