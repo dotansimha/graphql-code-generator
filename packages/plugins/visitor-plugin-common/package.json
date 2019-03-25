@@ -1,12 +1,12 @@
 {
   "name": "@graphql-codegen/visitor-plugin-common",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "license": "MIT",
   "scripts": {
     "build": "tsc -m esnext --outDir dist/esnext && tsc -m commonjs --outDir dist/commonjs"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "1.0.3",
+    "@graphql-codegen/plugin-helpers": "1.0.4",
     "auto-bind": "2.0.0",
     "dependency-graph": "0.8.0",
     "graphql-tag": "2.10.1",
@@ -16,7 +16,7 @@
     "graphql": "14.1.1"
   },
   "devDependencies": {
-    "@graphql-codegen/testing": "1.0.3",
+    "@graphql-codegen/testing": "1.0.4",
     "@types/graphql": "14.0.7",
     "graphql": "14.1.1",
     "typescript": "3.3.4000"
