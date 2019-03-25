@@ -46,7 +46,7 @@
     "ts-jest": "24.0.0",
     "tslint": "5.14.0",
     "typescript": "3.3.4000",
-    "react-apollo": "2.5.2",
+    "react-apollo": "2.5.3",
     "react-apollo-hooks": "0.4.3",
     "apollo-server": "2.4.8"
   },
