@@ -19,6 +19,7 @@
     "flow-bin": "0.95.1",
     "flow-parser": "0.95.2",
     "graphql": "14.1.1",
+    "graphql-subscriptions": "1.0.0",
     "graphql-tools": "4.0.4",
     "jest": "24.5.0",
     "ts-jest": "24.0.0",
