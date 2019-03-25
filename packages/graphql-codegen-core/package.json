@@ -40,7 +40,7 @@
   },
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "1.0.3",
-    "graphql-toolkit": "0.2.7",
+    "graphql-toolkit": "0.2.8",
     "tslib": "1.9.3"
   },
   "devDependencies": {
