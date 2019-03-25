@@ -127,12 +127,5 @@ export const loadDocuments = async (documentDef: Types.OperationDocument, config
     loadDocumentsToolkitConfig.tagPluck = config.pluckConfig;
   }
 
-  return loadDocumentsToolkit(
-    documentDef as string,
-    config.pluckConfig
-      ? {
-          tagPluck: config.pluckConfig,
-        }
-      : {}
-  );
+  return loadDocumentsToolkit(documentDef as string, loadDocumentsToolkitConfig);
 };

@@ -153,7 +153,7 @@ describe('generate-and-save', () => {
     if (!fs.existsSync('./temp')) {
       fs.mkdirSync('./temp');
     }
-    if (fs.existsSync('./temp/output-graphql.ts')) {
+    if (fs.existsSync('./temp/output-graphql.tsx')) {
       fs.unlinkSync('./temp/output-graphql.tsx');
     }
     fs.writeFileSync(
@@ -179,6 +179,6 @@ describe('generate-and-save', () => {
       );
     const [firstOutput] = await generateOnce();
     fs.writeFileSync(firstOutput.filename, firstOutput.content);
-    expect(await generateOnce()).not.toThrow();
+    await generateOnce();
   });
 });
