@@ -53,7 +53,7 @@ export class OperationVariablesToObject {
       typeValue = this._scalars[typeName]
         ? this.getScalar(typeName)
         : this._convertName(baseType, {
-            useTypesPrefix: true
+            useTypesPrefix: true,
           });
     }
 
@@ -78,6 +78,10 @@ export class OperationVariablesToObject {
   }
 
   protected formatTypeString(fieldType: string, isNonNullType: boolean, hasDefaultValue: boolean): string {
+    if (hasDefaultValue) {
+      return `Maybe<${fieldType}>`;
+    }
+
     return fieldType;
   }
 }
