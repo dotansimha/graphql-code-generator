@@ -119,12 +119,13 @@ export const loadDocuments = async (documentDef: Types.OperationDocument, config
     }
   }
 
-  return loadDocumentsToolkit(
-    documentDef as string,
-    config.pluckConfig
-      ? {
-          tagPluck: config.pluckConfig,
-        }
-      : {}
-  );
+  const loadDocumentsToolkitConfig: any = {
+    ignore: Object.keys(config.generates),
+  };
+
+  if (config.pluckConfig) {
+    loadDocumentsToolkitConfig.tagPluck = config.pluckConfig;
+  }
+
+  return loadDocumentsToolkit(documentDef as string, loadDocumentsToolkitConfig);
 };
