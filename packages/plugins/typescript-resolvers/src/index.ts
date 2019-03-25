@@ -140,7 +140,11 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   const printedSchema = printSchema(schema);
   const astNode = parse(printedSchema);
   const visitorResult = visit(astNode, { leave: visitor });
-  const { getRootResolver, getAllDirectiveResolvers, mappersImports } = visitor;
+  const { getRootResolver, getAllDirectiveResolvers, mappersImports, unusedMappers } = visitor;
+
+  if (unusedMappers.length) {
+    console['warn'](`Unused mappers: ${unusedMappers.join(',')}`);
+  }
 
   return [...mappersImports, header, ...visitorResult.definitions.filter(d => typeof d === 'string'), getRootResolver(), getAllDirectiveResolvers()].join('\n');
 };
