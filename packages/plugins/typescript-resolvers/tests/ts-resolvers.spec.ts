@@ -1043,4 +1043,52 @@ describe('TypeScript Resolvers Plugin', () => {
 
     validateTs(content);
   });
+  it('should generate subscription types correctly', async () => {
+    const testSchema = buildSchema(/* GraphQL */ `
+      type Subscription {
+        postAdded: Post
+      }
+
+      type Query {
+        posts: [Post]
+      }
+
+      type Mutation {
+        addPost(author: String, comment: String): Post
+      }
+
+      type Post {
+        author: String
+        comment: String
+      }
+    `);
+    const tsContent = await tsPlugin(testSchema, [], {}, { outputFile: 'graphql.ts' });
+    const resolversContent = await plugin(testSchema, [], {}, { outputFile: 'graphql.ts' });
+    const content = [
+      tsContent,
+      resolversContent,
+      `
+        import { PubSub } from 'graphql-subscriptions';
+        const pubsub = new PubSub();
+        
+        const POST_ADDED = 'POST_ADDED';
+
+        const resolvers: Resolvers = {
+          Subscription: {
+            postAdded: {
+              // Additional event labels can be passed to asyncIterator creation
+              subscribe: () => pubsub.asyncIterator([POST_ADDED]),
+            },
+          },
+          Mutation: {
+            addPost: (root, args) => {
+              pubsub.publish(POST_ADDED, { postAdded: args });
+              return args;
+            }
+          },
+        };
+      `,
+    ].join('\n');
+    validateTs(content);
+  });
 });
