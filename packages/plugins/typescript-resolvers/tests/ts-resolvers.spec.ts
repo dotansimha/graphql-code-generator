@@ -833,6 +833,35 @@ describe('TypeScript Resolvers Plugin', () => {
     await validate(result);
   });
 
+  it('Should not convert type names in unions', async () => {
+    const testSchema = buildSchema(/* GraphQL */ `
+      type CCCFoo {
+        foo: String!
+      }
+
+      type CCCBar {
+        bar: String!
+      }
+
+      type Query {
+        something: CCCUnion!
+      }
+
+      union CCCUnion = CCCFoo | CCCBar
+    `);
+
+    const tsContent = await tsPlugin(testSchema, [], {}, { outputFile: 'graphql.ts' });
+    const content = await plugin(testSchema, [], {}, { outputFile: 'graphql.ts' });
+
+    expect(content).toBeSimilarStringTo(`
+      export type CccUnionResolvers<Context = any, ParentType = CccUnion> = {
+        __resolveType: TypeResolveFn<'CCCFoo' | 'CCCBar', ParentType, Context>
+      };
+    `);
+
+    await validateTs([tsContent, content].join('\n'));
+  });
+
   it('Should generate the correct resolver args type names when typesPrefix is specified', async () => {
     const testSchema = buildSchema(`type MyType { f(a: String): String }`);
     const config = { typesPrefix: 'T' };
