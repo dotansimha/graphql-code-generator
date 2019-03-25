@@ -183,7 +183,7 @@ export type CurrentUserForProfileQueryVariables = {};
 
 export type CurrentUserForProfileQuery = ({ readonly __typename?: 'Query' } & { readonly currentUser: Maybe<({ readonly __typename?: 'User' } & Pick<User, 'login' | 'avatar_url'>)> });
 
-export type FeedEntryFragment = ({ readonly __typename?: 'Entry' } & Pick<Entry, 'id' | 'commentCount'> & { readonly repository: ({ readonly __typename?: 'Repository' } & Pick<Repository, 'full_name' | 'html_url'> & { readonly owner: Maybe<({ readonly __typename?: 'User' } & Pick<User, 'avatar_url'>)> }) } & VoteButtonsFragment & RepoInfoFragment);
+export type FeedEntryFragment = ({ readonly __typename?: 'Entry' } & Pick<Entry, 'id' | 'commentCount'> & { readonly repository: ({ readonly __typename?: 'Repository' } & Pick<Repository, 'full_name' | 'html_url'> & { readonly owner: Maybe<({ readonly __typename?: 'User' } & Pick<User, 'avatar_url'>)> }) } & (VoteButtonsFragment & RepoInfoFragment));
 
 export type FeedQueryVariables = {
   type: FeedType,

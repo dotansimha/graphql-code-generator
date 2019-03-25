@@ -184,7 +184,7 @@ export type CurrentUserForProfileQueryVariables = {};
 
 export type CurrentUserForProfileQuery = ({ __typename?: 'Query' } & { currentUser: Maybe<({ __typename?: 'User' } & Pick<User, 'login' | 'avatar_url'>)> });
 
-export type FeedEntryFragment = ({ __typename?: 'Entry' } & Pick<Entry, 'id' | 'commentCount'> & { repository: ({ __typename?: 'Repository' } & Pick<Repository, 'full_name' | 'html_url'> & { owner: Maybe<({ __typename?: 'User' } & Pick<User, 'avatar_url'>)> }) } & VoteButtonsFragment & RepoInfoFragment);
+export type FeedEntryFragment = ({ __typename?: 'Entry' } & Pick<Entry, 'id' | 'commentCount'> & { repository: ({ __typename?: 'Repository' } & Pick<Repository, 'full_name' | 'html_url'> & { owner: Maybe<({ __typename?: 'User' } & Pick<User, 'avatar_url'>)> }) } & (VoteButtonsFragment & RepoInfoFragment));
 
 export type FeedQueryVariables = {
   type: FeedType,
@@ -298,7 +298,7 @@ export class OnCommentAddedComponent extends React.Component<Partial<ReactApollo
 }
 export type OnCommentAddedProps<TChildProps = {}> = Partial<ReactApollo.DataProps<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>> & TChildProps;
 export function withOnCommentAdded<TProps, TChildProps = {}>(operationOptions: ReactApollo.OperationOption<
-  TProps, 
+  TProps,
   OnCommentAddedSubscription,
   OnCommentAddedSubscriptionVariables,
   OnCommentAddedProps<TChildProps>> | undefined) {
@@ -347,7 +347,7 @@ export class CommentComponent extends React.Component<Partial<ReactApollo.QueryP
 }
 export type CommentProps<TChildProps = {}> = Partial<ReactApollo.DataProps<CommentQuery, CommentQueryVariables>> & TChildProps;
 export function withComment<TProps, TChildProps = {}>(operationOptions: ReactApollo.OperationOption<
-  TProps, 
+  TProps,
   CommentQuery,
   CommentQueryVariables,
   CommentProps<TChildProps>> | undefined) {
@@ -375,7 +375,7 @@ export class CurrentUserForProfileComponent extends React.Component<Partial<Reac
 }
 export type CurrentUserForProfileProps<TChildProps = {}> = Partial<ReactApollo.DataProps<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>> & TChildProps;
 export function withCurrentUserForProfile<TProps, TChildProps = {}>(operationOptions: ReactApollo.OperationOption<
-  TProps, 
+  TProps,
   CurrentUserForProfileQuery,
   CurrentUserForProfileQueryVariables,
   CurrentUserForProfileProps<TChildProps>> | undefined) {
@@ -405,7 +405,7 @@ export class FeedComponent extends React.Component<Partial<ReactApollo.QueryProp
 }
 export type FeedProps<TChildProps = {}> = Partial<ReactApollo.DataProps<FeedQuery, FeedQueryVariables>> & TChildProps;
 export function withFeed<TProps, TChildProps = {}>(operationOptions: ReactApollo.OperationOption<
-  TProps, 
+  TProps,
   FeedQuery,
   FeedQueryVariables,
   FeedProps<TChildProps>> | undefined) {
@@ -433,7 +433,7 @@ export class SubmitRepositoryComponent extends React.Component<Partial<ReactApol
 export type SubmitRepositoryProps<TChildProps = {}> = Partial<ReactApollo.MutateProps<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>> & TChildProps;
 export type SubmitRepositoryMutationFn = ReactApollo.MutationFn<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>;
 export function withSubmitRepository<TProps, TChildProps = {}>(operationOptions: ReactApollo.OperationOption<
-  TProps, 
+  TProps,
   SubmitRepositoryMutation,
   SubmitRepositoryMutationVariables,
   SubmitRepositoryProps<TChildProps>> | undefined) {
@@ -461,7 +461,7 @@ export class SubmitCommentComponent extends React.Component<Partial<ReactApollo.
 export type SubmitCommentProps<TChildProps = {}> = Partial<ReactApollo.MutateProps<SubmitCommentMutation, SubmitCommentMutationVariables>> & TChildProps;
 export type SubmitCommentMutationFn = ReactApollo.MutationFn<SubmitCommentMutation, SubmitCommentMutationVariables>;
 export function withSubmitComment<TProps, TChildProps = {}>(operationOptions: ReactApollo.OperationOption<
-  TProps, 
+  TProps,
   SubmitCommentMutation,
   SubmitCommentMutationVariables,
   SubmitCommentProps<TChildProps>> | undefined) {
@@ -493,7 +493,7 @@ export class VoteComponent extends React.Component<Partial<ReactApollo.MutationP
 export type VoteProps<TChildProps = {}> = Partial<ReactApollo.MutateProps<VoteMutation, VoteMutationVariables>> & TChildProps;
 export type VoteMutationFn = ReactApollo.MutationFn<VoteMutation, VoteMutationVariables>;
 export function withVote<TProps, TChildProps = {}>(operationOptions: ReactApollo.OperationOption<
-  TProps, 
+  TProps,
   VoteMutation,
   VoteMutationVariables,
   VoteProps<TChildProps>> | undefined) {
