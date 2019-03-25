@@ -233,7 +233,7 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
   protected buildEnumValuesBlock(typeName: string, values: ReadonlyArray<EnumValueDefinitionNode>): string {
     return values
       .map(enumOption => {
-        const optionName = this.convertName(enumOption);
+        const optionName = this.convertName(enumOption, { useTypesPrefix: false });
         const comment = transformComment((enumOption.description as any) as string, 1);
         let enumValue: string = (enumOption.name as any) as string;
 
