@@ -69,6 +69,7 @@ export const createWatcher = (config: Types.Config, onNext: (result: Types.FileO
       awaitWriteFinish: true,
       ignorePermissionErrors: false,
       atomic: true,
+      ignored: Object.keys(config.generates),
     });
 
     debugLog(`[Watcher] Started`);
