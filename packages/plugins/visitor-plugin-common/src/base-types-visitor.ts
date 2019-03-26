@@ -149,34 +149,22 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
       .withComment((node.description as any) as string)
       .withBlock(node.fields.join('\n')).string;
 
-    const original = parent[key];
-    const fieldsWithArguments = original.fields.filter(field => field.arguments && field.arguments.length > 0);
-    const fieldsArguments = fieldsWithArguments.map(field => {
-      const name =
-        original.name.value +
-        this.convertName(field, {
-          useTypesPrefix: false,
-        }) +
-        'Args';
+    const argumentsBlock = this.buildArgumentsBlock(originalNode);
 
-      return new DeclarationBlock(this._declarationBlockConfig)
-        .export()
-        .asKind('type')
-        .withName(this.convertName(name))
-        .withComment((node.description as any) as string)
-        .withBlock(this._argumentsTransformer.transform<InputValueDefinitionNode>(field.arguments)).string;
-    });
-
-    return [typeDefinition, ...fieldsArguments].filter(f => f).join('\n\n');
+    return [typeDefinition, argumentsBlock].filter(f => f).join('\n\n');
   }
 
-  InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode): string {
-    return new DeclarationBlock(this._declarationBlockConfig)
+  InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode, key: number | string, parent: any): string {
+    const argumentsBlock = this.buildArgumentsBlock(parent[key] as InterfaceTypeDefinitionNode);
+
+    const interfaceDefinition = new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
       .withName(this.convertName(node))
       .withComment((node.description as any) as string)
       .withBlock(node.fields.join('\n')).string;
+
+    return [interfaceDefinition, argumentsBlock].filter(f => f).join('\n\n');
   }
 
   ScalarTypeDefinition(node: ScalarTypeDefinitionNode): string {
@@ -248,6 +236,27 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
 
   DirectiveDefinition(node: DirectiveDefinitionNode): string {
     return '';
+  }
+
+  protected buildArgumentsBlock(node: InterfaceTypeDefinitionNode | ObjectTypeDefinitionNode) {
+    const fieldsWithArguments = node.fields.filter(field => field.arguments && field.arguments.length > 0) || [];
+    return fieldsWithArguments
+      .map(field => {
+        const name =
+          node.name.value +
+          this.convertName(field, {
+            useTypesPrefix: false,
+          }) +
+          'Args';
+
+        return new DeclarationBlock(this._declarationBlockConfig)
+          .export()
+          .asKind('type')
+          .withName(this.convertName(name))
+          .withComment(node.description)
+          .withBlock(this._argumentsTransformer.transform<InputValueDefinitionNode>(field.arguments)).string;
+      })
+      .join('\n\n');
   }
 
   protected _getScalar(name: string): string {
