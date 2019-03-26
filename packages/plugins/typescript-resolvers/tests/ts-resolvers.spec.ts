@@ -160,6 +160,84 @@ describe('TypeScript Resolvers Plugin', () => {
     });
   });
 
+  it('Should use StitchingResolver by default', async () => {
+    const result = await plugin(schema, [], {}, { outputFile: '' });
+
+    expect(result).toBeSimilarStringTo(`
+      export type StitchingResolver<TResult, TParent, TContext, TArgs> = {
+        fragment: string;
+        resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
+      };
+    `);
+    expect(result).toBeSimilarStringTo(`
+      export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
+        | ResolverFn<TResult, TParent, TContext, TArgs>
+        | StitchingResolver<TResult, TParent, TContext, TArgs>;
+    `);
+
+    await validate(result);
+  });
+
+  it('Should warn when noSchemaStitching is set to false (deprecated)', async () => {
+    const spy = jest.spyOn(console, 'warn').mockImplementation();
+    const result = await plugin(
+      schema,
+      [],
+      {
+        noSchemaStitching: false,
+      },
+      { outputFile: '' }
+    );
+
+    expect(spy).toHaveBeenCalled();
+    expect(spy.mock.calls[0][0]).toContain('noSchemaStitching');
+
+    spy.mockRestore();
+
+    await validate(result);
+  });
+
+  it('Should not warn when noSchemaStitching is not defined', async () => {
+    const spy = jest.spyOn(console, 'warn').mockImplementation();
+    const result = await plugin(schema, [], {}, { outputFile: '' });
+
+    expect(spy).not.toHaveBeenCalled();
+
+    spy.mockRestore();
+
+    await validate(result);
+  });
+
+  it('Should disable StitchingResolver on demand', async () => {
+    const result = await plugin(
+      schema,
+      [],
+      {
+        noSchemaStitching: true,
+      },
+      { outputFile: '' }
+    );
+
+    expect(result).not.toBeSimilarStringTo(`
+      export type StitchingResolver<TResult, TParent, TContext, TArgs> = {
+        fragment: string;
+        resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
+      };
+    `);
+    expect(result).not.toBeSimilarStringTo(`
+      export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
+        | ResolverFn<TResult, TParent, TContext, TArgs>
+        | StitchingResolver<TResult, TParent, TContext, TArgs>;
+    `);
+
+    expect(result).toBeSimilarStringTo(`
+      export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
+        ResolverFn<TResult, TParent, TContext, TArgs>;
+    `);
+
+    await validate(result);
+  });
+
   it('Should generate basic type resolvers', async () => {
     const result = await plugin(schema, [], {}, { outputFile: '' });
 
