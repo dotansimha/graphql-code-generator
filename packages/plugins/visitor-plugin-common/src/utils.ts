@@ -197,11 +197,19 @@ export function getBaseTypeNode(typeNode: TypeNode): NamedTypeNode {
   return typeNode;
 }
 
-export function toPascalCase(str: string) {
+export function convertNameParts(str: string, func: (str: string) => string, transformUnderscore = false): string {
+  if (transformUnderscore) {
+    return func(str);
+  }
+
   return str
     .split('_')
-    .map(s => pascalCase(s))
+    .map(s => func(s))
     .join('_');
+}
+
+export function toPascalCase(str: string, transformUnderscore = false): string {
+  return convertNameParts(str, pascalCase, transformUnderscore);
 }
 
 export const wrapTypeWithModifiers = (prefix = '') => (baseType: string, type: GraphQLObjectType | GraphQLNonNull<GraphQLObjectType> | GraphQLList<GraphQLObjectType>): string => {
