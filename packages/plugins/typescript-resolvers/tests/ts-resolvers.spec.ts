@@ -1072,6 +1072,82 @@ describe('TypeScript Resolvers Plugin', () => {
 
     validateTs(content);
   });
+
+  it('should warn about unused mappers by default', async () => {
+    const spy = jest.spyOn(console, 'warn').mockImplementation();
+    const testSchema = buildSchema(/* GraphQL */ `
+      type Query {
+        comments: [Comment!]!
+      }
+
+      type User {
+        id: ID!
+        name: String!
+      }
+
+      type Comment {
+        id: ID!
+        text: String!
+        author: User!
+      }
+    `);
+
+    await plugin(
+      testSchema,
+      [],
+      {
+        mappers: {
+          Comment: 'number',
+          Post: 'string',
+        },
+      },
+      {
+        outputFile: 'graphql.ts',
+      }
+    );
+
+    expect(spy).toHaveBeenCalledWith('Unused mappers: Post');
+    spy.mockRestore();
+  });
+
+  it('should be able not to warn about unused mappers', async () => {
+    const spy = jest.spyOn(console, 'warn').mockImplementation();
+    const testSchema = buildSchema(/* GraphQL */ `
+      type Query {
+        comments: [Comment!]!
+      }
+
+      type User {
+        id: ID!
+        name: String!
+      }
+
+      type Comment {
+        id: ID!
+        text: String!
+        author: User!
+      }
+    `);
+
+    await plugin(
+      testSchema,
+      [],
+      {
+        mappers: {
+          Comment: 'number',
+          Post: 'string',
+        },
+        showUnusedMappers: false,
+      },
+      {
+        outputFile: 'graphql.ts',
+      }
+    );
+
+    expect(spy).not.toHaveBeenCalled();
+    spy.mockRestore();
+  });
+
   it('should generate subscription types correctly', async () => {
     const testSchema = buildSchema(/* GraphQL */ `
       type Subscription {

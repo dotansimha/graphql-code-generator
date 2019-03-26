@@ -40,10 +40,29 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    * ```
    */
   useIndexSignature?: boolean;
+  /**
+   * @name showUnusedMappers
+   * @type boolean
+   * @description Warns about unused mappers.
+   * @default true
+   *
+   * @example
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *    - typescript-resolvers
+   *  config:
+   *    showUnusedMappers: true
+   * ```
+   */
+  showUnusedMappers?: boolean;
 }
 
 export const plugin: PluginFunction<TypeScriptResolversPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: TypeScriptResolversPluginConfig) => {
   const imports = ['GraphQLResolveInfo'];
+  const showUnusedMappers = typeof config.showUnusedMappers === 'boolean' ? config.showUnusedMappers : true;
   const hasScalars = Object.values(schema.getTypeMap())
     .filter(t => t.astNode)
     .some(isScalarType);
@@ -120,7 +139,11 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   const printedSchema = printSchema(schema);
   const astNode = parse(printedSchema);
   const visitorResult = visit(astNode, { leave: visitor });
-  const { getRootResolver, getAllDirectiveResolvers, mappersImports } = visitor;
+  const { getRootResolver, getAllDirectiveResolvers, mappersImports, unusedMappers } = visitor;
+
+  if (showUnusedMappers && unusedMappers.length) {
+    console['warn'](`Unused mappers: ${unusedMappers.join(',')}`);
+  }
 
   return [...mappersImports, header, ...visitorResult.definitions.filter(d => typeof d === 'string'), getRootResolver(), getAllDirectiveResolvers()].join('\n');
 };

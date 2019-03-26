@@ -1031,6 +1031,32 @@ describe('TypeScript', () => {
 
       validateTs(result);
     });
+
+    it('Should generate the correct type for a method with arguments (interface object)', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        interface Node {
+          text(arg1: String!, arg2: String): String
+        }
+
+        type Book implements Node {
+          id: ID!
+          text(arg: String, arg2: String!): String
+        }
+
+        type Query {
+          books: [Book!]!
+        }
+      `);
+      const result = await plugin(testSchema, [], {}, { outputFile: '' });
+
+      expect(result).toBeSimilarStringTo(`
+        export type NodeTextArgs = {
+          arg1: Scalars['String'],
+          arg2?: Maybe<Scalars['String']>
+        };
+      `);
+      await validateTs(result);
+    });
   });
 
   describe('Enum', () => {

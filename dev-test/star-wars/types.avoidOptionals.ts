@@ -23,6 +23,13 @@ export type Character = {
   appearsIn: Array<Maybe<Episode>>,
 };
 
+
+/** A character from the Star Wars universe */
+export type CharacterFriendsConnectionArgs = {
+  first: Maybe<Scalars['Int']>,
+  after: Maybe<Scalars['ID']>
+};
+
 /** The input object sent when passing a color */
 export type ColorInput = {
   red: Scalars['Int'],
