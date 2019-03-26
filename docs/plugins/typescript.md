@@ -11,7 +11,7 @@ It generates types for your entire schema: types, input types, enums, interfaces
 
 Install using `yarn`:
 
-    $ yarn -D @graphql-codegen/typescript
+    $ yarn add -D @graphql-codegen/typescript
 
 ## Configuration
 
