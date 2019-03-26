@@ -1082,5 +1082,38 @@ describe('TypeScript Operations Plugin', () => {
       };`);
       expect(content).toBeSimilarStringTo(`export type PREFIX_UsersQuery = ({ __typename?: 'Query' } & { users: Maybe<Array<Maybe<({ __typename?: 'User' } & Pick<PREFIX_User, 'access'>)>>> });`);
     });
+
+    it('Should make arguments optional when there is a default value', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type User {
+          name: String!
+        }
+        type Query {
+          users(reverse: Boolean!): [User!]!
+        }
+      `);
+      const query = parse(/* GraphQL */ `
+        query users($reverse: Boolean = true) {
+          users(reverse: $reverse) {
+            name
+          }
+        }
+      `);
+
+      const content = await plugin(
+        testSchema,
+        [{ filePath: '', content: query }],
+        {},
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+        export type UsersQueryVariables = {
+          reverse: Maybe<Scalars['Boolean']>
+        };
+      `);
+    });
   });
 });
