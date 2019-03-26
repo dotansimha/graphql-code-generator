@@ -9,6 +9,7 @@ type ConfigComment = {
   type: string;
   description: string;
   defaultValue: string;
+  warning: string;
   examples: Example[];
 };
 
@@ -53,6 +54,7 @@ export async function generateConfig(inputFile: string): Promise<string> {
 ### ${config.name} (\`${config.type}\`${!config.defaultValue ? '' : `, default value: \`${config.defaultValue}\``})
 
 ${config.description ? config.description + '\n' : ''}
+${config.warning ? '> ' + config.warning + '\n' : ''}
 ${config.examples
   .map(example => {
     return `#### ${example.title ? `Usage Example: ${example.title}` : 'Usage Example'}
@@ -85,6 +87,11 @@ const defaultDefinition: tsdoc.TSDocTagDefinition = new tsdoc.TSDocTagDefinition
   syntaxKind: tsdoc.TSDocTagSyntaxKind.BlockTag,
   allowMultiple: false,
 });
+const warningDefinition: tsdoc.TSDocTagDefinition = new tsdoc.TSDocTagDefinition({
+  tagName: '@warning',
+  syntaxKind: tsdoc.TSDocTagSyntaxKind.BlockTag,
+  allowMultiple: false,
+});
 
 function parseTSDoc(foundComment: IFoundComment): ConfigComment {
   const customConfiguration: tsdoc.TSDocConfiguration = new tsdoc.TSDocConfiguration();
@@ -100,6 +107,7 @@ function parseTSDoc(foundComment: IFoundComment): ConfigComment {
     type: (getTagValue(typeDefinition, docComment) || '').trim(),
     description: getTagValue(descriptionDefinition, docComment, false) || '',
     defaultValue: (getTagValue(defaultDefinition, docComment) || '').trim(),
+    warning: (getTagValue(warningDefinition, docComment) || '').trim(),
     examples: extractExamples(docComment),
   };
 }
