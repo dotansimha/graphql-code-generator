@@ -1032,11 +1032,11 @@ describe('TypeScript Operations Plugin', () => {
         /** Indicates this type is an enum. \`enumValues\` is a valid field. */
         Enum = 'ENUM',
         /** Indicates this type is an input object. \`inputFields\` is a valid field. */
-        Input_Object = 'INPUT_OBJECT',
+        InputObject = 'INPUT_OBJECT',
         /** Indicates this type is a list. \`ofType\` is a valid field. */
         List = 'LIST',
         /** Indicates this type is a non-null. \`ofType\` is a valid field. */
-        Non_Null = 'NON_NULL'
+        NonNull = 'NON_NULL'
       }
       `);
 

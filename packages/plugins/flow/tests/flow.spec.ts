@@ -344,6 +344,27 @@ describe('Flow Plugin', () => {
       validateFlow(result);
     });
 
+    it('Should remove underscore from enum values', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        enum MyEnum {
+          My_Value
+          _MyOtherValue
+        }
+      `);
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+
+      expect(result).toBeSimilarStringTo(`
+      export const MyEnumValues = Object.freeze({
+        MyValue: 'My_Value', 
+        MyOtherValue: '_MyOtherValue'
+      });
+      
+      
+      export type MyEnum = $Values<typeof MyEnumValues>;`);
+
+      validateFlow(result);
+    });
+
     it('Should use custom namingConvention and add custom prefix', async () => {
       const schema = buildSchema(`type MyType { foo(a: String!, b: String, c: [String], d: [Int!]!): String }`);
       const result = await plugin(schema, [], { namingConvention: 'change-case#lowerCase', typesPrefix: 'I' }, { outputFile: '' });
@@ -511,9 +532,9 @@ describe('Flow Plugin', () => {
 
       expect(result).toBeSimilarStringTo(`
       export const IMyEnumValues = Object.freeze({
-        IA: 'A',
-        IB: 'B',
-        IC: 'C'
+        A: 'A',
+        B: 'B',
+        C: 'C'
       });`);
       expect(result).toBeSimilarStringTo(`export type IMyEnum = $Values<typeof IMyEnumValues>;`);
 

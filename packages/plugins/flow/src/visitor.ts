@@ -88,7 +88,7 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
         node.values
           .map(enumOption => {
             const comment = transformComment((enumOption.description as any) as string, 1);
-            const optionName = this.convertName(enumOption);
+            const optionName = this.convertName(enumOption, { transformUnderscore: true, useTypesPrefix: false });
             let enumValue: string = (enumOption.name as any) as string;
 
             if (this.config.enumValues[typeName] && typeof this.config.enumValues[typeName] === 'object' && this.config.enumValues[typeName][enumValue]) {

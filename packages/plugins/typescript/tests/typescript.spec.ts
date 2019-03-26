@@ -172,6 +172,26 @@ describe('TypeScript', () => {
       }`);
     });
 
+    it('Should removed underscore from enum values', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        enum MyEnum {
+          A_B_C
+          X_Y_Z
+          _TEST
+          My_Value
+        }
+      `);
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+
+      expect(result).toBeSimilarStringTo(`
+      export enum MyEnum {
+        ABC = 'A_B_C',
+        XYZ = 'X_Y_Z',
+        Test = '_TEST',
+        MyValue = 'My_Value'
+      }`);
+    });
+
     it('Should work with enum and enum values (enumsAsTypes)', async () => {
       const schema = buildSchema(/* GraphQL */ `
         "custom enum"
@@ -448,11 +468,11 @@ describe('TypeScript', () => {
         /** Indicates this type is an enum. \`enumValues\` is a valid field. */
         Enum = 'ENUM',
         /** Indicates this type is an input object. \`inputFields\` is a valid field. */
-        Input_Object = 'INPUT_OBJECT',
+        InputObject = 'INPUT_OBJECT',
         /** Indicates this type is a list. \`ofType\` is a valid field. */
         List = 'LIST',
         /** Indicates this type is a non-null. \`ofType\` is a valid field. */
-        Non_Null = 'NON_NULL'
+        NonNull = 'NON_NULL'
       }
       `);
     });

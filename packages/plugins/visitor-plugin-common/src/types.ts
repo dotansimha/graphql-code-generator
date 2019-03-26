@@ -7,11 +7,12 @@ export type ConvertNameFn<T = {}> = ConvertFn<T>;
 export interface ConvertOptions {
   prefix?: string;
   suffix?: string;
+  transformUnderscore?: boolean;
 }
 
 export type ConvertFn<T = {}> = (node: ASTNode | string, options?: ConvertOptions & T) => string;
 export type NamingConventionResolvePath = string; // module-name#exportedFunction
-export type NamingConvention = string | NamingConventionMap;
+export type NamingConvention = string | Function | NamingConventionMap;
 
 export interface NamingConventionMap {
   enumValues?: 'keep' | NamingConventionResolvePath | Function;
