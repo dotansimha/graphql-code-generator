@@ -96,7 +96,7 @@ const warningDefinition: tsdoc.TSDocTagDefinition = new tsdoc.TSDocTagDefinition
 function parseTSDoc(foundComment: IFoundComment): ConfigComment {
   const customConfiguration: tsdoc.TSDocConfiguration = new tsdoc.TSDocConfiguration();
 
-  customConfiguration.addTagDefinitions([nameDefinition, typeDefinition, descriptionDefinition, defaultDefinition]);
+  customConfiguration.addTagDefinitions([nameDefinition, typeDefinition, descriptionDefinition, warningDefinition, defaultDefinition]);
 
   const tsdocParser: tsdoc.TSDocParser = new tsdoc.TSDocParser(customConfiguration);
   const parserContext: tsdoc.ParserContext = tsdocParser.parseRange(foundComment.textRange);
@@ -107,7 +107,7 @@ function parseTSDoc(foundComment: IFoundComment): ConfigComment {
     type: (getTagValue(typeDefinition, docComment) || '').trim(),
     description: getTagValue(descriptionDefinition, docComment, false) || '',
     defaultValue: (getTagValue(defaultDefinition, docComment) || '').trim(),
-    warning: (getTagValue(warningDefinition, docComment) || '').trim(),
+    warning: getTagValue(warningDefinition, docComment, false) || '',
     examples: extractExamples(docComment),
   };
 }
