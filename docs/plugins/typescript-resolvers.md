@@ -49,14 +49,18 @@ This will make the resolver fully typed and compatible with typescript compiler,
 It adds the generic resolvers signature to the top of the file:
 
 ```typescript
-export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (parent: Parent, args: Args, context: Context, info: GraphQLResolveInfo) => Promise<Result> | Result;
+export type ResolverFn<TResult, TParent, TContext, TArgs> = (parent: TParent, args: TArgs, context: TContext, info: GraphQLResolveInfo) => Promise<TResult> | TResult;
 
-export interface ISubscriptionResolverObject<Result, Parent, Context, Args> {
-  subscribe<R = Result, P = Parent>(parent: P, args: Args, context: Context, info: GraphQLResolveInfo): AsyncIterator<R | Result>;
-  resolve?<R = Result, P = Parent>(parent: P, args: Args, context: Context, info: GraphQLResolveInfo): R | Result | Promise<R | Result>;
-}
+export type StitchingResolver<TResult, TParent, TContext, TArgs> = {
+  fragment: string;
+  resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
+};
 
-export type SubscriptionResolver<Result, Parent = {}, Context = {}, Args = {}> = ((...args: any[]) => ISubscriptionResolverObject<Result, Parent, Context, Args>) | ISubscriptionResolverObject<Result, Parent, Context, Args>;
+export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFn<TResult, TParent, TContext, TArgs> | StitchingResolver<TResult, TParent, TContext, TArgs>;
+
+export type SubscriptionSubscribeFn<TResult, TParent, TContext, TArgs> = (parent: TParent, args: TArgs, context: TContext, info: GraphQLResolveInfo) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
+
+export type SubscriptionResolveFn<TResult, TParent, TContext, TArgs> = (parent: TParent, args: TArgs, context: TContext, info: GraphQLResolveInfo) => TResult | Promise<TResult>;
 ```
 
 Then, it creates a default TypeScript resolvers signature, according to your GraphQL schema:
@@ -80,7 +84,6 @@ Given the schema above, the output should be the following:
 export interface QueryResolvers<Context = any, ParentType = Query> {
   allUsers?: Resolver<Array<Maybe<User>>, ParentType, Context>;
   userById?: Resolver<Maybe<User>, ParentType, Context, QueryUserByIdArgs>;
-  answer?: Resolver<Array<number>, ParentType, Context>;
 }
 
 export interface UserResolvers<Context = any, ParentType = User> {
