@@ -217,6 +217,26 @@ export class SelectionSetToObject {
   }
 
   protected buildFragments(fragments: FragmentsMap): string | null {
+    if (isUnionType(this._parentSchemaType) || isInterfaceType(this._parentSchemaType)) {
+      return this._handleFragmentsForUnionAndInterface(fragments);
+    } else if (isObjectType(this._parentSchemaType)) {
+      return this._handleFragmentsForObjectType(fragments);
+    }
+
+    return null;
+  }
+
+  protected _handleFragmentsForObjectType(fragments: FragmentsMap): string | null {
+    const fragmentsValue = Object.keys(fragments).reduce((prev, fragmentName) => {
+      const fragmentArr = fragments[fragmentName];
+
+      return [...prev, ...fragmentArr];
+    }, []);
+
+    return quoteIfNeeded(fragmentsValue, ' & ');
+  }
+
+  protected _handleFragmentsForUnionAndInterface(fragments: FragmentsMap): string | null {
     const interfaces: { [onType: string]: { fragments: string[]; implementingFragments: string[] } } = {};
     const types: { [onType: string]: { fragments: string[]; implementingFragments: string[] } } = {};
     const onInterfaces = Object.keys(fragments).filter(typeName => isInterfaceType(this._schema.getType(typeName)));

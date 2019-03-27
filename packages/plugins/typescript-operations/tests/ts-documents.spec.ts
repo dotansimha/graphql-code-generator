@@ -466,6 +466,55 @@ describe('TypeScript Operations Plugin', () => {
       validate(result, config);
     });
 
+    it('Should generate the correct intersection for fragments when type implements 2 interfaces', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        interface Base1 {
+          foo: String!
+        }
+
+        interface Base2 {
+          bar: String!
+        }
+
+        type MyType implements Base1 & Base2 {
+          foo: String!
+          bar: String!
+          test: String!
+        }
+
+        type Query {
+          myType: MyType!
+        }
+      `);
+
+      const ast = parse(/* GraphQL */ `
+        query {
+          myType {
+            ...a
+            ...b
+            ...c
+          }
+        }
+
+        fragment c on MyType {
+          test
+        }
+
+        fragment a on Base1 {
+          foo
+        }
+
+        fragment b on Base2 {
+          bar
+        }
+      `);
+      const config = {};
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
+
+      expect(result).toBeSimilarStringTo(`export type Unnamed_1_Query = ({ __typename?: 'Query' } & { myType: ({ __typename?: 'MyType' } & (AFragment & BFragment & CFragment)) })`);
+      validate(result, config);
+    });
+
     it('Should generate the correct intersection for fragments when using with interfaces with same type', async () => {
       const schema = buildSchema(/* GraphQL */ `
         interface Base {
