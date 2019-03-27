@@ -9,6 +9,8 @@ describe('TypeScript Operations Plugin', () => {
   const gitHuntSchema = buildClientSchema(JSON.parse(readFileSync('../../../dev-test/githunt/schema.json', 'utf-8')));
 
   const schema = buildSchema(/* GraphQL */ `
+    scalar DateTime
+
     type User {
       id: ID!
       username: String!
@@ -858,6 +860,23 @@ describe('TypeScript Operations Plugin', () => {
           testArray?: Maybe<Array<Maybe<Scalars['String']>>>,
           requireString: Array<Maybe<Scalars['String']>>,
           innerRequired: Array<Scalars['String']>
+        };`
+      );
+      validate(result, config);
+    });
+
+    it('Should handle operation variables correctly when they use custom scalars', async () => {
+      const ast = parse(`
+        query testQuery($test: DateTime) {
+          dummy
+        }
+      `);
+      const config = { skipTypename: true };
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
+
+      expect(result).toBeSimilarStringTo(
+        `export type TestQueryQueryVariables = {
+          test?: Maybe<Scalars['DateTime']>
         };`
       );
       validate(result, config);
