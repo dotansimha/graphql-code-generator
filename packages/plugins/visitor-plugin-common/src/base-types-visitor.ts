@@ -139,7 +139,7 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: number | string, parent: any): string {
     const originalNode = parent[key] as ObjectTypeDefinitionNode;
-    const interfaces = originalNode.interfaces && node.interfaces.length > 0 ? originalNode.interfaces.map(i => this.convertName(i)).join(' & ') + ' & ' : '';
+    const interfaces = originalNode.interfaces && node.interfaces.length > 0 ? originalNode.interfaces.map(i => this.convertName(i)).join(' & ') + (node.fields.length ? ' & ' : '') : '';
 
     const typeDefinition = new DeclarationBlock(this._declarationBlockConfig)
       .export()
