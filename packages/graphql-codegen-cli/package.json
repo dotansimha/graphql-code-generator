@@ -67,7 +67,7 @@
     "graphql-tools": "4.0.4",
     "indent-string": "3.2.0",
     "inquirer": "6.2.2",
-    "is-glob": "4.0.0",
+    "is-glob": "4.0.1",
     "is-valid-path": "0.1.1",
     "js-yaml": "3.13.0",
     "json-to-pretty-yaml": "1.2.2",
