@@ -91,6 +91,14 @@ export interface RawResolversConfig extends RawConfig {
    *   config:
    *     defaultMapper: ./my-file#BaseObject
    * ```
+   *
+   * @example Wrap default types with Partial
+   * You can also specify a custom wrapper for the original type, without overring the original generated types, use "{T}" to specify the identifier. (for flow, use `$Shape<{T}>`)
+   * ```yml
+   * plugins
+   *   config:
+   *     defaultMapper: Partial<{T}>
+   * ```
    */
   defaultMapper?: string;
   /**
@@ -174,7 +182,11 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
           this.markMapperAsUsed(typeName);
           prev[typeName] = this.config.mappers[typeName].type;
         } else if (this.config.defaultMapper && this.config.defaultMapper.type) {
-          prev[typeName] = this.config.defaultMapper.type;
+          if (this.config.defaultMapper.type.includes('{T}')) {
+            prev[typeName] = this.config.scalars[typeName] ? this._getScalar(typeName) : this.config.defaultMapper.type.replace('{T}', this.convertName(typeName));
+          } else {
+            prev[typeName] = this.config.defaultMapper.type;
+          }
         } else if (this.config.scalars[typeName]) {
           prev[typeName] = this._getScalar(typeName);
         } else {
@@ -294,7 +306,13 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
         groupedMappers[this.config.defaultMapper.source] = [];
       }
 
-      groupedMappers[this.config.defaultMapper.source].push(this.config.defaultMapper.type);
+      let identifier = this.config.defaultMapper.type;
+
+      if (identifier.includes('{T}')) {
+        identifier = identifier.replace(/<.*?>/g, '');
+      }
+
+      groupedMappers[this.config.defaultMapper.source].push(identifier);
     }
 
     return Object.keys(groupedMappers).map(source => this.buildMapperImport(source, groupedMappers[source]));

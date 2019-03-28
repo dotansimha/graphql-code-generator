@@ -55,6 +55,61 @@ describe('ResolversTypes', () => {
     };`);
   });
 
+  it('Should build ResolversTypes with defaultMapper set using {T}', async () => {
+    const result = await plugin(
+      schema,
+      [],
+      {
+        defaultMapper: 'Partial<{T}>',
+      },
+      { outputFile: '' }
+    );
+
+    expect(result).toBeSimilarStringTo(`
+    export type ResolversTypes = {
+      Query: Partial<Query>,
+      MyType: Partial<MyType>,
+      String: Scalars['String'],
+      MyOtherType: Partial<MyOtherType>,
+      Subscription: Partial<Subscription>,
+      Boolean: Scalars['Boolean'],
+      Node: Partial<Node>,
+      ID: Scalars['ID'],
+      SomeNode: Partial<SomeNode>,
+      MyUnion: Partial<MyUnion>,
+      MyScalar: Scalars['MyScalar'],
+      Int: Scalars['Int'],
+    };`);
+  });
+
+  it('Should build ResolversTypes with defaultMapper set using {T} with external identifier', async () => {
+    const result = await plugin(
+      schema,
+      [],
+      {
+        defaultMapper: './my-wrapper#CustomPartial<{T}>',
+      },
+      { outputFile: '' }
+    );
+
+    expect(result).toBeSimilarStringTo(`import { CustomPartial } from './my-wrapper';`);
+    expect(result).toBeSimilarStringTo(`
+    export type ResolversTypes = {
+      Query: CustomPartial<Query>,
+      MyType: CustomPartial<MyType>,
+      String: Scalars['String'],
+      MyOtherType: CustomPartial<MyOtherType>,
+      Subscription: CustomPartial<Subscription>,
+      Boolean: Scalars['Boolean'],
+      Node: CustomPartial<Node>,
+      ID: Scalars['ID'],
+      SomeNode: CustomPartial<SomeNode>,
+      MyUnion: CustomPartial<MyUnion>,
+      MyScalar: Scalars['MyScalar'],
+      Int: Scalars['Int'],
+    };`);
+  });
+
   it('Should build ResolversTypes with defaultMapper set', async () => {
     const result = await plugin(
       schema,

@@ -599,4 +599,59 @@ describe('ResolversTypes', () => {
     };`);
     await validate(`type MyTypeCustom = {}; type MyOtherTypeCustom = {}; ${result}`);
   });
+
+  it('Should build ResolversTypes with defaultMapper set using {T}', async () => {
+    const result = await plugin(
+      schema,
+      [],
+      {
+        defaultMapper: '$Shape<{T}>',
+      },
+      { outputFile: '' }
+    );
+
+    expect(result).toBeSimilarStringTo(`
+    export type ResolversTypes = {
+      Query: $Shape<Query>,
+      MyType: $Shape<MyType>,
+      String: $ElementType<Scalars, 'String'>,
+      MyOtherType: $Shape<MyOtherType>,
+      Subscription: $Shape<Subscription>,
+      Boolean: $ElementType<Scalars, 'Boolean'>,
+      Node: $Shape<Node>,
+      ID: $ElementType<Scalars, 'ID'>,
+      SomeNode: $Shape<SomeNode>,
+      MyUnion: $Shape<MyUnion>,
+      MyScalar: $ElementType<Scalars, 'MyScalar'>,
+      Int: $ElementType<Scalars, 'Int'>,
+    };`);
+  });
+
+  it('Should build ResolversTypes with defaultMapper set using {T} with external identifier', async () => {
+    const result = await plugin(
+      schema,
+      [],
+      {
+        defaultMapper: './my-wrapper#CustomPartial<{T}>',
+      },
+      { outputFile: '' }
+    );
+
+    expect(result).toBeSimilarStringTo(`import { type CustomPartial } from './my-wrapper';`);
+    expect(result).toBeSimilarStringTo(`
+    export type ResolversTypes = {
+      Query: CustomPartial<Query>,
+      MyType: CustomPartial<MyType>,
+      String: $ElementType<Scalars, 'String'>,
+      MyOtherType: CustomPartial<MyOtherType>,
+      Subscription: CustomPartial<Subscription>,
+      Boolean: $ElementType<Scalars, 'Boolean'>,
+      Node: CustomPartial<Node>,
+      ID: $ElementType<Scalars, 'ID'>,
+      SomeNode: CustomPartial<SomeNode>,
+      MyUnion: CustomPartial<MyUnion>,
+      MyScalar: $ElementType<Scalars, 'MyScalar'>,
+      Int: $ElementType<Scalars, 'Int'>,
+    };`);
+  });
 });
