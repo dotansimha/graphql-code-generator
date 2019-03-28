@@ -640,6 +640,27 @@ describe('TypeScript', () => {
       validateTs(result);
     });
 
+    it('Should build type correctly when implementing interface without adding fields', async () => {
+      const schema = buildSchema(`
+        interface MyInterface {
+          foo: String!
+        }
+
+        type MyType implements MyInterface
+        `);
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+
+      expect(result).toBeSimilarStringTo(`
+        export type MyInterface = {
+          foo: Scalars['String'],
+        };
+      `);
+      expect(result).toBeSimilarStringTo(`
+        export type MyType = MyInterface;
+      `);
+      validateTs(result);
+    });
+
     it('Should build type correctly with links between types', async () => {
       const schema = buildSchema(`
         type MyType {
