@@ -100,6 +100,8 @@ export interface RawResolversConfig extends RawConfig {
   avoidOptionals?: boolean;
 }
 
+export type ResolverTypes = { [gqlType: string]: string };
+
 export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawResolversConfig, TPluginConfig extends ParsedResolversConfig = ParsedResolversConfig> extends BaseVisitor<TRawConfig, TPluginConfig> {
   protected _parsedConfig: TPluginConfig;
   protected _declarationBlockConfig: DeclarationBlockConfig = {};
@@ -107,6 +109,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
   protected _collectedDirectiveResolvers: { [key: string]: string } = {};
   protected _variablesTransfomer: OperationVariablesToObject;
   protected _usedMappers: { [key: string]: boolean } = {};
+  protected _resolversTypes: ResolverTypes = {};
 
   constructor(rawConfig: TRawConfig, additionalConfig: TPluginConfig, private _schema: GraphQLSchema, defaultScalars: ScalarsMap = DEFAULT_SCALARS) {
     super(
@@ -117,12 +120,48 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
         defaultMapper: rawConfig.defaultMapper ? parseMapper(rawConfig.defaultMapper || 'any') : null,
         mappers: transformMappers(rawConfig.mappers || {}),
         ...(additionalConfig || {}),
-      } as any,
+      } as TPluginConfig,
       buildScalars(_schema, defaultScalars)
     );
 
     autoBind(this);
     this._variablesTransfomer = new OperationVariablesToObject(this.scalars, this.convertName);
+
+    const allSchemaTypes = this._schema.getTypeMap();
+    this._resolversTypes = Object.keys(allSchemaTypes).reduce(
+      (prev: ResolverTypes, typeName: string) => {
+        if (typeName.startsWith('__')) {
+          return prev;
+        }
+
+        if (this.config.mappers[typeName] && this.config.mappers[typeName].type) {
+          this.markMapperAsUsed(typeName);
+          prev[typeName] = this.config.mappers[typeName].type;
+        } else if (this.config.defaultMapper && this.config.defaultMapper.type) {
+          prev[typeName] = this.config.defaultMapper.type;
+        } else if (this.config.scalars[typeName]) {
+          prev[typeName] = this._getScalar(typeName);
+        } else {
+          prev[typeName] = this.convertName(typeName);
+        }
+
+        return prev;
+      },
+      {} as ResolverTypes
+    );
+  }
+
+  public buildResolversTypes(): string {
+    return new DeclarationBlock(this._declarationBlockConfig)
+      .export()
+      .asKind('type')
+      .withName(this.convertName('ResolversTypes'))
+      .withComment('Mapping between all available schema types and the resolvers types')
+      .withBlock(
+        Object.keys(this._resolversTypes)
+          .map(typeName => indent(`${typeName}: ${this._resolversTypes[typeName]},`))
+          .join('\n')
+      ).string;
   }
 
   public get schema(): GraphQLSchema {
@@ -293,17 +332,10 @@ export type IDirectiveResolvers${contextType} = ${name}<Context>;`
     this._usedMappers[name] = true;
   }
 
-  protected getTypeToUse(name: string, node: { name: any }): string {
-    if (this.config.mappers[name]) {
-      this.markMapperAsUsed(name);
-      return this.config.mappers[name].type;
-    } else if (this.config.defaultMapper) {
-      return this.config.defaultMapper.type;
-    } else if (this.config.scalars[name]) {
-      return this._getScalar(name);
-    }
+  protected getTypeToUse(name: string): string {
+    const resolversType = this.convertName('ResolversTypes');
 
-    return this.convertName(typeof node.name === 'string' ? node.name : node.name.value);
+    return `${resolversType}['${name}']`;
   }
 
   FieldDefinition(node: FieldDefinitionNode, key: string | number, parent: any) {
@@ -313,7 +345,7 @@ export type IDirectiveResolvers${contextType} = ${name}<Context>;`
       const original = parent[key];
       const baseType = getBaseTypeNode(original.type);
       const realType = baseType.name.value;
-      const typeToUse = this.getTypeToUse(realType, baseType);
+      const typeToUse = this.getTypeToUse(realType);
       const mappedType = this._variablesTransfomer.wrapAstTypeWithModifiers(typeToUse, original.type);
       const subscriptionType = this._schema.getSubscriptionType();
       const isSubscriptionType = subscriptionType && subscriptionType.name === parentName;
@@ -338,7 +370,7 @@ export type IDirectiveResolvers${contextType} = ${name}<Context>;`
     const name = this.convertName(node, {
       suffix: 'Resolvers',
     });
-    const type = this.getTypeToUse((node.name as any) as string, node);
+    const type = this.getTypeToUse((node.name as any) as string);
 
     const block = new DeclarationBlock(this._declarationBlockConfig)
       .export()
@@ -362,7 +394,7 @@ export type IDirectiveResolvers${contextType} = ${name}<Context>;`
       .join(' | ');
 
     this._collectedResolvers[node.name as any] = name;
-    const type = this.getTypeToUse((node.name as any) as string, node);
+    const type = this.getTypeToUse((node.name as any) as string);
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
@@ -373,7 +405,7 @@ export type IDirectiveResolvers${contextType} = ${name}<Context>;`
 
   ScalarTypeDefinition(node: ScalarTypeDefinitionNode): string {
     const nameAsString = (node.name as any) as string;
-    const baseName = this.scalars[nameAsString] ? this._getScalar(nameAsString) : this.convertName(node);
+    const baseName = this.getTypeToUse(nameAsString);
 
     this._collectedResolvers[node.name as any] = 'GraphQLScalarType';
 
@@ -433,7 +465,7 @@ export type IDirectiveResolvers${contextType} = ${name}<Context>;`
       }
     }
 
-    const type = this.getTypeToUse((node.name as any) as string, node);
+    const type = this.getTypeToUse((node.name as any) as string);
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
