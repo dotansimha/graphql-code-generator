@@ -55,6 +55,67 @@ describe('ResolversTypes', () => {
     };`);
   });
 
+  it('should map to a custom type on every level (+ actual usage in code)', async () => {
+    const testSchema = buildSchema(/* GraphQL */ `
+      type User {
+        id: ID!
+        name: String!
+        chats: [Chat!]
+      }
+
+      type Chat {
+        id: ID!
+        owner: User!
+        members: [User!]
+      }
+
+      type Query {
+        me: User
+      }
+    `);
+    const result = await plugin(
+      testSchema,
+      [],
+      {
+        mappers: {
+          ID: 'number',
+          Chat: 'number',
+        },
+      },
+      { outputFile: '' }
+    );
+
+    const usage = `
+      const resolvers: Resolvers = {
+        Query: {
+          me() {
+            return {
+              id: 1,
+              name: 'Foo',
+              chats: [0,1,2],
+            };
+          }
+        },
+        Chat: {
+          id(parent) {
+            const id: number = parent;
+            return id;
+          }
+        }
+      }
+    `;
+
+    await validate(
+      [result, usage].join('\n\n'),
+      {
+        scalars: {
+          ID: 'number',
+        },
+      },
+      testSchema
+    );
+  });
+
   it('Should build ResolversTypes with defaultMapper set using {T}', async () => {
     const result = await plugin(
       schema,
@@ -108,6 +169,87 @@ describe('ResolversTypes', () => {
       MyScalar: Scalars['MyScalar'],
       Int: Scalars['Int'],
     };`);
+  });
+
+  it('Should map to a custom type on every level when {T} is used as default mapper', async () => {
+    const testSchema = buildSchema(/* GraphQL */ `
+      type User {
+        id: ID!
+        name: String!
+        chats: [Chat!]
+      }
+
+      type Chat {
+        id: ID!
+        owner: User!
+        members: [User!]
+      }
+
+      type Query {
+        me: User
+      }
+    `);
+    const result = await plugin(
+      testSchema,
+      [],
+      {
+        defaultMapper: 'Partial<{T}>',
+        mappers: {
+          User: 'number',
+        },
+      },
+      { outputFile: '' }
+    );
+
+    // expect(result).toBeSimilarStringTo(`
+    //   export type ResolversTypes = {
+    //     Query: Partial<Query>,
+    //     User: CustomUser,
+    //     ID: Scalars['ID'],
+    //     String: Scalars['String'],
+    //     Chat: Partial<Chat>,
+    //     Boolean: Scalars['Boolean'],
+    //   };
+    // `);
+
+    const usage = `
+      const resolvers: Resolvers = {
+        Query: {
+          me() {
+            return 1;
+          }
+        },
+        Chat: {
+          id(chat) {
+            return chat.id;
+          },
+          owner(chat) {
+            const id: number = chat.owner;
+            return id;
+          },
+          members(chat) {
+            const ids: number[] = chat.members;
+            return ids;
+          }
+        },
+        User: {
+          id(parent) {
+            const id: number = parent;
+            return id;
+          }
+        }
+      }
+    `;
+
+    await validate(
+      [result, usage].join('\n\n'),
+      {
+        scalars: {
+          ID: 'number',
+        },
+      },
+      testSchema
+    );
   });
 
   it('Should build ResolversTypes with defaultMapper set', async () => {
