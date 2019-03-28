@@ -11,7 +11,6 @@ export class FlowResolversVisitor extends BaseResolversVisitor<FlowResolversPlug
     super(pluginConfig, null, schema);
     autoBind(this);
     this.setVariablesTransformer(new FlowOperationVariablesToObject(this.config.scalars, this.convertName));
-    this._enableDefaultMapperGenerics = false;
   }
 
   protected _getScalar(name: string): string {
