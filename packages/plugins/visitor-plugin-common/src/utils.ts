@@ -212,18 +212,6 @@ export function toPascalCase(str: string, transformUnderscore = false): string {
   return convertNameParts(str, pascalCase, transformUnderscore);
 }
 
-export const wrapTypeWithModifiers = (prefix = '') => (baseType: string, type: GraphQLObjectType | GraphQLNonNull<GraphQLObjectType> | GraphQLList<GraphQLObjectType>): string => {
-  if (isNonNullType(type)) {
-    return wrapTypeWithModifiers(prefix)(baseType, type.ofType).substr(1);
-  } else if (isListType(type)) {
-    const innerType = wrapTypeWithModifiers(prefix)(baseType, type.ofType);
-
-    return `${prefix}Array<${innerType}>`;
-  } else {
-    return `${prefix}${baseType}`;
-  }
-};
-
 export function buildScalars(schema: GraphQLSchema, scalarsMapping: ScalarsMap): ScalarsMap {
   const typeMap = schema.getTypeMap();
   let result = { ...scalarsMapping };

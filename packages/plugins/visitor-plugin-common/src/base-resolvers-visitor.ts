@@ -1,10 +1,25 @@
 import { ParsedConfig, RawConfig, BaseVisitor } from './base-visitor';
 import * as autoBind from 'auto-bind';
 import { DEFAULT_SCALARS } from './scalars';
-import { ScalarsMap, ConvertFn } from './types';
-import { DeclarationBlock, DeclarationBlockConfig, indent, getBaseTypeNode, buildScalars, getConfigValue } from './utils';
-import { NameNode, ListTypeNode, NamedTypeNode, FieldDefinitionNode, ObjectTypeDefinitionNode, GraphQLSchema, NonNullTypeNode, UnionTypeDefinitionNode, ScalarTypeDefinitionNode, InterfaceTypeDefinitionNode } from 'graphql';
-import { DirectiveDefinitionNode, GraphQLObjectType, InputValueDefinitionNode } from 'graphql';
+import { ScalarsMap } from './types';
+import { DeclarationBlock, DeclarationBlockConfig, indent, getBaseTypeNode, buildScalars, getConfigValue, getBaseType } from './utils';
+import {
+  NameNode,
+  ListTypeNode,
+  NamedTypeNode,
+  FieldDefinitionNode,
+  ObjectTypeDefinitionNode,
+  GraphQLSchema,
+  NonNullTypeNode,
+  UnionTypeDefinitionNode,
+  ScalarTypeDefinitionNode,
+  InterfaceTypeDefinitionNode,
+  isObjectType,
+  isInterfaceType,
+  isNonNullType,
+  isListType,
+} from 'graphql';
+import { DirectiveDefinitionNode, GraphQLObjectType, InputValueDefinitionNode, GraphQLOutputType } from 'graphql';
 import { OperationVariablesToObject } from './variables-to-object';
 import { ParsedMapper, parseMapper, transformMappers } from './mappers';
 
@@ -98,6 +113,24 @@ export interface RawResolversConfig extends RawConfig {
    * ```
    */
   avoidOptionals?: boolean;
+  /**
+   * @name showUnusedMappers
+   * @type boolean
+   * @description Warns about unused mappers.
+   * @default true
+   *
+   * @example
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *    - typescript-resolvers
+   *  config:
+   *    showUnusedMappers: true
+   * ```
+   */
+  showUnusedMappers?: boolean;
 }
 
 export type ResolverTypes = { [gqlType: string]: string };
@@ -126,7 +159,10 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
 
     autoBind(this);
     this._variablesTransfomer = new OperationVariablesToObject(this.scalars, this.convertName);
+    this.createResolversFields();
+  }
 
+  protected createResolversFields(): void {
     const allSchemaTypes = this._schema.getTypeMap();
     this._resolversTypes = Object.keys(allSchemaTypes).reduce(
       (prev: ResolverTypes, typeName: string) => {
@@ -143,12 +179,64 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
           prev[typeName] = this._getScalar(typeName);
         } else {
           prev[typeName] = this.convertName(typeName);
+          const schemaType = allSchemaTypes[typeName];
+
+          if (isObjectType(schemaType) || isInterfaceType(schemaType)) {
+            const fields = schemaType.getFields();
+            const relevantFields = Object.keys(fields)
+              .map(fieldName => {
+                const field = fields[fieldName];
+                const baseType = getBaseType(field.type);
+
+                if (!this.config.mappers[baseType.name]) {
+                  return null;
+                }
+
+                return {
+                  fieldName,
+                  replaceWithType: this.wrapTypeWithModifiers(this.getTypeToUse(baseType.name), field.type),
+                };
+              })
+              .filter(a => a);
+
+            if (relevantFields.length > 0) {
+              prev[typeName] = this.replaceFieldsInType(prev[typeName], relevantFields);
+            }
+          }
         }
 
         return prev;
       },
       {} as ResolverTypes
     );
+  }
+
+  protected replaceFieldsInType(typeName: string, relevantFields: { fieldName: string; replaceWithType: string }[]): string {
+    return `Omit<${typeName}, ${relevantFields.map(f => `'${f.fieldName}'`).join(' | ')}> & { ${relevantFields.map(f => `${f.fieldName}: ${f.replaceWithType}`).join(', ')} }`;
+  }
+
+  protected applyMaybe(str: string): string {
+    return `Maybe<${str}>`;
+  }
+
+  protected clearMaybe(str: string): string {
+    if (str.startsWith('Maybe')) {
+      return str.replace(/Maybe<(.*?)>$/, '$1');
+    }
+
+    return str;
+  }
+
+  protected wrapTypeWithModifiers(baseType: string, type: GraphQLOutputType): string {
+    if (isNonNullType(type)) {
+      return this.clearMaybe(this.wrapTypeWithModifiers(baseType, type.ofType));
+    } else if (isListType(type)) {
+      const innerType = this.wrapTypeWithModifiers(baseType, type.ofType);
+
+      return this.applyMaybe(`Array<${innerType}>`);
+    } else {
+      return this.applyMaybe(baseType);
+    }
   }
 
   public buildResolversTypes(): string {

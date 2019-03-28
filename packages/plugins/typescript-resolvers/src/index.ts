@@ -41,24 +41,6 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    */
   useIndexSignature?: boolean;
   /**
-   * @name showUnusedMappers
-   * @type boolean
-   * @description Warns about unused mappers.
-   * @default true
-   *
-   * @example
-   * ```yml
-   * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-resolvers
-   *  config:
-   *    showUnusedMappers: true
-   * ```
-   */
-  showUnusedMappers?: boolean;
-  /**
    * @name noSchemaStitching
    * @type boolean
    * @description Disables Schema Stitching support
@@ -124,6 +106,8 @@ export type StitchingResolver<TResult, TParent, TContext, TArgs> = {
 
   const header = `
 import { ${imports.join(', ')} } from 'graphql';
+
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 
 ${indexSignature}
 

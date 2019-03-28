@@ -32,7 +32,7 @@ describe('ResolversTypes', () => {
         mappers: {
           Query: 'MyQueryType',
           MyType: 'MyTypeDb',
-          String: 'string',
+          String: 'number',
         },
       },
       { outputFile: '' }
@@ -42,8 +42,8 @@ describe('ResolversTypes', () => {
     export type ResolversTypes = {
       Query: MyQueryType,
       MyType: MyTypeDb,
-      String: string,
-      MyOtherType: MyOtherType,
+      String: number,
+      MyOtherType: Omit<MyOtherType, 'bar'> & { bar: ResolversTypes['String'] },
       Subscription: Subscription,
       Boolean: Scalars['Boolean'],
       Node: Node,
@@ -534,5 +534,66 @@ describe('ResolversTypes', () => {
       };
     `);
     await validate(result);
+  });
+
+  it('Should replace using Omit when non-mapped type is pointing to mapped type', async () => {
+    const result = await plugin(
+      schema,
+      [],
+      {
+        mappers: {
+          MyOtherType: 'MyOtherTypeCustom',
+        },
+      },
+      { outputFile: '' }
+    );
+
+    expect(result).toBeSimilarStringTo(`
+    export type ResolversTypes = {
+      Query: Query,
+      MyType: Omit<MyType, 'otherType'> & { otherType: Maybe<ResolversTypes['MyOtherType']> },
+      String: Scalars['String'],
+      MyOtherType: MyOtherTypeCustom,
+      Subscription: Omit<Subscription, 'somethingChanged'> & { somethingChanged: Maybe<ResolversTypes['MyOtherType']> },
+      Boolean: Scalars['Boolean'],
+      Node: Node,
+      ID: Scalars['ID'],
+      SomeNode: SomeNode,
+      MyUnion: MyUnion,
+      MyScalar: Scalars['MyScalar'],
+      Int: Scalars['Int'],
+    };`);
+    await validate(`type MyOtherTypeCustom = {}; ${result}`);
+  });
+
+  it('Should not replace using Omit when non-mapped type is pointing to mapped type', async () => {
+    const result = await plugin(
+      schema,
+      [],
+      {
+        mappers: {
+          MyOtherType: 'MyOtherTypeCustom',
+          MyType: 'MyTypeCustom',
+        },
+      },
+      { outputFile: '' }
+    );
+
+    expect(result).toBeSimilarStringTo(`
+    export type ResolversTypes = {
+      Query: Omit<Query, 'something'> & { something: ResolversTypes['MyType'] },
+      MyType: MyTypeCustom,
+      String: Scalars['String'],
+      MyOtherType: MyOtherTypeCustom,
+      Subscription: Omit<Subscription, 'somethingChanged'> & { somethingChanged: Maybe<ResolversTypes['MyOtherType']> },
+      Boolean: Scalars['Boolean'],
+      Node: Node,
+      ID: Scalars['ID'],
+      SomeNode: SomeNode,
+      MyUnion: MyUnion,
+      MyScalar: Scalars['MyScalar'],
+      Int: Scalars['Int'],
+    };`);
+    await validate(`type MyTypeCustom = {}; type MyOtherTypeCustom = {}; ${result}`);
   });
 });
