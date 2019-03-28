@@ -2,9 +2,10 @@ import { loadSchema as loadSchemaToolkit, loadDocuments as loadDocumentsToolkit 
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { GraphQLSchema, DocumentNode } from 'graphql';
 import { DetailedError } from '@graphql-codegen/core';
+import { join } from 'path';
 
 async function getCustomLoaderByPath(path: string): Promise<any> {
-  const requiredModule = await import(path);
+  const requiredModule = await import(join(process.cwd(), path));
 
   if (requiredModule && requiredModule.default && typeof requiredModule.default === 'function') {
     return requiredModule.default;
@@ -119,12 +120,13 @@ export const loadDocuments = async (documentDef: Types.OperationDocument, config
     }
   }
 
-  return loadDocumentsToolkit(
-    documentDef as string,
-    config.pluckConfig
-      ? {
-          tagPluck: config.pluckConfig,
-        }
-      : {}
-  );
+  const loadDocumentsToolkitConfig: any = {
+    ignore: Object.keys(config.generates),
+  };
+
+  if (config.pluckConfig) {
+    loadDocumentsToolkitConfig.tagPluck = config.pluckConfig;
+  }
+
+  return loadDocumentsToolkit(documentDef as string, loadDocumentsToolkitConfig);
 };

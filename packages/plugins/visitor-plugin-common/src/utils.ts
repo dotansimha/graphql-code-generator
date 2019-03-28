@@ -1,5 +1,5 @@
 import { pascalCase } from 'change-case';
-import { NameNode, Kind, TypeNode, NamedTypeNode, isNonNullType, GraphQLObjectType, GraphQLNonNull, GraphQLList, isListType, GraphQLOutputType, GraphQLNamedType, isScalarType, GraphQLSchema, GraphQLScalarType } from 'graphql';
+import { NameNode, Kind, TypeNode, NamedTypeNode, isNonNullType, GraphQLObjectType, GraphQLNonNull, GraphQLList, isListType, GraphQLOutputType, GraphQLNamedType, isScalarType, GraphQLSchema, GraphQLScalarType, StringValueNode } from 'graphql';
 import { ScalarsMap } from './types';
 
 function isWrapperType(t: GraphQLOutputType): t is GraphQLNonNull<any> | GraphQLList<any> {
@@ -54,9 +54,13 @@ export interface DeclarationBlockConfig {
   enumNameValueSeparator?: string;
 }
 
-export function transformComment(comment: string, indentLevel = 0): string {
+export function transformComment(comment: string | StringValueNode, indentLevel = 0): string {
   if (!comment || comment === '') {
     return '';
+  }
+
+  if (isStringValueNode(comment)) {
+    comment = comment.value;
   }
 
   const lines = comment.split('\n');
@@ -106,7 +110,7 @@ export class DeclarationBlock {
     return this;
   }
 
-  withComment(comment: string | null): DeclarationBlock {
+  withComment(comment: string | StringValueNode | null): DeclarationBlock {
     if (comment) {
       this._comment = transformComment(comment, 0);
     }
@@ -193,11 +197,19 @@ export function getBaseTypeNode(typeNode: TypeNode): NamedTypeNode {
   return typeNode;
 }
 
-export function toPascalCase(str: string) {
+export function convertNameParts(str: string, func: (str: string) => string, transformUnderscore = false): string {
+  if (transformUnderscore) {
+    return func(str);
+  }
+
   return str
     .split('_')
-    .map(s => pascalCase(s))
+    .map(s => func(s))
     .join('_');
+}
+
+export function toPascalCase(str: string, transformUnderscore = false): string {
+  return convertNameParts(str, pascalCase, transformUnderscore);
 }
 
 export const wrapTypeWithModifiers = (prefix = '') => (baseType: string, type: GraphQLObjectType | GraphQLNonNull<GraphQLObjectType> | GraphQLList<GraphQLObjectType>): string => {
@@ -227,4 +239,8 @@ export function buildScalars(schema: GraphQLSchema, scalarsMapping: ScalarsMap):
     });
 
   return result;
+}
+
+function isStringValueNode(node: any): node is StringValueNode {
+  return node && typeof node === 'object' && node.kind === 'StringValue';
 }

@@ -1,7 +1,8 @@
 import { ASTNode } from 'graphql';
 import { resolveExternalModuleAndFn } from '@graphql-codegen/plugin-helpers';
-import { NamingConventionMap, NamingConvention, ConvertFn } from './types';
-import { toPascalCase } from './utils';
+import { NamingConventionMap, NamingConvention, ConvertFn, ConvertOptions } from './types';
+import { pascalCase } from 'change-case';
+import { convertNameParts } from './utils';
 
 function getKind(node: ASTNode | string): keyof NamingConventionMap {
   if (typeof node === 'string') {
@@ -56,13 +57,27 @@ function getName(node: ASTNode | string): string | undefined {
 }
 
 export function convertFactory(config: { namingConvention?: NamingConvention }): ConvertFn {
-  function resolveConventionName(type: keyof NamingConventionMap): (str: string) => string {
+  function resolveConventionName(type: keyof NamingConventionMap): (str: string, opts?: ConvertOptions) => string {
     if (!config.namingConvention) {
-      return toPascalCase;
+      return (str: string, opts: ConvertOptions = {}) => {
+        return convertNameParts(str, pascalCase, !!(opts || {}).transformUnderscore);
+      };
     }
 
     if (typeof config.namingConvention === 'string') {
-      return resolveExternalModuleAndFn(config.namingConvention);
+      if (config.namingConvention === 'keep') {
+        return str => str;
+      }
+
+      return (str: string, opts: ConvertOptions = {}) => {
+        return convertNameParts(str, resolveExternalModuleAndFn(config.namingConvention), !!(opts || {}).transformUnderscore);
+      };
+    }
+
+    if (typeof config.namingConvention === 'function') {
+      return (str: string, opts: ConvertOptions = {}) => {
+        return convertNameParts(str, config.namingConvention as ((str: string) => string), !!(opts || {}).transformUnderscore);
+      };
     }
 
     if (config.namingConvention[type] === 'keep') {
@@ -70,7 +85,9 @@ export function convertFactory(config: { namingConvention?: NamingConvention }):
     }
 
     if (typeof config.namingConvention[type] === 'string') {
-      return resolveExternalModuleAndFn(config.namingConvention[type]);
+      return (str: string, opts: ConvertOptions = {}) => {
+        return convertNameParts(str, resolveExternalModuleAndFn(config.namingConvention[type]), !!(opts || {}).transformUnderscore);
+      };
     }
 
     return config.namingConvention[type] as any;
@@ -83,6 +100,6 @@ export function convertFactory(config: { namingConvention?: NamingConvention }):
     const kind = getKind(node);
     const str = [prefix || '', getName(node), suffix || ''].join('');
 
-    return resolveConventionName(kind)(str);
+    return resolveConventionName(kind)(str, opts);
   };
 }

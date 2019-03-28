@@ -160,6 +160,84 @@ describe('TypeScript Resolvers Plugin', () => {
     });
   });
 
+  it('Should use StitchingResolver by default', async () => {
+    const result = await plugin(schema, [], {}, { outputFile: '' });
+
+    expect(result).toBeSimilarStringTo(`
+      export type StitchingResolver<TResult, TParent, TContext, TArgs> = {
+        fragment: string;
+        resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
+      };
+    `);
+    expect(result).toBeSimilarStringTo(`
+      export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
+        | ResolverFn<TResult, TParent, TContext, TArgs>
+        | StitchingResolver<TResult, TParent, TContext, TArgs>;
+    `);
+
+    await validate(result);
+  });
+
+  it('Should warn when noSchemaStitching is set to false (deprecated)', async () => {
+    const spy = jest.spyOn(console, 'warn').mockImplementation();
+    const result = await plugin(
+      schema,
+      [],
+      {
+        noSchemaStitching: false,
+      },
+      { outputFile: '' }
+    );
+
+    expect(spy).toHaveBeenCalled();
+    expect(spy.mock.calls[0][0]).toContain('noSchemaStitching');
+
+    spy.mockRestore();
+
+    await validate(result);
+  });
+
+  it('Should not warn when noSchemaStitching is not defined', async () => {
+    const spy = jest.spyOn(console, 'warn').mockImplementation();
+    const result = await plugin(schema, [], {}, { outputFile: '' });
+
+    expect(spy).not.toHaveBeenCalled();
+
+    spy.mockRestore();
+
+    await validate(result);
+  });
+
+  it('Should disable StitchingResolver on demand', async () => {
+    const result = await plugin(
+      schema,
+      [],
+      {
+        noSchemaStitching: true,
+      },
+      { outputFile: '' }
+    );
+
+    expect(result).not.toBeSimilarStringTo(`
+      export type StitchingResolver<TResult, TParent, TContext, TArgs> = {
+        fragment: string;
+        resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
+      };
+    `);
+    expect(result).not.toBeSimilarStringTo(`
+      export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
+        | ResolverFn<TResult, TParent, TContext, TArgs>
+        | StitchingResolver<TResult, TParent, TContext, TArgs>;
+    `);
+
+    expect(result).toBeSimilarStringTo(`
+      export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
+        ResolverFn<TResult, TParent, TContext, TArgs>;
+    `);
+
+    await validate(result);
+  });
+
   it('Should generate basic type resolvers', async () => {
     const result = await plugin(schema, [], {}, { outputFile: '' });
 
@@ -833,6 +911,35 @@ describe('TypeScript Resolvers Plugin', () => {
     await validate(result);
   });
 
+  it('Should not convert type names in unions', async () => {
+    const testSchema = buildSchema(/* GraphQL */ `
+      type CCCFoo {
+        foo: String!
+      }
+
+      type CCCBar {
+        bar: String!
+      }
+
+      type Query {
+        something: CCCUnion!
+      }
+
+      union CCCUnion = CCCFoo | CCCBar
+    `);
+
+    const tsContent = await tsPlugin(testSchema, [], {}, { outputFile: 'graphql.ts' });
+    const content = await plugin(testSchema, [], {}, { outputFile: 'graphql.ts' });
+
+    expect(content).toBeSimilarStringTo(`
+      export type CccUnionResolvers<Context = any, ParentType = CccUnion> = {
+        __resolveType: TypeResolveFn<'CCCFoo' | 'CCCBar', ParentType, Context>
+      };
+    `);
+
+    await validateTs([tsContent, content].join('\n'));
+  });
+
   it('Should generate the correct resolver args type names when typesPrefix is specified', async () => {
     const testSchema = buildSchema(`type MyType { f(a: String): String }`);
     const config = { typesPrefix: 'T' };
@@ -1043,6 +1150,82 @@ describe('TypeScript Resolvers Plugin', () => {
 
     validateTs(content);
   });
+
+  it('should warn about unused mappers by default', async () => {
+    const spy = jest.spyOn(console, 'warn').mockImplementation();
+    const testSchema = buildSchema(/* GraphQL */ `
+      type Query {
+        comments: [Comment!]!
+      }
+
+      type User {
+        id: ID!
+        name: String!
+      }
+
+      type Comment {
+        id: ID!
+        text: String!
+        author: User!
+      }
+    `);
+
+    await plugin(
+      testSchema,
+      [],
+      {
+        mappers: {
+          Comment: 'number',
+          Post: 'string',
+        },
+      },
+      {
+        outputFile: 'graphql.ts',
+      }
+    );
+
+    expect(spy).toHaveBeenCalledWith('Unused mappers: Post');
+    spy.mockRestore();
+  });
+
+  it('should be able not to warn about unused mappers', async () => {
+    const spy = jest.spyOn(console, 'warn').mockImplementation();
+    const testSchema = buildSchema(/* GraphQL */ `
+      type Query {
+        comments: [Comment!]!
+      }
+
+      type User {
+        id: ID!
+        name: String!
+      }
+
+      type Comment {
+        id: ID!
+        text: String!
+        author: User!
+      }
+    `);
+
+    await plugin(
+      testSchema,
+      [],
+      {
+        mappers: {
+          Comment: 'number',
+          Post: 'string',
+        },
+        showUnusedMappers: false,
+      },
+      {
+        outputFile: 'graphql.ts',
+      }
+    );
+
+    expect(spy).not.toHaveBeenCalled();
+    spy.mockRestore();
+  });
+
   it('should generate subscription types correctly', async () => {
     const testSchema = buildSchema(/* GraphQL */ `
       type Subscription {

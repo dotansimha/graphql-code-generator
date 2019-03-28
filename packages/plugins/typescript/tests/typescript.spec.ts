@@ -172,6 +172,26 @@ describe('TypeScript', () => {
       }`);
     });
 
+    it('Should removed underscore from enum values', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        enum MyEnum {
+          A_B_C
+          X_Y_Z
+          _TEST
+          My_Value
+        }
+      `);
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+
+      expect(result).toBeSimilarStringTo(`
+      export enum MyEnum {
+        ABC = 'A_B_C',
+        XYZ = 'X_Y_Z',
+        Test = '_TEST',
+        MyValue = 'My_Value'
+      }`);
+    });
+
     it('Should work with enum and enum values (enumsAsTypes)', async () => {
       const schema = buildSchema(/* GraphQL */ `
         "custom enum"
@@ -217,7 +237,7 @@ describe('TypeScript', () => {
       directive @default(
         value: Any,
       ) on ENUM_VALUE | FIELD_DEFINITION
-    
+
       type CardEdge {
         count: Int! @default(value: 1)
       }`);
@@ -332,7 +352,7 @@ describe('TypeScript', () => {
 
       expect(result).toBeSimilarStringTo(`
         export enum foo {
-          YES = 'YES', 
+          YES = 'YES',
           NO = 'NO'
         }
       `);
@@ -378,7 +398,7 @@ describe('TypeScript', () => {
 
       expect(result).toBeSimilarStringTo(`
         export enum Foo {
-          yes = 'YES', 
+          yes = 'YES',
           no = 'NO'
         }
       `);
@@ -448,11 +468,11 @@ describe('TypeScript', () => {
         /** Indicates this type is an enum. \`enumValues\` is a valid field. */
         Enum = 'ENUM',
         /** Indicates this type is an input object. \`inputFields\` is a valid field. */
-        Input_Object = 'INPUT_OBJECT',
+        InputObject = 'INPUT_OBJECT',
         /** Indicates this type is a list. \`ofType\` is a valid field. */
         List = 'LIST',
         /** Indicates this type is a non-null. \`ofType\` is a valid field. */
-        Non_Null = 'NON_NULL'
+        NonNull = 'NON_NULL'
       }
       `);
     });
@@ -620,12 +640,33 @@ describe('TypeScript', () => {
       validateTs(result);
     });
 
+    it('Should build type correctly when implementing interface without adding fields', async () => {
+      const schema = buildSchema(`
+        interface MyInterface {
+          foo: String!
+        }
+
+        type MyType implements MyInterface
+        `);
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+
+      expect(result).toBeSimilarStringTo(`
+        export type MyInterface = {
+          foo: Scalars['String'],
+        };
+      `);
+      expect(result).toBeSimilarStringTo(`
+        export type MyType = MyInterface;
+      `);
+      validateTs(result);
+    });
+
     it('Should build type correctly with links between types', async () => {
       const schema = buildSchema(`
         type MyType {
           foo: MyOtherType!
         }
-        
+
         type MyOtherType {
           bar: String!
         }
@@ -656,7 +697,7 @@ describe('TypeScript', () => {
       type MyOtherType {
         bar: String!
       }
-      
+
       union MyUnion = MyType | MyOtherType
       `);
       const result = await plugin(schema, [], {}, { outputFile: '' });
@@ -909,9 +950,9 @@ describe('TypeScript', () => {
 
       expect(result).toBeSimilarStringTo(`
       export enum IMyEnum {
-        IA = 'A',
-        IB = 'B',
-        IC = 'C'
+        A = 'A',
+        B = 'B',
+        C = 'C'
       }`);
 
       expect(result).toBeSimilarStringTo(`
@@ -1030,6 +1071,32 @@ describe('TypeScript', () => {
       `);
 
       validateTs(result);
+    });
+
+    it('Should generate the correct type for a method with arguments (interface object)', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        interface Node {
+          text(arg1: String!, arg2: String): String
+        }
+
+        type Book implements Node {
+          id: ID!
+          text(arg: String, arg2: String!): String
+        }
+
+        type Query {
+          books: [Book!]!
+        }
+      `);
+      const result = await plugin(testSchema, [], {}, { outputFile: '' });
+
+      expect(result).toBeSimilarStringTo(`
+        export type NodeTextArgs = {
+          arg1: Scalars['String'],
+          arg2?: Maybe<Scalars['String']>
+        };
+      `);
+      await validateTs(result);
     });
   });
 

@@ -106,6 +106,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
   protected _collectedResolvers: { [key: string]: string } = {};
   protected _collectedDirectiveResolvers: { [key: string]: string } = {};
   protected _variablesTransfomer: OperationVariablesToObject;
+  protected _usedMappers: { [key: string]: boolean } = {};
 
   constructor(rawConfig: TRawConfig, additionalConfig: TPluginConfig, private _schema: GraphQLSchema, defaultScalars: ScalarsMap = DEFAULT_SCALARS) {
     super(
@@ -130,6 +131,10 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
 
   public get defaultMapperType(): string {
     return this.config.defaultMapper.type;
+  }
+
+  public get unusedMappers() {
+    return Object.keys(this.config.mappers).filter(name => !this._usedMappers[name]);
   }
 
   public get mappersImports(): string[] {
@@ -284,8 +289,13 @@ export type IDirectiveResolvers${contextType} = ${name}<Context>;`
     return asString;
   }
 
+  protected markMapperAsUsed(name: string): void {
+    this._usedMappers[name] = true;
+  }
+
   protected getTypeToUse(name: string, node: { name: any }): string {
     if (this.config.mappers[name]) {
+      this.markMapperAsUsed(name);
       return this.config.mappers[name].type;
     } else if (this.config.defaultMapper) {
       return this.config.defaultMapper.type;
@@ -347,7 +357,7 @@ export type IDirectiveResolvers${contextType} = ${name}<Context>;`
     });
     const originalNode = parent[key] as UnionTypeDefinitionNode;
     const possibleTypes = originalNode.types
-      .map(node => this.convertName(node))
+      .map(node => node.name.value)
       .map(f => `'${f}'`)
       .join(' | ');
 

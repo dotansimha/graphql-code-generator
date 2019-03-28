@@ -9,6 +9,8 @@ describe('TypeScript Operations Plugin', () => {
   const gitHuntSchema = buildClientSchema(JSON.parse(readFileSync('../../../dev-test/githunt/schema.json', 'utf-8')));
 
   const schema = buildSchema(/* GraphQL */ `
+    scalar DateTime
+
     type User {
       id: ID!
       username: String!
@@ -466,6 +468,55 @@ describe('TypeScript Operations Plugin', () => {
       validate(result, config);
     });
 
+    it('Should generate the correct intersection for fragments when type implements 2 interfaces', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        interface Base1 {
+          foo: String!
+        }
+
+        interface Base2 {
+          bar: String!
+        }
+
+        type MyType implements Base1 & Base2 {
+          foo: String!
+          bar: String!
+          test: String!
+        }
+
+        type Query {
+          myType: MyType!
+        }
+      `);
+
+      const ast = parse(/* GraphQL */ `
+        query {
+          myType {
+            ...a
+            ...b
+            ...c
+          }
+        }
+
+        fragment c on MyType {
+          test
+        }
+
+        fragment a on Base1 {
+          foo
+        }
+
+        fragment b on Base2 {
+          bar
+        }
+      `);
+      const config = {};
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
+
+      expect(result).toBeSimilarStringTo(`export type Unnamed_1_Query = ({ __typename?: 'Query' } & { myType: ({ __typename?: 'MyType' } & (AFragment & BFragment & CFragment)) })`);
+      validate(result, config);
+    });
+
     it('Should generate the correct intersection for fragments when using with interfaces with same type', async () => {
       const schema = buildSchema(/* GraphQL */ `
         interface Base {
@@ -814,6 +865,23 @@ describe('TypeScript Operations Plugin', () => {
       validate(result, config);
     });
 
+    it('Should handle operation variables correctly when they use custom scalars', async () => {
+      const ast = parse(`
+        query testQuery($test: DateTime) {
+          dummy
+        }
+      `);
+      const config = { skipTypename: true };
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
+
+      expect(result).toBeSimilarStringTo(
+        `export type TestQueryQueryVariables = {
+          test?: Maybe<Scalars['DateTime']>
+        };`
+      );
+      validate(result, config);
+    });
+
     it('Should create empty variables when there are no operation variables', async () => {
       const ast = parse(`
         query testQuery {
@@ -1032,11 +1100,11 @@ describe('TypeScript Operations Plugin', () => {
         /** Indicates this type is an enum. \`enumValues\` is a valid field. */
         Enum = 'ENUM',
         /** Indicates this type is an input object. \`inputFields\` is a valid field. */
-        Input_Object = 'INPUT_OBJECT',
+        InputObject = 'INPUT_OBJECT',
         /** Indicates this type is a list. \`ofType\` is a valid field. */
         List = 'LIST',
         /** Indicates this type is a non-null. \`ofType\` is a valid field. */
-        Non_Null = 'NON_NULL'
+        NonNull = 'NON_NULL'
       }
       `);
 
@@ -1081,6 +1149,39 @@ describe('TypeScript Operations Plugin', () => {
         filter: PREFIX_Filter
       };`);
       expect(content).toBeSimilarStringTo(`export type PREFIX_UsersQuery = ({ __typename?: 'Query' } & { users: Maybe<Array<Maybe<({ __typename?: 'User' } & Pick<PREFIX_User, 'access'>)>>> });`);
+    });
+
+    it('Should make arguments optional when there is a default value', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type User {
+          name: String!
+        }
+        type Query {
+          users(reverse: Boolean!): [User!]!
+        }
+      `);
+      const query = parse(/* GraphQL */ `
+        query users($reverse: Boolean = true) {
+          users(reverse: $reverse) {
+            name
+          }
+        }
+      `);
+
+      const content = await plugin(
+        testSchema,
+        [{ filePath: '', content: query }],
+        {},
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+        export type UsersQueryVariables = {
+          reverse: Maybe<Scalars['Boolean']>
+        };
+      `);
     });
   });
 });

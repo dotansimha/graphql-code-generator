@@ -193,7 +193,7 @@ export type CurrentUserForProfileQueryVariables = {};
 
 export type CurrentUserForProfileQuery = ({ __typename?: 'Query' } & { currentUser: ?({ __typename?: 'User' } & $Pick<User, { login: *, avatar_url: * }>) });
 
-export type FeedEntryFragment = ({ __typename?: 'Entry' } & $Pick<Entry, { id: *, commentCount: * }> & { repository: ({ __typename?: 'Repository' } & $Pick<Repository, { full_name: *, html_url: * }> & { owner: ?({ __typename?: 'User' } & $Pick<User, { avatar_url: * }>) }) } & VoteButtonsFragment & RepoInfoFragment);
+export type FeedEntryFragment = ({ __typename?: 'Entry' } & $Pick<Entry, { id: *, commentCount: * }> & { repository: ({ __typename?: 'Repository' } & $Pick<Repository, { full_name: *, html_url: * }> & { owner: ?({ __typename?: 'User' } & $Pick<User, { avatar_url: * }>) }) } & (VoteButtonsFragment & RepoInfoFragment));
 
 export type FeedQueryVariables = {
   type: FeedType,

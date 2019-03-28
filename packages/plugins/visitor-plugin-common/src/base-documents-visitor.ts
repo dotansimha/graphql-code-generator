@@ -1,7 +1,7 @@
 import { ScalarsMap, NamingConvention, ConvertFn, ConvertOptions } from './types';
 import * as autoBind from 'auto-bind';
 import { DEFAULT_SCALARS } from './scalars';
-import { toPascalCase, DeclarationBlock, DeclarationBlockConfig } from './utils';
+import { toPascalCase, DeclarationBlock, DeclarationBlockConfig, buildScalars } from './utils';
 import { GraphQLSchema, FragmentDefinitionNode, GraphQLObjectType, OperationDefinitionNode, VariableDefinitionNode, OperationTypeNode, ASTNode } from 'graphql';
 import { SelectionSetToObject } from './selection-set-to-object';
 import { OperationVariablesToObject } from './variables-to-object';
@@ -51,7 +51,7 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
         addTypename: !rawConfig.skipTypename,
         ...((additionalConfig || {}) as any),
       } as any,
-      scalars
+      buildScalars(_schema, scalars)
     );
 
     autoBind(this);

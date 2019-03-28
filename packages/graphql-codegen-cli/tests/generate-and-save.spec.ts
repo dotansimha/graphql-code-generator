@@ -1,5 +1,6 @@
 import { generate } from '../src/generate-and-save';
 import * as fs from '../src/utils/file-system';
+import { Types } from '@graphql-codegen/plugin-helpers';
 
 const SIMPLE_TEST_SCHEMA = `type MyType { f: String } type Query { f: String }`;
 
@@ -145,5 +146,39 @@ describe('generate-and-save', () => {
     expect(output.length).toBe(1);
     // makes sure it doesn't write a new file
     expect(writeSpy).toHaveBeenCalled();
+  });
+  test('should override generated files', async () => {
+    jest.unmock('fs');
+    const fs = await import('fs');
+    if (!fs.existsSync('./temp')) {
+      fs.mkdirSync('./temp');
+    }
+    if (fs.existsSync('./temp/output-graphql.tsx')) {
+      fs.unlinkSync('./temp/output-graphql.tsx');
+    }
+    fs.writeFileSync(
+      './temp/input-graphql.tsx',
+      `
+      import gql from 'graphql-tag';
+      const MyQuery = gql\`query MyQuery { f }\`;
+    `,
+      {}
+    );
+    const generateOnce: () => Promise<Types.FileOutput[]> = () =>
+      generate(
+        {
+          schema: SIMPLE_TEST_SCHEMA,
+          documents: './temp/*-graphql.tsx',
+          generates: {
+            './temp/output-graphql.tsx': {
+              plugins: ['typescript', 'typescript-operations', 'typescript-react-apollo'],
+            },
+          },
+        },
+        true
+      );
+    const [firstOutput] = await generateOnce();
+    fs.writeFileSync(firstOutput.filename, firstOutput.content);
+    await generateOnce();
   });
 });

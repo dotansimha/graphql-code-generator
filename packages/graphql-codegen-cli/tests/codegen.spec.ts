@@ -644,7 +644,7 @@ describe('Codegen Executor', () => {
         schema: [
           {
             './tests/test-documents/schema.graphql': {
-              loader: '../tests/custom-loaders/custom-schema-loader.js',
+              loader: './tests/custom-loaders/custom-schema-loader.js',
             },
           },
         ],
@@ -663,7 +663,7 @@ describe('Codegen Executor', () => {
             schema: [
               {
                 './tests/test-documents/schema.graphql': {
-                  loader: '../tests/custom-loaders/custom-schema-loader.js',
+                  loader: './tests/custom-loaders/custom-schema-loader.js',
                 },
               },
             ],
@@ -681,7 +681,7 @@ describe('Codegen Executor', () => {
           schema: [
             {
               './tests/test-documents/schema.graphql': {
-                loader: '../tests/custom-loaders/invalid-return-value-schema-loader.js',
+                loader: './tests/custom-loaders/invalid-return-value-schema-loader.js',
               },
             },
           ],
@@ -704,7 +704,7 @@ describe('Codegen Executor', () => {
           schema: [
             {
               './tests/test-documents/schema.graphql': {
-                loader: '../tests/custom-loaders/non-existing.js',
+                loader: './tests/custom-loaders/non-existing.js',
               },
             },
           ],
@@ -727,7 +727,7 @@ describe('Codegen Executor', () => {
           schema: [
             {
               './tests/test-documents/schema.graphql': {
-                loader: '../tests/custom-loaders/invalid-export.js',
+                loader: './tests/custom-loaders/invalid-export.js',
               },
             },
           ],
@@ -752,7 +752,7 @@ describe('Codegen Executor', () => {
         documents: [
           {
             './tests/test-documents/valid.graphql': {
-              loader: '../tests/custom-loaders/custom-documents-loader.js',
+              loader: './tests/custom-loaders/custom-documents-loader.js',
             },
           },
         ],
@@ -772,7 +772,7 @@ describe('Codegen Executor', () => {
             documents: [
               {
                 './tests/test-documents/valid.graphql': {
-                  loader: '../tests/custom-loaders/custom-documents-loader.js',
+                  loader: './tests/custom-loaders/custom-documents-loader.js',
                 },
               },
             ],
@@ -791,7 +791,7 @@ describe('Codegen Executor', () => {
           documents: [
             {
               './tests/test-documents/valid.graphql': {
-                loader: '../tests/custom-loaders/invalid-return-value-documents-loader.js',
+                loader: './tests/custom-loaders/invalid-return-value-documents-loader.js',
               },
             },
           ],
@@ -815,7 +815,7 @@ describe('Codegen Executor', () => {
           documents: [
             {
               './tests/test-documents/valid.graphql': {
-                loader: '../tests/custom-loaders/non-existing.js',
+                loader: './tests/custom-loaders/non-existing.js',
               },
             },
           ],
@@ -839,7 +839,7 @@ describe('Codegen Executor', () => {
           documents: [
             {
               './tests/test-documents/valid.graphql': {
-                loader: '../tests/custom-loaders/invalid-export.js',
+                loader: './tests/custom-loaders/invalid-export.js',
               },
             },
           ],

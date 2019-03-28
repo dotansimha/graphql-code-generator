@@ -1,8 +1,8 @@
 import { GraphQLSchema } from 'graphql';
 import { ParsedDocumentsConfig, BaseDocumentsVisitor, LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptSelectionSetToObject } from './ts-selection-set-to-object';
+import { TypeScriptOperationVariablesToObject } from './ts-operation-variables-to-object';
 import { TypeScriptDocumentsPluginConfig } from './index';
-import { TypeScriptOperationVariablesToObject } from '@graphql-codegen/typescript';
 
 export interface TypeScriptDocumentsParsedConfig extends ParsedDocumentsConfig {
   avoidOptionals: boolean;

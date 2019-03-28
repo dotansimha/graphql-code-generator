@@ -5,26 +5,6 @@ import { TypeScriptResolversVisitor } from './visitor';
 
 export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
   /**
-   * @name avoidOptionals
-   * @type boolean
-   * @description This will cause the generator to avoid using TypeScript optionals (`?`),
-   * so the following definition: `type A { myField: String }` will output `myField: Maybe<string>`
-   * instead of `myField?: Maybe<string>`.
-   * @default false
-   *
-   * @example
-   * ```yml
-   * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-resolvers
-   *  config:
-   *    avoidOptionals: true
-   * ```
-   */
-  avoidOptionals?: boolean;
-  /**
    * @name immutableTypes
    * @type boolean
    * @description Generates immutable types by adding `readonly` to properties and uses `ReadonlyArray`.
@@ -60,13 +40,56 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    * ```
    */
   useIndexSignature?: boolean;
+  /**
+   * @name showUnusedMappers
+   * @type boolean
+   * @description Warns about unused mappers.
+   * @default true
+   *
+   * @example
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *    - typescript-resolvers
+   *  config:
+   *    showUnusedMappers: true
+   * ```
+   */
+  showUnusedMappers?: boolean;
+  /**
+   * @name noSchemaStitching
+   * @type boolean
+   * @description Disables Schema Stitching support
+   * @default false
+   * @warning The default behavior will be reversed in the next major release. Support for Schema Stitching will be disabled by default.
+   *
+   * @example
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *    - typescript-resolvers
+   *  config:
+   *    noSchemaStitching: true
+   * ```
+   */
+  noSchemaStitching?: boolean;
 }
 
 export const plugin: PluginFunction<TypeScriptResolversPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: TypeScriptResolversPluginConfig) => {
   const imports = ['GraphQLResolveInfo'];
+  const showUnusedMappers = typeof config.showUnusedMappers === 'boolean' ? config.showUnusedMappers : true;
+  const noSchemaStitching = typeof config.noSchemaStitching === 'boolean' ? config.noSchemaStitching : false;
   const hasScalars = Object.values(schema.getTypeMap())
     .filter(t => t.astNode)
     .some(isScalarType);
+
+  if (config.noSchemaStitching === false) {
+    console['warn'](`The default behavior of 'noSchemaStitching' will be reversed in the next major release. Support for Schema Stitching will be disabled by default.`);
+  }
 
   if (hasScalars) {
     imports.push('GraphQLScalarType', 'GraphQLScalarTypeConfig');
@@ -75,6 +98,29 @@ export const plugin: PluginFunction<TypeScriptResolversPluginConfig> = (schema: 
   const indexSignature = config.useIndexSignature ? ['export type WithIndex<TObject> = TObject & Record<string, any>;', 'export type ResolversObject<TObject> = WithIndex<TObject>;'].join('\n') : '';
 
   const visitor = new TypeScriptResolversVisitor(config, schema);
+
+  const stitchingResolverType = `
+export type StitchingResolver<TResult, TParent, TContext, TArgs> = {
+  fragment: string;
+  resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
+};
+`;
+  const resolverType = `export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =`;
+  const resolverFnUsage = `ResolverFn<TResult, TParent, TContext, TArgs>`;
+  const stitchingResolverUsage = `StitchingResolver<TResult, TParent, TContext, TArgs>`;
+
+  let resolverDefs: string;
+
+  if (noSchemaStitching) {
+    // Resolver = ResolverFn;
+    resolverDefs = `${resolverType} ${resolverFnUsage};`;
+  } else {
+    // StitchingResolver
+    // Resolver =
+    // | ResolverFn
+    // | StitchingResolver;
+    resolverDefs = [stitchingResolverType, resolverType, `  | ${resolverFnUsage}`, `  | ${stitchingResolverUsage};`].join('\n');
+  }
 
   const header = `
 import { ${imports.join(', ')} } from 'graphql';
@@ -88,14 +134,7 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   info: GraphQLResolveInfo
 ) => Promise<TResult> | TResult;
 
-export type StitchingResolver<TResult, TParent, TContext, TArgs> = {
-  fragment: string;
-  resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
-};
-
-export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
-  | ResolverFn<TResult, TParent, TContext, TArgs>
-  | StitchingResolver<TResult, TParent, TContext, TArgs>;
+${resolverDefs}
 
 export type SubscriptionSubscribeFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
@@ -140,7 +179,11 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   const printedSchema = printSchema(schema);
   const astNode = parse(printedSchema);
   const visitorResult = visit(astNode, { leave: visitor });
-  const { getRootResolver, getAllDirectiveResolvers, mappersImports } = visitor;
+  const { getRootResolver, getAllDirectiveResolvers, mappersImports, unusedMappers } = visitor;
+
+  if (showUnusedMappers && unusedMappers.length) {
+    console['warn'](`Unused mappers: ${unusedMappers.join(',')}`);
+  }
 
   return [...mappersImports, header, ...visitorResult.definitions.filter(d => typeof d === 'string'), getRootResolver(), getAllDirectiveResolvers()].join('\n');
 };
