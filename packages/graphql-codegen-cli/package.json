@@ -47,7 +47,7 @@
     "@graphql-codegen/core": "1.0.6",
     "@graphql-codegen/plugin-helpers": "1.0.6",
     "@types/babylon": "6.16.5",
-    "@types/is-glob": "4.0.0",
+    "@types/is-glob": "4.0.1",
     "@types/mkdirp": "0.5.2",
     "@types/prettier": "1.16.1",
     "@types/valid-url": "1.0.2",
