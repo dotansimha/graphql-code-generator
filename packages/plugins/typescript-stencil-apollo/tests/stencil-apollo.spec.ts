@@ -26,7 +26,8 @@ describe('Components', () => {
     const content = await plugin(schema, [{ filePath: '', content: documents }], { componentType: StencilComponentType.class }, { outputFile: '' });
 
     expect(content).toBeSimilarStringTo(`
-        import { Component } from '@stencil/core';
+        import 'stencil-apollo';
+        import { Component, Prop } from '@stencil/core';
       `);
   });
 
