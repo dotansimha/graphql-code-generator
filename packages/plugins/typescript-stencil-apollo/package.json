@@ -10,7 +10,7 @@
   },
   "peerDependencies": {
     "graphql-tag": "^2.0.0",
-    "stencil-apollo": "^0.0.2 || ^0.0.3"
+    "stencil-apollo": "^0.0.2 || ^0.0.3 || ^0.0.4"
   },
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "1.0.6",
