@@ -12,7 +12,7 @@
     "@graphql-codegen/plugin-helpers": "1.0.6"
   },
   "devDependencies": {
-    "graphql": "14.2.0",
+    "graphql": "14.2.1",
     "graphql-tag": "2.10.1",
     "jest": "24.5.0",
     "ts-jest": "24.0.0",
