@@ -19,8 +19,8 @@
     "flow-parser": "0.95.2",
     "graphql": "14.2.0",
     "jest": "24.5.0",
-    "ts-jest": "24.0.1",
-    "typescript": "3.3.4000"
+    "ts-jest": "24.0.0",
+    "typescript": "3.4.1"
   },
   "sideEffects": false,
   "main": "dist/commonjs/index.js",
