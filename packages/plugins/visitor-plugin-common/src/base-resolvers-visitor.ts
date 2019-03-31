@@ -178,8 +178,11 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
           return prev;
         }
 
+        let shouldApplyOmit = true;
+
         if (this.config.mappers[typeName] && this.config.mappers[typeName].type) {
           this.markMapperAsUsed(typeName);
+          shouldApplyOmit = false;
           prev[typeName] = this.config.mappers[typeName].type;
         } else if (this.config.defaultMapper && this.config.defaultMapper.type) {
           if (this.config.defaultMapper.type.includes('{T}')) {
@@ -191,29 +194,29 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
           prev[typeName] = this._getScalar(typeName);
         } else {
           prev[typeName] = this.convertName(typeName);
-          const schemaType = allSchemaTypes[typeName];
+        }
 
-          if (isObjectType(schemaType) || isInterfaceType(schemaType)) {
-            const fields = schemaType.getFields();
-            const relevantFields = Object.keys(fields)
-              .map(fieldName => {
-                const field = fields[fieldName];
-                const baseType = getBaseType(field.type);
+        const schemaType = allSchemaTypes[typeName];
+        if ((shouldApplyOmit && prev[typeName] !== 'any' && isObjectType(schemaType)) || isInterfaceType(schemaType)) {
+          const fields = schemaType.getFields();
+          const relevantFields = Object.keys(fields)
+            .map(fieldName => {
+              const field = fields[fieldName];
+              const baseType = getBaseType(field.type);
 
-                if (!this.config.mappers[baseType.name]) {
-                  return null;
-                }
+              if (!this.config.mappers[baseType.name]) {
+                return null;
+              }
 
-                return {
-                  fieldName,
-                  replaceWithType: this.wrapTypeWithModifiers(this.getTypeToUse(baseType.name), field.type),
-                };
-              })
-              .filter(a => a);
+              return {
+                fieldName,
+                replaceWithType: this.wrapTypeWithModifiers(this.getTypeToUse(baseType.name), field.type),
+              };
+            })
+            .filter(a => a);
 
-            if (relevantFields.length > 0) {
-              prev[typeName] = this.replaceFieldsInType(prev[typeName], relevantFields);
-            }
+          if (relevantFields.length > 0) {
+            prev[typeName] = this.replaceFieldsInType(prev[typeName], relevantFields);
           }
         }
 

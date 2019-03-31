@@ -77,6 +77,7 @@ describe('ResolversTypes', () => {
       testSchema,
       [],
       {
+        noSchemaStitching: true,
         mappers: {
           ID: 'number',
           Chat: 'number',
@@ -121,6 +122,7 @@ describe('ResolversTypes', () => {
       schema,
       [],
       {
+        noSchemaStitching: true,
         defaultMapper: 'Partial<{T}>',
       },
       { outputFile: '' }
@@ -148,6 +150,7 @@ describe('ResolversTypes', () => {
       schema,
       [],
       {
+        noSchemaStitching: true,
         defaultMapper: './my-wrapper#CustomPartial<{T}>',
       },
       { outputFile: '' }
@@ -172,6 +175,16 @@ describe('ResolversTypes', () => {
   });
 
   it('Should map to a custom type on every level when {T} is used as default mapper', async () => {
+    const config = {
+      scalars: {
+        ID: 'number',
+      },
+      noSchemaStitching: true,
+      defaultMapper: 'Partial<{T}>',
+      mappers: {
+        User: 'number',
+      },
+    };
     const testSchema = buildSchema(/* GraphQL */ `
       type User {
         id: ID!
@@ -189,28 +202,18 @@ describe('ResolversTypes', () => {
         me: User
       }
     `);
-    const result = await plugin(
-      testSchema,
-      [],
-      {
-        defaultMapper: 'Partial<{T}>',
-        mappers: {
-          User: 'number',
-        },
-      },
-      { outputFile: '' }
-    );
+    const result = await plugin(testSchema, [], config, { outputFile: '' });
 
-    // expect(result).toBeSimilarStringTo(`
-    //   export type ResolversTypes = {
-    //     Query: Partial<Query>,
-    //     User: CustomUser,
-    //     ID: Scalars['ID'],
-    //     String: Scalars['String'],
-    //     Chat: Partial<Chat>,
-    //     Boolean: Scalars['Boolean'],
-    //   };
-    // `);
+    expect(result).toBeSimilarStringTo(`
+    export type ResolversTypes = {
+      Query: Omit<Partial<Query>, 'me'> & { me: Maybe<ResolversTypes['User']> },
+      User: number,
+      ID: Scalars['ID'],
+      String: Scalars['String'],
+      Chat: Omit<Partial<Chat>, 'owner' | 'members'> & { owner: ResolversTypes['User'], members: Maybe<Array<ResolversTypes['User']>> },
+      Boolean: Scalars['Boolean'],
+    };
+    `);
 
     const usage = `
       const resolvers: Resolvers = {
@@ -241,15 +244,7 @@ describe('ResolversTypes', () => {
       }
     `;
 
-    await validate(
-      [result, usage].join('\n\n'),
-      {
-        scalars: {
-          ID: 'number',
-        },
-      },
-      testSchema
-    );
+    await validate([result, usage].join('\n\n'), config, testSchema);
   });
 
   it('Should build ResolversTypes with defaultMapper set', async () => {
@@ -257,6 +252,7 @@ describe('ResolversTypes', () => {
       schema,
       [],
       {
+        noSchemaStitching: true,
         mappers: {
           Query: 'MyQueryType',
           MyType: 'MyTypeDb',
@@ -289,6 +285,7 @@ describe('ResolversTypes', () => {
       schema,
       [],
       {
+        noSchemaStitching: true,
         mappers: {
           Query: './my-module#CustomQueryRootType',
           MyType: 'MyTypeDb',
@@ -337,6 +334,7 @@ describe('ResolversTypes', () => {
       testSchema,
       [],
       {
+        noSchemaStitching: true,
         mappers: {
           Comment: 'number',
           Post: 'string',
@@ -374,6 +372,7 @@ describe('ResolversTypes', () => {
       testSchema,
       [],
       {
+        noSchemaStitching: true,
         mappers: {
           Comment: 'number',
           Post: 'string',
@@ -394,6 +393,7 @@ describe('ResolversTypes', () => {
       schema,
       [],
       {
+        noSchemaStitching: true,
         mappers: {
           MyOtherType: './my-file#MyCustomOtherType',
         },
@@ -463,6 +463,7 @@ describe('ResolversTypes', () => {
       schema,
       [],
       {
+        noSchemaStitching: true,
         mappers: {
           MyType: './my-file#MyCustomOtherType',
           MyOtherType: './my-file#MyCustomOtherType',
@@ -533,6 +534,7 @@ describe('ResolversTypes', () => {
       schema,
       [],
       {
+        noSchemaStitching: true,
         mappers: {
           Node: 'MyNodeType',
         },
@@ -602,6 +604,7 @@ describe('ResolversTypes', () => {
       schema,
       [],
       {
+        noSchemaStitching: true,
         defaultMapper: 'any',
       },
       { outputFile: '' }
@@ -669,6 +672,7 @@ describe('ResolversTypes', () => {
       schema,
       [],
       {
+        noSchemaStitching: true,
         defaultMapper: './my-file#MyBaseType',
       },
       { outputFile: '' }
@@ -738,6 +742,7 @@ describe('ResolversTypes', () => {
       schema,
       [],
       {
+        noSchemaStitching: true,
         mappers: {
           MyOtherType: 'MyOtherTypeCustom',
         },
@@ -768,6 +773,7 @@ describe('ResolversTypes', () => {
       schema,
       [],
       {
+        noSchemaStitching: true,
         mappers: {
           MyOtherType: 'MyOtherTypeCustom',
           MyType: 'MyTypeCustom',
