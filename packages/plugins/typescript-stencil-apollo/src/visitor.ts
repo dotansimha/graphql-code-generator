@@ -23,7 +23,10 @@ export class StencilApolloVisitor extends ClientSideBaseVisitor<StencilApolloRaw
     const imports = [];
 
     if (this.config.componentType === StencilComponentType.class) {
-      imports.push(`import { Component } from '@stencil/core';`);
+      imports.push(`import 'stencil-apollo';`);
+      imports.push(`import { Component, Prop } from '@stencil/core';`);
+    } else {
+      imports.push(`import * as StencilApollo from 'stencil-apollo';`);
     }
 
     return [baseImports, ...imports].join('\n');
@@ -32,19 +35,24 @@ export class StencilApolloVisitor extends ClientSideBaseVisitor<StencilApolloRaw
   private _buildOperationFunctionalComponent(node: OperationDefinitionNode, documentVariableName: string, operationType: string, operationResultType: string, operationVariablesTypes: string): string {
     const operationName: string = this.convertName(node.name.value);
     const propsTypeName: string = this.convertName(operationName + 'Props');
+    const rendererSignature = toPascalCase(`${operationType}Renderer`) + `<${operationResultType}, ${operationVariablesTypes}>`;
     const apolloStencilComponentTag = changeCase.paramCase(`Apollo${operationType}`);
-    const onReadySignature = toPascalCase(`On${operationType}ReadyFn`);
+    const apolloStencilFunctionalComponentName = changeCase.titleCase(`${operationType}`);
     const componentName = this.convertName(`${operationName}Component`);
 
     const propsVar = `
         export type ${propsTypeName} = {
             variables ?: ${operationVariablesTypes};
-            onReady ?: import('stencil-apollo/dist/types/components/${apolloStencilComponentTag}/types').${onReadySignature}<${operationResultType}, ${operationVariablesTypes}>;
+            children ?: import('stencil-apollo/dist/types/components/${apolloStencilComponentTag}/types').${rendererSignature};
         };
       `;
 
     const component = `
-        export const ${componentName} = (props: ${propsTypeName}) => <${apolloStencilComponentTag} ${operationType.toLowerCase()}={ ${documentVariableName} } { ...props } />;
+        export const ${componentName} = (props: ${propsTypeName}, children: [import('stencil-apollo/dist/types/components/${apolloStencilComponentTag}/types').${rendererSignature}]) => (
+          <StencilApollo.${apolloStencilFunctionalComponentName}<${operationResultType}, ${operationVariablesTypes}> ${operationType.toLowerCase()}={ ${documentVariableName} } { ...props }>
+            {children[0]}
+          </StencilApollo.${apolloStencilFunctionalComponentName}>
+        );
       `;
 
     return [propsVar, component].filter(a => a).join('\n');
@@ -53,16 +61,16 @@ export class StencilApolloVisitor extends ClientSideBaseVisitor<StencilApolloRaw
   private _buildClassComponent(node: OperationDefinitionNode, documentVariableName: string, operationType: string, operationResultType: string, operationVariablesTypes: string): string {
     const componentName: string = this.convertName(node.name.value + 'Component');
     const apolloStencilComponentTag = changeCase.paramCase(`Apollo${operationType}`);
-    const onReadySignature = toPascalCase(`On${operationType}ReadyFn`);
+    const rendererSignature = toPascalCase(`${operationType}Renderer`);
 
     return `
             @Component({
                 tag: '${changeCase.paramCase(`Apollo${toPascalCase(node.name.value)}`)}'
             })
             export class ${componentName} {
-                @Prop() onReady: import('stencil-apollo/dist/types/components/${apolloStencilComponentTag}/types').${onReadySignature}<${operationResultType}, ${operationVariablesTypes}>;
+                @Prop() renderer: import('stencil-apollo/dist/types/components/${apolloStencilComponentTag}/types').${rendererSignature}<${operationResultType}, ${operationVariablesTypes}>;
                 render() {
-                    return <${apolloStencilComponentTag} ${operationType.toLowerCase()}={ ${documentVariableName} } onReady={ this.onReady } />;
+                    return <${apolloStencilComponentTag} ${operationType.toLowerCase()}={ ${documentVariableName} } renderer={ this.renderer } />;
                 }
             }
       `;

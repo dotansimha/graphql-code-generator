@@ -223,7 +223,8 @@ export type VoteMutationVariables = {
 export type VoteMutation = ({ __typename?: 'Mutation' } & { vote: Maybe<({ __typename?: 'Entry' } & Pick<Entry, 'score' | 'id'> & { vote: ({ __typename?: 'Vote' } & Pick<Vote, 'vote_value'>) })> });
 
 import gql from 'graphql-tag';
-import { Component } from '@stencil/core';
+import 'stencil-apollo';
+import { Component, Prop } from '@stencil/core';
 export const CommentsPageCommentFragmentDoc = gql`
     fragment CommentsPageComment on Comment {
   id
@@ -291,9 +292,9 @@ export const OnCommentAddedDocument = gql`
                 tag: 'apollo-on-comment-added'
             })
             export class OnCommentAddedComponent {
-                @Prop() onReady: import('stencil-apollo/dist/types/components/apollo-subscription/types').OnSubscriptionReadyFn<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>;
+                @Prop() renderer: import('stencil-apollo/dist/types/components/apollo-subscription/types').SubscriptionRenderer<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>;
                 render() {
-                    return <apollo-subscription subscription={ OnCommentAddedDocument } onReady={ this.onReady } />;
+                    return <apollo-subscription subscription={ OnCommentAddedDocument } renderer={ this.renderer } />;
                 }
             }
       
@@ -331,9 +332,9 @@ export const CommentDocument = gql`
                 tag: 'apollo-comment'
             })
             export class CommentComponent {
-                @Prop() onReady: import('stencil-apollo/dist/types/components/apollo-query/types').OnQueryReadyFn<CommentQuery, CommentQueryVariables>;
+                @Prop() renderer: import('stencil-apollo/dist/types/components/apollo-query/types').QueryRenderer<CommentQuery, CommentQueryVariables>;
                 render() {
-                    return <apollo-query query={ CommentDocument } onReady={ this.onReady } />;
+                    return <apollo-query query={ CommentDocument } renderer={ this.renderer } />;
                 }
             }
       
@@ -350,9 +351,9 @@ export const CurrentUserForProfileDocument = gql`
                 tag: 'apollo-current-user-for-profile'
             })
             export class CurrentUserForProfileComponent {
-                @Prop() onReady: import('stencil-apollo/dist/types/components/apollo-query/types').OnQueryReadyFn<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>;
+                @Prop() renderer: import('stencil-apollo/dist/types/components/apollo-query/types').QueryRenderer<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>;
                 render() {
-                    return <apollo-query query={ CurrentUserForProfileDocument } onReady={ this.onReady } />;
+                    return <apollo-query query={ CurrentUserForProfileDocument } renderer={ this.renderer } />;
                 }
             }
       
@@ -371,9 +372,9 @@ export const FeedDocument = gql`
                 tag: 'apollo-feed'
             })
             export class FeedComponent {
-                @Prop() onReady: import('stencil-apollo/dist/types/components/apollo-query/types').OnQueryReadyFn<FeedQuery, FeedQueryVariables>;
+                @Prop() renderer: import('stencil-apollo/dist/types/components/apollo-query/types').QueryRenderer<FeedQuery, FeedQueryVariables>;
                 render() {
-                    return <apollo-query query={ FeedDocument } onReady={ this.onReady } />;
+                    return <apollo-query query={ FeedDocument } renderer={ this.renderer } />;
                 }
             }
       
@@ -389,9 +390,9 @@ export const SubmitRepositoryDocument = gql`
                 tag: 'apollo-submit-repository'
             })
             export class SubmitRepositoryComponent {
-                @Prop() onReady: import('stencil-apollo/dist/types/components/apollo-mutation/types').OnMutationReadyFn<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>;
+                @Prop() renderer: import('stencil-apollo/dist/types/components/apollo-mutation/types').MutationRenderer<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>;
                 render() {
-                    return <apollo-mutation mutation={ SubmitRepositoryDocument } onReady={ this.onReady } />;
+                    return <apollo-mutation mutation={ SubmitRepositoryDocument } renderer={ this.renderer } />;
                 }
             }
       
@@ -407,9 +408,9 @@ export const SubmitCommentDocument = gql`
                 tag: 'apollo-submit-comment'
             })
             export class SubmitCommentComponent {
-                @Prop() onReady: import('stencil-apollo/dist/types/components/apollo-mutation/types').OnMutationReadyFn<SubmitCommentMutation, SubmitCommentMutationVariables>;
+                @Prop() renderer: import('stencil-apollo/dist/types/components/apollo-mutation/types').MutationRenderer<SubmitCommentMutation, SubmitCommentMutationVariables>;
                 render() {
-                    return <apollo-mutation mutation={ SubmitCommentDocument } onReady={ this.onReady } />;
+                    return <apollo-mutation mutation={ SubmitCommentDocument } renderer={ this.renderer } />;
                 }
             }
       
@@ -429,9 +430,9 @@ export const VoteDocument = gql`
                 tag: 'apollo-vote'
             })
             export class VoteComponent {
-                @Prop() onReady: import('stencil-apollo/dist/types/components/apollo-mutation/types').OnMutationReadyFn<VoteMutation, VoteMutationVariables>;
+                @Prop() renderer: import('stencil-apollo/dist/types/components/apollo-mutation/types').MutationRenderer<VoteMutation, VoteMutationVariables>;
                 render() {
-                    return <apollo-mutation mutation={ VoteDocument } onReady={ this.onReady } />;
+                    return <apollo-mutation mutation={ VoteDocument } renderer={ this.renderer } />;
                 }
             }
       
