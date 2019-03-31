@@ -6898,17 +6898,6 @@ graphql-subscriptions@1.0.0, graphql-subscriptions@^1.0.0:
   dependencies:
     iterall "^1.2.1"
 
-graphql-tag-pluck@0.7.0:
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/graphql-tag-pluck/-/graphql-tag-pluck-0.7.0.tgz#95481a144d3a6a6923a2851cc3fbe46b39192be3"
-  integrity sha512-BETjfTimrl942KT5b8mWfM28DI1VwOvHL92xxCPevPPzfQ5qxY4Tv79p0GdWWsfU8WQMSzp0FJpK4Qjh8A1dYw==
-  dependencies:
-    "@babel/parser" "^7.2.0"
-    "@babel/traverse" "^7.1.6"
-    "@babel/types" "^7.2.0"
-    source-map-support "^0.5.9"
-    typescript "^3.2.2"
-
 graphql-tag-pluck@0.8.0:
   version "0.8.0"
   resolved "https://registry.yarnpkg.com/graphql-tag-pluck/-/graphql-tag-pluck-0.8.0.tgz#604405f46dfd87f002d47c1f452f277bfc0ba92c"
@@ -6925,16 +6914,17 @@ graphql-tag@2.10.1, graphql-tag@^2.9.2:
   resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.10.1.tgz#10aa41f1cd8fae5373eaf11f1f67260a3cad5e02"
   integrity sha512-jApXqWBzNXQ8jYa/HLkZJaVw9jgwNqZkywa2zfFn16Iv1Zb7ELNHkJaXHR7Quvd5SIGsy6Ny7SUKATgnu05uEg==
 
-graphql-toolkit@0.2.8:
-  version "0.2.8"
-  resolved "https://registry.yarnpkg.com/graphql-toolkit/-/graphql-toolkit-0.2.8.tgz#25408dd9361abbada26cc86a01c7e69e7a7f4b51"
-  integrity sha512-J1i1xDSv22mjdtJ4zuw6eCEG6sCcP5Nz1qwP6ZgRNwgJiSP/SJAuiI67vOhbqPbuEmdAM9Kb5YPu68smslxXZA==
+graphql-toolkit@0.2.9:
+  version "0.2.9"
+  resolved "https://registry.yarnpkg.com/graphql-toolkit/-/graphql-toolkit-0.2.9.tgz#d8b2c3a37feee4fc6424139d1ca97366ff23bdad"
+  integrity sha512-ALojfCMRYb+o/kbHmnhf8Fa6QMS9I223us5jb1jxQc5n4/StYpPQDhVqb8WeAp8OA68D6k1Zxtz2uLyutR9KAw==
   dependencies:
     aggregate-error "2.2.0"
+    asyncro "^3.0.0"
     deepmerge "3.2.0"
     glob "7.1.3"
     graphql-import "0.7.1"
-    graphql-tag-pluck "0.7.0"
+    graphql-tag-pluck "0.8.0"
     graphql-tools "4.0.4"
     is-glob "4.0.0"
     is-valid-path "0.1.1"
