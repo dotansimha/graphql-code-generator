@@ -28,7 +28,7 @@
   "devDependencies": {
     "@types/common-tags": "1.8.0",
     "@types/glob": "7.1.1",
-    "@types/graphql": "14.2.0",
+    "@types/graphql": "14.0.7",
     "@types/jest": "24.0.11",
     "@types/mkdirp": "0.5.2",
     "@types/node": "10.14.4",
@@ -43,9 +43,9 @@
     "lint-staged": "8.1.5",
     "microbundle": "0.11.0",
     "rimraf": "2.6.3",
-    "ts-jest": "24.0.1",
+    "ts-jest": "24.0.0",
     "tslint": "5.14.0",
-    "typescript": "3.3.4000",
+    "typescript": "3.4.1",
     "react-apollo": "2.5.3",
     "react-apollo-hooks": "0.4.4",
     "apollo-server": "2.4.8"
