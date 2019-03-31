@@ -47,7 +47,7 @@
     "@graphql-codegen/core": "1.0.6",
     "@graphql-codegen/plugin-helpers": "1.0.6",
     "@types/babylon": "6.16.5",
-    "@types/is-glob": "4.0.0",
+    "@types/is-glob": "4.0.1",
     "@types/mkdirp": "0.5.2",
     "@types/prettier": "1.16.1",
     "@types/valid-url": "1.0.2",
@@ -63,7 +63,7 @@
     "graphql-config": "2.2.1",
     "graphql-import": "0.7.1",
     "graphql-tag-pluck": "0.8.0",
-    "graphql-toolkit": "0.2.8",
+    "graphql-toolkit": "0.2.9",
     "graphql-tools": "4.0.4",
     "indent-string": "3.2.0",
     "inquirer": "6.2.2",
@@ -90,7 +90,7 @@
     "@types/listr": "0.13.0",
     "@types/log-symbols": "2.0.0",
     "bdd-stdin": "0.2.0",
-    "ts-jest": "24.0.0"
+    "ts-jest": "24.0.1"
   },
   "main": "dist/commonjs/index.js",
   "module": "dist/esnext/index.js",

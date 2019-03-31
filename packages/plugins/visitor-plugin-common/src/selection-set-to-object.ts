@@ -112,6 +112,10 @@ export class SelectionSetToObject {
   _collectFragmentSpread(node: FragmentSpreadNode) {
     const loadedFragment = this._loadedFragments.find(f => f.name === node.name.value);
 
+    if (!loadedFragment) {
+      throw new Error(`Unable to find fragment matching then name "${node.name.value}"! Please make sure it's loaded.`);
+    }
+
     if (!this._fragments[loadedFragment.onType]) {
       this._fragments[loadedFragment.onType] = [];
     }

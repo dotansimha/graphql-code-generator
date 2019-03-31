@@ -13,7 +13,7 @@
   },
   "devDependencies": {
     "graphql": "14.2.0",
-    "typescript": "3.3.4000"
+    "typescript": "3.4.1"
   },
   "sideEffects": false,
   "main": "dist/commonjs/index.js",

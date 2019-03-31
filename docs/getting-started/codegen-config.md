@@ -49,7 +49,7 @@ Here are the supported options that you can define in the config file (see [sour
 
 - **`overwrite`** - A flag to overwrite files in case they're already exist when generating code (`true` by default)
 
-- **`watch`** - A flag to watch for changes in the specified GraphQL schemas and re-generate code any that happens.
+- **`watch`** - A flag to watch for changes in the specified GraphQL schemas and re-generate code any that happens. You can either specify a boolean to turn it on/off, or specify an array of glob patterns to add custom files to the watch.
 
 - **`silent`** - A flag to not print errors in case they occur.
 
