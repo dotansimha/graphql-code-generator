@@ -188,7 +188,7 @@ export class DeclarationBlock {
       result += '{}';
     }
 
-    return (this._comment ? this._comment : '') + result + (this._kind === 'interface' || this._kind === 'enum' ? '' : ';') + '\n';
+    return (this._comment ? this._comment : '') + result + (this._kind === 'interface' || this._kind === 'enum' || this._kind === 'namespace' ? '' : ';') + '\n';
   }
 }
 
