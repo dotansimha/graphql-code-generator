@@ -9598,10 +9598,10 @@ log-symbols@^1.0.2:
   dependencies:
     chalk "^1.0.0"
 
-log-update@3.1.1:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/log-update/-/log-update-3.1.1.tgz#c8c86e44d9f0ecb816e364ed4e8dfc58760a4573"
-  integrity sha512-kqnFtiui/54LE2Sud9D/+p9vDXGUK9J2ISJ1kFd6LXHnodLWpsbLvf+iD1aQEpCniLPIAQpimg37mktmNkpNiA==
+log-update@3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/log-update/-/log-update-3.2.0.tgz#719f24293250d65d0165f4e2ec2ed805ff062eec"
+  integrity sha512-KJ6zAPIHWo7Xg1jYror6IUDFJBq1bQ4Bi4wAEp2y/0ScjBBVi/g0thr0sUVhuvuXauWzczt7T2QHghPDNnKBuw==
   dependencies:
     ansi-escapes "^3.2.0"
     cli-cursor "^2.1.0"
