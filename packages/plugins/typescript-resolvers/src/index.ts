@@ -41,24 +41,6 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    */
   useIndexSignature?: boolean;
   /**
-   * @name showUnusedMappers
-   * @type boolean
-   * @description Warns about unused mappers.
-   * @default true
-   *
-   * @example
-   * ```yml
-   * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-resolvers
-   *  config:
-   *    showUnusedMappers: true
-   * ```
-   */
-  showUnusedMappers?: boolean;
-  /**
    * @name noSchemaStitching
    * @type boolean
    * @description Disables Schema Stitching support
@@ -125,6 +107,8 @@ export type StitchingResolver<TResult, TParent, TContext, TArgs> = {
   const header = `
 import { ${imports.join(', ')} } from 'graphql';
 
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
+
 ${indexSignature}
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
@@ -179,11 +163,12 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   const printedSchema = printSchema(schema);
   const astNode = parse(printedSchema);
   const visitorResult = visit(astNode, { leave: visitor });
+  const resolversTypeMapping = visitor.buildResolversTypes();
   const { getRootResolver, getAllDirectiveResolvers, mappersImports, unusedMappers } = visitor;
 
   if (showUnusedMappers && unusedMappers.length) {
     console['warn'](`Unused mappers: ${unusedMappers.join(',')}`);
   }
 
-  return [...mappersImports, header, ...visitorResult.definitions.filter(d => typeof d === 'string'), getRootResolver(), getAllDirectiveResolvers()].join('\n');
+  return [...mappersImports, header, resolversTypeMapping, ...visitorResult.definitions.filter(d => typeof d === 'string'), getRootResolver(), getAllDirectiveResolvers()].join('\n');
 };

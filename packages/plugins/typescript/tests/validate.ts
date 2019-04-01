@@ -63,7 +63,8 @@ export function validateTs(
     if (diagnostic.file) {
       let { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start!);
       let message = ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n');
-      errors.push(`${line + 1},${character + 1}: ${message}`);
+      errors.push(`${line + 1},${character + 1}: ${message} ->
+  ${contents.split('\n')[line]}`);
     } else {
       errors.push(`${ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n')}`);
     }

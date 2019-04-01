@@ -7,6 +7,7 @@ export interface FlowResolversPluginConfig extends RawResolversConfig {}
 
 export const plugin: PluginFunction<FlowResolversPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: FlowResolversPluginConfig) => {
   const imports = ['type GraphQLResolveInfo'];
+  const showUnusedMappers = typeof config.showUnusedMappers === 'boolean' ? config.showUnusedMappers : true;
   const hasScalars = Object.values(schema.getTypeMap())
     .filter(t => t.astNode)
     .some(isScalarType);
@@ -69,7 +70,12 @@ export type DirectiveResolverFn<Result = {}, Parent = {}, Args = {}, Context = {
   const astNode = parse(printedSchema);
   const visitor = new FlowResolversVisitor(config, schema);
   const visitorResult = visit(astNode, { leave: visitor });
-  const { getRootResolver, getAllDirectiveResolvers, mappersImports } = visitor;
+  const resolversTypeMapping = visitor.buildResolversTypes();
+  const { getRootResolver, getAllDirectiveResolvers, mappersImports, unusedMappers } = visitor;
 
-  return [...mappersImports, header, ...visitorResult.definitions.filter(d => typeof d === 'string'), getRootResolver(), getAllDirectiveResolvers()].join('\n');
+  if (showUnusedMappers && unusedMappers.length) {
+    console['warn'](`Unused mappers: ${unusedMappers.join(',')}`);
+  }
+
+  return [...mappersImports, header, resolversTypeMapping, ...visitorResult.definitions.filter(d => typeof d === 'string'), getRootResolver(), getAllDirectiveResolvers()].join('\n');
 };
