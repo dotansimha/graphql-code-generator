@@ -178,21 +178,17 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
           return prev;
         }
 
-        let shouldApplyOmit = true;
+        let shouldApplyOmit = false;
 
         if (this.config.mappers[typeName] && this.config.mappers[typeName].type) {
           this.markMapperAsUsed(typeName);
-          shouldApplyOmit = false;
           prev[typeName] = this.config.mappers[typeName].type;
-        } else if (this.config.defaultMapper && this.config.defaultMapper.type) {
-          if (this.config.defaultMapper.type.includes('{T}')) {
-            prev[typeName] = this.config.scalars[typeName] ? this._getScalar(typeName) : this.config.defaultMapper.type.replace('{T}', this.convertName(typeName));
-          } else {
-            prev[typeName] = this.config.defaultMapper.type;
-          }
+        } else if (this.config.defaultMapper && this.config.defaultMapper.type && !this.config.defaultMapper.type.includes('{T}')) {
+          prev[typeName] = this.config.defaultMapper.type;
         } else if (this.config.scalars[typeName]) {
           prev[typeName] = this._getScalar(typeName);
         } else {
+          shouldApplyOmit = true;
           prev[typeName] = this.convertName(typeName);
         }
 
@@ -218,6 +214,10 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
           if (relevantFields.length > 0) {
             prev[typeName] = this.replaceFieldsInType(prev[typeName], relevantFields);
           }
+        }
+
+        if (!this.config.scalars[typeName] && !this.config.mappers[typeName] && this.config.defaultMapper && this.config.defaultMapper.type.includes('{T}')) {
+          prev[typeName] = this.config.defaultMapper.type.replace('{T}', prev[typeName]);
         }
 
         return prev;

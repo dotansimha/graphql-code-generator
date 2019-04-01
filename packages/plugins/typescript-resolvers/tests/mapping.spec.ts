@@ -206,11 +206,11 @@ describe('ResolversTypes', () => {
 
     expect(result).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      Query: Omit<Partial<Query>, 'me'> & { me: Maybe<ResolversTypes['User']> },
+      Query: Partial<Omit<Query, 'me'> & { me: Maybe<ResolversTypes['User']> }>,
       User: number,
       ID: Scalars['ID'],
       String: Scalars['String'],
-      Chat: Omit<Partial<Chat>, 'owner' | 'members'> & { owner: ResolversTypes['User'], members: Maybe<Array<ResolversTypes['User']>> },
+      Chat: Partial<Omit<Chat, 'owner' | 'members'> & { owner: ResolversTypes['User'], members: Maybe<Array<ResolversTypes['User']>> }>,
       Boolean: Scalars['Boolean'],
     };
     `);
