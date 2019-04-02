@@ -576,11 +576,13 @@ export type IDirectiveResolvers${contextType} = ${name}<Context>;`
 
     const type = this.getTypeToUse((node.name as any) as string);
 
+    const possibleTypes = implementingTypes.map(name => `'${name}'`).join(' | ') || 'null';
+
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
       .withName(name, `<Context = ${this.config.contextType.type}, ParentType = ${type}>`)
-      .withBlock([indent(`__resolveType: TypeResolveFn<${implementingTypes.map(name => `'${name}'`).join(' | ')}, ParentType, Context>,`), ...(node.fields || []).map((f: any) => f(node.name))].join('\n')).string;
+      .withBlock([indent(`__resolveType: TypeResolveFn<${possibleTypes}, ParentType, Context>,`), ...(node.fields || []).map((f: any) => f(node.name))].join('\n')).string;
   }
 
   SchemaDefinition() {

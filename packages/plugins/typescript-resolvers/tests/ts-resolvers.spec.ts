@@ -728,4 +728,25 @@ describe('TypeScript Resolvers Plugin', () => {
     ].join('\n');
     validateTs(content);
   });
+
+  it('Should generate valid types even when there are no implementers for an interface', async () => {
+    const schemaWithNoImplementors = buildSchema(/* GraphQL */ `
+      interface Node {
+        id: ID!
+      }
+
+      type Query {
+        node: Node!
+      }
+    `);
+
+    const result = await plugin(schemaWithNoImplementors, [], {}, { outputFile: '' });
+
+    expect(result).toBeSimilarStringTo(`
+      export type NodeResolvers<Context = any, ParentType = ResolversTypes['Node']> = {
+        __resolveType: TypeResolveFn<null, ParentType, Context>,
+        id?: Resolver<ResolversTypes['ID'], ParentType, Context>,
+      };
+    `);
+  });
 });
