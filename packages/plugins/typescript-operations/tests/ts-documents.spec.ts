@@ -1184,4 +1184,55 @@ describe('TypeScript Operations Plugin', () => {
       `);
     });
   });
+
+  describe('Issues', () => {
+    it('#1624 - Should work with fragment on union type', async () => {
+      const testSchema = buildSchema(`
+      type Query {
+        fooBar: [FooBar!]!
+      }
+      
+      union FooBar = Foo | Bar
+      
+      type Foo {
+        id: ID!
+      }
+      
+      type Bar {
+        id: ID!
+      }`);
+
+      const query = parse(`
+        query TestQuery {
+          fooBar {
+            ...FooBarFragment
+          }
+        }
+
+        fragment FooBarFragment on FooBar {
+          ... on Foo {
+            id
+          }
+          ... on Bar {
+            id
+          }
+        }
+      `);
+
+      const content = await plugin(
+        testSchema,
+        [{ filePath: '', content: query }],
+        {},
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+      export type TestQueryQueryVariables = {};
+      export type TestQueryQuery = ({ __typename?: 'Query' } & { fooBar: Array<FooBarFragmentFragment> });
+      export type FooBarFragmentFragment = (({ __typename?: 'Foo' } & Pick<Foo, 'id'>) | ({ __typename?: 'Bar' } & Pick<Bar, 'id'>));
+      `);
+    });
+  });
 });

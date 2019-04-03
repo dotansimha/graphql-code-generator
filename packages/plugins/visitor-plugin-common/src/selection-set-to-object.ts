@@ -263,7 +263,7 @@ export class SelectionSetToObject {
       }
 
       const typeFragments = fragments[typeName];
-      const interfacesFragments = schemaType.getInterfaces().filter(gqlInterface => !!interfaces[gqlInterface.name]);
+      const interfacesFragments = schemaType.getInterfaces === undefined ? [] : schemaType.getInterfaces().filter(gqlInterface => !!interfaces[gqlInterface.name]);
 
       if (interfacesFragments.length > 0) {
         for (const relevantInterface of interfacesFragments) {
