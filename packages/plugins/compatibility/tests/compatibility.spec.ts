@@ -43,6 +43,17 @@ describe('Compatibility Plugin', () => {
         }
       }
     }
+
+    query me2 {
+      me {
+        ...UserFields
+      }
+    }
+
+    fragment UserFields on User {
+      id
+      name
+    }
   `);
 
   it('Should generate namepsace and the internal types correctly', async () => {
@@ -83,11 +94,46 @@ describe('Compatibility Plugin', () => {
     expect(result).toContain(`export type __Friends = MeQuery['me']['friends'][0]['friends'][0]['friends'][0];`);
   });
 
+  it('Should work with fragment spread', async () => {
+    const ast = [{ filePath: '', content: basicQuery }];
+    const result = await plugin(schema, ast, {});
+
+    expect(result).toContain(`export type Me = UserFieldsFragment;`);
+    await validate(result, schema, ast, {});
+  });
+
+  it('Should work with inline fragment', async () => {
+    const ast = [{ filePath: '', content: basicQuery }];
+    const result = await plugin(schema, ast, {});
+
+    expect(result).toContain('export type Query = MeQuery;');
+    expect(result).toContain(`export type Me = UserFieldsFragment;`);
+    await validate(result, schema, ast, {});
+  });
+
   it('Should produce valid ts code', async () => {
     const ast = [{ filePath: '', content: basicQuery }];
     const result = await plugin(schema, ast, {});
-    const usage = `const myVar: Me.__Friends = { name: '1' }`;
+    const usage = `const myVar: Me.__Friends = { name: '1' }`; // Should refer to a single item and not to it's array
 
     await validate(result + '\n' + usage, schema, ast, {});
+  });
+
+  it('Should produce valid ts code with naming convention', async () => {
+    const config = { namingConvention: 'change-case#lowerCase' };
+    const ast = [{ filePath: '', content: basicQuery }];
+    const result = await plugin(schema, ast, config);
+    const usage = `const myVar: me.__friends = { name: '1' }`;
+
+    await validate(result + '\n' + usage, schema, ast, config);
+  });
+
+  it('Should produce valid ts code with prefix', async () => {
+    const config = { typesPrefix: 'I' };
+    const ast = [{ filePath: '', content: basicQuery }];
+    const result = await plugin(schema, ast, config);
+    const usage = `const myVar: IMe.__IFriends = { name: '1' }`;
+
+    await validate(result + '\n' + usage, schema, ast, config);
   });
 });

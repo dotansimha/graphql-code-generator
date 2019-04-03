@@ -18,5 +18,5 @@ export const plugin: PluginFunction<CompatabilityPluginRawConfig> = async (schem
     leave: visitor as any,
   });
 
-  return visitorResult.definitions.join('\n');
+  return visitorResult.definitions.filter(a => a && typeof a === 'string').join('\n');
 };

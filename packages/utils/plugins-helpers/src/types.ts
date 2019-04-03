@@ -74,17 +74,13 @@ export type PluginFunction<T = any> = (
   documents: Types.DocumentFile[],
   config: T,
   info?: {
-    outputFile: string;
+    outputFile?: string;
+    allPlugins?: Types.ConfiguredPlugin[];
+    [key: string]: any;
   }
 ) => Promise<string> | string;
 
-export type PluginValidateFn<T = any> = (
-  schema: GraphQLSchema,
-  documents: Types.DocumentFile[],
-  config: T,
-  outputFile: string,
-  allPlugins: Types.ConfiguredPlugin[]
-) => Promise<void> | void;
+export type PluginValidateFn<T = any> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: T, outputFile: string, allPlugins: Types.ConfiguredPlugin[]) => Promise<void> | void;
 
 export interface CodegenPlugin<T = any> {
   plugin: PluginFunction<T>;
