@@ -56,7 +56,7 @@
     "chalk": "2.4.2",
     "change-case": "3.1.0",
     "chokidar": "2.1.5",
-    "commander": "2.19.0",
+    "commander": "2.20.0",
     "common-tags": "1.8.0",
     "detect-indent": "5.0.0",
     "glob": "7.1.3",
