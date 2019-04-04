@@ -1,5 +1,5 @@
 import { BaseVisitor, getBaseType } from '@graphql-codegen/visitor-plugin-common';
-import { GraphQLNamedType, SelectionSetNode, isObjectType, isInterfaceType, isNonNullType, isListType, Kind, InlineFragmentNode, GraphQLSchema } from 'graphql';
+import { SelectionSetNode, isObjectType, isInterfaceType, isNonNullType, isListType, Kind, GraphQLSchema } from 'graphql';
 
 export type SelectionSetToObjectResult = { [typeName: string]: string };
 
