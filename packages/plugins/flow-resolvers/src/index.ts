@@ -46,7 +46,7 @@ export interface ISubscriptionResolverObject<Result, Parent, Context, Args> {
 }
 
 export type SubscriptionResolver<Result, Parent = {}, Context = {}, Args = {}> =
-  | ((...args: any[]) => ISubscriptionResolverObject<Result, Parent, Context, Args>)
+  | ((...args: Array<any>) => ISubscriptionResolverObject<Result, Parent, Context, Args>)
   | ISubscriptionResolverObject<Result, Parent, Context, Args>;
 
 export type TypeResolveFn<Types, Parent = {}, Context = {}> = (
