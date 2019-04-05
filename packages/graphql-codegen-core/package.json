@@ -44,7 +44,7 @@
     "tslib": "1.9.3"
   },
   "devDependencies": {
-    "ts-jest": "24.0.1"
+    "ts-jest": "24.0.2"
   },
   "sideEffects": false,
   "main": "dist/commonjs/index.js",
