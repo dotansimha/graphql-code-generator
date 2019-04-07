@@ -91,7 +91,7 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
       .export()
       .asKind('const')
       .withName(enumValuesName)
-      .withMethodCall('Object.freeze')
+      .withMethodCall('Object.freeze', true)
       .withBlock(
         node.values
           .map(enumOption => {

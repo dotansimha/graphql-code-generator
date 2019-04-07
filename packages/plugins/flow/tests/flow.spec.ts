@@ -271,6 +271,23 @@ describe('Flow Plugin', () => {
   });
 
   describe('Output options', () => {
+    it('Should produce valid flow code when used with useFlowExactObjects in enums', async () => {
+      const schema = buildSchema(`
+      enum MyEnum {
+        A
+        B
+      }
+        `);
+      const result = await plugin(schema, [], { useFlowExactObjects: true }, { outputFile: '' });
+
+      expect(result).toBeSimilarStringTo(`
+      export const MyEnumValues = Object.freeze({
+        A: 'A', 
+        B: 'B'
+      });`);
+      validateFlow(result);
+    });
+
     it('Should respect flow option useFlowExactObjects', async () => {
       const schema = buildSchema(`
         interface MyInterface {
