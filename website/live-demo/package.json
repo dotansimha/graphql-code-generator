@@ -26,7 +26,7 @@
     "@material-ui/core": "3.9.3",
     "codemirror": "5.45.0",
     "codemirror-graphql": "0.8.3",
-    "js-yaml": "3.13.0",
+    "js-yaml": "3.13.1",
     "react": "16.8.6",
     "react-dom": "16.8.6",
     "react-scripts-rewired": "2.1.8"
