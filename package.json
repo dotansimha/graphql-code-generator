@@ -47,7 +47,7 @@
     "tslint": "5.15.0",
     "typescript": "3.4.1",
     "react-apollo": "2.5.3",
-    "react-apollo-hooks": "0.4.4",
+    "react-apollo-hooks": "0.4.5",
     "apollo-server": "2.4.8"
   },
   "lint-staged": {
