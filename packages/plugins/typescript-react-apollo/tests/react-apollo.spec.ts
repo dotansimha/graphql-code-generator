@@ -367,7 +367,7 @@ query MyFeed {
       await validateTypeScript(content, schema, docs, {});
     });
 
-    it('should generate Document variable with noGraphQlTag', async () => {
+    it.only('should generate Document variable with noGraphQlTag', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
       const content = await plugin(
         schema,
@@ -381,6 +381,11 @@ query MyFeed {
       );
 
       expect(content).toBeSimilarStringTo(`export const TestDocument: DocumentNode = {"kind":"Document","defin`);
+
+      // For issue #1599 - make sure there are not `loc` properties
+      expect(content).not.toContain(`loc":`);
+      expect(content).not.toContain(`loc':`);
+
       await validateTypeScript(content, schema, docs, {});
     });
 
