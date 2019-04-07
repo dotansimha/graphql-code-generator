@@ -161,68 +161,121 @@ describe('Compatibility Plugin', () => {
     await validate(result + '\n' + usage, schema, ast, {});
   });
 
-  it('Should produce valid ts code with naming convention', async () => {
-    const config = { namingConvention: 'change-case#lowerCase' };
-    const ast = [{ filePath: '', content: basicQuery }];
-    const result = await plugin(schema, ast, config);
-    const usage = `const myVar: me.__friends = { name: '1' }`;
+  describe('Config', () => {
+    it('Should produce valid ts code with naming convention', async () => {
+      const config = { namingConvention: 'change-case#lowerCase' };
+      const ast = [{ filePath: '', content: basicQuery }];
+      const result = await plugin(schema, ast, config);
+      const usage = `const myVar: me.__friends = { name: '1' }`;
 
-    await validate(result + '\n' + usage, schema, ast, config);
-  });
-
-  it('Should produce valid ts code with prefix', async () => {
-    const config = { typesPrefix: 'I' };
-    const ast = [{ filePath: '', content: basicQuery }];
-    const result = await plugin(schema, ast, config);
-    const usage = `const myVar: IMe.__IFriends = { name: '1' }`;
-
-    await validate(result + '\n' + usage, schema, ast, config);
-  });
-
-  it('Should produce valid ts code with react-apollo', async () => {
-    const config = {};
-    const ast = [{ filePath: '', content: basicQuery }];
-    const result = await plugin(schema, ast, config, {
-      allPlugins: [
-        {
-          'typescript-react-apollo': {},
-        },
-      ],
+      await validate(result + '\n' + usage, schema, ast, config);
     });
 
-    expect(result).toBeSimilarStringTo(`    export namespace Me4 {
-      export type Props = Me4Props;
-      export const Document = Me4Document;
-      export const HOC = withMe4;
-      export const Component = Me4Component;
-    }`);
+    it('Should produce valid ts code with prefix', async () => {
+      const config = { typesPrefix: 'I' };
+      const ast = [{ filePath: '', content: basicQuery }];
+      const result = await plugin(schema, ast, config);
+      const usage = `const myVar: IMe.__IFriends = { name: '1' }`;
 
-    const raPluginResult = await raPlugin(schema, ast, config, { outputFile: '' });
-    await validate(raPluginResult + '\n' + result, schema, ast, config, true);
-  });
-
-  it('Should produce valid ts code with react-apollo with hooks', async () => {
-    const config = {
-      withHooks: true,
-    };
-    const ast = [{ filePath: '', content: basicQuery }];
-    const result = await plugin(schema, ast, config as any, {
-      allPlugins: [
-        {
-          'typescript-react-apollo': config,
-        },
-      ],
+      await validate(result + '\n' + usage, schema, ast, config);
     });
 
-    expect(result).toBeSimilarStringTo(`    export namespace Me4 {
-      export type Props = Me4Props;
-      export const Document = Me4Document;
-      export const HOC = withMe4;
-      export const Component = Me4Component;
-      export const use = useMe4Query;
-    }`);
+    it('Should produce valid ts code with noNamepsaces', async () => {
+      const config = { noNamespaces: true };
+      const ast = [{ filePath: '', content: basicQuery }];
+      const result = await plugin(schema, ast, config);
 
-    const raPluginResult = await raPlugin(schema, ast, config, { outputFile: '' });
-    await validate(raPluginResult + '\n' + result, schema, ast, config, true);
+      expect(result).toContain(`export type Me4Variables = Me4QueryVariables;`);
+      expect(result).toContain(`export type Me4Me = Me4Query['me'];`);
+      expect(result).toContain(`export type Me4UserInlineFragment = ({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>);`);
+      expect(result).toContain(`export type Me4Friends = ({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][0];`);
+      expect(result).toContain(`export type Me4_UserInlineFragment = ({ __typename: 'User' } & Pick<({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][0], 'id' | 'name'>);`);
+
+      await validate(result, schema, ast, config);
+    });
+  });
+
+  describe('React Apollo', () => {
+    it('Should produce valid ts code with react-apollo', async () => {
+      const config = {};
+      const ast = [{ filePath: '', content: basicQuery }];
+      const result = await plugin(schema, ast, config, {
+        allPlugins: [
+          {
+            'typescript-react-apollo': {},
+          },
+        ],
+      });
+
+      expect(result).toBeSimilarStringTo(`export namespace Me4 {
+        export type Variables = Me4QueryVariables;
+        export type Query = Me4Query;
+        export type Me = Me4Query['me'];
+        export type UserInlineFragment = ({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>);
+        export type Friends = ({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][0];
+        export type _UserInlineFragment = ({ __typename: 'User' } & Pick<({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][0], 'id' | 'name'>);
+        export type Props = Me4Props;
+        export const Document = Me4Document;
+        export const HOC = withMe4;
+        export const Component = Me4Component;
+      }`);
+
+      const raPluginResult = await raPlugin(schema, ast, config, { outputFile: '' });
+      await validate(raPluginResult + '\n' + result, schema, ast, config, true);
+    });
+
+    it('Should produce valid ts code with react-apollo and noNamespaces', async () => {
+      const config = { noNamespaces: true, withHooks: true };
+      const ast = [{ filePath: '', content: basicQuery }];
+      const result = await plugin(schema, ast, config, {
+        allPlugins: [
+          {
+            'typescript-react-apollo': config,
+          },
+        ],
+      });
+
+      expect(result).toContain(`export type Me4Variables = Me4QueryVariables;`);
+      expect(result).toContain(`export type Me4Me = Me4Query['me'];`);
+      expect(result).toContain(`export type Me4UserInlineFragment = ({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>);`);
+      expect(result).toContain(`export type Me4Friends = ({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][0];`);
+      expect(result).toContain(`export type Me4_UserInlineFragment = ({ __typename: 'User' } & Pick<({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][0], 'id' | 'name'>);`);
+      expect(result).toContain(`export const Me4HOC = withMe4;`);
+      expect(result).toContain(`export const useMe4 = useMe4Query;`);
+
+      const raPluginResult = await raPlugin(schema, ast, config as any, { outputFile: '' });
+      await validate(raPluginResult + '\n' + result, schema, ast, config, true);
+    });
+
+    it('Should produce valid ts code with react-apollo with hooks', async () => {
+      const config = {
+        withHooks: true,
+      };
+      const ast = [{ filePath: '', content: basicQuery }];
+      const result = await plugin(schema, ast, config as any, {
+        allPlugins: [
+          {
+            'typescript-react-apollo': config,
+          },
+        ],
+      });
+
+      expect(result).toBeSimilarStringTo(`export namespace Me4 {
+        export type Variables = Me4QueryVariables;
+        export type Query = Me4Query;
+        export type Me = Me4Query['me'];
+        export type UserInlineFragment = ({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>);
+        export type Friends = ({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][0];
+        export type _UserInlineFragment = ({ __typename: 'User' } & Pick<({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][0], 'id' | 'name'>);
+        export type Props = Me4Props;
+        export const Document = Me4Document;
+        export const HOC = withMe4;
+        export const Component = Me4Component;
+        export const use = useMe4Query;
+      }`);
+
+      const raPluginResult = await raPlugin(schema, ast, config, { outputFile: '' });
+      await validate(raPluginResult + '\n' + result, schema, ast, config, true);
+    });
   });
 });

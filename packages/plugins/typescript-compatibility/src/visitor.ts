@@ -17,32 +17,35 @@ export class CompatabilityPluginVisitor extends BaseVisitor<CompatabilityPluginR
     } as any);
   }
 
-  protected buildOperationBlock(node: OperationDefinitionNode): string {
+  protected buildOperationBlock(node: OperationDefinitionNode): SelectionSetToObjectResult {
     const typeName = toPascalCase(node.operation);
     const baseName = this.convertName(node.name.value, { suffix: `${toPascalCase(node.operation)}` });
+    const typesPrefix = this.config.noNamespaces ? this.convertName(node.name.value) : '';
     const selectionSetTypes: SelectionSetToObjectResult = {
-      [this.convertName('Variables')]: this.convertName(node.name.value, { suffix: `${toPascalCase(node.operation)}Variables` }),
+      [typesPrefix + this.convertName('Variables')]: {
+        export: 'type',
+        name: this.convertName(node.name.value, { suffix: `${toPascalCase(node.operation)}Variables` }),
+      },
     };
 
-    selectionSetToTypes(this, this._schema, typeName, baseName, node.operation, node.selectionSet, selectionSetTypes);
+    selectionSetToTypes(typesPrefix, this, this._schema, typeName, baseName, node.operation, node.selectionSet, selectionSetTypes);
 
+    return selectionSetTypes;
+  }
+
+  protected printTypes(selectionSetTypes: SelectionSetToObjectResult): string {
     return Object.keys(selectionSetTypes)
-      .map(typeName => `export type ${typeName} = ${selectionSetTypes[typeName]};`)
-      .map(m => indent(m))
+      .filter(typeName => typeName !== selectionSetTypes[typeName].name)
+      .map(typeName => `export ${selectionSetTypes[typeName].export} ${typeName} = ${selectionSetTypes[typeName].name};`)
+      .map(m => (this.config.noNamespaces ? m : indent(m)))
       .join('\n');
   }
 
   OperationDefinition(node: OperationDefinitionNode): string {
     const baseName = node.name.value;
     const convertedName = this.convertName(baseName);
-
-    const results = [
-      new DeclarationBlock(this._declarationBlockConfig)
-        .export()
-        .asKind('namespace')
-        .withName(convertedName)
-        .withBlock(this.buildOperationBlock(node)).string,
-    ];
+    const results = [];
+    const selectionSetTypes = this.buildOperationBlock(node);
 
     if (this.config.reactApollo) {
       const reactApolloConfig = this.config.reactApollo[Object.keys(this.config.reactApollo)[0]];
@@ -64,23 +67,52 @@ export class CompatabilityPluginVisitor extends BaseVisitor<CompatabilityPluginR
         }
       }
 
-      const pieces = [indent(`export type Props = ${this.convertName(baseName, { suffix: 'Props' })};`), indent(`export const Document = ${this.convertName(baseName, { suffix: 'Document' })};`)];
+      const prefix = this.config.noNamespaces ? convertedName : '';
+
+      selectionSetTypes[prefix + 'Props'] = {
+        export: 'type',
+        name: this.convertName(baseName, { suffix: 'Props' }),
+      };
+
+      selectionSetTypes[prefix + 'Document'] = {
+        export: 'const',
+        name: this.convertName(baseName, { suffix: 'Document' }),
+      };
 
       if (hoc) {
-        pieces.push(indent(`export const HOC = with${convertedName};`));
+        selectionSetTypes[prefix + 'HOC'] = {
+          export: 'const',
+          name: `with${convertedName}`,
+        };
       }
 
       if (component) {
-        pieces.push(indent(`export const Component = ${this.convertName(baseName, { suffix: 'Component' })};`));
+        selectionSetTypes[prefix + 'Component'] = {
+          export: 'const',
+          name: this.convertName(baseName, { suffix: 'Component' }),
+        };
       }
 
       if (hooks) {
-        pieces.push(indent(`export const use = use${this.convertName(baseName, { suffix: toPascalCase(node.operation) })};`));
+        selectionSetTypes['use' + prefix] = {
+          export: 'const',
+          name: 'use' + this.convertName(baseName, { suffix: toPascalCase(node.operation) }),
+        };
       }
+    }
 
-      results.push(`export namespace ${convertedName} {
-${pieces.join('\n')}
-}`);
+    const operationsBlock = this.printTypes(selectionSetTypes);
+
+    if (!this.config.noNamespaces) {
+      results.push(
+        new DeclarationBlock(this._declarationBlockConfig)
+          .export()
+          .asKind('namespace')
+          .withName(convertedName)
+          .withBlock(operationsBlock).string
+      );
+    } else {
+      results.push(operationsBlock);
     }
 
     return results.join('\n');
