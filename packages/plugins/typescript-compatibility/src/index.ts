@@ -3,7 +3,9 @@ import { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
 import { RawConfig } from '@graphql-codegen/visitor-plugin-common';
 import { CompatabilityPluginVisitor } from './visitor';
 
-export interface CompatabilityPluginRawConfig extends RawConfig {}
+export interface CompatabilityPluginRawConfig extends RawConfig {
+  noNamespaces?: boolean;
+}
 
 const REACT_APOLLO_PLUGIN_NAME = 'typescript-react-apollo';
 

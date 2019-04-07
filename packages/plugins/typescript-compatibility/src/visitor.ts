@@ -1,17 +1,19 @@
 import { CompatabilityPluginRawConfig } from './index';
-import { BaseVisitor, DeclarationBlock, indent, toPascalCase } from '@graphql-codegen/visitor-plugin-common';
+import { BaseVisitor, DeclarationBlock, indent, toPascalCase, getConfigValue } from '@graphql-codegen/visitor-plugin-common';
 import { GraphQLSchema, OperationDefinitionNode } from 'graphql';
 import { ParsedConfig } from '@graphql-codegen/visitor-plugin-common';
 import { selectionSetToTypes, SelectionSetToObjectResult } from './selection-set-to-types';
 
 export interface CompatabilityPluginConfig extends ParsedConfig {
   reactApollo: any;
+  noNamespaces: boolean;
 }
 
 export class CompatabilityPluginVisitor extends BaseVisitor<CompatabilityPluginRawConfig, CompatabilityPluginConfig> {
   constructor(rawConfig: CompatabilityPluginRawConfig, private _schema: GraphQLSchema, options: { reactApollo: any }) {
     super(rawConfig, {
       reactApollo: options.reactApollo,
+      noNamespaces: getConfigValue<boolean>(rawConfig.noNamespaces, false),
     } as any);
   }
 
@@ -33,6 +35,7 @@ export class CompatabilityPluginVisitor extends BaseVisitor<CompatabilityPluginR
   OperationDefinition(node: OperationDefinitionNode): string {
     const baseName = node.name.value;
     const convertedName = this.convertName(baseName);
+
     const results = [
       new DeclarationBlock(this._declarationBlockConfig)
         .export()
