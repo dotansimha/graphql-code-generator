@@ -21,6 +21,10 @@ export class FlowResolversVisitor extends BaseResolversVisitor<FlowResolversPlug
     return `import { ${types.map(t => `type ${t}`).join(', ')} } from '${source}';`;
   }
 
+  protected formatRootResolver(schemaTypeName: string, resolverType: string): string {
+    return `${schemaTypeName}?: ${resolverType}${resolverType.includes('<') ? '' : '<>'},`;
+  }
+
   ListType(node: ListTypeNode): string {
     return `?${super.ListType(node)}`;
   }
