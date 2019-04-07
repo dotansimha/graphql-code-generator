@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "1.0.6",
-    "auto-bind": "2.0.0",
+    "auto-bind": "2.1.0",
     "dependency-graph": "0.8.0",
     "graphql-tag": "2.10.1",
     "tslib": "1.9.3"
