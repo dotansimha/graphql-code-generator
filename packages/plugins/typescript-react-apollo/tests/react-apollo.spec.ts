@@ -367,7 +367,7 @@ query MyFeed {
       await validateTypeScript(content, schema, docs, {});
     });
 
-    it.only('should generate Document variable with noGraphQlTag', async () => {
+    it('should generate Document variable with noGraphQlTag', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
       const content = await plugin(
         schema,
