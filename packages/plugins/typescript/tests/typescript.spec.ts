@@ -374,6 +374,34 @@ describe('TypeScript', () => {
       validateTs(result);
     });
 
+    it('Should use custom namingConvention for enums values as string, without specifying other type converters', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        enum Foo {
+          YES
+          NO
+        }
+        type MyType {
+          foo(a: String!, b: String, c: [String], d: [Int!]!): Foo
+        }
+      `);
+      const result = await plugin(
+        schema,
+        [],
+        {
+          namingConvention: {
+            enumValues: 'change-case#lowerCase',
+          },
+        },
+        { outputFile: '' }
+      );
+
+      expect(result).toBeSimilarStringTo(`
+      export enum Foo {
+        yes = 'YES',
+        no = 'NO'
+      }`);
+    });
+
     it('Should use custom namingConvention for enums', async () => {
       const schema = buildSchema(/* GraphQL */ `
         enum Foo {

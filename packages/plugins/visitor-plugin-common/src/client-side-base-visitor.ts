@@ -91,7 +91,13 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
     ${this._includeFragments(this._transformFragments(node))}`);
 
     if (this.config.noGraphQLTag) {
-      return JSON.stringify(gqlTag(doc));
+      const gqlObj = gqlTag(doc);
+
+      if (gqlObj && gqlObj['loc']) {
+        delete gqlObj.loc;
+      }
+
+      return JSON.stringify(gqlObj);
     }
 
     return 'gql`' + doc + '`';

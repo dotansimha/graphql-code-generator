@@ -381,6 +381,11 @@ query MyFeed {
       );
 
       expect(content).toBeSimilarStringTo(`export const TestDocument: DocumentNode = {"kind":"Document","defin`);
+
+      // For issue #1599 - make sure there are not `loc` properties
+      expect(content).not.toContain(`loc":`);
+      expect(content).not.toContain(`loc':`);
+
       await validateTypeScript(content, schema, docs, {});
     });
 

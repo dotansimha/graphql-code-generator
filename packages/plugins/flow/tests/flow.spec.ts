@@ -75,11 +75,11 @@ describe('Flow Plugin', () => {
         /** Repeat password */
         passwordRepeat: $ElementType<Scalars, 'String'>,
         /** Language */
-        language: ?$ElementType<Scalars, 'String'>,
+        language?: ?$ElementType<Scalars, 'String'>,
         /** Timezone */
-        timezone: ?$ElementType<Scalars, 'String'>,
+        timezone?: ?$ElementType<Scalars, 'String'>,
         /** CAPTCHA verification code */
-        captcha: ?$ElementType<Scalars, 'String'>,
+        captcha?: ?$ElementType<Scalars, 'String'>,
       };
       `);
     });
@@ -271,6 +271,23 @@ describe('Flow Plugin', () => {
   });
 
   describe('Output options', () => {
+    it('Should produce valid flow code when used with useFlowExactObjects in enums', async () => {
+      const schema = buildSchema(`
+      enum MyEnum {
+        A
+        B
+      }
+        `);
+      const result = await plugin(schema, [], { useFlowExactObjects: true }, { outputFile: '' });
+
+      expect(result).toBeSimilarStringTo(`
+      export const MyEnumValues = Object.freeze({
+        A: 'A', 
+        B: 'B'
+      });`);
+      validateFlow(result);
+    });
+
     it('Should respect flow option useFlowExactObjects', async () => {
       const schema = buildSchema(`
         interface MyInterface {
@@ -631,7 +648,7 @@ describe('Flow Plugin', () => {
 
       expect(result).toBeSimilarStringTo(`
         export type TInput = {
-          name: ?$ElementType<Scalars, 'String'>,
+          name?: ?$ElementType<Scalars, 'String'>,
         };
       `);
 
@@ -773,15 +790,15 @@ describe('Flow Plugin', () => {
       expect(result).toBeSimilarStringTo(`
         export type MyInput = {
           a: $ElementType<Scalars, 'String'>,
-          b: ?$ElementType<Scalars, 'Int'>,
-          c: ?MyType,
+          b?: ?$ElementType<Scalars, 'Int'>,
+          c?: ?MyType,
           d: MyType,
-          e: ?Array<?$ElementType<Scalars, 'String'>>,
+          e?: ?Array<?$ElementType<Scalars, 'String'>>,
           f: Array<?$ElementType<Scalars, 'String'>>,
           g: Array<$ElementType<Scalars, 'String'>>,
-          h: ?Array<$ElementType<Scalars, 'String'>>,
-          i: ?Array<?Array<?$ElementType<Scalars, 'String'>>>,
-          j: ?Array<?Array<?Array<?$ElementType<Scalars, 'String'>>>>,
+          h?: ?Array<$ElementType<Scalars, 'String'>>,
+          i?: ?Array<?Array<?$ElementType<Scalars, 'String'>>>,
+          j?: ?Array<?Array<?Array<?$ElementType<Scalars, 'String'>>>>,
           k: Array<?Array<?$ElementType<Scalars, 'String'>>>,
           l: Array<Array<$ElementType<Scalars, 'String'>>>,
         };
@@ -948,6 +965,40 @@ describe('Flow Plugin', () => {
       `);
 
       const result = await plugin(schema, [], {}, { outputFile: '' });
+
+      validateFlow(result);
+    });
+  });
+
+  describe('Issues', () => {
+    it('Issue #1645 - Input type fields does not have optional sign', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        schema {
+          mutation: Mutation
+        }
+
+        type Mutation {
+          updateUser(userId: ID!, update: UpdateUser): User!
+        }
+
+        type User {
+          id: ID!
+          username: String!
+          email: String!
+        }
+
+        input UpdateUser {
+          username: String
+          email: String
+        }
+      `);
+
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+
+      expect(result).toBeSimilarStringTo(`export type UpdateUser = {
+          username?: ?$ElementType<Scalars, 'String'>,
+          email?: ?$ElementType<Scalars, 'String'>,
+        };`);
 
       validateFlow(result);
     });
