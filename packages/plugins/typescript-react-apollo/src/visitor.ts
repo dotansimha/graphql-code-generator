@@ -59,11 +59,11 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
 
     const mutationFn = node.operation === 'mutation' ? `export type ${this.convertName(node.name.value + 'MutationFn')} = ReactApollo.MutationFn<${operationResultType}, ${operationVariablesTypes}>;` : null;
 
-    const hocString = `export function with${operationName}<TProps, TChildProps = {}>(operationOptions: ReactApollo.OperationOption<
+    const hocString = `export function with${operationName}<TProps, TChildProps = {}>(operationOptions?: ReactApollo.OperationOption<
   TProps,
   ${operationResultType},
   ${operationVariablesTypes},
-  ${propsTypeName}<TChildProps>> | undefined) {
+  ${propsTypeName}<TChildProps>>) {
     return ReactApollo.with${titleCase(node.operation)}<TProps, ${operationResultType}, ${operationVariablesTypes}, ${propsTypeName}<TChildProps>>(${documentVariableName}, operationOptions);
 };`;
 
