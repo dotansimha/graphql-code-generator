@@ -39,11 +39,12 @@ export function selectionSetToTypes(
       for (const selection of selectionSet.selections) {
         switch (selection.kind) {
           case Kind.FIELD: {
+            const selectionName = selection.alias && selection.alias.value ? selection.alias.value : selection.name.value;
             const field = parentType.getFields()[selection.name.value];
             const baseType = getBaseType(field.type);
             const isArray = (isNonNullType(field.type) && isListType(field.type.ofType)) || isListType(field.type);
-            const newStack = `${stack}['${selection.name.value}']${isArray ? '[0]' : ''}`;
-            selectionSetToTypes(typesPrefix, baseVisitor, schema, baseType.name, newStack, selection.name.value, selection.selectionSet, result);
+            const newStack = `${stack}['${selectionName}']${isArray ? '[0]' : ''}`;
+            selectionSetToTypes(typesPrefix, baseVisitor, schema, baseType.name, newStack, selectionName, selection.selectionSet, result);
 
             break;
           }

@@ -46,6 +46,12 @@ describe('Compatibility Plugin', () => {
       }
     }
 
+    query aliasTest {
+      currentUser: me {
+        id
+      }
+    }
+
     query me2 {
       me {
         ...UserFields
@@ -96,6 +102,13 @@ describe('Compatibility Plugin', () => {
     const result = await plugin(schema, [{ filePath: '', content: basicQuery }], {});
 
     expect(result).toContain('export type Variables = MeQueryVariables;');
+  });
+
+  it('Should handle field name aliasing', async () => {
+    const result = await plugin(schema, [{ filePath: '', content: basicQuery }], {});
+
+    expect(result).toContain(`export type Query = AliasTestQuery;`);
+    expect(result).toContain(`export type CurrentUser = AliasTestQuery['currentUser'];`);
   });
 
   it('Should generate mapping to 1.0 types according to fields usage and selection set', async () => {
