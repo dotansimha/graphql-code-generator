@@ -4,6 +4,24 @@ import { RawConfig } from '@graphql-codegen/visitor-plugin-common';
 import { CompatabilityPluginVisitor } from './visitor';
 
 export interface CompatabilityPluginRawConfig extends RawConfig {
+  /**
+   * @name noNamespaces
+   * @type boolean
+   * @description Does not generate TypeScript `namepsace`s and uses the operation name as prefix.
+   * @default false
+   *
+   * @example
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *    - typescript-operations
+   *    - typescript-compatibility
+   *  config:
+   *    noNamespaces: true
+   * ```
+   */
   noNamespaces?: boolean;
 }
 

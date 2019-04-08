@@ -14,6 +14,7 @@
       "plugins/index",
       "plugins/typescript",
       "plugins/typescript-operations",
+      "plugins/typescript-compatibility",
       "plugins/typescript-resolvers",
       "plugins/typescript-graphql-files-modules",
       "plugins/typescript-mongodb",

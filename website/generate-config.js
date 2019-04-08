@@ -7,6 +7,7 @@ const BASE_DIR = '../docs/generated-config';
 const mapping = {
   '../packages/plugins/time/src/index.ts': BASE_DIR + '/time.md',
   '../packages/plugins/typescript/src/index.ts': BASE_DIR + '/typescript.md',
+  '../packages/plugins/typescript-compatibility/src/index.ts': BASE_DIR + '/typescript-compatibility.md',
   '../packages/plugins/typescript-operations/src/index.ts': BASE_DIR + '/typescript-operations.md',
   '../packages/plugins/typescript-mongodb/src/index.ts': BASE_DIR + '/typescript-mongodb.md',
   '../packages/plugins/typescript-resolvers/src/index.ts': BASE_DIR + '/typescript-resolvers.md',
