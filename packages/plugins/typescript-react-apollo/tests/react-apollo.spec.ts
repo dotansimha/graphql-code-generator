@@ -455,11 +455,11 @@ query MyFeed {
 
       expect(content).toBeSimilarStringTo(`export type TestProps<TChildProps = {}> = Partial<ReactApollo.DataProps<TestQuery, TestQueryVariables>> & TChildProps;`);
 
-      expect(content).toBeSimilarStringTo(`export function withTest<TProps, TChildProps = {}>(operationOptions: ReactApollo.OperationOption<
+      expect(content).toBeSimilarStringTo(`export function withTest<TProps, TChildProps = {}>(operationOptions?: ReactApollo.OperationOption<
   TProps,
   TestQuery,
   TestQueryVariables,
-  TestProps<TChildProps>> | undefined) {
+  TestProps<TChildProps>>) {
     return ReactApollo.withQuery<TProps, TestQuery, TestQueryVariables, TestProps<TChildProps>>(TestDocument, operationOptions);
 };`);
       await validateTypeScript(content, schema, docs, {});
