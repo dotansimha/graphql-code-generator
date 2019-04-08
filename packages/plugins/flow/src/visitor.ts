@@ -1,4 +1,4 @@
-import { NonNullTypeNode, ListTypeNode, ObjectTypeDefinitionNode, FieldDefinitionNode, EnumTypeDefinitionNode, NamedTypeNode, GraphQLSchema } from 'graphql';
+import { NonNullTypeNode, ListTypeNode, ObjectTypeDefinitionNode, FieldDefinitionNode, EnumTypeDefinitionNode, NamedTypeNode, GraphQLSchema, InputValueDefinitionNode, Kind } from 'graphql';
 import { BaseTypesVisitor, DeclarationBlock, wrapWithSingleQuotes, indent, ParsedTypesConfig, transformComment } from '@graphql-codegen/visitor-plugin-common';
 import * as autoBind from 'auto-bind';
 import { FlowPluginConfig } from './index';
@@ -25,6 +25,14 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
 
   protected _getScalar(name: string): string {
     return `$ElementType<Scalars, '${name}'>`;
+  }
+
+  InputValueDefinition(node: InputValueDefinitionNode, key?: number | string, parent?: any): string {
+    const originalFieldNode = parent[key] as FieldDefinitionNode;
+    const addOptionalSign = originalFieldNode.type.kind !== Kind.NON_NULL_TYPE;
+    const comment = transformComment((node.description as any) as string, 1);
+
+    return comment + indent(`${node.name}${addOptionalSign ? '?' : ''}: ${node.type},`);
   }
 
   NamedType(node: NamedTypeNode): string {
@@ -83,7 +91,7 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
       .export()
       .asKind('const')
       .withName(enumValuesName)
-      .withMethodCall('Object.freeze')
+      .withMethodCall('Object.freeze', true)
       .withBlock(
         node.values
           .map(enumOption => {

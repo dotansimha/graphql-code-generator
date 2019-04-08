@@ -58,7 +58,7 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    *    - typescript-operations
    *    - typescript-react-apollo
    *  config:
-   *    withComponent: false
+   *    withHooks: false
    * ```
    */
   withHooks?: boolean;

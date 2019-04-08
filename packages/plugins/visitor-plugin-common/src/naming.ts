@@ -80,11 +80,17 @@ export function convertFactory(config: { namingConvention?: NamingConvention }):
       };
     }
 
-    if (config.namingConvention[type] === 'keep') {
+    if (typeof config.namingConvention === 'object' && config.namingConvention[type] === 'keep') {
       return str => str;
     }
 
-    if (typeof config.namingConvention[type] === 'string') {
+    if (typeof config.namingConvention === 'object') {
+      if (!config.namingConvention[type]) {
+        return (str: string, opts: ConvertOptions = {}) => {
+          return convertNameParts(str, pascalCase, !!(opts || {}).transformUnderscore);
+        };
+      }
+
       return (str: string, opts: ConvertOptions = {}) => {
         return convertNameParts(str, resolveExternalModuleAndFn(config.namingConvention[type]), !!(opts || {}).transformUnderscore);
       };

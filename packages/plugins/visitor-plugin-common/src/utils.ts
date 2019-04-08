@@ -88,6 +88,7 @@ export class DeclarationBlock {
   _block = null;
   _nameGenerics = null;
   _comment = null;
+  _ignoreBlockWrapper = false;
 
   constructor(private _config: DeclarationBlockConfig) {
     this._config = {
@@ -118,8 +119,9 @@ export class DeclarationBlock {
     return this;
   }
 
-  withMethodCall(methodName: string): DeclarationBlock {
+  withMethodCall(methodName: string, ignoreBlockWrapper = false): DeclarationBlock {
     this._methodName = methodName;
+    this._ignoreBlockWrapper = ignoreBlockWrapper;
 
     return this;
   }
@@ -170,8 +172,9 @@ export class DeclarationBlock {
         result += this._content;
       }
 
-      const before = '{' + this._config.blockWrapper;
-      const after = this._config.blockWrapper + '}';
+      const blockWrapper = this._ignoreBlockWrapper ? '' : this._config.blockWrapper;
+      const before = '{' + blockWrapper;
+      const after = blockWrapper + '}';
       const block = [before, this._block, after].join('\n');
 
       if (this._methodName) {
@@ -211,18 +214,6 @@ export function convertNameParts(str: string, func: (str: string) => string, tra
 export function toPascalCase(str: string, transformUnderscore = false): string {
   return convertNameParts(str, pascalCase, transformUnderscore);
 }
-
-export const wrapTypeWithModifiers = (prefix = '') => (baseType: string, type: GraphQLObjectType | GraphQLNonNull<GraphQLObjectType> | GraphQLList<GraphQLObjectType>): string => {
-  if (isNonNullType(type)) {
-    return wrapTypeWithModifiers(prefix)(baseType, type.ofType).substr(1);
-  } else if (isListType(type)) {
-    const innerType = wrapTypeWithModifiers(prefix)(baseType, type.ofType);
-
-    return `${prefix}Array<${innerType}>`;
-  } else {
-    return `${prefix}${baseType}`;
-  }
-};
 
 export function buildScalars(schema: GraphQLSchema, scalarsMapping: ScalarsMap): ScalarsMap {
   const typeMap = schema.getTypeMap();

@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/time",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "GraphQL Code Generator plugin for adding the current time for an output file",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
@@ -8,13 +8,13 @@
     "build": "tsc -m esnext --outDir dist/esnext && tsc -m commonjs --outDir dist/commonjs"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "1.0.6",
+    "@graphql-codegen/plugin-helpers": "1.0.7",
     "moment": "2.24.0"
   },
   "devDependencies": {
-    "graphql": "14.2.0",
+    "graphql": "14.2.1",
     "graphql-tag": "2.10.1",
-    "typescript": "3.3.4000"
+    "typescript": "3.4.2"
   },
   "peerDependencies": {
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0"

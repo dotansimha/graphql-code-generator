@@ -26,7 +26,8 @@ describe('Components', () => {
     const content = await plugin(schema, [{ filePath: '', content: documents }], { componentType: StencilComponentType.class }, { outputFile: '' });
 
     expect(content).toBeSimilarStringTo(`
-        import { Component } from '@stencil/core';
+        import 'stencil-apollo';
+        import { Component, Prop } from '@stencil/core';
       `);
   });
 
@@ -52,12 +53,16 @@ describe('Components', () => {
     expect(content).toBeSimilarStringTo(`
         export type FeedProps = {
             variables ?: FeedQueryVariables;
-            onReady ?: import('stencil-apollo/dist/types/components/apollo-query/types').OnQueryReadyFn<FeedQuery, FeedQueryVariables>;
+            children ?: import('stencil-apollo/dist/types/components/apollo-query/types').QueryRenderer<FeedQuery, FeedQueryVariables>;
         };
     `);
 
     expect(content).toBeSimilarStringTo(`
-        export const FeedComponent = (props: FeedProps) => <apollo-query query={ FeedDocument } { ...props } />;
+        export const FeedComponent = (props: FeedProps, children: [import('stencil-apollo/dist/types/components/apollo-query/types').QueryRenderer<FeedQuery, FeedQueryVariables>]) => (
+          <StencilApollo.Query<FeedQuery, FeedQueryVariables> query={ FeedDocument } { ...props }>
+            {children[0]}
+          </StencilApollo.Query>
+        );
     `);
   });
 
@@ -85,9 +90,9 @@ describe('Components', () => {
                 tag: 'apollo-feed'
             })
             export class FeedComponent {
-                @Prop() onReady: import('stencil-apollo/dist/types/components/apollo-query/types').OnQueryReadyFn<FeedQuery, FeedQueryVariables>;
+                @Prop() renderer: import('stencil-apollo/dist/types/components/apollo-query/types').QueryRenderer<FeedQuery, FeedQueryVariables>;
                 render() {
-                    return <apollo-query query={ FeedDocument } onReady={ this.onReady } />;
+                    return <apollo-query query={ FeedDocument } renderer={ this.renderer } />;
                 }
             }
       `);

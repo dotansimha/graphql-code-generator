@@ -46,7 +46,7 @@ Then, provide the config object to `codegen`:
 
 ```ts
 const output = await codegen(config);
-fs.writeFile(path.join(__dirname, outpuFile), output, () => {
+fs.writeFile(path.join(__dirname, outputFile), output, () => {
       console.log('Outputs generated!');
     });
 ```

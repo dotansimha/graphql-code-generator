@@ -699,11 +699,11 @@
     to-fast-properties "^2.0.0"
 
 "@graphql-codegen/config-markdown-generator@../packages/utils/config-md-generator":
-  version "1.0.0"
+  version "1.0.6"
   dependencies:
     "@microsoft/tsdoc" "0.12.8"
     tslib "1.9.3"
-    typescript "3.3.3333"
+    typescript "3.3.4000"
 
 "@microsoft/tsdoc@0.12.8":
   version "0.12.8"
@@ -2659,10 +2659,10 @@ dkim-signer@^0.2.2:
   dependencies:
     libmime "^2.0.3"
 
-docusaurus@1.7.3:
-  version "1.7.3"
-  resolved "https://registry.yarnpkg.com/docusaurus/-/docusaurus-1.7.3.tgz#c3546ec83ca83f5840c46b529e54f12b8f6fb565"
-  integrity sha512-FiMtqdX2ytp176ahp+F3epqe0KyTZ12jx2xw2NLmgxCd7d9rbZ6bWHHHGjevi77VhXnM1ZUZQZkmsh3Hl+TlGA==
+docusaurus@1.8.0:
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/docusaurus/-/docusaurus-1.8.0.tgz#d82eeb426c1f0fb69411f141fa9311213254ad1a"
+  integrity sha512-Hn+/simu3yiX+5ucqNvX6yTyXtH3BFu2UIeGiXcKiRG8Khos206SsQQ2B7DrBzeJ0duhPxi/I7zYMFyaF23UUQ==
   dependencies:
     "@babel/core" "^7.0.0"
     "@babel/plugin-proposal-class-properties" "^7.0.0"
@@ -7434,10 +7434,10 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript@3.3.3333:
-  version "3.3.3333"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.3.3333.tgz#171b2c5af66c59e9431199117a3bcadc66fdcfd6"
-  integrity sha512-JjSKsAfuHBE/fB2oZ8NxtRTk5iGcg6hkYXMnZ3Wc+b2RSqejEqTaem11mHASMnFilHrax3sLK0GDzcJrekZYLw==
+typescript@3.3.4000:
+  version "3.3.4000"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.3.4000.tgz#76b0f89cfdbf97827e1112d64f283f1151d6adf0"
+  integrity sha512-jjOcCZvpkl2+z7JFn0yBOoLQyLoIkNZAs/fYJkUG6VKy6zLPHJGfQJYFHzibB6GJaF/8QrcECtlQ5cpvRHSMEA==
 
 unbzip2-stream@^1.0.9:
   version "1.3.3"

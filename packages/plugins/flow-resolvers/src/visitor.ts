@@ -21,6 +21,10 @@ export class FlowResolversVisitor extends BaseResolversVisitor<FlowResolversPlug
     return `import { ${types.map(t => `type ${t}`).join(', ')} } from '${source}';`;
   }
 
+  protected formatRootResolver(schemaTypeName: string, resolverType: string): string {
+    return `${schemaTypeName}?: ${resolverType}${resolverType.includes('<') ? '' : '<>'},`;
+  }
+
   ListType(node: ListTypeNode): string {
     return `?${super.ListType(node)}`;
   }
@@ -39,9 +43,31 @@ export class FlowResolversVisitor extends BaseResolversVisitor<FlowResolversPlug
     return baseValue;
   }
 
+  protected applyMaybe(str: string): string {
+    return `?${str}`;
+  }
+
+  protected clearMaybe(str: string): string {
+    if (str.startsWith('?')) {
+      return str.substr(1);
+    }
+
+    return str;
+  }
+
+  protected getTypeToUse(name: string): string {
+    const resolversType = this.convertName('ResolversTypes');
+
+    return `$ElementType<${resolversType}, '${name}'>`;
+  }
+
+  protected replaceFieldsInType(typeName: string, relevantFields: { fieldName: string; replaceWithType: string }[]): string {
+    return `$Diff<${typeName}, { ${relevantFields.map(f => `${f.fieldName}: * `).join(', ')} }> & { ${relevantFields.map(f => `${f.fieldName}: ${f.replaceWithType}`).join(', ')} }`;
+  }
+
   ScalarTypeDefinition(node: ScalarTypeDefinitionNode): string {
     const nameAsString = (node.name as any) as string;
-    const baseName = this.scalars[nameAsString] ? this._getScalar(nameAsString) : this.convertName(node);
+    const baseName = this.getTypeToUse(nameAsString);
     this._collectedResolvers[node.name as any] = 'GraphQLScalarType';
 
     return new DeclarationBlock({
