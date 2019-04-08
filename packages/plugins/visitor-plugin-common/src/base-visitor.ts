@@ -97,7 +97,7 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
     return this.config.scalars;
   }
 
-  protected convertName(node: ASTNode | string, options?: BaseVisitorConvertOptions & ConvertOptions): string {
+  public convertName(node: ASTNode | string, options?: BaseVisitorConvertOptions & ConvertOptions): string {
     const useTypesPrefix = typeof (options && options.useTypesPrefix) === 'boolean' ? options.useTypesPrefix : true;
 
     return (useTypesPrefix ? this.config.typesPrefix : '') + this.config.convert(node, options);

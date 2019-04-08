@@ -52,5 +52,6 @@ export async function executePlugin(options: ExecutePluginOptions, plugin: Codeg
 
   return plugin.plugin(outputSchema, options.documents, options.config, {
     outputFile: options.outputFilename,
+    allPlugins: options.allPlugins,
   });
 }

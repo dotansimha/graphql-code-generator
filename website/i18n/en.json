@@ -50,6 +50,9 @@
       "generated-config/typescript-apollo-angular": {
         "title": "generated-config/typescript-apollo-angular"
       },
+      "generated-config/typescript-compatibility": {
+        "title": "generated-config/typescript-compatibility"
+      },
       "generated-config/typescript-mongodb": {
         "title": "generated-config/typescript-mongodb"
       },
@@ -92,11 +95,14 @@
       "getting-started/schema-field": {
         "title": "`schema` field"
       },
-      "integrations/apollo-link-state": {
-        "title": "apollo-link-state"
+      "integrations/apollo-local-state": {
+        "title": "Apollo Local State"
       },
       "integrations/create-react-app": {
         "title": "Create-React-App"
+      },
+      "integrations/gatsby": {
+        "title": "GatsbyJS"
       },
       "migration/from-0-13": {
         "title": "Migration from 0.13 to 0.18"
@@ -133,6 +139,9 @@
       },
       "plugins/typescript-apollo-angular": {
         "title": "TypeScript Apollo Angular"
+      },
+      "plugins/typescript-compatibility": {
+        "title": "TypeScript 1.0 Compatibility"
       },
       "plugins/typescript-graphql-files-modules": {
         "title": "TypeScript GraphQL Files Modules"
