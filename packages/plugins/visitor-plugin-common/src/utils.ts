@@ -1,5 +1,22 @@
 import { pascalCase } from 'change-case';
-import { NameNode, Kind, TypeNode, NamedTypeNode, isNonNullType, GraphQLObjectType, GraphQLNonNull, GraphQLList, isListType, GraphQLOutputType, GraphQLNamedType, isScalarType, GraphQLSchema, GraphQLScalarType, StringValueNode } from 'graphql';
+import {
+  NameNode,
+  Kind,
+  TypeNode,
+  NamedTypeNode,
+  isNonNullType,
+  GraphQLObjectType,
+  GraphQLNonNull,
+  GraphQLList,
+  isListType,
+  GraphQLOutputType,
+  GraphQLNamedType,
+  isScalarType,
+  GraphQLSchema,
+  GraphQLScalarType,
+  StringValueNode,
+  isEqualType,
+} from 'graphql';
 import { ScalarsMap } from './types';
 
 function isWrapperType(t: GraphQLOutputType): t is GraphQLNonNull<any> | GraphQLList<any> {
@@ -234,4 +251,12 @@ export function buildScalars(schema: GraphQLSchema, scalarsMapping: ScalarsMap):
 
 function isStringValueNode(node: any): node is StringValueNode {
   return node && typeof node === 'object' && node.kind === 'StringValue';
+}
+
+export function isRootType(type: GraphQLNamedType, schema: GraphQLSchema): type is GraphQLObjectType {
+  return isEqualType(type, schema.getQueryType()) || isEqualType(type, schema.getMutationType()) || isEqualType(type, schema.getSubscriptionType());
+}
+
+export function getRootTypeNames(schema: GraphQLSchema): string[] {
+  return [schema.getQueryType(), schema.getMutationType(), schema.getSubscriptionType()].filter(t => t).map(t => t.name);
 }

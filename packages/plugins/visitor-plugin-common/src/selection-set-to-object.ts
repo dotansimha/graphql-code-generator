@@ -17,7 +17,7 @@ import {
   isScalarType,
   print,
 } from 'graphql';
-import { getBaseType, quoteIfNeeded } from './utils';
+import { getBaseType, quoteIfNeeded, isRootType } from './utils';
 import { ScalarsMap, ConvertNameFn } from './types';
 import { GraphQLObjectType, GraphQLNonNull, GraphQLList } from 'graphql';
 import { BaseVisitorConvertOptions } from './base-visitor';
@@ -29,10 +29,6 @@ export type FragmentsMap = { [onType: string]: string[] };
 
 function isMetadataFieldName(name: string) {
   return ['__schema', '__type'].includes(name);
-}
-
-function isRootType(type: GraphQLNamedType, schema: GraphQLSchema): type is GraphQLObjectType {
-  return isEqualType(type, schema.getQueryType()) || isEqualType(type, schema.getMutationType()) || isEqualType(type, schema.getSubscriptionType());
 }
 
 const metadataFieldMap: Record<string, GraphQLField<any, any>> = {
