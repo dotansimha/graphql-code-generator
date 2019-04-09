@@ -614,16 +614,16 @@ describe('ResolversTypes', () => {
     export type ResolversTypes = {
       Query: $Shape<Query>,
       MyType: $Shape<MyType>,
-      String: $ElementType<Scalars, 'String'>,
+      String: $Shape<$ElementType<Scalars, 'String'>>,
       MyOtherType: $Shape<MyOtherType>,
       Subscription: $Shape<Subscription>,
-      Boolean: $ElementType<Scalars, 'Boolean'>,
+      Boolean: $Shape<$ElementType<Scalars, 'Boolean'>>,
       Node: $Shape<Node>,
-      ID: $ElementType<Scalars, 'ID'>,
+      ID: $Shape<$ElementType<Scalars, 'ID'>>,
       SomeNode: $Shape<SomeNode>,
       MyUnion: $Shape<MyUnion>,
-      MyScalar: $ElementType<Scalars, 'MyScalar'>,
-      Int: $ElementType<Scalars, 'Int'>,
+      MyScalar: $Shape<$ElementType<Scalars, 'MyScalar'>>,
+      Int: $Shape<$ElementType<Scalars, 'Int'>>,
     };`);
   });
 
@@ -642,16 +642,16 @@ describe('ResolversTypes', () => {
     export type ResolversTypes = {
       Query: CustomPartial<Query>,
       MyType: CustomPartial<MyType>,
-      String: $ElementType<Scalars, 'String'>,
+      String: CustomPartial<$ElementType<Scalars, 'String'>>,
       MyOtherType: CustomPartial<MyOtherType>,
       Subscription: CustomPartial<Subscription>,
-      Boolean: $ElementType<Scalars, 'Boolean'>,
+      Boolean: CustomPartial<$ElementType<Scalars, 'Boolean'>>,
       Node: CustomPartial<Node>,
-      ID: $ElementType<Scalars, 'ID'>,
+      ID: CustomPartial<$ElementType<Scalars, 'ID'>>,
       SomeNode: CustomPartial<SomeNode>,
       MyUnion: CustomPartial<MyUnion>,
-      MyScalar: $ElementType<Scalars, 'MyScalar'>,
-      Int: $ElementType<Scalars, 'Int'>,
+      MyScalar: CustomPartial<$ElementType<Scalars, 'MyScalar'>>,
+      Int: CustomPartial<$ElementType<Scalars, 'Int'>>,
     };`);
   });
 });
