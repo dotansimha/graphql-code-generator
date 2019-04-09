@@ -182,11 +182,12 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
 
         const isMapped = this.config.mappers[typeName];
         const isScalar = this.config.scalars[typeName];
+        const hasDefaultMapper = !!(this.config.defaultMapper && this.config.defaultMapper.type);
 
         if (isMapped && this.config.mappers[typeName].type) {
           this.markMapperAsUsed(typeName);
           prev[typeName] = this.config.mappers[typeName].type;
-        } else if (this.config.defaultMapper && this.config.defaultMapper.type && !hasPlaceholder(this.config.defaultMapper.type)) {
+        } else if (hasDefaultMapper && !hasPlaceholder(this.config.defaultMapper.type)) {
           prev[typeName] = this.config.defaultMapper.type;
         } else if (isScalar) {
           prev[typeName] = this._getScalar(typeName);
@@ -224,7 +225,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
           prev[typeName] = replacePlaceholder(prev[typeName], typeName);
         }
 
-        if (!isMapped && this.config.defaultMapper && this.config.defaultMapper.type && hasPlaceholder(this.config.defaultMapper.type)) {
+        if (!isMapped && hasDefaultMapper && hasPlaceholder(this.config.defaultMapper.type)) {
           const name = isScalar ? this._getScalar(typeName) : prev[typeName];
           prev[typeName] = replacePlaceholder(this.config.defaultMapper.type, name);
         }
