@@ -97,20 +97,20 @@ export type ResolversTypes = {
   Boolean: Scalars['Boolean'],
 };
 
-export type QueryResolvers<Context = any, ParentType = ResolversTypes['Query']> = {
-  allUsers?: Resolver<Array<Maybe<ResolversTypes['User']>>, ParentType, Context>,
-  userById?: Resolver<Maybe<ResolversTypes['User']>, ParentType, Context, QueryUserByIdArgs>,
+export type QueryResolvers<ContextType = any, ParentType = ResolversTypes['Query']> = {
+  allUsers?: Resolver<Array<Maybe<ResolversTypes['User']>>, ParentType, ContextType>,
+  userById?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, QueryUserByIdArgs>,
 };
 
-export type UserResolvers<Context = any, ParentType = ResolversTypes['User']> = {
-  id?: Resolver<ResolversTypes['Int'], ParentType, Context>,
-  name?: Resolver<ResolversTypes['String'], ParentType, Context>,
-  email?: Resolver<ResolversTypes['String'], ParentType, Context>,
+export type UserResolvers<ContextType = any, ParentType = ResolversTypes['User']> = {
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>,
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
 };
 
-export type Resolvers<Context = any> = {
-  Query?: QueryResolvers<Context>,
-  User?: UserResolvers<Context>,
+export type Resolvers<ContextType = any> = {
+  Query?: QueryResolvers<ContextType>,
+  User?: UserResolvers<ContextType>,
 };
 
 
@@ -118,4 +118,4 @@ export type Resolvers<Context = any> = {
  * @deprecated
  * Use "Resolvers" root object instead. If you wish to get "IResolvers", add "typesPrefix: I" to your config.
 */
-export type IResolvers<Context = any> = Resolvers<Context>;
+export type IResolvers<ContextType = any> = Resolvers<ContextType>;

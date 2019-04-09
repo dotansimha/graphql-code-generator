@@ -81,15 +81,15 @@ type User {
 Given the schema above, the output should be the following:
 
 ```typescript
-export interface QueryResolvers<Context = any, ParentType = Query> {
-  allUsers?: Resolver<Array<Maybe<User>>, ParentType, Context>;
-  userById?: Resolver<Maybe<User>, ParentType, Context, QueryUserByIdArgs>;
+export interface QueryResolvers<ContextType = any, ParentType = Query> {
+  allUsers?: Resolver<Array<Maybe<User>>, ParentType, ContextType>;
+  userById?: Resolver<Maybe<User>, ParentType, ContextType, QueryUserByIdArgs>;
 }
 
-export interface UserResolvers<Context = any, ParentType = User> {
-  id?: Resolver<number, ParentType, Context>;
-  name?: Resolver<string, ParentType, Context>;
-  email?: Resolver<string, ParentType, Context>;
+export interface UserResolvers<ContextType = any, ParentType = User> {
+  id?: Resolver<number, ParentType, ContextType>;
+  name?: Resolver<string, ParentType, ContextType>;
+  email?: Resolver<string, ParentType, ContextType>;
 }
 ```
 

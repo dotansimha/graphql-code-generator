@@ -383,7 +383,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
 
   public getRootResolver(): string {
     const name = this.convertName('Resolvers');
-    const contextType = `<Context = ${this.config.contextType.type}>`;
+    const contextType = `<ContextType = ${this.config.contextType.type}>`;
 
     // This is here because we don't want to break IResolvers, so there is a mapping by default,
     // and if the developer is overriding typesPrefix, it won't get generated at all.
@@ -393,7 +393,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
  * @deprecated
  * Use "Resolvers" root object instead. If you wish to get "IResolvers", add "typesPrefix: I" to your config.
 */
-export type IResolvers${contextType} = ${name}<Context>;`
+export type IResolvers${contextType} = ${name}<ContextType>;`
       : '';
 
     return [
@@ -421,7 +421,7 @@ export type IResolvers${contextType} = ${name}<Context>;`
   public getAllDirectiveResolvers(): string {
     if (Object.keys(this._collectedDirectiveResolvers).length) {
       const name = this.convertName('DirectiveResolvers');
-      const contextType = `<Context = ${this.config.contextType.type}>`;
+      const contextType = `<ContextType = ${this.config.contextType.type}>`;
 
       // This is here because we don't want to break IResolvers, so there is a mapping by default,
       // and if the developer is overriding typesPrefix, it won't get generated at all.
@@ -431,7 +431,7 @@ export type IResolvers${contextType} = ${name}<Context>;`
 * @deprecated
 * Use "DirectiveResolvers" root object instead. If you wish to get "IDirectiveResolvers", add "typesPrefix: I" to your config.
 */
-export type IDirectiveResolvers${contextType} = ${name}<Context>;`
+export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
         : '';
 
       return [
@@ -508,7 +508,7 @@ export type IDirectiveResolvers${contextType} = ${name}<Context>;`
       const isSubscriptionType = subscriptionType && subscriptionType.name === parentName;
 
       return indent(
-        `${node.name}${this.config.avoidOptionals ? '' : '?'}: ${isSubscriptionType ? 'SubscriptionResolver' : 'Resolver'}<${mappedType}, ParentType, Context${
+        `${node.name}${this.config.avoidOptionals ? '' : '?'}: ${isSubscriptionType ? 'SubscriptionResolver' : 'Resolver'}<${mappedType}, ParentType, ContextType${
           hasArguments
             ? `, ${this.convertName(parentName, {
                 useTypesPrefix: true,
@@ -533,10 +533,10 @@ export type IDirectiveResolvers${contextType} = ${name}<Context>;`
     const block = new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
-      .withName(name, `<Context = ${this.config.contextType.type}, ParentType = ${type}>`)
+      .withName(name, `<ContextType = ${this.config.contextType.type}, ParentType = ${type}>`)
       .withBlock(node.fields.map((f: any) => f(node.name)).join('\n'));
 
-    this._collectedResolvers[node.name as any] = name + '<Context>';
+    this._collectedResolvers[node.name as any] = name + '<ContextType>';
 
     return block.string;
   }
@@ -557,8 +557,8 @@ export type IDirectiveResolvers${contextType} = ${name}<Context>;`
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
-      .withName(name, `<Context = ${this.config.contextType.type}, ParentType = ${type}>`)
-      .withBlock(indent(`__resolveType: TypeResolveFn<${possibleTypes}, ParentType, Context>`)).string;
+      .withName(name, `<ContextType = ${this.config.contextType.type}, ParentType = ${type}>`)
+      .withBlock(indent(`__resolveType: TypeResolveFn<${possibleTypes}, ParentType, ContextType>`)).string;
   }
 
   ScalarTypeDefinition(node: ScalarTypeDefinitionNode): string {
@@ -591,7 +591,7 @@ export type IDirectiveResolvers${contextType} = ${name}<Context>;`
     const hasArguments = node.arguments && node.arguments.length > 0;
     const directiveArgs = hasArguments ? this._variablesTransfomer.transform<InputValueDefinitionNode>(node.arguments) : '';
 
-    this._collectedDirectiveResolvers[node.name as any] = directiveName + '<any, any, Context>';
+    this._collectedDirectiveResolvers[node.name as any] = directiveName + '<any, any, ContextType>';
 
     return new DeclarationBlock({
       ...this._declarationBlockConfig,
@@ -601,8 +601,8 @@ export type IDirectiveResolvers${contextType} = ${name}<Context>;`
     })
       .export()
       .asKind('type')
-      .withName(directiveName, `<Result, Parent, Context = ${this.config.contextType.type}, Args = { ${directiveArgs} }>`)
-      .withContent(`DirectiveResolverFn<Result, Parent, Context, Args>`).string;
+      .withName(directiveName, `<Result, Parent, ContextType = ${this.config.contextType.type}, Args = { ${directiveArgs} }>`)
+      .withContent(`DirectiveResolverFn<Result, Parent, ContextType, Args>`).string;
   }
 
   InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode): string {
@@ -630,8 +630,8 @@ export type IDirectiveResolvers${contextType} = ${name}<Context>;`
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
-      .withName(name, `<Context = ${this.config.contextType.type}, ParentType = ${type}>`)
-      .withBlock([indent(`__resolveType: TypeResolveFn<${possibleTypes}, ParentType, Context>,`), ...(node.fields || []).map((f: any) => f(node.name))].join('\n')).string;
+      .withName(name, `<ContextType = ${this.config.contextType.type}, ParentType = ${type}>`)
+      .withBlock([indent(`__resolveType: TypeResolveFn<${possibleTypes}, ParentType, ContextType>,`), ...(node.fields || []).map((f: any) => f(node.name))].join('\n')).string;
   }
 
   SchemaDefinition() {
