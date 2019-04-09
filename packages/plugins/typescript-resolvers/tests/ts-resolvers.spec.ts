@@ -759,7 +759,7 @@ describe('TypeScript Resolvers Plugin', () => {
     `);
   });
 
-  it('should generate subscription types correctly', async () => {
+  it.only('should generate subscription types correctly', async () => {
     const testSchema = buildSchema(/* GraphQL */ `
       type Subscription {
         postAdded: Post
@@ -824,6 +824,8 @@ describe('TypeScript Resolvers Plugin', () => {
         };
       `,
     ].join('\n');
+
+    console['log'](resolversContent);
 
     validateTs(content);
   });

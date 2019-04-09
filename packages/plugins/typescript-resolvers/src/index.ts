@@ -120,33 +120,27 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
 
 ${resolverDefs}
 
-export type SubscriptionSubscribeFn<TResult, TParent, TContext, TArgs> = (
+export type SubscriptionSubscribeFn<TPayload, TParent, TContext, TArgs> = (
   parent: TParent,
   args: TArgs,
   context: TContext,
   info: GraphQLResolveInfo
-) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
+) => AsyncIterator<TPayload> | Promise<AsyncIterator<TPayload>>;
 
-// 4. But parent should be payload and it's hard to actually predict what it could be
-// 5. I guess we can use TResult as parent (which would be the expected payload)
-// 6. Or even have it customized
-export type SubscriptionResolveFn<TResult, TParent, TContext, TArgs> = (
-  parent: TParent,
+export type SubscriptionResolveFn<TResult, TPayload, TContext, TArgs> = (
+  parent: TPayload,
   args: TArgs,
   context: TContext,
   info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
-// 2. It reaches that interface
-export interface SubscriptionResolverObject<TResult, TParent, TContext, TArgs> {
-  subscribe: SubscriptionSubscribeFn<TResult, TParent, TContext, TArgs>;
-  // 3. and this function
-  resolve?: SubscriptionResolveFn<TResult, TParent, TContext, TArgs>;
+export interface SubscriptionResolverObject<TResult, TParent, TContext, TArgs, TPayload> {
+  subscribe: SubscriptionSubscribeFn<TPayload, TParent, TContext, TArgs>;
+  resolve?: SubscriptionResolveFn<TResult, TPayload, TContext, TArgs>;
 }
 
-// 1. Here, we pass TResult and TParent
-export type SubscriptionResolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
-  | ((...args: any[]) => SubscriptionResolverObject<TResult, TParent, TContext, TArgs>)
+export type SubscriptionResolver<TResult, TParent = {}, TContext = {}, TArgs = {}, TPayload = {}, > =
+  | ((...args: any[]) => SubscriptionResolverObject<TResult, TPayload, TParent, TContext, TArgs>)
   | SubscriptionResolverObject<TResult, TParent, TContext, TArgs>;
 
 export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
