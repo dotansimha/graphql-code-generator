@@ -132,16 +132,16 @@ describe('ResolversTypes', () => {
     export type ResolversTypes = {
       Query: Partial<Query>,
       MyType: Partial<MyType>,
-      String: Scalars['String'],
+      String: Partial<Scalars['String']>,
       MyOtherType: Partial<MyOtherType>,
       Subscription: Partial<Subscription>,
-      Boolean: Scalars['Boolean'],
+      Boolean: Partial<Scalars['Boolean']>,
       Node: Partial<Node>,
-      ID: Scalars['ID'],
+      ID: Partial<Scalars['ID']>,
       SomeNode: Partial<SomeNode>,
       MyUnion: Partial<MyUnion>,
-      MyScalar: Scalars['MyScalar'],
-      Int: Scalars['Int'],
+      MyScalar: Partial<Scalars['MyScalar']>,
+      Int: Partial<Scalars['Int']>,
     };`);
   });
 
@@ -161,16 +161,16 @@ describe('ResolversTypes', () => {
     export type ResolversTypes = {
       Query: CustomPartial<Query>,
       MyType: CustomPartial<MyType>,
-      String: Scalars['String'],
+      String: CustomPartial<Scalars['String']>,
       MyOtherType: CustomPartial<MyOtherType>,
       Subscription: CustomPartial<Subscription>,
-      Boolean: Scalars['Boolean'],
+      Boolean: CustomPartial<Scalars['Boolean']>,
       Node: CustomPartial<Node>,
-      ID: Scalars['ID'],
+      ID: CustomPartial<Scalars['ID']>,
       SomeNode: CustomPartial<SomeNode>,
       MyUnion: CustomPartial<MyUnion>,
-      MyScalar: Scalars['MyScalar'],
-      Int: Scalars['Int'],
+      MyScalar: CustomPartial<Scalars['MyScalar']>,
+      Int: CustomPartial<Scalars['Int']>,
     };`);
   });
 
@@ -208,10 +208,10 @@ describe('ResolversTypes', () => {
     export type ResolversTypes = {
       Query: Partial<Omit<Query, 'me'> & { me: Maybe<ResolversTypes['User']> }>,
       User: number,
-      ID: Scalars['ID'],
-      String: Scalars['String'],
+      ID: Partial<Scalars['ID']>,
+      String: Partial<Scalars['String']>,
       Chat: Partial<Omit<Chat, 'owner' | 'members'> & { owner: ResolversTypes['User'], members: Maybe<Array<ResolversTypes['User']>> }>,
-      Boolean: Scalars['Boolean'],
+      Boolean: Partial<Scalars['Boolean']>,
     };
     `);
 
@@ -309,6 +309,37 @@ describe('ResolversTypes', () => {
       MyScalar: Scalars['MyScalar'],
       Int: Scalars['Int'],
     };`);
+  });
+
+  it('Should handle {T} in a mapper', async () => {
+    const result = await plugin(
+      schema,
+      [],
+      {
+        noSchemaStitching: true,
+        mappers: {
+          MyType: 'Partial<{T}>',
+        },
+      },
+      { outputFile: '' }
+    );
+
+    expect(result).toBeSimilarStringTo(`
+      export type ResolversTypes = {
+        Query: Omit<Query, 'something'> & { something: ResolversTypes['MyType'] },
+        MyType: Partial<MyType>,
+        String: Scalars['String'],
+        MyOtherType: MyOtherType,
+        Subscription: Subscription,
+        Boolean: Scalars['Boolean'],
+        Node: Node,
+        ID: Scalars['ID'],
+        SomeNode: SomeNode,
+        MyUnion: MyUnion,
+        MyScalar: Scalars['MyScalar'],
+        Int: Scalars['Int'],
+      };
+    `);
   });
 
   it('should warn about unused mappers by default', async () => {

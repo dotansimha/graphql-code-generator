@@ -180,12 +180,15 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
 
         let shouldApplyOmit = false;
 
-        if (this.config.mappers[typeName] && this.config.mappers[typeName].type) {
+        const isMapped = this.config.mappers[typeName];
+        const isScalar = this.config.scalars[typeName];
+
+        if (isMapped && this.config.mappers[typeName].type) {
           this.markMapperAsUsed(typeName);
           prev[typeName] = this.config.mappers[typeName].type;
-        } else if (this.config.defaultMapper && this.config.defaultMapper.type && !this.config.defaultMapper.type.includes('{T}')) {
+        } else if (this.config.defaultMapper && this.config.defaultMapper.type && !hasPlaceholder(this.config.defaultMapper.type)) {
           prev[typeName] = this.config.defaultMapper.type;
-        } else if (this.config.scalars[typeName]) {
+        } else if (isScalar) {
           prev[typeName] = this._getScalar(typeName);
         } else {
           shouldApplyOmit = true;
@@ -193,7 +196,8 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
         }
 
         const schemaType = allSchemaTypes[typeName];
-        if ((shouldApplyOmit && prev[typeName] !== 'any' && isObjectType(schemaType)) || (isInterfaceType(schemaType) && !this.config.mappers[typeName])) {
+
+        if ((shouldApplyOmit && prev[typeName] !== 'any' && isObjectType(schemaType)) || (isInterfaceType(schemaType) && !isMapped)) {
           const fields = schemaType.getFields();
           const relevantFields = Object.keys(fields)
             .map(fieldName => {
@@ -216,8 +220,13 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
           }
         }
 
-        if (!this.config.scalars[typeName] && !this.config.mappers[typeName] && this.config.defaultMapper && this.config.defaultMapper.type.includes('{T}')) {
-          prev[typeName] = this.config.defaultMapper.type.replace('{T}', prev[typeName]);
+        if (isMapped && hasPlaceholder(prev[typeName])) {
+          prev[typeName] = replacePlaceholder(prev[typeName], typeName);
+        }
+
+        if (!isMapped && this.config.defaultMapper && this.config.defaultMapper.type && hasPlaceholder(this.config.defaultMapper.type)) {
+          const name = isScalar ? this._getScalar(typeName) : prev[typeName];
+          prev[typeName] = replacePlaceholder(this.config.defaultMapper.type, name);
         }
 
         return prev;
@@ -588,4 +597,12 @@ export type IDirectiveResolvers${contextType} = ${name}<Context>;`
   SchemaDefinition() {
     return null;
   }
+}
+
+function replacePlaceholder(pattern: string, typename: string): string {
+  return pattern.replace('{T}', typename);
+}
+
+function hasPlaceholder(pattern: string): boolean {
+  return pattern.includes('{T}');
 }
