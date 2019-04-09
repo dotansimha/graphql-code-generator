@@ -193,7 +193,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
         }
 
         const schemaType = allSchemaTypes[typeName];
-        if ((shouldApplyOmit && prev[typeName] !== 'any' && isObjectType(schemaType)) || isInterfaceType(schemaType)) {
+        if ((shouldApplyOmit && prev[typeName] !== 'any' && isObjectType(schemaType)) || (isInterfaceType(schemaType) && !this.config.mappers[typeName])) {
           const fields = schemaType.getFields();
           const relevantFields = Object.keys(fields)
             .map(fieldName => {
