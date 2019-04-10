@@ -190,7 +190,7 @@ describe('Apollo Angular', () => {
         @Injectable({
           providedIn: 'root'
         })
-        export class TestGQL extends Query
+        export class TestGQL extends ApolloQuery
       `);
       validateTypeScript(content, rootSchema, docs, {});
     });
