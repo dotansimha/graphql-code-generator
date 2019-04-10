@@ -1,6 +1,6 @@
 import { CompatabilityPluginRawConfig } from './index';
 import { BaseVisitor, DeclarationBlock, indent, toPascalCase, getConfigValue } from '@graphql-codegen/visitor-plugin-common';
-import { GraphQLSchema, OperationDefinitionNode } from 'graphql';
+import { GraphQLSchema, OperationDefinitionNode, OperationTypeNode } from 'graphql';
 import { ParsedConfig } from '@graphql-codegen/visitor-plugin-common';
 import { selectionSetToTypes, SelectionSetToObjectResult } from './selection-set-to-types';
 
@@ -17,8 +17,18 @@ export class CompatabilityPluginVisitor extends BaseVisitor<CompatabilityPluginR
     } as any);
   }
 
+  protected getRootType(operationType: OperationTypeNode): string {
+    if (operationType === 'query') {
+      return this._schema.getQueryType().name;
+    } else if (operationType === 'mutation') {
+      return this._schema.getMutationType().name;
+    } else if (operationType === 'subscription') {
+      return this._schema.getSubscriptionType().name;
+    }
+  }
+
   protected buildOperationBlock(node: OperationDefinitionNode): SelectionSetToObjectResult {
-    const typeName = toPascalCase(node.operation);
+    const typeName = this.getRootType(node.operation);
     const baseName = this.convertName(node.name.value, { suffix: `${toPascalCase(node.operation)}` });
     const typesPrefix = this.config.noNamespaces ? this.convertName(node.name.value) : '';
     const selectionSetTypes: SelectionSetToObjectResult = {

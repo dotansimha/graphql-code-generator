@@ -92,6 +92,29 @@ describe('Compatibility Plugin', () => {
     }
   `);
 
+  it('Should work with custom Query root type', async () => {
+    const testSchema = buildSchema(/* GraphQL */ `
+      type User {
+        id: ID!
+        name: String!
+        friends: [User!]!
+      }
+
+      type QueryRoot {
+        me: User!
+      }
+
+      schema {
+        query: QueryRoot
+      }
+    `);
+
+    const result = await plugin(testSchema, [{ filePath: '', content: basicQuery }], {});
+
+    expect(result).toContain(`export type Query = Me4Query;`);
+    expect(result).toContain(`export type Me = Me4Query['me'];`);
+  });
+
   it('Should generate namepsace and the internal types correctly', async () => {
     const result = await plugin(schema, [{ filePath: '', content: basicQuery }], {});
 
