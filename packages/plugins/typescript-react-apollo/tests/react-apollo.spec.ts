@@ -61,7 +61,7 @@ describe('React Apollo', () => {
         }
       );
 
-      expect(content).toBeSimilarStringTo(`import { Query as ApolloQuery, QueryProps } from 'react-apollo';`);
+      expect(content).toBeSimilarStringTo(`import { Query as ApolloQuery, QueryProps, DataProps, withQuery, OperationOption } from 'react-apollo';`);
       expect(content).toBeSimilarStringTo(`import * as React from 'react';`);
       expect(content).toBeSimilarStringTo(`import gql from 'graphql-tag';`);
       await validateTypeScript(content, schema, docs, {});
@@ -111,7 +111,7 @@ describe('React Apollo', () => {
         }
       );
 
-      expect(content).toBeSimilarStringTo(`import * as ReactApolloHooks from 'react-apollo-hooks';`);
+      expect(content).toBeSimilarStringTo(`import { useQuery, QueryHookOptions } from 'react-apollo-hooks';`);
       await validateTypeScript(content, schema, docs, {});
     });
 
@@ -126,7 +126,7 @@ describe('React Apollo', () => {
         }
       );
 
-      expect(content).toBeSimilarStringTo(`import * as ReactApolloHooks from 'custom-apollo-hooks';`);
+      expect(content).toBeSimilarStringTo(`import { useQuery, QueryHookOptions } from 'custom-apollo-hooks';`);
       await validateTypeScript(content, schema, docs, {});
     });
 
@@ -145,7 +145,7 @@ describe('React Apollo', () => {
         }
       );
 
-      expect(content).not.toBeSimilarStringTo(`import * as ReactApollo from 'react-apollo';`);
+      expect(content).not.toContain(`from 'react-apollo';`);
       expect(content).not.toBeSimilarStringTo(`import * as React from 'react';`);
       await validateTypeScript(content, schema, docs, {});
     });

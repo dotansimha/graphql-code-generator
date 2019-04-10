@@ -62,8 +62,11 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
 
     const propsVar = `export type ${propsTypeName}<TChildProps = {}> = ${this._buildHocProps(node.name.value, node.operation)} & TChildProps;`;
 
-    this.reactApolloImports.add(`MutationFn`);
-    const mutationFn = node.operation === 'mutation' ? `export type ${this.convertName(node.name.value + 'MutationFn')} = MutationFn<${operationResultType}, ${operationVariablesTypes}>;` : null;
+    let mutationFn = null;
+    if (node.operation === 'mutation') {
+      this.reactApolloImports.add(`MutationFn`);
+      mutationFn = node.operation === 'mutation' ? `export type ${this.convertName(node.name.value + 'MutationFn')} = MutationFn<${operationResultType}, ${operationVariablesTypes}>;` : null;
+    }
 
     const reactApolloHoc = `with${titleCase(node.operation)}`;
     this.reactApolloImports.add(reactApolloHoc);
