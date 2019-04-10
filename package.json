@@ -45,7 +45,7 @@
     "rimraf": "2.6.3",
     "ts-jest": "24.0.0",
     "tslint": "5.15.0",
-    "typescript": "3.4.2",
+    "typescript": "3.4.3",
     "react-apollo": "2.5.4",
     "react-apollo-hooks": "0.4.5",
     "apollo-server": "2.4.8"
