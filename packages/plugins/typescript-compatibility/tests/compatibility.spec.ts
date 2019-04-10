@@ -6,24 +6,26 @@ import { plugin as tsPlugin } from '../../typescript/src';
 import { plugin as tsOperationPlugin } from '../../typescript-operations/src';
 import { plugin as raPlugin } from '../../typescript-react-apollo/src';
 
-const validate = async (content: string, schema: GraphQLSchema, operations, config = {}, tsx = false) => {
+const validate = async (content: string, schema: GraphQLSchema, operations, config = {}, tsx = false, strict = false) => {
   const tsPluginResult = await tsPlugin(schema, operations, config, { outputFile: '' });
   const tsOperationPluginResult = await tsOperationPlugin(schema, operations, config, { outputFile: '' });
   const mergedOutput = [tsPluginResult, tsOperationPluginResult, content].join('\n');
 
-  validateTs(mergedOutput, undefined, tsx);
+  validateTs(mergedOutput, undefined, tsx, strict);
 };
 
 describe('Compatibility Plugin', () => {
   const schema = buildSchema(/* GraphQL */ `
     type User {
       id: ID!
-      name: String!
+      name: String
       friends: [User!]!
+      testField: [User]
     }
 
     type Query {
       me: User!
+      user(id: ID!): User
     }
   `);
 
@@ -90,6 +92,20 @@ describe('Compatibility Plugin', () => {
         }
       }
     }
+
+    query me5 {
+      user(id: "1") {
+        id
+        name
+        testField {
+          id
+        }
+        friends {
+          id
+          name
+        }
+      }
+    }
   `);
 
   it('Should work with custom Query root type', async () => {
@@ -98,10 +114,12 @@ describe('Compatibility Plugin', () => {
         id: ID!
         name: String!
         friends: [User!]!
+        testField: [User]
       }
 
       type QueryRoot {
         me: User!
+        user(id: ID!): User
       }
 
       schema {
@@ -195,6 +213,13 @@ describe('Compatibility Plugin', () => {
     const usage = `const myVar: Me.__Friends = { name: '1' }`; // Should refer to a single item and not to it's array
 
     await validate(result + '\n' + usage, schema, ast, {});
+  });
+
+  it('Should produce valid ts code with strict mode', async () => {
+    const ast = [{ filePath: '', content: basicQuery }];
+    const result = await plugin(schema, ast, { strict: true });
+
+    await validate(result, schema, ast, {}, false, true);
   });
 
   describe('Config', () => {

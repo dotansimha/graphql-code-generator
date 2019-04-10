@@ -23,6 +23,25 @@ export interface CompatabilityPluginRawConfig extends RawConfig {
    * ```
    */
   noNamespaces?: boolean;
+  /**
+   * @name strict
+   * @type boolean
+   * @description Make sure to genereate code that compatible with TypeScript strict mode.
+   * @default false
+   *
+   * @example
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *    - typescript-operations
+   *    - typescript-compatibility
+   *  config:
+   *    strict: true
+   * ```
+   */
+  strict?: boolean;
 }
 
 const REACT_APOLLO_PLUGIN_NAME = 'typescript-react-apollo';

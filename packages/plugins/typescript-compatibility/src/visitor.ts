@@ -7,6 +7,7 @@ import { selectionSetToTypes, SelectionSetToObjectResult } from './selection-set
 export interface CompatabilityPluginConfig extends ParsedConfig {
   reactApollo: any;
   noNamespaces: boolean;
+  strict: boolean;
 }
 
 export class CompatabilityPluginVisitor extends BaseVisitor<CompatabilityPluginRawConfig, CompatabilityPluginConfig> {
@@ -14,6 +15,7 @@ export class CompatabilityPluginVisitor extends BaseVisitor<CompatabilityPluginR
     super(rawConfig, {
       reactApollo: options.reactApollo,
       noNamespaces: getConfigValue<boolean>(rawConfig.noNamespaces, false),
+      strict: getConfigValue<boolean>(rawConfig.strict, false),
     } as any);
   }
 
@@ -25,6 +27,8 @@ export class CompatabilityPluginVisitor extends BaseVisitor<CompatabilityPluginR
     } else if (operationType === 'subscription') {
       return this._schema.getSubscriptionType().name;
     }
+
+    return null;
   }
 
   protected buildOperationBlock(node: OperationDefinitionNode): SelectionSetToObjectResult {

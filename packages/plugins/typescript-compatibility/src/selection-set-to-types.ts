@@ -1,5 +1,7 @@
 import { BaseVisitor, getBaseType } from '@graphql-codegen/visitor-plugin-common';
 import { SelectionSetNode, isObjectType, isInterfaceType, isNonNullType, isListType, Kind, GraphQLSchema } from 'graphql';
+import { CompatabilityPluginRawConfig } from './index';
+import { CompatabilityPluginConfig } from './visitor';
 
 export type SelectionSetToObjectResult = {
   [typeName: string]: {
@@ -20,7 +22,7 @@ const handleTypeNameDuplicates = (result: SelectionSetToObjectResult, name: stri
 
 export function selectionSetToTypes(
   typesPrefix: string,
-  baseVisitor: BaseVisitor,
+  baseVisitor: BaseVisitor<CompatabilityPluginRawConfig, CompatabilityPluginConfig>,
   schema: GraphQLSchema,
   parentTypeName: string,
   stack: string,
@@ -42,8 +44,10 @@ export function selectionSetToTypes(
             const selectionName = selection.alias && selection.alias.value ? selection.alias.value : selection.name.value;
             const field = parentType.getFields()[selection.name.value];
             const baseType = getBaseType(field.type);
+            const wrapWithNonNull = baseVisitor.config.strict && !isNonNullType(field.type);
             const isArray = (isNonNullType(field.type) && isListType(field.type.ofType)) || isListType(field.type);
-            const newStack = `${stack}['${selectionName}']${isArray ? '[0]' : ''}`;
+            const typeRef = `${stack}['${selectionName}']`;
+            const newStack = `${wrapWithNonNull ? `(NonNullable<${typeRef}>)` : typeRef}${isArray ? '[0]' : ''}`;
             selectionSetToTypes(typesPrefix, baseVisitor, schema, baseType.name, newStack, selectionName, selection.selectionSet, result);
 
             break;

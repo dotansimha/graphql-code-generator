@@ -24,10 +24,20 @@ export function validateTs(
     ],
     module: ts.ModuleKind.ESNext,
   },
-  isTsx = false
+  isTsx = false,
+  isStrict = false
 ): void {
   if (process.env.SKIP_VALIDATION) {
     return;
+  }
+
+  if (isStrict) {
+    options.strictNullChecks = true;
+    options.strict = true;
+    options.strictBindCallApply = true;
+    options.strictPropertyInitialization = true;
+    options.alwaysStrict = true;
+    options.strictFunctionTypes = true;
   }
 
   const testFile = `test-file.${isTsx ? 'tsx' : 'ts'}`;
