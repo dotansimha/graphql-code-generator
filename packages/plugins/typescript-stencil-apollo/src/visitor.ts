@@ -43,12 +43,12 @@ export class StencilApolloVisitor extends ClientSideBaseVisitor<StencilApolloRaw
     const propsVar = `
         export type ${propsTypeName} = {
             variables ?: ${operationVariablesTypes};
-            children ?: import('stencil-apollo/dist/types/components/${apolloStencilComponentTag}/types').${rendererSignature};
+            children ?: StencilApollo.${rendererSignature};
         };
       `;
 
     const component = `
-        export const ${componentName} = (props: ${propsTypeName}, children: [import('stencil-apollo/dist/types/components/${apolloStencilComponentTag}/types').${rendererSignature}]) => (
+        export const ${componentName} = (props: ${propsTypeName}, children: [StencilApollo.${rendererSignature}]) => (
           <StencilApollo.${apolloStencilFunctionalComponentName}<${operationResultType}, ${operationVariablesTypes}> ${operationType.toLowerCase()}={ ${documentVariableName} } { ...props }>
             {children[0]}
           </StencilApollo.${apolloStencilFunctionalComponentName}>
@@ -68,7 +68,7 @@ export class StencilApolloVisitor extends ClientSideBaseVisitor<StencilApolloRaw
                 tag: '${changeCase.paramCase(`Apollo${toPascalCase(node.name.value)}`)}'
             })
             export class ${componentName} {
-                @Prop() renderer: import('stencil-apollo/dist/types/components/${apolloStencilComponentTag}/types').${rendererSignature}<${operationResultType}, ${operationVariablesTypes}>;
+                @Prop() renderer: StencilApollo.${rendererSignature}<${operationResultType}, ${operationVariablesTypes}>;
                 render() {
                     return <${apolloStencilComponentTag} ${operationType.toLowerCase()}={ ${documentVariableName} } renderer={ this.renderer } />;
                 }
