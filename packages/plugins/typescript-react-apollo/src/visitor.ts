@@ -88,10 +88,10 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     this.reactApolloImports.add(`${operationType}Props`);
 
     return `
-export class ${componentName} extends React.Component<Partial<${operationType}Props<${operationResultType}, ${operationVariablesTypes}>>> {
+export class ${componentName} extends React.Component<Exclude<${operationType}Props<${operationResultType}, ${operationVariablesTypes}>, 'query'>> {
   render() {
       return (
-          <Apollo${operationType}<${operationResultType}, ${operationVariablesTypes}> ${node.operation}={${documentVariableName}} {...(this as any)['props'] as any} />
+          <Apollo${operationType}<${operationResultType}, ${operationVariablesTypes}> ${node.operation}={${documentVariableName}} {...this.props} />
       );
   }
 }`;

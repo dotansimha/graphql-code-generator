@@ -333,10 +333,10 @@ export const CommentDocument = gql`
 }
     ${CommentsPageCommentFragmentDoc}`;
 
-export class CommentComponent extends React.Component<Partial<QueryProps<CommentQuery, CommentQueryVariables>>> {
+export class CommentComponent extends React.Component<Exclude<QueryProps<CommentQuery, CommentQueryVariables>, 'query'>> {
   render() {
       return (
-          <ApolloQuery<CommentQuery, CommentQueryVariables> query={CommentDocument} {...(this as any)['props'] as any} />
+          <ApolloQuery<CommentQuery, CommentQueryVariables> query={CommentDocument} {...this.props} />
       );
   }
 }

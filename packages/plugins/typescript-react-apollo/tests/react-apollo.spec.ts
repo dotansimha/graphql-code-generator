@@ -401,10 +401,10 @@ query MyFeed {
       );
 
       expect(content).toBeSimilarStringTo(`
-      export class TestComponent extends React.Component<Partial<QueryProps<TestQuery, TestQueryVariables>>> {
+      export class TestComponent extends React.Component<Exclude<QueryProps<TestQuery, TestQueryVariables>, 'query'>> {
         render() {
             return (
-                <ApolloQuery<TestQuery, TestQueryVariables> query={TestDocument} {...(this as any)['props'] as any} />
+                <ApolloQuery<TestQuery, TestQueryVariables> query={TestDocument} {...this.props} />
             );
         }
       }`);
