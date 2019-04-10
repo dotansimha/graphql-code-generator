@@ -56,7 +56,7 @@ export interface ISubscriptionResolverObject<Result, Parent, Context, Args> {
 }
 
 export type SubscriptionResolver<Result, Parent = {}, Context = {}, Args = {}> =
-  | ((...args: any[]) => ISubscriptionResolverObject<Result, Parent, Context, Args>)
+  | ((...args: Array<any>) => ISubscriptionResolverObject<Result, Parent, Context, Args>)
   | ISubscriptionResolverObject<Result, Parent, Context, Args>;
 
 export type TypeResolveFn<Types, Parent = {}, Context = {}> = (
@@ -75,15 +75,24 @@ export type DirectiveResolverFn<Result = {}, Parent = {}, Args = {}, Context = {
   info?: GraphQLResolveInfo
 ) => Result | Promise<Result>;
 
-export type QueryResolvers<Context = any, ParentType = Query> = {
-  allUsers?: Resolver<Array<?User>, ParentType, Context>,
-  userById?: Resolver<?User, ParentType, Context, QueryUserByIdArgs>,
+/** Mapping between all available schema types and the resolvers types */
+export type ResolversTypes = {
+  Query: {},
+  User: User,
+  Int: $ElementType<Scalars, 'Int'>,
+  String: $ElementType<Scalars, 'String'>,
+  Boolean: $ElementType<Scalars, 'Boolean'>,
 };
 
-export type UserResolvers<Context = any, ParentType = User> = {
-  id?: Resolver<$ElementType<Scalars, 'Int'>, ParentType, Context>,
-  name?: Resolver<$ElementType<Scalars, 'String'>, ParentType, Context>,
-  email?: Resolver<$ElementType<Scalars, 'String'>, ParentType, Context>,
+export type QueryResolvers<Context = any, ParentType = $ElementType<ResolversTypes, 'Query'>> = {
+  allUsers?: Resolver<Array<?$ElementType<ResolversTypes, 'User'>>, ParentType, Context>,
+  userById?: Resolver<?$ElementType<ResolversTypes, 'User'>, ParentType, Context, QueryUserByIdArgs>,
+};
+
+export type UserResolvers<Context = any, ParentType = $ElementType<ResolversTypes, 'User'>> = {
+  id?: Resolver<$ElementType<ResolversTypes, 'Int'>, ParentType, Context>,
+  name?: Resolver<$ElementType<ResolversTypes, 'String'>, ParentType, Context>,
+  email?: Resolver<$ElementType<ResolversTypes, 'String'>, ParentType, Context>,
 };
 
 export type Resolvers<Context = any> = {

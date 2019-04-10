@@ -324,11 +324,11 @@ describe('ResolversTypes', () => {
 
     expect(result).toBeSimilarStringTo(`
       export type ResolversTypes = {
-        Query: Omit<Query, 'something'> & { something: ResolversTypes['MyType'] },
+        Query: {},
         MyType: Partial<MyType>,
         String: Scalars['String'],
         MyOtherType: MyOtherType,
-        Subscription: Subscription,
+        Subscription: {},
         Boolean: Scalars['Boolean'],
         Node: Node,
         ID: Scalars['ID'],

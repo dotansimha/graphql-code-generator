@@ -120,27 +120,27 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
 
 ${resolverDefs}
 
-export type SubscriptionSubscribeFn<TPayload, TParent, TContext, TArgs> = (
+export type SubscriptionSubscribeFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
   args: TArgs,
   context: TContext,
   info: GraphQLResolveInfo
-) => AsyncIterator<TPayload> | Promise<AsyncIterator<TPayload>>;
+) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
 
-export type SubscriptionResolveFn<TResult, TPayload, TContext, TArgs> = (
-  parent: TPayload,
+export type SubscriptionResolveFn<TResult, TParent, TContext, TArgs> = (
+  parent: TParent,
   args: TArgs,
   context: TContext,
   info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
-export interface SubscriptionResolverObject<TResult, TParent, TContext, TArgs, TPayload> {
-  subscribe: SubscriptionSubscribeFn<TPayload, TParent, TContext, TArgs>;
-  resolve?: SubscriptionResolveFn<TResult, TPayload, TContext, TArgs>;
+export interface SubscriptionResolverObject<TResult, TParent, TContext, TArgs> {
+  subscribe: SubscriptionSubscribeFn<TResult, TParent, TContext, TArgs>;
+  resolve?: SubscriptionResolveFn<TResult, TParent, TContext, TArgs>;
 }
 
-export type SubscriptionResolver<TResult, TParent = {}, TContext = {}, TArgs = {}, TPayload = {}, > =
-  | ((...args: any[]) => SubscriptionResolverObject<TResult, TPayload, TParent, TContext, TArgs>)
+export type SubscriptionResolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
+  | ((...args: any[]) => SubscriptionResolverObject<TResult, TParent, TContext, TArgs>)
   | SubscriptionResolverObject<TResult, TParent, TContext, TArgs>;
 
 export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
