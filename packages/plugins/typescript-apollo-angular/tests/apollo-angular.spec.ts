@@ -92,7 +92,7 @@ describe('Apollo Angular', () => {
         }
       );
 
-      expect(content).toBeSimilarStringTo(`import { Query } from 'apollo-angular';`);
+      expect(content).toBeSimilarStringTo(`import { Query as ApolloQuery } from 'apollo-angular';`);
       expect(content).toBeSimilarStringTo(`import { Injectable } from '@angular/core';`);
       await validateTypeScript(content, schema, docs, {});
     });
