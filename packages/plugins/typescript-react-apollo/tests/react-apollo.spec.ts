@@ -135,7 +135,7 @@ describe('React Apollo', () => {
       const content = await plugin(
         schema,
         docs,
-        { withHooks: true, hooksImportFrom: 'custom-apollo' },
+        { withHooks: true, reactApolloImportFrom: 'custom-apollo' },
         {
           outputFile: 'graphql.tsx',
         }
