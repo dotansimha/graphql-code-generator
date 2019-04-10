@@ -10,6 +10,8 @@ export type Scalars = {
   Float: number,
 };
 
+
+
 /** A comment about an entry, submitted by a user */
 export type Comment = {
   /** The SQL ID of this entry */
@@ -223,8 +225,8 @@ export type VoteMutationVariables = {
 export type VoteMutation = ({ __typename?: 'Mutation' } & { vote: Maybe<({ __typename?: 'Entry' } & Pick<Entry, 'score' | 'id'> & { vote: ({ __typename?: 'Vote' } & Pick<Vote, 'vote_value'>) })> });
 
 import gql from 'graphql-tag';
-import { Component, Prop } from '@stencil/core';
-import { SubscriptionRenderer, QueryRenderer, MutationRenderer } from 'stencil-apollo';
+import { Injectable } from '@angular/core';
+import { Subscription as ApolloSubscription, Query as ApolloQuery, Mutation as ApolloMutation } from 'apollo-angular';
 export const CommentsPageCommentFragmentDoc = gql`
     fragment CommentsPageComment on Comment {
   id
@@ -288,16 +290,13 @@ export const OnCommentAddedDocument = gql`
 }
     `;
 
-            @Component({
-                tag: 'apollo-on-comment-added'
-            })
-            export class OnCommentAddedComponent {
-                @Prop() renderer: SubscriptionRenderer<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>;
-                render() {
-                    return <apollo-subscription subscription={ OnCommentAddedDocument } renderer={ this.renderer } />;
-                }
-            }
-      
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class OnCommentAddedGQL extends ApolloSubscription<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables> {
+    document = OnCommentAddedDocument;
+    
+  }
 export const CommentDocument = gql`
     query Comment($repoFullName: String!, $limit: Int, $offset: Int) {
   currentUser {
@@ -328,16 +327,13 @@ export const CommentDocument = gql`
 }
     ${CommentsPageCommentFragmentDoc}`;
 
-            @Component({
-                tag: 'apollo-comment'
-            })
-            export class CommentComponent {
-                @Prop() renderer: QueryRenderer<CommentQuery, CommentQueryVariables>;
-                render() {
-                    return <apollo-query query={ CommentDocument } renderer={ this.renderer } />;
-                }
-            }
-      
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CommentGQL extends ApolloQuery<CommentQuery, CommentQueryVariables> {
+    document = CommentDocument;
+    
+  }
 export const CurrentUserForProfileDocument = gql`
     query CurrentUserForProfile {
   currentUser {
@@ -347,16 +343,13 @@ export const CurrentUserForProfileDocument = gql`
 }
     `;
 
-            @Component({
-                tag: 'apollo-current-user-for-profile'
-            })
-            export class CurrentUserForProfileComponent {
-                @Prop() renderer: QueryRenderer<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>;
-                render() {
-                    return <apollo-query query={ CurrentUserForProfileDocument } renderer={ this.renderer } />;
-                }
-            }
-      
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CurrentUserForProfileGQL extends ApolloQuery<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables> {
+    document = CurrentUserForProfileDocument;
+    
+  }
 export const FeedDocument = gql`
     query Feed($type: FeedType!, $offset: Int, $limit: Int) {
   currentUser {
@@ -368,16 +361,13 @@ export const FeedDocument = gql`
 }
     ${FeedEntryFragmentDoc}`;
 
-            @Component({
-                tag: 'apollo-feed'
-            })
-            export class FeedComponent {
-                @Prop() renderer: QueryRenderer<FeedQuery, FeedQueryVariables>;
-                render() {
-                    return <apollo-query query={ FeedDocument } renderer={ this.renderer } />;
-                }
-            }
-      
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class FeedGQL extends ApolloQuery<FeedQuery, FeedQueryVariables> {
+    document = FeedDocument;
+    
+  }
 export const SubmitRepositoryDocument = gql`
     mutation submitRepository($repoFullName: String!) {
   submitRepository(repoFullName: $repoFullName) {
@@ -386,16 +376,13 @@ export const SubmitRepositoryDocument = gql`
 }
     `;
 
-            @Component({
-                tag: 'apollo-submit-repository'
-            })
-            export class SubmitRepositoryComponent {
-                @Prop() renderer: MutationRenderer<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>;
-                render() {
-                    return <apollo-mutation mutation={ SubmitRepositoryDocument } renderer={ this.renderer } />;
-                }
-            }
-      
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class SubmitRepositoryGQL extends ApolloMutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables> {
+    document = SubmitRepositoryDocument;
+    
+  }
 export const SubmitCommentDocument = gql`
     mutation submitComment($repoFullName: String!, $commentContent: String!) {
   submitComment(repoFullName: $repoFullName, commentContent: $commentContent) {
@@ -404,16 +391,13 @@ export const SubmitCommentDocument = gql`
 }
     ${CommentsPageCommentFragmentDoc}`;
 
-            @Component({
-                tag: 'apollo-submit-comment'
-            })
-            export class SubmitCommentComponent {
-                @Prop() renderer: MutationRenderer<SubmitCommentMutation, SubmitCommentMutationVariables>;
-                render() {
-                    return <apollo-mutation mutation={ SubmitCommentDocument } renderer={ this.renderer } />;
-                }
-            }
-      
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class SubmitCommentGQL extends ApolloMutation<SubmitCommentMutation, SubmitCommentMutationVariables> {
+    document = SubmitCommentDocument;
+    
+  }
 export const VoteDocument = gql`
     mutation vote($repoFullName: String!, $type: VoteType!) {
   vote(repoFullName: $repoFullName, type: $type) {
@@ -426,13 +410,10 @@ export const VoteDocument = gql`
 }
     `;
 
-            @Component({
-                tag: 'apollo-vote'
-            })
-            export class VoteComponent {
-                @Prop() renderer: MutationRenderer<VoteMutation, VoteMutationVariables>;
-                render() {
-                    return <apollo-mutation mutation={ VoteDocument } renderer={ this.renderer } />;
-                }
-            }
-      
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class VoteGQL extends ApolloMutation<VoteMutation, VoteMutationVariables> {
+    document = VoteDocument;
+    
+  }

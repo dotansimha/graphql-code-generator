@@ -25,9 +25,15 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<ApolloAngularRaw
     autoBind(this);
   }
 
+  apolloImports = new Set<string>();
+
   public getImports(): string {
     const baseImports = super.getImports();
-    const imports = [`import { Injectable } from '@angular/core';`, `import * as Apollo from 'apollo-angular';`];
+    const imports = [`import { Injectable } from '@angular/core';`];
+
+    if (this.apolloImports.size) {
+      imports.push(`import { ${[...this.apolloImports].join(', ')} } from 'apollo-angular';`);
+    }
 
     const defs: Record<string, { path: string; module: string }> = {};
 
@@ -146,10 +152,12 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<ApolloAngularRaw
   @Injectable({
     providedIn: ${this._providedIn(node)}
   })
-  export class ${this.convertName(node)}GQL extends Apollo.${operationType}<${operationResultType}, ${operationVariablesTypes}> {
+  export class ${this.convertName(node)}GQL extends Apollo${operationType}<${operationResultType}, ${operationVariablesTypes}> {
     document = ${documentVariableName};
     ${this._namedClient(node)}
   }`;
+
+    this.apolloImports.add(`${operationType} as Apollo${operationType}`);
 
     return content;
   }

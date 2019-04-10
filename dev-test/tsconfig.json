@@ -2,7 +2,8 @@
   "compilerOptions": {
     "lib": ["esnext"],
     "jsx": "react",
-    "jsxFactory": "React.createElement",
+    "jsxFactory": "h",
+    "experimentalDecorators": true,
     "skipLibCheck": true,
     "strict": true,
     "noImplicitAny": true,

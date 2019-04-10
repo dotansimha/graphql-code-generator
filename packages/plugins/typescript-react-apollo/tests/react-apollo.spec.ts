@@ -43,7 +43,7 @@ describe('React Apollo', () => {
       }
     );
 
-    expect(content).not.toContain(`import * as ReactApollo from 'react-apollo';`);
+    expect(content).not.toContain(`from 'react-apollo';`);
     expect(content).not.toContain(`import * as React from 'react';`);
     expect(content).not.toContain(`import gql from 'graphql-tag';`);
     await validateTypeScript(content, schema, [], {});
@@ -61,7 +61,7 @@ describe('React Apollo', () => {
         }
       );
 
-      expect(content).toBeSimilarStringTo(`import * as ReactApollo from 'react-apollo';`);
+      expect(content).toBeSimilarStringTo(`import { Query as ApolloQuery, QueryProps } from 'react-apollo';`);
       expect(content).toBeSimilarStringTo(`import * as React from 'react';`);
       expect(content).toBeSimilarStringTo(`import gql from 'graphql-tag';`);
       await validateTypeScript(content, schema, docs, {});
@@ -401,10 +401,10 @@ query MyFeed {
       );
 
       expect(content).toBeSimilarStringTo(`
-      export class TestComponent extends React.Component<Partial<ReactApollo.QueryProps<TestQuery, TestQueryVariables>>> {
+      export class TestComponent extends React.Component<Partial<QueryProps<TestQuery, TestQueryVariables>>> {
         render() {
             return (
-                <ReactApollo.Query<TestQuery, TestQueryVariables> query={TestDocument} {...(this as any)['props'] as any} />
+                <ApolloQuery<TestQuery, TestQueryVariables> query={TestDocument} {...(this as any)['props'] as any} />
             );
         }
       }`);
@@ -453,14 +453,14 @@ query MyFeed {
         }
       );
 
-      expect(content).toBeSimilarStringTo(`export type TestProps<TChildProps = {}> = Partial<ReactApollo.DataProps<TestQuery, TestQueryVariables>> & TChildProps;`);
+      expect(content).toBeSimilarStringTo(`export type TestProps<TChildProps = {}> = Partial<DataProps<TestQuery, TestQueryVariables>> & TChildProps;`);
 
-      expect(content).toBeSimilarStringTo(`export function withTest<TProps, TChildProps = {}>(operationOptions: ReactApollo.OperationOption<
+      expect(content).toBeSimilarStringTo(`export function withTest<TProps, TChildProps = {}>(operationOptions?: OperationOption<
   TProps,
   TestQuery,
   TestQueryVariables,
-  TestProps<TChildProps>> | undefined) {
-    return ReactApollo.withQuery<TProps, TestQuery, TestQueryVariables, TestProps<TChildProps>>(TestDocument, operationOptions);
+  TestProps<TChildProps>>) {
+    return withQuery<TProps, TestQuery, TestQueryVariables, TestProps<TChildProps>>(TestDocument, operationOptions);
 };`);
       await validateTypeScript(content, schema, docs, {});
     });
@@ -532,13 +532,13 @@ query MyFeed {
       );
 
       expect(content).toBeSimilarStringTo(`
-export function useFeedQuery(baseOptions?: ReactApolloHooks.QueryHookOptions<FeedQueryVariables>) {
-  return ReactApolloHooks.useQuery<FeedQuery, FeedQueryVariables>(FeedDocument, baseOptions);
+export function useFeedQuery(baseOptions?: QueryHookOptions<FeedQueryVariables>) {
+  return useQuery<FeedQuery, FeedQueryVariables>(FeedDocument, baseOptions);
 };`);
 
       expect(content).toBeSimilarStringTo(`
-export function useSubmitRepositoryMutation(baseOptions?: ReactApolloHooks.MutationHookOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>) {
-  return ReactApolloHooks.useMutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(SubmitRepositoryDocument, baseOptions);
+export function useSubmitRepositoryMutation(baseOptions?: MutationHookOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>) {
+  return useMutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(SubmitRepositoryDocument, baseOptions);
 };`);
       await validateTypeScript(content, schema, docs, {});
     });
@@ -583,8 +583,8 @@ export function useSubmitRepositoryMutation(baseOptions?: ReactApolloHooks.Mutat
       );
 
       expect(content).toBeSimilarStringTo(`
-export function useListenToCommentsSubscription(baseOptions?: ReactApolloHooks.SubscriptionHookOptions<ListenToCommentsSubscription, ListenToCommentsSubscriptionVariables>) {
-  return ReactApolloHooks.useSubscription<ListenToCommentsSubscription, ListenToCommentsSubscriptionVariables>(ListenToCommentsDocument, baseOptions);
+export function useListenToCommentsSubscription(baseOptions?: SubscriptionHookOptions<ListenToCommentsSubscription, ListenToCommentsSubscriptionVariables>) {
+  return useSubscription<ListenToCommentsSubscription, ListenToCommentsSubscriptionVariables>(ListenToCommentsDocument, baseOptions);
 };`);
       await validateTypeScript(content, schema, docs, {});
     });

@@ -26,7 +26,7 @@ describe('Components', () => {
     const content = await plugin(schema, [{ filePath: '', content: documents }], { componentType: StencilComponentType.class }, { outputFile: '' });
 
     expect(content).toBeSimilarStringTo(`
-        import 'stencil-apollo';
+        import { QueryRenderer } from 'stencil-apollo';
         import { Component, Prop } from '@stencil/core';
       `);
   });
@@ -53,15 +53,15 @@ describe('Components', () => {
     expect(content).toBeSimilarStringTo(`
         export type FeedProps = {
             variables ?: FeedQueryVariables;
-            children ?: import('stencil-apollo/dist/types/components/apollo-query/types').QueryRenderer<FeedQuery, FeedQueryVariables>;
+            children ?: QueryRenderer<FeedQuery, FeedQueryVariables>;
         };
     `);
 
     expect(content).toBeSimilarStringTo(`
-        export const FeedComponent = (props: FeedProps, children: [import('stencil-apollo/dist/types/components/apollo-query/types').QueryRenderer<FeedQuery, FeedQueryVariables>]) => (
-          <StencilApollo.Query<FeedQuery, FeedQueryVariables> query={ FeedDocument } { ...props }>
+        export const FeedComponent = (props: FeedProps, children: [QueryRenderer<FeedQuery, FeedQueryVariables>]) => (
+          <ApolloQuery<FeedQuery, FeedQueryVariables> query={ FeedDocument } { ...props }>
             {children[0]}
-          </StencilApollo.Query>
+          </ApolloQuery>
         );
     `);
   });
@@ -90,9 +90,10 @@ describe('Components', () => {
                 tag: 'apollo-feed'
             })
             export class FeedComponent {
-                @Prop() renderer: import('stencil-apollo/dist/types/components/apollo-query/types').QueryRenderer<FeedQuery, FeedQueryVariables>;
+                @Prop() renderer: QueryRenderer<FeedQuery, FeedQueryVariables>;
+                @Prop() variables: FeedQueryVariables;
                 render() {
-                    return <apollo-query query={ FeedDocument } renderer={ this.renderer } />;
+                    return <apollo-query query={ FeedDocument } renderer={ this.renderer } variables={ FeedQueryVariables } />;
                 }
             }
       `);

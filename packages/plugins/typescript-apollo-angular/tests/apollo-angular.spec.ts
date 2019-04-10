@@ -92,7 +92,7 @@ describe('Apollo Angular', () => {
         }
       );
 
-      expect(content).toBeSimilarStringTo(`import * as Apollo from 'apollo-angular';`);
+      expect(content).toBeSimilarStringTo(`import { Query } from 'apollo-angular';`);
       expect(content).toBeSimilarStringTo(`import { Injectable } from '@angular/core';`);
       await validateTypeScript(content, schema, docs, {});
     });
@@ -190,7 +190,7 @@ describe('Apollo Angular', () => {
         @Injectable({
           providedIn: 'root'
         })
-        export class TestGQL extends Apollo.Query
+        export class TestGQL extends Query
       `);
       validateTypeScript(content, rootSchema, docs, {});
     });
