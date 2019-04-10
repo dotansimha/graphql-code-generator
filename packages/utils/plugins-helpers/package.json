@@ -17,7 +17,7 @@
     "tslib": "1.9.3"
   },
   "devDependencies": {
-    "typescript": "3.4.2"
+    "typescript": "3.4.3"
   },
   "sideEffects": false,
   "main": "dist/commonjs/index.js",
