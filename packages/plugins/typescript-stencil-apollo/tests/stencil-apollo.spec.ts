@@ -25,10 +25,8 @@ describe('Components', () => {
 
     const content = await plugin(schema, [{ filePath: '', content: documents }], { componentType: StencilComponentType.class }, { outputFile: '' });
 
-    expect(content).toBeSimilarStringTo(`
-        import { QueryRenderer } from 'stencil-apollo';
-        import { Component, Prop } from '@stencil/core';
-      `);
+    expect(content).toBeSimilarStringTo(`import { QueryRenderer } from 'stencil-apollo';`);
+    expect(content).toBeSimilarStringTo(`import { Component, Prop } from '@stencil/core';`);
   });
 
   it('should generate Functional Component', async () => {
@@ -93,7 +91,7 @@ describe('Components', () => {
                 @Prop() renderer: QueryRenderer<FeedQuery, FeedQueryVariables>;
                 @Prop() variables: FeedQueryVariables;
                 render() {
-                    return <apollo-query query={ FeedDocument } renderer={ this.renderer } variables={ FeedQueryVariables } />;
+                    return <apollo-query query={ FeedDocument } renderer={ this.renderer } variables={ this.variables } />;
                 }
             }
       `);
