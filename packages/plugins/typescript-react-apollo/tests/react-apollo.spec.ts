@@ -130,6 +130,21 @@ describe('React Apollo', () => {
       await validateTypeScript(content, schema, docs, {});
     });
 
+    it('should import ReactApollo from reactApolloImportFrom config option', async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
+      const content = await plugin(
+        schema,
+        docs,
+        { withHooks: true, hooksImportFrom: 'custom-apollo' },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`import * as ReactApollo from 'custom-apollo';`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
     it('should skip import React and ReactApollo if only hooks are used', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
       const content = await plugin(
