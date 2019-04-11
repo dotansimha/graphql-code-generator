@@ -2,7 +2,7 @@ import { ParsedConfig, RawConfig, BaseVisitor } from './base-visitor';
 import * as autoBind from 'auto-bind';
 import { DEFAULT_SCALARS } from './scalars';
 import { ScalarsMap } from './types';
-import { DeclarationBlock, DeclarationBlockConfig, indent, getBaseTypeNode, buildScalars, getConfigValue, getBaseType } from './utils';
+import { DeclarationBlock, DeclarationBlockConfig, indent, getBaseTypeNode, buildScalars, getConfigValue, getBaseType, getRootTypeNames } from './utils';
 import {
   NameNode,
   ListTypeNode,
@@ -25,6 +25,7 @@ import { ParsedMapper, parseMapper, transformMappers } from './mappers';
 
 export interface ParsedResolversConfig extends ParsedConfig {
   contextType: ParsedMapper;
+  rootValueType: ParsedMapper;
   mappers: {
     [typeName: string]: ParsedMapper;
   };
@@ -55,6 +56,28 @@ export interface RawResolversConfig extends RawConfig {
    * ```
    */
   contextType?: string;
+  /**
+   * @name rootValueType
+   * @type string
+   * @description Use this configuration to set a custom type for the `rootValue`, and it will
+   * effect resolvers of all root types (Query, Mutation and Subscription), without the need to override it using generics each time.
+   * If you wish to use an external type and import it from another file, you can use `add` plugin
+   * and add the required `import` statement, or you can use a `module#type` syntax.
+   *
+   * @example Custom RootValue Type
+   * ```yml
+   * plugins
+   *   config:
+   *     rootValueType: MyRootValue
+   * ```
+   * @example Custom RootValue Type
+   * ```yml
+   * plugins
+   *   config:
+   *     rootValueType: ./my-types#MyRootValue
+   * ```
+   */
+  rootValueType?: string;
   /**
    * @name mappers
    * @type Object
@@ -151,12 +174,14 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
   protected _variablesTransfomer: OperationVariablesToObject;
   protected _usedMappers: { [key: string]: boolean } = {};
   protected _resolversTypes: ResolverTypes = {};
+  protected _rootTypeNames: string[] = [];
 
   constructor(rawConfig: TRawConfig, additionalConfig: TPluginConfig, private _schema: GraphQLSchema, defaultScalars: ScalarsMap = DEFAULT_SCALARS) {
     super(
       rawConfig,
       {
         contextType: parseMapper(rawConfig.contextType || 'any'),
+        rootValueType: parseMapper(rawConfig.rootValueType || '{}'),
         avoidOptionals: getConfigValue(rawConfig.avoidOptionals, false),
         defaultMapper: rawConfig.defaultMapper ? parseMapper(rawConfig.defaultMapper || 'any') : null,
         mappers: transformMappers(rawConfig.mappers || {}),
@@ -166,6 +191,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
     );
 
     autoBind(this);
+    this._rootTypeNames = getRootTypeNames(_schema);
     this._variablesTransfomer = new OperationVariablesToObject(this.scalars, this.convertName);
     this.createResolversFields();
   }
@@ -179,12 +205,16 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
         }
 
         let shouldApplyOmit = false;
+        const isRootType = this._rootTypeNames.includes(typeName);
 
         const isMapped = this.config.mappers[typeName];
         const isScalar = this.config.scalars[typeName];
         const hasDefaultMapper = !!(this.config.defaultMapper && this.config.defaultMapper.type);
 
-        if (isMapped && this.config.mappers[typeName].type) {
+        if (isRootType) {
+          prev[typeName] = this.config.rootValueType.type;
+          return prev;
+        } else if (isMapped && this.config.mappers[typeName].type) {
           this.markMapperAsUsed(typeName);
           prev[typeName] = this.config.mappers[typeName].type;
         } else if (hasDefaultMapper && !hasPlaceholder(this.config.defaultMapper.type)) {
@@ -312,6 +342,14 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
       }
 
       groupedMappers[this.config.contextType.source].push(this.config.contextType.type);
+    }
+
+    if (this.config.rootValueType.isExternal) {
+      if (!groupedMappers[this.config.rootValueType.source]) {
+        groupedMappers[this.config.rootValueType.source] = [];
+      }
+
+      groupedMappers[this.config.rootValueType.source].push(this.config.rootValueType.type);
     }
 
     if (this.config.defaultMapper && this.config.defaultMapper.isExternal) {
@@ -485,10 +523,11 @@ export type IDirectiveResolvers${contextType} = ${name}<Context>;`
     };
   }
 
-  ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: string | number, parent: any) {
+  ObjectTypeDefinition(node: ObjectTypeDefinitionNode) {
     const name = this.convertName(node, {
       suffix: 'Resolvers',
     });
+
     const type = this.getTypeToUse((node.name as any) as string);
 
     const block = new DeclarationBlock(this._declarationBlockConfig)

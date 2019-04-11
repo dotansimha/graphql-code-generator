@@ -9,11 +9,11 @@ describe('ResolversTypes', () => {
 
     expect(result).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      Query: Query,
+      Query: {},
       MyType: MyType,
       String: Scalars['String'],
       MyOtherType: MyOtherType,
-      Subscription: Subscription,
+      Subscription: {},
       Boolean: Scalars['Boolean'],
       Node: Node,
       ID: Scalars['ID'],
@@ -30,7 +30,6 @@ describe('ResolversTypes', () => {
       [],
       {
         mappers: {
-          Query: 'MyQueryType',
           MyType: 'MyTypeDb',
           String: 'number',
         },
@@ -40,11 +39,11 @@ describe('ResolversTypes', () => {
 
     expect(result).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      Query: MyQueryType,
+      Query: {},
       MyType: MyTypeDb,
       String: number,
       MyOtherType: Omit<MyOtherType, 'bar'> & { bar: ResolversTypes['String'] },
-      Subscription: Subscription,
+      Subscription: {},
       Boolean: Scalars['Boolean'],
       Node: Node,
       ID: Scalars['ID'],
@@ -130,11 +129,11 @@ describe('ResolversTypes', () => {
 
     expect(result).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      Query: Partial<Query>,
+      Query: {},
       MyType: Partial<MyType>,
       String: Partial<Scalars['String']>,
       MyOtherType: Partial<MyOtherType>,
-      Subscription: Partial<Subscription>,
+      Subscription: {},
       Boolean: Partial<Scalars['Boolean']>,
       Node: Partial<Node>,
       ID: Partial<Scalars['ID']>,
@@ -159,11 +158,11 @@ describe('ResolversTypes', () => {
     expect(result).toBeSimilarStringTo(`import { CustomPartial } from './my-wrapper';`);
     expect(result).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      Query: CustomPartial<Query>,
+      Query: {},
       MyType: CustomPartial<MyType>,
       String: CustomPartial<Scalars['String']>,
       MyOtherType: CustomPartial<MyOtherType>,
-      Subscription: CustomPartial<Subscription>,
+      Subscription: {},
       Boolean: CustomPartial<Scalars['Boolean']>,
       Node: CustomPartial<Node>,
       ID: CustomPartial<Scalars['ID']>,
@@ -206,7 +205,7 @@ describe('ResolversTypes', () => {
 
     expect(result).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      Query: Partial<Omit<Query, 'me'> & { me: Maybe<ResolversTypes['User']> }>,
+      Query: {},
       User: number,
       ID: Partial<Scalars['ID']>,
       String: Partial<Scalars['String']>,
@@ -254,7 +253,6 @@ describe('ResolversTypes', () => {
       {
         noSchemaStitching: true,
         mappers: {
-          Query: 'MyQueryType',
           MyType: 'MyTypeDb',
           String: 'string',
         },
@@ -265,11 +263,11 @@ describe('ResolversTypes', () => {
 
     expect(result).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      Query: MyQueryType,
+      Query: {},
       MyType: MyTypeDb,
       String: string,
       MyOtherType: any,
-      Subscription: any,
+      Subscription: {},
       Boolean: any,
       Node: any,
       ID: any,
@@ -287,7 +285,7 @@ describe('ResolversTypes', () => {
       {
         noSchemaStitching: true,
         mappers: {
-          Query: './my-module#CustomQueryRootType',
+          MyOtherType: './my-module#CustomMyOtherType',
           MyType: 'MyTypeDb',
         },
       },
@@ -296,11 +294,11 @@ describe('ResolversTypes', () => {
 
     expect(result).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      Query: CustomQueryRootType,
+      Query: {},
       MyType: MyTypeDb,
       String: Scalars['String'],
-      MyOtherType: MyOtherType,
-      Subscription: Subscription,
+      MyOtherType: CustomMyOtherType,
+      Subscription: {},
       Boolean: Scalars['Boolean'],
       Node: Node,
       ID: Scalars['ID'],
@@ -326,11 +324,11 @@ describe('ResolversTypes', () => {
 
     expect(result).toBeSimilarStringTo(`
       export type ResolversTypes = {
-        Query: Omit<Query, 'something'> & { something: ResolversTypes['MyType'] },
+        Query: {},
         MyType: Partial<MyType>,
         String: Scalars['String'],
         MyOtherType: MyOtherType,
-        Subscription: Subscription,
+        Subscription: {},
         Boolean: Scalars['Boolean'],
         Node: Node,
         ID: Scalars['ID'],
@@ -783,11 +781,11 @@ describe('ResolversTypes', () => {
 
     expect(result).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      Query: Query,
+      Query: {},
       MyType: Omit<MyType, 'otherType'> & { otherType: Maybe<ResolversTypes['MyOtherType']> },
       String: Scalars['String'],
       MyOtherType: MyOtherTypeCustom,
-      Subscription: Omit<Subscription, 'somethingChanged'> & { somethingChanged: Maybe<ResolversTypes['MyOtherType']> },
+      Subscription: {},
       Boolean: Scalars['Boolean'],
       Node: Node,
       ID: Scalars['ID'],
@@ -815,11 +813,11 @@ describe('ResolversTypes', () => {
 
     expect(result).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      Query: Omit<Query, 'something'> & { something: ResolversTypes['MyType'] },
+      Query: {},
       MyType: MyTypeCustom,
       String: Scalars['String'],
       MyOtherType: MyOtherTypeCustom,
-      Subscription: Omit<Subscription, 'somethingChanged'> & { somethingChanged: Maybe<ResolversTypes['MyOtherType']> },
+      Subscription: {},
       Boolean: Scalars['Boolean'],
       Node: Node,
       ID: Scalars['ID'],

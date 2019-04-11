@@ -10,11 +10,11 @@ describe('ResolversTypes', () => {
 
     expect(result).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      Query: Query,
+      Query: {},
       MyType: MyType,
       String: $ElementType<Scalars, 'String'>,
       MyOtherType: MyOtherType,
-      Subscription: Subscription,
+      Subscription: {},
       Boolean: $ElementType<Scalars, 'Boolean'>,
       Node: Node,
       ID: $ElementType<Scalars, 'ID'>,
@@ -31,7 +31,6 @@ describe('ResolversTypes', () => {
       [],
       {
         mappers: {
-          Query: 'MyQueryType',
           MyType: 'MyTypeDb',
           String: 'number',
         },
@@ -41,11 +40,11 @@ describe('ResolversTypes', () => {
 
     expect(result).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      Query: MyQueryType,
+      Query: {},
       MyType: MyTypeDb,
       String: number,
       MyOtherType: $Diff<MyOtherType, { bar: * }> & { bar: $ElementType<ResolversTypes, 'String'> },
-      Subscription: Subscription,
+      Subscription: {},
       Boolean: $ElementType<Scalars, 'Boolean'>,
       Node: Node,
       ID: $ElementType<Scalars, 'ID'>,
@@ -62,7 +61,6 @@ describe('ResolversTypes', () => {
       [],
       {
         mappers: {
-          Query: 'MyQueryType',
           MyType: 'MyTypeDb',
           String: 'string',
         },
@@ -73,11 +71,11 @@ describe('ResolversTypes', () => {
 
     expect(result).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      Query: MyQueryType,
+      Query: {},
       MyType: MyTypeDb,
       String: string,
       MyOtherType: any,
-      Subscription: any,
+      Subscription: {},
       Boolean: any,
       Node: any,
       ID: any,
@@ -94,8 +92,7 @@ describe('ResolversTypes', () => {
       [],
       {
         mappers: {
-          Query: './my-module#CustomQueryRootType',
-          MyType: 'MyTypeDb',
+          MyType: './my-module#MyTypeDb',
         },
       },
       { outputFile: '' }
@@ -103,11 +100,11 @@ describe('ResolversTypes', () => {
 
     expect(result).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      Query: CustomQueryRootType,
+      Query: {},
       MyType: MyTypeDb,
       String: $ElementType<Scalars, 'String'>,
       MyOtherType: MyOtherType,
-      Subscription: Subscription,
+      Subscription: {},
       Boolean: $ElementType<Scalars, 'Boolean'>,
       Node: Node,
       ID: $ElementType<Scalars, 'ID'>,
@@ -553,11 +550,11 @@ describe('ResolversTypes', () => {
 
     expect(result).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      Query: Query,
+      Query: {},
       MyType: $Diff<MyType, { otherType: * }> & { otherType: ?$ElementType<ResolversTypes, 'MyOtherType'> },
       String: $ElementType<Scalars, 'String'>,
       MyOtherType: MyOtherTypeCustom,
-      Subscription: $Diff<Subscription, { somethingChanged: * }> & { somethingChanged: ?$ElementType<ResolversTypes, 'MyOtherType'> },
+      Subscription: {},
       Boolean: $ElementType<Scalars, 'Boolean'>,
       Node: Node,
       ID: $ElementType<Scalars, 'ID'>,
@@ -576,7 +573,6 @@ describe('ResolversTypes', () => {
       {
         mappers: {
           MyOtherType: 'MyOtherTypeCustom',
-          MyType: 'MyTypeCustom',
         },
       },
       { outputFile: '' }
@@ -584,11 +580,11 @@ describe('ResolversTypes', () => {
 
     expect(result).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      Query: $Diff<Query, { something: * }> & { something: $ElementType<ResolversTypes, 'MyType'> },
-      MyType: MyTypeCustom,
+      Query: {},
+      MyType: $Diff<MyType, { otherType: *  }> & { otherType: ?$ElementType<ResolversTypes, 'MyOtherType'> },
       String: $ElementType<Scalars, 'String'>,
       MyOtherType: MyOtherTypeCustom,
-      Subscription: $Diff<Subscription, { somethingChanged: * }> & { somethingChanged: ?$ElementType<ResolversTypes, 'MyOtherType'> },
+      Subscription: {},
       Boolean: $ElementType<Scalars, 'Boolean'>,
       Node: Node,
       ID: $ElementType<Scalars, 'ID'>,
@@ -612,11 +608,11 @@ describe('ResolversTypes', () => {
 
     expect(result).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      Query: $Shape<Query>,
+      Query: {},
       MyType: $Shape<MyType>,
       String: $Shape<$ElementType<Scalars, 'String'>>,
       MyOtherType: $Shape<MyOtherType>,
-      Subscription: $Shape<Subscription>,
+      Subscription: {},
       Boolean: $Shape<$ElementType<Scalars, 'Boolean'>>,
       Node: $Shape<Node>,
       ID: $Shape<$ElementType<Scalars, 'ID'>>,
@@ -640,11 +636,11 @@ describe('ResolversTypes', () => {
     expect(result).toBeSimilarStringTo(`import { type CustomPartial } from './my-wrapper';`);
     expect(result).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      Query: CustomPartial<Query>,
+      Query: {},
       MyType: CustomPartial<MyType>,
       String: CustomPartial<$ElementType<Scalars, 'String'>>,
       MyOtherType: CustomPartial<MyOtherType>,
-      Subscription: CustomPartial<Subscription>,
+      Subscription: {},
       Boolean: CustomPartial<$ElementType<Scalars, 'Boolean'>>,
       Node: CustomPartial<Node>,
       ID: CustomPartial<$ElementType<Scalars, 'ID'>>,

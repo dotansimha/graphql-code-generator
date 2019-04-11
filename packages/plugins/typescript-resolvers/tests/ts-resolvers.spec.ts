@@ -680,6 +680,85 @@ describe('TypeScript Resolvers Plugin', () => {
     validateTs(content);
   });
 
+  it('should use {} as default of rootValueType', async () => {
+    const testSchema = buildSchema(/* GraphQL */ `
+      type Subscription {
+        postAdded: Post
+      }
+
+      type Query {
+        posts: [Post]
+      }
+
+      type Mutation {
+        addPost(author: String, comment: String): Post
+      }
+
+      type Post {
+        author: String
+        comment: String
+      }
+    `);
+    const content = await plugin(testSchema, [], {}, { outputFile: 'graphql.ts' });
+
+    expect(content).toBeSimilarStringTo(`
+      export type ResolversTypes = {
+        Query: {},
+        Post: Post,
+        String: Scalars['String'],
+        Mutation: {},
+        Subscription: {},
+        Boolean: Scalars['Boolean'],
+      };
+    `);
+  });
+
+  it('should use rootValueType in Query, Mutation and Subscription', async () => {
+    const testSchema = buildSchema(/* GraphQL */ `
+      type MySubscription {
+        postAdded: Post
+      }
+
+      type MyQuery {
+        posts: [Post]
+      }
+
+      type MyMutation {
+        addPost(author: String, comment: String): Post
+      }
+
+      type Post {
+        author: String
+        comment: String
+      }
+
+      schema {
+        query: MyQuery
+        mutation: MyMutation
+        subscription: MySubscription
+      }
+    `);
+    const content = await plugin(
+      testSchema,
+      [],
+      {
+        rootValueType: 'MyRoot',
+      },
+      { outputFile: 'graphql.ts' }
+    );
+
+    expect(content).toBeSimilarStringTo(`
+      export type ResolversTypes = {
+        MyQuery: MyRoot,
+        Post: Post,
+        String: Scalars['String'],
+        MyMutation: MyRoot,
+        MySubscription: MyRoot,
+        Boolean: Scalars['Boolean'],
+      };
+    `);
+  });
+
   it('should generate subscription types correctly', async () => {
     const testSchema = buildSchema(/* GraphQL */ `
       type Subscription {
@@ -700,7 +779,14 @@ describe('TypeScript Resolvers Plugin', () => {
       }
     `);
     const tsContent = await tsPlugin(testSchema, [], {}, { outputFile: 'graphql.ts' });
-    const resolversContent = await plugin(testSchema, [], {}, { outputFile: 'graphql.ts' });
+    const resolversContent = await plugin(
+      testSchema,
+      [],
+      {
+        rootValueType: '{version: 1}',
+      },
+      { outputFile: 'graphql.ts' }
+    );
     const content = [
       tsContent,
       resolversContent,
@@ -713,19 +799,30 @@ describe('TypeScript Resolvers Plugin', () => {
         const resolvers: Resolvers = {
           Subscription: {
             postAdded: {
-              // Additional event labels can be passed to asyncIterator creation
               subscribe: () => pubsub.asyncIterator([POST_ADDED]),
-            },
+            }
           },
           Mutation: {
-            addPost: (root, args) => {
-              pubsub.publish(POST_ADDED, { postAdded: args });
-              return args;
+            addPost: (root, { author, comment }) => {
+              const post = {
+                author,
+                comment,
+              };
+
+              // RootValue should be accessible
+              console.log(root.version);
+
+              // Pass correct data
+              pubsub.publish(POST_ADDED, post);
+              
+              // Return correct data
+              return post;
             }
           },
         };
       `,
     ].join('\n');
+
     validateTs(content);
   });
 
