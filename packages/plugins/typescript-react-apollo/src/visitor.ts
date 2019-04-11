@@ -10,6 +10,7 @@ export interface ReactApolloPluginConfig extends ClientSideBasePluginConfig {
   withComponent: boolean;
   withHooks: boolean;
   hooksImportFrom: string;
+  reactApolloImportFrom: string;
 }
 
 export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPluginConfig, ReactApolloPluginConfig> {
@@ -19,6 +20,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
       withComponent: getConfigValue(rawConfig.withComponent, true),
       withHooks: getConfigValue(rawConfig.withHooks, false),
       hooksImportFrom: getConfigValue(rawConfig.hooksImportFrom, 'react-apollo-hooks'),
+      reactApolloImportFrom: getConfigValue(rawConfig.reactApolloImportFrom, 'react-apollo'),
     } as any);
 
     autoBind(this);
@@ -33,7 +35,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     }
 
     if (this.config.withComponent || this.config.withHOC) {
-      imports.push(`import * as ReactApollo from 'react-apollo';`);
+      imports.push(`import * as ReactApollo from '${typeof this.config.reactApolloImportFrom === 'string' ? this.config.reactApolloImportFrom : 'react-apollo'}';`);
     }
 
     if (this.config.withHooks) {

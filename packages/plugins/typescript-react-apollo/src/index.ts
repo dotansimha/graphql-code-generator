@@ -71,6 +71,15 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    * @default react-apollo-hooks
    */
   hooksImportFrom?: string;
+  /**
+   * @name hooksImportFrom
+   * @type string
+   * @description You can specify module that exports components `Query`, `Mutation`, `Subscription` and HOCs
+   * This is useful for further abstraction of some common tasks (eg. error handling).
+   * Filepath relative to generated file can be also specified.
+   * @default react-apollo
+   */
+  reactApolloImportFrom?: string;
 }
 
 export const plugin: PluginFunction<ReactApolloRawPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: ReactApolloRawPluginConfig) => {
