@@ -1,6 +1,6 @@
 import { CompatabilityPluginRawConfig } from './index';
 import { BaseVisitor, DeclarationBlock, indent, toPascalCase, getConfigValue } from '@graphql-codegen/visitor-plugin-common';
-import { GraphQLSchema, OperationDefinitionNode, OperationTypeNode } from 'graphql';
+import { GraphQLSchema, OperationDefinitionNode, OperationTypeNode, FragmentDefinitionNode } from 'graphql';
 import { ParsedConfig } from '@graphql-codegen/visitor-plugin-common';
 import { selectionSetToTypes, SelectionSetToObjectResult } from './selection-set-to-types';
 
@@ -47,12 +47,45 @@ export class CompatabilityPluginVisitor extends BaseVisitor<CompatabilityPluginR
     return selectionSetTypes;
   }
 
+  protected buildFragmentBlock(node: FragmentDefinitionNode): SelectionSetToObjectResult {
+    const typeName = this._schema.getType(node.typeCondition.name.value).name;
+    const baseName = this.convertName(node.name.value, { suffix: `Fragment` });
+    const typesPrefix = this.config.noNamespaces ? this.convertName(node.name.value) : '';
+    const selectionSetTypes: SelectionSetToObjectResult = {};
+
+    selectionSetToTypes(typesPrefix, this, this._schema, typeName, baseName, 'fragment', node.selectionSet, selectionSetTypes);
+
+    return selectionSetTypes;
+  }
+
   protected printTypes(selectionSetTypes: SelectionSetToObjectResult): string {
     return Object.keys(selectionSetTypes)
       .filter(typeName => typeName !== selectionSetTypes[typeName].name)
       .map(typeName => `export ${selectionSetTypes[typeName].export} ${typeName} = ${selectionSetTypes[typeName].name};`)
       .map(m => (this.config.noNamespaces ? m : indent(m)))
       .join('\n');
+  }
+
+  FragmentDefinition(node: FragmentDefinitionNode): string {
+    const baseName = node.name.value;
+    const results = [];
+    const convertedName = this.convertName(baseName);
+    const selectionSetTypes = this.buildFragmentBlock(node);
+    const fragmentBlock = this.printTypes(selectionSetTypes);
+
+    if (!this.config.noNamespaces) {
+      results.push(
+        new DeclarationBlock(this._declarationBlockConfig)
+          .export()
+          .asKind('namespace')
+          .withName(convertedName)
+          .withBlock(fragmentBlock).string
+      );
+    } else {
+      results.push(fragmentBlock);
+    }
+
+    return results.join('\n');
   }
 
   OperationDefinition(node: OperationDefinitionNode): string {
