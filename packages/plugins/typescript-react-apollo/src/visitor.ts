@@ -40,7 +40,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
       imports.push(`import * as ReactApolloHooks from '${typeof this.config.hooksImportFrom === 'string' ? this.config.hooksImportFrom : 'react-apollo-hooks'}';`);
     }
 
-    imports.push(`type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>`);
+    imports.push(`export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>`);
 
     return [baseImports, ...imports].join('\n');
   }
