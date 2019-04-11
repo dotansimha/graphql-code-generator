@@ -9,7 +9,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@microsoft/tsdoc": "0.12.8",
+    "@microsoft/tsdoc": "0.12.9",
     "tslib": "1.9.3",
     "typescript": "3.4.3"
   },
