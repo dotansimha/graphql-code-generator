@@ -93,6 +93,18 @@ describe('Compatibility Plugin', () => {
       }
     }
 
+    fragment MoreUserFields on User {
+      id
+      name
+      friends {
+        id
+        name
+        friends {
+          id
+        }
+      }
+    }
+
     query me5 {
       user(id: "1") {
         id
@@ -107,6 +119,23 @@ describe('Compatibility Plugin', () => {
       }
     }
   `);
+
+  it('Should work with fragments and generate namespaces', async () => {
+    const ast = [{ filePath: '', content: basicQuery }];
+    const result = await plugin(schema, ast, {});
+
+    expect(result).toBeSimilarStringTo(`export namespace UserFields {
+      export type Fragment = UserFieldsFragment;
+    }`);
+
+    expect(result).toBeSimilarStringTo(`export namespace MoreUserFields {
+      export type Fragment = MoreUserFieldsFragment;
+      export type Friends = MoreUserFieldsFragment['friends'][0];
+      export type _Friends = MoreUserFieldsFragment['friends'][0]['friends'][0];
+    }`);
+
+    await validate(result, schema, ast, {});
+  });
 
   it('Should work with custom Query root type', async () => {
     const testSchema = buildSchema(/* GraphQL */ `
