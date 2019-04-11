@@ -1,6 +1,6 @@
 import '@graphql-codegen/testing';
 import { plugin } from '../src/index';
-import { parse, GraphQLSchema, buildClientSchema } from 'graphql';
+import { parse, GraphQLSchema, buildClientSchema, buildASTSchema } from 'graphql';
 import gql from 'graphql-tag';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { plugin as tsPlugin } from '../../typescript/src/index';
@@ -416,13 +416,11 @@ query MyFeed {
       );
 
       expect(content).toBeSimilarStringTo(`
-      export class TestComponent extends React.Component<Partial<ReactApollo.QueryProps<TestQuery, TestQueryVariables>>> {
-        render() {
-            return (
-                <ReactApollo.Query<TestQuery, TestQueryVariables> query={TestDocument} {...(this as any)['props'] as any} />
-            );
-        }
-      }`);
+      export const TestComponent = (props: Omit<Omit<ReactApollo.QueryProps<TestQuery, TestQueryVariables>, 'query'>, 'variables'> & { variables?: TestQueryVariables }) => 
+      (
+          <ReactApollo.Query<TestQuery, TestQueryVariables> query={TestDocument} {...props} />
+      );
+      `);
       await validateTypeScript(content, schema, docs, {});
     });
 
@@ -438,6 +436,38 @@ query MyFeed {
       );
 
       expect(content).not.toContain(`export class TestComponent`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should make variables property required if any of variable definitions is non-null', async () => {
+      const docs = [
+        {
+          filePath: '',
+          content: gql`
+            query Test($foo: String!) {
+              test(foo: $foo)
+            }
+          `,
+        },
+      ];
+      const schema = buildASTSchema(gql`
+        type Query {
+          test(foo: String!): Boolean
+        }
+      `);
+      const content = await plugin(
+        schema,
+        docs,
+        {},
+        {
+          outputFile: 'graphql.tsx',
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+      export const TestComponent = (props: Omit<Omit<ReactApollo.QueryProps<TestQuery, TestQueryVariables>, 'query'>, 'variables'> & { variables: TestQueryVariables }) => (
+        <ReactApollo.Query<TestQuery, TestQueryVariables> query={TestDocument} {...props} />
+      );`);
       await validateTypeScript(content, schema, docs, {});
     });
 

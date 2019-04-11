@@ -42,6 +42,8 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
       imports.push(`import * as ReactApolloHooks from '${typeof this.config.hooksImportFrom === 'string' ? this.config.hooksImportFrom : 'react-apollo-hooks'}';`);
     }
 
+    imports.push(`export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>`);
+
     return [baseImports, ...imports].join('\n');
   }
 
@@ -75,14 +77,15 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
   private _buildComponent(node: OperationDefinitionNode, documentVariableName: string, operationType: string, operationResultType: string, operationVariablesTypes: string): string {
     const componentName: string = this.convertName(node.name.value, { suffix: 'Component', useTypesPrefix: false });
 
+    const isVariablesRequired = node.variableDefinitions.some(variableDef => variableDef.type.kind === 'NonNullType');
+
     return `
-export class ${componentName} extends React.Component<Partial<ReactApollo.${operationType}Props<${operationResultType}, ${operationVariablesTypes}>>> {
-  render() {
-      return (
-          <ReactApollo.${operationType}<${operationResultType}, ${operationVariablesTypes}> ${node.operation}={${documentVariableName}} {...(this as any)['props'] as any} />
+      export const ${componentName} = (props: Omit<Omit<ReactApollo.${operationType}Props<${operationResultType}, ${operationVariablesTypes}>, '${operationType.toLowerCase()}'>, 'variables'> & { variables${
+      isVariablesRequired ? '' : '?'
+    }: ${operationVariablesTypes} }) => (
+        <ReactApollo.${operationType}<${operationResultType}, ${operationVariablesTypes}> ${node.operation}={${documentVariableName}} {...props} />
       );
-  }
-}`;
+`;
   }
 
   private _buildHooks(node: OperationDefinitionNode, operationType: string, documentVariableName: string, operationResultType: string, operationVariablesTypes: string): string {
