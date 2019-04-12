@@ -6597,10 +6597,10 @@ flow-bin@0.96.0:
   resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.96.0.tgz#3b0379d97304dc1879ae6db627cd2d6819998661"
   integrity sha512-OSxERs0EdhVxEVCst/HmlT/RcnXsQQIRqcfK9J9wC8/93JQj+xQz4RtlsmYe1PSRYaozuDLyPS5pIA81Zwzaww==
 
-flow-parser@0.96.1:
-  version "0.96.1"
-  resolved "https://registry.yarnpkg.com/flow-parser/-/flow-parser-0.96.1.tgz#477affba976b7e22963aa9a76888c30c783f63bd"
-  integrity sha512-T8TZV/L7Iy8sp7eoF1G7OLmXGWL25/GflyAK4W1fc9/3ny7RE0cdpWT69nEIoHWsWZ8nFpQCN791hXTddfRKyg==
+flow-parser@0.97.0:
+  version "0.97.0"
+  resolved "https://registry.yarnpkg.com/flow-parser/-/flow-parser-0.97.0.tgz#e52ffdb3f0a9c96b6969178d39fcaf27b292a5ba"
+  integrity sha512-+7ubRHBEF6n4QQNUIDCVdqD7TuahvHUBzzj7Lf9u1Pn3i6UplL6SRdP0s9/Hdn+4BDX3zJG1HWkcf4h5IQMvvQ==
 
 flow-remove-types@^1.1.0:
   version "1.2.3"
