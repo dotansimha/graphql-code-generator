@@ -14,7 +14,7 @@ describe('TypeScript Resolvers Plugin', () => {
        * @deprecated
        * Use "DirectiveResolvers" root object instead. If you wish to get "IDirectiveResolvers", add "typesPrefix: I" to your config.
       */
-      export type IDirectiveResolvers<Context = any> = DirectiveResolvers<Context>;`);
+      export type IDirectiveResolvers<ContextType = any> = DirectiveResolvers<ContextType>;`);
       await validate(result);
     });
 
@@ -34,7 +34,7 @@ describe('TypeScript Resolvers Plugin', () => {
        * @deprecated
        * Use "Resolvers" root object instead. If you wish to get "IResolvers", add "typesPrefix: I" to your config.
       */
-      export type IResolvers<Context = any> = Resolvers<Context>;`);
+      export type IResolvers<ContextType = any> = Resolvers<ContextType>;`);
       await validate(result);
     });
 
@@ -54,7 +54,7 @@ describe('TypeScript Resolvers Plugin', () => {
        * @deprecated
        * Use "Resolvers" root object instead. If you wish to get "IResolvers", add "typesPrefix: I" to your config.
       */
-      export type IResolvers<Context = any> = Resolvers<Context>;`);
+      export type IResolvers<ContextType = any> = Resolvers<ContextType>;`);
       await validate(result);
     });
 
@@ -75,7 +75,7 @@ describe('TypeScript Resolvers Plugin', () => {
         testSchema,
         [],
         {
-          contextType: 'AppContext',
+          contextType: 'Context',
           useIndexSignature: true,
         },
         {
@@ -88,7 +88,7 @@ describe('TypeScript Resolvers Plugin', () => {
         `
           import { makeExecutableSchema } from 'graphql-tools';
   
-          interface AppContext {
+          interface Context {
             users: Array<{
               id: string;
               name: string;
@@ -111,9 +111,9 @@ describe('TypeScript Resolvers Plugin', () => {
       ].join('\n');
 
       expect(content).toBeSimilarStringTo(`
-        export type Resolvers<Context = AppContext> = ResolversObject<{
-          Query?: QueryResolvers<Context>,
-          User?: UserResolvers<Context>,
+        export type Resolvers<ContextType = Context> = ResolversObject<{
+          Query?: QueryResolvers<ContextType>,
+          User?: UserResolvers<ContextType>,
         }>;
       `);
 
@@ -203,12 +203,12 @@ describe('TypeScript Resolvers Plugin', () => {
     const result = await plugin(schema, [], {}, { outputFile: '' });
 
     expect(result).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveResolver<Result, Parent, Context = any, Args = {   arg?: Maybe<Scalars['Int']>,
-      arg2?: Maybe<Scalars['String']>, arg3?: Maybe<Scalars['Boolean']> }> = DirectiveResolverFn<Result, Parent, Context, Args>;`);
+    export type MyDirectiveDirectiveResolver<Result, Parent, ContextType = any, Args = {   arg?: Maybe<Scalars['Int']>,
+      arg2?: Maybe<Scalars['String']>, arg3?: Maybe<Scalars['Boolean']> }> = DirectiveResolverFn<Result, Parent, ContextType, Args>;`);
 
     expect(result).toBeSimilarStringTo(`
-      export type MyOtherTypeResolvers<Context = any, ParentType = ResolversTypes['MyOtherType']> = {
-        bar?: Resolver<ResolversTypes['String'], ParentType, Context>,
+      export type MyOtherTypeResolvers<ContextType = any, ParentType = ResolversTypes['MyOtherType']> = {
+        bar?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
       };
     `);
 
@@ -217,41 +217,41 @@ describe('TypeScript Resolvers Plugin', () => {
     }`);
 
     expect(result).toBeSimilarStringTo(`
-      export type MyTypeResolvers<Context = any, ParentType = ResolversTypes['MyType']> = {
-        foo?: Resolver<ResolversTypes['String'], ParentType, Context>,
-        otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, Context>,
-        withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, Context, MyTypeWithArgsArgs>,
+      export type MyTypeResolvers<ContextType = any, ParentType = ResolversTypes['MyType']> = {
+        foo?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+        otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>,
+        withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, MyTypeWithArgsArgs>,
       };
     `);
 
     expect(result).toBeSimilarStringTo(`
-      export type MyUnionResolvers<Context = any, ParentType = ResolversTypes['MyUnion']> = {
-        __resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, Context>
+      export type MyUnionResolvers<ContextType = any, ParentType = ResolversTypes['MyUnion']> = {
+        __resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, ContextType>
       };
     `);
 
     expect(result).toBeSimilarStringTo(`
-      export type NodeResolvers<Context = any, ParentType = ResolversTypes['Node']> = {
-        __resolveType: TypeResolveFn<'SomeNode', ParentType, Context>,
-        id?: Resolver<ResolversTypes['ID'], ParentType, Context>,
+      export type NodeResolvers<ContextType = any, ParentType = ResolversTypes['Node']> = {
+        __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>,
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
       };
     `);
 
     expect(result).toBeSimilarStringTo(`
-      export type QueryResolvers<Context = any, ParentType = ResolversTypes['Query']> = {
-        something?: Resolver<ResolversTypes['MyType'], ParentType, Context>,
+      export type QueryResolvers<ContextType = any, ParentType = ResolversTypes['Query']> = {
+        something?: Resolver<ResolversTypes['MyType'], ParentType, ContextType>,
       };
     `);
 
     expect(result).toBeSimilarStringTo(`
-      export type SomeNodeResolvers<Context = any, ParentType = ResolversTypes['SomeNode']> = {
-        id?: Resolver<ResolversTypes['ID'], ParentType, Context>,
+      export type SomeNodeResolvers<ContextType = any, ParentType = ResolversTypes['SomeNode']> = {
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
       };
     `);
 
     expect(result).toBeSimilarStringTo(`
-      export type SubscriptionResolvers<Context = any, ParentType = ResolversTypes['Subscription']> = {
-        somethingChanged?: SubscriptionResolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, Context>,
+      export type SubscriptionResolvers<ContextType = any, ParentType = ResolversTypes['Subscription']> = {
+        somethingChanged?: SubscriptionResolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>,
       };
     `);
 
@@ -262,12 +262,12 @@ describe('TypeScript Resolvers Plugin', () => {
     const result = await plugin(schema, [], { avoidOptionals: true }, { outputFile: '' });
 
     expect(result).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveResolver<Result, Parent, Context = any, Args = {   arg: Maybe<Scalars['Int']>,
-      arg2: Maybe<Scalars['String']>, arg3: Maybe<Scalars['Boolean']> }> = DirectiveResolverFn<Result, Parent, Context, Args>;`);
+    export type MyDirectiveDirectiveResolver<Result, Parent, ContextType = any, Args = {   arg: Maybe<Scalars['Int']>,
+      arg2: Maybe<Scalars['String']>, arg3: Maybe<Scalars['Boolean']> }> = DirectiveResolverFn<Result, Parent, ContextType, Args>;`);
 
     expect(result).toBeSimilarStringTo(`
-      export type MyOtherTypeResolvers<Context = any, ParentType = ResolversTypes['MyOtherType']> = {
-        bar: Resolver<ResolversTypes['String'], ParentType, Context>,
+      export type MyOtherTypeResolvers<ContextType = any, ParentType = ResolversTypes['MyOtherType']> = {
+        bar: Resolver<ResolversTypes['String'], ParentType, ContextType>,
       };
     `);
 
@@ -276,41 +276,41 @@ describe('TypeScript Resolvers Plugin', () => {
     }`);
 
     expect(result).toBeSimilarStringTo(`
-      export type MyTypeResolvers<Context = any, ParentType = ResolversTypes['MyType']> = {
-        foo: Resolver<ResolversTypes['String'], ParentType, Context>,
-        otherType: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, Context>,
-        withArgs: Resolver<Maybe<ResolversTypes['String']>, ParentType, Context, MyTypeWithArgsArgs>,
+      export type MyTypeResolvers<ContextType = any, ParentType = ResolversTypes['MyType']> = {
+        foo: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+        otherType: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>,
+        withArgs: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, MyTypeWithArgsArgs>,
       };
     `);
 
     expect(result).toBeSimilarStringTo(`
-      export type MyUnionResolvers<Context = any, ParentType = ResolversTypes['MyUnion']> = {
-        __resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, Context>
+      export type MyUnionResolvers<ContextType = any, ParentType = ResolversTypes['MyUnion']> = {
+        __resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, ContextType>
       };
     `);
 
     expect(result).toBeSimilarStringTo(`
-      export type NodeResolvers<Context = any, ParentType = ResolversTypes['Node']> = {
-        __resolveType: TypeResolveFn<'SomeNode', ParentType, Context>,
-        id: Resolver<ResolversTypes['ID'], ParentType, Context>,
+      export type NodeResolvers<ContextType = any, ParentType = ResolversTypes['Node']> = {
+        __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>,
+        id: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
       };
     `);
 
     expect(result).toBeSimilarStringTo(`
-      export type QueryResolvers<Context = any, ParentType = ResolversTypes['Query']> = {
-        something: Resolver<ResolversTypes['MyType'], ParentType, Context>,
+      export type QueryResolvers<ContextType = any, ParentType = ResolversTypes['Query']> = {
+        something: Resolver<ResolversTypes['MyType'], ParentType, ContextType>,
       };
     `);
 
     expect(result).toBeSimilarStringTo(`
-      export type SomeNodeResolvers<Context = any, ParentType = ResolversTypes['SomeNode']> = {
-        id: Resolver<ResolversTypes['ID'], ParentType, Context>,
+      export type SomeNodeResolvers<ContextType = any, ParentType = ResolversTypes['SomeNode']> = {
+        id: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
       };
     `);
 
     expect(result).toBeSimilarStringTo(`
-      export type SubscriptionResolvers<Context = any, ParentType = ResolversTypes['Subscription']> = {
-        somethingChanged: SubscriptionResolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, Context>,
+      export type SubscriptionResolvers<ContextType = any, ParentType = ResolversTypes['Subscription']> = {
+        somethingChanged: SubscriptionResolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>,
       };
     `);
 
@@ -322,61 +322,61 @@ describe('TypeScript Resolvers Plugin', () => {
       schema,
       [],
       {
-        contextType: 'MyCustomContext',
+        contextType: 'MyCustomCtx',
       },
       { outputFile: '' }
     );
 
     expect(result).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveResolver<Result, Parent, Context = MyCustomContext, Args = {   arg?: Maybe<Scalars['Int']>,
-      arg2?: Maybe<Scalars['String']>, arg3?: Maybe<Scalars['Boolean']> }> = DirectiveResolverFn<Result, Parent, Context, Args>;`);
+    export type MyDirectiveDirectiveResolver<Result, Parent, ContextType = MyCustomCtx, Args = {   arg?: Maybe<Scalars['Int']>,
+      arg2?: Maybe<Scalars['String']>, arg3?: Maybe<Scalars['Boolean']> }> = DirectiveResolverFn<Result, Parent, ContextType, Args>;`);
 
     expect(result).toBeSimilarStringTo(`
-      export type MyOtherTypeResolvers<Context = MyCustomContext, ParentType = ResolversTypes['MyOtherType']> = {
-        bar?: Resolver<ResolversTypes['String'], ParentType, Context>,
+      export type MyOtherTypeResolvers<ContextType = MyCustomCtx, ParentType = ResolversTypes['MyOtherType']> = {
+        bar?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
       };
     `);
 
     expect(result).toBeSimilarStringTo(`
-      export type MyTypeResolvers<Context = MyCustomContext, ParentType = ResolversTypes['MyType']> = {
-        foo?: Resolver<ResolversTypes['String'], ParentType, Context>,
-        otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, Context>,
-        withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, Context, MyTypeWithArgsArgs>,
+      export type MyTypeResolvers<ContextType = MyCustomCtx, ParentType = ResolversTypes['MyType']> = {
+        foo?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+        otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>,
+        withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, MyTypeWithArgsArgs>,
       };
     `);
 
     expect(result).toBeSimilarStringTo(`
-      export type MyUnionResolvers<Context = MyCustomContext, ParentType = ResolversTypes['MyUnion']> = {
-        __resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, Context>
+      export type MyUnionResolvers<ContextType = MyCustomCtx, ParentType = ResolversTypes['MyUnion']> = {
+        __resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, ContextType>
       };
     `);
 
     expect(result).toBeSimilarStringTo(`
-      export type NodeResolvers<Context = MyCustomContext, ParentType = ResolversTypes['Node']> = {
-        __resolveType: TypeResolveFn<'SomeNode', ParentType, Context>,
-        id?: Resolver<ResolversTypes['ID'], ParentType, Context>,
+      export type NodeResolvers<ContextType = MyCustomCtx, ParentType = ResolversTypes['Node']> = {
+        __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>,
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
       };
     `);
 
     expect(result).toBeSimilarStringTo(`
-      export type QueryResolvers<Context = MyCustomContext, ParentType = ResolversTypes['Query']> = {
-        something?: Resolver<ResolversTypes['MyType'], ParentType, Context>,
+      export type QueryResolvers<ContextType = MyCustomCtx, ParentType = ResolversTypes['Query']> = {
+        something?: Resolver<ResolversTypes['MyType'], ParentType, ContextType>,
       };
     `);
 
     expect(result).toBeSimilarStringTo(`
-      export type SomeNodeResolvers<Context = MyCustomContext, ParentType = ResolversTypes['SomeNode']> = {
-        id?: Resolver<ResolversTypes['ID'], ParentType, Context>,
+      export type SomeNodeResolvers<ContextType = MyCustomCtx, ParentType = ResolversTypes['SomeNode']> = {
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
       };
     `);
 
     expect(result).toBeSimilarStringTo(`
-      export type SubscriptionResolvers<Context = MyCustomContext, ParentType = ResolversTypes['Subscription']> = {
-        somethingChanged?: SubscriptionResolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, Context>,
+      export type SubscriptionResolvers<ContextType = MyCustomCtx, ParentType = ResolversTypes['Subscription']> = {
+        somethingChanged?: SubscriptionResolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>,
       };
     `);
 
-    await validate(`type MyCustomContext = {};\n` + result);
+    await validate(`type MyCustomCtx = {};\n` + result);
   });
 
   it('Should allow to override context with mapped context type', async () => {
@@ -384,59 +384,59 @@ describe('TypeScript Resolvers Plugin', () => {
       schema,
       [],
       {
-        contextType: './my-file#MyCustomContext',
+        contextType: './my-file#MyCustomCtx',
       },
       { outputFile: '' }
     );
 
-    expect(result).toBeSimilarStringTo(`import { MyCustomContext } from './my-file';`);
+    expect(result).toBeSimilarStringTo(`import { MyCustomCtx } from './my-file';`);
 
     expect(result).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveResolver<Result, Parent, Context = MyCustomContext, Args = {   arg?: Maybe<Scalars['Int']>,
-      arg2?: Maybe<Scalars['String']>, arg3?: Maybe<Scalars['Boolean']> }> = DirectiveResolverFn<Result, Parent, Context, Args>;`);
+    export type MyDirectiveDirectiveResolver<Result, Parent, ContextType = MyCustomCtx, Args = {   arg?: Maybe<Scalars['Int']>,
+      arg2?: Maybe<Scalars['String']>, arg3?: Maybe<Scalars['Boolean']> }> = DirectiveResolverFn<Result, Parent, ContextType, Args>;`);
 
     expect(result).toBeSimilarStringTo(`
-      export type MyOtherTypeResolvers<Context = MyCustomContext, ParentType = ResolversTypes['MyOtherType']> = {
-        bar?: Resolver<ResolversTypes['String'], ParentType, Context>,
+      export type MyOtherTypeResolvers<ContextType = MyCustomCtx, ParentType = ResolversTypes['MyOtherType']> = {
+        bar?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
       };
     `);
 
     expect(result).toBeSimilarStringTo(`
-      export type MyTypeResolvers<Context = MyCustomContext, ParentType = ResolversTypes['MyType']> = {
-        foo?: Resolver<ResolversTypes['String'], ParentType, Context>,
-        otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, Context>,
-        withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, Context, MyTypeWithArgsArgs>,
+      export type MyTypeResolvers<ContextType = MyCustomCtx, ParentType = ResolversTypes['MyType']> = {
+        foo?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+        otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>,
+        withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, MyTypeWithArgsArgs>,
       };
     `);
 
     expect(result).toBeSimilarStringTo(`
-      export type MyUnionResolvers<Context = MyCustomContext, ParentType = ResolversTypes['MyUnion']> = {
-        __resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, Context>
+      export type MyUnionResolvers<ContextType = MyCustomCtx, ParentType = ResolversTypes['MyUnion']> = {
+        __resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, ContextType>
       };
     `);
 
     expect(result).toBeSimilarStringTo(`
-      export type NodeResolvers<Context = MyCustomContext, ParentType = ResolversTypes['Node']> = {
-        __resolveType: TypeResolveFn<'SomeNode', ParentType, Context>,
-        id?: Resolver<ResolversTypes['ID'], ParentType, Context>,
+      export type NodeResolvers<ContextType = MyCustomCtx, ParentType = ResolversTypes['Node']> = {
+        __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>,
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
       };
     `);
 
     expect(result).toBeSimilarStringTo(`
-      export type QueryResolvers<Context = MyCustomContext, ParentType = ResolversTypes['Query']> = {
-        something?: Resolver<ResolversTypes['MyType'], ParentType, Context>,
+      export type QueryResolvers<ContextType = MyCustomCtx, ParentType = ResolversTypes['Query']> = {
+        something?: Resolver<ResolversTypes['MyType'], ParentType, ContextType>,
       };
     `);
 
     expect(result).toBeSimilarStringTo(`
-      export type SomeNodeResolvers<Context = MyCustomContext, ParentType = ResolversTypes['SomeNode']> = {
-        id?: Resolver<ResolversTypes['ID'], ParentType, Context>,
+      export type SomeNodeResolvers<ContextType = MyCustomCtx, ParentType = ResolversTypes['SomeNode']> = {
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
       };
     `);
 
     expect(result).toBeSimilarStringTo(`
-      export type SubscriptionResolvers<Context = MyCustomContext, ParentType = ResolversTypes['Subscription']> = {
-        somethingChanged?: SubscriptionResolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, Context>,
+      export type SubscriptionResolvers<ContextType = MyCustomCtx, ParentType = ResolversTypes['Subscription']> = {
+        somethingChanged?: SubscriptionResolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>,
       };
     `);
 
@@ -481,8 +481,8 @@ describe('TypeScript Resolvers Plugin', () => {
 
     expect(content).toBeSimilarStringTo(`CCCUnion: CccUnion`); // In ResolversTypes
     expect(content).toBeSimilarStringTo(`
-    export type CccUnionResolvers<Context = any, ParentType = ResolversTypes['CCCUnion']> = {
-      __resolveType: TypeResolveFn<'CCCFoo' | 'CCCBar', ParentType, Context>
+    export type CccUnionResolvers<ContextType = any, ParentType = ResolversTypes['CCCUnion']> = {
+      __resolveType: TypeResolveFn<'CCCFoo' | 'CCCBar', ParentType, ContextType>
     };
     `);
 
@@ -494,7 +494,7 @@ describe('TypeScript Resolvers Plugin', () => {
     const config = { typesPrefix: 'T' };
     const result = await plugin(testSchema, [], config, { outputFile: '' });
 
-    expect(result).toBeSimilarStringTo(`f?: Resolver<Maybe<TResolversTypes['String']>, ParentType, Context, TMyTypeFArgs>,`);
+    expect(result).toBeSimilarStringTo(`f?: Resolver<Maybe<TResolversTypes['String']>, ParentType, ContextType, TMyTypeFArgs>,`);
     await validate(result, config, testSchema);
   });
 
@@ -532,19 +532,19 @@ describe('TypeScript Resolvers Plugin', () => {
     );
 
     expect(content).toBeSimilarStringTo(`
-      export type Resolvers<Context = any> = {
+      export type Resolvers<ContextType = any> = {
         Date?: GraphQLScalarType,
         Node?: NodeResolvers,
-        Post?: PostResolvers<Context>,
+        Post?: PostResolvers<ContextType>,
         PostOrUser?: PostOrUserResolvers,
-        Query?: QueryResolvers<Context>,
-        User?: UserResolvers<Context>,
+        Query?: QueryResolvers<ContextType>,
+        User?: UserResolvers<ContextType>,
       };
     `);
 
     expect(content).toBeSimilarStringTo(`
-      export type DirectiveResolvers<Context = any> = {
-        modify?: ModifyDirectiveResolver<any, any, Context>,
+      export type DirectiveResolvers<ContextType = any> = {
+        modify?: ModifyDirectiveResolver<any, any, ContextType>,
       };
     `);
   });
@@ -566,7 +566,7 @@ describe('TypeScript Resolvers Plugin', () => {
     );
 
     expect(content).not.toBeSimilarStringTo(`
-      export type DirectiveResolvers<Context = any> = {};
+      export type DirectiveResolvers<ContextType = any> = {};
     `);
   });
 
@@ -840,9 +840,9 @@ describe('TypeScript Resolvers Plugin', () => {
     const result = await plugin(schemaWithNoImplementors, [], {}, { outputFile: '' });
 
     expect(result).toBeSimilarStringTo(`
-      export type NodeResolvers<Context = any, ParentType = ResolversTypes['Node']> = {
-        __resolveType: TypeResolveFn<null, ParentType, Context>,
-        id?: Resolver<ResolversTypes['ID'], ParentType, Context>,
+      export type NodeResolvers<ContextType = any, ParentType = ResolversTypes['Node']> = {
+        __resolveType: TypeResolveFn<null, ParentType, ContextType>,
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
       };
     `);
   });

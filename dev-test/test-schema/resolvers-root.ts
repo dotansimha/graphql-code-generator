@@ -103,26 +103,26 @@ export type ResolversTypes = {
   Boolean: Scalars['Boolean'],
 };
 
-export type QueryRootResolvers<Context = any, ParentType = ResolversTypes['QueryRoot']> = {
-  allUsers?: Resolver<Array<Maybe<ResolversTypes['User']>>, ParentType, Context>,
-  userById?: Resolver<Maybe<ResolversTypes['User']>, ParentType, Context, QueryRootUserByIdArgs>,
-  answer?: Resolver<Array<ResolversTypes['Int']>, ParentType, Context>,
+export type QueryRootResolvers<ContextType = any, ParentType = ResolversTypes['QueryRoot']> = {
+  allUsers?: Resolver<Array<Maybe<ResolversTypes['User']>>, ParentType, ContextType>,
+  userById?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, QueryRootUserByIdArgs>,
+  answer?: Resolver<Array<ResolversTypes['Int']>, ParentType, ContextType>,
 };
 
-export type SubscriptionRootResolvers<Context = any, ParentType = ResolversTypes['SubscriptionRoot']> = {
-  newUser?: SubscriptionResolver<Maybe<ResolversTypes['User']>, ParentType, Context>,
+export type SubscriptionRootResolvers<ContextType = any, ParentType = ResolversTypes['SubscriptionRoot']> = {
+  newUser?: SubscriptionResolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>,
 };
 
-export type UserResolvers<Context = any, ParentType = ResolversTypes['User']> = {
-  id?: Resolver<ResolversTypes['Int'], ParentType, Context>,
-  name?: Resolver<ResolversTypes['String'], ParentType, Context>,
-  email?: Resolver<ResolversTypes['String'], ParentType, Context>,
+export type UserResolvers<ContextType = any, ParentType = ResolversTypes['User']> = {
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>,
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
 };
 
-export type Resolvers<Context = any> = {
-  QueryRoot?: QueryRootResolvers<Context>,
-  SubscriptionRoot?: SubscriptionRootResolvers<Context>,
-  User?: UserResolvers<Context>,
+export type Resolvers<ContextType = any> = {
+  QueryRoot?: QueryRootResolvers<ContextType>,
+  SubscriptionRoot?: SubscriptionRootResolvers<ContextType>,
+  User?: UserResolvers<ContextType>,
 };
 
 
@@ -130,4 +130,4 @@ export type Resolvers<Context = any> = {
  * @deprecated
  * Use "Resolvers" root object instead. If you wish to get "IResolvers", add "typesPrefix: I" to your config.
 */
-export type IResolvers<Context = any> = Resolvers<Context>;
+export type IResolvers<ContextType = any> = Resolvers<ContextType>;
