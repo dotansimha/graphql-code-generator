@@ -65,6 +65,13 @@ export function indent(str: string, count = 1): string {
   return new Array(count).fill('  ').join('') + str;
 }
 
+export function indentMultiline(str: string, count = 1): string {
+  const indentation = new Array(count).fill('  ').join('');
+  const replaceWith = '\n' + indentation;
+
+  return indentation + str.replace(/\n/g, replaceWith);
+}
+
 export interface DeclarationBlockConfig {
   blockWrapper?: string;
   blockTransformer?: (block: string) => string;

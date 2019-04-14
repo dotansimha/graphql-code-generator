@@ -1,5 +1,7 @@
 export * from './types';
 export * from './utils';
+export * from './mappers';
+export * from './naming';
 export * from './scalars';
 
 export * from './base-visitor';

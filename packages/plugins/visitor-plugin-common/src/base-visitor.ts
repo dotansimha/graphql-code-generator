@@ -78,7 +78,7 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
   protected _parsedConfig: TPluginConfig;
   protected _declarationBlockConfig: DeclarationBlockConfig = {};
 
-  constructor(rawConfig: TRawConfig, additionalConfig: TPluginConfig, defaultScalars: ScalarsMap = DEFAULT_SCALARS) {
+  constructor(rawConfig: TRawConfig, additionalConfig: Partial<TPluginConfig>, defaultScalars: ScalarsMap = DEFAULT_SCALARS) {
     this._parsedConfig = {
       scalars: { ...(defaultScalars || DEFAULT_SCALARS), ...(rawConfig.scalars || {}) },
       convert: convertFactory(rawConfig),
