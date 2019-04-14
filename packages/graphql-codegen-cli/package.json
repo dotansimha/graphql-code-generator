@@ -76,7 +76,7 @@
     "log-symbols": "2.2.0",
     "log-update": "3.2.0",
     "mkdirp": "0.5.1",
-    "prettier": "1.16.4",
+    "prettier": "1.17.0",
     "request": "2.88.0",
     "ts-log": "2.1.4",
     "tslib": "1.9.3",
