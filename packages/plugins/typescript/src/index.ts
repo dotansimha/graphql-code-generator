@@ -101,7 +101,7 @@ export const plugin: PluginFunction<TypeScriptPluginConfig> = (schema: GraphQLSc
   const visitor = new TsVisitor(schema, config);
   const printedSchema = printSchema(schema);
   const astNode = parse(printedSchema);
-  const maybeValue = `type Maybe<T> = ${visitor.config.maybeValue};`;
+  const maybeValue = `export type Maybe<T> = ${visitor.config.maybeValue};`;
   const visitorResult = visit(astNode, { leave: visitor });
   const introspectionDefinitions = includeIntrospectionDefinitions(schema, documents, config);
   const scalars = visitor.scalarsDefinition;
