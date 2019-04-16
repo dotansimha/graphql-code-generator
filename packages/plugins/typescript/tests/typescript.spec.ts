@@ -9,7 +9,7 @@ describe('TypeScript', () => {
       scalar A
     `);
     const result = await plugin(schema, [], {}, { outputFile: '' });
-    expect(result).toContainEqual('export type Maybe<T> =');
+    expect(result).toBeSimilarStringTo('export type Maybe<T> =');
   });
 
   describe('description to comment', () => {
