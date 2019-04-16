@@ -47,7 +47,10 @@ export function selectionSetToTypes(
             const wrapWithNonNull = baseVisitor.config.strict && !isNonNullType(field.type);
             const isArray = (isNonNullType(field.type) && isListType(field.type.ofType)) || isListType(field.type);
             const typeRef = `${stack}['${selectionName}']`;
-            const newStack = `${wrapWithNonNull ? `(NonNullable<${typeRef}>)` : typeRef}${isArray ? '[0]' : ''}`;
+            const nonNullableInnerType = `${wrapWithNonNull ? `(NonNullable<${typeRef}>)` : typeRef}`;
+            const arrayInnerType = isArray ? `${nonNullableInnerType}[0]` : nonNullableInnerType;
+            const wrapArrayWithNonNull = baseVisitor.config.strict;
+            const newStack = isArray && wrapArrayWithNonNull ? `(NonNullable<${arrayInnerType}>)` : arrayInnerType;
             selectionSetToTypes(typesPrefix, baseVisitor, schema, baseType.name, newStack, selectionName, selection.selectionSet, result);
 
             break;
