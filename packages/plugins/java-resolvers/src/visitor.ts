@@ -38,6 +38,8 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
       allImports.push('graphql.schema.TypeResolver');
     }
 
+    allImports.push('graphql.schema.DataFetcher');
+
     return allImports.map(i => `import ${i};`).join('\n') + '\n';
   }
 

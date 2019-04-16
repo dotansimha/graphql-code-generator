@@ -3,7 +3,7 @@ import { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
 import { RawConfig } from '@graphql-codegen/visitor-plugin-common';
 import { JavaResolversVisitor } from './visitor';
 import { buildPackageNameFromPath } from './utils';
-import { dirname } from 'path';
+import { dirname, normalize } from 'path';
 
 export interface JavaResolversPluginRawConfig extends RawConfig {
   package?: string;
@@ -14,7 +14,8 @@ export interface JavaResolversPluginRawConfig extends RawConfig {
 }
 
 export const plugin: PluginFunction<JavaResolversPluginRawConfig> = async (schema: GraphQLSchema, documents: Types.DocumentFile[], config: JavaResolversPluginRawConfig, { outputFile }): Promise<string> => {
-  const defaultPackageName = buildPackageNameFromPath(dirname(outputFile));
+  const relevantPath = dirname(normalize(outputFile)).replace(/src\/main\/.*?\//, '');
+  const defaultPackageName = buildPackageNameFromPath(relevantPath);
   const visitor = new JavaResolversVisitor(config, schema, defaultPackageName);
   const printedSchema = printSchema(schema);
   const astNode = parse(printedSchema);
