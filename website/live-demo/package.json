@@ -13,7 +13,7 @@
     "react-scripts-rewired": "2.1.3",
     "codemirror": "5.44.0",
     "codemirror-graphql": "0.8.3",
-    "js-yaml": "3.12.2",
+    "js-yaml": "3.13.1",
     "graphql-code-generator": "0.17.0",
     "graphql-codegen-flow": "0.17.0",
     "graphql-codegen-flow-documents": "0.17.0",
