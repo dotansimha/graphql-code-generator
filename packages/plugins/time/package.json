@@ -1,6 +1,6 @@
 {
   "name": "graphql-codegen-time",
-  "version": "0.18.0",
+  "version": "0.18.1",
   "description": "graphql-codegen-cli template for TypeScript typings for both client side and server side",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
@@ -13,9 +13,9 @@
     "moment": "2.24.0"
   },
   "devDependencies": {
-    "codegen-templates-scripts": "0.18.0",
+    "codegen-templates-scripts": "0.18.1",
     "graphql": "14.1.1",
-    "graphql-codegen-core": "0.18.0"
+    "graphql-codegen-core": "0.18.1"
   },
   "main": "./dist/index.js",
   "typings": "dist/index.d.ts",
