@@ -699,16 +699,16 @@
     to-fast-properties "^2.0.0"
 
 "@graphql-codegen/config-markdown-generator@../packages/utils/config-md-generator":
-  version "1.0.6"
+  version "1.0.7"
   dependencies:
-    "@microsoft/tsdoc" "0.12.8"
+    "@microsoft/tsdoc" "0.12.9"
     tslib "1.9.3"
-    typescript "3.3.4000"
+    typescript "3.4.3"
 
-"@microsoft/tsdoc@0.12.8":
-  version "0.12.8"
-  resolved "https://registry.yarnpkg.com/@microsoft/tsdoc/-/tsdoc-0.12.8.tgz#e9646c91c650d536f37b04762eaa81afdc9a19d3"
-  integrity sha512-0smzAmVIUCsssAqDSPn9AfOPKUobq2WXMygbzC5JNswAJOs4uJK6DTZgfnHC8QLE2q374sPNwWU5D5LuoAJQSA==
+"@microsoft/tsdoc@0.12.9":
+  version "0.12.9"
+  resolved "https://registry.yarnpkg.com/@microsoft/tsdoc/-/tsdoc-0.12.9.tgz#f92538bebf649b1b9d00bdd34a9c9971aef17d01"
+  integrity sha512-sDhulvuVk65eMppYOE6fr6mMI6RUqs53KUg9deYzNCBpP+2FhR0OFB5innEfdtSedk0LK+1Ppu6MxkfiNjS/Cw==
 
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
@@ -2659,10 +2659,10 @@ dkim-signer@^0.2.2:
   dependencies:
     libmime "^2.0.3"
 
-docusaurus@1.8.0:
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/docusaurus/-/docusaurus-1.8.0.tgz#d82eeb426c1f0fb69411f141fa9311213254ad1a"
-  integrity sha512-Hn+/simu3yiX+5ucqNvX6yTyXtH3BFu2UIeGiXcKiRG8Khos206SsQQ2B7DrBzeJ0duhPxi/I7zYMFyaF23UUQ==
+docusaurus@1.8.1:
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/docusaurus/-/docusaurus-1.8.1.tgz#725298b092c7da265c2875057db31d80d0902e9b"
+  integrity sha512-pVKNe7Q+QICWnSvsVK4n+JixpD9zowlfNt99Ll70d//Umf0MQmKT9gH9LirXghYULFS3JQuPX4ryhXHtAV2BeA==
   dependencies:
     "@babel/core" "^7.0.0"
     "@babel/plugin-proposal-class-properties" "^7.0.0"
@@ -7434,10 +7434,10 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript@3.3.4000:
-  version "3.3.4000"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.3.4000.tgz#76b0f89cfdbf97827e1112d64f283f1151d6adf0"
-  integrity sha512-jjOcCZvpkl2+z7JFn0yBOoLQyLoIkNZAs/fYJkUG6VKy6zLPHJGfQJYFHzibB6GJaF/8QrcECtlQ5cpvRHSMEA==
+typescript@3.4.3:
+  version "3.4.3"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.4.3.tgz#0eb320e4ace9b10eadf5bc6103286b0f8b7c224f"
+  integrity sha512-FFgHdPt4T/duxx6Ndf7hwgMZZjZpB+U0nMNGVCYPq0rEzWKjEDobm4J6yb3CS7naZ0yURFqdw9Gwc7UOh/P9oQ==
 
 unbzip2-stream@^1.0.9:
   version "1.3.3"
