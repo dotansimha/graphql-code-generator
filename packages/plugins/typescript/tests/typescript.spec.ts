@@ -4,6 +4,14 @@ import { validateTs } from './validate';
 import { plugin } from '../src/index';
 
 describe('TypeScript', () => {
+  it('should expose Maybe', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      scalar A
+    `);
+    const result = await plugin(schema, [], {}, { outputFile: '' });
+    expect(result).toContainEqual('export type Maybe<T> =');
+  });
+
   describe('description to comment', () => {
     it('Should include a description for Scalars type', async () => {
       const schema = buildSchema(/* GraphQL */ `
