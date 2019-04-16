@@ -61,6 +61,7 @@ export function createConfig(argv = process.argv): Types.Config | never {
     .allowUnknownOption(true)
     .option('-c, --config <path>', 'Path to GraphQL codegen YAML config file, defaults to "codegen.yml" on the current directory')
     .option('-w, --watch', 'Watch for changes and execute generation automatically')
+    .option('-s, --silent', 'A flag to not print errors in case they occur')
     .option('-o, --overwrite', 'Overwrites existing files')
     .parse(argv) as any) as Command & YamlCliFlags;
 
@@ -90,6 +91,10 @@ export function createConfig(argv = process.argv): Types.Config | never {
 
   if (cliFlags.overwrite === true) {
     parsedConfigFile.overwrite = cliFlags.overwrite;
+  }
+
+  if (cliFlags.silent === true) {
+    parsedConfigFile.silent = cliFlags.silent;
   }
 
   return parsedConfigFile;
