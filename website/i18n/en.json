@@ -44,6 +44,9 @@
       "generated-config/flow": {
         "title": "generated-config/flow"
       },
+      "generated-config/java-resolvers": {
+        "title": "generated-config/java-resolvers"
+      },
       "generated-config/time": {
         "title": "generated-config/time"
       },
@@ -127,6 +130,12 @@
       },
       "plugins/index": {
         "title": "Available Plugins"
+      },
+      "plugins/java-installation": {
+        "title": "plugins/java-installation"
+      },
+      "plugins/java-resolvers": {
+        "title": "Java Resolvers"
       },
       "plugins/reason-client": {
         "title": "Reason Client"
