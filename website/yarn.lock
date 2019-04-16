@@ -5109,10 +5109,10 @@ neo-async@^2.5.0:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.0.tgz#b9d15e4d71c6762908654b5183ed38b753340835"
   integrity sha512-MFh0d/Wa7vkKO3Y3LlacqAEeHK0mckVqzDieUKTT+KGxi+zIpeVsFxymkIiRpbpDziHc290Xr9A1O4Om7otoRA==
 
-netlify-lambda@1.4.3:
-  version "1.4.3"
-  resolved "https://registry.yarnpkg.com/netlify-lambda/-/netlify-lambda-1.4.3.tgz#99f4999e31b54bbab8dd167382a3e2e73f749911"
-  integrity sha512-mxZiSeuAW0K9s41RFr1Fw2ZmX/786pUOx0AJbyEpKamtl+CyviRohj8id+fZEkAZqwCd+HkVxYqCcCjShNBsZQ==
+netlify-lambda@1.4.4:
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/netlify-lambda/-/netlify-lambda-1.4.4.tgz#aea020ae6704af99e9a19b2f0569738dc9c49505"
+  integrity sha512-2d2b5h+24rRloiGgIoOUY90EPjFCTxprm3XOl/6dHg+BIopBQShMUww9ixllXxZFy4SZurOFkE1LwFyk4RRbYQ==
   dependencies:
     "@babel/core" "^7.0.0"
     "@babel/plugin-proposal-class-properties" "^7.0.0"
