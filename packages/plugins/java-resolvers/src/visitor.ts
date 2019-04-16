@@ -106,7 +106,7 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
       .withName(this.convertName(node.name))
       .extends(['TypeResolver'])
       .withComment(node.description)
-      .withBlock(node.fields.map(f => indent((f as any) as string)).join('\n')).string;
+      .withBlock(node.fields.map(f => indent((f as any)(true))).join('\n')).string;
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode): string {
@@ -115,14 +115,20 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
       .asKind('interface')
       .withName(this.convertName(node.name))
       .withComment(node.description)
-      .withBlock(node.fields.map(f => indent((f as any) as string)).join('\n')).string;
+      .withBlock(node.fields.map(f => indent((f as any)(false))).join('\n')).string;
   }
 
-  FieldDefinition(node: FieldDefinitionNode) {
-    const baseType = getBaseTypeNode(node.type);
-    const typeToUse = this.getTypeToUse(baseType);
-    const wrappedType = this.wrapTypeWithModifiers(typeToUse, node.type);
+  FieldDefinition(node: FieldDefinitionNode, key: string | number, parent: any) {
+    return (isInterface: boolean) => {
+      const baseType = getBaseTypeNode(node.type);
+      const typeToUse = this.getTypeToUse(baseType);
+      const wrappedType = this.wrapTypeWithModifiers(typeToUse, node.type);
 
-    return `public DataFetcher<${wrappedType}> ${node.name.value}();`;
+      if (isInterface) {
+        return `default public DataFetcher<${wrappedType}> ${node.name.value}() { return null; }`;
+      } else {
+        return `public DataFetcher<${wrappedType}> ${node.name.value}();`;
+      }
+    };
   }
 }

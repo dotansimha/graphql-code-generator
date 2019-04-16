@@ -77,7 +77,7 @@ describe('Java Resolvers', () => {
     expect(result).toContain(`import graphql.schema.TypeResolver;`);
     expect(result).toBeSimilarStringTo(`
     public interface Node extends TypeResolver {
-      public DataFetcher<Object> id();
+      default public DataFetcher<Object> id() { return null; }
     }`);
   });
 
