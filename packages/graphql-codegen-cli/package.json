@@ -65,7 +65,7 @@
     "graphql-tag-pluck": "0.8.0",
     "graphql-toolkit": "0.2.9",
     "graphql-tools": "4.0.4",
-    "indent-string": "3.2.0",
+    "indent-string": "4.0.0",
     "inquirer": "6.3.1",
     "is-glob": "4.0.1",
     "is-valid-path": "0.1.1",
