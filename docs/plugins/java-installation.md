@@ -23,7 +23,7 @@ Then, create a `package.json` file in your project root, with the following cont
   "dependencies": {
     "graphql": "14.2.1",
     "@graphql-codegen/cli": "1.0.7",
-    "@graphql-codegen/java-resolvers": "1.0.7"
+    "@graphql-codegen/$1": "1.0.7"
   }
 }
 ```
@@ -35,8 +35,8 @@ Then, create `codegen.yml` file in your root directory, pointing to your schema,
 ```
 schema: src/main/resources/schema.graphqls
 generates:
-  src/main/java/com/my-name/my-app/generated/Resolvers.java:
-    - java-resolvers
+  src/main/java/com/my-name/my-app/generated/$2.java:
+    - $1
 ```
 
 Also, make sure you add the following to your `.gitignore` file:

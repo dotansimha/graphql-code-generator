@@ -6,7 +6,8 @@ module.exports = function() {
   return function(md, options) {
     const embed = new Plugin();
 
-    function handleImport(path) {
+    function handleImport(arg) {
+      const [path, ...vars] = arg.split('|');
       const fullPath = resolve(process.cwd(), path);
 
       if (!existsSync(fullPath)) {
@@ -15,7 +16,12 @@ module.exports = function() {
         return '';
       }
 
-      const fileContent = readFileSync(fullPath, 'utf-8');
+      let fileContent = readFileSync(fullPath, 'utf-8');
+
+      (vars || []).forEach((value, key) => {
+        const rgx = new RegExp('\\$' + (key + 1), 'g');
+        fileContent = fileContent.replace(rgx, value);
+      });
 
       return md.render(fileContent);
     }

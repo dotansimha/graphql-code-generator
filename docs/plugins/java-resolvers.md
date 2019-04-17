@@ -9,7 +9,7 @@ It works with `graphql-java` library and it uses it's `DataFetcher` API.
 
 You can use this plugin to generate interfaces and later implement them, this way you can always tell if one of the fields is missing a resolvers:
 
-```
+```java
 import com.my.app.generated.Resolvers;
 import com.my.app.models.User;
 import graphql.schema.DataFetcher;
@@ -23,7 +23,7 @@ export class QueryResolvers implements Resolvers.Query {
 
 ## Installation
 
-{@import: ../docs/plugins/java-installation.md}
+{@import: ../docs/plugins/java-installation.md|java-resolvers|Resolvers}
 
 ## Configuration
 

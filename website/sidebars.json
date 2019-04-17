@@ -24,6 +24,7 @@
       "plugins/flow",
       "plugins/flow-resolvers",
       "plugins/flow-operations",
+      "plugins/java",
       "plugins/java-resolvers",
       "plugins/fragment-matcher",
       "plugins/add",

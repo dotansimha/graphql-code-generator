@@ -16,7 +16,7 @@ export interface JavaResolversPluginRawConfig extends RawConfig {
    * generates:
    *   src/main/java/my-org/my-app/Resolvers.java:
    *     plugins:
-   *       - java-resolvers
+   *       - java
    *     config:
    *       package: custom.package.name
    * ```
