@@ -78,6 +78,18 @@ export const EXAMPLES = {
       documents: TS_QUERY,
     },
   },
+  'typescript-operations-compatibility': {
+    name: 'TypeScript Operations with 0.18 Compatibility',
+    state: {
+      config: `generates:
+  client-types.ts:
+    - typescript
+    - typescript-operations
+    - typescript-compatibility`,
+      schema: TS_SCHEMA,
+      documents: TS_QUERY,
+    },
+  },
   'react-apollo': {
     name: 'TypeScript React-Apollo Components',
     state: {
@@ -129,8 +141,28 @@ export const EXAMPLES = {
       documents: TS_QUERY,
     },
   },
+  java: {
+    name: 'Java (Enum & Input)',
+    state: {
+      config: `generates:
+  src/main/java/my/app/generated/Types.java:
+    - java`,
+      schema: TS_SCHEMA,
+      documents: '',
+    },
+  },
+  'java-resolvers': {
+    name: 'Java Resolvers Signature',
+    state: {
+      config: `generates:
+  src/main/java/my/app/generated/Resolvers.java:
+    - java-resolvers`,
+      schema: TS_SCHEMA,
+      documents: '',
+    },
+  },
   flow: {
-    name: 'Flow Types',
+    name: 'Flow',
     state: {
       config: `generates:
   types.flow.js:
@@ -224,14 +256,14 @@ type ChatMessage @entity {
       documents: '',
     },
   },
-  // 'fragment-matcher': {
-  //   name: 'Fragment Matcher',
-  //   state: {
-  //     config: `generates:
-  // fragment-matcher.json:
-  //   - fragment-matcher`,
-  //     schema: TS_SCHEMA,
-  //     documents: '',
-  //   },
-  // },
+  'fragment-matcher': {
+    name: 'Fragment Matcher',
+    state: {
+      config: `generates:
+  fragment-matcher.json:
+    - fragment-matcher`,
+      schema: TS_SCHEMA,
+      documents: '',
+    },
+  },
 };

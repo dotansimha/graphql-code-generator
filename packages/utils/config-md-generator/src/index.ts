@@ -41,7 +41,7 @@ export async function generateConfig(inputFile: string): Promise<string> {
   const sourceFile: ts.SourceFile | undefined = program.getSourceFile(inputFile);
 
   if (!sourceFile) {
-    throw new Error('Error retrieving source file');
+    throw new Error('Error retrieving source file: ' + inputFile);
   }
 
   const foundComments: IFoundComment[] = [];

@@ -10,6 +10,9 @@
   "dependencies": {
     "@graphql-codegen/add": "1.0.7",
     "@graphql-codegen/cli": "1.0.7",
+    "@graphql-codegen/fragment-matcher": "1.0.7",
+    "@graphql-codegen/java": "1.0.7",
+    "@graphql-codegen/java-resolvers": "1.0.7",
     "@graphql-codegen/flow": "1.0.7",
     "@graphql-codegen/flow-operations": "1.0.7",
     "@graphql-codegen/flow-resolvers": "1.0.7",
@@ -23,6 +26,7 @@
     "@graphql-codegen/typescript-operations": "1.0.7",
     "@graphql-codegen/typescript-react-apollo": "1.0.7",
     "@graphql-codegen/typescript-resolvers": "1.0.7",
+    "@graphql-codegen/typescript-compatibility": "1.0.7",
     "@material-ui/core": "3.9.3",
     "codemirror": "5.45.0",
     "codemirror-graphql": "0.8.3",

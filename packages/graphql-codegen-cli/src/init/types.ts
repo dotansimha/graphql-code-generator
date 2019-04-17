@@ -2,6 +2,7 @@ export interface PluginOption {
   name: string;
   package: string;
   value: string;
+  pathInRepo: string;
   available(tags: Tags[]): boolean;
   shouldBeSelected(tags: Tags[]): boolean;
 }
@@ -24,5 +25,5 @@ export enum Tags {
   flow = 'Flow',
   angular = 'Angular',
   stencil = 'Stencil',
-  react = 'React'
+  react = 'React',
 }
