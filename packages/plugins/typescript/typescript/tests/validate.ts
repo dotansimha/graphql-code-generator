@@ -1,5 +1,6 @@
 import * as ts from 'typescript';
 import * as path from 'path';
+import { readFileSync } from 'fs';
 
 export function validateTs(
   contents: string,
@@ -40,48 +41,27 @@ export function validateTs(
   }
 
   const testFile = `test-file.${isTsx ? 'tsx' : 'ts'}`;
-  const host = ts.createCompilerHost(options);
-  let program = ts.createProgram([testFile], options, {
-    ...host,
-    getSourceFile: (fileName: string, languageVersion: ts.ScriptTarget, onError?: (message: string) => void, shouldCreateNewSourceFile?: boolean) => {
-      if (fileName === testFile) {
-        return ts.createSourceFile(fileName, contents, options.target);
+  const result = ts.createSourceFile(testFile, contents, ts.ScriptTarget.ES2016, false, isTsx ? ts.ScriptKind.TSX : undefined);
+
+  if (result['parseDiagnostics'] && result['parseDiagnostics'].length > 0) {
+    const errors = [];
+    const allDiagnostics = result['parseDiagnostics'];
+
+    allDiagnostics.forEach(diagnostic => {
+      if (diagnostic.file) {
+        let { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start!);
+        let message = ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n');
+        errors.push(`${line + 1},${character + 1}: ${message} ->
+    ${contents.split('\n')[line]}`);
+      } else {
+        errors.push(`${ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n')}`);
       }
 
-      return host.getSourceFile(fileName, languageVersion, onError, shouldCreateNewSourceFile);
-    },
-    writeFile: function(name, text, writeByteOrderMark) {},
-    useCaseSensitiveFileNames: function() {
-      return false;
-    },
-    getCanonicalFileName: function(filename) {
-      return filename;
-    },
-    getCurrentDirectory: function() {
-      return '';
-    },
-    getNewLine: function() {
-      return '\n';
-    },
-  });
-  let emitResult = program.emit();
-  let allDiagnostics = emitResult.diagnostics;
-  const errors = [];
+      const relevantErrors = errors.filter(e => !e.includes('Cannot find module'));
 
-  allDiagnostics.forEach(diagnostic => {
-    if (diagnostic.file) {
-      let { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start!);
-      let message = ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n');
-      errors.push(`${line + 1},${character + 1}: ${message} ->
-  ${contents.split('\n')[line]}`);
-    } else {
-      errors.push(`${ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n')}`);
-    }
-  });
-
-  const relevantErrors = errors.filter(e => !e.includes('Cannot find module'));
-
-  if (relevantErrors && relevantErrors.length > 0) {
-    throw new Error(relevantErrors.join('\n'));
+      if (relevantErrors && relevantErrors.length > 0) {
+        throw new Error(relevantErrors.join('\n'));
+      }
+    });
   }
 }
