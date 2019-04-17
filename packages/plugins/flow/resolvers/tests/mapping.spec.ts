@@ -1,5 +1,5 @@
 import '@graphql-codegen/testing';
-import { schema } from '../../typescript-resolvers/tests/common';
+import { schema } from '../../../typescript/resolvers/tests/common';
 import { plugin } from '../src';
 import { buildSchema } from 'graphql';
 import { validateFlow as validate } from '../../flow/tests/validate-flow';

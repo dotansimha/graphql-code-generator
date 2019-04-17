@@ -577,7 +577,7 @@ describe('init', () => {
   describe('plugins', () => {
     it('should have correct plugin and package names', async () => {});
     plugins.forEach(pkg => {
-      const { name } = require(`../../plugins/${pkg.value}/package.json`);
+      const { name } = require(`../../plugins/${pkg.pathInRepo}/package.json`);
 
       expect(pkg.package.replace('@graphql-codegen/', '')).toEqual(pkg.value);
       expect(pkg.package).toEqual(name);

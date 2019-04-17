@@ -4,12 +4,12 @@ import { parse, GraphQLSchema, buildClientSchema, buildASTSchema } from 'graphql
 import gql from 'graphql-tag';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { plugin as tsPlugin } from '../../typescript/src/index';
-import { plugin as tsDocumentsPlugin } from '../../typescript-operations/src/index';
+import { plugin as tsDocumentsPlugin } from '../../operations/src/index';
 import { validateTs } from '../../typescript/tests/validate';
 import { readFileSync } from 'fs';
 
 describe('React Apollo', () => {
-  const schema = buildClientSchema(JSON.parse(readFileSync('../../../dev-test/githunt/schema.json').toString()));
+  const schema = buildClientSchema(JSON.parse(readFileSync('../../../../dev-test/githunt/schema.json').toString()));
   const basicDoc = parse(/* GraphQL */ `
     query test {
       feed {

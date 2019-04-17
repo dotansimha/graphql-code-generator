@@ -1,7 +1,7 @@
 import '@graphql-codegen/testing';
 import { buildSchema } from 'graphql';
 import { plugin } from '../src';
-import { schema } from '../../typescript-resolvers/tests/common';
+import { schema } from '../../../typescript/resolvers/tests/common';
 
 describe('Flow Resolvers Plugin', () => {
   it('Should generate basic type resolvers', () => {

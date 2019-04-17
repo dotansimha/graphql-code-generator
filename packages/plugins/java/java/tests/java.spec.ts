@@ -1,7 +1,7 @@
 import '@graphql-codegen/testing';
 import { buildSchema } from 'graphql';
 import { plugin } from '../src/index';
-import { validateJava } from '../../java-common/tests/validate-java';
+import { validateJava } from '../../common/tests/validate-java';
 
 const OUTPUT_FILE = 'com/java/generated/resolvers.java';
 
@@ -30,4 +30,6 @@ describe('Java', () => {
 
     union SearchResult = Chat | User
   `);
+
+  it('stub', () => {});
 });

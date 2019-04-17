@@ -5,7 +5,7 @@ import { validateFlow } from '../../flow/tests/validate-flow';
 import { readFileSync } from 'fs';
 
 describe('Flow Operations Plugin', () => {
-  const gitHuntSchema = buildClientSchema(JSON.parse(readFileSync('../../../dev-test/githunt/schema.json', 'utf-8')));
+  const gitHuntSchema = buildClientSchema(JSON.parse(readFileSync('../../../../dev-test/githunt/schema.json', 'utf-8')));
   const schema = buildSchema(/* GraphQL */ `
     type User {
       id: ID!

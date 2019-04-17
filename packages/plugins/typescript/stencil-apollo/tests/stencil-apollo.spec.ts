@@ -5,7 +5,7 @@ import gql from 'graphql-tag';
 import { readFileSync } from 'fs';
 
 describe('Components', () => {
-  const schema = buildClientSchema(JSON.parse(readFileSync('../../../dev-test/githunt/schema.json').toString()));
+  const schema = buildClientSchema(JSON.parse(readFileSync('../../../../dev-test/githunt/schema.json').toString()));
   it('should import dependencies if class components are generated', async () => {
     const documents = gql`
       query Feed {

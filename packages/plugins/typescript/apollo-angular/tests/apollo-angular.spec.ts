@@ -9,7 +9,7 @@ import { validateTs } from '../../typescript/tests/validate';
 import { readFileSync } from 'fs';
 
 describe('Apollo Angular', () => {
-  const schema = buildClientSchema(JSON.parse(readFileSync('../../../dev-test/githunt/schema.json').toString()));
+  const schema = buildClientSchema(JSON.parse(readFileSync('../../../../dev-test/githunt/schema.json').toString()));
   const basicDoc = parse(/* GraphQL */ `
     query test {
       feed {
