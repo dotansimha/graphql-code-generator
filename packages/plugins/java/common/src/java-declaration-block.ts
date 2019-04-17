@@ -2,7 +2,7 @@ import { transformComment } from '@graphql-codegen/visitor-plugin-common';
 import { StringValueNode, NameNode } from 'graphql';
 
 export type Access = 'private' | 'public' | 'protected';
-export type Kind = 'class' | 'interface';
+export type Kind = 'class' | 'interface' | 'enum';
 
 export class JavaDeclarationBlock {
   _name: string = null;

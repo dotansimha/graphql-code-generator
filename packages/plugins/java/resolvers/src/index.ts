@@ -90,7 +90,7 @@ export interface JavaResolversPluginRawConfig extends RawConfig {
    *     plugins:
    *       - java-resolvers
    *     config:
-   *       className: MyResolvers
+   *       listType: Map
    * ```
    */
   listType?: string;

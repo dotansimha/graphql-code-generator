@@ -1,7 +1,7 @@
 import { ASTNode } from 'graphql';
 
 export type ScalarsMap = { [name: string]: string };
-export type EnumValuesMap = { [enumName: string]: string | { [key: string]: string } };
+export type EnumValuesMap<AdditionalProps = {}> = { [enumName: string]: string | ({ [key: string]: string } & AdditionalProps) };
 export type ConvertNameFn<T = {}> = ConvertFn<T>;
 
 export interface ConvertOptions {

@@ -1,7 +1,7 @@
 import { ParsedConfig, BaseVisitor, ParsedMapper, transformMappers, parseMapper, indent, indentMultiline, getBaseTypeNode } from '@graphql-codegen/visitor-plugin-common';
 import { JavaResolversPluginRawConfig } from './index';
-import { JAVA_SCALARS, JavaDeclarationBlock } from '@graphql-codegen/java-common';
-import { GraphQLSchema, Kind, NamedTypeNode, ObjectTypeDefinitionNode, FieldDefinitionNode, InterfaceTypeDefinitionNode, TypeNode } from 'graphql';
+import { JAVA_SCALARS, JavaDeclarationBlock, wrapTypeWithModifiers } from '@graphql-codegen/java-common';
+import { GraphQLSchema, NamedTypeNode, ObjectTypeDefinitionNode, FieldDefinitionNode, InterfaceTypeDefinitionNode, TypeNode } from 'graphql';
 import { UnionTypeDefinitionNode } from 'graphql/language/ast';
 
 export interface JavaResolverParsedConfig extends ParsedConfig {
@@ -47,20 +47,6 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
       .map(typeName => this.config.mappers[typeName])
       .filter(m => m.isExternal)
       .map(m => m.source);
-  }
-
-  protected wrapTypeWithModifiers(baseType: string, typeNode: TypeNode): string {
-    if (typeNode.kind === Kind.NON_NULL_TYPE) {
-      const type = this.wrapTypeWithModifiers(baseType, typeNode.type);
-
-      return type;
-    } else if (typeNode.kind === Kind.LIST_TYPE) {
-      const innerType = this.wrapTypeWithModifiers(baseType, typeNode.type);
-
-      return `Iterable<${innerType}>`;
-    } else {
-      return baseType;
-    }
   }
 
   protected getTypeToUse(type: NamedTypeNode): string {
@@ -121,7 +107,7 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
     return (isInterface: boolean) => {
       const baseType = getBaseTypeNode(node.type);
       const typeToUse = this.getTypeToUse(baseType);
-      const wrappedType = this.wrapTypeWithModifiers(typeToUse, node.type);
+      const wrappedType = wrapTypeWithModifiers(typeToUse, node.type, this.config.listType);
 
       if (isInterface) {
         return `default public DataFetcher<${wrappedType}> ${node.name.value}() { return null; }`;
