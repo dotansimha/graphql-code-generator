@@ -4,7 +4,7 @@
     "start": "docusaurus-start",
     "generate-config": "node generate-config.js",
     "prestart": "yarn live-demo:dev",
-    "build": "yarn generate-config && yarn build:app && yarn live-demo:prod && yarn build:lambda",
+    "build": "yarn build:app && yarn live-demo:prod && yarn build:lambda",
     "build:app": "docusaurus-build",
     "build:lambda": "netlify-lambda build lambda",
     "serve:lambda": "netlify-lambda serve",
