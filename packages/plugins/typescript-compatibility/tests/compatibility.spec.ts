@@ -27,6 +27,9 @@ describe('Compatibility Plugin', () => {
       me: User!
       user(id: ID!): User
     }
+    type Mutation {
+      createUsers(name: String!): [User]
+    }
   `);
 
   const basicQuery = parse(/* GraphQL */ `
@@ -114,6 +117,21 @@ describe('Compatibility Plugin', () => {
         }
         friends {
           id
+          name
+        }
+      }
+    }
+  `);
+
+  const basicMutation = parse(/* GraphQL */ `
+    mutation CreateUsers($name: String!) {
+      createUsers (name: $name) {
+        id
+        name
+        friends {
+          name
+        }
+        testField {
           name
         }
       }
@@ -246,6 +264,13 @@ describe('Compatibility Plugin', () => {
 
   it('Should produce valid ts code with strict mode', async () => {
     const ast = [{ filePath: '', content: basicQuery }];
+    const result = await plugin(schema, ast, { strict: true });
+
+    await validate(result, schema, ast, {}, false, true);
+  });
+
+  it('Should produce valid ts code with strict mode and mutations returning arrays', async () => {
+    const ast = [{ filePath: '', content: basicMutation }];
     const result = await plugin(schema, ast, { strict: true });
 
     await validate(result, schema, ast, {}, false, true);
