@@ -33,10 +33,14 @@ function normalizeConfig(config) {
 }
 
 const pluginLoaderMap = {
+  java: () => import('@graphql-codegen/java'),
+  'java-resolvers': () => import('@graphql-codegen/java-resolvers'),
+  'fragment-matcher': () => import('@graphql-codegen/fragment-matcher'),
   flow: () => import('@graphql-codegen/flow'),
   'flow-operations': () => import('@graphql-codegen/flow-operations'),
   'flow-resolvers': () => import('@graphql-codegen/flow-resolvers'),
   typescript: () => import('@graphql-codegen/typescript'),
+  'typescript-compatibility': () => import('@graphql-codegen/typescript-compatibility'),
   'typescript-operations': () => import('@graphql-codegen/typescript-operations'),
   'typescript-resolvers': () => import('@graphql-codegen/typescript-resolvers'),
   'typescript-apollo-angular': () => import('@graphql-codegen/typescript-apollo-angular'),
