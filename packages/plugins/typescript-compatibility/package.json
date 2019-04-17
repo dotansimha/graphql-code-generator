@@ -16,7 +16,7 @@
   "devDependencies": {
     "graphql": "14.2.1",
     "typescript": "3.4.3",
-    "jest": "24.5.0",
+    "jest": "24.7.1",
     "ts-jest": "24.0.0"
   },
   "sideEffects": false,
