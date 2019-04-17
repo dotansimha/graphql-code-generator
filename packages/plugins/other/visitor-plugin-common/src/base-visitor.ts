@@ -13,6 +13,7 @@ export interface ParsedConfig {
   scalars: ScalarsMap;
   convert: ConvertFn;
   typesPrefix: string;
+  addTypename: boolean;
 }
 
 export interface RawConfig {
@@ -72,6 +73,21 @@ export interface RawConfig {
    * ```
    */
   typesPrefix?: string;
+
+  /**
+   * @name skipTypename
+   * @type boolean
+   * @default false
+   * @description Automatically adds `__typename` field to the generated types, even when they are not specified
+   * in the selection set.
+   *
+   * @example
+   * ```yml
+   * config:
+   *   skipTypename: true
+   * ```
+   */
+  skipTypename?: boolean;
 }
 
 export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig extends ParsedConfig = ParsedConfig> {
@@ -83,6 +99,7 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
       scalars: { ...(defaultScalars || DEFAULT_SCALARS), ...(rawConfig.scalars || {}) },
       convert: convertFactory(rawConfig),
       typesPrefix: rawConfig.typesPrefix || '',
+      addTypename: !rawConfig.skipTypename,
       ...((additionalConfig || {}) as any),
     };
 

@@ -267,7 +267,10 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
   }
 
   protected replaceFieldsInType(typeName: string, relevantFields: { fieldName: string; replaceWithType: string }[]): string {
-    return `Omit<${typeName}, ${relevantFields.map(f => `'${f.fieldName}'`).join(' | ')}> & { ${relevantFields.map(f => `${f.fieldName}: ${f.replaceWithType}`).join(', ')} }`;
+    const omitFields = relevantFields.map(f => `'${f.fieldName}'`).join(' | ');
+    const keepFields = relevantFields.map(f => `${f.fieldName}: ${f.replaceWithType}`).join(', ');
+
+    return `Omit<${typeName}, ${omitFields}> & { ${keepFields} }`;
   }
 
   protected applyMaybe(str: string): string {

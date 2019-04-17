@@ -22,22 +22,7 @@ export interface ParsedDocumentsConfig extends ParsedConfig {
   addTypename: boolean;
 }
 
-export interface RawDocumentsConfig extends RawConfig {
-  /**
-   * @name skipTypename
-   * @type boolean
-   * @default false
-   * @description Automatically adds `__typename` field to the generated types, even when they are not specified
-   * in the selection set.
-   *
-   * @example
-   * ```yml
-   * config:
-   *   skipTypename: true
-   * ```
-   */
-  skipTypename?: boolean;
-}
+export interface RawDocumentsConfig extends RawConfig {}
 
 export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDocumentsConfig, TPluginConfig extends ParsedDocumentsConfig = ParsedDocumentsConfig> extends BaseVisitor<TRawConfig, TPluginConfig> {
   protected _unnamedCounter = 1;
