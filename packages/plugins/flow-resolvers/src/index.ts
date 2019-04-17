@@ -20,24 +20,24 @@ export const plugin: PluginFunction<FlowResolversPluginConfig> = (schema: GraphQ
 import { ${imports.join(', ')} } from 'graphql';
 
 export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
-  parent?: Parent,
-  args?: Args,
-  context?: Context,
-  info?: GraphQLResolveInfo
+  parent: Parent,
+  args: Args,
+  context: Context,
+  info: GraphQLResolveInfo
 ) => Promise<Result> | Result;
 
 export type SubscriptionSubscribeFn<Result, Parent, Context, Args> = (
-  parent?: Parent,
-  args?: Args,
-  context?: Context,
-  info?: GraphQLResolveInfo
+  parent: Parent,
+  args: Args,
+  context: Context,
+  info: GraphQLResolveInfo
 ) => AsyncIterator<Result> | Promise<AsyncIterator<Result>>;
 
 export type SubscriptionResolveFn<Result, Parent, Context, Args> = (
-  parent?: Parent,
-  args?: Args,
-  context?: Context,
-  info?: GraphQLResolveInfo
+  parent: Parent,
+  args: Args,
+  context: Context,
+  info: GraphQLResolveInfo
 ) => Result | Promise<Result>;
 
 export interface ISubscriptionResolverObject<Result, Parent, Context, Args> {
@@ -50,19 +50,19 @@ export type SubscriptionResolver<Result, Parent = {}, Context = {}, Args = {}> =
   | ISubscriptionResolverObject<Result, Parent, Context, Args>;
 
 export type TypeResolveFn<Types, Parent = {}, Context = {}> = (
-  parent?: Parent,
-  context?: Context,
-  info?: GraphQLResolveInfo
+  parent: Parent,
+  context: Context,
+  info: GraphQLResolveInfo
 ) => ?Types;
 
 export type NextResolverFn<T> = () => Promise<T>;
 
 export type DirectiveResolverFn<Result = {}, Parent = {}, Args = {}, Context = {}> = (
-  next?: NextResolverFn<Result>,
-  parent?: Parent,
-  args?: Args,
-  context?: Context,
-  info?: GraphQLResolveInfo
+  next: NextResolverFn<Result>,
+  parent: Parent,
+  args: Args,
+  context: Context,
+  info: GraphQLResolveInfo
 ) => Result | Promise<Result>;
 `;
 
