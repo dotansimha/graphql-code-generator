@@ -16,7 +16,7 @@
     "graphql": "14.2.1",
     "graphql-tag": "2.10.1",
     "jest": "24.7.1",
-    "ts-jest": "24.0.0",
+    "ts-jest": "24.0.2",
     "typescript": "3.4.3"
   },
   "peerDependencies": {
