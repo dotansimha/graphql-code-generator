@@ -22,7 +22,7 @@
   "workspaces": [
     "packages/*",
     "packages/utils/*",
-    "packages/plugins/*",
+    "packages/plugins/**/*",
     "website/live-demo"
   ],
   "devDependencies": {
