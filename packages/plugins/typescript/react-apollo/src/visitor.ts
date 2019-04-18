@@ -68,7 +68,10 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
   ${operationResultType},
   ${operationVariablesTypes},
   ${propsTypeName}<TChildProps>>) {
-    return ReactApollo.with${titleCase(node.operation)}<TProps, ${operationResultType}, ${operationVariablesTypes}, ${propsTypeName}<TChildProps>>(${documentVariableName}, operationOptions);
+    return ReactApollo.with${titleCase(node.operation)}<TProps, ${operationResultType}, ${operationVariablesTypes}, ${propsTypeName}<TChildProps>>(${documentVariableName}, {
+      alias: 'with${operationName}',
+      ...operationOptions
+    });
 };`;
 
     return [propsVar, mutationFn, hocString].filter(a => a).join('\n');

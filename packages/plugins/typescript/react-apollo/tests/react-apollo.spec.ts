@@ -505,7 +505,10 @@ query MyFeed {
   TestQuery,
   TestQueryVariables,
   TestProps<TChildProps>>) {
-    return ReactApollo.withQuery<TProps, TestQuery, TestQueryVariables, TestProps<TChildProps>>(TestDocument, operationOptions);
+    return ReactApollo.withQuery<TProps, TestQuery, TestQueryVariables, TestProps<TChildProps>>(TestDocument, {
+      alias: 'withTest',
+      ...operationOptions
+    });
 };`);
       await validateTypeScript(content, schema, docs, {});
     });
