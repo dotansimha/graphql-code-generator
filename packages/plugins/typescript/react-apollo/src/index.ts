@@ -62,6 +62,27 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    * ```
    */
   withHooks?: boolean;
+
+  /**
+   * @name withMutationFn
+   * @type boolean
+   * @description Customized the output by enabling/disabling the generated mutation function signature.
+   * @default true
+   *
+   * @example
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *    - typescript-operations
+   *    - typescript-react-apollo
+   *  config:
+   *    withMutationFn: true
+   * ```
+   */
+  withMutationFn?: boolean;
+
   /**
    * @name hooksImportFrom
    * @type string
