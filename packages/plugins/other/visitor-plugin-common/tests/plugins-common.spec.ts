@@ -91,4 +91,18 @@ describe('convertFactory', () => {
     expect(factory('_Myname', { transformUnderscore: true })).toBe('Myname');
     expect(factory('My_name', { transformUnderscore: true })).toBe('MyName');
   });
+
+  it('Should allow to override transformUnderscore in config', () => {
+    const factory = convertFactory({
+      namingConvention: {
+        typeNames: str => str.replace('_', ''),
+        enumValues: 'keep',
+        transformUnderscore: true,
+      },
+    });
+
+    expect(factory('My_Name')).toBe('MyName');
+    expect(factory('_Myname')).toBe('Myname');
+    expect(factory('My_name')).toBe('Myname');
+  });
 });
