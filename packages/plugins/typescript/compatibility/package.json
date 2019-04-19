@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc -m esnext --outDir dist/esnext && tsc -m commonjs --outDir dist/commonjs",
-    "test": "jest --config ../../../../jest.config.js"
+    "test": "cross-env JEST_JUNIT_OUTPUT=../../test-results/typescript-compatibility.xml jest --config ../../jest.config.js"
   },
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "1.1.0",

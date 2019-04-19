@@ -4,7 +4,18 @@ module.exports = {
   rootDir: process.cwd(),
   globals: {
     'ts-jest': {
-      diagnostics: false
-    }
-  }
+      diagnostics: false,
+    },
+  },
+  reporters: [
+    'default',
+    [
+      'jest-junit',
+      {
+        classNameTemplate: '{classname}',
+        titleTemplate: '{title}',
+        addFileAttribute: 'true',
+      },
+    ],
+  ],
 };
