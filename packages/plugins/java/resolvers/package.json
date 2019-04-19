@@ -29,6 +29,9 @@
   "typescript": {
     "definition": "dist/esnext/index.d.ts"
   },
+  "jest-junit": {
+    "outputDirectory": "../../../../test-results/java-resolvers"
+  },
   "publishConfig": {
     "access": "public"
   }

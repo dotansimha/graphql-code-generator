@@ -27,8 +27,7 @@
     "definition": "dist/esnext/index.d.ts"
   },
   "jest-junit": {
-    "outputDirectory": "../../../../test-results/typescript-compatibility",
-    "outputName": "typescript-compatibility.xml"
+    "outputDirectory": "../../../../test-results/typescript-compatibility"
   },
   "publishConfig": {
     "access": "public"

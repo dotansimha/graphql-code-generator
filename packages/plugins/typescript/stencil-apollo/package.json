@@ -33,8 +33,7 @@
     "definition": "dist/esnext/index.d.ts"
   },
   "jest-junit": {
-    "outputDirectory": "../../../../test-results/typescript-stencil-apollo",
-    "outputName": "typescript-stencil-apollo.xml"
+    "outputDirectory": "../../../../test-results/typescript-stencil-apollo"
   },
   "publishConfig": {
     "access": "public"

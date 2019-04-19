@@ -33,8 +33,7 @@
     "definition": "dist/esnext/index.d.ts"
   },
   "jest-junit": {
-    "outputDirectory": "../../../../test-results/typescript-resolvers",
-    "outputName": "typescript-resolvers.xml"
+    "outputDirectory": "../../../../test-results/typescript-resolvers"
   },
   "publishConfig": {
     "access": "public"

@@ -30,6 +30,9 @@
   "typescript": {
     "definition": "dist/esnext/index.d.ts"
   },
+  "jest-junit": {
+    "outputDirectory": "../../../../test-results/flow-resolvers"
+  },
   "publishConfig": {
     "access": "public"
   }

@@ -32,6 +32,9 @@
   "typescript": {
     "definition": "dist/esnext/index.d.ts"
   },
+  "jest-junit": {
+    "outputDirectory": "../../../../test-results/typescript-apollo-angular"
+  },
   "publishConfig": {
     "access": "public"
   }

@@ -29,8 +29,7 @@
     "definition": "dist/esnext/index.d.ts"
   },
   "jest-junit": {
-    "outputDirectory": "../../../../test-results/typescript-operations",
-    "outputName": "typescript-operations.xml"
+    "outputDirectory": "../../../../test-results/typescript-operations"
   },
   "publishConfig": {
     "access": "public"

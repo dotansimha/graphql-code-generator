@@ -53,6 +53,9 @@
   "typescript": {
     "definition": "dist/esnext/index.d.ts"
   },
+  "jest-junit": {
+    "outputDirectory": "../../test-results/core"
+  },
   "publishConfig": {
     "access": "public"
   }
