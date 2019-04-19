@@ -35,7 +35,6 @@
     "@types/request": "2.48.1",
     "apollo-link": "1.2.11",
     "apollo-server": "2.4.8",
-    "cross-env": "^5.2.0",
     "graphql": "14.2.1",
     "graphql-tag": "2.10.1",
     "graphql-tools": "4.0.4",
