@@ -100,7 +100,7 @@
   },
   "jest-junit": {
     "outputDirectory": "../../test-results",
-    "outputName": "./cli.xml"
+    "outputName": "cli.xml"
   },
   "publishConfig": {
     "access": "public"
