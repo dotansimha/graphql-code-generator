@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc -m esnext --outDir dist/esnext && tsc -m commonjs --outDir dist/commonjs",
-    "test": "cross-env JEST_JUNIT_OUTPUT=../../test-results/typescript-stencil-apollo.xml jest --config ../../jest.config.js"
+    "test": "jest --config ../../jest.config.js"
   },
   "peerDependencies": {
     "graphql-tag": "^2.0.0",

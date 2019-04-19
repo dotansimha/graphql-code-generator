@@ -16,7 +16,7 @@
     "lint": "tslint src/**/*.ts",
     "prebuild": "yarn clean",
     "build": "tsc -m esnext --outDir dist/esnext && tsc -m commonjs --outDir dist/commonjs",
-    "test": "cross-env JEST_JUNIT_OUTPUT=../../test-results/cli.xml jest --config ../../jest.config.js"
+    "test": "jest --config ../../jest.config.js"
   },
   "keywords": [
     "gql",
@@ -97,6 +97,10 @@
   "typings": "dist/esnext/index.d.ts",
   "typescript": {
     "definition": "dist/esnext/index.d.ts"
+  },
+  "jest-junit": {
+    "outputDirectory": "../../test-results",
+    "outputName": "./cli.xml"
   },
   "publishConfig": {
     "access": "public"
