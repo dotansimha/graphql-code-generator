@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc -m esnext --outDir dist/esnext && tsc -m commonjs --outDir dist/commonjs",
-    "test": "jest --config ../../jest.config.js"
+    "test": "jest --config ../../../../jest.config.js"
   },
   "peerDependencies": {
     "graphql-tag": "^2.0.0",
@@ -31,6 +31,10 @@
   "typings": "dist/esnext/index.d.ts",
   "typescript": {
     "definition": "dist/esnext/index.d.ts"
+  },
+  "jest-junit": {
+    "outputDirectory": "../../../../test-results",
+    "outputName": "typescript-stencil-apollo.xml"
   },
   "publishConfig": {
     "access": "public"
