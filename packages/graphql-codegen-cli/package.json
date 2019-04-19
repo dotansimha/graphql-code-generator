@@ -99,7 +99,7 @@
     "definition": "dist/esnext/index.d.ts"
   },
   "jest-junit": {
-    "outputDirectory": "../../test-results",
+    "outputDirectory": "../../test-results/cli",
     "outputName": "cli.xml"
   },
   "publishConfig": {
