@@ -2,7 +2,7 @@ import { ParsedConfig, RawConfig, BaseVisitor } from './base-visitor';
 import * as autoBind from 'auto-bind';
 import { DEFAULT_SCALARS } from './scalars';
 import { ScalarsMap } from './types';
-import { DeclarationBlock, DeclarationBlockConfig, indent, getBaseTypeNode, buildScalars, getConfigValue, getBaseType, getRootTypeNames } from './utils';
+import { DeclarationBlock, DeclarationBlockConfig, indent, getBaseTypeNode, buildScalars, getConfigValue, getBaseType, getRootTypeNames, stripMapperTypeInterpolation } from './utils';
 import {
   NameNode,
   ListTypeNode,
@@ -331,8 +331,10 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
           groupedMappers[mapper.source] = [];
         }
 
-        if (!groupedMappers[mapper.source].includes(mapper.type)) {
-          groupedMappers[mapper.source].push(mapper.type);
+        const identifier = stripMapperTypeInterpolation(mapper.type);
+
+        if (!groupedMappers[mapper.source].includes(identifier)) {
+          groupedMappers[mapper.source].push(identifier);
         }
       });
 
@@ -357,11 +359,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
         groupedMappers[this.config.defaultMapper.source] = [];
       }
 
-      let identifier = this.config.defaultMapper.type;
-
-      if (identifier.includes('{T}')) {
-        identifier = identifier.replace(/<.*?>/g, '');
-      }
+      const identifier = stripMapperTypeInterpolation(this.config.defaultMapper.type);
 
       groupedMappers[this.config.defaultMapper.source].push(identifier);
     }
