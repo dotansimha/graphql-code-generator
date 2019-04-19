@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc -m esnext --outDir dist/esnext && tsc -m commonjs --outDir dist/commonjs",
-    "test": "jest --config ../../jest.config.js"
+    "test": "jest --config ../../../../jest.config.js"
   },
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "1.1.0",
@@ -25,6 +25,10 @@
   "typings": "dist/esnext/index.d.ts",
   "typescript": {
     "definition": "dist/esnext/index.d.ts"
+  },
+  "jest-junit": {
+    "outputDirectory": "../../../../test-results",
+    "outputName": "typescript-compatibility.xml"
   },
   "publishConfig": {
     "access": "public"
