@@ -23,7 +23,7 @@ jobs:
           name: Publish Canary
           command: |
             echo "Fork PR username: $CIRCLE_PR_USERNAME"
-            if [ "${CIRCLE_PR_USERNAME}" == "" ]
+            if [ "${CIRCLE_PR_USERNAME}" == "" ] && [ "${NPM_AUTH_TOKEN}" != "" ]
             then
                 echo "//registry.npmjs.org/:_authToken=$NPM_AUTH_TOKEN" > .npmrc
                 npm run ci:release:canary
