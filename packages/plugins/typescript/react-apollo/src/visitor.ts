@@ -84,7 +84,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
   private _buildComponent(node: OperationDefinitionNode, documentVariableName: string, operationType: string, operationResultType: string, operationVariablesTypes: string): string {
     const componentName: string = this.convertName(node.name.value, { suffix: 'Component', useTypesPrefix: false });
 
-    const isVariablesRequired = node.variableDefinitions.some(variableDef => variableDef.type.kind === 'NonNullType');
+    const isVariablesRequired = operationType === 'Query' && node.variableDefinitions.some(variableDef => variableDef.type.kind === 'NonNullType');
 
     return `
 export const ${componentName} = (props: Omit<Omit<ReactApollo.${operationType}Props<${operationResultType}, ${operationVariablesTypes}>, '${operationType.toLowerCase()}'>, 'variables'> & { variables${

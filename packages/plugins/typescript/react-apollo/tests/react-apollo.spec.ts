@@ -471,6 +471,38 @@ query MyFeed {
       await validateTypeScript(content, schema, docs, {});
     });
 
+    it('should make variables property optional if operationType is mutation', async () => {
+      const docs = [
+        {
+          filePath: '',
+          content: gql`
+            mutation Test($foo: String!) {
+              test(foo: $foo)
+            }
+          `,
+        },
+      ];
+      const schema = buildASTSchema(gql`
+        type Mutation {
+          test(foo: String!): Boolean
+        }
+      `);
+      const content = await plugin(
+        schema,
+        docs,
+        {},
+        {
+          outputFile: 'graphql.tsx',
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+      export const TestComponent = (props: Omit<Omit<ReactApollo.MutationProps<TestMutation, TestMutationVariables>, 'mutation'>, 'variables'> & { variables?: TestMutationVariables }) => (
+        <ReactApollo.Mutation<TestMutation, TestMutationVariables> mutation={TestDocument} {...props} />
+      );`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
     it('should not add typesPrefix to Component', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
       const content = await plugin(
