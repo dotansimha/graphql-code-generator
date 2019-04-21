@@ -19,6 +19,7 @@ describe('TypeScript Mongo', () => {
       name: String @column
       gender: Gender @column
       someLink: LinkType @link
+      someLinkWithOverride: Boolean @link(overrideType: "LinkType")
       linkWithoutDirective: LinkType
       multipleLinks: [LinkType] @link
       fieldWithMap: String @column @map(path: "profile.inner.field")
@@ -176,6 +177,11 @@ describe('TypeScript Mongo', () => {
       const result = await plugin(schema, [], {}, { outputFile: '' });
       expect(result).toContain(`someLink?: Maybe<LinkTypeDbObject['_id']>`); // link to another entity
       expect(result).toContain(`multipleLinks?: Maybe<Array<Maybe<LinkTypeDbObject['_id']>>>`); // links array
+    });
+
+    it('Should output the correct values for @link directive and overrideType', async () => {
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+      expect(result).toContain(`someLinkWithOverride?: Maybe<LinkTypeDbObject['_id']>`); // link to another entity
     });
 
     it('Should output the correct values for @map directive', async () => {
