@@ -540,6 +540,31 @@ query MyFeed {
       expect(content).toContain(`export type ITestProps`);
       expect(content).toContain(`export function withTest`);
     });
+    it('should generate mutation function signature correctly', async () => {
+      const docs = [
+        {
+          filePath: '',
+          content: parse(/* GraphQL */ `
+            mutation submitComment($repoFullName: String!, $commentContent: String!) {
+              submitComment(repoFullName: $repoFullName, commentContent: $commentContent) {
+                id
+              }
+            }
+          `),
+        },
+      ];
+      const content = await plugin(
+        schema,
+        docs,
+        { withMutationFn: true },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      );
+
+      expect(content).toContain(`export type SubmitCommentMutationFn = ReactApollo.MutationFn<SubmitCommentMutation, SubmitCommentMutationVariables>;`);
+      await validateTypeScript(content, schema, docs, {});
+    });
   });
 
   describe('Hooks', () => {
