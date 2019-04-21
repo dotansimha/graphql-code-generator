@@ -115,10 +115,10 @@ There are different methods to use GraphQL Code Generator besides the [CLI](../c
 
 ### Using in Runtime
 
-We can `require()` (or `import`) `@graphql-codegen/core` directly with Node.JS:
+We can `require()` (or `import`) `@graphql-codegen/cli` directly with Node.JS:
 
 ```js
-import { generate } from '@graphql-codegen/core';
+import { generate } from '@graphql-codegen/cli';
 
 async function doSomething() {
   const generatedFiles = await generate(
