@@ -19,6 +19,7 @@ describe('TypeScript Mongo', () => {
       name: String @column
       gender: Gender @column
       someLink: LinkType @link
+      someLinkWithOverride: Boolean @link(overrideType: "LinkType")
       linkWithoutDirective: LinkType
       multipleLinks: [LinkType] @link
       fieldWithMap: String @column @map(path: "profile.inner.field")
@@ -38,8 +39,25 @@ describe('TypeScript Mongo', () => {
       eField2: Int! @column
     }
 
+    type Machine @entity {
+      documents(addPublic: Boolean = false): [Document] @link(overrideType: "MachineDocument")
+    }
+
+    type Document {
+      id: ID!
+    }
+
     type LinkType @entity {
       id: ID @id
+    }
+
+    type TEST @entity {
+      id: ID! @id
+      foo: String! @column
+    }
+
+    type Test2 @entity {
+      testfield: TEST! @link
     }
 
     enum Gender {
@@ -162,6 +180,7 @@ describe('TypeScript Mongo', () => {
     it('Should output the correct values for @id directive', async () => {
       const result = await plugin(schema, [], {}, { outputFile: '' });
       expect(result).toContain('_id?: Maybe<ObjectID>'); // optional id
+      await validate(result, schema, {});
     });
 
     it('Should output the correct values for @column directive', async () => {
@@ -170,12 +189,42 @@ describe('TypeScript Mongo', () => {
       expect(result).toContain('gender?: Maybe<string>'); // enum as string by default
       expect(result).toContain(`arrayColumn?: Maybe<Array<Maybe<number>>>`); // simple @column with array
       expect(result).toContain(`columnWithOverride?: number`); // override type
+      await validate(result, schema, {});
     });
 
     it('Should output the correct values for @link directive', async () => {
       const result = await plugin(schema, [], {}, { outputFile: '' });
       expect(result).toContain(`someLink?: Maybe<LinkTypeDbObject['_id']>`); // link to another entity
       expect(result).toContain(`multipleLinks?: Maybe<Array<Maybe<LinkTypeDbObject['_id']>>>`); // links array
+      await validate(result, schema, {});
+    });
+
+    it('Should output the correct values for @link directive and overrideType', async () => {
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+      expect(result).toContain(`someLinkWithOverride?: Maybe<LinkTypeDbObject['_id']>`); // link to another entity
+      await validate(result, schema, {});
+    });
+
+    it('Should prduce valid types when names are uppercase', async () => {
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+
+      expect(result).toBeSimilarStringTo(`
+      export type TestDbObject = {
+        _id: ObjectID,
+        foo: string,
+      };
+      
+      export type Test2DbObject = {
+        testfield: TestDbObject['_id'],
+      };`);
+      await validate(result, schema, {});
+    });
+
+    it('Should output the correct values for @link directive and overrideType and array type', async () => {
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+
+      expect(result).toContain(`documents?: Maybe<Array<Maybe<MachineDocumentDbObject['_id']>>>`); // link to another entity with overwrite type and array
+      await validate(result, schema, {});
     });
 
     it('Should output the correct values for @map directive', async () => {
@@ -192,6 +241,7 @@ describe('TypeScript Mongo', () => {
       innerEmbedded: {
         moreLevel: Maybe<EmbeddedTypeDbObject>,
       },`); // embedded with @map
+      await validate(result, schema, {});
     });
 
     it('Should output the correct values for @embedded directive', async () => {
@@ -204,6 +254,7 @@ describe('TypeScript Mongo', () => {
     it('Should output the correct values with additionalFields', async () => {
       const result = await plugin(schema, [], {}, { outputFile: '' });
       expect(result).toContain(`nonSchemaField: string`); // additional field
+      await validate(result, schema, {});
     });
   });
 });

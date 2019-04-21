@@ -134,8 +134,9 @@ export class TsMongoVisitor extends BaseVisitor<TypeScriptMongoPluginConfig, Typ
     tree.addField(`${this.config.idFieldName}${addOptionalSign ? '?' : ''}`, this._variablesTransformer.wrapAstTypeWithModifiers(this.config.objectIdType, fieldNode.type));
   }
 
-  private _handleLinkField(fieldNode: FieldDefinitionNode, tree: FieldsTree, mapPath: string | null, addOptionalSign: boolean): void {
-    const coreType = getBaseTypeNode(fieldNode.type);
+  private _handleLinkField(fieldNode: FieldDefinitionNode, tree: FieldsTree, linkDirective: DirectiveNode, mapPath: string | null, addOptionalSign: boolean): void {
+    const overrideType = this._getDirectiveArgValue<string>(linkDirective, 'overrideType');
+    const coreType = overrideType ? overrideType : getBaseTypeNode(fieldNode.type);
     const type = this.convertName(coreType, { suffix: this.config.dbTypeSuffix });
 
     tree.addField(mapPath ? mapPath : `${fieldNode.name.value}${addOptionalSign ? '?' : ''}`, this._variablesTransformer.wrapAstTypeWithModifiers(`${type}['${this.config.idFieldName}']`, fieldNode.type));
@@ -183,7 +184,7 @@ export class TsMongoVisitor extends BaseVisitor<TypeScriptMongoPluginConfig, Typ
       if (idDirective) {
         this._handleIdField(field, tree, addOptionalSign);
       } else if (linkDirective) {
-        this._handleLinkField(field, tree, mapPath, addOptionalSign);
+        this._handleLinkField(field, tree, linkDirective, mapPath, addOptionalSign);
       } else if (columnDirective) {
         this._handleColumnField(field, tree, columnDirective, mapPath, addOptionalSign);
       } else if (embeddedDirective) {
