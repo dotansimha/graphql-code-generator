@@ -19,16 +19,18 @@ jobs:
       - run:
           name: Test
           command: yarn test
+      - store_test_results:
+          path: test-results
       - run:
           name: Publish Canary
           command: |
             echo "Fork PR username: $CIRCLE_PR_USERNAME"
-            if [ "${CIRCLE_PR_USERNAME}" == "" ]
+            if [ "${CIRCLE_PR_USERNAME}" == "" ] && [ "${NPM_AUTH_TOKEN}" != "" ]
             then
                 echo "//registry.npmjs.org/:_authToken=$NPM_AUTH_TOKEN" > .npmrc
                 npm run ci:release:canary
             else    
-                echo "Skipping canary publish due to a fork PR..."
+                echo "Skipping canary publish due to a fork/PR..."
             fi
       - save_cache:
           key: dependency-cache-{{ checksum "package.json" }}

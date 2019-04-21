@@ -26,6 +26,9 @@
   "typescript": {
     "definition": "dist/esnext/index.d.ts"
   },
+  "jest-junit": {
+    "outputDirectory": "../../../../test-results/typescript-graphql-files-modules"
+  },
   "publishConfig": {
     "access": "public"
   }
