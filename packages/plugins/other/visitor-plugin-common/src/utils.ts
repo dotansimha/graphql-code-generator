@@ -267,3 +267,7 @@ export function isRootType(type: GraphQLNamedType, schema: GraphQLSchema): type 
 export function getRootTypeNames(schema: GraphQLSchema): string[] {
   return [schema.getQueryType(), schema.getMutationType(), schema.getSubscriptionType()].filter(t => t).map(t => t.name);
 }
+
+export function stripMapperTypeInterpolation(identifier: string): string {
+  return identifier.includes('{T}') ? identifier.replace(/<.*?>/g, '') : identifier;
+}

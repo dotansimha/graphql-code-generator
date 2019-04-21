@@ -173,6 +173,37 @@ describe('ResolversTypes', () => {
     };`);
   });
 
+  it('Should build ResolversTypes with mapper set for concrete type using {T} with external identifier', async () => {
+    const result = await plugin(
+      schema,
+      [],
+      {
+        noSchemaStitching: true,
+        mappers: {
+          MyType: './my-wrapper#CustomPartial<{T}>',
+        },
+      },
+      { outputFile: '' }
+    );
+
+    expect(result).toBeSimilarStringTo(`import { CustomPartial } from './my-wrapper';`);
+    expect(result).toBeSimilarStringTo(`
+    export type ResolversTypes = {
+      Query: {},
+      MyType: CustomPartial<MyType>,
+      String: Scalars['String'],
+      MyOtherType: MyOtherType,
+      Subscription: {},
+      Boolean: Scalars['Boolean'],
+      Node: Node,
+      ID: Scalars['ID'],
+      SomeNode: SomeNode,
+      MyUnion: MyUnion,
+      MyScalar: Scalars['MyScalar'],
+      Int: Scalars['Int'],
+    };`);
+  });
+
   it('Should map to a custom type on every level when {T} is used as default mapper', async () => {
     const config = {
       scalars: {
