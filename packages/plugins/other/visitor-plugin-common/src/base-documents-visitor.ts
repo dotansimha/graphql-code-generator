@@ -118,6 +118,11 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
   OperationDefinition(node: OperationDefinitionNode): string {
     const name = this.handleAnonymouseOperation(node);
     const operationRootType = getRootType(node.operation, this._schema);
+
+    if (!operationRootType) {
+      throw new Error(`Unable to find root schema type for operation type "${node.operation}"!`);
+    }
+
     const selectionSet = this._selectionSetToObject.createNext(operationRootType, node.selectionSet);
     const visitedOperationVariables = this._variablesTransfomer.transform<VariableDefinitionNode>(node.variableDefinitions);
 

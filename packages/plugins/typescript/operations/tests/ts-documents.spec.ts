@@ -25,6 +25,7 @@ describe('TypeScript Operations Plugin', () => {
     }
 
     type Mutation {
+      test: String
       login(username: String!, password: String!): User
     }
 
@@ -342,6 +343,31 @@ describe('TypeScript Operations Plugin', () => {
   });
 
   describe('Selection Set', () => {
+    it('Should detect invalid types as parent and notify', async () => {
+      const ast = parse(`
+      mutation test {
+        test
+      }
+  `);
+      const config = {};
+
+      try {
+        await plugin(
+          buildSchema(/* GraphQL */ `
+            type Query {
+              foo: String
+            }
+          `),
+          [{ filePath: 'test-file.ts', content: ast }],
+          config,
+          { outputFile: '' }
+        );
+        expect(true).toBeFalsy();
+      } catch (e) {
+        expect(e.message).toBe('Unable to find root schema type for operation type "mutation"!');
+      }
+    });
+
     it('Should support fragment spread correctly with simple type with no other fields', async () => {
       const ast = parse(`
         fragment UserFields on User {

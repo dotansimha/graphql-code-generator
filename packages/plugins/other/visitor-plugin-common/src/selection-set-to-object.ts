@@ -81,6 +81,11 @@ export class SelectionSetToObject {
 
       const rawType = schemaField.type as any;
       const baseType = getBaseType(rawType);
+
+      if (!baseType) {
+        throw new Error(`Unable to find a type called "${rawType}" in your schema!`);
+      }
+
       const typeName = baseType.name;
 
       if (this._scalars[typeName] || isEnumType(baseType) || isScalarType(baseType)) {
