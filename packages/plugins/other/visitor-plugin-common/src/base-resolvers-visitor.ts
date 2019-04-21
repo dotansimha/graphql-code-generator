@@ -18,6 +18,7 @@ import {
   isInterfaceType,
   isNonNullType,
   isListType,
+  Kind,
 } from 'graphql';
 import { DirectiveDefinitionNode, GraphQLObjectType, InputValueDefinitionNode, GraphQLOutputType } from 'graphql';
 import { OperationVariablesToObject } from './variables-to-object';
@@ -230,7 +231,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
 
         if ((shouldApplyOmit && prev[typeName] !== 'any' && isObjectType(schemaType)) || (isInterfaceType(schemaType) && !isMapped)) {
           const fields = schemaType.getFields();
-          const relevantFields = Object.keys(fields)
+          const relevantFields: { addOptionalSign: boolean; fieldName: string; replaceWithType: string }[] = Object.keys(fields)
             .map(fieldName => {
               const field = fields[fieldName];
               const baseType = getBaseType(field.type);
@@ -239,7 +240,10 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
                 return null;
               }
 
+              const addOptionalSign = !this.config.avoidOptionals && !isNonNullType(field.type);
+
               return {
+                addOptionalSign,
                 fieldName,
                 replaceWithType: this.wrapTypeWithModifiers(this.getTypeToUse(baseType.name), field.type),
               };
@@ -266,8 +270,8 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
     );
   }
 
-  protected replaceFieldsInType(typeName: string, relevantFields: { fieldName: string; replaceWithType: string }[]): string {
-    return `Omit<${typeName}, ${relevantFields.map(f => `'${f.fieldName}'`).join(' | ')}> & { ${relevantFields.map(f => `${f.fieldName}: ${f.replaceWithType}`).join(', ')} }`;
+  protected replaceFieldsInType(typeName: string, relevantFields: { addOptionalSign: boolean; fieldName: string; replaceWithType: string }[]): string {
+    return `Omit<${typeName}, ${relevantFields.map(f => `'${f.fieldName}'`).join(' | ')}> & { ${relevantFields.map(f => `${f.fieldName}${f.addOptionalSign ? '?' : ''}: ${f.replaceWithType}`).join(', ')} }`;
   }
 
   protected applyMaybe(str: string): string {
