@@ -87,12 +87,12 @@ export function convertFactory(config: { namingConvention?: NamingConvention }):
     if (typeof config.namingConvention === 'object') {
       if (!config.namingConvention[type]) {
         return (str: string, opts: ConvertOptions = {}) => {
-          return convertNameParts(str, pascalCase, !!(opts || {}).transformUnderscore);
+          return convertNameParts(str, pascalCase, config.namingConvention['transformUnderscore'] || !!(opts || {}).transformUnderscore);
         };
       }
 
       return (str: string, opts: ConvertOptions = {}) => {
-        return convertNameParts(str, resolveExternalModuleAndFn(config.namingConvention[type]), !!(opts || {}).transformUnderscore);
+        return convertNameParts(str, resolveExternalModuleAndFn(config.namingConvention[type]), config.namingConvention['transformUnderscore'] || !!(opts || {}).transformUnderscore);
       };
     }
 
