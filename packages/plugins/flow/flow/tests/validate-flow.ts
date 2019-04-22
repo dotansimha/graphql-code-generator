@@ -1,9 +1,21 @@
-import * as flow from 'flow-parser';
+const flow = require('./flow.js');
 
 export function validateFlow(code: string) {
-  const result = flow.parse(code);
+  const errors = flow.checkContent('temp.flow.js', code);
 
-  if (result.errors.length > 0) {
-    throw new Error(result.errors.map(error => error.message).join('\n'));
+  var lint = errors.map(function(err) {
+    var messages = err.message;
+    var firstLoc = messages[0].loc;
+    var message = messages
+      .map(function(msg) {
+        return msg.descr;
+      })
+      .join('\n');
+
+    return `[l${firstLoc.start.line},c${firstLoc.start.column}][${err.level}]: ${message}`;
+  });
+
+  if (lint.length > 0) {
+    throw new Error(`Invalid FlowJS Code:\n${lint.join('\n')}`);
   }
 }
