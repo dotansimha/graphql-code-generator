@@ -19,6 +19,8 @@ import {
   isNonNullType,
   isListType,
   Kind,
+  isScalarType,
+  isUnionType,
 } from 'graphql';
 import { DirectiveDefinitionNode, GraphQLObjectType, InputValueDefinitionNode, GraphQLOutputType } from 'graphql';
 import { OperationVariablesToObject } from './variables-to-object';
@@ -211,9 +213,11 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
         const isMapped = this.config.mappers[typeName];
         const isScalar = this.config.scalars[typeName];
         const hasDefaultMapper = !!(this.config.defaultMapper && this.config.defaultMapper.type);
+        const schemaType = allSchemaTypes[typeName];
 
         if (isRootType) {
           prev[typeName] = this.config.rootValueType.type;
+
           return prev;
         } else if (isMapped && this.config.mappers[typeName].type) {
           this.markMapperAsUsed(typeName);
@@ -222,12 +226,15 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
           prev[typeName] = this.config.defaultMapper.type;
         } else if (isScalar) {
           prev[typeName] = this._getScalar(typeName);
+        } else if (isUnionType(schemaType)) {
+          prev[typeName] = schemaType
+            .getTypes()
+            .map(type => this.getTypeToUse(type.name))
+            .join(' | ');
         } else {
           shouldApplyOmit = true;
           prev[typeName] = this.convertName(typeName);
         }
-
-        const schemaType = allSchemaTypes[typeName];
 
         if ((shouldApplyOmit && prev[typeName] !== 'any' && isObjectType(schemaType)) || (isInterfaceType(schemaType) && !isMapped)) {
           const fields = schemaType.getFields();
