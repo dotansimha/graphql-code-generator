@@ -479,7 +479,7 @@ describe('TypeScript Resolvers Plugin', () => {
     const tsContent = await tsPlugin(testSchema, [], {}, { outputFile: 'graphql.ts' });
     const content = await plugin(testSchema, [], {}, { outputFile: 'graphql.ts' });
 
-    expect(content).toBeSimilarStringTo(`CCCUnion: CccUnion`); // In ResolversTypes
+    expect(content).toBeSimilarStringTo(`CCCUnion: ResolversTypes['CCCFoo'] | ResolversTypes['CCCBar']`); // In ResolversTypes
     expect(content).toBeSimilarStringTo(`
     export type CccUnionResolvers<ContextType = any, ParentType = ResolversTypes['CCCUnion']> = {
       __resolveType: TypeResolveFn<'CCCFoo' | 'CCCBar', ParentType, ContextType>

@@ -18,7 +18,7 @@ describe('ResolversTypes', () => {
       Node: Node,
       ID: Scalars['ID'],
       SomeNode: SomeNode,
-      MyUnion: MyUnion,
+      MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'],
       MyScalar: Scalars['MyScalar'],
       Int: Scalars['Int'],
     };`);
@@ -48,7 +48,7 @@ describe('ResolversTypes', () => {
       Node: Node,
       ID: Scalars['ID'],
       SomeNode: SomeNode,
-      MyUnion: MyUnion,
+      MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'],
       MyScalar: Scalars['MyScalar'],
       Int: Scalars['Int'],
     };`);
@@ -138,7 +138,7 @@ describe('ResolversTypes', () => {
       Node: Partial<Node>,
       ID: Partial<Scalars['ID']>,
       SomeNode: Partial<SomeNode>,
-      MyUnion: Partial<MyUnion>,
+      MyUnion: Partial<ResolversTypes['MyType'] | ResolversTypes['MyOtherType']>,
       MyScalar: Partial<Scalars['MyScalar']>,
       Int: Partial<Scalars['Int']>,
     };`);
@@ -167,7 +167,7 @@ describe('ResolversTypes', () => {
       Node: CustomPartial<Node>,
       ID: CustomPartial<Scalars['ID']>,
       SomeNode: CustomPartial<SomeNode>,
-      MyUnion: CustomPartial<MyUnion>,
+      MyUnion: CustomPartial<ResolversTypes['MyType'] | ResolversTypes['MyOtherType']>,
       MyScalar: CustomPartial<Scalars['MyScalar']>,
       Int: CustomPartial<Scalars['Int']>,
     };`);
@@ -198,7 +198,7 @@ describe('ResolversTypes', () => {
       Node: Node,
       ID: Scalars['ID'],
       SomeNode: SomeNode,
-      MyUnion: MyUnion,
+      MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'],
       MyScalar: Scalars['MyScalar'],
       Int: Scalars['Int'],
     };`);
@@ -334,7 +334,7 @@ describe('ResolversTypes', () => {
       Node: Node,
       ID: Scalars['ID'],
       SomeNode: SomeNode,
-      MyUnion: MyUnion,
+      MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'],
       MyScalar: Scalars['MyScalar'],
       Int: Scalars['Int'],
     };`);
@@ -364,7 +364,7 @@ describe('ResolversTypes', () => {
         Node: Node,
         ID: Scalars['ID'],
         SomeNode: SomeNode,
-        MyUnion: MyUnion,
+        MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'],
         MyScalar: Scalars['MyScalar'],
         Int: Scalars['Int'],
       };
@@ -821,7 +821,7 @@ describe('ResolversTypes', () => {
       Node: Node,
       ID: Scalars['ID'],
       SomeNode: SomeNode,
-      MyUnion: MyUnion,
+      MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'],
       MyScalar: Scalars['MyScalar'],
       Int: Scalars['Int'],
     };`);
@@ -853,7 +853,7 @@ describe('ResolversTypes', () => {
       Node: Node,
       ID: Scalars['ID'],
       SomeNode: SomeNode,
-      MyUnion: MyUnion,
+      MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'],
       MyScalar: Scalars['MyScalar'],
       Int: Scalars['Int'],
     };`);
