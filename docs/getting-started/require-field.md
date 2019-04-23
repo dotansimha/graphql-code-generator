@@ -25,3 +25,14 @@ If you wish to use TypeScript, just add [`ts-node`](https://github.com/TypeStron
 require:
   - ts-node/register
 ```
+
+## `dotenv` Integration
+
+If you wish to use [dotenv](https://github.com/motdotla/dotenv) to load environment variables, you can install `dotenv` from npm, and then to use `require` field to preload the `dotenv` require extensions:
+
+```yml
+require:
+  - dotenv/config
+```
+
+It will make sure to load your `.env` before executing the codegen.
