@@ -2,7 +2,7 @@ import { ParsedConfig, RawConfig, BaseVisitor } from './base-visitor';
 import * as autoBind from 'auto-bind';
 import { DEFAULT_SCALARS } from './scalars';
 import { ScalarsMap } from './types';
-import { DeclarationBlock, DeclarationBlockConfig, indent, getBaseTypeNode, buildScalars, getConfigValue, getBaseType, getRootTypeNames } from './utils';
+import { DeclarationBlock, DeclarationBlockConfig, indent, getBaseTypeNode, buildScalars, getConfigValue, getBaseType, getRootTypeNames, stripMapperTypeInterpolation } from './utils';
 import {
   NameNode,
   ListTypeNode,
@@ -18,6 +18,9 @@ import {
   isInterfaceType,
   isNonNullType,
   isListType,
+  Kind,
+  isScalarType,
+  isUnionType,
 } from 'graphql';
 import { DirectiveDefinitionNode, GraphQLObjectType, InputValueDefinitionNode, GraphQLOutputType } from 'graphql';
 import { OperationVariablesToObject } from './variables-to-object';
@@ -210,9 +213,11 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
         const isMapped = this.config.mappers[typeName];
         const isScalar = this.config.scalars[typeName];
         const hasDefaultMapper = !!(this.config.defaultMapper && this.config.defaultMapper.type);
+        const schemaType = allSchemaTypes[typeName];
 
         if (isRootType) {
           prev[typeName] = this.config.rootValueType.type;
+
           return prev;
         } else if (isMapped && this.config.mappers[typeName].type) {
           this.markMapperAsUsed(typeName);
@@ -221,16 +226,19 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
           prev[typeName] = this.config.defaultMapper.type;
         } else if (isScalar) {
           prev[typeName] = this._getScalar(typeName);
+        } else if (isUnionType(schemaType)) {
+          prev[typeName] = schemaType
+            .getTypes()
+            .map(type => this.getTypeToUse(type.name))
+            .join(' | ');
         } else {
           shouldApplyOmit = true;
           prev[typeName] = this.convertName(typeName);
         }
 
-        const schemaType = allSchemaTypes[typeName];
-
         if ((shouldApplyOmit && prev[typeName] !== 'any' && isObjectType(schemaType)) || (isInterfaceType(schemaType) && !isMapped)) {
           const fields = schemaType.getFields();
-          const relevantFields = Object.keys(fields)
+          const relevantFields: { addOptionalSign: boolean; fieldName: string; replaceWithType: string }[] = Object.keys(fields)
             .map(fieldName => {
               const field = fields[fieldName];
               const baseType = getBaseType(field.type);
@@ -239,7 +247,10 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
                 return null;
               }
 
+              const addOptionalSign = !this.config.avoidOptionals && !isNonNullType(field.type);
+
               return {
+                addOptionalSign,
                 fieldName,
                 replaceWithType: this.wrapTypeWithModifiers(this.getTypeToUse(baseType.name), field.type),
               };
@@ -266,11 +277,8 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
     );
   }
 
-  protected replaceFieldsInType(typeName: string, relevantFields: { fieldName: string; replaceWithType: string }[]): string {
-    const omitFields = relevantFields.map(f => `'${f.fieldName}'`).join(' | ');
-    const keepFields = relevantFields.map(f => `${f.fieldName}: ${f.replaceWithType}`).join(', ');
-
-    return `Omit<${typeName}, ${omitFields}> & { ${keepFields} }`;
+  protected replaceFieldsInType(typeName: string, relevantFields: { addOptionalSign: boolean; fieldName: string; replaceWithType: string }[]): string {
+    return `Omit<${typeName}, ${relevantFields.map(f => `'${f.fieldName}'`).join(' | ')}> & { ${relevantFields.map(f => `${f.fieldName}${f.addOptionalSign ? '?' : ''}: ${f.replaceWithType}`).join(', ')} }`;
   }
 
   protected applyMaybe(str: string): string {
@@ -334,8 +342,10 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
           groupedMappers[mapper.source] = [];
         }
 
-        if (!groupedMappers[mapper.source].includes(mapper.type)) {
-          groupedMappers[mapper.source].push(mapper.type);
+        const identifier = stripMapperTypeInterpolation(mapper.type);
+
+        if (!groupedMappers[mapper.source].includes(identifier)) {
+          groupedMappers[mapper.source].push(identifier);
         }
       });
 
@@ -360,11 +370,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
         groupedMappers[this.config.defaultMapper.source] = [];
       }
 
-      let identifier = this.config.defaultMapper.type;
-
-      if (identifier.includes('{T}')) {
-        identifier = identifier.replace(/<.*?>/g, '');
-      }
+      const identifier = stripMapperTypeInterpolation(this.config.defaultMapper.type);
 
       groupedMappers[this.config.defaultMapper.source].push(identifier);
     }

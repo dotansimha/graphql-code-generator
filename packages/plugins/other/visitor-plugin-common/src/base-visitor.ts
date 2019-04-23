@@ -40,6 +40,8 @@ export interface RawConfig {
    * The format of the converter must be a valid `module#method`.
    * Allowed values for specific output are: `typeNames`, `enumValues`.
    * You can also use "keep" to keep all GraphQL names as-is.
+   * Additionally you can set `transformUndersocre` to `true` if you want do override the default behaviour,
+   * which is to preserver underscores.
    *
    * @example Override All Names
    * ```yml
@@ -57,6 +59,12 @@ export interface RawConfig {
    * ```yml
    * config:
    *   namingConvention: keep
+   * ```
+   * @example Transform Underscores
+   * ```yml
+   * config:
+   *   typeNames: change-case#pascalCase
+   *   transformUnderscore: true
    * ```
    */
   namingConvention?: NamingConvention;

@@ -41,18 +41,18 @@ export class StencilApolloVisitor extends ClientSideBaseVisitor<StencilApolloRaw
     const componentName = this.convertName(`${operationName}Component`);
 
     const propsVar = `
-        export type ${propsTypeName} = {
-            variables ?: ${operationVariablesTypes};
-            children ?: StencilApollo.${rendererSignature};
-        };
+export type ${propsTypeName} = {
+    variables ?: ${operationVariablesTypes};
+    children ?: StencilApollo.${rendererSignature};
+};
       `;
 
     const component = `
-        export const ${componentName} = (props: ${propsTypeName}, children: [StencilApollo.${rendererSignature}]) => (
-          <StencilApollo.${apolloStencilFunctionalComponentName}<${operationResultType}, ${operationVariablesTypes}> ${operationType.toLowerCase()}={ ${documentVariableName} } { ...props }>
-            {children[0]}
-          </StencilApollo.${apolloStencilFunctionalComponentName}>
-        );
+export const ${componentName} = (props: ${propsTypeName}, children: [StencilApollo.${rendererSignature}]) => (
+  <StencilApollo.${apolloStencilFunctionalComponentName}<${operationResultType}, ${operationVariablesTypes}> ${operationType.toLowerCase()}={ ${documentVariableName} } { ...props }>
+    {children[0]}
+  </StencilApollo.${apolloStencilFunctionalComponentName}>
+);
       `;
 
     return [propsVar, component].filter(a => a).join('\n');
@@ -64,15 +64,15 @@ export class StencilApolloVisitor extends ClientSideBaseVisitor<StencilApolloRaw
     const rendererSignature = toPascalCase(`${operationType}Renderer`);
 
     return `
-            @Component({
-                tag: '${changeCase.paramCase(`Apollo${toPascalCase(node.name.value)}`)}'
-            })
-            export class ${componentName} {
-                @Prop() renderer: StencilApollo.${rendererSignature}<${operationResultType}, ${operationVariablesTypes}>;
-                render() {
-                    return <${apolloStencilComponentTag} ${operationType.toLowerCase()}={ ${documentVariableName} } renderer={ this.renderer } />;
-                }
-            }
+@Component({
+    tag: '${changeCase.paramCase(`Apollo${toPascalCase(node.name.value)}`)}'
+})
+export class ${componentName} {
+    @Prop() renderer: StencilApollo.${rendererSignature}<${operationResultType}, ${operationVariablesTypes}>;
+    render() {
+        return <${apolloStencilComponentTag} ${operationType.toLowerCase()}={ ${documentVariableName} } renderer={ this.renderer } />;
+    }
+}
       `;
   }
 

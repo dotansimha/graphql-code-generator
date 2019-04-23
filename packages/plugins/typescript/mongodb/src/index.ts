@@ -121,7 +121,7 @@ export const DIRECTIVES = gql`
   directive @${Directives.ENTITY}(embedded: Boolean, additionalFields: [AdditionalEntityFields]) on OBJECT
   directive @${Directives.COLUMN}(overrideType: String) on FIELD_DEFINITION
   directive @${Directives.ID} on FIELD_DEFINITION
-  directive @${Directives.LINK} on FIELD_DEFINITION
+  directive @${Directives.LINK}(overrideType: String) on FIELD_DEFINITION
   directive @${Directives.EMBEDDED} on FIELD_DEFINITION
   directive @${Directives.MAP}(path: String!) on FIELD_DEFINITION
   # Inputs

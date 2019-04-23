@@ -17,4 +17,5 @@ export type NamingConvention = string | Function | NamingConventionMap;
 export interface NamingConventionMap {
   enumValues?: 'keep' | NamingConventionResolvePath | Function;
   typeNames?: 'keep' | NamingConventionResolvePath | Function;
+  transformUnderscore?: boolean;
 }

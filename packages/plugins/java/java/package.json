@@ -20,7 +20,7 @@
     "java-ast": "0.1.0",
     "jest": "24.7.1",
     "ts-jest": "24.0.2",
-    "typescript": "3.4.3"
+    "typescript": "3.4.4"
   },
   "sideEffects": false,
   "main": "dist/commonjs/index.js",
@@ -28,6 +28,9 @@
   "typings": "dist/esnext/index.d.ts",
   "typescript": {
     "definition": "dist/esnext/index.d.ts"
+  },
+  "jest-junit": {
+    "outputDirectory": "../../../../test-results/java"
   },
   "publishConfig": {
     "access": "public"

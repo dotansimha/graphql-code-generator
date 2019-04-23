@@ -61,7 +61,7 @@ export type ResolversTypes = {
   Node: Node,
   ID: $ElementType<Scalars, 'ID'>,
   SomeNode: SomeNode,
-  MyUnion: MyUnion,
+  MyUnion: $ElementType<ResolversTypes, 'MyType'> | $ElementType<ResolversTypes, 'MyOtherType'>,
   MyScalar: $ElementType<Scalars, 'MyScalar'>,
   Int: $ElementType<Scalars, 'Int'>,
 };

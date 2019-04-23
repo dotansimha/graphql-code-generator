@@ -471,6 +471,38 @@ query MyFeed {
       await validateTypeScript(content, schema, docs, {});
     });
 
+    it('should make variables property optional if operationType is mutation', async () => {
+      const docs = [
+        {
+          filePath: '',
+          content: gql`
+            mutation Test($foo: String!) {
+              test(foo: $foo)
+            }
+          `,
+        },
+      ];
+      const schema = buildASTSchema(gql`
+        type Mutation {
+          test(foo: String!): Boolean
+        }
+      `);
+      const content = await plugin(
+        schema,
+        docs,
+        {},
+        {
+          outputFile: 'graphql.tsx',
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+      export const TestComponent = (props: Omit<Omit<ReactApollo.MutationProps<TestMutation, TestMutationVariables>, 'mutation'>, 'variables'> & { variables?: TestMutationVariables }) => (
+        <ReactApollo.Mutation<TestMutation, TestMutationVariables> mutation={TestDocument} {...props} />
+      );`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
     it('should not add typesPrefix to Component', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
       const content = await plugin(
@@ -505,7 +537,10 @@ query MyFeed {
   TestQuery,
   TestQueryVariables,
   TestProps<TChildProps>>) {
-    return ReactApollo.withQuery<TProps, TestQuery, TestQueryVariables, TestProps<TChildProps>>(TestDocument, operationOptions);
+    return ReactApollo.withQuery<TProps, TestQuery, TestQueryVariables, TestProps<TChildProps>>(TestDocument, {
+      alias: 'withTest',
+      ...operationOptions
+    });
 };`);
       await validateTypeScript(content, schema, docs, {});
     });
@@ -539,6 +574,31 @@ query MyFeed {
 
       expect(content).toContain(`export type ITestProps`);
       expect(content).toContain(`export function withTest`);
+    });
+    it('should generate mutation function signature correctly', async () => {
+      const docs = [
+        {
+          filePath: '',
+          content: parse(/* GraphQL */ `
+            mutation submitComment($repoFullName: String!, $commentContent: String!) {
+              submitComment(repoFullName: $repoFullName, commentContent: $commentContent) {
+                id
+              }
+            }
+          `),
+        },
+      ];
+      const content = await plugin(
+        schema,
+        docs,
+        { withMutationFn: true },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      );
+
+      expect(content).toContain(`export type SubmitCommentMutationFn = ReactApollo.MutationFn<SubmitCommentMutation, SubmitCommentMutationVariables>;`);
+      await validateTypeScript(content, schema, docs, {});
     });
   });
 

@@ -19,7 +19,7 @@ describe('ResolversTypes', () => {
       Node: Node,
       ID: $ElementType<Scalars, 'ID'>,
       SomeNode: SomeNode,
-      MyUnion: MyUnion,
+      MyUnion: $ElementType<ResolversTypes, 'MyType'> | $ElementType<ResolversTypes, 'MyOtherType'>,
       MyScalar: $ElementType<Scalars, 'MyScalar'>,
       Int: $ElementType<Scalars, 'Int'>,
     };`);
@@ -49,7 +49,7 @@ describe('ResolversTypes', () => {
       Node: Node,
       ID: $ElementType<Scalars, 'ID'>,
       SomeNode: SomeNode,
-      MyUnion: MyUnion,
+      MyUnion: $ElementType<ResolversTypes, 'MyType'> | $ElementType<ResolversTypes, 'MyOtherType'>,
       MyScalar: $ElementType<Scalars, 'MyScalar'>,
       Int: $ElementType<Scalars, 'Int'>,
     };`);
@@ -109,7 +109,7 @@ describe('ResolversTypes', () => {
       Node: Node,
       ID: $ElementType<Scalars, 'ID'>,
       SomeNode: SomeNode,
-      MyUnion: MyUnion,
+      MyUnion: $ElementType<ResolversTypes, 'MyType'> | $ElementType<ResolversTypes, 'MyOtherType'>,
       MyScalar: $ElementType<Scalars, 'MyScalar'>,
       Int: $ElementType<Scalars, 'Int'>,
     };`);
@@ -559,7 +559,7 @@ describe('ResolversTypes', () => {
       Node: Node,
       ID: $ElementType<Scalars, 'ID'>,
       SomeNode: SomeNode,
-      MyUnion: MyUnion,
+      MyUnion: $ElementType<ResolversTypes, 'MyType'> | $ElementType<ResolversTypes, 'MyOtherType'>,
       MyScalar: $ElementType<Scalars, 'MyScalar'>,
       Int: $ElementType<Scalars, 'Int'>,
     };`);
@@ -589,7 +589,7 @@ describe('ResolversTypes', () => {
       Node: Node,
       ID: $ElementType<Scalars, 'ID'>,
       SomeNode: SomeNode,
-      MyUnion: MyUnion,
+      MyUnion: $ElementType<ResolversTypes, 'MyType'> | $ElementType<ResolversTypes, 'MyOtherType'>,
       MyScalar: $ElementType<Scalars, 'MyScalar'>,
       Int: $ElementType<Scalars, 'Int'>,
     };`);
@@ -617,7 +617,7 @@ describe('ResolversTypes', () => {
       Node: $Shape<Node>,
       ID: $Shape<$ElementType<Scalars, 'ID'>>,
       SomeNode: $Shape<SomeNode>,
-      MyUnion: $Shape<MyUnion>,
+      MyUnion: $Shape<$ElementType<ResolversTypes, 'MyType'> | $ElementType<ResolversTypes, 'MyOtherType'>>,
       MyScalar: $Shape<$ElementType<Scalars, 'MyScalar'>>,
       Int: $Shape<$ElementType<Scalars, 'Int'>>,
     };`);
@@ -645,7 +645,7 @@ describe('ResolversTypes', () => {
       Node: CustomPartial<Node>,
       ID: CustomPartial<$ElementType<Scalars, 'ID'>>,
       SomeNode: CustomPartial<SomeNode>,
-      MyUnion: CustomPartial<MyUnion>,
+      MyUnion: CustomPartial<$ElementType<ResolversTypes, 'MyType'> | $ElementType<ResolversTypes, 'MyOtherType'>>,
       MyScalar: CustomPartial<$ElementType<Scalars, 'MyScalar'>>,
       Int: CustomPartial<$ElementType<Scalars, 'Int'>>,
     };`);

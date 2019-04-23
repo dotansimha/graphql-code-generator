@@ -18,7 +18,7 @@ describe('ResolversTypes', () => {
       Node: Node,
       ID: Scalars['ID'],
       SomeNode: SomeNode,
-      MyUnion: MyUnion,
+      MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'],
       MyScalar: Scalars['MyScalar'],
       Int: Scalars['Int'],
     };`);
@@ -48,7 +48,7 @@ describe('ResolversTypes', () => {
       Node: Node,
       ID: Scalars['ID'],
       SomeNode: SomeNode,
-      MyUnion: MyUnion,
+      MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'],
       MyScalar: Scalars['MyScalar'],
       Int: Scalars['Int'],
     };`);
@@ -138,7 +138,7 @@ describe('ResolversTypes', () => {
       Node: Partial<Node>,
       ID: Partial<Scalars['ID']>,
       SomeNode: Partial<SomeNode>,
-      MyUnion: Partial<MyUnion>,
+      MyUnion: Partial<ResolversTypes['MyType'] | ResolversTypes['MyOtherType']>,
       MyScalar: Partial<Scalars['MyScalar']>,
       Int: Partial<Scalars['Int']>,
     };`);
@@ -167,9 +167,40 @@ describe('ResolversTypes', () => {
       Node: CustomPartial<Node>,
       ID: CustomPartial<Scalars['ID']>,
       SomeNode: CustomPartial<SomeNode>,
-      MyUnion: CustomPartial<MyUnion>,
+      MyUnion: CustomPartial<ResolversTypes['MyType'] | ResolversTypes['MyOtherType']>,
       MyScalar: CustomPartial<Scalars['MyScalar']>,
       Int: CustomPartial<Scalars['Int']>,
+    };`);
+  });
+
+  it('Should build ResolversTypes with mapper set for concrete type using {T} with external identifier', async () => {
+    const result = await plugin(
+      schema,
+      [],
+      {
+        noSchemaStitching: true,
+        mappers: {
+          MyType: './my-wrapper#CustomPartial<{T}>',
+        },
+      },
+      { outputFile: '' }
+    );
+
+    expect(result).toBeSimilarStringTo(`import { CustomPartial } from './my-wrapper';`);
+    expect(result).toBeSimilarStringTo(`
+    export type ResolversTypes = {
+      Query: {},
+      MyType: CustomPartial<MyType>,
+      String: Scalars['String'],
+      MyOtherType: MyOtherType,
+      Subscription: {},
+      Boolean: Scalars['Boolean'],
+      Node: Node,
+      ID: Scalars['ID'],
+      SomeNode: SomeNode,
+      MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'],
+      MyScalar: Scalars['MyScalar'],
+      Int: Scalars['Int'],
     };`);
   });
 
@@ -209,7 +240,7 @@ describe('ResolversTypes', () => {
       User: number,
       ID: Partial<Scalars['ID']>,
       String: Partial<Scalars['String']>,
-      Chat: Partial<Omit<Chat, 'owner' | 'members'> & { owner: ResolversTypes['User'], members: Maybe<Array<ResolversTypes['User']>> }>,
+      Chat: Partial<Omit<Chat, 'owner' | 'members'> & { owner: ResolversTypes['User'], members?: Maybe<Array<ResolversTypes['User']>> }>,
       Boolean: Partial<Scalars['Boolean']>,
     };
     `);
@@ -303,7 +334,7 @@ describe('ResolversTypes', () => {
       Node: Node,
       ID: Scalars['ID'],
       SomeNode: SomeNode,
-      MyUnion: MyUnion,
+      MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'],
       MyScalar: Scalars['MyScalar'],
       Int: Scalars['Int'],
     };`);
@@ -333,7 +364,7 @@ describe('ResolversTypes', () => {
         Node: Node,
         ID: Scalars['ID'],
         SomeNode: SomeNode,
-        MyUnion: MyUnion,
+        MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'],
         MyScalar: Scalars['MyScalar'],
         Int: Scalars['Int'],
       };
@@ -782,7 +813,7 @@ describe('ResolversTypes', () => {
     expect(result).toBeSimilarStringTo(`
     export type ResolversTypes = {
       Query: {},
-      MyType: Omit<MyType, 'otherType'> & { otherType: Maybe<ResolversTypes['MyOtherType']> },
+      MyType: Omit<MyType, 'otherType'> & { otherType?: Maybe<ResolversTypes['MyOtherType']> },
       String: Scalars['String'],
       MyOtherType: MyOtherTypeCustom,
       Subscription: {},
@@ -790,7 +821,7 @@ describe('ResolversTypes', () => {
       Node: Node,
       ID: Scalars['ID'],
       SomeNode: SomeNode,
-      MyUnion: MyUnion,
+      MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'],
       MyScalar: Scalars['MyScalar'],
       Int: Scalars['Int'],
     };`);
@@ -822,7 +853,7 @@ describe('ResolversTypes', () => {
       Node: Node,
       ID: Scalars['ID'],
       SomeNode: SomeNode,
-      MyUnion: MyUnion,
+      MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'],
       MyScalar: Scalars['MyScalar'],
       Int: Scalars['Int'],
     };`);
