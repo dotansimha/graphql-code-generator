@@ -138,6 +138,125 @@ describe('Compatibility Plugin', () => {
     }
   `);
 
+  describe('Issues', () => {
+    it('Issue #1686 - Inline fragments on a union', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        schema {
+          query: Query
+        }
+
+        type Query {
+          machine: Machine
+        }
+
+        type Machine {
+          id: Int!
+          unit: Unit
+        }
+
+        type Unit {
+          id: Int!
+          events(active: Boolean!): [UnitEvent!]
+        }
+
+        enum UnitEventType {
+          DAMAGE_REPORT
+          PRE_CHECK
+          SERVICE_KM
+          SERVICE_HOUR
+          SERVICE_HOUR2
+          SERVICE_CALENDAR
+          CAN_ERROR
+          UNKNOWN
+        }
+
+        type UnitEvent {
+          id: String!
+          details: UnitEventDetails
+        }
+
+        union UnitEventDetails = DamageReportEvent | CanErrorEvent | PrecheckEvent | ServiceCalendarEvent | ServiceHourEvent | ServiceKmEvent
+
+        type DamageReportEvent {
+          state: Int
+        }
+
+        type CanErrorEvent {
+          id: String
+          canErrorId: String
+          suspectParameterNumber: Int
+          failureModeIdentifier: Int
+          canbusNumber: Int
+          sourceAddress: Int
+          unitId: Int
+        }
+
+        type PrecheckEvent {
+          count: Int
+          failedCount: Int
+        }
+
+        type ServiceCalendarEvent {
+          date: String
+        }
+
+        type ServiceHourEvent {
+          serviceRun: Int
+          currentRun: Int
+        }
+
+        type ServiceKmEvent {
+          serviceKm: Int
+          currentKm: Int
+        }
+      `);
+
+      const testQuery = parse(/* GraphQL */ `
+        query GetMachineActiveEvents {
+          machine {
+            id
+            unit {
+              id
+              events(active: true) {
+                details {
+                  ... on CanErrorEvent {
+                    suspectParameterNumber
+                  }
+                  ... on DamageReportEvent {
+                    state
+                  }
+                  ... on PrecheckEvent {
+                    count
+                    failedCount
+                  }
+                  ... on ServiceKmEvent {
+                    serviceKm
+                    currentKm
+                  }
+                  ... on ServiceHourEvent {
+                    serviceRun
+                    currentRun
+                  }
+                  ... on ServiceCalendarEvent {
+                    date
+                  }
+                }
+              }
+            }
+          }
+        }
+      `);
+
+      const result = await plugin(testSchema, [{ filePath: '', content: testQuery }], {});
+      expect(result).toContain('CanErrorEventInlineFragment');
+      expect(result).toContain('DamageReportEventInlineFragment');
+      expect(result).toContain('PrecheckEventInlineFragment');
+      expect(result).toContain('ServiceKmEventInlineFragment');
+      expect(result).toContain('ServiceHourEventInlineFragment');
+      expect(result).toContain('ServiceCalendarEventInlineFragment');
+    });
+  });
+
   it('Should work with fragments and generate namespaces', async () => {
     const ast = [{ filePath: '', content: basicQuery }];
     const result = await plugin(schema, ast, {});
