@@ -2125,10 +2125,10 @@
   resolved "https://registry.yarnpkg.com/@types/graphql/-/graphql-14.2.0.tgz#74e1da5f2a4a744ac6eb3ed57b48242ea9367202"
   integrity sha512-lELg5m6eBOmATWyCZl8qULEOvnPIUG6B443yXKj930glXIgwQirIBPp5rthP2amJW0YSzUg2s5sfgba4mRRCNw==
 
-"@types/inquirer@6.0.0":
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/@types/inquirer/-/inquirer-6.0.0.tgz#bbf3c915f9266e30adf78fc2f3df72f205287aca"
-  integrity sha512-4evhNF+xgdnXNBKouwlZl4JW7uhv9t6JSCOOEg1s61T4QP+UbvyGWTSxj2SjAXz61ZvohJkepHU6p8KzHAClbg==
+"@types/inquirer@6.0.1":
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/@types/inquirer/-/inquirer-6.0.1.tgz#ea9b483a81f16f4f0d27d5c8d9d081dfa36c4ee9"
+  integrity sha512-O9rEHE9iBvYaFAGS0fAlDzqY/3CsOrRKzni4zwnAEce2JrHUEbXAce2Pwwe8ZGzmQkucwSXn1tSiKig37INgfA==
   dependencies:
     "@types/through" "*"
     rxjs ">=6.4.0"
