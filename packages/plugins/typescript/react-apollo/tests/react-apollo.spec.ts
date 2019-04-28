@@ -154,6 +154,7 @@ describe('React Apollo', () => {
           withHooks: true,
           withHOC: false,
           withComponent: false,
+          withMutationFn: false
         },
         {
           outputFile: 'graphql.tsx',
