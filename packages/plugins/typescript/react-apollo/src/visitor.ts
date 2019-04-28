@@ -36,7 +36,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
       imports.push(`import * as React from 'react';`);
     }
 
-    if (this.config.withComponent || this.config.withHOC) {
+    if (this.config.withComponent || this.config.withHOC || this.config.withMutationFn) {
       imports.push(`import * as ReactApollo from '${typeof this.config.reactApolloImportFrom === 'string' ? this.config.reactApolloImportFrom : 'react-apollo'}';`);
     }
 

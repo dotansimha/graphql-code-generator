@@ -93,7 +93,7 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    */
   hooksImportFrom?: string;
   /**
-   * @name hooksImportFrom
+   * @name reactApolloImportFrom
    * @type string
    * @description You can specify module that exports components `Query`, `Mutation`, `Subscription` and HOCs
    * This is useful for further abstraction of some common tasks (eg. error handling).
