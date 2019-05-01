@@ -703,7 +703,7 @@
   dependencies:
     "@microsoft/tsdoc" "0.12.9"
     tslib "1.9.3"
-    typescript "3.4.4"
+    typescript "3.4.5"
 
 "@microsoft/tsdoc@0.12.9":
   version "0.12.9"
@@ -2659,10 +2659,10 @@ dkim-signer@^0.2.2:
   dependencies:
     libmime "^2.0.3"
 
-docusaurus@1.8.3:
-  version "1.8.3"
-  resolved "https://registry.yarnpkg.com/docusaurus/-/docusaurus-1.8.3.tgz#2bc33355274e4d25b658f125879a95f00dd6477a"
-  integrity sha512-5Roic5h4ji3wl4q4bbRowJxh4PwGhAs/Y9gZa8t99VEb6gs8QWMbUKo//P6VmZZo4cfM3AElEoHE0zx8lpvmSA==
+docusaurus@1.9.0:
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/docusaurus/-/docusaurus-1.9.0.tgz#cb670d70c7bdabd9d2f6e26cd697b50bb4f28bfe"
+  integrity sha512-FyZ7Bk82PB5cE3xWnO/lAH41T4UkY68ME+pHmhCXveZs+/cjaH5F7DZGlasf+JFeixYjnQvcHWc6ugw/cDB9Ig==
   dependencies:
     "@babel/core" "^7.0.0"
     "@babel/plugin-proposal-class-properties" "^7.0.0"
@@ -7434,10 +7434,10 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript@3.4.4:
-  version "3.4.4"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.4.4.tgz#aac4a08abecab8091a75f10842ffa0631818f785"
-  integrity sha512-xt5RsIRCEaf6+j9AyOBgvVuAec0i92rgCaS3S+UVf5Z/vF2Hvtsw08wtUTJqp4djwznoAgjSxeCcU4r+CcDBJA==
+typescript@3.4.5:
+  version "3.4.5"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.4.5.tgz#2d2618d10bb566572b8d7aad5180d84257d70a99"
+  integrity sha512-YycBxUb49UUhdNMU5aJ7z5Ej2XGmaIBL0x34vZ82fn3hGvD+bgrMrVDpatgz2f7YxUMJxMkbWxJZeAvDxVe7Vw==
 
 unbzip2-stream@^1.0.9:
   version "1.3.3"
