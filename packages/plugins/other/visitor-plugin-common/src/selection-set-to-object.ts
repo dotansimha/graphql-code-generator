@@ -16,6 +16,7 @@ import {
   TypeMetaFieldDef,
   isScalarType,
   print,
+  GraphQLInterfaceType,
 } from 'graphql';
 import { getBaseType, quoteIfNeeded, isRootType } from './utils';
 import { ScalarsMap, ConvertNameFn } from './types';
@@ -179,10 +180,30 @@ export class SelectionSetToObject {
     return quoteIfNeeded(fieldsSet, ' & ');
   }
 
+  protected getImplementingTypes(node: GraphQLInterfaceType): string[] {
+    const allTypesMap = this._schema.getTypeMap();
+    const implementingTypes: string[] = [];
+
+    for (const graphqlType of Object.values(allTypesMap)) {
+      if (graphqlType instanceof GraphQLObjectType) {
+        const allInterfaces = graphqlType.getInterfaces();
+        if (allInterfaces.find(int => int.name === ((node.name as any) as string))) {
+          implementingTypes.push(graphqlType.name);
+        }
+      }
+    }
+
+    return implementingTypes;
+  }
+
   protected buildTypeNameField(): string | null {
     const possibleTypes = [];
 
-    if (!isUnionType(this._parentSchemaType) && !isInterfaceType(this._parentSchemaType)) {
+    if (isUnionType(this._parentSchemaType)) {
+      return null;
+    } else if (isInterfaceType(this._parentSchemaType)) {
+      possibleTypes.push(...this.getImplementingTypes(this._parentSchemaType));
+    } else {
       possibleTypes.push(this._parentSchemaType.name);
     }
 
