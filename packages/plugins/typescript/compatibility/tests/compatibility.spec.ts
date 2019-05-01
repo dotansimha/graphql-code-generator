@@ -275,105 +275,19 @@ describe('Compatibility Plugin', () => {
             servers(where: { uid: $uid }) {
               uid
               sources
-              active
-              principalName
-              systemClass
-              systemType
               getHostVirtualMachines {
                 id
                 uid
-                host
-                displayName
-                storage
-                sources
-                vmType
-                active
-                vCenterName
-                vmVersion
-                dataCenterName
-                collector
-                monitoringGroup
               }
               imacs {
                 ... on ServerChangeImac {
                   __typename
                   requestedAt
-                  mutatedBy
-                  mutationContext
-                  ticketNumber
-                  note
-                  active
-                  cIState
-                  customer
-                  patchWindow
-                  primaryOwner
-                  region
-                  systemClass
-                  businessModules
-                  description
-                  isVisibleToCustomer
-                  isManagedByGIA
-                  infrastructure
-                  serviceWindowPft
-                  serviceWindowApp
-                  comment
-                  investmentNumbers
-                  contractNumbers
-                  assetNumbers
-                  assignedServices
                 }
                 ... on ServerDecomImac {
                   requestedAt
-                  ticketNumber
-                  mutatedBy
-                  mutationContext
-                  note
-                  __typename
                 }
                 ... on ServerSetupImac {
-                  mutatedBy
-                  mutationContext
-                  requestedAt
-                  ticketNumber
-                  note
-                  imacId
-                  archId
-                  currentState
-                  __typename
-                  backupPolicy
-                  explanation
-                  region
-                  description
-                  platformDistributionComment
-                  platformInstallComment
-                  satComment
-                  networkComment
-                  platformConfigComment
-                  serverType
-                  networkVlan
-                  hostname
-                  ip
-                  subnetMask
-                  defaultGateway
-                  vlan
-                  vlanId
-                  domain
-                  primaryDns
-                  secondaryDns
-                  computeCluster
-                  storageSystem
-                  passwordSaved
-                  customer
-                  patchWindow
-                  businessModules
-                  primaryOwner
-                  secondaryOwner
-                  requestedBy
-                  scomUser
-                  sccmUser
-                  scepUser
-                  scsmUser
-                  visionAppUser
                   backupUser
                   serverSize {
                     name
@@ -385,17 +299,18 @@ describe('Compatibility Plugin', () => {
                     application
                     platform
                   }
-                  systemClass
                 }
               }
             }
           }
         }
       `);
-      const result = await plugin(testSchema, [{ filePath: '', content: testQuery }], {});
+      const ast = [{ filePath: '', content: testQuery }];
+      const result = await plugin(testSchema, ast, {});
       expect(result).toContain('ServerChangeImacInlineFragment');
       expect(result).toContain('ServerDecomImacInlineFragment');
       expect(result).toContain('ServerSetupImacInlineFragment');
+      await validateAndCompile(result, testSchema, ast, {});
     });
 
     it('Issue #1762 - __typename issues', async () => {

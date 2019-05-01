@@ -73,7 +73,7 @@ export function selectionSetToTypes(
           let inlineFragmentValue;
 
           if (isUnionType(parentType)) {
-            inlineFragmentValue = `DiscriminateUnion<RequireField<${stack}, '__typename'>, '__typename', '${typeCondition}'>`;
+            inlineFragmentValue = `DiscriminateUnion<RequireField<${stack}, '__typename'>, { __typename: '${typeCondition}' }>`;
           } else {
             inlineFragmentValue = `{ __typename: '${typeCondition}' } & Pick<${stack}, ${selection.selectionSet.selections
               .map(subSelection => (subSelection.kind === Kind.FIELD ? `'${subSelection.name.value}'` : null))
