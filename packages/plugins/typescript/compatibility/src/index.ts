@@ -60,5 +60,9 @@ export const plugin: PluginFunction<CompatabilityPluginRawConfig> = async (schem
     leave: visitor as any,
   });
 
-  return visitorResult.definitions.filter(a => a && typeof a === 'string').join('\n');
+  const discriminateUnion = `type DiscriminateUnion<T, U> = T extends U ? T : never;\n`;
+  const requireField = `type RequireField<T, TNames extends string> = T & { [P in TNames]: (T & { [name: string]: never })[P] };\n`;
+  const result: string = visitorResult.definitions.filter(a => a && typeof a === 'string').join('\n');
+
+  return result.includes('DiscriminateUnion') ? [discriminateUnion, requireField, result].join('\n') : result;
 };

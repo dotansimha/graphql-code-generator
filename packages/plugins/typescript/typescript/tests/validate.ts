@@ -1,6 +1,5 @@
 import * as ts from 'typescript';
 import * as path from 'path';
-import { readFileSync } from 'fs';
 
 export function validateTs(
   contents: string,

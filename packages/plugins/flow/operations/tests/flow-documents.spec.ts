@@ -106,7 +106,7 @@ describe('Flow Operations Plugin', () => {
       );
 
       expect(result).toBeSimilarStringTo(
-        `export type notificationsquery = ({ __typename?: 'Query' } & { notifications: Array<($Pick<notifiction, { id: * }> & (({ __typename?: 'TextNotification' } & $Pick<textnotification, { text: * }>) | ({ __typename?: 'ImageNotification' } & $Pick<imagenotification, { imageUrl: * }> & { metadata: ({ __typename?: 'ImageMetadata' } & $Pick<imagemetadata, { createdBy: * }>) })))> });`
+        `export type notificationsquery = ({ __typename?: 'Query' } & { notifications: Array<({ __typename?: 'TextNotification' | 'ImageNotification' } & $Pick<notifiction, { id: * }> & (({ __typename?: 'TextNotification' } & $Pick<textnotification, { text: * }>) | ({ __typename?: 'ImageNotification' } & $Pick<imagenotification, { imageUrl: * }> & { metadata: ({ __typename?: 'ImageMetadata' } & $Pick<imagemetadata, { createdBy: * }>) })))> });`
       );
       validateFlow(result);
     });
@@ -144,7 +144,7 @@ describe('Flow Operations Plugin', () => {
 
       expect(result).toBeSimilarStringTo(`export type inotificationsqueryvariables = {};`);
       expect(result).toBeSimilarStringTo(
-        `export type inotificationsquery = ({ __typename?: 'Query' } & { notifications: Array<($Pick<inotifiction, { id: * }> & (({ __typename?: 'TextNotification' } & $Pick<itextnotification, { text: * }>) | ({ __typename?: 'ImageNotification' } & $Pick<iimagenotification, { imageUrl: * }> & { metadata: ({ __typename?: 'ImageMetadata' } & $Pick<iimagemetadata, { createdBy: * }>) })))> });`
+        `export type inotificationsquery = ({ __typename?: 'Query' } & { notifications: Array<({ __typename?: 'TextNotification' | 'ImageNotification' } & $Pick<inotifiction, { id: * }> & (({ __typename?: 'TextNotification' } & $Pick<itextnotification, { text: * }>) | ({ __typename?: 'ImageNotification' } & $Pick<iimagenotification, { imageUrl: * }> & { metadata: ({ __typename?: 'ImageMetadata' } & $Pick<iimagemetadata, { createdBy: * }>) })))> });`
       );
       validateFlow(result);
     });
@@ -298,7 +298,7 @@ describe('Flow Operations Plugin', () => {
         { outputFile: '' }
       );
       expect(result).toBeSimilarStringTo(
-        `export type NotificationsQuery = ({ __typename?: 'Query' } & { notifications: Array<($Pick<Notifiction, { id: * }> & (({ __typename?: 'TextNotification' } & $Pick<TextNotification, { text: * }>) | ({ __typename?: 'ImageNotification' } & $Pick<ImageNotification, { imageUrl: * }> & { metadata: ({ __typename?: 'ImageMetadata' } & $Pick<ImageMetadata, { createdBy: * }>) })))> });`
+        `export type NotificationsQuery = ({ __typename?: 'Query' } & { notifications: Array<({ __typename?: 'TextNotification' | 'ImageNotification' } & $Pick<Notifiction, { id: * }> & (({ __typename?: 'TextNotification' } & $Pick<TextNotification, { text: * }>) | ({ __typename?: 'ImageNotification' } & $Pick<ImageNotification, { imageUrl: * }> & { metadata: ({ __typename?: 'ImageMetadata' } & $Pick<ImageMetadata, { createdBy: * }>) })))> });`
       );
       validateFlow(result);
     });

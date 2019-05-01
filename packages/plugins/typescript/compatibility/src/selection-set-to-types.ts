@@ -1,5 +1,5 @@
 import { BaseVisitor, getBaseType } from '@graphql-codegen/visitor-plugin-common';
-import { SelectionSetNode, isObjectType, isInterfaceType, isNonNullType, isListType, Kind, GraphQLSchema } from 'graphql';
+import { SelectionSetNode, isObjectType, isInterfaceType, isNonNullType, isListType, Kind, GraphQLSchema, isUnionType } from 'graphql';
 import { CompatabilityPluginRawConfig } from './index';
 import { CompatabilityPluginConfig } from './visitor';
 
@@ -42,16 +42,19 @@ export function selectionSetToTypes(
         case Kind.FIELD: {
           if (isObjectType(parentType) || isInterfaceType(parentType)) {
             const selectionName = selection.alias && selection.alias.value ? selection.alias.value : selection.name.value;
-            const field = parentType.getFields()[selection.name.value];
-            const baseType = getBaseType(field.type);
-            const wrapWithNonNull = baseVisitor.config.strict && !isNonNullType(field.type);
-            const isArray = (isNonNullType(field.type) && isListType(field.type.ofType)) || isListType(field.type);
-            const typeRef = `${stack}['${selectionName}']`;
-            const nonNullableInnerType = `${wrapWithNonNull ? `(NonNullable<${typeRef}>)` : typeRef}`;
-            const arrayInnerType = isArray ? `${nonNullableInnerType}[0]` : nonNullableInnerType;
-            const wrapArrayWithNonNull = baseVisitor.config.strict;
-            const newStack = isArray && wrapArrayWithNonNull ? `(NonNullable<${arrayInnerType}>)` : arrayInnerType;
-            selectionSetToTypes(typesPrefix, baseVisitor, schema, baseType.name, newStack, selectionName, selection.selectionSet, result);
+
+            if (!selectionName.startsWith('__')) {
+              const field = parentType.getFields()[selection.name.value];
+              const baseType = getBaseType(field.type);
+              const wrapWithNonNull = baseVisitor.config.strict && !isNonNullType(field.type);
+              const isArray = (isNonNullType(field.type) && isListType(field.type.ofType)) || isListType(field.type);
+              const typeRef = `${stack}['${selectionName}']`;
+              const nonNullableInnerType = `${wrapWithNonNull ? `(NonNullable<${typeRef}>)` : typeRef}`;
+              const arrayInnerType = isArray ? `${nonNullableInnerType}[0]` : nonNullableInnerType;
+              const wrapArrayWithNonNull = baseVisitor.config.strict;
+              const newStack = isArray && wrapArrayWithNonNull ? `(NonNullable<${arrayInnerType}>)` : arrayInnerType;
+              selectionSetToTypes(typesPrefix, baseVisitor, schema, baseType.name, newStack, selectionName, selection.selectionSet, result);
+            }
           }
 
           break;
@@ -67,10 +70,16 @@ export function selectionSetToTypes(
         case Kind.INLINE_FRAGMENT: {
           const typeCondition = selection.typeCondition.name.value;
           const fragmentName = baseVisitor.convertName(typeCondition, { suffix: 'InlineFragment' });
-          let inlineFragmentValue = `{ __typename: '${typeCondition}' } & Pick<${stack}, ${selection.selectionSet.selections
-            .map(subSelection => (subSelection.kind === Kind.FIELD ? `'${subSelection.name.value}'` : null))
-            .filter(a => a)
-            .join(' | ')}>`;
+          let inlineFragmentValue;
+
+          if (isUnionType(parentType)) {
+            inlineFragmentValue = `DiscriminateUnion<RequireField<${stack}, '__typename'>, { __typename: '${typeCondition}' }>`;
+          } else {
+            inlineFragmentValue = `{ __typename: '${typeCondition}' } & Pick<${stack}, ${selection.selectionSet.selections
+              .map(subSelection => (subSelection.kind === Kind.FIELD ? `'${subSelection.name.value}'` : null))
+              .filter(a => a)
+              .join(' | ')}>`;
+          }
 
           selectionSetToTypes(typesPrefix, baseVisitor, schema, typeCondition, `(${inlineFragmentValue})`, fragmentName, selection.selectionSet, result);
 
