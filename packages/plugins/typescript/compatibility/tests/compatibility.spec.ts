@@ -7,6 +7,7 @@ import { plugin as tsOperationPlugin } from '../../operations/src';
 import { plugin as raPlugin } from '../../../typescript/react-apollo/src';
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import { compileTs } from '../../typescript/tests/compile';
 
 const validate = async (content: string, schema: GraphQLSchema, operations, config = {}, tsx = false, strict = false) => {
   const tsPluginResult = await tsPlugin(schema, operations, config, { outputFile: '' });
@@ -14,6 +15,14 @@ const validate = async (content: string, schema: GraphQLSchema, operations, conf
   const mergedOutput = [tsPluginResult, tsOperationPluginResult, content].join('\n');
 
   validateTs(mergedOutput, undefined, tsx, strict);
+};
+
+const validateAndCompile = async (content: string, schema: GraphQLSchema, operations, config = {}, tsx = false) => {
+  const tsPluginResult = await tsPlugin(schema, operations, config, { outputFile: '' });
+  const tsOperationPluginResult = await tsOperationPlugin(schema, operations, config, { outputFile: '' });
+  const mergedOutput = [tsPluginResult, tsOperationPluginResult, content].join('\n');
+
+  compileTs(mergedOutput, undefined, tsx);
 };
 
 describe('Compatibility Plugin', () => {
@@ -388,6 +397,120 @@ describe('Compatibility Plugin', () => {
       expect(result).toContain('ServerDecomImacInlineFragment');
       expect(result).toContain('ServerSetupImacInlineFragment');
     });
+
+    it('Issue #1762 - __typename issues', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        schema {
+          query: Query
+        }
+
+        type Query {
+          machine: Machine
+        }
+
+        type Machine {
+          id: Int!
+          unit: Unit
+        }
+
+        type Unit {
+          id: Int!
+          events(active: Boolean!): [UnitEvent!]
+        }
+
+        enum UnitEventType {
+          DAMAGE_REPORT
+          PRE_CHECK
+          SERVICE_KM
+          SERVICE_HOUR
+          SERVICE_HOUR2
+          SERVICE_CALENDAR
+          CAN_ERROR
+          UNKNOWN
+        }
+
+        type UnitEvent {
+          id: String!
+          details: UnitEventDetails
+        }
+
+        union UnitEventDetails = DamageReportEvent | CanErrorEvent | PrecheckEvent | ServiceCalendarEvent | ServiceHourEvent | ServiceKmEvent
+
+        type DamageReportEvent {
+          state: Int
+        }
+
+        type CanErrorEvent {
+          id: String
+          canErrorId: String
+          suspectParameterNumber: Int
+          failureModeIdentifier: Int
+          canbusNumber: Int
+          sourceAddress: Int
+          unitId: Int
+        }
+
+        type PrecheckEvent {
+          count: Int
+          failedCount: Int
+        }
+
+        type ServiceCalendarEvent {
+          date: String
+        }
+
+        type ServiceHourEvent {
+          serviceRun: Int
+          currentRun: Int
+        }
+
+        type ServiceKmEvent {
+          serviceKm: Int
+          currentKm: Int
+        }
+      `);
+
+      const testQuery = parse(/* GraphQL */ `
+        query GetMachineActiveEvents($id: Int!) {
+          machine(input: { id: $id }) {
+            id
+            unit {
+              id
+              events(active: true) {
+                id
+                details {
+                  ... on CanErrorEvent {
+                    suspectParameterNumber
+                  }
+                  ... on DamageReportEvent {
+                    state
+                  }
+                  ... on PrecheckEvent {
+                    count
+                    failedCount
+                  }
+                  ... on ServiceKmEvent {
+                    serviceKm
+                    currentKm
+                  }
+                  ... on ServiceHourEvent {
+                    serviceRun
+                    currentRun
+                  }
+                  ... on ServiceCalendarEvent {
+                    date
+                  }
+                }
+              }
+            }
+          }
+        }
+      `);
+
+      const ast = [{ filePath: '', content: testQuery }];
+      const result = await plugin(testSchema, ast, {});
+      await validateAndCompile(result, testSchema, ast, {});
+    });
   });
 
   it('Should work with fragments and generate namespaces', async () => {
@@ -426,10 +549,55 @@ describe('Compatibility Plugin', () => {
       }
     `);
 
-    const result = await plugin(testSchema, [{ filePath: '', content: basicQuery }], {});
+    const ast = [{ filePath: '', content: basicQuery }];
+    const result = await plugin(testSchema, ast, {});
 
     expect(result).toContain(`export type Query = Me4Query;`);
     expect(result).toContain(`export type Me = Me4Query['me'];`);
+    validateAndCompile(result, testSchema, ast);
+  });
+
+  it('Should work with interfaces and inline fragments', async () => {
+    const testSchema = buildSchema(/* GraphQL */ `
+      type Node {
+        id: ID!
+      }
+
+      type A implements Node {
+        id: ID!
+        a: String
+      }
+
+      type B implements Node {
+        id: ID!
+        a: String
+      }
+
+      type Query {
+        node: Node
+      }
+    `);
+
+    const ast = [
+      {
+        filePath: '',
+        content: parse(/* GraphQL */ `
+          query something {
+            node {
+              ... on A {
+                a
+              }
+
+              ... on B {
+                a
+              }
+            }
+          }
+        `),
+      },
+    ];
+    const result = await plugin(testSchema, ast, {});
+    validateAndCompile(result, testSchema, ast);
   });
 
   it('Should generate namepsace and the internal types correctly', async () => {
@@ -475,6 +643,7 @@ describe('Compatibility Plugin', () => {
     expect(result).toContain(`export type Friends = MeQuery['me']['friends'][0];`);
     expect(result).toContain(`export type _Friends = MeQuery['me']['friends'][0]['friends'][0];`);
     expect(result).toContain(`export type __Friends = MeQuery['me']['friends'][0]['friends'][0]['friends'][0];`);
+    validateAndCompile(result, schema, ast);
   });
 
   it('Should work with fragment spread', async () => {

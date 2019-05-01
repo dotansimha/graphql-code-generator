@@ -1,5 +1,5 @@
 import { BaseVisitor, getBaseType } from '@graphql-codegen/visitor-plugin-common';
-import { SelectionSetNode, isObjectType, isInterfaceType, isNonNullType, isListType, Kind, GraphQLSchema } from 'graphql';
+import { SelectionSetNode, isObjectType, isInterfaceType, isNonNullType, isListType, Kind, GraphQLSchema, isUnionType } from 'graphql';
 import { CompatabilityPluginRawConfig } from './index';
 import { CompatabilityPluginConfig } from './visitor';
 
@@ -70,10 +70,16 @@ export function selectionSetToTypes(
         case Kind.INLINE_FRAGMENT: {
           const typeCondition = selection.typeCondition.name.value;
           const fragmentName = baseVisitor.convertName(typeCondition, { suffix: 'InlineFragment' });
-          let inlineFragmentValue = `{ __typename: '${typeCondition}' } & Pick<${stack}, ${selection.selectionSet.selections
-            .map(subSelection => (subSelection.kind === Kind.FIELD ? `'${subSelection.name.value}'` : null))
-            .filter(a => a)
-            .join(' | ')}>`;
+          let inlineFragmentValue;
+
+          if (isUnionType(parentType)) {
+            inlineFragmentValue = `DiscriminateUnion<${stack}, '__typename', '${typeCondition}'>`;
+          } else {
+            inlineFragmentValue = `{ __typename: '${typeCondition}' } & Pick<${stack}, ${selection.selectionSet.selections
+              .map(subSelection => (subSelection.kind === Kind.FIELD ? `'${subSelection.name.value}'` : null))
+              .filter(a => a)
+              .join(' | ')}>`;
+          }
 
           selectionSetToTypes(typesPrefix, baseVisitor, schema, typeCondition, `(${inlineFragmentValue})`, fragmentName, selection.selectionSet, result);
 
