@@ -1,10 +1,12 @@
 import '@graphql-codegen/testing';
 import { plugin } from '../src/index';
-import { buildSchema, parse, GraphQLSchema } from 'graphql';
+import { buildSchema, parse, GraphQLSchema, buildClientSchema } from 'graphql';
 import { validateTs } from '../../typescript/tests/validate';
 import { plugin as tsPlugin } from '../../typescript/src';
 import { plugin as tsOperationPlugin } from '../../operations/src';
 import { plugin as raPlugin } from '../../../typescript/react-apollo/src';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
 const validate = async (content: string, schema: GraphQLSchema, operations, config = {}, tsx = false, strict = false) => {
   const tsPluginResult = await tsPlugin(schema, operations, config, { outputFile: '' });
@@ -254,6 +256,137 @@ describe('Compatibility Plugin', () => {
       expect(result).toContain('ServiceKmEventInlineFragment');
       expect(result).toContain('ServiceHourEventInlineFragment');
       expect(result).toContain('ServiceCalendarEventInlineFragment');
+    });
+
+    it('Issue #1775 - Inline fragments', async () => {
+      const testSchema = buildClientSchema(JSON.parse(readFileSync(join(__dirname, './1775.schema.json'), 'utf-8')));
+      const testQuery = parse(/* GraphQL */ `
+        query fetchServerAnalyticsData($uid: String!) {
+          process {
+            servers(where: { uid: $uid }) {
+              uid
+              sources
+              active
+              principalName
+              systemClass
+              systemType
+              getHostVirtualMachines {
+                id
+                uid
+                host
+                displayName
+                storage
+                sources
+                vmType
+                active
+                vCenterName
+                vmVersion
+                dataCenterName
+                collector
+                monitoringGroup
+              }
+              imacs {
+                ... on ServerChangeImac {
+                  __typename
+                  requestedAt
+                  mutatedBy
+                  mutationContext
+                  ticketNumber
+                  note
+                  active
+                  cIState
+                  customer
+                  patchWindow
+                  primaryOwner
+                  region
+                  systemClass
+                  businessModules
+                  description
+                  isVisibleToCustomer
+                  isManagedByGIA
+                  infrastructure
+                  serviceWindowPft
+                  serviceWindowApp
+                  comment
+                  investmentNumbers
+                  contractNumbers
+                  assetNumbers
+                  assignedServices
+                }
+                ... on ServerDecomImac {
+                  requestedAt
+                  ticketNumber
+                  mutatedBy
+                  mutationContext
+                  note
+                  __typename
+                }
+                ... on ServerSetupImac {
+                  mutatedBy
+                  mutationContext
+                  requestedAt
+                  ticketNumber
+                  note
+                  imacId
+                  archId
+                  currentState
+                  __typename
+                  backupPolicy
+                  explanation
+                  region
+                  description
+                  platformDistributionComment
+                  platformInstallComment
+                  satComment
+                  networkComment
+                  platformConfigComment
+                  serverType
+                  networkVlan
+                  hostname
+                  ip
+                  subnetMask
+                  defaultGateway
+                  vlan
+                  vlanId
+                  domain
+                  primaryDns
+                  secondaryDns
+                  computeCluster
+                  storageSystem
+                  passwordSaved
+                  customer
+                  patchWindow
+                  businessModules
+                  primaryOwner
+                  secondaryOwner
+                  requestedBy
+                  scomUser
+                  sccmUser
+                  scepUser
+                  scsmUser
+                  visionAppUser
+                  backupUser
+                  serverSize {
+                    name
+                    cpu
+                    memory
+                    disk
+                  }
+                  sla {
+                    application
+                    platform
+                  }
+                  systemClass
+                }
+              }
+            }
+          }
+        }
+      `);
+      const result = await plugin(testSchema, [{ filePath: '', content: testQuery }], {});
+      expect(result).toContain('ServerChangeImacInlineFragment');
+      expect(result).toContain('ServerDecomImacInlineFragment');
+      expect(result).toContain('ServerSetupImacInlineFragment');
     });
   });
 
