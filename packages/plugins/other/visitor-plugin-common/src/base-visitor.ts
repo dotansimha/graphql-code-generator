@@ -34,12 +34,12 @@ export interface RawConfig {
    * @name namingConvention
    * @type NamingConvention
    * @default change-case#pascalCase
-   * @description Allow you to ovderride the naming convention of the output.
+   * @description Allow you to override the naming convention of the output.
    * You can either override all namings, or specify an object with specific custom naming convention per output.
    * The format of the converter must be a valid `module#method`.
    * Allowed values for specific output are: `typeNames`, `enumValues`.
    * You can also use "keep" to keep all GraphQL names as-is.
-   * Additionally you can set `transformUndersocre` to `true` if you want do override the default behaviour,
+   * Additionally you can set `transformUnderscore` to `true` if you want to override the default behaviour,
    * which is to preserver underscores.
    *
    * @example Override All Names
