@@ -42,7 +42,7 @@
     "jest": "24.7.1",
     "jest-junit": "6.3.0",
     "lerna": "3.13.4",
-    "lint-staged": "8.1.5",
+    "lint-staged": "8.1.6",
     "microbundle": "0.11.0",
     "react-apollo": "2.5.5",
     "react-apollo-hooks": "0.4.5",
