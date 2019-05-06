@@ -300,7 +300,7 @@ query MyFeed {
     });
   });
 
-  describe.skip('Component', () => {
+  describe('Component', () => {
     it('should generate Document variable', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
       const content = await plugin(
@@ -366,9 +366,9 @@ query MyFeed {
       );
 
       expect(content).toBeSimilarStringTo(`
-      export const TestComponent = (props: Omit<Omit<ReactApollo.QueryProps<TestQuery, TestQueryVariables>, 'query'>, 'variables'> & { variables?: TestQueryVariables }) => 
+      export const TestComponent = (props: { variables?: TestQueryVariables, requestPolicy?: Urql.RequestPolicy }) => 
       (
-          <ReactApollo.Query<TestQuery, TestQueryVariables> query={TestDocument} {...props} />
+          <Urql.Query query={TestDocument} {...props} />
       );
       `);
       await validateTypeScript(content, schema, docs, {});
@@ -415,8 +415,8 @@ query MyFeed {
       );
 
       expect(content).toBeSimilarStringTo(`
-      export const TestComponent = (props: Omit<Omit<ReactApollo.QueryProps<TestQuery, TestQueryVariables>, 'query'>, 'variables'> & { variables: TestQueryVariables }) => (
-        <ReactApollo.Query<TestQuery, TestQueryVariables> query={TestDocument} {...props} />
+      export const TestComponent = (props: { variables: TestQueryVariables, requestPolicy?: Urql.RequestPolicy }) => (
+        <Urql.Query query={TestDocument} {...props} />
       );`);
       await validateTypeScript(content, schema, docs, {});
     });
@@ -447,8 +447,8 @@ query MyFeed {
       );
 
       expect(content).toBeSimilarStringTo(`
-      export const TestComponent = (props: Omit<Omit<ReactApollo.MutationProps<TestMutation, TestMutationVariables>, 'mutation'>, 'variables'> & { variables?: TestMutationVariables }) => (
-        <ReactApollo.Mutation<TestMutation, TestMutationVariables> mutation={TestDocument} {...props} />
+      export const TestComponent = (props: { variables?: TestMutationVariables }) => (
+        <Urql.Mutation query={TestDocument} {...props} />
       );`);
       await validateTypeScript(content, schema, docs, {});
     });
@@ -465,90 +465,6 @@ query MyFeed {
       );
 
       expect(content).not.toContain(`export class ITestComponent`);
-    });
-  });
-
-  describe.skip('HOC', () => {
-    it('should generate HOCs', async () => {
-      const docs = [{ filePath: '', content: basicDoc }];
-      const content = await plugin(
-        schema,
-        docs,
-        {},
-        {
-          outputFile: 'graphql.tsx',
-        }
-      );
-
-      expect(content).toBeSimilarStringTo(`export type TestProps<TChildProps = {}> = Partial<ReactApollo.DataProps<TestQuery, TestQueryVariables>> & TChildProps;`);
-
-      expect(content).toBeSimilarStringTo(`export function withTest<TProps, TChildProps = {}>(operationOptions?: ReactApollo.OperationOption<
-  TProps,
-  TestQuery,
-  TestQueryVariables,
-  TestProps<TChildProps>>) {
-    return ReactApollo.withQuery<TProps, TestQuery, TestQueryVariables, TestProps<TChildProps>>(TestDocument, {
-      alias: 'withTest',
-      ...operationOptions
-    });
-};`);
-      await validateTypeScript(content, schema, docs, {});
-    });
-
-    it('should not generate HOCs', async () => {
-      const docs = [{ filePath: '', content: basicDoc }];
-      const content = await plugin(
-        schema,
-        docs,
-        { withHOC: false },
-        {
-          outputFile: 'graphql.tsx',
-        }
-      );
-
-      expect(content).not.toContain(`export type TestProps`);
-      expect(content).not.toContain(`export function withTest`);
-      await validateTypeScript(content, schema, docs, {});
-    });
-
-    it('should not add typesPrefix to HOCs', async () => {
-      const docs = [{ filePath: '', content: basicDoc }];
-      const content = await plugin(
-        schema,
-        docs,
-        { typesPrefix: 'I' },
-        {
-          outputFile: 'graphql.tsx',
-        }
-      );
-
-      expect(content).toContain(`export type ITestProps`);
-      expect(content).toContain(`export function withTest`);
-    });
-    it('should generate mutation function signature correctly', async () => {
-      const docs = [
-        {
-          filePath: '',
-          content: parse(/* GraphQL */ `
-            mutation submitComment($repoFullName: String!, $commentContent: String!) {
-              submitComment(repoFullName: $repoFullName, commentContent: $commentContent) {
-                id
-              }
-            }
-          `),
-        },
-      ];
-      const content = await plugin(
-        schema,
-        docs,
-        { withMutationFn: true },
-        {
-          outputFile: 'graphql.tsx',
-        }
-      );
-
-      expect(content).toContain(`export type SubmitCommentMutationFn = ReactApollo.MutationFn<SubmitCommentMutation, SubmitCommentMutationVariables>;`);
-      await validateTypeScript(content, schema, docs, {});
     });
   });
 
@@ -580,7 +496,7 @@ query MyFeed {
       const content = await plugin(
         schema,
         docs,
-        { withHooks: true, withComponent: false, withHOC: false },
+        { withHooks: true, withComponent: false },
         {
           outputFile: 'graphql.tsx',
         }
@@ -630,7 +546,6 @@ export function useSubmitRepositoryMutation() {
         {
           withHooks: true,
           withComponent: false,
-          withHOC: false,
         },
         {
           outputFile: 'graphql.tsx',
