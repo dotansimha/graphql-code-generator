@@ -6,8 +6,6 @@ import { sync as mkdirpSync } from 'mkdirp';
 import { dirname } from 'path';
 import { debugLog } from './utils/debugging';
 
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-
 export async function generate(config: Types.Config, saveToFile = true): Promise<Types.FileOutput[] | any> {
   async function writeOutput(generationResult: Types.FileOutput[]) {
     if (!saveToFile) {
