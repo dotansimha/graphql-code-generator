@@ -2,7 +2,6 @@ import { ClientSideBaseVisitor, ClientSideBasePluginConfig, getConfigValue } fro
 import { UrqlRawPluginConfig } from './index';
 import * as autoBind from 'auto-bind';
 import { FragmentDefinitionNode, OperationDefinitionNode, Kind } from 'graphql';
-import { toPascalCase } from '@graphql-codegen/plugin-helpers';
 import { titleCase } from 'change-case';
 
 export interface UrqlPluginConfig extends ClientSideBasePluginConfig {
@@ -17,7 +16,7 @@ export class UrqlVisitor extends ClientSideBaseVisitor<UrqlRawPluginConfig, Urql
       withComponent: getConfigValue(rawConfig.withComponent, true),
       withHooks: getConfigValue(rawConfig.withHooks, false),
       urqlImportFrom: getConfigValue(rawConfig.urqlImportFrom, null),
-    } as any);
+    });
 
     autoBind(this);
   }
