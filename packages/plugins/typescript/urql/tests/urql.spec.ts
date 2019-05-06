@@ -100,23 +100,23 @@ describe('urql', () => {
       await validateTypeScript(content, schema, docs, {});
     });
 
-    it.skip('should import ReactApollo from reactApolloImportFrom config option', async () => {
+    it('should import Urql from urqlImportFrom config option', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
       const content = await plugin(
         schema,
         docs,
-        { withHooks: true, reactApolloImportFrom: 'custom-apollo' },
+        { withHooks: true, urqlImportFrom: 'custom-urql' },
         {
           outputFile: 'graphql.tsx',
         }
       );
 
-      expect(content).toBeSimilarStringTo(`import * as ReactApollo from 'custom-apollo';`);
+      expect(content).toBeSimilarStringTo(`import * as Urql from 'custom-urql';`);
       await validateTypeScript(content, schema, docs, {});
     });
   });
 
-  describe.skip('Fragments', () => {
+  describe('Fragments', () => {
     it('Should generate basic fragments documents correctly', async () => {
       const docs = [
         {

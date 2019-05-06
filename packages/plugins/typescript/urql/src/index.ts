@@ -6,25 +6,6 @@ import { extname } from 'path';
 
 export interface UrqlRawPluginConfig extends RawClientSideBasePluginConfig {
   /**
-   * @name withHOC
-   * @type boolean
-   * @description Customized the output by enabling/disabling the HOC.
-   * @default true
-   *
-   * @example
-   * ```yml
-   * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-operations
-   *    - typescript-react-apollo
-   *  config:
-   *    withHOC: false
-   * ```
-   */
-  withHOC?: boolean;
-  /**
    * @name withComponent
    * @type boolean
    * @description Customized the output by enabling/disabling the generated Component.
@@ -64,43 +45,14 @@ export interface UrqlRawPluginConfig extends RawClientSideBasePluginConfig {
   withHooks?: boolean;
 
   /**
-   * @name withMutationFn
-   * @type boolean
-   * @description Customized the output by enabling/disabling the generated mutation function signature.
-   * @default true
-   *
-   * @example
-   * ```yml
-   * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-operations
-   *    - typescript-react-apollo
-   *  config:
-   *    withMutationFn: true
-   * ```
-   */
-  withMutationFn?: boolean;
-
-  /**
-   * @name hooksImportFrom
-   * @type string
-   * @description You can specify alternative module that is exports `useQuery` `useMutation` and `useSubscription`.
-   * This is useful for further abstraction of some common tasks (eg. error handling).
-   * Filepath relative to generated file can be also specified.
-   * @default react-apollo-hooks
-   */
-  hooksImportFrom?: string;
-  /**
-   * @name UrqlImportFrom
+   * @name urqlImportFrom
    * @type string
    * @description You can specify module that exports components `Query`, `Mutation`, `Subscription` and HOCs
    * This is useful for further abstraction of some common tasks (eg. error handling).
    * Filepath relative to generated file can be also specified.
-   * @default react-apollo
+   * @default urql
    */
-  UrqlImportFrom?: string;
+  urqlImportFrom?: string;
 }
 
 export const plugin: PluginFunction<UrqlRawPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: UrqlRawPluginConfig) => {
