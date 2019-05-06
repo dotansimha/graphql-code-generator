@@ -366,9 +366,9 @@ query MyFeed {
       );
 
       expect(content).toBeSimilarStringTo(`
-      export const TestComponent = (props: { variables?: TestQueryVariables, requestPolicy?: Urql.RequestPolicy }) => 
+      export const TestComponent = (props: Omit<Urql.QueryProps,  'query'> & { variables?: TestQueryVariables }) => 
       (
-          <Urql.Query query={TestDocument} {...props} />
+          <Urql.Query {...props} query={TestDocument} />
       );
       `);
       await validateTypeScript(content, schema, docs, {});
@@ -415,8 +415,8 @@ query MyFeed {
       );
 
       expect(content).toBeSimilarStringTo(`
-      export const TestComponent = (props: { variables: TestQueryVariables, requestPolicy?: Urql.RequestPolicy }) => (
-        <Urql.Query query={TestDocument} {...props} />
+      export const TestComponent = (props: Omit<Urql.QueryProps, 'query'> & { variables: TestQueryVariables }) => (
+        <Urql.Query {...props} query={TestDocument} />
       );`);
       await validateTypeScript(content, schema, docs, {});
     });
@@ -447,8 +447,8 @@ query MyFeed {
       );
 
       expect(content).toBeSimilarStringTo(`
-      export const TestComponent = (props: { variables?: TestMutationVariables }) => (
-        <Urql.Mutation query={TestDocument} {...props} />
+      export const TestComponent = (props: Omit<Urql.MutationProps, 'query'> & { variables?: TestMutationVariables }) => (
+        <Urql.Mutation {...props} query={TestDocument} />
       );`);
       await validateTypeScript(content, schema, docs, {});
     });
