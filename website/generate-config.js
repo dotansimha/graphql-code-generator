@@ -12,6 +12,7 @@ const mapping = {
   '../packages/plugins/typescript/mongodb/src/index.ts': BASE_DIR + '/typescript-mongodb.md',
   '../packages/plugins/typescript/resolvers/src/index.ts': BASE_DIR + '/typescript-resolvers.md',
   '../packages/plugins/typescript/apollo-angular/src/index.ts': BASE_DIR + '/typescript-apollo-angular.md',
+  '../packages/plugins/typescript/urql/src/index.ts': BASE_DIR + '/typescript-urql.md',
   '../packages/plugins/typescript/react-apollo/src/index.ts': BASE_DIR + '/typescript-react-apollo.md',
   '../packages/plugins/typescript/stencil-apollo/src/index.ts': BASE_DIR + '/typescript-stencil-apollo.md',
   '../packages/plugins/java/resolvers/src/index.ts': BASE_DIR + '/java-resolvers.md',
