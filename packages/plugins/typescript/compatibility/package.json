@@ -14,7 +14,7 @@
     "tslib": "1.9.3"
   },
   "devDependencies": {
-    "graphql": "14.2.1",
+    "graphql": "14.3.0",
     "jest": "24.8.0",
     "ts-jest": "24.0.2",
     "typescript": "3.4.5"
