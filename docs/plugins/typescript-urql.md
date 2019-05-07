@@ -1,13 +1,13 @@
 ---
-id: typescript-react-apollo
-title: TypeScript React Apollo
+id: typescript-urql
+title: TypeScript Urql
 ---
 
-This plugin generates React Apollo components and HOC with TypeScript typings. It extends the basic TypeScript template [`@graphql-codegen/typescript`](typescript-typings) and thus shares a similar configuration.
+This plugin generates [`urql`](https://github.com/FormidableLabs/urql) components and HOC with TypeScript typings.
 
 ## Installation
 
-    $ yarn add @graphql-codegen/typescript-react-apollo
+    $ yarn add @graphql-codegen/typescript-urql
 
 ## Usage
 
@@ -47,4 +47,4 @@ Or if you prefer:
 
 {@import: ../docs/generated-config/base-visitor.md}
 {@import: ../docs/generated-config/client-side-base-visitor.md}
-{@import: ../docs/generated-config/typescript-react-apollo.md}
+{@import: ../docs/generated-config/typescript-urql.md}

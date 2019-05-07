@@ -21,6 +21,7 @@
       "plugins/typescript-react-apollo",
       "plugins/typescript-apollo-angular",
       "plugins/typescript-stencil-apollo",
+      "plugins/typescript-urql",
       "plugins/flow",
       "plugins/flow-resolvers",
       "plugins/flow-operations",

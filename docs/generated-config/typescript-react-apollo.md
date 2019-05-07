@@ -49,10 +49,27 @@ path/to/file.ts:
     withHooks: false
 ```
 
+### withMutationFn (`boolean`, default value: `true`)
+
+Customized the output by enabling/disabling the generated mutation function signature.
+
+#### Usage Example
+
+```yml
+generates:
+path/to/file.ts:
+  plugins:
+    - typescript
+    - typescript-operations
+    - typescript-react-apollo
+  config:
+    withMutationFn: true
+```
+
 ### hooksImportFrom (`string`, default value: `react-apollo-hooks`)
 
 You can specify alternative module that is exports `useQuery` `useMutation` and `useSubscription`. This is useful for further abstraction of some common tasks (eg. error handling). Filepath relative to generated file can be also specified.
 
-### hooksImportFrom (`string`, default value: `react-apollo`)
+### reactApolloImportFrom (`string`, default value: `react-apollo`)
 
 You can specify module that exports components `Query`, `Mutation`, `Subscription` and HOCs This is useful for further abstraction of some common tasks (eg. error handling). Filepath relative to generated file can be also specified.

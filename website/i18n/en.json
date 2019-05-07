@@ -74,6 +74,9 @@
       "generated-config/typescript-stencil-apollo": {
         "title": "generated-config/typescript-stencil-apollo"
       },
+      "generated-config/typescript-urql": {
+        "title": "generated-config/typescript-urql"
+      },
       "generated-config/typescript": {
         "title": "generated-config/typescript"
       },
@@ -175,6 +178,9 @@
       },
       "plugins/typescript-stencil-apollo": {
         "title": "TypeScript Stencil Apollo"
+      },
+      "plugins/typescript-urql": {
+        "title": "TypeScript Urql"
       },
       "plugins/typescript": {
         "title": "TypeScript"

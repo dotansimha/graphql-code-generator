@@ -116,6 +116,19 @@ export const EXAMPLES = {
       documents: TS_QUERY,
     },
   },
+  'typescript-urql': {
+    name: 'TypeScript urql',
+    state: {
+      config: `generates:
+  components.tsx:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-urql`,
+      schema: TS_SCHEMA,
+      documents: TS_QUERY,
+    },
+  },
   'stencil-apollo': {
     name: 'TypeScript Stencil-Apollo Components',
     state: {
