@@ -34,7 +34,7 @@
     "js-yaml": "3.13.1",
     "react": "16.8.6",
     "react-dom": "16.8.6",
-    "react-scripts": "3.0.0"
+    "react-scripts": "3.0.1"
   },
   "scripts": {
     "analyze": "NODE_OPTIONS=--max_old_space_size=8192 react-scripts build && source-map-explorer build/static/js/main.*",
