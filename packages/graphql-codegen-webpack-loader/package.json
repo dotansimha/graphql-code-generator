@@ -1,0 +1,63 @@
+{
+  "name": "@graphql-codegen/webpack-loader",
+  "version": "1.0.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dotansimha/graphql-code-generator.git"
+  },
+  "scripts": {
+    "clean": "rimraf ./dist",
+    "lint": "tslint src/**/*.ts",
+    "prebuild": "yarn clean",
+    "build": "tsc -m esnext --outDir dist/esnext && tsc -m commonjs --outDir dist/commonjs",
+    "test": "jest --config ../../jest.config.js"
+  },
+  "keywords": [
+    "gql",
+    "generator",
+    "code",
+    "types",
+    "interfaces",
+    "graphql",
+    "codegen",
+    "apollo",
+    "node",
+    "typescript",
+    "ts",
+    "flow",
+    "types",
+    "d.ts",
+    "typings",
+    "webpack",
+    "loader"
+  ],
+  "author": "Dotan Simha <dotansimha@gmail.com>",
+  "bugs": {
+    "url": "https://github.com/dotansimha/graphql-codegen/issues"
+  },
+  "homepage": "https://github.com/dotansimha/graphql-codegen#readme",
+  "peerDependencies": {
+    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0"
+  },
+  "dependencies": {
+    "loader-utils": "^1.2.3",
+    "tslib": "1.9.3"
+  },
+  "devDependencies": {
+    "ts-jest": "24.0.2"
+  },
+  "sideEffects": false,
+  "main": "dist/commonjs/index.js",
+  "module": "dist/esnext/index.js",
+  "typings": "dist/esnext/index.d.ts",
+  "typescript": {
+    "definition": "dist/esnext/index.d.ts"
+  },
+  "jest-junit": {
+    "outputDirectory": "../../test-results/core"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
