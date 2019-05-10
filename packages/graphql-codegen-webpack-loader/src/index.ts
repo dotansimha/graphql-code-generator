@@ -7,8 +7,8 @@ export default function loader(content) {
   // TODO: Load options.schema
 
   // TODO: Transform file `content` with the graphql-codegen plugins
-  const transformed = content;
+  const transformed = `export default \`${content}\``;
 
   // Once done transforming, call `callback` with the new code
-  callback(transformed);
+  callback(null, transformed);
 }
