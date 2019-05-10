@@ -101,6 +101,13 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    * @default react-apollo
    */
   reactApolloImportFrom?: string;
+  customSuffix?: string;
+  /**
+   * @name customSuffix
+   * @type string
+   * @description You can specify a suffix that gets attached to the name of the generated component.
+   * @default react-apollo
+   */
 }
 
 export const plugin: PluginFunction<ReactApolloRawPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: ReactApolloRawPluginConfig) => {
