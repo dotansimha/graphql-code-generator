@@ -16,11 +16,11 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<TypeScriptD
       {
         avoidOptionals: config.avoidOptionals || false,
         immutableTypes: config.immutableTypes || false,
-      } as any,
+      } as TypeScriptDocumentsParsedConfig,
       schema
     );
 
-    this.setSelectionSetHandler(new TypeScriptSelectionSetToObject(this.scalars, this.schema, this.convertName, this.config.addTypename, allFragments, this.config.immutableTypes));
+    this.setSelectionSetHandler(new TypeScriptSelectionSetToObject(this.scalars, this.schema, this.convertName, this.config.addTypename, allFragments, this.config.immutableTypes, this.config.namespacedImportName));
     this.setVariablesTransformer(new TypeScriptOperationVariablesToObject(this.scalars, this.convertName, this.config.avoidOptionals, this.config.immutableTypes));
   }
 }

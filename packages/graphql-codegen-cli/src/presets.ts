@@ -2,13 +2,21 @@ import { Types } from '@graphql-codegen/plugin-helpers';
 import { resolve } from 'path';
 import { DetailedError } from '@graphql-codegen/core';
 
-export async function getPresetByName(name: string, loader: Types.PackageLoaderFn<Types.OutputPreset>): Promise<Types.OutputPreset> {
+export async function getPresetByName(name: string, loader: Types.PackageLoaderFn<{ preset?: Types.OutputPreset; default?: Types.OutputPreset }>): Promise<Types.OutputPreset> {
   const possibleNames = [`@graphql-codegen/${name}`, `@graphql-codegen/${name}-preset`, name];
   const possibleModules = possibleNames.concat(resolve(process.cwd(), name));
 
   for (const moduleName of possibleModules) {
     try {
-      return (await loader(moduleName)) as Types.OutputPreset;
+      const loaded = await loader(moduleName);
+
+      if (loaded && loaded.preset) {
+        return loaded.preset as Types.OutputPreset;
+      } else if (loaded && loaded.default) {
+        return loaded.default as Types.OutputPreset;
+      }
+
+      return loaded as Types.OutputPreset;
     } catch (err) {
       if (err.message.indexOf(`Cannot find module '${moduleName}'`) === -1) {
         throw new DetailedError(

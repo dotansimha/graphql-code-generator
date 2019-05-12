@@ -52,6 +52,7 @@ export class SelectionSetToObject {
     protected _convertName: ConvertNameFn<BaseVisitorConvertOptions>,
     protected _addTypename: boolean,
     protected _loadedFragments: LoadedFragment[],
+    protected _namespacedImportName: string | null,
     protected _parentSchemaType?: GraphQLNamedType,
     protected _selectionSet?: SelectionSetNode
   ) {}
@@ -163,9 +164,11 @@ export class SelectionSetToObject {
       }
     }
 
-    const parentName = this._convertName(this._parentSchemaType.name, {
-      useTypesPrefix: true,
-    });
+    const parentName =
+      (this._namespacedImportName ? `${this._namespacedImportName}.` : '') +
+      this._convertName(this._parentSchemaType.name, {
+        useTypesPrefix: true,
+      });
     const typeName = this._addTypename || this._queriedForTypename ? this.buildTypeNameField() : null;
     const baseFields = this.buildPrimitiveFields(parentName, this._primitiveFields);
     const aliasBaseFields = this.buildAliasedPrimitiveFields(parentName, this._primitiveAliasedFields);

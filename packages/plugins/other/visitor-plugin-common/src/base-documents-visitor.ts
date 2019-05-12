@@ -20,6 +20,7 @@ function getRootType(operation: OperationTypeNode, schema: GraphQLSchema) {
 
 export interface ParsedDocumentsConfig extends ParsedConfig {
   addTypename: boolean;
+  namespacedImportName: string | null;
 }
 
 export interface RawDocumentsConfig extends RawConfig {
@@ -37,6 +38,9 @@ export interface RawDocumentsConfig extends RawConfig {
    * ```
    */
   skipTypename?: boolean;
+
+  /* The following configuration are for preset configuration and should not be set manually (for most use cases...) */
+  namespacedImportName?: string;
 }
 
 export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDocumentsConfig, TPluginConfig extends ParsedDocumentsConfig = ParsedDocumentsConfig> extends BaseVisitor<TRawConfig, TPluginConfig> {
@@ -49,6 +53,7 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
       rawConfig,
       {
         addTypename: !rawConfig.skipTypename,
+        namespacedImportName: rawConfig.namespacedImportName || null,
         ...((additionalConfig || {}) as any),
       } as any,
       buildScalars(_schema, scalars)

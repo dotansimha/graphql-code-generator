@@ -90,6 +90,34 @@ describe('TypeScript Operations Plugin', () => {
   const validate = async (content: string, config: any = {}, pluginSchema = schema) => validateTs((await tsPlugin(pluginSchema, [], config, { outputFile: '' })) + '\n' + content);
 
   describe('Config', () => {
+    it('Should handle "namespacedImportName" and add it when specified', async () => {
+      const ast = parse(`
+      query notifications {
+        notifications {
+          id
+
+          ... on TextNotification {
+            text
+          }
+
+          ... on ImageNotification {
+            imageUrl
+            metadata {
+              created: createdBy
+            }
+          }
+        }
+      }
+  `);
+      const config = { namespacedImportName: 'Types' };
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
+
+      expect(result).toBeSimilarStringTo(
+        `export type NotificationsQuery = ({ __typename?: 'Query' } & { notifications: Array<({ __typename?: 'TextNotification' | 'ImageNotification' } & Pick<Types.Notifiction, 'id'> & (({ __typename?: 'TextNotification' } & Pick<Types.TextNotification, 'text'>) | ({ __typename?: 'ImageNotification' } & Pick<Types.ImageNotification, 'imageUrl'> & { metadata: ({ __typename?: 'ImageMetadata' } & { created: Types.ImageMetadata['createdBy'] }) })))> });`
+      );
+      await validate(result, config);
+    });
+
     it('Should generate the correct output when using immutableTypes config', async () => {
       const ast = parse(`
       query notifications {
