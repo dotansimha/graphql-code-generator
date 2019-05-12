@@ -102,12 +102,12 @@ describe('near-operation-file preset', () => {
     });
 
     expect(result.map(o => o.plugins[0])).toEqual([
-      { add: `import * as Types from '../../types.ts';\n` },
-      { add: `import * as Types from '../../types.ts';\n` },
-      { add: `import * as Types from '../../types.ts';\n` },
-      { add: `import * as Types from '../../../types.ts';\n` },
-      { add: `import * as Types from '../../../types.ts';\n` },
-      { add: `import * as Types from '../../types.ts';\n` },
+      { add: `import * as Types from '../types';\n` },
+      { add: `import * as Types from '../types';\n` },
+      { add: `import * as Types from '../types';\n` },
+      { add: `import * as Types from '../../types';\n` },
+      { add: `import * as Types from '../../types';\n` },
+      { add: `import * as Types from '../types';\n` },
     ]);
   });
 
@@ -142,6 +142,6 @@ describe('near-operation-file preset', () => {
       pluginMap: { typescript: {} as any },
     });
 
-    expect(result.map(o => o.config.namespacedImportName)).toBe('Types');
+    expect(result.map(o => o.config.namespacedImportName)[0]).toBe('Types');
   });
 });
