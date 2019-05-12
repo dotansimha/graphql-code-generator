@@ -1,5 +1,6 @@
 import { SelectionSetToObject, ConvertNameFn, ScalarsMap, LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
 import { GraphQLSchema, GraphQLNamedType, SelectionSetNode, GraphQLObjectType, GraphQLNonNull, GraphQLList, isNonNullType, isListType } from 'graphql';
+import { TypeScriptDocumentsParsedConfig } from './visitor';
 
 export class TypeScriptSelectionSetToObject extends SelectionSetToObject {
   constructor(
@@ -8,16 +9,15 @@ export class TypeScriptSelectionSetToObject extends SelectionSetToObject {
     _convertName: ConvertNameFn,
     _addTypename: boolean,
     _loadedFragments: LoadedFragment[],
-    private _immutableTypes: boolean,
-    _namespacedImportName: string | null,
+    private _config: TypeScriptDocumentsParsedConfig,
     _parentSchemaType?: GraphQLNamedType,
     _selectionSet?: SelectionSetNode
   ) {
-    super(_scalars, _schema, _convertName, _addTypename, _loadedFragments, _namespacedImportName, _parentSchemaType, _selectionSet);
+    super(_scalars, _schema, _convertName, _addTypename, _loadedFragments, _config.namespacedImportName, _parentSchemaType, _selectionSet);
   }
 
   public createNext(parentSchemaType: GraphQLNamedType, selectionSet: SelectionSetNode): SelectionSetToObject {
-    return new TypeScriptSelectionSetToObject(this._scalars, this._schema, this._convertName, this._addTypename, this._loadedFragments, this._immutableTypes, this._namespacedImportName, parentSchemaType, selectionSet);
+    return new TypeScriptSelectionSetToObject(this._scalars, this._schema, this._convertName, this._addTypename, this._loadedFragments, this._config, parentSchemaType, selectionSet);
   }
 
   private clearOptional(str: string): string {
@@ -29,7 +29,7 @@ export class TypeScriptSelectionSetToObject extends SelectionSetToObject {
   }
 
   protected formatNamedField(name: string): string {
-    return this._immutableTypes ? `readonly ${name}` : name;
+    return this._config.immutableTypes ? `readonly ${name}` : name;
   }
 
   protected wrapTypeWithModifiers(baseType: string, type: GraphQLObjectType | GraphQLNonNull<GraphQLObjectType> | GraphQLList<GraphQLObjectType>): string {
@@ -38,7 +38,7 @@ export class TypeScriptSelectionSetToObject extends SelectionSetToObject {
     } else if (isListType(type)) {
       const innerType = this.wrapTypeWithModifiers(baseType, type.ofType);
 
-      return `Maybe<${this._immutableTypes ? 'ReadonlyArray' : 'Array'}<${innerType}>>`;
+      return `Maybe<${this._config.immutableTypes ? 'ReadonlyArray' : 'Array'}<${innerType}>>`;
     } else {
       return `Maybe<${baseType}>`;
     }

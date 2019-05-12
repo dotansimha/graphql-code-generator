@@ -20,7 +20,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<TypeScriptD
       schema
     );
 
-    this.setSelectionSetHandler(new TypeScriptSelectionSetToObject(this.scalars, this.schema, this.convertName, this.config.addTypename, allFragments, this.config.immutableTypes, this.config.namespacedImportName));
-    this.setVariablesTransformer(new TypeScriptOperationVariablesToObject(this.scalars, this.convertName, this.config.avoidOptionals, this.config.immutableTypes));
+    this.setSelectionSetHandler(new TypeScriptSelectionSetToObject(this.scalars, this.schema, this.convertName, this.config.addTypename, allFragments, this.config));
+    this.setVariablesTransformer(new TypeScriptOperationVariablesToObject(this.scalars, this.convertName, this.config.avoidOptionals, this.config.immutableTypes, this.config.namespacedImportName));
   }
 }

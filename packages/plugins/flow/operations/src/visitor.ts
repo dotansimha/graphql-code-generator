@@ -21,6 +21,6 @@ export class FlowDocumentsVisitor extends BaseDocumentsVisitor<FlowDocumentsPlug
     );
 
     this.setSelectionSetHandler(new FlowSelectionSetToObject(this.scalars, this.schema, this.convertName, this.config.addTypename, allFragments, this.config));
-    this.setVariablesTransformer(new FlowOperationVariablesToObject(this.scalars, this.convertName));
+    this.setVariablesTransformer(new FlowOperationVariablesToObject(this.scalars, this.convertName, this.config.namespacedImportName));
   }
 }

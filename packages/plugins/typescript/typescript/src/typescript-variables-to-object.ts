@@ -2,8 +2,8 @@ import { OperationVariablesToObject, ScalarsMap, ConvertNameFn } from '@graphql-
 import { TypeNode, Kind } from 'graphql';
 
 export class TypeScriptOperationVariablesToObject extends OperationVariablesToObject {
-  constructor(_scalars: ScalarsMap, _convertName: ConvertNameFn, private _avoidOptionals: boolean, private _immutableTypes: boolean) {
-    super(_scalars, _convertName);
+  constructor(_scalars: ScalarsMap, _convertName: ConvertNameFn, private _avoidOptionals: boolean, private _immutableTypes: boolean, _namespacedImportName: string | null = null) {
+    super(_scalars, _convertName, _namespacedImportName);
   }
 
   private clearOptional(str: string): string {

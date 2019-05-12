@@ -10,12 +10,10 @@ import {
   isInterfaceType,
   isEnumType,
   GraphQLSchema,
-  isEqualType,
   GraphQLField,
   SchemaMetaFieldDef,
   TypeMetaFieldDef,
   isScalarType,
-  print,
   GraphQLInterfaceType,
 } from 'graphql';
 import { getBaseType, quoteIfNeeded, isRootType } from './utils';

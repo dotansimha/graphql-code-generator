@@ -1,0 +1,9 @@
+mutation vote($repoFullName: String!, $type: VoteType!) {
+  vote(repoFullName: $repoFullName, type: $type) {
+    score
+    id
+    vote {
+      vote_value
+    }
+  }
+}

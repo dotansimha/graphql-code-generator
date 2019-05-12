@@ -1,0 +1,12 @@
+schema: ./dev-test/githunt/schema.json
+overwrite: true
+generates:
+  ./dev-test/test-preset/types.ts:
+    - typescript
+  ./dev-test/test-preset/:
+    documents: ./dev-test/test-preset/operations/**/*.graphql
+    preset: near-operation-file
+    presetConfig:
+      baseTypesPath: types.ts
+    plugins:
+      - typescript-operations

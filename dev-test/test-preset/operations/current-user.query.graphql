@@ -1,0 +1,6 @@
+query CurrentUserForProfile {
+  currentUser {
+    login
+    avatar_url
+  }
+}

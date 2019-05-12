@@ -60,7 +60,7 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
     );
 
     autoBind(this);
-    this._variablesTransfomer = new OperationVariablesToObject(this.scalars, this.convertName);
+    this._variablesTransfomer = new OperationVariablesToObject(this.scalars, this.convertName, this.config.namespacedImportName);
   }
 
   setSelectionSetHandler(handler: SelectionSetToObject) {

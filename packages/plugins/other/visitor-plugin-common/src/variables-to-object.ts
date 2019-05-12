@@ -12,7 +12,7 @@ export interface InterfaceOrVariable {
 }
 
 export class OperationVariablesToObject {
-  constructor(protected _scalars: ScalarsMap, protected _convertName: ConvertNameFn<BaseVisitorConvertOptions>) {
+  constructor(protected _scalars: ScalarsMap, protected _convertName: ConvertNameFn<BaseVisitorConvertOptions>, protected _namespacedImportName: string | null = null) {
     autoBind(this);
   }
 
@@ -39,7 +39,9 @@ export class OperationVariablesToObject {
   }
 
   protected getScalar(name: string): string {
-    return `Scalars['${name}']`;
+    const prefix = this._namespacedImportName ? `${this._namespacedImportName}.` : '';
+
+    return `${prefix}Scalars['${name}']`;
   }
 
   protected transformVariable<TDefinitionType extends InterfaceOrVariable>(variable: TDefinitionType): string {
