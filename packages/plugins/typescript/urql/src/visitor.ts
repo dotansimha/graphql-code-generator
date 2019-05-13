@@ -60,7 +60,7 @@ export function use${operationName}() {
 };`;
     }
     return `
-export function use${operationName}(options: Urql.Use${operationType}Args<${operationVariablesTypes}> = {}) {
+export function use${operationName}(options: Omit<Urql.Use${operationType}Args<${operationVariablesTypes}>, 'query'> = {}) {
   return Urql.use${operationType}<${operationResultType}>({ query: ${documentVariableName}, ...options });
 };`;
   }
