@@ -12,13 +12,13 @@ export interface ReactApolloPluginConfig extends ClientSideBasePluginConfig {
   withMutationFn: boolean;
   hooksImportFrom: string;
   reactApolloImportFrom: string;
-  customSuffix: string;
+  componentSuffix: string;
 }
 
 export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPluginConfig, ReactApolloPluginConfig> {
   constructor(fragments: FragmentDefinitionNode[], rawConfig: ReactApolloRawPluginConfig) {
     super(fragments, rawConfig, {
-      customSuffix: getConfigValue(rawConfig.customSuffix, 'Component'),
+      componentSuffix: getConfigValue(rawConfig.componentSuffix, 'Component'),
       withHOC: getConfigValue(rawConfig.withHOC, true),
       withComponent: getConfigValue(rawConfig.withComponent, true),
       withHooks: getConfigValue(rawConfig.withHooks, false),
@@ -87,7 +87,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
   }
 
   private _buildComponent(node: OperationDefinitionNode, documentVariableName: string, operationType: string, operationResultType: string, operationVariablesTypes: string): string {
-    const componentName: string = this.convertName(node.name.value, { suffix: this.config.customSuffix, useTypesPrefix: false });
+    const componentName: string = this.convertName(node.name.value, { suffix: this.config.componentSuffix, useTypesPrefix: false });
 
     const isVariablesRequired = operationType === 'Query' && node.variableDefinitions.some(variableDef => variableDef.type.kind === Kind.NON_NULL_TYPE);
 

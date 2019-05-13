@@ -101,9 +101,9 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    * @default react-apollo
    */
   reactApolloImportFrom?: string;
-  customSuffix?: string;
+  componentSuffix?: string;
   /**
-   * @name customSuffix
+   * @name componentSuffix
    * @type string
    * @description You can specify a suffix that gets attached to the name of the generated component.
    * @default Component

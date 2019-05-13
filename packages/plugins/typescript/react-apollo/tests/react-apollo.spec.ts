@@ -430,7 +430,7 @@ query MyFeed {
       const content = await plugin(
         schema,
         docs,
-        { customSuffix: 'Q' },
+        { componentSuffix: 'Q' },
         {
           outputFile: 'graphql.tsx',
         }
@@ -442,7 +442,7 @@ query MyFeed {
           <ReactApollo.Query<TestQuery, TestQueryVariables> query={TestDocument} {...props} />
       );
       `);
-      await validateTypeScript(content, schema, docs, { customSuffix: 'Q' });
+      await validateTypeScript(content, schema, docs, { componentSuffix: 'Q' });
     });
 
     it('should not generate Component', async () => {
