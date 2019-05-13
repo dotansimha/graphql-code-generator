@@ -441,7 +441,10 @@ query MyFeed {
       );
 
       expect(content).toBeSimilarStringTo(`
-      export const TestQ = (props: Omit<Omit<ReactApollo.QueryProps<TestQuery, TestQueryVariables>, 'query'>, 'variables'> & { variables?: TestQueryVariables }) => 
+      export type TypeQProps = Omit<Omit<ReactApollo.QueryProps<TestQuery, TestQueryVariables>, 'query'>, 'variables'> & { variables?: TestQueryVariables };
+      `);
+      expect(content).toBeSimilarStringTo(`
+      export const TestQ = (props: TypeQProps) => 
       (
           <ReactApollo.Query<TestQuery, TestQueryVariables> query={TestDocument} {...props} />
       );
