@@ -43,7 +43,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
   }
 
   private getOmitDeclaration() {
-    return `export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>`;
+    return `export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;`;
   }
 
   public getImports(): string {
