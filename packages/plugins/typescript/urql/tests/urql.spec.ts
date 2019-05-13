@@ -503,7 +503,7 @@ query MyFeed {
       );
 
       expect(content).toBeSimilarStringTo(`
-export function useFeedQuery(options: Urql.UseQueryArgs<FeedQueryVariables> = {}) {
+export function useFeedQuery(options: Omit<Urql.UseQueryArgs<FeedQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<FeedQuery>({ query: FeedDocument, ...options });
 };`);
 
@@ -553,7 +553,7 @@ export function useSubmitRepositoryMutation() {
       );
 
       expect(content).toBeSimilarStringTo(`
-export function useListenToCommentsSubscription(options: Urql.UseSubscriptionArgs<ListenToCommentsSubscriptionVariables> = {}) {
+export function useListenToCommentsSubscription(options: Omit<Urql.UseSubscriptionArgs<ListenToCommentsSubscriptionVariables>, 'query'> = {}) {
   return Urql.useSubscription<ListenToCommentsSubscription>({ query: ListenToCommentsDocument, ...options });
 };`);
       await validateTypeScript(content, schema, docs, {});
