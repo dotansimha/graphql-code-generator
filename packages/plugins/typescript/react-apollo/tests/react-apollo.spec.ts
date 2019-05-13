@@ -154,7 +154,7 @@ describe('React Apollo', () => {
           withHooks: true,
           withHOC: false,
           withComponent: false,
-          withMutationFn: false
+          withMutationFn: false,
         },
         {
           outputFile: 'graphql.tsx',
@@ -423,6 +423,26 @@ query MyFeed {
       );
       `);
       await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should generate a component with a custom suffix when specified', async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
+      const content = await plugin(
+        schema,
+        docs,
+        { componentSuffix: 'Q' },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+      export const TestQ = (props: Omit<Omit<ReactApollo.QueryProps<TestQuery, TestQueryVariables>, 'query'>, 'variables'> & { variables?: TestQueryVariables }) => 
+      (
+          <ReactApollo.Query<TestQuery, TestQueryVariables> query={TestDocument} {...props} />
+      );
+      `);
+      await validateTypeScript(content, schema, docs, { componentSuffix: 'Q' });
     });
 
     it('should not generate Component', async () => {
