@@ -30,25 +30,28 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     autoBind(this);
   }
 
+  private imports = new Set<string>();
+
+  private getReactImport() {
+    return `import * as React from 'react';`;
+  }
+
+  private getReactApolloImport() {
+    return `import * as ReactApollo from '${typeof this.config.reactApolloImportFrom === 'string' ? this.config.reactApolloImportFrom : 'react-apollo'}';`;
+  }
+
+  private getReactApolloHooksImport() {
+    return `import * as ReactApolloHooks from '${typeof this.config.hooksImportFrom === 'string' ? this.config.hooksImportFrom : 'react-apollo-hooks'}';`;
+  }
+
+  private getOmitDeclaration() {
+    return `export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;`;
+  }
+
   public getImports(): string {
     const baseImports = super.getImports();
-    const imports = [];
 
-    if (this.config.withComponent) {
-      imports.push(`import * as React from 'react';`);
-    }
-
-    if (this.config.withComponent || this.config.withHOC || this.config.withMutationFn) {
-      imports.push(`import * as ReactApollo from '${typeof this.config.reactApolloImportFrom === 'string' ? this.config.reactApolloImportFrom : 'react-apollo'}';`);
-    }
-
-    if (this.config.withHooks) {
-      imports.push(`import * as ReactApolloHooks from '${typeof this.config.hooksImportFrom === 'string' ? this.config.hooksImportFrom : 'react-apollo-hooks'}';`);
-    }
-
-    imports.push(`export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>`);
-
-    return [baseImports, ...imports].join('\n');
+    return [baseImports, ...this.imports].join('\n');
   }
 
   private _buildHocProps(operationName: string, operationType: string): string {
@@ -56,11 +59,14 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     const variablesVarName = this.convertName(operationName + toPascalCase(operationType) + 'Variables');
     const argType = operationType === 'mutation' ? 'MutateProps' : 'DataProps';
 
+    this.imports.add(this.getReactApolloImport());
+
     return `Partial<ReactApollo.${argType}<${typeVariableName}, ${variablesVarName}>>`;
   }
 
   private _buildMutationFn(node: OperationDefinitionNode, operationResultType: string, operationVariablesTypes: string): string {
     if (node.operation === 'mutation') {
+      this.imports.add(this.getReactApolloImport());
       return `export type ${this.convertName(node.name.value + 'MutationFn')} = ReactApollo.MutationFn<${operationResultType}, ${operationVariablesTypes}>;`;
     }
     return null;
@@ -91,6 +97,9 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
 
     const isVariablesRequired = operationType === 'Query' && node.variableDefinitions.some(variableDef => variableDef.type.kind === Kind.NON_NULL_TYPE);
 
+    this.imports.add(this.getReactImport());
+    this.imports.add(this.getReactApolloImport());
+    this.imports.add(this.getOmitDeclaration());
     return `
 export const ${componentName} = (props: Omit<Omit<ReactApollo.${operationType}Props<${operationResultType}, ${operationVariablesTypes}>, '${operationType.toLowerCase()}'>, 'variables'> & { variables${
       isVariablesRequired ? '' : '?'
@@ -103,6 +112,7 @@ export const ${componentName} = (props: Omit<Omit<ReactApollo.${operationType}Pr
   private _buildHooks(node: OperationDefinitionNode, operationType: string, documentVariableName: string, operationResultType: string, operationVariablesTypes: string): string {
     const operationName: string = this.convertName(node.name.value, { suffix: titleCase(operationType), useTypesPrefix: false });
 
+    this.imports.add(this.getReactApolloHooksImport());
     return `
 export function use${operationName}(baseOptions?: ReactApolloHooks.${operationType}HookOptions<${node.operation !== 'query' ? `${operationResultType}, ` : ''}${operationVariablesTypes}>) {
   return ReactApolloHooks.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, baseOptions);
@@ -110,7 +120,7 @@ export function use${operationName}(baseOptions?: ReactApolloHooks.${operationTy
   }
 
   protected buildOperation(node: OperationDefinitionNode, documentVariableName: string, operationType: string, operationResultType: string, operationVariablesTypes: string): string {
-    const mutationFn = this.config.withMutationFn ? this._buildMutationFn(node, operationResultType, operationVariablesTypes) : null;
+    const mutationFn = this.config.withMutationFn || this.config.withComponent ? this._buildMutationFn(node, operationResultType, operationVariablesTypes) : null;
     const component = this.config.withComponent ? this._buildComponent(node, documentVariableName, operationType, operationResultType, operationVariablesTypes) : null;
     const hoc = this.config.withHOC ? this._buildOperationHoc(node, documentVariableName, operationResultType, operationVariablesTypes) : null;
     const hooks = this.config.withHooks ? this._buildHooks(node, operationType, documentVariableName, operationResultType, operationVariablesTypes) : null;
