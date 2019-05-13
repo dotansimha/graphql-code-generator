@@ -417,7 +417,11 @@ query MyFeed {
       );
 
       expect(content).toBeSimilarStringTo(`
-      export const TestComponent = (props: Omit<Omit<ReactApollo.QueryProps<TestQuery, TestQueryVariables>, 'query'>, 'variables'> & { variables?: TestQueryVariables }) => 
+      export type TestComponentProps = Omit<Omit<ReactApollo.QueryProps<TestQuery, TestQueryVariables>, 'query'>, 'variables'> & { variables?: TestQueryVariables };
+      `);
+
+      expect(content).toBeSimilarStringTo(`
+      export const TestComponent = (props: TestComponentProps) => 
       (
           <ReactApollo.Query<TestQuery, TestQueryVariables> query={TestDocument} {...props} />
       );
@@ -437,7 +441,10 @@ query MyFeed {
       );
 
       expect(content).toBeSimilarStringTo(`
-      export const TestQ = (props: Omit<Omit<ReactApollo.QueryProps<TestQuery, TestQueryVariables>, 'query'>, 'variables'> & { variables?: TestQueryVariables }) => 
+      export type TestQProps = Omit<Omit<ReactApollo.QueryProps<TestQuery, TestQueryVariables>, 'query'>, 'variables'> & { variables?: TestQueryVariables };
+      `);
+      expect(content).toBeSimilarStringTo(`
+      export const TestQ = (props: TestQProps) => 
       (
           <ReactApollo.Query<TestQuery, TestQueryVariables> query={TestDocument} {...props} />
       );
@@ -486,9 +493,15 @@ query MyFeed {
       );
 
       expect(content).toBeSimilarStringTo(`
-      export const TestComponent = (props: Omit<Omit<ReactApollo.QueryProps<TestQuery, TestQueryVariables>, 'query'>, 'variables'> & { variables: TestQueryVariables }) => (
-        <ReactApollo.Query<TestQuery, TestQueryVariables> query={TestDocument} {...props} />
-      );`);
+      export type TestComponentProps = Omit<Omit<ReactApollo.QueryProps<TestQuery, TestQueryVariables>, 'query'>, 'variables'> & { variables: TestQueryVariables };
+      `);
+
+      expect(content).toBeSimilarStringTo(`
+      export const TestComponent = (props: TestComponentProps) => 
+      (
+          <ReactApollo.Query<TestQuery, TestQueryVariables> query={TestDocument} {...props} />
+      );
+      `);
       await validateTypeScript(content, schema, docs, {});
     });
 
@@ -518,7 +531,10 @@ query MyFeed {
       );
 
       expect(content).toBeSimilarStringTo(`
-      export const TestComponent = (props: Omit<Omit<ReactApollo.MutationProps<TestMutation, TestMutationVariables>, 'mutation'>, 'variables'> & { variables?: TestMutationVariables }) => (
+      export type TestComponentProps = Omit<Omit<ReactApollo.MutationProps<TestMutation, TestMutationVariables>, 'mutation'>, 'variables'> & { variables?: TestMutationVariables };
+      `);
+      expect(content).toBeSimilarStringTo(`
+      export const TestComponent = (props: TestComponentProps) => (
         <ReactApollo.Mutation<TestMutation, TestMutationVariables> mutation={TestDocument} {...props} />
       );`);
       await validateTypeScript(content, schema, docs, {});
