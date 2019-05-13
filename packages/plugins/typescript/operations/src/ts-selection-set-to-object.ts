@@ -33,14 +33,16 @@ export class TypeScriptSelectionSetToObject extends SelectionSetToObject {
   }
 
   protected wrapTypeWithModifiers(baseType: string, type: GraphQLObjectType | GraphQLNonNull<GraphQLObjectType> | GraphQLList<GraphQLObjectType>): string {
+    const prefix = this._config.namespacedImportName ? `${this._config.namespacedImportName}.` : '';
+
     if (isNonNullType(type)) {
       return this.clearOptional(this.wrapTypeWithModifiers(baseType, type.ofType));
     } else if (isListType(type)) {
       const innerType = this.wrapTypeWithModifiers(baseType, type.ofType);
 
-      return `Maybe<${this._config.immutableTypes ? 'ReadonlyArray' : 'Array'}<${innerType}>>`;
+      return `${prefix}Maybe<${this._config.immutableTypes ? 'ReadonlyArray' : 'Array'}<${innerType}>>`;
     } else {
-      return `Maybe<${baseType}>`;
+      return `${prefix}Maybe<${baseType}>`;
     }
   }
 }

@@ -1,12 +1,10 @@
-import { CommentsPageCommentFragment } from './comments-page-comment.fragment.generated';
 import * as Types from '../types';
 
-type Maybe<T> = T | null;
-
+import { CommentsPageCommentFragment } from './comments-page-comment.fragment.generated';
 export type SubmitCommentMutationVariables = {
-  repoFullName: Types.Scalars['String'],
-  commentContent: Types.Scalars['String']
+  repoFullName: Types.Maybe<Types.Scalars['String']>,
+  commentContent: Types.Maybe<Types.Scalars['String']>
 };
 
 
-export type SubmitCommentMutation = ({ __typename?: 'Mutation' } & { submitComment: Maybe<({ __typename?: 'Comment' } & CommentsPageCommentFragment)> });
+export type SubmitCommentMutation = ({ __typename?: 'Mutation' } & { submitComment: Types.Maybe<({ __typename?: 'Comment' } & CommentsPageCommentFragment)> });

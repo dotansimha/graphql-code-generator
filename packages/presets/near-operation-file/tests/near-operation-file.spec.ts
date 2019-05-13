@@ -184,9 +184,6 @@ describe('near-operation-file preset', () => {
           add: `import * as Types from '../types';\n`,
         },
         {
-          add: `type Maybe<T> = T | null;\n`,
-        },
-        {
           typescript: {},
         },
         {

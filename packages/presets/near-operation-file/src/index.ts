@@ -49,7 +49,8 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
         const absFilePath = appendExtensionToFilePath(documentFile.filePath, extension);
         const relativeImportPath = resolveRelativeImport(absFilePath, absTypesPath);
         const fragmentsInUse = extractExternalFragmentsInUse(documentFile.content);
-        const plugins = [{ add: `import * as ${importTypesNamespace} from '${relativeImportPath}';\n` }, { add: `type Maybe<T> = T | null;\n` }, ...options.plugins];
+        const plugins = [...options.plugins];
+
         const config = {
           ...options.config,
           namespacedImportName: importTypesNamespace,
@@ -72,6 +73,8 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
             });
           }
         }
+
+        plugins.unshift({ add: `import * as ${importTypesNamespace} from '${relativeImportPath}';\n` });
 
         return {
           filename: absFilePath,

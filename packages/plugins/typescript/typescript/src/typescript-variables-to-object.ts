@@ -15,6 +15,8 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
   }
 
   public wrapAstTypeWithModifiers(baseType: string, typeNode: TypeNode): string {
+    const prefix = this._namespacedImportName ? `${this._namespacedImportName}.` : '';
+
     if (typeNode.kind === Kind.NON_NULL_TYPE) {
       const type = this.wrapAstTypeWithModifiers(baseType, typeNode.type);
 
@@ -22,9 +24,9 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
     } else if (typeNode.kind === Kind.LIST_TYPE) {
       const innerType = this.wrapAstTypeWithModifiers(baseType, typeNode.type);
 
-      return `Maybe<${this._immutableTypes ? 'ReadonlyArray' : 'Array'}<${innerType}>>`;
+      return `${prefix}Maybe<${this._immutableTypes ? 'ReadonlyArray' : 'Array'}<${innerType}>>`;
     } else {
-      return `Maybe<${baseType}>`;
+      return `${prefix}Maybe<${baseType}>`;
     }
   }
 
