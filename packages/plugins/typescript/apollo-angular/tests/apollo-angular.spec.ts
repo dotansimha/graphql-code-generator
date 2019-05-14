@@ -33,20 +33,6 @@ describe('Apollo Angular', () => {
     validateTs(merged, undefined, true);
   };
 
-  it(`should skip if there's no operations`, async () => {
-    const content = await plugin(
-      schema,
-      [],
-      {},
-      {
-        outputFile: 'graphql.ts',
-      }
-    );
-
-    expect(content).toBe('');
-    await validateTypeScript(content, schema, [], {});
-  });
-
   describe('Imports', () => {
     it('should import DocumentNode when using noGraphQLTag', async () => {
       const docs = [{ filePath: '', content: basicDoc }];

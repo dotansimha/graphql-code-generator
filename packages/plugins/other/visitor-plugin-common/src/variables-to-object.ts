@@ -12,7 +12,7 @@ export interface InterfaceOrVariable {
 }
 
 export class OperationVariablesToObject {
-  constructor(protected _scalars: ScalarsMap, protected _convertName: ConvertNameFn<BaseVisitorConvertOptions>) {
+  constructor(protected _scalars: ScalarsMap, protected _convertName: ConvertNameFn<BaseVisitorConvertOptions>, protected _namespacedImportName: string | null = null) {
     autoBind(this);
   }
 
@@ -39,11 +39,14 @@ export class OperationVariablesToObject {
   }
 
   protected getScalar(name: string): string {
-    return `Scalars['${name}']`;
+    const prefix = this._namespacedImportName ? `${this._namespacedImportName}.` : '';
+
+    return `${prefix}Scalars['${name}']`;
   }
 
   protected transformVariable<TDefinitionType extends InterfaceOrVariable>(variable: TDefinitionType): string {
     let typeValue = null;
+    const prefix = this._namespacedImportName ? `${this._namespacedImportName}.` : '';
 
     if (typeof variable.type === 'string') {
       typeValue = variable.type;
@@ -52,9 +55,9 @@ export class OperationVariablesToObject {
       const typeName = baseType.name.value;
       typeValue = this._scalars[typeName]
         ? this.getScalar(typeName)
-        : this._convertName(baseType, {
+        : `${prefix}${this._convertName(baseType, {
             useTypesPrefix: true,
-          });
+          })}`;
     }
 
     const fieldName = this.getName(variable);
@@ -78,8 +81,10 @@ export class OperationVariablesToObject {
   }
 
   protected formatTypeString(fieldType: string, isNonNullType: boolean, hasDefaultValue: boolean): string {
+    const prefix = this._namespacedImportName ? `${this._namespacedImportName}.` : '';
+
     if (hasDefaultValue) {
-      return `Maybe<${fieldType}>`;
+      return `${prefix}Maybe<${fieldType}>`;
     }
 
     return fieldType;

@@ -1,19 +1,10 @@
-import { CodegenPlugin, Types } from '@graphql-codegen/plugin-helpers';
+import { Types } from '@graphql-codegen/plugin-helpers';
 import { DocumentNode, visit } from 'graphql';
 import { mergeSchemas } from './merge-schemas';
 import { executePlugin } from './execute-plugin';
 import { DetailedError } from './errors';
 
-export async function codegen(options: {
-  filename: string;
-  plugins: Types.ConfiguredPlugin[];
-  schema: DocumentNode;
-  documents: Types.DocumentFile[];
-  config: { [key: string]: any };
-  pluginMap: {
-    [name: string]: CodegenPlugin;
-  };
-}) {
+export async function codegen(options: Types.GenerateOptions) {
   let output = '';
 
   validateDocuments(options.schema, options.documents);

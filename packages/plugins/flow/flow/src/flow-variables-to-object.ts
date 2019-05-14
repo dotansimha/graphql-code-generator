@@ -11,7 +11,9 @@ export class FlowOperationVariablesToObject extends OperationVariablesToObject {
   }
 
   protected getScalar(name: string): string {
-    return `$ElementType<Scalars, '${name}'>`;
+    const prefix = this._namespacedImportName ? `${this._namespacedImportName}.` : '';
+
+    return `$ElementType<${prefix}Scalars, '${name}'>`;
   }
 
   public wrapAstTypeWithModifiers(baseType: string, typeNode: TypeNode): string {

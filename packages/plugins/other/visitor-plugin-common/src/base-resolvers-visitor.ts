@@ -18,8 +18,6 @@ import {
   isInterfaceType,
   isNonNullType,
   isListType,
-  Kind,
-  isScalarType,
   isUnionType,
 } from 'graphql';
 import { DirectiveDefinitionNode, GraphQLObjectType, InputValueDefinitionNode, GraphQLOutputType } from 'graphql';

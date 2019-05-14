@@ -2,19 +2,24 @@ import { OperationVariablesToObject, ScalarsMap, ConvertNameFn } from '@graphql-
 import { TypeNode, Kind } from 'graphql';
 
 export class TypeScriptOperationVariablesToObject extends OperationVariablesToObject {
-  constructor(_scalars: ScalarsMap, _convertName: ConvertNameFn, private _avoidOptionals: boolean, private _immutableTypes: boolean) {
-    super(_scalars, _convertName);
+  constructor(_scalars: ScalarsMap, _convertName: ConvertNameFn, private _avoidOptionals: boolean, private _immutableTypes: boolean, _namespacedImportName: string | null = null) {
+    super(_scalars, _convertName, _namespacedImportName);
   }
 
   private clearOptional(str: string): string {
-    if (str.startsWith('Maybe')) {
-      return str.replace(/^Maybe<(.*?)>$/i, '$1');
+    const prefix = this._namespacedImportName ? `${this._namespacedImportName}\.` : '';
+    const rgx = new RegExp(`^${prefix}Maybe<(.*?)>$`, 'i');
+
+    if (str.startsWith(`${this._namespacedImportName ? `${this._namespacedImportName}.` : ''}Maybe`)) {
+      return str.replace(rgx, '$1');
     }
 
     return str;
   }
 
   public wrapAstTypeWithModifiers(baseType: string, typeNode: TypeNode): string {
+    const prefix = this._namespacedImportName ? `${this._namespacedImportName}.` : '';
+
     if (typeNode.kind === Kind.NON_NULL_TYPE) {
       const type = this.wrapAstTypeWithModifiers(baseType, typeNode.type);
 
@@ -22,9 +27,9 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
     } else if (typeNode.kind === Kind.LIST_TYPE) {
       const innerType = this.wrapAstTypeWithModifiers(baseType, typeNode.type);
 
-      return `Maybe<${this._immutableTypes ? 'ReadonlyArray' : 'Array'}<${innerType}>>`;
+      return `${prefix}Maybe<${this._immutableTypes ? 'ReadonlyArray' : 'Array'}<${innerType}>>`;
     } else {
-      return `Maybe<${baseType}>`;
+      return `${prefix}Maybe<${baseType}>`;
     }
   }
 

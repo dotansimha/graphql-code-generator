@@ -13,7 +13,7 @@ export class FlowSelectionSetToObject extends SelectionSetToObject {
     _parentSchemaType?: GraphQLNamedType,
     _selectionSet?: SelectionSetNode
   ) {
-    super(_scalars, _schema, _convertName, _addTypename, _loadedFragments, _parentSchemaType, _selectionSet);
+    super(_scalars, _schema, _convertName, _addTypename, _loadedFragments, _visitorConfig.namespacedImportName, _parentSchemaType, _selectionSet);
   }
 
   public createNext(parentSchemaType: GraphQLNamedType, selectionSet: SelectionSetNode): SelectionSetToObject {

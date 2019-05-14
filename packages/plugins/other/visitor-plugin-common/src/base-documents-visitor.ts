@@ -1,4 +1,4 @@
-import { ScalarsMap, NamingConvention, ConvertFn, ConvertOptions } from './types';
+import { ScalarsMap, ConvertOptions, LoadedFragment } from './types';
 import * as autoBind from 'auto-bind';
 import { DEFAULT_SCALARS } from './scalars';
 import { toPascalCase, DeclarationBlock, DeclarationBlockConfig, buildScalars } from './utils';
@@ -55,7 +55,7 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
     );
 
     autoBind(this);
-    this._variablesTransfomer = new OperationVariablesToObject(this.scalars, this.convertName);
+    this._variablesTransfomer = new OperationVariablesToObject(this.scalars, this.convertName, this.config.namespacedImportName);
   }
 
   setSelectionSetHandler(handler: SelectionSetToObject) {

@@ -23,6 +23,7 @@
     "packages/*",
     "packages/utils/*",
     "packages/plugins/**/*",
+    "packages/presets/**/*",
     "website/live-demo"
   ],
   "devDependencies": {
