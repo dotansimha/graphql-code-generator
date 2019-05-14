@@ -15,6 +15,8 @@ import {
   ScalarTypeDefinitionNode,
   UnionTypeDefinitionNode,
   StringValueNode,
+  isUnionType,
+  isInterfaceType,
 } from 'graphql';
 import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor';
 import { parseMapper } from './mappers';
@@ -141,13 +143,18 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
     const originalNode = parent[key] as ObjectTypeDefinitionNode;
     const interfaces = originalNode.interfaces && node.interfaces.length > 0 ? originalNode.interfaces.map(i => this.convertName(i)).join(' & ') + (node.fields.length ? ' & ' : '') : '';
 
-    const typeDefinition = new DeclarationBlock(this._declarationBlockConfig)
+    let declarationBlock = new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
       .withName(this.convertName(node))
       .withContent(interfaces)
       .withComment((node.description as any) as string)
-      .withBlock(node.fields.join('\n')).string;
+      .withComment((node.description as any) as string);
+
+    if (this._parsedConfig.addTypename) {
+      declarationBlock = declarationBlock.withTypeName(node.name);
+    }
+    const typeDefinition = declarationBlock.withBlock(node.fields.join('\n')).string;
 
     const argumentsBlock = this.buildArgumentsBlock(originalNode);
 
@@ -157,12 +164,17 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
   InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode, key: number | string, parent: any): string {
     const argumentsBlock = this.buildArgumentsBlock(parent[key] as InterfaceTypeDefinitionNode);
 
-    const interfaceDefinition = new DeclarationBlock(this._declarationBlockConfig)
+    let declarationBlock = new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
       .withName(this.convertName(node))
       .withComment((node.description as any) as string)
-      .withBlock(node.fields.join('\n')).string;
+      .withComment((node.description as any) as string);
+
+    if (this._parsedConfig.addTypename) {
+      declarationBlock = declarationBlock.withTypeName(node.name);
+    }
+    const interfaceDefinition = declarationBlock.withBlock(node.fields.join('\n')).string;
 
     return [interfaceDefinition, argumentsBlock].filter(f => f).join('\n\n');
   }
