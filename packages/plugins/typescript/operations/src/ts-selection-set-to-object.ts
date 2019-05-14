@@ -21,8 +21,11 @@ export class TypeScriptSelectionSetToObject extends SelectionSetToObject {
   }
 
   private clearOptional(str: string): string {
-    if (str.startsWith('Maybe')) {
-      return str.replace(/^Maybe<(.*?)>$/i, '$1');
+    const prefix = this._config.namespacedImportName ? `${this._config.namespacedImportName}\.` : '';
+    const rgx = new RegExp(`^${prefix}Maybe<(.*?)>$`, 'i');
+
+    if (str.startsWith(`${this._config.namespacedImportName ? `${this._config.namespacedImportName}.` : ''}Maybe`)) {
+      return str.replace(rgx, '$1');
     }
 
     return str;
