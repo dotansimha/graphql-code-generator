@@ -50,6 +50,9 @@
       "generated-config/java": {
         "title": "generated-config/java"
       },
+      "generated-config/near-operation-file": {
+        "title": "generated-config/near-operation-file"
+      },
       "generated-config/time": {
         "title": "generated-config/time"
       },
@@ -184,6 +187,12 @@
       },
       "plugins/typescript": {
         "title": "TypeScript"
+      },
+      "presets/presets-index": {
+        "title": "Available Presets"
+      },
+      "presets/near-operation-file": {
+        "title": "near-operation-file"
       }
     },
     "links": {
@@ -194,6 +203,7 @@
     "categories": {
       "Getting Started": "Getting Started",
       "Plugins": "Plugins",
+      "Presets": "Presets",
       "Integrations": "Integrations",
       "Custom Code-Generator Plugins": "Custom Code-Generator Plugins",
       "Migration": "Migration"
