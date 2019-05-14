@@ -1,8 +1,10 @@
 import * as Types from '../types';
 
+import { RepoInfoFragment } from './repo-info.fragment.generated';
+import { VoteButtonsFragment } from './vote-buttons.fragment.generated';
 import { FeedEntryFragment } from './feed-entry.fragment.generated';
 export type FeedQueryVariables = {
-  type: Types.Maybe<Types.FeedType>,
+  type: Types.FeedType,
   offset?: Types.Maybe<Types.Scalars['Int']>,
   limit?: Types.Maybe<Types.Scalars['Int']>
 };
@@ -11,6 +13,9 @@ export type FeedQueryVariables = {
 export type FeedQuery = ({ __typename?: 'Query' } & { currentUser: Types.Maybe<({ __typename?: 'User' } & Pick<Types.User, 'login'>)>, feed: Types.Maybe<Array<Types.Maybe<({ __typename?: 'Entry' } & FeedEntryFragment)>>> });
 
 import gql from 'graphql-tag';
+import { FeedEntryFragmentDoc } from './feed-entry.fragment.generated';
+import { VoteButtonsFragmentDoc } from './vote-buttons.fragment.generated';
+import { RepoInfoFragmentDoc } from './repo-info.fragment.generated';
 import * as React from 'react';
 import * as ReactApollo from 'react-apollo';
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;

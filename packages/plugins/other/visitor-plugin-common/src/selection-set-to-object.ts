@@ -17,7 +17,7 @@ import {
   GraphQLInterfaceType,
 } from 'graphql';
 import { getBaseType, quoteIfNeeded, isRootType } from './utils';
-import { ScalarsMap, ConvertNameFn } from './types';
+import { ScalarsMap, ConvertNameFn, LoadedFragment } from './types';
 import { GraphQLObjectType, GraphQLNonNull, GraphQLList } from 'graphql';
 import { BaseVisitorConvertOptions } from './base-visitor';
 
@@ -34,8 +34,6 @@ const metadataFieldMap: Record<string, GraphQLField<any, any>> = {
   __schema: SchemaMetaFieldDef,
   __type: TypeMetaFieldDef,
 };
-
-export type LoadedFragment = { name: string; onType: string };
 
 export class SelectionSetToObject {
   protected _primitiveFields: PrimitiveField[] = [];

@@ -1,16 +1,19 @@
 import { Types, CodegenPlugin } from '@graphql-codegen/plugin-helpers';
 import { BaseVisitor, LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
 import * as addPlugin from '@graphql-codegen/add';
-import { join, resolve, relative, dirname } from 'path';
+import { join, resolve } from 'path';
 import { Kind, FragmentDefinitionNode } from 'graphql';
-import { appendExtensionToFilePath, clearExtension, extractExternalFragmentsInUse, fixLocalFile, resolveRelativeImport } from './utils';
+import { appendExtensionToFilePath, extractExternalFragmentsInUse, resolveRelativeImport } from './utils';
 
 export type NearOperationFileConfig = {
   baseTypesPath: string;
   extension?: string;
   cwd?: string;
   importTypesNamespace?: string;
+  addFragmentsImport?: boolean;
 };
+
+export type FragmentNameToFile = { [fragmentName: string]: { filePath: string; importName: string; onType: string; node: FragmentDefinitionNode } };
 
 export const preset: Types.OutputPreset<NearOperationFileConfig> = {
   buildGeneratesSection: options => {
@@ -28,7 +31,7 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
       add: addPlugin,
     };
 
-    const fragmentNameToFile: { [fragmentName: string]: { filePath: string; importName: string; onType: string } } = options.documents.reduce((prev, documentRecord) => {
+    const fragmentNameToFile: FragmentNameToFile = options.documents.reduce((prev, documentRecord) => {
       const fragments: FragmentDefinitionNode[] = documentRecord.content.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[];
 
       if (fragments.length > 0) {
@@ -36,7 +39,7 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
           const filePath = appendExtensionToFilePath(documentRecord.filePath, extension);
           const importName = baseVisitor.convertName(fragment, { suffix: 'Fragment' });
 
-          prev[fragment.name.value] = { filePath, importName, onType: fragment.name.value };
+          prev[fragment.name.value] = { filePath, importName, onType: fragment.typeCondition.name.value, node: fragment };
         }
       }
 
@@ -48,7 +51,7 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
         const absTypesPath = resolve(baseDir, join(options.baseOutputDir, options.presetConfig.baseTypesPath));
         const absFilePath = appendExtensionToFilePath(documentFile.filePath, extension);
         const relativeImportPath = resolveRelativeImport(absFilePath, absTypesPath);
-        const fragmentsInUse = extractExternalFragmentsInUse(documentFile.content);
+        const fragmentsInUse = extractExternalFragmentsInUse(documentFile.content, fragmentNameToFile);
         const plugins = [...options.plugins];
 
         const config = {
@@ -68,8 +71,11 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
             });
 
             config.externalFragments.push({
+              isExternal: true,
+              importFrom: fragmentImportPath,
               name: fragmentName,
               onType: fragmentDetails.onType,
+              node: fragmentDetails.node,
             });
           }
         }

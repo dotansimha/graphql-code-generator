@@ -1,4 +1,4 @@
-import { ClientSideBaseVisitor, ClientSideBasePluginConfig, getConfigValue } from '@graphql-codegen/visitor-plugin-common';
+import { ClientSideBaseVisitor, ClientSideBasePluginConfig, getConfigValue, LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
 import { ReactApolloRawPluginConfig } from './index';
 import * as autoBind from 'auto-bind';
 import { FragmentDefinitionNode, OperationDefinitionNode, Kind } from 'graphql';
@@ -16,7 +16,7 @@ export interface ReactApolloPluginConfig extends ClientSideBasePluginConfig {
 }
 
 export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPluginConfig, ReactApolloPluginConfig> {
-  constructor(fragments: FragmentDefinitionNode[], rawConfig: ReactApolloRawPluginConfig) {
+  constructor(fragments: LoadedFragment[], rawConfig: ReactApolloRawPluginConfig) {
     super(fragments, rawConfig, {
       componentSuffix: getConfigValue(rawConfig.componentSuffix, 'Component'),
       withHOC: getConfigValue(rawConfig.withHOC, true),
@@ -50,6 +50,11 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
 
   public getImports(): string {
     const baseImports = super.getImports();
+    const hasOperations = this._collectedOperations.length > 0;
+
+    if (!hasOperations) {
+      return baseImports;
+    }
 
     return [baseImports, ...this.imports].join('\n');
   }

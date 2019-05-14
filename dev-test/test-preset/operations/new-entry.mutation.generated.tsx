@@ -1,7 +1,7 @@
 import * as Types from '../types';
 
 export type SubmitRepositoryMutationVariables = {
-  repoFullName: Types.Maybe<Types.Scalars['String']>
+  repoFullName: Types.Scalars['String']
 };
 
 

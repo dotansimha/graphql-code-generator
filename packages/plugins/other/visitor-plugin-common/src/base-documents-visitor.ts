@@ -1,9 +1,9 @@
-import { ScalarsMap, ConvertOptions } from './types';
+import { ScalarsMap, ConvertOptions, LoadedFragment } from './types';
 import * as autoBind from 'auto-bind';
 import { DEFAULT_SCALARS } from './scalars';
 import { toPascalCase, DeclarationBlock, DeclarationBlockConfig, buildScalars } from './utils';
 import { GraphQLSchema, FragmentDefinitionNode, GraphQLObjectType, OperationDefinitionNode, VariableDefinitionNode, OperationTypeNode, ASTNode } from 'graphql';
-import { SelectionSetToObject, LoadedFragment } from './selection-set-to-object';
+import { SelectionSetToObject } from './selection-set-to-object';
 import { OperationVariablesToObject } from './variables-to-object';
 import { RawConfig, ParsedConfig, BaseVisitor, BaseVisitorConvertOptions } from './base-visitor';
 
@@ -20,8 +20,6 @@ function getRootType(operation: OperationTypeNode, schema: GraphQLSchema) {
 
 export interface ParsedDocumentsConfig extends ParsedConfig {
   addTypename: boolean;
-  namespacedImportName: string | null;
-  externalFragments: LoadedFragment[];
 }
 
 export interface RawDocumentsConfig extends RawConfig {
@@ -39,10 +37,6 @@ export interface RawDocumentsConfig extends RawConfig {
    * ```
    */
   skipTypename?: boolean;
-
-  /* The following configuration are for preset configuration and should not be set manually (for most use cases...) */
-  namespacedImportName?: string;
-  externalFragments?: LoadedFragment[];
 }
 
 export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDocumentsConfig, TPluginConfig extends ParsedDocumentsConfig = ParsedDocumentsConfig> extends BaseVisitor<TRawConfig, TPluginConfig> {
@@ -55,8 +49,6 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
       rawConfig,
       {
         addTypename: !rawConfig.skipTypename,
-        namespacedImportName: rawConfig.namespacedImportName || null,
-        externalFragments: rawConfig.externalFragments || [],
         ...((additionalConfig || {}) as any),
       } as any,
       buildScalars(_schema, scalars)

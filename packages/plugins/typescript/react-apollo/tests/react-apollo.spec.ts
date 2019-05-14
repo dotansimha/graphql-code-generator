@@ -33,22 +33,6 @@ describe('React Apollo', () => {
     validateTs(merged, undefined, true);
   };
 
-  it(`should skip if there's no operations`, async () => {
-    const content = await plugin(
-      schema,
-      [],
-      {},
-      {
-        outputFile: 'graphql.tsx',
-      }
-    );
-
-    expect(content).not.toContain(`import * as ReactApollo from 'react-apollo';`);
-    expect(content).not.toContain(`import * as React from 'react';`);
-    expect(content).not.toContain(`import gql from 'graphql-tag';`);
-    await validateTypeScript(content, schema, [], {});
-  });
-
   describe('Imports', () => {
     it('should import React and ReactApollo dependencies', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
