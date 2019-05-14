@@ -49,7 +49,10 @@ export const plugin: PluginFunction<FlowDocumentsPluginConfig> = (schema: GraphQ
     }, [])
   );
 
-  const allFragments: LoadedFragment[] = (allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[]).map(fragmentDef => ({ name: fragmentDef.name.value, onType: fragmentDef.typeCondition.name.value }));
+  const allFragments: LoadedFragment[] = [
+    ...(allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[]).map(fragmentDef => ({ node: fragmentDef, name: fragmentDef.name.value, onType: fragmentDef.typeCondition.name.value, isExternal: false })),
+    ...(config.externalFragments || []),
+  ];
 
   const visitorResult = visit(allAst, {
     leave: new FlowDocumentsVisitor(schema, config, allFragments),

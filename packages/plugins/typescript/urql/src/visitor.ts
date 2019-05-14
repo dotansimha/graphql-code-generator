@@ -1,7 +1,7 @@
-import { ClientSideBaseVisitor, ClientSideBasePluginConfig, getConfigValue } from '@graphql-codegen/visitor-plugin-common';
+import { ClientSideBaseVisitor, ClientSideBasePluginConfig, LoadedFragment, getConfigValue } from '@graphql-codegen/visitor-plugin-common';
 import { UrqlRawPluginConfig } from './index';
 import * as autoBind from 'auto-bind';
-import { FragmentDefinitionNode, OperationDefinitionNode, Kind } from 'graphql';
+import { OperationDefinitionNode, Kind } from 'graphql';
 import { titleCase } from 'change-case';
 
 export interface UrqlPluginConfig extends ClientSideBasePluginConfig {
@@ -11,7 +11,7 @@ export interface UrqlPluginConfig extends ClientSideBasePluginConfig {
 }
 
 export class UrqlVisitor extends ClientSideBaseVisitor<UrqlRawPluginConfig, UrqlPluginConfig> {
-  constructor(fragments: FragmentDefinitionNode[], rawConfig: UrqlRawPluginConfig) {
+  constructor(fragments: LoadedFragment[], rawConfig: UrqlRawPluginConfig) {
     super(fragments, rawConfig, {
       withComponent: getConfigValue(rawConfig.withComponent, true),
       withHooks: getConfigValue(rawConfig.withHooks, false),
@@ -24,6 +24,11 @@ export class UrqlVisitor extends ClientSideBaseVisitor<UrqlRawPluginConfig, Urql
   public getImports(): string {
     const baseImports = super.getImports();
     const imports = [];
+    const hasOperations = this._collectedOperations.length > 0;
+
+    if (!hasOperations) {
+      return baseImports;
+    }
 
     if (this.config.withComponent) {
       imports.push(`import * as React from 'react';`);

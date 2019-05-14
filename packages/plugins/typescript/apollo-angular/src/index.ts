@@ -1,6 +1,6 @@
 import { Types, PluginValidateFn, PluginFunction } from '@graphql-codegen/plugin-helpers';
 import { visit, GraphQLSchema, concatAST, Kind, FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
-import { RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-common';
+import { RawClientSideBasePluginConfig, LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
 import { ApolloAngularVisitor } from './visitor';
 import { extname } from 'path';
 import gql from 'graphql-tag';
@@ -39,12 +39,11 @@ export const plugin: PluginFunction<ApolloAngularRawPluginConfig> = (schema: Gra
     }, [])
   );
   const operations = allAst.definitions.filter(d => d.kind === Kind.OPERATION_DEFINITION) as OperationDefinitionNode[];
+  const allFragments: LoadedFragment[] = [
+    ...(allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[]).map(fragmentDef => ({ node: fragmentDef, name: fragmentDef.name.value, onType: fragmentDef.typeCondition.name.value, isExternal: false })),
+    ...(config.externalFragments || []),
+  ];
 
-  if (operations.length === 0) {
-    return '';
-  }
-
-  const allFragments = allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[];
   const visitor = new ApolloAngularVisitor(allFragments, operations, config) as any;
   const visitorResult = visit(allAst, { leave: visitor });
 

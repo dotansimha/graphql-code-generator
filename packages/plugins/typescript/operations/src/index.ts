@@ -52,7 +52,7 @@ export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig> = (schema: 
   );
 
   const allFragments: LoadedFragment[] = [
-    ...(allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[]).map(fragmentDef => ({ node: fragmentDef, name: fragmentDef.name.value, onType: fragmentDef.typeCondition.name.value })),
+    ...(allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[]).map(fragmentDef => ({ node: fragmentDef, name: fragmentDef.name.value, onType: fragmentDef.typeCondition.name.value, isExternal: false })),
     ...(config.externalFragments || []),
   ];
 
