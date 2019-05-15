@@ -61,7 +61,33 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
     }
   }
 
-  return [...prepend.values(), output, ...append.values()].join('\n');
+  return [...sortPrependValues(Array.from(prepend.values())), output, ...append.values()].join('\n');
+}
+
+function resolveCompareValue(a: string) {
+  if (a.startsWith('/*')) {
+    return 0;
+  } else if (a.startsWith('import')) {
+    return 1;
+  } else {
+    return 2;
+  }
+}
+
+function sortPrependValues(values: string[]): string[] {
+  return values.sort((a: string, b: string) => {
+    const aV = resolveCompareValue(a);
+    const bV = resolveCompareValue(b);
+
+    if (aV < bV) {
+      return -1;
+    }
+    if (aV > bV) {
+      return 1;
+    }
+
+    return 0;
+  });
 }
 
 function validateDocuments(schema: DocumentNode, files: Types.DocumentFile[]) {
