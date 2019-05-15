@@ -13,6 +13,7 @@ export interface ParsedConfig {
   scalars: ScalarsMap;
   convert: ConvertFn;
   typesPrefix: string;
+  addTypename: boolean;
   namespacedImportName: string | null;
   externalFragments: LoadedFragment[];
 }
@@ -83,6 +84,21 @@ export interface RawConfig {
    */
   typesPrefix?: string;
 
+  /**
+   * @name skipTypename
+   * @type boolean
+   * @default false
+   * @description Automatically adds `__typename` field to the generated types, even when they are not specified
+   * in the selection set.
+   *
+   * @example
+   * ```yml
+   * config:
+   *   skipTypename: true
+   * ```
+   */
+  skipTypename?: boolean;
+
   /* The following configuration are for preset configuration and should not be set manually (for most use cases...) */
   namespacedImportName?: string;
   externalFragments?: LoadedFragment[];
@@ -102,6 +118,7 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
       typesPrefix: rawConfig.typesPrefix || '',
       namespacedImportName: rawConfig.namespacedImportName || null,
       externalFragments: rawConfig.externalFragments || [],
+      addTypename: !rawConfig.skipTypename,
       ...((additionalConfig || {}) as any),
     };
 

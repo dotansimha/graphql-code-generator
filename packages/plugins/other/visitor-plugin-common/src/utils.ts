@@ -199,7 +199,7 @@ export class DeclarationBlock {
       const blockWrapper = this._ignoreBlockWrapper ? '' : this._config.blockWrapper;
       const before = '{' + blockWrapper;
       const after = blockWrapper + '}';
-      const block = [before, this._block, after].join('\n');
+      const block = [before, this._block, after].filter(val => !!val).join('\n');
 
       if (this._methodName) {
         result += `${this._methodName}(${this._config.blockTransformer!(block)})`;
