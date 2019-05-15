@@ -2,7 +2,7 @@ import '@graphql-codegen/testing';
 import gql from 'graphql-tag';
 import { plugin, addToSchema } from '../src/index';
 import { parse, GraphQLSchema, buildClientSchema, buildSchema, extendSchema } from 'graphql';
-import { Types } from '@graphql-codegen/plugin-helpers';
+import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { plugin as tsPlugin } from '../../typescript/src/index';
 import { plugin as tsDocumentsPlugin } from '../../../typescript/operations/src/index';
 import { validateTs } from '../../typescript/tests/validate';
@@ -26,17 +26,17 @@ describe('Apollo Angular', () => {
     }
   `);
 
-  const validateTypeScript = async (output: string, testSchema: GraphQLSchema, documents: Types.DocumentFile[], config: any) => {
+  const validateTypeScript = async (output: Types.PluginOutput, testSchema: GraphQLSchema, documents: Types.DocumentFile[], config: any) => {
     const tsOutput = await tsPlugin(testSchema, documents, config, { outputFile: '' });
     const tsDocumentsOutput = await tsDocumentsPlugin(testSchema, documents, config, { outputFile: '' });
-    const merged = [tsOutput, tsDocumentsOutput, output].join('\n');
+    const merged = mergeOutputs([tsOutput, tsDocumentsOutput, output]);
     validateTs(merged, undefined, true);
   };
 
   describe('Imports', () => {
     it('should import DocumentNode when using noGraphQLTag', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
-      const content = await plugin(
+      const content = (await plugin(
         schema,
         docs,
         {
@@ -45,41 +45,41 @@ describe('Apollo Angular', () => {
         {
           outputFile: 'graphql.tsx',
         }
-      );
+      )) as Types.ComplexPluginOutput;
 
-      expect(content).toContain(`import { DocumentNode } from 'graphql';`);
-      expect(content).not.toBeSimilarStringTo(`import gql from 'graphql-tag';`);
+      expect(content.prepend).toContain(`import { DocumentNode } from 'graphql';`);
+      expect(content.prepend).not.toContain(`import gql from 'graphql-tag';`);
       await validateTypeScript(content, schema, docs, {});
     });
 
     it(`should use gql import from gqlImport config option`, async () => {
       const docs = [{ filePath: '', content: basicDoc }];
-      const content = await plugin(
+      const content = (await plugin(
         schema,
         docs,
         { gqlImport: 'graphql.macro#gql' },
         {
           outputFile: 'graphql.tsx',
         }
-      );
+      )) as Types.ComplexPluginOutput;
 
-      expect(content).toContain(`import { gql } from 'graphql.macro';`);
+      expect(content.prepend).toContain(`import { gql } from 'graphql.macro';`);
       await validateTypeScript(content, schema, docs, {});
     });
 
     it(`should add the correct angular imports`, async () => {
       const docs = [{ filePath: '', content: basicDoc }];
-      const content = await plugin(
+      const content = (await plugin(
         schema,
         docs,
         {},
         {
           outputFile: 'graphql.tsx',
         }
-      );
+      )) as Types.ComplexPluginOutput;
 
-      expect(content).toBeSimilarStringTo(`import * as Apollo from 'apollo-angular';`);
-      expect(content).toBeSimilarStringTo(`import { Injectable } from '@angular/core';`);
+      expect(content.prepend).toContain(`import * as Apollo from 'apollo-angular';`);
+      expect(content.prepend).toContain(`import { Injectable } from '@angular/core';`);
       await validateTypeScript(content, schema, docs, {});
     });
 
@@ -97,25 +97,25 @@ describe('Apollo Angular', () => {
         }
       `);
       const docs = [{ filePath: '', content: myFeed }];
-      const content = await plugin(
+      const content = (await plugin(
         modifiedSchema,
         docs,
         {},
         {
           outputFile: 'graphql.ts',
         }
-      );
+      )) as Types.ComplexPluginOutput;
 
-      expect(content).toMatch(`import { ${moduleName} } from '${modulePath}'`);
-      expect(content).toBeSimilarStringTo(`
+      expect(content.prepend).toContain(`import { ${moduleName} } from '${modulePath}';`);
+      expect(content.content).toBeSimilarStringTo(`
         @Injectable({
           providedIn: ${moduleName}
         })
         export class MyFeedGQL
       `);
-      expect(content).toBeSimilarStringTo(`document = MyFeedDocument;`);
-      expect(content).not.toContain('@NgModule');
-      expect(content).toContain('@client');
+      expect(content.content).toBeSimilarStringTo(`document = MyFeedDocument;`);
+      expect(content.content).not.toContain('@NgModule');
+      expect(content.content).toContain('@client');
       validateTypeScript(content, modifiedSchema, docs, {});
     });
 
@@ -132,21 +132,21 @@ describe('Apollo Angular', () => {
       `);
 
       const docs = [{ filePath: '', content: myFeed }];
-      const content = await plugin(
+      const content = (await plugin(
         modifiedSchema,
         docs,
         {},
         {
           outputFile: 'graphql.ts',
         }
-      );
+      )) as Types.ComplexPluginOutput;
 
-      expect(content).toBeSimilarStringTo(`document = MyFeedDocument;`);
+      expect(content.content).toBeSimilarStringTo(`document = MyFeedDocument;`);
 
-      expect(content).toBeSimilarStringTo(`
+      expect(content.content).toBeSimilarStringTo(`
         client = 'custom';
       `);
-      expect(content).not.toContain('@namedClient');
+      expect(content.content).not.toContain('@namedClient');
       validateTypeScript(content, modifiedSchema, docs, {});
     });
   });
@@ -163,16 +163,16 @@ describe('Apollo Angular', () => {
         }
       `;
       const docs = [{ filePath: '', content: query }];
-      const content = await plugin(
+      const content = (await plugin(
         rootSchema,
         docs,
         {},
         {
           outputFile: 'graphql.ts',
         }
-      );
+      )) as Types.ComplexPluginOutput;
 
-      expect(content).toBeSimilarStringTo(`
+      expect(content.content).toBeSimilarStringTo(`
         @Injectable({
           providedIn: 'root'
         })
@@ -191,16 +191,16 @@ describe('Apollo Angular', () => {
       `;
 
       const docs = [{ filePath: '', content: myFeed }];
-      const content = await plugin(
+      const content = (await plugin(
         schema,
         docs,
         {},
         {
           outputFile: 'graphql.ts',
         }
-      );
+      )) as Types.ComplexPluginOutput;
 
-      expect(content).toBeSimilarStringTo(`document = MyFeedDocument;`);
+      expect(content.content).toBeSimilarStringTo(`document = MyFeedDocument;`);
 
       validateTypeScript(content, schema, docs, {});
     });
@@ -224,7 +224,7 @@ describe('Apollo Angular', () => {
         }
       `);
       const docs = [{ filePath: '', content: myFeed }, { filePath: 'a.ts', content: myExtraFeed }];
-      const content = await plugin(
+      const content = (await plugin(
         modifiedSchema,
         docs,
         {
@@ -234,29 +234,30 @@ describe('Apollo Angular', () => {
         {
           outputFile: 'graphql.ts',
         }
-      );
+      )) as Types.ComplexPluginOutput;
 
       // NgModule
-      expect(content).toMatch(`import { AppModule } from './path/to/file'`);
-      expect(content).toBeSimilarStringTo(`
+      expect(content.prepend).toContain(`import { AppModule } from './path/to/file';`);
+      expect(content.content).toBeSimilarStringTo(`
         @Injectable({
           providedIn: AppModule
         })
         export class MyFeedGQL
       `);
-      expect(content).toMatch(`import { ExtraModule } from './extra'`);
-      expect(content).toBeSimilarStringTo(`
+      expect(content.prepend).toContain(`import { ExtraModule } from './extra';`);
+
+      expect(content.content).toBeSimilarStringTo(`
         @Injectable({
           providedIn: ExtraModule
         })
         export class MyExtraFeed
       `);
-      expect(content).not.toContain('@NgModule');
+      expect(content.content).not.toContain('@NgModule');
 
       // NamedClient
-      expect(content).toBeSimilarStringTo(`client = 'custom';`);
-      expect(content).toBeSimilarStringTo(`client = 'extra';`);
-      expect(content).not.toContain('@namedClient');
+      expect(content.content).toBeSimilarStringTo(`client = 'custom';`);
+      expect(content.content).toBeSimilarStringTo(`client = 'extra';`);
+      expect(content.content).not.toContain('@namedClient');
 
       validateTypeScript(content, modifiedSchema, docs, {});
     });
@@ -278,14 +279,14 @@ describe('Apollo Angular', () => {
       `;
 
       const docs = [{ filePath: '', content: myFeed }];
-      const content = await plugin(
+      const content = (await plugin(
         schema,
         docs,
         {},
         {
           outputFile: 'graphql.ts',
         }
-      );
+      )) as Types.ComplexPluginOutput;
 
       validateTypeScript(content, schema, docs, {});
     });
