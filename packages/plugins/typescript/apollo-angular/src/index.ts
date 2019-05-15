@@ -47,7 +47,10 @@ export const plugin: PluginFunction<ApolloAngularRawPluginConfig> = (schema: Gra
   const visitor = new ApolloAngularVisitor(allFragments, operations, config) as any;
   const visitorResult = visit(allAst, { leave: visitor });
 
-  return [visitor.getImports(), visitor.fragments, ...visitorResult.definitions.filter(t => typeof t === 'string')].join('\n');
+  return {
+    prepend: visitor.getImports(),
+    content: [visitor.fragments, ...visitorResult.definitions.filter(t => typeof t === 'string')].join('\n'),
+  };
 };
 
 export const addToSchema = gql`

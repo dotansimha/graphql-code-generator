@@ -46,7 +46,10 @@ export const plugin: PluginFunction<StencilApolloRawPluginConfig> = (schema: Gra
   const visitor = new StencilApolloVisitor(allFragments, config) as any;
   const visitorResult = visit(allAst, { leave: visitor });
 
-  return [visitor.getImports(), visitor.fragments, ...visitorResult.definitions.filter(t => typeof t === 'string')].join('\n');
+  return {
+    prepend: visitor.getImports(),
+    content: [, visitor.fragments, ...visitorResult.definitions.filter(t => typeof t === 'string')].join('\n'),
+  };
 };
 
 export const validate: PluginValidateFn<any> = async (schema: GraphQLSchema, documents: Types.DocumentFile[], config: StencilApolloRawPluginConfig, outputFile: string) => {

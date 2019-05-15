@@ -2,6 +2,7 @@ import '@graphql-codegen/testing';
 import { buildSchema } from 'graphql';
 import { plugin } from '../src';
 import { schema } from '../../../typescript/resolvers/tests/common';
+import { Types } from '@graphql-codegen/plugin-helpers';
 
 describe('Flow Resolvers Plugin', () => {
   it('Should generate basic type resolvers', () => {
@@ -11,20 +12,20 @@ describe('Flow Resolvers Plugin', () => {
   });
 
   it('Should generate the correct imports when schema has scalars', () => {
-    const result = plugin(buildSchema(`scalar MyScalar`), [], {}, { outputFile: '' });
+    const result = plugin(buildSchema(`scalar MyScalar`), [], {}, { outputFile: '' }) as Types.ComplexPluginOutput;
 
-    expect(result).toBeSimilarStringTo(`import { type GraphQLResolveInfo, type GraphQLScalarTypeConfig } from 'graphql';`);
+    expect(result.prepend).toContain(`import { type GraphQLResolveInfo, type GraphQLScalarTypeConfig } from 'graphql';`);
   });
 
   it('Should generate the correct imports when schema has no scalars', () => {
-    const result = plugin(buildSchema(`type MyType { f: String }`), [], {}, { outputFile: '' });
+    const result = plugin(buildSchema(`type MyType { f: String }`), [], {}, { outputFile: '' }) as Types.ComplexPluginOutput;
 
-    expect(result).not.toBeSimilarStringTo(`import { type GraphQLResolveInfo, type GraphQLScalarTypeConfig } from 'graphql';`);
+    expect(result.prepend).not.toContain(`import { type GraphQLResolveInfo, type GraphQLScalarTypeConfig } from 'graphql';`);
   });
 
   it('Should generate the correct resolver args type names when typesPrefix is specified', () => {
-    const result = plugin(buildSchema(`type MyType { f(a: String): String }`), [], { typesPrefix: 'T' }, { outputFile: '' });
+    const result = plugin(buildSchema(`type MyType { f(a: String): String }`), [], { typesPrefix: 'T' }, { outputFile: '' }) as Types.ComplexPluginOutput;
 
-    expect(result).toBeSimilarStringTo(`f?: Resolver<?$ElementType<TResolversTypes, 'String'>, ParentType, ContextType, TMyTypeFArgs>,`);
+    expect(result.content).toBeSimilarStringTo(`f?: Resolver<?$ElementType<TResolversTypes, 'String'>, ParentType, ContextType, TMyTypeFArgs>,`);
   });
 });

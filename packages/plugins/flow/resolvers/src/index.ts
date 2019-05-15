@@ -16,10 +16,9 @@ export const plugin: PluginFunction<FlowResolversPluginConfig> = (schema: GraphQ
     imports.push('type GraphQLScalarTypeConfig');
   }
 
-  const header = `
-import { ${imports.join(', ')} } from 'graphql';
+  const gqlImports = `import { ${imports.join(', ')} } from 'graphql';`;
 
-export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
+  const header = `export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
   parent: Parent,
   args: Args,
   context: Context,
@@ -77,5 +76,8 @@ export type DirectiveResolverFn<Result = {}, Parent = {}, Args = {}, Context = {
     console['warn'](`Unused mappers: ${unusedMappers.join(',')}`);
   }
 
-  return [...mappersImports, header, resolversTypeMapping, ...visitorResult.definitions.filter(d => typeof d === 'string'), getRootResolver(), getAllDirectiveResolvers()].join('\n');
+  return {
+    prepend: [gqlImports, ...mappersImports],
+    content: [header, resolversTypeMapping, ...visitorResult.definitions.filter(d => typeof d === 'string'), getRootResolver(), getAllDirectiveResolvers()].join('\n'),
+  };
 };

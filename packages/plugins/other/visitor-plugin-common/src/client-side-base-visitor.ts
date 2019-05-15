@@ -175,13 +175,12 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
     };
   }
 
-  public getImports(): string {
+  public getImports(): string[] {
     const gqlImport = this._parseImport(this.config.gqlImport || 'graphql-tag');
     let imports = [];
 
     if (!this.config.noGraphQLTag) {
-      imports.push(`
-import ${gqlImport.propName ? `{ ${gqlImport.propName === 'gql' ? 'gql' : `${gqlImport.propName} as gql`} }` : 'gql'} from '${gqlImport.moduleName}';`);
+      imports.push(`import ${gqlImport.propName ? `{ ${gqlImport.propName === 'gql' ? 'gql' : `${gqlImport.propName} as gql`} }` : 'gql'} from '${gqlImport.moduleName}';`);
     } else {
       imports.push(`import { DocumentNode } from 'graphql';`);
     }
@@ -194,7 +193,7 @@ import ${gqlImport.propName ? `{ ${gqlImport.propName === 'gql' ? 'gql' : `${gql
         imports.push(`import { ${identifierName} } from '${externalFragment.importFrom}';`);
       });
 
-    return imports.join('\n');
+    return imports;
   }
 
   protected buildOperation(node: OperationDefinitionNode, documentVariableName: string, operationType: string, operationResultType: string, operationVariablesTypes: string): string {

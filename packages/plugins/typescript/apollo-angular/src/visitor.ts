@@ -25,7 +25,7 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<ApolloAngularRaw
     autoBind(this);
   }
 
-  public getImports(): string {
+  public getImports(): string[] {
     const baseImports = super.getImports();
     const hasOperations = this._collectedOperations.length > 0;
 
@@ -56,7 +56,7 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<ApolloAngularRaw
       imports.push(`import { ${def.module} } from '${def.path}';`);
     });
 
-    return [baseImports, ...imports].join('\n');
+    return [...baseImports, ...imports];
   }
 
   private _extractNgModule(operation: OperationDefinitionNode) {

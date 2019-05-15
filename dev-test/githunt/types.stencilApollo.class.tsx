@@ -1,6 +1,8 @@
+import gql from 'graphql-tag';
+import 'stencil-apollo';
+import { Component, Prop } from '@stencil/core';
+export type Maybe<T> = T | null;
 // tslint:disable
-
-type Maybe<T> = T | null;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string,
@@ -12,6 +14,7 @@ export type Scalars = {
 
 /** A comment about an entry, submitted by a user */
 export type Comment = {
+  __typename?: 'Comment',
   /** The SQL ID of this entry */
   id: Scalars['Int'],
   /** The GitHub user who posted the comment */
@@ -26,6 +29,7 @@ export type Comment = {
 
 /** Information about a GitHub repository submitted to GitHunt */
 export type Entry = {
+  __typename?: 'Entry',
   /** Information about the repository from GitHub */
   repository: Repository,
   /** The GitHub user who submitted this entry */
@@ -64,6 +68,7 @@ export enum FeedType {
 }
 
 export type Mutation = {
+  __typename?: 'Mutation',
   /** Submit a new repository, returns the new submission */
   submitRepository?: Maybe<Entry>,
   /** Vote on a repository submission, returns the submission that was voted on */
@@ -90,6 +95,7 @@ export type MutationSubmitCommentArgs = {
 };
 
 export type Query = {
+  __typename?: 'Query',
   /** A feed of repository submissions */
   feed?: Maybe<Array<Maybe<Entry>>>,
   /** A single entry */
@@ -114,6 +120,7 @@ export type QueryEntryArgs = {
  * GitHub API for simplicity, even though the convention for GraphQL is usually to camel case.
  */
 export type Repository = {
+  __typename?: 'Repository',
   /** Just the name of the repository, e.g. GitHunt-API */
   name: Scalars['String'],
   /** The full name of the repository with the username, e.g. apollostack/GitHunt-API */
@@ -131,6 +138,7 @@ export type Repository = {
 };
 
 export type Subscription = {
+  __typename?: 'Subscription',
   /** Subscription fires on every comment added */
   commentAdded?: Maybe<Comment>,
 };
@@ -142,6 +150,7 @@ export type SubscriptionCommentAddedArgs = {
 
 /** A user object from the GitHub API. This uses the exact field names returned from the GitHub API. */
 export type User = {
+  __typename?: 'User',
   /** The name of the user, e.g. apollostack */
   login: Scalars['String'],
   /** The URL to a directly embeddable image for this user's avatar */
@@ -152,6 +161,7 @@ export type User = {
 
 /** XXX to be removed */
 export type Vote = {
+  __typename?: 'Vote',
   vote_value: Scalars['Int'],
 };
 
@@ -222,9 +232,6 @@ export type VoteMutationVariables = {
 
 export type VoteMutation = ({ __typename?: 'Mutation' } & { vote: Maybe<({ __typename?: 'Entry' } & Pick<Entry, 'score' | 'id'> & { vote: ({ __typename?: 'Vote' } & Pick<Vote, 'vote_value'>) })> });
 
-import gql from 'graphql-tag';
-import 'stencil-apollo';
-import { Component, Prop } from '@stencil/core';
 export const CommentsPageCommentFragmentDoc = gql`
     fragment CommentsPageComment on Comment {
   id
@@ -288,15 +295,15 @@ export const OnCommentAddedDocument = gql`
 }
     `;
 
-            @Component({
-                tag: 'apollo-on-comment-added'
-            })
-            export class OnCommentAddedComponent {
-                @Prop() renderer: import('stencil-apollo/dist/types/components/apollo-subscription/types').SubscriptionRenderer<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>;
-                render() {
-                    return <apollo-subscription subscription={ OnCommentAddedDocument } renderer={ this.renderer } />;
-                }
-            }
+@Component({
+    tag: 'apollo-on-comment-added'
+})
+export class OnCommentAddedComponent {
+    @Prop() renderer: StencilApollo.SubscriptionRenderer<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>;
+    render() {
+        return <apollo-subscription subscription={ OnCommentAddedDocument } renderer={ this.renderer } />;
+    }
+}
       
 export const CommentDocument = gql`
     query Comment($repoFullName: String!, $limit: Int, $offset: Int) {
@@ -328,15 +335,15 @@ export const CommentDocument = gql`
 }
     ${CommentsPageCommentFragmentDoc}`;
 
-            @Component({
-                tag: 'apollo-comment'
-            })
-            export class CommentComponent {
-                @Prop() renderer: import('stencil-apollo/dist/types/components/apollo-query/types').QueryRenderer<CommentQuery, CommentQueryVariables>;
-                render() {
-                    return <apollo-query query={ CommentDocument } renderer={ this.renderer } />;
-                }
-            }
+@Component({
+    tag: 'apollo-comment'
+})
+export class CommentComponent {
+    @Prop() renderer: StencilApollo.QueryRenderer<CommentQuery, CommentQueryVariables>;
+    render() {
+        return <apollo-query query={ CommentDocument } renderer={ this.renderer } />;
+    }
+}
       
 export const CurrentUserForProfileDocument = gql`
     query CurrentUserForProfile {
@@ -347,15 +354,15 @@ export const CurrentUserForProfileDocument = gql`
 }
     `;
 
-            @Component({
-                tag: 'apollo-current-user-for-profile'
-            })
-            export class CurrentUserForProfileComponent {
-                @Prop() renderer: import('stencil-apollo/dist/types/components/apollo-query/types').QueryRenderer<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>;
-                render() {
-                    return <apollo-query query={ CurrentUserForProfileDocument } renderer={ this.renderer } />;
-                }
-            }
+@Component({
+    tag: 'apollo-current-user-for-profile'
+})
+export class CurrentUserForProfileComponent {
+    @Prop() renderer: StencilApollo.QueryRenderer<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>;
+    render() {
+        return <apollo-query query={ CurrentUserForProfileDocument } renderer={ this.renderer } />;
+    }
+}
       
 export const FeedDocument = gql`
     query Feed($type: FeedType!, $offset: Int, $limit: Int) {
@@ -368,15 +375,15 @@ export const FeedDocument = gql`
 }
     ${FeedEntryFragmentDoc}`;
 
-            @Component({
-                tag: 'apollo-feed'
-            })
-            export class FeedComponent {
-                @Prop() renderer: import('stencil-apollo/dist/types/components/apollo-query/types').QueryRenderer<FeedQuery, FeedQueryVariables>;
-                render() {
-                    return <apollo-query query={ FeedDocument } renderer={ this.renderer } />;
-                }
-            }
+@Component({
+    tag: 'apollo-feed'
+})
+export class FeedComponent {
+    @Prop() renderer: StencilApollo.QueryRenderer<FeedQuery, FeedQueryVariables>;
+    render() {
+        return <apollo-query query={ FeedDocument } renderer={ this.renderer } />;
+    }
+}
       
 export const SubmitRepositoryDocument = gql`
     mutation submitRepository($repoFullName: String!) {
@@ -386,15 +393,15 @@ export const SubmitRepositoryDocument = gql`
 }
     `;
 
-            @Component({
-                tag: 'apollo-submit-repository'
-            })
-            export class SubmitRepositoryComponent {
-                @Prop() renderer: import('stencil-apollo/dist/types/components/apollo-mutation/types').MutationRenderer<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>;
-                render() {
-                    return <apollo-mutation mutation={ SubmitRepositoryDocument } renderer={ this.renderer } />;
-                }
-            }
+@Component({
+    tag: 'apollo-submit-repository'
+})
+export class SubmitRepositoryComponent {
+    @Prop() renderer: StencilApollo.MutationRenderer<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>;
+    render() {
+        return <apollo-mutation mutation={ SubmitRepositoryDocument } renderer={ this.renderer } />;
+    }
+}
       
 export const SubmitCommentDocument = gql`
     mutation submitComment($repoFullName: String!, $commentContent: String!) {
@@ -404,15 +411,15 @@ export const SubmitCommentDocument = gql`
 }
     ${CommentsPageCommentFragmentDoc}`;
 
-            @Component({
-                tag: 'apollo-submit-comment'
-            })
-            export class SubmitCommentComponent {
-                @Prop() renderer: import('stencil-apollo/dist/types/components/apollo-mutation/types').MutationRenderer<SubmitCommentMutation, SubmitCommentMutationVariables>;
-                render() {
-                    return <apollo-mutation mutation={ SubmitCommentDocument } renderer={ this.renderer } />;
-                }
-            }
+@Component({
+    tag: 'apollo-submit-comment'
+})
+export class SubmitCommentComponent {
+    @Prop() renderer: StencilApollo.MutationRenderer<SubmitCommentMutation, SubmitCommentMutationVariables>;
+    render() {
+        return <apollo-mutation mutation={ SubmitCommentDocument } renderer={ this.renderer } />;
+    }
+}
       
 export const VoteDocument = gql`
     mutation vote($repoFullName: String!, $type: VoteType!) {
@@ -426,13 +433,13 @@ export const VoteDocument = gql`
 }
     `;
 
-            @Component({
-                tag: 'apollo-vote'
-            })
-            export class VoteComponent {
-                @Prop() renderer: import('stencil-apollo/dist/types/components/apollo-mutation/types').MutationRenderer<VoteMutation, VoteMutationVariables>;
-                render() {
-                    return <apollo-mutation mutation={ VoteDocument } renderer={ this.renderer } />;
-                }
-            }
+@Component({
+    tag: 'apollo-vote'
+})
+export class VoteComponent {
+    @Prop() renderer: StencilApollo.MutationRenderer<VoteMutation, VoteMutationVariables>;
+    render() {
+        return <apollo-mutation mutation={ VoteDocument } renderer={ this.renderer } />;
+    }
+}
       

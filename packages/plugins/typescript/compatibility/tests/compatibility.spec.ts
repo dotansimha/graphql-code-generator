@@ -8,19 +8,20 @@ import { plugin as raPlugin } from '../../../typescript/react-apollo/src';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { compileTs } from '../../typescript/tests/compile';
+import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 
-const validate = async (content: string, schema: GraphQLSchema, operations, config = {}, tsx = false, strict = false) => {
+const validate = async (content: Types.PluginOutput, schema: GraphQLSchema, operations, config = {}, tsx = false, strict = false) => {
   const tsPluginResult = await tsPlugin(schema, operations, config, { outputFile: '' });
   const tsOperationPluginResult = await tsOperationPlugin(schema, operations, config, { outputFile: '' });
-  const mergedOutput = [tsPluginResult, tsOperationPluginResult, content].join('\n');
+  const mergedOutput = mergeOutputs([tsPluginResult, tsOperationPluginResult, content]);
 
   validateTs(mergedOutput, undefined, tsx, strict);
 };
 
-const validateAndCompile = async (content: string, schema: GraphQLSchema, operations, config = {}, tsx = false) => {
+const validateAndCompile = async (content: Types.PluginOutput, schema: GraphQLSchema, operations, config = {}, tsx = false) => {
   const tsPluginResult = await tsPlugin(schema, operations, config, { outputFile: '' });
   const tsOperationPluginResult = await tsOperationPlugin(schema, operations, config, { outputFile: '' });
-  const mergedOutput = [tsPluginResult, tsOperationPluginResult, content].join('\n');
+  const mergedOutput = mergeOutputs([tsPluginResult, tsOperationPluginResult, content]);
 
   compileTs(mergedOutput, undefined, tsx);
 };
@@ -672,7 +673,7 @@ describe('Compatibility Plugin', () => {
       }`);
 
       const raPluginResult = await raPlugin(schema, ast, config, { outputFile: '' });
-      await validate(raPluginResult + '\n' + result, schema, ast, config, true);
+      await validate(mergeOutputs([raPluginResult, result]), schema, ast, config, true);
     });
 
     it('Should produce valid ts code with react-apollo and noNamespaces', async () => {
@@ -695,7 +696,7 @@ describe('Compatibility Plugin', () => {
       expect(result).toContain(`export const useMe4 = useMe4Query;`);
 
       const raPluginResult = await raPlugin(schema, ast, config as any, { outputFile: '' });
-      await validate(raPluginResult + '\n' + result, schema, ast, config, true);
+      await validate(mergeOutputs([raPluginResult, result]), schema, ast, config, true);
     });
 
     it('Should produce valid ts code with react-apollo with hooks', async () => {
@@ -726,7 +727,7 @@ describe('Compatibility Plugin', () => {
       }`);
 
       const raPluginResult = await raPlugin(schema, ast, config, { outputFile: '' });
-      await validate(raPluginResult + '\n' + result, schema, ast, config, true);
+      await validate(mergeOutputs([raPluginResult, result]), schema, ast, config, true);
     });
   });
 });

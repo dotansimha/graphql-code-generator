@@ -1,7 +1,7 @@
-import { ClientSideBaseVisitor, ClientSideBasePluginConfig, getConfigValue, LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
+import { ClientSideBaseVisitor, ClientSideBasePluginConfig, getConfigValue, LoadedFragment, OMIT_TYPE } from '@graphql-codegen/visitor-plugin-common';
 import { ReactApolloRawPluginConfig } from './index';
 import * as autoBind from 'auto-bind';
-import { FragmentDefinitionNode, OperationDefinitionNode, Kind } from 'graphql';
+import { OperationDefinitionNode, Kind } from 'graphql';
 import { toPascalCase } from '@graphql-codegen/plugin-helpers';
 import { titleCase } from 'change-case';
 
@@ -32,23 +32,23 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
 
   private imports = new Set<string>();
 
-  private getReactImport() {
+  private getReactImport(): string {
     return `import * as React from 'react';`;
   }
 
-  private getReactApolloImport() {
+  private getReactApolloImport(): string {
     return `import * as ReactApollo from '${typeof this.config.reactApolloImportFrom === 'string' ? this.config.reactApolloImportFrom : 'react-apollo'}';`;
   }
 
-  private getReactApolloHooksImport() {
+  private getReactApolloHooksImport(): string {
     return `import * as ReactApolloHooks from '${typeof this.config.hooksImportFrom === 'string' ? this.config.hooksImportFrom : 'react-apollo-hooks'}';`;
   }
 
-  private getOmitDeclaration() {
-    return `export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;`;
+  private getOmitDeclaration(): string {
+    return OMIT_TYPE;
   }
 
-  public getImports(): string {
+  public getImports(): string[] {
     const baseImports = super.getImports();
     const hasOperations = this._collectedOperations.length > 0;
 
@@ -56,7 +56,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
       return baseImports;
     }
 
-    return [baseImports, ...this.imports].join('\n');
+    return [...baseImports, ...this.imports];
   }
 
   private _buildHocProps(operationName: string, operationType: string): string {
