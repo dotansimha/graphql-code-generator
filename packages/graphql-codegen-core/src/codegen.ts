@@ -1,10 +1,10 @@
-import { Types } from '@graphql-codegen/plugin-helpers';
+import { Types, isComplexPluginOutput } from '@graphql-codegen/plugin-helpers';
 import { DocumentNode, visit } from 'graphql';
 import { mergeSchemas } from './merge-schemas';
 import { executePlugin } from './execute-plugin';
 import { DetailedError } from './errors';
 
-export async function codegen(options: Types.GenerateOptions) {
+export async function codegen(options: Types.GenerateOptions): Promise<string> {
   let output = '';
 
   validateDocuments(options.schema, options.documents);
@@ -15,6 +15,9 @@ export async function codegen(options: Types.GenerateOptions) {
   const schema = pluginPackages.reduce((schema, plugin) => {
     return !plugin.addToSchema ? schema : mergeSchemas([schema, plugin.addToSchema]);
   }, options.schema);
+
+  const prepend: Set<string> = new Set<string>();
+  const append: Set<string> = new Set<string>();
 
   for (const plugin of options.plugins) {
     const name = Object.keys(plugin)[0];
@@ -39,10 +42,26 @@ export async function codegen(options: Types.GenerateOptions) {
       pluginPackage
     );
 
-    output += result;
+    if (typeof result === 'string') {
+      output += result;
+    } else if (isComplexPluginOutput(result)) {
+      output += result.content;
+
+      if (result.append && result.append.length > 0) {
+        for (const item of result.append) {
+          append.add(item);
+        }
+      }
+
+      if (result.prepend && result.prepend.length > 0) {
+        for (const item of result.prepend) {
+          prepend.add(item);
+        }
+      }
+    }
   }
 
-  return output;
+  return [...prepend.values(), output, ...append.values()].join('\n');
 }
 
 function validateDocuments(schema: DocumentNode, files: Types.DocumentFile[]) {

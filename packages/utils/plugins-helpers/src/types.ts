@@ -1,4 +1,5 @@
 import { GraphQLSchema, DocumentNode } from 'graphql';
+import { object } from 'prop-types';
 
 export namespace Types {
   export interface GenerateOptions {
@@ -100,6 +101,13 @@ export namespace Types {
       globalIdentifier?: string;
     };
   }
+
+  export type ComplexPluginOutput = { content: string; prepend?: string[]; append?: string[] };
+  export type PluginOutput = string | ComplexPluginOutput;
+}
+
+export function isComplexPluginOutput(obj: Types.PluginOutput): obj is Types.ComplexPluginOutput {
+  return typeof obj === 'object' && obj.content && typeof obj.content === 'string';
 }
 
 export type PluginFunction<T = any> = (
@@ -111,7 +119,7 @@ export type PluginFunction<T = any> = (
     allPlugins?: Types.ConfiguredPlugin[];
     [key: string]: any;
   }
-) => Types.Promisable<string>;
+) => Types.Promisable<Types.PluginOutput>;
 
 export type PluginValidateFn<T = any> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: T, outputFile: string, allPlugins: Types.ConfiguredPlugin[]) => Types.Promisable<void>;
 

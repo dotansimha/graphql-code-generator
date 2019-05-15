@@ -125,7 +125,10 @@ export const plugin: PluginFunction<ReactApolloRawPluginConfig> = (schema: Graph
   const visitor = new ReactApolloVisitor(allFragments, config) as any;
   const visitorResult = visit(allAst, { leave: visitor });
 
-  return [visitor.getImports(), visitor.fragments, ...visitorResult.definitions.filter(t => typeof t === 'string')].join('\n');
+  return {
+    prepend: visitor.getImports(),
+    content: [visitor.fragments, ...visitorResult.definitions.filter(t => typeof t === 'string')].join('\n'),
+  };
 };
 
 export const validate: PluginValidateFn<any> = async (schema: GraphQLSchema, documents: Types.DocumentFile[], config: ReactApolloRawPluginConfig, outputFile: string) => {

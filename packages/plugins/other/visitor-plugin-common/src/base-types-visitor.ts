@@ -182,7 +182,7 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
     return `import { ${identifier} } from '${source}';`;
   }
 
-  public getEnumsImports(): string {
+  public getEnumsImports(): string[] {
     return Object.keys(this.config.enumValues)
       .map(enumName => {
         const mappedValue = this.config.enumValues[enumName];
@@ -199,8 +199,7 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
 
         return null;
       })
-      .filter(a => a)
-      .join('\n');
+      .filter(a => a);
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {

@@ -1,3 +1,4 @@
+import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { buildSchema } from 'graphql';
 import { plugin as tsPlugin } from '../../typescript/src/index';
 import { validateTs } from '../../typescript/tests/validate';
@@ -36,8 +37,8 @@ export const schema = buildSchema(/* GraphQL */ `
   directive @myDirective(arg: Int!, arg2: String!, arg3: Boolean!) on FIELD
 `);
 
-export const validate = async (content: string, config: any = {}, pluginSchema = schema) => {
-  const mergedContent = (await tsPlugin(pluginSchema, [], config, { outputFile: '' })) + '\n' + content;
+export const validate = async (content: Types.PluginOutput, config: any = {}, pluginSchema = schema) => {
+  const mergedContent = mergeOutputs([await tsPlugin(pluginSchema, [], config, { outputFile: '' }), content]);
 
   validateTs(mergedContent);
 };

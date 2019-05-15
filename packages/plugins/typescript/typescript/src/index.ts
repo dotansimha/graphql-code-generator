@@ -106,7 +106,10 @@ export const plugin: PluginFunction<TypeScriptPluginConfig> = (schema: GraphQLSc
   const introspectionDefinitions = includeIntrospectionDefinitions(schema, documents, config);
   const scalars = visitor.scalarsDefinition;
 
-  return [visitor.getEnumsImports(), maybeValue, scalars, ...visitorResult.definitions, ...introspectionDefinitions].join('\n');
+  return {
+    prepend: [...visitor.getEnumsImports(), maybeValue],
+    content: [scalars, ...visitorResult.definitions, ...introspectionDefinitions].join('\n'),
+  };
 };
 
 function includeIntrospectionDefinitions(schema: GraphQLSchema, documents: Types.DocumentFile[], config: TypeScriptPluginConfig): string[] {
