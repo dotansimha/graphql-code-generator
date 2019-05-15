@@ -1,4 +1,4 @@
-import { ClientSideBaseVisitor, ClientSideBasePluginConfig, LoadedFragment, getConfigValue } from '@graphql-codegen/visitor-plugin-common';
+import { ClientSideBaseVisitor, ClientSideBasePluginConfig, LoadedFragment, getConfigValue, OMIT_TYPE } from '@graphql-codegen/visitor-plugin-common';
 import { UrqlRawPluginConfig } from './index';
 import * as autoBind from 'auto-bind';
 import { OperationDefinitionNode, Kind } from 'graphql';
@@ -21,7 +21,7 @@ export class UrqlVisitor extends ClientSideBaseVisitor<UrqlRawPluginConfig, Urql
     autoBind(this);
   }
 
-  public getImports(): string {
+  public getImports(): string[] {
     const baseImports = super.getImports();
     const imports = [];
     const hasOperations = this._collectedOperations.length > 0;
@@ -38,9 +38,9 @@ export class UrqlVisitor extends ClientSideBaseVisitor<UrqlRawPluginConfig, Urql
       imports.push(`import * as Urql from '${this.config.urqlImportFrom || 'urql'}';`);
     }
 
-    imports.push(`export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>`);
+    imports.push(OMIT_TYPE);
 
-    return [baseImports, ...imports].join('\n');
+    return [...baseImports, ...imports];
   }
 
   private _buildComponent(node: OperationDefinitionNode, documentVariableName: string, operationType: string, operationResultType: string, operationVariablesTypes: string): string {

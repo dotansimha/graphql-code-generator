@@ -18,7 +18,7 @@ export class StencilApolloVisitor extends ClientSideBaseVisitor<StencilApolloRaw
     autoBind(this);
   }
 
-  public getImports(): string {
+  public getImports(): string[] {
     const baseImports = super.getImports();
     const imports = [];
     const hasOperations = this._collectedOperations.length > 0;
@@ -34,7 +34,7 @@ export class StencilApolloVisitor extends ClientSideBaseVisitor<StencilApolloRaw
       imports.push(`import * as StencilApollo from 'stencil-apollo';`);
     }
 
-    return [baseImports, ...imports].join('\n');
+    return [...baseImports, ...imports];
   }
 
   private _buildOperationFunctionalComponent(node: OperationDefinitionNode, documentVariableName: string, operationType: string, operationResultType: string, operationVariablesTypes: string): string {
