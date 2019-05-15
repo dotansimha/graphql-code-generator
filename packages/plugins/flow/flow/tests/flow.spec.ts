@@ -217,7 +217,7 @@ describe('Flow Plugin', () => {
 
       expect(result).toBeSimilarStringTo(`
       export type B = {
-        __typename?: "B",
+        __typename?: 'B',
         /** the id */
         id?: ?$ElementType<Scalars, 'ID'>,
       };`);
@@ -236,7 +236,7 @@ describe('Flow Plugin', () => {
 
       expect(result).toBeSimilarStringTo(`
       export type Node = {
-        __typename?: "Node",
+        __typename?: 'Node',
         /** the id */
         id: $ElementType<Scalars, 'ID'>,
       };`);
@@ -300,7 +300,7 @@ describe('Flow Plugin', () => {
 
       expect(result).toBeSimilarStringTo(`
         export type MyInterface = {|
-          __typename?: "MyInterface",
+          __typename?: 'MyInterface',
           foo?: ?$ElementType<Scalars, 'String'>,
           bar: $ElementType<Scalars, 'String'>,
         |};
@@ -325,7 +325,7 @@ describe('Flow Plugin', () => {
 
       expect(result).toBeSimilarStringTo(`
         export type MyInterface = {
-          __typename?: "MyInterface",
+          __typename?: 'MyInterface',
           +foo?: ?$ElementType<Scalars, 'String'>,
           +bar: $ElementType<Scalars, 'String'>,
         };
@@ -358,7 +358,7 @@ describe('Flow Plugin', () => {
     `);
       expect(result).toBeSimilarStringTo(`
         export type mytype = {
-          __typename?: "MyType",
+          __typename?: 'MyType',
           foo?: ?$ElementType<Scalars, 'String'>,
         };
     `);
@@ -402,7 +402,7 @@ describe('Flow Plugin', () => {
 
       expect(result).toBeSimilarStringTo(`
         export type Imytype = {
-          __typename?: "MyType",
+          __typename?: 'MyType',
           foo?: ?$ElementType<Scalars, 'String'>,
         };
       `);
@@ -465,7 +465,7 @@ describe('Flow Plugin', () => {
       expect(result).toBeSimilarStringTo(`export type myenum = $Values<typeof myenumvalues>;`);
 
       expect(result).toBeSimilarStringTo(`export type mytype = {
-          __typename?: "MyType",
+          __typename?: 'MyType',
           f?: ?$ElementType<Scalars, 'String'>,
           bar?: ?myenum,
           b_a_r?: ?$ElementType<Scalars, 'String'>,
@@ -473,34 +473,34 @@ describe('Flow Plugin', () => {
         };`);
 
       expect(result).toBeSimilarStringTo(`export type my_type = {
-          __typename?: "My_Type",
+          __typename?: 'My_Type',
           linkTest?: ?mytype,
         };`);
 
       expect(result).toBeSimilarStringTo(`export type myunion = my_type | mytype;`);
 
       expect(result).toBeSimilarStringTo(`export type some_interface = {
-          __typename?: "Some_Interface",
+          __typename?: 'Some_Interface',
           id: $ElementType<Scalars, 'ID'>,
         };`);
 
       expect(result).toBeSimilarStringTo(`export type impl1 = some_interface & {
-          __typename?: "Impl1",
+          __typename?: 'Impl1',
           id: $ElementType<Scalars, 'ID'>,
         };`);
 
       expect(result).toBeSimilarStringTo(`export type impl_2 = some_interface & {
-          __typename?: "Impl_2",
+          __typename?: 'Impl_2',
           id: $ElementType<Scalars, 'ID'>,
         };`);
 
       expect(result).toBeSimilarStringTo(`export type impl_3 = some_interface & {
-          __typename?: "impl_3",
+          __typename?: 'impl_3',
           id: $ElementType<Scalars, 'ID'>,
         };`);
 
       expect(result).toBeSimilarStringTo(`export type query = {
-          __typename?: "Query",
+          __typename?: 'Query',
           something?: ?myunion,
           use_interface?: ?some_interface,
         };`);
@@ -521,7 +521,7 @@ describe('Flow Plugin', () => {
       expect(result).toBeSimilarStringTo(`export type MyEnum = $Values<typeof MyEnumValues>;`);
 
       expect(result).toBeSimilarStringTo(`export type MyType = {
-        __typename?: "MyType",
+        __typename?: 'MyType',
         f?: ?$ElementType<Scalars, 'String'>,
         bar?: ?MyEnum,
         b_a_r?: ?$ElementType<Scalars, 'String'>,
@@ -529,34 +529,34 @@ describe('Flow Plugin', () => {
       };`);
 
       expect(result).toBeSimilarStringTo(`export type My_Type = {
-        __typename?: "My_Type",
+        __typename?: 'My_Type',
         linkTest?: ?MyType,
       };`);
 
       expect(result).toBeSimilarStringTo(`export type MyUnion = My_Type | MyType;`);
 
       expect(result).toBeSimilarStringTo(`export type Some_Interface = {
-        __typename?: "Some_Interface",
+        __typename?: 'Some_Interface',
         id: $ElementType<Scalars, 'ID'>,
       };`);
 
       expect(result).toBeSimilarStringTo(`export type Impl1 = Some_Interface & {
-        __typename?: "Impl1",
+        __typename?: 'Impl1',
         id: $ElementType<Scalars, 'ID'>,
       };`);
 
       expect(result).toBeSimilarStringTo(`export type Impl_2 = Some_Interface & {
-        __typename?: "Impl_2",
+        __typename?: 'Impl_2',
         id: $ElementType<Scalars, 'ID'>,
       };`);
 
       expect(result).toBeSimilarStringTo(`export type Impl_3 = Some_Interface & {
-        __typename?: "impl_3",
+        __typename?: 'impl_3',
         id: $ElementType<Scalars, 'ID'>,
       };`);
 
       expect(result).toBeSimilarStringTo(`export type Query = {
-        __typename?: "Query",
+        __typename?: 'Query',
         something?: ?MyUnion,
         use_interface?: ?Some_Interface,
       };`);
@@ -576,7 +576,7 @@ describe('Flow Plugin', () => {
       expect(result).toBeSimilarStringTo(`export type IMyEnum = $Values<typeof IMyEnumValues>;`);
 
       expect(result).toBeSimilarStringTo(`export type IMyType = {
-        __typename?: "MyType",
+        __typename?: 'MyType',
         f?: ?$ElementType<Scalars, 'String'>,
         bar?: ?IMyEnum,
         b_a_r?: ?$ElementType<Scalars, 'String'>,
@@ -584,34 +584,34 @@ describe('Flow Plugin', () => {
       };`);
 
       expect(result).toBeSimilarStringTo(`export type IMy_Type = {
-        __typename?: "My_Type",
+        __typename?: 'My_Type',
         linkTest?: ?IMyType,
       };`);
 
       expect(result).toBeSimilarStringTo(`export type IMyUnion = IMy_Type | IMyType;`);
 
       expect(result).toBeSimilarStringTo(`export type ISome_Interface = {
-        __typename?: "Some_Interface",
+        __typename?: 'Some_Interface',
         id: $ElementType<Scalars, 'ID'>,
       };`);
 
       expect(result).toBeSimilarStringTo(`export type IImpl1 = ISome_Interface & {
-        __typename?: "Impl1",
+        __typename?: 'Impl1',
         id: $ElementType<Scalars, 'ID'>,
       };`);
 
       expect(result).toBeSimilarStringTo(`export type IImpl_2 = ISome_Interface & {
-        __typename?: "Impl_2",
+        __typename?: 'Impl_2',
         id: $ElementType<Scalars, 'ID'>,
       };`);
 
       expect(result).toBeSimilarStringTo(`export type IImpl_3 = ISome_Interface & {
-        __typename?: "impl_3",
+        __typename?: 'impl_3',
         id: $ElementType<Scalars, 'ID'>,
       };`);
 
       expect(result).toBeSimilarStringTo(`export type IQuery = {
-        __typename?: "Query",
+        __typename?: 'Query',
         something?: ?IMyUnion,
         use_interface?: ?ISome_Interface,
       };`);
@@ -681,7 +681,7 @@ describe('Flow Plugin', () => {
 
       expect(result).toBeSimilarStringTo(`
         export type TMutation = {
-          __typename?: "Mutation",
+          __typename?: 'Mutation',
           foo?: ?$ElementType<Scalars, 'String'>,
         };
 
@@ -847,7 +847,7 @@ describe('Flow Plugin', () => {
 
       expect(result).toBeSimilarStringTo(`
         export type MyType = {
-          __typename?: "MyType",
+          __typename?: 'MyType',
           foo?: ?$ElementType<Scalars, 'String'>,
           bar: $ElementType<Scalars, 'String'>,
         };
@@ -869,13 +869,13 @@ describe('Flow Plugin', () => {
 
       expect(result).toBeSimilarStringTo(`
         export type MyInterface = {
-          __typename?: "MyInterface",
+          __typename?: 'MyInterface',
           foo: $ElementType<Scalars, 'String'>,
         };
       `);
       expect(result).toBeSimilarStringTo(`
         export type MyType = MyInterface & {
-          __typename?: "MyType",
+          __typename?: 'MyType',
           foo: $ElementType<Scalars, 'String'>,
         };
       `);
@@ -901,19 +901,19 @@ describe('Flow Plugin', () => {
 
       expect(result).toBeSimilarStringTo(`
         export type MyInterface = {
-          __typename?: "MyInterface",
+          __typename?: 'MyInterface',
           foo: $ElementType<Scalars, 'String'>,
         };
       `);
       expect(result).toBeSimilarStringTo(`
         export type MyOtherInterface = {
-          __typename?: "MyOtherInterface",
+          __typename?: 'MyOtherInterface',
           bar: $ElementType<Scalars, 'String'>,
         };
       `);
       expect(result).toBeSimilarStringTo(`
         export type MyType = MyInterface & MyOtherInterface & {
-          __typename?: "MyType",
+          __typename?: 'MyType',
           foo: $ElementType<Scalars, 'String'>,
           bar: $ElementType<Scalars, 'String'>,
         };
@@ -935,13 +935,13 @@ describe('Flow Plugin', () => {
 
       expect(result).toBeSimilarStringTo(`
         export type MyType = {
-          __typename?: "MyType",
+          __typename?: 'MyType',
           foo: MyOtherType,
         };
       `);
       expect(result).toBeSimilarStringTo(`
         export type MyOtherType = {
-          __typename?: "MyOtherType",
+          __typename?: 'MyOtherType',
           bar: $ElementType<Scalars, 'String'>,
         };
       `);
@@ -983,7 +983,7 @@ describe('Flow Plugin', () => {
 
       expect(result).toBeSimilarStringTo(`
         export type MyInterface = {
-          __typename?: "MyInterface",
+          __typename?: 'MyInterface',
           foo?: ?$ElementType<Scalars, 'String'>,
           bar: $ElementType<Scalars, 'String'>,
         };

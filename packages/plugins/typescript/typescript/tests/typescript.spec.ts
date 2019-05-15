@@ -137,7 +137,7 @@ describe('TypeScript', () => {
 
       expect(result).toBeSimilarStringTo(`
       export type B = {
-        __typename?: "B",
+        __typename?: 'B',
         /** the id */
         id?: Maybe<Scalars['ID']>,
       };`);
@@ -154,7 +154,7 @@ describe('TypeScript', () => {
 
       expect(result).toBeSimilarStringTo(`
       export type Node = {
-        __typename?: "Node",
+        __typename?: 'Node',
         /** the id */
         id: Scalars['ID'],
       };`);
@@ -256,7 +256,7 @@ describe('TypeScript', () => {
       expect(result).toBeSimilarStringTo(`export type Any = Scalars['String'] | Scalars['Int'] | Scalars['Float'] | Scalars['ID'];`);
       expect(result).toBeSimilarStringTo(`
       export type CardEdge = {
-        __typename?: "CardEdge",
+        __typename?: 'CardEdge',
         count: Scalars['Int'],
       };`);
       validateTs(result);
@@ -274,7 +274,7 @@ describe('TypeScript', () => {
 
       expect(result).toBeSimilarStringTo(`
         export type MyType = {
-          __typename?: "MyType",
+          __typename?: 'MyType',
           foo: Maybe<Scalars['String']>,
           bar: Scalars['String'],
         };
@@ -291,7 +291,7 @@ describe('TypeScript', () => {
 
       expect(result).toBeSimilarStringTo(`
         export type MyType = {
-          __typename?: "MyType",
+          __typename?: 'MyType',
           readonly foo: ReadonlyArray<Scalars['String']>,
         };
       `);
@@ -380,7 +380,7 @@ describe('TypeScript', () => {
     `);
       expect(result).toBeSimilarStringTo(`
         export type mytype = {
-          __typename?: "MyType",
+          __typename?: 'MyType',
           foo?: Maybe<foo>,
         };
     `);
@@ -456,7 +456,7 @@ describe('TypeScript', () => {
 
       expect(result).toBeSimilarStringTo(`
         export type MyType = {
-          __typename?: "MyType",
+          __typename?: 'MyType',
           foo?: Maybe<Foo>,
         };
       `);
@@ -541,7 +541,7 @@ describe('TypeScript', () => {
 
       expect(result).toBeSimilarStringTo(`
       export type MyType = {
-        __typename?: "MyType",
+        __typename?: 'MyType',
         foo?: Maybe<Scalars['String']>,
         bar: Scalars['String'],
       };`);
@@ -570,7 +570,7 @@ describe('TypeScript', () => {
 
       expect(result).toBeSimilarStringTo(`
       export type MyType = {
-        __typename?: "MyType",
+        __typename?: 'MyType',
         foo?: Maybe<Scalars['String']>,
         bar: Scalars['MyScalar'],
       };`);
@@ -599,7 +599,7 @@ describe('TypeScript', () => {
 
       expect(result).toBeSimilarStringTo(`
       export type MyType = {
-        __typename?: "MyType",
+        __typename?: 'MyType',
         foo?: Maybe<Scalars['String']>,
         bar: Scalars['MyScalar'],
       };`);
@@ -618,7 +618,7 @@ describe('TypeScript', () => {
 
       expect(result).toBeSimilarStringTo(`
         export type MyType = {
-          __typename?: "MyType",
+          __typename?: 'MyType',
           foo?: Maybe<Scalars['String']>,
           bar: Scalars['String'],
         };
@@ -640,13 +640,13 @@ describe('TypeScript', () => {
 
       expect(result).toBeSimilarStringTo(`
         export type MyInterface = {
-          __typename?: "MyInterface",
+          __typename?: 'MyInterface',
           foo: Scalars['String'],
         };
       `);
       expect(result).toBeSimilarStringTo(`
         export type MyType = MyInterface & {
-          __typename?: "MyType",
+          __typename?: 'MyType',
           foo: Scalars['String'],
         };
       `);
@@ -672,19 +672,19 @@ describe('TypeScript', () => {
 
       expect(result).toBeSimilarStringTo(`
         export type MyInterface = {
-          __typename?: "MyInterface",
+          __typename?: 'MyInterface',
           foo: Scalars['String'],
         };
       `);
       expect(result).toBeSimilarStringTo(`
         export type MyOtherInterface = {
-          __typename?: "MyOtherInterface",
+          __typename?: 'MyOtherInterface',
           bar: Scalars['String'],
         };
       `);
       expect(result).toBeSimilarStringTo(`
         export type MyType = MyInterface & MyOtherInterface & {
-          __typename?: "MyType",
+          __typename?: 'MyType',
           foo: Scalars['String'],
           bar: Scalars['String'],
         };
@@ -704,12 +704,14 @@ describe('TypeScript', () => {
 
       expect(result).toBeSimilarStringTo(`
         export type MyInterface = {
-          __typename?: "MyInterface",
+          __typename?: 'MyInterface',
           foo: Scalars['String'],
         };
       `);
       expect(result).toBeSimilarStringTo(`
-        export type MyType = MyInterface;
+        export type MyType = MyInterface & {
+          __typename?: 'MyType',
+        };
       `);
       validateTs(result);
     });
@@ -728,13 +730,13 @@ describe('TypeScript', () => {
 
       expect(result).toBeSimilarStringTo(`
         export type MyType = {
-          __typename?: "MyType",
+          __typename?: 'MyType',
           foo: MyOtherType,
         };
       `);
       expect(result).toBeSimilarStringTo(`
         export type MyOtherType = {
-          __typename?: "MyOtherType",
+          __typename?: 'MyOtherType',
           bar: Scalars['String'],
         };
       `);
@@ -775,7 +777,7 @@ describe('TypeScript', () => {
 
       expect(result).toBeSimilarStringTo(`
         export type MyInterface = {
-          __typename?: "MyInterface",
+          __typename?: 'MyInterface',
           foo?: Maybe<Scalars['String']>,
           bar: Scalars['String'],
         };
@@ -818,7 +820,7 @@ describe('TypeScript', () => {
     `);
       expect(result).toBeSimilarStringTo(`
         export type mytype = {
-          __typename?: "MyType",
+          __typename?: 'MyType',
           foo?: Maybe<Scalars['String']>,
         };
     `);
@@ -841,7 +843,7 @@ describe('TypeScript', () => {
 
       expect(result).toBeSimilarStringTo(`
         export type Imytype = {
-          __typename?: "MyType",
+          __typename?: 'MyType',
           foo?: Maybe<Scalars['String']>,
         };
       `);
@@ -903,7 +905,7 @@ describe('TypeScript', () => {
         `);
       expect(result).toBeSimilarStringTo(`
         export type mytype = {
-          __typename?: "MyType",
+          __typename?: 'MyType',
           f?: Maybe<Scalars['String']>,
           bar?: Maybe<myenum>,
           b_a_r?: Maybe<Scalars['String']>,
@@ -912,7 +914,7 @@ describe('TypeScript', () => {
         `);
       expect(result).toBeSimilarStringTo(`
         export type my_type = {
-          __typename?: "My_Type",
+          __typename?: 'My_Type',
           linkTest?: Maybe<mytype>,
         };
         `);
@@ -921,31 +923,31 @@ describe('TypeScript', () => {
         `);
       expect(result).toBeSimilarStringTo(`
         export type some_interface = {
-          __typename?: "Some_Interface",
+          __typename?: 'Some_Interface',
           id: Scalars['ID'],
         };
         `);
       expect(result).toBeSimilarStringTo(`
         export type impl1 = some_interface & {
-          __typename?: "Impl1",
+          __typename?: 'Impl1',
           id: Scalars['ID'],
         };
         `);
       expect(result).toBeSimilarStringTo(`
         export type impl_2 = some_interface & {
-          __typename?: "Impl_2",
+          __typename?: 'Impl_2',
           id: Scalars['ID'],
         };
         `);
       expect(result).toBeSimilarStringTo(`
         export type impl_3 = some_interface & {
-          __typename?: "impl_3",
+          __typename?: 'impl_3',
           id: Scalars['ID'],
         };
         `);
       expect(result).toBeSimilarStringTo(`
         export type query = {
-          __typename?: "Query",
+          __typename?: 'Query',
           something?: Maybe<myunion>,
           use_interface?: Maybe<some_interface>,
         };
@@ -966,7 +968,7 @@ describe('TypeScript', () => {
       `);
       expect(result).toBeSimilarStringTo(`
       export type MyType = {
-        __typename?: "MyType",
+        __typename?: 'MyType',
         f?: Maybe<Scalars['String']>,
         bar?: Maybe<MyEnum>,
         b_a_r?: Maybe<Scalars['String']>,
@@ -975,7 +977,7 @@ describe('TypeScript', () => {
       `);
       expect(result).toBeSimilarStringTo(`
       export type My_Type = {
-        __typename?: "My_Type",
+        __typename?: 'My_Type',
         linkTest?: Maybe<MyType>,
       };
       `);
@@ -984,31 +986,31 @@ describe('TypeScript', () => {
       `);
       expect(result).toBeSimilarStringTo(`
       export type Some_Interface = {
-        __typename?: "Some_Interface",
+        __typename?: 'Some_Interface',
         id: Scalars['ID'],
       };
       `);
       expect(result).toBeSimilarStringTo(`
       export type Impl1 = Some_Interface & {
-        __typename?: "Impl1",
+        __typename?: 'Impl1',
         id: Scalars['ID'],
       };
       `);
       expect(result).toBeSimilarStringTo(`
       export type Impl_2 = Some_Interface & {
-        __typename?: "Impl_2",
+        __typename?: 'Impl_2',
         id: Scalars['ID'],
       };
       `);
       expect(result).toBeSimilarStringTo(`
       export type Impl_3 = Some_Interface & {
-        __typename?: "impl_3",
+        __typename?: 'impl_3',
         id: Scalars['ID'],
       };
       `);
       expect(result).toBeSimilarStringTo(`
       export type Query = {
-        __typename?: "Query",
+        __typename?: 'Query',
         something?: Maybe<MyUnion>,
         use_interface?: Maybe<Some_Interface>,
       };
@@ -1029,7 +1031,7 @@ describe('TypeScript', () => {
 
       expect(result).toBeSimilarStringTo(`
       export type IMyType = {
-        __typename?: "MyType",
+        __typename?: 'MyType',
         f?: Maybe<Scalars['String']>,
         bar?: Maybe<IMyEnum>,
         b_a_r?: Maybe<Scalars['String']>,
@@ -1037,38 +1039,38 @@ describe('TypeScript', () => {
       };`);
       expect(result).toBeSimilarStringTo(`
       export type IMy_Type = {
-        __typename?: "My_Type",
+        __typename?: 'My_Type',
         linkTest?: Maybe<IMyType>,
       };
   `);
       expect(result).toBeSimilarStringTo(`export type IMyUnion = IMy_Type | IMyType;`);
       expect(result).toBeSimilarStringTo(`
       export type ISome_Interface = {
-        __typename?: "Some_Interface",
+        __typename?: 'Some_Interface',
         id: Scalars['ID'],
       };
       `);
       expect(result).toBeSimilarStringTo(`
       export type IImpl1 = ISome_Interface & {
-        __typename?: "Impl1",
+        __typename?: 'Impl1',
         id: Scalars['ID'],
       };
       `);
       expect(result).toBeSimilarStringTo(`
       export type IImpl_2 = ISome_Interface & {
-        __typename?: "Impl_2",
+        __typename?: 'Impl_2',
         id: Scalars['ID'],
       };
       `);
       expect(result).toBeSimilarStringTo(`
       export type IImpl_3 = ISome_Interface & {
-        __typename?: "impl_3",
+        __typename?: 'impl_3',
         id: Scalars['ID'],
       };
       `);
       expect(result).toBeSimilarStringTo(`
       export type IQuery = {
-        __typename?: "Query",
+        __typename?: 'Query',
         something?: Maybe<IMyUnion>,
         use_interface?: Maybe<ISome_Interface>,
       };
@@ -1140,7 +1142,7 @@ describe('TypeScript', () => {
 
       expect(result).toBeSimilarStringTo(`
         export type TMutation = {
-          __typename?: "Mutation",
+          __typename?: 'Mutation',
           foo?: Maybe<Scalars['String']>,
         };
 

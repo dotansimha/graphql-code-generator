@@ -113,7 +113,6 @@ export class DeclarationBlock {
   _nameGenerics = null;
   _comment = null;
   _ignoreBlockWrapper = false;
-  _typeName = null;
 
   constructor(private _config: DeclarationBlockConfig) {
     this._config = {
@@ -170,12 +169,6 @@ export class DeclarationBlock {
     return this;
   }
 
-  withTypeName(typeName: NameNode) {
-    this._typeName = typeName;
-
-    return this;
-  }
-
   public get string(): string {
     let result = '';
 
@@ -206,7 +199,7 @@ export class DeclarationBlock {
       const blockWrapper = this._ignoreBlockWrapper ? '' : this._config.blockWrapper;
       const before = '{' + blockWrapper;
       const after = blockWrapper + '}';
-      const block = [before, buildTypeName(this._typeName), this._block, after].filter(val => !!val).join('\n');
+      const block = [before, this._block, after].filter(val => !!val).join('\n');
 
       if (this._methodName) {
         result += `${this._methodName}(${this._config.blockTransformer!(block)})`;
@@ -221,10 +214,6 @@ export class DeclarationBlock {
 
     return (this._comment ? this._comment : '') + result + (this._kind === 'interface' || this._kind === 'enum' || this._kind === 'namespace' ? '' : ';') + '\n';
   }
-}
-
-function buildTypeName(name: NameNode | null): string | null {
-  return name ? indent(`__typename?: "${name}",`) : null;
 }
 
 export function getBaseTypeNode(typeNode: TypeNode): NamedTypeNode {
