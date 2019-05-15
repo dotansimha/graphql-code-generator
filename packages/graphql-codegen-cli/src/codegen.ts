@@ -155,7 +155,7 @@ export async function executeCodegen(config: Types.Config): Promise<Types.FileOu
           const hasPreset = !!outputConfig.preset;
 
           return {
-            title: hasPreset ? `Generate to ${filename} (using preset "${outputConfig.preset}")` : `Generate ${filename}`,
+            title: hasPreset ? `Generate to ${filename} (using EXPERIMENTAL preset "${outputConfig.preset}")` : `Generate ${filename}`,
             task: () => {
               const outputFileTemplateConfig = outputConfig.config || {};
               const outputDocuments: Types.DocumentFile[] = [];
