@@ -1,6 +1,6 @@
 {
   "name": "graphql-codegen-flow-documents",
-  "version": "0.18.1",
+  "version": "0.18.2",
   "description": "GraphQL Code Generator plugin for generating Flow types for GraphQL docuemnts (query/mutation/subscription/fragment)",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
@@ -11,12 +11,12 @@
     "test": "codegen-templates-scripts test"
   },
   "dependencies": {
-    "graphql-codegen-core": "0.18.1",
-    "graphql-codegen-flow": "0.18.1",
-    "graphql-codegen-plugin-helpers": "0.18.1"
+    "graphql-codegen-core": "0.18.2",
+    "graphql-codegen-flow": "0.18.2",
+    "graphql-codegen-plugin-helpers": "0.18.2"
   },
   "devDependencies": {
-    "codegen-templates-scripts": "0.18.1",
+    "codegen-templates-scripts": "0.18.2",
     "flow-bin": "0.94.0",
     "flow-parser": "0.94.0",
     "graphql": "14.1.1"

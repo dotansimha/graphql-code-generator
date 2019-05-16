@@ -1,9 +1,9 @@
 {
   "name": "graphql-codegen-apollo-angular-template",
-  "version": "0.18.1",
+  "version": "0.18.2",
   "dependencies": {
-    "graphql-codegen-typescript-apollo-angular": "0.18.1",
-    "graphql-codegen-typescript-client": "0.18.1",
-    "graphql-codegen-typescript-common": "0.18.1"
+    "graphql-codegen-typescript-apollo-angular": "0.18.2",
+    "graphql-codegen-typescript-client": "0.18.2",
+    "graphql-codegen-typescript-common": "0.18.2"
   }
 }
