@@ -65,7 +65,8 @@
     ]
   },
   "resolutions": {
-    "upath": "1.1.0"
+    "upath": "1.1.0",
+    "handlebars": "4.1.0"
   },
   "prettier": {
     "printWidth": 120,
