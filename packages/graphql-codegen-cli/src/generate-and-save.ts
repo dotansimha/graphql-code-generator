@@ -3,8 +3,6 @@ import { executeCodegen } from './codegen';
 import { createWatcher } from './utils/watcher';
 import fs from './utils/file-system';
 
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-
 export async function generate(config: Types.Config, saveToFile = true): Promise<FileOutput[] | any> {
   async function writeOutput(generationResult: FileOutput[]) {
     if (!saveToFile) {
