@@ -121,7 +121,7 @@ export async function executeCodegen(config: Types.Config): Promise<Types.FileOu
       }
     }
 
-    if (rootSchemas.length === 0 && Object.keys(generates).some(filename => generates[filename].schema.length === 0)) {
+    if (rootSchemas.length === 0 && Object.keys(generates).some(filename => !generates[filename].schema || generates[filename].schema.length === 0)) {
       throw new DetailedError(
         'Invalid Codegen Configuration!',
         `

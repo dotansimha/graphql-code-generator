@@ -23,6 +23,7 @@ export class Renderer {
   end(
     err: Error & {
       errors?: (Error | DetailedError)[];
+      details?: string;
     }
   ) {
     this.updateRenderer.end(err);
@@ -64,7 +65,8 @@ export class Renderer {
           .join('\n\n');
         logUpdate(['', count, details, ''].join('\n\n'));
       } else {
-        logUpdate(chalk.red.bold(err.message));
+        const details = err.details ? err.details : '';
+        logUpdate(`${chalk.red.bold(`${indentString(err.message, 2)}`)}\n${details}\n${chalk.grey(err.stack)}`);
       }
     }
 
