@@ -267,6 +267,36 @@ describe('Flow Operations Plugin', () => {
       validateFlow(result);
     });
 
+    it('Should add non optional __typename when specified in config', async () => {
+      const ast = parse(`
+        query unionTest {
+          unionTest {
+            ... on User {
+              id
+            }
+
+            ... on Profile {
+              age
+            }
+          }
+        }
+    `);
+      const result = await plugin(
+        schema,
+        [
+          {
+            filePath: '',
+            content: ast,
+          },
+        ],
+        { nonOptionalTypename: true },
+        { outputFile: '' }
+      );
+
+      expect(result).toBeSimilarStringTo(`export type UnionTestQuery = ({ __typename: 'Query' } & { unionTest: ?(({ __typename: 'User' } & $Pick<User, { id: * }>) | ({ __typename: 'Profile' } & $Pick<Profile, { age: * }>)) });`);
+      validateFlow(result);
+    });
+
     it('Should add __typename correctly when interfaces are in use', async () => {
       const ast = parse(`
         query notifications {

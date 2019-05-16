@@ -141,7 +141,8 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: number | string, parent: any): string {
     const originalNode = parent[key] as ObjectTypeDefinitionNode;
-    const allFields = [...(this._parsedConfig.addTypename ? [indent(`__typename?: '${node.name}',`)] : []), ...node.fields];
+    const optionalTypename = this.config.nonOptionalTypename ? '__typename' : '__typename?';
+    const allFields = [...(this.config.addTypename ? [indent(`${optionalTypename}: '${node.name}',`)] : []), ...node.fields];
     const interfaces = originalNode.interfaces && node.interfaces.length > 0 ? originalNode.interfaces.map(i => this.convertName(i)).join(' & ') + (allFields.length ? ' & ' : '') : '';
 
     let declarationBlock = new DeclarationBlock(this._declarationBlockConfig)
@@ -159,7 +160,8 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
   }
 
   InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode, key: number | string, parent: any): string {
-    const allFields = [...(this._parsedConfig.addTypename ? [indent(`__typename?: '${node.name}',`)] : []), ...node.fields];
+    const optionalTypename = this.config.nonOptionalTypename ? '__typename' : '__typename?';
+    const allFields = [...(this.config.addTypename ? [indent(`${optionalTypename}: '${node.name}',`)] : []), ...node.fields];
     const argumentsBlock = this.buildArgumentsBlock(parent[key] as InterfaceTypeDefinitionNode);
 
     let declarationBlock = new DeclarationBlock(this._declarationBlockConfig)
