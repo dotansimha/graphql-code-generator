@@ -47,6 +47,7 @@ export class SelectionSetToObject {
     protected _schema: GraphQLSchema,
     protected _convertName: ConvertNameFn<BaseVisitorConvertOptions>,
     protected _addTypename: boolean,
+    protected _nonOptionalTypename: boolean,
     protected _loadedFragments: LoadedFragment[],
     protected _namespacedImportName: string | null,
     protected _parentSchemaType?: GraphQLNamedType,
@@ -165,7 +166,7 @@ export class SelectionSetToObject {
       this._convertName(this._parentSchemaType.name, {
         useTypesPrefix: true,
       });
-    const typeName = this._addTypename || this._queriedForTypename ? this.buildTypeNameField() : null;
+    const typeName = this._nonOptionalTypename || this._addTypename || this._queriedForTypename ? this.buildTypeNameField() : null;
     const baseFields = this.buildPrimitiveFields(parentName, this._primitiveFields);
     const aliasBaseFields = this.buildAliasedPrimitiveFields(parentName, this._primitiveAliasedFields);
     const linksFields = this.buildLinkFields(this._linksFields);
@@ -210,7 +211,9 @@ export class SelectionSetToObject {
       return null;
     }
 
-    return `{ ${this.formatNamedField('__typename')}${this._queriedForTypename ? '' : '?'}: ${possibleTypes.map(t => `'${t}'`).join(' | ')} }`;
+    const optionalTypename = !this._queriedForTypename && !this._nonOptionalTypename;
+
+    return `{ ${this.formatNamedField('__typename')}${optionalTypename ? '?' : ''}: ${possibleTypes.map(t => `'${t}'`).join(' | ')} }`;
   }
 
   protected buildPrimitiveFields(parentName: string, fields: PrimitiveField[]): string | null {

@@ -300,6 +300,17 @@ describe('TypeScript Operations Plugin', () => {
       expect(result).toBeSimilarStringTo(`export type Unnamed_1_Query = ({ __typename: 'Query' } & Pick<Query, 'dummy'>);`);
       validate(result, config);
     });
+    it('Should add __typename as non-optional when forced', async () => {
+      const ast = parse(`
+        query {
+          dummy
+        }
+      `);
+      const config = { nonOptionalTypename: true };
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
+      expect(result).toBeSimilarStringTo(`export type Unnamed_1_Query = ({ __typename: 'Query' } & Pick<Query, 'dummy'>);`);
+      validate(result, config);
+    });
 
     it('Should add __typename as optional when its not specified', async () => {
       const ast = parse(`

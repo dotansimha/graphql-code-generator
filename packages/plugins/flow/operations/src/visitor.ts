@@ -20,7 +20,7 @@ export class FlowDocumentsVisitor extends BaseDocumentsVisitor<FlowDocumentsPlug
       schema
     );
 
-    this.setSelectionSetHandler(new FlowSelectionSetToObject(this.scalars, this.schema, this.convertName, this.config.addTypename, allFragments, this.config));
+    this.setSelectionSetHandler(new FlowSelectionSetToObject(this.scalars, this.schema, this.convertName, this.config.addTypename, this.config.nonOptionalTypename, allFragments, this.config));
     this.setVariablesTransformer(new FlowOperationVariablesToObject(this.scalars, this.convertName, this.config.namespacedImportName));
   }
 }
