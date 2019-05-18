@@ -92,7 +92,7 @@ describe('near-operation-file preset', () => {
       baseOutputDir: './src/',
       config: {},
       presetConfig: {
-        cwd: '/some/deep/path/',
+        cwd: '/some/deep/path',
         baseTypesPath: 'types.ts',
         extension: '.flow.js',
       },
@@ -118,7 +118,7 @@ describe('near-operation-file preset', () => {
       baseOutputDir: './src/',
       config: {},
       presetConfig: {
-        cwd: '/some/deep/path/',
+        cwd: '/some/deep/path',
         baseTypesPath: 'types.ts',
       },
       schema: schemaDocumentNode,
@@ -135,7 +135,7 @@ describe('near-operation-file preset', () => {
       baseOutputDir: './src/',
       config: {},
       presetConfig: {
-        cwd: '/some/deep/path/',
+        cwd: '/some/deep/path',
         baseTypesPath: 'types.ts',
       },
       schema: schemaDocumentNode,
@@ -152,7 +152,7 @@ describe('near-operation-file preset', () => {
       baseOutputDir: './src/',
       config: {},
       presetConfig: {
-        cwd: '/some/deep/path/',
+        cwd: '/some/deep/path',
         baseTypesPath: 'types.ts',
       },
       schema: schemaDocumentNode,
@@ -169,7 +169,7 @@ describe('near-operation-file preset', () => {
       baseOutputDir: './src/',
       config: {},
       presetConfig: {
-        cwd: '/some/deep/path/',
+        cwd: '/some/deep/path',
         baseTypesPath: 'types.ts',
       },
       schema: schemaDocumentNode,
