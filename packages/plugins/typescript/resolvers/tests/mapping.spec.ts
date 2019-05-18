@@ -55,6 +55,48 @@ describe('ResolversTypes', () => {
     };`);
   });
 
+  it('Should allow to map custom type that refers itself (issue #1770)', async () => {
+    const testSchema = buildSchema(/* GraphQL */ `
+      type Movie {
+        id: ID!
+        title: String!
+      }
+
+      type Book {
+        id: ID!
+        author: String!
+      }
+
+      union MovieLike = Movie | Book
+
+      type NonInterfaceHasNarrative {
+        narrative: MovieLike!
+        movie: Movie!
+      }
+    `);
+    const result = (await plugin(
+      testSchema,
+      [],
+      {
+        noSchemaStitching: true,
+        mappers: {
+          Movie: 'MovieEntity',
+        },
+      },
+      { outputFile: '' }
+    )) as Types.ComplexPluginOutput;
+    const content = mergeOutputs([result]);
+    expect(content).toBeSimilarStringTo(`export type ResolversTypes = {
+      String: Scalars['String'],
+      Boolean: Scalars['Boolean'],
+      Movie: MovieEntity,
+      ID: Scalars['ID'],
+      Book: Book,
+      MovieLike: ResolversTypes['Movie'] | ResolversTypes['Book'],
+      NonInterfaceHasNarrative: Omit<NonInterfaceHasNarrative, 'narrative' | 'movie'> & { narrative: ResolversTypes['MovieLike'], movie: ResolversTypes['Movie'] },
+    };`);
+  });
+
   it('should map to a custom type on every level (+ actual usage in code)', async () => {
     const testSchema = buildSchema(/* GraphQL */ `
       type User {
