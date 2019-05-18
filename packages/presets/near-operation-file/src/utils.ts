@@ -1,17 +1,17 @@
-import { parse, dirname, relative } from 'path';
+import { parse, dirname, relative, sep } from 'path';
 import { DocumentNode, visit, FragmentSpreadNode, FragmentDefinitionNode } from 'graphql';
 import { FragmentNameToFile } from './index';
 
 export function appendExtensionToFilePath(baseFilePath: string, extension: string) {
   const parsedPath = parse(baseFilePath);
 
-  return parsedPath.dir + '/' + parsedPath.name + extension;
+  return parsedPath.dir + sep + parsedPath.name + extension;
 }
 
 export function clearExtension(path: string): string {
   const parsedPath = parse(path);
 
-  return parsedPath.dir + '/' + parsedPath.name;
+  return parsedPath.dir + sep + parsedPath.name;
 }
 
 export function extractExternalFragmentsInUse(documentNode: DocumentNode | FragmentDefinitionNode, fragmentNameToFile: FragmentNameToFile, result: Set<string> = new Set(), ignoreList: Set<string> = new Set()): Set<string> {
