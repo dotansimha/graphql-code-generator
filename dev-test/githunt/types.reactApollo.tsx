@@ -1,9 +1,9 @@
+// tslint:disable
 import gql from 'graphql-tag';
 import * as React from 'react';
 import * as ReactApollo from 'react-apollo';
 export type Maybe<T> = T | null;
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
-// tslint:disable
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string,

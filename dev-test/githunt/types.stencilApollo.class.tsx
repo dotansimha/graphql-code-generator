@@ -1,8 +1,8 @@
+// tslint:disable
 import gql from 'graphql-tag';
 import 'stencil-apollo';
 import { Component, Prop } from '@stencil/core';
 export type Maybe<T> = T | null;
-// tslint:disable
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string,

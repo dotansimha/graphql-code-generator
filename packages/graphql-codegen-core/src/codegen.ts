@@ -45,7 +45,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
     if (typeof result === 'string') {
       output += result;
     } else if (isComplexPluginOutput(result)) {
-      output += result.content;
+      output += result.content || '';
 
       if (result.append && result.append.length > 0) {
         for (const item of result.append) {
@@ -74,7 +74,7 @@ function resolveCompareValue(a: string) {
   }
 }
 
-function sortPrependValues(values: string[]): string[] {
+export function sortPrependValues(values: string[]): string[] {
   return values.sort((a: string, b: string) => {
     const aV = resolveCompareValue(a);
     const bV = resolveCompareValue(b);

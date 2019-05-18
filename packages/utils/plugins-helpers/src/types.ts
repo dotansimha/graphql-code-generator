@@ -107,7 +107,7 @@ export namespace Types {
 }
 
 export function isComplexPluginOutput(obj: Types.PluginOutput): obj is Types.ComplexPluginOutput {
-  return typeof obj === 'object' && obj.content && typeof obj.content === 'string';
+  return typeof obj === 'object' && obj.hasOwnProperty('content');
 }
 
 export type PluginFunction<T = any> = (
