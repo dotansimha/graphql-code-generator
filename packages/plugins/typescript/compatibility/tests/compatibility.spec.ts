@@ -666,8 +666,8 @@ describe('Compatibility Plugin', () => {
         export type UserInlineFragment = ({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>);
         export type Friends = ({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][0];
         export type _UserInlineFragment = ({ __typename: 'User' } & Pick<({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][0], 'id' | 'name'>);
-        export type Props = Me4Props;
         export const Document = Me4Document;
+        export type Props = Me4Props;
         export const HOC = withMe4;
         export const Component = Me4Component;
       }`);
@@ -719,11 +719,39 @@ describe('Compatibility Plugin', () => {
         export type UserInlineFragment = ({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>);
         export type Friends = ({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][0];
         export type _UserInlineFragment = ({ __typename: 'User' } & Pick<({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][0], 'id' | 'name'>);
-        export type Props = Me4Props;
         export const Document = Me4Document;
+        export type Props = Me4Props;
         export const HOC = withMe4;
         export const Component = Me4Component;
         export const use = useMe4Query;
+      }`);
+
+      const raPluginResult = await raPlugin(schema, ast, config, { outputFile: '' });
+      await validate(mergeOutputs([raPluginResult, result]), schema, ast, config, true);
+    });
+
+    it('Should not refer to Props and HOC type when withHOC = false', async () => {
+      const config = {
+        withHOC: false,
+      };
+      const ast = [{ filePath: '', content: basicQuery }];
+      const result = await plugin(schema, ast, config as any, {
+        allPlugins: [
+          {
+            'typescript-react-apollo': config,
+          },
+        ],
+      });
+
+      expect(result).toBeSimilarStringTo(`export namespace Me4 {
+        export type Variables = Me4QueryVariables;
+        export type Query = Me4Query;
+        export type Me = Me4Query['me'];
+        export type UserInlineFragment = ({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>);
+        export type Friends = ({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][0];
+        export type _UserInlineFragment = ({ __typename: 'User' } & Pick<({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][0], 'id' | 'name'>);
+        export const Document = Me4Document;
+        export const Component = Me4Component;
       }`);
 
       const raPluginResult = await raPlugin(schema, ast, config, { outputFile: '' });

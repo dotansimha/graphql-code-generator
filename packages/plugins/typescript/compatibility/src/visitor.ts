@@ -116,17 +116,17 @@ export class CompatabilityPluginVisitor extends BaseVisitor<CompatabilityPluginR
 
       const prefix = this.config.noNamespaces ? convertedName : '';
 
-      selectionSetTypes[prefix + 'Props'] = {
-        export: 'type',
-        name: this.convertName(baseName, { suffix: 'Props' }),
-      };
-
       selectionSetTypes[prefix + 'Document'] = {
         export: 'const',
         name: this.convertName(baseName, { suffix: 'Document' }),
       };
 
       if (hoc) {
+        selectionSetTypes[prefix + 'Props'] = {
+          export: 'type',
+          name: this.convertName(baseName, { suffix: 'Props' }),
+        };
+
         selectionSetTypes[prefix + 'HOC'] = {
           export: 'const',
           name: `with${convertedName}`,
