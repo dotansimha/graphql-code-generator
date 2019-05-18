@@ -122,7 +122,7 @@ describe('near-operation-file preset', () => {
         baseTypesPath: 'types.ts',
       },
       schema: schemaDocumentNode,
-      documents: testDocuments,
+      documents: testDocuments.slice(0, 2),
       plugins: [{ typescript: {} }],
       pluginMap: { typescript: {} as any },
     });
@@ -139,7 +139,7 @@ describe('near-operation-file preset', () => {
         baseTypesPath: 'types.ts',
       },
       schema: schemaDocumentNode,
-      documents: testDocuments,
+      documents: testDocuments.slice(0, 2),
       plugins: [{ typescript: {} }],
       pluginMap: { typescript: {} as any },
     });
@@ -156,7 +156,7 @@ describe('near-operation-file preset', () => {
         baseTypesPath: 'types.ts',
       },
       schema: schemaDocumentNode,
-      documents: testDocuments,
+      documents: testDocuments.slice(0, 2),
       plugins: [{ typescript: {} }],
       pluginMap: { typescript: {} as any },
     });
@@ -173,7 +173,7 @@ describe('near-operation-file preset', () => {
         baseTypesPath: 'types.ts',
       },
       schema: schemaDocumentNode,
-      documents: testDocuments,
+      documents: testDocuments.slice(0, 2),
       plugins: [{ typescript: {} }],
       pluginMap: { typescript: {} as any },
     });
