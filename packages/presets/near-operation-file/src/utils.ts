@@ -1,17 +1,17 @@
-import { parse, dirname, relative } from 'path';
+import { parse, dirname, relative, join } from 'path';
 import { DocumentNode, visit, FragmentSpreadNode, FragmentDefinitionNode } from 'graphql';
 import { FragmentNameToFile } from './index';
 
 export function appendExtensionToFilePath(baseFilePath: string, extension: string) {
   const parsedPath = parse(baseFilePath);
 
-  return parsedPath.dir + '/' + parsedPath.name + extension;
+  return join(parsedPath.dir, parsedPath.name + extension).replace(/\\/g, '/');
 }
 
 export function clearExtension(path: string): string {
   const parsedPath = parse(path);
 
-  return parsedPath.dir + '/' + parsedPath.name;
+  return join(parsedPath.dir, parsedPath.name).replace(/\\/g, '/');
 }
 
 export function extractExternalFragmentsInUse(documentNode: DocumentNode | FragmentDefinitionNode, fragmentNameToFile: FragmentNameToFile, result: Set<string> = new Set(), ignoreList: Set<string> = new Set()): Set<string> {
@@ -39,7 +39,7 @@ export function extractExternalFragmentsInUse(documentNode: DocumentNode | Fragm
 
 export function fixLocalFile(path: string): string {
   if (!path.startsWith('..') && !path.startsWith('&&')) {
-    return `.${path}`;
+    return `./${path}`;
   }
 
   return path;
