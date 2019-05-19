@@ -117,11 +117,13 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
       return prev;
     }, {});
 
+    const absTypesPath = resolve(baseDir, join(options.baseOutputDir, options.presetConfig.baseTypesPath));
+
     return options.documents
       .map<Types.GenerateOptions | null>(documentFile => {
-        const absTypesPath = resolve(baseDir, join(options.baseOutputDir, options.presetConfig.baseTypesPath));
-        const absFilePath = appendExtensionToFilePath(documentFile.filePath, extension);
-        const relativeImportPath = resolveRelativeImport(absFilePath, absTypesPath);
+        const generatedFilePath = appendExtensionToFilePath(documentFile.filePath, extension);
+        const absGeneratedFilePath = resolve(baseDir, generatedFilePath);
+        const relativeImportPath = resolveRelativeImport(absGeneratedFilePath, absTypesPath);
         const fragmentsInUse = extractExternalFragmentsInUse(documentFile.content, fragmentNameToFile);
         const plugins = [...options.plugins];
 
@@ -135,7 +137,8 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
           const fragmentDetails = fragmentNameToFile[fragmentName];
 
           if (fragmentDetails) {
-            const fragmentImportPath = resolveRelativeImport(absFilePath, fragmentDetails.filePath);
+            const absFragmentFilePath = resolve(baseDir, fragmentDetails.filePath);
+            const fragmentImportPath = resolveRelativeImport(absGeneratedFilePath, absFragmentFilePath);
 
             plugins.unshift({
               add: `import { ${fragmentDetails.importName} } from '${fragmentImportPath}';`,
@@ -154,7 +157,7 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
         plugins.unshift({ add: `import * as ${importTypesNamespace} from '${relativeImportPath}';\n` });
 
         return {
-          filename: absFilePath,
+          filename: generatedFilePath,
           plugins,
           pluginMap,
           config,

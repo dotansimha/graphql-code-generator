@@ -92,7 +92,7 @@ describe('near-operation-file preset', () => {
       baseOutputDir: './src/',
       config: {},
       presetConfig: {
-        cwd: '/some/deep/path/',
+        cwd: '/some/deep/path',
         baseTypesPath: 'types.ts',
         extension: '.flow.js',
       },
@@ -118,11 +118,11 @@ describe('near-operation-file preset', () => {
       baseOutputDir: './src/',
       config: {},
       presetConfig: {
-        cwd: '/some/deep/path/',
+        cwd: '/some/deep/path',
         baseTypesPath: 'types.ts',
       },
       schema: schemaDocumentNode,
-      documents: testDocuments,
+      documents: testDocuments.slice(0, 2),
       plugins: [{ typescript: {} }],
       pluginMap: { typescript: {} as any },
     });
@@ -130,16 +130,60 @@ describe('near-operation-file preset', () => {
     expect(result.map(o => o.plugins)[0]).toEqual(expect.arrayContaining([{ add: `import * as Types from '../types';\n` }]));
   });
 
+  it('Should prepend the "add" plugin with the correct import (long path)', async () => {
+    const result = await preset.buildGeneratesSection({
+      baseOutputDir: './src/',
+      config: {},
+      presetConfig: {
+        cwd: '/some/deep/path',
+        baseTypesPath: 'types.ts',
+      },
+      schema: schemaDocumentNode,
+      documents: [
+        {
+          filePath: '/some/deep/path/src/graphql/nested/here/me-query.graphql',
+          content: operationAst,
+        },
+        testDocuments[1],
+      ],
+      plugins: [{ typescript: {} }],
+      pluginMap: { typescript: {} as any },
+    });
+    expect(result.map(o => o.plugins)[0]).toEqual(expect.arrayContaining([{ add: `import * as Types from '../../../types';\n` }]));
+  });
+
+  it('Should prepend the "add" plugin with the correct import (siblings)', async () => {
+    const result = await preset.buildGeneratesSection({
+      baseOutputDir: './src/',
+      config: {},
+      presetConfig: {
+        cwd: '/some/deep/path',
+        baseTypesPath: 'types.ts',
+      },
+      schema: schemaDocumentNode,
+      documents: [
+        {
+          filePath: '/some/deep/path/src/me-query.graphql',
+          content: operationAst,
+        },
+        testDocuments[1],
+      ],
+      plugins: [{ typescript: {} }],
+      pluginMap: { typescript: {} as any },
+    });
+    expect(result.map(o => o.plugins)[0]).toEqual(expect.arrayContaining([{ add: `import * as Types from './types';\n` }]));
+  });
+
   it('Should add "add" plugin to plugins map if its not there', async () => {
     const result = await preset.buildGeneratesSection({
       baseOutputDir: './src/',
       config: {},
       presetConfig: {
-        cwd: '/some/deep/path/',
+        cwd: '/some/deep/path',
         baseTypesPath: 'types.ts',
       },
       schema: schemaDocumentNode,
-      documents: testDocuments,
+      documents: testDocuments.slice(0, 2),
       plugins: [{ typescript: {} }],
       pluginMap: { typescript: {} as any },
     });
@@ -152,11 +196,11 @@ describe('near-operation-file preset', () => {
       baseOutputDir: './src/',
       config: {},
       presetConfig: {
-        cwd: '/some/deep/path/',
+        cwd: '/some/deep/path',
         baseTypesPath: 'types.ts',
       },
       schema: schemaDocumentNode,
-      documents: testDocuments,
+      documents: testDocuments.slice(0, 2),
       plugins: [{ typescript: {} }],
       pluginMap: { typescript: {} as any },
     });
@@ -169,11 +213,11 @@ describe('near-operation-file preset', () => {
       baseOutputDir: './src/',
       config: {},
       presetConfig: {
-        cwd: '/some/deep/path/',
+        cwd: '/some/deep/path',
         baseTypesPath: 'types.ts',
       },
       schema: schemaDocumentNode,
-      documents: testDocuments,
+      documents: testDocuments.slice(0, 2),
       plugins: [{ typescript: {} }],
       pluginMap: { typescript: {} as any },
     });
@@ -188,6 +232,64 @@ describe('near-operation-file preset', () => {
         },
         {
           add: `import { UserFieldsFragment } from './user-fragment.generated';`,
+        },
+      ])
+    );
+  });
+
+  it('Should add import to external fragment when its in use (long path)', async () => {
+    const result = await preset.buildGeneratesSection({
+      baseOutputDir: './src/',
+      config: {},
+      presetConfig: {
+        cwd: '/some/deep/path',
+        baseTypesPath: 'types.ts',
+      },
+      schema: schemaDocumentNode,
+      documents: [
+        {
+          filePath: '/some/deep/path/src/graphql/nested/down/here/me-query.graphql',
+          content: operationAst,
+        },
+        testDocuments[1],
+      ],
+      plugins: [{ typescript: {} }],
+      pluginMap: { typescript: {} as any },
+    });
+
+    expect(result.map(o => o.plugins)[0]).toEqual(
+      expect.arrayContaining([
+        {
+          add: `import { UserFieldsFragment } from '../../../user-fragment.generated';`,
+        },
+      ])
+    );
+  });
+
+  it('Should add import to external fragment when its in use (nested fragment)', async () => {
+    const result = await preset.buildGeneratesSection({
+      baseOutputDir: './src/',
+      config: {},
+      presetConfig: {
+        cwd: '/some/deep/path',
+        baseTypesPath: 'types.ts',
+      },
+      schema: schemaDocumentNode,
+      documents: [
+        testDocuments[0],
+        {
+          filePath: '/some/deep/path/src/graphql/nested/down/here/user-fragment.graphql',
+          content: fragmentAst,
+        },
+      ],
+      plugins: [{ typescript: {} }],
+      pluginMap: { typescript: {} as any },
+    });
+
+    expect(result.map(o => o.plugins)[0]).toEqual(
+      expect.arrayContaining([
+        {
+          add: `import { UserFieldsFragment } from './nested/down/here/user-fragment.generated';`,
         },
       ])
     );
