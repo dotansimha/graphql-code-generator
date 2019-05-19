@@ -38,7 +38,7 @@ export function extractExternalFragmentsInUse(documentNode: DocumentNode | Fragm
 }
 
 export function fixLocalFile(path: string): string {
-  if (!path.startsWith('..') && !path.startsWith('&&')) {
+  if (!path.startsWith('..')) {
     return `./${path}`;
   }
 
