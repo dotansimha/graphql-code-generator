@@ -1,4 +1,4 @@
-import { parse, dirname, relative, join } from 'path';
+import { parse, dirname, relative, join, isAbsolute } from 'path';
 import { DocumentNode, visit, FragmentSpreadNode, FragmentDefinitionNode } from 'graphql';
 import { FragmentNameToFile } from './index';
 
@@ -46,5 +46,11 @@ export function fixLocalFile(path: string): string {
 }
 
 export function resolveRelativeImport(from: string, to: string): string {
+  if (!isAbsolute(from)) {
+    throw new Error(`Argument 'from' must be an absolute path, '${from}' given.`);
+  }
+  if (!isAbsolute(to)) {
+    throw new Error(`Argument 'to' must be an absolute path, '${to}' given.`);
+  }
   return fixLocalFile(clearExtension(relative(dirname(from), to)));
 }
