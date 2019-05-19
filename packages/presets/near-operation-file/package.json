@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/near-operation-file-preset",
-  "version": "1.1.3",
+  "version": "1.2.0",
   "description": "GraphQL Code Generator preset for generating operation code near the operation file",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
@@ -9,13 +9,13 @@
     "test": "jest --config ../../../jest.config.js"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "1.1.3",
-    "@graphql-codegen/visitor-plugin-common": "1.1.3",
-    "@graphql-codegen/add": "1.1.3",
+    "@graphql-codegen/add": "1.2.0",
+    "@graphql-codegen/plugin-helpers": "1.2.0",
+    "@graphql-codegen/visitor-plugin-common": "1.2.0",
     "tslib": "1.9.3"
   },
   "devDependencies": {
-    "@graphql-codegen/testing": "1.1.3",
+    "@graphql-codegen/testing": "1.2.0",
     "graphql": "14.3.0",
     "jest": "24.8.0",
     "ts-jest": "24.0.2",
