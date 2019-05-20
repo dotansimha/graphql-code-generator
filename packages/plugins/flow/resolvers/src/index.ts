@@ -39,10 +39,19 @@ export type SubscriptionResolveFn<Result, Parent, Context, Args> = (
   info: GraphQLResolveInfo
 ) => Result | Promise<Result>;
 
-export interface ISubscriptionResolverObject<Result, Key: string, Parent, Context, Args> {
+export interface ISubscriptionDirectSubscribeObject<Result, Key: string, Parent, Context, Args> {
   subscribe: SubscriptionSubscribeFn<{ [key: Key]: Result }, Parent, Context, Args>;
-  resolve?: SubscriptionResolveFn<Result, Parent, Context, Args>;
+  resolve?: SubscriptionResolveFn<Result, mixed, Context, Args>;
 }
+
+export interface ISubscriptionSubscribeResolveObject<Result, Parent, Context, Args> {
+  subscribe: SubscriptionSubscribeFn<mixed, Parent, Context, Args>;
+  resolve: SubscriptionResolveFn<Result, mixed, Context, Args>;
+}
+
+export type ISubscriptionResolverObject<Result, Key: string, Parent, Context, Args> =
+  | ISubscriptionDirectSubscribeObject<Result, Key, Parent, Context, Args>
+  | ISubscriptionSubscribeResolveObject<Result, Parent, Context, Args>;
 
 export type SubscriptionResolver<Result, Key: string, Parent = {}, Context = {}, Args = {}> =
   | ((...args: Array<any>) => ISubscriptionResolverObject<Result, Key, Parent, Context, Args>)
