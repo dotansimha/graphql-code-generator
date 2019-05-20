@@ -3,6 +3,7 @@ import { plugin, StencilComponentType } from '../src/index';
 import { buildClientSchema } from 'graphql';
 import gql from 'graphql-tag';
 import { readFileSync } from 'fs';
+import { Types } from '@graphql-codegen/plugin-helpers';
 
 describe('Components', () => {
   const schema = buildClientSchema(JSON.parse(readFileSync('../../../../dev-test/githunt/schema.json').toString()));
@@ -23,12 +24,10 @@ describe('Components', () => {
       }
     `;
 
-    const content = await plugin(schema, [{ filePath: '', content: documents }], { componentType: StencilComponentType.class }, { outputFile: '' });
+    const content = (await plugin(schema, [{ filePath: '', content: documents }], { componentType: StencilComponentType.class }, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-    expect(content).toBeSimilarStringTo(`
-        import 'stencil-apollo';
-        import { Component, Prop } from '@stencil/core';
-      `);
+    expect(content.prepend).toContain(`import 'stencil-apollo';`);
+    expect(content.prepend).toContain(`import { Component, Prop } from '@stencil/core';`);
   });
 
   it('should generate Functional Component', async () => {
@@ -48,7 +47,7 @@ describe('Components', () => {
       }
     `;
 
-    const content = await plugin(schema, [{ filePath: '', content: documents }], { componentType: StencilComponentType.functional }, { outputFile: '' });
+    const { content } = (await plugin(schema, [{ filePath: '', content: documents }], { componentType: StencilComponentType.functional }, { outputFile: '' })) as Types.ComplexPluginOutput;
 
     expect(content).toBeSimilarStringTo(`
         export type FeedProps = {
@@ -83,7 +82,7 @@ describe('Components', () => {
       }
     `;
 
-    const content = await plugin(schema, [{ filePath: '', content: documents }], { componentType: StencilComponentType.class }, { outputFile: '' });
+    const { content } = (await plugin(schema, [{ filePath: '', content: documents }], { componentType: StencilComponentType.class }, { outputFile: '' })) as Types.ComplexPluginOutput;
 
     expect(content).toBeSimilarStringTo(`
             @Component({

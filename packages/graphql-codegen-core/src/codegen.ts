@@ -1,19 +1,10 @@
-import { CodegenPlugin, Types } from '@graphql-codegen/plugin-helpers';
+import { Types, isComplexPluginOutput } from '@graphql-codegen/plugin-helpers';
 import { DocumentNode, visit } from 'graphql';
 import { mergeSchemas } from './merge-schemas';
 import { executePlugin } from './execute-plugin';
 import { DetailedError } from './errors';
 
-export async function codegen(options: {
-  filename: string;
-  plugins: Types.ConfiguredPlugin[];
-  schema: DocumentNode;
-  documents: Types.DocumentFile[];
-  config: { [key: string]: any };
-  pluginMap: {
-    [name: string]: CodegenPlugin;
-  };
-}) {
+export async function codegen(options: Types.GenerateOptions): Promise<string> {
   let output = '';
 
   validateDocuments(options.schema, options.documents);
@@ -24,6 +15,9 @@ export async function codegen(options: {
   const schema = pluginPackages.reduce((schema, plugin) => {
     return !plugin.addToSchema ? schema : mergeSchemas([schema, plugin.addToSchema]);
   }, options.schema);
+
+  const prepend: Set<string> = new Set<string>();
+  const append: Set<string> = new Set<string>();
 
   for (const plugin of options.plugins) {
     const name = Object.keys(plugin)[0];
@@ -48,10 +42,52 @@ export async function codegen(options: {
       pluginPackage
     );
 
-    output += result;
+    if (typeof result === 'string') {
+      output += result;
+    } else if (isComplexPluginOutput(result)) {
+      output += result.content || '';
+
+      if (result.append && result.append.length > 0) {
+        for (const item of result.append) {
+          append.add(item);
+        }
+      }
+
+      if (result.prepend && result.prepend.length > 0) {
+        for (const item of result.prepend) {
+          prepend.add(item);
+        }
+      }
+    }
   }
 
-  return output;
+  return [...sortPrependValues(Array.from(prepend.values())), output, ...append.values()].join('\n');
+}
+
+function resolveCompareValue(a: string) {
+  if (a.startsWith('/*') || a.startsWith('//')) {
+    return 0;
+  } else if (a.startsWith('import')) {
+    return 1;
+  } else {
+    return 2;
+  }
+}
+
+export function sortPrependValues(values: string[]): string[] {
+  return values.sort((a: string, b: string) => {
+    const aV = resolveCompareValue(a);
+    const bV = resolveCompareValue(b);
+
+    if (aV < bV) {
+      return -1;
+    }
+    if (aV > bV) {
+      return 1;
+    }
+
+    return 0;
+  });
 }
 
 function validateDocuments(schema: DocumentNode, files: Types.DocumentFile[]) {

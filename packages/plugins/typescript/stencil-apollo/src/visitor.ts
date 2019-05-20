@@ -1,4 +1,4 @@
-import { ClientSideBaseVisitor, ClientSideBasePluginConfig, getConfigValue } from '@graphql-codegen/visitor-plugin-common';
+import { ClientSideBaseVisitor, ClientSideBasePluginConfig, getConfigValue, LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
 import { StencilApolloRawPluginConfig, StencilComponentType } from './index';
 import * as autoBind from 'auto-bind';
 import { FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
@@ -10,7 +10,7 @@ export interface StencilApolloPluginConfig extends ClientSideBasePluginConfig {
 }
 
 export class StencilApolloVisitor extends ClientSideBaseVisitor<StencilApolloRawPluginConfig, StencilApolloPluginConfig> {
-  constructor(fragments: FragmentDefinitionNode[], rawConfig: StencilApolloRawPluginConfig) {
+  constructor(fragments: LoadedFragment[], rawConfig: StencilApolloRawPluginConfig) {
     super(fragments, rawConfig, {
       componentType: getConfigValue(rawConfig.componentType, StencilComponentType.functional),
     } as any);
@@ -18,9 +18,14 @@ export class StencilApolloVisitor extends ClientSideBaseVisitor<StencilApolloRaw
     autoBind(this);
   }
 
-  public getImports(): string {
+  public getImports(): string[] {
     const baseImports = super.getImports();
     const imports = [];
+    const hasOperations = this._collectedOperations.length > 0;
+
+    if (!hasOperations) {
+      return baseImports;
+    }
 
     if (this.config.componentType === StencilComponentType.class) {
       imports.push(`import 'stencil-apollo';`);
@@ -29,7 +34,7 @@ export class StencilApolloVisitor extends ClientSideBaseVisitor<StencilApolloRaw
       imports.push(`import * as StencilApollo from 'stencil-apollo';`);
     }
 
-    return [baseImports, ...imports].join('\n');
+    return [...baseImports, ...imports];
   }
 
   private _buildOperationFunctionalComponent(node: OperationDefinitionNode, documentVariableName: string, operationType: string, operationResultType: string, operationVariablesTypes: string): string {

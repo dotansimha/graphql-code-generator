@@ -18,8 +18,6 @@ import {
   isInterfaceType,
   isNonNullType,
   isListType,
-  Kind,
-  isScalarType,
   isUnionType,
 } from 'graphql';
 import { DirectiveDefinitionNode, GraphQLObjectType, InputValueDefinitionNode, GraphQLOutputType } from 'graphql';
@@ -242,8 +240,9 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
             .map(fieldName => {
               const field = fields[fieldName];
               const baseType = getBaseType(field.type);
+              const isUnion = isUnionType(baseType);
 
-              if (!this.config.mappers[baseType.name]) {
+              if (!this.config.mappers[baseType.name] && !isUnion) {
                 return null;
               }
 

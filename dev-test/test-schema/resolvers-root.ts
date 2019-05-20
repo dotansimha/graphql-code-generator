@@ -1,6 +1,7 @@
 // tslint:disable
-
-type Maybe<T> = T | null;
+import { GraphQLResolveInfo } from 'graphql';
+export type Maybe<T> = T | null;
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string,
@@ -11,6 +12,7 @@ export type Scalars = {
 };
 
 export type QueryRoot = {
+  __typename?: 'QueryRoot',
   allUsers: Array<Maybe<User>>,
   userById?: Maybe<User>,
   answer: Array<Scalars['Int']>,
@@ -22,19 +24,16 @@ export type QueryRootUserByIdArgs = {
 };
 
 export type SubscriptionRoot = {
+  __typename?: 'SubscriptionRoot',
   newUser?: Maybe<User>,
 };
 
 export type User = {
+  __typename?: 'User',
   id: Scalars['Int'],
   name: Scalars['String'],
   email: Scalars['String'],
 };
-
-import { GraphQLResolveInfo } from 'graphql';
-
-export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
-
 
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (

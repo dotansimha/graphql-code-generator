@@ -1,10 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Flow Resolvers Plugin Should generate basic type resolvers 1`] = `
-"
-import { type GraphQLResolveInfo, type GraphQLScalarTypeConfig } from 'graphql';
-
-export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
+Object {
+  "content": "export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
   parent: Parent,
   args: Args,
   context: Context,
@@ -132,5 +130,9 @@ export type DirectiveResolvers<ContextType = any> = {
 * @deprecated
 * Use \\"DirectiveResolvers\\" root object instead. If you wish to get \\"IDirectiveResolvers\\", add \\"typesPrefix: I\\" to your config.
 */
-export type IDirectiveResolvers<ContextType = any> = DirectiveResolvers<ContextType>;"
+export type IDirectiveResolvers<ContextType = any> = DirectiveResolvers<ContextType>;",
+  "prepend": Array [
+    "import { type GraphQLResolveInfo, type GraphQLScalarTypeConfig } from 'graphql';",
+  ],
+}
 `;

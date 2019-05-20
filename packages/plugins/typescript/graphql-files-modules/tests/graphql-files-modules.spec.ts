@@ -177,4 +177,33 @@ describe('graphql-codegen typescript-graphql-files-modules', () => {
     `);
     validateTs(result);
   });
+
+  it('Should generate simple module with a custom path prefix', async () => {
+    const result = await plugin(
+      null,
+      [
+        {
+          filePath: 'some/file/my-query.graphql',
+          content: parse(/* GraphQL */ `
+            query MyQuery {
+              field
+            }
+          `),
+        },
+      ],
+      { modulePathPrefix: 'api/' },
+      { outputFile: '' }
+    );
+
+    expect(result).toBeSimilarStringTo(`
+      declare module '*/api/my-query.graphql' {
+        import { DocumentNode } from 'graphql';
+        const defaultDocument: DocumentNode;
+        export const MyQuery: DocumentNode;
+      
+        export default defaultDocument;
+      }
+    `);
+    validateTs(result);
+  });
 });

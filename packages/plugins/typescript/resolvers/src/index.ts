@@ -1,4 +1,4 @@
-import { RawResolversConfig } from '@graphql-codegen/visitor-plugin-common';
+import { RawResolversConfig, OMIT_TYPE } from '@graphql-codegen/visitor-plugin-common';
 import { Types, PluginFunction } from '@graphql-codegen/plugin-helpers';
 import { isScalarType, parse, printSchema, visit, GraphQLSchema } from 'graphql';
 import { TypeScriptResolversVisitor } from './visitor';
@@ -104,12 +104,7 @@ export type StitchingResolver<TResult, TParent, TContext, TArgs> = {
     resolverDefs = [stitchingResolverType, resolverType, `  | ${resolverFnUsage}`, `  | ${stitchingResolverUsage};`].join('\n');
   }
 
-  const header = `
-import { ${imports.join(', ')} } from 'graphql';
-
-export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
-
-${indexSignature}
+  const header = `${indexSignature}
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
@@ -170,5 +165,8 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
     console['warn'](`Unused mappers: ${unusedMappers.join(',')}`);
   }
 
-  return [...mappersImports, header, resolversTypeMapping, ...visitorResult.definitions.filter(d => typeof d === 'string'), getRootResolver(), getAllDirectiveResolvers()].join('\n');
+  return {
+    prepend: [`import { ${imports.join(', ')} } from 'graphql';`, ...mappersImports, OMIT_TYPE],
+    content: [header, resolversTypeMapping, ...visitorResult.definitions.filter(d => typeof d === 'string'), getRootResolver(), getAllDirectiveResolvers()].join('\n'),
+  };
 };

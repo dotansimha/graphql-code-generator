@@ -9,6 +9,7 @@ export function isConfiguredOutput(type: any): type is Types.ConfiguredOutput {
 }
 
 export function normalizeOutputParam(config: Types.OutputConfig | Types.ConfiguredOutput): Types.ConfiguredOutput {
+  // In case of direct array with a list of plugins
   if (isOutputConfigArray(config)) {
     return {
       documents: [],

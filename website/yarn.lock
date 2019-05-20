@@ -724,7 +724,7 @@
     to-fast-properties "^2.0.0"
 
 "@graphql-codegen/config-markdown-generator@../packages/utils/config-md-generator":
-  version "1.1.3"
+  version "1.2.0"
   dependencies:
     "@microsoft/tsdoc" "0.12.9"
     tslib "1.9.3"
@@ -5162,10 +5162,10 @@ neo-async@^2.5.0:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.0.tgz#b9d15e4d71c6762908654b5183ed38b753340835"
   integrity sha512-MFh0d/Wa7vkKO3Y3LlacqAEeHK0mckVqzDieUKTT+KGxi+zIpeVsFxymkIiRpbpDziHc290Xr9A1O4Om7otoRA==
 
-netlify-lambda@1.4.7:
-  version "1.4.7"
-  resolved "https://registry.yarnpkg.com/netlify-lambda/-/netlify-lambda-1.4.7.tgz#a03e4a4c6f6f8d27abb7986891b11b4a74d82e82"
-  integrity sha512-tTS1Vm6sDky8lTi6SZgAwrOWz9sLhlwUpoh5Vg3L/Iz6oR03XAdIxXAoSZjbRD2OHhLzATh0LsBpCN1BlFF2ug==
+netlify-lambda@1.4.11:
+  version "1.4.11"
+  resolved "https://registry.yarnpkg.com/netlify-lambda/-/netlify-lambda-1.4.11.tgz#f175b8ea8a854c3eac3bc594f89339382cf423eb"
+  integrity sha512-4hq8mgnrOzFCqylQh2erWFQTEcz2Qd+YdEDrr2mAUivPOunHEWwW5lW9Y/oVmqimkxtkqDv2AwxF0t1vJM5qMQ==
   dependencies:
     "@babel/core" "^7.0.0"
     "@babel/plugin-proposal-class-properties" "^7.0.0"

@@ -1,0 +1,37 @@
+{
+  "name": "@graphql-codegen/near-operation-file-preset",
+  "version": "1.2.0",
+  "description": "GraphQL Code Generator preset for generating operation code near the operation file",
+  "repository": "git@github.com:dotansimha/graphql-code-generator.git",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc -m esnext --outDir dist/esnext && tsc -m commonjs --outDir dist/commonjs",
+    "test": "jest --config ../../../jest.config.js"
+  },
+  "dependencies": {
+    "@graphql-codegen/add": "1.2.0",
+    "@graphql-codegen/plugin-helpers": "1.2.0",
+    "@graphql-codegen/visitor-plugin-common": "1.2.0",
+    "tslib": "1.9.3"
+  },
+  "devDependencies": {
+    "@graphql-codegen/testing": "1.2.0",
+    "graphql": "14.3.0",
+    "jest": "24.8.0",
+    "ts-jest": "24.0.2",
+    "typescript": "3.4.5"
+  },
+  "sideEffects": false,
+  "main": "dist/commonjs/index.js",
+  "module": "dist/esnext/index.js",
+  "typings": "dist/esnext/index.d.ts",
+  "typescript": {
+    "definition": "dist/esnext/index.d.ts"
+  },
+  "jest-junit": {
+    "outputDirectory": "../../../../test-results/typescript"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

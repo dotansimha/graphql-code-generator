@@ -3,11 +3,12 @@ import { plugin, addToSchema } from './../src/index';
 import { buildSchema, print, GraphQLSchema } from 'graphql';
 import { plugin as tsPlugin } from '../../typescript/src/index';
 import { validateTs } from '../../typescript/tests/validate';
+import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 
 describe('TypeScript Mongo', () => {
-  const validate = async (content: string, schema: GraphQLSchema, config: any) => {
+  const validate = async (content: Types.PluginOutput, schema: GraphQLSchema, config: any) => {
     const tsPluginOutput = await tsPlugin(schema, [], config, { outputFile: '' });
-    const result = [tsPluginOutput, content].join('\n');
+    const result = mergeOutputs([tsPluginOutput, content]);
     await validateTs(result);
   };
 

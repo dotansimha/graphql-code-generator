@@ -1,7 +1,7 @@
-import { ClientSideBaseVisitor, ClientSideBasePluginConfig, getConfigValue } from '@graphql-codegen/visitor-plugin-common';
+import { ClientSideBaseVisitor, ClientSideBasePluginConfig, LoadedFragment, getConfigValue, OMIT_TYPE } from '@graphql-codegen/visitor-plugin-common';
 import { UrqlRawPluginConfig } from './index';
 import * as autoBind from 'auto-bind';
-import { FragmentDefinitionNode, OperationDefinitionNode, Kind } from 'graphql';
+import { OperationDefinitionNode, Kind } from 'graphql';
 import { titleCase } from 'change-case';
 
 export interface UrqlPluginConfig extends ClientSideBasePluginConfig {
@@ -11,7 +11,7 @@ export interface UrqlPluginConfig extends ClientSideBasePluginConfig {
 }
 
 export class UrqlVisitor extends ClientSideBaseVisitor<UrqlRawPluginConfig, UrqlPluginConfig> {
-  constructor(fragments: FragmentDefinitionNode[], rawConfig: UrqlRawPluginConfig) {
+  constructor(fragments: LoadedFragment[], rawConfig: UrqlRawPluginConfig) {
     super(fragments, rawConfig, {
       withComponent: getConfigValue(rawConfig.withComponent, true),
       withHooks: getConfigValue(rawConfig.withHooks, false),
@@ -21,9 +21,14 @@ export class UrqlVisitor extends ClientSideBaseVisitor<UrqlRawPluginConfig, Urql
     autoBind(this);
   }
 
-  public getImports(): string {
+  public getImports(): string[] {
     const baseImports = super.getImports();
     const imports = [];
+    const hasOperations = this._collectedOperations.length > 0;
+
+    if (!hasOperations) {
+      return baseImports;
+    }
 
     if (this.config.withComponent) {
       imports.push(`import * as React from 'react';`);
@@ -33,9 +38,9 @@ export class UrqlVisitor extends ClientSideBaseVisitor<UrqlRawPluginConfig, Urql
       imports.push(`import * as Urql from '${this.config.urqlImportFrom || 'urql'}';`);
     }
 
-    imports.push(`export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>`);
+    imports.push(OMIT_TYPE);
 
-    return [baseImports, ...imports].join('\n');
+    return [...baseImports, ...imports];
   }
 
   private _buildComponent(node: OperationDefinitionNode, documentVariableName: string, operationType: string, operationResultType: string, operationVariablesTypes: string): string {
@@ -60,7 +65,7 @@ export function use${operationName}() {
 };`;
     }
     return `
-export function use${operationName}(options: Urql.Use${operationType}Args<${operationVariablesTypes}> = {}) {
+export function use${operationName}(options: Omit<Urql.Use${operationType}Args<${operationVariablesTypes}>, 'query'> = {}) {
   return Urql.use${operationType}<${operationResultType}>({ query: ${documentVariableName}, ...options });
 };`;
   }

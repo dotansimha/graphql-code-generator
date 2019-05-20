@@ -1,8 +1,9 @@
+import { Types } from '@graphql-codegen/plugin-helpers';
 import * as ts from 'typescript';
 import * as path from 'path';
 
 export function validateTs(
-  contents: string,
+  pluginOutput: Types.PluginOutput,
   options: ts.CompilerOptions = {
     noEmitOnError: true,
     noImplicitAny: true,
@@ -39,6 +40,7 @@ export function validateTs(
     options.strictFunctionTypes = true;
   }
 
+  const contents: string = typeof pluginOutput === 'string' ? pluginOutput : [...(pluginOutput.prepend || []), pluginOutput.content, ...(pluginOutput.append || [])].join('\n');
   const testFile = `test-file.${isTsx ? 'tsx' : 'ts'}`;
   const result = ts.createSourceFile(testFile, contents, ts.ScriptTarget.ES2016, false, isTsx ? ts.ScriptKind.TSX : undefined);
 

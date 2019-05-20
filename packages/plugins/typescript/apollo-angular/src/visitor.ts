@@ -1,6 +1,6 @@
-import { ClientSideBaseVisitor, ClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-common';
+import { ClientSideBaseVisitor, ClientSideBasePluginConfig, LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
 import * as autoBind from 'auto-bind';
-import { FragmentDefinitionNode, OperationDefinitionNode, print, visit } from 'graphql';
+import { OperationDefinitionNode, print, visit } from 'graphql';
 import { ApolloAngularRawPluginConfig } from './index';
 
 const R_MOD = /module\:\s*"([^"]+)"/; // matches: module: "..."
@@ -16,7 +16,7 @@ export interface ApolloAngularPluginConfig extends ClientSideBasePluginConfig {
 }
 
 export class ApolloAngularVisitor extends ClientSideBaseVisitor<ApolloAngularRawPluginConfig, ApolloAngularPluginConfig> {
-  constructor(fragments: FragmentDefinitionNode[], private _allOperations: OperationDefinitionNode[], rawConfig: ApolloAngularRawPluginConfig) {
+  constructor(fragments: LoadedFragment[], private _allOperations: OperationDefinitionNode[], rawConfig: ApolloAngularRawPluginConfig) {
     super(fragments, rawConfig, {
       ngModule: rawConfig.ngModule,
       namedClient: rawConfig.namedClient,
@@ -25,8 +25,14 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<ApolloAngularRaw
     autoBind(this);
   }
 
-  public getImports(): string {
+  public getImports(): string[] {
     const baseImports = super.getImports();
+    const hasOperations = this._collectedOperations.length > 0;
+
+    if (!hasOperations) {
+      return baseImports;
+    }
+
     const imports = [`import { Injectable } from '@angular/core';`, `import * as Apollo from 'apollo-angular';`];
 
     const defs: Record<string, { path: string; module: string }> = {};
@@ -50,7 +56,7 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<ApolloAngularRaw
       imports.push(`import { ${def.module} } from '${def.path}';`);
     });
 
-    return [baseImports, ...imports].join('\n');
+    return [...baseImports, ...imports];
   }
 
   private _extractNgModule(operation: OperationDefinitionNode) {

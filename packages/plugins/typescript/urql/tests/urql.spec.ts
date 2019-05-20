@@ -2,7 +2,7 @@ import '@graphql-codegen/testing';
 import { plugin } from '../src/index';
 import { parse, GraphQLSchema, buildClientSchema, buildASTSchema } from 'graphql';
 import gql from 'graphql-tag';
-import { Types } from '@graphql-codegen/plugin-helpers';
+import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { plugin as tsPlugin } from '@graphql-codegen/typescript/src';
 import { plugin as tsDocumentsPlugin } from '../../operations/src/index';
 import { validateTs } from '@graphql-codegen/typescript/tests/validate';
@@ -26,50 +26,34 @@ describe('urql', () => {
     }
   `);
 
-  const validateTypeScript = async (output: string, testSchema: GraphQLSchema, documents: Types.DocumentFile[], config: any) => {
+  const validateTypeScript = async (output: Types.PluginOutput, testSchema: GraphQLSchema, documents: Types.DocumentFile[], config: any) => {
     const tsOutput = await tsPlugin(testSchema, documents, config, { outputFile: '' });
     const tsDocumentsOutput = await tsDocumentsPlugin(testSchema, documents, config, { outputFile: '' });
-    const merged = [tsOutput, tsDocumentsOutput, output].join('\n');
+    const merged = mergeOutputs([tsOutput, tsDocumentsOutput, output]);
     validateTs(merged, undefined, true);
   };
-
-  it(`should skip if there's no operations`, async () => {
-    const content = await plugin(
-      schema,
-      [],
-      {},
-      {
-        outputFile: 'graphql.tsx',
-      }
-    );
-
-    expect(content).not.toContain(`import * as ReactApollo from 'react-apollo';`);
-    expect(content).not.toContain(`import * as React from 'react';`);
-    expect(content).not.toContain(`import gql from 'graphql-tag';`);
-    await validateTypeScript(content, schema, [], {});
-  });
 
   describe('Imports', () => {
     it('should import Urql dependencies', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
-      const content = await plugin(
+      const content = (await plugin(
         schema,
         docs,
         {},
         {
           outputFile: 'graphql.tsx',
         }
-      );
+      )) as Types.ComplexPluginOutput;
 
-      expect(content).toBeSimilarStringTo(`import * as Urql from 'urql';`);
-      expect(content).toBeSimilarStringTo(`import * as React from 'react';`);
-      expect(content).toBeSimilarStringTo(`import gql from 'graphql-tag';`);
+      expect(content.prepend).toContain(`import * as Urql from 'urql';`);
+      expect(content.prepend).toContain(`import * as React from 'react';`);
+      expect(content.prepend).toContain(`import gql from 'graphql-tag';`);
       await validateTypeScript(content, schema, docs, {});
     });
 
     it('should import DocumentNode when using noGraphQLTag', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
-      const content = await plugin(
+      const content = (await plugin(
         schema,
         docs,
         {
@@ -78,40 +62,40 @@ describe('urql', () => {
         {
           outputFile: 'graphql.tsx',
         }
-      );
+      )) as Types.ComplexPluginOutput;
 
-      expect(content).toContain(`import { DocumentNode } from 'graphql';`);
-      expect(content).not.toBeSimilarStringTo(`import gql from 'graphql-tag';`);
+      expect(content.prepend).toContain(`import { DocumentNode } from 'graphql';`);
+      expect(content.prepend).not.toContain(`import gql from 'graphql-tag';`);
       await validateTypeScript(content, schema, docs, {});
     });
 
     it(`should use gql import from gqlImport config option`, async () => {
       const docs = [{ filePath: '', content: basicDoc }];
-      const content = await plugin(
+      const content = (await plugin(
         schema,
         docs,
         { gqlImport: 'graphql.macro#gql' },
         {
           outputFile: 'graphql.tsx',
         }
-      );
+      )) as Types.ComplexPluginOutput;
 
-      expect(content).toContain(`import { gql } from 'graphql.macro';`);
+      expect(content.prepend).toContain(`import { gql } from 'graphql.macro';`);
       await validateTypeScript(content, schema, docs, {});
     });
 
     it('should import Urql from urqlImportFrom config option', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
-      const content = await plugin(
+      const content = (await plugin(
         schema,
         docs,
         { withHooks: true, urqlImportFrom: 'custom-urql' },
         {
           outputFile: 'graphql.tsx',
         }
-      );
+      )) as Types.ComplexPluginOutput;
 
-      expect(content).toBeSimilarStringTo(`import * as Urql from 'custom-urql';`);
+      expect(content.prepend).toContain(`import * as Urql from 'custom-urql';`);
       await validateTypeScript(content, schema, docs, {});
     });
   });
@@ -134,9 +118,9 @@ describe('urql', () => {
           `),
         },
       ];
-      const result = await plugin(schema, docs, {}, { outputFile: '' });
+      const result = (await plugin(schema, docs, {}, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
       export const MyFragmentFragmentDoc = gql\`
       fragment MyFragment on Repository {
         full_name
@@ -178,16 +162,16 @@ describe('urql', () => {
 
       const docs = [{ filePath: '', content: myFeed }];
 
-      const content = await plugin(
+      const content = (await plugin(
         schema,
         docs,
         {},
         {
           outputFile: 'graphql.tsx',
         }
-      );
+      )) as Types.ComplexPluginOutput;
 
-      expect(content).toBeSimilarStringTo(`export const FeedWithRepositoryFragmentDoc = gql\`
+      expect(content.content).toBeSimilarStringTo(`export const FeedWithRepositoryFragmentDoc = gql\`
 fragment FeedWithRepository on Entry {
   id
   commentCount
@@ -196,7 +180,7 @@ fragment FeedWithRepository on Entry {
   }
 }
 \${RepositoryWithOwnerFragmentDoc}\`;`);
-      expect(content).toBeSimilarStringTo(`export const RepositoryWithOwnerFragmentDoc = gql\`
+      expect(content.content).toBeSimilarStringTo(`export const RepositoryWithOwnerFragmentDoc = gql\`
 fragment RepositoryWithOwner on Repository {
   full_name
   html_url
@@ -206,7 +190,7 @@ fragment RepositoryWithOwner on Repository {
 }
 \`;`);
 
-      expect(content).toBeSimilarStringTo(`export const MyFeedDocument = gql\`
+      expect(content.content).toBeSimilarStringTo(`export const MyFeedDocument = gql\`
 query MyFeed {
   feed {
     ...FeedWithRepository
@@ -234,16 +218,16 @@ query MyFeed {
       `;
       const documents = [simpleFeed, myFeed];
       const docs = documents.map(content => ({ content, filePath: '' }));
-      const content = await plugin(
+      const content = (await plugin(
         schema,
         docs,
         {},
         {
           outputFile: 'graphql.tsx',
         }
-      );
+      )) as Types.ComplexPluginOutput;
 
-      expect(content).toBeSimilarStringTo(`
+      expect(content.content).toBeSimilarStringTo(`
         export const MyFeedDocument = gql\`
         query MyFeed {
             feed {
@@ -254,7 +238,7 @@ query MyFeed {
             }
           }
           \${ItemFragmentDoc}\``);
-      expect(content).toBeSimilarStringTo(`
+      expect(content.content).toBeSimilarStringTo(`
         export const ItemFragmentDoc = gql\`
         fragment Item on Entry {
           id
@@ -284,17 +268,17 @@ query MyFeed {
       `;
       const documents = [myFeed];
       const docs = documents.map(content => ({ content, filePath: '' }));
-      const content = await plugin(
+      const content = (await plugin(
         schema,
         docs,
         {},
         {
           outputFile: 'graphql.tsx',
         }
-      );
+      )) as Types.ComplexPluginOutput;
 
-      const feedWithRepositoryPos = content.indexOf('fragment FeedWithRepository');
-      const repositoryWithOwnerPos = content.indexOf('fragment RepositoryWithOwner');
+      const feedWithRepositoryPos = content.content.indexOf('fragment FeedWithRepository');
+      const repositoryWithOwnerPos = content.content.indexOf('fragment RepositoryWithOwner');
       expect(repositoryWithOwnerPos).toBeLessThan(feedWithRepositoryPos);
       await validateTypeScript(content, schema, docs, {});
     });
@@ -303,16 +287,16 @@ query MyFeed {
   describe('Component', () => {
     it('should generate Document variable', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
-      const content = await plugin(
+      const content = (await plugin(
         schema,
         docs,
         {},
         {
           outputFile: 'graphql.tsx',
         }
-      );
+      )) as Types.ComplexPluginOutput;
 
-      expect(content).toBeSimilarStringTo(`
+      expect(content.content).toBeSimilarStringTo(`
           export const TestDocument =  gql\`
           query test {
             feed {
@@ -334,7 +318,7 @@ query MyFeed {
 
     it('should generate Document variable with noGraphQlTag', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
-      const content = await plugin(
+      const content = (await plugin(
         schema,
         docs,
         {
@@ -343,29 +327,29 @@ query MyFeed {
         {
           outputFile: 'graphql.tsx',
         }
-      );
+      )) as Types.ComplexPluginOutput;
 
-      expect(content).toBeSimilarStringTo(`export const TestDocument: DocumentNode = {"kind":"Document","defin`);
+      expect(content.content).toBeSimilarStringTo(`export const TestDocument: DocumentNode = {"kind":"Document","defin`);
 
       // For issue #1599 - make sure there are not `loc` properties
-      expect(content).not.toContain(`loc":`);
-      expect(content).not.toContain(`loc':`);
+      expect(content.content).not.toContain(`loc":`);
+      expect(content.content).not.toContain(`loc':`);
 
       await validateTypeScript(content, schema, docs, {});
     });
 
     it('should generate Component', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
-      const content = await plugin(
+      const content = (await plugin(
         schema,
         docs,
         {},
         {
           outputFile: 'graphql.tsx',
         }
-      );
+      )) as Types.ComplexPluginOutput;
 
-      expect(content).toBeSimilarStringTo(`
+      expect(content.content).toBeSimilarStringTo(`
       export const TestComponent = (props: Omit<Urql.QueryProps,  'query'> & { variables?: TestQueryVariables }) => 
       (
           <Urql.Query {...props} query={TestDocument} />
@@ -376,16 +360,16 @@ query MyFeed {
 
     it('should not generate Component', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
-      const content = await plugin(
+      const content = (await plugin(
         schema,
         docs,
         { withComponent: false },
         {
           outputFile: 'graphql.tsx',
         }
-      );
+      )) as Types.ComplexPluginOutput;
 
-      expect(content).not.toContain(`export class TestComponent`);
+      expect(content.content).not.toContain(`export class TestComponent`);
       await validateTypeScript(content, schema, docs, {});
     });
 
@@ -405,16 +389,16 @@ query MyFeed {
           test(foo: String!): Boolean
         }
       `);
-      const content = await plugin(
+      const content = (await plugin(
         schema,
         docs,
         {},
         {
           outputFile: 'graphql.tsx',
         }
-      );
+      )) as Types.ComplexPluginOutput;
 
-      expect(content).toBeSimilarStringTo(`
+      expect(content.content).toBeSimilarStringTo(`
       export const TestComponent = (props: Omit<Urql.QueryProps, 'query'> & { variables: TestQueryVariables }) => (
         <Urql.Query {...props} query={TestDocument} />
       );`);
@@ -437,16 +421,16 @@ query MyFeed {
           test(foo: String!): Boolean
         }
       `);
-      const content = await plugin(
+      const content = (await plugin(
         schema,
         docs,
         {},
         {
           outputFile: 'graphql.tsx',
         }
-      );
+      )) as Types.ComplexPluginOutput;
 
-      expect(content).toBeSimilarStringTo(`
+      expect(content.content).toBeSimilarStringTo(`
       export const TestComponent = (props: Omit<Urql.MutationProps, 'query'> & { variables?: TestMutationVariables }) => (
         <Urql.Mutation {...props} query={TestDocument} />
       );`);
@@ -455,16 +439,16 @@ query MyFeed {
 
     it('should not add typesPrefix to Component', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
-      const content = await plugin(
+      const content = (await plugin(
         schema,
         docs,
         { typesPrefix: 'I' },
         {
           outputFile: 'graphql.tsx',
         }
-      );
+      )) as Types.ComplexPluginOutput;
 
-      expect(content).not.toContain(`export class ITestComponent`);
+      expect(content.content).not.toContain(`export class ITestComponent`);
     });
   });
 
@@ -493,21 +477,21 @@ query MyFeed {
       `);
       const docs = [{ filePath: '', content: documents }];
 
-      const content = await plugin(
+      const content = (await plugin(
         schema,
         docs,
         { withHooks: true, withComponent: false },
         {
           outputFile: 'graphql.tsx',
         }
-      );
+      )) as Types.ComplexPluginOutput;
 
-      expect(content).toBeSimilarStringTo(`
-export function useFeedQuery(options: Urql.UseQueryArgs<FeedQueryVariables> = {}) {
+      expect(content.content).toBeSimilarStringTo(`
+export function useFeedQuery(options: Omit<Urql.UseQueryArgs<FeedQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<FeedQuery>({ query: FeedDocument, ...options });
 };`);
 
-      expect(content).toBeSimilarStringTo(`
+      expect(content.content).toBeSimilarStringTo(`
 export function useSubmitRepositoryMutation() {
   return Urql.useMutation<SubmitRepositoryMutation>(SubmitRepositoryDocument);
 };`);
@@ -516,16 +500,16 @@ export function useSubmitRepositoryMutation() {
 
     it('Should not generate hooks for query and mutation', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
-      const content = await plugin(
+      const content = (await plugin(
         schema,
         docs,
         { withHooks: false },
         {
           outputFile: 'graphql.tsx',
         }
-      );
+      )) as Types.ComplexPluginOutput;
 
-      expect(content).not.toContain(`export function useTestQuery`);
+      expect(content.content).not.toContain(`export function useTestQuery`);
       await validateTypeScript(content, schema, docs, {});
     });
 
@@ -540,7 +524,7 @@ export function useSubmitRepositoryMutation() {
 
       const docs = [{ filePath: '', content: documents }];
 
-      const content = await plugin(
+      const content = (await plugin(
         schema,
         docs,
         {
@@ -550,10 +534,10 @@ export function useSubmitRepositoryMutation() {
         {
           outputFile: 'graphql.tsx',
         }
-      );
+      )) as Types.ComplexPluginOutput;
 
-      expect(content).toBeSimilarStringTo(`
-export function useListenToCommentsSubscription(options: Urql.UseSubscriptionArgs<ListenToCommentsSubscriptionVariables> = {}) {
+      expect(content.content).toBeSimilarStringTo(`
+export function useListenToCommentsSubscription(options: Omit<Urql.UseSubscriptionArgs<ListenToCommentsSubscriptionVariables>, 'query'> = {}) {
   return Urql.useSubscription<ListenToCommentsSubscription>({ query: ListenToCommentsDocument, ...options });
 };`);
       await validateTypeScript(content, schema, docs, {});
@@ -561,16 +545,16 @@ export function useListenToCommentsSubscription(options: Urql.UseSubscriptionArg
 
     it('Should not add typesPrefix to hooks', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
-      const content = await plugin(
+      const content = (await plugin(
         schema,
         docs,
         { withHooks: true, typesPrefix: 'I' },
         {
           outputFile: 'graphql.tsx',
         }
-      );
+      )) as Types.ComplexPluginOutput;
 
-      expect(content).toContain(`export function useTestQuery`);
+      expect(content.content).toContain(`export function useTestQuery`);
     });
   });
 });

@@ -1,4 +1,4 @@
-import { ScalarsMap, NamingConvention, ConvertFn, ConvertOptions } from './types';
+import { ScalarsMap, ConvertOptions, LoadedFragment } from './types';
 import * as autoBind from 'auto-bind';
 import { DEFAULT_SCALARS } from './scalars';
 import { toPascalCase, DeclarationBlock, DeclarationBlockConfig, buildScalars } from './utils';
@@ -22,22 +22,7 @@ export interface ParsedDocumentsConfig extends ParsedConfig {
   addTypename: boolean;
 }
 
-export interface RawDocumentsConfig extends RawConfig {
-  /**
-   * @name skipTypename
-   * @type boolean
-   * @default false
-   * @description Automatically adds `__typename` field to the generated types, even when they are not specified
-   * in the selection set.
-   *
-   * @example
-   * ```yml
-   * config:
-   *   skipTypename: true
-   * ```
-   */
-  skipTypename?: boolean;
-}
+export interface RawDocumentsConfig extends RawConfig {}
 
 export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDocumentsConfig, TPluginConfig extends ParsedDocumentsConfig = ParsedDocumentsConfig> extends BaseVisitor<TRawConfig, TPluginConfig> {
   protected _unnamedCounter = 1;
@@ -55,7 +40,7 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
     );
 
     autoBind(this);
-    this._variablesTransfomer = new OperationVariablesToObject(this.scalars, this.convertName);
+    this._variablesTransfomer = new OperationVariablesToObject(this.scalars, this.convertName, this.config.namespacedImportName);
   }
 
   setSelectionSetHandler(handler: SelectionSetToObject) {

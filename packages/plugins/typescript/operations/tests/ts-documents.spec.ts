@@ -2,9 +2,10 @@ import '@graphql-codegen/testing';
 import { parse, buildClientSchema, buildSchema } from 'graphql';
 import { readFileSync } from 'fs';
 import { plugin } from '../src/index';
-import { validateTs } from '@graphql-codegen/typescript/tests/validate';
-import { plugin as tsPlugin } from '@graphql-codegen/typescript/src';
+import { validateTs } from '../../typescript/tests/validate';
+import { plugin as tsPlugin } from '../../typescript/src';
 import { compileTs } from '../../typescript/tests/compile';
+import { mergeOutputs, Types } from '@graphql-codegen/plugin-helpers';
 
 describe('TypeScript Operations Plugin', () => {
   const gitHuntSchema = buildClientSchema(JSON.parse(readFileSync('../../../../dev-test/githunt/schema.json', 'utf-8')));
@@ -87,9 +88,37 @@ describe('TypeScript Operations Plugin', () => {
     }
   `);
 
-  const validate = async (content: string, config: any = {}, pluginSchema = schema) => validateTs((await tsPlugin(pluginSchema, [], config, { outputFile: '' })) + '\n' + content);
+  const validate = async (content: Types.PluginOutput, config: any = {}, pluginSchema = schema) => validateTs(mergeOutputs([await tsPlugin(pluginSchema, [], config, { outputFile: '' }), content]));
 
   describe('Config', () => {
+    it('Should handle "namespacedImportName" and add it when specified', async () => {
+      const ast = parse(`
+      query notifications {
+        notifications {
+          id
+
+          ... on TextNotification {
+            text
+          }
+
+          ... on ImageNotification {
+            imageUrl
+            metadata {
+              created: createdBy
+            }
+          }
+        }
+      }
+  `);
+      const config = { namespacedImportName: 'Types' };
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
+
+      expect(result).toBeSimilarStringTo(
+        `export type NotificationsQuery = ({ __typename?: 'Query' } & { notifications: Array<({ __typename?: 'TextNotification' | 'ImageNotification' } & Pick<Types.Notifiction, 'id'> & (({ __typename?: 'TextNotification' } & Pick<Types.TextNotification, 'text'>) | ({ __typename?: 'ImageNotification' } & Pick<Types.ImageNotification, 'imageUrl'> & { metadata: ({ __typename?: 'ImageMetadata' } & { created: Types.ImageMetadata['createdBy'] }) })))> });`
+      );
+      await validate(result, config);
+    });
+
     it('Should generate the correct output when using immutableTypes config', async () => {
       const ast = parse(`
       query notifications {
@@ -267,6 +296,17 @@ describe('TypeScript Operations Plugin', () => {
         }
       `);
       const config = {};
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
+      expect(result).toBeSimilarStringTo(`export type Unnamed_1_Query = ({ __typename: 'Query' } & Pick<Query, 'dummy'>);`);
+      validate(result, config);
+    });
+    it('Should add __typename as non-optional when forced', async () => {
+      const ast = parse(`
+        query {
+          dummy
+        }
+      `);
+      const config = { nonOptionalTypename: true };
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
       expect(result).toBeSimilarStringTo(`export type Unnamed_1_Query = ({ __typename: 'Query' } & Pick<Query, 'dummy'>);`);
       validate(result, config);
@@ -628,7 +668,7 @@ describe('TypeScript Operations Plugin', () => {
       export type AFragment = ({ __typename?: 'A' } & Pick<A, 'id'>);
       
       export type BFragment = ({ __typename?: 'A' } & Pick<A, 'x'>);`);
-      compileTs(result, config);
+      compileTs(mergeOutputs([result]), config);
     });
 
     it('Should support interfaces correctly when used with inline fragments', async () => {
@@ -1149,7 +1189,7 @@ describe('TypeScript Operations Plugin', () => {
         }
       );
 
-      const content = [coreContent, pluginContent].join('\n');
+      const content = mergeOutputs([coreContent, pluginContent]);
 
       expect(content).toBeSimilarStringTo(`
       /** An enum describing what kind of type a given \`__Type\` is. */

@@ -1,11 +1,11 @@
 import { BaseVisitor, ParsedConfig, RawConfig } from './index';
 import * as autoBind from 'auto-bind';
-import { FragmentDefinitionNode, print, OperationDefinitionNode } from 'graphql';
+import { FragmentDefinitionNode, print, OperationDefinitionNode, visit, FragmentSpreadNode } from 'graphql';
 import { DepGraph } from 'dependency-graph';
 import gqlTag from 'graphql-tag';
 import { toPascalCase } from '@graphql-codegen/plugin-helpers';
 import { getConfigValue } from './utils';
-
+import { LoadedFragment } from './types';
 export interface RawClientSideBasePluginConfig extends RawConfig {
   noGraphQLTag?: boolean;
   gqlImport?: string;
@@ -48,7 +48,9 @@ export interface ClientSideBasePluginConfig extends ParsedConfig {
 }
 
 export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginConfig = RawClientSideBasePluginConfig, TPluginConfig extends ClientSideBasePluginConfig = ClientSideBasePluginConfig> extends BaseVisitor<TRawConfig, TPluginConfig> {
-  constructor(protected _fragments: FragmentDefinitionNode[], rawConfig: TRawConfig, additionalConfig: Partial<TPluginConfig>) {
+  protected _collectedOperations: OperationDefinitionNode[] = [];
+
+  constructor(protected _fragments: LoadedFragment[], rawConfig: TRawConfig, additionalConfig: Partial<TPluginConfig>) {
     super(rawConfig, {
       noGraphQLTag: getConfigValue(rawConfig.noGraphQLTag, false),
       gqlImport: rawConfig.gqlImport || null,
@@ -62,16 +64,30 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
     return (typeof fragment === 'string' ? fragment : fragment.name.value) + 'FragmentDoc';
   }
 
-  protected _extractFragments(document: FragmentDefinitionNode | OperationDefinitionNode): string[] | undefined {
-    return (print(document).match(/\.\.\.[a-z0-9\_]+/gi) || []).map(name => name.replace('...', ''));
+  protected _extractFragments(document: FragmentDefinitionNode | OperationDefinitionNode): string[] {
+    if (!document) {
+      return [];
+    }
+
+    const names = [];
+
+    visit(document, {
+      enter: {
+        FragmentSpread: (node: FragmentSpreadNode) => {
+          names.push(node.name.value);
+        },
+      },
+    });
+
+    return names;
   }
 
-  protected _transformFragments(document: FragmentDefinitionNode | OperationDefinitionNode): string[] | undefined {
+  protected _transformFragments(document: FragmentDefinitionNode | OperationDefinitionNode): string[] {
     return this._extractFragments(document).map(document => this._getFragmentName(document));
   }
 
   protected _includeFragments(fragments: string[]): string {
-    if (fragments) {
+    if (fragments && fragments.length > 0) {
       return `${fragments
         .filter((name, i, all) => all.indexOf(name) === i)
         .map(name => '${' + name + '}')
@@ -109,40 +125,45 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
     return `export const ${name}${this.config.noGraphQLTag ? ': DocumentNode' : ''} = ${this._gql(fragmentDocument)};`;
   }
 
-  public get fragments(): string {
-    if (this._fragments.length === 0) {
-      return '';
-    }
-
-    const graph = new DepGraph<FragmentDefinitionNode>({ circular: true });
+  private get fragmentsGraph(): DepGraph<LoadedFragment> {
+    const graph = new DepGraph<LoadedFragment>({ circular: true });
 
     for (const fragment of this._fragments) {
-      if (graph.hasNode(fragment.name.value)) {
-        const cachedAsString = print(graph.getNodeData(fragment.name.value));
-        const asString = print(fragment);
+      if (graph.hasNode(fragment.name)) {
+        const cachedAsString = print(graph.getNodeData(fragment.name).node);
+        const asString = print(fragment.node);
 
         if (cachedAsString !== asString) {
           throw new Error(`Duplicated fragment called '${fragment.name}'!`);
         }
       }
 
-      graph.addNode(fragment.name.value, fragment);
+      graph.addNode(fragment.name, fragment);
     }
 
     this._fragments.forEach(fragment => {
-      const depends = this._extractFragments(fragment);
+      const depends = this._extractFragments(fragment.node);
 
-      if (depends) {
+      if (depends && depends.length > 0) {
         depends.forEach(name => {
-          graph.addDependency(fragment.name.value, name);
+          graph.addDependency(fragment.name, name);
         });
       }
     });
 
-    return graph
-      .overallOrder()
-      .map(name => this._generateFragment(graph.getNodeData(name)))
-      .join('\n');
+    return graph;
+  }
+
+  public get fragments(): string {
+    if (this._fragments.length === 0) {
+      return '';
+    }
+
+    const graph = this.fragmentsGraph;
+    const orderedDeps = graph.overallOrder();
+    const localFragments = orderedDeps.filter(name => !graph.getNodeData(name).isExternal).map(name => this._generateFragment(graph.getNodeData(name).node));
+
+    return localFragments.join('\n');
   }
 
   protected _parseImport(importStr: string) {
@@ -154,18 +175,25 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
     };
   }
 
-  public getImports(): string {
+  public getImports(): string[] {
     const gqlImport = this._parseImport(this.config.gqlImport || 'graphql-tag');
     let imports = [];
 
     if (!this.config.noGraphQLTag) {
-      imports.push(`
-import ${gqlImport.propName ? `{ ${gqlImport.propName === 'gql' ? 'gql' : `${gqlImport.propName} as gql`} }` : 'gql'} from '${gqlImport.moduleName}';`);
+      imports.push(`import ${gqlImport.propName ? `{ ${gqlImport.propName === 'gql' ? 'gql' : `${gqlImport.propName} as gql`} }` : 'gql'} from '${gqlImport.moduleName}';`);
     } else {
       imports.push(`import { DocumentNode } from 'graphql';`);
     }
 
-    return imports.join('\n');
+    (this._fragments || [])
+      .filter(f => f.isExternal && f.importFrom)
+      .forEach(externalFragment => {
+        const identifierName = this._getFragmentName(externalFragment.name);
+
+        imports.push(`import { ${identifierName} } from '${externalFragment.importFrom}';`);
+      });
+
+    return imports;
   }
 
   protected buildOperation(node: OperationDefinitionNode, documentVariableName: string, operationType: string, operationResultType: string, operationVariablesTypes: string): string {
@@ -176,6 +204,8 @@ import ${gqlImport.propName ? `{ ${gqlImport.propName === 'gql' ? 'gql' : `${gql
     if (!node.name || !node.name.value) {
       return null;
     }
+
+    this._collectedOperations.push(node);
 
     const documentVariableName = this.convertName(node, {
       suffix: 'Document',

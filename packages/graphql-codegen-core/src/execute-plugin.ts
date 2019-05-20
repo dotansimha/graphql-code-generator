@@ -12,7 +12,7 @@ export interface ExecutePluginOptions {
   allPlugins: Types.ConfiguredPlugin[];
 }
 
-export async function executePlugin(options: ExecutePluginOptions, plugin: CodegenPlugin): Promise<string> {
+export async function executePlugin(options: ExecutePluginOptions, plugin: CodegenPlugin): Promise<Types.PluginOutput> {
   if (!plugin || !plugin.plugin || typeof plugin.plugin !== 'function') {
     throw new DetailedError(
       `Invalid Custom Plugin "${options.name}"`,

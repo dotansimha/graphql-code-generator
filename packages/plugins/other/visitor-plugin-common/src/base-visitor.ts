@@ -1,4 +1,4 @@
-import { ScalarsMap, NamingConvention, ConvertFn, ConvertOptions } from './types';
+import { ScalarsMap, NamingConvention, ConvertFn, ConvertOptions, LoadedFragment } from './types';
 import { DeclarationBlockConfig } from './utils';
 import * as autoBind from 'auto-bind';
 import { DEFAULT_SCALARS } from './scalars';
@@ -13,6 +13,10 @@ export interface ParsedConfig {
   scalars: ScalarsMap;
   convert: ConvertFn;
   typesPrefix: string;
+  addTypename: boolean;
+  nonOptionalTypename: boolean;
+  namespacedImportName: string | null;
+  externalFragments: LoadedFragment[];
 }
 
 export interface RawConfig {
@@ -80,6 +84,39 @@ export interface RawConfig {
    * ```
    */
   typesPrefix?: string;
+
+  /**
+   * @name skipTypename
+   * @type boolean
+   * @default false
+   * @description Automatically adds `__typename` field to the generated types, even when they are not specified
+   * in the selection set.
+   *
+   * @example
+   * ```yml
+   * config:
+   *   skipTypename: true
+   * ```
+   */
+  skipTypename?: boolean;
+  /**
+   * @name nonOptionalTypename
+   * @type boolean
+   * @default false
+   * @description Automatically adds `__typename` field to the generated types, even when they are not specified
+   * in the selection set, and makes it non-optional
+   *
+   * @example
+   * ```yml
+   * config:
+   *   nonOptionalTypename: true
+   * ```
+   */
+  nonOptionalTypename?: boolean;
+
+  /* The following configuration are for preset configuration and should not be set manually (for most use cases...) */
+  namespacedImportName?: string;
+  externalFragments?: LoadedFragment[];
 }
 
 export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig extends ParsedConfig = ParsedConfig> {
@@ -88,9 +125,16 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
 
   constructor(rawConfig: TRawConfig, additionalConfig: Partial<TPluginConfig>, defaultScalars: ScalarsMap = DEFAULT_SCALARS) {
     this._parsedConfig = {
-      scalars: { ...(defaultScalars || DEFAULT_SCALARS), ...(rawConfig.scalars || {}) },
+      scalars: {
+        ...(defaultScalars || DEFAULT_SCALARS),
+        ...(rawConfig.scalars || {}),
+      },
       convert: convertFactory(rawConfig),
       typesPrefix: rawConfig.typesPrefix || '',
+      namespacedImportName: rawConfig.namespacedImportName || null,
+      externalFragments: rawConfig.externalFragments || [],
+      addTypename: !rawConfig.skipTypename,
+      nonOptionalTypename: !!rawConfig.nonOptionalTypename,
       ...((additionalConfig || {}) as any),
     };
 

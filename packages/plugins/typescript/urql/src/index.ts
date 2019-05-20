@@ -1,6 +1,6 @@
 import { Types, PluginValidateFn, PluginFunction } from '@graphql-codegen/plugin-helpers';
 import { visit, GraphQLSchema, concatAST, Kind, FragmentDefinitionNode } from 'graphql';
-import { RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-common';
+import { RawClientSideBasePluginConfig, LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
 import { UrqlVisitor } from './visitor';
 import { extname } from 'path';
 
@@ -18,7 +18,7 @@ export interface UrqlRawPluginConfig extends RawClientSideBasePluginConfig {
    *  plugins:
    *    - typescript
    *    - typescript-operations
-   *    - typescript-react-apollo
+   *    - typescript-urql
    *  config:
    *    withComponent: false
    * ```
@@ -37,7 +37,7 @@ export interface UrqlRawPluginConfig extends RawClientSideBasePluginConfig {
    *  plugins:
    *    - typescript
    *    - typescript-operations
-   *    - typescript-react-apollo
+   *    - typescript-urql
    *  config:
    *    withHooks: false
    * ```
@@ -61,27 +61,27 @@ export const plugin: PluginFunction<UrqlRawPluginConfig> = (schema: GraphQLSchem
       return [...prev, v.content];
     }, [])
   );
-  const operationsCount = allAst.definitions.filter(d => d.kind === Kind.OPERATION_DEFINITION);
-
-  if (operationsCount.length === 0) {
-    return '';
-  }
-
-  const allFragments = allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[];
+  const allFragments: LoadedFragment[] = [
+    ...(allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[]).map(fragmentDef => ({ node: fragmentDef, name: fragmentDef.name.value, onType: fragmentDef.typeCondition.name.value, isExternal: false })),
+    ...(config.externalFragments || []),
+  ];
   const visitor = new UrqlVisitor(allFragments, config) as any;
   const visitorResult = visit(allAst, { leave: visitor });
 
-  return [visitor.getImports(), visitor.fragments, ...visitorResult.definitions.filter(t => typeof t === 'string')].join('\n');
+  return {
+    prepend: visitor.getImports(),
+    content: [visitor.fragments, ...visitorResult.definitions.filter(t => typeof t === 'string')].join('\n'),
+  };
 };
 
 export const validate: PluginValidateFn<any> = async (schema: GraphQLSchema, documents: Types.DocumentFile[], config: UrqlRawPluginConfig, outputFile: string) => {
   if (config.withComponent === false) {
     if (extname(outputFile) !== '.ts' && extname(outputFile) !== '.tsx') {
-      throw new Error(`Plugin "react-apollo" with "noComponents" requires extension to be ".ts" or ".tsx"!`);
+      throw new Error(`Plugin "urql" with "noComponents" requires extension to be ".ts" or ".tsx"!`);
     }
   } else {
     if (extname(outputFile) !== '.tsx') {
-      throw new Error(`Plugin "react-apollo" requires extension to be ".tsx"!`);
+      throw new Error(`Plugin "urql" requires extension to be ".tsx"!`);
     }
   }
 };

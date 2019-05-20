@@ -1,4 +1,4 @@
-import { ASTNode } from 'graphql';
+import { ASTNode, FragmentDefinitionNode } from 'graphql';
 
 export type ScalarsMap = { [name: string]: string };
 export type EnumValuesMap<AdditionalProps = {}> = { [enumName: string]: string | ({ [key: string]: string } & AdditionalProps) };
@@ -19,3 +19,5 @@ export interface NamingConventionMap {
   typeNames?: 'keep' | NamingConventionResolvePath | Function;
   transformUnderscore?: boolean;
 }
+
+export type LoadedFragment = { name: string; onType: string; node: FragmentDefinitionNode; isExternal: boolean; importFrom?: string | null };

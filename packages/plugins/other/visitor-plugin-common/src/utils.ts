@@ -199,7 +199,7 @@ export class DeclarationBlock {
       const blockWrapper = this._ignoreBlockWrapper ? '' : this._config.blockWrapper;
       const before = '{' + blockWrapper;
       const after = blockWrapper + '}';
-      const block = [before, this._block, after].join('\n');
+      const block = [before, this._block, after].filter(val => !!val).join('\n');
 
       if (this._methodName) {
         result += `${this._methodName}(${this._config.blockTransformer!(block)})`;
@@ -271,3 +271,5 @@ export function getRootTypeNames(schema: GraphQLSchema): string[] {
 export function stripMapperTypeInterpolation(identifier: string): string {
   return identifier.includes('{T}') ? identifier.replace(/<.*?>/g, '') : identifier;
 }
+
+export const OMIT_TYPE = 'export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;';

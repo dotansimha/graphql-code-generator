@@ -2,6 +2,7 @@ import '@graphql-codegen/testing';
 import { buildSchema } from 'graphql';
 import { plugin } from '../src/index';
 import { validateFlow } from './validate-flow';
+import { Types } from '@graphql-codegen/plugin-helpers';
 
 describe('Flow Plugin', () => {
   describe('description to comment', () => {
@@ -57,9 +58,9 @@ describe('Flow Plugin', () => {
           captcha: String
         }
       `);
-      const result = await plugin(schema, [], {}, { outputFile: '' });
+      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
       /** New user account input fields */
       export type SignUpDetails = {
         /** First name */
@@ -88,9 +89,9 @@ describe('Flow Plugin', () => {
         "My custom scalar"
         scalar A
       `);
-      const result = await plugin(schema, [], {}, { outputFile: '' });
+      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
       /** All built-in and custom scalars, mapped to their actual values */
       export type Scalars = {
           ID: string,
@@ -111,9 +112,9 @@ describe('Flow Plugin', () => {
           f: String
         }
       `);
-      const result = await plugin(schema, [], {}, { outputFile: '' });
+      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
         /** MyInput */
         export type MyInput`);
 
@@ -128,9 +129,9 @@ describe('Flow Plugin', () => {
           f: String!
         }
       `);
-      const result = await plugin(schema, [], {}, { outputFile: '' });
+      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
         /** MyInput */
         export type MyInput = {
           /** f is something */
@@ -150,9 +151,9 @@ describe('Flow Plugin', () => {
           f: String!
         }
       `);
-      const result = await plugin(schema, [], {}, { outputFile: '' });
+      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
         /** MyInput
          * multiline
          */
@@ -173,9 +174,9 @@ describe('Flow Plugin', () => {
           id: ID
         }
       `);
-      const result = await plugin(schema, [], {}, { outputFile: '' });
+      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
         /** my union */
         export type A = `);
 
@@ -193,13 +194,13 @@ describe('Flow Plugin', () => {
           id: ID
         }
       `);
-      const result = await plugin(schema, [], {}, { outputFile: '' });
+      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
         /** this is b */
         export type B = `);
 
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
         /** this is c */
         export type C = `);
 
@@ -213,10 +214,11 @@ describe('Flow Plugin', () => {
           id: ID
         }
       `);
-      const result = await plugin(schema, [], {}, { outputFile: '' });
+      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
       export type B = {
+        __typename?: 'B',
         /** the id */
         id?: ?$ElementType<Scalars, 'ID'>,
       };`);
@@ -231,10 +233,11 @@ describe('Flow Plugin', () => {
           id: ID!
         }
       `);
-      const result = await plugin(schema, [], {}, { outputFile: '' });
+      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
       export type Node = {
+        __typename?: 'Node',
         /** the id */
         id: $ElementType<Scalars, 'ID'>,
       };`);
@@ -252,9 +255,9 @@ describe('Flow Plugin', () => {
           B
         }
       `);
-      const result = await plugin(schema, [], {}, { outputFile: '' });
+      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
       export const MyEnumValues = Object.freeze({
         /** this is a */
         A: 'A', 
@@ -278,9 +281,9 @@ describe('Flow Plugin', () => {
         B
       }
         `);
-      const result = await plugin(schema, [], { useFlowExactObjects: true }, { outputFile: '' });
+      const result = (await plugin(schema, [], { useFlowExactObjects: true }, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
       export const MyEnumValues = Object.freeze({
         A: 'A', 
         B: 'B'
@@ -294,10 +297,11 @@ describe('Flow Plugin', () => {
           foo: String
           bar: String!
         }`);
-      const result = await plugin(schema, [], { useFlowExactObjects: true }, { outputFile: '' });
+      const result = (await plugin(schema, [], { useFlowExactObjects: true }, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
         export type MyInterface = {|
+          __typename?: 'MyInterface',
           foo?: ?$ElementType<Scalars, 'String'>,
           bar: $ElementType<Scalars, 'String'>,
         |};
@@ -318,15 +322,16 @@ describe('Flow Plugin', () => {
           C
         }
       `);
-      const result = await plugin(schema, [], { useFlowReadOnlyTypes: true }, { outputFile: '' });
+      const result = (await plugin(schema, [], { useFlowReadOnlyTypes: true }, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
         export type MyInterface = {
+          __typename?: 'MyInterface',
           +foo?: ?$ElementType<Scalars, 'String'>,
           +bar: $ElementType<Scalars, 'String'>,
         };
       `);
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
         export const MyEnumValues = Object.freeze({
           A: 'A',
           B: 'B',
@@ -342,9 +347,9 @@ describe('Flow Plugin', () => {
   describe('Naming Convention & Types Prefix', () => {
     it('Should use custom namingConvention for type name and args typename', async () => {
       const schema = buildSchema(`type MyType { foo(a: String!, b: String, c: [String], d: [Int!]!): String }`);
-      const result = await plugin(schema, [], { namingConvention: 'change-case#lowerCase' }, { outputFile: '' });
+      const result = (await plugin(schema, [], { namingConvention: 'change-case#lowerCase' }, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
         export type mytypefooargs = {
           a: $ElementType<Scalars, 'String'>,
           b?: ?$ElementType<Scalars, 'String'>,
@@ -352,8 +357,9 @@ describe('Flow Plugin', () => {
           d: Array<$ElementType<Scalars, 'Int'>>
         };
     `);
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
         export type mytype = {
+          __typename?: 'MyType',
           foo?: ?$ElementType<Scalars, 'String'>,
         };
     `);
@@ -368,9 +374,9 @@ describe('Flow Plugin', () => {
           _MyOtherValue
         }
       `);
-      const result = await plugin(schema, [], {}, { outputFile: '' });
+      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
       export const MyEnumValues = Object.freeze({
         MyValue: 'My_Value', 
         MyOtherValue: '_MyOtherValue'
@@ -384,9 +390,9 @@ describe('Flow Plugin', () => {
 
     it('Should use custom namingConvention and add custom prefix', async () => {
       const schema = buildSchema(`type MyType { foo(a: String!, b: String, c: [String], d: [Int!]!): String }`);
-      const result = await plugin(schema, [], { namingConvention: 'change-case#lowerCase', typesPrefix: 'I' }, { outputFile: '' });
+      const result = (await plugin(schema, [], { namingConvention: 'change-case#lowerCase', typesPrefix: 'I' }, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
         export type Imytypefooargs = {
           a: $ElementType<Scalars, 'String'>,
           b?: ?$ElementType<Scalars, 'String'>,
@@ -395,8 +401,9 @@ describe('Flow Plugin', () => {
         };
       `);
 
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
         export type Imytype = {
+          __typename?: 'MyType',
           foo?: ?$ElementType<Scalars, 'String'>,
         };
       `);
@@ -447,47 +454,54 @@ describe('Flow Plugin', () => {
   `);
 
     it('Should generate correct values when using links between types - lowerCase', async () => {
-      const result = await plugin(schema, [], { namingConvention: 'change-case#lowerCase' }, { outputFile: '' });
+      const result = (await plugin(schema, [], { namingConvention: 'change-case#lowerCase' }, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
         export const myenumvalues = Object.freeze({
           a: 'A',
           b: 'B',
           c: 'C'
         });`);
 
-      expect(result).toBeSimilarStringTo(`export type myenum = $Values<typeof myenumvalues>;`);
+      expect(result.content).toBeSimilarStringTo(`export type myenum = $Values<typeof myenumvalues>;`);
 
-      expect(result).toBeSimilarStringTo(`export type mytype = {
+      expect(result.content).toBeSimilarStringTo(`export type mytype = {
+          __typename?: 'MyType',
           f?: ?$ElementType<Scalars, 'String'>,
           bar?: ?myenum,
           b_a_r?: ?$ElementType<Scalars, 'String'>,
           myOtherField?: ?$ElementType<Scalars, 'String'>,
         };`);
 
-      expect(result).toBeSimilarStringTo(`export type my_type = {
+      expect(result.content).toBeSimilarStringTo(`export type my_type = {
+          __typename?: 'My_Type',
           linkTest?: ?mytype,
         };`);
 
-      expect(result).toBeSimilarStringTo(`export type myunion = my_type | mytype;`);
+      expect(result.content).toBeSimilarStringTo(`export type myunion = my_type | mytype;`);
 
-      expect(result).toBeSimilarStringTo(`export type some_interface = {
+      expect(result.content).toBeSimilarStringTo(`export type some_interface = {
+          __typename?: 'Some_Interface',
           id: $ElementType<Scalars, 'ID'>,
         };`);
 
-      expect(result).toBeSimilarStringTo(`export type impl1 = some_interface & {
+      expect(result.content).toBeSimilarStringTo(`export type impl1 = some_interface & {
+          __typename?: 'Impl1',
           id: $ElementType<Scalars, 'ID'>,
         };`);
 
-      expect(result).toBeSimilarStringTo(`export type impl_2 = some_interface & {
+      expect(result.content).toBeSimilarStringTo(`export type impl_2 = some_interface & {
+          __typename?: 'Impl_2',
           id: $ElementType<Scalars, 'ID'>,
         };`);
 
-      expect(result).toBeSimilarStringTo(`export type impl_3 = some_interface & {
+      expect(result.content).toBeSimilarStringTo(`export type impl_3 = some_interface & {
+          __typename?: 'impl_3',
           id: $ElementType<Scalars, 'ID'>,
         };`);
 
-      expect(result).toBeSimilarStringTo(`export type query = {
+      expect(result.content).toBeSimilarStringTo(`export type query = {
+          __typename?: 'Query',
           something?: ?myunion,
           use_interface?: ?some_interface,
         };`);
@@ -496,47 +510,54 @@ describe('Flow Plugin', () => {
     });
 
     it('Should generate correct values when using links between types - pascalCase (default)', async () => {
-      const result = await plugin(schema, [], {}, { outputFile: '' });
+      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
       export const MyEnumValues = Object.freeze({
         A: 'A',
         B: 'B',
         C: 'C'
       });`);
 
-      expect(result).toBeSimilarStringTo(`export type MyEnum = $Values<typeof MyEnumValues>;`);
+      expect(result.content).toBeSimilarStringTo(`export type MyEnum = $Values<typeof MyEnumValues>;`);
 
-      expect(result).toBeSimilarStringTo(`export type MyType = {
+      expect(result.content).toBeSimilarStringTo(`export type MyType = {
+        __typename?: 'MyType',
         f?: ?$ElementType<Scalars, 'String'>,
         bar?: ?MyEnum,
         b_a_r?: ?$ElementType<Scalars, 'String'>,
         myOtherField?: ?$ElementType<Scalars, 'String'>,
       };`);
 
-      expect(result).toBeSimilarStringTo(`export type My_Type = {
+      expect(result.content).toBeSimilarStringTo(`export type My_Type = {
+        __typename?: 'My_Type',
         linkTest?: ?MyType,
       };`);
 
-      expect(result).toBeSimilarStringTo(`export type MyUnion = My_Type | MyType;`);
+      expect(result.content).toBeSimilarStringTo(`export type MyUnion = My_Type | MyType;`);
 
-      expect(result).toBeSimilarStringTo(`export type Some_Interface = {
+      expect(result.content).toBeSimilarStringTo(`export type Some_Interface = {
+        __typename?: 'Some_Interface',
         id: $ElementType<Scalars, 'ID'>,
       };`);
 
-      expect(result).toBeSimilarStringTo(`export type Impl1 = Some_Interface & {
+      expect(result.content).toBeSimilarStringTo(`export type Impl1 = Some_Interface & {
+        __typename?: 'Impl1',
         id: $ElementType<Scalars, 'ID'>,
       };`);
 
-      expect(result).toBeSimilarStringTo(`export type Impl_2 = Some_Interface & {
+      expect(result.content).toBeSimilarStringTo(`export type Impl_2 = Some_Interface & {
+        __typename?: 'Impl_2',
         id: $ElementType<Scalars, 'ID'>,
       };`);
 
-      expect(result).toBeSimilarStringTo(`export type Impl_3 = Some_Interface & {
+      expect(result.content).toBeSimilarStringTo(`export type Impl_3 = Some_Interface & {
+        __typename?: 'impl_3',
         id: $ElementType<Scalars, 'ID'>,
       };`);
 
-      expect(result).toBeSimilarStringTo(`export type Query = {
+      expect(result.content).toBeSimilarStringTo(`export type Query = {
+        __typename?: 'Query',
         something?: ?MyUnion,
         use_interface?: ?Some_Interface,
       };`);
@@ -545,46 +566,53 @@ describe('Flow Plugin', () => {
     });
 
     it('Should generate correct values when using links between types - pascalCase (default) with custom prefix', async () => {
-      const result = await plugin(schema, [], { typesPrefix: 'I' }, { outputFile: '' });
+      const result = (await plugin(schema, [], { typesPrefix: 'I' }, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
       export const IMyEnumValues = Object.freeze({
         A: 'A',
         B: 'B',
         C: 'C'
       });`);
-      expect(result).toBeSimilarStringTo(`export type IMyEnum = $Values<typeof IMyEnumValues>;`);
+      expect(result.content).toBeSimilarStringTo(`export type IMyEnum = $Values<typeof IMyEnumValues>;`);
 
-      expect(result).toBeSimilarStringTo(`export type IMyType = {
+      expect(result.content).toBeSimilarStringTo(`export type IMyType = {
+        __typename?: 'MyType',
         f?: ?$ElementType<Scalars, 'String'>,
         bar?: ?IMyEnum,
         b_a_r?: ?$ElementType<Scalars, 'String'>,
         myOtherField?: ?$ElementType<Scalars, 'String'>,
       };`);
 
-      expect(result).toBeSimilarStringTo(`export type IMy_Type = {
+      expect(result.content).toBeSimilarStringTo(`export type IMy_Type = {
+        __typename?: 'My_Type',
         linkTest?: ?IMyType,
       };`);
 
-      expect(result).toBeSimilarStringTo(`export type IMyUnion = IMy_Type | IMyType;`);
+      expect(result.content).toBeSimilarStringTo(`export type IMyUnion = IMy_Type | IMyType;`);
 
-      expect(result).toBeSimilarStringTo(`export type ISome_Interface = {
+      expect(result.content).toBeSimilarStringTo(`export type ISome_Interface = {
+        __typename?: 'Some_Interface',
         id: $ElementType<Scalars, 'ID'>,
       };`);
 
-      expect(result).toBeSimilarStringTo(`export type IImpl1 = ISome_Interface & {
+      expect(result.content).toBeSimilarStringTo(`export type IImpl1 = ISome_Interface & {
+        __typename?: 'Impl1',
         id: $ElementType<Scalars, 'ID'>,
       };`);
 
-      expect(result).toBeSimilarStringTo(`export type IImpl_2 = ISome_Interface & {
+      expect(result.content).toBeSimilarStringTo(`export type IImpl_2 = ISome_Interface & {
+        __typename?: 'Impl_2',
         id: $ElementType<Scalars, 'ID'>,
       };`);
 
-      expect(result).toBeSimilarStringTo(`export type IImpl_3 = ISome_Interface & {
+      expect(result.content).toBeSimilarStringTo(`export type IImpl_3 = ISome_Interface & {
+        __typename?: 'impl_3',
         id: $ElementType<Scalars, 'ID'>,
       };`);
 
-      expect(result).toBeSimilarStringTo(`export type IQuery = {
+      expect(result.content).toBeSimilarStringTo(`export type IQuery = {
+        __typename?: 'Query',
         something?: ?IMyUnion,
         use_interface?: ?ISome_Interface,
       };`);
@@ -596,9 +624,9 @@ describe('Flow Plugin', () => {
   describe('Arguments', () => {
     it('Should generate correctly types for field arguments - with basic fields', async () => {
       const schema = buildSchema(`type MyType { foo(a: String!, b: String, c: [String], d: [Int!]!): String }`);
-      const result = await plugin(schema, [], {}, { outputFile: '' });
+      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
         export type MyTypeFooArgs = {
           a: $ElementType<Scalars, 'String'>,
           b?: ?$ElementType<Scalars, 'String'>,
@@ -612,9 +640,9 @@ describe('Flow Plugin', () => {
 
     it('Should generate correctly types for field arguments - with default value', async () => {
       const schema = buildSchema(`type MyType { foo(a: String = "default", b: String! = "default", c: String): String }`);
-      const result = await plugin(schema, [], {}, { outputFile: '' });
+      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
         export type MyTypeFooArgs = {
           a: $ElementType<Scalars, 'String'>,
           b: $ElementType<Scalars, 'String'>,
@@ -627,9 +655,9 @@ describe('Flow Plugin', () => {
 
     it('Should generate correctly types for field arguments - with input type', async () => {
       const schema = buildSchema(`input MyInput { f: String } type MyType { foo(a: MyInput, b: MyInput!, c: [MyInput], d: [MyInput]!, e: [MyInput!]!): String }`);
-      const result = await plugin(schema, [], {}, { outputFile: '' });
+      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
         export type MyTypeFooArgs = {
           a?: ?MyInput,
           b: MyInput,
@@ -644,16 +672,17 @@ describe('Flow Plugin', () => {
 
     it('Should add custom prefix for mutation arguments', async () => {
       const schema = buildSchema(`input Input { name: String } type Mutation { foo(id: String, input: Input): String }`);
-      const result = await plugin(schema, [], { typesPrefix: 'T' }, { outputFile: '' });
+      const result = (await plugin(schema, [], { typesPrefix: 'T' }, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
         export type TInput = {
           name?: ?$ElementType<Scalars, 'String'>,
         };
       `);
 
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
         export type TMutation = {
+          __typename?: 'Mutation',
           foo?: ?$ElementType<Scalars, 'String'>,
         };
 
@@ -671,9 +700,9 @@ describe('Flow Plugin', () => {
   describe('Enum', () => {
     it('Should build basic enum correctly', async () => {
       const schema = buildSchema(`enum MyEnum { A, B, C }`);
-      const result = await plugin(schema, [], {}, { outputFile: '' });
+      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
         export const MyEnumValues = Object.freeze({
           A: 'A',
           B: 'B',
@@ -688,9 +717,9 @@ describe('Flow Plugin', () => {
 
     it('Should build enum correctly with custom values', async () => {
       const schema = buildSchema(`enum MyEnum { A, B, C }`);
-      const result = await plugin(schema, [], { enumValues: { MyEnum: { A: 'SomeValue', B: 'TEST' } } }, { outputFile: '' });
+      const result = (await plugin(schema, [], { enumValues: { MyEnum: { A: 'SomeValue', B: 'TEST' } } }, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
         export const MyEnumValues = Object.freeze({
           A: 'SomeValue',
           B: 'TEST',
@@ -705,20 +734,20 @@ describe('Flow Plugin', () => {
 
     it('Should build enum correctly with custom values and map to external enum', async () => {
       const schema = buildSchema(`enum MyEnum { A, B, C }`);
-      const result = await plugin(schema, [], { enumValues: { MyEnum: './my-file#MyEnum' } }, { outputFile: '' });
+      const result = (await plugin(schema, [], { enumValues: { MyEnum: './my-file#MyEnum' } }, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-      expect(result).not.toContain(`export type MyEnum`);
-      expect(result).toContain(`import { type MyEnum } from './my-file';`);
+      expect(result.content).not.toContain(`export type MyEnum`);
+      expect(result.prepend).toContain(`import { type MyEnum } from './my-file';`);
 
       validateFlow(result);
     });
 
     it('Should build enum correctly with custom values and map to external enum with different identifier', async () => {
       const schema = buildSchema(`enum MyEnum { A, B, C }`);
-      const result = await plugin(schema, [], { enumValues: { MyEnum: './my-file#MyCustomEnum' } }, { outputFile: '' });
+      const result = (await plugin(schema, [], { enumValues: { MyEnum: './my-file#MyCustomEnum' } }, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-      expect(result).not.toContain(`export type MyEnum`);
-      expect(result).toContain(`import { type MyCustomEnum as MyEnum } from './my-file';`);
+      expect(result.content).not.toContain(`export type MyEnum`);
+      expect(result.prepend).toContain(`import { type MyCustomEnum as MyEnum } from './my-file';`);
 
       validateFlow(result);
     });
@@ -727,9 +756,9 @@ describe('Flow Plugin', () => {
   describe('Scalars', () => {
     it('Should build basic scalar correctly as any', async () => {
       const schema = buildSchema(`scalar A`);
-      const result = await plugin(schema, [], {}, { outputFile: '' });
+      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
    export type Scalars = {
       ID: string,
       String: string,
@@ -747,9 +776,9 @@ describe('Flow Plugin', () => {
 
     it('Should build enum correctly with custom values', async () => {
       const schema = buildSchema(`scalar A`);
-      const result = await plugin(schema, [], { scalars: { A: 'MyCustomType' } }, { outputFile: '' });
+      const result = (await plugin(schema, [], { scalars: { A: 'MyCustomType' } }, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
    export type Scalars = {
       ID: string,
       String: string,
@@ -785,9 +814,9 @@ describe('Flow Plugin', () => {
           k: [[String]]!
           l: [[String!]!]!
         }`);
-      const result = await plugin(schema, [], {}, { outputFile: '' });
+      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
         export type MyInput = {
           a: $ElementType<Scalars, 'String'>,
           b?: ?$ElementType<Scalars, 'Int'>,
@@ -815,10 +844,11 @@ describe('Flow Plugin', () => {
           foo: String
           bar: String!
         }`);
-      const result = await plugin(schema, [], {}, { outputFile: '' });
+      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
         export type MyType = {
+          __typename?: 'MyType',
           foo?: ?$ElementType<Scalars, 'String'>,
           bar: $ElementType<Scalars, 'String'>,
         };
@@ -836,15 +866,17 @@ describe('Flow Plugin', () => {
           foo: String!
         }
         `);
-      const result = await plugin(schema, [], {}, { outputFile: '' });
+      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
         export type MyInterface = {
+          __typename?: 'MyInterface',
           foo: $ElementType<Scalars, 'String'>,
         };
       `);
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
         export type MyType = MyInterface & {
+          __typename?: 'MyType',
           foo: $ElementType<Scalars, 'String'>,
         };
       `);
@@ -866,20 +898,23 @@ describe('Flow Plugin', () => {
           bar: String!
         }
         `);
-      const result = await plugin(schema, [], {}, { outputFile: '' });
+      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
         export type MyInterface = {
+          __typename?: 'MyInterface',
           foo: $ElementType<Scalars, 'String'>,
         };
       `);
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
         export type MyOtherInterface = {
+          __typename?: 'MyOtherInterface',
           bar: $ElementType<Scalars, 'String'>,
         };
       `);
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
         export type MyType = MyInterface & MyOtherInterface & {
+          __typename?: 'MyType',
           foo: $ElementType<Scalars, 'String'>,
           bar: $ElementType<Scalars, 'String'>,
         };
@@ -897,15 +932,17 @@ describe('Flow Plugin', () => {
           bar: String!
         }
         `);
-      const result = await plugin(schema, [], {}, { outputFile: '' });
+      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
         export type MyType = {
+          __typename?: 'MyType',
           foo: MyOtherType,
         };
       `);
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
         export type MyOtherType = {
+          __typename?: 'MyOtherType',
           bar: $ElementType<Scalars, 'String'>,
         };
       `);
@@ -926,9 +963,9 @@ describe('Flow Plugin', () => {
       
       union MyUnion = MyType | MyOtherType
       `);
-      const result = await plugin(schema, [], {}, { outputFile: '' });
+      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
       export type MyUnion = MyType | MyOtherType;
     `);
 
@@ -943,10 +980,11 @@ describe('Flow Plugin', () => {
           foo: String
           bar: String!
         }`);
-      const result = await plugin(schema, [], {}, { outputFile: '' });
+      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-      expect(result).toBeSimilarStringTo(`
+      expect(result.content).toBeSimilarStringTo(`
         export type MyInterface = {
+          __typename?: 'MyInterface',
           foo?: ?$ElementType<Scalars, 'String'>,
           bar: $ElementType<Scalars, 'String'>,
         };
@@ -964,7 +1002,7 @@ describe('Flow Plugin', () => {
         directive @universal on OBJECT | FIELD_DEFINITION | ENUM_VALUE
       `);
 
-      const result = await plugin(schema, [], {}, { outputFile: '' });
+      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
 
       validateFlow(result);
     });
@@ -993,14 +1031,42 @@ describe('Flow Plugin', () => {
         }
       `);
 
-      const result = await plugin(schema, [], {}, { outputFile: '' });
+      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-      expect(result).toBeSimilarStringTo(`export type UpdateUser = {
+      expect(result.content).toBeSimilarStringTo(`export type UpdateUser = {
           username?: ?$ElementType<Scalars, 'String'>,
           email?: ?$ElementType<Scalars, 'String'>,
         };`);
 
       validateFlow(result);
     });
+  });
+
+  it('should not contain __typename', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type User {
+        id: Int!
+        name: String!
+        email: String!
+      }
+      type QueryRoot {
+        allUsers: [User]!
+        userById(id: Int!): User
+        # Generates a new answer for the guessing game
+        answer: [Int!]!
+      }
+      type SubscriptionRoot {
+        newUser: User
+      }
+      schema {
+        query: QueryRoot
+        subscription: SubscriptionRoot
+      }
+    `);
+
+    const content = (await plugin(schema, [], { skipTypename: true }, { outputFile: '' })) as Types.ComplexPluginOutput;
+    expect(content).not.toContain('__typename');
+
+    validateFlow(content);
   });
 });

@@ -10,16 +10,14 @@ import {
   isInterfaceType,
   isEnumType,
   GraphQLSchema,
-  isEqualType,
   GraphQLField,
   SchemaMetaFieldDef,
   TypeMetaFieldDef,
   isScalarType,
-  print,
   GraphQLInterfaceType,
 } from 'graphql';
 import { getBaseType, quoteIfNeeded, isRootType } from './utils';
-import { ScalarsMap, ConvertNameFn } from './types';
+import { ScalarsMap, ConvertNameFn, LoadedFragment } from './types';
 import { GraphQLObjectType, GraphQLNonNull, GraphQLList } from 'graphql';
 import { BaseVisitorConvertOptions } from './base-visitor';
 
@@ -37,8 +35,6 @@ const metadataFieldMap: Record<string, GraphQLField<any, any>> = {
   __type: TypeMetaFieldDef,
 };
 
-export type LoadedFragment = { name: string; onType: string };
-
 export class SelectionSetToObject {
   protected _primitiveFields: PrimitiveField[] = [];
   protected _primitiveAliasedFields: PrimitiveAliasedFields[] = [];
@@ -51,7 +47,9 @@ export class SelectionSetToObject {
     protected _schema: GraphQLSchema,
     protected _convertName: ConvertNameFn<BaseVisitorConvertOptions>,
     protected _addTypename: boolean,
+    protected _nonOptionalTypename: boolean,
     protected _loadedFragments: LoadedFragment[],
+    protected _namespacedImportName: string | null,
     protected _parentSchemaType?: GraphQLNamedType,
     protected _selectionSet?: SelectionSetNode
   ) {}
@@ -163,10 +161,12 @@ export class SelectionSetToObject {
       }
     }
 
-    const parentName = this._convertName(this._parentSchemaType.name, {
-      useTypesPrefix: true,
-    });
-    const typeName = this._addTypename || this._queriedForTypename ? this.buildTypeNameField() : null;
+    const parentName =
+      (this._namespacedImportName ? `${this._namespacedImportName}.` : '') +
+      this._convertName(this._parentSchemaType.name, {
+        useTypesPrefix: true,
+      });
+    const typeName = this._nonOptionalTypename || this._addTypename || this._queriedForTypename ? this.buildTypeNameField() : null;
     const baseFields = this.buildPrimitiveFields(parentName, this._primitiveFields);
     const aliasBaseFields = this.buildAliasedPrimitiveFields(parentName, this._primitiveAliasedFields);
     const linksFields = this.buildLinkFields(this._linksFields);
@@ -211,7 +211,9 @@ export class SelectionSetToObject {
       return null;
     }
 
-    return `{ ${this.formatNamedField('__typename')}${this._queriedForTypename ? '' : '?'}: ${possibleTypes.map(t => `'${t}'`).join(' | ')} }`;
+    const optionalTypename = !this._queriedForTypename && !this._nonOptionalTypename;
+
+    return `{ ${this.formatNamedField('__typename')}${optionalTypename ? '?' : ''}: ${possibleTypes.map(t => `'${t}'`).join(' | ')} }`;
   }
 
   protected buildPrimitiveFields(parentName: string, fields: PrimitiveField[]): string | null {

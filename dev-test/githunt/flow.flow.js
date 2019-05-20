@@ -1,7 +1,6 @@
 /* @flow */
 
 
-
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string,
@@ -13,6 +12,7 @@ export type Scalars = {
 
 /** A comment about an entry, submitted by a user */
 export type Comment = {
+  __typename?: 'Comment',
   /** The SQL ID of this entry */
   id: $ElementType<Scalars, 'Int'>,
   /** The GitHub user who posted the comment */
@@ -27,6 +27,7 @@ export type Comment = {
 
 /** Information about a GitHub repository submitted to GitHunt */
 export type Entry = {
+  __typename?: 'Entry',
   /** Information about the repository from GitHub */
   repository: Repository,
   /** The GitHub user who submitted this entry */
@@ -68,6 +69,7 @@ export const FeedTypeValues = Object.freeze({
 export type FeedType = $Values<typeof FeedTypeValues>;
 
 export type Mutation = {
+  __typename?: 'Mutation',
   /** Submit a new repository, returns the new submission */
   submitRepository?: ?Entry,
   /** Vote on a repository submission, returns the submission that was voted on */
@@ -94,6 +96,7 @@ export type MutationSubmitCommentArgs = {
 };
 
 export type Query = {
+  __typename?: 'Query',
   /** A feed of repository submissions */
   feed?: ?Array<?Entry>,
   /** A single entry */
@@ -118,6 +121,7 @@ export type QueryEntryArgs = {
  * GitHub API for simplicity, even though the convention for GraphQL is usually to camel case.
  */
 export type Repository = {
+  __typename?: 'Repository',
   /** Just the name of the repository, e.g. GitHunt-API */
   name: $ElementType<Scalars, 'String'>,
   /** The full name of the repository with the username, e.g. apollostack/GitHunt-API */
@@ -135,6 +139,7 @@ export type Repository = {
 };
 
 export type Subscription = {
+  __typename?: 'Subscription',
   /** Subscription fires on every comment added */
   commentAdded?: ?Comment,
 };
@@ -146,6 +151,7 @@ export type SubscriptionCommentAddedArgs = {
 
 /** A user object from the GitHub API. This uses the exact field names returned from the GitHub API. */
 export type User = {
+  __typename?: 'User',
   /** The name of the user, e.g. apollostack */
   login: $ElementType<Scalars, 'String'>,
   /** The URL to a directly embeddable image for this user's avatar */
@@ -156,6 +162,7 @@ export type User = {
 
 /** XXX to be removed */
 export type Vote = {
+  __typename?: 'Vote',
   vote_value: $ElementType<Scalars, 'Int'>,
 };
 

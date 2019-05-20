@@ -1,6 +1,18 @@
 import { GraphQLSchema, DocumentNode } from 'graphql';
+import { object } from 'prop-types';
 
 export namespace Types {
+  export interface GenerateOptions {
+    filename: string;
+    plugins: Types.ConfiguredPlugin[];
+    schema: DocumentNode;
+    documents: Types.DocumentFile[];
+    config: { [key: string]: any };
+    pluginMap: {
+      [name: string]: CodegenPlugin;
+    };
+  }
+
   export type FileOutput = {
     filename: string;
     content: string;
@@ -12,6 +24,8 @@ export namespace Types {
   };
 
   /* Utils */
+  export type ObjectMap<T = any> = { [key: string]: T };
+  export type Promisable<T> = T | Promise<T>;
   export type InstanceOrArray<T> = T | T[];
 
   /* Schema Definition */
@@ -27,25 +41,45 @@ export namespace Types {
   export type OperationDocument = OperationDocumentGlobPath | CustomDocumentLoader;
 
   /* Plugin Definition */
-  export type PluginConfig = InstanceOrArray<string> | { [key: string]: any };
+  export type PluginConfig = InstanceOrArray<string> | ObjectMap;
   export type ConfiguredPlugin = { [name: string]: PluginConfig };
   export type NamedPlugin = string;
 
   /* Output Definition */
+  export type NamedPreset = string;
   export type OutputConfig = InstanceOrArray<NamedPlugin | ConfiguredPlugin>;
   export type ConfiguredOutput = {
+    plugins: OutputConfig;
+    preset?: string | OutputPreset;
+    presetConfig?: { [key: string]: any };
     overwrite?: boolean;
     documents?: InstanceOrArray<OperationDocument>;
     schema?: InstanceOrArray<Schema>;
-    plugins: OutputConfig;
-    config?: { [key: string]: any };
+    config?: PluginConfig;
+  };
+
+  /* Output Builder Preset */
+  export type PresetFnArgs<Config = any> = {
+    presetConfig: Config;
+    baseOutputDir: string;
+    plugins: Types.ConfiguredPlugin[];
+    schema: DocumentNode;
+    documents: Types.DocumentFile[];
+    config: { [key: string]: any };
+    pluginMap: {
+      [name: string]: CodegenPlugin;
+    };
+  };
+
+  export type OutputPreset<TPresetConfig = any> = {
+    buildGeneratesSection: (options: PresetFnArgs<TPresetConfig>) => Promisable<GenerateOptions[]>;
   };
 
   /* Require Extensions */
   export type RequireExtension = InstanceOrArray<string>;
 
-  /* Plugin Loader */
-  export type PluginLoaderFn = (pluginName: string) => CodegenPlugin | Promise<CodegenPlugin>;
+  /* PackageLoaderFn Loader */
+  export type PackageLoaderFn<TExpectedResult> = (name: string) => Promisable<TExpectedResult>;
 
   /* Config Definition */
   export interface Config {
@@ -53,11 +87,11 @@ export namespace Types {
     require?: RequireExtension;
     documents?: InstanceOrArray<OperationDocument>;
     config?: { [key: string]: any };
-    generates: { [filename: string]: OutputConfig | ConfiguredOutput };
+    generates: { [output: string]: OutputConfig | ConfiguredOutput };
     overwrite?: boolean;
     watch?: boolean | string | string[];
     silent?: boolean;
-    pluginLoader?: PluginLoaderFn;
+    pluginLoader?: PackageLoaderFn<CodegenPlugin>;
     pluckConfig?: {
       modules?: Array<{
         name: string;
@@ -67,6 +101,13 @@ export namespace Types {
       globalIdentifier?: string;
     };
   }
+
+  export type ComplexPluginOutput = { content: string; prepend?: string[]; append?: string[] };
+  export type PluginOutput = string | ComplexPluginOutput;
+}
+
+export function isComplexPluginOutput(obj: Types.PluginOutput): obj is Types.ComplexPluginOutput {
+  return typeof obj === 'object' && obj.hasOwnProperty('content');
 }
 
 export type PluginFunction<T = any> = (
@@ -78,9 +119,9 @@ export type PluginFunction<T = any> = (
     allPlugins?: Types.ConfiguredPlugin[];
     [key: string]: any;
   }
-) => Promise<string> | string;
+) => Types.Promisable<Types.PluginOutput>;
 
-export type PluginValidateFn<T = any> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: T, outputFile: string, allPlugins: Types.ConfiguredPlugin[]) => Promise<void> | void;
+export type PluginValidateFn<T = any> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: T, outputFile: string, allPlugins: Types.ConfiguredPlugin[]) => Types.Promisable<void>;
 
 export interface CodegenPlugin<T = any> {
   plugin: PluginFunction<T>;
