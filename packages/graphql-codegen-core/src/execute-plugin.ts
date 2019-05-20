@@ -31,9 +31,10 @@ export async function executePlugin(options: ExecutePluginOptions, plugin: Codeg
   }
 
   const outputSchema: GraphQLSchema = buildASTSchema(options.schema);
+  const documentsToValidate = options.documents.filter(d => !d.skipValidation);
 
-  if (outputSchema && options.documents.length > 0) {
-    const errors = validateGraphQlDocuments(outputSchema, options.documents);
+  if (outputSchema && documentsToValidate.length > 0) {
+    const errors = validateGraphQlDocuments(outputSchema, documentsToValidate);
     checkValidationErrors(errors);
   }
 

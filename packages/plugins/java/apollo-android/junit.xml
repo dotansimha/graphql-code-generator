@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="8" failures="0" time="2.613">
+  <testsuite name="java-apollo-android" errors="0" failures="0" skipped="0" timestamp="2019-05-20T11:34:48" time="2.59" tests="8">
+    <testcase classname="java-apollo-android Input Types" name="Should produce valid Java code" time="0.527" file="tests/plugin.spec.ts">
+    </testcase>
+    <testcase classname="java-apollo-android Input Types" name="Should create a basic input type signature correctly" time="0.002" file="tests/plugin.spec.ts">
+    </testcase>
+    <testcase classname="java-apollo-android Input Types" name="Should create private fields correctly" time="0.002" file="tests/plugin.spec.ts">
+    </testcase>
+    <testcase classname="java-apollo-android Input Types" name="Should create ctor correctly" time="0.001" file="tests/plugin.spec.ts">
+    </testcase>
+    <testcase classname="java-apollo-android Input Types" name="Should create getters correctly" time="0.001" file="tests/plugin.spec.ts">
+    </testcase>
+    <testcase classname="java-apollo-android Input Types" name="Should have Builder static getter" time="0" file="tests/plugin.spec.ts">
+    </testcase>
+    <testcase classname="java-apollo-android Input Types" name="Should have Builder nested class " time="0" file="tests/plugin.spec.ts">
+    </testcase>
+    <testcase classname="java-apollo-android Input Types" name="Should have marshaller built for the fields" time="0.001" file="tests/plugin.spec.ts">
+    </testcase>
+  </testsuite>
+</testsuites>

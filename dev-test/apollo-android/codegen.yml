@@ -1,0 +1,12 @@
+schema: schema.json
+documents:
+  - mutations.graphql
+  - queries.graphql
+  - subscriptions.graphql
+generates:
+  generatedJava/:
+    preset: java-apollo-android
+    config:
+      package: com.app.generated.graphql
+    plugins:
+      - java-apollo-android

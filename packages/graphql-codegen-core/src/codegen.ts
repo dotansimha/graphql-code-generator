@@ -67,10 +67,12 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
 function resolveCompareValue(a: string) {
   if (a.startsWith('/*') || a.startsWith('//')) {
     return 0;
-  } else if (a.startsWith('import')) {
+  } else if (a.startsWith('package')) {
     return 1;
-  } else {
+  } else if (a.startsWith('import')) {
     return 2;
+  } else {
+    return 3;
   }
 }
 
