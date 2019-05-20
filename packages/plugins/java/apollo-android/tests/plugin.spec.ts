@@ -23,7 +23,7 @@ describe('java-apollo-android', () => {
         f: String
       }
     `);
-    const config = { package: 'com.app.generated.graphql' };
+    const config = { typePackage: 'com.app.generated.graphql' };
     const files: Types.DocumentFile[] = [{ content: { kind: Kind.DOCUMENT, definitions: [schema.getType('MyInput').astNode] }, filePath: '' }];
 
     it('Should produce valid Java code', async () => {

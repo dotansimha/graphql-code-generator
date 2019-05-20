@@ -17,7 +17,20 @@ export const Imports = {
   Generated: 'javax.annotation.Generated',
 
   // Apollo Android
+  Operation: 'com.apollographql.apollo.api.Operation',
+  OperationName: 'com.apollographql.apollo.api.OperationName',
+  Mutation: 'com.apollographql.apollo.api.Mutation',
+  Query: 'com.apollographql.apollo.api.Query',
+  Subscription: 'com.apollographql.apollo.api.Subscription',
+  ResponseField: 'com.apollographql.apollo.api.ResponseField',
+  ResponseFieldMapper: 'com.apollographql.apollo.api.ResponseFieldMapper',
+  ResponseFieldMarshaller: 'com.apollographql.apollo.api.ResponseFieldMarshaller',
+  ResponseReader: 'com.apollographql.apollo.api.ResponseReader',
+  ResponseWriter: 'com.apollographql.apollo.api.ResponseWriter',
+
+  UnmodifiableMapBuilder: 'com.apollographql.apollo.api.internal.UnmodifiableMapBuilder',
   Utils: 'com.apollographql.apollo.api.internal.Utils',
+
   InputType: 'com.apollographql.apollo.api.InputType',
   Input: 'com.apollographql.apollo.api.Input',
   InputFieldMarshaller: 'com.apollographql.apollo.api.InputFieldMarshaller',

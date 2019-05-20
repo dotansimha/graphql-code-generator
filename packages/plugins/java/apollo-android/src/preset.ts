@@ -1,5 +1,5 @@
 import { Types } from '@graphql-codegen/plugin-helpers';
-import { visit, concatAST, InputObjectTypeDefinitionNode, DocumentNode, Kind } from 'graphql';
+import { visit, concatAST, InputObjectTypeDefinitionNode, DocumentNode, Kind, OperationDefinitionNode } from 'graphql';
 import { join } from 'path';
 
 export const preset: Types.OutputPreset = {
@@ -29,16 +29,16 @@ export const preset: Types.OutputPreset = {
           documents: [{ skipValidation: true, content: { kind: Kind.DOCUMENT, definitions: [ast] }, filePath: '' }],
         };
       }),
-      // ...operationsAst.definitions.map((ast: OperationDefinitionNode) => {
-      //   return {
-      //     filename: join(outDir, 'operations', ast.name.value + '.java'),
-      //     plugins: options.plugins,
-      //     pluginMap: options.pluginMap,
-      //     config: options.config,
-      //     schema: options.schema,
-      //     documents: [{ content: { kind: Kind.DOCUMENT, definitions: [ast] }, filePath: '' }],
-      //   };
-      // }),
+      ...operationsAst.definitions.map((ast: OperationDefinitionNode) => {
+        return {
+          filename: join(outDir, 'operations/', ast.name.value + '.java'),
+          plugins: options.plugins,
+          pluginMap: options.pluginMap,
+          config: options.config,
+          schema: options.schema,
+          documents: [{ content: { kind: Kind.DOCUMENT, definitions: [ast] }, filePath: '' }],
+        };
+      }),
     ];
   },
 };

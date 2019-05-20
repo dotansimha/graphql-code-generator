@@ -1,91 +1,25 @@
-import { BaseVisitor, ParsedConfig, getBaseTypeNode, indent, indentMultiline } from '@graphql-codegen/visitor-plugin-common';
+import { ParsedConfig, getBaseTypeNode, indent, indentMultiline } from '@graphql-codegen/visitor-plugin-common';
 import { JavaApolloAndroidPluginConfig } from './plugin';
-import { JAVA_SCALARS, JavaDeclarationBlock, wrapTypeWithModifiers, buildPackageNameFromPath } from '@graphql-codegen/java-common';
+import { JavaDeclarationBlock, buildPackageNameFromPath } from '@graphql-codegen/java-common';
 import { InputObjectTypeDefinitionNode, GraphQLSchema, InputValueDefinitionNode, isScalarType, isInputObjectType, Kind, TypeNode, isEnumType } from 'graphql';
 import { Imports } from './imports';
+import { BaseJavaVisitor, SCALAR_TO_WRITER_METHOD } from './base-java-visitor';
 
-export interface JavaApolloAndroidPluginParsedConfig extends ParsedConfig {
+export interface InputTypeVisitorConfig extends ParsedConfig {
   package: string;
 }
 
-const SCALAR_TO_WRITER_METHOD = {
-  ID: 'writeString',
-  String: 'writeString',
-  Int: 'writeInt',
-  Boolean: 'writeBoolean',
-  Float: 'writeDouble',
-};
-
-export class JavaApolloAndroidVisitor extends BaseVisitor<JavaApolloAndroidPluginConfig, JavaApolloAndroidPluginParsedConfig> {
-  private _imports = new Set<string>();
-
-  constructor(private _schema: GraphQLSchema, rawConfig: JavaApolloAndroidPluginConfig) {
-    super(
-      rawConfig,
-      {
-        package: rawConfig.package || buildPackageNameFromPath(process.cwd()),
-      },
-      {
-        ...JAVA_SCALARS,
-        ID: 'String',
-      }
-    );
-  }
-
-  public get imports(): string[] {
-    return Array.from(this._imports).map(imp => `import ${imp};`);
-  }
-
-  private getActualType(type: TypeNode, wrap = true): string {
-    const baseType = getBaseTypeNode(type);
-    const schemaType = this._schema.getType(baseType.name.value);
-    let typeToUse = schemaType.name;
-
-    if (isScalarType(schemaType)) {
-      const scalar = this.config.scalars[schemaType.name] || 'Object';
-
-      if (Imports[scalar]) {
-        this._imports.add(Imports[scalar]);
-      }
-
-      typeToUse = scalar;
-    } else if (isInputObjectType(schemaType)) {
-      this._imports.add(`${this.config.package}.${schemaType.name}`);
-    }
-
-    const result = wrap ? wrapTypeWithModifiers(typeToUse, type, 'List') : typeToUse;
-
-    if (result.includes('List<')) {
-      this._imports.add(Imports.List);
-    }
-
-    return result;
-  }
-
-  private getFieldWithTypePrefix(field: InputValueDefinitionNode, withInputWrapperWhenNeeded = true): string {
-    this._imports.add(Imports.Input);
-    const typeToUse = this.getActualType(field.type);
-    const isNonNull = field.type.kind === Kind.NON_NULL_TYPE;
-
-    if (isNonNull) {
-      this._imports.add(Imports.NonNull);
-    }
-
-    if (isNonNull) {
-      return `@Nonnull ${typeToUse} ${field.name.value}`;
-    } else {
-      if (withInputWrapperWhenNeeded) {
-        return `Input<${typeToUse}> ${field.name.value}`;
-      } else {
-        return `${typeToUse} ${field.name.value}`;
-      }
-    }
+export class InputTypeVisitor extends BaseJavaVisitor<InputTypeVisitorConfig> {
+  constructor(_schema: GraphQLSchema, rawConfig: JavaApolloAndroidPluginConfig) {
+    super(_schema, rawConfig, {
+      package: rawConfig.typePackage || buildPackageNameFromPath(process.cwd()),
+    });
   }
 
   private buildInputPrivateFields(fields: ReadonlyArray<InputValueDefinitionNode>): string[] {
     return fields
       .map<string>(field => {
-        const fieldType = this.getFieldWithTypePrefix(field);
+        const fieldType = this.getFieldWithTypePrefix(field, 'Input');
 
         return `private final ${fieldType};`;
       })
@@ -93,7 +27,7 @@ export class JavaApolloAndroidVisitor extends BaseVisitor<JavaApolloAndroidPlugi
   }
 
   private buildInputCtor(className: string, fields: ReadonlyArray<InputValueDefinitionNode>): string {
-    const mappedFields = fields.map<string>(field => this.getFieldWithTypePrefix(field));
+    const mappedFields = fields.map<string>(field => this.getFieldWithTypePrefix(field, 'Input'));
 
     return indentMultiline(`${className}(${mappedFields.join(', ')}) {
 ${fields.map(field => indent(`this.${field.name.value} = ${field.name.value};`)).join('\n')}
@@ -168,7 +102,7 @@ ${allMarshallers.join('\n')}
     const builderClassName = 'Builder';
     const privateFields = fields
       .map<string>(field => {
-        const fieldType = this.getFieldWithTypePrefix(field);
+        const fieldType = this.getFieldWithTypePrefix(field, 'Input');
         const isNonNull = field.type.kind === Kind.NON_NULL_TYPE;
 
         return `private ${fieldType}${isNonNull ? '' : ' = Input.absent()'};`;
@@ -177,7 +111,7 @@ ${allMarshallers.join('\n')}
 
     const setters = fields
       .map<string>(field => {
-        const fieldType = this.getFieldWithTypePrefix(field, false);
+        const fieldType = this.getFieldWithTypePrefix(field, null);
         const isNonNull = field.type.kind === Kind.NON_NULL_TYPE;
 
         return `\npublic ${builderClassName} ${field.name.value}(${isNonNull ? '' : '@Nullable '}${fieldType}) {
@@ -216,7 +150,8 @@ ${nonNullFields.join('\n')}
   private buildInputGetters(fields: ReadonlyArray<InputValueDefinitionNode>): string[] {
     return fields
       .map<string>(field => {
-        const fieldType = this.getFieldWithTypePrefix(field);
+        this._imports.add(Imports.Input);
+        const fieldType = this.getFieldWithTypePrefix(field, 'Input');
         const isNullable = field.type.kind !== Kind.NON_NULL_TYPE;
 
         if (isNullable) {
