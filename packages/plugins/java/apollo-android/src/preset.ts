@@ -1,5 +1,5 @@
 import { Types } from '@graphql-codegen/plugin-helpers';
-import { visit, concatAST, InputObjectTypeDefinitionNode, DocumentNode, Kind, OperationDefinitionNode } from 'graphql';
+import { visit, concatAST, InputObjectTypeDefinitionNode, DocumentNode, Kind, OperationDefinitionNode, FragmentDefinitionNode } from 'graphql';
 import { join } from 'path';
 
 export const preset: Types.OutputPreset = {
@@ -16,7 +16,9 @@ export const preset: Types.OutputPreset = {
     });
 
     const inputTypesDocumentNode: DocumentNode = { kind: Kind.DOCUMENT, definitions: inputTypesAst };
-    const operationsAst = concatAST(options.documents.reduce((prev, v) => [...prev, v.content], []));
+    const allAst = concatAST(options.documents.reduce((prev, v) => [...prev, v.content], []));
+    const operationsAst = allAst.definitions.filter(d => d.kind === Kind.OPERATION_DEFINITION) as OperationDefinitionNode[];
+    const externalFragments = allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[];
 
     return [
       ...inputTypesDocumentNode.definitions.map((ast: InputObjectTypeDefinitionNode) => {
@@ -29,12 +31,21 @@ export const preset: Types.OutputPreset = {
           documents: [{ skipValidation: true, content: { kind: Kind.DOCUMENT, definitions: [ast] }, filePath: '' }],
         };
       }),
-      ...operationsAst.definitions.map((ast: OperationDefinitionNode) => {
+      ...operationsAst.map((ast: OperationDefinitionNode) => {
         return {
           filename: join(outDir, 'operations/', ast.name.value + '.java'),
           plugins: options.plugins,
           pluginMap: options.pluginMap,
-          config: options.config,
+          config: {
+            ...options.config,
+            externalFragments: externalFragments.map(frag => ({
+              isExternal: true,
+              importFrom: frag.name.value,
+              name: frag.name.value,
+              onType: frag.typeCondition.name.value,
+              node: frag,
+            })),
+          },
           schema: options.schema,
           documents: [{ content: { kind: Kind.DOCUMENT, definitions: [ast] }, filePath: '' }],
         };

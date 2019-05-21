@@ -8,11 +8,13 @@
     "build": "tsc -m esnext --outDir dist/esnext && tsc -m commonjs --outDir dist/commonjs"
   },
   "dependencies": {
+    "strip-indent": "3.0.0",
     "@graphql-codegen/plugin-helpers": "1.2.1",
     "@graphql-codegen/visitor-plugin-common": "1.2.1",
     "tslib": "1.10.0"
   },
   "devDependencies": {
+    "@types/strip-indent": "3.0.2",
     "graphql": "14.3.1",
     "java-ast": "0.1.0",
     "typescript": "3.5.2"

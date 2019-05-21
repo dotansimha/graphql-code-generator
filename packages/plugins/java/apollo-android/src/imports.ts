@@ -9,6 +9,9 @@ export const Imports = {
   // Java Base
   List: 'java.util.List',
   IOException: 'java.io.IOException',
+  Collections: 'java.util.Collections',
+  LinkedHashMap: 'java.util.LinkedHashMap',
+  Map: 'java.util.Map',
 
   // Annotations
   NonNull: 'javax.annotation.Nonnull',

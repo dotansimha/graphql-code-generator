@@ -1,8 +1,9 @@
-schema: schema.json
+schema:
+  - https://jpmbfqfpxvcujfn4d4e3lu2pga.appsync-api.us-east-1.amazonaws.com/graphql:
+      headers:
+        'x-api-key': da2-nqo2z3qhxbbdrev6n5upweblui
 documents:
-  - mutations.graphql
-  - queries.graphql
-  - subscriptions.graphql
+  - /Users/dotansimha/Dev/test-app/app/src/main/graphql/com/amazonaws/amplify/generated/graphql/*.graphql
 generates:
   generatedJava/:
     preset: java-apollo-android

@@ -1,8 +1,8 @@
 import { Imports } from './imports';
 import { BaseVisitor, ParsedConfig, getBaseTypeNode } from '@graphql-codegen/visitor-plugin-common';
 import { JavaApolloAndroidPluginConfig } from './plugin';
-import { JAVA_SCALARS, wrapTypeWithModifiers } from '@graphql-codegen/java-common';
-import { GraphQLSchema, TypeNode, isScalarType, isInputObjectType, InputValueDefinitionNode, Kind, VariableDefinitionNode } from 'graphql';
+import { JAVA_SCALARS } from '@graphql-codegen/java-common';
+import { GraphQLSchema, isScalarType, isInputObjectType, InputValueDefinitionNode, Kind, VariableDefinitionNode, GraphQLNamedType } from 'graphql';
 
 export const SCALAR_TO_WRITER_METHOD = {
   ID: 'writeString',
@@ -26,9 +26,8 @@ export class BaseJavaVisitor<Config extends ParsedConfig & { package: string } =
     return Array.from(this._imports).map(imp => `import ${imp};`);
   }
 
-  protected getActualType(type: TypeNode, wrap = true): string {
-    const baseType = getBaseTypeNode(type);
-    const schemaType = this._schema.getType(baseType.name.value);
+  // Replaces a GraphQL type with a Java class
+  protected getActualType(schemaType: GraphQLNamedType): string {
     let typeToUse = schemaType.name;
 
     if (isScalarType(schemaType)) {
@@ -40,21 +39,16 @@ export class BaseJavaVisitor<Config extends ParsedConfig & { package: string } =
 
       typeToUse = scalar;
     } else if (isInputObjectType(schemaType)) {
+      // Make sure to import it if it's in use
       this._imports.add(`${this.config.package}.${schemaType.name}`);
     }
 
-    const result = wrap ? wrapTypeWithModifiers(typeToUse, type, 'List') : typeToUse;
-
-    if (result.includes('List<')) {
-      this._imports.add(Imports.List);
-    }
-
-    return result;
+    return typeToUse;
   }
 
   protected getFieldWithTypePrefix(field: InputValueDefinitionNode | VariableDefinitionNode, wrapWith: string | null = null, applyNullable = false): string {
     this._imports.add(Imports.Input);
-    const typeToUse = this.getActualType(field.type);
+    const typeToUse = this.getActualType(this._schema.getType(getBaseTypeNode(field.type).name.value));
     const isNonNull = field.type.kind === Kind.NON_NULL_TYPE;
     const name = field.kind === Kind.INPUT_VALUE_DEFINITION ? field.name.value : field.variable.name.value;
 

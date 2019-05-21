@@ -55,7 +55,8 @@ ${fields.map(field => indent(`this.${field.name.value} = ${field.name.value};`))
     const isNonNull = field.type.kind === Kind.NON_NULL_TYPE;
     const isArray = field.type.kind === Kind.LIST_TYPE || (field.type.kind === Kind.NON_NULL_TYPE && field.type.type.kind === Kind.LIST_TYPE);
     const call = this.getFieldWriterCall(field, isArray);
-    const listItemType = this.getActualType(field.type, false);
+    const baseTypeNode = getBaseTypeNode(field.type);
+    const listItemType = this.getActualType(this._schema.getType(baseTypeNode.name.value));
     let result = '';
 
     if (isArray) {

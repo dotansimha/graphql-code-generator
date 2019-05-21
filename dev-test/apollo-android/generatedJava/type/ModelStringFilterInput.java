@@ -4,7 +4,6 @@ import com.apollographql.apollo.api.InputType;
 import javax.annotation.Generated;
 import com.apollographql.apollo.api.Input;
 import java.lang.String;
-import java.util.List;
 import javax.annotation.Nullable;
 import java.lang.Override;
 import java.io.IOException;
@@ -21,10 +20,10 @@ public final class ModelStringFilterInput implements InputType {
   private final Input<String> gt;
   private final Input<String> contains;
   private final Input<String> notContains;
-  private final Input<List<String>> between;
+  private final Input<String> between;
   private final Input<String> beginsWith;
 
-  ModelStringFilterInput(Input<String> ne, Input<String> eq, Input<String> le, Input<String> lt, Input<String> ge, Input<String> gt, Input<String> contains, Input<String> notContains, Input<List<String>> between, Input<String> beginsWith) {
+  ModelStringFilterInput(Input<String> ne, Input<String> eq, Input<String> le, Input<String> lt, Input<String> ge, Input<String> gt, Input<String> contains, Input<String> notContains, Input<String> between, Input<String> beginsWith) {
     this.ne = ne;
     this.eq = eq;
     this.le = le;
@@ -45,7 +44,7 @@ public final class ModelStringFilterInput implements InputType {
   public @Nullable Input<String> gt() { return this.gt; }
   public @Nullable Input<String> contains() { return this.contains; }
   public @Nullable Input<String> notContains() { return this.notContains; }
-  public @Nullable Input<List<String>> between() { return this.between; }
+  public @Nullable Input<String> between() { return this.between; }
   public @Nullable Input<String> beginsWith() { return this.beginsWith; }
 
   public static Builder builder() { return new Builder(); }
@@ -105,7 +104,7 @@ public final class ModelStringFilterInput implements InputType {
     private Input<String> gt = Input.absent();
     private Input<String> contains = Input.absent();
     private Input<String> notContains = Input.absent();
-    private Input<List<String>> between = Input.absent();
+    private Input<String> between = Input.absent();
     private Input<String> beginsWith = Input.absent();
   
     Builder() {}
@@ -150,7 +149,7 @@ public final class ModelStringFilterInput implements InputType {
       return this;
     }
     
-    public Builder between(@Nullable List<String> between) {
+    public Builder between(@Nullable String between) {
       this.between = Input.fromNullable(between);
       return this;
     }

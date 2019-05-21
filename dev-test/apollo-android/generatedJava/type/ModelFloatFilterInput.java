@@ -4,7 +4,6 @@ import com.apollographql.apollo.api.InputType;
 import javax.annotation.Generated;
 import com.apollographql.apollo.api.Input;
 import java.lang.Float;
-import java.util.List;
 import javax.annotation.Nullable;
 import java.lang.Override;
 import java.io.IOException;
@@ -21,9 +20,9 @@ public final class ModelFloatFilterInput implements InputType {
   private final Input<Float> gt;
   private final Input<Float> contains;
   private final Input<Float> notContains;
-  private final Input<List<Float>> between;
+  private final Input<Float> between;
 
-  ModelFloatFilterInput(Input<Float> ne, Input<Float> eq, Input<Float> le, Input<Float> lt, Input<Float> ge, Input<Float> gt, Input<Float> contains, Input<Float> notContains, Input<List<Float>> between) {
+  ModelFloatFilterInput(Input<Float> ne, Input<Float> eq, Input<Float> le, Input<Float> lt, Input<Float> ge, Input<Float> gt, Input<Float> contains, Input<Float> notContains, Input<Float> between) {
     this.ne = ne;
     this.eq = eq;
     this.le = le;
@@ -43,7 +42,7 @@ public final class ModelFloatFilterInput implements InputType {
   public @Nullable Input<Float> gt() { return this.gt; }
   public @Nullable Input<Float> contains() { return this.contains; }
   public @Nullable Input<Float> notContains() { return this.notContains; }
-  public @Nullable Input<List<Float>> between() { return this.between; }
+  public @Nullable Input<Float> between() { return this.between; }
 
   public static Builder builder() { return new Builder(); }
 
@@ -99,7 +98,7 @@ public final class ModelFloatFilterInput implements InputType {
     private Input<Float> gt = Input.absent();
     private Input<Float> contains = Input.absent();
     private Input<Float> notContains = Input.absent();
-    private Input<List<Float>> between = Input.absent();
+    private Input<Float> between = Input.absent();
   
     Builder() {}
     
@@ -143,7 +142,7 @@ public final class ModelFloatFilterInput implements InputType {
       return this;
     }
     
-    public Builder between(@Nullable List<Float> between) {
+    public Builder between(@Nullable Float between) {
       this.between = Input.fromNullable(between);
       return this;
     }
