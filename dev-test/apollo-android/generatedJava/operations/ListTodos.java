@@ -25,6 +25,39 @@ public final class ListTodosQuery implements Query<ListTodosQuery.Data, ListTodo
     }
   };
   private final ListTodosQuery.Variables variables;
+  @Override
+   public String queryDocument() {
+    return QUERY_DOCUMENT;
+  }
+  
+  @Override
+   public ListTodosQuery.Data wrapData(ListTodosQuery.Data data) {
+    return data;
+  }
+  
+  @Override
+   public ListTodosQuery.Variables variables() {
+    return variables;
+  }
+  
+  @Override
+   public ResponseFieldMapper<ListTodosQuery.Data> responseFieldMapper() {
+    return new Data.Mapper();
+  }
+  
+  public static Builder builder() {
+    new Builder();
+  }
+  
+  @Override
+   public OperationName name() {
+    return OPERATION_NAME;
+  }
+  
+  public String operationId() {
+    return "e7d954ccc0ea1bdc65aed226eeb8a504";
+    }
+  }
   public static class Data implements Operation.Data {
     private final @Nullable ListTodos listTodos;
     private volatile String $toString;
@@ -263,39 +296,5 @@ public final class ListTodosQuery implements Query<ListTodosQuery.Data, ListTodo
   public ListTodosQuery(@Nullable ModelTodoFilterInput filter, @Nullable Integer limit, @Nullable String nextToken) {
         
     this.variables = new ListTodosQuery.Variables(filter, limit, nextToken);
-  }
-
-  @Override
-  public String operationId() {
-    return "e7d954ccc0ea1bdc65aed226eeb8a504";
-  }
-
-  @Override
-  public String queryDocument() {
-    return QUERY_DOCUMENT;
-  }
-  
-  @Override
-  public ListTodosQuery.Data wrapData(ListTodosQuery.Data data) {
-    return data;
-  }
-  
-  @Override
-  public ListTodosQuery.Variables variables() {
-    return variables;
-  }
-  
-  @Override
-  public ResponseFieldMapper<ListTodosQuery.Data> responseFieldMapper() {
-    return new Data.Mapper();
-  }
-  
-  public static Builder builder() {
-    return new Builder();
-  }
-  
-  @Override
-  public OperationName name() {
-    return OPERATION_NAME;
   }
 }

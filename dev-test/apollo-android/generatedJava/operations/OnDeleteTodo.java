@@ -21,6 +21,39 @@ public final class OnDeleteTodoSubscription implements Subscription<OnDeleteTodo
     }
   };
   private final OnDeleteTodoSubscription.Variables variables;
+  @Override
+   public String queryDocument() {
+    return QUERY_DOCUMENT;
+  }
+  
+  @Override
+   public OnDeleteTodoSubscription.Data wrapData(OnDeleteTodoSubscription.Data data) {
+    return data;
+  }
+  
+  @Override
+   public OnDeleteTodoSubscription.Variables variables() {
+    return variables;
+  }
+  
+  @Override
+   public ResponseFieldMapper<OnDeleteTodoSubscription.Data> responseFieldMapper() {
+    return new Data.Mapper();
+  }
+  
+  public static Builder builder() {
+    new Builder();
+  }
+  
+  @Override
+   public OperationName name() {
+    return OPERATION_NAME;
+  }
+  
+  public String operationId() {
+    return "9dfd580d494eb7362d1ff0b180ea0bdd";
+    }
+  }
   public static class Data implements Operation.Data {
     private final @Nullable OnDeleteTodo onDeleteTodo;
     private volatile String $toString;
@@ -177,39 +210,5 @@ public final class OnDeleteTodoSubscription implements Subscription<OnDeleteTodo
   public OnDeleteTodoSubscription() {
         
     this.variables = Operation.EMPTY_VARIABLES;
-  }
-
-  @Override
-  public String operationId() {
-    return "9dfd580d494eb7362d1ff0b180ea0bdd";
-  }
-
-  @Override
-  public String queryDocument() {
-    return QUERY_DOCUMENT;
-  }
-  
-  @Override
-  public OnDeleteTodoSubscription.Data wrapData(OnDeleteTodoSubscription.Data data) {
-    return data;
-  }
-  
-  @Override
-  public OnDeleteTodoSubscription.Variables variables() {
-    return variables;
-  }
-  
-  @Override
-  public ResponseFieldMapper<OnDeleteTodoSubscription.Data> responseFieldMapper() {
-    return new Data.Mapper();
-  }
-  
-  public static Builder builder() {
-    return new Builder();
-  }
-  
-  @Override
-  public OperationName name() {
-    return OPERATION_NAME;
   }
 }

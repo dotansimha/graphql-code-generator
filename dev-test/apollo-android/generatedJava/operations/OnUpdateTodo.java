@@ -21,6 +21,39 @@ public final class OnUpdateTodoSubscription implements Subscription<OnUpdateTodo
     }
   };
   private final OnUpdateTodoSubscription.Variables variables;
+  @Override
+   public String queryDocument() {
+    return QUERY_DOCUMENT;
+  }
+  
+  @Override
+   public OnUpdateTodoSubscription.Data wrapData(OnUpdateTodoSubscription.Data data) {
+    return data;
+  }
+  
+  @Override
+   public OnUpdateTodoSubscription.Variables variables() {
+    return variables;
+  }
+  
+  @Override
+   public ResponseFieldMapper<OnUpdateTodoSubscription.Data> responseFieldMapper() {
+    return new Data.Mapper();
+  }
+  
+  public static Builder builder() {
+    new Builder();
+  }
+  
+  @Override
+   public OperationName name() {
+    return OPERATION_NAME;
+  }
+  
+  public String operationId() {
+    return "8f638b2057f5c82c9ac9c3594486b499";
+    }
+  }
   public static class Data implements Operation.Data {
     private final @Nullable OnUpdateTodo onUpdateTodo;
     private volatile String $toString;
@@ -177,39 +210,5 @@ public final class OnUpdateTodoSubscription implements Subscription<OnUpdateTodo
   public OnUpdateTodoSubscription() {
         
     this.variables = Operation.EMPTY_VARIABLES;
-  }
-
-  @Override
-  public String operationId() {
-    return "8f638b2057f5c82c9ac9c3594486b499";
-  }
-
-  @Override
-  public String queryDocument() {
-    return QUERY_DOCUMENT;
-  }
-  
-  @Override
-  public OnUpdateTodoSubscription.Data wrapData(OnUpdateTodoSubscription.Data data) {
-    return data;
-  }
-  
-  @Override
-  public OnUpdateTodoSubscription.Variables variables() {
-    return variables;
-  }
-  
-  @Override
-  public ResponseFieldMapper<OnUpdateTodoSubscription.Data> responseFieldMapper() {
-    return new Data.Mapper();
-  }
-  
-  public static Builder builder() {
-    return new Builder();
-  }
-  
-  @Override
-  public OperationName name() {
-    return OPERATION_NAME;
   }
 }

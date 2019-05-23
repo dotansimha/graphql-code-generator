@@ -25,6 +25,39 @@ public final class DeleteTodoMutation implements Mutation<DeleteTodoMutation.Dat
     }
   };
   private final DeleteTodoMutation.Variables variables;
+  @Override
+   public String queryDocument() {
+    return QUERY_DOCUMENT;
+  }
+  
+  @Override
+   public DeleteTodoMutation.Data wrapData(DeleteTodoMutation.Data data) {
+    return data;
+  }
+  
+  @Override
+   public DeleteTodoMutation.Variables variables() {
+    return variables;
+  }
+  
+  @Override
+   public ResponseFieldMapper<DeleteTodoMutation.Data> responseFieldMapper() {
+    return new Data.Mapper();
+  }
+  
+  public static Builder builder() {
+    new Builder();
+  }
+  
+  @Override
+   public OperationName name() {
+    return OPERATION_NAME;
+  }
+  
+  public String operationId() {
+    return "f86f628796ee076cc8429f204e1c49cd";
+    }
+  }
   public static class Data implements Operation.Data {
     private final @Nullable DeleteTodo deleteTodo;
     private volatile String $toString;
@@ -181,39 +214,5 @@ public final class DeleteTodoMutation implements Mutation<DeleteTodoMutation.Dat
   public DeleteTodoMutation(@Nonnull DeleteTodoInput input) {
     Utils.checkNotNull(input, "input == null");      
     this.variables = new DeleteTodoMutation.Variables(input);
-  }
-
-  @Override
-  public String operationId() {
-    return "f86f628796ee076cc8429f204e1c49cd";
-  }
-
-  @Override
-  public String queryDocument() {
-    return QUERY_DOCUMENT;
-  }
-  
-  @Override
-  public DeleteTodoMutation.Data wrapData(DeleteTodoMutation.Data data) {
-    return data;
-  }
-  
-  @Override
-  public DeleteTodoMutation.Variables variables() {
-    return variables;
-  }
-  
-  @Override
-  public ResponseFieldMapper<DeleteTodoMutation.Data> responseFieldMapper() {
-    return new Data.Mapper();
-  }
-  
-  public static Builder builder() {
-    return new Builder();
-  }
-  
-  @Override
-  public OperationName name() {
-    return OPERATION_NAME;
   }
 }

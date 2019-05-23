@@ -25,6 +25,39 @@ public final class UpdateTodoMutation implements Mutation<UpdateTodoMutation.Dat
     }
   };
   private final UpdateTodoMutation.Variables variables;
+  @Override
+   public String queryDocument() {
+    return QUERY_DOCUMENT;
+  }
+  
+  @Override
+   public UpdateTodoMutation.Data wrapData(UpdateTodoMutation.Data data) {
+    return data;
+  }
+  
+  @Override
+   public UpdateTodoMutation.Variables variables() {
+    return variables;
+  }
+  
+  @Override
+   public ResponseFieldMapper<UpdateTodoMutation.Data> responseFieldMapper() {
+    return new Data.Mapper();
+  }
+  
+  public static Builder builder() {
+    new Builder();
+  }
+  
+  @Override
+   public OperationName name() {
+    return OPERATION_NAME;
+  }
+  
+  public String operationId() {
+    return "c4949ad7b9f5829a0421d47acbf17e88";
+    }
+  }
   public static class Data implements Operation.Data {
     private final @Nullable UpdateTodo updateTodo;
     private volatile String $toString;
@@ -181,39 +214,5 @@ public final class UpdateTodoMutation implements Mutation<UpdateTodoMutation.Dat
   public UpdateTodoMutation(@Nonnull UpdateTodoInput input) {
     Utils.checkNotNull(input, "input == null");      
     this.variables = new UpdateTodoMutation.Variables(input);
-  }
-
-  @Override
-  public String operationId() {
-    return "c4949ad7b9f5829a0421d47acbf17e88";
-  }
-
-  @Override
-  public String queryDocument() {
-    return QUERY_DOCUMENT;
-  }
-  
-  @Override
-  public UpdateTodoMutation.Data wrapData(UpdateTodoMutation.Data data) {
-    return data;
-  }
-  
-  @Override
-  public UpdateTodoMutation.Variables variables() {
-    return variables;
-  }
-  
-  @Override
-  public ResponseFieldMapper<UpdateTodoMutation.Data> responseFieldMapper() {
-    return new Data.Mapper();
-  }
-  
-  public static Builder builder() {
-    return new Builder();
-  }
-  
-  @Override
-  public OperationName name() {
-    return OPERATION_NAME;
   }
 }

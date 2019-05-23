@@ -27,7 +27,16 @@ export interface OperationVisitorConfig extends ParsedConfig {
   fragmentPackage: string;
 }
 
+export interface ChildField {
+  isNonNull: boolean;
+  annotation: string;
+  className: string;
+  fieldName: string;
+}
+
 export interface TransformSelectionSetOptions {
+  additionalFragments?: LoadedFragment[];
+  additionalFields?: ChildField[];
   className: string;
   schemaType: GraphQLNamedType;
   implements?: string[];
@@ -121,9 +130,9 @@ ${nonNullVariables}
     options.result[className] = cls;
 
     const fields = options.schemaType.getFields();
-    const childFields: { isNonNull: boolean; annotation: string; className: string; fieldName: string }[] = [];
+    const childFields: ChildField[] = [...(options.additionalFields || [])];
     const childInlineFragments: { onType: string; node: InlineFragmentNode }[] = [];
-    const childFragmentSpread: LoadedFragment[] = [];
+    const childFragmentSpread: LoadedFragment[] = [...(options.additionalFragments || [])];
 
     const selections = [...(options.selectionSet || [])];
     const responseFieldArr: string[] = [];
@@ -197,12 +206,15 @@ ${nonNullVariables}
     }
 
     if (childInlineFragments.length > 0) {
+      const childFieldsBase = [...childFields];
       childFields.push(
         ...childInlineFragments.map(inlineFragment => {
           const cls = `As${inlineFragment.onType}`;
 
           this.transformSelectionSet(
             {
+              additionalFields: childFieldsBase,
+              additionalFragments: childFragmentSpread,
               className: cls,
               result: options.result,
               selectionSet: inlineFragment.node.selectionSet.selections,
@@ -213,7 +225,7 @@ ${nonNullVariables}
 
           return {
             isNonNull: false,
-            annotation: 'Nullable ',
+            annotation: 'Nullable',
             className: cls,
             fieldName: `as${inlineFragment.onType}`,
           };
@@ -232,9 +244,6 @@ ${nonNullVariables}
         className: 'Fragments',
         fieldName: 'fragments',
       });
-
-      // TODO: fragments class
-      const fragmentsClass = '';
     }
 
     if (responseFieldArr.length > 0 && !isRoot) {
@@ -426,42 +435,41 @@ return $hashCode;`,
       { static: true, final: true }
     );
     cls.addClassMember('variables', `${className}.Variables`, null, [], 'private', { final: true });
+    cls.addClassMethod('queryDocument', `String`, `return QUERY_DOCUMENT;`, [], [], 'public', {}, ['Override']);
+    cls.addClassMethod(
+      'wrapData',
+      `${className}.Data`,
+      `return data;`,
+      [
+        {
+          name: 'data',
+          type: `${className}.Data`,
+        },
+      ],
+      [],
+      'public',
+      {},
+      ['Override']
+    );
+    cls.addClassMethod('variables', `${className}.Variables`, `return variables;`, [], [], 'public', {}, ['Override']);
+    cls.addClassMethod('responseFieldMapper', `ResponseFieldMapper<${className}.Data>`, `return new Data.Mapper();`, [], [], 'public', {}, ['Override']);
+    cls.addClassMethod('builder', `Builder`, `new Builder();`, [], [], 'public', { static: true }, []);
+    cls.addClassMethod('name', `OperationName`, `return OPERATION_NAME;`, [], [], 'public', {}, ['Override']);
+    cls.addClassMethod(
+      'operationId',
+      `String`,
+      `return "${createHash('md5')
+        .update(printedOperation)
+        .digest('hex')}";
+}`,
+      [],
+      [],
+      'public',
+      {},
+      []
+    );
 
     const ctor = this.buildCtor(className, node);
-    const operationId = indentMultiline(`@Override
-public String operationId() {
-  return "${createHash('md5')
-    .update(printedOperation)
-    .digest('hex')}";
-}`);
-    const mixedDeclarations = indentMultiline(`@Override
-public String queryDocument() {
-  return QUERY_DOCUMENT;
-}
-
-@Override
-public ${className}.Data wrapData(${className}.Data data) {
-  return data;
-}
-
-@Override
-public ${className}.Variables variables() {
-  return variables;
-}
-
-@Override
-public ResponseFieldMapper<${className}.Data> responseFieldMapper() {
-  return new Data.Mapper();
-}
-
-public static Builder builder() {
-  return new Builder();
-}
-
-@Override
-public OperationName name() {
-  return OPERATION_NAME;
-}`);
 
     const dataClasses = this.transformSelectionSet({
       className: 'Data',
@@ -475,9 +483,7 @@ public OperationName name() {
       cls.nestedClass(dataClasses[className]);
     });
 
-    const block = [ctor, operationId, mixedDeclarations].join('\n\n');
-
-    cls.withBlock(block);
+    cls.withBlock(ctor);
 
     return cls.string;
   }

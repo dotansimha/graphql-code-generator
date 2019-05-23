@@ -26,6 +26,39 @@ public final class GetTodoQuery implements Query<GetTodoQuery.Data, GetTodoQuery
     }
   };
   private final GetTodoQuery.Variables variables;
+  @Override
+   public String queryDocument() {
+    return QUERY_DOCUMENT;
+  }
+  
+  @Override
+   public GetTodoQuery.Data wrapData(GetTodoQuery.Data data) {
+    return data;
+  }
+  
+  @Override
+   public GetTodoQuery.Variables variables() {
+    return variables;
+  }
+  
+  @Override
+   public ResponseFieldMapper<GetTodoQuery.Data> responseFieldMapper() {
+    return new Data.Mapper();
+  }
+  
+  public static Builder builder() {
+    new Builder();
+  }
+  
+  @Override
+   public OperationName name() {
+    return OPERATION_NAME;
+  }
+  
+  public String operationId() {
+    return "2efa7a12cfc5463f2002cdd779aa4266";
+    }
+  }
   public static class Data implements Operation.Data {
     private final @Nullable GetTodo getTodo;
     private volatile String $toString;
@@ -172,39 +205,5 @@ public final class GetTodoQuery implements Query<GetTodoQuery.Data, GetTodoQuery
   public GetTodoQuery(@Nonnull String id) {
     Utils.checkNotNull(id, "id == null");      
     this.variables = new GetTodoQuery.Variables(id);
-  }
-
-  @Override
-  public String operationId() {
-    return "2efa7a12cfc5463f2002cdd779aa4266";
-  }
-
-  @Override
-  public String queryDocument() {
-    return QUERY_DOCUMENT;
-  }
-  
-  @Override
-  public GetTodoQuery.Data wrapData(GetTodoQuery.Data data) {
-    return data;
-  }
-  
-  @Override
-  public GetTodoQuery.Variables variables() {
-    return variables;
-  }
-  
-  @Override
-  public ResponseFieldMapper<GetTodoQuery.Data> responseFieldMapper() {
-    return new Data.Mapper();
-  }
-  
-  public static Builder builder() {
-    return new Builder();
-  }
-  
-  @Override
-  public OperationName name() {
-    return OPERATION_NAME;
   }
 }
