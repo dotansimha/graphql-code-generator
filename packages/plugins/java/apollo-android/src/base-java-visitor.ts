@@ -3,6 +3,7 @@ import { BaseVisitor, ParsedConfig, getBaseTypeNode } from '@graphql-codegen/vis
 import { JavaApolloAndroidPluginConfig } from './plugin';
 import { JAVA_SCALARS } from '@graphql-codegen/java-common';
 import { GraphQLSchema, isScalarType, isInputObjectType, InputValueDefinitionNode, Kind, VariableDefinitionNode, GraphQLNamedType } from 'graphql';
+import { VisitorConfig } from './visitor-config';
 
 export const SCALAR_TO_WRITER_METHOD = {
   ID: 'writeString',
@@ -12,7 +13,7 @@ export const SCALAR_TO_WRITER_METHOD = {
   Float: 'writeDouble',
 };
 
-export class BaseJavaVisitor<Config extends ParsedConfig & { package: string } = any> extends BaseVisitor<JavaApolloAndroidPluginConfig, Config> {
+export class BaseJavaVisitor<Config extends VisitorConfig = any> extends BaseVisitor<JavaApolloAndroidPluginConfig, Config> {
   protected _imports = new Set<string>();
 
   constructor(protected _schema: GraphQLSchema, rawConfig: JavaApolloAndroidPluginConfig, additionalConfig: Partial<Config>) {
@@ -40,7 +41,7 @@ export class BaseJavaVisitor<Config extends ParsedConfig & { package: string } =
       typeToUse = scalar;
     } else if (isInputObjectType(schemaType)) {
       // Make sure to import it if it's in use
-      this._imports.add(`${this.config.package}.${schemaType.name}`);
+      this._imports.add(`${this.config.inputPackage}.${schemaType.name}`);
     }
 
     return typeToUse;

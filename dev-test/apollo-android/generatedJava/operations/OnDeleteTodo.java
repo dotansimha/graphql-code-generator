@@ -207,6 +207,17 @@ public final class OnDeleteTodoSubscription implements Subscription<OnDeleteTodo
     
   }
   
+
+  public static final class Builder {
+    Builder() {
+      
+    }
+    
+    public OnDeleteTodoSubscription build() {
+      return new OnDeleteTodoSubscription();
+    }
+  }
+  
   public OnDeleteTodoSubscription() {
         
     this.variables = Operation.EMPTY_VARIABLES;

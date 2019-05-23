@@ -372,6 +372,23 @@ public final class SearchQuery implements Query<SearchQuery.Data, SearchQuery.Da
     
   }
   
+
+  public static final class Builder {
+    private @Nonnull String term;
+    Builder() {
+      
+    }
+    
+    public Builder term(@Nonnull String term) {
+      this.term = term;
+      return this;
+    }
+    
+    public SearchQuery build() {
+      return new SearchQuery(term);
+    }
+  }
+  
   public SearchQuery(@Nonnull String term) {
     Utils.checkNotNull(term, "term == null");      
     this.variables = new SearchQuery.Variables(term);

@@ -207,6 +207,17 @@ public final class OnUpdateTodoSubscription implements Subscription<OnUpdateTodo
     
   }
   
+
+  public static final class Builder {
+    Builder() {
+      
+    }
+    
+    public OnUpdateTodoSubscription build() {
+      return new OnUpdateTodoSubscription();
+    }
+  }
+  
   public OnUpdateTodoSubscription() {
         
     this.variables = Operation.EMPTY_VARIABLES;

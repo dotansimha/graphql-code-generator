@@ -376,6 +376,23 @@ public final class SearchOneQuery implements Query<SearchOneQuery.Data, SearchOn
     
   }
   
+
+  public static final class Builder {
+    private @Nonnull String term;
+    Builder() {
+      
+    }
+    
+    public Builder term(@Nonnull String term) {
+      this.term = term;
+      return this;
+    }
+    
+    public SearchOneQuery build() {
+      return new SearchOneQuery(term);
+    }
+  }
+  
   public SearchOneQuery(@Nonnull String term) {
     Utils.checkNotNull(term, "term == null");      
     this.variables = new SearchOneQuery.Variables(term);

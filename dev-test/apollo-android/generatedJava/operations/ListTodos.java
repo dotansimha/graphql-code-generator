@@ -7,7 +7,7 @@ import javax.annotation.Generated;
 import com.apollographql.apollo.api.OperationName;
 import com.apollographql.apollo.api.ResponseFieldMapper;
 import com.apollographql.apollo.api.Input;
-import com.app.generated.graphql.ModelTodoFilterInput;
+import type.ModelTodoFilterInput;
 import javax.annotation.Nullable;
 import java.lang.Integer;
 import com.apollographql.apollo.api.ResponseField;
@@ -291,6 +291,35 @@ public final class ListTodosQuery implements Query<ListTodosQuery.Data, ListTodo
       }
     }
     
+  }
+  
+
+  public static final class Builder {
+    private @Nonnull ModelTodoFilterInput filter;
+    private @Nonnull Integer limit;
+    private @Nonnull String nextToken;
+    Builder() {
+      
+    }
+    
+    public Builder filter(@Nonnull ModelTodoFilterInput filter) {
+      this.filter = filter;
+      return this;
+    }
+    
+    public Builder limit(@Nonnull Integer limit) {
+      this.limit = limit;
+      return this;
+    }
+    
+    public Builder nextToken(@Nonnull String nextToken) {
+      this.nextToken = nextToken;
+      return this;
+    }
+    
+    public ListTodosQuery build() {
+      return new ListTodosQuery(filter, limit, nextToken);
+    }
   }
   
   public ListTodosQuery(@Nullable ModelTodoFilterInput filter, @Nullable Integer limit, @Nullable String nextToken) {

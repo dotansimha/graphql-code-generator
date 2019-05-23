@@ -1,5 +1,5 @@
 import { BaseJavaVisitor } from './base-java-visitor';
-import { ParsedConfig, toPascalCase, indent, indentMultiline, getBaseType, LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
+import { ParsedConfig, toPascalCase, indent, indentMultiline, getBaseType, LoadedFragment, getBaseTypeNode } from '@graphql-codegen/visitor-plugin-common';
 import { buildPackageNameFromPath, JavaDeclarationBlock } from '@graphql-codegen/java-common';
 import {
   GraphQLSchema,
@@ -17,15 +17,12 @@ import {
   isUnionType,
   isInterfaceType,
   isObjectType,
+  VariableDefinitionNode,
 } from 'graphql';
 import { JavaApolloAndroidPluginConfig } from './plugin';
 import { Imports } from './imports';
 import { createHash } from 'crypto';
-
-export interface OperationVisitorConfig extends ParsedConfig {
-  package: string;
-  fragmentPackage: string;
-}
+import { VisitorConfig } from './visitor-config';
 
 export interface ChildField {
   isNonNull: boolean;
@@ -44,11 +41,12 @@ export interface TransformSelectionSetOptions {
   result: { [typeName: string]: JavaDeclarationBlock };
 }
 
-export class OperationVisitor extends BaseJavaVisitor<OperationVisitorConfig> {
+export class OperationVisitor extends BaseJavaVisitor<VisitorConfig> {
   constructor(_schema: GraphQLSchema, rawConfig: JavaApolloAndroidPluginConfig, private _availableFragments: LoadedFragment[]) {
     super(_schema, rawConfig, {
       package: rawConfig.package || buildPackageNameFromPath(process.cwd()),
       fragmentPackage: rawConfig.fragmentPackage || 'fragment',
+      inputPackage: rawConfig.typePackage || 'type',
     });
   }
 
@@ -99,16 +97,6 @@ ${nonNullVariables}
 
     return possibleNewName;
   }
-
-  // private getReaderMethod(schemaType: GraphQLNamedType): string {
-  //   if (isScalarType(schemaType)) {
-  //     return SCALAR_TO_READER_METHOD[schemaType.name] || 'writeCustom';
-  //   } else if (isInputObjectType(schemaType)) {
-  //     return listItemCall ? `writeObject($item.marshaller())` : `writeObject("${field.name.value}", ${field.name.value}.value != null ? ${field.name.value}.value.marshaller() : null)`;
-  //   } else if (isEnumType(schemaType)) {
-  //     writerMethod = 'writeString';
-  //   }
-  // }
 
   private transformSelectionSet(options: TransformSelectionSetOptions, isRoot = true) {
     if (!options.result) {
@@ -483,8 +471,48 @@ return $hashCode;`,
       cls.nestedClass(dataClasses[className]);
     });
 
+    cls.nestedClass(this.createBuilderClass(className, node.variableDefinitions || []));
     cls.withBlock(ctor);
 
     return cls.string;
+  }
+
+  private createBuilderClass(parentClassName: string, variables: ReadonlyArray<VariableDefinitionNode>): JavaDeclarationBlock {
+    const builderClassName = 'Builder';
+    const cls = new JavaDeclarationBlock()
+      .static()
+      .final()
+      .access('public')
+      .asKind('class')
+      .withName(builderClassName)
+      .addClassMethod(builderClassName, null, '');
+
+    variables.forEach(variable => {
+      const baseTypeNode = getBaseTypeNode(variable.type);
+      const schemaType = this._schema.getType(baseTypeNode.name.value);
+      const javaClass = this.getActualType(schemaType);
+      const annotations = [isNonNullType(variable.type) ? 'Nullable' : 'Nonnull'];
+      cls.addClassMember(variable.variable.name.value, javaClass, null, annotations, 'private');
+      cls.addClassMethod(
+        variable.variable.name.value,
+        builderClassName,
+        `this.${variable.variable.name.value} = ${variable.variable.name.value};\nreturn this;`,
+        [
+          {
+            name: variable.variable.name.value,
+            type: javaClass,
+            annotations,
+          },
+        ],
+        [],
+        'public'
+      );
+    });
+
+    const nonNullChecks = variables.filter(f => isNonNullType(f)).map(f => `Utils.checkNotNull(${f.variable.name.value}, "${f.variable.name.value} == null");`);
+    const returnStatement = `return new ${parentClassName}(${variables.map(v => v.variable.name.value).join(', ')});`;
+    cls.addClassMethod('build', parentClassName, `${[...nonNullChecks, returnStatement].join('\n')}`, [], [], 'public');
+
+    return cls;
   }
 }

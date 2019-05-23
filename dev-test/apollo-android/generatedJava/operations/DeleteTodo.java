@@ -7,7 +7,7 @@ import javax.annotation.Generated;
 import com.apollographql.apollo.api.OperationName;
 import com.apollographql.apollo.api.ResponseFieldMapper;
 import com.apollographql.apollo.api.Input;
-import com.app.generated.graphql.DeleteTodoInput;
+import type.DeleteTodoInput;
 import javax.annotation.Nonnull;
 import com.apollographql.apollo.api.internal.Utils;
 import com.apollographql.apollo.api.ResponseField;
@@ -209,6 +209,23 @@ public final class DeleteTodoMutation implements Mutation<DeleteTodoMutation.Dat
       }
     }
     
+  }
+  
+
+  public static final class Builder {
+    private @Nonnull DeleteTodoInput input;
+    Builder() {
+      
+    }
+    
+    public Builder input(@Nonnull DeleteTodoInput input) {
+      this.input = input;
+      return this;
+    }
+    
+    public DeleteTodoMutation build() {
+      return new DeleteTodoMutation(input);
+    }
   }
   
   public DeleteTodoMutation(@Nonnull DeleteTodoInput input) {

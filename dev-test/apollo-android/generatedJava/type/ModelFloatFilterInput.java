@@ -1,4 +1,4 @@
-package .Users.dotansimha.Dev.graphql-code-generator.dev-test.apollo-android;
+package undefined;
 
 import com.apollographql.apollo.api.InputType;
 import javax.annotation.Generated;

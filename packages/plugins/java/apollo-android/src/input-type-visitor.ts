@@ -4,15 +4,12 @@ import { JavaDeclarationBlock, buildPackageNameFromPath } from '@graphql-codegen
 import { InputObjectTypeDefinitionNode, GraphQLSchema, InputValueDefinitionNode, isScalarType, isInputObjectType, Kind, TypeNode, isEnumType } from 'graphql';
 import { Imports } from './imports';
 import { BaseJavaVisitor, SCALAR_TO_WRITER_METHOD } from './base-java-visitor';
+import { VisitorConfig } from './visitor-config';
 
-export interface InputTypeVisitorConfig extends ParsedConfig {
-  package: string;
-}
-
-export class InputTypeVisitor extends BaseJavaVisitor<InputTypeVisitorConfig> {
+export class InputTypeVisitor extends BaseJavaVisitor<VisitorConfig> {
   constructor(_schema: GraphQLSchema, rawConfig: JavaApolloAndroidPluginConfig) {
     super(_schema, rawConfig, {
-      package: rawConfig.typePackage || buildPackageNameFromPath(process.cwd()),
+      inputPackage: rawConfig.typePackage || buildPackageNameFromPath(process.cwd()),
     });
   }
 

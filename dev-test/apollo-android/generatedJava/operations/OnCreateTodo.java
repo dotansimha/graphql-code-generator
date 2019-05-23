@@ -207,6 +207,17 @@ public final class OnCreateTodoSubscription implements Subscription<OnCreateTodo
     
   }
   
+
+  public static final class Builder {
+    Builder() {
+      
+    }
+    
+    public OnCreateTodoSubscription build() {
+      return new OnCreateTodoSubscription();
+    }
+  }
+  
   public OnCreateTodoSubscription() {
         
     this.variables = Operation.EMPTY_VARIABLES;

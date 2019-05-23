@@ -202,6 +202,23 @@ public final class GetTodoQuery implements Query<GetTodoQuery.Data, GetTodoQuery
     
   }
   
+
+  public static final class Builder {
+    private @Nonnull String id;
+    Builder() {
+      
+    }
+    
+    public Builder id(@Nonnull String id) {
+      this.id = id;
+      return this;
+    }
+    
+    public GetTodoQuery build() {
+      return new GetTodoQuery(id);
+    }
+  }
+  
   public GetTodoQuery(@Nonnull String id) {
     Utils.checkNotNull(id, "id == null");      
     this.variables = new GetTodoQuery.Variables(id);
