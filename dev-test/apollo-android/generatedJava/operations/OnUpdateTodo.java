@@ -9,11 +9,6 @@ import com.apollographql.apollo.api.ResponseFieldMapper;
 import com.apollographql.apollo.api.ResponseField;
 import java.util.Collections;
 import com.apollographql.apollo.api.ResponseReader;
-import com.apollographql.apollo.api.ResponseFieldMarshaller;
-import com.apollographql.apollo.api.ResponseWriter;
-import com.apollographql.apollo.api.InputFieldMarshaller;
-import com.apollographql.apollo.api.InputFieldWriter;
-import java.io.IOException;
 
 @Generated("Apollo GraphQL")
 public final class OnUpdateTodoSubscription implements Subscription<OnUpdateTodoSubscription.Data, OnUpdateTodoSubscription.Data, OnUpdateTodoSubscription.Variables> {
@@ -26,39 +21,6 @@ public final class OnUpdateTodoSubscription implements Subscription<OnUpdateTodo
     }
   };
   private final OnUpdateTodoSubscription.Variables variables;
-  @Override
-   public String queryDocument() {
-    return QUERY_DOCUMENT;
-  }
-  
-  @Override
-   public OnUpdateTodoSubscription.Data wrapData(OnUpdateTodoSubscription.Data data) {
-    return data;
-  }
-  
-  @Override
-   public OnUpdateTodoSubscription.Variables variables() {
-    return variables;
-  }
-  
-  @Override
-   public ResponseFieldMapper<OnUpdateTodoSubscription.Data> responseFieldMapper() {
-    return new Data.Mapper();
-  }
-  
-  public static Builder builder() {
-    new Builder();
-  }
-  
-  @Override
-   public OperationName name() {
-    return OPERATION_NAME;
-  }
-  
-  public String operationId() {
-    return "8f638b2057f5c82c9ac9c3594486b499";
-    }
-  }
   public static class Data implements Operation.Data {
     private final @Nullable OnUpdateTodo onUpdateTodo;
     private volatile String $toString;
@@ -110,15 +72,6 @@ public final class OnUpdateTodoSubscription implements Subscription<OnUpdateTodo
       }
       
       return $hashCode;
-    }
-    
-    public ResponseFieldMarshaller marshaller() {
-      return new ResponseFieldMarshaller() {
-        @Override
-        public void marshal(ResponseWriter writer) {
-          writer.writeObject($responseFields[0], onUpdateTodo);
-        }
-      };
     }
     public static final class Mapper implements ResponseFieldMapper<Data> {
       @Override
@@ -212,18 +165,6 @@ public final class OnUpdateTodoSubscription implements Subscription<OnUpdateTodo
       
       return $hashCode;
     }
-    
-    public ResponseFieldMarshaller marshaller() {
-      return new ResponseFieldMarshaller() {
-        @Override
-        public void marshal(ResponseWriter writer) {
-          writer.writeString($responseFields[0], __typename);
-          writer.writeString($responseFields[1], id);
-          writer.writeString($responseFields[2], name);
-          writer.writeString($responseFields[3], description);
-        }
-      };
-    }
     public static final class Mapper implements ResponseFieldMapper<OnUpdateTodo> {
       @Override
        public OnUpdateTodo map(ResponseReader reader) {
@@ -233,42 +174,42 @@ public final class OnUpdateTodoSubscription implements Subscription<OnUpdateTodo
     
   }
   
-
-  public static final class Builder {
-    Builder() {
-      
-    }
-    
-    public OnUpdateTodoSubscription build() {
-      return new OnUpdateTodoSubscription();
-    }
-  }
-  
-
-  public static final class Variables extends Operation.Variables {
-    private final transient Map<String, Object> valueMap = new LinkedHashMap<>();
-    public Variables() {
-      
-    }
-    
-    @Override
-     public Map<String, Object> valueMap() {
-      return Collections.unmodifiableMap(valueMap);
-    }
-    
-    @Override
-     public InputFieldMarshaller marshaller() {
-      return new InputFieldMarshaller() {
-        @Override
-        public void marshal(InputFieldWriter writer) throws IOException {
-      
-        }
-      };
-    }
-  }
-  
   public OnUpdateTodoSubscription() {
         
     this.variables = Operation.EMPTY_VARIABLES;
+  }
+
+  @Override
+  public String operationId() {
+    return "8f638b2057f5c82c9ac9c3594486b499";
+  }
+
+  @Override
+  public String queryDocument() {
+    return QUERY_DOCUMENT;
+  }
+  
+  @Override
+  public OnUpdateTodoSubscription.Data wrapData(OnUpdateTodoSubscription.Data data) {
+    return data;
+  }
+  
+  @Override
+  public OnUpdateTodoSubscription.Variables variables() {
+    return variables;
+  }
+  
+  @Override
+  public ResponseFieldMapper<OnUpdateTodoSubscription.Data> responseFieldMapper() {
+    return new Data.Mapper();
+  }
+  
+  public static Builder builder() {
+    return new Builder();
+  }
+  
+  @Override
+  public OperationName name() {
+    return OPERATION_NAME;
   }
 }

@@ -30,7 +30,6 @@
     ]
   },
   "devDependencies": {
-    "prettier-plugin-java": "0.0.10",
     "@types/common-tags": "1.8.0",
     "@types/glob": "7.1.1",
     "@types/graphql": "14.2.1",
