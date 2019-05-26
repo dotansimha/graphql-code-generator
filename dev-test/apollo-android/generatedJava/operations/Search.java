@@ -221,7 +221,7 @@ public final class SearchQuery implements Query<SearchQuery.Data, SearchQuery.Da
         @Override
         public void marshal(ResponseWriter writer) {
           writer.writeString($responseFields[0], __typename);
-          writer.writeString($responseFields[1], id);
+          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[1], id);
           writer.writeObject($responseFields[2], asA != null ? asA.marshaller() : null);
           writer.writeObject($responseFields[3], asB != null ? asB.marshaller() : null);
         }
@@ -314,7 +314,7 @@ public final class SearchQuery implements Query<SearchQuery.Data, SearchQuery.Da
         @Override
         public void marshal(ResponseWriter writer) {
           writer.writeString($responseFields[0], __typename);
-          writer.writeString($responseFields[1], id);
+          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[1], id);
           writer.writeString($responseFields[2], a != null ? a : null);
         }
       };
@@ -406,7 +406,7 @@ public final class SearchQuery implements Query<SearchQuery.Data, SearchQuery.Da
         @Override
         public void marshal(ResponseWriter writer) {
           writer.writeString($responseFields[0], __typename);
-          writer.writeString($responseFields[1], id);
+          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[1], id);
           writer.writeString($responseFields[2], b != null ? b : null);
         }
       };

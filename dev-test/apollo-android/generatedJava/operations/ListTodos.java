@@ -320,7 +320,7 @@ public final class ListTodosQuery implements Query<ListTodosQuery.Data, ListTodo
         @Override
         public void marshal(ResponseWriter writer) {
           writer.writeString($responseFields[0], __typename);
-          writer.writeString($responseFields[1], id);
+          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[1], id);
           writer.writeString($responseFields[2], name);
           writer.writeString($responseFields[3], description != null ? description : null);
         }

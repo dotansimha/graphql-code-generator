@@ -317,7 +317,7 @@ public final class SearchOneQuery implements Query<SearchOneQuery.Data, SearchOn
         @Override
         public void marshal(ResponseWriter writer) {
           writer.writeString($responseFields[0], __typename);
-          writer.writeString($responseFields[1], id);
+          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[1], id);
           writer.writeObject($responseFields[2], fragments != null ? fragments.marshaller() : null);
         }
       };
@@ -410,7 +410,7 @@ public final class SearchOneQuery implements Query<SearchOneQuery.Data, SearchOn
         @Override
         public void marshal(ResponseWriter writer) {
           writer.writeString($responseFields[0], __typename);
-          writer.writeString($responseFields[1], id);
+          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[1], id);
           writer.writeObject($responseFields[2], fragments != null ? fragments.marshaller() : null);
         }
       };

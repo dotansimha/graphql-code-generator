@@ -213,7 +213,7 @@ public final class GetTodoQuery implements Query<GetTodoQuery.Data, GetTodoQuery
         @Override
         public void marshal(ResponseWriter writer) {
           writer.writeString($responseFields[0], __typename);
-          writer.writeString($responseFields[1], id);
+          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[1], id);
           writer.writeObject($responseFields[2], fragments != null ? fragments.marshaller() : null);
         }
       };
@@ -267,7 +267,7 @@ public final class GetTodoQuery implements Query<GetTodoQuery.Data, GetTodoQuery
       return new InputFieldMarshaller() {
         @Override
         public void marshal(InputFieldWriter writer) throws IOException {
-          writer.writeString("id", id);
+          writer.writeCustom("id", id);
         }
       };
     }

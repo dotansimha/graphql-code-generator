@@ -378,7 +378,7 @@ ${childFields
       fValue = `${f.fieldName} != null ? ${fValue} : null`;
     }
 
-    return indent(`writer.${writerMethod.name}($responseFields[${index}], ${fValue});`, 2);
+    return indent(`writer.${writerMethod.name}(${writerMethod.castTo ? `(${writerMethod.castTo}) ` : ''}$responseFields[${index}], ${fValue});`, 2);
   })
   .join('\n')}
   }
@@ -589,9 +589,9 @@ ${variables
     return cls;
   }
 
-  private _getWriterMethodByType(schemaType: GraphQLNamedType): { name: string; checkNull: boolean; useMarshaller: boolean } {
+  private _getWriterMethodByType(schemaType: GraphQLNamedType): { name: string; checkNull: boolean; useMarshaller: boolean; castTo?: string } {
     if (isScalarType(schemaType)) {
-      if (SCALAR_TO_WRITER_METHOD[schemaType.name]) {
+      if (SCALAR_TO_WRITER_METHOD[schemaType.name] && schemaType.name !== 'ID') {
         return {
           name: SCALAR_TO_WRITER_METHOD[schemaType.name],
           checkNull: false,
@@ -599,7 +599,7 @@ ${variables
         };
       }
 
-      return { name: 'writeCustom', checkNull: true, useMarshaller: false };
+      return { name: 'writeCustom', checkNull: false, useMarshaller: false, castTo: 'ResponseField.CustomTypeField' };
     } else if (isInputObjectType(schemaType)) {
       return { name: 'writeObject', checkNull: true, useMarshaller: true };
     } else if (isEnumType(schemaType)) {
