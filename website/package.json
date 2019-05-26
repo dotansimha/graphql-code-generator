@@ -20,7 +20,7 @@
     "remarkable-embed": "0.4.1",
     "babel-preset-minify": "0.5.0",
     "docusaurus": "1.9.0",
-    "netlify-lambda": "1.4.10"
+    "netlify-lambda": "1.4.11"
   },
   "dependencies": {
     "sendmail": "1.4.1"
