@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "@graphql-codegen/testing": "1.2.0",
-    "graphql": "14.3.0",
+    "graphql": "14.3.1",
     "java-ast": "0.1.0",
     "jest": "24.8.0",
     "ts-jest": "24.0.2",

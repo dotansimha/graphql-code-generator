@@ -20,7 +20,7 @@
     "@graphql-codegen/testing": "1.2.0",
     "@types/graphql": "14.2.0",
     "@types/jest": "24.0.13",
-    "graphql": "14.3.0",
+    "graphql": "14.3.1",
     "jest": "24.8.0",
     "ts-jest": "24.0.2",
     "typescript": "3.4.5"
