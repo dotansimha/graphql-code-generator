@@ -61,7 +61,6 @@ public final class UpdateTodoMutation implements Mutation<UpdateTodoMutation.Dat
   
   public String operationId() {
     return "c4949ad7b9f5829a0421d47acbf17e88";
-    }
   }
   public static class Data implements Operation.Data {
     private final @Nullable UpdateTodo updateTodo;

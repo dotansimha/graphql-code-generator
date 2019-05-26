@@ -57,7 +57,6 @@ public final class OnCreateTodoSubscription implements Subscription<OnCreateTodo
   
   public String operationId() {
     return "428b3d0142cc5cb6cd6748540efb25c7";
-    }
   }
   public static class Data implements Operation.Data {
     private final @Nullable OnCreateTodo onCreateTodo;

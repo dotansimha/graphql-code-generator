@@ -62,7 +62,6 @@ public final class GetTodoQuery implements Query<GetTodoQuery.Data, GetTodoQuery
   
   public String operationId() {
     return "2efa7a12cfc5463f2002cdd779aa4266";
-    }
   }
   public static class Data implements Operation.Data {
     private final @Nullable GetTodo getTodo;

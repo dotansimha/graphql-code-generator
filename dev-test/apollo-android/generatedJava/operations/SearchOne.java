@@ -62,7 +62,6 @@ public final class SearchOneQuery implements Query<SearchOneQuery.Data, SearchOn
   
   public String operationId() {
     return "653aff32c6b38de801080dad1ec58839";
-    }
   }
   public static class Data implements Operation.Data {
     private final @Nonnull SearchOne searchOne;

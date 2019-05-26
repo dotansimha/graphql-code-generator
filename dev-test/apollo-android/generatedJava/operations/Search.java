@@ -60,7 +60,6 @@ public final class SearchQuery implements Query<SearchQuery.Data, SearchQuery.Da
   
   public String operationId() {
     return "cc5de466b97c73fce5c80c4cb12de3bf";
-    }
   }
   public static class Data implements Operation.Data {
     private final @Nonnull Search search;

@@ -57,7 +57,6 @@ public final class OnUpdateTodoSubscription implements Subscription<OnUpdateTodo
   
   public String operationId() {
     return "8f638b2057f5c82c9ac9c3594486b499";
-    }
   }
   public static class Data implements Operation.Data {
     private final @Nullable OnUpdateTodo onUpdateTodo;

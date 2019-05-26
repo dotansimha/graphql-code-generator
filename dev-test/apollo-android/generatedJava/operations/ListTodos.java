@@ -61,7 +61,6 @@ public final class ListTodosQuery implements Query<ListTodosQuery.Data, ListTodo
   
   public String operationId() {
     return "e7d954ccc0ea1bdc65aed226eeb8a504";
-    }
   }
   public static class Data implements Operation.Data {
     private final @Nullable ListTodos listTodos;

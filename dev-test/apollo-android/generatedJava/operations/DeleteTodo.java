@@ -61,7 +61,6 @@ public final class DeleteTodoMutation implements Mutation<DeleteTodoMutation.Dat
   
   public String operationId() {
     return "f86f628796ee076cc8429f204e1c49cd";
-    }
   }
   public static class Data implements Operation.Data {
     private final @Nullable DeleteTodo deleteTodo;

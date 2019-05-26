@@ -505,8 +505,7 @@ ${childFields
       `String`,
       `return "${createHash('md5')
         .update(printedOperation)
-        .digest('hex')}";
-}`,
+        .digest('hex')}";`,
       [],
       [],
       'public',
