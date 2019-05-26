@@ -12,7 +12,7 @@
     "tslib": "1.9.3"
   },
   "devDependencies": {
-    "graphql": "14.3.0",
+    "graphql": "14.3.1",
     "typescript": "3.4.5"
   },
   "sideEffects": false,
