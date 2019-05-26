@@ -372,7 +372,13 @@ ${childFields
       );
     }
 
-    return indent(`writer.${writerMethod.name}($responseFields[${index}], ${f.fieldName});`, 2);
+    let fValue = `${f.fieldName}${writerMethod.useMarshaller ? '.marshaller()' : ''}`;
+
+    if (writerMethod.checkNull || !f.isNonNull) {
+      fValue = `${f.fieldName} != null ? ${fValue} : null`;
+    }
+
+    return indent(`writer.${writerMethod.name}($responseFields[${index}], ${fValue});`, 2);
   })
   .join('\n')}
   }
