@@ -85,7 +85,7 @@
   "devDependencies": {
     "@types/chokidar": "1.7.5",
     "@types/detect-indent": "5.0.0",
-    "@types/inquirer": "6.0.2",
+    "@types/inquirer": "6.0.3",
     "@types/js-yaml": "3.12.1",
     "@types/listr": "0.14.0",
     "@types/log-symbols": "2.0.0",
