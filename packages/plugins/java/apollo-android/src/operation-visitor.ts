@@ -1,4 +1,4 @@
-import { BaseJavaVisitor } from './base-java-visitor';
+import { BaseJavaVisitor, SCALAR_TO_WRITER_METHOD } from './base-java-visitor';
 import { ParsedConfig, toPascalCase, indent, indentMultiline, getBaseType, LoadedFragment, getBaseTypeNode } from '@graphql-codegen/visitor-plugin-common';
 import { buildPackageNameFromPath, JavaDeclarationBlock } from '@graphql-codegen/java-common';
 import {
@@ -18,14 +18,19 @@ import {
   isInterfaceType,
   isObjectType,
   VariableDefinitionNode,
+  isInputObjectType,
+  GraphQLString,
 } from 'graphql';
 import { JavaApolloAndroidPluginConfig } from './plugin';
 import { Imports } from './imports';
 import { createHash } from 'crypto';
 import { VisitorConfig } from './visitor-config';
+import { isListType } from 'graphql';
 
 export interface ChildField {
+  type: GraphQLNamedType;
   isNonNull: boolean;
+  isList: boolean;
   annotation: string;
   className: string;
   fieldName: string;
@@ -146,6 +151,8 @@ ${nonNullVariables}
           );
 
           childFields.push({
+            isList: isListType(field.type),
+            type: getBaseType(field.type),
             isNonNull,
             annotation: fieldAnnotation,
             className: childClsName,
@@ -155,6 +162,8 @@ ${nonNullVariables}
           const javaClass = this.getActualType(getBaseType(field.type));
 
           childFields.push({
+            isList: isListType(field.type),
+            type: getBaseType(field.type),
             isNonNull,
             annotation: fieldAnnotation,
             className: javaClass,
@@ -212,6 +221,8 @@ ${nonNullVariables}
           );
 
           return {
+            isList: false,
+            type: this._schema.getType(inlineFragment.onType),
             isNonNull: false,
             annotation: 'Nullable',
             className: cls,
@@ -227,6 +238,8 @@ ${nonNullVariables}
       responseFieldArr.push(`ResponseField.forFragment("__typename", "__typename", Arrays.asList(${childFragmentSpread.map(f => `"${f.onType}"`).join(', ')}))`);
 
       childFields.push({
+        isList: false,
+        type: options.schemaType,
         isNonNull: true,
         annotation: 'Nonnull',
         className: 'Fragments',
@@ -240,6 +253,8 @@ ${nonNullVariables}
 
     if (!isRoot) {
       childFields.unshift({
+        isList: false,
+        type: GraphQLString,
         isNonNull: true,
         annotation: 'Nonnull',
         className: 'String',
@@ -331,34 +346,70 @@ return $hashCode;`,
     );
 
     this._imports.add(Imports.ResponseReader);
+    this._imports.add(Imports.ResponseFieldMarshaller);
+    this._imports.add(Imports.ResponseWriter);
 
-    // TODO: Finish impl
-    cls.nestedClass(
-      new JavaDeclarationBlock()
-        .access('public')
-        .static()
-        .final()
-        .asKind('class')
-        .withName('Mapper')
-        .implements([`ResponseFieldMapper<${className}>`])
-        .addClassMethod(
-          'map',
-          className,
-          '',
-          [
-            {
-              name: 'reader',
-              type: 'ResponseReader',
-            },
-          ],
-          [],
-          'public',
-          {},
-          ['Override']
-        )
+    // marshaller
+    cls.addClassMethod(
+      'marshaller',
+      'ResponseFieldMarshaller',
+      `return new ResponseFieldMarshaller() {
+  @Override
+  public void marshal(ResponseWriter writer) {
+${childFields
+  .map((f, index) => {
+    const writerMethod = this._getWriterMethodByType(f.type);
+
+    if (f.isList) {
+      return indentMultiline(
+        `writer.writeList($responseFields[${index}], ${f.fieldName}, new ResponseWriter.ListWriter() {
+  @Override
+  public void write(Object value, ResponseWriter.ListItemWriter listItemWriter) {
+    listItemWriter.${writerMethod.name}(((${f.className}) value)${writerMethod.useMarshaller ? '.marshaller()' : ''});
+  }
+});`,
+        2
+      );
+    }
+
+    return indent(`writer.${writerMethod.name}($responseFields[${index}], ${f.fieldName});`, 2);
+  })
+  .join('\n')}
+  }
+};`,
+      [],
+      [],
+      'public'
     );
 
+    cls.nestedClass(this.buildMapperClass(className, childFields));
+
     return options.result;
+  }
+
+  private buildMapperClass(parentClassName: string, childFields: ChildField[]): JavaDeclarationBlock {
+    return new JavaDeclarationBlock()
+      .access('public')
+      .static()
+      .final()
+      .asKind('class')
+      .withName('Mapper')
+      .implements([`ResponseFieldMapper<${parentClassName}>`])
+      .addClassMethod(
+        'map',
+        parentClassName,
+        '',
+        [
+          {
+            name: 'reader',
+            type: 'ResponseReader',
+          },
+        ],
+        [],
+        'public',
+        {},
+        ['Override']
+      );
   }
 
   private _resolveResponseFieldMethod(type: GraphQLOutputType): string {
@@ -472,9 +523,86 @@ return $hashCode;`,
     });
 
     cls.nestedClass(this.createBuilderClass(className, node.variableDefinitions || []));
+    cls.nestedClass(this.createVariablesClass(className, node.variableDefinitions || []));
     cls.withBlock(ctor);
 
     return cls.string;
+  }
+
+  private createVariablesClass(parentClassName: string, variables: ReadonlyArray<VariableDefinitionNode>): JavaDeclarationBlock {
+    const className = 'Variables';
+    const cls = new JavaDeclarationBlock()
+      .static()
+      .access('public')
+      .final()
+      .asKind('class')
+      .extends(['Operation.Variables'])
+      .withName(className);
+
+    const ctorImpl: string[] = [];
+    const ctorArgs = [];
+
+    variables.forEach(variable => {
+      ctorImpl.push(`this.${variable.variable.name.value} = ${variable.variable.name.value};`);
+      ctorImpl.push(`this.valueMap.put("${variable.variable.name.value}", ${variable.variable.name.value});`);
+      const baseTypeNode = getBaseTypeNode(variable.type);
+      const schemaType = this._schema.getType(baseTypeNode.name.value);
+      const javaClass = this.getActualType(schemaType);
+      const annotation = isNonNullType(variable.type) ? 'Nullable' : 'Nonnull';
+      ctorArgs.push({ name: variable.variable.name.value, type: javaClass, annotations: [annotation] });
+      cls.addClassMember(variable.variable.name.value, javaClass, null, [annotation], 'private');
+      cls.addClassMethod(variable.variable.name.value, javaClass, `return ${variable.variable.name.value};`, [], [], 'public');
+    });
+
+    cls.addClassMethod(className, null, ctorImpl.join('\n'), ctorArgs, [], 'public');
+    cls.addClassMember('valueMap', 'Map<String, Object>', 'new LinkedHashMap<>()', [], 'private', { final: true, transient: true });
+    cls.addClassMethod('valueMap', 'Map<String, Object>', 'return Collections.unmodifiableMap(valueMap);', [], [], 'public', {}, ['Override']);
+
+    const marshallerImpl = `return new InputFieldMarshaller() {
+  @Override
+  public void marshal(InputFieldWriter writer) throws IOException {
+${variables
+  .map(v => {
+    const baseTypeNode = getBaseTypeNode(v.type);
+    const schemaType = this._schema.getType(baseTypeNode.name.value);
+    const writerMethod = this._getWriterMethodByType(schemaType);
+
+    return indent(
+      `writer.${writerMethod.name}("${v.variable.name.value}", ${writerMethod.checkNull ? `${v.variable.name.value} != null ? ${v.variable.name.value}${writerMethod.useMarshaller ? '.marshaller()' : ''} : null` : v.variable.name.value});`,
+      2
+    );
+  })
+  .join('\n')}
+  }
+};`;
+    this._imports.add(Imports.InputFieldMarshaller);
+    this._imports.add(Imports.InputFieldWriter);
+    this._imports.add(Imports.IOException);
+    cls.addClassMethod('marshaller', 'InputFieldMarshaller', marshallerImpl, [], [], 'public', {}, ['Override']);
+
+    return cls;
+  }
+
+  private _getWriterMethodByType(schemaType: GraphQLNamedType): { name: string; checkNull: boolean; useMarshaller: boolean } {
+    if (isScalarType(schemaType)) {
+      if (SCALAR_TO_WRITER_METHOD[schemaType.name]) {
+        return {
+          name: SCALAR_TO_WRITER_METHOD[schemaType.name],
+          checkNull: false,
+          useMarshaller: false,
+        };
+      }
+
+      return { name: 'writeCustom', checkNull: true, useMarshaller: false };
+    } else if (isInputObjectType(schemaType)) {
+      return { name: 'writeObject', checkNull: true, useMarshaller: true };
+    } else if (isEnumType(schemaType)) {
+      return { name: 'writeString', checkNull: false, useMarshaller: false };
+    } else if (isObjectType(schemaType) || isInterfaceType(schemaType)) {
+      return { name: 'writeObject', checkNull: true, useMarshaller: true };
+    }
+
+    return { name: 'writeString', useMarshaller: false, checkNull: false };
   }
 
   private createBuilderClass(parentClassName: string, variables: ReadonlyArray<VariableDefinitionNode>): JavaDeclarationBlock {

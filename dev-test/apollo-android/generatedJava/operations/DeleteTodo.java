@@ -13,6 +13,11 @@ import com.apollographql.apollo.api.internal.Utils;
 import com.apollographql.apollo.api.ResponseField;
 import java.util.Collections;
 import com.apollographql.apollo.api.ResponseReader;
+import com.apollographql.apollo.api.ResponseFieldMarshaller;
+import com.apollographql.apollo.api.ResponseWriter;
+import com.apollographql.apollo.api.InputFieldMarshaller;
+import com.apollographql.apollo.api.InputFieldWriter;
+import java.io.IOException;
 
 @Generated("Apollo GraphQL")
 public final class DeleteTodoMutation implements Mutation<DeleteTodoMutation.Data, DeleteTodoMutation.Data, DeleteTodoMutation.Variables> {
@@ -110,6 +115,15 @@ public final class DeleteTodoMutation implements Mutation<DeleteTodoMutation.Dat
       
       return $hashCode;
     }
+    
+    public ResponseFieldMarshaller marshaller() {
+      return new ResponseFieldMarshaller() {
+        @Override
+        public void marshal(ResponseWriter writer) {
+          writer.writeObject($responseFields[0], deleteTodo);
+        }
+      };
+    }
     public static final class Mapper implements ResponseFieldMapper<Data> {
       @Override
        public Data map(ResponseReader reader) {
@@ -202,6 +216,18 @@ public final class DeleteTodoMutation implements Mutation<DeleteTodoMutation.Dat
       
       return $hashCode;
     }
+    
+    public ResponseFieldMarshaller marshaller() {
+      return new ResponseFieldMarshaller() {
+        @Override
+        public void marshal(ResponseWriter writer) {
+          writer.writeString($responseFields[0], __typename);
+          writer.writeString($responseFields[1], id);
+          writer.writeString($responseFields[2], name);
+          writer.writeString($responseFields[3], description);
+        }
+      };
+    }
     public static final class Mapper implements ResponseFieldMapper<DeleteTodo> {
       @Override
        public DeleteTodo map(ResponseReader reader) {
@@ -225,6 +251,35 @@ public final class DeleteTodoMutation implements Mutation<DeleteTodoMutation.Dat
     
     public DeleteTodoMutation build() {
       return new DeleteTodoMutation(input);
+    }
+  }
+  
+
+  public static final class Variables extends Operation.Variables {
+    private @Nonnull DeleteTodoInput input;
+    private final transient Map<String, Object> valueMap = new LinkedHashMap<>();
+    public DeleteTodoInput input() {
+      return input;
+    }
+    
+    public Variables(@Nonnull DeleteTodoInput input) {
+      this.input = input;
+      this.valueMap.put("input", input);
+    }
+    
+    @Override
+     public Map<String, Object> valueMap() {
+      return Collections.unmodifiableMap(valueMap);
+    }
+    
+    @Override
+     public InputFieldMarshaller marshaller() {
+      return new InputFieldMarshaller() {
+        @Override
+        public void marshal(InputFieldWriter writer) throws IOException {
+          writer.writeObject("input", input != null ? input.marshaller() : null);
+        }
+      };
     }
   }
   

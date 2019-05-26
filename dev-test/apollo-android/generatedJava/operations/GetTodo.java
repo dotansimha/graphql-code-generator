@@ -14,6 +14,11 @@ import fragment.Item2;
 import fragment.Item;
 import java.util.Collections;
 import com.apollographql.apollo.api.ResponseReader;
+import com.apollographql.apollo.api.ResponseFieldMarshaller;
+import com.apollographql.apollo.api.ResponseWriter;
+import com.apollographql.apollo.api.InputFieldMarshaller;
+import com.apollographql.apollo.api.InputFieldWriter;
+import java.io.IOException;
 
 @Generated("Apollo GraphQL")
 public final class GetTodoQuery implements Query<GetTodoQuery.Data, GetTodoQuery.Data, GetTodoQuery.Variables> {
@@ -111,6 +116,15 @@ public final class GetTodoQuery implements Query<GetTodoQuery.Data, GetTodoQuery
       
       return $hashCode;
     }
+    
+    public ResponseFieldMarshaller marshaller() {
+      return new ResponseFieldMarshaller() {
+        @Override
+        public void marshal(ResponseWriter writer) {
+          writer.writeObject($responseFields[0], getTodo);
+        }
+      };
+    }
     public static final class Mapper implements ResponseFieldMapper<Data> {
       @Override
        public Data map(ResponseReader reader) {
@@ -193,6 +207,17 @@ public final class GetTodoQuery implements Query<GetTodoQuery.Data, GetTodoQuery
       
       return $hashCode;
     }
+    
+    public ResponseFieldMarshaller marshaller() {
+      return new ResponseFieldMarshaller() {
+        @Override
+        public void marshal(ResponseWriter writer) {
+          writer.writeString($responseFields[0], __typename);
+          writer.writeString($responseFields[1], id);
+          writer.writeObject($responseFields[2], fragments);
+        }
+      };
+    }
     public static final class Mapper implements ResponseFieldMapper<GetTodo> {
       @Override
        public GetTodo map(ResponseReader reader) {
@@ -216,6 +241,35 @@ public final class GetTodoQuery implements Query<GetTodoQuery.Data, GetTodoQuery
     
     public GetTodoQuery build() {
       return new GetTodoQuery(id);
+    }
+  }
+  
+
+  public static final class Variables extends Operation.Variables {
+    private @Nonnull String id;
+    private final transient Map<String, Object> valueMap = new LinkedHashMap<>();
+    public String id() {
+      return id;
+    }
+    
+    public Variables(@Nonnull String id) {
+      this.id = id;
+      this.valueMap.put("id", id);
+    }
+    
+    @Override
+     public Map<String, Object> valueMap() {
+      return Collections.unmodifiableMap(valueMap);
+    }
+    
+    @Override
+     public InputFieldMarshaller marshaller() {
+      return new InputFieldMarshaller() {
+        @Override
+        public void marshal(InputFieldWriter writer) throws IOException {
+          writer.writeString("id", id);
+        }
+      };
     }
   }
   

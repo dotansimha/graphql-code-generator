@@ -9,6 +9,11 @@ import com.apollographql.apollo.api.ResponseFieldMapper;
 import com.apollographql.apollo.api.ResponseField;
 import java.util.Collections;
 import com.apollographql.apollo.api.ResponseReader;
+import com.apollographql.apollo.api.ResponseFieldMarshaller;
+import com.apollographql.apollo.api.ResponseWriter;
+import com.apollographql.apollo.api.InputFieldMarshaller;
+import com.apollographql.apollo.api.InputFieldWriter;
+import java.io.IOException;
 
 @Generated("Apollo GraphQL")
 public final class OnCreateTodoSubscription implements Subscription<OnCreateTodoSubscription.Data, OnCreateTodoSubscription.Data, OnCreateTodoSubscription.Variables> {
@@ -106,6 +111,15 @@ public final class OnCreateTodoSubscription implements Subscription<OnCreateTodo
       
       return $hashCode;
     }
+    
+    public ResponseFieldMarshaller marshaller() {
+      return new ResponseFieldMarshaller() {
+        @Override
+        public void marshal(ResponseWriter writer) {
+          writer.writeObject($responseFields[0], onCreateTodo);
+        }
+      };
+    }
     public static final class Mapper implements ResponseFieldMapper<Data> {
       @Override
        public Data map(ResponseReader reader) {
@@ -198,6 +212,18 @@ public final class OnCreateTodoSubscription implements Subscription<OnCreateTodo
       
       return $hashCode;
     }
+    
+    public ResponseFieldMarshaller marshaller() {
+      return new ResponseFieldMarshaller() {
+        @Override
+        public void marshal(ResponseWriter writer) {
+          writer.writeString($responseFields[0], __typename);
+          writer.writeString($responseFields[1], id);
+          writer.writeString($responseFields[2], name);
+          writer.writeString($responseFields[3], description);
+        }
+      };
+    }
     public static final class Mapper implements ResponseFieldMapper<OnCreateTodo> {
       @Override
        public OnCreateTodo map(ResponseReader reader) {
@@ -215,6 +241,29 @@ public final class OnCreateTodoSubscription implements Subscription<OnCreateTodo
     
     public OnCreateTodoSubscription build() {
       return new OnCreateTodoSubscription();
+    }
+  }
+  
+
+  public static final class Variables extends Operation.Variables {
+    private final transient Map<String, Object> valueMap = new LinkedHashMap<>();
+    public Variables() {
+      
+    }
+    
+    @Override
+     public Map<String, Object> valueMap() {
+      return Collections.unmodifiableMap(valueMap);
+    }
+    
+    @Override
+     public InputFieldMarshaller marshaller() {
+      return new InputFieldMarshaller() {
+        @Override
+        public void marshal(InputFieldWriter writer) throws IOException {
+      
+        }
+      };
     }
   }
   

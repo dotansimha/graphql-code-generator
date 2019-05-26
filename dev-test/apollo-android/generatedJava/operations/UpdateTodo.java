@@ -13,6 +13,11 @@ import com.apollographql.apollo.api.internal.Utils;
 import com.apollographql.apollo.api.ResponseField;
 import java.util.Collections;
 import com.apollographql.apollo.api.ResponseReader;
+import com.apollographql.apollo.api.ResponseFieldMarshaller;
+import com.apollographql.apollo.api.ResponseWriter;
+import com.apollographql.apollo.api.InputFieldMarshaller;
+import com.apollographql.apollo.api.InputFieldWriter;
+import java.io.IOException;
 
 @Generated("Apollo GraphQL")
 public final class UpdateTodoMutation implements Mutation<UpdateTodoMutation.Data, UpdateTodoMutation.Data, UpdateTodoMutation.Variables> {
@@ -110,6 +115,15 @@ public final class UpdateTodoMutation implements Mutation<UpdateTodoMutation.Dat
       
       return $hashCode;
     }
+    
+    public ResponseFieldMarshaller marshaller() {
+      return new ResponseFieldMarshaller() {
+        @Override
+        public void marshal(ResponseWriter writer) {
+          writer.writeObject($responseFields[0], updateTodo);
+        }
+      };
+    }
     public static final class Mapper implements ResponseFieldMapper<Data> {
       @Override
        public Data map(ResponseReader reader) {
@@ -202,6 +216,18 @@ public final class UpdateTodoMutation implements Mutation<UpdateTodoMutation.Dat
       
       return $hashCode;
     }
+    
+    public ResponseFieldMarshaller marshaller() {
+      return new ResponseFieldMarshaller() {
+        @Override
+        public void marshal(ResponseWriter writer) {
+          writer.writeString($responseFields[0], __typename);
+          writer.writeString($responseFields[1], id);
+          writer.writeString($responseFields[2], name);
+          writer.writeString($responseFields[3], description);
+        }
+      };
+    }
     public static final class Mapper implements ResponseFieldMapper<UpdateTodo> {
       @Override
        public UpdateTodo map(ResponseReader reader) {
@@ -225,6 +251,35 @@ public final class UpdateTodoMutation implements Mutation<UpdateTodoMutation.Dat
     
     public UpdateTodoMutation build() {
       return new UpdateTodoMutation(input);
+    }
+  }
+  
+
+  public static final class Variables extends Operation.Variables {
+    private @Nonnull UpdateTodoInput input;
+    private final transient Map<String, Object> valueMap = new LinkedHashMap<>();
+    public UpdateTodoInput input() {
+      return input;
+    }
+    
+    public Variables(@Nonnull UpdateTodoInput input) {
+      this.input = input;
+      this.valueMap.put("input", input);
+    }
+    
+    @Override
+     public Map<String, Object> valueMap() {
+      return Collections.unmodifiableMap(valueMap);
+    }
+    
+    @Override
+     public InputFieldMarshaller marshaller() {
+      return new InputFieldMarshaller() {
+        @Override
+        public void marshal(InputFieldWriter writer) throws IOException {
+          writer.writeObject("input", input != null ? input.marshaller() : null);
+        }
+      };
     }
   }
   

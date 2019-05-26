@@ -14,6 +14,11 @@ import fragment.A;
 import fragment.B;
 import java.util.Collections;
 import com.apollographql.apollo.api.ResponseReader;
+import com.apollographql.apollo.api.ResponseFieldMarshaller;
+import com.apollographql.apollo.api.ResponseWriter;
+import com.apollographql.apollo.api.InputFieldMarshaller;
+import com.apollographql.apollo.api.InputFieldWriter;
+import java.io.IOException;
 
 @Generated("Apollo GraphQL")
 public final class SearchOneQuery implements Query<SearchOneQuery.Data, SearchOneQuery.Data, SearchOneQuery.Variables> {
@@ -111,6 +116,15 @@ public final class SearchOneQuery implements Query<SearchOneQuery.Data, SearchOn
       
       return $hashCode;
     }
+    
+    public ResponseFieldMarshaller marshaller() {
+      return new ResponseFieldMarshaller() {
+        @Override
+        public void marshal(ResponseWriter writer) {
+          writer.writeObject($responseFields[0], searchOne);
+        }
+      };
+    }
     public static final class Mapper implements ResponseFieldMapper<Data> {
       @Override
        public Data map(ResponseReader reader) {
@@ -203,6 +217,18 @@ public final class SearchOneQuery implements Query<SearchOneQuery.Data, SearchOn
       
       return $hashCode;
     }
+    
+    public ResponseFieldMarshaller marshaller() {
+      return new ResponseFieldMarshaller() {
+        @Override
+        public void marshal(ResponseWriter writer) {
+          writer.writeString($responseFields[0], __typename);
+          writer.writeObject($responseFields[1], asA);
+          writer.writeObject($responseFields[2], asB);
+          writer.writeObject($responseFields[3], fragments);
+        }
+      };
+    }
     public static final class Mapper implements ResponseFieldMapper<SearchOne> {
       @Override
        public SearchOne map(ResponseReader reader) {
@@ -284,6 +310,17 @@ public final class SearchOneQuery implements Query<SearchOneQuery.Data, SearchOn
       }
       
       return $hashCode;
+    }
+    
+    public ResponseFieldMarshaller marshaller() {
+      return new ResponseFieldMarshaller() {
+        @Override
+        public void marshal(ResponseWriter writer) {
+          writer.writeString($responseFields[0], __typename);
+          writer.writeString($responseFields[1], id);
+          writer.writeObject($responseFields[2], fragments);
+        }
+      };
     }
     public static final class Mapper implements ResponseFieldMapper<AsA> {
       @Override
@@ -367,6 +404,17 @@ public final class SearchOneQuery implements Query<SearchOneQuery.Data, SearchOn
       
       return $hashCode;
     }
+    
+    public ResponseFieldMarshaller marshaller() {
+      return new ResponseFieldMarshaller() {
+        @Override
+        public void marshal(ResponseWriter writer) {
+          writer.writeString($responseFields[0], __typename);
+          writer.writeString($responseFields[1], id);
+          writer.writeObject($responseFields[2], fragments);
+        }
+      };
+    }
     public static final class Mapper implements ResponseFieldMapper<AsB> {
       @Override
        public AsB map(ResponseReader reader) {
@@ -390,6 +438,35 @@ public final class SearchOneQuery implements Query<SearchOneQuery.Data, SearchOn
     
     public SearchOneQuery build() {
       return new SearchOneQuery(term);
+    }
+  }
+  
+
+  public static final class Variables extends Operation.Variables {
+    private @Nonnull String term;
+    private final transient Map<String, Object> valueMap = new LinkedHashMap<>();
+    public String term() {
+      return term;
+    }
+    
+    public Variables(@Nonnull String term) {
+      this.term = term;
+      this.valueMap.put("term", term);
+    }
+    
+    @Override
+     public Map<String, Object> valueMap() {
+      return Collections.unmodifiableMap(valueMap);
+    }
+    
+    @Override
+     public InputFieldMarshaller marshaller() {
+      return new InputFieldMarshaller() {
+        @Override
+        public void marshal(InputFieldWriter writer) throws IOException {
+          writer.writeString("term", term);
+        }
+      };
     }
   }
   

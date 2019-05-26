@@ -13,6 +13,11 @@ import java.lang.Integer;
 import com.apollographql.apollo.api.ResponseField;
 import java.util.Collections;
 import com.apollographql.apollo.api.ResponseReader;
+import com.apollographql.apollo.api.ResponseFieldMarshaller;
+import com.apollographql.apollo.api.ResponseWriter;
+import com.apollographql.apollo.api.InputFieldMarshaller;
+import com.apollographql.apollo.api.InputFieldWriter;
+import java.io.IOException;
 
 @Generated("Apollo GraphQL")
 public final class ListTodosQuery implements Query<ListTodosQuery.Data, ListTodosQuery.Data, ListTodosQuery.Variables> {
@@ -110,6 +115,15 @@ public final class ListTodosQuery implements Query<ListTodosQuery.Data, ListTodo
       
       return $hashCode;
     }
+    
+    public ResponseFieldMarshaller marshaller() {
+      return new ResponseFieldMarshaller() {
+        @Override
+        public void marshal(ResponseWriter writer) {
+          writer.writeObject($responseFields[0], listTodos);
+        }
+      };
+    }
     public static final class Mapper implements ResponseFieldMapper<Data> {
       @Override
        public Data map(ResponseReader reader) {
@@ -191,6 +205,22 @@ public final class ListTodosQuery implements Query<ListTodosQuery.Data, ListTodo
       }
       
       return $hashCode;
+    }
+    
+    public ResponseFieldMarshaller marshaller() {
+      return new ResponseFieldMarshaller() {
+        @Override
+        public void marshal(ResponseWriter writer) {
+          writer.writeString($responseFields[0], __typename);
+          writer.writeList($responseFields[1], items, new ResponseWriter.ListWriter() {
+            @Override
+            public void write(Object value, ResponseWriter.ListItemWriter listItemWriter) {
+              listItemWriter.writeObject(((Items) value).marshaller());
+            }
+          });
+          writer.writeString($responseFields[2], nextToken);
+        }
+      };
     }
     public static final class Mapper implements ResponseFieldMapper<ListTodos> {
       @Override
@@ -284,6 +314,18 @@ public final class ListTodosQuery implements Query<ListTodosQuery.Data, ListTodo
       
       return $hashCode;
     }
+    
+    public ResponseFieldMarshaller marshaller() {
+      return new ResponseFieldMarshaller() {
+        @Override
+        public void marshal(ResponseWriter writer) {
+          writer.writeString($responseFields[0], __typename);
+          writer.writeString($responseFields[1], id);
+          writer.writeString($responseFields[2], name);
+          writer.writeString($responseFields[3], description);
+        }
+      };
+    }
     public static final class Mapper implements ResponseFieldMapper<Items> {
       @Override
        public Items map(ResponseReader reader) {
@@ -319,6 +361,51 @@ public final class ListTodosQuery implements Query<ListTodosQuery.Data, ListTodo
     
     public ListTodosQuery build() {
       return new ListTodosQuery(filter, limit, nextToken);
+    }
+  }
+  
+
+  public static final class Variables extends Operation.Variables {
+    private @Nonnull ModelTodoFilterInput filter;
+    private @Nonnull Integer limit;
+    private @Nonnull String nextToken;
+    private final transient Map<String, Object> valueMap = new LinkedHashMap<>();
+    public ModelTodoFilterInput filter() {
+      return filter;
+    }
+    
+    public Integer limit() {
+      return limit;
+    }
+    
+    public String nextToken() {
+      return nextToken;
+    }
+    
+    public Variables(@Nonnull ModelTodoFilterInput filter, @Nonnull Integer limit, @Nonnull String nextToken) {
+      this.filter = filter;
+      this.valueMap.put("filter", filter);
+      this.limit = limit;
+      this.valueMap.put("limit", limit);
+      this.nextToken = nextToken;
+      this.valueMap.put("nextToken", nextToken);
+    }
+    
+    @Override
+     public Map<String, Object> valueMap() {
+      return Collections.unmodifiableMap(valueMap);
+    }
+    
+    @Override
+     public InputFieldMarshaller marshaller() {
+      return new InputFieldMarshaller() {
+        @Override
+        public void marshal(InputFieldWriter writer) throws IOException {
+          writer.writeObject("filter", filter != null ? filter.marshaller() : null);
+          writer.writeInt("limit", limit);
+          writer.writeString("nextToken", nextToken);
+        }
+      };
     }
   }
   
