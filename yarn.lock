@@ -1789,16 +1789,16 @@
     npmlog "^4.1.2"
     write-file-atomic "^2.3.0"
 
-"@material-ui/core@4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@material-ui/core/-/core-4.0.0.tgz#f8bead508cc727188e5d819ae937aa928d83857b"
-  integrity sha512-mLEGTuzgUALRKFI3hkRcS0gi/cB3XV0JA4F5PT3rGUt7Dc4liu8/IGiHF7iQh+p337FMk8vkEMxMVdYd9JXKMQ==
+"@material-ui/core@4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@material-ui/core/-/core-4.0.1.tgz#7fe3bcb1a89b01376b181358a5ded58291da0016"
+  integrity sha512-cw2Qs3BLem8FOrp/knfjJkwJXG4dZO/HGyWwZV71UWiqDIOF3plHZ7duCbOMIWwKgSUJ85k9omlSHUTT63E/pw==
   dependencies:
     "@babel/runtime" "^7.2.0"
-    "@material-ui/styles" "^4.0.0"
-    "@material-ui/system" "^4.0.0"
-    "@material-ui/types" "^4.0.0"
-    "@material-ui/utils" "^4.0.0"
+    "@material-ui/styles" "^4.0.1"
+    "@material-ui/system" "^4.0.1"
+    "@material-ui/types" "^4.0.1"
+    "@material-ui/utils" "^4.0.1"
     "@types/react-transition-group" "^2.0.16"
     clsx "^1.0.2"
     convert-css-length "^1.0.2"
@@ -1814,15 +1814,15 @@
     react-transition-group "^4.0.0"
     warning "^4.0.1"
 
-"@material-ui/styles@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@material-ui/styles/-/styles-4.0.0.tgz#789461e3e2b484a26206db7656c78b3248904f3b"
-  integrity sha512-TUpmXlyZDVOl6E2//+UzsZxgi2E+2L753QY02nNkbAC6PPx8FUBqvnjYSGqX0V/BjTJ/fD4CkoS6ZpY3lHf+Gg==
+"@material-ui/styles@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@material-ui/styles/-/styles-4.0.1.tgz#67e880d490f010c9f2956c572b07d218bfa255d7"
+  integrity sha512-SywkWzBzXvm9dUY2rtmzTc/FTlKGctVYGb8hzPZyHU3OI4X9jQH4YnR/OiqTwg4jNpFnASJX5rW1rEUJM+ZnhA==
   dependencies:
     "@babel/runtime" "^7.2.0"
     "@emotion/hash" "^0.7.1"
-    "@material-ui/types" "^4.0.0"
-    "@material-ui/utils" "^4.0.0"
+    "@material-ui/types" "^4.0.1"
+    "@material-ui/utils" "^4.0.1"
     clsx "^1.0.2"
     deepmerge "^3.0.0"
     hoist-non-react-statics "^3.2.1"
@@ -1837,25 +1837,25 @@
     prop-types "^15.7.2"
     warning "^4.0.1"
 
-"@material-ui/system@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@material-ui/system/-/system-4.0.0.tgz#bb9a03aa3cf0405c2159c2408b7b8b20b959b119"
-  integrity sha512-SIsqIwjix98Mqw9LVAmRqTs10E4S/SP5n5mlBlhHVHI+2XG2c+MaCPzOF2Zxq0KdqOMgTb7/aevR3mG9UmODxg==
+"@material-ui/system@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@material-ui/system/-/system-4.0.1.tgz#d78969f3dd9eb6baf82ded0ef183368d8befb00b"
+  integrity sha512-NlMF4jZk1xx7taUOT+QhrJw7v7uUi9Ae+G8C8fowGgP5x04whxOuSuSmN9a8u2j7dc8XqahR0OJeA6Xch8ymog==
   dependencies:
     "@babel/runtime" "^7.2.0"
     deepmerge "^3.0.0"
     prop-types "^15.7.2"
     warning "^4.0.1"
 
-"@material-ui/types@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@material-ui/types/-/types-4.0.0.tgz#6804123b1c5d56db232fc54fe745c5b1c3ef7306"
-  integrity sha512-wuiQMo8nSljZR1oWh57UQYssdtFqaU+Cbhr16uLohzzTllpCAK4LkH0slnH3n+5vCa2dgOdNlZTrmsIDDwvRJQ==
+"@material-ui/types@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@material-ui/types/-/types-4.0.1.tgz#a05fe801a10604d99e593303df9e843868008d4f"
+  integrity sha512-FGhogU9l4s+ycMcC3hhOAvu5hcWa5TVSCCGUf4NOUF904ythroWSAvcCHn92NjftXZ8WZqmtPjL1K/d90Pq/3Q==
 
-"@material-ui/utils@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@material-ui/utils/-/utils-4.0.0.tgz#cfe8da2328afea8fbc5599d8e7abd64e25828bc3"
-  integrity sha512-gjz52hO1hkIbKPMng1diQybVgtfgCptOCrulUs4emSCHHKUoR1zfT+IUrjgOaKIpYZNOgS/CI7KDMp689+FzeQ==
+"@material-ui/utils@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@material-ui/utils/-/utils-4.0.1.tgz#ea3ab6fe4eea9588713813cff6eca33bda3519f6"
+  integrity sha512-mWRcMQIrqsXGze73tx3hNfB1NUu+BL/oIQI7TImyuhsia1EQXw3bPVBjgwTzqM6MqfXw6eh1fR45Di+WN5hASA==
   dependencies:
     "@babel/runtime" "^7.2.0"
     prop-types "^15.7.2"
