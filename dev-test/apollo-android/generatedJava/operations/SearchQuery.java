@@ -11,6 +11,7 @@ import javax.annotation.Nonnull;
 import com.apollographql.apollo.api.internal.Utils;
 import com.apollographql.apollo.api.ResponseField;
 import java.util.Collections;
+import fragment.BF;
 import com.apollographql.apollo.api.ResponseReader;
 import com.apollographql.apollo.api.ResponseFieldMarshaller;
 import com.apollographql.apollo.api.ResponseWriter;
@@ -20,7 +21,7 @@ import java.io.IOException;
 
 @Generated("Apollo GraphQL")
 public final class SearchQuery implements Query<SearchQuery.Data, SearchQuery.Data, SearchQuery.Variables> {
-  public static final String OPERATION_DEFINITION = "query Search($term: String!) {   search(term: $term) {     id     ... on B {       b     }     ... on A {       a     }   } }";
+  public static final String OPERATION_DEFINITION = "query Search($term: String!) {   search(term: $term) {     id     ... on B {       ...BF     }     ... on A {       a     }   } }";
   public static final String QUERY_DOCUMENT = OPERATION_DEFINITION;
   public static final OperationName OPERATION_NAME = new OperationName() {
     @Override
@@ -59,7 +60,7 @@ public final class SearchQuery implements Query<SearchQuery.Data, SearchQuery.Da
   }
   
   public String operationId() {
-    return "b4698048a4bb29e9f3593758c2ff3253";
+    return "7152c3afb6fca3130f8ba662afd8b209";
   }
   public static class Data implements Operation.Data {
     private final @Nonnull List<Search> search;
@@ -257,18 +258,18 @@ public final class SearchQuery implements Query<SearchQuery.Data, SearchQuery.Da
   public static class AsB {
     private final @Nonnull String __typename;
     private final @Nonnull String id;
-    private final @Nullable String b;
+    private final @Nonnull Fragments fragments;
     private volatile String $toString;
     private volatile int $hashCode;
     private volatile boolean $hashCodeMemoized;
     static final ResponseField[] $responseFields = {
         ResponseField.forString("__typename", "__typename", null, false, Collections.<ResponseField.Condition>emptyList()),
-        ResponseField.forString("b", "b", null, true, Collections.<ResponseField.Condition>emptyList())
+        ResponseField.forFragment("__typename", "__typename", Arrays.asList("B"))
       };
-    public AsB(@Nonnull String __typename, @Nonnull String id, @Nullable String b) {
+    public AsB(@Nonnull String __typename, @Nonnull String id, @Nonnull Fragments fragments) {
       this.__typename = Utils.checkNotNull(__typename, "__typename == null");
       this.id = Utils.checkNotNull(id, "id == null");
-      this.b = b;
+      this.fragments = Utils.checkNotNull(fragments, "fragments == null");
     }
     
     public @Nonnull String __typename() {
@@ -279,8 +280,8 @@ public final class SearchQuery implements Query<SearchQuery.Data, SearchQuery.Da
       return this.id;
     }
     
-    public @Nullable String b() {
-      return this.b;
+    public @Nonnull Fragments fragments() {
+      return this.fragments;
     }
     
     @Override
@@ -289,7 +290,7 @@ public final class SearchQuery implements Query<SearchQuery.Data, SearchQuery.Da
         $toString = "AsB{"
           + "__typename=" + __typename + ", "
           + "id=" + id + ", "
-          + "b=" + b + ", "
+          + "fragments=" + fragments + ", "
           + "}";
       }
       
@@ -303,7 +304,7 @@ public final class SearchQuery implements Query<SearchQuery.Data, SearchQuery.Da
       }
       if (o instanceof AsB) {
         AsB that = (AsB) o;
-        return this.__typename.equals(that.__typename) && this.id.equals(that.id) && ((this.b == null) ? (that.b == null) : this.b.equals(that.b));
+        return this.__typename.equals(that.__typename) && this.id.equals(that.id) && this.fragments.equals(that.fragments);
       }
       
       return false;
@@ -318,7 +319,7 @@ public final class SearchQuery implements Query<SearchQuery.Data, SearchQuery.Da
         h *= 1000003;
         h ^= id.hashCode();
         h *= 1000003;
-        h ^= (b == null) ? 0 : b.hashCode();
+        h ^= fragments.hashCode();
         $hashCode = h;
         $hashCodeMemoized = true;
       }
@@ -332,17 +333,18 @@ public final class SearchQuery implements Query<SearchQuery.Data, SearchQuery.Da
         public void marshal(ResponseWriter writer) {
           writer.writeString($responseFields[0], __typename);
           writer.writeCustom((ResponseField.CustomTypeField) $responseFields[1], id);
-          writer.writeString($responseFields[2], b != null ? b : null);
+          writer.writeObject($responseFields[2], fragments != null ? fragments.marshaller() : null);
         }
       };
     }
     public static final class Mapper implements ResponseFieldMapper<AsB> {
+      private final Fragments.Mapper fragmentsFieldMapper = new Fragments.Mapper();
       @Override
        public AsB map(ResponseReader reader) {
         final String __typename = reader.readString($responseFields[0]);
         final String id = reader.readCustomType($responseFields[1]);
-        final String b = reader.readString($responseFields[2]);
-        return new AsB(__typename, id, b);
+        final Fragments fragments = reader.readObject($responseFields[2]);
+        return new AsB(__typename, id, fragments);
       }
     }
     
