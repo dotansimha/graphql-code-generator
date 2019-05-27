@@ -124,9 +124,11 @@ public final class DeleteTodoMutation implements Mutation<DeleteTodoMutation.Dat
       };
     }
     public static final class Mapper implements ResponseFieldMapper<Data> {
+      private final DeleteTodo.Mapper deleteTodoFieldMapper = new DeleteTodo.Mapper();
       @Override
        public Data map(ResponseReader reader) {
-        
+        final DeleteTodo deleteTodo = reader.readObject($responseFields[0]);
+        return new Data(deleteTodo);
       }
     }
     
@@ -230,7 +232,11 @@ public final class DeleteTodoMutation implements Mutation<DeleteTodoMutation.Dat
     public static final class Mapper implements ResponseFieldMapper<DeleteTodo> {
       @Override
        public DeleteTodo map(ResponseReader reader) {
-        
+        final String __typename = reader.readString($responseFields[0]);
+        final String id = reader.readCustomType($responseFields[1]);
+        final String name = reader.readString($responseFields[2]);
+        final String description = reader.readString($responseFields[3]);
+        return new DeleteTodo(__typename, id, name, description);
       }
     }
     
@@ -238,12 +244,12 @@ public final class DeleteTodoMutation implements Mutation<DeleteTodoMutation.Dat
   
 
   public static final class Builder {
-    private @Nonnull DeleteTodoInput input;
+    private @Nullable DeleteTodoInput input;
     Builder() {
       
     }
     
-    public Builder input(@Nonnull DeleteTodoInput input) {
+    public Builder input(@Nullable DeleteTodoInput input) {
       this.input = input;
       return this;
     }

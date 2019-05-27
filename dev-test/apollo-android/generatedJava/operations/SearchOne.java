@@ -10,8 +10,6 @@ import com.apollographql.apollo.api.Input;
 import javax.annotation.Nonnull;
 import com.apollographql.apollo.api.internal.Utils;
 import com.apollographql.apollo.api.ResponseField;
-import fragment.A;
-import fragment.B;
 import java.util.Collections;
 import com.apollographql.apollo.api.ResponseReader;
 import com.apollographql.apollo.api.ResponseFieldMarshaller;
@@ -22,7 +20,7 @@ import java.io.IOException;
 
 @Generated("Apollo GraphQL")
 public final class SearchOneQuery implements Query<SearchOneQuery.Data, SearchOneQuery.Data, SearchOneQuery.Variables> {
-  public static final String OPERATION_DEFINITION = "query SearchOne($term: String!) {   searchOne(term: $term) {     ...A     ...B     ... on A {       id     }     ... on B {       id     }   } }";
+  public static final String OPERATION_DEFINITION = "query SearchOne($term: String!) {   searchOne(term: $term) {     id     ... on B {       b     }     ... on A {       a     }   } }";
   public static final String QUERY_DOCUMENT = OPERATION_DEFINITION;
   public static final OperationName OPERATION_NAME = new OperationName() {
     @Override
@@ -61,7 +59,7 @@ public final class SearchOneQuery implements Query<SearchOneQuery.Data, SearchOn
   }
   
   public String operationId() {
-    return "653aff32c6b38de801080dad1ec58839";
+    return "eefe02d378aa4985eeb0a3a21232fa8d";
   }
   public static class Data implements Operation.Data {
     private final @Nonnull SearchOne searchOne;
@@ -125,9 +123,11 @@ public final class SearchOneQuery implements Query<SearchOneQuery.Data, SearchOn
       };
     }
     public static final class Mapper implements ResponseFieldMapper<Data> {
+      private final SearchOne.Mapper searchOneFieldMapper = new SearchOne.Mapper();
       @Override
        public Data map(ResponseReader reader) {
-        
+        final SearchOne searchOne = reader.readObject($responseFields[0]);
+        return new Data(searchOne);
       }
     }
     
@@ -136,39 +136,39 @@ public final class SearchOneQuery implements Query<SearchOneQuery.Data, SearchOn
 
   public static class SearchOne {
     private final @Nonnull String __typename;
-    private final @Nullable AsA asA;
+    private final @Nonnull String id;
     private final @Nullable AsB asB;
-    private final @Nonnull Fragments fragments;
+    private final @Nullable AsA asA;
     private volatile String $toString;
     private volatile int $hashCode;
     private volatile boolean $hashCodeMemoized;
     static final ResponseField[] $responseFields = {
         ResponseField.forString("__typename", "__typename", null, false, Collections.<ResponseField.Condition>emptyList()),
-        ResponseField.forInlineFragment("__typename", "__typename", Arrays.asList("A")),
+        ResponseField.forCustomType("id", "id", null, false, Collections.<ResponseField.Condition>emptyList()),
         ResponseField.forInlineFragment("__typename", "__typename", Arrays.asList("B")),
-        ResponseField.forFragment("__typename", "__typename", Arrays.asList("A", "B"))
+        ResponseField.forInlineFragment("__typename", "__typename", Arrays.asList("A"))
       };
-    public SearchOne(@Nonnull String __typename, @Nullable AsA asA, @Nullable AsB asB, @Nonnull Fragments fragments) {
+    public SearchOne(@Nonnull String __typename, @Nonnull String id, @Nullable AsB asB, @Nullable AsA asA) {
       this.__typename = Utils.checkNotNull(__typename, "__typename == null");
-      this.asA = asA;
+      this.id = Utils.checkNotNull(id, "id == null");
       this.asB = asB;
-      this.fragments = Utils.checkNotNull(fragments, "fragments == null");
+      this.asA = asA;
     }
     
     public @Nonnull String __typename() {
       return this.__typename;
     }
     
-    public @Nullable AsA asA() {
-      return this.asA;
+    public @Nonnull String id() {
+      return this.id;
     }
     
     public @Nullable AsB asB() {
       return this.asB;
     }
     
-    public @Nonnull Fragments fragments() {
-      return this.fragments;
+    public @Nullable AsA asA() {
+      return this.asA;
     }
     
     @Override
@@ -176,9 +176,9 @@ public final class SearchOneQuery implements Query<SearchOneQuery.Data, SearchOn
       if ($toString == null) {
         $toString = "SearchOne{"
           + "__typename=" + __typename + ", "
-          + "asA=" + asA + ", "
+          + "id=" + id + ", "
           + "asB=" + asB + ", "
-          + "fragments=" + fragments + ", "
+          + "asA=" + asA + ", "
           + "}";
       }
       
@@ -192,103 +192,7 @@ public final class SearchOneQuery implements Query<SearchOneQuery.Data, SearchOn
       }
       if (o instanceof SearchOne) {
         SearchOne that = (SearchOne) o;
-        return this.__typename.equals(that.__typename) && ((this.asA == null) ? (that.asA == null) : this.asA.equals(that.asA)) && ((this.asB == null) ? (that.asB == null) : this.asB.equals(that.asB)) && this.fragments.equals(that.fragments);
-      }
-      
-      return false;
-    }
-    
-    @Override
-     public int hashCode() {
-      if (!$hashCodeMemoized) {
-        int h = 1;
-        h *= 1000003;
-        h ^= __typename.hashCode();
-        h *= 1000003;
-        h ^= (asA == null) ? 0 : asA.hashCode();
-        h *= 1000003;
-        h ^= (asB == null) ? 0 : asB.hashCode();
-        h *= 1000003;
-        h ^= fragments.hashCode();
-        $hashCode = h;
-        $hashCodeMemoized = true;
-      }
-      
-      return $hashCode;
-    }
-    
-    public ResponseFieldMarshaller marshaller() {
-      return new ResponseFieldMarshaller() {
-        @Override
-        public void marshal(ResponseWriter writer) {
-          writer.writeString($responseFields[0], __typename);
-          writer.writeObject($responseFields[1], asA != null ? asA.marshaller() : null);
-          writer.writeObject($responseFields[2], asB != null ? asB.marshaller() : null);
-          writer.writeObject($responseFields[3], fragments != null ? fragments.marshaller() : null);
-        }
-      };
-    }
-    public static final class Mapper implements ResponseFieldMapper<SearchOne> {
-      @Override
-       public SearchOne map(ResponseReader reader) {
-        
-      }
-    }
-    
-  }
-  
-
-  public static class AsA {
-    private final @Nonnull String __typename;
-    private final @Nonnull String id;
-    private final @Nonnull Fragments fragments;
-    private volatile String $toString;
-    private volatile int $hashCode;
-    private volatile boolean $hashCodeMemoized;
-    static final ResponseField[] $responseFields = {
-        ResponseField.forString("__typename", "__typename", null, false, Collections.<ResponseField.Condition>emptyList()),
-        ResponseField.forCustomType("id", "id", null, false, Collections.<ResponseField.Condition>emptyList()),
-        ResponseField.forFragment("__typename", "__typename", Arrays.asList("A", "B"))
-      };
-    public AsA(@Nonnull String __typename, @Nonnull String id, @Nonnull Fragments fragments) {
-      this.__typename = Utils.checkNotNull(__typename, "__typename == null");
-      this.id = Utils.checkNotNull(id, "id == null");
-      this.fragments = Utils.checkNotNull(fragments, "fragments == null");
-    }
-    
-    public @Nonnull String __typename() {
-      return this.__typename;
-    }
-    
-    public @Nonnull String id() {
-      return this.id;
-    }
-    
-    public @Nonnull Fragments fragments() {
-      return this.fragments;
-    }
-    
-    @Override
-     public String toString() {
-      if ($toString == null) {
-        $toString = "AsA{"
-          + "__typename=" + __typename + ", "
-          + "id=" + id + ", "
-          + "fragments=" + fragments + ", "
-          + "}";
-      }
-      
-      return $toString;
-    }
-    
-    @Override
-     public boolean equals() {
-      if (o == this) {
-        return true;
-      }
-      if (o instanceof AsA) {
-        AsA that = (AsA) o;
-        return this.__typename.equals(that.__typename) && this.id.equals(that.id) && this.fragments.equals(that.fragments);
+        return this.__typename.equals(that.__typename) && this.id.equals(that.id) && ((this.asB == null) ? (that.asB == null) : this.asB.equals(that.asB)) && ((this.asA == null) ? (that.asA == null) : this.asA.equals(that.asA));
       }
       
       return false;
@@ -303,7 +207,9 @@ public final class SearchOneQuery implements Query<SearchOneQuery.Data, SearchOn
         h *= 1000003;
         h ^= id.hashCode();
         h *= 1000003;
-        h ^= fragments.hashCode();
+        h ^= (asB == null) ? 0 : asB.hashCode();
+        h *= 1000003;
+        h ^= (asA == null) ? 0 : asA.hashCode();
         $hashCode = h;
         $hashCodeMemoized = true;
       }
@@ -317,14 +223,21 @@ public final class SearchOneQuery implements Query<SearchOneQuery.Data, SearchOn
         public void marshal(ResponseWriter writer) {
           writer.writeString($responseFields[0], __typename);
           writer.writeCustom((ResponseField.CustomTypeField) $responseFields[1], id);
-          writer.writeObject($responseFields[2], fragments != null ? fragments.marshaller() : null);
+          writer.writeObject($responseFields[2], asB != null ? asB.marshaller() : null);
+          writer.writeObject($responseFields[3], asA != null ? asA.marshaller() : null);
         }
       };
     }
-    public static final class Mapper implements ResponseFieldMapper<AsA> {
+    public static final class Mapper implements ResponseFieldMapper<SearchOne> {
+      private final AsB.Mapper asBFieldMapper = new AsB.Mapper();
+      private final AsA.Mapper asAFieldMapper = new AsA.Mapper();
       @Override
-       public AsA map(ResponseReader reader) {
-        
+       public SearchOne map(ResponseReader reader) {
+        final String __typename = reader.readString($responseFields[0]);
+        final String id = reader.readCustomType($responseFields[1]);
+        final AsB asB = reader.readObject($responseFields[2]);
+        final AsA asA = reader.readObject($responseFields[3]);
+        return new SearchOne(__typename, id, asB, asA);
       }
     }
     
@@ -334,19 +247,18 @@ public final class SearchOneQuery implements Query<SearchOneQuery.Data, SearchOn
   public static class AsB {
     private final @Nonnull String __typename;
     private final @Nonnull String id;
-    private final @Nonnull Fragments fragments;
+    private final @Nullable String b;
     private volatile String $toString;
     private volatile int $hashCode;
     private volatile boolean $hashCodeMemoized;
     static final ResponseField[] $responseFields = {
         ResponseField.forString("__typename", "__typename", null, false, Collections.<ResponseField.Condition>emptyList()),
-        ResponseField.forCustomType("id", "id", null, false, Collections.<ResponseField.Condition>emptyList()),
-        ResponseField.forFragment("__typename", "__typename", Arrays.asList("A", "B"))
+        ResponseField.forString("b", "b", null, true, Collections.<ResponseField.Condition>emptyList())
       };
-    public AsB(@Nonnull String __typename, @Nonnull String id, @Nonnull Fragments fragments) {
+    public AsB(@Nonnull String __typename, @Nonnull String id, @Nullable String b) {
       this.__typename = Utils.checkNotNull(__typename, "__typename == null");
       this.id = Utils.checkNotNull(id, "id == null");
-      this.fragments = Utils.checkNotNull(fragments, "fragments == null");
+      this.b = b;
     }
     
     public @Nonnull String __typename() {
@@ -357,8 +269,8 @@ public final class SearchOneQuery implements Query<SearchOneQuery.Data, SearchOn
       return this.id;
     }
     
-    public @Nonnull Fragments fragments() {
-      return this.fragments;
+    public @Nullable String b() {
+      return this.b;
     }
     
     @Override
@@ -367,7 +279,7 @@ public final class SearchOneQuery implements Query<SearchOneQuery.Data, SearchOn
         $toString = "AsB{"
           + "__typename=" + __typename + ", "
           + "id=" + id + ", "
-          + "fragments=" + fragments + ", "
+          + "b=" + b + ", "
           + "}";
       }
       
@@ -381,7 +293,7 @@ public final class SearchOneQuery implements Query<SearchOneQuery.Data, SearchOn
       }
       if (o instanceof AsB) {
         AsB that = (AsB) o;
-        return this.__typename.equals(that.__typename) && this.id.equals(that.id) && this.fragments.equals(that.fragments);
+        return this.__typename.equals(that.__typename) && this.id.equals(that.id) && ((this.b == null) ? (that.b == null) : this.b.equals(that.b));
       }
       
       return false;
@@ -396,7 +308,7 @@ public final class SearchOneQuery implements Query<SearchOneQuery.Data, SearchOn
         h *= 1000003;
         h ^= id.hashCode();
         h *= 1000003;
-        h ^= fragments.hashCode();
+        h ^= (b == null) ? 0 : b.hashCode();
         $hashCode = h;
         $hashCodeMemoized = true;
       }
@@ -410,14 +322,112 @@ public final class SearchOneQuery implements Query<SearchOneQuery.Data, SearchOn
         public void marshal(ResponseWriter writer) {
           writer.writeString($responseFields[0], __typename);
           writer.writeCustom((ResponseField.CustomTypeField) $responseFields[1], id);
-          writer.writeObject($responseFields[2], fragments != null ? fragments.marshaller() : null);
+          writer.writeString($responseFields[2], b != null ? b : null);
         }
       };
     }
     public static final class Mapper implements ResponseFieldMapper<AsB> {
       @Override
        public AsB map(ResponseReader reader) {
-        
+        final String __typename = reader.readString($responseFields[0]);
+        final String id = reader.readCustomType($responseFields[1]);
+        final String b = reader.readString($responseFields[2]);
+        return new AsB(__typename, id, b);
+      }
+    }
+    
+  }
+  
+
+  public static class AsA {
+    private final @Nonnull String __typename;
+    private final @Nonnull String id;
+    private final @Nullable String a;
+    private volatile String $toString;
+    private volatile int $hashCode;
+    private volatile boolean $hashCodeMemoized;
+    static final ResponseField[] $responseFields = {
+        ResponseField.forString("__typename", "__typename", null, false, Collections.<ResponseField.Condition>emptyList()),
+        ResponseField.forString("a", "a", null, true, Collections.<ResponseField.Condition>emptyList())
+      };
+    public AsA(@Nonnull String __typename, @Nonnull String id, @Nullable String a) {
+      this.__typename = Utils.checkNotNull(__typename, "__typename == null");
+      this.id = Utils.checkNotNull(id, "id == null");
+      this.a = a;
+    }
+    
+    public @Nonnull String __typename() {
+      return this.__typename;
+    }
+    
+    public @Nonnull String id() {
+      return this.id;
+    }
+    
+    public @Nullable String a() {
+      return this.a;
+    }
+    
+    @Override
+     public String toString() {
+      if ($toString == null) {
+        $toString = "AsA{"
+          + "__typename=" + __typename + ", "
+          + "id=" + id + ", "
+          + "a=" + a + ", "
+          + "}";
+      }
+      
+      return $toString;
+    }
+    
+    @Override
+     public boolean equals() {
+      if (o == this) {
+        return true;
+      }
+      if (o instanceof AsA) {
+        AsA that = (AsA) o;
+        return this.__typename.equals(that.__typename) && this.id.equals(that.id) && ((this.a == null) ? (that.a == null) : this.a.equals(that.a));
+      }
+      
+      return false;
+    }
+    
+    @Override
+     public int hashCode() {
+      if (!$hashCodeMemoized) {
+        int h = 1;
+        h *= 1000003;
+        h ^= __typename.hashCode();
+        h *= 1000003;
+        h ^= id.hashCode();
+        h *= 1000003;
+        h ^= (a == null) ? 0 : a.hashCode();
+        $hashCode = h;
+        $hashCodeMemoized = true;
+      }
+      
+      return $hashCode;
+    }
+    
+    public ResponseFieldMarshaller marshaller() {
+      return new ResponseFieldMarshaller() {
+        @Override
+        public void marshal(ResponseWriter writer) {
+          writer.writeString($responseFields[0], __typename);
+          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[1], id);
+          writer.writeString($responseFields[2], a != null ? a : null);
+        }
+      };
+    }
+    public static final class Mapper implements ResponseFieldMapper<AsA> {
+      @Override
+       public AsA map(ResponseReader reader) {
+        final String __typename = reader.readString($responseFields[0]);
+        final String id = reader.readCustomType($responseFields[1]);
+        final String a = reader.readString($responseFields[2]);
+        return new AsA(__typename, id, a);
       }
     }
     
@@ -425,12 +435,12 @@ public final class SearchOneQuery implements Query<SearchOneQuery.Data, SearchOn
   
 
   public static final class Builder {
-    private @Nonnull String term;
+    private @Nullable String term;
     Builder() {
       
     }
     
-    public Builder term(@Nonnull String term) {
+    public Builder term(@Nullable String term) {
       this.term = term;
       return this;
     }

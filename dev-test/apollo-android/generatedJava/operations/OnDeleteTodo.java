@@ -120,9 +120,11 @@ public final class OnDeleteTodoSubscription implements Subscription<OnDeleteTodo
       };
     }
     public static final class Mapper implements ResponseFieldMapper<Data> {
+      private final OnDeleteTodo.Mapper onDeleteTodoFieldMapper = new OnDeleteTodo.Mapper();
       @Override
        public Data map(ResponseReader reader) {
-        
+        final OnDeleteTodo onDeleteTodo = reader.readObject($responseFields[0]);
+        return new Data(onDeleteTodo);
       }
     }
     
@@ -226,7 +228,11 @@ public final class OnDeleteTodoSubscription implements Subscription<OnDeleteTodo
     public static final class Mapper implements ResponseFieldMapper<OnDeleteTodo> {
       @Override
        public OnDeleteTodo map(ResponseReader reader) {
-        
+        final String __typename = reader.readString($responseFields[0]);
+        final String id = reader.readCustomType($responseFields[1]);
+        final String name = reader.readString($responseFields[2]);
+        final String description = reader.readString($responseFields[3]);
+        return new OnDeleteTodo(__typename, id, name, description);
       }
     }
     

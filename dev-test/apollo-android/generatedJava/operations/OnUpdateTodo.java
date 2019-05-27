@@ -120,9 +120,11 @@ public final class OnUpdateTodoSubscription implements Subscription<OnUpdateTodo
       };
     }
     public static final class Mapper implements ResponseFieldMapper<Data> {
+      private final OnUpdateTodo.Mapper onUpdateTodoFieldMapper = new OnUpdateTodo.Mapper();
       @Override
        public Data map(ResponseReader reader) {
-        
+        final OnUpdateTodo onUpdateTodo = reader.readObject($responseFields[0]);
+        return new Data(onUpdateTodo);
       }
     }
     
@@ -226,7 +228,11 @@ public final class OnUpdateTodoSubscription implements Subscription<OnUpdateTodo
     public static final class Mapper implements ResponseFieldMapper<OnUpdateTodo> {
       @Override
        public OnUpdateTodo map(ResponseReader reader) {
-        
+        final String __typename = reader.readString($responseFields[0]);
+        final String id = reader.readCustomType($responseFields[1]);
+        final String name = reader.readString($responseFields[2]);
+        final String description = reader.readString($responseFields[3]);
+        return new OnUpdateTodo(__typename, id, name, description);
       }
     }
     

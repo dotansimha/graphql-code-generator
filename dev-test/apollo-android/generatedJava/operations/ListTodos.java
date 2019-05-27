@@ -124,9 +124,11 @@ public final class ListTodosQuery implements Query<ListTodosQuery.Data, ListTodo
       };
     }
     public static final class Mapper implements ResponseFieldMapper<Data> {
+      private final ListTodos.Mapper listTodosFieldMapper = new ListTodos.Mapper();
       @Override
        public Data map(ResponseReader reader) {
-        
+        final ListTodos listTodos = reader.readObject($responseFields[0]);
+        return new Data(listTodos);
       }
     }
     
@@ -135,7 +137,7 @@ public final class ListTodosQuery implements Query<ListTodosQuery.Data, ListTodo
 
   public static class ListTodos {
     private final @Nonnull String __typename;
-    private final @Nullable Items items;
+    private final @Nullable List<Item> items;
     private final @Nullable String nextToken;
     private volatile String $toString;
     private volatile int $hashCode;
@@ -145,7 +147,7 @@ public final class ListTodosQuery implements Query<ListTodosQuery.Data, ListTodo
         ResponseField.forObject("items", "items", null, true, Collections.<ResponseField.Condition>emptyList()),
         ResponseField.forString("nextToken", "nextToken", null, true, Collections.<ResponseField.Condition>emptyList())
       };
-    public ListTodos(@Nonnull String __typename, @Nullable Items items, @Nullable String nextToken) {
+    public ListTodos(@Nonnull String __typename, @Nullable List<Item> items, @Nullable String nextToken) {
       this.__typename = Utils.checkNotNull(__typename, "__typename == null");
       this.items = items;
       this.nextToken = nextToken;
@@ -155,7 +157,7 @@ public final class ListTodosQuery implements Query<ListTodosQuery.Data, ListTodo
       return this.__typename;
     }
     
-    public @Nullable Items items() {
+    public @Nullable List<Item> items() {
       return this.items;
     }
     
@@ -214,7 +216,7 @@ public final class ListTodosQuery implements Query<ListTodosQuery.Data, ListTodo
           writer.writeList($responseFields[1], items, new ResponseWriter.ListWriter() {
             @Override
             public void write(Object value, ResponseWriter.ListItemWriter listItemWriter) {
-              listItemWriter.writeObject(((Items) value).marshaller());
+              listItemWriter.writeObject(((Item) value).marshaller());
             }
           });
           writer.writeString($responseFields[2], nextToken != null ? nextToken : null);
@@ -222,16 +224,25 @@ public final class ListTodosQuery implements Query<ListTodosQuery.Data, ListTodo
       };
     }
     public static final class Mapper implements ResponseFieldMapper<ListTodos> {
+      private final Item.Mapper itemsFieldMapper = new Item.Mapper();
       @Override
        public ListTodos map(ResponseReader reader) {
-        
+        final String __typename = reader.readString($responseFields[0]);
+        final List<Item> items = reader.readList($responseFields[1], new ResponseReader.ListReader<Item>() {
+          @Override
+          public Item read(ResponseReader.ListItemReader listItemReader) {
+            return listItemReader.readObject();
+          }
+        });
+        final String nextToken = reader.readString($responseFields[2]);
+        return new ListTodos(__typename, items, nextToken);
       }
     }
     
   }
   
 
-  public static class Items {
+  public static class Item {
     private final @Nonnull String __typename;
     private final @Nonnull String id;
     private final @Nonnull String name;
@@ -245,7 +256,7 @@ public final class ListTodosQuery implements Query<ListTodosQuery.Data, ListTodo
         ResponseField.forString("name", "name", null, false, Collections.<ResponseField.Condition>emptyList()),
         ResponseField.forString("description", "description", null, true, Collections.<ResponseField.Condition>emptyList())
       };
-    public Items(@Nonnull String __typename, @Nonnull String id, @Nonnull String name, @Nullable String description) {
+    public Item(@Nonnull String __typename, @Nonnull String id, @Nonnull String name, @Nullable String description) {
       this.__typename = Utils.checkNotNull(__typename, "__typename == null");
       this.id = Utils.checkNotNull(id, "id == null");
       this.name = Utils.checkNotNull(name, "name == null");
@@ -271,7 +282,7 @@ public final class ListTodosQuery implements Query<ListTodosQuery.Data, ListTodo
     @Override
      public String toString() {
       if ($toString == null) {
-        $toString = "Items{"
+        $toString = "Item{"
           + "__typename=" + __typename + ", "
           + "id=" + id + ", "
           + "name=" + name + ", "
@@ -287,8 +298,8 @@ public final class ListTodosQuery implements Query<ListTodosQuery.Data, ListTodo
       if (o == this) {
         return true;
       }
-      if (o instanceof Items) {
-        Items that = (Items) o;
+      if (o instanceof Item) {
+        Item that = (Item) o;
         return this.__typename.equals(that.__typename) && this.id.equals(that.id) && this.name.equals(that.name) && ((this.description == null) ? (that.description == null) : this.description.equals(that.description));
       }
       
@@ -325,10 +336,14 @@ public final class ListTodosQuery implements Query<ListTodosQuery.Data, ListTodo
         }
       };
     }
-    public static final class Mapper implements ResponseFieldMapper<Items> {
+    public static final class Mapper implements ResponseFieldMapper<Item> {
       @Override
-       public Items map(ResponseReader reader) {
-        
+       public Item map(ResponseReader reader) {
+        final String __typename = reader.readString($responseFields[0]);
+        final String id = reader.readCustomType($responseFields[1]);
+        final String name = reader.readString($responseFields[2]);
+        final String description = reader.readString($responseFields[3]);
+        return new Item(__typename, id, name, description);
       }
     }
     
@@ -336,24 +351,24 @@ public final class ListTodosQuery implements Query<ListTodosQuery.Data, ListTodo
   
 
   public static final class Builder {
-    private @Nonnull ModelTodoFilterInput filter;
-    private @Nonnull Integer limit;
-    private @Nonnull String nextToken;
+    private @Nullable ModelTodoFilterInput filter;
+    private @Nullable Integer limit;
+    private @Nullable String nextToken;
     Builder() {
       
     }
     
-    public Builder filter(@Nonnull ModelTodoFilterInput filter) {
+    public Builder filter(@Nullable ModelTodoFilterInput filter) {
       this.filter = filter;
       return this;
     }
     
-    public Builder limit(@Nonnull Integer limit) {
+    public Builder limit(@Nullable Integer limit) {
       this.limit = limit;
       return this;
     }
     
-    public Builder nextToken(@Nonnull String nextToken) {
+    public Builder nextToken(@Nullable String nextToken) {
       this.nextToken = nextToken;
       return this;
     }

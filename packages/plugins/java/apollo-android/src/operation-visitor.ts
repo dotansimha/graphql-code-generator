@@ -26,14 +26,17 @@ import { Imports } from './imports';
 import { createHash } from 'crypto';
 import { VisitorConfig } from './visitor-config';
 import { isListType } from 'graphql';
+import { singular, isPlural } from 'pluralize';
 
 export interface ChildField {
   type: GraphQLNamedType;
+  rawType: GraphQLOutputType;
   isNonNull: boolean;
   isList: boolean;
   annotation: string;
   className: string;
   fieldName: string;
+  isObject: boolean;
 }
 
 export interface TransformSelectionSetOptions {
@@ -103,6 +106,20 @@ ${nonNullVariables}
     return possibleNewName;
   }
 
+  private getListTypeWrapped(toWrap: string, type: GraphQLOutputType): string {
+    if (isNonNullType(type)) {
+      return this.getListTypeWrapped(toWrap, type.ofType);
+    }
+
+    if (isListType(type)) {
+      const child = this.getListTypeWrapped(toWrap, type.ofType);
+
+      return `List<${child}>`;
+    }
+
+    return toWrap;
+  }
+
   private transformSelectionSet(options: TransformSelectionSetOptions, isRoot = true) {
     if (!options.result) {
       options.result = {};
@@ -137,33 +154,44 @@ ${nonNullVariables}
         const isObject = selection.selectionSet && selection.selectionSet.selections && selection.selectionSet.selections.length > 0;
         const isNonNull = isNonNullType(field.type);
         const fieldAnnotation = isNonNull ? 'Nonnull' : 'Nullable';
+        const baseType = getBaseType(field.type);
+        const isList = isListType(field.type) || (isNonNullType(field.type) && isListType(field.type.ofType));
 
         if (isObject) {
-          const childClsName = this.convertName(field.name);
+          let childClsName = this.convertName(field.name);
+
+          if (isList && isPlural(childClsName)) {
+            childClsName = singular(childClsName);
+          }
+
           this.transformSelectionSet(
             {
               className: childClsName,
               result: options.result,
               selectionSet: selection.selectionSet.selections,
-              schemaType: getBaseType(field.type) as GraphQLObjectType,
+              schemaType: baseType as GraphQLObjectType,
             },
             false
           );
 
           childFields.push({
-            isList: isListType(field.type),
-            type: getBaseType(field.type),
+            rawType: field.type,
+            isObject: true,
+            isList,
+            type: baseType,
             isNonNull,
             annotation: fieldAnnotation,
             className: childClsName,
             fieldName: field.name,
           });
         } else {
-          const javaClass = this.getActualType(getBaseType(field.type));
+          const javaClass = this.getActualType(baseType);
 
           childFields.push({
-            isList: isListType(field.type),
-            type: getBaseType(field.type),
+            rawType: field.type,
+            isObject: false,
+            isList: isList,
+            type: baseType,
             isNonNull,
             annotation: fieldAnnotation,
             className: javaClass,
@@ -207,6 +235,7 @@ ${nonNullVariables}
       childFields.push(
         ...childInlineFragments.map(inlineFragment => {
           const cls = `As${inlineFragment.onType}`;
+          const schemaType = this._schema.getType(inlineFragment.onType);
 
           this.transformSelectionSet(
             {
@@ -215,12 +244,14 @@ ${nonNullVariables}
               className: cls,
               result: options.result,
               selectionSet: inlineFragment.node.selectionSet.selections,
-              schemaType: this._schema.getType(inlineFragment.onType),
+              schemaType,
             },
             false
           );
 
           return {
+            rawType: schemaType as GraphQLOutputType,
+            isObject: true,
             isList: false,
             type: this._schema.getType(inlineFragment.onType),
             isNonNull: false,
@@ -238,7 +269,9 @@ ${nonNullVariables}
       responseFieldArr.push(`ResponseField.forFragment("__typename", "__typename", Arrays.asList(${childFragmentSpread.map(f => `"${f.onType}"`).join(', ')}))`);
 
       childFields.push({
+        isObject: true,
         isList: false,
+        rawType: options.schemaType,
         type: options.schemaType,
         isNonNull: true,
         annotation: 'Nonnull',
@@ -253,8 +286,10 @@ ${nonNullVariables}
 
     if (!isRoot) {
       childFields.unshift({
+        isObject: false,
         isList: false,
         type: GraphQLString,
+        rawType: GraphQLString,
         isNonNull: true,
         annotation: 'Nonnull',
         className: 'String',
@@ -264,7 +299,7 @@ ${nonNullVariables}
 
     // Add members
     childFields.forEach(c => {
-      cls.addClassMember(c.fieldName, c.className, null, [c.annotation], 'private', { final: true });
+      cls.addClassMember(c.fieldName, this.getListTypeWrapped(c.className, c.rawType), null, [c.annotation], 'private', { final: true });
     });
 
     // Add $toString, $hashCode, $hashCodeMemoized
@@ -278,14 +313,14 @@ ${nonNullVariables}
       className,
       null,
       childFields.map(c => `this.${c.fieldName} = ${c.isNonNull ? `Utils.checkNotNull(${c.fieldName}, "${c.fieldName} == null")` : c.fieldName};`).join('\n'),
-      childFields.map(c => ({ name: c.fieldName, type: c.className, annotations: [c.annotation] })),
+      childFields.map(c => ({ name: c.fieldName, type: this.getListTypeWrapped(c.className, c.rawType), annotations: [c.annotation] })),
       null,
       'public'
     );
 
     // Add getters for all members
     childFields.forEach(c => {
-      cls.addClassMethod(c.fieldName, c.className, `return this.${c.fieldName};`, [], [c.annotation], 'public', {});
+      cls.addClassMethod(c.fieldName, this.getListTypeWrapped(c.className, c.rawType), `return this.${c.fieldName};`, [], [c.annotation], 'public', {});
     });
 
     // Add .toString()
@@ -393,8 +428,64 @@ ${childFields
     return options.result;
   }
 
+  private getReaderFn(baseType: GraphQLNamedType): string {
+    if (isScalarType(baseType)) {
+      if (baseType.name === 'String') {
+        return `readString`;
+      } else if (baseType.name === 'Int') {
+        return `readInt`;
+      } else if (baseType.name === 'Float') {
+        return `readDouble`;
+      } else if (baseType.name === 'Boolean') {
+        return `readBoolean`;
+      } else {
+        return `readCustomType`;
+      }
+    } else if (isEnumType(baseType)) {
+      return `readString`;
+    } else {
+      return `readObject`;
+    }
+  }
+
   private buildMapperClass(parentClassName: string, childFields: ChildField[]): JavaDeclarationBlock {
-    return new JavaDeclarationBlock()
+    const wrapList = (childField: ChildField, rawType: GraphQLOutputType, edgeStr: string) => {
+      if (isNonNullType(rawType)) {
+        return wrapList(childField, rawType.ofType, edgeStr);
+      }
+
+      if (isListType(rawType)) {
+        const typeStr = this.getListTypeWrapped(childField.className, rawType.ofType);
+        const innerContent = wrapList(childField, rawType.ofType, edgeStr);
+        const inner = isListType(rawType.ofType) ? `return listItemReader.readList(${innerContent});` : innerContent;
+
+        return `new ResponseReader.ListReader<${typeStr}>() {
+  @Override
+  public ${typeStr} read(ResponseReader.ListItemReader listItemReader) {
+${indentMultiline(inner, 2)}
+  }
+}`;
+      }
+
+      return edgeStr;
+    };
+
+    const mapperBody = childFields.map((f, index) => {
+      const varDec = `final ${this.getListTypeWrapped(f.className, f.rawType)} ${f.fieldName} =`;
+      const readerFn = this.getReaderFn(f.type);
+
+      if (f.isList) {
+        const wrappedList = wrapList(f, f.rawType, `return listItemReader.${readerFn}();`);
+
+        return `${varDec} reader.readList($responseFields[${index}], ${wrappedList});`;
+      } else {
+        return `${varDec} reader.${readerFn}($responseFields[${index}]);`;
+      }
+    });
+
+    const mapperImpl = [...mapperBody, `return new ${parentClassName}(${childFields.map(f => f.fieldName).join(', ')});`].join('\n');
+
+    const cls = new JavaDeclarationBlock()
       .access('public')
       .static()
       .final()
@@ -404,7 +495,7 @@ ${childFields
       .addClassMethod(
         'map',
         parentClassName,
-        '',
+        mapperImpl,
         [
           {
             name: 'reader',
@@ -416,6 +507,14 @@ ${childFields
         {},
         ['Override']
       );
+
+    childFields
+      .filter(c => c.isObject)
+      .forEach(childField => {
+        cls.addClassMember(`${childField.fieldName}FieldMapper`, `${childField.className}.Mapper`, `new ${childField.className}.Mapper()`, [], 'private', { final: true });
+      });
+
+    return cls;
   }
 
   private _resolveResponseFieldMethod(type: GraphQLOutputType): string {
@@ -624,7 +723,7 @@ ${variables
       const baseTypeNode = getBaseTypeNode(variable.type);
       const schemaType = this._schema.getType(baseTypeNode.name.value);
       const javaClass = this.getActualType(schemaType);
-      const annotations = [isNonNullType(variable.type) ? 'Nullable' : 'Nonnull'];
+      const annotations = [isNonNullType(variable.type) ? 'Nonnull' : 'Nullable'];
       cls.addClassMember(variable.variable.name.value, javaClass, null, annotations, 'private');
       cls.addClassMethod(
         variable.variable.name.value,

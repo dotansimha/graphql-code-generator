@@ -124,9 +124,11 @@ public final class UpdateTodoMutation implements Mutation<UpdateTodoMutation.Dat
       };
     }
     public static final class Mapper implements ResponseFieldMapper<Data> {
+      private final UpdateTodo.Mapper updateTodoFieldMapper = new UpdateTodo.Mapper();
       @Override
        public Data map(ResponseReader reader) {
-        
+        final UpdateTodo updateTodo = reader.readObject($responseFields[0]);
+        return new Data(updateTodo);
       }
     }
     
@@ -230,7 +232,11 @@ public final class UpdateTodoMutation implements Mutation<UpdateTodoMutation.Dat
     public static final class Mapper implements ResponseFieldMapper<UpdateTodo> {
       @Override
        public UpdateTodo map(ResponseReader reader) {
-        
+        final String __typename = reader.readString($responseFields[0]);
+        final String id = reader.readCustomType($responseFields[1]);
+        final String name = reader.readString($responseFields[2]);
+        final String description = reader.readString($responseFields[3]);
+        return new UpdateTodo(__typename, id, name, description);
       }
     }
     
@@ -238,12 +244,12 @@ public final class UpdateTodoMutation implements Mutation<UpdateTodoMutation.Dat
   
 
   public static final class Builder {
-    private @Nonnull UpdateTodoInput input;
+    private @Nullable UpdateTodoInput input;
     Builder() {
       
     }
     
-    public Builder input(@Nonnull UpdateTodoInput input) {
+    public Builder input(@Nullable UpdateTodoInput input) {
       this.input = input;
       return this;
     }

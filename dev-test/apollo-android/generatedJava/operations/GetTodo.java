@@ -10,8 +10,6 @@ import com.apollographql.apollo.api.Input;
 import javax.annotation.Nonnull;
 import com.apollographql.apollo.api.internal.Utils;
 import com.apollographql.apollo.api.ResponseField;
-import fragment.Item2;
-import fragment.Item;
 import java.util.Collections;
 import com.apollographql.apollo.api.ResponseReader;
 import com.apollographql.apollo.api.ResponseFieldMarshaller;
@@ -22,7 +20,7 @@ import java.io.IOException;
 
 @Generated("Apollo GraphQL")
 public final class GetTodoQuery implements Query<GetTodoQuery.Data, GetTodoQuery.Data, GetTodoQuery.Variables> {
-  public static final String OPERATION_DEFINITION = "query GetTodo($id: ID!) {   getTodo(id: $id) {     ... on Todo {       id     }     ...Item2     ...Item   } }";
+  public static final String OPERATION_DEFINITION = "query GetTodo($id: ID!) {   getTodo(id: $id) {     id     name     description   } }";
   public static final String QUERY_DOCUMENT = OPERATION_DEFINITION;
   public static final OperationName OPERATION_NAME = new OperationName() {
     @Override
@@ -61,7 +59,7 @@ public final class GetTodoQuery implements Query<GetTodoQuery.Data, GetTodoQuery
   }
   
   public String operationId() {
-    return "2efa7a12cfc5463f2002cdd779aa4266";
+    return "c44eec87be1feca567e036c2f6aa2905";
   }
   public static class Data implements Operation.Data {
     private final @Nullable GetTodo getTodo;
@@ -125,9 +123,11 @@ public final class GetTodoQuery implements Query<GetTodoQuery.Data, GetTodoQuery
       };
     }
     public static final class Mapper implements ResponseFieldMapper<Data> {
+      private final GetTodo.Mapper getTodoFieldMapper = new GetTodo.Mapper();
       @Override
        public Data map(ResponseReader reader) {
-        
+        final GetTodo getTodo = reader.readObject($responseFields[0]);
+        return new Data(getTodo);
       }
     }
     
@@ -137,19 +137,22 @@ public final class GetTodoQuery implements Query<GetTodoQuery.Data, GetTodoQuery
   public static class GetTodo {
     private final @Nonnull String __typename;
     private final @Nonnull String id;
-    private final @Nonnull Fragments fragments;
+    private final @Nonnull String name;
+    private final @Nullable String description;
     private volatile String $toString;
     private volatile int $hashCode;
     private volatile boolean $hashCodeMemoized;
     static final ResponseField[] $responseFields = {
         ResponseField.forString("__typename", "__typename", null, false, Collections.<ResponseField.Condition>emptyList()),
         ResponseField.forCustomType("id", "id", null, false, Collections.<ResponseField.Condition>emptyList()),
-        ResponseField.forFragment("__typename", "__typename", Arrays.asList("Todo", "Todo"))
+        ResponseField.forString("name", "name", null, false, Collections.<ResponseField.Condition>emptyList()),
+        ResponseField.forString("description", "description", null, true, Collections.<ResponseField.Condition>emptyList())
       };
-    public GetTodo(@Nonnull String __typename, @Nonnull String id, @Nonnull Fragments fragments) {
+    public GetTodo(@Nonnull String __typename, @Nonnull String id, @Nonnull String name, @Nullable String description) {
       this.__typename = Utils.checkNotNull(__typename, "__typename == null");
       this.id = Utils.checkNotNull(id, "id == null");
-      this.fragments = Utils.checkNotNull(fragments, "fragments == null");
+      this.name = Utils.checkNotNull(name, "name == null");
+      this.description = description;
     }
     
     public @Nonnull String __typename() {
@@ -160,8 +163,12 @@ public final class GetTodoQuery implements Query<GetTodoQuery.Data, GetTodoQuery
       return this.id;
     }
     
-    public @Nonnull Fragments fragments() {
-      return this.fragments;
+    public @Nonnull String name() {
+      return this.name;
+    }
+    
+    public @Nullable String description() {
+      return this.description;
     }
     
     @Override
@@ -170,7 +177,8 @@ public final class GetTodoQuery implements Query<GetTodoQuery.Data, GetTodoQuery
         $toString = "GetTodo{"
           + "__typename=" + __typename + ", "
           + "id=" + id + ", "
-          + "fragments=" + fragments + ", "
+          + "name=" + name + ", "
+          + "description=" + description + ", "
           + "}";
       }
       
@@ -184,7 +192,7 @@ public final class GetTodoQuery implements Query<GetTodoQuery.Data, GetTodoQuery
       }
       if (o instanceof GetTodo) {
         GetTodo that = (GetTodo) o;
-        return this.__typename.equals(that.__typename) && this.id.equals(that.id) && this.fragments.equals(that.fragments);
+        return this.__typename.equals(that.__typename) && this.id.equals(that.id) && this.name.equals(that.name) && ((this.description == null) ? (that.description == null) : this.description.equals(that.description));
       }
       
       return false;
@@ -199,7 +207,9 @@ public final class GetTodoQuery implements Query<GetTodoQuery.Data, GetTodoQuery
         h *= 1000003;
         h ^= id.hashCode();
         h *= 1000003;
-        h ^= fragments.hashCode();
+        h ^= name.hashCode();
+        h *= 1000003;
+        h ^= (description == null) ? 0 : description.hashCode();
         $hashCode = h;
         $hashCodeMemoized = true;
       }
@@ -213,14 +223,19 @@ public final class GetTodoQuery implements Query<GetTodoQuery.Data, GetTodoQuery
         public void marshal(ResponseWriter writer) {
           writer.writeString($responseFields[0], __typename);
           writer.writeCustom((ResponseField.CustomTypeField) $responseFields[1], id);
-          writer.writeObject($responseFields[2], fragments != null ? fragments.marshaller() : null);
+          writer.writeString($responseFields[2], name);
+          writer.writeString($responseFields[3], description != null ? description : null);
         }
       };
     }
     public static final class Mapper implements ResponseFieldMapper<GetTodo> {
       @Override
        public GetTodo map(ResponseReader reader) {
-        
+        final String __typename = reader.readString($responseFields[0]);
+        final String id = reader.readCustomType($responseFields[1]);
+        final String name = reader.readString($responseFields[2]);
+        final String description = reader.readString($responseFields[3]);
+        return new GetTodo(__typename, id, name, description);
       }
     }
     
@@ -228,12 +243,12 @@ public final class GetTodoQuery implements Query<GetTodoQuery.Data, GetTodoQuery
   
 
   public static final class Builder {
-    private @Nonnull String id;
+    private @Nullable String id;
     Builder() {
       
     }
     
-    public Builder id(@Nonnull String id) {
+    public Builder id(@Nullable String id) {
       this.id = id;
       return this;
     }

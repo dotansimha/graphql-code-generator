@@ -9,12 +9,14 @@
     "build": "tsc -m esnext --outDir dist/esnext && tsc -m commonjs --outDir dist/commonjs"
   },
   "dependencies": {
+    "pluralize": "8.0.0",
     "@graphql-codegen/java-common": "1.2.0",
     "@graphql-codegen/plugin-helpers": "1.2.0",
     "@graphql-codegen/visitor-plugin-common": "1.2.0",
     "tslib": "1.9.3"
   },
   "devDependencies": {
+    "@types/pluralize": "0.0.29",
     "graphql": "14.3.1",
     "java-ast": "0.1.0",
     "typescript": "3.4.5",
