@@ -20,13 +20,23 @@ import {
   VariableDefinitionNode,
   isInputObjectType,
   GraphQLString,
+  ArgumentNode,
+  visit,
+  ObjectValueNode,
+  ObjectFieldNode,
+  IntValueNode,
+  FloatValueNode,
+  isListType,
+  FieldNode,
+  VariableNode,
+  StringValueNode,
 } from 'graphql';
 import { JavaApolloAndroidPluginConfig } from './plugin';
 import { Imports } from './imports';
 import { createHash } from 'crypto';
 import { VisitorConfig } from './visitor-config';
-import { isListType } from 'graphql';
 import { singular, isPlural } from 'pluralize';
+import { visitFieldArguments } from './sub-visitors/field-arguments';
 
 export interface ChildField {
   type: GraphQLNamedType;
@@ -202,12 +212,11 @@ ${nonNullVariables}
         this._imports.add(Imports.ResponseField);
         this._imports.add(Imports.Collections);
 
-        // TODO: resolve variables
-        const variables = 'null';
+        const operationArgs = visitFieldArguments(selection as FieldNode, this._imports);
         const responseFieldMethod = this._resolveResponseFieldMethod(field.type);
 
         responseFieldArr.push(
-          `ResponseField.${responseFieldMethod}("${selection.alias ? selection.alias.value : selection.name.value}", "${selection.name.value}", ${variables}, ${!isNonNullType(field.type)}, Collections.<ResponseField.Condition>emptyList())`
+          `ResponseField.${responseFieldMethod}("${selection.alias ? selection.alias.value : selection.name.value}", "${selection.name.value}", ${operationArgs}, ${!isNonNullType(field.type)}, Collections.<ResponseField.Condition>emptyList())`
         );
       } else if (selection.kind === Kind.INLINE_FRAGMENT) {
         if (isUnionType(options.schemaType) || isInterfaceType(options.schemaType)) {
@@ -253,7 +262,7 @@ ${nonNullVariables}
             rawType: schemaType as GraphQLOutputType,
             isObject: true,
             isList: false,
-            type: this._schema.getType(inlineFragment.onType),
+            type: schemaType,
             isNonNull: false,
             annotation: 'Nullable',
             className: cls,

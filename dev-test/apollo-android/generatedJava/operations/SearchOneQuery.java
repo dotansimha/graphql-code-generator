@@ -14,6 +14,8 @@ import java.util.Collections;
 import com.apollographql.apollo.api.ResponseReader;
 import com.apollographql.apollo.api.ResponseFieldMarshaller;
 import com.apollographql.apollo.api.ResponseWriter;
+import com.apollographql.apollo.api.internal.UnmodifiableMapBuilder;
+import java.lang.Object;
 import com.apollographql.apollo.api.InputFieldMarshaller;
 import com.apollographql.apollo.api.InputFieldWriter;
 import java.io.IOException;
@@ -67,7 +69,7 @@ public final class SearchOneQuery implements Query<SearchOneQuery.Data, SearchOn
     private volatile int $hashCode;
     private volatile boolean $hashCodeMemoized;
     static final ResponseField[] $responseFields = {
-        ResponseField.forObject("searchOne", "searchOne", null, false, Collections.<ResponseField.Condition>emptyList())
+        ResponseField.forObject("searchOne", "searchOne", new UnmodifiableMapBuilder<String, Object>(1).put("term", new UnmodifiableMapBuilder<String, Object>(2).put("kind", "Variable").put("variableName", "term").build()).build(), false, Collections.<ResponseField.Condition>emptyList())
       };
     public Data(@Nonnull SearchOne searchOne) {
       this.searchOne = Utils.checkNotNull(searchOne, "searchOne == null");

@@ -7,7 +7,6 @@ import javax.annotation.Generated;
 import com.apollographql.apollo.api.OperationName;
 import com.apollographql.apollo.api.ResponseFieldMapper;
 import com.apollographql.apollo.api.Input;
-import type.ModelTodoFilterInput;
 import javax.annotation.Nullable;
 import java.lang.Integer;
 import com.apollographql.apollo.api.ResponseField;
@@ -22,33 +21,33 @@ import com.apollographql.apollo.api.InputFieldWriter;
 import java.io.IOException;
 
 @Generated("Apollo GraphQL")
-public final class ListTodosQuery implements Query<ListTodosQuery.Data, ListTodosQuery.Data, ListTodosQuery.Variables> {
-  public static final String OPERATION_DEFINITION = "query ListTodos($filter: ModelTodoFilterInput, $limit: Int, $nextToken: String) {   listTodos(filter: $filter, limit: $limit, nextToken: $nextToken) {     items {       id       name       description     }     nextToken   } }";
+public final class ListTodos2Query implements Query<ListTodos2Query.Data, ListTodos2Query.Data, ListTodos2Query.Variables> {
+  public static final String OPERATION_DEFINITION = "query ListTodos2($q: String, $limit: Int, $nextToken: String) {   listTodos(filter: {name: {ne: $q}}, limit: $limit, nextToken: $nextToken) {     items {       id       name       description     }     nextToken   } }";
   public static final String QUERY_DOCUMENT = OPERATION_DEFINITION;
   public static final OperationName OPERATION_NAME = new OperationName() {
     @Override
     public String name() {
-      return "ListTodos";
+      return "ListTodos2";
     }
   };
-  private final ListTodosQuery.Variables variables;
+  private final ListTodos2Query.Variables variables;
   @Override
    public String queryDocument() {
     return QUERY_DOCUMENT;
   }
   
   @Override
-   public ListTodosQuery.Data wrapData(ListTodosQuery.Data data) {
+   public ListTodos2Query.Data wrapData(ListTodos2Query.Data data) {
     return data;
   }
   
   @Override
-   public ListTodosQuery.Variables variables() {
+   public ListTodos2Query.Variables variables() {
     return variables;
   }
   
   @Override
-   public ResponseFieldMapper<ListTodosQuery.Data> responseFieldMapper() {
+   public ResponseFieldMapper<ListTodos2Query.Data> responseFieldMapper() {
     return new Data.Mapper();
   }
   
@@ -62,7 +61,7 @@ public final class ListTodosQuery implements Query<ListTodosQuery.Data, ListTodo
   }
   
   public String operationId() {
-    return "e7d954ccc0ea1bdc65aed226eeb8a504";
+    return "4af474ba1c47e1c5c1c6837063a90d55";
   }
   public static class Data implements Operation.Data {
     private final @Nullable ListTodos listTodos;
@@ -70,7 +69,7 @@ public final class ListTodosQuery implements Query<ListTodosQuery.Data, ListTodo
     private volatile int $hashCode;
     private volatile boolean $hashCodeMemoized;
     static final ResponseField[] $responseFields = {
-        ResponseField.forObject("listTodos", "listTodos", new UnmodifiableMapBuilder<String, Object>(3).put("filter", new UnmodifiableMapBuilder<String, Object>(2).put("kind", "Variable").put("variableName", "filter").build()).put("limit", new UnmodifiableMapBuilder<String, Object>(2).put("kind", "Variable").put("variableName", "limit").build()).put("nextToken", new UnmodifiableMapBuilder<String, Object>(2).put("kind", "Variable").put("variableName", "nextToken").build()).build(), true, Collections.<ResponseField.Condition>emptyList())
+        ResponseField.forObject("listTodos", "listTodos", new UnmodifiableMapBuilder<String, Object>(3).put("filter", new UnmodifiableMapBuilder<String, Object>(1).put("name", new UnmodifiableMapBuilder<String, Object>(1).put("ne", new UnmodifiableMapBuilder<String, Object>(2).put("kind", "Variable").put("variableName", "q").build()).build()).build()).put("limit", new UnmodifiableMapBuilder<String, Object>(2).put("kind", "Variable").put("variableName", "limit").build()).put("nextToken", new UnmodifiableMapBuilder<String, Object>(2).put("kind", "Variable").put("variableName", "nextToken").build()).build(), true, Collections.<ResponseField.Condition>emptyList())
       };
     public Data(@Nullable ListTodos listTodos) {
       this.listTodos = listTodos;
@@ -353,15 +352,15 @@ public final class ListTodosQuery implements Query<ListTodosQuery.Data, ListTodo
   
 
   public static final class Builder {
-    private @Nullable ModelTodoFilterInput filter;
+    private @Nullable String q;
     private @Nullable Integer limit;
     private @Nullable String nextToken;
     Builder() {
       
     }
     
-    public Builder filter(@Nullable ModelTodoFilterInput filter) {
-      this.filter = filter;
+    public Builder q(@Nullable String q) {
+      this.q = q;
       return this;
     }
     
@@ -375,19 +374,19 @@ public final class ListTodosQuery implements Query<ListTodosQuery.Data, ListTodo
       return this;
     }
     
-    public ListTodosQuery build() {
-      return new ListTodosQuery(filter, limit, nextToken);
+    public ListTodos2Query build() {
+      return new ListTodos2Query(q, limit, nextToken);
     }
   }
   
 
   public static final class Variables extends Operation.Variables {
-    private @Nonnull ModelTodoFilterInput filter;
+    private @Nonnull String q;
     private @Nonnull Integer limit;
     private @Nonnull String nextToken;
     private final transient Map<String, Object> valueMap = new LinkedHashMap<>();
-    public ModelTodoFilterInput filter() {
-      return filter;
+    public String q() {
+      return q;
     }
     
     public Integer limit() {
@@ -398,9 +397,9 @@ public final class ListTodosQuery implements Query<ListTodosQuery.Data, ListTodo
       return nextToken;
     }
     
-    public Variables(@Nonnull ModelTodoFilterInput filter, @Nonnull Integer limit, @Nonnull String nextToken) {
-      this.filter = filter;
-      this.valueMap.put("filter", filter);
+    public Variables(@Nonnull String q, @Nonnull Integer limit, @Nonnull String nextToken) {
+      this.q = q;
+      this.valueMap.put("q", q);
       this.limit = limit;
       this.valueMap.put("limit", limit);
       this.nextToken = nextToken;
@@ -417,7 +416,7 @@ public final class ListTodosQuery implements Query<ListTodosQuery.Data, ListTodo
       return new InputFieldMarshaller() {
         @Override
         public void marshal(InputFieldWriter writer) throws IOException {
-          writer.writeObject("filter", filter != null ? filter.marshaller() : null);
+          writer.writeString("q", q);
           writer.writeInt("limit", limit);
           writer.writeString("nextToken", nextToken);
         }
@@ -425,8 +424,8 @@ public final class ListTodosQuery implements Query<ListTodosQuery.Data, ListTodo
     }
   }
   
-  public ListTodosQuery(@Nullable ModelTodoFilterInput filter, @Nullable Integer limit, @Nullable String nextToken) {
+  public ListTodos2Query(@Nullable String q, @Nullable Integer limit, @Nullable String nextToken) {
         
-    this.variables = new ListTodosQuery.Variables(filter, limit, nextToken);
+    this.variables = new ListTodos2Query.Variables(q, limit, nextToken);
   }
 }

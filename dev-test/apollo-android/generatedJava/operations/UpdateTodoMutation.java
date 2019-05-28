@@ -15,6 +15,8 @@ import java.util.Collections;
 import com.apollographql.apollo.api.ResponseReader;
 import com.apollographql.apollo.api.ResponseFieldMarshaller;
 import com.apollographql.apollo.api.ResponseWriter;
+import com.apollographql.apollo.api.internal.UnmodifiableMapBuilder;
+import java.lang.Object;
 import com.apollographql.apollo.api.InputFieldMarshaller;
 import com.apollographql.apollo.api.InputFieldWriter;
 import java.io.IOException;
@@ -68,7 +70,7 @@ public final class UpdateTodoMutation implements Mutation<UpdateTodoMutation.Dat
     private volatile int $hashCode;
     private volatile boolean $hashCodeMemoized;
     static final ResponseField[] $responseFields = {
-        ResponseField.forObject("updateTodo", "updateTodo", null, true, Collections.<ResponseField.Condition>emptyList())
+        ResponseField.forObject("updateTodo", "updateTodo", new UnmodifiableMapBuilder<String, Object>(1).put("input", new UnmodifiableMapBuilder<String, Object>(2).put("kind", "Variable").put("variableName", "input").build()).build(), true, Collections.<ResponseField.Condition>emptyList())
       };
     public Data(@Nullable UpdateTodo updateTodo) {
       this.updateTodo = updateTodo;

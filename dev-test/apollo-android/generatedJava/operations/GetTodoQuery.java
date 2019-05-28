@@ -14,6 +14,8 @@ import java.util.Collections;
 import com.apollographql.apollo.api.ResponseReader;
 import com.apollographql.apollo.api.ResponseFieldMarshaller;
 import com.apollographql.apollo.api.ResponseWriter;
+import com.apollographql.apollo.api.internal.UnmodifiableMapBuilder;
+import java.lang.Object;
 import com.apollographql.apollo.api.InputFieldMarshaller;
 import com.apollographql.apollo.api.InputFieldWriter;
 import java.io.IOException;
@@ -67,7 +69,7 @@ public final class GetTodoQuery implements Query<GetTodoQuery.Data, GetTodoQuery
     private volatile int $hashCode;
     private volatile boolean $hashCodeMemoized;
     static final ResponseField[] $responseFields = {
-        ResponseField.forObject("getTodo", "getTodo", null, true, Collections.<ResponseField.Condition>emptyList())
+        ResponseField.forObject("getTodo", "getTodo", new UnmodifiableMapBuilder<String, Object>(1).put("id", new UnmodifiableMapBuilder<String, Object>(2).put("kind", "Variable").put("variableName", "id").build()).build(), true, Collections.<ResponseField.Condition>emptyList())
       };
     public Data(@Nullable GetTodo getTodo) {
       this.getTodo = getTodo;

@@ -4,6 +4,7 @@ import { JavaApolloAndroidPluginConfig } from './plugin';
 import { JAVA_SCALARS } from '@graphql-codegen/java-common';
 import { GraphQLSchema, isScalarType, isInputObjectType, InputValueDefinitionNode, Kind, VariableDefinitionNode, GraphQLNamedType } from 'graphql';
 import { VisitorConfig } from './visitor-config';
+import { ImportsSet } from './types';
 
 export const SCALAR_TO_WRITER_METHOD = {
   ID: 'writeString',
@@ -14,7 +15,7 @@ export const SCALAR_TO_WRITER_METHOD = {
 };
 
 export class BaseJavaVisitor<Config extends VisitorConfig = any> extends BaseVisitor<JavaApolloAndroidPluginConfig, Config> {
-  protected _imports = new Set<string>();
+  protected _imports: ImportsSet = new Set<string>();
 
   constructor(protected _schema: GraphQLSchema, rawConfig: JavaApolloAndroidPluginConfig, additionalConfig: Partial<Config>) {
     super(rawConfig, additionalConfig, {

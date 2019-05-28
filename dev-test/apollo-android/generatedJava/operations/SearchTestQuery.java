@@ -6,12 +6,8 @@ import java.lang.Override;
 import javax.annotation.Generated;
 import com.apollographql.apollo.api.OperationName;
 import com.apollographql.apollo.api.ResponseFieldMapper;
-import com.apollographql.apollo.api.Input;
-import javax.annotation.Nonnull;
-import com.apollographql.apollo.api.internal.Utils;
 import com.apollographql.apollo.api.ResponseField;
 import java.util.Collections;
-import fragment.BF;
 import com.apollographql.apollo.api.ResponseReader;
 import com.apollographql.apollo.api.ResponseFieldMarshaller;
 import com.apollographql.apollo.api.ResponseWriter;
@@ -22,33 +18,33 @@ import com.apollographql.apollo.api.InputFieldWriter;
 import java.io.IOException;
 
 @Generated("Apollo GraphQL")
-public final class SearchQuery implements Query<SearchQuery.Data, SearchQuery.Data, SearchQuery.Variables> {
-  public static final String OPERATION_DEFINITION = "query Search($term: String!) {   search(term: $term) {     id     ... on B {       ...BF     }     ... on A {       a     }   } }";
+public final class SearchTestQuery implements Query<SearchTestQuery.Data, SearchTestQuery.Data, SearchTestQuery.Variables> {
+  public static final String OPERATION_DEFINITION = "query SearchTest {   test: searchOne(term: \"1\") {     id     ... on B {       b     }     ... on A {       a     }   } }";
   public static final String QUERY_DOCUMENT = OPERATION_DEFINITION;
   public static final OperationName OPERATION_NAME = new OperationName() {
     @Override
     public String name() {
-      return "Search";
+      return "SearchTest";
     }
   };
-  private final SearchQuery.Variables variables;
+  private final SearchTestQuery.Variables variables;
   @Override
    public String queryDocument() {
     return QUERY_DOCUMENT;
   }
   
   @Override
-   public SearchQuery.Data wrapData(SearchQuery.Data data) {
+   public SearchTestQuery.Data wrapData(SearchTestQuery.Data data) {
     return data;
   }
   
   @Override
-   public SearchQuery.Variables variables() {
+   public SearchTestQuery.Variables variables() {
     return variables;
   }
   
   @Override
-   public ResponseFieldMapper<SearchQuery.Data> responseFieldMapper() {
+   public ResponseFieldMapper<SearchTestQuery.Data> responseFieldMapper() {
     return new Data.Mapper();
   }
   
@@ -62,29 +58,29 @@ public final class SearchQuery implements Query<SearchQuery.Data, SearchQuery.Da
   }
   
   public String operationId() {
-    return "7152c3afb6fca3130f8ba662afd8b209";
+    return "1b962c3babff3c9fbe12549739531948";
   }
   public static class Data implements Operation.Data {
-    private final @Nonnull List<Search> search;
+    private final @Nonnull SearchOne searchOne;
     private volatile String $toString;
     private volatile int $hashCode;
     private volatile boolean $hashCodeMemoized;
     static final ResponseField[] $responseFields = {
-        ResponseField.forObject("search", "search", new UnmodifiableMapBuilder<String, Object>(1).put("term", new UnmodifiableMapBuilder<String, Object>(2).put("kind", "Variable").put("variableName", "term").build()).build(), false, Collections.<ResponseField.Condition>emptyList())
+        ResponseField.forObject("test", "searchOne", new UnmodifiableMapBuilder<String, Object>(1).put("term", "1").build(), false, Collections.<ResponseField.Condition>emptyList())
       };
-    public Data(@Nonnull List<Search> search) {
-      this.search = Utils.checkNotNull(search, "search == null");
+    public Data(@Nonnull SearchOne searchOne) {
+      this.searchOne = Utils.checkNotNull(searchOne, "searchOne == null");
     }
     
-    public @Nonnull List<Search> search() {
-      return this.search;
+    public @Nonnull SearchOne searchOne() {
+      return this.searchOne;
     }
     
     @Override
      public String toString() {
       if ($toString == null) {
         $toString = "Data{"
-          + "search=" + search + ", "
+          + "searchOne=" + searchOne + ", "
           + "}";
       }
       
@@ -98,7 +94,7 @@ public final class SearchQuery implements Query<SearchQuery.Data, SearchQuery.Da
       }
       if (o instanceof Data) {
         Data that = (Data) o;
-        return this.search.equals(that.search);
+        return this.searchOne.equals(that.searchOne);
       }
       
       return false;
@@ -109,7 +105,7 @@ public final class SearchQuery implements Query<SearchQuery.Data, SearchQuery.Da
       if (!$hashCodeMemoized) {
         int h = 1;
         h *= 1000003;
-        h ^= search.hashCode();
+        h ^= searchOne.hashCode();
         $hashCode = h;
         $hashCodeMemoized = true;
       }
@@ -121,33 +117,23 @@ public final class SearchQuery implements Query<SearchQuery.Data, SearchQuery.Da
       return new ResponseFieldMarshaller() {
         @Override
         public void marshal(ResponseWriter writer) {
-          writer.writeList($responseFields[0], search, new ResponseWriter.ListWriter() {
-            @Override
-            public void write(Object value, ResponseWriter.ListItemWriter listItemWriter) {
-              listItemWriter.writeObject(((Search) value).marshaller());
-            }
-          });
+          writer.writeObject($responseFields[0], searchOne != null ? searchOne.marshaller() : null);
         }
       };
     }
     public static final class Mapper implements ResponseFieldMapper<Data> {
-      private final Search.Mapper searchFieldMapper = new Search.Mapper();
+      private final SearchOne.Mapper searchOneFieldMapper = new SearchOne.Mapper();
       @Override
        public Data map(ResponseReader reader) {
-        final List<Search> search = reader.readList($responseFields[0], new ResponseReader.ListReader<Search>() {
-          @Override
-          public Search read(ResponseReader.ListItemReader listItemReader) {
-            return listItemReader.readObject();
-          }
-        });
-        return new Data(search);
+        final SearchOne searchOne = reader.readObject($responseFields[0]);
+        return new Data(searchOne);
       }
     }
     
   }
   
 
-  public static class Search {
+  public static class SearchOne {
     private final @Nonnull String __typename;
     private final @Nonnull String id;
     private final @Nullable AsB asB;
@@ -161,7 +147,7 @@ public final class SearchQuery implements Query<SearchQuery.Data, SearchQuery.Da
         ResponseField.forInlineFragment("__typename", "__typename", Arrays.asList("B")),
         ResponseField.forInlineFragment("__typename", "__typename", Arrays.asList("A"))
       };
-    public Search(@Nonnull String __typename, @Nonnull String id, @Nullable AsB asB, @Nullable AsA asA) {
+    public SearchOne(@Nonnull String __typename, @Nonnull String id, @Nullable AsB asB, @Nullable AsA asA) {
       this.__typename = Utils.checkNotNull(__typename, "__typename == null");
       this.id = Utils.checkNotNull(id, "id == null");
       this.asB = asB;
@@ -187,7 +173,7 @@ public final class SearchQuery implements Query<SearchQuery.Data, SearchQuery.Da
     @Override
      public String toString() {
       if ($toString == null) {
-        $toString = "Search{"
+        $toString = "SearchOne{"
           + "__typename=" + __typename + ", "
           + "id=" + id + ", "
           + "asB=" + asB + ", "
@@ -203,8 +189,8 @@ public final class SearchQuery implements Query<SearchQuery.Data, SearchQuery.Da
       if (o == this) {
         return true;
       }
-      if (o instanceof Search) {
-        Search that = (Search) o;
+      if (o instanceof SearchOne) {
+        SearchOne that = (SearchOne) o;
         return this.__typename.equals(that.__typename) && this.id.equals(that.id) && ((this.asB == null) ? (that.asB == null) : this.asB.equals(that.asB)) && ((this.asA == null) ? (that.asA == null) : this.asA.equals(that.asA));
       }
       
@@ -241,16 +227,16 @@ public final class SearchQuery implements Query<SearchQuery.Data, SearchQuery.Da
         }
       };
     }
-    public static final class Mapper implements ResponseFieldMapper<Search> {
+    public static final class Mapper implements ResponseFieldMapper<SearchOne> {
       private final AsB.Mapper asBFieldMapper = new AsB.Mapper();
       private final AsA.Mapper asAFieldMapper = new AsA.Mapper();
       @Override
-       public Search map(ResponseReader reader) {
+       public SearchOne map(ResponseReader reader) {
         final String __typename = reader.readString($responseFields[0]);
         final String id = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[1]);
         final AsB asB = reader.readObject($responseFields[2]);
         final AsA asA = reader.readObject($responseFields[3]);
-        return new Search(__typename, id, asB, asA);
+        return new SearchOne(__typename, id, asB, asA);
       }
     }
     
@@ -260,18 +246,18 @@ public final class SearchQuery implements Query<SearchQuery.Data, SearchQuery.Da
   public static class AsB {
     private final @Nonnull String __typename;
     private final @Nonnull String id;
-    private final @Nonnull Fragments fragments;
+    private final @Nullable String b;
     private volatile String $toString;
     private volatile int $hashCode;
     private volatile boolean $hashCodeMemoized;
     static final ResponseField[] $responseFields = {
         ResponseField.forString("__typename", "__typename", null, false, Collections.<ResponseField.Condition>emptyList()),
-        ResponseField.forFragment("__typename", "__typename", Arrays.asList("B"))
+        ResponseField.forString("b", "b", null, true, Collections.<ResponseField.Condition>emptyList())
       };
-    public AsB(@Nonnull String __typename, @Nonnull String id, @Nonnull Fragments fragments) {
+    public AsB(@Nonnull String __typename, @Nonnull String id, @Nullable String b) {
       this.__typename = Utils.checkNotNull(__typename, "__typename == null");
       this.id = Utils.checkNotNull(id, "id == null");
-      this.fragments = Utils.checkNotNull(fragments, "fragments == null");
+      this.b = b;
     }
     
     public @Nonnull String __typename() {
@@ -282,8 +268,8 @@ public final class SearchQuery implements Query<SearchQuery.Data, SearchQuery.Da
       return this.id;
     }
     
-    public @Nonnull Fragments fragments() {
-      return this.fragments;
+    public @Nullable String b() {
+      return this.b;
     }
     
     @Override
@@ -292,7 +278,7 @@ public final class SearchQuery implements Query<SearchQuery.Data, SearchQuery.Da
         $toString = "AsB{"
           + "__typename=" + __typename + ", "
           + "id=" + id + ", "
-          + "fragments=" + fragments + ", "
+          + "b=" + b + ", "
           + "}";
       }
       
@@ -306,7 +292,7 @@ public final class SearchQuery implements Query<SearchQuery.Data, SearchQuery.Da
       }
       if (o instanceof AsB) {
         AsB that = (AsB) o;
-        return this.__typename.equals(that.__typename) && this.id.equals(that.id) && this.fragments.equals(that.fragments);
+        return this.__typename.equals(that.__typename) && this.id.equals(that.id) && ((this.b == null) ? (that.b == null) : this.b.equals(that.b));
       }
       
       return false;
@@ -321,7 +307,7 @@ public final class SearchQuery implements Query<SearchQuery.Data, SearchQuery.Da
         h *= 1000003;
         h ^= id.hashCode();
         h *= 1000003;
-        h ^= fragments.hashCode();
+        h ^= (b == null) ? 0 : b.hashCode();
         $hashCode = h;
         $hashCodeMemoized = true;
       }
@@ -335,18 +321,17 @@ public final class SearchQuery implements Query<SearchQuery.Data, SearchQuery.Da
         public void marshal(ResponseWriter writer) {
           writer.writeString($responseFields[0], __typename);
           writer.writeCustom((ResponseField.CustomTypeField) $responseFields[1], id);
-          writer.writeObject($responseFields[2], fragments != null ? fragments.marshaller() : null);
+          writer.writeString($responseFields[2], b != null ? b : null);
         }
       };
     }
     public static final class Mapper implements ResponseFieldMapper<AsB> {
-      private final Fragments.Mapper fragmentsFieldMapper = new Fragments.Mapper();
       @Override
        public AsB map(ResponseReader reader) {
         final String __typename = reader.readString($responseFields[0]);
         final String id = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[1]);
-        final Fragments fragments = reader.readObject($responseFields[2]);
-        return new AsB(__typename, id, fragments);
+        final String b = reader.readString($responseFields[2]);
+        return new AsB(__typename, id, b);
       }
     }
     
@@ -449,32 +434,20 @@ public final class SearchQuery implements Query<SearchQuery.Data, SearchQuery.Da
   
 
   public static final class Builder {
-    private @Nullable String term;
     Builder() {
       
     }
     
-    public Builder term(@Nullable String term) {
-      this.term = term;
-      return this;
-    }
-    
-    public SearchQuery build() {
-      return new SearchQuery(term);
+    public SearchTestQuery build() {
+      return new SearchTestQuery();
     }
   }
   
 
   public static final class Variables extends Operation.Variables {
-    private @Nonnull String term;
     private final transient Map<String, Object> valueMap = new LinkedHashMap<>();
-    public String term() {
-      return term;
-    }
-    
-    public Variables(@Nonnull String term) {
-      this.term = term;
-      this.valueMap.put("term", term);
+    public Variables() {
+      
     }
     
     @Override
@@ -487,14 +460,14 @@ public final class SearchQuery implements Query<SearchQuery.Data, SearchQuery.Da
       return new InputFieldMarshaller() {
         @Override
         public void marshal(InputFieldWriter writer) throws IOException {
-          writer.writeString("term", term);
+      
         }
       };
     }
   }
   
-  public SearchQuery(@Nonnull String term) {
-    Utils.checkNotNull(term, "term == null");      
-    this.variables = new SearchQuery.Variables(term);
+  public SearchTestQuery() {
+        
+    this.variables = Operation.EMPTY_VARIABLES;
   }
 }
