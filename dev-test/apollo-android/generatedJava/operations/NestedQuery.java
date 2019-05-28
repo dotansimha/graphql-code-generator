@@ -5,18 +5,24 @@ import java.lang.String;
 import java.lang.Override;
 import javax.annotation.Generated;
 import com.apollographql.apollo.api.OperationName;
+import com.apollographql.apollo.api.Operation;
 import com.apollographql.apollo.api.ResponseFieldMapper;
 import com.apollographql.apollo.api.ResponseField;
+import javax.annotation.Nonnull;
 import java.util.Collections;
+import java.util.List;
+import com.apollographql.apollo.api.internal.Utils;
 import com.apollographql.apollo.api.ResponseReader;
 import com.apollographql.apollo.api.ResponseFieldMarshaller;
 import com.apollographql.apollo.api.ResponseWriter;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import com.apollographql.apollo.api.InputFieldMarshaller;
 import com.apollographql.apollo.api.InputFieldWriter;
 import java.io.IOException;
 
 @Generated("Apollo GraphQL")
-public final class NestedQuery implements Query<NestedQuery.Data, NestedQuery.Data, NestedQuery.Variables> {
+public final class NestedQuery implements Query<NestedQuery.Data, NestedQuery.Data, Operation.Variables> {
   public static final String OPERATION_DEFINITION = "query Nested {   nested }";
   public static final String QUERY_DOCUMENT = OPERATION_DEFINITION;
   public static final OperationName OPERATION_NAME = new OperationName() {
@@ -25,7 +31,7 @@ public final class NestedQuery implements Query<NestedQuery.Data, NestedQuery.Da
       return "Nested";
     }
   };
-  private final NestedQuery.Variables variables;
+  private final Operation.Variables variables;
   @Override
    public String queryDocument() {
     return QUERY_DOCUMENT;
@@ -37,7 +43,7 @@ public final class NestedQuery implements Query<NestedQuery.Data, NestedQuery.Da
   }
   
   @Override
-   public NestedQuery.Variables variables() {
+   public Operation.Variables variables() {
     return variables;
   }
   
@@ -47,7 +53,7 @@ public final class NestedQuery implements Query<NestedQuery.Data, NestedQuery.Da
   }
   
   public static Builder builder() {
-    new Builder();
+    return new Builder();
   }
   
   @Override
@@ -86,7 +92,7 @@ public final class NestedQuery implements Query<NestedQuery.Data, NestedQuery.Da
     }
     
     @Override
-     public boolean equals() {
+     public boolean equals(Object o) {
       if (o == this) {
         return true;
       }

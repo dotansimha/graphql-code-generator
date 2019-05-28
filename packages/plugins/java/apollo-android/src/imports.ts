@@ -14,7 +14,7 @@ export const Imports = {
   Map: 'java.util.Map',
 
   // Annotations
-  NonNull: 'javax.annotation.Nonnull',
+  Nonnull: 'javax.annotation.Nonnull',
   Nullable: 'javax.annotation.Nullable',
   Override: 'java.lang.Override',
   Generated: 'javax.annotation.Generated',

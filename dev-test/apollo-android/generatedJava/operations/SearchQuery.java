@@ -5,18 +5,24 @@ import java.lang.String;
 import java.lang.Override;
 import javax.annotation.Generated;
 import com.apollographql.apollo.api.OperationName;
+import com.apollographql.apollo.api.Operation;
 import com.apollographql.apollo.api.ResponseFieldMapper;
 import com.apollographql.apollo.api.Input;
 import javax.annotation.Nonnull;
 import com.apollographql.apollo.api.internal.Utils;
 import com.apollographql.apollo.api.ResponseField;
 import java.util.Collections;
+import type.CustomType;
 import fragment.BF;
 import com.apollographql.apollo.api.ResponseReader;
 import com.apollographql.apollo.api.ResponseFieldMarshaller;
 import com.apollographql.apollo.api.ResponseWriter;
+import javax.annotation.Nullable;
 import com.apollographql.apollo.api.internal.UnmodifiableMapBuilder;
 import java.lang.Object;
+import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import com.apollographql.apollo.api.InputFieldMarshaller;
 import com.apollographql.apollo.api.InputFieldWriter;
 import java.io.IOException;
@@ -53,7 +59,7 @@ public final class SearchQuery implements Query<SearchQuery.Data, SearchQuery.Da
   }
   
   public static Builder builder() {
-    new Builder();
+    return new Builder();
   }
   
   @Override
@@ -92,7 +98,7 @@ public final class SearchQuery implements Query<SearchQuery.Data, SearchQuery.Da
     }
     
     @Override
-     public boolean equals() {
+     public boolean equals(Object o) {
       if (o == this) {
         return true;
       }
@@ -157,7 +163,7 @@ public final class SearchQuery implements Query<SearchQuery.Data, SearchQuery.Da
     private volatile boolean $hashCodeMemoized;
     static final ResponseField[] $responseFields = {
         ResponseField.forString("__typename", "__typename", null, false, Collections.<ResponseField.Condition>emptyList()),
-        ResponseField.forCustomType("id", "id", null, false, Collections.<ResponseField.Condition>emptyList()),
+        ResponseField.forCustomType("id", "id", null, false, CustomType.ID, Collections.<ResponseField.Condition>emptyList()),
         ResponseField.forInlineFragment("__typename", "__typename", Arrays.asList("B")),
         ResponseField.forInlineFragment("__typename", "__typename", Arrays.asList("A"))
       };
@@ -199,7 +205,7 @@ public final class SearchQuery implements Query<SearchQuery.Data, SearchQuery.Da
     }
     
     @Override
-     public boolean equals() {
+     public boolean equals(Object o) {
       if (o == this) {
         return true;
       }
@@ -248,8 +254,18 @@ public final class SearchQuery implements Query<SearchQuery.Data, SearchQuery.Da
        public Search map(ResponseReader reader) {
         final String __typename = reader.readString($responseFields[0]);
         final String id = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[1]);
-        final AsB asB = reader.readObject($responseFields[2]);
-        final AsA asA = reader.readObject($responseFields[3]);
+        final AsB asB = reader.readObject($responseFields[2], new ResponseReader.ObjectReader<AsB>() {
+                  @Override
+                  public AsB read(ResponseReader reader) {
+                    return asBFieldMapper.map(reader);
+                  }
+                });
+        final AsA asA = reader.readObject($responseFields[3], new ResponseReader.ObjectReader<AsA>() {
+                  @Override
+                  public AsA read(ResponseReader reader) {
+                    return asAFieldMapper.map(reader);
+                  }
+                });
         return new Search(__typename, id, asB, asA);
       }
     }
@@ -300,7 +316,7 @@ public final class SearchQuery implements Query<SearchQuery.Data, SearchQuery.Da
     }
     
     @Override
-     public boolean equals() {
+     public boolean equals(Object o) {
       if (o == this) {
         return true;
       }
@@ -345,7 +361,12 @@ public final class SearchQuery implements Query<SearchQuery.Data, SearchQuery.Da
        public AsB map(ResponseReader reader) {
         final String __typename = reader.readString($responseFields[0]);
         final String id = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[1]);
-        final Fragments fragments = reader.readObject($responseFields[2]);
+        final Fragments fragments = reader.readObject($responseFields[2], new ResponseReader.ObjectReader<Fragments>() {
+                  @Override
+                  public Fragments read(ResponseReader reader) {
+                    return fragmentsFieldMapper.map(reader);
+                  }
+                });
         return new AsB(__typename, id, fragments);
       }
     }
@@ -396,7 +417,7 @@ public final class SearchQuery implements Query<SearchQuery.Data, SearchQuery.Da
     }
     
     @Override
-     public boolean equals() {
+     public boolean equals(Object o) {
       if (o == this) {
         return true;
       }

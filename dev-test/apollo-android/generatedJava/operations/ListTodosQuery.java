@@ -5,18 +5,25 @@ import java.lang.String;
 import java.lang.Override;
 import javax.annotation.Generated;
 import com.apollographql.apollo.api.OperationName;
+import com.apollographql.apollo.api.Operation;
 import com.apollographql.apollo.api.ResponseFieldMapper;
 import com.apollographql.apollo.api.Input;
 import type.ModelTodoFilterInput;
 import javax.annotation.Nullable;
 import java.lang.Integer;
 import com.apollographql.apollo.api.ResponseField;
+import javax.annotation.Nonnull;
 import java.util.Collections;
+import type.CustomType;
+import com.apollographql.apollo.api.internal.Utils;
 import com.apollographql.apollo.api.ResponseReader;
 import com.apollographql.apollo.api.ResponseFieldMarshaller;
 import com.apollographql.apollo.api.ResponseWriter;
+import java.util.List;
 import com.apollographql.apollo.api.internal.UnmodifiableMapBuilder;
 import java.lang.Object;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import com.apollographql.apollo.api.InputFieldMarshaller;
 import com.apollographql.apollo.api.InputFieldWriter;
 import java.io.IOException;
@@ -53,7 +60,7 @@ public final class ListTodosQuery implements Query<ListTodosQuery.Data, ListTodo
   }
   
   public static Builder builder() {
-    new Builder();
+    return new Builder();
   }
   
   @Override
@@ -92,7 +99,7 @@ public final class ListTodosQuery implements Query<ListTodosQuery.Data, ListTodo
     }
     
     @Override
-     public boolean equals() {
+     public boolean equals(Object o) {
       if (o == this) {
         return true;
       }
@@ -129,7 +136,12 @@ public final class ListTodosQuery implements Query<ListTodosQuery.Data, ListTodo
       private final ListTodos.Mapper listTodosFieldMapper = new ListTodos.Mapper();
       @Override
        public Data map(ResponseReader reader) {
-        final ListTodos listTodos = reader.readObject($responseFields[0]);
+        final ListTodos listTodos = reader.readObject($responseFields[0], new ResponseReader.ObjectReader<ListTodos>() {
+                  @Override
+                  public ListTodos read(ResponseReader reader) {
+                    return listTodosFieldMapper.map(reader);
+                  }
+                });
         return new Data(listTodos);
       }
     }
@@ -181,7 +193,7 @@ public final class ListTodosQuery implements Query<ListTodosQuery.Data, ListTodo
     }
     
     @Override
-     public boolean equals() {
+     public boolean equals(Object o) {
       if (o == this) {
         return true;
       }
@@ -254,7 +266,7 @@ public final class ListTodosQuery implements Query<ListTodosQuery.Data, ListTodo
     private volatile boolean $hashCodeMemoized;
     static final ResponseField[] $responseFields = {
         ResponseField.forString("__typename", "__typename", null, false, Collections.<ResponseField.Condition>emptyList()),
-        ResponseField.forCustomType("id", "id", null, false, Collections.<ResponseField.Condition>emptyList()),
+        ResponseField.forCustomType("id", "id", null, false, CustomType.ID, Collections.<ResponseField.Condition>emptyList()),
         ResponseField.forString("name", "name", null, false, Collections.<ResponseField.Condition>emptyList()),
         ResponseField.forString("description", "description", null, true, Collections.<ResponseField.Condition>emptyList())
       };
@@ -296,7 +308,7 @@ public final class ListTodosQuery implements Query<ListTodosQuery.Data, ListTodo
     }
     
     @Override
-     public boolean equals() {
+     public boolean equals(Object o) {
       if (o == this) {
         return true;
       }

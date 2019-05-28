@@ -46,7 +46,7 @@ describe('Java Resolvers', () => {
       public DataFetcher<String> name();
     }`);
 
-    validateJava(result);
+    validateJava(result as any);
   });
 
   it('Should generate list types correctly', async () => {
@@ -68,7 +68,9 @@ describe('Java Resolvers', () => {
   it('Should generate union correctly', async () => {
     const result = await plugin(schema, [], {}, { outputFile: OUTPUT_FILE });
 
-    expect(result).toBeSimilarStringTo(`public interface SearchResult extends TypeResolver {}`);
+    expect(result).toBeSimilarStringTo(`public interface SearchResult extends TypeResolver {
+
+    }`);
   });
 
   it('Should generate interfaces correctly and add the correct imports', async () => {

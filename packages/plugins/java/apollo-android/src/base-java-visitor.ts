@@ -55,7 +55,7 @@ export class BaseJavaVisitor<Config extends VisitorConfig = any> extends BaseVis
     const name = field.kind === Kind.INPUT_VALUE_DEFINITION ? field.name.value : field.variable.name.value;
 
     if (isNonNull) {
-      this._imports.add(Imports.NonNull);
+      this._imports.add(Imports.Nonnull);
 
       return `@Nonnull ${typeToUse} ${name}`;
     } else {

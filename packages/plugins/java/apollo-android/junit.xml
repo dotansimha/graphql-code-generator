@@ -1,7 +1,535 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="jest tests" tests="1" failures="0" time="2.205">
-  <testsuite name="Operations Visitor" errors="0" failures="0" skipped="0" timestamp="2019-05-21T09:22:29" time="2.17" tests="1">
-    <testcase classname="Operations Visitor" name="Should handle Query correctly" time="0.019" file="tests/operations.spec.ts">
+<testsuites name="jest tests" tests="9" failures="4" time="3.288">
+  <testsuite name="Operations Visitor" errors="0" failures="0" skipped="0" timestamp="2019-05-28T10:34:26" time="2.384" tests="1">
+    <testcase classname="Operations Visitor" name="Should handle Query correctly" time="0.01" file="tests/operations.spec.ts">
+    </testcase>
+  </testsuite>
+  <testsuite name="java-apollo-android" errors="0" failures="4" skipped="0" timestamp="2019-05-28T10:34:26" time="3.052" tests="8">
+    <testcase classname="java-apollo-android Input Types" name="Should produce valid Java code" time="0.488" file="tests/plugin.spec.ts">
+    </testcase>
+    <testcase classname="java-apollo-android Input Types" name="Should create a basic input type signature correctly" time="0.003" file="tests/plugin.spec.ts">
+    </testcase>
+    <testcase classname="java-apollo-android Input Types" name="Should create private fields correctly" time="0.002" file="tests/plugin.spec.ts">
+      <failure>Error: expect(received).toContain(expected) // indexOf
+
+Expected substring: &quot;private final Input&lt;List&lt;String&gt;&gt; testArr;&quot;
+Received string:    &quot;package undefined;
+
+import com.apollographql.apollo.api.InputType;
+import javax.annotation.Generated;
+import com.apollographql.apollo.api.Input;
+import java.lang.Integer;
+import javax.annotation.Nonnull;
+import java.lang.String;
+import java.lang.Boolean;
+import com.app.generated.graphql.NestedInput;
+import javax.annotation.Nullable;
+import java.lang.Override;
+import java.io.IOException;
+import com.apollographql.apollo.api.InputFieldWriter;
+import com.apollographql.apollo.api.InputFieldMarshaller;
+import com.apollographql.apollo.api.internal.Utils;
+
+@Generated(\&quot;Apollo GraphQL\&quot;)
+public final class MyInput implements InputType {
+  private final @Nonnull Integer foo;
+  private final Input&lt;String&gt; bar;
+  private final @Nonnull Boolean something;
+  private final Input&lt;NestedInput&gt; nested;
+  private final Input&lt;String&gt; testArr;
+
+  MyInput(@Nonnull Integer foo, Input&lt;String&gt; bar, @Nonnull Boolean something, Input&lt;NestedInput&gt; nested, Input&lt;String&gt; testArr) {
+    this.foo = foo;
+    this.bar = bar;
+    this.something = something;
+    this.nested = nested;
+    this.testArr = testArr;
+  }
+
+  public @Nonnull Integer foo() { return this.foo; }
+  public @Nullable Input&lt;String&gt; bar() { return this.bar; }
+  public @Nonnull Boolean something() { return this.something; }
+  public @Nullable Input&lt;NestedInput&gt; nested() { return this.nested; }
+  public @Nullable Input&lt;String&gt; testArr() { return this.testArr; }
+
+  public static Builder builder() { return new Builder(); }
+
+  @Override
+  public InputFieldMarshaller marshaller() {
+    return new InputFieldMarshaller() {
+      @Override
+      public void marshal(InputFieldWriter writer) throws IOException {
+        writer.writeInt(\&quot;foo\&quot;, foo);
+        if(bar.defined) {
+            writer.writeString(\&quot;bar\&quot;, bar.value);
+        }
+        writer.writeBoolean(\&quot;something\&quot;, something);
+        if(nested.defined) {
+            writer.writeObject(\&quot;nested\&quot;, nested.value != null ? nested.value.marshaller() : null);
+        }
+        if(testArr.defined) {
+          writer.writeList(\&quot;testArr\&quot;, testArr.value != null ? new InputFieldWriter.ListWriter() {
+            @Override
+            public void write(InputFieldWriter.ListItemWriter listItemWriter) throws IOException {
+              for (String $item : testArr.value) {
+                listItemWriter.writeString($item);
+              }
+            }
+          } : null);
+        }
+      }
+    };
+  }
+
+  public static final class Builder {
+    private @Nonnull Integer foo;
+    private Input&lt;String&gt; bar = Input.absent();
+    private @Nonnull Boolean something;
+    private Input&lt;NestedInput&gt; nested = Input.absent();
+    private Input&lt;String&gt; testArr = Input.absent();
+  
+    Builder() {}
+    
+    public Builder foo(@Nonnull Integer foo) {
+      this.foo = foo;
+      return this;
+    }
+    
+    public Builder bar(@Nullable String bar) {
+      this.bar = Input.fromNullable(bar);
+      return this;
+    }
+    
+    public Builder something(@Nonnull Boolean something) {
+      this.something = something;
+      return this;
+    }
+    
+    public Builder nested(@Nullable NestedInput nested) {
+      this.nested = Input.fromNullable(nested);
+      return this;
+    }
+    
+    public Builder testArr(@Nullable String testArr) {
+      this.testArr = Input.fromNullable(testArr);
+      return this;
+    }
+  
+    public MyInput build() {
+      Utils.checkNotNull(foo, \&quot;foo == null\&quot;);
+      Utils.checkNotNull(something, \&quot;something == null\&quot;);
+      return new MyInput(foo, bar, something, nested, testArr);
+    }
+  }
+  
+}
+&quot;
+    at Object.&lt;anonymous&gt; (/Users/dotansimha/Dev/graphql-code-generator/packages/plugins/java/apollo-android/tests/plugin.spec.ts:61:22)
+    at processTicksAndRejections (internal/process/task_queues.js:89:5)</failure>
+    </testcase>
+    <testcase classname="java-apollo-android Input Types" name="Should create ctor correctly" time="0.001" file="tests/plugin.spec.ts">
+      <failure>Error: expected 
+ package undefined;
+
+import com.apollographql.apollo.api.InputType;
+import javax.annotation.Generated;
+import com.apollographql.apollo.api.Input;
+import java.lang.Integer;
+import javax.annotation.Nonnull;
+import java.lang.String;
+import java.lang.Boolean;
+import com.app.generated.graphql.NestedInput;
+import javax.annotation.Nullable;
+import java.lang.Override;
+import java.io.IOException;
+import com.apollographql.apollo.api.InputFieldWriter;
+import com.apollographql.apollo.api.InputFieldMarshaller;
+import com.apollographql.apollo.api.internal.Utils;
+
+@Generated(&quot;Apollo GraphQL&quot;)
+public final class MyInput implements InputType {
+  private final @Nonnull Integer foo;
+  private final Input&lt;String&gt; bar;
+  private final @Nonnull Boolean something;
+  private final Input&lt;NestedInput&gt; nested;
+  private final Input&lt;String&gt; testArr;
+
+  MyInput(@Nonnull Integer foo, Input&lt;String&gt; bar, @Nonnull Boolean something, Input&lt;NestedInput&gt; nested, Input&lt;String&gt; testArr) {
+    this.foo = foo;
+    this.bar = bar;
+    this.something = something;
+    this.nested = nested;
+    this.testArr = testArr;
+  }
+
+  public @Nonnull Integer foo() { return this.foo; }
+  public @Nullable Input&lt;String&gt; bar() { return this.bar; }
+  public @Nonnull Boolean something() { return this.something; }
+  public @Nullable Input&lt;NestedInput&gt; nested() { return this.nested; }
+  public @Nullable Input&lt;String&gt; testArr() { return this.testArr; }
+
+  public static Builder builder() { return new Builder(); }
+
+  @Override
+  public InputFieldMarshaller marshaller() {
+    return new InputFieldMarshaller() {
+      @Override
+      public void marshal(InputFieldWriter writer) throws IOException {
+        writer.writeInt(&quot;foo&quot;, foo);
+        if(bar.defined) {
+            writer.writeString(&quot;bar&quot;, bar.value);
+        }
+        writer.writeBoolean(&quot;something&quot;, something);
+        if(nested.defined) {
+            writer.writeObject(&quot;nested&quot;, nested.value != null ? nested.value.marshaller() : null);
+        }
+        if(testArr.defined) {
+          writer.writeList(&quot;testArr&quot;, testArr.value != null ? new InputFieldWriter.ListWriter() {
+            @Override
+            public void write(InputFieldWriter.ListItemWriter listItemWriter) throws IOException {
+              for (String $item : testArr.value) {
+                listItemWriter.writeString($item);
+              }
+            }
+          } : null);
+        }
+      }
+    };
+  }
+
+  public static final class Builder {
+    private @Nonnull Integer foo;
+    private Input&lt;String&gt; bar = Input.absent();
+    private @Nonnull Boolean something;
+    private Input&lt;NestedInput&gt; nested = Input.absent();
+    private Input&lt;String&gt; testArr = Input.absent();
+  
+    Builder() {}
+    
+    public Builder foo(@Nonnull Integer foo) {
+      this.foo = foo;
+      return this;
+    }
+    
+    public Builder bar(@Nullable String bar) {
+      this.bar = Input.fromNullable(bar);
+      return this;
+    }
+    
+    public Builder something(@Nonnull Boolean something) {
+      this.something = something;
+      return this;
+    }
+    
+    public Builder nested(@Nullable NestedInput nested) {
+      this.nested = Input.fromNullable(nested);
+      return this;
+    }
+    
+    public Builder testArr(@Nullable String testArr) {
+      this.testArr = Input.fromNullable(testArr);
+      return this;
+    }
+  
+    public MyInput build() {
+      Utils.checkNotNull(foo, &quot;foo == null&quot;);
+      Utils.checkNotNull(something, &quot;something == null&quot;);
+      return new MyInput(foo, bar, something, nested, testArr);
+    }
+  }
+  
+}
+
+ to be similar (strip-indent) string to
+ MyInput(@Nonnull Integer foo, Input&lt;String&gt; bar, @Nonnull Boolean something, Input&lt;NestedInput&gt; nested, Input&lt;List&lt;String&gt;&gt; testArr) {
+        this.foo = foo;
+        this.bar = bar;
+        this.something = something;
+        this.nested = nested;
+        this.testArr = testArr;
+      }
+      
+    at Object.&lt;anonymous&gt; (/Users/dotansimha/Dev/graphql-code-generator/packages/plugins/java/apollo-android/tests/plugin.spec.ts:68:22)
+    at processTicksAndRejections (internal/process/task_queues.js:89:5)</failure>
+    </testcase>
+    <testcase classname="java-apollo-android Input Types" name="Should create getters correctly" time="0.001" file="tests/plugin.spec.ts">
+      <failure>Error: expected 
+ package undefined;
+
+import com.apollographql.apollo.api.InputType;
+import javax.annotation.Generated;
+import com.apollographql.apollo.api.Input;
+import java.lang.Integer;
+import javax.annotation.Nonnull;
+import java.lang.String;
+import java.lang.Boolean;
+import com.app.generated.graphql.NestedInput;
+import javax.annotation.Nullable;
+import java.lang.Override;
+import java.io.IOException;
+import com.apollographql.apollo.api.InputFieldWriter;
+import com.apollographql.apollo.api.InputFieldMarshaller;
+import com.apollographql.apollo.api.internal.Utils;
+
+@Generated(&quot;Apollo GraphQL&quot;)
+public final class MyInput implements InputType {
+  private final @Nonnull Integer foo;
+  private final Input&lt;String&gt; bar;
+  private final @Nonnull Boolean something;
+  private final Input&lt;NestedInput&gt; nested;
+  private final Input&lt;String&gt; testArr;
+
+  MyInput(@Nonnull Integer foo, Input&lt;String&gt; bar, @Nonnull Boolean something, Input&lt;NestedInput&gt; nested, Input&lt;String&gt; testArr) {
+    this.foo = foo;
+    this.bar = bar;
+    this.something = something;
+    this.nested = nested;
+    this.testArr = testArr;
+  }
+
+  public @Nonnull Integer foo() { return this.foo; }
+  public @Nullable Input&lt;String&gt; bar() { return this.bar; }
+  public @Nonnull Boolean something() { return this.something; }
+  public @Nullable Input&lt;NestedInput&gt; nested() { return this.nested; }
+  public @Nullable Input&lt;String&gt; testArr() { return this.testArr; }
+
+  public static Builder builder() { return new Builder(); }
+
+  @Override
+  public InputFieldMarshaller marshaller() {
+    return new InputFieldMarshaller() {
+      @Override
+      public void marshal(InputFieldWriter writer) throws IOException {
+        writer.writeInt(&quot;foo&quot;, foo);
+        if(bar.defined) {
+            writer.writeString(&quot;bar&quot;, bar.value);
+        }
+        writer.writeBoolean(&quot;something&quot;, something);
+        if(nested.defined) {
+            writer.writeObject(&quot;nested&quot;, nested.value != null ? nested.value.marshaller() : null);
+        }
+        if(testArr.defined) {
+          writer.writeList(&quot;testArr&quot;, testArr.value != null ? new InputFieldWriter.ListWriter() {
+            @Override
+            public void write(InputFieldWriter.ListItemWriter listItemWriter) throws IOException {
+              for (String $item : testArr.value) {
+                listItemWriter.writeString($item);
+              }
+            }
+          } : null);
+        }
+      }
+    };
+  }
+
+  public static final class Builder {
+    private @Nonnull Integer foo;
+    private Input&lt;String&gt; bar = Input.absent();
+    private @Nonnull Boolean something;
+    private Input&lt;NestedInput&gt; nested = Input.absent();
+    private Input&lt;String&gt; testArr = Input.absent();
+  
+    Builder() {}
+    
+    public Builder foo(@Nonnull Integer foo) {
+      this.foo = foo;
+      return this;
+    }
+    
+    public Builder bar(@Nullable String bar) {
+      this.bar = Input.fromNullable(bar);
+      return this;
+    }
+    
+    public Builder something(@Nonnull Boolean something) {
+      this.something = something;
+      return this;
+    }
+    
+    public Builder nested(@Nullable NestedInput nested) {
+      this.nested = Input.fromNullable(nested);
+      return this;
+    }
+    
+    public Builder testArr(@Nullable String testArr) {
+      this.testArr = Input.fromNullable(testArr);
+      return this;
+    }
+  
+    public MyInput build() {
+      Utils.checkNotNull(foo, &quot;foo == null&quot;);
+      Utils.checkNotNull(something, &quot;something == null&quot;);
+      return new MyInput(foo, bar, something, nested, testArr);
+    }
+  }
+  
+}
+
+ to be similar (strip-indent) string to
+ public @Nullable Input&lt;List&lt;String&gt;&gt; testArr() { return this.testArr; }
+    at Object.&lt;anonymous&gt; (/Users/dotansimha/Dev/graphql-code-generator/packages/plugins/java/apollo-android/tests/plugin.spec.ts:88:22)
+    at processTicksAndRejections (internal/process/task_queues.js:89:5)</failure>
+    </testcase>
+    <testcase classname="java-apollo-android Input Types" name="Should have Builder static getter" time="0.001" file="tests/plugin.spec.ts">
+    </testcase>
+    <testcase classname="java-apollo-android Input Types" name="Should have Builder nested class " time="0" file="tests/plugin.spec.ts">
+      <failure>Error: expected 
+ package undefined;
+
+import com.apollographql.apollo.api.InputType;
+import javax.annotation.Generated;
+import com.apollographql.apollo.api.Input;
+import java.lang.Integer;
+import javax.annotation.Nonnull;
+import java.lang.String;
+import java.lang.Boolean;
+import com.app.generated.graphql.NestedInput;
+import javax.annotation.Nullable;
+import java.lang.Override;
+import java.io.IOException;
+import com.apollographql.apollo.api.InputFieldWriter;
+import com.apollographql.apollo.api.InputFieldMarshaller;
+import com.apollographql.apollo.api.internal.Utils;
+
+@Generated(&quot;Apollo GraphQL&quot;)
+public final class MyInput implements InputType {
+  private final @Nonnull Integer foo;
+  private final Input&lt;String&gt; bar;
+  private final @Nonnull Boolean something;
+  private final Input&lt;NestedInput&gt; nested;
+  private final Input&lt;String&gt; testArr;
+
+  MyInput(@Nonnull Integer foo, Input&lt;String&gt; bar, @Nonnull Boolean something, Input&lt;NestedInput&gt; nested, Input&lt;String&gt; testArr) {
+    this.foo = foo;
+    this.bar = bar;
+    this.something = something;
+    this.nested = nested;
+    this.testArr = testArr;
+  }
+
+  public @Nonnull Integer foo() { return this.foo; }
+  public @Nullable Input&lt;String&gt; bar() { return this.bar; }
+  public @Nonnull Boolean something() { return this.something; }
+  public @Nullable Input&lt;NestedInput&gt; nested() { return this.nested; }
+  public @Nullable Input&lt;String&gt; testArr() { return this.testArr; }
+
+  public static Builder builder() { return new Builder(); }
+
+  @Override
+  public InputFieldMarshaller marshaller() {
+    return new InputFieldMarshaller() {
+      @Override
+      public void marshal(InputFieldWriter writer) throws IOException {
+        writer.writeInt(&quot;foo&quot;, foo);
+        if(bar.defined) {
+            writer.writeString(&quot;bar&quot;, bar.value);
+        }
+        writer.writeBoolean(&quot;something&quot;, something);
+        if(nested.defined) {
+            writer.writeObject(&quot;nested&quot;, nested.value != null ? nested.value.marshaller() : null);
+        }
+        if(testArr.defined) {
+          writer.writeList(&quot;testArr&quot;, testArr.value != null ? new InputFieldWriter.ListWriter() {
+            @Override
+            public void write(InputFieldWriter.ListItemWriter listItemWriter) throws IOException {
+              for (String $item : testArr.value) {
+                listItemWriter.writeString($item);
+              }
+            }
+          } : null);
+        }
+      }
+    };
+  }
+
+  public static final class Builder {
+    private @Nonnull Integer foo;
+    private Input&lt;String&gt; bar = Input.absent();
+    private @Nonnull Boolean something;
+    private Input&lt;NestedInput&gt; nested = Input.absent();
+    private Input&lt;String&gt; testArr = Input.absent();
+  
+    Builder() {}
+    
+    public Builder foo(@Nonnull Integer foo) {
+      this.foo = foo;
+      return this;
+    }
+    
+    public Builder bar(@Nullable String bar) {
+      this.bar = Input.fromNullable(bar);
+      return this;
+    }
+    
+    public Builder something(@Nonnull Boolean something) {
+      this.something = something;
+      return this;
+    }
+    
+    public Builder nested(@Nullable NestedInput nested) {
+      this.nested = Input.fromNullable(nested);
+      return this;
+    }
+    
+    public Builder testArr(@Nullable String testArr) {
+      this.testArr = Input.fromNullable(testArr);
+      return this;
+    }
+  
+    public MyInput build() {
+      Utils.checkNotNull(foo, &quot;foo == null&quot;);
+      Utils.checkNotNull(something, &quot;something == null&quot;);
+      return new MyInput(foo, bar, something, nested, testArr);
+    }
+  }
+  
+}
+
+ to be similar (strip-indent) string to
+       public static final class Builder {
+        private @Nonnull Integer foo;
+        private Input&lt;String&gt; bar = Input.absent();
+        private @Nonnull Boolean something;
+        private Input&lt;NestedInput&gt; nested = Input.absent();
+        private Input&lt;List&lt;String&gt;&gt; testArr = Input.absent();
+      
+        Builder() {}
+        
+        public Builder foo(@Nonnull Integer foo) {
+          this.foo = foo;
+          return this;
+        }
+        
+        public Builder bar(@Nullable String bar) {
+          this.bar = Input.fromNullable(bar);
+          return this;
+        }
+        
+        public Builder something(@Nonnull Boolean something) {
+          this.something = something;
+          return this;
+        }
+        
+        public Builder nested(@Nullable NestedInput nested) {
+          this.nested = Input.fromNullable(nested);
+          return this;
+        }
+        
+        public Builder testArr(@Nullable List&lt;String&gt; testArr) {
+          this.testArr = Input.fromNullable(testArr);
+          return this;
+        }
+      
+        public MyInput build() {
+          Utils.checkNotNull(foo, &quot;foo == null&quot;);
+          Utils.checkNotNull(something, &quot;something == null&quot;);
+          return new MyInput(foo, bar, something, nested, testArr);
+        }
+      }
+    at Object.&lt;anonymous&gt; (/Users/dotansimha/Dev/graphql-code-generator/packages/plugins/java/apollo-android/tests/plugin.spec.ts:102:22)
+    at processTicksAndRejections (internal/process/task_queues.js:89:5)</failure>
+    </testcase>
+    <testcase classname="java-apollo-android Input Types" name="Should have marshaller built for the fields" time="0.001" file="tests/plugin.spec.ts">
     </testcase>
   </testsuite>
 </testsuites>

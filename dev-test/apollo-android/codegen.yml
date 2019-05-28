@@ -1,7 +1,7 @@
 schema:
   - https://jpmbfqfpxvcujfn4d4e3lu2pga.appsync-api.us-east-1.amazonaws.com/graphql:
       headers:
-        'x-api-key': da2-nqo2z3qhxbbdrev6n5upweblui
+        'x-api-key': da2-t2u7vtm33fattisq6vrrde56ui
 documents:
   - /Users/dotansimha/Dev/test-app/app/src/main/graphql/com/amazonaws/amplify/generated/graphql/*.graphql
 generates:

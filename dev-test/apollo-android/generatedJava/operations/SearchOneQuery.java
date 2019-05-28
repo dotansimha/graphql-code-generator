@@ -5,17 +5,22 @@ import java.lang.String;
 import java.lang.Override;
 import javax.annotation.Generated;
 import com.apollographql.apollo.api.OperationName;
+import com.apollographql.apollo.api.Operation;
 import com.apollographql.apollo.api.ResponseFieldMapper;
 import com.apollographql.apollo.api.Input;
 import javax.annotation.Nonnull;
 import com.apollographql.apollo.api.internal.Utils;
 import com.apollographql.apollo.api.ResponseField;
 import java.util.Collections;
+import type.CustomType;
+import javax.annotation.Nullable;
 import com.apollographql.apollo.api.ResponseReader;
 import com.apollographql.apollo.api.ResponseFieldMarshaller;
 import com.apollographql.apollo.api.ResponseWriter;
 import com.apollographql.apollo.api.internal.UnmodifiableMapBuilder;
 import java.lang.Object;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import com.apollographql.apollo.api.InputFieldMarshaller;
 import com.apollographql.apollo.api.InputFieldWriter;
 import java.io.IOException;
@@ -52,7 +57,7 @@ public final class SearchOneQuery implements Query<SearchOneQuery.Data, SearchOn
   }
   
   public static Builder builder() {
-    new Builder();
+    return new Builder();
   }
   
   @Override
@@ -91,7 +96,7 @@ public final class SearchOneQuery implements Query<SearchOneQuery.Data, SearchOn
     }
     
     @Override
-     public boolean equals() {
+     public boolean equals(Object o) {
       if (o == this) {
         return true;
       }
@@ -128,7 +133,12 @@ public final class SearchOneQuery implements Query<SearchOneQuery.Data, SearchOn
       private final SearchOne.Mapper searchOneFieldMapper = new SearchOne.Mapper();
       @Override
        public Data map(ResponseReader reader) {
-        final SearchOne searchOne = reader.readObject($responseFields[0]);
+        final SearchOne searchOne = reader.readObject($responseFields[0], new ResponseReader.ObjectReader<SearchOne>() {
+                  @Override
+                  public SearchOne read(ResponseReader reader) {
+                    return searchOneFieldMapper.map(reader);
+                  }
+                });
         return new Data(searchOne);
       }
     }
@@ -146,7 +156,7 @@ public final class SearchOneQuery implements Query<SearchOneQuery.Data, SearchOn
     private volatile boolean $hashCodeMemoized;
     static final ResponseField[] $responseFields = {
         ResponseField.forString("__typename", "__typename", null, false, Collections.<ResponseField.Condition>emptyList()),
-        ResponseField.forCustomType("id", "id", null, false, Collections.<ResponseField.Condition>emptyList()),
+        ResponseField.forCustomType("id", "id", null, false, CustomType.ID, Collections.<ResponseField.Condition>emptyList()),
         ResponseField.forInlineFragment("__typename", "__typename", Arrays.asList("B")),
         ResponseField.forInlineFragment("__typename", "__typename", Arrays.asList("A"))
       };
@@ -188,7 +198,7 @@ public final class SearchOneQuery implements Query<SearchOneQuery.Data, SearchOn
     }
     
     @Override
-     public boolean equals() {
+     public boolean equals(Object o) {
       if (o == this) {
         return true;
       }
@@ -237,8 +247,18 @@ public final class SearchOneQuery implements Query<SearchOneQuery.Data, SearchOn
        public SearchOne map(ResponseReader reader) {
         final String __typename = reader.readString($responseFields[0]);
         final String id = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[1]);
-        final AsB asB = reader.readObject($responseFields[2]);
-        final AsA asA = reader.readObject($responseFields[3]);
+        final AsB asB = reader.readObject($responseFields[2], new ResponseReader.ObjectReader<AsB>() {
+                  @Override
+                  public AsB read(ResponseReader reader) {
+                    return asBFieldMapper.map(reader);
+                  }
+                });
+        final AsA asA = reader.readObject($responseFields[3], new ResponseReader.ObjectReader<AsA>() {
+                  @Override
+                  public AsA read(ResponseReader reader) {
+                    return asAFieldMapper.map(reader);
+                  }
+                });
         return new SearchOne(__typename, id, asB, asA);
       }
     }
@@ -289,7 +309,7 @@ public final class SearchOneQuery implements Query<SearchOneQuery.Data, SearchOn
     }
     
     @Override
-     public boolean equals() {
+     public boolean equals(Object o) {
       if (o == this) {
         return true;
       }
@@ -384,7 +404,7 @@ public final class SearchOneQuery implements Query<SearchOneQuery.Data, SearchOn
     }
     
     @Override
-     public boolean equals() {
+     public boolean equals(Object o) {
       if (o == this) {
         return true;
       }

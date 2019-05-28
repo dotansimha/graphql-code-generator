@@ -5,18 +5,23 @@ import java.lang.String;
 import java.lang.Override;
 import javax.annotation.Generated;
 import com.apollographql.apollo.api.OperationName;
+import com.apollographql.apollo.api.Operation;
 import com.apollographql.apollo.api.ResponseFieldMapper;
 import com.apollographql.apollo.api.Input;
 import type.UpdateTodoInput;
 import javax.annotation.Nonnull;
 import com.apollographql.apollo.api.internal.Utils;
 import com.apollographql.apollo.api.ResponseField;
+import javax.annotation.Nullable;
 import java.util.Collections;
+import type.CustomType;
 import com.apollographql.apollo.api.ResponseReader;
 import com.apollographql.apollo.api.ResponseFieldMarshaller;
 import com.apollographql.apollo.api.ResponseWriter;
 import com.apollographql.apollo.api.internal.UnmodifiableMapBuilder;
 import java.lang.Object;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import com.apollographql.apollo.api.InputFieldMarshaller;
 import com.apollographql.apollo.api.InputFieldWriter;
 import java.io.IOException;
@@ -53,7 +58,7 @@ public final class UpdateTodoMutation implements Mutation<UpdateTodoMutation.Dat
   }
   
   public static Builder builder() {
-    new Builder();
+    return new Builder();
   }
   
   @Override
@@ -92,7 +97,7 @@ public final class UpdateTodoMutation implements Mutation<UpdateTodoMutation.Dat
     }
     
     @Override
-     public boolean equals() {
+     public boolean equals(Object o) {
       if (o == this) {
         return true;
       }
@@ -129,7 +134,12 @@ public final class UpdateTodoMutation implements Mutation<UpdateTodoMutation.Dat
       private final UpdateTodo.Mapper updateTodoFieldMapper = new UpdateTodo.Mapper();
       @Override
        public Data map(ResponseReader reader) {
-        final UpdateTodo updateTodo = reader.readObject($responseFields[0]);
+        final UpdateTodo updateTodo = reader.readObject($responseFields[0], new ResponseReader.ObjectReader<UpdateTodo>() {
+                  @Override
+                  public UpdateTodo read(ResponseReader reader) {
+                    return updateTodoFieldMapper.map(reader);
+                  }
+                });
         return new Data(updateTodo);
       }
     }
@@ -147,7 +157,7 @@ public final class UpdateTodoMutation implements Mutation<UpdateTodoMutation.Dat
     private volatile boolean $hashCodeMemoized;
     static final ResponseField[] $responseFields = {
         ResponseField.forString("__typename", "__typename", null, false, Collections.<ResponseField.Condition>emptyList()),
-        ResponseField.forCustomType("id", "id", null, false, Collections.<ResponseField.Condition>emptyList()),
+        ResponseField.forCustomType("id", "id", null, false, CustomType.ID, Collections.<ResponseField.Condition>emptyList()),
         ResponseField.forString("name", "name", null, false, Collections.<ResponseField.Condition>emptyList()),
         ResponseField.forString("description", "description", null, true, Collections.<ResponseField.Condition>emptyList())
       };
@@ -189,7 +199,7 @@ public final class UpdateTodoMutation implements Mutation<UpdateTodoMutation.Dat
     }
     
     @Override
-     public boolean equals() {
+     public boolean equals(Object o) {
       if (o == this) {
         return true;
       }

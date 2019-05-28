@@ -1,6 +1,6 @@
 import { FieldNode, visit, ArgumentNode, ObjectValueNode, ObjectFieldNode, VariableNode, StringValueNode, IntValueNode, FloatValueNode } from 'graphql';
-import { ImportsSet } from '../types';
-import { Imports } from '../imports';
+import { ImportsSet } from './types';
+import { Imports } from './imports';
 
 export function visitFieldArguments(selection: FieldNode, imports: ImportsSet): string {
   if (!selection.arguments || selection.arguments.length === 0) {
