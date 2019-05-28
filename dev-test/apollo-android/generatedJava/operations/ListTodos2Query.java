@@ -7,10 +7,9 @@ import javax.annotation.Generated;
 import com.apollographql.apollo.api.OperationName;
 import com.apollographql.apollo.api.Operation;
 import com.apollographql.apollo.api.ResponseFieldMapper;
-import com.apollographql.apollo.api.Input;
-import javax.annotation.Nullable;
 import java.lang.Integer;
 import com.apollographql.apollo.api.ResponseField;
+import javax.annotation.Nullable;
 import javax.annotation.Nonnull;
 import java.util.Collections;
 import type.CustomType;
@@ -69,6 +68,10 @@ public final class ListTodos2Query implements Query<ListTodos2Query.Data, ListTo
   
   public String operationId() {
     return "4af474ba1c47e1c5c1c6837063a90d55";
+  }
+  
+  public ListTodos2Query(String q, Integer limit, String nextToken) {
+    this.variables = new ListTodos2Query.Variables(q, limit, nextToken);
   }
   public static class Data implements Operation.Data {
     private final @Nullable ListTodos listTodos;
@@ -436,8 +439,4 @@ public final class ListTodos2Query implements Query<ListTodos2Query.Data, ListTo
     }
   }
   
-  public ListTodos2Query(@Nullable String q, @Nullable Integer limit, @Nullable String nextToken) {
-        
-    this.variables = new ListTodos2Query.Variables(q, limit, nextToken);
-  }
 }

@@ -7,12 +7,11 @@ import javax.annotation.Generated;
 import com.apollographql.apollo.api.OperationName;
 import com.apollographql.apollo.api.Operation;
 import com.apollographql.apollo.api.ResponseFieldMapper;
-import com.apollographql.apollo.api.Input;
-import type.DeleteTodoInput;
-import javax.annotation.Nonnull;
 import com.apollographql.apollo.api.internal.Utils;
+import type.DeleteTodoInput;
 import com.apollographql.apollo.api.ResponseField;
 import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import type.CustomType;
 import com.apollographql.apollo.api.ResponseReader;
@@ -68,6 +67,11 @@ public final class DeleteTodoMutation implements Mutation<DeleteTodoMutation.Dat
   
   public String operationId() {
     return "f86f628796ee076cc8429f204e1c49cd";
+  }
+  
+  public DeleteTodoMutation(DeleteTodoInput input) {
+    Utils.checkNotNull(input, "input == null");
+    this.variables = new DeleteTodoMutation.Variables(input);
   }
   public static class Data implements Operation.Data {
     private final @Nullable DeleteTodo deleteTodo;
@@ -300,8 +304,4 @@ public final class DeleteTodoMutation implements Mutation<DeleteTodoMutation.Dat
     }
   }
   
-  public DeleteTodoMutation(@Nonnull DeleteTodoInput input) {
-    Utils.checkNotNull(input, "input == null");      
-    this.variables = new DeleteTodoMutation.Variables(input);
-  }
 }

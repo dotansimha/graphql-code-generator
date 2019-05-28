@@ -7,10 +7,9 @@ import javax.annotation.Generated;
 import com.apollographql.apollo.api.OperationName;
 import com.apollographql.apollo.api.Operation;
 import com.apollographql.apollo.api.ResponseFieldMapper;
-import com.apollographql.apollo.api.Input;
-import javax.annotation.Nonnull;
 import com.apollographql.apollo.api.internal.Utils;
 import com.apollographql.apollo.api.ResponseField;
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import type.CustomType;
 import fragment.BF;
@@ -69,6 +68,11 @@ public final class SearchQuery implements Query<SearchQuery.Data, SearchQuery.Da
   
   public String operationId() {
     return "7152c3afb6fca3130f8ba662afd8b209";
+  }
+  
+  public SearchQuery(String term) {
+    Utils.checkNotNull(term, "term == null");
+    this.variables = new SearchQuery.Variables(term);
   }
   public static class Data implements Operation.Data {
     private final @Nonnull List<Search> search;
@@ -514,8 +518,4 @@ public final class SearchQuery implements Query<SearchQuery.Data, SearchQuery.Da
     }
   }
   
-  public SearchQuery(@Nonnull String term) {
-    Utils.checkNotNull(term, "term == null");      
-    this.variables = new SearchQuery.Variables(term);
-  }
 }

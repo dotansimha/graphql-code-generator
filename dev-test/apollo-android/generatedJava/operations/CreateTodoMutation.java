@@ -7,12 +7,11 @@ import javax.annotation.Generated;
 import com.apollographql.apollo.api.OperationName;
 import com.apollographql.apollo.api.Operation;
 import com.apollographql.apollo.api.ResponseFieldMapper;
-import com.apollographql.apollo.api.Input;
-import type.CreateTodoInput;
-import javax.annotation.Nonnull;
 import com.apollographql.apollo.api.internal.Utils;
+import type.CreateTodoInput;
 import com.apollographql.apollo.api.ResponseField;
 import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import type.CustomType;
 import com.apollographql.apollo.api.ResponseReader;
@@ -68,6 +67,11 @@ public final class CreateTodoMutation implements Mutation<CreateTodoMutation.Dat
   
   public String operationId() {
     return "ccf21c7837e09882049484de7ae1a14b";
+  }
+  
+  public CreateTodoMutation(CreateTodoInput input) {
+    Utils.checkNotNull(input, "input == null");
+    this.variables = new CreateTodoMutation.Variables(input);
   }
   public static class Data implements Operation.Data {
     private final @Nullable CreateTodo createTodo;
@@ -300,8 +304,4 @@ public final class CreateTodoMutation implements Mutation<CreateTodoMutation.Dat
     }
   }
   
-  public CreateTodoMutation(@Nonnull CreateTodoInput input) {
-    Utils.checkNotNull(input, "input == null");      
-    this.variables = new CreateTodoMutation.Variables(input);
-  }
 }

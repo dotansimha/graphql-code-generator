@@ -7,11 +7,10 @@ import javax.annotation.Generated;
 import com.apollographql.apollo.api.OperationName;
 import com.apollographql.apollo.api.Operation;
 import com.apollographql.apollo.api.ResponseFieldMapper;
-import com.apollographql.apollo.api.Input;
-import javax.annotation.Nonnull;
 import com.apollographql.apollo.api.internal.Utils;
 import com.apollographql.apollo.api.ResponseField;
 import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import type.CustomType;
 import com.apollographql.apollo.api.ResponseReader;
@@ -67,6 +66,11 @@ public final class GetTodoQuery implements Query<GetTodoQuery.Data, GetTodoQuery
   
   public String operationId() {
     return "c44eec87be1feca567e036c2f6aa2905";
+  }
+  
+  public GetTodoQuery(String id) {
+    Utils.checkNotNull(id, "id == null");
+    this.variables = new GetTodoQuery.Variables(id);
   }
   public static class Data implements Operation.Data {
     private final @Nullable GetTodo getTodo;
@@ -299,8 +303,4 @@ public final class GetTodoQuery implements Query<GetTodoQuery.Data, GetTodoQuery
     }
   }
   
-  public GetTodoQuery(@Nonnull String id) {
-    Utils.checkNotNull(id, "id == null");      
-    this.variables = new GetTodoQuery.Variables(id);
-  }
 }

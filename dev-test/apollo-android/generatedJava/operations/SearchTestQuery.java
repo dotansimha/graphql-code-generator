@@ -67,6 +67,10 @@ public final class SearchTestQuery implements Query<SearchTestQuery.Data, Search
   public String operationId() {
     return "1b962c3babff3c9fbe12549739531948";
   }
+  
+  public SearchTestQuery() {
+    this.variables = Operation.EMPTY_VARIABLES;
+  }
   public static class Data implements Operation.Data {
     private final @Nonnull SearchOne searchOne;
     private volatile String $toString;
@@ -488,8 +492,4 @@ public final class SearchTestQuery implements Query<SearchTestQuery.Data, Search
     }
   }
   
-  public SearchTestQuery() {
-        
-    this.variables = Operation.EMPTY_VARIABLES;
-  }
 }

@@ -67,23 +67,38 @@ export class OperationVisitor extends BaseJavaVisitor<VisitorConfig> {
       .trim();
   }
 
-  private buildCtor(className: string, node: OperationDefinitionNode): string {
+  private addCtor(className: string, node: OperationDefinitionNode, cls: JavaDeclarationBlock): void {
     const variables = node.variableDefinitions || [];
     const hasVariables = variables.length > 0;
-    const variablesArgs = (node.variableDefinitions || []).map(v => this.getFieldWithTypePrefix(v, null, true)).join(', ');
     const nonNullVariables = variables
       .filter(v => v.type.kind === Kind.NON_NULL_TYPE)
       .map(v => {
         this._imports.add(Imports.Utils);
 
-        return indent(`Utils.checkNotNull(${v.variable.name.value}, "${v.variable.name.value} == null");`);
-      })
-      .join('\n');
+        return `Utils.checkNotNull(${v.variable.name.value}, "${v.variable.name.value} == null");`;
+      });
+    const impl = [...nonNullVariables, `this.variables = ${!hasVariables ? 'Operation.EMPTY_VARIABLES' : `new ${className}.Variables(${variables.map(v => v.variable.name.value).join(', ')})`};`].join('\n');
 
-    return indentMultiline(`public ${className}(${variablesArgs}) {
-${nonNullVariables}      
-  this.variables = ${!hasVariables ? 'Operation.EMPTY_VARIABLES' : `new ${className}.Variables(${variables.map(v => v.variable.name.value).join(', ')})`};
-}`);
+    cls.addClassMethod(
+      className,
+      null,
+      impl,
+      node.variableDefinitions.map(varDec => {
+        const outputType = getBaseTypeNode(varDec.type).name.value;
+        const schemaType = this._schema.getType(outputType);
+        const javaClass = this.getJavaClass(schemaType);
+        const typeToUse = this.getListTypeNodeWrapped(javaClass, varDec.type);
+        const isNonNull = varDec.type.kind === Kind.NON_NULL_TYPE;
+
+        return {
+          name: varDec.variable.name.value,
+          type: typeToUse,
+          annotation: isNonNull ? 'Nonnull' : 'Nullable',
+        };
+      }),
+      null,
+      'public'
+    );
   }
 
   private getRootType(operation: string): GraphQLObjectType {
@@ -106,21 +121,6 @@ ${nonNullVariables}
     }
 
     return possibleNewName;
-  }
-
-  private getListTypeWrapped(toWrap: string, type: GraphQLOutputType): string {
-    if (isNonNullType(type)) {
-      return this.getListTypeWrapped(toWrap, type.ofType);
-    }
-
-    if (isListType(type)) {
-      const child = this.getListTypeWrapped(toWrap, type.ofType);
-      this._imports.add(Imports.List);
-
-      return `List<${child}>`;
-    }
-
-    return toWrap;
   }
 
   private transformSelectionSet(options: TransformSelectionSetOptions, isRoot = true) {
@@ -189,7 +189,7 @@ ${nonNullVariables}
             fieldName: field.name,
           });
         } else {
-          const javaClass = this.getActualType(baseType);
+          const javaClass = this.getJavaClass(baseType);
 
           childFields.push({
             rawType: field.type,
@@ -628,7 +628,7 @@ ${indentMultiline(inner, 2)}
       []
     );
 
-    const ctor = this.buildCtor(className, node);
+    this.addCtor(className, node, cls);
 
     this._imports.add(Imports.Operation);
     const dataClasses = this.transformSelectionSet({
@@ -645,7 +645,6 @@ ${indentMultiline(inner, 2)}
 
     cls.nestedClass(this.createBuilderClass(className, node.variableDefinitions || []));
     cls.nestedClass(this.createVariablesClass(className, node.variableDefinitions || []));
-    cls.withBlock(ctor);
 
     return cls.string;
   }
@@ -668,7 +667,7 @@ ${indentMultiline(inner, 2)}
       ctorImpl.push(`this.valueMap.put("${variable.variable.name.value}", ${variable.variable.name.value});`);
       const baseTypeNode = getBaseTypeNode(variable.type);
       const schemaType = this._schema.getType(baseTypeNode.name.value);
-      const javaClass = this.getActualType(schemaType);
+      const javaClass = this.getJavaClass(schemaType);
       const annotation = isNonNullType(variable.type) ? 'Nullable' : 'Nonnull';
       this._imports.add(Imports[annotation]);
       ctorArgs.push({ name: variable.variable.name.value, type: javaClass, annotations: [annotation] });
@@ -742,7 +741,7 @@ ${variables
     variables.forEach(variable => {
       const baseTypeNode = getBaseTypeNode(variable.type);
       const schemaType = this._schema.getType(baseTypeNode.name.value);
-      const javaClass = this.getActualType(schemaType);
+      const javaClass = this.getJavaClass(schemaType);
       const annotation = isNonNullType(variable.type) ? 'Nonnull' : 'Nullable';
       this._imports.add(Imports[annotation]);
       cls.addClassMember(variable.variable.name.value, javaClass, null, [annotation], 'private');

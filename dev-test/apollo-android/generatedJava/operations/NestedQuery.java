@@ -64,6 +64,10 @@ public final class NestedQuery implements Query<NestedQuery.Data, NestedQuery.Da
   public String operationId() {
     return "cddabe3e6621261c404a32e0f592f072";
   }
+  
+  public NestedQuery() {
+    this.variables = Operation.EMPTY_VARIABLES;
+  }
   public static class Data implements Operation.Data {
     private final @Nonnull List<List<String>> nested;
     private volatile String $toString;
@@ -184,8 +188,4 @@ public final class NestedQuery implements Query<NestedQuery.Data, NestedQuery.Da
     }
   }
   
-  public NestedQuery() {
-        
-    this.variables = Operation.EMPTY_VARIABLES;
-  }
 }

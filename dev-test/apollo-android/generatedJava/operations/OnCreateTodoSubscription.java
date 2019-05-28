@@ -65,6 +65,10 @@ public final class OnCreateTodoSubscription implements Subscription<OnCreateTodo
   public String operationId() {
     return "428b3d0142cc5cb6cd6748540efb25c7";
   }
+  
+  public OnCreateTodoSubscription() {
+    this.variables = Operation.EMPTY_VARIABLES;
+  }
   public static class Data implements Operation.Data {
     private final @Nullable OnCreateTodo onCreateTodo;
     private volatile String $toString;
@@ -284,8 +288,4 @@ public final class OnCreateTodoSubscription implements Subscription<OnCreateTodo
     }
   }
   
-  public OnCreateTodoSubscription() {
-        
-    this.variables = Operation.EMPTY_VARIABLES;
-  }
 }

@@ -65,6 +65,10 @@ public final class OnDeleteTodoSubscription implements Subscription<OnDeleteTodo
   public String operationId() {
     return "9dfd580d494eb7362d1ff0b180ea0bdd";
   }
+  
+  public OnDeleteTodoSubscription() {
+    this.variables = Operation.EMPTY_VARIABLES;
+  }
   public static class Data implements Operation.Data {
     private final @Nullable OnDeleteTodo onDeleteTodo;
     private volatile String $toString;
@@ -284,8 +288,4 @@ public final class OnDeleteTodoSubscription implements Subscription<OnDeleteTodo
     }
   }
   
-  public OnDeleteTodoSubscription() {
-        
-    this.variables = Operation.EMPTY_VARIABLES;
-  }
 }

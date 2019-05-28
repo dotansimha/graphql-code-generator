@@ -64,6 +64,10 @@ public final class SomethingQuery implements Query<SomethingQuery.Data, Somethin
   public String operationId() {
     return "a9e79832309f8b549d253fe85b094a50";
   }
+  
+  public SomethingQuery() {
+    this.variables = Operation.EMPTY_VARIABLES;
+  }
   public static class Data implements Operation.Data {
     private final @Nonnull List<String> something;
     private volatile String $toString;
@@ -179,8 +183,4 @@ public final class SomethingQuery implements Query<SomethingQuery.Data, Somethin
     }
   }
   
-  public SomethingQuery() {
-        
-    this.variables = Operation.EMPTY_VARIABLES;
-  }
 }

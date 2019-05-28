@@ -2,7 +2,7 @@ import { Imports } from './imports';
 import { BaseVisitor, ParsedConfig, getBaseTypeNode } from '@graphql-codegen/visitor-plugin-common';
 import { JavaApolloAndroidPluginConfig } from './plugin';
 import { JAVA_SCALARS } from '@graphql-codegen/java-common';
-import { GraphQLSchema, isScalarType, isInputObjectType, InputValueDefinitionNode, Kind, VariableDefinitionNode, GraphQLNamedType } from 'graphql';
+import { GraphQLSchema, isScalarType, isInputObjectType, InputValueDefinitionNode, Kind, VariableDefinitionNode, GraphQLNamedType, GraphQLOutputType, isNonNullType, isListType, TypeNode } from 'graphql';
 import { VisitorConfig } from './visitor-config';
 import { ImportsSet } from './types';
 
@@ -29,7 +29,7 @@ export class BaseJavaVisitor<Config extends VisitorConfig = any> extends BaseVis
   }
 
   // Replaces a GraphQL type with a Java class
-  protected getActualType(schemaType: GraphQLNamedType): string {
+  protected getJavaClass(schemaType: GraphQLNamedType): string {
     let typeToUse = schemaType.name;
 
     if (isScalarType(schemaType)) {
@@ -48,25 +48,33 @@ export class BaseJavaVisitor<Config extends VisitorConfig = any> extends BaseVis
     return typeToUse;
   }
 
-  protected getFieldWithTypePrefix(field: InputValueDefinitionNode | VariableDefinitionNode, wrapWith: string | null = null, applyNullable = false): string {
-    this._imports.add(Imports.Input);
-    const typeToUse = this.getActualType(this._schema.getType(getBaseTypeNode(field.type).name.value));
-    const isNonNull = field.type.kind === Kind.NON_NULL_TYPE;
-    const name = field.kind === Kind.INPUT_VALUE_DEFINITION ? field.name.value : field.variable.name.value;
-
-    if (isNonNull) {
-      this._imports.add(Imports.Nonnull);
-
-      return `@Nonnull ${typeToUse} ${name}`;
-    } else {
-      if (wrapWith) {
-        return `${wrapWith}<${typeToUse}> ${name}`;
-      } else {
-        if (applyNullable) {
-          this._imports.add(Imports.Nullable);
-        }
-        return `${applyNullable ? '@Nullable ' : ''}${typeToUse} ${name}`;
-      }
+  protected getListTypeWrapped(toWrap: string, type: GraphQLOutputType): string {
+    if (isNonNullType(type)) {
+      return this.getListTypeWrapped(toWrap, type.ofType);
     }
+
+    if (isListType(type)) {
+      const child = this.getListTypeWrapped(toWrap, type.ofType);
+      this._imports.add(Imports.List);
+
+      return `List<${child}>`;
+    }
+
+    return toWrap;
+  }
+
+  protected getListTypeNodeWrapped(toWrap: string, type: TypeNode): string {
+    if (type.kind === Kind.NON_NULL_TYPE) {
+      return this.getListTypeNodeWrapped(toWrap, type.type);
+    }
+
+    if (type.kind === Kind.LIST_TYPE) {
+      const child = this.getListTypeNodeWrapped(toWrap, type.type);
+      this._imports.add(Imports.List);
+
+      return `List<${child}>`;
+    }
+
+    return toWrap;
   }
 }

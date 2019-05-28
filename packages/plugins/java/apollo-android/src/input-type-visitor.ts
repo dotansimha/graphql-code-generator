@@ -1,7 +1,7 @@
 import { ParsedConfig, getBaseTypeNode, indent, indentMultiline } from '@graphql-codegen/visitor-plugin-common';
 import { JavaApolloAndroidPluginConfig } from './plugin';
 import { JavaDeclarationBlock, buildPackageNameFromPath } from '@graphql-codegen/java-common';
-import { InputObjectTypeDefinitionNode, GraphQLSchema, InputValueDefinitionNode, isScalarType, isInputObjectType, Kind, TypeNode, isEnumType } from 'graphql';
+import { InputObjectTypeDefinitionNode, GraphQLSchema, InputValueDefinitionNode, isScalarType, isInputObjectType, Kind, TypeNode, isEnumType, VariableDefinitionNode } from 'graphql';
 import { Imports } from './imports';
 import { BaseJavaVisitor, SCALAR_TO_WRITER_METHOD } from './base-java-visitor';
 import { VisitorConfig } from './visitor-config';
@@ -48,14 +48,37 @@ ${fields.map(field => indent(`this.${field.name.value} = ${field.name.value};`))
     return listItemCall ? `${writerMethod}($item)` : `${writerMethod}("${field.name.value}", ${field.name.value}${isNonNull ? '' : '.value'})`;
   }
 
+  protected getFieldWithTypePrefix(field: InputValueDefinitionNode | VariableDefinitionNode, wrapWith: string | null = null, applyNullable = false): string {
+    this._imports.add(Imports.Input);
+    const typeToUse = this.getJavaClass(this._schema.getType(getBaseTypeNode(field.type).name.value));
+    const isNonNull = field.type.kind === Kind.NON_NULL_TYPE;
+    const name = field.kind === Kind.INPUT_VALUE_DEFINITION ? field.name.value : field.variable.name.value;
+
+    if (isNonNull) {
+      this._imports.add(Imports.Nonnull);
+
+      return `@Nonnull ${typeToUse} ${name}`;
+    } else {
+      if (wrapWith) {
+        return `${wrapWith}<${typeToUse}> ${name}`;
+      } else {
+        if (applyNullable) {
+          this._imports.add(Imports.Nullable);
+        }
+        return `${applyNullable ? '@Nullable ' : ''}${typeToUse} ${name}`;
+      }
+    }
+  }
+
   private buildFieldsMarshaller(field: InputValueDefinitionNode): string {
     const isNonNull = field.type.kind === Kind.NON_NULL_TYPE;
     const isArray = field.type.kind === Kind.LIST_TYPE || (field.type.kind === Kind.NON_NULL_TYPE && field.type.type.kind === Kind.LIST_TYPE);
     const call = this.getFieldWriterCall(field, isArray);
     const baseTypeNode = getBaseTypeNode(field.type);
-    const listItemType = this.getActualType(this._schema.getType(baseTypeNode.name.value));
+    const listItemType = this.getJavaClass(this._schema.getType(baseTypeNode.name.value));
     let result = '';
 
+    // TODO: Refactor
     if (isArray) {
       result = `writer.writeList("${field.name.value}", ${field.name.value}.value != null ? new InputFieldWriter.ListWriter() {
   @Override

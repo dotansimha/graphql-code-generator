@@ -7,11 +7,10 @@ import javax.annotation.Generated;
 import com.apollographql.apollo.api.OperationName;
 import com.apollographql.apollo.api.Operation;
 import com.apollographql.apollo.api.ResponseFieldMapper;
-import com.apollographql.apollo.api.Input;
 import type.ModelTodoFilterInput;
-import javax.annotation.Nullable;
 import java.lang.Integer;
 import com.apollographql.apollo.api.ResponseField;
+import javax.annotation.Nullable;
 import javax.annotation.Nonnull;
 import java.util.Collections;
 import type.CustomType;
@@ -70,6 +69,10 @@ public final class ListTodosQuery implements Query<ListTodosQuery.Data, ListTodo
   
   public String operationId() {
     return "e7d954ccc0ea1bdc65aed226eeb8a504";
+  }
+  
+  public ListTodosQuery(ModelTodoFilterInput filter, Integer limit, String nextToken) {
+    this.variables = new ListTodosQuery.Variables(filter, limit, nextToken);
   }
   public static class Data implements Operation.Data {
     private final @Nullable ListTodos listTodos;
@@ -437,8 +440,4 @@ public final class ListTodosQuery implements Query<ListTodosQuery.Data, ListTodo
     }
   }
   
-  public ListTodosQuery(@Nullable ModelTodoFilterInput filter, @Nullable Integer limit, @Nullable String nextToken) {
-        
-    this.variables = new ListTodosQuery.Variables(filter, limit, nextToken);
-  }
 }
