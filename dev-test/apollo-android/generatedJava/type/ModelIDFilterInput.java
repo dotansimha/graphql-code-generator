@@ -1,4 +1,4 @@
-package undefined;
+package type;
 
 import com.apollographql.apollo.api.InputType;
 import javax.annotation.Generated;

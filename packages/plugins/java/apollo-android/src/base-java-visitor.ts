@@ -24,6 +24,10 @@ export class BaseJavaVisitor<Config extends VisitorConfig = any> extends BaseVis
     });
   }
 
+  public getPackage(): string {
+    return '';
+  }
+
   public getImports(): string[] {
     return Array.from(this._imports).map(imp => `import ${imp};`);
   }
@@ -42,7 +46,7 @@ export class BaseJavaVisitor<Config extends VisitorConfig = any> extends BaseVis
       typeToUse = scalar;
     } else if (isInputObjectType(schemaType)) {
       // Make sure to import it if it's in use
-      this._imports.add(`${this.config.inputPackage}.${schemaType.name}`);
+      this._imports.add(`${this.config.typePackage}.${schemaType.name}`);
     }
 
     return typeToUse;

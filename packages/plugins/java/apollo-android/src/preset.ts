@@ -1,6 +1,7 @@
 import { Types, toPascalCase } from '@graphql-codegen/plugin-helpers';
 import { visit, concatAST, InputObjectTypeDefinitionNode, DocumentNode, Kind, OperationDefinitionNode, FragmentDefinitionNode } from 'graphql';
 import { join } from 'path';
+import { FileType } from './file-type';
 
 export const preset: Types.OutputPreset = {
   buildGeneratesSection: options => {
@@ -28,12 +29,26 @@ export const preset: Types.OutputPreset = {
     }));
 
     return [
+      {
+        filename: join(outDir, 'type/CustomType.java'),
+        plugins: options.plugins,
+        pluginMap: options.pluginMap,
+        config: {
+          ...options.config,
+          fileType: FileType.CUSTOM_TYPES,
+        },
+        schema: options.schema,
+        documents: [],
+      },
       ...inputTypesDocumentNode.definitions.map((ast: InputObjectTypeDefinitionNode) => {
         return {
           filename: join(outDir, 'type/', ast.name.value + '.java'),
           plugins: options.plugins,
           pluginMap: options.pluginMap,
-          config: options.config,
+          config: {
+            ...options.config,
+            fileType: FileType.INPUT_TYPE,
+          },
           schema: options.schema,
           documents: [{ skipValidation: true, content: { kind: Kind.DOCUMENT, definitions: [ast] }, filePath: '' }],
         };
@@ -47,6 +62,7 @@ export const preset: Types.OutputPreset = {
           pluginMap: options.pluginMap,
           config: {
             ...options.config,
+            fileType: FileType.OPERATION,
             externalFragments,
           },
           schema: options.schema,
@@ -60,6 +76,7 @@ export const preset: Types.OutputPreset = {
           pluginMap: options.pluginMap,
           config: {
             ...options.config,
+            fileType: FileType.FRAGMENT,
             externalFragments,
           },
           schema: options.schema,

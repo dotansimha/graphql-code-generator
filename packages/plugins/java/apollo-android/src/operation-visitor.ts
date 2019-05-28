@@ -56,7 +56,7 @@ export class OperationVisitor extends BaseJavaVisitor<VisitorConfig> {
     super(_schema, rawConfig, {
       package: rawConfig.package || buildPackageNameFromPath(process.cwd()),
       fragmentPackage: rawConfig.fragmentPackage || 'fragment',
-      inputPackage: rawConfig.typePackage || 'type',
+      typePackage: rawConfig.typePackage || 'type',
     });
   }
 
@@ -65,6 +65,10 @@ export class OperationVisitor extends BaseJavaVisitor<VisitorConfig> {
       .replace(/\r?\n|\r/g, ' ')
       .replace(/"/g, '\\"')
       .trim();
+  }
+
+  public getPackage(): string {
+    return this.config.package;
   }
 
   private addCtor(className: string, node: OperationDefinitionNode, cls: JavaDeclarationBlock): void {
@@ -548,7 +552,7 @@ ${indentMultiline(inner, 2)}
       } else if (baseType.name === 'Boolean') {
         return { fn: `forBoolean` };
       } else {
-        this._imports.add(`${this.config.inputPackage}.CustomType`);
+        this._imports.add(`${this.config.typePackage}.CustomType`);
         return { fn: `forCustomType`, custom: true };
       }
     } else if (isEnumType(baseType)) {

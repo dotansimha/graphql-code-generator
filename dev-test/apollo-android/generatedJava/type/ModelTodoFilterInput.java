@@ -1,11 +1,11 @@
-package undefined;
+package type;
 
 import com.apollographql.apollo.api.InputType;
 import javax.annotation.Generated;
 import com.apollographql.apollo.api.Input;
-import .Users.dotansimha.Dev.graphql-code-generator.dev-test.apollo-android.ModelIDFilterInput;
-import .Users.dotansimha.Dev.graphql-code-generator.dev-test.apollo-android.ModelStringFilterInput;
-import .Users.dotansimha.Dev.graphql-code-generator.dev-test.apollo-android.ModelTodoFilterInput;
+import type.ModelIDFilterInput;
+import type.ModelStringFilterInput;
+import type.ModelTodoFilterInput;
 import javax.annotation.Nullable;
 import java.lang.Override;
 import java.io.IOException;

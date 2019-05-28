@@ -9,8 +9,12 @@ import { VisitorConfig } from './visitor-config';
 export class InputTypeVisitor extends BaseJavaVisitor<VisitorConfig> {
   constructor(_schema: GraphQLSchema, rawConfig: JavaApolloAndroidPluginConfig) {
     super(_schema, rawConfig, {
-      inputPackage: rawConfig.typePackage || buildPackageNameFromPath(process.cwd()),
+      typePackage: rawConfig.typePackage || 'type',
     });
+  }
+
+  public getPackage(): string {
+    return this.config.typePackage;
   }
 
   private buildInputPrivateFields(fields: ReadonlyArray<InputValueDefinitionNode>): string[] {
