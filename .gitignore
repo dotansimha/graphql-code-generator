@@ -10,4 +10,4 @@ website/i18n
 website/static/live-demo
 temp
 test-results/
-
+junit.xml
