@@ -2,13 +2,13 @@ package type;
 
 import com.apollographql.apollo.api.InputType;
 import javax.annotation.Generated;
-import com.apollographql.apollo.api.Input;
 import java.lang.Float;
-import javax.annotation.Nullable;
+import java.util.List;
 import java.lang.Override;
 import java.io.IOException;
 import com.apollographql.apollo.api.InputFieldWriter;
 import com.apollographql.apollo.api.InputFieldMarshaller;
+import com.apollographql.apollo.api.Input;
 
 @Generated("Apollo GraphQL")
 public final class ModelFloatFilterInput implements InputType {
@@ -20,9 +20,44 @@ public final class ModelFloatFilterInput implements InputType {
   private final Input<Float> gt;
   private final Input<Float> contains;
   private final Input<Float> notContains;
-  private final Input<Float> between;
-
-  ModelFloatFilterInput(Input<Float> ne, Input<Float> eq, Input<Float> le, Input<Float> lt, Input<Float> ge, Input<Float> gt, Input<Float> contains, Input<Float> notContains, Input<Float> between) {
+  private final Input<List<Float>> between;
+  public Input<Float> ne() {
+    return this.ne;
+  }
+  
+  public Input<Float> eq() {
+    return this.eq;
+  }
+  
+  public Input<Float> le() {
+    return this.le;
+  }
+  
+  public Input<Float> lt() {
+    return this.lt;
+  }
+  
+  public Input<Float> ge() {
+    return this.ge;
+  }
+  
+  public Input<Float> gt() {
+    return this.gt;
+  }
+  
+  public Input<Float> contains() {
+    return this.contains;
+  }
+  
+  public Input<Float> notContains() {
+    return this.notContains;
+  }
+  
+  public Input<List<Float>> between() {
+    return this.between;
+  }
+  
+  public ModelFloatFilterInput(Input<Float> ne, Input<Float> eq, Input<Float> le, Input<Float> lt, Input<Float> ge, Input<Float> gt, Input<Float> contains, Input<Float> notContains, Input<List<Float>> between) {
     this.ne = ne;
     this.eq = eq;
     this.le = le;
@@ -33,19 +68,10 @@ public final class ModelFloatFilterInput implements InputType {
     this.notContains = notContains;
     this.between = between;
   }
-
-  public @Nullable Input<Float> ne() { return this.ne; }
-  public @Nullable Input<Float> eq() { return this.eq; }
-  public @Nullable Input<Float> le() { return this.le; }
-  public @Nullable Input<Float> lt() { return this.lt; }
-  public @Nullable Input<Float> ge() { return this.ge; }
-  public @Nullable Input<Float> gt() { return this.gt; }
-  public @Nullable Input<Float> contains() { return this.contains; }
-  public @Nullable Input<Float> notContains() { return this.notContains; }
-  public @Nullable Input<Float> between() { return this.between; }
-
-  public static Builder builder() { return new Builder(); }
-
+  
+  public static Builder builder() {
+    return new Builder();
+  }
   @Override
   public InputFieldMarshaller marshaller() {
     return new InputFieldMarshaller() {

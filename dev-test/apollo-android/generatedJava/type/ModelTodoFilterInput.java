@@ -2,26 +2,49 @@ package type;
 
 import com.apollographql.apollo.api.InputType;
 import javax.annotation.Generated;
-import com.apollographql.apollo.api.Input;
 import type.ModelIDFilterInput;
 import type.ModelStringFilterInput;
 import type.ModelTodoFilterInput;
-import javax.annotation.Nullable;
+import java.util.List;
 import java.lang.Override;
 import java.io.IOException;
 import com.apollographql.apollo.api.InputFieldWriter;
 import com.apollographql.apollo.api.InputFieldMarshaller;
+import com.apollographql.apollo.api.Input;
 
 @Generated("Apollo GraphQL")
 public final class ModelTodoFilterInput implements InputType {
   private final Input<ModelIDFilterInput> id;
   private final Input<ModelStringFilterInput> name;
   private final Input<ModelStringFilterInput> description;
-  private final Input<ModelTodoFilterInput> and;
-  private final Input<ModelTodoFilterInput> or;
+  private final Input<List<ModelTodoFilterInput>> and;
+  private final Input<List<ModelTodoFilterInput>> or;
   private final Input<ModelTodoFilterInput> not;
-
-  ModelTodoFilterInput(Input<ModelIDFilterInput> id, Input<ModelStringFilterInput> name, Input<ModelStringFilterInput> description, Input<ModelTodoFilterInput> and, Input<ModelTodoFilterInput> or, Input<ModelTodoFilterInput> not) {
+  public Input<ModelIDFilterInput> id() {
+    return this.id;
+  }
+  
+  public Input<ModelStringFilterInput> name() {
+    return this.name;
+  }
+  
+  public Input<ModelStringFilterInput> description() {
+    return this.description;
+  }
+  
+  public Input<List<ModelTodoFilterInput>> and() {
+    return this.and;
+  }
+  
+  public Input<List<ModelTodoFilterInput>> or() {
+    return this.or;
+  }
+  
+  public Input<ModelTodoFilterInput> not() {
+    return this.not;
+  }
+  
+  public ModelTodoFilterInput(Input<ModelIDFilterInput> id, Input<ModelStringFilterInput> name, Input<ModelStringFilterInput> description, Input<List<ModelTodoFilterInput>> and, Input<List<ModelTodoFilterInput>> or, Input<ModelTodoFilterInput> not) {
     this.id = id;
     this.name = name;
     this.description = description;
@@ -29,16 +52,10 @@ public final class ModelTodoFilterInput implements InputType {
     this.or = or;
     this.not = not;
   }
-
-  public @Nullable Input<ModelIDFilterInput> id() { return this.id; }
-  public @Nullable Input<ModelStringFilterInput> name() { return this.name; }
-  public @Nullable Input<ModelStringFilterInput> description() { return this.description; }
-  public @Nullable Input<ModelTodoFilterInput> and() { return this.and; }
-  public @Nullable Input<ModelTodoFilterInput> or() { return this.or; }
-  public @Nullable Input<ModelTodoFilterInput> not() { return this.not; }
-
-  public static Builder builder() { return new Builder(); }
-
+  
+  public static Builder builder() {
+    return new Builder();
+  }
   @Override
   public InputFieldMarshaller marshaller() {
     return new InputFieldMarshaller() {

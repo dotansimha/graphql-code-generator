@@ -2,14 +2,13 @@ package type;
 
 import com.apollographql.apollo.api.InputType;
 import javax.annotation.Generated;
-import com.apollographql.apollo.api.Input;
 import java.lang.String;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.lang.Override;
 import java.io.IOException;
 import com.apollographql.apollo.api.InputFieldWriter;
 import com.apollographql.apollo.api.InputFieldMarshaller;
+import com.apollographql.apollo.api.Input;
+import javax.annotation.Nonnull;
 import com.apollographql.apollo.api.internal.Utils;
 
 @Generated("Apollo GraphQL")
@@ -17,19 +16,27 @@ public final class UpdateTodoInput implements InputType {
   private final @Nonnull String id;
   private final Input<String> name;
   private final Input<String> description;
-
-  UpdateTodoInput(@Nonnull String id, Input<String> name, Input<String> description) {
+  public @Nonnull String id() {
+    return this.id;
+  }
+  
+  public Input<String> name() {
+    return this.name;
+  }
+  
+  public Input<String> description() {
+    return this.description;
+  }
+  
+  public UpdateTodoInput(@Nonnull String id, Input<String> name, Input<String> description) {
     this.id = id;
     this.name = name;
     this.description = description;
   }
-
-  public @Nonnull String id() { return this.id; }
-  public @Nullable Input<String> name() { return this.name; }
-  public @Nullable Input<String> description() { return this.description; }
-
-  public static Builder builder() { return new Builder(); }
-
+  
+  public static Builder builder() {
+    return new Builder();
+  }
   @Override
   public InputFieldMarshaller marshaller() {
     return new InputFieldMarshaller() {

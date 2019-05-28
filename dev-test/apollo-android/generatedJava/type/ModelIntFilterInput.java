@@ -2,13 +2,13 @@ package type;
 
 import com.apollographql.apollo.api.InputType;
 import javax.annotation.Generated;
-import com.apollographql.apollo.api.Input;
 import java.lang.Integer;
-import javax.annotation.Nullable;
+import java.util.List;
 import java.lang.Override;
 import java.io.IOException;
 import com.apollographql.apollo.api.InputFieldWriter;
 import com.apollographql.apollo.api.InputFieldMarshaller;
+import com.apollographql.apollo.api.Input;
 
 @Generated("Apollo GraphQL")
 public final class ModelIntFilterInput implements InputType {
@@ -20,9 +20,44 @@ public final class ModelIntFilterInput implements InputType {
   private final Input<Integer> gt;
   private final Input<Integer> contains;
   private final Input<Integer> notContains;
-  private final Input<Integer> between;
-
-  ModelIntFilterInput(Input<Integer> ne, Input<Integer> eq, Input<Integer> le, Input<Integer> lt, Input<Integer> ge, Input<Integer> gt, Input<Integer> contains, Input<Integer> notContains, Input<Integer> between) {
+  private final Input<List<Integer>> between;
+  public Input<Integer> ne() {
+    return this.ne;
+  }
+  
+  public Input<Integer> eq() {
+    return this.eq;
+  }
+  
+  public Input<Integer> le() {
+    return this.le;
+  }
+  
+  public Input<Integer> lt() {
+    return this.lt;
+  }
+  
+  public Input<Integer> ge() {
+    return this.ge;
+  }
+  
+  public Input<Integer> gt() {
+    return this.gt;
+  }
+  
+  public Input<Integer> contains() {
+    return this.contains;
+  }
+  
+  public Input<Integer> notContains() {
+    return this.notContains;
+  }
+  
+  public Input<List<Integer>> between() {
+    return this.between;
+  }
+  
+  public ModelIntFilterInput(Input<Integer> ne, Input<Integer> eq, Input<Integer> le, Input<Integer> lt, Input<Integer> ge, Input<Integer> gt, Input<Integer> contains, Input<Integer> notContains, Input<List<Integer>> between) {
     this.ne = ne;
     this.eq = eq;
     this.le = le;
@@ -33,19 +68,10 @@ public final class ModelIntFilterInput implements InputType {
     this.notContains = notContains;
     this.between = between;
   }
-
-  public @Nullable Input<Integer> ne() { return this.ne; }
-  public @Nullable Input<Integer> eq() { return this.eq; }
-  public @Nullable Input<Integer> le() { return this.le; }
-  public @Nullable Input<Integer> lt() { return this.lt; }
-  public @Nullable Input<Integer> ge() { return this.ge; }
-  public @Nullable Input<Integer> gt() { return this.gt; }
-  public @Nullable Input<Integer> contains() { return this.contains; }
-  public @Nullable Input<Integer> notContains() { return this.notContains; }
-  public @Nullable Input<Integer> between() { return this.between; }
-
-  public static Builder builder() { return new Builder(); }
-
+  
+  public static Builder builder() {
+    return new Builder();
+  }
   @Override
   public InputFieldMarshaller marshaller() {
     return new InputFieldMarshaller() {

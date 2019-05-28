@@ -1,10 +1,10 @@
 import { Imports } from './imports';
-import { BaseVisitor, ParsedConfig, getBaseTypeNode } from '@graphql-codegen/visitor-plugin-common';
+import { BaseVisitor, ParsedConfig, getBaseTypeNode, getBaseType } from '@graphql-codegen/visitor-plugin-common';
 import { JavaApolloAndroidPluginConfig } from './plugin';
 import { JAVA_SCALARS } from '@graphql-codegen/java-common';
 import { GraphQLSchema, isScalarType, isInputObjectType, InputValueDefinitionNode, Kind, VariableDefinitionNode, GraphQLNamedType, GraphQLOutputType, isNonNullType, isListType, TypeNode } from 'graphql';
 import { VisitorConfig } from './visitor-config';
-import { ImportsSet } from './types';
+import { ImportsSet, TransformedType } from './types';
 
 export const SCALAR_TO_WRITER_METHOD = {
   ID: 'writeString',
@@ -13,6 +13,10 @@ export const SCALAR_TO_WRITER_METHOD = {
   Boolean: 'writeBoolean',
   Float: 'writeDouble',
 };
+
+function isTypeNode(type: TypeNode | GraphQLOutputType): type is TypeNode {
+  return type && type['kind'];
+}
 
 export class BaseJavaVisitor<Config extends VisitorConfig = any> extends BaseVisitor<JavaApolloAndroidPluginConfig, Config> {
   protected _imports: ImportsSet = new Set<string>();
@@ -30,6 +34,32 @@ export class BaseJavaVisitor<Config extends VisitorConfig = any> extends BaseVis
 
   public getImports(): string[] {
     return Array.from(this._imports).map(imp => `import ${imp};`);
+  }
+
+  protected transformType(type: TypeNode | GraphQLOutputType): TransformedType {
+    let schemaType: GraphQLNamedType;
+    let isNonNull: boolean;
+
+    if (isTypeNode(type)) {
+      const baseTypeNode = getBaseTypeNode(type as TypeNode);
+      schemaType = this._schema.getType(baseTypeNode.name.value);
+      isNonNull = type.kind === Kind.NON_NULL_TYPE;
+    } else {
+      schemaType = this._schema.getType(getBaseType(type).name);
+      isNonNull = isNonNullType(type);
+    }
+
+    const javaType = this.getJavaClass(schemaType);
+    const annotation = isNonNull ? 'Nonnull' : 'Nullable';
+    const typeToUse = isTypeNode(type) ? this.getListTypeNodeWrapped(javaType, type) : this.getListTypeWrapped(javaType, type);
+
+    return {
+      baseType: schemaType.name,
+      javaType,
+      isNonNull,
+      annotation,
+      typeToUse,
+    };
   }
 
   // Replaces a GraphQL type with a Java class

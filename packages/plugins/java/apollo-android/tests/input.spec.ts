@@ -3,6 +3,7 @@ import { buildSchema, Kind } from 'graphql';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { plugin } from '../src/plugin';
 import { validateJava } from '../../common/tests/validate-java';
+import { FileType } from '../src/file-type';
 
 describe('java-apollo-android', () => {
   describe('Input Types', () => {
@@ -23,7 +24,7 @@ describe('java-apollo-android', () => {
         f: String
       }
     `);
-    const config = { typePackage: 'com.app.generated.graphql' };
+    const config = { typePackage: 'com.app.generated.graphql', fragmentPackage: 'com.app.generated.graphql.fragment', package: 'com.app.generated.graphql', fileType: FileType.INPUT_TYPE };
     const files: Types.DocumentFile[] = [{ content: { kind: Kind.DOCUMENT, definitions: [schema.getType('MyInput').astNode] }, filePath: '' }];
 
     it('Should produce valid Java code', async () => {
@@ -99,45 +100,39 @@ describe('java-apollo-android', () => {
       const result = (await plugin(schema, files, config)) as Types.ComplexPluginOutput;
       const output = mergeOutputs([result]);
 
-      expect(output).toBeSimilarStringTo(`      public static final class Builder {
+      expect(output).toBeSimilarStringTo(`public static final class Builder {`);
+      expect(output).toBeSimilarStringTo(`
         private @Nonnull Integer foo;
         private Input<String> bar = Input.absent();
         private @Nonnull Boolean something;
         private Input<NestedInput> nested = Input.absent();
-        private Input<List<String>> testArr = Input.absent();
-      
-        Builder() {}
-        
-        public Builder foo(@Nonnull Integer foo) {
-          this.foo = foo;
-          return this;
-        }
-        
-        public Builder bar(@Nullable String bar) {
-          this.bar = Input.fromNullable(bar);
-          return this;
-        }
-        
-        public Builder something(@Nonnull Boolean something) {
-          this.something = something;
-          return this;
-        }
-        
-        public Builder nested(@Nullable NestedInput nested) {
-          this.nested = Input.fromNullable(nested);
-          return this;
-        }
-        
-        public Builder testArr(@Nullable List<String> testArr) {
-          this.testArr = Input.fromNullable(testArr);
-          return this;
-        }
-      
-        public MyInput build() {
-          Utils.checkNotNull(foo, "foo == null");
-          Utils.checkNotNull(something, "something == null");
-          return new MyInput(foo, bar, something, nested, testArr);
-        }
+        private Input<String> testArr = Input.absent();
+      `);
+      expect(output).toBeSimilarStringTo(`Builder() {}`);
+      expect(output).toBeSimilarStringTo(`public Builder foo(@Nonnull Integer foo) {
+        this.foo = foo;
+        return this;
+      }`);
+      expect(output).toBeSimilarStringTo(`public Builder bar(@Nullable String bar) {
+        this.bar = Input.fromNullable(bar);
+        return this;
+      }`);
+      expect(output).toBeSimilarStringTo(`public Builder something(@Nonnull Boolean something) {
+        this.something = something;
+        return this;
+      }`);
+      expect(output).toBeSimilarStringTo(`public Builder nested(@Nullable NestedInput nested) {
+        this.nested = Input.fromNullable(nested);
+        return this;
+      }`);
+      expect(output).toBeSimilarStringTo(`public Builder testArr(@Nullable String testArr) {
+        this.testArr = Input.fromNullable(testArr);
+        return this;
+      }`);
+      expect(output).toBeSimilarStringTo(`public MyInput build() {
+        Utils.checkNotNull(foo, "foo == null");
+        Utils.checkNotNull(something, "something == null");
+        return new MyInput(foo, bar, something, nested, testArr);
       }`);
     });
 

@@ -1,7 +1,7 @@
-import { ParsedConfig, getBaseTypeNode, indent, indentMultiline } from '@graphql-codegen/visitor-plugin-common';
+import { getBaseTypeNode, indent, indentMultiline } from '@graphql-codegen/visitor-plugin-common';
 import { JavaApolloAndroidPluginConfig } from './plugin';
-import { JavaDeclarationBlock, buildPackageNameFromPath } from '@graphql-codegen/java-common';
-import { InputObjectTypeDefinitionNode, GraphQLSchema, InputValueDefinitionNode, isScalarType, isInputObjectType, Kind, TypeNode, isEnumType, VariableDefinitionNode } from 'graphql';
+import { JavaDeclarationBlock } from '@graphql-codegen/java-common';
+import { InputObjectTypeDefinitionNode, GraphQLSchema, InputValueDefinitionNode, isScalarType, isInputObjectType, Kind, isEnumType, VariableDefinitionNode } from 'graphql';
 import { Imports } from './imports';
 import { BaseJavaVisitor, SCALAR_TO_WRITER_METHOD } from './base-java-visitor';
 import { VisitorConfig } from './visitor-config';
@@ -17,22 +17,39 @@ export class InputTypeVisitor extends BaseJavaVisitor<VisitorConfig> {
     return this.config.typePackage;
   }
 
-  private buildInputPrivateFields(fields: ReadonlyArray<InputValueDefinitionNode>): string[] {
-    return fields
-      .map<string>(field => {
-        const fieldType = this.getFieldWithTypePrefix(field, 'Input');
+  private addInputMembers(cls: JavaDeclarationBlock, fields: ReadonlyArray<InputValueDefinitionNode>): void {
+    fields.forEach(field => {
+      const type = this.transformType(field.type);
+      const actualType = type.isNonNull ? type.typeToUse : `Input<${type.typeToUse}>`;
+      const annotations = type.isNonNull ? [type.annotation] : [];
+      this._imports.add(Imports[type.annotation]);
 
-        return `private final ${fieldType};`;
-      })
-      .map(s => indent(s));
+      cls.addClassMember(field.name.value, actualType, null, annotations, 'private', { final: true });
+      cls.addClassMethod(field.name.value, actualType, `return this.${field.name.value};`, [], [type.annotation], 'public');
+    });
   }
 
-  private buildInputCtor(className: string, fields: ReadonlyArray<InputValueDefinitionNode>): string {
-    const mappedFields = fields.map<string>(field => this.getFieldWithTypePrefix(field, 'Input'));
+  private addInputCtor(cls: JavaDeclarationBlock, className: string, fields: ReadonlyArray<InputValueDefinitionNode>): void {
+    const impl = fields.map(field => `this.${field.name.value} = ${field.name.value};`).join('\n');
 
-    return indentMultiline(`${className}(${mappedFields.join(', ')}) {
-${fields.map(field => indent(`this.${field.name.value} = ${field.name.value};`)).join('\n')}
-}`);
+    cls.addClassMethod(
+      className,
+      null,
+      impl,
+      fields.map(f => {
+        const type = this.transformType(f.type);
+        const actualType = type.isNonNull ? type.typeToUse : `Input<${type.typeToUse}>`;
+        this._imports.add(Imports[type.annotation]);
+
+        return {
+          name: f.name.value,
+          type: actualType,
+          annotations: type.isNonNull ? [type.annotation] : [],
+        };
+      }),
+      [],
+      'public'
+    );
   }
 
   private getFieldWriterCall(field: InputValueDefinitionNode, listItemCall = false): string {
@@ -172,43 +189,29 @@ ${nonNullFields.join('\n')}
     );
   }
 
-  private buildInputGetters(fields: ReadonlyArray<InputValueDefinitionNode>): string[] {
-    return fields
-      .map<string>(field => {
-        this._imports.add(Imports.Input);
-        const fieldType = this.getFieldWithTypePrefix(field, 'Input');
-        const isNullable = field.type.kind !== Kind.NON_NULL_TYPE;
-
-        if (isNullable) {
-          this._imports.add(Imports.Nullable);
-        }
-
-        return `public ${isNullable ? '@Nullable ' : ''}${fieldType}() { return this.${field.name.value}; }`;
-      })
-      .map(s => indent(s));
-  }
-
   InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode): string {
     const className = node.name.value;
     this._imports.add(Imports.InputType);
     this._imports.add(Imports.Generated);
 
-    const privateFields = this.buildInputPrivateFields(node.fields);
-    const ctor = this.buildInputCtor(className, node.fields);
-    const getters = this.buildInputGetters(node.fields);
-    const builderGetter = indent(`public static Builder builder() { return new Builder(); }`);
-    const marshallerOverride = this.buildMarshallerOverride(node.fields);
-    const builderClass = this.buildBuilderNestedClass(className, node.fields);
-
-    const classBlock = [...privateFields, '', ctor, '', ...getters, '', builderGetter, '', marshallerOverride, '', builderClass].join('\n');
-
-    return new JavaDeclarationBlock()
+    const cls = new JavaDeclarationBlock()
       .annotate([`Generated("Apollo GraphQL")`])
       .access('public')
       .final()
       .asKind('class')
       .withName(className)
-      .withBlock(classBlock)
-      .implements(['InputType']).string;
+      .implements(['InputType']);
+
+    this.addInputMembers(cls, node.fields);
+    this.addInputCtor(cls, className, node.fields);
+    cls.addClassMethod('builder', 'Builder', 'return new Builder();', [], [], 'public', { static: true });
+    const marshallerOverride = this.buildMarshallerOverride(node.fields);
+    const builderClass = this.buildBuilderNestedClass(className, node.fields);
+
+    const classBlock = [marshallerOverride, '', builderClass].join('\n');
+
+    cls.withBlock(classBlock);
+
+    return cls.string;
   }
 }

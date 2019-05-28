@@ -2,13 +2,13 @@ package type;
 
 import com.apollographql.apollo.api.InputType;
 import javax.annotation.Generated;
-import com.apollographql.apollo.api.Input;
 import java.lang.String;
-import javax.annotation.Nullable;
+import java.util.List;
 import java.lang.Override;
 import java.io.IOException;
 import com.apollographql.apollo.api.InputFieldWriter;
 import com.apollographql.apollo.api.InputFieldMarshaller;
+import com.apollographql.apollo.api.Input;
 
 @Generated("Apollo GraphQL")
 public final class ModelIDFilterInput implements InputType {
@@ -20,10 +20,49 @@ public final class ModelIDFilterInput implements InputType {
   private final Input<String> gt;
   private final Input<String> contains;
   private final Input<String> notContains;
-  private final Input<String> between;
+  private final Input<List<String>> between;
   private final Input<String> beginsWith;
-
-  ModelIDFilterInput(Input<String> ne, Input<String> eq, Input<String> le, Input<String> lt, Input<String> ge, Input<String> gt, Input<String> contains, Input<String> notContains, Input<String> between, Input<String> beginsWith) {
+  public Input<String> ne() {
+    return this.ne;
+  }
+  
+  public Input<String> eq() {
+    return this.eq;
+  }
+  
+  public Input<String> le() {
+    return this.le;
+  }
+  
+  public Input<String> lt() {
+    return this.lt;
+  }
+  
+  public Input<String> ge() {
+    return this.ge;
+  }
+  
+  public Input<String> gt() {
+    return this.gt;
+  }
+  
+  public Input<String> contains() {
+    return this.contains;
+  }
+  
+  public Input<String> notContains() {
+    return this.notContains;
+  }
+  
+  public Input<List<String>> between() {
+    return this.between;
+  }
+  
+  public Input<String> beginsWith() {
+    return this.beginsWith;
+  }
+  
+  public ModelIDFilterInput(Input<String> ne, Input<String> eq, Input<String> le, Input<String> lt, Input<String> ge, Input<String> gt, Input<String> contains, Input<String> notContains, Input<List<String>> between, Input<String> beginsWith) {
     this.ne = ne;
     this.eq = eq;
     this.le = le;
@@ -35,20 +74,10 @@ public final class ModelIDFilterInput implements InputType {
     this.between = between;
     this.beginsWith = beginsWith;
   }
-
-  public @Nullable Input<String> ne() { return this.ne; }
-  public @Nullable Input<String> eq() { return this.eq; }
-  public @Nullable Input<String> le() { return this.le; }
-  public @Nullable Input<String> lt() { return this.lt; }
-  public @Nullable Input<String> ge() { return this.ge; }
-  public @Nullable Input<String> gt() { return this.gt; }
-  public @Nullable Input<String> contains() { return this.contains; }
-  public @Nullable Input<String> notContains() { return this.notContains; }
-  public @Nullable Input<String> between() { return this.between; }
-  public @Nullable Input<String> beginsWith() { return this.beginsWith; }
-
-  public static Builder builder() { return new Builder(); }
-
+  
+  public static Builder builder() {
+    return new Builder();
+  }
   @Override
   public InputFieldMarshaller marshaller() {
     return new InputFieldMarshaller() {
