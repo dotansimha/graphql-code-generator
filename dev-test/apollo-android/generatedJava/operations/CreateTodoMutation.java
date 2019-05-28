@@ -233,7 +233,7 @@ public final class CreateTodoMutation implements Mutation<CreateTodoMutation.Dat
       @Override
        public CreateTodo map(ResponseReader reader) {
         final String __typename = reader.readString($responseFields[0]);
-        final String id = reader.readCustomType($responseFields[1]);
+        final String id = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[1]);
         final String name = reader.readString($responseFields[2]);
         final String description = reader.readString($responseFields[3]);
         return new CreateTodo(__typename, id, name, description);

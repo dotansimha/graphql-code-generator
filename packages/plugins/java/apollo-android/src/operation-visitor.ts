@@ -479,7 +479,7 @@ ${indentMultiline(inner, 2)}
 
         return `${varDec} reader.readList($responseFields[${index}], ${wrappedList});`;
       } else {
-        return `${varDec} reader.${readerFn}($responseFields[${index}]);`;
+        return `${varDec} reader.${readerFn}(${readerFn === 'readCustomType' ? '(ResponseField.CustomTypeField) ' : ''}$responseFields[${index}]);`;
       }
     });
 

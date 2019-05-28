@@ -233,7 +233,7 @@ public final class DeleteTodoMutation implements Mutation<DeleteTodoMutation.Dat
       @Override
        public DeleteTodo map(ResponseReader reader) {
         final String __typename = reader.readString($responseFields[0]);
-        final String id = reader.readCustomType($responseFields[1]);
+        final String id = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[1]);
         final String name = reader.readString($responseFields[2]);
         final String description = reader.readString($responseFields[3]);
         return new DeleteTodo(__typename, id, name, description);

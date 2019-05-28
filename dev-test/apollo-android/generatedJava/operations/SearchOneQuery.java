@@ -234,7 +234,7 @@ public final class SearchOneQuery implements Query<SearchOneQuery.Data, SearchOn
       @Override
        public SearchOne map(ResponseReader reader) {
         final String __typename = reader.readString($responseFields[0]);
-        final String id = reader.readCustomType($responseFields[1]);
+        final String id = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[1]);
         final AsB asB = reader.readObject($responseFields[2]);
         final AsA asA = reader.readObject($responseFields[3]);
         return new SearchOne(__typename, id, asB, asA);
@@ -330,7 +330,7 @@ public final class SearchOneQuery implements Query<SearchOneQuery.Data, SearchOn
       @Override
        public AsB map(ResponseReader reader) {
         final String __typename = reader.readString($responseFields[0]);
-        final String id = reader.readCustomType($responseFields[1]);
+        final String id = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[1]);
         final String b = reader.readString($responseFields[2]);
         return new AsB(__typename, id, b);
       }
@@ -425,7 +425,7 @@ public final class SearchOneQuery implements Query<SearchOneQuery.Data, SearchOn
       @Override
        public AsA map(ResponseReader reader) {
         final String __typename = reader.readString($responseFields[0]);
-        final String id = reader.readCustomType($responseFields[1]);
+        final String id = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[1]);
         final String a = reader.readString($responseFields[2]);
         return new AsA(__typename, id, a);
       }
