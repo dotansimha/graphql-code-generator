@@ -305,3 +305,4 @@ public final class DeleteTodoMutation implements Mutation<DeleteTodoMutation.Dat
   }
   
 }
+

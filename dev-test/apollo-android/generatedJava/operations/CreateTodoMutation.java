@@ -305,3 +305,4 @@ public final class CreateTodoMutation implements Mutation<CreateTodoMutation.Dat
   }
   
 }
+

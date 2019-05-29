@@ -289,3 +289,4 @@ public final class OnUpdateTodoSubscription implements Subscription<OnUpdateTodo
   }
   
 }
+

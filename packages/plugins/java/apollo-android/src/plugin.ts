@@ -5,6 +5,7 @@ import { InputTypeVisitor } from './input-type-visitor';
 import { BaseJavaVisitor } from './base-java-visitor';
 import { OperationVisitor } from './operation-visitor';
 import { FileType } from './file-type';
+import { CustomTypeClassVisitor } from './custom-type-class';
 
 export interface JavaApolloAndroidPluginConfig extends RawConfig {
   package?: string;
@@ -14,7 +15,7 @@ export interface JavaApolloAndroidPluginConfig extends RawConfig {
 }
 
 export const plugin: PluginFunction<JavaApolloAndroidPluginConfig> = (schema: GraphQLSchema, asts: Types.DocumentFile[], config: JavaApolloAndroidPluginConfig): Types.PluginOutput => {
-  const allAst = concatAST(asts.reduce((prev, v) => [...prev, v.content], []));
+  let allAst = concatAST(asts.reduce((prev, v) => [...prev, v.content], []));
   const allFragments: LoadedFragment[] = [
     ...(allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[]).map(fragmentDef => ({ node: fragmentDef, name: fragmentDef.name.value, onType: fragmentDef.typeCondition.name.value, isExternal: false })),
     ...(config.externalFragments || []),
@@ -32,7 +33,7 @@ export const plugin: PluginFunction<JavaApolloAndroidPluginConfig> = (schema: Gr
       break;
     }
     case FileType.CUSTOM_TYPES: {
-      // TODO: this
+      visitor = new CustomTypeClassVisitor(schema, config);
       break;
     }
   }
@@ -42,9 +43,11 @@ export const plugin: PluginFunction<JavaApolloAndroidPluginConfig> = (schema: Gr
   }
 
   const visitResult = visit(allAst, visitor as any);
+  const additionalContent = visitor.additionalContent();
+  const imports = visitor.getImports();
 
   return {
-    prepend: [`package ${visitor.getPackage()};\n`, ...visitor.getImports()],
-    content: '\n' + visitResult.definitions.filter(a => a && typeof a === 'string').join('\n'),
+    prepend: [`package ${visitor.getPackage()};\n`, ...imports],
+    content: '\n' + [...visitResult.definitions.filter(a => a && typeof a === 'string'), additionalContent].join('\n'),
   };
 };

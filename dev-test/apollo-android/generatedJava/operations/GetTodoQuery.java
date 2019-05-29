@@ -304,3 +304,4 @@ public final class GetTodoQuery implements Query<GetTodoQuery.Data, GetTodoQuery
   }
   
 }
+

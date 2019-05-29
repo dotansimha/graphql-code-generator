@@ -68,3 +68,4 @@ public final class ModelBooleanFilterInput implements InputType {
   }
   
 }
+

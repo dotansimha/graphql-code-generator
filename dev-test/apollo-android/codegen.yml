@@ -9,5 +9,7 @@ generates:
     preset: java-apollo-android
     config:
       package: com.app.generated.graphql
+      scalars:
+        AWSDate: Long
     plugins:
       - java-apollo-android

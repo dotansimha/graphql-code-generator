@@ -181,3 +181,4 @@ public final class ModelFloatFilterInput implements InputType {
   }
   
 }
+

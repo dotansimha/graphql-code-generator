@@ -289,3 +289,4 @@ public final class OnDeleteTodoSubscription implements Subscription<OnDeleteTodo
   }
   
 }
+

@@ -145,3 +145,4 @@ public final class ModelTodoFilterInput implements InputType {
   }
   
 }
+

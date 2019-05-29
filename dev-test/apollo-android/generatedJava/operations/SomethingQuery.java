@@ -184,3 +184,4 @@ public final class SomethingQuery implements Query<SomethingQuery.Data, Somethin
   }
   
 }
+

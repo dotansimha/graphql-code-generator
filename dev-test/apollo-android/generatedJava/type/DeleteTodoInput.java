@@ -53,3 +53,4 @@ public final class DeleteTodoInput implements InputType {
   }
   
 }
+

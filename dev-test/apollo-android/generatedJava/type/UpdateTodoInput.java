@@ -83,3 +83,4 @@ public final class UpdateTodoInput implements InputType {
   }
   
 }
+

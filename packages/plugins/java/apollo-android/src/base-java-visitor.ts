@@ -32,6 +32,10 @@ export class BaseJavaVisitor<Config extends VisitorConfig = any> extends BaseVis
     return '';
   }
 
+  public additionalContent(): string {
+    return '';
+  }
+
   public getImports(): string[] {
     return Array.from(this._imports).map(imp => `import ${imp};`);
   }
