@@ -665,7 +665,6 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     }
 
     const type = this.getTypeToUse((node.name as any) as string);
-
     const possibleTypes = implementingTypes.map(name => `'${name}'`).join(' | ') || 'null';
 
     return new DeclarationBlock(this._declarationBlockConfig)

@@ -7,6 +7,7 @@ export const Imports = {
   Float: 'java.lang.Float',
 
   // Java Base
+  Arrays: 'java.util.Arrays',
   List: 'java.util.List',
   IOException: 'java.io.IOException',
   Collections: 'java.util.Collections',
@@ -20,6 +21,7 @@ export const Imports = {
   Generated: 'javax.annotation.Generated',
 
   // Apollo Android
+  GraphqlFragment: 'com.apollographql.apollo.api.GraphqlFragment',
   Operation: 'com.apollographql.apollo.api.Operation',
   OperationName: 'com.apollographql.apollo.api.OperationName',
   Mutation: 'com.apollographql.apollo.api.Mutation',

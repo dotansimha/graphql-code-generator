@@ -3,6 +3,7 @@ package type;
 import com.apollographql.apollo.api.InputType;
 import javax.annotation.Generated;
 import java.lang.Float;
+import javax.annotation.Nullable;
 import java.util.List;
 import java.lang.Override;
 import java.io.IOException;
@@ -21,39 +22,39 @@ public final class ModelFloatFilterInput implements InputType {
   private final Input<Float> contains;
   private final Input<Float> notContains;
   private final Input<List<Float>> between;
-  public Input<Float> ne() {
+  public @Nullable Input<Float> ne() {
     return this.ne;
   }
   
-  public Input<Float> eq() {
+  public @Nullable Input<Float> eq() {
     return this.eq;
   }
   
-  public Input<Float> le() {
+  public @Nullable Input<Float> le() {
     return this.le;
   }
   
-  public Input<Float> lt() {
+  public @Nullable Input<Float> lt() {
     return this.lt;
   }
   
-  public Input<Float> ge() {
+  public @Nullable Input<Float> ge() {
     return this.ge;
   }
   
-  public Input<Float> gt() {
+  public @Nullable Input<Float> gt() {
     return this.gt;
   }
   
-  public Input<Float> contains() {
+  public @Nullable Input<Float> contains() {
     return this.contains;
   }
   
-  public Input<Float> notContains() {
+  public @Nullable Input<Float> notContains() {
     return this.notContains;
   }
   
-  public Input<List<Float>> between() {
+  public @Nullable Input<List<Float>> between() {
     return this.between;
   }
   

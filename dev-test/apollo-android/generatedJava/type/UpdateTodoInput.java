@@ -3,12 +3,13 @@ package type;
 import com.apollographql.apollo.api.InputType;
 import javax.annotation.Generated;
 import java.lang.String;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.Override;
 import java.io.IOException;
 import com.apollographql.apollo.api.InputFieldWriter;
 import com.apollographql.apollo.api.InputFieldMarshaller;
 import com.apollographql.apollo.api.Input;
-import javax.annotation.Nonnull;
 import com.apollographql.apollo.api.internal.Utils;
 
 @Generated("Apollo GraphQL")
@@ -20,11 +21,11 @@ public final class UpdateTodoInput implements InputType {
     return this.id;
   }
   
-  public Input<String> name() {
+  public @Nullable Input<String> name() {
     return this.name;
   }
   
-  public Input<String> description() {
+  public @Nullable Input<String> description() {
     return this.description;
   }
   

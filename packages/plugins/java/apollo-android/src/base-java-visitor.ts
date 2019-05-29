@@ -2,7 +2,7 @@ import { Imports } from './imports';
 import { BaseVisitor, ParsedConfig, getBaseTypeNode, getBaseType } from '@graphql-codegen/visitor-plugin-common';
 import { JavaApolloAndroidPluginConfig } from './plugin';
 import { JAVA_SCALARS } from '@graphql-codegen/java-common';
-import { GraphQLSchema, isScalarType, isInputObjectType, InputValueDefinitionNode, Kind, VariableDefinitionNode, GraphQLNamedType, GraphQLOutputType, isNonNullType, isListType, TypeNode } from 'graphql';
+import { GraphQLSchema, isScalarType, isInputObjectType, InputValueDefinitionNode, Kind, VariableDefinitionNode, GraphQLNamedType, GraphQLOutputType, isNonNullType, isListType, TypeNode, GraphQLInterfaceType, GraphQLObjectType } from 'graphql';
 import { VisitorConfig } from './visitor-config';
 import { ImportsSet, TransformedType } from './types';
 
@@ -34,6 +34,22 @@ export class BaseJavaVisitor<Config extends VisitorConfig = any> extends BaseVis
 
   public getImports(): string[] {
     return Array.from(this._imports).map(imp => `import ${imp};`);
+  }
+
+  protected getImplementingTypes(node: GraphQLInterfaceType): string[] {
+    const allTypesMap = this._schema.getTypeMap();
+    const implementingTypes: string[] = [];
+
+    for (const graphqlType of Object.values(allTypesMap)) {
+      if (graphqlType instanceof GraphQLObjectType) {
+        const allInterfaces = graphqlType.getInterfaces();
+        if (allInterfaces.find(int => int.name === ((node.name as any) as string))) {
+          implementingTypes.push(graphqlType.name);
+        }
+      }
+    }
+
+    return implementingTypes;
   }
 
   protected transformType(type: TypeNode | GraphQLOutputType): TransformedType {

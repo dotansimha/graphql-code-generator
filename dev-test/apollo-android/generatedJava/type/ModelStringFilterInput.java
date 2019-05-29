@@ -3,6 +3,7 @@ package type;
 import com.apollographql.apollo.api.InputType;
 import javax.annotation.Generated;
 import java.lang.String;
+import javax.annotation.Nullable;
 import java.util.List;
 import java.lang.Override;
 import java.io.IOException;
@@ -22,43 +23,43 @@ public final class ModelStringFilterInput implements InputType {
   private final Input<String> notContains;
   private final Input<List<String>> between;
   private final Input<String> beginsWith;
-  public Input<String> ne() {
+  public @Nullable Input<String> ne() {
     return this.ne;
   }
   
-  public Input<String> eq() {
+  public @Nullable Input<String> eq() {
     return this.eq;
   }
   
-  public Input<String> le() {
+  public @Nullable Input<String> le() {
     return this.le;
   }
   
-  public Input<String> lt() {
+  public @Nullable Input<String> lt() {
     return this.lt;
   }
   
-  public Input<String> ge() {
+  public @Nullable Input<String> ge() {
     return this.ge;
   }
   
-  public Input<String> gt() {
+  public @Nullable Input<String> gt() {
     return this.gt;
   }
   
-  public Input<String> contains() {
+  public @Nullable Input<String> contains() {
     return this.contains;
   }
   
-  public Input<String> notContains() {
+  public @Nullable Input<String> notContains() {
     return this.notContains;
   }
   
-  public Input<List<String>> between() {
+  public @Nullable Input<List<String>> between() {
     return this.between;
   }
   
-  public Input<String> beginsWith() {
+  public @Nullable Input<String> beginsWith() {
     return this.beginsWith;
   }
   

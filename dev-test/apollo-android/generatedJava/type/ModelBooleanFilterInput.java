@@ -3,6 +3,7 @@ package type;
 import com.apollographql.apollo.api.InputType;
 import javax.annotation.Generated;
 import java.lang.Boolean;
+import javax.annotation.Nullable;
 import java.lang.Override;
 import java.io.IOException;
 import com.apollographql.apollo.api.InputFieldWriter;
@@ -13,11 +14,11 @@ import com.apollographql.apollo.api.Input;
 public final class ModelBooleanFilterInput implements InputType {
   private final Input<Boolean> ne;
   private final Input<Boolean> eq;
-  public Input<Boolean> ne() {
+  public @Nullable Input<Boolean> ne() {
     return this.ne;
   }
   
-  public Input<Boolean> eq() {
+  public @Nullable Input<Boolean> eq() {
     return this.eq;
   }
   

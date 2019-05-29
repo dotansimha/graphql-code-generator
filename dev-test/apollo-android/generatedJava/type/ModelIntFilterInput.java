@@ -3,6 +3,7 @@ package type;
 import com.apollographql.apollo.api.InputType;
 import javax.annotation.Generated;
 import java.lang.Integer;
+import javax.annotation.Nullable;
 import java.util.List;
 import java.lang.Override;
 import java.io.IOException;
@@ -21,39 +22,39 @@ public final class ModelIntFilterInput implements InputType {
   private final Input<Integer> contains;
   private final Input<Integer> notContains;
   private final Input<List<Integer>> between;
-  public Input<Integer> ne() {
+  public @Nullable Input<Integer> ne() {
     return this.ne;
   }
   
-  public Input<Integer> eq() {
+  public @Nullable Input<Integer> eq() {
     return this.eq;
   }
   
-  public Input<Integer> le() {
+  public @Nullable Input<Integer> le() {
     return this.le;
   }
   
-  public Input<Integer> lt() {
+  public @Nullable Input<Integer> lt() {
     return this.lt;
   }
   
-  public Input<Integer> ge() {
+  public @Nullable Input<Integer> ge() {
     return this.ge;
   }
   
-  public Input<Integer> gt() {
+  public @Nullable Input<Integer> gt() {
     return this.gt;
   }
   
-  public Input<Integer> contains() {
+  public @Nullable Input<Integer> contains() {
     return this.contains;
   }
   
-  public Input<Integer> notContains() {
+  public @Nullable Input<Integer> notContains() {
     return this.notContains;
   }
   
-  public Input<List<Integer>> between() {
+  public @Nullable Input<List<Integer>> between() {
     return this.between;
   }
   

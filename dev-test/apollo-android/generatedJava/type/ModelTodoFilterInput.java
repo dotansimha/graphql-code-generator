@@ -3,6 +3,7 @@ package type;
 import com.apollographql.apollo.api.InputType;
 import javax.annotation.Generated;
 import type.ModelIDFilterInput;
+import javax.annotation.Nullable;
 import type.ModelStringFilterInput;
 import type.ModelTodoFilterInput;
 import java.util.List;
@@ -20,27 +21,27 @@ public final class ModelTodoFilterInput implements InputType {
   private final Input<List<ModelTodoFilterInput>> and;
   private final Input<List<ModelTodoFilterInput>> or;
   private final Input<ModelTodoFilterInput> not;
-  public Input<ModelIDFilterInput> id() {
+  public @Nullable Input<ModelIDFilterInput> id() {
     return this.id;
   }
   
-  public Input<ModelStringFilterInput> name() {
+  public @Nullable Input<ModelStringFilterInput> name() {
     return this.name;
   }
   
-  public Input<ModelStringFilterInput> description() {
+  public @Nullable Input<ModelStringFilterInput> description() {
     return this.description;
   }
   
-  public Input<List<ModelTodoFilterInput>> and() {
+  public @Nullable Input<List<ModelTodoFilterInput>> and() {
     return this.and;
   }
   
-  public Input<List<ModelTodoFilterInput>> or() {
+  public @Nullable Input<List<ModelTodoFilterInput>> or() {
     return this.or;
   }
   
-  public Input<ModelTodoFilterInput> not() {
+  public @Nullable Input<ModelTodoFilterInput> not() {
     return this.not;
   }
   

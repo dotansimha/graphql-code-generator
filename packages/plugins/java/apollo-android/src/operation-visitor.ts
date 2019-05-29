@@ -22,6 +22,7 @@ import {
   GraphQLString,
   isListType,
   FieldNode,
+  ExecutableDefinitionNode,
 } from 'graphql';
 import { JavaApolloAndroidPluginConfig } from './plugin';
 import { Imports } from './imports';
@@ -29,6 +30,7 @@ import { createHash } from 'crypto';
 import { VisitorConfig } from './visitor-config';
 import { singular, isPlural } from 'pluralize';
 import { visitFieldArguments } from './field-arguments';
+import { FragmentDefinitionNode, GraphQLInterfaceType } from 'graphql';
 
 export interface ChildField {
   type: GraphQLNamedType;
@@ -42,6 +44,7 @@ export interface ChildField {
 }
 
 export interface TransformSelectionSetOptions {
+  nonStaticClass?: boolean;
   additionalFragments?: LoadedFragment[];
   additionalFields?: ChildField[];
   className: string;
@@ -60,7 +63,7 @@ export class OperationVisitor extends BaseJavaVisitor<VisitorConfig> {
     });
   }
 
-  private printOperation(node: OperationDefinitionNode): string {
+  private printDocument(node: ExecutableDefinitionNode): string {
     return print(node)
       .replace(/\r?\n|\r/g, ' ')
       .replace(/"/g, '\\"')
@@ -139,10 +142,13 @@ export class OperationVisitor extends BaseJavaVisitor<VisitorConfig> {
     const className = this.createUniqueClassName(Object.keys(options.result), options.className);
     const cls = new JavaDeclarationBlock()
       .access('public')
-      .static()
       .asKind('class')
       .withName(className)
       .implements(options.implements || []);
+
+    if (!options.nonStaticClass) {
+      cls.static();
+    }
 
     options.result[className] = cls;
 
@@ -562,6 +568,47 @@ ${indentMultiline(inner, 2)}
     }
   }
 
+  FragmentDefinition(node: FragmentDefinitionNode): string {
+    const className = node.name.value;
+    const schemaType: GraphQLObjectType | GraphQLInterfaceType = this._schema.getType(node.typeCondition.name.value) as GraphQLObjectType | GraphQLInterfaceType;
+
+    this._imports.add(Imports.Arrays);
+    this._imports.add(Imports.GraphqlFragment);
+    this._imports.add(Imports.List);
+    this._imports.add(Imports.String);
+    this._imports.add(Imports.Collections);
+    this._imports.add(Imports.Override);
+    this._imports.add(Imports.Generated);
+    this._imports.add(Imports.ResponseFieldMapper);
+
+    const dataClasses = this.transformSelectionSet(
+      {
+        className: className,
+        nonStaticClass: true,
+        implements: ['GraphqlFragment'],
+        selectionSet: node.selectionSet && node.selectionSet.selections ? node.selectionSet.selections : [],
+        result: {},
+        schemaType: schemaType,
+      },
+      false
+    );
+
+    const rootCls = dataClasses[className];
+    const printed = this.printDocument(node);
+    rootCls.addClassMember('FRAGMENT_DEFINITION', 'String', `"${printed}"`, [], 'public', { static: true, final: true });
+
+    const possibleTypes = isObjectType(schemaType) ? [schemaType.name] : this.getImplementingTypes(schemaType);
+    rootCls.addClassMember('POSSIBLE_TYPES', 'List<String>', `Collections.unmodifiableList(Arrays.asList(${possibleTypes.map(t => `"${t}"`).join(', ')}))`, [], 'public', { static: true, final: true });
+
+    Object.keys(dataClasses)
+      .filter(name => name !== className)
+      .forEach(clsName => {
+        rootCls.nestedClass(dataClasses[clsName]);
+      });
+
+    return rootCls.string;
+  }
+
   OperationDefinition(node: OperationDefinitionNode): string {
     const operationType = toPascalCase(node.operation);
     const operationSchemaType = this.getRootType(node.operation);
@@ -574,16 +621,18 @@ ${indentMultiline(inner, 2)}
     this._imports.add(Imports.Operation);
     this._imports.add(Imports.ResponseFieldMapper);
 
-    const printedOperation = this.printOperation(node);
     const cls = new JavaDeclarationBlock()
       .annotate([`Generated("Apollo GraphQL")`])
       .access('public')
       .final()
       .asKind('class')
-      .withName(className)
-      .implements([`${operationType}<${className}.Data, ${className}.Data, ${node.variableDefinitions.length === 0 ? 'Operation' : className}.Variables>`]);
+      .withName(className);
 
-    cls.addClassMember('OPERATION_DEFINITION', 'String', `"${printedOperation}"`, [], 'public', { static: true, final: true });
+    const printed = this.printDocument(node);
+
+    cls.implements([`${operationType}<${className}.Data, ${className}.Data, ${node.variableDefinitions.length === 0 ? 'Operation' : className}.Variables>`]);
+
+    cls.addClassMember('OPERATION_DEFINITION', 'String', `"${printed}"`, [], 'public', { static: true, final: true });
     cls.addClassMember('QUERY_DOCUMENT', 'String', 'OPERATION_DEFINITION', [], 'public', { static: true, final: true });
     cls.addClassMember(
       'OPERATION_NAME',
@@ -623,7 +672,7 @@ ${indentMultiline(inner, 2)}
       'operationId',
       `String`,
       `return "${createHash('md5')
-        .update(printedOperation)
+        .update(printed)
         .digest('hex')}";`,
       [],
       [],
