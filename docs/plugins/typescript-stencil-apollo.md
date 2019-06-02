@@ -5,6 +5,8 @@ title: TypeScript Stencil Apollo
 
 This plugin generates Stencil Apollo functional components typings. It extends the basic TypeScript template [`@graphql-codegen/typescript-common`](typescript-typings) and thus shares a similar configuration.
 
+{@import: ../docs/plugins/client-note.md}
+
 ## Installation
 
     $ yarn add -D @graphql-codegen/typescript-stencil-apollo

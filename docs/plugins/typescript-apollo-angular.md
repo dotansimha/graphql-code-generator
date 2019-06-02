@@ -9,6 +9,8 @@ It will generate a strongly typed Angular service for every defined query, mutat
 
 To shed some more light regards this template, it's recommended to go through the ["Query, Mutation, Subscription services"](http://apollographql.com/docs/angular/basics/services.html) chapter of Apollo Angular docs and to read the ["Code Generation with Apollo Angular"](https://medium.com/the-guild/apollo-angular-code-generation-7903da1f8559) article.
 
+{@import: ../docs/plugins/client-note.md}
+
 ## Installation
 
     $ yarn add -D @graphql-codegen/typescript-apollo-angular
@@ -48,7 +50,7 @@ import { MyFeedGQL, Feed } from './graphql';
   template: `
     <h1>Feed:</h1>
     <ul>
-      <li *ngFor="let item of (feed | async)">{{ item.id }}</li>
+      <li *ngFor="let item of feed | async">{{ item.id }}</li>
     </ul>
   `,
 })
