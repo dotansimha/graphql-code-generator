@@ -5,7 +5,7 @@
   "homepage": "/live-demo/",
   "devDependencies": {
     "aws-sdk": "2.466.0",
-    "source-map-explorer": "1.8.0"
+    "source-map-explorer": "2.0.0"
   },
   "dependencies": {
     "@graphql-codegen/add": "1.2.0",
