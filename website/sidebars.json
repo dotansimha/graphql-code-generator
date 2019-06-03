@@ -8,7 +8,8 @@
       "getting-started/config-field",
       "getting-started/require-field",
       "getting-started/development-workflow",
-      "getting-started/programmatic-usage"
+      "getting-started/programmatic-usage",
+      "getting-started/further-reading"
     ],
     "Plugins": [
       "plugins/index",
