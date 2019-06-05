@@ -128,7 +128,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
 
     this.imports.add(this.getReactApolloHooksImport());
     return `
-export function use${operationName}(baseOptions?: ReactApolloHooks.${operationType}HookOptions<${node.operation !== 'query' ? `${operationResultType}, ` : ''}${operationVariablesTypes}>) {
+export function use${operationName}(baseOptions?: ReactApolloHooks.${operationType}HookOptions<${this.config.hooksImportFrom === '@apollo/react-hooks' || node.operation !== 'query' ? `${operationResultType}, ` : ''}${operationVariablesTypes}>) {
   return ReactApolloHooks.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, baseOptions);
 };`;
   }
