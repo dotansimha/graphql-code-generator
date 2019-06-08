@@ -1,21 +1,19 @@
 {
-  "name": "website",
+  "name": "@graphql-codegen/website",
   "version": "1.2.0",
   "scripts": {
     "dev": "docusaurus-start",
     "start": "docusaurus-start",
     "generate-config": "node generate-config.js",
     "prestart": "yarn live-demo:dev",
-    "build": "yarn build:app && yarn live-demo:prod && yarn build:lambda",
+    "build": "yarn build:app && yarn build:lambda",
     "build:app": "docusaurus-build",
     "build:lambda": "netlify-lambda build lambda",
     "serve:lambda": "netlify-lambda serve",
     "publish-gh-pages": "docusaurus-publish",
     "write-translations": "docusaurus-write-translations",
     "version": "docusaurus-version",
-    "rename-version": "docusaurus-rename-version",
-    "live-demo:dev": "cd live-demo && yarn build && cp -r ./build ../static/live-demo",
-    "live-demo:prod": "cd live-demo && yarn build && cp -r ./build ../build/graphql-code-generator/live-demo"
+    "rename-version": "docusaurus-rename-version"
   },
   "devDependencies": {
     "@graphql-codegen/config-markdown-generator": "1.2.0",
@@ -25,6 +23,7 @@
     "netlify-lambda": "1.4.13"
   },
   "dependencies": {
+    "@graphql-codegen/live-demo": "1.2.0",
     "sendmail": "1.4.1"
   }
 }
