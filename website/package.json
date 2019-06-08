@@ -1,4 +1,6 @@
 {
+  "name": "website",
+  "version": "1.2.0",
   "scripts": {
     "dev": "docusaurus-start",
     "start": "docusaurus-start",
@@ -16,7 +18,7 @@
     "live-demo:prod": "cd live-demo && yarn build && cp -r ./build ../build/graphql-code-generator/live-demo"
   },
   "devDependencies": {
-    "@graphql-codegen/config-markdown-generator": "../packages/utils/config-md-generator",
+    "@graphql-codegen/config-markdown-generator": "1.2.0",
     "remarkable-embed": "0.4.1",
     "babel-preset-minify": "0.5.0",
     "docusaurus": "1.11.0",

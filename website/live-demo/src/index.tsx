@@ -5,11 +5,11 @@ import './index.css';
 import App from './App';
 import * as jsYaml from 'js-yaml';
 
-window.jsyaml = jsYaml;
+(window as any)['jsyaml'] = jsYaml;
 
-process.stdout = process.stderr = {
-  isTTY: false,
-  write: () => null
+(process as any)['stdout'] = (process as any)['stderr'] = {
+  isTTY: undefined,
+  write: () => false,
 };
 
 ReactDOM.render(<App />, document.getElementById('root'));

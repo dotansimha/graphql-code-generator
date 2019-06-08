@@ -95,6 +95,9 @@
       "getting-started/documents-field": {
         "title": "`documents` field"
       },
+      "getting-started/further-reading": {
+        "title": "Further Reading"
+      },
       "getting-started/index": {
         "title": "What is GraphQL Code Generator?"
       },

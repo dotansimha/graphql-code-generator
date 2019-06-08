@@ -5,9 +5,12 @@
   "homepage": "/live-demo/",
   "devDependencies": {
     "aws-sdk": "2.471.0",
-    "source-map-explorer": "2.0.0"
+    "source-map-explorer": "2.0.0",
+    "typescript": "3.5.1"
   },
   "dependencies": {
+    "@types/react": "16.8.19",
+    "@types/react-dom": "16.8.4",
     "@graphql-codegen/add": "1.2.0",
     "@graphql-codegen/cli": "1.2.0",
     "@graphql-codegen/flow": "1.2.0",

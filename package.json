@@ -15,13 +15,20 @@
     "generate:examples": "./dev-test/generate-all.sh",
     "build-website": "cd website && yarn && yarn build"
   },
-  "workspaces": [
-    "packages/*",
-    "packages/utils/*",
-    "packages/plugins/**/*",
-    "packages/presets/**/*",
-    "website/live-demo"
-  ],
+  "workspaces": {
+    "packages": [
+      "packages/*",
+      "packages/utils/*",
+      "packages/plugins/**/*",
+      "packages/presets/**/*",
+      "website",
+      "website/live-demo"
+    ],
+    "nohoist": [
+      "**/@babel-*",
+      "**/@babel-*/**"
+    ]
+  },
   "devDependencies": {
     "@types/common-tags": "1.8.0",
     "@types/glob": "7.1.1",
