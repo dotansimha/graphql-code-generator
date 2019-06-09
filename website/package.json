@@ -24,7 +24,6 @@
     "netlify-lambda": "1.4.13"
   },
   "dependencies": {
-    "@graphql-codegen/live-demo": "1.2.0",
     "sendmail": "1.4.1"
   }
 }
