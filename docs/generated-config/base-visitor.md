@@ -56,3 +56,25 @@ Prefixes all the generated types.
 config:
   typesPrefix: I
 ```
+
+### skipTypename (`boolean`, default value: `false`)
+
+Automatically adds `__typename` field to the generated types, even when they are not specified in the selection set.
+
+#### Usage Example
+
+```yml
+config:
+  skipTypename: true
+```
+
+### nonOptionalTypename (`boolean`, default value: `false`)
+
+Automatically adds `__typename` field to the generated types, even when they are not specified in the selection set, and makes it non-optional
+
+#### Usage Example
+
+```yml
+config:
+  nonOptionalTypename: true
+```

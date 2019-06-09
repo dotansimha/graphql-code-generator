@@ -10,7 +10,7 @@ path/to/file.ts:
   plugins:
     - typescript
     - typescript-operations
-    - typescript-react-apollo
+    - typescript-urql
   config:
     withComponent: false
 ```
@@ -27,7 +27,7 @@ path/to/file.ts:
   plugins:
     - typescript
     - typescript-operations
-    - typescript-react-apollo
+    - typescript-urql
   config:
     withHooks: false
 ```
