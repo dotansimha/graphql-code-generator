@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Editor } from './editor.component';
+import { Editor } from './Editor';
 import { safeLoad } from 'js-yaml';
 import MagicIcon from './magic.svg';
 import CodegenLogo from './logo.svg';
@@ -86,7 +86,10 @@ const App: React.FC<StyledComponentProps> = () => {
   const [documents, setDocuments] = useState<string>(EXAMPLES[DEFAULT_EXAMPLE].documents);
   const [config, setConfig] = useState<string>(EXAMPLES[DEFAULT_EXAMPLE].config);
   const [output, setOutput] = useState<string | null>(null);
-  const exec = async (eConfig: string, eSchema: string, eDocuments: string) => setOutput(await generate(eConfig, eSchema, eDocuments));
+  const exec = async (eConfig: string, eSchema: string, eDocuments: string) => {
+    const result = await generate(eConfig, eSchema, eDocuments);
+    setOutput(result);
+  };
   const changeTemplate = (name: string) => {
     setTemplate(name);
     setSchema(EXAMPLES[name].schema);

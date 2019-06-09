@@ -9,6 +9,7 @@
     "typescript": "3.5.1"
   },
   "dependencies": {
+    "@types/codemirror": "0.0.74",
     "@types/react": "16.8.19",
     "@types/react-dom": "16.8.4",
     "@graphql-codegen/add": "1.2.0",
