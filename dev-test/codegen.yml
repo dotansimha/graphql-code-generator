@@ -29,6 +29,16 @@ generates:
       avoidOptionals: true
     plugins:
       - typescript
+  ./dev-test/test-schema/typings.wrapped.ts:
+    schema: ./dev-test/test-schema/schema.json
+    plugins:
+      - add:
+          content: 'declare namespace GraphQL {'
+      - add:
+          placement: append
+          content: '}'
+      - typescript
+      - typescript-operations
   ./dev-test/test-schema/typings.immutableTypes.ts:
     schema: ./dev-test/test-schema/schema.json
     config:
