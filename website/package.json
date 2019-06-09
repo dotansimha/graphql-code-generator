@@ -12,9 +12,7 @@
     "build:lambda": "netlify-lambda build lambda",
     "serve:lambda": "netlify-lambda serve",
     "publish-gh-pages": "docusaurus-publish",
-    "write-translations": "docusaurus-write-translations",
-    "version": "docusaurus-version",
-    "rename-version": "docusaurus-rename-version"
+    "write-translations": "docusaurus-write-translations"
   },
   "devDependencies": {
     "@graphql-codegen/config-markdown-generator": "1.2.0",
