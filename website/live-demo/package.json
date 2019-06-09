@@ -5,9 +5,13 @@
   "homepage": "/live-demo/",
   "devDependencies": {
     "aws-sdk": "2.471.0",
-    "source-map-explorer": "2.0.0"
+    "source-map-explorer": "2.0.0",
+    "typescript": "3.5.1"
   },
   "dependencies": {
+    "@types/codemirror": "0.0.74",
+    "@types/react": "16.8.19",
+    "@types/react-dom": "16.8.4",
     "@graphql-codegen/add": "1.2.0",
     "@graphql-codegen/cli": "1.2.0",
     "@graphql-codegen/flow": "1.2.0",
@@ -40,7 +44,7 @@
   "scripts": {
     "analyze": "NODE_OPTIONS=--max_old_space_size=8192 react-scripts build && source-map-explorer build/static/js/main.*",
     "start": "NODE_OPTIONS=--max_old_space_size=8192 react-scripts start",
-    "build": "GENERATE_SOURCEMAP=false NODE_OPTIONS=--max_old_space_size=8192 react-scripts build"
+    "build": "GENERATE_SOURCEMAP=false NODE_OPTIONS=--max_old_space_size=8192 react-scripts build &&  cp -r ./build ../build/graphql-code-generator/live-demo"
   },
   "eslintConfig": {
     "extends": "react-app"

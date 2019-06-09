@@ -2,26 +2,33 @@
   "private": true,
   "scripts": {
     "clean": "lerna clean --yes && rm -rf node_modules",
-    "build": "lerna run build --ignore @graphql-codegen/live-demo",
-    "test": "lerna run test --ignore @graphql-codegen/live-demo",
-    "lint": "lerna run lint --ignore @graphql-codegen/live-demo",
+    "build": "lerna run build --ignore @graphql-codegen/{live-demo,website} ",
+    "test": "lerna run test --ignore @graphql-codegen/{live-demo,website} ",
+    "lint": "lerna run lint --ignore @graphql-codegen/{live-demo,website} ",
     "precommit": "lint-staged",
     "test-and-build": " yarn build && yarn test",
     "prerelease": "yarn test-and-build",
     "prerelease:canary": "yarn test-and-build",
-    "release": "lerna publish --exact --force-publish=\"*\" --ignore @graphql-codegen/live-demo",
-    "release:canary": "lerna publish --force-publish=\"*\" --canary --exact --ignore @graphql-codegen/live-demo",
-    "ci:release:canary": "lerna publish --force-publish=\"*\" --preid \"alpha-`git rev-parse --short HEAD`\" --canary --exact --yes --ignore @graphql-codegen/live-demo",
+    "release": "lerna publish --exact --force-publish=\"*\" --ignore @graphql-codegen/{live-demo,website} ",
+    "release:canary": "lerna publish --force-publish=\"*\" --canary --exact --ignore @graphql-codegen/{live-demo,website} ",
+    "ci:release:canary": "lerna publish --ignore @graphql-codegen/{live-demo,website} --force-publish=\"*\" --preid \"alpha-`git rev-parse --short HEAD`\" --canary --exact --yes",
     "generate:examples": "./dev-test/generate-all.sh",
-    "build-website": "cd website && yarn && yarn build"
+    "build-website": "lerna run build"
   },
-  "workspaces": [
-    "packages/*",
-    "packages/utils/*",
-    "packages/plugins/**/*",
-    "packages/presets/**/*",
-    "website/live-demo"
-  ],
+  "workspaces": {
+    "packages": [
+      "packages/*",
+      "packages/utils/*",
+      "packages/plugins/**/*",
+      "packages/presets/**/*",
+      "website",
+      "website/live-demo"
+    ],
+    "nohoist": [
+      "**/@babel-*",
+      "**/@babel-*/**"
+    ]
+  },
   "devDependencies": {
     "@types/common-tags": "1.8.0",
     "@types/glob": "7.1.1",
