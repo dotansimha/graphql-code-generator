@@ -19,7 +19,7 @@
     "@graphql-codegen/config-markdown-generator": "../packages/utils/config-md-generator",
     "remarkable-embed": "0.4.1",
     "babel-preset-minify": "0.5.0",
-    "docusaurus": "1.11.0",
+    "docusaurus": "1.11.1",
     "netlify-lambda": "1.4.13"
   },
   "dependencies": {
