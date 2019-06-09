@@ -11,7 +11,7 @@
     "prerelease:canary": "yarn test-and-build",
     "release": "lerna publish --exact --force-publish=\"*\" --ignore @graphql-codegen/live-demo --ignore @graphql-codegen/website",
     "release:canary": "lerna publish --force-publish=\"*\" --canary --exact --ignore @graphql-codegen/live-demo --ignore @graphql-codegen/website",
-    "ci:release:canary": "lerna publish --ignore @graphql-codegen/live-demo --ignore @graphql-codegen/website --force-publish=\"*\" --preid \"alpha-`git rev-parse --short HEAD`\" --canary --exact",
+    "ci:release:canary": "lerna publish --ignore @graphql-codegen/{live-demo,website} --force-publish=\"*\" --preid \"alpha-`git rev-parse --short HEAD`\" --canary --exact",
     "generate:examples": "./dev-test/generate-all.sh",
     "build-website": "lerna run build"
   },
