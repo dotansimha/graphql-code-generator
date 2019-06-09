@@ -3359,7 +3359,7 @@ autoprefixer@^6.3.1:
     postcss "^5.2.16"
     postcss-value-parser "^3.2.3"
 
-autoprefixer@^9.0.0, autoprefixer@^9.1.5, autoprefixer@^9.4.9:
+autoprefixer@^9.0.0, autoprefixer@^9.4.9, autoprefixer@^9.6.0:
   version "9.6.0"
   resolved "https://registry.yarnpkg.com/autoprefixer/-/autoprefixer-9.6.0.tgz#0111c6bde2ad20c6f17995a33fad7cf6854b4c87"
   integrity sha512-kuip9YilBqhirhHEGHaBTZKXL//xxGnzvsD0FtBQa6z+A69qZD6s/BAX9VzDF1i9VKDquTJDQaPLSEhOnL6FvQ==
@@ -4534,7 +4534,7 @@ cheerio@0.22.0:
     lodash.reject "^4.4.0"
     lodash.some "^4.4.0"
 
-chokidar@3.0.1:
+chokidar@3.0.1, chokidar@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-3.0.1.tgz#98fe9aa476c55d9aea7841d6325ffdb30e95b40c"
   integrity sha512-2ww34sJWehnbpV0Q4k4V5Hh7juo7po6z7LUWkcIQnSGN1lHOL8GGtLtfwabKvLFQw/hbSUQ0u6V7OgGYgBzlkQ==
@@ -4874,7 +4874,7 @@ commander@2.17.x:
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.17.1.tgz#bd77ab7de6de94205ceacc72f1716d29f20a77bf"
   integrity sha512-wPMUt6FnH2yzG95SA6mzjQOEKUU3aLaDEmzs1ti+1E9h+CsrZghRlqEM/EJ4KscsQVG8uNN4uVreUeT8+drlgg==
 
-commander@2.20.0, commander@^2.11.0, commander@^2.12.1, commander@^2.14.1, commander@^2.15.1, commander@^2.17.1, commander@^2.18.0, commander@^2.19.0, commander@^2.9.0, commander@~2.20.0:
+commander@2.20.0, commander@^2.11.0, commander@^2.12.1, commander@^2.14.1, commander@^2.15.1, commander@^2.17.1, commander@^2.19.0, commander@^2.20.0, commander@^2.9.0, commander@~2.20.0:
   version "2.20.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.20.0.tgz#d58bb2b5c1ee8f87b0d340027e9e94e222c5a422"
   integrity sha512-7j2y+40w61zy6YC2iRNpUe/NwhNyoXrYpHMrSunaMG64nRnaf96zO/KMQR4OyN/UnE5KLyEBnKHd4aG3rskjpQ==
@@ -6077,10 +6077,10 @@ doctrine@^3.0.0:
   dependencies:
     esutils "^2.0.2"
 
-docusaurus@1.11.0:
-  version "1.11.0"
-  resolved "https://registry.yarnpkg.com/docusaurus/-/docusaurus-1.11.0.tgz#8c39261ca4487b700dd190dcc5c3b54e90e29c74"
-  integrity sha512-UhsSvfyKoC0EYvc9ieKSLQZNhDZpsC3bqBuRCmldP/pQs4mVIHjwXG5uKEo3lfaflO3tBqsa0EQNtxtScJUL9w==
+docusaurus@1.11.1:
+  version "1.11.1"
+  resolved "https://registry.yarnpkg.com/docusaurus/-/docusaurus-1.11.1.tgz#786bae93946bc21ab7ef457c5672e2e2bd930b25"
+  integrity sha512-oIdftD4E8dnzXcNohTdE6MICsiJIR1pAmKa/sRHDiG3T3v8f2eiq9nt88CidSIPpyEw50TbCr3bOoExHS90UGg==
   dependencies:
     "@babel/core" "^7.0.0"
     "@babel/plugin-proposal-class-properties" "^7.0.0"
@@ -6091,17 +6091,18 @@ docusaurus@1.11.0:
     "@babel/register" "^7.0.0"
     "@babel/traverse" "^7.0.0"
     "@babel/types" "^7.1.2"
-    autoprefixer "^9.1.5"
+    autoprefixer "^9.6.0"
     babylon "^6.17.4"
-    chalk "^2.1.0"
+    chalk "^2.4.2"
+    chokidar "^3.0.1"
     classnames "^2.2.6"
     color "^2.0.1"
-    commander "^2.18.0"
+    commander "^2.20.0"
     cross-spawn "^6.0.5"
     crowdin-cli "^0.3.0"
-    cssnano "^3.10.0"
+    cssnano "^4.1.0"
     escape-string-regexp "^1.0.5"
-    express "^4.15.3"
+    express "^4.17.1"
     feed "^1.1.0"
     fs-extra "^5.0.0"
     gaze "^1.1.2"
@@ -6823,7 +6824,7 @@ express-logging@^1.1.1:
   dependencies:
     on-headers "^1.0.0"
 
-express@^4.0.0, express@^4.15.3, express@^4.16.2, express@^4.16.3:
+express@^4.0.0, express@^4.16.2, express@^4.16.3, express@^4.17.1:
   version "4.17.1"
   resolved "https://registry.yarnpkg.com/express/-/express-4.17.1.tgz#4491fc38605cf51f8629d39c2b5d026f98a4c134"
   integrity sha512-mHJ9O79RqluphRrcw2X/GTh3k9tVv8YcoyY4Kkh4WDMUYKRZUq0h1o0w2rrrxBqM7VoeUVqgb27xlEMXTnYt4g==

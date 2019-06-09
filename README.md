@@ -4,6 +4,7 @@
 [![CircleCI](https://circleci.com/gh/dotansimha/graphql-code-generator/tree/master.svg?style=svg)](https://circleci.com/gh/dotansimha/graphql-code-generator/tree/master)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 [![renovate-app badge][renovate-badge]][renovate-app]
+[![Netlify Status](https://api.netlify.com/api/v1/badges/beb4a802-e080-469d-82d6-e83a3d108a40/deploy-status)](https://app.netlify.com/sites/graphql-code-generator/deploys)
 
 [renovate-badge]: https://img.shields.io/badge/renovate-app-blue.svg
 [renovate-app]: https://renovateapp.com/
