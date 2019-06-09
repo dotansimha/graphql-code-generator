@@ -1,6 +1,7 @@
 {
   "name": "@graphql-codegen/website",
   "version": "1.2.0",
+  "private": true,
   "scripts": {
     "dev": "docusaurus-start",
     "start": "docusaurus-start",
