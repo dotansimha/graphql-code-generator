@@ -1,5 +1,5 @@
 import { parse, dirname, relative, join, isAbsolute } from 'path';
-import { DocumentNode, visit, FragmentSpreadNode, FragmentDefinitionNode, print } from 'graphql';
+import { DocumentNode, visit, FragmentSpreadNode, FragmentDefinitionNode } from 'graphql';
 import { FragmentNameToFile } from './index';
 
 export function appendExtensionToFilePath(baseFilePath: string, extension: string) {
