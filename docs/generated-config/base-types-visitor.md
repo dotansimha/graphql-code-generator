@@ -18,3 +18,23 @@ config:
   enumValues:
     MyEnum: ./my-file#MyCustomEnum
 ```
+
+### declarationKind (`DeclarationKindConfig`)
+
+Overrides the default output for various GraphQL elements.
+
+#### Usage Example: Override all declarations
+
+```yml
+config:
+  declarationKind: 'interface'
+```
+
+#### Usage Example: Override only specific declarations
+
+```yml
+config:
+  declarationKind:
+    type: 'interface'
+    input: 'interface'
+```

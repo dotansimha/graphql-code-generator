@@ -21,3 +21,14 @@ export interface NamingConventionMap {
 }
 
 export type LoadedFragment = { name: string; onType: string; node: FragmentDefinitionNode; isExternal: boolean; importFrom?: string | null };
+
+export type DeclarationKind = 'type' | 'interface';
+
+export interface DeclarationKindConfig {
+  scalar?: DeclarationKind;
+  input?: DeclarationKind;
+  union?: DeclarationKind;
+  type?: DeclarationKind;
+  interface?: DeclarationKind;
+  arguments?: DeclarationKind;
+}
