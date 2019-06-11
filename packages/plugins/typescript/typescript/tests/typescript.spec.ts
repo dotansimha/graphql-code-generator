@@ -155,7 +155,6 @@ describe('TypeScript', () => {
 
       expect(result.content).toBeSimilarStringTo(`
       export type Node = {
-        __typename?: 'Node',
         /** the id */
         id: Scalars['ID'],
       };`);
@@ -641,7 +640,6 @@ describe('TypeScript', () => {
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyInterface = {
-          __typename?: 'MyInterface',
           foo: Scalars['String'],
         };
       `);
@@ -673,13 +671,11 @@ describe('TypeScript', () => {
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyInterface = {
-          __typename?: 'MyInterface',
           foo: Scalars['String'],
         };
       `);
       expect(result.content).toBeSimilarStringTo(`
         export type MyOtherInterface = {
-          __typename?: 'MyOtherInterface',
           bar: Scalars['String'],
         };
       `);
@@ -705,7 +701,6 @@ describe('TypeScript', () => {
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyInterface = {
-          __typename?: 'MyInterface',
           foo: Scalars['String'],
         };
       `);
@@ -778,7 +773,6 @@ describe('TypeScript', () => {
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyInterface = {
-          __typename?: 'MyInterface',
           foo?: Maybe<Scalars['String']>,
           bar: Scalars['String'],
         };
@@ -924,7 +918,6 @@ describe('TypeScript', () => {
         `);
       expect(result.content).toBeSimilarStringTo(`
         export type some_interface = {
-          __typename?: 'Some_Interface',
           id: Scalars['ID'],
         };
         `);
@@ -987,7 +980,6 @@ describe('TypeScript', () => {
       `);
       expect(result.content).toBeSimilarStringTo(`
       export type Some_Interface = {
-        __typename?: 'Some_Interface',
         id: Scalars['ID'],
       };
       `);
@@ -1047,7 +1039,6 @@ describe('TypeScript', () => {
       expect(result.content).toBeSimilarStringTo(`export type IMyUnion = IMy_Type | IMyType;`);
       expect(result.content).toBeSimilarStringTo(`
       export type ISome_Interface = {
-        __typename?: 'Some_Interface',
         id: Scalars['ID'],
       };
       `);

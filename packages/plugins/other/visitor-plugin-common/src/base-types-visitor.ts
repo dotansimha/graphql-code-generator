@@ -160,8 +160,6 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
   }
 
   InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode, key: number | string, parent: any): string {
-    const optionalTypename = this.config.nonOptionalTypename ? '__typename' : '__typename?';
-    const allFields = [...(this.config.addTypename ? [indent(`${optionalTypename}: '${node.name}',`)] : []), ...node.fields];
     const argumentsBlock = this.buildArgumentsBlock(parent[key] as InterfaceTypeDefinitionNode);
 
     let declarationBlock = new DeclarationBlock(this._declarationBlockConfig)
@@ -170,7 +168,7 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
       .withName(this.convertName(node))
       .withComment((node.description as any) as string);
 
-    const interfaceDefinition = declarationBlock.withBlock(allFields.join('\n')).string;
+    const interfaceDefinition = declarationBlock.withBlock(node.fields.join('\n')).string;
 
     return [interfaceDefinition, argumentsBlock].filter(f => f).join('\n\n');
   }
