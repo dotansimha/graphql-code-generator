@@ -35,7 +35,7 @@
     "@types/graphql": "14.2.0",
     "@types/jest": "24.0.13",
     "@types/mkdirp": "0.5.2",
-    "@types/node": "10.14.8",
+    "@types/node": "10.14.9",
     "@types/request": "2.48.1",
     "apollo-link": "1.2.11",
     "apollo-server": "2.6.2",
