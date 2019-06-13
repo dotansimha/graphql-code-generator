@@ -6,7 +6,7 @@
   "devDependencies": {
     "aws-sdk": "2.471.0",
     "source-map-explorer": "2.0.0",
-    "typescript": "3.5.1"
+    "typescript": "3.5.2"
   },
   "dependencies": {
     "@graphql-codegen/add": "1.2.1",
