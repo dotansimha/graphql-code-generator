@@ -30,8 +30,8 @@ export const loadSchema = async (schemaDef: Types.Schema, config: Types.Config):
       if (customSchemaLoader) {
         const returnedSchema = await customSchemaLoader(pointToSchema, config, defObject);
 
-        if (returnedSchema && returnedSchema instanceof GraphQLSchema) {
-          return returnedSchema;
+        if (returnedSchema && isGraphQLSchema(returnedSchema)) {
+          return recreateSchema(returnedSchema);
         } else {
           throw new Error(`Return value of a custom schema loader must be of type "GraphQLSchema"!`);
         }
@@ -130,3 +130,21 @@ export const loadDocuments = async (documentDef: Types.OperationDocument, config
 
   return loadDocumentsToolkit(documentDef as string, loadDocumentsToolkitConfig);
 };
+
+function isGraphQLSchema(schema: any): schema is GraphQLSchema {
+  const schemaClass = schema.constructor;
+  const className = GraphQLSchema.name;
+  return className && schemaClass && schemaClass.name === className;
+}
+
+function recreateSchema(schema: GraphQLSchema): GraphQLSchema {
+  return new GraphQLSchema({
+    query: schema.getQueryType(),
+    mutation: schema.getMutationType(),
+    subscription: schema.getSubscriptionType(),
+    types: Object.values(schema.getTypeMap()),
+    directives: [...schema.getDirectives()],
+    astNode: schema.astNode,
+    extensionASTNodes: schema.extensionASTNodes,
+  });
+}

@@ -40,9 +40,6 @@
     "url": "https://github.com/dotansimha/graphql-codegen/issues"
   },
   "homepage": "https://github.com/dotansimha/graphql-codegen#readme",
-  "peerDependencies": {
-    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0"
-  },
   "dependencies": {
     "@graphql-codegen/core": "1.2.1",
     "@graphql-codegen/plugin-helpers": "1.2.1",
@@ -60,6 +57,7 @@
     "common-tags": "1.8.0",
     "detect-indent": "6.0.0",
     "glob": "7.1.4",
+    "graphql": "14.3.1",
     "graphql-config": "2.2.1",
     "graphql-import": "0.7.1",
     "graphql-tag-pluck": "0.8.1",
