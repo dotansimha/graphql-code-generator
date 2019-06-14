@@ -14,7 +14,11 @@
     "url": "https://github.com/dotansimha/graphql-code-generator/issues"
   },
   "homepage": "https://github.com/dotansimha/graphql-code-generator#readme",
+  "peerDependencies": {
+    "typescript": ">=3.0.0"
+  },
   "dependencies": {
+    "@graphql-codegen/plugin-helpers": "1.2.1",
     "common-tags": "1.8.0",
     "tslib": "1.9.3"
   },

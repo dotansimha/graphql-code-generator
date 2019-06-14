@@ -1,10 +1,8 @@
-import '@graphql-codegen/testing';
+import { compileTs, validateTs } from '@graphql-codegen/testing';
 import { parse, buildClientSchema, buildSchema } from 'graphql';
 import { readFileSync } from 'fs';
 import { plugin } from '../src/index';
-import { validateTs } from '../../typescript/tests/validate';
 import { plugin as tsPlugin } from '../../typescript/src';
-import { compileTs } from '../../typescript/tests/compile';
 import { mergeOutputs, Types } from '@graphql-codegen/plugin-helpers';
 
 describe('TypeScript Operations Plugin', () => {

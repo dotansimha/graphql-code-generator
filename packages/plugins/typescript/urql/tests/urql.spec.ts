@@ -1,11 +1,10 @@
-import '@graphql-codegen/testing';
+import { validateTs } from '@graphql-codegen/testing';
 import { plugin } from '../src/index';
 import { parse, GraphQLSchema, buildClientSchema, buildASTSchema } from 'graphql';
 import gql from 'graphql-tag';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { plugin as tsPlugin } from '@graphql-codegen/typescript/src';
 import { plugin as tsDocumentsPlugin } from '../../operations/src/index';
-import { validateTs } from '@graphql-codegen/typescript/tests/validate';
 import { readFileSync } from 'fs';
 
 describe('urql', () => {
