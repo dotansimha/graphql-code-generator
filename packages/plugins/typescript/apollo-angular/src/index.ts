@@ -63,3 +63,5 @@ export const validate: PluginValidateFn<any> = async (schema: GraphQLSchema, doc
     throw new Error(`Plugin "apollo-angular" requires extension to be ".ts"!`);
   }
 };
+
+export { ApolloAngularVisitor };

@@ -142,3 +142,5 @@ export const validate: PluginValidateFn<any> = async (schema: GraphQLSchema, doc
     }
   }
 };
+
+export { ReactApolloVisitor };

@@ -170,3 +170,5 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
     content: [header, resolversTypeMapping, ...visitorResult.definitions.filter(d => typeof d === 'string'), getRootResolver(), getAllDirectiveResolvers()].join('\n'),
   };
 };
+
+export { TypeScriptResolversVisitor };
