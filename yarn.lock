@@ -2287,10 +2287,10 @@
     "@types/minimatch" "*"
     "@types/node" "*"
 
-"@types/graphql@14.2.0":
-  version "14.2.0"
-  resolved "https://registry.yarnpkg.com/@types/graphql/-/graphql-14.2.0.tgz#74e1da5f2a4a744ac6eb3ed57b48242ea9367202"
-  integrity sha512-lELg5m6eBOmATWyCZl8qULEOvnPIUG6B443yXKj930glXIgwQirIBPp5rthP2amJW0YSzUg2s5sfgba4mRRCNw==
+"@types/graphql@14.2.1":
+  version "14.2.1"
+  resolved "https://registry.yarnpkg.com/@types/graphql/-/graphql-14.2.1.tgz#02027ff799aa4dc5aa88ff2eed4058d29e7eb491"
+  integrity sha512-81YjgyCz+kYDXkPuk1j4+jCgFjM4DubzrI88tvpWOQp5eILa0A/KvtGAbXONPhD6vRa3neiFb/ES1IDQ82n5Rw==
 
 "@types/inquirer@6.0.2":
   version "6.0.2"
