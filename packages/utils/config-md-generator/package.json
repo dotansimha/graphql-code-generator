@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@microsoft/tsdoc": "0.12.9",
-    "tslib": "1.9.3",
+    "tslib": "1.10.0",
     "typescript": "3.5.2"
   },
   "devDependencies": {

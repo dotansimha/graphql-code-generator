@@ -77,7 +77,7 @@
     "prettier": "1.18.2",
     "request": "2.88.0",
     "ts-log": "2.1.4",
-    "tslib": "1.9.3",
+    "tslib": "1.10.0",
     "valid-url": "1.0.9"
   },
   "devDependencies": {
