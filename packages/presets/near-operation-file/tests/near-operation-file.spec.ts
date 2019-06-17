@@ -30,6 +30,15 @@ describe('near-operation-file preset', () => {
     fragment UserFields on User {
       id
       username
+      profile {
+        ...ProfileFields
+      }
+    }
+  `);
+  const nestedFragmentAst = parse(/* GraphQL */ `
+    fragment ProfileFields on Profile {
+      name
+      age
     }
   `);
   const testDocuments = [
@@ -40,6 +49,10 @@ describe('near-operation-file preset', () => {
     {
       filePath: '/some/deep/path/src/graphql/user-fragment.graphql',
       content: fragmentAst,
+    },
+    {
+      filePath: '/some/deep/path/src/graphql/profile-fragment.graphql',
+      content: nestedFragmentAst,
     },
     {
       filePath: '/some/deep/path/src/graphql/me.query.graphql',
@@ -79,6 +92,7 @@ describe('near-operation-file preset', () => {
     expect(result.map(a => a.filename)).toEqual([
       '/some/deep/path/src/graphql/me-query.generated.ts',
       '/some/deep/path/src/graphql/user-fragment.generated.ts',
+      '/some/deep/path/src/graphql/profile-fragment.generated.ts',
       '/some/deep/path/src/graphql/me.query.generated.ts',
       '/some/deep/path/src/graphql/something-query.generated.ts',
       '/some/deep/path/src/graphql/nested/somethingElse.generated.ts',
@@ -105,6 +119,7 @@ describe('near-operation-file preset', () => {
     expect(result.map(a => a.filename)).toEqual([
       '/some/deep/path/src/graphql/me-query.flow.js',
       '/some/deep/path/src/graphql/user-fragment.flow.js',
+      '/some/deep/path/src/graphql/profile-fragment.flow.js',
       '/some/deep/path/src/graphql/me.query.flow.js',
       '/some/deep/path/src/graphql/something-query.flow.js',
       '/some/deep/path/src/graphql/nested/somethingElse.flow.js',
@@ -290,6 +305,49 @@ describe('near-operation-file preset', () => {
       expect.arrayContaining([
         {
           add: `import { UserFieldsFragment } from './nested/down/here/user-fragment.generated';`,
+        },
+      ])
+    );
+  });
+
+  it('Should add import to external fragment when its in use (no nested fragments - 2+ level deep)', async () => {
+    const result = await preset.buildGeneratesSection({
+      baseOutputDir: './src/',
+      config: {},
+      presetConfig: {
+        cwd: '/some/deep/path',
+        baseTypesPath: 'types.ts',
+      },
+      schema: schemaDocumentNode,
+      documents: [
+        testDocuments[0],
+        {
+          filePath: '/some/deep/path/src/graphql/nested/down/here/user-fragment.graphql',
+          content: fragmentAst,
+        },
+        {
+          filePath: '/some/deep/path/src/graphql/nested/down/here/profile-fragment.graphql',
+          content: nestedFragmentAst,
+        },
+      ],
+      plugins: [{ typescript: {}, 'typescript-operations': {} }],
+      pluginMap: { typescript: {} as any, 'typescript-operations': {} as any },
+    });
+
+    const plugins = result.map(o => o.plugins)[0];
+
+    expect(plugins).toEqual(
+      expect.arrayContaining([
+        {
+          add: `import { UserFieldsFragment } from './nested/down/here/user-fragment.generated';`,
+        },
+      ])
+    );
+
+    expect(plugins).not.toEqual(
+      expect.arrayContaining([
+        {
+          add: `import { ProfileFieldsFragment } from './nested/down/here/profile-fragment.generated';`,
         },
       ])
     );
