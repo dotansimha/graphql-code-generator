@@ -41,7 +41,7 @@
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "1.2.1",
     "graphql-toolkit": "0.2.14",
-    "tslib": "1.9.3"
+    "tslib": "1.10.0"
   },
   "devDependencies": {
     "ts-jest": "24.0.2"
