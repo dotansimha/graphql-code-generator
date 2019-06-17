@@ -158,3 +158,5 @@ function includeIntrospectionDefinitions(schema: GraphQLSchema, documents: Types
 
   return result.definitions as any[];
 }
+
+export { TsVisitor, TsIntrospectionVisitor };

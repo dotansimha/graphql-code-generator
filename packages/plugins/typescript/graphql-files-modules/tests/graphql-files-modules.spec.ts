@@ -1,7 +1,6 @@
-import '@graphql-codegen/testing';
+import { validateTs } from '@graphql-codegen/testing';
 import { plugin } from '../src/index';
 import { parse } from 'graphql';
-import { validateTs } from '../../typescript/tests/validate';
 
 describe('graphql-codegen typescript-graphql-files-modules', () => {
   it('Should generate simple module with one file', async () => {

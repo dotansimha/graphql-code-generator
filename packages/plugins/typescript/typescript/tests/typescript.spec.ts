@@ -1,7 +1,6 @@
+import { validateTs } from '@graphql-codegen/testing';
 import { Types } from '@graphql-codegen/plugin-helpers';
-import '@graphql-codegen/testing';
 import { buildSchema, parse } from 'graphql';
-import { validateTs } from './validate';
 import { plugin } from '../src/index';
 
 describe('TypeScript', () => {

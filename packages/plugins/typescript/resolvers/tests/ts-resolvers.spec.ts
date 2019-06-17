@@ -1,8 +1,7 @@
-import '@graphql-codegen/testing';
+import { validateTs } from '@graphql-codegen/testing';
 import { buildSchema } from 'graphql';
 import { plugin } from '../src';
 import { plugin as tsPlugin } from '../../typescript/src/index';
-import { validateTs } from '../../typescript/tests/validate';
 import { schema, validate } from './common';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 

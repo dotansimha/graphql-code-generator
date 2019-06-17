@@ -62,3 +62,5 @@ export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig> = (schema: 
 
   return visitorResult.definitions.join('\n');
 };
+
+export { TypeScriptDocumentsVisitor };

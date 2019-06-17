@@ -1,13 +1,11 @@
-import '@graphql-codegen/testing';
+import { compileTs, validateTs } from '@graphql-codegen/testing';
 import { plugin } from '../src/index';
 import { buildSchema, parse, GraphQLSchema, buildClientSchema } from 'graphql';
-import { validateTs } from '../../typescript/tests/validate';
 import { plugin as tsPlugin } from '../../typescript/src';
 import { plugin as tsOperationPlugin } from '../../operations/src';
 import { plugin as raPlugin } from '../../../typescript/react-apollo/src';
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import { compileTs } from '../../typescript/tests/compile';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 
 const validate = async (content: Types.PluginOutput, schema: GraphQLSchema, operations, config = {}, tsx = false, strict = false) => {
