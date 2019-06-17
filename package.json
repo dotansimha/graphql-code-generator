@@ -42,7 +42,7 @@
     "graphql": "14.3.1",
     "graphql-tag": "2.10.1",
     "graphql-tools": "4.0.4",
-    "husky": "2.4.0",
+    "husky": "2.4.1",
     "jest": "24.8.0",
     "jest-junit": "6.4.0",
     "lerna": "3.15.0",
