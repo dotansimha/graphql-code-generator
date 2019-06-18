@@ -25,7 +25,7 @@ describe('CLI Flags', () => {
     resetFs();
   });
 
-  it('Should create basic config using new yml API', () => {
+  it('Should create basic config using new yml API', async () => {
     mockConfig(`
         schema: schema.graphql
         generates:
@@ -33,14 +33,14 @@ describe('CLI Flags', () => {
                 - plugin
     `);
     const args = createArgv();
-    const config = createConfig(args);
+    const config = await createConfig(args);
     expect(config).toEqual({
       schema: 'schema.graphql',
       generates: { 'file.ts': ['plugin'] },
     });
   });
 
-  it('Should use different config file correctly with --config', () => {
+  it('Should use different config file correctly with --config', async () => {
     mockConfig(
       `
         schema: schema.graphql
@@ -51,14 +51,14 @@ describe('CLI Flags', () => {
       'other.yml'
     );
     const args = createArgv('--config other.yml');
-    const config = createConfig(args);
+    const config = await createConfig(args);
     expect(config).toEqual({
       schema: 'schema.graphql',
       generates: { 'file.ts': ['plugin'] },
     });
   });
 
-  it('Should set --watch with new YML api', () => {
+  it('Should set --watch with new YML api', async () => {
     mockConfig(`
         schema: schema.graphql
         generates:
@@ -66,11 +66,11 @@ describe('CLI Flags', () => {
                 - plugin
     `);
     const args = createArgv('--watch');
-    const config = createConfig(args);
+    const config = await createConfig(args);
     expect(config.watch).toBeTruthy();
   });
 
-  it('Should set watch and overwrite to default (false) with new YML api', () => {
+  it('Should set watch and overwrite to default (false) with new YML api', async () => {
     mockConfig(`
         schema: schema.graphql
         generates:
@@ -78,12 +78,12 @@ describe('CLI Flags', () => {
                 - plugin
     `);
     const args = createArgv();
-    const config = createConfig(args);
+    const config = await createConfig(args);
     expect(config.watch).not.toBeTruthy();
     expect(config.overwrite).not.toBeTruthy();
   });
 
-  it('Should overwrite watch config using cli flags', () => {
+  it('Should overwrite watch config using cli flags', async () => {
     mockConfig(`
         schema: schema.graphql
         watch: false
@@ -92,11 +92,11 @@ describe('CLI Flags', () => {
                 - plugin
     `);
     const args = createArgv('--watch');
-    const config = createConfig(args);
+    const config = await createConfig(args);
     expect(config.watch).toBeTruthy();
   });
 
-  it('Should set --overwrite with new YML api', () => {
+  it('Should set --overwrite with new YML api', async () => {
     mockConfig(`
         schema: schema.graphql
         generates:
@@ -104,11 +104,11 @@ describe('CLI Flags', () => {
                 - plugin
     `);
     const args = createArgv('--overwrite');
-    const config = createConfig(args);
+    const config = await createConfig(args);
     expect(config.overwrite).toBeTruthy();
   });
 
-  it('Should interpolate environmental variables in YML', () => {
+  it('Should interpolate environmental variables in YML', async () => {
     process.env['SCHEMA_PATH'] = 'schema-env.graphql';
     mockConfig(`
         schema: \${SCHEMA_PATH}
@@ -117,7 +117,39 @@ describe('CLI Flags', () => {
                 - plugin
     `);
     const args = createArgv('--overwrite');
-    const config = createConfig(args);
+    const config = await createConfig(args);
     expect(config.schema).toBe('schema-env.graphql');
+  });
+
+  it('Should interpolate environmental variables in YML and support default value', async () => {
+    process.env['SCHEMA_PATH'] = '';
+
+    mockConfig(`
+        schema: \${SCHEMA_PATH:schema.graphql}
+        generates:
+            file.ts:
+                - plugin
+    `);
+    const args = createArgv('--overwrite');
+    const config = await createConfig(args);
+    expect(config.schema).toBe('schema.graphql');
+  });
+
+  it('Should load require extensions provided by cli flags', async () => {
+    process.env['SCHEMA_PATH'] = 'schema-env.graphql';
+    mockConfig(`
+        schema: \${SCHEMA_PATH}
+        generates:
+            file.ts:
+                - plugin
+    `);
+    const args = createArgv('--require my-extension');
+
+    try {
+      await createConfig(args);
+      expect(true).toBeFalsy();
+    } catch (e) {
+      expect(e.message).toBe(`Cannot find module 'my-extension' from 'config.ts'`);
+    }
   });
 });
