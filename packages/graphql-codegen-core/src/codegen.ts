@@ -7,7 +7,7 @@ import { DetailedError } from './errors';
 export async function codegen(options: Types.GenerateOptions): Promise<string> {
   let output = '';
 
-  validateDocuments(options.schema, options.documents);
+  validateDocuments(options.schema, options.documents || []);
 
   const pluginPackages = Object.keys(options.pluginMap).map(key => options.pluginMap[key]);
 
