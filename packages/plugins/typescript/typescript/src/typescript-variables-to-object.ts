@@ -34,7 +34,7 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
   }
 
   protected formatFieldString(fieldName: string, isNonNullType: boolean, hasDefaultValue: boolean): string {
-    if (hasDefaultValue || isNonNullType || this._avoidOptionals) {
+    if ((!hasDefaultValue && isNonNullType) || this._avoidOptionals) {
       return fieldName;
     } else {
       return `${fieldName}?`;
@@ -42,7 +42,7 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
   }
 
   protected formatTypeString(fieldType: string, isNonNullType: boolean, hasDefaultValue: boolean): string {
-    if (hasDefaultValue) {
+    if (!hasDefaultValue && isNonNullType) {
       return this.clearOptional(fieldType);
     }
 
