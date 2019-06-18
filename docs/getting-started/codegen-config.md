@@ -43,18 +43,18 @@ Here are the supported options that you can define in the config file (see [sour
 
   - [**`generates.overwrite`**](./config-field#output-level) - Same as root `overwrite`, but applies only for the specific output file.
 
-- [**`require`**](./require-field) - A path to a file which defines custom Node.JS `require()` handlers for custom file extensions. This is essential if the code generator has to go through files which require other files in an unsupported format (by default). See [more information](https://gist.github.com/jamestalmage/df922691475cff66c7e6).
+- [**`require`**](./require-field) - A path to a file which defines custom Node.JS `require()` handlers for custom file extensions. This is essential if the code generator has to go through files which require other files in an unsupported format (by default). See [more information](https://gist.github.com/jamestalmage/df922691475cff66c7e6). Note that values that specified in your `.yml` file will get loaded after loading the `.yml` file.
 
 - [**`config`**](./config-field#root-level) - Options that we would like to provide to the specified plug-ins. The options may vary depends on what plug-ins you specified. Read the documentation of that specific plug-in for more information. [You can read more about how to pass configuration to plugins here](./config-field)
 
 - **`overwrite`** - A flag to overwrite files in case they're already exist when generating code (`true` by default)
-
+-
 - **`watch`** - A flag to watch for changes in the specified GraphQL schemas and re-generate code any that happens. You can either specify a boolean to turn it on/off, or specify an array of glob patterns to add custom files to the watch.
 
 - **`silent`** - A flag to not print errors in case they occur.
 
 - **`pluginLoader`** - If you are using the programmatic API in browser environment, you can override this configuration to load your plugins in a way different then `require`.
-
+  \
 - **`pluckConfig`** - Allow you to override the configuration for `graphql-tag-pluck` (the tool that extracts your GraphQL operations from your code files).
 
   - **`pluckConfig.modules`** - An array of `{ name: string, identifier: string }` that will be used to track down your `gql` usages and imports. Use this if your code files imports `gql` from another library, or you have a custom `gql` tag.
@@ -62,3 +62,45 @@ Here are the supported options that you can define in the config file (see [sour
   - **`pluckConfig.magicComment`** - Configure the magic GraphQL comments to look for (the default is `/* GraphQL */`).
 
   - **`pluckConfig.globalIdentifier`** - Overrides the name of the default GraphQL name identifier.
+
+## Environment Variables
+
+You can use environment variables in your `codegen.yml` file like that:
+
+```yml
+schema: ${SCHEMA_PATH}
+documents: ./src/**/*.graphql
+generates:
+  ./src/types.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+```
+
+If you wish, you can also load `.env` file by adding `-r dotenv/config` flag to your CLI execution.
+
+Additionally, you can specify default value in case of a missing environment variable:
+
+```yml
+schema: ${SCHEMA_PATH:schema.graphql}
+```
+
+## CLI Flags
+
+The Codegen also supports several CLI flags, that allow you to override the default behaviour specified in your `.yml` config file:
+
+- **`--config`** (`-c`) - Overrides the Codegen configuration file path.
+
+- **`--watch`** (`-w`) - Allow you to override the `watch` mode set by the config file.
+
+- **`--silent`** (`-s`) - Silents the command line output.
+
+- **`--require`** (`-r`) - Allow you to load `require.extensions` before loading the `.yml` file.
+
+- **`--overwrite`** (`-o`) - Allow you to override the `overwrite` configuration flag.
+
+## Debug Mode
+
+You can set the `DEBUG` environment to `1` in order to tell the Codegen to print debug information.
+
+You can set the `VERBOSE` environment to `1` in order to tell the codegen to print more information regarding the CLI output (`listr`).
