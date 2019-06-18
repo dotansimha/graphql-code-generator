@@ -265,7 +265,7 @@ describe('init', () => {
     const logSpy = jest.spyOn(console, 'log').mockImplementation();
     const defaults = {
       schema: 'http://localhost:4000',
-      documents: '**/*.graphql',
+      documents: 'src/**/*.graphql',
       output: 'src/generated/graphql.ts',
       config: 'codegen.yml',
     };
