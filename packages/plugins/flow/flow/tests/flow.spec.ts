@@ -237,7 +237,6 @@ describe('Flow Plugin', () => {
 
       expect(result.content).toBeSimilarStringTo(`
       export type Node = {
-        __typename?: 'Node',
         /** the id */
         id: $ElementType<Scalars, 'ID'>,
       };`);
@@ -301,7 +300,6 @@ describe('Flow Plugin', () => {
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyInterface = {|
-          __typename?: 'MyInterface',
           foo?: ?$ElementType<Scalars, 'String'>,
           bar: $ElementType<Scalars, 'String'>,
         |};
@@ -326,7 +324,6 @@ describe('Flow Plugin', () => {
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyInterface = {
-          __typename?: 'MyInterface',
           +foo?: ?$ElementType<Scalars, 'String'>,
           +bar: $ElementType<Scalars, 'String'>,
         };
@@ -481,7 +478,6 @@ describe('Flow Plugin', () => {
       expect(result.content).toBeSimilarStringTo(`export type myunion = my_type | mytype;`);
 
       expect(result.content).toBeSimilarStringTo(`export type some_interface = {
-          __typename?: 'Some_Interface',
           id: $ElementType<Scalars, 'ID'>,
         };`);
 
@@ -537,7 +533,6 @@ describe('Flow Plugin', () => {
       expect(result.content).toBeSimilarStringTo(`export type MyUnion = My_Type | MyType;`);
 
       expect(result.content).toBeSimilarStringTo(`export type Some_Interface = {
-        __typename?: 'Some_Interface',
         id: $ElementType<Scalars, 'ID'>,
       };`);
 
@@ -592,7 +587,6 @@ describe('Flow Plugin', () => {
       expect(result.content).toBeSimilarStringTo(`export type IMyUnion = IMy_Type | IMyType;`);
 
       expect(result.content).toBeSimilarStringTo(`export type ISome_Interface = {
-        __typename?: 'Some_Interface',
         id: $ElementType<Scalars, 'ID'>,
       };`);
 
@@ -870,7 +864,6 @@ describe('Flow Plugin', () => {
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyInterface = {
-          __typename?: 'MyInterface',
           foo: $ElementType<Scalars, 'String'>,
         };
       `);
@@ -902,13 +895,11 @@ describe('Flow Plugin', () => {
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyInterface = {
-          __typename?: 'MyInterface',
           foo: $ElementType<Scalars, 'String'>,
         };
       `);
       expect(result.content).toBeSimilarStringTo(`
         export type MyOtherInterface = {
-          __typename?: 'MyOtherInterface',
           bar: $ElementType<Scalars, 'String'>,
         };
       `);
@@ -984,7 +975,6 @@ describe('Flow Plugin', () => {
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyInterface = {
-          __typename?: 'MyInterface',
           foo?: ?$ElementType<Scalars, 'String'>,
           bar: $ElementType<Scalars, 'String'>,
         };

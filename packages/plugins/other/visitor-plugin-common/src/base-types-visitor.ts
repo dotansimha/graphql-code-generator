@@ -21,12 +21,14 @@ import {
 import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor';
 import { parseMapper } from './mappers';
 import { DEFAULT_SCALARS } from './scalars';
-import { EnumValuesMap, ScalarsMap } from './types';
+import { normalizeDeclarationKind } from './declaration-kinds';
+import { EnumValuesMap, ScalarsMap, DeclarationKindConfig, DeclarationKind } from './types';
 import { transformComment, buildScalars, DeclarationBlock, DeclarationBlockConfig, indent, wrapWithSingleQuotes } from './utils';
 import { OperationVariablesToObject } from './variables-to-object';
 
 export interface ParsedTypesConfig extends ParsedConfig {
   enumValues: EnumValuesMap;
+  declarationKind: DeclarationKindConfig;
 }
 
 export interface RawTypesConfig extends RawConfig {
@@ -52,6 +54,26 @@ export interface RawTypesConfig extends RawConfig {
    * ```
    */
   enumValues?: EnumValuesMap;
+  /**
+   * @name declarationKind
+   * @type DeclarationKindConfig
+   * @description Overrides the default output for various GraphQL elements.
+   *
+   * @example Override all declarations
+   * ```yml
+   *   config:
+   *     declarationKind: 'interface'
+   * ```
+   *
+   * @example Override only specific declarations
+   * ```yml
+   *   config:
+   *     declarationKind:
+   *       type: 'interface'
+   *       input: 'interface'
+   * ```
+   */
+  declarationKind?: DeclarationKind | DeclarationKindConfig;
 }
 
 export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig, TPluginConfig extends ParsedTypesConfig = ParsedTypesConfig> extends BaseVisitor<TRawConfig, TPluginConfig> {
@@ -62,6 +84,7 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
       rawConfig,
       {
         enumValues: rawConfig.enumValues || {},
+        declarationKind: normalizeDeclarationKind(rawConfig.declarationKind),
         ...additionalConfig,
       },
       buildScalars(_schema, defaultScalars)
@@ -81,7 +104,7 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
-      .asKind('type')
+      .asKind(this._parsedConfig.declarationKind.scalar)
       .withName('Scalars')
       .withComment('All built-in and custom scalars, mapped to their actual values')
       .withBlock(allScalars.join('\n')).string;
@@ -104,7 +127,7 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
   InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode): string {
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
-      .asKind('type')
+      .asKind(this._parsedConfig.declarationKind.input)
       .withName(this.convertName(node))
       .withComment((node.description as any) as string)
       .withBlock(node.fields.join('\n')).string;
@@ -133,7 +156,7 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
-      .asKind('type')
+      .asKind(this._parsedConfig.declarationKind.union)
       .withName(this.convertName(node))
       .withComment((node.description as any) as string)
       .withContent(possibleTypes).string;
@@ -143,11 +166,26 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
     const originalNode = parent[key] as ObjectTypeDefinitionNode;
     const optionalTypename = this.config.nonOptionalTypename ? '__typename' : '__typename?';
     const allFields = [...(this.config.addTypename ? [indent(`${optionalTypename}: '${node.name}',`)] : []), ...node.fields];
-    const interfaces = originalNode.interfaces && node.interfaces.length > 0 ? originalNode.interfaces.map(i => this.convertName(i)).join(' & ') + (allFields.length ? ' & ' : '') : '';
+    const { type } = this._parsedConfig.declarationKind;
+
+    const buildInterfaces = () => {
+      if (!originalNode.interfaces || !node.interfaces.length) {
+        return '';
+      }
+
+      const interfaces = originalNode.interfaces.map(i => this.convertName(i));
+
+      if (type === 'interface') {
+        return ' extends ' + interfaces.join(', ') + (allFields.length ? ' ' : ' {}');
+      }
+
+      return interfaces.join(' & ') + (allFields.length ? ' & ' : '');
+    };
+    const interfaces = buildInterfaces();
 
     let declarationBlock = new DeclarationBlock(this._declarationBlockConfig)
       .export()
-      .asKind('type')
+      .asKind(type)
       .withName(this.convertName(node))
       .withContent(interfaces)
       .withComment((node.description as any) as string);
@@ -160,17 +198,15 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
   }
 
   InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode, key: number | string, parent: any): string {
-    const optionalTypename = this.config.nonOptionalTypename ? '__typename' : '__typename?';
-    const allFields = [...(this.config.addTypename ? [indent(`${optionalTypename}: '${node.name}',`)] : []), ...node.fields];
     const argumentsBlock = this.buildArgumentsBlock(parent[key] as InterfaceTypeDefinitionNode);
 
     let declarationBlock = new DeclarationBlock(this._declarationBlockConfig)
       .export()
-      .asKind('type')
+      .asKind(this._parsedConfig.declarationKind.interface)
       .withName(this.convertName(node))
       .withComment((node.description as any) as string);
 
-    const interfaceDefinition = declarationBlock.withBlock(allFields.join('\n')).string;
+    const interfaceDefinition = declarationBlock.withBlock(node.fields.join('\n')).string;
 
     return [interfaceDefinition, argumentsBlock].filter(f => f).join('\n\n');
   }
@@ -258,7 +294,7 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
 
         return new DeclarationBlock(this._declarationBlockConfig)
           .export()
-          .asKind('type')
+          .asKind(this._parsedConfig.declarationKind.arguments)
           .withName(this.convertName(name))
           .withComment(node.description)
           .withBlock(this._argumentsTransformer.transform<InputValueDefinitionNode>(field.arguments)).string;

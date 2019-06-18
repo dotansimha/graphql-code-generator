@@ -154,7 +154,6 @@ describe('TypeScript', () => {
 
       expect(result.content).toBeSimilarStringTo(`
       export type Node = {
-        __typename?: 'Node',
         /** the id */
         id: Scalars['ID'],
       };`);
@@ -519,6 +518,277 @@ describe('TypeScript', () => {
       }
       `);
     });
+
+    it('Should use interface for type when declarationKind for types is set', async () => {
+      const schema = buildSchema(`
+        input MyInput {
+          id: ID!
+          displayName: String
+        }
+
+        type MyType {
+          id: ID!
+          displayName: String
+        }
+      `);
+      const result = (await plugin(
+        schema,
+        [],
+        {
+          declarationKind: {
+            type: 'interface',
+          },
+        },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type MyInput = {
+          id: Scalars['ID'],
+          displayName?: Maybe<Scalars['String']>,
+        }
+      `);
+
+      expect(result.content).toBeSimilarStringTo(`
+        export interface MyType {
+          __typename?: 'MyType',
+          id: Scalars['ID'],
+          displayName?: Maybe<Scalars['String']>,
+        }
+      `);
+      validateTs(result);
+    });
+
+    it('Should use interface for input when declarationKind for inputs is set', async () => {
+      const schema = buildSchema(`
+        input MyInput {
+          id: ID!
+          displayName: String
+        }
+
+        type MyType {
+          id: ID!
+          displayName: String
+        }
+      `);
+      const result = (await plugin(
+        schema,
+        [],
+        {
+          declarationKind: {
+            input: 'interface',
+          },
+        },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`
+        export interface MyInput {
+          id: Scalars['ID'],
+          displayName?: Maybe<Scalars['String']>,
+        }
+      `);
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type MyType = {
+          __typename?: 'MyType',
+          id: Scalars['ID'],
+          displayName?: Maybe<Scalars['String']>,
+        }
+      `);
+      validateTs(result);
+    });
+
+    it('Should use interface for arguments when declarationKind for arguments is set', async () => {
+      const schema = buildSchema(`
+        type MyType {
+          id: ID!
+          displayName: String
+          child(id: ID!): MyType
+        }
+      `);
+      const result = (await plugin(
+        schema,
+        [],
+        {
+          declarationKind: {
+            arguments: 'interface',
+          },
+        },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type MyType = {
+          __typename?: 'MyType',
+          id: Scalars['ID'],
+          displayName?: Maybe<Scalars['String']>,
+          child?: Maybe<MyType>,
+        }
+      `);
+
+      expect(result.content).toBeSimilarStringTo(`
+        export interface MyTypeChildArgs {
+          id: Scalars['ID']
+        }
+      `);
+      validateTs(result);
+    });
+
+    it('Should use interface for all objects when declarationKind is interface', async () => {
+      const schema = buildSchema(`
+        input MyInput {
+          id: ID!
+          displayName: String
+        }
+
+        type MyType {
+          id: ID!
+          displayName: String
+        }
+      `);
+      const result = (await plugin(
+        schema,
+        [],
+        {
+          declarationKind: 'interface',
+        },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`
+        export interface MyInput {
+          id: Scalars['ID'],
+          displayName?: Maybe<Scalars['String']>,
+        }
+      `);
+
+      expect(result.content).toBeSimilarStringTo(`
+        export interface MyType {
+          __typename?: 'MyType',
+          id: Scalars['ID'],
+          displayName?: Maybe<Scalars['String']>,
+        }
+      `);
+      validateTs(result);
+    });
+
+    it('Should correctly render empty interfaces', async () => {
+      const schema = buildSchema(`
+        input MyInput
+
+        type MyType
+      `);
+      const result = (await plugin(
+        schema,
+        [],
+        {
+          declarationKind: 'interface',
+        },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`
+        export interface MyInput {}
+      `);
+
+      expect(result.content).toBeSimilarStringTo(`
+        export interface MyType {
+          __typename?: 'MyType',
+        }
+      `);
+      validateTs(result);
+    });
+
+    it('Should extend one interface from another', async () => {
+      const schema = buildSchema(`
+        interface MyInterface {
+          id: ID!
+          displayName: String
+        }
+
+        type MyType implements MyInterface {
+          id: ID!
+          displayName: String
+          value: Int
+        }
+      `);
+      const result = (await plugin(
+        schema,
+        [],
+        {
+          declarationKind: 'interface',
+        },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`
+        export interface MyInterface {
+          id: Scalars['ID'],
+          displayName?: Maybe<Scalars['String']>,
+        }
+      `);
+
+      expect(result.content).toBeSimilarStringTo(`
+        export interface MyType extends MyInterface {
+          __typename?: 'MyType',
+          id: Scalars['ID'],
+          displayName?: Maybe<Scalars['String']>,
+          value?: Maybe<Scalars['Int']>,
+        }
+      `);
+      validateTs(result);
+    });
+
+    it('Should extend mutiple interfaces', async () => {
+      const schema = buildSchema(`
+        interface MyInterface1 {
+          id: ID!
+          displayName: String
+        }
+
+        interface MyInterface2 {
+          value: Int
+        }
+
+        type MyType implements MyInterface1 & MyInterface2 {
+          id: ID!
+          displayName: String
+          value: Int
+        }
+      `);
+      const result = (await plugin(
+        schema,
+        [],
+        {
+          declarationKind: 'interface',
+        },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`
+        export interface MyInterface1 {
+          id: Scalars['ID'],
+          displayName?: Maybe<Scalars['String']>,
+        }
+      `);
+
+      expect(result.content).toBeSimilarStringTo(`
+        export interface MyInterface2 {
+          value?: Maybe<Scalars['Int']>,
+        }
+      `);
+
+      expect(result.content).toBeSimilarStringTo(`
+        export interface MyType extends MyInterface1, MyInterface2 {
+          __typename?: 'MyType',
+          id: Scalars['ID'],
+          displayName?: Maybe<Scalars['String']>,
+          value?: Maybe<Scalars['Int']>,
+        }
+      `);
+      validateTs(result);
+    });
   });
 
   describe('Scalars', () => {
@@ -640,7 +910,6 @@ describe('TypeScript', () => {
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyInterface = {
-          __typename?: 'MyInterface',
           foo: Scalars['String'],
         };
       `);
@@ -672,13 +941,11 @@ describe('TypeScript', () => {
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyInterface = {
-          __typename?: 'MyInterface',
           foo: Scalars['String'],
         };
       `);
       expect(result.content).toBeSimilarStringTo(`
         export type MyOtherInterface = {
-          __typename?: 'MyOtherInterface',
           bar: Scalars['String'],
         };
       `);
@@ -704,7 +971,6 @@ describe('TypeScript', () => {
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyInterface = {
-          __typename?: 'MyInterface',
           foo: Scalars['String'],
         };
       `);
@@ -777,7 +1043,6 @@ describe('TypeScript', () => {
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyInterface = {
-          __typename?: 'MyInterface',
           foo?: Maybe<Scalars['String']>,
           bar: Scalars['String'],
         };
@@ -923,7 +1188,6 @@ describe('TypeScript', () => {
         `);
       expect(result.content).toBeSimilarStringTo(`
         export type some_interface = {
-          __typename?: 'Some_Interface',
           id: Scalars['ID'],
         };
         `);
@@ -986,7 +1250,6 @@ describe('TypeScript', () => {
       `);
       expect(result.content).toBeSimilarStringTo(`
       export type Some_Interface = {
-        __typename?: 'Some_Interface',
         id: Scalars['ID'],
       };
       `);
@@ -1046,7 +1309,6 @@ describe('TypeScript', () => {
       expect(result.content).toBeSimilarStringTo(`export type IMyUnion = IMy_Type | IMyType;`);
       expect(result.content).toBeSimilarStringTo(`
       export type ISome_Interface = {
-        __typename?: 'Some_Interface',
         id: Scalars['ID'],
       };
       `);
