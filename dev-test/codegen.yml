@@ -45,40 +45,27 @@ generates:
       imutableTypes: true
     plugins:
       - typescript
-  ./dev-test/githunt/operations/types.d.ts:
-    schema: ./dev-test/githunt/schema.json
-    plugins:
-      - typescript
-  ./dev-test/githunt/operations:
-    schema: ./dev-test/githunt/schema.json
-    documents: './dev-test/githunt/operations/*.graphql'
-    preset: near-operation-file
-    presetConfig:
-      extension: .types.d.ts
-      baseTypesPath: common.d.ts
-    plugins:
-      - typescript-operations
   ./dev-test/githunt/graphql-declared-modules.d.ts:
     schema: ./dev-test/githunt/schema.json
-    documents: ./dev-test/githunt/*.graphql
+    documents: ./dev-test/githunt/**/*.graphql
     plugins:
       - add: // tslint:disable
       - typescript-graphql-files-modules
   ./dev-test/githunt/flow.flow.js:
     schema: ./dev-test/githunt/schema.json
-    documents: ./dev-test/githunt/*.graphql
+    documents: ./dev-test/githunt/**/*.graphql
     plugins:
       - flow
       - flow-operations
   ./dev-test/githunt/types.ts:
     schema: ./dev-test/githunt/schema.json
-    documents: ./dev-test/githunt/*.graphql
+    documents: ./dev-test/githunt/**/*.graphql
     plugins:
       - typescript
       - typescript-operations
   ./dev-test/githunt/types.enumsAsTypes.ts:
     schema: ./dev-test/githunt/schema.json
-    documents: ./dev-test/githunt/*.graphql
+    documents: ./dev-test/githunt/**/*.graphql
     config:
       enumsAsTypes: true
     plugins:
@@ -86,7 +73,7 @@ generates:
       - typescript-operations
   ./dev-test/githunt/types.d.ts:
     schema: ./dev-test/githunt/schema.json
-    documents: ./dev-test/githunt/*.graphql
+    documents: ./dev-test/githunt/**/*.graphql
     config:
       enumsAsTypes: true
     plugins:
@@ -94,7 +81,7 @@ generates:
       - typescript-operations
   ./dev-test/githunt/types.avoidOptionals.ts:
     schema: ./dev-test/githunt/schema.json
-    documents: ./dev-test/githunt/*.graphql
+    documents: ./dev-test/githunt/**/*.graphql
     config:
       avoidOptionals: true
     plugins:
@@ -102,7 +89,7 @@ generates:
       - typescript-operations
   ./dev-test/githunt/types.immutableTypes.ts:
     schema: ./dev-test/githunt/schema.json
-    documents: ./dev-test/githunt/*.graphql
+    documents: ./dev-test/githunt/**/*.graphql
     config:
       immutableTypes: true
     plugins:
@@ -110,7 +97,7 @@ generates:
       - typescript-operations
   ./dev-test/githunt/types.reactApollo.tsx:
     schema: ./dev-test/githunt/schema.json
-    documents: ./dev-test/githunt/*.graphql
+    documents: ./dev-test/githunt/**/*.graphql
     plugins:
       - add: // tslint:disable
       - typescript
@@ -118,7 +105,7 @@ generates:
       - typescript-react-apollo
   ./dev-test/githunt/types.reactApollo.hooks.tsx:
     schema: ./dev-test/githunt/schema.json
-    documents: ./dev-test/githunt/*.graphql
+    documents: ./dev-test/githunt/**/*.graphql
     plugins:
       - add: // tslint:disable
       - typescript
@@ -128,7 +115,7 @@ generates:
       withHooks: true
   ./dev-test/githunt/types.stencilApollo.tsx:
     schema: ./dev-test/githunt/schema.json
-    documents: ./dev-test/githunt/*.graphql
+    documents: ./dev-test/githunt/**/*.graphql
     plugins:
       - add: // tslint:disable
       - typescript
@@ -136,7 +123,7 @@ generates:
       - typescript-stencil-apollo
   ./dev-test/githunt/types.stencilApollo.class.tsx:
     schema: ./dev-test/githunt/schema.json
-    documents: ./dev-test/githunt/*.graphql
+    documents: ./dev-test/githunt/**/*.graphql
     plugins:
       - add: // tslint:disable
       - typescript

@@ -124,7 +124,7 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
         const generatedFilePath = appendExtensionToFilePath(documentFile.filePath, extension);
         const absGeneratedFilePath = resolve(baseDir, generatedFilePath);
         const relativeImportPath = resolveRelativeImport(absGeneratedFilePath, absTypesPath);
-        const fragmentsInUse = extractExternalFragmentsInUse(documentFile.content, fragmentNameToFile, 1);
+        const fragmentsInUse = extractExternalFragmentsInUse(documentFile.content, fragmentNameToFile);
         const plugins = [...options.plugins];
 
         const config = {
