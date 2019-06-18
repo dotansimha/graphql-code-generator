@@ -181,10 +181,10 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
     super(
       rawConfig,
       {
-        contextType: parseMapper(rawConfig.contextType || 'any'),
-        rootValueType: parseMapper(rawConfig.rootValueType || '{}'),
+        contextType: parseMapper(rawConfig.contextType || 'any', 'ContextType'),
+        rootValueType: parseMapper(rawConfig.rootValueType || '{}', 'RootValueType'),
         avoidOptionals: getConfigValue(rawConfig.avoidOptionals, false),
-        defaultMapper: rawConfig.defaultMapper ? parseMapper(rawConfig.defaultMapper || 'any') : null,
+        defaultMapper: rawConfig.defaultMapper ? parseMapper(rawConfig.defaultMapper || 'any', 'DefaultMapperType') : null,
         mappers: transformMappers(rawConfig.mappers || {}),
         ...(additionalConfig || {}),
       } as TPluginConfig,
@@ -330,55 +330,48 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
   }
 
   public get mappersImports(): string[] {
-    const groupedMappers: { [sourceFile: string]: string[] } = {};
+    const groupedMappers: { [sourceFile: string]: { identifier: string; asDefault?: boolean }[] } = {};
+
+    const addMapper = (source: string, identifier: string, asDefault: boolean) => {
+      if (!groupedMappers[source]) {
+        groupedMappers[source] = [];
+      }
+
+      if (!groupedMappers[source].find(m => m.identifier === identifier)) {
+        groupedMappers[source].push({ identifier, asDefault });
+      }
+    };
 
     Object.keys(this.config.mappers)
       .filter(gqlTypeName => this.config.mappers[gqlTypeName].isExternal)
       .forEach(gqlTypeName => {
         const mapper = this.config.mappers[gqlTypeName];
-
-        if (!groupedMappers[mapper.source]) {
-          groupedMappers[mapper.source] = [];
-        }
-
         const identifier = stripMapperTypeInterpolation(mapper.type);
-
-        if (!groupedMappers[mapper.source].includes(identifier)) {
-          groupedMappers[mapper.source].push(identifier);
-        }
+        addMapper(mapper.source, identifier, mapper.default);
       });
 
     if (this.config.contextType.isExternal) {
-      if (!groupedMappers[this.config.contextType.source]) {
-        groupedMappers[this.config.contextType.source] = [];
-      }
-
-      groupedMappers[this.config.contextType.source].push(this.config.contextType.type);
+      addMapper(this.config.contextType.source, this.config.contextType.type, this.config.contextType.default);
     }
 
     if (this.config.rootValueType.isExternal) {
-      if (!groupedMappers[this.config.rootValueType.source]) {
-        groupedMappers[this.config.rootValueType.source] = [];
-      }
-
-      groupedMappers[this.config.rootValueType.source].push(this.config.rootValueType.type);
+      addMapper(this.config.rootValueType.source, this.config.rootValueType.type, this.config.rootValueType.default);
     }
 
     if (this.config.defaultMapper && this.config.defaultMapper.isExternal) {
-      if (!groupedMappers[this.config.defaultMapper.source]) {
-        groupedMappers[this.config.defaultMapper.source] = [];
-      }
-
       const identifier = stripMapperTypeInterpolation(this.config.defaultMapper.type);
-
-      groupedMappers[this.config.defaultMapper.source].push(identifier);
+      addMapper(this.config.defaultMapper.source, identifier, this.config.defaultMapper.default);
     }
 
     return Object.keys(groupedMappers).map(source => this.buildMapperImport(source, groupedMappers[source]));
   }
 
-  protected buildMapperImport(source: string, types: string[]): string {
-    return `import { ${types.join(', ')} } from '${source}';`;
+  protected buildMapperImport(source: string, types: { identifier: string; asDefault?: boolean }[]): string {
+    if (types[0] && types[0].asDefault) {
+      return `import ${types[0].identifier} from '${source}';`;
+    }
+
+    return `import { ${types.map(t => t.identifier).join(', ')} } from '${source}';`;
   }
 
   setDeclarationBlockConfig(config: DeclarationBlockConfig): void {

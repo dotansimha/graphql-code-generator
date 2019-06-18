@@ -4,16 +4,19 @@ export interface ParsedMapper {
   isExternal: boolean;
   type: string;
   source?: string;
+  default?: boolean;
 }
 
-export function parseMapper(mapper: string): ParsedMapper {
+export function parseMapper(mapper: string, gqlTypeName: string | null = null): ParsedMapper {
   if (isExternalMapper(mapper)) {
     const [source, type] = mapper.split('#');
+    const asDefault = type === 'default';
 
     return {
+      default: asDefault,
       isExternal: true,
       source,
-      type,
+      type: asDefault ? gqlTypeName : type,
     };
   }
 
@@ -32,7 +35,7 @@ export function transformMappers(rawMappers: RawResolversConfig['mappers']): Par
 
   Object.keys(rawMappers).forEach(gqlTypeName => {
     const mapperDef = rawMappers[gqlTypeName];
-    const parsedMapper = parseMapper(mapperDef);
+    const parsedMapper = parseMapper(mapperDef, gqlTypeName);
     result[gqlTypeName] = parsedMapper;
   });
 
