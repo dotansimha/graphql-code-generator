@@ -1282,7 +1282,7 @@ describe('TypeScript Operations Plugin', () => {
 
       expect(content).toBeSimilarStringTo(`
         export type UsersQueryVariables = {
-          reverse: Maybe<Scalars['Boolean']>
+          reverse?: Maybe<Scalars['Boolean']>
         };
       `);
     });
