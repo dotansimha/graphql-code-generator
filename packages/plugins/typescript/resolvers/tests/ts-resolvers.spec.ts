@@ -443,6 +443,70 @@ describe('TypeScript Resolvers Plugin', () => {
     await validate(result);
   });
 
+  it('Should allow to override context with mapped context type as default export', async () => {
+    const result = (await plugin(
+      schema,
+      [],
+      {
+        contextType: './my-file#default',
+      },
+      { outputFile: '' }
+    )) as Types.ComplexPluginOutput;
+
+    expect(result.prepend).toContain(`import ContextType from './my-file';`);
+
+    expect(result.content).toBeSimilarStringTo(`
+    export type MyDirectiveDirectiveResolver<Result, Parent, ContextType = ContextType, Args = {   arg?: Maybe<Scalars['Int']>,
+      arg2?: Maybe<Scalars['String']>, arg3?: Maybe<Scalars['Boolean']> }> = DirectiveResolverFn<Result, Parent, ContextType, Args>;`);
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type MyOtherTypeResolvers<ContextType = ContextType, ParentType = ResolversTypes['MyOtherType']> = {
+        bar?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+      };
+    `);
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type MyTypeResolvers<ContextType = ContextType, ParentType = ResolversTypes['MyType']> = {
+        foo?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+        otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>,
+        withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, MyTypeWithArgsArgs>,
+      };
+    `);
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type MyUnionResolvers<ContextType = ContextType, ParentType = ResolversTypes['MyUnion']> = {
+        __resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, ContextType>
+      };
+    `);
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type NodeResolvers<ContextType = ContextType, ParentType = ResolversTypes['Node']> = {
+        __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>,
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
+      };
+    `);
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type QueryResolvers<ContextType = ContextType, ParentType = ResolversTypes['Query']> = {
+        something?: Resolver<ResolversTypes['MyType'], ParentType, ContextType>,
+      };
+    `);
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type SomeNodeResolvers<ContextType = ContextType, ParentType = ResolversTypes['SomeNode']> = {
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
+      };
+    `);
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type SubscriptionResolvers<ContextType = ContextType, ParentType = ResolversTypes['Subscription']> = {
+        somethingChanged?: SubscriptionResolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>,
+      };
+    `);
+
+    await validate(result);
+  });
+
   it('Should generate the correct imports when schema has scalars', async () => {
     const testSchema = buildSchema(`scalar MyScalar`);
     const result = (await plugin(testSchema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
@@ -711,6 +775,48 @@ describe('TypeScript Resolvers Plugin', () => {
         Boolean: Scalars['Boolean'],
       };
     `);
+  });
+
+  it('should use correct value when rootValueType mapped as default', async () => {
+    const testSchema = buildSchema(/* GraphQL */ `
+      type Subscription {
+        postAdded: Post
+      }
+
+      type Query {
+        posts: [Post]
+      }
+
+      type Mutation {
+        addPost(author: String, comment: String): Post
+      }
+
+      type Post {
+        author: String
+        comment: String
+      }
+    `);
+    const content = (await plugin(
+      testSchema,
+      [],
+      {
+        rootValueType: 'my-file#default',
+      },
+      { outputFile: 'graphql.ts' }
+    )) as Types.ComplexPluginOutput;
+
+    expect(content.content).toBeSimilarStringTo(`
+      export type ResolversTypes = {
+        Query: RootValueType,
+        Post: Post,
+        String: Scalars['String'],
+        Mutation: RootValueType,
+        Subscription: RootValueType,
+        Boolean: Scalars['Boolean'],
+      };
+    `);
+
+    expect(content.prepend).toContain(`import RootValueType from 'my-file';`);
   });
 
   it('should use rootValueType in Query, Mutation and Subscription', async () => {
