@@ -43,7 +43,7 @@ const siteConfig = {
   //   organizationName: 'JoelMarcey'
 
   // For no header links in the top nav bar -> headerLinks: [],
-  headerLinks: [{ doc: 'getting-started/index', label: 'Docs' }, { href: 'https://github.com/dotansimha/graphql-code-generator', label: 'GitHub' }, { page: 'help', label: 'Help' }],
+  headerLinks: [{ doc: 'getting-started/index', label: 'API & Documentation' }, { search: true }, { href: 'https://github.com/dotansimha/graphql-code-generator', label: 'GitHub' }, { page: 'help', label: 'Help' }],
 
   // If you have users set above, you add it here:
   users,
@@ -101,6 +101,12 @@ const siteConfig = {
   gaTrackingId: 'UA-128969121-3',
 
   markdownPlugins: [importMd()],
+
+  algolia: {
+    apiKey: 'dc81d9e0ead1aecb5e776d262181ceeb',
+    indexName: 'graphql-code-generator',
+    algoliaOptions: {}, // Optional, if provided by Algolia
+  },
 };
 
 module.exports = siteConfig;
