@@ -230,6 +230,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
     return false;
   }
 
+  // Kamil: this one is heeeeavvyyyy
   protected createResolversFields(): void {
     const allSchemaTypes = this._schema.getTypeMap();
     const nestedMapping: { [typeName: string]: boolean } = {};
@@ -254,16 +255,16 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
         const schemaType = allSchemaTypes[typeName];
 
         if (isRootType) {
-          prev[typeName] = this.config.rootValueType.type;
+          prev[typeName] = this.applyMaybePromise(this.config.rootValueType.type);
 
           return prev;
         } else if (isMapped && this.config.mappers[typeName].type) {
           this.markMapperAsUsed(typeName);
-          prev[typeName] = this.config.mappers[typeName].type;
+          prev[typeName] = this.applyMaybePromise(this.config.mappers[typeName].type);
         } else if (hasDefaultMapper && !hasPlaceholder(this.config.defaultMapper.type)) {
-          prev[typeName] = this.config.defaultMapper.type;
+          prev[typeName] = this.applyMaybePromise(this.config.defaultMapper.type);
         } else if (isScalar) {
-          prev[typeName] = this._getScalar(typeName);
+          prev[typeName] = this.applyMaybePromise(this._getScalar(typeName));
         } else if (isUnionType(schemaType)) {
           prev[typeName] = schemaType
             .getTypes()
@@ -297,7 +298,11 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
             .filter(a => a);
 
           if (relevantFields.length > 0) {
-            prev[typeName] = this.replaceFieldsInType(prev[typeName], relevantFields);
+            // Puts MaybePromise on top of an entire type
+            prev[typeName] = this.applyMaybePromise(this.replaceFieldsInType(prev[typeName], relevantFields));
+          } else {
+            // We still want to use MaybePromise, even if we don't touch any fields
+            prev[typeName] = this.applyMaybePromise(prev[typeName]);
           }
         }
 
@@ -306,8 +311,16 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
         }
 
         if (!isMapped && hasDefaultMapper && hasPlaceholder(this.config.defaultMapper.type)) {
-          const name = isScalar ? this._getScalar(typeName) : prev[typeName];
-          prev[typeName] = replacePlaceholder(this.config.defaultMapper.type, name);
+          // Make sure the inner type has no MaybePromise
+          const name = this.clearMaybePromise(isScalar ? this._getScalar(typeName) : prev[typeName]);
+          const replaced = replacePlaceholder(this.config.defaultMapper.type, name);
+
+          // Don't wrap Union with MaybePromise, each inner type already has it
+          if (isUnionType(schemaType)) {
+            prev[typeName] = replaced;
+          } else {
+            prev[typeName] = this.applyMaybePromise(replacePlaceholder(this.config.defaultMapper.type, name));
+          }
         }
 
         return prev;
@@ -324,9 +337,23 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
     return `Maybe<${str}>`;
   }
 
+  protected applyMaybePromise(str: string): string {
+    return `MaybePromise<${this.clearMaybePromise(str)}>`;
+  }
+
   protected clearMaybe(str: string): string {
-    if (str.startsWith('Maybe')) {
+    // Make sure we don't find MaybePromise
+    if (str.startsWith('Maybe<')) {
       return str.replace(/Maybe<(.*?)>$/, '$1');
+    }
+
+    return str;
+  }
+
+  protected clearMaybePromise(str: string): string {
+    // Make sure we don't find Maybe
+    if (str.startsWith('MaybePromise<')) {
+      return str.replace(/MaybePromise<(.*?)>$/, '$1');
     }
 
     return str;
@@ -340,6 +367,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
 
       return this.applyMaybe(`Array<${innerType}>`);
     } else {
+      // maybePromise here?
       return this.applyMaybe(baseType);
     }
   }
