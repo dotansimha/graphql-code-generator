@@ -34,11 +34,10 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
   }
 
   protected formatFieldString(fieldName: string, isNonNullType: boolean, hasDefaultValue: boolean): string {
-    if ((!hasDefaultValue && isNonNullType) || this._avoidOptionals) {
+    if (!hasDefaultValue && (this._avoidOptionals || isNonNullType)) {
       return fieldName;
-    } else {
-      return `${fieldName}?`;
     }
+    return `${fieldName}?`;
   }
 
   protected formatTypeString(fieldType: string, isNonNullType: boolean, hasDefaultValue: boolean): string {
