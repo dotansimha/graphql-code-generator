@@ -1376,6 +1376,22 @@ describe('TypeScript', () => {
       validateTs(result);
     });
 
+    it('Should generate correctly types for field arguments - with default value and avoidOptionals option set to true', async () => {
+      const schema = buildSchema(`type MyType { foo(a: String = "default", b: String! = "default", c: String, d: String!): String }`);
+      const result = (await plugin(schema, [], { avoidOptionals: true }, { outputFile: '' })) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type MyTypeFooArgs = {
+          a?: Maybe<Scalars['String']>,
+          b?: Scalars['String'],
+          c: Maybe<Scalars['String']>,
+          d: Scalars['String']
+      };
+    `);
+
+      validateTs(result);
+    });
+
     it('Should generate correctly types for field arguments - with input type', async () => {
       const schema = buildSchema(`input MyInput { f: String } type MyType { foo(a: MyInput, b: MyInput!, c: [MyInput], d: [MyInput]!, e: [MyInput!]!): String }`);
       const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
