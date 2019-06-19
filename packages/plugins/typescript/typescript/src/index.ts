@@ -107,7 +107,7 @@ export const plugin: PluginFunction<TypeScriptPluginConfig> = (schema: GraphQLSc
   const scalars = visitor.scalarsDefinition;
 
   return {
-    prepend: [...visitor.getEnumsImports(), maybeValue],
+    prepend: [...visitor.getEnumsImports(), maybeValue, `export type MaybePromise<T> = Promise<T> | T;`],
     content: [scalars, ...visitorResult.definitions, ...introspectionDefinitions].join('\n'),
   };
 };
