@@ -141,15 +141,15 @@ describe('ResolversTypes', () => {
     )) as Types.ComplexPluginOutput;
     const content = mergeOutputs([result]);
     expect(content).toBeSimilarStringTo(`export type ResolversTypes = {
-      String: Scalars['String'],
-      Boolean: Scalars['Boolean'],
-      Movie: MovieEntity,
-      ID: Scalars['ID'],
-      Book: Book,
+      String: MaybePromise<Scalars['String']>,
+      Boolean: MaybePromise<Scalars['Boolean']>,
+      Movie: MaybePromise<MovieEntity>,
+      ID: MaybePromise<Scalars['ID']>,
+      Book: MaybePromise<Book>,
       MovieLike: ResolversTypes['Movie'] | ResolversTypes['Book'],
-      NonInterfaceHasNarrative: Omit<NonInterfaceHasNarrative, 'narrative' | 'movie'> & { narrative: ResolversTypes['MovieLike'], movie: ResolversTypes['Movie'] },
-      LayerOfIndirection: Omit<LayerOfIndirection, 'movies'> & { movies: Array<ResolversTypes['NonInterfaceHasNarrative']> },
-      AnotherLayerOfIndirection: Omit<AnotherLayerOfIndirection, 'inner'> & { inner: ResolversTypes['LayerOfIndirection'] },
+      NonInterfaceHasNarrative: MaybePromise<Omit<NonInterfaceHasNarrative, 'narrative' | 'movie'> & { narrative: ResolversTypes['MovieLike'], movie: ResolversTypes['Movie'] }>,
+      LayerOfIndirection: MaybePromise<Omit<LayerOfIndirection, 'movies'> & { movies: Array<ResolversTypes['NonInterfaceHasNarrative']> }>,
+      AnotherLayerOfIndirection: MaybePromise<Omit<AnotherLayerOfIndirection, 'inner'> & { inner: ResolversTypes['LayerOfIndirection'] }>,
     };`);
   });
 
