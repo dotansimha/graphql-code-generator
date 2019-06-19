@@ -97,7 +97,7 @@ describe('ResolversTypes', () => {
     };`);
   });
 
-  it.only('Should allow to map custom type that refers itself (issue #1770, attempt #2)', async () => {
+  it('Should allow to map custom type that refers itself (issue #1770, attempt #2)', async () => {
     const testSchema = buildSchema(/* GraphQL */ `
       type Movie {
         id: ID!
@@ -120,6 +120,10 @@ describe('ResolversTypes', () => {
         id: ID!
         movies: [NonInterfaceHasNarrative!]!
       }
+
+      type AnotherLayerOfIndirection {
+        inner: LayerOfIndirection!
+      }
     `);
     const result = (await plugin(
       testSchema,
@@ -141,7 +145,8 @@ describe('ResolversTypes', () => {
       Book: Book,
       MovieLike: ResolversTypes['Movie'] | ResolversTypes['Book'],
       NonInterfaceHasNarrative: Omit<NonInterfaceHasNarrative, 'narrative' | 'movie'> & { narrative: ResolversTypes['MovieLike'], movie: ResolversTypes['Movie'] },
-      LayerOfIndirection: LayerOfIndirection,
+      LayerOfIndirection: Omit<LayerOfIndirection, 'movies'> & { movies: Array<ResolversTypes['NonInterfaceHasNarrative']> },
+      AnotherLayerOfIndirection: Omit<AnotherLayerOfIndirection, 'inner'> & { inner: ResolversTypes['LayerOfIndirection'] },
     };`);
   });
 
