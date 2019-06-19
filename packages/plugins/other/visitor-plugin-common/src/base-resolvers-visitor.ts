@@ -19,6 +19,8 @@ import {
   isNonNullType,
   isListType,
   isUnionType,
+  GraphQLNamedType,
+  GraphQLInterfaceType,
 } from 'graphql';
 import { DirectiveDefinitionNode, GraphQLObjectType, InputValueDefinitionNode, GraphQLOutputType } from 'graphql';
 import { OperationVariablesToObject } from './variables-to-object';
@@ -197,8 +199,46 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
     this.createResolversFields();
   }
 
+  protected shouldMapType(type: GraphQLNamedType, checkedBefore: { [typeName: string]: boolean } = {}): boolean {
+    if (type.name.startsWith('__') || this.config.scalars[type.name]) {
+      return false;
+    }
+
+    if (checkedBefore[type.name] !== undefined) {
+      return checkedBefore[type.name];
+    }
+
+    if (this.config.mappers[type.name]) {
+      return true;
+    }
+
+    if (isObjectType(type) || isInterfaceType(type)) {
+      const fields = type.getFields();
+
+      return Object.keys(fields).some(fieldName => {
+        const field = fields[fieldName];
+        const fieldType = getBaseType(field.type);
+
+        if (checkedBefore[fieldType.name] !== undefined) {
+          return checkedBefore[fieldType.name];
+        }
+
+        return this.shouldMapType(fieldType, checkedBefore);
+      });
+    }
+
+    return false;
+  }
+
   protected createResolversFields(): void {
     const allSchemaTypes = this._schema.getTypeMap();
+    const nestedMapping: { [typeName: string]: boolean } = {};
+
+    Object.keys(allSchemaTypes).forEach(typeName => {
+      const schemaType = allSchemaTypes[typeName];
+      nestedMapping[typeName] = this.shouldMapType(schemaType, nestedMapping);
+    });
+
     this._resolversTypes = Object.keys(allSchemaTypes).reduce(
       (prev: ResolverTypes, typeName: string) => {
         if (typeName.startsWith('__')) {
@@ -242,7 +282,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
               const baseType = getBaseType(field.type);
               const isUnion = isUnionType(baseType);
 
-              if (!this.config.mappers[baseType.name] && !isUnion) {
+              if (!this.config.mappers[baseType.name] && !isUnion && !nestedMapping[baseType.name]) {
                 return null;
               }
 
