@@ -1042,36 +1042,6 @@
     unique-filename "^1.1.1"
     which "^1.3.1"
 
-"@graphql-codegen/java-common@1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/java-common/-/java-common-1.2.0.tgz#5514eab0d6c6c16b11d13c80cfe96f1455144075"
-  integrity sha512-BMn3frpca13Wslv/5BRTGE6sPxKu+NN4ewJYH2uIbWfH3mL6xuzx1rvnlEqNYlrKLlzh9TgflTSkdEbrwLc+7A==
-  dependencies:
-    "@graphql-codegen/plugin-helpers" "1.2.0"
-    "@graphql-codegen/visitor-plugin-common" "1.2.0"
-    tslib "1.9.3"
-
-"@graphql-codegen/plugin-helpers@1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/plugin-helpers/-/plugin-helpers-1.2.0.tgz#a5011f9d90767cbbe20ad9b4f6c8080bf79ba2fa"
-  integrity sha512-eF1p9KlKTgiqqCMnHUTlB8OhV35yyMCVfiqaSFuR0WtnnxgrR9QC6Bw+NAOsoV8gGhK2Uc9VgEJzjjHYVqPiVg==
-  dependencies:
-    change-case "3.1.0"
-    common-tags "1.8.0"
-    import-from "3.0.0"
-    tslib "1.9.3"
-
-"@graphql-codegen/visitor-plugin-common@1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/visitor-plugin-common/-/visitor-plugin-common-1.2.0.tgz#0f07f0e8e668ec83e40afb6f7d6157fe7c8affc5"
-  integrity sha512-o295vWzfFke86nKxbTzGQE8TSB529bq/rmDgjqd+chK3txDuIEKj/k9iu1oMl26AaM9Hs93ChXk8baMrbuXQ+A==
-  dependencies:
-    "@graphql-codegen/plugin-helpers" "1.2.0"
-    auto-bind "2.0.0"
-    dependency-graph "0.8.0"
-    graphql-tag "2.10.1"
-    tslib "1.9.3"
-
 "@hapi/address@2.x.x":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@hapi/address/-/address-2.0.0.tgz#9f05469c88cb2fd3dcd624776b54ee95c312126a"
