@@ -767,12 +767,12 @@ describe('TypeScript Resolvers Plugin', () => {
 
     expect(content.content).toBeSimilarStringTo(`
       export type ResolversTypes = {
-        Query: {},
-        Post: Post,
-        String: Scalars['String'],
-        Mutation: {},
-        Subscription: {},
-        Boolean: Scalars['Boolean'],
+        Query: MaybePromise<{}>,
+        Post: MaybePromise<Post>,
+        String: MaybePromise<Scalars['String']>,
+        Mutation: MaybePromise<{}>,
+        Subscription: MaybePromise<{}>,
+        Boolean: MaybePromise<Scalars['Boolean']>,
       };
     `);
   });
@@ -807,12 +807,12 @@ describe('TypeScript Resolvers Plugin', () => {
 
     expect(content.content).toBeSimilarStringTo(`
       export type ResolversTypes = {
-        Query: RootValueType,
-        Post: Post,
-        String: Scalars['String'],
-        Mutation: RootValueType,
-        Subscription: RootValueType,
-        Boolean: Scalars['Boolean'],
+        Query: MaybePromise<RootValueType>,
+        Post: MaybePromise<Post>,
+        String: MaybePromise<Scalars['String']>,
+        Mutation: MaybePromise<RootValueType>,
+        Subscription: MaybePromise<RootValueType>,
+        Boolean: MaybePromise<Scalars['Boolean']>,
       };
     `);
 
@@ -855,12 +855,12 @@ describe('TypeScript Resolvers Plugin', () => {
 
     expect(content.content).toBeSimilarStringTo(`
       export type ResolversTypes = {
-        MyQuery: MyRoot,
-        Post: Post,
-        String: Scalars['String'],
-        MyMutation: MyRoot,
-        MySubscription: MyRoot,
-        Boolean: Scalars['Boolean'],
+        MyQuery: MaybePromise<MyRoot>,
+        Post: MaybePromise<Post>,
+        String: MaybePromise<Scalars['String']>,
+        MyMutation: MaybePromise<MyRoot>,
+        MySubscription: MaybePromise<MyRoot>,
+        Boolean: MaybePromise<Scalars['Boolean']>,
       };
     `);
   });

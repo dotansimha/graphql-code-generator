@@ -10,18 +10,18 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      Query: {},
-      MyType: MyType,
-      String: Scalars['String'],
-      MyOtherType: MyOtherType,
-      Subscription: {},
-      Boolean: Scalars['Boolean'],
-      Node: Node,
-      ID: Scalars['ID'],
-      SomeNode: SomeNode,
+      Query: MaybePromise<{}>,
+      MyType: MaybePromise<MyType>,
+      String: MaybePromise<Scalars['String']>,
+      MyOtherType: MaybePromise<MyOtherType>,
+      Subscription: MaybePromise<{}>,
+      Boolean: MaybePromise<Scalars['Boolean']>,
+      Node: MaybePromise<Node>,
+      ID: MaybePromise<Scalars['ID']>,
+      SomeNode: MaybePromise<SomeNode>,
       MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'],
-      MyScalar: Scalars['MyScalar'],
-      Int: Scalars['Int'],
+      MyScalar: MaybePromise<Scalars['MyScalar']>,
+      Int: MaybePromise<Scalars['Int']>,
     };`);
   });
 
@@ -39,20 +39,21 @@ describe('ResolversTypes', () => {
     )) as Types.ComplexPluginOutput;
 
     expect(result.content).toBeSimilarStringTo(`
-    export type ResolversTypes = {
-      Query: {},
-      MyType: MyTypeDb,
-      String: number,
-      MyOtherType: Omit<MyOtherType, 'bar'> & { bar: ResolversTypes['String'] },
-      Subscription: {},
-      Boolean: Scalars['Boolean'],
-      Node: Node,
-      ID: Scalars['ID'],
-      SomeNode: SomeNode,
-      MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'],
-      MyScalar: Scalars['MyScalar'],
-      Int: Scalars['Int'],
-    };`);
+      export type ResolversTypes = {
+        Query: MaybePromise<{}>,
+        MyType: MaybePromise<MyTypeDb>,
+        String: MaybePromise<number>,
+        MyOtherType: MaybePromise<Omit<MyOtherType, 'bar'> & { bar: ResolversTypes['String'] }>,
+        Subscription: MaybePromise<{}>,
+        Boolean: MaybePromise<Scalars['Boolean']>,
+        Node: MaybePromise<Node>,
+        ID: MaybePromise<Scalars['ID']>,
+        SomeNode: MaybePromise<SomeNode>,
+        MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'],
+        MyScalar: MaybePromise<Scalars['MyScalar']>,
+        Int: MaybePromise<Scalars['Int']>,
+      };
+    `);
   });
 
   it('Should allow to map custom type that refers itself (issue #1770)', async () => {
@@ -86,15 +87,17 @@ describe('ResolversTypes', () => {
       { outputFile: '' }
     )) as Types.ComplexPluginOutput;
     const content = mergeOutputs([result]);
-    expect(content).toBeSimilarStringTo(`export type ResolversTypes = {
-      String: Scalars['String'],
-      Boolean: Scalars['Boolean'],
-      Movie: MovieEntity,
-      ID: Scalars['ID'],
-      Book: Book,
-      MovieLike: ResolversTypes['Movie'] | ResolversTypes['Book'],
-      NonInterfaceHasNarrative: Omit<NonInterfaceHasNarrative, 'narrative' | 'movie'> & { narrative: ResolversTypes['MovieLike'], movie: ResolversTypes['Movie'] },
-    };`);
+    expect(content).toBeSimilarStringTo(`
+      export type ResolversTypes = {
+        String: MaybePromise<Scalars['String']>,
+        Boolean: MaybePromise<Scalars['Boolean']>,
+        Movie: MaybePromise<MovieEntity>,
+        ID: MaybePromise<Scalars['ID']>,
+        Book: MaybePromise<Book>,
+        MovieLike: ResolversTypes['Movie'] | ResolversTypes['Book'],
+        NonInterfaceHasNarrative: MaybePromise<Omit<NonInterfaceHasNarrative, 'narrative' | 'movie'> & { narrative: ResolversTypes['MovieLike'], movie: ResolversTypes['Movie'] }>,
+      };
+    `);
   });
 
   it('Should allow to map custom type that refers itself (issue #1770, attempt #2)', async () => {
@@ -225,18 +228,18 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      Query: {},
-      MyType: Partial<MyType>,
-      String: Partial<Scalars['String']>,
-      MyOtherType: Partial<MyOtherType>,
-      Subscription: {},
-      Boolean: Partial<Scalars['Boolean']>,
-      Node: Partial<Node>,
-      ID: Partial<Scalars['ID']>,
-      SomeNode: Partial<SomeNode>,
+      Query: MaybePromise<{}>,
+      MyType: MaybePromise<Partial<MyType>>,
+      String: MaybePromise<Partial<Scalars['String']>>,
+      MyOtherType: MaybePromise<Partial<MyOtherType>>,
+      Subscription: MaybePromise<{}>,
+      Boolean: MaybePromise<Partial<Scalars['Boolean']>>,
+      Node: MaybePromise<Partial<Node>>,
+      ID: MaybePromise<Partial<Scalars['ID']>>,
+      SomeNode: MaybePromise<Partial<SomeNode>>,
       MyUnion: Partial<ResolversTypes['MyType'] | ResolversTypes['MyOtherType']>,
-      MyScalar: Partial<Scalars['MyScalar']>,
-      Int: Partial<Scalars['Int']>,
+      MyScalar: MaybePromise<Partial<Scalars['MyScalar']>>,
+      Int: MaybePromise<Partial<Scalars['Int']>>,
     };`);
   });
 
@@ -254,18 +257,18 @@ describe('ResolversTypes', () => {
     expect(result.prepend).toContain(`import { CustomPartial } from './my-wrapper';`);
     expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      Query: {},
-      MyType: CustomPartial<MyType>,
-      String: CustomPartial<Scalars['String']>,
-      MyOtherType: CustomPartial<MyOtherType>,
-      Subscription: {},
-      Boolean: CustomPartial<Scalars['Boolean']>,
-      Node: CustomPartial<Node>,
-      ID: CustomPartial<Scalars['ID']>,
-      SomeNode: CustomPartial<SomeNode>,
+      Query: MaybePromise<{}>,
+      MyType: MaybePromise<CustomPartial<MyType>>,
+      String: MaybePromise<CustomPartial<Scalars['String']>>,
+      MyOtherType: MaybePromise<CustomPartial<MyOtherType>>,
+      Subscription: MaybePromise<{}>,
+      Boolean: MaybePromise<CustomPartial<Scalars['Boolean']>>,
+      Node: MaybePromise<CustomPartial<Node>>,
+      ID: MaybePromise<CustomPartial<Scalars['ID']>>,
+      SomeNode: MaybePromise<CustomPartial<SomeNode>>,
       MyUnion: CustomPartial<ResolversTypes['MyType'] | ResolversTypes['MyOtherType']>,
-      MyScalar: CustomPartial<Scalars['MyScalar']>,
-      Int: CustomPartial<Scalars['Int']>,
+      MyScalar: MaybePromise<CustomPartial<Scalars['MyScalar']>>,
+      Int: MaybePromise<CustomPartial<Scalars['Int']>>,
     };`);
   });
 
@@ -285,18 +288,18 @@ describe('ResolversTypes', () => {
     expect(result.prepend).toContain(`import { CustomPartial } from './my-wrapper';`);
     expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      Query: {},
-      MyType: CustomPartial<MyType>,
-      String: Scalars['String'],
-      MyOtherType: MyOtherType,
-      Subscription: {},
-      Boolean: Scalars['Boolean'],
-      Node: Node,
-      ID: Scalars['ID'],
-      SomeNode: SomeNode,
+      Query: MaybePromise<{}>,
+      MyType: MaybePromise<CustomPartial<MyType>>,
+      String: MaybePromise<Scalars['String']>,
+      MyOtherType: MaybePromise<MyOtherType>,
+      Subscription: MaybePromise<{}>,
+      Boolean: MaybePromise<Scalars['Boolean']>,
+      Node: MaybePromise<Node>,
+      ID: MaybePromise<Scalars['ID']>,
+      SomeNode: MaybePromise<SomeNode>,
       MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'],
-      MyScalar: Scalars['MyScalar'],
-      Int: Scalars['Int'],
+      MyScalar: MaybePromise<Scalars['MyScalar']>,
+      Int: MaybePromise<Scalars['Int']>,
     };`);
   });
 
@@ -331,14 +334,14 @@ describe('ResolversTypes', () => {
     const result = (await plugin(testSchema, [], config, { outputFile: '' })) as Types.ComplexPluginOutput;
 
     expect(result.content).toBeSimilarStringTo(`
-    export type ResolversTypes = {
-      Query: {},
-      User: number,
-      ID: Partial<Scalars['ID']>,
-      String: Partial<Scalars['String']>,
-      Chat: Partial<Omit<Chat, 'owner' | 'members'> & { owner: ResolversTypes['User'], members?: Maybe<Array<ResolversTypes['User']>> }>,
-      Boolean: Partial<Scalars['Boolean']>,
-    };
+      export type ResolversTypes = {
+        Query: MaybePromise<{}>,
+        User: MaybePromise<number>,
+        ID: MaybePromise<Partial<Scalars['ID']>>,
+        String: MaybePromise<Partial<Scalars['String']>>,
+        Chat: MaybePromise<Partial<Omit<Chat, 'owner' | 'members'> & { owner: ResolversTypes['User'], members?: Maybe<Array<ResolversTypes['User']>> }>>,
+        Boolean: MaybePromise<Partial<Scalars['Boolean']>>,
+      };
     `);
 
     const usage = `
@@ -390,18 +393,18 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      Query: {},
-      MyType: MyTypeDb,
-      String: string,
-      MyOtherType: any,
-      Subscription: {},
-      Boolean: any,
-      Node: any,
-      ID: any,
-      SomeNode: any,
-      MyUnion: any,
-      MyScalar: any,
-      Int: any,
+      Query: MaybePromise<{}>,
+      MyType: MaybePromise<MyTypeDb>,
+      String: MaybePromise<string>,
+      MyOtherType: MaybePromise<any>,
+      Subscription: MaybePromise<{}>,
+      Boolean: MaybePromise<any>,
+      Node: MaybePromise<any>,
+      ID: MaybePromise<any>,
+      SomeNode: MaybePromise<any>,
+      MyUnion: MaybePromise<any>,
+      MyScalar: MaybePromise<any>,
+      Int: MaybePromise<any>,
     };`);
   });
 
@@ -421,18 +424,18 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      Query: {},
-      MyType: MyTypeDb,
-      String: Scalars['String'],
-      MyOtherType: CustomMyOtherType,
-      Subscription: {},
-      Boolean: Scalars['Boolean'],
-      Node: Node,
-      ID: Scalars['ID'],
-      SomeNode: SomeNode,
+      Query: MaybePromise<{}>,
+      MyType: MaybePromise<MyTypeDb>,
+      String: MaybePromise<Scalars['String']>,
+      MyOtherType: MaybePromise<CustomMyOtherType>,
+      Subscription: MaybePromise<{}>,
+      Boolean: MaybePromise<Scalars['Boolean']>,
+      Node: MaybePromise<Node>,
+      ID: MaybePromise<Scalars['ID']>,
+      SomeNode: MaybePromise<SomeNode>,
       MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'],
-      MyScalar: Scalars['MyScalar'],
-      Int: Scalars['Int'],
+      MyScalar: MaybePromise<Scalars['MyScalar']>,
+      Int: MaybePromise<Scalars['Int']>,
     };`);
   });
 
@@ -451,18 +454,18 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       export type ResolversTypes = {
-        Query: {},
-        MyType: Partial<MyType>,
-        String: Scalars['String'],
-        MyOtherType: MyOtherType,
-        Subscription: {},
-        Boolean: Scalars['Boolean'],
-        Node: Node,
-        ID: Scalars['ID'],
-        SomeNode: SomeNode,
+        Query: MaybePromise<{}>,
+        MyType: MaybePromise<Partial<MyType>>,
+        String: MaybePromise<Scalars['String']>,
+        MyOtherType: MaybePromise<MyOtherType>,
+        Subscription: MaybePromise<{}>,
+        Boolean: MaybePromise<Scalars['Boolean']>,
+        Node: MaybePromise<Node>,
+        ID: MaybePromise<Scalars['ID']>,
+        SomeNode: MaybePromise<SomeNode>,
         MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'],
-        MyScalar: Scalars['MyScalar'],
-        Int: Scalars['Int'],
+        MyScalar: MaybePromise<Scalars['MyScalar']>,
+        Int: MaybePromise<Scalars['Int']>,
       };
     `);
   });
@@ -908,18 +911,18 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      Query: {},
-      MyType: Omit<MyType, 'otherType'> & { otherType?: Maybe<ResolversTypes['MyOtherType']> },
-      String: Scalars['String'],
-      MyOtherType: MyOtherTypeCustom,
-      Subscription: {},
-      Boolean: Scalars['Boolean'],
-      Node: Node,
-      ID: Scalars['ID'],
-      SomeNode: SomeNode,
+      Query: MaybePromise<{}>,
+      MyType: MaybePromise<Omit<MyType, 'otherType'> & { otherType?: Maybe<ResolversTypes['MyOtherType']> }>,
+      String: MaybePromise<Scalars['String']>,
+      MyOtherType: MaybePromise<MyOtherTypeCustom>,
+      Subscription: MaybePromise<{}>,
+      Boolean: MaybePromise<Scalars['Boolean']>,
+      Node: MaybePromise<Node>,
+      ID: MaybePromise<Scalars['ID']>,
+      SomeNode: MaybePromise<SomeNode>,
       MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'],
-      MyScalar: Scalars['MyScalar'],
-      Int: Scalars['Int'],
+      MyScalar: MaybePromise<Scalars['MyScalar']>,
+      Int: MaybePromise<Scalars['Int']>,
     };`);
     await validate(mergeOutputs([result, 'type MyOtherTypeCustom = {};']));
   });
@@ -940,18 +943,18 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
     export type ResolversTypes = {
-      Query: {},
-      MyType: MyTypeCustom,
-      String: Scalars['String'],
-      MyOtherType: MyOtherTypeCustom,
-      Subscription: {},
-      Boolean: Scalars['Boolean'],
-      Node: Node,
-      ID: Scalars['ID'],
-      SomeNode: SomeNode,
+      Query: MaybePromise<{}>,
+      MyType: MaybePromise<MyTypeCustom>,
+      String: MaybePromise<Scalars['String']>,
+      MyOtherType: MaybePromise<MyOtherTypeCustom>,
+      Subscription: MaybePromise<{}>,
+      Boolean: MaybePromise<Scalars['Boolean']>,
+      Node: MaybePromise<Node>,
+      ID: MaybePromise<Scalars['ID']>,
+      SomeNode: MaybePromise<SomeNode>,
       MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'],
-      MyScalar: Scalars['MyScalar'],
-      Int: Scalars['Int'],
+      MyScalar: MaybePromise<Scalars['MyScalar']>,
+      Int: MaybePromise<Scalars['Int']>,
     };`);
     await validate(mergeOutputs([result, `type MyTypeCustom = {}; type MyOtherTypeCustom = {};`]));
   });
