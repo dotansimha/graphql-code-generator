@@ -135,6 +135,20 @@ describe('CLI Flags', () => {
     expect(config.schema).toBe('schema.graphql');
   });
 
+  it('Should interpolate environmental variables in YML and support default value containing ":"', async () => {
+    process.env['SCHEMA_PATH'] = '';
+
+    mockConfig(`
+        schema: \${SCHEMA_PATH:http://url-to-graphql-api}
+        generates:
+            file.ts:
+                - plugin
+    `);
+    const args = createArgv('--overwrite');
+    const config = await createConfig(args);
+    expect(config.schema).toBe('http://url-to-graphql-api');
+  });
+
   it('Should load require extensions provided by cli flags', async () => {
     process.env['SCHEMA_PATH'] = 'schema-env.graphql';
     mockConfig(`
