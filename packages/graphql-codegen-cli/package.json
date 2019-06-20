@@ -57,7 +57,6 @@
     "common-tags": "1.8.0",
     "detect-indent": "6.0.0",
     "glob": "7.1.4",
-    "graphql": "14.3.1",
     "graphql-config": "2.2.1",
     "graphql-import": "0.7.1",
     "graphql-tag-pluck": "0.8.2",
@@ -81,6 +80,7 @@
     "valid-url": "1.0.9"
   },
   "devDependencies": {
+    "graphql": "14.3.1",
     "@types/chokidar": "1.7.5",
     "@types/detect-indent": "5.0.0",
     "@types/inquirer": "6.0.2",
@@ -89,6 +89,9 @@
     "@types/log-symbols": "2.0.0",
     "bdd-stdin": "0.2.0",
     "ts-jest": "24.0.2"
+  },
+  "peerDependencies": {
+    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0"
   },
   "main": "dist/commonjs/index.js",
   "module": "dist/esnext/index.js",
