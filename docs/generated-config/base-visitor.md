@@ -13,7 +13,9 @@ config:
 
 ### namingConvention (`NamingConvention`, default value: `change-case#pascalCase`)
 
-Allow you to override the naming convention of the output. You can either override all namings, or specify an object with specific custom naming convention per output. The format of the converter must be a valid `module#method`. Allowed values for specific output are: `typeNames`, `enumValues`. You can also use "keep" to keep all GraphQL names as-is. Additionally you can set `transformUnderscore` to `true` if you want to override the default behaviour, which is to preserver underscores.
+Allow you to override the naming convention of the output. You can either override all namings, or specify an object with specific custom naming convention per output. The format of the converter must be a valid `module#method`. Allowed values for specific output are: `typeNames`, `enumValues`. You can also use "keep" to keep all GraphQL names as-is.
+
+Additionally, the codegen keeps underscore (`_`) for type names, but removes them for enum values. If you wish to keep underscore in your enum values, you can add `transformUnderscore: false` to your configuration.
 
 #### Usage Example: Override All Names
 
@@ -31,19 +33,19 @@ config:
     enumValues: change-case#upperCase
 ```
 
-#### Usage Example: Keep
+#### Usage Example: Keep Names As-Is
 
 ```yml
 config:
   namingConvention: keep
 ```
 
-#### Usage Example: Transform Underscores
+#### Usage Example: Keep Underscores
 
 ```yml
 config:
-  typeNames: change-case#pascalCase
-  transformUnderscore: true
+  namingConvention:
+    transformUnderscore: false
 ```
 
 ### typesPrefix (`string`, default value: `""`)

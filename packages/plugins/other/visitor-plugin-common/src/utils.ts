@@ -224,8 +224,8 @@ export function getBaseTypeNode(typeNode: TypeNode): NamedTypeNode {
   return typeNode;
 }
 
-export function convertNameParts(str: string, func: (str: string) => string, transformUnderscore = false): string {
-  if (transformUnderscore) {
+export function convertNameParts(str: string, func: (str: string) => string, removeUnderscore = false): string {
+  if (removeUnderscore) {
     return func(str);
   }
 
