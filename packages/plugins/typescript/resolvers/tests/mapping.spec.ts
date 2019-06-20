@@ -153,6 +153,45 @@ describe('ResolversTypes', () => {
     };`);
   });
 
+  it('Should allow to map custom type that refers itself (issue #1770, attempt #3 - circular)', async () => {
+    const testSchema = buildSchema(/* GraphQL */ `
+      type Account {
+        id: ID!
+        name: String!
+        programs: [Program!]!
+      }
+
+      type Program {
+        id: ID!
+        name: String!
+        account: Account!
+      }
+    `);
+    const result = (await plugin(
+      testSchema,
+      [],
+      {
+        typesPrefix: 'Gql',
+        defaultMapper: 'Partial<{T}>',
+        namingConvention: {
+          typeNames: 'change-case#pascalCase',
+          enumValues: 'change-case#upperCase',
+        },
+        noSchemaStitching: true,
+      },
+      { outputFile: '' }
+    )) as Types.ComplexPluginOutput;
+    const content = mergeOutputs([result]);
+
+    expect(content).toBeSimilarStringTo(`export type GqlResolversTypes = {
+      String: MaybePromise<Partial<Scalars['String']>>,
+      Boolean: MaybePromise<Partial<Scalars['Boolean']>>,
+      Account: MaybePromise<Partial<GqlAccount>>,
+      ID: MaybePromise<Partial<Scalars['ID']>>,
+      Program: MaybePromise<Partial<GqlProgram>>,
+    };`);
+  });
+
   it('should map to a custom type on every level (+ actual usage in code)', async () => {
     const testSchema = buildSchema(/* GraphQL */ `
       type User {

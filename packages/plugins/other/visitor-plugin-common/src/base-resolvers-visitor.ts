@@ -199,13 +199,13 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
     this.createResolversFields();
   }
 
-  protected shouldMapType(type: GraphQLNamedType, checkedBefore: { [typeName: string]: boolean } = {}): boolean {
-    if (type.name.startsWith('__') || this.config.scalars[type.name]) {
-      return false;
-    }
-
+  protected shouldMapType(type: GraphQLNamedType, checkedBefore: { [typeName: string]: boolean } = {}, duringCheck: string[] = []): boolean {
     if (checkedBefore[type.name] !== undefined) {
       return checkedBefore[type.name];
+    }
+
+    if (type.name.startsWith('__') || this.config.scalars[type.name]) {
+      return false;
     }
 
     if (this.config.mappers[type.name]) {
@@ -215,16 +215,30 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
     if (isObjectType(type) || isInterfaceType(type)) {
       const fields = type.getFields();
 
-      return Object.keys(fields).some(fieldName => {
-        const field = fields[fieldName];
-        const fieldType = getBaseType(field.type);
+      return Object.keys(fields)
+        .filter(fieldName => {
+          const field = fields[fieldName];
+          const fieldType = getBaseType(field.type);
 
-        if (checkedBefore[fieldType.name] !== undefined) {
-          return checkedBefore[fieldType.name];
-        }
+          return !duringCheck.includes(fieldType.name);
+        })
+        .some(fieldName => {
+          const field = fields[fieldName];
+          const fieldType = getBaseType(field.type);
 
-        return this.shouldMapType(fieldType, checkedBefore);
-      });
+          if (checkedBefore[fieldType.name] !== undefined) {
+            return checkedBefore[fieldType.name];
+          }
+
+          if (this.config.mappers[type.name]) {
+            return true;
+          }
+
+          duringCheck.push(type.name);
+          const innerResult = this.shouldMapType(fieldType, checkedBefore, duringCheck);
+
+          return innerResult;
+        });
     }
 
     return false;
