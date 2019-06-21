@@ -777,6 +777,39 @@ describe('TypeScript Resolvers Plugin', () => {
     `);
   });
 
+  it('should generate ResolversParentTypes', async () => {
+    const testSchema = buildSchema(/* GraphQL */ `
+      type Subscription {
+        postAdded: Post
+      }
+
+      type Query {
+        posts: [Post]
+      }
+
+      type Mutation {
+        addPost(author: String, comment: String): Post
+      }
+
+      type Post {
+        author: String
+        comment: String
+      }
+    `);
+    const content = (await plugin(testSchema, [], {}, { outputFile: 'graphql.ts' })) as Types.ComplexPluginOutput;
+
+    expect(content.content).toBeSimilarStringTo(`
+      export type ResolversParentTypes = {
+        Query: {},
+        Post: Post,
+        String: Scalars['String'],
+        Mutation: {},
+        Subscription: {},
+        Boolean: Scalars['Boolean'],
+      };
+    `);
+  });
+
   it('should use correct value when rootValueType mapped as default', async () => {
     const testSchema = buildSchema(/* GraphQL */ `
       type Subscription {
@@ -992,7 +1025,7 @@ describe('TypeScript Resolvers Plugin', () => {
     `);
   });
 
-  it('should use regular ResolverTypeWrapper by default', async () => {
+  it('should use MaybePromise in ResolverTypeWrapper on demand', async () => {
     const testSchema = buildSchema(/* GraphQL */ `
       type MySubscription {
         postAdded: Post

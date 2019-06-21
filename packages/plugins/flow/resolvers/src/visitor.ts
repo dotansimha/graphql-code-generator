@@ -65,6 +65,12 @@ export class FlowResolversVisitor extends BaseResolversVisitor<FlowResolversPlug
     return `$ElementType<${resolversType}, '${name}'>`;
   }
 
+  protected getParentTypeToUse(name: string): string {
+    const resolversType = this.convertName('ResolversParentTypes');
+
+    return `$ElementType<${resolversType}, '${name}'>`;
+  }
+
   protected replaceFieldsInType(typeName: string, relevantFields: { fieldName: string; replaceWithType: string }[]): string {
     return `$Diff<${typeName}, { ${relevantFields.map(f => `${f.fieldName}: * `).join(', ')} }> & { ${relevantFields.map(f => `${f.fieldName}: ${f.replaceWithType}`).join(', ')} }`;
   }

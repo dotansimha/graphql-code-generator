@@ -165,24 +165,6 @@ export interface RawResolversConfig extends RawConfig {
    * ```
    */
   showUnusedMappers?: boolean;
-  /**
-   * @name asyncResolverTypes
-   * @type boolean
-   * @description Wraps
-   * @default false
-   *
-   * @example
-   * ```yml
-   * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-resolvers
-   *  config:
-   *    asyncResolverTypes: true
-   * ```
-   */
-  asyncResolverTypes?: boolean;
 }
 
 export type ResolverTypes = { [gqlType: string]: string };
