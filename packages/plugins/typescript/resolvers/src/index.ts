@@ -91,6 +91,9 @@ export type StitchingResolver<TResult, TParent, TContext, TArgs> = {
   const resolverFnUsage = `ResolverFn<TResult, TParent, TContext, TArgs>`;
   const stitchingResolverUsage = `StitchingResolver<TResult, TParent, TContext, TArgs>`;
 
+  // Wrapper of every ResolverType
+  const resolverTypeWrapper = config.asyncResolverTypes ? `export type ResolverTypeWrapper<T> = Promise<T> | T;` : `export type ResolverTypeWrapper<T> = T;`;
+
   let resolverDefs: string;
 
   if (noSchemaStitching) {
@@ -105,6 +108,8 @@ export type StitchingResolver<TResult, TParent, TContext, TArgs> = {
   }
 
   const header = `${indexSignature}
+
+${resolverTypeWrapper}
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
