@@ -248,7 +248,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
   }
 
   // Kamil: this one is heeeeavvyyyy
-  protected createResolversFields(wrapperFn: (str: string) => string, clearWrapperFn: (str: string) => string): ResolverTypes {
+  protected createResolversFields(applyWrapper: (str: string) => string, clearWrapper: (str: string) => string): ResolverTypes {
     const allSchemaTypes = this._schema.getTypeMap();
     const nestedMapping: { [typeName: string]: boolean } = {};
 
@@ -272,16 +272,16 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
         const schemaType = allSchemaTypes[typeName];
 
         if (isRootType) {
-          prev[typeName] = wrapperFn(this.config.rootValueType.type);
+          prev[typeName] = applyWrapper(this.config.rootValueType.type);
 
           return prev;
         } else if (isMapped && this.config.mappers[typeName].type) {
           this.markMapperAsUsed(typeName);
-          prev[typeName] = wrapperFn(this.config.mappers[typeName].type);
+          prev[typeName] = applyWrapper(this.config.mappers[typeName].type);
         } else if (hasDefaultMapper && !hasPlaceholder(this.config.defaultMapper.type)) {
-          prev[typeName] = wrapperFn(this.config.defaultMapper.type);
+          prev[typeName] = applyWrapper(this.config.defaultMapper.type);
         } else if (isScalar) {
-          prev[typeName] = wrapperFn(this._getScalar(typeName));
+          prev[typeName] = applyWrapper(this._getScalar(typeName));
         } else if (isUnionType(schemaType)) {
           prev[typeName] = schemaType
             .getTypes()
@@ -316,10 +316,10 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
 
           if (relevantFields.length > 0) {
             // Puts ResolverTypeWrapper on top of an entire type
-            prev[typeName] = wrapperFn(this.replaceFieldsInType(prev[typeName], relevantFields));
+            prev[typeName] = applyWrapper(this.replaceFieldsInType(prev[typeName], relevantFields));
           } else {
             // We still want to use ResolverTypeWrapper, even if we don't touch any fields
-            prev[typeName] = wrapperFn(prev[typeName]);
+            prev[typeName] = applyWrapper(prev[typeName]);
           }
         }
 
@@ -329,14 +329,14 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
 
         if (!isMapped && hasDefaultMapper && hasPlaceholder(this.config.defaultMapper.type)) {
           // Make sure the inner type has no ResolverTypeWrapper
-          const name = clearWrapperFn(isScalar ? this._getScalar(typeName) : prev[typeName]);
+          const name = clearWrapper(isScalar ? this._getScalar(typeName) : prev[typeName]);
           const replaced = replacePlaceholder(this.config.defaultMapper.type, name);
 
           // Don't wrap Union with ResolverTypeWrapper, each inner type already has it
           if (isUnionType(schemaType)) {
             prev[typeName] = replaced;
           } else {
-            prev[typeName] = wrapperFn(replacePlaceholder(this.config.defaultMapper.type, name));
+            prev[typeName] = applyWrapper(replacePlaceholder(this.config.defaultMapper.type, name));
           }
         }
 
