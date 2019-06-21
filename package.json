@@ -52,7 +52,7 @@
     "react-apollo-hooks": "0.4.5",
     "rimraf": "2.6.3",
     "ts-jest": "24.0.2",
-    "tslint": "5.17.0",
+    "tslint": "5.18.0",
     "typescript": "3.5.2"
   },
   "lint-staged": {
