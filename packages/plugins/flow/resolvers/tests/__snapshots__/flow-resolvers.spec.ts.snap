@@ -48,7 +48,7 @@ export type DirectiveResolverFn<Result = {}, Parent = {}, Args = {}, Context = {
   info: GraphQLResolveInfo
 ) => Result | Promise<Result>;
 
-export type ResolverTypeWrapper<T> = T;
+export type ResolverTypeWrapper<T> = Promise<T> | T;
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
