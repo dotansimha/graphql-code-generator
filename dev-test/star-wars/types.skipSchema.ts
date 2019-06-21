@@ -10,7 +10,6 @@ export type Scalars = {
 
 /** A character from the Star Wars universe */
 export type Character = {
-  __typename?: 'Character',
   /** The ID of the character */
   id: Scalars['ID'],
   /** The name of the character */
@@ -119,7 +118,7 @@ export type Human = Character & {
 
 /** A humanoid creature from the Star Wars universe */
 export type HumanHeightArgs = {
-  unit: LengthUnit
+  unit?: Maybe<LengthUnit>
 };
 
 
@@ -245,7 +244,7 @@ export type Starship = {
 
 
 export type StarshipLengthArgs = {
-  unit: LengthUnit
+  unit?: Maybe<LengthUnit>
 };
 export type CreateReviewForEpisodeMutationVariables = {
   episode: Episode,

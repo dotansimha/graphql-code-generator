@@ -31,6 +31,8 @@ export type User = {
 };
 
 
+export type ResolverTypeWrapper<T> = Promise<T> | T;
+
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
   args: TArgs,
@@ -89,6 +91,15 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  Query: ResolverTypeWrapper<{}>,
+  User: ResolverTypeWrapper<User>,
+  Int: ResolverTypeWrapper<Scalars['Int']>,
+  String: ResolverTypeWrapper<Scalars['String']>,
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
+};
+
+/** Mapping between all available schema types and the resolvers parents */
+export type ResolversParentTypes = {
   Query: {},
   User: User,
   Int: Scalars['Int'],
@@ -96,13 +107,13 @@ export type ResolversTypes = {
   Boolean: Scalars['Boolean'],
 };
 
-export type QueryResolvers<ContextType = any, ParentType = ResolversTypes['Query']> = {
+export type QueryResolvers<ContextType = any, ParentType = ResolversParentTypes['Query']> = {
   allUsers?: Resolver<Array<Maybe<ResolversTypes['User']>>, ParentType, ContextType>,
   userById?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, QueryUserByIdArgs>,
   answer?: Resolver<Array<ResolversTypes['Int']>, ParentType, ContextType>,
 };
 
-export type UserResolvers<ContextType = any, ParentType = ResolversTypes['User']> = {
+export type UserResolvers<ContextType = any, ParentType = ResolversParentTypes['User']> = {
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>,
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
