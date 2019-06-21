@@ -54,7 +54,7 @@ export const plugin: PluginFunction<FlowPluginConfig> = (schema: GraphQLSchema, 
   });
 
   return {
-    prepend: [header, ...visitor.getEnumsImports()],
+    prepend: [header, ...visitor.getEnumsImports(), `export type ResolverTypeWrapper<T> = T;`],
     content: [visitor.scalarsDefinition, ...visitorResult.definitions].join('\n'),
   };
 };

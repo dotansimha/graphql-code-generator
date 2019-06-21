@@ -165,6 +165,24 @@ export interface RawResolversConfig extends RawConfig {
    * ```
    */
   showUnusedMappers?: boolean;
+  /**
+   * @name asyncResolverTypes
+   * @type boolean
+   * @description Wraps
+   * @default false
+   *
+   * @example
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *    - typescript-resolvers
+   *  config:
+   *    asyncResolverTypes: true
+   * ```
+   */
+  asyncResolverTypes?: boolean;
 }
 
 export type ResolverTypes = { [gqlType: string]: string };
@@ -269,16 +287,16 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
         const schemaType = allSchemaTypes[typeName];
 
         if (isRootType) {
-          prev[typeName] = this.applyMaybePromise(this.config.rootValueType.type);
+          prev[typeName] = this.applyResolverTypeWrapper(this.config.rootValueType.type);
 
           return prev;
         } else if (isMapped && this.config.mappers[typeName].type) {
           this.markMapperAsUsed(typeName);
-          prev[typeName] = this.applyMaybePromise(this.config.mappers[typeName].type);
+          prev[typeName] = this.applyResolverTypeWrapper(this.config.mappers[typeName].type);
         } else if (hasDefaultMapper && !hasPlaceholder(this.config.defaultMapper.type)) {
-          prev[typeName] = this.applyMaybePromise(this.config.defaultMapper.type);
+          prev[typeName] = this.applyResolverTypeWrapper(this.config.defaultMapper.type);
         } else if (isScalar) {
-          prev[typeName] = this.applyMaybePromise(this._getScalar(typeName));
+          prev[typeName] = this.applyResolverTypeWrapper(this._getScalar(typeName));
         } else if (isUnionType(schemaType)) {
           prev[typeName] = schemaType
             .getTypes()
@@ -312,11 +330,11 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
             .filter(a => a);
 
           if (relevantFields.length > 0) {
-            // Puts MaybePromise on top of an entire type
-            prev[typeName] = this.applyMaybePromise(this.replaceFieldsInType(prev[typeName], relevantFields));
+            // Puts ResolverTypeWrapper on top of an entire type
+            prev[typeName] = this.applyResolverTypeWrapper(this.replaceFieldsInType(prev[typeName], relevantFields));
           } else {
-            // We still want to use MaybePromise, even if we don't touch any fields
-            prev[typeName] = this.applyMaybePromise(prev[typeName]);
+            // We still want to use ResolverTypeWrapper, even if we don't touch any fields
+            prev[typeName] = this.applyResolverTypeWrapper(prev[typeName]);
           }
         }
 
@@ -325,15 +343,15 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
         }
 
         if (!isMapped && hasDefaultMapper && hasPlaceholder(this.config.defaultMapper.type)) {
-          // Make sure the inner type has no MaybePromise
-          const name = this.clearMaybePromise(isScalar ? this._getScalar(typeName) : prev[typeName]);
+          // Make sure the inner type has no ResolverTypeWrapper
+          const name = this.clearWrapper(isScalar ? this._getScalar(typeName) : prev[typeName]);
           const replaced = replacePlaceholder(this.config.defaultMapper.type, name);
 
-          // Don't wrap Union with MaybePromise, each inner type already has it
+          // Don't wrap Union with ResolverTypeWrapper, each inner type already has it
           if (isUnionType(schemaType)) {
             prev[typeName] = replaced;
           } else {
-            prev[typeName] = this.applyMaybePromise(replacePlaceholder(this.config.defaultMapper.type, name));
+            prev[typeName] = this.applyResolverTypeWrapper(replacePlaceholder(this.config.defaultMapper.type, name));
           }
         }
 
@@ -351,12 +369,11 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
     return `Maybe<${str}>`;
   }
 
-  protected applyMaybePromise(str: string): string {
-    return `MaybePromise<${this.clearMaybePromise(str)}>`;
+  protected applyResolverTypeWrapper(str: string): string {
+    return `ResolverTypeWrapper<${this.clearWrapper(str)}>`;
   }
 
   protected clearMaybe(str: string): string {
-    // Make sure we don't find MaybePromise
     if (str.startsWith('Maybe<')) {
       return str.replace(/Maybe<(.*?)>$/, '$1');
     }
@@ -364,10 +381,9 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
     return str;
   }
 
-  protected clearMaybePromise(str: string): string {
-    // Make sure we don't find Maybe
-    if (str.startsWith('MaybePromise<')) {
-      return str.replace(/MaybePromise<(.*?)>$/, '$1');
+  protected clearWrapper(str: string): string {
+    if (str.startsWith('ResolverTypeWrapper<')) {
+      return str.replace(/ResolverTypeWrapper<(.*?)>$/, '$1');
     }
 
     return str;
@@ -381,7 +397,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
 
       return this.applyMaybe(`Array<${innerType}>`);
     } else {
-      // maybePromise here?
+      // ResolverTypeWrapper here?
       return this.applyMaybe(baseType);
     }
   }

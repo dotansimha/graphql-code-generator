@@ -767,12 +767,12 @@ describe('TypeScript Resolvers Plugin', () => {
 
     expect(content.content).toBeSimilarStringTo(`
       export type ResolversTypes = {
-        Query: MaybePromise<{}>,
-        Post: MaybePromise<Post>,
-        String: MaybePromise<Scalars['String']>,
-        Mutation: MaybePromise<{}>,
-        Subscription: MaybePromise<{}>,
-        Boolean: MaybePromise<Scalars['Boolean']>,
+        Query: ResolverTypeWrapper<{}>,
+        Post: ResolverTypeWrapper<Post>,
+        String: ResolverTypeWrapper<Scalars['String']>,
+        Mutation: ResolverTypeWrapper<{}>,
+        Subscription: ResolverTypeWrapper<{}>,
+        Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
       };
     `);
   });
@@ -807,12 +807,12 @@ describe('TypeScript Resolvers Plugin', () => {
 
     expect(content.content).toBeSimilarStringTo(`
       export type ResolversTypes = {
-        Query: MaybePromise<RootValueType>,
-        Post: MaybePromise<Post>,
-        String: MaybePromise<Scalars['String']>,
-        Mutation: MaybePromise<RootValueType>,
-        Subscription: MaybePromise<RootValueType>,
-        Boolean: MaybePromise<Scalars['Boolean']>,
+        Query: ResolverTypeWrapper<RootValueType>,
+        Post: ResolverTypeWrapper<Post>,
+        String: ResolverTypeWrapper<Scalars['String']>,
+        Mutation: ResolverTypeWrapper<RootValueType>,
+        Subscription: ResolverTypeWrapper<RootValueType>,
+        Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
       };
     `);
 
@@ -855,12 +855,12 @@ describe('TypeScript Resolvers Plugin', () => {
 
     expect(content.content).toBeSimilarStringTo(`
       export type ResolversTypes = {
-        MyQuery: MaybePromise<MyRoot>,
-        Post: MaybePromise<Post>,
-        String: MaybePromise<Scalars['String']>,
-        MyMutation: MaybePromise<MyRoot>,
-        MySubscription: MaybePromise<MyRoot>,
-        Boolean: MaybePromise<Scalars['Boolean']>,
+        MyQuery: ResolverTypeWrapper<MyRoot>,
+        Post: ResolverTypeWrapper<Post>,
+        String: ResolverTypeWrapper<Scalars['String']>,
+        MyMutation: ResolverTypeWrapper<MyRoot>,
+        MySubscription: ResolverTypeWrapper<MyRoot>,
+        Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
       };
     `);
   });
