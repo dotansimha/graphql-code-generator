@@ -18,6 +18,9 @@ export const plugin: PluginFunction<FlowResolversPluginConfig> = (schema: GraphQ
 
   const gqlImports = `import { ${imports.join(', ')} } from 'graphql';`;
 
+  // Wrapper of every ResolverType
+  const resolverTypeWrapper = `export type ResolverTypeWrapper<T> = Promise<T> | T;`;
+
   const header = `export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
   parent: Parent,
   args: Args,
@@ -63,6 +66,8 @@ export type DirectiveResolverFn<Result = {}, Parent = {}, Args = {}, Context = {
   context: Context,
   info: GraphQLResolveInfo
 ) => Result | Promise<Result>;
+
+${resolverTypeWrapper}
 `;
 
   const printedSchema = printSchema(schema);
@@ -70,6 +75,7 @@ export type DirectiveResolverFn<Result = {}, Parent = {}, Args = {}, Context = {
   const visitor = new FlowResolversVisitor(config, schema);
   const visitorResult = visit(astNode, { leave: visitor });
   const resolversTypeMapping = visitor.buildResolversTypes();
+  const resolversParentTypeMapping = visitor.buildResolversParentTypes();
   const { getRootResolver, getAllDirectiveResolvers, mappersImports, unusedMappers } = visitor;
 
   if (showUnusedMappers && unusedMappers.length) {
@@ -78,6 +84,6 @@ export type DirectiveResolverFn<Result = {}, Parent = {}, Args = {}, Context = {
 
   return {
     prepend: [gqlImports, ...mappersImports],
-    content: [header, resolversTypeMapping, ...visitorResult.definitions.filter(d => typeof d === 'string'), getRootResolver(), getAllDirectiveResolvers()].join('\n'),
+    content: [header, resolversTypeMapping, resolversParentTypeMapping, ...visitorResult.definitions.filter(d => typeof d === 'string'), getRootResolver(), getAllDirectiveResolvers()].join('\n'),
   };
 };

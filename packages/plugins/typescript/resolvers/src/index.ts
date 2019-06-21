@@ -91,6 +91,9 @@ export type StitchingResolver<TResult, TParent, TContext, TArgs> = {
   const resolverFnUsage = `ResolverFn<TResult, TParent, TContext, TArgs>`;
   const stitchingResolverUsage = `StitchingResolver<TResult, TParent, TContext, TArgs>`;
 
+  // Wrapper of every ResolverType
+  const resolverTypeWrapper = `export type ResolverTypeWrapper<T> = Promise<T> | T;`;
+
   let resolverDefs: string;
 
   if (noSchemaStitching) {
@@ -105,6 +108,8 @@ export type StitchingResolver<TResult, TParent, TContext, TArgs> = {
   }
 
   const header = `${indexSignature}
+
+${resolverTypeWrapper}
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
@@ -159,6 +164,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   const astNode = parse(printedSchema);
   const visitorResult = visit(astNode, { leave: visitor });
   const resolversTypeMapping = visitor.buildResolversTypes();
+  const resolversParentTypeMapping = visitor.buildResolversParentTypes();
   const { getRootResolver, getAllDirectiveResolvers, mappersImports, unusedMappers } = visitor;
 
   if (showUnusedMappers && unusedMappers.length) {
@@ -167,7 +173,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
   return {
     prepend: [`import { ${imports.join(', ')} } from 'graphql';`, ...mappersImports, OMIT_TYPE],
-    content: [header, resolversTypeMapping, ...visitorResult.definitions.filter(d => typeof d === 'string'), getRootResolver(), getAllDirectiveResolvers()].join('\n'),
+    content: [header, resolversTypeMapping, resolversParentTypeMapping, ...visitorResult.definitions.filter(d => typeof d === 'string'), getRootResolver(), getAllDirectiveResolvers()].join('\n'),
   };
 };
 

@@ -48,27 +48,45 @@ export type DirectiveResolverFn<Result = {}, Parent = {}, Args = {}, Context = {
   info: GraphQLResolveInfo
 ) => Result | Promise<Result>;
 
+export type ResolverTypeWrapper<T> = Promise<T> | T;
+
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
-  Query: MaybePromise<{}>,
-  MyType: MaybePromise<MyType>,
-  String: MaybePromise<$ElementType<Scalars, 'String'>>,
-  MyOtherType: MaybePromise<MyOtherType>,
-  Subscription: MaybePromise<{}>,
-  Boolean: MaybePromise<$ElementType<Scalars, 'Boolean'>>,
-  Node: MaybePromise<Node>,
-  ID: MaybePromise<$ElementType<Scalars, 'ID'>>,
-  SomeNode: MaybePromise<SomeNode>,
+  Query: ResolverTypeWrapper<{}>,
+  MyType: ResolverTypeWrapper<MyType>,
+  String: ResolverTypeWrapper<$ElementType<Scalars, 'String'>>,
+  MyOtherType: ResolverTypeWrapper<MyOtherType>,
+  Subscription: ResolverTypeWrapper<{}>,
+  Boolean: ResolverTypeWrapper<$ElementType<Scalars, 'Boolean'>>,
+  Node: ResolverTypeWrapper<Node>,
+  ID: ResolverTypeWrapper<$ElementType<Scalars, 'ID'>>,
+  SomeNode: ResolverTypeWrapper<SomeNode>,
   MyUnion: $ElementType<ResolversTypes, 'MyType'> | $ElementType<ResolversTypes, 'MyOtherType'>,
-  MyScalar: MaybePromise<$ElementType<Scalars, 'MyScalar'>>,
-  Int: MaybePromise<$ElementType<Scalars, 'Int'>>,
+  MyScalar: ResolverTypeWrapper<$ElementType<Scalars, 'MyScalar'>>,
+  Int: ResolverTypeWrapper<$ElementType<Scalars, 'Int'>>,
+};
+
+/** Mapping between all available schema types and the resolvers parents */
+export type ResolversParentTypes = {
+  Query: {},
+  MyType: MyType,
+  String: $ElementType<Scalars, 'String'>,
+  MyOtherType: MyOtherType,
+  Subscription: {},
+  Boolean: $ElementType<Scalars, 'Boolean'>,
+  Node: Node,
+  ID: $ElementType<Scalars, 'ID'>,
+  SomeNode: SomeNode,
+  MyUnion: $ElementType<ResolversTypes, 'MyType'> | $ElementType<ResolversTypes, 'MyOtherType'>,
+  MyScalar: $ElementType<Scalars, 'MyScalar'>,
+  Int: $ElementType<Scalars, 'Int'>,
 };
 
 export type MyDirectiveDirectiveResolver<Result, Parent, ContextType = any, Args = {   arg?: ?$ElementType<Scalars, 'Int'>,
   arg2?: ?$ElementType<Scalars, 'String'>,
   arg3?: ?$ElementType<Scalars, 'Boolean'> }> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
-export type MyOtherTypeResolvers<ContextType = any, ParentType = $ElementType<ResolversTypes, 'MyOtherType'>> = {
+export type MyOtherTypeResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'MyOtherType'>> = {
   bar?: Resolver<$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
 };
 
@@ -77,30 +95,30 @@ export type MyScalarScalarConfig = {
   name: 'MyScalar'
 };
 
-export type MyTypeResolvers<ContextType = any, ParentType = $ElementType<ResolversTypes, 'MyType'>> = {
+export type MyTypeResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'MyType'>> = {
   foo?: Resolver<$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
   otherType?: Resolver<?$ElementType<ResolversTypes, 'MyOtherType'>, ParentType, ContextType>,
   withArgs?: Resolver<?$ElementType<ResolversTypes, 'String'>, ParentType, ContextType, MyTypeWithArgsArgs>,
 };
 
-export type MyUnionResolvers<ContextType = any, ParentType = $ElementType<ResolversTypes, 'MyUnion'>> = {
+export type MyUnionResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'MyUnion'>> = {
   __resolveType: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, ContextType>
 };
 
-export type NodeResolvers<ContextType = any, ParentType = $ElementType<ResolversTypes, 'Node'>> = {
+export type NodeResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'Node'>> = {
   __resolveType: TypeResolveFn<'SomeNode', ParentType, ContextType>,
   id?: Resolver<$ElementType<ResolversTypes, 'ID'>, ParentType, ContextType>,
 };
 
-export type QueryResolvers<ContextType = any, ParentType = $ElementType<ResolversTypes, 'Query'>> = {
+export type QueryResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'Query'>> = {
   something?: Resolver<$ElementType<ResolversTypes, 'MyType'>, ParentType, ContextType>,
 };
 
-export type SomeNodeResolvers<ContextType = any, ParentType = $ElementType<ResolversTypes, 'SomeNode'>> = {
+export type SomeNodeResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'SomeNode'>> = {
   id?: Resolver<$ElementType<ResolversTypes, 'ID'>, ParentType, ContextType>,
 };
 
-export type SubscriptionResolvers<ContextType = any, ParentType = $ElementType<ResolversTypes, 'Subscription'>> = {
+export type SubscriptionResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'Subscription'>> = {
   somethingChanged?: SubscriptionResolver<?$ElementType<ResolversTypes, 'MyOtherType'>, ParentType, ContextType>,
 };
 
