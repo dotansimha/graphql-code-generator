@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/testing",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "GraphQL Codegen Testing Utils",
   "main": "dist/commonjs/index.js",
   "module": "dist/esnext/index.js",
@@ -18,7 +18,7 @@
     "typescript": ">=3.0.0"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "1.3.0",
+    "@graphql-codegen/plugin-helpers": "1.3.1",
     "common-tags": "1.8.0",
     "tslib": "1.10.0"
   },

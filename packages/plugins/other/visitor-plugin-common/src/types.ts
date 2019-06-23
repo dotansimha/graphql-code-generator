@@ -27,7 +27,6 @@ export type DeclarationKind = 'type' | 'interface';
 export interface DeclarationKindConfig {
   scalar?: DeclarationKind;
   input?: DeclarationKind;
-  union?: DeclarationKind;
   type?: DeclarationKind;
   interface?: DeclarationKind;
   arguments?: DeclarationKind;
