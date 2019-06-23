@@ -156,7 +156,7 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
-      .asKind(this._parsedConfig.declarationKind.union)
+      .asKind('type')
       .withName(this.convertName(node))
       .withComment((node.description as any) as string)
       .withContent(possibleTypes).string;
