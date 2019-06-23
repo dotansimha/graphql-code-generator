@@ -61,7 +61,7 @@
     "graphql-import": "0.7.1",
     "graphql-tag-pluck": "0.8.2",
     "graphql-toolkit": "0.2.14",
-    "graphql-tools": "4.0.4",
+    "graphql-tools": "4.0.5",
     "indent-string": "4.0.0",
     "inquirer": "6.3.1",
     "is-glob": "4.0.1",
