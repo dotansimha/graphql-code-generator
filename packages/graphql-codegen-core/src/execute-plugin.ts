@@ -31,15 +31,16 @@ export async function executePlugin(options: ExecutePluginOptions, plugin: Codeg
   }
 
   const outputSchema: GraphQLSchema = buildASTSchema(options.schema);
+  const documents = options.documents || [];
 
-  if (outputSchema && options.documents.length > 0) {
-    const errors = validateGraphQlDocuments(outputSchema, options.documents);
+  if (outputSchema && documents.length > 0) {
+    const errors = validateGraphQlDocuments(outputSchema, documents);
     checkValidationErrors(errors);
   }
 
   if (plugin.validate && typeof plugin.validate === 'function') {
     try {
-      await plugin.validate(outputSchema, options.documents, options.config, options.outputFilename, options.allPlugins);
+      await plugin.validate(outputSchema, documents, options.config, options.outputFilename, options.allPlugins);
     } catch (e) {
       throw new DetailedError(
         `Plugin "${options.name}" validation failed:`,
@@ -50,7 +51,7 @@ export async function executePlugin(options: ExecutePluginOptions, plugin: Codeg
     }
   }
 
-  return plugin.plugin(outputSchema, options.documents, options.config, {
+  return plugin.plugin(outputSchema, documents, options.config, {
     outputFile: options.outputFilename,
     allPlugins: options.allPlugins,
   });
