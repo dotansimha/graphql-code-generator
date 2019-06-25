@@ -1901,13 +1901,12 @@
     npmlog "^4.1.2"
     write-file-atomic "^2.3.0"
 
-"@material-ui/core@4.1.2":
-  version "4.1.2"
-  resolved "https://registry.yarnpkg.com/@material-ui/core/-/core-4.1.2.tgz#395eeeb7e24d77bec58f586577221617a5b3d368"
-  integrity sha512-qW0RmqMAenccFF6ErUPixDTi2hjboKU7PxaDB4OhFmDACBU8kWTf9XCoFzBVXwO3ADDkgpUTfBFNf9y2H9oubQ==
+"@material-ui/core@4.1.3":
+  version "4.1.3"
+  resolved "https://registry.yarnpkg.com/@material-ui/core/-/core-4.1.3.tgz#0f8ffae88ac668399fbfc66efa1ed37c4ce29a7d"
+  integrity sha512-cSrI3yZ2L1XVi5IyO0/dPGUq1FaDBKTL9ygDOlvojD6bGuD/Qu17dCFAD8/mHV4CPNQMJYUKLYyOmqtDYdEB9g==
   dependencies:
     "@babel/runtime" "^7.2.0"
-    "@material-ui/react-transition-group" "^4.2.0"
     "@material-ui/styles" "^4.1.2"
     "@material-ui/system" "^4.3.0"
     "@material-ui/types" "^4.1.1"
@@ -1923,17 +1922,8 @@
     popper.js "^1.14.1"
     prop-types "^15.7.2"
     react-event-listener "^0.6.6"
+    react-transition-group "^4.0.0"
     warning "^4.0.1"
-
-"@material-ui/react-transition-group@^4.2.0":
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/@material-ui/react-transition-group/-/react-transition-group-4.2.0.tgz#afec833bbcc79f05a9b4d4828b3e07965cc7e321"
-  integrity sha512-4zapZ0gW1ZTws5aH9OGy3IMvtTV/olc7YrVSkM1WFu1FsrEhL+qarEniRjx7LjHt0gukFqoINfElI8v2boVMQA==
-  dependencies:
-    "@babel/runtime" "^7.4.5"
-    dom-helpers "^3.4.0"
-    loose-envify "^1.4.0"
-    prop-types "^15.6.2"
 
 "@material-ui/styles@^4.1.2":
   version "4.1.2"
@@ -14021,6 +14011,16 @@ react-scripts@3.0.1:
     workbox-webpack-plugin "4.2.0"
   optionalDependencies:
     fsevents "2.0.6"
+
+react-transition-group@^4.0.0:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-4.1.1.tgz#16efe9ac8c68306f6bef59c7da5a96b4dfd9fb32"
+  integrity sha512-K/N1wqJ2GRP2yj3WBqEUYa0KV5fiaAWpUfU9SpHOHefeKvyrO+VrnMBML21M19QZoVbDZKmuQFHZYoMMi1xuJA==
+  dependencies:
+    "@babel/runtime" "^7.4.5"
+    dom-helpers "^3.4.0"
+    loose-envify "^1.4.0"
+    prop-types "^15.6.2"
 
 react@16.8.6, react@^16.5.0:
   version "16.8.6"
