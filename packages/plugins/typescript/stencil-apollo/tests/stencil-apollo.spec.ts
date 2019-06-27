@@ -27,7 +27,7 @@ describe('Components', () => {
     const content = (await plugin(schema, [{ filePath: '', content: documents }], { componentType: StencilComponentType.class }, { outputFile: '' })) as Types.ComplexPluginOutput;
 
     expect(content.prepend).toContain(`import 'stencil-apollo';`);
-    expect(content.prepend).toContain(`import { Component, Prop } from '@stencil/core';`);
+    expect(content.prepend).toContain(`import { Component, Prop, h } from '@stencil/core';`);
   });
 
   it('should generate Functional Component', async () => {
@@ -52,7 +52,7 @@ describe('Components', () => {
     expect(content).toBeSimilarStringTo(`
         export type FeedProps = {
             variables ?: FeedQueryVariables;
-            children ?: StencilApollo.QueryRenderer<FeedQuery, FeedQueryVariables>;
+            inlist ?: StencilApollo.QueryRenderer<FeedQuery, FeedQueryVariables>;
         };
     `);
 
@@ -89,7 +89,7 @@ describe('Components', () => {
                 tag: 'apollo-feed'
             })
             export class FeedComponent {
-                @Prop() renderer: StencilApollo.QueryRenderer<FeedQuery, FeedQueryVariables>;
+                @Prop() renderer: import('stencil-apollo').QueryRenderer<FeedQuery, FeedQueryVariables>;
                 render() {
                     return <apollo-query query={ FeedDocument } renderer={ this.renderer } />;
                 }
