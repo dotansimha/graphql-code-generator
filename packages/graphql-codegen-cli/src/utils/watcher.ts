@@ -6,6 +6,7 @@ import * as isGlob from 'is-glob';
 import * as logSymbols from 'log-symbols';
 import { debugLog } from './debugging';
 import { getLogger } from './logger';
+import path from 'path';
 
 function log(msg: string) {
   // double spaces to inline the message with Listr
@@ -56,6 +57,20 @@ export const createWatcher = (config: Types.Config, onNext: (result: Types.FileO
     const chokidar = await import('chokidar');
     emitWatching();
 
+    const ignored: string[] = [];
+    Object.keys(config.generates)
+      .map(filename => ({ filename, config: normalizeOutputParam(config.generates[filename]) }))
+      .forEach(entry => {
+        if (entry.config.preset) {
+          const extension = entry.config.presetConfig && entry.config.presetConfig.extension;
+          if (extension) {
+            ignored.push(path.join(entry.filename, '**', '*' + extension));
+          }
+        } else {
+          ignored.push(entry.filename);
+        }
+      });
+
     watcher = chokidar.watch(files, {
       persistent: true,
       ignoreInitial: true,
@@ -69,7 +84,7 @@ export const createWatcher = (config: Types.Config, onNext: (result: Types.FileO
       awaitWriteFinish: true,
       ignorePermissionErrors: false,
       atomic: true,
-      ignored: Object.keys(config.generates),
+      ignored,
     });
 
     debugLog(`[Watcher] Started`);
