@@ -121,9 +121,13 @@ generates:
       - typescript
       - typescript-operations
       - typescript-stencil-apollo
-  ./dev-test/githunt/types.stencilApollo.class.tsx:
+  ./dev-test/githunt:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
+    preset: near-operation-file
+    presetConfig:
+      extension: .stencil-component.tsx
+      baseTypesPath: types.d.ts
     plugins:
       - add: // tslint:disable
       - typescript

@@ -1,6 +1,7 @@
 // tslint:disable
 import gql from 'graphql-tag';
 import * as StencilApollo from 'stencil-apollo';
+import { h } from '@stencil/core';
 export type Maybe<T> = T | null;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -296,7 +297,7 @@ export const OnCommentAddedDocument = gql`
 
 export type OnCommentAddedProps = {
     variables ?: OnCommentAddedSubscriptionVariables;
-    children ?: StencilApollo.SubscriptionRenderer<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>;
+    inlist ?: StencilApollo.SubscriptionRenderer<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>;
 };
       
 
@@ -338,7 +339,7 @@ export const CommentDocument = gql`
 
 export type CommentProps = {
     variables ?: CommentQueryVariables;
-    children ?: StencilApollo.QueryRenderer<CommentQuery, CommentQueryVariables>;
+    inlist ?: StencilApollo.QueryRenderer<CommentQuery, CommentQueryVariables>;
 };
       
 
@@ -359,7 +360,7 @@ export const CurrentUserForProfileDocument = gql`
 
 export type CurrentUserForProfileProps = {
     variables ?: CurrentUserForProfileQueryVariables;
-    children ?: StencilApollo.QueryRenderer<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>;
+    inlist ?: StencilApollo.QueryRenderer<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>;
 };
       
 
@@ -382,7 +383,7 @@ export const FeedDocument = gql`
 
 export type FeedProps = {
     variables ?: FeedQueryVariables;
-    children ?: StencilApollo.QueryRenderer<FeedQuery, FeedQueryVariables>;
+    inlist ?: StencilApollo.QueryRenderer<FeedQuery, FeedQueryVariables>;
 };
       
 
@@ -402,7 +403,7 @@ export const SubmitRepositoryDocument = gql`
 
 export type SubmitRepositoryProps = {
     variables ?: SubmitRepositoryMutationVariables;
-    children ?: StencilApollo.MutationRenderer<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>;
+    inlist ?: StencilApollo.MutationRenderer<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>;
 };
       
 
@@ -422,7 +423,7 @@ export const SubmitCommentDocument = gql`
 
 export type SubmitCommentProps = {
     variables ?: SubmitCommentMutationVariables;
-    children ?: StencilApollo.MutationRenderer<SubmitCommentMutation, SubmitCommentMutationVariables>;
+    inlist ?: StencilApollo.MutationRenderer<SubmitCommentMutation, SubmitCommentMutationVariables>;
 };
       
 
@@ -446,7 +447,7 @@ export const VoteDocument = gql`
 
 export type VoteProps = {
     variables ?: VoteMutationVariables;
-    children ?: StencilApollo.MutationRenderer<VoteMutation, VoteMutationVariables>;
+    inlist ?: StencilApollo.MutationRenderer<VoteMutation, VoteMutationVariables>;
 };
       
 
