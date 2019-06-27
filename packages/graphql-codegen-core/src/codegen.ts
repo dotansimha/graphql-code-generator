@@ -39,6 +39,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
                 ...(pluginConfig as object),
               },
         schema,
+        schemaAst: options.schemaAst,
         documents: options.documents,
         outputFilename: options.filename,
         allPlugins: options.plugins,
