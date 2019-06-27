@@ -48,7 +48,9 @@ Here are the supported options that you can define in the config file (see [sour
 - [**`config`**](./config-field#root-level) - Options that we would like to provide to the specified plug-ins. The options may vary depends on what plug-ins you specified. Read the documentation of that specific plug-in for more information. [You can read more about how to pass configuration to plugins here](./config-field)
 
 - **`overwrite`** - A flag to overwrite files in case they're already exist when generating code (`true` by default)
--
+
+- **`prettify`** - A flag that enables formatting of generated code (using [`prettier`](https://prettier.io/)) (`true` by default)
+
 - **`watch`** - A flag to watch for changes in the specified GraphQL schemas and re-generate code any that happens. You can either specify a boolean to turn it on/off, or specify an array of glob patterns to add custom files to the watch.
 
 - **`silent`** - A flag to not print errors in case they occur.

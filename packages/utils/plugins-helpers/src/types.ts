@@ -91,6 +91,7 @@ export namespace Types {
     config?: { [key: string]: any };
     generates: { [output: string]: OutputConfig | ConfiguredOutput };
     overwrite?: boolean;
+    prettify?: boolean;
     watch?: boolean | string | string[];
     silent?: boolean;
     pluginLoader?: PackageLoaderFn<CodegenPlugin>;
