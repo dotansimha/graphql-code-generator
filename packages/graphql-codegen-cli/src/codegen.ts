@@ -16,7 +16,7 @@ export async function executeCodegen(config: Types.Config): Promise<Types.FileOu
   function wrapTask(task: () => void | Promise<void>, source?: string) {
     return async () => {
       try {
-        await task();
+        await Promise.resolve(task());
       } catch (error) {
         if (source && !(error instanceof GraphQLError)) {
           error.source = source;
