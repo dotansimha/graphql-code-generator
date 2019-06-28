@@ -87,7 +87,7 @@
     "@types/listr": "0.14.0",
     "@types/log-symbols": "2.0.0",
     "bdd-stdin": "0.2.0",
-    "graphql": "14.3.1",
+    "graphql": "14.4.1",
     "ts-jest": "24.0.2"
   },
   "peerDependencies": {
