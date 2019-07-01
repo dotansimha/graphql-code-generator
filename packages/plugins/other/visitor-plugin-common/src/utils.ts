@@ -269,7 +269,7 @@ export function getRootTypeNames(schema: GraphQLSchema): string[] {
 }
 
 export function stripMapperTypeInterpolation(identifier: string): string {
-  return identifier.includes('{T}') ? identifier.replace(/<.*?>/g, '') : identifier;
+  return identifier.trim().replace(/[^$\w].*$/, '');
 }
 
 export const OMIT_TYPE = 'export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;';
