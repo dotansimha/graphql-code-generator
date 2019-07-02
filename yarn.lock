@@ -8046,10 +8046,10 @@ graphql-tag@2.10.1, graphql-tag@^2.9.2:
   resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.10.1.tgz#10aa41f1cd8fae5373eaf11f1f67260a3cad5e02"
   integrity sha512-jApXqWBzNXQ8jYa/HLkZJaVw9jgwNqZkywa2zfFn16Iv1Zb7ELNHkJaXHR7Quvd5SIGsy6Ny7SUKATgnu05uEg==
 
-graphql-toolkit@0.3.1:
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/graphql-toolkit/-/graphql-toolkit-0.3.1.tgz#2a66330a38ae5c1e4d276a77f73f43b8a4d0b99e"
-  integrity sha512-KZvqapHMRjQ68HB2winh7GYV2rCiCgrK3BTRFRvv25mlbTQpunklDVv3YUeHHhj2us5I0Qn6TFxZX7rJN0dhxQ==
+graphql-toolkit@0.3.3:
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/graphql-toolkit/-/graphql-toolkit-0.3.3.tgz#9d7d470efa9a1ab107cc7f9279148bbb1459df34"
+  integrity sha512-bYzwPBTAQj2NJbyAmQuAfZ44az34asc7JV1RW1DWVQdB9E6xY1aMfr/c840IFhEgGcWHCkJO4olrTScVVTCzHw==
   dependencies:
     "@kamilkisiela/graphql-tools" "4.0.6"
     "@types/glob" "7.1.1"
@@ -8058,7 +8058,6 @@ graphql-toolkit@0.3.1:
     deepmerge "3.3.0"
     glob "7.1.4"
     graphql-import "0.7.1"
-    graphql-tag-pluck "0.8.2"
     is-glob "4.0.1"
     is-valid-path "0.1.1"
     lodash "4.17.11"
