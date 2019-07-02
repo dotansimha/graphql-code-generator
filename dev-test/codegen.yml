@@ -128,13 +128,14 @@ generates:
     presetConfig:
       extension: .stencil-component.tsx
       baseTypesPath: types.d.ts
+      globalNamespaceForFragments: true
     plugins:
       - add: // tslint:disable
-      - typescript
       - typescript-operations
       - typescript-stencil-apollo
     config: 
       componentType: class
+      globalNamespace: true
   ./dev-test/star-wars/types.ts:
     schema: ./dev-test/star-wars/schema.json
     documents: ./dev-test/star-wars/**/*.graphql

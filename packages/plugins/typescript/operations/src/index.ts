@@ -42,6 +42,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    * ```
    */
   immutableTypes?: boolean;
+  globalNamespace?: boolean;
 }
 
 export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: TypeScriptDocumentsPluginConfig) => {
@@ -60,7 +61,17 @@ export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig> = (schema: 
     leave: new TypeScriptDocumentsVisitor(schema, config, allFragments),
   });
 
-  return visitorResult.definitions.join('\n');
+  const result = visitorResult.definitions.join('\n');
+
+  if (config.globalNamespace) {
+    return `
+    declare global { 
+      ${result} 
+    }
+          `;
+  } else {
+    return result;
+  }
 };
 
 export { TypeScriptDocumentsVisitor };

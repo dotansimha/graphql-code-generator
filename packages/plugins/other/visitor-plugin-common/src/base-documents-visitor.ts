@@ -20,9 +20,12 @@ function getRootType(operation: OperationTypeNode, schema: GraphQLSchema) {
 
 export interface ParsedDocumentsConfig extends ParsedConfig {
   addTypename: boolean;
+  globalNamespace: boolean;
 }
 
-export interface RawDocumentsConfig extends RawConfig {}
+export interface RawDocumentsConfig extends RawConfig {
+  globalNamespace?: boolean;
+}
 
 export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDocumentsConfig, TPluginConfig extends ParsedDocumentsConfig = ParsedDocumentsConfig> extends BaseVisitor<TRawConfig, TPluginConfig> {
   protected _unnamedCounter = 1;
@@ -34,6 +37,7 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
       rawConfig,
       {
         addTypename: !rawConfig.skipTypename,
+        globalNamespace: !!rawConfig.globalNamespace,
         ...((additionalConfig || {}) as any),
       } as any,
       buildScalars(_schema, scalars)

@@ -82,6 +82,7 @@ export type NearOperationFileConfig = {
    * ```
    */
   importTypesNamespace?: string;
+  globalNamespaceForFragments?: boolean;
 };
 
 export type FragmentNameToFile = { [fragmentName: string]: { filePath: string; importName: string; onType: string; node: FragmentDefinitionNode } };
@@ -140,9 +141,11 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
             const absFragmentFilePath = resolve(baseDir, fragmentDetails.filePath);
             const fragmentImportPath = resolveRelativeImport(absGeneratedFilePath, absFragmentFilePath);
 
-            plugins.unshift({
-              add: `import { ${fragmentDetails.importName} } from '${fragmentImportPath}';`,
-            });
+            if (!options.presetConfig.globalNamespaceForFragments) {
+              plugins.unshift({
+                add: `import { ${fragmentDetails.importName} } from '${fragmentImportPath}';`,
+              });
+            }
 
             config.externalFragments.push({
               isExternal: true,

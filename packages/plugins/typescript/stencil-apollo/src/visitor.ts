@@ -13,6 +13,7 @@ export class StencilApolloVisitor extends ClientSideBaseVisitor<StencilApolloRaw
   constructor(fragments: LoadedFragment[], rawConfig: StencilApolloRawPluginConfig) {
     super(fragments, rawConfig, {
       componentType: getConfigValue(rawConfig.componentType, StencilComponentType.functional),
+      noExport: rawConfig.componentType === StencilComponentType.class,
     } as any);
 
     autoBind(this);
