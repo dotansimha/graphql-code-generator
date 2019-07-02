@@ -58,9 +58,7 @@ describe('Components', () => {
 
     expect(content).toBeSimilarStringTo(`
         export const FeedComponent = (props: FeedProps, children: [StencilApollo.QueryRenderer<FeedQuery, FeedQueryVariables>]) => (
-          <StencilApollo.Query<FeedQuery, FeedQueryVariables> query={ FeedDocument } { ...props }>
-            {children[0]}
-          </StencilApollo.Query>
+          <apollo-query query={ FeedDocument } { ...props } renderer={ children[0] } />
         );
     `);
   });

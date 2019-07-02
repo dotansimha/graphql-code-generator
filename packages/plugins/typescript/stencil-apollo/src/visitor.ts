@@ -42,7 +42,7 @@ export class StencilApolloVisitor extends ClientSideBaseVisitor<StencilApolloRaw
     const operationName: string = this.convertName(node.name.value);
     const propsTypeName: string = this.convertName(operationName + 'Props');
     const rendererSignature = toPascalCase(`${operationType}Renderer`) + `<${operationResultType}, ${operationVariablesTypes}>`;
-    const apolloStencilFunctionalComponentName = changeCase.titleCase(`${operationType}`);
+    const apolloStencilComponentTag = changeCase.paramCase(`Apollo${operationType}`);
     const componentName = this.convertName(`${operationName}Component`);
 
     const propsVar = `
@@ -54,9 +54,7 @@ export type ${propsTypeName} = {
 
     const component = `
 export const ${componentName} = (props: ${propsTypeName}, children: [StencilApollo.${rendererSignature}]) => (
-  <StencilApollo.${apolloStencilFunctionalComponentName}<${operationResultType}, ${operationVariablesTypes}> ${operationType.toLowerCase()}={ ${documentVariableName} } { ...props }>
-    {children[0]}
-  </StencilApollo.${apolloStencilFunctionalComponentName}>
+  <${apolloStencilComponentTag} ${operationType.toLowerCase()}={ ${documentVariableName} } { ...props } renderer={ children[0] } />
 );
       `;
 
