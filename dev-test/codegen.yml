@@ -128,7 +128,6 @@ generates:
     presetConfig:
       extension: .stencil-component.tsx
       baseTypesPath: types.d.ts
-      globalNamespaceForFragments: true
     plugins:
       - add: // tslint:disable
       - typescript-operations
