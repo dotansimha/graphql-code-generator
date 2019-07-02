@@ -1214,10 +1214,10 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^12.0.9"
 
-"@kamilkisiela/graphql-tools@4.0.5":
-  version "4.0.5"
-  resolved "https://registry.yarnpkg.com/@kamilkisiela/graphql-tools/-/graphql-tools-4.0.5.tgz#7c7a3d3928b7eb00e22925eab2f33d7d53536091"
-  integrity sha512-/AK2+e1hxvVweo/GOW2KHdlLnxZ7yUVGHshWRg9u0LfqTu8lniPh7/eA/WGiccuK8OH54AVxYPWJQZ0mbDbm1Q==
+"@kamilkisiela/graphql-tools@4.0.6":
+  version "4.0.6"
+  resolved "https://registry.yarnpkg.com/@kamilkisiela/graphql-tools/-/graphql-tools-4.0.6.tgz#6dcf4d18bedaf34f6ab1d5bad2414e530d0875d1"
+  integrity sha512-IPWa+dOFCE4zaCsrJrAMp7yWXnfOZLNhqoMEOmn958WkLM0mmsDc/W/Rh7/7xopIT6P0oizb6/N1iH5HnNXOUA==
   dependencies:
     apollo-link "^1.2.3"
     apollo-utilities "^1.0.1"
@@ -2906,13 +2906,13 @@ agentkeepalive@^3.4.1:
   dependencies:
     humanize-ms "^1.2.1"
 
-aggregate-error@2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/aggregate-error/-/aggregate-error-2.2.0.tgz#f54b464db18cc77c907ae084451f39134707134a"
-  integrity sha512-E5n+IZkhh22/pFdUvHUU/o9z752lc+7tgHt+FXS/g6BjlbE9249dGmuS/SxIWMPhTljZJkFN+7OXE0+O5+WT8w==
+aggregate-error@3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/aggregate-error/-/aggregate-error-3.0.0.tgz#5b5a3c95e9095f311c9ab16c19fb4f3527cd3f79"
+  integrity sha512-yKD9kEoJIR+2IFqhMwayIBgheLYbB3PS2OBhWae1L/ODTd/JF/30cW0bc9TqzRL3k4U41Dieu3BF4I29p8xesA==
   dependencies:
     clean-stack "^2.0.0"
-    indent-string "^3.0.0"
+    indent-string "^3.2.0"
 
 ajv-errors@^1.0.0:
   version "1.0.1"
@@ -8025,13 +8025,14 @@ graphql-tag@2.10.1, graphql-tag@^2.9.2:
   resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.10.1.tgz#10aa41f1cd8fae5373eaf11f1f67260a3cad5e02"
   integrity sha512-jApXqWBzNXQ8jYa/HLkZJaVw9jgwNqZkywa2zfFn16Iv1Zb7ELNHkJaXHR7Quvd5SIGsy6Ny7SUKATgnu05uEg==
 
-graphql-toolkit@0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/graphql-toolkit/-/graphql-toolkit-0.3.0.tgz#9b754bd7b657267dd74f468e27513f33c52e81fb"
-  integrity sha512-4ikecqnmFtr8UrKgbfA8UD4DmVnCqVHEQSPFb0BhIAnqiDiaY5EGI9fa0VJQLGCpBZYwSvaW29hdu3jI+EykJw==
+graphql-toolkit@0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/graphql-toolkit/-/graphql-toolkit-0.3.1.tgz#2a66330a38ae5c1e4d276a77f73f43b8a4d0b99e"
+  integrity sha512-KZvqapHMRjQ68HB2winh7GYV2rCiCgrK3BTRFRvv25mlbTQpunklDVv3YUeHHhj2us5I0Qn6TFxZX7rJN0dhxQ==
   dependencies:
-    "@kamilkisiela/graphql-tools" "4.0.5"
-    aggregate-error "2.2.0"
+    "@kamilkisiela/graphql-tools" "4.0.6"
+    "@types/glob" "7.1.1"
+    aggregate-error "3.0.0"
     asyncro "^3.0.0"
     deepmerge "3.3.0"
     glob "7.1.4"
@@ -8718,7 +8719,7 @@ indent-string@^2.1.0:
   dependencies:
     repeating "^2.0.0"
 
-indent-string@^3.0.0:
+indent-string@^3.0.0, indent-string@^3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/indent-string/-/indent-string-3.2.0.tgz#4a5fd6d27cc332f37e5419a504dbb837105c9289"
   integrity sha1-Sl/W0nzDMvN+VBmlBNu4NxBckok=
