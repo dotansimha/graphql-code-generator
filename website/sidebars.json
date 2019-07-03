@@ -18,6 +18,7 @@
       "plugins/typescript-compatibility",
       "plugins/typescript-resolvers",
       "plugins/typescript-graphql-files-modules",
+      "plugins/typescript-document-nodes",
       "plugins/typescript-mongodb",
       "plugins/typescript-react-apollo",
       "plugins/typescript-apollo-angular",
