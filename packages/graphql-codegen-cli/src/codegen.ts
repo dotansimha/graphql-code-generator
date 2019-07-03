@@ -244,7 +244,7 @@ export async function executeCodegen(config: Types.Config): Promise<Types.FileOu
                         const output = await codegen(outputArgs);
                         result.push({
                           filename: outputArgs.filename,
-                          content: await prettify(outputArgs.filename, output),
+                          content: config.prettify === undefined || config.prettify ? await prettify(outputArgs.filename, output) : output,
                         });
                       };
 
