@@ -140,9 +140,11 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
             const absFragmentFilePath = resolve(baseDir, fragmentDetails.filePath);
             const fragmentImportPath = resolveRelativeImport(absGeneratedFilePath, absFragmentFilePath);
 
-            plugins.unshift({
-              add: `import { ${fragmentDetails.importName} } from '${fragmentImportPath}';`,
-            });
+            if (!options.config.globalNamespace) {
+              plugins.unshift({
+                add: `import { ${fragmentDetails.importName} } from '${fragmentImportPath}';`,
+              });
+            }
 
             config.externalFragments.push({
               isExternal: true,

@@ -9,6 +9,7 @@ import { LoadedFragment } from './types';
 export interface RawClientSideBasePluginConfig extends RawConfig {
   noGraphQLTag?: boolean;
   gqlImport?: string;
+  noExport?: boolean;
 }
 
 export interface ClientSideBasePluginConfig extends ParsedConfig {
@@ -45,6 +46,7 @@ export interface ClientSideBasePluginConfig extends ParsedConfig {
    * ```
    */
   gqlImport: string;
+  noExport: boolean;
 }
 
 export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginConfig = RawClientSideBasePluginConfig, TPluginConfig extends ClientSideBasePluginConfig = ClientSideBasePluginConfig> extends BaseVisitor<TRawConfig, TPluginConfig> {
@@ -54,6 +56,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
     super(rawConfig, {
       noGraphQLTag: getConfigValue(rawConfig.noGraphQLTag, false),
       gqlImport: rawConfig.gqlImport || null,
+      noExport: !!rawConfig.noExport,
       ...additionalConfig,
     } as any);
 
@@ -211,7 +214,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
       suffix: 'Document',
       useTypesPrefix: false,
     });
-    const documentString = `export const ${documentVariableName}${this.config.noGraphQLTag ? ': DocumentNode' : ''} = ${this._gql(node)};`;
+    const documentString = `${this.config.noExport ? '' : 'export'} const ${documentVariableName}${this.config.noGraphQLTag ? ': DocumentNode' : ''} = ${this._gql(node)};`;
     const operationType: string = toPascalCase(node.operation);
     const operationResultType: string = this.convertName(node, {
       suffix: operationType,

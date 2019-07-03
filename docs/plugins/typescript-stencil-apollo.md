@@ -32,7 +32,9 @@ query Test {
 We can use the generated code like this:
 
 ```tsx
-  <Test.Component variables={...} onReady={...} />
+  <TestComponent variables={...}>
+    ...
+  </TestComponent>
 ```
 
 ## Configuration
