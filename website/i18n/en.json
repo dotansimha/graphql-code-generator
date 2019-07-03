@@ -167,6 +167,9 @@
       "plugins/typescript-compatibility": {
         "title": "TypeScript 1.0 Compatibility"
       },
+      "plugins/typescript-document-nodes": {
+        "title": "TypeScript document nodes"
+      },
       "plugins/typescript-graphql-files-modules": {
         "title": "TypeScript GraphQL Files Modules"
       },
