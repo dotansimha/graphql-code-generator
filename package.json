@@ -60,11 +60,11 @@
     "typescript": "3.5.2"
   },
   "lint-staged": {
-    "*.{ts,tsx}": [
+    "packages/**/*.{ts,tsx}": [
       "tslint --fix",
       "git add"
     ],
-    "*.{js,json,css,md,ts,tsx}": [
+    "packages/**/*.{js,json,css,md,ts,tsx}": [
       "prettier --write",
       "git add -f"
     ]
