@@ -6,6 +6,7 @@ export namespace Types {
     filename: string;
     plugins: Types.ConfiguredPlugin[];
     schema: DocumentNode;
+    schemaAst?: GraphQLSchema;
     documents: Types.DocumentFile[];
     config: { [key: string]: any };
     pluginMap: {
@@ -64,6 +65,7 @@ export namespace Types {
     baseOutputDir: string;
     plugins: Types.ConfiguredPlugin[];
     schema: DocumentNode;
+    schemaAst?: GraphQLSchema;
     documents: Types.DocumentFile[];
     config: { [key: string]: any };
     pluginMap: {
