@@ -5,7 +5,7 @@ import { normalizeOutputParam, normalizeInstanceOrArray, normalizeConfig } from 
 import { prettify } from './utils/prettier';
 import { Renderer } from './utils/listr-renderer';
 import { loadSchema, loadDocuments } from './load';
-import { GraphQLError, DocumentNode } from 'graphql';
+import { GraphQLError, DocumentNode, buildASTSchema } from 'graphql';
 import { getPluginByName } from './plugins';
 import { getPresetByName } from './presets';
 import { debugLog } from './utils/debugging';
@@ -16,7 +16,7 @@ export async function executeCodegen(config: Types.Config): Promise<Types.FileOu
   function wrapTask(task: () => void | Promise<void>, source?: string) {
     return async () => {
       try {
-        await task();
+        await Promise.resolve(task());
       } catch (error) {
         if (source && !(error instanceof GraphQLError)) {
           error.source = source;
@@ -221,6 +221,7 @@ export async function executeCodegen(config: Types.Config): Promise<Types.FileOu
                           presetConfig: outputConfig.presetConfig || {},
                           plugins: normalizedPluginsArray,
                           schema: outputSchema,
+                          schemaAst: buildASTSchema(outputSchema),
                           documents: outputDocuments,
                           config: mergedConfig,
                           pluginMap,
@@ -231,6 +232,7 @@ export async function executeCodegen(config: Types.Config): Promise<Types.FileOu
                             filename,
                             plugins: normalizedPluginsArray,
                             schema: outputSchema,
+                            schemaAst: buildASTSchema(outputSchema),
                             documents: outputDocuments,
                             config: mergedConfig,
                             pluginMap,
@@ -238,13 +240,15 @@ export async function executeCodegen(config: Types.Config): Promise<Types.FileOu
                         ];
                       }
 
-                      for (const outputArgs of outputs) {
+                      const process = async (outputArgs: Types.GenerateOptions) => {
                         const output = await codegen(outputArgs);
                         result.push({
                           filename: outputArgs.filename,
-                          content: await prettify(filename, output),
+                          content: await prettify(outputArgs.filename, output),
                         });
-                      }
+                      };
+
+                      await Promise.all(outputs.map(process));
                     }, filename),
                   },
                 ],

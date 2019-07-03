@@ -1,5 +1,5 @@
 import { Types, isComplexPluginOutput } from '@graphql-codegen/plugin-helpers';
-import { DocumentNode, visit } from 'graphql';
+import { DocumentNode, visit, buildASTSchema } from 'graphql';
 import { mergeSchemas } from './merge-schemas';
 import { executePlugin } from './execute-plugin';
 import { DetailedError } from './errors';
@@ -16,9 +16,19 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
   const pluginPackages = Object.keys(options.pluginMap).map(key => options.pluginMap[key]);
 
   // merged schema with parts added by plugins
+  let schemaChanged = false;
   const schema = pluginPackages.reduce((schema, plugin) => {
-    return !plugin.addToSchema ? schema : mergeSchemas([schema, plugin.addToSchema]);
+    if (!plugin.addToSchema) {
+      return schema;
+    }
+
+    schemaChanged = true;
+    return mergeSchemas([schema, plugin.addToSchema]);
   }, options.schema);
+
+  if (schemaChanged) {
+    options.schemaAst = buildASTSchema(schema);
+  }
 
   const prepend: Set<string> = new Set<string>();
   const append: Set<string> = new Set<string>();
@@ -39,6 +49,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
                 ...(pluginConfig as object),
               },
         schema,
+        schemaAst: options.schemaAst,
         documents: options.documents,
         outputFilename: options.filename,
         allPlugins: options.plugins,

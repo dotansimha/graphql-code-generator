@@ -162,6 +162,7 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
           pluginMap,
           config,
           schema: options.schema,
+          schemaAst: options.schemaAst,
           documents: [documentFile],
         };
       })
