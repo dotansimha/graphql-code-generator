@@ -15,13 +15,18 @@ export function clearExtension(path: string): string {
 }
 
 export function extractExternalFragmentsInUse(documentNode: DocumentNode | FragmentDefinitionNode, fragmentNameToFile: FragmentNameToFile, result: Set<string> = new Set(), ignoreList: Set<string> = new Set()): Set<string> {
+  // First, take all fragments definition from the current file, and mark them as ignored
   visit(documentNode, {
     enter: {
       FragmentDefinition: (node: FragmentDefinitionNode) => {
         ignoreList.add(node.name.value);
       },
     },
-    leave: {
+  });
+
+  // Then, look for all used fragments in this document
+  visit(documentNode, {
+    enter: {
       FragmentSpread: (node: FragmentSpreadNode) => {
         if (!ignoreList.has(node.name.value)) {
           result.add(node.name.value);

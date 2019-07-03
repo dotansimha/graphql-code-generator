@@ -1,0 +1,3 @@
+fragment ComponentA_TypeA on TypeA {
+    field1
+}
