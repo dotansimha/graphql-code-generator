@@ -108,6 +108,25 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    * @default Component
    */
   componentSuffix?: string;
+  /**
+   * @name reactApolloVersion
+   * @type 2 | 3
+   * @description Customized the output by enabling/disabling the HOC.
+   * @default 2
+   *
+   * @example
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *    - typescript-operations
+   *    - typescript-react-apollo
+   *  config:
+   *    reactApolloVersion: 3
+   * ```
+   */
+  reactApolloVersion?: 2 | 3;
 }
 
 export const plugin: PluginFunction<ReactApolloRawPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: ReactApolloRawPluginConfig) => {

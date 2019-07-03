@@ -13,6 +13,7 @@ export interface ReactApolloPluginConfig extends ClientSideBasePluginConfig {
   hooksImportFrom: string;
   reactApolloImportFrom: string;
   componentSuffix: string;
+  reactApolloVersion: 2 | 3;
 }
 
 export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPluginConfig, ReactApolloPluginConfig> {
@@ -25,6 +26,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
       withMutationFn: getConfigValue(rawConfig.withMutationFn, true),
       hooksImportFrom: getConfigValue(rawConfig.hooksImportFrom, 'react-apollo-hooks'),
       reactApolloImportFrom: getConfigValue(rawConfig.reactApolloImportFrom, 'react-apollo'),
+      reactApolloVersion: getConfigValue(rawConfig.reactApolloVersion, 2),
     } as any);
 
     autoBind(this);
@@ -72,7 +74,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
   private _buildMutationFn(node: OperationDefinitionNode, operationResultType: string, operationVariablesTypes: string): string {
     if (node.operation === 'mutation') {
       this.imports.add(this.getReactApolloImport());
-      return `export type ${this.convertName(node.name.value + 'MutationFn')} = ReactApollo.MutationFn<${operationResultType}, ${operationVariablesTypes}>;`;
+      return `export type ${this.convertName(node.name.value + 'MutationFn')} = ReactApollo.${MutationFnNameForVersionMap[this.config.reactApolloVersion]}<${operationResultType}, ${operationVariablesTypes}>;`;
     }
     return null;
   }
@@ -142,3 +144,8 @@ export function use${operationName}(baseOptions?: ReactApolloHooks.${operationTy
     return [mutationFn, component, hoc, hooks].filter(a => a).join('\n');
   }
 }
+
+const MutationFnNameForVersionMap = {
+  2: 'MutationFn',
+  3: 'MutationFunction',
+};
