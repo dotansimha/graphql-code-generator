@@ -9,6 +9,15 @@ about: Create a bug report to help us improve
 **To Reproduce**
 Steps to reproduce the behavior:
 
+<!--
+#############
+#############
+You can also use this template to create a live sandbox of the issue: 
+https://codesandbox.io/s/graphql-codegen-issue-template-2njb1 
+#############
+#############
+-->
+
 1. My GraphQL schema:
 
 ```graphql
