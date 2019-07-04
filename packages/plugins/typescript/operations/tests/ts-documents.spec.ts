@@ -827,6 +827,34 @@ describe('TypeScript Operations Plugin', () => {
       validate(result, config, gitHuntSchema);
     });
 
+    it('Should build a basic selection set based on basic query on GitHub schema with preResolveTypes=true', async () => {
+      const ast = parse(/* GraphQL */ `
+        query me($repoFullName: String!) {
+          currentUser {
+            login
+            html_url
+          }
+          entry(repoFullName: $repoFullName) {
+            id
+            postedBy {
+              login
+              html_url
+            }
+            createdAt
+          }
+        }
+      `);
+      const config = { preResolveTypes: true };
+      const result = await plugin(gitHuntSchema, [{ filePath: 'test-file.ts', content: ast }], config, {
+        outputFile: '',
+      });
+
+      expect(result).toBeSimilarStringTo(
+        `export type MeQuery = { __typename?: 'Query', currentUser: Maybe<{ __typename?: 'User', login: string, html_url: string }>, entry: Maybe<{ __typename?: 'Entry', id: number, createdAt: number, postedBy: { __typename?: 'User', login: string, html_url: string } }> };`
+      );
+      validate(result, config, gitHuntSchema);
+    });
+
     it('Should build a basic selection set based on basic query', async () => {
       const ast = parse(`
         query dummy {
