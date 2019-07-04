@@ -3450,6 +3450,13 @@ auto-bind@2.0.0:
   resolved "https://registry.yarnpkg.com/auto-bind/-/auto-bind-2.0.0.tgz#9a55a461b521f58daf955169203bed1a07a970a9"
   integrity sha512-rvRBv0/O7iriUMqSzTDhAfyAD1vVnElAEruo5rMSFeYLA0iKDEzLPSJiwMnL86+IPpTlhfOIAzjoKZ9TaySYdA==
 
+auto-parse@^1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/auto-parse/-/auto-parse-1.7.0.tgz#7dd7f9dd4bd921744594c95c52ec4bc213a7c3b9"
+  integrity sha512-PLNPNt2gNRqIom895AsEeUo1HcDjfhDvxHW2pr+pTkTrI9CauqCD5AvYSEJ6tieES0Rb/88HK9+0m83uJNS2zw==
+  dependencies:
+    typpy "2.3.11"
+
 autolinker@~0.15.0:
   version "0.15.3"
   resolved "https://registry.yarnpkg.com/autolinker/-/autolinker-0.15.3.tgz#342417d8f2f3461b14cf09088d5edf8791dc9832"
@@ -7553,6 +7560,13 @@ function-bind@^1.1.1:
   resolved "https://registry.yarnpkg.com/function-bind/-/function-bind-1.1.1.tgz#a56899d3ea3c9bab874bb9773b7c5ede92f4895d"
   integrity sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A==
 
+function.name@^1.0.3:
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/function.name/-/function.name-1.0.12.tgz#34eec84476d9fb67977924a4cdcb98ec85695726"
+  integrity sha512-C7Tu+rAFrWW5RjXqtKtXp2xOdCujq+4i8ZH3w0uz/xrYHBwXZrPt96x8cDAEHrIjeyEv/Jm6iDGyqupbaVQTlw==
+  dependencies:
+    noop6 "^1.0.1"
+
 functional-red-black-tree@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/functional-red-black-tree/-/functional-red-black-tree-1.0.1.tgz#1b0ab3bd553b2a0d6399d29c0e3ea0b252078327"
@@ -8097,10 +8111,10 @@ graphql-upload@^8.0.2:
     http-errors "^1.7.2"
     object-path "^0.11.4"
 
-graphql@14.4.1:
-  version "14.4.1"
-  resolved "https://registry.yarnpkg.com/graphql/-/graphql-14.4.1.tgz#7a7818d3f63f66b9528ba5416b6c88460db62280"
-  integrity sha512-g4HUH26CohlMjaHneXMAtvG3QtO6peJIUTFxrPW4g5LNnXkUuFoBI6Bk1c14Q5kW8+FyjM/tTbePTgpiVB/2hQ==
+graphql@14.4.2:
+  version "14.4.2"
+  resolved "https://registry.yarnpkg.com/graphql/-/graphql-14.4.2.tgz#553a7d546d524663eda49ed6df77577be3203ae3"
+  integrity sha512-6uQadiRgnpnSS56hdZUSvFrVcQ6OF9y6wkxJfKquFtHlnl7+KSuWwSJsdwiK1vybm1HgcdbpGkCpvhvsVQ0UZQ==
   dependencies:
     iterall "^1.2.2"
 
@@ -11592,6 +11606,11 @@ noop-logger@^0.1.1:
   resolved "https://registry.yarnpkg.com/noop-logger/-/noop-logger-0.1.1.tgz#94a2b1633c4f1317553007d8966fd0e841b6a4c2"
   integrity sha1-lKKxYzxPExdVMAfYlm/Q6EG2pMI=
 
+noop6@^1.0.1:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/noop6/-/noop6-1.0.8.tgz#eff06e2e5b3621e9e5618f389d6a2294f76e64ad"
+  integrity sha512-+Al5csMVc40I8xRfJsyBcN1IbpyvebOuQmMfxdw+AL6ECELey12ANgNTRhMfTwNIDU4W9W0g8EHLcsb3+3qPFA==
+
 "nopt@2 || 3":
   version "3.0.6"
   resolved "https://registry.yarnpkg.com/nopt/-/nopt-3.0.6.tgz#c6465dbf08abcd4db359317f79ac68a646b28ff9"
@@ -15059,11 +15078,12 @@ send@0.17.1:
     range-parser "~1.2.1"
     statuses "~1.5.0"
 
-sendmail@1.4.1:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/sendmail/-/sendmail-1.4.1.tgz#e0732447f5ff07270fbcecd6030d748bcb4a03cb"
-  integrity sha512-MfprntdcmRUlxZJisAJGb4sp8kL4biCbrmcLT9FJsECDATTn3Q1rYkxXyT+DFZ5fIZ5ZPJt+H/eHWUFd1xWUuw==
+sendmail@1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/sendmail/-/sendmail-1.6.0.tgz#8cc192cb8e2e88b393cd41c4c1207d50b131d29c"
+  integrity sha512-2lnZZNvejv+F0UdNsOF9fE4DWUx16ijd+47D5tl3dOSp+hpAHipr56UUBzYfx+r38GRarhWNZRpFhPAf3pZ7Kg==
   dependencies:
+    auto-parse "^1.7.0"
     dkim-signer "^0.2.2"
     mailcomposer "^3.12.0"
 
@@ -16455,6 +16475,13 @@ typescript@>=2.8.3:
   version "3.5.1"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.5.1.tgz#ba72a6a600b2158139c5dd8850f700e231464202"
   integrity sha512-64HkdiRv1yYZsSe4xC1WVgamNigVYjlssIoaH2HcZF0+ijsk5YK2g0G34w9wJkze8+5ow4STd22AynfO6ZYYLw==
+
+typpy@2.3.11:
+  version "2.3.11"
+  resolved "https://registry.yarnpkg.com/typpy/-/typpy-2.3.11.tgz#21a0d22c96fb646306e08b6c669ad43608e1b3b9"
+  integrity sha512-Jh/fykZSaxeKO0ceMAs6agki9T5TNA9kiIR6fzKbvafKpIw8UlNlHhzuqKyi5lfJJ5VojJOx9tooIbyy7vHV/g==
+  dependencies:
+    function.name "^1.0.3"
 
 uglify-js@3.4.x:
   version "3.4.10"
