@@ -29,9 +29,9 @@
     "object-literal-sort-keys": false,
     "no-conditional-assignment": true,
     "one-line": [true, "check-open-brace", "check-whitespace"],
-    "quotemark": false,
+    "quotemark": [true, "single"],
     "radix": false,
-    "semicolon": false,
+    "semicolon": [true, "ignore-bound-class-methods"],
     "triple-equals": [true, "allow-null-check"],
     "variable-name": [true, "check-format", "allow-leading-underscore", "allow-pascal-case"],
     "whitespace": [true, "check-branch", "check-decl", "check-operator", "check-separator", "check-type"]

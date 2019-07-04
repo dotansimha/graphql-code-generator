@@ -110,7 +110,7 @@ export const plugin: PluginFunction<TypeScriptDocumentNodesPluginConfig> = (sche
     )
     .join('\n');
 
-  const prepend = content ? ["import { DocumentNode } from 'graphql';", "import gql from 'graphql-tag';", '', ''] : [];
+  const prepend = content ? [`import { DocumentNode } from 'graphql';`, `import gql from 'graphql-tag';`, '', ''] : [];
 
   return prepend.join('\n') + content;
 };
