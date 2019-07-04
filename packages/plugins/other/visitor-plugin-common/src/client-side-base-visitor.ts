@@ -91,10 +91,26 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
 
   protected _includeFragments(fragments: string[]): string {
     if (fragments && fragments.length > 0) {
-      return `${fragments
-        .filter((name, i, all) => all.indexOf(name) === i)
-        .map(name => '${' + name + '}')
-        .join('\n')}`;
+      if (this.config.noGraphQLTag) {
+        return `${fragments
+          .filter((name, i, all) => all.indexOf(name) === i)
+          .map(name => {
+            const found = this._fragments.find(f => `${f.name}FragmentDoc` === name);
+
+            if (found) {
+              return print(found.node);
+            }
+
+            return null;
+          })
+          .filter(a => a)
+          .join('\n')}`;
+      } else {
+        return `${fragments
+          .filter((name, i, all) => all.indexOf(name) === i)
+          .map(name => '${' + name + '}')
+          .join('\n')}`;
+      }
     }
 
     return '';
