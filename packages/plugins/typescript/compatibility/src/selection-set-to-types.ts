@@ -72,7 +72,7 @@ export function selectionSetToTypes(
           const fragmentName = baseVisitor.convertName(typeCondition, { suffix: 'InlineFragment' });
           let inlineFragmentValue;
 
-          if (isUnionType(parentType)) {
+          if (isUnionType(parentType) || isInterfaceType(parentType)) {
             inlineFragmentValue = `DiscriminateUnion<RequireField<${stack}, '__typename'>, { __typename: '${typeCondition}' }>`;
           } else {
             inlineFragmentValue = `{ __typename: '${typeCondition}' } & Pick<${stack}, ${selection.selectionSet.selections
