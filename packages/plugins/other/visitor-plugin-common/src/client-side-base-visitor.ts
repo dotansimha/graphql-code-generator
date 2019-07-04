@@ -189,7 +189,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
     }
 
     (this._fragments || [])
-      .filter(f => f.isExternal && f.importFrom)
+      .filter(f => f.isExternal && f.importFrom && (!f['level'] || (f['level'] !== undefined && f['level'] === 0)))
       .forEach(externalFragment => {
         const identifierName = this._getFragmentName(externalFragment.name);
 

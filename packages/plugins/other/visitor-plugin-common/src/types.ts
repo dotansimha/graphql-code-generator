@@ -20,7 +20,7 @@ export interface NamingConventionMap {
   transformUnderscore?: boolean;
 }
 
-export type LoadedFragment = { name: string; onType: string; node: FragmentDefinitionNode; isExternal: boolean; importFrom?: string | null };
+export type LoadedFragment<AdditionalFields = {}> = { name: string; onType: string; node: FragmentDefinitionNode; isExternal: boolean; importFrom?: string | null } & AdditionalFields;
 
 export type DeclarationKind = 'type' | 'interface';
 
