@@ -63,6 +63,23 @@ generates:
     plugins:
       - typescript
       - typescript-operations
+  ./dev-test/githunt/types.preResolveTypes.ts:
+    schema: ./dev-test/githunt/schema.json
+    documents: ./dev-test/githunt/**/*.graphql
+    config:
+      preResolveTypes: true
+    plugins:
+      - typescript
+      - typescript-operations
+  ./dev-test/githunt/types.preResolveTypes.compatibility.ts:
+    schema: ./dev-test/githunt/schema.json
+    documents: ./dev-test/githunt/**/*.graphql
+    config:
+      preResolveTypes: true
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-compatibility
   ./dev-test/githunt/types.enumsAsTypes.ts:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
