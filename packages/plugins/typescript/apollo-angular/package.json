@@ -9,6 +9,7 @@
     "test": "jest --config ../../../../jest.config.js"
   },
   "peerDependencies": {
+    "@types/graphql": "*",
     "graphql-tag": "^2.0.0"
   },
   "dependencies": {

@@ -7,7 +7,7 @@ This plugin generates React Apollo components and HOC with TypeScript typings. I
 
 ## Installation
 
-    $ yarn add @graphql-codegen/typescript-react-apollo
+    $ yarn add @graphql-codegen/typescript-react-apollo @types/graphql
 
 ## Usage
 

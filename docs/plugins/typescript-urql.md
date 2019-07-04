@@ -7,7 +7,7 @@ This plugin generates [`urql`](https://github.com/FormidableLabs/urql) component
 
 ## Installation
 
-    $ yarn add @graphql-codegen/typescript-urql
+    $ yarn add @graphql-codegen/typescript-urql @types/graphql
 
 ## Usage
 

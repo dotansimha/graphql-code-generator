@@ -7,7 +7,7 @@ This plugin generates Stencil Apollo functional components typings. It extends t
 
 ## Installation
 
-    $ yarn add -D @graphql-codegen/typescript-stencil-apollo
+    $ yarn add -D @graphql-codegen/typescript-stencil-apollo @types/graphql
 
 ## Usage
 
