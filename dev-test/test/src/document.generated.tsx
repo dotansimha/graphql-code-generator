@@ -1,13 +1,11 @@
 /* eslint-disable */
 import * as Types from './gql/__generated__/types';
 
-import { ComponentB_TypeBFragment } from './ComponentB/document.generated';
 import { ComponentB_TypeAFragment } from './ComponentB/document.generated';
 import { ComponentA_TypeAFragment } from './ComponentA/document.generated';
 import gql from 'graphql-tag';
 import { ComponentA_TypeAFragmentDoc } from './ComponentA/document.generated';
 import { ComponentB_TypeAFragmentDoc } from './ComponentB/document.generated';
-import { ComponentB_TypeBFragmentDoc } from './ComponentB/document.generated';
 import * as React from 'react';
 import * as ReactApollo from 'react-apollo';
 import * as ReactApolloHooks from 'react-apollo-hooks';

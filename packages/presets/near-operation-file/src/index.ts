@@ -130,23 +130,25 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
         const config = {
           ...options.config,
           namespacedImportName: importTypesNamespace,
-          externalFragments: [] as LoadedFragment[],
+          externalFragments: [] as (LoadedFragment<{ level: number }>)[],
         };
 
-        for (const fragmentName of fragmentsInUse) {
+        for (const fragmentName of Object.keys(fragmentsInUse)) {
+          const level = fragmentsInUse[fragmentName];
           const fragmentDetails = fragmentNameToFile[fragmentName];
 
           if (fragmentDetails) {
             const absFragmentFilePath = resolve(baseDir, fragmentDetails.filePath);
             const fragmentImportPath = resolveRelativeImport(absGeneratedFilePath, absFragmentFilePath);
 
-            if (!options.config.globalNamespace) {
+            if (!options.config.globalNamespace && level === 0) {
               plugins.unshift({
                 add: `import { ${fragmentDetails.importName} } from '${fragmentImportPath}';`,
               });
             }
 
             config.externalFragments.push({
+              level,
               isExternal: true,
               importFrom: fragmentImportPath,
               name: fragmentName,

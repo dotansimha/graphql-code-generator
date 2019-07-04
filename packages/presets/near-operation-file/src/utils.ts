@@ -14,7 +14,13 @@ export function clearExtension(path: string): string {
   return join(parsedPath.dir, parsedPath.name).replace(/\\/g, '/');
 }
 
-export function extractExternalFragmentsInUse(documentNode: DocumentNode | FragmentDefinitionNode, fragmentNameToFile: FragmentNameToFile, result: Set<string> = new Set(), ignoreList: Set<string> = new Set()): Set<string> {
+export function extractExternalFragmentsInUse(
+  documentNode: DocumentNode | FragmentDefinitionNode,
+  fragmentNameToFile: FragmentNameToFile,
+  result: { [fragmentName: string]: number } = {},
+  ignoreList: Set<string> = new Set(),
+  level = 0
+): { [fragmentName: string]: number } {
   // First, take all fragments definition from the current file, and mark them as ignored
   visit(documentNode, {
     enter: {
@@ -29,10 +35,10 @@ export function extractExternalFragmentsInUse(documentNode: DocumentNode | Fragm
     enter: {
       FragmentSpread: (node: FragmentSpreadNode) => {
         if (!ignoreList.has(node.name.value)) {
-          result.add(node.name.value);
+          result[node.name.value] = level;
 
           if (fragmentNameToFile[node.name.value]) {
-            extractExternalFragmentsInUse(fragmentNameToFile[node.name.value].node, fragmentNameToFile, result, ignoreList);
+            extractExternalFragmentsInUse(fragmentNameToFile[node.name.value].node, fragmentNameToFile, result, ignoreList, level + 1);
           }
         }
       },
