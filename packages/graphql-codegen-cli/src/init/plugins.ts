@@ -91,6 +91,14 @@ export const plugins: Array<PluginOption> = [
     shouldBeSelected: () => false,
   },
   {
+    name: `TypeScript GraphQL document nodes ${italic('(embedded GraphQL document)')}`,
+    package: '@graphql-codegen/typescript-document-nodes',
+    value: 'typescript-document-nodes',
+    pathInRepo: 'typescript/document-nodes',
+    available: tags => allOf(tags, Tags.typescript),
+    shouldBeSelected: () => false,
+  },
+  {
     name: `Introspection Fragment Matcher ${italic('(for Apollo Client)')}`,
     package: '@graphql-codegen/fragment-matcher',
     value: 'fragment-matcher',
