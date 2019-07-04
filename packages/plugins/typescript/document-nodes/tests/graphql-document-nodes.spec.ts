@@ -154,7 +154,7 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
           `),
         },
       ],
-      { namingConvention: 'lowerCamelCase' },
+      { namingConvention: 'change-case#camelCase' },
       { outputFile: '' }
     ) as string;
 
@@ -171,20 +171,50 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
     validateTs(result);
   });
 
-  it('Should generate module with a name as a camel case', async () => {
+  it('Should generate module with a name as a pascal case with underscores', async () => {
     const result = plugin(
       null,
       [
         {
           filePath: 'some/file/my-query.graphql',
           content: parse(/* GraphQL */ `
-            query MyQuery {
+            query My_Query {
               field
             }
           `),
         },
       ],
-      { namingConvention: 'UpperCamelCase' },
+      { namingConvention: 'change-case#pascalCase', transformUnderscore: false },
+      { outputFile: '' }
+    ) as string;
+
+    expect(result).toBeSimilarStringTo(`
+      import { DocumentNode } from 'graphql';
+      import gql from 'graphql-tag';
+
+      export const My_Query: DocumentNode = gql\`
+        query My_Query {
+          field
+        }
+      \`;
+    `);
+    validateTs(result);
+  });
+
+  it('Should generate module with a name as a pascal case without underscores', async () => {
+    const result = plugin(
+      null,
+      [
+        {
+          filePath: 'some/file/my-query.graphql',
+          content: parse(/* GraphQL */ `
+            query My_Query {
+              field
+            }
+          `),
+        },
+      ],
+      { namingConvention: 'change-case#pascalCase', transformUnderscore: true },
       { outputFile: '' }
     ) as string;
 
@@ -193,7 +223,7 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
       import gql from 'graphql-tag';
 
       export const MyQuery: DocumentNode = gql\`
-        query MyQuery {
+        query My_Query {
           field
         }
       \`;
@@ -201,7 +231,7 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
     validateTs(result);
   });
 
-  it('Should generate module with a name as an upper case', async () => {
+  it('Should generate module with a name as a contant case', async () => {
     const result = plugin(
       null,
       [
@@ -214,7 +244,7 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
           `),
         },
       ],
-      { namingConvention: 'UPPER_CASE' },
+      { namingConvention: 'change-case#constantCase' },
       { outputFile: '' }
     ) as string;
 

@@ -1,38 +1,40 @@
 import { PluginFunction, PluginValidateFn, Types } from '@graphql-codegen/plugin-helpers';
+import { convertFactory, NamingConvention } from '@graphql-codegen/visitor-plugin-common';
 import { GraphQLSchema, OperationDefinitionNode } from 'graphql';
 import { print } from 'graphql/language/printer';
-import * as changeCase from 'change-case';
-
-export type NamingConvention = 'lowerCamelCase' | 'UpperCamelCase' | 'UPPER_CASE';
-
-function useNamingConvention(str: string, namingConvention?: NamingConvention): string {
-  if (namingConvention === 'lowerCamelCase') {
-    return changeCase.camelCase(str);
-  } else if (namingConvention === 'UpperCamelCase') {
-    return changeCase.upperCaseFirst(changeCase.camelCase(str));
-  } else if (namingConvention === 'UPPER_CASE') {
-    return changeCase.upperCase(changeCase.snakeCase(str));
-  } else {
-    return str;
-  }
-}
 
 export interface TypeScriptDocumentNodesPluginConfig {
   /**
    * @name namingConvention
-   * @type string
-   * @default false
-   * @description Generates variable names in choosen naming convention
-   * (lowerCamelCase, UpperCamelCase or UPPER_CASE)
+   * @type NamingConvention
+   * @default change-case#pascalCase
+   * @description Allow you to override the naming convention of the output.
+   * You can either override all namings, or specify an object with specific custom naming convention per output.
+   * The format of the converter must be a valid `module#method`.
+   * You can also use "keep" to keep all GraphQL names as-is.
+   * Additionally you can set `transformUnderscore` to `true` if you want to override the default behaviour,
+   * which is to preserve underscores.
    *
-   * @example
+   * @example Override All Names
    * ```yml
-   *  generates: src/api/user-service/queries.ts
-   *  documents: src/api/user-service/queries.graphql
-   *  plugins:
-   *    - graphql-codegen-typescript-document-nodes
-   *  config:
-   *    namingConvention: lowerCamelCase
+   * config:
+   *   namingConvention: change-case#lowerCase
+   * ```
+   * @example Upper-case enum values
+   * ```yml
+   * config:
+   *   namingConvention: change-case#pascalCase
+   * ```
+   * @example Keep
+   * ```yml
+   * config:
+   *   namingConvention: keep
+   * ```
+   * @example Transform Underscores
+   * ```yml
+   * config:
+   *   namingConvention: change-case#pascalCase
+   *   transformUnderscore: true
    * ```
    */
   namingConvention?: NamingConvention;
@@ -70,17 +72,19 @@ export interface TypeScriptDocumentNodesPluginConfig {
    * ```
    */
   nameSuffix?: string;
+  transformUnderscore?: boolean;
 }
 
 export const plugin: PluginFunction<TypeScriptDocumentNodesPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: TypeScriptDocumentNodesPluginConfig): string => {
-  const { namingConvention, namePrefix = '', nameSuffix = '' } = config;
+  const { namingConvention, namePrefix = '', nameSuffix = '', transformUnderscore = false } = config;
+  const convertFn = convertFactory({ namingConvention });
   const content = documents
     .filter(documentFile => documentFile.filePath.length > 0)
     .map(documentFile =>
       documentFile.content.definitions
         .filter((d: OperationDefinitionNode) => d.name && d.name.value)
         .map((d: OperationDefinitionNode) => {
-          const name = useNamingConvention(namePrefix + d.name.value + nameSuffix, namingConvention);
+          const name = convertFn(namePrefix + d.name.value + nameSuffix, { transformUnderscore });
           const code = print(d)
             .replace(/^/gm, '  ')
             .replace(/\s*$/, '');
