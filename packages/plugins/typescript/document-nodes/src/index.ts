@@ -1,37 +1,17 @@
 import { PluginFunction, PluginValidateFn, Types } from '@graphql-codegen/plugin-helpers';
 import { GraphQLSchema, OperationDefinitionNode } from 'graphql';
 import { print } from 'graphql/language/printer';
+import * as changeCase from 'change-case';
 
 export type NamingConvention = 'lowerCamelCase' | 'UpperCamelCase' | 'UPPER_CASE';
 
-function upperFirst(str: string): string {
-  return str[0].toUpperCase() + str.slice(1);
-}
-
-function camelize(str: string): string {
-  return str
-    .replace(/([a-z])([A-Z])/g, '$1 $2')
-    .split(/[\x00-\x2f\x3a-\x40\x5b-\x60\x7b-\x7f]+/)
-    .reduce((result, word, index) => {
-      word = word.toLowerCase();
-      return result + (index ? upperFirst(word) : word);
-    }, '');
-}
-
-function upperize(str: string): string {
-  return str
-    .replace(/([a-z])([A-Z])/g, '$1 $2')
-    .replace(/[\x00-\x2f\x3a-\x40\x5b-\x60\x7b-\x7f]+/g, '_')
-    .toUpperCase();
-}
-
 function useNamingConvention(str: string, namingConvention?: NamingConvention): string {
   if (namingConvention === 'lowerCamelCase') {
-    return camelize(str);
+    return changeCase.camelCase(str);
   } else if (namingConvention === 'UpperCamelCase') {
-    return upperFirst(camelize(str));
+    return changeCase.upperCaseFirst(changeCase.camelCase(str));
   } else if (namingConvention === 'UPPER_CASE') {
-    return upperize(str);
+    return changeCase.upperCase(changeCase.snakeCase(str));
   } else {
     return str;
   }
