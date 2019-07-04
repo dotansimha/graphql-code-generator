@@ -32,6 +32,47 @@ describe('React Apollo', () => {
     validateTs(merged, undefined, true);
   };
 
+  describe('Issues', () => {
+    it('Issue #2080 - noGraphQLTag does not work with fragments correctly', async () => {
+      const docs = [
+        {
+          filePath: '',
+          content: parse(/* GraphQL */ `
+            query test {
+              feed {
+                id
+                commentCount
+                repository {
+                  ...RepositoryFields
+                }
+              }
+            }
+
+            fragment RepositoryFields on Repository {
+              full_name
+              html_url
+              owner {
+                avatar_url
+              }
+            }
+          `),
+        },
+      ];
+      const content = (await plugin(
+        schema,
+        docs,
+        {
+          noGraphQLTag: true,
+        },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+      // make sure the fragment is there twice.
+      expect(content.content.split('{"kind":"FragmentDefinition","name":{"kind":"Name","value":"RepositoryFields"}').length).toBe(3);
+    });
+  });
+
   describe('Imports', () => {
     it('should import React and ReactApollo dependencies', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
