@@ -8,6 +8,7 @@ export interface CompatabilityPluginConfig extends ParsedConfig {
   reactApollo: any;
   noNamespaces: boolean;
   strict: boolean;
+  preResolveTypes: boolean;
 }
 
 export class CompatabilityPluginVisitor extends BaseVisitor<CompatabilityPluginRawConfig, CompatabilityPluginConfig> {
@@ -15,6 +16,7 @@ export class CompatabilityPluginVisitor extends BaseVisitor<CompatabilityPluginR
     super(rawConfig, {
       reactApollo: options.reactApollo,
       noNamespaces: getConfigValue<boolean>(rawConfig.noNamespaces, false),
+      preResolveTypes: getConfigValue<boolean>(rawConfig.preResolveTypes, false),
       strict: getConfigValue<boolean>(rawConfig.strict, false),
     } as any);
   }
@@ -42,7 +44,7 @@ export class CompatabilityPluginVisitor extends BaseVisitor<CompatabilityPluginR
       },
     };
 
-    selectionSetToTypes(typesPrefix, this, this._schema, typeName, baseName, node.operation, node.selectionSet, selectionSetTypes);
+    selectionSetToTypes(typesPrefix, this, this._schema, typeName, baseName, node.operation, node.selectionSet, this.config.preResolveTypes, selectionSetTypes);
 
     return selectionSetTypes;
   }
@@ -53,7 +55,7 @@ export class CompatabilityPluginVisitor extends BaseVisitor<CompatabilityPluginR
     const typesPrefix = this.config.noNamespaces ? this.convertName(node.name.value) : '';
     const selectionSetTypes: SelectionSetToObjectResult = {};
 
-    selectionSetToTypes(typesPrefix, this, this._schema, typeName, baseName, 'fragment', node.selectionSet, selectionSetTypes);
+    selectionSetToTypes(typesPrefix, this, this._schema, typeName, baseName, 'fragment', node.selectionSet, this.config.preResolveTypes, selectionSetTypes);
 
     return selectionSetTypes;
   }

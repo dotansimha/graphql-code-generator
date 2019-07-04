@@ -47,6 +47,7 @@ export class SelectionSetToObject {
     protected _schema: GraphQLSchema,
     protected _convertName: ConvertNameFn<BaseVisitorConvertOptions>,
     protected _addTypename: boolean,
+    protected _preResolveTypes: boolean,
     protected _nonOptionalTypename: boolean,
     protected _loadedFragments: LoadedFragment[],
     protected _namespacedImportName: string | null,
@@ -161,17 +162,85 @@ export class SelectionSetToObject {
       }
     }
 
+    if (this._preResolveTypes) {
+      return this.buildFieldsWithoutPick();
+    } else {
+      return this.buildFieldsWithPick();
+    }
+  }
+
+  protected buildFieldsWithoutPick(): string {
+    const typeName = this.buildTypeNameField();
+    const baseFields = this.buildPrimitiveFieldsWithoutPick(this._parentSchemaType as any, this._primitiveFields);
+    const linksFields = this.buildLinkFieldsWithoutPick(this._linksFields);
+    const aliasBaseFields = this.buildAliasedPrimitiveFieldsWithoutPick(this._parentSchemaType as any, this._primitiveAliasedFields);
+    const fragments = this.buildFragments(this._fragments);
+    let mergedFields = `{ ${[typeName, ...baseFields, ...aliasBaseFields, ...linksFields]
+      .filter(a => a)
+      .map(b => `${b.name}: ${b.type}`)
+      .join(', ')} }`;
+
+    if (fragments && fragments !== '') {
+      mergedFields = this.mergeAllFields([mergedFields, fragments]);
+    }
+
+    return mergedFields;
+  }
+
+  protected buildAliasedPrimitiveFieldsWithoutPick(schemaType: GraphQLObjectType | GraphQLInterfaceType, fields: PrimitiveAliasedFields[]): { name: string; type: string }[] {
+    if (fields.length === 0) {
+      return [];
+    }
+
+    return fields.map(aliasedField => {
+      const fieldObj = schemaType.getFields()[aliasedField.fieldName];
+      const baseType = getBaseType(fieldObj.type);
+      const typeToUse = this._scalars[baseType.name] || baseType.name;
+
+      return {
+        name: this.formatNamedField(aliasedField.alias),
+        type: typeToUse,
+      };
+    });
+  }
+
+  protected buildLinkFieldsWithoutPick(fields: LinkField[]): { name: string; type: string }[] {
+    if (fields.length === 0) {
+      return [];
+    }
+
+    return fields.map(field => ({ name: this.formatNamedField(field.alias || field.name), type: field.selectionSet }));
+  }
+
+  protected buildPrimitiveFieldsWithoutPick(schemaType: GraphQLObjectType | GraphQLInterfaceType, fields: PrimitiveField[]): { name: string; type: string }[] {
+    if (fields.length === 0) {
+      return [];
+    }
+
+    return fields.map(field => {
+      const fieldObj = schemaType.getFields()[field];
+      const baseType = getBaseType(fieldObj.type);
+      const typeToUse = this._scalars[baseType.name] || baseType.name;
+
+      return {
+        name: this.formatNamedField(field),
+        type: typeToUse,
+      };
+    });
+  }
+
+  protected buildFieldsWithPick(): string {
     const parentName =
       (this._namespacedImportName ? `${this._namespacedImportName}.` : '') +
       this._convertName(this._parentSchemaType.name, {
         useTypesPrefix: true,
       });
-    const typeName = this._nonOptionalTypename || this._addTypename || this._queriedForTypename ? this.buildTypeNameField() : null;
+    const typeName = this.buildTypeNameField();
     const baseFields = this.buildPrimitiveFields(parentName, this._primitiveFields);
     const aliasBaseFields = this.buildAliasedPrimitiveFields(parentName, this._primitiveAliasedFields);
     const linksFields = this.buildLinkFields(this._linksFields);
     const fragments = this.buildFragments(this._fragments);
-    const fieldsSet = [typeName, baseFields, aliasBaseFields, linksFields, fragments].filter(f => f && f !== '');
+    const fieldsSet = [typeName ? `{ ${typeName.name}: ${typeName.type} }` : '', baseFields, aliasBaseFields, linksFields, fragments].filter(f => f && f !== '');
 
     return this.mergeAllFields(fieldsSet);
   }
@@ -196,24 +265,31 @@ export class SelectionSetToObject {
     return implementingTypes;
   }
 
-  protected buildTypeNameField(): string | null {
-    const possibleTypes = [];
+  protected buildTypeNameField(): { name: string; type: string } {
+    if (this._nonOptionalTypename || this._addTypename || this._queriedForTypename) {
+      const possibleTypes = [];
 
-    if (isUnionType(this._parentSchemaType)) {
-      return null;
-    } else if (isInterfaceType(this._parentSchemaType)) {
-      possibleTypes.push(...this.getImplementingTypes(this._parentSchemaType));
-    } else {
-      possibleTypes.push(this._parentSchemaType.name);
+      if (isUnionType(this._parentSchemaType)) {
+        return null;
+      } else if (isInterfaceType(this._parentSchemaType)) {
+        possibleTypes.push(...this.getImplementingTypes(this._parentSchemaType));
+      } else {
+        possibleTypes.push(this._parentSchemaType.name);
+      }
+
+      if (possibleTypes.length === 0) {
+        return null;
+      }
+
+      const optionalTypename = !this._queriedForTypename && !this._nonOptionalTypename;
+
+      return {
+        name: `${this.formatNamedField('__typename')}${optionalTypename ? '?' : ''}`,
+        type: `${possibleTypes.map(t => `'${t}'`).join(' | ')}`,
+      };
     }
 
-    if (possibleTypes.length === 0) {
-      return null;
-    }
-
-    const optionalTypename = !this._queriedForTypename && !this._nonOptionalTypename;
-
-    return `{ ${this.formatNamedField('__typename')}${optionalTypename ? '?' : ''}: ${possibleTypes.map(t => `'${t}'`).join(' | ')} }`;
+    return null;
   }
 
   protected buildPrimitiveFields(parentName: string, fields: PrimitiveField[]): string | null {

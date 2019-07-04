@@ -63,6 +63,23 @@ generates:
     plugins:
       - typescript
       - typescript-operations
+  ./dev-test/githunt/types.preResolveTypes.ts:
+    schema: ./dev-test/githunt/schema.json
+    documents: ./dev-test/githunt/**/*.graphql
+    config:
+      preResolveTypes: true
+    plugins:
+      - typescript
+      - typescript-operations
+  ./dev-test/githunt/types.preResolveTypes.compatibility.ts:
+    schema: ./dev-test/githunt/schema.json
+    documents: ./dev-test/githunt/**/*.graphql
+    config:
+      preResolveTypes: true
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-compatibility
   ./dev-test/githunt/types.enumsAsTypes.ts:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
@@ -103,6 +120,16 @@ generates:
       - typescript
       - typescript-operations
       - typescript-react-apollo
+  ./dev-test/githunt/types.reactApollo.preResolveTypes.tsx:
+    schema: ./dev-test/githunt/schema.json
+    documents: ./dev-test/githunt/**/*.graphql
+    config:
+      preResolveTypes: true
+    plugins:
+      - add: // tslint:disable
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo
   ./dev-test/githunt/types.reactApollo.hooks.tsx:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
@@ -138,6 +165,14 @@ generates:
   ./dev-test/star-wars/types.ts:
     schema: ./dev-test/star-wars/schema.json
     documents: ./dev-test/star-wars/**/*.graphql
+    plugins:
+      - typescript
+      - typescript-operations
+  ./dev-test/star-wars/types.preResolveTypes.ts:
+    schema: ./dev-test/star-wars/schema.json
+    documents: ./dev-test/star-wars/**/*.graphql
+    config:
+      preResolveTypes: true
     plugins:
       - typescript
       - typescript-operations

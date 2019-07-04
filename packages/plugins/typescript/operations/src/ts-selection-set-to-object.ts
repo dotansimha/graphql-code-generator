@@ -8,17 +8,18 @@ export class TypeScriptSelectionSetToObject extends SelectionSetToObject {
     _schema: GraphQLSchema,
     _convertName: ConvertNameFn,
     _addTypename: boolean,
+    _preResolveTypes: boolean,
     _nonOptionalTypename: boolean,
     _loadedFragments: LoadedFragment[],
     private _config: TypeScriptDocumentsParsedConfig,
     _parentSchemaType?: GraphQLNamedType,
     _selectionSet?: SelectionSetNode
   ) {
-    super(_scalars, _schema, _convertName, _addTypename, _nonOptionalTypename, _loadedFragments, _config.namespacedImportName, _parentSchemaType, _selectionSet);
+    super(_scalars, _schema, _convertName, _addTypename, _preResolveTypes, _nonOptionalTypename, _loadedFragments, _config.namespacedImportName, _parentSchemaType, _selectionSet);
   }
 
   public createNext(parentSchemaType: GraphQLNamedType, selectionSet: SelectionSetNode): SelectionSetToObject {
-    return new TypeScriptSelectionSetToObject(this._scalars, this._schema, this._convertName, this._addTypename, this._nonOptionalTypename, this._loadedFragments, this._config, parentSchemaType, selectionSet);
+    return new TypeScriptSelectionSetToObject(this._scalars, this._schema, this._convertName, this._addTypename, this._preResolveTypes, this._nonOptionalTypename, this._loadedFragments, this._config, parentSchemaType, selectionSet);
   }
 
   private clearOptional(str: string): string {

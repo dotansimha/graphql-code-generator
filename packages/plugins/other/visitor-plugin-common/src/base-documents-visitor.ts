@@ -1,7 +1,7 @@
 import { ScalarsMap, ConvertOptions, LoadedFragment } from './types';
 import * as autoBind from 'auto-bind';
 import { DEFAULT_SCALARS } from './scalars';
-import { toPascalCase, DeclarationBlock, DeclarationBlockConfig, buildScalars } from './utils';
+import { toPascalCase, DeclarationBlock, DeclarationBlockConfig, buildScalars, getConfigValue } from './utils';
 import { GraphQLSchema, FragmentDefinitionNode, GraphQLObjectType, OperationDefinitionNode, VariableDefinitionNode, OperationTypeNode, ASTNode } from 'graphql';
 import { SelectionSetToObject } from './selection-set-to-object';
 import { OperationVariablesToObject } from './variables-to-object';
@@ -20,10 +20,38 @@ function getRootType(operation: OperationTypeNode, schema: GraphQLSchema) {
 
 export interface ParsedDocumentsConfig extends ParsedConfig {
   addTypename: boolean;
+  preResolveTypes: boolean;
   globalNamespace: boolean;
 }
 
 export interface RawDocumentsConfig extends RawConfig {
+  /**
+   * @name preResolveTypes
+   * @type boolean
+   * @default false
+   * @description Avoid using `Pick` and resolve the actual primitive type of all selection set.
+   *
+   * @example
+   * ```yml
+   * plugins
+   *   config:
+   *     preResolveTypes: true
+   * ```
+   */
+  preResolveTypes?: boolean;
+  /**
+   * @name globalNamespace
+   * @type boolean
+   * @default false
+   * @description Puts all generated code under `global` namespace. Useful for Stencil integration.
+   *
+   * @example
+   * ```yml
+   * plugins
+   *   config:
+   *     globalNamespace: true
+   * ```
+   */
   globalNamespace?: boolean;
 }
 
@@ -36,10 +64,11 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
     super(
       rawConfig,
       {
+        preResolveTypes: getConfigValue(rawConfig.preResolveTypes, false),
         addTypename: !rawConfig.skipTypename,
         globalNamespace: !!rawConfig.globalNamespace,
         ...((additionalConfig || {}) as any),
-      } as any,
+      },
       buildScalars(_schema, scalars)
     );
 

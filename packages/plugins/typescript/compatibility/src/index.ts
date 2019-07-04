@@ -42,6 +42,14 @@ export interface CompatabilityPluginRawConfig extends RawConfig {
    * ```
    */
   strict?: boolean;
+  /**
+   * @name preResolveTypes
+   * @type boolean
+   * @description Avoid using `Pick` in `typescript-operations` and make sure to optimize this package as well.
+   * @default false
+   *
+   */
+  preResolveTypes?: boolean;
 }
 
 const REACT_APOLLO_PLUGIN_NAME = 'typescript-react-apollo';
