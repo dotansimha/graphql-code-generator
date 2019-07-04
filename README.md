@@ -80,26 +80,40 @@ schema {
 And generate the following TypeScript typings:
 
 ```ts
-interface Query {
-  posts?: Post[];
-}
+export type Maybe<T> = T | null;
 
-interface Post {
-  id: number;
-  title: string;
-  author: Author;
-}
+/** All built-in and custom scalars, mapped to their actual values */
+export type Scalars = {
+  ID: string,
+  String: string,
+  Boolean: boolean,
+  Int: number,
+  Float: number,
+};
 
-interface Author {
-  id: number;
-  firstName: string;
-  lastName: string;
-  posts?: Post[];
-}
+export type Author = {
+  __typename?: 'Author',
+  id: Scalars['Int'],
+  firstName: Scalars['String'],
+  lastName: Scalars['String'],
+  posts?: Maybe<Array<Maybe<Post>>>,
+};
 
-interface PostsAuthorArgs {
-  findTitle?: string;
-}
+export type AuthorPostsArgs = {
+  findTitle?: Maybe<Scalars['String']>
+};
+
+export type Post = {
+  __typename?: 'Post',
+  id: Scalars['Int'],
+  title: Scalars['String'],
+  author: Author,
+};
+
+export type Query = {
+  __typename?: 'Query',
+  posts?: Maybe<Array<Maybe<Post>>>,
+};
 ```
 
 ### Links

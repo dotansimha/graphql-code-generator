@@ -9,7 +9,7 @@ GraphQL Code Generator was built to address exactly that. By analyzing the schem
 
 For example, given the following schema:
 
-```gql
+```graphql
 type Author {
   id: Int!
   firstName: String!
@@ -35,26 +35,40 @@ schema {
 GraphQL Code Generator can generate the following TypeScript typings:
 
 ```ts
-interface Query {
-  posts?: Post[];
-}
+export type Maybe<T> = T | null;
 
-interface Post {
-  id: number;
-  title: string;
-  author: Author;
-}
+/** All built-in and custom scalars, mapped to their actual values */
+export type Scalars = {
+  ID: string,
+  String: string,
+  Boolean: boolean,
+  Int: number,
+  Float: number,
+};
 
-interface Author {
-  id: number;
-  firstName: string;
-  lastName: string;
-  posts?: Post[];
-}
+export type Author = {
+  __typename?: 'Author',
+  id: Scalars['Int'],
+  firstName: Scalars['String'],
+  lastName: Scalars['String'],
+  posts?: Maybe<Array<Maybe<Post>>>,
+};
 
-interface PostsAuthorArgs {
-  findTitle?: string;
-}
+export type AuthorPostsArgs = {
+  findTitle?: Maybe<Scalars['String']>
+};
+
+export type Post = {
+  __typename?: 'Post',
+  id: Scalars['Int'],
+  title: Scalars['String'],
+  author: Author,
+};
+
+export type Query = {
+  __typename?: 'Query',
+  posts?: Maybe<Array<Maybe<Post>>>,
+};
 ```
 
 GraphQL codegen uses [prettier](https://github.com/prettier/prettier) inside the box, which means that the output code should always be formatted in a pretty way whenever possible. Accordingly, if your project includes a [prettier config file](https://prettier.io/docs/en/configuration.html) it should be respected and the code should be generated accordingly.
