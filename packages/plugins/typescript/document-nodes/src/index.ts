@@ -1,8 +1,6 @@
 import { PluginFunction, PluginValidateFn, Types } from '@graphql-codegen/plugin-helpers';
 import { convertFactory, NamingConvention } from '@graphql-codegen/visitor-plugin-common';
 import { GraphQLSchema, OperationDefinitionNode } from 'graphql';
-import gqlTag from 'graphql-tag';
-
 import { print } from 'graphql/language/printer';
 
 export interface TypeScriptDocumentNodesPluginConfig {
