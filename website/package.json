@@ -22,6 +22,6 @@
     "remarkable-embed": "0.4.1"
   },
   "dependencies": {
-    "sendmail": "1.6.0"
+    "sendmail": "1.6.1"
   }
 }
