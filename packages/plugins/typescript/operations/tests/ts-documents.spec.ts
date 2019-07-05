@@ -174,6 +174,36 @@ describe('TypeScript Operations Plugin', () => {
     });
   });
 
+  describe('Custom Query Response Name', () => {
+    it('Should generate custom query response name', async () => {
+      const ast = parse(`
+        query notifications {
+          notifications {
+            id
+
+            ... on TextNotification {
+              text
+            }
+
+            ... on ImageNotification {
+              imageUrl
+              metadata {
+                createdBy
+              }
+            }
+          }
+        }
+      `);
+      const config = { queryResponseSuffix: 'Q' };
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
+      expect(result).toBeSimilarStringTo(`export type NotificationsQueryVariables = {};`);
+      expect(result).toBeSimilarStringTo(
+        `export type NotificationsQ = ({ __typename?: 'Query' } & { notifications: Array<({ __typename?: 'TextNotification' | 'ImageNotification' } & Pick<Notifiction, 'id'> & (({ __typename?: 'TextNotification' } & Pick<TextNotification, 'text'>) | ({ __typename?: 'ImageNotification' } & Pick<ImageNotification, 'imageUrl'> & { metadata: ({ __typename?: 'ImageMetadata' } & Pick<ImageMetadata, 'createdBy'>) })))> });`
+      );
+      await validate(result, config);
+    });
+  });
+
   describe('Naming Convention & Types Prefix', () => {
     it('Should allow custom naming and point to the correct type', async () => {
       const ast = parse(`

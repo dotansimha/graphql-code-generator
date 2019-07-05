@@ -22,6 +22,7 @@ export interface ParsedDocumentsConfig extends ParsedConfig {
   addTypename: boolean;
   preResolveTypes: boolean;
   globalNamespace: boolean;
+  queryResponseSuffix: string;
 }
 
 export interface RawDocumentsConfig extends RawConfig {
@@ -53,6 +54,7 @@ export interface RawDocumentsConfig extends RawConfig {
    * ```
    */
   globalNamespace?: boolean;
+  queryResponseSuffix?: string;
 }
 
 export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDocumentsConfig, TPluginConfig extends ParsedDocumentsConfig = ParsedDocumentsConfig> extends BaseVisitor<TRawConfig, TPluginConfig> {
@@ -67,6 +69,7 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
         preResolveTypes: getConfigValue(rawConfig.preResolveTypes, false),
         addTypename: !rawConfig.skipTypename,
         globalNamespace: !!rawConfig.globalNamespace,
+        queryResponseSuffix: getConfigValue(rawConfig.queryResponseSuffix, ''),
         ...((additionalConfig || {}) as any),
       },
       buildScalars(_schema, scalars)
@@ -144,12 +147,13 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
     const selectionSet = this._selectionSetToObject.createNext(operationRootType, node.selectionSet);
     const visitedOperationVariables = this._variablesTransfomer.transform<VariableDefinitionNode>(node.variableDefinitions);
 
+    //HERE!
     const operationResult = new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
       .withName(
         this.convertName(name, {
-          suffix: toPascalCase(node.operation),
+          suffix: this._parsedConfig.queryResponseSuffix || toPascalCase(node.operation),
         })
       )
       .withContent(selectionSet.string).string;
