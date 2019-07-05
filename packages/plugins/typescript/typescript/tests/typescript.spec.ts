@@ -260,6 +260,52 @@ describe('TypeScript', () => {
       };`);
       validateTs(result);
     });
+
+    it('#1954 - Duplicate type names', async () => {
+      const schema = buildSchema(`
+      type PullRequest {
+        reviewThreads(first: Int!): Int
+      }
+      
+      type PullRequestReview {
+          threads(first: Int!, last: Int!): Int
+      }`);
+
+      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+
+      expect(result.content).toMatchInlineSnapshot(`
+        "/** All built-in and custom scalars, mapped to their actual values */
+        export type Scalars = {
+          ID: string,
+          String: string,
+          Boolean: boolean,
+          Int: number,
+          Float: number,
+        };
+
+        export type PullRequest = {
+          __typename?: 'PullRequest',
+          reviewThreads?: Maybe<Scalars['Int']>,
+        };
+
+
+        export type PullRequestReviewThreadsArgs = {
+          first: Scalars['Int']
+        };
+
+        export type PullRequestReview = {
+          __typename?: 'PullRequestReview',
+          threads?: Maybe<Scalars['Int']>,
+        };
+
+
+        export type PullRequestReviewThreadsArgs2 = {
+          first: Scalars['Int'],
+          last: Scalars['Int']
+        };
+        "
+      `);
+    });
   });
 
   describe('Config', () => {
