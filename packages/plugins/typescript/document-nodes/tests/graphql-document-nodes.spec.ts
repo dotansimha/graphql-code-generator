@@ -320,4 +320,68 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
     `);
     validateTs(result);
   });
+
+  it('Should generate simple module without graphql-tag', async () => {
+    const result = plugin(
+      null,
+      [
+        {
+          filePath: 'some/file/my-query.graphql',
+          content: parse(/* GraphQL */ `
+            query MyQuery {
+              field
+            }
+          `),
+        },
+      ],
+      { noGraphQLTag: true },
+      { outputFile: '' }
+    ) as string;
+
+    expect(result).toBeSimilarStringTo(`
+    import { DocumentNode } from 'graphql';
+
+    export const MyQuery: DocumentNode = {
+      "kind": "OperationDefinition",
+      "operation": "query",
+      "name": {
+        "kind": "Name",
+        "value": "MyQuery",
+        "loc": {
+          "start": 19,
+          "end": 26
+        }
+      },
+      "variableDefinitions": [],
+      "directives": [],
+      "selectionSet": {
+        "kind": "SelectionSet",
+        "selections": [
+          {
+            "kind": "Field",
+            "name": {
+              "kind": "Name",
+              "value": "field",
+              "loc": {
+                "start": 43,
+                "end": 48
+              }
+            },
+            "arguments": [],
+            "directives": [],
+            "loc": {
+              "start": 43,
+              "end": 48
+            }
+          }
+        ],
+        "loc": {
+          "start": 27,
+          "end": 62
+        }
+      }
+    };
+    `);
+    validateTs(result);
+  });
 });
