@@ -89,15 +89,12 @@ export interface TypeScriptDocumentNodesPluginConfig {
   transformUnderscore?: boolean;
 }
 
-function _gql(node: OperationDefinitionNode, noGraphQLTag = false): string {
+function _gql(operationDefinitionNode: OperationDefinitionNode, noGraphQLTag = false): string {
   if (noGraphQLTag) {
-    const nodeWithoutLoc = { ...node };
-    if (nodeWithoutLoc.loc) {
-      delete nodeWithoutLoc.loc;
-    }
-    return JSON.stringify(nodeWithoutLoc, undefined, 2);
+    const documentNode = { kind: 'Document', definitions: [operationDefinitionNode] };
+    return JSON.stringify(documentNode, (k, v) => (k === 'loc' ? undefined : v), 2);
   } else {
-    const code = print(node)
+    const code = print(operationDefinitionNode)
       .replace(/^/gm, '  ')
       .replace(/\s*$/, '');
     return ['gql`', code, '`'].join('\n');

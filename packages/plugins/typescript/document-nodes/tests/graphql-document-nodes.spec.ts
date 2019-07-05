@@ -342,44 +342,33 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
     import { DocumentNode } from 'graphql';
 
     export const MyQuery: DocumentNode = {
-      "kind": "OperationDefinition",
-      "operation": "query",
-      "name": {
-        "kind": "Name",
-        "value": "MyQuery",
-        "loc": {
-          "start": 19,
-          "end": 26
-        }
-      },
-      "variableDefinitions": [],
-      "directives": [],
-      "selectionSet": {
-        "kind": "SelectionSet",
-        "selections": [
-          {
-            "kind": "Field",
-            "name": {
-              "kind": "Name",
-              "value": "field",
-              "loc": {
-                "start": 43,
-                "end": 48
+      "kind": "Document",
+      "definitions": [
+        {
+          "kind": "OperationDefinition",
+          "operation": "query",
+          "name": {
+            "kind": "Name",
+            "value": "MyQuery"
+          },
+          "variableDefinitions": [],
+          "directives": [],
+          "selectionSet": {
+            "kind": "SelectionSet",
+            "selections": [
+              {
+                "kind": "Field",
+                "name": {
+                  "kind": "Name",
+                  "value": "field"
+                },
+                "arguments": [],
+                "directives": []
               }
-            },
-            "arguments": [],
-            "directives": [],
-            "loc": {
-              "start": 43,
-              "end": 48
-            }
+            ]
           }
-        ],
-        "loc": {
-          "start": 27,
-          "end": 62
         }
-      }
+      ]
     };
     `);
     validateTs(result);
