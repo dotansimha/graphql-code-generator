@@ -10,6 +10,7 @@ export interface RawClientSideBasePluginConfig extends RawConfig {
   noGraphQLTag?: boolean;
   gqlImport?: string;
   noExport?: boolean;
+  operationResultSuffix?: string;
 }
 
 export interface ClientSideBasePluginConfig extends ParsedConfig {
@@ -46,6 +47,13 @@ export interface ClientSideBasePluginConfig extends ParsedConfig {
    * ```
    */
   gqlImport: string;
+  /**
+   * @name operationResultSuffix
+   * @type string
+   * @default ""
+   * @description Adds a suffix to generated operation result type names
+   */
+  operationResultSuffix: string;
   noExport: boolean;
 }
 
@@ -57,6 +65,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
       noGraphQLTag: getConfigValue(rawConfig.noGraphQLTag, false),
       gqlImport: rawConfig.gqlImport || null,
       noExport: !!rawConfig.noExport,
+      operationResultSuffix: getConfigValue(rawConfig.operationResultSuffix, ''),
       ...additionalConfig,
     } as any);
 
@@ -233,7 +242,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
     const documentString = `${this.config.noExport ? '' : 'export'} const ${documentVariableName}${this.config.noGraphQLTag ? ': DocumentNode' : ''} = ${this._gql(node)};`;
     const operationType: string = toPascalCase(node.operation);
     const operationResultType: string = this.convertName(node, {
-      suffix: operationType,
+      suffix: operationType + this._parsedConfig.operationResultSuffix,
     });
     const operationVariablesTypes: string = this.convertName(node, {
       suffix: operationType + 'Variables',

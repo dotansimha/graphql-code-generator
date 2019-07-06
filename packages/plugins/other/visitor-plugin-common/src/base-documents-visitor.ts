@@ -54,6 +54,12 @@ export interface RawDocumentsConfig extends RawConfig {
    * ```
    */
   globalNamespace?: boolean;
+  /**
+   * @name operationResultSuffix
+   * @type string
+   * @default ""
+   * @description Adds a suffix to generated operation result type names
+   */
   operationResultSuffix?: string;
 }
 
