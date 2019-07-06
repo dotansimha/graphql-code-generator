@@ -147,7 +147,6 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
     const selectionSet = this._selectionSetToObject.createNext(operationRootType, node.selectionSet);
     const visitedOperationVariables = this._variablesTransfomer.transform<VariableDefinitionNode>(node.variableDefinitions);
 
-    //HERE!
     const operationResult = new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
