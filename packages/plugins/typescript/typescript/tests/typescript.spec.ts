@@ -260,6 +260,22 @@ describe('TypeScript', () => {
       };`);
       validateTs(result);
     });
+
+    it('#1954 - Duplicate type names for args type', async () => {
+      const schema = buildSchema(`
+      type PullRequest {
+        reviewThreads(first: Int!): Int
+      }
+      
+      type PullRequestReview {
+          threads(first: Int!, last: Int!): Int
+      }`);
+
+      const result = (await plugin(schema, [], { addUnderscoreToArgsType: true }, { outputFile: '' })) as Types.ComplexPluginOutput;
+
+      expect(result.content).toContain('PullRequest_ReviewThreadsArgs');
+      expect(result.content).toContain('PullRequestReview_ThreadsArgs');
+    });
   });
 
   describe('Config', () => {

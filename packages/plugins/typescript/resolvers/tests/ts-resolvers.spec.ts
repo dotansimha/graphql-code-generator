@@ -379,6 +379,22 @@ describe('TypeScript Resolvers Plugin', () => {
     await validate(mergeOutputs([result, `type MyCustomCtx = {};`]));
   });
 
+  it('Should with correctly with addUnderscoreToArgsType set to true', async () => {
+    const result = (await plugin(
+      schema,
+      [],
+      {
+        addUnderscoreToArgsType: true,
+      },
+      { outputFile: '' }
+    )) as Types.ComplexPluginOutput;
+
+    expect(result.content).toContain('MyType_WithArgsArgs');
+    expect(result.content).not.toContain('MyTypeWithArgsArgs');
+
+    await validate(mergeOutputs([result]));
+  });
+
   it('Should allow to override context with mapped context type', async () => {
     const result = (await plugin(
       schema,

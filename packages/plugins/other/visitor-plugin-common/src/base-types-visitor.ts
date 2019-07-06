@@ -15,23 +15,35 @@ import {
   ScalarTypeDefinitionNode,
   UnionTypeDefinitionNode,
   StringValueNode,
-  isUnionType,
-  isInterfaceType,
 } from 'graphql';
 import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor';
 import { parseMapper } from './mappers';
 import { DEFAULT_SCALARS } from './scalars';
 import { normalizeDeclarationKind } from './declaration-kinds';
 import { EnumValuesMap, ScalarsMap, DeclarationKindConfig, DeclarationKind } from './types';
-import { transformComment, buildScalars, DeclarationBlock, DeclarationBlockConfig, indent, wrapWithSingleQuotes } from './utils';
+import { transformComment, buildScalars, DeclarationBlock, DeclarationBlockConfig, indent, wrapWithSingleQuotes, getConfigValue } from './utils';
 import { OperationVariablesToObject } from './variables-to-object';
 
 export interface ParsedTypesConfig extends ParsedConfig {
   enumValues: EnumValuesMap;
   declarationKind: DeclarationKindConfig;
+  addUnderscoreToArgsType: boolean;
 }
 
 export interface RawTypesConfig extends RawConfig {
+  /**
+   * @name addUnderscoreToArgsType
+   * @type boolean
+   * @description Adds `_` to generated `Args` types in order to avoid duplicate identifiers.
+   *
+   * @example With Custom Values
+   * ```yml
+   *   config:
+   *     addUnderscoreToArgsType: true
+   * ```
+   *
+   */
+  addUnderscoreToArgsType?: boolean;
   /**
    * @name enumValues
    * @type EnumValuesMap
@@ -83,6 +95,7 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
     super(
       rawConfig,
       {
+        addUnderscoreToArgsType: getConfigValue(rawConfig.addUnderscoreToArgsType, false),
         enumValues: rawConfig.enumValues || {},
         declarationKind: normalizeDeclarationKind(rawConfig.declarationKind),
         ...additionalConfig,
@@ -286,7 +299,10 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
     return fieldsWithArguments
       .map(field => {
         const name =
-          node.name.value +
+          this.convertName(node.name.value, {
+            useTypesPrefix: true,
+          }) +
+          (this.config.addUnderscoreToArgsType ? '_' : '') +
           this.convertName(field, {
             useTypesPrefix: false,
           }) +

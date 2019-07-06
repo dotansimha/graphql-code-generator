@@ -34,9 +34,23 @@ export interface ParsedResolversConfig extends ParsedConfig {
   };
   defaultMapper: ParsedMapper | null;
   avoidOptionals: boolean;
+  addUnderscoreToArgsType: boolean;
 }
 
 export interface RawResolversConfig extends RawConfig {
+  /**
+   * @name addUnderscoreToArgsType
+   * @type boolean
+   * @description Adds `_` to generated `Args` types in order to avoid duplicate identifiers.
+   *
+   * @example With Custom Values
+   * ```yml
+   *   config:
+   *     addUnderscoreToArgsType: true
+   * ```
+   *
+   */
+  addUnderscoreToArgsType?: boolean;
   /**
    * @name contextType
    * @type string
@@ -185,6 +199,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
     super(
       rawConfig,
       {
+        addUnderscoreToArgsType: getConfigValue(rawConfig.addUnderscoreToArgsType, false),
         contextType: parseMapper(rawConfig.contextType || 'any', 'ContextType'),
         rootValueType: parseMapper(rawConfig.rootValueType || '{}', 'RootValueType'),
         avoidOptionals: getConfigValue(rawConfig.avoidOptionals, false),
@@ -616,6 +631,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
             ? `, ${this.convertName(parentName, {
                 useTypesPrefix: true,
               }) +
+                (this.config.addUnderscoreToArgsType ? '_' : '') +
                 this.convertName(node.name, {
                   useTypesPrefix: false,
                 }) +
