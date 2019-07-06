@@ -72,11 +72,37 @@ export interface TypeScriptDocumentNodesPluginConfig {
    * ```
    */
   nameSuffix?: string;
+  /**
+   * @name noGraphQLTag
+   * @type boolean
+   * @default false
+   * @description Instead of adding gql tag with the GraphQL operation, it uses
+   * the precompiled JSON representation (DocumentNode) of the operation.
+   *
+   * @example
+   * ```yml
+   * config:
+   *   noGraphQLTag: true
+   * ```
+   */
+  noGraphQLTag?: boolean;
   transformUnderscore?: boolean;
 }
 
+function _gql(operationDefinitionNode: OperationDefinitionNode, noGraphQLTag = false): string {
+  if (noGraphQLTag) {
+    const documentNode = { kind: 'Document', definitions: [operationDefinitionNode] };
+    return JSON.stringify(documentNode, (k, v) => (k === 'loc' ? undefined : v), 2);
+  } else {
+    const code = print(operationDefinitionNode)
+      .replace(/^/gm, '  ')
+      .replace(/\s*$/, '');
+    return ['gql`', code, '`'].join('\n');
+  }
+}
+
 export const plugin: PluginFunction<TypeScriptDocumentNodesPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: TypeScriptDocumentNodesPluginConfig): string => {
-  const { namingConvention, namePrefix = '', nameSuffix = '', transformUnderscore = false } = config;
+  const { namingConvention, namePrefix = '', nameSuffix = '', noGraphQLTag = false, transformUnderscore = false } = config;
   const convertFn = convertFactory({ namingConvention });
   const content = documents
     .filter(documentFile => documentFile.filePath.length > 0)
@@ -85,16 +111,21 @@ export const plugin: PluginFunction<TypeScriptDocumentNodesPluginConfig> = (sche
         .filter((d: OperationDefinitionNode) => d.name && d.name.value)
         .map((d: OperationDefinitionNode) => {
           const name = convertFn(namePrefix + d.name.value + nameSuffix, { transformUnderscore });
-          const code = print(d)
-            .replace(/^/gm, '  ')
-            .replace(/\s*$/, '');
-          return ['export const ' + name + ': DocumentNode = gql`', code, '`;', ''].join('\n');
+          return 'export const ' + name + ': DocumentNode = ' + _gql(d, noGraphQLTag) + ';\n';
         })
         .join('\n')
     )
     .join('\n');
 
-  const prepend = content ? [`import { DocumentNode } from 'graphql';`, `import gql from 'graphql-tag';`, '', ''] : [];
+  const prepend: string[] = [];
+
+  if (content) {
+    prepend.push(`import { DocumentNode } from 'graphql';`);
+    if (!noGraphQLTag) {
+      prepend.push(`import gql from 'graphql-tag';`);
+    }
+    prepend.push('', '');
+  }
 
   return prepend.join('\n') + content;
 };
