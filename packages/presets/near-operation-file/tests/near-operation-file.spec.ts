@@ -22,6 +22,7 @@ describe('near-operation-file preset', () => {
   const operationAst = parse(/* GraphQL */ `
     query {
       user {
+        id
         ...UserFields
       }
     }
@@ -128,6 +129,35 @@ describe('near-operation-file preset', () => {
     });
 
     expect(result.map(o => o.plugins)[0]).toEqual(expect.arrayContaining([{ add: `import * as Types from '../types';\n` }]));
+  });
+
+  it('Should NOT prepend the "add" plugin with Types import when selection set does not include direct fields', async () => {
+    const result = await preset.buildGeneratesSection({
+      baseOutputDir: './src/',
+      config: {},
+      presetConfig: {
+        cwd: '/some/deep/path',
+        baseTypesPath: 'types.ts',
+      },
+      schema: schemaDocumentNode,
+      documents: [
+        {
+          filePath: './test.graphql',
+          content: parse(/* GraphQL */ `
+            query {
+              user {
+                ...UserFields
+              }
+            }
+          `),
+        },
+        testDocuments[1],
+      ],
+      plugins: [{ typescript: {} }],
+      pluginMap: { typescript: {} as any },
+    });
+
+    expect(result.map(o => o.plugins)[0]).not.toEqual(expect.arrayContaining([{ add: `import * as Types from '../types';\n` }]));
   });
 
   it('Should prepend the "add" plugin with the correct import (long path)', async () => {

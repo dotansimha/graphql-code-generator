@@ -1,5 +1,5 @@
 import { parse, dirname, relative, join, isAbsolute } from 'path';
-import { DocumentNode, visit, FragmentSpreadNode, FragmentDefinitionNode } from 'graphql';
+import { DocumentNode, visit, FragmentSpreadNode, FragmentDefinitionNode, FieldNode } from 'graphql';
 import { FragmentNameToFile } from './index';
 
 export function appendExtensionToFilePath(baseFilePath: string, extension: string) {
@@ -64,4 +64,22 @@ export function resolveRelativeImport(from: string, to: string): string {
     throw new Error(`Argument 'to' must be an absolute path, '${to}' given.`);
   }
   return fixLocalFile(clearExtension(relative(dirname(from), to)));
+}
+
+export function isUsingTypes(document: DocumentNode): boolean {
+  let foundFields = 0;
+
+  visit(document, {
+    enter: {
+      Field: (node: FieldNode) => {
+        const selections = node.selectionSet ? node.selectionSet.selections || [] : [];
+
+        if (selections.length === 0) {
+          foundFields++;
+        }
+      },
+    },
+  });
+
+  return foundFields > 0;
 }
