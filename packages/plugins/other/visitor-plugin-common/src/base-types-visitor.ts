@@ -299,9 +299,7 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
     return fieldsWithArguments
       .map(field => {
         const name =
-          this.convertName(node.name.value, {
-            useTypesPrefix: true,
-          }) +
+          node.name.value +
           (this.config.addUnderscoreToArgsType ? '_' : '') +
           this.convertName(field, {
             useTypesPrefix: false,
