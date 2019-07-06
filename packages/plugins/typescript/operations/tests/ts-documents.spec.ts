@@ -174,8 +174,8 @@ describe('TypeScript Operations Plugin', () => {
     });
   });
 
-  describe('Custom Query Response Name', () => {
-    it('Should generate custom query response name', async () => {
+  describe('Custom Operation Result Name Suffix', () => {
+    it('Should generate custom operation result name', async () => {
       const ast = parse(`
         query notifications {
           notifications {
@@ -194,12 +194,14 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = { queryResponseSuffix: 'Q' };
+      const config = { operationResultSuffix: 'Result' };
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
+
       expect(result).toBeSimilarStringTo(`export type NotificationsQueryVariables = {};`);
       expect(result).toBeSimilarStringTo(
-        `export type NotificationsQ = ({ __typename?: 'Query' } & { notifications: Array<({ __typename?: 'TextNotification' | 'ImageNotification' } & Pick<Notifiction, 'id'> & (({ __typename?: 'TextNotification' } & Pick<TextNotification, 'text'>) | ({ __typename?: 'ImageNotification' } & Pick<ImageNotification, 'imageUrl'> & { metadata: ({ __typename?: 'ImageMetadata' } & Pick<ImageMetadata, 'createdBy'>) })))> });`
+        `export type NotificationsQueryResult = ({ __typename?: 'Query' } & { notifications: Array<({ __typename?: 'TextNotification' | 'ImageNotification' } & Pick<Notifiction, 'id'> & (({ __typename?: 'TextNotification' } & Pick<TextNotification, 'text'>) | ({ __typename?: 'ImageNotification' } & Pick<ImageNotification, 'imageUrl'> & { metadata: ({ __typename?: 'ImageMetadata' } & Pick<ImageMetadata, 'createdBy'>) })))> });`
       );
+
       await validate(result, config);
     });
   });
