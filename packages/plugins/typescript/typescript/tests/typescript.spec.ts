@@ -224,6 +224,40 @@ describe('TypeScript', () => {
   });
 
   describe('Issues', () => {
+    it('#2082 - Issues with enumValues and types prefix', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        enum MyEnum {
+          A
+          B
+          C
+        }
+
+        enum OtherEnum {
+          V
+        }
+
+        type Test {
+          a: MyEnum
+          b: OtherEnum
+        }
+      `);
+      const result = (await plugin(
+        testSchema,
+        [],
+        {
+          typesPrefix: 'GQL_',
+          enumValues: {
+            MyEnum: './files#MyEnum',
+          },
+        },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+      expect(result.prepend).toContain(`import { MyEnum } from './files';`);
+      expect(result.content).toContain(`enum GQL_OtherEnum {`);
+      expect(result.content).toContain(`a?: Maybe<MyEnum>,`);
+      expect(result.content).toContain(`b?: Maybe<GQL_OtherEnum>`);
+    });
+
     it('#1488 - Should generate readonly also in input types when immutableTypes is set', async () => {
       const schema = buildSchema(`
       input MyInput {
@@ -1524,6 +1558,18 @@ describe('TypeScript', () => {
 
       expect(result.content).not.toContain(`export enum MyEnum`);
       expect(result.prepend).toContain(`import { MyCustomEnum as MyEnum } from './my-file';`);
+
+      validateTs(result);
+    });
+
+    it('Should imoprt all enums from a single file when specified as string', async () => {
+      const schema = buildSchema(`enum MyEnum { A, B, C } enum MyEnum2 { X, Y, Z }`);
+      const result = (await plugin(schema, [], { enumValues: './my-file' }, { outputFile: '' })) as Types.ComplexPluginOutput;
+
+      expect(result.content).not.toContain(`export enum MyEnum`);
+      expect(result.content).not.toContain(`export enum MyEnum2`);
+      expect(result.prepend).toContain(`import { MyEnum } from './my-file';`);
+      expect(result.prepend).toContain(`import { MyEnum2 } from './my-file';`);
 
       validateTs(result);
     });

@@ -199,6 +199,45 @@ describe('TypeScript Resolvers Plugin', () => {
     await validate(result);
   });
 
+  it('Test for enum usage in resolvers (to verify compatibility with enumValues)', async () => {
+    const testSchema = buildSchema(/* GraphQL */ `
+      type Query {
+        a: A
+      }
+
+      enum A {
+        X
+        Y
+        Z
+      }
+
+      enum NotMapped {
+        X
+        Y
+      }
+
+      type B {
+        a: String
+      }
+    `);
+
+    const config = {
+      enumValues: {
+        A: 'MyA',
+      },
+      typesPrefix: 'GQL_',
+    };
+    const result = (await plugin(testSchema, [], config, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const tsContent = (await tsPlugin(testSchema, [], config, { outputFile: 'graphql.ts' })) as Types.ComplexPluginOutput;
+    const mergedOutputs = mergeOutputs([result, tsContent]);
+
+    expect(mergedOutputs).toContain(`A: A,`);
+    expect(mergedOutputs).not.toContain(`A: GQL_A,`);
+    expect(mergedOutputs).toContain(`NotMapped: GQL_NotMapped,`);
+    expect(mergedOutputs).not.toContain(`NotMapped: NotMapped,`);
+    expect(mergedOutputs).toContain(`B: GQL_B,`);
+  });
+
   it('Should generate basic type resolvers', async () => {
     const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
 
