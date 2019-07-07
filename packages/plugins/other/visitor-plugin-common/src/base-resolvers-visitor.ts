@@ -1,7 +1,7 @@
 import { ParsedConfig, RawConfig, BaseVisitor } from './base-visitor';
 import * as autoBind from 'auto-bind';
 import { DEFAULT_SCALARS } from './scalars';
-import { ScalarsMap, EnumValuesMap } from './types';
+import { ScalarsMap, EnumValuesMap, ParsedEnumValuesMap } from './types';
 import { DeclarationBlock, DeclarationBlockConfig, indent, getBaseTypeNode, buildScalars, getConfigValue, getBaseType, getRootTypeNames, stripMapperTypeInterpolation } from './utils';
 import {
   NameNode,
@@ -26,6 +26,7 @@ import {
 import { DirectiveDefinitionNode, GraphQLObjectType, InputValueDefinitionNode, GraphQLOutputType } from 'graphql';
 import { OperationVariablesToObject } from './variables-to-object';
 import { ParsedMapper, parseMapper, transformMappers } from './mappers';
+import { parseEnumValues } from './enum-values';
 
 export interface ParsedResolversConfig extends ParsedConfig {
   contextType: ParsedMapper;
@@ -36,7 +37,7 @@ export interface ParsedResolversConfig extends ParsedConfig {
   defaultMapper: ParsedMapper | null;
   avoidOptionals: boolean;
   addUnderscoreToArgsType: boolean;
-  enumValues: EnumValuesMap;
+  enumValues: ParsedEnumValuesMap;
 }
 
 export interface RawResolversConfig extends RawConfig {
@@ -186,14 +187,8 @@ export interface RawResolversConfig extends RawConfig {
    * @type EnumValuesMap
    * @description Overrides the default value of enum values declared in your GraphQL schema, supported
    * in this plugin because of the need for integeration with `typescript` package.
+   * See documentation under `typescript` plugin for more information and examples.
    *
-   * @example With Custom Values
-   * ```yml
-   *   config:
-   *     enumValues:
-   *       MyEnum:
-   *         A: 'foo'
-   * ```
    */
   enumValues?: EnumValuesMap;
 }
@@ -216,7 +211,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
     super(
       rawConfig,
       {
-        enumValues: rawConfig.enumValues || {},
+        enumValues: parseEnumValues(_schema, rawConfig.enumValues),
         addUnderscoreToArgsType: getConfigValue(rawConfig.addUnderscoreToArgsType, false),
         contextType: parseMapper(rawConfig.contextType || 'any', 'ContextType'),
         rootValueType: parseMapper(rawConfig.rootValueType || '{}', 'RootValueType'),
@@ -309,7 +304,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
 
           return prev;
         } else if (isEnumType(schemaType) && this.config.enumValues[typeName]) {
-          prev[typeName] = typeName;
+          prev[typeName] = this.config.enumValues[typeName].typeIdentifier;
         } else if (isMapped && this.config.mappers[typeName].type) {
           this.markMapperAsUsed(typeName);
           prev[typeName] = applyWrapper(this.config.mappers[typeName].type);

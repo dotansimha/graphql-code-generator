@@ -79,7 +79,7 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
     const typeName = (node.name as any) as string;
 
-    if (this.config.enumValues[typeName] && typeof this.config.enumValues[typeName] === 'string') {
+    if (this.config.enumValues[typeName] && this.config.enumValues[typeName].sourceFile) {
       return null;
     }
 
@@ -99,8 +99,8 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
             const optionName = this.convertName(enumOption, { transformUnderscore: true, useTypesPrefix: false });
             let enumValue: string = (enumOption.name as any) as string;
 
-            if (this.config.enumValues[typeName] && typeof this.config.enumValues[typeName] === 'object' && this.config.enumValues[typeName][enumValue]) {
-              enumValue = this.config.enumValues[typeName][enumValue];
+            if (this.config.enumValues[typeName] && this.config.enumValues[typeName].mappedValues && this.config.enumValues[typeName].mappedValues[enumValue]) {
+              enumValue = this.config.enumValues[typeName].mappedValues[enumValue];
             }
 
             return comment + indent(`${optionName}: ${wrapWithSingleQuotes(enumValue)}`);

@@ -1561,6 +1561,18 @@ describe('TypeScript', () => {
 
       validateTs(result);
     });
+
+    it('Should imoprt all enums from a single file when specified as string', async () => {
+      const schema = buildSchema(`enum MyEnum { A, B, C } enum MyEnum2 { X, Y, Z }`);
+      const result = (await plugin(schema, [], { enumValues: './my-file' }, { outputFile: '' })) as Types.ComplexPluginOutput;
+
+      expect(result.content).not.toContain(`export enum MyEnum`);
+      expect(result.content).not.toContain(`export enum MyEnum2`);
+      expect(result.prepend).toContain(`import { MyEnum } from './my-file';`);
+      expect(result.prepend).toContain(`import { MyEnum2 } from './my-file';`);
+
+      validateTs(result);
+    });
   });
 
   it('should not have [object Object]', async () => {
