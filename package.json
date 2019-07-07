@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "clean": "lerna clean --yes && rm -rf node_modules",
-    "build": "lerna run build --ignore @graphql-codegen/{live-demo,website} ",
+    "build": "lerna run build --concurrency 2 --ignore @graphql-codegen/{live-demo,website} ",
     "test": "lerna run test --ignore @graphql-codegen/{live-demo,website} ",
     "lint": "lerna run lint --ignore @graphql-codegen/{live-demo,website} ",
     "test-and-build": " yarn build && yarn test",
