@@ -325,6 +325,8 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
 
     if (this.scalars[typeAsString]) {
       return this._getScalar(typeAsString);
+    } else if (this.config.enumValues[typeAsString]) {
+      return typeAsString;
     }
 
     return this.convertName(node);
