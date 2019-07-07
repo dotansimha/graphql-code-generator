@@ -199,6 +199,32 @@ describe('TypeScript Resolvers Plugin', () => {
     await validate(result);
   });
 
+  it('Default values of args and compatibility with typescript plugin', async () => {
+    const testSchema = buildSchema(/* GraphQL */ `
+      type Query {
+        something(arg: String = "default_value"): String
+      }
+    `);
+
+    const config: any = { noSchemaStitching: true };
+    const result = (await plugin(testSchema, [], config, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const mergedOutputs = mergeOutputs([
+      result,
+      {
+        content: `
+    const resolvers: QueryResolvers = {
+      something: (root, args, context, info) => {
+        return args.arg; // This should work becuase "args.arg" is now forced
+      }
+    };`,
+      },
+    ]);
+
+    expect(mergedOutputs).toContain(`export type RequireFields`);
+    expect(mergedOutputs).toContain(`something?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QuerySomethingArgs, 'arg'>>,`);
+    validate(mergedOutputs);
+  });
+
   it('Test for enum usage in resolvers (to verify compatibility with enumValues)', async () => {
     const testSchema = buildSchema(/* GraphQL */ `
       type Query {
@@ -1072,7 +1098,7 @@ describe('TypeScript Resolvers Plugin', () => {
       {
         rootValueType: 'MyRoot',
         asyncResolverTypes: true,
-      },
+      } as any,
       { outputFile: 'graphql.ts' }
     )) as Types.ComplexPluginOutput;
 

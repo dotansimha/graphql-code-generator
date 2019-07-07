@@ -1,8 +1,9 @@
 import { FlowResolversPluginConfig } from './index';
-import { ListTypeNode, NamedTypeNode, NonNullTypeNode, GraphQLSchema, ScalarTypeDefinitionNode } from 'graphql';
+import { ListTypeNode, NamedTypeNode, NonNullTypeNode, GraphQLSchema, ScalarTypeDefinitionNode, InputValueDefinitionNode } from 'graphql';
 import * as autoBind from 'auto-bind';
 import { indent, ParsedResolversConfig, BaseResolversVisitor, DeclarationBlock } from '@graphql-codegen/visitor-plugin-common';
 import { FlowOperationVariablesToObject } from '@graphql-codegen/flow';
+import { FLOW_REQUIRE_FIELDS_TYPE } from './flow-util-types';
 
 export interface ParsedFlorResolversConfig extends ParsedResolversConfig {}
 
@@ -15,6 +16,11 @@ export class FlowResolversVisitor extends BaseResolversVisitor<FlowResolversPlug
 
   protected _getScalar(name: string): string {
     return `$ElementType<Scalars, '${name}'>`;
+  }
+
+  protected applyRequireFields(argsType: string, fields: InputValueDefinitionNode[]): string {
+    this._globalDeclarations.add(FLOW_REQUIRE_FIELDS_TYPE);
+    return `$RequireFields<${argsType}, { ${fields.map(f => `${f.name.value}: *`).join(', ')} }>`;
   }
 
   protected buildMapperImport(source: string, types: { identifier: string; asDefault?: boolean }[]): string {
