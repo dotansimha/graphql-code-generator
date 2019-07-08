@@ -6,7 +6,7 @@ import * as isGlob from 'is-glob';
 import * as logSymbols from 'log-symbols';
 import { debugLog } from './debugging';
 import { getLogger } from './logger';
-import path from 'path';
+import { join } from 'path';
 
 function log(msg: string) {
   // double spaces to inline the message with Listr
@@ -64,7 +64,7 @@ export const createWatcher = (config: Types.Config, onNext: (result: Types.FileO
         if (entry.config.preset) {
           const extension = entry.config.presetConfig && entry.config.presetConfig.extension;
           if (extension) {
-            ignored.push(path.join(entry.filename, '**', '*' + extension));
+            ignored.push(join(entry.filename, '**', '*' + extension));
           }
         } else {
           ignored.push(entry.filename);
