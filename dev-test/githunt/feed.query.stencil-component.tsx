@@ -3,8 +3,6 @@ import * as Types from './types.d';
 
 import gql from 'graphql-tag';
 import { FeedEntryFragmentDoc } from './feed-entry.fragment.stencil-component';
-import { VoteButtonsFragmentDoc } from './vote-buttons.fragment.stencil-component';
-import { RepoInfoFragmentDoc } from './repo-info.fragment.stencil-component';
 import 'stencil-apollo';
 import { Component, Prop, h } from '@stencil/core';
 

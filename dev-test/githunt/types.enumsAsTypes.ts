@@ -54,7 +54,7 @@ export type EntryCommentsArgs = {
 };
 
 /** A list of options for the sort order of the feed */
-export type FeedType =
+export type FeedType = 
   /** Sort by a combination of freshness and score, using Reddit's algorithm */
   'HOT' |
   /** Newest entries first */
@@ -161,7 +161,7 @@ export type Vote = {
 };
 
 /** The type of vote to record, when submitting a vote */
-export type VoteType =
+export type VoteType = 
   'UP' |
   'DOWN' |
   'CANCEL';
