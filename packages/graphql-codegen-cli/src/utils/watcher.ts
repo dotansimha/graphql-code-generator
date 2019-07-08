@@ -6,7 +6,7 @@ import * as isGlob from 'is-glob';
 import * as logSymbols from 'log-symbols';
 import { debugLog } from './debugging';
 import { getLogger } from './logger';
-import path from 'path';
+import * as path from 'path';
 
 function log(msg: string) {
   // double spaces to inline the message with Listr
