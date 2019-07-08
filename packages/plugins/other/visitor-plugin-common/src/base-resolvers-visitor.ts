@@ -1,8 +1,8 @@
 import { ParsedConfig, RawConfig, BaseVisitor } from './base-visitor';
 import * as autoBind from 'auto-bind';
 import { DEFAULT_SCALARS } from './scalars';
-import { ScalarsMap } from './types';
-import { DeclarationBlock, DeclarationBlockConfig, indent, getBaseTypeNode, buildScalars, getConfigValue, getBaseType, getRootTypeNames, stripMapperTypeInterpolation } from './utils';
+import { ScalarsMap, EnumValuesMap, ParsedEnumValuesMap } from './types';
+import { DeclarationBlock, DeclarationBlockConfig, indent, getBaseTypeNode, buildScalars, getConfigValue, getBaseType, getRootTypeNames, stripMapperTypeInterpolation, OMIT_TYPE, REQUIRE_FIELDS_TYPE } from './utils';
 import {
   NameNode,
   ListTypeNode,
@@ -21,10 +21,12 @@ import {
   isUnionType,
   GraphQLNamedType,
   GraphQLInterfaceType,
+  isEnumType,
 } from 'graphql';
 import { DirectiveDefinitionNode, GraphQLObjectType, InputValueDefinitionNode, GraphQLOutputType } from 'graphql';
 import { OperationVariablesToObject } from './variables-to-object';
 import { ParsedMapper, parseMapper, transformMappers } from './mappers';
+import { parseEnumValues } from './enum-values';
 
 export interface ParsedResolversConfig extends ParsedConfig {
   contextType: ParsedMapper;
@@ -34,9 +36,24 @@ export interface ParsedResolversConfig extends ParsedConfig {
   };
   defaultMapper: ParsedMapper | null;
   avoidOptionals: boolean;
+  addUnderscoreToArgsType: boolean;
+  enumValues: ParsedEnumValuesMap;
 }
 
 export interface RawResolversConfig extends RawConfig {
+  /**
+   * @name addUnderscoreToArgsType
+   * @type boolean
+   * @description Adds `_` to generated `Args` types in order to avoid duplicate identifiers.
+   *
+   * @example With Custom Values
+   * ```yml
+   *   config:
+   *     addUnderscoreToArgsType: true
+   * ```
+   *
+   */
+  addUnderscoreToArgsType?: boolean;
   /**
    * @name contextType
    * @type string
@@ -165,6 +182,15 @@ export interface RawResolversConfig extends RawConfig {
    * ```
    */
   showUnusedMappers?: boolean;
+  /**
+   * @name enumValues
+   * @type EnumValuesMap
+   * @description Overrides the default value of enum values declared in your GraphQL schema, supported
+   * in this plugin because of the need for integeration with `typescript` package.
+   * See documentation under `typescript` plugin for more information and examples.
+   *
+   */
+  enumValues?: EnumValuesMap;
 }
 
 export type ResolverTypes = { [gqlType: string]: string };
@@ -180,11 +206,14 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
   protected _resolversTypes: ResolverTypes = {};
   protected _resolversParentTypes: ResolverParentTypes = {};
   protected _rootTypeNames: string[] = [];
+  protected _globalDeclarations: Set<string> = new Set();
 
   constructor(rawConfig: TRawConfig, additionalConfig: TPluginConfig, private _schema: GraphQLSchema, defaultScalars: ScalarsMap = DEFAULT_SCALARS) {
     super(
       rawConfig,
       {
+        enumValues: parseEnumValues(_schema, rawConfig.enumValues),
+        addUnderscoreToArgsType: getConfigValue(rawConfig.addUnderscoreToArgsType, false),
         contextType: parseMapper(rawConfig.contextType || 'any', 'ContextType'),
         rootValueType: parseMapper(rawConfig.rootValueType || '{}', 'RootValueType'),
         avoidOptionals: getConfigValue(rawConfig.avoidOptionals, false),
@@ -275,6 +304,8 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
           prev[typeName] = applyWrapper(this.config.rootValueType.type);
 
           return prev;
+        } else if (isEnumType(schemaType) && this.config.enumValues[typeName]) {
+          prev[typeName] = this.config.enumValues[typeName].typeIdentifier;
         } else if (isMapped && this.config.mappers[typeName].type) {
           this.markMapperAsUsed(typeName);
           prev[typeName] = applyWrapper(this.config.mappers[typeName].type);
@@ -347,6 +378,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
   }
 
   protected replaceFieldsInType(typeName: string, relevantFields: { addOptionalSign: boolean; fieldName: string; replaceWithType: string }[]): string {
+    this._globalDeclarations.add(OMIT_TYPE);
     return `Omit<${typeName}, ${relevantFields.map(f => `'${f.fieldName}'`).join(' | ')}> & { ${relevantFields.map(f => `${f.fieldName}${f.addOptionalSign ? '?' : ''}: ${f.replaceWithType}`).join(', ')} }`;
   }
 
@@ -423,6 +455,10 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
 
   public get unusedMappers() {
     return Object.keys(this.config.mappers).filter(name => !this._usedMappers[name]);
+  }
+
+  public get globalDeclarations(): string[] {
+    return Array.from(this._globalDeclarations);
   }
 
   public get mappersImports(): string[] {
@@ -602,28 +638,39 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     const hasArguments = node.arguments && node.arguments.length > 0;
 
     return (parentName: string) => {
-      const original = parent[key];
+      const original: FieldDefinitionNode = parent[key];
       const baseType = getBaseTypeNode(original.type);
       const realType = baseType.name.value;
       const typeToUse = this.getTypeToUse(realType);
       const mappedType = this._variablesTransfomer.wrapAstTypeWithModifiers(typeToUse, original.type);
       const subscriptionType = this._schema.getSubscriptionType();
       const isSubscriptionType = subscriptionType && subscriptionType.name === parentName;
+      let argsType = hasArguments
+        ? `${this.convertName(parentName, {
+            useTypesPrefix: true,
+          }) +
+            (this.config.addUnderscoreToArgsType ? '_' : '') +
+            this.convertName(node.name, {
+              useTypesPrefix: false,
+            }) +
+            'Args'}`
+        : null;
 
-      return indent(
-        `${node.name}${this.config.avoidOptionals ? '' : '?'}: ${isSubscriptionType ? 'SubscriptionResolver' : 'Resolver'}<${mappedType}, ParentType, ContextType${
-          hasArguments
-            ? `, ${this.convertName(parentName, {
-                useTypesPrefix: true,
-              }) +
-                this.convertName(node.name, {
-                  useTypesPrefix: false,
-                }) +
-                'Args'}`
-            : ''
-        }>,`
-      );
+      if (argsType !== null) {
+        const argsToForceRequire = original.arguments.filter(arg => !!arg.defaultValue);
+
+        if (argsToForceRequire.length > 0) {
+          argsType = this.applyRequireFields(argsType, argsToForceRequire);
+        }
+      }
+
+      return indent(`${node.name}${this.config.avoidOptionals ? '' : '?'}: ${isSubscriptionType ? 'SubscriptionResolver' : 'Resolver'}<${mappedType}, ParentType, ContextType${argsType ? `, ${argsType}` : ''}>,`);
     };
+  }
+
+  protected applyRequireFields(argsType: string, fields: InputValueDefinitionNode[]): string {
+    this._globalDeclarations.add(REQUIRE_FIELDS_TYPE);
+    return `RequireFields<${argsType}, ${fields.map(f => `'${f.name.value}'`).join(', ')}>`;
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode) {

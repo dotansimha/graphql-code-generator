@@ -5,7 +5,8 @@ import { pluginLoaderMap } from './plugins';
 export async function generate(config: string, schema: string, documents?: string): Promise<string> {
   try {
     const cleanTabs = config.replace(/\t/g, '  ');
-    const { generates, ...rootConfig } = safeLoad(cleanTabs);
+    const { generates, ...otherFields } = safeLoad(cleanTabs);
+    const rootConfig = otherFields.config || {};
     const filename = Object.keys(generates)[0];
     const plugins = normalizeConfig(generates[filename].plugins || generates[filename]);
     const outputConfig = generates[filename].config;

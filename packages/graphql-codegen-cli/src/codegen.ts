@@ -5,10 +5,11 @@ import { normalizeOutputParam, normalizeInstanceOrArray, normalizeConfig } from 
 import { prettify } from './utils/prettier';
 import { Renderer } from './utils/listr-renderer';
 import { loadSchema, loadDocuments } from './load';
-import { GraphQLError, DocumentNode, buildASTSchema } from 'graphql';
+import { GraphQLError, DocumentNode } from 'graphql';
 import { getPluginByName } from './plugins';
 import { getPresetByName } from './presets';
 import { debugLog } from './utils/debugging';
+import { tryToBuildSchema } from './utils/try-to-build-schema';
 
 export const defaultLoader = (mod: string) => import(mod);
 
@@ -214,6 +215,7 @@ export async function executeCodegen(config: Types.Config): Promise<Types.FileOu
                       };
 
                       let outputs: Types.GenerateOptions[] = [];
+                      const builtSchema = tryToBuildSchema(outputSchema);
 
                       if (hasPreset) {
                         outputs = await preset.buildGeneratesSection({
@@ -221,7 +223,7 @@ export async function executeCodegen(config: Types.Config): Promise<Types.FileOu
                           presetConfig: outputConfig.presetConfig || {},
                           plugins: normalizedPluginsArray,
                           schema: outputSchema,
-                          schemaAst: buildASTSchema(outputSchema),
+                          schemaAst: builtSchema,
                           documents: outputDocuments,
                           config: mergedConfig,
                           pluginMap,
@@ -232,7 +234,7 @@ export async function executeCodegen(config: Types.Config): Promise<Types.FileOu
                             filename,
                             plugins: normalizedPluginsArray,
                             schema: outputSchema,
-                            schemaAst: buildASTSchema(outputSchema),
+                            schemaAst: builtSchema,
                             documents: outputDocuments,
                             config: mergedConfig,
                             pluginMap,

@@ -83,7 +83,7 @@ ${resolverTypeWrapper}
   }
 
   return {
-    prepend: [gqlImports, ...mappersImports],
+    prepend: [gqlImports, ...mappersImports, ...visitor.globalDeclarations],
     content: [header, resolversTypeMapping, resolversParentTypeMapping, ...visitorResult.definitions.filter(d => typeof d === 'string'), getRootResolver(), getAllDirectiveResolvers()].join('\n'),
   };
 };

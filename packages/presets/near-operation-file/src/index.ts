@@ -3,7 +3,7 @@ import { BaseVisitor, LoadedFragment } from '@graphql-codegen/visitor-plugin-com
 import * as addPlugin from '@graphql-codegen/add';
 import { join, resolve } from 'path';
 import { Kind, FragmentDefinitionNode } from 'graphql';
-import { appendExtensionToFilePath, extractExternalFragmentsInUse, resolveRelativeImport } from './utils';
+import { appendExtensionToFilePath, extractExternalFragmentsInUse, resolveRelativeImport, isUsingTypes } from './utils';
 
 export type NearOperationFileConfig = {
   /**
@@ -158,7 +158,9 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
           }
         }
 
-        plugins.unshift({ add: `import * as ${importTypesNamespace} from '${relativeImportPath}';\n` });
+        if (isUsingTypes(documentFile.content)) {
+          plugins.unshift({ add: `import * as ${importTypesNamespace} from '${relativeImportPath}';\n` });
+        }
 
         return {
           filename: generatedFilePath,

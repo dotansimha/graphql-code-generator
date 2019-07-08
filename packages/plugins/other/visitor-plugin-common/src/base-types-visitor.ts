@@ -15,23 +15,36 @@ import {
   ScalarTypeDefinitionNode,
   UnionTypeDefinitionNode,
   StringValueNode,
-  isUnionType,
-  isInterfaceType,
 } from 'graphql';
 import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor';
 import { parseMapper } from './mappers';
 import { DEFAULT_SCALARS } from './scalars';
 import { normalizeDeclarationKind } from './declaration-kinds';
-import { EnumValuesMap, ScalarsMap, DeclarationKindConfig, DeclarationKind } from './types';
-import { transformComment, buildScalars, DeclarationBlock, DeclarationBlockConfig, indent, wrapWithSingleQuotes } from './utils';
+import { EnumValuesMap, ScalarsMap, DeclarationKindConfig, DeclarationKind, ParsedEnumValuesMap } from './types';
+import { transformComment, buildScalars, DeclarationBlock, DeclarationBlockConfig, indent, wrapWithSingleQuotes, getConfigValue } from './utils';
 import { OperationVariablesToObject } from './variables-to-object';
+import { parseEnumValues } from './enum-values';
 
 export interface ParsedTypesConfig extends ParsedConfig {
-  enumValues: EnumValuesMap;
+  enumValues: ParsedEnumValuesMap;
   declarationKind: DeclarationKindConfig;
+  addUnderscoreToArgsType: boolean;
 }
 
 export interface RawTypesConfig extends RawConfig {
+  /**
+   * @name addUnderscoreToArgsType
+   * @type boolean
+   * @description Adds `_` to generated `Args` types in order to avoid duplicate identifiers.
+   *
+   * @example With Custom Values
+   * ```yml
+   *   config:
+   *     addUnderscoreToArgsType: true
+   * ```
+   *
+   */
+  addUnderscoreToArgsType?: boolean;
   /**
    * @name enumValues
    * @type EnumValuesMap
@@ -51,6 +64,12 @@ export interface RawTypesConfig extends RawConfig {
    *   config:
    *     enumValues:
    *       MyEnum: ./my-file#MyCustomEnum
+   * ```
+   *
+   * @example Import All Enums from a file
+   * ```yml
+   *   config:
+   *     enumValues: ./my-file
    * ```
    */
   enumValues?: EnumValuesMap;
@@ -83,7 +102,8 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
     super(
       rawConfig,
       {
-        enumValues: rawConfig.enumValues || {},
+        addUnderscoreToArgsType: getConfigValue(rawConfig.addUnderscoreToArgsType, false),
+        enumValues: parseEnumValues(_schema, rawConfig.enumValues),
         declarationKind: normalizeDeclarationKind(rawConfig.declarationKind),
         ...additionalConfig,
       },
@@ -225,14 +245,10 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
       .map(enumName => {
         const mappedValue = this.config.enumValues[enumName];
 
-        if (mappedValue && typeof mappedValue === 'string') {
-          const mapper = parseMapper(mappedValue);
+        if (mappedValue.sourceFile) {
+          const identifier = mappedValue.sourceIdentifier !== mappedValue.typeIdentifier ? `${mappedValue.sourceIdentifier} as ${mappedValue.typeIdentifier}` : mappedValue.sourceIdentifier;
 
-          if (mapper.isExternal) {
-            const identifier = mapper.type === enumName ? enumName : `${mapper.type} as ${enumName}`;
-
-            return this._buildEnumImport(identifier, mapper.source);
-          }
+          return this._buildEnumImport(identifier, mappedValue.sourceFile);
         }
 
         return null;
@@ -244,7 +260,7 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
     const enumName = (node.name as any) as string;
 
     // In case of mapped external enum string
-    if (this.config.enumValues[enumName] && typeof this.config.enumValues[enumName] === 'string') {
+    if (this.config.enumValues[enumName] && this.config.enumValues[enumName].sourceFile) {
       return null;
     }
 
@@ -268,8 +284,8 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
         const comment = transformComment((enumOption.description as any) as string, 1);
         let enumValue: string = (enumOption.name as any) as string;
 
-        if (this.config.enumValues[typeName] && typeof this.config.enumValues[typeName] === 'object' && this.config.enumValues[typeName][enumValue]) {
-          enumValue = this.config.enumValues[typeName][enumValue];
+        if (this.config.enumValues[typeName] && this.config.enumValues[typeName].mappedValues && this.config.enumValues[typeName].mappedValues[enumValue]) {
+          enumValue = this.config.enumValues[typeName].mappedValues[enumValue];
         }
 
         return comment + indent(`${optionName}${this._declarationBlockConfig.enumNameValueSeparator} ${wrapWithSingleQuotes(enumValue)}`);
@@ -287,6 +303,7 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
       .map(field => {
         const name =
           node.name.value +
+          (this.config.addUnderscoreToArgsType ? '_' : '') +
           this.convertName(field, {
             useTypesPrefix: false,
           }) +
@@ -311,6 +328,8 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
 
     if (this.scalars[typeAsString]) {
       return this._getScalar(typeAsString);
+    } else if (this.config.enumValues[typeAsString]) {
+      return this.config.enumValues[typeAsString].typeIdentifier;
     }
 
     return this.convertName(node);

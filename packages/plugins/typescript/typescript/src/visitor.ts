@@ -77,7 +77,7 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
     const enumName = (node.name as any) as string;
 
     // In case of mapped external enum string
-    if (this.config.enumValues[enumName] && typeof this.config.enumValues[enumName] === 'string') {
+    if (this.config.enumValues[enumName] && this.config.enumValues[enumName].sourceFile) {
       return null;
     }
 
@@ -94,8 +94,8 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
                 let enumValue: string = (enumOption.name as any) as string;
                 const comment = transformComment((enumOption.description as any) as string, 1);
 
-                if (this.config.enumValues[enumName] && typeof this.config.enumValues[enumName] === 'object' && this.config.enumValues[enumName][enumValue]) {
-                  enumValue = this.config.enumValues[enumName][enumValue];
+                if (this.config.enumValues[enumName] && this.config.enumValues[enumName].mappedValues && this.config.enumValues[enumName].mappedValues[enumValue]) {
+                  enumValue = this.config.enumValues[enumName].mappedValues[enumValue];
                 }
 
                 return comment + indent(wrapWithSingleQuotes(enumValue));

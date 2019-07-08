@@ -54,4 +54,4 @@ fs.writeFile(path.join(__dirname, outputFile), output, () => {
 });
 ```
 
-> We are using this API in the live demo in GraphQL Code Generator website, [here is the code](https://github.com/dotansimha/graphql-code-generator/blob/master/website/live-demo/src/App.js#L79).
+> We are using this API in the live demo in GraphQL Code Generator website, [here is the code](https://github.com/dotansimha/graphql-code-generator/blob/master/website/live-demo/src/generate.ts).

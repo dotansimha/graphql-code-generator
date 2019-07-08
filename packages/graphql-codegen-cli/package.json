@@ -52,7 +52,7 @@
     "babylon": "7.0.0-beta.47",
     "chalk": "2.4.2",
     "change-case": "3.1.0",
-    "chokidar": "3.0.1",
+    "chokidar": "3.0.2",
     "commander": "2.20.0",
     "common-tags": "1.8.0",
     "detect-indent": "6.0.0",
