@@ -1,7 +1,7 @@
 import { TypeScriptResolversPluginConfig } from './index';
 import { ListTypeNode, NamedTypeNode, NonNullTypeNode, GraphQLSchema } from 'graphql';
 import * as autoBind from 'auto-bind';
-import { ParsedResolversConfig, BaseResolversVisitor } from '@graphql-codegen/visitor-plugin-common';
+import { ParsedResolversConfig, BaseResolversVisitor, getConfigValue } from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptOperationVariablesToObject } from '@graphql-codegen/typescript';
 
 export interface ParsedTypeScriptResolversConfig extends ParsedResolversConfig {
@@ -15,10 +15,10 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<TypeScriptR
     super(
       pluginConfig,
       {
-        avoidOptionals: pluginConfig.avoidOptionals || false,
-        immutableTypes: pluginConfig.immutableTypes || false,
-        useIndexSignature: pluginConfig.useIndexSignature || false,
-      } as any,
+        avoidOptionals: getConfigValue(pluginConfig.avoidOptionals, false),
+        immutableTypes: getConfigValue(pluginConfig.immutableTypes, false),
+        useIndexSignature: getConfigValue(pluginConfig.useIndexSignature, false),
+      } as ParsedTypeScriptResolversConfig,
       schema
     );
     autoBind(this);

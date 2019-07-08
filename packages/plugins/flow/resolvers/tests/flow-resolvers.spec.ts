@@ -11,8 +11,22 @@ describe('Flow Resolvers Plugin', () => {
     expect(result).toMatchSnapshot();
   });
 
+  it('Default values of args and compatibility with typescript plugin', async () => {
+    const testSchema = buildSchema(/* GraphQL */ `
+      type Query {
+        something(arg: String = "default_value"): String
+      }
+    `);
+
+    const config: any = { noSchemaStitching: true };
+    const result = (await plugin(testSchema, [], config, { outputFile: '' })) as Types.ComplexPluginOutput;
+
+    expect(result.prepend).toContain(`export type $RequireFields<Origin, Keys> = $Diff<Args, Keys> & $ObjMapi<Keys, <Key>(k: Key) => $NonMaybeType<$ElementType<Origin, Key>>>;`);
+    expect(result.content).toContain(`something?: Resolver<?$ElementType<ResolversTypes, 'String'>, ParentType, ContextType, $RequireFields<QuerySomethingArgs, { arg: * }>>,`);
+  });
+
   it('Should generate ResolversParentTypes', () => {
-    const result = plugin(schema, [], {}, { outputFile: '' });
+    const result = plugin(schema, [], {}, { outputFile: '' }) as Types.ComplexPluginOutput;
 
     expect(result.content).toBeSimilarStringTo(`
       /** Mapping between all available schema types and the resolvers parents */
@@ -72,7 +86,7 @@ describe('Flow Resolvers Plugin', () => {
       {
         rootValueType: 'MyRoot',
         asyncResolverTypes: true,
-      },
+      } as any,
       { outputFile: 'graphql.ts' }
     )) as Types.ComplexPluginOutput;
 
