@@ -53,6 +53,9 @@
       "generated-config/near-operation-file": {
         "title": "generated-config/near-operation-file"
       },
+      "generated-config/schema-ast": {
+        "title": "generated-config/schema-ast"
+      },
       "generated-config/time": {
         "title": "generated-config/time"
       },

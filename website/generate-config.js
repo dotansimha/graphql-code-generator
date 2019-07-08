@@ -8,6 +8,7 @@ const mapping = {
   // Presets
   '../packages/presets/near-operation-file/src/index.ts': BASE_DIR + '/near-operation-file.md',
   // Plugins
+  '../packages/plugins/other/schema-ast/src/index.ts': BASE_DIR + '/schema-ast.md',
   '../packages/plugins/other/time/src/index.ts': BASE_DIR + '/time.md',
   '../packages/plugins/typescript/typescript/src/index.ts': BASE_DIR + '/typescript.md',
   '../packages/plugins/typescript/compatibility/src/index.ts': BASE_DIR + '/typescript-compatibility.md',
