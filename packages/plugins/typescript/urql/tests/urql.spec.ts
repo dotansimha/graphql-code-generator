@@ -349,7 +349,7 @@ query MyFeed {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(`
-      export const TestComponent = (props: Omit<Urql.QueryProps,  'query'> & { variables?: TestQueryVariables }) => 
+      export const TestComponent = (props: Omit<Urql.QueryProps<TestQuery, TestQueryVariables>,  'query'> & { variables?: TestQueryVariables }) => 
       (
           <Urql.Query {...props} query={TestDocument} />
       );
@@ -398,7 +398,7 @@ query MyFeed {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(`
-      export const TestComponent = (props: Omit<Urql.QueryProps, 'query'> & { variables: TestQueryVariables }) => (
+      export const TestComponent = (props: Omit<Urql.QueryProps<TestQuery, TestQueryVariables>, 'query'> & { variables: TestQueryVariables }) => (
         <Urql.Query {...props} query={TestDocument} />
       );`);
       await validateTypeScript(content, schema, docs, {});
@@ -430,7 +430,7 @@ query MyFeed {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(`
-      export const TestComponent = (props: Omit<Urql.MutationProps, 'query'> & { variables?: TestMutationVariables }) => (
+      export const TestComponent = (props: Omit<Urql.MutationProps<TestMutation, TestMutationVariables>, 'query'> & { variables?: TestMutationVariables }) => (
         <Urql.Mutation {...props} query={TestDocument} />
       );`);
       await validateTypeScript(content, schema, docs, {});
@@ -448,6 +448,35 @@ query MyFeed {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).not.toContain(`export class ITestComponent`);
+    });
+
+    it('should add three generics if operation type is subscription', async () => {
+      const documents = parse(/* GraphQL */ `
+        subscription ListenToComments($name: String) {
+          commentAdded(repoFullName: $name) {
+            id
+          }
+        }
+      `);
+
+      const docs = [{ filePath: '', content: documents }];
+
+      const content = (await plugin(
+        schema,
+        docs,
+        {
+          withComponent: true,
+        },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.content).toBeSimilarStringTo(`
+      export const ListenToCommentsComponent = (props: Omit<Urql.SubscriptionProps<ListenToCommentsSubscription, ListenToCommentsSubscription, ListenToCommentsSubscriptionVariables>, 'query'> & { variables?: ListenToCommentsSubscriptionVariables }) => (
+        <Urql.Subscription {...props} query={ListenToCommentsDocument} />
+      );`);
+      await validateTypeScript(content, schema, docs, {});
     });
   });
 

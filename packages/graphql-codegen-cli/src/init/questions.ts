@@ -124,7 +124,7 @@ export function getApplicationTypeChoices(possibleTargets: Record<Tags, boolean>
 export function getPluginChoices(answers: Answers) {
   return plugins
     .filter(p => p.available(answers.targets))
-    .map<inquirer.ChoiceType<any>>(p => {
+    .map<inquirer.ChoiceType>(p => {
       return {
         name: p.name,
         value: p,

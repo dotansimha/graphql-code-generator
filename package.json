@@ -54,6 +54,7 @@
     "microbundle": "0.11.0",
     "react-apollo": "2.5.8",
     "react-apollo-hooks": "0.4.5",
+    "urql": "1.1.3",
     "rimraf": "2.6.3",
     "ts-jest": "24.0.2",
     "tslint": "5.18.0",

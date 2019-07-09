@@ -158,6 +158,14 @@ generates:
       - typescript
       - typescript-operations
       - typescript-stencil-apollo
+  ./dev-test/githunt/types.urql.tsx:
+    schema: ./dev-test/githunt/schema.json
+    documents: ./dev-test/githunt/**/*.graphql
+    plugins:
+      - add: // tslint:disable
+      - typescript
+      - typescript-operations
+      - typescript-urql
   ./dev-test/githunt:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
