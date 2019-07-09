@@ -295,7 +295,7 @@ export const OnCommentAddedDocument = gql`
 }
     `;
 
-export const OnCommentAddedComponent = (props: Omit<Urql.SubscriptionProps, 'query'> & { variables?: OnCommentAddedSubscriptionVariables }) => (
+export const OnCommentAddedComponent = (props: Omit<Urql.SubscriptionProps<OnCommentAddedSubscription, OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>, 'query'> & { variables?: OnCommentAddedSubscriptionVariables }) => (
   <Urql.Subscription {...props} query={OnCommentAddedDocument} />
 );
 
@@ -329,7 +329,7 @@ export const CommentDocument = gql`
 }
     ${CommentsPageCommentFragmentDoc}`;
 
-export const CommentComponent = (props: Omit<Urql.QueryProps, 'query'> & { variables: CommentQueryVariables }) => (
+export const CommentComponent = (props: Omit<Urql.QueryProps<CommentQuery, CommentQueryVariables>, 'query'> & { variables: CommentQueryVariables }) => (
   <Urql.Query {...props} query={CommentDocument} />
 );
 
@@ -342,7 +342,7 @@ export const CurrentUserForProfileDocument = gql`
 }
     `;
 
-export const CurrentUserForProfileComponent = (props: Omit<Urql.QueryProps, 'query'> & { variables?: CurrentUserForProfileQueryVariables }) => (
+export const CurrentUserForProfileComponent = (props: Omit<Urql.QueryProps<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>, 'query'> & { variables?: CurrentUserForProfileQueryVariables }) => (
   <Urql.Query {...props} query={CurrentUserForProfileDocument} />
 );
 
@@ -357,7 +357,7 @@ export const FeedDocument = gql`
 }
     ${FeedEntryFragmentDoc}`;
 
-export const FeedComponent = (props: Omit<Urql.QueryProps, 'query'> & { variables: FeedQueryVariables }) => (
+export const FeedComponent = (props: Omit<Urql.QueryProps<FeedQuery, FeedQueryVariables>, 'query'> & { variables: FeedQueryVariables }) => (
   <Urql.Query {...props} query={FeedDocument} />
 );
 
@@ -369,7 +369,7 @@ export const SubmitRepositoryDocument = gql`
 }
     `;
 
-export const SubmitRepositoryComponent = (props: Omit<Urql.MutationProps, 'query'> & { variables?: SubmitRepositoryMutationVariables }) => (
+export const SubmitRepositoryComponent = (props: Omit<Urql.MutationProps<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>, 'query'> & { variables?: SubmitRepositoryMutationVariables }) => (
   <Urql.Mutation {...props} query={SubmitRepositoryDocument} />
 );
 
@@ -381,7 +381,7 @@ export const SubmitCommentDocument = gql`
 }
     ${CommentsPageCommentFragmentDoc}`;
 
-export const SubmitCommentComponent = (props: Omit<Urql.MutationProps, 'query'> & { variables?: SubmitCommentMutationVariables }) => (
+export const SubmitCommentComponent = (props: Omit<Urql.MutationProps<SubmitCommentMutation, SubmitCommentMutationVariables>, 'query'> & { variables?: SubmitCommentMutationVariables }) => (
   <Urql.Mutation {...props} query={SubmitCommentDocument} />
 );
 
@@ -397,6 +397,6 @@ export const VoteDocument = gql`
 }
     `;
 
-export const VoteComponent = (props: Omit<Urql.MutationProps, 'query'> & { variables?: VoteMutationVariables }) => (
+export const VoteComponent = (props: Omit<Urql.MutationProps<VoteMutation, VoteMutationVariables>, 'query'> & { variables?: VoteMutationVariables }) => (
   <Urql.Mutation {...props} query={VoteDocument} />
 );
