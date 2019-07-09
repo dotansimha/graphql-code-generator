@@ -27,6 +27,13 @@ describe('near-operation-file preset', () => {
       }
     }
   `);
+  const minimalOperationAst = parse(/* GraphQL */ `
+    query {
+      user {
+        ...UserFields
+      }
+    }
+  `);
   const fragmentAst = parse(/* GraphQL */ `
     fragment UserFields on User {
       id
@@ -124,6 +131,23 @@ describe('near-operation-file preset', () => {
       },
       schema: schemaDocumentNode,
       documents: testDocuments.slice(0, 2),
+      plugins: [{ typescript: {} }],
+      pluginMap: { typescript: {} as any },
+    });
+
+    expect(result.map(o => o.plugins)[0]).toEqual(expect.arrayContaining([{ add: `import * as Types from '../types';\n` }]));
+  });
+
+  it('Should prepend the "add" plugin with the correct import, when only using fragment spread', async () => {
+    const result = await preset.buildGeneratesSection({
+      baseOutputDir: './src/',
+      config: {},
+      presetConfig: {
+        cwd: '/some/deep/path',
+        baseTypesPath: 'types.ts',
+      },
+      schema: schemaDocumentNode,
+      documents: [{ filePath: '/some/deep/path/src/graphql/me-query.graphql', content: minimalOperationAst }, testDocuments[1]],
       plugins: [{ typescript: {} }],
       pluginMap: { typescript: {} as any },
     });
