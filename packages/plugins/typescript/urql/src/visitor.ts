@@ -48,8 +48,13 @@ export class UrqlVisitor extends ClientSideBaseVisitor<UrqlRawPluginConfig, Urql
 
     const isVariablesRequired = operationType === 'Query' && node.variableDefinitions.some(variableDef => variableDef.type.kind === Kind.NON_NULL_TYPE);
 
+    const generics = [operationResultType, operationVariablesTypes];
+
+    if (operationType === 'Subscription') {
+      generics.unshift(operationResultType);
+    }
     return `
-export const ${componentName} = (props: Omit<Urql.${operationType}Props, 'query'> & { variables${isVariablesRequired ? '' : '?'}: ${operationVariablesTypes} }) => (
+export const ${componentName} = (props: Omit<Urql.${operationType}Props<${generics.join(', ')}>, 'query'> & { variables${isVariablesRequired ? '' : '?'}: ${operationVariablesTypes} }) => (
   <Urql.${operationType} {...props} query={${documentVariableName}} />
 );
 `;
