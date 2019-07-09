@@ -129,10 +129,15 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     const operationName: string = this.convertName(node.name.value, { suffix: titleCase(operationType), useTypesPrefix: false });
 
     this.imports.add(this.getReactApolloHooksImport());
-    return `
-export function use${operationName}(baseOptions?: ReactApolloHooks.${operationType}HookOptions<${this.config.hooksImportFrom === '@apollo/react-hooks' || node.operation !== 'query' ? `${operationResultType}, ` : ''}${operationVariablesTypes}>) {
-  return ReactApolloHooks.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, baseOptions);
-};`;
+
+    const hookFn = `
+    export function use${operationName}(baseOptions?: ReactApolloHooks.${operationType}HookOptions<${this.config.hooksImportFrom === '@apollo/react-hooks' || node.operation !== 'query' ? `${operationResultType}, ` : ''}${operationVariablesTypes}>) {
+      return ReactApolloHooks.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, baseOptions);
+    };`;
+
+    const hookResult = `export type ${operationName}HookResult = ReturnType<typeof use${operationName}>;`;
+
+    return [hookFn, hookResult].join('\n');
   }
 
   protected buildOperation(node: OperationDefinitionNode, documentVariableName: string, operationType: string, operationResultType: string, operationVariablesTypes: string): string {

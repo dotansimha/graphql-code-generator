@@ -313,9 +313,10 @@ export function withOnCommentAdded<TProps, TChildProps = {}>(operationOptions?: 
     });
 };
 
-export function useOnCommentAddedSubscription(baseOptions?: ReactApolloHooks.SubscriptionHookOptions<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>) {
-  return ReactApolloHooks.useSubscription<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>(OnCommentAddedDocument, baseOptions);
-};
+    export function useOnCommentAddedSubscription(baseOptions?: ReactApolloHooks.SubscriptionHookOptions<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>) {
+      return ReactApolloHooks.useSubscription<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>(OnCommentAddedDocument, baseOptions);
+    };
+export type OnCommentAddedSubscriptionHookResult = ReturnType<typeof useOnCommentAddedSubscription>;
 export const CommentDocument = gql`
     query Comment($repoFullName: String!, $limit: Int, $offset: Int) {
   currentUser {
@@ -363,9 +364,10 @@ export function withComment<TProps, TChildProps = {}>(operationOptions?: ReactAp
     });
 };
 
-export function useCommentQuery(baseOptions?: ReactApolloHooks.QueryHookOptions<CommentQueryVariables>) {
-  return ReactApolloHooks.useQuery<CommentQuery, CommentQueryVariables>(CommentDocument, baseOptions);
-};
+    export function useCommentQuery(baseOptions?: ReactApolloHooks.QueryHookOptions<CommentQueryVariables>) {
+      return ReactApolloHooks.useQuery<CommentQuery, CommentQueryVariables>(CommentDocument, baseOptions);
+    };
+export type CommentQueryHookResult = ReturnType<typeof useCommentQuery>;
 export const CurrentUserForProfileDocument = gql`
     query CurrentUserForProfile {
   currentUser {
@@ -392,9 +394,10 @@ export function withCurrentUserForProfile<TProps, TChildProps = {}>(operationOpt
     });
 };
 
-export function useCurrentUserForProfileQuery(baseOptions?: ReactApolloHooks.QueryHookOptions<CurrentUserForProfileQueryVariables>) {
-  return ReactApolloHooks.useQuery<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>(CurrentUserForProfileDocument, baseOptions);
-};
+    export function useCurrentUserForProfileQuery(baseOptions?: ReactApolloHooks.QueryHookOptions<CurrentUserForProfileQueryVariables>) {
+      return ReactApolloHooks.useQuery<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>(CurrentUserForProfileDocument, baseOptions);
+    };
+export type CurrentUserForProfileQueryHookResult = ReturnType<typeof useCurrentUserForProfileQuery>;
 export const FeedDocument = gql`
     query Feed($type: FeedType!, $offset: Int, $limit: Int) {
   currentUser {
@@ -423,9 +426,10 @@ export function withFeed<TProps, TChildProps = {}>(operationOptions?: ReactApoll
     });
 };
 
-export function useFeedQuery(baseOptions?: ReactApolloHooks.QueryHookOptions<FeedQueryVariables>) {
-  return ReactApolloHooks.useQuery<FeedQuery, FeedQueryVariables>(FeedDocument, baseOptions);
-};
+    export function useFeedQuery(baseOptions?: ReactApolloHooks.QueryHookOptions<FeedQueryVariables>) {
+      return ReactApolloHooks.useQuery<FeedQuery, FeedQueryVariables>(FeedDocument, baseOptions);
+    };
+export type FeedQueryHookResult = ReturnType<typeof useFeedQuery>;
 export const SubmitRepositoryDocument = gql`
     mutation submitRepository($repoFullName: String!) {
   submitRepository(repoFullName: $repoFullName) {
@@ -452,9 +456,10 @@ export function withSubmitRepository<TProps, TChildProps = {}>(operationOptions?
     });
 };
 
-export function useSubmitRepositoryMutation(baseOptions?: ReactApolloHooks.MutationHookOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>) {
-  return ReactApolloHooks.useMutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(SubmitRepositoryDocument, baseOptions);
-};
+    export function useSubmitRepositoryMutation(baseOptions?: ReactApolloHooks.MutationHookOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>) {
+      return ReactApolloHooks.useMutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(SubmitRepositoryDocument, baseOptions);
+    };
+export type SubmitRepositoryMutationHookResult = ReturnType<typeof useSubmitRepositoryMutation>;
 export const SubmitCommentDocument = gql`
     mutation submitComment($repoFullName: String!, $commentContent: String!) {
   submitComment(repoFullName: $repoFullName, commentContent: $commentContent) {
@@ -481,9 +486,10 @@ export function withSubmitComment<TProps, TChildProps = {}>(operationOptions?: R
     });
 };
 
-export function useSubmitCommentMutation(baseOptions?: ReactApolloHooks.MutationHookOptions<SubmitCommentMutation, SubmitCommentMutationVariables>) {
-  return ReactApolloHooks.useMutation<SubmitCommentMutation, SubmitCommentMutationVariables>(SubmitCommentDocument, baseOptions);
-};
+    export function useSubmitCommentMutation(baseOptions?: ReactApolloHooks.MutationHookOptions<SubmitCommentMutation, SubmitCommentMutationVariables>) {
+      return ReactApolloHooks.useMutation<SubmitCommentMutation, SubmitCommentMutationVariables>(SubmitCommentDocument, baseOptions);
+    };
+export type SubmitCommentMutationHookResult = ReturnType<typeof useSubmitCommentMutation>;
 export const VoteDocument = gql`
     mutation vote($repoFullName: String!, $type: VoteType!) {
   vote(repoFullName: $repoFullName, type: $type) {
@@ -514,6 +520,7 @@ export function withVote<TProps, TChildProps = {}>(operationOptions?: ReactApoll
     });
 };
 
-export function useVoteMutation(baseOptions?: ReactApolloHooks.MutationHookOptions<VoteMutation, VoteMutationVariables>) {
-  return ReactApolloHooks.useMutation<VoteMutation, VoteMutationVariables>(VoteDocument, baseOptions);
-};
+    export function useVoteMutation(baseOptions?: ReactApolloHooks.MutationHookOptions<VoteMutation, VoteMutationVariables>) {
+      return ReactApolloHooks.useMutation<VoteMutation, VoteMutationVariables>(VoteDocument, baseOptions);
+    };
+export type VoteMutationHookResult = ReturnType<typeof useVoteMutation>;
