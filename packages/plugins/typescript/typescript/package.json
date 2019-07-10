@@ -20,6 +20,9 @@
     "ts-jest": "24.0.2",
     "typescript": "3.5.3"
   },
+  "peerDependencies": {
+    "graphql": "^0.12.0 || ^0.13.0 || ^14.0.0"
+  },
   "sideEffects": false,
   "main": "dist/commonjs/index.js",
   "module": "dist/esnext/index.js",
