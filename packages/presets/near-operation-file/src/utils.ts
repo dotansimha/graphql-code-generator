@@ -1,5 +1,5 @@
 import { parse, dirname, relative, join, isAbsolute } from 'path';
-import { DocumentNode, visit, FragmentSpreadNode, FragmentDefinitionNode, FieldNode } from 'graphql';
+import { DocumentNode, visit, FragmentSpreadNode, FragmentDefinitionNode, FieldNode, Kind } from 'graphql';
 import { FragmentNameToFile } from './index';
 
 export function appendExtensionToFilePath(baseFilePath: string, extension: string) {
@@ -74,7 +74,7 @@ export function isUsingTypes(document: DocumentNode): boolean {
       Field: (node: FieldNode) => {
         const selections = node.selectionSet ? node.selectionSet.selections || [] : [];
 
-        if (selections.length === 0) {
+        if (selections.length === 0 || selections[0].kind === Kind.FRAGMENT_SPREAD) {
           foundFields++;
         }
       },
