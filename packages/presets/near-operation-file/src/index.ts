@@ -102,6 +102,7 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
       add: addPlugin,
     };
 
+    const duplicateFragmentNames: string[] = [];
     const fragmentNameToFile: FragmentNameToFile = options.documents.reduce((prev, documentRecord) => {
       const fragments: FragmentDefinitionNode[] = documentRecord.content.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[];
 
@@ -110,12 +111,20 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
           const filePath = appendExtensionToFilePath(documentRecord.filePath, extension);
           const importName = baseVisitor.convertName(fragment, { suffix: 'Fragment' });
 
+          if (prev[fragment.name.value]) {
+            duplicateFragmentNames.push(fragment.name.value);
+          }
+
           prev[fragment.name.value] = { filePath, importName, onType: fragment.typeCondition.name.value, node: fragment };
         }
       }
 
       return prev;
     }, {});
+
+    if (duplicateFragmentNames.length) {
+      throw new Error(`Multiple fragments with the name(s) "${duplicateFragmentNames.join(', ')}" were found.`);
+    }
 
     const absTypesPath = resolve(baseDir, join(options.baseOutputDir, options.presetConfig.baseTypesPath));
 
