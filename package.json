@@ -42,7 +42,7 @@
     "@types/node": "10.14.12",
     "@types/request": "2.48.1",
     "apollo-link": "1.2.12",
-    "apollo-server": "2.6.8",
+    "apollo-server": "2.6.9",
     "graphql": "14.4.2",
     "graphql-tag": "2.10.1",
     "graphql-tools": "4.0.5",
