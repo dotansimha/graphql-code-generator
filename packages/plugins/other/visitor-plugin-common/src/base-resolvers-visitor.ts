@@ -670,7 +670,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
 
   protected applyRequireFields(argsType: string, fields: InputValueDefinitionNode[]): string {
     this._globalDeclarations.add(REQUIRE_FIELDS_TYPE);
-    return `RequireFields<${argsType}, ${fields.map(f => `'${f.name.value}'`).join(', ')}>`;
+    return `RequireFields<${argsType}, ${fields.map(f => `'${f.name.value}'`).join(' | ')}>`;
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode) {
