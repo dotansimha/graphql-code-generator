@@ -606,6 +606,22 @@ query MyFeed {
       await validateTypeScript(content, schema, docs, {});
     });
 
+    it('should generate HOC props with correct operation result type name', async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
+      const content = (await plugin(
+        schema,
+        docs,
+        { operationResultSuffix: 'Response' },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.content).toBeSimilarStringTo(`export type TestProps<TChildProps = {}> = Partial<ReactApollo.DataProps<TestQueryResponse, TestQueryVariables>> & TChildProps;`);
+
+      await validateTypeScript(content, schema, docs, {});
+    });
+
     it('should not generate HOCs', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
       const content = (await plugin(

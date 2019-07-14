@@ -62,7 +62,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
   }
 
   private _buildHocProps(operationName: string, operationType: string): string {
-    const typeVariableName = this.convertName(operationName + toPascalCase(operationType));
+    const typeVariableName = this.convertName(operationName + toPascalCase(operationType) + this._parsedConfig.operationResultSuffix);
     const variablesVarName = this.convertName(operationName + toPascalCase(operationType) + 'Variables');
     const argType = operationType === 'mutation' ? 'MutateProps' : 'DataProps';
 
