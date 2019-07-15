@@ -80,7 +80,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
 }
 
 function resolveCompareValue(a: string) {
-  if (a.startsWith('/*') || a.startsWith('//')) {
+  if (a.startsWith('/*') || a.startsWith('//') || a.startsWith(' *') || a.startsWith(' */') || a.startsWith('*/')) {
     return 0;
   } else if (a.startsWith('import')) {
     return 1;
