@@ -1663,4 +1663,35 @@ describe('TypeScript', () => {
 
     validateTs(result);
   });
+
+  it('should generate type-graphql enums', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      "custom enum"
+      enum MyEnum {
+        "this is a"
+        A
+        "this is b"
+        B
+      }
+    `);
+    const result = (await plugin(
+      schema,
+      [],
+      {
+        outputTypeGraphQL: true,
+      },
+      { outputFile: '' }
+    )) as Types.ComplexPluginOutput;
+
+    expect(result.content).toBeSimilarStringTo(`
+      /** custom enum */
+      export enum MyEnum {
+        /** this is a */
+        A = 'A',
+        /** this is b */
+        B = 'B'
+      }
+      registerEnumType(MyEnum, { name: 'MyEnum' });`);
+    validateTs(result);
+  });
 });

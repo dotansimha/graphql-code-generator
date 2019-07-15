@@ -95,6 +95,23 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * ```
    */
   maybeValue?: string;
+  /**
+   * @name outputTypeGraphQL
+   * @type boolean
+   * @description Output objects compatible with type-graphql
+   * @default false
+   *
+   * @example
+   * * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *  config:
+   *    outputTypeGraphQL: true
+   * ```
+   */
+  outputTypeGraphQL?: boolean;
 }
 
 export const plugin: PluginFunction<TypeScriptPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: TypeScriptPluginConfig) => {

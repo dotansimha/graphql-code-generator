@@ -1,5 +1,5 @@
 import { transformComment, wrapWithSingleQuotes, DeclarationBlock, indent, BaseTypesVisitor, ParsedTypesConfig } from '@graphql-codegen/visitor-plugin-common';
-import { TypeScriptPluginConfig } from './index';
+import { TypeScriptPluginConfig, plugin } from './index';
 import * as autoBind from 'auto-bind';
 import { FieldDefinitionNode, NamedTypeNode, ListTypeNode, NonNullTypeNode, EnumTypeDefinitionNode, Kind, InputValueDefinitionNode, GraphQLSchema } from 'graphql';
 import { TypeScriptOperationVariablesToObject } from './typescript-variables-to-object';
@@ -10,6 +10,7 @@ export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
   enumsAsTypes: boolean;
   immutableTypes: boolean;
   maybeValue: string;
+  outputTypeGraphQL: boolean;
 }
 
 export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPluginConfig, TParsedConfig extends TypeScriptPluginParsedConfig = TypeScriptPluginParsedConfig> extends BaseTypesVisitor<TRawConfig, TParsedConfig> {
@@ -20,6 +21,7 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
       constEnums: pluginConfig.constEnums || false,
       enumsAsTypes: pluginConfig.enumsAsTypes || false,
       immutableTypes: pluginConfig.immutableTypes || false,
+      outputTypeGraphQL: pluginConfig.outputTypeGraphQL || false,
       ...(additionalConfig || {}),
     } as TParsedConfig);
 
@@ -81,8 +83,10 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
       return null;
     }
 
+    let declaration: string;
+
     if (this.config.enumsAsTypes) {
-      return new DeclarationBlock(this._declarationBlockConfig)
+      declaration = new DeclarationBlock(this._declarationBlockConfig)
         .export()
         .asKind('type')
         .withComment((node.description as any) as string)
@@ -103,12 +107,18 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
               .join(' |\n')
         ).string;
     } else {
-      return new DeclarationBlock(this._declarationBlockConfig)
+      declaration = new DeclarationBlock(this._declarationBlockConfig)
         .export()
         .asKind(this.config.constEnums ? 'const enum' : 'enum')
         .withName(this.convertName(node))
         .withComment((node.description as any) as string)
         .withBlock(this.buildEnumValuesBlock(enumName, node.values)).string;
     }
+
+    if (super.config.outputTypeGraphQL) {
+      declaration = declaration + `registerEnumType(${this.convertName(node)}, { name: '${this.convertName(node)}' });\n`;
+    }
+
+    return declaration;
   }
 }
