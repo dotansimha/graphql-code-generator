@@ -15,6 +15,7 @@ export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
 
 const MAYBE_REGEX = /^Maybe<(.*?)>$/;
 const ARRAY_REGEX = /^Array<(.*?)>$/;
+const GRAPHQL_TYPES = ['Query', 'Mutation', 'Subscription'];
 
 export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPluginConfig, TParsedConfig extends TypeScriptPluginParsedConfig = TypeScriptPluginParsedConfig> extends BaseTypesVisitor<TRawConfig, TParsedConfig> {
   constructor(schema: GraphQLSchema, pluginConfig: TRawConfig, additionalConfig: Partial<TParsedConfig> = {}) {
@@ -76,7 +77,8 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
     const originalNode = parent[key] as ObjectTypeDefinitionNode;
 
     let declarationBlock = this.getObjectTypeDeclarationBlock(node, originalNode);
-    if (this.config.outputTypeGraphQL) {
+    if (this.config.outputTypeGraphQL && GRAPHQL_TYPES.indexOf((node.name as unknown) as string) === -1) {
+      // Add type-graphql ObjectType decorator
       const interfaces = originalNode.interfaces.map(i => this.convertName(i));
       let decoratorOptions = '';
       if (interfaces.length > 1) {
