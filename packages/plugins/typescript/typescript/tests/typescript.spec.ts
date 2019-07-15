@@ -1664,6 +1664,22 @@ describe('TypeScript', () => {
     validateTs(result);
   });
 
+  it('should generate type-graphql imports', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      scalar A
+    `);
+    const result = (await plugin(
+      schema,
+      [],
+      {
+        outputTypeGraphQL: true,
+      },
+      { outputFile: '' }
+    )) as Types.ComplexPluginOutput;
+
+    expect(result.prepend).toContainEqual(`import * as TypeGraphQL from 'type-graphql';`);
+  });
+
   it('should generate type-graphql enums', async () => {
     const schema = buildSchema(/* GraphQL */ `
       "custom enum"

@@ -114,6 +114,8 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
   outputTypeGraphQL?: boolean;
 }
 
+const TYPE_GRAPHQL_IMPORT = `import * as TypeGraphQL from 'type-graphql';`;
+
 export const plugin: PluginFunction<TypeScriptPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: TypeScriptPluginConfig) => {
   const visitor = new TsVisitor(schema, config);
   const printedSchema = printSchema(schema);
@@ -124,7 +126,7 @@ export const plugin: PluginFunction<TypeScriptPluginConfig> = (schema: GraphQLSc
   const scalars = visitor.scalarsDefinition;
 
   return {
-    prepend: [...visitor.getEnumsImports(), maybeValue],
+    prepend: [...visitor.getEnumsImports(), maybeValue, ...(config.outputTypeGraphQL ? [TYPE_GRAPHQL_IMPORT] : [])],
     content: [scalars, ...visitorResult.definitions, ...introspectionDefinitions].join('\n'),
   };
 };
