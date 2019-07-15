@@ -218,8 +218,8 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
     return [this.getObjectTypeDeclarationBlock(node, originalNode).string, this.buildArgumentsBlock(originalNode)].filter(f => f).join('\n\n');
   }
 
-  InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode, key: number | string, parent: any): string {
-    const argumentsBlock = this.buildArgumentsBlock(parent[key] as InterfaceTypeDefinitionNode);
+  getInterfaceTypeDeclarationBlock(node: InterfaceTypeDefinitionNode, originalNode: InterfaceTypeDefinitionNode): DeclarationBlock {
+    const argumentsBlock = this.buildArgumentsBlock(originalNode);
 
     let declarationBlock = new DeclarationBlock(this._declarationBlockConfig)
       .export()
@@ -227,9 +227,13 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
       .withName(this.convertName(node))
       .withComment((node.description as any) as string);
 
-    const interfaceDefinition = declarationBlock.withBlock(node.fields.join('\n')).string;
+    return declarationBlock.withBlock(node.fields.join('\n'));
+  }
 
-    return [interfaceDefinition, argumentsBlock].filter(f => f).join('\n\n');
+  InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode, key: number | string, parent: any): string {
+    const originalNode = parent[key] as InterfaceTypeDefinitionNode;
+
+    return [this.getInterfaceTypeDeclarationBlock(node, originalNode).string, this.buildArgumentsBlock(originalNode)].filter(f => f).join('\n\n');
   }
 
   ScalarTypeDefinition(node: ScalarTypeDefinitionNode): string {
