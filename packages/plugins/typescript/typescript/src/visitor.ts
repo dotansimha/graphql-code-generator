@@ -86,7 +86,7 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
     const comment = transformComment((node.description as any) as string, 1);
     let decorator = '';
     if (super.config.outputTypeGraphQL) {
-      const typeGraphQLType = typeString.replace(MAYBE_REGEX, '$1').replace(/Scalars\['(.*?)'\]$/, 'TypeGraphQL.$1');
+      const typeGraphQLType = typeString.replace(MAYBE_REGEX, '$1').replace(/Scalars\['(.*?)'\]$/, (match, type) => (global[type] ? type : `TypeGraphQL.${type}`));
       const nullable = !!typeString.match(MAYBE_REGEX);
 
       decorator = '\n' + indent(`@TypeGraphQL.Field(type => ${typeGraphQLType}${nullable ? ', { nullable: true }' : ''})`) + '\n';

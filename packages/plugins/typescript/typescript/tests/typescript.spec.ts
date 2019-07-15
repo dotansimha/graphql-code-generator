@@ -1752,16 +1752,16 @@ describe('TypeScript', () => {
         @TypeGraphQL.Field(type => TypeGraphQL.ID)
         mandatoryId!: Scalars['ID'];
 
-        @TypeGraphQL.Field(type => TypeGraphQL.String, { nullable: true })
+        @TypeGraphQL.Field(type => String, { nullable: true })
         str!: Maybe<Scalars['String']>;
 
-        @TypeGraphQL.Field(type => TypeGraphQL.String)
+        @TypeGraphQL.Field(type => String)
         mandatoryStr!: Scalars['String'];
 
-        @TypeGraphQL.Field(type => TypeGraphQL.Boolean, { nullable: true })
+        @TypeGraphQL.Field(type => Boolean, { nullable: true })
         bool!: Maybe<Scalars['Boolean']>;
 
-        @TypeGraphQL.Field(type => TypeGraphQL.Boolean)
+        @TypeGraphQL.Field(type => Boolean)
         mandatoryBool!: Scalars['Boolean'];
 
         @TypeGraphQL.Field(type => TypeGraphQL.Int, { nullable: true })
@@ -1781,8 +1781,7 @@ describe('TypeScript', () => {
 
         @TypeGraphQL.Field(type => B)
         mandatoryB!: B;
-
-        
+      }
     `);
   });
 });
