@@ -1746,7 +1746,7 @@ describe('TypeScript', () => {
     expect(result.content).toBeSimilarStringTo(`
       @TypeGraphQL.ObjectType()
       export class A {
-        __typename?: 'A',
+        __typename?: 'A';
 
         @TypeGraphQL.Field(type => TypeGraphQL.ID, { nullable: true })
         id!: Maybe<Scalars['ID']>;
@@ -1789,6 +1789,50 @@ describe('TypeScript', () => {
 
         @TypeGraphQL.Field(type => [String])
         mandatoryArr!: Array<Scalars['String']>;
+      }
+    `);
+  });
+
+  it('should generate type-graphql classes implementing type-graphql interfaces', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Test implements ITest {
+        id: ID
+        mandatoryStr: String!
+      }
+
+      interface ITest {
+        id: ID
+      }
+    `);
+
+    const result = (await plugin(
+      schema,
+      [],
+      {
+        outputTypeGraphQL: true,
+      },
+      { outputFile: '' }
+    )) as Types.ComplexPluginOutput;
+
+    expect(result.content).toBeSimilarStringTo(`
+      @TypeGraphQL.ObjectType({ implements: ITest })
+      export class Test extends ITest {
+        __typename?: 'Test';
+
+        @TypeGraphQL.Field(type => TypeGraphQL.ID, { nullable: true })
+        id!: Maybe<Scalars['ID']>;
+
+        @TypeGraphQL.Field(type => String)
+        mandatoryStr!: Scalars['String'];
+      }
+    `);
+
+    expect(result.content).toBeSimilarStringTo(`
+      @TypeGraphQL.InterfaceType()
+      export abstract class ITest {
+        
+        @TypeGraphQL.Field(type => TypeGraphQL.ID, { nullable: true })
+        id!: Maybe<Scalars['ID']>;
       }
     `);
   });

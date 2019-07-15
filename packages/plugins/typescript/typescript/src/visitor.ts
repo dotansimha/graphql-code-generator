@@ -1,7 +1,7 @@
 import { transformComment, wrapWithSingleQuotes, DeclarationBlock, indent, BaseTypesVisitor, ParsedTypesConfig } from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptPluginConfig, plugin } from './index';
 import * as autoBind from 'auto-bind';
-import { FieldDefinitionNode, NamedTypeNode, ListTypeNode, NonNullTypeNode, EnumTypeDefinitionNode, Kind, InputValueDefinitionNode, GraphQLSchema, ObjectTypeDefinitionNode } from 'graphql';
+import { FieldDefinitionNode, NamedTypeNode, ListTypeNode, NonNullTypeNode, EnumTypeDefinitionNode, Kind, InputValueDefinitionNode, GraphQLSchema, ObjectTypeDefinitionNode, InterfaceTypeDefinitionNode } from 'graphql';
 import { TypeScriptOperationVariablesToObject } from './typescript-variables-to-object';
 
 export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
@@ -77,7 +77,25 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
 
     let declarationBlock = this.getObjectTypeDeclarationBlock(node, originalNode);
     if (this.config.outputTypeGraphQL) {
-      declarationBlock = declarationBlock.withDecorator('@TypeGraphQL.ObjectType()');
+      const interfaces = originalNode.interfaces.map(i => this.convertName(i));
+      let decoratorOptions = '';
+      if (interfaces.length > 1) {
+        decoratorOptions = `{ implements: [${interfaces.join(', ')}] }`;
+      } else if (interfaces.length === 1) {
+        decoratorOptions = `{ implements: ${interfaces[0]} }`;
+      }
+      declarationBlock = declarationBlock.withDecorator(`@TypeGraphQL.ObjectType(${decoratorOptions})`);
+    }
+
+    return [declarationBlock.string, this.buildArgumentsBlock(originalNode)].filter(f => f).join('\n\n');
+  }
+
+  InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode, key: number | string, parent: any): string {
+    const originalNode = parent[key] as InterfaceTypeDefinitionNode;
+
+    let declarationBlock = this.getInterfaceTypeDeclarationBlock(node, originalNode);
+    if (this.config.outputTypeGraphQL) {
+      declarationBlock = declarationBlock.withDecorator('@TypeGraphQL.InterfaceType()');
     }
 
     return [declarationBlock.string, this.buildArgumentsBlock(originalNode)].filter(f => f).join('\n\n');
