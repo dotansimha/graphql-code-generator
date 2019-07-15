@@ -349,7 +349,7 @@ query MyFeed {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(`
-      export const TestComponent = (props: Omit<Urql.QueryProps<TestQuery, TestQueryVariables>,  'query'> & { variables?: TestQueryVariables }) => 
+      export const TestComponent = (props: Omit<Urql.QueryProps<TestQuery, TestQueryVariables>,  'query'> & { variables?: TestQueryVariables }) =>
       (
           <Urql.Query {...props} query={TestDocument} />
       );
@@ -521,7 +521,7 @@ export function useFeedQuery(options: Omit<Urql.UseQueryArgs<FeedQueryVariables>
 
       expect(content.content).toBeSimilarStringTo(`
 export function useSubmitRepositoryMutation() {
-  return Urql.useMutation<SubmitRepositoryMutation>(SubmitRepositoryDocument);
+  return Urql.useMutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(SubmitRepositoryDocument);
 };`);
       await validateTypeScript(content, schema, docs, {});
     });
