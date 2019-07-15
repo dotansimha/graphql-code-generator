@@ -182,8 +182,7 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
       .withContent(possibleTypes).string;
   }
 
-  ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: number | string, parent: any): string {
-    const originalNode = parent[key] as ObjectTypeDefinitionNode;
+  getObjectTypeDeclarationBlock(node: ObjectTypeDefinitionNode, originalNode: ObjectTypeDefinitionNode): DeclarationBlock {
     const optionalTypename = this.config.nonOptionalTypename ? '__typename' : '__typename?';
     const allFields = [...(this.config.addTypename ? [indent(`${optionalTypename}: '${node.name}',`)] : []), ...node.fields];
     const { type } = this._parsedConfig.declarationKind;
@@ -195,7 +194,7 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
 
       const interfaces = originalNode.interfaces.map(i => this.convertName(i));
 
-      if (type === 'interface') {
+      if (type === 'interface' || type === 'class') {
         return ' extends ' + interfaces.join(', ') + (allFields.length ? ' ' : ' {}');
       }
 
@@ -210,11 +209,13 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
       .withContent(interfaces)
       .withComment((node.description as any) as string);
 
-    const typeDefinition = declarationBlock.withBlock(allFields.join('\n')).string;
+    return declarationBlock.withBlock(allFields.join('\n'));
+  }
 
-    const argumentsBlock = this.buildArgumentsBlock(originalNode);
+  ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: number | string, parent: any): string {
+    const originalNode = parent[key] as ObjectTypeDefinitionNode;
 
-    return [typeDefinition, argumentsBlock].filter(f => f).join('\n\n');
+    return [this.getObjectTypeDeclarationBlock(node, originalNode).string, this.buildArgumentsBlock(originalNode)].filter(f => f).join('\n\n');
   }
 
   InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode, key: number | string, parent: any): string {

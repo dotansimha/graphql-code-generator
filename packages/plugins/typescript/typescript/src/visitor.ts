@@ -1,7 +1,7 @@
 import { transformComment, wrapWithSingleQuotes, DeclarationBlock, indent, BaseTypesVisitor, ParsedTypesConfig } from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptPluginConfig, plugin } from './index';
 import * as autoBind from 'auto-bind';
-import { FieldDefinitionNode, NamedTypeNode, ListTypeNode, NonNullTypeNode, EnumTypeDefinitionNode, Kind, InputValueDefinitionNode, GraphQLSchema } from 'graphql';
+import { FieldDefinitionNode, NamedTypeNode, ListTypeNode, NonNullTypeNode, EnumTypeDefinitionNode, Kind, InputValueDefinitionNode, GraphQLSchema, ObjectTypeDefinitionNode } from 'graphql';
 import { TypeScriptOperationVariablesToObject } from './typescript-variables-to-object';
 
 export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
@@ -13,6 +13,8 @@ export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
   outputTypeGraphQL: boolean;
 }
 
+const MAYBE_REGEX = /Maybe<(.*?)>$/;
+
 export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPluginConfig, TParsedConfig extends TypeScriptPluginParsedConfig = TypeScriptPluginParsedConfig> extends BaseTypesVisitor<TRawConfig, TParsedConfig> {
   constructor(schema: GraphQLSchema, pluginConfig: TRawConfig, additionalConfig: Partial<TParsedConfig> = {}) {
     super(schema, pluginConfig, {
@@ -22,6 +24,14 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
       enumsAsTypes: pluginConfig.enumsAsTypes || false,
       immutableTypes: pluginConfig.immutableTypes || false,
       outputTypeGraphQL: pluginConfig.outputTypeGraphQL || false,
+      ...(pluginConfig.outputTypeGraphQL
+        ? {
+            declarationKind: {
+              type: 'class',
+              interface: 'abstract class',
+            },
+          }
+        : {}),
       ...(additionalConfig || {}),
     } as TParsedConfig);
 
@@ -34,7 +44,7 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
 
   private clearOptional(str: string): string {
     if (str.startsWith('Maybe')) {
-      return str.replace(/Maybe<(.*?)>$/, '$1');
+      return str.replace(MAYBE_REGEX, '$1');
     }
 
     return str;
@@ -58,13 +68,31 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
     return this.clearOptional(baseValue);
   }
 
+  ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: number | string, parent: any): string {
+    const originalNode = parent[key] as ObjectTypeDefinitionNode;
+
+    let declarationBlock = this.getObjectTypeDeclarationBlock(node, originalNode);
+    if (this.config.outputTypeGraphQL) {
+      declarationBlock = declarationBlock.withDecorator('@TypeGraphQL.ObjectType()');
+    }
+
+    return [declarationBlock.string, this.buildArgumentsBlock(originalNode)].filter(f => f).join('\n\n');
+  }
+
   FieldDefinition(node: FieldDefinitionNode, key?: number | string, parent?: any): string {
     const typeString = (node.type as any) as string;
     const originalFieldNode = parent[key] as FieldDefinitionNode;
     const addOptionalSign = !this.config.avoidOptionals && originalFieldNode.type.kind !== Kind.NON_NULL_TYPE;
     const comment = transformComment((node.description as any) as string, 1);
+    let decorator = '';
+    if (super.config.outputTypeGraphQL) {
+      const typeGraphQLType = typeString.replace(MAYBE_REGEX, '$1').replace(/Scalars\['(.*?)'\]$/, 'TypeGraphQL.$1');
+      const nullable = !!typeString.match(MAYBE_REGEX);
 
-    return comment + indent(`${this.config.immutableTypes ? 'readonly ' : ''}${node.name}${addOptionalSign ? '?' : ''}: ${typeString},`);
+      decorator = '\n' + indent(`@TypeGraphQL.Field(type => ${typeGraphQLType}${nullable ? ', { nullable: true }' : ''})`) + '\n';
+    }
+
+    return comment + decorator + indent(`${this.config.immutableTypes ? 'readonly ' : ''}${node.name}${super.config.outputTypeGraphQL ? '!' : addOptionalSign ? '?' : ''}: ${typeString}${super.config.outputTypeGraphQL ? ';' : ','}`);
   }
 
   InputValueDefinition(node: InputValueDefinitionNode, key?: number | string, parent?: any): string {
@@ -116,7 +144,7 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
     }
 
     if (super.config.outputTypeGraphQL) {
-      declaration = declaration + `registerEnumType(${this.convertName(node)}, { name: '${this.convertName(node)}' });\n`;
+      declaration = declaration + `TypeGraphQL.registerEnumType(${this.convertName(node)}, { name: '${this.convertName(node)}' });\n`;
     }
 
     return declaration;

@@ -1691,7 +1691,82 @@ describe('TypeScript', () => {
         /** this is b */
         B = 'B'
       }
-      registerEnumType(MyEnum, { name: 'MyEnum' });`);
-    validateTs(result);
+      TypeGraphQL.registerEnumType(MyEnum, { name: 'MyEnum' });`);
+  });
+
+  it('should generate type-graphql classes', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type A {
+        id: ID
+        mandatoryId: ID!
+        str: String
+        mandatoryStr: String!
+        bool: Boolean
+        mandatoryBool: Boolean!
+        int: Int
+        mandatoryInt: Int!
+        float: Float
+        mandatoryFloat: Float!
+        b: B
+        mandatoryB: B!
+      }
+
+      type B {
+        id: ID
+      }
+    `);
+
+    const result = (await plugin(
+      schema,
+      [],
+      {
+        outputTypeGraphQL: true,
+      },
+      { outputFile: '' }
+    )) as Types.ComplexPluginOutput;
+
+    expect(result.content).toBeSimilarStringTo(`
+      @TypeGraphQL.ObjectType()
+      export class A {
+        __typename?: 'A',
+
+        @TypeGraphQL.Field(type => TypeGraphQL.ID, { nullable: true })
+        id!: Maybe<Scalars['ID']>;
+
+        @TypeGraphQL.Field(type => TypeGraphQL.ID)
+        mandatoryId!: Scalars['ID'];
+
+        @TypeGraphQL.Field(type => TypeGraphQL.String, { nullable: true })
+        str!: Maybe<Scalars['String']>;
+
+        @TypeGraphQL.Field(type => TypeGraphQL.String)
+        mandatoryStr!: Scalars['String'];
+
+        @TypeGraphQL.Field(type => TypeGraphQL.Boolean, { nullable: true })
+        bool!: Maybe<Scalars['Boolean']>;
+
+        @TypeGraphQL.Field(type => TypeGraphQL.Boolean)
+        mandatoryBool!: Scalars['Boolean'];
+
+        @TypeGraphQL.Field(type => TypeGraphQL.Int, { nullable: true })
+        int!: Maybe<Scalars['Int']>;
+
+        @TypeGraphQL.Field(type => TypeGraphQL.Int)
+        mandatoryInt!: Scalars['Int'];
+
+        @TypeGraphQL.Field(type => TypeGraphQL.Float, { nullable: true })
+        float!: Maybe<Scalars['Float']>;
+
+        @TypeGraphQL.Field(type => TypeGraphQL.Float)
+        mandatoryFloat!: Scalars['Float'];
+
+        @TypeGraphQL.Field(type => B, { nullable: true })
+        b!: Maybe<B>;
+
+        @TypeGraphQL.Field(type => B)
+        mandatoryB!: B;
+
+        
+    `);
   });
 });
