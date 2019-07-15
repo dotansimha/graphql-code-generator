@@ -13,7 +13,8 @@ export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
   outputTypeGraphQL: boolean;
 }
 
-const MAYBE_REGEX = /Maybe<(.*?)>$/;
+const MAYBE_REGEX = /^Maybe<(.*?)>$/;
+const ARRAY_REGEX = /^Array<(.*?)>$/;
 
 export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPluginConfig, TParsedConfig extends TypeScriptPluginParsedConfig = TypeScriptPluginParsedConfig> extends BaseTypesVisitor<TRawConfig, TParsedConfig> {
   constructor(schema: GraphQLSchema, pluginConfig: TRawConfig, additionalConfig: Partial<TParsedConfig> = {}) {
@@ -29,6 +30,9 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
             declarationKind: {
               type: 'class',
               interface: 'abstract class',
+              arguments: 'type',
+              input: 'type',
+              scalar: 'type',
             },
           }
         : {}),
@@ -79,6 +83,16 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
     return [declarationBlock.string, this.buildArgumentsBlock(originalNode)].filter(f => f).join('\n\n');
   }
 
+  parseType(typeString: string) {
+    const isNullable = !!typeString.match(MAYBE_REGEX);
+    const nonNullableType = typeString.replace(MAYBE_REGEX, '$1');
+    const isArray = !!nonNullableType.match(ARRAY_REGEX);
+    const singularType = nonNullableType.replace(ARRAY_REGEX, '$1');
+    const type = singularType.replace(/Scalars\['(.*?)'\]$/, (match, type) => (global[type] ? type : `TypeGraphQL.${type}`));
+
+    return { type, isNullable, isArray };
+  }
+
   FieldDefinition(node: FieldDefinitionNode, key?: number | string, parent?: any): string {
     const typeString = (node.type as any) as string;
     const originalFieldNode = parent[key] as FieldDefinitionNode;
@@ -86,10 +100,9 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
     const comment = transformComment((node.description as any) as string, 1);
     let decorator = '';
     if (super.config.outputTypeGraphQL) {
-      const typeGraphQLType = typeString.replace(MAYBE_REGEX, '$1').replace(/Scalars\['(.*?)'\]$/, (match, type) => (global[type] ? type : `TypeGraphQL.${type}`));
-      const nullable = !!typeString.match(MAYBE_REGEX);
+      const type = this.parseType(typeString);
 
-      decorator = '\n' + indent(`@TypeGraphQL.Field(type => ${typeGraphQLType}${nullable ? ', { nullable: true }' : ''})`) + '\n';
+      decorator = '\n' + indent(`@TypeGraphQL.Field(type => ${type.isArray ? `[${type.type}]` : type.type}${type.isNullable ? ', { nullable: true }' : ''})`) + '\n';
     }
 
     return comment + decorator + indent(`${this.config.immutableTypes ? 'readonly ' : ''}${node.name}${super.config.outputTypeGraphQL ? '!' : addOptionalSign ? '?' : ''}: ${typeString}${super.config.outputTypeGraphQL ? ';' : ','}`);

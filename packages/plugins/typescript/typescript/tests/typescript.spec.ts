@@ -1725,6 +1725,8 @@ describe('TypeScript', () => {
         mandatoryFloat: Float!
         b: B
         mandatoryB: B!
+        arr: [String!]
+        mandatoryArr: [String!]!
       }
 
       type B {
@@ -1781,6 +1783,12 @@ describe('TypeScript', () => {
 
         @TypeGraphQL.Field(type => B)
         mandatoryB!: B;
+
+        @TypeGraphQL.Field(type => [String], { nullable: true })
+        arr!: Maybe<Array<Scalars['String']>>;
+
+        @TypeGraphQL.Field(type => [String])
+        mandatoryArr!: Array<Scalars['String']>;
       }
     `);
   });
