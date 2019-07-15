@@ -840,7 +840,23 @@ export function useListenToCommentsSubscription(baseOptions?: ReactApolloHooks.S
       withMutationOptionsType: false,
     };
 
-    it('should generate ResultType for Query', async () => {
+    const mutationDoc = parse(/* GraphQL */ `
+      mutation test($name: String) {
+        submitRepository(repoFullName: $name) {
+          id
+        }
+      }
+    `);
+
+    const subscriptionDoc = parse(/* GraphQL */ `
+      subscription test($name: String) {
+        commentAdded(repoFullName: $name) {
+          id
+        }
+      }
+    `);
+
+    it('should generate ResultType for Query if withResultType is true', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
       const content = (await plugin(
         schema,
@@ -856,14 +872,23 @@ export function useListenToCommentsSubscription(baseOptions?: ReactApolloHooks.S
       await validateTypeScript(content, schema, docs, {});
     });
 
-    it('should generate ResultType for Mutation', async () => {
-      const mutationDoc = parse(/* GraphQL */ `
-        mutation test($name: String) {
-          submitRepository(repoFullName: $name) {
-            id
-          }
+    it('should NOT generate ResultType for Query if withResultType is false', async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
+      const content = (await plugin(
+        schema,
+        docs,
+        { ...config, withResultType: false },
+        {
+          outputFile: 'graphql.tsx',
         }
-      `);
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).not.toContain(`import * as ReactApollo from 'react-apollo';`);
+      expect(content.content).not.toContain(`export type TestQueryResult = ReactApollo.QueryResult<TestQuery, TestQueryVariables>;`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should generate ResultType for Mutation if withResultType is true', async () => {
       const docs = [{ filePath: '', content: mutationDoc }];
 
       const content = (await plugin(
@@ -880,15 +905,24 @@ export function useListenToCommentsSubscription(baseOptions?: ReactApolloHooks.S
       await validateTypeScript(content, schema, docs, {});
     });
 
-    it('should generate ResultType for Subscription', async () => {
-      const subscriptionDoc = parse(/* GraphQL */ `
-        subscription test($name: String) {
-          commentAdded(repoFullName: $name) {
-            id
-          }
-        }
-      `);
+    it('should NOT generate ResultType for Mutation if withResultType is false', async () => {
+      const docs = [{ filePath: '', content: mutationDoc }];
 
+      const content = (await plugin(
+        schema,
+        docs,
+        { ...config, withResultType: false },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).not.toContain(`import * as ReactApollo from 'react-apollo';`);
+      expect(content.content).not.toContain(`export type TestMutationResult = ReactApollo.MutationResult<TestMutation>;`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should generate ResultType for Subscription if withResultType is true', async () => {
       const docs = [{ filePath: '', content: subscriptionDoc }];
 
       const content = (await plugin(
@@ -902,6 +936,23 @@ export function useListenToCommentsSubscription(baseOptions?: ReactApolloHooks.S
 
       expect(content.prepend).toContain(`import * as ReactApollo from 'react-apollo';`);
       expect(content.content).toContain(`export type TestSubscriptionResult = ReactApollo.SubscriptionResult<TestSubscription>;`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should NOT generate ResultType for Subscription if withResultType is false', async () => {
+      const docs = [{ filePath: '', content: subscriptionDoc }];
+
+      const content = (await plugin(
+        schema,
+        docs,
+        { ...config, withResultType: false },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).not.toContain(`import * as ReactApollo from 'react-apollo';`);
+      expect(content.content).not.toContain(`export type TestSubscriptionResult = ReactApollo.SubscriptionResult<TestSubscription>;`);
       await validateTypeScript(content, schema, docs, {});
     });
   });
