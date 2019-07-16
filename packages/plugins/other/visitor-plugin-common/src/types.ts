@@ -23,7 +23,7 @@ export interface NamingConventionMap {
 
 export type LoadedFragment<AdditionalFields = {}> = { name: string; onType: string; node: FragmentDefinitionNode; isExternal: boolean; importFrom?: string | null } & AdditionalFields;
 
-export type DeclarationKind = 'type' | 'interface';
+export type DeclarationKind = 'type' | 'interface' | 'class' | 'abstract class';
 
 export interface DeclarationKindConfig {
   scalar?: DeclarationKind;

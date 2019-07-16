@@ -104,6 +104,7 @@ export function transformComment(comment: string | StringValueNode, indentLevel 
 }
 
 export class DeclarationBlock {
+  _decorator = null;
   _export = false;
   _name = null;
   _kind = null;
@@ -121,6 +122,12 @@ export class DeclarationBlock {
       enumNameValueSeparator: ':',
       ...this._config,
     };
+  }
+
+  withDecorator(decorator: string): DeclarationBlock {
+    this._decorator = decorator;
+
+    return this;
   }
 
   export(exp = true): DeclarationBlock {
@@ -171,6 +178,10 @@ export class DeclarationBlock {
 
   public get string(): string {
     let result = '';
+
+    if (this._decorator) {
+      result += this._decorator + '\n';
+    }
 
     if (this._export) {
       result += 'export ';
