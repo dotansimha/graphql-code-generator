@@ -6,12 +6,14 @@ import { toPascalCase } from '@graphql-codegen/plugin-helpers';
 import { titleCase } from 'change-case';
 
 export interface ReactApolloPluginConfig extends ClientSideBasePluginConfig {
-  withHOC: boolean;
   withComponent: boolean;
+  withHOC: boolean;
   withHooks: boolean;
   withMutationFn: boolean;
-  hooksImportFrom: string;
-  reactApolloImportFrom: string;
+  apolloReactCommonImportFrom: string;
+  apolloReactComponentsImportFrom: string;
+  apolloReactHocImportFrom: string;
+  apolloReactHooksImportFrom: string;
   componentSuffix: string;
   reactApolloVersion: 2 | 3;
 }
@@ -24,8 +26,10 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
       withComponent: getConfigValue(rawConfig.withComponent, true),
       withHooks: getConfigValue(rawConfig.withHooks, false),
       withMutationFn: getConfigValue(rawConfig.withMutationFn, true),
-      hooksImportFrom: getConfigValue(rawConfig.hooksImportFrom, 'react-apollo-hooks'),
-      reactApolloImportFrom: getConfigValue(rawConfig.reactApolloImportFrom, 'react-apollo'),
+      apolloReactCommonImportFrom: getConfigValue(rawConfig.apolloReactCommonImportFrom, '@apollo/react-common'),
+      apolloReactComponentsImportFrom: getConfigValue(rawConfig.apolloReactComponentsImportFrom, '@apollo/react-components'),
+      apolloReactHocImportFrom: getConfigValue(rawConfig.apolloReactHocImportFrom, '@apollo/react-hoc'),
+      apolloReactHooksImportFrom: getConfigValue(rawConfig.apolloReactHooksImportFrom, '@apollo/react-hooks'),
       reactApolloVersion: getConfigValue(rawConfig.reactApolloVersion, 2),
     } as any);
 
@@ -38,12 +42,20 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     return `import * as React from 'react';`;
   }
 
-  private getReactApolloImport(): string {
-    return `import * as ReactApollo from '${typeof this.config.reactApolloImportFrom === 'string' ? this.config.reactApolloImportFrom : 'react-apollo'}';`;
+  private getApolloReactCommonImport(): string {
+    return `import * as ApolloReactCommon from '${this.config.apolloReactCommonImportFrom}';`;
   }
 
-  private getReactApolloHooksImport(): string {
-    return `import * as ReactApolloHooks from '${typeof this.config.hooksImportFrom === 'string' ? this.config.hooksImportFrom : 'react-apollo-hooks'}';`;
+  private getApolloReactComponentsImport(): string {
+    return `import * as ApolloReactComponents from '${this.config.apolloReactComponentsImportFrom}';`;
+  }
+
+  private getApolloReactHocImport(): string {
+    return `import * as ApolloReactHoc from '${this.config.apolloReactHocImportFrom}';`;
+  }
+
+  private getApolloReactHooksImport(): string {
+    return `import * as ApolloReactHooks from '${this.config.apolloReactHooksImportFrom}';`;
   }
 
   private getOmitDeclaration(): string {
@@ -66,31 +78,34 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     const variablesVarName = this.convertName(operationName + toPascalCase(operationType) + 'Variables');
     const argType = operationType === 'mutation' ? 'MutateProps' : 'DataProps';
 
-    this.imports.add(this.getReactApolloImport());
+    this.imports.add(this.getApolloReactCommonImport());
+    this.imports.add(this.getApolloReactHocImport());
 
-    return `Partial<ReactApollo.${argType}<${typeVariableName}, ${variablesVarName}>>`;
+    return `Partial<ApolloReactHoc.${argType}<${typeVariableName}, ${variablesVarName}>>`;
   }
 
   private _buildMutationFn(node: OperationDefinitionNode, operationResultType: string, operationVariablesTypes: string): string {
     if (node.operation === 'mutation') {
-      this.imports.add(this.getReactApolloImport());
-      return `export type ${this.convertName(node.name.value + 'MutationFn')} = ReactApollo.${MutationFnNameForVersionMap[this.config.reactApolloVersion]}<${operationResultType}, ${operationVariablesTypes}>;`;
+      this.imports.add(this.getApolloReactCommonImport());
+      return `export type ${this.convertName(node.name.value + 'MutationFn')} = ApolloReactCommon.MutationFunction<${operationResultType}, ${operationVariablesTypes}>;`;
     }
     return null;
   }
 
   private _buildOperationHoc(node: OperationDefinitionNode, documentVariableName: string, operationResultType: string, operationVariablesTypes: string): string {
+    this.imports.add(this.getApolloReactCommonImport());
+    this.imports.add(this.getApolloReactHocImport());
     const operationName: string = this.convertName(node.name.value, { useTypesPrefix: false });
     const propsTypeName: string = this.convertName(node.name.value, { suffix: 'Props' });
 
     const propsVar = `export type ${propsTypeName}<TChildProps = {}> = ${this._buildHocProps(node.name.value, node.operation)} & TChildProps;`;
 
-    const hocString = `export function with${operationName}<TProps, TChildProps = {}>(operationOptions?: ReactApollo.OperationOption<
+    const hocString = `export function with${operationName}<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
   TProps,
   ${operationResultType},
   ${operationVariablesTypes},
   ${propsTypeName}<TChildProps>>) {
-    return ReactApollo.with${titleCase(node.operation)}<TProps, ${operationResultType}, ${operationVariablesTypes}, ${propsTypeName}<TChildProps>>(${documentVariableName}, {
+    return ApolloReactHoc.with${titleCase(node.operation)}<TProps, ${operationResultType}, ${operationVariablesTypes}, ${propsTypeName}<TChildProps>>(${documentVariableName}, {
       alias: 'with${operationName}',
       ...operationOptions
     });
@@ -106,10 +121,11 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     const isVariablesRequired = operationType === 'Query' && node.variableDefinitions.some(variableDef => variableDef.type.kind === Kind.NON_NULL_TYPE);
 
     this.imports.add(this.getReactImport());
-    this.imports.add(this.getReactApolloImport());
+    this.imports.add(this.getApolloReactCommonImport());
+    this.imports.add(this.getApolloReactComponentsImport());
     this.imports.add(this.getOmitDeclaration());
 
-    const propsType = `Omit<ReactApollo.${operationType}Props<${operationResultType}, ${operationVariablesTypes}>, '${operationType.toLowerCase()}'>`;
+    const propsType = `Omit<ApolloReactComponents.${operationType}ComponentOptions<${operationResultType}, ${operationVariablesTypes}>, '${operationType.toLowerCase()}'>`;
     let componentProps = '';
     if (isVariablesRequired) {
       componentProps = `export type ${componentPropsName} = ${propsType} & ({ variables: ${operationVariablesTypes}; skip?: false; } | { skip: true; });`;
@@ -119,7 +135,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
 
     const component = `
     export const ${componentName} = (props: ${componentPropsName}) => (
-      <ReactApollo.${operationType}<${operationResultType}, ${operationVariablesTypes}> ${node.operation}={${documentVariableName}} {...props} />
+      <ApolloReactComponents.${operationType}<${operationResultType}, ${operationVariablesTypes}> ${node.operation}={${documentVariableName}} {...props} />
     );
     `;
     return [componentProps, component].join('\n');
@@ -128,11 +144,12 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
   private _buildHooks(node: OperationDefinitionNode, operationType: string, documentVariableName: string, operationResultType: string, operationVariablesTypes: string): string {
     const operationName: string = this.convertName(node.name.value, { suffix: titleCase(operationType), useTypesPrefix: false });
 
-    this.imports.add(this.getReactApolloHooksImport());
+    this.imports.add(this.getApolloReactCommonImport());
+    this.imports.add(this.getApolloReactHooksImport());
 
     const hookFn = `
-    export function use${operationName}(baseOptions?: ReactApolloHooks.${operationType}HookOptions<${this.config.hooksImportFrom === '@apollo/react-hooks' || node.operation !== 'query' ? `${operationResultType}, ` : ''}${operationVariablesTypes}>) {
-      return ReactApolloHooks.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, baseOptions);
+    export function use${operationName}(baseOptions?: ApolloReactHooks.${operationType}HookOptions<${operationResultType}, ${operationVariablesTypes}>) {
+      return ApolloReactHooks.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, baseOptions);
     };`;
 
     const hookResult = `export type ${operationName}HookResult = ReturnType<typeof use${operationName}>;`;
@@ -149,8 +166,3 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     return [mutationFn, component, hoc, hooks].filter(a => a).join('\n');
   }
 }
-
-const MutationFnNameForVersionMap = {
-  2: 'MutationFn',
-  3: 'MutationFunction',
-};

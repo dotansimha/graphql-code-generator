@@ -85,7 +85,8 @@ describe('React Apollo', () => {
         }
       )) as Types.ComplexPluginOutput;
 
-      expect(content.prepend).toContain(`import * as ReactApollo from 'react-apollo';`);
+      expect(content.prepend).toContain(`import * as ApolloReactCommon from '@apollo/react-common';`);
+      expect(content.prepend).toContain(`import * as ApolloReactComponents from '@apollo/react-components';`);
       expect(content.prepend).toContain(`import * as React from 'react';`);
       expect(content.prepend).toContain(`import gql from 'graphql-tag';`);
       await validateTypeScript(content, schema, docs, {});
@@ -124,7 +125,7 @@ describe('React Apollo', () => {
       await validateTypeScript(content, schema, docs, {});
     });
 
-    it('should import ReactApolloHooks dependencies', async () => {
+    it('should import ApolloReactHooks dependencies', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
       const content = (await plugin(
         schema,
@@ -135,41 +136,41 @@ describe('React Apollo', () => {
         }
       )) as Types.ComplexPluginOutput;
 
-      expect(content.prepend).toContain(`import * as ReactApolloHooks from 'react-apollo-hooks';`);
+      expect(content.prepend).toContain(`import * as ApolloReactHooks from '@apollo/react-hooks';`);
       await validateTypeScript(content, schema, docs, {});
     });
 
-    it('should import ReactApolloHooks from hooksImportFrom config option', async () => {
+    it('should import ApolloReactHooks from apolloReactHooksImportFrom config option', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
-        { withHooks: true, hooksImportFrom: 'custom-apollo-hooks' },
+        { withHooks: true, apolloReactHooksImportFrom: 'react-apollo-hooks' },
         {
           outputFile: 'graphql.tsx',
         }
       )) as Types.ComplexPluginOutput;
 
-      expect(content.prepend).toContain(`import * as ReactApolloHooks from 'custom-apollo-hooks';`);
+      expect(content.prepend).toContain(`import * as ApolloReactHooks from 'react-apollo-hooks';`);
       await validateTypeScript(content, schema, docs, {});
     });
 
-    it('should import ReactApollo from reactApolloImportFrom config option', async () => {
+    it('should import ApolloReactCommon from apolloReactCommonImportFrom config option', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
-        { withHooks: true, reactApolloImportFrom: 'custom-apollo' },
+        { withHooks: true, apolloReactCommonImportFrom: 'custom-apollo-react-common' },
         {
           outputFile: 'graphql.tsx',
         }
       )) as Types.ComplexPluginOutput;
 
-      expect(content.prepend).toContain(`import * as ReactApollo from 'custom-apollo';`);
+      expect(content.prepend).toContain(`import * as ApolloReactCommon from 'custom-apollo-react-common';`);
       await validateTypeScript(content, schema, docs, {});
     });
 
-    it('should skip import React and ReactApollo if only hooks are used', async () => {
+    it('should skip import React and ApolloReactComponents if only hooks are used', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
       const content = (await plugin(
         schema,
@@ -185,7 +186,7 @@ describe('React Apollo', () => {
         }
       )) as Types.ComplexPluginOutput;
 
-      expect(content.prepend).not.toContain(`import * as ReactApollo from 'react-apollo';`);
+      expect(content.prepend).not.toContain(`import * as ApolloReactComponents from '@apollo/react-components';`);
       expect(content.prepend).not.toContain(`import * as React from 'react';`);
       await validateTypeScript(content, schema, docs, {});
     });
@@ -441,13 +442,13 @@ query MyFeed {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(`
-      export type TestComponentProps = Omit<ReactApollo.QueryProps<TestQuery, TestQueryVariables>, 'query'>;
+      export type TestComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<TestQuery, TestQueryVariables>, 'query'>;
       `);
 
       expect(content.content).toBeSimilarStringTo(`
       export const TestComponent = (props: TestComponentProps) => 
       (
-          <ReactApollo.Query<TestQuery, TestQueryVariables> query={TestDocument} {...props} />
+          <ApolloReactComponents.Query<TestQuery, TestQueryVariables> query={TestDocument} {...props} />
       );
       `);
       await validateTypeScript(content, schema, docs, {});
@@ -465,12 +466,12 @@ query MyFeed {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(`
-      export type TestQProps = Omit<ReactApollo.QueryProps<TestQuery, TestQueryVariables>, 'query'>;
+      export type TestQProps = Omit<ApolloReactComponents.QueryComponentOptions<TestQuery, TestQueryVariables>, 'query'>;
       `);
       expect(content.content).toBeSimilarStringTo(`
       export const TestQ = (props: TestQProps) => 
       (
-          <ReactApollo.Query<TestQuery, TestQueryVariables> query={TestDocument} {...props} />
+          <ApolloReactComponents.Query<TestQuery, TestQueryVariables> query={TestDocument} {...props} />
       );
       `);
       await validateTypeScript(content, schema, docs, { componentSuffix: 'Q' });
@@ -517,13 +518,13 @@ query MyFeed {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(`
-      export type TestComponentProps = Omit<ReactApollo.QueryProps<TestQuery, TestQueryVariables>, 'query'> & ({ variables: TestQueryVariables; skip?: false; } | { skip: true; });
+      export type TestComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<TestQuery, TestQueryVariables>, 'query'> & ({ variables: TestQueryVariables; skip?: false; } | { skip: true; });
       `);
 
       expect(content.content).toBeSimilarStringTo(`
       export const TestComponent = (props: TestComponentProps) => 
       (
-          <ReactApollo.Query<TestQuery, TestQueryVariables> query={TestDocument} {...props} />
+          <ApolloReactComponents.Query<TestQuery, TestQueryVariables> query={TestDocument} {...props} />
       );
       `);
       await validateTypeScript(content, schema, docs, {});
@@ -555,11 +556,11 @@ query MyFeed {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(`
-      export type TestComponentProps = Omit<ReactApollo.MutationProps<TestMutation, TestMutationVariables>, 'mutation'>;
+      export type TestComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<TestMutation, TestMutationVariables>, 'mutation'>;
       `);
       expect(content.content).toBeSimilarStringTo(`
       export const TestComponent = (props: TestComponentProps) => (
-        <ReactApollo.Mutation<TestMutation, TestMutationVariables> mutation={TestDocument} {...props} />
+        <ApolloReactComponents.Mutation<TestMutation, TestMutationVariables> mutation={TestDocument} {...props} />
       );`);
       await validateTypeScript(content, schema, docs, {});
     });
@@ -591,14 +592,14 @@ query MyFeed {
         }
       )) as Types.ComplexPluginOutput;
 
-      expect(content.content).toBeSimilarStringTo(`export type TestProps<TChildProps = {}> = Partial<ReactApollo.DataProps<TestQuery, TestQueryVariables>> & TChildProps;`);
+      expect(content.content).toBeSimilarStringTo(`export type TestProps<TChildProps = {}> = Partial<ApolloReactHoc.DataProps<TestQuery, TestQueryVariables>> & TChildProps;`);
 
-      expect(content.content).toBeSimilarStringTo(`export function withTest<TProps, TChildProps = {}>(operationOptions?: ReactApollo.OperationOption<
+      expect(content.content).toBeSimilarStringTo(`export function withTest<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
   TProps,
   TestQuery,
   TestQueryVariables,
   TestProps<TChildProps>>) {
-    return ReactApollo.withQuery<TProps, TestQuery, TestQueryVariables, TestProps<TChildProps>>(TestDocument, {
+    return ApolloReactHoc.withQuery<TProps, TestQuery, TestQueryVariables, TestProps<TChildProps>>(TestDocument, {
       alias: 'withTest',
       ...operationOptions
     });
@@ -617,7 +618,7 @@ query MyFeed {
         }
       )) as Types.ComplexPluginOutput;
 
-      expect(content.content).toBeSimilarStringTo(`export type TestProps<TChildProps = {}> = Partial<ReactApollo.DataProps<TestQueryResponse, TestQueryVariables>> & TChildProps;`);
+      expect(content.content).toBeSimilarStringTo(`export type TestProps<TChildProps = {}> = Partial<ApolloReactHoc.DataProps<TestQueryResponse, TestQueryVariables>> & TChildProps;`);
 
       await validateTypeScript(content, schema, docs, {});
     });
@@ -674,7 +675,7 @@ query MyFeed {
         }
       )) as Types.ComplexPluginOutput;
 
-      expect(content.content).toContain(`export type SubmitCommentMutationFn = ReactApollo.MutationFn<SubmitCommentMutation, SubmitCommentMutationVariables>;`);
+      expect(content.content).toContain(`export type SubmitCommentMutationFn = ApolloReactCommon.MutationFunction<SubmitCommentMutation, SubmitCommentMutationVariables>;`);
       await validateTypeScript(content, schema, docs, {});
     });
   });
@@ -714,13 +715,13 @@ query MyFeed {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(`
-export function useFeedQuery(baseOptions?: ReactApolloHooks.QueryHookOptions<FeedQueryVariables>) {
-  return ReactApolloHooks.useQuery<FeedQuery, FeedQueryVariables>(FeedDocument, baseOptions);
+export function useFeedQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<FeedQuery, FeedQueryVariables>) {
+  return ApolloReactHooks.useQuery<FeedQuery, FeedQueryVariables>(FeedDocument, baseOptions);
 };`);
 
       expect(content.content).toBeSimilarStringTo(`
-export function useSubmitRepositoryMutation(baseOptions?: ReactApolloHooks.MutationHookOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>) {
-  return ReactApolloHooks.useMutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(SubmitRepositoryDocument, baseOptions);
+export function useSubmitRepositoryMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>) {
+  return ApolloReactHooks.useMutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(SubmitRepositoryDocument, baseOptions);
 };`);
       await validateTypeScript(content, schema, docs, {});
     });
@@ -765,8 +766,8 @@ export function useSubmitRepositoryMutation(baseOptions?: ReactApolloHooks.Mutat
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(`
-export function useListenToCommentsSubscription(baseOptions?: ReactApolloHooks.SubscriptionHookOptions<ListenToCommentsSubscription, ListenToCommentsSubscriptionVariables>) {
-  return ReactApolloHooks.useSubscription<ListenToCommentsSubscription, ListenToCommentsSubscriptionVariables>(ListenToCommentsDocument, baseOptions);
+export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.SubscriptionHookOptions<ListenToCommentsSubscription, ListenToCommentsSubscriptionVariables>) {
+  return ApolloReactHooks.useSubscription<ListenToCommentsSubscription, ListenToCommentsSubscriptionVariables>(ListenToCommentsDocument, baseOptions);
 };`);
       await validateTypeScript(content, schema, docs, {});
     });
