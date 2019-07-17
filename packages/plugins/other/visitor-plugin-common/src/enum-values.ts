@@ -47,20 +47,22 @@ export function parseEnumValues(schema: GraphQLSchema, mapOrStr: EnumValuesMap):
       {} as ParsedEnumValuesMap
     );
   } else if (typeof mapOrStr === 'string') {
-    return allEnums.reduce(
-      (prev, enumName) => {
-        return {
-          ...prev,
-          [enumName]: {
-            typeIdentifier: enumName,
-            sourceFile: mapOrStr,
-            sourceIdentifier: enumName,
-            mappedValues: null,
-          },
-        };
-      },
-      {} as ParsedEnumValuesMap
-    );
+    return allEnums
+      .filter(enumName => !enumName.startsWith('__'))
+      .reduce(
+        (prev, enumName) => {
+          return {
+            ...prev,
+            [enumName]: {
+              typeIdentifier: enumName,
+              sourceFile: mapOrStr,
+              sourceIdentifier: enumName,
+              mappedValues: null,
+            },
+          };
+        },
+        {} as ParsedEnumValuesMap
+      );
   }
 
   return {};
