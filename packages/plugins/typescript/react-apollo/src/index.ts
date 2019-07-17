@@ -127,6 +127,44 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    * ```
    */
   reactApolloVersion?: 2 | 3;
+  /**
+   * @name withResultType
+   * @type boolean
+   * @description Customized the output by enabling/disabling the generated result type.
+   * @default true
+   *
+   * @example
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *    - typescript-operations
+   *    - typescript-react-apollo
+   *  config:
+   *    withResultType: true
+   * ```
+   */
+  withResultType?: boolean;
+  /**
+   * @name withMutationOptionsType
+   * @type boolean
+   * @description Customized the output by enabling/disabling the generated mutation option type.
+   * @default true
+   *
+   * @example
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *    - typescript-operations
+   *    - typescript-react-apollo
+   *  config:
+   *    withMutationOptionsType: true
+   *
+   */
+  withMutationOptionsType?: boolean;
 }
 
 export const plugin: PluginFunction<ReactApolloRawPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: ReactApolloRawPluginConfig) => {
