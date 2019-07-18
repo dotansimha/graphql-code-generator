@@ -6,6 +6,7 @@ import { TypeScriptOperationVariablesToObject } from './typescript-variables-to-
 
 export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
   avoidOptionals: boolean;
+  avoidInputOptionals: boolean;
   constEnums: boolean;
   enumsAsTypes: boolean;
   immutableTypes: boolean;
@@ -16,6 +17,7 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
   constructor(schema: GraphQLSchema, pluginConfig: TRawConfig, additionalConfig: Partial<TParsedConfig> = {}) {
     super(schema, pluginConfig, {
       avoidOptionals: pluginConfig.avoidOptionals || false,
+      avoidInputOptionals: pluginConfig.avoidInputOptionals || false,
       maybeValue: pluginConfig.maybeValue || 'T | null',
       constEnums: pluginConfig.constEnums || false,
       enumsAsTypes: pluginConfig.enumsAsTypes || false,
@@ -67,7 +69,7 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
 
   InputValueDefinition(node: InputValueDefinitionNode, key?: number | string, parent?: any): string {
     const originalFieldNode = parent[key] as FieldDefinitionNode;
-    const addOptionalSign = !this.config.avoidOptionals && originalFieldNode.type.kind !== Kind.NON_NULL_TYPE;
+    const addOptionalSign = !this.config.avoidInputOptionals && originalFieldNode.type.kind !== Kind.NON_NULL_TYPE;
     const comment = transformComment((node.description as any) as string, 1);
 
     return comment + indent(`${this.config.immutableTypes ? 'readonly ' : ''}${node.name}${addOptionalSign ? '?' : ''}: ${node.type},`);

@@ -318,7 +318,8 @@ describe('TypeScript', () => {
         type MyType {
           foo: String
           bar: String!
-        }`);
+        }
+      `);
       const result = (await plugin(schema, [], { avoidOptionals: true }, { outputFile: '' })) as Types.ComplexPluginOutput;
 
       expect(result.content).toBeSimilarStringTo(`
@@ -328,6 +329,25 @@ describe('TypeScript', () => {
           bar: Scalars['String'],
         };
       `);
+      validateTs(result);
+    });
+
+    it('Should build input type correctly when specified with avoidInputOptionals config', async () => {
+      const schema = buildSchema(`
+        input MyInput {
+          foo: String
+          bar: String!
+        }
+      `);
+      const result = (await plugin(schema, [], { avoidInputOptionals: true }, { outputFile: '' })) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type MyInput = {
+          foo: Maybe<Scalars['String']>,
+          bar: Scalars['String'],
+        }
+      `);
+
       validateTs(result);
     });
 

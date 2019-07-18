@@ -10,7 +10,7 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
   /**
    * @name avoidOptionals
    * @type boolean
-   * @description This will cause the generator to avoid using TypeScript optionals (`?`),
+   * @description This will cause the generator to avoid using TypeScript optionals (`?`) on types,
    * so the following definition: `type A { myField: String }` will output `myField: Maybe<string>`
    * instead of `myField?: Maybe<string>`.
    * @default false
@@ -26,6 +26,25 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * ```
    */
   avoidOptionals?: boolean;
+  /**
+   * @name avoidInputOptionals
+   * @type boolean
+   * @description This will cause the generator to avoid using TypeScript optionals (`?`) on inputs,
+   * so the following definition: `input A { myField: String }` will output `myField: Maybe<string>`
+   * instead of `myField?: Maybe<string>`.
+   * @default false
+   *
+   * @example
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *  config:
+   *    avoidInputOptionals: true
+   * ```
+   */
+  avoidInputOptionals?: boolean;
   /**
    * @name constEnums
    * @type boolean
