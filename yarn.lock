@@ -1975,10 +1975,10 @@
     prop-types "^15.7.2"
     react-is "^16.8.0"
 
-"@microsoft/tsdoc@0.12.9":
-  version "0.12.9"
-  resolved "https://registry.yarnpkg.com/@microsoft/tsdoc/-/tsdoc-0.12.9.tgz#f92538bebf649b1b9d00bdd34a9c9971aef17d01"
-  integrity sha512-sDhulvuVk65eMppYOE6fr6mMI6RUqs53KUg9deYzNCBpP+2FhR0OFB5innEfdtSedk0LK+1Ppu6MxkfiNjS/Cw==
+"@microsoft/tsdoc@0.12.10":
+  version "0.12.10"
+  resolved "https://registry.yarnpkg.com/@microsoft/tsdoc/-/tsdoc-0.12.10.tgz#c0e2c875c24a21da6d345d09189f5df4a1801d82"
+  integrity sha512-tsog/HTdM88/WyR0Jz7XWTI0ghbJkt9soFXnQJrINDyaTGzbCoJjRttaW/IY5eAp4eqDyfg++jq6o+byEDOkIQ==
 
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
@@ -2420,10 +2420,10 @@
   resolved "https://registry.yarnpkg.com/@types/js-yaml/-/js-yaml-3.12.1.tgz#5c6f4a1eabca84792fbd916f0cb40847f123c656"
   integrity sha512-SGGAhXLHDx+PK4YLNcNGa6goPf9XRWQNAUUbffkwVGGXIxmDKWyGGL4inzq2sPmExu431Ekb9aEMn9BkPqEYFA==
 
-"@types/listr@0.14.0":
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/@types/listr/-/listr-0.14.0.tgz#55161177ed5043987871bca5f66d87ca0a63a0b7"
-  integrity sha512-8ZLo3UiyxuzgmbJYc8vMC0kbF3RFaB3ZZOh7xM1nfcGxypFoJZi0P7ndD4MLSYqWW4M4zG6PWvObVkpHjg+45g==
+"@types/listr@0.14.1":
+  version "0.14.1"
+  resolved "https://registry.yarnpkg.com/@types/listr/-/listr-0.14.1.tgz#ed55e083589c289774893fe1d582c3452eb11ca5"
+  integrity sha512-EDDdv+f1riQ4eS1yyX+FFuMbQvKwijQtIKGWt6alHLrjOfswP7oFHWiRQkII0dRpA6+CoKD4NRvFk3eSMJTWAQ==
   dependencies:
     "@types/node" "*"
     rxjs "^6.5.1"
