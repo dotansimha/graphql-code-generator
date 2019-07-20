@@ -2420,10 +2420,10 @@
   resolved "https://registry.yarnpkg.com/@types/js-yaml/-/js-yaml-3.12.1.tgz#5c6f4a1eabca84792fbd916f0cb40847f123c656"
   integrity sha512-SGGAhXLHDx+PK4YLNcNGa6goPf9XRWQNAUUbffkwVGGXIxmDKWyGGL4inzq2sPmExu431Ekb9aEMn9BkPqEYFA==
 
-"@types/listr@0.14.0":
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/@types/listr/-/listr-0.14.0.tgz#55161177ed5043987871bca5f66d87ca0a63a0b7"
-  integrity sha512-8ZLo3UiyxuzgmbJYc8vMC0kbF3RFaB3ZZOh7xM1nfcGxypFoJZi0P7ndD4MLSYqWW4M4zG6PWvObVkpHjg+45g==
+"@types/listr@0.14.1":
+  version "0.14.1"
+  resolved "https://registry.yarnpkg.com/@types/listr/-/listr-0.14.1.tgz#ed55e083589c289774893fe1d582c3452eb11ca5"
+  integrity sha512-EDDdv+f1riQ4eS1yyX+FFuMbQvKwijQtIKGWt6alHLrjOfswP7oFHWiRQkII0dRpA6+CoKD4NRvFk3eSMJTWAQ==
   dependencies:
     "@types/node" "*"
     rxjs "^6.5.1"
