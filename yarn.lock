@@ -16967,10 +16967,10 @@ url@^0.11.0:
     punycode "1.3.2"
     querystring "0.2.0"
 
-urql@1.1.3:
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/urql/-/urql-1.1.3.tgz#41fffb0a3b1a3f7ac47be55b7f84ca69875e7358"
-  integrity sha512-H6xdtT+b3n7OYG1U/ItLHTBfBpM0Kxd6FkQSYP1TvylqUeyz160whRu/XpwDRt2VwbLy5+j729wv4BF1f1zP4Q==
+urql@1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/urql/-/urql-1.2.0.tgz#82b5dc49a7c22c4640ed3415f1fb9f2f6bf71b36"
+  integrity sha512-rAk9ExBpdmkvFXfYbgXM2pg2x5Lpnm0aJYNYriWsOYWKVxmoX+LJIZb0xGPWE3hPxXl9Q17Y+H+4yW1JVAuHhQ==
   dependencies:
     fast-json-stable-stringify "^2.0.0"
     graphql-tag "^2.10.1"
