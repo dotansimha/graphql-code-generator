@@ -4,7 +4,7 @@ title: TypeScript document nodes
 ---
 
 This is a plugin for [GraphQL Code
-Generator](https://graphql-code-generator.com/) that generates Typescript
+Generator](https://graphql-code-generator.com/) that generates TypeScript
 source file from GraphQL files.
 
 Generated modules export GraphQL as an AST document nodes. Modules use
@@ -28,7 +28,7 @@ query Viewer {
 }
 ```
 
-It will generate following Typescript code:
+It will generate following TypeScript code:
 
 ```ts
 import { DocumentNode } from 'graphql';
