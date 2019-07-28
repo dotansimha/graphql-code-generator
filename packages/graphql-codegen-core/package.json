@@ -10,7 +10,7 @@
     "clean": "rimraf ./dist",
     "lint": "tslint src/**/*.ts",
     "prebuild": "yarn clean",
-    "build": "tsc -m esnext --outDir dist/esnext && tsc -m commonjs --outDir dist/commonjs",
+    "build": "node ../../scripts/build.js",
     "test": "jest --config ../../jest.config.js"
   },
   "keywords": [

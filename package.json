@@ -2,10 +2,10 @@
   "private": true,
   "scripts": {
     "clean": "lerna clean --yes && rm -rf node_modules",
-    "build": "lerna run build --ignore @graphql-codegen/{live-demo,website} ",
-    "test": "lerna run test --ignore @graphql-codegen/{live-demo,website} ",
-    "lint": "lerna run lint --ignore @graphql-codegen/{live-demo,website} ",
-    "test-and-build": " yarn build && yarn test",
+    "build": "wsrun --concurrency 5 --fast-exit --exclude-missing --exclude @graphql-codegen/live-demo --exclude @graphql-codegen/website build",
+    "test": "wsrun --concurrency 5 --fast-exit --exclude-missing --exclude @graphql-codegen/live-demo --exclude @graphql-codegen/website test",
+    "lint": "wsrun --concurrency 5 --fast-exit --exclude-missing --exclude @graphql-codegen/live-demo --exclude @graphql-codegen/website lint",
+    "test-and-build": "yarn build && yarn test",
     "prerelease": "yarn test-and-build",
     "prerelease:canary": "yarn test-and-build",
     "release": "lerna publish --exact --force-publish=\"*\" --ignore @graphql-codegen/{live-demo,website}",
@@ -34,6 +34,7 @@
     ]
   },
   "devDependencies": {
+    "wsrun": "5.0.0",
     "@types/common-tags": "1.8.0",
     "@types/glob": "7.1.1",
     "@types/graphql": "14.2.2",

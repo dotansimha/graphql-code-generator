@@ -11,6 +11,7 @@
   "dependencies": {
     "@graphql-codegen/add": "1.4.0",
     "@graphql-codegen/cli": "1.4.0",
+    "@graphql-codegen/core": "1.4.0",
     "@graphql-codegen/flow": "1.4.0",
     "@graphql-codegen/flow-operations": "1.4.0",
     "@graphql-codegen/flow-resolvers": "1.4.0",
