@@ -78,7 +78,7 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
 
     // In case of mapped external enum string
     if (this.config.enumValues[enumName] && this.config.enumValues[enumName].sourceFile) {
-      return null;
+      return `export { ${this.config.enumValues[enumName].typeIdentifier} };\n`;
     }
 
     if (this.config.enumsAsTypes) {
