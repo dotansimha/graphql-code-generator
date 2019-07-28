@@ -3,7 +3,7 @@ id: typescript-resolvers
 title: TypeScript Resolvers
 ---
 
-This plugin generates types for resolve function.
+This plugin generates types for resolve functions.
 
 ## Pre-Requirements
 
