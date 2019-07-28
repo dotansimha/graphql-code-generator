@@ -20,7 +20,7 @@ query myQuery {
 }
 ```
 
-If you wish to get better integarion and fully type-safe types for your client side schema as well, you can create a `.graphql` file for your local schema, for example:
+If you wish to get better integration and fully type-safe types for your client side schema as well, you can create a `.graphql` file for your local schema, for example:
 
 ```
 type Todo {
