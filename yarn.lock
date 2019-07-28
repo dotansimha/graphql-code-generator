@@ -8415,10 +8415,10 @@ graphql-tag@2.10.1, graphql-tag@^2.10.1, graphql-tag@^2.9.2:
   resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.10.1.tgz#10aa41f1cd8fae5373eaf11f1f67260a3cad5e02"
   integrity sha512-jApXqWBzNXQ8jYa/HLkZJaVw9jgwNqZkywa2zfFn16Iv1Zb7ELNHkJaXHR7Quvd5SIGsy6Ny7SUKATgnu05uEg==
 
-graphql-toolkit@0.4.1:
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/graphql-toolkit/-/graphql-toolkit-0.4.1.tgz#f5a9fa225b51168dd0d0558dc59e8fc3d379e9b1"
-  integrity sha512-asTRlNn0381f6/wVp8F0X2vsz8GJnv4TX+KNHg1k8Ybe6Ii5HBreJTxBHJ7GXlNDhj5MGCNi09nt8Oe7Ategrg==
+graphql-toolkit@0.4.2:
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/graphql-toolkit/-/graphql-toolkit-0.4.2.tgz#5250dc56c87f1357095234199980260b59cb7274"
+  integrity sha512-qG2zfM/dfa03LnUb4wWslwOUrOHGx9glvjjjL9CELCpAcQzSwk0ABu/4+2p5u/g4Tuv0SSszoIogDY+U7+qWDQ==
   dependencies:
     "@kamilkisiela/graphql-tools" "4.0.6"
     "@types/glob" "7.1.1"
@@ -11812,10 +11812,10 @@ neo-async@^2.5.0, neo-async@^2.6.0:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.1.tgz#ac27ada66167fa8849a6addd837f6b189ad2081c"
   integrity sha512-iyam8fBuCUpWeKPGpaNMetEocMt364qkCsfL9JuhjXX6dRnguRVOfk2GZaDpPjcOKiiXCPINZC1GczQ7iTq3Zw==
 
-netlify-lambda@1.5.0:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/netlify-lambda/-/netlify-lambda-1.5.0.tgz#52b1a16af73b3eeb1dee3c6178f189f010dd6450"
-  integrity sha512-Np1+dGu850o5qVzVlUlvuLD7M2QzL9HuH0BqKZisXtFPz8SYLv7Ulyj1GNYnUfBBa6SnZAQ+wU4L4u3laGm7Ww==
+netlify-lambda@1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/netlify-lambda/-/netlify-lambda-1.5.1.tgz#723f83494bd3f2fd1681d0a9c5db3df571c70074"
+  integrity sha512-i8Sd47KKUtlNziEZlwJjoE5p9gQMt8PM+NS/bimMe9lFiOoZWliSUAk2yIGsQqLCT1uxFIFFmMM99M5LuKfdJw==
   dependencies:
     "@babel/core" "^7.0.0"
     "@babel/plugin-proposal-class-properties" "^7.0.0"
