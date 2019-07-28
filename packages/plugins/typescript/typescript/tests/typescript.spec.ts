@@ -1573,6 +1573,26 @@ describe('TypeScript', () => {
 
       validateTs(result);
     });
+
+    it('Should re-export external enums', async () => {
+      const schema = buildSchema(`enum MyEnum { A, B, C } enum MyEnum2 { X, Y, Z }`);
+      const result = (await plugin(schema, [], { enumValues: { MyEnum: './my-file#MyEnum', MyEnum2: './my-file#MyEnum2X' } }, { outputFile: '' })) as Types.ComplexPluginOutput;
+
+      expect(result.content).toContain(`export { MyEnum };`);
+      expect(result.content).toContain(`export { MyEnum2 };`);
+
+      validateTs(result);
+    });
+
+    it('Should re-export external enums when single file option used', async () => {
+      const schema = buildSchema(`enum MyEnum { A, B, C } enum MyEnum2 { X, Y, Z }`);
+      const result = (await plugin(schema, [], { enumValues: './my-file' }, { outputFile: '' })) as Types.ComplexPluginOutput;
+
+      expect(result.content).toContain(`export { MyEnum };`);
+      expect(result.content).toContain(`export { MyEnum2 };`);
+
+      validateTs(result);
+    });
   });
 
   it('should not have [object Object]', async () => {
