@@ -96,7 +96,7 @@ describe('TypeScript Operations Plugin', () => {
   };
 
   describe('Config', () => {
-    it('Should not generate "export" when noExport is set to true', async () => {
+    it('Should handle "namespacedImportName" and add it when specified', async () => {
       const ast = parse(/* GraphQL */ `
         query notifications {
           notifications {
@@ -132,6 +132,10 @@ describe('TypeScript Operations Plugin', () => {
               text
             }
 
+            ... on TextNotification {
+              text
+            }
+
             ... on ImageNotification {
               imageUrl
               metadata {
@@ -144,9 +148,16 @@ describe('TypeScript Operations Plugin', () => {
       const config = { namespacedImportName: 'Types' };
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
-      expect(result).toBeSimilarStringTo(
-        `export type NotificationsQuery = ({ __typename?: 'Query' } & { notifications: Array<({ __typename?: 'TextNotification' | 'ImageNotification' } & Pick<Types.Notifiction, 'id'> & (({ __typename?: 'TextNotification' } & Pick<Types.TextNotification, 'text'>) | ({ __typename?: 'ImageNotification' } & Pick<Types.ImageNotification, 'imageUrl'> & { metadata: ({ __typename?: 'ImageMetadata' } & { created: Types.ImageMetadata['createdBy'] }) })))> });`
-      );
+      expect(result).toBeSimilarStringTo(`
+        export type NotificationsQuery = ({ __typename?: 'Query' } & { notifications: Array<(
+          { __typename?: 'TextNotification' }
+          & Pick<Types.TextNotification, 'text' | 'id'>
+        ) | (
+          { __typename?: 'ImageNotification' }
+          & Pick<Types.ImageNotification, 'imageUrl' | 'id'>  
+          & { metadata: ({ __typename?: 'ImageMetadata' } & { created: Types.ImageMetadata['createdBy'] }) }
+        )> });
+      `);
       await validate(result, config);
     });
 
@@ -172,9 +183,16 @@ describe('TypeScript Operations Plugin', () => {
       const config = { namingConvention: 'change-case#lowerCase', immutableTypes: true };
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
-      expect(result).toBeSimilarStringTo(
-        `export type notificationsquery = ({ readonly __typename?: 'Query' } & { readonly notifications: ReadonlyArray<({ readonly __typename?: 'TextNotification' | 'ImageNotification' } & Pick<notifiction, 'id'> & (({ readonly __typename?: 'TextNotification' } & Pick<textnotification, 'text'>) | ({ readonly __typename?: 'ImageNotification' } & Pick<imagenotification, 'imageUrl'> & { readonly metadata: ({ readonly __typename?: 'ImageMetadata' } & Pick<imagemetadata, 'createdBy'>) })))> });`
-      );
+      expect(result).toBeSimilarStringTo(`
+        export type notificationsquery = ({ readonly __typename?: 'Query' } & { readonly notifications: ReadonlyArray<(
+          { readonly __typename?: 'TextNotification' }
+          & Pick<textnotification, 'text' | 'id'>
+        ) | (
+          { readonly __typename?: 'ImageNotification' }
+          & Pick<imagenotification, 'imageUrl' | 'id'>
+          & { readonly metadata: ({ readonly __typename?: 'ImageMetadata' } & Pick<imagemetadata, 'createdBy'>) }
+        )> });
+      `);
       await validate(result, config);
     });
   });
@@ -231,9 +249,16 @@ describe('TypeScript Operations Plugin', () => {
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(`export type NotificationsQueryVariables = {};`);
-      expect(result).toBeSimilarStringTo(
-        `export type NotificationsQueryResult = ({ __typename?: 'Query' } & { notifications: Array<({ __typename?: 'TextNotification' | 'ImageNotification' } & Pick<Notifiction, 'id'> & (({ __typename?: 'TextNotification' } & Pick<TextNotification, 'text'>) | ({ __typename?: 'ImageNotification' } & Pick<ImageNotification, 'imageUrl'> & { metadata: ({ __typename?: 'ImageMetadata' } & Pick<ImageMetadata, 'createdBy'>) })))> });`
-      );
+      expect(result).toBeSimilarStringTo(`
+        export type NotificationsQueryResult = ({ __typename?: 'Query' } & { notifications: Array<(
+          { __typename?: 'TextNotification' }
+          & Pick<TextNotification, 'text' | 'id'>
+        ) | (
+          { __typename?: 'ImageNotification' }
+          & Pick<ImageNotification, 'imageUrl' | 'id'>
+          & { metadata: ({ __typename?: 'ImageMetadata' } & Pick<ImageMetadata, 'createdBy'>) }
+        )> });
+      `);
 
       await validate(result, config);
     });
@@ -262,9 +287,16 @@ describe('TypeScript Operations Plugin', () => {
       const config = { namingConvention: 'change-case#lowerCase' };
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
-      expect(result).toBeSimilarStringTo(
-        `export type notificationsquery = ({ __typename?: 'Query' } & { notifications: Array<({ __typename?: 'TextNotification' | 'ImageNotification' } & Pick<notifiction, 'id'> & (({ __typename?: 'TextNotification' } & Pick<textnotification, 'text'>) | ({ __typename?: 'ImageNotification' } & Pick<imagenotification, 'imageUrl'> & { metadata: ({ __typename?: 'ImageMetadata' } & Pick<imagemetadata, 'createdBy'>) })))> });`
-      );
+      expect(result).toBeSimilarStringTo(`
+        export type notificationsquery = ({ __typename?: 'Query' } & { notifications: Array<(
+          { __typename?: 'TextNotification' }
+          & Pick<textnotification, 'text' | 'id'>
+        ) | (
+          { __typename?: 'ImageNotification' }
+          & Pick<imagenotification, 'imageUrl' | 'id'>
+          & { metadata: ({ __typename?: 'ImageMetadata' } & Pick<imagemetadata, 'createdBy'>) }
+        )> });
+      `);
       await validate(result, config);
     });
 
@@ -292,9 +324,17 @@ describe('TypeScript Operations Plugin', () => {
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(`export type inotificationsqueryvariables = {};`);
-      expect(result).toBeSimilarStringTo(
-        `export type inotificationsquery = ({ __typename?: 'Query' } & { notifications: Array<({ __typename?: 'TextNotification' | 'ImageNotification' } & Pick<inotifiction, 'id'> & (({ __typename?: 'TextNotification' } & Pick<itextnotification, 'text'>) | ({ __typename?: 'ImageNotification' } & Pick<iimagenotification, 'imageUrl'> & { metadata: ({ __typename?: 'ImageMetadata' } & Pick<iimagemetadata, 'createdBy'>) })))> });`
-      );
+      expect(result).toBeSimilarStringTo(`
+        export type inotificationsquery = ({ __typename?: 'Query' } & { notifications: Array<(
+          { __typename?: 'TextNotification' }
+          & Pick<itextnotification, 'text' | 'id'>
+        ) | (
+          { __typename?: 'ImageNotification' }
+          & Pick<iimagenotification, 'imageUrl' | 'id'>
+          & { metadata: ({ __typename?: 'ImageMetadata' } & Pick<iimagemetadata, 'createdBy'>) }
+        )> });
+        
+      `);
       validate(result, config);
     });
 
@@ -470,7 +510,15 @@ describe('TypeScript Operations Plugin', () => {
       `);
       const config = {};
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
-      expect(result).toBeSimilarStringTo(`export type UnionTestQuery = ({ __typename?: 'Query' } & { unionTest: Maybe<(({ __typename?: 'User' } & Pick<User, 'id'>) | ({ __typename?: 'Profile' } & Pick<Profile, 'age'>))> });`);
+      expect(result).toBeSimilarStringTo(`
+        export type UnionTestQuery = ({ __typename?: 'Query' } & { unionTest: Maybe<(
+          { __typename?: 'User' }
+          & Pick<User, 'id'>
+        ) | (
+          { __typename?: 'Profile' }
+          & Pick<Profile, 'age'>
+        )> });
+      `);
       validate(result, config);
     });
 
@@ -495,9 +543,16 @@ describe('TypeScript Operations Plugin', () => {
       `);
       const config = {};
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
-      expect(result).toBeSimilarStringTo(
-        `export type NotificationsQuery = ({ __typename?: 'Query' } & { notifications: Array<({ __typename?: 'TextNotification' | 'ImageNotification' } & Pick<Notifiction, 'id'> & (({ __typename?: 'TextNotification' } & Pick<TextNotification, 'text'>) | ({ __typename?: 'ImageNotification' } & Pick<ImageNotification, 'imageUrl'> & { metadata: ({ __typename?: 'ImageMetadata' } & Pick<ImageMetadata, 'createdBy'>) })))> });`
-      );
+      expect(result).toBeSimilarStringTo(`
+        export type NotificationsQuery = ({ __typename?: 'Query' } & { notifications: Array<(
+          { __typename?: 'TextNotification' }
+          & Pick<TextNotification, 'text' | 'id'>
+        ) | (
+          { __typename?: 'ImageNotification' }
+          & Pick<ImageNotification, 'imageUrl' | 'id'>
+          & { metadata: ({ __typename?: 'ImageMetadata' } & Pick<ImageMetadata, 'createdBy'>) }
+        )> });
+      `);
       validate(result, config);
     });
   });
@@ -809,9 +864,16 @@ describe('TypeScript Operations Plugin', () => {
 
       const config = {};
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
-      expect(result).toBeSimilarStringTo(
-        `export type NotificationsQuery = ({ __typename?: 'Query' } & { notifications: Array<({ __typename?: 'TextNotification' | 'ImageNotification' } & Pick<Notifiction, 'id'> & (({ __typename?: 'TextNotification' } & Pick<TextNotification, 'text'>) | ({ __typename?: 'ImageNotification' } & Pick<ImageNotification, 'imageUrl'> & { metadata: ({ __typename?: 'ImageMetadata' } & Pick<ImageMetadata, 'createdBy'>) })))> });`
-      );
+      expect(result).toBeSimilarStringTo(`
+        export type NotificationsQuery = ({ __typename?: 'Query' } & { notifications: Array<(
+          { __typename?: 'TextNotification' }
+          & Pick<TextNotification, 'text' | 'id'>
+        ) | (
+          { __typename?: 'ImageNotification' }
+          & Pick<ImageNotification, 'imageUrl' | 'id'>
+          & { metadata: ({ __typename?: 'ImageMetadata' } & Pick<ImageMetadata, 'createdBy'>) }
+        )> });
+      `);
       validate(result, config);
     });
 
@@ -832,7 +894,15 @@ describe('TypeScript Operations Plugin', () => {
       const config = {};
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
-      expect(result).toBeSimilarStringTo(`export type UnionTestQuery = ({ __typename?: 'Query' } & { unionTest: Maybe<(({ __typename?: 'User' } & Pick<User, 'id'>) | ({ __typename?: 'Profile' } & Pick<Profile, 'age'>))> });`);
+      expect(result).toBeSimilarStringTo(`
+        export type UnionTestQuery = ({ __typename?: 'Query' } & { unionTest: Maybe<(
+          { __typename?: 'User' }
+          & Pick<User, 'id'>
+        ) | (
+          { __typename?: 'Profile' }
+          & Pick<Profile, 'age'>
+        )> });
+      `);
       validate(result, config);
     });
 
@@ -857,9 +927,15 @@ describe('TypeScript Operations Plugin', () => {
       const config = {};
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
-      expect(result).toBeSimilarStringTo(
-        `export type UnionTestQuery = ({ __typename?: 'Query' } & { mixedNotifications: Array<(({ __typename?: 'TextNotification' | 'ImageNotification' } & Pick<Notifiction, 'id'>) & (({ __typename?: 'TextNotification' } & Pick<TextNotification, 'text'>) | ({ __typename?: 'ImageNotification' } & Pick<ImageNotification, 'imageUrl'>)))> });`
-      );
+      expect(result).toBeSimilarStringTo(`
+        export type UnionTestQuery = ({ __typename?: 'Query' } & { mixedNotifications: Array<(
+          { __typename?: 'TextNotification' }
+          & Pick<TextNotification, 'id' | 'text'>
+        ) | (
+          { __typename?: 'ImageNotification' }
+          & Pick<ImageNotification, 'id' | 'imageUrl'>
+        )> });
+      `);
       validate(result, config);
     });
 
@@ -888,9 +964,18 @@ describe('TypeScript Operations Plugin', () => {
       const config = {};
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
-      expect(result).toBeSimilarStringTo(
-        `export type UnionTestQuery = ({ __typename?: 'Query' } & { search: Array<((({ __typename?: 'TextNotification' | 'ImageNotification' } & Pick<Notifiction, 'id'>) & (({ __typename?: 'TextNotification' } & Pick<TextNotification, 'text'>) | ({ __typename?: 'ImageNotification' } & Pick<ImageNotification, 'imageUrl'>))) | ({ __typename?: 'User' } & Pick<User, 'id'>))> });`
-      );
+      expect(result).toBeSimilarStringTo(`
+        export type UnionTestQuery = ({ __typename?: 'Query' } & { search: Array<(
+          { __typename?: 'User' }
+          & Pick<User, 'id'>
+        ) | (
+          { __typename?: 'TextNotification' }
+          & Pick<TextNotification, 'id' | 'text'>
+        ) | (
+          { __typename?: 'ImageNotification' }
+          & Pick<ImageNotification, 'id' | 'imageUrl'>
+        )> });
+      `);
       validate(result, config);
     });
 
@@ -910,7 +995,14 @@ describe('TypeScript Operations Plugin', () => {
       `);
       const config = { skipTypename: true };
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
-      expect(result).toBeSimilarStringTo(`export type CurrentUserQuery = { me: Maybe<(Pick<User, 'id'> & (Pick<User, 'username'> & { profile: Maybe<Pick<Profile, 'age'>> }))> };`);
+      expect(result).toBeSimilarStringTo(`
+        export type CurrentUserQuery = { me: Maybe<(
+          { __typename?: 'User' }
+          & Pick<User, 'username' | 'id'>
+          & { profile: Pick<Profile, 'age'> }
+        )> };
+      `);
+
       validate(result, config);
     });
 
@@ -1225,9 +1317,15 @@ describe('TypeScript Operations Plugin', () => {
         }
       );
 
-      expect(content).toBeSimilarStringTo(
-        `export type SubmitMessageMutation = ({ __typename?: 'Mutation' } & { mutation: (({ __typename?: 'DeleteMutation' } & Pick<DeleteMutation, 'deleted'>) | ({ __typename?: 'UpdateMutation' } & Pick<UpdateMutation, 'updated'>)) });`
-      );
+      expect(content).toBeSimilarStringTo(`
+        export type SubmitMessageMutation = ({ __typename?: 'Mutation' } & { mutation: (
+          { __typename?: 'DeleteMutation' }
+          & Pick<DeleteMutation, 'deleted'>
+        ) | (
+          { __typename?: 'UpdateMutation' }
+        & Pick<UpdateMutation, 'updated'>
+        ) });
+      `);
     });
 
     it('should use __typename in fragments when requested', async () => {
@@ -1258,7 +1356,11 @@ describe('TypeScript Operations Plugin', () => {
         }
       );
 
-      expect(content).toBeSimilarStringTo(`export type PostQuery = ({ __typename?: 'Query' } & { post: ({ __typename?: 'Post' } & { __typename: 'Post' }) });`);
+      expect(content).toBeSimilarStringTo(`
+        export type PostQuery = ({ __typename?: 'Query' } & { post: (
+          { __typename: 'Post' }
+        ) });
+      `);
     });
 
     it('should handle introspection types (__schema)', async () => {
@@ -1477,7 +1579,7 @@ describe('TypeScript Operations Plugin', () => {
     });
   });
 
-  describe.only('Union & Interfaces', () => {
+  describe('Union & Interfaces', () => {
     it('should generate correct types', async () => {
       const schema = buildSchema(/* GraphQL */ `
         interface Error {
@@ -1533,22 +1635,22 @@ describe('TypeScript Operations Plugin', () => {
           outputFile: 'graphql.ts',
         }
       );
-
-      expect(prettier.format(content.toString(), { filepath: 'graphql.ts' })).toBeSimilarStringTo(`
+      const formattedContent = prettier.format(content.toString(), { filepath: 'graphql.ts' });
+      expect(formattedContent).toBeSimilarStringTo(`
         export type FieldQueryVariables = {};
 
         export type FieldQuery = { __typename?: "Query" } & {
           field:
-            | ({ __typename?: "Error1" | "Error2" } & Pick<Error, "message">)
+            | ({ __typename?: "Error1" } & Pick<Error1, "message">)
+            | ({ __typename?: "Error2" } & Pick<Error2, "message">)
             | ({ __typename?: "ComplexError" } & Pick<
                 ComplexError,
-                "message",
-                "additionalInfo"
+                "message" | "additionalInfo"
               >)
             | ({ __typename?: "FieldResultSuccess" } & Pick<
                 FieldResultSuccess,
                 "someValue"
-              >)
+              >);
         };
       `);
     });
@@ -1556,20 +1658,21 @@ describe('TypeScript Operations Plugin', () => {
 
   describe('Issues', () => {
     it('#1624 - Should work with fragment on union type', async () => {
-      const testSchema = buildSchema(`
-      type Query {
-        fooBar: [FooBar!]!
-      }
-      
-      union FooBar = Foo | Bar
-      
-      type Foo {
-        id: ID!
-      }
-      
-      type Bar {
-        id: ID!
-      }`);
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Query {
+          fooBar: [FooBar!]!
+        }
+
+        union FooBar = Foo | Bar
+
+        type Foo {
+          id: ID!
+        }
+
+        type Bar {
+          id: ID!
+        }
+      `);
 
       const query = parse(/* GraphQL */ `
         query TestQuery {
@@ -1598,9 +1701,15 @@ describe('TypeScript Operations Plugin', () => {
       );
 
       expect(content).toBeSimilarStringTo(`
-      export type TestQueryQueryVariables = {};
-      export type TestQueryQuery = ({ __typename?: 'Query' } & { fooBar: Array<FooBarFragmentFragment> });
-      export type FooBarFragmentFragment = (({ __typename?: 'Foo' } & Pick<Foo, 'id'>) | ({ __typename?: 'Bar' } & Pick<Bar, 'id'>));
+        export type TestQueryQuery = ({ __typename?: 'Query' } & { fooBar: Array<FooBarFragmentFragment> });
+
+        export type FooBarFragmentFragment = (
+          { __typename?: 'Foo' }
+          & Pick<Foo, 'id'>
+        ) | (
+          { __typename?: 'Bar' }
+          & Pick<Bar, 'id'>
+        );
       `);
     });
   });
