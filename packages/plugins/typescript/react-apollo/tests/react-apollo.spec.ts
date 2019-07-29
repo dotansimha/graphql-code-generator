@@ -442,7 +442,7 @@ query MyFeed {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(`
-      export type TestComponentProps = Omit<ReactApollo.QueryProps<TestQuery, TestQueryVariables>, 'query'>;
+      export type TestComponentProps = Omit<Omit<ReactApollo.QueryProps<TestQuery, TestQueryVariables>, 'query'>, 'variables'> & { variables?: TestQueryVariables };
       `);
 
       expect(content.content).toBeSimilarStringTo(`
@@ -466,7 +466,7 @@ query MyFeed {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(`
-      export type TestQProps = Omit<ReactApollo.QueryProps<TestQuery, TestQueryVariables>, 'query'>;
+      export type TestQProps = Omit<Omit<ReactApollo.QueryProps<TestQuery, TestQueryVariables>, 'query'>, 'variables'> & { variables?: TestQueryVariables };
       `);
       expect(content.content).toBeSimilarStringTo(`
       export const TestQ = (props: TestQProps) => 
@@ -518,7 +518,7 @@ query MyFeed {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(`
-      export type TestComponentProps = Omit<ReactApollo.QueryProps<TestQuery, TestQueryVariables>, 'query'> & ({ variables: TestQueryVariables; skip?: false; } | { skip: true; });
+      export type TestComponentProps = Omit<Omit<ReactApollo.QueryProps<TestQuery, TestQueryVariables>, 'query'>, 'variables'> & { variables: TestQueryVariables };
       `);
 
       expect(content.content).toBeSimilarStringTo(`
@@ -556,7 +556,7 @@ query MyFeed {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(`
-      export type TestComponentProps = Omit<ReactApollo.MutationProps<TestMutation, TestMutationVariables>, 'mutation'>;
+      export type TestComponentProps = Omit<Omit<ReactApollo.MutationProps<TestMutation, TestMutationVariables>, 'mutation'>, 'variables'> & { variables?: TestMutationVariables };
       `);
       expect(content.content).toBeSimilarStringTo(`
       export const TestComponent = (props: TestComponentProps) => (

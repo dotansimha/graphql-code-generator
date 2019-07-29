@@ -113,13 +113,9 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     this.imports.add(this.getReactApolloImport());
     this.imports.add(this.getOmitDeclaration());
 
-    const propsType = `Omit<ReactApollo.${operationType}Props<${operationResultType}, ${operationVariablesTypes}>, '${operationType.toLowerCase()}'>`;
-    let componentProps = '';
-    if (isVariablesRequired) {
-      componentProps = `export type ${componentPropsName} = ${propsType} & ({ variables: ${operationVariablesTypes}; skip?: false; } | { skip: true; });`;
-    } else {
-      componentProps = `export type ${componentPropsName} = ${propsType};`;
-    }
+    const componentProps = `export type ${componentPropsName} = Omit<Omit<ReactApollo.${operationType}Props<${operationResultType}, ${operationVariablesTypes}>, '${operationType.toLowerCase()}'>, 'variables'> & { variables${
+      isVariablesRequired ? '' : '?'
+    }: ${operationVariablesTypes} };`;
 
     const component = `
     export const ${componentName} = (props: ${componentPropsName}) => (

@@ -295,7 +295,7 @@ export const OnCommentAddedDocument = gql`
   }
 }
     `;
-export type OnCommentAddedComponentProps = Omit<ReactApollo.SubscriptionProps<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>, 'subscription'>;
+export type OnCommentAddedComponentProps = Omit<Omit<ReactApollo.SubscriptionProps<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>, 'subscription'>, 'variables'> & { variables?: OnCommentAddedSubscriptionVariables };
 
     export const OnCommentAddedComponent = (props: OnCommentAddedComponentProps) => (
       <ReactApollo.Subscription<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables> subscription={OnCommentAddedDocument} {...props} />
@@ -346,7 +346,7 @@ export const CommentDocument = gql`
   }
 }
     ${CommentsPageCommentFragmentDoc}`;
-export type CommentComponentProps = Omit<ReactApollo.QueryProps<CommentQuery, CommentQueryVariables>, 'query'> & ({ variables: CommentQueryVariables; skip?: false; } | { skip: true; });
+export type CommentComponentProps = Omit<Omit<ReactApollo.QueryProps<CommentQuery, CommentQueryVariables>, 'query'>, 'variables'> & { variables: CommentQueryVariables };
 
     export const CommentComponent = (props: CommentComponentProps) => (
       <ReactApollo.Query<CommentQuery, CommentQueryVariables> query={CommentDocument} {...props} />
@@ -376,7 +376,7 @@ export const CurrentUserForProfileDocument = gql`
   }
 }
     `;
-export type CurrentUserForProfileComponentProps = Omit<ReactApollo.QueryProps<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>, 'query'>;
+export type CurrentUserForProfileComponentProps = Omit<Omit<ReactApollo.QueryProps<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>, 'query'>, 'variables'> & { variables?: CurrentUserForProfileQueryVariables };
 
     export const CurrentUserForProfileComponent = (props: CurrentUserForProfileComponentProps) => (
       <ReactApollo.Query<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables> query={CurrentUserForProfileDocument} {...props} />
@@ -408,7 +408,7 @@ export const FeedDocument = gql`
   }
 }
     ${FeedEntryFragmentDoc}`;
-export type FeedComponentProps = Omit<ReactApollo.QueryProps<FeedQuery, FeedQueryVariables>, 'query'> & ({ variables: FeedQueryVariables; skip?: false; } | { skip: true; });
+export type FeedComponentProps = Omit<Omit<ReactApollo.QueryProps<FeedQuery, FeedQueryVariables>, 'query'>, 'variables'> & { variables: FeedQueryVariables };
 
     export const FeedComponent = (props: FeedComponentProps) => (
       <ReactApollo.Query<FeedQuery, FeedQueryVariables> query={FeedDocument} {...props} />
@@ -438,7 +438,7 @@ export const SubmitRepositoryDocument = gql`
 }
     `;
 export type SubmitRepositoryMutationFn = ReactApollo.MutationFn<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>;
-export type SubmitRepositoryComponentProps = Omit<ReactApollo.MutationProps<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>, 'mutation'>;
+export type SubmitRepositoryComponentProps = Omit<Omit<ReactApollo.MutationProps<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>, 'mutation'>, 'variables'> & { variables?: SubmitRepositoryMutationVariables };
 
     export const SubmitRepositoryComponent = (props: SubmitRepositoryComponentProps) => (
       <ReactApollo.Mutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables> mutation={SubmitRepositoryDocument} {...props} />
@@ -468,7 +468,7 @@ export const SubmitCommentDocument = gql`
 }
     ${CommentsPageCommentFragmentDoc}`;
 export type SubmitCommentMutationFn = ReactApollo.MutationFn<SubmitCommentMutation, SubmitCommentMutationVariables>;
-export type SubmitCommentComponentProps = Omit<ReactApollo.MutationProps<SubmitCommentMutation, SubmitCommentMutationVariables>, 'mutation'>;
+export type SubmitCommentComponentProps = Omit<Omit<ReactApollo.MutationProps<SubmitCommentMutation, SubmitCommentMutationVariables>, 'mutation'>, 'variables'> & { variables?: SubmitCommentMutationVariables };
 
     export const SubmitCommentComponent = (props: SubmitCommentComponentProps) => (
       <ReactApollo.Mutation<SubmitCommentMutation, SubmitCommentMutationVariables> mutation={SubmitCommentDocument} {...props} />
@@ -502,7 +502,7 @@ export const VoteDocument = gql`
 }
     `;
 export type VoteMutationFn = ReactApollo.MutationFn<VoteMutation, VoteMutationVariables>;
-export type VoteComponentProps = Omit<ReactApollo.MutationProps<VoteMutation, VoteMutationVariables>, 'mutation'>;
+export type VoteComponentProps = Omit<Omit<ReactApollo.MutationProps<VoteMutation, VoteMutationVariables>, 'mutation'>, 'variables'> & { variables?: VoteMutationVariables };
 
     export const VoteComponent = (props: VoteComponentProps) => (
       <ReactApollo.Mutation<VoteMutation, VoteMutationVariables> mutation={VoteDocument} {...props} />
