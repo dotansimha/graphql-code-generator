@@ -4,7 +4,6 @@ import { readFileSync } from 'fs';
 import { plugin } from '../src/index';
 import { plugin as tsPlugin } from '../../typescript/src';
 import { mergeOutputs, Types } from '@graphql-codegen/plugin-helpers';
-import * as prettier from 'prettier';
 
 describe('TypeScript Operations Plugin', () => {
   const gitHuntSchema = buildClientSchema(JSON.parse(readFileSync('../../../../dev-test/githunt/schema.json', 'utf-8')));
@@ -1635,23 +1634,20 @@ describe('TypeScript Operations Plugin', () => {
           outputFile: 'graphql.ts',
         }
       );
-      const formattedContent = prettier.format(content.toString(), { filepath: 'graphql.ts' });
-      expect(formattedContent).toBeSimilarStringTo(`
-        export type FieldQueryVariables = {};
-
-        export type FieldQuery = { __typename?: "Query" } & {
-          field:
-            | ({ __typename?: "Error1" } & Pick<Error1, "message">)
-            | ({ __typename?: "Error2" } & Pick<Error2, "message">)
-            | ({ __typename?: "ComplexError" } & Pick<
-                ComplexError,
-                "message" | "additionalInfo"
-              >)
-            | ({ __typename?: "FieldResultSuccess" } & Pick<
-                FieldResultSuccess,
-                "someValue"
-              >);
-        };
+      expect(content).toBeSimilarStringTo(`
+        export type FieldQuery = ({ __typename?: 'Query' } & { field: (
+          { __typename?: 'Error1' }
+          & Pick<Error1, 'message'>
+        ) | (
+          { __typename?: 'Error2' }
+          & Pick<Error2, 'message'>
+        ) | (
+          { __typename?: 'ComplexError' }
+          & Pick<ComplexError, 'message' | 'additionalInfo'>
+        ) | (
+          { __typename?: 'FieldResultSuccess' }
+          & Pick<FieldResultSuccess, 'someValue'>
+        ) });
       `);
     });
   });
