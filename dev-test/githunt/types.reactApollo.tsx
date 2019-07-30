@@ -340,7 +340,7 @@ export const CommentDocument = gql`
   }
 }
     ${CommentsPageCommentFragmentDoc}`;
-export type CommentComponentProps = Omit<ReactApollo.QueryProps<CommentQuery, CommentQueryVariables>, 'query'> & ({ variables: CommentQueryVariables; skip?: false; } | { skip: true; });
+export type CommentComponentProps = Omit<ReactApollo.QueryProps<CommentQuery, CommentQueryVariables>, 'query'> & ({ variables: CommentQueryVariables; skip?: boolean; } | { skip: boolean; });
 
     export const CommentComponent = (props: CommentComponentProps) => (
       <ReactApollo.Query<CommentQuery, CommentQueryVariables> query={CommentDocument} {...props} />
@@ -392,7 +392,7 @@ export const FeedDocument = gql`
   }
 }
     ${FeedEntryFragmentDoc}`;
-export type FeedComponentProps = Omit<ReactApollo.QueryProps<FeedQuery, FeedQueryVariables>, 'query'> & ({ variables: FeedQueryVariables; skip?: false; } | { skip: true; });
+export type FeedComponentProps = Omit<ReactApollo.QueryProps<FeedQuery, FeedQueryVariables>, 'query'> & ({ variables: FeedQueryVariables; skip?: boolean; } | { skip: boolean; });
 
     export const FeedComponent = (props: FeedComponentProps) => (
       <ReactApollo.Query<FeedQuery, FeedQueryVariables> query={FeedDocument} {...props} />
