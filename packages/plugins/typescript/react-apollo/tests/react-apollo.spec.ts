@@ -124,6 +124,29 @@ describe('React Apollo', () => {
       await validateTypeScript(content, schema, docs, {});
     });
 
+    it(`tests for dedupeOperationSuffix`, async () => {
+      const ast = parse(/* GraphQL */ `
+        query notificationsQuery {
+          notifications {
+            id
+          }
+        }
+      `);
+      const ast2 = parse(/* GraphQL */ `
+        query notifications {
+          notifications {
+            id
+          }
+        }
+      `);
+
+      expect(((await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], {}, { outputFile: '' })) as any).content).toContain('ReactApollo.QueryResult<NotificationsQueryQuery, NotificationsQueryQueryVariables>;');
+      expect(((await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], { dedupeOperationSuffix: false }, { outputFile: '' })) as any).content).toContain('ReactApollo.QueryResult<NotificationsQueryQuery, NotificationsQueryQueryVariables>');
+      expect(((await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], { dedupeOperationSuffix: true }, { outputFile: '' })) as any).content).toContain('ReactApollo.QueryResult<NotificationsQuery, NotificationsQueryVariables>');
+      expect(((await plugin(schema, [{ filePath: 'test-file.ts', content: ast2 }], { dedupeOperationSuffix: true }, { outputFile: '' })) as any).content).toContain('ReactApollo.QueryResult<NotificationsQuery, NotificationsQueryVariables>');
+      expect(((await plugin(schema, [{ filePath: 'test-file.ts', content: ast2 }], { dedupeOperationSuffix: false }, { outputFile: '' })) as any).content).toContain('ReactApollo.QueryResult<NotificationsQuery, NotificationsQueryVariables>');
+    });
+
     it('should import ReactApolloHooks dependencies', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
       const content = (await plugin(

@@ -179,7 +179,7 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
       .asKind('type')
       .withName(
         this.convertName(name, {
-          suffix: toPascalCase(node.operation) + 'Variables',
+          suffix: operationTypeSuffix + 'Variables',
         })
       )
       .withBlock(visitedOperationVariables).string;
