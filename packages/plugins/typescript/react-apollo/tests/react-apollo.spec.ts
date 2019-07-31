@@ -33,7 +33,7 @@ describe('React Apollo', () => {
   };
 
   describe('Issues', () => {
-    it('Issue #2080 - noGraphQLTag does not work with fragments correctly', async () => {
+    it('Issue #2080 - documentMode being "documentNode" (formerly noGraphQLTag) does not work with fragments correctly', async () => {
       const docs = [
         {
           filePath: '',
@@ -62,7 +62,7 @@ describe('React Apollo', () => {
         schema,
         docs,
         {
-          noGraphQLTag: true,
+          documentMode: 'documentNode',
         },
         {
           outputFile: 'graphql.tsx',
@@ -91,13 +91,13 @@ describe('React Apollo', () => {
       await validateTypeScript(content, schema, docs, {});
     });
 
-    it('should import DocumentNode when using noGraphQLTag', async () => {
+    it('should import DocumentNode when using documentMode being "documentNode" (formerly noGraphQLTag)', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
         {
-          noGraphQLTag: true,
+          documentMode: 'documentNode',
         },
         {
           outputFile: 'graphql.tsx',
@@ -408,13 +408,13 @@ query MyFeed {
       await validateTypeScript(content, schema, docs, {});
     });
 
-    it('should generate Document variable with noGraphQlTag', async () => {
+    it('should generate Document variable with documentMode being "documentNode" (formerly noGraphQLTag)', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
         {
-          noGraphQLTag: true,
+          documentMode: 'documentNode',
         },
         {
           outputFile: 'graphql.tsx',
