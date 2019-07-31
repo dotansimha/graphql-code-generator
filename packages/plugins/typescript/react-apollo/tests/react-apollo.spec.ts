@@ -1143,5 +1143,65 @@ export function useListenToCommentsSubscription(baseOptions?: ReactApolloHooks.S
         );`);
       await validateTypeScript(content, schema, docs, {});
     });
+
+    it('should import Operations from near operation file for Queries', async () => {
+      const config: ReactApolloRawPluginConfig = {
+        documentMode: 'external',
+        importDocumentNodeExternallyFrom: 'near-operation-file',
+      };
+
+      const docs = [{ filePath: 'document.graphql', content: basicDoc }];
+
+      const content = (await plugin(schema, docs, config, {
+        outputFile: 'graphql.tsx',
+      })) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).toContain(`import * as Operations from './document.graphql';`);
+      expect(content.content).toBeSimilarStringTo(`
+        export const TestComponent = (props: TestComponentProps) => (
+          <ReactApollo.Query<TestQuery, TestQueryVariables> query={Operations.test} {...props} />
+        );`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should import Operations from near operation file for Mutations', async () => {
+      const config: ReactApolloRawPluginConfig = {
+        documentMode: 'external',
+        importDocumentNodeExternallyFrom: 'near-operation-file',
+      };
+
+      const docs = [{ filePath: 'document.graphql', content: mutationDoc }];
+
+      const content = (await plugin(schema, docs, config, {
+        outputFile: 'graphql.tsx',
+      })) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).toContain(`import * as Operations from './document.graphql';`);
+      expect(content.content).toBeSimilarStringTo(`
+      export const TestComponent = (props: TestComponentProps) => (
+        <ReactApollo.Mutation<TestMutation, TestMutationVariables> mutation={Operations.test} {...props} />
+      );`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should import Operations from near operation file for Subscriptions', async () => {
+      const config: ReactApolloRawPluginConfig = {
+        documentMode: 'external',
+        importDocumentNodeExternallyFrom: 'near-operation-file',
+      };
+
+      const docs = [{ filePath: 'document.graphql', content: subscriptionDoc }];
+
+      const content = (await plugin(schema, docs, config, {
+        outputFile: 'graphql.tsx',
+      })) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).toContain(`import * as Operations from './document.graphql';`);
+      expect(content.content).toBeSimilarStringTo(`
+      export const TestComponent = (props: TestComponentProps) => (
+        <ReactApollo.Subscription<TestSubscription, TestSubscriptionVariables> subscription={Operations.test} {...props} />
+      );`);
+      await validateTypeScript(content, schema, docs, {});
+    });
   });
 });

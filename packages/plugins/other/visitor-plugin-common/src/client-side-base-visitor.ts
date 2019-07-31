@@ -3,7 +3,7 @@ import * as autoBind from 'auto-bind';
 import { FragmentDefinitionNode, print, OperationDefinitionNode, visit, FragmentSpreadNode } from 'graphql';
 import { DepGraph } from 'dependency-graph';
 import gqlTag from 'graphql-tag';
-import { toPascalCase } from '@graphql-codegen/plugin-helpers';
+import { toPascalCase, Types } from '@graphql-codegen/plugin-helpers';
 import { getConfigValue } from './utils';
 import { LoadedFragment } from './types';
 export interface RawClientSideBasePluginConfig extends RawConfig {
@@ -50,14 +50,16 @@ export interface ClientSideBasePluginConfig extends ParsedConfig {
 
   /**
    * TODO: eddeee - write more stuff
+   * mention "near-operation-file"
    */
   importDocumentNodeExternallyFrom?: string;
 }
 
 export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginConfig = RawClientSideBasePluginConfig, TPluginConfig extends ClientSideBasePluginConfig = ClientSideBasePluginConfig> extends BaseVisitor<TRawConfig, TPluginConfig> {
   protected _collectedOperations: OperationDefinitionNode[] = [];
+  protected _documents: Types.DocumentFile[] = [];
 
-  constructor(protected _fragments: LoadedFragment[], rawConfig: TRawConfig, additionalConfig: Partial<TPluginConfig>) {
+  constructor(protected _fragments: LoadedFragment[], rawConfig: TRawConfig, additionalConfig: Partial<TPluginConfig>, documents?: Types.DocumentFile[]) {
     super(rawConfig, {
       gqlImport: rawConfig.gqlImport || null,
       noExport: !!rawConfig.noExport,
@@ -66,6 +68,8 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
       importDocumentNodeExternallyFrom: getConfigValue(rawConfig.importDocumentNodeExternallyFrom, ''),
       ...additionalConfig,
     } as any);
+
+    this._documents = documents;
 
     autoBind(this);
   }
@@ -213,7 +217,12 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
         imports.push(`import ${gqlImport.propName ? `{ ${gqlImport.propName === 'gql' ? 'gql' : `${gqlImport.propName} as gql`} }` : 'gql'} from '${gqlImport.moduleName}';`);
         break;
       case 'external':
-        imports.push(`import * as Operations from '${this.config.importDocumentNodeExternallyFrom}';`);
+        if (this.config.importDocumentNodeExternallyFrom === 'near-operation-file' && this._documents.length === 1) {
+          imports.push(`import * as Operations from './${this._documents[0].filePath}';`);
+        }
+        else {
+          imports.push(`import * as Operations from '${this.config.importDocumentNodeExternallyFrom}';`);
+        }
         break;
       default:
         break;
