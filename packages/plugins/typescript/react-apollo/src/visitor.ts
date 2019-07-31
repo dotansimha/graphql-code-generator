@@ -2,7 +2,7 @@ import { ClientSideBaseVisitor, ClientSideBasePluginConfig, getConfigValue, Load
 import { ReactApolloRawPluginConfig } from './index';
 import * as autoBind from 'auto-bind';
 import { OperationDefinitionNode, Kind } from 'graphql';
-import { toPascalCase } from '@graphql-codegen/plugin-helpers';
+import { toPascalCase, Types } from '@graphql-codegen/plugin-helpers';
 import { titleCase } from 'change-case';
 
 export interface ReactApolloPluginConfig extends ClientSideBasePluginConfig {
@@ -19,7 +19,7 @@ export interface ReactApolloPluginConfig extends ClientSideBasePluginConfig {
 }
 
 export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPluginConfig, ReactApolloPluginConfig> {
-  constructor(fragments: LoadedFragment[], rawConfig: ReactApolloRawPluginConfig) {
+  constructor(fragments: LoadedFragment[], rawConfig: ReactApolloRawPluginConfig, documents?: Types.DocumentFile[]) {
     super(fragments, rawConfig, {
       componentSuffix: getConfigValue(rawConfig.componentSuffix, 'Component'),
       withHOC: getConfigValue(rawConfig.withHOC, true),
@@ -31,7 +31,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
       reactApolloVersion: getConfigValue(rawConfig.reactApolloVersion, 2),
       withResultType: getConfigValue(rawConfig.withResultType, true),
       withMutationOptionsType: getConfigValue(rawConfig.withMutationOptionsType, true),
-    } as any);
+    } as any, documents);
 
     autoBind(this);
   }
@@ -62,7 +62,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
       return baseImports;
     }
 
-    return [...baseImports, ...Array.from(this.imports)];
+    return [...baseImports, ...this.imports];
   }
 
   private _buildHocProps(operationName: string, operationType: string): string {
@@ -123,7 +123,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
 
     const component = `
     export const ${componentName} = (props: ${componentPropsName}) => (
-      <ReactApollo.${operationType}<${operationResultType}, ${operationVariablesTypes}> ${node.operation}={${documentVariableName}} {...props} />
+      <ReactApollo.${operationType}<${operationResultType}, ${operationVariablesTypes}> ${node.operation}={${this.config.documentMode === 'external' ? `Operations.${node.name.value}` : documentVariableName}} {...props} />
     );
     `;
     return [componentProps, component].join('\n');
