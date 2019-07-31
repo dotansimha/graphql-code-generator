@@ -44,6 +44,13 @@ This will make the resolver fully typed and compatible with typescript compiler,
 {@import: ../docs/generated-config/base-resolvers-visitor.md}
 {@import: ../docs/generated-config/typescript-resolvers.md}
 
+Using Apollo Server? [Make sure to add](https://github.com/dotansimha/graphql-code-generator/issues/1133#issuecomment-456812621):
+
+```yaml
+    config:
+      useIndexSignature: true
+```
+
 ## How It Works
 
 It adds the generic resolvers signature to the top of the file:
