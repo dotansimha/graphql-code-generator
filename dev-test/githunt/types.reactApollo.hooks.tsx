@@ -317,6 +317,7 @@ export function withOnCommentAdded<TProps, TChildProps = {}>(operationOptions?: 
       return ReactApolloHooks.useSubscription<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>(OnCommentAddedDocument, baseOptions);
     };
 export type OnCommentAddedSubscriptionHookResult = ReturnType<typeof useOnCommentAddedSubscription>;
+export type OnCommentAddedSubscriptionResult = ReactApollo.SubscriptionResult<OnCommentAddedSubscription>;
 export const CommentDocument = gql`
     query Comment($repoFullName: String!, $limit: Int, $offset: Int) {
   currentUser {
@@ -368,6 +369,7 @@ export function withComment<TProps, TChildProps = {}>(operationOptions?: ReactAp
       return ReactApolloHooks.useQuery<CommentQuery, CommentQueryVariables>(CommentDocument, baseOptions);
     };
 export type CommentQueryHookResult = ReturnType<typeof useCommentQuery>;
+export type CommentQueryResult = ReactApollo.QueryResult<CommentQuery, CommentQueryVariables>;
 export const CurrentUserForProfileDocument = gql`
     query CurrentUserForProfile {
   currentUser {
@@ -398,6 +400,7 @@ export function withCurrentUserForProfile<TProps, TChildProps = {}>(operationOpt
       return ReactApolloHooks.useQuery<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>(CurrentUserForProfileDocument, baseOptions);
     };
 export type CurrentUserForProfileQueryHookResult = ReturnType<typeof useCurrentUserForProfileQuery>;
+export type CurrentUserForProfileQueryResult = ReactApollo.QueryResult<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>;
 export const FeedDocument = gql`
     query Feed($type: FeedType!, $offset: Int, $limit: Int) {
   currentUser {
@@ -430,6 +433,7 @@ export function withFeed<TProps, TChildProps = {}>(operationOptions?: ReactApoll
       return ReactApolloHooks.useQuery<FeedQuery, FeedQueryVariables>(FeedDocument, baseOptions);
     };
 export type FeedQueryHookResult = ReturnType<typeof useFeedQuery>;
+export type FeedQueryResult = ReactApollo.QueryResult<FeedQuery, FeedQueryVariables>;
 export const SubmitRepositoryDocument = gql`
     mutation submitRepository($repoFullName: String!) {
   submitRepository(repoFullName: $repoFullName) {
@@ -460,6 +464,8 @@ export function withSubmitRepository<TProps, TChildProps = {}>(operationOptions?
       return ReactApolloHooks.useMutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(SubmitRepositoryDocument, baseOptions);
     };
 export type SubmitRepositoryMutationHookResult = ReturnType<typeof useSubmitRepositoryMutation>;
+export type SubmitRepositoryMutationResult = ReactApollo.MutationResult<SubmitRepositoryMutation>;
+export type SubmitRepositoryMutationOptions = ReactApollo.MutationOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>;
 export const SubmitCommentDocument = gql`
     mutation submitComment($repoFullName: String!, $commentContent: String!) {
   submitComment(repoFullName: $repoFullName, commentContent: $commentContent) {
@@ -490,6 +496,8 @@ export function withSubmitComment<TProps, TChildProps = {}>(operationOptions?: R
       return ReactApolloHooks.useMutation<SubmitCommentMutation, SubmitCommentMutationVariables>(SubmitCommentDocument, baseOptions);
     };
 export type SubmitCommentMutationHookResult = ReturnType<typeof useSubmitCommentMutation>;
+export type SubmitCommentMutationResult = ReactApollo.MutationResult<SubmitCommentMutation>;
+export type SubmitCommentMutationOptions = ReactApollo.MutationOptions<SubmitCommentMutation, SubmitCommentMutationVariables>;
 export const VoteDocument = gql`
     mutation vote($repoFullName: String!, $type: VoteType!) {
   vote(repoFullName: $repoFullName, type: $type) {
@@ -524,3 +532,5 @@ export function withVote<TProps, TChildProps = {}>(operationOptions?: ReactApoll
       return ReactApolloHooks.useMutation<VoteMutation, VoteMutationVariables>(VoteDocument, baseOptions);
     };
 export type VoteMutationHookResult = ReturnType<typeof useVoteMutation>;
+export type VoteMutationResult = ReactApollo.MutationResult<VoteMutation>;
+export type VoteMutationOptions = ReactApollo.MutationOptions<VoteMutation, VoteMutationVariables>;
