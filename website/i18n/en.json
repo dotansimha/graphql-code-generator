@@ -65,6 +65,9 @@
       "generated-config/typescript-compatibility": {
         "title": "generated-config/typescript-compatibility"
       },
+      "generated-config/typescript-document-nodes": {
+        "title": "generated-config/typescript-document-nodes"
+      },
       "generated-config/typescript-mongodb": {
         "title": "generated-config/typescript-mongodb"
       },

@@ -10,6 +10,7 @@ export interface RawClientSideBasePluginConfig extends RawConfig {
   noGraphQLTag?: boolean;
   gqlImport?: string;
   noExport?: boolean;
+  dedupeOperationSuffix?: boolean;
   operationResultSuffix?: string;
 }
 
@@ -54,6 +55,13 @@ export interface ClientSideBasePluginConfig extends ParsedConfig {
    * @description Adds a suffix to generated operation result type names
    */
   operationResultSuffix: string;
+  /**
+   * @name dedupeOperationSuffix
+   * @type boolean
+   * @default false
+   * @description Set this configuration to `true` if you wish to make sure to remove duplicate operation name suffix.
+   */
+  dedupeOperationSuffix: boolean;
   noExport: boolean;
 }
 
@@ -62,6 +70,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
 
   constructor(protected _fragments: LoadedFragment[], rawConfig: TRawConfig, additionalConfig: Partial<TPluginConfig>) {
     super(rawConfig, {
+      dedupeOperationSuffix: getConfigValue(rawConfig.dedupeOperationSuffix, false),
       noGraphQLTag: getConfigValue(rawConfig.noGraphQLTag, false),
       gqlImport: rawConfig.gqlImport || null,
       noExport: !!rawConfig.noExport,
@@ -241,11 +250,13 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
     });
     const documentString = `${this.config.noExport ? '' : 'export'} const ${documentVariableName}${this.config.noGraphQLTag ? ': DocumentNode' : ''} = ${this._gql(node)};`;
     const operationType: string = toPascalCase(node.operation);
+    const operationTypeSuffix: string = this.config.dedupeOperationSuffix && node.name.value.toLowerCase().endsWith(node.operation) ? '' : operationType;
+
     const operationResultType: string = this.convertName(node, {
-      suffix: operationType + this._parsedConfig.operationResultSuffix,
+      suffix: operationTypeSuffix + this._parsedConfig.operationResultSuffix,
     });
     const operationVariablesTypes: string = this.convertName(node, {
-      suffix: operationType + 'Variables',
+      suffix: operationTypeSuffix + 'Variables',
     });
 
     const additional = this.buildOperation(node, documentVariableName, operationType, operationResultType, operationVariablesTypes);
