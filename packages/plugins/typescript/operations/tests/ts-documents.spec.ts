@@ -90,24 +90,24 @@ describe('TypeScript Operations Plugin', () => {
 
   describe('Config', () => {
     it('Should handle "namespacedImportName" and add it when specified', async () => {
-      const ast = parse(`
-      query notifications {
-        notifications {
-          id
+      const ast = parse(/* GraphQL */ `
+        query notifications {
+          notifications {
+            id
 
-          ... on TextNotification {
-            text
-          }
+            ... on TextNotification {
+              text
+            }
 
-          ... on ImageNotification {
-            imageUrl
-            metadata {
-              created: createdBy
+            ... on ImageNotification {
+              imageUrl
+              metadata {
+                created: createdBy
+              }
             }
           }
         }
-      }
-  `);
+      `);
       const config = { namespacedImportName: 'Types' };
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
@@ -118,24 +118,24 @@ describe('TypeScript Operations Plugin', () => {
     });
 
     it('Should generate the correct output when using immutableTypes config', async () => {
-      const ast = parse(`
-      query notifications {
-        notifications {
-          id
+      const ast = parse(/* GraphQL */ `
+        query notifications {
+          notifications {
+            id
 
-          ... on TextNotification {
-            text
-          }
+            ... on TextNotification {
+              text
+            }
 
-          ... on ImageNotification {
-            imageUrl
-            metadata {
-              createdBy
+            ... on ImageNotification {
+              imageUrl
+              metadata {
+                createdBy
+              }
             }
           }
         }
-      }
-  `);
+      `);
       const config = { namingConvention: 'change-case#lowerCase', immutableTypes: true };
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
@@ -176,7 +176,7 @@ describe('TypeScript Operations Plugin', () => {
 
   describe('Custom Operation Result Name Suffix', () => {
     it('Should generate custom operation result name', async () => {
-      const ast = parse(`
+      const ast = parse(/* GraphQL */ `
         query notifications {
           notifications {
             id
@@ -208,24 +208,24 @@ describe('TypeScript Operations Plugin', () => {
 
   describe('Naming Convention & Types Prefix', () => {
     it('Should allow custom naming and point to the correct type', async () => {
-      const ast = parse(`
-      query notifications {
-        notifications {
-          id
+      const ast = parse(/* GraphQL */ `
+        query notifications {
+          notifications {
+            id
 
-          ... on TextNotification {
-            text
-          }
+            ... on TextNotification {
+              text
+            }
 
-          ... on ImageNotification {
-            imageUrl
-            metadata {
-              createdBy
+            ... on ImageNotification {
+              imageUrl
+              metadata {
+                createdBy
+              }
             }
           }
         }
-      }
-  `);
+      `);
       const config = { namingConvention: 'change-case#lowerCase' };
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
@@ -236,24 +236,24 @@ describe('TypeScript Operations Plugin', () => {
     });
 
     it('Should allow custom naming and point to the correct type - with custom prefix', async () => {
-      const ast = parse(`
-      query notifications {
-        notifications {
-          id
+      const ast = parse(/* GraphQL */ `
+        query notifications {
+          notifications {
+            id
 
-          ... on TextNotification {
-            text
-          }
+            ... on TextNotification {
+              text
+            }
 
-          ... on ImageNotification {
-            imageUrl
-            metadata {
-              createdBy
+            ... on ImageNotification {
+              imageUrl
+              metadata {
+                createdBy
+              }
             }
           }
         }
-      }
-  `);
+      `);
 
       const config = { typesPrefix: 'i', namingConvention: 'change-case#lowerCase' };
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
@@ -264,11 +264,34 @@ describe('TypeScript Operations Plugin', () => {
       );
       validate(result, config);
     });
+
+    it('Test for dedupeOperationSuffix', async () => {
+      const ast = parse(/* GraphQL */ `
+        query notificationsQuery {
+          notifications {
+            id
+          }
+        }
+      `);
+      const ast2 = parse(/* GraphQL */ `
+        query notifications {
+          notifications {
+            id
+          }
+        }
+      `);
+
+      expect(await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], {}, { outputFile: '' })).toContain('export type NotificationsQueryQuery =');
+      expect(await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], { dedupeOperationSuffix: false }, { outputFile: '' })).toContain('export type NotificationsQueryQuery =');
+      expect(await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], { dedupeOperationSuffix: true }, { outputFile: '' })).toContain('export type NotificationsQuery =');
+      expect(await plugin(schema, [{ filePath: 'test-file.ts', content: ast2 }], { dedupeOperationSuffix: true }, { outputFile: '' })).toContain('export type NotificationsQuery =');
+      expect(await plugin(schema, [{ filePath: 'test-file.ts', content: ast2 }], { dedupeOperationSuffix: false }, { outputFile: '' })).toContain('export type NotificationsQuery =');
+    });
   });
 
   describe('__typename', () => {
     it('Should skip __typename when skipTypename is set to true', async () => {
-      const ast = parse(`
+      const ast = parse(/* GraphQL */ `
         query {
           dummy
         }
@@ -300,12 +323,12 @@ describe('TypeScript Operations Plugin', () => {
           some: Node
         }
       `);
-      const ast = parse(`
+      const ast = parse(/* GraphQL */ `
         fragment Node on Node {
           __typename
           id
         }
-        
+
         query Test {
           some {
             ...Node
@@ -319,7 +342,7 @@ describe('TypeScript Operations Plugin', () => {
     });
 
     it('Should add __typename as non-optional when explicitly specified', async () => {
-      const ast = parse(`
+      const ast = parse(/* GraphQL */ `
         query {
           __typename
           dummy
@@ -331,7 +354,7 @@ describe('TypeScript Operations Plugin', () => {
       validate(result, config);
     });
     it('Should add __typename as non-optional when forced', async () => {
-      const ast = parse(`
+      const ast = parse(/* GraphQL */ `
         query {
           dummy
         }
@@ -343,7 +366,7 @@ describe('TypeScript Operations Plugin', () => {
     });
 
     it('Should add __typename as optional when its not specified', async () => {
-      const ast = parse(`
+      const ast = parse(/* GraphQL */ `
         query {
           dummy
         }
@@ -355,7 +378,7 @@ describe('TypeScript Operations Plugin', () => {
     });
 
     it('Should add __typename as non-optional when its explictly specified, even if skipTypename is true', async () => {
-      const ast = parse(`
+      const ast = parse(/* GraphQL */ `
         query {
           __typename
           dummy
@@ -369,7 +392,7 @@ describe('TypeScript Operations Plugin', () => {
     });
 
     it('Should add __typename correctly when unions are in use', async () => {
-      const ast = parse(`
+      const ast = parse(/* GraphQL */ `
         query unionTest {
           unionTest {
             ... on User {
@@ -381,7 +404,7 @@ describe('TypeScript Operations Plugin', () => {
             }
           }
         }
-    `);
+      `);
       const config = {};
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
       expect(result).toBeSimilarStringTo(`export type UnionTestQuery = ({ __typename?: 'Query' } & { unionTest: Maybe<(({ __typename?: 'User' } & Pick<User, 'id'>) | ({ __typename?: 'Profile' } & Pick<Profile, 'age'>))> });`);
@@ -389,7 +412,7 @@ describe('TypeScript Operations Plugin', () => {
     });
 
     it('Should add __typename correctly when interfaces are in use', async () => {
-      const ast = parse(`
+      const ast = parse(/* GraphQL */ `
         query notifications {
           notifications {
             id
@@ -397,7 +420,7 @@ describe('TypeScript Operations Plugin', () => {
             ... on TextNotification {
               text
             }
-  
+
             ... on ImageNotification {
               imageUrl
               metadata {
@@ -406,7 +429,7 @@ describe('TypeScript Operations Plugin', () => {
             }
           }
         }
-    `);
+      `);
       const config = {};
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
       expect(result).toBeSimilarStringTo(
@@ -418,7 +441,7 @@ describe('TypeScript Operations Plugin', () => {
 
   describe('Unnamed Documents', () => {
     it('Should handle unnamed documents correctly', async () => {
-      const ast = parse(`
+      const ast = parse(/* GraphQL */ `
         query {
           dummy
         }
@@ -431,7 +454,7 @@ describe('TypeScript Operations Plugin', () => {
     });
 
     it('Should handle unnamed documents correctly with multiple documents', async () => {
-      const ast = parse(`
+      const ast = parse(/* GraphQL */ `
         query {
           dummy
         }
@@ -453,11 +476,11 @@ describe('TypeScript Operations Plugin', () => {
 
   describe('Selection Set', () => {
     it('Should detect invalid types as parent and notify', async () => {
-      const ast = parse(`
-      mutation test {
-        test
-      }
-  `);
+      const ast = parse(/* GraphQL */ `
+        mutation test {
+          test
+        }
+      `);
       const config = {};
 
       try {
@@ -478,7 +501,7 @@ describe('TypeScript Operations Plugin', () => {
     });
 
     it('Should support fragment spread correctly with simple type with no other fields', async () => {
-      const ast = parse(`
+      const ast = parse(/* GraphQL */ `
         fragment UserFields on User {
           id
           username
@@ -493,7 +516,7 @@ describe('TypeScript Operations Plugin', () => {
             ...UserFields
           }
         }
-    `);
+      `);
       const config = { skipTypename: true };
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
       expect(result).toBeSimilarStringTo(`export type MeQuery = { me: Maybe<UserFieldsFragment> };`);
@@ -501,7 +524,7 @@ describe('TypeScript Operations Plugin', () => {
     });
 
     it('Should support fragment spread correctly with simple type with other fields', async () => {
-      const ast = parse(`
+      const ast = parse(/* GraphQL */ `
         fragment UserFields on User {
           id
           profile {
@@ -515,7 +538,7 @@ describe('TypeScript Operations Plugin', () => {
             username
           }
         }
-    `);
+      `);
       const config = { skipTypename: true };
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
@@ -524,7 +547,7 @@ describe('TypeScript Operations Plugin', () => {
     });
 
     it('Should support fragment spread correctly with multiple fragment spread', async () => {
-      const ast = parse(`
+      const ast = parse(/* GraphQL */ `
         fragment UserFields on User {
           id
         }
@@ -542,7 +565,7 @@ describe('TypeScript Operations Plugin', () => {
             username
           }
         }
-    `);
+      `);
       const config = { skipTypename: false };
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
@@ -702,24 +725,24 @@ describe('TypeScript Operations Plugin', () => {
     });
 
     it('Should support interfaces correctly when used with inline fragments', async () => {
-      const ast = parse(`
-      query notifications {
-        notifications {
-          id
+      const ast = parse(/* GraphQL */ `
+        query notifications {
+          notifications {
+            id
 
-          ... on TextNotification {
-            text
-          }
+            ... on TextNotification {
+              text
+            }
 
-          ... on ImageNotification {
-            imageUrl
-            metadata {
-              createdBy
+            ... on ImageNotification {
+              imageUrl
+              metadata {
+                createdBy
+              }
             }
           }
         }
-      }
-    `);
+      `);
 
       const config = {};
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
@@ -730,7 +753,7 @@ describe('TypeScript Operations Plugin', () => {
     });
 
     it('Should support union correctly when used with inline fragments', async () => {
-      const ast = parse(`
+      const ast = parse(/* GraphQL */ `
         query unionTest {
           unionTest {
             ... on User {
@@ -742,7 +765,7 @@ describe('TypeScript Operations Plugin', () => {
             }
           }
         }
-    `);
+      `);
       const config = {};
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
@@ -751,7 +774,7 @@ describe('TypeScript Operations Plugin', () => {
     });
 
     it('Should support union correctly when used with inline fragments on types implementing common interface', async () => {
-      const ast = parse(`
+      const ast = parse(/* GraphQL */ `
         query unionTest {
           mixedNotifications {
             ... on Notifiction {
@@ -761,13 +784,13 @@ describe('TypeScript Operations Plugin', () => {
             ... on TextNotification {
               text
             }
-            
+
             ... on ImageNotification {
               imageUrl
             }
           }
         }
-    `);
+      `);
       const config = {};
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
@@ -778,7 +801,7 @@ describe('TypeScript Operations Plugin', () => {
     });
 
     it('Should support union correctly when used with inline fragments on types implementing common interface and also other types', async () => {
-      const ast = parse(`
+      const ast = parse(/* GraphQL */ `
         query unionTest {
           search(term: "a") {
             ... on User {
@@ -792,13 +815,13 @@ describe('TypeScript Operations Plugin', () => {
             ... on TextNotification {
               text
             }
-            
+
             ... on ImageNotification {
               imageUrl
             }
           }
         }
-    `);
+      `);
       const config = {};
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
@@ -809,7 +832,7 @@ describe('TypeScript Operations Plugin', () => {
     });
 
     it('Should support inline fragments', async () => {
-      const ast = parse(`
+      const ast = parse(/* GraphQL */ `
         query currentUser {
           me {
             id
@@ -821,7 +844,7 @@ describe('TypeScript Operations Plugin', () => {
             }
           }
         }
-    `);
+      `);
       const config = { skipTypename: true };
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
       expect(result).toBeSimilarStringTo(`export type CurrentUserQuery = { me: Maybe<(Pick<User, 'id'> & (Pick<User, 'username'> & { profile: Maybe<Pick<Profile, 'age'>> }))> };`);
@@ -829,7 +852,7 @@ describe('TypeScript Operations Plugin', () => {
     });
 
     it('Should build a basic selection set based on basic query on GitHub schema', async () => {
-      const ast = parse(`
+      const ast = parse(/* GraphQL */ `
         query me($repoFullName: String!) {
           currentUser {
             login
@@ -888,7 +911,7 @@ describe('TypeScript Operations Plugin', () => {
     });
 
     it('Should build a basic selection set based on basic query', async () => {
-      const ast = parse(`
+      const ast = parse(/* GraphQL */ `
         query dummy {
           dummy
         }
@@ -901,7 +924,7 @@ describe('TypeScript Operations Plugin', () => {
     });
 
     it('Should build a basic selection set based on basic query with field aliasing for basic scalar', async () => {
-      const ast = parse(`
+      const ast = parse(/* GraphQL */ `
         query dummy {
           customName: dummy
           customName2: dummyWithType {
@@ -917,7 +940,7 @@ describe('TypeScript Operations Plugin', () => {
     });
 
     it('Should build a basic selection set based on a query with inner fields', async () => {
-      const ast = parse(`
+      const ast = parse(/* GraphQL */ `
         query currentUser {
           me {
             id
@@ -939,7 +962,7 @@ describe('TypeScript Operations Plugin', () => {
 
   describe('Fragment Definition', () => {
     it('Should build fragment definition correctly - with name and selection set', async () => {
-      const ast = parse(`
+      const ast = parse(/* GraphQL */ `
         fragment UserFields on User {
           id
           username
@@ -958,7 +981,7 @@ describe('TypeScript Operations Plugin', () => {
 
   describe('Operation Definition', () => {
     it('Should detect Mutation correctly', async () => {
-      const ast = parse(`
+      const ast = parse(/* GraphQL */ `
         mutation login {
           login(username: "1", password: "2") {
             id
@@ -977,7 +1000,7 @@ describe('TypeScript Operations Plugin', () => {
     });
 
     it('Should detect Query correctly', async () => {
-      const ast = parse(`
+      const ast = parse(/* GraphQL */ `
         query test {
           dummy
         }
@@ -990,7 +1013,7 @@ describe('TypeScript Operations Plugin', () => {
     });
 
     it('Should detect Subscription correctly', async () => {
-      const ast = parse(`
+      const ast = parse(/* GraphQL */ `
         subscription test {
           userCreated {
             id
@@ -1005,7 +1028,7 @@ describe('TypeScript Operations Plugin', () => {
     });
 
     it('Should handle operation variables correctly', async () => {
-      const ast = parse(`
+      const ast = parse(/* GraphQL */ `
         query testQuery($username: String, $email: String, $password: String!, $input: InputType, $mandatoryInput: InputType!, $testArray: [String], $requireString: [String]!, $innerRequired: [String!]!) {
           dummy
         }
@@ -1029,7 +1052,7 @@ describe('TypeScript Operations Plugin', () => {
     });
 
     it('Should handle operation variables correctly when they use custom scalars', async () => {
-      const ast = parse(`
+      const ast = parse(/* GraphQL */ `
         query testQuery($test: DateTime) {
           dummy
         }
@@ -1046,7 +1069,7 @@ describe('TypeScript Operations Plugin', () => {
     });
 
     it('Should create empty variables when there are no operation variables', async () => {
-      const ast = parse(`
+      const ast = parse(/* GraphQL */ `
         query testQuery {
           dummy
         }
@@ -1365,7 +1388,7 @@ describe('TypeScript Operations Plugin', () => {
         id: ID!
       }`);
 
-      const query = parse(`
+      const query = parse(/* GraphQL */ `
         query TestQuery {
           fooBar {
             ...FooBarFragment
