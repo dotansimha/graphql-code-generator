@@ -1084,6 +1084,33 @@ export function useListenToCommentsSubscription(baseOptions?: ReactApolloHooks.S
   });
 
   describe('documentMode and importDocumentNodeExternallyFrom', () => {
+    const multipleOperationDoc = parse(/* GraphQL */ `
+      query testOne {
+        feed {
+          id
+          commentCount
+          repository {
+            full_name
+            html_url
+            owner {
+              avatar_url
+            }
+          }
+        }
+      }
+      mutation testTwo($name: String) {
+        submitRepository(repoFullName: $name) {
+          id
+        }
+      }
+
+      subscription testThree($name: String) {
+        commentAdded(repoFullName: $name) {
+          id
+        }
+      }
+    `);
+
     it('should import Operations from one external file and use it in Queries', async () => {
       const config: ReactApolloRawPluginConfig = {
         documentMode: 'external',
@@ -1144,6 +1171,35 @@ export function useListenToCommentsSubscription(baseOptions?: ReactApolloHooks.S
       await validateTypeScript(content, schema, docs, {});
     });
 
+    it('should import Operations from one external file and use it in multiple components', async () => {
+      const config: ReactApolloRawPluginConfig = {
+        documentMode: 'external',
+        importDocumentNodeExternallyFrom: 'path/to/documents.tsx',
+      };
+
+      const docs = [{ filePath: '', content: multipleOperationDoc }];
+
+      const content = (await plugin(schema, docs, config, {
+        outputFile: 'graphql.tsx',
+      })) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).toContain(`import * as Operations from 'path/to/documents.tsx';`);
+      expect(content.content).toBeSimilarStringTo(`
+      export const TestOneComponent = (props: TestOneComponentProps) => (
+        <ReactApollo.Query<TestOneQuery, TestOneQueryVariables> query={Operations.testOne} {...props} />
+      );`);
+      expect(content.content).toBeSimilarStringTo(`
+        export const TestTwoComponent = (props: TestTwoComponentProps) => (
+          <ReactApollo.Mutation<TestTwoMutation, TestTwoMutationVariables> mutation={Operations.testTwo} {...props} />
+        );`);
+      expect(content.content).toBeSimilarStringTo(`
+        export const TestThreeComponent = (props: TestThreeComponentProps) => (
+          <ReactApollo.Subscription<TestThreeSubscription, TestThreeSubscriptionVariables> subscription={Operations.testThree} {...props} />
+        );`);
+
+      await validateTypeScript(content, schema, docs, {});
+    });
+
     it('should import Operations from near operation file for Queries', async () => {
       const config: ReactApolloRawPluginConfig = {
         documentMode: 'external',
@@ -1201,6 +1257,35 @@ export function useListenToCommentsSubscription(baseOptions?: ReactApolloHooks.S
       export const TestComponent = (props: TestComponentProps) => (
         <ReactApollo.Subscription<TestSubscription, TestSubscriptionVariables> subscription={Operations.test} {...props} />
       );`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should import Operations from near operatino file and use it in multiple components', async () => {
+      const config: ReactApolloRawPluginConfig = {
+        documentMode: 'external',
+        importDocumentNodeExternallyFrom: 'near-operation-file',
+      };
+
+      const docs = [{ filePath: 'document.graphql', content: multipleOperationDoc }];
+
+      const content = (await plugin(schema, docs, config, {
+        outputFile: 'graphql.tsx',
+      })) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).toContain(`import * as Operations from './document.graphql';`);
+      expect(content.content).toBeSimilarStringTo(`
+      export const TestOneComponent = (props: TestOneComponentProps) => (
+        <ReactApollo.Query<TestOneQuery, TestOneQueryVariables> query={Operations.testOne} {...props} />
+      );`);
+      expect(content.content).toBeSimilarStringTo(`
+        export const TestTwoComponent = (props: TestTwoComponentProps) => (
+          <ReactApollo.Mutation<TestTwoMutation, TestTwoMutationVariables> mutation={Operations.testTwo} {...props} />
+        );`);
+      expect(content.content).toBeSimilarStringTo(`
+        export const TestThreeComponent = (props: TestThreeComponentProps) => (
+          <ReactApollo.Subscription<TestThreeSubscription, TestThreeSubscriptionVariables> subscription={Operations.testThree} {...props} />
+        );`);
+
       await validateTypeScript(content, schema, docs, {});
     });
   });
