@@ -339,7 +339,7 @@ describe('TypeScript', () => {
           bar: String!
         }
       `);
-      const result = (await plugin(schema, [], { avoidInputOptionals: true }, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = (await plugin(schema, [], { avoidOptionals: { inputValue: true } }, { outputFile: '' })) as Types.ComplexPluginOutput;
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyInput = {
