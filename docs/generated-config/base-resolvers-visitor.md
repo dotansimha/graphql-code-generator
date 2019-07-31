@@ -135,3 +135,10 @@ path/to/file.ts:
 Overrides the default value of enum values declared in your GraphQL schema, supported in this plugin because of the need for integeration with `typescript` package. See documentation under `typescript` plugin for more information and examples.
 
 
+
+
+### resolverTypeWrapperSignature (`string`, default value: `Promise | T`)
+
+Allow you to override `resolverTypeWrapper` definition.
+
+

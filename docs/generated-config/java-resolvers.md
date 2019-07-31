@@ -29,7 +29,7 @@ generates:
       - java-resolvers
     config:
       mappers:
-       User: com.app.models#UserObject
+        User: com.app.models#UserObject
 ```
 
 ### defaultMapper (`string`, default value: `Object`)

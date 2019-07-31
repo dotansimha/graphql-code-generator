@@ -37,7 +37,7 @@ export interface JavaResolversPluginRawConfig extends RawConfig {
    *       - java-resolvers
    *     config:
    *       mappers:
-   *        User: com.app.models#UserObject
+   *         User: com.app.models#UserObject
    * ```
    */
   mappers?: { [typeName: string]: string };
