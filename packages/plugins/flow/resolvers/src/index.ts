@@ -17,9 +17,9 @@ export const plugin: PluginFunction<FlowResolversPluginConfig> = (schema: GraphQ
   }
 
   const gqlImports = `import { ${imports.join(', ')} } from 'graphql';`;
-
-  // Wrapper of every ResolverType
-  const resolverTypeWrapper = `export type ResolverTypeWrapper<T> = Promise<T> | T;`;
+  const printedSchema = printSchema(schema);
+  const astNode = parse(printedSchema);
+  const visitor = new FlowResolversVisitor(config, schema);
 
   const header = `export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
   parent: Parent,
@@ -67,12 +67,9 @@ export type DirectiveResolverFn<Result = {}, Parent = {}, Args = {}, Context = {
   info: GraphQLResolveInfo
 ) => Result | Promise<Result>;
 
-${resolverTypeWrapper}
+${visitor.getResolverTypeWrapperSignature()}
 `;
 
-  const printedSchema = printSchema(schema);
-  const astNode = parse(printedSchema);
-  const visitor = new FlowResolversVisitor(config, schema);
   const visitorResult = visit(astNode, { leave: visitor });
   const resolversTypeMapping = visitor.buildResolversTypes();
   const resolversParentTypeMapping = visitor.buildResolversParentTypes();
