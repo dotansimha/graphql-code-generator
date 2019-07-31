@@ -62,7 +62,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
       return baseImports;
     }
 
-    return [...baseImports, ...this.imports];
+    return [...baseImports, ...Array.from(this.imports)];
   }
 
   private _buildHocProps(operationName: string, operationType: string): string {
