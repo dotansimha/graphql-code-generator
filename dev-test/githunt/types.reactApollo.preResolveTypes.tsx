@@ -311,6 +311,7 @@ export function withOnCommentAdded<TProps, TChildProps = {}>(operationOptions?: 
       ...operationOptions
     });
 };
+export type OnCommentAddedSubscriptionResult = ReactApollo.SubscriptionResult<OnCommentAddedSubscription>;
 export const CommentDocument = gql`
     query Comment($repoFullName: String!, $limit: Int, $offset: Int) {
   currentUser {
@@ -357,6 +358,7 @@ export function withComment<TProps, TChildProps = {}>(operationOptions?: ReactAp
       ...operationOptions
     });
 };
+export type CommentQueryResult = ReactApollo.QueryResult<CommentQuery, CommentQueryVariables>;
 export const CurrentUserForProfileDocument = gql`
     query CurrentUserForProfile {
   currentUser {
@@ -382,6 +384,7 @@ export function withCurrentUserForProfile<TProps, TChildProps = {}>(operationOpt
       ...operationOptions
     });
 };
+export type CurrentUserForProfileQueryResult = ReactApollo.QueryResult<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>;
 export const FeedDocument = gql`
     query Feed($type: FeedType!, $offset: Int, $limit: Int) {
   currentUser {
@@ -409,6 +412,7 @@ export function withFeed<TProps, TChildProps = {}>(operationOptions?: ReactApoll
       ...operationOptions
     });
 };
+export type FeedQueryResult = ReactApollo.QueryResult<FeedQuery, FeedQueryVariables>;
 export const SubmitRepositoryDocument = gql`
     mutation submitRepository($repoFullName: String!) {
   submitRepository(repoFullName: $repoFullName) {
@@ -434,6 +438,8 @@ export function withSubmitRepository<TProps, TChildProps = {}>(operationOptions?
       ...operationOptions
     });
 };
+export type SubmitRepositoryMutationResult = ReactApollo.MutationResult<SubmitRepositoryMutation>;
+export type SubmitRepositoryMutationOptions = ReactApollo.MutationOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>;
 export const SubmitCommentDocument = gql`
     mutation submitComment($repoFullName: String!, $commentContent: String!) {
   submitComment(repoFullName: $repoFullName, commentContent: $commentContent) {
@@ -459,6 +465,8 @@ export function withSubmitComment<TProps, TChildProps = {}>(operationOptions?: R
       ...operationOptions
     });
 };
+export type SubmitCommentMutationResult = ReactApollo.MutationResult<SubmitCommentMutation>;
+export type SubmitCommentMutationOptions = ReactApollo.MutationOptions<SubmitCommentMutation, SubmitCommentMutationVariables>;
 export const VoteDocument = gql`
     mutation vote($repoFullName: String!, $type: VoteType!) {
   vote(repoFullName: $repoFullName, type: $type) {
@@ -488,3 +496,5 @@ export function withVote<TProps, TChildProps = {}>(operationOptions?: ReactApoll
       ...operationOptions
     });
 };
+export type VoteMutationResult = ReactApollo.MutationResult<VoteMutation>;
+export type VoteMutationOptions = ReactApollo.MutationOptions<VoteMutation, VoteMutationVariables>;

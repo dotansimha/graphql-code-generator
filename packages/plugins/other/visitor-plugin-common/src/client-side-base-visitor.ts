@@ -213,13 +213,15 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
       imports.push(`import { DocumentNode } from 'graphql';`);
     }
 
-    (this._fragments || [])
-      .filter(f => f.isExternal && f.importFrom && (!f['level'] || (f['level'] !== undefined && f['level'] === 0)))
-      .forEach(externalFragment => {
-        const identifierName = this._getFragmentName(externalFragment.name);
+    if (!this.config.noGraphQLTag) {
+      (this._fragments || [])
+        .filter(f => f.isExternal && f.importFrom && (!f['level'] || (f['level'] !== undefined && f['level'] === 0)))
+        .forEach(externalFragment => {
+          const identifierName = this._getFragmentName(externalFragment.name);
 
-        imports.push(`import { ${identifierName} } from '${externalFragment.importFrom}';`);
-      });
+          imports.push(`import { ${identifierName} } from '${externalFragment.importFrom}';`);
+        });
+    }
 
     return imports;
   }
