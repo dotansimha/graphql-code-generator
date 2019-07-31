@@ -170,8 +170,8 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
     return comment + indent(`${node.name}: ${typeString},`);
   }
 
-  UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number, parent: any): string {
-    const originalNode = parent[key] as UnionTypeDefinitionNode;
+  UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number | undefined, parent: any): string {
+    const originalNode = parent[key!] as UnionTypeDefinitionNode;
     const possibleTypes = originalNode.types.map(t => (this.scalars[t.name.value] ? this._getScalar(t.name.value) : this.convertName(t))).join(' | ');
 
     return new DeclarationBlock(this._declarationBlockConfig)
@@ -182,8 +182,8 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
       .withContent(possibleTypes).string;
   }
 
-  ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: number | string, parent: any): string {
-    const originalNode = parent[key] as ObjectTypeDefinitionNode;
+  ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: number | string | undefined, parent: any): string {
+    const originalNode = parent[key!] as ObjectTypeDefinitionNode;
     const optionalTypename = this.config.nonOptionalTypename ? '__typename' : '__typename?';
     const allFields = [...(this.config.addTypename ? [indent(`${optionalTypename}: '${node.name}',`)] : []), ...node.fields];
     const { type } = this._parsedConfig.declarationKind;
@@ -217,8 +217,8 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
     return [typeDefinition, argumentsBlock].filter(f => f).join('\n\n');
   }
 
-  InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode, key: number | string, parent: any): string {
-    const argumentsBlock = this.buildArgumentsBlock(parent[key] as InterfaceTypeDefinitionNode);
+  InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode, key: number | string | undefined, parent: any): string {
+    const argumentsBlock = this.buildArgumentsBlock(parent[key!] as InterfaceTypeDefinitionNode);
 
     let declarationBlock = new DeclarationBlock(this._declarationBlockConfig)
       .export()
