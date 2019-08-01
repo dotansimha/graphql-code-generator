@@ -998,7 +998,7 @@ describe('TypeScript Operations Plugin', () => {
         export type CurrentUserQuery = { me: Maybe<(
           { __typename?: 'User' }
           & Pick<User, 'username' | 'id'>
-          & { profile: Pick<Profile, 'age'> }
+          & { profile: Maybe<Pick<Profile, 'age'>> }
         )> };
       `);
 
@@ -1579,7 +1579,7 @@ describe('TypeScript Operations Plugin', () => {
   });
 
   describe('Union & Interfaces', () => {
-    it('should generate correct types', async () => {
+    it('should generate correct types for union that returns interface types', async () => {
       const schema = buildSchema(/* GraphQL */ `
         interface Error {
           message: String!
@@ -1648,6 +1648,209 @@ describe('TypeScript Operations Plugin', () => {
           { __typename?: 'FieldResultSuccess' }
           & Pick<FieldResultSuccess, 'someValue'>
         ) });
+      `);
+    });
+    it('interface with same field names', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Node {
+          id: ID!
+        }
+
+        type A implements Node {
+          id: ID!
+          a: String
+        }
+
+        type B implements Node {
+          id: ID!
+          a: Boolean
+        }
+
+        type Query {
+          node: Node
+        }
+      `);
+
+      const query = parse(/* GraphQL */ `
+        query something {
+          node {
+            ... on A {
+              a
+            }
+
+            ... on B {
+              a
+            }
+          }
+        }
+      `);
+
+      const content = await plugin(
+        testSchema,
+        [{ filePath: '', content: query }],
+        {},
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+        export type SomethingQuery = ({ __typename?: 'Query' } & { node: Maybe<(
+          { __typename?: 'A' }
+          & Pick<A, 'a'>
+        ) | (
+          { __typename?: 'B' }
+          & Pick<B, 'a'>
+        )> });
+      `);
+    });
+    it('union returning single interface types', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        interface Error {
+          message: String!
+        }
+        type Error1 implements Error {
+          message: String!
+        }
+        type Error2 implements Error {
+          message: String!
+        }
+        type Error3 implements Error {
+          message: String!
+          info: AdditionalInfo
+        }
+        type AdditionalInfo {
+          message: String!
+        }
+        type User {
+          id: ID!
+          login: String!
+        }
+
+        union UserResult = User | Error2 | Error3
+        type Query {
+          user: UserResult
+        }
+      `);
+
+      const query = parse(/* GraphQL */ `
+        query user {
+          user {
+            ... on User {
+              id
+              login
+            }
+            ... on Error {
+              message
+            }
+            ... on Error3 {
+              info {
+                message
+              }
+            }
+          }
+        }
+      `);
+
+      const content = await plugin(
+        testSchema,
+        [{ filePath: '', content: query }],
+        {},
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+        export type UserQuery = ({ __typename?: 'Query' } & { user: Maybe<(
+          { __typename?: 'User' }
+          & Pick<User, 'id' | 'login'>
+        ) | (
+          { __typename?: 'Error2' }
+          & Pick<Error2, 'message'>
+        ) | (
+          { __typename?: 'Error3' }
+          & Pick<Error3, 'message'>
+          & { info: Maybe<({ __typename?: 'AdditionalInfo' } & Pick<AdditionalInfo, 'message'>)> }
+        )> });
+      `);
+    });
+    it('duplicated fragment on type includes combined types only once', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        interface Error {
+          message: String!
+        }
+        type Error1 implements Error {
+          message: String!
+        }
+        type Error2 implements Error {
+          message: String!
+        }
+        type Error3 implements Error {
+          message: String!
+          info: AdditionalInfo
+        }
+        type AdditionalInfo {
+          message: String!
+          message2: String!
+        }
+        type User {
+          id: ID!
+          login: String!
+        }
+
+        union UserResult = User | Error2 | Error3
+        type Query {
+          user: UserResult
+        }
+      `);
+
+      const query = parse(/* GraphQL */ `
+        query user {
+          user {
+            ... on User {
+              id
+              login
+            }
+            ... on Error {
+              message
+              ... on Error3 {
+                info {
+                  message
+                  message2
+                }
+              }
+            }
+            ... on Error3 {
+              info {
+                message
+              }
+            }
+          }
+        }
+      `);
+
+      const content = await plugin(
+        testSchema,
+        [{ filePath: '', content: query }],
+        {},
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+        export type UserQuery = ({ __typename?: 'Query' } & { user: Maybe<(
+          { __typename?: 'User' }
+          & Pick<User, 'id' | 'login'>
+        ) | (
+          { __typename?: 'Error2' }
+          & Pick<Error2, 'message'>
+        ) | (
+          { __typename?: 'Error3' }
+          & Pick<Error3, 'message'>
+          & { info: Maybe<({ __typename?: 'AdditionalInfo' } & Pick<AdditionalInfo, 'message' | 'message2'>)> }
+        )> });
       `);
     });
   });
