@@ -181,7 +181,7 @@ export type CommentQueryVariables = {
 };
 
 
-export type CommentQuery = { __typename?: 'Query', currentUser: Maybe<{ __typename?: 'User', login: string, html_url: string }>, entry: Maybe<{ __typename?: 'Entry', id: number, createdAt: number, commentCount: number, postedBy: { __typename?: 'User', login: string, html_url: string }, comments: Array<Maybe<({ __typename?: 'Comment' } & CommentsPageCommentFragment)>>, repository: ({ __typename?: 'Repository', full_name: string, html_url: string } & { __typename?: 'Repository', description: string, open_issues_count: number, stargazers_count: number }) }> };
+export type CommentQuery = { __typename?: 'Query', currentUser: Maybe<{ __typename?: 'User', login: string, html_url: string }>, entry: Maybe<{ __typename?: 'Entry', id: number, createdAt: number, commentCount: number, postedBy: { __typename?: 'User', login: string, html_url: string }, comments: Array<Maybe<({ __typename?: 'Comment' } & CommentsPageCommentFragment)>>, repository: ({ __typename?: 'Repository', full_name: string, html_url: string } & { __typename?: 'Repository', description: Maybe<string>, open_issues_count: Maybe<number>, stargazers_count: number }) }> };
 
 export type CommentsPageCommentFragment = { __typename?: 'Comment', id: number, createdAt: number, content: string, postedBy: { __typename?: 'User', login: string, html_url: string } };
 
@@ -208,7 +208,7 @@ export type SubmitRepositoryMutationVariables = {
 
 export type SubmitRepositoryMutation = { __typename?: 'Mutation', submitRepository: Maybe<{ __typename?: 'Entry', createdAt: number }> };
 
-export type RepoInfoFragment = { __typename?: 'Entry', createdAt: number, repository: { __typename?: 'Repository', description: string, stargazers_count: number, open_issues_count: number }, postedBy: { __typename?: 'User', html_url: string, login: string } };
+export type RepoInfoFragment = { __typename?: 'Entry', createdAt: number, repository: { __typename?: 'Repository', description: Maybe<string>, stargazers_count: number, open_issues_count: Maybe<number> }, postedBy: { __typename?: 'User', html_url: string, login: string } };
 
 export type SubmitCommentMutationVariables = {
   repoFullName: Scalars['String'],

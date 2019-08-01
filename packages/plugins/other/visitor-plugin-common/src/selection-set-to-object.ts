@@ -196,10 +196,11 @@ export class SelectionSetToObject {
       const fieldObj = schemaType.getFields()[aliasedField.fieldName];
       const baseType = getBaseType(fieldObj.type);
       const typeToUse = this._scalars[baseType.name] || baseType.name;
+      const wrappedType = this.wrapTypeWithModifiers(typeToUse, fieldObj.type as GraphQLObjectType);
 
       return {
         name: this.formatNamedField(aliasedField.alias),
-        type: typeToUse,
+        type: wrappedType,
       };
     });
   }
@@ -221,10 +222,11 @@ export class SelectionSetToObject {
       const fieldObj = schemaType.getFields()[field];
       const baseType = getBaseType(fieldObj.type);
       const typeToUse = this._scalars[baseType.name] || baseType.name;
+      const wrappedType = this.wrapTypeWithModifiers(typeToUse, fieldObj.type as GraphQLObjectType);
 
       return {
         name: this.formatNamedField(field),
-        type: typeToUse,
+        type: wrappedType,
       };
     });
   }
