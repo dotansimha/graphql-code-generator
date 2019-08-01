@@ -272,6 +272,12 @@ describe('TypeScript Operations Plugin', () => {
             id
           }
         }
+
+        fragment MyFragment on Query {
+          notifications {
+            id
+          }
+        }
       `);
       const ast2 = parse(/* GraphQL */ `
         query notifications {
@@ -279,13 +285,22 @@ describe('TypeScript Operations Plugin', () => {
             id
           }
         }
+
+        fragment My on Query {
+          notifications {
+            id
+          }
+        }
       `);
 
       expect(await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], {}, { outputFile: '' })).toContain('export type NotificationsQueryQuery =');
+      expect(await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], {}, { outputFile: '' })).toContain('export type MyFragmentFragment =');
       expect(await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], { dedupeOperationSuffix: false }, { outputFile: '' })).toContain('export type NotificationsQueryQuery =');
       expect(await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], { dedupeOperationSuffix: true }, { outputFile: '' })).toContain('export type NotificationsQuery =');
+      expect(await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], { dedupeOperationSuffix: true }, { outputFile: '' })).toContain('export type MyFragment =');
       expect(await plugin(schema, [{ filePath: 'test-file.ts', content: ast2 }], { dedupeOperationSuffix: true }, { outputFile: '' })).toContain('export type NotificationsQuery =');
       expect(await plugin(schema, [{ filePath: 'test-file.ts', content: ast2 }], { dedupeOperationSuffix: false }, { outputFile: '' })).toContain('export type NotificationsQuery =');
+      expect(await plugin(schema, [{ filePath: 'test-file.ts', content: ast2 }], { dedupeOperationSuffix: false }, { outputFile: '' })).toContain('export type MyFragment =');
     });
   });
 

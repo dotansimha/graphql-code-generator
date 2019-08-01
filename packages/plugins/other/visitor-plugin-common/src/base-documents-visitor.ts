@@ -139,6 +139,7 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
   FragmentDefinition(node: FragmentDefinitionNode): string {
     const fragmentRootType = this._schema.getType(node.typeCondition.name.value) as GraphQLObjectType;
     const selectionSet = this._selectionSetToObject.createNext(fragmentRootType, node.selectionSet);
+    const fragmentSuffix = this.config.dedupeOperationSuffix && node.name.value.toLowerCase().endsWith('fragment') ? '' : 'Fragment';
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
@@ -146,7 +147,7 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
       .withName(
         this.convertName(node, {
           useTypesPrefix: true,
-          suffix: 'Fragment',
+          suffix: fragmentSuffix,
         })
       )
       .withContent(selectionSet.string).string;
