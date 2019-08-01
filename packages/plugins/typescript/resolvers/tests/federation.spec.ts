@@ -21,7 +21,8 @@ const directives = /* GraphQL */ `
 // TODO: [ ] support `extend type Query { }`
 // TODO: [ ] make it possible to not include @key and other federation directives
 // TODO: [x] Objects with `@key` directives should have additional `__resolveReference` field
-// TODO: [ ] Fields marked `@external` cannot have resolvers defined for them, unless they are also marked `@provided` by some other field:
+// TODO: [x] Fields marked `@external` cannot have resolvers defined for them
+// TODO: [ ] Fields marked `@external` cannot have resolvers defined for them unless they are also marked `@provided` by some other field:
 // TODO: [ ] https://github.com/apollographql/apollo-tooling/pull/1432/files#diff-ef0c8ff73747d34b126f39eebaf1f91aR109
 // TODO: [ ] Fields with a `@requires` directive will have access to the given fields in their resolver functions:
 // TODO: [ ] https://github.com/apollographql/apollo-tooling/pull/1432/files#diff-ef0c8ff73747d34b126f39eebaf1f91aR133
@@ -33,7 +34,6 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       ${directives}
 
       type Query {
-        me: User
         allUsers: [User]
       }
       type User @key(fields: "id") {
@@ -63,6 +63,43 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
     // Foo shouldn't because it doesn't have @key
     expect(content.content).not.toBeSimilarStringTo(`
       __resolveReference?: Resolver<Maybe<ResolversTypes['Foo']>, ParentType, ContextType>,
+    `);
+  });
+
+  it('should skip to generate resolvers of fields with @external directive', async () => {
+    const federatedSchema = buildSchema(/* GraphQL */ `
+      ${directives}
+
+      type Query {
+        allUsers: [User]
+      }
+      type User @key(fields: "id") {
+        id: ID!
+        name: String @external
+        username: String
+      }
+
+      type Foo {
+        id: ID!
+      }
+    `);
+
+    const content = (await plugin(
+      federatedSchema,
+      [],
+      {
+        federation: true,
+      } as any,
+      { outputFile: 'graphql.ts' }
+    )) as Types.ComplexPluginOutput;
+
+    // UserResolver should not have a resolver function of name field
+    expect(content.content).toBeSimilarStringTo(`
+      export type UserResolvers<ContextType = any, ParentType = ResolversParentTypes['User']> = {
+        __resolveReference?: Resolver<Maybe<ResolversTypes['User']>, ParentType & ({ id: ParentType['id'] }), ContextType>,
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
+        username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+      };
     `);
   });
 });

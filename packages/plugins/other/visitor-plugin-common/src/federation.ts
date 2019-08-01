@@ -38,7 +38,7 @@ export function addFederationToSchema(schema: GraphQLSchema) {
             },
             arguments: [],
           } as FieldDefinitionNode,
-          ...node.fields,
+          ...node.fields.filter(field => !isExternal(field)),
         ],
       };
     },
@@ -83,8 +83,12 @@ function isFederationObjectType(node: ObjectTypeDefinitionNode | GraphQLObjectTy
   return isNotRoot && isNotIntrospection && hasKeyDirective;
 }
 
-function getDirectivesByName(name: string, node: ObjectTypeDefinitionNode | GraphQLObjectType): DirectiveNode[] {
+function getDirectivesByName(name: string, node: ObjectTypeDefinitionNode | GraphQLObjectType | FieldDefinitionNode): DirectiveNode[] {
   return (isObjectType(node) ? node.astNode : node).directives.filter(d => d.name.value === name);
+}
+
+function isExternal(node: FieldDefinitionNode): boolean {
+  return getDirectivesByName('external', node).length > 0;
 }
 
 function translateFieldSet(fields: string, parentTypeRef: string): string {
