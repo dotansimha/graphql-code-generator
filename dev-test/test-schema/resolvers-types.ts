@@ -15,6 +15,9 @@ export type Query = {
   allUsers: Array<Maybe<User>>,
   userById?: Maybe<User>,
   answer: Array<Scalars['Int']>,
+  testArr1?: Maybe<Array<Maybe<Scalars['String']>>>,
+  testArr2: Array<Maybe<Scalars['String']>>,
+  testArr3: Array<Scalars['String']>,
 };
 
 
@@ -110,6 +113,9 @@ export type QueryResolvers<ContextType = any, ParentType = ResolversParentTypes[
   allUsers?: Resolver<Array<Maybe<ResolversTypes['User']>>, ParentType, ContextType>,
   userById?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, QueryUserByIdArgs>,
   answer?: Resolver<Array<ResolversTypes['Int']>, ParentType, ContextType>,
+  testArr1?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>,
+  testArr2?: Resolver<Array<Maybe<ResolversTypes['String']>>, ParentType, ContextType>,
+  testArr3?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>,
 };
 
 export type UserResolvers<ContextType = any, ParentType = ResolversParentTypes['User']> = {
