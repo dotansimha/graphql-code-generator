@@ -1186,6 +1186,26 @@ describe('TypeScript', () => {
       validateTs(result);
     });
 
+    it('Should allow to disable typesPrefix for enums', async () => {
+      const schema = buildSchema(`type T { f: String, e: E } enum E { A }`);
+      const result = (await plugin(schema, [], { typesPrefix: 'I', enumPrefix: false }, { outputFile: '' })) as Types.ComplexPluginOutput;
+
+      expect(result.content).toContain(`export enum E {`);
+      expect(result.content).toContain(`e?: Maybe<E>,`);
+
+      validateTs(result);
+    });
+
+    it('Should enable typesPrefix for enums by default', async () => {
+      const schema = buildSchema(`type T { f: String, e: E } enum E { A }`);
+      const result = (await plugin(schema, [], { typesPrefix: 'I' }, { outputFile: '' })) as Types.ComplexPluginOutput;
+
+      expect(result.content).toContain(`export enum IE {`);
+      expect(result.content).toContain(`e?: Maybe<IE>,`);
+
+      validateTs(result);
+    });
+
     const schema = buildSchema(`
     enum MyEnum {
       A

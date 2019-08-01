@@ -15,9 +15,9 @@ import {
   ScalarTypeDefinitionNode,
   UnionTypeDefinitionNode,
   StringValueNode,
+  isEnumType,
 } from 'graphql';
 import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor';
-import { parseMapper } from './mappers';
 import { DEFAULT_SCALARS } from './scalars';
 import { normalizeDeclarationKind } from './declaration-kinds';
 import { EnumValuesMap, ScalarsMap, DeclarationKindConfig, DeclarationKind, ParsedEnumValuesMap } from './types';
@@ -29,6 +29,7 @@ export interface ParsedTypesConfig extends ParsedConfig {
   enumValues: ParsedEnumValuesMap;
   declarationKind: DeclarationKindConfig;
   addUnderscoreToArgsType: boolean;
+  enumPrefix: boolean;
 }
 
 export interface RawTypesConfig extends RawConfig {
@@ -93,6 +94,20 @@ export interface RawTypesConfig extends RawConfig {
    * ```
    */
   declarationKind?: DeclarationKind | DeclarationKindConfig;
+  /**
+   * @name enumPrefix
+   * @type boolean
+   * @default true
+   * @description Allow you to disable prefixing for generated enums, works in combination with `typesPrefix`.
+   *
+   * @example Disable enum prefixes
+   * ```yml
+   *   config:
+   *     typesPrefix: I
+   *     enumPrefix: false
+   * ```
+   */
+  enumPrefix?: boolean;
 }
 
 export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig, TPluginConfig extends ParsedTypesConfig = ParsedTypesConfig> extends BaseVisitor<TRawConfig, TPluginConfig> {
@@ -102,6 +117,7 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
     super(
       rawConfig,
       {
+        enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
         addUnderscoreToArgsType: getConfigValue(rawConfig.addUnderscoreToArgsType, false),
         enumValues: parseEnumValues(_schema, rawConfig.enumValues),
         declarationKind: normalizeDeclarationKind(rawConfig.declarationKind),
@@ -267,7 +283,7 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('enum')
-      .withName(this.convertName(node))
+      .withName(this.convertName(node, { useTypesPrefix: this.config.enumPrefix }))
       .withComment((node.description as any) as string)
       .withBlock(this.buildEnumValuesBlock(enumName, node.values)).string;
   }
@@ -330,6 +346,12 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
       return this._getScalar(typeAsString);
     } else if (this.config.enumValues[typeAsString]) {
       return this.config.enumValues[typeAsString].typeIdentifier;
+    }
+
+    const schemaType = this._schema.getType(node.name as any);
+
+    if (schemaType && isEnumType(schemaType)) {
+      return this.convertName(node, { useTypesPrefix: this.config.enumPrefix });
     }
 
     return this.convertName(node);
