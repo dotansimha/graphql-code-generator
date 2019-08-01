@@ -12,6 +12,7 @@ export namespace Types {
     pluginMap: {
       [name: string]: CodegenPlugin;
     };
+    skipDuplicateDocumentsValidation?: boolean;
   }
 
   export type FileOutput = {
