@@ -179,6 +179,7 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
           schema: options.schema,
           schemaAst: options.schemaAst,
           documents: [documentFile],
+          skipDuplicateDocumentsValidation: true,
         };
       })
       .filter(f => f);
