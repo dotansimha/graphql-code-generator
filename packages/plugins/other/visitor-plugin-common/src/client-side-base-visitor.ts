@@ -6,6 +6,7 @@ import gqlTag from 'graphql-tag';
 import { toPascalCase, Types } from '@graphql-codegen/plugin-helpers';
 import { getConfigValue } from './utils';
 import { LoadedFragment } from './types';
+import { basename } from 'path';
 export interface RawClientSideBasePluginConfig extends RawConfig {
   gqlImport?: string;
   noExport?: boolean;
@@ -218,7 +219,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
         break;
       case 'external':
         if (this.config.importDocumentNodeExternallyFrom === 'near-operation-file' && this._documents.length === 1) {
-          imports.push(`import * as Operations from './${this._documents[0].filePath}';`);
+          imports.push(`import * as Operations from './${basename(this._documents[0].filePath)}';`);
         } else {
           imports.push(`import * as Operations from '${this.config.importDocumentNodeExternallyFrom}';`);
         }

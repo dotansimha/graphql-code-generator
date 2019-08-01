@@ -1206,7 +1206,7 @@ export function useListenToCommentsSubscription(baseOptions?: ReactApolloHooks.S
         importDocumentNodeExternallyFrom: 'near-operation-file',
       };
 
-      const docs = [{ filePath: 'document.graphql', content: basicDoc }];
+      const docs = [{ filePath: 'path/to/document.graphql', content: basicDoc }];
 
       const content = (await plugin(schema, docs, config, {
         outputFile: 'graphql.tsx',
@@ -1226,7 +1226,7 @@ export function useListenToCommentsSubscription(baseOptions?: ReactApolloHooks.S
         importDocumentNodeExternallyFrom: 'near-operation-file',
       };
 
-      const docs = [{ filePath: 'document.graphql', content: mutationDoc }];
+      const docs = [{ filePath: 'path/to/document.graphql', content: mutationDoc }];
 
       const content = (await plugin(schema, docs, config, {
         outputFile: 'graphql.tsx',
@@ -1246,7 +1246,7 @@ export function useListenToCommentsSubscription(baseOptions?: ReactApolloHooks.S
         importDocumentNodeExternallyFrom: 'near-operation-file',
       };
 
-      const docs = [{ filePath: 'document.graphql', content: subscriptionDoc }];
+      const docs = [{ filePath: 'path/to/document.graphql', content: subscriptionDoc }];
 
       const content = (await plugin(schema, docs, config, {
         outputFile: 'graphql.tsx',
@@ -1266,7 +1266,7 @@ export function useListenToCommentsSubscription(baseOptions?: ReactApolloHooks.S
         importDocumentNodeExternallyFrom: 'near-operation-file',
       };
 
-      const docs = [{ filePath: 'document.graphql', content: multipleOperationDoc }];
+      const docs = [{ filePath: 'path/to/document.graphql', content: multipleOperationDoc }];
 
       const content = (await plugin(schema, docs, config, {
         outputFile: 'graphql.tsx',
