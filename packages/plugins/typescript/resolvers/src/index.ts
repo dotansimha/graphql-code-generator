@@ -1,7 +1,10 @@
+import gql from 'graphql-tag';
+import { printSchemaWithDirectives } from 'graphql-toolkit';
 import { RawResolversConfig } from '@graphql-codegen/visitor-plugin-common';
 import { Types, PluginFunction } from '@graphql-codegen/plugin-helpers';
-import { isScalarType, parse, printSchema, visit, GraphQLSchema } from 'graphql';
+import { isScalarType, parse, visit, GraphQLSchema } from 'graphql';
 import { TypeScriptResolversVisitor } from './visitor';
+import { addFederationToSchema, federationSpec, useFederation } from './federation';
 
 export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
   /**
@@ -79,7 +82,8 @@ export const plugin: PluginFunction<TypeScriptResolversPluginConfig> = (schema: 
 
   const indexSignature = config.useIndexSignature ? ['export type WithIndex<TObject> = TObject & Record<string, any>;', 'export type ResolversObject<TObject> = WithIndex<TObject>;'].join('\n') : '';
 
-  const visitor = new TypeScriptResolversVisitor(config, schema);
+  const transformedSchema = useFederation ? addFederationToSchema(schema) : schema;
+  const visitor = new TypeScriptResolversVisitor(config, transformedSchema);
 
   const stitchingResolverType = `
 export type StitchingResolver<TResult, TParent, TContext, TArgs> = {
@@ -157,7 +161,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 ) => TResult | Promise<TResult>;
 `;
 
-  const printedSchema = printSchema(schema);
+  const printedSchema = printSchemaWithDirectives(transformedSchema);
   const astNode = parse(printedSchema);
   const visitorResult = visit(astNode, { leave: visitor });
   const resolversTypeMapping = visitor.buildResolversTypes();
@@ -173,5 +177,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
     content: [header, resolversTypeMapping, resolversParentTypeMapping, ...visitorResult.definitions.filter(d => typeof d === 'string'), getRootResolver(), getAllDirectiveResolvers()].join('\n'),
   };
 };
+
+export const addToSchema = useFederation ? federationSpec : undefined;
 
 export { TypeScriptResolversVisitor };
