@@ -541,7 +541,7 @@ query MyFeed {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(`
-      export type TestComponentProps = Omit<ReactApollo.QueryProps<TestQuery, TestQueryVariables>, 'query'> & ({ variables: TestQueryVariables; skip?: false; } | { skip: true; });
+      export type TestComponentProps = Omit<ReactApollo.QueryProps<TestQuery, TestQueryVariables>, 'query'> & ({ variables: TestQueryVariables; skip?: boolean; } | { skip: boolean; });
       `);
 
       expect(content.content).toBeSimilarStringTo(`
