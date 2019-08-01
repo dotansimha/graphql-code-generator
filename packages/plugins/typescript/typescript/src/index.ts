@@ -3,19 +3,21 @@ import { parse, printSchema, visit, GraphQLSchema, TypeInfo, GraphQLNamedType, v
 import { RawTypesConfig } from '@graphql-codegen/visitor-plugin-common';
 import { TsVisitor } from './visitor';
 import { TsIntrospectionVisitor } from './introspection-visitor';
+import { AvoidOptionalsConfig } from './types';
 export * from './typescript-variables-to-object';
+export * from './visitor';
 export * from './visitor';
 
 export interface TypeScriptPluginConfig extends RawTypesConfig {
   /**
    * @name avoidOptionals
    * @type boolean
-   * @description This will cause the generator to avoid using TypeScript optionals (`?`),
+   * @description This will cause the generator to avoid using TypeScript optionals (`?`) on types,
    * so the following definition: `type A { myField: String }` will output `myField: Maybe<string>`
    * instead of `myField?: Maybe<string>`.
    * @default false
    *
-   * @example
+   * @example Override all definition types
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -24,8 +26,20 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    *  config:
    *    avoidOptionals: true
    * ```
+   *
+   * @example Override only specific definition types
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *  config:
+   *    avoidOptionals:
+   *      inputValue: true
+   * ```
+   *
    */
-  avoidOptionals?: boolean;
+  avoidOptionals?: boolean | AvoidOptionalsConfig;
   /**
    * @name constEnums
    * @type boolean
