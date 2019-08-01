@@ -14,18 +14,18 @@ const directives = /* GraphQL */ `
   directive @key(fields: _FieldSet!) on OBJECT | INTERFACE
 `;
 
-// TODO: we shouldn't produce a resolver for `_FieldSet`
-// TODO: we shouldn't produce `_FieldSetScalarConfig`
-// TODO: we shouldn't produce directive resolvers for those from apollo federation
-// TODO: we shouldn't produce ResolversTypes._FieldSet and ResolversParentTypes._FieldSet
-// TODO: support `extend type Query { }`
-// TODO: make it possible to not include @key and other federation directives
-// TODO: Objects with `@key` directives should have additional `__resolveReference` field
-// TODO: Fields marked `@external` cannot have resolvers defined for them, unless they are also marked `@provided` by some other field:
-// TODO: https://github.com/apollographql/apollo-tooling/pull/1432/files#diff-ef0c8ff73747d34b126f39eebaf1f91aR109
-// TODO: Fields with a `@requires` directive will have access to the given fields in their resolver functions:
-// TODO: https://github.com/apollographql/apollo-tooling/pull/1432/files#diff-ef0c8ff73747d34b126f39eebaf1f91aR133
-// TODO: should make sure fields from @key directive are non optional and included in the parent type
+// TODO: [ ] we shouldn't produce a resolver for `_FieldSet`
+// TODO: [ ] we shouldn't produce `_FieldSetScalarConfig`
+// TODO: [ ] we shouldn't produce directive resolvers for those from apollo federation
+// TODO: [ ] we shouldn't produce ResolversTypes._FieldSet and ResolversParentTypes._FieldSet
+// TODO: [ ] support `extend type Query { }`
+// TODO: [ ] make it possible to not include @key and other federation directives
+// TODO: [x] Objects with `@key` directives should have additional `__resolveReference` field
+// TODO: [ ] Fields marked `@external` cannot have resolvers defined for them, unless they are also marked `@provided` by some other field:
+// TODO: [ ] https://github.com/apollographql/apollo-tooling/pull/1432/files#diff-ef0c8ff73747d34b126f39eebaf1f91aR109
+// TODO: [ ] Fields with a `@requires` directive will have access to the given fields in their resolver functions:
+// TODO: [ ] https://github.com/apollographql/apollo-tooling/pull/1432/files#diff-ef0c8ff73747d34b126f39eebaf1f91aR133
+// TODO: [x] should make sure fields from @key directive are non optional and included in the parent type
 
 describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
   it('should add __resolveReference to objects that have @key', async () => {
