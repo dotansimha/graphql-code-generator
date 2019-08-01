@@ -32,7 +32,7 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
     });
   }
 
-  private clearOptional(str: string): string {
+  protected clearOptional(str: string): string {
     if (str.startsWith('Maybe')) {
       return str.replace(/Maybe<(.*?)>$/, '$1');
     }
