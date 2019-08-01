@@ -33,13 +33,13 @@ describe('Apollo Angular', () => {
   };
 
   describe('Imports', () => {
-    it('should import DocumentNode when using noGraphQLTag', async () => {
+    it('should import DocumentNode when documentMode is "documentNode" ( formerly noGraphQLTag )', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
         {
-          noGraphQLTag: true,
+          documentMode: 'documentNode',
         },
         {
           outputFile: 'graphql.tsx',
