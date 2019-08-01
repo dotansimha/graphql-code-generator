@@ -83,12 +83,14 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
       return `export { ${this.config.enumValues[enumName].typeIdentifier} };\n`;
     }
 
+    const enumTypeName = this.convertName(node, { useTypesPrefix: this.config.enumPrefix });
+
     if (this.config.enumsAsTypes) {
       return new DeclarationBlock(this._declarationBlockConfig)
         .export()
         .asKind('type')
         .withComment((node.description as any) as string)
-        .withName(this.convertName(node))
+        .withName(enumTypeName)
         .withContent(
           '\n' +
             node.values
@@ -108,7 +110,7 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
       return new DeclarationBlock(this._declarationBlockConfig)
         .export()
         .asKind(this.config.constEnums ? 'const enum' : 'enum')
-        .withName(this.convertName(node))
+        .withName(enumTypeName)
         .withComment((node.description as any) as string)
         .withBlock(this.buildEnumValuesBlock(enumName, node.values)).string;
     }

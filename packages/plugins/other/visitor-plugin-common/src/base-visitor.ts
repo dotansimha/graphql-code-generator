@@ -84,7 +84,6 @@ export interface RawConfig {
    * ```
    */
   typesPrefix?: string;
-
   /**
    * @name skipTypename
    * @type boolean
