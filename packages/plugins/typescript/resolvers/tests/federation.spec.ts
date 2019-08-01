@@ -22,7 +22,8 @@ const directives = /* GraphQL */ `
 // TODO: [ ] make it possible to not include @key and other federation directives
 // TODO: [x] Objects with `@key` directives should have additional `__resolveReference` field
 // TODO: [x] Fields marked `@external` cannot have resolvers defined for them
-// TODO: [ ] Fields marked `@external` cannot have resolvers defined for them unless they are also marked `@provided` by some other field:
+// TODO: [ ] Fields marked `@external` cannot have resolvers defined for them unless they are also marked `@provides` by some other field:
+//            - we could use a visitor to look for `@provides` that is on top of a field that returns a matching type
 // TODO: [ ] https://github.com/apollographql/apollo-tooling/pull/1432/files#diff-ef0c8ff73747d34b126f39eebaf1f91aR109
 // TODO: [ ] Fields with a `@requires` directive will have access to the given fields in their resolver functions:
 // TODO: [ ] https://github.com/apollographql/apollo-tooling/pull/1432/files#diff-ef0c8ff73747d34b126f39eebaf1f91aR133
