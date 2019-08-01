@@ -58,7 +58,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
 
     // User should have it
     expect(content.content).toBeSimilarStringTo(`
-      __resolveReference?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>,
+      __resolveReference?: Resolver<Maybe<ResolversTypes['User']>, ParentType & ({ id: ParentType['id'] }), ContextType>,
     `);
     // Foo shouldn't because it doesn't have @key
     expect(content.content).not.toBeSimilarStringTo(`

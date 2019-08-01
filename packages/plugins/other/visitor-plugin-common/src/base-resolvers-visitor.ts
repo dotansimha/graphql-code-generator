@@ -26,6 +26,7 @@ import { DirectiveDefinitionNode, GraphQLObjectType, InputValueDefinitionNode, G
 import { OperationVariablesToObject } from './variables-to-object';
 import { ParsedMapper, parseMapper, transformMappers } from './mappers';
 import { parseEnumValues } from './enum-values';
+import { translateResolverParentType } from './federation';
 
 export interface ParsedResolversConfig extends ParsedConfig {
   contextType: ParsedMapper;
@@ -654,6 +655,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
       const original: FieldDefinitionNode = parent[key];
       const baseType = getBaseTypeNode(original.type);
       const realType = baseType.name.value;
+      const parentType = this.schema.getType(parentName);
       const typeToUse = this.getTypeToUse(realType);
       const mappedType = this._variablesTransfomer.wrapAstTypeWithModifiers(typeToUse, original.type);
       const subscriptionType = this._schema.getSubscriptionType();
@@ -677,7 +679,11 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
         }
       }
 
-      return indent(`${node.name}${this.config.avoidOptionals ? '' : '?'}: ${isSubscriptionType ? 'SubscriptionResolver' : 'Resolver'}<${mappedType}, ParentType, ContextType${argsType ? `, ${argsType}` : ''}>,`);
+      return indent(
+        `${node.name}${this.config.avoidOptionals ? '' : '?'}: ${isSubscriptionType ? 'SubscriptionResolver' : 'Resolver'}<${mappedType}, ${translateResolverParentType(original, parentType as any, 'ParentType')}, ContextType${
+          argsType ? `, ${argsType}` : ''
+        }>,`
+      );
     };
   }
 
