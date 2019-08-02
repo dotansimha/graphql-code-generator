@@ -18,17 +18,13 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
   // merged schema with parts added by plugins
   let schemaChanged = false;
   const schema = pluginPackages.reduce((schema, plugin) => {
-    if (!plugin.addToSchema) {
+    const addToSchema = typeof plugin.addToSchema === 'function' ? plugin.addToSchema(options.config) : plugin.addToSchema;
+
+    if (!addToSchema) {
       return schema;
     }
 
     schemaChanged = true;
-
-    let addToSchema = plugin.addToSchema;
-
-    if (typeof addToSchema === 'function') {
-      addToSchema = addToSchema(options.config);
-    }
 
     return mergeSchemas([schema, addToSchema]);
   }, options.schema);

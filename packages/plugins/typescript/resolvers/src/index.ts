@@ -177,7 +177,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 };
 
 export const addToSchema: CodegenPlugin<{ federation?: boolean }>['addToSchema'] = config => {
-  return config.federation ? federationSpec : '';
+  return config.federation ? federationSpec : undefined;
 };
 
 export { TypeScriptResolversVisitor };

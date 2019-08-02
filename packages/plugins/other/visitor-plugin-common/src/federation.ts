@@ -56,7 +56,7 @@ export function addFederationToSchema(schema: GraphQLSchema) {
 }
 
 export class ApolloFederation {
-  private enabled: boolean;
+  private enabled = false;
   private schema: GraphQLSchema;
   private providesMap: Record<string, string[]>;
 

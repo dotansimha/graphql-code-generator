@@ -23,13 +23,14 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       type Query {
         allUsers: [User]
       }
+
       type User @key(fields: "id") {
         id: ID!
         name: String
         username: String
       }
 
-      type Foo {
+      type Book {
         id: ID!
       }
     `);
@@ -49,7 +50,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
     `);
     // Foo shouldn't because it doesn't have @key
     expect(content.content).not.toBeSimilarStringTo(`
-      __resolveReference?: Resolver<Maybe<ResolversTypes['Foo']>, ParentType, ContextType>,
+      __resolveReference?: Resolver<Maybe<ResolversTypes['Book']>, ParentType, ContextType>,
     `);
   });
 
@@ -58,8 +59,9 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       ${directives}
 
       type Query {
-        allUsers: [User]
+        users: [User]
       }
+
       type User @key(fields: "id") {
         id: ID!
         name: String @external
@@ -92,10 +94,10 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       ${directives}
 
       type Query {
-        allUsers: [User]
+        users: [User]
       }
 
-      type Foo {
+      type Book {
         author: User @provides(fields: "name")
       }
 
@@ -130,15 +132,16 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       ${directives}
 
       type Query {
-        allUsers: [User]
+        users: [User]
       }
+
       type User @key(fields: "id") {
         id: ID!
         name: String
         username: String
       }
 
-      type Foo {
+      type Book {
         id: ID!
       }
     `);
@@ -160,15 +163,16 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       ${directives}
 
       type Query {
-        allUsers: [User]
+        users: [User]
       }
+
       type User @key(fields: "id") {
         id: ID!
         name: String
         username: String
       }
 
-      type Foo {
+      type Book {
         id: ID!
       }
     `);
