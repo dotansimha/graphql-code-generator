@@ -136,7 +136,13 @@ export class ApolloFederation {
 
   private extractFieldSet(directive: DirectiveNode): string[] {
     const arg = directive.arguments.find(arg => arg.name.value === 'fields');
-    return deduplicate((arg.value as StringValueNode).value.split(/\s+/g));
+    const value = (arg.value as StringValueNode).value;
+
+    if (/[\{\}]+/gi.test(value)) {
+      throw new Error('Nested fields in _FieldSet is not supported');
+    }
+
+    return deduplicate(value.split(/\s+/g));
   }
 
   private createMapOfProvides() {
