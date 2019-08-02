@@ -996,8 +996,7 @@ describe('TypeScript Operations Plugin', () => {
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
       expect(result).toBeSimilarStringTo(`
         export type CurrentUserQuery = { me: Maybe<(
-          { __typename?: 'User' }
-          & Pick<User, 'username' | 'id'>
+          Pick<User, 'username' | 'id'>
           & { profile: Maybe<Pick<Profile, 'age'>> }
         )> };
       `);
@@ -1814,6 +1813,14 @@ describe('TypeScript Operations Plugin', () => {
             }
             ... on Error {
               message
+              ... on Error3 {
+                info {
+                  message
+                  message2
+                }
+              }
+            }
+            ... on Error {
               ... on Error3 {
                 info {
                   message
