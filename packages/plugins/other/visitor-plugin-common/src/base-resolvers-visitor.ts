@@ -718,7 +718,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     const block = new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
-      .withName(name, `<ContextType = ${this.config.contextType.type}, ParentType = ${parentType}>`)
+      .withName(name, `<ContextType = ${this.config.contextType.type}, ParentType extends ${parentType} = ${parentType}>`)
       .withBlock(node.fields.map((f: any) => f(node.name)).join('\n'));
 
     this._collectedResolvers[node.name as any] = name + '<ContextType>';

@@ -9,7 +9,7 @@ interface FieldSetItem {
 
 // TODO: we need to include that scala
 export const federationSpec = parse(/* GraphQL */ `
-  # scalar _FieldSet
+  scalar _FieldSet
 
   directive @external on FIELD_DEFINITION
   directive @requires(fields: _FieldSet!) on FIELD_DEFINITION
@@ -49,10 +49,7 @@ export function addFederationToSchema(schema: GraphQLSchema) {
     },
   });
 
-  return buildASTSchema({
-    ...visited,
-    definitions: [...federationSpec.definitions, ...visited.definitions],
-  });
+  return buildASTSchema(visited);
 }
 
 export class ApolloFederation {
@@ -133,7 +130,7 @@ export class ApolloFederation {
 
   private translateFieldSet(fields: FieldSetItem[], parentTypeRef: string): string {
     // TODO: support other things than fields separated by a whitespace (fields: "fieldA fieldB fieldC")
-    const inner = fields.map(field => `${field.name}${field.required ? '' : '?'}: ${parentTypeRef}['${field.name}']`).join('; ');
+    const inner = fields.map(field => `${field.name}${field.required ? '' : '?'}: ${parentTypeRef}["${field.name}"]`).join('; ');
     return `{ ${inner} }`;
   }
 
