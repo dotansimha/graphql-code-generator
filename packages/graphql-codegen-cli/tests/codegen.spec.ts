@@ -1,3 +1,4 @@
+import { Types } from '@graphql-codegen/plugin-helpers';
 import '@graphql-codegen/testing';
 import { GraphQLObjectType, buildSchema, buildASTSchema, parse, print } from 'graphql';
 import { mergeSchemas } from '@graphql-codegen/core';
@@ -535,6 +536,20 @@ describe('Codegen Executor', () => {
       expect(output[0].content).toContain('MyType,');
       expect(output[0].content).toContain('Extension');
       expect(output[0].content).toContain(`Should have the Extension type: 'Extension'`);
+    });
+
+    it('Should allow plugins to extend schema (using a function)', async () => {
+      const output = await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        config: {
+          test: 'MyType',
+        },
+        generates: {
+          'out1.ts': ['./tests/custom-plugins/extends-schema-fn.js'],
+        },
+      });
+
+      expect(output[0].content).toContain('MyType');
     });
   });
 

@@ -23,7 +23,14 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
     }
 
     schemaChanged = true;
-    return mergeSchemas([schema, plugin.addToSchema]);
+
+    let addToSchema = plugin.addToSchema;
+
+    if (typeof addToSchema === 'function') {
+      addToSchema = addToSchema(options.config);
+    }
+
+    return mergeSchemas([schema, addToSchema]);
   }, options.schema);
 
   if (schemaChanged) {
