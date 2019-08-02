@@ -6,7 +6,7 @@ import { TsIntrospectionVisitor } from './introspection-visitor';
 import { AvoidOptionalsConfig } from './types';
 export * from './typescript-variables-to-object';
 export * from './visitor';
-export * from './visitor';
+export { AvoidOptionalsConfig } from './types';
 
 export interface TypeScriptPluginConfig extends RawTypesConfig {
   /**
@@ -126,7 +126,7 @@ export const plugin: PluginFunction<TypeScriptPluginConfig> = (schema: GraphQLSc
   };
 };
 
-function includeIntrospectionDefinitions(schema: GraphQLSchema, documents: Types.DocumentFile[], config: TypeScriptPluginConfig): string[] {
+export function includeIntrospectionDefinitions(schema: GraphQLSchema, documents: Types.DocumentFile[], config: TypeScriptPluginConfig): string[] {
   const typeInfo = new TypeInfo(schema);
   const usedTypes: GraphQLNamedType[] = [];
   const documentsVisitor = visitWithTypeInfo(typeInfo, {

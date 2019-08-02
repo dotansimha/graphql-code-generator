@@ -23,7 +23,14 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
     }
 
     schemaChanged = true;
-    return mergeSchemas([schema, typeof plugin.addToSchema === 'function' ? plugin.addToSchema(/* DOTAN HERE */) : plugin.addToSchema]);
+
+    let addToSchema = plugin.addToSchema;
+
+    if (typeof addToSchema === 'function') {
+      addToSchema = addToSchema(options.config);
+    }
+
+    return mergeSchemas([schema, addToSchema]);
   }, options.schema);
 
   if (schemaChanged) {
@@ -152,7 +159,6 @@ function validateDocuments(files: Types.DocumentFile[]) {
       `Not all operations have an unique name: ${duplicated.join(', ')}`,
       `
         Not all operations have an unique name
-
         ${list}
       `
     );
