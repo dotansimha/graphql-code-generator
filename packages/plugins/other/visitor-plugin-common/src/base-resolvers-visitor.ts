@@ -742,7 +742,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
-      .withName(name, `<ContextType = ${this.config.contextType.type}, ParentType = ${parentType}>`)
+      .withName(name, `<ContextType = ${this.config.contextType.type}, ParentType extends ${parentType} = ${parentType}>`)
       .withBlock(indent(`__resolveType: TypeResolveFn<${possibleTypes}, ParentType, ContextType>`)).string;
   }
 
@@ -823,7 +823,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
-      .withName(name, `<ContextType = ${this.config.contextType.type}, ParentType = ${parentType}>`)
+      .withName(name, `<ContextType = ${this.config.contextType.type}, ParentType extends ${parentType} = ${parentType}>`)
       .withBlock([indent(`__resolveType: TypeResolveFn<${possibleTypes}, ParentType, ContextType>,`), ...(node.fields || []).map((f: any) => f(node.name))].join('\n')).string;
   }
 

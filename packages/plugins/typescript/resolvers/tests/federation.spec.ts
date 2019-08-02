@@ -46,7 +46,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
 
     // User should have it
     expect(content.content).toBeSimilarStringTo(`
-      __resolveReference?: Resolver<Maybe<ResolversTypes['User']>, ({ id: ParentType['id'] }), ContextType>,
+      __resolveReference?: Resolver<Maybe<ResolversTypes['User']>, ({ id: ParentType["id"] }), ContextType>,
     `);
     // Foo shouldn't because it doesn't have @key
     expect(content.content).not.toBeSimilarStringTo(`
@@ -81,10 +81,10 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
 
     // User should have it
     expect(content.content).toBeSimilarStringTo(`
-      export type UserResolvers<ContextType = any, ParentType = ResolversParentTypes['User']> = {
-        __resolveReference?: Resolver<Maybe<ResolversTypes['User']>, ({ id: ParentType['id'] }), ContextType>,
-        id?: Resolver<ResolversTypes['ID'], ({ id: ParentType['id'] }), ContextType>,
-        username?: Resolver<Maybe<ResolversTypes['String']>, ({ id: ParentType['id'] }) & { name?: ParentType['name']; age: ParentType['age'] }, ContextType>,
+      export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
+        __resolveReference?: Resolver<Maybe<ResolversTypes['User']>, ({ id: ParentType["id"] }), ContextType>,
+        id?: Resolver<ResolversTypes['ID'], ({ id: ParentType["id"] }), ContextType>,
+        username?: Resolver<Maybe<ResolversTypes['String']>, ({ id: ParentType["id"] }) & { name?: ParentType["name"]; age: ParentType["age"] }, ContextType>,
       };
     `);
   });
@@ -119,10 +119,10 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
 
     // UserResolver should not have a resolver function of name field
     expect(content.content).toBeSimilarStringTo(`
-      export type UserResolvers<ContextType = any, ParentType = ResolversParentTypes['User']> = {
-        __resolveReference?: Resolver<Maybe<ResolversTypes['User']>, ({ id: ParentType['id'] }), ContextType>,
-        id?: Resolver<ResolversTypes['ID'], ({ id: ParentType['id'] }), ContextType>,
-        name?: Resolver<Maybe<ResolversTypes['String']>, ({ id: ParentType['id'] }), ContextType>,
+      export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
+        __resolveReference?: Resolver<Maybe<ResolversTypes['User']>, ({ id: ParentType["id"] }), ContextType>,
+        id?: Resolver<ResolversTypes['ID'], ({ id: ParentType["id"] }), ContextType>,
+        name?: Resolver<Maybe<ResolversTypes['String']>, ({ id: ParentType["id"] }), ContextType>,
       };
     `);
   });
