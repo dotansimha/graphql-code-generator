@@ -1,7 +1,7 @@
 import { printSchemaWithDirectives } from 'graphql-toolkit';
 import { RawResolversConfig, addFederationToSchema, federationSpec } from '@graphql-codegen/visitor-plugin-common';
 import { Types, CodegenPlugin, PluginFunction } from '@graphql-codegen/plugin-helpers';
-import { isScalarType, parse, visit, GraphQLSchema } from 'graphql';
+import { isScalarType, parse, visit, GraphQLSchema, printSchema } from 'graphql';
 import { TypeScriptResolversVisitor } from './visitor';
 
 export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
@@ -159,7 +159,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 ) => TResult | Promise<TResult>;
 `;
 
-  const printedSchema = printSchemaWithDirectives(transformedSchema);
+  const printedSchema = config.federation ? printSchemaWithDirectives(transformedSchema) : printSchema(transformedSchema);
   const astNode = parse(printedSchema);
   const visitorResult = visit(astNode, { leave: visitor });
   const resolversTypeMapping = visitor.buildResolversTypes();
