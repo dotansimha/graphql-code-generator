@@ -4,6 +4,7 @@ import { getBaseType } from './utils';
 
 export const useFederation = true;
 
+// TODO: we need to include that scala
 export const federationSpec = parse(/* GraphQL */ `
   # scalar _FieldSet
 
@@ -40,8 +41,6 @@ export function addFederationToSchema(schema: GraphQLSchema) {
             arguments: [],
           } as FieldDefinitionNode,
           ...node.fields,
-          // we can't filter them out because we need them later on
-          // ...node.fields.filter(field => !isExternal(field) || hasProvides(node, field, providesMap)),
         ],
       };
     },
@@ -53,54 +52,40 @@ export function addFederationToSchema(schema: GraphQLSchema) {
   });
 }
 
-export function federationInResolvers(typeNames: string[]) {
-  return typeNames.filter(t => t !== '_FieldSet');
-}
+export class ApolloFederation {
+  private enabled: boolean;
 
-export function federationInDirectiveDefinition(name: string) {
-  if (['external', 'requires', 'provides', 'key'].includes(name)) {
-    return {
-      skip: true,
-    };
+  constructor({ enabled }: { enabled: boolean }) {
+    this.enabled = enabled;
   }
 
-  return {
-    notFederation: true,
-  };
-}
-
-export function federationInScalarTypeDefinition(name: string) {
-  if (name === '_FieldSet') {
-    return {
-      skip: true,
-    };
+  filterTypeNames(typeNames: string[]): string[] {
+    return this.enabled ? typeNames.filter(t => t !== '_FieldSet') : typeNames;
   }
 
-  return {
-    notFederation: true,
-  };
-}
-
-export function federationInFieldDefinition({ fieldNode, parentType, schema }: { fieldNode: FieldDefinitionNode; parentType: GraphQLNamedType; schema: GraphQLSchema }) {
-  if (!isObjectType(parentType) || !isFederationObjectType(parentType)) {
-    return {
-      notFederation: true,
-    };
+  skipDirective(name: string): boolean {
+    return this.enabled && ['external', 'requires', 'provides', 'key'].includes(name);
   }
 
-  const providesMap = createMapOfProvides(schema);
-
-  if (isExternalAndNotProvided(fieldNode, parentType, providesMap)) {
-    return {
-      skip: true,
-    };
+  skipScalar(name: string): boolean {
+    return this.enabled && name === '_FieldSet';
   }
 
-  return {
-    translateResolverParentType(parentTypeSignature: string) {
+  skipField({ fieldNode, parentType, schema }: { fieldNode: FieldDefinitionNode; parentType: GraphQLNamedType; schema: GraphQLSchema }): boolean {
+    if (!this.enabled || !isObjectType(parentType) || !isFederationObjectType(parentType)) {
+      return false;
+    }
+
+    return isExternalAndNotProvided(fieldNode, parentType, createMapOfProvides(schema));
+  }
+
+  translateParentType({ fieldNode, parentType, parentTypeSignature }: { fieldNode: FieldDefinitionNode; parentType: GraphQLNamedType; parentTypeSignature: string }) {
+    if (this.enabled && isObjectType(parentType) && isFederationObjectType(parentType)) {
       return translateResolverParentType(fieldNode, parentType, parentTypeSignature);
-    },
-  };
+    }
+
+    return parentTypeSignature;
+  }
 }
 
 function translateResolverParentType(field: FieldDefinitionNode, entity: GraphQLObjectType, parentTypeSignature: string) {
@@ -161,15 +146,15 @@ function getDirectivesByName(name: string, node: ObjectTypeDefinitionNode | Grap
   return [];
 }
 
-export function isExternalAndNotProvided(fieldNode: FieldDefinitionNode, objectType: GraphQLObjectType, providesMap: Record<string, string[]>): boolean {
+function isExternalAndNotProvided(fieldNode: FieldDefinitionNode, objectType: GraphQLObjectType, providesMap: Record<string, string[]>): boolean {
   return isExternal(fieldNode) && !hasProvides(objectType, fieldNode, providesMap);
 }
 
-export function isExternal(node: FieldDefinitionNode): boolean {
+function isExternal(node: FieldDefinitionNode): boolean {
   return getDirectivesByName('external', node).length > 0;
 }
 
-export function hasProvides(objectType: ObjectTypeDefinitionNode | GraphQLObjectType, node: FieldDefinitionNode, providesMap: Record<string, string[]>): boolean {
+function hasProvides(objectType: ObjectTypeDefinitionNode | GraphQLObjectType, node: FieldDefinitionNode, providesMap: Record<string, string[]>): boolean {
   const fields = providesMap[isObjectType(objectType) ? objectType.name : objectType.name.value];
 
   if (fields && fields.length) {

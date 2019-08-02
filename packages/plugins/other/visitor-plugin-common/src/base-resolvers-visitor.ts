@@ -26,7 +26,7 @@ import { DirectiveDefinitionNode, GraphQLObjectType, InputValueDefinitionNode, G
 import { OperationVariablesToObject } from './variables-to-object';
 import { ParsedMapper, parseMapper, transformMappers } from './mappers';
 import { parseEnumValues } from './enum-values';
-import { federationInFieldDefinition, federationInScalarTypeDefinition, federationInDirectiveDefinition, federationInResolvers } from './federation';
+import { ApolloFederation } from './federation';
 
 export interface ParsedResolversConfig extends ParsedConfig {
   contextType: ParsedMapper;
@@ -216,6 +216,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
   protected _resolversParentTypes: ResolverParentTypes = {};
   protected _rootTypeNames: string[] = [];
   protected _globalDeclarations: Set<string> = new Set();
+  protected _federation: ApolloFederation;
 
   constructor(rawConfig: TRawConfig, additionalConfig: TPluginConfig, private _schema: GraphQLSchema, defaultScalars: ScalarsMap = DEFAULT_SCALARS) {
     super(
@@ -235,6 +236,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
     );
 
     autoBind(this);
+    this._federation = new ApolloFederation({ enabled: true });
     this._rootTypeNames = getRootTypeNames(_schema);
     this._variablesTransfomer = new OperationVariablesToObject(this.scalars, this.convertName);
     this._resolversTypes = this.createResolversFields(type => this.applyResolverTypeWrapper(type), type => this.clearResolverTypeWrapper(type));
@@ -294,7 +296,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
   protected createResolversFields(applyWrapper: (str: string) => string, clearWrapper: (str: string) => string): ResolverTypes {
     const allSchemaTypes = this._schema.getTypeMap();
     const nestedMapping: { [typeName: string]: boolean } = {};
-    const typeNames = federationInResolvers(Object.keys(allSchemaTypes));
+    const typeNames = this._federation.filterTypeNames(Object.keys(allSchemaTypes));
 
     typeNames.forEach(typeName => {
       const schemaType = allSchemaTypes[typeName];
@@ -658,13 +660,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
       const realType = baseType.name.value;
       const parentType = this.schema.getType(parentName);
 
-      const federation = federationInFieldDefinition({
-        fieldNode: original,
-        parentType: parentType,
-        schema: this.schema,
-      });
-
-      if (federation.skip) {
+      if (this._federation.skipField({ fieldNode: original, parentType: parentType, schema: this.schema })) {
         return null;
       }
 
@@ -694,9 +690,9 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
       const parentTypeSignature = 'ParentType';
 
       return indent(
-        `${node.name}${this.config.avoidOptionals ? '' : '?'}: ${isSubscriptionType ? 'SubscriptionResolver' : 'Resolver'}<${mappedType}, ${
-          federation.notFederation ? parentTypeSignature : federation.translateResolverParentType(parentTypeSignature)
-        }, ContextType${argsType ? `, ${argsType}` : ''}>,`
+        `${node.name}${this.config.avoidOptionals ? '' : '?'}: ${isSubscriptionType ? 'SubscriptionResolver' : 'Resolver'}<${mappedType}, ${this._federation.translateParentType({ fieldNode: original, parentType, parentTypeSignature })}, ContextType${
+          argsType ? `, ${argsType}` : ''
+        }>,`
       );
     };
   }
@@ -748,9 +744,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     const nameAsString = (node.name as any) as string;
     const baseName = this.getTypeToUse(nameAsString);
 
-    const federation = federationInScalarTypeDefinition(nameAsString);
-
-    if (federation.skip) {
+    if (this._federation.skipScalar(nameAsString)) {
       return null;
     }
 
@@ -774,7 +768,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
   }
 
   DirectiveDefinition(node: DirectiveDefinitionNode): string {
-    if (federationInDirectiveDefinition(node.name as any).skip) {
+    if (this._federation.skipDirective(node.name as any)) {
       return null;
     }
 
