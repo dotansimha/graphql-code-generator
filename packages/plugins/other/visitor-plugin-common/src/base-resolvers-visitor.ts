@@ -39,6 +39,7 @@ export interface ParsedResolversConfig extends ParsedConfig {
   addUnderscoreToArgsType: boolean;
   enumValues: ParsedEnumValuesMap;
   resolverTypeWrapperSignature: string;
+  federation: boolean;
 }
 
 export interface RawResolversConfig extends RawConfig {
@@ -200,6 +201,14 @@ export interface RawResolversConfig extends RawConfig {
    *
    */
   resolverTypeWrapperSignature?: string;
+  /**
+   * @name federation
+   * @type boolean
+   * @default false
+   * @description Supports Apollo Federation
+   *
+   */
+  federation?: boolean;
 }
 
 export type ResolverTypes = { [gqlType: string]: string };
@@ -222,6 +231,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
     super(
       rawConfig,
       {
+        federation: getConfigValue(rawConfig.federation, false),
         resolverTypeWrapperSignature: getConfigValue(rawConfig.resolverTypeWrapperSignature, 'Promise<T> | T'),
         enumValues: parseEnumValues(_schema, rawConfig.enumValues),
         addUnderscoreToArgsType: getConfigValue(rawConfig.addUnderscoreToArgsType, false),
@@ -236,7 +246,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
     );
 
     autoBind(this);
-    this._federation = new ApolloFederation({ enabled: true });
+    this._federation = new ApolloFederation({ enabled: this.config.federation, schema: this.schema });
     this._rootTypeNames = getRootTypeNames(_schema);
     this._variablesTransfomer = new OperationVariablesToObject(this.scalars, this.convertName);
     this._resolversTypes = this.createResolversFields(type => this.applyResolverTypeWrapper(type), type => this.clearResolverTypeWrapper(type));
@@ -660,7 +670,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
       const realType = baseType.name.value;
       const parentType = this.schema.getType(parentName);
 
-      if (this._federation.skipField({ fieldNode: original, parentType: parentType, schema: this.schema })) {
+      if (this._federation.skipField({ fieldNode: original, parentType: parentType })) {
         return null;
       }
 
@@ -687,13 +697,9 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
         }
       }
 
-      const parentTypeSignature = 'ParentType';
+      const parentTypeSignature = this._federation.translateParentType({ fieldNode: original, parentType, parentTypeSignature: 'ParentType' });
 
-      return indent(
-        `${node.name}${this.config.avoidOptionals ? '' : '?'}: ${isSubscriptionType ? 'SubscriptionResolver' : 'Resolver'}<${mappedType}, ${this._federation.translateParentType({ fieldNode: original, parentType, parentTypeSignature })}, ContextType${
-          argsType ? `, ${argsType}` : ''
-        }>,`
-      );
+      return indent(`${node.name}${this.config.avoidOptionals ? '' : '?'}: ${isSubscriptionType ? 'SubscriptionResolver' : 'Resolver'}<${mappedType}, ${parentTypeSignature}, ContextType${argsType ? `, ${argsType}` : ''}>,`);
     };
   }
 

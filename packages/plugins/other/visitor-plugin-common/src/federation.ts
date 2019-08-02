@@ -2,7 +2,10 @@ import { GraphQLSchema, visit, parse, buildASTSchema, FieldDefinitionNode, Kind,
 import { printSchemaWithDirectives } from 'graphql-toolkit';
 import { getBaseType } from './utils';
 
-export const useFederation = true;
+interface FieldSetItem {
+  name: string;
+  required: boolean;
+}
 
 // TODO: we need to include that scala
 export const federationSpec = parse(/* GraphQL */ `
@@ -54,9 +57,13 @@ export function addFederationToSchema(schema: GraphQLSchema) {
 
 export class ApolloFederation {
   private enabled: boolean;
+  private schema: GraphQLSchema;
+  private providesMap: Record<string, string[]>;
 
-  constructor({ enabled }: { enabled: boolean }) {
+  constructor({ enabled, schema }: { enabled: boolean; schema: GraphQLSchema }) {
     this.enabled = enabled;
+    this.schema = schema;
+    this.providesMap = this.createMapOfProvides();
   }
 
   filterTypeNames(typeNames: string[]): string[] {
@@ -71,52 +78,94 @@ export class ApolloFederation {
     return this.enabled && name === '_FieldSet';
   }
 
-  skipField({ fieldNode, parentType, schema }: { fieldNode: FieldDefinitionNode; parentType: GraphQLNamedType; schema: GraphQLSchema }): boolean {
+  skipField({ fieldNode, parentType }: { fieldNode: FieldDefinitionNode; parentType: GraphQLNamedType }): boolean {
     if (!this.enabled || !isObjectType(parentType) || !isFederationObjectType(parentType)) {
       return false;
     }
 
-    return isExternalAndNotProvided(fieldNode, parentType, createMapOfProvides(schema));
+    return this.isExternalAndNotProvided(fieldNode, parentType);
   }
 
   translateParentType({ fieldNode, parentType, parentTypeSignature }: { fieldNode: FieldDefinitionNode; parentType: GraphQLNamedType; parentTypeSignature: string }) {
     if (this.enabled && isObjectType(parentType) && isFederationObjectType(parentType)) {
-      return translateResolverParentType(fieldNode, parentType, parentTypeSignature);
+      const keys = getDirectivesByName('key', parentType);
+
+      if (keys.length) {
+        const requires = getDirectivesByName('requires', fieldNode)
+          .map(this.extractFieldSet)
+          .reduce((prev, curr) => [...prev, ...curr], [])
+          .map(name => {
+            return { name, required: isNonNullType(parentType.getFields()[name].type) };
+          });
+        const requiredFields = this.translateFieldSet(requires, parentTypeSignature);
+
+        const extra: string = requires.length ? ` & ${requiredFields}` : '';
+
+        return `(${keys
+          .map(def => {
+            const fields = this.extractFieldSet(def).map(name => ({ name, required: true }));
+            return this.translateFieldSet(fields, parentTypeSignature);
+          })
+          .join(' | ')})${extra}`;
+      }
     }
 
     return parentTypeSignature;
   }
-}
 
-function translateResolverParentType(field: FieldDefinitionNode, entity: GraphQLObjectType, parentTypeSignature: string) {
-  if (isFederationObjectType(entity)) {
-    const keys = getDirectivesByName('key', entity);
-
-    if (keys.length) {
-      const requires = getDirectivesByName('requires', field)
-        .map(extractFieldSet)
-        .reduce((prev, curr) => [...prev, ...curr], [])
-        .map(name => {
-          return { name, required: isNonNullType(entity.getFields()[name].type) };
-        });
-      const requiredFields = translateFieldSet(requires, parentTypeSignature);
-
-      const extra: string = requires.length ? ` & ${requiredFields}` : '';
-
-      return `(${keys
-        .map(def => {
-          const fields = extractFieldSet(def).map(name => ({ name, required: true }));
-          return translateFieldSet(fields, parentTypeSignature);
-        })
-        .join(' | ')})${extra}`;
-    }
+  private isExternalAndNotProvided(fieldNode: FieldDefinitionNode, objectType: GraphQLObjectType): boolean {
+    return this.isExternal(fieldNode) && !this.hasProvides(objectType, fieldNode);
   }
 
-  return parentTypeSignature;
-}
+  private isExternal(node: FieldDefinitionNode): boolean {
+    return getDirectivesByName('external', node).length > 0;
+  }
 
-function deduplicate<T>(items: T[]): T[] {
-  return items.filter((item, i) => items.indexOf(item) === i);
+  private hasProvides(objectType: ObjectTypeDefinitionNode | GraphQLObjectType, node: FieldDefinitionNode): boolean {
+    const fields = this.providesMap[isObjectType(objectType) ? objectType.name : objectType.name.value];
+
+    if (fields && fields.length) {
+      return fields.includes(node.name.value);
+    }
+
+    return false;
+  }
+
+  private translateFieldSet(fields: FieldSetItem[], parentTypeRef: string): string {
+    // TODO: support other things than fields separated by a whitespace (fields: "fieldA fieldB fieldC")
+    const inner = fields.map(field => `${field.name}${field.required ? '' : '?'}: ${parentTypeRef}['${field.name}']`).join('; ');
+    return `{ ${inner} }`;
+  }
+
+  private extractFieldSet(directive: DirectiveNode): string[] {
+    const arg = directive.arguments.find(arg => arg.name.value === 'fields');
+    return deduplicate((arg.value as StringValueNode).value.split(/\s+/g));
+  }
+
+  private createMapOfProvides() {
+    const providesMap: Record<string, string[]> = {};
+
+    Object.keys(this.schema.getTypeMap()).forEach(typename => {
+      const objectType = this.schema.getType(typename);
+
+      if (isObjectType(objectType)) {
+        Object.values(objectType.getFields()).forEach(field => {
+          const provides = getDirectivesByName('provides', field.astNode)
+            .map(this.extractFieldSet)
+            .reduce((prev, curr) => [...prev, ...curr], []);
+          const ofType = getBaseType(field.type);
+
+          if (!providesMap[ofType.name]) {
+            providesMap[ofType.name] = [];
+          }
+
+          providesMap[ofType.name].push(...provides);
+        });
+      }
+    });
+
+    return providesMap;
+  }
 }
 
 function isFederationObjectType(node: ObjectTypeDefinitionNode | GraphQLObjectType): boolean {
@@ -128,6 +177,10 @@ function isFederationObjectType(node: ObjectTypeDefinitionNode | GraphQLObjectTy
   const hasKeyDirective = directives.some(d => d.name.value === 'key');
 
   return isNotRoot && isNotIntrospection && hasKeyDirective;
+}
+
+function deduplicate<T>(items: T[]): T[] {
+  return items.filter((item, i) => items.indexOf(item) === i);
 }
 
 function getDirectivesByName(name: string, node: ObjectTypeDefinitionNode | GraphQLObjectType | FieldDefinitionNode): readonly DirectiveNode[] {
@@ -144,59 +197,4 @@ function getDirectivesByName(name: string, node: ObjectTypeDefinitionNode | Grap
   }
 
   return [];
-}
-
-function isExternalAndNotProvided(fieldNode: FieldDefinitionNode, objectType: GraphQLObjectType, providesMap: Record<string, string[]>): boolean {
-  return isExternal(fieldNode) && !hasProvides(objectType, fieldNode, providesMap);
-}
-
-function isExternal(node: FieldDefinitionNode): boolean {
-  return getDirectivesByName('external', node).length > 0;
-}
-
-function hasProvides(objectType: ObjectTypeDefinitionNode | GraphQLObjectType, node: FieldDefinitionNode, providesMap: Record<string, string[]>): boolean {
-  const fields = providesMap[isObjectType(objectType) ? objectType.name : objectType.name.value];
-
-  if (fields && fields.length) {
-    return fields.includes(node.name.value);
-  }
-
-  return false;
-}
-
-function extractFieldSet(directive: DirectiveNode): string[] {
-  const arg = directive.arguments.find(arg => arg.name.value === 'fields');
-
-  return deduplicate((arg.value as StringValueNode).value.split(/\s+/g));
-}
-
-function translateFieldSet(fields: Array<{ name: string; required?: boolean }>, parentTypeRef: string): string {
-  // TODO: support other things than fields separated by a whitespace (fields: "fieldA fieldB fieldC")
-  const inner = fields.map(field => `${field.name}${field.required ? '' : '?'}: ${parentTypeRef}['${field.name}']`).join('; ');
-  return `{ ${inner} }`;
-}
-
-function createMapOfProvides(schema: GraphQLSchema) {
-  const providesMap: Record<string, string[]> = {};
-
-  Object.keys(schema.getTypeMap()).forEach(typename => {
-    const objectType = schema.getType(typename);
-
-    if (isObjectType(objectType)) {
-      Object.values(objectType.getFields()).forEach(field => {
-        const provides = getDirectivesByName('provides', field.astNode)
-          .map(extractFieldSet)
-          .reduce((prev, curr) => [...prev, ...curr], []);
-        const ofType = getBaseType(field.type);
-
-        if (!providesMap[ofType.name]) {
-          providesMap[ofType.name] = [];
-        }
-
-        providesMap[ofType.name].push(...provides);
-      });
-    }
-  });
-
-  return providesMap;
 }
