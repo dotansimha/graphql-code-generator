@@ -109,7 +109,7 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'],
 };
 
-export type QueryResolvers<ContextType = any, ParentType = ResolversParentTypes['Query']> = {
+export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   allUsers?: Resolver<Array<Maybe<ResolversTypes['User']>>, ParentType, ContextType>,
   userById?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, QueryUserByIdArgs>,
   answer?: Resolver<Array<ResolversTypes['Int']>, ParentType, ContextType>,
@@ -118,7 +118,7 @@ export type QueryResolvers<ContextType = any, ParentType = ResolversParentTypes[
   testArr3?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>,
 };
 
-export type UserResolvers<ContextType = any, ParentType = ResolversParentTypes['User']> = {
+export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>,
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
