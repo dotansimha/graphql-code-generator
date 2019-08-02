@@ -129,6 +129,6 @@ export type PluginValidateFn<T = any> = (schema: GraphQLSchema, documents: Types
 
 export interface CodegenPlugin<T = any> {
   plugin: PluginFunction<T>;
-  addToSchema?: string | DocumentNode;
+  addToSchema?: string | DocumentNode | ((config: T) => string | DocumentNode);
   validate?: PluginValidateFn;
 }

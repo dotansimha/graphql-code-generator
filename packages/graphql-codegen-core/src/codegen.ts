@@ -23,7 +23,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
     }
 
     schemaChanged = true;
-    return mergeSchemas([schema, plugin.addToSchema]);
+    return mergeSchemas([schema, typeof plugin.addToSchema === 'function' ? plugin.addToSchema(/* DOTAN HERE */) : plugin.addToSchema]);
   }, options.schema);
 
   if (schemaChanged) {

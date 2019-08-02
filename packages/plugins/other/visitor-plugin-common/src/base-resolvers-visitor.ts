@@ -26,7 +26,7 @@ import { DirectiveDefinitionNode, GraphQLObjectType, InputValueDefinitionNode, G
 import { OperationVariablesToObject } from './variables-to-object';
 import { ParsedMapper, parseMapper, transformMappers } from './mappers';
 import { parseEnumValues } from './enum-values';
-import { translateResolverParentType } from './federation';
+import { federationInFieldDefinition, federationInScalarTypeDefinition, federationInDirectiveDefinition, federationInResolvers } from './federation';
 
 export interface ParsedResolversConfig extends ParsedConfig {
   contextType: ParsedMapper;
@@ -294,13 +294,14 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
   protected createResolversFields(applyWrapper: (str: string) => string, clearWrapper: (str: string) => string): ResolverTypes {
     const allSchemaTypes = this._schema.getTypeMap();
     const nestedMapping: { [typeName: string]: boolean } = {};
+    const typeNames = federationInResolvers(Object.keys(allSchemaTypes));
 
-    Object.keys(allSchemaTypes).forEach(typeName => {
+    typeNames.forEach(typeName => {
       const schemaType = allSchemaTypes[typeName];
       nestedMapping[typeName] = this.shouldMapType(schemaType, nestedMapping);
     });
 
-    return Object.keys(allSchemaTypes).reduce(
+    return typeNames.reduce(
       (prev: ResolverTypes, typeName: string) => {
         if (typeName.startsWith('__')) {
           return prev;
@@ -656,6 +657,17 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
       const baseType = getBaseTypeNode(original.type);
       const realType = baseType.name.value;
       const parentType = this.schema.getType(parentName);
+
+      const federation = federationInFieldDefinition({
+        fieldNode: original,
+        parentType: parentType,
+        schema: this.schema,
+      });
+
+      if (federation.skip) {
+        return null;
+      }
+
       const typeToUse = this.getTypeToUse(realType);
       const mappedType = this._variablesTransfomer.wrapAstTypeWithModifiers(typeToUse, original.type);
       const subscriptionType = this._schema.getSubscriptionType();
@@ -679,10 +691,12 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
         }
       }
 
+      const parentTypeSignature = 'ParentType';
+
       return indent(
-        `${node.name}${this.config.avoidOptionals ? '' : '?'}: ${isSubscriptionType ? 'SubscriptionResolver' : 'Resolver'}<${mappedType}, ${translateResolverParentType(original, parentType as any, 'ParentType')}, ContextType${
-          argsType ? `, ${argsType}` : ''
-        }>,`
+        `${node.name}${this.config.avoidOptionals ? '' : '?'}: ${isSubscriptionType ? 'SubscriptionResolver' : 'Resolver'}<${mappedType}, ${
+          federation.notFederation ? parentTypeSignature : federation.translateResolverParentType(parentTypeSignature)
+        }, ContextType${argsType ? `, ${argsType}` : ''}>,`
       );
     };
   }
@@ -734,6 +748,12 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     const nameAsString = (node.name as any) as string;
     const baseName = this.getTypeToUse(nameAsString);
 
+    const federation = federationInScalarTypeDefinition(nameAsString);
+
+    if (federation.skip) {
+      return null;
+    }
+
     this._collectedResolvers[node.name as any] = 'GraphQLScalarType';
 
     return new DeclarationBlock({
@@ -754,6 +774,10 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
   }
 
   DirectiveDefinition(node: DirectiveDefinitionNode): string {
+    if (federationInDirectiveDefinition(node.name as any).skip) {
+      return null;
+    }
+
     const directiveName = this.convertName(node, {
       suffix: 'DirectiveResolver',
     });
