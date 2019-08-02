@@ -661,6 +661,10 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     return `${resolversType}['${name}']`;
   }
 
+  protected transformParentGenericType(parentType: string): string {
+    return `ParentType extends ${parentType} = ${parentType}`;
+  }
+
   FieldDefinition(node: FieldDefinitionNode, key: string | number, parent: any) {
     const hasArguments = node.arguments && node.arguments.length > 0;
 
@@ -718,7 +722,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     const block = new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
-      .withName(name, `<ContextType = ${this.config.contextType.type}, ParentType extends ${parentType} = ${parentType}>`)
+      .withName(name, `<ContextType = ${this.config.contextType.type}, ${this.transformParentGenericType(parentType)}>`)
       .withBlock(node.fields.map((f: any) => f(node.name)).join('\n'));
 
     this._collectedResolvers[node.name as any] = name + '<ContextType>';
@@ -742,7 +746,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
-      .withName(name, `<ContextType = ${this.config.contextType.type}, ParentType extends ${parentType} = ${parentType}>`)
+      .withName(name, `<ContextType = ${this.config.contextType.type}, ${this.transformParentGenericType(parentType)}>`)
       .withBlock(indent(`__resolveType: TypeResolveFn<${possibleTypes}, ParentType, ContextType>`)).string;
   }
 
@@ -823,7 +827,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
-      .withName(name, `<ContextType = ${this.config.contextType.type}, ParentType extends ${parentType} = ${parentType}>`)
+      .withName(name, `<ContextType = ${this.config.contextType.type}, ${this.transformParentGenericType(parentType)}>`)
       .withBlock([indent(`__resolveType: TypeResolveFn<${possibleTypes}, ParentType, ContextType>,`), ...(node.fields || []).map((f: any) => f(node.name))].join('\n')).string;
   }
 

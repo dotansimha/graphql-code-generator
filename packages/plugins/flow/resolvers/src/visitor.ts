@@ -35,6 +35,10 @@ export class FlowResolversVisitor extends BaseResolversVisitor<FlowResolversPlug
     return `${schemaTypeName}?: ${resolverType}${resolverType.includes('<') ? '' : '<>'},`;
   }
 
+  protected transformParentGenericType(parentType: string): string {
+    return `ParentType = ${parentType}`;
+  }
+
   ListType(node: ListTypeNode): string {
     return `?${super.ListType(node)}`;
   }
