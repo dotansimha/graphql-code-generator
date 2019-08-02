@@ -17,6 +17,14 @@ generates:
       - add: // tslint:disable
       - typescript
       - typescript-resolvers
+  ./dev-test/test-schema/resolvers-federation.ts:
+    schema: ./dev-test/test-schema/schema-federation.graphql
+    config:
+      federation: true
+    plugins:
+      - add: // tslint:disable
+      - typescript
+      - typescript-resolvers
   ./dev-test/test-schema/typings.ts:
     schema: ./dev-test/test-schema/schema.json
     plugins:
