@@ -42,6 +42,24 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    * ```
    */
   immutableTypes?: boolean;
+  /**
+   * @name noExport
+   * @type boolean
+   * @description Set the to `true` in order to generate output without `export` modifier.
+   * This is useful if you are generating `.d.ts` file and want it to be globally available.
+   * @default false
+   *
+   * @example Disable all export from a file
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *  config:
+   *    noExport: true
+   * ```
+   */
+  noExport?: boolean;
   globalNamespace?: boolean;
 }
 

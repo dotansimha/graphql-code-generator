@@ -76,6 +76,7 @@ export interface DeclarationBlockConfig {
   blockWrapper?: string;
   blockTransformer?: (block: string) => string;
   enumNameValueSeparator?: string;
+  ignoreExport?: boolean;
 }
 
 export function transformComment(comment: string | StringValueNode, indentLevel = 0): string {
@@ -131,7 +132,9 @@ export class DeclarationBlock {
   }
 
   export(exp = true): DeclarationBlock {
-    this._export = exp;
+    if (!this._config.ignoreExport) {
+      this._export = exp;
+    }
 
     return this;
   }
