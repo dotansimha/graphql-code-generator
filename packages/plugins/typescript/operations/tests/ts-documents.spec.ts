@@ -89,6 +89,32 @@ describe('TypeScript Operations Plugin', () => {
   const validate = async (content: Types.PluginOutput, config: any = {}, pluginSchema = schema) => validateTs(mergeOutputs([await tsPlugin(pluginSchema, [], config, { outputFile: '' }), content]));
 
   describe('Config', () => {
+    it('Should not generate "export" when noExport is set to true', async () => {
+      const ast = parse(/* GraphQL */ `
+        query notifications {
+          notifications {
+            id
+
+            ... on TextNotification {
+              text
+            }
+
+            ... on ImageNotification {
+              imageUrl
+              metadata {
+                created: createdBy
+              }
+            }
+          }
+        }
+      `);
+      const config = { noExport: true };
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
+
+      expect(result).not.toContain('export');
+      await validate(result, config);
+    });
+
     it('Should handle "namespacedImportName" and add it when specified', async () => {
       const ast = parse(/* GraphQL */ `
         query notifications {
