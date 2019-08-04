@@ -16,12 +16,12 @@ const validate = async (content: Types.PluginOutput, schema: GraphQLSchema, oper
   validateTs(mergedOutput, undefined, tsx, strict);
 };
 
-const validateAndCompile = async (content: Types.PluginOutput, schema: GraphQLSchema, operations, config = {}, tsx = false) => {
+const validateAndCompile = async (content: Types.PluginOutput, schema: GraphQLSchema, operations, config = {}, tsx = false, options = undefined) => {
   const tsPluginResult = await tsPlugin(schema, operations, config, { outputFile: '' });
   const tsOperationPluginResult = await tsOperationPlugin(schema, operations, config, { outputFile: '' });
   const mergedOutput = mergeOutputs([tsPluginResult, tsOperationPluginResult, content]);
 
-  compileTs(mergedOutput, undefined, tsx);
+  compileTs(mergedOutput, options, tsx);
 };
 
 describe('Compatibility Plugin', () => {
@@ -689,6 +689,31 @@ describe('Compatibility Plugin', () => {
   });
 
   describe('React Apollo', () => {
+    it('Issue #1876 - should produce valid ts code with react-apollo', async () => {
+      const config = {
+        strict: true,
+        maybeValue: 'T | undefined',
+        withHooks: true,
+        withHOC: false,
+        withComponent: false,
+        noNamespaces: true,
+        preResolveTypes: true,
+        namingConvention: { typeNames: 'change-case#pascalCase' },
+        transformUnderscore: true,
+      };
+      const ast = [{ filePath: '', content: basicQuery }];
+      const result = await plugin(schema, ast, config, {
+        allPlugins: [
+          {
+            'typescript-react-apollo': config,
+          },
+        ],
+      });
+
+      const raPluginResult = await raPlugin(schema, ast, config, { outputFile: '' });
+      await validateAndCompile(mergeOutputs([raPluginResult, result]), schema, ast, config, true, { strict: true });
+    });
+
     it('Should produce valid ts code with react-apollo', async () => {
       const config = {};
       const ast = [{ filePath: '', content: basicQuery }];
