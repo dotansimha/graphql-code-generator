@@ -221,7 +221,17 @@ export class SelectionSetToObject {
     return fields.map(field => {
       const fieldObj = schemaType.getFields()[field];
       const baseType = getBaseType(fieldObj.type);
-      const typeToUse = this._scalars[baseType.name] || baseType.name;
+      let typeToUse = baseType.name;
+
+      if (isEnumType(baseType)) {
+        typeToUse = baseType
+          .getValues()
+          .map(v => `'${v.value}'`)
+          .join(' | ');
+      } else if (this._scalars[baseType.name]) {
+        typeToUse = this._scalars[baseType.name];
+      }
+
       const wrappedType = this.wrapTypeWithModifiers(typeToUse, fieldObj.type as GraphQLObjectType);
 
       return {
