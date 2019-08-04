@@ -100,6 +100,24 @@ You can also point to multiple `.graphql` files, and the Code Generator will mer
 schema: src/**/*.graphql
 ```
 
+You can also specify multiplep patterns:
+
+```yml
+schema:
+  - src/dir1/**/*.graphql
+  - src/dir2/**/*.graphql
+```
+
+And, you can specify files to exclude: 
+
+```yml
+schema:
+  - './src/**/*.graphql'
+  - '!*.generated.graphql'
+```
+
+> All provided glob expressions are being evaludated together - the usage is similar to `.gitingore` file.
+
 - ### JavaScript export
 
 You can also specify a code file that exports your `GraphQLSchema` object as named export `schema` or as default export.
