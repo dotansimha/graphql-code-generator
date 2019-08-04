@@ -65,8 +65,8 @@ export const plugin: PluginFunction<CompatabilityPluginRawConfig> = async (schem
   const visitor = new CompatabilityPluginVisitor(config, schema, {
     reactApollo: reactApollo
       ? {
+          ...(config || {}),
           ...(reactApollo[REACT_APOLLO_PLUGIN_NAME] as object),
-          ...config,
         }
       : null,
   });
