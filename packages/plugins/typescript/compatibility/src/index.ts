@@ -62,7 +62,14 @@ export const plugin: PluginFunction<CompatabilityPluginRawConfig> = async (schem
   );
 
   const reactApollo = ((additionalData || {}).allPlugins || []).find(p => Object.keys(p)[0] === REACT_APOLLO_PLUGIN_NAME);
-  const visitor = new CompatabilityPluginVisitor(config, schema, { reactApollo });
+  const visitor = new CompatabilityPluginVisitor(config, schema, {
+    reactApollo: reactApollo
+      ? {
+          ...(reactApollo[REACT_APOLLO_PLUGIN_NAME] as object),
+          ...config,
+        }
+      : null,
+  });
 
   const visitorResult = visit(allAst, {
     leave: visitor as any,
