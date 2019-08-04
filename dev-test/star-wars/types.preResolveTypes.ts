@@ -264,7 +264,7 @@ export type HeroAndFriendsNamesQuery = { __typename?: 'Query', hero: Maybe<{ __t
 export type HeroAppearsInQueryVariables = {};
 
 
-export type HeroAppearsInQuery = { __typename?: 'Query', hero: Maybe<{ __typename?: 'Human' | 'Droid', name: string, appearsIn: Array<Maybe<Episode>> }> };
+export type HeroAppearsInQuery = { __typename?: 'Query', hero: Maybe<{ __typename?: 'Human' | 'Droid', name: string, appearsIn: Array<Maybe<'NEWHOPE' | 'EMPIRE' | 'JEDI'>> }> };
 
 export type HeroDetailsQueryVariables = {
   episode?: Maybe<Episode>
