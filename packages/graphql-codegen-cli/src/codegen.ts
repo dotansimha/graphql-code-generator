@@ -182,13 +182,10 @@ export async function executeCodegen(config: Types.Config): Promise<Types.FileOu
                     task: wrapTask(async () => {
                       debugLog(`[CLI] Loading Documents`);
                       const allDocuments = [...rootDocuments, ...outputSpecificDocuments];
+                      const documents = await loadDocuments(allDocuments, config);
 
-                      for (const docDef of allDocuments) {
-                        const documents = await loadDocuments(docDef, config);
-
-                        if (documents.length > 0) {
-                          outputDocuments.push(...documents);
-                        }
+                      if (documents.length > 0) {
+                        outputDocuments.push(...documents);
                       }
                     }, filename),
                   },
