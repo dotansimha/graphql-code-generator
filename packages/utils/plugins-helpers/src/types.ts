@@ -1,5 +1,4 @@
 import { GraphQLSchema, DocumentNode } from 'graphql';
-import { object } from 'prop-types';
 
 export namespace Types {
   export interface GenerateOptions {
