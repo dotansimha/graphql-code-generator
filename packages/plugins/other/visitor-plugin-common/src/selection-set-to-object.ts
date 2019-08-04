@@ -221,7 +221,7 @@ export class SelectionSetToObject {
     return fields.map(field => {
       const fieldObj = schemaType.getFields()[field];
       const baseType = getBaseType(fieldObj.type);
-      let typeToUse = '';
+      let typeToUse = baseType.name;
 
       if (isEnumType(baseType)) {
         typeToUse = baseType
@@ -230,9 +230,8 @@ export class SelectionSetToObject {
           .join(' | ');
       } else if (this._scalars[baseType.name]) {
         typeToUse = this._scalars[baseType.name];
-      } else {
-        typeToUse = baseType.name;
       }
+
       const wrappedType = this.wrapTypeWithModifiers(typeToUse, fieldObj.type as GraphQLObjectType);
 
       return {
