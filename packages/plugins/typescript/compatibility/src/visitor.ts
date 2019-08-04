@@ -97,7 +97,7 @@ export class CompatabilityPluginVisitor extends BaseVisitor<CompatabilityPluginR
     const selectionSetTypes = this.buildOperationBlock(node);
 
     if (this.config.reactApollo) {
-      const reactApolloConfig = this.config.reactApollo[Object.keys(this.config.reactApollo)[0]];
+      const reactApolloConfig = this.config.reactApollo;
       let hoc = true;
       let component = true;
       let hooks = false;
