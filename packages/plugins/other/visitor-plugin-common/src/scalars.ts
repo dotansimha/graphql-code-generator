@@ -1,4 +1,4 @@
-import { ScalarsMap } from '@graphql-codegen/visitor-plugin-common';
+import { ScalarsMap } from './types';
 
 export const DEFAULT_SCALARS: ScalarsMap = {
   ID: 'string',
