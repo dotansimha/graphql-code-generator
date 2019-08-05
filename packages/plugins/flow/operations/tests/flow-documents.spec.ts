@@ -75,24 +75,24 @@ describe('Flow Operations Plugin', () => {
 
   describe('Naming Convention & Types Prefix', () => {
     it('Should allow custom naming and point to the correct type', async () => {
-      const ast = parse(`
-      query notifications {
-        notifications {
-          id
+      const ast = parse(/* GraphQL */ `
+        query notifications {
+          notifications {
+            id
 
-          ... on TextNotification {
-            text
-          }
+            ... on TextNotification {
+              text
+            }
 
-          ... on ImageNotification {
-            imageUrl
-            metadata {
-              createdBy
+            ... on ImageNotification {
+              imageUrl
+              metadata {
+                createdBy
+              }
             }
           }
         }
-      }
-  `);
+      `);
       const result = await plugin(
         schema,
         [
@@ -105,31 +105,38 @@ describe('Flow Operations Plugin', () => {
         { outputFile: '' }
       );
 
-      expect(result).toBeSimilarStringTo(
-        `export type notificationsquery = ({ __typename?: 'Query' } & { notifications: Array<({ __typename?: 'TextNotification' | 'ImageNotification' } & $Pick<notifiction, { id: * }> & (({ __typename?: 'TextNotification' } & $Pick<textnotification, { text: * }>) | ({ __typename?: 'ImageNotification' } & $Pick<imagenotification, { imageUrl: * }> & { metadata: ({ __typename?: 'ImageMetadata' } & $Pick<imagemetadata, { createdBy: * }>) })))> });`
-      );
+      expect(result).toBeSimilarStringTo(`
+        export type notificationsquery = ({ __typename?: 'Query' } & { notifications: Array<(
+          { __typename?: 'TextNotification' }
+          & $Pick<textnotification, { text: *, id: * }>
+        ) | (
+          { __typename?: 'ImageNotification' }
+          & $Pick<imagenotification, { imageUrl: *, id: * }>
+          & { metadata: ({ __typename?: 'ImageMetadata' } & $Pick<imagemetadata, { createdBy: * }>) }
+        )> });
+      `);
       validateFlow(result);
     });
 
     it('Should allow custom naming and point to the correct type - with custom prefix', async () => {
-      const ast = parse(`
-      query notifications {
-        notifications {
-          id
+      const ast = parse(/* GraphQL */ `
+        query notifications {
+          notifications {
+            id
 
-          ... on TextNotification {
-            text
-          }
+            ... on TextNotification {
+              text
+            }
 
-          ... on ImageNotification {
-            imageUrl
-            metadata {
-              createdBy
+            ... on ImageNotification {
+              imageUrl
+              metadata {
+                createdBy
+              }
             }
           }
         }
-      }
-  `);
+      `);
       const result = await plugin(
         schema,
         [
@@ -143,9 +150,16 @@ describe('Flow Operations Plugin', () => {
       );
 
       expect(result).toBeSimilarStringTo(`export type inotificationsqueryvariables = {};`);
-      expect(result).toBeSimilarStringTo(
-        `export type inotificationsquery = ({ __typename?: 'Query' } & { notifications: Array<({ __typename?: 'TextNotification' | 'ImageNotification' } & $Pick<inotifiction, { id: * }> & (({ __typename?: 'TextNotification' } & $Pick<itextnotification, { text: * }>) | ({ __typename?: 'ImageNotification' } & $Pick<iimagenotification, { imageUrl: * }> & { metadata: ({ __typename?: 'ImageMetadata' } & $Pick<iimagemetadata, { createdBy: * }>) })))> });`
-      );
+      expect(result).toBeSimilarStringTo(`
+        export type inotificationsquery = ({ __typename?: 'Query' } & { notifications: Array<(
+          { __typename?: 'TextNotification' }
+          & $Pick<itextnotification, { text: *, id: * }>
+        ) | (
+          { __typename?: 'ImageNotification' }
+          & $Pick<iimagenotification, { imageUrl: *, id: * }>
+          & { metadata: ({ __typename?: 'ImageMetadata' } & $Pick<iimagemetadata, { createdBy: * }>) }
+        )> });
+      `);
       validateFlow(result);
     });
   });
@@ -238,7 +252,7 @@ describe('Flow Operations Plugin', () => {
     });
 
     it('Should add __typename correctly when unions are in use', async () => {
-      const ast = parse(`
+      const ast = parse(/* GraphQL */ `
         query unionTest {
           unionTest {
             ... on User {
@@ -250,7 +264,7 @@ describe('Flow Operations Plugin', () => {
             }
           }
         }
-    `);
+      `);
       const result = await plugin(
         schema,
         [
@@ -263,12 +277,20 @@ describe('Flow Operations Plugin', () => {
         { outputFile: '' }
       );
 
-      expect(result).toBeSimilarStringTo(`export type UnionTestQuery = ({ __typename?: 'Query' } & { unionTest: ?(({ __typename?: 'User' } & $Pick<User, { id: * }>) | ({ __typename?: 'Profile' } & $Pick<Profile, { age: * }>)) });`);
+      expect(result).toBeSimilarStringTo(`
+        export type UnionTestQuery = ({ __typename?: 'Query' } & { unionTest: ?(
+          { __typename?: 'User' }
+          & $Pick<User, { id: * }>
+        ) | (
+          { __typename?: 'Profile' }
+          & $Pick<Profile, { age: * }>
+        ) });
+      `);
       validateFlow(result);
     });
 
     it('Should add non optional __typename when specified in config', async () => {
-      const ast = parse(`
+      const ast = parse(/* GraphQL */ `
         query unionTest {
           unionTest {
             ... on User {
@@ -280,7 +302,7 @@ describe('Flow Operations Plugin', () => {
             }
           }
         }
-    `);
+      `);
       const result = await plugin(
         schema,
         [
@@ -293,12 +315,20 @@ describe('Flow Operations Plugin', () => {
         { outputFile: '' }
       );
 
-      expect(result).toBeSimilarStringTo(`export type UnionTestQuery = ({ __typename: 'Query' } & { unionTest: ?(({ __typename: 'User' } & $Pick<User, { id: * }>) | ({ __typename: 'Profile' } & $Pick<Profile, { age: * }>)) });`);
+      expect(result).toBeSimilarStringTo(`
+        export type UnionTestQuery = ({ __typename: 'Query' } & { unionTest: ?(
+          { __typename: 'User' }
+          & $Pick<User, { id: * }>
+        ) | (
+          { __typename: 'Profile' }
+          & $Pick<Profile, { age: * }>
+        ) });
+      `);
       validateFlow(result);
     });
 
     it('Should add __typename correctly when interfaces are in use', async () => {
-      const ast = parse(`
+      const ast = parse(/* GraphQL */ `
         query notifications {
           notifications {
             id
@@ -306,7 +336,7 @@ describe('Flow Operations Plugin', () => {
             ... on TextNotification {
               text
             }
-  
+
             ... on ImageNotification {
               imageUrl
               metadata {
@@ -315,7 +345,7 @@ describe('Flow Operations Plugin', () => {
             }
           }
         }
-    `);
+      `);
       const result = await plugin(
         schema,
         [
@@ -327,9 +357,16 @@ describe('Flow Operations Plugin', () => {
         {},
         { outputFile: '' }
       );
-      expect(result).toBeSimilarStringTo(
-        `export type NotificationsQuery = ({ __typename?: 'Query' } & { notifications: Array<({ __typename?: 'TextNotification' | 'ImageNotification' } & $Pick<Notifiction, { id: * }> & (({ __typename?: 'TextNotification' } & $Pick<TextNotification, { text: * }>) | ({ __typename?: 'ImageNotification' } & $Pick<ImageNotification, { imageUrl: * }> & { metadata: ({ __typename?: 'ImageMetadata' } & $Pick<ImageMetadata, { createdBy: * }>) })))> });`
-      );
+      expect(result).toBeSimilarStringTo(`
+        export type NotificationsQuery = ({ __typename?: 'Query' } & { notifications: Array<(
+          { __typename?: 'TextNotification' }
+          & $Pick<TextNotification, { text: *, id: * }>
+        ) | (
+          { __typename?: 'ImageNotification' }
+          & $Pick<ImageNotification, { imageUrl: *, id: * }>
+          & { metadata: ({ __typename?: 'ImageMetadata' } & $Pick<ImageMetadata, { createdBy: * }>) }
+        )> });
+      `);
       validateFlow(result);
     });
   });
@@ -490,24 +527,24 @@ describe('Flow Operations Plugin', () => {
     });
 
     it('Should support interfaces correctly when used with inline fragments', async () => {
-      const ast = parse(`
-      query notifications {
-        notifications {
-          id
+      const ast = parse(/* GraphQL */ `
+        query notifications {
+          notifications {
+            id
 
-          ... on TextNotification {
-            text
-          }
+            ... on TextNotification {
+              text
+            }
 
-          ... on ImageNotification {
-            imageUrl
-            metadata {
-              createdBy
+            ... on ImageNotification {
+              imageUrl
+              metadata {
+                createdBy
+              }
             }
           }
         }
-      }
-    `);
+      `);
       const result = await plugin(
         schema,
         [
@@ -520,14 +557,19 @@ describe('Flow Operations Plugin', () => {
         { outputFile: '' }
       );
 
-      expect(result).toBeSimilarStringTo(
-        'export type NotificationsQuery = { notifications: Array<($Pick<Notifiction, { id: * }> & ($Pick<TextNotification, { text: * }> | ($Pick<ImageNotification, { imageUrl: * }> & { metadata: $Pick<ImageMetadata, { createdBy: * }> })))> };'
-      );
+      expect(result).toBeSimilarStringTo(`
+        export type NotificationsQuery = { notifications: Array<(
+          $Pick<TextNotification, { text: *, id: * }>
+        ) | (
+          $Pick<ImageNotification, { imageUrl: *, id: * }>
+          & { metadata: $Pick<ImageMetadata, { createdBy: * }> }
+        )> };
+      `);
       validateFlow(result);
     });
 
     it('Should support union correctly when used with inline fragments', async () => {
-      const ast = parse(`
+      const ast = parse(/* GraphQL */ `
         query unionTest {
           unionTest {
             ... on User {
@@ -539,7 +581,7 @@ describe('Flow Operations Plugin', () => {
             }
           }
         }
-    `);
+      `);
       const result = await plugin(
         schema,
         [
@@ -552,12 +594,18 @@ describe('Flow Operations Plugin', () => {
         { outputFile: '' }
       );
 
-      expect(result).toBeSimilarStringTo(`export type UnionTestQuery = { unionTest: ?($Pick<User, { id: * }> | $Pick<Profile, { age: * }>) };`);
+      expect(result).toBeSimilarStringTo(`
+        export type UnionTestQuery = { unionTest: ?(
+          $Pick<User, { id: * }>
+        ) | (
+          $Pick<Profile, { age: * }>
+        ) };
+      `);
       validateFlow(result);
     });
 
     it('Should support inline fragments', async () => {
-      const ast = parse(`
+      const ast = parse(/* GraphQL */ `
         query currentUser {
           me {
             id
@@ -569,7 +617,7 @@ describe('Flow Operations Plugin', () => {
             }
           }
         }
-    `);
+      `);
       const result = await plugin(
         schema,
         [
@@ -582,7 +630,12 @@ describe('Flow Operations Plugin', () => {
         { outputFile: '' }
       );
 
-      expect(result).toBeSimilarStringTo(`export type CurrentUserQuery = { me: ?($Pick<User, { id: * }> & ($Pick<User, { username: * }> & { profile: ?$Pick<Profile, { age: * }> })) };`);
+      expect(result).toBeSimilarStringTo(`
+        export type CurrentUserQuery = { me: ?(
+          $Pick<User, { username: *, id: * }>
+          & { profile: ?$Pick<Profile, { age: * }> }
+        ) };
+      `);
       validateFlow(result);
     });
 
