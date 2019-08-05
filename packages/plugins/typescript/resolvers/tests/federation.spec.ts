@@ -41,9 +41,15 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       },
     });
 
+    interface User {
+      id: string;
+      name: string;
+      username: string;
+    }
+
     // User should have it
     expect(content).toBeSimilarStringTo(`
-      __resolveReference?: Resolver<Maybe<ResolversTypes['User']>, ({ id: ParentType["id"] }), ContextType>,
+      __resolveReference?: Resolver<Maybe<ResolversTypes['User']>, (Pick<ParentType, 'id'>), ContextType>,
     `);
     // Foo shouldn't because it doesn't have @key
     expect(content).not.toBeSimilarStringTo(`
@@ -90,7 +96,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
 
     // User should have it
     expect(content).toBeSimilarStringTo(`
-      __resolveReference?: Resolver<Maybe<ResolversTypes['User']>, ({ id: ParentType["id"] }), ContextType>,
+      __resolveReference?: Resolver<Maybe<ResolversTypes['User']>, (Pick<ParentType, 'id'>), ContextType>,
     `);
     // Foo shouldn't because it doesn't have @key
     expect(content).not.toBeSimilarStringTo(`
@@ -135,9 +141,9 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
     // User should have it
     expect(content).toBeSimilarStringTo(`
       export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
-        __resolveReference?: Resolver<Maybe<ResolversTypes['User']>, ({ id: ParentType["id"] }), ContextType>,
-        id?: Resolver<ResolversTypes['ID'], ({ id: ParentType["id"] }), ContextType>,
-        username?: Resolver<Maybe<ResolversTypes['String']>, ({ id: ParentType["id"] }) & { name?: ParentType["name"]; age: ParentType["age"] }, ContextType>,
+        __resolveReference?: Resolver<Maybe<ResolversTypes['User']>, (Pick<ParentType, 'id'>), ContextType>,
+        id?: Resolver<ResolversTypes['ID'], (Pick<ParentType, 'id'>), ContextType>,
+        username?: Resolver<Maybe<ResolversTypes['String']>, (Pick<ParentType, 'id'>) & Pick<ParentType, 'name' | 'age'>, ContextType>,
       };
     `);
   });
@@ -182,9 +188,9 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
     // UserResolver should not have a resolver function of name field
     expect(content).toBeSimilarStringTo(`
       export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
-        __resolveReference?: Resolver<Maybe<ResolversTypes['User']>, ({ id: ParentType["id"] }), ContextType>,
-        id?: Resolver<ResolversTypes['ID'], ({ id: ParentType["id"] }), ContextType>,
-        name?: Resolver<Maybe<ResolversTypes['String']>, ({ id: ParentType["id"] }), ContextType>,
+        __resolveReference?: Resolver<Maybe<ResolversTypes['User']>, (Pick<ParentType, 'id'>), ContextType>,
+        id?: Resolver<ResolversTypes['ID'], (Pick<ParentType, 'id'>), ContextType>,
+        name?: Resolver<Maybe<ResolversTypes['String']>, (Pick<ParentType, 'id'>), ContextType>,
       };
     `);
   });
@@ -360,10 +366,57 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
     // User should have it
     expect(content).toBeSimilarStringTo(`
       export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
-        __resolveReference?: Resolver<Maybe<ResolversTypes['User']>, ({ id: ParentType["id"] } | { name: ParentType["name"] }), ContextType>,
-        id?: Resolver<ResolversTypes['ID'], ({ id: ParentType["id"] } | { name: ParentType["name"] }), ContextType>,
-        name?: Resolver<Maybe<ResolversTypes['String']>, ({ id: ParentType["id"] } | { name: ParentType["name"] }), ContextType>,
-        username?: Resolver<Maybe<ResolversTypes['String']>, ({ id: ParentType["id"] } | { name: ParentType["name"] }), ContextType>,
+        __resolveReference?: Resolver<Maybe<ResolversTypes['User']>, (Pick<ParentType, 'id'> | Pick<ParentType, 'name'>), ContextType>,
+        id?: Resolver<ResolversTypes['ID'], (Pick<ParentType, 'id'> | Pick<ParentType, 'name'>), ContextType>,
+        name?: Resolver<Maybe<ResolversTypes['String']>, (Pick<ParentType, 'id'> | Pick<ParentType, 'name'>), ContextType>,
+        username?: Resolver<Maybe<ResolversTypes['String']>, (Pick<ParentType, 'id'> | Pick<ParentType, 'name'>), ContextType>,
+      };
+    `);
+  });
+
+  it.skip('should only extend an original type by a mapped type', async () => {
+    const federatedSchema = parse(/* GraphQL */ `
+      type Query {
+        users: [User]
+      }
+
+      type User @key(fields: "id") {
+        id: ID!
+        name: String
+        age: Int!
+        username: String
+      }
+    `);
+
+    const content = await codegen({
+      filename: 'graphql.ts',
+      schema: federatedSchema,
+      documents: [],
+      plugins: [
+        {
+          'typescript-resolvers': {},
+        },
+      ],
+      config: {
+        federation: true,
+        mappers: {
+          User: 'UserExtension',
+        },
+      },
+      pluginMap: {
+        'typescript-resolvers': {
+          plugin,
+          addToSchema,
+        },
+      },
+    });
+
+    // User should have it
+    expect(content).toBeSimilarStringTo(`
+      export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
+        __resolveReference?: Resolver<Maybe<ResolversTypes['User']>, (Pick<ParentType, 'id'>), ContextType>,
+        id?: Resolver<ResolversTypes['ID'], UserExtension & (Pick<ParentType, 'id'>), ContextType>,
+        username?: Resolver<Maybe<ResolversTypes['String']>, UserExtension & (Pick<ParentType, 'id'>) & Pick<ParentType, 'name', 'age'>, ContextType>,
       };
     `);
   });

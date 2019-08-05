@@ -132,8 +132,8 @@ export class ApolloFederation {
 
   private translateFieldSet(fields: FieldSetItem[], parentTypeRef: string): string {
     // TODO: support other things than fields separated by a whitespace (fields: "fieldA fieldB fieldC")
-    const inner = fields.map(field => `${field.name}${field.required ? '' : '?'}: ${parentTypeRef}["${field.name}"]`).join('; ');
-    return `{ ${inner} }`;
+    const keys = fields.map(field => `'${field.name}'`).join(' | ');
+    return `Pick<${parentTypeRef}, ${keys}>`;
   }
 
   private extractFieldSet(directive: DirectiveNode): string[] {
