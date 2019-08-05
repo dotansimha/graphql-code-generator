@@ -22,22 +22,6 @@ export interface RawClientSideBasePluginConfig extends RawConfig {
 
 export interface ClientSideBasePluginConfig extends ParsedConfig {
   /**
-   * @name noGraphQLTag
-   * @type boolean
-   * @default false
-   * @description Instead of adding gql tag with the GraphQL operation, it uses the percompiled JSON representation (DocumentNode)
-   * of the operation.
-   *
-   * This is another implementation of `documentMode`. If this is `true`, it is the equivalent of `documentMode = 'documentNode'`. If this is `false`, it is `documentMode = 'graphQLTag'`
-   *
-   * @example
-   * ```yml
-   * config:
-   *   noGraphQLTag: true
-   * ```
-   */
-  noGraphQLTag: boolean;
-  /**
    * @name gqlImport
    * @type string
    * @default gql#graphql-tag
@@ -115,11 +99,10 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
   constructor(protected _fragments: LoadedFragment[], rawConfig: TRawConfig, additionalConfig: Partial<TPluginConfig>, documents?: Types.DocumentFile[]) {
     super(rawConfig, {
       dedupeOperationSuffix: getConfigValue(rawConfig.dedupeOperationSuffix, false),
-      noGraphQLTag: getConfigValue(rawConfig.noGraphQLTag, false),
       gqlImport: rawConfig.gqlImport || null,
       noExport: !!rawConfig.noExport,
       operationResultSuffix: getConfigValue(rawConfig.operationResultSuffix, ''),
-      documentMode: getConfigValue(rawConfig.documentMode, 'graphQLTag'),
+      documentMode: typeof rawConfig.noGraphQLTag === 'boolean' && rawConfig.noGraphQLTag === false ? 'documentMode' : getConfigValue(rawConfig.documentMode, 'graphQLTag'),
       importDocumentNodeExternallyFrom: getConfigValue(rawConfig.importDocumentNodeExternallyFrom, ''),
       ...additionalConfig,
     } as any);
@@ -157,7 +140,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
 
   protected _includeFragments(fragments: string[]): string {
     if (fragments && fragments.length > 0) {
-      if (this._getDocumentMode() === 'documentNode') {
+      if (this.config.documentMode === 'documentNode') {
         return `${fragments
           .filter((name, i, all) => all.indexOf(name) === i)
           .map(name => {
@@ -191,7 +174,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
     ${print(node)}
     ${this._includeFragments(this._transformFragments(node))}`);
 
-    if (this._getDocumentMode() === 'documentNode') {
+    if (this.config.documentMode === 'documentNode') {
       const gqlObj = gqlTag(doc);
 
       if (gqlObj && gqlObj['loc']) {
@@ -207,18 +190,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
   protected _generateFragment(fragmentDocument: FragmentDefinitionNode): string | void {
     const name = this._getFragmentName(fragmentDocument);
 
-    return `export const ${name}${this._getDocumentMode() === 'documentNode' ? ': DocumentNode' : ''} = ${this._gql(fragmentDocument)};`;
-  }
-
-  protected _getDocumentMode(): DocumentMode {
-    if (this.config.noGraphQLTag) {
-      return 'documentNode';
-    } else if (!this.config.noGraphQLTag) {
-      // If `noGraphQLTag` is `false`, fallback to `documentMode` which is has the default of `graphQLTag`
-      return this.config.documentMode;
-    } else {
-      return 'graphQLTag';
-    }
+    return `export const ${name}${this.config.documentMode === 'documentNode' ? ': DocumentNode' : ''} = ${this._gql(fragmentDocument)};`;
   }
 
   private get fragmentsGraph(): DepGraph<LoadedFragment> {
@@ -274,7 +246,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
   public getImports(): string[] {
     let imports = [];
 
-    switch (this._getDocumentMode()) {
+    switch (this.config.documentMode) {
       case 'documentNode':
         imports.push(`import { DocumentNode } from 'graphql';`);
         break;
@@ -323,8 +295,8 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
     });
 
     let documentString = '';
-    if (this._getDocumentMode() !== 'external') {
-      documentString = `${this.config.noExport ? '' : 'export'} const ${documentVariableName}${this._getDocumentMode() === 'documentNode' ? ': DocumentNode' : ''} = ${this._gql(node)};`;
+    if (this.config.documentMode !== 'external') {
+      documentString = `${this.config.noExport ? '' : 'export'} const ${documentVariableName}${this.config.documentMode === 'documentNode' ? ': DocumentNode' : ''} = ${this._gql(node)};`;
     }
 
     const operationType: string = toPascalCase(node.operation);
