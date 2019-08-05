@@ -1,25 +1,14 @@
 import '@graphql-codegen/testing';
-import { buildSchema } from 'graphql';
-import { plugin } from '../src';
-import { Types } from '@graphql-codegen/plugin-helpers';
+import { parse } from 'graphql';
+import { codegen } from '@graphql-codegen/core';
+import { plugin, addToSchema } from '../src';
 
-const directives = /* GraphQL */ `
-  scalar _FieldSet
-
-  directive @external on FIELD_DEFINITION
-  directive @requires(fields: _FieldSet!) on FIELD_DEFINITION
-  directive @provides(fields: _FieldSet!) on FIELD_DEFINITION
-  directive @key(fields: _FieldSet!) on OBJECT | INTERFACE
-`;
-
-// TODO: support `extend type Query { }`
-// TODO: should we assume people add federation spec (scalars and directives) or we should do it when `federation` flag is on?
+// TODO: make sure we don't duplicate federation spec (directives, scalars)
+// TODO: support multiple the same directives on a FIELD and OBJECT_TYPE (@key @key) - might be tricky...
 
 describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
   it('should add __resolveReference to objects that have @key', async () => {
-    const federatedSchema = buildSchema(/* GraphQL */ `
-      ${directives}
-
+    const federatedSchema = parse(/* GraphQL */ `
       type Query {
         allUsers: [User]
       }
@@ -35,29 +24,85 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       }
     `);
 
-    const content = (await plugin(
-      federatedSchema,
-      [],
-      {
+    const content = await codegen({
+      filename: 'graphql.ts',
+      schema: federatedSchema,
+      documents: [],
+      plugins: [
+        {
+          'typescript-resolvers': {},
+        },
+      ],
+      config: {
         federation: true,
-      } as any,
-      { outputFile: 'graphql.ts' }
-    )) as Types.ComplexPluginOutput;
+      },
+      pluginMap: {
+        'typescript-resolvers': {
+          plugin,
+          addToSchema,
+        },
+      },
+    });
 
     // User should have it
-    expect(content.content).toBeSimilarStringTo(`
+    expect(content).toBeSimilarStringTo(`
       __resolveReference?: Resolver<Maybe<ResolversTypes['User']>, ({ id: ParentType["id"] }), ContextType>,
     `);
     // Foo shouldn't because it doesn't have @key
-    expect(content.content).not.toBeSimilarStringTo(`
+    expect(content).not.toBeSimilarStringTo(`
+      __resolveReference?: Resolver<Maybe<ResolversTypes['Book']>, ParentType, ContextType>,
+    `);
+  });
+
+  it('should support extend keyword', async () => {
+    const federatedSchema = parse(/* GraphQL */ `
+      extend type Query {
+        allUsers: [User]
+      }
+
+      extend type User @key(fields: "id") {
+        id: ID!
+        name: String
+        username: String
+      }
+
+      type Book {
+        id: ID!
+      }
+    `);
+
+    const content = await codegen({
+      filename: 'graphql.ts',
+      schema: federatedSchema,
+      documents: [],
+      plugins: [
+        {
+          'typescript-resolvers': {},
+        },
+      ],
+      config: {
+        federation: true,
+      },
+      pluginMap: {
+        'typescript-resolvers': {
+          plugin,
+          addToSchema,
+        },
+      },
+    });
+
+    // User should have it
+    expect(content).toBeSimilarStringTo(`
+      __resolveReference?: Resolver<Maybe<ResolversTypes['User']>, ({ id: ParentType["id"] }), ContextType>,
+    `);
+    // Foo shouldn't because it doesn't have @key
+    expect(content).not.toBeSimilarStringTo(`
       __resolveReference?: Resolver<Maybe<ResolversTypes['Book']>, ParentType, ContextType>,
     `);
   });
 
   it('should include fields from @requires directive', async () => {
-    const federatedSchema = buildSchema(/* GraphQL */ `
-      ${directives}
-
+    const federatedSchema = parse(/* GraphQL */ `
       type Query {
         users: [User]
       }
@@ -70,17 +115,28 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       }
     `);
 
-    const content = (await plugin(
-      federatedSchema,
-      [],
-      {
+    const content = await codegen({
+      filename: 'graphql.ts',
+      schema: federatedSchema,
+      documents: [],
+      plugins: [
+        {
+          'typescript-resolvers': {},
+        },
+      ],
+      config: {
         federation: true,
-      } as any,
-      { outputFile: 'graphql.ts' }
-    )) as Types.ComplexPluginOutput;
+      },
+      pluginMap: {
+        'typescript-resolvers': {
+          plugin,
+          addToSchema,
+        },
+      },
+    });
 
     // User should have it
-    expect(content.content).toBeSimilarStringTo(`
+    expect(content).toBeSimilarStringTo(`
       export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
         __resolveReference?: Resolver<Maybe<ResolversTypes['User']>, ({ id: ParentType["id"] }), ContextType>,
         id?: Resolver<ResolversTypes['ID'], ({ id: ParentType["id"] }), ContextType>,
@@ -90,9 +146,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
   });
 
   it('should skip to generate resolvers of fields with @external directive', async () => {
-    const federatedSchema = buildSchema(/* GraphQL */ `
-      ${directives}
-
+    const federatedSchema = parse(/* GraphQL */ `
       type Query {
         users: [User]
       }
@@ -108,17 +162,28 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       }
     `);
 
-    const content = (await plugin(
-      federatedSchema,
-      [],
-      {
+    const content = await codegen({
+      filename: 'graphql.ts',
+      schema: federatedSchema,
+      documents: [],
+      plugins: [
+        {
+          'typescript-resolvers': {},
+        },
+      ],
+      config: {
         federation: true,
-      } as any,
-      { outputFile: 'graphql.ts' }
-    )) as Types.ComplexPluginOutput;
+      },
+      pluginMap: {
+        'typescript-resolvers': {
+          plugin,
+          addToSchema,
+        },
+      },
+    });
 
     // UserResolver should not have a resolver function of name field
-    expect(content.content).toBeSimilarStringTo(`
+    expect(content).toBeSimilarStringTo(`
       export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
         __resolveReference?: Resolver<Maybe<ResolversTypes['User']>, ({ id: ParentType["id"] }), ContextType>,
         id?: Resolver<ResolversTypes['ID'], ({ id: ParentType["id"] }), ContextType>,
@@ -128,9 +193,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
   });
 
   it('should not include _FieldSet scalar', async () => {
-    const federatedSchema = buildSchema(/* GraphQL */ `
-      ${directives}
-
+    const federatedSchema = parse(/* GraphQL */ `
       type Query {
         users: [User]
       }
@@ -146,22 +209,31 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       }
     `);
 
-    const content = (await plugin(
-      federatedSchema,
-      [],
-      {
+    const content = await codegen({
+      filename: 'graphql.ts',
+      schema: federatedSchema,
+      documents: [],
+      plugins: [
+        {
+          'typescript-resolvers': {},
+        },
+      ],
+      config: {
         federation: true,
-      } as any,
-      { outputFile: 'graphql.ts' }
-    )) as Types.ComplexPluginOutput;
+      },
+      pluginMap: {
+        'typescript-resolvers': {
+          plugin,
+          addToSchema,
+        },
+      },
+    });
 
-    expect(content.content).not.toMatch(`_FieldSet`);
+    expect(content).not.toMatch(`_FieldSet`);
   });
 
   it('should not include federation directives', async () => {
-    const federatedSchema = buildSchema(/* GraphQL */ `
-      ${directives}
-
+    const federatedSchema = parse(/* GraphQL */ `
       type Query {
         users: [User]
       }
@@ -177,18 +249,29 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       }
     `);
 
-    const content = (await plugin(
-      federatedSchema,
-      [],
-      {
+    const content = await codegen({
+      filename: 'graphql.ts',
+      schema: federatedSchema,
+      documents: [],
+      plugins: [
+        {
+          'typescript-resolvers': {},
+        },
+      ],
+      config: {
         federation: true,
-      } as any,
-      { outputFile: 'graphql.ts' }
-    )) as Types.ComplexPluginOutput;
+      },
+      pluginMap: {
+        'typescript-resolvers': {
+          plugin,
+          addToSchema,
+        },
+      },
+    });
 
-    expect(content.content).not.toMatch('ExternalDirectiveResolver');
-    expect(content.content).not.toMatch('RequiresDirectiveResolver');
-    expect(content.content).not.toMatch('ProvidesDirectiveResolver');
-    expect(content.content).not.toMatch('KeyDirectiveResolver');
+    expect(content).not.toMatch('ExternalDirectiveResolver');
+    expect(content).not.toMatch('RequiresDirectiveResolver');
+    expect(content).not.toMatch('ProvidesDirectiveResolver');
+    expect(content).not.toMatch('KeyDirectiveResolver');
   });
 });
