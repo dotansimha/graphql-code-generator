@@ -221,6 +221,25 @@ describe('TypeScript', () => {
         /** this is b */
         'B';`);
     });
+    it('Should work with multiline comments', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Node {
+          '''
+            the id
+          '''
+          id: ID!
+        }
+      `);
+      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`
+      export type Node = {
+        /** 
+         * the id 
+         **/
+        id: Scalars['ID'],
+      };`);
+    });
   });
 
   describe('Issues', () => {
