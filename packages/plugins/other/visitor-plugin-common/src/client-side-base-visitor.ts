@@ -18,7 +18,6 @@ export interface RawClientSideBasePluginConfig extends RawConfig {
   noGraphQLTag?: boolean;
   gqlImport?: string;
   noExport?: boolean;
-  dedupeOperationSuffix?: boolean;
   operationResultSuffix?: string;
   documentMode?: DocumentMode;
   importDocumentNodeExternallyFrom?: string;
@@ -51,13 +50,6 @@ export interface ClientSideBasePluginConfig extends ParsedConfig {
    * @description Adds a suffix to generated operation result type names
    */
   operationResultSuffix: string;
-  /**
-   * @name dedupeOperationSuffix
-   * @type boolean
-   * @default false
-   * @description Set this configuration to `true` if you wish to make sure to remove duplicate operation name suffix.
-   */
-  dedupeOperationSuffix: boolean;
   noExport: boolean;
 
   /**
@@ -102,7 +94,6 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
 
   constructor(protected _fragments: LoadedFragment[], rawConfig: TRawConfig, additionalConfig: Partial<TPluginConfig>, documents?: Types.DocumentFile[]) {
     super(rawConfig, {
-      dedupeOperationSuffix: getConfigValue(rawConfig.dedupeOperationSuffix, false),
       gqlImport: rawConfig.gqlImport || null,
       noExport: !!rawConfig.noExport,
       operationResultSuffix: getConfigValue(rawConfig.operationResultSuffix, ''),
