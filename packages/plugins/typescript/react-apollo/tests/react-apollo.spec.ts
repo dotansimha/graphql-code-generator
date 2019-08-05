@@ -1134,6 +1134,46 @@ export function useListenToCommentsSubscription(baseOptions?: ReactApolloHooks.S
       }
     `);
 
+    it('should import DocumentNode when documentMode is "documentNode"', async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
+      const content = (await plugin(
+        schema,
+        docs,
+        {
+          documentMode: 'documentNode',
+        },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).toContain(`import { DocumentNode } from 'graphql';`);
+      expect(content.prepend).not.toContain(`import gql from 'graphql-tag';`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should generate Document variable when documentMode is "documentNode"', async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
+      const content = (await plugin(
+        schema,
+        docs,
+        {
+          documentMode: 'documentNode',
+        },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.content).toBeSimilarStringTo(`export const TestDocument: DocumentNode = {"kind":"Document","defin`);
+
+      // For issue #1599 - make sure there are not `loc` properties
+      expect(content.content).not.toContain(`loc":`);
+      expect(content.content).not.toContain(`loc':`);
+
+      await validateTypeScript(content, schema, docs, {});
+    });
+
     it('should import Operations from one external file and use it in Queries', async () => {
       const config: ReactApolloRawPluginConfig = {
         documentMode: 'external',
