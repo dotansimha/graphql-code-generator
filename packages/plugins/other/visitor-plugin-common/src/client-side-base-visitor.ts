@@ -274,7 +274,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
         break;
     }
 
-    if (!this.config.noGraphQLTag) {
+    if (this.config.documentMode === DocumentMode.graphQLTag) {
       (this._fragments || [])
         .filter(f => f.isExternal && f.importFrom && (!f['level'] || (f['level'] !== undefined && f['level'] === 0)))
         .forEach(externalFragment => {
