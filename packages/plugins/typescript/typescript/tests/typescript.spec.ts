@@ -79,9 +79,10 @@ describe('TypeScript', () => {
       const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
 
       expect(result.content).toBeSimilarStringTo(`
-        /** MyInput
+        /** 
+         * MyInput
          * multiline
-         */
+         **/
         export type MyInput`);
     });
 
