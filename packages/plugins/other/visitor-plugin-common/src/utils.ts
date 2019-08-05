@@ -99,7 +99,7 @@ export function transformComment(comment: string | StringValueNode, indentLevel 
         return indent(`/** ${comment} */\n`, indentLevel);
       }
 
-      return indent(`${isFirst ? '/** \n' : ' * '}${line}${isLast ? '\n */\n' : ''}`, indentLevel);
+      return indent(`${isFirst ? '/** \n' : ''} * ${line}${isLast ? '\n **/\n' : ''}`, indentLevel);
     })
     .join('\n');
 }
