@@ -3,7 +3,6 @@ import { parse } from 'graphql';
 import { codegen } from '@graphql-codegen/core';
 import { plugin, addToSchema } from '../src';
 
-// TODO: make sure we don't duplicate federation spec (directives, scalars)
 // TODO: support multiple the same directives on a FIELD and OBJECT_TYPE (@key @key) - might be tricky...
 
 describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
@@ -321,5 +320,53 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
     expect(content).not.toMatch('RequiresDirectiveResolver');
     expect(content).not.toMatch('ProvidesDirectiveResolver');
     expect(content).not.toMatch('KeyDirectiveResolver');
+  });
+
+  it('should allow for duplicated directives', async () => {
+    const federatedSchema = parse(/* GraphQL */ `
+      type Query {
+        allUsers: [User]
+      }
+
+      type User @key(fields: "id") @key(fields: "name") {
+        id: ID!
+        name: String
+        username: String
+      }
+
+      type Book {
+        id: ID!
+      }
+    `);
+
+    const content = await codegen({
+      filename: 'graphql.ts',
+      schema: federatedSchema,
+      documents: [],
+      plugins: [
+        {
+          'typescript-resolvers': {},
+        },
+      ],
+      config: {
+        federation: true,
+      },
+      pluginMap: {
+        'typescript-resolvers': {
+          plugin,
+          addToSchema,
+        },
+      },
+    });
+
+    // User should have it
+    expect(content).toBeSimilarStringTo(`
+      export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
+        __resolveReference?: Resolver<Maybe<ResolversTypes['User']>, ({ id: ParentType["id"] } | { name: ParentType["name"] }), ContextType>,
+        id?: Resolver<ResolversTypes['ID'], ({ id: ParentType["id"] } | { name: ParentType["name"] }), ContextType>,
+        name?: Resolver<ResolversTypes['ID'], ({ id: ParentType["id"] } | { name: ParentType["name"] }), ContextType>,
+        username?: Resolver<Maybe<ResolversTypes['String']>, ({ id: ParentType["id"] } | { name: ParentType["name"] }), ContextType>,
+      };
+    `);
   });
 });
