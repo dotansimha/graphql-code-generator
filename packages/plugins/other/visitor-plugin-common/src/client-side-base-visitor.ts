@@ -214,9 +214,10 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
     if (this.config.noGraphQLTag) {
       return 'documentNode';
     } else if (!this.config.noGraphQLTag) {
-      return 'graphQLTag';
-    } else {
+      // If `noGraphQLTag` is `false`, fallback to `documentMode` which is has the default of `graphQLTag`
       return this.config.documentMode;
+    } else {
+      return 'graphQLTag';
     }
   }
 

@@ -1323,7 +1323,7 @@ export function useListenToCommentsSubscription(baseOptions?: ReactApolloHooks.S
       await validateTypeScript(content, schema, docs, {});
     });
 
-    it('should import Operations from near operatino file and use it in multiple components', async () => {
+    it('should import Operations from near operation file and use it in multiple components', async () => {
       const config: ReactApolloRawPluginConfig = {
         documentMode: 'external',
         importDocumentNodeExternallyFrom: 'near-operation-file',
