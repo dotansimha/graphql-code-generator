@@ -8,10 +8,10 @@ import { getConfigValue } from './utils';
 import { LoadedFragment } from './types';
 import { basename } from 'path';
 
-enum DocumentMode {
+export enum DocumentMode {
   graphQLTag = 'graphQLTag',
   documentNode = 'documentNode',
-  external = 'external'
+  external = 'external',
 }
 
 export interface RawClientSideBasePluginConfig extends RawConfig {

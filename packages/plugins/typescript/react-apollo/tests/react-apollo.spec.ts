@@ -6,6 +6,7 @@ import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { plugin as tsPlugin } from '../../typescript/src/index';
 import { plugin as tsDocumentsPlugin } from '../../operations/src/index';
 import { readFileSync } from 'fs';
+import { DocumentMode } from '@graphql-codegen/visitor-plugin-common';
 
 describe('React Apollo', () => {
   const schema = buildClientSchema(JSON.parse(readFileSync('../../../../dev-test/githunt/schema.json').toString()));
@@ -1140,7 +1141,7 @@ export function useListenToCommentsSubscription(baseOptions?: ReactApolloHooks.S
         schema,
         docs,
         {
-          documentMode: 'documentNode',
+          documentMode: DocumentMode.documentNode,
         },
         {
           outputFile: 'graphql.tsx',
@@ -1158,7 +1159,7 @@ export function useListenToCommentsSubscription(baseOptions?: ReactApolloHooks.S
         schema,
         docs,
         {
-          documentMode: 'documentNode',
+          documentMode: DocumentMode.documentNode,
         },
         {
           outputFile: 'graphql.tsx',
@@ -1176,7 +1177,7 @@ export function useListenToCommentsSubscription(baseOptions?: ReactApolloHooks.S
 
     it('should import Operations from one external file and use it in Queries', async () => {
       const config: ReactApolloRawPluginConfig = {
-        documentMode: 'external',
+        documentMode: DocumentMode.external,
         importDocumentNodeExternallyFrom: 'path/to/documents.tsx',
       };
 
@@ -1196,7 +1197,7 @@ export function useListenToCommentsSubscription(baseOptions?: ReactApolloHooks.S
 
     it('should import Operations from one external file and use it in Mutations', async () => {
       const config: ReactApolloRawPluginConfig = {
-        documentMode: 'external',
+        documentMode: DocumentMode.external,
         importDocumentNodeExternallyFrom: 'path/to/documents.tsx',
       };
 
@@ -1216,7 +1217,7 @@ export function useListenToCommentsSubscription(baseOptions?: ReactApolloHooks.S
 
     it('should import Operations from one external file and use it in Subscriptions', async () => {
       const config: ReactApolloRawPluginConfig = {
-        documentMode: 'external',
+        documentMode: DocumentMode.external,
         importDocumentNodeExternallyFrom: 'path/to/documents.tsx',
       };
 
@@ -1236,7 +1237,7 @@ export function useListenToCommentsSubscription(baseOptions?: ReactApolloHooks.S
 
     it('should import Operations from one external file and use it in multiple components', async () => {
       const config: ReactApolloRawPluginConfig = {
-        documentMode: 'external',
+        documentMode: DocumentMode.external,
         importDocumentNodeExternallyFrom: 'path/to/documents.tsx',
       };
 
@@ -1265,7 +1266,7 @@ export function useListenToCommentsSubscription(baseOptions?: ReactApolloHooks.S
 
     it('should import Operations from near operation file for Queries', async () => {
       const config: ReactApolloRawPluginConfig = {
-        documentMode: 'external',
+        documentMode: DocumentMode.external,
         importDocumentNodeExternallyFrom: 'near-operation-file',
       };
 
@@ -1285,7 +1286,7 @@ export function useListenToCommentsSubscription(baseOptions?: ReactApolloHooks.S
 
     it('should import Operations from near operation file for Mutations', async () => {
       const config: ReactApolloRawPluginConfig = {
-        documentMode: 'external',
+        documentMode: DocumentMode.external,
         importDocumentNodeExternallyFrom: 'near-operation-file',
       };
 
@@ -1305,7 +1306,7 @@ export function useListenToCommentsSubscription(baseOptions?: ReactApolloHooks.S
 
     it('should import Operations from near operation file for Subscriptions', async () => {
       const config: ReactApolloRawPluginConfig = {
-        documentMode: 'external',
+        documentMode: DocumentMode.external,
         importDocumentNodeExternallyFrom: 'near-operation-file',
       };
 
@@ -1325,7 +1326,7 @@ export function useListenToCommentsSubscription(baseOptions?: ReactApolloHooks.S
 
     it('should import Operations from near operation file and use it in multiple components', async () => {
       const config: ReactApolloRawPluginConfig = {
-        documentMode: 'external',
+        documentMode: DocumentMode.external,
         importDocumentNodeExternallyFrom: 'near-operation-file',
       };
 
