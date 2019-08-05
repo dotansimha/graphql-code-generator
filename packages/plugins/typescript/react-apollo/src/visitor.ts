@@ -1,8 +1,8 @@
-import { ClientSideBaseVisitor, ClientSideBasePluginConfig, getConfigValue, LoadedFragment, OMIT_TYPE } from '@graphql-codegen/visitor-plugin-common';
+import { ClientSideBaseVisitor, ClientSideBasePluginConfig, getConfigValue, LoadedFragment, OMIT_TYPE, DocumentMode } from '@graphql-codegen/visitor-plugin-common';
 import { ReactApolloRawPluginConfig } from './index';
 import * as autoBind from 'auto-bind';
 import { OperationDefinitionNode, Kind } from 'graphql';
-import { toPascalCase } from '@graphql-codegen/plugin-helpers';
+import { toPascalCase, Types } from '@graphql-codegen/plugin-helpers';
 import { titleCase } from 'change-case';
 
 export interface ReactApolloPluginConfig extends ClientSideBasePluginConfig {
@@ -19,19 +19,24 @@ export interface ReactApolloPluginConfig extends ClientSideBasePluginConfig {
 }
 
 export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPluginConfig, ReactApolloPluginConfig> {
-  constructor(fragments: LoadedFragment[], rawConfig: ReactApolloRawPluginConfig) {
-    super(fragments, rawConfig, {
-      componentSuffix: getConfigValue(rawConfig.componentSuffix, 'Component'),
-      withHOC: getConfigValue(rawConfig.withHOC, true),
-      withComponent: getConfigValue(rawConfig.withComponent, true),
-      withHooks: getConfigValue(rawConfig.withHooks, false),
-      withMutationFn: getConfigValue(rawConfig.withMutationFn, true),
-      hooksImportFrom: getConfigValue(rawConfig.hooksImportFrom, 'react-apollo-hooks'),
-      reactApolloImportFrom: getConfigValue(rawConfig.reactApolloImportFrom, 'react-apollo'),
-      reactApolloVersion: getConfigValue(rawConfig.reactApolloVersion, 2),
-      withResultType: getConfigValue(rawConfig.withResultType, true),
-      withMutationOptionsType: getConfigValue(rawConfig.withMutationOptionsType, true),
-    } as any);
+  constructor(fragments: LoadedFragment[], rawConfig: ReactApolloRawPluginConfig, documents?: Types.DocumentFile[]) {
+    super(
+      fragments,
+      rawConfig,
+      {
+        componentSuffix: getConfigValue(rawConfig.componentSuffix, 'Component'),
+        withHOC: getConfigValue(rawConfig.withHOC, true),
+        withComponent: getConfigValue(rawConfig.withComponent, true),
+        withHooks: getConfigValue(rawConfig.withHooks, false),
+        withMutationFn: getConfigValue(rawConfig.withMutationFn, true),
+        hooksImportFrom: getConfigValue(rawConfig.hooksImportFrom, 'react-apollo-hooks'),
+        reactApolloImportFrom: getConfigValue(rawConfig.reactApolloImportFrom, 'react-apollo'),
+        reactApolloVersion: getConfigValue(rawConfig.reactApolloVersion, 2),
+        withResultType: getConfigValue(rawConfig.withResultType, true),
+        withMutationOptionsType: getConfigValue(rawConfig.withMutationOptionsType, true),
+      } as any,
+      documents
+    );
 
     autoBind(this);
   }
@@ -123,7 +128,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
 
     const component = `
     export const ${componentName} = (props: ${componentPropsName}) => (
-      <ReactApollo.${operationType}<${operationResultType}, ${operationVariablesTypes}> ${node.operation}={${documentVariableName}} {...props} />
+      <ReactApollo.${operationType}<${operationResultType}, ${operationVariablesTypes}> ${node.operation}={${this.config.documentMode === DocumentMode.external ? `Operations.${node.name.value}` : documentVariableName}} {...props} />
     );
     `;
     return [componentProps, component].join('\n');
