@@ -106,7 +106,12 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
       gqlImport: rawConfig.gqlImport || null,
       noExport: !!rawConfig.noExport,
       operationResultSuffix: getConfigValue(rawConfig.operationResultSuffix, ''),
-      documentMode: typeof rawConfig.noGraphQLTag === 'boolean' && rawConfig.noGraphQLTag === false ? 'documentMode' : getConfigValue(rawConfig.documentMode, DocumentMode.graphQLTag),
+      documentMode: ((rawConfig: RawClientSideBasePluginConfig) => {
+        if (typeof rawConfig.noGraphQLTag === 'boolean') {
+          return rawConfig.noGraphQLTag ? DocumentMode.documentNode : DocumentMode.graphQLTag;
+        }
+        return getConfigValue(rawConfig.documentMode, DocumentMode.graphQLTag);
+      })(rawConfig),
       importDocumentNodeExternallyFrom: getConfigValue(rawConfig.importDocumentNodeExternallyFrom, ''),
       ...additionalConfig,
     } as any);
