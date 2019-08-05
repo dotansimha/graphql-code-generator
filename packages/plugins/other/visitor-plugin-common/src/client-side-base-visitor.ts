@@ -45,13 +45,37 @@ export interface ClientSideBasePluginConfig extends ParsedConfig {
   noExport: boolean;
 
   /**
-   * TODO: eddeee - write stuff
+   * @name documentMode
+   * @type 'graphQLTag' | 'documentNode' | 'external'
+   * @default 'graphQLTag'
+   * @description Declares how DocumentNode are created:
+   * - `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client
+   * - `documentNode`: document nodes will be generated as objects when we generate the templates.
+   * - `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`
    */
   documentMode?: 'graphQLTag' | 'documentNode' | 'external';
 
   /**
-   * TODO: eddeee - write more stuff
-   * mention "near-operation-file"
+   * @name importDocumentNodeExternallyFrom
+   * @type string | 'near-operation-file'
+   * @default ''
+   * @description This config should be used if `documentMode` is `external`. This has 2 usage:
+   * - any string: This would be the path to import document nodes from. This can be used if we want to manually create the document nodes e.g. Use `graphql-tag` in a separate file and export the generated document
+   * - 'near-operation-file': This is a special mode that is intended to be used with `near-operation-file` preset to import document nodes from those files. If these files are `.graphql` files, we make use of webpack loader.
+   *
+   * @example
+   * ```yml
+   * config:
+   *   documentMode: external
+   *   importDocumentNodeExternallyFrom: path/to/document-node-file
+   * ```
+   *
+   * ```yml
+   * config:
+   *   documentMode: external
+   *   importDocumentNodeExternallyFrom: near-operation-file
+   * ```
+   *
    */
   importDocumentNodeExternallyFrom?: string;
 }
