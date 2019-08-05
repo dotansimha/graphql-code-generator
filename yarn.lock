@@ -15823,15 +15823,15 @@ url@^0.11.0:
     punycode "1.3.2"
     querystring "0.2.0"
 
-urql@1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/urql/-/urql-1.2.0.tgz#82b5dc49a7c22c4640ed3415f1fb9f2f6bf71b36"
-  integrity sha512-rAk9ExBpdmkvFXfYbgXM2pg2x5Lpnm0aJYNYriWsOYWKVxmoX+LJIZb0xGPWE3hPxXl9Q17Y+H+4yW1JVAuHhQ==
+urql@1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/urql/-/urql-1.3.0.tgz#b5961becc3db58a8e5089f981ab5c8a3ad1a9aaa"
+  integrity sha512-AuZtyhvgq06vek1m5OAyUE50fevjGinT//AEK1N25vqWlFmB/nxNXdSfEmaSf2ZzRDIwu9w19l7BxWIs0D4Bcg==
   dependencies:
     fast-json-stable-stringify "^2.0.0"
     graphql-tag "^2.10.1"
     prop-types "^15.6.0"
-    wonka "^3.0.0"
+    wonka "^3.2.0"
 
 use@^3.1.0:
   version "3.1.1"
@@ -16242,10 +16242,10 @@ windows-release@^3.1.0:
   dependencies:
     execa "^1.0.0"
 
-wonka@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/wonka/-/wonka-3.0.0.tgz#4f32a6a30e3229bae5944f002ce32d05b0423ba8"
-  integrity sha512-eDDzMU1gv1OgZG0fYom/0xi3WO4s2ILt6QvZzjcnSvFM+nzpgX4sux1+Z+LDYWhknJA9agpDADVtATZtajMtLA==
+wonka@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/wonka/-/wonka-3.2.0.tgz#40b9ce8e0c375127437661290e98e5d9e5278440"
+  integrity sha512-sHCLouGzTclUlp1sdXAhuTqGMIoAQfpBit9puepaINPVqDBRtC8DPWtTUHC0DJIdFSO+DsO86AFBFCDor7Sn0g==
 
 wordwrap@0.0.2:
   version "0.0.2"
