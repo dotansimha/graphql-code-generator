@@ -3,8 +3,6 @@ import { parse } from 'graphql';
 import { codegen } from '@graphql-codegen/core';
 import { plugin, addToSchema } from '../src';
 
-// TODO: support multiple the same directives on a FIELD and OBJECT_TYPE (@key @key) - might be tricky...
-
 describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
   it('should add __resolveReference to objects that have @key', async () => {
     const federatedSchema = parse(/* GraphQL */ `
@@ -364,7 +362,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
         __resolveReference?: Resolver<Maybe<ResolversTypes['User']>, ({ id: ParentType["id"] } | { name: ParentType["name"] }), ContextType>,
         id?: Resolver<ResolversTypes['ID'], ({ id: ParentType["id"] } | { name: ParentType["name"] }), ContextType>,
-        name?: Resolver<ResolversTypes['ID'], ({ id: ParentType["id"] } | { name: ParentType["name"] }), ContextType>,
+        name?: Resolver<Maybe<ResolversTypes['String']>, ({ id: ParentType["id"] } | { name: ParentType["name"] }), ContextType>,
         username?: Resolver<Maybe<ResolversTypes['String']>, ({ id: ParentType["id"] } | { name: ParentType["name"] }), ContextType>,
       };
     `);

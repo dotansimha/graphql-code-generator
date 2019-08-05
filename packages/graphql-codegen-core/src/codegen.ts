@@ -52,7 +52,14 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
         }),
       };
     }
-    options.schemaAst = buildASTSchema(schema);
+    options.schemaAst = buildASTSchema(
+      schema,
+      options.config.federation
+        ? {
+            assumeValidSDL: true,
+          }
+        : undefined
+    );
   }
 
   const prepend: Set<string> = new Set<string>();

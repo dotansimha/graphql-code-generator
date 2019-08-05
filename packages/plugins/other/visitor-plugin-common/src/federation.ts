@@ -49,7 +49,9 @@ export function addFederationToSchema(schema: GraphQLSchema) {
     },
   });
 
-  return buildASTSchema(visited);
+  return buildASTSchema(visited, {
+    assumeValidSDL: true,
+  });
 }
 
 export class ApolloFederation {
