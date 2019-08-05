@@ -274,4 +274,52 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
     expect(content).not.toMatch('ProvidesDirectiveResolver');
     expect(content).not.toMatch('KeyDirectiveResolver');
   });
+
+  it('should not add directive definitions and scalars if they are already there', async () => {
+    const federatedSchema = parse(/* GraphQL */ `
+      scalar _FieldSet
+
+      directive @key(fields: _FieldSet!) on OBJECT | INTERFACE
+
+      type Query {
+        allUsers: [User]
+      }
+
+      type User @key(fields: "id") {
+        id: ID!
+        name: String
+        username: String
+      }
+
+      type Book {
+        id: ID!
+      }
+    `);
+
+    const content = await codegen({
+      filename: 'graphql.ts',
+      schema: federatedSchema,
+      documents: [],
+      plugins: [
+        {
+          'typescript-resolvers': {},
+        },
+      ],
+      config: {
+        federation: true,
+      },
+      pluginMap: {
+        'typescript-resolvers': {
+          plugin,
+          addToSchema,
+        },
+      },
+    });
+
+    expect(content).not.toMatch(`_FieldSet`);
+    expect(content).not.toMatch('ExternalDirectiveResolver');
+    expect(content).not.toMatch('RequiresDirectiveResolver');
+    expect(content).not.toMatch('ProvidesDirectiveResolver');
+    expect(content).not.toMatch('KeyDirectiveResolver');
+  });
 });
