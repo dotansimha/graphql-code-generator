@@ -309,11 +309,13 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
     }
 
     const operationType: string = toPascalCase(node.operation);
+    const operationTypeSuffix: string = this.config.dedupeOperationSuffix && node.name.value.toLowerCase().endsWith(node.operation) ? '' : operationType;
+
     const operationResultType: string = this.convertName(node, {
-      suffix: operationType + this._parsedConfig.operationResultSuffix,
+      suffix: operationTypeSuffix + this._parsedConfig.operationResultSuffix,
     });
     const operationVariablesTypes: string = this.convertName(node, {
-      suffix: operationType + 'Variables',
+      suffix: operationTypeSuffix + 'Variables',
     });
 
     const additional = this.buildOperation(node, documentVariableName, operationType, operationResultType, operationVariablesTypes);
