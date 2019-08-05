@@ -129,6 +129,7 @@ describe('TypeScript Operations Plugin', () => {
 
             ... on TextNotification {
               text
+              textAlias: text
             }
 
             ... on TextNotification {
@@ -151,9 +152,10 @@ describe('TypeScript Operations Plugin', () => {
         export type NotificationsQuery = ({ __typename?: 'Query' } & { notifications: Array<(
           { __typename?: 'TextNotification' }
           & Pick<Types.TextNotification, 'text' | 'id'>
+          & { textAlias: Types.TextNotification['text'] }
         ) | (
           { __typename?: 'ImageNotification' }
-          & Pick<Types.ImageNotification, 'imageUrl' | 'id'>  
+          & Pick<Types.ImageNotification, 'imageUrl' | 'id'>
           & { metadata: ({ __typename?: 'ImageMetadata' } & { created: Types.ImageMetadata['createdBy'] }) }
         )> });
       `);

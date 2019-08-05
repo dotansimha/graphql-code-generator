@@ -329,8 +329,8 @@ export class SelectionSetToObject {
 
       return Array.from(types.entries())
         .map(([name, fields]) => {
-          const primitiveFields: FieldNode[] = [];
-          const primitiveAliasFields: FieldNode[] = [];
+          const primitiveFields = new Map<string, FieldNode>();
+          const primitiveAliasFields = new Map<string, FieldNode>();
           const linkFieldSelectionSets = new Map<
             string,
             {
@@ -343,11 +343,11 @@ export class SelectionSetToObject {
           for (const field of fields as FieldNode[]) {
             if (!field.selectionSet) {
               if (field.alias) {
-                primitiveAliasFields.push(field);
+                primitiveAliasFields.set(field.alias.value, field);
               } else if (field.name.value === '__typename') {
                 requireTypename = true;
               } else {
-                primitiveFields.push(field);
+                primitiveFields.set(field.name.value, field);
               }
             } else {
               let selectedField: GraphQLField<any, any, any> = null;
@@ -419,10 +419,11 @@ export class SelectionSetToObject {
             const optionalTypename = !requireTypename && !this._nonOptionalTypename;
             typeInfoString = `{ ${this.formatNamedField('__typename')}${optionalTypename ? '?' : ''}: '${name}' }`;
           }
-          const primitiveFieldsString = this.buildPrimitiveFields(parentName, primitiveFields.map(field => field.name.value));
+          const primitiveFieldsString = this.buildPrimitiveFields(parentName, Array.from(primitiveFields.values()).map(field => field.name.value));
+          const primitiveAliasFieldsString = this.buildAliasedPrimitiveFields(parentName, Array.from(primitiveAliasFields.values()).map(field => ({ alias: field.alias.value, fieldName: field.name.value })));
           const linkFieldsString = this.buildLinkFields(linkFields);
 
-          return '(\n  ' + [typeInfoString, primitiveFieldsString, linkFieldsString].filter(Boolean).join('\n  & ') + '\n)';
+          return '(\n  ' + [typeInfoString, primitiveFieldsString, primitiveAliasFieldsString, linkFieldsString].filter(Boolean).join('\n  & ') + '\n)';
         })
         .join(' | ');
     } else {
