@@ -20,18 +20,23 @@ export interface ReactApolloPluginConfig extends ClientSideBasePluginConfig {
 
 export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPluginConfig, ReactApolloPluginConfig> {
   constructor(fragments: LoadedFragment[], rawConfig: ReactApolloRawPluginConfig, documents?: Types.DocumentFile[]) {
-    super(fragments, rawConfig, {
-      componentSuffix: getConfigValue(rawConfig.componentSuffix, 'Component'),
-      withHOC: getConfigValue(rawConfig.withHOC, true),
-      withComponent: getConfigValue(rawConfig.withComponent, true),
-      withHooks: getConfigValue(rawConfig.withHooks, false),
-      withMutationFn: getConfigValue(rawConfig.withMutationFn, true),
-      hooksImportFrom: getConfigValue(rawConfig.hooksImportFrom, 'react-apollo-hooks'),
-      reactApolloImportFrom: getConfigValue(rawConfig.reactApolloImportFrom, 'react-apollo'),
-      reactApolloVersion: getConfigValue(rawConfig.reactApolloVersion, 2),
-      withResultType: getConfigValue(rawConfig.withResultType, true),
-      withMutationOptionsType: getConfigValue(rawConfig.withMutationOptionsType, true),
-    } as any, documents);
+    super(
+      fragments,
+      rawConfig,
+      {
+        componentSuffix: getConfigValue(rawConfig.componentSuffix, 'Component'),
+        withHOC: getConfigValue(rawConfig.withHOC, true),
+        withComponent: getConfigValue(rawConfig.withComponent, true),
+        withHooks: getConfigValue(rawConfig.withHooks, false),
+        withMutationFn: getConfigValue(rawConfig.withMutationFn, true),
+        hooksImportFrom: getConfigValue(rawConfig.hooksImportFrom, 'react-apollo-hooks'),
+        reactApolloImportFrom: getConfigValue(rawConfig.reactApolloImportFrom, 'react-apollo'),
+        reactApolloVersion: getConfigValue(rawConfig.reactApolloVersion, 2),
+        withResultType: getConfigValue(rawConfig.withResultType, true),
+        withMutationOptionsType: getConfigValue(rawConfig.withMutationOptionsType, true),
+      } as any,
+      documents
+    );
 
     autoBind(this);
   }
@@ -62,7 +67,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
       return baseImports;
     }
 
-    return [...baseImports, ...this.imports];
+    return [...baseImports, ...Array.from(this.imports)];
   }
 
   private _buildHocProps(operationName: string, operationType: string): string {

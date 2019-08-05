@@ -50,13 +50,13 @@ describe('urql', () => {
       await validateTypeScript(content, schema, docs, {});
     });
 
-    it('should import DocumentNode when documentMode is "documentNode" ( formerly noGraphQLTag )', async () => {
+    it('should import DocumentNode when using noGraphQLTag', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
         {
-          documentMode: 'documentNode',
+          noGraphQLTag: true,
         },
         {
           outputFile: 'graphql.tsx',
@@ -315,13 +315,13 @@ query MyFeed {
       await validateTypeScript(content, schema, docs, {});
     });
 
-    it('should generate Document variable with documentMode being "documentNode" ( formerly noGraphQlTag )', async () => {
+    it('should generate Document variable with noGraphQlTag', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
         {
-          documentMode: 'documentNode',
+          noGraphQLTag: true,
         },
         {
           outputFile: 'graphql.tsx',

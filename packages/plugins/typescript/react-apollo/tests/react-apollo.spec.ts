@@ -48,7 +48,7 @@ describe('React Apollo', () => {
   };
 
   describe('Issues', () => {
-    it('Issue #2080 - documentMode being "documentNode" (formerly noGraphQLTag) does not work with fragments correctly', async () => {
+    it('Issue #2080 - noGraphQLTag does not work with fragments correctly', async () => {
       const docs = [
         {
           filePath: '',
@@ -77,7 +77,7 @@ describe('React Apollo', () => {
         schema,
         docs,
         {
-          documentMode: 'documentNode',
+          noGraphQLTag: true,
         },
         {
           outputFile: 'graphql.tsx',
@@ -106,13 +106,13 @@ describe('React Apollo', () => {
       await validateTypeScript(content, schema, docs, {});
     });
 
-    it('should import DocumentNode when using documentMode being "documentNode" (formerly noGraphQLTag)', async () => {
+    it('should import DocumentNode when using noGraphQLTag', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
         {
-          documentMode: 'documentNode',
+          noGraphQLTag: true,
         },
         {
           outputFile: 'graphql.tsx',
@@ -137,6 +137,29 @@ describe('React Apollo', () => {
 
       expect(content.prepend).toContain(`import { gql } from 'graphql.macro';`);
       await validateTypeScript(content, schema, docs, {});
+    });
+
+    it(`tests for dedupeOperationSuffix`, async () => {
+      const ast = parse(/* GraphQL */ `
+        query notificationsQuery {
+          notifications {
+            id
+          }
+        }
+      `);
+      const ast2 = parse(/* GraphQL */ `
+        query notifications {
+          notifications {
+            id
+          }
+        }
+      `);
+
+      expect(((await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], {}, { outputFile: '' })) as any).content).toContain('ReactApollo.QueryResult<NotificationsQueryQuery, NotificationsQueryQueryVariables>;');
+      expect(((await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], { dedupeOperationSuffix: false }, { outputFile: '' })) as any).content).toContain('ReactApollo.QueryResult<NotificationsQueryQuery, NotificationsQueryQueryVariables>');
+      expect(((await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], { dedupeOperationSuffix: true }, { outputFile: '' })) as any).content).toContain('ReactApollo.QueryResult<NotificationsQuery, NotificationsQueryVariables>');
+      expect(((await plugin(schema, [{ filePath: 'test-file.ts', content: ast2 }], { dedupeOperationSuffix: true }, { outputFile: '' })) as any).content).toContain('ReactApollo.QueryResult<NotificationsQuery, NotificationsQueryVariables>');
+      expect(((await plugin(schema, [{ filePath: 'test-file.ts', content: ast2 }], { dedupeOperationSuffix: false }, { outputFile: '' })) as any).content).toContain('ReactApollo.QueryResult<NotificationsQuery, NotificationsQueryVariables>');
     });
 
     it('should import ReactApolloHooks dependencies', async () => {
@@ -423,13 +446,13 @@ query MyFeed {
       await validateTypeScript(content, schema, docs, {});
     });
 
-    it('should generate Document variable with documentMode being "documentNode" (formerly noGraphQLTag)', async () => {
+    it('should generate Document variable with noGraphQlTag', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
         {
-          documentMode: 'documentNode',
+          noGraphQLTag: true,
         },
         {
           outputFile: 'graphql.tsx',
