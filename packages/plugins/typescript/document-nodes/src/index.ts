@@ -101,4 +101,3 @@ export const validate: PluginValidateFn<any> = async (schema: GraphQLSchema, doc
     throw new Error(`Plugin "typescript-document-nodes" requires extension to be ".ts"!`);
   }
 };
-

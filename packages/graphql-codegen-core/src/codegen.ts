@@ -1,5 +1,5 @@
 import { Types, isComplexPluginOutput } from '@graphql-codegen/plugin-helpers';
-import { visit, buildASTSchema } from 'graphql';
+import { visit, buildASTSchema, Kind } from 'graphql';
 import { mergeSchemas } from './merge-schemas';
 import { executePlugin } from './execute-plugin';
 import { DetailedError } from './errors';
@@ -17,24 +17,49 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
 
   // merged schema with parts added by plugins
   let schemaChanged = false;
-  const schema = pluginPackages.reduce((schema, plugin) => {
-    if (!plugin.addToSchema) {
+  let schema = pluginPackages.reduce((schema, plugin) => {
+    const addToSchema = typeof plugin.addToSchema === 'function' ? plugin.addToSchema(options.config) : plugin.addToSchema;
+
+    if (!addToSchema) {
       return schema;
     }
 
     schemaChanged = true;
 
-    let addToSchema = plugin.addToSchema;
-
-    if (typeof addToSchema === 'function') {
-      addToSchema = addToSchema(options.config);
-    }
-
     return mergeSchemas([schema, addToSchema]);
   }, options.schema);
 
   if (schemaChanged) {
-    options.schemaAst = buildASTSchema(schema);
+    // It's for federation, to support extended types without their definitions
+    if (options.config.federation) {
+      schema = {
+        ...schema,
+        definitions: schema.definitions.map(def => {
+          if (def.kind !== Kind.OBJECT_TYPE_EXTENSION) {
+            return def;
+          }
+
+          const isDefined = schema.definitions.some(d => d.kind === Kind.OBJECT_TYPE_DEFINITION && d.name.value === def.name.value);
+
+          if (isDefined) {
+            return def;
+          }
+
+          return {
+            ...def,
+            kind: Kind.OBJECT_TYPE_DEFINITION,
+          };
+        }),
+      };
+    }
+    options.schemaAst = buildASTSchema(
+      schema,
+      options.config.federation
+        ? {
+            assumeValidSDL: true,
+          }
+        : undefined
+    );
   }
 
   const prepend: Set<string> = new Set<string>();
@@ -159,7 +184,6 @@ function validateDocuments(files: Types.DocumentFile[]) {
       `Not all operations have an unique name: ${duplicated.join(', ')}`,
       `
         Not all operations have an unique name
-
         ${list}
       `
     );

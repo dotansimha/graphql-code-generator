@@ -1,5 +1,5 @@
 // tslint:disable
-import { GraphQLResolveInfo } from 'graphql';
+import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 export type Maybe<T> = T | null;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -8,24 +8,29 @@ export type Scalars = {
   Boolean: boolean,
   Int: number,
   Float: number,
+  _FieldSet: any,
+};
+
+
+
+
+
+
+export type Book = {
+  __typename?: 'Book',
+  id: Scalars['ID'],
 };
 
 export type Query = {
   __typename?: 'Query',
-  allUsers: Array<Maybe<User>>,
-  userById?: Maybe<User>,
-};
-
-
-export type QueryUserByIdArgs = {
-  id: Scalars['Int']
+  users?: Maybe<Array<Maybe<User>>>,
 };
 
 export type User = {
   __typename?: 'User',
-  id: Scalars['Int'],
-  name: Scalars['String'],
-  email: Scalars['String'],
+  id: Scalars['ID'],
+  name?: Maybe<Scalars['String']>,
+  username?: Maybe<Scalars['String']>,
 };
 
 
@@ -91,34 +96,41 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>,
   User: ResolverTypeWrapper<User>,
-  Int: ResolverTypeWrapper<Scalars['Int']>,
+  ID: ResolverTypeWrapper<Scalars['ID']>,
   String: ResolverTypeWrapper<Scalars['String']>,
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
+  Book: ResolverTypeWrapper<Book>,
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Query: {},
   User: User,
-  Int: Scalars['Int'],
+  ID: Scalars['ID'],
   String: Scalars['String'],
   Boolean: Scalars['Boolean'],
+  Book: Book,
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  allUsers?: Resolver<Array<Maybe<ResolversTypes['User']>>, ParentType, ContextType>,
-  userById?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, QueryUserByIdArgs>,
+  users?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>,
 };
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
-  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>,
-  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
-  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  __resolveReference?: Resolver<Maybe<ResolversTypes['User']>, ({ id: ParentType["id"] }), ContextType>,
+  id?: Resolver<ResolversTypes['ID'], ({ id: ParentType["id"] }), ContextType>,
+  name?: Resolver<Maybe<ResolversTypes['String']>, ({ id: ParentType["id"] }), ContextType>,
+  username?: Resolver<Maybe<ResolversTypes['String']>, ({ id: ParentType["id"] }), ContextType>,
+};
+
+export type BookResolvers<ContextType = any, ParentType extends ResolversParentTypes['Book'] = ResolversParentTypes['Book']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
 };
 
 export type Resolvers<ContextType = any> = {
   Query?: QueryResolvers<ContextType>,
   User?: UserResolvers<ContextType>,
+  Book?: BookResolvers<ContextType>,
 };
 
 

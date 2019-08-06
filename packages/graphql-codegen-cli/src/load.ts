@@ -1,4 +1,4 @@
-import { loadSchema as loadSchemaToolkit, loadDocuments as loadDocumentsToolkit } from 'graphql-toolkit';
+import { loadTypedefs, mergeTypeDefs, loadDocuments as loadDocumentsToolkit } from 'graphql-toolkit';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { GraphQLSchema, DocumentNode } from 'graphql';
 import { DetailedError } from '@graphql-codegen/core';
@@ -18,7 +18,7 @@ async function getCustomLoaderByPath(path: string): Promise<any> {
   return null;
 }
 
-export const loadSchema = async (schemaDef: Types.Schema, config: Types.Config): Promise<GraphQLSchema | DocumentNode> => {
+export const loadSchema = async (schemaDef: Types.Schema, config: Types.Config): Promise<DocumentNode> => {
   if (typeof schemaDef === 'object' && schemaDef[Object.keys(schemaDef)[0]] && (schemaDef[Object.keys(schemaDef)[0]] as any).loader && typeof (schemaDef[Object.keys(schemaDef)[0]] as any).loader === 'string') {
     const pointToSchema = Object.keys(schemaDef)[0];
     const defObject: any = schemaDef[pointToSchema];
@@ -31,7 +31,7 @@ export const loadSchema = async (schemaDef: Types.Schema, config: Types.Config):
         const returnedSchema = await customSchemaLoader(pointToSchema, config, defObject);
 
         if (returnedSchema && isGraphQLSchema(returnedSchema)) {
-          return recreateSchema(returnedSchema);
+          return mergeTypeDefs([returnedSchema]);
         } else {
           throw new Error(`Return value of a custom schema loader must be of type "GraphQLSchema"!`);
         }
@@ -67,7 +67,9 @@ export const loadSchema = async (schemaDef: Types.Schema, config: Types.Config):
       options.tagPluck = config.pluckConfig;
     }
 
-    return loadSchemaToolkit(pointToSchema, options);
+    const docs = (await loadTypedefs(pointToSchema, options)).map(({ content }) => content);
+
+    return mergeTypeDefs(docs);
   } catch (e) {
     throw new DetailedError(
       'Failed to load schema',
@@ -151,16 +153,4 @@ function isGraphQLSchema(schema: any): schema is GraphQLSchema {
   const schemaClass = schema.constructor;
   const className = GraphQLSchema.name;
   return className && schemaClass && schemaClass.name === className;
-}
-
-function recreateSchema(schema: GraphQLSchema): GraphQLSchema {
-  return new GraphQLSchema({
-    query: schema.getQueryType(),
-    mutation: schema.getMutationType(),
-    subscription: schema.getSubscriptionType(),
-    types: Object.values(schema.getTypeMap()),
-    directives: [...schema.getDirectives()],
-    astNode: schema.astNode,
-    extensionASTNodes: schema.extensionASTNodes,
-  });
 }

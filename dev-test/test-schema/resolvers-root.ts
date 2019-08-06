@@ -113,17 +113,17 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'],
 };
 
-export type QueryRootResolvers<ContextType = any, ParentType = ResolversParentTypes['QueryRoot']> = {
+export type QueryRootResolvers<ContextType = any, ParentType extends ResolversParentTypes['QueryRoot'] = ResolversParentTypes['QueryRoot']> = {
   allUsers?: Resolver<Array<Maybe<ResolversTypes['User']>>, ParentType, ContextType>,
   userById?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, QueryRootUserByIdArgs>,
   answer?: Resolver<Array<ResolversTypes['Int']>, ParentType, ContextType>,
 };
 
-export type SubscriptionRootResolvers<ContextType = any, ParentType = ResolversParentTypes['SubscriptionRoot']> = {
+export type SubscriptionRootResolvers<ContextType = any, ParentType extends ResolversParentTypes['SubscriptionRoot'] = ResolversParentTypes['SubscriptionRoot']> = {
   newUser?: SubscriptionResolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>,
 };
 
-export type UserResolvers<ContextType = any, ParentType = ResolversParentTypes['User']> = {
+export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>,
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>,

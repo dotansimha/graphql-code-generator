@@ -126,7 +126,7 @@ export type PluginFunction<T = any> = (
 
 export type PluginValidateFn<T = any> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: T, outputFile: string, allPlugins: Types.ConfiguredPlugin[]) => Types.Promisable<void>;
 
-export type AddToSchemaResult = string | DocumentNode;
+export type AddToSchemaResult = string | DocumentNode | undefined;
 
 export interface CodegenPlugin<T = any> {
   plugin: PluginFunction<T>;

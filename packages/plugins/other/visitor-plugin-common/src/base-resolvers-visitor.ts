@@ -26,6 +26,7 @@ import { DirectiveDefinitionNode, GraphQLObjectType, InputValueDefinitionNode, G
 import { OperationVariablesToObject } from './variables-to-object';
 import { ParsedMapper, parseMapper, transformMappers } from './mappers';
 import { parseEnumValues } from './enum-values';
+import { ApolloFederation } from './federation';
 
 export interface ParsedResolversConfig extends ParsedConfig {
   contextType: ParsedMapper;
@@ -38,6 +39,7 @@ export interface ParsedResolversConfig extends ParsedConfig {
   addUnderscoreToArgsType: boolean;
   enumValues: ParsedEnumValuesMap;
   resolverTypeWrapperSignature: string;
+  federation: boolean;
 }
 
 export interface RawResolversConfig extends RawConfig {
@@ -199,6 +201,14 @@ export interface RawResolversConfig extends RawConfig {
    *
    */
   resolverTypeWrapperSignature?: string;
+  /**
+   * @name federation
+   * @type boolean
+   * @default false
+   * @description Supports Apollo Federation
+   *
+   */
+  federation?: boolean;
 }
 
 export type ResolverTypes = { [gqlType: string]: string };
@@ -215,11 +225,13 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
   protected _resolversParentTypes: ResolverParentTypes = {};
   protected _rootTypeNames: string[] = [];
   protected _globalDeclarations: Set<string> = new Set();
+  protected _federation: ApolloFederation;
 
   constructor(rawConfig: TRawConfig, additionalConfig: TPluginConfig, private _schema: GraphQLSchema, defaultScalars: ScalarsMap = DEFAULT_SCALARS) {
     super(
       rawConfig,
       {
+        federation: getConfigValue(rawConfig.federation, false),
         resolverTypeWrapperSignature: getConfigValue(rawConfig.resolverTypeWrapperSignature, 'Promise<T> | T'),
         enumValues: parseEnumValues(_schema, rawConfig.enumValues),
         addUnderscoreToArgsType: getConfigValue(rawConfig.addUnderscoreToArgsType, false),
@@ -234,6 +246,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
     );
 
     autoBind(this);
+    this._federation = new ApolloFederation({ enabled: this.config.federation, schema: this.schema });
     this._rootTypeNames = getRootTypeNames(_schema);
     this._variablesTransfomer = new OperationVariablesToObject(this.scalars, this.convertName);
     this._resolversTypes = this.createResolversFields(type => this.applyResolverTypeWrapper(type), type => this.clearResolverTypeWrapper(type));
@@ -293,13 +306,14 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
   protected createResolversFields(applyWrapper: (str: string) => string, clearWrapper: (str: string) => string): ResolverTypes {
     const allSchemaTypes = this._schema.getTypeMap();
     const nestedMapping: { [typeName: string]: boolean } = {};
+    const typeNames = this._federation.filterTypeNames(Object.keys(allSchemaTypes));
 
-    Object.keys(allSchemaTypes).forEach(typeName => {
+    typeNames.forEach(typeName => {
       const schemaType = allSchemaTypes[typeName];
       nestedMapping[typeName] = this.shouldMapType(schemaType, nestedMapping);
     });
 
-    return Object.keys(allSchemaTypes).reduce(
+    return typeNames.reduce(
       (prev: ResolverTypes, typeName: string) => {
         if (typeName.startsWith('__')) {
           return prev;
@@ -338,7 +352,8 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
 
         if ((shouldApplyOmit && prev[typeName] !== 'any' && isObjectType(schemaType)) || (isInterfaceType(schemaType) && !isMapped)) {
           const fields = schemaType.getFields();
-          const relevantFields: { addOptionalSign: boolean; fieldName: string; replaceWithType: string }[] = Object.keys(fields)
+          const relevantFields: { addOptionalSign: boolean; fieldName: string; replaceWithType: string }[] = this._federation
+            .filterFieldNames(Object.keys(fields))
             .map(fieldName => {
               const field = fields[fieldName];
               const baseType = getBaseType(field.type);
@@ -647,6 +662,10 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     return `${resolversType}['${name}']`;
   }
 
+  protected transformParentGenericType(parentType: string): string {
+    return `ParentType extends ${parentType} = ${parentType}`;
+  }
+
   FieldDefinition(node: FieldDefinitionNode, key: string | number, parent: any) {
     const hasArguments = node.arguments && node.arguments.length > 0;
 
@@ -654,6 +673,12 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
       const original: FieldDefinitionNode = parent[key];
       const baseType = getBaseTypeNode(original.type);
       const realType = baseType.name.value;
+      const parentType = this.schema.getType(parentName);
+
+      if (this._federation.skipField({ fieldNode: original, parentType: parentType })) {
+        return null;
+      }
+
       const typeToUse = this.getTypeToUse(realType);
       const mappedType = this._variablesTransfomer.wrapAstTypeWithModifiers(typeToUse, original.type);
       const subscriptionType = this._schema.getSubscriptionType();
@@ -677,7 +702,9 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
         }
       }
 
-      return indent(`${node.name}${this.config.avoidOptionals ? '' : '?'}: ${isSubscriptionType ? 'SubscriptionResolver' : 'Resolver'}<${mappedType}, ParentType, ContextType${argsType ? `, ${argsType}` : ''}>,`);
+      const parentTypeSignature = this._federation.translateParentType({ fieldNode: original, parentType, parentTypeSignature: 'ParentType' });
+
+      return indent(`${node.name}${this.config.avoidOptionals ? '' : '?'}: ${isSubscriptionType ? 'SubscriptionResolver' : 'Resolver'}<${mappedType}, ${parentTypeSignature}, ContextType${argsType ? `, ${argsType}` : ''}>,`);
     };
   }
 
@@ -696,7 +723,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     const block = new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
-      .withName(name, `<ContextType = ${this.config.contextType.type}, ParentType = ${parentType}>`)
+      .withName(name, `<ContextType = ${this.config.contextType.type}, ${this.transformParentGenericType(parentType)}>`)
       .withBlock(node.fields.map((f: any) => f(node.name)).join('\n'));
 
     this._collectedResolvers[node.name as any] = name + '<ContextType>';
@@ -720,13 +747,17 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
-      .withName(name, `<ContextType = ${this.config.contextType.type}, ParentType = ${parentType}>`)
+      .withName(name, `<ContextType = ${this.config.contextType.type}, ${this.transformParentGenericType(parentType)}>`)
       .withBlock(indent(`__resolveType: TypeResolveFn<${possibleTypes}, ParentType, ContextType>`)).string;
   }
 
   ScalarTypeDefinition(node: ScalarTypeDefinitionNode): string {
     const nameAsString = (node.name as any) as string;
     const baseName = this.getTypeToUse(nameAsString);
+
+    if (this._federation.skipScalar(nameAsString)) {
+      return null;
+    }
 
     this._collectedResolvers[node.name as any] = 'GraphQLScalarType';
 
@@ -748,6 +779,10 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
   }
 
   DirectiveDefinition(node: DirectiveDefinitionNode): string {
+    if (this._federation.skipDirective(node.name as any)) {
+      return null;
+    }
+
     const directiveName = this.convertName(node, {
       suffix: 'DirectiveResolver',
     });
@@ -793,7 +828,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
-      .withName(name, `<ContextType = ${this.config.contextType.type}, ParentType = ${parentType}>`)
+      .withName(name, `<ContextType = ${this.config.contextType.type}, ${this.transformParentGenericType(parentType)}>`)
       .withBlock([indent(`__resolveType: TypeResolveFn<${possibleTypes}, ParentType, ContextType>,`), ...(node.fields || []).map((f: any) => f(node.name))].join('\n')).string;
   }
 

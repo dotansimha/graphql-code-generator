@@ -182,4 +182,25 @@ describe('generate-and-save', () => {
     fs.writeFileSync(firstOutput.filename, firstOutput.content);
     await generateOnce();
   });
+  test('should extract a document from the gql tag (imported from apollo-server)', async () => {
+    const filename = 'overwrite.ts';
+    const writeSpy = jest.spyOn(fs, 'writeSync').mockImplementation();
+
+    const output = await generate(
+      {
+        schema: `./tests/test-files/schema-dir/gatsby-and-custom-parsers/apollo-server.ts`,
+        generates: {
+          [filename]: {
+            plugins: ['typescript'],
+          },
+        },
+      },
+      true
+    );
+
+    expect(output.length).toBe(1);
+    expect(output[0].content).toMatch('Used apollo-server');
+    // makes sure it doesn't write a new file
+    expect(writeSpy).toHaveBeenCalled();
+  });
 });
