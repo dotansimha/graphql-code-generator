@@ -77,7 +77,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
 
     this.imports.add(this.getReactApolloImport());
 
-    return `Partial<ReactApollo.${argType}<${typeVariableName}, ${variablesVarName}>>`;
+    return `ReactApollo.${argType}<${typeVariableName}, ${variablesVarName}>`;
   }
 
   private _buildMutationFn(node: OperationDefinitionNode, operationResultType: string, operationVariablesTypes: string): string {

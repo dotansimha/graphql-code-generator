@@ -118,9 +118,10 @@ export type QueryEntryArgs = {
   repoFullName: Scalars['String']
 };
 
-/** A repository object from the GitHub API. This uses the exact field names returned by the
+/** 
+ * A repository object from the GitHub API. This uses the exact field names returned by the
  * GitHub API for simplicity, even though the convention for GraphQL is usually to camel case.
- */
+ **/
 export type Repository = {
   __typename?: 'Repository',
   /** Just the name of the repository, e.g. GitHunt-API */
@@ -301,7 +302,7 @@ export type OnCommentAddedComponentProps = Omit<ReactApollo.SubscriptionProps<On
       <ReactApollo.Subscription<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables> subscription={OnCommentAddedDocument} {...props} />
     );
     
-export type OnCommentAddedProps<TChildProps = {}> = Partial<ReactApollo.DataProps<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>> & TChildProps;
+export type OnCommentAddedProps<TChildProps = {}> = ReactApollo.DataProps<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables> & TChildProps;
 export function withOnCommentAdded<TProps, TChildProps = {}>(operationOptions?: ReactApollo.OperationOption<
   TProps,
   OnCommentAddedSubscription,
@@ -353,7 +354,7 @@ export type CommentComponentProps = Omit<ReactApollo.QueryProps<CommentQuery, Co
       <ReactApollo.Query<CommentQuery, CommentQueryVariables> query={CommentDocument} {...props} />
     );
     
-export type CommentProps<TChildProps = {}> = Partial<ReactApollo.DataProps<CommentQuery, CommentQueryVariables>> & TChildProps;
+export type CommentProps<TChildProps = {}> = ReactApollo.DataProps<CommentQuery, CommentQueryVariables> & TChildProps;
 export function withComment<TProps, TChildProps = {}>(operationOptions?: ReactApollo.OperationOption<
   TProps,
   CommentQuery,
@@ -384,7 +385,7 @@ export type CurrentUserForProfileComponentProps = Omit<ReactApollo.QueryProps<Cu
       <ReactApollo.Query<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables> query={CurrentUserForProfileDocument} {...props} />
     );
     
-export type CurrentUserForProfileProps<TChildProps = {}> = Partial<ReactApollo.DataProps<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>> & TChildProps;
+export type CurrentUserForProfileProps<TChildProps = {}> = ReactApollo.DataProps<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables> & TChildProps;
 export function withCurrentUserForProfile<TProps, TChildProps = {}>(operationOptions?: ReactApollo.OperationOption<
   TProps,
   CurrentUserForProfileQuery,
@@ -417,7 +418,7 @@ export type FeedComponentProps = Omit<ReactApollo.QueryProps<FeedQuery, FeedQuer
       <ReactApollo.Query<FeedQuery, FeedQueryVariables> query={FeedDocument} {...props} />
     );
     
-export type FeedProps<TChildProps = {}> = Partial<ReactApollo.DataProps<FeedQuery, FeedQueryVariables>> & TChildProps;
+export type FeedProps<TChildProps = {}> = ReactApollo.DataProps<FeedQuery, FeedQueryVariables> & TChildProps;
 export function withFeed<TProps, TChildProps = {}>(operationOptions?: ReactApollo.OperationOption<
   TProps,
   FeedQuery,
@@ -448,7 +449,7 @@ export type SubmitRepositoryComponentProps = Omit<ReactApollo.MutationProps<Subm
       <ReactApollo.Mutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables> mutation={SubmitRepositoryDocument} {...props} />
     );
     
-export type SubmitRepositoryProps<TChildProps = {}> = Partial<ReactApollo.MutateProps<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>> & TChildProps;
+export type SubmitRepositoryProps<TChildProps = {}> = ReactApollo.MutateProps<SubmitRepositoryMutation, SubmitRepositoryMutationVariables> & TChildProps;
 export function withSubmitRepository<TProps, TChildProps = {}>(operationOptions?: ReactApollo.OperationOption<
   TProps,
   SubmitRepositoryMutation,
@@ -480,7 +481,7 @@ export type SubmitCommentComponentProps = Omit<ReactApollo.MutationProps<SubmitC
       <ReactApollo.Mutation<SubmitCommentMutation, SubmitCommentMutationVariables> mutation={SubmitCommentDocument} {...props} />
     );
     
-export type SubmitCommentProps<TChildProps = {}> = Partial<ReactApollo.MutateProps<SubmitCommentMutation, SubmitCommentMutationVariables>> & TChildProps;
+export type SubmitCommentProps<TChildProps = {}> = ReactApollo.MutateProps<SubmitCommentMutation, SubmitCommentMutationVariables> & TChildProps;
 export function withSubmitComment<TProps, TChildProps = {}>(operationOptions?: ReactApollo.OperationOption<
   TProps,
   SubmitCommentMutation,
@@ -516,7 +517,7 @@ export type VoteComponentProps = Omit<ReactApollo.MutationProps<VoteMutation, Vo
       <ReactApollo.Mutation<VoteMutation, VoteMutationVariables> mutation={VoteDocument} {...props} />
     );
     
-export type VoteProps<TChildProps = {}> = Partial<ReactApollo.MutateProps<VoteMutation, VoteMutationVariables>> & TChildProps;
+export type VoteProps<TChildProps = {}> = ReactApollo.MutateProps<VoteMutation, VoteMutationVariables> & TChildProps;
 export function withVote<TProps, TChildProps = {}>(operationOptions?: ReactApollo.OperationOption<
   TProps,
   VoteMutation,
