@@ -1,7 +1,9 @@
 // tslint:disable
 import gql from 'graphql-tag';
 import * as React from 'react';
-import * as ReactApollo from 'react-apollo';
+import * as ApolloReactCommon from '@apollo/react-common';
+import * as ApolloReactComponents from '@apollo/react-components';
+import * as ApolloReactHoc from '@apollo/react-hoc';
 export type Maybe<T> = T | null;
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 /** All built-in and custom scalars, mapped to their actual values */
@@ -295,24 +297,24 @@ export const OnCommentAddedDocument = gql`
   }
 }
     `;
-export type OnCommentAddedComponentProps = Omit<ReactApollo.SubscriptionProps<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>, 'subscription'>;
+export type OnCommentAddedComponentProps = Omit<ApolloReactComponents.SubscriptionComponentOptions<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>, 'subscription'>;
 
     export const OnCommentAddedComponent = (props: OnCommentAddedComponentProps) => (
-      <ReactApollo.Subscription<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables> subscription={OnCommentAddedDocument} {...props} />
+      <ApolloReactComponents.Subscription<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables> subscription={OnCommentAddedDocument} {...props} />
     );
     
-export type OnCommentAddedProps<TChildProps = {}> = ReactApollo.DataProps<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables> & TChildProps;
-export function withOnCommentAdded<TProps, TChildProps = {}>(operationOptions?: ReactApollo.OperationOption<
+export type OnCommentAddedProps<TChildProps = {}> = ApolloReactHoc.DataProps<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables> & TChildProps;
+export function withOnCommentAdded<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
   TProps,
   OnCommentAddedSubscription,
   OnCommentAddedSubscriptionVariables,
   OnCommentAddedProps<TChildProps>>) {
-    return ReactApollo.withSubscription<TProps, OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables, OnCommentAddedProps<TChildProps>>(OnCommentAddedDocument, {
+    return ApolloReactHoc.withSubscription<TProps, OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables, OnCommentAddedProps<TChildProps>>(OnCommentAddedDocument, {
       alias: 'withOnCommentAdded',
       ...operationOptions
     });
 };
-export type OnCommentAddedSubscriptionResult = ReactApollo.SubscriptionResult<OnCommentAddedSubscription>;
+export type OnCommentAddedSubscriptionResult = ApolloReactCommon.SubscriptionResult<OnCommentAddedSubscription>;
 export const CommentDocument = gql`
     query Comment($repoFullName: String!, $limit: Int, $offset: Int) {
   currentUser {
@@ -342,24 +344,24 @@ export const CommentDocument = gql`
   }
 }
     ${CommentsPageCommentFragmentDoc}`;
-export type CommentComponentProps = Omit<ReactApollo.QueryProps<CommentQuery, CommentQueryVariables>, 'query'> & ({ variables: CommentQueryVariables; skip?: boolean; } | { skip: boolean; });
+export type CommentComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<CommentQuery, CommentQueryVariables>, 'query'> & ({ variables: CommentQueryVariables; skip?: boolean; } | { skip: boolean; });
 
     export const CommentComponent = (props: CommentComponentProps) => (
-      <ReactApollo.Query<CommentQuery, CommentQueryVariables> query={CommentDocument} {...props} />
+      <ApolloReactComponents.Query<CommentQuery, CommentQueryVariables> query={CommentDocument} {...props} />
     );
     
-export type CommentProps<TChildProps = {}> = ReactApollo.DataProps<CommentQuery, CommentQueryVariables> & TChildProps;
-export function withComment<TProps, TChildProps = {}>(operationOptions?: ReactApollo.OperationOption<
+export type CommentProps<TChildProps = {}> = ApolloReactHoc.DataProps<CommentQuery, CommentQueryVariables> & TChildProps;
+export function withComment<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
   TProps,
   CommentQuery,
   CommentQueryVariables,
   CommentProps<TChildProps>>) {
-    return ReactApollo.withQuery<TProps, CommentQuery, CommentQueryVariables, CommentProps<TChildProps>>(CommentDocument, {
+    return ApolloReactHoc.withQuery<TProps, CommentQuery, CommentQueryVariables, CommentProps<TChildProps>>(CommentDocument, {
       alias: 'withComment',
       ...operationOptions
     });
 };
-export type CommentQueryResult = ReactApollo.QueryResult<CommentQuery, CommentQueryVariables>;
+export type CommentQueryResult = ApolloReactCommon.QueryResult<CommentQuery, CommentQueryVariables>;
 export const CurrentUserForProfileDocument = gql`
     query CurrentUserForProfile {
   currentUser {
@@ -368,24 +370,24 @@ export const CurrentUserForProfileDocument = gql`
   }
 }
     `;
-export type CurrentUserForProfileComponentProps = Omit<ReactApollo.QueryProps<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>, 'query'>;
+export type CurrentUserForProfileComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>, 'query'>;
 
     export const CurrentUserForProfileComponent = (props: CurrentUserForProfileComponentProps) => (
-      <ReactApollo.Query<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables> query={CurrentUserForProfileDocument} {...props} />
+      <ApolloReactComponents.Query<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables> query={CurrentUserForProfileDocument} {...props} />
     );
     
-export type CurrentUserForProfileProps<TChildProps = {}> = ReactApollo.DataProps<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables> & TChildProps;
-export function withCurrentUserForProfile<TProps, TChildProps = {}>(operationOptions?: ReactApollo.OperationOption<
+export type CurrentUserForProfileProps<TChildProps = {}> = ApolloReactHoc.DataProps<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables> & TChildProps;
+export function withCurrentUserForProfile<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
   TProps,
   CurrentUserForProfileQuery,
   CurrentUserForProfileQueryVariables,
   CurrentUserForProfileProps<TChildProps>>) {
-    return ReactApollo.withQuery<TProps, CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables, CurrentUserForProfileProps<TChildProps>>(CurrentUserForProfileDocument, {
+    return ApolloReactHoc.withQuery<TProps, CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables, CurrentUserForProfileProps<TChildProps>>(CurrentUserForProfileDocument, {
       alias: 'withCurrentUserForProfile',
       ...operationOptions
     });
 };
-export type CurrentUserForProfileQueryResult = ReactApollo.QueryResult<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>;
+export type CurrentUserForProfileQueryResult = ApolloReactCommon.QueryResult<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>;
 export const FeedDocument = gql`
     query Feed($type: FeedType!, $offset: Int, $limit: Int) {
   currentUser {
@@ -396,24 +398,24 @@ export const FeedDocument = gql`
   }
 }
     ${FeedEntryFragmentDoc}`;
-export type FeedComponentProps = Omit<ReactApollo.QueryProps<FeedQuery, FeedQueryVariables>, 'query'> & ({ variables: FeedQueryVariables; skip?: boolean; } | { skip: boolean; });
+export type FeedComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<FeedQuery, FeedQueryVariables>, 'query'> & ({ variables: FeedQueryVariables; skip?: boolean; } | { skip: boolean; });
 
     export const FeedComponent = (props: FeedComponentProps) => (
-      <ReactApollo.Query<FeedQuery, FeedQueryVariables> query={FeedDocument} {...props} />
+      <ApolloReactComponents.Query<FeedQuery, FeedQueryVariables> query={FeedDocument} {...props} />
     );
     
-export type FeedProps<TChildProps = {}> = ReactApollo.DataProps<FeedQuery, FeedQueryVariables> & TChildProps;
-export function withFeed<TProps, TChildProps = {}>(operationOptions?: ReactApollo.OperationOption<
+export type FeedProps<TChildProps = {}> = ApolloReactHoc.DataProps<FeedQuery, FeedQueryVariables> & TChildProps;
+export function withFeed<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
   TProps,
   FeedQuery,
   FeedQueryVariables,
   FeedProps<TChildProps>>) {
-    return ReactApollo.withQuery<TProps, FeedQuery, FeedQueryVariables, FeedProps<TChildProps>>(FeedDocument, {
+    return ApolloReactHoc.withQuery<TProps, FeedQuery, FeedQueryVariables, FeedProps<TChildProps>>(FeedDocument, {
       alias: 'withFeed',
       ...operationOptions
     });
 };
-export type FeedQueryResult = ReactApollo.QueryResult<FeedQuery, FeedQueryVariables>;
+export type FeedQueryResult = ApolloReactCommon.QueryResult<FeedQuery, FeedQueryVariables>;
 export const SubmitRepositoryDocument = gql`
     mutation submitRepository($repoFullName: String!) {
   submitRepository(repoFullName: $repoFullName) {
@@ -421,26 +423,26 @@ export const SubmitRepositoryDocument = gql`
   }
 }
     `;
-export type SubmitRepositoryMutationFn = ReactApollo.MutationFn<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>;
-export type SubmitRepositoryComponentProps = Omit<ReactApollo.MutationProps<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>, 'mutation'>;
+export type SubmitRepositoryMutationFn = ApolloReactCommon.MutationFunction<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>;
+export type SubmitRepositoryComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>, 'mutation'>;
 
     export const SubmitRepositoryComponent = (props: SubmitRepositoryComponentProps) => (
-      <ReactApollo.Mutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables> mutation={SubmitRepositoryDocument} {...props} />
+      <ApolloReactComponents.Mutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables> mutation={SubmitRepositoryDocument} {...props} />
     );
     
-export type SubmitRepositoryProps<TChildProps = {}> = ReactApollo.MutateProps<SubmitRepositoryMutation, SubmitRepositoryMutationVariables> & TChildProps;
-export function withSubmitRepository<TProps, TChildProps = {}>(operationOptions?: ReactApollo.OperationOption<
+export type SubmitRepositoryProps<TChildProps = {}> = ApolloReactHoc.MutateProps<SubmitRepositoryMutation, SubmitRepositoryMutationVariables> & TChildProps;
+export function withSubmitRepository<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
   TProps,
   SubmitRepositoryMutation,
   SubmitRepositoryMutationVariables,
   SubmitRepositoryProps<TChildProps>>) {
-    return ReactApollo.withMutation<TProps, SubmitRepositoryMutation, SubmitRepositoryMutationVariables, SubmitRepositoryProps<TChildProps>>(SubmitRepositoryDocument, {
+    return ApolloReactHoc.withMutation<TProps, SubmitRepositoryMutation, SubmitRepositoryMutationVariables, SubmitRepositoryProps<TChildProps>>(SubmitRepositoryDocument, {
       alias: 'withSubmitRepository',
       ...operationOptions
     });
 };
-export type SubmitRepositoryMutationResult = ReactApollo.MutationResult<SubmitRepositoryMutation>;
-export type SubmitRepositoryMutationOptions = ReactApollo.MutationOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>;
+export type SubmitRepositoryMutationResult = ApolloReactCommon.MutationResult<SubmitRepositoryMutation>;
+export type SubmitRepositoryMutationOptions = ApolloReactCommon.BaseMutationOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>;
 export const SubmitCommentDocument = gql`
     mutation submitComment($repoFullName: String!, $commentContent: String!) {
   submitComment(repoFullName: $repoFullName, commentContent: $commentContent) {
@@ -448,26 +450,26 @@ export const SubmitCommentDocument = gql`
   }
 }
     ${CommentsPageCommentFragmentDoc}`;
-export type SubmitCommentMutationFn = ReactApollo.MutationFn<SubmitCommentMutation, SubmitCommentMutationVariables>;
-export type SubmitCommentComponentProps = Omit<ReactApollo.MutationProps<SubmitCommentMutation, SubmitCommentMutationVariables>, 'mutation'>;
+export type SubmitCommentMutationFn = ApolloReactCommon.MutationFunction<SubmitCommentMutation, SubmitCommentMutationVariables>;
+export type SubmitCommentComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<SubmitCommentMutation, SubmitCommentMutationVariables>, 'mutation'>;
 
     export const SubmitCommentComponent = (props: SubmitCommentComponentProps) => (
-      <ReactApollo.Mutation<SubmitCommentMutation, SubmitCommentMutationVariables> mutation={SubmitCommentDocument} {...props} />
+      <ApolloReactComponents.Mutation<SubmitCommentMutation, SubmitCommentMutationVariables> mutation={SubmitCommentDocument} {...props} />
     );
     
-export type SubmitCommentProps<TChildProps = {}> = ReactApollo.MutateProps<SubmitCommentMutation, SubmitCommentMutationVariables> & TChildProps;
-export function withSubmitComment<TProps, TChildProps = {}>(operationOptions?: ReactApollo.OperationOption<
+export type SubmitCommentProps<TChildProps = {}> = ApolloReactHoc.MutateProps<SubmitCommentMutation, SubmitCommentMutationVariables> & TChildProps;
+export function withSubmitComment<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
   TProps,
   SubmitCommentMutation,
   SubmitCommentMutationVariables,
   SubmitCommentProps<TChildProps>>) {
-    return ReactApollo.withMutation<TProps, SubmitCommentMutation, SubmitCommentMutationVariables, SubmitCommentProps<TChildProps>>(SubmitCommentDocument, {
+    return ApolloReactHoc.withMutation<TProps, SubmitCommentMutation, SubmitCommentMutationVariables, SubmitCommentProps<TChildProps>>(SubmitCommentDocument, {
       alias: 'withSubmitComment',
       ...operationOptions
     });
 };
-export type SubmitCommentMutationResult = ReactApollo.MutationResult<SubmitCommentMutation>;
-export type SubmitCommentMutationOptions = ReactApollo.MutationOptions<SubmitCommentMutation, SubmitCommentMutationVariables>;
+export type SubmitCommentMutationResult = ApolloReactCommon.MutationResult<SubmitCommentMutation>;
+export type SubmitCommentMutationOptions = ApolloReactCommon.BaseMutationOptions<SubmitCommentMutation, SubmitCommentMutationVariables>;
 export const VoteDocument = gql`
     mutation vote($repoFullName: String!, $type: VoteType!) {
   vote(repoFullName: $repoFullName, type: $type) {
@@ -479,23 +481,23 @@ export const VoteDocument = gql`
   }
 }
     `;
-export type VoteMutationFn = ReactApollo.MutationFn<VoteMutation, VoteMutationVariables>;
-export type VoteComponentProps = Omit<ReactApollo.MutationProps<VoteMutation, VoteMutationVariables>, 'mutation'>;
+export type VoteMutationFn = ApolloReactCommon.MutationFunction<VoteMutation, VoteMutationVariables>;
+export type VoteComponentProps = Omit<ApolloReactComponents.MutationComponentOptions<VoteMutation, VoteMutationVariables>, 'mutation'>;
 
     export const VoteComponent = (props: VoteComponentProps) => (
-      <ReactApollo.Mutation<VoteMutation, VoteMutationVariables> mutation={VoteDocument} {...props} />
+      <ApolloReactComponents.Mutation<VoteMutation, VoteMutationVariables> mutation={VoteDocument} {...props} />
     );
     
-export type VoteProps<TChildProps = {}> = ReactApollo.MutateProps<VoteMutation, VoteMutationVariables> & TChildProps;
-export function withVote<TProps, TChildProps = {}>(operationOptions?: ReactApollo.OperationOption<
+export type VoteProps<TChildProps = {}> = ApolloReactHoc.MutateProps<VoteMutation, VoteMutationVariables> & TChildProps;
+export function withVote<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
   TProps,
   VoteMutation,
   VoteMutationVariables,
   VoteProps<TChildProps>>) {
-    return ReactApollo.withMutation<TProps, VoteMutation, VoteMutationVariables, VoteProps<TChildProps>>(VoteDocument, {
+    return ApolloReactHoc.withMutation<TProps, VoteMutation, VoteMutationVariables, VoteProps<TChildProps>>(VoteDocument, {
       alias: 'withVote',
       ...operationOptions
     });
 };
-export type VoteMutationResult = ReactApollo.MutationResult<VoteMutation>;
-export type VoteMutationOptions = ReactApollo.MutationOptions<VoteMutation, VoteMutationVariables>;
+export type VoteMutationResult = ApolloReactCommon.MutationResult<VoteMutation>;
+export type VoteMutationOptions = ApolloReactCommon.BaseMutationOptions<VoteMutation, VoteMutationVariables>;

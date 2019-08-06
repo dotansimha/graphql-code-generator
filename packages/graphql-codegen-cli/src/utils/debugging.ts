@@ -9,7 +9,7 @@ export function debugLog(message: string, ...meta: any[]) {
   if (!process.env.GQL_CODEGEN_NODEBUG && process.env.DEBUG !== undefined) {
     queue.push({
       message,
-      meta
+      meta,
     });
   }
 }
