@@ -332,35 +332,7 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
     expect(result).toBeSimilarStringTo(`
     import { DocumentNode } from 'graphql';
 
-    export const MyQuery: DocumentNode = {
-      "kind": "Document",
-      "definitions": [
-        {
-          "kind": "OperationDefinition",
-          "operation": "query",
-          "name": {
-            "kind": "Name",
-            "value": "MyQuery"
-          },
-          "variableDefinitions": [],
-          "directives": [],
-          "selectionSet": {
-            "kind": "SelectionSet",
-            "selections": [
-              {
-                "kind": "Field",
-                "name": {
-                  "kind": "Name",
-                  "value": "field"
-                },
-                "arguments": [],
-                "directives": []
-              }
-            ]
-          }
-        }
-      ]
-    };
+    export const MyQuery: DocumentNode = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"MyQuery"},"variableDefinitions":[],"directives":[],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"field"},"arguments":[],"directives":[]}]}}]};
     `);
     validateTs(result);
   });

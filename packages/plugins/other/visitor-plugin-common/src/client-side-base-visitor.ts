@@ -208,7 +208,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
         delete gqlObj.loc;
       }
 
-      return JSON.stringify(gqlObj, (k, v) => (k === 'loc' ? undefined : v), 2);
+      return JSON.stringify(gqlObj);
     }
 
     return 'gql`' + doc + '`';
