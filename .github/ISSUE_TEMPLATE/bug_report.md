@@ -13,7 +13,9 @@ Steps to reproduce the behavior:
 #############
 #############
 You can also use this template to create a live sandbox of the issue: 
-https://codesandbox.io/s/graphql-codegen-issue-template-2njb1 
+https://codesandbox.io/s/github/dotansimha/graphql-code-generator-issue-sandbox-template
+Make sure sure fork this template, and run `yarn generate` in the terminal. 
+Please make sure the Codegen and plugins version under `package.json` matches yours. 
 #############
 #############
 -->
