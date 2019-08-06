@@ -69,6 +69,10 @@ export class ApolloFederation {
     return this.enabled ? typeNames.filter(t => t !== '_FieldSet') : typeNames;
   }
 
+  filterFieldNames(fieldNames: string[]): string[] {
+    return this.enabled ? fieldNames.filter(t => t !== '__resolveReference') : fieldNames;
+  }
+
   skipDirective(name: string): boolean {
     return this.enabled && ['external', 'requires', 'provides', 'key'].includes(name);
   }

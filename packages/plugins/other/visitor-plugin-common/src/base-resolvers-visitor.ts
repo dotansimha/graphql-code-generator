@@ -352,7 +352,8 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
 
         if ((shouldApplyOmit && prev[typeName] !== 'any' && isObjectType(schemaType)) || (isInterfaceType(schemaType) && !isMapped)) {
           const fields = schemaType.getFields();
-          const relevantFields: { addOptionalSign: boolean; fieldName: string; replaceWithType: string }[] = Object.keys(fields)
+          const relevantFields: { addOptionalSign: boolean; fieldName: string; replaceWithType: string }[] = this._federation
+            .filterFieldNames(Object.keys(fields))
             .map(fieldName => {
               const field = fields[fieldName];
               const baseType = getBaseType(field.type);
