@@ -1,5 +1,4 @@
 import { GraphQLSchema, DocumentNode } from 'graphql';
-import { object } from 'prop-types';
 
 export namespace Types {
   export interface GenerateOptions {
@@ -12,6 +11,7 @@ export namespace Types {
     pluginMap: {
       [name: string]: CodegenPlugin;
     };
+    skipDuplicateDocumentsValidation?: boolean;
   }
 
   export type FileOutput = {
@@ -126,8 +126,10 @@ export type PluginFunction<T = any> = (
 
 export type PluginValidateFn<T = any> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: T, outputFile: string, allPlugins: Types.ConfiguredPlugin[]) => Types.Promisable<void>;
 
+export type AddToSchemaResult = string | DocumentNode;
+
 export interface CodegenPlugin<T = any> {
   plugin: PluginFunction<T>;
-  addToSchema?: string | DocumentNode;
+  addToSchema?: AddToSchemaResult | ((config: T) => AddToSchemaResult);
   validate?: PluginValidateFn;
 }

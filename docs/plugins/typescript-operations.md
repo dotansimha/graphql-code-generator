@@ -7,7 +7,7 @@ The `@graphql-codegen/typescript-operations` plugin generates TypeScript types b
 
 It generates types for your GraphQL documents: Query, Mutation, Subscription and Fragment.
 
-This plugin requires you to use `@graphql-codegen/typescript` as well, because it depends on it's types.
+This plugin requires you to use `@graphql-codegen/typescript` as well, because it depends on its types.
 
 ### Installation
 

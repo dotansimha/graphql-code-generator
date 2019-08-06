@@ -79,9 +79,10 @@ describe('TypeScript', () => {
       const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
 
       expect(result.content).toBeSimilarStringTo(`
-        /** MyInput
+        /** 
+         * MyInput
          * multiline
-         */
+         **/
         export type MyInput`);
     });
 
@@ -318,7 +319,8 @@ describe('TypeScript', () => {
         type MyType {
           foo: String
           bar: String!
-        }`);
+        }
+      `);
       const result = (await plugin(schema, [], { avoidOptionals: true }, { outputFile: '' })) as Types.ComplexPluginOutput;
 
       expect(result.content).toBeSimilarStringTo(`
@@ -328,6 +330,25 @@ describe('TypeScript', () => {
           bar: Scalars['String'],
         };
       `);
+      validateTs(result);
+    });
+
+    it('Should build input type correctly when specified with avoidInputOptionals config', async () => {
+      const schema = buildSchema(`
+        input MyInput {
+          foo: String
+          bar: String!
+        }
+      `);
+      const result = (await plugin(schema, [], { avoidOptionals: { inputValue: true } }, { outputFile: '' })) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type MyInput = {
+          foo: Maybe<Scalars['String']>,
+          bar: Scalars['String'],
+        }
+      `);
+
       validateTs(result);
     });
 
@@ -1166,6 +1187,26 @@ describe('TypeScript', () => {
       validateTs(result);
     });
 
+    it('Should allow to disable typesPrefix for enums', async () => {
+      const schema = buildSchema(`type T { f: String, e: E } enum E { A }`);
+      const result = (await plugin(schema, [], { typesPrefix: 'I', enumPrefix: false }, { outputFile: '' })) as Types.ComplexPluginOutput;
+
+      expect(result.content).toContain(`export enum E {`);
+      expect(result.content).toContain(`e?: Maybe<E>,`);
+
+      validateTs(result);
+    });
+
+    it('Should enable typesPrefix for enums by default', async () => {
+      const schema = buildSchema(`type T { f: String, e: E } enum E { A }`);
+      const result = (await plugin(schema, [], { typesPrefix: 'I' }, { outputFile: '' })) as Types.ComplexPluginOutput;
+
+      expect(result.content).toContain(`export enum IE {`);
+      expect(result.content).toContain(`e?: Maybe<IE>,`);
+
+      validateTs(result);
+    });
+
     const schema = buildSchema(`
     enum MyEnum {
       A
@@ -1573,6 +1614,26 @@ describe('TypeScript', () => {
 
       validateTs(result);
     });
+
+    it('Should re-export external enums', async () => {
+      const schema = buildSchema(`enum MyEnum { A, B, C } enum MyEnum2 { X, Y, Z }`);
+      const result = (await plugin(schema, [], { enumValues: { MyEnum: './my-file#MyEnum', MyEnum2: './my-file#MyEnum2X' } }, { outputFile: '' })) as Types.ComplexPluginOutput;
+
+      expect(result.content).toContain(`export { MyEnum };`);
+      expect(result.content).toContain(`export { MyEnum2 };`);
+
+      validateTs(result);
+    });
+
+    it('Should re-export external enums when single file option used', async () => {
+      const schema = buildSchema(`enum MyEnum { A, B, C } enum MyEnum2 { X, Y, Z }`);
+      const result = (await plugin(schema, [], { enumValues: './my-file' }, { outputFile: '' })) as Types.ComplexPluginOutput;
+
+      expect(result.content).toContain(`export { MyEnum };`);
+      expect(result.content).toContain(`export { MyEnum2 };`);
+
+      validateTs(result);
+    });
   });
 
   it('should not have [object Object]', async () => {
@@ -1660,6 +1721,34 @@ describe('TypeScript', () => {
 
     const result = (await plugin(schema, [], { skipTypename: true }, { outputFile: '' })) as Types.ComplexPluginOutput;
     expect(result.content).not.toContain('__typename');
+
+    validateTs(result);
+  });
+
+  it('should not contain "export" when noExport is set to true', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type User {
+        id: Int!
+        name: String!
+        email: String!
+      }
+      type QueryRoot {
+        allUsers: [User]!
+        userById(id: Int!): User
+        # Generates a new answer for the guessing game
+        answer: [Int!]!
+      }
+      type SubscriptionRoot {
+        newUser: User
+      }
+      schema {
+        query: QueryRoot
+        subscription: SubscriptionRoot
+      }
+    `);
+
+    const result = (await plugin(schema, [], { noExport: true }, { outputFile: '' })) as Types.ComplexPluginOutput;
+    expect(result.content).not.toContain('export');
 
     validateTs(result);
   });

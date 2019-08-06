@@ -1,11 +1,12 @@
 import { validateTs } from '@graphql-codegen/testing';
-import { plugin } from '../src/index';
+import { plugin, ReactApolloRawPluginConfig } from '../src/index';
 import { parse, GraphQLSchema, buildClientSchema, buildASTSchema } from 'graphql';
 import gql from 'graphql-tag';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { plugin as tsPlugin } from '../../typescript/src/index';
 import { plugin as tsDocumentsPlugin } from '../../operations/src/index';
 import { readFileSync } from 'fs';
+import { DocumentMode } from '@graphql-codegen/visitor-plugin-common';
 
 describe('React Apollo', () => {
   const schema = buildClientSchema(JSON.parse(readFileSync('../../../../dev-test/githunt/schema.json').toString()));
@@ -21,6 +22,21 @@ describe('React Apollo', () => {
             avatar_url
           }
         }
+      }
+    }
+  `);
+  const mutationDoc = parse(/* GraphQL */ `
+    mutation test($name: String) {
+      submitRepository(repoFullName: $name) {
+        id
+      }
+    }
+  `);
+
+  const subscriptionDoc = parse(/* GraphQL */ `
+    subscription test($name: String) {
+      commentAdded(repoFullName: $name) {
+        id
       }
     }
   `);
@@ -125,6 +141,31 @@ describe('React Apollo', () => {
       await validateTypeScript(content, schema, docs, {});
     });
 
+    it(`tests for dedupeOperationSuffix`, async () => {
+      const ast = parse(/* GraphQL */ `
+        query notificationsQuery {
+          notifications {
+            id
+          }
+        }
+      `);
+      const ast2 = parse(/* GraphQL */ `
+        query notifications {
+          notifications {
+            id
+          }
+        }
+      `);
+
+      expect(((await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], {}, { outputFile: '' })) as any).content).toContain('ApolloReactCommon.QueryResult<NotificationsQueryQuery, NotificationsQueryQueryVariables>;');
+      expect(((await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], { dedupeOperationSuffix: false }, { outputFile: '' })) as any).content).toContain(
+        'ApolloReactCommon.QueryResult<NotificationsQueryQuery, NotificationsQueryQueryVariables>'
+      );
+      expect(((await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], { dedupeOperationSuffix: true }, { outputFile: '' })) as any).content).toContain('ApolloReactCommon.QueryResult<NotificationsQuery, NotificationsQueryVariables>');
+      expect(((await plugin(schema, [{ filePath: 'test-file.ts', content: ast2 }], { dedupeOperationSuffix: true }, { outputFile: '' })) as any).content).toContain('ApolloReactCommon.QueryResult<NotificationsQuery, NotificationsQueryVariables>');
+      expect(((await plugin(schema, [{ filePath: 'test-file.ts', content: ast2 }], { dedupeOperationSuffix: false }, { outputFile: '' })) as any).content).toContain('ApolloReactCommon.QueryResult<NotificationsQuery, NotificationsQueryVariables>');
+    });
+
     it('should import ApolloReactHooks dependencies', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
       const content = (await plugin(
@@ -180,6 +221,7 @@ describe('React Apollo', () => {
           withHOC: false,
           withComponent: false,
           withMutationFn: false,
+          withResultType: false,
         },
         {
           outputFile: 'graphql.tsx',
@@ -518,7 +560,7 @@ query MyFeed {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(`
-      export type TestComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<TestQuery, TestQueryVariables>, 'query'> & ({ variables: TestQueryVariables; skip?: false; } | { skip: true; });
+      export type TestComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<TestQuery, TestQueryVariables>, 'query'> & ({ variables: TestQueryVariables; skip?: boolean; } | { skip: boolean; });
       `);
 
       expect(content.content).toBeSimilarStringTo(`
@@ -592,7 +634,7 @@ query MyFeed {
         }
       )) as Types.ComplexPluginOutput;
 
-      expect(content.content).toBeSimilarStringTo(`export type TestProps<TChildProps = {}> = Partial<ApolloReactHoc.DataProps<TestQuery, TestQueryVariables>> & TChildProps;`);
+      expect(content.content).toBeSimilarStringTo(`export type TestProps<TChildProps = {}> = ApolloReactHoc.DataProps<TestQuery, TestQueryVariables> & TChildProps;`);
 
       expect(content.content).toBeSimilarStringTo(`export function withTest<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
   TProps,
@@ -618,7 +660,7 @@ query MyFeed {
         }
       )) as Types.ComplexPluginOutput;
 
-      expect(content.content).toBeSimilarStringTo(`export type TestProps<TChildProps = {}> = Partial<ApolloReactHoc.DataProps<TestQueryResponse, TestQueryVariables>> & TChildProps;`);
+      expect(content.content).toBeSimilarStringTo(`export type TestProps<TChildProps = {}> = ApolloReactHoc.DataProps<TestQueryResponse, TestQueryVariables> & TChildProps;`);
 
       await validateTypeScript(content, schema, docs, {});
     });
@@ -826,6 +868,491 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       expect(content.content).toBeSimilarStringTo(`
       export type SubmitRepositoryMutationHookResult = ReturnType<typeof useSubmitRepositoryMutation>;
       `);
+      await validateTypeScript(content, schema, docs, {});
+    });
+  });
+
+  describe('ResultType', () => {
+    const config: ReactApolloRawPluginConfig = {
+      withHOC: false,
+      withComponent: false,
+      withHooks: false,
+      withMutationFn: false,
+      withResultType: true,
+      withMutationOptionsType: false,
+    };
+
+    const mutationDoc = parse(/* GraphQL */ `
+      mutation test($name: String) {
+        submitRepository(repoFullName: $name) {
+          id
+        }
+      }
+    `);
+
+    const subscriptionDoc = parse(/* GraphQL */ `
+      subscription test($name: String) {
+        commentAdded(repoFullName: $name) {
+          id
+        }
+      }
+    `);
+
+    it('should generate ResultType for Query if withResultType is true', async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
+      const content = (await plugin(
+        schema,
+        docs,
+        { ...config },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).toContain(`import * as ApolloReactCommon from '@apollo/react-common';`);
+      expect(content.content).toContain(`export type TestQueryResult = ApolloReactCommon.QueryResult<TestQuery, TestQueryVariables>;`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should NOT generate ResultType for Query if withResultType is false', async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
+      const content = (await plugin(
+        schema,
+        docs,
+        { ...config, withResultType: false },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).not.toContain(`import * as ApolloReactCommon from '@apollo/react-common';`);
+      expect(content.content).not.toContain(`export type TestQueryResult = ApolloReactCommon.QueryResult<TestQuery, TestQueryVariables>;`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should generate ResultType for Mutation if withResultType is true', async () => {
+      const docs = [{ filePath: '', content: mutationDoc }];
+
+      const content = (await plugin(
+        schema,
+        docs,
+        { ...config },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).toContain(`import * as ApolloReactCommon from '@apollo/react-common';`);
+      expect(content.content).toContain(`export type TestMutationResult = ApolloReactCommon.MutationResult<TestMutation>;`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should NOT generate ResultType for Mutation if withResultType is false', async () => {
+      const docs = [{ filePath: '', content: mutationDoc }];
+
+      const content = (await plugin(
+        schema,
+        docs,
+        { ...config, withResultType: false },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).not.toContain(`import * as ApolloReactCommon from '@apollo/react-common';`);
+      expect(content.content).not.toContain(`export type TestMutationResult = ApolloReactCommon.MutationResult<TestMutation>;`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should generate ResultType for Subscription if withResultType is true', async () => {
+      const docs = [{ filePath: '', content: subscriptionDoc }];
+
+      const content = (await plugin(
+        schema,
+        docs,
+        { ...config },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).toContain(`import * as ApolloReactCommon from '@apollo/react-common';`);
+      expect(content.content).toContain(`export type TestSubscriptionResult = ApolloReactCommon.SubscriptionResult<TestSubscription>;`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should NOT generate ResultType for Subscription if withResultType is false', async () => {
+      const docs = [{ filePath: '', content: subscriptionDoc }];
+
+      const content = (await plugin(
+        schema,
+        docs,
+        { ...config, withResultType: false },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).not.toContain(`import * as ApolloReactCommon from '@apollo/react-common';`);
+      expect(content.content).not.toContain(`export type TestSubscriptionResult = ApolloReactCommon.SubscriptionResult<TestSubscription>;`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+  });
+
+  describe('MutationOptions', () => {
+    const config: ReactApolloRawPluginConfig = {
+      withHOC: false,
+      withComponent: false,
+      withHooks: false,
+      withMutationFn: false,
+      withResultType: false,
+      withMutationOptionsType: true,
+    };
+
+    it('should generate MutationOptions for Mutation if withMutationOptionsType is true', async () => {
+      const docs = [{ filePath: '', content: mutationDoc }];
+
+      const content = (await plugin(
+        schema,
+        docs,
+        { ...config },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).toContain(`import * as ApolloReactCommon from '@apollo/react-common';`);
+      expect(content.content).toContain(`export type TestMutationOptions = ApolloReactCommon.BaseMutationOptions<TestMutation, TestMutationVariables>;`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should NOT generate MutationOptions for Mutation if withMutationOptionsType is false', async () => {
+      const docs = [{ filePath: '', content: mutationDoc }];
+
+      const content = (await plugin(
+        schema,
+        docs,
+        { ...config, withMutationOptionsType: false },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).not.toContain(`import * as ApolloReactCommon from '@apollo/react-common';`);
+      expect(content.content).not.toContain(`export type TestMutationOptions = ApolloReactCommon.BaseMutationOptions<TestMutation, TestMutationVariables>;`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should NOT generate MutationOptions for Query if withMutationOptionsType is true', async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
+      const content = (await plugin(
+        schema,
+        docs,
+        { ...config },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).not.toContain(`import * as ApolloReactCommon from 'react-apollo';`);
+      expect(content.content).not.toContain(`ApolloReactCommon.BaseMutationOptions`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should NOT generate MutationOptions for Query if withMutationOptionsType is false', async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
+      const content = (await plugin(
+        schema,
+        docs,
+        { ...config, withMutationOptionsType: false },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).not.toContain(`import * as ApolloReactCommon from 'react-apollo';`);
+      expect(content.content).not.toContain(`ApolloReactCommon.BaseMutationOptions`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should NOT generate MutationOptions for Subscription if withMutationOptionsType is true', async () => {
+      const docs = [{ filePath: '', content: subscriptionDoc }];
+
+      const content = (await plugin(
+        schema,
+        docs,
+        { ...config },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).not.toContain(`import * as ApolloReactCommon from 'react-apollo';`);
+      expect(content.content).not.toContain(`ApolloReactCommon.BaseMutationOptions`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should NOT generate MutationOptions for Subscription if withMutationOptionsType is false', async () => {
+      const docs = [{ filePath: '', content: subscriptionDoc }];
+
+      const content = (await plugin(
+        schema,
+        docs,
+        { ...config, withMutationOptionsType: false },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).not.toContain(`import * as ApolloReactCommon from 'react-apollo';`);
+      expect(content.content).not.toContain(`ApolloReactCommon.BaseMutationOptions`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+  });
+
+  describe('documentMode and importDocumentNodeExternallyFrom', () => {
+    const multipleOperationDoc = parse(/* GraphQL */ `
+      query testOne {
+        feed {
+          id
+          commentCount
+          repository {
+            full_name
+            html_url
+            owner {
+              avatar_url
+            }
+          }
+        }
+      }
+      mutation testTwo($name: String) {
+        submitRepository(repoFullName: $name) {
+          id
+        }
+      }
+
+      subscription testThree($name: String) {
+        commentAdded(repoFullName: $name) {
+          id
+        }
+      }
+    `);
+
+    it('should import DocumentNode when documentMode is "documentNode"', async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
+      const content = (await plugin(
+        schema,
+        docs,
+        {
+          documentMode: DocumentMode.documentNode,
+        },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).toContain(`import { DocumentNode } from 'graphql';`);
+      expect(content.prepend).not.toContain(`import gql from 'graphql-tag';`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should generate Document variable when documentMode is "documentNode"', async () => {
+      const docs = [{ filePath: '', content: basicDoc }];
+      const content = (await plugin(
+        schema,
+        docs,
+        {
+          documentMode: DocumentMode.documentNode,
+        },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.content).toBeSimilarStringTo(`export const TestDocument: DocumentNode = {"kind":"Document","defin`);
+
+      // For issue #1599 - make sure there are not `loc` properties
+      expect(content.content).not.toContain(`loc":`);
+      expect(content.content).not.toContain(`loc':`);
+
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should import Operations from one external file and use it in Queries', async () => {
+      const config: ReactApolloRawPluginConfig = {
+        documentMode: DocumentMode.external,
+        importDocumentNodeExternallyFrom: 'path/to/documents.tsx',
+      };
+
+      const docs = [{ filePath: '', content: basicDoc }];
+
+      const content = (await plugin(schema, docs, config, {
+        outputFile: 'graphql.tsx',
+      })) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).toContain(`import * as Operations from 'path/to/documents.tsx';`);
+      expect(content.content).toBeSimilarStringTo(`
+        export const TestComponent = (props: TestComponentProps) => (
+          <ApolloReactComponents.Query<TestQuery, TestQueryVariables> query={Operations.test} {...props} />
+        );`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should import Operations from one external file and use it in Mutations', async () => {
+      const config: ReactApolloRawPluginConfig = {
+        documentMode: DocumentMode.external,
+        importDocumentNodeExternallyFrom: 'path/to/documents.tsx',
+      };
+
+      const docs = [{ filePath: '', content: mutationDoc }];
+
+      const content = (await plugin(schema, docs, config, {
+        outputFile: 'graphql.tsx',
+      })) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).toContain(`import * as Operations from 'path/to/documents.tsx';`);
+      expect(content.content).toBeSimilarStringTo(`
+        export const TestComponent = (props: TestComponentProps) => (
+          <ApolloReactComponents.Mutation<TestMutation, TestMutationVariables> mutation={Operations.test} {...props} />
+        );`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should import Operations from one external file and use it in Subscriptions', async () => {
+      const config: ReactApolloRawPluginConfig = {
+        documentMode: DocumentMode.external,
+        importDocumentNodeExternallyFrom: 'path/to/documents.tsx',
+      };
+
+      const docs = [{ filePath: '', content: subscriptionDoc }];
+
+      const content = (await plugin(schema, docs, config, {
+        outputFile: 'graphql.tsx',
+      })) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).toContain(`import * as Operations from 'path/to/documents.tsx';`);
+      expect(content.content).toBeSimilarStringTo(`
+        export const TestComponent = (props: TestComponentProps) => (
+          <ApolloReactComponents.Subscription<TestSubscription, TestSubscriptionVariables> subscription={Operations.test} {...props} />
+        );`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should import Operations from one external file and use it in multiple components', async () => {
+      const config: ReactApolloRawPluginConfig = {
+        documentMode: DocumentMode.external,
+        importDocumentNodeExternallyFrom: 'path/to/documents.tsx',
+      };
+
+      const docs = [{ filePath: '', content: multipleOperationDoc }];
+
+      const content = (await plugin(schema, docs, config, {
+        outputFile: 'graphql.tsx',
+      })) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).toContain(`import * as Operations from 'path/to/documents.tsx';`);
+      expect(content.content).toBeSimilarStringTo(`
+      export const TestOneComponent = (props: TestOneComponentProps) => (
+        <ApolloReactComponents.Query<TestOneQuery, TestOneQueryVariables> query={Operations.testOne} {...props} />
+      );`);
+      expect(content.content).toBeSimilarStringTo(`
+        export const TestTwoComponent = (props: TestTwoComponentProps) => (
+          <ApolloReactComponents.Mutation<TestTwoMutation, TestTwoMutationVariables> mutation={Operations.testTwo} {...props} />
+        );`);
+      expect(content.content).toBeSimilarStringTo(`
+        export const TestThreeComponent = (props: TestThreeComponentProps) => (
+          <ApolloReactComponents.Subscription<TestThreeSubscription, TestThreeSubscriptionVariables> subscription={Operations.testThree} {...props} />
+        );`);
+
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should import Operations from near operation file for Queries', async () => {
+      const config: ReactApolloRawPluginConfig = {
+        documentMode: DocumentMode.external,
+        importDocumentNodeExternallyFrom: 'near-operation-file',
+      };
+
+      const docs = [{ filePath: 'path/to/document.graphql', content: basicDoc }];
+
+      const content = (await plugin(schema, docs, config, {
+        outputFile: 'graphql.tsx',
+      })) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).toContain(`import * as Operations from './document.graphql';`);
+      expect(content.content).toBeSimilarStringTo(`
+        export const TestComponent = (props: TestComponentProps) => (
+          <ApolloReactComponents.Query<TestQuery, TestQueryVariables> query={Operations.test} {...props} />
+        );`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should import Operations from near operation file for Mutations', async () => {
+      const config: ReactApolloRawPluginConfig = {
+        documentMode: DocumentMode.external,
+        importDocumentNodeExternallyFrom: 'near-operation-file',
+      };
+
+      const docs = [{ filePath: 'path/to/document.graphql', content: mutationDoc }];
+
+      const content = (await plugin(schema, docs, config, {
+        outputFile: 'graphql.tsx',
+      })) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).toContain(`import * as Operations from './document.graphql';`);
+      expect(content.content).toBeSimilarStringTo(`
+      export const TestComponent = (props: TestComponentProps) => (
+        <ApolloReactComponents.Mutation<TestMutation, TestMutationVariables> mutation={Operations.test} {...props} />
+      );`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should import Operations from near operation file for Subscriptions', async () => {
+      const config: ReactApolloRawPluginConfig = {
+        documentMode: DocumentMode.external,
+        importDocumentNodeExternallyFrom: 'near-operation-file',
+      };
+
+      const docs = [{ filePath: 'path/to/document.graphql', content: subscriptionDoc }];
+
+      const content = (await plugin(schema, docs, config, {
+        outputFile: 'graphql.tsx',
+      })) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).toContain(`import * as Operations from './document.graphql';`);
+      expect(content.content).toBeSimilarStringTo(`
+      export const TestComponent = (props: TestComponentProps) => (
+        <ApolloReactComponents.Subscription<TestSubscription, TestSubscriptionVariables> subscription={Operations.test} {...props} />
+      );`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should import Operations from near operation file and use it in multiple components', async () => {
+      const config: ReactApolloRawPluginConfig = {
+        documentMode: DocumentMode.external,
+        importDocumentNodeExternallyFrom: 'near-operation-file',
+      };
+
+      const docs = [{ filePath: 'path/to/document.graphql', content: multipleOperationDoc }];
+
+      const content = (await plugin(schema, docs, config, {
+        outputFile: 'graphql.tsx',
+      })) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).toContain(`import * as Operations from './document.graphql';`);
+      expect(content.content).toBeSimilarStringTo(`
+      export const TestOneComponent = (props: TestOneComponentProps) => (
+        <ApolloReactComponents.Query<TestOneQuery, TestOneQueryVariables> query={Operations.testOne} {...props} />
+      );`);
+      expect(content.content).toBeSimilarStringTo(`
+        export const TestTwoComponent = (props: TestTwoComponentProps) => (
+          <ApolloReactComponents.Mutation<TestTwoMutation, TestTwoMutationVariables> mutation={Operations.testTwo} {...props} />
+        );`);
+      expect(content.content).toBeSimilarStringTo(`
+        export const TestThreeComponent = (props: TestThreeComponentProps) => (
+          <ApolloReactComponents.Subscription<TestThreeSubscription, TestThreeSubscriptionVariables> subscription={Operations.testThree} {...props} />
+        );`);
+
       await validateTypeScript(content, schema, docs, {});
     });
   });

@@ -3,7 +3,7 @@ id: typescript-resolvers
 title: TypeScript Resolvers
 ---
 
-This plugin generates types for resolve function.
+This plugin generates types for resolve functions.
 
 ## Pre-Requirements
 
@@ -130,6 +130,10 @@ By default:
 - `Query.userById` expects to returns `User` typed object
 
 This behavior might fit well with how your resolvers look like but in some cases you want to tweak it a bit.
+
+## Intergration with Apollo-Server
+
+If you are using Apollo Server with TypeScript, note that you need to set `useIndexSignature: true` in your config, in order to add a compatible index signature ([more info](https://github.com/dotansimha/graphql-code-generator/issues/1133#issuecomment-456812621)).
 
 ## Plugin Customization
 

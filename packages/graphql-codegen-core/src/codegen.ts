@@ -1,5 +1,5 @@
 import { Types, isComplexPluginOutput } from '@graphql-codegen/plugin-helpers';
-import { DocumentNode, visit, buildASTSchema } from 'graphql';
+import { visit, buildASTSchema } from 'graphql';
 import { mergeSchemas } from './merge-schemas';
 import { executePlugin } from './execute-plugin';
 import { DetailedError } from './errors';
@@ -9,8 +9,8 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
 
   const documents = options.documents || [];
 
-  if (documents.length > 0) {
-    validateDocuments(options.schema, documents);
+  if (documents.length > 0 && !options.skipDuplicateDocumentsValidation) {
+    validateDocuments(documents);
   }
 
   const pluginPackages = Object.keys(options.pluginMap).map(key => options.pluginMap[key]);
@@ -23,7 +23,14 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
     }
 
     schemaChanged = true;
-    return mergeSchemas([schema, plugin.addToSchema]);
+
+    let addToSchema = plugin.addToSchema;
+
+    if (typeof addToSchema === 'function') {
+      addToSchema = addToSchema(options.config);
+    }
+
+    return mergeSchemas([schema, addToSchema]);
   }, options.schema);
 
   if (schemaChanged) {
@@ -105,7 +112,7 @@ export function sortPrependValues(values: string[]): string[] {
   });
 }
 
-function validateDocuments(schema: DocumentNode, files: Types.DocumentFile[]) {
+function validateDocuments(files: Types.DocumentFile[]) {
   // duplicated names
   const operationMap: {
     [name: string]: string[];

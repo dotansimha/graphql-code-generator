@@ -194,11 +194,29 @@ generates:
     plugins:
       - typescript
       - typescript-operations
+  ./dev-test/test-schema/types.preResolveTypes.ts:
+    schema: ./dev-test/test-schema/schema.graphql
+    documents:
+      - "query test { testArr1 testArr2 testArr3 }"
+    config:
+      preResolveTypes: true
+    plugins:
+      - typescript
+      - typescript-operations
   ./dev-test/star-wars/types.d.ts:
     schema: ./dev-test/star-wars/schema.json
     documents: ./dev-test/star-wars/**/*.graphql
     config:
       enumsAsTypes: true
+    plugins:
+      - typescript
+      - typescript-operations
+  ./dev-test/star-wars/types.globallyAvailable.d.ts:
+    schema: ./dev-test/star-wars/schema.json
+    documents: ./dev-test/star-wars/**/*.graphql
+    config:
+      enumsAsTypes: true
+      noExport: true
     plugins:
       - typescript
       - typescript-operations

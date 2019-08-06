@@ -5,7 +5,7 @@ title: Write your first Plugin
 
 ## Basic Plugin
 
-To get started with writing your GraphQL Code-Generator Plugin, start by creating a simple `my-plugin.js` file in your project, with the following content:
+To get started with writing your GraphQL Code-Generator plugin, start by creating a simple `my-plugin.js` file in your project, with the following content:
 
 ```js
 module.exports = {

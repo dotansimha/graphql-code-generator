@@ -3,19 +3,21 @@ import { parse, printSchema, visit, GraphQLSchema, TypeInfo, GraphQLNamedType, v
 import { RawTypesConfig } from '@graphql-codegen/visitor-plugin-common';
 import { TsVisitor } from './visitor';
 import { TsIntrospectionVisitor } from './introspection-visitor';
+import { AvoidOptionalsConfig } from './types';
 export * from './typescript-variables-to-object';
 export * from './visitor';
+export { AvoidOptionalsConfig } from './types';
 
 export interface TypeScriptPluginConfig extends RawTypesConfig {
   /**
    * @name avoidOptionals
    * @type boolean
-   * @description This will cause the generator to avoid using TypeScript optionals (`?`),
+   * @description This will cause the generator to avoid using TypeScript optionals (`?`) on types,
    * so the following definition: `type A { myField: String }` will output `myField: Maybe<string>`
    * instead of `myField?: Maybe<string>`.
    * @default false
    *
-   * @example
+   * @example Override all definition types
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -24,8 +26,20 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    *  config:
    *    avoidOptionals: true
    * ```
+   *
+   * @example Override only specific definition types
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *  config:
+   *    avoidOptionals:
+   *      inputValue: true
+   * ```
+   *
    */
-  avoidOptionals?: boolean;
+  avoidOptionals?: boolean | AvoidOptionalsConfig;
   /**
    * @name constEnums
    * @type boolean
@@ -95,13 +109,31 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * ```
    */
   maybeValue?: string;
+  /**
+   * @name noExport
+   * @type boolean
+   * @description Set the to `true` in order to generate output without `export` modifier.
+   * This is useful if you are generating `.d.ts` file and want it to be globally available.
+   * @default false
+   *
+   * @example Disable all export from a file
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *  config:
+   *    noExport: true
+   * ```
+   */
+  noExport?: boolean;
 }
 
 export const plugin: PluginFunction<TypeScriptPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: TypeScriptPluginConfig) => {
   const visitor = new TsVisitor(schema, config);
   const printedSchema = printSchema(schema);
   const astNode = parse(printedSchema);
-  const maybeValue = `export type Maybe<T> = ${visitor.config.maybeValue};`;
+  const maybeValue = visitor.getMaybeValue();
   const visitorResult = visit(astNode, { leave: visitor });
   const introspectionDefinitions = includeIntrospectionDefinitions(schema, documents, config);
   const scalars = visitor.scalarsDefinition;
@@ -112,7 +144,7 @@ export const plugin: PluginFunction<TypeScriptPluginConfig> = (schema: GraphQLSc
   };
 };
 
-function includeIntrospectionDefinitions(schema: GraphQLSchema, documents: Types.DocumentFile[], config: TypeScriptPluginConfig): string[] {
+export function includeIntrospectionDefinitions(schema: GraphQLSchema, documents: Types.DocumentFile[], config: TypeScriptPluginConfig): string[] {
   const typeInfo = new TypeInfo(schema);
   const usedTypes: GraphQLNamedType[] = [];
   const documentsVisitor = visitWithTypeInfo(typeInfo, {

@@ -1,7 +1,7 @@
 import { ScalarsMap, NamingConvention, ConvertFn, ConvertOptions, LoadedFragment } from './types';
 import { DeclarationBlockConfig } from './utils';
 import * as autoBind from 'auto-bind';
-import { DEFAULT_SCALARS } from './scalars';
+import { DEFAULT_SCALARS, normalizeScalars } from './scalars';
 import { convertFactory } from './naming';
 import { ASTNode } from 'graphql';
 
@@ -84,7 +84,6 @@ export interface RawConfig {
    * ```
    */
   typesPrefix?: string;
-
   /**
    * @name skipTypename
    * @type boolean
@@ -126,10 +125,10 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
 
   constructor(rawConfig: TRawConfig, additionalConfig: Partial<TPluginConfig>, defaultScalars: ScalarsMap = DEFAULT_SCALARS) {
     this._parsedConfig = {
-      scalars: {
+      scalars: normalizeScalars({
         ...(defaultScalars || DEFAULT_SCALARS),
         ...(rawConfig.scalars || {}),
-      },
+      }),
       convert: convertFactory(rawConfig),
       typesPrefix: rawConfig.typesPrefix || '',
       namespacedImportName: rawConfig.namespacedImportName || null,

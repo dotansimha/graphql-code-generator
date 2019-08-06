@@ -88,6 +88,16 @@ documents:
   - './src/dir2/*.graphql'
 ```
 
+And, you can specify files to exclude: 
+
+```yml
+documents:
+  - './src/**/*.graphql'
+  - '!*.generated.graphql'
+```
+
+> All provided glob expressions are being evaludated together - the usage is similar to `.gitingore` file.
+
 - ### String
 
 You can specify your GraphQL documents directly as AST string in your config file. It's very useful for testing.

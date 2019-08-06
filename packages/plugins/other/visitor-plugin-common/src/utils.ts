@@ -76,6 +76,7 @@ export interface DeclarationBlockConfig {
   blockWrapper?: string;
   blockTransformer?: (block: string) => string;
   enumNameValueSeparator?: string;
+  ignoreExport?: boolean;
 }
 
 export function transformComment(comment: string | StringValueNode, indentLevel = 0): string {
@@ -98,12 +99,13 @@ export function transformComment(comment: string | StringValueNode, indentLevel 
         return indent(`/** ${comment} */\n`, indentLevel);
       }
 
-      return indent(`${isFirst ? '/** ' : ' * '}${line}${isLast ? '\n */\n' : ''}`, indentLevel);
+      return indent(`${isFirst ? '/** \n' : ''} * ${line}${isLast ? '\n **/\n' : ''}`, indentLevel);
     })
     .join('\n');
 }
 
 export class DeclarationBlock {
+  _decorator = null;
   _export = false;
   _name = null;
   _kind = null;
@@ -123,8 +125,16 @@ export class DeclarationBlock {
     };
   }
 
+  withDecorator(decorator: string): DeclarationBlock {
+    this._decorator = decorator;
+
+    return this;
+  }
+
   export(exp = true): DeclarationBlock {
-    this._export = exp;
+    if (!this._config.ignoreExport) {
+      this._export = exp;
+    }
 
     return this;
   }
@@ -171,6 +181,10 @@ export class DeclarationBlock {
 
   public get string(): string {
     let result = '';
+
+    if (this._decorator) {
+      result += this._decorator + '\n';
+    }
 
     if (this._export) {
       result += 'export ';

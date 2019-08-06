@@ -3,7 +3,7 @@ id: gatsby
 title: GatsbyJS
 ---
 
-If you are building apps using [GatsbyJS](https://www.gatsbyjs.org/), you can intergrate GraphQL Code Generator and use it to generate types.
+If you are building apps using [GatsbyJS](https://www.gatsbyjs.org/), you can use GraphQL Code Generator to generate TypeScript types.
 
 The codegen knows automatically to look for the import of the `graphql` tag for `gatsby` package.
 

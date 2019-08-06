@@ -15,9 +15,9 @@ import {
   ScalarTypeDefinitionNode,
   UnionTypeDefinitionNode,
   StringValueNode,
+  isEnumType,
 } from 'graphql';
 import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor';
-import { parseMapper } from './mappers';
 import { DEFAULT_SCALARS } from './scalars';
 import { normalizeDeclarationKind } from './declaration-kinds';
 import { EnumValuesMap, ScalarsMap, DeclarationKindConfig, DeclarationKind, ParsedEnumValuesMap } from './types';
@@ -29,6 +29,7 @@ export interface ParsedTypesConfig extends ParsedConfig {
   enumValues: ParsedEnumValuesMap;
   declarationKind: DeclarationKindConfig;
   addUnderscoreToArgsType: boolean;
+  enumPrefix: boolean;
 }
 
 export interface RawTypesConfig extends RawConfig {
@@ -93,6 +94,20 @@ export interface RawTypesConfig extends RawConfig {
    * ```
    */
   declarationKind?: DeclarationKind | DeclarationKindConfig;
+  /**
+   * @name enumPrefix
+   * @type boolean
+   * @default true
+   * @description Allow you to disable prefixing for generated enums, works in combination with `typesPrefix`.
+   *
+   * @example Disable enum prefixes
+   * ```yml
+   *   config:
+   *     typesPrefix: I
+   *     enumPrefix: false
+   * ```
+   */
+  enumPrefix?: boolean;
 }
 
 export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig, TPluginConfig extends ParsedTypesConfig = ParsedTypesConfig> extends BaseVisitor<TRawConfig, TPluginConfig> {
@@ -102,6 +117,7 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
     super(
       rawConfig,
       {
+        enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
         addUnderscoreToArgsType: getConfigValue(rawConfig.addUnderscoreToArgsType, false),
         enumValues: parseEnumValues(_schema, rawConfig.enumValues),
         declarationKind: normalizeDeclarationKind(rawConfig.declarationKind),
@@ -170,8 +186,8 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
     return comment + indent(`${node.name}: ${typeString},`);
   }
 
-  UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number, parent: any): string {
-    const originalNode = parent[key] as UnionTypeDefinitionNode;
+  UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number | undefined, parent: any): string {
+    const originalNode = parent[key!] as UnionTypeDefinitionNode;
     const possibleTypes = originalNode.types.map(t => (this.scalars[t.name.value] ? this._getScalar(t.name.value) : this.convertName(t))).join(' | ');
 
     return new DeclarationBlock(this._declarationBlockConfig)
@@ -182,11 +198,10 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
       .withContent(possibleTypes).string;
   }
 
-  ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: number | string, parent: any): string {
-    const originalNode = parent[key] as ObjectTypeDefinitionNode;
+  getObjectTypeDeclarationBlock(node: ObjectTypeDefinitionNode, originalNode: ObjectTypeDefinitionNode): DeclarationBlock {
     const optionalTypename = this.config.nonOptionalTypename ? '__typename' : '__typename?';
-    const allFields = [...(this.config.addTypename ? [indent(`${optionalTypename}: '${node.name}',`)] : []), ...node.fields];
     const { type } = this._parsedConfig.declarationKind;
+    const allFields = [...(this.config.addTypename ? [indent(`${optionalTypename}: '${node.name}'${type === 'class' ? ';' : ','}`)] : []), ...node.fields];
 
     const buildInterfaces = () => {
       if (!originalNode.interfaces || !node.interfaces.length) {
@@ -195,7 +210,7 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
 
       const interfaces = originalNode.interfaces.map(i => this.convertName(i));
 
-      if (type === 'interface') {
+      if (type === 'interface' || type === 'class') {
         return ' extends ' + interfaces.join(', ') + (allFields.length ? ' ' : ' {}');
       }
 
@@ -210,15 +225,17 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
       .withContent(interfaces)
       .withComment((node.description as any) as string);
 
-    const typeDefinition = declarationBlock.withBlock(allFields.join('\n')).string;
-
-    const argumentsBlock = this.buildArgumentsBlock(originalNode);
-
-    return [typeDefinition, argumentsBlock].filter(f => f).join('\n\n');
+    return declarationBlock.withBlock(allFields.join('\n'));
   }
 
-  InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode, key: number | string, parent: any): string {
-    const argumentsBlock = this.buildArgumentsBlock(parent[key] as InterfaceTypeDefinitionNode);
+  ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: number | string | undefined, parent: any): string {
+    const originalNode = parent[key!] as ObjectTypeDefinitionNode;
+
+    return [this.getObjectTypeDeclarationBlock(node, originalNode).string, this.buildArgumentsBlock(originalNode)].filter(f => f).join('\n\n');
+  }
+
+  getInterfaceTypeDeclarationBlock(node: InterfaceTypeDefinitionNode, originalNode: InterfaceTypeDefinitionNode): DeclarationBlock {
+    const argumentsBlock = this.buildArgumentsBlock(originalNode);
 
     let declarationBlock = new DeclarationBlock(this._declarationBlockConfig)
       .export()
@@ -226,9 +243,13 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
       .withName(this.convertName(node))
       .withComment((node.description as any) as string);
 
-    const interfaceDefinition = declarationBlock.withBlock(node.fields.join('\n')).string;
+    return declarationBlock.withBlock(node.fields.join('\n'));
+  }
 
-    return [interfaceDefinition, argumentsBlock].filter(f => f).join('\n\n');
+  InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode, key: number | string | undefined, parent: any): string {
+    const originalNode = parent[key!] as InterfaceTypeDefinitionNode;
+
+    return [this.getInterfaceTypeDeclarationBlock(node, originalNode).string, this.buildArgumentsBlock(originalNode)].filter(f => f).join('\n\n');
   }
 
   ScalarTypeDefinition(node: ScalarTypeDefinitionNode): string {
@@ -267,7 +288,7 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('enum')
-      .withName(this.convertName(node))
+      .withName(this.convertName(node, { useTypesPrefix: this.config.enumPrefix }))
       .withComment((node.description as any) as string)
       .withBlock(this.buildEnumValuesBlock(enumName, node.values)).string;
   }
@@ -330,6 +351,12 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
       return this._getScalar(typeAsString);
     } else if (this.config.enumValues[typeAsString]) {
       return this.config.enumValues[typeAsString].typeIdentifier;
+    }
+
+    const schemaType = this._schema.getType(node.name as any);
+
+    if (schemaType && isEnumType(schemaType)) {
+      return this.convertName(node, { useTypesPrefix: this.config.enumPrefix });
     }
 
     return this.convertName(node);

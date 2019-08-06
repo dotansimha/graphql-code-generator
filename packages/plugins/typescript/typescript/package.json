@@ -9,6 +9,7 @@
     "test": "jest --config ../../../../jest.config.js"
   },
   "dependencies": {
+    "auto-bind": "2.0.0",
     "@graphql-codegen/plugin-helpers": "1.4.0",
     "@graphql-codegen/visitor-plugin-common": "1.4.0",
     "tslib": "1.10.0"

@@ -1,6 +1,8 @@
+
 ### scalars (`ScalarsMap`)
 
 Extends or overrides the built-in scalars and custom GraphQL scalars to a custom type.
+
 
 #### Usage Example
 
@@ -13,9 +15,8 @@ config:
 
 ### namingConvention (`NamingConvention`, default value: `change-case#pascalCase`)
 
-Allow you to override the naming convention of the output. You can either override all namings, or specify an object with specific custom naming convention per output. The format of the converter must be a valid `module#method`. Allowed values for specific output are: `typeNames`, `enumValues`. You can also use "keep" to keep all GraphQL names as-is.
+Allow you to override the naming convention of the output. You can either override all namings, or specify an object with specific custom naming convention per output. The format of the converter must be a valid `module#method`. Allowed values for specific output are: `typeNames`, `enumValues`. You can also use "keep" to keep all GraphQL names as-is. Additionally you can set `transformUnderscore` to `true` if you want to override the default behaviour, which is to preserver underscores.
 
-Additionally, the codegen keeps underscore (`_`) for type names, but removes them for enum values. If you wish to keep underscore in your enum values, you can add `transformUnderscore: false` to your configuration.
 
 #### Usage Example: Override All Names
 
@@ -23,7 +24,6 @@ Additionally, the codegen keeps underscore (`_`) for type names, but removes the
 config:
   namingConvention: change-case#lowerCase
 ```
-
 #### Usage Example: Upper-case enum values
 
 ```yml
@@ -32,25 +32,24 @@ config:
     typeNames: change-case#pascalCase
     enumValues: change-case#upperCase
 ```
-
-#### Usage Example: Keep Names As-Is
+#### Usage Example: Keep
 
 ```yml
 config:
   namingConvention: keep
 ```
-
-#### Usage Example: Keep Underscores
+#### Usage Example: Transform Underscores
 
 ```yml
 config:
-  namingConvention:
-    transformUnderscore: false
+  typeNames: change-case#pascalCase
+  transformUnderscore: true
 ```
 
 ### typesPrefix (`string`, default value: `""`)
 
 Prefixes all the generated types.
+
 
 #### Usage Example: Add "I" Prefix
 
@@ -63,6 +62,7 @@ config:
 
 Automatically adds `__typename` field to the generated types, even when they are not specified in the selection set.
 
+
 #### Usage Example
 
 ```yml
@@ -73,6 +73,7 @@ config:
 ### nonOptionalTypename (`boolean`, default value: `false`)
 
 Automatically adds `__typename` field to the generated types, even when they are not specified in the selection set, and makes it non-optional
+
 
 #### Usage Example
 

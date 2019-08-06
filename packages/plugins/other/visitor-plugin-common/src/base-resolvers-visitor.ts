@@ -20,7 +20,6 @@ import {
   isListType,
   isUnionType,
   GraphQLNamedType,
-  GraphQLInterfaceType,
   isEnumType,
 } from 'graphql';
 import { DirectiveDefinitionNode, GraphQLObjectType, InputValueDefinitionNode, GraphQLOutputType } from 'graphql';
@@ -38,6 +37,7 @@ export interface ParsedResolversConfig extends ParsedConfig {
   avoidOptionals: boolean;
   addUnderscoreToArgsType: boolean;
   enumValues: ParsedEnumValuesMap;
+  resolverTypeWrapperSignature: string;
 }
 
 export interface RawResolversConfig extends RawConfig {
@@ -191,6 +191,14 @@ export interface RawResolversConfig extends RawConfig {
    *
    */
   enumValues?: EnumValuesMap;
+  /**
+   * @name resolverTypeWrapperSignature
+   * @type string
+   * @default Promise<T> | T
+   * @description Allow you to override `resolverTypeWrapper` definition.
+   *
+   */
+  resolverTypeWrapperSignature?: string;
 }
 
 export type ResolverTypes = { [gqlType: string]: string };
@@ -212,6 +220,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
     super(
       rawConfig,
       {
+        resolverTypeWrapperSignature: getConfigValue(rawConfig.resolverTypeWrapperSignature, 'Promise<T> | T'),
         enumValues: parseEnumValues(_schema, rawConfig.enumValues),
         addUnderscoreToArgsType: getConfigValue(rawConfig.addUnderscoreToArgsType, false),
         contextType: parseMapper(rawConfig.contextType || 'any', 'ContextType'),
@@ -229,6 +238,10 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
     this._variablesTransfomer = new OperationVariablesToObject(this.scalars, this.convertName);
     this._resolversTypes = this.createResolversFields(type => this.applyResolverTypeWrapper(type), type => this.clearResolverTypeWrapper(type));
     this._resolversParentTypes = this.createResolversFields(type => type, type => type);
+  }
+
+  public getResolverTypeWrapperSignature(): string {
+    return `export type ResolverTypeWrapper<T> = ${this.config.resolverTypeWrapperSignature};`;
   }
 
   protected shouldMapType(type: GraphQLNamedType, checkedBefore: { [typeName: string]: boolean } = {}, duringCheck: string[] = []): boolean {

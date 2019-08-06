@@ -23,6 +23,7 @@ export interface ParsedDocumentsConfig extends ParsedConfig {
   preResolveTypes: boolean;
   globalNamespace: boolean;
   operationResultSuffix: string;
+  dedupeOperationSuffix: boolean;
 }
 
 export interface RawDocumentsConfig extends RawConfig {
@@ -61,6 +62,13 @@ export interface RawDocumentsConfig extends RawConfig {
    * @description Adds a suffix to generated operation result type names
    */
   operationResultSuffix?: string;
+  /**
+   * @name dedupeOperationSuffix
+   * @type boolean
+   * @default false
+   * @description Set this configuration to `true` if you wish to make sure to remove duplicate operation name suffix.
+   */
+  dedupeOperationSuffix?: boolean;
 }
 
 export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDocumentsConfig, TPluginConfig extends ParsedDocumentsConfig = ParsedDocumentsConfig> extends BaseVisitor<TRawConfig, TPluginConfig> {
@@ -73,6 +81,7 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
       rawConfig,
       {
         preResolveTypes: getConfigValue(rawConfig.preResolveTypes, false),
+        dedupeOperationSuffix: getConfigValue(rawConfig.dedupeOperationSuffix, false),
         addTypename: !rawConfig.skipTypename,
         globalNamespace: !!rawConfig.globalNamespace,
         operationResultSuffix: getConfigValue(rawConfig.operationResultSuffix, ''),
@@ -99,6 +108,7 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
 
   public convertName(node: ASTNode | string, options?: ConvertOptions & BaseVisitorConvertOptions): string {
     const useTypesPrefix = options && typeof options.useTypesPrefix === 'boolean' ? options.useTypesPrefix : true;
+
     return (useTypesPrefix ? this._parsedConfig.typesPrefix : '') + this._parsedConfig.convert(node, options);
   }
 
@@ -129,6 +139,7 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
   FragmentDefinition(node: FragmentDefinitionNode): string {
     const fragmentRootType = this._schema.getType(node.typeCondition.name.value) as GraphQLObjectType;
     const selectionSet = this._selectionSetToObject.createNext(fragmentRootType, node.selectionSet);
+    const fragmentSuffix = this.config.dedupeOperationSuffix && node.name.value.toLowerCase().endsWith('fragment') ? '' : 'Fragment';
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
@@ -136,7 +147,7 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
       .withName(
         this.convertName(node, {
           useTypesPrefix: true,
-          suffix: 'Fragment',
+          suffix: fragmentSuffix,
         })
       )
       .withContent(selectionSet.string).string;
@@ -152,13 +163,14 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
 
     const selectionSet = this._selectionSetToObject.createNext(operationRootType, node.selectionSet);
     const visitedOperationVariables = this._variablesTransfomer.transform<VariableDefinitionNode>(node.variableDefinitions);
+    const operationTypeSuffix = this.config.dedupeOperationSuffix && name.toLowerCase().endsWith(node.operation) ? '' : toPascalCase(node.operation);
 
     const operationResult = new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
       .withName(
         this.convertName(name, {
-          suffix: toPascalCase(node.operation) + this._parsedConfig.operationResultSuffix,
+          suffix: operationTypeSuffix + this._parsedConfig.operationResultSuffix,
         })
       )
       .withContent(selectionSet.string).string;
@@ -168,7 +180,7 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
       .asKind('type')
       .withName(
         this.convertName(name, {
-          suffix: toPascalCase(node.operation) + 'Variables',
+          suffix: operationTypeSuffix + 'Variables',
         })
       )
       .withBlock(visitedOperationVariables).string;

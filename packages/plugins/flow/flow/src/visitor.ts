@@ -85,6 +85,7 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
 
     const enumValuesName = this.convertName(node, {
       suffix: 'Values',
+      useTypesPrefix: this.config.enumPrefix,
     });
 
     const enumValues = new DeclarationBlock(this._declarationBlockConfig)
@@ -111,7 +112,7 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
     const enumType = new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
-      .withName(this.convertName(node))
+      .withName(this.convertName(node, { useTypesPrefix: this.config.enumPrefix }))
       .withComment((node.description as any) as string)
       .withContent(`$Values<typeof ${enumValuesName}>`).string;
 
