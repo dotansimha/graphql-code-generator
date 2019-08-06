@@ -94,6 +94,9 @@ export class ApolloFederation {
       const keys = getDirectivesByName('key', parentType);
 
       if (keys.length) {
+        const outputs: string[] = [];
+
+        // Look for @requires and see what the service needs and gets
         const requires = getDirectivesByName('requires', fieldNode)
           .map(this.extractFieldSet)
           .reduce((prev, curr) => [...prev, ...curr], [])
@@ -102,14 +105,22 @@ export class ApolloFederation {
           });
         const requiredFields = this.translateFieldSet(requires, parentTypeSignature);
 
-        const extra: string = requires.length ? ` & ${requiredFields}` : '';
+        // @key() @key() - "primary keys" in Federation
+        const primaryKeys = keys.map(def => {
+          const fields = this.extractFieldSet(def).map(name => ({ name, required: true }));
+          return this.translateFieldSet(fields, parentTypeSignature);
+        });
 
-        return `(${keys
-          .map(def => {
-            const fields = this.extractFieldSet(def).map(name => ({ name, required: true }));
-            return this.translateFieldSet(fields, parentTypeSignature);
-          })
-          .join(' | ')})${extra}`;
+        const [open, close] = primaryKeys.length > 1 ? ['(', ')'] : ['', ''];
+
+        outputs.push([open, primaryKeys.join(' | '), close].join(''));
+
+        // include required fields
+        if (requires.length) {
+          outputs.push(`& ${requiredFields}`);
+        }
+
+        return outputs.join(' ');
       }
     }
 
