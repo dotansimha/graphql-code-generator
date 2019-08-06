@@ -24,10 +24,9 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
     ) as string;
 
     expect(result).toBeSimilarStringTo(`
-      import { DocumentNode } from 'graphql';
       import gql from 'graphql-tag';
 
-      export const MyQuery: DocumentNode = gql\`
+      export const MyQuery = gql\`
         query MyQuery {
           field
         }
@@ -62,16 +61,15 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
     )) as string;
 
     expect(result).toBeSimilarStringTo(`
-      import { DocumentNode } from 'graphql';
       import gql from 'graphql-tag';
 
-      export const MyQuery: DocumentNode = gql\`
+      export const MyQuery = gql\`
         query MyQuery {
           field
         }
       \`;
 
-      export const OtherQuery: DocumentNode = gql\`
+      export const OtherQuery = gql\`
         query OtherQuery {
           field
         }
@@ -123,16 +121,15 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
     )) as string;
 
     expect(result).toBeSimilarStringTo(`
-      import { DocumentNode } from 'graphql';
       import gql from 'graphql-tag';
 
-      export const MyQuery: DocumentNode = gql\`
+      export const MyQuery = gql\`
         query MyQuery {
           field
         }
       \`;
 
-      export const OtherQuery: DocumentNode = gql\`
+      export const OtherQuery = gql\`
         query OtherQuery {
           field
         }
@@ -159,10 +156,9 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
     ) as string;
 
     expect(result).toBeSimilarStringTo(`
-      import { DocumentNode } from 'graphql';
       import gql from 'graphql-tag';
 
-      export const myQuery: DocumentNode = gql\`
+      export const myQuery = gql\`
         query MyQuery {
           field
         }
@@ -189,10 +185,9 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
     ) as string;
 
     expect(result).toBeSimilarStringTo(`
-      import { DocumentNode } from 'graphql';
       import gql from 'graphql-tag';
 
-      export const My_Query: DocumentNode = gql\`
+      export const My_Query = gql\`
         query My_Query {
           field
         }
@@ -219,10 +214,9 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
     ) as string;
 
     expect(result).toBeSimilarStringTo(`
-      import { DocumentNode } from 'graphql';
       import gql from 'graphql-tag';
 
-      export const MyQuery: DocumentNode = gql\`
+      export const MyQuery = gql\`
         query My_Query {
           field
         }
@@ -249,10 +243,9 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
     ) as string;
 
     expect(result).toBeSimilarStringTo(`
-      import { DocumentNode } from 'graphql';
       import gql from 'graphql-tag';
 
-      export const MY_QUERY: DocumentNode = gql\`
+      export const MY_QUERY = gql\`
         query MyQuery {
           field
         }
@@ -279,10 +272,9 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
     ) as string;
 
     expect(result).toBeSimilarStringTo(`
-      import { DocumentNode } from 'graphql';
       import gql from 'graphql-tag';
 
-      export const GraphqlMyQuery: DocumentNode = gql\`
+      export const GraphqlMyQuery = gql\`
         query MyQuery {
           field
         }
@@ -309,10 +301,9 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
     ) as string;
 
     expect(result).toBeSimilarStringTo(`
-      import { DocumentNode } from 'graphql';
       import gql from 'graphql-tag';
 
-      export const MyQueryQuery: DocumentNode = gql\`
+      export const MyQueryQuery = gql\`
         query MyQuery {
           field
         }
@@ -370,6 +361,67 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
         }
       ]
     };
+    `);
+    validateTs(result);
+  });
+  it('should contain fragment definitions', async () => {
+    const result = plugin(
+      null,
+      [
+        {
+          filePath: 'some/file/my-query.graphql',
+          content: parse(/* GraphQL */ `
+            # Put your operations here
+            fragment fragment1 on User {
+              id
+              username
+            }
+
+            query user {
+              user(id: 1) {
+                ...fragment1
+              }
+            }
+
+            query user2 {
+              user2: user(id: 1) {
+                ...fragment1
+                email
+              }
+            }
+          `),
+        },
+      ],
+      {},
+      { outputFile: '' }
+    ) as string;
+
+    expect(result).toBeSimilarStringTo(`
+    import gql from 'graphql-tag';
+    
+    export const Fragment1 = gql\`
+      fragment fragment1 on User {
+        id
+        username
+      }
+    \`;
+    
+    export const User = gql\`
+      query user {
+        user(id: 1) {
+          ...fragment1
+        }
+      }
+    \${Fragment1}\`;
+    
+    export const User2 = gql\`
+      query user2 {
+        user2: user(id: 1) {
+          ...fragment1
+          email
+        }
+      }
+    \${Fragment1}\`;
     `);
     validateTs(result);
   });

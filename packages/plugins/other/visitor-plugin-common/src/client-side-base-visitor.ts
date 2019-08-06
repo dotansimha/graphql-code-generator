@@ -12,6 +12,9 @@ export interface RawClientSideBasePluginConfig extends RawConfig {
   noExport?: boolean;
   dedupeOperationSuffix?: boolean;
   operationResultSuffix?: string;
+  documentVariablePrefix?: string;
+  documentVariableSuffix?: string;
+  transformUnderscore?: boolean;
 }
 
 export interface ClientSideBasePluginConfig extends ParsedConfig {
@@ -63,6 +66,11 @@ export interface ClientSideBasePluginConfig extends ParsedConfig {
    */
   dedupeOperationSuffix: boolean;
   noExport: boolean;
+  documentVariablePrefix: string;
+  documentVariableSuffix: string;
+  transformUnderscore: boolean;
+  fragmentVariablePrefix: string;
+  fragmentVariableSuffix: string;
 }
 
 export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginConfig = RawClientSideBasePluginConfig, TPluginConfig extends ClientSideBasePluginConfig = ClientSideBasePluginConfig> extends BaseVisitor<TRawConfig, TPluginConfig> {
@@ -75,6 +83,11 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
       gqlImport: rawConfig.gqlImport || null,
       noExport: !!rawConfig.noExport,
       operationResultSuffix: getConfigValue(rawConfig.operationResultSuffix, ''),
+      documentVariablePrefix: getConfigValue(rawConfig.documentVariablePrefix, ''),
+      documentVariableSuffix: getConfigValue(rawConfig.documentVariableSuffix, 'Document'),
+      fragmentVariablePrefix: getConfigValue(rawConfig.documentVariablePrefix, ''),
+      fragmentVariableSuffix: getConfigValue(rawConfig.documentVariableSuffix, 'FragmentDoc'),
+      transformUnderscore: getConfigValue(rawConfig.transformUnderscore, false),
       ...additionalConfig,
     } as any);
 
@@ -82,7 +95,12 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
   }
 
   protected _getFragmentName(fragment: FragmentDefinitionNode | string): string {
-    return (typeof fragment === 'string' ? fragment : fragment.name.value) + 'FragmentDoc';
+    return this.convertName(fragment, {
+      suffix: this.config.fragmentVariableSuffix,
+      prefix: this.config.fragmentVariablePrefix,
+      transformUnderscore: this.config.transformUnderscore,
+      useTypesPrefix: false,
+    });
   }
 
   protected _extractFragments(document: FragmentDefinitionNode | OperationDefinitionNode): string[] {
@@ -150,7 +168,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
         delete gqlObj.loc;
       }
 
-      return JSON.stringify(gqlObj);
+      return JSON.stringify(gqlObj, (k, v) => (k === 'loc' ? undefined : v), 2);
     }
 
     return 'gql`' + doc + '`';
@@ -247,7 +265,9 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
     this._collectedOperations.push(node);
 
     const documentVariableName = this.convertName(node, {
-      suffix: 'Document',
+      suffix: this.config.documentVariableSuffix,
+      prefix: this.config.documentVariablePrefix,
+      transformUnderscore: this.config.transformUnderscore,
       useTypesPrefix: false,
     });
     const documentString = `${this.config.noExport ? '' : 'export'} const ${documentVariableName}${this.config.noGraphQLTag ? ': DocumentNode' : ''} = ${this._gql(node)};`;
@@ -256,9 +276,11 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
 
     const operationResultType: string = this.convertName(node, {
       suffix: operationTypeSuffix + this._parsedConfig.operationResultSuffix,
+      transformUnderscore: this.config.transformUnderscore,
     });
     const operationVariablesTypes: string = this.convertName(node, {
       suffix: operationTypeSuffix + 'Variables',
+      transformUnderscore: this.config.transformUnderscore,
     });
 
     const additional = this.buildOperation(node, documentVariableName, operationType, operationResultType, operationVariablesTypes);
