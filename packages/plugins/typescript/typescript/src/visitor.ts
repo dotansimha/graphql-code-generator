@@ -1,4 +1,4 @@
-import { transformComment, wrapWithSingleQuotes, DeclarationBlock, indent, BaseTypesVisitor, ParsedTypesConfig } from '@graphql-codegen/visitor-plugin-common';
+import { transformComment, wrapWithSingleQuotes, DeclarationBlock, indent, BaseTypesVisitor, ParsedTypesConfig, getConfigValue } from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptPluginConfig } from './index';
 import { AvoidOptionalsConfig } from './types';
 import * as autoBind from 'auto-bind';
@@ -12,16 +12,18 @@ export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
   enumsAsTypes: boolean;
   immutableTypes: boolean;
   maybeValue: string;
+  noExport: boolean;
 }
 
 export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPluginConfig, TParsedConfig extends TypeScriptPluginParsedConfig = TypeScriptPluginParsedConfig> extends BaseTypesVisitor<TRawConfig, TParsedConfig> {
   constructor(schema: GraphQLSchema, pluginConfig: TRawConfig, additionalConfig: Partial<TParsedConfig> = {}) {
     super(schema, pluginConfig, {
-      avoidOptionals: normalizeAvoidOptionals(pluginConfig.avoidOptionals || false),
-      maybeValue: pluginConfig.maybeValue || 'T | null',
-      constEnums: pluginConfig.constEnums || false,
-      enumsAsTypes: pluginConfig.enumsAsTypes || false,
-      immutableTypes: pluginConfig.immutableTypes || false,
+      noExport: getConfigValue(pluginConfig.noExport, false),
+      avoidOptionals: normalizeAvoidOptionals(getConfigValue(pluginConfig.avoidOptionals, false)),
+      maybeValue: getConfigValue(pluginConfig.maybeValue, 'T | null'),
+      constEnums: getConfigValue(pluginConfig.constEnums, false),
+      enumsAsTypes: getConfigValue(pluginConfig.enumsAsTypes, false),
+      immutableTypes: getConfigValue(pluginConfig.immutableTypes, false),
       ...(additionalConfig || {}),
     } as TParsedConfig);
 
@@ -29,7 +31,12 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
     this.setArgumentsTransformer(new TypeScriptOperationVariablesToObject(this.scalars, this.convertName, this.config.avoidOptionals.object, this.config.immutableTypes));
     this.setDeclarationBlockConfig({
       enumNameValueSeparator: ' =',
+      ignoreExport: this.config.noExport,
     });
+  }
+
+  public getMaybeValue(): string {
+    return `${this.config.noExport ? '' : 'export '}type Maybe<T> = ${this.config.maybeValue};`;
   }
 
   protected clearOptional(str: string): string {

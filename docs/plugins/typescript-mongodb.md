@@ -31,7 +31,9 @@ This interface can be used for db read/write purposes, thus making communication
 
 ## Installation
 
-    $ yarn add -D @graphql-codegen/typescript-mongodb
+    $ yarn add @graphql-codegen/typescript-mongodb
+
+> Don't install this plugin as devDependency, because you need to import the directives from it.
 
 ## Usage
 

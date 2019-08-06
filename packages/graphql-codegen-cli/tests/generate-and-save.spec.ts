@@ -147,6 +147,7 @@ describe('generate-and-save', () => {
     // makes sure it doesn't write a new file
     expect(writeSpy).toHaveBeenCalled();
   });
+
   test('should override generated files', async () => {
     jest.unmock('fs');
     const fs = await import('fs');
@@ -159,16 +160,16 @@ describe('generate-and-save', () => {
     fs.writeFileSync(
       './temp/input-graphql.tsx',
       `
-      import gql from 'graphql-tag';
-      const MyQuery = gql\`query MyQuery { f }\`;
-    `,
+    import gql from 'graphql-tag';
+    const MyQuery = gql\`query MyQuery { f }\`;
+  `,
       {}
     );
     const generateOnce: () => Promise<Types.FileOutput[]> = () =>
       generate(
         {
           schema: SIMPLE_TEST_SCHEMA,
-          documents: './temp/*-graphql.tsx',
+          documents: './temp/input-graphql.tsx',
           generates: {
             './temp/output-graphql.tsx': {
               plugins: ['typescript', 'typescript-operations', 'typescript-react-apollo'],

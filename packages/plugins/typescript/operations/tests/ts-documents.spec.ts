@@ -86,9 +86,41 @@ describe('TypeScript Operations Plugin', () => {
     }
   `);
 
-  const validate = async (content: Types.PluginOutput, config: any = {}, pluginSchema = schema) => validateTs(mergeOutputs([await tsPlugin(pluginSchema, [], config, { outputFile: '' }), content]));
+  const validate = async (content: Types.PluginOutput, config: any = {}, pluginSchema = schema) => {
+    const m = mergeOutputs([await tsPlugin(pluginSchema, [], config, { outputFile: '' }), content]);
+
+    await validateTs(m);
+
+    return m;
+  };
 
   describe('Config', () => {
+    it('Should not generate "export" when noExport is set to true', async () => {
+      const ast = parse(/* GraphQL */ `
+        query notifications {
+          notifications {
+            id
+
+            ... on TextNotification {
+              text
+            }
+
+            ... on ImageNotification {
+              imageUrl
+              metadata {
+                created: createdBy
+              }
+            }
+          }
+        }
+      `);
+      const config = { noExport: true };
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
+
+      expect(result).not.toContain('export');
+      await validate(result, config);
+    });
+
     it('Should handle "namespacedImportName" and add it when specified', async () => {
       const ast = parse(/* GraphQL */ `
         query notifications {
@@ -923,6 +955,49 @@ describe('TypeScript Operations Plugin', () => {
         `export type MeQuery = { __typename?: 'Query', currentUser: Maybe<{ __typename?: 'User', login: string, html_url: string }>, entry: Maybe<{ __typename?: 'Entry', id: number, createdAt: number, postedBy: { __typename?: 'User', login: string, html_url: string } }> };`
       );
       validate(result, config, gitHuntSchema);
+    });
+
+    it('Should produce valid output with preResolveTypes=true and enums', async () => {
+      const ast = parse(/* GraphQL */ `
+        query test {
+          info {
+            ...information
+          }
+        }
+
+        fragment information on Information {
+          entries {
+            id
+            value
+          }
+        }
+      `);
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Information {
+          entries: [Information_Entry!]!
+        }
+
+        enum Information_EntryType {
+          NAME
+          ADDRESS
+        }
+
+        type Information_Entry {
+          id: Information_EntryType!
+          value: String
+        }
+
+        type Query {
+          info: Information
+        }
+      `);
+      const config = { preResolveTypes: true };
+      const result = await plugin(testSchema, [{ filePath: 'test-file.ts', content: ast }], config, {
+        outputFile: '',
+      });
+
+      const o = await validate(result, config, testSchema);
+      expect(o).toContain(`__typename?: 'Information_Entry', id: 'NAME' | 'ADDRESS',`);
     });
 
     it('Should build a basic selection set based on basic query', async () => {

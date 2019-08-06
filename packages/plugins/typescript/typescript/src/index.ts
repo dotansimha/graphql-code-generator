@@ -109,13 +109,31 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * ```
    */
   maybeValue?: string;
+  /**
+   * @name noExport
+   * @type boolean
+   * @description Set the to `true` in order to generate output without `export` modifier.
+   * This is useful if you are generating `.d.ts` file and want it to be globally available.
+   * @default false
+   *
+   * @example Disable all export from a file
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *  config:
+   *    noExport: true
+   * ```
+   */
+  noExport?: boolean;
 }
 
 export const plugin: PluginFunction<TypeScriptPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: TypeScriptPluginConfig) => {
   const visitor = new TsVisitor(schema, config);
   const printedSchema = printSchema(schema);
   const astNode = parse(printedSchema);
-  const maybeValue = `export type Maybe<T> = ${visitor.config.maybeValue};`;
+  const maybeValue = visitor.getMaybeValue();
   const visitorResult = visit(astNode, { leave: visitor });
   const introspectionDefinitions = includeIntrospectionDefinitions(schema, documents, config);
   const scalars = visitor.scalarsDefinition;
