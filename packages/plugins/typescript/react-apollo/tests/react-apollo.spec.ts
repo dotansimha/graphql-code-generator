@@ -1025,7 +1025,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(`
-  export function useLazyFeedQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<FeedQuery, FeedQueryVariables>) {
+  export function useFeedLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<FeedQuery, FeedQueryVariables>) {
     return ApolloReactHooks.useLazyQuery<FeedQuery, FeedQueryVariables>(FeedDocument, baseOptions);
   };`);
       await validateTypeScript(content, schema, docs, {});

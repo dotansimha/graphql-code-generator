@@ -168,8 +168,12 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     };`;
 
     if (operationType === 'Query') {
+      const lazyOperationName: string = this.convertName(node.name.value, {
+        suffix: titleCase('LazyQuery'),
+        useTypesPrefix: false,
+      });
       hookFn += `
-      export function useLazy${operationName}(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<${operationResultType}, ${operationVariablesTypes}>) {
+      export function use${lazyOperationName}(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<${operationResultType}, ${operationVariablesTypes}>) {
         return ApolloReactHooks.useLazyQuery<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, baseOptions);
       };
       `;
