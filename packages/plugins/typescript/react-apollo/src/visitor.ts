@@ -162,10 +162,18 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     this.imports.add(this.getApolloReactCommonImport());
     this.imports.add(this.getApolloReactHooksImport());
 
-    const hookFn = `
+    let hookFn = `
     export function use${operationName}(baseOptions?: ApolloReactHooks.${operationType}HookOptions<${operationResultType}, ${operationVariablesTypes}>) {
       return ApolloReactHooks.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, baseOptions);
     };`;
+
+    if (operationType === 'Query') {
+      hookFn += `
+      export function useLazy${operationName}(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<${operationResultType}, ${operationVariablesTypes}>) {
+        return ApolloReactHooks.useLazyQuery<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, baseOptions);
+      };
+      `;
+    }
 
     const hookResult = `export type ${operationName}HookResult = ReturnType<typeof use${operationName}>;`;
 
