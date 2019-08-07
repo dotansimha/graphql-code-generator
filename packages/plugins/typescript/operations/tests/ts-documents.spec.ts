@@ -324,6 +324,17 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
+      const ast3 = parse(/* GraphQL */ `
+        query notificationsQuery {
+          ...MyFragment
+        }
+
+        fragment MyFragment on Query {
+          notifications {
+            id
+          }
+        }
+      `);
 
       expect(await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], {}, { outputFile: '' })).toContain('export type NotificationsQueryQuery =');
       expect(await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], {}, { outputFile: '' })).toContain('export type MyFragmentFragment =');
@@ -333,6 +344,10 @@ describe('TypeScript Operations Plugin', () => {
       expect(await plugin(schema, [{ filePath: 'test-file.ts', content: ast2 }], { dedupeOperationSuffix: true }, { outputFile: '' })).toContain('export type NotificationsQuery =');
       expect(await plugin(schema, [{ filePath: 'test-file.ts', content: ast2 }], { dedupeOperationSuffix: false }, { outputFile: '' })).toContain('export type NotificationsQuery =');
       expect(await plugin(schema, [{ filePath: 'test-file.ts', content: ast2 }], { dedupeOperationSuffix: false }, { outputFile: '' })).toContain('export type MyFragment =');
+
+      const withUsage = await plugin(schema, [{ filePath: 'test-file.ts', content: ast3 }], { dedupeOperationSuffix: true }, { outputFile: '' });
+      expect(withUsage).toContain(`export type MyFragment = `);
+      expect(withUsage).toContain(`({ __typename?: 'Query' } & MyFragment)`);
     });
   });
 

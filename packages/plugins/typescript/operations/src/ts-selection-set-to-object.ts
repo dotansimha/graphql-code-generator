@@ -15,7 +15,7 @@ export class TypeScriptSelectionSetToObject extends SelectionSetToObject {
     _parentSchemaType?: GraphQLNamedType,
     _selectionSet?: SelectionSetNode
   ) {
-    super(_scalars, _schema, _convertName, _addTypename, _preResolveTypes, _nonOptionalTypename, _loadedFragments, _config.namespacedImportName, _parentSchemaType, _selectionSet);
+    super(_scalars, _schema, _convertName, _addTypename, _preResolveTypes, _nonOptionalTypename, _loadedFragments, _config.namespacedImportName, _config.dedupeOperationSuffix, _parentSchemaType, _selectionSet);
   }
 
   public createNext(parentSchemaType: GraphQLNamedType, selectionSet: SelectionSetNode): SelectionSetToObject {

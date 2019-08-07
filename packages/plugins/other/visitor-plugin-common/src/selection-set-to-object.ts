@@ -51,6 +51,7 @@ export class SelectionSetToObject {
     protected _nonOptionalTypename: boolean,
     protected _loadedFragments: LoadedFragment[],
     protected _namespacedImportName: string | null,
+    protected _dedupeOperationSuffix: boolean,
     protected _parentSchemaType?: GraphQLNamedType,
     protected _selectionSet?: SelectionSetNode
   ) {}
@@ -121,7 +122,8 @@ export class SelectionSetToObject {
       this._fragments[loadedFragment.onType] = [];
     }
 
-    this._fragments[loadedFragment.onType].push(this._convertName(node.name.value, { useTypesPrefix: true, suffix: 'Fragment' }));
+    const fragmentSuffix = this._dedupeOperationSuffix && node.name.value.toLowerCase().endsWith('fragment') ? '' : 'Fragment';
+    this._fragments[loadedFragment.onType].push(this._convertName(node.name.value, { useTypesPrefix: true, suffix: fragmentSuffix }));
   }
 
   _collectInlineFragment(node: InlineFragmentNode) {
