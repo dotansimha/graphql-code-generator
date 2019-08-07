@@ -61,15 +61,3 @@ Adds suffix to the name
  config:
    nameSuffix: 'Query'
 ```
-
-### noGraphQLTag (`boolean`, default value: `false`)
-
-Instead of adding gql tag with the GraphQL operation, it uses the precompiled JSON representation (DocumentNode) of the operation.
-
-
-#### Usage Example
-
-```yml
-config:
-  noGraphQLTag: true
-```

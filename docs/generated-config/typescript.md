@@ -1,10 +1,10 @@
 
 ### avoidOptionals (`boolean`, default value: `false`)
 
-This will cause the generator to avoid using TypeScript optionals (`?`), so the following definition: `type A { myField: String }` will output `myField: Maybe<string>` instead of `myField?: Maybe<string>`.
+This will cause the generator to avoid using TypeScript optionals (`?`) on types, so the following definition: `type A { myField: String }` will output `myField: Maybe<string>` instead of `myField?: Maybe<string>`.
 
 
-#### Usage Example
+#### Usage Example: Override all definition types
 
 ```yml
 generates:
@@ -14,6 +14,19 @@ path/to/file.ts:
  config:
    avoidOptionals: true
 ```
+
+#### Usage Example: Override only specific definition types
+
+```yml
+generates:
+path/to/file.ts:
+ plugins:
+   - typescript
+ config:
+   avoidOptionals:
+     inputValue: true
+```
+
 
 ### constEnums (`boolean`, default value: `false`)
 
@@ -77,4 +90,20 @@ path/to/file.ts:
    - typescript
  config:
    maybeValue: T | null | undefined
+```
+
+### noExport (`boolean`, default value: `false`)
+
+Set the to `true` in order to generate output without `export` modifier. This is useful if you are generating `.d.ts` file and want it to be globally available.
+
+
+#### Usage Example: Disable all export from a file
+
+```yml
+generates:
+path/to/file.ts:
+ plugins:
+   - typescript
+ config:
+   noExport: true
 ```

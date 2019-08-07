@@ -142,3 +142,10 @@ Overrides the default value of enum values declared in your GraphQL schema, supp
 Allow you to override `resolverTypeWrapper` definition.
 
 
+
+
+### federation (`boolean`, default value: `false`)
+
+Supports Apollo Federation
+
+

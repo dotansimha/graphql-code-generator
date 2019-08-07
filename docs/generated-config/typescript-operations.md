@@ -32,3 +32,19 @@ path/to/file.ts:
  config:
    immutableTypes: true
 ```
+
+### noExport (`boolean`, default value: `false`)
+
+Set the to `true` in order to generate output without `export` modifier. This is useful if you are generating `.d.ts` file and want it to be globally available.
+
+
+#### Usage Example: Disable all export from a file
+
+```yml
+generates:
+path/to/file.ts:
+ plugins:
+   - typescript
+ config:
+   noExport: true
+```

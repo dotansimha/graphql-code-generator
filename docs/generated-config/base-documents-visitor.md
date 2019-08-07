@@ -30,3 +30,10 @@ plugins
 Adds a suffix to generated operation result type names
 
 
+
+
+### dedupeOperationSuffix (`boolean`, default value: `false`)
+
+Set this configuration to `true` if you wish to make sure to remove duplicate operation name suffix.
+
+

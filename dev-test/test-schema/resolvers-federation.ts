@@ -117,10 +117,10 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 };
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
-  __resolveReference?: Resolver<Maybe<ResolversTypes['User']>, ({ id: ParentType["id"] }), ContextType>,
-  id?: Resolver<ResolversTypes['ID'], ({ id: ParentType["id"] }), ContextType>,
-  name?: Resolver<Maybe<ResolversTypes['String']>, ({ id: ParentType["id"] }), ContextType>,
-  username?: Resolver<Maybe<ResolversTypes['String']>, ({ id: ParentType["id"] }), ContextType>,
+  __resolveReference?: Resolver<Maybe<ResolversTypes['User']>, Pick<ParentType, 'id'>, ContextType>,
+  id?: Resolver<ResolversTypes['ID'], Pick<ParentType, 'id'>, ContextType>,
+  name?: Resolver<Maybe<ResolversTypes['String']>, Pick<ParentType, 'id'>, ContextType>,
+  username?: Resolver<Maybe<ResolversTypes['String']>, Pick<ParentType, 'id'>, ContextType>,
 };
 
 export type BookResolvers<ContextType = any, ParentType extends ResolversParentTypes['Book'] = ResolversParentTypes['Book']> = {

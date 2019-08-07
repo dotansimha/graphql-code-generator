@@ -61,3 +61,16 @@ Overrides the default output for various GraphQL elements.
       type: 'interface'
       input: 'interface'
 ```
+
+### enumPrefix (`boolean`, default value: `true`)
+
+Allow you to disable prefixing for generated enums, works in combination with `typesPrefix`.
+
+
+#### Usage Example: Disable enum prefixes
+
+```yml
+  config:
+    typesPrefix: I
+    enumPrefix: false
+```

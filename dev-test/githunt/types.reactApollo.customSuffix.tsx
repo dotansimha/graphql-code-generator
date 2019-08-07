@@ -442,7 +442,7 @@ export function withSubmitRepository<TProps, TChildProps = {}>(operationOptions?
     });
 };
 export type SubmitRepositoryMutationResult = ApolloReactCommon.MutationResult<SubmitRepositoryMutationMyOperation>;
-export type SubmitRepositoryMutationOptions = ApolloReactCommon.BaseMutationOptionsions<SubmitRepositoryMutationMyOperation, SubmitRepositoryMutationVariables>;
+export type SubmitRepositoryMutationOptions = ApolloReactCommon.BaseMutationOptions<SubmitRepositoryMutationMyOperation, SubmitRepositoryMutationVariables>;
 export const SubmitCommentDocument = gql`
     mutation submitComment($repoFullName: String!, $commentContent: String!) {
   submitComment(repoFullName: $repoFullName, commentContent: $commentContent) {
@@ -469,7 +469,7 @@ export function withSubmitComment<TProps, TChildProps = {}>(operationOptions?: A
     });
 };
 export type SubmitCommentMutationResult = ApolloReactCommon.MutationResult<SubmitCommentMutationMyOperation>;
-export type SubmitCommentMutationOptions = ApolloReactCommon.BaseMutationOptionsions<SubmitCommentMutationMyOperation, SubmitCommentMutationVariables>;
+export type SubmitCommentMutationOptions = ApolloReactCommon.BaseMutationOptions<SubmitCommentMutationMyOperation, SubmitCommentMutationVariables>;
 export const VoteDocument = gql`
     mutation vote($repoFullName: String!, $type: VoteType!) {
   vote(repoFullName: $repoFullName, type: $type) {
@@ -500,4 +500,4 @@ export function withVote<TProps, TChildProps = {}>(operationOptions?: ApolloReac
     });
 };
 export type VoteMutationResult = ApolloReactCommon.MutationResult<VoteMutationMyOperation>;
-export type VoteMutationOptions = ApolloReactCommon.BaseMutationOptionsions<VoteMutationMyOperation, VoteMutationVariables>;
+export type VoteMutationOptions = ApolloReactCommon.BaseMutationOptions<VoteMutationMyOperation, VoteMutationVariables>;

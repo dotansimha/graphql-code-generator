@@ -1,22 +1,4 @@
 
-### withHOC (`boolean`, default value: `true`)
-
-Customized the output by enabling/disabling the HOC.
-
-
-#### Usage Example
-
-```yml
-generates:
-path/to/file.ts:
- plugins:
-   - typescript
-   - typescript-operations
-   - typescript-react-apollo
- config:
-   withHOC: false
-```
-
 ### withComponent (`boolean`, default value: `true`)
 
 Customized the output by enabling/disabling the generated Component.
@@ -33,6 +15,24 @@ path/to/file.ts:
    - typescript-react-apollo
  config:
    withComponent: false
+```
+
+### withHOC (`boolean`, default value: `true`)
+
+Customized the output by enabling/disabling the HOC.
+
+
+#### Usage Example
+
+```yml
+generates:
+path/to/file.ts:
+ plugins:
+   - typescript
+   - typescript-operations
+   - typescript-react-apollo
+ config:
+   withHOC: false
 ```
 
 ### withHooks (`boolean`, default value: `false`)
@@ -71,16 +71,26 @@ path/to/file.ts:
    withMutationFn: true
 ```
 
-### hooksImportFrom (`string`, default value: `react-apollo-hooks`)
-
-You can specify alternative module that is exports `useQuery` `useMutation` and `useSubscription`. This is useful for further abstraction of some common tasks (eg. error handling). Filepath relative to generated file can be also specified.
+### apolloReactCommonImportFrom (`string`, default value: `apollo/react-common`)
 
 
 
 
-### reactApolloImportFrom (`string`, default value: `react-apollo`)
 
-You can specify module that exports components `Query`, `Mutation`, `Subscription` and HOCs This is useful for further abstraction of some common tasks (eg. error handling). Filepath relative to generated file can be also specified.
+### apolloReactComponentsImportFrom (`string`, default value: `apollo/react-components`)
+
+
+
+
+
+### apolloReactHocImportFrom (`string`, default value: `apollo/react-hoc`)
+
+
+
+
+
+### apolloReactHooksImportFrom (`string`, default value: `apollo/react-hooks`)
+
 
 
 
