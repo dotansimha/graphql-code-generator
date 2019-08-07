@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/typescript-document-nodes",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "GraphQL Code Generator plugin for generating TypeScript modules with embedded GraphQL document nodes",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
@@ -9,12 +9,12 @@
     "test": "jest --config ../../../../jest.config.js"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "1.4.0",
-    "@graphql-codegen/visitor-plugin-common": "1.4.0",
+    "@graphql-codegen/plugin-helpers": "1.5.0",
+    "@graphql-codegen/visitor-plugin-common": "1.5.0",
     "tslib": "1.10.0"
   },
   "devDependencies": {
-    "@graphql-codegen/testing": "1.4.0",
+    "@graphql-codegen/testing": "1.5.0",
     "graphql": "14.4.1",
     "jest": "24.8.0",
     "ts-jest": "24.0.2",
