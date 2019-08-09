@@ -417,8 +417,23 @@ describe('TypeScript Operations Plugin', () => {
       expect(await plugin(schema, [{ filePath: 'test-file.ts', content: ast2 }], { dedupeOperationSuffix: false }, { outputFile: '' })).toContain('export type MyFragment =');
 
       const withUsage = await plugin(schema, [{ filePath: 'test-file.ts', content: ast3 }], { dedupeOperationSuffix: true }, { outputFile: '' });
-      expect(withUsage).toContain(`export type MyFragment = `);
-      expect(withUsage).toContain(`({ __typename?: 'Query' } & MyFragment)`);
+      expect(withUsage).toBeSimilarStringTo(`
+        export type MyFragment = (
+          { __typename?: 'Query' }
+          & { notifications: Array<(
+            { __typename?: 'TextNotification' }
+            & Pick<TextNotification, 'id'>
+          ) | (
+            { __typename?: 'ImageNotification' }
+            & Pick<ImageNotification, 'id'>
+          )> }
+        );
+      `);
+      expect(withUsage).toBeSimilarStringTo(`
+        export type NotificationsQuery = { __typename?: 'Query' }
+          & MyFragment
+        ;
+      `);
     });
   });
 
