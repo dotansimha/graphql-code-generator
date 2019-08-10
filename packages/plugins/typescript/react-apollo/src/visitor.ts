@@ -68,6 +68,10 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     return OMIT_TYPE;
   }
 
+  private getDocumentNodeVariable(node: OperationDefinitionNode, documentVariableName: string): string {
+    return this.config.documentMode === DocumentMode.external ? `Operations.${node.name.value}` : documentVariableName;
+  }
+
   public getImports(): string[] {
     const baseImports = super.getImports();
     const hasOperations = this._collectedOperations.length > 0;
@@ -147,7 +151,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
 
     const component = `
     export const ${componentName} = (props: ${componentPropsName}) => (
-      <ApolloReactComponents.${operationType}<${operationResultType}, ${operationVariablesTypes}> ${node.operation}={${this.config.documentMode === DocumentMode.external ? `Operations.${node.name.value}` : documentVariableName}} {...props} />
+      <ApolloReactComponents.${operationType}<${operationResultType}, ${operationVariablesTypes}> ${node.operation}={${this.getDocumentNodeVariable(node, documentVariableName)}} {...props} />
     );
     `;
     return [componentProps, component].join('\n');
@@ -164,7 +168,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
 
     let hookFn = `
     export function use${operationName}(baseOptions?: ApolloReactHooks.${operationType}HookOptions<${operationResultType}, ${operationVariablesTypes}>) {
-      return ApolloReactHooks.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, baseOptions);
+      return ApolloReactHooks.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${this.getDocumentNodeVariable(node, documentVariableName)}, baseOptions);
     };`;
 
     if (operationType === 'Query') {
@@ -174,7 +178,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
       });
       hookFn += `
       export function use${lazyOperationName}(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<${operationResultType}, ${operationVariablesTypes}>) {
-        return ApolloReactHooks.useLazyQuery<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName}, baseOptions);
+        return ApolloReactHooks.useLazyQuery<${operationResultType}, ${operationVariablesTypes}>(${this.getDocumentNodeVariable(node, documentVariableName)}, baseOptions);
       };
       `;
     }
