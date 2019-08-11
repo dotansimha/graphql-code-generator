@@ -142,7 +142,19 @@ export const loadDocuments = async (documentsDef: Types.InstanceOrArray<Types.Op
     const loadedFromToolkit = await loadDocumentsToolkit(loadWithToolkit, loadDocumentsToolkitConfig);
 
     if (loadedFromToolkit.length > 0) {
-      result.push(...loadedFromToolkit);
+      result.push(
+        ...loadedFromToolkit.sort((a, b) => {
+          if (a.filePath < b.filePath) {
+            return -1;
+          }
+
+          if (a.filePath > b.filePath) {
+            return 1;
+          }
+
+          return 0;
+        })
+      );
     }
   }
 
