@@ -8169,10 +8169,10 @@ graphql-tag@2.10.1, graphql-tag@^2.10.1, graphql-tag@^2.9.2:
   resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.10.1.tgz#10aa41f1cd8fae5373eaf11f1f67260a3cad5e02"
   integrity sha512-jApXqWBzNXQ8jYa/HLkZJaVw9jgwNqZkywa2zfFn16Iv1Zb7ELNHkJaXHR7Quvd5SIGsy6Ny7SUKATgnu05uEg==
 
-graphql-toolkit@0.5.7:
-  version "0.5.7"
-  resolved "https://registry.yarnpkg.com/graphql-toolkit/-/graphql-toolkit-0.5.7.tgz#54b44aa452831ec01a3f50287114dce12f378c55"
-  integrity sha512-QPF4VRLKi+UFSBLK4QM+qARvi3qzdOV18AQ9NY/Dgl1xa1S1ELky5VAvIrqzZ9Vxlao/Yo6QGeu1iwsys9B5Qg==
+graphql-toolkit@0.5.8:
+  version "0.5.8"
+  resolved "https://registry.yarnpkg.com/graphql-toolkit/-/graphql-toolkit-0.5.8.tgz#8a803b16ddddd1fb74f2c9c4f7654a71a49eb347"
+  integrity sha512-KF6euY/fGs5ZOfckPYGWmKShItqq+ZnRK3kvgBVn+hPF85xebMTpaSsJbhPtzX7AmCalMPQZyZI6Uv1rXZp3NA==
   dependencies:
     "@kamilkisiela/graphql-tools" "4.0.6"
     "@types/glob" "7.1.1"
