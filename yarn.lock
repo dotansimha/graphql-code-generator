@@ -7493,10 +7493,10 @@ flatten@^1.0.2:
   resolved "https://registry.yarnpkg.com/flatten/-/flatten-1.0.2.tgz#dae46a9d78fbe25292258cc1e780a41d95c03782"
   integrity sha1-2uRqnXj74lKSJYzB54CkHZXAN4I=
 
-flow-bin@0.105.0:
-  version "0.105.0"
-  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.105.0.tgz#50a6ab736355ff1c978ec50823df970aa1276665"
-  integrity sha512-IiJhJd8bsBcIzvl9c4JDE2Xx6AWMrQvZul0RA/66y+8wg5agAIT8ZYNhg4t39dtBT40iZtHIiYGvAbETikVONA==
+flow-bin@0.105.1:
+  version "0.105.1"
+  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.105.1.tgz#5ce4515b583e5fa6ea1b82bc849c354271f5b88d"
+  integrity sha512-wRI5ogu/+85fgftljAOtnDBx9+2JHToyq2XifzoMmXc5mmB9OE7osukzwi2PuOoEKtq9fu+APRD+MqbEJ8bUwQ==
 
 flow-parser@0.104.0:
   version "0.104.0"
