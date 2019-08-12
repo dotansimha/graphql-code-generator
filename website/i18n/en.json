@@ -194,6 +194,9 @@
       "plugins/typescript-stencil-apollo": {
         "title": "TypeScript Stencil Apollo"
       },
+      "plugins/typescript-type-graphql": {
+        "title": "TypeScript TypeGraphQL"
+      },
       "plugins/typescript-urql": {
         "title": "TypeScript Urql"
       },

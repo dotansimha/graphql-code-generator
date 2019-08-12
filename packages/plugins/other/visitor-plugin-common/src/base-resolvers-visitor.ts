@@ -703,8 +703,9 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
       }
 
       const parentTypeSignature = this._federation.translateParentType({ fieldNode: original, parentType, parentTypeSignature: 'ParentType' });
+      const mappedTypeKey = isSubscriptionType ? `${mappedType}, "${node.name}"` : mappedType;
 
-      return indent(`${node.name}${this.config.avoidOptionals ? '' : '?'}: ${isSubscriptionType ? 'SubscriptionResolver' : 'Resolver'}<${mappedType}, ${parentTypeSignature}, ContextType${argsType ? `, ${argsType}` : ''}>,`);
+      return indent(`${node.name}${this.config.avoidOptionals ? '' : '?'}: ${isSubscriptionType ? 'SubscriptionResolver' : 'Resolver'}<${mappedTypeKey}, ${parentTypeSignature}, ContextType${argsType ? `, ${argsType}` : ''}>,`);
     };
   }
 

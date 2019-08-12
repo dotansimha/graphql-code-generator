@@ -302,11 +302,12 @@ export class SelectionSetToObject {
       return null;
     }
 
-
-    return fragmentSpreadNodes.map(node => {
-      const fragmentSuffix = this._dedupeOperationSuffix && node.name.value.toLowerCase().endsWith('fragment') ? '' : 'Fragment';
-      return this._convertName(node.name.value, { useTypesPrefix: true, suffix: fragmentSuffix });
-    }).join(`\n  & `);
+    return fragmentSpreadNodes
+      .map(node => {
+        const fragmentSuffix = this._dedupeOperationSuffix && node.name.value.toLowerCase().endsWith('fragment') ? '' : 'Fragment';
+        return this._convertName(node.name.value, { useTypesPrefix: true, suffix: fragmentSuffix });
+      })
+      .join(`\n  & `);
   }
 
   protected buildSelectionSetString(parentSchemaType: GraphQLObjectType, selectionNodes: SelectionNode[]) {
