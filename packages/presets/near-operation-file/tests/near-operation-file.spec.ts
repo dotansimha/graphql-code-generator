@@ -4,7 +4,7 @@ import { parse } from 'graphql';
 describe('near-operation-file preset', () => {
   const schemaDocumentNode = parse(/* GraphQL */ `
     type Query {
-      user: User!
+      user(id: String): User!
     }
 
     type User {
@@ -215,6 +215,35 @@ describe('near-operation-file preset', () => {
     });
 
     expect(result.map(o => o.plugins)[0]).not.toEqual(expect.arrayContaining([{ add: `import * as Types from '../types';\n` }]));
+  });
+
+  it('Should prepend the "add" plugin with Types import when arguments are used', async () => {
+    const result = await preset.buildGeneratesSection({
+      baseOutputDir: './src/',
+      config: {},
+      presetConfig: {
+        cwd: '/some/deep/path',
+        baseTypesPath: 'types.ts',
+      },
+      schema: schemaDocumentNode,
+      documents: [
+        {
+          filePath: './test.graphql',
+          content: parse(/* GraphQL */ `
+            query($id: String) {
+              user(id: $id) {
+                ...UserFields
+              }
+            }
+          `),
+        },
+        testDocuments[1],
+      ],
+      plugins: [{ typescript: {} }],
+      pluginMap: { typescript: {} as any },
+    });
+
+    expect(result.map(o => o.plugins)[0]).toEqual(expect.arrayContaining([{ add: `import * as Types from './src/types';\n` }]));
   });
 
   it('Should prepend the "add" plugin with the correct import (long path)', async () => {
