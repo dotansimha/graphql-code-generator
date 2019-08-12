@@ -2601,15 +2601,10 @@
     "@types/graphql" "*"
     "@types/koa" "*"
 
-"@types/graphql@*":
+"@types/graphql@*", "@types/graphql@14.2.3":
   version "14.2.3"
   resolved "https://registry.yarnpkg.com/@types/graphql/-/graphql-14.2.3.tgz#cfc6420a67eb20420786f90112357921974593b9"
   integrity sha512-UoCovaxbJIxagCvVfalfK7YaNhmxj3BQFRQ2RHQKLiu+9wNXhJnlbspsLHt/YQM99IaLUUFJNzCwzc6W0ypMeQ==
-
-"@types/graphql@14.2.2":
-  version "14.2.2"
-  resolved "https://registry.yarnpkg.com/@types/graphql/-/graphql-14.2.2.tgz#10f197e6f8559c11b16d630c5e9c10c3c8e61c5e"
-  integrity sha512-okXbUmdZFMO3AYBEJCcpJFPFDkKmIiZZBqWD5TmPtAv+GHfjD2qLZEI0PvZ8IWMU4ozoK2HV2lDxWjw4LbVlnw==
 
 "@types/http-assert@*":
   version "1.5.0"
@@ -8195,10 +8190,10 @@ graphql-tag@2.10.1, graphql-tag@^2.10.1, graphql-tag@^2.9.2:
   resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.10.1.tgz#10aa41f1cd8fae5373eaf11f1f67260a3cad5e02"
   integrity sha512-jApXqWBzNXQ8jYa/HLkZJaVw9jgwNqZkywa2zfFn16Iv1Zb7ELNHkJaXHR7Quvd5SIGsy6Ny7SUKATgnu05uEg==
 
-graphql-toolkit@0.5.7:
-  version "0.5.7"
-  resolved "https://registry.yarnpkg.com/graphql-toolkit/-/graphql-toolkit-0.5.7.tgz#54b44aa452831ec01a3f50287114dce12f378c55"
-  integrity sha512-QPF4VRLKi+UFSBLK4QM+qARvi3qzdOV18AQ9NY/Dgl1xa1S1ELky5VAvIrqzZ9Vxlao/Yo6QGeu1iwsys9B5Qg==
+graphql-toolkit@0.5.8:
+  version "0.5.8"
+  resolved "https://registry.yarnpkg.com/graphql-toolkit/-/graphql-toolkit-0.5.8.tgz#8a803b16ddddd1fb74f2c9c4f7654a71a49eb347"
+  integrity sha512-KF6euY/fGs5ZOfckPYGWmKShItqq+ZnRK3kvgBVn+hPF85xebMTpaSsJbhPtzX7AmCalMPQZyZI6Uv1rXZp3NA==
   dependencies:
     "@kamilkisiela/graphql-tools" "4.0.6"
     "@types/glob" "7.1.1"
@@ -8245,13 +8240,6 @@ graphql-upload@^8.0.2:
     fs-capacitor "^2.0.1"
     http-errors "^1.7.2"
     object-path "^0.11.4"
-
-graphql@14.4.1:
-  version "14.4.1"
-  resolved "https://registry.yarnpkg.com/graphql/-/graphql-14.4.1.tgz#7a7818d3f63f66b9528ba5416b6c88460db62280"
-  integrity sha512-g4HUH26CohlMjaHneXMAtvG3QtO6peJIUTFxrPW4g5LNnXkUuFoBI6Bk1c14Q5kW8+FyjM/tTbePTgpiVB/2hQ==
-  dependencies:
-    iterall "^1.2.2"
 
 graphql@14.4.2:
   version "14.4.2"
