@@ -118,6 +118,22 @@ schema:
 
 > All provided glob expressions are being evaludated together - the usage is similar to `.gitingore` file.
 
+Additionally, you can use code files and the codegen will try to extract the GraphQL schema from it:
+
+```yml
+schema: './src/**/*.ts'
+```
+
+The codegen will try to load the file as AST and look for explicit GraphQL strings, but if it can't find those, it will try to `require` the file and looks for operations in the default export.
+
+You can disable the `require` if it causes errors for you (for example, because of different module system or missing deps):
+
+```yml
+schema:
+  './src/**/*.ts':
+    noRequire: true
+```
+
 - ### JavaScript export
 
 You can also specify a code file that exports your `GraphQLSchema` object as named export `schema` or as default export.
