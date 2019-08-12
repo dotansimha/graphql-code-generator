@@ -1211,10 +1211,13 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       await validateTypeScript(content, schema, docs, {});
     });
 
-    it('should import Operations from one external file and use it in Queries', async () => {
+    it('should import Operations from one external file and use it in Query component', async () => {
       const config: ReactApolloRawPluginConfig = {
         documentMode: DocumentMode.external,
         importDocumentNodeExternallyFrom: 'path/to/documents.tsx',
+        withComponent: true,
+        withHooks: false,
+        withHOC: false,
       };
 
       const docs = [{ filePath: '', content: basicDoc }];
@@ -1235,7 +1238,9 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       const config: ReactApolloRawPluginConfig = {
         documentMode: DocumentMode.external,
         importDocumentNodeExternallyFrom: 'path/to/documents.tsx',
+        withComponent: false,
         withHooks: true,
+        withHOC: false,
       };
 
       const docs = [{ filePath: '', content: basicDoc }];
@@ -1289,10 +1294,13 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       await validateTypeScript(content, schema, docs, {});
     });
 
-    it('should import Operations from one external file and use it in Mutations', async () => {
+    it('should import Operations from one external file and use it in Mutation component', async () => {
       const config: ReactApolloRawPluginConfig = {
         documentMode: DocumentMode.external,
         importDocumentNodeExternallyFrom: 'path/to/documents.tsx',
+        withComponent: true,
+        withHooks: false,
+        withHOC: false,
       };
 
       const docs = [{ filePath: '', content: mutationDoc }];
@@ -1313,7 +1321,9 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       const config: ReactApolloRawPluginConfig = {
         documentMode: DocumentMode.external,
         importDocumentNodeExternallyFrom: 'path/to/documents.tsx',
+        withComponent: false,
         withHooks: true,
+        withHOC: false,
       };
 
       const docs = [{ filePath: '', content: mutationDoc }];
@@ -1362,10 +1372,13 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       await validateTypeScript(content, schema, docs, {});
     });
 
-    it('should import Operations from one external file and use it in Subscriptions', async () => {
+    it('should import Operations from one external file and use it in Subscription component', async () => {
       const config: ReactApolloRawPluginConfig = {
         documentMode: DocumentMode.external,
         importDocumentNodeExternallyFrom: 'path/to/documents.tsx',
+        withComponent: true,
+        withHooks: false,
+        withHOC: false,
       };
 
       const docs = [{ filePath: '', content: subscriptionDoc }];
@@ -1386,7 +1399,9 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       const config: ReactApolloRawPluginConfig = {
         documentMode: DocumentMode.external,
         importDocumentNodeExternallyFrom: 'path/to/documents.tsx',
+        withComponent: false,
         withHooks: true,
+        withHOC: false,
       };
 
       const docs = [{ filePath: '', content: subscriptionDoc }];
@@ -1439,6 +1454,9 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       const config: ReactApolloRawPluginConfig = {
         documentMode: DocumentMode.external,
         importDocumentNodeExternallyFrom: 'path/to/documents.tsx',
+        withComponent: true,
+        withHooks: false,
+        withHOC: false,
       };
 
       const docs = [{ filePath: '', content: multipleOperationDoc }];
@@ -1468,7 +1486,9 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       const config: ReactApolloRawPluginConfig = {
         documentMode: DocumentMode.external,
         importDocumentNodeExternallyFrom: 'path/to/documents.tsx',
+        withComponent: false,
         withHooks: true,
+        withHOC: false,
       };
 
       const docs = [{ filePath: '', content: multipleOperationDoc }];
@@ -1557,10 +1577,13 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       await validateTypeScript(content, schema, docs, {});
     });
 
-    it('should import Operations from near operation file for Queries', async () => {
+    it('should import Operations from near operation file for Query component', async () => {
       const config: ReactApolloRawPluginConfig = {
         documentMode: DocumentMode.external,
         importDocumentNodeExternallyFrom: 'near-operation-file',
+        withComponent: true,
+        withHooks: false,
+        withHOC: false,
       };
 
       const docs = [{ filePath: 'path/to/document.graphql', content: basicDoc }];
@@ -1581,7 +1604,9 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       const config: ReactApolloRawPluginConfig = {
         documentMode: DocumentMode.external,
         importDocumentNodeExternallyFrom: 'near-operation-file',
+        withComponent: false,
         withHooks: true,
+        withHOC: false,
       };
 
       const docs = [{ filePath: 'path/to/document.graphql', content: basicDoc }];
@@ -1635,10 +1660,13 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       await validateTypeScript(content, schema, docs, {});
     });
 
-    it('should import Operations from near operation file for Mutations', async () => {
+    it('should import Operations from near operation file for Mutation component', async () => {
       const config: ReactApolloRawPluginConfig = {
         documentMode: DocumentMode.external,
         importDocumentNodeExternallyFrom: 'near-operation-file',
+        withComponent: true,
+        withHooks: false,
+        withHOC: false,
       };
 
       const docs = [{ filePath: 'path/to/document.graphql', content: mutationDoc }];
@@ -1659,7 +1687,9 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       const config: ReactApolloRawPluginConfig = {
         documentMode: DocumentMode.external,
         importDocumentNodeExternallyFrom: 'near-operation-file',
+        withComponent: false,
         withHooks: true,
+        withHOC: false,
       };
 
       const docs = [{ filePath: 'path/to/document.graphql', content: mutationDoc }];
@@ -1707,10 +1737,13 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       await validateTypeScript(content, schema, docs, {});
     });
 
-    it('should import Operations from near operation file for Subscriptions', async () => {
+    it('should import Operations from near operation file for Subscription component', async () => {
       const config: ReactApolloRawPluginConfig = {
         documentMode: DocumentMode.external,
         importDocumentNodeExternallyFrom: 'near-operation-file',
+        withComponent: true,
+        withHooks: false,
+        withHOC: false,
       };
 
       const docs = [{ filePath: 'path/to/document.graphql', content: subscriptionDoc }];
@@ -1731,7 +1764,9 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       const config: ReactApolloRawPluginConfig = {
         documentMode: DocumentMode.external,
         importDocumentNodeExternallyFrom: 'near-operation-file',
+        withComponent: false,
         withHooks: true,
+        withHOC: false,
       };
 
       const docs = [{ filePath: 'path/to/document.graphql', content: subscriptionDoc }];
@@ -1782,6 +1817,9 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       const config: ReactApolloRawPluginConfig = {
         documentMode: DocumentMode.external,
         importDocumentNodeExternallyFrom: 'near-operation-file',
+        withComponent: true,
+        withHooks: false,
+        withHOC: false,
       };
 
       const docs = [{ filePath: 'path/to/document.graphql', content: multipleOperationDoc }];
@@ -1811,7 +1849,9 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       const config: ReactApolloRawPluginConfig = {
         documentMode: DocumentMode.external,
         importDocumentNodeExternallyFrom: 'near-operation-file',
+        withComponent: false,
         withHooks: true,
+        withHOC: false,
       };
 
       const docs = [{ filePath: 'path/to/document.graphql', content: multipleOperationDoc }];
