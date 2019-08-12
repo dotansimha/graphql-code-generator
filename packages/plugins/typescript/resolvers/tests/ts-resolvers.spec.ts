@@ -847,4 +847,253 @@ describe('TypeScript Resolvers Plugin', () => {
       };
     `);
   });
+
+  it.skip('should support all use-cases of subscription resolvers', async () => {
+    const testSchema = buildSchema(/* GraphQL */ `
+      type Subscription {
+        postAdded: Post
+      }
+
+      type Query {
+        posts: [Post]
+      }
+
+      type Post {
+        author: String
+        comment: String
+      }
+    `);
+
+    const tsContent = await tsPlugin(testSchema, [], {}, { outputFile: 'graphql.ts' });
+    const resolversContent = (await plugin(testSchema, [], {}, { outputFile: 'graphql.ts' })) as Types.ComplexPluginOutput;
+
+    const validateResolvers = (code: string) => {
+      validateTs(
+        mergeOutputs([
+          tsContent,
+          resolversContent,
+          `
+            import { PubSub } from 'graphql-subscriptions';
+        
+            const pubsub = new PubSub();
+            const POST_ADDED = 'POST_ADDED';
+          `,
+          code,
+        ])
+      );
+    };
+
+    // if `subscribe` returns anything
+    // `resolve` should be defined
+    // and `parent` should be any
+    expect(() => {
+      validateResolvers(`
+      type PubSubEvent = {
+        text: string;
+        user: string;
+      };
+  
+      const resolvers: Resolvers = {
+        Subscription: {
+          postAdded: {
+            subscribe: () => pubsub.asyncIterator<PubSubEvent>(POST_ADDED),
+            resolve: parent => {
+              return {
+                comment: parent.text,
+                author: parent.user
+              };
+            }
+          }
+        }
+      };
+    `);
+    }).not.toThrow();
+
+    // if `subscribe` returns anything
+    // `resolve` should be defined
+    // and `parent` should be any
+    // but resolver is missing...
+    expect(() => {
+      validateResolvers(`
+      import { PubSub } from 'graphql-subscriptions';
+      
+      const pubsub = new PubSub();
+      const POST_ADDED = 'POST_ADDED';
+      
+      type PubSubEvent = {
+        text: string;
+        user: string;
+      };
+  
+      const resolvers: Resolvers = {
+        Subscription: {
+          postAdded: {
+            subscribe: () => pubsub.asyncIterator<PubSubEvent>(POST_ADDED)
+            // resolvers is missing!
+          }
+        }
+      };
+    `);
+    }).toThrow();
+
+    // if `subscribe` returns { postAdded: PostAdded }
+    // `resolve` should be optional
+    expect(() => {
+      validateResolvers(`
+      import { PubSub } from 'graphql-subscriptions';
+      
+      const pubsub = new PubSub();
+      const POST_ADDED = 'POST_ADDED';
+      
+      type PubSubEvent = {
+        postAdded: {
+          comment: string;
+          author: string;
+        }
+      };
+  
+      const resolvers: Resolvers = {
+        Subscription: {
+          postAdded: {
+            subscribe: () => pubsub.asyncIterator<PubSubEvent>(POST_ADDED),
+          },
+        }
+      };
+    `);
+    }).not.toThrow();
+
+    // if `subscribe` returns { postAdded: PostAdded }
+    // and `parent` should be { postAdded: PostAdded }
+    expect(() => {
+      validateResolvers(`
+      import { PubSub } from 'graphql-subscriptions';
+      
+      const pubsub = new PubSub();
+      const POST_ADDED = 'POST_ADDED';
+      
+      type PubSubEvent = {
+        postAdded: {
+          comment: string;
+          author: string;
+        }
+      };
+  
+      const resolvers: Resolvers = {
+        Subscription: {
+          postAdded: {
+            subscribe: () => pubsub.asyncIterator<PubSubEvent>(POST_ADDED),
+            resolve: event => event.postAdded
+          },
+        }
+      };
+    `);
+    }).not.toThrow();
+
+    // if `subscribe` returns { postAdded: Foo }
+    // `resolve` shouldn't be optional
+    expect(() => {
+      validateResolvers(`
+      import { PubSub } from 'graphql-subscriptions';
+      
+      const pubsub = new PubSub();
+      const POST_ADDED = 'POST_ADDED';
+      
+      type PubSubEvent = {
+        postAdded: {
+          text: string;
+          user: string;
+        }
+      };
+  
+      const resolvers: Resolvers = {
+        Subscription: {
+          postAdded: {
+            subscribe: () => pubsub.asyncIterator<PubSubEvent>(POST_ADDED),
+          },
+        }
+      };
+    `);
+    }).toThrow();
+
+    // if `subscribe` returns { postAdded: Foo }
+    // and `parent` should be { postAdded: Foo }
+    expect(() => {
+      validateResolvers(`
+      import { PubSub } from 'graphql-subscriptions';
+      
+      const pubsub = new PubSub();
+      const POST_ADDED = 'POST_ADDED';
+      
+      type PubSubEvent = {
+        postAdded: {
+          text: string;
+          user: string;
+        }
+      };
+  
+      const resolvers: Resolvers = {
+        Subscription: {
+          postAdded: {
+            subscribe: () => pubsub.asyncIterator<PubSubEvent>(POST_ADDED),
+            resolve: (event) => {
+              return {
+                comment: event.text,
+                author: event.user
+              };
+            }
+          },
+        }
+      };
+    `);
+    }).not.toThrow();
+
+    // if `subscribe` returns PostAdded
+    // `resolve` should be optional
+    expect(() => {
+      validateResolvers(`
+      import { PubSub } from 'graphql-subscriptions';
+      
+      const pubsub = new PubSub();
+      const POST_ADDED = 'POST_ADDED';
+      
+      type PubSubEvent = {
+        comment: string;
+        author: string;
+      };
+  
+      const resolvers: Resolvers = {
+        Subscription: {
+          postAdded: {
+            subscribe: () => pubsub.asyncIterator<PubSubEvent>(POST_ADDED),
+          },
+        }
+      };
+    `);
+    }).not.toThrow();
+
+    // if `subscribe` returns PostAdded
+    // `parent` should be of type PostAdded
+    expect(() => {
+      validateResolvers(`
+      import { PubSub } from 'graphql-subscriptions';
+      
+      const pubsub = new PubSub();
+      const POST_ADDED = 'POST_ADDED';
+      
+      type PubSubEvent = {
+        comment: string;
+        author: string;
+      };
+  
+      const resolvers: Resolvers = {
+        Subscription: {
+          postAdded: {
+            subscribe: () => pubsub.asyncIterator<PubSubEvent>(POST_ADDED),
+            resolve: event => event
+          },
+        }
+      };
+    `);
+    }).not.toThrow();
+  });
 });
