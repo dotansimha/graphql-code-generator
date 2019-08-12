@@ -1752,4 +1752,55 @@ describe('TypeScript', () => {
 
     validateTs(result);
   });
+
+  it('should keep non-optional arguments non-optional - issue #2323', async () => {
+    const testSchema = buildSchema(/* GraphQL */ `
+      enum OrderBy {
+        name
+        id
+      }
+
+      input Filter {
+        contain: String
+      }
+
+      type Node {
+        id: ID!
+        name: String!
+      }
+
+      type Connection {
+        nodes: [Node]
+      }
+
+      type Query {
+        list(after: String, orderBy: OrderBy = name, filter: Filter!): Connection!
+      }
+    `);
+
+    const output = (await plugin(
+      testSchema,
+      [],
+      {
+        avoidOptionals: false,
+        maybeValue: 'T | undefined',
+      } as any,
+      { outputFile: 'graphql.ts' }
+    )) as Types.ComplexPluginOutput;
+
+    // Filter.contain should be optional
+    expect(output.content).toBeSimilarStringTo(`
+      export type Filter = {
+        contain?: Maybe<Scalars['String']>,
+      };
+    `);
+    // filter should be non-optional
+    expect(output.content).toBeSimilarStringTo(`
+      export type QueryListArgs = {
+        after?: Maybe<Scalars['String']>,
+        orderBy?: Maybe<OrderBy>,
+        filter: Filter
+      };
+    `);
+  });
 });
