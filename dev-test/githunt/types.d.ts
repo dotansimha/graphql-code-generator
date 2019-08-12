@@ -54,7 +54,7 @@ export type EntryCommentsArgs = {
 };
 
 /** A list of options for the sort order of the feed */
-export type FeedType =
+export type FeedType = 
   /** Sort by a combination of freshness and score, using Reddit's algorithm */
   'HOT' |
   /** Newest entries first */
@@ -111,9 +111,10 @@ export type QueryEntryArgs = {
   repoFullName: Scalars['String']
 };
 
-/** A repository object from the GitHub API. This uses the exact field names returned by the
+/** 
+ * A repository object from the GitHub API. This uses the exact field names returned by the
  * GitHub API for simplicity, even though the convention for GraphQL is usually to camel case.
- */
+ **/
 export type Repository = {
   __typename?: 'Repository',
   /** Just the name of the repository, e.g. GitHunt-API */
@@ -161,7 +162,7 @@ export type Vote = {
 };
 
 /** The type of vote to record, when submitting a vote */
-export type VoteType =
+export type VoteType = 
   'UP' |
   'DOWN' |
   'CANCEL';

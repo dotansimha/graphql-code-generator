@@ -1,5 +1,5 @@
 import { GraphQLSchema } from 'graphql';
-import { ParsedDocumentsConfig, BaseDocumentsVisitor, LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
+import { ParsedDocumentsConfig, BaseDocumentsVisitor, LoadedFragment, getConfigValue } from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptSelectionSetToObject } from './ts-selection-set-to-object';
 import { TypeScriptOperationVariablesToObject } from './ts-operation-variables-to-object';
 import { TypeScriptDocumentsPluginConfig } from './index';
@@ -7,6 +7,7 @@ import { TypeScriptDocumentsPluginConfig } from './index';
 export interface TypeScriptDocumentsParsedConfig extends ParsedDocumentsConfig {
   avoidOptionals: boolean;
   immutableTypes: boolean;
+  noExport: boolean;
 }
 
 export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<TypeScriptDocumentsPluginConfig, TypeScriptDocumentsParsedConfig> {
@@ -14,14 +15,18 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<TypeScriptD
     super(
       config,
       {
-        avoidOptionals: config.avoidOptionals || false,
-        immutableTypes: config.immutableTypes || false,
-        nonOptionalTypename: config.nonOptionalTypename || false,
+        noExport: getConfigValue(config.noExport, false),
+        avoidOptionals: getConfigValue(config.avoidOptionals, false),
+        immutableTypes: getConfigValue(config.immutableTypes, false),
+        nonOptionalTypename: getConfigValue(config.nonOptionalTypename, false),
       } as TypeScriptDocumentsParsedConfig,
       schema
     );
 
-    this.setSelectionSetHandler(new TypeScriptSelectionSetToObject(this.scalars, this.schema, this.convertName, this.config.addTypename, this.config.nonOptionalTypename, allFragments, this.config));
+    this.setSelectionSetHandler(new TypeScriptSelectionSetToObject(this.scalars, this.schema, this.convertName, this.config.addTypename, this.config.preResolveTypes, this.config.nonOptionalTypename, allFragments, this.config));
     this.setVariablesTransformer(new TypeScriptOperationVariablesToObject(this.scalars, this.convertName, this.config.avoidOptionals, this.config.immutableTypes, this.config.namespacedImportName));
+    this._declarationBlockConfig = {
+      ignoreExport: this.config.noExport,
+    };
   }
 }

@@ -1,8 +1,9 @@
 import { FlowResolversPluginConfig } from './index';
-import { ListTypeNode, NamedTypeNode, NonNullTypeNode, GraphQLSchema, ScalarTypeDefinitionNode } from 'graphql';
+import { ListTypeNode, NamedTypeNode, NonNullTypeNode, GraphQLSchema, ScalarTypeDefinitionNode, InputValueDefinitionNode } from 'graphql';
 import * as autoBind from 'auto-bind';
 import { indent, ParsedResolversConfig, BaseResolversVisitor, DeclarationBlock } from '@graphql-codegen/visitor-plugin-common';
 import { FlowOperationVariablesToObject } from '@graphql-codegen/flow';
+import { FLOW_REQUIRE_FIELDS_TYPE } from './flow-util-types';
 
 export interface ParsedFlorResolversConfig extends ParsedResolversConfig {}
 
@@ -17,12 +18,25 @@ export class FlowResolversVisitor extends BaseResolversVisitor<FlowResolversPlug
     return `$ElementType<Scalars, '${name}'>`;
   }
 
-  protected buildMapperImport(source: string, types: string[]): string {
-    return `import { ${types.map(t => `type ${t}`).join(', ')} } from '${source}';`;
+  protected applyRequireFields(argsType: string, fields: InputValueDefinitionNode[]): string {
+    this._globalDeclarations.add(FLOW_REQUIRE_FIELDS_TYPE);
+    return `$RequireFields<${argsType}, { ${fields.map(f => `${f.name.value}: *`).join(', ')} }>`;
+  }
+
+  protected buildMapperImport(source: string, types: { identifier: string; asDefault?: boolean }[]): string {
+    if (types[0] && types[0].asDefault) {
+      return `import type ${types[0].identifier} from '${source}';`;
+    }
+
+    return `import { ${types.map(t => `type ${t.identifier}`).join(', ')} } from '${source}';`;
   }
 
   protected formatRootResolver(schemaTypeName: string, resolverType: string): string {
     return `${schemaTypeName}?: ${resolverType}${resolverType.includes('<') ? '' : '<>'},`;
+  }
+
+  protected transformParentGenericType(parentType: string): string {
+    return `ParentType = ${parentType}`;
   }
 
   ListType(node: ListTypeNode): string {
@@ -57,6 +71,12 @@ export class FlowResolversVisitor extends BaseResolversVisitor<FlowResolversPlug
 
   protected getTypeToUse(name: string): string {
     const resolversType = this.convertName('ResolversTypes');
+
+    return `$ElementType<${resolversType}, '${name}'>`;
+  }
+
+  protected getParentTypeToUse(name: string): string {
+    const resolversType = this.convertName('ResolversParentTypes');
 
     return `$ElementType<${resolversType}, '${name}'>`;
   }

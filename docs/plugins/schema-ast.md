@@ -22,3 +22,7 @@ generates:
     plugins:
       - schema-ast
 ```
+
+## Configuration
+
+{@import: ../docs/generated-config/schema-ast.md}

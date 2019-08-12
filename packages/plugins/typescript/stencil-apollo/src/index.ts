@@ -57,3 +57,5 @@ export const validate: PluginValidateFn<any> = async (schema: GraphQLSchema, doc
     throw new Error(`Plugin "stencil-apollo" requires extension to be ".tsx"!`);
   }
 };
+
+export { StencilApolloVisitor };

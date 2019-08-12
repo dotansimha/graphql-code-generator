@@ -1,7 +1,6 @@
 // tslint:disable
 import { GraphQLResolveInfo } from 'graphql';
 export type Maybe<T> = T | null;
-export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string,
@@ -35,6 +34,8 @@ export type User = {
   email: Scalars['String'],
 };
 
+
+export type ResolverTypeWrapper<T> = Promise<T> | T;
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
@@ -94,6 +95,16 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  QueryRoot: ResolverTypeWrapper<{}>,
+  User: ResolverTypeWrapper<User>,
+  Int: ResolverTypeWrapper<Scalars['Int']>,
+  String: ResolverTypeWrapper<Scalars['String']>,
+  SubscriptionRoot: ResolverTypeWrapper<{}>,
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
+};
+
+/** Mapping between all available schema types and the resolvers parents */
+export type ResolversParentTypes = {
   QueryRoot: {},
   User: User,
   Int: Scalars['Int'],
@@ -102,17 +113,17 @@ export type ResolversTypes = {
   Boolean: Scalars['Boolean'],
 };
 
-export type QueryRootResolvers<ContextType = any, ParentType = ResolversTypes['QueryRoot']> = {
+export type QueryRootResolvers<ContextType = any, ParentType extends ResolversParentTypes['QueryRoot'] = ResolversParentTypes['QueryRoot']> = {
   allUsers?: Resolver<Array<Maybe<ResolversTypes['User']>>, ParentType, ContextType>,
   userById?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, QueryRootUserByIdArgs>,
   answer?: Resolver<Array<ResolversTypes['Int']>, ParentType, ContextType>,
 };
 
-export type SubscriptionRootResolvers<ContextType = any, ParentType = ResolversTypes['SubscriptionRoot']> = {
+export type SubscriptionRootResolvers<ContextType = any, ParentType extends ResolversParentTypes['SubscriptionRoot'] = ResolversParentTypes['SubscriptionRoot']> = {
   newUser?: SubscriptionResolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>,
 };
 
-export type UserResolvers<ContextType = any, ParentType = ResolversTypes['User']> = {
+export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>,
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>,

@@ -42,6 +42,14 @@ export interface CompatabilityPluginRawConfig extends RawConfig {
    * ```
    */
   strict?: boolean;
+  /**
+   * @name preResolveTypes
+   * @type boolean
+   * @description Avoid using `Pick` in `typescript-operations` and make sure to optimize this package as well.
+   * @default false
+   *
+   */
+  preResolveTypes?: boolean;
 }
 
 const REACT_APOLLO_PLUGIN_NAME = 'typescript-react-apollo';
@@ -54,7 +62,14 @@ export const plugin: PluginFunction<CompatabilityPluginRawConfig> = async (schem
   );
 
   const reactApollo = ((additionalData || {}).allPlugins || []).find(p => Object.keys(p)[0] === REACT_APOLLO_PLUGIN_NAME);
-  const visitor = new CompatabilityPluginVisitor(config, schema, { reactApollo });
+  const visitor = new CompatabilityPluginVisitor(config, schema, {
+    reactApollo: reactApollo
+      ? {
+          ...(config || {}),
+          ...(reactApollo[REACT_APOLLO_PLUGIN_NAME] as object),
+        }
+      : null,
+  });
 
   const visitorResult = visit(allAst, {
     leave: visitor as any,

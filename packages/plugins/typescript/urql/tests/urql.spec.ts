@@ -1,11 +1,10 @@
-import '@graphql-codegen/testing';
+import { validateTs } from '@graphql-codegen/testing';
 import { plugin } from '../src/index';
 import { parse, GraphQLSchema, buildClientSchema, buildASTSchema } from 'graphql';
 import gql from 'graphql-tag';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { plugin as tsPlugin } from '@graphql-codegen/typescript/src';
 import { plugin as tsDocumentsPlugin } from '../../operations/src/index';
-import { validateTs } from '@graphql-codegen/typescript/tests/validate';
 import { readFileSync } from 'fs';
 
 describe('urql', () => {
@@ -350,7 +349,7 @@ query MyFeed {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(`
-      export const TestComponent = (props: Omit<Urql.QueryProps,  'query'> & { variables?: TestQueryVariables }) => 
+      export const TestComponent = (props: Omit<Urql.QueryProps<TestQuery, TestQueryVariables>,  'query'> & { variables?: TestQueryVariables }) =>
       (
           <Urql.Query {...props} query={TestDocument} />
       );
@@ -399,7 +398,7 @@ query MyFeed {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(`
-      export const TestComponent = (props: Omit<Urql.QueryProps, 'query'> & { variables: TestQueryVariables }) => (
+      export const TestComponent = (props: Omit<Urql.QueryProps<TestQuery, TestQueryVariables>, 'query'> & { variables: TestQueryVariables }) => (
         <Urql.Query {...props} query={TestDocument} />
       );`);
       await validateTypeScript(content, schema, docs, {});
@@ -431,7 +430,7 @@ query MyFeed {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(`
-      export const TestComponent = (props: Omit<Urql.MutationProps, 'query'> & { variables?: TestMutationVariables }) => (
+      export const TestComponent = (props: Omit<Urql.MutationProps<TestMutation, TestMutationVariables>, 'query'> & { variables?: TestMutationVariables }) => (
         <Urql.Mutation {...props} query={TestDocument} />
       );`);
       await validateTypeScript(content, schema, docs, {});
@@ -449,6 +448,35 @@ query MyFeed {
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).not.toContain(`export class ITestComponent`);
+    });
+
+    it('should add three generics if operation type is subscription', async () => {
+      const documents = parse(/* GraphQL */ `
+        subscription ListenToComments($name: String) {
+          commentAdded(repoFullName: $name) {
+            id
+          }
+        }
+      `);
+
+      const docs = [{ filePath: '', content: documents }];
+
+      const content = (await plugin(
+        schema,
+        docs,
+        {
+          withComponent: true,
+        },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.content).toBeSimilarStringTo(`
+      export const ListenToCommentsComponent = (props: Omit<Urql.SubscriptionProps<ListenToCommentsSubscription, ListenToCommentsSubscription, ListenToCommentsSubscriptionVariables>, 'query'> & { variables?: ListenToCommentsSubscriptionVariables }) => (
+        <Urql.Subscription {...props} query={ListenToCommentsDocument} />
+      );`);
+      await validateTypeScript(content, schema, docs, {});
     });
   });
 
@@ -493,7 +521,7 @@ export function useFeedQuery(options: Omit<Urql.UseQueryArgs<FeedQueryVariables>
 
       expect(content.content).toBeSimilarStringTo(`
 export function useSubmitRepositoryMutation() {
-  return Urql.useMutation<SubmitRepositoryMutation>(SubmitRepositoryDocument);
+  return Urql.useMutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(SubmitRepositoryDocument);
 };`);
       await validateTypeScript(content, schema, docs, {});
     });

@@ -1,6 +1,7 @@
-import { RawResolversConfig, OMIT_TYPE } from '@graphql-codegen/visitor-plugin-common';
-import { Types, PluginFunction } from '@graphql-codegen/plugin-helpers';
-import { isScalarType, parse, printSchema, visit, GraphQLSchema } from 'graphql';
+import { printSchemaWithDirectives } from 'graphql-toolkit';
+import { RawResolversConfig, addFederationToSchema, federationSpec } from '@graphql-codegen/visitor-plugin-common';
+import { Types, CodegenPlugin, PluginFunction } from '@graphql-codegen/plugin-helpers';
+import { isScalarType, parse, visit, GraphQLSchema, printSchema } from 'graphql';
 import { TypeScriptResolversVisitor } from './visitor';
 
 export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
@@ -79,7 +80,8 @@ export const plugin: PluginFunction<TypeScriptResolversPluginConfig> = (schema: 
 
   const indexSignature = config.useIndexSignature ? ['export type WithIndex<TObject> = TObject & Record<string, any>;', 'export type ResolversObject<TObject> = WithIndex<TObject>;'].join('\n') : '';
 
-  const visitor = new TypeScriptResolversVisitor(config, schema);
+  const transformedSchema = config.federation ? addFederationToSchema(schema) : schema;
+  const visitor = new TypeScriptResolversVisitor(config, transformedSchema);
 
   const stitchingResolverType = `
 export type StitchingResolver<TResult, TParent, TContext, TArgs> = {
@@ -105,6 +107,8 @@ export type StitchingResolver<TResult, TParent, TContext, TArgs> = {
   }
 
   const header = `${indexSignature}
+
+${visitor.getResolverTypeWrapperSignature()}
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
@@ -164,10 +168,11 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 ) => TResult | Promise<TResult>;
 `;
 
-  const printedSchema = printSchema(schema);
+  const printedSchema = config.federation ? printSchemaWithDirectives(transformedSchema) : printSchema(transformedSchema);
   const astNode = parse(printedSchema);
   const visitorResult = visit(astNode, { leave: visitor });
   const resolversTypeMapping = visitor.buildResolversTypes();
+  const resolversParentTypeMapping = visitor.buildResolversParentTypes();
   const { getRootResolver, getAllDirectiveResolvers, mappersImports, unusedMappers } = visitor;
 
   if (showUnusedMappers && unusedMappers.length) {
@@ -175,7 +180,13 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   }
 
   return {
-    prepend: [`import { ${imports.join(', ')} } from 'graphql';`, ...mappersImports, OMIT_TYPE],
-    content: [header, resolversTypeMapping, ...visitorResult.definitions.filter(d => typeof d === 'string'), getRootResolver(), getAllDirectiveResolvers()].join('\n'),
+    prepend: [`import { ${imports.join(', ')} } from 'graphql';`, ...mappersImports, ...visitor.globalDeclarations],
+    content: [header, resolversTypeMapping, resolversParentTypeMapping, ...visitorResult.definitions.filter(d => typeof d === 'string'), getRootResolver(), getAllDirectiveResolvers()].join('\n'),
   };
 };
+
+export const addToSchema: CodegenPlugin<{ federation?: boolean }>['addToSchema'] = config => {
+  return config.federation ? federationSpec : undefined;
+};
+
+export { TypeScriptResolversVisitor };

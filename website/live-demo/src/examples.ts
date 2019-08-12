@@ -1,3 +1,10 @@
+export interface Example {
+  name: string;
+  config: string;
+  schema: string;
+  documents: string;
+}
+
 const TS_SCHEMA = `scalar Date
 
 schema {
@@ -56,166 +63,151 @@ fragment UserFields on User {
   role
 }`;
 
-export const EXAMPLES = {
+export const EXAMPLES: { [name: string]: Example } = {
   typescript: {
     name: 'TypeScript',
-    state: {
-      config: `generates:
+    config: `generates:
   server-types.ts:
     - typescript`,
-      schema: TS_SCHEMA,
-      documents: '',
-    },
+    schema: TS_SCHEMA,
+    documents: '',
   },
   'typescript-operations': {
     name: 'TypeScript Operations',
-    state: {
-      config: `generates:
+    config: `generates:
   client-types.ts:
     - typescript
     - typescript-operations`,
-      schema: TS_SCHEMA,
-      documents: TS_QUERY,
-    },
+    schema: TS_SCHEMA,
+    documents: TS_QUERY,
+  },
+  'typescript-operations-no-pick': {
+    name: 'TypeScript Operations (without Pick)',
+    config: `generates:
+  client-types.ts:
+    config:
+      preResolveTypes: true
+    plugins:
+      - typescript
+      - typescript-operations`,
+    schema: TS_SCHEMA,
+    documents: TS_QUERY,
   },
   'typescript-operations-compatibility': {
     name: 'TypeScript Operations with 0.18 Compatibility',
-    state: {
-      config: `generates:
+    config: `generates:
   client-types.ts:
     - typescript
     - typescript-operations
     - typescript-compatibility`,
-      schema: TS_SCHEMA,
-      documents: TS_QUERY,
-    },
+    schema: TS_SCHEMA,
+    documents: TS_QUERY,
   },
   'react-apollo': {
     name: 'TypeScript React-Apollo Components',
-    state: {
-      config: `generates:
+    config: `generates:
   components.tsx:
     plugins:
       - typescript
       - typescript-operations
       - typescript-react-apollo`,
-      schema: TS_SCHEMA,
-      documents: TS_QUERY,
-    },
+    schema: TS_SCHEMA,
+    documents: TS_QUERY,
   },
   'apollo-angular': {
     name: 'TypeScript Apollo-Angular Components',
-    state: {
-      config: `generates:
+    config: `generates:
   components.ts:
     plugins:
       - typescript
       - typescript-operations
       - typescript-apollo-angular`,
-      schema: TS_SCHEMA,
-      documents: TS_QUERY,
-    },
+    schema: TS_SCHEMA,
+    documents: TS_QUERY,
   },
   'typescript-urql': {
     name: 'TypeScript urql',
-    state: {
-      config: `generates:
+    config: `generates:
   components.tsx:
     plugins:
       - typescript
       - typescript-operations
       - typescript-urql`,
-      schema: TS_SCHEMA,
-      documents: TS_QUERY,
-    },
+    schema: TS_SCHEMA,
+    documents: TS_QUERY,
   },
   'stencil-apollo': {
     name: 'TypeScript Stencil-Apollo Components',
-    state: {
-      config: `generates:
+    config: `generates:
   components.tsx:
     plugins:
       - typescript
       - typescript-operations
       - typescript-stencil-apollo`,
-      schema: TS_SCHEMA,
-      documents: TS_QUERY,
-    },
+    schema: TS_SCHEMA,
+    documents: TS_QUERY,
   },
   'typescript-server-resolvers': {
     name: 'TypeScript Resolvers Signature',
-    state: {
-      config: `generates:
+    config: `generates:
   resolvers.ts:
     plugins:
       - typescript
       - typescript-resolvers`,
-      schema: TS_SCHEMA,
-      documents: TS_QUERY,
-    },
+    schema: TS_SCHEMA,
+    documents: TS_QUERY,
   },
   java: {
     name: 'Java (Enum & Input)',
-    state: {
-      config: `generates:
+    config: `generates:
   src/main/java/my/app/generated/Types.java:
     - java`,
-      schema: TS_SCHEMA,
-      documents: '',
-    },
+    schema: TS_SCHEMA,
+    documents: '',
   },
   'java-resolvers': {
     name: 'Java Resolvers Signature',
-    state: {
-      config: `generates:
+    config: `generates:
   src/main/java/my/app/generated/Resolvers.java:
     - java-resolvers`,
-      schema: TS_SCHEMA,
-      documents: '',
-    },
+    schema: TS_SCHEMA,
+    documents: '',
   },
   flow: {
     name: 'Flow',
-    state: {
-      config: `generates:
+    config: `generates:
   types.flow.js:
     - flow
     `,
-      schema: TS_SCHEMA,
-      documents: '',
-    },
+    schema: TS_SCHEMA,
+    documents: '',
   },
   flowResolvers: {
     name: 'Flow Resolvers Signature',
-    state: {
-      config: `generates:
+    config: `generates:
   resolvers.flow.js:
     - flow
     - flow-resolvers
     `,
-      schema: TS_SCHEMA,
-      documents: '',
-    },
+    schema: TS_SCHEMA,
+    documents: '',
   },
   flowDocuments: {
     name: 'Flow Operations',
-    state: {
-      config: `generates:
+    config: `generates:
   types.flow.js:
     - flow
     - flow-operations
     `,
-      schema: TS_SCHEMA,
-      documents: TS_QUERY,
-    },
+    schema: TS_SCHEMA,
+    documents: TS_QUERY,
   },
   'typescript-mongo': {
     name: 'TypeScript MongoDB',
-    state: {
-      config: `generates:
+    config: `generates:
   models.ts:
     - typescript-mongodb`,
-      schema: `type User @entity {
+    schema: `type User @entity {
   id: ID! @id
   username: String! @column
   email: String! @column @map(
@@ -246,37 +238,30 @@ type ChatMessage @entity {
   author: User! @link
 }      
 `,
-      documents: '',
-    },
+    documents: '',
   },
   introspection: {
     name: 'Introspection JSON',
-    state: {
-      config: `generates:
+    config: `generates:
   schema.json:
     - introspection`,
-      schema: TS_SCHEMA,
-      documents: '',
-    },
+    schema: TS_SCHEMA,
+    documents: '',
   },
   'schema-ast': {
     name: 'Schema AST',
-    state: {
-      config: `generates:
+    config: `generates:
   schema.graphql:
     - schema-ast`,
-      schema: TS_SCHEMA,
-      documents: '',
-    },
+    schema: TS_SCHEMA,
+    documents: '',
   },
   'fragment-matcher': {
     name: 'Fragment Matcher',
-    state: {
-      config: `generates:
+    config: `generates:
   fragment-matcher.json:
     - fragment-matcher`,
-      schema: TS_SCHEMA,
-      documents: '',
-    },
+    schema: TS_SCHEMA,
+    documents: '',
   },
 };

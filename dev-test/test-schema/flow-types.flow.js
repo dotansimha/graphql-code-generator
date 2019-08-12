@@ -74,8 +74,19 @@ export type DirectiveResolverFn<Result = {}, Parent = {}, Args = {}, Context = {
   info: GraphQLResolveInfo
 ) => Result | Promise<Result>;
 
+export type ResolverTypeWrapper<T> = Promise<T> | T;
+
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  Query: ResolverTypeWrapper<{}>,
+  User: ResolverTypeWrapper<User>,
+  Int: ResolverTypeWrapper<$ElementType<Scalars, 'Int'>>,
+  String: ResolverTypeWrapper<$ElementType<Scalars, 'String'>>,
+  Boolean: ResolverTypeWrapper<$ElementType<Scalars, 'Boolean'>>,
+};
+
+/** Mapping between all available schema types and the resolvers parents */
+export type ResolversParentTypes = {
   Query: {},
   User: User,
   Int: $ElementType<Scalars, 'Int'>,
@@ -83,12 +94,12 @@ export type ResolversTypes = {
   Boolean: $ElementType<Scalars, 'Boolean'>,
 };
 
-export type QueryResolvers<ContextType = any, ParentType = $ElementType<ResolversTypes, 'Query'>> = {
+export type QueryResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'Query'>> = {
   allUsers?: Resolver<Array<?$ElementType<ResolversTypes, 'User'>>, ParentType, ContextType>,
   userById?: Resolver<?$ElementType<ResolversTypes, 'User'>, ParentType, ContextType, QueryUserByIdArgs>,
 };
 
-export type UserResolvers<ContextType = any, ParentType = $ElementType<ResolversTypes, 'User'>> = {
+export type UserResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'User'>> = {
   id?: Resolver<$ElementType<ResolversTypes, 'Int'>, ParentType, ContextType>,
   name?: Resolver<$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
   email?: Resolver<$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,

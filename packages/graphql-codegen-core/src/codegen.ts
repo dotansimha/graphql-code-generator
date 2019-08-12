@@ -1,5 +1,5 @@
 import { Types, isComplexPluginOutput } from '@graphql-codegen/plugin-helpers';
-import { DocumentNode, visit } from 'graphql';
+import { visit, buildASTSchema, Kind } from 'graphql';
 import { mergeSchemas } from './merge-schemas';
 import { executePlugin } from './execute-plugin';
 import { DetailedError } from './errors';
@@ -7,14 +7,60 @@ import { DetailedError } from './errors';
 export async function codegen(options: Types.GenerateOptions): Promise<string> {
   let output = '';
 
-  validateDocuments(options.schema, options.documents);
+  const documents = options.documents || [];
+
+  if (documents.length > 0 && !options.skipDuplicateDocumentsValidation) {
+    validateDocuments(documents);
+  }
 
   const pluginPackages = Object.keys(options.pluginMap).map(key => options.pluginMap[key]);
 
   // merged schema with parts added by plugins
-  const schema = pluginPackages.reduce((schema, plugin) => {
-    return !plugin.addToSchema ? schema : mergeSchemas([schema, plugin.addToSchema]);
+  let schemaChanged = false;
+  let schema = pluginPackages.reduce((schema, plugin) => {
+    const addToSchema = typeof plugin.addToSchema === 'function' ? plugin.addToSchema(options.config) : plugin.addToSchema;
+
+    if (!addToSchema) {
+      return schema;
+    }
+
+    schemaChanged = true;
+
+    return mergeSchemas([schema, addToSchema]);
   }, options.schema);
+
+  if (schemaChanged) {
+    // It's for federation, to support extended types without their definitions
+    if (options.config.federation) {
+      schema = {
+        ...schema,
+        definitions: schema.definitions.map(def => {
+          if (def.kind !== Kind.OBJECT_TYPE_EXTENSION) {
+            return def;
+          }
+
+          const isDefined = schema.definitions.some(d => d.kind === Kind.OBJECT_TYPE_DEFINITION && d.name.value === def.name.value);
+
+          if (isDefined) {
+            return def;
+          }
+
+          return {
+            ...def,
+            kind: Kind.OBJECT_TYPE_DEFINITION,
+          };
+        }),
+      };
+    }
+    options.schemaAst = buildASTSchema(
+      schema,
+      options.config.federation
+        ? {
+            assumeValidSDL: true,
+          }
+        : undefined
+    );
+  }
 
   const prepend: Set<string> = new Set<string>();
   const append: Set<string> = new Set<string>();
@@ -35,6 +81,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
                 ...(pluginConfig as object),
               },
         schema,
+        schemaAst: options.schemaAst,
         documents: options.documents,
         outputFilename: options.filename,
         allPlugins: options.plugins,
@@ -65,7 +112,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
 }
 
 function resolveCompareValue(a: string) {
-  if (a.startsWith('/*') || a.startsWith('//')) {
+  if (a.startsWith('/*') || a.startsWith('//') || a.startsWith(' *') || a.startsWith(' */') || a.startsWith('*/')) {
     return 0;
   } else if (a.startsWith('import')) {
     return 1;
@@ -90,7 +137,7 @@ export function sortPrependValues(values: string[]): string[] {
   });
 }
 
-function validateDocuments(schema: DocumentNode, files: Types.DocumentFile[]) {
+function validateDocuments(files: Types.DocumentFile[]) {
   // duplicated names
   const operationMap: {
     [name: string]: string[];
@@ -137,7 +184,6 @@ function validateDocuments(schema: DocumentNode, files: Types.DocumentFile[]) {
       `Not all operations have an unique name: ${duplicated.join(', ')}`,
       `
         Not all operations have an unique name
-
         ${list}
       `
     );

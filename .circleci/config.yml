@@ -2,14 +2,14 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:12.2.0
+      - image: circleci/node:12.8.0
     steps:
       - checkout
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
           name: Install dependencies
-          command: yarn
+          command: yarn --pure-lockfile
       - run:
           name: Build
           command: yarn build

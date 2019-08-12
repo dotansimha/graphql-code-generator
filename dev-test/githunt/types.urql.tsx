@@ -1,8 +1,9 @@
 // tslint:disable
 import gql from 'graphql-tag';
-import 'stencil-apollo';
-import { Component, Prop } from '@stencil/core';
+import * as React from 'react';
+import * as Urql from 'urql';
 export type Maybe<T> = T | null;
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string,
@@ -116,9 +117,10 @@ export type QueryEntryArgs = {
   repoFullName: Scalars['String']
 };
 
-/** A repository object from the GitHub API. This uses the exact field names returned by the
+/** 
+ * A repository object from the GitHub API. This uses the exact field names returned by the
  * GitHub API for simplicity, even though the convention for GraphQL is usually to camel case.
- */
+ **/
 export type Repository = {
   __typename?: 'Repository',
   /** Just the name of the repository, e.g. GitHunt-API */
@@ -231,7 +233,6 @@ export type VoteMutationVariables = {
 
 
 export type VoteMutation = ({ __typename?: 'Mutation' } & { vote: Maybe<({ __typename?: 'Entry' } & Pick<Entry, 'score' | 'id'> & { vote: ({ __typename?: 'Vote' } & Pick<Vote, 'vote_value'>) })> });
-
 export const CommentsPageCommentFragmentDoc = gql`
     fragment CommentsPageComment on Comment {
   id
@@ -295,16 +296,10 @@ export const OnCommentAddedDocument = gql`
 }
     `;
 
-@Component({
-    tag: 'apollo-on-comment-added'
-})
-export class OnCommentAddedComponent {
-    @Prop() renderer: StencilApollo.SubscriptionRenderer<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>;
-    render() {
-        return <apollo-subscription subscription={ OnCommentAddedDocument } renderer={ this.renderer } />;
-    }
-}
-      
+export const OnCommentAddedComponent = (props: Omit<Urql.SubscriptionProps<OnCommentAddedSubscription, OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>, 'query'> & { variables?: OnCommentAddedSubscriptionVariables }) => (
+  <Urql.Subscription {...props} query={OnCommentAddedDocument} />
+);
+
 export const CommentDocument = gql`
     query Comment($repoFullName: String!, $limit: Int, $offset: Int) {
   currentUser {
@@ -335,16 +330,10 @@ export const CommentDocument = gql`
 }
     ${CommentsPageCommentFragmentDoc}`;
 
-@Component({
-    tag: 'apollo-comment'
-})
-export class CommentComponent {
-    @Prop() renderer: StencilApollo.QueryRenderer<CommentQuery, CommentQueryVariables>;
-    render() {
-        return <apollo-query query={ CommentDocument } renderer={ this.renderer } />;
-    }
-}
-      
+export const CommentComponent = (props: Omit<Urql.QueryProps<CommentQuery, CommentQueryVariables>, 'query'> & { variables: CommentQueryVariables }) => (
+  <Urql.Query {...props} query={CommentDocument} />
+);
+
 export const CurrentUserForProfileDocument = gql`
     query CurrentUserForProfile {
   currentUser {
@@ -354,16 +343,10 @@ export const CurrentUserForProfileDocument = gql`
 }
     `;
 
-@Component({
-    tag: 'apollo-current-user-for-profile'
-})
-export class CurrentUserForProfileComponent {
-    @Prop() renderer: StencilApollo.QueryRenderer<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>;
-    render() {
-        return <apollo-query query={ CurrentUserForProfileDocument } renderer={ this.renderer } />;
-    }
-}
-      
+export const CurrentUserForProfileComponent = (props: Omit<Urql.QueryProps<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>, 'query'> & { variables?: CurrentUserForProfileQueryVariables }) => (
+  <Urql.Query {...props} query={CurrentUserForProfileDocument} />
+);
+
 export const FeedDocument = gql`
     query Feed($type: FeedType!, $offset: Int, $limit: Int) {
   currentUser {
@@ -375,16 +358,10 @@ export const FeedDocument = gql`
 }
     ${FeedEntryFragmentDoc}`;
 
-@Component({
-    tag: 'apollo-feed'
-})
-export class FeedComponent {
-    @Prop() renderer: StencilApollo.QueryRenderer<FeedQuery, FeedQueryVariables>;
-    render() {
-        return <apollo-query query={ FeedDocument } renderer={ this.renderer } />;
-    }
-}
-      
+export const FeedComponent = (props: Omit<Urql.QueryProps<FeedQuery, FeedQueryVariables>, 'query'> & { variables: FeedQueryVariables }) => (
+  <Urql.Query {...props} query={FeedDocument} />
+);
+
 export const SubmitRepositoryDocument = gql`
     mutation submitRepository($repoFullName: String!) {
   submitRepository(repoFullName: $repoFullName) {
@@ -393,16 +370,10 @@ export const SubmitRepositoryDocument = gql`
 }
     `;
 
-@Component({
-    tag: 'apollo-submit-repository'
-})
-export class SubmitRepositoryComponent {
-    @Prop() renderer: StencilApollo.MutationRenderer<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>;
-    render() {
-        return <apollo-mutation mutation={ SubmitRepositoryDocument } renderer={ this.renderer } />;
-    }
-}
-      
+export const SubmitRepositoryComponent = (props: Omit<Urql.MutationProps<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>, 'query'> & { variables?: SubmitRepositoryMutationVariables }) => (
+  <Urql.Mutation {...props} query={SubmitRepositoryDocument} />
+);
+
 export const SubmitCommentDocument = gql`
     mutation submitComment($repoFullName: String!, $commentContent: String!) {
   submitComment(repoFullName: $repoFullName, commentContent: $commentContent) {
@@ -411,16 +382,10 @@ export const SubmitCommentDocument = gql`
 }
     ${CommentsPageCommentFragmentDoc}`;
 
-@Component({
-    tag: 'apollo-submit-comment'
-})
-export class SubmitCommentComponent {
-    @Prop() renderer: StencilApollo.MutationRenderer<SubmitCommentMutation, SubmitCommentMutationVariables>;
-    render() {
-        return <apollo-mutation mutation={ SubmitCommentDocument } renderer={ this.renderer } />;
-    }
-}
-      
+export const SubmitCommentComponent = (props: Omit<Urql.MutationProps<SubmitCommentMutation, SubmitCommentMutationVariables>, 'query'> & { variables?: SubmitCommentMutationVariables }) => (
+  <Urql.Mutation {...props} query={SubmitCommentDocument} />
+);
+
 export const VoteDocument = gql`
     mutation vote($repoFullName: String!, $type: VoteType!) {
   vote(repoFullName: $repoFullName, type: $type) {
@@ -433,13 +398,6 @@ export const VoteDocument = gql`
 }
     `;
 
-@Component({
-    tag: 'apollo-vote'
-})
-export class VoteComponent {
-    @Prop() renderer: StencilApollo.MutationRenderer<VoteMutation, VoteMutationVariables>;
-    render() {
-        return <apollo-mutation mutation={ VoteDocument } renderer={ this.renderer } />;
-    }
-}
-      
+export const VoteComponent = (props: Omit<Urql.MutationProps<VoteMutation, VoteMutationVariables>, 'query'> & { variables?: VoteMutationVariables }) => (
+  <Urql.Mutation {...props} query={VoteDocument} />
+);

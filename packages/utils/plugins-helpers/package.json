@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/plugin-helpers",
-  "version": "1.2.0",
+  "version": "1.5.0",
   "description": "GraphQL Code Generator common utils and types",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
@@ -14,10 +14,10 @@
     "change-case": "3.1.0",
     "common-tags": "1.8.0",
     "import-from": "3.0.0",
-    "tslib": "1.9.3"
+    "tslib": "1.10.0"
   },
   "devDependencies": {
-    "typescript": "3.4.5"
+    "typescript": "3.5.3"
   },
   "sideEffects": false,
   "main": "dist/commonjs/index.js",

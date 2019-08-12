@@ -3,11 +3,11 @@ id: typescript-stencil-apollo
 title: TypeScript Stencil Apollo
 ---
 
-This plugin generates Stencil Apollo functional components typings. It extends the basic TypeScript template [`@graphql-codegen/typescript-common`](typescript-typings) and thus shares a similar configuration.
+This plugin generates Stencil Apollo functional components typings. It extends the basic TypeScript template [`@graphql-codegen/typescript`](typescript) and thus shares a similar configuration.
 
 ## Installation
 
-    $ yarn add -D @graphql-codegen/typescript-stencil-apollo
+    $ yarn add -D @graphql-codegen/typescript-stencil-apollo @types/graphql
 
 ## Usage
 
@@ -32,7 +32,9 @@ query Test {
 We can use the generated code like this:
 
 ```tsx
-  <Test.Component variables={...} onReady={...} />
+  <TestComponent variables={...}>
+    ...
+  </TestComponent>
 ```
 
 ## Configuration

@@ -9,6 +9,7 @@ import { GraphQLError, DocumentNode } from 'graphql';
 import { getPluginByName } from './plugins';
 import { getPresetByName } from './presets';
 import { debugLog } from './utils/debugging';
+import { tryToBuildSchema } from './utils/try-to-build-schema';
 
 export const defaultLoader = (mod: string) => import(mod);
 
@@ -16,7 +17,7 @@ export async function executeCodegen(config: Types.Config): Promise<Types.FileOu
   function wrapTask(task: () => void | Promise<void>, source?: string) {
     return async () => {
       try {
-        await task();
+        await Promise.resolve(task());
       } catch (error) {
         if (source && !(error instanceof GraphQLError)) {
           error.source = source;
@@ -181,13 +182,10 @@ export async function executeCodegen(config: Types.Config): Promise<Types.FileOu
                     task: wrapTask(async () => {
                       debugLog(`[CLI] Loading Documents`);
                       const allDocuments = [...rootDocuments, ...outputSpecificDocuments];
+                      const documents = await loadDocuments(allDocuments, config);
 
-                      for (const docDef of allDocuments) {
-                        const documents = await loadDocuments(docDef, config);
-
-                        if (documents.length > 0) {
-                          outputDocuments.push(...documents);
-                        }
+                      if (documents.length > 0) {
+                        outputDocuments.push(...documents);
                       }
                     }, filename),
                   },
@@ -214,6 +212,7 @@ export async function executeCodegen(config: Types.Config): Promise<Types.FileOu
                       };
 
                       let outputs: Types.GenerateOptions[] = [];
+                      const builtSchema = tryToBuildSchema(outputSchema);
 
                       if (hasPreset) {
                         outputs = await preset.buildGeneratesSection({
@@ -221,6 +220,7 @@ export async function executeCodegen(config: Types.Config): Promise<Types.FileOu
                           presetConfig: outputConfig.presetConfig || {},
                           plugins: normalizedPluginsArray,
                           schema: outputSchema,
+                          schemaAst: builtSchema,
                           documents: outputDocuments,
                           config: mergedConfig,
                           pluginMap,
@@ -231,6 +231,7 @@ export async function executeCodegen(config: Types.Config): Promise<Types.FileOu
                             filename,
                             plugins: normalizedPluginsArray,
                             schema: outputSchema,
+                            schemaAst: builtSchema,
                             documents: outputDocuments,
                             config: mergedConfig,
                             pluginMap,
@@ -238,13 +239,15 @@ export async function executeCodegen(config: Types.Config): Promise<Types.FileOu
                         ];
                       }
 
-                      for (const outputArgs of outputs) {
+                      const process = async (outputArgs: Types.GenerateOptions) => {
                         const output = await codegen(outputArgs);
                         result.push({
                           filename: outputArgs.filename,
-                          content: await prettify(filename, output),
+                          content: config.prettify === undefined || config.prettify ? await prettify(outputArgs.filename, output) : output,
                         });
-                      }
+                      };
+
+                      await Promise.all(outputs.map(process));
                     }, filename),
                   },
                 ],

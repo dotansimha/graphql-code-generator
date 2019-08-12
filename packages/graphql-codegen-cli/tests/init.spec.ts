@@ -265,7 +265,7 @@ describe('init', () => {
     const logSpy = jest.spyOn(console, 'log').mockImplementation();
     const defaults = {
       schema: 'http://localhost:4000',
-      documents: '**/*.graphql',
+      documents: 'src/**/*.graphql',
       output: 'src/generated/graphql.ts',
       config: 'codegen.yml',
     };
@@ -437,10 +437,11 @@ describe('init', () => {
       const { available, selected } = getPlugins([Tags.node]);
 
       // available
-      expect(available).toHaveLength(5);
+      expect(available).toHaveLength(6);
       expect(available).toContainEqual('typescript');
       expect(available).toContainEqual('typescript-resolvers');
       expect(available).toContainEqual('typescript-mongodb');
+      expect(available).toContainEqual('typescript-document-nodes');
       expect(available).toContainEqual('flow');
       expect(available).toContainEqual('flow-resolvers');
       // selected
@@ -451,10 +452,11 @@ describe('init', () => {
       const { selected, available } = getPlugins([Tags.node, Tags.typescript]);
 
       // available
-      expect(available).toHaveLength(3);
+      expect(available).toHaveLength(4);
       expect(available).toContainEqual('typescript');
       expect(available).toContainEqual('typescript-resolvers');
       expect(available).toContainEqual('typescript-mongodb');
+      expect(available).toContainEqual('typescript-document-nodes');
       // selected
       expect(selected).toHaveLength(2);
       expect(selected).toContainEqual('typescript');
@@ -478,11 +480,12 @@ describe('init', () => {
       const { selected, available } = getPlugins([Tags.angular]);
 
       // available
-      expect(available).toHaveLength(5);
+      expect(available).toHaveLength(6);
       expect(available).toContainEqual('typescript');
       expect(available).toContainEqual('typescript-operations');
       expect(available).toContainEqual('typescript-apollo-angular');
       expect(available).toContainEqual('typescript-graphql-files-modules');
+      expect(available).toContainEqual('typescript-document-nodes');
       expect(available).toContainEqual('fragment-matcher');
       // selected
       expect(selected).toHaveLength(3);
@@ -495,7 +498,7 @@ describe('init', () => {
       const { selected, available } = getPlugins([Tags.react]);
 
       // available
-      expect(available).toHaveLength(7);
+      expect(available).toHaveLength(8);
       expect(available).toContainEqual('typescript');
       expect(available).toContainEqual('typescript-operations');
       expect(available).toContainEqual('typescript-react-apollo');
@@ -514,11 +517,12 @@ describe('init', () => {
       const { selected, available } = getPlugins([Tags.react, Tags.typescript]);
 
       // available
-      expect(available).toHaveLength(5);
+      expect(available).toHaveLength(6);
       expect(available).toContainEqual('typescript');
       expect(available).toContainEqual('typescript-operations');
       expect(available).toContainEqual('typescript-react-apollo');
       expect(available).toContainEqual('typescript-graphql-files-modules');
+      expect(available).toContainEqual('typescript-document-nodes');
       expect(available).toContainEqual('fragment-matcher');
       // selected
       expect(selected).toHaveLength(3);
@@ -545,11 +549,12 @@ describe('init', () => {
       const { selected, available } = getPlugins([Tags.stencil]);
 
       // available
-      expect(available).toHaveLength(5);
+      expect(available).toHaveLength(6);
       expect(available).toContainEqual('typescript');
       expect(available).toContainEqual('typescript-operations');
       expect(available).toContainEqual('typescript-stencil-apollo');
       expect(available).toContainEqual('typescript-graphql-files-modules');
+      expect(available).toContainEqual('typescript-document-nodes');
       expect(available).toContainEqual('fragment-matcher');
       // selected
       expect(selected).toHaveLength(3);
@@ -562,10 +567,11 @@ describe('init', () => {
       const { selected, available } = getPlugins([Tags.browser]);
 
       // available
-      expect(available).toHaveLength(6);
+      expect(available).toHaveLength(7);
       expect(available).toContainEqual('typescript');
       expect(available).toContainEqual('typescript-operations');
       expect(available).toContainEqual('typescript-graphql-files-modules');
+      expect(available).toContainEqual('typescript-document-nodes');
       expect(available).toContainEqual('flow');
       expect(available).toContainEqual('flow-operations');
       expect(available).toContainEqual('fragment-matcher');

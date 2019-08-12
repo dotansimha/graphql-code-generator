@@ -26,7 +26,7 @@ function toBeSimilarStringTo(received: string, argument: string) {
  ${received}
  not to be similar (strip-indent) string to
  ${argument}`,
-      pass: true
+      pass: true,
     };
   } else {
     return {
@@ -35,11 +35,13 @@ function toBeSimilarStringTo(received: string, argument: string) {
  ${received}
  to be similar (strip-indent) string to
  ${argument}`,
-      pass: false
+      pass: false,
     };
   }
 }
 
 expect.extend({
-  toBeSimilarStringTo
+  toBeSimilarStringTo,
 });
+
+export * from './typescript';

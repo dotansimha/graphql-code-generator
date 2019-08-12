@@ -42,6 +42,25 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    * ```
    */
   immutableTypes?: boolean;
+  /**
+   * @name noExport
+   * @type boolean
+   * @description Set the to `true` in order to generate output without `export` modifier.
+   * This is useful if you are generating `.d.ts` file and want it to be globally available.
+   * @default false
+   *
+   * @example Disable all export from a file
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *  config:
+   *    noExport: true
+   * ```
+   */
+  noExport?: boolean;
+  globalNamespace?: boolean;
 }
 
 export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: TypeScriptDocumentsPluginConfig) => {
@@ -60,5 +79,17 @@ export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig> = (schema: 
     leave: new TypeScriptDocumentsVisitor(schema, config, allFragments),
   });
 
-  return visitorResult.definitions.join('\n');
+  const result = visitorResult.definitions.join('\n');
+
+  if (config.globalNamespace) {
+    return `
+    declare global { 
+      ${result} 
+    }
+          `;
+  } else {
+    return result;
+  }
 };
+
+export { TypeScriptDocumentsVisitor };

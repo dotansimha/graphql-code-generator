@@ -1,7 +1,6 @@
 // tslint:disable
 import { GraphQLResolveInfo } from 'graphql';
 export type Maybe<T> = T | null;
-export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string,
@@ -29,6 +28,8 @@ export type User = {
   email: Scalars['String'],
 };
 
+
+export type ResolverTypeWrapper<T> = Promise<T> | T;
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
@@ -88,6 +89,15 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  Query: ResolverTypeWrapper<{}>,
+  User: ResolverTypeWrapper<User>,
+  Int: ResolverTypeWrapper<Scalars['Int']>,
+  String: ResolverTypeWrapper<Scalars['String']>,
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
+};
+
+/** Mapping between all available schema types and the resolvers parents */
+export type ResolversParentTypes = {
   Query: {},
   User: User,
   Int: Scalars['Int'],
@@ -95,12 +105,12 @@ export type ResolversTypes = {
   Boolean: Scalars['Boolean'],
 };
 
-export type QueryResolvers<ContextType = any, ParentType = ResolversTypes['Query']> = {
+export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   allUsers?: Resolver<Array<Maybe<ResolversTypes['User']>>, ParentType, ContextType>,
   userById?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, QueryUserByIdArgs>,
 };
 
-export type UserResolvers<ContextType = any, ParentType = ResolversTypes['User']> = {
+export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>,
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>,

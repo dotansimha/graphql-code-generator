@@ -1,5 +1,6 @@
-import { RawResolversConfig } from '@graphql-codegen/visitor-plugin-common';
-import { Types, PluginFunction } from '@graphql-codegen/plugin-helpers';
+import { printSchemaWithDirectives } from 'graphql-toolkit';
+import { RawResolversConfig, addFederationToSchema, federationSpec } from '@graphql-codegen/visitor-plugin-common';
+import { Types, PluginFunction, CodegenPlugin } from '@graphql-codegen/plugin-helpers';
 import { isScalarType, parse, printSchema, visit, GraphQLSchema } from 'graphql';
 import { FlowResolversVisitor } from './visitor';
 
@@ -17,6 +18,12 @@ export const plugin: PluginFunction<FlowResolversPluginConfig> = (schema: GraphQ
   }
 
   const gqlImports = `import { ${imports.join(', ')} } from 'graphql';`;
+
+  const transformedSchema = config.federation ? addFederationToSchema(schema) : schema;
+
+  const printedSchema = config.federation ? printSchemaWithDirectives(transformedSchema) : printSchema(transformedSchema);
+  const astNode = parse(printedSchema);
+  const visitor = new FlowResolversVisitor(config, transformedSchema);
 
   const header = `export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
   parent: Parent,
@@ -72,13 +79,13 @@ export type DirectiveResolverFn<Result = {}, Parent = {}, Args = {}, Context = {
   context: Context,
   info: GraphQLResolveInfo
 ) => Result | Promise<Result>;
+
+${visitor.getResolverTypeWrapperSignature()}
 `;
 
-  const printedSchema = printSchema(schema);
-  const astNode = parse(printedSchema);
-  const visitor = new FlowResolversVisitor(config, schema);
   const visitorResult = visit(astNode, { leave: visitor });
   const resolversTypeMapping = visitor.buildResolversTypes();
+  const resolversParentTypeMapping = visitor.buildResolversParentTypes();
   const { getRootResolver, getAllDirectiveResolvers, mappersImports, unusedMappers } = visitor;
 
   if (showUnusedMappers && unusedMappers.length) {
@@ -86,7 +93,11 @@ export type DirectiveResolverFn<Result = {}, Parent = {}, Args = {}, Context = {
   }
 
   return {
-    prepend: [gqlImports, ...mappersImports],
-    content: [header, resolversTypeMapping, ...visitorResult.definitions.filter(d => typeof d === 'string'), getRootResolver(), getAllDirectiveResolvers()].join('\n'),
+    prepend: [gqlImports, ...mappersImports, ...visitor.globalDeclarations],
+    content: [header, resolversTypeMapping, resolversParentTypeMapping, ...visitorResult.definitions.filter(d => typeof d === 'string'), getRootResolver(), getAllDirectiveResolvers()].join('\n'),
   };
+};
+
+export const addToSchema: CodegenPlugin<{ federation?: boolean }>['addToSchema'] = config => {
+  return config.federation ? federationSpec : undefined;
 };

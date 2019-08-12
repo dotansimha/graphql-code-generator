@@ -4,6 +4,7 @@
 [![CircleCI](https://circleci.com/gh/dotansimha/graphql-code-generator/tree/master.svg?style=svg)](https://circleci.com/gh/dotansimha/graphql-code-generator/tree/master)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 [![renovate-app badge][renovate-badge]][renovate-app]
+[![Netlify Status](https://api.netlify.com/api/v1/badges/beb4a802-e080-469d-82d6-e83a3d108a40/deploy-status)](https://app.netlify.com/sites/graphql-code-generator/deploys)
 
 [renovate-badge]: https://img.shields.io/badge/renovate-app-blue.svg
 [renovate-app]: https://renovateapp.com/
@@ -79,26 +80,40 @@ schema {
 And generate the following TypeScript typings:
 
 ```ts
-interface Query {
-  posts?: Post[];
-}
+export type Maybe<T> = T | null;
 
-interface Post {
-  id: number;
-  title: string;
-  author: Author;
-}
+/** All built-in and custom scalars, mapped to their actual values */
+export type Scalars = {
+  ID: string,
+  String: string,
+  Boolean: boolean,
+  Int: number,
+  Float: number,
+};
 
-interface Author {
-  id: number;
-  firstName: string;
-  lastName: string;
-  posts?: Post[];
-}
+export type Author = {
+  __typename?: 'Author',
+  id: Scalars['Int'],
+  firstName: Scalars['String'],
+  lastName: Scalars['String'],
+  posts?: Maybe<Array<Maybe<Post>>>,
+};
 
-interface PostsAuthorArgs {
-  findTitle?: string;
-}
+export type AuthorPostsArgs = {
+  findTitle?: Maybe<Scalars['String']>
+};
+
+export type Post = {
+  __typename?: 'Post',
+  id: Scalars['Int'],
+  title: Scalars['String'],
+  author: Author,
+};
+
+export type Query = {
+  __typename?: 'Query',
+  posts?: Maybe<Array<Maybe<Post>>>,
+};
 ```
 
 ### Links

@@ -8,6 +8,7 @@ import { Command } from 'commander';
 export type YamlCliFlags = {
   config: string;
   watch: boolean;
+  require: string[];
   overwrite: boolean;
 };
 
@@ -55,13 +56,20 @@ function loadAndParseConfig(filepath: string): Types.Config | never {
   }
 }
 
-export function createConfig(argv = process.argv): Types.Config | never {
+function collect<T = string>(val: T, memo: T[]): T[] {
+  memo.push(val);
+
+  return memo;
+}
+
+export async function createConfig(argv = process.argv): Promise<Types.Config | never> {
   const cliFlags = (new Command()
     .usage('graphql-codegen [options]')
     .allowUnknownOption(true)
     .option('-c, --config <path>', 'Path to GraphQL codegen YAML config file, defaults to "codegen.yml" on the current directory')
     .option('-w, --watch', 'Watch for changes and execute generation automatically')
     .option('-s, --silent', 'A flag to not print errors in case they occur')
+    .option('-r, --require [value]', 'Loads specific require.extensions before running the codegen and reading the configuration', collect, [])
     .option('-o, --overwrite', 'Overwrites existing files')
     .parse(argv) as any) as Command & YamlCliFlags;
 
@@ -81,6 +89,12 @@ export function createConfig(argv = process.argv): Types.Config | never {
         Please make sure that you have a configuration file under the current directory! 
       `
     );
+  }
+
+  if (cliFlags.require && cliFlags.require.length > 0) {
+    for (const mod of cliFlags.require) {
+      await import(mod);
+    }
   }
 
   const parsedConfigFile = loadAndParseConfig(filepath);

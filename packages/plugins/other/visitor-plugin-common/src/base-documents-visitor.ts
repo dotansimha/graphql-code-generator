@@ -1,7 +1,7 @@
 import { ScalarsMap, ConvertOptions, LoadedFragment } from './types';
 import * as autoBind from 'auto-bind';
 import { DEFAULT_SCALARS } from './scalars';
-import { toPascalCase, DeclarationBlock, DeclarationBlockConfig, buildScalars } from './utils';
+import { toPascalCase, DeclarationBlock, DeclarationBlockConfig, buildScalars, getConfigValue } from './utils';
 import { GraphQLSchema, FragmentDefinitionNode, GraphQLObjectType, OperationDefinitionNode, VariableDefinitionNode, OperationTypeNode, ASTNode } from 'graphql';
 import { SelectionSetToObject } from './selection-set-to-object';
 import { OperationVariablesToObject } from './variables-to-object';
@@ -20,9 +20,56 @@ function getRootType(operation: OperationTypeNode, schema: GraphQLSchema) {
 
 export interface ParsedDocumentsConfig extends ParsedConfig {
   addTypename: boolean;
+  preResolveTypes: boolean;
+  globalNamespace: boolean;
+  operationResultSuffix: string;
+  dedupeOperationSuffix: boolean;
 }
 
-export interface RawDocumentsConfig extends RawConfig {}
+export interface RawDocumentsConfig extends RawConfig {
+  /**
+   * @name preResolveTypes
+   * @type boolean
+   * @default false
+   * @description Avoid using `Pick` and resolve the actual primitive type of all selection set.
+   *
+   * @example
+   * ```yml
+   * plugins
+   *   config:
+   *     preResolveTypes: true
+   * ```
+   */
+  preResolveTypes?: boolean;
+  /**
+   * @name globalNamespace
+   * @type boolean
+   * @default false
+   * @description Puts all generated code under `global` namespace. Useful for Stencil integration.
+   *
+   * @example
+   * ```yml
+   * plugins
+   *   config:
+   *     globalNamespace: true
+   * ```
+   */
+  globalNamespace?: boolean;
+  /**
+   * @name operationResultSuffix
+   * @type string
+   * @default ""
+   * @description Adds a suffix to generated operation result type names
+   */
+  operationResultSuffix?: string;
+  /**
+   * @name dedupeOperationSuffix
+   * @type boolean
+   * @default false
+   * @description Set this configuration to `true` if you wish to make sure to remove duplicate operation name suffix.
+   */
+  dedupeOperationSuffix?: boolean;
+}
 
 export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDocumentsConfig, TPluginConfig extends ParsedDocumentsConfig = ParsedDocumentsConfig> extends BaseVisitor<TRawConfig, TPluginConfig> {
   protected _unnamedCounter = 1;
@@ -33,9 +80,13 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
     super(
       rawConfig,
       {
+        preResolveTypes: getConfigValue(rawConfig.preResolveTypes, false),
+        dedupeOperationSuffix: getConfigValue(rawConfig.dedupeOperationSuffix, false),
         addTypename: !rawConfig.skipTypename,
+        globalNamespace: !!rawConfig.globalNamespace,
+        operationResultSuffix: getConfigValue(rawConfig.operationResultSuffix, ''),
         ...((additionalConfig || {}) as any),
-      } as any,
+      },
       buildScalars(_schema, scalars)
     );
 
@@ -57,6 +108,7 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
 
   public convertName(node: ASTNode | string, options?: ConvertOptions & BaseVisitorConvertOptions): string {
     const useTypesPrefix = options && typeof options.useTypesPrefix === 'boolean' ? options.useTypesPrefix : true;
+
     return (useTypesPrefix ? this._parsedConfig.typesPrefix : '') + this._parsedConfig.convert(node, options);
   }
 
@@ -87,6 +139,7 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
   FragmentDefinition(node: FragmentDefinitionNode): string {
     const fragmentRootType = this._schema.getType(node.typeCondition.name.value) as GraphQLObjectType;
     const selectionSet = this._selectionSetToObject.createNext(fragmentRootType, node.selectionSet);
+    const fragmentSuffix = this.config.dedupeOperationSuffix && node.name.value.toLowerCase().endsWith('fragment') ? '' : 'Fragment';
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
@@ -94,7 +147,7 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
       .withName(
         this.convertName(node, {
           useTypesPrefix: true,
-          suffix: 'Fragment',
+          suffix: fragmentSuffix,
         })
       )
       .withContent(selectionSet.string).string;
@@ -110,13 +163,14 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
 
     const selectionSet = this._selectionSetToObject.createNext(operationRootType, node.selectionSet);
     const visitedOperationVariables = this._variablesTransfomer.transform<VariableDefinitionNode>(node.variableDefinitions);
+    const operationTypeSuffix = this.config.dedupeOperationSuffix && name.toLowerCase().endsWith(node.operation) ? '' : toPascalCase(node.operation);
 
     const operationResult = new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
       .withName(
         this.convertName(name, {
-          suffix: toPascalCase(node.operation),
+          suffix: operationTypeSuffix + this._parsedConfig.operationResultSuffix,
         })
       )
       .withContent(selectionSet.string).string;
@@ -126,7 +180,7 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
       .asKind('type')
       .withName(
         this.convertName(name, {
-          suffix: toPascalCase(node.operation) + 'Variables',
+          suffix: operationTypeSuffix + 'Variables',
         })
       )
       .withBlock(visitedOperationVariables).string;

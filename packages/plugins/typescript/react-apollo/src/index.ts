@@ -6,25 +6,6 @@ import { extname } from 'path';
 
 export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfig {
   /**
-   * @name withHOC
-   * @type boolean
-   * @description Customized the output by enabling/disabling the HOC.
-   * @default true
-   *
-   * @example
-   * ```yml
-   * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-operations
-   *    - typescript-react-apollo
-   *  config:
-   *    withHOC: false
-   * ```
-   */
-  withHOC?: boolean;
-  /**
    * @name withComponent
    * @type boolean
    * @description Customized the output by enabling/disabling the generated Component.
@@ -43,6 +24,25 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    * ```
    */
   withComponent?: boolean;
+  /**
+   * @name withHOC
+   * @type boolean
+   * @description Customized the output by enabling/disabling the HOC.
+   * @default true
+   *
+   * @example
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *    - typescript-operations
+   *    - typescript-react-apollo
+   *  config:
+   *    withHOC: false
+   * ```
+   */
+  withHOC?: boolean;
   /**
    * @name withHooks
    * @type boolean
@@ -84,30 +84,93 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
   withMutationFn?: boolean;
 
   /**
-   * @name hooksImportFrom
+   * @name apolloReactCommonImportFrom
    * @type string
-   * @description You can specify alternative module that is exports `useQuery` `useMutation` and `useSubscription`.
-   * This is useful for further abstraction of some common tasks (eg. error handling).
-   * Filepath relative to generated file can be also specified.
-   * @default react-apollo-hooks
+   * @default @apollo/react-common
    */
-  hooksImportFrom?: string;
+  apolloReactCommonImportFrom?: string;
   /**
-   * @name reactApolloImportFrom
+   * @name apolloReactComponentsImportFrom
    * @type string
-   * @description You can specify module that exports components `Query`, `Mutation`, `Subscription` and HOCs
-   * This is useful for further abstraction of some common tasks (eg. error handling).
-   * Filepath relative to generated file can be also specified.
-   * @default react-apollo
+   * @default @apollo/react-components
    */
-  reactApolloImportFrom?: string;
-  componentSuffix?: string;
+  apolloReactComponentsImportFrom?: string;
+  /**
+   * @name apolloReactHocImportFrom
+   * @type string
+   * @default @apollo/react-hoc
+   */
+  apolloReactHocImportFrom?: string;
+  /**
+   * @name apolloReactHooksImportFrom
+   * @type string
+   * @default @apollo/react-hooks
+   */
+  apolloReactHooksImportFrom?: string;
   /**
    * @name componentSuffix
    * @type string
    * @description You can specify a suffix that gets attached to the name of the generated component.
    * @default Component
    */
+  componentSuffix?: string;
+  /**
+   * @name reactApolloVersion
+   * @type 2 | 3
+   * @description Customized the output by enabling/disabling the HOC.
+   * @default 2
+   *
+   * @example
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *    - typescript-operations
+   *    - typescript-react-apollo
+   *  config:
+   *    reactApolloVersion: 3
+   * ```
+   */
+  reactApolloVersion?: 2 | 3;
+  /**
+   * @name withResultType
+   * @type boolean
+   * @description Customized the output by enabling/disabling the generated result type.
+   * @default true
+   *
+   * @example
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *    - typescript-operations
+   *    - typescript-react-apollo
+   *  config:
+   *    withResultType: true
+   * ```
+   */
+  withResultType?: boolean;
+  /**
+   * @name withMutationOptionsType
+   * @type boolean
+   * @description Customized the output by enabling/disabling the generated mutation option type.
+   * @default true
+   *
+   * @example
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *    - typescript-operations
+   *    - typescript-react-apollo
+   *  config:
+   *    withMutationOptionsType: true
+   *
+   */
+  withMutationOptionsType?: boolean;
 }
 
 export const plugin: PluginFunction<ReactApolloRawPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: ReactApolloRawPluginConfig) => {
@@ -122,7 +185,7 @@ export const plugin: PluginFunction<ReactApolloRawPluginConfig> = (schema: Graph
     ...(config.externalFragments || []),
   ];
 
-  const visitor = new ReactApolloVisitor(allFragments, config) as any;
+  const visitor = new ReactApolloVisitor(allFragments, config, documents);
   const visitorResult = visit(allAst, { leave: visitor });
 
   return {
@@ -142,3 +205,5 @@ export const validate: PluginValidateFn<any> = async (schema: GraphQLSchema, doc
     }
   }
 };
+
+export { ReactApolloVisitor };

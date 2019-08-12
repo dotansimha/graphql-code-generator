@@ -11,7 +11,7 @@ To shed some more light regards this template, it's recommended to go through th
 
 ## Installation
 
-    $ yarn add -D @graphql-codegen/typescript-apollo-angular
+    $ yarn add -D @graphql-codegen/typescript-apollo-angular @types/graphql
 
 ## How to use?
 

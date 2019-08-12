@@ -1,16 +1,17 @@
 import { GraphQLSchema, DocumentNode } from 'graphql';
-import { object } from 'prop-types';
 
 export namespace Types {
   export interface GenerateOptions {
     filename: string;
     plugins: Types.ConfiguredPlugin[];
     schema: DocumentNode;
+    schemaAst?: GraphQLSchema;
     documents: Types.DocumentFile[];
     config: { [key: string]: any };
     pluginMap: {
       [name: string]: CodegenPlugin;
     };
+    skipDuplicateDocumentsValidation?: boolean;
   }
 
   export type FileOutput = {
@@ -64,6 +65,7 @@ export namespace Types {
     baseOutputDir: string;
     plugins: Types.ConfiguredPlugin[];
     schema: DocumentNode;
+    schemaAst?: GraphQLSchema;
     documents: Types.DocumentFile[];
     config: { [key: string]: any };
     pluginMap: {
@@ -89,6 +91,7 @@ export namespace Types {
     config?: { [key: string]: any };
     generates: { [output: string]: OutputConfig | ConfiguredOutput };
     overwrite?: boolean;
+    prettify?: boolean;
     watch?: boolean | string | string[];
     silent?: boolean;
     pluginLoader?: PackageLoaderFn<CodegenPlugin>;
@@ -123,8 +126,10 @@ export type PluginFunction<T = any> = (
 
 export type PluginValidateFn<T = any> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: T, outputFile: string, allPlugins: Types.ConfiguredPlugin[]) => Types.Promisable<void>;
 
+export type AddToSchemaResult = string | DocumentNode | undefined;
+
 export interface CodegenPlugin<T = any> {
   plugin: PluginFunction<T>;
-  addToSchema?: string | DocumentNode;
+  addToSchema?: AddToSchemaResult | ((config: T) => AddToSchemaResult);
   validate?: PluginValidateFn;
 }

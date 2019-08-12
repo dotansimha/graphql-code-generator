@@ -10,7 +10,6 @@ export type Scalars = {
 
 /** A character from the Star Wars universe */
 export type Character = {
-  __typename?: 'Character',
   /** The ID of the character */
   id: Scalars['ID'],
   /** The name of the character */
@@ -62,7 +61,7 @@ export type DroidFriendsConnectionArgs = {
 };
 
 /** The episodes in the Star Wars trilogy */
-export type Episode =
+export type Episode = 
   /** Star Wars Episode IV: A New Hope, released in 1977. */
   'NEWHOPE' |
   /** Star Wars Episode V: The Empire Strikes Back, released in 1980. */
@@ -118,7 +117,7 @@ export type Human = Character & {
 
 /** A humanoid creature from the Star Wars universe */
 export type HumanHeightArgs = {
-  unit: LengthUnit
+  unit?: Maybe<LengthUnit>
 };
 
 
@@ -129,7 +128,7 @@ export type HumanFriendsConnectionArgs = {
 };
 
 /** Units of height */
-export type LengthUnit =
+export type LengthUnit = 
   /** The standard unit around the world */
   'METER' |
   /** Primarily used in the United States */
@@ -243,7 +242,7 @@ export type Starship = {
 
 
 export type StarshipLengthArgs = {
-  unit: LengthUnit
+  unit?: Maybe<LengthUnit>
 };
 export type CreateReviewForEpisodeMutationVariables = {
   episode: Episode,

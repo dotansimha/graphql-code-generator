@@ -5,7 +5,7 @@ title: Write your first Plugin
 
 ## Basic Plugin
 
-To get started with writing your GraphQL Code-Generator Plugin, start by creating a simple `my-plugin.js` file in your project, with the following content:
+To get started with writing your GraphQL Code-Generator plugin, start by creating a simple `my-plugin.js` file in your project, with the following content:
 
 ```js
 module.exports = {
@@ -62,7 +62,7 @@ module.exports = {
   plugin: (schema, documents, config, info) => {
     return documents
       .map(doc => {
-        const docsNames = doc.definitions.map(def => def.name.value);
+        const docsNames = doc.content.definitions.map(def => def.name.value);
 
         return `File ${doc.filePath} contains: ${docsNames.join(', ')}`;
       })

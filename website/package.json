@@ -1,28 +1,27 @@
 {
+  "name": "@graphql-codegen/website",
+  "version": "1.5.0",
+  "private": true,
   "scripts": {
     "dev": "docusaurus-start",
     "start": "docusaurus-start",
     "generate-config": "node generate-config.js",
     "prestart": "yarn live-demo:dev",
-    "build": "yarn build:app && yarn live-demo:prod && yarn build:lambda",
+    "build": "yarn build:app && yarn build:lambda",
     "build:app": "docusaurus-build",
     "build:lambda": "netlify-lambda build lambda",
     "serve:lambda": "netlify-lambda serve",
     "publish-gh-pages": "docusaurus-publish",
-    "write-translations": "docusaurus-write-translations",
-    "version": "docusaurus-version",
-    "rename-version": "docusaurus-rename-version",
-    "live-demo:dev": "cd live-demo && yarn build && cp -r ./build ../static/live-demo",
-    "live-demo:prod": "cd live-demo && yarn build && cp -r ./build ../build/graphql-code-generator/live-demo"
+    "write-translations": "docusaurus-write-translations"
   },
   "devDependencies": {
-    "@graphql-codegen/config-markdown-generator": "../packages/utils/config-md-generator",
-    "remarkable-embed": "0.4.1",
+    "@graphql-codegen/config-markdown-generator": "1.5.0",
     "babel-preset-minify": "0.5.0",
-    "docusaurus": "1.9.0",
-    "netlify-lambda": "1.4.11"
+    "docusaurus": "1.12.0",
+    "netlify-lambda": "1.5.1",
+    "remarkable-embed": "0.4.1"
   },
   "dependencies": {
-    "sendmail": "1.4.1"
+    "sendmail": "1.6.1"
   }
 }

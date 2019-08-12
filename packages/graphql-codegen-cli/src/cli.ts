@@ -17,9 +17,11 @@ switch (cmd) {
     break;
 
   default:
-    generate(createConfig())
-      .then(() => {
-        process.exit(0);
-      })
-      .catch(cliError);
+    createConfig().then(config => {
+      return generate(config)
+        .then(() => {
+          process.exit(0);
+        })
+        .catch(cliError);
+    });
 }

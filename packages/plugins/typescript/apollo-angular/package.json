@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/typescript-apollo-angular",
-  "version": "1.2.0",
+  "version": "1.5.0",
   "description": "GraphQL Code Generator plugin for generating ready-to-use Angular Components based on GraphQL operations",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
@@ -9,21 +9,20 @@
     "test": "jest --config ../../../../jest.config.js"
   },
   "peerDependencies": {
+    "@types/graphql": "*",
     "graphql-tag": "^2.0.0"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "1.2.0",
-    "@graphql-codegen/visitor-plugin-common": "1.2.0",
-    "tslib": "1.9.3"
+    "@graphql-codegen/plugin-helpers": "1.5.0",
+    "@graphql-codegen/visitor-plugin-common": "1.5.0",
+    "tslib": "1.10.0"
   },
   "devDependencies": {
-    "@graphql-codegen/testing": "1.2.0",
-    "flow-bin": "0.98.1",
-    "flow-parser": "0.98.1",
-    "graphql": "14.3.0",
+    "@graphql-codegen/testing": "1.5.0",
+    "graphql": "14.4.2",
     "jest": "24.8.0",
     "ts-jest": "24.0.2",
-    "typescript": "3.4.5"
+    "typescript": "3.5.3"
   },
   "sideEffects": false,
   "main": "dist/commonjs/index.js",

@@ -3,7 +3,7 @@ id: typescript-mongodb
 title: TypeScript MongoDB
 ---
 
-This plugin would generate TypeScript types for MongoDB models, which makes it relevant for server-side development only. It uses GraphQL directives to declare the types you want to generate and use in your MongoDB backend.
+This plugin generates TypeScript types for MongoDB models, which makes it relevant for server-side development only. It uses GraphQL directives to declare the types you want to generate and use in your MongoDB backend.
 
 Given the following GraphQL declaration:
 
@@ -31,7 +31,9 @@ This interface can be used for db read/write purposes, thus making communication
 
 ## Installation
 
-    $ yarn add -D @graphql-codegen/typescript-mongodb
+    $ yarn add @graphql-codegen/typescript-mongodb
+
+> Don't install this plugin as devDependency, because you need to import the directives from it.
 
 ## Usage
 

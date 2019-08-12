@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/testing",
-  "version": "1.2.0",
+  "version": "1.5.0",
   "description": "GraphQL Codegen Testing Utils",
   "main": "dist/commonjs/index.js",
   "module": "dist/esnext/index.js",
@@ -14,12 +14,16 @@
     "url": "https://github.com/dotansimha/graphql-code-generator/issues"
   },
   "homepage": "https://github.com/dotansimha/graphql-code-generator#readme",
+  "peerDependencies": {
+    "typescript": ">=3.0.0"
+  },
   "dependencies": {
+    "@graphql-codegen/plugin-helpers": "1.5.0",
     "common-tags": "1.8.0",
-    "tslib": "1.9.3"
+    "tslib": "1.10.0"
   },
   "devDependencies": {
-    "typescript": "3.4.5"
+    "typescript": "3.5.3"
   },
   "typings": "dist/esnext/index.d.ts",
   "typescript": {

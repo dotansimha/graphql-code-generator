@@ -1,4 +1,4 @@
-import { loadSchema as loadSchemaToolkit, loadDocuments as loadDocumentsToolkit } from 'graphql-toolkit';
+import { loadTypedefs, mergeTypeDefs, loadDocuments as loadDocumentsToolkit } from 'graphql-toolkit';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { GraphQLSchema, DocumentNode } from 'graphql';
 import { DetailedError } from '@graphql-codegen/core';
@@ -18,7 +18,7 @@ async function getCustomLoaderByPath(path: string): Promise<any> {
   return null;
 }
 
-export const loadSchema = async (schemaDef: Types.Schema, config: Types.Config): Promise<GraphQLSchema | DocumentNode> => {
+export const loadSchema = async (schemaDef: Types.Schema, config: Types.Config): Promise<DocumentNode> => {
   if (typeof schemaDef === 'object' && schemaDef[Object.keys(schemaDef)[0]] && (schemaDef[Object.keys(schemaDef)[0]] as any).loader && typeof (schemaDef[Object.keys(schemaDef)[0]] as any).loader === 'string') {
     const pointToSchema = Object.keys(schemaDef)[0];
     const defObject: any = schemaDef[pointToSchema];
@@ -30,8 +30,8 @@ export const loadSchema = async (schemaDef: Types.Schema, config: Types.Config):
       if (customSchemaLoader) {
         const returnedSchema = await customSchemaLoader(pointToSchema, config, defObject);
 
-        if (returnedSchema && returnedSchema instanceof GraphQLSchema) {
-          return returnedSchema;
+        if (returnedSchema && isGraphQLSchema(returnedSchema)) {
+          return mergeTypeDefs([returnedSchema]);
         } else {
           throw new Error(`Return value of a custom schema loader must be of type "GraphQLSchema"!`);
         }
@@ -67,18 +67,23 @@ export const loadSchema = async (schemaDef: Types.Schema, config: Types.Config):
       options.tagPluck = config.pluckConfig;
     }
 
-    return loadSchemaToolkit(pointToSchema, options);
+    const docs = (await loadTypedefs(pointToSchema, options)).map(({ content }) => content);
+
+    return mergeTypeDefs(docs);
   } catch (e) {
     throw new DetailedError(
       'Failed to load schema',
       `
-        Failed to load schema from ${schemaDef}.
+        Failed to load schema from ${schemaDef}:
+
+        ${e.message}
+        ${e.stack}
     
         GraphQL Code Generator supports:
-          - ES Modules and CommonJS exports
+          - ES Modules and CommonJS exports (export as default or named export "schema")
           - Introspection JSON File
           - URL of GraphQL endpoint
-          - Multiple files with type definitions
+          - Multiple files with type definitions (glob expression)
           - String in config file
     
         Try to use one of above options and run codegen again.
@@ -88,45 +93,79 @@ export const loadSchema = async (schemaDef: Types.Schema, config: Types.Config):
   }
 };
 
-export const loadDocuments = async (documentDef: Types.OperationDocument, config: Types.Config): Promise<Types.DocumentFile[]> => {
-  if (typeof documentDef === 'object' && documentDef[Object.keys(documentDef)[0]] && (documentDef[Object.keys(documentDef)[0]] as any).loader && typeof (documentDef[Object.keys(documentDef)[0]] as any).loader === 'string') {
-    const pointToDoc = Object.keys(documentDef)[0];
-    const defObject: any = documentDef[pointToDoc];
-    const loaderString = defObject.loader;
+export const loadDocuments = async (documentsDef: Types.InstanceOrArray<Types.OperationDocument>, config: Types.Config): Promise<Types.DocumentFile[]> => {
+  const asArray: Types.OperationDocument[] = Array.isArray(documentsDef) ? documentsDef : [documentsDef];
+  const loadWithToolkit: string[] = [];
+  const result: Types.DocumentFile[] = [];
 
-    try {
-      const customDocumentLoader = await getCustomLoaderByPath(loaderString);
+  for (const documentDef of asArray) {
+    if (typeof documentDef === 'object' && documentDef[Object.keys(documentDef)[0]] && (documentDef[Object.keys(documentDef)[0]] as any).loader && typeof (documentDef[Object.keys(documentDef)[0]] as any).loader === 'string') {
+      const pointToDoc = Object.keys(documentDef)[0];
+      const defObject = documentDef[pointToDoc];
+      const loaderString = defObject.loader;
 
-      if (customDocumentLoader) {
-        const returned = await customDocumentLoader(pointToDoc, config);
+      try {
+        const customDocumentLoader = await getCustomLoaderByPath(loaderString);
 
-        if (returned && Array.isArray(returned)) {
-          return returned;
+        if (customDocumentLoader) {
+          const returned = await customDocumentLoader(pointToDoc, config);
+
+          if (returned && Array.isArray(returned)) {
+            result.push(...returned);
+          } else {
+            throw new Error(`Return value of a custom schema loader must be an Array of: { filePath: string, content: DocumentNode }`);
+          }
         } else {
-          throw new Error(`Return value of a custom schema loader must be an Array of: { filePath: string, content: DocumentNode }`);
+          throw new Error(`Unable to find a loader function! Make sure to export a default function from your file`);
         }
-      } else {
-        throw new Error(`Unable to find a loader function! Make sure to export a default function from your file`);
-      }
-    } catch (e) {
-      throw new DetailedError(
-        'Failed to load custom documents loader',
+      } catch (e) {
+        throw new DetailedError(
+          'Failed to load custom documents loader',
+          `
+          Failed to load documents from ${pointToDoc} using loader "${loaderString}":
+      
+          ${e.message}
         `
-        Failed to load documents from ${pointToDoc} using loader "${loaderString}":
-    
-        ${e.message}
-      `
+        );
+      }
+    } else if (typeof documentDef === 'string') {
+      loadWithToolkit.push(documentDef);
+    }
+  }
+
+  if (loadWithToolkit.length > 0) {
+    const loadDocumentsToolkitConfig: any = {
+      ignore: Object.keys(config.generates),
+    };
+
+    if (config.pluckConfig) {
+      loadDocumentsToolkitConfig.tagPluck = config.pluckConfig;
+    }
+
+    const loadedFromToolkit = await loadDocumentsToolkit(loadWithToolkit, loadDocumentsToolkitConfig);
+
+    if (loadedFromToolkit.length > 0) {
+      result.push(
+        ...loadedFromToolkit.sort((a, b) => {
+          if (a.filePath < b.filePath) {
+            return -1;
+          }
+
+          if (a.filePath > b.filePath) {
+            return 1;
+          }
+
+          return 0;
+        })
       );
     }
   }
 
-  const loadDocumentsToolkitConfig: any = {
-    ignore: Object.keys(config.generates),
-  };
-
-  if (config.pluckConfig) {
-    loadDocumentsToolkitConfig.tagPluck = config.pluckConfig;
-  }
-
-  return loadDocumentsToolkit(documentDef as string, loadDocumentsToolkitConfig);
+  return result;
 };
+
+function isGraphQLSchema(schema: any): schema is GraphQLSchema {
+  const schemaClass = schema.constructor;
+  const className = GraphQLSchema.name;
+  return className && schemaClass && schemaClass.name === className;
+}

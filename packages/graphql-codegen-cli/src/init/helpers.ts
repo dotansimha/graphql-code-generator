@@ -59,6 +59,10 @@ export function writePackage(answers: Answers, configLocation: string) {
     pkg.devDependencies[plugin.package] = version;
   });
 
+  if (answers.introspection) {
+    pkg.devDependencies['@graphql-codegen/introspection'] = version;
+  }
+
   writeFileSync(pkgPath, JSON.stringify(pkg, null, indent));
 }
 

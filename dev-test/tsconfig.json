@@ -10,7 +10,8 @@
     "alwaysStrict": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true
+    "noUnusedParameters": true,
+    "experimentalDecorators": true
   },
   "include": ["**/*.ts", "**/*.tsx"]
 }

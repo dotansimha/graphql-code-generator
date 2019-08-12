@@ -3,7 +3,7 @@ import { BaseVisitor, LoadedFragment } from '@graphql-codegen/visitor-plugin-com
 import * as addPlugin from '@graphql-codegen/add';
 import { join, resolve } from 'path';
 import { Kind, FragmentDefinitionNode } from 'graphql';
-import { appendExtensionToFilePath, extractExternalFragmentsInUse, resolveRelativeImport } from './utils';
+import { appendExtensionToFilePath, extractExternalFragmentsInUse, resolveRelativeImport, isUsingTypes } from './utils';
 
 export type NearOperationFileConfig = {
   /**
@@ -102,6 +102,7 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
       add: addPlugin,
     };
 
+    const duplicateFragmentNames: string[] = [];
     const fragmentNameToFile: FragmentNameToFile = options.documents.reduce((prev, documentRecord) => {
       const fragments: FragmentDefinitionNode[] = documentRecord.content.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[];
 
@@ -110,12 +111,20 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
           const filePath = appendExtensionToFilePath(documentRecord.filePath, extension);
           const importName = baseVisitor.convertName(fragment, { suffix: 'Fragment' });
 
+          if (prev[fragment.name.value]) {
+            duplicateFragmentNames.push(fragment.name.value);
+          }
+
           prev[fragment.name.value] = { filePath, importName, onType: fragment.typeCondition.name.value, node: fragment };
         }
       }
 
       return prev;
     }, {});
+
+    if (duplicateFragmentNames.length) {
+      throw new Error(`Multiple fragments with the name(s) "${duplicateFragmentNames.join(', ')}" were found.`);
+    }
 
     const absTypesPath = resolve(baseDir, join(options.baseOutputDir, options.presetConfig.baseTypesPath));
 
@@ -130,21 +139,25 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
         const config = {
           ...options.config,
           namespacedImportName: importTypesNamespace,
-          externalFragments: [] as LoadedFragment[],
+          externalFragments: [] as (LoadedFragment<{ level: number }>)[],
         };
 
-        for (const fragmentName of fragmentsInUse) {
+        for (const fragmentName of Object.keys(fragmentsInUse)) {
+          const level = fragmentsInUse[fragmentName];
           const fragmentDetails = fragmentNameToFile[fragmentName];
 
           if (fragmentDetails) {
             const absFragmentFilePath = resolve(baseDir, fragmentDetails.filePath);
             const fragmentImportPath = resolveRelativeImport(absGeneratedFilePath, absFragmentFilePath);
 
-            plugins.unshift({
-              add: `import { ${fragmentDetails.importName} } from '${fragmentImportPath}';`,
-            });
+            if (!options.config.globalNamespace && level === 0) {
+              plugins.unshift({
+                add: `import { ${fragmentDetails.importName} } from '${fragmentImportPath}';`,
+              });
+            }
 
             config.externalFragments.push({
+              level,
               isExternal: true,
               importFrom: fragmentImportPath,
               name: fragmentName,
@@ -154,7 +167,9 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
           }
         }
 
-        plugins.unshift({ add: `import * as ${importTypesNamespace} from '${relativeImportPath}';\n` });
+        if (isUsingTypes(documentFile.content)) {
+          plugins.unshift({ add: `import * as ${importTypesNamespace} from '${relativeImportPath}';\n` });
+        }
 
         return {
           filename: generatedFilePath,
@@ -162,7 +177,9 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
           pluginMap,
           config,
           schema: options.schema,
+          schemaAst: options.schemaAst,
           documents: [documentFile],
+          skipDuplicateDocumentsValidation: true,
         };
       })
       .filter(f => f);

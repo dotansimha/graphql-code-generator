@@ -76,6 +76,7 @@ export interface DeclarationBlockConfig {
   blockWrapper?: string;
   blockTransformer?: (block: string) => string;
   enumNameValueSeparator?: string;
+  ignoreExport?: boolean;
 }
 
 export function transformComment(comment: string | StringValueNode, indentLevel = 0): string {
@@ -98,12 +99,13 @@ export function transformComment(comment: string | StringValueNode, indentLevel 
         return indent(`/** ${comment} */\n`, indentLevel);
       }
 
-      return indent(`${isFirst ? '/** ' : ' * '}${line}${isLast ? '\n */\n' : ''}`, indentLevel);
+      return indent(`${isFirst ? '/** \n' : ''} * ${line}${isLast ? '\n **/\n' : ''}`, indentLevel);
     })
     .join('\n');
 }
 
 export class DeclarationBlock {
+  _decorator = null;
   _export = false;
   _name = null;
   _kind = null;
@@ -123,8 +125,16 @@ export class DeclarationBlock {
     };
   }
 
+  withDecorator(decorator: string): DeclarationBlock {
+    this._decorator = decorator;
+
+    return this;
+  }
+
   export(exp = true): DeclarationBlock {
-    this._export = exp;
+    if (!this._config.ignoreExport) {
+      this._export = exp;
+    }
 
     return this;
   }
@@ -171,6 +181,10 @@ export class DeclarationBlock {
 
   public get string(): string {
     let result = '';
+
+    if (this._decorator) {
+      result += this._decorator + '\n';
+    }
 
     if (this._export) {
       result += 'export ';
@@ -224,8 +238,8 @@ export function getBaseTypeNode(typeNode: TypeNode): NamedTypeNode {
   return typeNode;
 }
 
-export function convertNameParts(str: string, func: (str: string) => string, transformUnderscore = false): string {
-  if (transformUnderscore) {
+export function convertNameParts(str: string, func: (str: string) => string, removeUnderscore = false): string {
+  if (removeUnderscore) {
     return func(str);
   }
 
@@ -269,7 +283,8 @@ export function getRootTypeNames(schema: GraphQLSchema): string[] {
 }
 
 export function stripMapperTypeInterpolation(identifier: string): string {
-  return identifier.includes('{T}') ? identifier.replace(/<.*?>/g, '') : identifier;
+  return identifier.trim().replace(/[^$\w].*$/, '');
 }
 
 export const OMIT_TYPE = 'export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;';
+export const REQUIRE_FIELDS_TYPE = `export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } & { [P in K]-?: NonNullable<T[P]> };`;

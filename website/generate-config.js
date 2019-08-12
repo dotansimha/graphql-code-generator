@@ -8,6 +8,7 @@ const mapping = {
   // Presets
   '../packages/presets/near-operation-file/src/index.ts': BASE_DIR + '/near-operation-file.md',
   // Plugins
+  '../packages/plugins/other/schema-ast/src/index.ts': BASE_DIR + '/schema-ast.md',
   '../packages/plugins/other/time/src/index.ts': BASE_DIR + '/time.md',
   '../packages/plugins/typescript/typescript/src/index.ts': BASE_DIR + '/typescript.md',
   '../packages/plugins/typescript/compatibility/src/index.ts': BASE_DIR + '/typescript-compatibility.md',
@@ -18,6 +19,7 @@ const mapping = {
   '../packages/plugins/typescript/urql/src/index.ts': BASE_DIR + '/typescript-urql.md',
   '../packages/plugins/typescript/react-apollo/src/index.ts': BASE_DIR + '/typescript-react-apollo.md',
   '../packages/plugins/typescript/stencil-apollo/src/index.ts': BASE_DIR + '/typescript-stencil-apollo.md',
+  '../packages/plugins/typescript/document-nodes/src/index.ts': BASE_DIR + '/typescript-document-nodes.md',
   '../packages/plugins/java/resolvers/src/index.ts': BASE_DIR + '/java-resolvers.md',
   '../packages/plugins/java/java/src/index.ts': BASE_DIR + '/java.md',
   '../packages/plugins/flow/flow/src/index.ts': BASE_DIR + '/flow.md',

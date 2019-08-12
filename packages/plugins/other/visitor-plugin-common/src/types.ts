@@ -1,7 +1,8 @@
 import { ASTNode, FragmentDefinitionNode } from 'graphql';
 
 export type ScalarsMap = { [name: string]: string };
-export type EnumValuesMap<AdditionalProps = {}> = { [enumName: string]: string | ({ [key: string]: string } & AdditionalProps) };
+export type EnumValuesMap<AdditionalProps = {}> = string | { [enumName: string]: string | ({ [key: string]: string } & AdditionalProps) };
+export type ParsedEnumValuesMap = { [enumName: string]: { mappedValues?: { [valueName: string]: string }; typeIdentifier: string; sourceIdentifier?: string; sourceFile?: string } };
 export type ConvertNameFn<T = {}> = ConvertFn<T>;
 
 export interface ConvertOptions {
@@ -20,4 +21,14 @@ export interface NamingConventionMap {
   transformUnderscore?: boolean;
 }
 
-export type LoadedFragment = { name: string; onType: string; node: FragmentDefinitionNode; isExternal: boolean; importFrom?: string | null };
+export type LoadedFragment<AdditionalFields = {}> = { name: string; onType: string; node: FragmentDefinitionNode; isExternal: boolean; importFrom?: string | null } & AdditionalFields;
+
+export type DeclarationKind = 'type' | 'interface' | 'class' | 'abstract class';
+
+export interface DeclarationKindConfig {
+  scalar?: DeclarationKind;
+  input?: DeclarationKind;
+  type?: DeclarationKind;
+  interface?: DeclarationKind;
+  arguments?: DeclarationKind;
+}
