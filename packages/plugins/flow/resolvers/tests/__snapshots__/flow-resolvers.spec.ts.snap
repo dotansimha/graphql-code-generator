@@ -107,7 +107,7 @@ export type MyScalarScalarConfig = {
 export type MyTypeResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'MyType'>> = {
   foo?: Resolver<$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
   otherType?: Resolver<?$ElementType<ResolversTypes, 'MyOtherType'>, ParentType, ContextType>,
-  withArgs?: Resolver<?$ElementType<ResolversTypes, 'String'>, ParentType, ContextType, MyTypeWithArgsArgs>,
+  withArgs?: Resolver<?$ElementType<ResolversTypes, 'String'>, ParentType, ContextType, $RequireFields<MyTypeWithArgsArgs, { arg2: * }>>,
 };
 
 export type MyUnionResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'MyUnion'>> = {
@@ -160,6 +160,7 @@ export type DirectiveResolvers<ContextType = any> = {
 export type IDirectiveResolvers<ContextType = any> = DirectiveResolvers<ContextType>;",
   "prepend": Array [
     "import { type GraphQLResolveInfo, type GraphQLScalarTypeConfig } from 'graphql';",
+    "export type $RequireFields<Origin, Keys> = $Diff<Args, Keys> & $ObjMapi<Keys, <Key>(k: Key) => $NonMaybeType<$ElementType<Origin, Key>>>;",
   ],
 }
 `;
