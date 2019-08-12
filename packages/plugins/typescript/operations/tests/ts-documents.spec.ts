@@ -637,6 +637,66 @@ describe('TypeScript Operations Plugin', () => {
       `);
       await validate(result, config);
     });
+    it('should mark __typename as non optional in case it is included in the selection set of an interface field', async () => {
+      const ast = parse(/* GraphQL */ `
+        query notifications {
+          notifications {
+            __typename
+            ... on TextNotification {
+              text
+            }
+            ... on ImageNotification {
+              imageUrl
+            }
+          }
+        }
+      `);
+      const config = {};
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
+      expect(result).toBeSimilarStringTo(`
+        export type NotificationsQuery = (
+          { __typename?: 'Query' }
+          & { notifications: Array<(
+            { __typename: 'TextNotification' }
+            & Pick<TextNotification, 'text'>
+          ) | (
+            { __typename: 'ImageNotification' }
+            & Pick<ImageNotification, 'imageUrl'>
+          )> }
+        );
+      `);
+      await validate(result, config);
+    });
+    it('should mark __typename as non optional in case it is included in the selection set of an union field', async () => {
+      const ast = parse(/* GraphQL */ `
+        query unionTest {
+          unionTest {
+            __typename
+            ... on Profile {
+              firstName
+            }
+            ... on User {
+              email
+            }
+          }
+        }
+      `);
+      const config = {};
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
+      expect(result).toBeSimilarStringTo(`
+        export type UnionTestQuery = (
+          { __typename?: 'Query' }
+          & { unionTest: Maybe<(
+            { __typename: 'User' }
+            & Pick<User, 'email'>
+          ) | (
+            { __typename: 'Profile' }
+            & Pick<Profile, 'firstName'>
+          )> }
+        );
+      `);
+      await validate(result, config);
+    });
   });
 
   describe('Unnamed Documents', () => {
@@ -1881,13 +1941,87 @@ describe('TypeScript Operations Plugin', () => {
         export type FieldQuery = (
           { __typename?: 'Query' }
           & { field: (
-            { __typename?: 'Error1' }
+            { __typename: 'Error1' }
             & Pick<Error1, 'message'>
           ) | (
-            { __typename?: 'Error2' }
+            { __typename: 'Error2' }
             & Pick<Error2, 'message'>
           ) | (
-            { __typename?: 'ComplexError' }
+            { __typename: 'ComplexError' }
+            & Pick<ComplexError, 'message' | 'additionalInfo'>
+          ) | (
+            { __typename: 'FieldResultSuccess' }
+            & Pick<FieldResultSuccess, 'someValue'>
+          ) }
+        );
+      `);
+    });
+    it('should generate correct types for union that returns interface types (variant __typename in fragment)', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        interface Error {
+          message: String!
+        }
+        type Error1 implements Error {
+          message: String!
+        }
+        type Error2 implements Error {
+          message: String!
+        }
+        type Error3 implements Error {
+          message: String!
+        }
+        type ComplexError implements Error {
+          message: String!
+          additionalInfo: String!
+        }
+
+        type FieldResultSuccess {
+          someValue: Boolean!
+        }
+
+        union FieldResult = Error1 | Error2 | ComplexError | FieldResultSuccess
+
+        type Query {
+          field: FieldResult!
+        }
+      `);
+
+      const query = parse(/* GraphQL */ `
+        query field {
+          field {
+            ... on Error {
+              __typename
+              message
+            }
+            ... on ComplexError {
+              additionalInfo
+            }
+            ... on FieldResultSuccess {
+              someValue
+            }
+          }
+        }
+      `);
+
+      const content = await plugin(
+        schema,
+        [{ filePath: '', content: query }],
+        {},
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+      expect(content).toBeSimilarStringTo(`
+        export type FieldQuery = (
+          { __typename?: 'Query' }
+          & { field: (
+            { __typename: 'Error1' }
+            & Pick<Error1, 'message'>
+          ) | (
+            { __typename: 'Error2' }
+            & Pick<Error2, 'message'>
+          ) | (
+            { __typename: 'ComplexError' }
             & Pick<ComplexError, 'message' | 'additionalInfo'>
           ) | (
             { __typename?: 'FieldResultSuccess' }
