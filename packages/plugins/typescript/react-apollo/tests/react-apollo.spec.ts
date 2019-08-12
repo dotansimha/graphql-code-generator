@@ -1258,6 +1258,37 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       await validateTypeScript(content, schema, docs, {});
     });
 
+    it('should import Operations from one external file and use it in withQuery', async () => {
+      const config: ReactApolloRawPluginConfig = {
+        documentMode: DocumentMode.external,
+        importDocumentNodeExternallyFrom: 'path/to/documents.tsx',
+        withComponent: false,
+        withHooks: false,
+        withHOC: true,
+      };
+
+      const docs = [{ filePath: '', content: basicDoc }];
+
+      const content = (await plugin(schema, docs, config, {
+        outputFile: 'graphql.tsx',
+      })) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).toContain(`import * as Operations from 'path/to/documents.tsx';`);
+      expect(content.content).toBeSimilarStringTo(`
+      export function withTest<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
+        TProps,
+        TestQuery,
+        TestQueryVariables,
+        TestProps<TChildProps>>) {
+          return ApolloReactHoc.withQuery<TProps, TestQuery, TestQueryVariables, TestProps<TChildProps>>(Operations.test, {
+            alias: 'withTest',
+            ...operationOptions
+          });
+      };
+      `);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
     it('should import Operations from one external file and use it in Mutations', async () => {
       const config: ReactApolloRawPluginConfig = {
         documentMode: DocumentMode.external,
@@ -1300,6 +1331,37 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       await validateTypeScript(content, schema, docs, {});
     });
 
+    it('should import Operations from one external file and use it in withMutation', async () => {
+      const config: ReactApolloRawPluginConfig = {
+        documentMode: DocumentMode.external,
+        importDocumentNodeExternallyFrom: 'path/to/documents.tsx',
+        withComponent: false,
+        withHooks: false,
+        withHOC: true,
+      };
+
+      const docs = [{ filePath: '', content: mutationDoc }];
+
+      const content = (await plugin(schema, docs, config, {
+        outputFile: 'graphql.tsx',
+      })) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).toContain(`import * as Operations from 'path/to/documents.tsx';`);
+      expect(content.content).toBeSimilarStringTo(`
+      export function withTest<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
+        TProps,
+        TestMutation,
+        TestMutationVariables,
+        TestProps<TChildProps>>) {
+          return ApolloReactHoc.withMutation<TProps, TestMutation, TestMutationVariables, TestProps<TChildProps>>(Operations.test, {
+            alias: 'withTest',
+            ...operationOptions
+          });
+      };
+      `);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
     it('should import Operations from one external file and use it in Subscriptions', async () => {
       const config: ReactApolloRawPluginConfig = {
         documentMode: DocumentMode.external,
@@ -1337,6 +1399,37 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       expect(content.content).toBeSimilarStringTo(`
       export function useTestSubscription(baseOptions?: ApolloReactHooks.SubscriptionHookOptions<TestSubscription, TestSubscriptionVariables>) {
         return ApolloReactHooks.useSubscription<TestSubscription, TestSubscriptionVariables>(Operations.test, baseOptions);
+      };
+      `);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should import Operations from one external file and use it in withSubscription', async () => {
+      const config: ReactApolloRawPluginConfig = {
+        documentMode: DocumentMode.external,
+        importDocumentNodeExternallyFrom: 'path/to/documents.tsx',
+        withComponent: false,
+        withHooks: false,
+        withHOC: true,
+      };
+
+      const docs = [{ filePath: '', content: subscriptionDoc }];
+
+      const content = (await plugin(schema, docs, config, {
+        outputFile: 'graphql.tsx',
+      })) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).toContain(`import * as Operations from 'path/to/documents.tsx';`);
+      expect(content.content).toBeSimilarStringTo(`
+      export function withTest<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
+        TProps,
+        TestSubscription,
+        TestSubscriptionVariables,
+        TestProps<TChildProps>>) {
+          return ApolloReactHoc.withSubscription<TProps, TestSubscription, TestSubscriptionVariables, TestProps<TChildProps>>(Operations.test, {
+            alias: 'withTest',
+            ...operationOptions
+          });
       };
       `);
       await validateTypeScript(content, schema, docs, {});
@@ -1409,6 +1502,61 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       await validateTypeScript(content, schema, docs, {});
     });
 
+    it('should import Operations from one external file and use it in multiple HOCs', async () => {
+      const config: ReactApolloRawPluginConfig = {
+        documentMode: DocumentMode.external,
+        importDocumentNodeExternallyFrom: 'path/to/documents.tsx',
+        withComponent: false,
+        withHooks: false,
+        withHOC: true,
+      };
+
+      const docs = [{ filePath: '', content: multipleOperationDoc }];
+
+      const content = (await plugin(schema, docs, config, {
+        outputFile: 'graphql.tsx',
+      })) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).toContain(`import * as Operations from 'path/to/documents.tsx';`);
+      expect(content.content).toBeSimilarStringTo(`
+      export function withTestOne<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
+        TProps,
+        TestOneQuery,
+        TestOneQueryVariables,
+        TestOneProps<TChildProps>>) {
+          return ApolloReactHoc.withQuery<TProps, TestOneQuery, TestOneQueryVariables, TestOneProps<TChildProps>>(Operations.testOne, {
+            alias: 'withTestOne',
+            ...operationOptions
+          });
+      };
+      `);
+      expect(content.content).toBeSimilarStringTo(`
+      export function withTestTwo<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
+        TProps,
+        TestTwoMutation,
+        TestTwoMutationVariables,
+        TestTwoProps<TChildProps>>) {
+          return ApolloReactHoc.withMutation<TProps, TestTwoMutation, TestTwoMutationVariables, TestTwoProps<TChildProps>>(Operations.testTwo, {
+            alias: 'withTestTwo',
+            ...operationOptions
+          });
+      };
+      `);
+      expect(content.content).toBeSimilarStringTo(`
+      export function withTestThree<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
+        TProps,
+        TestThreeSubscription,
+        TestThreeSubscriptionVariables,
+        TestThreeProps<TChildProps>>) {
+          return ApolloReactHoc.withSubscription<TProps, TestThreeSubscription, TestThreeSubscriptionVariables, TestThreeProps<TChildProps>>(Operations.testThree, {
+            alias: 'withTestThree',
+            ...operationOptions
+          });
+      };
+      `);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
     it('should import Operations from near operation file for Queries', async () => {
       const config: ReactApolloRawPluginConfig = {
         documentMode: DocumentMode.external,
@@ -1456,6 +1604,37 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       await validateTypeScript(content, schema, docs, {});
     });
 
+    it('should import Operations from near operation file for withQuery', async () => {
+      const config: ReactApolloRawPluginConfig = {
+        documentMode: DocumentMode.external,
+        importDocumentNodeExternallyFrom: 'near-operation-file',
+        withComponent: false,
+        withHooks: false,
+        withHOC: true,
+      };
+
+      const docs = [{ filePath: 'path/to/document.graphql', content: basicDoc }];
+
+      const content = (await plugin(schema, docs, config, {
+        outputFile: 'graphql.tsx',
+      })) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).toContain(`import * as Operations from './document.graphql';`);
+      expect(content.content).toBeSimilarStringTo(`
+      export function withTest<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
+        TProps,
+        TestQuery,
+        TestQueryVariables,
+        TestProps<TChildProps>>) {
+          return ApolloReactHoc.withQuery<TProps, TestQuery, TestQueryVariables, TestProps<TChildProps>>(Operations.test, {
+            alias: 'withTest',
+            ...operationOptions
+          });
+      };
+      `);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
     it('should import Operations from near operation file for Mutations', async () => {
       const config: ReactApolloRawPluginConfig = {
         documentMode: DocumentMode.external,
@@ -1497,6 +1676,37 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       await validateTypeScript(content, schema, docs, {});
     });
 
+    it('should import Operations from near operation file for withMutation', async () => {
+      const config: ReactApolloRawPluginConfig = {
+        documentMode: DocumentMode.external,
+        importDocumentNodeExternallyFrom: 'near-operation-file',
+        withComponent: false,
+        withHooks: false,
+        withHOC: true,
+      };
+
+      const docs = [{ filePath: 'path/to/document.graphql', content: mutationDoc }];
+
+      const content = (await plugin(schema, docs, config, {
+        outputFile: 'graphql.tsx',
+      })) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).toContain(`import * as Operations from './document.graphql';`);
+      expect(content.content).toBeSimilarStringTo(`
+      export function withTest<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
+        TProps,
+        TestMutation,
+        TestMutationVariables,
+        TestProps<TChildProps>>) {
+          return ApolloReactHoc.withMutation<TProps, TestMutation, TestMutationVariables, TestProps<TChildProps>>(Operations.test, {
+            alias: 'withTest',
+            ...operationOptions
+          });
+      };
+      `);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
     it('should import Operations from near operation file for Subscriptions', async () => {
       const config: ReactApolloRawPluginConfig = {
         documentMode: DocumentMode.external,
@@ -1534,6 +1744,36 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       expect(content.content).toBeSimilarStringTo(`
       export function useTestSubscription(baseOptions?: ApolloReactHooks.SubscriptionHookOptions<TestSubscription, TestSubscriptionVariables>) {
         return ApolloReactHooks.useSubscription<TestSubscription, TestSubscriptionVariables>(Operations.test, baseOptions);
+      };`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should import Operations from near operation file for withSubscription', async () => {
+      const config: ReactApolloRawPluginConfig = {
+        documentMode: DocumentMode.external,
+        importDocumentNodeExternallyFrom: 'near-operation-file',
+        withComponent: false,
+        withHooks: false,
+        withHOC: true,
+      };
+
+      const docs = [{ filePath: 'path/to/document.graphql', content: subscriptionDoc }];
+
+      const content = (await plugin(schema, docs, config, {
+        outputFile: 'graphql.tsx',
+      })) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).toContain(`import * as Operations from './document.graphql';`);
+      expect(content.content).toBeSimilarStringTo(`
+      export function withTest<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
+        TProps,
+        TestSubscription,
+        TestSubscriptionVariables,
+        TestProps<TChildProps>>) {
+          return ApolloReactHoc.withSubscription<TProps, TestSubscription, TestSubscriptionVariables, TestProps<TChildProps>>(Operations.test, {
+            alias: 'withTest',
+            ...operationOptions
+          });
       };`);
       await validateTypeScript(content, schema, docs, {});
     });
@@ -1600,6 +1840,62 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       export function useTestThreeSubscription(baseOptions?: ApolloReactHooks.SubscriptionHookOptions<TestThreeSubscription, TestThreeSubscriptionVariables>) {
         return ApolloReactHooks.useSubscription<TestThreeSubscription, TestThreeSubscriptionVariables>(Operations.testThree, baseOptions);
       };`);
+
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should import Operations from near operation file and use it in multiple HOCs', async () => {
+      const config: ReactApolloRawPluginConfig = {
+        documentMode: DocumentMode.external,
+        importDocumentNodeExternallyFrom: 'near-operation-file',
+        withComponent: false,
+        withHooks: false,
+        withHOC: true,
+      };
+
+      const docs = [{ filePath: 'path/to/document.graphql', content: multipleOperationDoc }];
+
+      const content = (await plugin(schema, docs, config, {
+        outputFile: 'graphql.tsx',
+      })) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).toContain(`import * as Operations from './document.graphql';`);
+      expect(content.content).toBeSimilarStringTo(`
+      export function withTestOne<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
+        TProps,
+        TestOneQuery,
+        TestOneQueryVariables,
+        TestOneProps<TChildProps>>) {
+          return ApolloReactHoc.withQuery<TProps, TestOneQuery, TestOneQueryVariables, TestOneProps<TChildProps>>(Operations.testOne, {
+            alias: 'withTestOne',
+            ...operationOptions
+          });
+      };
+      `);
+      expect(content.content).toBeSimilarStringTo(`
+      export function withTestTwo<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
+        TProps,
+        TestTwoMutation,
+        TestTwoMutationVariables,
+        TestTwoProps<TChildProps>>) {
+          return ApolloReactHoc.withMutation<TProps, TestTwoMutation, TestTwoMutationVariables, TestTwoProps<TChildProps>>(Operations.testTwo, {
+            alias: 'withTestTwo',
+            ...operationOptions
+          });
+      };
+      `);
+      expect(content.content).toBeSimilarStringTo(`
+      export function withTestThree<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
+        TProps,
+        TestThreeSubscription,
+        TestThreeSubscriptionVariables,
+        TestThreeProps<TChildProps>>) {
+          return ApolloReactHoc.withSubscription<TProps, TestThreeSubscription, TestThreeSubscriptionVariables, TestThreeProps<TChildProps>>(Operations.testThree, {
+            alias: 'withTestThree',
+            ...operationOptions
+          });
+      };
+      `);
 
       await validateTypeScript(content, schema, docs, {});
     });
