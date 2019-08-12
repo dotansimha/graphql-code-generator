@@ -74,13 +74,16 @@ export const loadSchema = async (schemaDef: Types.Schema, config: Types.Config):
     throw new DetailedError(
       'Failed to load schema',
       `
-        Failed to load schema from ${schemaDef}.
+        Failed to load schema from ${schemaDef}:
+
+        ${e.message}
+        ${e.stack}
     
         GraphQL Code Generator supports:
-          - ES Modules and CommonJS exports
+          - ES Modules and CommonJS exports (export as default or named export "schema")
           - Introspection JSON File
           - URL of GraphQL endpoint
-          - Multiple files with type definitions
+          - Multiple files with type definitions (glob expression)
           - String in config file
     
         Try to use one of above options and run codegen again.
@@ -142,7 +145,19 @@ export const loadDocuments = async (documentsDef: Types.InstanceOrArray<Types.Op
     const loadedFromToolkit = await loadDocumentsToolkit(loadWithToolkit, loadDocumentsToolkitConfig);
 
     if (loadedFromToolkit.length > 0) {
-      result.push(...loadedFromToolkit);
+      result.push(
+        ...loadedFromToolkit.sort((a, b) => {
+          if (a.filePath < b.filePath) {
+            return -1;
+          }
+
+          if (a.filePath > b.filePath) {
+            return 1;
+          }
+
+          return 0;
+        })
+      );
     }
   }
 
