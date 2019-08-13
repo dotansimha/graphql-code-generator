@@ -6,7 +6,6 @@ import { sync as mkdirpSync } from 'mkdirp';
 import { dirname } from 'path';
 import { debugLog } from './utils/debugging';
 import { createHash } from 'crypto';
-import { readFileSync } from 'fs';
 
 const hash = (content: string): string =>
   createHash('sha1')
@@ -34,7 +33,7 @@ export async function generate(config: Types.Config, saveToFile = true): Promise
         let previousHash = recentOutputHash.get(result.filename);
 
         if (!previousHash && exists) {
-          previousHash = hash(readSync(result.filename, 'utf-8'));
+          previousHash = hash(readSync(result.filename));
         }
 
         if (previousHash && currentHash === previousHash) {
