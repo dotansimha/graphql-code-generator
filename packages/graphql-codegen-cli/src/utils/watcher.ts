@@ -3,10 +3,12 @@ import { Types } from '@graphql-codegen/plugin-helpers';
 import { normalizeInstanceOrArray, normalizeOutputParam } from '../helpers';
 import * as isValidPath from 'is-valid-path';
 import * as isGlob from 'is-glob';
+import * as debounce from 'debounce';
 import * as logSymbols from 'log-symbols';
 import { debugLog } from './debugging';
 import { getLogger } from './logger';
 import { join } from 'path';
+import { FSWatcher } from 'chokidar';
 
 function log(msg: string) {
   // double spaces to inline the message with Listr
@@ -17,8 +19,9 @@ function emitWatching() {
   log(`${logSymbols.info} Watching for changes...`);
 }
 
-export const createWatcher = (config: Types.Config, onNext: (result: Types.FileOutput[]) => Promise<Types.FileOutput[]>) => {
+export const createWatcher = (initialConfig: Types.Config, onNext: (result: Types.FileOutput[]) => Promise<Types.FileOutput[]>) => {
   debugLog(`[Watcher] Starting watcher...`);
+  let config: Types.Config = initialConfig;
   const files: string[] = [];
   const documents = normalizeInstanceOrArray<Types.OperationDocument>(config.documents);
   const schemas = normalizeInstanceOrArray<Types.Schema>(config.schema);
@@ -51,10 +54,19 @@ export const createWatcher = (config: Types.Config, onNext: (result: Types.FileO
     files.push(...normalizeInstanceOrArray<string>(config.watch));
   }
 
-  let watcher: any;
+  let watcher: FSWatcher;
 
   const runWatcher = async () => {
     const chokidar = await import('chokidar');
+    let isShutdown = false;
+
+    const debouncedExec = debounce(() => {
+      if (!isShutdown) {
+        executeCodegen(config)
+          .then(onNext, () => Promise.resolve())
+          .then(() => emitWatching());
+      }
+    }, 100);
     emitWatching();
 
     const ignored: string[] = [];
@@ -89,7 +101,6 @@ export const createWatcher = (config: Types.Config, onNext: (result: Types.FileO
 
     debugLog(`[Watcher] Started`);
 
-    let isShutdown = false;
     const shutdown = async () => {
       isShutdown = true;
       debugLog(`[Watcher] Shutting down`);
@@ -98,12 +109,10 @@ export const createWatcher = (config: Types.Config, onNext: (result: Types.FileO
     };
 
     // it doesn't matter what has changed, need to run whole process anyway
-    watcher.on('all', () => {
-      if (!isShutdown) {
-        executeCodegen(config)
-          .then(onNext, () => Promise.resolve())
-          .then(() => emitWatching());
-      }
+    watcher.on('all', (eventName, path) => {
+      debugLog(`[Watcher] triggered due to a file change: ${eventName} - ${path}`);
+
+      debouncedExec();
     });
 
     process.once('SIGINT', shutdown);

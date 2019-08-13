@@ -183,7 +183,17 @@ export type OnCommentAddedSubscriptionVariables = {
 };
 
 
-export type OnCommentAddedSubscription = ({ __typename?: 'Subscription' } & { commentAdded: ?({ __typename?: 'Comment' } & $Pick<Comment, { id: *, createdAt: *, content: * }> & { postedBy: ({ __typename?: 'User' } & $Pick<User, { login: *, html_url: * }>) }) });
+export type OnCommentAddedSubscription = (
+  { __typename?: 'Subscription' }
+  & { commentAdded: ?(
+    { __typename?: 'Comment' }
+    & $Pick<Comment, { id: *, createdAt: *, content: * }>
+    & { postedBy: (
+      { __typename?: 'User' }
+      & $Pick<User, { login: *, html_url: * }>
+    ) }
+  ) }
+);
 
 export type CommentQueryVariables = {
   repoFullName: $ElementType<Scalars, 'String'>,
@@ -192,16 +202,61 @@ export type CommentQueryVariables = {
 };
 
 
-export type CommentQuery = ({ __typename?: 'Query' } & { currentUser: ?({ __typename?: 'User' } & $Pick<User, { login: *, html_url: * }>), entry: ?({ __typename?: 'Entry' } & $Pick<Entry, { id: *, createdAt: *, commentCount: * }> & { postedBy: ({ __typename?: 'User' } & $Pick<User, { login: *, html_url: * }>), comments: Array<?({ __typename?: 'Comment' } & CommentsPageCommentFragment)>, repository: ({ __typename?: 'Repository' } & $Pick<Repository, { full_name: *, html_url: * }> & ({ __typename?: 'Repository' } & $Pick<Repository, { description: *, open_issues_count: *, stargazers_count: * }>)) }) });
+export type CommentQuery = (
+  { __typename?: 'Query' }
+  & { currentUser: ?(
+    { __typename?: 'User' }
+    & $Pick<User, { login: *, html_url: * }>
+  ), entry: ?(
+    { __typename?: 'Entry' }
+    & $Pick<Entry, { id: *, createdAt: *, commentCount: * }>
+    & { postedBy: (
+      { __typename?: 'User' }
+      & $Pick<User, { login: *, html_url: * }>
+    ), comments: Array<?{ __typename?: 'Comment' }
+      & CommentsPageCommentFragment
+    >, repository: (
+      { __typename?: 'Repository' }
+      & $Pick<Repository, { description: *, open_issues_count: *, stargazers_count: *, full_name: *, html_url: * }>
+    ) }
+  ) }
+);
 
-export type CommentsPageCommentFragment = ({ __typename?: 'Comment' } & $Pick<Comment, { id: *, createdAt: *, content: * }> & { postedBy: ({ __typename?: 'User' } & $Pick<User, { login: *, html_url: * }>) });
+export type CommentsPageCommentFragment = (
+  { __typename?: 'Comment' }
+  & $Pick<Comment, { id: *, createdAt: *, content: * }>
+  & { postedBy: (
+    { __typename?: 'User' }
+    & $Pick<User, { login: *, html_url: * }>
+  ) }
+);
 
 export type CurrentUserForProfileQueryVariables = {};
 
 
-export type CurrentUserForProfileQuery = ({ __typename?: 'Query' } & { currentUser: ?({ __typename?: 'User' } & $Pick<User, { login: *, avatar_url: * }>) });
+export type CurrentUserForProfileQuery = (
+  { __typename?: 'Query' }
+  & { currentUser: ?(
+    { __typename?: 'User' }
+    & $Pick<User, { login: *, avatar_url: * }>
+  ) }
+);
 
-export type FeedEntryFragment = ({ __typename?: 'Entry' } & $Pick<Entry, { id: *, commentCount: * }> & { repository: ({ __typename?: 'Repository' } & $Pick<Repository, { full_name: *, html_url: * }> & { owner: ?({ __typename?: 'User' } & $Pick<User, { avatar_url: * }>) }) } & (VoteButtonsFragment & RepoInfoFragment));
+export type FeedEntryFragment = (
+  { __typename?: 'Entry' }
+  & $Pick<Entry, { id: *, commentCount: * }>
+  & { repository: (
+    { __typename?: 'Repository' }
+    & $Pick<Repository, { full_name: *, html_url: * }>
+    & { owner: ?(
+      { __typename?: 'User' }
+      & $Pick<User, { avatar_url: * }>
+    ) }
+  ) }
+)
+  & VoteButtonsFragment
+  & RepoInfoFragment
+;
 
 export type FeedQueryVariables = {
   type: FeedType,
@@ -210,16 +265,40 @@ export type FeedQueryVariables = {
 };
 
 
-export type FeedQuery = ({ __typename?: 'Query' } & { currentUser: ?({ __typename?: 'User' } & $Pick<User, { login: * }>), feed: ?Array<?({ __typename?: 'Entry' } & FeedEntryFragment)> });
+export type FeedQuery = (
+  { __typename?: 'Query' }
+  & { currentUser: ?(
+    { __typename?: 'User' }
+    & $Pick<User, { login: * }>
+  ), feed: ?Array<?{ __typename?: 'Entry' }
+    & FeedEntryFragment
+  > }
+);
 
 export type SubmitRepositoryMutationVariables = {
   repoFullName: $ElementType<Scalars, 'String'>
 };
 
 
-export type SubmitRepositoryMutation = ({ __typename?: 'Mutation' } & { submitRepository: ?({ __typename?: 'Entry' } & $Pick<Entry, { createdAt: * }>) });
+export type SubmitRepositoryMutation = (
+  { __typename?: 'Mutation' }
+  & { submitRepository: ?(
+    { __typename?: 'Entry' }
+    & $Pick<Entry, { createdAt: * }>
+  ) }
+);
 
-export type RepoInfoFragment = ({ __typename?: 'Entry' } & $Pick<Entry, { createdAt: * }> & { repository: ({ __typename?: 'Repository' } & $Pick<Repository, { description: *, stargazers_count: *, open_issues_count: * }>), postedBy: ({ __typename?: 'User' } & $Pick<User, { html_url: *, login: * }>) });
+export type RepoInfoFragment = (
+  { __typename?: 'Entry' }
+  & $Pick<Entry, { createdAt: * }>
+  & { repository: (
+    { __typename?: 'Repository' }
+    & $Pick<Repository, { description: *, stargazers_count: *, open_issues_count: * }>
+  ), postedBy: (
+    { __typename?: 'User' }
+    & $Pick<User, { html_url: *, login: * }>
+  ) }
+);
 
 export type SubmitCommentMutationVariables = {
   repoFullName: $ElementType<Scalars, 'String'>,
@@ -227,9 +306,21 @@ export type SubmitCommentMutationVariables = {
 };
 
 
-export type SubmitCommentMutation = ({ __typename?: 'Mutation' } & { submitComment: ?({ __typename?: 'Comment' } & CommentsPageCommentFragment) });
+export type SubmitCommentMutation = (
+  { __typename?: 'Mutation' }
+  & { submitComment: ?{ __typename?: 'Comment' }
+    & CommentsPageCommentFragment
+   }
+);
 
-export type VoteButtonsFragment = ({ __typename?: 'Entry' } & $Pick<Entry, { score: * }> & { vote: ({ __typename?: 'Vote' } & $Pick<Vote, { vote_value: * }>) });
+export type VoteButtonsFragment = (
+  { __typename?: 'Entry' }
+  & $Pick<Entry, { score: * }>
+  & { vote: (
+    { __typename?: 'Vote' }
+    & $Pick<Vote, { vote_value: * }>
+  ) }
+);
 
 export type VoteMutationVariables = {
   repoFullName: $ElementType<Scalars, 'String'>,
@@ -237,4 +328,14 @@ export type VoteMutationVariables = {
 };
 
 
-export type VoteMutation = ({ __typename?: 'Mutation' } & { vote: ?({ __typename?: 'Entry' } & $Pick<Entry, { score: *, id: * }> & { vote: ({ __typename?: 'Vote' } & $Pick<Vote, { vote_value: * }>) }) });
+export type VoteMutation = (
+  { __typename?: 'Mutation' }
+  & { vote: ?(
+    { __typename?: 'Entry' }
+    & $Pick<Entry, { score: *, id: * }>
+    & { vote: (
+      { __typename?: 'Vote' }
+      & $Pick<Vote, { vote_value: * }>
+    ) }
+  ) }
+);

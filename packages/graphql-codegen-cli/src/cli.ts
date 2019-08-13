@@ -16,12 +16,15 @@ switch (cmd) {
       .catch(cliError);
     break;
 
-  default:
-    createConfig().then(config => {
+  default: {
+    const config = createConfig();
+
+    config.then(config => {
       return generate(config)
         .then(() => {
           process.exit(0);
         })
         .catch(cliError);
     });
+  }
 }

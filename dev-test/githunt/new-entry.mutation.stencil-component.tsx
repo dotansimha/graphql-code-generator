@@ -11,7 +11,13 @@ import { Component, Prop, h } from '@stencil/core';
 };
 
 
-export type SubmitRepositoryMutation = ({ __typename?: 'Mutation' } & { submitRepository: Types.Maybe<({ __typename?: 'Entry' } & Pick<Types.Entry, 'createdAt'>)> });
+export type SubmitRepositoryMutation = (
+  { __typename?: 'Mutation' }
+  & { submitRepository: Types.Maybe<(
+    { __typename?: 'Entry' }
+    & Pick<Types.Entry, 'createdAt'>
+  )> }
+);
  
     }
           
