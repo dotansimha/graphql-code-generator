@@ -93,6 +93,7 @@ export namespace Types {
     overwrite?: boolean;
     prettify?: boolean;
     watch?: boolean | string | string[];
+    configFilePath?: string;
     silent?: boolean;
     pluginLoader?: PackageLoaderFn<CodegenPlugin>;
     pluckConfig?: {

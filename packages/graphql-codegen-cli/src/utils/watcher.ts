@@ -9,6 +9,7 @@ import { debugLog } from './debugging';
 import { getLogger } from './logger';
 import { join } from 'path';
 import { FSWatcher } from 'chokidar';
+import { loadAndParseConfig } from '../config';
 
 function log(msg: string) {
   // double spaces to inline the message with Listr
@@ -22,7 +23,7 @@ function emitWatching() {
 export const createWatcher = (initialConfig: Types.Config, onNext: (result: Types.FileOutput[]) => Promise<Types.FileOutput[]>) => {
   debugLog(`[Watcher] Starting watcher...`);
   let config: Types.Config = initialConfig;
-  const files: string[] = [];
+  const files: string[] = [initialConfig.configFilePath].filter(a => a);
   const documents = normalizeInstanceOrArray<Types.OperationDocument>(config.documents);
   const schemas = normalizeInstanceOrArray<Types.Schema>(config.schema);
 
@@ -109,8 +110,19 @@ export const createWatcher = (initialConfig: Types.Config, onNext: (result: Type
     };
 
     // it doesn't matter what has changed, need to run whole process anyway
-    watcher.on('all', (eventName, path) => {
-      debugLog(`[Watcher] triggered due to a file change: ${eventName} - ${path}`);
+    watcher.on('all', async (eventName, path) => {
+      debugLog(`[Watcher] triggered due to a file ${eventName} event: ${path}`);
+      const fullPath = join(process.cwd(), path);
+
+      if (eventName === 'change' && config.configFilePath && fullPath === config.configFilePath) {
+        log(`${logSymbols.info} Config file has changed, reloading...`);
+        const newParsedConfig = loadAndParseConfig(config.configFilePath);
+        newParsedConfig.watch = config.watch;
+        newParsedConfig.silent = config.silent;
+        newParsedConfig.overwrite = config.overwrite;
+        newParsedConfig.configFilePath = config.configFilePath;
+        config = newParsedConfig;
+      }
 
       debouncedExec();
     });
