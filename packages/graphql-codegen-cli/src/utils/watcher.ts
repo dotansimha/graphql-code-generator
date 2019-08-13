@@ -10,6 +10,7 @@ import { getLogger } from './logger';
 import { join } from 'path';
 import { FSWatcher } from 'chokidar';
 import { loadAndParseConfig } from '../config';
+import { lifecycleHooks } from '../hooks';
 
 function log(msg: string) {
   // double spaces to inline the message with Listr
@@ -107,10 +108,12 @@ export const createWatcher = (initialConfig: Types.Config, onNext: (result: Type
       debugLog(`[Watcher] Shutting down`);
       log(`Shutting down watch...`);
       watcher.close();
+      lifecycleHooks.beforeDone();
     };
 
     // it doesn't matter what has changed, need to run whole process anyway
     watcher.on('all', async (eventName, path) => {
+      lifecycleHooks.onWatchTriggered(eventName, path);
       debugLog(`[Watcher] triggered due to a file ${eventName} event: ${path}`);
       const fullPath = join(process.cwd(), path);
 

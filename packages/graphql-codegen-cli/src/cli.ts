@@ -4,6 +4,7 @@ import { generate } from './generate-and-save';
 import { init } from './init';
 import { cliError } from './utils/cli-error';
 import { createConfig } from './config';
+import { lifecycleHooks } from './hooks';
 
 const [, , cmd] = process.argv;
 
@@ -24,7 +25,10 @@ switch (cmd) {
         .then(() => {
           process.exit(0);
         })
-        .catch(cliError);
+        .catch(error => {
+          cliError(error);
+          lifecycleHooks.onError(error.toString());
+        });
     });
   }
 }

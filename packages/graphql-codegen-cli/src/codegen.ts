@@ -2,7 +2,6 @@ import { Types, CodegenPlugin } from '@graphql-codegen/plugin-helpers';
 import { DetailedError, codegen, mergeSchemas } from '@graphql-codegen/core';
 import * as Listr from 'listr';
 import { normalizeOutputParam, normalizeInstanceOrArray, normalizeConfig } from './helpers';
-import { prettify } from './utils/prettier';
 import { Renderer } from './utils/listr-renderer';
 import { loadSchema, loadDocuments } from './load';
 import { GraphQLError, DocumentNode } from 'graphql';
@@ -243,7 +242,7 @@ export async function executeCodegen(config: Types.Config): Promise<Types.FileOu
                         const output = await codegen(outputArgs);
                         result.push({
                           filename: outputArgs.filename,
-                          content: config.prettify === undefined || config.prettify ? await prettify(outputArgs.filename, output) : output,
+                          content: output,
                         });
                       };
 
