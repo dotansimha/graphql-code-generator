@@ -1,5 +1,5 @@
 jest.mock('fs');
-import { createConfig } from '../src/config';
+import { createConfig, parseArgv } from '../src/config';
 import { join } from 'path';
 
 const mockFsFile = (file: string, content: string) => require('fs').__setMockFiles(file, content);
@@ -33,11 +33,9 @@ describe('CLI Flags', () => {
                 - plugin
     `);
     const args = createArgv();
-    const config = await createConfig(args);
-    expect(config).toEqual({
-      schema: 'schema.graphql',
-      generates: { 'file.ts': ['plugin'] },
-    });
+    const config = await createConfig(parseArgv(args));
+    expect(config.schema).toEqual('schema.graphql');
+    expect(config.generates).toEqual({ 'file.ts': ['plugin'] });
   });
 
   it('Should use different config file correctly with --config', async () => {
@@ -51,11 +49,9 @@ describe('CLI Flags', () => {
       'other.yml'
     );
     const args = createArgv('--config other.yml');
-    const config = await createConfig(args);
-    expect(config).toEqual({
-      schema: 'schema.graphql',
-      generates: { 'file.ts': ['plugin'] },
-    });
+    const config = await createConfig(parseArgv(args));
+    expect(config.schema).toEqual('schema.graphql');
+    expect(config.generates).toEqual({ 'file.ts': ['plugin'] });
   });
 
   it('Should set --watch with new YML api', async () => {
@@ -66,7 +62,7 @@ describe('CLI Flags', () => {
                 - plugin
     `);
     const args = createArgv('--watch');
-    const config = await createConfig(args);
+    const config = await createConfig(parseArgv(args));
     expect(config.watch).toBeTruthy();
   });
 
@@ -78,7 +74,7 @@ describe('CLI Flags', () => {
                 - plugin
     `);
     const args = createArgv();
-    const config = await createConfig(args);
+    const config = await createConfig(parseArgv(args));
     expect(config.watch).not.toBeTruthy();
     expect(config.overwrite).not.toBeTruthy();
   });
@@ -92,7 +88,7 @@ describe('CLI Flags', () => {
                 - plugin
     `);
     const args = createArgv('--watch');
-    const config = await createConfig(args);
+    const config = await createConfig(parseArgv(args));
     expect(config.watch).toBeTruthy();
   });
 
@@ -104,7 +100,7 @@ describe('CLI Flags', () => {
                 - plugin
     `);
     const args = createArgv('--overwrite');
-    const config = await createConfig(args);
+    const config = await createConfig(parseArgv(args));
     expect(config.overwrite).toBeTruthy();
   });
 
@@ -117,7 +113,7 @@ describe('CLI Flags', () => {
                 - plugin
     `);
     const args = createArgv('--overwrite');
-    const config = await createConfig(args);
+    const config = await createConfig(parseArgv(args));
     expect(config.schema).toBe('schema-env.graphql');
   });
 
@@ -131,7 +127,7 @@ describe('CLI Flags', () => {
                 - plugin
     `);
     const args = createArgv('--overwrite');
-    const config = await createConfig(args);
+    const config = await createConfig(parseArgv(args));
     expect(config.schema).toBe('schema.graphql');
   });
 
@@ -145,7 +141,7 @@ describe('CLI Flags', () => {
                 - plugin
     `);
     const args = createArgv('--overwrite');
-    const config = await createConfig(args);
+    const config = await createConfig(parseArgv(args));
     expect(config.schema).toBe('http://url-to-graphql-api');
   });
 
@@ -160,7 +156,7 @@ describe('CLI Flags', () => {
     const args = createArgv('--require my-extension');
 
     try {
-      await createConfig(args);
+      await createConfig(parseArgv(args));
       expect(true).toBeFalsy();
     } catch (e) {
       expect(e.message).toBe(`Cannot find module 'my-extension' from 'config.ts'`);
