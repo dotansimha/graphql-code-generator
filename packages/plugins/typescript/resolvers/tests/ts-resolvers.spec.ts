@@ -312,7 +312,7 @@ describe('TypeScript Resolvers Plugin', () => {
       export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyType'] = ResolversParentTypes['MyType']> = {
         foo?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
         otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>,
-        withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, MyTypeWithArgsArgs>,
+        withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeWithArgsArgs, 'arg2'>>,
       };
     `);
 
@@ -371,7 +371,7 @@ describe('TypeScript Resolvers Plugin', () => {
       export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyType'] = ResolversParentTypes['MyType']> = {
         foo: Resolver<ResolversTypes['String'], ParentType, ContextType>,
         otherType: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>,
-        withArgs: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, MyTypeWithArgsArgs>,
+        withArgs: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeWithArgsArgs, 'arg2'>>,
       };
     `);
 
@@ -433,7 +433,7 @@ describe('TypeScript Resolvers Plugin', () => {
       export type MyTypeResolvers<ContextType = MyCustomCtx, ParentType extends ResolversParentTypes['MyType'] = ResolversParentTypes['MyType']> = {
         foo?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
         otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>,
-        withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, MyTypeWithArgsArgs>,
+        withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeWithArgsArgs, 'arg2'>>,
       };
     `);
 
@@ -513,7 +513,7 @@ describe('TypeScript Resolvers Plugin', () => {
       export type MyTypeResolvers<ContextType = MyCustomCtx, ParentType extends ResolversParentTypes['MyType'] = ResolversParentTypes['MyType']> = {
         foo?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
         otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>,
-        withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, MyTypeWithArgsArgs>,
+        withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeWithArgsArgs, 'arg2'>>,
       };
     `);
 
@@ -577,7 +577,7 @@ describe('TypeScript Resolvers Plugin', () => {
       export type MyTypeResolvers<ContextType = ContextType, ParentType extends ResolversParentTypes['MyType'] = ResolversParentTypes['MyType']> = {
         foo?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
         otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, ContextType>,
-        withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, MyTypeWithArgsArgs>,
+        withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeWithArgsArgs, 'arg2'>>,
       };
     `);
 
@@ -1380,5 +1380,48 @@ describe('TypeScript Resolvers Plugin', () => {
       };
     `);
     }).not.toThrow();
+  });
+
+  it('should keep non-optional arguments non-optional - issue #2323', async () => {
+    const testSchema = buildSchema(/* GraphQL */ `
+      enum OrderBy {
+        name
+        id
+      }
+
+      input Filter {
+        contain: String
+      }
+
+      type Node {
+        id: ID!
+        name: String!
+      }
+
+      type Connection {
+        nodes: [Node]
+      }
+
+      type Query {
+        list(after: String, orderBy: OrderBy = name, filter: Filter!): Connection!
+      }
+    `);
+
+    const output = (await plugin(
+      testSchema,
+      [],
+      {
+        avoidOptionals: false,
+        maybeValue: 'T | undefined',
+      } as any,
+      { outputFile: 'graphql.ts' }
+    )) as Types.ComplexPluginOutput;
+
+    // filter should be non-optional
+    expect(output.content).toBeSimilarStringTo(`
+      export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+        list?: Resolver<ResolversTypes['Connection'], ParentType, ContextType, RequireFields<QueryListArgs, 'orderBy' | 'filter'>>,
+      };
+    `);
   });
 });

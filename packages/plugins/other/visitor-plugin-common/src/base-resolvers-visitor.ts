@@ -696,7 +696,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
         : null;
 
       if (argsType !== null) {
-        const argsToForceRequire = original.arguments.filter(arg => !!arg.defaultValue);
+        const argsToForceRequire = original.arguments.filter(arg => !!arg.defaultValue || arg.type.kind === 'NonNullType');
 
         if (argsToForceRequire.length > 0) {
           argsType = this.applyRequireFields(argsType, argsToForceRequire);
