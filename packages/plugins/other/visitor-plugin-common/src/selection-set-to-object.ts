@@ -267,6 +267,15 @@ export class SelectionSetToObject {
 
     const possibleTypes = this._getPossibleTypes(this._parentSchemaType);
 
+    if (possibleTypes.length > 0) {
+      const sharedFieldNodes = fieldNodes.filter(node => node.name.value === '__typename');
+      if (sharedFieldNodes.length) {
+        selectionNodesByTypeName.forEach(nodes => {
+          nodes.push(...sharedFieldNodes);
+        });
+      }
+    }
+
     const fieldSelections = possibleTypes.map(type => {
       const typeName = type.name;
       const schemaType = this._schema.getType(typeName);
