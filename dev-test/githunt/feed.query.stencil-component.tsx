@@ -14,7 +14,15 @@ import { Component, Prop, h } from '@stencil/core';
 };
 
 
-export type FeedQuery = ({ __typename?: 'Query' } & { currentUser: Types.Maybe<({ __typename?: 'User' } & Pick<Types.User, 'login'>)>, feed: Types.Maybe<Array<Types.Maybe<({ __typename?: 'Entry' } & FeedEntryFragment)>>> });
+export type FeedQuery = (
+  { __typename?: 'Query' }
+  & { currentUser: Types.Maybe<(
+    { __typename?: 'User' }
+    & Pick<Types.User, 'login'>
+  )>, feed: Types.Maybe<Array<Types.Maybe<{ __typename?: 'Entry' }
+    & FeedEntryFragment
+  >>> }
+);
  
     }
           

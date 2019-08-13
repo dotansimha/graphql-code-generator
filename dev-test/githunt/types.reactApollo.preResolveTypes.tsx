@@ -189,7 +189,9 @@ export type CommentQueryVariables = {
 };
 
 
-export type CommentQuery = { __typename?: 'Query', currentUser: Maybe<{ __typename?: 'User', login: string, html_url: string }>, entry: Maybe<{ __typename?: 'Entry', id: number, createdAt: number, commentCount: number, postedBy: { __typename?: 'User', login: string, html_url: string }, comments: Array<Maybe<({ __typename?: 'Comment' } & CommentsPageCommentFragment)>>, repository: ({ __typename?: 'Repository', full_name: string, html_url: string } & { __typename?: 'Repository', description: Maybe<string>, open_issues_count: Maybe<number>, stargazers_count: number }) }> };
+export type CommentQuery = { __typename?: 'Query', currentUser: Maybe<{ __typename?: 'User', login: string, html_url: string }>, entry: Maybe<{ __typename?: 'Entry', id: number, createdAt: number, commentCount: number, postedBy: { __typename?: 'User', login: string, html_url: string }, comments: Array<Maybe<{ __typename?: 'Comment' }
+      & CommentsPageCommentFragment
+    >>, repository: { __typename?: 'Repository', description: Maybe<string>, open_issues_count: Maybe<number>, stargazers_count: number, full_name: string, html_url: string } }> };
 
 export type CommentsPageCommentFragment = { __typename?: 'Comment', id: number, createdAt: number, content: string, postedBy: { __typename?: 'User', login: string, html_url: string } };
 
@@ -198,7 +200,10 @@ export type CurrentUserForProfileQueryVariables = {};
 
 export type CurrentUserForProfileQuery = { __typename?: 'Query', currentUser: Maybe<{ __typename?: 'User', login: string, avatar_url: string }> };
 
-export type FeedEntryFragment = ({ __typename?: 'Entry', id: number, commentCount: number, repository: { __typename?: 'Repository', full_name: string, html_url: string, owner: Maybe<{ __typename?: 'User', avatar_url: string }> } } & (VoteButtonsFragment & RepoInfoFragment));
+export type FeedEntryFragment = { __typename?: 'Entry', id: number, commentCount: number, repository: { __typename?: 'Repository', full_name: string, html_url: string, owner: Maybe<{ __typename?: 'User', avatar_url: string }> } }
+  & VoteButtonsFragment
+  & RepoInfoFragment
+;
 
 export type FeedQueryVariables = {
   type: FeedType,
@@ -207,7 +212,9 @@ export type FeedQueryVariables = {
 };
 
 
-export type FeedQuery = { __typename?: 'Query', currentUser: Maybe<{ __typename?: 'User', login: string }>, feed: Maybe<Array<Maybe<({ __typename?: 'Entry' } & FeedEntryFragment)>>> };
+export type FeedQuery = { __typename?: 'Query', currentUser: Maybe<{ __typename?: 'User', login: string }>, feed: Maybe<Array<Maybe<{ __typename?: 'Entry' }
+    & FeedEntryFragment
+  >>> };
 
 export type SubmitRepositoryMutationVariables = {
   repoFullName: Scalars['String']
@@ -224,7 +231,9 @@ export type SubmitCommentMutationVariables = {
 };
 
 
-export type SubmitCommentMutation = { __typename?: 'Mutation', submitComment: Maybe<({ __typename?: 'Comment' } & CommentsPageCommentFragment)> };
+export type SubmitCommentMutation = { __typename?: 'Mutation', submitComment: Maybe<{ __typename?: 'Comment' }
+    & CommentsPageCommentFragment
+  > };
 
 export type VoteButtonsFragment = { __typename?: 'Entry', score: number, vote: { __typename?: 'Vote', vote_value: number } };
 

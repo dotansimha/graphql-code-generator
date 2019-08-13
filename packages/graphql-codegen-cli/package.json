@@ -41,6 +41,8 @@
   },
   "homepage": "https://github.com/dotansimha/graphql-codegen#readme",
   "dependencies": {
+    "@types/debounce": "1.2.0",
+    "debounce": "1.2.0",
     "@babel/parser": "7.5.5",
     "@graphql-codegen/core": "1.5.0",
     "@graphql-codegen/plugin-helpers": "1.5.0",

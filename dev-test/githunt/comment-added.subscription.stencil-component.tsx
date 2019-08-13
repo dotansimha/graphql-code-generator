@@ -11,7 +11,17 @@ import { Component, Prop, h } from '@stencil/core';
 };
 
 
-export type OnCommentAddedSubscription = ({ __typename?: 'Subscription' } & { commentAdded: Types.Maybe<({ __typename?: 'Comment' } & Pick<Types.Comment, 'id' | 'createdAt' | 'content'> & { postedBy: ({ __typename?: 'User' } & Pick<Types.User, 'login' | 'html_url'>) })> });
+export type OnCommentAddedSubscription = (
+  { __typename?: 'Subscription' }
+  & { commentAdded: Types.Maybe<(
+    { __typename?: 'Comment' }
+    & Pick<Types.Comment, 'id' | 'createdAt' | 'content'>
+    & { postedBy: (
+      { __typename?: 'User' }
+      & Pick<Types.User, 'login' | 'html_url'>
+    ) }
+  )> }
+);
  
     }
           

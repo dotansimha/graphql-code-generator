@@ -13,7 +13,12 @@ import { Component, Prop, h } from '@stencil/core';
 };
 
 
-export type SubmitCommentMutation = ({ __typename?: 'Mutation' } & { submitComment: Types.Maybe<({ __typename?: 'Comment' } & CommentsPageCommentFragment)> });
+export type SubmitCommentMutation = (
+  { __typename?: 'Mutation' }
+  & { submitComment: Types.Maybe<{ __typename?: 'Comment' }
+    & CommentsPageCommentFragment
+  > }
+);
  
     }
           
