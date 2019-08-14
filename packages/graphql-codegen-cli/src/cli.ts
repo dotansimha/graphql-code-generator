@@ -25,9 +25,9 @@ switch (cmd) {
         .then(() => {
           process.exit(0);
         })
-        .catch(error => {
+        .catch(async error => {
+          await lifecycleHooks(config.hooks).onError(error.toString());
           cliError(error);
-          lifecycleHooks.onError(error.toString());
         });
     });
   }

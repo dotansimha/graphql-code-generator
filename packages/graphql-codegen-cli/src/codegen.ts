@@ -243,6 +243,7 @@ export async function executeCodegen(config: Types.Config): Promise<Types.FileOu
                         result.push({
                           filename: outputArgs.filename,
                           content: output,
+                          hooks: outputConfig.hooks || {},
                         });
                       };
 

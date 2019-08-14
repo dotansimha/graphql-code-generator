@@ -17,6 +17,10 @@ export namespace Types {
   export type FileOutput = {
     filename: string;
     content: string;
+    hooks?: {
+      beforeOneFileWrite?: LifecycleHooksDefinition<string | string[]>['beforeOneFileWrite'];
+      afterOneFileWrite?: LifecycleHooksDefinition<string | string[]>['afterOneFileWrite'];
+    };
   };
 
   export type DocumentFile = {
@@ -57,6 +61,7 @@ export namespace Types {
     documents?: InstanceOrArray<OperationDocument>;
     schema?: InstanceOrArray<Schema>;
     config?: PluginConfig;
+    hooks?: LifecycleHooksDefinition<string | string[]>;
   };
 
   /* Output Builder Preset */

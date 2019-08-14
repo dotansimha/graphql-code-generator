@@ -108,12 +108,12 @@ export const createWatcher = (initialConfig: Types.Config, onNext: (result: Type
       debugLog(`[Watcher] Shutting down`);
       log(`Shutting down watch...`);
       watcher.close();
-      lifecycleHooks.beforeDone();
+      lifecycleHooks(config.hooks).beforeDone();
     };
 
     // it doesn't matter what has changed, need to run whole process anyway
     watcher.on('all', async (eventName, path) => {
-      lifecycleHooks.onWatchTriggered(eventName, path);
+      lifecycleHooks(config.hooks).onWatchTriggered(eventName, path);
       debugLog(`[Watcher] triggered due to a file ${eventName} event: ${path}`);
       const fullPath = join(process.cwd(), path);
 
