@@ -76,7 +76,7 @@ export const lifecycleHooks = (_hooks: Partial<Types.LifecycleHooksDefinition<st
   return {
     afterStart: async (): Promise<void> => executeHooks('afterStart', hooks.afterStart),
     onWatchTriggered: async (event: string, path: string): Promise<void> => executeHooks('onWatchTriggered', hooks.onWatchTriggered, [event, path]),
-    onError: async (error: string): Promise<void> => executeHooks('onError', hooks.onError, [error]),
+    onError: async (error: string): Promise<void> => executeHooks('onError', hooks.onError, [`"${error}"`]),
     afterOneFileWrite: async (path: string): Promise<void> => executeHooks('afterOneFileWrite', hooks.afterOneFileWrite, [path]),
     afterAllFileWrite: async (paths: string[]): Promise<void> => executeHooks('afterAllFileWrite', hooks.afterAllFileWrite, paths),
     beforeOneFileWrite: async (path: string): Promise<void> => executeHooks('beforeOneFileWrite', hooks.beforeOneFileWrite, [path]),

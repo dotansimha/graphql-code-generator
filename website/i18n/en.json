@@ -107,6 +107,9 @@
       "getting-started/index": {
         "title": "What is GraphQL Code Generator?"
       },
+      "getting-started/lifecycle-hooks": {
+        "title": "Lifecycle Hooks"
+      },
       "getting-started/programmatic-usage": {
         "title": "Programmatic Usage"
       },
@@ -122,8 +125,14 @@
       "integrations/create-react-app": {
         "title": "Create-React-App"
       },
+      "integrations/federation": {
+        "title": "Apollo Federation"
+      },
       "integrations/gatsby": {
         "title": "GatsbyJS"
+      },
+      "integrations/prettier": {
+        "title": "Prettier & Linters"
       },
       "migration/from-0-13": {
         "title": "Migration from 0.13 to 0.18"

@@ -53,6 +53,8 @@ Here are the supported options that you can define in the config file (see [sour
 
 - **`silent`** - A flag to not print errors in case they occur.
 
+- **`hooks`** - Specifies scripts to run when events are happening in the codegen's core. [You can read more about lifecycle hooks here here](./lifecycle-hooks). You can specify this on your root configuration, or per each output.
+
 - **`pluginLoader`** - If you are using the programmatic API in browser environment, you can override this configuration to load your plugins in a way different then `require`.
   \
 - **`pluckConfig`** - Allow you to override the configuration for `graphql-tag-pluck` (the tool that extracts your GraphQL operations from your code files).
