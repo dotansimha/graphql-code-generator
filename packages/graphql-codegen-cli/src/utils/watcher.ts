@@ -1,6 +1,6 @@
 import { executeCodegen } from '../codegen';
 import { Types } from '@graphql-codegen/plugin-helpers';
-import { normalizeInstanceOrArray, normalizeOutputParam } from '../helpers';
+import { normalizeInstanceOrArray, normalizeOutputParam } from '@graphql-codegen/plugin-helpers';
 import * as isValidPath from 'is-valid-path';
 import * as isGlob from 'is-glob';
 import * as debounce from 'debounce';

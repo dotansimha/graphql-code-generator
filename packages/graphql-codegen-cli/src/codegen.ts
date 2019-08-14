@@ -1,7 +1,7 @@
 import { Types, CodegenPlugin } from '@graphql-codegen/plugin-helpers';
 import { DetailedError, codegen, mergeSchemas } from '@graphql-codegen/core';
 import * as Listr from 'listr';
-import { normalizeOutputParam, normalizeInstanceOrArray, normalizeConfig } from './helpers';
+import { normalizeOutputParam, normalizeInstanceOrArray, normalizeConfig } from '@graphql-codegen/plugin-helpers';
 import { Renderer } from './utils/listr-renderer';
 import { loadSchema, loadDocuments } from './load';
 import { GraphQLError, DocumentNode } from 'graphql';
