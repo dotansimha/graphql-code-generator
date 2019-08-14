@@ -642,12 +642,12 @@ describe('Codegen Executor', () => {
 
       expect(output.length).toBe(1);
       expect(output[0].content).toBeSimilarStringTo(`export type Scalars = {
-        ID: string;
-        String: string;
-        Boolean: boolean;
-        Int: number;
-        Float: number;
-        UniqueID: any;
+        ID: string,
+        String: string,
+        Boolean: boolean,
+        Int: number,
+        Float: number,
+        UniqueID: any,
       };`);
     });
   });

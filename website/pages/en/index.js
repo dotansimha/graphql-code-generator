@@ -80,9 +80,6 @@ class HomeSplash extends React.Component {
       <SplashContainer>
         <div className="inner">
           <ProjectTitle />
-          <h2>
-            <a href={`${siteConfig.baseUrl}docs/migration/from-0-18`}>GraphQL Codegen 1.0 is here!</a>
-          </h2>
           <PromoSection>
             <Button href={'#live-demo'}>Try It Out</Button>
             <Button href={`${siteConfig.baseUrl}docs/getting-started`}>View Docs</Button>

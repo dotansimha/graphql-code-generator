@@ -1,3 +1,4 @@
+import { lifecycleHooks } from './hooks';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { executeCodegen } from './codegen';
 import { createWatcher } from './utils/watcher';
@@ -13,12 +14,15 @@ const hash = (content: string): string =>
     .digest('base64');
 
 export async function generate(config: Types.Config, saveToFile = true): Promise<Types.FileOutput[] | any> {
+  await lifecycleHooks(config.hooks).afterStart();
   let recentOutputHash = new Map<string, string>();
 
   async function writeOutput(generationResult: Types.FileOutput[]) {
     if (!saveToFile) {
       return generationResult;
     }
+
+    await lifecycleHooks(config.hooks).beforeAllFileWrite(generationResult.map(r => r.filename));
 
     await Promise.all(
       generationResult.map(async (result: Types.FileOutput) => {
@@ -48,10 +52,16 @@ export async function generate(config: Types.Config, saveToFile = true): Promise
 
         recentOutputHash.set(result.filename, currentHash);
         const basedir = dirname(result.filename);
+        await lifecycleHooks(result.hooks).beforeOneFileWrite(result.filename);
+        await lifecycleHooks(config.hooks).beforeOneFileWrite(result.filename);
         mkdirpSync(basedir);
         writeSync(result.filename, result.content);
+        await lifecycleHooks(result.hooks).afterOneFileWrite(result.filename);
+        await lifecycleHooks(config.hooks).afterOneFileWrite(result.filename);
       })
     );
+
+    await lifecycleHooks(config.hooks).afterAllFileWrite(generationResult.map(r => r.filename));
 
     return generationResult;
   }
@@ -64,6 +74,8 @@ export async function generate(config: Types.Config, saveToFile = true): Promise
   const outputFiles = await executeCodegen(config);
 
   await writeOutput(outputFiles);
+
+  lifecycleHooks(config.hooks).beforeDone();
 
   return outputFiles;
 }

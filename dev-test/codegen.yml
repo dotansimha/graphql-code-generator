@@ -1,4 +1,7 @@
 overwrite: true
+hooks:
+  afterAllFileWrite:
+    - prettier --write
 generates:
   ./dev-test/test-schema/resolvers-types.ts:
     schema: ./dev-test/test-schema/schema-text.js
