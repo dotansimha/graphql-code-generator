@@ -67,6 +67,10 @@ export const loadSchema = async (schemaDef: Types.Schema, config: Types.Config):
       options.tagPluck = config.pluckConfig;
     }
 
+    const customFetchStr = config.customFetch && 'cross-fetch#fetch';
+    const [moduleName, fetchFnName] = customFetchStr.split('#');
+    options.fetch = await import(moduleName).then(module => (fetchFnName ? module[fetchFnName] : module));
+
     const docs = (await loadTypedefs(pointToSchema, options)).map(({ content }) => content);
 
     return mergeTypeDefs(docs);
