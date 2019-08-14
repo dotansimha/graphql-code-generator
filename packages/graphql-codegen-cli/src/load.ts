@@ -135,7 +135,7 @@ export const loadDocuments = async (documentsDef: Types.InstanceOrArray<Types.Op
 
   if (loadWithToolkit.length > 0) {
     const loadDocumentsToolkitConfig: any = {
-      ignore: Object.keys(config.generates),
+      ignore: Object.keys(config.generates).map(p => join(process.cwd(), p)),
     };
 
     if (config.pluckConfig) {
