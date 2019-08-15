@@ -1487,6 +1487,21 @@ describe('TypeScript Operations Plugin', () => {
       `);
       await validate(result, config);
     });
+    // Issue: 2355
+    it('Should detect unnamed operation as Query correctly', async () => {
+      const ast = parse(/* GraphQL */ `
+        SomeUnnamed {
+          dummy
+        }
+      `);
+      const config = { skipTypename: true };
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
+
+      expect(result).toBeSimilarStringTo(`
+        export type SomeUnnamedQuery = Pick<Query, 'dummy'>;
+      `);
+      await validate(result, config);
+    });
 
     it('Should handle operation variables correctly', async () => {
       const ast = parse(/* GraphQL */ `
