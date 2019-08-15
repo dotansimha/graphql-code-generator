@@ -768,6 +768,51 @@ export function useSubmitRepositoryMutation(baseOptions?: ApolloReactHooks.Mutat
       await validateTypeScript(content, schema, docs, {});
     });
 
+    it('Should generate deduped hooks for query and mutation', async () => {
+      const documents = parse(/* GraphQL */ `
+        query FeedQuery {
+          feed {
+            id
+            commentCount
+            repository {
+              full_name
+              html_url
+              owner {
+                avatar_url
+              }
+            }
+          }
+        }
+
+        mutation SubmitRepositoryMutation($name: String) {
+          submitRepository(repoFullName: $name) {
+            id
+          }
+        }
+      `);
+      const docs = [{ filePath: '', content: documents }];
+
+      const content = (await plugin(
+        schema,
+        docs,
+        { withHooks: true, withComponent: false, withHOC: false, dedupeOperationSuffix: true },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.content).toBeSimilarStringTo(`
+export function useFeedQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<FeedQuery, FeedQueryVariables>) {
+  return ApolloReactHooks.useQuery<FeedQuery, FeedQueryVariables>(FeedQueryDocument, baseOptions);
+};`);
+
+      expect(content.content).toBeSimilarStringTo(`
+export function useSubmitRepositoryMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>) {
+  return ApolloReactHooks.useMutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(SubmitRepositoryMutationDocument, baseOptions);
+};`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
     it('Should not generate hooks for query and mutation', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
       const content = (await plugin(

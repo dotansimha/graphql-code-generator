@@ -158,8 +158,9 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
   }
 
   private _buildHooks(node: OperationDefinitionNode, operationType: string, documentVariableName: string, operationResultType: string, operationVariablesTypes: string): string {
+    const suffix = this._getHookSuffix(node.name.value, operationType);
     const operationName: string = this.convertName(node.name.value, {
-      suffix: titleCase(operationType),
+      suffix,
       useTypesPrefix: false,
     });
 
@@ -186,6 +187,16 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     const hookResult = `export type ${operationName}HookResult = ReturnType<typeof use${operationName}>;`;
 
     return [hookFn, hookResult].join('\n');
+  }
+
+  private _getHookSuffix(name: string, operationType: string) {
+    if (!this.config.dedupeOperationSuffix) {
+      return titleCase(operationType);
+    }
+    if (name.includes('Query') || name.includes('Mutation') || name.includes('Subscription')) {
+      return '';
+    }
+    return titleCase(operationType);
   }
 
   private _buildResultType(node: OperationDefinitionNode, operationType: string, operationResultType: string, operationVariablesTypes: string): string {
