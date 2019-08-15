@@ -38,7 +38,7 @@ export const resolvers: QueryResolvers = {
 
 This will make the resolver fully typed and compatible with typescript compiler, including the handler's arguments and return value.
 
-Generated resolvers can be passed directly into [graph-tools](https://www.npmjs.com/package/graphql-tools) `makeExecutableSchema` function.
+Generated resolvers can be passed directly into [graphql-tools](https://www.npmjs.com/package/graphql-tools) `makeExecutableSchema` function.
 
 ## Configuration
 
