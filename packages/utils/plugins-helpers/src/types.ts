@@ -92,6 +92,7 @@ export namespace Types {
   export interface Config {
     schema?: InstanceOrArray<Schema>;
     require?: RequireExtension;
+    customFetch?: string;
     documents?: InstanceOrArray<OperationDocument>;
     config?: { [key: string]: any };
     generates: { [output: string]: OutputConfig | ConfiguredOutput };
