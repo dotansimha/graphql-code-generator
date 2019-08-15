@@ -109,7 +109,7 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
       if (fragments.length > 0) {
         for (const fragment of fragments) {
           const filePath = appendExtensionToFilePath(documentRecord.filePath, extension);
-          const importName = baseVisitor.convertName(fragment, { suffix: 'Fragment' });
+          const importName = baseVisitor.convertName(fragment, { suffix: options.config.dedupeOperationSuffix && fragment.name.value.includes('Fragment') ? '' : 'Fragment' });
 
           if (prev[fragment.name.value]) {
             duplicateFragmentNames.push(fragment.name.value);
