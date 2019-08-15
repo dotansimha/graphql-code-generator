@@ -1,4 +1,4 @@
-import { NonNullTypeNode, ListTypeNode, ObjectTypeDefinitionNode, FieldDefinitionNode, EnumTypeDefinitionNode, NamedTypeNode, GraphQLSchema, InputValueDefinitionNode, Kind } from 'graphql';
+import { NonNullTypeNode, ListTypeNode, ObjectTypeDefinitionNode, FieldDefinitionNode, EnumTypeDefinitionNode, NamedTypeNode, GraphQLSchema, InputValueDefinitionNode, Kind, GraphQLEnumType } from 'graphql';
 import { BaseTypesVisitor, DeclarationBlock, wrapWithSingleQuotes, indent, ParsedTypesConfig, transformComment } from '@graphql-codegen/visitor-plugin-common';
 import * as autoBind from 'auto-bind';
 import { FlowPluginConfig } from './index';
@@ -17,7 +17,10 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
     } as FlowPluginParsedConfig);
     autoBind(this);
 
-    this.setArgumentsTransformer(new FlowOperationVariablesToObject(this.config.scalars, this.convertName));
+    const enumNames = Object.values(schema.getTypeMap())
+      .map(type => (type instanceof GraphQLEnumType ? type.name : undefined))
+      .filter(t => t);
+    this.setArgumentsTransformer(new FlowOperationVariablesToObject(this.scalars, this.convertName, null, enumNames, pluginConfig.enumPrefix));
     this.setDeclarationBlockConfig({
       blockWrapper: this.config.useFlowExactObjects ? '|' : '',
     });

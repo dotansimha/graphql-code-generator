@@ -311,6 +311,65 @@ describe('TypeScript', () => {
       expect(result.content).toContain('PullRequest_ReviewThreadsArgs');
       expect(result.content).toContain('PullRequestReview_ThreadsArgs');
     });
+    it('#1980 Do not put prefix on enums in args when enumPrefix: false', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        enum SuggestionType {
+          concern
+          goal
+        }
+
+        type Suggestion {
+          id: ID!
+          userId: ID!
+          suggestionType: SuggestionType!
+          text: String!
+        }
+
+        type RootQueryType {
+          suggestionsForUser(userId: ID!, suggestionType: SuggestionType!): [Suggestion!]
+        }
+      `);
+      const result = (await plugin(schema, [], {
+        skipTypename: true,
+        declarationKind: 'interface',
+        typesPrefix: 'I',
+        enumPrefix: false,
+        constEnums: true,
+        scalars: {
+          DateTime: 'string',
+          Time: 'string',
+          Date: 'string',
+        },
+      })) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`
+          export interface ISuggestion {
+            id: Scalars['ID'],
+            userId: Scalars['ID'],
+            suggestionType: SuggestionType,
+            text: Scalars['String'],
+          }
+      `);
+      expect(result.content).toBeSimilarStringTo(`
+          export const enum SuggestionType {
+            Concern = 'concern',
+            Goal = 'goal'
+          };
+      `);
+
+      expect(result.content).toBeSimilarStringTo(`
+          export interface IRootQueryType {
+            suggestionsForUser?: Maybe<Array<ISuggestion>>,
+          }
+      `);
+
+      expect(result.content).toBeSimilarStringTo(`
+          export interface IRootQueryTypeSuggestionsForUserArgs {
+            userId: Scalars['ID'],
+            suggestionType: SuggestionType
+          }
+      `);
+    });
   });
 
   describe('Config', () => {
