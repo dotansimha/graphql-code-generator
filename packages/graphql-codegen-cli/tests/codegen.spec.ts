@@ -7,7 +7,6 @@ import { readFileSync } from 'fs';
 
 const SHOULD_NOT_THROW_STRING = 'SHOULD_NOT_THROW';
 const SIMPLE_TEST_SCHEMA = `type MyType { f: String } type Query { f: String }`;
-let CUSTOM_FETCH_FN_CALLED = false;
 
 jest.mock('some-fetch');
 
@@ -873,16 +872,17 @@ describe('Codegen Executor', () => {
         expect(e.details).toContain('Unable to find a loader function! Make sure to export a default function from your file');
       }
     });
-    it('should load schema with custom fetch', async () => {
-      await executeCodegen({
-        schema: ['http://www.dummyschema.com/graphql'],
-        customFetch: 'some-fetch#someFetchFn',
-        documents: ['./tests/test-documents/valid.graphql'],
-        generates: {
-          'out1.ts': ['typescript'],
-        },
-      });
-      expect(CUSTOM_FETCH_FN_CALLED).toBeTruthy();
+  });
+
+  it('should load schema with custom fetch', async () => {
+    await executeCodegen({
+      schema: ['http://www.dummyschema.com/graphql'],
+      customFetch: 'some-fetch#someFetchFn',
+      documents: ['./tests/test-documents/valid.graphql'],
+      generates: {
+        'out1.ts': ['typescript'],
+      },
     });
+    expect(global['CUSTOM_FETCH_FN_CALLED']).toBeTruthy();
   });
 });
