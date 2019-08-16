@@ -2,7 +2,7 @@ import { transformComment, wrapWithSingleQuotes, DeclarationBlock, indent, BaseT
 import { TypeScriptPluginConfig } from './index';
 import { AvoidOptionalsConfig } from './types';
 import * as autoBind from 'auto-bind';
-import { FieldDefinitionNode, NamedTypeNode, ListTypeNode, NonNullTypeNode, EnumTypeDefinitionNode, Kind, InputValueDefinitionNode, GraphQLSchema } from 'graphql';
+import { FieldDefinitionNode, NamedTypeNode, ListTypeNode, NonNullTypeNode, EnumTypeDefinitionNode, Kind, InputValueDefinitionNode, GraphQLSchema, GraphQLEnumType } from 'graphql';
 import { TypeScriptOperationVariablesToObject } from './typescript-variables-to-object';
 import { normalizeAvoidOptionals } from './avoid-optionals';
 
@@ -28,7 +28,10 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
     } as TParsedConfig);
 
     autoBind(this);
-    this.setArgumentsTransformer(new TypeScriptOperationVariablesToObject(this.scalars, this.convertName, this.config.avoidOptionals.object, this.config.immutableTypes));
+    const enumNames = Object.values(schema.getTypeMap())
+      .map(type => (type instanceof GraphQLEnumType ? type.name : undefined))
+      .filter(t => t);
+    this.setArgumentsTransformer(new TypeScriptOperationVariablesToObject(this.scalars, this.convertName, this.config.avoidOptionals.object, this.config.immutableTypes, null, enumNames, pluginConfig.enumPrefix));
     this.setDeclarationBlockConfig({
       enumNameValueSeparator: ' =',
       ignoreExport: this.config.noExport,
@@ -78,7 +81,6 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
     const originalFieldNode = parent[key] as FieldDefinitionNode;
     const addOptionalSign = !this.config.avoidOptionals.inputValue && originalFieldNode.type.kind !== Kind.NON_NULL_TYPE;
     const comment = transformComment((node.description as any) as string, 1);
-
     return comment + indent(`${this.config.immutableTypes ? 'readonly ' : ''}${node.name}${addOptionalSign ? '?' : ''}: ${node.type},`);
   }
 
