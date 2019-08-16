@@ -250,7 +250,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
   }
 
   public get fragments(): string {
-    if (this._fragments.length === 0) {
+    if (this._fragments.length === 0 || this.config.documentMode === DocumentMode.external) {
       return '';
     }
 

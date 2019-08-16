@@ -1256,6 +1256,109 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       await validateTypeScript(content, schema, docs, {});
     });
 
+    it('should NOT generate inline fragment docs for external mode: file with operation using inline fragment', async () => {
+      const docs = [
+        {
+          filePath: '',
+          content: parse(/* GraphQL */ `
+            fragment feedFragment on Entry {
+              id
+              commentCount
+            }
+            query testOne {
+              feed {
+                ...feedFragment
+              }
+            }
+          `),
+        },
+      ];
+      const config = {
+        documentMode: DocumentMode.external,
+        importDocumentNodeExternallyFrom: 'path/to/documents.tsx',
+      };
+      const content = (await plugin(
+        schema,
+        docs,
+        { ...config },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.content).not.toBeSimilarStringTo(`export const FeedFragmentFragmentDoc = gql`);
+
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should NOT generate inline fragment docs for external mode: file with operation NOT using inline fragment', async () => {
+      const docs = [
+        {
+          filePath: '',
+          content: parse(/* GraphQL */ `
+            fragment feedFragment on Entry {
+              id
+              commentCount
+            }
+            query testOne {
+              feed {
+                id
+              }
+            }
+          `),
+        },
+      ];
+      const config = {
+        documentMode: DocumentMode.external,
+        importDocumentNodeExternallyFrom: 'path/to/documents.tsx',
+      };
+      const content = (await plugin(
+        schema,
+        docs,
+        {
+          ...config,
+        },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.content).not.toBeSimilarStringTo(`export const FeedFragmentFragmentDoc = gql`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should NOT generate inline fragment docs for external mode: file with just fragment', async () => {
+      const docs = [
+        {
+          filePath: '',
+          content: parse(/* GraphQL */ `
+            fragment feedFragment on Entry {
+              id
+              commentCount
+            }
+          `),
+        },
+      ];
+      const config = {
+        documentMode: DocumentMode.external,
+        importDocumentNodeExternallyFrom: 'path/to/documents.tsx',
+      };
+      const content = (await plugin(
+        schema,
+        docs,
+        {
+          ...config,
+        },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.content).not.toBeSimilarStringTo(`export const FeedFragmentFragmentDoc = gql`);
+
+      await validateTypeScript(content, schema, docs, { ...config });
+    });
+
     it('should import Operations from one external file and use it in Query component', async () => {
       const config: ReactApolloRawPluginConfig = {
         documentMode: DocumentMode.external,
