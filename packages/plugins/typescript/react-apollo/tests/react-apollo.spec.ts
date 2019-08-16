@@ -1273,13 +1273,14 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
           `),
         },
       ];
+      const config = {
+        documentMode: DocumentMode.external,
+        importDocumentNodeExternallyFrom: 'path/to/documents.tsx',
+      };
       const content = (await plugin(
         schema,
         docs,
-        {
-          documentMode: DocumentMode.external,
-          importDocumentNodeExternallyFrom: 'path/to/documents.tsx',
-        },
+        { ...config },
         {
           outputFile: 'graphql.tsx',
         }
@@ -1288,7 +1289,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       expect(content.content).not.toBeSimilarStringTo(`export const FeedFragmentFragmentDoc = gql`);
 
       // Unable to do get this validation to pass :(
-      await validateTypeScript(content, schema, docs, {});
+      await validateTypeScript(content, schema, docs, { ...config });
     });
 
     it('should NOT generate inline fragment docs for external mode: file with operation NOT using inline fragment', async () => {
@@ -1308,12 +1309,15 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
           `),
         },
       ];
+      const config = {
+        documentMode: DocumentMode.external,
+        importDocumentNodeExternallyFrom: 'path/to/documents.tsx',
+      };
       const content = (await plugin(
         schema,
         docs,
         {
-          documentMode: DocumentMode.external,
-          importDocumentNodeExternallyFrom: 'path/to/documents.tsx',
+          ...config,
         },
         {
           outputFile: 'graphql.tsx',
@@ -1323,7 +1327,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       expect(content.content).not.toBeSimilarStringTo(`export const FeedFragmentFragmentDoc = gql`);
 
       // Unable to do get this validation to pass :(
-      await validateTypeScript(content, schema, docs, {});
+      await validateTypeScript(content, schema, docs, { ...config });
     });
 
     it('should NOT generate inline fragment docs for external mode: file with just fragment', async () => {
@@ -1338,12 +1342,15 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
           `),
         },
       ];
+      const config = {
+        documentMode: DocumentMode.external,
+        importDocumentNodeExternallyFrom: 'path/to/documents.tsx',
+      };
       const content = (await plugin(
         schema,
         docs,
         {
-          documentMode: DocumentMode.external,
-          importDocumentNodeExternallyFrom: 'path/to/documents.tsx',
+          ...config,
         },
         {
           outputFile: 'graphql.tsx',
@@ -1353,7 +1360,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       expect(content.content).not.toBeSimilarStringTo(`export const FeedFragmentFragmentDoc = gql`);
 
       // Unable to do get this validation to pass :(
-      await validateTypeScript(content, schema, docs, {});
+      await validateTypeScript(content, schema, docs, { ...config });
     });
 
     it('should import Operations from one external file and use it in Query component', async () => {
