@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/website",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "private": true,
   "scripts": {
     "dev": "docusaurus-start",
@@ -14,7 +14,7 @@
     "write-translations": "docusaurus-write-translations"
   },
   "devDependencies": {
-    "@graphql-codegen/config-markdown-generator": "1.6.0",
+    "@graphql-codegen/config-markdown-generator": "1.6.1",
     "babel-preset-minify": "0.5.1",
     "docusaurus": "1.12.0",
     "netlify-lambda": "1.6.1",
