@@ -1261,7 +1261,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         {
           filePath: '',
           content: parse(/* GraphQL */ `
-            fragment feedFragment on feed {
+            fragment feedFragment on Entry {
               id
               commentCount
             }
@@ -1288,8 +1288,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
 
       expect(content.content).not.toBeSimilarStringTo(`export const FeedFragmentFragmentDoc = gql`);
 
-      // Unable to do get this validation to pass :(
-      await validateTypeScript(content, schema, docs, { ...config });
+      await validateTypeScript(content, schema, docs, {});
     });
 
     it('should NOT generate inline fragment docs for external mode: file with operation NOT using inline fragment', async () => {
@@ -1297,7 +1296,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         {
           filePath: '',
           content: parse(/* GraphQL */ `
-            fragment feedFragment on feed {
+            fragment feedFragment on Entry {
               id
               commentCount
             }
@@ -1325,9 +1324,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).not.toBeSimilarStringTo(`export const FeedFragmentFragmentDoc = gql`);
-
-      // Unable to do get this validation to pass :(
-      await validateTypeScript(content, schema, docs, { ...config });
+      await validateTypeScript(content, schema, docs, {});
     });
 
     it('should NOT generate inline fragment docs for external mode: file with just fragment', async () => {
@@ -1335,7 +1332,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         {
           filePath: '',
           content: parse(/* GraphQL */ `
-            fragment feedFragment on feed {
+            fragment feedFragment on Entry {
               id
               commentCount
             }
@@ -1359,7 +1356,6 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
 
       expect(content.content).not.toBeSimilarStringTo(`export const FeedFragmentFragmentDoc = gql`);
 
-      // Unable to do get this validation to pass :(
       await validateTypeScript(content, schema, docs, { ...config });
     });
 
