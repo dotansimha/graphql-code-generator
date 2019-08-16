@@ -1,11 +1,12 @@
-import { ScalarsMap, ConvertOptions, LoadedFragment } from './types';
+import { ScalarsMap, ConvertOptions } from './types';
 import * as autoBind from 'auto-bind';
 import { DEFAULT_SCALARS } from './scalars';
 import { toPascalCase, DeclarationBlock, DeclarationBlockConfig, buildScalars, getConfigValue } from './utils';
 import { GraphQLSchema, FragmentDefinitionNode, GraphQLObjectType, OperationDefinitionNode, VariableDefinitionNode, OperationTypeNode, ASTNode } from 'graphql';
 import { SelectionSetToObject } from './selection-set-to-object';
 import { OperationVariablesToObject } from './variables-to-object';
-import { RawConfig, ParsedConfig, BaseVisitor, BaseVisitorConvertOptions } from './base-visitor';
+import { BaseVisitor, BaseVisitorConvertOptions } from './base-visitor';
+import { ParsedTypesConfig, RawTypesConfig } from './base-types-visitor';
 
 function getRootType(operation: OperationTypeNode, schema: GraphQLSchema) {
   switch (operation) {
@@ -18,7 +19,7 @@ function getRootType(operation: OperationTypeNode, schema: GraphQLSchema) {
   }
 }
 
-export interface ParsedDocumentsConfig extends ParsedConfig {
+export interface ParsedDocumentsConfig extends ParsedTypesConfig {
   addTypename: boolean;
   preResolveTypes: boolean;
   globalNamespace: boolean;
@@ -26,7 +27,7 @@ export interface ParsedDocumentsConfig extends ParsedConfig {
   dedupeOperationSuffix: boolean;
 }
 
-export interface RawDocumentsConfig extends RawConfig {
+export interface RawDocumentsConfig extends RawTypesConfig {
   /**
    * @name preResolveTypes
    * @type boolean
@@ -80,6 +81,7 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
     super(
       rawConfig,
       {
+        enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
         preResolveTypes: getConfigValue(rawConfig.preResolveTypes, false),
         dedupeOperationSuffix: getConfigValue(rawConfig.dedupeOperationSuffix, false),
         addTypename: !rawConfig.skipTypename,
