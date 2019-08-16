@@ -8159,7 +8159,7 @@ globals@^11.1.0, globals@^11.7.0:
   resolved "https://registry.yarnpkg.com/globals/-/globals-11.12.0.tgz#ab8795338868a0babd8525758018c2a7eb95c42e"
   integrity sha512-WOBp/EEGUiIsJSp7wcv/y6MO+lV9UoncWqxuFfm8eBwzWNgyfBd6Gz+IeKQ9jCmyhoH99g15M3T+QaVHFjizVA==
 
-globby@10.0.1, globby@^10.0.0:
+globby@10.0.1, globby@^10.0.0, globby@^10.0.1:
   version "10.0.1"
   resolved "https://registry.yarnpkg.com/globby/-/globby-10.0.1.tgz#4782c34cb75dd683351335c5829cc3420e606b22"
   integrity sha512-sSs4inE1FB2YQiymcmTv6NWENryABjUNPeWhOvmn4SjtKybglsyPZxFB3U1/+L1bYi0rNZDqCLlHyLYDl1Pq5A==
@@ -8402,10 +8402,10 @@ graphql-tag@2.10.1, graphql-tag@^2.10.1, graphql-tag@^2.9.2:
   resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.10.1.tgz#10aa41f1cd8fae5373eaf11f1f67260a3cad5e02"
   integrity sha512-jApXqWBzNXQ8jYa/HLkZJaVw9jgwNqZkywa2zfFn16Iv1Zb7ELNHkJaXHR7Quvd5SIGsy6Ny7SUKATgnu05uEg==
 
-graphql-toolkit@0.5.9:
-  version "0.5.9"
-  resolved "https://registry.yarnpkg.com/graphql-toolkit/-/graphql-toolkit-0.5.9.tgz#456dbee3c5e04747329c9f807937148ebaaa0113"
-  integrity sha512-Ndig9yWPROsxDviijIzeK3sUG6VuCyPhiQiBzsZRHVOg/RDc6/QcXfZOExJD5WEWBUIKUKEoAWK746o15Ao55Q==
+graphql-toolkit@0.5.10:
+  version "0.5.10"
+  resolved "https://registry.yarnpkg.com/graphql-toolkit/-/graphql-toolkit-0.5.10.tgz#7b4d5e84c421ca72801d436084478d4a7ac06444"
+  integrity sha512-mMHNezD9oT0IlM/vkZd/aeoIKtXqKnZq3ipJIMcHZPmMDPcZEf7BMzbB8naKWSWPaB1Iskg426DrfzQDUgU25A==
   dependencies:
     "@kamilkisiela/graphql-tools" "4.0.6"
     "@types/glob" "7.1.1"
@@ -11916,10 +11916,10 @@ neo-async@^2.5.0, neo-async@^2.6.0, neo-async@^2.6.1:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.1.tgz#ac27ada66167fa8849a6addd837f6b189ad2081c"
   integrity sha512-iyam8fBuCUpWeKPGpaNMetEocMt364qkCsfL9JuhjXX6dRnguRVOfk2GZaDpPjcOKiiXCPINZC1GczQ7iTq3Zw==
 
-netlify-lambda@1.6.0:
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/netlify-lambda/-/netlify-lambda-1.6.0.tgz#22ccd2fcae97ff72f6a79cde4f3305daca2531ff"
-  integrity sha512-MiNdmmigdsEQrB0PZFoZDXlu8FMJwlZ9WovHSoxmYCbNOlxb6bap/4jvL99nZvKX/vnbuPh7dyR1NE5PPdSz9w==
+netlify-lambda@1.6.1:
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/netlify-lambda/-/netlify-lambda-1.6.1.tgz#974cae90ca10c7ea96d327ab59f0880b4d589d05"
+  integrity sha512-jMplw9W/t7Qlz3n+Mda5EIp2ODsKACISiQmNKwjb6yplm12A8Cc2UtsUCYCZ3CzDFvyr/gSOAMSlgRMcC04noQ==
   dependencies:
     "@babel/core" "^7.0.0"
     "@babel/plugin-proposal-class-properties" "^7.0.0"
@@ -11931,6 +11931,7 @@ netlify-lambda@1.6.0:
     commander "^2.17.1"
     express "^4.16.3"
     express-logging "^1.1.1"
+    globby "^10.0.1"
     jwt-decode "^2.2.0"
     toml "^2.3.3"
     webpack "^4.17.1"
