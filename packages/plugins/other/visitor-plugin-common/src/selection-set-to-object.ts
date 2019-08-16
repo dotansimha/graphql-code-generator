@@ -45,11 +45,13 @@ const getFieldNodeNameValue = (node: FieldNode): string => {
 
 const mergeSelectionSets = (selectionSet1: SelectionSetNode, selectionSet2: SelectionSetNode) => {
   const newSelections = [...selectionSet1.selections];
+
   for (const selection2 of selectionSet2.selections) {
     if (selection2.kind === 'FragmentSpread') {
       newSelections.push(selection2);
       continue;
     }
+
     if (selection2.kind !== 'Field') {
       throw new TypeError('Invalid state.');
     }
@@ -63,6 +65,7 @@ const mergeSelectionSets = (selectionSet1: SelectionSetNode, selectionSet2: Sele
       }
       continue;
     }
+
     newSelections.push(selection2);
   }
 
@@ -87,6 +90,7 @@ export class SelectionSetToObject {
     protected _loadedFragments: LoadedFragment[],
     protected _namespacedImportName: string | null,
     protected _dedupeOperationSuffix: boolean,
+    protected _enumPrefix: boolean,
     protected _parentSchemaType?: GraphQLNamedType,
     protected _selectionSet?: SelectionSetNode
   ) {}
@@ -494,10 +498,7 @@ export class SelectionSetToObject {
       let typeToUse = baseType.name;
 
       if (isEnumType(baseType)) {
-        typeToUse = baseType
-          .getValues()
-          .map(v => `'${v.value}'`)
-          .join(' | ');
+        typeToUse = this._convertName(baseType.name, { useTypesPrefix: this._enumPrefix });
       } else if (this._scalars[baseType.name]) {
         typeToUse = this._scalars[baseType.name];
       }
