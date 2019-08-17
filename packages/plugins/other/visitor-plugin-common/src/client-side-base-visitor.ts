@@ -282,11 +282,15 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
         imports.push(`import ${gqlImport.propName ? `{ ${gqlImport.propName === 'gql' ? 'gql' : `${gqlImport.propName} as gql`} }` : 'gql'} from '${gqlImport.moduleName}';`);
         break;
       case DocumentMode.external:
+          if (this._collectedOperations.length > 0) {
         if (this.config.importDocumentNodeExternallyFrom === 'near-operation-file' && this._documents.length === 1) {
-          imports.push(`import * as Operations from './${basename(this._documents[0].filePath)}';`);
+
+            imports.push(`import * as Operations from './${basename(this._documents[0].filePath)}';`);
+
         } else {
           imports.push(`import * as Operations from '${this.config.importDocumentNodeExternallyFrom}';`);
         }
+      }
         break;
       default:
         break;
