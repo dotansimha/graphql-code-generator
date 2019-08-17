@@ -10937,10 +10937,10 @@ libqp@1.1.0:
   resolved "https://registry.yarnpkg.com/libqp/-/libqp-1.1.0.tgz#f5e6e06ad74b794fb5b5b66988bf728ef1dedbe8"
   integrity sha1-9ebgatdLeU+1tbZpiL9yjvHe2+g=
 
-lint-staged@9.2.1:
-  version "9.2.1"
-  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-9.2.1.tgz#57fc5947611604d5a32e478734a13f3e4687f646"
-  integrity sha512-3lGgJfBddCy/WndKdNko+uJbwyYjBD1k+V+SA+phBYWzH265S95KQya/Wln/UL+hOjc7NcjtFYVCUWuAcqYHhg==
+lint-staged@9.2.2:
+  version "9.2.2"
+  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-9.2.2.tgz#07828263197c5d8ef8f23f86960dccaecb6f9e0a"
+  integrity sha512-6VFRfqk8RgZmmd52bvCCEH7cBLfQ97ynZd/uATIGM/Rh4EluZbQdY/HXj9kcx7LhX2Zc4+m+4Z6zS74owovLyA==
   dependencies:
     chalk "^2.4.2"
     commander "^2.20.0"
@@ -11916,10 +11916,10 @@ neo-async@^2.5.0, neo-async@^2.6.0, neo-async@^2.6.1:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.1.tgz#ac27ada66167fa8849a6addd837f6b189ad2081c"
   integrity sha512-iyam8fBuCUpWeKPGpaNMetEocMt364qkCsfL9JuhjXX6dRnguRVOfk2GZaDpPjcOKiiXCPINZC1GczQ7iTq3Zw==
 
-netlify-lambda@1.6.1:
-  version "1.6.1"
-  resolved "https://registry.yarnpkg.com/netlify-lambda/-/netlify-lambda-1.6.1.tgz#974cae90ca10c7ea96d327ab59f0880b4d589d05"
-  integrity sha512-jMplw9W/t7Qlz3n+Mda5EIp2ODsKACISiQmNKwjb6yplm12A8Cc2UtsUCYCZ3CzDFvyr/gSOAMSlgRMcC04noQ==
+netlify-lambda@1.6.2:
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/netlify-lambda/-/netlify-lambda-1.6.2.tgz#89feeb5c3fb2238c186190fe928554702570a061"
+  integrity sha512-a0cf/akgaqahcHRozmdJJgsIER2HRBx7S75q4QBhcSlPxXP1bxE20OPm0WnE3yzcTnJwzHF8a7SqLjZ33OFjWw==
   dependencies:
     "@babel/core" "^7.0.0"
     "@babel/plugin-proposal-class-properties" "^7.0.0"
