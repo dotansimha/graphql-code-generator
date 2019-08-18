@@ -49,11 +49,11 @@ Here are the supported options that you can define in the config file (see [sour
 
 - **`overwrite`** - A flag to overwrite files in case they're already exist when generating code (`true` by default)
 
-- **`prettify`** - A flag that enables formatting of generated code (using [`prettier`](https://prettier.io/)) (`true` by default)
-
 - **`watch`** - A flag to watch for changes in the specified GraphQL schemas and re-generate code any that happens. You can either specify a boolean to turn it on/off, or specify an array of glob patterns to add custom files to the watch.
 
 - **`silent`** - A flag to not print errors in case they occur.
+
+- **`hooks`** - Specifies scripts to run when events are happening in the codegen's core. [You can read more about lifecycle hooks here here](./lifecycle-hooks). You can specify this on your root configuration, or per each output.
 
 - **`pluginLoader`** - If you are using the programmatic API in browser environment, you can override this configuration to load your plugins in a way different then `require`.
   \

@@ -15,7 +15,7 @@ export class TypeScriptSelectionSetToObject extends SelectionSetToObject {
     _parentSchemaType?: GraphQLNamedType,
     _selectionSet?: SelectionSetNode
   ) {
-    super(_scalars, _schema, _convertName, _addTypename, _preResolveTypes, _nonOptionalTypename, _loadedFragments, _config.namespacedImportName, _config.dedupeOperationSuffix, _parentSchemaType, _selectionSet);
+    super(_scalars, _schema, _convertName, _addTypename, _preResolveTypes, _nonOptionalTypename, _loadedFragments, _config.namespacedImportName, _config.dedupeOperationSuffix, _config.enumPrefix, _parentSchemaType, _selectionSet);
   }
 
   public createNext(parentSchemaType: GraphQLNamedType, selectionSet: SelectionSetNode): SelectionSetToObject {
@@ -24,7 +24,7 @@ export class TypeScriptSelectionSetToObject extends SelectionSetToObject {
 
   private clearOptional(str: string): string {
     const prefix = this._config.namespacedImportName ? `${this._config.namespacedImportName}\.` : '';
-    const rgx = new RegExp(`^${prefix}Maybe<(.*?)>$`, 'i');
+    const rgx = new RegExp(`^${prefix}Maybe<(.*?)>$`, 'is');
 
     if (str.startsWith(`${this._config.namespacedImportName ? `${this._config.namespacedImportName}.` : ''}Maybe`)) {
       return str.replace(rgx, '$1');

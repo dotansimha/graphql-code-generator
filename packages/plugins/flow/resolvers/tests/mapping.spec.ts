@@ -224,7 +224,7 @@ describe('ResolversTypes', () => {
       export type MyTypeResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'MyType'>> = {
         foo?: Resolver<$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
         otherType?: Resolver<?$ElementType<ResolversTypes, 'MyOtherType'>, ParentType, ContextType>,
-        withArgs?: Resolver<?$ElementType<ResolversTypes, 'String'>, ParentType, ContextType, MyTypeWithArgsArgs>,
+        withArgs?: Resolver<?$ElementType<ResolversTypes, 'String'>, ParentType, ContextType, $RequireFields<MyTypeWithArgsArgs, { arg2: * }>>,
       };
     `);
 
@@ -255,7 +255,7 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       export type SubscriptionResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'Subscription'>> = {
-        somethingChanged?: SubscriptionResolver<?$ElementType<ResolversTypes, 'MyOtherType'>, ParentType, ContextType>,
+        somethingChanged?: SubscriptionResolver<?$ElementType<ResolversTypes, 'MyOtherType'>, "somethingChanged", ParentType, ContextType>,
       };
     `);
     await validate(result);
@@ -295,7 +295,7 @@ describe('ResolversTypes', () => {
       export type MyTypeResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'MyType'>> = {
         foo?: Resolver<$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
         otherType?: Resolver<?$ElementType<ResolversTypes, 'MyOtherType'>, ParentType, ContextType>,
-        withArgs?: Resolver<?$ElementType<ResolversTypes, 'String'>, ParentType, ContextType, MyTypeWithArgsArgs>,
+        withArgs?: Resolver<?$ElementType<ResolversTypes, 'String'>, ParentType, ContextType, $RequireFields<MyTypeWithArgsArgs, { arg2: * }>>,
       };
     `);
 
@@ -326,7 +326,7 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       export type SubscriptionResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'Subscription'>> = {
-        somethingChanged?: SubscriptionResolver<?$ElementType<ResolversTypes, 'MyOtherType'>, ParentType, ContextType>,
+        somethingChanged?: SubscriptionResolver<?$ElementType<ResolversTypes, 'MyOtherType'>, "somethingChanged", ParentType, ContextType>,
       };
     `);
     await validate(result);
@@ -364,7 +364,7 @@ describe('ResolversTypes', () => {
       export type MyTypeResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'MyType'>> = {
         foo?: Resolver<$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
         otherType?: Resolver<?$ElementType<ResolversTypes, 'MyOtherType'>, ParentType, ContextType>,
-        withArgs?: Resolver<?$ElementType<ResolversTypes, 'String'>, ParentType, ContextType, MyTypeWithArgsArgs>,
+        withArgs?: Resolver<?$ElementType<ResolversTypes, 'String'>, ParentType, ContextType, $RequireFields<MyTypeWithArgsArgs, { arg2: * }>>,
       };
     `);
 
@@ -395,7 +395,7 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       export type SubscriptionResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'Subscription'>> = {
-        somethingChanged?: SubscriptionResolver<?$ElementType<ResolversTypes, 'MyOtherType'>, ParentType, ContextType>,
+        somethingChanged?: SubscriptionResolver<?$ElementType<ResolversTypes, 'MyOtherType'>, "somethingChanged", ParentType, ContextType>,
       };
     `);
     await validate(mergeOutputs([result, `type MyNodeType = {};`]));
@@ -431,7 +431,7 @@ describe('ResolversTypes', () => {
       export type MyTypeResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'MyType'>> = {
         foo?: Resolver<$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
         otherType?: Resolver<?$ElementType<ResolversTypes, 'MyOtherType'>, ParentType, ContextType>,
-        withArgs?: Resolver<?$ElementType<ResolversTypes, 'String'>, ParentType, ContextType, MyTypeWithArgsArgs>,
+        withArgs?: Resolver<?$ElementType<ResolversTypes, 'String'>, ParentType, ContextType, $RequireFields<MyTypeWithArgsArgs, { arg2: * }>>,
       };
     `);
 
@@ -462,7 +462,7 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       export type SubscriptionResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'Subscription'>> = {
-        somethingChanged?: SubscriptionResolver<?$ElementType<ResolversTypes, 'MyOtherType'>, ParentType, ContextType>,
+        somethingChanged?: SubscriptionResolver<?$ElementType<ResolversTypes, 'MyOtherType'>, "somethingChanged", ParentType, ContextType>,
       };
     `);
     await validate(result);
@@ -500,7 +500,7 @@ describe('ResolversTypes', () => {
       export type MyTypeResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'MyType'>> = {
         foo?: Resolver<$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
         otherType?: Resolver<?$ElementType<ResolversTypes, 'MyOtherType'>, ParentType, ContextType>,
-        withArgs?: Resolver<?$ElementType<ResolversTypes, 'String'>, ParentType, ContextType, MyTypeWithArgsArgs>,
+        withArgs?: Resolver<?$ElementType<ResolversTypes, 'String'>, ParentType, ContextType, $RequireFields<MyTypeWithArgsArgs, { arg2: * }>>,
       };
     `);
 
@@ -531,7 +531,7 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
       export type SubscriptionResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'Subscription'>> = {
-        somethingChanged?: SubscriptionResolver<?$ElementType<ResolversTypes, 'MyOtherType'>, ParentType, ContextType>,
+        somethingChanged?: SubscriptionResolver<?$ElementType<ResolversTypes, 'MyOtherType'>, "somethingChanged", ParentType, ContextType>,
       };
     `);
     await validate(result);

@@ -1,12 +1,16 @@
 import { executeCodegen } from '../codegen';
 import { Types } from '@graphql-codegen/plugin-helpers';
-import { normalizeInstanceOrArray, normalizeOutputParam } from '../helpers';
+import { normalizeInstanceOrArray, normalizeOutputParam } from '@graphql-codegen/plugin-helpers';
 import * as isValidPath from 'is-valid-path';
 import * as isGlob from 'is-glob';
+import * as debounce from 'debounce';
 import * as logSymbols from 'log-symbols';
 import { debugLog } from './debugging';
 import { getLogger } from './logger';
 import { join } from 'path';
+import { FSWatcher } from 'chokidar';
+import { loadAndParseConfig } from '../config';
+import { lifecycleHooks } from '../hooks';
 
 function log(msg: string) {
   // double spaces to inline the message with Listr
@@ -17,9 +21,10 @@ function emitWatching() {
   log(`${logSymbols.info} Watching for changes...`);
 }
 
-export const createWatcher = (config: Types.Config, onNext: (result: Types.FileOutput[]) => Promise<Types.FileOutput[]>) => {
+export const createWatcher = (initialConfig: Types.Config, onNext: (result: Types.FileOutput[]) => Promise<Types.FileOutput[]>) => {
   debugLog(`[Watcher] Starting watcher...`);
-  const files: string[] = [];
+  let config: Types.Config = initialConfig;
+  const files: string[] = [initialConfig.configFilePath].filter(a => a);
   const documents = normalizeInstanceOrArray<Types.OperationDocument>(config.documents);
   const schemas = normalizeInstanceOrArray<Types.Schema>(config.schema);
 
@@ -51,10 +56,19 @@ export const createWatcher = (config: Types.Config, onNext: (result: Types.FileO
     files.push(...normalizeInstanceOrArray<string>(config.watch));
   }
 
-  let watcher: any;
+  let watcher: FSWatcher;
 
   const runWatcher = async () => {
     const chokidar = await import('chokidar');
+    let isShutdown = false;
+
+    const debouncedExec = debounce(() => {
+      if (!isShutdown) {
+        executeCodegen(config)
+          .then(onNext, () => Promise.resolve())
+          .then(() => emitWatching());
+      }
+    }, 100);
     emitWatching();
 
     const ignored: string[] = [];
@@ -89,21 +103,31 @@ export const createWatcher = (config: Types.Config, onNext: (result: Types.FileO
 
     debugLog(`[Watcher] Started`);
 
-    let isShutdown = false;
     const shutdown = async () => {
       isShutdown = true;
       debugLog(`[Watcher] Shutting down`);
       log(`Shutting down watch...`);
       watcher.close();
+      lifecycleHooks(config.hooks).beforeDone();
     };
 
     // it doesn't matter what has changed, need to run whole process anyway
-    watcher.on('all', () => {
-      if (!isShutdown) {
-        executeCodegen(config)
-          .then(onNext, () => Promise.resolve())
-          .then(() => emitWatching());
+    watcher.on('all', async (eventName, path) => {
+      lifecycleHooks(config.hooks).onWatchTriggered(eventName, path);
+      debugLog(`[Watcher] triggered due to a file ${eventName} event: ${path}`);
+      const fullPath = join(process.cwd(), path);
+
+      if (eventName === 'change' && config.configFilePath && fullPath === config.configFilePath) {
+        log(`${logSymbols.info} Config file has changed, reloading...`);
+        const newParsedConfig = loadAndParseConfig(config.configFilePath);
+        newParsedConfig.watch = config.watch;
+        newParsedConfig.silent = config.silent;
+        newParsedConfig.overwrite = config.overwrite;
+        newParsedConfig.configFilePath = config.configFilePath;
+        config = newParsedConfig;
       }
+
+      debouncedExec();
     });
 
     process.once('SIGINT', shutdown);

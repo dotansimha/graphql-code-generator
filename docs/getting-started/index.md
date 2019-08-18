@@ -71,8 +71,6 @@ export type Query = {
 };
 ```
 
-GraphQL codegen uses [prettier](https://github.com/prettier/prettier) inside the box, which means that the output code should always be formatted in a pretty way whenever possible. Accordingly, if your project includes a [prettier config file](https://prettier.io/docs/en/configuration.html) it should be respected and the code should be generated accordingly.
-
 ## Installation
 
 First we gotta make sure that the basic GraphQL package is within our dependencies, since GraphQL Code Generator is dependent on it:

@@ -7,6 +7,7 @@
       "getting-started/documents-field",
       "getting-started/config-field",
       "getting-started/require-field",
+      "getting-started/lifecycle-hooks",
       "getting-started/development-workflow",
       "getting-started/programmatic-usage",
       "getting-started/further-reading"
@@ -36,7 +37,7 @@
       "plugins/reason-client"
     ],
     "Presets": ["presets/index", "presets/near-operation-file"],
-    "Integrations": ["integrations/apollo-local-state", "integrations/create-react-app", "integrations/gatsby"],
+    "Integrations": ["integrations/apollo-local-state", "integrations/create-react-app", "integrations/gatsby", "integrations/prettier", "integrations/federation"],
     "Custom Code-Generator Plugins": ["custom-codegen/index", "custom-codegen/write-your-plugin", "custom-codegen/validate-configuration", "custom-codegen/extend-schema", "custom-codegen/using-visitor"],
     "Migration": ["migration/from-0-18", "migration/from-0-13"]
   }

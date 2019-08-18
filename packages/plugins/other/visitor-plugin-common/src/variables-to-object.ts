@@ -12,7 +12,7 @@ export interface InterfaceOrVariable {
 }
 
 export class OperationVariablesToObject {
-  constructor(protected _scalars: ScalarsMap, protected _convertName: ConvertNameFn<BaseVisitorConvertOptions>, protected _namespacedImportName: string | null = null) {
+  constructor(protected _scalars: ScalarsMap, protected _convertName: ConvertNameFn<BaseVisitorConvertOptions>, protected _namespacedImportName: string | null = null, protected _enumNames: string[] = [], protected _enumPrefix = true) {
     autoBind(this);
   }
 
@@ -56,7 +56,7 @@ export class OperationVariablesToObject {
       typeValue = this._scalars[typeName]
         ? this.getScalar(typeName)
         : `${prefix}${this._convertName(baseType, {
-            useTypesPrefix: true,
+            useTypesPrefix: this._enumNames.includes(typeName) ? this._enumPrefix : true,
           })}`;
     }
 

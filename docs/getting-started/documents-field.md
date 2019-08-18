@@ -47,7 +47,7 @@ You can use this this way:
 
 ```yml
 schema: http://server1.com/graphql
-documents: src/**/*.{ts,tsx}
+documents: "src/**/*.{ts,tsx}"
 ```
 
 And the code-generator will look for GraphQL documents inside your code files.
@@ -97,6 +97,25 @@ documents:
 ```
 
 > All provided glob expressions are being evaludated together - the usage is similar to `.gitingore` file.
+
+Additionally, you can use code files and the codegen will try to extract the GraphQL operations from it:
+
+```yml
+documents:
+  - './src/*.jsx'
+```
+
+The codegen will try to load the file as AST and look for explicit GraphQL operations strings, but if it can't find those, it will try to `require` the file and looks for operations in the default export.
+
+You can disable the `require` if it causes errors for you (for example, because of different module system):
+
+```yml
+documents:
+  - './src/*.jsx':
+    noRequire: true
+```
+
+> Your operations should be declared as template string with `gql` tag (you can customize is with `pluckConfig`), or with a magic GraphQL comment (`const myQuery = /* GraphQL*/\`query { ... }\``)
 
 - ### String
 

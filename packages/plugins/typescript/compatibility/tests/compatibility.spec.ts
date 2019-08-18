@@ -516,7 +516,7 @@ describe('Compatibility Plugin', () => {
 
   it('Should work with interfaces and inline fragments', async () => {
     const testSchema = buildSchema(/* GraphQL */ `
-      type Node {
+      interface Node {
         id: ID!
       }
 

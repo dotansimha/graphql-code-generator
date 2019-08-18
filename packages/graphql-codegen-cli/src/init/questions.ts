@@ -3,7 +3,7 @@ import { grey } from './helpers';
 import { Tags, Answers } from './types';
 import { plugins } from './plugins';
 
-export function getQuestions(possibleTargets: Record<Tags, boolean>): inquirer.Question[] {
+export function getQuestions(possibleTargets: Record<Tags, boolean>): inquirer.QuestionCollection {
   return [
     {
       type: 'checkbox',
@@ -124,7 +124,7 @@ export function getApplicationTypeChoices(possibleTargets: Record<Tags, boolean>
 export function getPluginChoices(answers: Answers) {
   return plugins
     .filter(p => p.available(answers.targets))
-    .map<inquirer.ChoiceType<any>>(p => {
+    .map<inquirer.DistinctChoice<inquirer.AllChoiceMap>>(p => {
       return {
         name: p.name,
         value: p,

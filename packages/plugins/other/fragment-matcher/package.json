@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/fragment-matcher",
-  "version": "1.5.0",
+  "version": "1.6.1",
   "description": "graphql-code-generate plugin for generating fragments matcher introspection file",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
@@ -9,12 +9,12 @@
     "test": "jest --config ../../../../jest.config.js"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "1.5.0"
+    "@graphql-codegen/plugin-helpers": "1.6.1"
   },
   "devDependencies": {
     "graphql": "14.4.2",
     "graphql-tag": "2.10.1",
-    "jest": "24.8.0",
+    "jest": "24.9.0",
     "ts-jest": "24.0.2",
     "tslib": "1.10.0",
     "typescript": "3.5.3"

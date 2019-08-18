@@ -16,7 +16,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<TypeScriptD
       config,
       {
         noExport: getConfigValue(config.noExport, false),
-        avoidOptionals: getConfigValue(config.avoidOptionals, false),
+        avoidOptionals: typeof config.avoidOptionals === 'boolean' ? getConfigValue(config.avoidOptionals, false) : false,
         immutableTypes: getConfigValue(config.immutableTypes, false),
         nonOptionalTypename: getConfigValue(config.nonOptionalTypename, false),
       } as TypeScriptDocumentsParsedConfig,
