@@ -2498,7 +2498,7 @@ describe('TypeScript Operations Plugin', () => {
       `);
     });
 
-    it('#2407 Fragment on Union type', async () => {
+    it('#2407 Fragment on Fragment Spread on Union type', async () => {
       const schema = buildSchema(/* GraphQL */ `
         type Price {
           id: ID!
@@ -2553,7 +2553,10 @@ describe('TypeScript Operations Plugin', () => {
         export type PriceFragmentFragment = (
           { __typename?: 'Price' }
           & Pick<Price, 'id'>
-          & { item: Array<Maybe<{ __typename?: 'Product' } & ProductFragmentFragment>> }
+          & { item: Array<Maybe<(
+            { __typename?: 'Product' }
+            & ProductFragmentFragment
+          )>> }
         );
       `);
     });
