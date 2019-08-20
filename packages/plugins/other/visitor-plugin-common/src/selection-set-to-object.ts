@@ -119,7 +119,7 @@ export class SelectionSetToObject {
             typeSelections = [];
             types.set(typeOnSchema.name, typeSelections);
           }
-          typeSelections.push(...node.selectionSet.selections.filter(selection => selection.kind === 'Field'));
+          typeSelections.push(...node.selectionSet.selections.filter(selection => selection.kind !== 'InlineFragment'));
 
           this._collectInlineFragments(typeOnSchema, node.selectionSet.selections.filter(selection => selection.kind === 'InlineFragment') as InlineFragmentNode[], types);
         } else if (isInterfaceType(typeOnSchema) && parentType.isTypeOf(typeOnSchema, null, null)) {
@@ -128,7 +128,7 @@ export class SelectionSetToObject {
             typeSelections = [];
             types.set(parentType.name, typeSelections);
           }
-          typeSelections.push(...node.selectionSet.selections.filter(selection => selection.kind === 'Field'));
+          typeSelections.push(...node.selectionSet.selections.filter(selection => selection.kind !== 'InlineFragment'));
 
           this._collectInlineFragments(typeOnSchema, node.selectionSet.selections.filter(selection => selection.kind === 'InlineFragment') as InlineFragmentNode[], types);
         }
@@ -151,7 +151,7 @@ export class SelectionSetToObject {
             types.set(schemaType.name, typeSelections);
           }
 
-          typeSelections.push(...node.selectionSet.selections.filter(selection => selection.kind === 'Field'));
+          typeSelections.push(...node.selectionSet.selections.filter(selection => selection.kind !== 'InlineFragment'));
 
           this._collectInlineFragments(schemaType, node.selectionSet.selections.filter(selection => selection.kind === 'InlineFragment') as InlineFragmentNode[], types);
         } else if (isInterfaceType(schemaType) && schemaType.name === parentType.name) {
@@ -161,7 +161,7 @@ export class SelectionSetToObject {
               typeSelections = [];
               types.set(possibleType.name, typeSelections);
             }
-            typeSelections.push(...node.selectionSet.selections.filter(selection => selection.kind === 'Field'));
+            typeSelections.push(...node.selectionSet.selections.filter(selection => selection.kind !== 'InlineFragment'));
 
             this._collectInlineFragments(schemaType, node.selectionSet.selections.filter(selection => selection.kind === 'InlineFragment') as InlineFragmentNode[], types);
           }
@@ -185,7 +185,7 @@ export class SelectionSetToObject {
             types.set(onType, typeSelections);
           }
 
-          typeSelections.push(...node.selectionSet.selections.filter(selection => selection.kind === 'Field'));
+          typeSelections.push(...node.selectionSet.selections.filter(selection => selection.kind !== 'InlineFragment'));
 
           this._collectInlineFragments(schemaType, node.selectionSet.selections.filter(selection => selection.kind === 'InlineFragment') as InlineFragmentNode[], types);
         } else if (isInterfaceType(schemaType)) {
@@ -198,7 +198,7 @@ export class SelectionSetToObject {
                 types.set(possibleType.name, typeSelections);
               }
 
-              typeSelections.push(...node.selectionSet.selections.filter(selection => selection.kind === 'Field'));
+              typeSelections.push(...node.selectionSet.selections.filter(selection => selection.kind !== 'InlineFragment'));
 
               this._collectInlineFragments(schemaType, node.selectionSet.selections.filter(selection => selection.kind === 'InlineFragment') as InlineFragmentNode[], types);
             }
@@ -333,6 +333,7 @@ export class SelectionSetToObject {
         field: FieldNode;
       }
     >();
+    const fragmentSpreadSelectionSets = new Map<string, FragmentSpreadNode>();
     let requireTypename = false;
 
     for (const selectionNode of selectionNodes) {
@@ -394,6 +395,8 @@ export class SelectionSetToObject {
             mergeSelectionSets(linkFieldNode.field.selectionSet, selectionNode.selectionSet);
           }
         }
+      } else if (selectionNode.kind === 'FragmentSpread') {
+        fragmentSpreadSelectionSets.set(selectionNode.name.value, selectionNode);
       }
     }
 
@@ -437,8 +440,9 @@ export class SelectionSetToObject {
     const primitiveFieldsString = this.buildPrimitiveFields(parentName, Array.from(primitiveFields.values()).map(field => field.name.value));
     const primitiveAliasFieldsString = this.buildAliasedPrimitiveFields(parentName, Array.from(primitiveAliasFields.values()).map(field => ({ alias: field.alias.value, fieldName: field.name.value })));
     const linkFieldsString = this.buildLinkFields(linkFields);
+    const fragmentSpreadString = this.buildFragmentSpreadString([...fragmentSpreadSelectionSets.values()]);
 
-    const result = [typeInfoString, primitiveFieldsString, primitiveAliasFieldsString, linkFieldsString].filter(Boolean);
+    const result = [typeInfoString, primitiveFieldsString, primitiveAliasFieldsString, linkFieldsString, fragmentSpreadString].filter(Boolean);
     if (result.length === 0) {
       return null;
     } else if (result.length === 1) {
