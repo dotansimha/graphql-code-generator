@@ -34,7 +34,7 @@
     "@material-ui/core": "4.3.2",
     "@types/codemirror": "0.0.76",
     "@types/react": "16.9.2",
-    "@types/react-dom": "16.8.5",
+    "@types/react-dom": "16.9.0",
     "codemirror": "5.48.4",
     "codemirror-graphql": "0.9.0",
     "js-yaml": "3.13.1",
