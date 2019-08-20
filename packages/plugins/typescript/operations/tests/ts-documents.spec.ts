@@ -2497,5 +2497,68 @@ describe('TypeScript Operations Plugin', () => {
         );
       `);
     });
+
+    it('#2407 Fragment on Fragment Spread on Union type', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Price {
+          id: ID!
+          item: [PriceItemUnion]!
+        }
+
+        type Product {
+          id: ID!
+          title: String!
+        }
+
+        union PriceItemUnion = Product
+
+        type Query {
+          price: Price!
+        }
+      `);
+
+      const productFragmentDocument = parse(/* GraphQL */ `
+        fragment ProductFragment on Product {
+          id
+          title
+        }
+      `);
+
+      const priceFragmentDocument = parse(/* GraphQL */ `
+        fragment PriceFragment on Price {
+          id
+          item {
+            ... on Product {
+              ...ProductFragment
+            }
+          }
+        }
+      `);
+
+      const content = await plugin(
+        schema,
+        [{ filePath: '', content: productFragmentDocument }, { filePath: '', content: priceFragmentDocument }],
+        {},
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+        export type ProductFragmentFragment = (
+          { __typename?: 'Product' }
+          & Pick<Product, 'id' | 'title'>
+        );
+
+        export type PriceFragmentFragment = (
+          { __typename?: 'Price' }
+          & Pick<Price, 'id'>
+          & { item: Array<Maybe<(
+            { __typename?: 'Product' }
+            & ProductFragmentFragment
+          )>> }
+        );
+      `);
+    });
   });
 });
