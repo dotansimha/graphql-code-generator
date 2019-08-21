@@ -142,7 +142,7 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
 
   public get scalarsDefinition(): string {
     const allScalars = Object.keys(this.config.scalars).map(scalarName => {
-      const scalarValue = this.config.scalars[scalarName];
+      const scalarValue = this.config.scalars[scalarName].type;
       const scalarType = this._schema.getType(scalarName);
       const comment = scalarType && scalarType.astNode && scalarType.description ? transformComment(scalarType.description, 1) : '';
 

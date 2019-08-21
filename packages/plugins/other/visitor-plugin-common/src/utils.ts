@@ -288,15 +288,15 @@ export function buildScalars(schema: GraphQLSchema | undefined, scalarsMapping: 
           };
         }
       });
-  } else {
+  } else if (scalarsMapping) {
     if (typeof scalarsMapping === 'string') {
       throw new Error('Cannot use string scalars mapping when building without a schema');
     }
     Object.keys(scalarsMapping).forEach(name => {
-      if (scalarsMapping && typeof scalarsMapping[name] === 'string') {
+      if (typeof scalarsMapping[name] === 'string') {
         const value = parseMapper(scalarsMapping[name], name);
         result[name] = value;
-      } else if (scalarsMapping && scalarsMapping[name]) {
+      } else if (scalarsMapping[name]) {
         result[name] = {
           isExternal: false,
           type: JSON.stringify(scalarsMapping[name]),
