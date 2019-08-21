@@ -281,7 +281,7 @@ export function buildScalars(schema: GraphQLSchema | undefined, scalarsMapping: 
             isExternal: false,
             type: JSON.stringify(scalarsMapping[name]),
           };
-        } else {
+        } else if (!defaultScalarsMapping[name]) {
           result[name] = {
             isExternal: false,
             type: 'any',
@@ -296,15 +296,10 @@ export function buildScalars(schema: GraphQLSchema | undefined, scalarsMapping: 
       if (typeof scalarsMapping[name] === 'string') {
         const value = parseMapper(scalarsMapping[name], name);
         result[name] = value;
-      } else if (scalarsMapping[name]) {
-        result[name] = {
-          isExternal: false,
-          type: JSON.stringify(scalarsMapping[name]),
-        };
       } else {
         result[name] = {
           isExternal: false,
-          type: 'any',
+          type: JSON.stringify(scalarsMapping[name]),
         };
       }
     });
