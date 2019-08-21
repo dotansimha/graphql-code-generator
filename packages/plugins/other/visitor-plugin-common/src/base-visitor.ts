@@ -1,7 +1,6 @@
-import { ScalarsMap, NamingConvention, ConvertFn, ConvertOptions, LoadedFragment } from './types';
+import { ScalarsMap, ParsedScalarsMap, NamingConvention, ConvertFn, ConvertOptions, LoadedFragment, NormalizedScalarsMap } from './types';
 import { DeclarationBlockConfig } from './utils';
 import * as autoBind from 'auto-bind';
-import { DEFAULT_SCALARS, normalizeScalars } from './scalars';
 import { convertFactory } from './naming';
 import { ASTNode } from 'graphql';
 
@@ -10,7 +9,7 @@ export interface BaseVisitorConvertOptions {
 }
 
 export interface ParsedConfig {
-  scalars: ScalarsMap;
+  scalars: ParsedScalarsMap;
   convert: ConvertFn;
   typesPrefix: string;
   addTypename: boolean;
@@ -122,13 +121,10 @@ export interface RawConfig {
 export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig extends ParsedConfig = ParsedConfig> {
   protected _parsedConfig: TPluginConfig;
   protected _declarationBlockConfig: DeclarationBlockConfig = {};
+  public readonly scalars: NormalizedScalarsMap;
 
-  constructor(rawConfig: TRawConfig, additionalConfig: Partial<TPluginConfig>, defaultScalars: ScalarsMap = DEFAULT_SCALARS) {
+  constructor(rawConfig: TRawConfig, additionalConfig: Partial<TPluginConfig>) {
     this._parsedConfig = {
-      scalars: normalizeScalars({
-        ...(defaultScalars || DEFAULT_SCALARS),
-        ...(rawConfig.scalars || {}),
-      }),
       convert: convertFactory(rawConfig),
       typesPrefix: rawConfig.typesPrefix || '',
       namespacedImportName: rawConfig.namespacedImportName || null,
@@ -138,15 +134,16 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
       ...((additionalConfig || {}) as any),
     };
 
+    this.scalars = {};
+    Object.keys(this.config.scalars).forEach(key => {
+      this.scalars[key] = this.config.scalars[key].type;
+    });
+
     autoBind(this);
   }
 
   get config(): TPluginConfig {
     return this._parsedConfig;
-  }
-
-  get scalars(): ScalarsMap {
-    return this.config.scalars;
   }
 
   public convertName(node: ASTNode | string, options?: BaseVisitorConvertOptions & ConvertOptions): string {

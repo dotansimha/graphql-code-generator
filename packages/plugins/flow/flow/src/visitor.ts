@@ -75,7 +75,7 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
     );
   }
 
-  protected _buildEnumImport(identifier: string, source: string): string {
+  protected _buildTypeImport(identifier: string, source: string): string {
     return `import { type ${identifier} } from '${source}';`;
   }
 

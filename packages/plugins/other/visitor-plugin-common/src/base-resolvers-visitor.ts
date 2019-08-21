@@ -1,7 +1,7 @@
 import { ParsedConfig, RawConfig, BaseVisitor } from './base-visitor';
 import * as autoBind from 'auto-bind';
 import { DEFAULT_SCALARS } from './scalars';
-import { ScalarsMap, EnumValuesMap, ParsedEnumValuesMap } from './types';
+import { NormalizedScalarsMap, EnumValuesMap, ParsedEnumValuesMap } from './types';
 import { DeclarationBlock, DeclarationBlockConfig, indent, getBaseTypeNode, buildScalars, getConfigValue, getBaseType, getRootTypeNames, stripMapperTypeInterpolation, OMIT_TYPE, REQUIRE_FIELDS_TYPE } from './utils';
 import {
   NameNode,
@@ -24,7 +24,7 @@ import {
 } from 'graphql';
 import { DirectiveDefinitionNode, GraphQLObjectType, InputValueDefinitionNode, GraphQLOutputType } from 'graphql';
 import { OperationVariablesToObject } from './variables-to-object';
-import { ParsedMapper, parseMapper, transformMappers } from './mappers';
+import { ParsedMapper, parseMapper, transformMappers, ExternalParsedMapper } from './mappers';
 import { parseEnumValues } from './enum-values';
 import { ApolloFederation } from './federation';
 
@@ -228,23 +228,20 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
   protected _globalDeclarations: Set<string> = new Set();
   protected _federation: ApolloFederation;
 
-  constructor(rawConfig: TRawConfig, additionalConfig: TPluginConfig, private _schema: GraphQLSchema, defaultScalars: ScalarsMap = DEFAULT_SCALARS) {
-    super(
-      rawConfig,
-      {
-        federation: getConfigValue(rawConfig.federation, false),
-        resolverTypeWrapperSignature: getConfigValue(rawConfig.resolverTypeWrapperSignature, 'Promise<T> | T'),
-        enumValues: parseEnumValues(_schema, rawConfig.enumValues),
-        addUnderscoreToArgsType: getConfigValue(rawConfig.addUnderscoreToArgsType, false),
-        contextType: parseMapper(rawConfig.contextType || 'any', 'ContextType'),
-        rootValueType: parseMapper(rawConfig.rootValueType || '{}', 'RootValueType'),
-        avoidOptionals: getConfigValue(rawConfig.avoidOptionals, false),
-        defaultMapper: rawConfig.defaultMapper ? parseMapper(rawConfig.defaultMapper || 'any', 'DefaultMapperType') : null,
-        mappers: transformMappers(rawConfig.mappers || {}),
-        ...(additionalConfig || {}),
-      } as TPluginConfig,
-      buildScalars(_schema, defaultScalars)
-    );
+  constructor(rawConfig: TRawConfig, additionalConfig: TPluginConfig, private _schema: GraphQLSchema, defaultScalars: NormalizedScalarsMap = DEFAULT_SCALARS) {
+    super(rawConfig, {
+      federation: getConfigValue(rawConfig.federation, false),
+      resolverTypeWrapperSignature: getConfigValue(rawConfig.resolverTypeWrapperSignature, 'Promise<T> | T'),
+      enumValues: parseEnumValues(_schema, rawConfig.enumValues),
+      addUnderscoreToArgsType: getConfigValue(rawConfig.addUnderscoreToArgsType, false),
+      contextType: parseMapper(rawConfig.contextType || 'any', 'ContextType'),
+      rootValueType: parseMapper(rawConfig.rootValueType || '{}', 'RootValueType'),
+      avoidOptionals: getConfigValue(rawConfig.avoidOptionals, false),
+      defaultMapper: rawConfig.defaultMapper ? parseMapper(rawConfig.defaultMapper || 'any', 'DefaultMapperType') : null,
+      mappers: transformMappers(rawConfig.mappers || {}),
+      scalars: buildScalars(_schema, rawConfig.scalars, defaultScalars),
+      ...(additionalConfig || {}),
+    } as TPluginConfig);
 
     autoBind(this);
     this._federation = new ApolloFederation({ enabled: this.config.federation, schema: this.schema });
@@ -504,9 +501,9 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
     };
 
     Object.keys(this.config.mappers)
-      .filter(gqlTypeName => this.config.mappers[gqlTypeName].isExternal)
-      .forEach(gqlTypeName => {
-        const mapper = this.config.mappers[gqlTypeName];
+      .map(gqlTypeName => this.config.mappers[gqlTypeName])
+      .filter((gqlType): gqlType is ExternalParsedMapper => gqlType.isExternal)
+      .forEach(mapper => {
         const identifier = stripMapperTypeInterpolation(mapper.type);
         addMapper(mapper.source, identifier, mapper.default);
       });

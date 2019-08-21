@@ -1,10 +1,10 @@
-import { SelectionSetToObject, PrimitiveField, PrimitiveAliasedFields, LinkField, ConvertNameFn, ScalarsMap, LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
+import { SelectionSetToObject, PrimitiveField, PrimitiveAliasedFields, LinkField, ConvertNameFn, NormalizedScalarsMap, LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
 import { GraphQLObjectType, GraphQLNonNull, GraphQLList, isNonNullType, isListType, GraphQLSchema, GraphQLNamedType, SelectionSetNode } from 'graphql';
 import { FlowDocumentsParsedConfig } from './visitor';
 
 export class FlowSelectionSetToObject extends SelectionSetToObject {
   constructor(
-    _scalars: ScalarsMap,
+    _scalars: NormalizedScalarsMap,
     _schema: GraphQLSchema,
     _convertName: ConvertNameFn,
     _addTypename: boolean,

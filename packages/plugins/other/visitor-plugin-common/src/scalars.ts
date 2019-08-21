@@ -1,21 +1,9 @@
-import { ScalarsMap } from './types';
+import { NormalizedScalarsMap } from './types';
 
-export const DEFAULT_SCALARS: ScalarsMap = {
+export const DEFAULT_SCALARS: NormalizedScalarsMap = {
   ID: 'string',
   String: 'string',
   Boolean: 'boolean',
   Int: 'number',
   Float: 'number',
 };
-
-export function normalizeScalars(scalars: ScalarsMap): ScalarsMap {
-  return Object.keys(scalars).reduce(
-    (prev, key) => {
-      return {
-        ...prev,
-        [key]: typeof scalars[key] === 'object' ? JSON.stringify(scalars[key]) : scalars[key],
-      };
-    },
-    {} as ScalarsMap
-  );
-}

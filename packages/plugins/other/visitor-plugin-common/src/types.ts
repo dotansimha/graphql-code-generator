@@ -1,6 +1,9 @@
 import { ASTNode, FragmentDefinitionNode } from 'graphql';
+import { ParsedMapper } from './mappers';
 
-export type ScalarsMap = { [name: string]: string };
+export type ScalarsMap = string | { [name: string]: string };
+export type NormalizedScalarsMap = { [name: string]: string };
+export type ParsedScalarsMap = { [name: string]: ParsedMapper };
 export type EnumValuesMap<AdditionalProps = {}> = string | { [enumName: string]: string | ({ [key: string]: string } & AdditionalProps) };
 export type ParsedEnumValuesMap = { [enumName: string]: { mappedValues?: { [valueName: string]: string }; typeIdentifier: string; sourceIdentifier?: string; sourceFile?: string } };
 export type ConvertNameFn<T = {}> = ConvertFn<T>;

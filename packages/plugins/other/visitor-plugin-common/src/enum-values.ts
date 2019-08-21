@@ -25,7 +25,7 @@ export function parseEnumValues(schema: GraphQLSchema, mapOrStr: EnumValuesMap):
             ...prev,
             [gqlIdentifier]: {
               typeIdentifier: gqlIdentifier,
-              sourceFile: mapper.source,
+              sourceFile: mapper.isExternal ? mapper.source : undefined,
               sourceIdentifier: mapper.type,
               mappedValues: null,
             },

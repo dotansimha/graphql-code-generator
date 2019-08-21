@@ -1,4 +1,4 @@
-import { ParsedConfig, BaseVisitor, ParsedMapper, transformMappers, parseMapper, indent, indentMultiline, getBaseTypeNode } from '@graphql-codegen/visitor-plugin-common';
+import { ParsedConfig, BaseVisitor, ParsedMapper, transformMappers, parseMapper, indent, indentMultiline, getBaseTypeNode, buildScalars, ExternalParsedMapper } from '@graphql-codegen/visitor-plugin-common';
 import { JavaResolversPluginRawConfig } from './index';
 import { JAVA_SCALARS, JavaDeclarationBlock, wrapTypeWithModifiers } from '@graphql-codegen/java-common';
 import { GraphQLSchema, NamedTypeNode, ObjectTypeDefinitionNode, FieldDefinitionNode, InterfaceTypeDefinitionNode, TypeNode } from 'graphql';
@@ -16,17 +16,14 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
   private _includeTypeResolverImport = false;
 
   constructor(rawConfig: JavaResolversPluginRawConfig, private _schema: GraphQLSchema, defaultPackageName: string) {
-    super(
-      rawConfig,
-      {
-        mappers: transformMappers(rawConfig.mappers || {}),
-        package: rawConfig.package || defaultPackageName,
-        defaultMapper: parseMapper(rawConfig.defaultMapper || 'Object'),
-        className: rawConfig.className || 'Resolvers',
-        listType: rawConfig.listType || 'Iterable',
-      },
-      JAVA_SCALARS
-    );
+    super(rawConfig, {
+      mappers: transformMappers(rawConfig.mappers || {}),
+      package: rawConfig.package || defaultPackageName,
+      defaultMapper: parseMapper(rawConfig.defaultMapper || 'Object'),
+      className: rawConfig.className || 'Resolvers',
+      listType: rawConfig.listType || 'Iterable',
+      scalars: buildScalars(_schema, rawConfig.scalars, JAVA_SCALARS),
+    });
   }
 
   public getImports(): string {
@@ -45,7 +42,7 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
   protected mappersImports(): string[] {
     return Object.keys(this.config.mappers)
       .map(typeName => this.config.mappers[typeName])
-      .filter(m => m.isExternal)
+      .filter((m): m is ExternalParsedMapper => m.isExternal)
       .map(m => m.source);
   }
 
