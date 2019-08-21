@@ -274,7 +274,7 @@ export function buildScalars(schema: GraphQLSchema | undefined, scalarsMapping: 
           const value = parseMapper(scalarsMapping + '#' + name);
           result[name] = value;
         } else {
-          const value = parseMapper(scalarsMapping[name] || 'any');
+          const value = parseMapper(scalarsMapping[name] !== undefined && typeof scalarsMapping[name] !== 'string' ? JSON.stringify(scalarsMapping[name]) : scalarsMapping[name] || 'any');
           result[name] = value;
         }
       });
