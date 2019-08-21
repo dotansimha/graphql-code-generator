@@ -271,11 +271,21 @@ export function buildScalars(schema: GraphQLSchema | undefined, scalarsMapping: 
       .map((scalarType: GraphQLScalarType) => {
         const name = scalarType.name;
         if (typeof scalarsMapping === 'string') {
-          const value = parseMapper(scalarsMapping + '#' + name);
+          const value = parseMapper(scalarsMapping + '#' + name, name);
           result[name] = value;
+        } else if (scalarsMapping && typeof scalarsMapping[name] === 'string') {
+          const value = parseMapper(scalarsMapping[name], name);
+          result[name] = value;
+        } else if (scalarsMapping && scalarsMapping[name]) {
+          result[name] = {
+            isExternal: false,
+            type: JSON.stringify(scalarsMapping[name]),
+          };
         } else {
-          const value = parseMapper(scalarsMapping[name] !== undefined && typeof scalarsMapping[name] !== 'string' ? JSON.stringify(scalarsMapping[name]) : scalarsMapping[name] || 'any');
-          result[name] = value;
+          result[name] = {
+            isExternal: false,
+            type: 'any',
+          };
         }
       });
   } else {
@@ -283,7 +293,20 @@ export function buildScalars(schema: GraphQLSchema | undefined, scalarsMapping: 
       throw new Error('Cannot use string scalars mapping when building without a schema');
     }
     Object.keys(scalarsMapping).forEach(name => {
-      result[name] = parseMapper(scalarsMapping[name]);
+      if (scalarsMapping && typeof scalarsMapping[name] === 'string') {
+        const value = parseMapper(scalarsMapping[name], name);
+        result[name] = value;
+      } else if (scalarsMapping && scalarsMapping[name]) {
+        result[name] = {
+          isExternal: false,
+          type: JSON.stringify(scalarsMapping[name]),
+        };
+      } else {
+        result[name] = {
+          isExternal: false,
+          type: 'any',
+        };
+      }
     });
   }
 
