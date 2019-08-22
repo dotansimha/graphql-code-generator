@@ -1,6 +1,6 @@
 import { FieldsTree } from './fields-tree';
-import { getBaseTypeNode, DeclarationBlock, getConfigValue, ParsedConfig, BaseVisitor } from '@graphql-codegen/visitor-plugin-common';
-import { TypeScriptOperationVariablesToObject } from '@graphql-codegen/typescript';
+import { getBaseTypeNode, DeclarationBlock, getConfigValue, ParsedConfig, BaseVisitor, buildScalars, DEFAULT_SCALARS } from '@graphql-codegen/visitor-plugin-common';
+import { TypeScriptOperationVariablesToObject, plugin } from '@graphql-codegen/typescript';
 import * as autoBind from 'auto-bind';
 import { Directives, TypeScriptMongoPluginConfig } from './index';
 import { DirectiveNode, GraphQLSchema, ObjectTypeDefinitionNode, NamedTypeNode, FieldDefinitionNode, Kind, ValueNode, isEnumType, InterfaceTypeDefinitionNode, UnionTypeDefinitionNode } from 'graphql';
@@ -47,6 +47,7 @@ export class TsMongoVisitor extends BaseVisitor<TypeScriptMongoPluginConfig, Typ
       idFieldName: pluginConfig.idFieldName || '_id',
       enumsAsString: getConfigValue<boolean>(pluginConfig.enumsAsString, true),
       avoidOptionals: getConfigValue<boolean>(pluginConfig.avoidOptionals, false),
+      scalars: buildScalars(_schema, pluginConfig.scalars, DEFAULT_SCALARS),
     } as Partial<TypeScriptMongoPluginParsedConfig>) as any);
     autoBind(this);
     this._variablesTransformer = new TypeScriptOperationVariablesToObject(this.scalars, this.convertName, false, false);
