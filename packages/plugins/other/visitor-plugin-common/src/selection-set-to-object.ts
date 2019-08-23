@@ -357,7 +357,7 @@ export class SelectionSetToObject {
           }
 
           if (!selectedField) {
-            throw new TypeError(`Could not find field type. ${this._parentSchemaType}.${selectionNode.name.value}`);
+            throw new TypeError(`Could not find field type. ${parentSchemaType}.${selectionNode.name.value}`);
           }
 
           const fieldName = getFieldNodeNameValue(selectionNode);
