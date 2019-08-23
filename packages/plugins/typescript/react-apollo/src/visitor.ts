@@ -116,7 +116,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
   ${operationVariablesTypes},
   ${propsTypeName}<TChildProps>>) {
     return ApolloReactHoc.with${titleCase(node.operation)}<TProps, ${operationResultType}, ${operationVariablesTypes}, ${propsTypeName}<TChildProps>>(${this.getDocumentNodeVariable(node, documentVariableName)}, {
-      alias: 'with${operationName}',
+      alias: 'with${operationName}Fn',
       ...operationOptions
     });
 };`;
