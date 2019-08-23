@@ -63,7 +63,7 @@
     "graphql-toolkit": "0.5.10",
     "graphql-tools": "4.0.5",
     "indent-string": "4.0.0",
-    "inquirer": "6.5.1",
+    "inquirer": "7.0.0",
     "is-glob": "4.0.1",
     "is-valid-path": "0.1.1",
     "js-yaml": "3.13.1",
