@@ -349,31 +349,8 @@ export class SelectionSetToObject {
         } else {
           let selectedField: GraphQLField<any, any, any> = null;
 
-          if (isObjectType(this._parentSchemaType)) {
-            const fields = this._parentSchemaType.getFields();
-            selectedField = fields[selectionNode.name.value];
-          } else if (isInterfaceType(this._parentSchemaType)) {
-            const fields = this._parentSchemaType.getFields();
-            selectedField = fields[selectionNode.name.value];
-            if (!selectedField) {
-              const possibleTypes = this._getPossibleTypes(this._parentSchemaType);
-              for (const possibleType of possibleTypes) {
-                selectedField = possibleType.getFields()[selectionNode.name.value];
-                if (selectedField) {
-                  break;
-                }
-              }
-            }
-          } else if (isUnionType(this._parentSchemaType)) {
-            const types = this._parentSchemaType.getTypes();
-            for (const type of types) {
-              const fields = type.getFields();
-              selectedField = fields[selectionNode.name.value];
-              if (selectedField) {
-                break;
-              }
-            }
-          }
+          const fields = parentSchemaType.getFields();
+          selectedField = fields[selectionNode.name.value];
 
           if (isMetadataFieldName(selectionNode.name.value)) {
             selectedField = metadataFieldMap[selectionNode.name.value];
