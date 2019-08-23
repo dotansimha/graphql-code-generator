@@ -2067,7 +2067,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         TestTwoMutationVariables,
         TestTwoProps<TChildProps>>) {
           return ApolloReactHoc.withMutation<TProps, TestTwoMutation, TestTwoMutationVariables, TestTwoProps<TChildProps>>(Operations.testTwo, {
-            alias: 'withTestTwo',
+            alias: 'testTwo',
             ...operationOptions
           });
       };
@@ -2079,7 +2079,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         TestThreeSubscriptionVariables,
         TestThreeProps<TChildProps>>) {
           return ApolloReactHoc.withSubscription<TProps, TestThreeSubscription, TestThreeSubscriptionVariables, TestThreeProps<TChildProps>>(Operations.testThree, {
-            alias: 'withTestThree',
+            alias: 'testThree',
             ...operationOptions
           });
       };
