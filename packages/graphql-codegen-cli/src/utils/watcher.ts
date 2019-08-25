@@ -5,6 +5,9 @@ import * as isValidPath from 'is-valid-path';
 import * as isGlob from 'is-glob';
 import * as debounce from 'debounce';
 import * as logSymbols from 'log-symbols';
+import * as fs from 'fs';
+import * as path from 'path';
+import { parseSDL } from 'graphql-import';
 import { debugLog } from './debugging';
 import { getLogger } from './logger';
 import { join } from 'path';
@@ -26,7 +29,7 @@ export const createWatcher = (initialConfig: Types.Config, onNext: (result: Type
   let config: Types.Config = initialConfig;
   const files: string[] = [initialConfig.configFilePath].filter(a => a);
   const documents = normalizeInstanceOrArray<Types.OperationDocument>(config.documents);
-  const schemas = normalizeInstanceOrArray<Types.Schema>(config.schema);
+  let schemas = normalizeInstanceOrArray<Types.Schema>(config.schema);
 
   // Add schemas and documents from "generates"
   Object.keys(config.generates)
@@ -35,6 +38,24 @@ export const createWatcher = (initialConfig: Types.Config, onNext: (result: Type
       schemas.push(...normalizeInstanceOrArray<Types.Schema>(conf.schema));
       documents.push(...normalizeInstanceOrArray<Types.OperationDocument>(conf.documents));
     });
+
+  const schemaChildren: string[] = [];
+
+  schemas.filter(schema => typeof schema === 'string').map(schema => parseSDLAndAddToSchemas(schemaChildren, path.resolve(schema as string)));
+
+  schemas = schemas.concat(schemaChildren);
+
+  const parseSDLAndAddToSchemas = async (schemaChildren: string[], schemaPath: string) => {
+    const schemaRaw = fs.readFileSync(schemaPath, 'utf-8');
+    const schemaDir = path.dirname(schemaPath);
+    const deps = parseSDL(schemaRaw);
+
+    schemaChildren.push(schemaPath);
+
+    for (const dep of deps) {
+      parseSDLAndAddToSchemas(schemaChildren, path.resolve(schemaDir, dep.from));
+    }
+  };
 
   if (documents) {
     documents.forEach(doc => {
