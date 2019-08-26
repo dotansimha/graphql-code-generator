@@ -41,10 +41,6 @@ export const createWatcher = (initialConfig: Types.Config, onNext: (result: Type
 
   const schemaChildren: string[] = [];
 
-  schemas.filter(schema => typeof schema === 'string').map(schema => parseSDLAndAddToSchemas(schemaChildren, path.resolve(schema as string)));
-
-  schemas = schemas.concat(schemaChildren);
-
   const parseSDLAndAddToSchemas = async (schemaChildren: string[], schemaPath: string) => {
     const schemaRaw = fs.readFileSync(schemaPath, 'utf-8');
     const schemaDir = path.dirname(schemaPath);
@@ -56,6 +52,10 @@ export const createWatcher = (initialConfig: Types.Config, onNext: (result: Type
       parseSDLAndAddToSchemas(schemaChildren, path.resolve(schemaDir, dep.from));
     }
   };
+
+  schemas.filter(schema => typeof schema === 'string').map(schema => parseSDLAndAddToSchemas(schemaChildren, path.resolve(schema as string)));
+
+  schemas = schemas.concat(schemaChildren);
 
   if (documents) {
     documents.forEach(doc => {
