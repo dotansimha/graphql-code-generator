@@ -9,11 +9,7 @@
 [renovate-badge]: https://img.shields.io/badge/renovate-app-blue.svg
 [renovate-app]: https://renovateapp.com/
 
-[graphql-code-generator.com](https://graphql-code-generator.com)
-
-<p align="center">
-    <img src="https://github.com/dotansimha/graphql-code-generator/blob/master/logo.png?raw=true" />
-</p>
+[![CodeGen](https://user-images.githubusercontent.com/25294569/63696114-af7a9380-c822-11e9-9e01-b3cf4c91f88e.gif)](https://graphql-code-generator.com)
 
 [GraphQL Codegen 1.0 is here!](https://graphql-code-generator.com/docs/migration/from-0-18)
 
