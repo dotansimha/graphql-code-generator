@@ -52,7 +52,7 @@
     "graphql-tools": "4.0.5",
     "husky": "3.0.4",
     "jest": "24.9.0",
-    "jest-junit": "7.0.0",
+    "jest-junit": "8.0.0",
     "lerna": "3.16.4",
     "lint-staged": "9.2.3",
     "urql": "1.4.0",
