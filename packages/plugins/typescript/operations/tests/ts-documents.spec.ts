@@ -2560,5 +2560,162 @@ describe('TypeScript Operations Plugin', () => {
         );
       `);
     });
+
+    it('#2436 - interface with field of same name but different type is correctly handled', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        interface DashboardTile {
+          tileId: ID!
+        }
+        type TileFilterMetadata {
+          viz: String!
+          columnInfo: String!
+        }
+        type DashboardTileFilterDetails implements DashboardTile {
+          tileId: ID!
+          md: TileFilterMetadata!
+        }
+        type TileParameterMetadata {
+          viz: String!
+          columnInfo: String!
+        }
+        type DashboardTileParameterDetails implements DashboardTile {
+          tileId: ID!
+          md: TileParameterMetadata!
+        }
+        type DashboardVersion {
+          id: ID!
+          tiles: DashboardTile!
+        }
+      `);
+
+      const fragment = parse(/* GraphQL */ `
+        fragment DashboardVersionFragment on DashboardVersion {
+          tiles {
+            ... on DashboardTileFilterDetails {
+              tileId
+              md {
+                viz
+                columnInfo
+              }
+            }
+            ... on DashboardTileParameterDetails {
+              tileId
+              md {
+                viz
+                columnInfo
+              }
+            }
+          }
+        }
+      `);
+
+      const content = await plugin(
+        schema,
+        [{ filePath: '', content: fragment }],
+        {},
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+        export type DashboardVersionFragmentFragment = (
+          { __typename?: 'DashboardVersion' }
+          & { tiles: (
+            { __typename?: 'DashboardTileFilterDetails' }
+            & Pick<DashboardTileFilterDetails, 'tileId'>
+            & { md: (
+              { __typename?: 'TileFilterMetadata' }
+              & Pick<TileFilterMetadata, 'viz' | 'columnInfo'>
+            ) }
+          ) | (
+            { __typename?: 'DashboardTileParameterDetails' }
+            & Pick<DashboardTileParameterDetails, 'tileId'>
+            & { md: (
+              { __typename?: 'TileParameterMetadata' }
+              & Pick<TileParameterMetadata, 'viz' | 'columnInfo'>
+            ) }
+          ) }
+        );
+      `);
+    });
+
+    it('#2436 - union with field of same name but different type is correctly handled', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type TileFilterMetadata {
+          viz: String!
+          columnInfo: String!
+        }
+        type DashboardTileFilterDetails {
+          tileId: ID!
+          md: TileFilterMetadata!
+        }
+        type TileParameterMetadata {
+          viz: String!
+          columnInfo: String!
+        }
+        type DashboardTileParameterDetails {
+          tileId: ID!
+          md: TileParameterMetadata!
+        }
+        union DashboardTile = DashboardTileFilterDetails | DashboardTileParameterDetails
+
+        type DashboardVersion {
+          id: ID!
+          tiles: DashboardTile!
+        }
+      `);
+
+      const fragment = parse(/* GraphQL */ `
+        fragment DashboardVersionFragment on DashboardVersion {
+          tiles {
+            ... on DashboardTileFilterDetails {
+              tileId
+              md {
+                viz
+                columnInfo
+              }
+            }
+            ... on DashboardTileParameterDetails {
+              tileId
+              md {
+                viz
+                columnInfo
+              }
+            }
+          }
+        }
+      `);
+
+      const content = await plugin(
+        schema,
+        [{ filePath: '', content: fragment }],
+        {},
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+        export type DashboardVersionFragmentFragment = (
+          { __typename?: 'DashboardVersion' }
+          & { tiles: (
+            { __typename?: 'DashboardTileFilterDetails' }
+            & Pick<DashboardTileFilterDetails, 'tileId'>
+            & { md: (
+              { __typename?: 'TileFilterMetadata' }
+              & Pick<TileFilterMetadata, 'viz' | 'columnInfo'>
+            ) }
+          ) | (
+            { __typename?: 'DashboardTileParameterDetails' }
+            & Pick<DashboardTileParameterDetails, 'tileId'>
+            & { md: (
+              { __typename?: 'TileParameterMetadata' }
+              & Pick<TileParameterMetadata, 'viz' | 'columnInfo'>
+            ) }
+          ) }
+        );
+      `);
+    });
   });
 });
