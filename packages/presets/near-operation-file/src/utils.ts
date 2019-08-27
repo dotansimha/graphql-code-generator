@@ -2,6 +2,11 @@ import { parse, dirname, relative, join, isAbsolute } from 'path';
 import { DocumentNode, visit, FragmentSpreadNode, FragmentDefinitionNode, FieldNode, Kind, InputValueDefinitionNode } from 'graphql';
 import { FragmentNameToFile } from './index';
 
+export function defineFilepathSubfolder(baseFilePath: string, folder: string) {
+  const parsedPath = parse(baseFilePath);
+  return join(parsedPath.dir, folder, parsedPath.base).replace(/\\/g, '/');
+}
+
 export function appendExtensionToFilePath(baseFilePath: string, extension: string) {
   const parsedPath = parse(baseFilePath);
 
