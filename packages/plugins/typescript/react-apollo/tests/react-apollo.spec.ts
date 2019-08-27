@@ -645,7 +645,7 @@ query MyFeed {
       alias: 'test',
       ...operationOptions
     });
-};`);
+}`);
       await validateTypeScript(content, schema, docs, {});
     });
 
@@ -759,12 +759,12 @@ query MyFeed {
       expect(content.content).toBeSimilarStringTo(`
 export function useFeedQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<FeedQuery, FeedQueryVariables>) {
   return ApolloReactHooks.useQuery<FeedQuery, FeedQueryVariables>(FeedDocument, baseOptions);
-};`);
+}`);
 
       expect(content.content).toBeSimilarStringTo(`
 export function useSubmitRepositoryMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>) {
   return ApolloReactHooks.useMutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(SubmitRepositoryDocument, baseOptions);
-};`);
+}`);
       await validateTypeScript(content, schema, docs, {});
     });
 
@@ -804,12 +804,12 @@ export function useSubmitRepositoryMutation(baseOptions?: ApolloReactHooks.Mutat
       expect(content.content).toBeSimilarStringTo(`
 export function useFeedQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<FeedQuery, FeedQueryVariables>) {
   return ApolloReactHooks.useQuery<FeedQuery, FeedQueryVariables>(FeedQueryDocument, baseOptions);
-};`);
+}`);
 
       expect(content.content).toBeSimilarStringTo(`
 export function useSubmitRepositoryMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>) {
   return ApolloReactHooks.useMutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(SubmitRepositoryMutationDocument, baseOptions);
-};`);
+}`);
       await validateTypeScript(content, schema, docs, {});
     });
 
@@ -855,7 +855,7 @@ export function useSubmitRepositoryMutation(baseOptions?: ApolloReactHooks.Mutat
       expect(content.content).toBeSimilarStringTo(`
 export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.SubscriptionHookOptions<ListenToCommentsSubscription, ListenToCommentsSubscriptionVariables>) {
   return ApolloReactHooks.useSubscription<ListenToCommentsSubscription, ListenToCommentsSubscriptionVariables>(ListenToCommentsDocument, baseOptions);
-};`);
+}`);
       await validateTypeScript(content, schema, docs, {});
     });
 
@@ -1072,7 +1072,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       expect(content.content).toBeSimilarStringTo(`
   export function useFeedLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<FeedQuery, FeedQueryVariables>) {
     return ApolloReactHooks.useLazyQuery<FeedQuery, FeedQueryVariables>(FeedDocument, baseOptions);
-  };`);
+  }`);
       await validateTypeScript(content, schema, docs, {});
     });
   });
@@ -1401,12 +1401,12 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       expect(content.content).toBeSimilarStringTo(`
       export function useTestQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<TestQuery, TestQueryVariables>) {
         return ApolloReactHooks.useQuery<TestQuery, TestQueryVariables>(Operations.test, baseOptions);
-      };
+      }
       `);
       expect(content.content).toBeSimilarStringTo(`
       export function useTestLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<TestQuery, TestQueryVariables>) {
         return ApolloReactHooks.useLazyQuery<TestQuery, TestQueryVariables>(Operations.test, baseOptions);
-      };
+      }
       `);
       await validateTypeScript(content, schema, docs, {});
     });
@@ -1437,7 +1437,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
             alias: 'test',
             ...operationOptions
           });
-      };
+      }
       `);
       await validateTypeScript(content, schema, docs, {});
     });
@@ -1484,7 +1484,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       expect(content.content).toBeSimilarStringTo(`
       export function useTestMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<TestMutation, TestMutationVariables>) {
         return ApolloReactHooks.useMutation<TestMutation, TestMutationVariables>(Operations.test, baseOptions);
-      };
+      }
       `);
       await validateTypeScript(content, schema, docs, {});
     });
@@ -1515,7 +1515,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
             alias: 'test',
             ...operationOptions
           });
-      };
+      }
       `);
       await validateTypeScript(content, schema, docs, {});
     });
@@ -1562,7 +1562,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       expect(content.content).toBeSimilarStringTo(`
       export function useTestSubscription(baseOptions?: ApolloReactHooks.SubscriptionHookOptions<TestSubscription, TestSubscriptionVariables>) {
         return ApolloReactHooks.useSubscription<TestSubscription, TestSubscriptionVariables>(Operations.test, baseOptions);
-      };
+      }
       `);
       await validateTypeScript(content, schema, docs, {});
     });
@@ -1593,7 +1593,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
             alias: 'test',
             ...operationOptions
           });
-      };
+      }
       `);
       await validateTypeScript(content, schema, docs, {});
     });
@@ -1649,23 +1649,23 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       expect(content.content).toBeSimilarStringTo(`
       export function useTestOneQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<TestOneQuery, TestOneQueryVariables>) {
         return ApolloReactHooks.useQuery<TestOneQuery, TestOneQueryVariables>(Operations.testOne, baseOptions);
-      };
+      }
       `);
       expect(content.content).toBeSimilarStringTo(`
       export function useTestOneLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<TestOneQuery, TestOneQueryVariables>) {
         return ApolloReactHooks.useLazyQuery<TestOneQuery, TestOneQueryVariables>(Operations.testOne, baseOptions);
-      };
+      }
       `);
       expect(content.content).toBeSimilarStringTo(`
       export function useTestTwoMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<TestTwoMutation, TestTwoMutationVariables>) {
         return ApolloReactHooks.useMutation<TestTwoMutation, TestTwoMutationVariables>(Operations.testTwo, baseOptions);
-      };
+      }
       `);
 
       expect(content.content).toBeSimilarStringTo(`
       export function useTestThreeSubscription(baseOptions?: ApolloReactHooks.SubscriptionHookOptions<TestThreeSubscription, TestThreeSubscriptionVariables>) {
         return ApolloReactHooks.useSubscription<TestThreeSubscription, TestThreeSubscriptionVariables>(Operations.testThree, baseOptions);
-      };`);
+      }`);
 
       await validateTypeScript(content, schema, docs, {});
     });
@@ -1696,7 +1696,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
             alias: 'testOne',
             ...operationOptions
           });
-      };
+      }
       `);
       expect(content.content).toBeSimilarStringTo(`
       export function withTestTwo<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
@@ -1708,7 +1708,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
             alias: 'testTwo',
             ...operationOptions
           });
-      };
+      }
       `);
       expect(content.content).toBeSimilarStringTo(`
       export function withTestThree<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
@@ -1720,7 +1720,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
             alias: 'testThree',
             ...operationOptions
           });
-      };
+      }
       `);
       await validateTypeScript(content, schema, docs, {});
     });
@@ -1767,12 +1767,12 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       expect(content.content).toBeSimilarStringTo(`
       export function useTestQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<TestQuery, TestQueryVariables>) {
         return ApolloReactHooks.useQuery<TestQuery, TestQueryVariables>(Operations.test, baseOptions);
-      };
+      }
       `);
       expect(content.content).toBeSimilarStringTo(`
       export function useTestLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<TestQuery, TestQueryVariables>) {
         return ApolloReactHooks.useLazyQuery<TestQuery, TestQueryVariables>(Operations.test, baseOptions);
-      };
+      }
       `);
       await validateTypeScript(content, schema, docs, {});
     });
@@ -1803,7 +1803,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
             alias: 'test',
             ...operationOptions
           });
-      };
+      }
       `);
       await validateTypeScript(content, schema, docs, {});
     });
@@ -1850,7 +1850,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       expect(content.content).toBeSimilarStringTo(`
       export function useTestMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<TestMutation, TestMutationVariables>) {
         return ApolloReactHooks.useMutation<TestMutation, TestMutationVariables>(Operations.test, baseOptions);
-      };`);
+      }`);
       await validateTypeScript(content, schema, docs, {});
     });
 
@@ -1880,7 +1880,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
             alias: 'test',
             ...operationOptions
           });
-      };
+      }
       `);
       await validateTypeScript(content, schema, docs, {});
     });
@@ -1927,7 +1927,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       expect(content.content).toBeSimilarStringTo(`
       export function useTestSubscription(baseOptions?: ApolloReactHooks.SubscriptionHookOptions<TestSubscription, TestSubscriptionVariables>) {
         return ApolloReactHooks.useSubscription<TestSubscription, TestSubscriptionVariables>(Operations.test, baseOptions);
-      };`);
+      }`);
       await validateTypeScript(content, schema, docs, {});
     });
 
@@ -1957,7 +1957,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
             alias: 'test',
             ...operationOptions
           });
-      };`);
+      }`);
       await validateTypeScript(content, schema, docs, {});
     });
 
@@ -2012,22 +2012,22 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       expect(content.content).toBeSimilarStringTo(`
       export function useTestOneQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<TestOneQuery, TestOneQueryVariables>) {
         return ApolloReactHooks.useQuery<TestOneQuery, TestOneQueryVariables>(Operations.testOne, baseOptions);
-      };
+      }
       `);
       expect(content.content).toBeSimilarStringTo(`
       export function useTestOneLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<TestOneQuery, TestOneQueryVariables>) {
         return ApolloReactHooks.useLazyQuery<TestOneQuery, TestOneQueryVariables>(Operations.testOne, baseOptions);
-      };
+      }
       `);
       expect(content.content).toBeSimilarStringTo(`
       export function useTestTwoMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<TestTwoMutation, TestTwoMutationVariables>) {
         return ApolloReactHooks.useMutation<TestTwoMutation, TestTwoMutationVariables>(Operations.testTwo, baseOptions);
-      };
+      }
       `);
       expect(content.content).toBeSimilarStringTo(`
       export function useTestThreeSubscription(baseOptions?: ApolloReactHooks.SubscriptionHookOptions<TestThreeSubscription, TestThreeSubscriptionVariables>) {
         return ApolloReactHooks.useSubscription<TestThreeSubscription, TestThreeSubscriptionVariables>(Operations.testThree, baseOptions);
-      };`);
+      }`);
 
       await validateTypeScript(content, schema, docs, {});
     });
@@ -2058,7 +2058,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
             alias: 'testOne',
             ...operationOptions
           });
-      };
+      }
       `);
       expect(content.content).toBeSimilarStringTo(`
       export function withTestTwo<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
@@ -2070,7 +2070,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
             alias: 'testTwo',
             ...operationOptions
           });
-      };
+      }
       `);
       expect(content.content).toBeSimilarStringTo(`
       export function withTestThree<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
@@ -2082,7 +2082,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
             alias: 'testThree',
             ...operationOptions
           });
-      };
+      }
       `);
 
       await validateTypeScript(content, schema, docs, {});
