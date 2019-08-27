@@ -5,12 +5,19 @@ import { FieldDefinitionNode, NamedTypeNode, ListTypeNode, NonNullTypeNode, Enum
 import { TypeScriptOperationVariablesToObject, TypeScriptPluginParsedConfig, TsVisitor } from '@graphql-codegen/typescript';
 import { AvoidOptionalsConfig } from '@graphql-codegen/typescript';
 
+export type DecoratorConfig = {
+  type: string;
+  interface: string;
+  field: string;
+};
+
 export interface TypeGraphQLPluginParsedConfig extends TypeScriptPluginParsedConfig {
   avoidOptionals: AvoidOptionalsConfig;
   constEnums: boolean;
   enumsAsTypes: boolean;
   immutableTypes: boolean;
   maybeValue: string;
+  decoratorName: DecoratorConfig;
 }
 
 const MAYBE_REGEX = /^Maybe<(.*?)>$/;
@@ -18,7 +25,7 @@ const ARRAY_REGEX = /^Array<(.*?)>$/;
 const SCALAR_REGEX = /^Scalars\['(.*?)'\]$/;
 const GRAPHQL_TYPES = ['Query', 'Mutation', 'Subscription'];
 
-export class TypeGraphQLVisitor<TRawConfig extends TypeGraphQLPluginConfig = TypeGraphQLPluginConfig, TParsedConfig extends TypeGraphQLPluginParsedConfig = TypeScriptPluginParsedConfig> extends TsVisitor<TRawConfig, TParsedConfig> {
+export class TypeGraphQLVisitor<TRawConfig extends TypeGraphQLPluginConfig = TypeGraphQLPluginConfig, TParsedConfig extends TypeGraphQLPluginParsedConfig = TypeGraphQLPluginParsedConfig> extends TsVisitor<TRawConfig, TParsedConfig> {
   constructor(schema: GraphQLSchema, pluginConfig: TRawConfig, additionalConfig: Partial<TParsedConfig> = {}) {
     super(schema, pluginConfig, {
       avoidOptionals: pluginConfig.avoidOptionals || false,
@@ -33,9 +40,14 @@ export class TypeGraphQLVisitor<TRawConfig extends TypeGraphQLPluginConfig = Typ
         input: 'type',
         scalar: 'type',
       },
+      decoratorName: {
+        type: 'ObjectType',
+        interface: 'InterfaceType',
+        field: 'Field',
+        ...(pluginConfig.decoratorName || {})
+      },
       ...(additionalConfig || {}),
     } as TParsedConfig);
-
     autoBind(this);
     this.setArgumentsTransformer(new TypeScriptOperationVariablesToObject(this.scalars, this.convertName, this.config.avoidOptionals.object, this.config.immutableTypes));
     this.setDeclarationBlockConfig({
@@ -44,6 +56,7 @@ export class TypeGraphQLVisitor<TRawConfig extends TypeGraphQLPluginConfig = Typ
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: number | string, parent: any): string {
+    const typeDecorator = this.config.decoratorName.type;
     const originalNode = parent[key] as ObjectTypeDefinitionNode;
 
     let declarationBlock = this.getObjectTypeDeclarationBlock(node, originalNode);
@@ -56,16 +69,17 @@ export class TypeGraphQLVisitor<TRawConfig extends TypeGraphQLPluginConfig = Typ
       } else if (interfaces.length === 1) {
         decoratorOptions = `{ implements: ${interfaces[0]} }`;
       }
-      declarationBlock = declarationBlock.withDecorator(`@TypeGraphQL.ObjectType(${decoratorOptions})`);
+      declarationBlock = declarationBlock.withDecorator(`@TypeGraphQL.${typeDecorator}(${decoratorOptions})`);
     }
 
     return [declarationBlock.string, this.buildArgumentsBlock(originalNode)].filter(f => f).join('\n\n');
   }
 
   InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode, key: number | string, parent: any): string {
+    const interfaceDecorator = this.config.decoratorName.interface;
     const originalNode = parent[key] as InterfaceTypeDefinitionNode;
 
-    let declarationBlock = this.getInterfaceTypeDeclarationBlock(node, originalNode).withDecorator('@TypeGraphQL.InterfaceType()');
+    let declarationBlock = this.getInterfaceTypeDeclarationBlock(node, originalNode).withDecorator(`@TypeGraphQL.${interfaceDecorator}()`);
 
     return [declarationBlock.string, this.buildArgumentsBlock(originalNode)].filter(f => f).join('\n\n');
   }
@@ -82,11 +96,12 @@ export class TypeGraphQLVisitor<TRawConfig extends TypeGraphQLPluginConfig = Typ
   }
 
   FieldDefinition(node: FieldDefinitionNode, key?: number | string, parent?: any): string {
+    const fieldDecorator = this.config.decoratorName.field;
     let typeString = (node.type as any) as string;
     const comment = transformComment((node.description as any) as string, 1);
 
     const type = this.parseType(typeString);
-    const decorator = '\n' + indent(`@TypeGraphQL.Field(type => ${type.isArray ? `[${type.type}]` : type.type}${type.isNullable ? ', { nullable: true }' : ''})`) + '\n';
+    const decorator = '\n' + indent(`@TypeGraphQL.${fieldDecorator}(type => ${type.isArray ? `[${type.type}]` : type.type}${type.isNullable ? ', { nullable: true }' : ''})`) + '\n';
 
     typeString = type.isArray || type.isNullable || type.isScalar ? typeString : `FixDecorator<${typeString}>`;
 

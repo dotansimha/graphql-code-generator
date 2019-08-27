@@ -130,4 +130,36 @@ describe('type-graphql', () => {
       }
     `);
   });
+  it('should generate type-graphql types as custom types', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Test {
+        id: ID
+        mandatoryStr: String!
+      }
+      interface ITest {
+        id: ID
+      }
+    `);
+
+    const result = (await plugin(schema, [], { decoratorName: { type: 'Foo', field: 'Bar', interface: 'FooBar' } }, { outputFile: '' })) as Types.ComplexPluginOutput;
+
+    expect(result.content).toBeSimilarStringTo(`
+        @TypeGraphQL.Foo()
+        export class Test {
+          __typename?: 'Test';
+          @TypeGraphQL.Bar(type => TypeGraphQL.ID, { nullable: true })
+          id!: Maybe<Scalars['ID']>;
+          @TypeGraphQL.Bar(type => String)
+          mandatoryStr!: Scalars['String'];
+        }
+      `);
+    expect(result.content).toBeSimilarStringTo(`
+        @TypeGraphQL.FooBar()
+        export abstract class ITest {
+          
+          @TypeGraphQL.Bar(type => TypeGraphQL.ID, { nullable: true })
+          id!: Maybe<Scalars['ID']>;
+        }
+      `);
+  });
 });

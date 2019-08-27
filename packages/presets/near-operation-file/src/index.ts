@@ -3,7 +3,7 @@ import { BaseVisitor, LoadedFragment } from '@graphql-codegen/visitor-plugin-com
 import * as addPlugin from '@graphql-codegen/add';
 import { join, resolve } from 'path';
 import { Kind, FragmentDefinitionNode } from 'graphql';
-import { appendExtensionToFilePath, extractExternalFragmentsInUse, resolveRelativeImport, isUsingTypes } from './utils';
+import { appendExtensionToFilePath, defineFilepathSubfolder, extractExternalFragmentsInUse, resolveRelativeImport, isUsingTypes } from './utils';
 
 export type NearOperationFileConfig = {
   /**
@@ -62,6 +62,25 @@ export type NearOperationFileConfig = {
    *    - typescript-operations
    * ```
    */
+  folder?: string;
+  /**
+   * @name folder
+   * @type string
+   * @description Optional, defines a folder, (Relative to the source files) where the generated files will be created.
+   * @default ''
+   *
+   * @example
+   * ```yml
+   * generates:
+   * src/:
+   *  preset: near-operation-file
+   *  presetConfig:
+   *    baseTypesPath: types.ts
+   *    folder: __generated__
+   *  plugins:
+   *    - typescript-operations
+   * ```
+   */
   cwd?: string;
   /**
    * @name importTypesNamespace
@@ -96,6 +115,7 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
 
     const baseDir = options.presetConfig.cwd || process.cwd();
     const extension = options.presetConfig.extension || '.generated.ts';
+    const folder = options.presetConfig.folder || '';
     const importTypesNamespace = options.presetConfig.importTypesNamespace || 'Types';
     const pluginMap: { [name: string]: CodegenPlugin } = {
       ...options.pluginMap,
@@ -130,7 +150,8 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
 
     return options.documents
       .map<Types.GenerateOptions | null>(documentFile => {
-        const generatedFilePath = appendExtensionToFilePath(documentFile.filePath, extension);
+        const newFilePath = defineFilepathSubfolder(documentFile.filePath, folder);
+        const generatedFilePath = appendExtensionToFilePath(newFilePath, extension);
         const absGeneratedFilePath = resolve(baseDir, generatedFilePath);
         const relativeImportPath = resolveRelativeImport(absGeneratedFilePath, absTypesPath);
         const fragmentsInUse = extractExternalFragmentsInUse(documentFile.content, fragmentNameToFile);
