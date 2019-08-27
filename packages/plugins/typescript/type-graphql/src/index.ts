@@ -1,10 +1,12 @@
 import { Types, PluginFunction } from '@graphql-codegen/plugin-helpers';
 import { parse, printSchema, visit, GraphQLSchema, TypeInfo, GraphQLNamedType, visitWithTypeInfo, getNamedType, isIntrospectionType, DocumentNode, printIntrospectionSchema, isObjectType } from 'graphql';
-import { TypeGraphQLVisitor } from './visitor';
+import { TypeGraphQLVisitor, DecoratorConfig } from './visitor';
 import { TsIntrospectionVisitor, includeIntrospectionDefinitions, TypeScriptPluginConfig } from '@graphql-codegen/typescript';
 export * from './visitor';
 
-export interface TypeGraphQLPluginConfig extends TypeScriptPluginConfig {}
+export interface TypeGraphQLPluginConfig extends TypeScriptPluginConfig {
+  decoratorName?: Partial<DecoratorConfig>;
+}
 
 const TYPE_GRAPHQL_IMPORT = `import * as TypeGraphQL from 'type-graphql';`;
 const DECORATOR_FIX = `type FixDecorator<T> = T;`;
