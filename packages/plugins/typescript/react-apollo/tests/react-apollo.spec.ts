@@ -642,7 +642,7 @@ query MyFeed {
   TestQueryVariables,
   TestProps<TChildProps>>) {
     return ApolloReactHoc.withQuery<TProps, TestQuery, TestQueryVariables, TestProps<TChildProps>>(TestDocument, {
-      alias: 'withTest',
+      alias: 'test',
       ...operationOptions
     });
 };`);
@@ -1434,7 +1434,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         TestQueryVariables,
         TestProps<TChildProps>>) {
           return ApolloReactHoc.withQuery<TProps, TestQuery, TestQueryVariables, TestProps<TChildProps>>(Operations.test, {
-            alias: 'withTest',
+            alias: 'test',
             ...operationOptions
           });
       };
@@ -1512,7 +1512,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         TestMutationVariables,
         TestProps<TChildProps>>) {
           return ApolloReactHoc.withMutation<TProps, TestMutation, TestMutationVariables, TestProps<TChildProps>>(Operations.test, {
-            alias: 'withTest',
+            alias: 'test',
             ...operationOptions
           });
       };
@@ -1590,7 +1590,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         TestSubscriptionVariables,
         TestProps<TChildProps>>) {
           return ApolloReactHoc.withSubscription<TProps, TestSubscription, TestSubscriptionVariables, TestProps<TChildProps>>(Operations.test, {
-            alias: 'withTest',
+            alias: 'test',
             ...operationOptions
           });
       };
@@ -1693,7 +1693,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         TestOneQueryVariables,
         TestOneProps<TChildProps>>) {
           return ApolloReactHoc.withQuery<TProps, TestOneQuery, TestOneQueryVariables, TestOneProps<TChildProps>>(Operations.testOne, {
-            alias: 'withTestOne',
+            alias: 'testOne',
             ...operationOptions
           });
       };
@@ -1705,7 +1705,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         TestTwoMutationVariables,
         TestTwoProps<TChildProps>>) {
           return ApolloReactHoc.withMutation<TProps, TestTwoMutation, TestTwoMutationVariables, TestTwoProps<TChildProps>>(Operations.testTwo, {
-            alias: 'withTestTwo',
+            alias: 'testTwo',
             ...operationOptions
           });
       };
@@ -1717,7 +1717,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         TestThreeSubscriptionVariables,
         TestThreeProps<TChildProps>>) {
           return ApolloReactHoc.withSubscription<TProps, TestThreeSubscription, TestThreeSubscriptionVariables, TestThreeProps<TChildProps>>(Operations.testThree, {
-            alias: 'withTestThree',
+            alias: 'testThree',
             ...operationOptions
           });
       };
@@ -1800,7 +1800,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         TestQueryVariables,
         TestProps<TChildProps>>) {
           return ApolloReactHoc.withQuery<TProps, TestQuery, TestQueryVariables, TestProps<TChildProps>>(Operations.test, {
-            alias: 'withTest',
+            alias: 'test',
             ...operationOptions
           });
       };
@@ -1877,7 +1877,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         TestMutationVariables,
         TestProps<TChildProps>>) {
           return ApolloReactHoc.withMutation<TProps, TestMutation, TestMutationVariables, TestProps<TChildProps>>(Operations.test, {
-            alias: 'withTest',
+            alias: 'test',
             ...operationOptions
           });
       };
@@ -1954,7 +1954,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         TestSubscriptionVariables,
         TestProps<TChildProps>>) {
           return ApolloReactHoc.withSubscription<TProps, TestSubscription, TestSubscriptionVariables, TestProps<TChildProps>>(Operations.test, {
-            alias: 'withTest',
+            alias: 'test',
             ...operationOptions
           });
       };`);
@@ -2055,7 +2055,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         TestOneQueryVariables,
         TestOneProps<TChildProps>>) {
           return ApolloReactHoc.withQuery<TProps, TestOneQuery, TestOneQueryVariables, TestOneProps<TChildProps>>(Operations.testOne, {
-            alias: 'withTestOne',
+            alias: 'testOne',
             ...operationOptions
           });
       };
@@ -2067,7 +2067,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         TestTwoMutationVariables,
         TestTwoProps<TChildProps>>) {
           return ApolloReactHoc.withMutation<TProps, TestTwoMutation, TestTwoMutationVariables, TestTwoProps<TChildProps>>(Operations.testTwo, {
-            alias: 'withTestTwo',
+            alias: 'testTwo',
             ...operationOptions
           });
       };
@@ -2079,7 +2079,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         TestThreeSubscriptionVariables,
         TestThreeProps<TChildProps>>) {
           return ApolloReactHoc.withSubscription<TProps, TestThreeSubscription, TestThreeSubscriptionVariables, TestThreeProps<TChildProps>>(Operations.testThree, {
-            alias: 'withTestThree',
+            alias: 'testThree',
             ...operationOptions
           });
       };

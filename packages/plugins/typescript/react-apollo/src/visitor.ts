@@ -3,7 +3,7 @@ import { ReactApolloRawPluginConfig } from './index';
 import * as autoBind from 'auto-bind';
 import { OperationDefinitionNode, Kind } from 'graphql';
 import { toPascalCase, Types } from '@graphql-codegen/plugin-helpers';
-import { titleCase } from 'change-case';
+import { titleCase, camelCase } from 'change-case';
 
 export interface ReactApolloPluginConfig extends ClientSideBasePluginConfig {
   withComponent: boolean;
@@ -116,7 +116,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
   ${operationVariablesTypes},
   ${propsTypeName}<TChildProps>>) {
     return ApolloReactHoc.with${titleCase(node.operation)}<TProps, ${operationResultType}, ${operationVariablesTypes}, ${propsTypeName}<TChildProps>>(${this.getDocumentNodeVariable(node, documentVariableName)}, {
-      alias: 'with${operationName}',
+      alias: '${camelCase(operationName)}',
       ...operationOptions
     });
 };`;
