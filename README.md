@@ -1,4 +1,4 @@
-# GraphQL Code Generator
+[![CodeGen](https://user-images.githubusercontent.com/25294569/63696114-af7a9380-c822-11e9-9e01-b3cf4c91f88e.gif)](https://graphql-code-generator.com)
 
 [![npm version](https://badge.fury.io/js/%40graphql-codegen%2Fcli.svg)](https://badge.fury.io/js/%40graphql-codegen%2Fcli)
 [![CircleCI](https://circleci.com/gh/dotansimha/graphql-code-generator/tree/master.svg?style=svg)](https://circleci.com/gh/dotansimha/graphql-code-generator/tree/master)
@@ -10,10 +10,6 @@
 [renovate-app]: https://renovateapp.com/
 
 [graphql-code-generator.com](https://graphql-code-generator.com)
-
-<p align="center">
-    <img src="https://github.com/dotansimha/graphql-code-generator/blob/master/logo.png?raw=true" />
-</p>
 
 [GraphQL Codegen 1.0 is here!](https://graphql-code-generator.com/docs/migration/from-0-18)
 
