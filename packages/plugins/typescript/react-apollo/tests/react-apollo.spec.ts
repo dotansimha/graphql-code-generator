@@ -2087,5 +2087,70 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
 
       await validateTypeScript(content, schema, docs, {});
     });
+
+    it(`should NOT import Operations if no operation collected: external mode and one file`, async () => {
+      const docs = [
+        {
+          filePath: 'path/to/document.graphql',
+          content: parse(/* GraphQL */ `
+            fragment feedFragment on Entry {
+              id
+              commentCount
+            }
+          `),
+        },
+      ];
+      const content = (await plugin(
+        schema,
+        docs,
+        {
+          documentMode: DocumentMode.external,
+          importDocumentNodeExternallyFrom: 'near-operation-file',
+        },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).not.toBeSimilarStringTo(`import * as Operations`);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it(`should NOT import Operations if no operation collected: external mode and multiple files`, async () => {
+      const docs = [
+        {
+          filePath: 'a.graphql',
+          content: parse(/* GraphQL */ `
+            fragment feedFragment1 on Entry {
+              id
+              commentCount
+            }
+          `),
+        },
+        {
+          filePath: 'b.graphql',
+          content: parse(/* GraphQL */ `
+            fragment feedFragment2 on Entry {
+              id
+              commentCount
+            }
+          `),
+        },
+      ];
+      const content = (await plugin(
+        schema,
+        docs,
+        {
+          documentMode: DocumentMode.external,
+          importDocumentNodeExternallyFrom: 'path/to/documents.tsx',
+        },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.prepend).not.toBeSimilarStringTo(`import * as Operations`);
+      await validateTypeScript(content, schema, docs, {});
+    });
   });
 });
