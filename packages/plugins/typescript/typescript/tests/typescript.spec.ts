@@ -420,7 +420,7 @@ describe('TypeScript', () => {
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyType = {
-          __typename?: 'MyType',
+          readonly  __typename?: 'MyType',
           readonly foo: ReadonlyArray<Scalars['String']>,
         };
       `);

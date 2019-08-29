@@ -12,7 +12,7 @@
     "moment": "2.24.0"
   },
   "devDependencies": {
-    "graphql": "14.5.3",
+    "graphql": "14.5.4",
     "graphql-tag": "2.10.1",
     "typescript": "3.6.2"
   },

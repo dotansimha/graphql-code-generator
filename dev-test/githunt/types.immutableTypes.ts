@@ -10,7 +10,7 @@ export type Scalars = {
 
 /** A comment about an entry, submitted by a user */
 export type Comment = {
-  __typename?: 'Comment';
+  readonly __typename?: 'Comment';
   /** The SQL ID of this entry */
   readonly id: Scalars['Int'];
   /** The GitHub user who posted the comment */
@@ -25,7 +25,7 @@ export type Comment = {
 
 /** Information about a GitHub repository submitted to GitHunt */
 export type Entry = {
-  __typename?: 'Entry';
+  readonly __typename?: 'Entry';
   /** Information about the repository from GitHub */
   readonly repository: Repository;
   /** The GitHub user who submitted this entry */
@@ -63,7 +63,7 @@ export enum FeedType {
 }
 
 export type Mutation = {
-  __typename?: 'Mutation';
+  readonly __typename?: 'Mutation';
   /** Submit a new repository, returns the new submission */
   readonly submitRepository?: Maybe<Entry>;
   /** Vote on a repository submission, returns the submission that was voted on */
@@ -87,7 +87,7 @@ export type MutationSubmitCommentArgs = {
 };
 
 export type Query = {
-  __typename?: 'Query';
+  readonly __typename?: 'Query';
   /** A feed of repository submissions */
   readonly feed?: Maybe<ReadonlyArray<Maybe<Entry>>>;
   /** A single entry */
@@ -111,7 +111,7 @@ export type QueryEntryArgs = {
  * GitHub API for simplicity, even though the convention for GraphQL is usually to camel case.
  **/
 export type Repository = {
-  __typename?: 'Repository';
+  readonly __typename?: 'Repository';
   /** Just the name of the repository, e.g. GitHunt-API */
   readonly name: Scalars['String'];
   /** The full name of the repository with the username, e.g. apollostack/GitHunt-API */
@@ -129,7 +129,7 @@ export type Repository = {
 };
 
 export type Subscription = {
-  __typename?: 'Subscription';
+  readonly __typename?: 'Subscription';
   /** Subscription fires on every comment added */
   readonly commentAdded?: Maybe<Comment>;
 };
@@ -140,7 +140,7 @@ export type SubscriptionCommentAddedArgs = {
 
 /** A user object from the GitHub API. This uses the exact field names returned from the GitHub API. */
 export type User = {
-  __typename?: 'User';
+  readonly __typename?: 'User';
   /** The name of the user, e.g. apollostack */
   readonly login: Scalars['String'];
   /** The URL to a directly embeddable image for this user's avatar */
@@ -151,7 +151,7 @@ export type User = {
 
 /** XXX to be removed */
 export type Vote = {
-  __typename?: 'Vote';
+  readonly __typename?: 'Vote';
   readonly vote_value: Scalars['Int'];
 };
 
