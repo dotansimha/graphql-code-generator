@@ -1,6 +1,7 @@
 import { parse, dirname, relative, join, isAbsolute } from 'path';
 import { DocumentNode, visit, FragmentSpreadNode, FragmentDefinitionNode, FieldNode, Kind, InputValueDefinitionNode } from 'graphql';
 import { FragmentNameToFile } from './index';
+import { VariableDefinitionNode } from 'graphql';
 
 export function defineFilepathSubfolder(baseFilePath: string, folder: string) {
   const parsedPath = parse(baseFilePath);
@@ -73,19 +74,16 @@ export function resolveRelativeImport(from: string, to: string): string {
 
 export function isUsingTypes(document: DocumentNode, externalFragments: string[]): boolean {
   let foundFields = 0;
-  let ignoredFragment = false;
 
   visit(document, {
-    leave: {
-      FragmentSpread: (node: FragmentSpreadNode) => {
-        ignoredFragment = false;
-      },
-    },
     enter: {
-      FragmentSpread: (node: FragmentSpreadNode) => {
-        if (externalFragments.includes(node.name.value)) {
-          ignoredFragment = true;
+      VariableDefinition: (node: VariableDefinitionNode, key, parent, path, anscestors) => {
+        const insideIgnoredFragment = (anscestors as any).find(f => f.kind && f.kind === 'FragmentDefinition' && externalFragments.includes(f.name.value));
+
+        if (insideIgnoredFragment) {
+          return;
         }
+        foundFields++;
       },
       InputValueDefinition: (node: InputValueDefinitionNode, key, parent, path, anscestors) => {
         const insideIgnoredFragment = (anscestors as any).find(f => f.kind && f.kind === 'FragmentDefinition' && externalFragments.includes(f.name.value));
@@ -101,10 +99,9 @@ export function isUsingTypes(document: DocumentNode, externalFragments: string[]
         if (insideIgnoredFragment) {
           return;
         }
-
         const selections = node.selectionSet ? node.selectionSet.selections || [] : [];
-
-        if (selections.length === 0 || selections[0].kind === Kind.FRAGMENT_SPREAD) {
+        const relevantFragmentSpreads = selections.filter(s => s.kind === Kind.FRAGMENT_SPREAD && !externalFragments.includes(s.name.value));
+        if (selections.length === 0 || relevantFragmentSpreads.length > 0) {
           foundFields++;
         }
       },
