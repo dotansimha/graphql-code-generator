@@ -15,7 +15,7 @@
   "devDependencies": {
     "graphql": "14.5.3",
     "java-ast": "0.1.0",
-    "typescript": "3.5.3"
+    "typescript": "3.6.2"
   },
   "sideEffects": false,
   "main": "dist/commonjs/index.js",
