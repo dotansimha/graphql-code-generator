@@ -37,7 +37,7 @@ export type ColorInput = {
 
 /** An autonomous mechanical character in the Star Wars universe */
 export type Droid = Character & {
-  __typename?: 'Droid';
+  readonly __typename?: 'Droid';
   /** The ID of the droid */
   readonly id: Scalars['ID'];
   /** What others call this droid */
@@ -70,7 +70,7 @@ export enum Episode {
 
 /** A connection object for a character's friends */
 export type FriendsConnection = {
-  __typename?: 'FriendsConnection';
+  readonly __typename?: 'FriendsConnection';
   /** The total number of friends */
   readonly totalCount?: Maybe<Scalars['Int']>;
   /** The edges for each of the character's friends. */
@@ -83,7 +83,7 @@ export type FriendsConnection = {
 
 /** An edge object for a character's friends */
 export type FriendsEdge = {
-  __typename?: 'FriendsEdge';
+  readonly __typename?: 'FriendsEdge';
   /** A cursor used for pagination */
   readonly cursor: Scalars['ID'];
   /** The character represented by this friendship edge */
@@ -92,7 +92,7 @@ export type FriendsEdge = {
 
 /** A humanoid creature from the Star Wars universe */
 export type Human = Character & {
-  __typename?: 'Human';
+  readonly __typename?: 'Human';
   /** The ID of the human */
   readonly id: Scalars['ID'];
   /** What this human calls themselves */
@@ -134,7 +134,7 @@ export enum LengthUnit {
 
 /** The mutation type, represents all updates we can make to our data */
 export type Mutation = {
-  __typename?: 'Mutation';
+  readonly __typename?: 'Mutation';
   readonly createReview?: Maybe<Review>;
 };
 
@@ -146,7 +146,7 @@ export type MutationCreateReviewArgs = {
 
 /** Information for paginating this connection */
 export type PageInfo = {
-  __typename?: 'PageInfo';
+  readonly __typename?: 'PageInfo';
   readonly startCursor?: Maybe<Scalars['ID']>;
   readonly endCursor?: Maybe<Scalars['ID']>;
   readonly hasNextPage: Scalars['Boolean'];
@@ -154,7 +154,7 @@ export type PageInfo = {
 
 /** The query type, represents all of the entry points into our object graph */
 export type Query = {
-  __typename?: 'Query';
+  readonly __typename?: 'Query';
   readonly hero?: Maybe<Character>;
   readonly reviews?: Maybe<ReadonlyArray<Maybe<Review>>>;
   readonly search?: Maybe<ReadonlyArray<Maybe<SearchResult>>>;
@@ -201,7 +201,7 @@ export type QueryStarshipArgs = {
 
 /** Represents a review for a movie */
 export type Review = {
-  __typename?: 'Review';
+  readonly __typename?: 'Review';
   /** The number of stars this review gave, 1-5 */
   readonly stars: Scalars['Int'];
   /** Comment about the movie */
@@ -221,7 +221,7 @@ export type ReviewInput = {
 export type SearchResult = Human | Droid | Starship;
 
 export type Starship = {
-  __typename?: 'Starship';
+  readonly __typename?: 'Starship';
   /** The ID of the starship */
   readonly id: Scalars['ID'];
   /** The name of the starship */
