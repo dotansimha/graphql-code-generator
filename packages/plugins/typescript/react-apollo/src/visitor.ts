@@ -3,7 +3,7 @@ import { ReactApolloRawPluginConfig } from './index';
 import * as autoBind from 'auto-bind';
 import { OperationDefinitionNode, Kind } from 'graphql';
 import { toPascalCase, Types } from '@graphql-codegen/plugin-helpers';
-import { titleCase, camelCase } from 'change-case';
+import { pascalCase, camelCase } from 'change-case';
 
 export interface ReactApolloPluginConfig extends ClientSideBasePluginConfig {
   withComponent: boolean;
@@ -115,7 +115,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
   ${operationResultType},
   ${operationVariablesTypes},
   ${propsTypeName}<TChildProps>>) {
-    return ApolloReactHoc.with${titleCase(node.operation)}<TProps, ${operationResultType}, ${operationVariablesTypes}, ${propsTypeName}<TChildProps>>(${this.getDocumentNodeVariable(node, documentVariableName)}, {
+    return ApolloReactHoc.with${pascalCase(node.operation)}<TProps, ${operationResultType}, ${operationVariablesTypes}, ${propsTypeName}<TChildProps>>(${this.getDocumentNodeVariable(node, documentVariableName)}, {
       alias: '${camelCase(operationName)}',
       ...operationOptions
     });
@@ -174,7 +174,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
 
     if (operationType === 'Query') {
       const lazyOperationName: string = this.convertName(node.name.value, {
-        suffix: titleCase('LazyQuery'),
+        suffix: pascalCase('LazyQuery'),
         useTypesPrefix: false,
       });
       hookFn += `
@@ -191,12 +191,12 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
 
   private _getHookSuffix(name: string, operationType: string) {
     if (!this.config.dedupeOperationSuffix) {
-      return titleCase(operationType);
+      return pascalCase(operationType);
     }
     if (name.includes('Query') || name.includes('Mutation') || name.includes('Subscription')) {
       return '';
     }
-    return titleCase(operationType);
+    return pascalCase(operationType);
   }
 
   private _buildResultType(node: OperationDefinitionNode, operationType: string, operationResultType: string, operationVariablesTypes: string): string {

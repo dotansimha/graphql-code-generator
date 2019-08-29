@@ -2,7 +2,7 @@ import { ClientSideBaseVisitor, ClientSideBasePluginConfig, LoadedFragment, getC
 import { UrqlRawPluginConfig } from './index';
 import * as autoBind from 'auto-bind';
 import { OperationDefinitionNode, Kind } from 'graphql';
-import { titleCase } from 'change-case';
+import { pascalCase } from 'change-case';
 
 export interface UrqlPluginConfig extends ClientSideBasePluginConfig {
   withComponent: boolean;
@@ -61,7 +61,7 @@ export const ${componentName} = (props: Omit<Urql.${operationType}Props<${generi
   }
 
   private _buildHooks(node: OperationDefinitionNode, operationType: string, documentVariableName: string, operationResultType: string, operationVariablesTypes: string): string {
-    const operationName: string = this.convertName(node.name.value, { suffix: titleCase(operationType), useTypesPrefix: false });
+    const operationName: string = this.convertName(node.name.value, { suffix: pascalCase(operationType), useTypesPrefix: false });
 
     if (operationType === 'Mutation') {
       return `
