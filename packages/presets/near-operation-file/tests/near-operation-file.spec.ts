@@ -192,7 +192,8 @@ describe('near-operation-file preset', () => {
       pluginMap: { typescript: {} as any },
     });
 
-    expect(result.map(o => o.plugins)[0]).toEqual(expect.arrayContaining([{ add: `import * as Types from '../types';\n` }]));
+    expect(result.map(o => o.plugins)[0]).not.toEqual(expect.arrayContaining([{ add: `import * as Types from '../types';\n` }]));
+    expect(result.map(o => o.plugins)[1]).toEqual(expect.arrayContaining([{ add: `import * as Types from '../types';\n` }]));
   });
 
   it('should fail when multiple fragments with the same name are found', () => {

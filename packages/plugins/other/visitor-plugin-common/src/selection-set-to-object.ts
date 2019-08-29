@@ -479,7 +479,7 @@ export class SelectionSetToObject {
       let typeToUse = baseType.name;
 
       if (isEnumType(baseType)) {
-        typeToUse = this._convertName(baseType.name, { useTypesPrefix: this._enumPrefix });
+        typeToUse = (this._namespacedImportName ? `${this._namespacedImportName}.` : '') + this._convertName(baseType.name, { useTypesPrefix: this._enumPrefix });
       } else if (this._scalars[baseType.name]) {
         typeToUse = this._scalars[baseType.name];
       }
