@@ -168,6 +168,44 @@ describe('TypeScript Operations Plugin', () => {
       await validate(result, config);
     });
 
+    it('Should handle "namespacedImportName" and "preResolveTypes" together', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Query {
+          f: E
+          user: User!
+        }
+
+        enum E {
+          A
+          B
+        }
+
+        scalar JSON
+
+        type User {
+          id: ID!
+          f: E
+          j: JSON
+        }
+      `);
+      const ast = parse(/* GraphQL */ `
+        query test {
+          f
+          user {
+            id
+            f
+            j
+          }
+        }
+      `);
+      const config = { namespacedImportName: 'Types', preResolveTypes: true };
+      const result = await plugin(testSchema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
+
+      expect(result).toBeSimilarStringTo(`export type TestQuery = { __typename?: 'Query', f: Types.Maybe<Types.E>, user: { __typename?: 'User', id: string, f: Types.Maybe<Types.E>, j: Types.Maybe<any> } };`);
+
+      await validate(result, config);
+    });
+
     it('Should generate the correct output when using immutableTypes config', async () => {
       const ast = parse(/* GraphQL */ `
         query notifications {
