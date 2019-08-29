@@ -20,7 +20,7 @@ import {
 import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor';
 import { DEFAULT_SCALARS } from './scalars';
 import { normalizeDeclarationKind } from './declaration-kinds';
-import { EnumValuesMap, ScalarsMap, DeclarationKindConfig, DeclarationKind, ParsedEnumValuesMap } from './types';
+import { EnumValuesMap, NormalizedScalarsMap, DeclarationKindConfig, DeclarationKind, ParsedEnumValuesMap } from './types';
 import { transformComment, buildScalars, DeclarationBlock, DeclarationBlockConfig, indent, wrapWithSingleQuotes, getConfigValue } from './utils';
 import { OperationVariablesToObject } from './variables-to-object';
 import { parseEnumValues } from './enum-values';
@@ -113,25 +113,36 @@ export interface RawTypesConfig extends RawConfig {
 export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig, TPluginConfig extends ParsedTypesConfig = ParsedTypesConfig> extends BaseVisitor<TRawConfig, TPluginConfig> {
   protected _argumentsTransformer: OperationVariablesToObject;
 
-  constructor(protected _schema: GraphQLSchema, rawConfig: TRawConfig, additionalConfig: TPluginConfig, defaultScalars: ScalarsMap = DEFAULT_SCALARS) {
-    super(
-      rawConfig,
-      {
-        enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
-        addUnderscoreToArgsType: getConfigValue(rawConfig.addUnderscoreToArgsType, false),
-        enumValues: parseEnumValues(_schema, rawConfig.enumValues),
-        declarationKind: normalizeDeclarationKind(rawConfig.declarationKind),
-        ...additionalConfig,
-      },
-      buildScalars(_schema, defaultScalars)
-    );
+  constructor(protected _schema: GraphQLSchema, rawConfig: TRawConfig, additionalConfig: TPluginConfig, defaultScalars: NormalizedScalarsMap = DEFAULT_SCALARS) {
+    super(rawConfig, {
+      enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
+      addUnderscoreToArgsType: getConfigValue(rawConfig.addUnderscoreToArgsType, false),
+      enumValues: parseEnumValues(_schema, rawConfig.enumValues),
+      declarationKind: normalizeDeclarationKind(rawConfig.declarationKind),
+      scalars: buildScalars(_schema, rawConfig.scalars, defaultScalars),
+      ...additionalConfig,
+    });
 
     this._argumentsTransformer = new OperationVariablesToObject(this.scalars, this.convertName);
   }
 
+  public getScalarsImports(): string[] {
+    return Object.keys(this.config.scalars)
+      .map(enumName => {
+        const mappedValue = this.config.scalars[enumName];
+
+        if (mappedValue.isExternal) {
+          return this._buildTypeImport(mappedValue.import, mappedValue.source, mappedValue.default);
+        }
+
+        return null;
+      })
+      .filter(a => a);
+  }
+
   public get scalarsDefinition(): string {
     const allScalars = Object.keys(this.config.scalars).map(scalarName => {
-      const scalarValue = this.config.scalars[scalarName];
+      const scalarValue = this.config.scalars[scalarName].type;
       const scalarType = this._schema.getType(scalarName);
       const comment = scalarType && scalarType.astNode && scalarType.description ? transformComment(scalarType.description, 1) : '';
 
@@ -257,7 +268,10 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
     return '';
   }
 
-  protected _buildEnumImport(identifier: string, source: string): string {
+  protected _buildTypeImport(identifier: string, source: string, asDefault = false): string {
+    if (asDefault) {
+      return `import ${identifier} from '${source}';`;
+    }
     return `import { ${identifier} } from '${source}';`;
   }
 
@@ -267,9 +281,12 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
         const mappedValue = this.config.enumValues[enumName];
 
         if (mappedValue.sourceFile) {
+          if (mappedValue.sourceIdentifier === 'default') {
+            return this._buildTypeImport(mappedValue.typeIdentifier, mappedValue.sourceFile, true);
+          }
           const identifier = mappedValue.sourceIdentifier !== mappedValue.typeIdentifier ? `${mappedValue.sourceIdentifier} as ${mappedValue.typeIdentifier}` : mappedValue.sourceIdentifier;
 
-          return this._buildEnumImport(identifier, mappedValue.sourceFile);
+          return this._buildTypeImport(identifier, mappedValue.sourceFile);
         }
 
         return null;

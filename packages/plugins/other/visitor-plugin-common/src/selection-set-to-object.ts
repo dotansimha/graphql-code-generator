@@ -21,7 +21,7 @@ import {
   isAbstractType,
 } from 'graphql';
 import { getBaseType } from './utils';
-import { ScalarsMap, ConvertNameFn, LoadedFragment } from './types';
+import { NormalizedScalarsMap, ConvertNameFn, LoadedFragment } from './types';
 import { GraphQLObjectType, GraphQLNonNull, GraphQLList } from 'graphql';
 import { BaseVisitorConvertOptions } from './base-visitor';
 
@@ -81,7 +81,7 @@ export class SelectionSetToObject {
   protected _queriedForTypename = false;
 
   constructor(
-    protected _scalars: ScalarsMap,
+    protected _scalars: NormalizedScalarsMap,
     protected _schema: GraphQLSchema,
     protected _convertName: ConvertNameFn<BaseVisitorConvertOptions>,
     protected _addTypename: boolean,

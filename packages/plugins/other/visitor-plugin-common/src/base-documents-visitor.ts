@@ -1,4 +1,4 @@
-import { ScalarsMap, ConvertOptions } from './types';
+import { NormalizedScalarsMap, ConvertOptions } from './types';
 import * as autoBind from 'auto-bind';
 import { DEFAULT_SCALARS } from './scalars';
 import { toPascalCase, DeclarationBlock, DeclarationBlockConfig, buildScalars, getConfigValue } from './utils';
@@ -77,20 +77,17 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
   protected _variablesTransfomer: OperationVariablesToObject;
   protected _selectionSetToObject: SelectionSetToObject;
 
-  constructor(rawConfig: TRawConfig, additionalConfig: TPluginConfig, protected _schema: GraphQLSchema, scalars: ScalarsMap = DEFAULT_SCALARS) {
-    super(
-      rawConfig,
-      {
-        enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
-        preResolveTypes: getConfigValue(rawConfig.preResolveTypes, false),
-        dedupeOperationSuffix: getConfigValue(rawConfig.dedupeOperationSuffix, false),
-        addTypename: !rawConfig.skipTypename,
-        globalNamespace: !!rawConfig.globalNamespace,
-        operationResultSuffix: getConfigValue(rawConfig.operationResultSuffix, ''),
-        ...((additionalConfig || {}) as any),
-      },
-      buildScalars(_schema, scalars)
-    );
+  constructor(rawConfig: TRawConfig, additionalConfig: TPluginConfig, protected _schema: GraphQLSchema, defaultScalars: NormalizedScalarsMap = DEFAULT_SCALARS) {
+    super(rawConfig, {
+      enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
+      preResolveTypes: getConfigValue(rawConfig.preResolveTypes, false),
+      dedupeOperationSuffix: getConfigValue(rawConfig.dedupeOperationSuffix, false),
+      addTypename: !rawConfig.skipTypename,
+      globalNamespace: !!rawConfig.globalNamespace,
+      operationResultSuffix: getConfigValue(rawConfig.operationResultSuffix, ''),
+      scalars: buildScalars(_schema, rawConfig.scalars, defaultScalars),
+      ...((additionalConfig || {}) as any),
+    });
 
     autoBind(this);
     this._variablesTransfomer = new OperationVariablesToObject(this.scalars, this.convertName, this.config.namespacedImportName);

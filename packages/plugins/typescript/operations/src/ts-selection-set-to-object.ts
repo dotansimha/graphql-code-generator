@@ -1,10 +1,10 @@
-import { SelectionSetToObject, ConvertNameFn, ScalarsMap, LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
+import { SelectionSetToObject, ConvertNameFn, NormalizedScalarsMap, LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
 import { GraphQLSchema, GraphQLNamedType, SelectionSetNode, GraphQLObjectType, GraphQLNonNull, GraphQLList, isNonNullType, isListType } from 'graphql';
 import { TypeScriptDocumentsParsedConfig } from './visitor';
 
 export class TypeScriptSelectionSetToObject extends SelectionSetToObject {
   constructor(
-    _scalars: ScalarsMap,
+    _scalars: NormalizedScalarsMap,
     _schema: GraphQLSchema,
     _convertName: ConvertNameFn,
     _addTypename: boolean,

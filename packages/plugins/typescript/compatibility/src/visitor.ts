@@ -1,5 +1,5 @@
 import { CompatabilityPluginRawConfig } from './index';
-import { BaseVisitor, DeclarationBlock, indent, toPascalCase, getConfigValue } from '@graphql-codegen/visitor-plugin-common';
+import { BaseVisitor, DeclarationBlock, indent, toPascalCase, getConfigValue, buildScalars } from '@graphql-codegen/visitor-plugin-common';
 import { GraphQLSchema, OperationDefinitionNode, OperationTypeNode, FragmentDefinitionNode } from 'graphql';
 import { ParsedConfig } from '@graphql-codegen/visitor-plugin-common';
 import { selectionSetToTypes, SelectionSetToObjectResult } from './selection-set-to-types';
@@ -18,6 +18,7 @@ export class CompatabilityPluginVisitor extends BaseVisitor<CompatabilityPluginR
       noNamespaces: getConfigValue<boolean>(rawConfig.noNamespaces, false),
       preResolveTypes: getConfigValue<boolean>(rawConfig.preResolveTypes, false),
       strict: getConfigValue<boolean>(rawConfig.strict, false),
+      scalars: buildScalars(_schema, rawConfig.scalars),
     } as any);
   }
 

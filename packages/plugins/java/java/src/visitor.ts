@@ -1,4 +1,4 @@
-import { ParsedConfig, BaseVisitor, EnumValuesMap, indentMultiline, indent } from '@graphql-codegen/visitor-plugin-common';
+import { ParsedConfig, BaseVisitor, EnumValuesMap, indentMultiline, indent, buildScalars } from '@graphql-codegen/visitor-plugin-common';
 import { JavaResolversPluginRawConfig } from './index';
 import {
   GraphQLSchema,
@@ -30,16 +30,13 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
   private _addListImport = false;
 
   constructor(rawConfig: JavaResolversPluginRawConfig, private _schema: GraphQLSchema, defaultPackageName: string) {
-    super(
-      rawConfig,
-      {
-        enumValues: rawConfig.enumValues || {},
-        listType: rawConfig.listType || 'Iterable',
-        className: rawConfig.className || 'Types',
-        package: rawConfig.package || defaultPackageName,
-      },
-      JAVA_SCALARS
-    );
+    super(rawConfig, {
+      enumValues: rawConfig.enumValues || {},
+      listType: rawConfig.listType || 'Iterable',
+      className: rawConfig.className || 'Types',
+      package: rawConfig.package || defaultPackageName,
+      scalars: buildScalars(_schema, rawConfig.scalars, JAVA_SCALARS),
+    });
   }
 
   public getImports(): string {
@@ -137,8 +134,8 @@ public static ${enumName} valueOfLabel(String label) {
     if (isScalarType(schemaType)) {
       if (this.config.scalars[schemaType.name]) {
         result = {
-          baseType: this.config.scalars[schemaType.name],
-          typeName: this.config.scalars[schemaType.name],
+          baseType: this.scalars[schemaType.name],
+          typeName: this.scalars[schemaType.name],
           isScalar: true,
           isArray,
         };
