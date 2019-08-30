@@ -17,7 +17,7 @@
   "devDependencies": {
     "@graphql-codegen/testing": "1.6.1",
     "flow-bin": "0.106.3",
-    "flow-parser": "0.106.2",
+    "flow-parser": "0.106.3",
     "graphql": "14.5.4",
     "jest": "24.9.0",
     "ts-jest": "24.0.2",
