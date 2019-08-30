@@ -39,7 +39,7 @@
     "@types/graphql": "14.2.3",
     "@types/jest": "24.0.18",
     "@types/mkdirp": "0.5.2",
-    "@types/node": "10.14.16",
+    "@types/node": "10.14.17",
     "@types/request": "2.48.2",
     "@apollo/react-common": "3.0.1",
     "@apollo/react-components": "3.0.1",
