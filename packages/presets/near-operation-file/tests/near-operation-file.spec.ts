@@ -132,7 +132,7 @@ describe('near-operation-file preset', () => {
       pluginMap: {},
     });
 
-    expect(result[0].skipDuplicateDocumentsValidation).toBeTruthy();
+    expect(result[0].skipDocumentsValidation).toBeTruthy();
   });
 
   it('Should allow to customize output extension', async () => {
