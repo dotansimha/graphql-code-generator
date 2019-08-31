@@ -2366,10 +2366,10 @@
     prop-types "^15.7.2"
     react-is "^16.8.6"
 
-"@microsoft/tsdoc@0.12.12":
-  version "0.12.12"
-  resolved "https://registry.yarnpkg.com/@microsoft/tsdoc/-/tsdoc-0.12.12.tgz#6692f1cbca664f68abbc62f9a26459fba8b9ff28"
-  integrity sha512-5EzH1gHIonvvgA/xWRmVAJmRkTQj/yayUXyr66hFwNZiFE4j7lP8is9YQeXhwxGZEjO1PVMblAmFF0CyjNtPGw==
+"@microsoft/tsdoc@0.12.13":
+  version "0.12.13"
+  resolved "https://registry.yarnpkg.com/@microsoft/tsdoc/-/tsdoc-0.12.13.tgz#a582f68ed9b48feb3f23b808f462d9d3c9105788"
+  integrity sha512-jIYm7X44D4hr6LkLT/aPb1Ff44c1r5JFYiR52XjoYJIOddVVN+vnBDqgcZe/VZdhFVgf5RKp5/+Ps9eiPyC8sA==
 
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
@@ -8431,10 +8431,10 @@ graphql-tag@2.10.1, graphql-tag@^2.9.2:
   resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.10.1.tgz#10aa41f1cd8fae5373eaf11f1f67260a3cad5e02"
   integrity sha512-jApXqWBzNXQ8jYa/HLkZJaVw9jgwNqZkywa2zfFn16Iv1Zb7ELNHkJaXHR7Quvd5SIGsy6Ny7SUKATgnu05uEg==
 
-graphql-toolkit@0.5.10:
-  version "0.5.10"
-  resolved "https://registry.yarnpkg.com/graphql-toolkit/-/graphql-toolkit-0.5.10.tgz#7b4d5e84c421ca72801d436084478d4a7ac06444"
-  integrity sha512-mMHNezD9oT0IlM/vkZd/aeoIKtXqKnZq3ipJIMcHZPmMDPcZEf7BMzbB8naKWSWPaB1Iskg426DrfzQDUgU25A==
+graphql-toolkit@0.5.11:
+  version "0.5.11"
+  resolved "https://registry.yarnpkg.com/graphql-toolkit/-/graphql-toolkit-0.5.11.tgz#f9adf1ecc4df455802d0cc223acbd35556f7d78e"
+  integrity sha512-CKYzzqcAUbG3mzeQ1+KDqggQMj1lcleanhU4h8EH9bKV2+IyY+vMXQcuxBuLF4BgxYeX04LQnPUfGi9F+lo0qw==
   dependencies:
     "@kamilkisiela/graphql-tools" "4.0.6"
     "@types/glob" "7.1.1"
