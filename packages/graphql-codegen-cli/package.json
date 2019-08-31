@@ -39,7 +39,7 @@
   "bugs": {
     "url": "https://github.com/dotansimha/graphql-codegen/issues"
   },
-  "homepage": "https://github.com/dotansimha/graphql-codegen#readme",
+  "homepage": "https://github.com/dotansimha/graphql-code-generator#readme",
   "dependencies": {
     "@babel/parser": "7.5.5",
     "@graphql-codegen/core": "1.7.0",
