@@ -171,13 +171,17 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
     return asString;
   }
 
-  InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode): string {
+  getInputObjectDeclarationBlock(node: InputObjectTypeDefinitionNode): DeclarationBlock {
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind(this._parsedConfig.declarationKind.input)
       .withName(this.convertName(node))
       .withComment((node.description as any) as string)
-      .withBlock(node.fields.join('\n')).string;
+      .withBlock(node.fields.join('\n'));
+  }
+
+  InputObjectTypeDefinition(node: InputObjectTypeDefinitionNode): string {
+    return this.getInputObjectDeclarationBlock(node).string;
   }
 
   InputValueDefinition(node: InputValueDefinitionNode): string {
@@ -335,6 +339,19 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
     return '';
   }
 
+  getArgumentsObjectDeclarationBlock(node: InterfaceTypeDefinitionNode | ObjectTypeDefinitionNode, name: string, field: FieldDefinitionNode): DeclarationBlock {
+    return new DeclarationBlock(this._declarationBlockConfig)
+      .export()
+      .asKind(this._parsedConfig.declarationKind.arguments)
+      .withName(this.convertName(name))
+      .withComment(node.description)
+      .withBlock(this._argumentsTransformer.transform<InputValueDefinitionNode>(field.arguments));
+  }
+
+  getArgumentsObjectTypeDefinition(node: InterfaceTypeDefinitionNode | ObjectTypeDefinitionNode, name: string, field: FieldDefinitionNode): string {
+    return this.getArgumentsObjectDeclarationBlock(node, name, field).string;
+  }
+
   protected buildArgumentsBlock(node: InterfaceTypeDefinitionNode | ObjectTypeDefinitionNode) {
     const fieldsWithArguments = node.fields.filter(field => field.arguments && field.arguments.length > 0) || [];
     return fieldsWithArguments
@@ -347,12 +364,7 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
           }) +
           'Args';
 
-        return new DeclarationBlock(this._declarationBlockConfig)
-          .export()
-          .asKind(this._parsedConfig.declarationKind.arguments)
-          .withName(this.convertName(name))
-          .withComment(node.description)
-          .withBlock(this._argumentsTransformer.transform<InputValueDefinitionNode>(field.arguments)).string;
+        return this.getArgumentsObjectTypeDefinition(node, name, field);
       })
       .join('\n\n');
   }

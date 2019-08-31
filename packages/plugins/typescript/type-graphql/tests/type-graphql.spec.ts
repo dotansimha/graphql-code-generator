@@ -36,7 +36,7 @@ describe('type-graphql', () => {
       TypeGraphQL.registerEnumType(MyEnum, { name: 'MyEnum' });`);
   });
 
-  it('should generate type-graphql classes', async () => {
+  it('should generate type-graphql classes for object types', async () => {
     const schema = buildSchema(/* GraphQL */ `
       type A {
         id: ID
@@ -97,7 +97,7 @@ describe('type-graphql', () => {
     `);
   });
 
-  it('should generate type-graphql classes implementing type-graphql interfaces', async () => {
+  it('should generate type-graphql classes implementing type-graphql interfaces for object types', async () => {
     const schema = buildSchema(/* GraphQL */ `
       type Test implements ITest {
         id: ID
@@ -130,6 +130,158 @@ describe('type-graphql', () => {
       }
     `);
   });
+
+  it('should generate type-graphql classes for input types', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      input A {
+        id: ID
+        mandatoryId: ID!
+        str: String
+        mandatoryStr: String!
+        bool: Boolean
+        mandatoryBool: Boolean!
+        int: Int
+        mandatoryInt: Int!
+        float: Float
+        mandatoryFloat: Float!
+        b: B
+        mandatoryB: B!
+        arr: [String!]
+        mandatoryArr: [String!]!
+      }
+      input B {
+        id: ID
+      }
+    `);
+
+    const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+
+    expect(result.content).toBeSimilarStringTo(`
+      @TypeGraphQL.InputType()
+      export class A {
+
+        @TypeGraphQL.Field(type => TypeGraphQL.ID, { nullable: true })
+        id!: Maybe<Scalars['ID']>;
+
+        @TypeGraphQL.Field(type => TypeGraphQL.ID)
+        mandatoryId!: Scalars['ID'];
+
+        @TypeGraphQL.Field(type => String, { nullable: true })
+        str!: Maybe<Scalars['String']>;
+
+        @TypeGraphQL.Field(type => String)
+        mandatoryStr!: Scalars['String'];
+
+        @TypeGraphQL.Field(type => Boolean, { nullable: true })
+        bool!: Maybe<Scalars['Boolean']>;
+
+        @TypeGraphQL.Field(type => Boolean)
+        mandatoryBool!: Scalars['Boolean'];
+
+        @TypeGraphQL.Field(type => TypeGraphQL.Int, { nullable: true })
+        int!: Maybe<Scalars['Int']>;
+
+        @TypeGraphQL.Field(type => TypeGraphQL.Int)
+        mandatoryInt!: Scalars['Int'];
+
+        @TypeGraphQL.Field(type => TypeGraphQL.Float, { nullable: true })
+        float!: Maybe<Scalars['Float']>;
+
+        @TypeGraphQL.Field(type => TypeGraphQL.Float)
+        mandatoryFloat!: Scalars['Float'];
+
+        @TypeGraphQL.Field(type => B, { nullable: true })
+        b!: Maybe<B>;
+
+        @TypeGraphQL.Field(type => B)
+        mandatoryB!: FixDecorator<B>;
+
+        @TypeGraphQL.Field(type => [String], { nullable: true })
+        arr!: Maybe<Array<Scalars['String']>>;
+        
+        @TypeGraphQL.Field(type => [String])
+        mandatoryArr!: Array<Scalars['String']>;
+      }
+    `);
+  });
+
+  it('should generate an args type', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Mutation {
+        test(
+          id: ID
+          mandatoryId: ID!
+          str: String
+          mandatoryStr: String!
+          bool: Boolean
+          mandatoryBool: Boolean!
+          int: Int
+          mandatoryInt: Int!
+          float: Float
+          mandatoryFloat: Float!
+          b: B
+          mandatoryB: B!
+          arr: [String!]
+          mandatoryArr: [String!]!
+        ): Boolean!
+      }
+
+      input B {
+        id: ID
+      }
+    `);
+
+    const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+
+    expect(result.content).toBeSimilarStringTo(`
+      @TypeGraphQL.ArgsType()
+      export class MutationTestArgs {
+
+        @TypeGraphQL.Field(type => TypeGraphQL.ID, { nullable: true })
+        id!: Maybe<Scalars['ID']>;
+
+        @TypeGraphQL.Field(type => TypeGraphQL.ID)
+        mandatoryId!: Scalars['ID'];
+
+        @TypeGraphQL.Field(type => String, { nullable: true })
+        str!: Maybe<Scalars['String']>;
+
+        @TypeGraphQL.Field(type => String)
+        mandatoryStr!: Scalars['String'];
+
+        @TypeGraphQL.Field(type => Boolean, { nullable: true })
+        bool!: Maybe<Scalars['Boolean']>;
+
+        @TypeGraphQL.Field(type => Boolean)
+        mandatoryBool!: Scalars['Boolean'];
+
+        @TypeGraphQL.Field(type => TypeGraphQL.Int, { nullable: true })
+        int!: Maybe<Scalars['Int']>;
+
+        @TypeGraphQL.Field(type => TypeGraphQL.Int)
+        mandatoryInt!: Scalars['Int'];
+
+        @TypeGraphQL.Field(type => TypeGraphQL.Float, { nullable: true })
+        float!: Maybe<Scalars['Float']>;
+
+        @TypeGraphQL.Field(type => TypeGraphQL.Float)
+        mandatoryFloat!: Scalars['Float'];
+
+        @TypeGraphQL.Field(type => B, { nullable: true })
+        b!: Maybe<B>;
+
+        @TypeGraphQL.Field(type => B)
+        mandatoryB!: FixDecorator<B>;
+
+        @TypeGraphQL.Field(type => [String], { nullable: true })
+        arr!: Maybe<Array<Scalars['String']>>;
+        
+        @TypeGraphQL.Field(type => [String])
+        mandatoryArr!: Array<Scalars['String']>;
+      }
+    `);
+  });
+
   it('should generate type-graphql types as custom types', async () => {
     const schema = buildSchema(/* GraphQL */ `
       type Test {
