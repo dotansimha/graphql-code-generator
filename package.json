@@ -46,7 +46,7 @@
     "@apollo/react-hoc": "3.0.1",
     "@apollo/react-hooks": "3.0.1",
     "apollo-link": "1.2.12",
-    "apollo-server": "2.9.2",
+    "apollo-server": "2.9.3",
     "graphql": "14.5.4",
     "graphql-tag": "2.10.1",
     "graphql-tools": "4.0.5",
