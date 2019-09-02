@@ -74,7 +74,7 @@ class ContactFormController extends HTMLDivElement {
 
     this.sending = true
 
-    fetch('https://the-guild.dev/api/graphql', {
+    fetch('https://the-guild-website-git-cors.theguild.now.sh/api/graphql', {
       method: 'POST',
       mode: 'cors',
       headers: {
@@ -83,7 +83,7 @@ class ContactFormController extends HTMLDivElement {
       },
       body: JSON.stringify({
         query: `
-          mutation sayHi($email: String!, $project: Project!, $name: String!, $message: String!) {
+          mutation sayHi($email: String!, $project: String!, $name: String!, $message: String!) {
             sayHi(email: $email, project: $project, message: $message, name: $name) {
               ok 
             }
