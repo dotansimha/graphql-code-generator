@@ -74,16 +74,24 @@ class ContactFormController extends HTMLDivElement {
 
     this.sending = true
 
-    fetch('/.netlify/functions/contact', {
+    fetch('https://the-guild-website-d0gvtp07u.now.sh/api/graphql', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
+        query: `
+          mutation sayHi($email: String!, $project: Project!, $name: String!, $message: String!) {
+            sayHi(email: $email, project: $project, message: $message, name: $name) {
+              ok 
+            }
+          }
+        `,
+        project: 'GRAPHQL_CODE_GENERATOR',
         name: this.nameInput.value,
         email: this.emailInput.value,
-        details: this.detailsInput.value,
+        message: this.detailsInput.value,
       }),
     }).then((res) => {
       if (res.status >= 400) {
