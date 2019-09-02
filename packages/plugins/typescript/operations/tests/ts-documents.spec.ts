@@ -168,6 +168,44 @@ describe('TypeScript Operations Plugin', () => {
       await validate(result, config);
     });
 
+    it('Should handle "namespacedImportName" and "preResolveTypes" together', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Query {
+          f: E
+          user: User!
+        }
+
+        enum E {
+          A
+          B
+        }
+
+        scalar JSON
+
+        type User {
+          id: ID!
+          f: E
+          j: JSON
+        }
+      `);
+      const ast = parse(/* GraphQL */ `
+        query test {
+          f
+          user {
+            id
+            f
+            j
+          }
+        }
+      `);
+      const config = { namespacedImportName: 'Types', preResolveTypes: true };
+      const result = await plugin(testSchema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
+
+      expect(result).toBeSimilarStringTo(`export type TestQuery = { __typename?: 'Query', f: Types.Maybe<Types.E>, user: { __typename?: 'User', id: string, f: Types.Maybe<Types.E>, j: Types.Maybe<any> } };`);
+
+      await validate(result, config);
+    });
+
     it('Should generate the correct output when using immutableTypes config', async () => {
       const ast = parse(/* GraphQL */ `
         query notifications {
@@ -2494,6 +2532,226 @@ describe('TypeScript Operations Plugin', () => {
         ) | (
           { __typename?: 'Bar' }
           & Pick<Bar, 'id'>
+        );
+      `);
+    });
+
+    it('#2407 Fragment on Fragment Spread on Union type', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Price {
+          id: ID!
+          item: [PriceItemUnion]!
+        }
+
+        type Product {
+          id: ID!
+          title: String!
+        }
+
+        union PriceItemUnion = Product
+
+        type Query {
+          price: Price!
+        }
+      `);
+
+      const productFragmentDocument = parse(/* GraphQL */ `
+        fragment ProductFragment on Product {
+          id
+          title
+        }
+      `);
+
+      const priceFragmentDocument = parse(/* GraphQL */ `
+        fragment PriceFragment on Price {
+          id
+          item {
+            ... on Product {
+              ...ProductFragment
+            }
+          }
+        }
+      `);
+
+      const content = await plugin(
+        schema,
+        [{ filePath: '', content: productFragmentDocument }, { filePath: '', content: priceFragmentDocument }],
+        {},
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+        export type ProductFragmentFragment = (
+          { __typename?: 'Product' }
+          & Pick<Product, 'id' | 'title'>
+        );
+
+        export type PriceFragmentFragment = (
+          { __typename?: 'Price' }
+          & Pick<Price, 'id'>
+          & { item: Array<Maybe<(
+            { __typename?: 'Product' }
+            & ProductFragmentFragment
+          )>> }
+        );
+      `);
+    });
+
+    it('#2436 - interface with field of same name but different type is correctly handled', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        interface DashboardTile {
+          tileId: ID!
+        }
+        type TileFilterMetadata {
+          viz: String!
+          columnInfo: String!
+        }
+        type DashboardTileFilterDetails implements DashboardTile {
+          tileId: ID!
+          md: TileFilterMetadata!
+        }
+        type TileParameterMetadata {
+          viz: String!
+          columnInfo: String!
+        }
+        type DashboardTileParameterDetails implements DashboardTile {
+          tileId: ID!
+          md: TileParameterMetadata!
+        }
+        type DashboardVersion {
+          id: ID!
+          tiles: DashboardTile!
+        }
+      `);
+
+      const fragment = parse(/* GraphQL */ `
+        fragment DashboardVersionFragment on DashboardVersion {
+          tiles {
+            ... on DashboardTileFilterDetails {
+              tileId
+              md {
+                viz
+                columnInfo
+              }
+            }
+            ... on DashboardTileParameterDetails {
+              tileId
+              md {
+                viz
+                columnInfo
+              }
+            }
+          }
+        }
+      `);
+
+      const content = await plugin(
+        schema,
+        [{ filePath: '', content: fragment }],
+        {},
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+        export type DashboardVersionFragmentFragment = (
+          { __typename?: 'DashboardVersion' }
+          & { tiles: (
+            { __typename?: 'DashboardTileFilterDetails' }
+            & Pick<DashboardTileFilterDetails, 'tileId'>
+            & { md: (
+              { __typename?: 'TileFilterMetadata' }
+              & Pick<TileFilterMetadata, 'viz' | 'columnInfo'>
+            ) }
+          ) | (
+            { __typename?: 'DashboardTileParameterDetails' }
+            & Pick<DashboardTileParameterDetails, 'tileId'>
+            & { md: (
+              { __typename?: 'TileParameterMetadata' }
+              & Pick<TileParameterMetadata, 'viz' | 'columnInfo'>
+            ) }
+          ) }
+        );
+      `);
+    });
+
+    it('#2436 - union with field of same name but different type is correctly handled', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type TileFilterMetadata {
+          viz: String!
+          columnInfo: String!
+        }
+        type DashboardTileFilterDetails {
+          tileId: ID!
+          md: TileFilterMetadata!
+        }
+        type TileParameterMetadata {
+          viz: String!
+          columnInfo: String!
+        }
+        type DashboardTileParameterDetails {
+          tileId: ID!
+          md: TileParameterMetadata!
+        }
+        union DashboardTile = DashboardTileFilterDetails | DashboardTileParameterDetails
+
+        type DashboardVersion {
+          id: ID!
+          tiles: DashboardTile!
+        }
+      `);
+
+      const fragment = parse(/* GraphQL */ `
+        fragment DashboardVersionFragment on DashboardVersion {
+          tiles {
+            ... on DashboardTileFilterDetails {
+              tileId
+              md {
+                viz
+                columnInfo
+              }
+            }
+            ... on DashboardTileParameterDetails {
+              tileId
+              md {
+                viz
+                columnInfo
+              }
+            }
+          }
+        }
+      `);
+
+      const content = await plugin(
+        schema,
+        [{ filePath: '', content: fragment }],
+        {},
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+        export type DashboardVersionFragmentFragment = (
+          { __typename?: 'DashboardVersion' }
+          & { tiles: (
+            { __typename?: 'DashboardTileFilterDetails' }
+            & Pick<DashboardTileFilterDetails, 'tileId'>
+            & { md: (
+              { __typename?: 'TileFilterMetadata' }
+              & Pick<TileFilterMetadata, 'viz' | 'columnInfo'>
+            ) }
+          ) | (
+            { __typename?: 'DashboardTileParameterDetails' }
+            & Pick<DashboardTileParameterDetails, 'tileId'>
+            & { md: (
+              { __typename?: 'TileParameterMetadata' }
+              & Pick<TileParameterMetadata, 'viz' | 'columnInfo'>
+            ) }
+          ) }
         );
       `);
     });

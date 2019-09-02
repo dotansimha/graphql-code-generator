@@ -1,11 +1,16 @@
 import { RawResolversConfig, ParsedResolversConfig } from './base-resolvers-visitor';
 
-export interface ParsedMapper {
-  isExternal: boolean;
+export type ParsedMapper = InternalParsedMapper | ExternalParsedMapper;
+export interface InternalParsedMapper {
+  isExternal: false;
   type: string;
-  import?: string;
-  source?: string;
-  default?: boolean;
+}
+export interface ExternalParsedMapper {
+  isExternal: true;
+  type: string;
+  import: string;
+  source: string;
+  default: boolean;
 }
 
 export function parseMapper(mapper: string, gqlTypeName: string | null = null): ParsedMapper {
@@ -37,7 +42,7 @@ export function parseMapper(mapper: string, gqlTypeName: string | null = null): 
 }
 
 export function isExternalMapper(value: string): boolean {
-  return value.includes('#');
+  return value.includes('#') && !value.includes('"') && !value.includes('\'');
 }
 
 export function transformMappers(rawMappers: RawResolversConfig['mappers']): ParsedResolversConfig['mappers'] {

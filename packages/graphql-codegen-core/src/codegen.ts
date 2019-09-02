@@ -9,7 +9,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
 
   const documents = options.documents || [];
 
-  if (documents.length > 0 && !options.skipDuplicateDocumentsValidation) {
+  if (documents.length > 0 && !options.skipDocumentsValidation) {
     validateDocuments(documents);
   }
 
@@ -85,6 +85,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
         documents: options.documents,
         outputFilename: options.filename,
         allPlugins: options.plugins,
+        skipDocumentsValidation: options.skipDocumentsValidation,
       },
       pluginPackage
     );

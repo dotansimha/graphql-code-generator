@@ -11,7 +11,7 @@ export class FlowResolversVisitor extends BaseResolversVisitor<FlowResolversPlug
   constructor(pluginConfig: FlowResolversPluginConfig, schema: GraphQLSchema) {
     super(pluginConfig, null, schema);
     autoBind(this);
-    this.setVariablesTransformer(new FlowOperationVariablesToObject(this.config.scalars, this.convertName));
+    this.setVariablesTransformer(new FlowOperationVariablesToObject(this.scalars, this.convertName));
   }
 
   protected _getScalar(name: string): string {

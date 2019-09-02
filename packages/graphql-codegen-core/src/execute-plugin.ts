@@ -11,6 +11,7 @@ export interface ExecutePluginOptions {
   documents: Types.DocumentFile[];
   outputFilename: string;
   allPlugins: Types.ConfiguredPlugin[];
+  skipDocumentsValidation?: boolean;
 }
 
 export async function executePlugin(options: ExecutePluginOptions, plugin: CodegenPlugin): Promise<Types.PluginOutput> {
@@ -34,7 +35,7 @@ export async function executePlugin(options: ExecutePluginOptions, plugin: Codeg
   const outputSchema: GraphQLSchema = options.schemaAst || buildASTSchema(options.schema);
   const documents = options.documents || [];
 
-  if (outputSchema && documents.length > 0) {
+  if (outputSchema && documents.length > 0 && !options.skipDocumentsValidation) {
     const errors = validateGraphQlDocuments(outputSchema, documents);
     checkValidationErrors(errors);
   }

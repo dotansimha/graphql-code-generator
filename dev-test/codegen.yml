@@ -183,6 +183,7 @@ generates:
     preset: near-operation-file
     presetConfig:
       extension: .stencil-component.tsx
+      folder: __generated__
       baseTypesPath: types.d.ts
     plugins:
       - add: // tslint:disable

@@ -95,6 +95,30 @@ describe('near-operation-file preset', () => {
     ]);
   });
 
+  it('Should build the correct operation files paths with a subfolder', async () => {
+    const result = await preset.buildGeneratesSection({
+      baseOutputDir: './src/',
+      config: {},
+      presetConfig: {
+        folder: '__generated__',
+        baseTypesPath: 'types.ts',
+      },
+      schema: schemaDocumentNode,
+      documents: testDocuments,
+      plugins: [],
+      pluginMap: {},
+    });
+    expect(result.map(a => a.filename)).toEqual([
+      '/some/deep/path/src/graphql/__generated__/me-query.generated.ts',
+      '/some/deep/path/src/graphql/__generated__/user-fragment.generated.ts',
+      '/some/deep/path/src/graphql/__generated__/me.query.generated.ts',
+      '/some/deep/path/src/graphql/__generated__/something-query.generated.ts',
+      '/some/deep/path/src/graphql/nested/__generated__/somethingElse.generated.ts',
+      '/some/deep/path/src/graphql/nested/__generated__/from-js.generated.ts',
+      '/some/deep/path/src/graphql/__generated__/component.generated.ts',
+    ]);
+  });
+
   it('Should skip the duplicate documents validation', async () => {
     const result = await preset.buildGeneratesSection({
       baseOutputDir: './src/',
@@ -108,7 +132,7 @@ describe('near-operation-file preset', () => {
       pluginMap: {},
     });
 
-    expect(result[0].skipDuplicateDocumentsValidation).toBeTruthy();
+    expect(result[0].skipDocumentsValidation).toBeTruthy();
   });
 
   it('Should allow to customize output extension', async () => {
@@ -168,7 +192,8 @@ describe('near-operation-file preset', () => {
       pluginMap: { typescript: {} as any },
     });
 
-    expect(result.map(o => o.plugins)[0]).toEqual(expect.arrayContaining([{ add: `import * as Types from '../types';\n` }]));
+    expect(result.map(o => o.plugins)[0]).not.toEqual(expect.arrayContaining([{ add: `import * as Types from '../types';\n` }]));
+    expect(result.map(o => o.plugins)[1]).toEqual(expect.arrayContaining([{ add: `import * as Types from '../types';\n` }]));
   });
 
   it('should fail when multiple fragments with the same name are found', () => {

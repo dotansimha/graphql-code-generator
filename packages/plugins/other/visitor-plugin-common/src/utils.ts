@@ -17,7 +17,9 @@ import {
   StringValueNode,
   isEqualType,
 } from 'graphql';
-import { ScalarsMap } from './types';
+import { ScalarsMap, NormalizedScalarsMap, ParsedScalarsMap } from './types';
+import { DEFAULT_SCALARS } from './scalars';
+import { parseMapper } from './mappers';
 
 function isWrapperType(t: GraphQLOutputType): t is GraphQLNonNull<any> | GraphQLList<any> {
   return isListType(t) || isNonNullType(t);
@@ -253,19 +255,55 @@ export function toPascalCase(str: string, transformUnderscore = false): string {
   return convertNameParts(str, pascalCase, transformUnderscore);
 }
 
-export function buildScalars(schema: GraphQLSchema, scalarsMapping: ScalarsMap): ScalarsMap {
-  const typeMap = schema.getTypeMap();
-  let result = { ...scalarsMapping };
+export function buildScalars(schema: GraphQLSchema | undefined, scalarsMapping: ScalarsMap, defaultScalarsMapping: NormalizedScalarsMap = DEFAULT_SCALARS): ParsedScalarsMap {
+  let result: ParsedScalarsMap = {};
 
-  Object.keys(typeMap)
-    .map(typeName => typeMap[typeName])
-    .filter(type => isScalarType(type))
-    .map((scalarType: GraphQLScalarType) => {
-      const name = scalarType.name;
-      const value = scalarsMapping[name] || 'any';
+  Object.keys(defaultScalarsMapping).forEach(name => {
+    result[name] = parseMapper(defaultScalarsMapping[name]);
+  });
 
-      result[name] = value;
+  if (schema) {
+    const typeMap = schema.getTypeMap();
+
+    Object.keys(typeMap)
+      .map(typeName => typeMap[typeName])
+      .filter(type => isScalarType(type))
+      .map((scalarType: GraphQLScalarType) => {
+        const name = scalarType.name;
+        if (typeof scalarsMapping === 'string') {
+          const value = parseMapper(scalarsMapping + '#' + name, name);
+          result[name] = value;
+        } else if (scalarsMapping && typeof scalarsMapping[name] === 'string') {
+          const value = parseMapper(scalarsMapping[name], name);
+          result[name] = value;
+        } else if (scalarsMapping && scalarsMapping[name]) {
+          result[name] = {
+            isExternal: false,
+            type: JSON.stringify(scalarsMapping[name]),
+          };
+        } else if (!defaultScalarsMapping[name]) {
+          result[name] = {
+            isExternal: false,
+            type: 'any',
+          };
+        }
+      });
+  } else if (scalarsMapping) {
+    if (typeof scalarsMapping === 'string') {
+      throw new Error('Cannot use string scalars mapping when building without a schema');
+    }
+    Object.keys(scalarsMapping).forEach(name => {
+      if (typeof scalarsMapping[name] === 'string') {
+        const value = parseMapper(scalarsMapping[name], name);
+        result[name] = value;
+      } else {
+        result[name] = {
+          isExternal: false,
+          type: JSON.stringify(scalarsMapping[name]),
+        };
+      }
     });
+  }
 
   return result;
 }

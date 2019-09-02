@@ -1,6 +1,6 @@
 import { Kind, TypeNode, VariableNode, NameNode, ValueNode } from 'graphql';
 import { indent, getBaseTypeNode } from './utils';
-import { ScalarsMap, ConvertNameFn } from './types';
+import { NormalizedScalarsMap, ConvertNameFn } from './types';
 import { BaseVisitorConvertOptions } from './base-visitor';
 import * as autoBind from 'auto-bind';
 
@@ -12,7 +12,7 @@ export interface InterfaceOrVariable {
 }
 
 export class OperationVariablesToObject {
-  constructor(protected _scalars: ScalarsMap, protected _convertName: ConvertNameFn<BaseVisitorConvertOptions>, protected _namespacedImportName: string | null = null, protected _enumNames: string[] = [], protected _enumPrefix = true) {
+  constructor(protected _scalars: NormalizedScalarsMap, protected _convertName: ConvertNameFn<BaseVisitorConvertOptions>, protected _namespacedImportName: string | null = null, protected _enumNames: string[] = [], protected _enumPrefix = true) {
     autoBind(this);
   }
 

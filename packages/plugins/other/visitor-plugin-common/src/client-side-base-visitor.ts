@@ -4,9 +4,10 @@ import { FragmentDefinitionNode, print, OperationDefinitionNode, visit, Fragment
 import { DepGraph } from 'dependency-graph';
 import gqlTag from 'graphql-tag';
 import { toPascalCase, Types } from '@graphql-codegen/plugin-helpers';
-import { getConfigValue } from './utils';
+import { getConfigValue, buildScalars } from './utils';
 import { LoadedFragment } from './types';
 import { basename } from 'path';
+import { DEFAULT_SCALARS } from './scalars';
 
 export enum DocumentMode {
   graphQLTag = 'graphQLTag',
@@ -110,6 +111,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
 
   constructor(protected _fragments: LoadedFragment[], rawConfig: TRawConfig, additionalConfig: Partial<TPluginConfig>, documents?: Types.DocumentFile[]) {
     super(rawConfig, {
+      scalars: buildScalars(undefined, rawConfig.scalars, DEFAULT_SCALARS),
       dedupeOperationSuffix: getConfigValue(rawConfig.dedupeOperationSuffix, false),
       gqlImport: rawConfig.gqlImport || null,
       noExport: !!rawConfig.noExport,
@@ -282,11 +284,15 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
         imports.push(`import ${gqlImport.propName ? `{ ${gqlImport.propName === 'gql' ? 'gql' : `${gqlImport.propName} as gql`} }` : 'gql'} from '${gqlImport.moduleName}';`);
         break;
       case DocumentMode.external:
+          if (this._collectedOperations.length > 0) {
         if (this.config.importDocumentNodeExternallyFrom === 'near-operation-file' && this._documents.length === 1) {
-          imports.push(`import * as Operations from './${basename(this._documents[0].filePath)}';`);
+
+            imports.push(`import * as Operations from './${basename(this._documents[0].filePath)}';`);
+
         } else {
           imports.push(`import * as Operations from '${this.config.importDocumentNodeExternallyFrom}';`);
         }
+      }
         break;
       default:
         break;

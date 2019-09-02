@@ -11,7 +11,7 @@ export namespace Types {
     pluginMap: {
       [name: string]: CodegenPlugin;
     };
-    skipDuplicateDocumentsValidation?: boolean;
+    skipDocumentsValidation?: boolean;
   }
 
   export type FileOutput = {

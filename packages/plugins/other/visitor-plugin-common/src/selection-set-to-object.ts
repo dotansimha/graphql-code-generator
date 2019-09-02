@@ -21,7 +21,7 @@ import {
   isAbstractType,
 } from 'graphql';
 import { getBaseType } from './utils';
-import { ScalarsMap, ConvertNameFn, LoadedFragment } from './types';
+import { NormalizedScalarsMap, ConvertNameFn, LoadedFragment } from './types';
 import { GraphQLObjectType, GraphQLNonNull, GraphQLList } from 'graphql';
 import { BaseVisitorConvertOptions } from './base-visitor';
 
@@ -81,7 +81,7 @@ export class SelectionSetToObject {
   protected _queriedForTypename = false;
 
   constructor(
-    protected _scalars: ScalarsMap,
+    protected _scalars: NormalizedScalarsMap,
     protected _schema: GraphQLSchema,
     protected _convertName: ConvertNameFn<BaseVisitorConvertOptions>,
     protected _addTypename: boolean,
@@ -119,7 +119,7 @@ export class SelectionSetToObject {
             typeSelections = [];
             types.set(typeOnSchema.name, typeSelections);
           }
-          typeSelections.push(...node.selectionSet.selections.filter(selection => selection.kind === 'Field'));
+          typeSelections.push(...node.selectionSet.selections.filter(selection => selection.kind !== 'InlineFragment'));
 
           this._collectInlineFragments(typeOnSchema, node.selectionSet.selections.filter(selection => selection.kind === 'InlineFragment') as InlineFragmentNode[], types);
         } else if (isInterfaceType(typeOnSchema) && parentType.isTypeOf(typeOnSchema, null, null)) {
@@ -128,7 +128,7 @@ export class SelectionSetToObject {
             typeSelections = [];
             types.set(parentType.name, typeSelections);
           }
-          typeSelections.push(...node.selectionSet.selections.filter(selection => selection.kind === 'Field'));
+          typeSelections.push(...node.selectionSet.selections.filter(selection => selection.kind !== 'InlineFragment'));
 
           this._collectInlineFragments(typeOnSchema, node.selectionSet.selections.filter(selection => selection.kind === 'InlineFragment') as InlineFragmentNode[], types);
         }
@@ -151,7 +151,7 @@ export class SelectionSetToObject {
             types.set(schemaType.name, typeSelections);
           }
 
-          typeSelections.push(...node.selectionSet.selections.filter(selection => selection.kind === 'Field'));
+          typeSelections.push(...node.selectionSet.selections.filter(selection => selection.kind !== 'InlineFragment'));
 
           this._collectInlineFragments(schemaType, node.selectionSet.selections.filter(selection => selection.kind === 'InlineFragment') as InlineFragmentNode[], types);
         } else if (isInterfaceType(schemaType) && schemaType.name === parentType.name) {
@@ -161,7 +161,7 @@ export class SelectionSetToObject {
               typeSelections = [];
               types.set(possibleType.name, typeSelections);
             }
-            typeSelections.push(...node.selectionSet.selections.filter(selection => selection.kind === 'Field'));
+            typeSelections.push(...node.selectionSet.selections.filter(selection => selection.kind !== 'InlineFragment'));
 
             this._collectInlineFragments(schemaType, node.selectionSet.selections.filter(selection => selection.kind === 'InlineFragment') as InlineFragmentNode[], types);
           }
@@ -185,7 +185,7 @@ export class SelectionSetToObject {
             types.set(onType, typeSelections);
           }
 
-          typeSelections.push(...node.selectionSet.selections.filter(selection => selection.kind === 'Field'));
+          typeSelections.push(...node.selectionSet.selections.filter(selection => selection.kind !== 'InlineFragment'));
 
           this._collectInlineFragments(schemaType, node.selectionSet.selections.filter(selection => selection.kind === 'InlineFragment') as InlineFragmentNode[], types);
         } else if (isInterfaceType(schemaType)) {
@@ -198,7 +198,7 @@ export class SelectionSetToObject {
                 types.set(possibleType.name, typeSelections);
               }
 
-              typeSelections.push(...node.selectionSet.selections.filter(selection => selection.kind === 'Field'));
+              typeSelections.push(...node.selectionSet.selections.filter(selection => selection.kind !== 'InlineFragment'));
 
               this._collectInlineFragments(schemaType, node.selectionSet.selections.filter(selection => selection.kind === 'InlineFragment') as InlineFragmentNode[], types);
             }
@@ -333,6 +333,7 @@ export class SelectionSetToObject {
         field: FieldNode;
       }
     >();
+    const fragmentSpreadSelectionSets = new Map<string, FragmentSpreadNode>();
     let requireTypename = false;
 
     for (const selectionNode of selectionNodes) {
@@ -348,38 +349,15 @@ export class SelectionSetToObject {
         } else {
           let selectedField: GraphQLField<any, any, any> = null;
 
-          if (isObjectType(this._parentSchemaType)) {
-            const fields = this._parentSchemaType.getFields();
-            selectedField = fields[selectionNode.name.value];
-          } else if (isInterfaceType(this._parentSchemaType)) {
-            const fields = this._parentSchemaType.getFields();
-            selectedField = fields[selectionNode.name.value];
-            if (!selectedField) {
-              const possibleTypes = this._getPossibleTypes(this._parentSchemaType);
-              for (const possibleType of possibleTypes) {
-                selectedField = possibleType.getFields()[selectionNode.name.value];
-                if (selectedField) {
-                  break;
-                }
-              }
-            }
-          } else if (isUnionType(this._parentSchemaType)) {
-            const types = this._parentSchemaType.getTypes();
-            for (const type of types) {
-              const fields = type.getFields();
-              selectedField = fields[selectionNode.name.value];
-              if (selectedField) {
-                break;
-              }
-            }
-          }
+          const fields = parentSchemaType.getFields();
+          selectedField = fields[selectionNode.name.value];
 
           if (isMetadataFieldName(selectionNode.name.value)) {
             selectedField = metadataFieldMap[selectionNode.name.value];
           }
 
           if (!selectedField) {
-            throw new TypeError(`Could not find field type. ${this._parentSchemaType}.${selectionNode.name.value}`);
+            throw new TypeError(`Could not find field type. ${parentSchemaType}.${selectionNode.name.value}`);
           }
 
           const fieldName = getFieldNodeNameValue(selectionNode);
@@ -394,6 +372,8 @@ export class SelectionSetToObject {
             mergeSelectionSets(linkFieldNode.field.selectionSet, selectionNode.selectionSet);
           }
         }
+      } else if (selectionNode.kind === 'FragmentSpread') {
+        fragmentSpreadSelectionSets.set(selectionNode.name.value, selectionNode);
       }
     }
 
@@ -437,8 +417,9 @@ export class SelectionSetToObject {
     const primitiveFieldsString = this.buildPrimitiveFields(parentName, Array.from(primitiveFields.values()).map(field => field.name.value));
     const primitiveAliasFieldsString = this.buildAliasedPrimitiveFields(parentName, Array.from(primitiveAliasFields.values()).map(field => ({ alias: field.alias.value, fieldName: field.name.value })));
     const linkFieldsString = this.buildLinkFields(linkFields);
+    const fragmentSpreadString = this.buildFragmentSpreadString([...fragmentSpreadSelectionSets.values()]);
 
-    const result = [typeInfoString, primitiveFieldsString, primitiveAliasFieldsString, linkFieldsString].filter(Boolean);
+    const result = [typeInfoString, primitiveFieldsString, primitiveAliasFieldsString, linkFieldsString, fragmentSpreadString].filter(Boolean);
     if (result.length === 0) {
       return null;
     } else if (result.length === 1) {
@@ -498,7 +479,7 @@ export class SelectionSetToObject {
       let typeToUse = baseType.name;
 
       if (isEnumType(baseType)) {
-        typeToUse = this._convertName(baseType.name, { useTypesPrefix: this._enumPrefix });
+        typeToUse = (this._namespacedImportName ? `${this._namespacedImportName}.` : '') + this._convertName(baseType.name, { useTypesPrefix: this._enumPrefix });
       } else if (this._scalars[baseType.name]) {
         typeToUse = this._scalars[baseType.name];
       }

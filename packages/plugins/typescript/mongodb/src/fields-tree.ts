@@ -7,10 +7,13 @@ export class FieldsTree {
   private _fields: FieldsResult = {};
 
   addField(path: string, type: string): void {
+    if (type === undefined) {
+      throw new Error('Did not expect type to be undefined');
+    }
     set(this._fields, path, type);
   }
 
-  private _getInnerField(root: FieldsResult, level = 1): string {
+  private _getInnerField(root: string | FieldsResult, level = 1): string {
     if (typeof root === 'string') {
       return root;
     }
@@ -18,7 +21,7 @@ export class FieldsTree {
     const fields = Object.keys(root).map(fieldName => {
       const fieldValue = root[fieldName];
 
-      return indent(`${fieldName}: ${this._getInnerField(fieldValue as FieldsResult, level + 1)},`, level);
+      return indent(`${fieldName}: ${this._getInnerField(fieldValue, level + 1)},`, level);
     });
 
     return level === 1
