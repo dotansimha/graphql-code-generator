@@ -74,8 +74,9 @@ class ContactFormController extends HTMLDivElement {
 
     this.sending = true
 
-    fetch('https://the-guild-website-d0gvtp07u.now.sh/api/graphql', {
+    fetch('https://the-guild.dev/api/graphql', {
       method: 'POST',
+      mode: 'cors',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
@@ -88,10 +89,12 @@ class ContactFormController extends HTMLDivElement {
             }
           }
         `,
-        project: 'GRAPHQL_CODE_GENERATOR',
-        name: this.nameInput.value,
-        email: this.emailInput.value,
-        message: this.detailsInput.value,
+        variables: {
+          project: 'GRAPHQL_CODE_GENERATOR',
+          name: this.nameInput.value,
+          email: this.emailInput.value,
+          message: this.detailsInput.value,
+        }
       }),
     }).then((res) => {
       if (res.status >= 400) {
