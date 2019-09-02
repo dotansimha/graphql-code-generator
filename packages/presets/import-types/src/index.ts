@@ -31,8 +31,8 @@ export type NearOperationFileConfig = {
    * @example
    * ```yml
    * generates:
-   * src/:
-   *  preset: near-operation-file
+   * path/to/file.ts:
+   *  preset: import-types
    *  presetConfig:
    *    typesPath: types.ts
    *    importTypesNamespace: SchemaTypes
