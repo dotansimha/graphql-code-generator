@@ -90,6 +90,7 @@ export function transformComment(comment: string | StringValueNode, indentLevel 
     comment = comment.value;
   }
 
+  comment = comment.split('*/').join('*\\/');
   const lines = comment.split('\n');
 
   return lines
