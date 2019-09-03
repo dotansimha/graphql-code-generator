@@ -1074,44 +1074,6 @@
     unique-filename "^1.1.1"
     which "^1.3.1"
 
-"@graphql-codegen/add@1.5.0":
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/add/-/add-1.5.0.tgz#df6d4c44cc3d48a8ce2e933f8aef096b8f728c52"
-  integrity sha512-LGyq4mVNahIHYRR6RnAhvXrRpSuOyKjW667GCXpgbatlY/ZXWACBAgT1cOxDgu0NR0Vqq1ThraTLSatAvz9qgA==
-  dependencies:
-    "@graphql-codegen/plugin-helpers" "1.5.0"
-    tslib "1.10.0"
-
-"@graphql-codegen/plugin-helpers@1.5.0":
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/plugin-helpers/-/plugin-helpers-1.5.0.tgz#0235343bee5350877ac7018e30c5833e7ea60b2f"
-  integrity sha512-U869xtwkLiIQBUQA8NlxO561GPBUF1p/Ecb1TW6RjEj72152NEtPMPvii6deWUII/FyL6ZKwahsS4C9CfJZwBQ==
-  dependencies:
-    change-case "3.1.0"
-    common-tags "1.8.0"
-    import-from "3.0.0"
-    tslib "1.10.0"
-
-"@graphql-codegen/testing@1.5.0":
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/testing/-/testing-1.5.0.tgz#ad5bf9a8c68327e37e20690aad758ce5fd47faa1"
-  integrity sha512-NWqO0sMNnaOoquyEugSKUD4kByRgQP5j9xOjeukHVJwd57l/F59Re4HeA7uzgr5bLJKnxm1Cy1xoKkydmFWRFA==
-  dependencies:
-    "@graphql-codegen/plugin-helpers" "1.5.0"
-    common-tags "1.8.0"
-    tslib "1.10.0"
-
-"@graphql-codegen/visitor-plugin-common@1.5.0":
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/@graphql-codegen/visitor-plugin-common/-/visitor-plugin-common-1.5.0.tgz#21c48d064b9ba51f6a52c0c61a4bb4914ba1a698"
-  integrity sha512-BdLkH9J6hirlhR2xMx8JKplr0wY8/VJW/FgG4G+b/L5qTGKGlK0ovGXuw1PjhYXkxweDO5vKM4CPkecE0QRC6A==
-  dependencies:
-    "@graphql-codegen/plugin-helpers" "1.5.0"
-    auto-bind "2.0.0"
-    dependency-graph "0.8.0"
-    graphql-tag "2.10.1"
-    tslib "1.10.0"
-
 "@hapi/address@2.x.x":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@hapi/address/-/address-2.0.0.tgz#9f05469c88cb2fd3dcd624776b54ee95c312126a"
@@ -3841,10 +3803,10 @@ autoprefixer@^9.6.1:
     postcss "^7.0.17"
     postcss-value-parser "^4.0.0"
 
-aws-sdk@2.521.0:
-  version "2.521.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.521.0.tgz#b7b41084fdc9e8b134520f054c06e3908df9321a"
-  integrity sha512-YRViGahZoHq0lEsy0Cq7bqaLzP8OTzjg35Hz08Rv88ltk+b5UWVpDgIWls7mXCBNTBTYjbfbeGXzNaHJBLKlpA==
+aws-sdk@2.522.0:
+  version "2.522.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.522.0.tgz#f3419800fad29c03c9344d433c0782c4ad7cf0bb"
+  integrity sha512-JNUVaBqXwzDVqR/9dDw4a55aVsdDQYlf/cBM5bSj/g95wbuNWMzrY1TfAxEfSKwH0llp/1/xdXP75AKKp2UoSg==
   dependencies:
     buffer "4.9.1"
     events "1.1.1"
