@@ -420,8 +420,9 @@ export class SelectionSetToObject {
     const fragmentSpreadString = this.buildFragmentSpreadString([...fragmentSpreadSelectionSets.values()]);
 
     const result = [typeInfoString, primitiveFieldsString, primitiveAliasFieldsString, linkFieldsString, fragmentSpreadString].filter(Boolean);
+
     if (result.length === 0) {
-      return null;
+      return '{}';
     } else if (result.length === 1) {
       return result[0];
     } else {
