@@ -167,26 +167,29 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     this.imports.add(this.getApolloReactCommonImport());
     this.imports.add(this.getApolloReactHooksImport());
 
-    let hookFn = `
-    export function use${operationName}(baseOptions?: ApolloReactHooks.${operationType}HookOptions<${operationResultType}, ${operationVariablesTypes}>) {
-      return ApolloReactHooks.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${this.getDocumentNodeVariable(node, documentVariableName)}, baseOptions);
-    }`;
+    const hookFns = [
+      `export function use${operationName}(baseOptions?: ApolloReactHooks.${operationType}HookOptions<${operationResultType}, ${operationVariablesTypes}>) {
+        return ApolloReactHooks.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${this.getDocumentNodeVariable(node, documentVariableName)}, baseOptions);
+      }`
+    ];
+    const hookResults = [
+      `export type ${operationName}HookResult = ReturnType<typeof use${operationName}>;`
+    ];
 
     if (operationType === 'Query') {
       const lazyOperationName: string = this.convertName(node.name.value, {
         suffix: pascalCase('LazyQuery'),
         useTypesPrefix: false,
       });
-      hookFn += `
-      export function use${lazyOperationName}(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<${operationResultType}, ${operationVariablesTypes}>) {
-        return ApolloReactHooks.useLazyQuery<${operationResultType}, ${operationVariablesTypes}>(${this.getDocumentNodeVariable(node, documentVariableName)}, baseOptions);
-      }
-      `;
+      hookFns.push(
+        `export function use${lazyOperationName}(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<${operationResultType}, ${operationVariablesTypes}>) {
+          return ApolloReactHooks.useLazyQuery<${operationResultType}, ${operationVariablesTypes}>(${this.getDocumentNodeVariable(node, documentVariableName)}, baseOptions);
+        }`
+      );
+      hookResults.push(`export type ${lazyOperationName}HookResult = ReturnType<typeof use${lazyOperationName}>;`);
     }
 
-    const hookResult = `export type ${operationName}HookResult = ReturnType<typeof use${operationName}>;`;
-
-    return [hookFn, hookResult].join('\n');
+    return [...hookFns, ...hookResults].join('\n');
   }
 
   private _getHookSuffix(name: string, operationType: string) {
