@@ -488,7 +488,7 @@ query MyFeed {
       `);
 
       expect(content.content).toBeSimilarStringTo(`
-      export const TestComponent = (props: TestComponentProps) => 
+      export const TestComponent = (props: TestComponentProps) =>
       (
           <ApolloReactComponents.Query<TestQuery, TestQueryVariables> query={TestDocument} {...props} />
       );
@@ -511,7 +511,7 @@ query MyFeed {
       export type TestQProps = Omit<ApolloReactComponents.QueryComponentOptions<TestQuery, TestQueryVariables>, 'query'>;
       `);
       expect(content.content).toBeSimilarStringTo(`
-      export const TestQ = (props: TestQProps) => 
+      export const TestQ = (props: TestQProps) =>
       (
           <ApolloReactComponents.Query<TestQuery, TestQueryVariables> query={TestDocument} {...props} />
       );
@@ -564,7 +564,7 @@ query MyFeed {
       `);
 
       expect(content.content).toBeSimilarStringTo(`
-      export const TestComponent = (props: TestComponentProps) => 
+      export const TestComponent = (props: TestComponentProps) =>
       (
           <ApolloReactComponents.Query<TestQuery, TestQueryVariables> query={TestDocument} {...props} />
       );
@@ -908,6 +908,10 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
 
       expect(content.content).toBeSimilarStringTo(`
       export type FeedQueryHookResult = ReturnType<typeof useFeedQuery>;
+      `);
+
+      expect(content.content).toBeSimilarStringTo(`
+      export type FeedLazyQueryHookResult = ReturnType<typeof useFeedLazyQuery>;
       `);
 
       expect(content.content).toBeSimilarStringTo(`

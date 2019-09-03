@@ -312,7 +312,6 @@ export function withOnCommentAdded<TProps, TChildProps = {}>(operationOptions?: 
     ...operationOptions,
   });
 }
-
 export function useOnCommentAddedSubscription(baseOptions?: ApolloReactHooks.SubscriptionHookOptions<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>) {
   return ApolloReactHooks.useSubscription<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables>(OnCommentAddedDocument, baseOptions);
 }
@@ -359,15 +358,14 @@ export function withComment<TProps, TChildProps = {}>(operationOptions?: ApolloR
     ...operationOptions,
   });
 }
-
 export function useCommentQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<CommentQuery, CommentQueryVariables>) {
   return ApolloReactHooks.useQuery<CommentQuery, CommentQueryVariables>(CommentDocument, baseOptions);
 }
 export function useCommentLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<CommentQuery, CommentQueryVariables>) {
   return ApolloReactHooks.useLazyQuery<CommentQuery, CommentQueryVariables>(CommentDocument, baseOptions);
 }
-
 export type CommentQueryHookResult = ReturnType<typeof useCommentQuery>;
+export type CommentLazyQueryHookResult = ReturnType<typeof useCommentLazyQuery>;
 export type CommentQueryResult = ApolloReactCommon.QueryResult<CommentQuery, CommentQueryVariables>;
 export const CurrentUserForProfileDocument = gql`
   query CurrentUserForProfile {
@@ -388,15 +386,14 @@ export function withCurrentUserForProfile<TProps, TChildProps = {}>(operationOpt
     ...operationOptions,
   });
 }
-
 export function useCurrentUserForProfileQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>) {
   return ApolloReactHooks.useQuery<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>(CurrentUserForProfileDocument, baseOptions);
 }
 export function useCurrentUserForProfileLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>) {
   return ApolloReactHooks.useLazyQuery<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>(CurrentUserForProfileDocument, baseOptions);
 }
-
 export type CurrentUserForProfileQueryHookResult = ReturnType<typeof useCurrentUserForProfileQuery>;
+export type CurrentUserForProfileLazyQueryHookResult = ReturnType<typeof useCurrentUserForProfileLazyQuery>;
 export type CurrentUserForProfileQueryResult = ApolloReactCommon.QueryResult<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>;
 export const FeedDocument = gql`
   query Feed($type: FeedType!, $offset: Int, $limit: Int) {
@@ -420,15 +417,14 @@ export function withFeed<TProps, TChildProps = {}>(operationOptions?: ApolloReac
     ...operationOptions,
   });
 }
-
 export function useFeedQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<FeedQuery, FeedQueryVariables>) {
   return ApolloReactHooks.useQuery<FeedQuery, FeedQueryVariables>(FeedDocument, baseOptions);
 }
 export function useFeedLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<FeedQuery, FeedQueryVariables>) {
   return ApolloReactHooks.useLazyQuery<FeedQuery, FeedQueryVariables>(FeedDocument, baseOptions);
 }
-
 export type FeedQueryHookResult = ReturnType<typeof useFeedQuery>;
+export type FeedLazyQueryHookResult = ReturnType<typeof useFeedLazyQuery>;
 export type FeedQueryResult = ApolloReactCommon.QueryResult<FeedQuery, FeedQueryVariables>;
 export const SubmitRepositoryDocument = gql`
   mutation submitRepository($repoFullName: String!) {
@@ -449,7 +445,6 @@ export function withSubmitRepository<TProps, TChildProps = {}>(operationOptions?
     ...operationOptions,
   });
 }
-
 export function useSubmitRepositoryMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>) {
   return ApolloReactHooks.useMutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(SubmitRepositoryDocument, baseOptions);
 }
@@ -476,7 +471,6 @@ export function withSubmitComment<TProps, TChildProps = {}>(operationOptions?: A
     ...operationOptions,
   });
 }
-
 export function useSubmitCommentMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SubmitCommentMutation, SubmitCommentMutationVariables>) {
   return ApolloReactHooks.useMutation<SubmitCommentMutation, SubmitCommentMutationVariables>(SubmitCommentDocument, baseOptions);
 }
@@ -506,7 +500,6 @@ export function withVote<TProps, TChildProps = {}>(operationOptions?: ApolloReac
     ...operationOptions,
   });
 }
-
 export function useVoteMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<VoteMutation, VoteMutationVariables>) {
   return ApolloReactHooks.useMutation<VoteMutation, VoteMutationVariables>(VoteDocument, baseOptions);
 }
