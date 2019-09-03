@@ -830,7 +830,9 @@ describe('TypeScript Operations Plugin', () => {
       const config = { skipTypename: true };
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
       expect(result).toBeSimilarStringTo(`
-        export type MeQuery = { me: Maybe<UserFieldsFragment> };
+        export type MeQuery = { me: Maybe<{}
+          & UserFieldsFragment
+        > };
       `);
       await validate(result, config);
     });
@@ -2753,6 +2755,51 @@ describe('TypeScript Operations Plugin', () => {
             ) }
           ) }
         );
+      `);
+    });
+
+    it('#2489 - Union that only covers one possible type with selection set and no typename', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type NotFoundError {
+          message: String!
+        }
+        type UserBannedError {
+          message: String!
+        }
+        type User {
+          id: ID!
+          login: String
+        }
+        union UserResult = NotFoundError | UserBannedError | User
+
+        type Query {
+          user: UserResult!
+        }
+      `);
+
+      const query = parse(/* GraphQL */ `
+        query user {
+          user {
+            ... on User {
+              id
+              login
+            }
+          }
+        }
+      `);
+      const content = await plugin(
+        schema,
+        [{ filePath: '', content: query }],
+        {
+          skipTypename: true,
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+        export type UserQuery = { user: {} | {} | Pick<User, 'id' | 'login'> };
       `);
     });
   });
