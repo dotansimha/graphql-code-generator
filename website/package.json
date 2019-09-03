@@ -6,10 +6,8 @@
     "dev": "docusaurus-start",
     "start": "docusaurus-start",
     "generate-config": "node generate-config.js",
-    "build": "yarn build:app && yarn build:lambda",
+    "build": "yarn build:app",
     "build:app": "docusaurus-build",
-    "build:lambda": "netlify-lambda build lambda",
-    "serve:lambda": "netlify-lambda serve",
     "publish-gh-pages": "docusaurus-publish",
     "write-translations": "docusaurus-write-translations"
   },
@@ -17,10 +15,6 @@
     "@graphql-codegen/config-markdown-generator": "1.7.0",
     "babel-preset-minify": "0.5.1",
     "docusaurus": "1.12.0",
-    "netlify-lambda": "1.6.3",
     "remarkable-embed": "0.4.1"
-  },
-  "dependencies": {
-    "sendmail": "1.6.1"
   }
 }
