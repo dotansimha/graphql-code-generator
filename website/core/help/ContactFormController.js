@@ -74,7 +74,7 @@ class ContactFormController extends HTMLDivElement {
 
     this.sending = true
 
-    fetch('https://the-guild-website-git-cors.theguild.now.sh/api/graphql', {
+    fetch('https://the-guild.dev/api/graphql', {
       method: 'POST',
       mode: 'cors',
       headers: {
