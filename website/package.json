@@ -16,8 +16,5 @@
     "babel-preset-minify": "0.5.1",
     "docusaurus": "1.12.0",
     "remarkable-embed": "0.4.1"
-  },
-  "dependencies": {
-    "sendmail": "1.6.1"
   }
 }
