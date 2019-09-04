@@ -2164,10 +2164,10 @@
     prop-types "^15.7.2"
     react-is "^16.8.6"
 
-"@microsoft/tsdoc@0.12.13":
-  version "0.12.13"
-  resolved "https://registry.yarnpkg.com/@microsoft/tsdoc/-/tsdoc-0.12.13.tgz#a582f68ed9b48feb3f23b808f462d9d3c9105788"
-  integrity sha512-jIYm7X44D4hr6LkLT/aPb1Ff44c1r5JFYiR52XjoYJIOddVVN+vnBDqgcZe/VZdhFVgf5RKp5/+Ps9eiPyC8sA==
+"@microsoft/tsdoc@0.12.14":
+  version "0.12.14"
+  resolved "https://registry.yarnpkg.com/@microsoft/tsdoc/-/tsdoc-0.12.14.tgz#0e0810a0a174e50e22dfe8edb30599840712f22d"
+  integrity sha512-518yewjSga1jLdiLrcmpMFlaba5P+50b0TWNFUpC+SL9Yzf0kMi57qw+bMl+rQ08cGqH1vLx4eg9YFUbZXgZ0Q==
 
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
@@ -3803,10 +3803,10 @@ autoprefixer@^9.6.1:
     postcss "^7.0.17"
     postcss-value-parser "^4.0.0"
 
-aws-sdk@2.522.0:
-  version "2.522.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.522.0.tgz#f3419800fad29c03c9344d433c0782c4ad7cf0bb"
-  integrity sha512-JNUVaBqXwzDVqR/9dDw4a55aVsdDQYlf/cBM5bSj/g95wbuNWMzrY1TfAxEfSKwH0llp/1/xdXP75AKKp2UoSg==
+aws-sdk@2.523.0:
+  version "2.523.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.523.0.tgz#7467f6a41a284f61103c9d2a91eb43537ce5f166"
+  integrity sha512-x6Bam0TSG5wnn1QaBUj+Cg4Tde+xyHe35V/G58bXyhwybhrTl2ffBBFeMnO1jvmHa9aEN9p3FV2jn43e2vouZg==
   dependencies:
     buffer "4.9.1"
     events "1.1.1"
