@@ -20,7 +20,7 @@ import {
   GraphQLOutputType,
   isAbstractType,
 } from 'graphql';
-import { getBaseType } from './utils';
+import { getBaseType } from '@graphql-codegen/plugin-helpers';
 import { NormalizedScalarsMap, ConvertNameFn, LoadedFragment } from './types';
 import { GraphQLObjectType, GraphQLNonNull, GraphQLList } from 'graphql';
 import { BaseVisitorConvertOptions } from './base-visitor';

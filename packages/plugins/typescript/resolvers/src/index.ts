@@ -1,6 +1,6 @@
 import { printSchemaWithDirectives } from 'graphql-toolkit';
-import { RawResolversConfig, addFederationToSchema, federationSpec } from '@graphql-codegen/visitor-plugin-common';
-import { Types, CodegenPlugin, PluginFunction } from '@graphql-codegen/plugin-helpers';
+import { RawResolversConfig } from '@graphql-codegen/visitor-plugin-common';
+import { Types, CodegenPlugin, PluginFunction, addFederationToSchema, federationSpec } from '@graphql-codegen/plugin-helpers';
 import { isScalarType, parse, visit, GraphQLSchema, printSchema } from 'graphql';
 import { TypeScriptResolversVisitor } from './visitor';
 
