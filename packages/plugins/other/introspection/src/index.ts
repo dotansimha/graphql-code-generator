@@ -4,10 +4,10 @@ import { extname } from 'path';
 
 export const plugin: PluginFunction<{ federation?: boolean }> = async (schema: GraphQLSchema, _documents, pluginConfig): Promise<string> => {
   const cleanSchema = pluginConfig.federation
-    ? schema
-    : removeFederation(schema, {
+    ? removeFederation(schema, {
         withDirectives: true,
-      });
+      })
+    : schema;
 
   const introspection = introspectionFromSchema(cleanSchema, { descriptions: true });
 
