@@ -1,7 +1,7 @@
 import '@graphql-codegen/testing';
 import { parse } from 'graphql';
 import { codegen } from '@graphql-codegen/core';
-import { plugin, addToSchema } from '../src';
+import { plugin } from '../src';
 
 describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
   it('should add __resolveReference to objects that have @key', async () => {
@@ -36,7 +36,6 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       pluginMap: {
         'typescript-resolvers': {
           plugin,
-          addToSchema,
         },
       },
     });
@@ -89,7 +88,6 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       pluginMap: {
         'typescript-resolvers': {
           plugin,
-          addToSchema,
         },
       },
     });
@@ -133,7 +131,6 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       pluginMap: {
         'typescript-resolvers': {
           plugin,
-          addToSchema,
         },
       },
     });
@@ -180,7 +177,6 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       pluginMap: {
         'typescript-resolvers': {
           plugin,
-          addToSchema,
         },
       },
     });
@@ -227,7 +223,6 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       pluginMap: {
         'typescript-resolvers': {
           plugin,
-          addToSchema,
         },
       },
     });
@@ -267,7 +262,6 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       pluginMap: {
         'typescript-resolvers': {
           plugin,
-          addToSchema,
         },
       },
     });
@@ -314,7 +308,6 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       pluginMap: {
         'typescript-resolvers': {
           plugin,
-          addToSchema,
         },
       },
     });
@@ -358,7 +351,6 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       pluginMap: {
         'typescript-resolvers': {
           plugin,
-          addToSchema,
         },
       },
     });
@@ -406,7 +398,6 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       pluginMap: {
         'typescript-resolvers': {
           plugin,
-          addToSchema,
         },
       },
     });

@@ -1,5 +1,6 @@
 import '@graphql-codegen/testing';
-import { buildASTSchema } from 'graphql';
+import { buildASTSchema, parse } from 'graphql';
+import { codegen } from '@graphql-codegen/core';
 import gql from 'graphql-tag';
 import { plugin, validate } from '../src';
 
@@ -224,5 +225,51 @@ describe('Fragment Matcher Plugin', () => {
       expect(tsContent).toBeSimilarStringTo(output);
       expect(tsxContent).toBeSimilarStringTo(output);
     });
+  });
+
+  it('should support Apollo Federation', async () => {
+    const federatedSchema = parse(/* GraphQL */ `
+      type Character @key(fields: "id") {
+        id: ID
+        name: String
+      }
+
+      type Jedi @key(fields: "id") {
+        id: ID
+        side: String
+      }
+
+      type Droid @key(fields: "id") {
+        id: ID
+        model: String
+      }
+
+      union People = Character | Jedi | Droid
+
+      type Query {
+        allPeople: [People]
+      }
+    `);
+    const content = await codegen({
+      filename: 'foo.json',
+      schema: federatedSchema,
+      documents: [],
+      plugins: [
+        {
+          'fragment-matcher': {},
+        },
+      ],
+      config: {
+        federation: true,
+      },
+      pluginMap: {
+        'fragment-matcher': {
+          plugin,
+          validate,
+        },
+      },
+    });
+
+    expect(content).toEqual(introspection);
   });
 });
