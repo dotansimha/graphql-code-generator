@@ -40,12 +40,6 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       },
     });
 
-    interface User {
-      id: string;
-      name: string;
-      username: string;
-    }
-
     // User should have it
     expect(content).toBeSimilarStringTo(`
       __resolveReference?: Resolver<Maybe<ResolversTypes['User']>, Pick<ParentType, 'id'>, ContextType>,
