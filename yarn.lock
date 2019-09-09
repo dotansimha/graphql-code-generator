@@ -3803,10 +3803,10 @@ autoprefixer@^9.6.1:
     postcss "^7.0.17"
     postcss-value-parser "^4.0.0"
 
-aws-sdk@2.524.0:
-  version "2.524.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.524.0.tgz#0acbd6a066cfb5b357b254b6ed273cca98ca6d5f"
-  integrity sha512-nCnKEExs1OqwNG6sIrRy+Lj8Zt2M6BTa6YlEMQ1gIpdwznaAN9XyTnm+MDc3iYsSl58MOBwiKpY8d6CONuxuDw==
+aws-sdk@2.525.0:
+  version "2.525.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.525.0.tgz#220da4ff859947bac9b2d391cae5a459fef3989e"
+  integrity sha512-UgigVfY4ayrffOMbybyz3F1bbIpEhuiO4yfYXultBC1LfIhZaFSFWLqzEBnm9srhydJhfLDftkL0WXVJtfJ4ng==
   dependencies:
     buffer "4.9.1"
     events "1.1.1"
