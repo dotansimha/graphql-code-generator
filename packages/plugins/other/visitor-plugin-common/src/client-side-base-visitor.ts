@@ -290,7 +290,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
             imports.push(`import * as Operations from './${basename(this._documents[0].filePath)}';`);
 
         } else {
-          imports.push(`import * as Operations from '${this.config.importDocumentNodeExternallyFrom}';`);
+          imports.push(`import * as Operations from '${this.config.importDocumentNodeExternallyFrom.replace(/\.tsx?$/, '')}';`);
         }
       }
         break;
