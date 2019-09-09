@@ -6,7 +6,7 @@ import gqlTag from 'graphql-tag';
 import { toPascalCase, Types } from '@graphql-codegen/plugin-helpers';
 import { getConfigValue, buildScalars } from './utils';
 import { LoadedFragment } from './types';
-import { basename } from 'path';
+import { basename, extname } from 'path';
 import { DEFAULT_SCALARS } from './scalars';
 
 export enum DocumentMode {
@@ -14,6 +14,8 @@ export enum DocumentMode {
   documentNode = 'documentNode',
   external = 'external',
 }
+
+const EXTENSIONS_TO_REMOVE = ['.ts', '.tsx', '.js', '.jsx'];
 
 export interface RawClientSideBasePluginConfig extends RawConfig {
   noGraphQLTag?: boolean;
@@ -272,6 +274,16 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
     };
   }
 
+  private clearExtension(path: string): string {
+    const extension = extname(path);
+
+    if (EXTENSIONS_TO_REMOVE.includes(extension)) {
+      return path.replace(/\.[^/.]+$/, '');
+    }
+
+    return path;
+  }
+
   public getImports(): string[] {
     let imports = [];
 
@@ -284,15 +296,13 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
         imports.push(`import ${gqlImport.propName ? `{ ${gqlImport.propName === 'gql' ? 'gql' : `${gqlImport.propName} as gql`} }` : 'gql'} from '${gqlImport.moduleName}';`);
         break;
       case DocumentMode.external:
-          if (this._collectedOperations.length > 0) {
-        if (this.config.importDocumentNodeExternallyFrom === 'near-operation-file' && this._documents.length === 1) {
-
+        if (this._collectedOperations.length > 0) {
+          if (this.config.importDocumentNodeExternallyFrom === 'near-operation-file' && this._documents.length === 1) {
             imports.push(`import * as Operations from './${basename(this._documents[0].filePath)}';`);
-
-        } else {
-          imports.push(`import * as Operations from '${this.config.importDocumentNodeExternallyFrom.replace(/\.tsx?$/, '')}';`);
+          } else {
+            imports.push(`import * as Operations from '${this.clearExtension(this.config.importDocumentNodeExternallyFrom)}';`);
+          }
         }
-      }
         break;
       default:
         break;
