@@ -190,7 +190,7 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
           }
         }
 
-        if (isUsingTypes(documentFile.content, config.externalFragments.map(m => m.name))) {
+        if (isUsingTypes(documentFile.content, config.externalFragments.map(m => m.name), options.schemaAst)) {
           plugins.unshift({ add: `import * as ${importTypesNamespace} from '${relativeImportPath}';\n` });
         }
 

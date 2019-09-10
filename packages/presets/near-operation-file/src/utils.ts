@@ -1,7 +1,11 @@
 import { parse, dirname, relative, join, isAbsolute } from 'path';
-import { DocumentNode, visit, FragmentSpreadNode, FragmentDefinitionNode, FieldNode, Kind, InputValueDefinitionNode } from 'graphql';
+import { DocumentNode, visit, FragmentSpreadNode, FragmentDefinitionNode, FieldNode, Kind, InputValueDefinitionNode, GraphQLSchema, OperationDefinitionNode, GraphQLNamedType, isNonNullType } from 'graphql';
 import { FragmentNameToFile } from './index';
 import { VariableDefinitionNode } from 'graphql';
+import { isObjectType } from 'graphql';
+import { GraphQLOutputType } from 'graphql';
+import { isInterfaceType } from 'graphql';
+import { print } from 'graphql';
 
 export function defineFilepathSubfolder(baseFilePath: string, folder: string) {
   const parsedPath = parse(baseFilePath);
@@ -72,10 +76,73 @@ export function resolveRelativeImport(from: string, to: string): string {
   return fixLocalFile(clearExtension(relative(dirname(from), to)));
 }
 
-export function isUsingTypes(document: DocumentNode, externalFragments: string[]): boolean {
+export function isUsingTypes(document: DocumentNode, externalFragments: string[], schema?: GraphQLSchema): boolean {
   let foundFields = 0;
+  let typesStack: GraphQLOutputType[] = [];
 
   visit(document, {
+    Field: {
+      enter: (node: FieldNode, key, parent, path, anscestors) => {
+        const insideIgnoredFragment = (anscestors as any).find(f => f.kind && f.kind === 'FragmentDefinition' && externalFragments.includes(f.name.value));
+
+        if (insideIgnoredFragment) {
+          return;
+        }
+
+        if (schema) {
+          const lastType = typesStack[typesStack.length - 1];
+          if (lastType && (isObjectType(lastType) || isInterfaceType(lastType))) {
+            const currentType = lastType.getFields()[node.name.value].type;
+
+            // To handle `Maybe` usage
+            if (!isNonNullType(currentType)) {
+              foundFields++;
+            }
+
+            typesStack.push(currentType);
+          }
+        }
+
+        const selections = node.selectionSet ? node.selectionSet.selections || [] : [];
+        const relevantFragmentSpreads = selections.filter(s => s.kind === Kind.FRAGMENT_SPREAD && !externalFragments.includes(s.name.value));
+
+        if (selections.length === 0 || relevantFragmentSpreads.length > 0) {
+          foundFields++;
+        }
+      },
+      leave: (node: FieldNode, key, parent, path, anscestors) => {
+        const insideIgnoredFragment = (anscestors as any).find(f => f.kind && f.kind === 'FragmentDefinition' && externalFragments.includes(f.name.value));
+
+        if (insideIgnoredFragment) {
+          return;
+        }
+
+        if (schema) {
+          const currentType = typesStack[typesStack.length - 1];
+          if (currentType && isObjectType(currentType)) {
+            typesStack.pop();
+          }
+        }
+      },
+    },
+    OperationDefinition: {
+      enter: (node: OperationDefinitionNode) => {
+        if (schema) {
+          if (node.operation === 'query') {
+            typesStack.push(schema.getQueryType());
+          } else if (node.operation === 'mutation') {
+            typesStack.push(schema.getMutationType());
+          } else if (node.operation === 'subscription') {
+            typesStack.push(schema.getSubscriptionType());
+          }
+        }
+      },
+      leave: () => {
+        if (schema) {
+          typesStack.pop();
+        }
+      },
+    },
     enter: {
       VariableDefinition: (node: VariableDefinitionNode, key, parent, path, anscestors) => {
         const insideIgnoredFragment = (anscestors as any).find(f => f.kind && f.kind === 'FragmentDefinition' && externalFragments.includes(f.name.value));
@@ -92,18 +159,6 @@ export function isUsingTypes(document: DocumentNode, externalFragments: string[]
           return;
         }
         foundFields++;
-      },
-      Field: (node: FieldNode, key, parent, path, anscestors) => {
-        const insideIgnoredFragment = (anscestors as any).find(f => f.kind && f.kind === 'FragmentDefinition' && externalFragments.includes(f.name.value));
-
-        if (insideIgnoredFragment) {
-          return;
-        }
-        const selections = node.selectionSet ? node.selectionSet.selections || [] : [];
-        const relevantFragmentSpreads = selections.filter(s => s.kind === Kind.FRAGMENT_SPREAD && !externalFragments.includes(s.name.value));
-        if (selections.length === 0 || relevantFragmentSpreads.length > 0) {
-          foundFields++;
-        }
       },
     },
   });
