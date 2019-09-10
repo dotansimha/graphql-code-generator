@@ -3,9 +3,9 @@
   "version": "1.7.0",
   "license": "MIT",
   "bin": {
-    "gql-gen": "dist/commonjs/cli.js",
-    "graphql-codegen": "dist/commonjs/cli.js",
-    "graphql-code-generator": "dist/commonjs/cli.js"
+    "gql-gen": "dist/commonjs/bin.js",
+    "graphql-codegen": "dist/commonjs/bin.js",
+    "graphql-code-generator": "dist/commonjs/bin.js"
   },
   "repository": {
     "type": "git",
