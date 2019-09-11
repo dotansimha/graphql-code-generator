@@ -21,7 +21,7 @@
     "graphql-tools": "4.0.5",
     "jest": "24.9.0",
     "ts-jest": "24.0.2",
-    "typescript": "3.6.2"
+    "typescript": "3.6.3"
   },
   "sideEffects": false,
   "main": "dist/commonjs/index.js",
