@@ -1,4 +1,4 @@
-import { parse } from 'graphql';
+import { parse, buildSchema } from 'graphql';
 import { isUsingTypes } from '../src/utils';
 
 describe('isUsingTypes', () => {
@@ -13,7 +13,7 @@ describe('isUsingTypes', () => {
       }
     `);
 
-    expect(isUsingTypes(ast, [])).toBeTruthy();
+    expect(isUsingTypes(ast, [], null)).toBeTruthy();
   });
 
   it('Should ignore fragments when they are extenral', () => {
@@ -27,6 +27,66 @@ describe('isUsingTypes', () => {
       }
     `);
 
-    expect(isUsingTypes(ast, ['UserFields'])).toBeFalsy();
+    expect(isUsingTypes(ast, ['UserFields'], null)).toBeFalsy();
+  });
+
+  it('Should includes types import when fragment spread is used over an optional field', () => {
+    const schema = buildSchema(/* GraphQL */ `
+      interface Node {
+        id: ID!
+      }
+
+      type User implements Node {
+        id: ID!
+        login: String!
+        name: String
+      }
+
+      type Query {
+        user: User
+      }
+    `);
+    const ast = parse(/* GraphQL */ `
+      query getUser {
+        user {
+          ...user
+        }
+      }
+
+      fragment user on User {
+        id
+      }
+    `);
+
+    expect(isUsingTypes(ast, ['user'], schema)).toBeTruthy();
+  });
+
+  it('Should includes types correctly', () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type User {
+        id: ID!
+        profile: Profile
+      }
+
+      type Profile {
+        name: String
+      }
+
+      type Query {
+        user: User
+      }
+    `);
+    const ast = parse(/* GraphQL */ `
+      query getUser {
+        user {
+          id
+          profile {
+            name
+          }
+        }
+      }
+    `);
+
+    expect(isUsingTypes(ast, ['user'], schema)).toBeTruthy();
   });
 });
