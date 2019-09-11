@@ -2599,6 +2599,46 @@ describe('TypeScript Operations Plugin', () => {
       `);
     });
 
+    it('#2506 - inline fragment without typeCondition specified', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Query {
+          user: User
+        }
+
+        type User {
+          name: String
+        }
+      `);
+
+      const fragment = parse(/* GraphQL */ `
+        query user($withUser: Boolean! = false) {
+          ... @include(if: $withUser) {
+            user {
+              name
+            }
+          }
+        }
+      `);
+
+      const content = await plugin(
+        schema,
+        [{ filePath: '', content: fragment }],
+        {},
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      expect(content).toBeSimilarStringTo(`
+      export type UserQuery = (
+        { __typename?: 'Query' }
+        & { user: Maybe<(
+          { __typename?: 'User' }
+          & Pick<User, 'name'>
+        )> }
+      );`);
+    });
+
     it('#2436 - interface with field of same name but different type is correctly handled', async () => {
       const schema = buildSchema(/* GraphQL */ `
         interface DashboardTile {
