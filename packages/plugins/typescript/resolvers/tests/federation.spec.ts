@@ -142,8 +142,8 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
     expect(content).toBeSimilarStringTo(`
       export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
         __resolveReference?: Resolver<Maybe<ResolversTypes['User']>, Pick<ParentType, 'id'>, ContextType>,
-        id?: Resolver<ResolversTypes['ID'], Pick<ParentType, 'id'>, ContextType>,
-        username?: Resolver<Maybe<ResolversTypes['String']>, Pick<ParentType, 'id'> & Pick<ParentType, 'name' | 'age'>, ContextType>,
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
+        username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
       };
     `);
   });
@@ -189,8 +189,8 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
     expect(content).toBeSimilarStringTo(`
       export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
         __resolveReference?: Resolver<Maybe<ResolversTypes['User']>, Pick<ParentType, 'id'>, ContextType>,
-        id?: Resolver<ResolversTypes['ID'], Pick<ParentType, 'id'>, ContextType>,
-        name?: Resolver<Maybe<ResolversTypes['String']>, Pick<ParentType, 'id'>, ContextType>,
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
+        name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
       };
     `);
   });
@@ -367,9 +367,9 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
     expect(content).toBeSimilarStringTo(`
       export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
         __resolveReference?: Resolver<Maybe<ResolversTypes['User']>, (Pick<ParentType, 'id'> | Pick<ParentType, 'name'>), ContextType>,
-        id?: Resolver<ResolversTypes['ID'], (Pick<ParentType, 'id'> | Pick<ParentType, 'name'>), ContextType>,
-        name?: Resolver<Maybe<ResolversTypes['String']>, (Pick<ParentType, 'id'> | Pick<ParentType, 'name'>), ContextType>,
-        username?: Resolver<Maybe<ResolversTypes['String']>, (Pick<ParentType, 'id'> | Pick<ParentType, 'name'>), ContextType>,
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
+        name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+        username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
       };
     `);
   });
@@ -415,8 +415,8 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
     expect(content).toBeSimilarStringTo(`
       export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
         __resolveReference?: Resolver<Maybe<ResolversTypes['User']>, Pick<ParentType, 'id'>, ContextType>,
-        id?: Resolver<ResolversTypes['ID'], UserExtension & Pick<ParentType, 'id'>, ContextType>,
-        username?: Resolver<Maybe<ResolversTypes['String']>, UserExtension & Pick<ParentType, 'id'> & Pick<ParentType, 'name', 'age'>, ContextType>,
+        id?: Resolver<ResolversTypes['ID'], UserExtension & ParentType, ContextType>,
+        username?: Resolver<Maybe<ResolversTypes['String']>, UserExtension & ParentType & Pick<ParentType, 'name', 'age'>, ContextType>,
       };
     `);
   });

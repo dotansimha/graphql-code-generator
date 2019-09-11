@@ -90,7 +90,7 @@ export class ApolloFederation {
   }
 
   translateParentType({ fieldNode, parentType, parentTypeSignature }: { fieldNode: FieldDefinitionNode; parentType: GraphQLNamedType; parentTypeSignature: string }) {
-    if (this.enabled && isObjectType(parentType) && isFederationObjectType(parentType)) {
+    if (this.enabled && isObjectType(parentType) && isFederationObjectType(parentType) && fieldNode.name.value === '__resolveReference') {
       const keys = getDirectivesByName('key', parentType);
 
       if (keys.length) {
