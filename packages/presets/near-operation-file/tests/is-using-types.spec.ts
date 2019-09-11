@@ -89,4 +89,49 @@ describe('isUsingTypes', () => {
 
     expect(isUsingTypes(ast, ['user'], schema)).toBeTruthy();
   });
+
+  it('Should includes types correctly when used in fragment', () => {
+    const schema = buildSchema(/* GraphQL */ `
+      interface Node {
+        id: ID!
+      }
+
+      type User implements Node {
+        id: ID!
+        login: String!
+        name: String
+
+        pictures(limit: Int!): PictureConnection!
+      }
+
+      type PictureConnection {
+        nodes: [Picture]!
+      }
+
+      type Picture {
+        size: Int!
+        url: String!
+      }
+
+      type Query {
+        user: User
+      }
+    `);
+    const ast = parse(/* GraphQL */ `
+      fragment pictures on User {
+        pictures(limit: 10) {
+          nodes {
+            ...picture
+          }
+        }
+      }
+
+      fragment picture on Picture {
+        size
+        url
+      }
+    `);
+
+    expect(isUsingTypes(ast, ['picture'], schema)).toBeTruthy();
+  });
 });

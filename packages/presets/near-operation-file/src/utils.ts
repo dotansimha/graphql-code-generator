@@ -6,6 +6,8 @@ import { isObjectType } from 'graphql';
 import { GraphQLOutputType } from 'graphql';
 import { isInterfaceType } from 'graphql';
 import { print } from 'graphql';
+import { isListType } from 'graphql';
+import { getBaseType } from '@graphql-codegen/visitor-plugin-common';
 
 export function defineFilepathSubfolder(baseFilePath: string, folder: string) {
   const parsedPath = parse(baseFilePath);
@@ -76,9 +78,21 @@ export function resolveRelativeImport(from: string, to: string): string {
   return fixLocalFile(clearExtension(relative(dirname(from), to)));
 }
 
+export function hasNullableTypeRecursively(type: GraphQLOutputType): boolean {
+  if (!isNonNullType(type)) {
+    return true;
+  }
+
+  if (isListType(type) || isNonNullType(type)) {
+    return hasNullableTypeRecursively(type.ofType);
+  }
+
+  return false;
+}
+
 export function isUsingTypes(document: DocumentNode, externalFragments: string[], schema?: GraphQLSchema): boolean {
   let foundFields = 0;
-  let typesStack: GraphQLOutputType[] = [];
+  let typesStack: GraphQLNamedType[] = [];
 
   visit(document, {
     Field: {
@@ -91,15 +105,16 @@ export function isUsingTypes(document: DocumentNode, externalFragments: string[]
 
         if (schema) {
           const lastType = typesStack[typesStack.length - 1];
+
           if (lastType && (isObjectType(lastType) || isInterfaceType(lastType))) {
             const currentType = lastType.getFields()[node.name.value].type;
 
             // To handle `Maybe` usage
-            if (!isNonNullType(currentType)) {
+            if (hasNullableTypeRecursively(currentType)) {
               foundFields++;
             }
 
-            typesStack.push(currentType);
+            typesStack.push(getBaseType(currentType));
           }
         }
 
@@ -122,6 +137,18 @@ export function isUsingTypes(document: DocumentNode, externalFragments: string[]
           if (currentType && isObjectType(currentType)) {
             typesStack.pop();
           }
+        }
+      },
+    },
+    FragmentDefinition: {
+      enter: (node: FragmentDefinitionNode) => {
+        if (schema) {
+          typesStack.push(schema.getType(node.typeCondition.name.value));
+        }
+      },
+      leave: () => {
+        if (schema) {
+          typesStack.pop();
         }
       },
     },
