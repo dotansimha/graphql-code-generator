@@ -172,6 +172,7 @@ export class SelectionSetToObject {
 
         if (isObjectType(schemaType) && possibleTypes.find(possibleType => possibleType.name === schemaType.name)) {
           let typeSelections = types.get(onType);
+
           if (!typeSelections) {
             typeSelections = [];
             types.set(onType, typeSelections);
@@ -282,7 +283,7 @@ export class SelectionSetToObject {
         }
 
         const selectionNodes = selectionNodesByTypeName.get(typeName) || [];
-        return this.buildSelectionSetString(schemaType, selectionNodes);
+        return this.buildSelectionSetString(schemaType, selectionNodes, fieldNodes.length > 0 || inlineFragmentSelections.length > 0);
       })
       .filter(a => a);
 
@@ -322,7 +323,7 @@ export class SelectionSetToObject {
       .join(`\n  & `);
   }
 
-  protected buildSelectionSetString(parentSchemaType: GraphQLObjectType, selectionNodes: SelectionNode[]) {
+  protected buildSelectionSetString(parentSchemaType: GraphQLObjectType, selectionNodes: SelectionNode[], addTypename = true) {
     const primitiveFields = new Map<string, FieldNode>();
     const primitiveAliasFields = new Map<string, FieldNode>();
     const linkFieldSelectionSets = new Map<
@@ -395,7 +396,7 @@ export class SelectionSetToObject {
         useTypesPrefix: true,
       });
 
-    const typeInfoField = this.buildTypeNameField(parentSchemaType, this._nonOptionalTypename, this._addTypename, requireTypename);
+    const typeInfoField = !addTypename ? null : this.buildTypeNameField(parentSchemaType, this._nonOptionalTypename, this._addTypename, requireTypename);
 
     if (this._preResolveTypes) {
       const primitiveFieldsTypes = this.buildPrimitiveFieldsWithoutPick(parentSchemaType, Array.from(primitiveFields.values()).map(field => field.name.value));
@@ -409,6 +410,7 @@ export class SelectionSetToObject {
     }
 
     let typeInfoString: null | string = null;
+
     if (typeInfoField) {
       typeInfoString = `{ ${typeInfoField.name}: ${typeInfoField.type} }`;
     }

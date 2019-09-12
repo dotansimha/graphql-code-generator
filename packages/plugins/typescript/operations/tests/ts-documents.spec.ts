@@ -86,10 +86,18 @@ describe('TypeScript Operations Plugin', () => {
     }
   `);
 
-  const validate = async (content: Types.PluginOutput, config: any = {}, pluginSchema = schema) => {
-    const m = mergeOutputs([await tsPlugin(pluginSchema, [], config, { outputFile: '' }), content]);
+  const validate = async (content: Types.PluginOutput, config: any = {}, pluginSchema = schema, usage = '') => {
+    const m = mergeOutputs([await tsPlugin(pluginSchema, [], config, { outputFile: '' }), content, usage]);
 
     await validateTs(m);
+
+    return m;
+  };
+
+  const validateAndCompile = async (content: Types.PluginOutput, config: any = {}, pluginSchema = schema, usage = '') => {
+    const m = mergeOutputs([await tsPlugin(pluginSchema, [], config, { outputFile: '' }), content, usage]);
+
+    await compileTs(m);
 
     return m;
   };
@@ -468,9 +476,7 @@ describe('TypeScript Operations Plugin', () => {
         );
       `);
       expect(withUsage).toBeSimilarStringTo(`
-        export type NotificationsQuery = { __typename?: 'Query' }
-          & MyFragment
-        ;
+        export type NotificationsQuery = MyFragment;
       `);
     });
   });
@@ -810,6 +816,64 @@ describe('TypeScript Operations Plugin', () => {
       }
     });
 
+    it('Should have valid __typename usage and split types according to that (with usage)', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        scalar IPV4
+        scalar IPV6
+
+        type IPV4Route {
+          address: IPV4
+          gateway: IPV4
+        }
+
+        type IPV6Route {
+          address: IPV6
+          gateway: IPV6
+        }
+
+        union RouteUnion = IPV4Route | IPV6Route
+
+        type Query {
+          routes: [RouteUnion!]!
+        }
+      `);
+      const ast = parse(/* GraphQL */ `
+        fragment NetRoute on RouteUnion {
+          __typename
+          ... on IPV4Route {
+            ipv4Address: address
+            ipv4Gateway: gateway
+          }
+          ... on IPV6Route {
+            ipv6Address: address
+            ipv6Gateway: gateway
+          }
+        }
+
+        query QQ {
+          routes {
+            ...NetRoute
+          }
+        }
+      `);
+      const config = {};
+      const result = await plugin(testSchema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
+
+      const usage = `
+      type Route = QqQuery['routes'][0];
+
+      function validateGateway(route: Route) {
+          if (route.__typename === 'IPV4Route') {
+              console.log(route.ipv4Gateway)
+          } else {
+              console.log(route.ipv6Gateway)
+          }
+      }
+      `;
+
+      const o = await validateAndCompile(result, config, testSchema, usage);
+    });
+
     it('Should support fragment spread correctly with simple type with no other fields', async () => {
       const ast = parse(/* GraphQL */ `
         fragment UserFields on User {
@@ -960,10 +1024,8 @@ describe('TypeScript Operations Plugin', () => {
       expect(result).toBeSimilarStringTo(`
         export type Unnamed_1_Query = (
           { __typename?: 'Query' }
-          & { b: Maybe<({ __typename?: 'A' } | { __typename?: 'B' })
-            & AFragment
-            & BFragment
-          > }
+          & { b: Maybe<AFragment
+            & BFragment> }
         );
 
         export type AFragment = (
@@ -1026,8 +1088,7 @@ describe('TypeScript Operations Plugin', () => {
       expect(result).toBeSimilarStringTo(`
         export type Unnamed_1_Query = (
           { __typename?: 'Query' }
-          & { myType: { __typename?: 'MyType' }
-            & AFragment
+          & { myType: AFragment
             & BFragment
             & CFragment
           }
@@ -1079,10 +1140,7 @@ describe('TypeScript Operations Plugin', () => {
       expect(result).toBeSimilarStringTo(`
         export type Unnamed_1_Query = (
           { __typename?: 'Query' }
-          & { b: Maybe<({ __typename?: 'A' } | { __typename?: 'B' })
-            & AFragment
-            & BFragment
-          > }
+          & { b: Maybe<AFragment & BFragment> }
         );
   
         export type AFragment = (
@@ -2437,9 +2495,7 @@ describe('TypeScript Operations Plugin', () => {
           ) | { __typename?: 'Error2' } | (
             { __typename?: 'Error3' }
             & Pick<Error3, 'message'>
-            & { info: Maybe<{ __typename?: 'AdditionalInfo' }
-              & AdditionalInfoFragmentFragment
-            > }
+            & { info: Maybe<AdditionalInfoFragmentFragment> }
           ))
             & UserResultFragmentFragment
             & UserResult1FragmentFragment
@@ -2521,9 +2577,7 @@ describe('TypeScript Operations Plugin', () => {
       expect(content).toBeSimilarStringTo(`
         export type TestQueryQuery = (
           { __typename?: 'Query' }
-          & { fooBar: Array<({ __typename?: 'Foo' } | { __typename?: 'Bar' })
-            & FooBarFragmentFragment
-          > }
+          & { fooBar: Array<FooBarFragmentFragment> }
         );
 
         export type FooBarFragmentFragment = (
