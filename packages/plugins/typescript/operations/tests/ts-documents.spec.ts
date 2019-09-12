@@ -97,6 +97,8 @@ describe('TypeScript Operations Plugin', () => {
   const validateAndCompile = async (content: Types.PluginOutput, config: any = {}, pluginSchema = schema, usage = '') => {
     const m = mergeOutputs([await tsPlugin(pluginSchema, [], config, { outputFile: '' }), content, usage]);
 
+    // console.log(m);
+
     await compileTs(m);
 
     return m;
@@ -869,6 +871,58 @@ describe('TypeScript Operations Plugin', () => {
               console.log(route.ipv6Gateway)
           }
       }
+      `;
+
+      await validateAndCompile(result, config, testSchema, usage);
+    });
+
+    it.only('Should have valid fragments intersection on different types (with usage)', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        interface User {
+          id: ID!
+        }
+
+        type Tom implements User {
+          id: ID!
+          foo: String!
+        }
+
+        type Jerry implements User {
+          id: ID!
+          bar: String!
+        }
+
+        type Query {
+          user: User
+        }
+      `);
+      const ast = parse(/* GraphQL */ `
+        fragment tom on Tom {
+          id
+          foo
+        }
+
+        fragment jerry on Jerry {
+          id
+          bar
+        }
+
+        fragment user on User {
+          ...tom
+          ...jerry
+        }
+
+        query userQuery {
+          user {
+            ...user
+          }
+        }
+      `);
+      const config = {};
+      const result = await plugin(testSchema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
+
+      const usage = `
+
       `;
 
       await validateAndCompile(result, config, testSchema, usage);
