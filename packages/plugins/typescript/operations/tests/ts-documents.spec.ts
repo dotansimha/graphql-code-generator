@@ -830,9 +830,7 @@ describe('TypeScript Operations Plugin', () => {
       const config = { skipTypename: true };
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
       expect(result).toBeSimilarStringTo(`
-        export type MeQuery = { me: Maybe<{}
-          & UserFieldsFragment
-        > };
+        export type MeQuery = { me: Maybe<UserFieldsFragment> };
       `);
       await validate(result, config);
     });
@@ -2839,7 +2837,7 @@ describe('TypeScript Operations Plugin', () => {
       );
 
       expect(content).toBeSimilarStringTo(`
-        export type UserQuery = { user: {} | {} | Pick<User, 'id' | 'login'> };
+        export type UserQuery = { user: Pick<User, 'id' | 'login'> };
       `);
     });
   });

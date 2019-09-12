@@ -272,15 +272,19 @@ export class SelectionSetToObject {
       }
     }
 
-    const fieldSelections = possibleTypes.map(type => {
-      const typeName = type.name;
-      const schemaType = this._schema.getType(typeName);
-      if (!isObjectType(schemaType)) {
-        throw new TypeError('Invalid state.');
-      }
-      const selectionNodes = selectionNodesByTypeName.get(typeName) || [];
-      return this.buildSelectionSetString(schemaType, selectionNodes);
-    });
+    const fieldSelections = possibleTypes
+      .map(type => {
+        const typeName = type.name;
+        const schemaType = this._schema.getType(typeName);
+
+        if (!isObjectType(schemaType)) {
+          throw new TypeError(`Invalid state! Schema type ${typeName} is not a valid GraphQL object!`);
+        }
+
+        const selectionNodes = selectionNodesByTypeName.get(typeName) || [];
+        return this.buildSelectionSetString(schemaType, selectionNodes);
+      })
+      .filter(a => a);
 
     let fieldSelectionString = fieldSelections.join(' | ');
 
@@ -290,9 +294,11 @@ export class SelectionSetToObject {
     }
 
     const fragmentSelectionString: string | null = this.buildFragmentSpreadString(fragmentSpreadNodes);
+
     if (!fieldSelectionString && !fragmentSelectionString) {
-      throw new TypeError('Invalid State.');
+      throw new TypeError(`Invalid State! No selection set has been created!`);
     }
+
     if (fieldSelectionString && !fragmentSelectionString) {
       return fieldSelectionString;
     } else if (!fieldSelectionString && fragmentSelectionString) {
@@ -310,6 +316,7 @@ export class SelectionSetToObject {
     return fragmentSpreadNodes
       .map(node => {
         const fragmentSuffix = this._dedupeOperationSuffix && node.name.value.toLowerCase().endsWith('fragment') ? '' : 'Fragment';
+
         return this._convertName(node.name.value, { useTypesPrefix: true, suffix: fragmentSuffix });
       })
       .join(`\n  & `);
@@ -414,7 +421,7 @@ export class SelectionSetToObject {
     const result = [typeInfoString, primitiveFieldsString, primitiveAliasFieldsString, linkFieldsString, fragmentSpreadString].filter(Boolean);
 
     if (result.length === 0) {
-      return '{}';
+      return null;
     } else if (result.length === 1) {
       return result[0];
     } else {

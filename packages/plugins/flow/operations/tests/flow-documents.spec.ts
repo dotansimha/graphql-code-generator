@@ -494,10 +494,7 @@ describe('Flow Operations Plugin', () => {
       );
 
       expect(result).toBeSimilarStringTo(`
-        export type MeQuery = { me: ?(
-          {} 
-          & UserFieldsFragment
-        ) };
+        export type MeQuery = { me: ?UserFieldsFragment };
       `);
       validateFlow(result);
     });
