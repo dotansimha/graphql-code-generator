@@ -289,11 +289,6 @@ export class SelectionSetToObject {
 
     let fieldSelectionString = fieldSelections.join(' | ');
 
-    // wrap in case we have some fragment spreads
-    if (fieldSelections.length > 1 && fragmentSpreadNodes.length) {
-      fieldSelectionString = `(${fieldSelectionString})`;
-    }
-
     const fragmentSelectionString: string | null = this.buildFragmentSpreadString(fragmentSpreadNodes);
 
     if (!fieldSelectionString && !fragmentSelectionString) {

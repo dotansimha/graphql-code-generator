@@ -871,7 +871,67 @@ describe('TypeScript Operations Plugin', () => {
       }
       `;
 
-      const o = await validateAndCompile(result, config, testSchema, usage);
+      await validateAndCompile(result, config, testSchema, usage);
+    });
+
+    it('Should have valid __typename usage and split types according to that (with usage)', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        scalar IPV4
+        scalar IPV6
+
+        type IPV4Route {
+          address: IPV4
+          gateway: IPV4
+        }
+
+        type IPV6Route {
+          address: IPV6
+          gateway: IPV6
+        }
+
+        union RouteUnion = IPV4Route | IPV6Route
+
+        type Query {
+          routes: [RouteUnion!]!
+        }
+      `);
+      const ast = parse(/* GraphQL */ `
+        fragment NetRoute on RouteUnion {
+          __typename
+          ... on IPV4Route {
+            ipv4Address: address
+            ipv4Gateway: gateway
+          }
+          ...test
+        }
+
+        fragment test on IPV6Route {
+          ipv6Address: address
+          ipv6Gateway: gateway
+        }
+
+        query QQ {
+          routes {
+            ...NetRoute
+          }
+        }
+      `);
+      const config = {};
+      const result = await plugin(testSchema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
+
+      const usage = `
+      type Route = QqQuery['routes'][0];
+
+      function validateGateway(route: Route) {
+          if (route.__typename === 'IPV4Route') {
+              console.log(route.ipv4Gateway)
+          } else {
+              console.log(route.ipv6Gateway)
+          }
+      }
+      `;
+
+      await validateAndCompile(result, config, testSchema, usage);
     });
 
     it('Should support fragment spread correctly with simple type with no other fields', async () => {
@@ -2489,14 +2549,14 @@ describe('TypeScript Operations Plugin', () => {
       expect(content).toBeSimilarStringTo(`
         export type UserQueryQuery = (
           { __typename?: 'Query' }
-          & { user: ((
+          & { user: (
             { __typename?: 'User' }
             & Pick<User, 'login'>
           ) | { __typename?: 'Error2' } | (
             { __typename?: 'Error3' }
             & Pick<Error3, 'message'>
             & { info: Maybe<AdditionalInfoFragmentFragment> }
-          ))
+          )
             & UserResultFragmentFragment
             & UserResult1FragmentFragment
            }
