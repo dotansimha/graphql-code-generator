@@ -111,8 +111,8 @@ export class SelectionSetToObject {
       return this._collectInlineFragments(parentType.ofType, nodes, types);
     } else if (isObjectType(parentType)) {
       for (const node of nodes) {
-        const onType = node.typeCondition.name.value;
-        const typeOnSchema = this._schema.getType(onType);
+        const typeOnSchema = node.typeCondition ? this._schema.getType(node.typeCondition.name.value) : parentType;
+
         if (isObjectType(typeOnSchema)) {
           let typeSelections = types.get(typeOnSchema.name);
           if (!typeSelections) {
@@ -138,11 +138,7 @@ export class SelectionSetToObject {
 
       for (const node of nodes) {
         const onType = node.typeCondition.name.value;
-        const schemaType = this._schema.getType(onType);
-
-        if (!schemaType) {
-          throw new Error(`Inline fragment refernces a GraphQL type "${onType}" that does not exists in your schema!`);
-        }
+        const schemaType = node.typeCondition ? this._schema.getType(node.typeCondition.name.value) : parentType;
 
         if (isObjectType(schemaType) && possibleTypes.find(possibleType => possibleType.name === schemaType.name)) {
           let typeSelections = types.get(onType);
@@ -173,10 +169,6 @@ export class SelectionSetToObject {
       for (const node of nodes) {
         const onType = node.typeCondition.name.value;
         const schemaType = this._schema.getType(onType);
-
-        if (!schemaType) {
-          throw new Error(`Inline fragment refernces a GraphQL type "${onType}" that does not exists in your schema!`);
-        }
 
         if (isObjectType(schemaType) && possibleTypes.find(possibleType => possibleType.name === schemaType.name)) {
           let typeSelections = types.get(onType);
