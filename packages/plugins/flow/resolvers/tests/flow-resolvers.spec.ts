@@ -2,7 +2,7 @@ import '@graphql-codegen/testing';
 import { buildSchema } from 'graphql';
 import { plugin } from '../src';
 import { schema } from '../../../typescript/resolvers/tests/common';
-import { Types } from '@graphql-codegen/plugin-helpers';
+import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 
 describe('Flow Resolvers Plugin', () => {
   it('Should generate basic type resolvers', () => {
@@ -11,7 +11,7 @@ describe('Flow Resolvers Plugin', () => {
     expect(result).toMatchSnapshot();
   });
 
-  it('Default values of args and compatibility with typescript plugin', async () => {
+  it('Default values of args and compatibility with flow plugin', async () => {
     const testSchema = buildSchema(/* GraphQL */ `
       type Query {
         something(arg: String = "default_value"): String
@@ -21,7 +21,7 @@ describe('Flow Resolvers Plugin', () => {
     const config: any = { noSchemaStitching: true };
     const result = (await plugin(testSchema, [], config, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-    expect(result.prepend).toContain(`export type $RequireFields<Origin, Keys> = $Diff<Args, Keys> & $ObjMapi<Keys, <Key>(k: Key) => $NonMaybeType<$ElementType<Origin, Key>>>;`);
+    expect(result.prepend).toContain(`export type $RequireFields<Origin, Keys> = $Diff<Origin, Keys> & $ObjMapi<Keys, <Key>(k: Key) => $NonMaybeType<$ElementType<Origin, Key>>>;`);
     expect(result.content).toContain(`something?: Resolver<?$ElementType<ResolversTypes, 'String'>, ParentType, ContextType, $RequireFields<QuerySomethingArgs, { arg: * }>>,`);
   });
 
@@ -57,6 +57,30 @@ describe('Flow Resolvers Plugin', () => {
     const result = plugin(buildSchema(`type MyType { f: String }`), [], {}, { outputFile: '' }) as Types.ComplexPluginOutput;
 
     expect(result.prepend).not.toContain(`import { type GraphQLResolveInfo, type GraphQLScalarTypeConfig } from 'graphql';`);
+  });
+
+  it('Should generate valid output with args', async () => {
+    const testSchema = buildSchema(/* GraphQL */ `
+      type Query {
+        release: String
+      }
+      type Mutation {
+        random(byteLength: Int!): String!
+      }
+      schema {
+        query: Query
+        mutation: Mutation
+      }
+    `);
+    const config = {
+      contextType: 'GraphQLContext',
+      skipTypename: true,
+      addUnderscoreToArgsType: true,
+    };
+    const result = (await plugin(testSchema, [], config, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const o = mergeOutputs([result]);
+    expect(o).toContain(`$RequireFields<Mutation_RandomArgs, { byteLength: * }>>,`);
+    expect(o).toContain(`export type $RequireFields<Origin, Keys> = $Diff<Origin, Keys> & $ObjMapi<Keys, <Key>(k: Key) => $NonMaybeType<$ElementType<Origin, Key>>>;`);
   });
 
   it('Should generate the correct resolver args type names when typesPrefix is specified', () => {

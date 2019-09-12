@@ -2,7 +2,7 @@ import '@graphql-codegen/testing';
 import { buildSchema } from 'graphql';
 import { plugin } from '../src/index';
 import { validateFlow } from './validate-flow';
-import { Types } from '@graphql-codegen/plugin-helpers';
+import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 
 describe('Flow Plugin', () => {
   describe('description to comment', () => {
@@ -1058,6 +1058,25 @@ describe('Flow Plugin', () => {
     const content = (await plugin(schema, [], { skipTypename: true }, { outputFile: '' })) as Types.ComplexPluginOutput;
     expect(content).not.toContain('__typename');
 
+    validateFlow(content);
+  });
+
+  it('should generate arguments types correctly with args', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        release: String
+      }
+      type Mutation {
+        random(byteLength: Int!): String!
+      }
+      schema {
+        query: Query
+        mutation: Mutation
+      }
+    `);
+
+    const content = (await plugin(schema, [], { addUnderscoreToArgsType: true, skipTypename: true }, { outputFile: '' })) as Types.ComplexPluginOutput;
+    expect(mergeOutputs([content])).toContain(`export type Mutation_RandomArgs = {`);
     validateFlow(content);
   });
 });
