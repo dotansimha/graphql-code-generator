@@ -465,7 +465,7 @@ describe('Flow Operations Plugin', () => {
 
   describe('Selection Set', () => {
     it('Should support fragment spread correctly with simple type with no other fields', async () => {
-      const ast = parse(`
+      const ast = parse(/* GraphQL */ `
         fragment UserFields on User {
           id
           username
@@ -480,7 +480,7 @@ describe('Flow Operations Plugin', () => {
             ...UserFields
           }
         }
-    `);
+      `);
       const result = await plugin(
         schema,
         [
@@ -493,7 +493,12 @@ describe('Flow Operations Plugin', () => {
         { outputFile: '' }
       );
 
-      expect(result).toBeSimilarStringTo(`export type MeQuery = { me: ?UserFieldsFragment };`);
+      expect(result).toBeSimilarStringTo(`
+        export type MeQuery = { me: ?(
+          {} 
+          & UserFieldsFragment
+        ) };
+      `);
       validateFlow(result);
     });
 
