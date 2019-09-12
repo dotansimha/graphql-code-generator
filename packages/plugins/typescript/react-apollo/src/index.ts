@@ -117,7 +117,7 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
   /**
    * @name reactApolloVersion
    * @type 2 | 3
-   * @description Customized the output by enabling/disabling the HOC.
+   * @description Sets the version of react-apollo.
    * @default 2
    *
    * @example
