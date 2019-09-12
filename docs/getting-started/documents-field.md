@@ -27,7 +27,7 @@ generates:
 
 ### Output-file level
 
-Or, you can specify it per-output file level. This way you can
+Or, you can specify it per-output file level.
 
 ```yml
 schema: http://server1.com/graphql
