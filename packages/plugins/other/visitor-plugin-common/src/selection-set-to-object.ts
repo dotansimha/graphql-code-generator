@@ -287,21 +287,11 @@ export class SelectionSetToObject {
       })
       .filter(a => a);
 
-    let fieldSelectionString = fieldSelections.join(' | ');
-
+    const fieldSelectionString = fieldSelections.join(' | ');
     const fragmentSelectionString: string | null = this.buildFragmentSpreadString(fragmentSpreadNodes);
+    const relevntFields = [fieldSelectionString, fragmentSelectionString].filter(a => a);
 
-    if (!fieldSelectionString && !fragmentSelectionString) {
-      throw new TypeError(`Invalid State! No selection set has been created!`);
-    }
-
-    if (fieldSelectionString && !fragmentSelectionString) {
-      return fieldSelectionString;
-    } else if (!fieldSelectionString && fragmentSelectionString) {
-      return fragmentSelectionString;
-    }
-
-    return fieldSelectionString + `\n  & ` + fragmentSelectionString + '\n';
+    return relevntFields.join('\n  & ');
   }
 
   protected buildFragmentSpreadString(fragmentSpreadNodes: FragmentSpreadNode[]) {

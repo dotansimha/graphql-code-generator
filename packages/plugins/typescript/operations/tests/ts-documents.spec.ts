@@ -97,8 +97,6 @@ describe('TypeScript Operations Plugin', () => {
   const validateAndCompile = async (content: Types.PluginOutput, config: any = {}, pluginSchema = schema, usage = '') => {
     const m = mergeOutputs([await tsPlugin(pluginSchema, [], config, { outputFile: '' }), content, usage]);
 
-    // console.log(m);
-
     await compileTs(m);
 
     return m;
@@ -876,7 +874,122 @@ describe('TypeScript Operations Plugin', () => {
       await validateAndCompile(result, config, testSchema, usage);
     });
 
-    it.only('Should have valid fragments intersection on different types (with usage)', async () => {
+    it('Should generate the correct __typename when using fragment over type', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Query {
+          user: User
+        }
+
+        type User {
+          id: ID!
+          name: String
+        }
+      `);
+      const ast = parse(/* GraphQL */ `
+        query userQuery {
+          user {
+            ... on User {
+              id
+              name
+            }
+          }
+        }
+      `);
+      const config = {};
+      const result = await plugin(testSchema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
+      await validateAndCompile(result, config, testSchema);
+    });
+
+    it('Should generate the correct __typename when using both inline fragment and spread over type', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Query {
+          user: User
+        }
+
+        type User {
+          id: ID!
+          name: String
+        }
+      `);
+      const ast = parse(/* GraphQL */ `
+        query userQuery {
+          user {
+            ... on User {
+              ...user
+            }
+          }
+        }
+
+        fragment user on User {
+          id
+          name
+        }
+      `);
+      const config = {};
+      const result = await plugin(testSchema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
+      await validateAndCompile(result, config, testSchema);
+    });
+
+    it('Should generate the correct __typename when using fragment spread over type', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Query {
+          user: User
+        }
+
+        type User {
+          id: ID!
+          name: String
+        }
+      `);
+      const ast = parse(/* GraphQL */ `
+        query userQuery {
+          user {
+            ...user
+          }
+        }
+
+        fragment user on User {
+          id
+          name
+        }
+      `);
+      const config = {};
+      const result = await plugin(testSchema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
+      await validateAndCompile(result, config, testSchema);
+    });
+
+    it('Should generate the correct __typename when using fragment spread over union', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type User {
+          id: ID!
+        }
+
+        type Error {
+          message: String!
+        }
+
+        union UserResult = User | Error
+
+        type Query {
+          user: UserResult!
+        }
+      `);
+      const ast = parse(/* GraphQL */ `
+        fragment UserFragment on User {
+          id
+        }
+        query aaa {
+          user {
+            ...UserFragment
+          }
+        }
+      `);
+      const config = {};
+      const result = await plugin(testSchema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
+      await validateAndCompile(result, config, testSchema, `function test(q: AaaQuery) { console.log(q.user.id) }`);
+    });
+
+    it.skip('Should have valid fragments intersection on different types (with usage) #2498', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         interface User {
           id: ID!
@@ -921,11 +1034,40 @@ describe('TypeScript Operations Plugin', () => {
       const config = {};
       const result = await plugin(testSchema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
-      const usage = `
+      await validateAndCompile(
+        result,
+        config,
+        testSchema,
+        `
+          function test(a: UserFragment) {
+              if (a.__typename === 'Tom') {
+                  console.log(a.foo);
+              } else if (a.__typename === 'Jerry') {
+                  console.log(a.bar);
+              }
+          }`
+      );
 
-      `;
-
-      await validateAndCompile(result, config, testSchema, usage);
+      try {
+        await validateAndCompile(
+          result,
+          config,
+          testSchema,
+          `
+            function test(a: UserFragment) {
+                if (a.__typename === 'Tom') {
+                    console.log(a.foo);
+                    console.log(a.bar);
+                } else if (a.__typename === 'Jerry') {
+                    console.log(a.foo);
+                    console.log(a.bar);
+                }
+            }`
+        );
+        throw new Error('invalid');
+      } catch (e) {
+        expect(e.message).not.toBe('invalid');
+      }
     });
 
     it('Should have valid __typename usage and split types according to that (with usage)', async () => {
@@ -1034,8 +1176,7 @@ describe('TypeScript Operations Plugin', () => {
 
       expect(result).toBeSimilarStringTo(`
         export type MeQuery = { me: Maybe<Pick<User, 'username'>
-            & UserFieldsFragment
-        > };
+            & UserFieldsFragment> };
       `);
       await validate(result, config);
     });
@@ -1071,8 +1212,7 @@ describe('TypeScript Operations Plugin', () => {
             & Pick<User, 'username'>
           )
             & UserFieldsFragment
-            & UserProfileFragment
-          > }
+            & UserProfileFragment> }
         );
       `);
       expect(result).toBeSimilarStringTo(`
