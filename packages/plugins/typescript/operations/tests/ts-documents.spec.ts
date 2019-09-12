@@ -986,7 +986,15 @@ describe('TypeScript Operations Plugin', () => {
       `);
       const config = {};
       const result = await plugin(testSchema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
-      await validateAndCompile(result, config, testSchema, `function test(q: AaaQuery) { console.log(q.user.id) }`);
+      await validateAndCompile(
+        result,
+        config,
+        testSchema,
+        `function test(q: AaaQuery) {
+        console.log(q.user.__typename === 'User' ? q.user.id : null);
+        console.log(q.user.__typename === 'Error' ? q.user.__typename : null);
+      }`
+      );
     });
 
     it.skip('Should have valid fragments intersection on different types (with usage) #2498', async () => {

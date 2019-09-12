@@ -273,8 +273,8 @@ export class SelectionSetToObject {
       }
     }
 
-    const fieldSelections = possibleTypes
-      .map(type => {
+    const grouped = possibleTypes.reduce(
+      (prev, type) => {
         const typeName = type.name;
         const schemaType = this._schema.getType(typeName);
 
@@ -283,15 +283,52 @@ export class SelectionSetToObject {
         }
 
         const selectionNodes = selectionNodesByTypeName.get(typeName) || [];
-        return this.buildSelectionSetString(schemaType, selectionNodes, fieldNodes.length > 0 || inlineFragmentSelections.length > 0);
+        const hasSpreadsOnType = this._loadedFragments.filter(lf => lf.onType === typeName).length > 0;
+        const hasInlineOnType = inlineFragmentSelections.filter(f => !f.typeCondition || f.typeCondition.name.value === typeName).length > 0;
+
+        if (!prev[typeName]) {
+          prev[typeName] = [];
+        }
+
+        const transformedSet = this.buildSelectionSetString(schemaType, selectionNodes, selectionNodes.length === 0 && fieldNodes.length === 0 && !hasSpreadsOnType && !hasInlineOnType);
+
+        if (transformedSet) {
+          prev[typeName].push(transformedSet);
+        }
+        return prev;
+      },
+      {} as Record<string, string[]>
+    );
+
+    for (const spread of fragmentSpreadNodes) {
+      const fragmentSpreadObject = this._loadedFragments.find(lf => lf.name === spread.name.value);
+
+      if (fragmentSpreadObject) {
+        if (!grouped[fragmentSpreadObject.name]) {
+          grouped[fragmentSpreadObject.name] = [];
+        }
+
+        const fragmentSuffix = this._dedupeOperationSuffix && spread.name.value.toLowerCase().endsWith('fragment') ? '' : 'Fragment';
+        const usage = this._convertName(spread.name.value, { useTypesPrefix: true, suffix: fragmentSuffix });
+
+        grouped[fragmentSpreadObject.name].push(usage);
+      }
+    }
+
+    return Object.keys(grouped)
+      .map(typeName => {
+        const relevant = grouped[typeName].filter(Boolean);
+
+        if (relevant.length === 0) {
+          return null;
+        } else if (relevant.length === 1) {
+          return relevant[0];
+        } else {
+          return `( ${relevant.join(' & ')} )`;
+        }
       })
-      .filter(a => a);
-
-    const fieldSelectionString = fieldSelections.join(' | ');
-    const fragmentSelectionString: string | null = this.buildFragmentSpreadString(fragmentSpreadNodes);
-    const relevntFields = [fieldSelectionString, fragmentSelectionString].filter(a => a);
-
-    return relevntFields.join('\n  & ');
+      .filter(Boolean)
+      .join(' | ');
   }
 
   protected buildFragmentSpreadString(fragmentSpreadNodes: FragmentSpreadNode[]) {
@@ -308,7 +345,7 @@ export class SelectionSetToObject {
       .join(`\n  & `);
   }
 
-  protected buildSelectionSetString(parentSchemaType: GraphQLObjectType, selectionNodes: SelectionNode[], addTypename = true) {
+  protected buildSelectionSetString(parentSchemaType: GraphQLObjectType, selectionNodes: SelectionNode[], generatePossibleTypename = true) {
     const primitiveFields = new Map<string, FieldNode>();
     const primitiveAliasFields = new Map<string, FieldNode>();
     const linkFieldSelectionSets = new Map<
@@ -381,7 +418,7 @@ export class SelectionSetToObject {
         useTypesPrefix: true,
       });
 
-    const typeInfoField = !addTypename ? null : this.buildTypeNameField(parentSchemaType, this._nonOptionalTypename, this._addTypename, requireTypename);
+    const typeInfoField = this.buildTypeNameField(parentSchemaType, this._nonOptionalTypename, this._addTypename, requireTypename);
 
     if (this._preResolveTypes) {
       const primitiveFieldsTypes = this.buildPrimitiveFieldsWithoutPick(parentSchemaType, Array.from(primitiveFields.values()).map(field => field.name.value));
@@ -404,8 +441,14 @@ export class SelectionSetToObject {
     const primitiveAliasFieldsString = this.buildAliasedPrimitiveFields(parentName, Array.from(primitiveAliasFields.values()).map(field => ({ alias: field.alias.value, fieldName: field.name.value })));
     const linkFieldsString = this.buildLinkFields(linkFields);
     const fragmentSpreadString = this.buildFragmentSpreadString([...fragmentSpreadSelectionSets.values()]);
+    const fields = [primitiveFieldsString, primitiveAliasFieldsString, linkFieldsString, fragmentSpreadString].filter(Boolean);
+    let result: string[] = [];
 
-    const result = [typeInfoString, primitiveFieldsString, primitiveAliasFieldsString, linkFieldsString, fragmentSpreadString].filter(Boolean);
+    if (fields.length === 0) {
+      result = generatePossibleTypename ? [typeInfoString] : [];
+    } else {
+      result = [typeInfoString, ...fields];
+    }
 
     if (result.length === 0) {
       return null;
