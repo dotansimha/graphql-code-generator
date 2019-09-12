@@ -1,11 +1,12 @@
 import { Types, CodegenPlugin } from '@graphql-codegen/plugin-helpers';
-import { DocumentNode, GraphQLSchema, buildASTSchema } from 'graphql';
+import { DocumentNode, GraphQLSchema, buildASTSchema, Kind } from 'graphql';
 import { DetailedError } from './errors';
 import { validateGraphQlDocuments, checkValidationErrors } from 'graphql-toolkit';
 
 export interface ExecutePluginOptions {
   name: string;
   config: Types.PluginConfig;
+  parentConfig: Types.PluginConfig;
   schema: DocumentNode;
   schemaAst?: GraphQLSchema;
   documents: Types.DocumentFile[];
@@ -35,8 +36,10 @@ export async function executePlugin(options: ExecutePluginOptions, plugin: Codeg
   const outputSchema: GraphQLSchema = options.schemaAst || buildASTSchema(options.schema);
   const documents = options.documents || [];
 
-  if (outputSchema && documents.length > 0 && !options.skipDocumentsValidation) {
-    const errors = validateGraphQlDocuments(outputSchema, documents);
+  if (outputSchema && documents.length > 0) {
+    const configObject = typeof options.config === 'object' ? options.config : options.parentConfig;
+    const extraFragments = configObject && (configObject as any)['externalFragments'] ? (configObject as any)['externalFragments'] : [];
+    const errors = validateGraphQlDocuments(outputSchema, [...documents, ...extraFragments.map((f: any) => ({ filePath: f.importFrom, content: { kind: Kind.DOCUMENT, definitions: [f.node] } }))]);
     checkValidationErrors(errors);
   }
 
@@ -54,7 +57,7 @@ export async function executePlugin(options: ExecutePluginOptions, plugin: Codeg
   }
 
   return await Promise.resolve(
-    plugin.plugin(outputSchema, documents, options.config, {
+    plugin.plugin(outputSchema, documents, typeof options.config === 'object' ? { ...options.config } : options.config, {
       outputFile: options.outputFilename,
       allPlugins: options.allPlugins,
     })

@@ -10,7 +10,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
   const documents = options.documents || [];
 
   if (documents.length > 0 && !options.skipDocumentsValidation) {
-    validateDocuments(documents);
+    validateDuplicateDocuments(documents);
   }
 
   const pluginPackages = Object.keys(options.pluginMap).map(key => options.pluginMap[key]);
@@ -68,18 +68,21 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
   for (const plugin of options.plugins) {
     const name = Object.keys(plugin)[0];
     const pluginPackage = options.pluginMap[name];
-    const pluginConfig = plugin[name];
+    const pluginConfig = plugin[name] || {};
+
+    const execConfig =
+      typeof pluginConfig !== 'object'
+        ? pluginConfig
+        : {
+            ...options.config,
+            ...pluginConfig,
+          };
 
     const result = await executePlugin(
       {
         name,
-        config:
-          typeof pluginConfig !== 'object'
-            ? pluginConfig
-            : {
-                ...options.config,
-                ...(pluginConfig as object),
-              },
+        config: execConfig,
+        parentConfig: options.config,
         schema,
         schemaAst: options.schemaAst,
         documents: options.documents,
@@ -138,7 +141,7 @@ export function sortPrependValues(values: string[]): string[] {
   });
 }
 
-function validateDocuments(files: Types.DocumentFile[]) {
+function validateDuplicateDocuments(files: Types.DocumentFile[]) {
   // duplicated names
   const operationMap: {
     [name: string]: string[];
