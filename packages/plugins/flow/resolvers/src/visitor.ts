@@ -97,6 +97,7 @@ export class FlowResolversVisitor extends BaseResolversVisitor<FlowResolversPlug
       },
     })
       .export()
+      .withFlow()
       .asKind('type')
       .withName(
         this.convertName(node, {

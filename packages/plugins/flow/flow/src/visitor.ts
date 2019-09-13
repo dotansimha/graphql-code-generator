@@ -26,6 +26,39 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
     });
   }
 
+  getObjectTypeDeclarationBlock(node: ObjectTypeDefinitionNode, originalNode: ObjectTypeDefinitionNode): DeclarationBlock {
+    const optionalTypename = this.config.nonOptionalTypename ? '__typename' : '__typename?';
+    const { type } = this._parsedConfig.declarationKind;
+    const allFields = [...(this.config.addTypename ? [indent(`${this.config['immutableTypes'] ? 'readonly' : ''} ${optionalTypename}: '${node.name}'${type === 'class' ? ';' : ','}`)] : []), ...node.fields];
+
+    const buildInterfaces = () => {
+      if (!originalNode.interfaces || !node.interfaces.length) {
+        return '';
+      }
+
+      const interfaces = originalNode.interfaces.map(i => this.convertName(i));
+
+      if (type === 'interface' || type === 'class') {
+        return ' extends ' + interfaces.join(', ') + (allFields.length ? ' ' : ' {}');
+      }
+
+      // return interfaces.join(' & ') + (allFields.length ? ' & ' : '');
+
+      return '{' + '...' + interfaces.join(', ...') + (allFields.length ? ', ...' : '}');
+    };
+    const interfaces = buildInterfaces();
+
+    let declarationBlock = new DeclarationBlock(this._declarationBlockConfig)
+      .export()
+      .withFlow()
+      .asKind(type)
+      .withName(this.convertName(node))
+      .withContent(interfaces)
+      .withComment((node.description as any) as string);
+
+    return declarationBlock.withBlock(allFields.join('\n'));
+  }
+
   protected _getScalar(name: string): string {
     return `$ElementType<Scalars, '${name}'>`;
   }
@@ -93,6 +126,7 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
 
     const enumValues = new DeclarationBlock(this._declarationBlockConfig)
       .export()
+      .withFlow()
       .asKind('const')
       .withName(enumValuesName)
       .withMethodCall('Object.freeze', true)
@@ -114,6 +148,7 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
 
     const enumType = new DeclarationBlock(this._declarationBlockConfig)
       .export()
+      .withFlow()
       .asKind('type')
       .withName(this.convertName(node, { useTypesPrefix: this.config.enumPrefix }))
       .withComment((node.description as any) as string)
