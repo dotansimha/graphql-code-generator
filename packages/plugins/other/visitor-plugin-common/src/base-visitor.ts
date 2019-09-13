@@ -16,6 +16,7 @@ export interface ParsedConfig {
   nonOptionalTypename: boolean;
   namespacedImportName: string | null;
   externalFragments: LoadedFragment[];
+  isFlow: boolean;
 }
 
 export interface RawConfig {

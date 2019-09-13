@@ -92,7 +92,8 @@ export class SelectionSetToObject {
     protected _dedupeOperationSuffix: boolean,
     protected _enumPrefix: boolean,
     protected _parentSchemaType?: GraphQLNamedType,
-    protected _selectionSet?: SelectionSetNode
+    protected _selectionSet?: SelectionSetNode,
+    protected _isFlow?: boolean
   ) {}
 
   public createNext(parentSchemaType: GraphQLNamedType, selectionSet: SelectionSetNode): SelectionSetToObject {
@@ -425,6 +426,9 @@ export class SelectionSetToObject {
     } else if (result.length === 1) {
       return result[0];
     } else {
+      if (this._isFlow) {
+        return `{\n  ...` + result.join(`,\n   ...`) + `\n}`;
+      }
       return `(\n  ` + result.join(`\n  & `) + `\n)`;
     }
   }
