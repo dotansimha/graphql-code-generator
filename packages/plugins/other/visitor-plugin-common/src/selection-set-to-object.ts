@@ -306,6 +306,9 @@ export class SelectionSetToObject {
       return fragmentSelectionString;
     }
 
+    if (this._isFlow) {
+      return '{...' + fieldSelectionString + `,\n  ...` + fragmentSelectionString + '}\n';
+    }
     return fieldSelectionString + `\n  & ` + fragmentSelectionString + '\n';
   }
 
@@ -314,13 +317,15 @@ export class SelectionSetToObject {
       return null;
     }
 
+    const separator = this._isFlow ? `,\n  ...` : `\n  & `;
+
     return fragmentSpreadNodes
       .map(node => {
         const fragmentSuffix = this._dedupeOperationSuffix && node.name.value.toLowerCase().endsWith('fragment') ? '' : 'Fragment';
 
         return this._convertName(node.name.value, { useTypesPrefix: true, suffix: fragmentSuffix });
       })
-      .join(`\n  & `);
+      .join(separator);
   }
 
   protected buildSelectionSetString(parentSchemaType: GraphQLObjectType, selectionNodes: SelectionNode[]) {
