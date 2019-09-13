@@ -13,7 +13,7 @@
     "tslib": "1.10.0"
   },
   "devDependencies": {
-    "graphql": "14.5.4",
+    "graphql": "14.5.5",
     "java-ast": "0.1.0",
     "typescript": "3.6.3"
   },
