@@ -207,6 +207,7 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
+      .withFlow(this._parsedConfig.isFlow)
       .asKind('type')
       .withName(this.convertName(node))
       .withComment((node.description as any) as string)
@@ -229,12 +230,17 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
         return ' extends ' + interfaces.join(', ') + (allFields.length ? ' ' : ' {}');
       }
 
+      if (this._parsedConfig.isFlow) {
+        return '{' + '...' + interfaces.join(', ...') + (allFields.length ? ', ...' : '}');
+      }
+
       return interfaces.join(' & ') + (allFields.length ? ' & ' : '');
     };
     const interfaces = buildInterfaces();
 
     let declarationBlock = new DeclarationBlock(this._declarationBlockConfig)
       .export()
+      .withFlow(this._parsedConfig.isFlow)
       .asKind(type)
       .withName(this.convertName(node))
       .withContent(interfaces)

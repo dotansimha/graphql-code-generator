@@ -7,6 +7,7 @@ import { FlowOperationVariablesToObject } from './flow-variables-to-object';
 export interface FlowPluginParsedConfig extends ParsedTypesConfig {
   useFlowExactObjects: boolean;
   useFlowReadOnlyTypes: boolean;
+  isFlow: boolean;
 }
 
 export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginParsedConfig> {
@@ -14,6 +15,7 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
     super(schema, pluginConfig, {
       useFlowExactObjects: pluginConfig.useFlowExactObjects || false,
       useFlowReadOnlyTypes: pluginConfig.useFlowReadOnlyTypes || false,
+      isFlow: true,
     } as FlowPluginParsedConfig);
     autoBind(this);
 
@@ -93,6 +95,7 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
 
     const enumValues = new DeclarationBlock(this._declarationBlockConfig)
       .export()
+      .withFlow(true)
       .asKind('const')
       .withName(enumValuesName)
       .withMethodCall('Object.freeze', true)
@@ -114,6 +117,7 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
 
     const enumType = new DeclarationBlock(this._declarationBlockConfig)
       .export()
+      .withFlow(true)
       .asKind('type')
       .withName(this.convertName(node, { useTypesPrefix: this.config.enumPrefix }))
       .withComment((node.description as any) as string)
