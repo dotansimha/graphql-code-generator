@@ -158,16 +158,21 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
   }
 
   private _buildHooksJSDoc(node: OperationDefinitionNode, operationName: string, operationType: string): string {
+    const variableString = node.variableDefinitions.reduce((acc, item) => {
+      const name = item.variable.name.value;
+
+      return `${acc}\n *      ${name}: // value for '${name}'`;
+    }, '');
+
     const queryDescription = `
- * To run a query within a React component, call \`use${operationName}\` and pass it a any options that fit your needs.
+ * To run a query within a React component, call \`use${operationName}\` and pass it any options that fit your needs.
  * When your component renders, \`use${operationName}\` returns an object from Apollo Client that contains loading, error, and data properties 
  * you can use to render your UI.
 `;
 
     const queryExample = `
  * const { data, loading, error } = use${operationName}({
- *   variables: {
- *     // some vars
+ *   variables: {${variableString}
  *   },
  * });`;
 
@@ -180,15 +185,14 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
 
     const mutationExample = `
  * const [${camelCase(operationName)}, { data, loading, error }] = use${operationName}({
- *   variables: {
- *     // some vars
+ *   variables: {${variableString}
  *   },
  * });`;
 
     return `
 /**
  * __use${operationName}__
- ${operationType === 'Mutation' ? mutationDescription : queryDescription}
+ *${operationType === 'Mutation' ? mutationDescription : queryDescription}
  *
  * @param baseOptions options that will be passed into the ${operationType.toLowerCase()}, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#${operationType === 'Mutation' ? 'options-2' : 'options'};
  *

@@ -922,8 +922,8 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
 
     it('should generate JSDoc annotations for hooks', async () => {
       const documents = parse(/* GraphQL */ `
-        query feed {
-          feed {
+        query feed($id: ID!) {
+          feed(id: $id) {
             id
             commentCount
             repository {
@@ -936,7 +936,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
           }
         }
 
-        mutation submitRepository($name: String) {
+        mutation submitRepository($name: String!) {
           submitRepository(repoFullName: $name) {
             id
           }
