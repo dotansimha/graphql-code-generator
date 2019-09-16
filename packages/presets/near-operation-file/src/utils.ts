@@ -5,9 +5,8 @@ import { VariableDefinitionNode } from 'graphql';
 import { isObjectType } from 'graphql';
 import { GraphQLOutputType } from 'graphql';
 import { isInterfaceType } from 'graphql';
-import { print } from 'graphql';
 import { isListType } from 'graphql';
-import { getBaseType } from '@graphql-codegen/visitor-plugin-common';
+import { getBaseType } from '@graphql-codegen/plugin-helpers';
 
 export function defineFilepathSubfolder(baseFilePath: string, folder: string) {
   const parsedPath = parse(baseFilePath);
