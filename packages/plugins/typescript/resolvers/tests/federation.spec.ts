@@ -1,11 +1,30 @@
 import '@graphql-codegen/testing';
 import { parse } from 'graphql';
 import { codegen } from '@graphql-codegen/core';
-import { plugin } from '../src';
+import { plugin, TypeScriptResolversPluginConfig } from '../src';
+
+function generate({ schema, config }: { schema: string; config: TypeScriptResolversPluginConfig }) {
+  return codegen({
+    filename: 'graphql.ts',
+    schema: parse(schema),
+    documents: [],
+    plugins: [
+      {
+        'typescript-resolvers': {},
+      },
+    ],
+    config,
+    pluginMap: {
+      'typescript-resolvers': {
+        plugin,
+      },
+    },
+  });
+}
 
 describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
   it('should add __resolveReference to objects that have @key', async () => {
-    const federatedSchema = parse(/* GraphQL */ `
+    const federatedSchema = /* GraphQL */ `
       type Query {
         allUsers: [User]
       }
@@ -19,24 +38,12 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       type Book {
         id: ID!
       }
-    `);
+    `;
 
-    const content = await codegen({
-      filename: 'graphql.ts',
+    const content = await generate({
       schema: federatedSchema,
-      documents: [],
-      plugins: [
-        {
-          'typescript-resolvers': {},
-        },
-      ],
       config: {
         federation: true,
-      },
-      pluginMap: {
-        'typescript-resolvers': {
-          plugin,
-        },
       },
     });
 
@@ -51,7 +58,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
   });
 
   it('should support extend keyword', async () => {
-    const federatedSchema = parse(/* GraphQL */ `
+    const federatedSchema = /* GraphQL */ `
       extend type Query {
         allUsers: [User]
       }
@@ -65,24 +72,12 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       type Book {
         id: ID!
       }
-    `);
+    `;
 
-    const content = await codegen({
-      filename: 'graphql.ts',
+    const content = await generate({
       schema: federatedSchema,
-      documents: [],
-      plugins: [
-        {
-          'typescript-resolvers': {},
-        },
-      ],
       config: {
         federation: true,
-      },
-      pluginMap: {
-        'typescript-resolvers': {
-          plugin,
-        },
       },
     });
 
@@ -97,7 +92,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
   });
 
   it('should include fields from @requires directive', async () => {
-    const federatedSchema = parse(/* GraphQL */ `
+    const federatedSchema = /* GraphQL */ `
       type Query {
         users: [User]
       }
@@ -108,24 +103,12 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
         age: Int! @external
         username: String @requires(fields: "name age")
       }
-    `);
+    `;
 
-    const content = await codegen({
-      filename: 'graphql.ts',
+    const content = await generate({
       schema: federatedSchema,
-      documents: [],
-      plugins: [
-        {
-          'typescript-resolvers': {},
-        },
-      ],
       config: {
         federation: true,
-      },
-      pluginMap: {
-        'typescript-resolvers': {
-          plugin,
-        },
       },
     });
 
@@ -140,7 +123,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
   });
 
   it('should skip to generate resolvers of fields with @external directive', async () => {
-    const federatedSchema = parse(/* GraphQL */ `
+    const federatedSchema = /* GraphQL */ `
       type Query {
         users: [User]
       }
@@ -154,24 +137,12 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
         name: String @external
         username: String @external
       }
-    `);
+    `;
 
-    const content = await codegen({
-      filename: 'graphql.ts',
+    const content = await generate({
       schema: federatedSchema,
-      documents: [],
-      plugins: [
-        {
-          'typescript-resolvers': {},
-        },
-      ],
       config: {
         federation: true,
-      },
-      pluginMap: {
-        'typescript-resolvers': {
-          plugin,
-        },
       },
     });
 
@@ -186,7 +157,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
   });
 
   it('should not include _FieldSet scalar', async () => {
-    const federatedSchema = parse(/* GraphQL */ `
+    const federatedSchema = /* GraphQL */ `
       type Query {
         users: [User]
       }
@@ -200,24 +171,12 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       type Book {
         id: ID!
       }
-    `);
+    `;
 
-    const content = await codegen({
-      filename: 'graphql.ts',
+    const content = await generate({
       schema: federatedSchema,
-      documents: [],
-      plugins: [
-        {
-          'typescript-resolvers': {},
-        },
-      ],
       config: {
         federation: true,
-      },
-      pluginMap: {
-        'typescript-resolvers': {
-          plugin,
-        },
       },
     });
 
@@ -225,7 +184,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
   });
 
   it('should not include federation directives', async () => {
-    const federatedSchema = parse(/* GraphQL */ `
+    const federatedSchema = /* GraphQL */ `
       type Query {
         users: [User]
       }
@@ -239,24 +198,12 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       type Book {
         id: ID!
       }
-    `);
+    `;
 
-    const content = await codegen({
-      filename: 'graphql.ts',
+    const content = await generate({
       schema: federatedSchema,
-      documents: [],
-      plugins: [
-        {
-          'typescript-resolvers': {},
-        },
-      ],
       config: {
         federation: true,
-      },
-      pluginMap: {
-        'typescript-resolvers': {
-          plugin,
-        },
       },
     });
 
@@ -267,7 +214,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
   });
 
   it('should not add directive definitions and scalars if they are already there', async () => {
-    const federatedSchema = parse(/* GraphQL */ `
+    const federatedSchema = /* GraphQL */ `
       scalar _FieldSet
 
       directive @key(fields: _FieldSet!) on OBJECT | INTERFACE
@@ -285,24 +232,12 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       type Book {
         id: ID!
       }
-    `);
+    `;
 
-    const content = await codegen({
-      filename: 'graphql.ts',
+    const content = await generate({
       schema: federatedSchema,
-      documents: [],
-      plugins: [
-        {
-          'typescript-resolvers': {},
-        },
-      ],
       config: {
         federation: true,
-      },
-      pluginMap: {
-        'typescript-resolvers': {
-          plugin,
-        },
       },
     });
 
@@ -314,7 +249,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
   });
 
   it('should allow for duplicated directives', async () => {
-    const federatedSchema = parse(/* GraphQL */ `
+    const federatedSchema = /* GraphQL */ `
       type Query {
         allUsers: [User]
       }
@@ -328,24 +263,12 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
       type Book {
         id: ID!
       }
-    `);
+    `;
 
-    const content = await codegen({
-      filename: 'graphql.ts',
+    const content = await generate({
       schema: federatedSchema,
-      documents: [],
-      plugins: [
-        {
-          'typescript-resolvers': {},
-        },
-      ],
       config: {
         federation: true,
-      },
-      pluginMap: {
-        'typescript-resolvers': {
-          plugin,
-        },
       },
     });
 
@@ -361,7 +284,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
   });
 
   it.skip('should only extend an original type by a mapped type', async () => {
-    const federatedSchema = parse(/* GraphQL */ `
+    const federatedSchema = /* GraphQL */ `
       type Query {
         users: [User]
       }
@@ -372,26 +295,14 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
         age: Int!
         username: String
       }
-    `);
+    `;
 
-    const content = await codegen({
-      filename: 'graphql.ts',
+    const content = await generate({
       schema: federatedSchema,
-      documents: [],
-      plugins: [
-        {
-          'typescript-resolvers': {},
-        },
-      ],
       config: {
         federation: true,
         mappers: {
           User: 'UserExtension',
-        },
-      },
-      pluginMap: {
-        'typescript-resolvers': {
-          plugin,
         },
       },
     });
@@ -404,5 +315,30 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
         username?: Resolver<Maybe<ResolversTypes['String']>, UserExtension & ParentType & Pick<ParentType, 'name', 'age'>, ContextType>,
       };
     `);
+  });
+
+  it('should not generate unused scalars', async () => {
+    const federatedSchema = /* GraphQL */ `
+      type Query {
+        user(id: ID!): User!
+      }
+
+      type User {
+        id: ID!
+        username: String!
+      }
+    `;
+
+    const content = await generate({
+      schema: federatedSchema,
+      config: {
+        federation: true,
+      },
+    });
+
+    // no GraphQLScalarTypeConfig
+    expect(content).not.toContain('GraphQLScalarTypeConfig');
+    // no GraphQLScalarType
+    expect(content).not.toContain('GraphQLScalarType');
   });
 });
