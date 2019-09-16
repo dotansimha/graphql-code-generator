@@ -157,12 +157,12 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     return [componentProps, component].join('\n');
   }
 
-  private _buildHooksJSDoc(operationName: string, operationType: string): string {
-    /**
-     * @param baseOptions Options that will be passed into the query, To see a full list of supported options visit: https://www.apollographql.com/docs/react/api/react-hooks/#options
-     */
-    const a: any = null;
-    console.log(a);
+  private _buildHooksJSDoc(node: OperationDefinitionNode, operationName: string, operationType: string): string {
+    const queryDescription = `
+ * To run a query within a React component, call \`use${operationName}\` and pass it a any options that fit your needs.
+ * When your component renders, \`use${operationName}\` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+`;
 
     const queryExample = `
  * const { data, loading, error } = use${operationName}({
@@ -170,6 +170,13 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
  *     // some vars
  *   },
  * });`;
+
+    const mutationDescription = `
+ * To run a mutation, you first call \`use${operationName}\` within a React component and pass it any options that fit your needs.
+ * When your component renders, \`use${operationName}\` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+`;
 
     const mutationExample = `
  * const [${camelCase(operationName)}, { data, loading, error }] = use${operationName}({
@@ -181,6 +188,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     return `
 /**
  * __use${operationName}__
+ ${operationType === 'Mutation' ? mutationDescription : queryDescription}
  *
  * @param baseOptions options that will be passed into the ${operationType.toLowerCase()}, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#${operationType === 'Mutation' ? 'options-2' : 'options'};
  *
@@ -199,7 +207,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     this.imports.add(this.getApolloReactHooksImport());
 
     const hookFns = [
-      this._buildHooksJSDoc(operationName, operationType),
+      this._buildHooksJSDoc(node, operationName, operationType),
       `export function use${operationName}(baseOptions?: ApolloReactHooks.${operationType}HookOptions<${operationResultType}, ${operationVariablesTypes}>) {
         return ApolloReactHooks.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${this.getDocumentNodeVariable(node, documentVariableName)}, baseOptions);
       }`,
