@@ -919,6 +919,42 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       `);
       await validateTypeScript(content, schema, docs, {});
     });
+
+    it('should generate JSDoc annotations for hooks', async () => {
+      const documents = parse(/* GraphQL */ `
+        query feed {
+          feed {
+            id
+            commentCount
+            repository {
+              full_name
+              html_url
+              owner {
+                avatar_url
+              }
+            }
+          }
+        }
+
+        mutation submitRepository($name: String) {
+          submitRepository(repoFullName: $name) {
+            id
+          }
+        }
+      `);
+      const docs = [{ filePath: '', content: documents }];
+
+      const content = (await plugin(
+        schema,
+        docs,
+        { withHooks: true, withComponent: false, withHOC: false },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.content).toContain('JSDOC');
+    });
   });
 
   describe('ResultType', () => {

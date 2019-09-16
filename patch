@@ -1,0 +1,106 @@
+diff --git a/packages/plugins/typescript/react-apollo/src/visitor.ts b/packages/plugins/typescript/react-apollo/src/visitor.ts
+index dc098981..d92009ea 100644
+--- a/packages/plugins/typescript/react-apollo/src/visitor.ts
++++ b/packages/plugins/typescript/react-apollo/src/visitor.ts
+@@ -157,6 +157,37 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
+     return [componentProps, component].join('\n');
+   }
+ 
++  private _buildHooksJSDoc(operationName: string, operationType: string): string {
++    /**
++     * @param baseOptions Options that will be passed into the query, To see a full list of supported options visit: https://www.apollographql.com/docs/react/api/react-hooks/#options
++     */
++    const a: any = null;
++    console.log(a);
++
++    const queryExample = `
++ * const { data, loading, error } = use${operationName}({
++ *   variables: {
++ *     // some vars
++ *   },
++ * });`;
++
++    const mutationExample = `
++ * const [${camelCase(operationName)}, { data, loading, error }] = use${operationName}({
++ *   variables: {
++ *     // some vars
++ *   },
++ * });`;
++
++    return `
++/**
++ * __use${operationName}__
++ *
++ * @param baseOptions options that will be passed into the ${operationType.toLowerCase()}, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#${operationType === 'Mutation' ? 'options-2' : 'options'};
++ *
++ * @example${operationType === 'Mutation' ? mutationExample : queryExample}
++ */`;
++  }
++
+   private _buildHooks(node: OperationDefinitionNode, operationType: string, documentVariableName: string, operationResultType: string, operationVariablesTypes: string): string {
+     const suffix = this._getHookSuffix(node.name.value, operationType);
+     const operationName: string = this.convertName(node.name.value, {
+@@ -168,13 +199,12 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
+     this.imports.add(this.getApolloReactHooksImport());
+ 
+     const hookFns = [
++      this._buildHooksJSDoc(operationName, operationType),
+       `export function use${operationName}(baseOptions?: ApolloReactHooks.${operationType}HookOptions<${operationResultType}, ${operationVariablesTypes}>) {
+         return ApolloReactHooks.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${this.getDocumentNodeVariable(node, documentVariableName)}, baseOptions);
+-      }`
+-    ];
+-    const hookResults = [
+-      `export type ${operationName}HookResult = ReturnType<typeof use${operationName}>;`
++      }`,
+     ];
++    const hookResults = [`export type ${operationName}HookResult = ReturnType<typeof use${operationName}>;`];
+ 
+     if (operationType === 'Query') {
+       const lazyOperationName: string = this.convertName(node.name.value, {
+diff --git a/packages/plugins/typescript/react-apollo/tests/react-apollo.spec.ts b/packages/plugins/typescript/react-apollo/tests/react-apollo.spec.ts
+index f4be0266..7c2bc259 100644
+--- a/packages/plugins/typescript/react-apollo/tests/react-apollo.spec.ts
++++ b/packages/plugins/typescript/react-apollo/tests/react-apollo.spec.ts
+@@ -919,6 +919,42 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
+       `);
+       await validateTypeScript(content, schema, docs, {});
+     });
++
++    it('should generate JSDoc annotations for hooks', async () => {
++      const documents = parse(/* GraphQL */ `
++        query feed {
++          feed {
++            id
++            commentCount
++            repository {
++              full_name
++              html_url
++              owner {
++                avatar_url
++              }
++            }
++          }
++        }
++
++        mutation submitRepository($name: String) {
++          submitRepository(repoFullName: $name) {
++            id
++          }
++        }
++      `);
++      const docs = [{ filePath: '', content: documents }];
++
++      const content = (await plugin(
++        schema,
++        docs,
++        { withHooks: true, withComponent: false, withHOC: false },
++        {
++          outputFile: 'graphql.tsx',
++        }
++      )) as Types.ComplexPluginOutput;
++
++      expect(content.content).toContain('JSDOC');
++    });
+   });
+ 
+   describe('ResultType', () => {
