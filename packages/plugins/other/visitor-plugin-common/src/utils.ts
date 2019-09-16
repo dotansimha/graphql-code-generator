@@ -89,7 +89,7 @@ export class DeclarationBlock {
   _nameGenerics = null;
   _comment = null;
   _ignoreBlockWrapper = false;
-  _flow = false;
+  _isFlow = false;
 
   constructor(private _config: DeclarationBlockConfig) {
     this._config = {
@@ -115,7 +115,7 @@ export class DeclarationBlock {
   }
 
   withFlow(withFlow: boolean): DeclarationBlock {
-    this._flow = withFlow;
+    this._isFlow = withFlow;
 
     return this;
   }
@@ -202,8 +202,8 @@ export class DeclarationBlock {
         result += this._config.blockTransformer!(block);
       }
 
-      if (this._flow && this._content) {
-        result += '}';
+      if (this._isFlow && this._content) {
+        result += blockWrapper + '}';
       }
     } else if (this._content) {
       result += this._content;

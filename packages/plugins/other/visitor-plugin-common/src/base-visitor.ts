@@ -17,6 +17,7 @@ export interface ParsedConfig {
   namespacedImportName: string | null;
   externalFragments: LoadedFragment[];
   isFlow: boolean;
+  useFlowExactObjects: boolean;
 }
 
 export interface RawConfig {
@@ -117,6 +118,7 @@ export interface RawConfig {
   namespacedImportName?: string;
   externalFragments?: LoadedFragment[];
   globalNamespace?: boolean;
+  useFlowExactObjects?: boolean;
 }
 
 export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig extends ParsedConfig = ParsedConfig> {
@@ -133,6 +135,7 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
       addTypename: !rawConfig.skipTypename,
       nonOptionalTypename: !!rawConfig.nonOptionalTypename,
       isFlow: false,
+      useFlowExactObjects: !!rawConfig.useFlowExactObjects,
       ...((additionalConfig || {}) as any),
     };
 

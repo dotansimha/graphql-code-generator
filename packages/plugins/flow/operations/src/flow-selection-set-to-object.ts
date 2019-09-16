@@ -28,7 +28,8 @@ export class FlowSelectionSetToObject extends SelectionSetToObject {
       _visitorConfig.enumPrefix,
       _parentSchemaType,
       _selectionSet,
-      true
+      true,
+      _visitorConfig.useFlowExactObjects
     );
   }
 

@@ -93,7 +93,8 @@ export class SelectionSetToObject {
     protected _enumPrefix: boolean,
     protected _parentSchemaType?: GraphQLNamedType,
     protected _selectionSet?: SelectionSetNode,
-    protected _isFlow?: boolean
+    protected _isFlow?: boolean,
+    protected _useFlowExactObjects?: boolean
   ) {}
 
   public createNext(parentSchemaType: GraphQLNamedType, selectionSet: SelectionSetNode): SelectionSetToObject {
@@ -307,7 +308,9 @@ export class SelectionSetToObject {
     }
 
     if (this._isFlow) {
-      return '{...' + fieldSelectionString + `,\n  ...` + fragmentSelectionString + '}\n';
+      const optionalExactMark = this._useFlowExactObjects ? '|' : '';
+
+      return '{' + optionalExactMark + '...' + fieldSelectionString + `,\n  ...` + fragmentSelectionString + optionalExactMark + '}\n';
     }
     return fieldSelectionString + `\n  & ` + fragmentSelectionString + '\n';
   }
@@ -432,7 +435,9 @@ export class SelectionSetToObject {
       return result[0];
     } else {
       if (this._isFlow) {
-        return `{\n  ...` + result.join(`,\n   ...`) + `\n}`;
+        const optionalExactMark = this._useFlowExactObjects ? '|' : '';
+
+        return `{${optionalExactMark}\n  ...` + result.join(`,\n   ...`) + `\n${optionalExactMark}}`;
       }
       return `(\n  ` + result.join(`\n  & `) + `\n)`;
     }

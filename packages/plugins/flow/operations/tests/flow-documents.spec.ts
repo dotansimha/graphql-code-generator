@@ -1008,10 +1008,10 @@ describe('Flow Operations Plugin', () => {
       );
 
       expect(result).toBeSimilarStringTo(`
-        export type CurrentUserQuery = {| me: ?{
+        export type CurrentUserQuery = {| me: ?{|
           ...$Pick<User, {| id: *, username: *, role: * |}>,
           ...{| profile: ?$Pick<Profile, {| age: * |}> |}
-        } |};
+        |} |};
       `);
 
       validateFlow(result);

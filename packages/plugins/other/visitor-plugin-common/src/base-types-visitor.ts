@@ -231,7 +231,10 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
       }
 
       if (this._parsedConfig.isFlow) {
-        return '{' + '...' + interfaces.join(', ...') + (allFields.length ? ', ...' : '}');
+        const useFlowExactObject = this._parsedConfig.useFlowExactObjects;
+        const optionalExactMark = useFlowExactObject ? '|' : '';
+
+        return '{' + optionalExactMark + '...' + interfaces.join(', ...') + (allFields.length ? ', ...' : optionalExactMark + '}');
       }
 
       return interfaces.join(' & ') + (allFields.length ? ' & ' : '');
