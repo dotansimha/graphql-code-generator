@@ -1,9 +1,15 @@
 import { GraphQLSchema, introspectionFromSchema } from 'graphql';
-import { PluginFunction, PluginValidateFn, Types } from '@graphql-codegen/plugin-helpers';
+import { PluginFunction, PluginValidateFn, Types, removeFederation } from '@graphql-codegen/plugin-helpers';
 import { extname } from 'path';
 
-export const plugin: PluginFunction = async (schema: GraphQLSchema): Promise<string> => {
-  const introspection = introspectionFromSchema(schema, { descriptions: true });
+export const plugin: PluginFunction<{ federation?: boolean }> = async (schema: GraphQLSchema, _documents, pluginConfig): Promise<string> => {
+  const cleanSchema = pluginConfig.federation
+    ? removeFederation(schema, {
+        withDirectives: true,
+      })
+    : schema;
+
+  const introspection = introspectionFromSchema(cleanSchema, { descriptions: true });
 
   return JSON.stringify(introspection);
 };

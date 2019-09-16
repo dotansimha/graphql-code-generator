@@ -1,4 +1,4 @@
-import { GraphQLSchema, visit, parse, buildASTSchema, FieldDefinitionNode, Kind, ObjectTypeDefinitionNode, DirectiveNode, StringValueNode, GraphQLObjectType, isObjectType, isNonNullType, GraphQLNamedType } from 'graphql';
+import { GraphQLSchema, visit, parse, buildASTSchema, FieldDefinitionNode, Kind, ObjectTypeDefinitionNode, DirectiveNode, StringValueNode, GraphQLObjectType, isObjectType, isNonNullType, GraphQLNamedType, printSchema, DocumentNode } from 'graphql';
 import { printSchemaWithDirectives } from 'graphql-toolkit';
 import { getBaseType } from './utils';
 
@@ -7,7 +7,9 @@ interface FieldSetItem {
   required: boolean;
 }
 
-// TODO: we need to include that scala
+/**
+ * Federation Spec
+ */
 export const federationSpec = parse(/* GraphQL */ `
   scalar _FieldSet
 
@@ -17,7 +19,11 @@ export const federationSpec = parse(/* GraphQL */ `
   directive @key(fields: _FieldSet!) on OBJECT | INTERFACE
 `);
 
-export function addFederationToSchema(schema: GraphQLSchema) {
+/**
+ * Adds `__resolveReference` in each ObjectType involved in Federation.
+ * @param schema
+ */
+export function addFederationReferencesToSchema(schema: GraphQLSchema): GraphQLSchema {
   const doc = parse(printSchemaWithDirectives(schema));
   const visited = visit(doc, {
     ObjectTypeDefinition(node) {
@@ -54,6 +60,87 @@ export function addFederationToSchema(schema: GraphQLSchema) {
   });
 }
 
+/**
+ * Turns ObjectType extensions into ObjectTypes
+ * @param ast Schema AST
+ */
+export function turnExtensionsIntoObjectTypes(ast: DocumentNode): DocumentNode {
+  return {
+    ...ast,
+    definitions: ast.definitions.map(def => {
+      if (def.kind !== Kind.OBJECT_TYPE_EXTENSION) {
+        return def;
+      }
+
+      const isDefined = ast.definitions.some(d => d.kind === Kind.OBJECT_TYPE_DEFINITION && d.name.value === def.name.value);
+
+      if (isDefined) {
+        return def;
+      }
+
+      return {
+        ...def,
+        kind: Kind.OBJECT_TYPE_DEFINITION,
+      };
+    }),
+  };
+}
+
+/**
+ * Removes Federation Spec from GraphQL Schema
+ * @param schema
+ * @param config
+ */
+export function removeFederation(
+  schema: GraphQLSchema,
+  {
+    withDirectives,
+  }: {
+    withDirectives: boolean;
+  }
+): GraphQLSchema {
+  const queryTypeName = schema.getQueryType().name;
+  const printedSchema = withDirectives ? printSchemaWithDirectives(schema) : printSchema(schema);
+  const astNode = parse(printedSchema);
+  const emptyNode: void = null;
+  const docWithoutFederation = visit(astNode, {
+    ScalarTypeDefinition(node) {
+      if (node.name.value === '_Any') {
+        return emptyNode;
+      }
+
+      return node;
+    },
+
+    UnionTypeDefinition(node) {
+      if (node.name.value === '_Entity') {
+        return emptyNode;
+      }
+
+      return node;
+    },
+
+    ObjectTypeDefinition(node) {
+      if (node.name.value === '_Service') {
+        return emptyNode;
+      }
+
+      if (node.name.value === queryTypeName) {
+        return {
+          ...node,
+          fields: node.fields.filter(field => ['_entities', '_service'].includes(field.name.value) === false),
+        };
+      }
+
+      return node;
+    },
+  });
+
+  return buildASTSchema(docWithoutFederation, {
+    commentDescriptions: false,
+  });
+}
+
 export class ApolloFederation {
   private enabled = false;
   private schema: GraphQLSchema;
@@ -65,22 +152,42 @@ export class ApolloFederation {
     this.providesMap = this.createMapOfProvides();
   }
 
+  /**
+   * Excludes types definde by Federation
+   * @param typeNames List of type names
+   */
   filterTypeNames(typeNames: string[]): string[] {
     return this.enabled ? typeNames.filter(t => t !== '_FieldSet') : typeNames;
   }
 
+  /**
+   * Excludes `__resolveReference` fields
+   * @param fieldNames List of field names
+   */
   filterFieldNames(fieldNames: string[]): string[] {
     return this.enabled ? fieldNames.filter(t => t !== '__resolveReference') : fieldNames;
   }
 
+  /**
+   * Decides if directive should not be generated
+   * @param name directive's name
+   */
   skipDirective(name: string): boolean {
     return this.enabled && ['external', 'requires', 'provides', 'key'].includes(name);
   }
 
+  /**
+   * Decides if scalar should not be generated
+   * @param name directive's name
+   */
   skipScalar(name: string): boolean {
     return this.enabled && name === '_FieldSet';
   }
 
+  /**
+   * Decides if field should not be generated
+   * @param data
+   */
   skipField({ fieldNode, parentType }: { fieldNode: FieldDefinitionNode; parentType: GraphQLNamedType }): boolean {
     if (!this.enabled || !isObjectType(parentType) || !isFederationObjectType(parentType)) {
       return false;
@@ -89,6 +196,10 @@ export class ApolloFederation {
     return this.isExternalAndNotProvided(fieldNode, parentType);
   }
 
+  /**
+   * Transforms ParentType signature in ObjectTypes involved in Federation
+   * @param data
+   */
   translateParentType({ fieldNode, parentType, parentTypeSignature }: { fieldNode: FieldDefinitionNode; parentType: GraphQLNamedType; parentTypeSignature: string }) {
     if (this.enabled && isObjectType(parentType) && isFederationObjectType(parentType) && fieldNode.name.value === '__resolveReference') {
       const keys = getDirectivesByName('key', parentType);
@@ -188,6 +299,10 @@ export class ApolloFederation {
   }
 }
 
+/**
+ * Checks if Object Type is involved in Federation. Based on `@key` directive
+ * @param node Type
+ */
 function isFederationObjectType(node: ObjectTypeDefinitionNode | GraphQLObjectType): boolean {
   const name = isObjectType(node) ? node.name : node.name.value;
   const directives = isObjectType(node) ? node.astNode.directives : node.directives;
@@ -203,6 +318,11 @@ function deduplicate<T>(items: T[]): T[] {
   return items.filter((item, i) => items.indexOf(item) === i);
 }
 
+/**
+ * Extracts directives from a node based on directive's name
+ * @param name directive name
+ * @param node ObjectType or Field
+ */
 function getDirectivesByName(name: string, node: ObjectTypeDefinitionNode | GraphQLObjectType | FieldDefinitionNode): readonly DirectiveNode[] {
   let astNode: ObjectTypeDefinitionNode | FieldDefinitionNode;
 

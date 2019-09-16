@@ -12,4 +12,3 @@ export * from './client-side-base-visitor';
 
 export * from './variables-to-object';
 export * from './selection-set-to-object';
-export * from './federation';

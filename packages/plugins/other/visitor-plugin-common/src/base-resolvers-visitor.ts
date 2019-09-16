@@ -2,7 +2,7 @@ import { ParsedConfig, RawConfig, BaseVisitor } from './base-visitor';
 import * as autoBind from 'auto-bind';
 import { DEFAULT_SCALARS } from './scalars';
 import { NormalizedScalarsMap, EnumValuesMap, ParsedEnumValuesMap } from './types';
-import { DeclarationBlock, DeclarationBlockConfig, indent, getBaseTypeNode, buildScalars, getConfigValue, getBaseType, getRootTypeNames, stripMapperTypeInterpolation, OMIT_TYPE, REQUIRE_FIELDS_TYPE } from './utils';
+import { DeclarationBlock, DeclarationBlockConfig, indent, getBaseTypeNode, buildScalars, getConfigValue, getRootTypeNames, stripMapperTypeInterpolation, OMIT_TYPE, REQUIRE_FIELDS_TYPE } from './utils';
 import {
   NameNode,
   ListTypeNode,
@@ -26,7 +26,7 @@ import { DirectiveDefinitionNode, GraphQLObjectType, InputValueDefinitionNode, G
 import { OperationVariablesToObject } from './variables-to-object';
 import { ParsedMapper, parseMapper, transformMappers, ExternalParsedMapper } from './mappers';
 import { parseEnumValues } from './enum-values';
-import { ApolloFederation } from './federation';
+import { ApolloFederation, getBaseType } from '@graphql-codegen/plugin-helpers';
 
 export interface ParsedResolversConfig extends ParsedConfig {
   contextType: ParsedMapper;

@@ -1,5 +1,5 @@
 import { Types, isComplexPluginOutput } from '@graphql-codegen/plugin-helpers';
-import { visit, buildASTSchema, Kind } from 'graphql';
+import { visit, buildASTSchema } from 'graphql';
 import { mergeSchemas } from './merge-schemas';
 import { executePlugin } from './execute-plugin';
 import { DetailedError } from './errors';
@@ -30,36 +30,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
   }, options.schema);
 
   if (schemaChanged) {
-    // It's for federation, to support extended types without their definitions
-    if (options.config.federation) {
-      schema = {
-        ...schema,
-        definitions: schema.definitions.map(def => {
-          if (def.kind !== Kind.OBJECT_TYPE_EXTENSION) {
-            return def;
-          }
-
-          const isDefined = schema.definitions.some(d => d.kind === Kind.OBJECT_TYPE_DEFINITION && d.name.value === def.name.value);
-
-          if (isDefined) {
-            return def;
-          }
-
-          return {
-            ...def,
-            kind: Kind.OBJECT_TYPE_DEFINITION,
-          };
-        }),
-      };
-    }
-    options.schemaAst = buildASTSchema(
-      schema,
-      options.config.federation
-        ? {
-            assumeValidSDL: true,
-          }
-        : undefined
-    );
+    options.schemaAst = buildASTSchema(schema);
   }
 
   const prepend: Set<string> = new Set<string>();

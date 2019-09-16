@@ -1,5 +1,5 @@
 import { GraphQLSchema, parse, execute } from 'graphql';
-import { PluginFunction, PluginValidateFn, Types } from '@graphql-codegen/plugin-helpers';
+import { PluginFunction, PluginValidateFn, Types, removeFederation } from '@graphql-codegen/plugin-helpers';
 import { extname } from 'path';
 
 interface IntrospectionResultData {
@@ -18,6 +18,7 @@ interface IntrospectionResultData {
 
 export interface FragmentMatcherConfig {
   module?: 'commonjs' | 'es2015';
+  federation?: boolean;
 }
 
 const extensions = {
@@ -29,11 +30,18 @@ const extensions = {
 export const plugin: PluginFunction = async (schema: GraphQLSchema, _documents, pluginConfig: FragmentMatcherConfig, info): Promise<string> => {
   const config: Required<FragmentMatcherConfig> = {
     module: 'es2015',
+    federation: false,
     ...pluginConfig,
   };
 
+  const cleanSchema = config.federation
+    ? removeFederation(schema, {
+        withDirectives: false,
+      })
+    : schema;
+
   const introspection = await execute<IntrospectionResultData>({
-    schema,
+    schema: cleanSchema,
     document: parse(`
       {
         __schema {

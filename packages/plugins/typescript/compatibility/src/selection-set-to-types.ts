@@ -1,4 +1,5 @@
-import { BaseVisitor, getBaseType } from '@graphql-codegen/visitor-plugin-common';
+import { BaseVisitor } from '@graphql-codegen/visitor-plugin-common';
+import { getBaseType } from '@graphql-codegen/plugin-helpers';
 import { SelectionSetNode, isObjectType, isInterfaceType, isNonNullType, isListType, Kind, GraphQLSchema, isUnionType } from 'graphql';
 import { CompatabilityPluginRawConfig } from './index';
 import { CompatabilityPluginConfig } from './visitor';
