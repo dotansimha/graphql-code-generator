@@ -39,7 +39,7 @@ export async function executePlugin(options: ExecutePluginOptions, plugin: Codeg
   let schema = options.schemaAst;
 
   if (isFederation) {
-    schema = buildASTSchema(schema ? mergeSchemas([schema, federationSpec]) : turnExtensionsIntoObjectTypes(options.schema), {
+    schema = buildASTSchema(turnExtensionsIntoObjectTypes(mergeSchemas([schema || options.schema, federationSpec])), {
       assumeValidSDL: true,
     });
   }
