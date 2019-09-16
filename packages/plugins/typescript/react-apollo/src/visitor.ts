@@ -167,8 +167,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     const queryDescription = `
  * To run a query within a React component, call \`use${operationName}\` and pass it any options that fit your needs.
  * When your component renders, \`use${operationName}\` returns an object from Apollo Client that contains loading, error, and data properties 
- * you can use to render your UI.
-`;
+ * you can use to render your UI.`;
 
     const queryExample = `
  * const { data, loading, error } = use${operationName}({
@@ -180,8 +179,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
  * To run a mutation, you first call \`use${operationName}\` within a React component and pass it any options that fit your needs.
  * When your component renders, \`use${operationName}\` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
-`;
+ * - An object with fields that represent the current status of the mutation's execution`;
 
     const mutationExample = `
  * const [${camelCase(operationName)}, { data, loading, error }] = use${operationName}({
