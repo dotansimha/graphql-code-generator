@@ -18,13 +18,13 @@ import {
   isListType,
   isNonNullType,
   GraphQLOutputType,
-  isAbstractType,
 } from 'graphql';
-import { DeclarationBlock } from './utils';
+import { getPossibleTypes, separateSelectionSet, getFieldNodeNameValue, DeclarationBlock, mergeSelectionSets } from './utils';
 import { NormalizedScalarsMap, ConvertNameFn, LoadedFragment } from './types';
 import { GraphQLObjectType, GraphQLNonNull, GraphQLList } from 'graphql';
 import { BaseVisitorConvertOptions } from './base-visitor';
 import { getBaseType } from '@graphql-codegen/plugin-helpers';
+import { ParsedDocumentsConfig } from './base-documents-visitor';
 
 export type PrimitiveField = string;
 export type PrimitiveAliasedFields = { alias: string; fieldName: string };
@@ -40,41 +40,7 @@ const metadataFieldMap: Record<string, GraphQLField<any, any>> = {
   __type: TypeMetaFieldDef,
 };
 
-const getFieldNodeNameValue = (node: FieldNode): string => {
-  return (node.alias || node.name).value;
-};
-
-const mergeSelectionSets = (selectionSet1: SelectionSetNode, selectionSet2: SelectionSetNode) => {
-  const newSelections = [...selectionSet1.selections];
-
-  for (const selection2 of selectionSet2.selections) {
-    if (selection2.kind === 'FragmentSpread') {
-      newSelections.push(selection2);
-      continue;
-    }
-
-    if (selection2.kind !== 'Field') {
-      throw new TypeError('Invalid state.');
-    }
-
-    const match = newSelections.find(selection1 => selection1.kind === 'Field' && getFieldNodeNameValue(selection1) === getFieldNodeNameValue(selection2));
-
-    if (match) {
-      // recursively merge all selection sets
-      if (match.kind === 'Field' && match.selectionSet && selection2.selectionSet) {
-        mergeSelectionSets(match.selectionSet, selection2.selectionSet);
-      }
-      continue;
-    }
-
-    newSelections.push(selection2);
-  }
-
-  // replace existing selections
-  selectionSet1.selections = newSelections;
-};
-
-export class SelectionSetToObject {
+export class SelectionSetToObject<C extends ParsedDocumentsConfig = ParsedDocumentsConfig> {
   protected _primitiveFields: PrimitiveField[] = [];
   protected _primitiveAliasedFields: PrimitiveAliasedFields[] = [];
   protected _linksFields: LinkField[] = [];
@@ -85,13 +51,8 @@ export class SelectionSetToObject {
     protected _scalars: NormalizedScalarsMap,
     protected _schema: GraphQLSchema,
     protected _convertName: ConvertNameFn<BaseVisitorConvertOptions>,
-    protected _addTypename: boolean,
-    protected _preResolveTypes: boolean,
-    protected _nonOptionalTypename: boolean,
     protected _loadedFragments: LoadedFragment[],
-    protected _namespacedImportName: string | null,
-    protected _dedupeOperationSuffix: boolean,
-    protected _enumPrefix: boolean,
+    protected _config: C,
     protected _parentSchemaType?: GraphQLNamedType,
     protected _selectionSet?: SelectionSetNode
   ) {}
@@ -104,14 +65,6 @@ export class SelectionSetToObject {
     throw new Error(`You must override wrapTypeWithModifiers in your SelectionSetToObject implementation!`);
   }
 
-  private separateSelectionSet(selections: ReadonlyArray<SelectionNode>): { fields: FieldNode[]; spreads: FragmentSpreadNode[]; inlines: InlineFragmentNode[] } {
-    return {
-      fields: selections.filter(s => s.kind === Kind.FIELD) as FieldNode[],
-      inlines: selections.filter(s => s.kind === Kind.INLINE_FRAGMENT) as InlineFragmentNode[],
-      spreads: selections.filter(s => s.kind === Kind.FRAGMENT_SPREAD) as FragmentSpreadNode[],
-    };
-  }
-
   /**
    * traverse the inline fragment nodes recursively for colleting the selectionSets on each type
    */
@@ -121,7 +74,7 @@ export class SelectionSetToObject {
     } else if (isObjectType(parentType)) {
       for (const node of nodes) {
         const typeOnSchema = node.typeCondition ? this._schema.getType(node.typeCondition.name.value) : parentType;
-        const { fields, inlines, spreads } = this.separateSelectionSet(node.selectionSet.selections);
+        const { fields, inlines, spreads } = separateSelectionSet(node.selectionSet.selections);
         const spreadsUsage = this.buildFragmentSpreadsUsage(spreads);
 
         if (isObjectType(typeOnSchema)) {
@@ -135,11 +88,11 @@ export class SelectionSetToObject {
         }
       }
     } else if (isInterfaceType(parentType)) {
-      const possibleTypes = this._getPossibleTypes(parentType);
+      const possibleTypes = getPossibleTypes(this._schema, parentType);
 
       for (const node of nodes) {
         const schemaType = node.typeCondition ? this._schema.getType(node.typeCondition.name.value) : parentType;
-        const { fields, inlines, spreads } = this.separateSelectionSet(node.selectionSet.selections);
+        const { fields, inlines, spreads } = separateSelectionSet(node.selectionSet.selections);
         const spreadsUsage = this.buildFragmentSpreadsUsage(spreads);
 
         if (isObjectType(schemaType) && possibleTypes.find(possibleType => possibleType.name === schemaType.name)) {
@@ -159,7 +112,7 @@ export class SelectionSetToObject {
 
       for (const node of nodes) {
         const schemaType = node.typeCondition ? this._schema.getType(node.typeCondition.name.value) : parentType;
-        const { fields, inlines, spreads } = this.separateSelectionSet(node.selectionSet.selections);
+        const { fields, inlines, spreads } = separateSelectionSet(node.selectionSet.selections);
         const spreadsUsage = this.buildFragmentSpreadsUsage(spreads);
 
         if (isObjectType(schemaType) && possibleTypes.find(possibleType => possibleType.name === schemaType.name)) {
@@ -167,7 +120,7 @@ export class SelectionSetToObject {
           this._appendToTypeMap(types, schemaType.name, spreadsUsage[schemaType.name]);
           this._collectInlineFragments(schemaType, inlines, types);
         } else if (isInterfaceType(schemaType)) {
-          const possibleInterfaceTypes = this._getPossibleTypes(schemaType);
+          const possibleInterfaceTypes = getPossibleTypes(this._schema, schemaType);
 
           for (const possibleType of possibleTypes) {
             if (possibleInterfaceTypes.find(possibleInterfaceType => possibleInterfaceType.name === possibleType.name)) {
@@ -179,18 +132,6 @@ export class SelectionSetToObject {
         }
       }
     }
-  }
-
-  protected _getPossibleTypes(type: GraphQLNamedType): GraphQLObjectType[] {
-    if (isListType(type) || isNonNullType(type)) {
-      return this._getPossibleTypes(type.ofType);
-    } else if (isObjectType(type)) {
-      return [type];
-    } else if (isAbstractType(type)) {
-      return this._schema.getPossibleTypes(type) as Array<GraphQLObjectType>;
-    }
-
-    return [];
   }
 
   protected _createInlineFragmentForFieldNodes(parentType: GraphQLNamedType, fieldNodes: FieldNode[]): InlineFragmentNode {
@@ -219,10 +160,10 @@ export class SelectionSetToObject {
 
       if (fragmentSpreadObject) {
         const schemaType = this._schema.getType(fragmentSpreadObject.onType);
-        const possibleTypesForFragment = this._getPossibleTypes(schemaType);
+        const possibleTypesForFragment = getPossibleTypes(this._schema, schemaType);
 
         for (const possibleType of possibleTypesForFragment) {
-          const fragmentSuffix = this._dedupeOperationSuffix && spread.name.value.toLowerCase().endsWith('fragment') ? '' : 'Fragment';
+          const fragmentSuffix = this._config.dedupeOperationSuffix && spread.name.value.toLowerCase().endsWith('fragment') ? '' : 'Fragment';
           const usage = this.buildFragmentTypeName(spread.name.value, fragmentSuffix, possibleTypesForFragment.length === 1 ? null : possibleType.name);
 
           if (!selectionNodesByTypeName[possibleType.name]) {
@@ -288,7 +229,7 @@ export class SelectionSetToObject {
 
     const selectionNodesByTypeName = this.flattenSelectionSet(this._selectionSet.selections);
 
-    const grouped = this._getPossibleTypes(this._parentSchemaType).reduce(
+    const grouped = getPossibleTypes(this._schema, this._parentSchemaType).reduce(
       (prev, type) => {
         const typeName = type.name;
         const schemaType = this._schema.getType(typeName);
@@ -391,14 +332,14 @@ export class SelectionSetToObject {
     }
 
     const parentName =
-      (this._namespacedImportName ? `${this._namespacedImportName}.` : '') +
+      (this._config.namespacedImportName ? `${this._config.namespacedImportName}.` : '') +
       this._convertName(parentSchemaType.name, {
         useTypesPrefix: true,
       });
 
-    const typeInfoField = this.buildTypeNameField(parentSchemaType, this._nonOptionalTypename, this._addTypename, requireTypename);
+    const typeInfoField = this.buildTypeNameField(parentSchemaType, this._config.nonOptionalTypename, this._config.addTypename, requireTypename);
 
-    if (this._preResolveTypes) {
+    if (this._config.preResolveTypes) {
       const primitiveFieldsTypes = this.buildPrimitiveFieldsWithoutPick(parentSchemaType, Array.from(primitiveFields.values()).map(field => field.name.value));
       const primitiveAliasTypes = this.buildAliasedPrimitiveFieldsWithoutPick(parentSchemaType, Array.from(primitiveAliasFields.values()).map(field => ({ alias: field.alias.value, fieldName: field.name.value })));
       const linkFieldsTypes = this.buildLinkFieldsWithoutPick(linkFields);
@@ -479,7 +420,7 @@ export class SelectionSetToObject {
       let typeToUse = baseType.name;
 
       if (isEnumType(baseType)) {
-        typeToUse = (this._namespacedImportName ? `${this._namespacedImportName}.` : '') + this._convertName(baseType.name, { useTypesPrefix: this._enumPrefix });
+        typeToUse = (this._config.namespacedImportName ? `${this._config.namespacedImportName}.` : '') + this._convertName(baseType.name, { useTypesPrefix: this._config.enumPrefix });
       } else if (this._scalars[baseType.name]) {
         typeToUse = this._scalars[baseType.name];
       }
@@ -493,7 +434,12 @@ export class SelectionSetToObject {
     });
   }
 
-  protected buildTypeNameField(type: GraphQLObjectType, nonOptionalTypename: boolean = this._nonOptionalTypename, addTypename: boolean = this._addTypename, queriedForTypename: boolean = this._queriedForTypename): { name: string; type: string } {
+  protected buildTypeNameField(
+    type: GraphQLObjectType,
+    nonOptionalTypename: boolean = this._config.nonOptionalTypename,
+    addTypename: boolean = this._config.addTypename,
+    queriedForTypename: boolean = this._queriedForTypename
+  ): { name: string; type: string } {
     if (nonOptionalTypename || addTypename || queriedForTypename) {
       const optionalTypename = !queriedForTypename && !nonOptionalTypename;
 
@@ -581,7 +527,7 @@ export class SelectionSetToObject {
       ...subTypes.map(
         t =>
           new DeclarationBlock(declarationBlockConfig)
-            .export()
+            .export(this._config.exportFragmentSpreadSubTypes)
             .asKind('type')
             .withName(t.name)
             .withContent(t.content).string

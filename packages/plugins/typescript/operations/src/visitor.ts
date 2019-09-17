@@ -23,7 +23,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<TypeScriptD
       schema
     );
 
-    this.setSelectionSetHandler(new TypeScriptSelectionSetToObject(this.scalars, this.schema, this.convertName, this.config.addTypename, this.config.preResolveTypes, this.config.nonOptionalTypename, allFragments, this.config));
+    this.setSelectionSetHandler(new TypeScriptSelectionSetToObject(this.scalars, this.schema, this.convertName, allFragments, this.config));
     this.setVariablesTransformer(new TypeScriptOperationVariablesToObject(this.scalars, this.convertName, this.config.avoidOptionals, this.config.immutableTypes, this.config.namespacedImportName));
     this._declarationBlockConfig = {
       ignoreExport: this.config.noExport,

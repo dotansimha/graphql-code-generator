@@ -2921,14 +2921,14 @@ describe('TypeScript Operations Plugin', () => {
         & Pick<AdditionalInfo, 'message'>
       );
   
-      export type UserResult1_User_Fragment = (
+      type UserResult1_User_Fragment = (
         { __typename?: 'User' }
         & Pick<User, 'id'>
       );
   
-      export type UserResult1_Error2_Fragment = { __typename?: 'Error2' };
+      type UserResult1_Error2_Fragment = { __typename?: 'Error2' };
   
-      export type UserResult1_Error3_Fragment = (
+      type UserResult1_Error3_Fragment = (
         { __typename?: 'Error3' }
         & { info: Maybe<(
           { __typename?: 'AdditionalInfo' }
@@ -2938,17 +2938,17 @@ describe('TypeScript Operations Plugin', () => {
   
       export type UserResult1Fragment = UserResult1_User_Fragment | UserResult1_Error2_Fragment | UserResult1_Error3_Fragment;
   
-      export type UserResult_User_Fragment = (
+      type UserResult_User_Fragment = (
         { __typename?: 'User' }
         & Pick<User, 'id'>
       );
   
-      export type UserResult_Error2_Fragment = (
+      type UserResult_Error2_Fragment = (
         { __typename?: 'Error2' }
         & Pick<Error2, 'message'>
       );
   
-      export type UserResult_Error3_Fragment = { __typename?: 'Error3' };
+      type UserResult_Error3_Fragment = { __typename?: 'Error3' };
   
       export type UserResultFragment = UserResult_User_Fragment | UserResult_Error2_Fragment | UserResult_Error3_Fragment;`);
     });
@@ -3004,12 +3004,12 @@ describe('TypeScript Operations Plugin', () => {
         & { fooBar: Array<( { __typename?: 'Foo' } & FooBarFragment_Foo_Fragment ) | ( { __typename?: 'Bar' } & FooBarFragment_Bar_Fragment )> }
       );
 
-      export type FooBarFragment_Foo_Fragment = (
+      type FooBarFragment_Foo_Fragment = (
         { __typename?: 'Foo' }
         & Pick<Foo, 'id'>
       );
 
-      export type FooBarFragment_Bar_Fragment = (
+      type FooBarFragment_Bar_Fragment = (
         { __typename?: 'Bar' }
         & Pick<Bar, 'id'>
       );
