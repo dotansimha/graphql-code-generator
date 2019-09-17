@@ -40,7 +40,7 @@ const metadataFieldMap: Record<string, GraphQLField<any, any>> = {
   __type: TypeMetaFieldDef,
 };
 
-export class SelectionSetToObject<C extends ParsedDocumentsConfig = ParsedDocumentsConfig> {
+export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedDocumentsConfig> {
   protected _primitiveFields: PrimitiveField[] = [];
   protected _primitiveAliasedFields: PrimitiveAliasedFields[] = [];
   protected _linksFields: LinkField[] = [];
@@ -52,7 +52,7 @@ export class SelectionSetToObject<C extends ParsedDocumentsConfig = ParsedDocume
     protected _schema: GraphQLSchema,
     protected _convertName: ConvertNameFn<BaseVisitorConvertOptions>,
     protected _loadedFragments: LoadedFragment[],
-    protected _config: C,
+    protected _config: Config,
     protected _parentSchemaType?: GraphQLNamedType,
     protected _selectionSet?: SelectionSetNode
   ) {}
