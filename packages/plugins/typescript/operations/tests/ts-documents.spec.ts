@@ -1998,7 +1998,7 @@ describe('TypeScript Operations Plugin', () => {
       `);
     });
 
-    it('should use __typename in fragments when requested', async () => {
+    it.only('should use __typename in fragments when requested', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         type Post {
           title: String
@@ -2661,6 +2661,108 @@ describe('TypeScript Operations Plugin', () => {
       `);
     });
 
+    it('Should merge inline fragments fields correctly', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type User {
+          id: ID!
+          login: String!
+        }
+
+        type Query {
+          user: User!
+        }
+      `);
+
+      const query = parse(/* GraphQL */ `
+        query UserQuery {
+          user {
+            ... on User {
+              id
+            }
+
+            ... on User {
+              login
+            }
+          }
+        }
+      `);
+
+      const content = await plugin(
+        testSchema,
+        [{ filePath: '', content: query }],
+        {},
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      const o = await validate(content, {}, testSchema);
+
+      expect(o).toBeSimilarStringTo(`
+      export type UserQueryQuery = (
+        { __typename?: 'Query' }
+        & { user: (
+          { __typename?: 'User' }
+          & Pick<User, 'id' | 'login'>
+        ) }
+      );
+      `);
+    });
+
+    it('Should merge inline fragments fields correctly with fragment spread over the same type', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type User {
+          id: ID!
+          login: String!
+        }
+
+        type Query {
+          user: User!
+        }
+      `);
+
+      const query = parse(/* GraphQL */ `
+        query UserQuery {
+          user {
+            ... on User {
+              id
+            }
+
+            ...test
+          }
+        }
+
+        fragment test on User {
+          login
+        }
+      `);
+
+      const content = await plugin(
+        testSchema,
+        [{ filePath: '', content: query }],
+        {},
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      const o = await validate(content, {}, testSchema);
+
+      expect(o).toBeSimilarStringTo(`
+      export type UserQueryQuery = (
+        { __typename?: 'Query' }
+        & { user: ( (
+          { __typename?: 'User' }
+          & Pick<User, 'id'>
+        ) & TestFragment ) }
+      );`);
+
+      expect(o).toBeSimilarStringTo(`export type TestFragment = (
+        { __typename?: 'User' }
+        & Pick<User, 'login'>
+      );`);
+    });
+
     it('Should handle union selection sets with both FragmentSpreads and InlineFragments', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         interface Error {
@@ -2686,24 +2788,34 @@ describe('TypeScript Operations Plugin', () => {
         }
 
         union UserResult = User | Error2 | Error3
+
         type Query {
           user: UserResult!
         }
       `);
 
-      const fragment1 = parse(/* GraphQL */ `
-        fragment UserResultFragment on UserResult {
-          ... on User {
-            id
-          }
-          ... on Error2 {
-            message
+      const query = parse(/* GraphQL */ `
+        query UserQuery {
+          user {
+            ...UserResult
+            ...UserResult1
+            ... on User {
+              login
+            }
+            ... on Error3 {
+              message
+              info {
+                ...AdditionalInfo
+              }
+            }
           }
         }
-      `);
 
-      const fragment2 = parse(/* GraphQL */ `
-        fragment UserResult1Fragment on UserResult {
+        fragment AdditionalInfo on AdditionalInfo {
+          message
+        }
+
+        fragment UserResult1 on UserResult {
           ... on User {
             id
           }
@@ -2713,82 +2825,99 @@ describe('TypeScript Operations Plugin', () => {
             }
           }
         }
-      `);
 
-      const fragment3 = parse(/* GraphQL */ `
-        fragment AdditionalInfoFragment on AdditionalInfo {
-          message
-        }
-      `);
-
-      const query = parse(/* GraphQL */ `
-        query UserQuery {
-          user {
-            ...UserResultFragment
-            ...UserResult1Fragment
-            ... on User {
-              login
-            }
-            ... on Error3 {
-              message
-              info {
-                ...AdditionalInfoFragment
-              }
-            }
+        fragment UserResult on UserResult {
+          ... on User {
+            id
+          }
+          ... on Error2 {
+            message
           }
         }
       `);
 
       const content = await plugin(
         testSchema,
-        [{ filePath: '', content: query }, { filePath: '', content: fragment1 }, { filePath: '', content: fragment2 }, { filePath: '', content: fragment3 }],
+        [{ filePath: '', content: query }],
         {},
         {
           outputFile: 'graphql.ts',
         }
       );
 
-      expect(content).toBeSimilarStringTo(`
-        export type UserQueryQuery = (
-          { __typename?: 'Query' }
-          & { user: (
-            { __typename?: 'User' }
-            & Pick<User, 'login'>
-          ) | { __typename?: 'Error2' } | (
-            { __typename?: 'Error3' }
-            & Pick<Error3, 'message'>
-            & { info: Maybe<AdditionalInfoFragmentFragment> }
-          )
-            & UserResultFragmentFragment
-            & UserResult1FragmentFragment
-           }
-        );
+      const output = await validateAndCompile(
+        content,
+        {},
+        testSchema,
+        `
+        function t(q: UserQueryQuery) {
+            if (q.user) {
+                if (q.user.__typename === 'User') {
+                    if (q.user.id) {
+                        const u = q.user.login;
+                    }
+                }
+                if (q.user.__typename === 'Error2') {
+                    console.log(q.user.message);
+                }
+                if (q.user.__typename === 'Error3') {
+                    if (q.user.info) {
+                        console.log(q.user.info.__typename)
+                    }
+                }
+            }
+        }`
+      );
 
-        export type UserResultFragmentFragment = (
+      expect(output).toBeSimilarStringTo(`
+      export type UserQueryQuery = (
+        { __typename?: 'Query' }
+        & { user: ( (
           { __typename?: 'User' }
-          & Pick<User, 'id'>
-        ) | (
-          { __typename?: 'Error2' }
-          & Pick<Error2, 'message'>
-        ) | { __typename?: 'Error3' };
-
-        export type UserResult1FragmentFragment = (
-          { __typename?: 'User' }
-          & Pick<User, 'id'>
-        ) | { __typename?: 'Error2' } | (
+          & Pick<User, 'login'>
+        ) & UserResult_User_Fragment & UserResult1_User_Fragment ) | ( { __typename?: 'Error2' } & UserResult_Error2_Fragment & UserResult1_Error2_Fragment ) | ( (
           { __typename?: 'Error3' }
-          & { info: Maybe<(
-            { __typename?: 'AdditionalInfo' }
-            & Pick<AdditionalInfo, 'message2'>
-          )> }
-        );
+          & Pick<Error3, 'message'>
+          & { info: Maybe<AdditionalInfoFragment> }
+        ) & UserResult_Error3_Fragment & UserResult1_Error3_Fragment ) }
+      );`);
 
-        export type AdditionalInfoFragmentFragment = (
+      expect(output).toBeSimilarStringTo(`
+      export type AdditionalInfoFragment = (
+        { __typename?: 'AdditionalInfo' }
+        & Pick<AdditionalInfo, 'message'>
+      );
+  
+      export type UserResult1_User_Fragment = (
+        { __typename?: 'User' }
+        & Pick<User, 'id'>
+      );
+  
+      export type UserResult1_Error2_Fragment = { __typename?: 'Error2' };
+  
+      export type UserResult1_Error3_Fragment = (
+        { __typename?: 'Error3' }
+        & { info: Maybe<(
           { __typename?: 'AdditionalInfo' }
-          & Pick<AdditionalInfo, 'message'>
-        );
-      `);
-      await validate(content, {}, testSchema);
+          & Pick<AdditionalInfo, 'message2'>
+        )> }
+      );
+  
+      export type UserResult1Fragment = UserResult1_User_Fragment | UserResult1_Error2_Fragment | UserResult1_Error3_Fragment;
+  
+      export type UserResult_User_Fragment = (
+        { __typename?: 'User' }
+        & Pick<User, 'id'>
+      );
+  
+      export type UserResult_Error2_Fragment = (
+        { __typename?: 'Error2' }
+        & Pick<Error2, 'message'>
+      );
+  
+      export type UserResult_Error3_Fragment = { __typename?: 'Error3' };
+  
+      export type UserResultFragment = UserResult_User_Fragment | UserResult_Error2_Fragment | UserResult_Error3_Fragment;`);
     });
   });
 
@@ -2837,18 +2966,22 @@ describe('TypeScript Operations Plugin', () => {
       );
 
       expect(content).toBeSimilarStringTo(`
-        export type TestQueryQuery = (
-          { __typename?: 'Query' }
-          & { fooBar: Array<FooBarFragmentFragment> }
-        );
+      export type TestQueryQuery = (
+        { __typename?: 'Query' }
+        & { fooBar: Array<( { __typename?: 'Foo' } & FooBarFragment_Foo_Fragment ) | ( { __typename?: 'Bar' } & FooBarFragment_Bar_Fragment )> }
+      );
 
-        export type FooBarFragmentFragment = (
-          { __typename?: 'Foo' }
-          & Pick<Foo, 'id'>
-        ) | (
-          { __typename?: 'Bar' }
-          & Pick<Bar, 'id'>
-        );
+      export type FooBarFragment_Foo_Fragment = (
+        { __typename?: 'Foo' }
+        & Pick<Foo, 'id'>
+      );
+
+      export type FooBarFragment_Bar_Fragment = (
+        { __typename?: 'Bar' }
+        & Pick<Bar, 'id'>
+      );
+
+      export type FooBarFragmentFragment = FooBarFragment_Foo_Fragment | FooBarFragment_Bar_Fragment;
       `);
     });
 
@@ -2899,10 +3032,10 @@ describe('TypeScript Operations Plugin', () => {
       );
 
       expect(content).toBeSimilarStringTo(`
-        export type ProductFragmentFragment = (
-          { __typename?: 'Product' }
-          & Pick<Product, 'id' | 'title'>
-        );
+      export type ProductFragmentFragment = (
+        { __typename?: 'Product' }
+        & Pick<Product, 'id' | 'title'>
+      );
 
         export type PriceFragmentFragment = (
           { __typename?: 'Price' }

@@ -140,16 +140,7 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
     const selectionSet = this._selectionSetToObject.createNext(fragmentRootType, node.selectionSet);
     const fragmentSuffix = this.config.dedupeOperationSuffix && node.name.value.toLowerCase().endsWith('fragment') ? '' : 'Fragment';
 
-    return new DeclarationBlock(this._declarationBlockConfig)
-      .export()
-      .asKind('type')
-      .withName(
-        this.convertName(node, {
-          useTypesPrefix: true,
-          suffix: fragmentSuffix,
-        })
-      )
-      .withContent(selectionSet.string).string;
+    return selectionSet.transformFragmentSelectionSetToTypes(node.name.value, fragmentSuffix, this._declarationBlockConfig);
   }
 
   OperationDefinition(node: OperationDefinitionNode): string {
@@ -172,7 +163,7 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
           suffix: operationTypeSuffix + this._parsedConfig.operationResultSuffix,
         })
       )
-      .withContent(selectionSet.string).string;
+      .withContent(selectionSet.transformOperationSelectionSet()).string;
 
     const operationVariables = new DeclarationBlock(this._declarationBlockConfig)
       .export()

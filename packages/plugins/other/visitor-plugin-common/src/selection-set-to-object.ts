@@ -20,7 +20,7 @@ import {
   GraphQLOutputType,
   isAbstractType,
 } from 'graphql';
-import { getBaseType } from './utils';
+import { DeclarationBlock, getBaseType } from './utils';
 import { NormalizedScalarsMap, ConvertNameFn, LoadedFragment } from './types';
 import { GraphQLObjectType, GraphQLNonNull, GraphQLList } from 'graphql';
 import { BaseVisitorConvertOptions } from './base-visitor';
@@ -106,7 +106,7 @@ export class SelectionSetToObject {
   /**
    * traverse the inline fragment nodes recursively for colleting the selectionSets on each type
    */
-  _collectInlineFragments(parentType: GraphQLNamedType, nodes: InlineFragmentNode[], types: Map<string, SelectionNode[]>) {
+  _collectInlineFragments(parentType: GraphQLNamedType, nodes: InlineFragmentNode[], types: Map<string, Array<SelectionNode>>) {
     if (isListType(parentType) || isNonNullType(parentType)) {
       return this._collectInlineFragments(parentType.ofType, nodes, types);
     } else if (isObjectType(parentType)) {
@@ -230,9 +230,35 @@ export class SelectionSetToObject {
     };
   }
 
-  get string(): string {
+  protected buildFragmentSpreadsUsage(spreads: FragmentSpreadNode[]): Record<string, string[]> {
+    const selectionNodesByTypeName = {};
+
+    for (const spread of spreads) {
+      const fragmentSpreadObject = this._loadedFragments.find(lf => lf.name === spread.name.value);
+
+      if (fragmentSpreadObject) {
+        const schemaType = this._schema.getType(fragmentSpreadObject.onType);
+        const possibleTypesForFragment = this._getPossibleTypes(schemaType);
+
+        for (const possibleType of possibleTypesForFragment) {
+          const fragmentSuffix = this._dedupeOperationSuffix && spread.name.value.toLowerCase().endsWith('fragment') ? '' : 'Fragment';
+          const usage = this.buildFragmentTypeName(spread.name.value, fragmentSuffix, possibleTypesForFragment.length === 1 ? null : possibleType.name);
+
+          if (!selectionNodesByTypeName[possibleType.name]) {
+            selectionNodesByTypeName[possibleType.name] = [];
+          }
+
+          selectionNodesByTypeName[possibleType.name].push(usage);
+        }
+      }
+    }
+
+    return selectionNodesByTypeName;
+  }
+
+  protected _buildGroupedSelections(): Record<string, string[]> {
     if (!this._selectionSet || !this._selectionSet.selections || this._selectionSet.selections.length === 0) {
-      return '';
+      return {};
     }
 
     const { selections } = this._selectionSet;
@@ -259,19 +285,22 @@ export class SelectionSetToObject {
       inlineFragmentSelections.push(this._createInlineFragmentForFieldNodes(this._parentSchemaType, fieldNodes));
     }
 
-    const selectionNodesByTypeName = new Map<string, SelectionNode[]>();
+    const selectionNodesByTypeName = new Map<string, Array<SelectionNode>>();
     this._collectInlineFragments(this._parentSchemaType, inlineFragmentSelections, selectionNodesByTypeName);
 
     const possibleTypes = this._getPossibleTypes(this._parentSchemaType);
 
     if (possibleTypes.length > 0) {
       const sharedFieldNodes = fieldNodes.filter(node => node.name.value === '__typename');
+
       if (sharedFieldNodes.length) {
         selectionNodesByTypeName.forEach(nodes => {
           nodes.push(...sharedFieldNodes);
         });
       }
     }
+
+    const fragmentUsage = this.buildFragmentSpreadsUsage(fragmentSpreadNodes);
 
     const grouped = possibleTypes.reduce(
       (prev, type) => {
@@ -290,45 +319,22 @@ export class SelectionSetToObject {
           prev[typeName] = [];
         }
 
+        // console.log(schemaType, selectionNodes.length === 0 && fieldNodes.length === 0 && !hasSpreadsOnType && !hasInlineOnType);
+
         const transformedSet = this.buildSelectionSetString(schemaType, selectionNodes, selectionNodes.length === 0 && fieldNodes.length === 0 && !hasSpreadsOnType && !hasInlineOnType);
 
         if (transformedSet) {
           prev[typeName].push(transformedSet);
         }
+
+        prev[typeName].push(...(fragmentUsage[typeName] || []));
+
         return prev;
       },
       {} as Record<string, string[]>
     );
 
-    for (const spread of fragmentSpreadNodes) {
-      const fragmentSpreadObject = this._loadedFragments.find(lf => lf.name === spread.name.value);
-
-      if (fragmentSpreadObject) {
-        if (!grouped[fragmentSpreadObject.name]) {
-          grouped[fragmentSpreadObject.name] = [];
-        }
-
-        const fragmentSuffix = this._dedupeOperationSuffix && spread.name.value.toLowerCase().endsWith('fragment') ? '' : 'Fragment';
-        const usage = this._convertName(spread.name.value, { useTypesPrefix: true, suffix: fragmentSuffix });
-
-        grouped[fragmentSpreadObject.name].push(usage);
-      }
-    }
-
-    return Object.keys(grouped)
-      .map(typeName => {
-        const relevant = grouped[typeName].filter(Boolean);
-
-        if (relevant.length === 0) {
-          return null;
-        } else if (relevant.length === 1) {
-          return relevant[0];
-        } else {
-          return `( ${relevant.join(' & ')} )`;
-        }
-      })
-      .filter(Boolean)
-      .join(' | ');
+    return grouped;
   }
 
   protected buildFragmentSpreadString(fragmentSpreadNodes: FragmentSpreadNode[]) {
@@ -355,7 +361,7 @@ export class SelectionSetToObject {
         field: FieldNode;
       }
     >();
-    const fragmentSpreadSelectionSets = new Map<string, FragmentSpreadNode>();
+    const fragmentSpreadSelectionSets: FragmentSpreadNode[] = [];
     let requireTypename = false;
 
     for (const selectionNode of selectionNodes) {
@@ -395,7 +401,7 @@ export class SelectionSetToObject {
           }
         }
       } else if (selectionNode.kind === 'FragmentSpread') {
-        fragmentSpreadSelectionSets.set(selectionNode.name.value, selectionNode);
+        fragmentSpreadSelectionSets.push(selectionNode);
       }
     }
 
@@ -408,7 +414,13 @@ export class SelectionSetToObject {
         alias: field.alias ? field.alias.value : undefined,
         name: field.name.value,
         type: realSelectedFieldType.name,
-        selectionSet: this.wrapTypeWithModifiers(selectionSet.string.split(`\n`).join(`\n  `), selectedFieldType as any),
+        selectionSet: this.wrapTypeWithModifiers(
+          selectionSet
+            .transformOperationSelectionSet()
+            .split(`\n`)
+            .join(`\n  `),
+          selectedFieldType as any
+        ),
       });
     }
 
@@ -440,8 +452,8 @@ export class SelectionSetToObject {
     const primitiveFieldsString = this.buildPrimitiveFields(parentName, Array.from(primitiveFields.values()).map(field => field.name.value));
     const primitiveAliasFieldsString = this.buildAliasedPrimitiveFields(parentName, Array.from(primitiveAliasFields.values()).map(field => ({ alias: field.alias.value, fieldName: field.name.value })));
     const linkFieldsString = this.buildLinkFields(linkFields);
-    const fragmentSpreadString = this.buildFragmentSpreadString([...fragmentSpreadSelectionSets.values()]);
-    const fields = [primitiveFieldsString, primitiveAliasFieldsString, linkFieldsString, fragmentSpreadString].filter(Boolean);
+    const fragmentSpreadString = this.buildFragmentSpreadsUsage(fragmentSpreadSelectionSets);
+    const fields = [primitiveFieldsString, primitiveAliasFieldsString, linkFieldsString, ...(fragmentSpreadString[parentSchemaType.name] || [])].filter(Boolean);
     let result: string[] = [];
 
     if (fields.length === 0) {
@@ -450,12 +462,14 @@ export class SelectionSetToObject {
       result = [typeInfoString, ...fields];
     }
 
+    result = result.filter(Boolean);
+
     if (result.length === 0) {
       return null;
     } else if (result.length === 1) {
       return result[0];
     } else {
-      return `(\n  ` + result.join(`\n  & `) + `\n)`;
+      return `(\n  ${result.join(`\n  & `)}\n)`;
     }
   }
 
@@ -561,5 +575,73 @@ export class SelectionSetToObject {
     }
 
     return `{ ${fields.map(field => `${this.formatNamedField(field.alias || field.name)}: ${field.selectionSet}`).join(', ')} }`;
+  }
+
+  public transformOperationSelectionSet(): string {
+    const grouped = this._buildGroupedSelections();
+
+    return Object.keys(grouped)
+      .map(typeName => {
+        const relevant = grouped[typeName].filter(Boolean);
+
+        if (relevant.length === 0) {
+          return null;
+        } else if (relevant.length === 1) {
+          return relevant[0];
+        } else {
+          return `( ${relevant.join(' & ')} )`;
+        }
+      })
+      .filter(Boolean)
+      .join(' | ');
+  }
+
+  public transformFragmentSelectionSetToTypes(fragmentName: string, fragmentSuffix: string, declarationBlockConfig): string {
+    const grouped = this._buildGroupedSelections();
+
+    const subTypes: { name: string; content: string }[] = Object.keys(grouped)
+      .map(typeName => {
+        const possibleFields = grouped[typeName].filter(Boolean);
+
+        if (possibleFields.length === 0) {
+          return null;
+        }
+
+        const declarationName = this.buildFragmentTypeName(fragmentName, fragmentSuffix, typeName);
+
+        return { name: declarationName, content: possibleFields.join(' & ') };
+      })
+      .filter(Boolean);
+
+    if (subTypes.length === 1) {
+      return new DeclarationBlock(declarationBlockConfig)
+        .export()
+        .asKind('type')
+        .withName(this.buildFragmentTypeName(fragmentName, fragmentSuffix))
+        .withContent(subTypes[0].content).string;
+    }
+
+    return [
+      ...subTypes.map(
+        t =>
+          new DeclarationBlock(declarationBlockConfig)
+            .export()
+            .asKind('type')
+            .withName(t.name)
+            .withContent(t.content).string
+      ),
+      new DeclarationBlock(declarationBlockConfig)
+        .export()
+        .asKind('type')
+        .withName(this.buildFragmentTypeName(fragmentName, fragmentSuffix))
+        .withContent(subTypes.map(t => t.name).join(' | ')).string,
+    ].join('\n');
+  }
+
+  protected buildFragmentTypeName(name: string, suffix: string, typeName = ''): string {
+    return this._convertName(name, {
+      useTypesPrefix: true,
+      suffix: typeName ? `_${typeName}_${suffix}` : suffix,
+    });
   }
 }
