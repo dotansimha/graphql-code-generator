@@ -476,7 +476,10 @@ describe('TypeScript Operations Plugin', () => {
         );
       `);
       expect(withUsage).toBeSimilarStringTo(`
-        export type NotificationsQuery = MyFragment;
+      export type NotificationsQuery = (
+        { __typename?: 'Query' }
+        & MyFragment
+      );
       `);
     });
   });
@@ -530,13 +533,16 @@ describe('TypeScript Operations Plugin', () => {
       const config = {};
       const result = await plugin(testSchema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
       expect(result).toBeSimilarStringTo(`
-        export type NodeFragment = (
-          { __typename: 'A' }
-          & Pick<A, 'id'>
+      export type TestQuery = (
+        { __typename?: 'Query' }
+        & { some: Maybe<(
+          { __typename?: 'A' }
+          & Node_A_Fragment
         ) | (
-          { __typename: 'B' }
-          & Pick<B, 'id'>
-        );
+          { __typename?: 'B' }
+          & Node_B_Fragment
+        )> }
+      );
       `);
       await validate(result, config, testSchema);
     });
@@ -728,16 +734,16 @@ describe('TypeScript Operations Plugin', () => {
       const config = {};
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
       expect(result).toBeSimilarStringTo(`
-        export type UnionTestQuery = (
-          { __typename?: 'Query' }
-          & { unionTest: Maybe<(
-            { __typename: 'User' }
-            & Pick<User, 'email'>
-          ) | (
-            { __typename: 'Profile' }
-            & Pick<Profile, 'firstName'>
-          )> }
-        );
+      export type UnionTestQuery = (
+        { __typename?: 'Query' }
+        & { unionTest: Maybe<(
+          { __typename?: 'User' }
+          & Pick<User, 'email'>
+        ) | (
+          { __typename?: 'Profile' }
+          & Pick<Profile, 'firstName'>
+        )> }
+      );
       `);
       await validate(result, config);
     });
@@ -997,7 +1003,7 @@ describe('TypeScript Operations Plugin', () => {
       );
     });
 
-    it.skip('Should have valid fragments intersection on different types (with usage) #2498', async () => {
+    it('Should have valid fragments intersection on different types (with usage) #2498', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         interface User {
           id: ID!
@@ -1074,6 +1080,7 @@ describe('TypeScript Operations Plugin', () => {
         );
         throw new Error('invalid');
       } catch (e) {
+        // We expect to have a TS compilation error
         expect(e.message).not.toBe('invalid');
       }
     });
@@ -1183,8 +1190,10 @@ describe('TypeScript Operations Plugin', () => {
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(`
-        export type MeQuery = { me: Maybe<Pick<User, 'username'>
-            & UserFieldsFragment> };
+      export type MeQuery = { me: Maybe<(
+        Pick<User, 'username'>
+        & UserFieldsFragment
+      )> };
       `);
       await validate(result, config);
     });
@@ -1213,15 +1222,15 @@ describe('TypeScript Operations Plugin', () => {
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(`
-        export type MeQuery = (
-          { __typename?: 'Query' }
-          & { me: Maybe<(
-            { __typename?: 'User' }
-            & Pick<User, 'username'>
-          )
-            & UserFieldsFragment
-            & UserProfileFragment> }
-        );
+      export type MeQuery = (
+        { __typename?: 'Query' }
+        & { me: Maybe<(
+          { __typename?: 'User' }
+          & Pick<User, 'username'>
+          & UserFieldsFragment
+          & UserProfileFragment
+        )> }
+      );
       `);
       expect(result).toBeSimilarStringTo(`
         export type UserProfileFragment = (
@@ -1284,11 +1293,16 @@ describe('TypeScript Operations Plugin', () => {
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(`
-        export type Unnamed_1_Query = (
-          { __typename?: 'Query' }
-          & { b: Maybe<AFragment
-            & BFragment> }
-        );
+      export type Unnamed_1_Query = (
+        { __typename?: 'Query' }
+        & { b: Maybe<(
+          { __typename?: 'A' }
+          & AFragment
+        ) | (
+          { __typename?: 'B' }
+          & BFragment
+        )> }
+      );
 
         export type AFragment = (
           { __typename?: 'A' }
@@ -1348,13 +1362,15 @@ describe('TypeScript Operations Plugin', () => {
       const config = {};
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
       expect(result).toBeSimilarStringTo(`
-        export type Unnamed_1_Query = (
-          { __typename?: 'Query' }
-          & { myType: AFragment
-            & BFragment
-            & CFragment
-          }
-        );
+      export type Unnamed_1_Query = (
+        { __typename?: 'Query' }
+        & { myType: (
+          { __typename?: 'MyType' }
+          & AFragment
+          & BFragment
+          & CFragment
+        ) }
+      );
       `);
       await validate(result, config);
     });
@@ -1400,10 +1416,14 @@ describe('TypeScript Operations Plugin', () => {
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(`
-        export type Unnamed_1_Query = (
-          { __typename?: 'Query' }
-          & { b: Maybe<AFragment & BFragment> }
-        );
+      export type Unnamed_1_Query = (
+        { __typename?: 'Query' }
+        & { b: Maybe<(
+          { __typename?: 'A' }
+          & AFragment
+          & BFragment
+        ) | { __typename?: 'B' }> }
+      );
   
         export type AFragment = (
           { __typename?: 'A' }
@@ -1998,7 +2018,7 @@ describe('TypeScript Operations Plugin', () => {
       `);
     });
 
-    it.only('should use __typename in fragments when requested', async () => {
+    it('should use __typename in fragments when requested', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         type Post {
           title: String
@@ -2029,7 +2049,7 @@ describe('TypeScript Operations Plugin', () => {
       expect(content).toBeSimilarStringTo(`
         export type PostQuery = (
           { __typename?: 'Query' }
-          & { post:  { __typename: 'Post' } }
+          & { post: { __typename: 'Post' } }
         );
       `);
     });
@@ -2342,24 +2362,25 @@ describe('TypeScript Operations Plugin', () => {
         }
       );
       expect(content).toBeSimilarStringTo(`
-        export type FieldQuery = (
-          { __typename?: 'Query' }
-          & { field: (
-            { __typename: 'Error1' }
-            & Pick<Error1, 'message'>
-          ) | (
-            { __typename: 'Error2' }
-            & Pick<Error2, 'message'>
-          ) | (
-            { __typename: 'ComplexError' }
-            & Pick<ComplexError, 'message' | 'additionalInfo'>
-          ) | (
-            { __typename: 'FieldResultSuccess' }
-            & Pick<FieldResultSuccess, 'someValue'>
-          ) }
-        );
+      export type FieldQuery = (
+        { __typename?: 'Query' }
+        & { field: (
+          { __typename?: 'Error1' }
+          & Pick<Error1, 'message'>
+        ) | (
+          { __typename?: 'Error2' }
+          & Pick<Error2, 'message'>
+        ) | (
+          { __typename?: 'ComplexError' }
+          & Pick<ComplexError, 'message' | 'additionalInfo'>
+        ) | (
+          { __typename?: 'FieldResultSuccess' }
+          & Pick<FieldResultSuccess, 'someValue'>
+        ) }
+      );
       `);
     });
+
     it('should generate correct types for union that returns interface types (variant __typename in fragment)', async () => {
       const schema = buildSchema(/* GraphQL */ `
         interface Error {
@@ -2751,10 +2772,11 @@ describe('TypeScript Operations Plugin', () => {
       expect(o).toBeSimilarStringTo(`
       export type UserQueryQuery = (
         { __typename?: 'Query' }
-        & { user: ( (
+        & { user: (
           { __typename?: 'User' }
           & Pick<User, 'id'>
-        ) & TestFragment ) }
+          & TestFragment
+        ) }
       );`);
 
       expect(o).toBeSimilarStringTo(`export type TestFragment = (
@@ -2872,14 +2894,25 @@ describe('TypeScript Operations Plugin', () => {
       expect(output).toBeSimilarStringTo(`
       export type UserQueryQuery = (
         { __typename?: 'Query' }
-        & { user: ( (
+        & { user: (
           { __typename?: 'User' }
           & Pick<User, 'login'>
-        ) & UserResult_User_Fragment & UserResult1_User_Fragment ) | ( { __typename?: 'Error2' } & UserResult_Error2_Fragment & UserResult1_Error2_Fragment ) | ( (
+          & UserResult_User_Fragment
+          & UserResult1_User_Fragment
+        ) | (
+          { __typename?: 'Error2' }
+          & UserResult_Error2_Fragment
+          & UserResult1_Error2_Fragment
+        ) | (
           { __typename?: 'Error3' }
           & Pick<Error3, 'message'>
-          & { info: Maybe<AdditionalInfoFragment> }
-        ) & UserResult_Error3_Fragment & UserResult1_Error3_Fragment ) }
+          & { info: Maybe<(
+            { __typename?: 'AdditionalInfo' }
+            & AdditionalInfoFragment
+          )> }
+          & UserResult_Error3_Fragment
+          & UserResult1_Error3_Fragment
+        ) }
       );`);
 
       expect(output).toBeSimilarStringTo(`

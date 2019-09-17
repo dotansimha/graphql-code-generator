@@ -103,63 +103,53 @@ export class SelectionSetToObject {
     throw new Error(`You must override wrapTypeWithModifiers in your SelectionSetToObject implementation!`);
   }
 
+  private separateSelectionSet(selections: ReadonlyArray<SelectionNode>): { fields: FieldNode[]; spreads: FragmentSpreadNode[]; inlines: InlineFragmentNode[] } {
+    return {
+      fields: selections.filter(s => s.kind === Kind.FIELD) as FieldNode[],
+      inlines: selections.filter(s => s.kind === Kind.INLINE_FRAGMENT) as InlineFragmentNode[],
+      spreads: selections.filter(s => s.kind === Kind.FRAGMENT_SPREAD) as FragmentSpreadNode[],
+    };
+  }
+
   /**
    * traverse the inline fragment nodes recursively for colleting the selectionSets on each type
    */
-  _collectInlineFragments(parentType: GraphQLNamedType, nodes: InlineFragmentNode[], types: Map<string, Array<SelectionNode>>) {
+  _collectInlineFragments(parentType: GraphQLNamedType, nodes: InlineFragmentNode[], types: Map<string, Array<SelectionNode | string>>) {
     if (isListType(parentType) || isNonNullType(parentType)) {
       return this._collectInlineFragments(parentType.ofType, nodes, types);
     } else if (isObjectType(parentType)) {
       for (const node of nodes) {
         const typeOnSchema = node.typeCondition ? this._schema.getType(node.typeCondition.name.value) : parentType;
+        const { fields, inlines, spreads } = this.separateSelectionSet(node.selectionSet.selections);
+        const spreadsUsage = this.buildFragmentSpreadsUsage(spreads);
 
         if (isObjectType(typeOnSchema)) {
-          let typeSelections = types.get(typeOnSchema.name);
-          if (!typeSelections) {
-            typeSelections = [];
-            types.set(typeOnSchema.name, typeSelections);
-          }
-          typeSelections.push(...node.selectionSet.selections.filter(selection => selection.kind !== 'InlineFragment'));
-
-          this._collectInlineFragments(typeOnSchema, node.selectionSet.selections.filter(selection => selection.kind === 'InlineFragment') as InlineFragmentNode[], types);
+          this._appendToTypeMap(types, typeOnSchema.name, fields);
+          this._appendToTypeMap(types, typeOnSchema.name, spreadsUsage[typeOnSchema.name]);
+          this._collectInlineFragments(typeOnSchema, inlines, types);
         } else if (isInterfaceType(typeOnSchema) && parentType.isTypeOf(typeOnSchema, null, null)) {
-          let typeSelections = types.get(parentType.name);
-          if (!typeSelections) {
-            typeSelections = [];
-            types.set(parentType.name, typeSelections);
-          }
-          typeSelections.push(...node.selectionSet.selections.filter(selection => selection.kind !== 'InlineFragment'));
-
-          this._collectInlineFragments(typeOnSchema, node.selectionSet.selections.filter(selection => selection.kind === 'InlineFragment') as InlineFragmentNode[], types);
+          this._appendToTypeMap(types, parentType.name, fields);
+          this._appendToTypeMap(types, parentType.name, spreadsUsage[parentType.name]);
+          this._collectInlineFragments(typeOnSchema, inlines, types);
         }
       }
     } else if (isInterfaceType(parentType)) {
       const possibleTypes = this._getPossibleTypes(parentType);
 
       for (const node of nodes) {
-        const onType = node.typeCondition.name.value;
         const schemaType = node.typeCondition ? this._schema.getType(node.typeCondition.name.value) : parentType;
+        const { fields, inlines, spreads } = this.separateSelectionSet(node.selectionSet.selections);
+        const spreadsUsage = this.buildFragmentSpreadsUsage(spreads);
 
         if (isObjectType(schemaType) && possibleTypes.find(possibleType => possibleType.name === schemaType.name)) {
-          let typeSelections = types.get(onType);
-          if (!typeSelections) {
-            typeSelections = [];
-            types.set(schemaType.name, typeSelections);
-          }
-
-          typeSelections.push(...node.selectionSet.selections.filter(selection => selection.kind !== 'InlineFragment'));
-
-          this._collectInlineFragments(schemaType, node.selectionSet.selections.filter(selection => selection.kind === 'InlineFragment') as InlineFragmentNode[], types);
+          this._appendToTypeMap(types, schemaType.name, fields);
+          this._appendToTypeMap(types, schemaType.name, spreadsUsage[schemaType.name]);
+          this._collectInlineFragments(schemaType, inlines, types);
         } else if (isInterfaceType(schemaType) && schemaType.name === parentType.name) {
           for (const possibleType of possibleTypes) {
-            let typeSelections = types.get(possibleType.name);
-            if (!typeSelections) {
-              typeSelections = [];
-              types.set(possibleType.name, typeSelections);
-            }
-            typeSelections.push(...node.selectionSet.selections.filter(selection => selection.kind !== 'InlineFragment'));
-
-            this._collectInlineFragments(schemaType, node.selectionSet.selections.filter(selection => selection.kind === 'InlineFragment') as InlineFragmentNode[], types);
+            this._appendToTypeMap(types, possibleType.name, fields);
+            this._appendToTypeMap(types, possibleType.name, spreadsUsage[possibleType.name]);
+            this._collectInlineFragments(schemaType, inlines, types);
           }
         }
       }
@@ -167,33 +157,22 @@ export class SelectionSetToObject {
       const possibleTypes = parentType.getTypes();
 
       for (const node of nodes) {
-        const onType = node.typeCondition.name.value;
-        const schemaType = this._schema.getType(onType);
+        const schemaType = node.typeCondition ? this._schema.getType(node.typeCondition.name.value) : parentType;
+        const { fields, inlines, spreads } = this.separateSelectionSet(node.selectionSet.selections);
+        const spreadsUsage = this.buildFragmentSpreadsUsage(spreads);
 
         if (isObjectType(schemaType) && possibleTypes.find(possibleType => possibleType.name === schemaType.name)) {
-          let typeSelections = types.get(onType);
-
-          if (!typeSelections) {
-            typeSelections = [];
-            types.set(onType, typeSelections);
-          }
-
-          typeSelections.push(...node.selectionSet.selections.filter(selection => selection.kind !== 'InlineFragment'));
-
-          this._collectInlineFragments(schemaType, node.selectionSet.selections.filter(selection => selection.kind === 'InlineFragment') as InlineFragmentNode[], types);
+          this._appendToTypeMap(types, schemaType.name, fields);
+          this._appendToTypeMap(types, schemaType.name, spreadsUsage[schemaType.name]);
+          this._collectInlineFragments(schemaType, inlines, types);
         } else if (isInterfaceType(schemaType)) {
           const possibleInterfaceTypes = this._getPossibleTypes(schemaType);
+
           for (const possibleType of possibleTypes) {
             if (possibleInterfaceTypes.find(possibleInterfaceType => possibleInterfaceType.name === possibleType.name)) {
-              let typeSelections = types.get(possibleType.name);
-              if (!typeSelections) {
-                typeSelections = [];
-                types.set(possibleType.name, typeSelections);
-              }
-
-              typeSelections.push(...node.selectionSet.selections.filter(selection => selection.kind !== 'InlineFragment'));
-
-              this._collectInlineFragments(schemaType, node.selectionSet.selections.filter(selection => selection.kind === 'InlineFragment') as InlineFragmentNode[], types);
+              this._appendToTypeMap(types, possibleType.name, fields);
+              this._appendToTypeMap(types, possibleType.name, spreadsUsage[possibleType.name]);
+              this._collectInlineFragments(schemaType, inlines, types);
             }
           }
         }
@@ -201,7 +180,7 @@ export class SelectionSetToObject {
     }
   }
 
-  protected _getPossibleTypes(type: GraphQLNamedType): Array<GraphQLObjectType> {
+  protected _getPossibleTypes(type: GraphQLNamedType): GraphQLObjectType[] {
     if (isListType(type) || isNonNullType(type)) {
       return this._getPossibleTypes(type.ofType);
     } else if (isObjectType(type)) {
@@ -209,6 +188,7 @@ export class SelectionSetToObject {
     } else if (isAbstractType(type)) {
       return this._schema.getPossibleTypes(type) as Array<GraphQLObjectType>;
     }
+
     return [];
   }
 
@@ -256,27 +236,22 @@ export class SelectionSetToObject {
     return selectionNodesByTypeName;
   }
 
-  protected _buildGroupedSelections(): Record<string, string[]> {
-    if (!this._selectionSet || !this._selectionSet.selections || this._selectionSet.selections.length === 0) {
-      return {};
-    }
-
-    const { selections } = this._selectionSet;
-
+  protected flattenSelectionSet(selections: ReadonlyArray<SelectionNode>): Map<string, Array<SelectionNode | string>> {
+    const selectionNodesByTypeName = new Map<string, Array<SelectionNode | string>>();
     const inlineFragmentSelections: InlineFragmentNode[] = [];
     const fieldNodes: FieldNode[] = [];
-    const fragmentSpreadNodes: FragmentSpreadNode[] = [];
+    const fragmentSpreads: FragmentSpreadNode[] = [];
 
     for (const selection of selections) {
       switch (selection.kind) {
         case Kind.FIELD:
           fieldNodes.push(selection);
           break;
-        case Kind.FRAGMENT_SPREAD:
-          fragmentSpreadNodes.push(selection);
-          break;
         case Kind.INLINE_FRAGMENT:
           inlineFragmentSelections.push(selection);
+          break;
+        case Kind.FRAGMENT_SPREAD:
+          fragmentSpreads.push(selection);
           break;
       }
     }
@@ -285,24 +260,34 @@ export class SelectionSetToObject {
       inlineFragmentSelections.push(this._createInlineFragmentForFieldNodes(this._parentSchemaType, fieldNodes));
     }
 
-    const selectionNodesByTypeName = new Map<string, Array<SelectionNode>>();
     this._collectInlineFragments(this._parentSchemaType, inlineFragmentSelections, selectionNodesByTypeName);
+    const fragmentsUsage = this.buildFragmentSpreadsUsage(fragmentSpreads);
 
-    const possibleTypes = this._getPossibleTypes(this._parentSchemaType);
+    Object.keys(fragmentsUsage).forEach(typeName => {
+      this._appendToTypeMap(selectionNodesByTypeName, typeName, fragmentsUsage[typeName]);
+    });
 
-    if (possibleTypes.length > 0) {
-      const sharedFieldNodes = fieldNodes.filter(node => node.name.value === '__typename');
+    return selectionNodesByTypeName;
+  }
 
-      if (sharedFieldNodes.length) {
-        selectionNodesByTypeName.forEach(nodes => {
-          nodes.push(...sharedFieldNodes);
-        });
-      }
+  private _appendToTypeMap<T = SelectionNode | string>(types: Map<string, Array<T>>, typeName: string, nodes: Array<T>): void {
+    if (!types.has(typeName)) {
+      types.set(typeName, []);
     }
 
-    const fragmentUsage = this.buildFragmentSpreadsUsage(fragmentSpreadNodes);
+    if (nodes && nodes.length > 0) {
+      types.get(typeName).push(...nodes);
+    }
+  }
 
-    const grouped = possibleTypes.reduce(
+  protected _buildGroupedSelections(): Record<string, string[]> {
+    if (!this._selectionSet || !this._selectionSet.selections || this._selectionSet.selections.length === 0) {
+      return {};
+    }
+
+    const selectionNodesByTypeName = this.flattenSelectionSet(this._selectionSet.selections);
+
+    const grouped = this._getPossibleTypes(this._parentSchemaType).reduce(
       (prev, type) => {
         const typeName = type.name;
         const schemaType = this._schema.getType(typeName);
@@ -312,22 +297,16 @@ export class SelectionSetToObject {
         }
 
         const selectionNodes = selectionNodesByTypeName.get(typeName) || [];
-        const hasSpreadsOnType = this._loadedFragments.filter(lf => lf.onType === typeName).length > 0;
-        const hasInlineOnType = inlineFragmentSelections.filter(f => !f.typeCondition || f.typeCondition.name.value === typeName).length > 0;
 
         if (!prev[typeName]) {
           prev[typeName] = [];
         }
 
-        // console.log(schemaType, selectionNodes.length === 0 && fieldNodes.length === 0 && !hasSpreadsOnType && !hasInlineOnType);
-
-        const transformedSet = this.buildSelectionSetString(schemaType, selectionNodes, selectionNodes.length === 0 && fieldNodes.length === 0 && !hasSpreadsOnType && !hasInlineOnType);
+        const transformedSet = this.buildSelectionSetString(schemaType, selectionNodes);
 
         if (transformedSet) {
           prev[typeName].push(transformedSet);
         }
-
-        prev[typeName].push(...(fragmentUsage[typeName] || []));
 
         return prev;
       },
@@ -337,21 +316,7 @@ export class SelectionSetToObject {
     return grouped;
   }
 
-  protected buildFragmentSpreadString(fragmentSpreadNodes: FragmentSpreadNode[]) {
-    if (!fragmentSpreadNodes.length) {
-      return null;
-    }
-
-    return fragmentSpreadNodes
-      .map(node => {
-        const fragmentSuffix = this._dedupeOperationSuffix && node.name.value.toLowerCase().endsWith('fragment') ? '' : 'Fragment';
-
-        return this._convertName(node.name.value, { useTypesPrefix: true, suffix: fragmentSuffix });
-      })
-      .join(`\n  & `);
-  }
-
-  protected buildSelectionSetString(parentSchemaType: GraphQLObjectType, selectionNodes: SelectionNode[], generatePossibleTypename = true) {
+  protected buildSelectionSetString(parentSchemaType: GraphQLObjectType, selectionNodes: Array<SelectionNode | string>) {
     const primitiveFields = new Map<string, FieldNode>();
     const primitiveAliasFields = new Map<string, FieldNode>();
     const linkFieldSelectionSets = new Map<
@@ -361,11 +326,13 @@ export class SelectionSetToObject {
         field: FieldNode;
       }
     >();
-    const fragmentSpreadSelectionSets: FragmentSpreadNode[] = [];
     let requireTypename = false;
+    const fragmentsSpreadUsages: string[] = [];
 
     for (const selectionNode of selectionNodes) {
-      if (selectionNode.kind === 'Field') {
+      if (typeof selectionNode === 'string') {
+        fragmentsSpreadUsages.push(selectionNode);
+      } else if (selectionNode.kind === 'Field') {
         if (!selectionNode.selectionSet) {
           if (selectionNode.alias) {
             primitiveAliasFields.set(selectionNode.alias.value, selectionNode);
@@ -400,8 +367,6 @@ export class SelectionSetToObject {
             mergeSelectionSets(linkFieldNode.field.selectionSet, selectionNode.selectionSet);
           }
         }
-      } else if (selectionNode.kind === 'FragmentSpread') {
-        fragmentSpreadSelectionSets.push(selectionNode);
       }
     }
 
@@ -416,7 +381,7 @@ export class SelectionSetToObject {
         type: realSelectedFieldType.name,
         selectionSet: this.wrapTypeWithModifiers(
           selectionSet
-            .transformOperationSelectionSet()
+            .transformSelectionSet()
             .split(`\n`)
             .join(`\n  `),
           selectedFieldType as any
@@ -452,24 +417,14 @@ export class SelectionSetToObject {
     const primitiveFieldsString = this.buildPrimitiveFields(parentName, Array.from(primitiveFields.values()).map(field => field.name.value));
     const primitiveAliasFieldsString = this.buildAliasedPrimitiveFields(parentName, Array.from(primitiveAliasFields.values()).map(field => ({ alias: field.alias.value, fieldName: field.name.value })));
     const linkFieldsString = this.buildLinkFields(linkFields);
-    const fragmentSpreadString = this.buildFragmentSpreadsUsage(fragmentSpreadSelectionSets);
-    const fields = [primitiveFieldsString, primitiveAliasFieldsString, linkFieldsString, ...(fragmentSpreadString[parentSchemaType.name] || [])].filter(Boolean);
-    let result: string[] = [];
+    const fields = [typeInfoString, primitiveFieldsString, primitiveAliasFieldsString, linkFieldsString, ...fragmentsSpreadUsages].filter(Boolean);
 
     if (fields.length === 0) {
-      result = generatePossibleTypename ? [typeInfoString] : [];
-    } else {
-      result = [typeInfoString, ...fields];
-    }
-
-    result = result.filter(Boolean);
-
-    if (result.length === 0) {
       return null;
-    } else if (result.length === 1) {
-      return result[0];
+    } else if (fields.length === 1) {
+      return fields[0];
     } else {
-      return `(\n  ${result.join(`\n  & `)}\n)`;
+      return `(\n  ${fields.join(`\n  & `)}\n)`;
     }
   }
 
@@ -577,7 +532,7 @@ export class SelectionSetToObject {
     return `{ ${fields.map(field => `${this.formatNamedField(field.alias || field.name)}: ${field.selectionSet}`).join(', ')} }`;
   }
 
-  public transformOperationSelectionSet(): string {
+  public transformSelectionSet(): string {
     const grouped = this._buildGroupedSelections();
 
     return Object.keys(grouped)

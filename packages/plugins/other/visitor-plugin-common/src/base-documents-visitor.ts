@@ -163,7 +163,7 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
           suffix: operationTypeSuffix + this._parsedConfig.operationResultSuffix,
         })
       )
-      .withContent(selectionSet.transformOperationSelectionSet()).string;
+      .withContent(selectionSet.transformSelectionSet()).string;
 
     const operationVariables = new DeclarationBlock(this._declarationBlockConfig)
       .export()
