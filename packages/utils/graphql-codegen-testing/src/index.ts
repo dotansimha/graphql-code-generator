@@ -15,17 +15,17 @@ function compareStrings(a: string, b: string): boolean {
   return a.includes(b);
 }
 
-function toBeSimilarStringTo(received: string, argument: string) {
-  const strippedA = oneLine`${received}`.replace(/\s\s+/g, ' ');
-  const strippedB = oneLine`${argument}`.replace(/\s\s+/g, ' ');
+function toBeSimilarStringTo(received: string, expected: string) {
+  const strippedReceived = oneLine`${received}`.replace(/\s\s+/g, ' ');
+  const strippedExpected = oneLine`${expected}`.replace(/\s\s+/g, ' ');
 
-  if (compareStrings(strippedA, strippedB)) {
+  if (compareStrings(strippedReceived, strippedExpected)) {
     return {
       message: () =>
         `expected 
  ${received}
- not to be similar (strip-indent) string to
- ${argument}`,
+ not to be a string containing (ignoring indents)
+ ${expected}`,
       pass: true,
     };
   } else {
@@ -33,8 +33,8 @@ function toBeSimilarStringTo(received: string, argument: string) {
       message: () =>
         `expected 
  ${received}
- to be similar (strip-indent) string to
- ${argument}`,
+ to be a string containing (ignoring indents)
+ ${expected}`,
       pass: false,
     };
   }

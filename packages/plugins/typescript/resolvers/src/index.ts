@@ -1,6 +1,6 @@
 import { printSchemaWithDirectives } from 'graphql-toolkit';
-import { RawResolversConfig, addFederationToSchema, federationSpec } from '@graphql-codegen/visitor-plugin-common';
-import { Types, CodegenPlugin, PluginFunction } from '@graphql-codegen/plugin-helpers';
+import { RawResolversConfig } from '@graphql-codegen/visitor-plugin-common';
+import { Types, PluginFunction, addFederationReferencesToSchema } from '@graphql-codegen/plugin-helpers';
 import { isScalarType, parse, visit, GraphQLSchema, printSchema } from 'graphql';
 import { TypeScriptResolversVisitor } from './visitor';
 
@@ -80,7 +80,7 @@ export const plugin: PluginFunction<TypeScriptResolversPluginConfig> = (schema: 
 
   const indexSignature = config.useIndexSignature ? ['export type WithIndex<TObject> = TObject & Record<string, any>;', 'export type ResolversObject<TObject> = WithIndex<TObject>;'].join('\n') : '';
 
-  const transformedSchema = config.federation ? addFederationToSchema(schema) : schema;
+  const transformedSchema = config.federation ? addFederationReferencesToSchema(schema) : schema;
   const visitor = new TypeScriptResolversVisitor(config, transformedSchema);
 
   const stitchingResolverType = `
@@ -183,10 +183,6 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
     prepend: [`import { ${imports.join(', ')} } from 'graphql';`, ...mappersImports, ...visitor.globalDeclarations],
     content: [header, resolversTypeMapping, resolversParentTypeMapping, ...visitorResult.definitions.filter(d => typeof d === 'string'), getRootResolver(), getAllDirectiveResolvers()].join('\n'),
   };
-};
-
-export const addToSchema: CodegenPlugin<{ federation?: boolean }>['addToSchema'] = config => {
-  return config.federation ? federationSpec : undefined;
 };
 
 export { TypeScriptResolversVisitor };

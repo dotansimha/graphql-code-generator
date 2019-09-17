@@ -157,6 +157,47 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     return [componentProps, component].join('\n');
   }
 
+  private _buildHooksJSDoc(node: OperationDefinitionNode, operationName: string, operationType: string): string {
+    const variableString = node.variableDefinitions.reduce((acc, item) => {
+      const name = item.variable.name.value;
+
+      return `${acc}\n *      ${name}: // value for '${name}'`;
+    }, '');
+
+    const queryDescription = `
+ * To run a query within a React component, call \`use${operationName}\` and pass it any options that fit your needs.
+ * When your component renders, \`use${operationName}\` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.`;
+
+    const queryExample = `
+ * const { data, loading, error } = use${operationName}({
+ *   variables: {${variableString}
+ *   },
+ * });`;
+
+    const mutationDescription = `
+ * To run a mutation, you first call \`use${operationName}\` within a React component and pass it any options that fit your needs.
+ * When your component renders, \`use${operationName}\` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution`;
+
+    const mutationExample = `
+ * const [${camelCase(operationName)}, { data, loading, error }] = use${operationName}({
+ *   variables: {${variableString}
+ *   },
+ * });`;
+
+    return `
+/**
+ * __use${operationName}__
+ *${operationType === 'Mutation' ? mutationDescription : queryDescription}
+ *
+ * @param baseOptions options that will be passed into the ${operationType.toLowerCase()}, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#${operationType === 'Mutation' ? 'options-2' : 'options'};
+ *
+ * @example${operationType === 'Mutation' ? mutationExample : queryExample}
+ */`;
+  }
+
   private _buildHooks(node: OperationDefinitionNode, operationType: string, documentVariableName: string, operationResultType: string, operationVariablesTypes: string): string {
     const suffix = this._getHookSuffix(node.name.value, operationType);
     const operationName: string = this.convertName(node.name.value, {
@@ -168,13 +209,12 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     this.imports.add(this.getApolloReactHooksImport());
 
     const hookFns = [
+      this._buildHooksJSDoc(node, operationName, operationType),
       `export function use${operationName}(baseOptions?: ApolloReactHooks.${operationType}HookOptions<${operationResultType}, ${operationVariablesTypes}>) {
         return ApolloReactHooks.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${this.getDocumentNodeVariable(node, documentVariableName)}, baseOptions);
-      }`
+      }`,
     ];
-    const hookResults = [
-      `export type ${operationName}HookResult = ReturnType<typeof use${operationName}>;`
-    ];
+    const hookResults = [`export type ${operationName}HookResult = ReturnType<typeof use${operationName}>;`];
 
     if (operationType === 'Query') {
       const lazyOperationName: string = this.convertName(node.name.value, {

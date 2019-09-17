@@ -1,29 +1,8 @@
 import { pascalCase } from 'change-case';
-import {
-  NameNode,
-  Kind,
-  TypeNode,
-  NamedTypeNode,
-  isNonNullType,
-  GraphQLObjectType,
-  GraphQLNonNull,
-  GraphQLList,
-  isListType,
-  GraphQLOutputType,
-  GraphQLNamedType,
-  isScalarType,
-  GraphQLSchema,
-  GraphQLScalarType,
-  StringValueNode,
-  isEqualType,
-} from 'graphql';
+import { NameNode, Kind, TypeNode, NamedTypeNode, GraphQLObjectType, GraphQLNamedType, isScalarType, GraphQLSchema, GraphQLScalarType, StringValueNode, isEqualType } from 'graphql';
 import { ScalarsMap, NormalizedScalarsMap, ParsedScalarsMap } from './types';
 import { DEFAULT_SCALARS } from './scalars';
 import { parseMapper } from './mappers';
-
-function isWrapperType(t: GraphQLOutputType): t is GraphQLNonNull<any> | GraphQLList<any> {
-  return isListType(t) || isNonNullType(t);
-}
 
 export const getConfigValue = <T = any>(value: T, defaultValue: T): T => {
   if (value === null || value === undefined) {
@@ -32,14 +11,6 @@ export const getConfigValue = <T = any>(value: T, defaultValue: T): T => {
 
   return value;
 };
-
-export function getBaseType(type: GraphQLOutputType): GraphQLNamedType {
-  if (isWrapperType(type)) {
-    return getBaseType(type.ofType);
-  } else {
-    return type;
-  }
-}
 
 export function quoteIfNeeded(array: string[], joinWith = ' & '): string {
   if (array.length === 0) {

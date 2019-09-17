@@ -2,6 +2,8 @@ import { validate, plugin } from '../src/index';
 import { buildSchema } from 'graphql';
 import '@graphql-codegen/testing';
 import { Types } from '@graphql-codegen/plugin-helpers';
+import { buildASTSchema, parse } from 'graphql';
+import { codegen } from '@graphql-codegen/core';
 
 const SHOULD_THROW_ERROR = 'SHOULD_THROW_ERROR';
 
@@ -90,6 +92,78 @@ describe('Schema AST', () => {
       expect(content).toBeSimilarStringTo(`
         type Query {
           fieldTest: String @modify(limit: 1)
+        }
+      `);
+    });
+
+    it('should support Apollo Federation', async () => {
+      const federatedSchema = parse(/* GraphQL */ `
+        type Character @key(fields: "id") {
+          id: ID
+          name: String
+        }
+
+        type Jedi @key(fields: "id") {
+          id: ID
+          side: String
+        }
+
+        type Droid @key(fields: "id") {
+          id: ID
+          model: String
+        }
+
+        union People = Character | Jedi | Droid
+
+        type Query {
+          allPeople: [People]
+        }
+      `);
+
+      const content = await codegen({
+        filename: 'foo.graphql',
+        schema: federatedSchema,
+        documents: [],
+        plugins: [
+          {
+            'schema-ast': {},
+          },
+        ],
+        config: {
+          federation: true,
+        },
+        pluginMap: {
+          'schema-ast': {
+            plugin,
+            validate,
+          },
+        },
+      });
+
+      expect(content).not.toContain(`scalar _Any`);
+      expect(content).not.toContain(`union _Entity`);
+      expect(content).not.toContain(`type _Service`);
+
+      expect(content).toBeSimilarStringTo(`
+        type Character {
+          id: ID
+          name: String
+        }
+        
+        type Droid {
+          id: ID
+          model: String
+        }
+        
+        type Jedi {
+          id: ID
+          side: String
+        }
+        
+        union People = Character | Jedi | Droid
+        
+        type Query {
+          allPeople: [People]
         }
       `);
     });

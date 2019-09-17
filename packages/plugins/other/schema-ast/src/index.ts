@@ -1,5 +1,5 @@
 import { GraphQLSchema, printSchema, print } from 'graphql';
-import { PluginFunction, PluginValidateFn, Types } from '@graphql-codegen/plugin-helpers';
+import { PluginFunction, PluginValidateFn, Types, removeFederation } from '@graphql-codegen/plugin-helpers';
 import { extname } from 'path';
 
 // Actually this should go to ardatan/graphql-toolkit
@@ -32,13 +32,20 @@ export interface SchemaASTConfig {
    * ```
    */
   includeDirectives?: boolean;
+  federation?: boolean;
 }
-export const plugin: PluginFunction = async (schema: GraphQLSchema, _documents, { includeDirectives = false }: SchemaASTConfig): Promise<string> => {
+export const plugin: PluginFunction = async (schema: GraphQLSchema, _documents, { includeDirectives = false, federation }: SchemaASTConfig): Promise<string> => {
+  const outputSchema = federation
+    ? removeFederation(schema, {
+        withDirectives: includeDirectives,
+      })
+    : schema;
+
   if (includeDirectives) {
-    return printSchemaWithDirectives(schema);
+    return printSchemaWithDirectives(outputSchema);
   }
 
-  return printSchema(schema, { commentDescriptions: false });
+  return printSchema(outputSchema, { commentDescriptions: false });
 };
 
 export const validate: PluginValidateFn<any> = async (_schema: GraphQLSchema, _documents: Types.DocumentFile[], _config: SchemaASTConfig, outputFile: string, allPlugins: Types.ConfiguredPlugin[]) => {
