@@ -20,10 +20,11 @@ import {
   GraphQLOutputType,
   isAbstractType,
 } from 'graphql';
-import { DeclarationBlock, getBaseType } from './utils';
+import { DeclarationBlock } from './utils';
 import { NormalizedScalarsMap, ConvertNameFn, LoadedFragment } from './types';
 import { GraphQLObjectType, GraphQLNonNull, GraphQLList } from 'graphql';
 import { BaseVisitorConvertOptions } from './base-visitor';
+import { getBaseType } from '@graphql-codegen/plugin-helpers';
 
 export type PrimitiveField = string;
 export type PrimitiveAliasedFields = { alias: string; fieldName: string };
