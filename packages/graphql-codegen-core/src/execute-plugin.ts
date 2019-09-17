@@ -35,6 +35,7 @@ export async function executePlugin(options: ExecutePluginOptions, plugin: Codeg
   }
 
   const isFederation = typeof options.config === 'object' && !Array.isArray(options.config) && options.config.federation;
+  const skipDocumentValidation = typeof options.config === 'object' && !Array.isArray(options.config) && options.config.skipDocumentsValidation;
 
   let schema = options.schemaAst;
 
@@ -47,7 +48,7 @@ export async function executePlugin(options: ExecutePluginOptions, plugin: Codeg
   const outputSchema: GraphQLSchema = schema || buildASTSchema(options.schema);
   const documents = options.documents || [];
 
-  if (outputSchema && documents.length > 0) {
+  if (outputSchema && documents.length > 0 && !skipDocumentValidation) {
     const configObject = typeof options.config === 'object' ? options.config : options.parentConfig;
     const extraFragments = configObject && (configObject as any)['externalFragments'] ? (configObject as any)['externalFragments'] : [];
     const errors = validateGraphQlDocuments(outputSchema, [...documents, ...extraFragments.map((f: any) => ({ filePath: f.importFrom, content: { kind: Kind.DOCUMENT, definitions: [f.node] } }))]);

@@ -61,4 +61,60 @@ describe('executePlugin', () => {
       }
     );
   });
+  it('should not throw an error when the \'skipDocumentsValidation\' option is set to true', () => {
+    const options = {
+      allPlugins: [
+        {
+          typescript: {},
+        },
+      ],
+      config: {
+        skipDocumentsValidation: true,
+      },
+      schema: parse(/* GraphQL */ `
+        type User {
+          id: ID!
+          login: String!
+          avatar(width: Int, height: Int): Avatar
+        }
+        type Avatar {
+          id: ID!
+          url: String!
+        }
+        type Query {
+          user: User!
+        }
+      `),
+      documents: [
+        {
+          filePath: 'a/random/path/some.query.graphql',
+          content: parse(/* GraphQL */ `
+            query user {
+              user {
+                ...UserLogin @arguments(avatarHeight: 30, avatarWidth: 30)
+              }
+            }
+
+            fragment UserLogin on User @argumentDefinitions(avatarHeight: { type: "Int", defaultValue: 10 }, avatarWidth: { type: "Int", defaultValue: 10 }) {
+              id
+              login
+              avatar(width: $avatarWidth, height: $avatarHeight) {
+                id
+                url
+              }
+            }
+          `),
+        },
+      ],
+      name: 'typescript',
+      outputFilename: 'a/random/path/output.ts',
+    };
+
+    return executePlugin(options, typescriptClientPlugin).then(
+      () => {},
+      errors => {
+        return Promise.reject(new Error('Did throw errors'));
+      }
+    );
+  });
 });
