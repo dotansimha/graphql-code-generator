@@ -7,6 +7,7 @@ import { plugin as tsPlugin } from '../../typescript/src/index';
 import { plugin as tsDocumentsPlugin } from '../../operations/src/index';
 import { readFileSync } from 'fs';
 import { DocumentMode } from '@graphql-codegen/visitor-plugin-common';
+import { extract, parseWithComments } from 'jest-docblock';
 
 describe('React Apollo', () => {
   const schema = buildClientSchema(JSON.parse(readFileSync('../../../../dev-test/githunt/schema.json').toString()));
@@ -918,6 +919,75 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       export type SubmitRepositoryMutationHookResult = ReturnType<typeof useSubmitRepositoryMutation>;
       `);
       await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should generate JSDoc docblocks for hooks', async () => {
+      const documents = parse(/* GraphQL */ `
+        query feed($id: ID!) {
+          feed(id: $id) {
+            id
+          }
+        }
+        mutation submitRepository($name: String) {
+          submitRepository(repoFullName: $name) {
+            id
+          }
+        }
+      `);
+
+      const docs = [{ filePath: '', content: documents }];
+
+      const content = (await plugin(
+        schema,
+        docs,
+        { withHooks: true, withComponent: false, withHOC: false },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      const queryDocBlock = extract(content.content.substr(content.content.indexOf('/**')));
+
+      expect(queryDocBlock).toMatchInlineSnapshot(`
+"/**
+ * __useFeedQuery__
+ *
+ * To run a query within a React component, call \`useFeedQuery\` and pass it any options that fit your needs.
+ * When your component renders, \`useFeedQuery\` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFeedQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */"
+`);
+
+      const mutationDocBlock = extract(content.content.substr(content.content.lastIndexOf('/**')));
+
+      expect(mutationDocBlock).toMatchInlineSnapshot(`
+"/**
+ * __useSubmitRepositoryMutation__
+ *
+ * To run a mutation, you first call \`useSubmitRepositoryMutation\` within a React component and pass it any options that fit your needs.
+ * When your component renders, \`useSubmitRepositoryMutation\` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [submitRepositoryMutation, { data, loading, error }] = useSubmitRepositoryMutation({
+ *   variables: {
+ *      name: // value for 'name'
+ *   },
+ * });
+ */"
+`);
     });
   });
 
