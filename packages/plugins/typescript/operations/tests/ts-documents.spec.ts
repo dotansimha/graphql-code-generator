@@ -547,6 +547,40 @@ describe('TypeScript Operations Plugin', () => {
       await validate(result, config, testSchema);
     });
 
+    it('Should add aliased __typename correctly', async () => {
+      const ast = parse(/* GraphQL */ `
+        query {
+          type: __typename
+          dummy
+        }
+      `);
+      const config = {};
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
+      expect(result).toBeSimilarStringTo(`
+      export type Unnamed_1_Query = (
+        { __typename?: 'Query' }
+        & Pick<Query, 'dummy'>
+        & { type: 'Query' }
+      );
+      `);
+      await validate(result, config);
+    });
+
+    it('Should add aliased __typename correctly with preResovleTypes', async () => {
+      const ast = parse(/* GraphQL */ `
+        query {
+          type: __typename
+          dummy
+        }
+      `);
+      const config = { preResolveTypes: true };
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
+      expect(result).toBeSimilarStringTo(`
+      export type Unnamed_1_Query = { __typename?: 'Query', dummy: Maybe<string>, type: 'Query' };
+      `);
+      await validate(result, config);
+    });
+
     it('Should add __typename as non-optional when explicitly specified', async () => {
       const ast = parse(/* GraphQL */ `
         query {

@@ -31,7 +31,15 @@ export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<S
         useTypesPrefix: true,
       });
 
-    return [`{ ${fields.map(aliasedField => `${this.config.formatNamedField(aliasedField.alias)}: ${parentName}['${aliasedField.fieldName}']`).join(', ')} }`];
+    return [
+      `{ ${fields
+        .map(aliasedField => {
+          const value = aliasedField.fieldName === '__typename' ? `'${schemaType.name}'` : `${parentName}['${aliasedField.fieldName}']`;
+
+          return `${this.config.formatNamedField(aliasedField.alias)}: ${value}`;
+        })
+        .join(', ')} }`,
+    ];
   }
 
   transformLinkFields(fields: LinkField[]): ProcessResult {

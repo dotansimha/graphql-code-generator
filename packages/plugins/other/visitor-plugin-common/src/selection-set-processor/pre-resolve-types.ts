@@ -43,15 +43,24 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
     }
 
     return fields.map(aliasedField => {
-      const fieldObj = schemaType.getFields()[aliasedField.fieldName];
-      const baseType = getBaseType(fieldObj.type);
-      const typeToUse = this.config.scalars[baseType.name] || baseType.name;
-      const wrappedType = this.config.wrapTypeWithModifiers(typeToUse, fieldObj.type as GraphQLObjectType);
+      const name = this.config.formatNamedField(aliasedField.alias);
 
-      return {
-        name: this.config.formatNamedField(aliasedField.alias),
-        type: wrappedType,
-      };
+      if (aliasedField.fieldName === '__typename') {
+        return {
+          name,
+          type: `'${schemaType.name}'`,
+        };
+      } else {
+        const fieldObj = schemaType.getFields()[aliasedField.fieldName];
+        const baseType = getBaseType(fieldObj.type);
+        const typeToUse = this.config.scalars[baseType.name] || baseType.name;
+        const wrappedType = this.config.wrapTypeWithModifiers(typeToUse, fieldObj.type as GraphQLObjectType);
+
+        return {
+          name,
+          type: wrappedType,
+        };
+      }
     });
   }
 
