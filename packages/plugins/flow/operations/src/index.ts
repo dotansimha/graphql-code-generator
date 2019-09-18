@@ -1,7 +1,7 @@
 import { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
 import { visit, concatAST, GraphQLSchema, Kind, FragmentDefinitionNode } from 'graphql';
 import { FlowDocumentsVisitor } from './visitor';
-import { RawDocumentsConfig, LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
+import { RawDocumentsConfig, LoadedFragment, optimizeOperations } from '@graphql-codegen/visitor-plugin-common';
 
 export interface FlowDocumentsPluginConfig extends RawDocumentsConfig {
   /**
@@ -38,9 +38,28 @@ export interface FlowDocumentsPluginConfig extends RawDocumentsConfig {
    * ```
    */
   useFlowReadOnlyTypes?: boolean;
+    /**
+   * @name flattenGeneratedTypes
+   * @type boolean
+   * @description Flatten fragment spread and inline fragments into a simple selection set before generating.
+   * @default false
+   *
+   * @example
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *    - typescript-operations
+   *  config:
+   *    flattenGeneratedTypes: true
+   * ```
+   */
+  flattenGeneratedTypes?: boolean;
 }
 
-export const plugin: PluginFunction<FlowDocumentsPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: FlowDocumentsPluginConfig) => {
+export const plugin: PluginFunction<FlowDocumentsPluginConfig> = (schema: GraphQLSchema, rawDocuments: Types.DocumentFile[], config: FlowDocumentsPluginConfig) => {
+  const documents = config.flattenGeneratedTypes ? optimizeOperations(schema, rawDocuments) : rawDocuments;
   let prefix = `type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;\n`;
 
   const allAst = concatAST(
