@@ -8,28 +8,22 @@ import {
   isObjectType,
   isUnionType,
   isInterfaceType,
-  isEnumType,
   GraphQLSchema,
   GraphQLField,
   SchemaMetaFieldDef,
   TypeMetaFieldDef,
-  GraphQLInterfaceType,
   SelectionNode,
   isListType,
   isNonNullType,
+  GraphQLObjectType,
   GraphQLOutputType,
 } from 'graphql';
 import { getPossibleTypes, separateSelectionSet, getFieldNodeNameValue, DeclarationBlock, mergeSelectionSets } from './utils';
 import { NormalizedScalarsMap, ConvertNameFn, LoadedFragment } from './types';
-import { GraphQLObjectType, GraphQLNonNull, GraphQLList } from 'graphql';
 import { BaseVisitorConvertOptions } from './base-visitor';
 import { getBaseType } from '@graphql-codegen/plugin-helpers';
 import { ParsedDocumentsConfig } from './base-documents-visitor';
-
-export type PrimitiveField = string;
-export type PrimitiveAliasedFields = { alias: string; fieldName: string };
-export type LinkField = { alias: string; name: string; type: string; selectionSet: string };
-export type FragmentsMap = { [onType: string]: string[] };
+import { LinkField, PrimitiveAliasedFields, PrimitiveField, BaseSelectionSetProcessor, ProcessResult, NameAndType } from './selection-set-processor/base';
 
 function isMetadataFieldName(name: string) {
   return ['__schema', '__type'].includes(name);
@@ -44,10 +38,10 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
   protected _primitiveFields: PrimitiveField[] = [];
   protected _primitiveAliasedFields: PrimitiveAliasedFields[] = [];
   protected _linksFields: LinkField[] = [];
-  protected _fragments: FragmentsMap = {};
   protected _queriedForTypename = false;
 
   constructor(
+    protected _processor: BaseSelectionSetProcessor<any>,
     protected _scalars: NormalizedScalarsMap,
     protected _schema: GraphQLSchema,
     protected _convertName: ConvertNameFn<BaseVisitorConvertOptions>,
@@ -58,11 +52,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
   ) {}
 
   public createNext(parentSchemaType: GraphQLNamedType, selectionSet: SelectionSetNode): SelectionSetToObject {
-    throw new Error(`You must override createNext in your SelectionSetToObject implementation!`);
-  }
-
-  protected wrapTypeWithModifiers(baseType: string, type: GraphQLObjectType | GraphQLNonNull<GraphQLObjectType> | GraphQLList<GraphQLObjectType>): string {
-    throw new Error(`You must override wrapTypeWithModifiers in your SelectionSetToObject implementation!`);
+    return new SelectionSetToObject(this._processor, this._scalars, this._schema, this._convertName, this._loadedFragments, this._config, parentSchemaType, selectionSet);
   }
 
   /**
@@ -321,7 +311,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
         alias: field.alias ? field.alias.value : undefined,
         name: field.name.value,
         type: realSelectedFieldType.name,
-        selectionSet: this.wrapTypeWithModifiers(
+        selectionSet: this._processor.config.wrapTypeWithModifiers(
           selectionSet
             .transformSelectionSet()
             .split(`\n`)
@@ -331,35 +321,23 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       });
     }
 
-    const parentName =
-      (this._config.namespacedImportName ? `${this._config.namespacedImportName}.` : '') +
-      this._convertName(parentSchemaType.name, {
-        useTypesPrefix: true,
-      });
-
     const typeInfoField = this.buildTypeNameField(parentSchemaType, this._config.nonOptionalTypename, this._config.addTypename, requireTypename);
+    const transformed: ProcessResult = [
+      ...(typeInfoField ? this._processor.transformTypenameField(typeInfoField.type, typeInfoField.name) : []),
+      ...this._processor.transformPrimitiveFields(parentSchemaType, Array.from(primitiveFields.values()).map(field => field.name.value)),
+      ...this._processor.transformAliasesPrimitiveFields(parentSchemaType, Array.from(primitiveAliasFields.values()).map(field => ({ alias: field.alias.value, fieldName: field.name.value }))),
+      ...this._processor.transformLinkFields(linkFields),
+    ].filter(Boolean);
 
-    if (this._config.preResolveTypes) {
-      const primitiveFieldsTypes = this.buildPrimitiveFieldsWithoutPick(parentSchemaType, Array.from(primitiveFields.values()).map(field => field.name.value));
-      const primitiveAliasTypes = this.buildAliasedPrimitiveFieldsWithoutPick(parentSchemaType, Array.from(primitiveAliasFields.values()).map(field => ({ alias: field.alias.value, fieldName: field.name.value })));
-      const linkFieldsTypes = this.buildLinkFieldsWithoutPick(linkFields);
+    const allStrings: string[] = transformed.filter(t => typeof t === 'string') as string[];
+    const allObjectsMerged: string[] = transformed.filter(t => typeof t !== 'string').map((t: NameAndType) => `${t.name}: ${t.type}`);
+    let mergedObjectsAsString: string = null;
 
-      return `{ ${[typeInfoField, ...primitiveFieldsTypes, ...primitiveAliasTypes, ...linkFieldsTypes]
-        .filter(a => a)
-        .map(b => `${b.name}: ${b.type}`)
-        .join(', ')} }`;
+    if (allObjectsMerged.length > 0) {
+      mergedObjectsAsString = `{ ${allObjectsMerged.join(', ')} }`;
     }
 
-    let typeInfoString: null | string = null;
-
-    if (typeInfoField) {
-      typeInfoString = `{ ${typeInfoField.name}: ${typeInfoField.type} }`;
-    }
-
-    const primitiveFieldsString = this.buildPrimitiveFields(parentName, Array.from(primitiveFields.values()).map(field => field.name.value));
-    const primitiveAliasFieldsString = this.buildAliasedPrimitiveFields(parentName, Array.from(primitiveAliasFields.values()).map(field => ({ alias: field.alias.value, fieldName: field.name.value })));
-    const linkFieldsString = this.buildLinkFields(linkFields);
-    const fields = [typeInfoString, primitiveFieldsString, primitiveAliasFieldsString, linkFieldsString, ...fragmentsSpreadUsages].filter(Boolean);
+    const fields = [...allStrings, mergedObjectsAsString, ...fragmentsSpreadUsages].filter(Boolean);
 
     if (fields.length === 0) {
       return null;
@@ -368,70 +346,6 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     } else {
       return `(\n  ${fields.join(`\n  & `)}\n)`;
     }
-  }
-
-  protected buildFieldsWithoutPick(parentType: GraphQLObjectType): string {
-    const typeName = this.buildTypeNameField(parentType);
-    const baseFields = this.buildPrimitiveFieldsWithoutPick(this._parentSchemaType as any, this._primitiveFields);
-    const linksFields = this.buildLinkFieldsWithoutPick(this._linksFields);
-    const aliasBaseFields = this.buildAliasedPrimitiveFieldsWithoutPick(this._parentSchemaType as any, this._primitiveAliasedFields);
-    let mergedFields = `{ ${[typeName, ...baseFields, ...aliasBaseFields, ...linksFields]
-      .filter(a => a)
-      .map(b => `${b.name}: ${b.type}`)
-      .join(', ')} }`;
-
-    return mergedFields;
-  }
-
-  protected buildAliasedPrimitiveFieldsWithoutPick(schemaType: GraphQLObjectType | GraphQLInterfaceType, fields: PrimitiveAliasedFields[]): { name: string; type: string }[] {
-    if (fields.length === 0) {
-      return [];
-    }
-
-    return fields.map(aliasedField => {
-      const fieldObj = schemaType.getFields()[aliasedField.fieldName];
-      const baseType = getBaseType(fieldObj.type);
-      const typeToUse = this._scalars[baseType.name] || baseType.name;
-      const wrappedType = this.wrapTypeWithModifiers(typeToUse, fieldObj.type as GraphQLObjectType);
-
-      return {
-        name: this.formatNamedField(aliasedField.alias),
-        type: wrappedType,
-      };
-    });
-  }
-
-  protected buildLinkFieldsWithoutPick(fields: LinkField[]): { name: string; type: string }[] {
-    if (fields.length === 0) {
-      return [];
-    }
-
-    return fields.map(field => ({ name: this.formatNamedField(field.alias || field.name), type: field.selectionSet }));
-  }
-
-  protected buildPrimitiveFieldsWithoutPick(schemaType: GraphQLObjectType | GraphQLInterfaceType, fields: PrimitiveField[]): { name: string; type: string }[] {
-    if (fields.length === 0) {
-      return [];
-    }
-
-    return fields.map(field => {
-      const fieldObj = schemaType.getFields()[field];
-      const baseType = getBaseType(fieldObj.type);
-      let typeToUse = baseType.name;
-
-      if (isEnumType(baseType)) {
-        typeToUse = (this._config.namespacedImportName ? `${this._config.namespacedImportName}.` : '') + this._convertName(baseType.name, { useTypesPrefix: this._config.enumPrefix });
-      } else if (this._scalars[baseType.name]) {
-        typeToUse = this._scalars[baseType.name];
-      }
-
-      const wrappedType = this.wrapTypeWithModifiers(typeToUse, fieldObj.type as GraphQLObjectType);
-
-      return {
-        name: this.formatNamedField(field),
-        type: wrappedType,
-      };
-    });
   }
 
   protected buildTypeNameField(
@@ -444,39 +358,12 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       const optionalTypename = !queriedForTypename && !nonOptionalTypename;
 
       return {
-        name: `${this.formatNamedField('__typename')}${optionalTypename ? '?' : ''}`,
+        name: `${this._processor.config.formatNamedField('__typename')}${optionalTypename ? '?' : ''}`,
         type: `'${type.name}'`,
       };
     }
+
     return null;
-  }
-
-  protected buildPrimitiveFields(parentName: string, fields: PrimitiveField[]): string | null {
-    if (fields.length === 0) {
-      return null;
-    }
-
-    return `Pick<${parentName}, ${fields.map(field => `'${field}'`).join(' | ')}>`;
-  }
-
-  protected buildAliasedPrimitiveFields(parentName: string, fields: PrimitiveAliasedFields[]): string | null {
-    if (fields.length === 0) {
-      return null;
-    }
-
-    return `{ ${fields.map(aliasedField => `${this.formatNamedField(aliasedField.alias)}: ${parentName}['${aliasedField.fieldName}']`).join(', ')} }`;
-  }
-
-  protected formatNamedField(name: string): string {
-    return name;
-  }
-
-  protected buildLinkFields(fields: LinkField[]): string | null {
-    if (fields.length === 0) {
-      return null;
-    }
-
-    return `{ ${fields.map(field => `${this.formatNamedField(field.alias || field.name)}: ${field.selectionSet}`).join(', ')} }`;
   }
 
   public transformSelectionSet(): string {

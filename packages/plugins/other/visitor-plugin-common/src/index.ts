@@ -12,3 +12,6 @@ export * from './client-side-base-visitor';
 
 export * from './variables-to-object';
 export * from './selection-set-to-object';
+
+export * from './selection-set-processor/base';
+export * from './selection-set-processor/pre-resolve-types';
