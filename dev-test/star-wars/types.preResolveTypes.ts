@@ -266,9 +266,13 @@ export type HeroDetailsWithFragmentQueryVariables = {
   episode?: Maybe<Episode>;
 };
 
-export type HeroDetailsWithFragmentQuery = { __typename?: 'Query'; hero: Maybe<({ __typename?: 'Human' } | { __typename?: 'Droid' }) & HeroDetailsFragment> };
+export type HeroDetailsWithFragmentQuery = { __typename?: 'Query'; hero: Maybe<({ __typename?: 'Human' } & HeroDetails_Human_Fragment) | ({ __typename?: 'Droid' } & HeroDetails_Droid_Fragment)> };
 
-export type HeroDetailsFragment = { __typename?: 'Human'; height: Maybe<number>; name: string } | { __typename?: 'Droid'; primaryFunction: Maybe<string>; name: string };
+type HeroDetails_Human_Fragment = { __typename?: 'Human'; height: Maybe<number>; name: string };
+
+type HeroDetails_Droid_Fragment = { __typename?: 'Droid'; primaryFunction: Maybe<string>; name: string };
+
+export type HeroDetailsFragment = HeroDetails_Human_Fragment | HeroDetails_Droid_Fragment;
 
 export type HeroNameQueryVariables = {
   episode?: Maybe<Episode>;

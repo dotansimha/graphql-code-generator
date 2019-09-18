@@ -61,7 +61,7 @@ describe('executePlugin', () => {
       }
     );
   });
-  it('should not throw an error when the \'skipDocumentsValidation\' option is set to true', () => {
+  it("should not throw an error when the 'skipDocumentsValidation' option is set to true", () => {
     const options = {
       allPlugins: [
         {

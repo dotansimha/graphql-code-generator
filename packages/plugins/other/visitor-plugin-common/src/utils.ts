@@ -1,8 +1,29 @@
 import { pascalCase } from 'change-case';
-import { NameNode, Kind, TypeNode, NamedTypeNode, GraphQLObjectType, GraphQLNamedType, isScalarType, GraphQLSchema, GraphQLScalarType, StringValueNode, isEqualType } from 'graphql';
+import {
+  NameNode,
+  Kind,
+  TypeNode,
+  NamedTypeNode,
+  GraphQLObjectType,
+  GraphQLNamedType,
+  isScalarType,
+  GraphQLSchema,
+  GraphQLScalarType,
+  StringValueNode,
+  isEqualType,
+  SelectionSetNode,
+  FieldNode,
+  SelectionNode,
+  FragmentSpreadNode,
+  InlineFragmentNode,
+  isNonNullType,
+  isObjectType,
+} from 'graphql';
 import { ScalarsMap, NormalizedScalarsMap, ParsedScalarsMap } from './types';
 import { DEFAULT_SCALARS } from './scalars';
 import { parseMapper } from './mappers';
+import { isListType } from 'graphql';
+import { isAbstractType } from 'graphql';
 
 export const getConfigValue = <T = any>(value: T, defaultValue: T): T => {
   if (value === null || value === undefined) {
@@ -298,3 +319,57 @@ export function stripMapperTypeInterpolation(identifier: string): string {
 
 export const OMIT_TYPE = 'export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;';
 export const REQUIRE_FIELDS_TYPE = `export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } & { [P in K]-?: NonNullable<T[P]> };`;
+
+export function mergeSelectionSets(selectionSet1: SelectionSetNode, selectionSet2: SelectionSetNode): void {
+  const newSelections = [...selectionSet1.selections];
+
+  for (const selection2 of selectionSet2.selections) {
+    if (selection2.kind === 'FragmentSpread') {
+      newSelections.push(selection2);
+      continue;
+    }
+
+    if (selection2.kind !== 'Field') {
+      throw new TypeError('Invalid state.');
+    }
+
+    const match = newSelections.find(selection1 => selection1.kind === 'Field' && getFieldNodeNameValue(selection1) === getFieldNodeNameValue(selection2));
+
+    if (match) {
+      // recursively merge all selection sets
+      if (match.kind === 'Field' && match.selectionSet && selection2.selectionSet) {
+        mergeSelectionSets(match.selectionSet, selection2.selectionSet);
+      }
+      continue;
+    }
+
+    newSelections.push(selection2);
+  }
+
+  // replace existing selections
+  selectionSet1.selections = newSelections;
+}
+
+export const getFieldNodeNameValue = (node: FieldNode): string => {
+  return (node.alias || node.name).value;
+};
+
+export function separateSelectionSet(selections: ReadonlyArray<SelectionNode>): { fields: FieldNode[]; spreads: FragmentSpreadNode[]; inlines: InlineFragmentNode[] } {
+  return {
+    fields: selections.filter(s => s.kind === Kind.FIELD) as FieldNode[],
+    inlines: selections.filter(s => s.kind === Kind.INLINE_FRAGMENT) as InlineFragmentNode[],
+    spreads: selections.filter(s => s.kind === Kind.FRAGMENT_SPREAD) as FragmentSpreadNode[],
+  };
+}
+
+export function getPossibleTypes(schema: GraphQLSchema, type: GraphQLNamedType): GraphQLObjectType[] {
+  if (isListType(type) || isNonNullType(type)) {
+    return getPossibleTypes(schema, type.ofType);
+  } else if (isObjectType(type)) {
+    return [type];
+  } else if (isAbstractType(type)) {
+    return schema.getPossibleTypes(type) as Array<GraphQLObjectType>;
+  }
+
+  return [];
+}

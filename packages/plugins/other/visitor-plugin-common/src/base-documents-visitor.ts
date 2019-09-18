@@ -25,6 +25,7 @@ export interface ParsedDocumentsConfig extends ParsedTypesConfig {
   globalNamespace: boolean;
   operationResultSuffix: string;
   dedupeOperationSuffix: boolean;
+  exportFragmentSpreadSubTypes: boolean;
 }
 
 export interface RawDocumentsConfig extends RawTypesConfig {
@@ -70,6 +71,13 @@ export interface RawDocumentsConfig extends RawTypesConfig {
    * @description Set this configuration to `true` if you wish to make sure to remove duplicate operation name suffix.
    */
   dedupeOperationSuffix?: boolean;
+  /**
+   * @name exportFragmentSpreadSubTypes
+   * @type boolean
+   * @default false
+   * @description If set to true, it will export the sub-types created in order to make it easier to access fields declared under fragment spread.
+   */
+  exportFragmentSpreadSubTypes?: boolean;
 }
 
 export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDocumentsConfig, TPluginConfig extends ParsedDocumentsConfig = ParsedDocumentsConfig> extends BaseVisitor<TRawConfig, TPluginConfig> {
@@ -79,6 +87,7 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
 
   constructor(rawConfig: TRawConfig, additionalConfig: TPluginConfig, protected _schema: GraphQLSchema, defaultScalars: NormalizedScalarsMap = DEFAULT_SCALARS) {
     super(rawConfig, {
+      exportFragmentSpreadSubTypes: getConfigValue(rawConfig.exportFragmentSpreadSubTypes, false),
       enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
       preResolveTypes: getConfigValue(rawConfig.preResolveTypes, false),
       dedupeOperationSuffix: getConfigValue(rawConfig.dedupeOperationSuffix, false),
@@ -140,16 +149,7 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
     const selectionSet = this._selectionSetToObject.createNext(fragmentRootType, node.selectionSet);
     const fragmentSuffix = this.config.dedupeOperationSuffix && node.name.value.toLowerCase().endsWith('fragment') ? '' : 'Fragment';
 
-    return new DeclarationBlock(this._declarationBlockConfig)
-      .export()
-      .asKind('type')
-      .withName(
-        this.convertName(node, {
-          useTypesPrefix: true,
-          suffix: fragmentSuffix,
-        })
-      )
-      .withContent(selectionSet.string).string;
+    return selectionSet.transformFragmentSelectionSetToTypes(node.name.value, fragmentSuffix, this._declarationBlockConfig);
   }
 
   OperationDefinition(node: OperationDefinitionNode): string {
@@ -172,7 +172,7 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
           suffix: operationTypeSuffix + this._parsedConfig.operationResultSuffix,
         })
       )
-      .withContent(selectionSet.string).string;
+      .withContent(selectionSet.transformSelectionSet()).string;
 
     const operationVariables = new DeclarationBlock(this._declarationBlockConfig)
       .export()

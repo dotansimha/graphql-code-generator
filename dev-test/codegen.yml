@@ -20,14 +20,14 @@ generates:
       - add: // tslint:disable
       - typescript
       - typescript-resolvers
-  ./dev-test/test-schema/resolvers-federation.ts:
-    schema: ./dev-test/test-schema/schema-federation.graphql
-    config:
-      federation: true
-    plugins:
-      - add: // tslint:disable
-      - typescript
-      - typescript-resolvers
+  # ./dev-test/test-schema/resolvers-federation.ts:
+  #   schema: ./dev-test/test-schema/schema-federation.graphql
+  #   config:
+  #     federation: true
+  #   plugins:
+  #     - add: // tslint:disable
+  #     - typescript
+  #     - typescript-resolvers
   ./dev-test/test-schema/typings.ts:
     schema: ./dev-test/test-schema/schema.json
     plugins:
@@ -79,6 +79,15 @@ generates:
     documents: ./dev-test/githunt/**/*.graphql
     config:
       preResolveTypes: true
+    plugins:
+      - typescript
+      - typescript-operations
+  ./dev-test/githunt/types.flatten.preResolveTypes.ts:
+    schema: ./dev-test/githunt/schema.json
+    documents: ./dev-test/githunt/**/*.graphql
+    config:
+      preResolveTypes: true
+      flattenGeneratedTypes: true
     plugins:
       - typescript
       - typescript-operations
