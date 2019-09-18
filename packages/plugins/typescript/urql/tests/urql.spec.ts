@@ -3,8 +3,8 @@ import { plugin } from '../src/index';
 import { parse, GraphQLSchema, buildClientSchema, buildASTSchema } from 'graphql';
 import gql from 'graphql-tag';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
-import { plugin as tsPlugin } from '@graphql-codegen/typescript/src';
-import { plugin as tsDocumentsPlugin } from '../../operations/src/index';
+import { plugin as tsPlugin } from '@graphql-codegen/typescript';
+import { plugin as tsDocumentsPlugin } from '@graphql-codegen/typescript-operations';
 import { readFileSync } from 'fs';
 
 describe('urql', () => {
