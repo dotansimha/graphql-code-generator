@@ -66,16 +66,9 @@ export const plugin: PluginFunction<TypeScriptResolversPluginConfig> = (schema: 
   const imports = ['GraphQLResolveInfo'];
   const showUnusedMappers = typeof config.showUnusedMappers === 'boolean' ? config.showUnusedMappers : true;
   const noSchemaStitching = typeof config.noSchemaStitching === 'boolean' ? config.noSchemaStitching : false;
-  const hasScalars = Object.values(schema.getTypeMap())
-    .filter(t => t.astNode)
-    .some(isScalarType);
 
   if (config.noSchemaStitching === false) {
     console['warn'](`The default behavior of 'noSchemaStitching' will be reversed in the next major release. Support for Schema Stitching will be disabled by default.`);
-  }
-
-  if (hasScalars) {
-    imports.push('GraphQLScalarType', 'GraphQLScalarTypeConfig');
   }
 
   const indexSignature = config.useIndexSignature ? ['export type WithIndex<TObject> = TObject & Record<string, any>;', 'export type ResolversObject<TObject> = WithIndex<TObject>;'].join('\n') : '';
@@ -173,7 +166,11 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   const visitorResult = visit(astNode, { leave: visitor });
   const resolversTypeMapping = visitor.buildResolversTypes();
   const resolversParentTypeMapping = visitor.buildResolversParentTypes();
-  const { getRootResolver, getAllDirectiveResolvers, mappersImports, unusedMappers } = visitor;
+  const { getRootResolver, getAllDirectiveResolvers, mappersImports, unusedMappers, hasScalars } = visitor;
+
+  if (hasScalars()) {
+    imports.push('GraphQLScalarType', 'GraphQLScalarTypeConfig');
+  }
 
   if (showUnusedMappers && unusedMappers.length) {
     console['warn'](`Unused mappers: ${unusedMappers.join(',')}`);

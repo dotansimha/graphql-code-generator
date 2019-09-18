@@ -9,13 +9,6 @@ export interface FlowResolversPluginConfig extends RawResolversConfig {}
 export const plugin: PluginFunction<FlowResolversPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: FlowResolversPluginConfig) => {
   const imports = ['type GraphQLResolveInfo'];
   const showUnusedMappers = typeof config.showUnusedMappers === 'boolean' ? config.showUnusedMappers : true;
-  const hasScalars = Object.values(schema.getTypeMap())
-    .filter(t => t.astNode)
-    .some(isScalarType);
-
-  if (hasScalars) {
-    imports.push('type GraphQLScalarTypeConfig');
-  }
 
   const gqlImports = `import { ${imports.join(', ')} } from 'graphql';`;
 
@@ -86,7 +79,11 @@ ${visitor.getResolverTypeWrapperSignature()}
   const visitorResult = visit(astNode, { leave: visitor });
   const resolversTypeMapping = visitor.buildResolversTypes();
   const resolversParentTypeMapping = visitor.buildResolversParentTypes();
-  const { getRootResolver, getAllDirectiveResolvers, mappersImports, unusedMappers } = visitor;
+  const { getRootResolver, getAllDirectiveResolvers, mappersImports, unusedMappers, hasScalars } = visitor;
+
+  if (hasScalars()) {
+    imports.push('type GraphQLScalarTypeConfig');
+  }
 
   if (showUnusedMappers && unusedMappers.length) {
     console['warn'](`Unused mappers: ${unusedMappers.join(',')}`);
