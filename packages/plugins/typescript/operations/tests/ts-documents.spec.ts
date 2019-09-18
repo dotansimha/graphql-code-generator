@@ -598,6 +598,7 @@ describe('TypeScript Operations Plugin', () => {
       `);
       await validate(result, config);
     });
+
     it('Should add __typename as non-optional when forced', async () => {
       const ast = parse(/* GraphQL */ `
         query {
@@ -3099,6 +3100,139 @@ describe('TypeScript Operations Plugin', () => {
         & { user: (
           { __typename?: 'User' }
           & Pick<User, 'id' | 'login'>
+        ) | (
+          { __typename?: 'Error2' }
+          & Pick<Error2, 'message'>
+        ) | (
+          { __typename?: 'Error3' }
+          & Pick<Error3, 'message'>
+          & { info: Maybe<(
+            { __typename?: 'AdditionalInfo' }
+            & Pick<AdditionalInfo, 'message2' | 'message'>
+          )> }
+        ) }
+      );
+      `);
+    });
+
+    it('Should handle union selection sets with both FragmentSpreads and InlineFragments with flattenGeneratedTypes and directives', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        interface Error {
+          message: String!
+        }
+        type Error1 implements Error {
+          message: String!
+        }
+        type Error2 implements Error {
+          message: String!
+        }
+        type Error3 implements Error {
+          message: String!
+          info: AdditionalInfo
+        }
+        type AdditionalInfo {
+          message: String!
+          message2: String!
+        }
+        type User {
+          id: ID!
+          login: String!
+          test: String
+          test2: String
+        }
+
+        union UserResult = User | Error2 | Error3
+
+        type Query {
+          user: UserResult!
+        }
+
+        directive @client on FIELD
+        directive @connection on FIELD
+      `);
+
+      const query = parse(/* GraphQL */ `
+        query UserQuery {
+          user {
+            ...UserResult
+            ...UserResult1
+            ... on User {
+              login
+              test @client
+            }
+            ... on Error3 {
+              message
+              info {
+                ...AdditionalInfo
+              }
+            }
+          }
+        }
+
+        fragment AdditionalInfo on AdditionalInfo {
+          message
+        }
+
+        fragment UserResult1 on UserResult {
+          ... on User {
+            id
+            test2 @connection
+          }
+          ... on Error3 {
+            info {
+              message2
+            }
+          }
+        }
+
+        fragment UserResult on UserResult {
+          ... on User {
+            id
+          }
+          ... on Error2 {
+            message
+          }
+        }
+      `);
+
+      const config = {
+        flattenGeneratedTypes: true,
+      };
+
+      const content = await plugin(testSchema, [{ filePath: '', content: query }], config, {
+        outputFile: 'graphql.ts',
+      });
+
+      const output = await validateAndCompile(
+        content,
+        config,
+        testSchema,
+        `
+        function t(q: UserQueryQuery) {
+            if (q.user) {
+                if (q.user.__typename === 'User') {
+                    if (q.user.id) {
+                        const u = q.user.login;
+                    }
+                }
+                if (q.user.__typename === 'Error2') {
+                    console.log(q.user.message);
+                }
+                if (q.user.__typename === 'Error3') {
+                    if (q.user.info) {
+                        console.log(q.user.info.__typename)
+                    }
+                }
+            }
+        }`
+      );
+
+      expect(output).toBeSimilarStringTo(`
+      export type UserQueryQuery = (
+        { __typename?: 'Query' }
+        & { user: (
+          { __typename?: 'User' }
+          & Pick<User, 'id' | 'test2' | 'login' | 'test'>
         ) | (
           { __typename?: 'Error2' }
           & Pick<Error2, 'message'>
