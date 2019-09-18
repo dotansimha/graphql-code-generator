@@ -6,10 +6,9 @@ import { VoteButtonsFragmentDoc } from '../vote-buttons.fragment.stencil-compone
 import { RepoInfoFragmentDoc } from '../repo-info.fragment.stencil-component';
 
 declare global {
-  export type FeedEntryFragment = ({ __typename?: 'Entry' } & Pick<Types.Entry, 'id' | 'commentCount'> & {
+  export type FeedEntryFragment = { __typename?: 'Entry' } & Pick<Types.Entry, 'id' | 'commentCount'> & {
       repository: { __typename?: 'Repository' } & Pick<Types.Repository, 'full_name' | 'html_url'> & { owner: Types.Maybe<{ __typename?: 'User' } & Pick<Types.User, 'avatar_url'>> };
-    }) &
-    VoteButtonsFragment &
+    } & VoteButtonsFragment &
     RepoInfoFragment;
 }
 

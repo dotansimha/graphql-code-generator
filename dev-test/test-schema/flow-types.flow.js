@@ -1,7 +1,7 @@
 /* @flow */
 
 import { type GraphQLResolveInfo } from 'graphql';
-export type $RequireFields<Origin, Keys> = $Diff<Args, Keys> & $ObjMapi<Keys, <Key>(k: Key) => $NonMaybeType<$ElementType<Origin, Key>>>;
+export type $RequireFields<Origin, Keys> = $Diff<Origin, Keys> & $ObjMapi<Keys, <Key>(k: Key) => $NonMaybeType<$ElementType<Origin, Key>>>;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string,
@@ -33,19 +33,19 @@ export type SubscriptionSubscribeFn<Result, Parent, Context, Args> = (parent: Pa
 
 export type SubscriptionResolveFn<Result, Parent, Context, Args> = (parent: Parent, args: Args, context: Context, info: GraphQLResolveInfo) => Result | Promise<Result>;
 
-export interface ISubscriptionSubscriberObject<Result, Key: string, Parent, Context, Args> {
+export interface SubscriptionSubscriberObject<Result, Key: string, Parent, Context, Args> {
   subscribe: SubscriptionSubscribeFn<{ [key: Key]: Result }, Parent, Context, Args>;
   resolve?: SubscriptionResolveFn<Result, { [key: Key]: Result }, Context, Args>;
 }
 
-export interface ISubscriptionResolverObject<Result, Parent, Context, Args> {
+export interface SubscriptionResolverObject<Result, Parent, Context, Args> {
   subscribe: SubscriptionSubscribeFn<mixed, Parent, Context, Args>;
   resolve: SubscriptionResolveFn<Result, mixed, Context, Args>;
 }
 
-export type ISubscriptionObject<Result, Key: string, Parent, Context, Args> = ISubscriptionSubscriberObject<Result, Key, Parent, Context, Args> | ISubscriptionSubscribeResolveObject<Result, Parent, Context, Args>;
+export type SubscriptionObject<Result, Key: string, Parent, Context, Args> = SubscriptionSubscriberObject<Result, Key, Parent, Context, Args> | SubscriptionResolverObject<Result, Parent, Context, Args>;
 
-export type SubscriptionResolver<Result, Key: string, Parent = {}, Context = {}, Args = {}> = ((...args: Array<any>) => ISubscriptionObject<Result, Key, Parent, Context, Args>) | ISubscriptionObject<Result, Key, Parent, Context, Args>;
+export type SubscriptionResolver<Result, Key: string, Parent = {}, Context = {}, Args = {}> = ((...args: Array<any>) => SubscriptionObject<Result, Key, Parent, Context, Args>) | SubscriptionObject<Result, Key, Parent, Context, Args>;
 
 export type TypeResolveFn<Types, Parent = {}, Context = {}> = (parent: Parent, context: Context, info: GraphQLResolveInfo) => ?Types;
 
