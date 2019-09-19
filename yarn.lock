@@ -2612,10 +2612,10 @@
     "@types/events" "*"
     "@types/node" "*"
 
-"@types/codemirror@0.0.76":
-  version "0.0.76"
-  resolved "https://registry.yarnpkg.com/@types/codemirror/-/codemirror-0.0.76.tgz#c52719878056a216bc05889b46a41d4eb1434423"
-  integrity sha512-k/hpUb+Ebyn9z63qM8IbsRiW0eYHZ+pi/1e2reGzBKAZJzkjWmNTXXqLLiNv5d9ekyxkajxRBr5Hu2WZq/nokw==
+"@types/codemirror@0.0.77":
+  version "0.0.77"
+  resolved "https://registry.yarnpkg.com/@types/codemirror/-/codemirror-0.0.77.tgz#6785a0183b4aea147de650530259ebf2a511bde9"
+  integrity sha512-nfjRJpAXgkT075jztMp92Ol2b7w7JrDvpfBU70GfVhpfdpWiZi6NqVIO3STGNzWl77/iJkTu2ZSg6hQobrEadg==
   dependencies:
     "@types/tern" "*"
 
