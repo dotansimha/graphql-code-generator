@@ -1,7 +1,6 @@
-import { Types, CodegenPlugin, federationSpec, turnExtensionsIntoObjectTypes } from '@graphql-codegen/plugin-helpers';
+import { Types, CodegenPlugin } from '@graphql-codegen/plugin-helpers';
 import { DocumentNode, GraphQLSchema, buildASTSchema, Kind } from 'graphql';
 import { DetailedError } from './errors';
-import { mergeSchemas } from './merge-schemas';
 import { validateGraphQlDocuments, checkValidationErrors } from 'graphql-toolkit';
 
 export interface ExecutePluginOptions {
@@ -14,24 +13,6 @@ export interface ExecutePluginOptions {
   outputFilename: string;
   allPlugins: Types.ConfiguredPlugin[];
   skipDocumentsValidation?: boolean;
-}
-
-function isObjectMap(obj: any): obj is Types.ObjectMap<any> {
-  return obj && typeof obj === 'object' && !Array.isArray(obj);
-}
-
-function prioritize<T>(...values: T[]): T {
-  const picked = values.find(val => typeof val === 'boolean');
-
-  if (typeof picked !== 'boolean') {
-    return values[values.length - 1];
-  }
-
-  return picked;
-}
-
-function pickFlag(flag: string, config: Types.PluginConfig): boolean | undefined {
-  return isObjectMap(config) ? (config as any)[flag] : undefined;
 }
 
 export async function executePlugin(options: ExecutePluginOptions, plugin: CodegenPlugin): Promise<Types.PluginOutput> {
@@ -52,19 +33,9 @@ export async function executePlugin(options: ExecutePluginOptions, plugin: Codeg
     );
   }
 
-  const federationInParentConfig = pickFlag('federation', options.parentConfig);
-  const federationInConfig = pickFlag('federation', options.config);
-  const isFederation = prioritize(federationInConfig, federationInParentConfig, false);
-
   const skipDocumentValidation = typeof options.config === 'object' && !Array.isArray(options.config) && options.config.skipDocumentsValidation;
 
-  let schema = options.schemaAst;
-
-  if (isFederation) {
-    schema = buildASTSchema(turnExtensionsIntoObjectTypes(mergeSchemas([schema || options.schema, federationSpec])), {
-      assumeValidSDL: true,
-    });
-  }
+  const schema = options.schemaAst;
 
   const outputSchema: GraphQLSchema = schema || buildASTSchema(options.schema);
   const documents = options.documents || [];
