@@ -16,6 +16,24 @@ export interface ExecutePluginOptions {
   skipDocumentsValidation?: boolean;
 }
 
+function isObjectMap(obj: any): obj is Types.ObjectMap<any> {
+  return obj && typeof obj === 'object' && !Array.isArray(obj);
+}
+
+function prioritize<T>(...values: T[]): T {
+  const picked = values.find(val => typeof val === 'boolean');
+
+  if (typeof picked !== 'boolean') {
+    return values[values.length - 1];
+  }
+
+  return picked;
+}
+
+function pickFlag(flag: string, config: Types.PluginConfig): boolean | undefined {
+  return isObjectMap(config) ? (config as any)[flag] : undefined;
+}
+
 export async function executePlugin(options: ExecutePluginOptions, plugin: CodegenPlugin): Promise<Types.PluginOutput> {
   if (!plugin || !plugin.plugin || typeof plugin.plugin !== 'function') {
     throw new DetailedError(
@@ -34,7 +52,10 @@ export async function executePlugin(options: ExecutePluginOptions, plugin: Codeg
     );
   }
 
-  const isFederation = typeof options.config === 'object' && !Array.isArray(options.config) && options.config.federation;
+  const federationInParentConfig = pickFlag('federation', options.parentConfig);
+  const federationInConfig = pickFlag('federation', options.config);
+  const isFederation = prioritize(federationInConfig, federationInParentConfig, false);
+
   const skipDocumentValidation = typeof options.config === 'object' && !Array.isArray(options.config) && options.config.skipDocumentsValidation;
 
   let schema = options.schemaAst;
