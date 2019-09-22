@@ -131,11 +131,11 @@ ${enumValues}
         const typeToUse = this.resolveInputFieldType(arg.type);
 
         if (typeToUse.isArray && !typeToUse.isScalar) {
-          return indent(`args.get("${arg.name.value}")${typeToUse.nullable ? '?' : '!!'}.let { ${arg.name.value} -> (${arg.name.value} as List<Map<String, Any>>).map { ${typeToUse.baseType}(it) } }`, 3);
+          return indent(`args["${arg.name.value}"]${typeToUse.nullable ? '?' : '!!'}.let { ${arg.name.value} -> (${arg.name.value} as List<Map<String, Any>>).map { ${typeToUse.baseType}(it) } }`, 3);
         } else if (typeToUse.isScalar) {
-          return indent(`args.get("${arg.name.value}") as ${typeToUse.typeName}${typeToUse.nullable ? '?' : ''}`, 3);
+          return indent(`args["${arg.name.value}"] as ${typeToUse.typeName}${typeToUse.nullable ? '?' : ''}`, 3);
         } else {
-          return indent(`args.get("${arg.name.value}")${typeToUse.nullable ? '?' : '!!'}.let { ${typeToUse.typeName}(it as Map<String, Any>) }`, 3);
+          return indent(`args["${arg.name.value}"]${typeToUse.nullable ? '?' : '!!'}.let { ${typeToUse.typeName}(it as Map<String, Any>) }`, 3);
         }
       })
       .join(',\n');

@@ -131,8 +131,8 @@ describe('Kotlin', () => {
         val g: Iterable<SearchUserInput>? = null
       ) {
         constructor(args: Map<String, Any>) : this(
-          args.get("f") as Iterable<String>?,
-          args.get("g")?.let { g -> (g as List<Map<String, Any>>).map { SearchUserInput(it) } }
+          args["f"] as Iterable<String>?,
+          args["g"]?.let { g -> (g as List<Map<String, Any>>).map { SearchUserInput(it) } }
         )
       }`);
     });
@@ -146,8 +146,8 @@ describe('Kotlin', () => {
         val limit: Int? = null
       ) {
         constructor(args: Map<String, Any>) : this(
-          args.get("skip") as Int?,
-          args.get("limit") as Int?
+          args["skip"] as Int?,
+          args["limit"] as Int?
         )
       }`);
     });
@@ -160,7 +160,7 @@ describe('Kotlin', () => {
         val id: Any
       ) {
         constructor(args: Map<String, Any>) : this(
-          args.get("id") as Any
+          args["id"] as Any
         )
       }`);
 
@@ -169,7 +169,7 @@ describe('Kotlin', () => {
         val searchFields: SearchUserInput
       ) {
         constructor(args: Map<String, Any>) : this(
-            args.get("searchFields")!!.let { SearchUserInput(it as Map<String, Any>) }
+            args["searchFields"]!!.let { SearchUserInput(it as Map<String, Any>) }
         )
       }`);
     });
@@ -182,7 +182,7 @@ describe('Kotlin', () => {
           val something: Int? = null
         ) {
           constructor(args: Map<String, Any>) : this(
-              args.get("something") as Int?
+              args["something"] as Int?
           )
         }`);
 
@@ -195,11 +195,11 @@ describe('Kotlin', () => {
           val metadata: MetadataSearchInput? = null
         ) {
           constructor(args: Map<String, Any>) : this(
-              args.get("username") as String?,
-              args.get("email") as String?,
-              args.get("name") as String?,
-              args.get("sort") as ResultSort?,
-              args.get("metadata")?.let { MetadataSearchInput(it as Map<String, Any>) }
+              args["username"] as String?,
+              args["email"] as String?,
+              args["name"] as String?,
+              args["sort"] as ResultSort?,
+              args["metadata"]?.let { MetadataSearchInput(it as Map<String, Any>) }
           )
         }`);
     });
