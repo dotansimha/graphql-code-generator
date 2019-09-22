@@ -4,6 +4,7 @@ import * as autoBind from 'auto-bind';
 import { OperationDefinitionNode, Kind } from 'graphql';
 import { toPascalCase, Types } from '@graphql-codegen/plugin-helpers';
 import { pascalCase, camelCase } from 'change-case';
+import { GraphQLSchema } from 'graphql';
 
 export interface ReactApolloPluginConfig extends ClientSideBasePluginConfig {
   withComponent: boolean;
@@ -21,8 +22,8 @@ export interface ReactApolloPluginConfig extends ClientSideBasePluginConfig {
 }
 
 export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPluginConfig, ReactApolloPluginConfig> {
-  constructor(fragments: LoadedFragment[], rawConfig: ReactApolloRawPluginConfig, documents: Types.DocumentFile[]) {
-    super(fragments, rawConfig, {
+  constructor(schema: GraphQLSchema, fragments: LoadedFragment[], rawConfig: ReactApolloRawPluginConfig, documents: Types.DocumentFile[]) {
+    super(schema, fragments, rawConfig, {
       componentSuffix: getConfigValue(rawConfig.componentSuffix, 'Component'),
       withHOC: getConfigValue(rawConfig.withHOC, true),
       withComponent: getConfigValue(rawConfig.withComponent, true),

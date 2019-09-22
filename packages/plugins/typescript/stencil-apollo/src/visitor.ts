@@ -1,7 +1,7 @@
 import { ClientSideBaseVisitor, ClientSideBasePluginConfig, getConfigValue, LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
 import { StencilApolloRawPluginConfig, StencilComponentType } from './index';
 import * as autoBind from 'auto-bind';
-import { FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
+import { FragmentDefinitionNode, OperationDefinitionNode, GraphQLSchema } from 'graphql';
 import { toPascalCase } from '@graphql-codegen/plugin-helpers';
 import * as changeCase from 'change-case';
 
@@ -10,8 +10,8 @@ export interface StencilApolloPluginConfig extends ClientSideBasePluginConfig {
 }
 
 export class StencilApolloVisitor extends ClientSideBaseVisitor<StencilApolloRawPluginConfig, StencilApolloPluginConfig> {
-  constructor(fragments: LoadedFragment[], rawConfig: StencilApolloRawPluginConfig) {
-    super(fragments, rawConfig, {
+  constructor(schema: GraphQLSchema, fragments: LoadedFragment[], rawConfig: StencilApolloRawPluginConfig) {
+    super(schema, fragments, rawConfig, {
       componentType: getConfigValue(rawConfig.componentType, StencilComponentType.functional),
       noExport: rawConfig.componentType === StencilComponentType.class,
     } as any);

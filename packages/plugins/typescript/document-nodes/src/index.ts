@@ -90,7 +90,7 @@ export const plugin: PluginFunction<TypeScriptDocumentNodesRawPluginConfig> = (s
     ...(config.externalFragments || []),
   ];
 
-  const visitor = new TypeScriptDocumentNodesVisitor(allFragments, config);
+  const visitor = new TypeScriptDocumentNodesVisitor(schema, allFragments, config);
   const visitorResult = visit(allAst, { leave: visitor });
 
   return [...visitor.getImports(), visitor.fragments, ...visitorResult.definitions.filter(t => typeof t === 'string')].join('\n');

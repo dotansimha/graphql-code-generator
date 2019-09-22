@@ -1,6 +1,6 @@
 import { ClientSideBaseVisitor, ClientSideBasePluginConfig, LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
 import * as autoBind from 'auto-bind';
-import { OperationDefinitionNode, print, visit } from 'graphql';
+import { OperationDefinitionNode, print, visit, GraphQLSchema } from 'graphql';
 import { ApolloAngularRawPluginConfig } from './index';
 
 const R_MOD = /module\:\s*"([^"]+)"/; // matches: module: "..."
@@ -16,8 +16,8 @@ export interface ApolloAngularPluginConfig extends ClientSideBasePluginConfig {
 }
 
 export class ApolloAngularVisitor extends ClientSideBaseVisitor<ApolloAngularRawPluginConfig, ApolloAngularPluginConfig> {
-  constructor(fragments: LoadedFragment[], private _allOperations: OperationDefinitionNode[], rawConfig: ApolloAngularRawPluginConfig) {
-    super(fragments, rawConfig, {
+  constructor(schema: GraphQLSchema, fragments: LoadedFragment[], private _allOperations: OperationDefinitionNode[], rawConfig: ApolloAngularRawPluginConfig) {
+    super(schema, fragments, rawConfig, {
       ngModule: rawConfig.ngModule,
       namedClient: rawConfig.namedClient,
     });
