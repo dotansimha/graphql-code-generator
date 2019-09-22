@@ -213,34 +213,42 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
       .withContent(possibleTypes).string;
   }
 
+  protected mergeInterfaces(interfaces: string[], hasOtherFields: boolean): string {
+    return interfaces.join(' & ') + (interfaces.length && hasOtherFields ? ' & ' : '');
+  }
+
+  appendInterfacesAndFieldsToBlock(block: DeclarationBlock, interfaces: string[], fields: string[]): void {
+    block.withContent(this.mergeInterfaces(interfaces, fields.length > 0));
+    block.withBlock(this.mergeAllFields(fields, interfaces.length > 0));
+  }
+
   getObjectTypeDeclarationBlock(node: ObjectTypeDefinitionNode, originalNode: ObjectTypeDefinitionNode): DeclarationBlock {
     const optionalTypename = this.config.nonOptionalTypename ? '__typename' : '__typename?';
     const { type } = this._parsedConfig.declarationKind;
-    const allFields = [...(this.config.addTypename ? [indent(`${this.config['immutableTypes'] ? 'readonly' : ''} ${optionalTypename}: '${node.name}'${type === 'class' ? ';' : ','}`)] : []), ...node.fields];
+    const allFields = [...(this.config.addTypename ? [indent(`${this.config['immutableTypes'] ? 'readonly' : ''} ${optionalTypename}: '${node.name}'${type === 'class' ? ';' : ','}`)] : []), ...node.fields] as string[];
+    const interfacesNames = originalNode.interfaces ? originalNode.interfaces.map(i => this.convertName(i)) : [];
 
-    const buildInterfaces = () => {
-      if (!originalNode.interfaces || !node.interfaces.length) {
-        return '';
-      }
-
-      const interfaces = originalNode.interfaces.map(i => this.convertName(i));
-
-      if (type === 'interface' || type === 'class') {
-        return ' extends ' + interfaces.join(', ') + (allFields.length ? ' ' : ' {}');
-      }
-
-      return interfaces.join(' & ') + (allFields.length ? ' & ' : '');
-    };
-    const interfaces = buildInterfaces();
-
-    let declarationBlock = new DeclarationBlock(this._declarationBlockConfig)
+    const declarationBlock = new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind(type)
       .withName(this.convertName(node))
-      .withContent(interfaces)
       .withComment((node.description as any) as string);
 
-    return declarationBlock.withBlock(allFields.join('\n'));
+    if (type === 'interface' || type === 'class') {
+      if (interfacesNames.length > 0) {
+        declarationBlock.withContent(' extends ' + interfacesNames.join(', ') + (allFields.length > 0 ? ' ' : ' {}'));
+      }
+
+      declarationBlock.withBlock(this.mergeAllFields(allFields, false));
+    } else {
+      this.appendInterfacesAndFieldsToBlock(declarationBlock, interfacesNames, allFields);
+    }
+
+    return declarationBlock;
+  }
+
+  protected mergeAllFields(allFields: string[], hasInterfaces: boolean): string {
+    return allFields.join('\n');
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: number | string | undefined, parent: any): string {
@@ -250,8 +258,6 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
   }
 
   getInterfaceTypeDeclarationBlock(node: InterfaceTypeDefinitionNode, originalNode: InterfaceTypeDefinitionNode): DeclarationBlock {
-    const argumentsBlock = this.buildArgumentsBlock(originalNode);
-
     let declarationBlock = new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind(this._parsedConfig.declarationKind.interface)

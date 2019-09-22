@@ -79,6 +79,30 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
     return `import { type ${identifier} } from '${source}';`;
   }
 
+  protected mergeInterfaces(interfaces: string[], hasOtherFields: boolean): string {
+    if (!interfaces.length) {
+      return '';
+    }
+
+    return interfaces.map(i => indent(`...${i}`)).join(',\n') + (hasOtherFields ? ',\n  ' : '');
+  }
+
+  appendInterfacesAndFieldsToBlock(block: DeclarationBlock, interfaces: string[], fields: string[]): void {
+    block.withBlock(this.mergeInterfaces(interfaces, fields.length > 0) + this.mergeAllFields(fields, interfaces.length > 0));
+  }
+
+  protected mergeAllFields(allFields: string[], hasInterfaces: boolean): string {
+    if (allFields.length === 0) {
+      return '';
+    }
+
+    if (!hasInterfaces) {
+      return allFields.join('\n');
+    }
+
+    return `...{\n${allFields.map(s => indent(s)).join('\n')}\n  }`;
+  }
+
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
     const typeName = (node.name as any) as string;
 

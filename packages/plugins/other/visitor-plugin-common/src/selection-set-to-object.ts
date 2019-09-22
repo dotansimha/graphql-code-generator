@@ -334,18 +334,12 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     let mergedObjectsAsString: string = null;
 
     if (allObjectsMerged.length > 0) {
-      mergedObjectsAsString = `{ ${allObjectsMerged.join(', ')} }`;
+      mergedObjectsAsString = this._processor.buildFieldsIntoObject(allObjectsMerged);
     }
 
     const fields = [...allStrings, mergedObjectsAsString, ...fragmentsSpreadUsages].filter(Boolean);
 
-    if (fields.length === 0) {
-      return null;
-    } else if (fields.length === 1) {
-      return fields[0];
-    } else {
-      return `(\n  ${fields.join(`\n  & `)}\n)`;
-    }
+    return this._processor.buildSelectionSetFromStrings(fields);
   }
 
   protected buildTypeNameField(
