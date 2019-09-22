@@ -1052,20 +1052,20 @@ describe('ResolversTypes', () => {
     `);
 
     expect(result.content).toBeSimilarStringTo(`
-      export type ResolversParentTypes = {
-        Query: {},
-        MyType: Omit<MyType, 'otherType'> & { otherType?: Maybe<ResolversTypes['MyOtherType']> },
-        String: Scalars['String'],
-        MyOtherType: MyNamespace.MyCustomOtherType,
-        Subscription: {},
-        Boolean: Scalars['Boolean'],
-        Node: Node,
-        ID: Scalars['ID'],
-        SomeNode: SomeNode,
-        MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'],
-        MyScalar: Scalars['MyScalar'],
-        Int: Scalars['Int'],
-      };
+    export type ResolversParentTypes = {
+      Query: {},
+      MyType: Omit<MyType, 'otherType'> & { otherType?: Maybe<ResolversParentTypes['MyOtherType']> },
+      String: Scalars['String'],
+      MyOtherType: MyNamespace.MyCustomOtherType,
+      Subscription: {},
+      Boolean: Scalars['Boolean'],
+      Node: Node,
+      ID: Scalars['ID'],
+      SomeNode: SomeNode,
+      MyUnion: ResolversParentTypes['MyType'] | ResolversParentTypes['MyOtherType'],
+      MyScalar: Scalars['MyScalar'],
+      Int: Scalars['Int'],
+    };
     `);
   });
 
@@ -1165,20 +1165,20 @@ describe('ResolversTypes', () => {
     `);
 
     expect(result.content).toBeSimilarStringTo(`
-      export type ResolversParentTypes = {
-        Query: MyNamespace.MyRootType,
-        MyType: MyType,
-        String: Scalars['String'],
-        MyOtherType: MyOtherType,
-        Subscription: MyNamespace.MyRootType,
-        Boolean: Scalars['Boolean'],
-        Node: Node,
-        ID: Scalars['ID'],
-        SomeNode: SomeNode,
-        MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'],
-        MyScalar: Scalars['MyScalar'],
-        Int: Scalars['Int'],
-      };
+    export type ResolversParentTypes = {
+      Query: MyNamespace.MyRootType,
+      MyType: MyType,
+      String: Scalars['String'],
+      MyOtherType: MyOtherType,
+      Subscription: MyNamespace.MyRootType,
+      Boolean: Scalars['Boolean'],
+      Node: Node,
+      ID: Scalars['ID'],
+      SomeNode: SomeNode,
+      MyUnion: ResolversParentTypes['MyType'] | ResolversParentTypes['MyOtherType'],
+      MyScalar: Scalars['MyScalar'],
+      Int: Scalars['Int'],
+    };
     `);
   });
 
@@ -1215,20 +1215,20 @@ describe('ResolversTypes', () => {
     `);
 
     expect(result.content).toBeSimilarStringTo(`
-      export type ResolversParentTypes = {
-        Query: {},
-        MyType: MyNamespace.MyType<MyType>,
-        String: MyNamespace.MyDefaultMapper<Scalars['String']>,
-        MyOtherType: MyNamespace.MyDefaultMapper<MyOtherType>,
-        Subscription: {},
-        Boolean: MyNamespace.MyDefaultMapper<Scalars['Boolean']>,
-        Node: MyNamespace.MyDefaultMapper<Node>,
-        ID: MyNamespace.MyDefaultMapper<Scalars['ID']>,
-        SomeNode: MyNamespace.MyDefaultMapper<SomeNode>,
-        MyUnion: MyNamespace.MyDefaultMapper<ResolversTypes['MyType'] | ResolversTypes['MyOtherType']>,
-        MyScalar: MyNamespace.MyDefaultMapper<Scalars['MyScalar']>,
-        Int: MyNamespace.MyDefaultMapper<Scalars['Int']>,
-      };
+    export type ResolversParentTypes = {
+      Query: {},
+      MyType: MyNamespace.MyType<MyType>,
+      String: MyNamespace.MyDefaultMapper<Scalars['String']>,
+      MyOtherType: MyNamespace.MyDefaultMapper<MyOtherType>,
+      Subscription: {},
+      Boolean: MyNamespace.MyDefaultMapper<Scalars['Boolean']>,
+      Node: MyNamespace.MyDefaultMapper<Node>,
+      ID: MyNamespace.MyDefaultMapper<Scalars['ID']>,
+      SomeNode: MyNamespace.MyDefaultMapper<SomeNode>,
+      MyUnion: MyNamespace.MyDefaultMapper<ResolversParentTypes['MyType'] | ResolversParentTypes['MyOtherType']>,
+      MyScalar: MyNamespace.MyDefaultMapper<Scalars['MyScalar']>,
+      Int: MyNamespace.MyDefaultMapper<Scalars['Int']>,
+    };
     `);
   });
 });
