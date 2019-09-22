@@ -948,6 +948,43 @@ describe('TypeScript', () => {
       validateTs(result);
     });
 
+    it('Should generate a scalars mapping correctly when using scalars as path', async () => {
+      const schema = buildSchema(`
+      scalar MyScalar
+
+      type MyType {
+        foo: String
+        bar: MyScalar!
+      }`);
+      const result = (await plugin(
+        schema,
+        [],
+        {
+          scalars: '../../scalars',
+        },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.prepend).toContain(`import { MyScalar } from '../../scalars';`);
+      expect(result.content).toBeSimilarStringTo(`
+      export type Scalars = {
+        ID: string,
+        String: String,
+        Boolean: Boolean,
+        Int: number,
+        Float: number,
+        MyScalar: MyScalar,
+      };`);
+
+      expect(result.content).toBeSimilarStringTo(`
+      export type MyType = {
+        __typename?: 'MyType',
+        foo?: Maybe<Scalars['String']>,
+        bar: Scalars['MyScalar'],
+      };`);
+      validateTs(result);
+    });
+
     it('Should generate a scalars mapping correctly for custom scalars', async () => {
       const schema = buildSchema(`
       scalar MyScalar

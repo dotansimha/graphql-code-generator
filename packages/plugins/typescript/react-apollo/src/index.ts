@@ -185,7 +185,7 @@ export const plugin: PluginFunction<ReactApolloRawPluginConfig> = (schema: Graph
     ...(config.externalFragments || []),
   ];
 
-  const visitor = new ReactApolloVisitor(allFragments, config, documents);
+  const visitor = new ReactApolloVisitor(schema, allFragments, config, documents);
   const visitorResult = visit(allAst, { leave: visitor });
 
   return {

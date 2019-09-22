@@ -108,7 +108,7 @@ export type FragmentNameToFile = { [fragmentName: string]: { filePath: string; i
 export const preset: Types.OutputPreset<NearOperationFileConfig> = {
   buildGeneratesSection: options => {
     const baseVisitor = new BaseVisitor(options.config, {
-      scalars: buildScalars(undefined, options.config.scalars),
+      scalars: buildScalars(options.schemaAst, options.config.scalars),
     });
 
     if (!options.presetConfig.baseTypesPath) {

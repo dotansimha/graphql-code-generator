@@ -65,7 +65,7 @@ export const plugin: PluginFunction<UrqlRawPluginConfig> = (schema: GraphQLSchem
     ...(allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[]).map(fragmentDef => ({ node: fragmentDef, name: fragmentDef.name.value, onType: fragmentDef.typeCondition.name.value, isExternal: false })),
     ...(config.externalFragments || []),
   ];
-  const visitor = new UrqlVisitor(allFragments, config) as any;
+  const visitor = new UrqlVisitor(schema, allFragments, config) as any;
   const visitorResult = visit(allAst, { leave: visitor });
 
   return {

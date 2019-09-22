@@ -3,6 +3,7 @@ import { UrqlRawPluginConfig } from './index';
 import * as autoBind from 'auto-bind';
 import { OperationDefinitionNode, Kind } from 'graphql';
 import { pascalCase } from 'change-case';
+import { GraphQLSchema } from 'graphql';
 
 export interface UrqlPluginConfig extends ClientSideBasePluginConfig {
   withComponent: boolean;
@@ -11,8 +12,8 @@ export interface UrqlPluginConfig extends ClientSideBasePluginConfig {
 }
 
 export class UrqlVisitor extends ClientSideBaseVisitor<UrqlRawPluginConfig, UrqlPluginConfig> {
-  constructor(fragments: LoadedFragment[], rawConfig: UrqlRawPluginConfig) {
-    super(fragments, rawConfig, {
+  constructor(schema: GraphQLSchema, fragments: LoadedFragment[], rawConfig: UrqlRawPluginConfig) {
+    super(schema, fragments, rawConfig, {
       withComponent: getConfigValue(rawConfig.withComponent, true),
       withHooks: getConfigValue(rawConfig.withHooks, false),
       urqlImportFrom: getConfigValue(rawConfig.urqlImportFrom, null),

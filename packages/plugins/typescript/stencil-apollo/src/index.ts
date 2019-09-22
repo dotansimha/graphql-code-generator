@@ -43,7 +43,7 @@ export const plugin: PluginFunction<StencilApolloRawPluginConfig> = (schema: Gra
     ...(config.externalFragments || []),
   ];
 
-  const visitor = new StencilApolloVisitor(allFragments, config) as any;
+  const visitor = new StencilApolloVisitor(schema, allFragments, config) as any;
   const visitorResult = visit(allAst, { leave: visitor });
 
   return {
