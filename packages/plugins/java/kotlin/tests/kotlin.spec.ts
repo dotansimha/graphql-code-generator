@@ -45,6 +45,7 @@ describe('Kotlin', () => {
       email: String!
       name: String
       friends(skip: Int, limit: Int): [User!]!
+      hobbies(skip: Int = 0, limit: Int! = 10): [String!]!
     }
 
     type Chat implements Node {
@@ -148,6 +149,21 @@ describe('Kotlin', () => {
         constructor(args: Map<String, Any>) : this(
           args["skip"] as Int?,
           args["limit"] as Int?
+        )
+      }`);
+    });
+
+    it('Should generate argument defaults', async () => {
+      const result = await plugin(schema, [], {}, { outputFile: OUTPUT_FILE });
+
+      // language=kotlin
+      expect(result).toBeSimilarStringTo(`data class UserHobbiesArgs(
+        val skip: Int? = 0,
+        val limit: Int = 10
+      ) {
+        constructor(args: Map<String, Any>) : this(
+          args["skip"] as Int? ?: 0,
+          args["limit"] as Int? ?: 10
         )
       }`);
     });

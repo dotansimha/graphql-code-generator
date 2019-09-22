@@ -4,7 +4,6 @@ import {
   EnumTypeDefinitionNode,
   EnumValueDefinitionNode,
   FieldDefinitionNode,
-  GraphQLNullableType,
   GraphQLSchema,
   InputObjectTypeDefinitionNode,
   InputValueDefinitionNode,
@@ -16,6 +15,7 @@ import {
   NamedTypeNode,
   ObjectTypeDefinitionNode,
   TypeNode,
+  ValueNode,
 } from 'graphql';
 import { KOTLIN_SCALARS, wrapTypeWithModifiers } from '@graphql-codegen/java-common';
 
@@ -122,20 +122,24 @@ ${enumValues}
     const classMembers = inputValueArray
       .map(arg => {
         const typeToUse = this.resolveInputFieldType(arg.type);
+        const initialValue = this.initialValue(typeToUse.typeName, arg.defaultValue);
+        const initial = initialValue ? ` = ${initialValue}` : typeToUse.nullable ? ' = null' : '';
 
-        return indent(`val ${arg.name.value}: ${typeToUse.typeName}${typeToUse.nullable ? '? = null' : ''}`, 2);
+        return indent(`val ${arg.name.value}: ${typeToUse.typeName}${typeToUse.nullable ? '?' : ''}${initial}`, 2);
       })
       .join(',\n');
     const ctorSet = inputValueArray
       .map(arg => {
         const typeToUse = this.resolveInputFieldType(arg.type);
+        const initialValue = this.initialValue(typeToUse.typeName, arg.defaultValue);
+        const fallback = initialValue ? ` ?: ${initialValue}` : '';
 
         if (typeToUse.isArray && !typeToUse.isScalar) {
-          return indent(`args["${arg.name.value}"]${typeToUse.nullable ? '?' : '!!'}.let { ${arg.name.value} -> (${arg.name.value} as List<Map<String, Any>>).map { ${typeToUse.baseType}(it) } }`, 3);
+          return indent(`args["${arg.name.value}"]${typeToUse.nullable || fallback ? '?' : '!!'}.let { ${arg.name.value} -> (${arg.name.value} as List<Map<String, Any>>).map { ${typeToUse.baseType}(it) } }${fallback}`, 3);
         } else if (typeToUse.isScalar) {
-          return indent(`args["${arg.name.value}"] as ${typeToUse.typeName}${typeToUse.nullable ? '?' : ''}`, 3);
+          return indent(`args["${arg.name.value}"] as ${typeToUse.typeName}${typeToUse.nullable || fallback ? '?' : ''}${fallback}`, 3);
         } else {
-          return indent(`args["${arg.name.value}"]${typeToUse.nullable ? '?' : '!!'}.let { ${typeToUse.typeName}(it as Map<String, Any>) }`, 3);
+          return indent(`args["${arg.name.value}"]${typeToUse.nullable ? '?' : '!!'}.let { ${typeToUse.typeName}(it as Map<String, Any>) }${fallback}`, 3);
         }
       })
       .join(',\n');
@@ -148,6 +152,30 @@ ${classMembers}
 ${ctorSet}
   )
 }`;
+  }
+
+  protected initialValue(typeName: string, defaultValue?: ValueNode): string | undefined {
+    if (defaultValue) {
+      if (defaultValue.kind === 'IntValue' || defaultValue.kind === 'FloatValue' || defaultValue.kind === 'BooleanValue') {
+        return `${defaultValue.value}`;
+      } else if (defaultValue.kind === 'StringValue') {
+        return `"""${defaultValue.value}""".trimIndent()`;
+      } else if (defaultValue.kind === 'EnumValue') {
+        return `${typeName}.${defaultValue.value}`;
+      } else if (defaultValue.kind === 'ListValue') {
+        const list = defaultValue.values
+          .map(value => {
+            return this.initialValue(typeName, value);
+          })
+          .join(', ');
+        return `listOf(${list})`;
+      }
+      // Variable
+      // ObjectValue
+      // ObjectField
+    }
+
+    return undefined;
   }
 
   FieldDefinition(node: FieldDefinitionNode): (typeName: string) => string {
