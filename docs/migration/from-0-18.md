@@ -3,17 +3,19 @@ id: from-0-18
 title: Migration to 1.0.0
 ---
 
+*March 20th, 2019*
+
 ## What has changed?
 
 Our goals (and achievements) for 1.0.0 release was:
 
 - Rename all package from `graphql-codegen-...` to scoped packages `@graphql-codegen/...`.
-- Stablize the core package and the YML configuration file.
-- Remove the old, depreacted code from this repostory (everything related to `flattenDocuments` and `buildSchemaContext`).
+- Stabilize the core package and the YML configuration file.
+- Remove the old, deprecated code from this repostory (everything related to `flattenDocuments` and `buildSchemaContext`).
 - Separate the CLI package from the core package, and create an easy-to-use and easy-to-consume core package.
 - Add better support for running the codegen in non-node environments, by clearing unused dependencies and add support for tree shaking.
 - Remove the dependency for Handlebars from this repository.
-- Introcude a new, easy-to-use common base for plugins, based on `Visitor` pattern, that uses `visit` from `graphql` package.
+- Introduce a new, easy-to-use common base for plugins, based on `Visitor` pattern, that uses `visit` from `graphql` package.
 - Better unit tests for all plugins packages, by use TypeScript compiler to compile each test result- makes it much easier to detect mismatches and invalid output.
 - Refactor the entire TypeScript plugin, and create better and optimized output.
 - Fix most of the GitHub issues.
