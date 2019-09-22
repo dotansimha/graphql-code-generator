@@ -131,6 +131,7 @@ describe('Kotlin', () => {
         val f: Iterable<String>? = null,
         val g: Iterable<SearchUserInput>? = null
       ) {
+        @Suppress("UNCHECKED_CAST")
         constructor(args: Map<String, Any>) : this(
           args["f"] as Iterable<String>?,
           args["g"]?.let { g -> (g as List<Map<String, Any>>).map { SearchUserInput(it) } }
@@ -184,6 +185,7 @@ describe('Kotlin', () => {
       expect(result).toBeSimilarStringTo(`data class QuerySearchUserArgs(
         val searchFields: SearchUserInput
       ) {
+        @Suppress("UNCHECKED_CAST")
         constructor(args: Map<String, Any>) : this(
             SearchUserInput(args["searchFields"] as Map<String, Any>)
         )
@@ -210,6 +212,7 @@ describe('Kotlin', () => {
           val sort: ResultSort? = null,
           val metadata: MetadataSearchInput? = null
         ) {
+          @Suppress("UNCHECKED_CAST")
           constructor(args: Map<String, Any>) : this(
               args["username"] as String?,
               args["email"] as String?,
