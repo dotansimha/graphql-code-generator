@@ -248,8 +248,8 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
     this._federation = new ApolloFederation({ enabled: this.config.federation, schema: this.schema });
     this._rootTypeNames = getRootTypeNames(_schema);
     this._variablesTransfomer = new OperationVariablesToObject(this.scalars, this.convertName);
-    this._resolversTypes = this.createResolversFields(type => this.applyResolverTypeWrapper(type), type => this.clearResolverTypeWrapper(type));
-    this._resolversParentTypes = this.createResolversFields(type => type, type => type);
+    this._resolversTypes = this.createResolversFields(type => this.applyResolverTypeWrapper(type), type => this.clearResolverTypeWrapper(type), name => this.getTypeToUse(name));
+    this._resolversParentTypes = this.createResolversFields(type => type, type => type, name => this.getParentTypeToUse(name));
   }
 
   public getResolverTypeWrapperSignature(): string {
@@ -302,7 +302,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
   }
 
   // Kamil: this one is heeeeavvyyyy
-  protected createResolversFields(applyWrapper: (str: string) => string, clearWrapper: (str: string) => string): ResolverTypes {
+  protected createResolversFields(applyWrapper: (str: string) => string, clearWrapper: (str: string) => string, getTypeToUse: (str: string) => string): ResolverTypes {
     const allSchemaTypes = this._schema.getTypeMap();
     const nestedMapping: { [typeName: string]: boolean } = {};
     const typeNames = this._federation.filterTypeNames(Object.keys(allSchemaTypes));
@@ -342,7 +342,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
         } else if (isUnionType(schemaType)) {
           prev[typeName] = schemaType
             .getTypes()
-            .map(type => this.getTypeToUse(type.name))
+            .map(type => getTypeToUse(type.name))
             .join(' | ');
         } else {
           shouldApplyOmit = true;
@@ -367,7 +367,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
               return {
                 addOptionalSign,
                 fieldName,
-                replaceWithType: this.wrapTypeWithModifiers(this.getTypeToUse(baseType.name), field.type),
+                replaceWithType: this.wrapTypeWithModifiers(getTypeToUse(baseType.name), field.type),
               };
             })
             .filter(a => a);
