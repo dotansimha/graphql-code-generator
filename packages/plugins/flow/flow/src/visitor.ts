@@ -80,15 +80,18 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
   }
 
   protected mergeInterfaces(interfaces: string[], hasOtherFields: boolean): string {
-    return interfaces.map(i => `...${i}`).join(', ');
+    if (!interfaces.length) {
+      return '';
+    }
+
+    return interfaces.map(i => indent(`...${i}`)).join(',\n') + (hasOtherFields ? ',\n  ' : '');
   }
 
   appendInterfacesAndFieldsToBlock(block: DeclarationBlock, interfaces: string[], fields: string[]): void {
-    console.log(interfaces);
-    block.withBlock(interfaces + this.mergeAllFields(fields, interfaces.length === 0));
+    block.withBlock(this.mergeInterfaces(interfaces, fields.length > 0) + this.mergeAllFields(fields, interfaces.length > 0));
   }
 
-  protected mergeAllFields(allFields: string[], hasInterfaces): string {
+  protected mergeAllFields(allFields: string[], hasInterfaces: boolean): string {
     if (allFields.length === 0) {
       return '';
     }
@@ -97,7 +100,7 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
       return allFields.join('\n');
     }
 
-    return `...{ ${allFields.join('\n')}}`;
+    return `...{\n${allFields.map(s => indent(s)).join('\n')}\n  }`;
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {

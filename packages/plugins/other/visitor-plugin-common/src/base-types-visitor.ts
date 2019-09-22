@@ -214,33 +214,19 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
   }
 
   protected mergeInterfaces(interfaces: string[], hasOtherFields: boolean): string {
-    return interfaces.join(' & ') + (hasOtherFields ? ' & ' : '');
+    return interfaces.join(' & ') + (interfaces.length && hasOtherFields ? ' & ' : '');
   }
 
-  protected buildInterfaces(node: ObjectTypeDefinitionNode, originalNode: ObjectTypeDefinitionNode, type: DeclarationKind, hasOtherFields: boolean) {
-    if (!originalNode.interfaces || !node.interfaces.length) {
-      return '';
-    }
-
-    const interfaces = originalNode.interfaces.map(i => this.convertName(i));
-
-    if (type === 'interface' || type === 'class') {
-      return ' extends ' + interfaces.join(', ') + (hasOtherFields ? ' ' : ' {}');
-    }
-
-    return this.mergeInterfaces(interfaces, hasOtherFields);
-  }
-
-  appendInterfacesAndFieldsToBlock(block: DeclarationBlock, interfaces: string, fields: string[]): void {
-    block.withContent(t);
-    block.withBlock(this.mergeAllFields(fields, interfaces.length === 0));
+  appendInterfacesAndFieldsToBlock(block: DeclarationBlock, interfaces: string[], fields: string[]): void {
+    block.withContent(this.mergeInterfaces(interfaces, fields.length > 0));
+    block.withBlock(this.mergeAllFields(fields, interfaces.length > 0));
   }
 
   getObjectTypeDeclarationBlock(node: ObjectTypeDefinitionNode, originalNode: ObjectTypeDefinitionNode): DeclarationBlock {
     const optionalTypename = this.config.nonOptionalTypename ? '__typename' : '__typename?';
     const { type } = this._parsedConfig.declarationKind;
-    const allFields = [...(this.config.addTypename ? [indent(`${this.config['immutableTypes'] ? 'readonly' : ''} ${optionalTypename}: '${node.name}'${type === 'class' ? ';' : ','}`)] : []), ...node.fields];
-    const interfaces = this.buildInterfaces(node, originalNode, type, allFields.length > 0);
+    const allFields = [...(this.config.addTypename ? [indent(`${this.config['immutableTypes'] ? 'readonly' : ''} ${optionalTypename}: '${node.name}'${type === 'class' ? ';' : ','}`)] : []), ...node.fields] as string[];
+    const interfacesNames = originalNode.interfaces ? originalNode.interfaces.map(i => this.convertName(i)) : [];
 
     const declarationBlock = new DeclarationBlock(this._declarationBlockConfig)
       .export()
@@ -248,7 +234,15 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
       .withName(this.convertName(node))
       .withComment((node.description as any) as string);
 
-    this.appendInterfacesAndFieldsToBlock(declarationBlock, interfaces, allFields as string[]);
+    if (type === 'interface' || type === 'class') {
+      if (interfacesNames.length > 0) {
+        declarationBlock.withContent(' extends ' + interfacesNames.join(', ') + (allFields.length > 0 ? ' ' : ' {}'));
+      }
+
+      declarationBlock.withBlock(this.mergeAllFields(allFields, false));
+    } else {
+      this.appendInterfacesAndFieldsToBlock(declarationBlock, interfacesNames, allFields);
+    }
 
     return declarationBlock;
   }
