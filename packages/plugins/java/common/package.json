@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/java-common",
-  "version": "1.2.2-beta.0",
+  "version": "1.7.0",
   "description": "GraphQL Code Generator utils library for developing Java plugins",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
@@ -8,16 +8,14 @@
     "build": "tsc -m esnext --outDir dist/esnext && tsc -m commonjs --outDir dist/commonjs"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "1.2.2-beta.0",
-    "@graphql-codegen/visitor-plugin-common": "1.2.2-beta.0",
-    "strip-indent": "3.0.0",
+    "@graphql-codegen/plugin-helpers": "1.7.0",
+    "@graphql-codegen/visitor-plugin-common": "1.7.0",
     "tslib": "1.10.0"
   },
   "devDependencies": {
-    "@types/strip-indent": "3.0.2",
-    "graphql": "14.3.1",
+    "graphql": "14.5.7",
     "java-ast": "0.1.0",
-    "typescript": "3.5.2"
+    "typescript": "3.6.3"
   },
   "sideEffects": false,
   "main": "dist/commonjs/index.js",

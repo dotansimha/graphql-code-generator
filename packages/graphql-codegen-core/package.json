@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/core",
-  "version": "1.2.2-beta.0",
+  "version": "1.7.0",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -39,12 +39,12 @@
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "1.2.2-beta.0",
-    "graphql-toolkit": "0.2.14",
+    "@graphql-codegen/plugin-helpers": "1.7.0",
+    "graphql-toolkit": "0.5.15",
     "tslib": "1.10.0"
   },
   "devDependencies": {
-    "ts-jest": "24.0.2"
+    "ts-jest": "24.1.0"
   },
   "sideEffects": false,
   "main": "dist/commonjs/index.js",

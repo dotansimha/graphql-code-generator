@@ -5,9 +5,11 @@ import { pluginLoaderMap } from './plugins';
 export async function generate(config: string, schema: string, documents?: string): Promise<string> {
   try {
     const cleanTabs = config.replace(/\t/g, '  ');
-    const { generates, ...rootConfig } = safeLoad(cleanTabs);
+    const { generates, ...otherFields } = safeLoad(cleanTabs);
+    const rootConfig = otherFields.config || {};
     const filename = Object.keys(generates)[0];
     const plugins = normalizeConfig(generates[filename].plugins || generates[filename]);
+    const outputConfig = generates[filename].config;
     const { codegen } = await import('@graphql-codegen/core');
     const { parse } = await import('graphql');
     const pluginMap: any = {};
@@ -16,6 +18,11 @@ export async function generate(config: string, schema: string, documents?: strin
       const pluginName = Object.keys(pluginElement)[0];
       pluginMap[pluginName] = await pluginLoaderMap[pluginName]();
     }
+
+    const mergedConfig = {
+      ...rootConfig,
+      ...outputConfig,
+    };
 
     return await codegen({
       filename,
@@ -29,9 +36,7 @@ export async function generate(config: string, schema: string, documents?: strin
             },
           ]
         : [],
-      config: {
-        ...rootConfig,
-      },
+      config: mergedConfig,
       pluginMap,
     });
   } catch (e) {

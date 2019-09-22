@@ -1,21 +1,26 @@
 import { GraphQLSchema, DocumentNode } from 'graphql';
-import { object } from 'prop-types';
 
 export namespace Types {
   export interface GenerateOptions {
     filename: string;
     plugins: Types.ConfiguredPlugin[];
     schema: DocumentNode;
+    schemaAst?: GraphQLSchema;
     documents: Types.DocumentFile[];
     config: { [key: string]: any };
     pluginMap: {
       [name: string]: CodegenPlugin;
     };
+    skipDocumentsValidation?: boolean;
   }
 
   export type FileOutput = {
     filename: string;
     content: string;
+    hooks?: {
+      beforeOneFileWrite?: LifecycleHooksDefinition<string | string[]>['beforeOneFileWrite'];
+      afterOneFileWrite?: LifecycleHooksDefinition<string | string[]>['afterOneFileWrite'];
+    };
   };
 
   export type DocumentFile = {
@@ -57,6 +62,7 @@ export namespace Types {
     documents?: InstanceOrArray<OperationDocument>;
     schema?: InstanceOrArray<Schema>;
     config?: PluginConfig;
+    hooks?: LifecycleHooksDefinition<string | string[]>;
   };
 
   /* Output Builder Preset */
@@ -65,6 +71,7 @@ export namespace Types {
     baseOutputDir: string;
     plugins: Types.ConfiguredPlugin[];
     schema: DocumentNode;
+    schemaAst?: GraphQLSchema;
     documents: Types.DocumentFile[];
     config: { [key: string]: any };
     pluginMap: {
@@ -86,11 +93,13 @@ export namespace Types {
   export interface Config {
     schema?: InstanceOrArray<Schema>;
     require?: RequireExtension;
+    customFetch?: string;
     documents?: InstanceOrArray<OperationDocument>;
     config?: { [key: string]: any };
     generates: { [output: string]: OutputConfig | ConfiguredOutput };
     overwrite?: boolean;
     watch?: boolean | string | string[];
+    configFilePath?: string;
     silent?: boolean;
     pluginLoader?: PackageLoaderFn<CodegenPlugin>;
     pluckConfig?: {
@@ -101,10 +110,23 @@ export namespace Types {
       magicComment?: string;
       globalIdentifier?: string;
     };
+    hooks?: LifecycleHooksDefinition<string | string[]>;
   }
 
   export type ComplexPluginOutput = { content: string; prepend?: string[]; append?: string[] };
   export type PluginOutput = string | ComplexPluginOutput;
+
+  export type LifecycleHooksDefinition<T = string | string[]> = {
+    afterStart: T;
+    beforeDone: T;
+    onWatchTriggered: T;
+    onError: T;
+    afterOneFileWrite: T;
+    afterAllFileWrite: T;
+    beforeOneFileWrite: T;
+    beforeAllFileWrite: T;
+    [key: string]: T;
+  };
 }
 
 export function isComplexPluginOutput(obj: Types.PluginOutput): obj is Types.ComplexPluginOutput {
@@ -124,8 +146,10 @@ export type PluginFunction<T = any> = (
 
 export type PluginValidateFn<T = any> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: T, outputFile: string, allPlugins: Types.ConfiguredPlugin[]) => Types.Promisable<void>;
 
+export type AddToSchemaResult = string | DocumentNode | undefined;
+
 export interface CodegenPlugin<T = any> {
   plugin: PluginFunction<T>;
-  addToSchema?: string | DocumentNode;
+  addToSchema?: AddToSchemaResult | ((config: T) => AddToSchemaResult);
   validate?: PluginValidateFn;
 }

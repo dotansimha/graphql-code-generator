@@ -12,6 +12,7 @@ describe('generate-and-save', () => {
   test('allow to specify overwrite for specific output (should write file)', async () => {
     const filename = 'overwrite.ts';
     const writeSpy = jest.spyOn(fs, 'writeSync').mockImplementation();
+    const readSpy = jest.spyOn(fs, 'readSync').mockImplementation();
 
     const output = await generate(
       {
@@ -124,6 +125,8 @@ describe('generate-and-save', () => {
   test('should overwrite a file by default', async () => {
     const filename = 'overwrite.ts';
     const writeSpy = jest.spyOn(fs, 'writeSync').mockImplementation();
+    const readSpy = jest.spyOn(fs, 'readSync').mockImplementation();
+    readSpy.mockImplementation(f => '');
     // forces file to exist
     const fileExistsSpy = jest.spyOn(fs, 'fileExists');
     fileExistsSpy.mockImplementation(file => file === filename);
@@ -147,6 +150,7 @@ describe('generate-and-save', () => {
     // makes sure it doesn't write a new file
     expect(writeSpy).toHaveBeenCalled();
   });
+
   test('should override generated files', async () => {
     jest.unmock('fs');
     const fs = await import('fs');
@@ -159,16 +163,16 @@ describe('generate-and-save', () => {
     fs.writeFileSync(
       './temp/input-graphql.tsx',
       `
-      import gql from 'graphql-tag';
-      const MyQuery = gql\`query MyQuery { f }\`;
-    `,
+    import gql from 'graphql-tag';
+    const MyQuery = gql\`query MyQuery { f }\`;
+  `,
       {}
     );
     const generateOnce: () => Promise<Types.FileOutput[]> = () =>
       generate(
         {
           schema: SIMPLE_TEST_SCHEMA,
-          documents: './temp/*-graphql.tsx',
+          documents: './temp/input-graphql.tsx',
           generates: {
             './temp/output-graphql.tsx': {
               plugins: ['typescript', 'typescript-operations', 'typescript-react-apollo'],
@@ -180,5 +184,26 @@ describe('generate-and-save', () => {
     const [firstOutput] = await generateOnce();
     fs.writeFileSync(firstOutput.filename, firstOutput.content);
     await generateOnce();
+  });
+  test('should extract a document from the gql tag (imported from apollo-server)', async () => {
+    const filename = 'overwrite.ts';
+    const writeSpy = jest.spyOn(fs, 'writeSync').mockImplementation();
+
+    const output = await generate(
+      {
+        schema: `./tests/test-files/schema-dir/gatsby-and-custom-parsers/apollo-server.ts`,
+        generates: {
+          [filename]: {
+            plugins: ['typescript'],
+          },
+        },
+      },
+      true
+    );
+
+    expect(output.length).toBe(1);
+    expect(output[0].content).toMatch('Used apollo-server');
+    // makes sure it doesn't write a new file
+    expect(writeSpy).toHaveBeenCalled();
   });
 });

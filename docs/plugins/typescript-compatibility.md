@@ -3,8 +3,8 @@ id: typescript-compatibility
 title: TypeScript 1.0 Compatibility
 ---
 
-If you are migrating from <1.0, we created a new plugin, called `typescript-compatibility` that generates backward compatibility for the `typescript-operations` and `typescript-react-apollo` plugins.
-It will generates for you types that are pointing to the new form of types. It supports _most_ of the use-cases.
+If you are migrating from <1.0, we created a new plugin called `typescript-compatibility` that generates backward compatibility for the `typescript-operations` and `typescript-react-apollo` plugins.
+It generates types that are pointing to the new form of types. It supports _most_ of the use-cases.
 
 To use it, start by installing from NPM:
 
@@ -21,7 +21,7 @@ Then, add it to your codegen configuration:
     - typescript-compatibility
 ```
 
-> Note: If `typescript-react-apollo` plugin also specified in your config file, it will generate backward-compatibily for it.
+> Note: If `typescript-react-apollo` plugin is also specified in your config file, it will generate backward-compatibily for it.
 
 ## Configuration
 

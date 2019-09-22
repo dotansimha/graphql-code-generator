@@ -4,24 +4,26 @@ import {
   Kind,
   TypeNode,
   NamedTypeNode,
-  isNonNullType,
   GraphQLObjectType,
-  GraphQLNonNull,
-  GraphQLList,
-  isListType,
-  GraphQLOutputType,
   GraphQLNamedType,
   isScalarType,
   GraphQLSchema,
   GraphQLScalarType,
   StringValueNode,
   isEqualType,
+  SelectionSetNode,
+  FieldNode,
+  SelectionNode,
+  FragmentSpreadNode,
+  InlineFragmentNode,
+  isNonNullType,
+  isObjectType,
 } from 'graphql';
-import { ScalarsMap } from './types';
-
-function isWrapperType(t: GraphQLOutputType): t is GraphQLNonNull<any> | GraphQLList<any> {
-  return isListType(t) || isNonNullType(t);
-}
+import { ScalarsMap, NormalizedScalarsMap, ParsedScalarsMap } from './types';
+import { DEFAULT_SCALARS } from './scalars';
+import { parseMapper } from './mappers';
+import { isListType } from 'graphql';
+import { isAbstractType } from 'graphql';
 
 export const getConfigValue = <T = any>(value: T, defaultValue: T): T => {
   if (value === null || value === undefined) {
@@ -30,14 +32,6 @@ export const getConfigValue = <T = any>(value: T, defaultValue: T): T => {
 
   return value;
 };
-
-export function getBaseType(type: GraphQLOutputType): GraphQLNamedType {
-  if (isWrapperType(type)) {
-    return getBaseType(type.ofType);
-  } else {
-    return type;
-  }
-}
 
 export function quoteIfNeeded(array: string[], joinWith = ' & '): string {
   if (array.length === 0) {
@@ -76,6 +70,7 @@ export interface DeclarationBlockConfig {
   blockWrapper?: string;
   blockTransformer?: (block: string) => string;
   enumNameValueSeparator?: string;
+  ignoreExport?: boolean;
 }
 
 export function transformComment(comment: string | StringValueNode, indentLevel = 0): string {
@@ -87,6 +82,7 @@ export function transformComment(comment: string | StringValueNode, indentLevel 
     comment = comment.value;
   }
 
+  comment = comment.split('*/').join('*\\/');
   const lines = comment.split('\n');
 
   return lines
@@ -98,12 +94,13 @@ export function transformComment(comment: string | StringValueNode, indentLevel 
         return indent(`/** ${comment} */\n`, indentLevel);
       }
 
-      return indent(`${isFirst ? '/** ' : ' * '}${line}${isLast ? '\n */\n' : ''}`, indentLevel);
+      return indent(`${isFirst ? '/** \n' : ''} * ${line}${isLast ? '\n **/\n' : ''}`, indentLevel);
     })
     .join('\n');
 }
 
 export class DeclarationBlock {
+  _decorator = null;
   _export = false;
   _name = null;
   _kind = null;
@@ -123,8 +120,16 @@ export class DeclarationBlock {
     };
   }
 
+  withDecorator(decorator: string): DeclarationBlock {
+    this._decorator = decorator;
+
+    return this;
+  }
+
   export(exp = true): DeclarationBlock {
-    this._export = exp;
+    if (!this._config.ignoreExport) {
+      this._export = exp;
+    }
 
     return this;
   }
@@ -171,6 +176,10 @@ export class DeclarationBlock {
 
   public get string(): string {
     let result = '';
+
+    if (this._decorator) {
+      result += this._decorator + '\n';
+    }
 
     if (this._export) {
       result += 'export ';
@@ -224,8 +233,8 @@ export function getBaseTypeNode(typeNode: TypeNode): NamedTypeNode {
   return typeNode;
 }
 
-export function convertNameParts(str: string, func: (str: string) => string, transformUnderscore = false): string {
-  if (transformUnderscore) {
+export function convertNameParts(str: string, func: (str: string) => string, removeUnderscore = false): string {
+  if (removeUnderscore) {
     return func(str);
   }
 
@@ -239,19 +248,55 @@ export function toPascalCase(str: string, transformUnderscore = false): string {
   return convertNameParts(str, pascalCase, transformUnderscore);
 }
 
-export function buildScalars(schema: GraphQLSchema, scalarsMapping: ScalarsMap): ScalarsMap {
-  const typeMap = schema.getTypeMap();
-  let result = { ...scalarsMapping };
+export function buildScalars(schema: GraphQLSchema | undefined, scalarsMapping: ScalarsMap, defaultScalarsMapping: NormalizedScalarsMap = DEFAULT_SCALARS): ParsedScalarsMap {
+  let result: ParsedScalarsMap = {};
 
-  Object.keys(typeMap)
-    .map(typeName => typeMap[typeName])
-    .filter(type => isScalarType(type))
-    .map((scalarType: GraphQLScalarType) => {
-      const name = scalarType.name;
-      const value = scalarsMapping[name] || 'any';
+  Object.keys(defaultScalarsMapping).forEach(name => {
+    result[name] = parseMapper(defaultScalarsMapping[name]);
+  });
 
-      result[name] = value;
+  if (schema) {
+    const typeMap = schema.getTypeMap();
+
+    Object.keys(typeMap)
+      .map(typeName => typeMap[typeName])
+      .filter(type => isScalarType(type))
+      .map((scalarType: GraphQLScalarType) => {
+        const name = scalarType.name;
+        if (typeof scalarsMapping === 'string') {
+          const value = parseMapper(scalarsMapping + '#' + name, name);
+          result[name] = value;
+        } else if (scalarsMapping && typeof scalarsMapping[name] === 'string') {
+          const value = parseMapper(scalarsMapping[name], name);
+          result[name] = value;
+        } else if (scalarsMapping && scalarsMapping[name]) {
+          result[name] = {
+            isExternal: false,
+            type: JSON.stringify(scalarsMapping[name]),
+          };
+        } else if (!defaultScalarsMapping[name]) {
+          result[name] = {
+            isExternal: false,
+            type: 'any',
+          };
+        }
+      });
+  } else if (scalarsMapping) {
+    if (typeof scalarsMapping === 'string') {
+      throw new Error('Cannot use string scalars mapping when building without a schema');
+    }
+    Object.keys(scalarsMapping).forEach(name => {
+      if (typeof scalarsMapping[name] === 'string') {
+        const value = parseMapper(scalarsMapping[name], name);
+        result[name] = value;
+      } else {
+        result[name] = {
+          isExternal: false,
+          type: JSON.stringify(scalarsMapping[name]),
+        };
+      }
     });
+  }
 
   return result;
 }
@@ -269,7 +314,62 @@ export function getRootTypeNames(schema: GraphQLSchema): string[] {
 }
 
 export function stripMapperTypeInterpolation(identifier: string): string {
-  return identifier.includes('{T}') ? identifier.replace(/<.*?>/g, '') : identifier;
+  return identifier.trim().replace(/[^$\w].*$/, '');
 }
 
 export const OMIT_TYPE = 'export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;';
+export const REQUIRE_FIELDS_TYPE = `export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } & { [P in K]-?: NonNullable<T[P]> };`;
+
+export function mergeSelectionSets(selectionSet1: SelectionSetNode, selectionSet2: SelectionSetNode): void {
+  const newSelections = [...selectionSet1.selections];
+
+  for (const selection2 of selectionSet2.selections) {
+    if (selection2.kind === 'FragmentSpread') {
+      newSelections.push(selection2);
+      continue;
+    }
+
+    if (selection2.kind !== 'Field') {
+      throw new TypeError('Invalid state.');
+    }
+
+    const match = newSelections.find(selection1 => selection1.kind === 'Field' && getFieldNodeNameValue(selection1) === getFieldNodeNameValue(selection2));
+
+    if (match) {
+      // recursively merge all selection sets
+      if (match.kind === 'Field' && match.selectionSet && selection2.selectionSet) {
+        mergeSelectionSets(match.selectionSet, selection2.selectionSet);
+      }
+      continue;
+    }
+
+    newSelections.push(selection2);
+  }
+
+  // replace existing selections
+  selectionSet1.selections = newSelections;
+}
+
+export const getFieldNodeNameValue = (node: FieldNode): string => {
+  return (node.alias || node.name).value;
+};
+
+export function separateSelectionSet(selections: ReadonlyArray<SelectionNode>): { fields: FieldNode[]; spreads: FragmentSpreadNode[]; inlines: InlineFragmentNode[] } {
+  return {
+    fields: selections.filter(s => s.kind === Kind.FIELD) as FieldNode[],
+    inlines: selections.filter(s => s.kind === Kind.INLINE_FRAGMENT) as InlineFragmentNode[],
+    spreads: selections.filter(s => s.kind === Kind.FRAGMENT_SPREAD) as FragmentSpreadNode[],
+  };
+}
+
+export function getPossibleTypes(schema: GraphQLSchema, type: GraphQLNamedType): GraphQLObjectType[] {
+  if (isListType(type) || isNonNullType(type)) {
+    return getPossibleTypes(schema, type.ofType);
+  } else if (isObjectType(type)) {
+    return [type];
+  } else if (isAbstractType(type)) {
+    return schema.getPossibleTypes(type) as Array<GraphQLObjectType>;
+  }
+
+  return [];
+}

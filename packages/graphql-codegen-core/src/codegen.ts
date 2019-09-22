@@ -1,5 +1,5 @@
 import { Types, isComplexPluginOutput } from '@graphql-codegen/plugin-helpers';
-import { DocumentNode, visit } from 'graphql';
+import { visit, buildASTSchema } from 'graphql';
 import { mergeSchemas } from './merge-schemas';
 import { executePlugin } from './execute-plugin';
 import { DetailedError } from './errors';
@@ -7,14 +7,31 @@ import { DetailedError } from './errors';
 export async function codegen(options: Types.GenerateOptions): Promise<string> {
   let output = '';
 
-  validateDocuments(options.schema, options.documents || []);
+  const documents = options.documents || [];
+
+  if (documents.length > 0 && !options.skipDocumentsValidation) {
+    validateDuplicateDocuments(documents);
+  }
 
   const pluginPackages = Object.keys(options.pluginMap).map(key => options.pluginMap[key]);
 
   // merged schema with parts added by plugins
-  const schema = pluginPackages.reduce((schema, plugin) => {
-    return !plugin.addToSchema ? schema : mergeSchemas([schema, plugin.addToSchema]);
+  let schemaChanged = false;
+  let schema = pluginPackages.reduce((schema, plugin) => {
+    const addToSchema = typeof plugin.addToSchema === 'function' ? plugin.addToSchema(options.config) : plugin.addToSchema;
+
+    if (!addToSchema) {
+      return schema;
+    }
+
+    schemaChanged = true;
+
+    return mergeSchemas([schema, addToSchema]);
   }, options.schema);
+
+  if (schemaChanged) {
+    options.schemaAst = buildASTSchema(schema);
+  }
 
   const prepend: Set<string> = new Set<string>();
   const append: Set<string> = new Set<string>();
@@ -22,22 +39,27 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
   for (const plugin of options.plugins) {
     const name = Object.keys(plugin)[0];
     const pluginPackage = options.pluginMap[name];
-    const pluginConfig = plugin[name];
+    const pluginConfig = plugin[name] || {};
+
+    const execConfig =
+      typeof pluginConfig !== 'object'
+        ? pluginConfig
+        : {
+            ...options.config,
+            ...pluginConfig,
+          };
 
     const result = await executePlugin(
       {
         name,
-        config:
-          typeof pluginConfig !== 'object'
-            ? pluginConfig
-            : {
-                ...options.config,
-                ...(pluginConfig as object),
-              },
+        config: execConfig,
+        parentConfig: options.config,
         schema,
+        schemaAst: options.schemaAst,
         documents: options.documents,
         outputFilename: options.filename,
         allPlugins: options.plugins,
+        skipDocumentsValidation: options.skipDocumentsValidation,
       },
       pluginPackage
     );
@@ -65,7 +87,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
 }
 
 function resolveCompareValue(a: string) {
-  if (a.startsWith('/*') || a.startsWith('//')) {
+  if (a.startsWith('/*') || a.startsWith('//') || a.startsWith(' *') || a.startsWith(' */') || a.startsWith('*/')) {
     return 0;
   } else if (a.startsWith('package')) {
     return 1;
@@ -92,7 +114,7 @@ export function sortPrependValues(values: string[]): string[] {
   });
 }
 
-function validateDocuments(schema: DocumentNode, files: Types.DocumentFile[]) {
+function validateDuplicateDocuments(files: Types.DocumentFile[]) {
   // duplicated names
   const operationMap: {
     [name: string]: string[];
@@ -139,7 +161,6 @@ function validateDocuments(schema: DocumentNode, files: Types.DocumentFile[]) {
       `Not all operations have an unique name: ${duplicated.join(', ')}`,
       `
         Not all operations have an unique name
-
         ${list}
       `
     );

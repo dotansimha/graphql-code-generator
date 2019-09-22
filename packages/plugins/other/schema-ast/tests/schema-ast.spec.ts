@@ -1,5 +1,9 @@
-import { validate } from '../src/index';
+import { validate, plugin } from '../src/index';
+import { buildSchema } from 'graphql';
+import '@graphql-codegen/testing';
 import { Types } from '@graphql-codegen/plugin-helpers';
+import { buildASTSchema, parse } from 'graphql';
+import { codegen } from '@graphql-codegen/core';
 
 const SHOULD_THROW_ERROR = 'SHOULD_THROW_ERROR';
 
@@ -54,6 +58,114 @@ describe('Schema AST', () => {
       } catch (e) {
         expect(true).toBeFalsy();
       }
+    });
+  });
+  describe('Output', () => {
+    const typeDefs = /* GraphQL */ `
+      directive @modify(limit: Int) on FIELD_DEFINITION
+
+      type Query {
+        fieldTest: String @modify(limit: 1)
+      }
+
+      schema {
+        query: Query
+      }
+    `;
+    const schema = buildSchema(typeDefs);
+
+    it('Should print schema without directives when "includeDirectives" is unset', async () => {
+      const content = await plugin(schema, [], { includeDirectives: false });
+
+      expect(content).toBeSimilarStringTo(`
+        type Query {
+          fieldTest: String
+        }
+      `);
+    });
+    it('Should print schema with directives when "includeDirectives" is set', async () => {
+      const content = await plugin(schema, [], { includeDirectives: true });
+
+      expect(content).toBeSimilarStringTo(`
+        directive @modify(limit: Int) on FIELD_DEFINITION 
+      `);
+      expect(content).toBeSimilarStringTo(`
+        type Query {
+          fieldTest: String @modify(limit: 1)
+        }
+      `);
+    });
+
+    it('should support Apollo Federation', async () => {
+      const federatedSchema = parse(/* GraphQL */ `
+        type Character @key(fields: "id") {
+          id: ID
+          name: String
+        }
+
+        type Jedi @key(fields: "id") {
+          id: ID
+          side: String
+        }
+
+        type Droid @key(fields: "id") {
+          id: ID
+          model: String
+        }
+
+        union People = Character | Jedi | Droid
+
+        type Query {
+          allPeople: [People]
+        }
+      `);
+
+      const content = await codegen({
+        filename: 'foo.graphql',
+        schema: federatedSchema,
+        documents: [],
+        plugins: [
+          {
+            'schema-ast': {},
+          },
+        ],
+        config: {
+          federation: true,
+        },
+        pluginMap: {
+          'schema-ast': {
+            plugin,
+            validate,
+          },
+        },
+      });
+
+      expect(content).not.toContain(`scalar _Any`);
+      expect(content).not.toContain(`union _Entity`);
+      expect(content).not.toContain(`type _Service`);
+
+      expect(content).toBeSimilarStringTo(`
+        type Character {
+          id: ID
+          name: String
+        }
+        
+        type Droid {
+          id: ID
+          model: String
+        }
+        
+        type Jedi {
+          id: ID
+          side: String
+        }
+        
+        union People = Character | Jedi | Droid
+        
+        type Query {
+          allPeople: [People]
+        }
+      `);
     });
   });
 });

@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/add",
-  "version": "1.2.2-beta.0",
+  "version": "1.7.0",
   "description": "GraphQL Code Generator plugin for adding custom content to your output file",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
@@ -8,12 +8,12 @@
     "build": "tsc -m esnext --outDir dist/esnext && tsc -m commonjs --outDir dist/commonjs"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "1.2.2-beta.0",
+    "@graphql-codegen/plugin-helpers": "1.7.0",
     "tslib": "1.10.0"
   },
   "devDependencies": {
-    "graphql": "14.3.1",
-    "typescript": "3.5.2"
+    "graphql": "14.5.7",
+    "typescript": "3.6.3"
   },
   "sideEffects": false,
   "main": "dist/commonjs/index.js",

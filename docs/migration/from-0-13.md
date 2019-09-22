@@ -3,6 +3,8 @@ id: from-0-13
 title: Migration from 0.13 to 0.18
 ---
 
+*March 1st, 2019*
+
 ## What has changed?
 
 In >= 0.14 we changed the way you pass configuration to GraphQL Code Generator.

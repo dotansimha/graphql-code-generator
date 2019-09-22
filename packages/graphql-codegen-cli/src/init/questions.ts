@@ -3,14 +3,14 @@ import { grey } from './helpers';
 import { Tags, Answers } from './types';
 import { plugins } from './plugins';
 
-export function getQuestions(possibleTargets: Record<Tags, boolean>): inquirer.Question[] {
+export function getQuestions(possibleTargets: Record<Tags, boolean>): inquirer.QuestionCollection {
   return [
     {
       type: 'checkbox',
       name: 'targets',
       message: `What type of application are you building?`,
       choices: getApplicationTypeChoices(possibleTargets),
-      validate: (targets: any[]) => targets.length > 0,
+      validate: ((targets: any[]) => targets.length > 0) as any,
     },
     {
       type: 'input',
@@ -39,7 +39,7 @@ export function getQuestions(possibleTargets: Record<Tags, boolean>): inquirer.Q
       name: 'plugins',
       message: 'Pick plugins:',
       choices: getPluginChoices,
-      validate: (plugins: any[]) => plugins.length > 0,
+      validate: ((plugins: any[]) => plugins.length > 0) as any,
     },
     {
       type: 'input',
@@ -124,7 +124,7 @@ export function getApplicationTypeChoices(possibleTargets: Record<Tags, boolean>
 export function getPluginChoices(answers: Answers) {
   return plugins
     .filter(p => p.available(answers.targets))
-    .map<inquirer.ChoiceType>(p => {
+    .map<inquirer.DistinctChoice<inquirer.AllChoiceMap>>(p => {
       return {
         name: p.name,
         value: p,

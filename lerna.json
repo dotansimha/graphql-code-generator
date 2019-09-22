@@ -1,5 +1,6 @@
 {
-  "version": "1.2.2-beta.0",
+  "version": "1.7.0",
   "npmClient": "yarn",
-  "useWorkspaces": true
+  "useWorkspaces": true,
+  "concurrency": 2
 }

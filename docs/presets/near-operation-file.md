@@ -3,7 +3,7 @@ id: near-operation-file
 title: near-operation-file
 ---
 
-This presets generates a file per each operation file.
+This preset generates a file per each operation file.
 
 ## Installation
 

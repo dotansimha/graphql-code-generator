@@ -5,7 +5,6 @@
     "build": "lerna run build --ignore @graphql-codegen/{live-demo,website} ",
     "test": "lerna run test --ignore @graphql-codegen/{live-demo,website} ",
     "lint": "lerna run lint --ignore @graphql-codegen/{live-demo,website} ",
-    "precommit": "lint-staged",
     "test-and-build": " yarn build && yarn test",
     "prerelease": "yarn test-and-build",
     "prerelease:canary": "yarn test-and-build",
@@ -14,6 +13,11 @@
     "ci:release:canary": "lerna publish --ignore @graphql-codegen/{live-demo,website} --force-publish=\"*\" --preid \"alpha-`git rev-parse --short HEAD`\" --canary --exact --yes",
     "generate:examples": "./dev-test/generate-all.sh",
     "build-website": "lerna run build"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "workspaces": {
     "packages": [
@@ -30,37 +34,40 @@
     ]
   },
   "devDependencies": {
+    "@apollo/react-common": "3.1.1",
+    "@apollo/react-components": "3.1.1",
+    "@apollo/react-hoc": "3.1.1",
+    "@apollo/react-hooks": "3.1.1",
     "@types/common-tags": "1.8.0",
     "@types/glob": "7.1.1",
-    "@types/graphql": "14.2.1",
-    "@types/jest": "24.0.15",
+    "@types/graphql": "14.2.3",
+    "@types/jest": "24.0.18",
     "@types/mkdirp": "0.5.2",
-    "@types/node": "10.14.9",
-    "@types/request": "2.48.1",
-    "apollo-link": "1.2.12",
-    "apollo-server": "2.6.3",
-    "graphql": "14.3.1",
+    "@types/node": "10.14.18",
+    "@types/request": "2.48.3",
+    "apollo-link": "1.2.13",
+    "apollo-server": "2.9.3",
+    "graphql": "14.5.7",
     "graphql-tag": "2.10.1",
-    "graphql-tools": "4.0.4",
-    "husky": "2.4.1",
-    "jest": "24.8.0",
-    "jest-junit": "6.4.0",
-    "lerna": "3.15.0",
-    "lint-staged": "8.2.1",
-    "microbundle": "0.11.0",
-    "react-apollo": "2.5.6",
-    "react-apollo-hooks": "0.4.5",
-    "rimraf": "2.6.3",
-    "ts-jest": "24.0.2",
-    "tslint": "5.17.0",
-    "typescript": "3.5.2"
+    "graphql-tools": "4.0.5",
+    "husky": "3.0.5",
+    "jest": "24.9.0",
+    "jest-docblock": "24.9.0",
+    "jest-junit": "8.0.0",
+    "lerna": "3.16.4",
+    "lint-staged": "9.3.0",
+    "rimraf": "3.0.0",
+    "ts-jest": "24.1.0",
+    "tslint": "5.20.0",
+    "typescript": "3.6.3",
+    "urql": "1.5.0"
   },
   "lint-staged": {
-    "*.{ts,tsx}": [
+    "packages/**/*.{ts,tsx}": [
       "tslint --fix",
       "git add"
     ],
-    "*.{js,json,css,md,ts,tsx}": [
+    "packages/**/*.{js,json,css,md,ts,tsx}": [
       "prettier --write",
       "git add -f"
     ]

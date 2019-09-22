@@ -1,6 +1,7 @@
-import { RawResolversConfig, OMIT_TYPE } from '@graphql-codegen/visitor-plugin-common';
-import { Types, PluginFunction } from '@graphql-codegen/plugin-helpers';
-import { isScalarType, parse, printSchema, visit, GraphQLSchema } from 'graphql';
+import { printSchemaWithDirectives } from 'graphql-toolkit';
+import { RawResolversConfig } from '@graphql-codegen/visitor-plugin-common';
+import { Types, PluginFunction, addFederationReferencesToSchema } from '@graphql-codegen/plugin-helpers';
+import { isScalarType, parse, visit, GraphQLSchema, printSchema } from 'graphql';
 import { TypeScriptResolversVisitor } from './visitor';
 
 export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
@@ -65,21 +66,15 @@ export const plugin: PluginFunction<TypeScriptResolversPluginConfig> = (schema: 
   const imports = ['GraphQLResolveInfo'];
   const showUnusedMappers = typeof config.showUnusedMappers === 'boolean' ? config.showUnusedMappers : true;
   const noSchemaStitching = typeof config.noSchemaStitching === 'boolean' ? config.noSchemaStitching : false;
-  const hasScalars = Object.values(schema.getTypeMap())
-    .filter(t => t.astNode)
-    .some(isScalarType);
 
   if (config.noSchemaStitching === false) {
     console['warn'](`The default behavior of 'noSchemaStitching' will be reversed in the next major release. Support for Schema Stitching will be disabled by default.`);
   }
 
-  if (hasScalars) {
-    imports.push('GraphQLScalarType', 'GraphQLScalarTypeConfig');
-  }
-
   const indexSignature = config.useIndexSignature ? ['export type WithIndex<TObject> = TObject & Record<string, any>;', 'export type ResolversObject<TObject> = WithIndex<TObject>;'].join('\n') : '';
 
-  const visitor = new TypeScriptResolversVisitor(config, schema);
+  const transformedSchema = config.federation ? addFederationReferencesToSchema(schema) : schema;
+  const visitor = new TypeScriptResolversVisitor(config, transformedSchema);
 
   const stitchingResolverType = `
 export type StitchingResolver<TResult, TParent, TContext, TArgs> = {
@@ -106,6 +101,8 @@ export type StitchingResolver<TResult, TParent, TContext, TArgs> = {
 
   const header = `${indexSignature}
 
+${visitor.getResolverTypeWrapperSignature()}
+
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
   args: TArgs,
@@ -129,14 +126,23 @@ export type SubscriptionResolveFn<TResult, TParent, TContext, TArgs> = (
   info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
-export interface SubscriptionResolverObject<TResult, TParent, TContext, TArgs> {
-  subscribe: SubscriptionSubscribeFn<TResult, TParent, TContext, TArgs>;
-  resolve?: SubscriptionResolveFn<TResult, TParent, TContext, TArgs>;
+export interface SubscriptionSubscriberObject<TResult, TKey extends string, TParent, TContext, TArgs> {
+  subscribe: SubscriptionSubscribeFn<{ [key in TKey]: TResult }, TParent, TContext, TArgs>;
+  resolve?: SubscriptionResolveFn<TResult, { [key in TKey]: TResult }, TContext, TArgs>;
 }
 
-export type SubscriptionResolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
-  | ((...args: any[]) => SubscriptionResolverObject<TResult, TParent, TContext, TArgs>)
+export interface SubscriptionResolverObject<TResult, TParent, TContext, TArgs> {
+  subscribe: SubscriptionSubscribeFn<any, TParent, TContext, TArgs>;
+  resolve: SubscriptionResolveFn<TResult, any, TContext, TArgs>;
+}
+
+export type SubscriptionObject<TResult, TKey extends string, TParent, TContext, TArgs> =
+  | SubscriptionSubscriberObject<TResult, TKey, TParent, TContext, TArgs>
   | SubscriptionResolverObject<TResult, TParent, TContext, TArgs>;
+
+export type SubscriptionResolver<TResult, TKey extends string, TParent = {}, TContext = {}, TArgs = {}> =
+  | ((...args: any[]) => SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>)
+  | SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>;
 
 export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
   parent: TParent,
@@ -155,19 +161,24 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 ) => TResult | Promise<TResult>;
 `;
 
-  const printedSchema = printSchema(schema);
+  const printedSchema = config.federation ? printSchemaWithDirectives(transformedSchema) : printSchema(transformedSchema);
   const astNode = parse(printedSchema);
   const visitorResult = visit(astNode, { leave: visitor });
   const resolversTypeMapping = visitor.buildResolversTypes();
-  const { getRootResolver, getAllDirectiveResolvers, mappersImports, unusedMappers } = visitor;
+  const resolversParentTypeMapping = visitor.buildResolversParentTypes();
+  const { getRootResolver, getAllDirectiveResolvers, mappersImports, unusedMappers, hasScalars } = visitor;
+
+  if (hasScalars()) {
+    imports.push('GraphQLScalarType', 'GraphQLScalarTypeConfig');
+  }
 
   if (showUnusedMappers && unusedMappers.length) {
     console['warn'](`Unused mappers: ${unusedMappers.join(',')}`);
   }
 
   return {
-    prepend: [`import { ${imports.join(', ')} } from 'graphql';`, ...mappersImports, OMIT_TYPE],
-    content: [header, resolversTypeMapping, ...visitorResult.definitions.filter(d => typeof d === 'string'), getRootResolver(), getAllDirectiveResolvers()].join('\n'),
+    prepend: [`import { ${imports.join(', ')} } from 'graphql';`, ...mappersImports, ...visitor.globalDeclarations],
+    content: [header, resolversTypeMapping, resolversParentTypeMapping, ...visitorResult.definitions.filter(d => typeof d === 'string'), getRootResolver(), getAllDirectiveResolvers()].join('\n'),
   };
 };
 

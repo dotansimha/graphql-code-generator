@@ -1,22 +1,37 @@
 import { RawResolversConfig, ParsedResolversConfig } from './base-resolvers-visitor';
 
-export interface ParsedMapper {
-  isExternal: boolean;
+export type ParsedMapper = InternalParsedMapper | ExternalParsedMapper;
+export interface InternalParsedMapper {
+  isExternal: false;
   type: string;
-  source?: string;
-  default?: boolean;
+}
+export interface ExternalParsedMapper {
+  isExternal: true;
+  type: string;
+  import: string;
+  source: string;
+  default: boolean;
 }
 
 export function parseMapper(mapper: string, gqlTypeName: string | null = null): ParsedMapper {
   if (isExternalMapper(mapper)) {
-    const [source, type] = mapper.split('#');
+    const items = mapper.split('#');
+    const isNamespace = items.length === 3;
+
+    const type = isNamespace ? items[2] : items[1];
+    const ns = isNamespace ? items[1] : undefined;
+    const source = items[0];
+
     const asDefault = type === 'default';
+    const identifier = ns ? [ns, type].join('.') : type;
+    const importElement = ns || type;
 
     return {
       default: asDefault,
       isExternal: true,
       source,
-      type: asDefault ? gqlTypeName : type,
+      type: asDefault ? gqlTypeName : identifier,
+      import: asDefault ? gqlTypeName : importElement,
     };
   }
 
@@ -27,7 +42,7 @@ export function parseMapper(mapper: string, gqlTypeName: string | null = null): 
 }
 
 export function isExternalMapper(value: string): boolean {
-  return value.includes('#');
+  return value.includes('#') && !value.includes('"') && !value.includes("'");
 }
 
 export function transformMappers(rawMappers: RawResolversConfig['mappers']): ParsedResolversConfig['mappers'] {

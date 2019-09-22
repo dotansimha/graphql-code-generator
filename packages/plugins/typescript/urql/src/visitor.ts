@@ -2,7 +2,8 @@ import { ClientSideBaseVisitor, ClientSideBasePluginConfig, LoadedFragment, getC
 import { UrqlRawPluginConfig } from './index';
 import * as autoBind from 'auto-bind';
 import { OperationDefinitionNode, Kind } from 'graphql';
-import { titleCase } from 'change-case';
+import { pascalCase } from 'change-case';
+import { GraphQLSchema } from 'graphql';
 
 export interface UrqlPluginConfig extends ClientSideBasePluginConfig {
   withComponent: boolean;
@@ -11,8 +12,8 @@ export interface UrqlPluginConfig extends ClientSideBasePluginConfig {
 }
 
 export class UrqlVisitor extends ClientSideBaseVisitor<UrqlRawPluginConfig, UrqlPluginConfig> {
-  constructor(fragments: LoadedFragment[], rawConfig: UrqlRawPluginConfig) {
-    super(fragments, rawConfig, {
+  constructor(schema: GraphQLSchema, fragments: LoadedFragment[], rawConfig: UrqlRawPluginConfig) {
+    super(schema, fragments, rawConfig, {
       withComponent: getConfigValue(rawConfig.withComponent, true),
       withHooks: getConfigValue(rawConfig.withHooks, false),
       urqlImportFrom: getConfigValue(rawConfig.urqlImportFrom, null),
@@ -48,20 +49,25 @@ export class UrqlVisitor extends ClientSideBaseVisitor<UrqlRawPluginConfig, Urql
 
     const isVariablesRequired = operationType === 'Query' && node.variableDefinitions.some(variableDef => variableDef.type.kind === Kind.NON_NULL_TYPE);
 
+    const generics = [operationResultType, operationVariablesTypes];
+
+    if (operationType === 'Subscription') {
+      generics.unshift(operationResultType);
+    }
     return `
-export const ${componentName} = (props: Omit<Urql.${operationType}Props, 'query'> & { variables${isVariablesRequired ? '' : '?'}: ${operationVariablesTypes} }) => (
+export const ${componentName} = (props: Omit<Urql.${operationType}Props<${generics.join(', ')}>, 'query'> & { variables${isVariablesRequired ? '' : '?'}: ${operationVariablesTypes} }) => (
   <Urql.${operationType} {...props} query={${documentVariableName}} />
 );
 `;
   }
 
   private _buildHooks(node: OperationDefinitionNode, operationType: string, documentVariableName: string, operationResultType: string, operationVariablesTypes: string): string {
-    const operationName: string = this.convertName(node.name.value, { suffix: titleCase(operationType), useTypesPrefix: false });
+    const operationName: string = this.convertName(node.name.value, { suffix: pascalCase(operationType), useTypesPrefix: false });
 
     if (operationType === 'Mutation') {
       return `
 export function use${operationName}() {
-  return Urql.use${operationType}<${operationResultType}>(${documentVariableName});
+  return Urql.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${documentVariableName});
 };`;
     }
     return `

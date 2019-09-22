@@ -15,7 +15,9 @@ const asFileString = (content: ContentType) => {
 
 export const plugin: PluginFunction<AddPluginConfig> = async (schema: GraphQLSchema, documents: Types.DocumentFile[], config: AddPluginConfig): Promise<Types.PluginOutput> => {
   // Will always be object if specified as array or object
-  if (typeof config !== 'object') { return { content: null, prepend: asFileString(config) }; }
+  if (typeof config !== 'object') {
+    return { content: null, prepend: asFileString(config) };
+  }
 
   let placement = config.placement;
   let content = config.content;
@@ -23,9 +25,13 @@ export const plugin: PluginFunction<AddPluginConfig> = async (schema: GraphQLSch
   if (placement && placement !== 'prepend' && placement !== 'content' && placement !== 'append') {
     throw Error('Add plugin, faulty placement option');
   }
-  if (!placement) { placement = 'prepend'; }
+  if (!placement) {
+    placement = 'prepend';
+  }
 
-  if (!content) { throw Error('Add plugin, missing content'); }
+  if (!content) {
+    throw Error('Add plugin, missing content');
+  }
 
   return {
     content: null,

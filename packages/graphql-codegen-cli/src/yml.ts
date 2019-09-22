@@ -9,8 +9,8 @@ export function parseConfigFile(ymlString: string): Types.Config {
 
       if (variable.includes(':')) {
         const spl = variable.split(':');
-        varName = spl[0];
-        defaultValue = spl[1];
+        varName = spl.shift();
+        defaultValue = spl.join(':');
       }
 
       return process.env[varName] || defaultValue;

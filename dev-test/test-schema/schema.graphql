@@ -11,5 +11,8 @@ type Query {
   # Generates a new answer for the
   # guessing game
   answer: [Int!]!
+  testArr1: [String]
+  testArr2: [String]!
+  testArr3: [String!]!
 }
 

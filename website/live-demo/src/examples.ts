@@ -81,6 +81,18 @@ export const EXAMPLES: { [name: string]: Example } = {
     schema: TS_SCHEMA,
     documents: TS_QUERY,
   },
+  'typescript-operations-no-pick': {
+    name: 'TypeScript Operations (without Pick)',
+    config: `generates:
+  client-types.ts:
+    config:
+      preResolveTypes: true
+    plugins:
+      - typescript
+      - typescript-operations`,
+    schema: TS_SCHEMA,
+    documents: TS_QUERY,
+  },
   'typescript-operations-compatibility': {
     name: 'TypeScript Operations with 0.18 Compatibility',
     config: `generates:

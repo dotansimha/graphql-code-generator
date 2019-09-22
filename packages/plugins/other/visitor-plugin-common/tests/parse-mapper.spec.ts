@@ -15,6 +15,7 @@ describe('parseMapper', () => {
     expect(result).toEqual({
       default: false,
       isExternal: true,
+      import: 'MyType',
       type: 'MyType',
       source: 'file',
     });
@@ -26,7 +27,20 @@ describe('parseMapper', () => {
     expect(result).toEqual({
       default: true,
       isExternal: true,
+      import: 'MyGqlType',
       type: 'MyGqlType',
+      source: 'file',
+    });
+  });
+
+  it('Should support namespaces', () => {
+    const result = parseMapper('file#Namespace#Type', 'MyGqlType');
+
+    expect(result).toEqual({
+      default: false,
+      isExternal: true,
+      import: 'Namespace',
+      type: 'Namespace.Type',
       source: 'file',
     });
   });

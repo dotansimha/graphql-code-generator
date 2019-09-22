@@ -16,12 +16,12 @@ const validate = async (content: Types.PluginOutput, schema: GraphQLSchema, oper
   validateTs(mergedOutput, undefined, tsx, strict);
 };
 
-const validateAndCompile = async (content: Types.PluginOutput, schema: GraphQLSchema, operations, config = {}, tsx = false) => {
+const validateAndCompile = async (content: Types.PluginOutput, schema: GraphQLSchema, operations, config = {}, tsx = false, options = undefined) => {
   const tsPluginResult = await tsPlugin(schema, operations, config, { outputFile: '' });
   const tsOperationPluginResult = await tsOperationPlugin(schema, operations, config, { outputFile: '' });
   const mergedOutput = mergeOutputs([tsPluginResult, tsOperationPluginResult, content]);
 
-  compileTs(mergedOutput, undefined, tsx);
+  compileTs(mergedOutput, options, tsx);
 };
 
 describe('Compatibility Plugin', () => {
@@ -149,6 +149,49 @@ describe('Compatibility Plugin', () => {
   `);
 
   describe('Issues', () => {
+    it('Issue #1943 - Missing DiscriminateUnion on interface types with strict mode', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        interface Book {
+          title: String
+          author: String
+        }
+
+        type TextBook implements Book {
+          title: String
+          author: String
+          classes: [String]
+        }
+
+        type ColoringBook implements Book {
+          title: String
+          author: String
+          colors: [String]
+        }
+
+        type Query {
+          schoolBooks: [Book]
+        }
+      `);
+      const testQuery = parse(/* GraphQL */ `
+        query GetBooks {
+          schoolBooks {
+            title
+            ... on TextBook {
+              classes
+            }
+            ... on ColoringBook {
+              colors
+            }
+          }
+        }
+      `);
+
+      const operations = [{ filePath: '', content: testQuery }];
+      const config = { strict: true, noNamespaces: true };
+      const result = await plugin(testSchema, operations, config);
+
+      await validateAndCompile(result, testSchema, operations, config, false);
+    });
     it('Issue #1686 - Inline fragments on a union', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         schema {
@@ -468,12 +511,12 @@ describe('Compatibility Plugin', () => {
 
     expect(result).toContain(`export type Query = Me4Query;`);
     expect(result).toContain(`export type Me = Me4Query['me'];`);
-    validateAndCompile(result, testSchema, ast);
+    await validateAndCompile(result, testSchema, ast);
   });
 
   it('Should work with interfaces and inline fragments', async () => {
     const testSchema = buildSchema(/* GraphQL */ `
-      type Node {
+      interface Node {
         id: ID!
       }
 
@@ -511,7 +554,7 @@ describe('Compatibility Plugin', () => {
       },
     ];
     const result = await plugin(testSchema, ast, {});
-    validateAndCompile(result, testSchema, ast);
+    await validateAndCompile(result, testSchema, ast);
   });
 
   it('Should generate namepsace and the internal types correctly', async () => {
@@ -557,7 +600,7 @@ describe('Compatibility Plugin', () => {
     expect(result).toContain(`export type Friends = MeQuery['me']['friends'][0];`);
     expect(result).toContain(`export type _Friends = MeQuery['me']['friends'][0]['friends'][0];`);
     expect(result).toContain(`export type __Friends = MeQuery['me']['friends'][0]['friends'][0]['friends'][0];`);
-    validateAndCompile(result, schema, ast);
+    await validateAndCompile(result, schema, ast);
   });
 
   it('Should work with fragment spread', async () => {
@@ -646,6 +689,31 @@ describe('Compatibility Plugin', () => {
   });
 
   describe('React Apollo', () => {
+    it('Issue #1876 - should produce valid ts code with react-apollo', async () => {
+      const config = {
+        strict: true,
+        maybeValue: 'T | undefined',
+        withHooks: true,
+        withHOC: false,
+        withComponent: false,
+        noNamespaces: true,
+        preResolveTypes: true,
+        namingConvention: { typeNames: 'change-case#pascalCase' },
+        transformUnderscore: true,
+      };
+      const ast = [{ filePath: '', content: basicQuery }];
+      const result = await plugin(schema, ast, config, {
+        allPlugins: [
+          {
+            'typescript-react-apollo': config,
+          },
+        ],
+      });
+
+      const raPluginResult = await raPlugin(schema, ast, config, { outputFile: '' });
+      await validateAndCompile(mergeOutputs([raPluginResult, result]), schema, ast, config, true, { strict: true });
+    });
+
     it('Should produce valid ts code with react-apollo', async () => {
       const config = {};
       const ast = [{ filePath: '', content: basicQuery }];

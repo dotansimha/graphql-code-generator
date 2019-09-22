@@ -1,6 +1,8 @@
+
 ### package (`string`)
 
 Customize the Java package name. The default package name will be generated according to the output file path.
+
 
 #### Usage Example
 
@@ -17,18 +19,20 @@ generates:
 
 Overrides the default value of enum values declared in your GraphQL schema.
 
+
 #### Usage Example: With Custom Values
 
 ```yml
-config:
-  enumValues:
-    MyEnum:
-      A: 'foo'
+  config:
+    enumValues:
+      MyEnum:
+        A: 'foo'
 ```
 
 ### className (`string`, default value: `Types`)
 
 Allow you to customize the parent class name.
+
 
 #### Usage Example
 
@@ -44,6 +48,7 @@ generates:
 ### listType (`string`, default value: `Iterable`)
 
 Allow you to customize the list type
+
 
 #### Usage Example
 

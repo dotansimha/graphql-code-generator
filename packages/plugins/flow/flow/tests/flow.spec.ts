@@ -2,7 +2,7 @@ import '@graphql-codegen/testing';
 import { buildSchema } from 'graphql';
 import { plugin } from '../src/index';
 import { validateFlow } from './validate-flow';
-import { Types } from '@graphql-codegen/plugin-helpers';
+import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 
 describe('Flow Plugin', () => {
   describe('description to comment', () => {
@@ -154,9 +154,10 @@ describe('Flow Plugin', () => {
       const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
 
       expect(result.content).toBeSimilarStringTo(`
-        /** MyInput
+        /** 
+         * MyInput
          * multiline
-         */
+         **/
         export type MyInput`);
 
       validateFlow(result);
@@ -481,20 +482,29 @@ describe('Flow Plugin', () => {
           id: $ElementType<Scalars, 'ID'>,
         };`);
 
-      expect(result.content).toBeSimilarStringTo(`export type impl1 = some_interface & {
-          __typename?: 'Impl1',
+      expect(result.content).toBeSimilarStringTo(`export type impl1 = {
+        ...some_interface,
+        ...{
+           __typename?: 'Impl1',
           id: $ElementType<Scalars, 'ID'>,
-        };`);
+        }
+      };`);
 
-      expect(result.content).toBeSimilarStringTo(`export type impl_2 = some_interface & {
-          __typename?: 'Impl_2',
+      expect(result.content).toBeSimilarStringTo(`export type impl_2 = {
+        ...some_interface,
+        ...{
+           __typename?: 'Impl_2',
           id: $ElementType<Scalars, 'ID'>,
-        };`);
+        }
+      };`);
 
-      expect(result.content).toBeSimilarStringTo(`export type impl_3 = some_interface & {
-          __typename?: 'impl_3',
+      expect(result.content).toBeSimilarStringTo(`export type impl_3 = {
+        ...some_interface,
+        ...{
+           __typename?: 'impl_3',
           id: $ElementType<Scalars, 'ID'>,
-        };`);
+        }
+      };`);
 
       expect(result.content).toBeSimilarStringTo(`export type query = {
           __typename?: 'Query',
@@ -536,26 +546,35 @@ describe('Flow Plugin', () => {
         id: $ElementType<Scalars, 'ID'>,
       };`);
 
-      expect(result.content).toBeSimilarStringTo(`export type Impl1 = Some_Interface & {
-        __typename?: 'Impl1',
-        id: $ElementType<Scalars, 'ID'>,
+      expect(result.content).toBeSimilarStringTo(`export type Impl1 = {
+        ...Some_Interface,
+        ...{
+           __typename?: 'Impl1',
+          id: $ElementType<Scalars, 'ID'>,
+        }
       };`);
 
-      expect(result.content).toBeSimilarStringTo(`export type Impl_2 = Some_Interface & {
-        __typename?: 'Impl_2',
-        id: $ElementType<Scalars, 'ID'>,
+      expect(result.content).toBeSimilarStringTo(`export type Impl_2 = {
+        ...Some_Interface,
+        ...{
+           __typename?: 'Impl_2',
+          id: $ElementType<Scalars, 'ID'>,
+        }
       };`);
 
-      expect(result.content).toBeSimilarStringTo(`export type Impl_3 = Some_Interface & {
-        __typename?: 'impl_3',
-        id: $ElementType<Scalars, 'ID'>,
+      expect(result.content).toBeSimilarStringTo(`export type Impl_3 = {
+        ...Some_Interface,
+        ...{
+           __typename?: 'impl_3',
+          id: $ElementType<Scalars, 'ID'>,
+        }
       };`);
 
       expect(result.content).toBeSimilarStringTo(`export type Query = {
         __typename?: 'Query',
-        something?: ?MyUnion,
-        use_interface?: ?Some_Interface,
-      };`);
+       something?: ?MyUnion,
+       use_interface?: ?Some_Interface,
+     };`);
 
       validateFlow(result);
     });
@@ -590,26 +609,35 @@ describe('Flow Plugin', () => {
         id: $ElementType<Scalars, 'ID'>,
       };`);
 
-      expect(result.content).toBeSimilarStringTo(`export type IImpl1 = ISome_Interface & {
-        __typename?: 'Impl1',
-        id: $ElementType<Scalars, 'ID'>,
+      expect(result.content).toBeSimilarStringTo(`export type IImpl1 = {
+        ...ISome_Interface,
+        ...{
+           __typename?: 'Impl1',
+          id: $ElementType<Scalars, 'ID'>,
+        }
       };`);
 
-      expect(result.content).toBeSimilarStringTo(`export type IImpl_2 = ISome_Interface & {
-        __typename?: 'Impl_2',
-        id: $ElementType<Scalars, 'ID'>,
+      expect(result.content).toBeSimilarStringTo(`export type IImpl_2 = {
+        ...ISome_Interface,
+        ...{
+           __typename?: 'Impl_2',
+          id: $ElementType<Scalars, 'ID'>,
+        }
       };`);
 
-      expect(result.content).toBeSimilarStringTo(`export type IImpl_3 = ISome_Interface & {
-        __typename?: 'impl_3',
-        id: $ElementType<Scalars, 'ID'>,
+      expect(result.content).toBeSimilarStringTo(`export type IImpl_3 = {
+        ...ISome_Interface,
+        ...{
+           __typename?: 'impl_3',
+          id: $ElementType<Scalars, 'ID'>,
+        }
       };`);
 
       expect(result.content).toBeSimilarStringTo(`export type IQuery = {
         __typename?: 'Query',
-        something?: ?IMyUnion,
-        use_interface?: ?ISome_Interface,
-      };`);
+       something?: ?IMyUnion,
+       use_interface?: ?ISome_Interface,
+     };`);
 
       validateFlow(result);
     });
@@ -868,10 +896,13 @@ describe('Flow Plugin', () => {
         };
       `);
       expect(result.content).toBeSimilarStringTo(`
-        export type MyType = MyInterface & {
-          __typename?: 'MyType',
+      export type MyType = {
+        ...MyInterface,
+        ...{
+           __typename?: 'MyType',
           foo: $ElementType<Scalars, 'String'>,
-        };
+        }
+      };
       `);
       validateFlow(result);
     });
@@ -904,11 +935,15 @@ describe('Flow Plugin', () => {
         };
       `);
       expect(result.content).toBeSimilarStringTo(`
-        export type MyType = MyInterface & MyOtherInterface & {
-          __typename?: 'MyType',
+      export type MyType = {
+        ...MyInterface,
+        ...MyOtherInterface,
+        ...{
+           __typename?: 'MyType',
           foo: $ElementType<Scalars, 'String'>,
           bar: $ElementType<Scalars, 'String'>,
-        };
+        }
+      };
       `);
       validateFlow(result);
     });
@@ -1057,6 +1092,25 @@ describe('Flow Plugin', () => {
     const content = (await plugin(schema, [], { skipTypename: true }, { outputFile: '' })) as Types.ComplexPluginOutput;
     expect(content).not.toContain('__typename');
 
+    validateFlow(content);
+  });
+
+  it('should generate arguments types correctly with args', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        release: String
+      }
+      type Mutation {
+        random(byteLength: Int!): String!
+      }
+      schema {
+        query: Query
+        mutation: Mutation
+      }
+    `);
+
+    const content = (await plugin(schema, [], { addUnderscoreToArgsType: true, skipTypename: true }, { outputFile: '' })) as Types.ComplexPluginOutput;
+    expect(mergeOutputs([content])).toContain(`export type Mutation_RandomArgs = {`);
     validateFlow(content);
   });
 });

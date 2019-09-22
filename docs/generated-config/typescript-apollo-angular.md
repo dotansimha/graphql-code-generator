@@ -1,6 +1,8 @@
+
 ### ngModule (`string`)
 
 Allows to define `ngModule` as part of the plugin's config so it's globally available.
+
 
 #### Usage Example: graphql.macro
 
@@ -12,6 +14,7 @@ config:
 ### namedClient (`string`)
 
 Defined the global value of `namedClient`.
+
 
 #### Usage Example: graphql.macro
 

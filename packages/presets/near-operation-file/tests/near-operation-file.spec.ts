@@ -4,7 +4,7 @@ import { parse } from 'graphql';
 describe('near-operation-file preset', () => {
   const schemaDocumentNode = parse(/* GraphQL */ `
     type Query {
-      user: User!
+      user(id: String): User!
     }
 
     type User {
@@ -20,6 +20,14 @@ describe('near-operation-file preset', () => {
     }
   `);
   const operationAst = parse(/* GraphQL */ `
+    query {
+      user {
+        id
+        ...UserFields
+      }
+    }
+  `);
+  const minimalOperationAst = parse(/* GraphQL */ `
     query {
       user {
         ...UserFields
@@ -87,6 +95,46 @@ describe('near-operation-file preset', () => {
     ]);
   });
 
+  it('Should build the correct operation files paths with a subfolder', async () => {
+    const result = await preset.buildGeneratesSection({
+      baseOutputDir: './src/',
+      config: {},
+      presetConfig: {
+        folder: '__generated__',
+        baseTypesPath: 'types.ts',
+      },
+      schema: schemaDocumentNode,
+      documents: testDocuments,
+      plugins: [],
+      pluginMap: {},
+    });
+    expect(result.map(a => a.filename)).toEqual([
+      '/some/deep/path/src/graphql/__generated__/me-query.generated.ts',
+      '/some/deep/path/src/graphql/__generated__/user-fragment.generated.ts',
+      '/some/deep/path/src/graphql/__generated__/me.query.generated.ts',
+      '/some/deep/path/src/graphql/__generated__/something-query.generated.ts',
+      '/some/deep/path/src/graphql/nested/__generated__/somethingElse.generated.ts',
+      '/some/deep/path/src/graphql/nested/__generated__/from-js.generated.ts',
+      '/some/deep/path/src/graphql/__generated__/component.generated.ts',
+    ]);
+  });
+
+  it('Should skip the duplicate documents validation', async () => {
+    const result = await preset.buildGeneratesSection({
+      baseOutputDir: './src/',
+      config: {},
+      presetConfig: {
+        baseTypesPath: 'types.ts',
+      },
+      schema: schemaDocumentNode,
+      documents: testDocuments,
+      plugins: [],
+      pluginMap: {},
+    });
+
+    expect(result[0].skipDocumentsValidation).toBeTruthy();
+  });
+
   it('Should allow to customize output extension', async () => {
     const result = await preset.buildGeneratesSection({
       baseOutputDir: './src/',
@@ -128,6 +176,99 @@ describe('near-operation-file preset', () => {
     });
 
     expect(result.map(o => o.plugins)[0]).toEqual(expect.arrayContaining([{ add: `import * as Types from '../types';\n` }]));
+  });
+
+  it('Should prepend the "add" plugin with the correct import, when only using fragment spread', async () => {
+    const result = await preset.buildGeneratesSection({
+      baseOutputDir: './src/',
+      config: {},
+      presetConfig: {
+        cwd: '/some/deep/path',
+        baseTypesPath: 'types.ts',
+      },
+      schema: schemaDocumentNode,
+      documents: [{ filePath: '/some/deep/path/src/graphql/me-query.graphql', content: minimalOperationAst }, testDocuments[1]],
+      plugins: [{ typescript: {} }],
+      pluginMap: { typescript: {} as any },
+    });
+
+    expect(result.map(o => o.plugins)[0]).not.toEqual(expect.arrayContaining([{ add: `import * as Types from '../types';\n` }]));
+    expect(result.map(o => o.plugins)[1]).toEqual(expect.arrayContaining([{ add: `import * as Types from '../types';\n` }]));
+  });
+
+  it('should fail when multiple fragments with the same name are found', () => {
+    expect(() =>
+      preset.buildGeneratesSection({
+        baseOutputDir: './src/',
+        config: {},
+        presetConfig: {
+          cwd: '/some/deep/path',
+          baseTypesPath: 'types.ts',
+        },
+        schema: schemaDocumentNode,
+        documents: [testDocuments[1], testDocuments[1]],
+        plugins: [{ typescript: {} }],
+        pluginMap: { typescript: {} as any },
+      })
+    ).toThrow('Multiple fragments with the name(s) "UserFields" were found.');
+  });
+
+  it('Should NOT prepend the "add" plugin with Types import when selection set does not include direct fields', async () => {
+    const result = await preset.buildGeneratesSection({
+      baseOutputDir: './src/',
+      config: {},
+      presetConfig: {
+        cwd: '/some/deep/path',
+        baseTypesPath: 'types.ts',
+      },
+      schema: schemaDocumentNode,
+      documents: [
+        {
+          filePath: './test.graphql',
+          content: parse(/* GraphQL */ `
+            query {
+              user {
+                ...UserFields
+              }
+            }
+          `),
+        },
+        testDocuments[1],
+      ],
+      plugins: [{ typescript: {} }],
+      pluginMap: { typescript: {} as any },
+    });
+
+    expect(result.map(o => o.plugins)[0]).not.toEqual(expect.arrayContaining([{ add: `import * as Types from '../types';\n` }]));
+  });
+
+  it('Should prepend the "add" plugin with Types import when arguments are used', async () => {
+    const result = await preset.buildGeneratesSection({
+      baseOutputDir: './src/',
+      config: {},
+      presetConfig: {
+        cwd: '/some/deep/path',
+        baseTypesPath: 'types.ts',
+      },
+      schema: schemaDocumentNode,
+      documents: [
+        {
+          filePath: './test.graphql',
+          content: parse(/* GraphQL */ `
+            query($id: String) {
+              user(id: $id) {
+                ...UserFields
+              }
+            }
+          `),
+        },
+        testDocuments[1],
+      ],
+      plugins: [{ typescript: {} }],
+      pluginMap: { typescript: {} as any },
+    });
+
+    expect(result.map(o => o.plugins)[0]).toEqual(expect.arrayContaining([{ add: `import * as Types from './src/types';\n` }]));
   });
 
   it('Should prepend the "add" plugin with the correct import (long path)', async () => {

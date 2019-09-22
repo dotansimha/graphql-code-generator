@@ -53,6 +53,9 @@
       "generated-config/near-operation-file": {
         "title": "generated-config/near-operation-file"
       },
+      "generated-config/schema-ast": {
+        "title": "generated-config/schema-ast"
+      },
       "generated-config/time": {
         "title": "generated-config/time"
       },
@@ -61,6 +64,9 @@
       },
       "generated-config/typescript-compatibility": {
         "title": "generated-config/typescript-compatibility"
+      },
+      "generated-config/typescript-document-nodes": {
+        "title": "generated-config/typescript-document-nodes"
       },
       "generated-config/typescript-mongodb": {
         "title": "generated-config/typescript-mongodb"
@@ -101,6 +107,9 @@
       "getting-started/index": {
         "title": "What is GraphQL Code Generator?"
       },
+      "getting-started/lifecycle-hooks": {
+        "title": "Lifecycle Hooks"
+      },
       "getting-started/programmatic-usage": {
         "title": "Programmatic Usage"
       },
@@ -116,8 +125,14 @@
       "integrations/create-react-app": {
         "title": "Create-React-App"
       },
+      "integrations/federation": {
+        "title": "Apollo Federation"
+      },
       "integrations/gatsby": {
         "title": "GatsbyJS"
+      },
+      "integrations/prettier": {
+        "title": "Prettier & Linters"
       },
       "migration/from-0-13": {
         "title": "Migration from 0.13 to 0.18"
@@ -170,6 +185,9 @@
       "plugins/typescript-compatibility": {
         "title": "TypeScript 1.0 Compatibility"
       },
+      "plugins/typescript-document-nodes": {
+        "title": "TypeScript document nodes"
+      },
       "plugins/typescript-graphql-files-modules": {
         "title": "TypeScript GraphQL Files Modules"
       },
@@ -187,6 +205,9 @@
       },
       "plugins/typescript-stencil-apollo": {
         "title": "TypeScript Stencil Apollo"
+      },
+      "plugins/typescript-type-graphql": {
+        "title": "TypeScript TypeGraphQL"
       },
       "plugins/typescript-urql": {
         "title": "TypeScript Urql"

@@ -79,9 +79,10 @@ describe('TypeScript', () => {
       const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
 
       expect(result.content).toBeSimilarStringTo(`
-        /** MyInput
+        /** 
+         * MyInput
          * multiline
-         */
+         **/
         export type MyInput`);
     });
 
@@ -224,6 +225,40 @@ describe('TypeScript', () => {
   });
 
   describe('Issues', () => {
+    it('#2082 - Issues with enumValues and types prefix', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        enum MyEnum {
+          A
+          B
+          C
+        }
+
+        enum OtherEnum {
+          V
+        }
+
+        type Test {
+          a: MyEnum
+          b: OtherEnum
+        }
+      `);
+      const result = (await plugin(
+        testSchema,
+        [],
+        {
+          typesPrefix: 'GQL_',
+          enumValues: {
+            MyEnum: './files#MyEnum',
+          },
+        },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+      expect(result.prepend).toContain(`import { MyEnum } from './files';`);
+      expect(result.content).toContain(`enum GQL_OtherEnum {`);
+      expect(result.content).toContain(`a?: Maybe<MyEnum>,`);
+      expect(result.content).toContain(`b?: Maybe<GQL_OtherEnum>`);
+    });
+
     it('#1488 - Should generate readonly also in input types when immutableTypes is set', async () => {
       const schema = buildSchema(`
       input MyInput {
@@ -260,6 +295,81 @@ describe('TypeScript', () => {
       };`);
       validateTs(result);
     });
+
+    it('#1954 - Duplicate type names for args type', async () => {
+      const schema = buildSchema(`
+      type PullRequest {
+        reviewThreads(first: Int!): Int
+      }
+      
+      type PullRequestReview {
+          threads(first: Int!, last: Int!): Int
+      }`);
+
+      const result = (await plugin(schema, [], { addUnderscoreToArgsType: true }, { outputFile: '' })) as Types.ComplexPluginOutput;
+
+      expect(result.content).toContain('PullRequest_ReviewThreadsArgs');
+      expect(result.content).toContain('PullRequestReview_ThreadsArgs');
+    });
+    it('#1980 Do not put prefix on enums in args when enumPrefix: false', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        enum SuggestionType {
+          concern
+          goal
+        }
+
+        type Suggestion {
+          id: ID!
+          userId: ID!
+          suggestionType: SuggestionType!
+          text: String!
+        }
+
+        type RootQueryType {
+          suggestionsForUser(userId: ID!, suggestionType: SuggestionType!): [Suggestion!]
+        }
+      `);
+      const result = (await plugin(schema, [], {
+        skipTypename: true,
+        declarationKind: 'interface',
+        typesPrefix: 'I',
+        enumPrefix: false,
+        constEnums: true,
+        scalars: {
+          DateTime: 'string',
+          Time: 'string',
+          Date: 'string',
+        },
+      })) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`
+          export interface ISuggestion {
+            id: Scalars['ID'],
+            userId: Scalars['ID'],
+            suggestionType: SuggestionType,
+            text: Scalars['String'],
+          }
+      `);
+      expect(result.content).toBeSimilarStringTo(`
+          export const enum SuggestionType {
+            Concern = 'concern',
+            Goal = 'goal'
+          };
+      `);
+
+      expect(result.content).toBeSimilarStringTo(`
+          export interface IRootQueryType {
+            suggestionsForUser?: Maybe<Array<ISuggestion>>,
+          }
+      `);
+
+      expect(result.content).toBeSimilarStringTo(`
+          export interface IRootQueryTypeSuggestionsForUserArgs {
+            userId: Scalars['ID'],
+            suggestionType: SuggestionType
+          }
+      `);
+    });
   });
 
   describe('Config', () => {
@@ -268,7 +378,8 @@ describe('TypeScript', () => {
         type MyType {
           foo: String
           bar: String!
-        }`);
+        }
+      `);
       const result = (await plugin(schema, [], { avoidOptionals: true }, { outputFile: '' })) as Types.ComplexPluginOutput;
 
       expect(result.content).toBeSimilarStringTo(`
@@ -281,6 +392,25 @@ describe('TypeScript', () => {
       validateTs(result);
     });
 
+    it('Should build input type correctly when specified with avoidInputOptionals config', async () => {
+      const schema = buildSchema(`
+        input MyInput {
+          foo: String
+          bar: String!
+        }
+      `);
+      const result = (await plugin(schema, [], { avoidOptionals: { inputValue: true } }, { outputFile: '' })) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type MyInput = {
+          foo: Maybe<Scalars['String']>,
+          bar: Scalars['String'],
+        }
+      `);
+
+      validateTs(result);
+    });
+
     it('Should build type correctly when specified with immutableTypes config', async () => {
       const schema = buildSchema(`
         type MyType {
@@ -290,7 +420,7 @@ describe('TypeScript', () => {
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyType = {
-          __typename?: 'MyType',
+          readonly  __typename?: 'MyType',
           readonly foo: ReadonlyArray<Scalars['String']>,
         };
       `);
@@ -818,6 +948,43 @@ describe('TypeScript', () => {
       validateTs(result);
     });
 
+    it('Should generate a scalars mapping correctly when using scalars as path', async () => {
+      const schema = buildSchema(`
+      scalar MyScalar
+
+      type MyType {
+        foo: String
+        bar: MyScalar!
+      }`);
+      const result = (await plugin(
+        schema,
+        [],
+        {
+          scalars: '../../scalars',
+        },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.prepend).toContain(`import { MyScalar } from '../../scalars';`);
+      expect(result.content).toBeSimilarStringTo(`
+      export type Scalars = {
+        ID: string,
+        String: String,
+        Boolean: Boolean,
+        Int: number,
+        Float: number,
+        MyScalar: MyScalar,
+      };`);
+
+      expect(result.content).toBeSimilarStringTo(`
+      export type MyType = {
+        __typename?: 'MyType',
+        foo?: Maybe<Scalars['String']>,
+        bar: Scalars['MyScalar'],
+      };`);
+      validateTs(result);
+    });
+
     it('Should generate a scalars mapping correctly for custom scalars', async () => {
       const schema = buildSchema(`
       scalar MyScalar
@@ -1112,6 +1279,26 @@ describe('TypeScript', () => {
           foo?: Maybe<Scalars['String']>,
         };
       `);
+
+      validateTs(result);
+    });
+
+    it('Should allow to disable typesPrefix for enums', async () => {
+      const schema = buildSchema(`type T { f: String, e: E } enum E { A }`);
+      const result = (await plugin(schema, [], { typesPrefix: 'I', enumPrefix: false }, { outputFile: '' })) as Types.ComplexPluginOutput;
+
+      expect(result.content).toContain(`export enum E {`);
+      expect(result.content).toContain(`e?: Maybe<E>,`);
+
+      validateTs(result);
+    });
+
+    it('Should enable typesPrefix for enums by default', async () => {
+      const schema = buildSchema(`type T { f: String, e: E } enum E { A }`);
+      const result = (await plugin(schema, [], { typesPrefix: 'I' }, { outputFile: '' })) as Types.ComplexPluginOutput;
+
+      expect(result.content).toContain(`export enum IE {`);
+      expect(result.content).toContain(`e?: Maybe<IE>,`);
 
       validateTs(result);
     });
@@ -1511,6 +1698,38 @@ describe('TypeScript', () => {
 
       validateTs(result);
     });
+
+    it('Should imoprt all enums from a single file when specified as string', async () => {
+      const schema = buildSchema(`enum MyEnum { A, B, C } enum MyEnum2 { X, Y, Z }`);
+      const result = (await plugin(schema, [], { enumValues: './my-file' }, { outputFile: '' })) as Types.ComplexPluginOutput;
+
+      expect(result.content).not.toContain(`export enum MyEnum`);
+      expect(result.content).not.toContain(`export enum MyEnum2`);
+      expect(result.prepend).toContain(`import { MyEnum } from './my-file';`);
+      expect(result.prepend).toContain(`import { MyEnum2 } from './my-file';`);
+
+      validateTs(result);
+    });
+
+    it('Should re-export external enums', async () => {
+      const schema = buildSchema(`enum MyEnum { A, B, C } enum MyEnum2 { X, Y, Z }`);
+      const result = (await plugin(schema, [], { enumValues: { MyEnum: './my-file#MyEnum', MyEnum2: './my-file#MyEnum2X' } }, { outputFile: '' })) as Types.ComplexPluginOutput;
+
+      expect(result.content).toContain(`export { MyEnum };`);
+      expect(result.content).toContain(`export { MyEnum2 };`);
+
+      validateTs(result);
+    });
+
+    it('Should re-export external enums when single file option used', async () => {
+      const schema = buildSchema(`enum MyEnum { A, B, C } enum MyEnum2 { X, Y, Z }`);
+      const result = (await plugin(schema, [], { enumValues: './my-file' }, { outputFile: '' })) as Types.ComplexPluginOutput;
+
+      expect(result.content).toContain(`export { MyEnum };`);
+      expect(result.content).toContain(`export { MyEnum2 };`);
+
+      validateTs(result);
+    });
   });
 
   it('should not have [object Object]', async () => {
@@ -1600,5 +1819,84 @@ describe('TypeScript', () => {
     expect(result.content).not.toContain('__typename');
 
     validateTs(result);
+  });
+
+  it('should not contain "export" when noExport is set to true', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type User {
+        id: Int!
+        name: String!
+        email: String!
+      }
+      type QueryRoot {
+        allUsers: [User]!
+        userById(id: Int!): User
+        # Generates a new answer for the guessing game
+        answer: [Int!]!
+      }
+      type SubscriptionRoot {
+        newUser: User
+      }
+      schema {
+        query: QueryRoot
+        subscription: SubscriptionRoot
+      }
+    `);
+
+    const result = (await plugin(schema, [], { noExport: true }, { outputFile: '' })) as Types.ComplexPluginOutput;
+    expect(result.content).not.toContain('export');
+
+    validateTs(result);
+  });
+
+  it('should keep non-optional arguments non-optional - issue #2323', async () => {
+    const testSchema = buildSchema(/* GraphQL */ `
+      enum OrderBy {
+        name
+        id
+      }
+
+      input Filter {
+        contain: String
+      }
+
+      type Node {
+        id: ID!
+        name: String!
+      }
+
+      type Connection {
+        nodes: [Node]
+      }
+
+      type Query {
+        list(after: String, orderBy: OrderBy = name, filter: Filter!): Connection!
+      }
+    `);
+
+    const output = (await plugin(
+      testSchema,
+      [],
+      {
+        avoidOptionals: false,
+        maybeValue: 'T | undefined',
+      } as any,
+      { outputFile: 'graphql.ts' }
+    )) as Types.ComplexPluginOutput;
+
+    // Filter.contain should be optional
+    expect(output.content).toBeSimilarStringTo(`
+      export type Filter = {
+        contain?: Maybe<Scalars['String']>,
+      };
+    `);
+    // filter should be non-optional
+    expect(output.content).toBeSimilarStringTo(`
+      export type QueryListArgs = {
+        after?: Maybe<Scalars['String']>,
+        orderBy?: Maybe<OrderBy>,
+        filter: Filter
+      };
+    `);
   });
 });

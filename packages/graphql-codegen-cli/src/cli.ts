@@ -1,27 +1,22 @@
-#!/usr/bin/env node
-
 import { generate } from './generate-and-save';
 import { init } from './init';
-import { cliError } from './utils/cli-error';
 import { createConfig } from './config';
+import { lifecycleHooks } from './hooks';
 
-const [, , cmd] = process.argv;
+export function runCli(cmd: string): Promise<any> {
+  switch (cmd) {
+    case 'init':
+      return init();
+    default: {
+      const config = createConfig();
 
-switch (cmd) {
-  case 'init':
-    init()
-      .then(() => {
-        process.exit(0);
-      })
-      .catch(cliError);
-    break;
+      return config.then(config => {
+        return generate(config).catch(async error => {
+          await lifecycleHooks(config.hooks).onError(error.toString());
 
-  default:
-    createConfig().then(config => {
-      return generate(config)
-        .then(() => {
-          process.exit(0);
-        })
-        .catch(cliError);
-    });
+          throw error;
+        });
+      });
+    }
+  }
 }

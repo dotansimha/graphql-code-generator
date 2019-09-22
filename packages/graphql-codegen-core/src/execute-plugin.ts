@@ -1,15 +1,19 @@
-import { Types, CodegenPlugin } from '@graphql-codegen/plugin-helpers';
-import { DocumentNode, GraphQLSchema, buildASTSchema } from 'graphql';
+import { Types, CodegenPlugin, federationSpec, turnExtensionsIntoObjectTypes } from '@graphql-codegen/plugin-helpers';
+import { DocumentNode, GraphQLSchema, buildASTSchema, Kind } from 'graphql';
 import { DetailedError } from './errors';
+import { mergeSchemas } from './merge-schemas';
 import { validateGraphQlDocuments, checkValidationErrors } from 'graphql-toolkit';
 
 export interface ExecutePluginOptions {
   name: string;
   config: Types.PluginConfig;
+  parentConfig: Types.PluginConfig;
   schema: DocumentNode;
+  schemaAst?: GraphQLSchema;
   documents: Types.DocumentFile[];
   outputFilename: string;
   allPlugins: Types.ConfiguredPlugin[];
+  skipDocumentsValidation?: boolean;
 }
 
 export async function executePlugin(options: ExecutePluginOptions, plugin: CodegenPlugin): Promise<Types.PluginOutput> {
@@ -30,17 +34,30 @@ export async function executePlugin(options: ExecutePluginOptions, plugin: Codeg
     );
   }
 
-  const outputSchema: GraphQLSchema = buildASTSchema(options.schema);
-  const documentsToValidate = options.documents.filter(d => !d.skipValidation);
+  const isFederation = typeof options.config === 'object' && !Array.isArray(options.config) && options.config.federation;
+  const skipDocumentValidation = typeof options.config === 'object' && !Array.isArray(options.config) && options.config.skipDocumentsValidation;
 
-  if (outputSchema && documentsToValidate.length > 0) {
-    const errors = validateGraphQlDocuments(outputSchema, documentsToValidate);
+  let schema = options.schemaAst;
+
+  if (isFederation) {
+    schema = buildASTSchema(turnExtensionsIntoObjectTypes(mergeSchemas([schema || options.schema, federationSpec])), {
+      assumeValidSDL: true,
+    });
+  }
+
+  const outputSchema: GraphQLSchema = schema || buildASTSchema(options.schema);
+  const documents = options.documents || [];
+
+  if (outputSchema && documents.length > 0 && !skipDocumentValidation) {
+    const configObject = typeof options.config === 'object' ? options.config : options.parentConfig;
+    const extraFragments = configObject && (configObject as any)['externalFragments'] ? (configObject as any)['externalFragments'] : [];
+    const errors = validateGraphQlDocuments(outputSchema, [...documents, ...extraFragments.map((f: any) => ({ filePath: f.importFrom, content: { kind: Kind.DOCUMENT, definitions: [f.node] } }))]);
     checkValidationErrors(errors);
   }
 
   if (plugin.validate && typeof plugin.validate === 'function') {
     try {
-      await plugin.validate(outputSchema, options.documents, options.config, options.outputFilename, options.allPlugins);
+      await plugin.validate(outputSchema, documents, options.config, options.outputFilename, options.allPlugins);
     } catch (e) {
       throw new DetailedError(
         `Plugin "${options.name}" validation failed:`,
@@ -51,8 +68,10 @@ export async function executePlugin(options: ExecutePluginOptions, plugin: Codeg
     }
   }
 
-  return plugin.plugin(outputSchema, options.documents, options.config, {
-    outputFile: options.outputFilename,
-    allPlugins: options.allPlugins,
-  });
+  return await Promise.resolve(
+    plugin.plugin(outputSchema, documents, typeof options.config === 'object' ? { ...options.config } : options.config, {
+      outputFile: options.outputFilename,
+      allPlugins: options.allPlugins,
+    })
+  );
 }

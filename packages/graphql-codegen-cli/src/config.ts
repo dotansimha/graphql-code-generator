@@ -37,7 +37,7 @@ function getCustomConfigPath(cliFlags: YamlCliFlags): string | null | never {
   return null;
 }
 
-function loadAndParseConfig(filepath: string): Types.Config | never {
+export function loadAndParseConfig(filepath: string): Types.Config | never {
   const ext = filepath.substr(filepath.lastIndexOf('.') + 1);
   switch (ext) {
     case 'yml':
@@ -62,8 +62,8 @@ function collect<T = string>(val: T, memo: T[]): T[] {
   return memo;
 }
 
-export async function createConfig(argv = process.argv): Promise<Types.Config | never> {
-  const cliFlags = (new Command()
+export function parseArgv(argv = process.argv): Command & YamlCliFlags {
+  return (new Command()
     .usage('graphql-codegen [options]')
     .allowUnknownOption(true)
     .option('-c, --config <path>', 'Path to GraphQL codegen YAML config file, defaults to "codegen.yml" on the current directory')
@@ -72,7 +72,9 @@ export async function createConfig(argv = process.argv): Promise<Types.Config | 
     .option('-r, --require [value]', 'Loads specific require.extensions before running the codegen and reading the configuration', collect, [])
     .option('-o, --overwrite', 'Overwrites existing files')
     .parse(argv) as any) as Command & YamlCliFlags;
+}
 
+export async function createConfig(cliFlags: Command & YamlCliFlags = parseArgv(process.argv)): Promise<Types.Config | never> {
   const customConfigPath = getCustomConfigPath(cliFlags);
   const locations: string[] = [join(process.cwd(), './codegen.yml'), join(process.cwd(), './codegen.json')];
 
@@ -98,6 +100,7 @@ export async function createConfig(argv = process.argv): Promise<Types.Config | 
   }
 
   const parsedConfigFile = loadAndParseConfig(filepath);
+  parsedConfigFile.configFilePath = filepath;
 
   if (cliFlags.watch === true) {
     parsedConfigFile.watch = cliFlags.watch;

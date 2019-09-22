@@ -3,13 +3,13 @@ id: typescript-react-apollo
 title: TypeScript React Apollo
 ---
 
-This plugin generates React Apollo components and HOC with TypeScript typings. It extends the basic TypeScript template [`@graphql-codegen/typescript`](typescript-typings) and thus shares a similar configuration.
+This plugin generates React Apollo components and HOC with TypeScript typings. It extends the basic TypeScript template [`@graphql-codegen/typescript`](typescript) and thus shares a similar configuration.
 
 {@import: ../docs/plugins/client-note.md}
 
 ## Installation
 
-    $ yarn add @graphql-codegen/typescript-react-apollo
+    $ yarn add @graphql-codegen/typescript-react-apollo @types/graphql
 
 ## Usage
 

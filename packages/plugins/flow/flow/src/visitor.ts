@@ -1,4 +1,4 @@
-import { NonNullTypeNode, ListTypeNode, ObjectTypeDefinitionNode, FieldDefinitionNode, EnumTypeDefinitionNode, NamedTypeNode, GraphQLSchema, InputValueDefinitionNode, Kind } from 'graphql';
+import { NonNullTypeNode, ListTypeNode, ObjectTypeDefinitionNode, FieldDefinitionNode, EnumTypeDefinitionNode, NamedTypeNode, GraphQLSchema, InputValueDefinitionNode, Kind, GraphQLEnumType } from 'graphql';
 import { BaseTypesVisitor, DeclarationBlock, wrapWithSingleQuotes, indent, ParsedTypesConfig, transformComment } from '@graphql-codegen/visitor-plugin-common';
 import * as autoBind from 'auto-bind';
 import { FlowPluginConfig } from './index';
@@ -17,7 +17,10 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
     } as FlowPluginParsedConfig);
     autoBind(this);
 
-    this.setArgumentsTransformer(new FlowOperationVariablesToObject(this.config.scalars, this.convertName));
+    const enumNames = Object.values(schema.getTypeMap())
+      .map(type => (type instanceof GraphQLEnumType ? type.name : undefined))
+      .filter(t => t);
+    this.setArgumentsTransformer(new FlowOperationVariablesToObject(this.scalars, this.convertName, null, enumNames, pluginConfig.enumPrefix));
     this.setDeclarationBlockConfig({
       blockWrapper: this.config.useFlowExactObjects ? '|' : '',
     });
@@ -72,19 +75,44 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
     );
   }
 
-  protected _buildEnumImport(identifier: string, source: string): string {
+  protected _buildTypeImport(identifier: string, source: string): string {
     return `import { type ${identifier} } from '${source}';`;
+  }
+
+  protected mergeInterfaces(interfaces: string[], hasOtherFields: boolean): string {
+    if (!interfaces.length) {
+      return '';
+    }
+
+    return interfaces.map(i => indent(`...${i}`)).join(',\n') + (hasOtherFields ? ',\n  ' : '');
+  }
+
+  appendInterfacesAndFieldsToBlock(block: DeclarationBlock, interfaces: string[], fields: string[]): void {
+    block.withBlock(this.mergeInterfaces(interfaces, fields.length > 0) + this.mergeAllFields(fields, interfaces.length > 0));
+  }
+
+  protected mergeAllFields(allFields: string[], hasInterfaces: boolean): string {
+    if (allFields.length === 0) {
+      return '';
+    }
+
+    if (!hasInterfaces) {
+      return allFields.join('\n');
+    }
+
+    return `...{\n${allFields.map(s => indent(s)).join('\n')}\n  }`;
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
     const typeName = (node.name as any) as string;
 
-    if (this.config.enumValues[typeName] && typeof this.config.enumValues[typeName] === 'string') {
+    if (this.config.enumValues[typeName] && this.config.enumValues[typeName].sourceFile) {
       return null;
     }
 
     const enumValuesName = this.convertName(node, {
       suffix: 'Values',
+      useTypesPrefix: this.config.enumPrefix,
     });
 
     const enumValues = new DeclarationBlock(this._declarationBlockConfig)
@@ -99,8 +127,8 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
             const optionName = this.convertName(enumOption, { transformUnderscore: true, useTypesPrefix: false });
             let enumValue: string = (enumOption.name as any) as string;
 
-            if (this.config.enumValues[typeName] && typeof this.config.enumValues[typeName] === 'object' && this.config.enumValues[typeName][enumValue]) {
-              enumValue = this.config.enumValues[typeName][enumValue];
+            if (this.config.enumValues[typeName] && this.config.enumValues[typeName].mappedValues && this.config.enumValues[typeName].mappedValues[enumValue]) {
+              enumValue = this.config.enumValues[typeName].mappedValues[enumValue];
             }
 
             return comment + indent(`${optionName}: ${wrapWithSingleQuotes(enumValue)}`);
@@ -111,7 +139,7 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
     const enumType = new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
-      .withName(this.convertName(node))
+      .withName(this.convertName(node, { useTypesPrefix: this.config.enumPrefix }))
       .withComment((node.description as any) as string)
       .withContent(`$Values<typeof ${enumValuesName}>`).string;
 

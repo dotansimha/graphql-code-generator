@@ -1,10 +1,14 @@
+import { Types } from '@graphql-codegen/plugin-helpers';
 import '@graphql-codegen/testing';
-import { GraphQLObjectType, buildSchema, buildASTSchema, parse, print } from 'graphql';
+import { GraphQLObjectType, buildSchema, buildASTSchema, parse, print, buildClientSchema, graphql, getIntrospectionQuery } from 'graphql';
 import { mergeSchemas } from '@graphql-codegen/core';
 import { executeCodegen } from '../src';
+import { readFileSync } from 'fs';
 
 const SHOULD_NOT_THROW_STRING = 'SHOULD_NOT_THROW';
 const SIMPLE_TEST_SCHEMA = `type MyType { f: String } type Query { f: String }`;
+
+jest.mock('some-fetch');
 
 describe('Codegen Executor', () => {
   describe('Generator General Options', () => {
@@ -18,8 +22,7 @@ describe('Codegen Executor', () => {
       });
 
       expect(output.length).toBe(2);
-      expect(output[0].filename).toBe('out1.ts');
-      expect(output[1].filename).toBe('out2.ts');
+      expect(output.map(f => f.filename)).toEqual(expect.arrayContaining(['out1.ts', 'out2.ts']));
     });
 
     it('Should load require extensions', async () => {
@@ -536,6 +539,20 @@ describe('Codegen Executor', () => {
       expect(output[0].content).toContain('Extension');
       expect(output[0].content).toContain(`Should have the Extension type: 'Extension'`);
     });
+
+    it('Should allow plugins to extend schema (using a function)', async () => {
+      const output = await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        config: {
+          test: 'MyType',
+        },
+        generates: {
+          'out1.ts': ['./tests/custom-plugins/extends-schema-fn.js'],
+        },
+      });
+
+      expect(output[0].content).toContain('MyType');
+    });
   });
 
   describe('Schema Merging', () => {
@@ -628,12 +645,12 @@ describe('Codegen Executor', () => {
 
       expect(output.length).toBe(1);
       expect(output[0].content).toBeSimilarStringTo(`export type Scalars = {
-        ID: string;
-        String: string;
-        Boolean: boolean;
-        Int: number;
-        Float: number;
-        UniqueID: any;
+        ID: string,
+        String: string,
+        Boolean: boolean,
+        Int: number,
+        Float: number,
+        UniqueID: any,
       };`);
     });
   });
@@ -855,5 +872,17 @@ describe('Codegen Executor', () => {
         expect(e.details).toContain('Unable to find a loader function! Make sure to export a default function from your file');
       }
     });
+  });
+
+  it('should load schema with custom fetch', async () => {
+    await executeCodegen({
+      schema: ['http://www.dummyschema.com/graphql'],
+      customFetch: 'some-fetch#someFetchFn',
+      documents: ['./tests/test-documents/valid.graphql'],
+      generates: {
+        'out1.ts': ['typescript'],
+      },
+    });
+    expect(global['CUSTOM_FETCH_FN_CALLED']).toBeTruthy();
   });
 });
