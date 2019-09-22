@@ -185,7 +185,7 @@ describe('Kotlin', () => {
         val searchFields: SearchUserInput
       ) {
         constructor(args: Map<String, Any>) : this(
-            args["searchFields"]!!.let { SearchUserInput(it as Map<String, Any>) }
+            SearchUserInput(args["searchFields"] as Map<String, Any>)
         )
       }`);
     });

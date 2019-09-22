@@ -138,8 +138,10 @@ ${enumValues}
           return indent(`args["${arg.name.value}"]${typeToUse.nullable || fallback ? '?' : '!!'}.let { ${arg.name.value} -> (${arg.name.value} as List<Map<String, Any>>).map { ${typeToUse.baseType}(it) } }${fallback}`, 3);
         } else if (typeToUse.isScalar) {
           return indent(`args["${arg.name.value}"] as ${typeToUse.typeName}${typeToUse.nullable || fallback ? '?' : ''}${fallback}`, 3);
+        } else if (typeToUse.nullable || fallback) {
+          return indent(`args["${arg.name.value}"]?.let { ${typeToUse.typeName}(it as Map<String, Any>) }${fallback}`, 3);
         } else {
-          return indent(`args["${arg.name.value}"]${typeToUse.nullable ? '?' : '!!'}.let { ${typeToUse.typeName}(it as Map<String, Any>) }${fallback}`, 3);
+          return indent(`${typeToUse.typeName}(args["${arg.name.value}"] as Map<String, Any>)`, 3);
         }
       })
       .join(',\n');
