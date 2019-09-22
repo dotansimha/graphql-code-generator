@@ -19,6 +19,20 @@ export type SelectionSetProcessorConfig = {
 export class BaseSelectionSetProcessor<Config extends SelectionSetProcessorConfig> {
   constructor(public config: Config) {}
 
+  buildFieldsIntoObject(allObjectsMerged: string[]): string {
+    return `{ ${allObjectsMerged.join(', ')} }`;
+  }
+
+  buildSelectionSetFromStrings(pieces: string[]): string {
+    if (pieces.length === 0) {
+      return null;
+    } else if (pieces.length === 1) {
+      return pieces[0];
+    } else {
+      return `(\n  ${pieces.join(`\n  & `)}\n)`;
+    }
+  }
+
   transformPrimitiveFields(schemaType: GraphQLObjectType | GraphQLInterfaceType, fields: PrimitiveField[]): ProcessResult {
     throw new Error(`Please override "transformPrimitiveFields" as part of your BaseSelectionSetProcessor implementation!`);
   }

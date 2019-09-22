@@ -1,4 +1,4 @@
-import { LinkField, PrimitiveField, PrimitiveAliasedFields, SelectionSetProcessorConfig, ProcessResult, BaseSelectionSetProcessor } from '@graphql-codegen/visitor-plugin-common';
+import { LinkField, PrimitiveField, PrimitiveAliasedFields, SelectionSetProcessorConfig, ProcessResult, BaseSelectionSetProcessor, indent } from '@graphql-codegen/visitor-plugin-common';
 import { GraphQLObjectType, GraphQLInterfaceType } from 'graphql';
 
 export interface FlowSelectionSetProcessorConfig extends SelectionSetProcessorConfig {
@@ -17,6 +17,20 @@ export class FlowWithPickSelectionSetProcessor extends BaseSelectionSetProcessor
     const parentName = this.config.convertName(schemaType.name, { useTypesPrefix: true });
 
     return [`{${useFlowExactObject ? '|' : ''} ${fields.map(aliasedField => `${useFlowReadOnlyTypes ? '+' : ''}${aliasedField.alias}: $ElementType<${parentName}, '${aliasedField.fieldName}'>`).join(', ')} ${useFlowExactObject ? '|' : ''}}`];
+  }
+
+  buildFieldsIntoObject(allObjectsMerged: string[]): string {
+    return `...{ ${allObjectsMerged.join(', ')} }`;
+  }
+
+  buildSelectionSetFromStrings(pieces: string[]): string {
+    if (pieces.length === 0) {
+      return null;
+    } else if (pieces.length === 1) {
+      return pieces[0];
+    } else {
+      return `({\n  ${pieces.map(t => indent(`...${t}`)).join(`,\n`)}\n})`;
+    }
   }
 
   transformLinkFields(fields: LinkField[]): ProcessResult {
