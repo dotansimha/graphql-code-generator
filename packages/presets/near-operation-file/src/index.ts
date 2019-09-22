@@ -1,9 +1,9 @@
-import { Types, CodegenPlugin } from '@graphql-codegen/plugin-helpers';
+import { isUsingTypes, Types, CodegenPlugin } from '@graphql-codegen/plugin-helpers';
 import { BaseVisitor, LoadedFragment, buildScalars } from '@graphql-codegen/visitor-plugin-common';
 import * as addPlugin from '@graphql-codegen/add';
 import { join, resolve } from 'path';
 import { Kind, FragmentDefinitionNode } from 'graphql';
-import { appendExtensionToFilePath, defineFilepathSubfolder, extractExternalFragmentsInUse, resolveRelativeImport, isUsingTypes } from './utils';
+import { appendExtensionToFilePath, defineFilepathSubfolder, extractExternalFragmentsInUse, resolveRelativeImport } from './utils';
 
 export type NearOperationFileConfig = {
   /**

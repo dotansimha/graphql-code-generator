@@ -135,7 +135,7 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
     };
 
     this.scalars = {};
-    Object.keys(this.config.scalars).forEach(key => {
+    Object.keys(this.config.scalars || {}).forEach(key => {
       this.scalars[key] = this.config.scalars[key].type;
     });
 

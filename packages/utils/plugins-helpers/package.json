@@ -5,6 +5,7 @@
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
   "scripts": {
+    "test": "jest --config ../../../jest.config.js",
     "build": "tsc -m esnext --outDir dist/esnext && tsc -m commonjs --outDir dist/commonjs"
   },
   "peerDependencies": {
@@ -17,6 +18,8 @@
     "tslib": "1.10.0"
   },
   "devDependencies": {
+    "jest": "24.9.0",
+    "ts-jest": "24.1.0",
     "typescript": "3.6.3"
   },
   "sideEffects": false,
