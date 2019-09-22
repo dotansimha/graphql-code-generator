@@ -1,5 +1,5 @@
 import { parse, buildSchema } from 'graphql';
-import { isUsingTypes } from '../src/utils';
+import { isUsingTypes } from '../src/helpers';
 
 describe('isUsingTypes', () => {
   it('Should include fragments when they are not extenral', () => {
