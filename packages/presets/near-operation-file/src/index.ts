@@ -199,8 +199,7 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
           const fragmentDetails = fragmentNameToFile[fragmentName];
 
           if (fragmentDetails) {
-            const fragmentNewFilePath = defineFilepathSubfolder(fragmentDetails.filePath, folder);
-            const fragmentGeneratedFilePath = appendExtensionToFilePath(fragmentNewFilePath, extension);
+            const fragmentGeneratedFilePath = defineFilepathSubfolder(fragmentDetails.filePath, folder);
             const absFragmentFilePath = resolve(baseDir, fragmentGeneratedFilePath);
             const fragmentImportPath = resolveRelativeImport(absGeneratedFilePath, absFragmentFilePath);
 
