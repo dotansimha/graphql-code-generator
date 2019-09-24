@@ -8,7 +8,7 @@ export interface FlowDocumentsPluginConfig extends RawDocumentsConfig {
    * @name useFlowExactObjects
    * @type boolean
    * @description Generates Flow types as Exact types.
-   * @default false
+   * @default true
    *
    * @example
    * ```yml
@@ -17,7 +17,7 @@ export interface FlowDocumentsPluginConfig extends RawDocumentsConfig {
    *  plugins:
    *    - flow
    *  config:
-   *    useFlowExactObjects: true
+   *    useFlowExactObjects: false
    * ```
    */
   useFlowExactObjects?: boolean;
@@ -38,7 +38,7 @@ export interface FlowDocumentsPluginConfig extends RawDocumentsConfig {
    * ```
    */
   useFlowReadOnlyTypes?: boolean;
-    /**
+  /**
    * @name flattenGeneratedTypes
    * @type boolean
    * @description Flatten fragment spread and inline fragments into a simple selection set before generating.
