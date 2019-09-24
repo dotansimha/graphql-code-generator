@@ -11,7 +11,7 @@ export interface FlowPluginConfig extends RawTypesConfig {
    * @name useFlowExactObjects
    * @type boolean
    * @description Generates Flow types as Exact types.
-   * @default false
+   * @default true
    *
    * @example
    * ```yml
@@ -20,7 +20,7 @@ export interface FlowPluginConfig extends RawTypesConfig {
    *  plugins:
    *    - flow
    *  config:
-   *    useFlowExactObjects: true
+   *    useFlowExactObjects: false
    * ```
    */
   useFlowExactObjects?: boolean;

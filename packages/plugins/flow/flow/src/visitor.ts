@@ -1,5 +1,5 @@
 import { NonNullTypeNode, ListTypeNode, ObjectTypeDefinitionNode, FieldDefinitionNode, EnumTypeDefinitionNode, NamedTypeNode, GraphQLSchema, InputValueDefinitionNode, Kind, GraphQLEnumType } from 'graphql';
-import { BaseTypesVisitor, DeclarationBlock, wrapWithSingleQuotes, indent, ParsedTypesConfig, transformComment } from '@graphql-codegen/visitor-plugin-common';
+import { BaseTypesVisitor, DeclarationBlock, wrapWithSingleQuotes, indent, ParsedTypesConfig, transformComment, getConfigValue } from '@graphql-codegen/visitor-plugin-common';
 import * as autoBind from 'auto-bind';
 import { FlowPluginConfig } from './index';
 import { FlowOperationVariablesToObject } from './flow-variables-to-object';
@@ -12,8 +12,8 @@ export interface FlowPluginParsedConfig extends ParsedTypesConfig {
 export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginParsedConfig> {
   constructor(schema: GraphQLSchema, pluginConfig: FlowPluginConfig) {
     super(schema, pluginConfig, {
-      useFlowExactObjects: pluginConfig.useFlowExactObjects || false,
-      useFlowReadOnlyTypes: pluginConfig.useFlowReadOnlyTypes || false,
+      useFlowExactObjects: getConfigValue(pluginConfig.useFlowExactObjects, true),
+      useFlowReadOnlyTypes: getConfigValue(pluginConfig.useFlowReadOnlyTypes, false),
     } as FlowPluginParsedConfig);
     autoBind(this);
 

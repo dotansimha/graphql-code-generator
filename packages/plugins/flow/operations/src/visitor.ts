@@ -2,7 +2,7 @@ import { FlowWithPickSelectionSetProcessor } from './flow-selection-set-processo
 import { GraphQLSchema, isListType, GraphQLObjectType, GraphQLNonNull, GraphQLList } from 'graphql';
 import { FlowDocumentsPluginConfig } from './index';
 import { FlowOperationVariablesToObject } from '@graphql-codegen/flow';
-import { PreResolveTypesProcessor, ParsedDocumentsConfig, BaseDocumentsVisitor, LoadedFragment, SelectionSetProcessorConfig, SelectionSetToObject } from '@graphql-codegen/visitor-plugin-common';
+import { PreResolveTypesProcessor, ParsedDocumentsConfig, BaseDocumentsVisitor, LoadedFragment, SelectionSetProcessorConfig, SelectionSetToObject, getConfigValue } from '@graphql-codegen/visitor-plugin-common';
 import { isNonNullType } from 'graphql';
 
 export interface FlowDocumentsParsedConfig extends ParsedDocumentsConfig {
@@ -15,8 +15,8 @@ export class FlowDocumentsVisitor extends BaseDocumentsVisitor<FlowDocumentsPlug
     super(
       config,
       {
-        useFlowExactObjects: config.useFlowExactObjects || false,
-        useFlowReadOnlyTypes: config.useFlowReadOnlyTypes || false,
+        useFlowExactObjects: getConfigValue(config.useFlowExactObjects, true),
+        useFlowReadOnlyTypes: getConfigValue(config.useFlowReadOnlyTypes, false),
       } as FlowDocumentsParsedConfig,
       schema
     );

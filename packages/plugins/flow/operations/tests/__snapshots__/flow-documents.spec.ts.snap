@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Flow Operations Plugin Output options Should respect flow option useFlowReadOnlyTypes 1`] = `undefined`;
