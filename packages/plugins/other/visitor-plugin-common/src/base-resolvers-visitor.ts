@@ -228,6 +228,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
   protected _globalDeclarations: Set<string> = new Set();
   protected _federation: ApolloFederation;
   protected _hasScalars = false;
+  protected _hasFederation = false;
 
   constructor(rawConfig: TRawConfig, additionalConfig: TPluginConfig, private _schema: GraphQLSchema, defaultScalars: NormalizedScalarsMap = DEFAULT_SCALARS) {
     super(rawConfig, {
@@ -545,6 +546,10 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
     return this._hasScalars;
   }
 
+  public hasFederation(): boolean {
+    return this._hasFederation;
+  }
+
   public getRootResolver(): string {
     const name = this.convertName('Resolvers');
     const contextType = `<ContextType = ${this.config.contextType.type}>`;
@@ -705,10 +710,31 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
         }
       }
 
-      const parentTypeSignature = this._federation.translateParentType({ fieldNode: original, parentType, parentTypeSignature: 'ParentType' });
+      const parentTypeSignature = this._federation.transformParentType({ fieldNode: original, parentType, parentTypeSignature: 'ParentType' });
       const mappedTypeKey = isSubscriptionType ? `${mappedType}, "${node.name}"` : mappedType;
 
-      return indent(`${node.name}${this.config.avoidOptionals ? '' : '?'}: ${isSubscriptionType ? 'SubscriptionResolver' : 'Resolver'}<${mappedTypeKey}, ${parentTypeSignature}, ContextType${argsType ? `, ${argsType}` : ''}>,`);
+      let signature: {
+        name: string;
+        modifier: string;
+        type: string;
+        genericTypes: string[];
+      } = {
+        name: node.name as any,
+        modifier: this.config.avoidOptionals ? '' : '?',
+        type: isSubscriptionType ? 'SubscriptionResolver' : 'Resolver',
+        genericTypes: [mappedTypeKey, parentTypeSignature, 'ContextType', argsType].filter(f => f),
+      };
+
+      if (this._federation.isResolveReferenceField(node)) {
+        this._hasFederation = true;
+        signature.type = 'ReferenceResolver';
+
+        if (signature.genericTypes.length >= 3) {
+          signature.genericTypes = signature.genericTypes.slice(0, 3);
+        }
+      }
+
+      return indent(`${signature.name}${signature.modifier}: ${signature.type}<${signature.genericTypes.join(', ')}>,`);
     };
   }
 

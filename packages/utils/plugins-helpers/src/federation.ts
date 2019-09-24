@@ -38,7 +38,7 @@ export function addFederationReferencesToSchema(schema: GraphQLSchema): GraphQLS
             kind: Kind.FIELD_DEFINITION,
             name: {
               kind: Kind.NAME,
-              value: '__resolveReference',
+              value: resolveReferenceFieldName,
             },
             type: {
               kind: Kind.NAMED_TYPE,
@@ -141,6 +141,8 @@ export function removeFederation(
   });
 }
 
+const resolveReferenceFieldName = '__resolveReference';
+
 export class ApolloFederation {
   private enabled = false;
   private schema: GraphQLSchema;
@@ -165,7 +167,7 @@ export class ApolloFederation {
    * @param fieldNames List of field names
    */
   filterFieldNames(fieldNames: string[]): string[] {
-    return this.enabled ? fieldNames.filter(t => t !== '__resolveReference') : fieldNames;
+    return this.enabled ? fieldNames.filter(t => t !== resolveReferenceFieldName) : fieldNames;
   }
 
   /**
@@ -196,16 +198,21 @@ export class ApolloFederation {
     return this.isExternalAndNotProvided(fieldNode, parentType);
   }
 
+  isResolveReferenceField(fieldNode: FieldDefinitionNode): boolean {
+    const name = typeof fieldNode.name === 'string' ? fieldNode.name : fieldNode.name.value;
+    return this.enabled && name === resolveReferenceFieldName;
+  }
+
   /**
    * Transforms ParentType signature in ObjectTypes involved in Federation
    * @param data
    */
-  translateParentType({ fieldNode, parentType, parentTypeSignature }: { fieldNode: FieldDefinitionNode; parentType: GraphQLNamedType; parentTypeSignature: string }) {
-    if (this.enabled && isObjectType(parentType) && isFederationObjectType(parentType) && fieldNode.name.value === '__resolveReference') {
+  transformParentType({ fieldNode, parentType, parentTypeSignature }: { fieldNode: FieldDefinitionNode; parentType: GraphQLNamedType; parentTypeSignature: string }) {
+    if (this.enabled && isObjectType(parentType) && isFederationObjectType(parentType) && fieldNode.name.value === resolveReferenceFieldName) {
       const keys = getDirectivesByName('key', parentType);
 
       if (keys.length) {
-        const outputs: string[] = [];
+        const outputs: string[] = [`{ __typename: '${parentType.name}' } &`];
 
         // Look for @requires and see what the service needs and gets
         const requires = getDirectivesByName('requires', fieldNode)

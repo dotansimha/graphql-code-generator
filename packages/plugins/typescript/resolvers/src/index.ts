@@ -76,6 +76,7 @@ export const plugin: PluginFunction<TypeScriptResolversPluginConfig> = (schema: 
   const transformedSchema = config.federation ? addFederationReferencesToSchema(schema) : schema;
   const visitor = new TypeScriptResolversVisitor(config, transformedSchema);
 
+  const defsToInclude = [];
   const stitchingResolverType = `
 export type StitchingResolver<TResult, TParent, TContext, TArgs> = {
   fragment: string;
@@ -86,17 +87,23 @@ export type StitchingResolver<TResult, TParent, TContext, TArgs> = {
   const resolverFnUsage = `ResolverFn<TResult, TParent, TContext, TArgs>`;
   const stitchingResolverUsage = `StitchingResolver<TResult, TParent, TContext, TArgs>`;
 
-  let resolverDefs: string;
+  if (visitor.hasFederation()) {
+    defsToInclude.push(`export type ReferenceResolver<TResult, TReference, TContext> = (
+      reference: TReference,
+      context: TContext,
+      info: GraphQLResolveInfo
+    ) => Promise<TResult> | TResult;`);
+  }
 
   if (noSchemaStitching) {
     // Resolver = ResolverFn;
-    resolverDefs = `${resolverType} ${resolverFnUsage};`;
+    defsToInclude.push(`${resolverType} ${resolverFnUsage};`);
   } else {
     // StitchingResolver
     // Resolver =
     // | ResolverFn
     // | StitchingResolver;
-    resolverDefs = [stitchingResolverType, resolverType, `  | ${resolverFnUsage}`, `  | ${stitchingResolverUsage};`].join('\n');
+    defsToInclude.push([stitchingResolverType, resolverType, `  | ${resolverFnUsage}`, `  | ${stitchingResolverUsage};`].join('\n'));
   }
 
   const header = `${indexSignature}
@@ -110,7 +117,7 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   info: GraphQLResolveInfo
 ) => Promise<TResult> | TResult;
 
-${resolverDefs}
+${defsToInclude.join('\n')}
 
 export type SubscriptionSubscribeFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
