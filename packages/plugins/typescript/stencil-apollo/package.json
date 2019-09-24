@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "@graphql-codegen/testing": "1.7.0",
-    "@types/node": "10.14.18",
+    "@types/node": "10.14.19",
     "graphql": "14.5.7",
     "jest": "24.9.0",
     "ts-jest": "24.1.0",
