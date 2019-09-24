@@ -705,10 +705,30 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
         }
       }
 
-      const parentTypeSignature = this._federation.translateParentType({ fieldNode: original, parentType, parentTypeSignature: 'ParentType' });
+      const parentTypeSignature = this._federation.transformParentType({ fieldNode: original, parentType, parentTypeSignature: 'ParentType' });
       const mappedTypeKey = isSubscriptionType ? `${mappedType}, "${node.name}"` : mappedType;
 
-      return indent(`${node.name}${this.config.avoidOptionals ? '' : '?'}: ${isSubscriptionType ? 'SubscriptionResolver' : 'Resolver'}<${mappedTypeKey}, ${parentTypeSignature}, ContextType${argsType ? `, ${argsType}` : ''}>,`);
+      let signature: {
+        name: string;
+        modifier: string;
+        type: string;
+        genericTypes: string[];
+      } = {
+        name: node.name as any,
+        modifier: this.config.avoidOptionals ? '' : '?',
+        type: isSubscriptionType ? 'SubscriptionResolver' : 'Resolver',
+        genericTypes: [mappedTypeKey, parentTypeSignature, 'ContextType', argsType].filter(f => f),
+      };
+
+      if (this._federation.isResolveReferenceField(node)) {
+        signature.type = 'ReferenceResolver';
+
+        if (signature.genericTypes.length >= 3) {
+          signature.genericTypes = signature.genericTypes.slice(0, 3);
+        }
+      }
+
+      return indent(`${signature.name}${signature.modifier}: ${signature.type}<${signature.genericTypes.join(', ')}>,`);
     };
   }
 

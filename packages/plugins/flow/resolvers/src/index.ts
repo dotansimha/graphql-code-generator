@@ -25,6 +25,12 @@ export const plugin: PluginFunction<FlowResolversPluginConfig> = (schema: GraphQ
   info: GraphQLResolveInfo
 ) => Promise<Result> | Result;
 
+export type ReferenceResolver<Result, Reference = {}, Context = {}> = (
+  reference: Reference,
+  context: Context,
+  info: GraphQLResolveInfo
+) => Promise<Result> | Result;
+
 export type SubscriptionSubscribeFn<Result, Parent, Context, Args> = (
   parent: Parent,
   args: Args,
