@@ -261,17 +261,17 @@ export type HeroDetailsQueryVariables = {
 
 export type HeroDetailsQuery = { readonly __typename?: 'Query' } & { readonly hero: Maybe<({ readonly __typename?: 'Human' } & Pick<Human, 'height' | 'name'>) | ({ readonly __typename?: 'Droid' } & Pick<Droid, 'primaryFunction' | 'name'>)> };
 
-export type HeroDetailsWithFragmentQueryVariables = {
-  episode?: Maybe<Episode>;
-};
-
-export type HeroDetailsWithFragmentQuery = { readonly __typename?: 'Query' } & { readonly hero: Maybe<({ readonly __typename?: 'Human' } & HeroDetails_Human_Fragment) | ({ readonly __typename?: 'Droid' } & HeroDetails_Droid_Fragment)> };
-
 type HeroDetails_Human_Fragment = { readonly __typename?: 'Human' } & Pick<Human, 'height' | 'name'>;
 
 type HeroDetails_Droid_Fragment = { readonly __typename?: 'Droid' } & Pick<Droid, 'primaryFunction' | 'name'>;
 
 export type HeroDetailsFragment = HeroDetails_Human_Fragment | HeroDetails_Droid_Fragment;
+
+export type HeroDetailsWithFragmentQueryVariables = {
+  episode?: Maybe<Episode>;
+};
+
+export type HeroDetailsWithFragmentQuery = { readonly __typename?: 'Query' } & { readonly hero: Maybe<({ readonly __typename?: 'Human' } & HeroDetails_Human_Fragment) | ({ readonly __typename?: 'Droid' } & HeroDetails_Droid_Fragment)> };
 
 export type HeroNameQueryVariables = {
   episode?: Maybe<Episode>;
@@ -312,9 +312,11 @@ export type HeroTypeDependentAliasedFieldQuery = { readonly __typename?: 'Query'
   readonly hero: Maybe<({ readonly __typename?: 'Human' } & { readonly property: Human['homePlanet'] }) | ({ readonly __typename?: 'Droid' } & { readonly property: Droid['primaryFunction'] })>;
 };
 
+export type HumanFieldsFragment = { readonly __typename?: 'Human' } & Pick<Human, 'name' | 'mass'>;
+
 export type HumanWithNullHeightQueryVariables = {};
 
-export type HumanWithNullHeightQuery = { readonly __typename?: 'Query' } & { readonly human: Maybe<{ readonly __typename?: 'Human' } & Pick<Human, 'name' | 'mass'>> };
+export type HumanWithNullHeightQuery = { readonly __typename?: 'Query' } & { readonly human: Maybe<{ readonly __typename?: 'Human' } & HumanFieldsFragment> };
 
 export type TwoHeroesQueryVariables = {};
 

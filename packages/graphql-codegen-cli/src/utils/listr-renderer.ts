@@ -46,21 +46,22 @@ export class Renderer {
           .map(error => {
             debugLog(`[CLI] Exited with an error`, error);
 
-            return isDetailedError(error) ? error.details : error;
+            return { msg: isDetailedError(error) ? error.details : error, rawError: error };
           })
-          .map((msg, i) => {
+          .map(({ msg, rawError }, i) => {
             const source: string | Source | undefined = (err.errors[i] as any).source;
 
             msg = chalk.gray(indentString(stripIndent(`${msg}`), 4));
+            const stack = rawError.stack ? chalk.gray(indentString(stripIndent(rawError.stack), 4)) : null;
 
             if (source) {
               const sourceOfError = typeof source === 'string' ? source : source.name;
               const title = indentString(`${logSymbol.error} ${sourceOfError}`, 2);
 
-              return [title, msg].join('\n');
+              return [title, !stack ? msg : null, stack].filter(Boolean).join('\n');
             }
 
-            return msg;
+            return stack ? stack : msg;
           })
           .join('\n\n');
         logUpdate(['', count, details, ''].join('\n\n'));

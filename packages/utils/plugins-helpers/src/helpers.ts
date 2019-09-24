@@ -16,8 +16,10 @@ import {
   isNonNullType,
   GraphQLOutputType,
   ASTNode,
+  isUnionType,
 } from 'graphql';
 import { getBaseType } from './utils';
+import { InlineFragmentNode } from 'graphql';
 
 export function isOutputConfigArray(type: any): type is Types.OutputConfig[] {
   return Array.isArray(type);
@@ -81,6 +83,18 @@ export function isUsingTypes(document: DocumentNode, externalFragments: string[]
   let typesStack: GraphQLNamedType[] = [];
 
   visit(document, {
+    InlineFragment: {
+      enter: (node: InlineFragmentNode) => {
+        if (node.typeCondition && schema) {
+          typesStack.push(schema.getType(node.typeCondition.name.value));
+        }
+      },
+      leave: (node: InlineFragmentNode) => {
+        if (node.typeCondition && schema) {
+          typesStack.pop();
+        }
+      },
+    },
     Field: {
       enter: (node: FieldNode, key, parent, path, anscestors) => {
         const insideIgnoredFragment = (anscestors as any).find((f: ASTNode) => f.kind && f.kind === 'FragmentDefinition' && externalFragments.includes(f.name.value));
@@ -92,15 +106,23 @@ export function isUsingTypes(document: DocumentNode, externalFragments: string[]
         if (schema) {
           const lastType = typesStack[typesStack.length - 1];
 
-          if (lastType && (isObjectType(lastType) || isInterfaceType(lastType))) {
-            const currentType = lastType.getFields()[node.name.value].type;
+          if (lastType) {
+            if (isObjectType(lastType)) {
+              const field = lastType.getFields()[node.name.value];
 
-            // To handle `Maybe` usage
-            if (hasNullableTypeRecursively(currentType)) {
-              foundFields++;
+              if (!field) {
+                throw new Error(`Unable to find field "${node.name.value}" on type "${lastType}"!`);
+              }
+              const currentType = field.type;
+
+              // To handle `Maybe` usage
+              if (hasNullableTypeRecursively(currentType)) {
+                foundFields++;
+              }
+
+              typesStack.push(getBaseType(currentType));
+            } else if (isInterfaceType(lastType) || isUnionType(lastType)) {
             }
-
-            typesStack.push(getBaseType(currentType));
           }
         }
 

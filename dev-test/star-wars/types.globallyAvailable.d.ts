@@ -259,17 +259,17 @@ type HeroDetailsQueryVariables = {
 
 type HeroDetailsQuery = { __typename?: 'Query' } & { hero: Maybe<({ __typename?: 'Human' } & Pick<Human, 'height' | 'name'>) | ({ __typename?: 'Droid' } & Pick<Droid, 'primaryFunction' | 'name'>)> };
 
-type HeroDetailsWithFragmentQueryVariables = {
-  episode?: Maybe<Episode>;
-};
-
-type HeroDetailsWithFragmentQuery = { __typename?: 'Query' } & { hero: Maybe<({ __typename?: 'Human' } & HeroDetails_Human_Fragment) | ({ __typename?: 'Droid' } & HeroDetails_Droid_Fragment)> };
-
 type HeroDetails_Human_Fragment = { __typename?: 'Human' } & Pick<Human, 'height' | 'name'>;
 
 type HeroDetails_Droid_Fragment = { __typename?: 'Droid' } & Pick<Droid, 'primaryFunction' | 'name'>;
 
 type HeroDetailsFragment = HeroDetails_Human_Fragment | HeroDetails_Droid_Fragment;
+
+type HeroDetailsWithFragmentQueryVariables = {
+  episode?: Maybe<Episode>;
+};
+
+type HeroDetailsWithFragmentQuery = { __typename?: 'Query' } & { hero: Maybe<({ __typename?: 'Human' } & HeroDetails_Human_Fragment) | ({ __typename?: 'Droid' } & HeroDetails_Droid_Fragment)> };
 
 type HeroNameQueryVariables = {
   episode?: Maybe<Episode>;
@@ -308,9 +308,11 @@ type HeroTypeDependentAliasedFieldQueryVariables = {
 
 type HeroTypeDependentAliasedFieldQuery = { __typename?: 'Query' } & { hero: Maybe<({ __typename?: 'Human' } & { property: Human['homePlanet'] }) | ({ __typename?: 'Droid' } & { property: Droid['primaryFunction'] })> };
 
+type HumanFieldsFragment = { __typename?: 'Human' } & Pick<Human, 'name' | 'mass'>;
+
 type HumanWithNullHeightQueryVariables = {};
 
-type HumanWithNullHeightQuery = { __typename?: 'Query' } & { human: Maybe<{ __typename?: 'Human' } & Pick<Human, 'name' | 'mass'>> };
+type HumanWithNullHeightQuery = { __typename?: 'Query' } & { human: Maybe<{ __typename?: 'Human' } & HumanFieldsFragment> };
 
 type TwoHeroesQueryVariables = {};
 
