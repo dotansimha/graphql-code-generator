@@ -1761,8 +1761,11 @@ describe('TypeScript Operations Plugin', () => {
 
     it('Should produce valid output with preResolveTypes=true and enums with prefixes set', async () => {
       const ast = parse(/* GraphQL */ `
-        query test {
+        query test($e: Information_EntryType!) {
           info {
+            ...information
+          }
+          infoArgTest(e: $e) {
             ...information
           }
         }
@@ -1790,6 +1793,7 @@ describe('TypeScript Operations Plugin', () => {
         }
 
         type Query {
+          infoArgTest(e: Information_EntryType!): Information
           info: Information
         }
       `);
@@ -1799,6 +1803,9 @@ describe('TypeScript Operations Plugin', () => {
       });
 
       const o = await validate(result, config, testSchema);
+      expect(o).toBeSimilarStringTo(` export type ITestQueryVariables = {
+        e: Information_EntryType
+      };`);
       expect(o).toContain(`export type IQuery = {`);
       expect(o).toContain(`export enum Information_EntryType {`);
       expect(o).toContain(`__typename?: 'Information_Entry', id: Information_EntryType,`);

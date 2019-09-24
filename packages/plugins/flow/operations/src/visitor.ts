@@ -1,5 +1,5 @@
 import { FlowWithPickSelectionSetProcessor } from './flow-selection-set-processor';
-import { GraphQLSchema, isListType, GraphQLObjectType, GraphQLNonNull, GraphQLList } from 'graphql';
+import { GraphQLSchema, isListType, GraphQLObjectType, GraphQLNonNull, GraphQLList, isEnumType } from 'graphql';
 import { FlowDocumentsPluginConfig } from './index';
 import { FlowOperationVariablesToObject } from '@graphql-codegen/flow';
 import { PreResolveTypesProcessor, ParsedDocumentsConfig, BaseDocumentsVisitor, LoadedFragment, SelectionSetProcessorConfig, SelectionSetToObject, getConfigValue } from '@graphql-codegen/visitor-plugin-common';
@@ -56,7 +56,8 @@ export class FlowDocumentsVisitor extends BaseDocumentsVisitor<FlowDocumentsPlug
           useFlowExactObjects: this.config.useFlowExactObjects,
           useFlowReadOnlyTypes: this.config.useFlowReadOnlyTypes,
         });
+    const enumsNames = Object.keys(schema.getTypeMap()).filter(typeName => isEnumType(schema.getType(typeName)));
     this.setSelectionSetHandler(new SelectionSetToObject(processor, this.scalars, this.schema, this.convertName, allFragments, this.config));
-    this.setVariablesTransformer(new FlowOperationVariablesToObject(this.scalars, this.convertName, this.config.namespacedImportName));
+    this.setVariablesTransformer(new FlowOperationVariablesToObject(this.scalars, this.convertName, this.config.namespacedImportName, enumsNames, this.config.enumPrefix));
   }
 }
