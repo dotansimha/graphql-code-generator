@@ -3,30 +3,30 @@
 import { type GraphQLResolveInfo } from 'graphql';
 export type $RequireFields<Origin, Keys> = $Diff<Origin, Keys> & $ObjMapi<Keys, <Key>(k: Key) => $NonMaybeType<$ElementType<Origin, Key>>>;
 /** All built-in and custom scalars, mapped to their actual values */
-export type Scalars = {
+export type Scalars = {|
   ID: string,
   String: string,
   Boolean: boolean,
   Int: number,
   Float: number,
-};
+|};
 
-export type Query = {
+export type Query = {|
   __typename?: 'Query',
   allUsers: Array<?User>,
   userById?: ?User,
-};
+|};
 
-export type QueryUserByIdArgs = {
+export type QueryUserByIdArgs = {|
   id: $ElementType<Scalars, 'Int'>,
-};
+|};
 
-export type User = {
+export type User = {|
   __typename?: 'User',
   id: $ElementType<Scalars, 'Int'>,
   name: $ElementType<Scalars, 'String'>,
   email: $ElementType<Scalars, 'String'>,
-};
+|};
 export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (parent: Parent, args: Args, context: Context, info: GraphQLResolveInfo) => Promise<Result> | Result;
 
 export type SubscriptionSubscribeFn<Result, Parent, Context, Args> = (parent: Parent, args: Args, context: Context, info: GraphQLResolveInfo) => AsyncIterator<Result> | Promise<AsyncIterator<Result>>;

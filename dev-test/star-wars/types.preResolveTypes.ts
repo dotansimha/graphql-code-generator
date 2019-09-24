@@ -262,17 +262,17 @@ export type HeroDetailsQueryVariables = {
 
 export type HeroDetailsQuery = { __typename?: 'Query'; hero: Maybe<{ __typename?: 'Human'; height: Maybe<number>; name: string } | { __typename?: 'Droid'; primaryFunction: Maybe<string>; name: string }> };
 
-export type HeroDetailsWithFragmentQueryVariables = {
-  episode?: Maybe<Episode>;
-};
-
-export type HeroDetailsWithFragmentQuery = { __typename?: 'Query'; hero: Maybe<({ __typename?: 'Human' } & HeroDetails_Human_Fragment) | ({ __typename?: 'Droid' } & HeroDetails_Droid_Fragment)> };
-
 type HeroDetails_Human_Fragment = { __typename?: 'Human'; height: Maybe<number>; name: string };
 
 type HeroDetails_Droid_Fragment = { __typename?: 'Droid'; primaryFunction: Maybe<string>; name: string };
 
 export type HeroDetailsFragment = HeroDetails_Human_Fragment | HeroDetails_Droid_Fragment;
+
+export type HeroDetailsWithFragmentQueryVariables = {
+  episode?: Maybe<Episode>;
+};
+
+export type HeroDetailsWithFragmentQuery = { __typename?: 'Query'; hero: Maybe<({ __typename?: 'Human' } & HeroDetails_Human_Fragment) | ({ __typename?: 'Droid' } & HeroDetails_Droid_Fragment)> };
 
 export type HeroNameQueryVariables = {
   episode?: Maybe<Episode>;
@@ -312,9 +312,11 @@ export type HeroTypeDependentAliasedFieldQueryVariables = {
 
 export type HeroTypeDependentAliasedFieldQuery = { __typename?: 'Query'; hero: Maybe<{ __typename?: 'Human'; property: Maybe<string> } | { __typename?: 'Droid'; property: Maybe<string> }> };
 
+export type HumanFieldsFragment = { __typename?: 'Human'; name: string; mass: Maybe<number> };
+
 export type HumanWithNullHeightQueryVariables = {};
 
-export type HumanWithNullHeightQuery = { __typename?: 'Query'; human: Maybe<{ __typename?: 'Human'; name: string; mass: Maybe<number> }> };
+export type HumanWithNullHeightQuery = { __typename?: 'Query'; human: Maybe<{ __typename?: 'Human' } & HumanFieldsFragment> };
 
 export type TwoHeroesQueryVariables = {};
 
