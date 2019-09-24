@@ -228,6 +228,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
   protected _globalDeclarations: Set<string> = new Set();
   protected _federation: ApolloFederation;
   protected _hasScalars = false;
+  protected _hasFederation = false;
 
   constructor(rawConfig: TRawConfig, additionalConfig: TPluginConfig, private _schema: GraphQLSchema, defaultScalars: NormalizedScalarsMap = DEFAULT_SCALARS) {
     super(rawConfig, {
@@ -545,6 +546,10 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
     return this._hasScalars;
   }
 
+  public hasFederation(): boolean {
+    return this._hasFederation;
+  }
+
   public getRootResolver(): string {
     const name = this.convertName('Resolvers');
     const contextType = `<ContextType = ${this.config.contextType.type}>`;
@@ -721,6 +726,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
       };
 
       if (this._federation.isResolveReferenceField(node)) {
+        this._hasFederation = true;
         signature.type = 'ReferenceResolver';
 
         if (signature.genericTypes.length >= 3) {
