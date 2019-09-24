@@ -2861,12 +2861,18 @@
     "@types/prop-types" "*"
     csstype "^2.2.0"
 
-"@types/relay-compiler@6.0.0":
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/@types/relay-compiler/-/relay-compiler-6.0.0.tgz#622dda28d681dcf95e2d77b97b07899d6c0a8fb2"
-  integrity sha512-vFMaFBUidUg/XQMxvZgZUpfmdgaQUUz7pSL5iZiQFuLSAWo/NgD8AO8LpF9F2sn3sdxyrehusYM1OimN7wFjfQ==
+"@types/relay-compiler@6.0.1":
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/@types/relay-compiler/-/relay-compiler-6.0.1.tgz#c33dace63e70d33ecf932bfe6abe911b71c9839c"
+  integrity sha512-to0ntZAGmgQanFpBQHOuvpULJFATD5z7We+H2gM7QPNzK/0P4jScweBmTGKSd8idnFfemPdXbVNEfKL9Mjd26g==
   dependencies:
+    "@types/relay-runtime" "*"
     graphql "^14.5.3"
+
+"@types/relay-runtime@*":
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/@types/relay-runtime/-/relay-runtime-6.0.0.tgz#40c3548bec73d876be6de84fb4d2dd43ab19131f"
+  integrity sha512-KutuTFGau+gM9igWXlIwrL1HXerd1Ui20392OKSTU5CVEDoLx+d6qc6oMDFCm/3PuhyZ3Hc7vFVwMnYlwQSVJg==
 
 "@types/request@2.48.3":
   version "2.48.3"
