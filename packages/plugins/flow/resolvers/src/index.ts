@@ -18,15 +18,17 @@ export const plugin: PluginFunction<FlowResolversPluginConfig> = (schema: GraphQ
   const astNode = parse(printedSchema);
   const visitor = new FlowResolversVisitor(config, transformedSchema);
 
-  const referenceResolverDef = visitor.hasFederation()
-    ? `
-export type ReferenceResolver<TResult, TReference, TContext> = (
-  reference: TReference,
-  context: TContext,
-  info: GraphQLResolveInfo
-) => Promise<TResult> | TResult;
-`
-    : '';
+  const defsToInclude: string[] = [visitor.getResolverTypeWrapperSignature()];
+
+  if (visitor.hasFederation()) {
+    defsToInclude.push(`
+    export type ReferenceResolver<TResult, TReference, TContext> = (
+      reference: TReference,
+      context: TContext,
+      info: GraphQLResolveInfo
+    ) => Promise<TResult> | TResult;
+    `);
+  }
 
   const header = `export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
   parent: Parent,
@@ -83,8 +85,7 @@ export type DirectiveResolverFn<Result = {}, Parent = {}, Args = {}, Context = {
   info: GraphQLResolveInfo
 ) => Result | Promise<Result>;
 
-${referenceResolverDef}
-${visitor.getResolverTypeWrapperSignature()}
+${defsToInclude.join('\n')}
 `;
 
   const visitorResult = visit(astNode, { leave: visitor });
