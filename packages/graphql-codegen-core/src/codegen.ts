@@ -1,4 +1,4 @@
-import { Types, isComplexPluginOutput } from '@graphql-codegen/plugin-helpers';
+import { Types, isComplexPluginOutput, turnExtensionsIntoObjectTypes, federationSpec } from '@graphql-codegen/plugin-helpers';
 import { visit, buildASTSchema } from 'graphql';
 import { mergeSchemas } from './merge-schemas';
 import { executePlugin } from './execute-plugin';
@@ -29,8 +29,18 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
     return mergeSchemas([schema, addToSchema]);
   }, options.schema);
 
+  const federationInConfig = pickFlag('federation', options.config);
+  const isFederation = prioritize(federationInConfig, false);
+
+  if (isFederation) {
+    schemaChanged = true;
+    schema = turnExtensionsIntoObjectTypes(mergeSchemas([schema, federationSpec]));
+  }
+
   if (schemaChanged) {
-    options.schemaAst = buildASTSchema(schema);
+    options.schemaAst = buildASTSchema(schema, {
+      assumeValidSDL: isFederation,
+    });
   }
 
   const prepend: Set<string> = new Set<string>();
@@ -163,4 +173,22 @@ function validateDuplicateDocuments(files: Types.DocumentFile[]) {
       `
     );
   }
+}
+
+function isObjectMap(obj: any): obj is Types.ObjectMap<any> {
+  return obj && typeof obj === 'object' && !Array.isArray(obj);
+}
+
+function prioritize<T>(...values: T[]): T {
+  const picked = values.find(val => typeof val === 'boolean');
+
+  if (typeof picked !== 'boolean') {
+    return values[values.length - 1];
+  }
+
+  return picked;
+}
+
+function pickFlag(flag: string, config: Types.PluginConfig): boolean | undefined {
+  return isObjectMap(config) ? (config as any)[flag] : undefined;
 }

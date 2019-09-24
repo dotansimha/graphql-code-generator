@@ -1,5 +1,5 @@
 // tslint:disable
-import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
+import { GraphQLResolveInfo } from 'graphql';
 export type Maybe<T> = T | null;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -89,9 +89,9 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
   __resolveReference?: Resolver<Maybe<ResolversTypes['User']>, Pick<ParentType, 'id'>, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], Pick<ParentType, 'id'>, ContextType>;
-  name?: Resolver<Maybe<ResolversTypes['String']>, Pick<ParentType, 'id'>, ContextType>;
-  username?: Resolver<Maybe<ResolversTypes['String']>, Pick<ParentType, 'id'>, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
 };
 
 export type BookResolvers<ContextType = any, ParentType extends ResolversParentTypes['Book'] = ResolversParentTypes['Book']> = {

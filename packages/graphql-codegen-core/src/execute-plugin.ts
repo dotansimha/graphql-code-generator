@@ -1,7 +1,6 @@
-import { Types, CodegenPlugin, federationSpec, turnExtensionsIntoObjectTypes } from '@graphql-codegen/plugin-helpers';
+import { Types, CodegenPlugin } from '@graphql-codegen/plugin-helpers';
 import { DocumentNode, GraphQLSchema, buildASTSchema, Kind } from 'graphql';
 import { DetailedError } from './errors';
-import { mergeSchemas } from './merge-schemas';
 import { validateGraphQlDocuments, checkValidationErrors } from 'graphql-toolkit';
 
 export interface ExecutePluginOptions {
@@ -34,16 +33,9 @@ export async function executePlugin(options: ExecutePluginOptions, plugin: Codeg
     );
   }
 
-  const isFederation = typeof options.config === 'object' && !Array.isArray(options.config) && options.config.federation;
   const skipDocumentValidation = typeof options.config === 'object' && !Array.isArray(options.config) && options.config.skipDocumentsValidation;
 
-  let schema = options.schemaAst;
-
-  if (isFederation) {
-    schema = buildASTSchema(turnExtensionsIntoObjectTypes(mergeSchemas([schema || options.schema, federationSpec])), {
-      assumeValidSDL: true,
-    });
-  }
+  const schema = options.schemaAst;
 
   const outputSchema: GraphQLSchema = schema || buildASTSchema(options.schema);
   const documents = options.documents || [];
