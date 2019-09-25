@@ -48,9 +48,10 @@ export const preset: Types.OutputPreset = {
           config: {
             ...options.config,
             fileType: FileType.INPUT_TYPE,
+            skipDocumentsValidation: true,
           },
           schema: options.schema,
-          documents: [{ skipValidation: true, content: { kind: Kind.DOCUMENT, definitions: [ast] }, filePath: '' }],
+          documents: [{ content: { kind: Kind.DOCUMENT, definitions: [ast] }, filePath: '' }],
         };
       }),
       ...operationsAst.map((ast: OperationDefinitionNode) => {

@@ -26,7 +26,6 @@ export namespace Types {
   export type DocumentFile = {
     filePath: string;
     content: DocumentNode;
-    skipValidation?: boolean;
   };
 
   /* Utils */
