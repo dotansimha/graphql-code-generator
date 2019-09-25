@@ -106,7 +106,7 @@ describe('java-apollo-android', () => {
         private Input<String> bar = Input.absent();
         private @Nonnull Boolean something;
         private Input<NestedInput> nested = Input.absent();
-        private Input<String> testArr = Input.absent();
+        private Input<List<String>> testArr = Input.absent();
       `);
       expect(output).toBeSimilarStringTo(`Builder() {}`);
       expect(output).toBeSimilarStringTo(`public Builder foo(@Nonnull Integer foo) {
