@@ -500,9 +500,9 @@ ${indentMultiline(inner, 2)}
 
       if (f.isList) {
         const listReader = readerFn.object
-          ? `return listItemReader.${readerFn.fn}(new ResponseReader.ObjectReader<${readerFn.object}>() {
+          ? `return listItemReader.${readerFn.fn}(new ResponseReader.ObjectReader<Item>() {
           @Override
-          public ${readerFn.object} read(ResponseReader reader) {
+          public Item read(ResponseReader reader) {
             return ${f.fieldName}FieldMapper.map(reader);
           }
         });`
