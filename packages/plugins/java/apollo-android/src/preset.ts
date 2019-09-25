@@ -3,6 +3,10 @@ import { visit, concatAST, InputObjectTypeDefinitionNode, DocumentNode, Kind, Op
 import { join } from 'path';
 import { FileType } from './file-type';
 
+const packageNameToDirectory = (packageName: string): string => {
+  return `./${packageName.split('.').join('/')}/`;
+};
+
 export const preset: Types.OutputPreset = {
   buildGeneratesSection: options => {
     const outDir = options.baseOutputDir;
@@ -30,7 +34,7 @@ export const preset: Types.OutputPreset = {
 
     return [
       {
-        filename: join(outDir, 'type/CustomType.java'),
+        filename: join(outDir, packageNameToDirectory(options.config.typePackage), 'type/CustomType.java'),
         plugins: options.plugins,
         pluginMap: options.pluginMap,
         config: {
@@ -42,7 +46,7 @@ export const preset: Types.OutputPreset = {
       },
       ...inputTypesDocumentNode.definitions.map((ast: InputObjectTypeDefinitionNode) => {
         return {
-          filename: join(outDir, 'type/', ast.name.value + '.java'),
+          filename: join(outDir, packageNameToDirectory(options.config.typePackage), ast.name.value + '.java'),
           plugins: options.plugins,
           pluginMap: options.pluginMap,
           config: {
@@ -58,7 +62,7 @@ export const preset: Types.OutputPreset = {
         const fileName = ast.name.value.toLowerCase().endsWith(ast.operation) ? ast.name.value : `${ast.name.value}${toPascalCase(ast.operation)}`;
 
         return {
-          filename: join(outDir, 'operations/', fileName + '.java'),
+          filename: join(outDir, packageNameToDirectory(options.config.package), fileName + '.java'),
           plugins: options.plugins,
           pluginMap: options.pluginMap,
           config: {
@@ -72,7 +76,7 @@ export const preset: Types.OutputPreset = {
       }),
       ...fragments.map((ast: FragmentDefinitionNode) => {
         return {
-          filename: join(outDir, 'fragment/', ast.name.value + '.java'),
+          filename: join(outDir, packageNameToDirectory(options.config.fragmentPackage), ast.name.value + '.java'),
           plugins: options.plugins,
           pluginMap: options.pluginMap,
           config: {
