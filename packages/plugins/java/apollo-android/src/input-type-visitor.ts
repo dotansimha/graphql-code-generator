@@ -69,7 +69,7 @@ export class InputTypeVisitor extends BaseJavaVisitor<VisitorConfig> {
     return listItemCall ? `${writerMethod}($item)` : `${writerMethod}("${field.name.value}", ${field.name.value}${isNonNull ? '' : '.value'})`;
   }
 
-  protected getFieldWithTypePrefix(field: InputValueDefinitionNode | VariableDefinitionNode, wrapWith: string | null = null, applyNullable = false): string {
+  protected getFieldWithTypePrefix(field: InputValueDefinitionNode | VariableDefinitionNode, wrapWith: (s: string) => string | string | null = null, applyNullable = false): string {
     this._imports.add(Imports.Input);
     const typeToUse = this.getJavaClass(this._schema.getType(getBaseTypeNode(field.type).name.value));
     const isNonNull = field.type.kind === Kind.NON_NULL_TYPE;
@@ -81,7 +81,7 @@ export class InputTypeVisitor extends BaseJavaVisitor<VisitorConfig> {
       return `@Nonnull ${typeToUse} ${name}`;
     } else {
       if (wrapWith) {
-        return `${wrapWith}<${typeToUse}> ${name}`;
+        return typeof wrapWith === 'function' ? `${wrapWith(typeToUse)} ${name}` : `${wrapWith}<${typeToUse}> ${name}`;
       } else {
         if (applyNullable) {
           this._imports.add(Imports.Nullable);
@@ -144,7 +144,8 @@ ${allMarshallers.join('\n')}
     const builderClassName = 'Builder';
     const privateFields = fields
       .map<string>(field => {
-        const fieldType = this.getFieldWithTypePrefix(field, 'Input');
+        const isArray = field.type.kind === Kind.LIST_TYPE || (field.type.kind === Kind.NON_NULL_TYPE && field.type.type.kind === Kind.LIST_TYPE);
+        const fieldType = this.getFieldWithTypePrefix(field, v => !isArray ? `Input<${v}>` : `Input<List<${v}>>`);
         const isNonNull = field.type.kind === Kind.NON_NULL_TYPE;
 
         return `private ${fieldType}${isNonNull ? '' : ' = Input.absent()'};`;

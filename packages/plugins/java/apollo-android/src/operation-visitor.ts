@@ -450,7 +450,7 @@ ${childFields
     return options.result;
   }
 
-  private getReaderFn(baseType: GraphQLNamedType): { fn: string; custom?: boolean; object?: boolean } {
+  private getReaderFn(baseType: GraphQLNamedType): { fn: string; custom?: boolean; object?: string } {
     if (isScalarType(baseType)) {
       if (baseType.name === 'String') {
         return { fn: `readString` };
@@ -466,7 +466,7 @@ ${childFields
     } else if (isEnumType(baseType)) {
       return { fn: `readString` };
     } else {
-      return { fn: `readObject`, object: true };
+      return { fn: `readObject`, object: baseType.name };
     }
   }
 
@@ -499,7 +499,15 @@ ${indentMultiline(inner, 2)}
       const readerFn = this.getReaderFn(f.type);
 
       if (f.isList) {
-        const wrappedList = wrapList(f, f.rawType, `return listItemReader.${readerFn.fn}();`);
+        const listReader = readerFn.object
+          ? `return listItemReader.${readerFn.fn}(new ResponseReader.ObjectReader<${readerFn.object}>() {
+          @Override
+          public ${readerFn.object} read(ResponseReader reader) {
+            return ${f.fieldName}FieldMapper.map(reader);
+          }
+        });`
+          : `return listItemReader.${readerFn.fn}();`;
+        const wrappedList = wrapList(f, f.rawType, listReader);
 
         return `${varDec} reader.readList($responseFields[${index}], ${wrappedList});`;
       } else if (readerFn.object) {
