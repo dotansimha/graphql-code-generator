@@ -34,7 +34,7 @@ export const preset: Types.OutputPreset = {
 
     return [
       {
-        filename: join(outDir, packageNameToDirectory(options.config.typePackage), 'type/CustomType.java'),
+        filename: join(outDir, packageNameToDirectory(options.config.typePackage), 'CustomType.java'),
         plugins: options.plugins,
         pluginMap: options.pluginMap,
         config: {
