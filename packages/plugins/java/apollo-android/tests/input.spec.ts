@@ -125,7 +125,7 @@ describe('java-apollo-android', () => {
         this.nested = Input.fromNullable(nested);
         return this;
       }`);
-      expect(output).toBeSimilarStringTo(`public Builder testArr(@Nullable String testArr) {
+      expect(output).toBeSimilarStringTo(`public Builder testArr(@Nullable List<String> testArr) {
         this.testArr = Input.fromNullable(testArr);
         return this;
       }`);
