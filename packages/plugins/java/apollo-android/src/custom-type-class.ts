@@ -43,7 +43,7 @@ export class CustomTypeClassVisitor extends BaseJavaVisitor<VisitorConfig> {
       .map<GraphQLScalarType>(t => allTypes[t] as GraphQLScalarType)
       .map(scalarType => {
         const uppercaseName = scalarType.name.toUpperCase();
-        const javaType = this.extract(this.config.scalars[scalarType.name] || 'String');
+        const javaType = this.extract(this.scalars[scalarType.name] || 'String');
 
         if (javaType.importFrom) {
           this._imports.add(javaType.importFrom);

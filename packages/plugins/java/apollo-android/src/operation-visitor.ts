@@ -1,6 +1,7 @@
 import { BaseJavaVisitor, SCALAR_TO_WRITER_METHOD } from './base-java-visitor';
-import { toPascalCase, indent, indentMultiline, getBaseType, LoadedFragment, getBaseTypeNode } from '@graphql-codegen/visitor-plugin-common';
+import { toPascalCase, indent, indentMultiline, LoadedFragment, getBaseTypeNode } from '@graphql-codegen/visitor-plugin-common';
 import { buildPackageNameFromPath, JavaDeclarationBlock } from '@graphql-codegen/java-common';
+import { getBaseType } from '@graphql-codegen/plugin-helpers';
 import {
   GraphQLSchema,
   OperationDefinitionNode,
