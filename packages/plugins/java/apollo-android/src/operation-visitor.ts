@@ -101,7 +101,7 @@ export class OperationVisitor extends BaseJavaVisitor<VisitorConfig> {
         return {
           name: varDec.variable.name.value,
           type: typeToUse,
-          annotation: isNonNull ? 'Nonnull' : 'Nullable',
+          annotations: [isNonNull ? 'Nonnull' : 'Nullable'],
         };
       }),
       null,
@@ -218,7 +218,7 @@ export class OperationVisitor extends BaseJavaVisitor<VisitorConfig> {
         this._imports.add(Imports.Collections);
 
         const operationArgs = visitFieldArguments(selection as FieldNode, this._imports);
-        const responseFieldMethod = this._resolveResponseFieldMethodForBaseType(baseType);
+        const responseFieldMethod = this._resolveResponseFieldMethodForBaseType(field.type);
 
         responseFieldArr.push(
           `ResponseField.${responseFieldMethod.fn}("${selection.alias ? selection.alias.value : selection.name.value}", "${selection.name.value}", ${operationArgs}, ${!isNonNullType(field.type)},${
@@ -556,8 +556,12 @@ ${indentMultiline(inner, 2)}
     return cls;
   }
 
-  private _resolveResponseFieldMethodForBaseType(baseType: GraphQLNamedType): { fn: string; custom?: boolean } {
-    if (isScalarType(baseType)) {
+  private _resolveResponseFieldMethodForBaseType(baseType: GraphQLOutputType): { fn: string; custom?: boolean } {
+    if (isListType(baseType)) {
+      return { fn: `forList` };
+    } else if (isNonNullType(baseType)) {
+      return this._resolveResponseFieldMethodForBaseType(baseType.ofType);
+    } else if (isScalarType(baseType)) {
       if (baseType.name === 'String') {
         return { fn: `forString` };
       } else if (baseType.name === 'Int') {
