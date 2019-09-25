@@ -4,7 +4,7 @@ import { join } from 'path';
 import { FileType } from './file-type';
 
 const packageNameToDirectory = (packageName: string): string => {
-  return `./${packageName.split('.').join('/')}/`;
+  return `./${packageName}/`;
 };
 
 export const preset: Types.OutputPreset = {
