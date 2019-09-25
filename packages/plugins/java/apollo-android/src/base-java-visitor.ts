@@ -1,8 +1,9 @@
 import { Imports } from './imports';
-import { BaseVisitor, ParsedConfig, getBaseTypeNode, getBaseType } from '@graphql-codegen/visitor-plugin-common';
+import { BaseVisitor, getBaseTypeNode, buildScalars } from '@graphql-codegen/visitor-plugin-common';
+import { getBaseType } from '@graphql-codegen/plugin-helpers';
 import { JavaApolloAndroidPluginConfig } from './plugin';
 import { JAVA_SCALARS } from '@graphql-codegen/java-common';
-import { GraphQLSchema, isScalarType, isInputObjectType, InputValueDefinitionNode, Kind, VariableDefinitionNode, GraphQLNamedType, GraphQLOutputType, isNonNullType, isListType, TypeNode, GraphQLInterfaceType, GraphQLObjectType } from 'graphql';
+import { GraphQLSchema, isScalarType, isInputObjectType, Kind, GraphQLNamedType, GraphQLOutputType, isNonNullType, isListType, TypeNode, GraphQLInterfaceType, GraphQLObjectType } from 'graphql';
 import { VisitorConfig } from './visitor-config';
 import { ImportsSet, TransformedType } from './types';
 
@@ -22,9 +23,9 @@ export class BaseJavaVisitor<Config extends VisitorConfig = any> extends BaseVis
   protected _imports: ImportsSet = new Set<string>();
 
   constructor(protected _schema: GraphQLSchema, rawConfig: JavaApolloAndroidPluginConfig, additionalConfig: Partial<Config>) {
-    super(rawConfig, additionalConfig, {
-      ...JAVA_SCALARS,
-      ID: 'String',
+    super(rawConfig, {
+      ...additionalConfig,
+      scalars: buildScalars(_schema, { ID: 'String' }, JAVA_SCALARS),
     });
   }
 
@@ -87,7 +88,7 @@ export class BaseJavaVisitor<Config extends VisitorConfig = any> extends BaseVis
     let typeToUse = schemaType.name;
 
     if (isScalarType(schemaType)) {
-      const scalar = this.config.scalars[schemaType.name] || 'Object';
+      const scalar = this.scalars[schemaType.name] || 'Object';
 
       if (Imports[scalar]) {
         this._imports.add(Imports[scalar]);
