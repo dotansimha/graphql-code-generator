@@ -3,7 +3,7 @@ id: java
 title: Java
 ---
 
-The `java` plugin generates Java `classes` for for Enums and Input types.
+The `java` plugin generates Java `classes` for Enums and Input types.
 
 It works with `graphql-java` library.
 
