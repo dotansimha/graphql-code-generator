@@ -211,6 +211,8 @@ describe('Operations Visitor', () => {
     const result = await plugin(schema, [ast], { package: 'app.test.generated.graphql', fileType: FileType.OPERATION });
     const output = mergeOutputs([result]);
 
+    expect(output).toMatchSnapshot();
+
     expect(output).toBeSimilarStringTo(`
     public ListProductsQuery(@Nullable ModelProductFilterInput filter, @Nullable Integer limit, @Nullable String nextToken) {
       this.variables = new ListProductsQuery.Variables(filter, limit, nextToken);
@@ -265,5 +267,39 @@ describe('Operations Visitor', () => {
         return new ListProductsQuery(filter, limit, nextToken);
       }
     }`);
+  });
+
+  it('Should handle Query correctly with fragments', async () => {
+    const ast = {
+      content: parse(/* GraphQL */ `
+        query ListProducts($filter: ModelProductFilterInput, $limit: Int, $nextToken: String) {
+          listProducts(filter: $filter, limit: $limit, nextToken: $nextToken) {
+            items {
+              ...ProductFields
+              ...ProductFields2
+            }
+            nextToken
+          }
+        }
+
+        fragment ProductFields on Product {
+          id
+          title
+          content
+          price
+          rating
+        }
+
+        fragment ProductFields2 on Product {
+          title
+          content
+        }
+      `),
+      filePath: '',
+    };
+
+    const result = await plugin(schema, [ast], { package: 'app.test.generated.graphql', fileType: FileType.OPERATION });
+    const output = mergeOutputs([result]);
+    expect(output).toMatchSnapshot();
   });
 });

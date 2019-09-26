@@ -35,6 +35,7 @@ export const Imports = {
   ResponseFieldMarshaller: 'com.apollographql.apollo.api.ResponseFieldMarshaller',
   ResponseReader: 'com.apollographql.apollo.api.ResponseReader',
   ResponseWriter: 'com.apollographql.apollo.api.ResponseWriter',
+  FragmentResponseFieldMapper: 'com.apollographql.apollo.api.FragmentResponseFieldMapper',
 
   UnmodifiableMapBuilder: 'com.apollographql.apollo.api.internal.UnmodifiableMapBuilder',
   Utils: 'com.apollographql.apollo.api.internal.Utils',

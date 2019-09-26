@@ -32,6 +32,7 @@ import { VisitorConfig } from './visitor-config';
 import { singular, isPlural } from 'pluralize';
 import { visitFieldArguments } from './field-arguments';
 import { FragmentDefinitionNode, GraphQLInterfaceType } from 'graphql';
+import { camelCase } from 'change-case';
 
 export interface ChildField {
   type: GraphQLNamedType;
@@ -56,6 +57,8 @@ export interface TransformSelectionSetOptions {
 }
 
 export class OperationVisitor extends BaseJavaVisitor<VisitorConfig> {
+  private visitingFragment = false;
+
   constructor(_schema: GraphQLSchema, rawConfig: JavaApolloAndroidPluginConfig, private _availableFragments: LoadedFragment[]) {
     super(_schema, rawConfig, {
       package: rawConfig.package || buildPackageNameFromPath(process.cwd()),
@@ -72,7 +75,7 @@ export class OperationVisitor extends BaseJavaVisitor<VisitorConfig> {
   }
 
   public getPackage(): string {
-    return this.config.package;
+    return this.visitingFragment ? this.config.fragmentPackage : this.config.package;
   }
 
   private addCtor(className: string, node: OperationDefinitionNode, cls: JavaDeclarationBlock): void {
@@ -280,12 +283,22 @@ export class OperationVisitor extends BaseJavaVisitor<VisitorConfig> {
         })
       );
 
-      responseFieldArr.push(...childInlineFragments.map(f => `ResponseField.forInlineFragment("__typename", "__typename", Arrays.asList("${f.onType}"))`));
+      responseFieldArr.push(
+        ...childInlineFragments.map(f => {
+          this._imports.add(Imports.Arrays);
+
+          return `ResponseField.forInlineFragment("__typename", "__typename", Arrays.asList("${f.onType}"))`;
+        })
+      );
     }
 
     if (childFragmentSpread.length > 0) {
       responseFieldArr.push(`ResponseField.forFragment("__typename", "__typename", Arrays.asList(${childFragmentSpread.map(f => `"${f.onType}"`).join(', ')}))`);
+      this._imports.add(Imports.ResponseField);
       this._imports.add(Imports.Nonnull);
+      this._imports.add(Imports.Arrays);
+
+      const fragmentsClassName = 'Fragments';
 
       childFields.push({
         isObject: true,
@@ -294,9 +307,197 @@ export class OperationVisitor extends BaseJavaVisitor<VisitorConfig> {
         type: options.schemaType,
         isNonNull: true,
         annotation: 'Nonnull',
-        className: 'Fragments',
+        className: fragmentsClassName,
         fieldName: 'fragments',
       });
+
+      const fragmentsClass = new JavaDeclarationBlock()
+        .withName(fragmentsClassName)
+        .access('public')
+        .static()
+        .final()
+        .asKind('class');
+
+      const fragmentMapperClass = new JavaDeclarationBlock()
+        .withName('Mapper')
+        .access('public')
+        .static()
+        .final()
+        .implements([`FragmentResponseFieldMapper<${fragmentsClassName}>`])
+        .asKind('class');
+
+      fragmentsClass.addClassMethod(
+        fragmentsClassName,
+        null,
+        childFragmentSpread
+          .map(spread => {
+            const varName = camelCase(spread.name);
+            this._imports.add(Imports.Utils);
+
+            return `this.${varName} = Utils.checkNotNull(${varName}, "${varName} == null")`;
+          })
+          .join('\n'),
+        childFragmentSpread.map(spread => ({
+          name: camelCase(spread.name),
+          type: spread.name,
+          annotations: ['Nonnull'],
+        })),
+        [],
+        'public'
+      );
+
+      for (const spread of childFragmentSpread) {
+        const fragmentVarName = camelCase(spread.name);
+        fragmentsClass.addClassMember(fragmentVarName, spread.name, null, ['Nonnull'], 'private', { final: true });
+        fragmentsClass.addClassMethod(fragmentVarName, spread.name, `return this.${fragmentVarName};`, [], ['Nonnull'], 'public', {}, []);
+        fragmentMapperClass.addClassMember(`${fragmentVarName}FieldMapper`, `${spread.name}.Mapper`, `new ${spread.name}.Mapper()`, [], 'private', { final: true });
+      }
+
+      fragmentMapperClass.addClassMethod(
+        'map',
+        fragmentsClassName,
+        `
+${childFragmentSpread
+  .map(spread => {
+    const fragmentVarName = camelCase(spread.name);
+
+    return `${spread.name} ${fragmentVarName} = null;
+if (${spread.name}.POSSIBLE_TYPES.contains(conditionalType)) {
+  ${fragmentVarName} = ${fragmentVarName}FieldMapper.map(reader);
+}`;
+  })
+  .join('\n')}
+
+return new Fragments(${childFragmentSpread
+          .map(spread => {
+            const fragmentVarName = camelCase(spread.name);
+
+            return `Utils.checkNotNull(${fragmentVarName}, "${fragmentVarName} == null")`;
+          })
+          .join(', ')});
+      `,
+        [
+          {
+            name: 'reader',
+            type: 'ResponseReader',
+          },
+          {
+            name: 'conditionalType',
+            type: 'String',
+            annotations: ['Nonnull'],
+          },
+        ],
+        ['Nonnull'],
+        'public',
+        {},
+        ['Override']
+      );
+
+      this._imports.add(Imports.String);
+      this._imports.add(Imports.ResponseReader);
+      this._imports.add(Imports.ResponseFieldMarshaller);
+      this._imports.add(Imports.ResponseWriter);
+      fragmentsClass.addClassMethod(
+        'marshaller',
+        'ResponseFieldMarshaller',
+        `return new ResponseFieldMarshaller() {
+  @Override
+  public void marshal(ResponseWriter writer) {
+${childFragmentSpread.map(spread => {
+  const fragmentVarName = camelCase(spread.name);
+
+  return indentMultiline(`final ${spread.name} $${fragmentVarName} = ${fragmentVarName};\nif ($${fragmentVarName} != null) { $${fragmentVarName}.marshaller().marshal(writer); }`, 2);
+})}
+  }
+};
+      `,
+        [],
+        [],
+        'public'
+      );
+
+      fragmentsClass.addClassMember('$toString', 'String', null, [], 'private', { volatile: true });
+      fragmentsClass.addClassMember('$hashCode', 'int', null, [], 'private', { volatile: true });
+      fragmentsClass.addClassMember('$hashCodeMemoized', 'boolean', null, [], 'private', { volatile: true });
+
+      fragmentsClass.addClassMethod(
+        'toString',
+        'String',
+        `if ($toString == null) {
+    $toString = "${fragmentsClassName}{"
+  ${childFragmentSpread
+    .map(spread => {
+      const varName = camelCase(spread.name);
+
+      return indent(`+ "${varName}=" + ${varName} + ", "`, 2);
+    })
+    .join('\n')}
+      + "}";
+  }
+  
+  return $toString;`,
+        [],
+        [],
+        'public',
+        {},
+        ['Override']
+      );
+
+      // Add equals
+      fragmentsClass.addClassMethod(
+        'equals',
+        'boolean',
+        `if (o == this) {
+    return true;
+  }
+  if (o instanceof ${fragmentsClassName}) {
+    ${fragmentsClassName} that = (${fragmentsClassName}) o;
+    return ${childFragmentSpread
+      .map(spread => {
+        const varName = camelCase(spread.name);
+
+        return `this.${varName}.equals(that.${varName})`;
+      })
+      .join(' && ')};
+  }
+  
+  return false;`,
+        [{ name: 'o', type: 'Object' }],
+        [],
+        'public',
+        {},
+        ['Override']
+      );
+
+      // hashCode
+      fragmentsClass.addClassMethod(
+        'hashCode',
+        'int',
+        `if (!$hashCodeMemoized) {
+    int h = 1;
+  ${childFragmentSpread
+    .map(spread => {
+      const varName = camelCase(spread.name);
+
+      return indentMultiline(`h *= 1000003;\nh ^= ${varName}.hashCode();`, 1);
+    })
+    .join('\n')}
+    $hashCode = h;
+    $hashCodeMemoized = true;
+  }
+  
+  return $hashCode;`,
+        [],
+        [],
+        'public',
+        {},
+        ['Override']
+      );
+
+      this._imports.add(Imports.FragmentResponseFieldMapper);
+
+      fragmentsClass.nestedClass(fragmentMapperClass);
+      cls.nestedClass(fragmentsClass);
     }
 
     if (responseFieldArr.length > 0 && !isRoot) {
@@ -582,6 +783,7 @@ ${indentMultiline(inner, 2)}
   }
 
   FragmentDefinition(node: FragmentDefinitionNode): string {
+    this.visitingFragment = true;
     const className = node.name.value;
     const schemaType: GraphQLObjectType | GraphQLInterfaceType = this._schema.getType(node.typeCondition.name.value) as GraphQLObjectType | GraphQLInterfaceType;
 
@@ -623,6 +825,7 @@ ${indentMultiline(inner, 2)}
   }
 
   OperationDefinition(node: OperationDefinitionNode): string {
+    this.visitingFragment = false;
     const operationType = toPascalCase(node.operation);
     const operationSchemaType = this.getRootType(node.operation);
     const className = node.name.value.endsWith(operationType) ? operationType : `${node.name.value}${operationType}`;
