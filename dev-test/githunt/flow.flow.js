@@ -166,6 +166,7 @@ export const VoteTypeValues = Object.freeze({
 
 /** The type of vote to record, when submitting a vote */
 export type VoteType = $Values<typeof VoteTypeValues>;
+
 type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;
 
 export type OnCommentAddedSubscriptionVariables = {

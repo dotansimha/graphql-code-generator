@@ -233,6 +233,7 @@ export type Starship = {
 export type StarshipLengthArgs = {
   unit?: Maybe<LengthUnit>;
 };
+
 export type CreateReviewForEpisodeMutationVariables = {
   episode: Episode;
   review: ReviewInput;

@@ -161,6 +161,7 @@ export enum VoteType {
   Down = 'DOWN',
   Cancel = 'CANCEL',
 }
+
 export type OnCommentAddedSubscriptionVariables = {
   repoFullName: Scalars['String'];
 };
@@ -237,6 +238,7 @@ export type VoteMutationVariables = {
 };
 
 export type VoteMutation = { __typename?: 'Mutation'; vote: Maybe<{ __typename?: 'Entry'; score: number; id: number; vote: { __typename?: 'Vote'; vote_value: number } }> };
+
 export namespace OnCommentAdded {
   export type Variables = OnCommentAddedSubscriptionVariables;
   export type Subscription = OnCommentAddedSubscription;

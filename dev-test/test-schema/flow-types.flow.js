@@ -27,6 +27,7 @@ export type User = {|
   name: $ElementType<Scalars, 'String'>,
   email: $ElementType<Scalars, 'String'>,
 |};
+
 export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (parent: Parent, args: Args, context: Context, info: GraphQLResolveInfo) => Promise<Result> | Result;
 
 export type SubscriptionSubscribeFn<Result, Parent, Context, Args> = (parent: Parent, args: Args, context: Context, info: GraphQLResolveInfo) => AsyncIterator<Result> | Promise<AsyncIterator<Result>>;

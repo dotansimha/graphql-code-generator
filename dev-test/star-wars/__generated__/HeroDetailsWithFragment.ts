@@ -1,6 +1,7 @@
 import * as Types from '../types.d';
 
 import { HeroDetails_Human_Fragment, HeroDetails_Droid_Fragment } from './HeroDetailsFragment';
+
 export type HeroDetailsWithFragmentQueryVariables = {
   episode?: Types.Maybe<Types.Episode>;
 };
