@@ -43,7 +43,7 @@ export async function executePlugin(options: ExecutePluginOptions, plugin: Codeg
   if (outputSchema && documents.length > 0 && !skipDocumentValidation) {
     const configObject = typeof options.config === 'object' ? options.config : options.parentConfig;
     const extraFragments = configObject && (configObject as any)['externalFragments'] ? (configObject as any)['externalFragments'] : [];
-    const errors = validateGraphQlDocuments(outputSchema, [...documents, ...extraFragments.map((f: any) => ({ filePath: f.importFrom, content: { kind: Kind.DOCUMENT, definitions: [f.node] } }))]);
+    const errors = await validateGraphQlDocuments(outputSchema, [...documents, ...extraFragments.map((f: any) => ({ filePath: f.importFrom, content: { kind: Kind.DOCUMENT, definitions: [f.node] } }))]);
     checkValidationErrors(errors);
   }
 
