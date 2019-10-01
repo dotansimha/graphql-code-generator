@@ -51,7 +51,7 @@
     "babel-types": "7.0.0-beta.3",
     "chalk": "2.4.2",
     "change-case": "3.1.0",
-    "chokidar": "3.1.1",
+    "chokidar": "3.2.0",
     "commander": "3.0.2",
     "common-tags": "1.8.0",
     "debounce": "1.2.0",
