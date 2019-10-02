@@ -43,6 +43,7 @@ export interface ChildField {
   className: string;
   fieldName: string;
   isObject: boolean;
+  isFragment: boolean;
 }
 
 export interface TransformSelectionSetOptions {
@@ -196,6 +197,7 @@ export class OperationVisitor extends BaseJavaVisitor<VisitorConfig> {
             rawType: field.type,
             isObject: true,
             isList,
+            isFragment: false,
             type: baseType,
             isNonNull,
             annotation: fieldAnnotation,
@@ -208,6 +210,7 @@ export class OperationVisitor extends BaseJavaVisitor<VisitorConfig> {
           childFields.push({
             rawType: field.type,
             isObject: false,
+            isFragment: false,
             isList: isList,
             type: baseType,
             isNonNull,
@@ -271,6 +274,7 @@ export class OperationVisitor extends BaseJavaVisitor<VisitorConfig> {
           this._imports.add(Imports.Nullable);
 
           return {
+            isFragment: false,
             rawType: schemaType as GraphQLOutputType,
             isObject: true,
             isList: false,
@@ -303,6 +307,7 @@ export class OperationVisitor extends BaseJavaVisitor<VisitorConfig> {
       childFields.push({
         isObject: true,
         isList: false,
+        isFragment: true,
         rawType: options.schemaType,
         type: options.schemaType,
         isNonNull: true,
@@ -511,6 +516,7 @@ ${childFragmentSpread
 
       childFields.unshift({
         isObject: false,
+        isFragment: false,
         isList: false,
         type: GraphQLString,
         rawType: GraphQLString,
@@ -701,7 +707,14 @@ ${indentMultiline(inner, 2)}
       const varDec = `final ${this.getListTypeWrapped(f.className, f.rawType)} ${f.fieldName} =`;
       const readerFn = this.getReaderFn(f.type);
 
-      if (f.isList) {
+      if (f.isFragment) {
+        return `${varDec} reader.readConditional($responseFields[${index}], new ResponseReader.ConditionalTypeReader<${f.className}>() {
+          @Override
+          public ${f.className} read(String conditionalType, ResponseReader reader) {
+            return fragmentsFieldMapper.map(reader, conditionalType);
+          }
+        });`;
+      } else if (f.isList) {
         const listReader = readerFn.object
           ? `return listItemReader.${readerFn.fn}(new ResponseReader.ObjectReader<Item>() {
           @Override

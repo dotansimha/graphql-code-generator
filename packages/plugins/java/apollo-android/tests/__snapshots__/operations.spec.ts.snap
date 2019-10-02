@@ -920,10 +920,10 @@ public final class ListProductsQuery implements Query<ListProductsQuery.Data, Li
       @Override
        public Item map(ResponseReader reader) {
         final String __typename = reader.readString($responseFields[0]);
-        final Fragments fragments = reader.readObject($responseFields[1], new ResponseReader.ObjectReader<Fragments>() {
+        final Fragments fragments = reader.readConditional($responseFields[1], new ResponseReader.ConditionalTypeReader<Fragments>() {
                   @Override
-                  public Fragments read(ResponseReader reader) {
-                    return fragmentsFieldMapper.map(reader);
+                  public Fragments read(String conditionalType, ResponseReader reader) {
+                    return fragmentsFieldMapper.map(reader, conditionalType);
                   }
                 });
         return new Item(__typename, fragments);
