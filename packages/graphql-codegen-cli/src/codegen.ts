@@ -16,7 +16,7 @@ export async function executeCodegen(config: Types.Config): Promise<Types.FileOu
   function wrapTask(task: () => void | Promise<void>, source?: string) {
     return async () => {
       try {
-        await Promise.resolve(task());
+        await Promise.resolve().then(() => task());
       } catch (error) {
         if (source && !(error instanceof GraphQLError)) {
           error.source = source;
@@ -169,10 +169,13 @@ export async function executeCodegen(config: Types.Config): Promise<Types.FileOu
                     title: 'Load GraphQL schemas',
                     task: wrapTask(async () => {
                       debugLog(`[CLI] Loading Schemas`);
-                      const allSchemas = [...rootSchemas.map(pointToScehma => loadSchema(pointToScehma, config)), ...outputSpecificSchemas.map(pointToScehma => loadSchema(pointToScehma, config))];
+                      const allSchemas = [
+                        ...rootSchemas.map(pointToScehma => loadSchema(pointToScehma, config)),
+                        ...outputSpecificSchemas.map(pointToScehma => loadSchema(pointToScehma, config))
+                      ];
 
                       if (allSchemas.length > 0) {
-                        outputSchema = await mergeSchemas(await Promise.all(allSchemas));
+                        outputSchema = mergeSchemas(await Promise.all(allSchemas));
                       }
                     }, filename),
                   },
