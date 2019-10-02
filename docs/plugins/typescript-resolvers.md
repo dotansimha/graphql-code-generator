@@ -5,10 +5,6 @@ title: TypeScript Resolvers
 
 This plugin generates types for resolve functions.
 
-## Pre-Requirements
-
-A TypeScript project with `@types/graphql` installed.
-
 ## Installation
 
     $ yarn add @graphql-codegen/typescript-resolvers

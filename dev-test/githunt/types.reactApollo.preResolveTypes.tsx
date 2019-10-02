@@ -6,6 +6,7 @@ import * as ApolloReactComponents from '@apollo/react-components';
 import * as ApolloReactHoc from '@apollo/react-hoc';
 export type Maybe<T> = T | null;
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -168,6 +169,7 @@ export enum VoteType {
   Down = 'DOWN',
   Cancel = 'CANCEL',
 }
+
 export type OnCommentAddedSubscriptionVariables = {
   repoFullName: Scalars['String'];
 };
@@ -244,6 +246,7 @@ export type VoteMutationVariables = {
 };
 
 export type VoteMutation = { __typename?: 'Mutation'; vote: Maybe<{ __typename?: 'Entry'; score: number; id: number; vote: { __typename?: 'Vote'; vote_value: number } }> };
+
 export const CommentsPageCommentFragmentDoc = gql`
   fragment CommentsPageComment on Comment {
     id

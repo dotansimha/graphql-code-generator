@@ -1,5 +1,6 @@
 import preset from '../src/index';
 import { parse } from 'graphql';
+import { buildASTSchema } from 'graphql';
 
 describe('near-operation-file preset', () => {
   const schemaDocumentNode = parse(/* GraphQL */ `
@@ -19,6 +20,7 @@ describe('near-operation-file preset', () => {
       age: Int!
     }
   `);
+  const schemaNode = buildASTSchema(schemaDocumentNode);
   const operationAst = parse(/* GraphQL */ `
     query {
       user {
@@ -78,6 +80,7 @@ describe('near-operation-file preset', () => {
       presetConfig: {
         baseTypesPath: 'types.ts',
       },
+      schemaAst: schemaNode,
       schema: schemaDocumentNode,
       documents: testDocuments,
       plugins: [],
@@ -104,6 +107,7 @@ describe('near-operation-file preset', () => {
         baseTypesPath: 'types.ts',
       },
       schema: schemaDocumentNode,
+      schemaAst: schemaNode,
       documents: testDocuments,
       plugins: [],
       pluginMap: {},
@@ -127,6 +131,7 @@ describe('near-operation-file preset', () => {
         baseTypesPath: 'types.ts',
       },
       schema: schemaDocumentNode,
+      schemaAst: schemaNode,
       documents: testDocuments,
       plugins: [],
       pluginMap: {},
@@ -145,6 +150,7 @@ describe('near-operation-file preset', () => {
         extension: '.flow.js',
       },
       schema: schemaDocumentNode,
+      schemaAst: schemaNode,
       documents: testDocuments,
       plugins: [],
       pluginMap: {},
@@ -170,6 +176,7 @@ describe('near-operation-file preset', () => {
         baseTypesPath: 'types.ts',
       },
       schema: schemaDocumentNode,
+      schemaAst: schemaNode,
       documents: testDocuments.slice(0, 2),
       plugins: [{ typescript: {} }],
       pluginMap: { typescript: {} as any },
@@ -187,12 +194,12 @@ describe('near-operation-file preset', () => {
         baseTypesPath: 'types.ts',
       },
       schema: schemaDocumentNode,
+      schemaAst: schemaNode,
       documents: [{ filePath: '/some/deep/path/src/graphql/me-query.graphql', content: minimalOperationAst }, testDocuments[1]],
       plugins: [{ typescript: {} }],
       pluginMap: { typescript: {} as any },
     });
 
-    expect(result.map(o => o.plugins)[0]).not.toEqual(expect.arrayContaining([{ add: `import * as Types from '../types';\n` }]));
     expect(result.map(o => o.plugins)[1]).toEqual(expect.arrayContaining([{ add: `import * as Types from '../types';\n` }]));
   });
 
@@ -206,6 +213,7 @@ describe('near-operation-file preset', () => {
           baseTypesPath: 'types.ts',
         },
         schema: schemaDocumentNode,
+        schemaAst: schemaNode,
         documents: [testDocuments[1], testDocuments[1]],
         plugins: [{ typescript: {} }],
         pluginMap: { typescript: {} as any },
@@ -221,6 +229,7 @@ describe('near-operation-file preset', () => {
         cwd: '/some/deep/path',
         baseTypesPath: 'types.ts',
       },
+      schemaAst: schemaNode,
       schema: schemaDocumentNode,
       documents: [
         {
@@ -250,6 +259,7 @@ describe('near-operation-file preset', () => {
         cwd: '/some/deep/path',
         baseTypesPath: 'types.ts',
       },
+      schemaAst: schemaNode,
       schema: schemaDocumentNode,
       documents: [
         {
@@ -279,6 +289,7 @@ describe('near-operation-file preset', () => {
         cwd: '/some/deep/path',
         baseTypesPath: 'types.ts',
       },
+      schemaAst: schemaNode,
       schema: schemaDocumentNode,
       documents: [
         {
@@ -301,6 +312,7 @@ describe('near-operation-file preset', () => {
         cwd: '/some/deep/path',
         baseTypesPath: 'types.ts',
       },
+      schemaAst: schemaNode,
       schema: schemaDocumentNode,
       documents: [
         {
@@ -323,6 +335,7 @@ describe('near-operation-file preset', () => {
         cwd: '/some/deep/path',
         baseTypesPath: 'types.ts',
       },
+      schemaAst: schemaNode,
       schema: schemaDocumentNode,
       documents: testDocuments.slice(0, 2),
       plugins: [{ typescript: {} }],
@@ -340,6 +353,7 @@ describe('near-operation-file preset', () => {
         cwd: '/some/deep/path',
         baseTypesPath: 'types.ts',
       },
+      schemaAst: schemaNode,
       schema: schemaDocumentNode,
       documents: testDocuments.slice(0, 2),
       plugins: [{ typescript: {} }],
@@ -357,6 +371,7 @@ describe('near-operation-file preset', () => {
         cwd: '/some/deep/path',
         baseTypesPath: 'types.ts',
       },
+      schemaAst: schemaNode,
       schema: schemaDocumentNode,
       documents: testDocuments.slice(0, 2),
       plugins: [{ typescript: {} }],
@@ -386,6 +401,7 @@ describe('near-operation-file preset', () => {
         cwd: '/some/deep/path',
         baseTypesPath: 'types.ts',
       },
+      schemaAst: schemaNode,
       schema: schemaDocumentNode,
       documents: [
         {
@@ -415,6 +431,7 @@ describe('near-operation-file preset', () => {
         cwd: '/some/deep/path',
         baseTypesPath: 'types.ts',
       },
+      schemaAst: schemaNode,
       schema: schemaDocumentNode,
       documents: [
         testDocuments[0],

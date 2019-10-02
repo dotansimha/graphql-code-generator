@@ -33,6 +33,23 @@ path/to/file.ts:
    immutableTypes: true
 ```
 
+### flattenGeneratedTypes (`boolean`, default value: `false`)
+
+Flatten fragment spread and inline fragments into a simple selection set before generating.
+
+
+#### Usage Example
+
+```yml
+generates:
+path/to/file.ts:
+ plugins:
+   - typescript
+   - typescript-operations
+ config:
+   flattenGeneratedTypes: true
+```
+
 ### noExport (`boolean`, default value: `false`)
 
 Set the to `true` in order to generate output without `export` modifier. This is useful if you are generating `.d.ts` file and want it to be globally available.

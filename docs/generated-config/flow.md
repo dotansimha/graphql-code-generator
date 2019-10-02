@@ -1,5 +1,5 @@
 
-### useFlowExactObjects (`boolean`, default value: `false`)
+### useFlowExactObjects (`boolean`, default value: `true`)
 
 Generates Flow types as Exact types.
 
@@ -12,7 +12,7 @@ path/to/file.ts:
  plugins:
    - flow
  config:
-   useFlowExactObjects: true
+   useFlowExactObjects: false
 ```
 
 ### useFlowReadOnlyTypes (`boolean`, default value: `false`)

@@ -12,3 +12,4 @@ GraphQL Code Generator also support presets - which is a way to manipulate and e
 | Name                  | Purpose                                       | Package Name & Docs                                                       |
 | --------------------- | --------------------------------------------- | ------------------------------------------------------------------------- |
 | `near-operation-file` | Generates operation code near the source file | [`@graphql-codegen/near-operation-file-preset`](./near-operation-file.md) |
+| `import-types` | Allow you to separate base types declarations and the operations that uses it | [`@graphql-codegen/import-types`](./import-types.md) |

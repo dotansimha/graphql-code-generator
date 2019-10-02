@@ -1,5 +1,5 @@
 
-### useFlowExactObjects (`boolean`, default value: `false`)
+### useFlowExactObjects (`boolean`, default value: `true`)
 
 Generates Flow types as Exact types.
 
@@ -12,7 +12,7 @@ path/to/file.ts:
  plugins:
    - flow
  config:
-   useFlowExactObjects: true
+   useFlowExactObjects: false
 ```
 
 ### useFlowReadOnlyTypes (`boolean`, default value: `false`)
@@ -29,4 +29,21 @@ path/to/file.ts:
    - flow
  config:
    useFlowReadOnlyTypes: true
+```
+
+### flattenGeneratedTypes (`boolean`, default value: `false`)
+
+Flatten fragment spread and inline fragments into a simple selection set before generating.
+
+
+#### Usage Example
+
+```yml
+generates:
+path/to/file.ts:
+ plugins:
+   - typescript
+   - typescript-operations
+ config:
+   flattenGeneratedTypes: true
 ```

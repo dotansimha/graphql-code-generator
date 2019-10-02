@@ -41,7 +41,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
       withMutationOptionsType: getConfigValue(rawConfig.withMutationOptionsType, true),
     });
 
-    this._prefix = rawConfig.namespacedImportName ? `${rawConfig.namespacedImportName}.` : '';
+    this._prefix = this.config.importOperationTypesFrom ? `${this.config.importOperationTypesFrom}.` : '';
     this._documents = documents;
 
     autoBind(this);

@@ -3,6 +3,7 @@ import gql from 'graphql-tag';
 import * as StencilApollo from 'stencil-apollo';
 import { h } from '@stencil/core';
 export type Maybe<T> = T | null;
+
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -165,6 +166,7 @@ export enum VoteType {
   Down = 'DOWN',
   Cancel = 'CANCEL',
 }
+
 export type OnCommentAddedSubscriptionVariables = {
   repoFullName: Scalars['String'];
 };

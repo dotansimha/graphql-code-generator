@@ -1,8 +1,8 @@
 import { FlowWithPickSelectionSetProcessor } from './flow-selection-set-processor';
-import { GraphQLSchema, isListType, GraphQLObjectType, GraphQLNonNull, GraphQLList } from 'graphql';
+import { GraphQLSchema, isListType, GraphQLObjectType, GraphQLNonNull, GraphQLList, isEnumType } from 'graphql';
 import { FlowDocumentsPluginConfig } from './index';
 import { FlowOperationVariablesToObject } from '@graphql-codegen/flow';
-import { PreResolveTypesProcessor, ParsedDocumentsConfig, BaseDocumentsVisitor, LoadedFragment, SelectionSetProcessorConfig, SelectionSetToObject } from '@graphql-codegen/visitor-plugin-common';
+import { PreResolveTypesProcessor, ParsedDocumentsConfig, BaseDocumentsVisitor, LoadedFragment, SelectionSetProcessorConfig, SelectionSetToObject, getConfigValue } from '@graphql-codegen/visitor-plugin-common';
 import { isNonNullType } from 'graphql';
 
 export interface FlowDocumentsParsedConfig extends ParsedDocumentsConfig {
@@ -15,8 +15,8 @@ export class FlowDocumentsVisitor extends BaseDocumentsVisitor<FlowDocumentsPlug
     super(
       config,
       {
-        useFlowExactObjects: config.useFlowExactObjects || false,
-        useFlowReadOnlyTypes: config.useFlowReadOnlyTypes || false,
+        useFlowExactObjects: getConfigValue(config.useFlowExactObjects, true),
+        useFlowReadOnlyTypes: getConfigValue(config.useFlowReadOnlyTypes, false),
       } as FlowDocumentsParsedConfig,
       schema
     );
@@ -56,7 +56,8 @@ export class FlowDocumentsVisitor extends BaseDocumentsVisitor<FlowDocumentsPlug
           useFlowExactObjects: this.config.useFlowExactObjects,
           useFlowReadOnlyTypes: this.config.useFlowReadOnlyTypes,
         });
+    const enumsNames = Object.keys(schema.getTypeMap()).filter(typeName => isEnumType(schema.getType(typeName)));
     this.setSelectionSetHandler(new SelectionSetToObject(processor, this.scalars, this.schema, this.convertName, allFragments, this.config));
-    this.setVariablesTransformer(new FlowOperationVariablesToObject(this.scalars, this.convertName, this.config.namespacedImportName));
+    this.setVariablesTransformer(new FlowOperationVariablesToObject(this.scalars, this.convertName, this.config.namespacedImportName, enumsNames, this.config.enumPrefix));
   }
 }

@@ -161,6 +161,7 @@ export enum VoteType {
   Down = 'DOWN',
   Cancel = 'CANCEL',
 }
+
 export type OnCommentAddedSubscriptionVariables = {
   repoFullName: Scalars['String'];
 };

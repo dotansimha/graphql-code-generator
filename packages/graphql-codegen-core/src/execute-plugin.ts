@@ -1,7 +1,6 @@
-import { Types, CodegenPlugin, federationSpec, turnExtensionsIntoObjectTypes } from '@graphql-codegen/plugin-helpers';
+import { Types, CodegenPlugin } from '@graphql-codegen/plugin-helpers';
 import { DocumentNode, GraphQLSchema, buildASTSchema, Kind } from 'graphql';
 import { DetailedError } from './errors';
-import { mergeSchemas } from './merge-schemas';
 import { validateGraphQlDocuments, checkValidationErrors } from 'graphql-toolkit';
 
 export interface ExecutePluginOptions {
@@ -34,16 +33,9 @@ export async function executePlugin(options: ExecutePluginOptions, plugin: Codeg
     );
   }
 
-  const isFederation = typeof options.config === 'object' && !Array.isArray(options.config) && options.config.federation;
   const skipDocumentValidation = typeof options.config === 'object' && !Array.isArray(options.config) && options.config.skipDocumentsValidation;
 
-  let schema = options.schemaAst;
-
-  if (isFederation) {
-    schema = buildASTSchema(turnExtensionsIntoObjectTypes(mergeSchemas([schema || options.schema, federationSpec])), {
-      assumeValidSDL: true,
-    });
-  }
+  const schema = options.schemaAst;
 
   const outputSchema: GraphQLSchema = schema || buildASTSchema(options.schema);
   const documents = options.documents || [];
@@ -51,7 +43,7 @@ export async function executePlugin(options: ExecutePluginOptions, plugin: Codeg
   if (outputSchema && documents.length > 0 && !skipDocumentValidation) {
     const configObject = typeof options.config === 'object' ? options.config : options.parentConfig;
     const extraFragments = configObject && (configObject as any)['externalFragments'] ? (configObject as any)['externalFragments'] : [];
-    const errors = validateGraphQlDocuments(outputSchema, [...documents, ...extraFragments.map((f: any) => ({ filePath: f.importFrom, content: { kind: Kind.DOCUMENT, definitions: [f.node] } }))]);
+    const errors = await validateGraphQlDocuments(outputSchema, [...documents, ...extraFragments.map((f: any) => ({ filePath: f.importFrom, content: { kind: Kind.DOCUMENT, definitions: [f.node] } }))]);
     checkValidationErrors(errors);
   }
 

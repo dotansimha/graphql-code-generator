@@ -1,9 +1,9 @@
 import * as ts from 'typescript';
 import * as tsdoc from '@microsoft/tsdoc';
 import * as os from 'os';
-import { writeFileSync } from 'fs';
 
 type Example = { title?: string; description?: string; code: string };
+
 type ConfigComment = {
   name: string;
   type: string;
@@ -16,6 +16,7 @@ type ConfigComment = {
 export async function generateConfig(inputFile: string): Promise<string> {
   const program: ts.Program = ts.createProgram([inputFile], {
     target: ts.ScriptTarget.ES5,
+    downlevelIteration: true,
     allowSyntheticDefaultImports: true,
     lib: ['es6', 'esnext', 'es2015', 'dom'],
     moduleResolution: ts.ModuleResolutionKind.NodeJs,

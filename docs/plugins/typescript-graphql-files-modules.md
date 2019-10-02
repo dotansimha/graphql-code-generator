@@ -11,7 +11,7 @@ This plugin also handles `.graphql` files containing multiple GraphQL documents,
 
 ## Pre-Requirements
 
-To use this template, make sure you are using [`graphql-tag/loader`](https://github.com/apollographql/graphql-tag#webpack-preprocessing-with-graphql-tagloader) with Webpack, and make sure to install `@types/graphql` package in your project.
+To use this template, make sure you are using [`graphql-tag/loader`](https://github.com/apollographql/graphql-tag#webpack-preprocessing-with-graphql-tagloader) with Webpack.
 
 ## Installation
 
