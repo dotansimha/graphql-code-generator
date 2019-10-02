@@ -1,4 +1,4 @@
-import { BaseVisitor, buildScalars, EnumValuesMap, indent, indentMultiline, ParsedConfig, transformComment } from '@graphql-codegen/visitor-plugin-common';
+import { BaseVisitor, buildScalars, EnumValuesMap, indent, indentMultiline, ParsedConfig, transformComment, getBaseTypeNode } from '@graphql-codegen/visitor-plugin-common';
 import { KotlinResolversPluginRawConfig } from './index';
 import {
   EnumTypeDefinitionNode,
@@ -9,15 +9,21 @@ import {
   InputValueDefinitionNode,
   isEnumType,
   isInputObjectType,
-  isNullableType,
   isScalarType,
   Kind,
-  NamedTypeNode,
   ObjectTypeDefinitionNode,
   TypeNode,
   ValueNode,
 } from 'graphql';
-import { KOTLIN_SCALARS, wrapTypeWithModifiers } from '@graphql-codegen/java-common';
+import { wrapTypeWithModifiers } from '@graphql-codegen/java-common';
+
+export const KOTLIN_SCALARS = {
+  ID: 'Any',
+  String: 'String',
+  Boolean: 'Boolean',
+  Int: 'Int',
+  Float: 'Float',
+};
 
 export interface KotlinResolverParsedConfig extends ParsedConfig {
   package: string;
@@ -70,16 +76,8 @@ ${enumValues}
 }`;
   }
 
-  protected extractInnerType(typeNode: TypeNode): NamedTypeNode {
-    if (typeNode.kind === Kind.NON_NULL_TYPE || typeNode.kind === Kind.LIST_TYPE) {
-      return this.extractInnerType(typeNode.type);
-    } else {
-      return typeNode;
-    }
-  }
-
   protected resolveInputFieldType(typeNode: TypeNode): { baseType: string; typeName: string; isScalar: boolean; isArray: boolean; nullable: boolean } {
-    const innerType = this.extractInnerType(typeNode);
+    const innerType = getBaseTypeNode(typeNode);
     const schemaType = this._schema.getType(innerType.name.value);
     const isArray = typeNode.kind === Kind.LIST_TYPE || (typeNode.kind === Kind.NON_NULL_TYPE && typeNode.type.kind === Kind.LIST_TYPE);
     let result: { baseType: string; typeName: string; isScalar: boolean; isArray: boolean; nullable: boolean } = null;
