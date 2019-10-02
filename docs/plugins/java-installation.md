@@ -21,7 +21,7 @@ Then, create a `package.json` file in your project root, with the following cont
     "postinstall": "graphql-codegen"
   },
   "dependencies": {
-    "graphql": "14.5.7",
+    "graphql": "14.5.8",
     "@graphql-codegen/cli": "1.7.0",
     "@graphql-codegen/$1": "1.7.0"
   }

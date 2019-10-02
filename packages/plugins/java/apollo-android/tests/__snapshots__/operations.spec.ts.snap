@@ -828,8 +828,8 @@ public final class ListProductsQuery implements Query<ListProductsQuery.Data, Li
       private volatile int $hashCode;
       private volatile boolean $hashCodeMemoized;
       public Fragments(@Nonnull ProductFields productFields, @Nonnull ProductFields2 productFields2) {
-        this.productFields = Utils.checkNotNull(productFields, \\"productFields == null\\")
-        this.productFields2 = Utils.checkNotNull(productFields2, \\"productFields2 == null\\")
+        this.productFields = Utils.checkNotNull(productFields, \\"productFields == null\\");
+        this.productFields2 = Utils.checkNotNull(productFields2, \\"productFields2 == null\\");
       }
       
       public @Nonnull ProductFields productFields() {
@@ -845,7 +845,8 @@ public final class ListProductsQuery implements Query<ListProductsQuery.Data, Li
           @Override
           public void marshal(ResponseWriter writer) {
             final ProductFields $productFields = productFields;
-            if ($productFields != null) { $productFields.marshaller().marshal(writer); },    final ProductFields2 $productFields2 = productFields2;
+            if ($productFields != null) { $productFields.marshaller().marshal(writer); }
+            final ProductFields2 $productFields2 = productFields2;
             if ($productFields2 != null) { $productFields2.marshaller().marshal(writer); }
           }
         };
