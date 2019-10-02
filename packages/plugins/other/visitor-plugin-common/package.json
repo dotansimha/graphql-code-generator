@@ -1,26 +1,26 @@
 {
   "name": "@graphql-codegen/visitor-plugin-common",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "license": "MIT",
   "scripts": {
     "test": "jest --config ../../../../jest.config.js",
     "build": "tsc -m esnext --outDir dist/esnext && tsc -m commonjs --outDir dist/commonjs"
   },
   "dependencies": {
-    "relay-compiler": "6.0.0",
-    "@graphql-codegen/plugin-helpers": "1.7.0",
+    "@graphql-codegen/plugin-helpers": "1.8.0",
     "auto-bind": "2.0.0",
     "dependency-graph": "0.8.0",
     "graphql-tag": "2.10.1",
+    "relay-compiler": "6.0.0",
     "tslib": "1.10.0"
   },
   "peerDependencies": {
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0"
   },
   "devDependencies": {
-    "@types/relay-compiler": "6.0.1",
-    "@graphql-codegen/testing": "1.7.0",
+    "@graphql-codegen/testing": "1.8.0",
     "@types/jest": "24.0.18",
+    "@types/relay-compiler": "6.0.1",
     "graphql": "14.5.8",
     "jest": "24.9.0",
     "ts-jest": "24.1.0",
