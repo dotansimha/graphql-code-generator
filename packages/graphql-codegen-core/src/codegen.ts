@@ -5,8 +5,6 @@ import { executePlugin } from './execute-plugin';
 import { DetailedError } from './errors';
 
 export async function codegen(options: Types.GenerateOptions): Promise<string> {
-  let output = '';
-
   const documents = options.documents || [];
 
   if (documents.length > 0 && !options.skipDocumentsValidation) {
@@ -46,54 +44,59 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
   const prepend: Set<string> = new Set<string>();
   const append: Set<string> = new Set<string>();
 
-  for (const plugin of options.plugins) {
-    const name = Object.keys(plugin)[0];
-    const pluginPackage = options.pluginMap[name];
-    const pluginConfig = plugin[name] || {};
+  const output$ = Promise.all(
+    options.plugins.map(async plugin => {
+      const name = Object.keys(plugin)[0];
+      const pluginPackage = options.pluginMap[name];
+      const pluginConfig = plugin[name] || {};
 
-    const execConfig =
-      typeof pluginConfig !== 'object'
-        ? pluginConfig
-        : {
-            ...options.config,
-            ...pluginConfig,
-          };
+      const execConfig =
+        typeof pluginConfig !== 'object'
+          ? pluginConfig
+          : {
+              ...options.config,
+              ...pluginConfig,
+            };
 
-    const result = await executePlugin(
-      {
-        name,
-        config: execConfig,
-        parentConfig: options.config,
-        schema,
-        schemaAst: options.schemaAst,
-        documents: options.documents,
-        outputFilename: options.filename,
-        allPlugins: options.plugins,
-        skipDocumentsValidation: options.skipDocumentsValidation,
-      },
-      pluginPackage
-    );
+      const result = await executePlugin(
+        {
+          name,
+          config: execConfig,
+          parentConfig: options.config,
+          schema,
+          schemaAst: options.schemaAst,
+          documents: options.documents,
+          outputFilename: options.filename,
+          allPlugins: options.plugins,
+          skipDocumentsValidation: options.skipDocumentsValidation,
+        },
+        pluginPackage
+      );
 
-    if (typeof result === 'string') {
-      output += result;
-    } else if (isComplexPluginOutput(result)) {
-      output += result.content || '';
-
-      if (result.append && result.append.length > 0) {
-        for (const item of result.append) {
-          append.add(item);
+      if (typeof result === 'string') {
+        return result || '';
+      } else if (isComplexPluginOutput(result)) {
+        if (result.append && result.append.length > 0) {
+          for (const item of result.append) {
+            append.add(item);
+          }
         }
+
+        if (result.prepend && result.prepend.length > 0) {
+          for (const item of result.prepend) {
+            prepend.add(item);
+          }
+        }
+        return result.content || '';
       }
 
-      if (result.prepend && result.prepend.length > 0) {
-        for (const item of result.prepend) {
-          prepend.add(item);
-        }
-      }
-    }
-  }
+      return '';
+    })
+  );
 
-  return [...sortPrependValues(Array.from(prepend.values())), output, ...append.values()].join('\n');
+  const output = await output$;
+
+  return [...sortPrependValues(Array.from(prepend.values())), ...output, ...append.values()].join('\n');
 }
 
 function resolveCompareValue(a: string) {

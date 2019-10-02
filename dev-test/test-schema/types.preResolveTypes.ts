@@ -28,6 +28,7 @@ export type User = {
   name: Scalars['String'];
   email: Scalars['String'];
 };
+
 export type TestQueryVariables = {};
 
 export type TestQuery = { __typename?: 'Query'; testArr1: Maybe<Array<Maybe<string>>>; testArr2: Array<Maybe<string>>; testArr3: Array<string> };
