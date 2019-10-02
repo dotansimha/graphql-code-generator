@@ -31,7 +31,7 @@
     "@graphql-codegen/typescript-stencil-apollo": "1.7.0",
     "@graphql-codegen/typescript-urql": "1.7.0",
     "@graphql-codegen/website": "1.7.0",
-    "@material-ui/core": "4.4.3",
+    "@material-ui/core": "4.5.0",
     "@types/codemirror": "0.0.76",
     "@types/react": "16.9.4",
     "@types/react-dom": "16.9.1",
