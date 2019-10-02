@@ -334,7 +334,7 @@ export class OperationVisitor extends BaseJavaVisitor<VisitorConfig> {
             const varName = camelCase(spread.name);
             this._imports.add(Imports.Utils);
 
-            return `this.${varName} = Utils.checkNotNull(${varName}, "${varName} == null")`;
+            return `this.${varName} = Utils.checkNotNull(${varName}, "${varName} == null");`;
           })
           .join('\n'),
         childFragmentSpread.map(spread => ({
@@ -403,11 +403,13 @@ return new Fragments(${childFragmentSpread
         `return new ResponseFieldMarshaller() {
   @Override
   public void marshal(ResponseWriter writer) {
-${childFragmentSpread.map(spread => {
-  const fragmentVarName = camelCase(spread.name);
+${childFragmentSpread
+  .map(spread => {
+    const fragmentVarName = camelCase(spread.name);
 
-  return indentMultiline(`final ${spread.name} $${fragmentVarName} = ${fragmentVarName};\nif ($${fragmentVarName} != null) { $${fragmentVarName}.marshaller().marshal(writer); }`, 2);
-})}
+    return indentMultiline(`final ${spread.name} $${fragmentVarName} = ${fragmentVarName};\nif ($${fragmentVarName} != null) { $${fragmentVarName}.marshaller().marshal(writer); }`, 2);
+  })
+  .join('\n')}
   }
 };
       `,
