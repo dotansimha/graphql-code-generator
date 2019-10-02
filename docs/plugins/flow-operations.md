@@ -9,6 +9,8 @@ It generates types for your GraphQL documents: Query, Mutation, Subscription and
 
 This plugin requires you to use `@graphql-codegen/flow` as well, because it depends on it's types.
 
+{@import: ../docs/plugins/client-note.md}
+
 ## Installation
 
     $ yarn add -D @graphql-codegen/flow-operations

@@ -3,5 +3,5 @@ export const JAVA_SCALARS = {
   String: 'String',
   Boolean: 'Boolean',
   Int: 'Integer',
-  Float: 'Float',
+  Float: 'Double',
 };

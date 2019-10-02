@@ -5,6 +5,8 @@ title: TypeScript Urql
 
 This plugin generates [`urql`](https://github.com/FormidableLabs/urql) components and HOC with TypeScript typings.
 
+{@import: ../docs/plugins/client-note.md}
+
 ## Installation
 
     $ yarn add @graphql-codegen/typescript-urql

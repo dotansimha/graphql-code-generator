@@ -30,6 +30,7 @@
       "plugins/flow-operations",
       "plugins/java",
       "plugins/java-resolvers",
+      "plugins/java-apollo-android",
       "plugins/fragment-matcher",
       "plugins/add",
       "plugins/time",

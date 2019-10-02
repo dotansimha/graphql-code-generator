@@ -16,6 +16,8 @@ Below is a table that lists all available plugins which can be installed via NPM
 | `typescript-resolvers`             | Generate TypeScript signature for server-side resolvers                                              | [`@graphql-codegen/typescript-resolvers`](./typescript-resolvers.md)                         |
 | `typescript-apollo-angular`        | Generate TypeScript types, and Apollo-Angular Services                                               | [`@graphql-codegen/typescript-apollo-angular`](./typescript-apollo-angular.md)               |
 | `typescript-react-apollo`          | Generate TypeScript types, and React-Apollo Components                                               | [`@graphql-codegen/typescript-react-apollo`](./typescript-react-apollo.md)                   |
+| `typescript-urql`                  | Generate TypeScript types, and Urql Components                                                       | [`@graphql-codegen/typescript-urql`](./typescript-urql.md)                                   |
+| `typescript-stencil-apollo`        | Generate TypeScript types, and Stencil Apollo Components                                             | [`@graphql-codegen/typescript-stencil-apollo`](./typescript-stencil-apollo.md)               |
 | `typescript-mongodb`               | Generate Generate server-side TypeScript types, with MongoDB models                                  | [`@graphql-codegen/typescript-mongodb`](./typescript-mongodb.md)                             |
 | `typescript-graphql-files-modules` | Generate `declare module` for `.graphql` files                                                       | [`@graphql-codegen/typescript-graphql-files-modules`](./typescript-graphql-files-modules.md) |
 | `typescript-document-nodes`        | Generate TypeScript source files files that use `graphql-tag`                                        | [`@graphql-codegen/typescript-document-nodes`](./typescript-document-nodes.md)               |
@@ -28,6 +30,9 @@ Below is a table that lists all available plugins which can be installed via NPM
 | `flow-resolvers`                   | Generate resolvers signature for Flow                                                                | [`@graphql-codegen/flow-resolvers`](./flow-resolvers.md)                                     |
 | `flow-operations`                  | Generate types for Flow type based on your GraphQL operations                                        | [`@graphql-codegen/flow-operations`](./flow-operations.md)                                   |
 | `reason-client`                    | Generate ReasonML types based on your GraphQL schema for use in a client application                 | [`@graphql-codegen/reason-client`](./reason-client.md)                                       |
+| `java`                             | generates Java backend `classes` for Enums and Input types                                           | [`@graphql-codegen/java`](./java.md)                                                         |
+| `java-resolvers`                   | generates Java backend resolvers signature                                                           | [`@graphql-codegen/java-resolvers`](./java-resolvers.md)                                     |
+| `java-apollo-android`              | generates Apollo Android parsers and mappers                                                         | [`@graphql-codegen/java-apollo-android`](./java-apollo-android.md)                           |
 
 In addition, you can build your own code generating plugins based on your specific needs. For more information, check [this doc page](../custom-codegen/index).
 

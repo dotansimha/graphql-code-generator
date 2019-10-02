@@ -132,7 +132,7 @@ public static ${enumName} valueOfLabel(String label) {
     let result: { baseType: string; typeName: string; isScalar: boolean; isArray: boolean } = null;
 
     if (isScalarType(schemaType)) {
-      if (this.config.scalars[schemaType.name]) {
+      if (this.scalars[schemaType.name]) {
         result = {
           baseType: this.scalars[schemaType.name],
           typeName: this.scalars[schemaType.name],
