@@ -1,4 +1,4 @@
-import { ParsedConfig, BaseVisitor, EnumValuesMap, indentMultiline, indent, buildScalars } from '@graphql-codegen/visitor-plugin-common';
+import { ParsedConfig, BaseVisitor, EnumValuesMap, indentMultiline, indent, buildScalars, getBaseTypeNode } from '@graphql-codegen/visitor-plugin-common';
 import { JavaResolversPluginRawConfig } from './index';
 import {
   GraphQLSchema,
@@ -117,16 +117,8 @@ public static ${enumName} valueOfLabel(String label) {
       .withBlock(enumBlock).string;
   }
 
-  protected extractInnerType(typeNode: TypeNode): NamedTypeNode {
-    if (typeNode.kind === Kind.NON_NULL_TYPE || typeNode.kind === Kind.LIST_TYPE) {
-      return this.extractInnerType(typeNode.type);
-    } else {
-      return typeNode;
-    }
-  }
-
   protected resolveInputFieldType(typeNode: TypeNode): { baseType: string; typeName: string; isScalar: boolean; isArray: boolean } {
-    const innerType = this.extractInnerType(typeNode);
+    const innerType = getBaseTypeNode(typeNode);
     const schemaType = this._schema.getType(innerType.name.value);
     const isArray = typeNode.kind === Kind.LIST_TYPE || (typeNode.kind === Kind.NON_NULL_TYPE && typeNode.type.kind === Kind.LIST_TYPE);
     let result: { baseType: string; typeName: string; isScalar: boolean; isArray: boolean } = null;

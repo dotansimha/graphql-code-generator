@@ -24,6 +24,7 @@ const mapping = {
   '../packages/plugins/java/apollo-android/src/plugin.ts': BASE_DIR + '/java-apollo-android.md',
   '../packages/plugins/java/resolvers/src/index.ts': BASE_DIR + '/java-resolvers.md',
   '../packages/plugins/java/java/src/index.ts': BASE_DIR + '/java.md',
+  '../packages/plugins/java/kotlin/src/index.ts': BASE_DIR + '/kotlin.md',
   '../packages/plugins/flow/flow/src/index.ts': BASE_DIR + '/flow.md',
   '../packages/plugins/flow/resolvers/src/index.ts': BASE_DIR + '/flow-resolvers.md',
   '../packages/plugins/flow/operations/src/index.ts': BASE_DIR + '/flow-operations.md',

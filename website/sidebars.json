@@ -28,6 +28,7 @@
       "plugins/flow",
       "plugins/flow-resolvers",
       "plugins/flow-operations",
+      "plugins/kotlin",
       "plugins/java",
       "plugins/java-resolvers",
       "plugins/java-apollo-android",

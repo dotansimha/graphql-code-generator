@@ -56,6 +56,9 @@
       "generated-config/java": {
         "title": "generated-config/java"
       },
+      "generated-config/kotlin": {
+        "title": "generated-config/kotlin"
+      },
       "generated-config/near-operation-file": {
         "title": "generated-config/near-operation-file"
       },
@@ -178,6 +181,9 @@
       },
       "plugins/java": {
         "title": "Java"
+      },
+      "plugins/kotlin": {
+        "title": "Kotlin"
       },
       "plugins/reason-client": {
         "title": "Reason Client"
