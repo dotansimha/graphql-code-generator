@@ -53,6 +53,24 @@ src/:
    - typescript-operations
 ```
 
+### folder (`string`, default value: `''`)
+
+Optional, defines a folder, (Relative to the source files) where the generated files will be created.
+
+
+#### Usage Example
+
+```yml
+generates:
+src/:
+ preset: near-operation-file
+ presetConfig:
+   baseTypesPath: types.ts
+   folder: __generated__
+ plugins:
+   - typescript-operations
+```
+
 ### importTypesNamespace (`string`, default value: `Types`)
 
 Optional, override the name of the import namespace used to import from the `baseTypesPath` file.

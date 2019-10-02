@@ -3,6 +3,7 @@
     "importHelpers": true,
     "experimentalDecorators": true,
     "module": "esnext",
+    "downlevelIteration": true,
     "target": "es2018",
     "lib": ["es6", "esnext", "es2015", "dom"],
     "suppressImplicitAnyIndexErrors": true,

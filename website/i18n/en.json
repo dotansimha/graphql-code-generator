@@ -44,6 +44,9 @@
       "generated-config/flow": {
         "title": "generated-config/flow"
       },
+      "generated-config/import-types": {
+        "title": "generated-config/import-types"
+      },
       "generated-config/java-resolvers": {
         "title": "generated-config/java-resolvers"
       },
@@ -211,6 +214,9 @@
       },
       "plugins/typescript": {
         "title": "TypeScript"
+      },
+      "presets/import-types": {
+        "title": "import-types"
       },
       "presets/presets-index": {
         "title": "Available Presets"

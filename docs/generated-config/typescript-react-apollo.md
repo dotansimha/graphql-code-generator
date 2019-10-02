@@ -104,7 +104,7 @@ You can specify a suffix that gets attached to the name of the generated compone
 
 ### reactApolloVersion (`2 | 3`, default value: `2`)
 
-Customized the output by enabling/disabling the HOC.
+Sets the version of react-apollo.
 
 
 #### Usage Example

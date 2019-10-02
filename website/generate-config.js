@@ -7,6 +7,7 @@ const BASE_DIR = '../docs/generated-config';
 const mapping = {
   // Presets
   '../packages/presets/near-operation-file/src/index.ts': BASE_DIR + '/near-operation-file.md',
+  '../packages/presets/import-types/src/index.ts': BASE_DIR + '/import-types.md',
   // Plugins
   '../packages/plugins/other/schema-ast/src/index.ts': BASE_DIR + '/schema-ast.md',
   '../packages/plugins/other/time/src/index.ts': BASE_DIR + '/time.md',
