@@ -21,6 +21,7 @@ const mapping = {
   '../packages/plugins/typescript/react-apollo/src/index.ts': BASE_DIR + '/typescript-react-apollo.md',
   '../packages/plugins/typescript/stencil-apollo/src/index.ts': BASE_DIR + '/typescript-stencil-apollo.md',
   '../packages/plugins/typescript/document-nodes/src/index.ts': BASE_DIR + '/typescript-document-nodes.md',
+  '../packages/plugins/java/apollo-android/src/plugin.ts': BASE_DIR + '/java-apollo-android.md',
   '../packages/plugins/java/resolvers/src/index.ts': BASE_DIR + '/java-resolvers.md',
   '../packages/plugins/java/java/src/index.ts': BASE_DIR + '/java.md',
   '../packages/plugins/flow/flow/src/index.ts': BASE_DIR + '/flow.md',

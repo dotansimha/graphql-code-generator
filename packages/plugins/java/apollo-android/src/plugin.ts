@@ -8,9 +8,59 @@ import { FileType } from './file-type';
 import { CustomTypeClassVisitor } from './custom-type-class';
 
 export interface JavaApolloAndroidPluginConfig extends RawConfig {
+  /**
+   * @name package
+   * @type string
+   * @description Customize the Java package name for the generated operations. The default package name will be generated according to the output file path.
+   *
+   * @example
+   * ```yml
+   * generates:
+   * ./app/src/main/java/:
+   *   preset: java-apollo-android
+   *   config:
+   *     package: "com.my.paackage.generated.graphql"
+   *   plugins:
+   *     - java-apollo-android
+   * ```
+   */
   package?: string;
+  /**
+   * @name typePackage
+   * @type string
+   * @description Customize the Java package name for the types generated based on input types.
+   *
+   * @example
+   * ```yml
+   * generates:
+   * ./app/src/main/java/:
+   *   preset: java-apollo-android
+   *   config:
+   *     typePackage: "com.my.paackage.generated.graphql"
+   *   plugins:
+   *     - java-apollo-android
+   * ```
+   */
   typePackage?: string;
+  /**
+   * @name fragmentPackage
+   * @type string
+   * @description Customize the Java package name for the fragments generated classes.
+   *
+   * @example
+   * ```yml
+   * generates:
+   * ./app/src/main/java/:
+   *   preset: java-apollo-android
+   *   config:
+   *     fragmentPackage: "com.my.paackage.generated.graphql"
+   *   plugins:
+   *     - java-apollo-android
+   * ```
+   */
   fragmentPackage?: string;
+
+  // This is an internal configuration, that allow the preset to comunicate with the plugin.
   fileType: FileType;
 }
 

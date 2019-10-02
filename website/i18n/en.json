@@ -47,6 +47,9 @@
       "generated-config/import-types": {
         "title": "generated-config/import-types"
       },
+      "generated-config/java-apollo-android": {
+        "title": "generated-config/java-apollo-android"
+      },
       "generated-config/java-resolvers": {
         "title": "generated-config/java-resolvers"
       },
@@ -163,6 +166,9 @@
       },
       "plugins/index": {
         "title": "Available Plugins"
+      },
+      "plugins/java-apollo-android": {
+        "title": "Java Apollo Android"
       },
       "plugins/java-installation": {
         "title": "plugins/java-installation"
