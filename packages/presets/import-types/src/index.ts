@@ -59,7 +59,10 @@ export const preset: Types.OutputPreset<ImportTypesConfig> = {
     const plugins = [...options.plugins];
     const config = {
       ...options.config,
+      // This is for the operations plugin
       namespacedImportName: importTypesNamespace,
+      // This is for the client-side runtime plugins
+      importOperationTypesFrom: importTypesNamespace,
       externalFragments: [],
     };
     options.documents.map(documentFile => {

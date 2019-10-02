@@ -25,6 +25,7 @@ export interface ParsedDocumentsConfig extends ParsedTypesConfig {
   globalNamespace: boolean;
   operationResultSuffix: string;
   dedupeOperationSuffix: boolean;
+  namespacedImportName: string | null;
   exportFragmentSpreadSubTypes: boolean;
 }
 
@@ -78,6 +79,9 @@ export interface RawDocumentsConfig extends RawTypesConfig {
    * @description If set to true, it will export the sub-types created in order to make it easier to access fields declared under fragment spread.
    */
   exportFragmentSpreadSubTypes?: boolean;
+
+  // The following are internal, and used by presets
+  namespacedImportName?: string;
 }
 
 export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDocumentsConfig, TPluginConfig extends ParsedDocumentsConfig = ParsedDocumentsConfig> extends BaseVisitor<TRawConfig, TPluginConfig> {
@@ -91,6 +95,7 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
       enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
       preResolveTypes: getConfigValue(rawConfig.preResolveTypes, false),
       dedupeOperationSuffix: getConfigValue(rawConfig.dedupeOperationSuffix, false),
+      namespacedImportName: getConfigValue(rawConfig.namespacedImportName, null),
       addTypename: !rawConfig.skipTypename,
       globalNamespace: !!rawConfig.globalNamespace,
       operationResultSuffix: getConfigValue(rawConfig.operationResultSuffix, ''),

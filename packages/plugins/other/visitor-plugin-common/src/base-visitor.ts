@@ -14,7 +14,6 @@ export interface ParsedConfig {
   typesPrefix: string;
   addTypename: boolean;
   nonOptionalTypename: boolean;
-  namespacedImportName: string | null;
   externalFragments: LoadedFragment[];
 }
 
@@ -113,7 +112,6 @@ export interface RawConfig {
   nonOptionalTypename?: boolean;
 
   /* The following configuration are for preset configuration and should not be set manually (for most use cases...) */
-  namespacedImportName?: string;
   externalFragments?: LoadedFragment[];
   globalNamespace?: boolean;
 }
@@ -127,7 +125,6 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
     this._parsedConfig = {
       convert: convertFactory(rawConfig),
       typesPrefix: rawConfig.typesPrefix || '',
-      namespacedImportName: rawConfig.namespacedImportName || null,
       externalFragments: rawConfig.externalFragments || [],
       addTypename: !rawConfig.skipTypename,
       nonOptionalTypename: !!rawConfig.nonOptionalTypename,

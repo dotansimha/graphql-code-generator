@@ -27,6 +27,7 @@ export interface RawClientSideBasePluginConfig extends RawConfig {
   documentVariableSuffix?: string;
   transformUnderscore?: boolean;
   documentMode?: DocumentMode;
+  importOperationTypesFrom?: string;
   importDocumentNodeExternallyFrom?: string;
 }
 
@@ -105,6 +106,9 @@ export interface ClientSideBasePluginConfig extends ParsedConfig {
    *
    */
   importDocumentNodeExternallyFrom?: string;
+
+  // The following are internal, and used by presets
+  importOperationTypesFrom?: string;
 }
 
 export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginConfig = RawClientSideBasePluginConfig, TPluginConfig extends ClientSideBasePluginConfig = ClientSideBasePluginConfig> extends BaseVisitor<TRawConfig, TPluginConfig> {
@@ -117,6 +121,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
       dedupeOperationSuffix: getConfigValue(rawConfig.dedupeOperationSuffix, false),
       gqlImport: rawConfig.gqlImport || null,
       noExport: !!rawConfig.noExport,
+      importOperationTypesFrom: getConfigValue(rawConfig.importOperationTypesFrom, null),
       operationResultSuffix: getConfigValue(rawConfig.operationResultSuffix, ''),
       documentVariablePrefix: getConfigValue(rawConfig.documentVariablePrefix, ''),
       documentVariableSuffix: getConfigValue(rawConfig.documentVariableSuffix, 'Document'),
