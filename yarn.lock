@@ -2672,7 +2672,7 @@
     "@types/graphql" "*"
     "@types/koa" "*"
 
-"@types/graphql@*", "@types/graphql@14.2.3":
+"@types/graphql@*":
   version "14.2.3"
   resolved "https://registry.yarnpkg.com/@types/graphql/-/graphql-14.2.3.tgz#cfc6420a67eb20420786f90112357921974593b9"
   integrity sha512-UoCovaxbJIxagCvVfalfK7YaNhmxj3BQFRQ2RHQKLiu+9wNXhJnlbspsLHt/YQM99IaLUUFJNzCwzc6W0ypMeQ==
