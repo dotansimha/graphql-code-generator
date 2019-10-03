@@ -1,8 +1,8 @@
-import { existsSync, readFileSync } from 'fs';
-import { join, resolve } from 'path';
+import cosmiconfig from 'cosmiconfig';
+import { existsSync } from 'fs';
+import { resolve } from 'path';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { DetailedError } from '@graphql-codegen/core';
-import { parseConfigFile } from './yml';
 import { Command } from 'commander';
 
 export type YamlCliFlags = {
@@ -11,6 +11,23 @@ export type YamlCliFlags = {
   require: string[];
   overwrite: boolean;
 };
+
+export async function loadConfig(
+  configFilePath?: string
+): Promise<{
+  isEmpty?: boolean;
+  config: Types.Config;
+  filepath: string;
+}> {
+  const cosmi = cosmiconfig('codegen');
+  const result = await (configFilePath ? cosmi.load(configFilePath) : cosmi.search(process.cwd()));
+
+  return {
+    isEmpty: result.isEmpty,
+    filepath: result.filepath,
+    config: result.config as Types.Config,
+  };
+}
 
 function getCustomConfigPath(cliFlags: YamlCliFlags): string | null | never {
   const configFile = cliFlags.config;
@@ -37,25 +54,6 @@ function getCustomConfigPath(cliFlags: YamlCliFlags): string | null | never {
   return null;
 }
 
-export function loadAndParseConfig(filepath: string): Types.Config | never {
-  const ext = filepath.substr(filepath.lastIndexOf('.') + 1);
-  switch (ext) {
-    case 'yml':
-      return parseConfigFile(readFileSync(filepath, 'utf-8'));
-    case 'json':
-      return JSON.parse(readFileSync(filepath, 'utf-8'));
-    case 'js':
-      return require(resolve(process.cwd(), filepath));
-    default:
-      throw new DetailedError(
-        `Extension '${ext}' is not supported`,
-        `
-        Config ${filepath} couldn't be parsed. Extension '${ext}' is not supported.
-      `
-      );
-  }
-}
-
 function collect<T = string>(val: T, memo: T[]): T[] {
   memo.push(val);
 
@@ -76,15 +74,9 @@ export function parseArgv(argv = process.argv): Command & YamlCliFlags {
 
 export async function createConfig(cliFlags: Command & YamlCliFlags = parseArgv(process.argv)): Promise<Types.Config | never> {
   const customConfigPath = getCustomConfigPath(cliFlags);
-  const locations: string[] = [join(process.cwd(), './codegen.yml'), join(process.cwd(), './codegen.json')];
+  const configSearchResult = await loadConfig(customConfigPath);
 
-  if (customConfigPath) {
-    locations.unshift(customConfigPath);
-  }
-
-  const filepath = locations.find(existsSync);
-
-  if (!filepath) {
+  if (!configSearchResult || configSearchResult.isEmpty) {
     throw new DetailedError(
       `Unable to find Codegen config file!`,
       `
@@ -99,8 +91,9 @@ export async function createConfig(cliFlags: Command & YamlCliFlags = parseArgv(
     }
   }
 
-  const parsedConfigFile = loadAndParseConfig(filepath);
-  parsedConfigFile.configFilePath = filepath;
+  const parsedConfigFile = configSearchResult.config as Types.Config;
+
+  parsedConfigFile.configFilePath = configSearchResult.filepath;
 
   if (cliFlags.watch === true) {
     parsedConfigFile.watch = cliFlags.watch;
