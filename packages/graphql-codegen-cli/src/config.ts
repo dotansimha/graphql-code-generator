@@ -21,6 +21,42 @@ function generateSearchPlaces(moduleName: string) {
   return regular.concat(dot);
 }
 
+function customLoader(ext: 'json' | 'yaml' | 'js') {
+  function loader(filepath: string, content: string) {
+    if (typeof process !== 'undefined' && 'env' in process) {
+      content = content.replace(/\$\{(.*)\}/g, (str, variable, index) => {
+        let varName = variable;
+        let defaultValue = '';
+
+        if (variable.includes(':')) {
+          const spl = variable.split(':');
+          varName = spl.shift();
+          defaultValue = spl.join(':');
+        }
+
+        return process.env[varName] || defaultValue;
+      });
+    }
+
+    if (ext === 'json') {
+      return (cosmiconfig as any).loadJson(filepath, content);
+    }
+
+    if (ext === 'yaml') {
+      return (cosmiconfig as any).loadYaml(filepath, content);
+    }
+
+    if (ext === 'js') {
+      return (cosmiconfig as any).loadJs(filepath, content);
+    }
+  }
+
+  return {
+    sync: loader,
+    async: loader,
+  };
+}
+
 export async function loadConfig(
   configFilePath?: string
 ):
@@ -32,6 +68,13 @@ export async function loadConfig(
   const moduleName = 'codegen';
   const cosmi = cosmiconfig(moduleName, {
     searchPlaces: generateSearchPlaces(moduleName),
+    loaders: {
+      '.json': customLoader('json'),
+      '.yaml': customLoader('yaml'),
+      '.yml': customLoader('yaml'),
+      '.js': customLoader('js'),
+      noExt: customLoader('yaml'),
+    },
   });
   const result = await (configFilePath ? cosmi.load(configFilePath) : cosmi.search(process.cwd()));
 
