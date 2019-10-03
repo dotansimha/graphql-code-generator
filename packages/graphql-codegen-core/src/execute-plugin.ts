@@ -11,6 +11,7 @@ export interface ExecutePluginOptions {
   documents: Types.DocumentFile[];
   outputFilename: string;
   allPlugins: Types.ConfiguredPlugin[];
+  skipDocumentsValidation?: boolean;
 }
 
 export async function executePlugin(options: ExecutePluginOptions, plugin: CodegenPlugin): Promise<Types.PluginOutput> {
