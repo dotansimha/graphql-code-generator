@@ -120,6 +120,7 @@ export const createWatcher = (initialConfig: Types.Config, onNext: (result: Type
       if (eventName === 'change' && config.configFilePath && fullPath === config.configFilePath) {
         log(`${logSymbols.info} Config file has changed, reloading...`);
         const configSearchResult = await loadConfig(config.configFilePath);
+
         const newParsedConfig = configSearchResult.config as Types.Config;
         newParsedConfig.watch = config.watch;
         newParsedConfig.silent = config.silent;

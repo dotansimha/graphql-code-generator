@@ -1,5 +1,4 @@
 import * as cosmiconfig from 'cosmiconfig';
-import { existsSync } from 'fs';
 import { resolve } from 'path';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { DetailedError } from '@graphql-codegen/core';
@@ -12,18 +11,62 @@ export type YamlCliFlags = {
   overwrite: boolean;
 };
 
+function generateSearchPlaces(moduleName: string) {
+  const extensions = ['json', 'yaml', 'yml', 'js', 'config.js'];
+  // gives codegen.json...
+  const regular = extensions.map(ext => `${moduleName}.${ext}`);
+  // gives .codegenrc.json... but no .codegenrc.config.js
+  const dot = extensions.filter(ext => ext !== 'config.js').map(ext => `.${moduleName}rc.${ext}`);
+
+  return regular.concat(dot);
+}
+
 export async function loadConfig(
   configFilePath?: string
-): Promise<{
-  isEmpty?: boolean;
-  config: Types.Config;
-  filepath: string;
-}> {
-  const cosmi = cosmiconfig('codegen');
+):
+  | Promise<{
+      config: Types.Config;
+      filepath: string;
+    }>
+  | never {
+  const moduleName = 'codegen';
+  const cosmi = cosmiconfig(moduleName, {
+    searchPlaces: generateSearchPlaces(moduleName),
+  });
   const result = await (configFilePath ? cosmi.load(configFilePath) : cosmi.search(process.cwd()));
 
+  if (!result) {
+    if (configFilePath) {
+      throw new DetailedError(
+        `Config ${configFilePath} does not exist`,
+        `
+        Config ${configFilePath} does not exist.
+  
+          $ graphql-codegen --config ${configFilePath}
+  
+        Please make sure the --config points to a correct file.
+      `
+      );
+    }
+
+    throw new DetailedError(
+      `Unable to find Codegen config file!`,
+      `
+        Please make sure that you have a configuration file under the current directory! 
+      `
+    );
+  }
+
+  if (result.isEmpty) {
+    throw new DetailedError(
+      `Found Codegen config file but it was empty!`,
+      `
+        Please make sure that you have a valid configuration file under the current directory!
+      `
+    );
+  }
+
   return {
-    isEmpty: result.isEmpty,
     filepath: result.filepath,
     config: result.config as Types.Config,
   };
@@ -32,26 +75,7 @@ export async function loadConfig(
 function getCustomConfigPath(cliFlags: YamlCliFlags): string | null | never {
   const configFile = cliFlags.config;
 
-  if (configFile) {
-    const configPath = resolve(process.cwd(), configFile);
-
-    if (!existsSync(configPath)) {
-      throw new DetailedError(
-        `Config ${configPath} does not exist`,
-        `
-        Config ${configPath} does not exist.
-
-          $ graphql-codegen --config ${configPath}
-
-        Please make sure the --config points to a correct file.
-      `
-      );
-    }
-
-    return configPath;
-  }
-
-  return null;
+  return configFile ? resolve(process.cwd(), configFile) : null;
 }
 
 function collect<T = string>(val: T, memo: T[]): T[] {
@@ -75,15 +99,6 @@ export function parseArgv(argv = process.argv): Command & YamlCliFlags {
 export async function createConfig(cliFlags: Command & YamlCliFlags = parseArgv(process.argv)): Promise<Types.Config | never> {
   const customConfigPath = getCustomConfigPath(cliFlags);
   const configSearchResult = await loadConfig(customConfigPath);
-
-  if (!configSearchResult || configSearchResult.isEmpty) {
-    throw new DetailedError(
-      `Unable to find Codegen config file!`,
-      `
-        Please make sure that you have a configuration file under the current directory! 
-      `
-    );
-  }
 
   if (cliFlags.require && cliFlags.require.length > 0) {
     for (const mod of cliFlags.require) {
