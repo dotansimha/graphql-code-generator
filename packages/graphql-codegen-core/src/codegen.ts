@@ -3,6 +3,8 @@ import { visit, buildASTSchema } from 'graphql';
 import { mergeSchemas } from './merge-schemas';
 import { executePlugin } from './execute-plugin';
 import { DetailedError } from './errors';
+import { checkValidationErrors, validateGraphQlDocuments } from 'graphql-toolkit';
+import { Kind } from 'graphql';
 
 export async function codegen(options: Types.GenerateOptions): Promise<string> {
   const documents = options.documents || [];
@@ -39,6 +41,14 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
     options.schemaAst = buildASTSchema(schema, {
       assumeValidSDL: isFederation,
     });
+  }
+
+  const skipDocumentValidation = typeof options.config === 'object' && !Array.isArray(options.config) && options.config.skipDocumentsValidation;
+
+  if (options.schemaAst && documents.length > 0 && !skipDocumentValidation) {
+    const extraFragments = options.config && (options.config as any)['externalFragments'] ? (options.config as any)['externalFragments'] : [];
+    const errors = await validateGraphQlDocuments(options.schemaAst, [...documents, ...extraFragments.map((f: any) => ({ filePath: f.importFrom, content: { kind: Kind.DOCUMENT, definitions: [f.node] } }))]);
+    checkValidationErrors(errors);
   }
 
   const prepend: Set<string> = new Set<string>();
