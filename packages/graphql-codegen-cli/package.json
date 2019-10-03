@@ -54,6 +54,7 @@
     "chokidar": "3.2.1",
     "commander": "3.0.2",
     "common-tags": "1.8.0",
+    "cosmiconfig": "5.2.1",
     "debounce": "1.2.0",
     "detect-indent": "6.0.0",
     "glob": "7.1.4",
@@ -66,7 +67,6 @@
     "inquirer": "7.0.0",
     "is-glob": "4.0.1",
     "is-valid-path": "0.1.1",
-    "js-yaml": "3.13.1",
     "json-to-pretty-yaml": "1.2.2",
     "listr": "0.14.3",
     "listr-update-renderer": "0.5.0",
@@ -81,6 +81,7 @@
   },
   "devDependencies": {
     "@types/chokidar": "1.7.5",
+    "@types/cosmiconfig": "5.0.3",
     "@types/detect-indent": "5.0.0",
     "@types/inquirer": "6.5.0",
     "@types/js-yaml": "3.12.1",
@@ -88,6 +89,8 @@
     "@types/log-symbols": "2.0.0",
     "bdd-stdin": "0.2.0",
     "graphql": "14.5.8",
+    "js-yaml": "3.13.1",
+    "make-dir": "3.0.0",
     "ts-jest": "24.1.0"
   },
   "peerDependencies": {

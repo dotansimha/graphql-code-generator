@@ -1,8 +1,7 @@
-import { existsSync, readFileSync } from 'fs';
-import { join, resolve } from 'path';
+import * as cosmiconfig from 'cosmiconfig';
+import { resolve } from 'path';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { DetailedError } from '@graphql-codegen/core';
-import { parseConfigFile } from './yml';
 import { Command } from 'commander';
 
 export type YamlCliFlags = {
@@ -12,48 +11,114 @@ export type YamlCliFlags = {
   overwrite: boolean;
 };
 
-function getCustomConfigPath(cliFlags: YamlCliFlags): string | null | never {
-  const configFile = cliFlags.config;
+function generateSearchPlaces(moduleName: string) {
+  const extensions = ['json', 'yaml', 'yml', 'js', 'config.js'];
+  // gives codegen.json...
+  const regular = extensions.map(ext => `${moduleName}.${ext}`);
+  // gives .codegenrc.json... but no .codegenrc.config.js
+  const dot = extensions.filter(ext => ext !== 'config.js').map(ext => `.${moduleName}rc.${ext}`);
 
-  if (configFile) {
-    const configPath = resolve(process.cwd(), configFile);
+  return regular.concat(dot);
+}
 
-    if (!existsSync(configPath)) {
+function customLoader(ext: 'json' | 'yaml' | 'js') {
+  function loader(filepath: string, content: string) {
+    if (typeof process !== 'undefined' && 'env' in process) {
+      content = content.replace(/\$\{(.*)\}/g, (str, variable, index) => {
+        let varName = variable;
+        let defaultValue = '';
+
+        if (variable.includes(':')) {
+          const spl = variable.split(':');
+          varName = spl.shift();
+          defaultValue = spl.join(':');
+        }
+
+        return process.env[varName] || defaultValue;
+      });
+    }
+
+    if (ext === 'json') {
+      return (cosmiconfig as any).loadJson(filepath, content);
+    }
+
+    if (ext === 'yaml') {
+      return (cosmiconfig as any).loadYaml(filepath, content);
+    }
+
+    if (ext === 'js') {
+      return (cosmiconfig as any).loadJs(filepath, content);
+    }
+  }
+
+  return {
+    sync: loader,
+    async: loader,
+  };
+}
+
+export async function loadConfig(
+  configFilePath?: string
+):
+  | Promise<{
+      config: Types.Config;
+      filepath: string;
+    }>
+  | never {
+  const moduleName = 'codegen';
+  const cosmi = cosmiconfig(moduleName, {
+    searchPlaces: generateSearchPlaces(moduleName),
+    loaders: {
+      '.json': customLoader('json'),
+      '.yaml': customLoader('yaml'),
+      '.yml': customLoader('yaml'),
+      '.js': customLoader('js'),
+      noExt: customLoader('yaml'),
+    },
+  });
+  const result = await (configFilePath ? cosmi.load(configFilePath) : cosmi.search(process.cwd()));
+
+  if (!result) {
+    if (configFilePath) {
       throw new DetailedError(
-        `Config ${configPath} does not exist`,
+        `Config ${configFilePath} does not exist`,
         `
-        Config ${configPath} does not exist.
-
-          $ graphql-codegen --config ${configPath}
-
+        Config ${configFilePath} does not exist.
+  
+          $ graphql-codegen --config ${configFilePath}
+  
         Please make sure the --config points to a correct file.
       `
       );
     }
 
-    return configPath;
+    throw new DetailedError(
+      `Unable to find Codegen config file!`,
+      `
+        Please make sure that you have a configuration file under the current directory! 
+      `
+    );
   }
 
-  return null;
+  if (result.isEmpty) {
+    throw new DetailedError(
+      `Found Codegen config file but it was empty!`,
+      `
+        Please make sure that you have a valid configuration file under the current directory!
+      `
+    );
+  }
+
+  return {
+    filepath: result.filepath,
+    config: result.config as Types.Config,
+  };
 }
 
-export function loadAndParseConfig(filepath: string): Types.Config | never {
-  const ext = filepath.substr(filepath.lastIndexOf('.') + 1);
-  switch (ext) {
-    case 'yml':
-      return parseConfigFile(readFileSync(filepath, 'utf-8'));
-    case 'json':
-      return JSON.parse(readFileSync(filepath, 'utf-8'));
-    case 'js':
-      return require(resolve(process.cwd(), filepath));
-    default:
-      throw new DetailedError(
-        `Extension '${ext}' is not supported`,
-        `
-        Config ${filepath} couldn't be parsed. Extension '${ext}' is not supported.
-      `
-      );
-  }
+function getCustomConfigPath(cliFlags: YamlCliFlags): string | null | never {
+  const configFile = cliFlags.config;
+
+  return configFile ? resolve(process.cwd(), configFile) : null;
 }
 
 function collect<T = string>(val: T, memo: T[]): T[] {
@@ -76,22 +141,7 @@ export function parseArgv(argv = process.argv): Command & YamlCliFlags {
 
 export async function createConfig(cliFlags: Command & YamlCliFlags = parseArgv(process.argv)): Promise<Types.Config | never> {
   const customConfigPath = getCustomConfigPath(cliFlags);
-  const locations: string[] = [join(process.cwd(), './codegen.yml'), join(process.cwd(), './codegen.json')];
-
-  if (customConfigPath) {
-    locations.unshift(customConfigPath);
-  }
-
-  const filepath = locations.find(existsSync);
-
-  if (!filepath) {
-    throw new DetailedError(
-      `Unable to find Codegen config file!`,
-      `
-        Please make sure that you have a configuration file under the current directory! 
-      `
-    );
-  }
+  const configSearchResult = await loadConfig(customConfigPath);
 
   if (cliFlags.require && cliFlags.require.length > 0) {
     for (const mod of cliFlags.require) {
@@ -99,8 +149,9 @@ export async function createConfig(cliFlags: Command & YamlCliFlags = parseArgv(
     }
   }
 
-  const parsedConfigFile = loadAndParseConfig(filepath);
-  parsedConfigFile.configFilePath = filepath;
+  const parsedConfigFile = configSearchResult.config as Types.Config;
+
+  parsedConfigFile.configFilePath = configSearchResult.filepath;
 
   if (cliFlags.watch === true) {
     parsedConfigFile.watch = cliFlags.watch;

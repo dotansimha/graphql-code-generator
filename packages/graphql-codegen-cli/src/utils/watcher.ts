@@ -9,8 +9,8 @@ import { debugLog } from './debugging';
 import { getLogger } from './logger';
 import { join } from 'path';
 import { FSWatcher } from 'chokidar';
-import { loadAndParseConfig } from '../config';
 import { lifecycleHooks } from '../hooks';
+import { loadConfig } from '../config';
 
 function log(msg: string) {
   // double spaces to inline the message with Listr
@@ -119,7 +119,9 @@ export const createWatcher = (initialConfig: Types.Config, onNext: (result: Type
 
       if (eventName === 'change' && config.configFilePath && fullPath === config.configFilePath) {
         log(`${logSymbols.info} Config file has changed, reloading...`);
-        const newParsedConfig = loadAndParseConfig(config.configFilePath);
+        const configSearchResult = await loadConfig(config.configFilePath);
+
+        const newParsedConfig = configSearchResult.config as Types.Config;
         newParsedConfig.watch = config.watch;
         newParsedConfig.silent = config.silent;
         newParsedConfig.overwrite = config.overwrite;

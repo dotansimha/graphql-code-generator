@@ -1,10 +1,7 @@
-jest.mock('fs');
+import { TempDir } from './utils';
 import { createConfig, parseArgv } from '../src/config';
-import { join } from 'path';
 
-const mockFsFile = (file: string, content: string) => require('fs').__setMockFiles(file, content);
-const resetFs = () => require('fs').__resetMockFiles();
-const mockConfig = (str: string, file = './codegen.yml') => mockFsFile(join(process.cwd(), file), str);
+const mockConfig = (str: string, file = './codegen.yml') => temp.createFile(file, str);
 const createArgv = (str = ''): string[] => {
   const result = ['node', 'fake.js'];
   const regexp = /([^\s'"]+(['"])([^\2]*?)\2)|[^\s'"]+|(['"])([^\4]*?)\4/gi;
@@ -20,9 +17,21 @@ const createArgv = (str = ''): string[] => {
   return result;
 };
 
+const temp = new TempDir();
+
 describe('CLI Flags', () => {
   beforeEach(() => {
-    resetFs();
+    temp.clean();
+    jest.spyOn(process, 'cwd').mockImplementation(() => temp.dir);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+    jest.restoreAllMocks();
+  });
+
+  afterAll(() => {
+    temp.deleteTempDir();
   });
 
   it('Should create basic config using new yml API', async () => {
