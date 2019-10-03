@@ -1,4 +1,4 @@
-import cosmiconfig from 'cosmiconfig';
+import * as cosmiconfig from 'cosmiconfig';
 import { existsSync } from 'fs';
 import { resolve } from 'path';
 import { Types } from '@graphql-codegen/plugin-helpers';
