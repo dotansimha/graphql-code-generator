@@ -51,7 +51,7 @@ export class Renderer {
           .map(({ msg, rawError }, i) => {
             const source: string | Source | undefined = (err.errors[i] as any).source;
 
-            msg = msg ? `${chalk.gray(indentString(stripIndent(`${msg}`), 4))}\n` : null;
+            msg = msg ? chalk.gray(indentString(stripIndent(`${msg}`), 4)) : null;
             const stack = rawError.stack ? chalk.gray(indentString(stripIndent(rawError.stack), 4)) : null;
 
             if (source) {
