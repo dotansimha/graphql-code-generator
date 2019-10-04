@@ -91,6 +91,19 @@ describe('convertFactory', () => {
     expect(factory('_Myname', { transformUnderscore: true })).toBe('Myname');
     expect(factory('My_name', { transformUnderscore: true })).toBe('MyName');
   });
+  
+  // TODO Not working!
+  it('Should allow to override underscore behaviour directly from configuration.', () => {
+    const factory = convertFactory({
+      namingConvention: {
+        transformUnderscore: true
+      },
+    });
+
+    expect(factory('My_Name')).toBe('MyName');
+    expect(factory('_Myname')).toBe('Myname');
+    expect(factory('My_name')).toBe('MyName');
+  });
 
   it('Should allow to override transformUnderscore in config', () => {
     const factory = convertFactory({
