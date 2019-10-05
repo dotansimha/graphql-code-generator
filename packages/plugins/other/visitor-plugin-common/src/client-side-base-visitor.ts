@@ -114,6 +114,7 @@ export interface ClientSideBasePluginConfig extends ParsedConfig {
 export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginConfig = RawClientSideBasePluginConfig, TPluginConfig extends ClientSideBasePluginConfig = ClientSideBasePluginConfig> extends BaseVisitor<TRawConfig, TPluginConfig> {
   protected _collectedOperations: OperationDefinitionNode[] = [];
   protected _documents: Types.DocumentFile[] = [];
+  protected _additionalImports: string[] = [];
 
   constructor(protected _schema: GraphQLSchema, protected _fragments: LoadedFragment[], rawConfig: TRawConfig, additionalConfig: Partial<TPluginConfig>, documents?: Types.DocumentFile[]) {
     super(rawConfig, {
@@ -290,7 +291,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
   }
 
   public getImports(): string[] {
-    let imports = [];
+    let imports = [...this._additionalImports];
 
     switch (this.config.documentMode) {
       case DocumentMode.documentNode:
