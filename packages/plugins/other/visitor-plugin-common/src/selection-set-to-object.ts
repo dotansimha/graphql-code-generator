@@ -24,6 +24,7 @@ import { BaseVisitorConvertOptions } from './base-visitor';
 import { getBaseType } from '@graphql-codegen/plugin-helpers';
 import { ParsedDocumentsConfig } from './base-documents-visitor';
 import { LinkField, PrimitiveAliasedFields, PrimitiveField, BaseSelectionSetProcessor, ProcessResult, NameAndType } from './selection-set-processor/base';
+import * as autoBind from 'auto-bind';
 
 function isMetadataFieldName(name: string) {
   return ['__schema', '__type'].includes(name);
@@ -49,7 +50,9 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     protected _config: Config,
     protected _parentSchemaType?: GraphQLNamedType,
     protected _selectionSet?: SelectionSetNode
-  ) {}
+  ) {
+    autoBind(this);
+  }
 
   public createNext(parentSchemaType: GraphQLNamedType, selectionSet: SelectionSetNode): SelectionSetToObject {
     return new SelectionSetToObject(this._processor, this._scalars, this._schema, this._convertName, this._loadedFragments, this._config, parentSchemaType, selectionSet);
