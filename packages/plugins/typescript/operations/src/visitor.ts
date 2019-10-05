@@ -4,6 +4,7 @@ import { TypeScriptOperationVariablesToObject } from './ts-operation-variables-t
 import { TypeScriptDocumentsPluginConfig } from './index';
 import { isNonNullType } from 'graphql';
 import { TypeScriptSelectionSetProcessor } from './ts-selection-set-processor';
+import * as autoBind from 'auto-bind';
 
 export interface TypeScriptDocumentsParsedConfig extends ParsedDocumentsConfig {
   avoidOptionals: boolean;
@@ -23,6 +24,8 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<TypeScriptD
       } as TypeScriptDocumentsParsedConfig,
       schema
     );
+
+    autoBind(this);
 
     const clearOptional = (str: string): string => {
       const prefix = this.config.namespacedImportName ? `${this.config.namespacedImportName}\.` : '';
@@ -58,9 +61,9 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<TypeScriptD
       wrapTypeWithModifiers,
     };
     const processor = new (config.preResolveTypes ? PreResolveTypesProcessor : TypeScriptSelectionSetProcessor)(processorConfig);
-    this.setSelectionSetHandler(new SelectionSetToObject(processor, this.scalars, this.schema, this.convertName, allFragments, this.config));
+    this.setSelectionSetHandler(new SelectionSetToObject(processor, this.scalars, this.schema, this.convertName.bind(this), allFragments, this.config));
     const enumsNames = Object.keys(schema.getTypeMap()).filter(typeName => isEnumType(schema.getType(typeName)));
-    this.setVariablesTransformer(new TypeScriptOperationVariablesToObject(this.scalars, this.convertName, this.config.avoidOptionals, this.config.immutableTypes, this.config.namespacedImportName, enumsNames, this.config.enumPrefix));
+    this.setVariablesTransformer(new TypeScriptOperationVariablesToObject(this.scalars, this.convertName.bind(this), this.config.avoidOptionals, this.config.immutableTypes, this.config.namespacedImportName, enumsNames, this.config.enumPrefix));
     this._declarationBlockConfig = {
       ignoreExport: this.config.noExport,
     };
