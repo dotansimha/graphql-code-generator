@@ -26,7 +26,7 @@ Customized the output by enabling/disabling the HOC.
 
 ```yml
 generates:
-path/to/file.ts:
+path/to/file.tsx:
  plugins:
    - typescript
    - typescript-operations
@@ -44,7 +44,7 @@ Customized the output by enabling/disabling the generated React Hooks.
 
 ```yml
 generates:
-path/to/file.ts:
+path/to/file.tsx:
  plugins:
    - typescript
    - typescript-operations
@@ -62,7 +62,7 @@ Customized the output by enabling/disabling the generated mutation function sign
 
 ```yml
 generates:
-path/to/file.ts:
+path/to/file.tsx:
  plugins:
    - typescript
    - typescript-operations
@@ -111,7 +111,7 @@ Sets the version of react-apollo.
 
 ```yml
 generates:
-path/to/file.ts:
+path/to/file.tsx:
  plugins:
    - typescript
    - typescript-operations
@@ -129,7 +129,7 @@ Customized the output by enabling/disabling the generated result type.
 
 ```yml
 generates:
-path/to/file.ts:
+path/to/file.tsx:
  plugins:
    - typescript
    - typescript-operations
@@ -143,13 +143,16 @@ path/to/file.ts:
 Customized the output by enabling/disabling the generated mutation option type.
 
 
-#### Usage Example: yml
+#### Usage Example: 
+
+```yml
 generates:
-path/to/file.ts:
+path/to/file.tsx:
  plugins:
    - typescript
    - typescript-operations
    - typescript-react-apollo
  config:
    withMutationOptionsType: true
+```
 
