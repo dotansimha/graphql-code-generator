@@ -14,6 +14,7 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<GraphQLRequestP
 
     autoBind(this);
     this._additionalImports.push(`import { GraphQLClient } from 'graphql-request';`);
+    this._additionalImports.push(`import { print } from 'graphql';`);
   }
 
   protected buildOperation(node: OperationDefinitionNode, documentVariableName: string, operationType: string, operationResultType: string, operationVariablesTypes: string): string {
@@ -34,7 +35,7 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<GraphQLRequestP
         const optionalVariables = !o.node.variableDefinitions || o.node.variableDefinitions.length === 0 || o.node.variableDefinitions.every(v => v.type.kind !== Kind.NON_NULL_TYPE || v.defaultValue);
 
         return `${o.node.name.value}(variables${optionalVariables ? '?' : ''}: ${o.operationVariablesTypes}): Promise<${o.operationResultType}> {
-  return client.request<${o.operationResultType}>(${o.documentVariableName}, variables);
+  return client.request<${o.operationResultType}>(print(${o.documentVariableName}), variables);
 }`;
       })
       .map(s => indentMultiline(s, 2));

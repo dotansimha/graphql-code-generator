@@ -3,6 +3,7 @@
 exports[`graphql-request sdk Should generate a correct wrap method 1`] = `
 "export type Maybe<T> = T | null;
 import { GraphQLClient } from 'graphql-request';
+import { print } from 'graphql';
 import gql from 'graphql-tag';
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -267,16 +268,16 @@ export const Feed4Document = gql\`
 export function getSdk(client: GraphQLClient) {
   return {
     feed(variables?: FeedQueryVariables): Promise<FeedQuery> {
-      return client.request<FeedQuery>(FeedDocument, variables);
+      return client.request<FeedQuery>(print(FeedDocument), variables);
     },
     feed2(variables: Feed2QueryVariables): Promise<Feed2Query> {
-      return client.request<Feed2Query>(Feed2Document, variables);
+      return client.request<Feed2Query>(print(Feed2Document), variables);
     },
     feed3(variables?: Feed3QueryVariables): Promise<Feed3Query> {
-      return client.request<Feed3Query>(Feed3Document, variables);
+      return client.request<Feed3Query>(print(Feed3Document), variables);
     },
     feed4(variables?: Feed4QueryVariables): Promise<Feed4Query> {
-      return client.request<Feed4Query>(Feed4Document, variables);
+      return client.request<Feed4Query>(print(Feed4Document), variables);
     }
   };
 }
