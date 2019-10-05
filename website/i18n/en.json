@@ -206,6 +206,9 @@
       "plugins/typescript-graphql-files-modules": {
         "title": "TypeScript GraphQL Files Modules"
       },
+      "plugins/typescript-graphql-request": {
+        "title": "TypeScript GraphQL-Request"
+      },
       "plugins/typescript-mongodb": {
         "title": "TypeScript MongoDB"
       },

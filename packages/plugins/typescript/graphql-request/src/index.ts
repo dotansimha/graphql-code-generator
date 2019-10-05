@@ -4,9 +4,7 @@ import { RawClientSideBasePluginConfig, LoadedFragment } from '@graphql-codegen/
 import { GraphQLRequestVisitor } from './visitor';
 import { extname } from 'path';
 
-export interface GraphQLRequestPluginRawConfig extends RawClientSideBasePluginConfig {}
-
-export const plugin: PluginFunction<GraphQLRequestPluginRawConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: GraphQLRequestPluginRawConfig) => {
+export const plugin: PluginFunction<RawClientSideBasePluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: RawClientSideBasePluginConfig) => {
   const allAst = concatAST(
     documents.reduce((prev, v) => {
       return [...prev, v.content];
@@ -25,7 +23,7 @@ export const plugin: PluginFunction<GraphQLRequestPluginRawConfig> = (schema: Gr
   };
 };
 
-export const validate: PluginValidateFn<any> = async (schema: GraphQLSchema, documents: Types.DocumentFile[], config: GraphQLRequestPluginRawConfig, outputFile: string) => {
+export const validate: PluginValidateFn<any> = async (schema: GraphQLSchema, documents: Types.DocumentFile[], config: RawClientSideBasePluginConfig, outputFile: string) => {
   if (extname(outputFile) !== '.ts') {
     throw new Error(`Plugin "typescript-graphql-request" requires extension to be ".ts"!`);
   }

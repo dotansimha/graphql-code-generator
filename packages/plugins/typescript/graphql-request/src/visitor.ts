@@ -1,15 +1,12 @@
-import { ClientSideBaseVisitor, ClientSideBasePluginConfig, LoadedFragment, getConfigValue, OMIT_TYPE, indentMultiline } from '@graphql-codegen/visitor-plugin-common';
-import { GraphQLRequestPluginRawConfig } from './index';
+import { ClientSideBaseVisitor, ClientSideBasePluginConfig, LoadedFragment, getConfigValue, OMIT_TYPE, indentMultiline, RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-common';
 import * as autoBind from 'auto-bind';
 import { GraphQLSchema, Kind } from 'graphql';
 import { OperationDefinitionNode } from 'graphql';
 
-export interface GraphQLRequestPluginConfig extends ClientSideBasePluginConfig {}
-
-export class GraphQLRequestVisitor extends ClientSideBaseVisitor<GraphQLRequestPluginRawConfig, GraphQLRequestPluginConfig> {
+export class GraphQLRequestVisitor extends ClientSideBaseVisitor<RawClientSideBasePluginConfig, ClientSideBasePluginConfig> {
   private _operationsToInclude: { node: OperationDefinitionNode; documentVariableName: string; operationType: string; operationResultType: string; operationVariablesTypes: string }[] = [];
 
-  constructor(schema: GraphQLSchema, fragments: LoadedFragment[], rawConfig: GraphQLRequestPluginRawConfig) {
+  constructor(schema: GraphQLSchema, fragments: LoadedFragment[], rawConfig: RawClientSideBasePluginConfig) {
     super(schema, fragments, rawConfig, {});
 
     autoBind(this);
