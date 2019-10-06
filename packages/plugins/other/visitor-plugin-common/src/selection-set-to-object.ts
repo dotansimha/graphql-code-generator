@@ -55,7 +55,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
   }
 
   public createNext(parentSchemaType: GraphQLNamedType, selectionSet: SelectionSetNode): SelectionSetToObject {
-    return new SelectionSetToObject(this._processor, this._scalars, this._schema, this._convertName, this._loadedFragments, this._config, parentSchemaType, selectionSet);
+    return new SelectionSetToObject(this._processor, this._scalars, this._schema, this._convertName.bind(this), this._loadedFragments, this._config, parentSchemaType, selectionSet);
   }
 
   /**
