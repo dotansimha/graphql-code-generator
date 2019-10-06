@@ -8,7 +8,7 @@ Generates Flow types as Exact types.
 
 ```yml
 generates:
-path/to/file.ts:
+path/to/file.js:
  plugins:
    - flow
  config:
@@ -24,7 +24,7 @@ Generates read-only Flow types
 
 ```yml
 generates:
-path/to/file.ts:
+path/to/file.js:
  plugins:
    - flow
  config:
@@ -40,7 +40,7 @@ Flatten fragment spread and inline fragments into a simple selection set before 
 
 ```yml
 generates:
-path/to/file.ts:
+path/to/file.js:
  plugins:
    - typescript
    - typescript-operations
