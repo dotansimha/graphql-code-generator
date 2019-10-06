@@ -1,4 +1,4 @@
-TEST 2
+TEST 3
 
 
 [![CodeGen](https://user-images.githubusercontent.com/25294569/63773131-35f6aa00-c8e3-11e9-8191-fc0ac6f959e4.gif)](https://graphql-code-generator.com)
