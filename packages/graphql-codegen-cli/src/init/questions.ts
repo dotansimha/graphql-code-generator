@@ -45,7 +45,7 @@ export function getQuestions(possibleTargets: Record<Tags, boolean>): inquirer.Q
       type: 'input',
       name: 'output',
       message: 'Where to write the output:',
-      default: 'src/generated/graphql.ts',
+      default: getOutputDefaultValue,
       validate: (str: string) => str.length > 0,
     },
     {
@@ -135,4 +135,14 @@ export function getPluginChoices(answers: Answers) {
 
 function normalizeTargets(targets: Tags[] | Tags[][]): Tags[] {
   return [].concat(...targets);
+}
+
+export function getOutputDefaultValue(answers: Answers) {
+  if (answers.plugins.some(plugin => plugin.defaultExtension === '.tsx')) {
+    return 'src/generated/graphql.tsx';
+  } else if (answers.plugins.some(plugin => plugin.defaultExtension === '.ts')) {
+    return 'src/generated/graphql.ts';
+  } else {
+    return 'src/generated/graphql.js';
+  }
 }

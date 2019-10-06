@@ -158,9 +158,9 @@ describe('init', () => {
     const config = safeLoad(writeFileSpy.mock.calls[0][1] as string);
 
     // should use default output path
-    expect(config.generates['src/generated/graphql.ts']).toBeDefined();
+    expect(config.generates['src/generated/graphql.tsx']).toBeDefined();
 
-    const output: any = config.generates['src/generated/graphql.ts'];
+    const output: any = config.generates['src/generated/graphql.tsx'];
     expect(output.plugins).toContainEqual('typescript');
     expect(output.plugins).toContainEqual('typescript-operations');
     expect(output.plugins).toContainEqual('typescript-react-apollo');
@@ -201,9 +201,9 @@ describe('init', () => {
     const config = safeLoad(writeFileSpy.mock.calls[0][1] as string);
 
     // should use default output path
-    expect(config.generates['src/generated/graphql.ts']).toBeDefined();
+    expect(config.generates['src/generated/graphql.tsx']).toBeDefined();
 
-    const output: any = config.generates['src/generated/graphql.ts'];
+    const output: any = config.generates['src/generated/graphql.tsx'];
     expect(output.plugins).toContainEqual('typescript');
     expect(output.plugins).toContainEqual('typescript-operations');
     expect(output.plugins).toContainEqual('typescript-stencil-apollo');
