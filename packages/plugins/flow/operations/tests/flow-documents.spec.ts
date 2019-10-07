@@ -177,6 +177,48 @@ describe('Flow Operations Plugin', () => {
     });
   });
 
+  describe('Import namespace', () => {
+    it('Should handle "namespacedImportName" and add it when specified', async () => {
+      const ast = parse(/* GraphQL */ `
+        query notifications {
+          notifications {
+            id
+
+            ... on TextNotification {
+              text
+            }
+
+            ... on ImageNotification {
+              imageUrl
+              metadata {
+                createdBy
+              }
+            }
+          }
+        }
+      `);
+      const result = await plugin(schema, [{ filePath: '', content: ast }], { namespacedImportName: 'Types' }, { outputFile: '' });
+
+      expect(result).toBeSimilarStringTo(`
+      export type NotificationsQuery = ({
+        ...{ __typename?: 'Query' },
+      ...{| notifications: Array<({
+          ...{ __typename?: 'TextNotification' },
+        ...$Pick<Types.TextNotification, {| text: *, id: * |}>
+      }) | ({
+          ...{ __typename?: 'ImageNotification' },
+        ...$Pick<Types.ImageNotification, {| imageUrl: *, id: * |}>,
+        ...{| metadata: ({
+            ...{ __typename?: 'ImageMetadata' },
+          ...$Pick<Types.ImageMetadata, {| createdBy: * |}>
+        }) |}
+      })> |}
+    });
+      `);
+      validateFlow(result);
+    });
+  });
+
   describe('__typename', () => {
     it('Should skip __typename when skipTypename is set to true', async () => {
       const ast = parse(`
