@@ -485,6 +485,24 @@ describe('TypeScript Operations Plugin', () => {
   });
 
   describe('__typename', () => {
+    it('Should add __typename correctly with nonOptionalTypename=false,skipTypename=true,preResolveTypes=true and explicit field', async () => {
+      const ast = parse(/* GraphQL */ `
+        query {
+          __typename
+          dummy
+        }
+      `);
+      const config = {
+        nonOptionalTypename: false,
+        skipTypename: true,
+        preResolveTypes: true,
+      };
+      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
+
+      expect(result).toContain(`{ __typename: 'Query', dummy: Maybe<string> }`);
+      await validate(result, config);
+    });
+
     it('Should skip __typename when skipTypename is set to true', async () => {
       const ast = parse(/* GraphQL */ `
         query {
