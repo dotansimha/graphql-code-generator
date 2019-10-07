@@ -13,7 +13,7 @@
     "@graphql-codegen/plugin-helpers": "1.8.1",
     "@graphql-codegen/visitor-plugin-common": "1.8.1",
     "pluralize": "8.0.0",
-    "tslib": "1.9.3"
+    "tslib": "1.10.0"
   },
   "devDependencies": {
     "@types/pluralize": "0.0.29",
