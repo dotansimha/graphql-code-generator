@@ -14,7 +14,11 @@ export class FlowWithPickSelectionSetProcessor extends BaseSelectionSetProcessor
 
     const useFlowExactObject = this.config.useFlowExactObjects;
     const useFlowReadOnlyTypes = this.config.useFlowReadOnlyTypes;
-    const parentName = this.config.convertName(schemaType.name, { useTypesPrefix: true });
+    const parentName =
+      (this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '') +
+      this.config.convertName(schemaType.name, {
+        useTypesPrefix: true,
+      });
 
     return [`{${useFlowExactObject ? '|' : ''} ${fields.map(aliasedField => `${useFlowReadOnlyTypes ? '+' : ''}${aliasedField.alias}: $ElementType<${parentName}, '${aliasedField.fieldName}'>`).join(', ')} ${useFlowExactObject ? '|' : ''}}`];
   }
@@ -51,7 +55,11 @@ export class FlowWithPickSelectionSetProcessor extends BaseSelectionSetProcessor
 
     const useFlowExactObject = this.config.useFlowExactObjects;
     const useFlowReadOnlyTypes = this.config.useFlowReadOnlyTypes;
-    const parentName = this.config.convertName(schemaType.name, { useTypesPrefix: true });
+    const parentName =
+      (this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '') +
+      this.config.convertName(schemaType.name, {
+        useTypesPrefix: true,
+      });
 
     return [`$Pick<${parentName}, {${useFlowExactObject ? '|' : ''} ${fields.map(fieldName => `${useFlowReadOnlyTypes ? '+' : ''}${fieldName}: *`).join(', ')} ${useFlowExactObject ? '|' : ''}}>`];
   }
