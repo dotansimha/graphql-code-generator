@@ -6,6 +6,7 @@ import App from './App';
 import * as jsYaml from 'js-yaml';
 
 (window as any)['jsyaml'] = jsYaml;
+(process as any)['hrtime'] = () => null;
 
 (process as any)['stdout'] = (process as any)['stderr'] = {
   isTTY: undefined,
