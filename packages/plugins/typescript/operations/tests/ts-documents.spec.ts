@@ -486,10 +486,54 @@ describe('TypeScript Operations Plugin', () => {
 
   describe('__typename', () => {
     it('Should add __typename correctly with nonOptionalTypename=false,skipTypename=true,preResolveTypes=true and explicit field', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Search {
+          search: [SearchResult!]!
+        }
+
+        type Movie {
+          id: ID!
+          title: String!
+        }
+        type Person {
+          id: ID!
+          name: String!
+        }
+
+        union SearchResult = Movie | Person
+
+        type Query {
+          search(term: String!): [SearchResult!]!
+        }
+      `);
       const ast = parse(/* GraphQL */ `
-        query {
-          __typename
-          dummy
+        query q1 {
+          search {
+            ... on Movie {
+              __typename
+              id
+              title
+            }
+            ... on Person {
+              __typename
+              id
+              name
+            }
+          }
+        }
+
+        query q2 {
+          search {
+            __typename
+            ... on Movie {
+              id
+              title
+            }
+            ... on Person {
+              id
+              name
+            }
+          }
         }
       `);
       const config = {
@@ -497,10 +541,11 @@ describe('TypeScript Operations Plugin', () => {
         skipTypename: true,
         preResolveTypes: true,
       };
-      const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
+      const result = await plugin(testSchema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
-      expect(result).toContain(`{ __typename: 'Query', dummy: Maybe<string> }`);
-      await validate(result, config);
+      expect(result).toContain(`export type Q1Query = { search: Array<{ __typename: 'Movie', id: string, title: string } | { __typename: 'Person', id: string, name: string }> };`);
+      expect(result).toContain(`export type Q2Query = { search: Array<{ __typename: 'Movie', id: string, title: string } | { __typename: 'Person', id: string, name: string }> };`);
+      await validate(result, config, testSchema);
     });
 
     it('Should skip __typename when skipTypename is set to true', async () => {
@@ -787,16 +832,15 @@ describe('TypeScript Operations Plugin', () => {
       const config = {};
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
       expect(result).toBeSimilarStringTo(`
-      export type UnionTestQuery = (
-        { __typename?: 'Query' }
-        & { unionTest: Maybe<(
-          { __typename?: 'User' }
-          & Pick<User, 'email'>
-        ) | (
-          { __typename?: 'Profile' }
-          & Pick<Profile, 'firstName'>
-        )> }
-      );
+      { __typename?: 'Query' }
+      & { unionTest: Maybe<(
+        { __typename: 'User' }
+        & Pick<User, 'email'>
+      ) | (
+        { __typename: 'Profile' }
+        & Pick<Profile, 'firstName'>
+      )> }
+    );
       `);
       await validate(result, config);
     });
@@ -2425,16 +2469,16 @@ describe('TypeScript Operations Plugin', () => {
       export type FieldQuery = (
         { __typename?: 'Query' }
         & { field: (
-          { __typename?: 'Error1' }
+          { __typename: 'Error1' }
           & Pick<Error1, 'message'>
         ) | (
-          { __typename?: 'Error2' }
+          { __typename: 'Error2' }
           & Pick<Error2, 'message'>
         ) | (
-          { __typename?: 'ComplexError' }
+          { __typename: 'ComplexError' }
           & Pick<ComplexError, 'message' | 'additionalInfo'>
         ) | (
-          { __typename?: 'FieldResultSuccess' }
+          { __typename: 'FieldResultSuccess' }
           & Pick<FieldResultSuccess, 'someValue'>
         ) }
       );
