@@ -170,8 +170,8 @@ export async function executeCodegen(config: Types.Config): Promise<Types.FileOu
                     task: wrapTask(async () => {
                       debugLog(`[CLI] Loading Schemas`);
                       const allSchemas = [
-                        ...rootSchemas.map(pointToScehma => loadSchema(pointToScehma, config)),
-                        ...outputSpecificSchemas.map(pointToScehma => loadSchema(pointToScehma, config))
+                        ...rootSchemas.map(pointToSchema => loadSchema(pointToSchema, config)),
+                        ...outputSpecificSchemas.map(pointToSchema => loadSchema(pointToSchema, config))
                       ];
 
                       if (allSchemas.length > 0) {
