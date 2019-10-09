@@ -50,6 +50,10 @@ generates:
           content: '}'
       - typescript
       - typescript-operations
+  ./dev-test/test-schema/env.types.ts:
+    schema: ${SCHEMA_PATH}
+    plugins:
+      - typescript
   ./dev-test/test-schema/typings.immutableTypes.ts:
     schema: ./dev-test/test-schema/schema.json
     config:
