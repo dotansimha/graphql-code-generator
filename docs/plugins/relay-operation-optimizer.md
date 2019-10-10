@@ -43,3 +43,5 @@ generates:
       - 'typescript-operations'
       - 'typescript-react-apollo'
 ```
+
+Please notice that you have to skip the document validation - but no worries, relay-compiler will validate your documents instead!
