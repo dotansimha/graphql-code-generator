@@ -1,5 +1,5 @@
 {
-  "name": "@graphql-codegen/relay-optimizer-plugin",
+  "name": "@graphql-codegen/relay-operation-optimizer",
   "version": "1.7.0",
   "license": "MIT",
   "description": "GraphQL Code Generator plugin for optimizing your GraphQL operations relay style.",

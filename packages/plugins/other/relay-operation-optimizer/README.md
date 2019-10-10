@@ -1,8 +1,8 @@
-# @graphql-codegen/relay-optimizer-plugin
+# @graphql-codegen/relay-operation-optimizer
 
 ## Description
 
-[GraphQL Codegen Plugin](https://github.com/dotansimha/graphql-code-generator) for bringing the benefits of Relay to GraphQL Codegen.
+[GraphQL Codegen Plugin](https://github.com/dotansimha/graphql-code-generator) for bringing the benefits of Relay Compiler to GraphQL Codegen.
 
 ### Current List of Features
 
@@ -16,7 +16,7 @@
 
 ## Install Instructions
 
-`yarn add -D -E @graphql-codegen/relay-optimizer-plugin`
+`yarn add -D -E @graphql-codegen/relay-operation-optimizer`
 
 ## Usage Instructions
 
