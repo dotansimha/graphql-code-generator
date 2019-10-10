@@ -19,6 +19,7 @@ export interface ReactApolloPluginConfig extends ClientSideBasePluginConfig {
   reactApolloVersion: 2 | 3;
   withResultType: boolean;
   withMutationOptionsType: boolean;
+  addDocBlocks: boolean;
 }
 
 export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPluginConfig, ReactApolloPluginConfig> {
@@ -39,6 +40,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
       reactApolloVersion: getConfigValue(rawConfig.reactApolloVersion, 2),
       withResultType: getConfigValue(rawConfig.withResultType, true),
       withMutationOptionsType: getConfigValue(rawConfig.withMutationOptionsType, true),
+      addDocBlocks: getConfigValue(rawConfig.addDocBlocks, true),
     });
 
     this._prefix = this.config.importOperationTypesFrom ? `${this.config.importOperationTypesFrom}.` : '';
@@ -212,11 +214,15 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     this.imports.add(this.getApolloReactHooksImport());
 
     const hookFns = [
-      this._buildHooksJSDoc(node, operationName, operationType),
       `export function use${operationName}(baseOptions?: ApolloReactHooks.${operationType}HookOptions<${operationResultType}, ${operationVariablesTypes}>) {
         return ApolloReactHooks.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${this.getDocumentNodeVariable(node, documentVariableName)}, baseOptions);
       }`,
     ];
+
+    if (this.config.addDocBlocks) {
+      hookFns.unshift(this._buildHooksJSDoc(node, operationName, operationType));
+    }
+
     const hookResults = [`export type ${operationName}HookResult = ReturnType<typeof use${operationName}>;`];
 
     if (operationType === 'Query') {

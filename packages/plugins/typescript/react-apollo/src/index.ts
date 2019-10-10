@@ -171,6 +171,26 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    *
    */
   withMutationOptionsType?: boolean;
+  /**
+   * @name addDocBlocks
+   * @type boolean
+   * @description Allows you to enable/disable the generation of docblocks in generated code.
+   * Some IDE's (like VSCode) add extra inline information with docblocks, you can disable this feature if your prefered IDE does not.
+   * @default true
+   *
+   * @example
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *    - typescript-operations
+   *    - typescript-react-apollo
+   *  config:
+   *    addDocBlocks: true
+   *
+   */
+  addDocBlocks?: boolean;
 }
 
 export const plugin: PluginFunction<ReactApolloRawPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: ReactApolloRawPluginConfig) => {

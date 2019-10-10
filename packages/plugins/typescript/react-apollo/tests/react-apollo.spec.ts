@@ -921,7 +921,42 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       await validateTypeScript(content, schema, docs, {});
     });
 
-    it('should generate JSDoc docblocks for hooks', async () => {
+    const queryDocBlockSnapshot = `/**
+ * __useFeedQuery__
+ *
+ * To run a query within a React component, call \`useFeedQuery\` and pass it any options that fit your needs.
+ * When your component renders, \`useFeedQuery\` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFeedQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */`;
+
+    const mutationDocBlockSnapshot = `/**
+ * __useSubmitRepositoryMutation__
+ *
+ * To run a mutation, you first call \`useSubmitRepositoryMutation\` within a React component and pass it any options that fit your needs.
+ * When your component renders, \`useSubmitRepositoryMutation\` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [submitRepositoryMutation, { data, loading, error }] = useSubmitRepositoryMutation({
+ *   variables: {
+ *      name: // value for 'name'
+ *   },
+ * });
+ */`;
+
+    it('Should generate JSDoc docblocks for hooks', async () => {
       const documents = parse(/* GraphQL */ `
         query feed($id: ID!) {
           feed(id: $id) {
@@ -948,46 +983,45 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
 
       const queryDocBlock = extract(content.content.substr(content.content.indexOf('/**')));
 
-      expect(queryDocBlock).toMatchInlineSnapshot(`
-"/**
- * __useFeedQuery__
- *
- * To run a query within a React component, call \`useFeedQuery\` and pass it any options that fit your needs.
- * When your component renders, \`useFeedQuery\` returns an object from Apollo Client that contains loading, error, and data properties 
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useFeedQuery({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */"
-`);
+      expect(queryDocBlock).toEqual(queryDocBlockSnapshot);
 
       const mutationDocBlock = extract(content.content.substr(content.content.lastIndexOf('/**')));
 
-      expect(mutationDocBlock).toMatchInlineSnapshot(`
-"/**
- * __useSubmitRepositoryMutation__
- *
- * To run a mutation, you first call \`useSubmitRepositoryMutation\` within a React component and pass it any options that fit your needs.
- * When your component renders, \`useSubmitRepositoryMutation\` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [submitRepositoryMutation, { data, loading, error }] = useSubmitRepositoryMutation({
- *   variables: {
- *      name: // value for 'name'
- *   },
- * });
- */"
-`);
+      expect(mutationDocBlock).toEqual(mutationDocBlockSnapshot);
+    });
+
+    it('Should NOT generate JSDoc docblocks for hooks if addDocBlocks is false', async () => {
+      const documents = parse(/* GraphQL */ `
+        query feed($id: ID!) {
+          feed(id: $id) {
+            id
+          }
+        }
+        mutation submitRepository($name: String) {
+          submitRepository(repoFullName: $name) {
+            id
+          }
+        }
+      `);
+
+      const docs = [{ filePath: '', content: documents }];
+
+      const content = (await plugin(
+        schema,
+        docs,
+        { withHooks: true, withComponent: false, withHOC: false, addDocBlocks: false },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      const queryDocBlock = extract(content.content.substr(content.content.indexOf('/**')));
+
+      expect(queryDocBlock).not.toEqual(queryDocBlockSnapshot);
+
+      const mutationDocBlock = extract(content.content.substr(content.content.lastIndexOf('/**')));
+
+      expect(mutationDocBlock).not.toEqual(mutationDocBlockSnapshot);
     });
   });
 
