@@ -1262,6 +1262,36 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
     });
   });
 
+  describe('Graphql Module', () => {
+    it('declare a graphql module if asGraphqlModule is true', async () => {
+      const documents = parse(/* GraphQL */ `
+        query feed($id: ID!) {
+          feed(id: $id) {
+            id
+          }
+        }
+        mutation submitRepository($name: String) {
+          submitRepository(repoFullName: $name) {
+            id
+          }
+        }
+      `);
+
+      const docs = [{ filePath: '', content: documents }];
+
+      const content = (await plugin(
+        schema,
+        docs,
+        { withHooks: true, withComponent: false, withHOC: false },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content).toEqual('foo');
+    });
+  });
+
   describe('documentMode and importDocumentNodeExternallyFrom', () => {
     const multipleOperationDoc = parse(/* GraphQL */ `
       query testOne {

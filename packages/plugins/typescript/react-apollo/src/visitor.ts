@@ -19,6 +19,7 @@ export interface ReactApolloPluginConfig extends ClientSideBasePluginConfig {
   reactApolloVersion: 2 | 3;
   withResultType: boolean;
   withMutationOptionsType: boolean;
+  asGraphqlModule: boolean;
 }
 
 export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPluginConfig, ReactApolloPluginConfig> {
@@ -39,6 +40,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
       reactApolloVersion: getConfigValue(rawConfig.reactApolloVersion, 2),
       withResultType: getConfigValue(rawConfig.withResultType, true),
       withMutationOptionsType: getConfigValue(rawConfig.withMutationOptionsType, true),
+      asGraphqlModule: getConfigValue(rawConfig.asGraphqlModule, false),
     });
 
     this._prefix = this.config.importOperationTypesFrom ? `${this.config.importOperationTypesFrom}.` : '';
@@ -288,6 +290,9 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     const resultType = this.config.withResultType ? this._buildResultType(node, operationType, operationResultType, operationVariablesTypes) : null;
     const mutationOptionsType = this.config.withMutationOptionsType ? this._buildWithMutationOptionsType(node, operationResultType, operationVariablesTypes) : null;
 
-    return [mutationFn, component, hoc, hooks, resultType, mutationOptionsType].filter(a => a).join('\n');
+    const declarationPrefix = this.config.asGraphqlModule ? 'declare module "foo.graphql" {' : '';
+    const declarationSuffix = this.config.asGraphqlModule ? '}' : '';
+
+    return [declarationPrefix, mutationFn, component, hoc, hooks, resultType, mutationOptionsType, declarationSuffix].filter(a => a).join('\n');
   }
 }

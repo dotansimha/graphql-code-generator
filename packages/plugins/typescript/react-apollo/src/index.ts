@@ -171,6 +171,7 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    *
    */
   withMutationOptionsType?: boolean;
+  asGraphqlModule?: boolean;
 }
 
 export const plugin: PluginFunction<ReactApolloRawPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: ReactApolloRawPluginConfig) => {
