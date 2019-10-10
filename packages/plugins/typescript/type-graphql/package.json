@@ -19,7 +19,7 @@
     "graphql": "14.5.8",
     "jest": "24.9.0",
     "ts-jest": "24.1.0",
-    "typescript": "3.6.3"
+    "typescript": "3.6.4"
   },
   "peerDependencies": {
     "graphql": "^0.12.0 || ^0.13.0 || ^14.0.0"
