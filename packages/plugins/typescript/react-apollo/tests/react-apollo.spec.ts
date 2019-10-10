@@ -1263,7 +1263,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
   });
 
   describe('Graphql Module', () => {
-    it('declare a graphql module if asGraphqlModule is true', async () => {
+    it('should declare a graphql module if asGraphqlModule is true', async () => {
       const documents = parse(/* GraphQL */ `
         query feed($id: ID!) {
           feed(id: $id) {
@@ -1282,13 +1282,13 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       const content = (await plugin(
         schema,
         docs,
-        { withHooks: true, withComponent: false, withHOC: false },
+        { withHooks: true, withComponent: false, withHOC: false, asGraphqlModule: true },
         {
           outputFile: 'graphql.tsx',
         }
       )) as Types.ComplexPluginOutput;
 
-      expect(content).toEqual('foo');
+      expect(content.content).toEqual('foo');
     });
   });
 

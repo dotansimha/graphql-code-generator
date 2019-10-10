@@ -203,6 +203,36 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
  */`;
   }
 
+  private _buildHooksDeclaration(node: OperationDefinitionNode, operationType: string, documentVariableName: string, operationResultType: string, operationVariablesTypes: string): string {
+    const suffix = this._getHookSuffix(node.name.value, operationType);
+    const operationName: string = this.convertName(node.name.value, {
+      suffix,
+      useTypesPrefix: false,
+    });
+
+    this.imports.add(this.getApolloReactCommonImport());
+    this.imports.add(this.getApolloReactHooksImport());
+
+    const hookFns = [
+      this._buildHooksJSDoc(node, operationName, operationType),
+      `export const use${operationName}: (baseOptions?: ApolloReactHooks.${operationType}HookOptions<${operationResultType}, ${operationVariablesTypes}>) => ReturnType<typeof ApolloReactHooks.use${operationType}<${operationResultType}, ${operationVariablesTypes}>>;`,
+    ];
+    const hookResults = [`export type ${operationName}HookResult = ReturnType<typeof use${operationName}>;`];
+
+    if (operationType === 'Query') {
+      const lazyOperationName: string = this.convertName(node.name.value, {
+        suffix: pascalCase('LazyQuery'),
+        useTypesPrefix: false,
+      });
+      hookFns.push(
+        `export const use${lazyOperationName}: (baseOptions?: ApolloReactHooks.LazyQueryHookOptions<${operationResultType}, ${operationVariablesTypes}>) => ReturnType<typeof ApolloReactHooks.useLazyQuery<${operationResultType}, ${operationVariablesTypes}>>;`
+      );
+      hookResults.push(`export type ${lazyOperationName}HookResult = ReturnType<typeof use${lazyOperationName}>;`);
+    }
+
+    return [...hookFns, ...hookResults].join('\n');
+  }
+
   private _buildHooks(node: OperationDefinitionNode, operationType: string, documentVariableName: string, operationResultType: string, operationVariablesTypes: string): string {
     const suffix = this._getHookSuffix(node.name.value, operationType);
     const operationName: string = this.convertName(node.name.value, {
@@ -280,19 +310,26 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     return `export type ${mutationOptionsType} = ApolloReactCommon.BaseMutationOptions<${operationResultType}, ${operationVariablesTypes}>;`;
   }
 
+  private _buildModuleDeclaration(filePath: string): [string, string] {
+    const prefix = this.config.asGraphqlModule ? `declare module "${filePath}" {` : '';
+    const suffix = this.config.asGraphqlModule ? '}' : '';
+
+    return [prefix, suffix];
+  }
+
   protected buildOperation(node: OperationDefinitionNode, documentVariableName: string, operationType: string, operationResultType: string, operationVariablesTypes: string): string {
     operationResultType = `${this._prefix}${operationResultType}`;
     operationVariablesTypes = `${this._prefix}${operationVariablesTypes}`;
     const mutationFn = this.config.withMutationFn || this.config.withComponent ? this._buildMutationFn(node, operationResultType, operationVariablesTypes) : null;
     const component = this.config.withComponent ? this._buildComponent(node, documentVariableName, operationType, operationResultType, operationVariablesTypes) : null;
     const hoc = this.config.withHOC ? this._buildOperationHoc(node, documentVariableName, operationResultType, operationVariablesTypes) : null;
-    const hooks = this.config.withHooks ? this._buildHooks(node, operationType, documentVariableName, operationResultType, operationVariablesTypes) : null;
+    const hooks = this.config.withHooks && !this.config.asGraphqlModule ? this._buildHooks(node, operationType, documentVariableName, operationResultType, operationVariablesTypes) : null;
+    const hooksDeclarations = this.config.asGraphqlModule ? this._buildHooksDeclaration(node, operationType, documentVariableName, operationResultType, operationVariablesTypes) : null;
     const resultType = this.config.withResultType ? this._buildResultType(node, operationType, operationResultType, operationVariablesTypes) : null;
     const mutationOptionsType = this.config.withMutationOptionsType ? this._buildWithMutationOptionsType(node, operationResultType, operationVariablesTypes) : null;
+    // @TODO: find actual filepath
+    const [moduleDeclarationPrefix, moduleDeclarationSuffix] = this._buildModuleDeclaration('./queries/foo.graphql');
 
-    const declarationPrefix = this.config.asGraphqlModule ? 'declare module "foo.graphql" {' : '';
-    const declarationSuffix = this.config.asGraphqlModule ? '}' : '';
-
-    return [declarationPrefix, mutationFn, component, hoc, hooks, resultType, mutationOptionsType, declarationSuffix].filter(a => a).join('\n');
+    return [moduleDeclarationPrefix, mutationFn, component, hoc, hooksDeclarations, hooks, resultType, mutationOptionsType, moduleDeclarationSuffix].filter(a => a).join('\n');
   }
 }
