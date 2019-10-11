@@ -37,7 +37,8 @@
       "plugins/add",
       "plugins/time",
       "plugins/schema-ast",
-      "plugins/reason-client"
+      "plugins/reason-client",
+      "plugins/relay-operation-optimizer"
     ],
     "Presets": ["presets/index", "presets/near-operation-file", "presets/import-types"],
     "Integrations": ["integrations/apollo-local-state", "integrations/create-react-app", "integrations/gatsby", "integrations/prettier", "integrations/federation"],
