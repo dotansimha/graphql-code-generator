@@ -13913,6 +13913,11 @@ react-transition-group@^4.3.0:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
+react-wonka@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/react-wonka/-/react-wonka-1.0.1.tgz#66b44aa1fb4e3e38cb2ef49f7d7195de1a322775"
+  integrity sha512-SMZCQUQ1gTxCqH9ftx5RecykOx1wWDtbZa6lJDmBU8aCpX3Xxs3baTtbGP+PIvrDMIOZIJN7Ezv1e/8jWQ2vXw==
+
 react@16.10.2:
   version "16.10.2"
   resolved "https://registry.yarnpkg.com/react/-/react-16.10.2.tgz#a5ede5cdd5c536f745173c8da47bda64797a4cf0"
@@ -16152,6 +16157,11 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
+typescript@3.6.3:
+  version "3.6.3"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.6.3.tgz#fea942fabb20f7e1ca7164ff626f1a9f3f70b4da"
+  integrity sha512-N7bceJL1CtRQ2RiG0AQME13ksR7DiuQh/QehubYcghzv20tnh+MQnQIuJddTmsbqYj+dztchykemz0zFzlvdQw==
+
 typescript@3.6.4:
   version "3.6.4"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.6.4.tgz#b18752bb3792bc1a0281335f7f6ebf1bbfc5b91d"
@@ -16386,11 +16396,12 @@ url@^0.11.0:
     punycode "1.3.2"
     querystring "0.2.0"
 
-urql@1.5.1:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/urql/-/urql-1.5.1.tgz#57b10919bc635585f964b6de9a21f31d1417ccdf"
-  integrity sha512-Mw8si2iiQIJQLHAukdMV7V9A/x8BPxQ/Wl+uag2EhN3FvpkkufD0YLLHduKYtyQC8K64kXO22ZdKb2aNKBqRyw==
+urql@1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/urql/-/urql-1.6.0.tgz#65c462b809b57844cbe122419dad5890c1ab9a79"
+  integrity sha512-nq90pxm1TqjVIiRtDqc/E16yZBopc5xET34Dcs7NCzjc1xEX7AKi+OAszcyGHqbw4YbIS/2UE400FfchCcEfMg==
   dependencies:
+    react-wonka "^1.0.1"
     wonka "^3.2.1"
 
 use@^3.1.0:
