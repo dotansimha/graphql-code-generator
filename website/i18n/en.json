@@ -188,6 +188,9 @@
       "plugins/reason-client": {
         "title": "Reason Client"
       },
+      "plugins/relay-operation-optimizer": {
+        "title": "Relay Operation Optimizer."
+      },
       "plugins/schema-ast": {
         "title": "Schema AST"
       },
