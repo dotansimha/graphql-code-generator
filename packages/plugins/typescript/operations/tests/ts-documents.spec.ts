@@ -4,6 +4,8 @@ import { readFileSync } from 'fs';
 import { plugin } from '../src/index';
 import { plugin as tsPlugin } from '../../typescript/src';
 import { mergeOutputs, Types } from '@graphql-codegen/plugin-helpers';
+import * as lzString from 'lz-string';
+import * as open from 'open';
 
 describe('TypeScript Operations Plugin', () => {
   const gitHuntSchema = buildClientSchema(JSON.parse(readFileSync('../../../../dev-test/githunt/schema.json', 'utf-8')));
@@ -86,18 +88,46 @@ describe('TypeScript Operations Plugin', () => {
     }
   `);
 
-  const validate = async (content: Types.PluginOutput, config: any = {}, pluginSchema = schema, usage = '') => {
+  const validate = async (content: Types.PluginOutput, config: any = {}, pluginSchema = schema, usage = '', openPlayground = false) => {
     const m = mergeOutputs([await tsPlugin(pluginSchema, [], config, { outputFile: '' }), content, usage]);
+    let error = null;
 
-    await validateTs(m);
+    try {
+      await validateTs(m);
+    } catch (e) {
+      error = e;
+    }
+
+    if (openPlayground) {
+      const compressedCode = lzString.compressToEncodedURIComponent(m);
+      await open('http://www.typescriptlang.org/play/#code/' + compressedCode);
+    }
+
+    if (error) {
+      throw error;
+    }
 
     return m;
   };
 
-  const validateAndCompile = async (content: Types.PluginOutput, config: any = {}, pluginSchema = schema, usage = '') => {
+  const validateAndCompile = async (content: Types.PluginOutput, config: any = {}, pluginSchema = schema, usage = '', openPlayground = false) => {
     const m = mergeOutputs([await tsPlugin(pluginSchema, [], config, { outputFile: '' }), content, usage]);
+    let error = null;
 
-    await compileTs(m);
+    try {
+      await compileTs(m);
+    } catch (e) {
+      error = e;
+    }
+
+    if (openPlayground) {
+      const compressedCode = lzString.compressToEncodedURIComponent(m);
+      await open('http://www.typescriptlang.org/play/#code/' + compressedCode);
+    }
+
+    if (error) {
+      throw error;
+    }
 
     return m;
   };
@@ -3319,6 +3349,158 @@ describe('TypeScript Operations Plugin', () => {
   });
 
   describe('Issues', () => {
+    it('#2699 - Issues with multiple interfaces and unions', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        interface Node {
+          id: ID!
+        }
+
+        scalar DateTime
+
+        interface Element {
+          active: Boolean!
+          createdAt: DateTime!
+          createdBy: User
+          updatedAt: DateTime!
+          updatedBy: User
+        }
+
+        interface Entity {
+          brandData(brand: ID!): EntityBrandData
+        }
+
+        type EntityBrandData {
+          active: Boolean!
+          browsable: Boolean!
+          description: String!
+          alternateTitle: String
+          title: String!
+        }
+
+        type Query {
+          node(id: ID!): Node!
+        }
+
+        type Company implements Element & Node & Entity {
+          active: Boolean!
+          createdAt: DateTime!
+          createdBy: User
+          updatedAt: DateTime!
+          updatedBy: User
+          id: ID!
+          brandData(brand: ID!): EntityBrandData
+        }
+
+        type Theater implements Element & Node & Entity {
+          active: Boolean!
+          createdAt: DateTime!
+          createdBy: User
+          updatedAt: DateTime!
+          updatedBy: User
+          id: ID!
+          brandData(brand: ID!): EntityBrandData
+        }
+
+        type Movie implements Element & Node & Entity {
+          active: Boolean!
+          createdAt: DateTime!
+          createdBy: User
+          updatedAt: DateTime!
+          updatedBy: User
+          id: ID!
+          brandData(brand: ID!): EntityBrandData
+        }
+
+        type User implements Element & Node & Entity {
+          active: Boolean!
+          name: String!
+          createdAt: DateTime!
+          createdBy: User
+          updatedAt: DateTime!
+          updatedBy: User
+          id: ID!
+          brandData(brand: ID!): EntityBrandData
+        }
+      `);
+
+      const query = parse(/* GraphQL */ `
+        query getEntityBrandData($gid: ID!, $brand: ID!) {
+          node(gid: $gid) {
+            __typename
+            id
+            ... on Entity {
+              ...EntityBrandData
+            }
+            ... on Element {
+              ...ElementMetadata
+            }
+            ... on Company {
+              active
+            }
+            ... on Theater {
+              active
+            }
+          }
+        }
+
+        fragment EntityBrandData on Entity {
+          brandData(brand: $brand) {
+            active
+            browsable
+            title
+            alternateTitle
+            description
+          }
+        }
+
+        fragment ElementMetadata on Element {
+          createdAt
+          createdBy {
+            id
+            name
+          }
+          updatedAt
+          updatedBy {
+            id
+            name
+          }
+        }
+      `);
+
+      const content = await plugin(
+        testSchema,
+        [{ filePath: '', content: query }],
+        {},
+        {
+          outputFile: 'graphql.ts',
+        }
+      );
+
+      expect(content).toMatchSnapshot();
+
+      await validateAndCompile(
+        content,
+        {},
+        testSchema,
+        `
+function test(q: GetEntityBrandDataQuery): void {
+  const typeName: 'Company' | 'Theater' | 'User' | 'Movie' = q.node.__typename; // just to check that those are the types we want here
+  const brandData = q.node.brandData; // this was missing in the original issue
+  const createdAt = q.node.createdAt; // this was missing in the original issue
+
+  if (q.node.__typename === 'Company') {
+    console.log('Company:', q.node.active);
+  } else if (q.node.__typename === 'Theater') {
+    console.log('Theater:', q.node.active);
+  } else if (q.node.__typename === 'User') {
+    console.log('User:', q.node.id);
+  } else if (q.node.__typename === 'Movie') {
+    console.log('Movie:', q.node.id);
+  }
+}`
+      );
+    });
+
     it('#1624 - Should work with fragment on union type', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         type Query {

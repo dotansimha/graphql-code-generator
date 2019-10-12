@@ -98,6 +98,11 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
             this._appendToTypeMap(types, possibleType.name, spreadsUsage[possibleType.name]);
             this._collectInlineFragments(schemaType, inlines, types);
           }
+        } else {
+          for (const possibleType of possibleTypes) {
+            this._appendToTypeMap(types, possibleType.name, fields);
+            this._appendToTypeMap(types, possibleType.name, spreadsUsage[possibleType.name]);
+          }
         }
       }
     } else if (isUnionType(parentType)) {

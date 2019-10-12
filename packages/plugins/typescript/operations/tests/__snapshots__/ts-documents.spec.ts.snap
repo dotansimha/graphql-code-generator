@@ -1,0 +1,119 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TypeScript Operations Plugin Issues #2699 - Issues with multiple interfaces and unions 1`] = `
+"export type GetEntityBrandDataQueryVariables = {
+  gid: Scalars['ID'],
+  brand: Scalars['ID']
+};
+
+
+export type GetEntityBrandDataQuery = (
+  { __typename?: 'Query' }
+  & { node: (
+    { __typename: 'User' }
+    & Pick<User, 'id'>
+    & EntityBrandData_User_Fragment
+    & ElementMetadata_User_Fragment
+  ) | (
+    { __typename: 'Company' }
+    & Pick<Company, 'active' | 'id'>
+    & EntityBrandData_Company_Fragment
+    & ElementMetadata_Company_Fragment
+  ) | (
+    { __typename: 'Theater' }
+    & Pick<Theater, 'active' | 'id'>
+    & EntityBrandData_Theater_Fragment
+    & ElementMetadata_Theater_Fragment
+  ) | (
+    { __typename: 'Movie' }
+    & Pick<Movie, 'id'>
+    & EntityBrandData_Movie_Fragment
+    & ElementMetadata_Movie_Fragment
+  ) }
+);
+
+type EntityBrandData_User_Fragment = (
+  { __typename?: 'User' }
+  & { brandData: Maybe<(
+    { __typename?: 'EntityBrandData' }
+    & Pick<EntityBrandData, 'active' | 'browsable' | 'title' | 'alternateTitle' | 'description'>
+  )> }
+);
+
+type EntityBrandData_Company_Fragment = (
+  { __typename?: 'Company' }
+  & { brandData: Maybe<(
+    { __typename?: 'EntityBrandData' }
+    & Pick<EntityBrandData, 'active' | 'browsable' | 'title' | 'alternateTitle' | 'description'>
+  )> }
+);
+
+type EntityBrandData_Theater_Fragment = (
+  { __typename?: 'Theater' }
+  & { brandData: Maybe<(
+    { __typename?: 'EntityBrandData' }
+    & Pick<EntityBrandData, 'active' | 'browsable' | 'title' | 'alternateTitle' | 'description'>
+  )> }
+);
+
+type EntityBrandData_Movie_Fragment = (
+  { __typename?: 'Movie' }
+  & { brandData: Maybe<(
+    { __typename?: 'EntityBrandData' }
+    & Pick<EntityBrandData, 'active' | 'browsable' | 'title' | 'alternateTitle' | 'description'>
+  )> }
+);
+
+export type EntityBrandDataFragment = EntityBrandData_User_Fragment | EntityBrandData_Company_Fragment | EntityBrandData_Theater_Fragment | EntityBrandData_Movie_Fragment;
+
+type ElementMetadata_User_Fragment = (
+  { __typename?: 'User' }
+  & Pick<User, 'createdAt' | 'updatedAt'>
+  & { createdBy: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'name'>
+  )>, updatedBy: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'name'>
+  )> }
+);
+
+type ElementMetadata_Company_Fragment = (
+  { __typename?: 'Company' }
+  & Pick<Company, 'createdAt' | 'updatedAt'>
+  & { createdBy: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'name'>
+  )>, updatedBy: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'name'>
+  )> }
+);
+
+type ElementMetadata_Theater_Fragment = (
+  { __typename?: 'Theater' }
+  & Pick<Theater, 'createdAt' | 'updatedAt'>
+  & { createdBy: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'name'>
+  )>, updatedBy: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'name'>
+  )> }
+);
+
+type ElementMetadata_Movie_Fragment = (
+  { __typename?: 'Movie' }
+  & Pick<Movie, 'createdAt' | 'updatedAt'>
+  & { createdBy: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'name'>
+  )>, updatedBy: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'name'>
+  )> }
+);
+
+export type ElementMetadataFragment = ElementMetadata_User_Fragment | ElementMetadata_Company_Fragment | ElementMetadata_Theater_Fragment | ElementMetadata_Movie_Fragment;
+"
+`;
