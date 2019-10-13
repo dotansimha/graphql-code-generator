@@ -20,6 +20,6 @@
     "noUnusedParameters": true,
     "resolveJsonModule": true
   },
-  "files": ["src/index.ts"],
+  "files": ["src/index.ts", "src/typings.d.ts"],
   "exclude": ["node_modules"]
 }
