@@ -1,6 +1,8 @@
 import { Types } from '@graphql-codegen/plugin-helpers';
 import * as ts from 'typescript';
 import * as path from 'path';
+import * as lzString from 'lz-string';
+import * as open from 'open';
 
 export function validateTs(
   pluginOutput: Types.PluginOutput,
@@ -25,12 +27,12 @@ export function validateTs(
     module: ts.ModuleKind.ESNext,
   },
   isTsx = false,
-  isStrict = false
+  isStrict = false,
+  openPlayground = false
 ): void {
   if (process.env.SKIP_VALIDATION) {
     return;
   }
-
   if (isStrict) {
     options.strictNullChecks = true;
     options.strict = true;
@@ -41,29 +43,39 @@ export function validateTs(
   }
 
   const contents: string = typeof pluginOutput === 'string' ? pluginOutput : [...(pluginOutput.prepend || []), pluginOutput.content, ...(pluginOutput.append || [])].join('\n');
-  const testFile = `test-file.${isTsx ? 'tsx' : 'ts'}`;
-  const result = ts.createSourceFile(testFile, contents, ts.ScriptTarget.ES2016, false, isTsx ? ts.ScriptKind.TSX : undefined);
 
-  if (result['parseDiagnostics'] && result['parseDiagnostics'].length > 0) {
-    const errors: string[] = [];
-    const allDiagnostics: any[] = result['parseDiagnostics'];
+  try {
+    const testFile = `test-file.${isTsx ? 'tsx' : 'ts'}`;
+    const result = ts.createSourceFile(testFile, contents, ts.ScriptTarget.ES2016, false, isTsx ? ts.ScriptKind.TSX : undefined);
 
-    allDiagnostics.forEach(diagnostic => {
-      if (diagnostic.file) {
-        let { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start!);
-        let message = ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n');
-        errors.push(`${line + 1},${character + 1}: ${message} ->
+    if (result['parseDiagnostics'] && result['parseDiagnostics'].length > 0) {
+      const errors: string[] = [];
+      const allDiagnostics: any[] = result['parseDiagnostics'];
+
+      allDiagnostics.forEach(diagnostic => {
+        if (diagnostic.file) {
+          let { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start!);
+          let message = ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n');
+          errors.push(`${line + 1},${character + 1}: ${message} ->
     ${contents.split('\n')[line]}`);
-      } else {
-        errors.push(`${ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n')}`);
-      }
+        } else {
+          errors.push(`${ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n')}`);
+        }
 
-      const relevantErrors = errors.filter(e => !e.includes('Cannot find module'));
+        const relevantErrors = errors.filter(e => !e.includes('Cannot find module'));
 
-      if (relevantErrors && relevantErrors.length > 0) {
-        throw new Error(relevantErrors.join('\n'));
-      }
-    });
+        if (relevantErrors && relevantErrors.length > 0) {
+          throw new Error(relevantErrors.join('\n'));
+        }
+      });
+    }
+  } catch (e) {
+    if (openPlayground && !process.env) {
+      const compressedCode = lzString.compressToEncodedURIComponent(contents);
+      open('http://www.typescriptlang.org/play/#code/' + compressedCode);
+    }
+
+    throw e;
   }
 }
 
@@ -89,55 +101,65 @@ export function compileTs(
     ],
     module: ts.ModuleKind.ESNext,
   },
-  isTsx = false
+  isTsx = false,
+  openPlayground = false
 ): void {
   if (process.env.SKIP_VALIDATION) {
     return;
   }
 
-  const testFile = `test-file.${isTsx ? 'tsx' : 'ts'}`;
-  const host = ts.createCompilerHost(options);
-  let program = ts.createProgram([testFile], options, {
-    ...host,
-    getSourceFile: (fileName: string, languageVersion: ts.ScriptTarget, onError?: (message: string) => void, shouldCreateNewSourceFile?: boolean) => {
-      if (fileName === testFile) {
-        return ts.createSourceFile(fileName, contents, options.target);
-      }
+  try {
+    const testFile = `test-file.${isTsx ? 'tsx' : 'ts'}`;
+    const host = ts.createCompilerHost(options);
+    let program = ts.createProgram([testFile], options, {
+      ...host,
+      getSourceFile: (fileName: string, languageVersion: ts.ScriptTarget, onError?: (message: string) => void, shouldCreateNewSourceFile?: boolean) => {
+        if (fileName === testFile) {
+          return ts.createSourceFile(fileName, contents, options.target);
+        }
 
-      return host.getSourceFile(fileName, languageVersion, onError, shouldCreateNewSourceFile);
-    },
-    writeFile: function() {},
-    useCaseSensitiveFileNames: function() {
-      return false;
-    },
-    getCanonicalFileName: function(filename) {
-      return filename;
-    },
-    getCurrentDirectory: function() {
-      return '';
-    },
-    getNewLine: function() {
-      return '\n';
-    },
-  });
-  let emitResult = program.emit();
-  let allDiagnostics = emitResult.diagnostics;
-  const errors: string[] = [];
+        return host.getSourceFile(fileName, languageVersion, onError, shouldCreateNewSourceFile);
+      },
+      writeFile: function() {},
+      useCaseSensitiveFileNames: function() {
+        return false;
+      },
+      getCanonicalFileName: function(filename) {
+        return filename;
+      },
+      getCurrentDirectory: function() {
+        return '';
+      },
+      getNewLine: function() {
+        return '\n';
+      },
+    });
+    let emitResult = program.emit();
+    let allDiagnostics = emitResult.diagnostics;
+    const errors: string[] = [];
 
-  allDiagnostics.forEach(diagnostic => {
-    if (diagnostic.file) {
-      let { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start!);
-      let message = ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n');
-      errors.push(`${line + 1},${character + 1}: ${message} ->
+    allDiagnostics.forEach(diagnostic => {
+      if (diagnostic.file) {
+        let { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start!);
+        let message = ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n');
+        errors.push(`${line + 1},${character + 1}: ${message} ->
   ${contents.split('\n')[line]}`);
-    } else {
-      errors.push(`${ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n')}`);
+      } else {
+        errors.push(`${ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n')}`);
+      }
+    });
+
+    const relevantErrors = errors.filter(e => !e.includes('Cannot find module'));
+
+    if (relevantErrors && relevantErrors.length > 0) {
+      throw new Error(relevantErrors.join('\n'));
     }
-  });
+  } catch (e) {
+    if (openPlayground) {
+      const compressedCode = lzString.compressToEncodedURIComponent(contents);
+      open('http://www.typescriptlang.org/play/#code/' + compressedCode);
+    }
 
-  const relevantErrors = errors.filter(e => !e.includes('Cannot find module'));
-
-  if (relevantErrors && relevantErrors.length > 0) {
-    throw new Error(relevantErrors.join('\n'));
+    throw e;
   }
 }

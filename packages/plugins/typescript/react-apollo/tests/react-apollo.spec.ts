@@ -1,4 +1,4 @@
-import { validateTs } from '@graphql-codegen/testing';
+import { compileTs, validateTs } from '@graphql-codegen/testing';
 import { plugin, ReactApolloRawPluginConfig } from '../src/index';
 import { parse, GraphQLSchema, buildClientSchema, buildASTSchema } from 'graphql';
 import gql from 'graphql-tag';
@@ -7,7 +7,7 @@ import { plugin as tsPlugin } from '../../typescript/src/index';
 import { plugin as tsDocumentsPlugin } from '../../operations/src/index';
 import { readFileSync } from 'fs';
 import { DocumentMode } from '@graphql-codegen/visitor-plugin-common';
-import { extract, parseWithComments } from 'jest-docblock';
+import { extract } from 'jest-docblock';
 
 describe('React Apollo', () => {
   const schema = buildClientSchema(JSON.parse(readFileSync('../../../../dev-test/githunt/schema.json').toString()));
@@ -42,14 +42,59 @@ describe('React Apollo', () => {
     }
   `);
 
-  const validateTypeScript = async (output: Types.PluginOutput, testSchema: GraphQLSchema, documents: Types.DocumentFile[], config: any) => {
+  const validateTypeScript = async (output: Types.PluginOutput, testSchema: GraphQLSchema, documents: Types.DocumentFile[], config: any, playground = false) => {
     const tsOutput = await tsPlugin(testSchema, documents, config, { outputFile: '' });
     const tsDocumentsOutput = await tsDocumentsPlugin(testSchema, documents, config, { outputFile: '' });
     const merged = mergeOutputs([tsOutput, tsDocumentsOutput, output]);
-    validateTs(merged, undefined, true);
+    validateTs(merged, undefined, true, false, playground);
+
+    return merged;
+  };
+
+  const validateAndCompile = async (content: Types.PluginOutput, config: any = {}, pluginSchema: GraphQLSchema, documents: Types.DocumentFile[], usage = '', playground = false) => {
+    const tsOutput = await tsPlugin(pluginSchema, documents, config, { outputFile: '' });
+    const tsDocumentsOutput = await tsDocumentsPlugin(pluginSchema, documents, config, { outputFile: '' });
+    const merged = mergeOutputs([tsOutput, tsDocumentsOutput, content]);
+
+    await compileTs(merged, {}, true, playground);
+
+    return merged;
   };
 
   describe('Issues', () => {
+    it('PR #2725 - transformUnderscore: true causes invalid output', async () => {
+      const docs = [
+        {
+          filePath: '',
+          content: parse(/* GraphQL */ `
+            query GET_SOMEHTING {
+              feed {
+                id
+              }
+            }
+          `),
+        },
+      ];
+      const config = {
+        addDocBlocks: false,
+        withHooks: true,
+        withComponent: false,
+        withHOC: false,
+        skipTypename: true,
+        namingConvention: {
+          typeNames: 'change-case#pascalCase',
+          enumValues: 'keep',
+          transformUnderscore: true,
+        },
+      };
+      const content = (await plugin(schema, docs, config, {
+        outputFile: 'graphql.tsx',
+      })) as Types.ComplexPluginOutput;
+
+      const output = await validateAndCompile(content, config, schema, docs, '');
+      expect(output).toMatchSnapshot();
+    });
+
     it('Issue #2080 - noGraphQLTag does not work with fragments correctly', async () => {
       const docs = [
         {

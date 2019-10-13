@@ -4,8 +4,6 @@ import { readFileSync } from 'fs';
 import { plugin } from '../src/index';
 import { plugin as tsPlugin } from '../../typescript/src';
 import { mergeOutputs, Types } from '@graphql-codegen/plugin-helpers';
-import * as lzString from 'lz-string';
-import * as open from 'open';
 
 describe('TypeScript Operations Plugin', () => {
   const gitHuntSchema = buildClientSchema(JSON.parse(readFileSync('../../../../dev-test/githunt/schema.json', 'utf-8')));
@@ -90,44 +88,14 @@ describe('TypeScript Operations Plugin', () => {
 
   const validate = async (content: Types.PluginOutput, config: any = {}, pluginSchema = schema, usage = '', openPlayground = false) => {
     const m = mergeOutputs([await tsPlugin(pluginSchema, [], config, { outputFile: '' }), content, usage]);
-    let error = null;
-
-    try {
-      await validateTs(m);
-    } catch (e) {
-      error = e;
-    }
-
-    if (openPlayground) {
-      const compressedCode = lzString.compressToEncodedURIComponent(m);
-      await open('http://www.typescriptlang.org/play/#code/' + compressedCode);
-    }
-
-    if (error) {
-      throw error;
-    }
+    await validateTs(m, null, null, null, openPlayground);
 
     return m;
   };
 
   const validateAndCompile = async (content: Types.PluginOutput, config: any = {}, pluginSchema = schema, usage = '', openPlayground = false) => {
     const m = mergeOutputs([await tsPlugin(pluginSchema, [], config, { outputFile: '' }), content, usage]);
-    let error = null;
-
-    try {
-      await compileTs(m);
-    } catch (e) {
-      error = e;
-    }
-
-    if (openPlayground) {
-      const compressedCode = lzString.compressToEncodedURIComponent(m);
-      await open('http://www.typescriptlang.org/play/#code/' + compressedCode);
-    }
-
-    if (error) {
-      throw error;
-    }
+    await compileTs(m);
 
     return m;
   };

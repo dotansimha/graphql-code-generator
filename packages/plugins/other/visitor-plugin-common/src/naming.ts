@@ -87,7 +87,8 @@ export function convertFactory(config: { namingConvention?: NamingConvention }):
     if (typeof config.namingConvention === 'object') {
       if (!config.namingConvention[type]) {
         return (str: string, opts: ConvertOptions = {}) => {
-          return convertNameParts(str, pascalCase, getConfigValue((opts || {}).transformUnderscore, false));
+          const transformUnderscore = (config.namingConvention as NamingConventionMap).transformUnderscore || (opts || {}).transformUnderscore;
+          return convertNameParts(str, pascalCase, getConfigValue(transformUnderscore, false));
         };
       }
 
