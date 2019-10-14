@@ -314,4 +314,28 @@ describe('type-graphql', () => {
         }
       `);
   });
+
+  it('should generate custom scalar types', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      scalar DateTime
+
+      type A {
+        date: DateTime
+        mandatoryDate: DateTime!
+      }
+    `);
+
+    const result = (await plugin(schema, [], { scalars: { DateTime: 'Date' } }, { outputFile: '' })) as Types.ComplexPluginOutput;
+
+    expect(result.content).toBeSimilarStringTo(`
+      @TypeGraphQL.ObjectType()
+      export class A {
+        __typename?: 'A';
+        @TypeGraphQL.Field(type => Date, { nullable: true })
+        date!: Maybe<Scalars['DateTime']>;
+        @TypeGraphQL.Field(type => Date)
+        mandatoryDate!: Scalars['DateTime'];
+      }
+    `);
+  });
 });

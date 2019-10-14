@@ -172,7 +172,20 @@ export class TypeGraphQLVisitor<TRawConfig extends TypeGraphQLPluginConfig = Typ
     const isArray = !!nonNullableType.match(ARRAY_REGEX);
     const singularType = nonNullableType.replace(ARRAY_REGEX, '$1');
     const isScalar = !!singularType.match(SCALAR_REGEX);
-    const type = singularType.replace(SCALAR_REGEX, (match, type) => (global[type] ? type : `TypeGraphQL.${type}`));
+    const type = singularType.replace(SCALAR_REGEX, (match, type) => {
+      if (TYPE_GRAPHQL_SCALARS.includes(type)) {
+        // This is a TypeGraphQL type
+        return `TypeGraphQL.${type}`;
+      } else if (global[type]) {
+        // This is a JS native type
+        return type;
+      } else if (this.scalars[type]) {
+        // This is a type specified in the configuration
+        return this.scalars[type];
+      } else {
+        throw new Error(`Unknown scalar type ${type}`);
+      }
+    });
 
     return { type, isNullable, isArray, isScalar };
   }
