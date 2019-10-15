@@ -17,6 +17,7 @@ export const plugin: PluginFunction<FlowResolversPluginConfig> = (schema: GraphQ
   const printedSchema = config.federation ? printSchemaWithDirectives(transformedSchema) : printSchema(transformedSchema);
   const astNode = parse(printedSchema);
   const visitor = new FlowResolversVisitor(config, transformedSchema);
+  const visitorResult = visit(astNode, { leave: visitor });
 
   const defsToInclude: string[] = [visitor.getResolverTypeWrapperSignature()];
 
@@ -88,7 +89,6 @@ export type DirectiveResolverFn<Result = {}, Parent = {}, Args = {}, Context = {
 ${defsToInclude.join('\n')}
 `;
 
-  const visitorResult = visit(astNode, { leave: visitor });
   const resolversTypeMapping = visitor.buildResolversTypes();
   const resolversParentTypeMapping = visitor.buildResolversParentTypes();
   const { getRootResolver, getAllDirectiveResolvers, mappersImports, unusedMappers, hasScalars } = visitor;

@@ -76,6 +76,11 @@ export const plugin: PluginFunction<TypeScriptResolversPluginConfig> = (schema: 
   const transformedSchema = config.federation ? addFederationReferencesToSchema(schema) : schema;
   const visitor = new TypeScriptResolversVisitor(config, transformedSchema);
 
+  const printedSchema = config.federation ? printSchemaWithDirectives(transformedSchema) : printSchema(transformedSchema);
+  const astNode = parse(printedSchema);
+  // runs visitor
+  const visitorResult = visit(astNode, { leave: visitor });
+  
   const defsToInclude = [];
   const stitchingResolverType = `
 export type StitchingResolver<TResult, TParent, TContext, TArgs> = {
@@ -167,10 +172,8 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 `;
-
-  const printedSchema = config.federation ? printSchemaWithDirectives(transformedSchema) : printSchema(transformedSchema);
-  const astNode = parse(printedSchema);
-  const visitorResult = visit(astNode, { leave: visitor });
+  
+  
   const resolversTypeMapping = visitor.buildResolversTypes();
   const resolversParentTypeMapping = visitor.buildResolversParentTypes();
   const { getRootResolver, getAllDirectiveResolvers, mappersImports, unusedMappers, hasScalars } = visitor;
