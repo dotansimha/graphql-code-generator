@@ -8316,10 +8316,10 @@ graphql-subscriptions@1.1.0, graphql-subscriptions@^1.0.0:
   dependencies:
     iterall "^1.2.1"
 
-graphql-tag-pluck@0.8.5:
-  version "0.8.5"
-  resolved "https://registry.yarnpkg.com/graphql-tag-pluck/-/graphql-tag-pluck-0.8.5.tgz#90660b88cf8d7f1dd2b1bacc5c8fdf45cb84f341"
-  integrity sha512-IHqMobX72OD4+HmGKesqzq7cRLo5gc40mEeTXzVzQGVD265sFDRoY2QS+smzNgvskClHSiFfKERK54y8VCXEjA==
+graphql-tag-pluck@0.8.6:
+  version "0.8.6"
+  resolved "https://registry.yarnpkg.com/graphql-tag-pluck/-/graphql-tag-pluck-0.8.6.tgz#631652183059d5a1c92af9fc878ea7fca5183fae"
+  integrity sha512-j5ftGv++G5cccwsQ1M6G907c7RffBWiWu0OVkxWVc2I+8BR2LuWziEUMTcT2K9/lWl43NeM0SDIsW+RUO6W2qQ==
   dependencies:
     "@babel/parser" "^7.4.4"
     "@babel/traverse" "^7.4.4"
