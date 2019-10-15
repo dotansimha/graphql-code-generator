@@ -15,7 +15,7 @@
     "@graphql-codegen/plugin-helpers": "1.8.1",
     "@graphql-codegen/typescript": "1.8.1",
     "@graphql-codegen/visitor-plugin-common": "1.8.1",
-    "graphql-toolkit": "0.5.16",
+    "graphql-toolkit": "0.5.17",
     "tslib": "1.10.0"
   },
   "devDependencies": {
