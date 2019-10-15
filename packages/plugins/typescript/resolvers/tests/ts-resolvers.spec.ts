@@ -1382,6 +1382,43 @@ describe('TypeScript Resolvers Plugin', () => {
     }).not.toThrow();
   });
 
+  it('should work correctly with enumPrefix: false - issue #2679', async () => {
+    const testSchema = buildSchema(/* GraphQL */ `
+      type Query {
+        t: Test
+      }
+
+      enum Test {
+        A
+        B
+        C
+      }
+    `);
+
+    const config = {
+      typesPrefix: 'I',
+      enumPrefix: false,
+      namingConvention: 'keep',
+      constEnums: true,
+    };
+    const output = (await plugin(testSchema, [], config, { outputFile: 'graphql.ts' })) as Types.ComplexPluginOutput;
+    const o = await validate(output, config, testSchema);
+
+    expect(o).toBeSimilarStringTo(`
+    export const enum Test {
+      A = 'A',
+      B = 'B',
+      C = 'C'
+    };`);
+    expect(o).toBeSimilarStringTo(`
+    export type IResolversParentTypes = {
+      Query: {},
+      Test: Test,
+      String: Scalars['String'],
+      Boolean: Scalars['Boolean'],
+    };`);
+  });
+
   it('should keep non-optional arguments non-optional - issue #2323', async () => {
     const testSchema = buildSchema(/* GraphQL */ `
       enum OrderBy {

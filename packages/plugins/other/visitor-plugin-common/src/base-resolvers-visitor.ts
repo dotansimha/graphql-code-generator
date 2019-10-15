@@ -40,6 +40,7 @@ export interface ParsedResolversConfig extends ParsedConfig {
   enumValues: ParsedEnumValuesMap;
   resolverTypeWrapperSignature: string;
   federation: boolean;
+  enumPrefix: boolean;
 }
 
 export interface RawResolversConfig extends RawConfig {
@@ -210,6 +211,20 @@ export interface RawResolversConfig extends RawConfig {
    *
    */
   federation?: boolean;
+  /**
+   * @name enumPrefix
+   * @type boolean
+   * @default true
+   * @description Allow you to disable prefixing for generated enums, works in combination with `typesPrefix`.
+   *
+   * @example Disable enum prefixes
+   * ```yml
+   *   config:
+   *     typesPrefix: I
+   *     enumPrefix: false
+   * ```
+   */
+  enumPrefix?: boolean;
 }
 
 export type ResolverTypes = { [gqlType: string]: string };
@@ -232,6 +247,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
 
   constructor(rawConfig: TRawConfig, additionalConfig: TPluginConfig, private _schema: GraphQLSchema, defaultScalars: NormalizedScalarsMap = DEFAULT_SCALARS) {
     super(rawConfig, {
+      enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
       federation: getConfigValue(rawConfig.federation, false),
       resolverTypeWrapperSignature: getConfigValue(rawConfig.resolverTypeWrapperSignature, 'Promise<T> | T'),
       enumValues: parseEnumValues(_schema, rawConfig.enumValues),
@@ -347,7 +363,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
             .join(' | ');
         } else {
           shouldApplyOmit = true;
-          prev[typeName] = this.convertName(typeName);
+          prev[typeName] = this.convertName(typeName, { useTypesPrefix: this.config.enumPrefix });
         }
 
         if ((shouldApplyOmit && prev[typeName] !== 'any' && isObjectType(schemaType)) || (isInterfaceType(schemaType) && !isMapped)) {

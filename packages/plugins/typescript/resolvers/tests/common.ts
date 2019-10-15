@@ -41,4 +41,6 @@ export const validate = async (content: Types.PluginOutput, config: any = {}, pl
   const mergedContent = mergeOutputs([await tsPlugin(pluginSchema, [], config, { outputFile: '' }), content]);
 
   validateTs(mergedContent);
+
+  return mergedContent;
 };
