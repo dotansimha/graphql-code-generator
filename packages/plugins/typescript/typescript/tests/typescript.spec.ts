@@ -1,5 +1,5 @@
 import { validateTs } from '@graphql-codegen/testing';
-import { Types } from '@graphql-codegen/plugin-helpers';
+import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { buildSchema, parse } from 'graphql';
 import { plugin } from '../src/index';
 
@@ -225,6 +225,53 @@ describe('TypeScript', () => {
   });
 
   describe('Issues', () => {
+    it('#2679 - incorrect prefix for enums', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        enum FilterOption {
+          New
+          Active
+          Closed
+        }
+
+        input UpdateFilterOptionInput {
+          newOption: FilterOption!
+        }
+
+        type Query {
+          a(i: UpdateFilterOptionInput, t: FilterOption): String
+        }
+      `);
+
+      const result = (await plugin(
+        testSchema,
+        [],
+        {
+          typesPrefix: 'I',
+          enumPrefix: false,
+        },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+      const output = mergeOutputs([result]);
+      validateTs(output);
+
+      expect(output).toBeSimilarStringTo(`
+      export enum FilterOption {
+        New = 'New',
+        Active = 'Active',
+        Closed = 'Closed'
+      }`);
+
+      expect(output).toBeSimilarStringTo(`
+      export type IUpdateFilterOptionInput = {
+        newOption: FilterOption,
+      };`);
+      expect(output).toBeSimilarStringTo(`   
+      export type IQueryAArgs = {
+        i?: Maybe<IUpdateFilterOptionInput>,
+        t?: Maybe<FilterOption>
+      };`);
+    });
+
     it('#2082 - Issues with enumValues and types prefix', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         enum MyEnum {
