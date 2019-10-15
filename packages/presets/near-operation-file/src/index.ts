@@ -2,7 +2,7 @@ import { isUsingTypes, Types, CodegenPlugin } from '@graphql-codegen/plugin-help
 import { BaseVisitor, LoadedFragment, buildScalars, getPossibleTypes } from '@graphql-codegen/visitor-plugin-common';
 import * as addPlugin from '@graphql-codegen/add';
 import { join, resolve } from 'path';
-import { Kind, FragmentDefinitionNode } from 'graphql';
+import { Kind, FragmentDefinitionNode, buildASTSchema, GraphQLSchema } from 'graphql';
 import { appendExtensionToFilePath, defineFilepathSubfolder, extractExternalFragmentsInUse, resolveRelativeImport } from './utils';
 
 export type NearOperationFileConfig = {
@@ -107,8 +107,9 @@ export type FragmentNameToFile = { [fragmentName: string]: { filePath: string; i
 
 export const preset: Types.OutputPreset<NearOperationFileConfig> = {
   buildGeneratesSection: options => {
+    const schemaObject: GraphQLSchema = options.schemaAst ? options.schemaAst : buildASTSchema(options.schema);
     const baseVisitor = new BaseVisitor(options.config, {
-      scalars: buildScalars(options.schemaAst, options.config.scalars),
+      scalars: buildScalars(schemaObject, options.config.scalars),
     });
 
     const getAllFragmentSubTypes = (possbileTypes: string[], name: string, suffix: string): string[] => {
@@ -151,8 +152,13 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
 
         if (fragments.length > 0) {
           for (const fragment of fragments) {
-            const schemaType = options.schemaAst.getType(fragment.typeCondition.name.value);
-            const possibleTypes = getPossibleTypes(options.schemaAst, schemaType);
+            const schemaType = schemaObject.getType(fragment.typeCondition.name.value);
+
+            if (!schemaType) {
+              throw new Error(`Fragment "${fragment.name.value}" is set on non-existing type "${fragment.typeCondition.name.value}"!`);
+            }
+
+            const possibleTypes = getPossibleTypes(schemaObject, schemaType);
             const fragmentSuffix = options.config.dedupeOperationSuffix && fragment.name.value.toLowerCase().endsWith('fragment') ? '' : 'Fragment';
             const filePath = appendExtensionToFilePath(documentRecord.filePath, extension);
             const importsNames = getAllFragmentSubTypes(possibleTypes.map(t => t.name), fragment.name.value, fragmentSuffix);
@@ -220,7 +226,7 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
           }
         }
 
-        if (isUsingTypes(documentFile.content, config.externalFragments.map(m => m.name), options.schemaAst)) {
+        if (isUsingTypes(documentFile.content, config.externalFragments.map(m => m.name), schemaObject)) {
           plugins.unshift({ add: `import * as ${importTypesNamespace} from '${relativeImportPath}';\n` });
         }
 
@@ -230,7 +236,7 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
           pluginMap,
           config,
           schema: options.schema,
-          schemaAst: options.schemaAst,
+          schemaAst: schemaObject,
           documents: [documentFile],
           skipDocumentsValidation: true,
         };
