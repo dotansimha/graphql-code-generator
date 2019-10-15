@@ -140,15 +140,14 @@ export function parseArgv(argv = process.argv): Command & YamlCliFlags {
 }
 
 export async function createConfig(cliFlags: Command & YamlCliFlags = parseArgv(process.argv)): Promise<Types.Config | never> {
-  const customConfigPath = getCustomConfigPath(cliFlags);
-  const configSearchResult = await loadConfig(customConfigPath);
-
   if (cliFlags.require && cliFlags.require.length > 0) {
     for (const mod of cliFlags.require) {
       await import(mod);
     }
   }
 
+  const customConfigPath = getCustomConfigPath(cliFlags);
+  const configSearchResult = await loadConfig(customConfigPath);
   const parsedConfigFile = configSearchResult.config as Types.Config;
 
   parsedConfigFile.configFilePath = configSearchResult.filepath;
