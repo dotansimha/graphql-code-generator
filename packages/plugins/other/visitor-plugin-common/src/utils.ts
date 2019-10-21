@@ -110,6 +110,7 @@ export class DeclarationBlock {
   _nameGenerics = null;
   _comment = null;
   _ignoreBlockWrapper = false;
+  _ignoreBlockSemicolon = false;
 
   constructor(private _config: DeclarationBlockConfig) {
     this._config = {
@@ -174,6 +175,11 @@ export class DeclarationBlock {
     return this;
   }
 
+  ignoreBlockSemicolon(ignore: boolean): DeclarationBlock {
+    this._ignoreBlockSemicolon = ignore;
+    return this;
+  }
+
   public get string(): string {
     let result = '';
 
@@ -221,7 +227,7 @@ export class DeclarationBlock {
       result += '{}';
     }
 
-    return (this._comment ? this._comment : '') + result + (this._kind === 'interface' || this._kind === 'enum' || this._kind === 'namespace' ? '' : ';') + '\n';
+    return (this._comment ? this._comment : '') + result + (this._ignoreBlockSemicolon || this._kind === 'interface' || this._kind === 'enum' || this._kind === 'namespace' ? '' : ';') + '\n';
   }
 }
 

@@ -100,7 +100,17 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
       return allFields.join('\n');
     }
 
-    return `...{\n${allFields.map(s => indent(s)).join('\n')}\n  }`;
+    return (
+      new DeclarationBlock(this._declarationBlockConfig)
+        .withContent('...')
+        .withBlock(allFields.join('\n'))
+        .ignoreBlockSemicolon(true)
+        .string.slice(0, -1) // Removes trailing newline from stringified block.
+        .split('\n')
+        // First line gets indented independently when joined in appendInterfacesAndFieldsToBlock.
+        .map((s, i) => (i !== 0 ? indent(s) : s))
+        .join('\n')
+    );
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
