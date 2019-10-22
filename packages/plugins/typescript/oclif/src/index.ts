@@ -34,7 +34,7 @@ export const plugin: PluginFunction = (schema: GraphQLSchema, documents: Types.D
 
 export const validate: PluginValidateFn<any> = async (schema: GraphQLSchema, documents: Types.DocumentFile[], config: Config, outputFile: string) => {
   if (extname(outputFile) !== '.ts') {
-    throw new Error(`Plugin "typescript-cli" requires output file extensions to be ".ts"!`);
+    throw new Error(`Plugin "typescript-oclif" requires output file extensions to be ".ts"!`);
   }
 };
 

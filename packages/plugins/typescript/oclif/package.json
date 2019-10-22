@@ -3,6 +3,7 @@
   "version": "1.8.1",
   "description": "GraphQL Code Generator plugin for generating a CLI tool with oclif",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
+  "author": "Kalan Snyder <hello@kalan.io>",
   "license": "MIT",
   "scripts": {
     "build": "tsc -m esnext --outDir dist/esnext && tsc -m commonjs --outDir dist/commonjs",
