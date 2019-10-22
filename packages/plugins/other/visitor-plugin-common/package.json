@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "1.8.1",
-    "auto-bind": "2.0.0",
+    "auto-bind": "3.0.0",
     "dependency-graph": "0.8.0",
     "graphql-tag": "2.10.1",
     "relay-compiler": "6.0.0",
