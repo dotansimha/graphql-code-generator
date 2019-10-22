@@ -8503,10 +8503,10 @@ graphql-config@2.2.1:
     lodash "^4.17.4"
     minimatch "^3.0.4"
 
-graphql-config@3.0.0-alpha.9:
-  version "3.0.0-alpha.9"
-  resolved "https://registry.yarnpkg.com/graphql-config/-/graphql-config-3.0.0-alpha.9.tgz#97c439fe501026690b86be1ce607d7eb1ea20be5"
-  integrity sha512-WnEXRn7A1RMLkJU2f1AUV72K5wqZ+4FnOdUsJ/YAhQMfxUR+rioD33+/OnQksfeMNDnZQA3EiJzXdn50be9sAA==
+graphql-config@3.0.0-alpha.11:
+  version "3.0.0-alpha.11"
+  resolved "https://registry.yarnpkg.com/graphql-config/-/graphql-config-3.0.0-alpha.11.tgz#81624d3aaa54063fa4c8c3dda819b116b7ca2ac3"
+  integrity sha512-oHtJJYe08Da/kdNkCRVX5qwyfs2wJngtbeUiWK7l9BQPyGSnlPNds0NXieiNI9NLQ9PlCjRNavYcjZL2hneoCw==
   dependencies:
     "@graphql-toolkit/common" "0.6.1-alpha-c775427.3+c775427"
     "@graphql-toolkit/graphql-file-loader" "0.6.1-alpha-c775427.3+c775427"

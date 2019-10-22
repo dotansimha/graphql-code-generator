@@ -55,7 +55,7 @@ describe('CLI Flags', () => {
         generates:
             file.ts:
                 - plugin
-    `,
+      `,
       'other.yml'
     );
     const args = createArgv('--config other.yml');

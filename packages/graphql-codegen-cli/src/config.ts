@@ -155,7 +155,6 @@ export async function createContext(cliFlags: Command & YamlCliFlags = parseArgv
 
   const customConfigPath = getCustomConfigPath(cliFlags);
   const context = await loadContext(customConfigPath);
-  // const configSearchResult = await loadConfig(customConfigPath);
   const config: Partial<Types.Config> = {
     configFilePath: context.filepath,
   };

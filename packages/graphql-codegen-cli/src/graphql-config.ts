@@ -24,5 +24,33 @@ export async function findAndLoadGraphQLConfig(filepath?: string): Promise<Graph
     throwOnMissing: false,
   });
 
-  return config;
+  if (isGraphQLConfig(config)) {
+    return config;
+  }
+}
+
+// Kamil: user might load a config that is not GraphQL Config
+//        so we need to check if it's a regular config or not
+function isGraphQLConfig(config: GraphQLConfig): config is GraphQLConfig {
+  if (!config) {
+    return false;
+  }
+
+  try {
+    return config.getDefault().hasExtension('graphql-codegen');
+  } catch (e) {}
+
+  try {
+    for (const projectName in config.projects) {
+      if (config.projects.hasOwnProperty(projectName)) {
+        const project = config.projects[projectName];
+
+        if (project.hasExtension('graphql-codegen')) {
+          return true;
+        }
+      }
+    }
+  } catch (e) {}
+
+  return false;
 }

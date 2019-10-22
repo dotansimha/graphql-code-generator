@@ -59,7 +59,7 @@
     "debounce": "1.2.0",
     "detect-indent": "6.0.0",
     "glob": "7.1.5",
-    "graphql-config": "3.0.0-alpha.9",
+    "graphql-config": "3.0.0-alpha.11",
     "graphql-import": "0.7.1",
     "graphql-tag-pluck": "0.8.6",
     "graphql-toolkit": "0.5.18",
