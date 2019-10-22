@@ -60,10 +60,32 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    * ```
    */
   noSchemaStitching?: boolean;
+
+  /**
+   * @name customResolveInfo
+   * @type string
+   * @description You can provide your custom GraphQLResolveInfo instead of the default one from graphql-js
+   * @default "graphql#GraphQLResolveInfo"
+   *
+   * @example
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *    - typescript-resolvers
+   *  config:
+   *    customResolveInfo: ./my-types#MyResolveInfo
+   * ```
+   */
+  customResolveInfo?: string;
 }
 
 export const plugin: PluginFunction<TypeScriptResolversPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: TypeScriptResolversPluginConfig) => {
-  const imports = ['GraphQLResolveInfo'];
+  const imports = [];
+  if (!config.customResolveInfo) {
+    imports.push('GraphQLResolveInfo');
+  }
   const showUnusedMappers = typeof config.showUnusedMappers === 'boolean' ? config.showUnusedMappers : true;
   const noSchemaStitching = typeof config.noSchemaStitching === 'boolean' ? config.noSchemaStitching : false;
 
@@ -80,7 +102,7 @@ export const plugin: PluginFunction<TypeScriptResolversPluginConfig> = (schema: 
   const astNode = parse(printedSchema);
   // runs visitor
   const visitorResult = visit(astNode, { leave: visitor });
-  
+
   const defsToInclude = [];
   const stitchingResolverType = `
 export type StitchingResolver<TResult, TParent, TContext, TArgs> = {
@@ -172,8 +194,8 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 `;
-  
-  
+
+
   const resolversTypeMapping = visitor.buildResolversTypes();
   const resolversParentTypeMapping = visitor.buildResolversParentTypes();
   const { getRootResolver, getAllDirectiveResolvers, mappersImports, unusedMappers, hasScalars } = visitor;
@@ -186,8 +208,25 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
     console['warn'](`Unused mappers: ${unusedMappers.join(',')}`);
   }
 
+  const prepend: string[] = [];
+
+  if (imports.length) {
+    prepend.push(`import { ${imports.join(', ')} } from 'graphql';`);
+  }
+
+  if (config.customResolveInfo) {
+    const [importName, moduleName] = config.customResolveInfo.split('#');
+    if (importName) {
+      prepend.push(`import { ${config.customResolveInfo} ${importName !== 'GraphQLResolveInfo' ? 'as GraphQLResolveInfo' : ''} } from '${moduleName}';`);
+    } else {
+      prepend.push('type GraphQLResolveInfo = ${moduleName}');
+    }
+  }
+
+  prepend.push(...mappersImports, ...visitor.globalDeclarations);
+
   return {
-    prepend: [`import { ${imports.join(', ')} } from 'graphql';`, ...mappersImports, ...visitor.globalDeclarations],
+    prepend,
     content: [header, resolversTypeMapping, resolversParentTypeMapping, ...visitorResult.definitions.filter(d => typeof d === 'string'), getRootResolver(), getAllDirectiveResolvers()].join('\n'),
   };
 };
