@@ -631,7 +631,7 @@ describe('TypeScript Resolvers Plugin', () => {
     await validate(result, {}, testSchema);
   });
 
-  it('Should generate the correct imports when customResolveInfo defined', async () => {
+  it('Should generate the correct imports when customResolveInfo defined in config', async () => {
     const testSchema = buildSchema(`scalar MyScalar`);
     const result = (await plugin(testSchema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
 

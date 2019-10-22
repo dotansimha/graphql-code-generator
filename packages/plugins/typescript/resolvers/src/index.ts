@@ -1,5 +1,5 @@
 import { printSchemaWithDirectives } from 'graphql-toolkit';
-import { RawResolversConfig } from '@graphql-codegen/visitor-plugin-common';
+import { RawResolversConfig, parseMapper } from '@graphql-codegen/visitor-plugin-common';
 import { Types, PluginFunction, addFederationReferencesToSchema } from '@graphql-codegen/plugin-helpers';
 import { isScalarType, parse, visit, GraphQLSchema, printSchema } from 'graphql';
 import { TypeScriptResolversVisitor } from './visitor';
@@ -215,11 +215,14 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   }
 
   if (config.customResolveInfo) {
-    const [importName, moduleName] = config.customResolveInfo.split('#');
-    if (importName) {
-      prepend.push(`import { ${config.customResolveInfo} ${importName !== 'GraphQLResolveInfo' ? 'as GraphQLResolveInfo' : ''} } from '${moduleName}';`);
+    const parsedMapper = parseMapper(config.customResolveInfo);
+    if (parsedMapper.isExternal) {
+      if (parsedMapper.default) {
+        prepend.push(`import GraphQLResolveInfo from '${parsedMapper.source}'`);
+      }
+      prepend.push(`import { ${config.customResolveInfo} ${parsedMapper.import !== 'GraphQLResolveInfo' ? 'as GraphQLResolveInfo' : ''} } from '${parsedMapper.source}';`);
     } else {
-      prepend.push('type GraphQLResolveInfo = ${moduleName}');
+      prepend.push(`type GraphQLResolveInfo = ${parsedMapper.type}`);
     }
   }
 
