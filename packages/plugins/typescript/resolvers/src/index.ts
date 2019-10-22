@@ -195,7 +195,6 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 ) => TResult | Promise<TResult>;
 `;
 
-
   const resolversTypeMapping = visitor.buildResolversTypes();
   const resolversParentTypeMapping = visitor.buildResolversParentTypes();
   const { getRootResolver, getAllDirectiveResolvers, mappersImports, unusedMappers, hasScalars } = visitor;
@@ -220,7 +219,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
       if (parsedMapper.default) {
         prepend.push(`import GraphQLResolveInfo from '${parsedMapper.source}'`);
       }
-      prepend.push(`import { ${config.customResolveInfo} ${parsedMapper.import !== 'GraphQLResolveInfo' ? 'as GraphQLResolveInfo' : ''} } from '${parsedMapper.source}';`);
+      prepend.push(`import { ${parsedMapper.import} ${parsedMapper.import !== 'GraphQLResolveInfo' ? 'as GraphQLResolveInfo' : ''} } from '${parsedMapper.source}';`);
     } else {
       prepend.push(`type GraphQLResolveInfo = ${parsedMapper.type}`);
     }

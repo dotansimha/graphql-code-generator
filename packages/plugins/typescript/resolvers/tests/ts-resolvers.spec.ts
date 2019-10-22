@@ -633,10 +633,17 @@ describe('TypeScript Resolvers Plugin', () => {
 
   it('Should generate the correct imports when customResolveInfo defined in config', async () => {
     const testSchema = buildSchema(`scalar MyScalar`);
-    const result = (await plugin(testSchema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const result = (await plugin(
+      testSchema,
+      [],
+      {
+        customResolveInfo: './my-type#MyGraphQLResolveInfo',
+      },
+      { outputFile: '' }
+    )) as Types.ComplexPluginOutput;
 
-    expect(result.prepend).not.toContain(`import { GraphQLScalarTypeConfig } from 'graphql';`);
-    expect(result.prepend).not.toContain(`import { MyGraphQLResolveInfo as GraphQLResolveInfo } from './my-type';`);
+    expect(result.prepend).toContain(`import { GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';`);
+    expect(result.prepend).toContain(`import { MyGraphQLResolveInfo as GraphQLResolveInfo } from './my-type';`);
     await validate(result, {}, testSchema);
   });
 
