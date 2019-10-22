@@ -1,5 +1,5 @@
 import { printSchemaWithDirectives } from 'graphql-toolkit';
-import { RawResolversConfig } from '@graphql-codegen/visitor-plugin-common';
+import { RawResolversConfig, parseMapper } from '@graphql-codegen/visitor-plugin-common';
 import { Types, PluginFunction, addFederationReferencesToSchema } from '@graphql-codegen/plugin-helpers';
 import { isScalarType, parse, visit, GraphQLSchema, printSchema } from 'graphql';
 import { TypeScriptResolversVisitor } from './visitor';
@@ -60,10 +60,32 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    * ```
    */
   noSchemaStitching?: boolean;
+
+  /**
+   * @name customResolveInfo
+   * @type string
+   * @description You can provide your custom GraphQLResolveInfo instead of the default one from graphql-js
+   * @default "graphql#GraphQLResolveInfo"
+   *
+   * @example
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *    - typescript-resolvers
+   *  config:
+   *    customResolveInfo: ./my-types#MyResolveInfo
+   * ```
+   */
+  customResolveInfo?: string;
 }
 
 export const plugin: PluginFunction<TypeScriptResolversPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: TypeScriptResolversPluginConfig) => {
-  const imports = ['GraphQLResolveInfo'];
+  const imports = [];
+  if (!config.customResolveInfo) {
+    imports.push('GraphQLResolveInfo');
+  }
   const showUnusedMappers = typeof config.showUnusedMappers === 'boolean' ? config.showUnusedMappers : true;
   const noSchemaStitching = typeof config.noSchemaStitching === 'boolean' ? config.noSchemaStitching : false;
 
@@ -80,7 +102,7 @@ export const plugin: PluginFunction<TypeScriptResolversPluginConfig> = (schema: 
   const astNode = parse(printedSchema);
   // runs visitor
   const visitorResult = visit(astNode, { leave: visitor });
-  
+
   const defsToInclude = [];
   const stitchingResolverType = `
 export type StitchingResolver<TResult, TParent, TContext, TArgs> = {
@@ -172,8 +194,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 `;
-  
-  
+
   const resolversTypeMapping = visitor.buildResolversTypes();
   const resolversParentTypeMapping = visitor.buildResolversParentTypes();
   const { getRootResolver, getAllDirectiveResolvers, mappersImports, unusedMappers, hasScalars } = visitor;
@@ -186,8 +207,28 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
     console['warn'](`Unused mappers: ${unusedMappers.join(',')}`);
   }
 
+  const prepend: string[] = [];
+
+  if (imports.length) {
+    prepend.push(`import { ${imports.join(', ')} } from 'graphql';`);
+  }
+
+  if (config.customResolveInfo) {
+    const parsedMapper = parseMapper(config.customResolveInfo);
+    if (parsedMapper.isExternal) {
+      if (parsedMapper.default) {
+        prepend.push(`import GraphQLResolveInfo from '${parsedMapper.source}'`);
+      }
+      prepend.push(`import { ${parsedMapper.import} ${parsedMapper.import !== 'GraphQLResolveInfo' ? 'as GraphQLResolveInfo' : ''} } from '${parsedMapper.source}';`);
+    } else {
+      prepend.push(`type GraphQLResolveInfo = ${parsedMapper.type}`);
+    }
+  }
+
+  prepend.push(...mappersImports, ...visitor.globalDeclarations);
+
   return {
-    prepend: [`import { ${imports.join(', ')} } from 'graphql';`, ...mappersImports, ...visitor.globalDeclarations],
+    prepend,
     content: [header, resolversTypeMapping, resolversParentTypeMapping, ...visitorResult.definitions.filter(d => typeof d === 'string'), getRootResolver(), getAllDirectiveResolvers()].join('\n'),
   };
 };
