@@ -57,7 +57,7 @@
     "cosmiconfig": "5.2.1",
     "debounce": "1.2.0",
     "detect-indent": "6.0.0",
-    "glob": "7.1.4",
+    "glob": "7.1.5",
     "graphql-config": "2.2.1",
     "graphql-import": "0.7.1",
     "graphql-tag-pluck": "0.8.6",
