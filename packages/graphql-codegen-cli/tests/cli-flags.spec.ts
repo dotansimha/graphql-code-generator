@@ -126,6 +126,20 @@ describe('CLI Flags', () => {
     expect(config.schema).toBe('schema-env.graphql');
   });
 
+  it('Should interpolate multiple environmental variables in YML', async () => {
+    process.env['SCHEMA_SCHEME'] = 'https';
+    process.env['SCHEMA_HOST'] = 'localhost';
+    mockConfig(`
+        schema: \${SCHEMA_SCHEME}://\${SCHEMA_HOST}/graphql
+        generates:
+            file.ts:
+                - plugin
+    `);
+    const args = createArgv('--overwrite');
+    const config = await createConfig(parseArgv(args));
+    expect(config.schema).toBe('https://localhost/graphql');
+  });
+
   it('Should interpolate environmental variables in YML and support default value', async () => {
     process.env['SCHEMA_PATH'] = '';
 
