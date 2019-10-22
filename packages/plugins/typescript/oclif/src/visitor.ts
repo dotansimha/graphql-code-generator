@@ -13,6 +13,13 @@ interface Operation {
   operationVariablesTypes: string;
 }
 
+interface OclifDirectiveValues {
+  description?: string;
+  examples?: string[];
+}
+
+const oclifDirectiveKeys: Array<keyof OclifDirectiveValues> = ['description', 'examples'];
+
 export class GraphQLRequestVisitor extends ClientSideBaseVisitor<Config, ClientSideBasePluginConfig> {
   private _operationsToInclude: Operation[] = [];
   private _info: Info;
@@ -59,7 +66,30 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<Config, ClientS
 
     const operation = this._operationsToInclude[0];
     const resultType = this._schema.getType(operation.operationResultType);
-    const description = getDescription(operation, resultType);
+
+    // Find the @oclif directive in the client document, if it's there
+    const directive = operation.node.directives.find(directive => directive.name.value === 'oclif');
+
+    // Remap the directive's fields ie @oclif(description: "a name") to a more usable format
+    const directiveValues: OclifDirectiveValues = {};
+
+    if (directive) {
+      directiveValues.examples = [];
+      directive.arguments.forEach(arg => {
+        // @ts-ignore ts doesn't like arg.value.value, there's a mis-typing in there to address
+        const { value } = arg.value;
+        const { value: name } = arg.name;
+        if (name === 'description') {
+          directiveValues[name] = value;
+        } else if (name === 'example') {
+          directiveValues.examples.push(value);
+        } else {
+          throw new Error(`Invalid field supplied to @oclif directive: ${name}`);
+        }
+      });
+    }
+
+    const { description, examples } = directiveValues;
 
     const flags = operation.node.variableDefinitions.map(getFlagConfigForVariableDefinition);
 
@@ -67,10 +97,8 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<Config, ClientS
 ${this.definition}
 
 export default class ${operation.node.name.value} extends Command {
-  ${description ? `static description = "${description}";` : ''}
-
-  static examples = [];
-
+  ${description ? `\nstatic description = "${description}";\n` : ''}
+  ${examples ? `\nstatic examples: string[] = ${JSON.stringify(examples)};\n` : ''}
   static flags = {
     help: flags.help({ char: 'h' }),
 ${indentMultiline(flags.join(',\n'), 2)}
@@ -84,7 +112,7 @@ ${indentMultiline(flags.join(',\n'), 2)}
       })
       .catch(error => {
         console.log(error.response.data);
-        console.error(error.response.errors.map(e => e.message).join("\\n"));
+        console.error(error.response.errors.map((e: Error) => e.message).join("\\n"));
       });
   }
 }
@@ -146,28 +174,6 @@ const getInnerType = (type: TypeNode): TypeConfig => {
   }
   result.innerType = _type;
   return result as TypeConfig;
-};
-
-const getDescription = (operation: Operation, resultType: GraphQLNamedType): string | undefined => {
-  let description: string = undefined;
-
-  const directive = operation.node.directives.find(directive => directive.name.value === 'oclif');
-
-  // First in precedence: custom description provided by client operation
-  if (directive) {
-    const oclifDescription = directive.arguments.find(arg => arg.name.value === 'description');
-    if (oclifDescription) {
-      // @ts-ignore
-      description = oclifDescription.value.value;
-    }
-  }
-
-  // Next: description provided by the schema
-  if (!description && resultType && resultType.description) {
-    description = description || resultType.description;
-  }
-
-  return description;
 };
 
 // remove all @oclif directives from the document for transmission to the server

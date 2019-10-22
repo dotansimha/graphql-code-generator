@@ -18,6 +18,7 @@
   },
   "devDependencies": {
     "@graphql-codegen/testing": "1.8.1",
+    "@oclif/command": "^1.5.19",
     "graphql": "14.5.8",
     "jest": "24.9.0",
     "ts-jest": "24.1.0",
