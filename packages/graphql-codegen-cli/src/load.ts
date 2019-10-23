@@ -73,7 +73,7 @@ export const loadSchema = async (schemaDef: Types.Schema, config: Types.Config):
       options.fetch = await import(moduleName).then(module => (fetchFnName ? module[fetchFnName] : module));
     }
 
-    const docs = (await loadTypedefs(pointToSchema, options)).map(({ content }) => content);
+    const docs = (await loadTypedefs(pointToSchema, options)).map(({ document }) => document);
 
     return mergeTypeDefs(docs);
   } catch (e) {
@@ -152,17 +152,19 @@ export const loadDocuments = async (documentsDef: Types.InstanceOrArray<Types.Op
 
     if (loadedFromToolkit.length > 0) {
       result.push(
-        ...loadedFromToolkit.sort((a, b) => {
-          if (a.filePath < b.filePath) {
-            return -1;
-          }
+        ...loadedFromToolkit
+          .map(({ location, document }) => ({ filePath: location, content: document }))
+          .sort((a, b) => {
+            if (a.filePath < b.filePath) {
+              return -1;
+            }
 
-          if (a.filePath > b.filePath) {
-            return 1;
-          }
+            if (a.filePath > b.filePath) {
+              return 1;
+            }
 
-          return 0;
-        })
+            return 0;
+          })
       );
     }
   }

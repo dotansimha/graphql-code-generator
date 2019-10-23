@@ -10,7 +10,7 @@ import { getLogger } from './logger';
 import { join } from 'path';
 import { FSWatcher } from 'chokidar';
 import { lifecycleHooks } from '../hooks';
-import { loadConfig } from '../config';
+import { loadContext, CodegenContext } from '../config';
 
 function log(msg: string) {
   // double spaces to inline the message with Listr
@@ -21,10 +21,10 @@ function emitWatching() {
   log(`${logSymbols.info} Watching for changes...`);
 }
 
-export const createWatcher = (initialConfig: Types.Config, onNext: (result: Types.FileOutput[]) => Promise<Types.FileOutput[]>) => {
+export const createWatcher = (initalContext: CodegenContext, onNext: (result: Types.FileOutput[]) => Promise<Types.FileOutput[]>) => {
   debugLog(`[Watcher] Starting watcher...`);
-  let config: Types.Config = initialConfig;
-  const files: string[] = [initialConfig.configFilePath].filter(a => a);
+  let config: Types.Config = initalContext.getConfig();
+  const files: string[] = [initalContext.filepath].filter(a => a);
   const documents = normalizeInstanceOrArray<Types.OperationDocument>(config.documents);
   const schemas = normalizeInstanceOrArray<Types.Schema>(config.schema);
 
@@ -64,7 +64,7 @@ export const createWatcher = (initialConfig: Types.Config, onNext: (result: Type
 
     const debouncedExec = debounce(() => {
       if (!isShutdown) {
-        executeCodegen(config)
+        executeCodegen(initalContext)
           .then(onNext, () => Promise.resolve())
           .then(() => emitWatching());
       }
@@ -119,9 +119,9 @@ export const createWatcher = (initialConfig: Types.Config, onNext: (result: Type
 
       if (eventName === 'change' && config.configFilePath && fullPath === config.configFilePath) {
         log(`${logSymbols.info} Config file has changed, reloading...`);
-        const configSearchResult = await loadConfig(config.configFilePath);
+        const context = await loadContext(config.configFilePath);
 
-        const newParsedConfig = configSearchResult.config as Types.Config;
+        const newParsedConfig = context.getConfig() as Types.Config;
         newParsedConfig.watch = config.watch;
         newParsedConfig.silent = config.silent;
         newParsedConfig.overwrite = config.overwrite;
@@ -138,7 +138,7 @@ export const createWatcher = (initialConfig: Types.Config, onNext: (result: Type
 
   // the promise never resolves to keep process running
   return new Promise((_, reject) => {
-    executeCodegen(config)
+    executeCodegen(initalContext)
       .then(onNext, () => Promise.resolve())
       .then(runWatcher)
       .catch(err => {

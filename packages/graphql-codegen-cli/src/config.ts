@@ -3,12 +3,16 @@ import { resolve } from 'path';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { DetailedError } from '@graphql-codegen/core';
 import { Command } from 'commander';
+import { GraphQLConfig } from 'graphql-config';
+import { findAndLoadGraphQLConfig } from './graphql-config';
+import { loadSchema, loadDocuments } from './load';
 
 export type YamlCliFlags = {
   config: string;
   watch: boolean;
   require: string[];
   overwrite: boolean;
+  project: string;
 };
 
 function generateSearchPlaces(moduleName: string) {
@@ -57,14 +61,7 @@ function customLoader(ext: 'json' | 'yaml' | 'js') {
   };
 }
 
-export async function loadConfig(
-  configFilePath?: string
-):
-  | Promise<{
-      config: Types.Config;
-      filepath: string;
-    }>
-  | never {
+export async function loadContext(configFilePath?: string): Promise<CodegenContext> | never {
   const moduleName = 'codegen';
   const cosmi = cosmiconfig(moduleName, {
     searchPlaces: generateSearchPlaces(moduleName),
@@ -76,6 +73,15 @@ export async function loadConfig(
       noExt: customLoader('yaml'),
     },
   });
+
+  const graphqlConfig = await findAndLoadGraphQLConfig(configFilePath);
+
+  if (graphqlConfig) {
+    return new CodegenContext({
+      graphqlConfig,
+    });
+  }
+
   const result = await (configFilePath ? cosmi.load(configFilePath) : cosmi.search(process.cwd()));
 
   if (!result) {
@@ -109,10 +115,10 @@ export async function loadConfig(
     );
   }
 
-  return {
+  return new CodegenContext({
     filepath: result.filepath,
     config: result.config as Types.Config,
-  };
+  });
 }
 
 function getCustomConfigPath(cliFlags: YamlCliFlags): string | null | never {
@@ -136,10 +142,11 @@ export function parseArgv(argv = process.argv): Command & YamlCliFlags {
     .option('-s, --silent', 'A flag to not print errors in case they occur')
     .option('-r, --require [value]', 'Loads specific require.extensions before running the codegen and reading the configuration', collect, [])
     .option('-o, --overwrite', 'Overwrites existing files')
+    .option('-p, --project <name>', 'Name of a project in GraphQL Config')
     .parse(argv) as any) as Command & YamlCliFlags;
 }
 
-export async function createConfig(cliFlags: Command & YamlCliFlags = parseArgv(process.argv)): Promise<Types.Config | never> {
+export async function createContext(cliFlags: Command & YamlCliFlags = parseArgv(process.argv)): Promise<CodegenContext> {
   if (cliFlags.require && cliFlags.require.length > 0) {
     for (const mod of cliFlags.require) {
       await import(mod);
@@ -147,22 +154,100 @@ export async function createConfig(cliFlags: Command & YamlCliFlags = parseArgv(
   }
 
   const customConfigPath = getCustomConfigPath(cliFlags);
-  const configSearchResult = await loadConfig(customConfigPath);
-  const parsedConfigFile = configSearchResult.config as Types.Config;
-
-  parsedConfigFile.configFilePath = configSearchResult.filepath;
+  const context = await loadContext(customConfigPath);
+  const config: Partial<Types.Config> = {
+    configFilePath: context.filepath,
+  };
 
   if (cliFlags.watch === true) {
-    parsedConfigFile.watch = cliFlags.watch;
+    config.watch = cliFlags.watch;
   }
 
   if (cliFlags.overwrite === true) {
-    parsedConfigFile.overwrite = cliFlags.overwrite;
+    config.overwrite = cliFlags.overwrite;
   }
 
   if (cliFlags.silent === true) {
-    parsedConfigFile.silent = cliFlags.silent;
+    config.silent = cliFlags.silent;
   }
 
-  return parsedConfigFile;
+  if (cliFlags.project) {
+    context.useProject(cliFlags.project);
+  }
+
+  context.updateConfig(config);
+
+  return context;
+}
+
+export class CodegenContext {
+  private _config: Types.Config;
+  private _graphqlConfig?: GraphQLConfig;
+  private config: Types.Config;
+  private _project?: string;
+  filepath: string;
+
+  constructor({ config, graphqlConfig, filepath }: { config?: Types.Config; graphqlConfig?: GraphQLConfig; filepath?: string }) {
+    this._config = config;
+    this._graphqlConfig = graphqlConfig;
+    this.filepath = this._graphqlConfig ? this._graphqlConfig.filepath : filepath;
+  }
+
+  useProject(name?: string) {
+    this._project = name;
+  }
+
+  getConfig(): Types.Config {
+    if (!this.config) {
+      if (this._graphqlConfig) {
+        const project = this._graphqlConfig.getProject(this._project);
+
+        this.config = {
+          ...project.extension('graphql-codegen'),
+          schema: project.schema,
+          documents: project.documents,
+        };
+      } else {
+        this.config = this._config;
+      }
+    }
+
+    return this.config;
+  }
+
+  updateConfig(config: Partial<Types.Config>): void {
+    this.config = {
+      ...this.getConfig(),
+      ...config,
+    };
+  }
+
+  loadSchema(pointer: Types.Schema) {
+    if (this._graphqlConfig) {
+      // TODO: SchemaWithLoader won't work here
+      return this._graphqlConfig.getProject(this._project).loadSchema(pointer as any, 'DocumentNode');
+    }
+
+    return loadSchema(pointer, this.getConfig());
+  }
+
+  async loadDocuments(pointer: Types.OperationDocument[]): Promise<Types.DocumentFile[]> {
+    if (this._graphqlConfig) {
+      // TODO: pointer won't work here
+      const documents = await this._graphqlConfig.getProject(this._project).loadDocuments(pointer as any);
+
+      return documents.map<Types.DocumentFile>(source => {
+        return {
+          filePath: source.location,
+          content: source.document,
+        };
+      });
+    }
+
+    return loadDocuments(pointer, this.getConfig());
+  }
+}
+
+export function ensureContext(input: CodegenContext | Types.Config): CodegenContext {
+  return input instanceof CodegenContext ? input : new CodegenContext({ config: input });
 }
