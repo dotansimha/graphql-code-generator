@@ -47,7 +47,10 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
 
   if (options.schemaAst && documents.length > 0 && !skipDocumentValidation) {
     const extraFragments = options.config && (options.config as any)['externalFragments'] ? (options.config as any)['externalFragments'] : [];
-    const errors = await validateGraphQlDocuments(options.schemaAst, [...documents, ...extraFragments.map((f: any) => ({ filePath: f.importFrom, content: { kind: Kind.DOCUMENT, definitions: [f.node] } }))]);
+    const errors = await validateGraphQlDocuments(options.schemaAst, [
+      ...documents.map(({ filePath, content }) => ({ location: filePath, document: content })),
+      ...extraFragments.map((f: any) => ({ location: f.importFrom, document: { kind: Kind.DOCUMENT, definitions: [f.node] } })),
+    ]);
     checkValidationErrors(errors);
   }
 

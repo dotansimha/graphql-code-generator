@@ -12,6 +12,10 @@ export type Query = {
   __typename?: 'Query';
   allUsers: Array<Maybe<User>>;
   userById?: Maybe<User>;
+  /**
+   * Generates a new answer for the
+   * guessing game
+   **/
   answer: Array<Scalars['Int']>;
   testArr1?: Maybe<Array<Maybe<Scalars['String']>>>;
   testArr2: Array<Maybe<Scalars['String']>>;
