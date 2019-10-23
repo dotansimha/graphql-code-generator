@@ -50,3 +50,20 @@ path/to/file.ts:
  config:
    noSchemaStitching: true
 ```
+
+### customResolveInfo (`string`, default value: `"graphql#GraphQLResolveInfo"`)
+
+You can provide your custom GraphQLResolveInfo instead of the default one from graphql-js
+
+
+#### Usage Example
+
+```yml
+generates:
+path/to/file.ts:
+ plugins:
+   - typescript
+   - typescript-resolvers
+ config:
+   customResolveInfo: ./my-types#MyResolveInfo
+```

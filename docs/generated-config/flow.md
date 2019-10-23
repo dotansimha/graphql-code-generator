@@ -8,7 +8,7 @@ Generates Flow types as Exact types.
 
 ```yml
 generates:
-path/to/file.js:
+path/to/file.ts:
  plugins:
    - flow
  config:
@@ -24,7 +24,7 @@ Generates read-only Flow types
 
 ```yml
 generates:
-path/to/file.js:
+path/to/file.ts:
  plugins:
    - flow
  config:

@@ -150,3 +150,17 @@ Allow you to override `resolverTypeWrapper` definition.
 Supports Apollo Federation
 
 
+
+
+### enumPrefix (`boolean`, default value: `true`)
+
+Allow you to disable prefixing for generated enums, works in combination with `typesPrefix`.
+
+
+#### Usage Example: Disable enum prefixes
+
+```yml
+  config:
+    typesPrefix: I
+    enumPrefix: false
+```

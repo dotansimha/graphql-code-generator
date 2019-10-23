@@ -26,7 +26,7 @@ Customized the output by enabling/disabling the HOC.
 
 ```yml
 generates:
-path/to/file.tsx:
+path/to/file.ts:
  plugins:
    - typescript
    - typescript-operations
@@ -44,7 +44,7 @@ Customized the output by enabling/disabling the generated React Hooks.
 
 ```yml
 generates:
-path/to/file.tsx:
+path/to/file.ts:
  plugins:
    - typescript
    - typescript-operations
@@ -62,7 +62,7 @@ Customized the output by enabling/disabling the generated mutation function sign
 
 ```yml
 generates:
-path/to/file.tsx:
+path/to/file.ts:
  plugins:
    - typescript
    - typescript-operations
@@ -111,7 +111,7 @@ Sets the version of react-apollo.
 
 ```yml
 generates:
-path/to/file.tsx:
+path/to/file.ts:
  plugins:
    - typescript
    - typescript-operations
@@ -129,7 +129,7 @@ Customized the output by enabling/disabling the generated result type.
 
 ```yml
 generates:
-path/to/file.tsx:
+path/to/file.ts:
  plugins:
    - typescript
    - typescript-operations
@@ -143,16 +143,30 @@ path/to/file.tsx:
 Customized the output by enabling/disabling the generated mutation option type.
 
 
-#### Usage Example: 
-
-```yml
+#### Usage Example: yml
 generates:
-path/to/file.tsx:
+path/to/file.ts:
  plugins:
    - typescript
    - typescript-operations
    - typescript-react-apollo
  config:
    withMutationOptionsType: true
-```
+
+
+
+### addDocBlocks (`boolean`, default value: `true`)
+
+Allows you to enable/disable the generation of docblocks in generated code. Some IDE's (like VSCode) add extra inline information with docblocks, you can disable this feature if your prefered IDE does not.
+
+
+#### Usage Example: yml
+generates:
+path/to/file.ts:
+ plugins:
+   - typescript
+   - typescript-operations
+   - typescript-react-apollo
+ config:
+   addDocBlocks: true
 

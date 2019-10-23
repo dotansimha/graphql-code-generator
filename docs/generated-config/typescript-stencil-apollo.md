@@ -8,7 +8,7 @@ Customize the output of the plugin - you can choose to generate a Component clas
 
 ```yml
 generates:
-path/to/file.tsx:
+path/to/file.ts:
  plugins:
    - typescript
    - typescript-operations
