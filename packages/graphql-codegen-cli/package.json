@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/cli",
-  "version": "1.8.1",
+  "version": "1.8.2",
   "license": "MIT",
   "bin": {
     "gql-gen": "dist/commonjs/bin.js",
@@ -42,8 +42,8 @@
   "homepage": "https://github.com/dotansimha/graphql-code-generator#readme",
   "dependencies": {
     "@babel/parser": "7.6.4",
-    "@graphql-codegen/core": "1.8.1",
-    "@graphql-codegen/plugin-helpers": "1.8.1",
+    "@graphql-codegen/core": "1.8.2",
+    "@graphql-codegen/plugin-helpers": "1.8.2",
     "@types/debounce": "1.2.0",
     "@types/is-glob": "4.0.1",
     "@types/mkdirp": "0.5.2",

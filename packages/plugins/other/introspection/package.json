@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/introspection",
-  "version": "1.8.1",
+  "version": "1.8.2",
   "description": "GraphQL Code Generator plugin for generating an introspection JSON file for a GraphQLSchema",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
@@ -9,7 +9,7 @@
     "test": "jest --config ../../../../jest.config.js"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "1.8.1",
+    "@graphql-codegen/plugin-helpers": "1.8.2",
     "tslib": "1.10.0"
   },
   "devDependencies": {
