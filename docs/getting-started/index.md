@@ -138,7 +138,7 @@ async function doSomething() {
       schema: 'http://127.0.0.1:3000/graphql',
       documents: './src/**/*.graphql',
       generates: {
-        [process.cwd() + '/models/']: {
+        [process.cwd() + '/models/types.d.ts']: {
           plugins: ['typescript'],
         },
       },
