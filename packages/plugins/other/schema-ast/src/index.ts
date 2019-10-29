@@ -32,9 +32,27 @@ export interface SchemaASTConfig {
    * ```
    */
   includeDirectives?: boolean;
+  /**
+   * @name commentDescriptions
+   * @type boolean
+   * @description Set to true in order to print description as comments (using # instead of """)
+   * @default false
+   *
+   * @example
+   * ```yml
+   * schema: http://localhost:3000/graphql
+   * generates:
+   *   schema.graphql:
+   *     plugins:
+   *       - schema-ast
+   *     config:
+   *       commentDescriptions: true
+   * ```
+   */
+  commentDescriptions?: boolean;
   federation?: boolean;
 }
-export const plugin: PluginFunction = async (schema: GraphQLSchema, _documents, { includeDirectives = false, federation }: SchemaASTConfig): Promise<string> => {
+export const plugin: PluginFunction<SchemaASTConfig> = async (schema: GraphQLSchema, _documents, { commentDescriptions = false, includeDirectives = false, federation }): Promise<string> => {
   const outputSchema = federation
     ? removeFederation(schema, {
         withDirectives: includeDirectives,
@@ -45,7 +63,7 @@ export const plugin: PluginFunction = async (schema: GraphQLSchema, _documents, 
     return printSchemaWithDirectives(outputSchema);
   }
 
-  return printSchema(outputSchema, { commentDescriptions: false });
+  return printSchema(outputSchema, { commentDescriptions: commentDescriptions });
 };
 
 export const validate: PluginValidateFn<any> = async (_schema: GraphQLSchema, _documents: Types.DocumentFile[], _config: SchemaASTConfig, outputFile: string, allPlugins: Types.ConfiguredPlugin[]) => {

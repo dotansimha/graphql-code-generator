@@ -83,6 +83,45 @@ describe('Schema AST', () => {
         }
       `);
     });
+
+    it('Should print schema with as """ comment as default', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Query {
+          """
+          test
+          """
+          fieldTest: String
+        }
+      `);
+      const content = await plugin(testSchema, [], { includeDirectives: false });
+
+      expect(content).toBeSimilarStringTo(`
+        type Query {
+          """ test """
+          fieldTest: String
+        }
+      `);
+    });
+
+    it('Should print schema with as # when commentDescriptions=true', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Query {
+          """
+          test
+          """
+          fieldTest: String
+        }
+      `);
+      const content = await plugin(testSchema, [], { commentDescriptions: true, includeDirectives: false });
+
+      expect(content).toBeSimilarStringTo(`
+        type Query {
+          #  test
+          fieldTest: String
+        }
+      `);
+    });
+
     it('Should print schema with directives when "includeDirectives" is set', async () => {
       const content = await plugin(schema, [], { includeDirectives: true });
 
