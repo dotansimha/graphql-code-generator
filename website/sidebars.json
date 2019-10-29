@@ -34,6 +34,7 @@
       "plugins/java-resolvers",
       "plugins/java-apollo-android",
       "plugins/fragment-matcher",
+      "plugins/introspection",
       "plugins/add",
       "plugins/time",
       "plugins/schema-ast",
