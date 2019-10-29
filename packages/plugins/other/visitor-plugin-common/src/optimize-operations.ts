@@ -4,7 +4,7 @@ import { GraphQLCompilerContext, transformASTSchema, Parser as RelayParser, Prin
 
 import * as InlineFragmentsTransform from 'relay-compiler/lib/transforms/InlineFragmentsTransform';
 import * as SkipRedundantNodesTransform from 'relay-compiler/lib/transforms/SkipRedundantNodesTransform';
-import * as RelayApplyFragmentArgumentTransform from 'relay-compiler/lib/transforms/RelayApplyFragmentArgumentTransform';
+import * as ApplyFragmentArgumentTransform from 'relay-compiler/lib/transforms/ApplyFragmentArgumentTransform';
 import * as FlattenTransform from 'relay-compiler/lib/transforms/FlattenTransform';
 
 export function optimizeOperations(schema: GraphQLSchema, documents: Types.DocumentFile[]): Types.DocumentFile[] {
@@ -18,7 +18,7 @@ export function optimizeOperations(schema: GraphQLSchema, documents: Types.Docum
 
   const queryCompilerContext = new GraphQLCompilerContext(schema)
     .addAll(relayDocuments)
-    .applyTransforms([RelayApplyFragmentArgumentTransform.transform, InlineFragmentsTransform.transform, FlattenTransform.transformWithOptions({ flattenAbstractTypes: false }), SkipRedundantNodesTransform.transform]);
+    .applyTransforms([ApplyFragmentArgumentTransform.transform, InlineFragmentsTransform.transform, FlattenTransform.transformWithOptions({ flattenAbstractTypes: false }), SkipRedundantNodesTransform.transform]);
 
   const newQueryDocuments = queryCompilerContext.documents().map(doc => ({
     filePath: 'optimized by relay',
