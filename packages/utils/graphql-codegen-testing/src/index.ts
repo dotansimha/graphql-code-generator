@@ -2,7 +2,7 @@ import { oneLine } from 'common-tags';
 
 declare global {
   namespace jest {
-    interface Matchers<R> {
+    interface Matchers<R, T> {
       /**
        * Normalizes whitespace and performs string comparisons
        */
