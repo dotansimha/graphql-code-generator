@@ -97,7 +97,7 @@ describe('Schema AST', () => {
 
       expect(content).toBeSimilarStringTo(`
         type Query {
-          """ test """
+          """test"""
           fieldTest: String
         }
       `);
