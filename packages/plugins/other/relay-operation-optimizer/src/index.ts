@@ -3,10 +3,10 @@ import { Types, PluginFunction } from '@graphql-codegen/plugin-helpers';
 
 import { GraphQLCompilerContext, transformASTSchema, Parser as RelayParser, Printer as GraphQLIRPrinter } from 'relay-compiler';
 
-import InlineFragmentsTransform from 'relay-compiler/lib/transforms/InlineFragmentsTransform';
-import SkipRedundantNodesTransform from 'relay-compiler/lib/transforms/SkipRedundantNodesTransform';
-import RelayApplyFragmentArgumentTransform from 'relay-compiler/lib/transforms/RelayApplyFragmentArgumentTransform';
-import FlattenTransform from 'relay-compiler/lib/transforms/FlattenTransform';
+import * as InlineFragmentsTransform from 'relay-compiler/lib/transforms/InlineFragmentsTransform';
+import * as SkipRedundantNodesTransform from 'relay-compiler/lib/transforms/SkipRedundantNodesTransform';
+import * as ApplyFragmentArgumentTransform from 'relay-compiler/lib/transforms/ApplyFragmentArgumentTransform';
+import * as FlattenTransform from 'relay-compiler/lib/transforms/FlattenTransform';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface RelayOptimizerPluginConfig {}
@@ -35,13 +35,13 @@ export const plugin: PluginFunction<RelayOptimizerPluginConfig> = (
   const fragmentCompilerContext = new GraphQLCompilerContext(adjustedSchema).addAll(relayDocuments);
 
   const fragmentDocuments = fragmentCompilerContext
-    .applyTransforms([RelayApplyFragmentArgumentTransform.transform, FlattenTransform.transformWithOptions({ flattenAbstractTypes: false }), SkipRedundantNodesTransform.transform])
+    .applyTransforms([ApplyFragmentArgumentTransform.transform, FlattenTransform.transformWithOptions({ flattenAbstractTypes: false }), SkipRedundantNodesTransform.transform])
     .documents()
     .filter(doc => doc.kind === 'Fragment');
 
   const queryCompilerContext = new GraphQLCompilerContext(adjustedSchema)
     .addAll(relayDocuments)
-    .applyTransforms([RelayApplyFragmentArgumentTransform.transform, InlineFragmentsTransform.transform, FlattenTransform.transformWithOptions({ flattenAbstractTypes: false }), SkipRedundantNodesTransform.transform]);
+    .applyTransforms([ApplyFragmentArgumentTransform.transform, InlineFragmentsTransform.transform, FlattenTransform.transformWithOptions({ flattenAbstractTypes: false }), SkipRedundantNodesTransform.transform]);
 
   const newQueryDocuments = queryCompilerContext.documents().map(doc => ({
     filePath: 'optimized by relay',
