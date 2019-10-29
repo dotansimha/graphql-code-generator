@@ -1,9 +1,7 @@
-import { Types } from '@graphql-codegen/plugin-helpers';
 import '@graphql-codegen/testing';
-import { GraphQLObjectType, buildSchema, buildASTSchema, parse, print, buildClientSchema, graphql, getIntrospectionQuery } from 'graphql';
+import { GraphQLObjectType, buildSchema, buildASTSchema, parse, print } from 'graphql';
 import { mergeSchemas } from '@graphql-codegen/core';
 import { executeCodegen } from '../src';
-import { readFileSync } from 'fs';
 
 const SHOULD_NOT_THROW_STRING = 'SHOULD_NOT_THROW';
 const SIMPLE_TEST_SCHEMA = `type MyType { f: String } type Query { f: String }`;
@@ -400,7 +398,7 @@ describe('Codegen Executor', () => {
       expect(output[0].content).toContain('export type root');
     });
 
-    it('Should accept config in per-output', async () => {
+    it('Should accept config in per-output (override)', async () => {
       const output = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         documents: `query root { f }`,

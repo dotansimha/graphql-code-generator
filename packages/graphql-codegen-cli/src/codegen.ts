@@ -3,16 +3,16 @@ import { DetailedError, codegen, mergeSchemas } from '@graphql-codegen/core';
 import * as Listr from 'listr';
 import { normalizeOutputParam, normalizeInstanceOrArray, normalizeConfig } from '@graphql-codegen/plugin-helpers';
 import { Renderer } from './utils/listr-renderer';
-import { loadSchema, loadDocuments } from './load';
 import { GraphQLError, DocumentNode } from 'graphql';
 import { getPluginByName } from './plugins';
 import { getPresetByName } from './presets';
 import { debugLog } from './utils/debugging';
 import { tryToBuildSchema } from './utils/try-to-build-schema';
+import { CodegenContext, ensureContext } from './config';
 
 export const defaultLoader = (mod: string) => import(mod);
 
-export async function executeCodegen(config: Types.Config): Promise<Types.FileOutput[]> {
+export async function executeCodegen(input: CodegenContext | Types.Config): Promise<Types.FileOutput[]> {
   function wrapTask(task: () => void | Promise<void>, source?: string) {
     return async () => {
       try {
@@ -27,6 +27,8 @@ export async function executeCodegen(config: Types.Config): Promise<Types.FileOu
     };
   }
 
+  const context = ensureContext(input);
+  const config = context.getConfig();
   const result: Types.FileOutput[] = [];
   const commonListrOptions = {
     exitOnError: true,
@@ -169,10 +171,7 @@ export async function executeCodegen(config: Types.Config): Promise<Types.FileOu
                     title: 'Load GraphQL schemas',
                     task: wrapTask(async () => {
                       debugLog(`[CLI] Loading Schemas`);
-                      const allSchemas = [
-                        ...rootSchemas.map(pointToSchema => loadSchema(pointToSchema, config)),
-                        ...outputSpecificSchemas.map(pointToSchema => loadSchema(pointToSchema, config))
-                      ];
+                      const allSchemas = [...rootSchemas.map(pointToSchema => context.loadSchema(pointToSchema)), ...outputSpecificSchemas.map(pointToSchema => context.loadSchema(pointToSchema))];
 
                       if (allSchemas.length > 0) {
                         outputSchema = mergeSchemas(await Promise.all(allSchemas));
@@ -184,7 +183,7 @@ export async function executeCodegen(config: Types.Config): Promise<Types.FileOu
                     task: wrapTask(async () => {
                       debugLog(`[CLI] Loading Documents`);
                       const allDocuments = [...rootDocuments, ...outputSpecificDocuments];
-                      const documents = await loadDocuments(allDocuments, config);
+                      const documents = await context.loadDocuments(allDocuments);
 
                       if (documents.length > 0) {
                         outputDocuments.push(...documents);

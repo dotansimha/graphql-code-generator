@@ -1,5 +1,5 @@
 import { TempDir } from './utils';
-import { createConfig, parseArgv } from '../src/config';
+import { createContext, parseArgv } from '../src/config';
 
 const mockConfig = (str: string, file = './codegen.yml') => temp.createFile(file, str);
 const createArgv = (str = ''): string[] => {
@@ -42,7 +42,8 @@ describe('CLI Flags', () => {
                 - plugin
     `);
     const args = createArgv();
-    const config = await createConfig(parseArgv(args));
+    const context = await createContext(parseArgv(args));
+    const config = context.getConfig();
     expect(config.schema).toEqual('schema.graphql');
     expect(config.generates).toEqual({ 'file.ts': ['plugin'] });
   });
@@ -54,11 +55,12 @@ describe('CLI Flags', () => {
         generates:
             file.ts:
                 - plugin
-    `,
+      `,
       'other.yml'
     );
     const args = createArgv('--config other.yml');
-    const config = await createConfig(parseArgv(args));
+    const context = await createContext(parseArgv(args));
+    const config = context.getConfig();
     expect(config.schema).toEqual('schema.graphql');
     expect(config.generates).toEqual({ 'file.ts': ['plugin'] });
   });
@@ -71,7 +73,8 @@ describe('CLI Flags', () => {
                 - plugin
     `);
     const args = createArgv('--watch');
-    const config = await createConfig(parseArgv(args));
+    const context = await createContext(parseArgv(args));
+    const config = context.getConfig();
     expect(config.watch).toBeTruthy();
   });
 
@@ -83,7 +86,8 @@ describe('CLI Flags', () => {
                 - plugin
     `);
     const args = createArgv();
-    const config = await createConfig(parseArgv(args));
+    const context = await createContext(parseArgv(args));
+    const config = context.getConfig();
     expect(config.watch).not.toBeTruthy();
     expect(config.overwrite).not.toBeTruthy();
   });
@@ -97,7 +101,8 @@ describe('CLI Flags', () => {
                 - plugin
     `);
     const args = createArgv('--watch');
-    const config = await createConfig(parseArgv(args));
+    const context = await createContext(parseArgv(args));
+    const config = context.getConfig();
     expect(config.watch).toBeTruthy();
   });
 
@@ -109,7 +114,8 @@ describe('CLI Flags', () => {
                 - plugin
     `);
     const args = createArgv('--overwrite');
-    const config = await createConfig(parseArgv(args));
+    const context = await createContext(parseArgv(args));
+    const config = context.getConfig();
     expect(config.overwrite).toBeTruthy();
   });
 
@@ -122,7 +128,8 @@ describe('CLI Flags', () => {
                 - plugin
     `);
     const args = createArgv('--overwrite');
-    const config = await createConfig(parseArgv(args));
+    const context = await createContext(parseArgv(args));
+    const config = context.getConfig();
     expect(config.schema).toBe('schema-env.graphql');
   });
 
@@ -136,7 +143,8 @@ describe('CLI Flags', () => {
                 - plugin
     `);
     const args = createArgv('--overwrite');
-    const config = await createConfig(parseArgv(args));
+    const context = await createContext(parseArgv(args));
+    const config = context.getConfig();
     expect(config.schema).toBe('https://localhost/graphql');
   });
 
@@ -150,7 +158,8 @@ describe('CLI Flags', () => {
                 - plugin
     `);
     const args = createArgv('--overwrite');
-    const config = await createConfig(parseArgv(args));
+    const context = await createContext(parseArgv(args));
+    const config = context.getConfig();
     expect(config.schema).toBe('schema.graphql');
   });
 
@@ -164,7 +173,8 @@ describe('CLI Flags', () => {
                 - plugin
     `);
     const args = createArgv('--overwrite');
-    const config = await createConfig(parseArgv(args));
+    const context = await createContext(parseArgv(args));
+    const config = context.getConfig();
     expect(config.schema).toBe('http://url-to-graphql-api');
   });
 
@@ -179,7 +189,7 @@ describe('CLI Flags', () => {
     const args = createArgv('--require my-extension');
 
     try {
-      await createConfig(parseArgv(args));
+      await createContext(parseArgv(args));
       expect(true).toBeFalsy();
     } catch (e) {
       expect(e.message).toBe(`Cannot find module 'my-extension' from 'config.ts'`);
