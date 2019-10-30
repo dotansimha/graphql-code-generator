@@ -1,7 +1,9 @@
 import '@graphql-codegen/testing';
-import { buildASTSchema, parse } from 'graphql';
+
 import { codegen } from '@graphql-codegen/core';
+import { buildASTSchema, parse } from 'graphql';
 import gql from 'graphql-tag';
+
 import { plugin, validate } from '../src';
 
 const schema = buildASTSchema(gql`
@@ -27,24 +29,8 @@ const schema = buildASTSchema(gql`
 // should only contain Unions and Interfaces
 const introspection = JSON.stringify(
   {
-    __schema: {
-      types: [
-        {
-          kind: 'UNION',
-          name: 'People',
-          possibleTypes: [
-            {
-              name: 'Character',
-            },
-            {
-              name: 'Jedi',
-            },
-            {
-              name: 'Droid',
-            },
-          ],
-        },
-      ],
+    possibleTypes: {
+      People: ['Character', 'Jedi', 'Droid'],
     },
   },
   null,
@@ -176,19 +162,13 @@ describe('Fragment Matcher Plugin', () => {
         }
       );
       const output = `
-        export interface IntrospectionResultData {
-          __schema: {
-            types: {
-              kind: string;
-              name: string;
-              possibleTypes: {
-                name: string;
-              }[];
-            }[];
-          };
+      export interface PossibleTypesResultData {
+        possibleTypes: {
+          [key: string]: string[]
         }
+      }
 
-        const result: IntrospectionResultData = ${introspection};  
+        const result: PossibleTypesResultData = ${introspection};  
 
         export default result;
       `;
