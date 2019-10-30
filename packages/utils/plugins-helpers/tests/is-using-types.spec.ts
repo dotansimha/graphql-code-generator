@@ -2,6 +2,27 @@ import { parse, buildSchema } from 'graphql';
 import { isUsingTypes } from '../src/helpers';
 
 describe('isUsingTypes', () => {
+  it('Should work with __typename on fragments', () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Query {
+        user(id: ID!): User!
+      }
+
+      type User {
+        id: ID!
+        username: String!
+        email: String!
+      }
+    `);
+    const ast = parse(/* GraphQL */ `
+      fragment User on User {
+        __typename
+      }
+    `);
+
+    expect(isUsingTypes(ast, [], schema)).toBeFalsy();
+  });
+
   it('Should include fragments when they are not extenral', () => {
     const ast = parse(/* GraphQL */ `
       fragment UserFields on User {

@@ -97,6 +97,10 @@ export function isUsingTypes(document: DocumentNode, externalFragments: string[]
     },
     Field: {
       enter: (node: FieldNode, key, parent, path, anscestors) => {
+        if (node.name.value.startsWith('__')) {
+          return;
+        }
+
         const insideIgnoredFragment = (anscestors as any).find((f: ASTNode) => f.kind && f.kind === 'FragmentDefinition' && externalFragments.includes(f.name.value));
 
         if (insideIgnoredFragment) {
@@ -113,6 +117,7 @@ export function isUsingTypes(document: DocumentNode, externalFragments: string[]
               if (!field) {
                 throw new Error(`Unable to find field "${node.name.value}" on type "${lastType}"!`);
               }
+
               const currentType = field.type;
 
               // To handle `Maybe` usage
@@ -121,7 +126,6 @@ export function isUsingTypes(document: DocumentNode, externalFragments: string[]
               }
 
               typesStack.push(getBaseType(currentType));
-            } else if (isInterfaceType(lastType) || isUnionType(lastType)) {
             }
           }
         }
@@ -134,6 +138,10 @@ export function isUsingTypes(document: DocumentNode, externalFragments: string[]
         }
       },
       leave: (node: FieldNode, key, parent, path, anscestors) => {
+        if (node.name.value.startsWith('__')) {
+          return;
+        }
+
         const insideIgnoredFragment = (anscestors as any).find((f: ASTNode) => f.kind && f.kind === 'FragmentDefinition' && externalFragments.includes(f.name.value));
 
         if (insideIgnoredFragment) {
