@@ -29,6 +29,32 @@ const schema = buildASTSchema(gql`
 // should only contain Unions and Interfaces
 const introspection = JSON.stringify(
   {
+    __schema: {
+      types: [
+        {
+          kind: 'UNION',
+          name: 'People',
+          possibleTypes: [
+            {
+              name: 'Character',
+            },
+            {
+              name: 'Jedi',
+            },
+            {
+              name: 'Droid',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  null,
+  2
+);
+
+const apolloClient3Result = JSON.stringify(
+  {
     possibleTypes: {
       People: ['Character', 'Jedi', 'Droid'],
     },
@@ -162,13 +188,54 @@ describe('Fragment Matcher Plugin', () => {
         }
       );
       const output = `
+        export interface IntrospectionResultData {
+          __schema: {
+            types: {
+              kind: string;
+              name: string;
+              possibleTypes: {
+                name: string;
+              }[];
+            }[];
+          };
+        }
+        const result: IntrospectionResultData = ${introspection};  
+        export default result;
+      `;
+
+      expect(tsContent).toBeSimilarStringTo(output);
+      expect(tsxContent).toBeSimilarStringTo(output);
+    });
+
+    it('should use es2015 module by default - apollo client 3', async () => {
+      const tsContent = await plugin(
+        schema,
+        [],
+        {
+          apolloClientVersion: '3',
+        },
+        {
+          outputFile: 'foo.ts',
+        }
+      );
+      const tsxContent = await plugin(
+        schema,
+        [],
+        {
+          apolloClientVersion: '3',
+        },
+        {
+          outputFile: 'foo.tsx',
+        }
+      );
+      const output = `
       export interface PossibleTypesResultData {
         possibleTypes: {
           [key: string]: string[]
         }
       }
 
-        const result: PossibleTypesResultData = ${introspection};  
+        const result: PossibleTypesResultData = ${apolloClient3Result};  
 
         export default result;
       `;

@@ -16,3 +16,20 @@ generates:
     config:
       includeDirectives: true
 ```
+
+### commentDescriptions (`boolean`, default value: `false`)
+
+Set to true in order to print description as comments (using # instead of """)
+
+
+#### Usage Example
+
+```yml
+schema: http://localhost:3000/graphql
+generates:
+  schema.graphql:
+    plugins:
+      - schema-ast
+    config:
+      commentDescriptions: true
+```
