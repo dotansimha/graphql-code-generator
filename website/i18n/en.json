@@ -44,6 +44,9 @@
       "generated-config/flow": {
         "title": "generated-config/flow"
       },
+      "generated-config/fragment-matcher": {
+        "title": "generated-config/fragment-matcher"
+      },
       "generated-config/import-types": {
         "title": "generated-config/import-types"
       },

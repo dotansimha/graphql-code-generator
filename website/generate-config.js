@@ -29,6 +29,7 @@ const mapping = {
   '../packages/plugins/flow/resolvers/src/index.ts': BASE_DIR + '/flow-resolvers.md',
   '../packages/plugins/flow/operations/src/index.ts': BASE_DIR + '/flow-operations.md',
   '../packages/plugins/other/introspection/src/index.ts': BASE_DIR + '/introspection.md',
+  '../packages/plugins/other/fragment-matcher/src/index.ts': BASE_DIR + '/fragment-matcher.md',
   '../packages/plugins/other/visitor-plugin-common/src/base-visitor.ts': BASE_DIR + '/base-visitor.md',
   '../packages/plugins/other/visitor-plugin-common/src/base-types-visitor.ts': BASE_DIR + '/base-types-visitor.md',
   '../packages/plugins/other/visitor-plugin-common/src/base-resolvers-visitor.ts': BASE_DIR + '/base-resolvers-visitor.md',

@@ -1,7 +1,9 @@
 import '@graphql-codegen/testing';
-import { buildASTSchema, parse } from 'graphql';
+
 import { codegen } from '@graphql-codegen/core';
+import { buildASTSchema, parse } from 'graphql';
 import gql from 'graphql-tag';
+
 import { plugin, validate } from '../src';
 
 const schema = buildASTSchema(gql`
@@ -45,6 +47,16 @@ const introspection = JSON.stringify(
           ],
         },
       ],
+    },
+  },
+  null,
+  2
+);
+
+const apolloClient3Result = JSON.stringify(
+  {
+    possibleTypes: {
+      People: ['Character', 'Jedi', 'Droid'],
     },
   },
   null,
@@ -187,8 +199,43 @@ describe('Fragment Matcher Plugin', () => {
             }[];
           };
         }
-
         const result: IntrospectionResultData = ${introspection};  
+        export default result;
+      `;
+
+      expect(tsContent).toBeSimilarStringTo(output);
+      expect(tsxContent).toBeSimilarStringTo(output);
+    });
+
+    it('should use es2015 module by default - apollo client 3', async () => {
+      const tsContent = await plugin(
+        schema,
+        [],
+        {
+          apolloClientVersion: '3',
+        },
+        {
+          outputFile: 'foo.ts',
+        }
+      );
+      const tsxContent = await plugin(
+        schema,
+        [],
+        {
+          apolloClientVersion: '3',
+        },
+        {
+          outputFile: 'foo.tsx',
+        }
+      );
+      const output = `
+      export interface PossibleTypesResultData {
+        possibleTypes: {
+          [key: string]: string[]
+        }
+      }
+
+        const result: PossibleTypesResultData = ${apolloClient3Result};  
 
         export default result;
       `;
