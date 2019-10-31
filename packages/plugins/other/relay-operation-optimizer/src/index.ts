@@ -1,12 +1,15 @@
+import { printSchemaWithDirectives } from 'graphql-toolkit';
 import { parse, GraphQLSchema, DefinitionNode } from 'graphql';
 import { Types, PluginFunction } from '@graphql-codegen/plugin-helpers';
 
-import { GraphQLCompilerContext, transformASTSchema, Parser as RelayParser, Printer as GraphQLIRPrinter } from 'relay-compiler';
+import { GraphQLCompilerContext, transformASTSchema, Parser as RelayParser } from 'relay-compiler';
+import { print } from 'relay-compiler/lib/core/GraphQLIRPrinter';
 
 import * as InlineFragmentsTransform from 'relay-compiler/lib/transforms/InlineFragmentsTransform';
 import * as SkipRedundantNodesTransform from 'relay-compiler/lib/transforms/SkipRedundantNodesTransform';
 import * as ApplyFragmentArgumentTransform from 'relay-compiler/lib/transforms/ApplyFragmentArgumentTransform';
 import * as FlattenTransform from 'relay-compiler/lib/transforms/FlattenTransform';
+import * as RelayCreate from 'relay-compiler/lib/core/Schema';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface RelayOptimizerPluginConfig {}
@@ -20,15 +23,22 @@ export const plugin: PluginFunction<RelayOptimizerPluginConfig> = (
   // @TODO way for users to define directives they use, otherwise relay will throw an unknown directive error
   // Maybe we can scan the queries and add them dynamically without users having to do some extra stuff
   // transformASTSchema creates a new schema instance instead of mutating the old one
-  const adjustedSchema = transformASTSchema(schema, [
-    /* GraphQL */ `
-      directive @connection(key: String!) on FIELD
-      directive @client on FIELD
-    `,
-  ]);
-  const documentAsts = documents.reduce((prev, v) => {
-    return [...prev, ...v.content.definitions];
-  }, [] as DefinitionNode[]);
+  const adjustedSchema = (RelayCreate as any).create(
+    printSchemaWithDirectives(
+      transformASTSchema(schema, [
+        /* GraphQL */ `
+          directive @connection(key: String!) on FIELD
+          directive @client on FIELD
+        `,
+      ])
+    )
+  );
+  const documentAsts = documents.reduce(
+    (prev, v) => {
+      return [...prev, ...v.content.definitions];
+    },
+    [] as DefinitionNode[]
+  );
 
   const relayDocuments = RelayParser.transform(adjustedSchema, documentAsts);
 
@@ -45,13 +55,13 @@ export const plugin: PluginFunction<RelayOptimizerPluginConfig> = (
 
   const newQueryDocuments = queryCompilerContext.documents().map(doc => ({
     filePath: 'optimized by relay',
-    content: parse(GraphQLIRPrinter.print(doc)),
+    content: parse((print as any)(adjustedSchema, doc)),
   }));
 
   const newDocuments = [
     ...fragmentDocuments.map(doc => ({
       filePath: 'optimized by relay',
-      content: parse(GraphQLIRPrinter.print(doc)),
+      content: parse((print as any)(adjustedSchema, doc)),
     })),
     ...newQueryDocuments,
   ];
