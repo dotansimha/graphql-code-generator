@@ -1,6 +1,7 @@
-import { GraphQLSchema, parse, execute } from 'graphql';
-import { PluginFunction, PluginValidateFn, Types, removeFederation } from '@graphql-codegen/plugin-helpers';
 import { extname } from 'path';
+
+import { PluginFunction, PluginValidateFn, Types, removeFederation } from '@graphql-codegen/plugin-helpers';
+import { GraphQLSchema, execute, parse } from 'graphql';
 
 interface IntrospectionResultData {
   __schema: {
@@ -13,6 +14,12 @@ interface IntrospectionResultData {
           }[]
         | null;
     }[];
+  };
+}
+
+interface PossibleTypesResultData {
+  possibleTypes: {
+    [key: string]: string[];
   };
 }
 
@@ -62,12 +69,15 @@ export const plugin: PluginFunction = async (schema: GraphQLSchema, _documents, 
     throw new Error(`Plugin "fragment-matcher" couldn't introspect the schema`);
   }
 
-  const filteredData: IntrospectionResultData = {
-    __schema: {
-      ...introspection.data.__schema,
-      types: introspection.data.__schema.types.filter(type => type.kind === 'UNION' || type.kind === 'INTERFACE'),
-    },
+  const filterUnionAndInterfaceTypes = type => type.kind === 'UNION' || type.kind === 'INTERFACE';
+  const createPossibleTypesCollection = (acc, type) => {
+    return { ...acc, ...{ [type.name]: type.possibleTypes.map(possibleType => possibleType.name) } };
   };
+
+  const filteredData: PossibleTypesResultData = {
+    possibleTypes: introspection.data.__schema.types.filter(filterUnionAndInterfaceTypes).reduce(createPossibleTypesCollection, {}),
+  };
+
   const content = JSON.stringify(filteredData, null, 2);
 
   if (extensions.json.includes(ext)) {
@@ -84,19 +94,13 @@ export const plugin: PluginFunction = async (schema: GraphQLSchema, _documents, 
 
   if (extensions.ts.includes(ext)) {
     return `
-      export interface IntrospectionResultData {
-        __schema: {
-          types: {
-            kind: string;
-            name: string;
-            possibleTypes: {
-              name: string;
-            }[];
-          }[];
-        };
+      export interface PossibleTypesResultData {
+        possibleTypes: {
+          [key: string]: string[]
+        }
       }
 
-      const result: IntrospectionResultData = ${content};
+      const result: PossibleTypesResultData = ${content};
 
       export default result;
     `;
