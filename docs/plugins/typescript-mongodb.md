@@ -172,14 +172,14 @@ Given the following GraphQL schema:
 
 ```graphql
 type A @entity {
-    fieldA: String @column
+  fieldA: String @column
 }
 
 type B @entity {
-    fieldB: String @column
+  fieldB: String @column
 }
 
-union PossibleType = A | B @union(discriminatorField: "entityType")
+union PossibleType @union(discriminatorField: "entityType") = A | B
 ```
 
 The output should be:
