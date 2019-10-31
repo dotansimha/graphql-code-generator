@@ -88,8 +88,9 @@ describe('Components', () => {
             })
             export class FeedComponent {
                 @Prop() renderer: import('stencil-apollo').QueryRenderer<FeedQuery, FeedQueryVariables>;
+                @Prop() variables: FeedQueryVariables;
                 render() {
-                    return <apollo-query query={ FeedDocument } renderer={ this.renderer } />;
+                    return <apollo-query query={ FeedDocument } variables={ this.variables } renderer={ this.renderer } />;
                 }
             }
       `);
