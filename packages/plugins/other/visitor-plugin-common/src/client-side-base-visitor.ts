@@ -13,6 +13,7 @@ export enum DocumentMode {
   graphQLTag = 'graphQLTag',
   documentNode = 'documentNode',
   external = 'external',
+  string = 'string',
 }
 
 const EXTENSIONS_TO_REMOVE = ['.ts', '.tsx', '.js', '.jsx'];
@@ -219,6 +220,8 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
       }
 
       return JSON.stringify(gqlObj);
+    } else if (this.config.documentMode === DocumentMode.string) {
+      return '`' + doc + '`';
     }
 
     return 'gql`' + doc + '`';

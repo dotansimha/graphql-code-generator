@@ -1,3 +1,4 @@
+import { DocumentMode } from '@graphql-codegen/visitor-plugin-common';
 import { compileTs } from '@graphql-codegen/testing';
 import { plugin } from '../src/index';
 import { parse, buildClientSchema } from 'graphql';
@@ -51,6 +52,35 @@ describe('graphql-request', () => {
   describe('sdk', () => {
     it('Should generate a correct wrap method', async () => {
       const config = {};
+      const docs = [{ filePath: '', content: basicDoc }];
+      const result = (await plugin(schema, docs, config, {
+        outputFile: 'graphql.ts',
+      })) as Types.ComplexPluginOutput;
+
+      const usage = `
+async function test() {
+  const client = new GraphQLClient('');
+  const sdk = getSdk(client);
+  
+  await sdk.feed();
+  await sdk.feed3();
+  await sdk.feed4();
+
+  const result = await sdk.feed2({ v: "1" });
+
+  if (result.feed) {
+    if (result.feed[0]) {
+      const id = result.feed[0].id
+    }
+  }
+}`;
+      const output = await validateAndCompile(result, config, docs, schema, usage);
+
+      expect(output).toMatchSnapshot();
+    });
+
+    it('Should generate a correct wrap method with documentMode=string', async () => {
+      const config = { documentMode: DocumentMode.string };
       const docs = [{ filePath: '', content: basicDoc }];
       const result = (await plugin(schema, docs, config, {
         outputFile: 'graphql.ts',
