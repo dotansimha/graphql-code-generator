@@ -12,9 +12,10 @@ export interface TypeScriptDocumentNodesRawPluginConfig extends RawClientSideBas
    * @description Allow you to override the naming convention of the output.
    * You can either override all namings, or specify an object with specific custom naming convention per output.
    * The format of the converter must be a valid `module#method`.
+   * Allowed values for specific output are: `typeNames`, `enumValues`.
    * You can also use "keep" to keep all GraphQL names as-is.
    * Additionally you can set `transformUnderscore` to `true` if you want to override the default behaviour,
-   * which is to preserve underscores.
+   * which is to preserves underscores.
    *
    * @example Override All Names
    * ```yml
@@ -24,18 +25,21 @@ export interface TypeScriptDocumentNodesRawPluginConfig extends RawClientSideBas
    * @example Upper-case enum values
    * ```yml
    * config:
-   *   namingConvention: change-case#pascalCase
+   *   namingConvention:
+   *     typeNames: change-case#pascalCase
+   *     enumValues: change-case#upperCase
    * ```
    * @example Keep
    * ```yml
    * config:
    *   namingConvention: keep
    * ```
-   * @example Transform Underscores
+   * @example Remove Underscores
    * ```yml
    * config:
-   *   namingConvention: change-case#pascalCase
-   *   transformUnderscore: true
+   *   namingConvention:
+   *     typeNames: change-case#pascalCase
+   *     transformUnderscore: true
    * ```
    */
   namingConvention?: NamingConvention;
@@ -73,7 +77,6 @@ export interface TypeScriptDocumentNodesRawPluginConfig extends RawClientSideBas
    * ```
    */
   nameSuffix?: string;
-  transformUnderscore?: boolean;
   fragmentPrefix?: string;
   fragmentSuffix?: string;
 }

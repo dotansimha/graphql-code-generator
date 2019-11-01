@@ -61,7 +61,7 @@ export interface RawConfig {
    * config:
    *   namingConvention: keep
    * ```
-   * @example Transform Underscores
+   * @example Remove Underscores
    * ```yml
    * config:
    *   namingConvention:

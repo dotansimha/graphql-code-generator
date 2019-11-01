@@ -62,6 +62,66 @@ describe('React Apollo', () => {
   };
 
   describe('Issues', () => {
+    it('Issue #2742 - Incorrect import prefix', async () => {
+      const docs = [
+        {
+          filePath: '',
+          content: parse(/* GraphQL */ `
+            query GET_SOMEHTING {
+              feed {
+                id
+              }
+            }
+          `),
+        },
+      ];
+      const config = {
+        addDocBlocks: false,
+        withHooks: true,
+        withComponent: false,
+        withHOC: false,
+        skipTypename: true,
+        importOperationTypesFrom: 'Types',
+      };
+
+      const content = (await plugin(schema, docs, config, {
+        outputFile: 'graphql.tsx',
+      })) as Types.ComplexPluginOutput;
+
+      const output = await validateAndCompile(content, config, schema, docs, '');
+      expect(output).toContain(`export type Get_SomehtingQueryResult = ApolloReactCommon.QueryResult<Types.Get_SomehtingQuery, Types.Get_SomehtingQueryVariables>;`);
+    });
+
+    it('Issue #2826 - Incorrect prefix', async () => {
+      const docs = [
+        {
+          filePath: '',
+          content: parse(/* GraphQL */ `
+            query GET_SOMEHTING {
+              feed {
+                id
+              }
+            }
+          `),
+        },
+      ];
+      const config = {
+        addDocBlocks: false,
+        withHooks: true,
+        withComponent: false,
+        withHOC: false,
+        skipTypename: true,
+        typesPrefix: 'GQL',
+      };
+
+      const content = (await plugin(schema, docs, config, {
+        outputFile: 'graphql.tsx',
+      })) as Types.ComplexPluginOutput;
+
+      const output = await validateAndCompile(content, config, schema, docs, '');
+      expect(output).toContain(`export type Get_SomehtingQueryResult = ApolloReactCommon.QueryResult<GQLGet_SomehtingQuery, GQLGet_SomehtingQueryVariables>;`);
+    });
+
     it('PR #2725 - transformUnderscore: true causes invalid output', async () => {
       const docs = [
         {

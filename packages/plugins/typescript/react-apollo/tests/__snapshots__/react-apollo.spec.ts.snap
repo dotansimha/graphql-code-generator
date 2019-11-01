@@ -171,7 +171,7 @@ export type GetSomehtingQueryVariables = {};
 
 export type GetSomehtingQuery = { feed: Maybe<Array<Maybe<Pick<Entry, 'id'>>>> };
 
-export const Get_SomehtingDocument = gql\`
+export const GetSomehtingDocument = gql\`
     query GET_SOMEHTING {
   feed {
     id
@@ -179,10 +179,10 @@ export const Get_SomehtingDocument = gql\`
 }
     \`;
 export function useGetSomehtingQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetSomehtingQuery, GetSomehtingQueryVariables>) {
-        return ApolloReactHooks.useQuery<GetSomehtingQuery, GetSomehtingQueryVariables>(Get_SomehtingDocument, baseOptions);
+        return ApolloReactHooks.useQuery<GetSomehtingQuery, GetSomehtingQueryVariables>(GetSomehtingDocument, baseOptions);
       }
 export function useGetSomehtingLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetSomehtingQuery, GetSomehtingQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<GetSomehtingQuery, GetSomehtingQueryVariables>(Get_SomehtingDocument, baseOptions);
+          return ApolloReactHooks.useLazyQuery<GetSomehtingQuery, GetSomehtingQueryVariables>(GetSomehtingDocument, baseOptions);
         }
 export type GetSomehtingQueryHookResult = ReturnType<typeof useGetSomehtingQuery>;
 export type GetSomehtingLazyQueryHookResult = ReturnType<typeof useGetSomehtingLazyQuery>;
