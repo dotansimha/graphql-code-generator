@@ -1,8 +1,15 @@
-import { loadTypedefs, mergeTypeDefs, loadDocuments as loadDocumentsToolkit } from 'graphql-toolkit';
+import { loadTypedefsUsingLoaders, loadDocumentsUsingLoaders as loadDocumentsToolkit } from '@graphql-toolkit/core';
+import { mergeTypeDefs } from '@graphql-toolkit/schema-merging';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { GraphQLSchema, DocumentNode } from 'graphql';
 import { DetailedError } from '@graphql-codegen/core';
 import { join } from 'path';
+import { CodeFileLoader } from '@graphql-toolkit/code-file-loader';
+import { GitLoader } from '@graphql-toolkit/git-loader';
+import { GithubLoader } from '@graphql-toolkit/github-loader';
+import { GraphQLFileLoader } from '@graphql-toolkit/graphql-file-loader';
+import { JsonFileLoader } from '@graphql-toolkit/json-file-loader';
+import { UrlLoader } from '@graphql-toolkit/url-loader';
 
 async function getCustomLoaderByPath(path: string): Promise<any> {
   const requiredModule = await import(join(process.cwd(), path));
@@ -73,7 +80,7 @@ export const loadSchema = async (schemaDef: Types.Schema, config: Types.Config):
       options.fetch = await import(moduleName).then(module => (fetchFnName ? module[fetchFnName] : module));
     }
 
-    const docs = (await loadTypedefs(pointToSchema, options)).map(({ document }) => document);
+    const docs = (await loadTypedefsUsingLoaders([new CodeFileLoader(), new GitLoader(), new GithubLoader(), new GraphQLFileLoader(), new JsonFileLoader(), new UrlLoader()], pointToSchema, options)).map(({ document }) => document);
 
     return mergeTypeDefs(docs);
   } catch (e) {
@@ -148,7 +155,7 @@ export const loadDocuments = async (documentsDef: Types.InstanceOrArray<Types.Op
       loadDocumentsToolkitConfig.tagPluck = config.pluckConfig;
     }
 
-    const loadedFromToolkit = await loadDocumentsToolkit(loadWithToolkit, loadDocumentsToolkitConfig);
+    const loadedFromToolkit = await loadDocumentsToolkit([new CodeFileLoader(), new GitLoader(), new GithubLoader(), new GraphQLFileLoader()], loadWithToolkit, loadDocumentsToolkitConfig);
 
     if (loadedFromToolkit.length > 0) {
       result.push(

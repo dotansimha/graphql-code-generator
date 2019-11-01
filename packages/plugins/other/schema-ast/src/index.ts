@@ -1,16 +1,7 @@
-import { GraphQLSchema, printSchema, print } from 'graphql';
+import { GraphQLSchema, printSchema } from 'graphql';
 import { PluginFunction, PluginValidateFn, Types, removeFederation } from '@graphql-codegen/plugin-helpers';
 import { extname } from 'path';
-
-// Actually this should go to ardatan/graphql-toolkit
-export function printSchemaWithDirectives(schema: GraphQLSchema): string {
-  const allTypes = schema.getTypeMap();
-  const allTypesAst = Object.keys(allTypes).map(key => allTypes[key].astNode);
-
-  const allDirectivesAst = schema.getDirectives().map(dir => dir.astNode);
-
-  return [...allDirectivesAst, ...allTypesAst].map(ast => print(ast)).join('\n');
-}
+import { printSchemaWithDirectives } from '@graphql-toolkit/common';
 
 export interface SchemaASTConfig {
   /**

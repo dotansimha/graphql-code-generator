@@ -3,7 +3,7 @@ import { visit, buildASTSchema } from 'graphql';
 import { mergeSchemas } from './merge-schemas';
 import { executePlugin } from './execute-plugin';
 import { DetailedError } from './errors';
-import { checkValidationErrors, validateGraphQlDocuments } from 'graphql-toolkit';
+import { checkValidationErrors, validateGraphQlDocuments } from '@graphql-toolkit/common';
 import { Kind } from 'graphql';
 
 export async function codegen(options: Types.GenerateOptions): Promise<string> {

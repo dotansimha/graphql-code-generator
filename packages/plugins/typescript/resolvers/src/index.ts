@@ -1,4 +1,4 @@
-import { printSchemaWithDirectives } from 'graphql-toolkit';
+import { printSchemaWithDirectives } from '@graphql-toolkit/common';
 import { RawResolversConfig, parseMapper } from '@graphql-codegen/visitor-plugin-common';
 import { Types, PluginFunction, addFederationReferencesToSchema } from '@graphql-codegen/plugin-helpers';
 import { isScalarType, parse, visit, GraphQLSchema, printSchema } from 'graphql';
