@@ -15,7 +15,6 @@ export class TypeScriptDocumentNodesVisitor extends ClientSideBaseVisitor<TypeSc
       documentVariableSuffix: getConfigValue(rawConfig.nameSuffix, ''),
       fragmentVariablePrefix: getConfigValue(rawConfig.fragmentPrefix, ''),
       fragmentVariableSuffix: getConfigValue(rawConfig.fragmentSuffix, ''),
-      transformUnderscore: getConfigValue(rawConfig.transformUnderscore, false),
     });
 
     autoBind(this);

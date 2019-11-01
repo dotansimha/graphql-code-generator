@@ -209,7 +209,12 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
           `),
         },
       ],
-      { namingConvention: 'change-case#pascalCase', transformUnderscore: true },
+      {
+        namingConvention: {
+          typeNames: 'change-case#pascalCase',
+          transformUnderscore: true,
+        },
+      },
       { outputFile: '' }
     ) as string;
 

@@ -23,7 +23,7 @@ export interface ReactApolloPluginConfig extends ClientSideBasePluginConfig {
 }
 
 export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPluginConfig, ReactApolloPluginConfig> {
-  private _prefix: string;
+  private _externalImportPrefix: string;
   private imports = new Set<string>();
 
   constructor(schema: GraphQLSchema, fragments: LoadedFragment[], rawConfig: ReactApolloRawPluginConfig, documents: Types.DocumentFile[]) {
@@ -43,7 +43,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
       addDocBlocks: getConfigValue(rawConfig.addDocBlocks, true),
     });
 
-    this._prefix = this.config.importOperationTypesFrom ? `${this.config.importOperationTypesFrom}.` : '';
+    this._externalImportPrefix = this.config.importOperationTypesFrom ? `${this.config.importOperationTypesFrom}.` : '';
     this._documents = documents;
 
     autoBind(this);
@@ -89,8 +89,8 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
   }
 
   private _buildHocProps(operationName: string, operationType: string): string {
-    const typeVariableName = this._prefix + this.convertName(operationName + toPascalCase(operationType) + this._parsedConfig.operationResultSuffix);
-    const variablesVarName = this._prefix + this.convertName(operationName + toPascalCase(operationType) + 'Variables');
+    const typeVariableName = this._externalImportPrefix + this.convertName(operationName + toPascalCase(operationType) + this._parsedConfig.operationResultSuffix);
+    const variablesVarName = this._externalImportPrefix + this.convertName(operationName + toPascalCase(operationType) + 'Variables');
     const argType = operationType === 'mutation' ? 'MutateProps' : 'DataProps';
 
     this.imports.add(this.getApolloReactCommonImport());
@@ -285,15 +285,8 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
   }
 
   protected buildOperation(node: OperationDefinitionNode, documentVariableName: string, operationType: string, operationResultType: string, operationVariablesTypes: string): string {
-    operationResultType = this.convertName(operationResultType, {
-      prefix: this._prefix,
-      useTypesPrefix: false,
-    });
-
-    operationVariablesTypes = this.convertName(operationVariablesTypes, {
-      prefix: this._prefix,
-      useTypesPrefix: false,
-    });
+    operationResultType = this._externalImportPrefix + operationResultType;
+    operationVariablesTypes = this._externalImportPrefix + operationVariablesTypes;
 
     const mutationFn = this.config.withMutationFn || this.config.withComponent ? this._buildMutationFn(node, operationResultType, operationVariablesTypes) : null;
     const component = this.config.withComponent ? this._buildComponent(node, documentVariableName, operationType, operationResultType, operationVariablesTypes) : null;
