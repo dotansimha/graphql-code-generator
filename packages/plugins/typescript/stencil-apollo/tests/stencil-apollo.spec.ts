@@ -88,8 +88,42 @@ describe('Components', () => {
             })
             export class FeedComponent {
                 @Prop() renderer: import('stencil-apollo').QueryRenderer<FeedQuery, FeedQueryVariables>;
+                @Prop() variables: FeedQueryVariables;
                 render() {
-                    return <apollo-query query={ FeedDocument } renderer={ this.renderer } />;
+                    return <apollo-query query={ FeedDocument } variables={ this.variables } renderer={ this.renderer } />;
+                }
+            }
+      `);
+  });
+
+  it('should generate Class Component with variables', async () => {
+    const documents = gql`
+      query Feed($limit: Int) {
+        feed(limit: $limit) {
+          id
+          commentCount
+          repository {
+            full_name
+            html_url
+            owner {
+              avatar_url
+            }
+          }
+        }
+      }
+    `;
+
+    const { content } = (await plugin(schema, [{ filePath: '', content: documents }], { componentType: StencilComponentType.class }, { outputFile: '' })) as Types.ComplexPluginOutput;
+
+    expect(content).toBeSimilarStringTo(`
+            @Component({
+                tag: 'apollo-feed'
+            })
+            export class FeedComponent {
+                @Prop() renderer: import('stencil-apollo').QueryRenderer<FeedQuery, FeedQueryVariables>;
+                @Prop() variables: FeedQueryVariables;
+                render() {
+                    return <apollo-query query={ FeedDocument } variables={ this.variables } renderer={ this.renderer } />;
                 }
             }
       `);
