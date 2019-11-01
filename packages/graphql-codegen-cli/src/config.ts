@@ -203,7 +203,7 @@ export class CodegenContext {
         const project = this._graphqlConfig.getProject(this._project);
 
         this.config = {
-          ...project.extension('graphql-codegen'),
+          ...project.extension('codegen'),
           schema: project.schema,
           documents: project.documents,
         };

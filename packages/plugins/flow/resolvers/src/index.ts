@@ -1,7 +1,7 @@
-import { printSchemaWithDirectives } from 'graphql-toolkit';
+import { printSchemaWithDirectives } from '@graphql-toolkit/common';
 import { RawResolversConfig } from '@graphql-codegen/visitor-plugin-common';
 import { Types, PluginFunction, addFederationReferencesToSchema } from '@graphql-codegen/plugin-helpers';
-import { isScalarType, parse, printSchema, visit, GraphQLSchema } from 'graphql';
+import { parse, printSchema, visit, GraphQLSchema } from 'graphql';
 import { FlowResolversVisitor } from './visitor';
 
 export interface FlowResolversPluginConfig extends RawResolversConfig {}

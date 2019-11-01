@@ -1,7 +1,7 @@
 import { RawConfig } from '@graphql-codegen/visitor-plugin-common';
 import { Types, PluginFunction, PluginValidateFn } from '@graphql-codegen/plugin-helpers';
 import { parse, visit, GraphQLSchema } from 'graphql';
-import { printSchemaWithDirectives } from 'graphql-toolkit';
+import { printSchemaWithDirectives } from '@graphql-toolkit/common';
 import { extname } from 'path';
 import gql from 'graphql-tag';
 import { TsMongoVisitor } from './visitor';
