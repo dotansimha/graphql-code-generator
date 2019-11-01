@@ -11,7 +11,7 @@ const CodegenExtension: GraphQLExtensionDeclaration = api => {
   // instead of exposing an api for that
 
   return {
-    name: 'graphql-codegen',
+    name: 'codegen',
   };
 };
 
@@ -37,7 +37,7 @@ function isGraphQLConfig(config: GraphQLConfig): config is GraphQLConfig {
   }
 
   try {
-    return config.getDefault().hasExtension('graphql-codegen');
+    return config.getDefault().hasExtension('codegen');
   } catch (e) {}
 
   try {
@@ -45,7 +45,7 @@ function isGraphQLConfig(config: GraphQLConfig): config is GraphQLConfig {
       if (config.projects.hasOwnProperty(projectName)) {
         const project = config.projects[projectName];
 
-        if (project.hasExtension('graphql-codegen')) {
+        if (project.hasExtension('codegen')) {
           return true;
         }
       }
