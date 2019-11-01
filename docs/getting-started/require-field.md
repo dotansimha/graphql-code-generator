@@ -3,7 +3,7 @@ id: require-field
 title: `require` field
 ---
 
-The GraphQL Code-Generator also support `require` extensions - that means that you can load any external files without the need to transpile it before.
+The `require` field allows you to load any external files without the need to transpile them before.
 
 ## How to use it?
 
@@ -19,7 +19,7 @@ Adding `require` extension is useful if you are loading your `GraphQLSchema` or 
 
 ## TypeScript Support
 
-If you wish to use TypeScript, just add [`ts-node`](https://github.com/TypeStrong/ts-node) from npm, and specify it's register export in your config file:
+If you wish to use TypeScript, just add [`ts-node`](https://github.com/TypeStrong/ts-node) from npm and specify its register export in your config file:
 
 ```yml
 require:
@@ -28,12 +28,12 @@ require:
 
 ## Specifying from the command line
 
-You can also specify `require.extensions` as a cli flag, using `-r`.
+You can also specify `require.extensions` as a cli flag using `-r`.
 
-Specifying `-r` using a CLI flag will load your `require.extension` _before_ loading the `.yml` file, and this way you can load environment variables using `dotenv`,and use those environment variables in your `.yml` config file.
+Specifying `-r` using a CLI flag will load your `require.extension` _before_ loading the `.yml` file, and this way you can load environment variables using `dotenv` and use those environment variables in your `.yml` config file.
 
 ### `dotenv` Integration
 
-If you wish to use [dotenv](https://github.com/motdotla/dotenv) to load environment variables, you can install `dotenv` from npm, and then to use `require` cli flag to preload the `dotenv` require extensions: `-r dotenv/config`.
+If you wish to use [dotenv](https://github.com/motdotla/dotenv) to load environment variables, you can install `dotenv` from npm and then to use the `require` cli flag to preload the `dotenv` require extensions: `-r dotenv/config`.
 
 It will make sure to load your `.env` file before executing the codegen and loading your `.yml` file.

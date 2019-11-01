@@ -100,7 +100,7 @@ You can also point to multiple `.graphql` files, and the Code Generator will mer
 schema: src/**/*.graphql
 ```
 
-You can also specify multiplep patterns:
+You can also specify multiple patterns:
 
 ```yml
 schema:
@@ -116,7 +116,7 @@ schema:
   - '!*.generated.graphql'
 ```
 
-> All provided glob expressions are being evaludated together - the usage is similar to `.gitingore` file.
+> All provided glob expressions are evaluated together. The usage is similar to `.gitignore`.
 
 Additionally, you can use code files and the codegen will try to extract the GraphQL schema from it:
 
@@ -124,7 +124,7 @@ Additionally, you can use code files and the codegen will try to extract the Gra
 schema: './src/**/*.ts'
 ```
 
-The codegen will try to load the file as AST and look for explicit GraphQL strings, but if it can't find those, it will try to `require` the file and looks for operations in the default export.
+The codegen will try to load the file as an AST and look for explicit GraphQL strings, but if it can't find those, it will try to `require` the file and looks for operations in the default export.
 
 You can disable the `require` if it causes errors for you (for example, because of different module system or missing deps):
 
@@ -160,7 +160,7 @@ module.exports = buildSchema(/* GraphQL */ `
 
 - ### String
 
-You can specify your schema directly as AST string in your config file. It's very useful for testing.
+You can specify your schema directly as an AST string in your config file. It's very useful for testing.
 
 ```yml
 schema: 'type MyType { foo: String }    type Query { myType: MyType }'
@@ -168,7 +168,7 @@ schema: 'type MyType { foo: String }    type Query { myType: MyType }'
 
 ## Custom Schema Loader
 
-If you schema has a different, or complicated way of loading, you can specify a custom loader (with the `loader` field) for your schema, by pointing to a code file that exports a `function` as default, in each schema that your are loading.
+If your schema has a different or complicated way of loading, you can specify a custom loader with the `loader` field.
 
 ```yml
 schema:
@@ -178,7 +178,7 @@ schema:
       loader: my-file-loader.js
 ```
 
-Your custom loader should export a default function, and return `GraphQLSchema` object. For example:
+Your custom loader should export a default function that returns `GraphQLSchema` object. For example:
 
 ```js
 const { buildSchema } = require('graphql');
