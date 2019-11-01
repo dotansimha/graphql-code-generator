@@ -13,7 +13,7 @@ You can specify either a `string` pointing to your documents, or `string[]` poin
 
 ### Root level
 
-You can specify the `documents` field in your root level config, as follow:
+You can specify the `documents` field in your root level config:
 
 ```yml
 schema: http://localhost:3000/graphql
@@ -27,7 +27,7 @@ generates:
 
 ### Output-file level
 
-Or, you can specify it per-output file level.
+You can also specify the `documents` field in your generated file config:
 
 ```yml
 schema: http://server1.com/graphql
@@ -41,20 +41,18 @@ generates:
 
 ### Document Scanner
 
-The code-generator has a built-in document scanner, which means that you can specify a `.graphql` file, or code files, that contains GraphQL documents.
+The code-generator has a built-in document scanner, which means that you can specify a `.graphql` file or code files that contains GraphQL documents.
 
-You can use this this way:
+You can tell it to find documents in TypeScript files:
 
 ```yml
 schema: http://server1.com/graphql
 documents: "src/**/*.{ts,tsx}"
 ```
 
-And the code-generator will look for GraphQL documents inside your code files.
-
 ## Available formats
 
-The following can be specified as a single value, or as an array with mixed values.
+The following can be specified as a single value or as an array with mixed values.
 
 - ### Filename
 
@@ -80,7 +78,7 @@ You can specify a Glob expresion in order to load multiple files:
 documents: './src/**/*.graphql'
 ```
 
-You can also specify multiple Glob expressions, as array:
+You can also specify multiple Glob expressions as an array:
 
 ```yml
 documents:
@@ -88,7 +86,7 @@ documents:
   - './src/dir2/*.graphql'
 ```
 
-And, you can specify files to exclude: 
+You can specify files to exclude by prefixing the Glob expression with `!`:
 
 ```yml
 documents:
@@ -96,16 +94,16 @@ documents:
   - '!*.generated.graphql'
 ```
 
-> All provided glob expressions are being evaludated together - the usage is similar to `.gitingore` file.
+> All provided glob expressions are evaluated together. The usage is similar to `.gitignore`.
 
-Additionally, you can use code files and the codegen will try to extract the GraphQL operations from it:
+Additionally, you can use code files and the codegen will try to extract the GraphQL documents from it:
 
 ```yml
 documents:
   - './src/*.jsx'
 ```
 
-The codegen will try to load the file as AST and look for explicit GraphQL operations strings, but if it can't find those, it will try to `require` the file and looks for operations in the default export.
+The codegen will try to load the file as an AST and look for explicit GraphQL operations strings, but if it can't find those, it will try to `require` the file and look for operations in the default export.
 
 You can disable the `require` if it causes errors for you (for example, because of different module system):
 
@@ -115,11 +113,11 @@ documents:
     noRequire: true
 ```
 
-> Your operations should be declared as template string with `gql` tag (you can customize is with `pluckConfig`), or with a magic GraphQL comment (`const myQuery = /* GraphQL*/\`query { ... }\``)
+> Your operations should be declared as template strings with the `gql` tag or with a GraphQL comment (`` const myQuery = /* GraphQL*/\`query { ... }` ``). This can be configured with `pluckConfig`.
 
 - ### String
 
-You can specify your GraphQL documents directly as AST string in your config file. It's very useful for testing.
+You can specify your GraphQL documents directly as an AST string in your config file. It's very useful for testing.
 
 ```yml
 documents:
@@ -129,7 +127,7 @@ documents:
 
 ## Custom Document Loader
 
-If you documents has a different, or complicated way of loading, you can specify a custom loader (with the `loader` field) for your documents, by pointing to a code file that exports a `function` as default, in each documents that your are loading.
+If your schema has a different or complicated way of loading, you can specify a custom loader with the `loader` field.
 
 ```yml
 documents:
@@ -137,7 +135,7 @@ documents:
         loader: my-documents-loader.js
 ```
 
-Your custom loader should export a default function, and return an array of `{ filePath: string, content: DocumentNode }`. For example:
+Your custom loader should export a default function that returns an array of objects like `{ filePath: string, content: DocumentNode }`. For example:
 
 ```js
 const { parse } = require('graphql');
