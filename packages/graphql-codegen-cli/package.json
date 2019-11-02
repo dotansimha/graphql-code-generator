@@ -61,7 +61,7 @@
     "chokidar": "3.2.3",
     "commander": "4.0.0",
     "common-tags": "1.8.0",
-    "cosmiconfig": "5.2.1",
+    "cosmiconfig": "6.0.0",
     "debounce": "1.2.0",
     "detect-indent": "6.0.0",
     "glob": "7.1.5",
