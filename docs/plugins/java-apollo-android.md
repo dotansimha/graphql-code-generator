@@ -50,6 +50,10 @@ build.dependsOn preBuild
 
 This will make sure to run and generate output before each time you build your project.
 
+## Usage
+
+You can find a [repository with a working example using AppSync](https://github.com/dotansimha/graphql-codegen-appsync-android-example)
+
 ## Configuration
 
 {@import: ../docs/generated-config/java-apollo-android.md}
