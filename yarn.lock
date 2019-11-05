@@ -14228,10 +14228,10 @@ react-transition-group@^4.3.0:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
-react-wonka@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/react-wonka/-/react-wonka-1.0.2.tgz#b8d5a095e5ce40548842036898a2665ea5202f69"
-  integrity sha512-oZgI5Z0DY7HjqPQZPbY5+2hEmDSWJfdurt1uaB65bvH4FLWA9/0cW4KNn8Y776fnicsxTNMtVMYMlFgB/2KJjQ==
+react-wonka@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/react-wonka/-/react-wonka-1.0.3.tgz#2d997403be347489e1161cb58d502ac683499847"
+  integrity sha512-7ocCcMnSxc7zD06V6H2Er4PJNbHQL2bityy6aZPrsn2JqJSP4SEkCzdvCk+nQVKDDqO8Lk5L5F9GG7PUB8gGsA==
 
 react@16.11.0:
   version "16.11.0"
@@ -16725,12 +16725,12 @@ url@^0.11.0:
     punycode "1.3.2"
     querystring "0.2.0"
 
-urql@1.6.1:
-  version "1.6.1"
-  resolved "https://registry.yarnpkg.com/urql/-/urql-1.6.1.tgz#ac40eddcdfb4b7cd3308b2c2a6e0fa426a3904c6"
-  integrity sha512-SqMBJiImlMppg7fodlIOAd1/7C1D7VxJ1ZNuk1p5nlmqbFAy7tjQlEbqtxEwNg+Rua3Pz/FPKR8m+LuMrnvWXA==
+urql@1.6.2:
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/urql/-/urql-1.6.2.tgz#89f630fd9b587dd1fa46ee223a02b727302d7e39"
+  integrity sha512-SRyFg0bBxsHyPFAV+4ZmBy+zRvsaoRI5s6yJiaYu4l5TX0jzmRXpVnKAvOBEfewYfqkH4ZaGkUw60izCumTcag==
   dependencies:
-    react-wonka "^1.0.2"
+    react-wonka "^1.0.3"
     wonka "^3.2.1"
 
 use@^3.1.0:
