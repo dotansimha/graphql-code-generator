@@ -45,7 +45,7 @@
     "@graphql-codegen/core": "1.8.3",
     "@graphql-codegen/plugin-helpers": "1.8.3",
     "@graphql-toolkit/code-file-loader": "0.6.7",
-    "@graphql-toolkit/core": "0.6.6",
+    "@graphql-toolkit/core": "0.6.7",
     "@graphql-toolkit/git-loader": "0.6.7",
     "@graphql-toolkit/github-loader": "0.6.6",
     "@graphql-toolkit/graphql-file-loader": "0.6.6",
