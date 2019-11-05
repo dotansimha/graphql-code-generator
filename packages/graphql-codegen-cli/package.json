@@ -49,7 +49,7 @@
     "@graphql-toolkit/git-loader": "0.6.7",
     "@graphql-toolkit/github-loader": "0.6.6",
     "@graphql-toolkit/graphql-file-loader": "0.6.6",
-    "@graphql-toolkit/json-file-loader": "0.6.6",
+    "@graphql-toolkit/json-file-loader": "0.6.7",
     "@graphql-toolkit/url-loader": "0.6.6",
     "@types/debounce": "1.2.0",
     "@types/is-glob": "4.0.1",
