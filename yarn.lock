@@ -1440,15 +1440,6 @@
     aggregate-error "3.0.1"
     lodash "4.17.15"
 
-"@graphql-toolkit/common@0.6.6":
-  version "0.6.6"
-  resolved "https://registry.yarnpkg.com/@graphql-toolkit/common/-/common-0.6.6.tgz#78e40a60eff843497140abf18733e170de4a1a40"
-  integrity sha512-6el8vYdtwO+LCZTfrpBsblsCYFFeUQ7W/KMGz2K/paE2V6mn93T0lzGkyGTSjxknqvqaTJOUMejzK719wAoQdQ==
-  dependencies:
-    "@kamilkisiela/graphql-tools" "4.0.6"
-    aggregate-error "3.0.1"
-    lodash "4.17.15"
-
 "@graphql-toolkit/common@0.6.7":
   version "0.6.7"
   resolved "https://registry.yarnpkg.com/@graphql-toolkit/common/-/common-0.6.7.tgz#9a23d51913c282fddef149b53dba54c69688f1cf"
@@ -3095,10 +3086,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.0.7.tgz#4f2563bad652b2acb1722d7e7aae2b0ff62d192c"
   integrity sha512-1YKeT4JitGgE4SOzyB9eMwO0nGVNkNEsm9qlIt1Lqm/tG2QEiSMTD4kS3aO6L+w5SClLVxALmIBESK6Mk5wX0A==
 
-"@types/node@10.17.3":
-  version "10.17.3"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.17.3.tgz#65a8d9a6a0f6af55595a2d0020617959130d6495"
-  integrity sha512-QZ9CjUB3QoA3f2afw3utKlfRPhpmufB7jC2+oDhLWnXqoyx333fhKSQDLQu2EK7OE0a15X67eYiRAaJsHXrpMA==
+"@types/node@10.17.4":
+  version "10.17.4"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.17.4.tgz#8993a4fe3c4022fda66bf4ea660d615fc5659c6f"
+  integrity sha512-F2pgg+LcIr/elguz+x+fdBX5KeZXGUOp7TV8M0TVIrDezYLFRNt8oMTyps0VQ1kj5WGGoR18RdxnRDHXrIFHMQ==
 
 "@types/node@^10.1.0":
   version "10.14.8"
