@@ -21,7 +21,7 @@
     "java-ast": "0.1.0",
     "jest": "24.8.0",
     "ts-jest": "24.1.0",
-    "typescript": "3.6.4"
+    "typescript": "3.7.2"
   },
   "sideEffects": false,
   "main": "dist/commonjs/index.js",
