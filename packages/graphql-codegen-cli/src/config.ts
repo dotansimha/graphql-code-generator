@@ -1,4 +1,4 @@
-import * as cosmiconfig from 'cosmiconfig';
+import { cosmiconfig } from 'cosmiconfig';
 import { resolve } from 'path';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { DetailedError } from '@graphql-codegen/core';

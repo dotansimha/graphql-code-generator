@@ -87,7 +87,6 @@
   },
   "devDependencies": {
     "@types/chokidar": "1.7.5",
-    "@types/cosmiconfig": "5.0.3",
     "@types/detect-indent": "5.0.0",
     "@types/inquirer": "6.5.0",
     "@types/js-yaml": "3.12.1",
