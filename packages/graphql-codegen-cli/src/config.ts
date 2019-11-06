@@ -55,10 +55,7 @@ function customLoader(ext: 'json' | 'yaml' | 'js') {
     }
   }
 
-  return {
-    sync: loader,
-    async: loader,
-  };
+  return loader;
 }
 
 export async function loadContext(configFilePath?: string): Promise<CodegenContext> | never {
