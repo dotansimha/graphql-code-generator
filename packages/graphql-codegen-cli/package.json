@@ -61,7 +61,7 @@
     "chokidar": "3.3.0",
     "commander": "4.0.0",
     "common-tags": "1.8.0",
-    "cosmiconfig": "5.2.1",
+    "cosmiconfig": "6.0.0",
     "debounce": "1.2.0",
     "detect-indent": "6.0.0",
     "glob": "7.1.5",
@@ -87,7 +87,6 @@
   },
   "devDependencies": {
     "@types/chokidar": "1.7.5",
-    "@types/cosmiconfig": "5.0.3",
     "@types/detect-indent": "5.0.0",
     "@types/inquirer": "6.5.0",
     "@types/js-yaml": "3.12.1",

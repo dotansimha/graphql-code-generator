@@ -1,4 +1,4 @@
-import * as cosmiconfig from 'cosmiconfig';
+import { cosmiconfig, defaultLoaders } from 'cosmiconfig';
 import { resolve } from 'path';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { DetailedError } from '@graphql-codegen/core';
@@ -43,22 +43,19 @@ function customLoader(ext: 'json' | 'yaml' | 'js') {
     }
 
     if (ext === 'json') {
-      return (cosmiconfig as any).loadJson(filepath, content);
+      return defaultLoaders['.json'](filepath, content);
     }
 
     if (ext === 'yaml') {
-      return (cosmiconfig as any).loadYaml(filepath, content);
+      return defaultLoaders['.yaml'](filepath, content);
     }
 
     if (ext === 'js') {
-      return (cosmiconfig as any).loadJs(filepath, content);
+      return defaultLoaders['.js'](filepath, content);
     }
   }
 
-  return {
-    sync: loader,
-    async: loader,
-  };
+  return loader;
 }
 
 export async function loadContext(configFilePath?: string): Promise<CodegenContext> | never {
