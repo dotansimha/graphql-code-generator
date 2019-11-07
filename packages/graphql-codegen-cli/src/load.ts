@@ -59,8 +59,8 @@ export const loadSchema = async (schemaDef: Types.Schema, config: Types.Config):
     }
   }
 
+  let pointToSchema: string = null;
   try {
-    let pointToSchema: string = null;
     let options: any = {};
 
     if (typeof schemaDef === 'string') {
@@ -87,10 +87,10 @@ export const loadSchema = async (schemaDef: Types.Schema, config: Types.Config):
     throw new DetailedError(
       'Failed to load schema',
       `
-        Failed to load schema from ${schemaDef}:
+        Failed to load schema from ${pointToSchema || schemaDef}:
 
-        ${e.message}
-        ${e.stack}
+        ${e.message || e}
+        ${e.stack || ''}
     
         GraphQL Code Generator supports:
           - ES Modules and CommonJS exports (export as default or named export "schema")
