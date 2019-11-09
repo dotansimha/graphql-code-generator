@@ -285,8 +285,8 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
   }
 
   protected buildOperation(node: OperationDefinitionNode, documentVariableName: string, operationType: string, operationResultType: string, operationVariablesTypes: string): string {
-    operationResultType = this._externalImportPrefix + operationResultType;
-    operationVariablesTypes = this._externalImportPrefix + operationVariablesTypes;
+    operationResultType = operationResultType;
+    operationVariablesTypes = operationVariablesTypes;
 
     const mutationFn = this.config.withMutationFn || this.config.withComponent ? this._buildMutationFn(node, operationResultType, operationVariablesTypes) : null;
     const component = this.config.withComponent ? this._buildComponent(node, documentVariableName, operationType, operationResultType, operationVariablesTypes) : null;
