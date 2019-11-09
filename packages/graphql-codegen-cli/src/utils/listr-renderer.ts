@@ -1,4 +1,4 @@
-import chalk from 'chalk';
+import * as chalk from 'chalk';
 import logUpdate from 'log-update';
 import * as indentString from 'indent-string';
 import * as logSymbol from 'log-symbols';
