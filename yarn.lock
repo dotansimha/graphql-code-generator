@@ -16409,10 +16409,10 @@ ts-log@2.1.4:
   resolved "https://registry.yarnpkg.com/ts-log/-/ts-log-2.1.4.tgz#063c5ad1cbab5d49d258d18015963489fb6fb59a"
   integrity sha512-P1EJSoyV+N3bR/IWFeAqXzKPZwHpnLY6j7j58mAvewHRipo+BQM2Y1f9Y9BjEQznKwgqqZm7H8iuixmssU7tYQ==
 
-ts-node@8.4.1:
-  version "8.4.1"
-  resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-8.4.1.tgz#270b0dba16e8723c9fa4f9b4775d3810fd994b4f"
-  integrity sha512-5LpRN+mTiCs7lI5EtbXmF/HfMeCjzt7DH9CZwtkr6SywStrNQC723wG+aOWFiLNn7zT3kD/RnFqi3ZUfr4l5Qw==
+ts-node@8.5.0:
+  version "8.5.0"
+  resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-8.5.0.tgz#bc7d5a39133d222bf25b1693651e4d893785f884"
+  integrity sha512-fbG32iZEupNV2E2Fd2m2yt1TdAwR3GTCrJQBHDevIiEBNy1A8kqnyl1fv7jmRmmbtcapFab2glZXHJvfD1ed0Q==
   dependencies:
     arg "^4.1.0"
     diff "^4.0.1"
@@ -16764,10 +16764,10 @@ url@^0.11.0:
     punycode "1.3.2"
     querystring "0.2.0"
 
-urql@1.6.2:
-  version "1.6.2"
-  resolved "https://registry.yarnpkg.com/urql/-/urql-1.6.2.tgz#89f630fd9b587dd1fa46ee223a02b727302d7e39"
-  integrity sha512-SRyFg0bBxsHyPFAV+4ZmBy+zRvsaoRI5s6yJiaYu4l5TX0jzmRXpVnKAvOBEfewYfqkH4ZaGkUw60izCumTcag==
+urql@1.6.3:
+  version "1.6.3"
+  resolved "https://registry.yarnpkg.com/urql/-/urql-1.6.3.tgz#0484a90a01d6fc8d0a6fb96bb4b2b2146a612c0d"
+  integrity sha512-KX8qHTGo8deSg41rrQEk9JhJTz6w/LBCdWhYutYjbCUrkoAF4lEiCkgOEiO0fEf+hpDg0nQTTkHTpRbgQ0yh1g==
   dependencies:
     react-wonka "^1.0.3"
     wonka "^3.2.1"
