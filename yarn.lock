@@ -1430,12 +1430,12 @@
     unique-filename "^1.1.1"
     which "^1.3.1"
 
-"@graphql-toolkit/code-file-loader@0.6.8":
-  version "0.6.8"
-  resolved "https://registry.yarnpkg.com/@graphql-toolkit/code-file-loader/-/code-file-loader-0.6.8.tgz#0afb384cb3f663b590bfba7dcc34e01663f12073"
-  integrity sha512-a+HwoEltaX8ychbwk9xxF9AJZjp8GkyCiSGBJrcEER0XbS5F4jFvVxKJJarmxC43I3b4tZMGggCG4bryCMtiQw==
+"@graphql-toolkit/code-file-loader@0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/code-file-loader/-/code-file-loader-0.7.0.tgz#6de7a055f3c92e565c6f4f6ee4d8fe9947b01d5c"
+  integrity sha512-iqWSLalaF1XxsZSK9D8RhvzKBde/9gu09kqv7HdJtUcdsQU2YOMPQvIAA5NgPnh/U74lA9/7cVM7hQxGixVh2w==
   dependencies:
-    "@graphql-toolkit/common" "0.6.8"
+    "@graphql-toolkit/common" "0.7.0"
     graphql-tag-pluck "0.8.7"
     is-valid-path "0.1.1"
     tslib "1.10.0"
@@ -1453,6 +1453,15 @@
   version "0.6.8"
   resolved "https://registry.yarnpkg.com/@graphql-toolkit/common/-/common-0.6.8.tgz#7e80f4821d8484970d768b7cb19a0bc1e7a90784"
   integrity sha512-vvxLMumGhFsSU/SPbMHsHPtr1WpD98EngSVzDoH4EfiobT8O9RKCaK/Nr57nWxbk1+A0iAC3OrHYugp46au5sQ==
+  dependencies:
+    "@kamilkisiela/graphql-tools" "4.0.6"
+    aggregate-error "3.0.1"
+    lodash "4.17.15"
+
+"@graphql-toolkit/common@0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/common/-/common-0.7.0.tgz#d557a9ba9e3c2cff8b65681d0a09f062337f0b4d"
+  integrity sha512-/zsfk44WHtk18r2b+1WB9smsrQ2Kfs0Qy/8j8ZfjV3Rmm4V1oz1e02eAT4wpOwxYUk7o/V6Bi0I+0ek6YytK/A==
   dependencies:
     "@kamilkisiela/graphql-tools" "4.0.6"
     aggregate-error "3.0.1"
