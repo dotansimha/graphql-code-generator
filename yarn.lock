@@ -1568,12 +1568,12 @@
     cross-fetch "3.0.4"
     valid-url "1.0.9"
 
-"@graphql-toolkit/url-loader@0.7.0":
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/@graphql-toolkit/url-loader/-/url-loader-0.7.0.tgz#2e56ab141feccf703cc8a2a6dee8162c5f0c2199"
-  integrity sha512-OxEVrGM5bWUah7x6/1uw14tiRWh7d5r+lT3EfjHMmUYjNEZLE8QgLZ1SGixjghbBjk+Hmd5upm/oym09ZEsnQw==
+"@graphql-toolkit/url-loader@0.7.1":
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/url-loader/-/url-loader-0.7.1.tgz#afe0532a404f8d6788029d5a4b3c1e087adab24e"
+  integrity sha512-zVZN3rQs4xSAdcMiUoV1fBGP2At5nFiI+nyxJ4yrkhD76AG23XV5cvgXzb5IG+0oTIP6HeowgAz+nkygEmMD7g==
   dependencies:
-    "@graphql-toolkit/common" "0.7.0"
+    "@graphql-toolkit/common" "0.7.1"
     cross-fetch "3.0.4"
     tslib "1.10.0"
     valid-url "1.0.9"
