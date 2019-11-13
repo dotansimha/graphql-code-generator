@@ -174,9 +174,9 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                       const schemaPointerMap: any = {};
                       const allSchemaUnnormalizedPointers = [...rootSchemas, ...outputSpecificSchemas];
                       for (const unnormalizedPtr of allSchemaUnnormalizedPointers) {
-                        if (unnormalizedPtr === 'string') {
+                        if (typeof unnormalizedPtr === 'string') {
                           schemaPointerMap[unnormalizedPtr] = {};
-                        } else if (unnormalizedPtr === 'object') {
+                        } else if (typeof unnormalizedPtr === 'object') {
                           Object.assign(schemaPointerMap, unnormalizedPtr);
                         }
                       }

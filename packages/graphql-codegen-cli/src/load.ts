@@ -11,7 +11,7 @@ import { JsonFileLoader } from '@graphql-toolkit/json-file-loader';
 import { UrlLoader } from '@graphql-toolkit/url-loader';
 import { join } from 'path';
 
-export const loadSchema = async (schemaPointers: UnnormalizedTypeDefPointer | UnnormalizedTypeDefPointer[], config: Types.Config): Promise<DocumentNode> => {
+export const loadSchema = async (schemaPointers: UnnormalizedTypeDefPointer, config: Types.Config): Promise<DocumentNode> => {
   try {
     const docs = await loadTypedefsUsingLoaders([new CodeFileLoader(), new GitLoader(), new GithubLoader(), new GraphQLFileLoader(), new JsonFileLoader(), new UrlLoader()], schemaPointers, config);
 
@@ -20,7 +20,7 @@ export const loadSchema = async (schemaPointers: UnnormalizedTypeDefPointer | Un
     throw new DetailedError(
       'Failed to load schema',
       `
-        Failed to load schema from ${schemaPointers instanceof Array ? schemaPointers.join(',') : schemaPointers}:
+        Failed to load schema from ${Object.keys(schemaPointers).join(',')}:
 
         ${e.message || e}
         ${e.stack || ''}
