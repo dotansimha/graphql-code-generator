@@ -135,18 +135,13 @@ documents:
         loader: my-documents-loader.js
 ```
 
-Your custom loader should export a default function that returns an array of objects like `{ filePath: string, content: DocumentNode }`. For example:
+Your custom loader should export a default function that returns a `DocumentNode`. For example:
 
 ```js
 const { parse } = require('graphql');
 const { readFileSync } = require('fs');
 
 module.exports = function(docString, config) {
-  return [
-    {
-      filePath: docString,
-      content: parse(readFileSync(docString, { encoding: 'utf-8' }))
-    }
-  ];
+  return parse(readFileSync(docString, { encoding: 'utf-8' }));;
 };
 ```
