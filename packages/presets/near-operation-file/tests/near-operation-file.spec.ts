@@ -327,6 +327,29 @@ describe('near-operation-file preset', () => {
     expect(result.map(o => o.plugins)[0]).toEqual(expect.arrayContaining([{ add: `import * as Types from './types';\n` }]));
   });
 
+  it('Should not generate an absolute path if the path starts with "~"', async () => {
+    const result = await preset.buildGeneratesSection({
+      baseOutputDir: './src/',
+      config: {},
+      presetConfig: {
+        cwd: '/some/deep/path',
+        baseTypesPath: '~@internal/types',
+      },
+      schemaAst: schemaNode,
+      schema: schemaDocumentNode,
+      documents: [
+        {
+          filePath: '/some/deep/path/src/me-query.graphql',
+          content: operationAst,
+        },
+        testDocuments[1],
+      ],
+      plugins: [{ typescript: {} }],
+      pluginMap: { typescript: {} as any },
+    });
+    expect(result.map(o => o.plugins)[0]).toEqual(expect.arrayContaining([{ add: `import * as Types from '@internal/types';\n` }]));
+  });
+
   it('Should add "add" plugin to plugins map if its not there', async () => {
     const result = await preset.buildGeneratesSection({
       baseOutputDir: './src/',

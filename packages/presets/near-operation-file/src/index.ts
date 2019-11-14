@@ -146,48 +146,49 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
     };
 
     const duplicateFragmentNames: string[] = [];
-    const fragmentNameToFile: FragmentNameToFile = options.documents.reduce(
-      (prev: FragmentNameToFile, documentRecord) => {
-        const fragments: FragmentDefinitionNode[] = documentRecord.content.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[];
+    const fragmentNameToFile: FragmentNameToFile = options.documents.reduce((prev: FragmentNameToFile, documentRecord) => {
+      const fragments: FragmentDefinitionNode[] = documentRecord.content.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[];
 
-        if (fragments.length > 0) {
-          for (const fragment of fragments) {
-            const schemaType = schemaObject.getType(fragment.typeCondition.name.value);
+      if (fragments.length > 0) {
+        for (const fragment of fragments) {
+          const schemaType = schemaObject.getType(fragment.typeCondition.name.value);
 
-            if (!schemaType) {
-              throw new Error(`Fragment "${fragment.name.value}" is set on non-existing type "${fragment.typeCondition.name.value}"!`);
-            }
-
-            const possibleTypes = getPossibleTypes(schemaObject, schemaType);
-            const fragmentSuffix = options.config.dedupeOperationSuffix && fragment.name.value.toLowerCase().endsWith('fragment') ? '' : 'Fragment';
-            const filePath = appendExtensionToFilePath(documentRecord.filePath, extension);
-            const importsNames = getAllFragmentSubTypes(possibleTypes.map(t => t.name), fragment.name.value, fragmentSuffix);
-
-            if (prev[fragment.name.value]) {
-              duplicateFragmentNames.push(fragment.name.value);
-            }
-
-            prev[fragment.name.value] = { filePath, importsNames, onType: fragment.typeCondition.name.value, node: fragment };
+          if (!schemaType) {
+            throw new Error(`Fragment "${fragment.name.value}" is set on non-existing type "${fragment.typeCondition.name.value}"!`);
           }
-        }
 
-        return prev;
-      },
-      {} as FragmentNameToFile
-    );
+          const possibleTypes = getPossibleTypes(schemaObject, schemaType);
+          const fragmentSuffix = options.config.dedupeOperationSuffix && fragment.name.value.toLowerCase().endsWith('fragment') ? '' : 'Fragment';
+          const filePath = appendExtensionToFilePath(documentRecord.filePath, extension);
+          const importsNames = getAllFragmentSubTypes(
+            possibleTypes.map(t => t.name),
+            fragment.name.value,
+            fragmentSuffix
+          );
+
+          if (prev[fragment.name.value]) {
+            duplicateFragmentNames.push(fragment.name.value);
+          }
+
+          prev[fragment.name.value] = { filePath, importsNames, onType: fragment.typeCondition.name.value, node: fragment };
+        }
+      }
+
+      return prev;
+    }, {} as FragmentNameToFile);
 
     if (duplicateFragmentNames.length) {
       throw new Error(`Multiple fragments with the name(s) "${duplicateFragmentNames.join(', ')}" were found.`);
     }
 
-    const absTypesPath = resolve(baseDir, join(options.baseOutputDir, options.presetConfig.baseTypesPath));
+    const shouldAbsolute = !options.presetConfig.baseTypesPath.startsWith('~');
 
     return options.documents
       .map<Types.GenerateOptions | null>(documentFile => {
         const newFilePath = defineFilepathSubfolder(documentFile.filePath, folder);
         const generatedFilePath = appendExtensionToFilePath(newFilePath, extension);
         const absGeneratedFilePath = resolve(baseDir, generatedFilePath);
-        const relativeImportPath = resolveRelativeImport(absGeneratedFilePath, absTypesPath);
+        const relativeImportPath = shouldAbsolute ? resolveRelativeImport(absGeneratedFilePath, resolve(baseDir, join(options.baseOutputDir, options.presetConfig.baseTypesPath))) : options.presetConfig.baseTypesPath.replace(`~`, '');
         const fragmentsInUse = extractExternalFragmentsInUse(documentFile.content, fragmentNameToFile);
         const plugins = [...options.plugins];
 
@@ -197,7 +198,7 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
           // are exported from operations file
           exportFragmentSpreadSubTypes: true,
           namespacedImportName: importTypesNamespace,
-          externalFragments: [] as (LoadedFragment<{ level: number }>)[],
+          externalFragments: [] as LoadedFragment<{ level: number }>[],
         };
 
         for (const fragmentName of Object.keys(fragmentsInUse)) {
@@ -226,7 +227,13 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
           }
         }
 
-        if (isUsingTypes(documentFile.content, config.externalFragments.map(m => m.name), schemaObject)) {
+        if (
+          isUsingTypes(
+            documentFile.content,
+            config.externalFragments.map(m => m.name),
+            schemaObject
+          )
+        ) {
           plugins.unshift({ add: `import * as ${importTypesNamespace} from '${relativeImportPath}';\n` });
         }
 
