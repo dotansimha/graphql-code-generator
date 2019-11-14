@@ -16,7 +16,7 @@
     "lint": "tslint src/**/*.ts",
     "prebuild": "yarn clean",
     "build": "tsc -m esnext --outDir dist/esnext && tsc -m commonjs --outDir dist/commonjs",
-    "test": "jest --no-watchman --runInBand --config ../../jest.config.js"
+    "test": "jest --no-watchman --config ../../jest.config.js"
   },
   "keywords": [
     "gql",
