@@ -44,4 +44,16 @@ describe('parseMapper', () => {
       source: 'file',
     });
   });
+
+  it('Should support aliases', () => {
+    const result = parseMapper('file#Type as SomeOtherType', 'SomeType');
+
+    expect(result).toEqual({
+      default: false,
+      isExternal: true,
+      import: 'Type as SomeOtherType',
+      type: 'SomeOtherType',
+      source: 'file',
+    });
+  });
 });
