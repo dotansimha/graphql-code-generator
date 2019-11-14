@@ -878,4 +878,18 @@ describe('Codegen Executor', () => {
     });
     expect(global['CUSTOM_FETCH_FN_CALLED']).toBeTruthy();
   });
+
+  it('should evaluate glob expressions correctly', async () => {
+    try {
+      await executeCodegen({
+        schema: ['./tests/test-documents/*schema.graphql', '!./tests/test-documents/invalid-schema.graphql'],
+        documents: ['./tests/test-documents/*.graphql', '!./tests/test-documents/invalid-*.graphql', '!./tests/test-documents/unused-*.graphql'],
+        generates: {
+          'out1.ts': ['typescript'],
+        },
+      });
+    } catch (e) {
+      expect(e).toBeFalsy();
+    }
+  });
 });
