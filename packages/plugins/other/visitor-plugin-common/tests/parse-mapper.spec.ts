@@ -58,7 +58,7 @@ describe('parseMapper', () => {
   });
 
   it('Should use aliases if graphql type has the same name', () => {
-    const result = parseMapper('file#Type', 'Type');
+    const result = parseMapper('file#Type', 'Type', false);
 
     expect(result).toEqual({
       default: false,
