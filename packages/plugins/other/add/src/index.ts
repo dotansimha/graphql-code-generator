@@ -39,4 +39,4 @@ export const plugin: PluginFunction<AddPluginConfig> = async (schema: GraphQLSch
   };
 };
 
-export default plugin;
+export default { plugin };
