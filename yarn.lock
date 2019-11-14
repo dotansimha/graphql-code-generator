@@ -1467,6 +1467,15 @@
     aggregate-error "3.0.1"
     lodash "4.17.15"
 
+"@graphql-toolkit/common@0.7.2":
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/common/-/common-0.7.2.tgz#10d5ea0a73aac483fba1bf7b1c1274a0ec1da195"
+  integrity sha512-VXbyoaEtWIJVyld/XAysWCcdU20VFckAhTRjsf/H5IvqZy89LvVJiPgzVkJqWfYVVT1UxGJSLEnIIFyfk6V9SQ==
+  dependencies:
+    "@kamilkisiela/graphql-tools" "4.0.6"
+    aggregate-error "3.0.1"
+    lodash "4.17.15"
+
 "@graphql-toolkit/core@0.7.1":
   version "0.7.1"
   resolved "https://registry.yarnpkg.com/@graphql-toolkit/core/-/core-0.7.1.tgz#5439d2b0c92761ca7b9966ca43ae49de6f2d528b"
@@ -1481,12 +1490,12 @@
     tslib "^1.9.3"
     valid-url "1.0.9"
 
-"@graphql-toolkit/git-loader@0.7.0":
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/@graphql-toolkit/git-loader/-/git-loader-0.7.0.tgz#5df7a3faefb62b28a937cc1194011456ad020630"
-  integrity sha512-oJMio0Hlb1VLl662Xv0QHcEE4C5uRTN/atNOqgp14bj4npar9Bo7CerUI48WeQQgYF3RCFlLXZRD4M7WoxW9yQ==
+"@graphql-toolkit/git-loader@0.7.2":
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/git-loader/-/git-loader-0.7.2.tgz#d6c95583e46151831436d1025dd321d8b235bb53"
+  integrity sha512-UZQTyFwFQOmwc1hzEhjUzyDmlYI4HUdhhLZY0nH7HAnsALRl1pXe5LatCHhzgtZnwPmWmQJ9rclvRT2y7HOlmA==
   dependencies:
-    "@graphql-toolkit/common" "0.7.0"
+    "@graphql-toolkit/common" "0.7.2"
     simple-git "1.126.0"
 
 "@graphql-toolkit/github-loader@0.7.1":
