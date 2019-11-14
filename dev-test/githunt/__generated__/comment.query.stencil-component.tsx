@@ -61,7 +61,8 @@ const CommentDocument = gql`
 })
 export class CommentComponent {
   @Prop() renderer: import('stencil-apollo').QueryRenderer<CommentQuery, CommentQueryVariables>;
+  @Prop() variables: CommentQueryVariables;
   render() {
-    return <apollo-query query={CommentDocument} renderer={this.renderer} />;
+    return <apollo-query query={CommentDocument} variables={this.variables} renderer={this.renderer} />;
   }
 }

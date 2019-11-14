@@ -25,7 +25,8 @@ const CurrentUserForProfileDocument = gql`
 })
 export class CurrentUserForProfileComponent {
   @Prop() renderer: import('stencil-apollo').QueryRenderer<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>;
+  @Prop() variables: CurrentUserForProfileQueryVariables;
   render() {
-    return <apollo-query query={CurrentUserForProfileDocument} renderer={this.renderer} />;
+    return <apollo-query query={CurrentUserForProfileDocument} variables={this.variables} renderer={this.renderer} />;
   }
 }

@@ -113,7 +113,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     const operationName: string = this.convertName(node.name.value, { useTypesPrefix: false });
     const propsTypeName: string = this.convertName(node.name.value, { suffix: 'Props' });
 
-    const propsVar = `export type ${propsTypeName}<TChildProps = {}> = ${this._buildHocProps(node.name.value, node.operation)} & TChildProps;`;
+    const propsVar = `export type ${propsTypeName}<TChildProps = {}> = ${this._buildHocProps(node.name.value, node.operation)} | TChildProps;`;
 
     const hocString = `export function with${operationName}<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
   TProps,
