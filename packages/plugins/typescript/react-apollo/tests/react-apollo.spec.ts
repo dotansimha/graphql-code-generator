@@ -583,7 +583,7 @@ query MyFeed {
         {
           filePath: '',
           content: parse(/* GraphQL */ `
-            mutation submitRepository {
+            mutation Test {
               submitRepository(repoFullName: "\\"REPONAME\\"") {
                 createdAt
               }
@@ -602,8 +602,8 @@ query MyFeed {
 
       expect(content.content).toBeSimilarStringTo(`
           export const TestDocument =  gql\`
-            mutation submitRepository(repoFullName: "\\"REPONAME\\"") {
-              submitRepository(repoFullName: $repoFullName) {
+            mutation Test {
+              submitRepository(repoFullName: "\\\\"REPONAME\\\\"") {
                 createdAt
               }
             }
