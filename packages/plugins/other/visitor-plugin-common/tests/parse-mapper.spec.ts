@@ -56,16 +56,4 @@ describe('parseMapper', () => {
       source: 'file',
     });
   });
-
-  it('Should use aliases if graphql type has the same name', () => {
-    const result = parseMapper('file#Type', 'Type', false);
-
-    expect(result).toEqual({
-      default: false,
-      isExternal: true,
-      import: 'Type as TypeParent',
-      type: 'TypeParent',
-      source: 'file',
-    });
-  });
 });
