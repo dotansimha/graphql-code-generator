@@ -13,7 +13,7 @@ jobs:
         with:
           node-version: '12.x'
       - name: Install Dependencies using Yarn
-        run: yarn install
+        run: yarn install --frozen-lockfile
       - name: Build
         run: yarn build
       - name: Test
