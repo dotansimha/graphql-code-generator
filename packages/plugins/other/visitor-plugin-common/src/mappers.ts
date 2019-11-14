@@ -13,7 +13,7 @@ export interface ExternalParsedMapper {
   default: boolean;
 }
 
-export function parseMapper(mapper: string, gqlTypeName: string | null = null): ParsedMapper {
+export function parseMapper(mapper: string, gqlTypeName: string | null = null, allowDuplicate = true): ParsedMapper {
   if (isExternalMapper(mapper)) {
     const items = mapper.split('#');
     const isNamespace = items.length === 3;
@@ -32,7 +32,7 @@ export function parseMapper(mapper: string, gqlTypeName: string | null = null): 
         type = `${gqlTypeName}Parent`;
         importElement = `${gqlTypeName}Parent`;
       } else {
-        if (items[1] === gqlTypeName) {
+        if (items[1] === gqlTypeName && !allowDuplicate) {
           type = `${gqlTypeName}Parent`;
           importElement = `${gqlTypeName} as ${gqlTypeName}Parent`;
         } else if (items[1].includes(' as ')) {
@@ -70,7 +70,7 @@ export function transformMappers(rawMappers: RawResolversConfig['mappers']): Par
 
   Object.keys(rawMappers).forEach(gqlTypeName => {
     const mapperDef = rawMappers[gqlTypeName];
-    const parsedMapper = parseMapper(mapperDef, gqlTypeName);
+    const parsedMapper = parseMapper(mapperDef, gqlTypeName, false);
     result[gqlTypeName] = parsedMapper;
   });
 
