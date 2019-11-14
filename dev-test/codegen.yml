@@ -278,3 +278,20 @@ generates:
     plugins:
       - typescript
       - typescript-operations
+  ./dev-test/test-message/types.tsx:
+    schema: ./dev-test/test-message/schema.graphql
+    documents: ./dev-test/test-message/documents.ts
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo
+    config:
+      documentMode: external
+      importDocumentNodeExternallyFrom: './documents.ts'
+      reactApolloVersion: 3
+      gqlImport: graphql-tag
+      hooksImportFrom: '@apollo/react-hooks'
+      withHooks: true
+      withHOC: false
+      withComponent: false
+      withMutationFn: false

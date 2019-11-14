@@ -243,7 +243,7 @@ export namespace OnCommentAdded {
   export type Variables = OnCommentAddedSubscriptionVariables;
   export type Subscription = OnCommentAddedSubscription;
   export type CommentAdded = NonNullable<OnCommentAddedSubscription['commentAdded']>;
-  export type PostedBy = (NonNullable<OnCommentAddedSubscription['commentAdded']>)['postedBy'];
+  export type PostedBy = NonNullable<OnCommentAddedSubscription['commentAdded']>['postedBy'];
 }
 
 export namespace Comment {
@@ -251,10 +251,10 @@ export namespace Comment {
   export type Query = CommentQuery;
   export type CurrentUser = NonNullable<CommentQuery['currentUser']>;
   export type Entry = NonNullable<CommentQuery['entry']>;
-  export type PostedBy = (NonNullable<CommentQuery['entry']>)['postedBy'];
+  export type PostedBy = NonNullable<CommentQuery['entry']>['postedBy'];
   export type Comments = CommentsPageCommentFragment;
-  export type Repository = (NonNullable<CommentQuery['entry']>)['repository'];
-  export type RepositoryInlineFragment = { __typename: 'Repository' } & Pick<(NonNullable<CommentQuery['entry']>)['repository'], 'description' | 'open_issues_count' | 'stargazers_count'>;
+  export type Repository = NonNullable<CommentQuery['entry']>['repository'];
+  export type RepositoryInlineFragment = { __typename: 'Repository' } & Pick<NonNullable<CommentQuery['entry']>['repository'], 'description' | 'open_issues_count' | 'stargazers_count'>;
 }
 
 export namespace CommentsPageComment {
@@ -308,5 +308,5 @@ export namespace Vote {
   export type Variables = VoteMutationVariables;
   export type Mutation = VoteMutation;
   export type Vote = NonNullable<VoteMutation['vote']>;
-  export type _Vote = (NonNullable<VoteMutation['vote']>)['vote'];
+  export type _Vote = NonNullable<VoteMutation['vote']>['vote'];
 }

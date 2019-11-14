@@ -29,7 +29,8 @@ const SubmitCommentDocument = gql`
 })
 export class SubmitCommentComponent {
   @Prop() renderer: import('stencil-apollo').MutationRenderer<SubmitCommentMutation, SubmitCommentMutationVariables>;
+  @Prop() variables: SubmitCommentMutationVariables;
   render() {
-    return <apollo-mutation mutation={SubmitCommentDocument} renderer={this.renderer} />;
+    return <apollo-mutation mutation={SubmitCommentDocument} variables={this.variables} renderer={this.renderer} />;
   }
 }
