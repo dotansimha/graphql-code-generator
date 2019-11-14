@@ -6,5 +6,9 @@
       "paths": ["website/package.json"],
       "extends": ["config:base"]
     }
-  ]
+  ],
+  "automerge": true,
+  "major": {
+    "automerge": false
+  }
 }
