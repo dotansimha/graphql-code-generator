@@ -27,8 +27,8 @@ describe('parseMapper', () => {
     expect(result).toEqual({
       default: true,
       isExternal: true,
-      import: 'MyGqlTypeParent',
-      type: 'MyGqlTypeParent',
+      import: 'MyGqlType',
+      type: 'MyGqlType',
       source: 'file',
     });
   });
