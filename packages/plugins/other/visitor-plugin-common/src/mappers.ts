@@ -17,21 +17,41 @@ export function parseMapper(mapper: string, gqlTypeName: string | null = null): 
   if (isExternalMapper(mapper)) {
     const items = mapper.split('#');
     const isNamespace = items.length === 3;
-
-    const type = isNamespace ? items[2] : items[1];
-    const ns = isNamespace ? items[1] : undefined;
     const source = items[0];
+    let type,
+      importElement,
+      asDefault = false;
 
-    const asDefault = type === 'default';
-    const identifier = ns ? [ns, type].join('.') : type;
-    const importElement = ns || type;
+    if (isNamespace) {
+      const ns = items[1];
+      type = `${ns}.${items[2]}`;
+      importElement = ns;
+    } else {
+      asDefault = items[1] === 'default';
+      if (asDefault) {
+        type = `${gqlTypeName}Parent`;
+        importElement = `${gqlTypeName}Parent`;
+      } else {
+        if (items[1] === gqlTypeName) {
+          type = `${gqlTypeName}Parent`;
+          importElement = `${gqlTypeName} as ${gqlTypeName}Parent`;
+        } else if (items[1].includes(' as ')) {
+          const [importedType, aliasType] = items[1].split(' as ');
+          type = aliasType;
+          importElement = `${importedType} as ${aliasType}`;
+        } else {
+          type = items[1];
+          importElement = items[1];
+        }
+      }
+    }
 
     return {
       default: asDefault,
       isExternal: true,
       source,
-      type: asDefault ? gqlTypeName : identifier,
-      import: asDefault ? gqlTypeName : importElement,
+      type,
+      import: importElement,
     };
   }
 

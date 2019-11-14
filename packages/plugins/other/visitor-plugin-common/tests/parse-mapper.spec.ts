@@ -27,8 +27,8 @@ describe('parseMapper', () => {
     expect(result).toEqual({
       default: true,
       isExternal: true,
-      import: 'MyGqlType',
-      type: 'MyGqlType',
+      import: 'MyGqlTypeParent',
+      type: 'MyGqlTypeParent',
       source: 'file',
     });
   });
@@ -41,6 +41,30 @@ describe('parseMapper', () => {
       isExternal: true,
       import: 'Namespace',
       type: 'Namespace.Type',
+      source: 'file',
+    });
+  });
+
+  it('Should support aliases', () => {
+    const result = parseMapper('file#Type as SomeOtherType', 'SomeType');
+
+    expect(result).toEqual({
+      default: false,
+      isExternal: true,
+      import: 'Type as SomeOtherType',
+      type: 'SomeOtherType',
+      source: 'file',
+    });
+  });
+
+  it('Should use aliases if graphql type has the same name', () => {
+    const result = parseMapper('file#Type', 'Type');
+
+    expect(result).toEqual({
+      default: false,
+      isExternal: true,
+      import: 'Type as TypeParent',
+      type: 'TypeParent',
       source: 'file',
     });
   });
