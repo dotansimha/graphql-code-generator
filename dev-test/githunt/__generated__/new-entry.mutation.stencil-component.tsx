@@ -26,7 +26,8 @@ const SubmitRepositoryDocument = gql`
 })
 export class SubmitRepositoryComponent {
   @Prop() renderer: import('stencil-apollo').MutationRenderer<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>;
+  @Prop() variables: SubmitRepositoryMutationVariables;
   render() {
-    return <apollo-mutation mutation={SubmitRepositoryDocument} renderer={this.renderer} />;
+    return <apollo-mutation mutation={SubmitRepositoryDocument} variables={this.variables} renderer={this.renderer} />;
   }
 }

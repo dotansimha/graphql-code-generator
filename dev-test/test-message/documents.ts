@@ -19,7 +19,7 @@ export const CreateMessage = gql`
 `;
 
 // tslint:disable-next-line:variable-name
-export const DeclineMutation = gql`
+export const Decline = gql`
   mutation Decline($id: ID!, $reason: String!) {
     decline(id: $id, reason: $reason) {
       id
@@ -28,7 +28,7 @@ export const DeclineMutation = gql`
 `;
 
 // tslint:disable-next-line:variable-name
-export const ApproveMutation = gql`
+export const Approve = gql`
   mutation Approve($id: ID!) {
     approve(id: $id) {
       id
@@ -37,7 +37,7 @@ export const ApproveMutation = gql`
 `;
 
 // tslint:disable-next-line:variable-name
-export const EscalateMutation = gql`
+export const Escalate = gql`
   mutation Escalate($id: ID!) {
     escalate(id: $id) {
       id
