@@ -1467,6 +1467,15 @@
     aggregate-error "3.0.1"
     lodash "4.17.15"
 
+"@graphql-toolkit/common@0.7.2":
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/common/-/common-0.7.2.tgz#10d5ea0a73aac483fba1bf7b1c1274a0ec1da195"
+  integrity sha512-VXbyoaEtWIJVyld/XAysWCcdU20VFckAhTRjsf/H5IvqZy89LvVJiPgzVkJqWfYVVT1UxGJSLEnIIFyfk6V9SQ==
+  dependencies:
+    "@kamilkisiela/graphql-tools" "4.0.6"
+    aggregate-error "3.0.1"
+    lodash "4.17.15"
+
 "@graphql-toolkit/core@0.7.1":
   version "0.7.1"
   resolved "https://registry.yarnpkg.com/@graphql-toolkit/core/-/core-0.7.1.tgz#5439d2b0c92761ca7b9966ca43ae49de6f2d528b"
@@ -1568,12 +1577,12 @@
     cross-fetch "3.0.4"
     valid-url "1.0.9"
 
-"@graphql-toolkit/url-loader@0.7.1":
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/@graphql-toolkit/url-loader/-/url-loader-0.7.1.tgz#afe0532a404f8d6788029d5a4b3c1e087adab24e"
-  integrity sha512-zVZN3rQs4xSAdcMiUoV1fBGP2At5nFiI+nyxJ4yrkhD76AG23XV5cvgXzb5IG+0oTIP6HeowgAz+nkygEmMD7g==
+"@graphql-toolkit/url-loader@0.7.2":
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/url-loader/-/url-loader-0.7.2.tgz#4a0e7453f9f597844138426a3158d7795d4c917c"
+  integrity sha512-oFV3CVztHFYW2cB7hirUeQNm7C+bJbTBjhNasbLMtsOwAIDnIu6xSsuWi3I29wI3n5v5zi4mabQxnHVMO2vIiQ==
   dependencies:
-    "@graphql-toolkit/common" "0.7.1"
+    "@graphql-toolkit/common" "0.7.2"
     cross-fetch "3.0.4"
     tslib "1.10.0"
     valid-url "1.0.9"
