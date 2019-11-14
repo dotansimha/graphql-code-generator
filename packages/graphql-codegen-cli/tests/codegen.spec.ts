@@ -230,12 +230,12 @@ describe('Codegen Executor', () => {
             type RootQuery { f: String }
             schema { query: RootQuery }
           `,
-          documents: [`query q { f }`, `query q { f }`],
+          documents: [`query q { e }`, `query q { f }`],
           generates: {
             'out1.ts': ['typescript'],
           },
         });
-        throw new Error(SHOULD_NOT_THROW_STRING);
+        throw SHOULD_NOT_THROW_STRING;
       } catch (e) {
         expect(e).not.toEqual(SHOULD_NOT_THROW_STRING);
         expect(e.errors[0].message).toContain('Not all operations have an unique name: q');
@@ -708,8 +708,7 @@ describe('Codegen Executor', () => {
         throw new Error(SHOULD_NOT_THROW_STRING);
       } catch (listrError) {
         const e = listrError.errors[0];
-        expect(e.message).toBe('Failed to load custom schema loader');
-        expect(e.details).toContain('Return value of a custom schema loader must be of type');
+        expect(e.message).toContain('Failed to load schema');
       }
     });
 
@@ -731,8 +730,7 @@ describe('Codegen Executor', () => {
         throw new Error(SHOULD_NOT_THROW_STRING);
       } catch (listrError) {
         const e = listrError.errors[0];
-        expect(e.message).toBe('Failed to load custom schema loader');
-        expect(e.details).toContain('Cannot find module');
+        expect(e.details).toContain('Failed to load custom loader');
       }
     });
 
@@ -754,8 +752,8 @@ describe('Codegen Executor', () => {
         throw new Error(SHOULD_NOT_THROW_STRING);
       } catch (listrError) {
         const e = listrError.errors[0];
-        expect(e.message).toBe('Failed to load custom schema loader');
-        expect(e.details).toContain('Unable to find a loader function! Make sure to export a default function from your file');
+        expect(e.message).toContain('Failed to load schema');
+        expect(e.details).toContain('Failed to load custom loader');
       }
     });
   });
@@ -818,8 +816,7 @@ describe('Codegen Executor', () => {
         throw new Error(SHOULD_NOT_THROW_STRING);
       } catch (listrError) {
         const e = listrError.errors[0];
-        expect(e.message).toBe('Failed to load custom documents loader');
-        expect(e.details).toContain('Return value of a custom schema loader must be an Array of');
+        expect(e.message).toContain('Unable to find any GraphQL type definitions for the following pointers');
       }
     });
 
@@ -842,8 +839,7 @@ describe('Codegen Executor', () => {
         throw new Error(SHOULD_NOT_THROW_STRING);
       } catch (listrError) {
         const e = listrError.errors[0];
-        expect(e.message).toBe('Failed to load custom documents loader');
-        expect(e.details).toContain('Cannot find module');
+        expect(e.message).toContain('Failed to load custom loader');
       }
     });
 
@@ -866,8 +862,7 @@ describe('Codegen Executor', () => {
         throw new Error(SHOULD_NOT_THROW_STRING);
       } catch (listrError) {
         const e = listrError.errors[0];
-        expect(e.message).toBe('Failed to load custom documents loader');
-        expect(e.details).toContain('Unable to find a loader function! Make sure to export a default function from your file');
+        expect(e.message).toContain('Failed to load custom loader');
       }
     });
   });
@@ -882,5 +877,19 @@ describe('Codegen Executor', () => {
       },
     });
     expect(global['CUSTOM_FETCH_FN_CALLED']).toBeTruthy();
+  });
+
+  it('should evaluate glob expressions correctly', async () => {
+    try {
+      await executeCodegen({
+        schema: ['./tests/test-documents/*schema.graphql', '!./tests/test-documents/invalid-schema.graphql'],
+        documents: ['./tests/test-documents/*.graphql', '!./tests/test-documents/invalid-*.graphql', '!./tests/test-documents/unused-*.graphql'],
+        generates: {
+          'out1.ts': ['typescript'],
+        },
+      });
+    } catch (e) {
+      expect(e).toBeFalsy();
+    }
   });
 });

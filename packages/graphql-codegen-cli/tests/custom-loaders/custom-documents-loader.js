@@ -4,10 +4,5 @@ const { readFileSync } = require('fs');
 module.exports = function(docString, config) {
   global.CUSTOM_DOCUMENT_LOADER_CALLED = true;
 
-  return [
-    {
-      filePath: docString,
-      content: parse(readFileSync(docString, { encoding: 'utf-8' }))
-    }
-  ];
+  return parse(readFileSync(docString, { encoding: 'utf-8' }));
 };

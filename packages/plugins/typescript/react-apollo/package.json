@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc -m esnext --outDir dist/esnext && tsc -m commonjs --outDir dist/commonjs",
-    "test": "jest --config ../../../../jest.config.js --forceExit"
+    "test": "jest --no-watchman --config ../../../../jest.config.js --forceExit"
   },
   "peerDependencies": {
     "graphql-tag": "^2.0.0"

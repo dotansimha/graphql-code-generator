@@ -1,5 +1,5 @@
 import { Types, CodegenPlugin } from '@graphql-codegen/plugin-helpers';
-import { DetailedError, codegen, mergeSchemas } from '@graphql-codegen/core';
+import { DetailedError, codegen } from '@graphql-codegen/core';
 import * as Listr from 'listr';
 import { normalizeOutputParam, normalizeInstanceOrArray, normalizeConfig } from '@graphql-codegen/plugin-helpers';
 import { Renderer } from './utils/listr-renderer';
@@ -171,11 +171,16 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                     title: 'Load GraphQL schemas',
                     task: wrapTask(async () => {
                       debugLog(`[CLI] Loading Schemas`);
-                      const allSchemas = [...rootSchemas.map(pointToSchema => context.loadSchema(pointToSchema)), ...outputSpecificSchemas.map(pointToSchema => context.loadSchema(pointToSchema))];
-
-                      if (allSchemas.length > 0) {
-                        outputSchema = mergeSchemas(await Promise.all(allSchemas));
+                      const schemaPointerMap: any = {};
+                      const allSchemaUnnormalizedPointers = [...rootSchemas, ...outputSpecificSchemas];
+                      for (const unnormalizedPtr of allSchemaUnnormalizedPointers) {
+                        if (typeof unnormalizedPtr === 'string') {
+                          schemaPointerMap[unnormalizedPtr] = {};
+                        } else if (typeof unnormalizedPtr === 'object') {
+                          Object.assign(schemaPointerMap, unnormalizedPtr);
+                        }
                       }
+                      outputSchema = await context.loadSchema(schemaPointerMap);
                     }, filename),
                   },
                   {

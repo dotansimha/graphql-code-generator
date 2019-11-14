@@ -1,93 +1,26 @@
-import { loadTypedefsUsingLoaders, loadDocumentsUsingLoaders as loadDocumentsToolkit } from '@graphql-toolkit/core';
+import { loadTypedefsUsingLoaders, loadDocumentsUsingLoaders as loadDocumentsToolkit, UnnormalizedTypeDefPointer } from '@graphql-toolkit/core';
 import { mergeTypeDefs } from '@graphql-toolkit/schema-merging';
 import { Types } from '@graphql-codegen/plugin-helpers';
-import { GraphQLSchema, DocumentNode } from 'graphql';
+import { DocumentNode } from 'graphql';
 import { DetailedError } from '@graphql-codegen/core';
-import { join } from 'path';
 import { CodeFileLoader } from '@graphql-toolkit/code-file-loader';
 import { GitLoader } from '@graphql-toolkit/git-loader';
 import { GithubLoader } from '@graphql-toolkit/github-loader';
 import { GraphQLFileLoader } from '@graphql-toolkit/graphql-file-loader';
 import { JsonFileLoader } from '@graphql-toolkit/json-file-loader';
 import { UrlLoader } from '@graphql-toolkit/url-loader';
+import { join } from 'path';
 
-async function getCustomLoaderByPath(path: string): Promise<any> {
-  const requiredModule = await import(join(process.cwd(), path));
-
-  if (requiredModule && requiredModule.default && typeof requiredModule.default === 'function') {
-    return requiredModule.default;
-  }
-
-  if (requiredModule && typeof requiredModule === 'function') {
-    return requiredModule;
-  }
-
-  return null;
-}
-
-export const loadSchema = async (schemaDef: Types.Schema, config: Types.Config): Promise<DocumentNode> => {
-  if (typeof schemaDef === 'object' && schemaDef[Object.keys(schemaDef)[0]] && (schemaDef[Object.keys(schemaDef)[0]] as any).loader && typeof (schemaDef[Object.keys(schemaDef)[0]] as any).loader === 'string') {
-    const pointToSchema = Object.keys(schemaDef)[0];
-    const defObject: any = schemaDef[pointToSchema];
-    const loaderString = defObject.loader;
-
-    try {
-      const customSchemaLoader = await getCustomLoaderByPath(loaderString);
-
-      if (customSchemaLoader) {
-        const returnedSchema = await customSchemaLoader(pointToSchema, config, defObject);
-
-        if (returnedSchema && isGraphQLSchema(returnedSchema)) {
-          return mergeTypeDefs([returnedSchema]);
-        } else {
-          throw new Error(`Return value of a custom schema loader must be of type "GraphQLSchema"!`);
-        }
-      } else {
-        throw new Error(`Unable to find a loader function! Make sure to export a default function from your file`);
-      }
-    } catch (e) {
-      throw new DetailedError(
-        'Failed to load custom schema loader',
-        `
-        Failed to load schema from ${pointToSchema} using loader "${loaderString}":
-    
-        ${e.message}
-        ${e.stack}
-      `,
-        `${pointToSchema} using loader "${loaderString}"`
-      );
-    }
-  }
-
-  let pointToSchema: string = null;
+export const loadSchema = async (schemaPointers: UnnormalizedTypeDefPointer, config: Types.Config): Promise<DocumentNode> => {
   try {
-    let options: any = {};
+    const docs = await loadTypedefsUsingLoaders([new CodeFileLoader(), new GitLoader(), new GithubLoader(), new GraphQLFileLoader(), new JsonFileLoader(), new UrlLoader()], schemaPointers, config);
 
-    if (typeof schemaDef === 'string') {
-      pointToSchema = schemaDef as string;
-    } else if (typeof schemaDef === 'object') {
-      pointToSchema = Object.keys(schemaDef)[0];
-      options = schemaDef[pointToSchema];
-    }
-
-    if (config.pluckConfig) {
-      options.tagPluck = config.pluckConfig;
-    }
-
-    if (config.customFetch) {
-      const customFetchStr = config.customFetch;
-      const [moduleName, fetchFnName] = customFetchStr.split('#');
-      options.fetch = await import(moduleName).then(module => (fetchFnName ? module[fetchFnName] : module));
-    }
-
-    const docs = (await loadTypedefsUsingLoaders([new CodeFileLoader(), new GitLoader(), new GithubLoader(), new GraphQLFileLoader(), new JsonFileLoader(), new UrlLoader()], pointToSchema, options)).map(({ document }) => document);
-
-    return mergeTypeDefs(docs);
+    return mergeTypeDefs(docs.map(({ document }) => document));
   } catch (e) {
     throw new DetailedError(
       'Failed to load schema',
       `
-        Failed to load schema from ${pointToSchema || schemaDef}:
+        Failed to load schema from ${Object.keys(schemaPointers).join(',')}:
 
         ${e.message || e}
         ${e.stack || ''}
@@ -106,81 +39,23 @@ export const loadSchema = async (schemaDef: Types.Schema, config: Types.Config):
   }
 };
 
-export const loadDocuments = async (documentsDef: Types.InstanceOrArray<Types.OperationDocument>, config: Types.Config): Promise<Types.DocumentFile[]> => {
-  const asArray: Types.OperationDocument[] = Array.isArray(documentsDef) ? documentsDef : [documentsDef];
-  const loadWithToolkit: string[] = [];
-  const result: Types.DocumentFile[] = [];
+export const loadDocuments = async (documentPointers: UnnormalizedTypeDefPointer | UnnormalizedTypeDefPointer[], config: Types.Config): Promise<Types.DocumentFile[]> => {
+  const loadedFromToolkit = await loadDocumentsToolkit([new CodeFileLoader(), new GitLoader(), new GithubLoader(), new GraphQLFileLoader()], documentPointers, {
+    ignore: Object.keys(config.generates).map(p => join(process.cwd(), p)),
+    ...config,
+  });
 
-  for (const documentDef of asArray) {
-    if (typeof documentDef === 'object' && documentDef[Object.keys(documentDef)[0]] && (documentDef[Object.keys(documentDef)[0]] as any).loader && typeof (documentDef[Object.keys(documentDef)[0]] as any).loader === 'string') {
-      const pointToDoc = Object.keys(documentDef)[0];
-      const defObject = documentDef[pointToDoc];
-      const loaderString = defObject.loader;
-
-      try {
-        const customDocumentLoader = await getCustomLoaderByPath(loaderString);
-
-        if (customDocumentLoader) {
-          const returned = await customDocumentLoader(pointToDoc, config);
-
-          if (returned && Array.isArray(returned)) {
-            result.push(...returned);
-          } else {
-            throw new Error(`Return value of a custom schema loader must be an Array of: { filePath: string, content: DocumentNode }`);
-          }
-        } else {
-          throw new Error(`Unable to find a loader function! Make sure to export a default function from your file`);
-        }
-      } catch (e) {
-        throw new DetailedError(
-          'Failed to load custom documents loader',
-          `
-          Failed to load documents from ${pointToDoc} using loader "${loaderString}":
-      
-          ${e.message}
-        `
-        );
+  return loadedFromToolkit
+    .map(({ location, document }) => ({ filePath: location, content: document }))
+    .sort((a, b) => {
+      if (a.filePath < b.filePath) {
+        return -1;
       }
-    } else if (typeof documentDef === 'string') {
-      loadWithToolkit.push(documentDef);
-    }
-  }
 
-  if (loadWithToolkit.length > 0) {
-    const loadDocumentsToolkitConfig: any = {
-      ignore: Object.keys(config.generates).map(p => join(process.cwd(), p)),
-    };
+      if (a.filePath > b.filePath) {
+        return 1;
+      }
 
-    if (config.pluckConfig) {
-      loadDocumentsToolkitConfig.tagPluck = config.pluckConfig;
-    }
-
-    const loadedFromToolkit = await loadDocumentsToolkit([new CodeFileLoader(), new GitLoader(), new GithubLoader(), new GraphQLFileLoader()], loadWithToolkit, loadDocumentsToolkitConfig);
-
-    if (loadedFromToolkit.length > 0) {
-      result.push(
-        ...loadedFromToolkit
-          .map(({ location, document }) => ({ filePath: location, content: document }))
-          .sort((a, b) => {
-            if (a.filePath < b.filePath) {
-              return -1;
-            }
-
-            if (a.filePath > b.filePath) {
-              return 1;
-            }
-
-            return 0;
-          })
-      );
-    }
-  }
-
-  return result;
+      return 0;
+    });
 };
-
-function isGraphQLSchema(schema: any): schema is GraphQLSchema {
-  const schemaClass = schema.constructor;
-  const className = GraphQLSchema.name;
-  return className && schemaClass && schemaClass.name === className;
-}
