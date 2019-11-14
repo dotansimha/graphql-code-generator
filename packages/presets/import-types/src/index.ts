@@ -1,5 +1,4 @@
 import { isUsingTypes, Types, CodegenPlugin } from '@graphql-codegen/plugin-helpers';
-import { BaseVisitor } from '@graphql-codegen/visitor-plugin-common';
 import addPlugin from '@graphql-codegen/add';
 import { FragmentDefinitionNode } from 'graphql';
 
