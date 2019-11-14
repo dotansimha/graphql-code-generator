@@ -584,7 +584,7 @@ query MyFeed {
           filePath: '',
           content: parse(/* GraphQL */ `
             mutation submitRepository {
-              submitRepository(repoFullName: "\\\\"REPONAME\\\\"") {
+              submitRepository(repoFullName: "\\"REPONAME\\"") {
                 createdAt
               }
             }
@@ -594,9 +594,7 @@ query MyFeed {
       const content = (await plugin(
         schema,
         docs,
-        {
-          noGraphQLTag: true,
-        },
+        {},
         {
           outputFile: 'graphql.tsx',
         }
@@ -604,7 +602,7 @@ query MyFeed {
 
       expect(content.content).toBeSimilarStringTo(`
           export const TestDocument =  gql\`
-            mutation submitRepository(repoFullName: "\\\\"REPONAME\\\\"") {
+            mutation submitRepository(repoFullName: "\\"REPONAME\\"") {
               submitRepository(repoFullName: $repoFullName) {
                 createdAt
               }
