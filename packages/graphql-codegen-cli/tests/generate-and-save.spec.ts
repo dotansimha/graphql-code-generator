@@ -1,5 +1,5 @@
 import { generate } from '../src/generate-and-save';
-import * as fs from '../src/utils/file-system';
+import fs from '../src/utils/file-system';
 import { Types } from '@graphql-codegen/plugin-helpers';
 
 const SIMPLE_TEST_SCHEMA = `type MyType { f: String } type Query { f: String }`;

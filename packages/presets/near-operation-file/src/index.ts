@@ -1,6 +1,6 @@
 import { isUsingTypes, Types, CodegenPlugin } from '@graphql-codegen/plugin-helpers';
 import { BaseVisitor, LoadedFragment, buildScalars, getPossibleTypes } from '@graphql-codegen/visitor-plugin-common';
-import * as addPlugin from '@graphql-codegen/add';
+import addPlugin from '@graphql-codegen/add';
 import { join, resolve } from 'path';
 import { Kind, FragmentDefinitionNode, buildASTSchema, GraphQLSchema } from 'graphql';
 import { appendExtensionToFilePath, defineFilepathSubfolder, extractExternalFragmentsInUse, resolveRelativeImport } from './utils';

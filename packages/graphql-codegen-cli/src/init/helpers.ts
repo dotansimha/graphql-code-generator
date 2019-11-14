@@ -1,9 +1,9 @@
-import * as chalk from 'chalk';
+import chalk from 'chalk';
 import { resolve, relative } from 'path';
 import { writeFileSync, readFileSync } from 'fs';
 import { Types } from '@graphql-codegen/plugin-helpers';
-import * as YAML from 'json-to-pretty-yaml';
-import * as detectIndent from 'detect-indent';
+import YAML from 'json-to-pretty-yaml';
+import detectIndent from 'detect-indent';
 import { Answers } from './types';
 
 // Parses config and writes it to a file

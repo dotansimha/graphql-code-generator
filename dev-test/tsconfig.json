@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "esModuleInterop": true,
     "lib": ["esnext"],
     "jsx": "react",
     "jsxFactory": "React.createElement",

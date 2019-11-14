@@ -8,9 +8,9 @@
     "test-and-build": " yarn build && yarn test",
     "prerelease": "yarn test-and-build",
     "prerelease:canary": "yarn test-and-build",
-    "release": "lerna publish --exact --force-publish=\"*\" --ignore @graphql-codegen/live-demo --ignore @graphql-codegen/website",
-    "release:canary": "lerna publish --force-publish=\"*\" --canary --exact --ignore @graphql-codegen/live-demo --ignore @graphql-codegen/website ",
-    "ci:release:canary": "lerna publish --ignore @graphql-codegen/live-demo --ignore @graphql-codegen/website --force-publish=\"*\" --preid \"alpha-`git rev-parse --short HEAD`\" --canary --exact --yes",
+    "release": "lerna publish --contents dist --exact --force-publish=\"*\" --ignore @graphql-codegen/live-demo --ignore @graphql-codegen/website",
+    "release:canary": "lerna publish --contents dist --force-publish=\"*\" --canary --exact --ignore @graphql-codegen/live-demo --ignore @graphql-codegen/website ",
+    "ci:release:canary": "lerna publish --contents dist --ignore @graphql-codegen/live-demo --ignore @graphql-codegen/website --force-publish=\"*\" --preid \"alpha-`git rev-parse --short HEAD`\" --canary --exact --yes",
     "generate:examples": "./dev-test/generate-all.sh",
     "build-website": "lerna run build"
   },
@@ -23,8 +23,11 @@
     "packages": [
       "packages/*",
       "packages/utils/*",
-      "packages/plugins/**/*",
-      "packages/presets/**/*",
+      "packages/plugins/flow/*",
+      "packages/plugins/java/*",
+      "packages/plugins/typescript/*",
+      "packages/plugins/other/*",
+      "packages/presets/*",
       "website",
       "website/live-demo"
     ],
@@ -34,6 +37,7 @@
     ]
   },
   "devDependencies": {
+    "@ardatan/bob": "0.1.0",
     "@apollo/react-common": "3.1.3",
     "@apollo/react-components": "3.1.3",
     "@apollo/react-hoc": "3.1.3",

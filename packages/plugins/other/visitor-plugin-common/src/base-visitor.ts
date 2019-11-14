@@ -1,6 +1,6 @@
 import { ScalarsMap, ParsedScalarsMap, NamingConvention, ConvertFn, ConvertOptions, LoadedFragment, NormalizedScalarsMap } from './types';
 import { DeclarationBlockConfig } from './utils';
-import * as autoBind from 'auto-bind';
+import autoBind from 'auto-bind';
 import { convertFactory } from './naming';
 import { ASTNode } from 'graphql';
 
