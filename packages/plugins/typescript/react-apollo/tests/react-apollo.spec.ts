@@ -578,6 +578,43 @@ query MyFeed {
       await validateTypeScript(content, schema, docs, {});
     });
 
+    it('should generate correct Document variable with escaped values', async () => {
+      const docs = [
+        {
+          filePath: '',
+          content: parse(/* GraphQL */ `
+            mutation submitRepository {
+              submitRepository(repoFullName: "\\"REPONAME\\"") {
+                createdAt
+              }
+            }
+          `),
+        },
+      ];
+      const content = (await plugin(
+        schema,
+        docs,
+        {
+          noGraphQLTag: true,
+        },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.content).toBeSimilarStringTo(`
+          export const TestDocument =  gql\`
+            mutation submitRepository(repoFullName: "\\"REPONAME\\"") {
+              submitRepository(repoFullName: $repoFullName) {
+                createdAt
+              }
+            }
+          \`;
+        `);
+
+      await validateTypeScript(content, schema, docs, {});
+    });
+
     it('should generate Component', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
       const content = (await plugin(

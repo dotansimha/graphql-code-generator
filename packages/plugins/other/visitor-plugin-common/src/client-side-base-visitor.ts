@@ -205,7 +205,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
 
   protected _gql(node: FragmentDefinitionNode | OperationDefinitionNode): string {
     const doc = this._prepareDocument(`
-    ${print(node)}
+    ${print(node).replace('\\', '\\\\') /* Re-escape escaped values in GraphQL syntax */}
     ${this._includeFragments(this._transformFragments(node))}`);
 
     if (this.config.documentMode === DocumentMode.documentNode) {
