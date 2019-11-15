@@ -4,7 +4,7 @@ import { TypeScriptOperationVariablesToObject } from './ts-operation-variables-t
 import { TypeScriptDocumentsPluginConfig } from './index';
 import { isNonNullType } from 'graphql';
 import { TypeScriptSelectionSetProcessor } from './ts-selection-set-processor';
-import * as autoBind from 'auto-bind';
+import autoBind from 'auto-bind';
 
 export interface TypeScriptDocumentsParsedConfig extends ParsedDocumentsConfig {
   avoidOptionals: boolean;

@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "importHelpers": true,
     "esModuleInterop": true,
+    "importHelpers": true,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "module": "esnext",

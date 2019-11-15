@@ -4,7 +4,7 @@ import { FlowDocumentsPluginConfig } from './index';
 import { FlowOperationVariablesToObject } from '@graphql-codegen/flow';
 import { PreResolveTypesProcessor, ParsedDocumentsConfig, BaseDocumentsVisitor, LoadedFragment, SelectionSetProcessorConfig, SelectionSetToObject, getConfigValue } from '@graphql-codegen/visitor-plugin-common';
 import { isNonNullType } from 'graphql';
-import * as autoBind from 'auto-bind';
+import autoBind from 'auto-bind';
 
 export interface FlowDocumentsParsedConfig extends ParsedDocumentsConfig {
   useFlowExactObjects: boolean;

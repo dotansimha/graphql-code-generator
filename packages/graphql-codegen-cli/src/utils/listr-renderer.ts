@@ -1,13 +1,14 @@
-import * as chalk from 'chalk';
+import chalk from 'chalk';
 import logUpdate from 'log-update';
-import * as indentString from 'indent-string';
-import * as logSymbol from 'log-symbols';
-import * as UpdateRenderer from 'listr-update-renderer';
+import indentString from 'indent-string';
+import logSymbol from 'log-symbols';
 import { stripIndent } from 'common-tags';
 import { ListrTask } from 'listr';
 import { DetailedError, isDetailedError } from '@graphql-codegen/core';
 import { Source } from 'graphql';
 import { debugLog, printLogs } from './debugging';
+
+const UpdateRenderer = require('listr-update-renderer');
 
 export class Renderer {
   private updateRenderer: any;

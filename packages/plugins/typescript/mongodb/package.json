@@ -5,7 +5,8 @@
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
   "scripts": {
-    "build": "tsc -m esnext --outDir dist/esnext && tsc -m commonjs --outDir dist/commonjs",
+    "prepack": "bob-update-version",
+    "build": "bob",
     "test": "jest --no-watchman --config ../../../../jest.config.js"
   },
   "peerDependencies": {
@@ -19,6 +20,7 @@
     "tslib": "1.10.0"
   },
   "devDependencies": {
+    "@ardatan/bob": "0.1.4",
     "@graphql-codegen/testing": "1.8.3",
     "graphql": "14.5.8",
     "jest": "24.9.0",
@@ -26,11 +28,14 @@
     "typescript": "3.7.2"
   },
   "sideEffects": false,
-  "main": "dist/commonjs/index.js",
-  "module": "dist/esnext/index.js",
-  "typings": "dist/esnext/index.d.ts",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "typings": "dist/index.d.ts",
   "typescript": {
-    "definition": "dist/esnext/index.d.ts"
+    "definition": "dist/index.d.ts"
+  },
+  "buildOptions": {
+    "input": "./src/index.ts"
   },
   "jest-junit": {
     "outputDirectory": "../../../../test-results/typescript-mongodb"

@@ -1,5 +1,5 @@
 import { NormalizedScalarsMap, ConvertOptions } from './types';
-import * as autoBind from 'auto-bind';
+import autoBind from 'auto-bind';
 import { DEFAULT_SCALARS } from './scalars';
 import { toPascalCase, DeclarationBlock, DeclarationBlockConfig, buildScalars, getConfigValue } from './utils';
 import { GraphQLSchema, FragmentDefinitionNode, GraphQLObjectType, OperationDefinitionNode, VariableDefinitionNode, OperationTypeNode, ASTNode } from 'graphql';

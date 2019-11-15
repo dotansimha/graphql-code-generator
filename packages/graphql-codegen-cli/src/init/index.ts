@@ -1,4 +1,4 @@
-import * as inquirer from 'inquirer';
+import inquirer from 'inquirer';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { getQuestions } from './questions';
 import { guessTargets } from './targets';

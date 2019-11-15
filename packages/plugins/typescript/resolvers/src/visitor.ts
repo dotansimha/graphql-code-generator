@@ -1,6 +1,6 @@
 import { TypeScriptResolversPluginConfig } from './index';
 import { ListTypeNode, NamedTypeNode, NonNullTypeNode, GraphQLSchema } from 'graphql';
-import * as autoBind from 'auto-bind';
+import autoBind from 'auto-bind';
 import { ParsedResolversConfig, BaseResolversVisitor, getConfigValue } from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptOperationVariablesToObject } from '@graphql-codegen/typescript';
 

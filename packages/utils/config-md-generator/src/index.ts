@@ -1,6 +1,6 @@
-import * as ts from 'typescript';
-import * as tsdoc from '@microsoft/tsdoc';
-import * as os from 'os';
+import ts from 'typescript';
+import tsdoc from '@microsoft/tsdoc';
+import os from 'os';
 
 type Example = { title?: string; description?: string; code: string };
 

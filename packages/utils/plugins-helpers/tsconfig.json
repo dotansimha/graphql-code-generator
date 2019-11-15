@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "esModuleInterop": true,
     "importHelpers": true,
     "experimentalDecorators": true,
     "module": "esnext",

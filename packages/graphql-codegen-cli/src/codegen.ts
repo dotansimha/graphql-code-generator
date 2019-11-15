@@ -1,6 +1,5 @@
 import { Types, CodegenPlugin } from '@graphql-codegen/plugin-helpers';
 import { DetailedError, codegen } from '@graphql-codegen/core';
-import * as Listr from 'listr';
 import { normalizeOutputParam, normalizeInstanceOrArray, normalizeConfig } from '@graphql-codegen/plugin-helpers';
 import { Renderer } from './utils/listr-renderer';
 import { GraphQLError, DocumentNode } from 'graphql';
@@ -9,6 +8,8 @@ import { getPresetByName } from './presets';
 import { debugLog } from './utils/debugging';
 import { tryToBuildSchema } from './utils/try-to-build-schema';
 import { CodegenContext, ensureContext } from './config';
+
+const Listr = require('listr');
 
 export const defaultLoader = (mod: string) => import(mod);
 
@@ -33,7 +34,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
   const commonListrOptions = {
     exitOnError: true,
   };
-  let listr: Listr;
+  let listr: import('listr');
 
   if (process.env.VERBOSE) {
     listr = new Listr({
@@ -152,7 +153,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
     title: 'Generate outputs',
     task: () => {
       return new Listr(
-        Object.keys(generates).map<Listr.ListrTask>((filename, i) => {
+        Object.keys(generates).map<import('listr').ListrTask>((filename, i) => {
           const outputConfig = generates[filename];
           const hasPreset = !!outputConfig.preset;
 

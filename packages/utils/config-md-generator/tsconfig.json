@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
+    "esModuleInterop": true,
     "importHelpers": false,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "module": "commonjs",
+    "module": "esnext",
     "target": "es5",
     "lib": ["es6", "esnext", "es2015", "dom"],
     "moduleResolution": "node",

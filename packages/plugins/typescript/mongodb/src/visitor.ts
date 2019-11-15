@@ -1,7 +1,7 @@
 import { FieldsTree } from './fields-tree';
 import { getBaseTypeNode, DeclarationBlock, getConfigValue, ParsedConfig, BaseVisitor, buildScalars, DEFAULT_SCALARS } from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptOperationVariablesToObject, plugin } from '@graphql-codegen/typescript';
-import * as autoBind from 'auto-bind';
+import autoBind from 'auto-bind';
 import { Directives, TypeScriptMongoPluginConfig } from './index';
 import { DirectiveNode, GraphQLSchema, ObjectTypeDefinitionNode, NamedTypeNode, FieldDefinitionNode, Kind, ValueNode, isEnumType, InterfaceTypeDefinitionNode, UnionTypeDefinitionNode } from 'graphql';
 
@@ -74,15 +74,12 @@ export class TsMongoVisitor extends BaseVisitor<TypeScriptMongoPluginConfig, Typ
       case Kind.NULL:
         return null;
       case Kind.OBJECT:
-        return valueNode.fields.reduce(
-          (prev, f) => {
-            return {
-              ...prev,
-              [f.name.value]: this._resolveDirectiveValue<T>(f.value),
-            };
-          },
-          {} as T
-        );
+        return valueNode.fields.reduce((prev, f) => {
+          return {
+            ...prev,
+            [f.name.value]: this._resolveDirectiveValue<T>(f.value),
+          };
+        }, {} as T);
       default:
         return undefined;
     }

@@ -24,7 +24,7 @@ import { BaseVisitorConvertOptions } from './base-visitor';
 import { getBaseType } from '@graphql-codegen/plugin-helpers';
 import { ParsedDocumentsConfig } from './base-documents-visitor';
 import { LinkField, PrimitiveAliasedFields, PrimitiveField, BaseSelectionSetProcessor, ProcessResult, NameAndType } from './selection-set-processor/base';
-import * as autoBind from 'auto-bind';
+import autoBind from 'auto-bind';
 
 function isMetadataFieldName(name: string) {
   return ['__schema', '__type'].includes(name);
@@ -232,31 +232,28 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
     const selectionNodesByTypeName = this.flattenSelectionSet(this._selectionSet.selections);
 
-    const grouped = getPossibleTypes(this._schema, this._parentSchemaType).reduce(
-      (prev, type) => {
-        const typeName = type.name;
-        const schemaType = this._schema.getType(typeName);
+    const grouped = getPossibleTypes(this._schema, this._parentSchemaType).reduce((prev, type) => {
+      const typeName = type.name;
+      const schemaType = this._schema.getType(typeName);
 
-        if (!isObjectType(schemaType)) {
-          throw new TypeError(`Invalid state! Schema type ${typeName} is not a valid GraphQL object!`);
-        }
+      if (!isObjectType(schemaType)) {
+        throw new TypeError(`Invalid state! Schema type ${typeName} is not a valid GraphQL object!`);
+      }
 
-        const selectionNodes = selectionNodesByTypeName.get(typeName) || [];
+      const selectionNodes = selectionNodesByTypeName.get(typeName) || [];
 
-        if (!prev[typeName]) {
-          prev[typeName] = [];
-        }
+      if (!prev[typeName]) {
+        prev[typeName] = [];
+      }
 
-        const transformedSet = this.buildSelectionSetString(schemaType, selectionNodes);
+      const transformedSet = this.buildSelectionSetString(schemaType, selectionNodes);
 
-        if (transformedSet) {
-          prev[typeName].push(transformedSet);
-        }
+      if (transformedSet) {
+        prev[typeName].push(transformedSet);
+      }
 
-        return prev;
-      },
-      {} as Record<string, string[]>
-    );
+      return prev;
+    }, {} as Record<string, string[]>);
 
     return grouped;
   }
@@ -337,8 +334,14 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     const typeInfoField = this.buildTypeNameField(parentSchemaType, this._config.nonOptionalTypename, this._config.addTypename, requireTypename);
     const transformed: ProcessResult = [
       ...(typeInfoField ? this._processor.transformTypenameField(typeInfoField.type, typeInfoField.name) : []),
-      ...this._processor.transformPrimitiveFields(parentSchemaType, Array.from(primitiveFields.values()).map(field => field.name.value)),
-      ...this._processor.transformAliasesPrimitiveFields(parentSchemaType, Array.from(primitiveAliasFields.values()).map(field => ({ alias: field.alias.value, fieldName: field.name.value }))),
+      ...this._processor.transformPrimitiveFields(
+        parentSchemaType,
+        Array.from(primitiveFields.values()).map(field => field.name.value)
+      ),
+      ...this._processor.transformAliasesPrimitiveFields(
+        parentSchemaType,
+        Array.from(primitiveAliasFields.values()).map(field => ({ alias: field.alias.value, fieldName: field.name.value }))
+      ),
       ...this._processor.transformLinkFields(linkFields),
     ].filter(Boolean);
 

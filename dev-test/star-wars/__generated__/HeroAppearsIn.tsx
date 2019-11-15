@@ -23,7 +23,7 @@ export type HeroAppearsInComponentProps = Omit<ApolloReactComponents.QueryCompon
 
 export const HeroAppearsInComponent = (props: HeroAppearsInComponentProps) => <ApolloReactComponents.Query<HeroAppearsInQuery, HeroAppearsInQueryVariables> query={HeroAppearsInDocument} {...props} />;
 
-export type HeroAppearsInProps<TChildProps = {}> = ApolloReactHoc.DataProps<HeroAppearsInQuery, HeroAppearsInQueryVariables> & TChildProps;
+export type HeroAppearsInProps<TChildProps = {}> = ApolloReactHoc.DataProps<HeroAppearsInQuery, HeroAppearsInQueryVariables> | TChildProps;
 export function withHeroAppearsIn<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<TProps, HeroAppearsInQuery, HeroAppearsInQueryVariables, HeroAppearsInProps<TChildProps>>) {
   return ApolloReactHoc.withQuery<TProps, HeroAppearsInQuery, HeroAppearsInQueryVariables, HeroAppearsInProps<TChildProps>>(HeroAppearsInDocument, {
     alias: 'heroAppearsIn',

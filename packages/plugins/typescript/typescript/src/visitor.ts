@@ -1,7 +1,7 @@
 import { transformComment, wrapWithSingleQuotes, DeclarationBlock, indent, BaseTypesVisitor, ParsedTypesConfig, getConfigValue } from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptPluginConfig } from './index';
 import { AvoidOptionalsConfig } from './types';
-import * as autoBind from 'auto-bind';
+import autoBind from 'auto-bind';
 import { FieldDefinitionNode, NamedTypeNode, ListTypeNode, NonNullTypeNode, EnumTypeDefinitionNode, Kind, InputValueDefinitionNode, GraphQLSchema, GraphQLEnumType } from 'graphql';
 import { TypeScriptOperationVariablesToObject } from './typescript-variables-to-object';
 import { normalizeAvoidOptionals } from './avoid-optionals';

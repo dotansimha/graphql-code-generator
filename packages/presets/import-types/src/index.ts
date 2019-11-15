@@ -1,6 +1,5 @@
 import { isUsingTypes, Types, CodegenPlugin } from '@graphql-codegen/plugin-helpers';
-import { BaseVisitor } from '@graphql-codegen/visitor-plugin-common';
-import * as addPlugin from '@graphql-codegen/add';
+import addPlugin from '@graphql-codegen/add';
 import { FragmentDefinitionNode } from 'graphql';
 
 export type ImportTypesConfig = {
@@ -66,7 +65,13 @@ export const preset: Types.OutputPreset<ImportTypesConfig> = {
       externalFragments: [],
     };
     options.documents.map(documentFile => {
-      if (isUsingTypes(documentFile.content, config.externalFragments.map(m => m.name), options.schemaAst)) {
+      if (
+        isUsingTypes(
+          documentFile.content,
+          config.externalFragments.map(m => m.name),
+          options.schemaAst
+        )
+      ) {
         plugins.unshift({ add: `import * as ${importTypesNamespace} from '${options.presetConfig.typesPath}';\n` });
       }
     });

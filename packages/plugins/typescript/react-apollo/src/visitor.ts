@@ -1,6 +1,6 @@
 import { ClientSideBaseVisitor, ClientSideBasePluginConfig, getConfigValue, LoadedFragment, OMIT_TYPE, DocumentMode } from '@graphql-codegen/visitor-plugin-common';
 import { ReactApolloRawPluginConfig } from './index';
-import * as autoBind from 'auto-bind';
+import autoBind from 'auto-bind';
 import { OperationDefinitionNode, Kind } from 'graphql';
 import { toPascalCase, Types } from '@graphql-codegen/plugin-helpers';
 import { pascalCase, camelCase } from 'change-case';
