@@ -12,7 +12,8 @@
     "input": "./src/index.ts"
   },
   "scripts": {
-    "build": "node_modules/.bin/bob"
+    "prepack": "bob-update-version",
+    "build": "bob"
   },
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "author": "Dotan Simha <dotansimha@gmail.com>",
@@ -32,7 +33,7 @@
     "tslib": "1.10.0"
   },
   "devDependencies": {
-    "@ardatan/bob": "0.1.0",
+    "@ardatan/bob": "0.1.4",
     "typescript": "3.7.2"
   },
   "publishConfig": {

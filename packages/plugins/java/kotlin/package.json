@@ -5,6 +5,7 @@
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
   "scripts": {
+    "prepack": "bob-update-version",
     "build": "bob",
     "test": "jest --no-watchman --config ../../../../jest.config.js"
   },
@@ -15,7 +16,7 @@
     "tslib": "1.10.0"
   },
   "devDependencies": {
-    "@ardatan/bob": "0.1.0",
+    "@ardatan/bob": "0.1.4",
     "@graphql-codegen/testing": "1.8.3",
     "graphql": "14.5.8",
     "jest": "24.9.0",

@@ -12,10 +12,11 @@
     "url": "git+https://github.com/dotansimha/graphql-code-generator.git"
   },
   "scripts": {
+    "prepack": "bob-update-version",
     "clean": "rimraf ./dist",
     "lint": "tslint src/**/*.ts",
     "prebuild": "yarn clean",
-    "build": "tsc",
+    "build": "bob",
     "test": "jest --no-watchman --config ../../jest.config.js"
   },
   "keywords": [
@@ -86,7 +87,7 @@
     "valid-url": "1.0.9"
   },
   "devDependencies": {
-    "@ardatan/bob": "0.1.0",
+    "@ardatan/bob": "0.1.4",
     "@types/chokidar": "1.7.5",
     "@types/detect-indent": "5.0.0",
     "@types/inquirer": "6.5.0",
@@ -103,10 +104,19 @@
   "peerDependencies": {
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0"
   },
-  "main": "dist/index.js",
+  "main": "./dist/index.cjs.js",
+  "module": "dist/index.esm.js",
   "typings": "dist/index.d.ts",
   "typescript": {
     "definition": "dist/index.d.ts"
+  },
+  "buildOptions": {
+    "input": "./src/index.ts",
+    "bin": {
+      "graphql-codegen": {
+        "input": "./src/bin.ts"
+      }
+    }
   },
   "jest-junit": {
     "outputDirectory": "../../test-results/cli"

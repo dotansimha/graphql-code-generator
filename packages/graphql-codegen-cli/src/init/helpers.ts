@@ -2,9 +2,10 @@ import chalk from 'chalk';
 import { resolve, relative } from 'path';
 import { writeFileSync, readFileSync } from 'fs';
 import { Types } from '@graphql-codegen/plugin-helpers';
-import YAML from 'json-to-pretty-yaml';
 import detectIndent from 'detect-indent';
 import { Answers } from './types';
+
+const YAML = require('json-to-pretty-yaml');
 
 // Parses config and writes it to a file
 export function writeConfig(answers: Answers, config: Types.Config) {

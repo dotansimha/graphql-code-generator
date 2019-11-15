@@ -12,7 +12,6 @@
     "write-translations": "docusaurus-write-translations"
   },
   "devDependencies": {
-    "@ardatan/bob": "0.1.0",
     "@graphql-codegen/config-markdown-generator": "1.8.3",
     "babel-preset-minify": "0.5.1",
     "docusaurus": "1.14.0",

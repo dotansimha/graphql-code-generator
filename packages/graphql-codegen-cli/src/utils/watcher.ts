@@ -1,7 +1,6 @@
 import { executeCodegen } from '../codegen';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { normalizeInstanceOrArray, normalizeOutputParam } from '@graphql-codegen/plugin-helpers';
-import isValidPath from 'is-valid-path';
 import isGlob from 'is-glob';
 import debounce from 'debounce';
 import logSymbols from 'log-symbols';
@@ -11,6 +10,8 @@ import { join } from 'path';
 import { FSWatcher } from 'chokidar';
 import { lifecycleHooks } from '../hooks';
 import { loadContext, CodegenContext } from '../config';
+
+const isValidPath = require('is-valid-path');
 
 function log(msg: string) {
   // double spaces to inline the message with Listr

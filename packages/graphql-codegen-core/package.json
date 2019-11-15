@@ -7,6 +7,7 @@
     "url": "git+https://github.com/dotansimha/graphql-code-generator.git"
   },
   "scripts": {
+    "prepack": "bob-update-version",
     "clean": "rimraf ./dist",
     "lint": "tslint src/**/*.ts",
     "prebuild": "yarn clean",
@@ -45,7 +46,7 @@
     "tslib": "1.10.0"
   },
   "devDependencies": {
-    "@ardatan/bob": "0.1.0",
+    "@ardatan/bob": "0.1.4",
     "ts-jest": "24.1.0"
   },
   "sideEffects": false,
