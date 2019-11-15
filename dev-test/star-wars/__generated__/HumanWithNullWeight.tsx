@@ -25,7 +25,7 @@ export type HumanWithNullHeightComponentProps = Omit<ApolloReactComponents.Query
 
 export const HumanWithNullHeightComponent = (props: HumanWithNullHeightComponentProps) => <ApolloReactComponents.Query<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables> query={HumanWithNullHeightDocument} {...props} />;
 
-export type HumanWithNullHeightProps<TChildProps = {}> = ApolloReactHoc.DataProps<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables> & TChildProps;
+export type HumanWithNullHeightProps<TChildProps = {}> = ApolloReactHoc.DataProps<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables> | TChildProps;
 export function withHumanWithNullHeight<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<TProps, HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables, HumanWithNullHeightProps<TChildProps>>) {
   return ApolloReactHoc.withQuery<TProps, HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables, HumanWithNullHeightProps<TChildProps>>(HumanWithNullHeightDocument, {
     alias: 'humanWithNullHeight',

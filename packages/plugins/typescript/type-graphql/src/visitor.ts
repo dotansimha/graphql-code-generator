@@ -1,6 +1,6 @@
 import { transformComment, indent, DeclarationBlock } from '@graphql-codegen/visitor-plugin-common';
 import { TypeGraphQLPluginConfig } from './index';
-import * as autoBind from 'auto-bind';
+import autoBind from 'auto-bind';
 import { FieldDefinitionNode, EnumTypeDefinitionNode, InputValueDefinitionNode, GraphQLSchema, ObjectTypeDefinitionNode, InterfaceTypeDefinitionNode, TypeNode, NameNode } from 'graphql';
 import { TypeScriptOperationVariablesToObject, TypeScriptPluginParsedConfig, TsVisitor, AvoidOptionalsConfig } from '@graphql-codegen/typescript';
 import { InputObjectTypeDefinitionNode } from 'graphql';

@@ -1,5 +1,5 @@
 import { ClientSideBaseVisitor, ClientSideBasePluginConfig, LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
-import * as autoBind from 'auto-bind';
+import autoBind from 'auto-bind';
 import { OperationDefinitionNode, print, visit, GraphQLSchema } from 'graphql';
 import { ApolloAngularRawPluginConfig } from './index';
 

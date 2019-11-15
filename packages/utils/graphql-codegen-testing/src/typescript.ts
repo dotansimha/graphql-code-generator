@@ -1,30 +1,31 @@
 import { Types } from '@graphql-codegen/plugin-helpers';
-import * as ts from 'typescript';
-import * as path from 'path';
-import * as lzString from 'lz-string';
-import * as open from 'open';
+import { CompilerOptions, ModuleResolutionKind, ScriptTarget, JsxEmit, ModuleKind, createSourceFile, ScriptKind, flattenDiagnosticMessageText, createCompilerHost, createProgram } from 'typescript';
+import { resolve, join, dirname } from 'path';
+import open from 'open';
+
+const { compressToEncodedURIComponent } = require('lz-string');
 
 export function validateTs(
   pluginOutput: Types.PluginOutput,
-  options: ts.CompilerOptions = {
+  options: CompilerOptions = {
     noEmitOnError: true,
     noImplicitAny: true,
-    moduleResolution: ts.ModuleResolutionKind.NodeJs,
+    moduleResolution: ModuleResolutionKind.NodeJs,
     experimentalDecorators: true,
     emitDecoratorMetadata: true,
-    target: ts.ScriptTarget.ES5,
-    typeRoots: [path.resolve(require.resolve('typescript'), '../../../@types/')],
-    jsx: ts.JsxEmit.Preserve,
+    target: ScriptTarget.ES5,
+    typeRoots: [resolve(require.resolve('typescript'), '../../../@types/')],
+    jsx: JsxEmit.Preserve,
     allowJs: true,
     lib: [
-      path.join(path.dirname(require.resolve('typescript')), 'lib.es5.d.ts'),
-      path.join(path.dirname(require.resolve('typescript')), 'lib.es6.d.ts'),
-      path.join(path.dirname(require.resolve('typescript')), 'lib.dom.d.ts'),
-      path.join(path.dirname(require.resolve('typescript')), 'lib.scripthost.d.ts'),
-      path.join(path.dirname(require.resolve('typescript')), 'lib.es2015.d.ts'),
-      path.join(path.dirname(require.resolve('typescript')), 'lib.esnext.asynciterable.d.ts'),
+      join(dirname(require.resolve('typescript')), 'lib.es5.d.ts'),
+      join(dirname(require.resolve('typescript')), 'lib.es6.d.ts'),
+      join(dirname(require.resolve('typescript')), 'lib.dom.d.ts'),
+      join(dirname(require.resolve('typescript')), 'lib.scripthost.d.ts'),
+      join(dirname(require.resolve('typescript')), 'lib.es2015.d.ts'),
+      join(dirname(require.resolve('typescript')), 'lib.esnext.asynciterable.d.ts'),
     ],
-    module: ts.ModuleKind.ESNext,
+    module: ModuleKind.ESNext,
   },
   isTsx = false,
   isStrict = false,
@@ -46,7 +47,7 @@ export function validateTs(
 
   try {
     const testFile = `test-file.${isTsx ? 'tsx' : 'ts'}`;
-    const result = ts.createSourceFile(testFile, contents, ts.ScriptTarget.ES2016, false, isTsx ? ts.ScriptKind.TSX : undefined);
+    const result = createSourceFile(testFile, contents, ScriptTarget.ES2016, false, isTsx ? ScriptKind.TSX : undefined);
 
     if (result['parseDiagnostics'] && result['parseDiagnostics'].length > 0) {
       const errors: string[] = [];
@@ -55,11 +56,11 @@ export function validateTs(
       allDiagnostics.forEach(diagnostic => {
         if (diagnostic.file) {
           let { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start!);
-          let message = ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n');
+          let message = flattenDiagnosticMessageText(diagnostic.messageText, '\n');
           errors.push(`${line + 1},${character + 1}: ${message} ->
     ${contents.split('\n')[line]}`);
         } else {
-          errors.push(`${ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n')}`);
+          errors.push(`${flattenDiagnosticMessageText(diagnostic.messageText, '\n')}`);
         }
 
         const relevantErrors = errors.filter(e => !e.includes('Cannot find module'));
@@ -71,7 +72,7 @@ export function validateTs(
     }
   } catch (e) {
     if (openPlayground && !process.env) {
-      const compressedCode = lzString.compressToEncodedURIComponent(contents);
+      const compressedCode = compressToEncodedURIComponent(contents);
       open('http://www.typescriptlang.org/play/#code/' + compressedCode);
     }
 
@@ -81,25 +82,25 @@ export function validateTs(
 
 export function compileTs(
   contents: string,
-  options: ts.CompilerOptions = {
+  options: CompilerOptions = {
     noEmitOnError: true,
     noImplicitAny: true,
-    moduleResolution: ts.ModuleResolutionKind.NodeJs,
+    moduleResolution: ModuleResolutionKind.NodeJs,
     experimentalDecorators: true,
     emitDecoratorMetadata: true,
-    target: ts.ScriptTarget.ES5,
-    typeRoots: [path.resolve(require.resolve('typescript'), '../../../@types/')],
-    jsx: ts.JsxEmit.Preserve,
+    target: ScriptTarget.ES5,
+    typeRoots: [resolve(require.resolve('typescript'), '../../../@types/')],
+    jsx: JsxEmit.Preserve,
     allowJs: true,
     lib: [
-      path.join(path.dirname(require.resolve('typescript')), 'lib.es5.d.ts'),
-      path.join(path.dirname(require.resolve('typescript')), 'lib.es6.d.ts'),
-      path.join(path.dirname(require.resolve('typescript')), 'lib.dom.d.ts'),
-      path.join(path.dirname(require.resolve('typescript')), 'lib.scripthost.d.ts'),
-      path.join(path.dirname(require.resolve('typescript')), 'lib.es2015.d.ts'),
-      path.join(path.dirname(require.resolve('typescript')), 'lib.esnext.asynciterable.d.ts'),
+      join(dirname(require.resolve('typescript')), 'lib.es5.d.ts'),
+      join(dirname(require.resolve('typescript')), 'lib.es6.d.ts'),
+      join(dirname(require.resolve('typescript')), 'lib.dom.d.ts'),
+      join(dirname(require.resolve('typescript')), 'lib.scripthost.d.ts'),
+      join(dirname(require.resolve('typescript')), 'lib.es2015.d.ts'),
+      join(dirname(require.resolve('typescript')), 'lib.esnext.asynciterable.d.ts'),
     ],
-    module: ts.ModuleKind.ESNext,
+    module: ModuleKind.ESNext,
   },
   isTsx = false,
   openPlayground = false
@@ -110,12 +111,12 @@ export function compileTs(
 
   try {
     const testFile = `test-file.${isTsx ? 'tsx' : 'ts'}`;
-    const host = ts.createCompilerHost(options);
-    let program = ts.createProgram([testFile], options, {
+    const host = createCompilerHost(options);
+    let program = createProgram([testFile], options, {
       ...host,
-      getSourceFile: (fileName: string, languageVersion: ts.ScriptTarget, onError?: (message: string) => void, shouldCreateNewSourceFile?: boolean) => {
+      getSourceFile: (fileName: string, languageVersion: ScriptTarget, onError?: (message: string) => void, shouldCreateNewSourceFile?: boolean) => {
         if (fileName === testFile) {
-          return ts.createSourceFile(fileName, contents, options.target);
+          return createSourceFile(fileName, contents, options.target);
         }
 
         return host.getSourceFile(fileName, languageVersion, onError, shouldCreateNewSourceFile);
@@ -141,11 +142,11 @@ export function compileTs(
     allDiagnostics.forEach(diagnostic => {
       if (diagnostic.file) {
         let { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start!);
-        let message = ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n');
+        let message = flattenDiagnosticMessageText(diagnostic.messageText, '\n');
         errors.push(`${line + 1},${character + 1}: ${message} ->
   ${contents.split('\n')[line]}`);
       } else {
-        errors.push(`${ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n')}`);
+        errors.push(`${flattenDiagnosticMessageText(diagnostic.messageText, '\n')}`);
       }
     });
 
@@ -156,7 +157,7 @@ export function compileTs(
     }
   } catch (e) {
     if (openPlayground) {
-      const compressedCode = lzString.compressToEncodedURIComponent(contents);
+      const compressedCode = compressToEncodedURIComponent(contents);
       open('http://www.typescriptlang.org/play/#code/' + compressedCode);
     }
 

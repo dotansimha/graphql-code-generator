@@ -1,7 +1,7 @@
 import { join, parse, relative, resolve } from 'path';
-import * as del from 'del';
-import * as makeDir from 'make-dir';
-import * as os from 'os';
+import del from 'del';
+import makeDir from 'make-dir';
+import os from 'os';
 
 const fs = jest.requireActual('fs');
 

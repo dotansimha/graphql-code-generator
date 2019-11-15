@@ -1,5 +1,5 @@
 jest.mock('fs');
-import * as bddStdin from 'bdd-stdin';
+import bddStdin from 'bdd-stdin';
 import { resolve } from 'path';
 import { init } from '../src/init';
 import { Tags } from '../src/init/types';

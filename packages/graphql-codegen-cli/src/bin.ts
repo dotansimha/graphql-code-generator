@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import { runCli } from './cli';
 import { cliError } from './utils/cli-error';
 

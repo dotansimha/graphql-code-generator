@@ -1,4 +1,4 @@
-import preset from '../src/index';
+import { preset } from '../src/index';
 import { parse } from 'graphql';
 import { buildASTSchema } from 'graphql';
 

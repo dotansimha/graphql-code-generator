@@ -1,4 +1,4 @@
-import * as inquirer from 'inquirer';
+import inquirer from 'inquirer';
 import { grey } from './helpers';
 import { Tags, Answers } from './types';
 import { plugins } from './plugins';

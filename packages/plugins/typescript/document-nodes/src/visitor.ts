@@ -1,5 +1,5 @@
 import { TypeScriptDocumentNodesRawPluginConfig } from '.';
-import * as autoBind from 'auto-bind';
+import autoBind from 'auto-bind';
 import { getConfigValue, LoadedFragment, ClientSideBaseVisitor, NamingConvention, ClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-common';
 import { GraphQLSchema } from 'graphql';
 

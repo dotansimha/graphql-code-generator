@@ -38,3 +38,5 @@ export const plugin: PluginFunction<AddPluginConfig> = async (schema: GraphQLSch
     [placement]: asFileString(content),
   };
 };
+
+export default { plugin };
