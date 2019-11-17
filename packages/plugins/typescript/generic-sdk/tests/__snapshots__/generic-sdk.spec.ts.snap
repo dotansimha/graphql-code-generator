@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`graphql-request sdk Should generate a correct wrap method 1`] = `
+exports[`generic-sdk sdk Should generate a correct wrap method 1`] = `
 "export type Maybe<T> = T | null;
 import { print } from 'graphql';
 import gql from 'graphql-tag';
@@ -299,7 +299,7 @@ async function test() {
 }"
 `;
 
-exports[`graphql-request sdk Should generate a correct wrap method with documentMode=string 1`] = `
+exports[`generic-sdk sdk Should generate a correct wrap method with documentMode=string 1`] = `
 "export type Maybe<T> = T | null;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {

@@ -7,7 +7,7 @@ import { plugin as tsPlugin } from '@graphql-codegen/typescript';
 import { plugin as tsDocumentsPlugin } from '@graphql-codegen/typescript-operations';
 import { readFileSync } from 'fs';
 
-describe('graphql-request', () => {
+describe('generic-sdk', () => {
   const schema = buildClientSchema(JSON.parse(readFileSync('../../../../dev-test/githunt/schema.json').toString()));
   const basicDoc = parse(/* GraphQL */ `
     query feed {

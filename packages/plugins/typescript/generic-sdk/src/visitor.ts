@@ -3,7 +3,7 @@ import autoBind from 'auto-bind';
 import { GraphQLSchema, Kind } from 'graphql';
 import { OperationDefinitionNode } from 'graphql';
 
-export class GraphQLRequestVisitor extends ClientSideBaseVisitor<RawClientSideBasePluginConfig, ClientSideBasePluginConfig> {
+export class GenericSdkVisitor extends ClientSideBaseVisitor<RawClientSideBasePluginConfig, ClientSideBasePluginConfig> {
   private _operationsToInclude: { node: OperationDefinitionNode; documentVariableName: string; operationType: string; operationResultType: string; operationVariablesTypes: string }[] = [];
 
   constructor(schema: GraphQLSchema, fragments: LoadedFragment[], rawConfig: RawClientSideBasePluginConfig) {
