@@ -12,7 +12,7 @@ export class GenericSdkVisitor extends ClientSideBaseVisitor<RawClientSideBasePl
     autoBind(this);
 
     if (this.config.documentMode !== DocumentMode.string) {
-      this._additionalImports.push(`import { print } from 'graphql';`);
+      this._additionalImports.push(`import { DocumentNode } from 'graphql';`);
     }
   }
 
@@ -32,14 +32,13 @@ export class GenericSdkVisitor extends ClientSideBaseVisitor<RawClientSideBasePl
     const allPossibleActions = this._operationsToInclude
       .map(o => {
         const optionalVariables = !o.node.variableDefinitions || o.node.variableDefinitions.length === 0 || o.node.variableDefinitions.every(v => v.type.kind !== Kind.NON_NULL_TYPE || v.defaultValue);
-        const doc = this.config.documentMode === DocumentMode.string ? o.documentVariableName : `print(${o.documentVariableName})`;
         return `${o.node.name.value}(variables${optionalVariables ? '?' : ''}: ${o.operationVariablesTypes}): Promise<${o.operationResultType}> {
-  return requester<${o.operationResultType}, ${o.operationVariablesTypes}>(${doc}, variables);
+  return requester<${o.operationResultType}, ${o.operationVariablesTypes}>(${o.documentVariableName}, variables);
 }`;
       })
       .map(s => indentMultiline(s, 2));
 
-    return `export type Requester = <R, V>(doc: string, vars?: V) => Promise<R>
+    return `export type Requester = <R, V>(doc: ${this.config.documentMode === DocumentMode.string ? 'string' : 'DocumentNode'}, vars?: V) => Promise<R>
 export function getSdk(requester: Requester) {
   return {
 ${allPossibleActions.join(',\n')}
