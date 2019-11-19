@@ -18,7 +18,7 @@
     "input": "./src/index.ts"
   },
   "dependencies": {
-    "@microsoft/tsdoc": "0.12.15",
+    "@microsoft/tsdoc": "0.12.16",
     "tslib": "1.10.0",
     "typescript": "3.7.2"
   },
