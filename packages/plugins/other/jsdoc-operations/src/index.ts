@@ -21,7 +21,8 @@ type Property = {
 type TypeDef = {
   name: string;
   operation: string;
-  properties: Array<Property>;
+  properties?: Array<Property>;
+  types?: Array<NamedType>;
 };
 
 const transformScalar = (scalar: string) => {
@@ -40,25 +41,31 @@ const transformScalar = (scalar: string) => {
   return scalarMap[scalar];
 };
 
-const createDocBlock = ({ name, properties }: TypeDef) => {
+const createTypeDef = ({ name, properties, types }: TypeDef) => {
   const optionalType = 'null|undefined';
+  const typeDef = [`/**`];
 
-  const propertyDefinitions = properties
-    .map(property => {
-      const name = !property.type.isRequired ? `[${property.name}]` : property.name;
+  if (types) {
+    typeDef.push(` * @typedef {(${types.map(type => type.value).join('|')})} ${name}`);
+  } else {
+    typeDef.push(` * @typedef {Object} ${name}`);
+  }
 
-      if (property.type.kind === 'ListType') {
-        return ` * @property {Array<${property.type.item.value}${property.type.item.isRequired ? '' : `|${optionalType}`}>} ${name}`;
-      }
+  if (properties) {
+    typeDef.push(
+      ...properties.map(property => {
+        const name = !property.type.isRequired ? `[${property.name}]` : property.name;
 
-      return ` * @property {${transformScalar(property.type.value)}} ${name}`;
-    })
-    .join('\n');
+        if (property.type.kind === 'ListType') {
+          return ` * @property {Array<${property.type.item.value}${property.type.item.isRequired ? '' : `|${optionalType}`}>} ${name}`;
+        }
 
-  return `/**
- * @typedef {Object} ${name}
-${propertyDefinitions}
- */`;
+        return ` * @property {${transformScalar(property.type.value)}} ${name}`;
+      })
+    );
+  }
+
+  return [...typeDef, ' */'].join('\n');
 };
 
 export const plugin: PluginFunction = schema => {
@@ -82,11 +89,18 @@ export const plugin: PluginFunction = schema => {
       NonNullType(node) {
         return { ...node.type, isRequired: true };
       },
+      UnionTypeDefinition(node) {
+        return {
+          kind: node.kind,
+          name: node.name.value,
+          types: node.types,
+        };
+      },
       ListType(node) {
         return { kind: node.kind, item: node.type };
       },
     },
   });
 
-  return visited.map(operation => createDocBlock(operation)).join('\n\n');
+  return visited.map(operation => createTypeDef(operation)).join('\n\n');
 };

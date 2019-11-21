@@ -3,6 +3,8 @@ import { plugin } from '../src/index';
 
 describe('JSDoc Operations Plugin', () => {
   const schema = buildSchema(/* GraphQL */ `
+    union FooBar = Foo | Bar
+
     type Foo {
       id: String!
     }
@@ -16,6 +18,8 @@ describe('JSDoc Operations Plugin', () => {
       bar: Bar
       foos: [Foo]
       bars: [Bar!]!
+      foobar: FooBar!
+      fooOrbar: FooBar
     }
 
     schema {

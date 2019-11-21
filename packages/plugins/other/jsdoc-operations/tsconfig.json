@@ -16,7 +16,8 @@
     "alwaysStrict": true,
     "noImplicitReturns": true,
     "noUnusedLocals": false,
-    "noUnusedParameters": false
+    "noUnusedParameters": false,
+    "strict": true
   },
   "exclude": ["node_modules", "tests", "dist"]
 }
