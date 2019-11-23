@@ -42,7 +42,7 @@
   },
   "homepage": "https://github.com/dotansimha/graphql-code-generator#readme",
   "dependencies": {
-    "@babel/parser": "7.7.3",
+    "@babel/parser": "7.7.4",
     "@graphql-codegen/core": "1.8.3",
     "@graphql-codegen/plugin-helpers": "1.8.3",
     "@graphql-toolkit/code-file-loader": "0.7.2",
