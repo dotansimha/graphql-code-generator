@@ -32,14 +32,14 @@ export class GenericSdkVisitor extends ClientSideBaseVisitor<RawClientSideBasePl
     const allPossibleActions = this._operationsToInclude
       .map(o => {
         const optionalVariables = !o.node.variableDefinitions || o.node.variableDefinitions.length === 0 || o.node.variableDefinitions.every(v => v.type.kind !== Kind.NON_NULL_TYPE || v.defaultValue);
-        return `${o.node.name.value}(variables${optionalVariables ? '?' : ''}: ${o.operationVariablesTypes}): Promise<${o.operationResultType}> {
-  return requester<${o.operationResultType}, ${o.operationVariablesTypes}>(${o.documentVariableName}, variables);
+        return `${o.node.name.value}(variables${optionalVariables ? '?' : ''}: ${o.operationVariablesTypes}, options?: C): Promise<${o.operationResultType}> {
+  return requester<${o.operationResultType}, ${o.operationVariablesTypes}>(${o.documentVariableName}, variables, options);
 }`;
       })
       .map(s => indentMultiline(s, 2));
 
-    return `export type Requester = <R, V>(doc: ${this.config.documentMode === DocumentMode.string ? 'string' : 'DocumentNode'}, vars?: V) => Promise<R>
-export function getSdk(requester: Requester) {
+    return `export type Requester<C= {}> = <R, V>(doc: ${this.config.documentMode === DocumentMode.string ? 'string' : 'DocumentNode'}, vars?: V, options?: C) => Promise<R>
+export function getSdk<C>(requester: Requester<C>) {
   return {
 ${allPossibleActions.join(',\n')}
   };

@@ -264,20 +264,20 @@ export const Feed4Document = gql\`
   }
 }
     \`;
-export type Requester = <R, V>(doc: DocumentNode, vars?: V) => Promise<R>
-export function getSdk(requester: Requester) {
+export type Requester<C= {}> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => Promise<R>
+export function getSdk<C>(requester: Requester<C>) {
   return {
-    feed(variables?: FeedQueryVariables): Promise<FeedQuery> {
-      return requester<FeedQuery, FeedQueryVariables>(FeedDocument, variables);
+    feed(variables?: FeedQueryVariables, options?: C): Promise<FeedQuery> {
+      return requester<FeedQuery, FeedQueryVariables>(FeedDocument, variables, options);
     },
-    feed2(variables: Feed2QueryVariables): Promise<Feed2Query> {
-      return requester<Feed2Query, Feed2QueryVariables>(Feed2Document, variables);
+    feed2(variables: Feed2QueryVariables, options?: C): Promise<Feed2Query> {
+      return requester<Feed2Query, Feed2QueryVariables>(Feed2Document, variables, options);
     },
-    feed3(variables?: Feed3QueryVariables): Promise<Feed3Query> {
-      return requester<Feed3Query, Feed3QueryVariables>(Feed3Document, variables);
+    feed3(variables?: Feed3QueryVariables, options?: C): Promise<Feed3Query> {
+      return requester<Feed3Query, Feed3QueryVariables>(Feed3Document, variables, options);
     },
-    feed4(variables?: Feed4QueryVariables): Promise<Feed4Query> {
-      return requester<Feed4Query, Feed4QueryVariables>(Feed4Document, variables);
+    feed4(variables?: Feed4QueryVariables, options?: C): Promise<Feed4Query> {
+      return requester<Feed4Query, Feed4QueryVariables>(Feed4Document, variables, options);
     }
   };
 }
@@ -561,20 +561,20 @@ export const Feed4Document = \`
   }
 }
     \`;
-export type Requester = <R, V>(doc: string, vars?: V) => Promise<R>
-export function getSdk(requester: Requester) {
+export type Requester<C= {}> = <R, V>(doc: string, vars?: V, options?: C) => Promise<R>
+export function getSdk<C>(requester: Requester<C>) {
   return {
-    feed(variables?: FeedQueryVariables): Promise<FeedQuery> {
-      return requester<FeedQuery, FeedQueryVariables>(FeedDocument, variables);
+    feed(variables?: FeedQueryVariables, options?: C): Promise<FeedQuery> {
+      return requester<FeedQuery, FeedQueryVariables>(FeedDocument, variables, options);
     },
-    feed2(variables: Feed2QueryVariables): Promise<Feed2Query> {
-      return requester<Feed2Query, Feed2QueryVariables>(Feed2Document, variables);
+    feed2(variables: Feed2QueryVariables, options?: C): Promise<Feed2Query> {
+      return requester<Feed2Query, Feed2QueryVariables>(Feed2Document, variables, options);
     },
-    feed3(variables?: Feed3QueryVariables): Promise<Feed3Query> {
-      return requester<Feed3Query, Feed3QueryVariables>(Feed3Document, variables);
+    feed3(variables?: Feed3QueryVariables, options?: C): Promise<Feed3Query> {
+      return requester<Feed3Query, Feed3QueryVariables>(Feed3Document, variables, options);
     },
-    feed4(variables?: Feed4QueryVariables): Promise<Feed4Query> {
-      return requester<Feed4Query, Feed4QueryVariables>(Feed4Document, variables);
+    feed4(variables?: Feed4QueryVariables, options?: C): Promise<Feed4Query> {
+      return requester<Feed4Query, Feed4QueryVariables>(Feed4Document, variables, options);
     }
   };
 }
