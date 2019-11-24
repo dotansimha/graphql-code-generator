@@ -1,4 +1,4 @@
-import { printSchemaWithDirectives } from 'graphql-toolkit';
+import { printSchemaWithDirectives } from '@graphql-toolkit/common';
 import { parse, GraphQLSchema, DefinitionNode } from 'graphql';
 import { Types, PluginFunction } from '@graphql-codegen/plugin-helpers';
 
@@ -33,12 +33,9 @@ export const plugin: PluginFunction<RelayOptimizerPluginConfig> = (
       ])
     )
   );
-  const documentAsts = documents.reduce(
-    (prev, v) => {
-      return [...prev, ...v.content.definitions];
-    },
-    [] as DefinitionNode[]
-  );
+  const documentAsts = documents.reduce((prev, v) => {
+    return [...prev, ...v.content.definitions];
+  }, [] as DefinitionNode[]);
 
   const relayDocuments = RelayParser.transform(adjustedSchema, documentAsts);
 
