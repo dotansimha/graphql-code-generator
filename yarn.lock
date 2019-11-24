@@ -3455,13 +3455,14 @@
     "@types/prop-types" "*"
     csstype "^2.2.0"
 
-"@types/relay-compiler@7.0.1":
-  version "7.0.1"
-  resolved "https://registry.yarnpkg.com/@types/relay-compiler/-/relay-compiler-7.0.1.tgz#e1fec4fa6e6625aa6ddbcb5dd0db55b0877de1d1"
-  integrity sha512-8Y4LiRtVLE3wbt8bS7DBh+uJX5zhdF/kxTt2HXuErj3/1B821MW6yNUQl6d8Kk+qIvVjft8hEFZn7EBiOipkUA==
+"@types/relay-compiler@7.0.2":
+  version "7.0.2"
+  resolved "https://registry.npmjs.org/@types/relay-compiler/-/relay-compiler-7.0.2.tgz#3d5ddd33aeea7a248a86f197a9f847be14874c6d"
+  integrity sha512-qmK4itE/82YG9Xt6WFCj8oDvAgdpPWU5GV5TbDRfn2dgMbq9vVFeLiNw+uymzLurQTlKPJejZnL0ByYq+pkFSg==
   dependencies:
     "@types/relay-runtime" "*"
     graphql "^14.5.3"
+    typescript "^3.0.0"
 
 "@types/relay-runtime@*":
   version "6.0.0"
@@ -14787,10 +14788,10 @@ relateurl@0.2.x:
   resolved "https://registry.yarnpkg.com/relateurl/-/relateurl-0.2.7.tgz#54dbf377e51440aca90a4cd274600d3ff2d888a9"
   integrity sha1-VNvzd+UUQKypCkzSdGANP/LYiKk=
 
-relay-compiler@7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/relay-compiler/-/relay-compiler-7.0.0.tgz#89ea3ec49de6dddeae65dcf9c9eebce49645d3ad"
-  integrity sha512-LpiKplawsZAbQU1AUD6F9HnV2ZCYmpi+p3xtA7TnxDgdqqctuWnkrsMJOOrDNHbAse8W9Fb1lZlzgEcnze/Rvg==
+relay-compiler@7.1.0:
+  version "7.1.0"
+  resolved "https://registry.npmjs.org/relay-compiler/-/relay-compiler-7.1.0.tgz#cd8657c98e4d36f59bc9301ca1dc174e7f373c1a"
+  integrity sha512-8SisbLejjob1CYI9uQP7wxtsWvT+cvbx1iFDgP5U360UBukOGWLehfmn33lygY0LYqnfMShgvL1n7lrqoohs5A==
   dependencies:
     "@babel/core" "^7.0.0"
     "@babel/generator" "^7.0.0"
@@ -14805,14 +14806,14 @@ relay-compiler@7.0.0:
     fbjs "^1.0.0"
     immutable "~3.7.6"
     nullthrows "^1.1.1"
-    relay-runtime "7.0.0"
+    relay-runtime "7.1.0"
     signedsource "^1.0.0"
     yargs "^9.0.0"
 
-relay-runtime@7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/relay-runtime/-/relay-runtime-7.0.0.tgz#49642c0e16096cd4e5f435fcbdd63ffd8da54090"
-  integrity sha512-w0TPq5xvL6dlxD8+tBR19gGep3kFsx0fJ2Xr4hsxpDFKskH2oOmsMSp6gNVsUd2T1zf/DYll5eJqjoiQc5nB1A==
+relay-runtime@7.1.0:
+  version "7.1.0"
+  resolved "https://registry.npmjs.org/relay-runtime/-/relay-runtime-7.1.0.tgz#3a1b38cb55fae7ab2fbb404f7db7a5b900ef963f"
+  integrity sha512-19WV0dC4rcbXnVBKEA4ZL41ccfJRUZ7/KKfQsgc9SwjqCi2g3+yYIR9wJ4KoC+rEfG2yN3W1vWBEqr+igH/rzA==
   dependencies:
     "@babel/runtime" "^7.0.0"
     fbjs "^1.0.0"
@@ -16763,6 +16764,11 @@ typedarray@^0.0.6:
 typescript@3.7.2:
   version "3.7.2"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.7.2.tgz#27e489b95fa5909445e9fef5ee48d81697ad18fb"
+  integrity sha512-ml7V7JfiN2Xwvcer+XAf2csGO1bPBdRbFCkYBczNZggrBZ9c7G3riSUeJmqEU5uOtXNPMhE3n+R4FA/3YOAWOQ==
+
+typescript@^3.0.0:
+  version "3.7.2"
+  resolved "https://registry.npmjs.org/typescript/-/typescript-3.7.2.tgz#27e489b95fa5909445e9fef5ee48d81697ad18fb"
   integrity sha512-ml7V7JfiN2Xwvcer+XAf2csGO1bPBdRbFCkYBczNZggrBZ9c7G3riSUeJmqEU5uOtXNPMhE3n+R4FA/3YOAWOQ==
 
 ua-parser-js@^0.7.18:
