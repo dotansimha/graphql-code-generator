@@ -12,7 +12,7 @@
     "auto-bind": "3.0.0",
     "dependency-graph": "0.8.0",
     "graphql-tag": "2.10.1",
-    "relay-compiler": "6.0.0",
+    "relay-compiler": "7.1.0",
     "tslib": "1.10.0"
   },
   "peerDependencies": {
@@ -22,7 +22,7 @@
     "@ardatan/bob": "0.1.4",
     "@graphql-codegen/testing": "1.8.3",
     "@types/jest": "24.0.23",
-    "@types/relay-compiler": "6.0.1",
+    "@types/relay-compiler": "7.0.2",
     "graphql": "14.5.8",
     "jest": "24.9.0",
     "ts-jest": "24.2.0",
