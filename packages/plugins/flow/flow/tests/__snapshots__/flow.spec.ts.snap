@@ -202,26 +202,26 @@ export type Scalars = {|
 
 export type impl_2 = {|
   ...some_interface,
-  ...{
+  ...{|
      __typename?: 'Impl_2',
     id: $ElementType<Scalars, 'ID'>,
-  }
+  |}
 |};
 
 export type impl_3 = {|
   ...some_interface,
-  ...{
+  ...{|
      __typename?: 'impl_3',
     id: $ElementType<Scalars, 'ID'>,
-  }
+  |}
 |};
 
 export type impl1 = {|
   ...some_interface,
-  ...{
+  ...{|
      __typename?: 'Impl1',
     id: $ElementType<Scalars, 'ID'>,
-  }
+  |}
 |};
 
 export type my_type = {|
@@ -272,26 +272,26 @@ export type Scalars = {|
 
 export type Impl_2 = {|
   ...Some_Interface,
-  ...{
+  ...{|
      __typename?: 'Impl_2',
     id: $ElementType<Scalars, 'ID'>,
-  }
+  |}
 |};
 
 export type Impl_3 = {|
   ...Some_Interface,
-  ...{
+  ...{|
      __typename?: 'impl_3',
     id: $ElementType<Scalars, 'ID'>,
-  }
+  |}
 |};
 
 export type Impl1 = {|
   ...Some_Interface,
-  ...{
+  ...{|
      __typename?: 'Impl1',
     id: $ElementType<Scalars, 'ID'>,
-  }
+  |}
 |};
 
 export type My_Type = {|
@@ -342,26 +342,26 @@ export type Scalars = {|
 
 export type IImpl_2 = {|
   ...ISome_Interface,
-  ...{
+  ...{|
      __typename?: 'Impl_2',
     id: $ElementType<Scalars, 'ID'>,
-  }
+  |}
 |};
 
 export type IImpl_3 = {|
   ...ISome_Interface,
-  ...{
+  ...{|
      __typename?: 'impl_3',
     id: $ElementType<Scalars, 'ID'>,
-  }
+  |}
 |};
 
 export type IImpl1 = {|
   ...ISome_Interface,
-  ...{
+  ...{|
      __typename?: 'Impl1',
     id: $ElementType<Scalars, 'ID'>,
-  }
+  |}
 |};
 
 export type IMy_Type = {|
@@ -504,10 +504,10 @@ export type MyInterface = {|
 
 export type MyType = {|
   ...MyInterface,
-  ...{
+  ...{|
      __typename?: 'MyType',
     foo: $ElementType<Scalars, 'String'>,
-  }
+  |}
 |};
 "
 `;
@@ -533,11 +533,11 @@ export type MyOtherInterface = {|
 export type MyType = {|
   ...MyInterface,
   ...MyOtherInterface,
-  ...{
+  ...{|
      __typename?: 'MyType',
     foo: $ElementType<Scalars, 'String'>,
     bar: $ElementType<Scalars, 'String'>,
-  }
+  |}
 |};
 "
 `;
