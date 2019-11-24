@@ -87,7 +87,7 @@ export interface RawConfig {
    * @name skipTypename
    * @type boolean
    * @default false
-   * @description Automatically adds `__typename` field to the generated types, even when they are not specified
+   * @description Does not add __typename to the generated types, unless it was specified in the selection set.
    * in the selection set.
    *
    * @example
