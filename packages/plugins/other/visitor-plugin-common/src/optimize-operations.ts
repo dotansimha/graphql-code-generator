@@ -1,11 +1,12 @@
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { DefinitionNode, GraphQLSchema, parse } from 'graphql';
-import { GraphQLCompilerContext, Parser as RelayParser, Printer as GraphQLIRPrinter } from 'relay-compiler';
-
+import { Parser as RelayParser, Printer as GraphQLIRPrinter } from 'relay-compiler';
 import * as InlineFragmentsTransform from 'relay-compiler/lib/transforms/InlineFragmentsTransform';
 import * as SkipRedundantNodesTransform from 'relay-compiler/lib/transforms/SkipRedundantNodesTransform';
 import * as ApplyFragmentArgumentTransform from 'relay-compiler/lib/transforms/ApplyFragmentArgumentTransform';
 import * as FlattenTransform from 'relay-compiler/lib/transforms/FlattenTransform';
+
+const GraphQLCompilerContext = require('relay-compiler/lib/core/GraphQLCompilerContext');
 
 export function optimizeOperations(schema: GraphQLSchema, documents: Types.DocumentFile[]): Types.DocumentFile[] {
   const documentAsts = documents.reduce((prev, v) => {
