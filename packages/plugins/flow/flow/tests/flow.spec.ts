@@ -159,7 +159,7 @@ describe('Flow Plugin', () => {
         /** 
          * MyInput
          * multiline
-         **/
+         */
         export type MyInput`);
 
       validateFlow(result);

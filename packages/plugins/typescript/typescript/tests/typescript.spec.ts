@@ -82,7 +82,7 @@ describe('TypeScript', () => {
         /** 
          * MyInput
          * multiline
-         **/
+         */
         export type MyInput`);
     });
 
