@@ -1,4 +1,4 @@
-import { basename } from 'path';
+import { basename, relative } from 'path';
 import { Types, PluginFunction, PluginValidateFn } from '@graphql-codegen/plugin-helpers';
 import { GraphQLSchema, OperationDefinitionNode } from 'graphql';
 
@@ -22,12 +22,28 @@ export interface TypeScriptFilesModulesPluginConfig {
    *    modulePathPrefix: "/api/user-service/"
    * ```
    */
-  modulePathPrefix: string;
+  modulePathPrefix?: string;
+  /**
+   * @name relativeToCwd
+   * @type boolean
+   * @default false
+   * @description By default, only the filename is being used to generate TS module declarations. Setting this to `true` will generate it with a full path based on the CWD.
+   */
+  relativeToCwd?: boolean;
+  /**
+   * @name prefix
+   * @type string
+   * @default *\/
+   * @description By default, a wildcard is being added as prefix, you can change that to a custom prefix
+   */
+  prefix?: string;
 }
 
-export const plugin: PluginFunction = async (schema: GraphQLSchema, documents: Types.DocumentFile[], { modulePathPrefix = '' }: TypeScriptFilesModulesPluginConfig): Promise<string> => {
+export const plugin: PluginFunction = async (schema: GraphQLSchema, documents: Types.DocumentFile[], { modulePathPrefix = '', relativeToCwd, prefix = '*/' }: TypeScriptFilesModulesPluginConfig): Promise<string> => {
+  const useRelative = relativeToCwd === true;
+
   const mappedDocuments: { [fileName: string]: OperationDefinitionNode[] } = documents.reduce((prev, documentRecord) => {
-    const fileName = basename(documentRecord.filePath);
+    const fileName = useRelative ? relative(process.cwd(), documentRecord.filePath) : basename(documentRecord.filePath);
 
     if (!prev[fileName]) {
       prev[fileName] = [];
@@ -44,7 +60,7 @@ export const plugin: PluginFunction = async (schema: GraphQLSchema, documents: T
       const operations = mappedDocuments[fileName];
 
       return `
-declare module '*/${modulePathPrefix}${fileName}' {
+declare module '${prefix}${modulePathPrefix}${fileName}' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
   ${operations
