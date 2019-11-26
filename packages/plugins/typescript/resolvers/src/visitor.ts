@@ -22,7 +22,7 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<TypeScriptR
       schema
     );
     autoBind(this);
-    this.setVariablesTransformer(new TypeScriptOperationVariablesToObject(this.scalars, this.convertName, this.config.avoidOptionals, this.config.immutableTypes));
+    this.setVariablesTransformer(new TypeScriptOperationVariablesToObject(this.scalars, this.convertName, this.config.avoidOptionals, this.config.immutableTypes, null, [], this.config.enumPrefix, this.config.enumValues));
 
     if (this.config.useIndexSignature) {
       this._declarationBlockConfig = {

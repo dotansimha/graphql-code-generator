@@ -1,9 +1,18 @@
-import { OperationVariablesToObject, NormalizedScalarsMap, ConvertNameFn } from '@graphql-codegen/visitor-plugin-common';
+import { ParsedEnumValuesMap, OperationVariablesToObject, NormalizedScalarsMap, ConvertNameFn } from '@graphql-codegen/visitor-plugin-common';
 import { TypeNode, Kind } from 'graphql';
 
 export class TypeScriptOperationVariablesToObject extends OperationVariablesToObject {
-  constructor(_scalars: NormalizedScalarsMap, _convertName: ConvertNameFn, private _avoidOptionals: boolean, private _immutableTypes: boolean, _namespacedImportName: string | null = null, _enumNames: string[] = [], _enumPrefix = true) {
-    super(_scalars, _convertName, _namespacedImportName, _enumNames, _enumPrefix);
+  constructor(
+    _scalars: NormalizedScalarsMap,
+    _convertName: ConvertNameFn,
+    private _avoidOptionals: boolean,
+    private _immutableTypes: boolean,
+    _namespacedImportName: string | null = null,
+    _enumNames: string[] = [],
+    _enumPrefix = true,
+    _enumValues: ParsedEnumValuesMap = {}
+  ) {
+    super(_scalars, _convertName, _namespacedImportName, _enumNames, _enumPrefix, _enumValues);
   }
 
   private clearOptional(str: string): string {

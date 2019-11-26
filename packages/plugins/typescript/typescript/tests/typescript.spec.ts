@@ -272,6 +272,43 @@ describe('TypeScript', () => {
       };`);
     });
 
+    it('#2976 - Issues with mapped enumValues and type prefix in args', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        enum MyEnum {
+          A
+          B
+          C
+        }
+
+        type Test {
+          t: MyEnum
+          test(a: MyEnum): String
+        }
+      `);
+      const result = (await plugin(
+        testSchema,
+        [],
+        {
+          typesPrefix: 'I',
+          namingConvention: { enumValues: 'change-case#constantCase' },
+          enumValues: {
+            MyEnum: './files#MyEnum',
+          },
+        },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`export type ITest = {
+        __typename?: 'Test',
+       t?: Maybe<MyEnum>,
+       test?: Maybe<Scalars['String']>,
+     };`);
+
+      expect(result.content).toBeSimilarStringTo(`export type ITestTestArgs = {
+      a?: Maybe<MyEnum>
+    };`);
+    });
+
     it('#2082 - Issues with enumValues and types prefix', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         enum MyEnum {

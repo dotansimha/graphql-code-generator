@@ -1,6 +1,6 @@
 import { GraphQLSchema, GraphQLNamedType, EnumTypeDefinitionNode, ObjectTypeDefinitionNode } from 'graphql';
 import { TsVisitor } from './visitor';
-import { TypeScriptPluginConfig } from './index';
+import { TypeScriptPluginConfig } from './config';
 import autoBind from 'auto-bind';
 
 export class TsIntrospectionVisitor extends TsVisitor {
