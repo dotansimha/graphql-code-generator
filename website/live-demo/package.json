@@ -4,7 +4,7 @@
   "private": true,
   "homepage": "/live-demo/",
   "devDependencies": {
-    "aws-sdk": "2.579.0",
+    "aws-sdk": "2.580.0",
     "source-map-explorer": "2.1.1",
     "typescript": "3.7.2"
   },
