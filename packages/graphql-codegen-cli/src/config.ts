@@ -13,6 +13,7 @@ export type YamlCliFlags = {
   require: string[];
   overwrite: boolean;
   project: string;
+  assumeValidSDL?: boolean;
 };
 
 function generateSearchPlaces(moduleName: string) {
@@ -140,6 +141,7 @@ export function parseArgv(argv = process.argv): Command & YamlCliFlags {
     .option('-r, --require [value]', 'Loads specific require.extensions before running the codegen and reading the configuration', collect, [])
     .option('-o, --overwrite', 'Overwrites existing files')
     .option('-p, --project <name>', 'Name of a project in GraphQL Config')
+    .option('-v, --assumeValidSDL', 'Assumes valid GraphQL SDL.')
     .parse(argv) as any) as Command & YamlCliFlags;
 }
 
@@ -170,6 +172,10 @@ export async function createContext(cliFlags: Command & YamlCliFlags = parseArgv
 
   if (cliFlags.project) {
     context.useProject(cliFlags.project);
+  }
+
+  if (cliFlags.assumeValidSDL === true) {
+    config.assumeValidSDL = cliFlags.assumeValidSDL;
   }
 
   context.updateConfig(config);

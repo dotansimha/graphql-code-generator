@@ -62,6 +62,7 @@ export namespace Types {
     schema?: InstanceOrArray<Schema>;
     config?: PluginConfig;
     hooks?: LifecycleHooksDefinition<string | string[]>;
+    assumeValidSDL?: boolean;
   };
 
   /* Output Builder Preset */
@@ -110,6 +111,7 @@ export namespace Types {
       globalIdentifier?: string;
     };
     hooks?: LifecycleHooksDefinition<string | string[]>;
+    assumeValidSDL?: boolean;
   }
 
   export type ComplexPluginOutput = { content: string; prepend?: string[]; append?: string[] };

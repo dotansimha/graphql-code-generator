@@ -12,6 +12,7 @@ export interface ExecutePluginOptions {
   outputFilename: string;
   allPlugins: Types.ConfiguredPlugin[];
   skipDocumentsValidation?: boolean;
+  assumeValidSDL?: true;
 }
 
 export async function executePlugin(options: ExecutePluginOptions, plugin: CodegenPlugin): Promise<Types.PluginOutput> {
@@ -34,7 +35,7 @@ export async function executePlugin(options: ExecutePluginOptions, plugin: Codeg
 
   const schema = options.schemaAst;
 
-  const outputSchema: GraphQLSchema = schema || buildASTSchema(options.schema);
+  const outputSchema: GraphQLSchema = schema || buildASTSchema(options.schema, { assumeValidSDL: options.assumeValidSDL || false });
   const documents = options.documents || [];
 
   if (plugin.validate && typeof plugin.validate === 'function') {

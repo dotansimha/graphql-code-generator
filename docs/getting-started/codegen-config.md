@@ -65,6 +65,8 @@ Here are the supported options that you can define in the config file (see [sour
 
   - **`pluckConfig.globalIdentifier`** - Overrides the name of the default GraphQL name identifier.
 
+- **`assumeValidSDL`** - A flag to assume the SDL is valid
+
 ## Environment Variables
 
 You can use environment variables in your `codegen.yml` file::
@@ -100,6 +102,8 @@ The Codegen also supports several CLI flags that allow you to override the defau
 - **`--require` (`-r`)** - Specifies `require.extensions` before loading the `.yml` file.
 
 - **`--overwrite` (`-o`)** - Overrides the `overwrite` config to true.
+
+- **`--assumeValidSDL` (`-v`)** - Overrides the `assumeValidSDL` config to true.
 
 ## Debug Mode
 
