@@ -2,17 +2,18 @@ import { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
 import { visit, concatAST, GraphQLSchema, Kind, FragmentDefinitionNode } from 'graphql';
 import { TypeScriptDocumentsVisitor } from './visitor';
 import { RawDocumentsConfig, LoadedFragment, optimizeOperations } from '@graphql-codegen/visitor-plugin-common';
+import { AvoidOptionalsConfig } from '../../typescript/src';
 
 export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
   /**
    * @name avoidOptionals
    * @type boolean
-   * @description This will cause the generator to avoid using TypeScript optionals (`?`),
+   * @description This will cause the generator to avoid using TypeScript optionals (`?`) on types,
    * so the following definition: `type A { myField: String }` will output `myField: Maybe<string>`
    * instead of `myField?: Maybe<string>`.
    * @default false
    *
-   * @example
+   * @example Override all definition types
    * ```yml
    * generates:
    * path/to/file.ts:
@@ -22,8 +23,20 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
    *  config:
    *    avoidOptionals: true
    * ```
+   *
+   * @example Override only specific definition types
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *  config:
+   *    avoidOptionals:
+   *      inputValue: true
+   *      object: true
+   * ```
    */
-  avoidOptionals?: boolean;
+  avoidOptionals?: boolean | AvoidOptionalsConfig;
   /**
    * @name immutableTypes
    * @type boolean

@@ -29,8 +29,8 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    *  config:
    *    avoidOptionals:
    *      inputValue: true
+   *      object: true
    * ```
-   *
    */
   avoidOptionals?: boolean | AvoidOptionalsConfig;
   /**
