@@ -3317,6 +3317,50 @@ describe('TypeScript Operations Plugin', () => {
   });
 
   describe('Issues', () => {
+    it('#2916 - Missing import prefix with preResolveTypes: true and near-operation-file preset', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Query {
+          user(id: ID!): User!
+        }
+
+        enum Department {
+          Direction
+          Development
+        }
+
+        type User {
+          id: ID!
+          username: String!
+          email: String!
+          department: Department!
+        }
+      `);
+
+      const query = parse(/* GraphQL */ `
+        query user {
+          user(id: 1) {
+            id
+            username
+            email
+            dep: department
+          }
+        }
+      `);
+
+      const config = {
+        skipTypename: true,
+        preResolveTypes: true,
+        namespacedImportName: 'Types',
+      };
+
+      const content = await plugin(testSchema, [{ filePath: '', content: query }], config, {
+        outputFile: 'graphql.ts',
+      });
+
+      expect(content).toContain(`dep: Types.Department`);
+      expect(content).toMatchSnapshot();
+    });
+
     it('#2699 - Issues with multiple interfaces and unions', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         interface Node {
@@ -3571,7 +3615,10 @@ function test(q: GetEntityBrandDataQuery): void {
 
       const content = await plugin(
         schema,
-        [{ filePath: '', content: productFragmentDocument }, { filePath: '', content: priceFragmentDocument }],
+        [
+          { filePath: '', content: productFragmentDocument },
+          { filePath: '', content: priceFragmentDocument },
+        ],
         {},
         {
           outputFile: 'graphql.ts',

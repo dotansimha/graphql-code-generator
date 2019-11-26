@@ -117,3 +117,11 @@ type ElementMetadata_Movie_Fragment = (
 export type ElementMetadataFragment = ElementMetadata_User_Fragment | ElementMetadata_Company_Fragment | ElementMetadata_Theater_Fragment | ElementMetadata_Movie_Fragment;
 "
 `;
+
+exports[`TypeScript Operations Plugin Issues #2916 - Missing import prefix with preResolveTypes: true and near-operation-file preset 1`] = `
+"export type UserQueryVariables = {};
+
+
+export type UserQuery = { user: { id: string, username: string, email: string, dep: Types.Department } };
+"
+`;
