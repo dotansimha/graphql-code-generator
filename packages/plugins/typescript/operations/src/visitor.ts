@@ -63,7 +63,9 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<TypeScriptD
     const processor = new (config.preResolveTypes ? PreResolveTypesProcessor : TypeScriptSelectionSetProcessor)(processorConfig);
     this.setSelectionSetHandler(new SelectionSetToObject(processor, this.scalars, this.schema, this.convertName.bind(this), allFragments, this.config));
     const enumsNames = Object.keys(schema.getTypeMap()).filter(typeName => isEnumType(schema.getType(typeName)));
-    this.setVariablesTransformer(new TypeScriptOperationVariablesToObject(this.scalars, this.convertName.bind(this), this.config.avoidOptionals, this.config.immutableTypes, this.config.namespacedImportName, enumsNames, this.config.enumPrefix));
+    this.setVariablesTransformer(
+      new TypeScriptOperationVariablesToObject(this.scalars, this.convertName.bind(this), this.config.avoidOptionals, this.config.immutableTypes, this.config.namespacedImportName, enumsNames, this.config.enumPrefix, this.config.enumValues)
+    );
     this._declarationBlockConfig = {
       ignoreExport: this.config.noExport,
     };

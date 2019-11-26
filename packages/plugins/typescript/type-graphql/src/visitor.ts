@@ -1,7 +1,7 @@
 import { transformComment, indent, DeclarationBlock } from '@graphql-codegen/visitor-plugin-common';
-import { TypeGraphQLPluginConfig } from './index';
+import { TypeGraphQLPluginConfig } from './config';
 import autoBind from 'auto-bind';
-import { FieldDefinitionNode, EnumTypeDefinitionNode, InputValueDefinitionNode, GraphQLSchema, ObjectTypeDefinitionNode, InterfaceTypeDefinitionNode, TypeNode, NameNode } from 'graphql';
+import { FieldDefinitionNode, EnumTypeDefinitionNode, InputValueDefinitionNode, GraphQLSchema, ObjectTypeDefinitionNode, InterfaceTypeDefinitionNode, TypeNode, NameNode, GraphQLEnumType } from 'graphql';
 import { TypeScriptOperationVariablesToObject, TypeScriptPluginParsedConfig, TsVisitor, AvoidOptionalsConfig } from '@graphql-codegen/typescript';
 import { InputObjectTypeDefinitionNode } from 'graphql';
 
@@ -62,7 +62,11 @@ export class TypeGraphQLVisitor<TRawConfig extends TypeGraphQLPluginConfig = Typ
       ...(additionalConfig || {}),
     } as TParsedConfig);
     autoBind(this);
-    this.setArgumentsTransformer(new TypeScriptOperationVariablesToObject(this.scalars, this.convertName, this.config.avoidOptionals.object, this.config.immutableTypes));
+
+    const enumNames = Object.values(schema.getTypeMap())
+      .map(type => (type instanceof GraphQLEnumType ? type.name : undefined))
+      .filter(t => t);
+    this.setArgumentsTransformer(new TypeScriptOperationVariablesToObject(this.scalars, this.convertName, this.config.avoidOptionals.object, this.config.immutableTypes, null, enumNames, this.config.enumPrefix, this.config.enumValues));
     this.setDeclarationBlockConfig({
       enumNameValueSeparator: ' =',
     });
