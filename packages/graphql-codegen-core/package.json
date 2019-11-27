@@ -46,7 +46,7 @@
     "tslib": "1.10.0"
   },
   "devDependencies": {
-    "@ardatan/bob": "0.1.4",
+    "@ardatan/bob": "0.1.6",
     "ts-jest": "24.2.0"
   },
   "sideEffects": false,

@@ -13,7 +13,7 @@
     "@graphql-codegen/plugin-helpers": "1.9.0"
   },
   "devDependencies": {
-    "@ardatan/bob": "0.1.4",
+    "@ardatan/bob": "0.1.6",
     "graphql": "14.5.8",
     "graphql-tag": "2.10.1",
     "jest": "24.9.0",

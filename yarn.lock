@@ -73,10 +73,10 @@
   resolved "https://registry.yarnpkg.com/@apollographql/graphql-playground-html/-/graphql-playground-html-1.6.24.tgz#3ce939cb127fb8aaa3ffc1e90dff9b8af9f2e3dc"
   integrity sha512-8GqG48m1XqyXh4mIZrtB5xOhUwSsh1WsrrsaZQOEYYql3YN9DEu9OOSg0ILzXHZo/h2Q74777YE4YzlArQzQEQ==
 
-"@ardatan/bob@0.1.4":
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/@ardatan/bob/-/bob-0.1.4.tgz#56585fec4fd4ca2b5f54845e00428f4e31212ef3"
-  integrity sha512-PgdPvbnLJfVDIZ6veytjM2fBCvMqwb1isWe2/2sfCew1UJc/u4W+Ofk7+iLIfF69UAHK99E8m8cmrzfxY73NbA==
+"@ardatan/bob@0.1.6":
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/@ardatan/bob/-/bob-0.1.6.tgz#524e0085935c37bcf3cd800c6df0b413a99ede00"
+  integrity sha512-tg+pwB3FWCl04EHsU5z4shYckjlPercChCy6eqkRUzI1LVsqW7ZTDN7qs0E/Jhl9mBqxoPfCbrcFAEg2gjKUoQ==
   dependencies:
     rollup "1.27.0"
     rollup-plugin-generate-package-json "3.1.4"
