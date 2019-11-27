@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/relay-operation-optimizer",
-  "version": "1.8.3",
+  "version": "1.9.0",
   "license": "MIT",
   "description": "GraphQL Code Generator plugin for optimizing your GraphQL operations relay style.",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
@@ -22,12 +22,12 @@
     "test": "jest --no-watchman --config ../../../../jest.config.js"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "1.8.3",
+    "@graphql-codegen/plugin-helpers": "1.9.0",
     "relay-compiler": "7.1.0"
   },
   "devDependencies": {
     "@ardatan/bob": "0.1.4",
-    "@graphql-codegen/testing": "1.8.3",
+    "@graphql-codegen/testing": "1.9.0",
     "@types/jest": "24.0.23",
     "@types/relay-compiler": "7.0.2",
     "graphql": "14.5.8",

@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/typescript-graphql-request",
-  "version": "1.8.3",
+  "version": "1.9.0",
   "description": "GraphQL Code Generator plugin for generating a ready-to-use SDK based on graphql-request and GraphQL operations",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
@@ -13,13 +13,13 @@
     "graphql-tag": "^2.0.0"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "1.8.3",
-    "@graphql-codegen/visitor-plugin-common": "1.8.3",
+    "@graphql-codegen/plugin-helpers": "1.9.0",
+    "@graphql-codegen/visitor-plugin-common": "1.9.0",
     "tslib": "1.10.0"
   },
   "devDependencies": {
     "@ardatan/bob": "0.1.4",
-    "@graphql-codegen/testing": "1.8.3",
+    "@graphql-codegen/testing": "1.9.0",
     "graphql": "14.5.8",
     "jest": "24.9.0",
     "ts-jest": "24.2.0",
