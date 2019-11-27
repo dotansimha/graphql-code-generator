@@ -20,7 +20,7 @@
     "tslib": "1.10.0"
   },
   "devDependencies": {
-    "@ardatan/bob": "0.1.6",
+    "@ardatan/bob": "0.1.7",
     "jest": "24.9.0",
     "ts-jest": "24.2.0",
     "typescript": "3.7.2"

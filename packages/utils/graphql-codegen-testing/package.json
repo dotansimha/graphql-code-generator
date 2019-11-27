@@ -33,7 +33,7 @@
     "tslib": "1.10.0"
   },
   "devDependencies": {
-    "@ardatan/bob": "0.1.6",
+    "@ardatan/bob": "0.1.7",
     "typescript": "3.7.2"
   },
   "publishConfig": {
