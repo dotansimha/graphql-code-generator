@@ -53,7 +53,12 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
       } else {
         const fieldObj = schemaType.getFields()[aliasedField.fieldName];
         const baseType = getBaseType(fieldObj.type);
-        const typeToUse = this.config.scalars[baseType.name] || baseType.name;
+        let typeToUse = this.config.scalars[baseType.name] || baseType.name;
+
+        if (isEnumType(baseType)) {
+          typeToUse = (this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '') + this.config.convertName(baseType.name, { useTypesPrefix: this.config.enumPrefix });
+        }
+
         const wrappedType = this.config.wrapTypeWithModifiers(typeToUse, fieldObj.type as GraphQLObjectType);
 
         return {
