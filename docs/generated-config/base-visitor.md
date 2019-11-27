@@ -38,7 +38,7 @@ config:
 config:
   namingConvention: keep
 ```
-#### Usage Example: Transform Underscores
+#### Usage Example: Remove Underscores
 
 ```yml
 config:
@@ -61,7 +61,7 @@ config:
 
 ### skipTypename (`boolean`, default value: `false`)
 
-Automatically adds `__typename` field to the generated types, even when they are not specified in the selection set.
+Does not add __typename to the generated types, unless it was specified in the selection set. in the selection set.
 
 
 #### Usage Example
