@@ -17,7 +17,7 @@
     "tslib": "1.10.0"
   },
   "devDependencies": {
-    "@ardatan/bob": "0.1.6",
+    "@ardatan/bob": "0.1.7",
     "@graphql-codegen/testing": "1.9.0",
     "flow-bin": "0.112.0",
     "flow-parser": "0.112.0",
