@@ -1,7 +1,7 @@
 {
   "name": "@graphql-codegen/config-markdown-generator",
   "private": true,
-  "version": "1.9.0",
+  "version": "1.9.1",
   "license": "MIT",
   "scripts": {
     "prepack": "bob-update-version",

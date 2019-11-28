@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/visitor-plugin-common",
-  "version": "1.9.0",
+  "version": "1.9.1",
   "license": "MIT",
   "scripts": {
     "prepack": "bob-update-version",
@@ -8,7 +8,7 @@
     "build": "bob"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "1.9.0",
+    "@graphql-codegen/plugin-helpers": "1.9.1",
     "auto-bind": "3.0.0",
     "dependency-graph": "0.8.0",
     "graphql-tag": "2.10.1",
@@ -20,7 +20,7 @@
   },
   "devDependencies": {
     "@ardatan/bob": "0.1.7",
-    "@graphql-codegen/testing": "1.9.0",
+    "@graphql-codegen/testing": "1.9.1",
     "@types/jest": "24.0.23",
     "@types/relay-compiler": "7.0.2",
     "graphql": "14.5.8",
