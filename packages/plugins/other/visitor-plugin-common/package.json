@@ -10,7 +10,7 @@
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "1.9.1",
     "auto-bind": "3.0.0",
-    "dependency-graph": "0.8.0",
+    "dependency-graph": "0.8.1",
     "graphql-tag": "2.10.1",
     "relay-compiler": "7.1.0",
     "tslib": "1.10.0"
