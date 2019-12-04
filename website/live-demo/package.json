@@ -33,7 +33,7 @@
     "@graphql-codegen/website": "1.9.1",
     "@material-ui/core": "4.7.1",
     "@types/codemirror": "0.0.81",
-    "@types/react": "16.9.14",
+    "@types/react": "16.9.15",
     "@types/react-dom": "16.9.4",
     "codemirror": "5.49.2",
     "codemirror-graphql": "0.11.4",
