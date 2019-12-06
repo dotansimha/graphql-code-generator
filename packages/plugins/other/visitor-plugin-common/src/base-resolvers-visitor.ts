@@ -30,6 +30,7 @@ import { ApolloFederation, getBaseType } from '@graphql-codegen/plugin-helpers';
 
 export interface ParsedResolversConfig extends ParsedConfig {
   contextType: ParsedMapper;
+  fieldContextTypes: Array<string>;
   rootValueType: ParsedMapper;
   mappers: {
     [typeName: string]: ParsedMapper;
@@ -79,6 +80,24 @@ export interface RawResolversConfig extends RawConfig {
    * ```
    */
   contextType?: string;
+  /**
+   * @name fieldContextTypes
+   * @type string array
+   * @description Use this to set a custom type for a specific field `context`.
+   * It will only affect the targeted resolvers.
+   * You can either use `Field.Path#ContextTypeName` or `Field.Path#ExternalFileName#ContextTypeName`
+   *
+   * @example Custom Field Context Types
+   * ```
+   * plugins
+   *   config:
+   *     fieldContextTypes:
+   *       - MyType.foo#CustomContextType
+   *       - MyType.bar#./my-file#ContextTypeOne
+   * ```
+   *
+   */
+  fieldContextTypes?: Array<string>;
   /**
    * @name rootValueType
    * @type string
@@ -229,6 +248,7 @@ export interface RawResolversConfig extends RawConfig {
 
 export type ResolverTypes = { [gqlType: string]: string };
 export type ResolverParentTypes = { [gqlType: string]: string };
+type FieldContextTypeMap = Record<string, ParsedMapper>;
 
 export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawResolversConfig, TPluginConfig extends ParsedResolversConfig = ParsedResolversConfig> extends BaseVisitor<TRawConfig, TPluginConfig> {
   protected _parsedConfig: TPluginConfig;
@@ -244,6 +264,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
   protected _federation: ApolloFederation;
   protected _hasScalars = false;
   protected _hasFederation = false;
+  protected _fieldContextTypeMap: FieldContextTypeMap;
 
   constructor(rawConfig: TRawConfig, additionalConfig: TPluginConfig, private _schema: GraphQLSchema, defaultScalars: NormalizedScalarsMap = DEFAULT_SCALARS) {
     super(rawConfig, {
@@ -253,6 +274,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
       enumValues: parseEnumValues(_schema, rawConfig.enumValues),
       addUnderscoreToArgsType: getConfigValue(rawConfig.addUnderscoreToArgsType, false),
       contextType: parseMapper(rawConfig.contextType || 'any', 'ContextType'),
+      fieldContextTypes: getConfigValue(rawConfig.fieldContextTypes, []),
       rootValueType: parseMapper(rawConfig.rootValueType || '{}', 'RootValueType'),
       avoidOptionals: getConfigValue(rawConfig.avoidOptionals, false),
       defaultMapper: rawConfig.defaultMapper ? parseMapper(rawConfig.defaultMapper || 'any', 'DefaultMapperType') : null,
@@ -275,6 +297,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
       type => type,
       name => this.getParentTypeToUse(name)
     );
+    this._fieldContextTypeMap = this.createFieldContextTypeMap();
   }
 
   public getResolverTypeWrapperSignature(): string {
@@ -468,6 +491,18 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
     }
   }
 
+  protected createFieldContextTypeMap(): FieldContextTypeMap {
+    return this.config.fieldContextTypes.reduce<FieldContextTypeMap>((prev, fieldContextType) => {
+      const items = fieldContextType.split('#');
+      if (items.length === 3) {
+        const [path, source, contextTypeName] = items;
+        return { ...prev, [path]: parseMapper(`${source}#${contextTypeName}`) };
+      }
+      const [path, contextType] = items;
+      return { ...prev, [path]: parseMapper(contextType) };
+    }, {});
+  }
+
   public buildResolversTypes(): string {
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
@@ -543,6 +578,12 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
       const identifier = stripMapperTypeInterpolation(this.config.defaultMapper.import);
       addMapper(this.config.defaultMapper.source, identifier, this.config.defaultMapper.default);
     }
+
+    Object.values(this._fieldContextTypeMap).forEach(parsedMapper => {
+      if (parsedMapper.isExternal) {
+        addMapper(parsedMapper.source, parsedMapper.import, parsedMapper.default);
+      }
+    });
 
     return Object.keys(groupedMappers).map(source => this.buildMapperImport(source, groupedMappers[source]));
   }
@@ -743,7 +784,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
         name: node.name as any,
         modifier: this.config.avoidOptionals ? '' : '?',
         type: isSubscriptionType ? 'SubscriptionResolver' : 'Resolver',
-        genericTypes: [mappedTypeKey, parentTypeSignature, 'ContextType', argsType].filter(f => f),
+        genericTypes: [mappedTypeKey, parentTypeSignature, this._fieldContextTypeMap[`${parentName}.${node.name}`] ? this._fieldContextTypeMap[`${parentName}.${node.name}`].type : 'ContextType', argsType].filter(f => f),
       };
 
       if (this._federation.isResolveReferenceField(node)) {

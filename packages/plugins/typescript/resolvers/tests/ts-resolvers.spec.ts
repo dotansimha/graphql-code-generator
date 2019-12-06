@@ -615,6 +615,33 @@ describe('TypeScript Resolvers Plugin', () => {
     await validate(result);
   });
 
+  it('should generate named custom field level context type', async () => {
+    const result = (await plugin(
+      schema,
+      [],
+      {
+        fieldContextTypes: ['MyType.foo#./my-file#ContextTypeOne', 'Query.something#./my-file#ContextTypeTwo', 'MyType.otherType#SpecialContextType'],
+      },
+      { outputFile: '' }
+    )) as Types.ComplexPluginOutput;
+
+    expect(result.prepend).toContain(`import { ContextTypeOne, ContextTypeTwo } from './my-file';`);
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type MyTypeResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyType'] = ResolversParentTypes['MyType']> = {
+        foo?: Resolver<ResolversTypes['String'], ParentType, ContextTypeOne>,
+        otherType?: Resolver<Maybe<ResolversTypes['MyOtherType']>, ParentType, SpecialContextType>,
+        withArgs?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeWithArgsArgs, 'arg2'>>,
+      };
+    `);
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+        something?: Resolver<ResolversTypes['MyType'], ParentType, ContextTypeTwo>,
+      };
+    `);
+  });
+
   it('Should generate the correct imports when schema has scalars', async () => {
     const testSchema = buildSchema(`scalar MyScalar`);
     const result = (await plugin(testSchema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
