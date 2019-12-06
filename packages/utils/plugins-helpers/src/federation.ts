@@ -11,12 +11,11 @@ interface FieldSetItem {
  * Federation Spec
  */
 export const federationSpec = parse(/* GraphQL */ `
-  scalar _FieldSet
-
   directive @external on FIELD_DEFINITION
-  directive @requires(fields: _FieldSet!) on FIELD_DEFINITION
-  directive @provides(fields: _FieldSet!) on FIELD_DEFINITION
-  directive @key(fields: _FieldSet!) on OBJECT | INTERFACE
+  directive @requires(fields: String!) on FIELD_DEFINITION
+  directive @provides(fields: String!) on FIELD_DEFINITION
+  directive @key(fields: String!) on OBJECT | INTERFACE
+  directive @extends on OBJECT | INTERFACE
 `);
 
 /**
