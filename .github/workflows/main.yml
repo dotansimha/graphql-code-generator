@@ -34,7 +34,6 @@ jobs:
             if [ "${{github.repository}}" == "dotansimha/graphql-code-generator" ] && [ "${{ secrets.NODE_AUTH_TOKEN }}" != "" ]
             then
                 echo "//registry.npmjs.org/:_authToken=${{ secrets.NODE_AUTH_TOKEN }}" > .npmrc
-                git fetch --depth=300
                 npm whoami
                 npm run ci:release:canary
             else    
