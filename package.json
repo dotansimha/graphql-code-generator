@@ -8,9 +8,9 @@
     "test-and-build": " yarn build && yarn test",
     "prerelease": "yarn test-and-build",
     "prerelease:canary": "yarn test-and-build",
-    "release": "lerna publish from-package --contents dist --exact --force-publish=\"*\" --ignore @graphql-codegen/live-demo --ignore @graphql-codegen/website",
-    "release:canary": "lerna publish from-package --contents dist --force-publish=\"*\" --canary --exact --ignore @graphql-codegen/live-demo --ignore @graphql-codegen/website ",
-    "ci:release:canary": "lerna publish from-package --contents dist --ignore @graphql-codegen/live-demo --ignore @graphql-codegen/website --force-publish=\"*\" --preid \"alpha-`git rev-parse --short HEAD`\" --canary --exact --yes",
+    "release": "lerna publish --contents dist --exact --force-publish=\"*\" --ignore @graphql-codegen/live-demo --ignore @graphql-codegen/website",
+    "release:canary": "lerna publish --contents dist --force-publish=\"*\" --canary --exact --ignore @graphql-codegen/live-demo --ignore @graphql-codegen/website ",
+    "ci:release:canary": "lerna publish --contents dist --ignore @graphql-codegen/live-demo --ignore @graphql-codegen/website --force-publish=\"*\" --preid \"alpha-`git rev-parse --short HEAD`\" --canary --exact --yes",
     "generate:examples": "./dev-test/generate-all.sh",
     "build-website": "lerna run build"
   },
