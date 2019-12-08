@@ -52,6 +52,8 @@
     "@graphql-toolkit/graphql-file-loader": "0.7.4",
     "@graphql-toolkit/json-file-loader": "0.7.4",
     "@graphql-toolkit/url-loader": "0.7.4",
+    "@graphql-toolkit/apollo-engine-loader": "0.7.4",
+    "@graphql-toolkit/prisma-loader": "0.7.4",
     "@types/debounce": "1.2.0",
     "@types/is-glob": "4.0.1",
     "@types/mkdirp": "0.5.2",
