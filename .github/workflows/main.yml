@@ -6,8 +6,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Master
-        uses: actions/checkout@master
+      - name: Checkout
+        uses: actions/checkout@v2-beta
+        with:
+          fetch-depth: 0
+          clean: true
       - name: Use Node
         uses: actions/setup-node@v1
         with:
