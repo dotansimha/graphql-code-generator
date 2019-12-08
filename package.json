@@ -61,7 +61,7 @@
     "rimraf": "3.0.0",
     "ts-jest": "24.2.0",
     "tslint": "5.20.1",
-    "typescript": "3.7.2",
+    "typescript": "3.7.3",
     "urql": "1.6.3"
   },
   "lint-staged": {
