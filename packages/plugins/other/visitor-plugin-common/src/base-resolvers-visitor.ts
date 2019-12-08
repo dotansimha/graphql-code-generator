@@ -562,7 +562,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
       .map(gqlTypeName => this.config.mappers[gqlTypeName])
       .filter((gqlType): gqlType is ExternalParsedMapper => gqlType.isExternal)
       .forEach(mapper => {
-        const identifier = stripMapperTypeInterpolation(mapper.type);
+        const identifier = stripMapperTypeInterpolation(mapper.import);
         addMapper(mapper.source, identifier, mapper.default);
       });
 
