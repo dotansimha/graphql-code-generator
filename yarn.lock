@@ -6328,10 +6328,10 @@ code-point-at@^1.0.0:
   resolved "https://registry.yarnpkg.com/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
   integrity sha1-DQcLTQQ6W+ozovGkDi7bPZpMz3c=
 
-codemirror-graphql@0.11.5:
-  version "0.11.5"
-  resolved "https://registry.yarnpkg.com/codemirror-graphql/-/codemirror-graphql-0.11.5.tgz#3018335797fa90d3a75691defb2aec4220f4d92b"
-  integrity sha512-dXVyY8jLDxGE7HGw9ue1XvUeSfYCe8iRdQCyUSrSJ8nA+EVCoJryq+rKJFmp1wTogY+iAN+viL3AZPkIIrd5mw==
+codemirror-graphql@0.11.6:
+  version "0.11.6"
+  resolved "https://registry.yarnpkg.com/codemirror-graphql/-/codemirror-graphql-0.11.6.tgz#885e34afb5b7aacf0e328d4d5949e73ad21d5a4e"
+  integrity sha512-/zVKgOVS2/hfjAY0yoBkLz9ESHnWKBWpBNXQSoFF4Hl5q5AS2DmM22coonWKJcCvNry6TLak2F+QkzPeKVv3Eg==
   dependencies:
     graphql-language-service-interface "^2.3.3"
     graphql-language-service-parser "^1.5.2"
