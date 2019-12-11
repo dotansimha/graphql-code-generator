@@ -3,7 +3,7 @@ import { BaseVisitor, LoadedFragment, buildScalars, getPossibleTypes } from '@gr
 import addPlugin from '@graphql-codegen/add';
 import { join, resolve } from 'path';
 import { Kind, FragmentDefinitionNode, buildASTSchema, GraphQLSchema } from 'graphql';
-import { appendExtensionToFilePath, defineFilepathSubfolder, extractExternalFragmentsInUse, resolveRelativeImport } from './utils';
+import { appendExtensionToFilePath, defineFilepathSubfolder, extractExternalFragmentsInUse, resolveRelativeImport, interpolate } from './utils';
 
 export type NearOperationFileConfig = {
   /**
@@ -101,6 +101,68 @@ export type NearOperationFileConfig = {
    * ```
    */
   importTypesNamespace?: string;
+  /**
+   * @name importTypesTemplate
+   * @type string
+   * @description Optional, override the template used to import from the `baseTypesPath` file.
+   * templates
+   * @default "import * as ${importTypesNamespace} from '${relativeImportPath}';"
+   *
+   * @example
+   * ```yml
+   * generates:
+   * src/:
+   *  preset: near-operation-file
+   *  presetConfig:
+   *    baseTypesPath: types.dart
+   *    importTypesNamespace: ''
+   *    importTypesTemplate: "import '${relativeImportPath}.dart'${importTypesNamespace ? ' as ' : ''}${importTypesNamespace}';"
+   *    # NOTE: The template can contain simple ternary (`if ? then : else` literal or variable statements,
+   *    # but not nested templates or nested ternary operations
+   *  plugins:
+   *    - graphql-to-dart/documents
+   * ```
+   */
+  importTypesTemplate?: string;
+  /**
+   * @name importFragmentsTemplate
+   * @type string
+   * @description Optional, override the template used to import from the `baseTypesPath` file.
+   * templates
+   * @default "import { ${fragmentNames} } from '${fragmentImportPath}';"
+   *
+   * @example
+   * ```yml
+   * generates:
+   * src/:
+   *  preset: near-operation-file
+   *  presetConfig:
+   *    importFragmentsTemplate: "import '${fragmentImportPath}.dart' show ${fragmentNames};"
+   *    # NOTE: The template can contain simple ternary (`if ? then : else`) literal or variable statements,
+   *    # but not nested templates or nested ternary operations
+   *  plugins:
+   *    - graphql-to-dart/documents
+   * ```
+   */
+  importFragmentsTemplate?: string;
+  /**
+   * @name fragmentImportSuffix
+   * @type string
+   * @description Optional, override the suffix to add to fragment import types
+   * @default "Fragment"
+   *
+   * @example
+   * ```yml
+   * generates:
+   * src/:
+   *  preset: near-operation-file
+   *  presetConfig:
+   *    fragmentImportSuffix: ""
+   *  plugins:
+   *    - graphql-to-dart/documents
+   * ```
+   */
+  fragmentImportSuffix?: string;
 };
 
 export type FragmentNameToFile = { [fragmentName: string]: { filePath: string; importsNames: string[]; onType: string; node: FragmentDefinitionNode } };
@@ -140,6 +202,10 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
     const extension = options.presetConfig.extension || '.generated.ts';
     const folder = options.presetConfig.folder || '';
     const importTypesNamespace = options.presetConfig.importTypesNamespace || 'Types';
+    const importTypesTemplate = options.presetConfig.importTypesTemplate || "import * as ${importTypesNamespace} from '${relativeImportPath}';";
+    const importFragmentsTemplate = options.presetConfig.importFragmentsTemplate || "import { ${fragmentNames} } from '${fragmentImportPath}';";
+    const fragmentImportSuffix = options.presetConfig.fragmentImportSuffix || 'Fragment';
+
     const pluginMap: { [name: string]: CodegenPlugin } = {
       ...options.pluginMap,
       add: addPlugin,
@@ -158,7 +224,7 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
           }
 
           const possibleTypes = getPossibleTypes(schemaObject, schemaType);
-          const fragmentSuffix = options.config.dedupeOperationSuffix && fragment.name.value.toLowerCase().endsWith('fragment') ? '' : 'Fragment';
+          const fragmentSuffix = options.config.dedupeOperationSuffix && fragment.name.value.toLowerCase().endsWith(fragmentImportSuffix.toLowerCase()) ? '' : fragmentImportSuffix;
           const filePath = appendExtensionToFilePath(documentRecord.filePath, extension);
           const importsNames = getAllFragmentSubTypes(
             possibleTypes.map(t => t.name),
@@ -183,7 +249,7 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
 
     const shouldAbsolute = !options.presetConfig.baseTypesPath.startsWith('~');
 
-    return options.documents
+    return (options.documents as Types.DocumentFile[])
       .map<Types.GenerateOptions | null>(documentFile => {
         const newFilePath = defineFilepathSubfolder(documentFile.filePath, folder);
         const generatedFilePath = appendExtensionToFilePath(newFilePath, extension);
@@ -211,8 +277,9 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
             const fragmentImportPath = resolveRelativeImport(absGeneratedFilePath, absFragmentFilePath);
 
             if (!options.config.globalNamespace && level === 0) {
+              const fragmentNames = fragmentDetails.importsNames.join(', ');
               plugins.unshift({
-                add: `import { ${fragmentDetails.importsNames.join(', ')} } from '${fragmentImportPath}';`,
+                add: interpolate(importFragmentsTemplate, { fragmentNames, fragmentImportPath }),
               });
             }
 
@@ -234,7 +301,7 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
             schemaObject
           )
         ) {
-          plugins.unshift({ add: `import * as ${importTypesNamespace} from '${relativeImportPath}';\n` });
+          plugins.unshift({ add: interpolate(importTypesTemplate, { importTypesNamespace, relativeImportPath }) });
         }
 
         return {
