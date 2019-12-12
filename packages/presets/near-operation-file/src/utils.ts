@@ -73,7 +73,7 @@ export function resolveRelativeImport(from: string, to: string): string {
 
 /* mini template parser helpers */
 
-const INTEROPLATE_TEMPLATE_PATTERN = /\${\s*([^}]*)\s*}/g;
+const INTEROPLATE_TEMPLATE_PATTERN = /{{\s*([^}]*)\s*}}/g;
 
 const SINGLE_QUOTE = '\'';
 const DOUBLE_QUOTE = '"';
@@ -115,7 +115,7 @@ function parseExpression(expression: string, resolve: (param: string) => any) {
  *
  * ```js
  * interpolate(
- *   "${foo}, ${bar}, ${biz ? bar : 'bang'}, ${123}",
+ *   "{{foo}}, {{bar}}, {{biz ? bar : 'bang'}}, {{123}}",
  *   { foo: "f1", bar: "b2", biz: false }
  * )
  * // => "f1, b2, bang, 123"

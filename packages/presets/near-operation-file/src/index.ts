@@ -106,7 +106,7 @@ export type NearOperationFileConfig = {
    * @type string
    * @description Optional, override the template used to import from the `baseTypesPath` file.
    * templates
-   * @default "import * as ${importTypesNamespace} from '${relativeImportPath}';"
+   * @default "import * as {{importTypesNamespace}} from '{{relativeImportPath}}';"
    *
    * @example
    * ```yml
@@ -116,7 +116,7 @@ export type NearOperationFileConfig = {
    *  presetConfig:
    *    baseTypesPath: types.dart
    *    importTypesNamespace: ''
-   *    importTypesTemplate: "import '${relativeImportPath}.dart'${importTypesNamespace ? ' as ' : ''}${importTypesNamespace};"
+   *    importTypesTemplate: "import '{{relativeImportPath}}.dart'{{importTypesNamespace ? ' as ' : ''}}{{importTypesNamespace}};"
    *    # NOTE: The template can contain simple ternary (`if ? then : else` literal or variable statements,
    *    # but not nested templates or nested ternary operations
    *  plugins:
@@ -129,7 +129,7 @@ export type NearOperationFileConfig = {
    * @type string
    * @description Optional, override the template used to import from the `baseTypesPath` file.
    * templates
-   * @default "import { ${fragmentNames} } from '${fragmentImportPath}';"
+   * @default "import { {{fragmentNames}} } from '{{fragmentImportPath}}';"
    *
    * @example
    * ```yml
@@ -137,7 +137,7 @@ export type NearOperationFileConfig = {
    * src/:
    *  preset: near-operation-file
    *  presetConfig:
-   *    importFragmentsTemplate: "import '${fragmentImportPath}.dart' show ${fragmentNames};"
+   *    importFragmentsTemplate: "import '{{fragmentImportPath}}.dart' show {{fragmentNames}};"
    *    # NOTE: The template can contain simple ternary (`if ? then : else`) literal or variable statements,
    *    # but not nested templates or nested ternary operations
    *  plugins:
@@ -202,9 +202,9 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
     const extension = options.presetConfig.extension || '.generated.ts';
     const folder = options.presetConfig.folder || '';
     const importTypesNamespace = options.presetConfig.importTypesNamespace || 'Types';
-    const importTypesTemplate = options.presetConfig.importTypesTemplate || "import * as ${importTypesNamespace} from '${relativeImportPath}';";
-    const importFragmentsTemplate = options.presetConfig.importFragmentsTemplate || "import { ${fragmentNames} } from '${fragmentImportPath}';";
-    const fragmentImportSuffix = options.presetConfig.fragmentImportSuffix || 'Fragment';
+    const importTypesTemplate = options.presetConfig.importTypesTemplate || 'import * as {{importTypesNamespace}} from \'{{relativeImportPath}}\';';
+    const importFragmentsTemplate = options.presetConfig.importFragmentsTemplate || 'import { {{fragmentNames}} } from \'{{fragmentImportPath}}\';';
+    const fragmentImportSuffix = options.presetConfig.fragmentImportSuffix === undefined ? 'Fragment' : options.presetConfig.fragmentImportSuffix;
 
     const pluginMap: { [name: string]: CodegenPlugin } = {
       ...options.pluginMap,
