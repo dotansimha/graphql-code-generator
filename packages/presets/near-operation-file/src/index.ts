@@ -116,7 +116,7 @@ export type NearOperationFileConfig = {
    *  presetConfig:
    *    baseTypesPath: types.dart
    *    importTypesNamespace: ''
-   *    importTypesTemplate: "import '${relativeImportPath}.dart'${importTypesNamespace ? ' as ' : ''}${importTypesNamespace}';"
+   *    importTypesTemplate: "import '${relativeImportPath}.dart'${importTypesNamespace ? ' as ' : ''}${importTypesNamespace};"
    *    # NOTE: The template can contain simple ternary (`if ? then : else` literal or variable statements,
    *    # but not nested templates or nested ternary operations
    *  plugins:
