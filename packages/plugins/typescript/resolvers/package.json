@@ -17,7 +17,7 @@
     "tslib": "1.10.0"
   },
   "devDependencies": {
-    "@ardatan/bob": "0.1.8",
+    "bob-the-bundler": "0.2.2",
     "@graphql-codegen/testing": "1.9.1",
     "graphql": "14.5.8",
     "graphql-subscriptions": "1.1.0",

@@ -118,15 +118,6 @@
   resolved "https://registry.yarnpkg.com/@apollographql/graphql-playground-html/-/graphql-playground-html-1.6.24.tgz#3ce939cb127fb8aaa3ffc1e90dff9b8af9f2e3dc"
   integrity sha512-8GqG48m1XqyXh4mIZrtB5xOhUwSsh1WsrrsaZQOEYYql3YN9DEu9OOSg0ILzXHZo/h2Q74777YE4YzlArQzQEQ==
 
-"@ardatan/bob@0.1.8":
-  version "0.1.8"
-  resolved "https://registry.yarnpkg.com/@ardatan/bob/-/bob-0.1.8.tgz#24a75208c6f1192a791798e41e527350b7700579"
-  integrity sha512-TomiLOUllTtLZxz57jkFPWwcSqVDZgcrGv9tDgyWxB7CaXMsXre17xXXgfkwuwe5tdcju6XBaBYhLrWMKfAKcQ==
-  dependencies:
-    rollup "1.27.0"
-    rollup-plugin-generate-package-json "3.1.4"
-    rollup-plugin-typescript2 "0.25.2"
-
 "@babel/code-frame@7.5.5", "@babel/code-frame@^7.5.5":
   version "7.5.5"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.5.5.tgz#bc0782f6d69f7b7d49531219699b988f669a8f9d"
@@ -5480,6 +5471,15 @@ bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.1.1, bn.js@^4.4.0:
   version "4.11.8"
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-4.11.8.tgz#2cde09eb5ee341f484746bb0309b3253b1b1442f"
   integrity sha512-ItfYfPLkWHUjckQCk8xC+LwxgK8NYcXywGigJgSwOP8Y2iyWT4f2vsZnoOXTTbo+o5yXmIUJ4gn5538SO5S3gA==
+
+bob-the-bundler@0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/bob-the-bundler/-/bob-the-bundler-0.2.2.tgz#243f5dd06d6649122565ef3f344f101dd29d1abd"
+  integrity sha512-KJiN5CrlrVe2e4hciP8HUieTRHBEH+44F115xmuHybC7qabtKZhQOwKRhifutvXKqq4jdj9UUJaDw+eF2zBGjA==
+  dependencies:
+    rollup "1.27.13"
+    rollup-plugin-generate-package-json "3.1.4"
+    rollup-plugin-typescript2 "0.25.3"
 
 body-parser@1.19.0, body-parser@^1.18.3:
   version "1.19.0"
@@ -15893,10 +15893,10 @@ rollup-plugin-generate-package-json@3.1.4:
     read-pkg "^5.1.1"
     write-pkg "^4.0.0"
 
-rollup-plugin-typescript2@0.25.2:
-  version "0.25.2"
-  resolved "https://registry.yarnpkg.com/rollup-plugin-typescript2/-/rollup-plugin-typescript2-0.25.2.tgz#1a165df08560902da45b355413464caca1765d3a"
-  integrity sha512-+tpZj/ZIf2lwjyjX6xEW1S5Y38/21TB3p6poLodISIia8owMMfIKuFFnWcESE4FPBHkR8XPKqjY0PH9IUJJK+Q==
+rollup-plugin-typescript2@0.25.3:
+  version "0.25.3"
+  resolved "https://registry.yarnpkg.com/rollup-plugin-typescript2/-/rollup-plugin-typescript2-0.25.3.tgz#a5fb2f0f85488789334ce540abe6c7011cbdf40f"
+  integrity sha512-ADkSaidKBovJmf5VBnZBZe+WzaZwofuvYdzGAKTN/J4hN7QJCFYAq7IrH9caxlru6T5qhX41PNFS1S4HqhsGQg==
   dependencies:
     find-cache-dir "^3.0.0"
     fs-extra "8.1.0"
@@ -15911,10 +15911,10 @@ rollup-pluginutils@2.8.1:
   dependencies:
     estree-walker "^0.6.1"
 
-rollup@1.27.0:
-  version "1.27.0"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-1.27.0.tgz#7afe0da89c967cec5ccea7e919da6c89a1a68666"
-  integrity sha512-yaMna4MJ8LLEHhHl1ilgHakylf0LKeQctDxhngZLQ+W57GnXa5vtH7XKaK8zlAhNEhlWiH5YFVFt+QCDPUmNkw==
+rollup@1.27.13:
+  version "1.27.13"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-1.27.13.tgz#d6d3500512daacbf8de54d2800de62d893085b90"
+  integrity sha512-hDi7M07MpmNSDE8YVwGVFA8L7n8jTLJ4lG65nMAijAyqBe//rtu4JdxjUBE7JqXfdpqxqDTbCDys9WcqdpsQvw==
   dependencies:
     "@types/estree" "*"
     "@types/node" "*"

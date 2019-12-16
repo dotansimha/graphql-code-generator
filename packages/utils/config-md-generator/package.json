@@ -23,7 +23,7 @@
     "typescript": "3.7.3"
   },
   "devDependencies": {
-    "@ardatan/bob": "0.1.8",
+    "bob-the-bundler": "0.2.2",
     "ts-node": "8.5.4"
   }
 }
