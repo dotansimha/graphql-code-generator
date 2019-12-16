@@ -279,7 +279,7 @@ describe('Apollo Angular', () => {
       const content = (await plugin(
         modifiedSchema,
         docs,
-        {},
+        { sdkClass: true },
         {
           outputFile: 'graphql.ts',
         }
@@ -320,6 +320,7 @@ describe('Apollo Angular', () => {
         modifiedSchema,
         docs,
         {
+          sdkClass: true,
           serviceName: 'MySDK',
           serviceProvidedInRoot: false,
         },
