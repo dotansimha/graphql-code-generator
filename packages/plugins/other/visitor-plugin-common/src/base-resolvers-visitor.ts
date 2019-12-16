@@ -42,6 +42,7 @@ export interface ParsedResolversConfig extends ParsedConfig {
   resolverTypeWrapperSignature: string;
   federation: boolean;
   enumPrefix: boolean;
+  optionalResolveType: boolean;
 }
 
 export interface RawResolversConfig extends RawConfig {
@@ -244,6 +245,13 @@ export interface RawResolversConfig extends RawConfig {
    * ```
    */
   enumPrefix?: boolean;
+  /**
+   * @name optionalResolveType
+   * @type boolean
+   * @default false
+   * @description Sets the `__resolveType` field as optional field.
+   */
+  optionalResolveType?: boolean;
 }
 
 export type ResolverTypes = { [gqlType: string]: string };
@@ -268,6 +276,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
 
   constructor(rawConfig: TRawConfig, additionalConfig: TPluginConfig, private _schema: GraphQLSchema, defaultScalars: NormalizedScalarsMap = DEFAULT_SCALARS) {
     super(rawConfig, {
+      optionalResolveType: getConfigValue(rawConfig.optionalResolveType, false),
       enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
       federation: getConfigValue(rawConfig.federation, false),
       resolverTypeWrapperSignature: getConfigValue(rawConfig.resolverTypeWrapperSignature, 'Promise<T> | T'),
@@ -840,7 +849,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
       .export()
       .asKind('type')
       .withName(name, `<ContextType = ${this.config.contextType.type}, ${this.transformParentGenericType(parentType)}>`)
-      .withBlock(indent(`__resolveType: TypeResolveFn<${possibleTypes}, ParentType, ContextType>`)).string;
+      .withBlock(indent(`__resolveType${this.config.optionalResolveType ? '?' : ''}: TypeResolveFn<${possibleTypes}, ParentType, ContextType>`)).string;
   }
 
   ScalarTypeDefinition(node: ScalarTypeDefinitionNode): string {
@@ -922,7 +931,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
       .export()
       .asKind('type')
       .withName(name, `<ContextType = ${this.config.contextType.type}, ${this.transformParentGenericType(parentType)}>`)
-      .withBlock([indent(`__resolveType: TypeResolveFn<${possibleTypes}, ParentType, ContextType>,`), ...(node.fields || []).map((f: any) => f(node.name))].join('\n')).string;
+      .withBlock([indent(`__resolveType${this.config.optionalResolveType ? '?' : ''}: TypeResolveFn<${possibleTypes}, ParentType, ContextType>,`), ...(node.fields || []).map((f: any) => f(node.name))].join('\n')).string;
   }
 
   SchemaDefinition() {

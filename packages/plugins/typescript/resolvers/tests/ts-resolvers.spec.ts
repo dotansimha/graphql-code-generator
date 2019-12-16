@@ -291,6 +291,23 @@ describe('TypeScript Resolvers Plugin', () => {
     expect(mergedOutputs).toContain(`B: GQL_B,`);
   });
 
+  it('Should allow to generate optional __resolveType', async () => {
+    const result = (await plugin(schema, [], { optionalResolveType: true }, { outputFile: '' })) as Types.ComplexPluginOutput;
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type MyUnionResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyUnion'] = ResolversParentTypes['MyUnion']> = {
+        __resolveType?: TypeResolveFn<'MyType' | 'MyOtherType', ParentType, ContextType>
+      };
+    `);
+
+    expect(result.content).toBeSimilarStringTo(`
+      export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
+        __resolveType?: TypeResolveFn<'SomeNode', ParentType, ContextType>,
+        id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
+      };
+    `);
+  });
+
   it('Should generate basic type resolvers', async () => {
     const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
 
