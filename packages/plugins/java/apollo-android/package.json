@@ -17,7 +17,7 @@
     "tslib": "1.10.0"
   },
   "devDependencies": {
-    "@ardatan/bob": "0.1.7",
+    "@ardatan/bob": "0.1.8",
     "@types/pluralize": "0.0.29",
     "graphql": "14.5.8",
     "java-ast": "0.1.0",
