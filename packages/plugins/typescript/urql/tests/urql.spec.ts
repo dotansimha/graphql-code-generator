@@ -548,7 +548,7 @@ export function useSubmitRepositoryMutation() {
       await validateTypeScript(content, schema, docs, {});
     });
 
-    it.only('Should generate subscription hooks', async () => {
+    it('Should generate subscription hooks', async () => {
       const documents = parse(/* GraphQL */ `
         subscription ListenToComments($name: String) {
           commentAdded(repoFullName: $name) {
@@ -573,7 +573,7 @@ export function useSubmitRepositoryMutation() {
 
       expect(content.content).toBeSimilarStringTo(`
       export function useListenToCommentsSubscription<TData = any>(options: Omit<Urql.UseSubscriptionArgs<ListenToCommentsSubscriptionVariables>, 'query'> = {}, handler?: Urql.SubscriptionHandler<ListenToCommentsSubscription, TData>) {
-        return Urql.useSubscription<ListenToCommentsSubscription>({ query: ListenToCommentsDocument, ...options }, handler);
+        return Urql.useSubscription<ListenToCommentsSubscription, TData, ListenToCommentsSubscriptionVariables>({ query: ListenToCommentsDocument, ...options }, handler);
       };`);
       await compileTypeScript(content, schema, docs, {});
     });
