@@ -10,7 +10,7 @@ export { resolveDocumentImports, DocumentImportResolverOptions };
 
 export type NearOperationFileConfig = {
   /**
-   * @name baseTypesPath
+   * @name schemaTypesPath
    * @type string
    * @description Required, should point to the base schema types file.
    * The key of the output is used a the base path for this file.
@@ -21,7 +21,7 @@ export type NearOperationFileConfig = {
    * src/:
    *  preset: near-operation-file
    *  presetConfig:
-   *    baseTypesPath: types.ts
+   *    schemaTypesPath: types.ts
    *  plugins:
    *    - typescript-operations
    * ```

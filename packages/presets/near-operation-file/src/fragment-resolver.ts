@@ -98,7 +98,7 @@ export default function buildFragmentResolver<T>(collectorOptions: DocumentImpor
           if (fragmentFileImports[fragmentDetails.filePath] === undefined) {
             fragmentFileImports[fragmentDetails.filePath] = new Set(fragmentDetails.importNames);
           } else {
-            fragmentFileImports[fragmentDetails.filePath].forEach(fragmentFileImports[fragmentDetails.filePath].add);
+            fragmentDetails.importNames.forEach(fragmentFileImports[fragmentDetails.filePath].add);
           }
         }
 
