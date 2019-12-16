@@ -65,7 +65,7 @@ export type NearOperationFileConfig = {
    *    - typescript-operations
    * ```
    */
-  folder?: string;
+  cwd?: string;
   /**
    * @name folder
    * @type string
@@ -84,7 +84,7 @@ export type NearOperationFileConfig = {
    *    - typescript-operations
    * ```
    */
-  cwd?: string;
+  folder?: string;
   /**
    * @name importTypesNamespace
    * @type string
