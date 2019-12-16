@@ -5,7 +5,7 @@ import { GitLoader } from '@graphql-toolkit/git-loader';
 import { GithubLoader } from '@graphql-toolkit/github-loader';
 import { PrismaLoader } from '@graphql-toolkit/prisma-loader';
 
-const CodegenExtension: GraphQLExtensionDeclaration = api => {
+export const CodegenExtension: GraphQLExtensionDeclaration = api => {
   // Schema
   api.loaders.schema.register(new CodeFileLoader());
   api.loaders.schema.register(new GitLoader());
