@@ -9,11 +9,13 @@ import { GithubLoader } from '@graphql-toolkit/github-loader';
 import { GraphQLFileLoader } from '@graphql-toolkit/graphql-file-loader';
 import { JsonFileLoader } from '@graphql-toolkit/json-file-loader';
 import { UrlLoader } from '@graphql-toolkit/url-loader';
+import { ApolloEngineLoader } from '@graphql-toolkit/apollo-engine-loader';
+import { PrismaLoader } from '@graphql-toolkit/prisma-loader';
 import { join } from 'path';
 
 export const loadSchema = async (schemaPointers: UnnormalizedTypeDefPointer, config: Types.Config): Promise<DocumentNode> => {
   try {
-    const docs = await loadTypedefsUsingLoaders([new CodeFileLoader(), new GitLoader(), new GithubLoader(), new GraphQLFileLoader(), new JsonFileLoader(), new UrlLoader()], schemaPointers, config);
+    const docs = await loadTypedefsUsingLoaders([new CodeFileLoader(), new GitLoader(), new GithubLoader(), new GraphQLFileLoader(), new JsonFileLoader(), new UrlLoader(), new ApolloEngineLoader(), new PrismaLoader()], schemaPointers, config);
 
     return mergeTypeDefs(docs.map(({ document }) => document));
   } catch (e) {
@@ -45,17 +47,15 @@ export const loadDocuments = async (documentPointers: UnnormalizedTypeDefPointer
     ...config,
   });
 
-  return loadedFromToolkit
-    .map(({ location, document }) => ({ filePath: location, content: document }))
-    .sort((a, b) => {
-      if (a.filePath < b.filePath) {
-        return -1;
-      }
+  return loadedFromToolkit.map(({ location, document }) => ({ filePath: location, content: document })).sort((a, b) => {
+    if (a.filePath < b.filePath) {
+      return -1;
+    }
 
-      if (a.filePath > b.filePath) {
-        return 1;
-      }
+    if (a.filePath > b.filePath) {
+      return 1;
+    }
 
-      return 0;
-    });
+    return 0;
+  });
 };
