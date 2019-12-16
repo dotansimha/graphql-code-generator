@@ -45,25 +45,6 @@ export type NearOperationFileConfig = {
    */
   extension?: string;
   /**
-   * @name cwd
-   * @type string
-   * @description Optional, override the `cwd` of the execution. We are using `cwd` to figure out the imports between files. Use this if your execuion path is not your project root directory.
-   * @default process.cwd()
-   *
-   * @example
-   * ```yml
-   * generates:
-   * src/:
-   *  preset: near-operation-file
-   *  presetConfig:
-   *    baseTypesPath: types.ts
-   *    cwd: /some/path
-   *  plugins:
-   *    - typescript-operations
-   * ```
-   */
-  folder?: string;
-  /**
    * @name folder
    * @type string
    * @description Optional, defines a folder, (Relative to the source files) where the generated files will be created.
@@ -77,6 +58,25 @@ export type NearOperationFileConfig = {
    *  presetConfig:
    *    baseTypesPath: types.ts
    *    folder: __generated__
+   *  plugins:
+   *    - typescript-operations
+   * ```
+   */
+  folder?: string;
+  /**
+   * @name cwd
+   * @type string
+   * @description Optional, override the `cwd` of the execution. We are using `cwd` to figure out the imports between files. Use this if your execuion path is not your project root directory.
+   * @default process.cwd()
+   *
+   * @example
+   * ```yml
+   * generates:
+   * src/:
+   *  preset: near-operation-file
+   *  presetConfig:
+   *    baseTypesPath: types.ts
+   *    cwd: /some/path
    *  plugins:
    *    - typescript-operations
    * ```
@@ -202,8 +202,8 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
     const extension = options.presetConfig.extension || '.generated.ts';
     const folder = options.presetConfig.folder || '';
     const importTypesNamespace = options.presetConfig.importTypesNamespace || 'Types';
-    const importTypesTemplate = options.presetConfig.importTypesTemplate || 'import * as {{importTypesNamespace}} from \'{{relativeImportPath}}\';';
-    const importFragmentsTemplate = options.presetConfig.importFragmentsTemplate || 'import { {{fragmentNames}} } from \'{{fragmentImportPath}}\';';
+    const importTypesTemplate = options.presetConfig.importTypesTemplate || "import * as {{importTypesNamespace}} from '{{relativeImportPath}}';";
+    const importFragmentsTemplate = options.presetConfig.importFragmentsTemplate || "import { {{fragmentNames}} } from '{{fragmentImportPath}}';";
     const fragmentImportSuffix = options.presetConfig.fragmentImportSuffix === undefined ? 'Fragment' : options.presetConfig.fragmentImportSuffix;
 
     const pluginMap: { [name: string]: CodegenPlugin } = {

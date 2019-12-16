@@ -1,6 +1,6 @@
 import { parse, dirname, relative, join, isAbsolute } from 'path';
 import { DocumentNode, visit, FragmentSpreadNode, FragmentDefinitionNode } from 'graphql';
-import { FragmentNameToFile } from './index';
+import { FragmentRegistry } from './fragment-resolver';
 
 export function defineFilepathSubfolder(baseFilePath: string, folder: string) {
   const parsedPath = parse(baseFilePath);
@@ -19,9 +19,10 @@ export function clearExtension(path: string): string {
   return join(parsedPath.dir, parsedPath.name).replace(/\\/g, '/');
 }
 
+// todo move to fragment-resolver
 export function extractExternalFragmentsInUse(
   documentNode: DocumentNode | FragmentDefinitionNode,
-  fragmentNameToFile: FragmentNameToFile,
+  fragmentNameToFile: FragmentRegistry,
   result: { [fragmentName: string]: number } = {},
   ignoreList: Set<string> = new Set(),
   level = 0
@@ -75,7 +76,7 @@ export function resolveRelativeImport(from: string, to: string): string {
 
 const INTEROPLATE_TEMPLATE_PATTERN = /{{\s*([^}]*)\s*}}/g;
 
-const SINGLE_QUOTE = '\'';
+const SINGLE_QUOTE = "'";
 const DOUBLE_QUOTE = '"';
 
 function normalize(value: string) {
