@@ -54,6 +54,14 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    * ```
    */
   serviceProvidedInRoot?: boolean;
+  /**
+   * @name sdkClass
+   * @type boolean
+   * @description Set to `true` in order to generate a SDK service class that uses all generated services.
+   * @default false
+   *
+   */
+  sdkClass?: boolean;
 }
 
 export const plugin: PluginFunction<ApolloAngularRawPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config) => {
@@ -73,7 +81,7 @@ export const plugin: PluginFunction<ApolloAngularRawPluginConfig> = (schema: Gra
 
   return {
     prepend: visitor.getImports(),
-    content: [visitor.fragments, ...visitorResult.definitions.filter(t => typeof t === 'string'), visitor.sdkClass].join('\n'),
+    content: [visitor.fragments, ...visitorResult.definitions.filter(t => typeof t === 'string'), config.sdkClass ? visitor.sdkClass : null].filter(a => a).join('\n'),
   };
 };
 
