@@ -110,6 +110,7 @@ export namespace Types {
       globalIdentifier?: string;
     };
     hooks?: LifecycleHooksDefinition<string | string[]>;
+    cwd?: string;
   }
 
   export type ComplexPluginOutput = { content: string; prepend?: string[]; append?: string[] };
