@@ -231,7 +231,7 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = { namingConvention: 'change-case#lowerCase', immutableTypes: true };
+      const config = { namingConvention: 'lower-case#lowerCase', immutableTypes: true };
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(`
@@ -347,7 +347,7 @@ describe('TypeScript Operations Plugin', () => {
           }
         }
       `);
-      const config = { namingConvention: 'change-case#lowerCase' };
+      const config = { namingConvention: 'lower-case#lowerCase' };
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(`
@@ -389,7 +389,7 @@ describe('TypeScript Operations Plugin', () => {
         }
       `);
 
-      const config = { typesPrefix: 'i', namingConvention: 'change-case#lowerCase' };
+      const config = { typesPrefix: 'i', namingConvention: 'lower-case#lowerCase' };
       const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(`export type inotificationsqueryvariables = {};`);

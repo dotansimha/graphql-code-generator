@@ -2,7 +2,7 @@ import { ClientSideBaseVisitor, ClientSideBasePluginConfig, LoadedFragment, getC
 import { UrqlRawPluginConfig } from './index';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, Kind } from 'graphql';
-import { pascalCase } from 'change-case';
+import { pascalCase } from 'pascal-case';
 import { GraphQLSchema } from 'graphql';
 
 export interface UrqlPluginConfig extends ClientSideBasePluginConfig {
@@ -71,7 +71,7 @@ export function use${operationName}() {
 };`;
     }
 
-    if(operationType === 'Subscription') {
+    if (operationType === 'Subscription') {
       return `
 export function use${operationName}<TData = any>(options: Omit<Urql.Use${operationType}Args<${operationVariablesTypes}>, 'query'> = {}, handler?: Urql.SubscriptionHandler<${operationName}, TData>) {
   return Urql.use${operationType}<${operationResultType}>({ query: ${documentVariableName}, ...options }, handler);

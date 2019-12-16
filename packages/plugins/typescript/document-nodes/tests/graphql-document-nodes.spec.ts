@@ -151,7 +151,7 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
           `),
         },
       ],
-      { namingConvention: 'change-case#camelCase' },
+      { namingConvention: 'camel-case#camelCase' },
       { outputFile: '' }
     ) as string;
 
@@ -180,7 +180,7 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
           `),
         },
       ],
-      { namingConvention: 'change-case#pascalCase', transformUnderscore: false },
+      { namingConvention: 'pascal-case#pascalCase', transformUnderscore: false },
       { outputFile: '' }
     ) as string;
 
@@ -211,7 +211,7 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
       ],
       {
         namingConvention: {
-          typeNames: 'change-case#pascalCase',
+          typeNames: 'pascal-case#pascalCase',
           transformUnderscore: true,
         },
       },
@@ -243,7 +243,7 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
           `),
         },
       ],
-      { namingConvention: 'change-case#constantCase' },
+      { namingConvention: 'constant-case#constantCase' },
       { outputFile: '' }
     ) as string;
 

@@ -1,4 +1,4 @@
-import { pascalCase } from 'change-case';
+import { pascalCase } from 'pascal-case';
 import {
   NameNode,
   Kind,
