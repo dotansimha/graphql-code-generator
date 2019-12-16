@@ -1,4 +1,4 @@
-import { BaseVisitor, ParsedConfig, RawConfig } from './index';
+import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor';
 import autoBind from 'auto-bind';
 import { FragmentDefinitionNode, print, OperationDefinitionNode, visit, FragmentSpreadNode, GraphQLSchema } from 'graphql';
 import { DepGraph } from 'dependency-graph';
