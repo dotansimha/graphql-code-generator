@@ -61,7 +61,7 @@
     "babel-types": "7.0.0-beta.3",
     "chalk": "3.0.0",
     "change-case": "3.1.0",
-    "chokidar": "3.3.0",
+    "chokidar": "3.3.1",
     "commander": "4.0.1",
     "common-tags": "1.8.0",
     "cosmiconfig": "6.0.0",
