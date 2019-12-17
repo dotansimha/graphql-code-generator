@@ -1,0 +1,5 @@
+src
+node_modules
+tests
+!dist
+example
