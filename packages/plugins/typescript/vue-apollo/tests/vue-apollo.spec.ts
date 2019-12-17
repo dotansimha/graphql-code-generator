@@ -154,7 +154,7 @@ describe('Vue Apollo', () => {
       const content = (await plugin(
         schema,
         docs,
-        { withCompositionFunctions: true, vueApolloComposableImportFrom: 'vue-apollo-composition-functions' },
+        { vueApolloComposableImportFrom: 'vue-apollo-composition-functions' },
         {
           outputFile: 'graphql.ts',
         }
@@ -421,7 +421,7 @@ export function useSubmitRepositoryMutation(baseOptions?: VueApolloComposable.Us
       const content = (await plugin(
         schema,
         docs,
-        { withCompositionFunctions: true, dedupeOperationSuffix: true },
+        { dedupeOperationSuffix: true },
         {
           outputFile: 'graphql.ts',
         }
@@ -468,9 +468,7 @@ export function useSubmitRepositoryMutation(baseOptions?: VueApolloComposable.Us
       const content = (await plugin(
         schema,
         docs,
-        {
-          withCompositionFunctions: true,
-        },
+        {},
         {
           outputFile: 'graphql.ts',
         }
@@ -488,7 +486,7 @@ export function useListenToCommentsSubscription(baseOptions?: VueApolloComposabl
       const content = (await plugin(
         schema,
         docs,
-        { withCompositionFunctions: true, typesPrefix: 'I' },
+        { typesPrefix: 'I' },
         {
           outputFile: 'graphql.ts',
         }
@@ -628,7 +626,7 @@ export function useListenToCommentsSubscription(baseOptions?: VueApolloComposabl
       const content = (await plugin(
         schema,
         docs,
-        { withCompositionFunctions: true, addDocBlocks: false },
+        { addDocBlocks: false },
         {
           outputFile: 'graphql.ts',
         }
@@ -819,7 +817,6 @@ export function useListenToCommentsSubscription(baseOptions?: VueApolloComposabl
       const config: VueApolloRawPluginConfig = {
         documentMode: DocumentMode.external,
         importDocumentNodeExternallyFrom: 'path/to/documents',
-        withCompositionFunctions: true,
       };
 
       const docs = [{ filePath: '', content: basicDoc }];
@@ -841,7 +838,6 @@ export function useListenToCommentsSubscription(baseOptions?: VueApolloComposabl
       const config: VueApolloRawPluginConfig = {
         documentMode: DocumentMode.external,
         importDocumentNodeExternallyFrom: 'path/to/documents.ts',
-        withCompositionFunctions: true,
       };
 
       const docs = [{ filePath: '', content: mutationDoc }];
@@ -863,7 +859,6 @@ export function useListenToCommentsSubscription(baseOptions?: VueApolloComposabl
       const config: VueApolloRawPluginConfig = {
         documentMode: DocumentMode.external,
         importDocumentNodeExternallyFrom: 'path/to/documents.tsx',
-        withCompositionFunctions: true,
       };
 
       const docs = [{ filePath: '', content: subscriptionDoc }];
@@ -885,7 +880,6 @@ export function useListenToCommentsSubscription(baseOptions?: VueApolloComposabl
       const config: VueApolloRawPluginConfig = {
         documentMode: DocumentMode.external,
         importDocumentNodeExternallyFrom: 'path/to/documents.tsx',
-        withCompositionFunctions: true,
       };
 
       const docs = [{ filePath: '', content: multipleOperationDoc }];
@@ -918,7 +912,6 @@ export function useListenToCommentsSubscription(baseOptions?: VueApolloComposabl
       const config: VueApolloRawPluginConfig = {
         documentMode: DocumentMode.external,
         importDocumentNodeExternallyFrom: 'near-operation-file',
-        withCompositionFunctions: true,
       };
 
       const docs = [{ filePath: 'path/to/document.graphql', content: basicDoc }];
@@ -940,7 +933,6 @@ export function useListenToCommentsSubscription(baseOptions?: VueApolloComposabl
       const config: VueApolloRawPluginConfig = {
         documentMode: DocumentMode.external,
         importDocumentNodeExternallyFrom: 'near-operation-file',
-        withCompositionFunctions: true,
       };
 
       const docs = [{ filePath: 'path/to/document.graphql', content: mutationDoc }];
@@ -961,7 +953,6 @@ export function useListenToCommentsSubscription(baseOptions?: VueApolloComposabl
       const config: VueApolloRawPluginConfig = {
         documentMode: DocumentMode.external,
         importDocumentNodeExternallyFrom: 'near-operation-file',
-        withCompositionFunctions: true,
       };
 
       const docs = [{ filePath: 'path/to/document.graphql', content: subscriptionDoc }];
@@ -982,7 +973,6 @@ export function useListenToCommentsSubscription(baseOptions?: VueApolloComposabl
       const config: VueApolloRawPluginConfig = {
         documentMode: DocumentMode.external,
         importDocumentNodeExternallyFrom: 'near-operation-file',
-        withCompositionFunctions: true,
       };
 
       const docs = [{ filePath: 'path/to/document.graphql', content: multipleOperationDoc }];
