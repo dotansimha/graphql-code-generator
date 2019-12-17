@@ -98,7 +98,9 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
     this.imports.add(this.getVueApolloComposableImport());
 
     const compositionFunctions = [
-      `export function use${operationName}(baseOptions?: VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}>) {
+      `export function use${operationName}(${
+        ['Query', 'Subscription'].includes(operationType) ? `variables?: ${operationVariablesTypes}, ` : ''
+      }baseOptions?: VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}>) {
         return VueApolloComposable.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${this.getDocumentNodeVariable(node, documentVariableName)}, baseOptions);
       }`,
     ];
