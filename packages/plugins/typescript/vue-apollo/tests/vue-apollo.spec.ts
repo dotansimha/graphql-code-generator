@@ -384,7 +384,7 @@ query MyFeed {
       )) as Types.ComplexPluginOutput;
       expect(content.content).toBeSimilarStringTo(`
 export function useFeedQuery(variables?: FeedQueryVariables, baseOptions?: VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables>) {
-  return VueApolloComposable.useQuery<FeedQuery, FeedQueryVariables>(FeedDocument, baseOptions);
+  return VueApolloComposable.useQuery<FeedQuery, FeedQueryVariables>(FeedDocument, variables, baseOptions);
 }`);
 
       expect(content.content).toBeSimilarStringTo(`
@@ -429,7 +429,7 @@ export function useSubmitRepositoryMutation(baseOptions?: VueApolloComposable.Us
 
       expect(content.content).toBeSimilarStringTo(`
 export function useFeedQuery(variables?: FeedQueryVariables, baseOptions?: VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables>) {
-  return VueApolloComposable.useQuery<FeedQuery, FeedQueryVariables>(FeedQueryDocument, baseOptions);
+  return VueApolloComposable.useQuery<FeedQuery, FeedQueryVariables>(FeedQueryDocument, variables, baseOptions);
 }`);
 
       expect(content.content).toBeSimilarStringTo(`
@@ -476,7 +476,7 @@ export function useSubmitRepositoryMutation(baseOptions?: VueApolloComposable.Us
 
       expect(content.content).toBeSimilarStringTo(`
 export function useListenToCommentsSubscription(variables?: ListenToCommentsSubscriptionVariables, baseOptions?: VueApolloComposable.UseSubscriptionOptions<ListenToCommentsSubscription, ListenToCommentsSubscriptionVariables>) {
-  return VueApolloComposable.useSubscription<ListenToCommentsSubscription, ListenToCommentsSubscriptionVariables>(ListenToCommentsDocument, baseOptions);
+  return VueApolloComposable.useSubscription<ListenToCommentsSubscription, ListenToCommentsSubscriptionVariables>(ListenToCommentsDocument, variables, baseOptions);
 }`);
       await validateTypeScript(content, schema, docs, {});
     });
@@ -828,7 +828,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
       expect(content.prepend).toContain(`import * as Operations from 'path/to/documents';`);
       expect(content.content).toBeSimilarStringTo(`
       export function useTestQuery(variables?: TestQueryVariables, baseOptions?: VueApolloComposable.UseQueryOptions<TestQuery, TestQueryVariables>) {
-        return VueApolloComposable.useQuery<TestQuery, TestQueryVariables>(Operations.test, baseOptions);
+        return VueApolloComposable.useQuery<TestQuery, TestQueryVariables>(Operations.test, variables, baseOptions);
       }
       `);
       await validateTypeScript(content, schema, docs, {});
@@ -870,7 +870,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
       expect(content.prepend).toContain(`import * as Operations from 'path/to/documents';`);
       expect(content.content).toBeSimilarStringTo(`
       export function useTestSubscription(variables?: TestSubscriptionVariables, baseOptions?: VueApolloComposable.UseSubscriptionOptions<TestSubscription, TestSubscriptionVariables>) {
-        return VueApolloComposable.useSubscription<TestSubscription, TestSubscriptionVariables>(Operations.test, baseOptions);
+        return VueApolloComposable.useSubscription<TestSubscription, TestSubscriptionVariables>(Operations.test, variables, baseOptions);
       }
       `);
       await validateTypeScript(content, schema, docs, {});
@@ -891,7 +891,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
       expect(content.prepend).toContain(`import * as Operations from 'path/to/documents';`);
       expect(content.content).toBeSimilarStringTo(`
       export function useTestOneQuery(variables?: TestOneQueryVariables, baseOptions?: VueApolloComposable.UseQueryOptions<TestOneQuery, TestOneQueryVariables>) {
-        return VueApolloComposable.useQuery<TestOneQuery, TestOneQueryVariables>(Operations.testOne, baseOptions);
+        return VueApolloComposable.useQuery<TestOneQuery, TestOneQueryVariables>(Operations.testOne, variables, baseOptions);
       }
       `);
       expect(content.content).toBeSimilarStringTo(`
@@ -902,7 +902,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
 
       expect(content.content).toBeSimilarStringTo(`
       export function useTestThreeSubscription(variables?: TestThreeSubscriptionVariables, baseOptions?: VueApolloComposable.UseSubscriptionOptions<TestThreeSubscription, TestThreeSubscriptionVariables>) {
-        return VueApolloComposable.useSubscription<TestThreeSubscription, TestThreeSubscriptionVariables>(Operations.testThree, baseOptions);
+        return VueApolloComposable.useSubscription<TestThreeSubscription, TestThreeSubscriptionVariables>(Operations.testThree, variables, baseOptions);
       }`);
 
       await validateTypeScript(content, schema, docs, {});
@@ -923,7 +923,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
       expect(content.prepend).toContain(`import * as Operations from './document.graphql';`);
       expect(content.content).toBeSimilarStringTo(`
       export function useTestQuery(variables?: TestQueryVariables, baseOptions?: VueApolloComposable.UseQueryOptions<TestQuery, TestQueryVariables>) {
-        return VueApolloComposable.useQuery<TestQuery, TestQueryVariables>(Operations.test, baseOptions);
+        return VueApolloComposable.useQuery<TestQuery, TestQueryVariables>(Operations.test, variables, baseOptions);
       }
       `);
       await validateTypeScript(content, schema, docs, {});
@@ -964,7 +964,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
       expect(content.prepend).toContain(`import * as Operations from './document.graphql';`);
       expect(content.content).toBeSimilarStringTo(`
       export function useTestSubscription(variables?: TestSubscriptionVariables, baseOptions?: VueApolloComposable.UseSubscriptionOptions<TestSubscription, TestSubscriptionVariables>) {
-        return VueApolloComposable.useSubscription<TestSubscription, TestSubscriptionVariables>(Operations.test, baseOptions);
+        return VueApolloComposable.useSubscription<TestSubscription, TestSubscriptionVariables>(Operations.test, variables, baseOptions);
       }`);
       await validateTypeScript(content, schema, docs, {});
     });
@@ -984,7 +984,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
       expect(content.prepend).toContain(`import * as Operations from './document.graphql';`);
       expect(content.content).toBeSimilarStringTo(`
       export function useTestOneQuery(variables?: TestOneQueryVariables, baseOptions?: VueApolloComposable.UseQueryOptions<TestOneQuery, TestOneQueryVariables>) {
-        return VueApolloComposable.useQuery<TestOneQuery, TestOneQueryVariables>(Operations.testOne, baseOptions);
+        return VueApolloComposable.useQuery<TestOneQuery, TestOneQueryVariables>(Operations.testOne, variables, baseOptions);
       }
       `);
       expect(content.content).toBeSimilarStringTo(`
@@ -994,7 +994,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
       `);
       expect(content.content).toBeSimilarStringTo(`
       export function useTestThreeSubscription(variables?: TestThreeSubscriptionVariables, baseOptions?: VueApolloComposable.UseSubscriptionOptions<TestThreeSubscription, TestThreeSubscriptionVariables>) {
-        return VueApolloComposable.useSubscription<TestThreeSubscription, TestThreeSubscriptionVariables>(Operations.testThree, baseOptions);
+        return VueApolloComposable.useSubscription<TestThreeSubscription, TestThreeSubscriptionVariables>(Operations.testThree, variables, baseOptions);
       }`);
 
       await validateTypeScript(content, schema, docs, {});
