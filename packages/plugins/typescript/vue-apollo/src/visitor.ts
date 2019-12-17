@@ -94,14 +94,13 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
       suffix,
       useTypesPrefix: false,
     });
+    const isQueryOrSubscription = ['Query', 'Subscription'].includes(operationType);
 
     this.imports.add(this.getVueApolloComposableImport());
 
     const compositionFunctions = [
-      `export function use${operationName}(${
-        ['Query', 'Subscription'].includes(operationType) ? `variables?: ${operationVariablesTypes}, ` : ''
-      }baseOptions?: VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}>) {
-        return VueApolloComposable.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${this.getDocumentNodeVariable(node, documentVariableName)}, baseOptions);
+      `export function use${operationName}(${isQueryOrSubscription ? `variables?: ${operationVariablesTypes}, ` : ''}baseOptions?: VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}>) {
+        return VueApolloComposable.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${this.getDocumentNodeVariable(node, documentVariableName)}, ${isQueryOrSubscription ? 'variables, ' : ''}baseOptions);
       }`,
     ];
 
