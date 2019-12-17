@@ -154,13 +154,13 @@ describe('Vue Apollo', () => {
       const content = (await plugin(
         schema,
         docs,
-        { withCompositionFunctions: true, vueApolloComposableImportFrom: 'vue-apollo-hooks' },
+        { withCompositionFunctions: true, vueApolloComposableImportFrom: 'vue-apollo-composition-functions' },
         {
           outputFile: 'graphql.ts',
         }
       )) as Types.ComplexPluginOutput;
 
-      expect(content.prepend).toContain(`import * as VueApolloComposable from 'vue-apollo-hooks';`);
+      expect(content.prepend).toContain(`import * as VueApolloComposable from 'vue-apollo-composition-functions';`);
       await validateTypeScript(content, schema, docs, {});
     });
   });
@@ -350,7 +350,7 @@ query MyFeed {
   });
 
   describe('Composition functions', () => {
-    it('Should generate hooks for query and mutation', async () => {
+    it('Should generate composition functions for query and mutation', async () => {
       const documents = parse(/* GraphQL */ `
         query feed {
           feed {
@@ -394,7 +394,7 @@ export function useSubmitRepositoryMutation(baseOptions?: VueApolloComposable.Us
       await validateTypeScript(content, schema, docs, {});
     });
 
-    it('Should generate deduped hooks for query and mutation', async () => {
+    it('Should generate deduped composition functions for query and mutation', async () => {
       const documents = parse(/* GraphQL */ `
         query FeedQuery {
           feed {
@@ -439,7 +439,7 @@ export function useSubmitRepositoryMutation(baseOptions?: VueApolloComposable.Us
       await validateTypeScript(content, schema, docs, {});
     });
 
-    it('Should not generate hooks for query and mutation', async () => {
+    it('Should not generate composition functions for query and mutation', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
       const content = (await plugin(
         schema,
@@ -454,7 +454,7 @@ export function useSubmitRepositoryMutation(baseOptions?: VueApolloComposable.Us
       await validateTypeScript(content, schema, docs, {});
     });
 
-    it('Should generate subscription hooks', async () => {
+    it('Should generate subscription composition functions', async () => {
       const documents = parse(/* GraphQL */ `
         subscription ListenToComments($name: String) {
           commentAdded(repoFullName: $name) {
@@ -483,7 +483,7 @@ export function useListenToCommentsSubscription(baseOptions?: VueApolloComposabl
       await validateTypeScript(content, schema, docs, {});
     });
 
-    it('Should not add typesPrefix to hooks', async () => {
+    it('Should not add typesPrefix to composition functions', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
       const content = (await plugin(
         schema,
@@ -497,7 +497,7 @@ export function useListenToCommentsSubscription(baseOptions?: VueApolloComposabl
       expect(content.content).toContain(`export function useTestQuery`);
     });
 
-    it('should generate hook result', async () => {
+    it('should generate composition function result', async () => {
       const documents = parse(/* GraphQL */ `
         query feed {
           feed {
@@ -531,11 +531,11 @@ export function useListenToCommentsSubscription(baseOptions?: VueApolloComposabl
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(`
-      export type FeedQueryHookResult = ReturnType<typeof useFeedQuery>;
+      export type FeedQueryCompositionFunctionResult = ReturnType<typeof useFeedQuery>;
       `);
 
       expect(content.content).toBeSimilarStringTo(`
-      export type SubmitRepositoryMutationHookResult = ReturnType<typeof useSubmitRepositoryMutation>;
+      export type SubmitRepositoryMutationCompositionFunctionResult = ReturnType<typeof useSubmitRepositoryMutation>;
       `);
       await validateTypeScript(content, schema, docs, {});
     });
@@ -575,7 +575,7 @@ export function useListenToCommentsSubscription(baseOptions?: VueApolloComposabl
  * });
  */`;
 
-    it('Should generate JSDoc docblocks for hooks', async () => {
+    it('Should generate JSDoc docblocks for composition functions', async () => {
       const documents = parse(/* GraphQL */ `
         query feed($id: ID!) {
           feed(id: $id) {
@@ -609,7 +609,7 @@ export function useListenToCommentsSubscription(baseOptions?: VueApolloComposabl
       expect(mutationDocBlock).toEqual(mutationDocBlockSnapshot);
     });
 
-    it('Should NOT generate JSDoc docblocks for hooks if addDocBlocks is false', async () => {
+    it('Should NOT generate JSDoc docblocks for composition functions if addDocBlocks is false', async () => {
       const documents = parse(/* GraphQL */ `
         query feed($id: ID!) {
           feed(id: $id) {
@@ -863,7 +863,6 @@ export function useListenToCommentsSubscription(baseOptions?: VueApolloComposabl
       const config: VueApolloRawPluginConfig = {
         documentMode: DocumentMode.external,
         importDocumentNodeExternallyFrom: 'path/to/documents.tsx',
-
         withCompositionFunctions: true,
       };
 
@@ -882,11 +881,10 @@ export function useListenToCommentsSubscription(baseOptions?: VueApolloComposabl
       await validateTypeScript(content, schema, docs, {});
     });
 
-    it('should import Operations from one external file and use it in multiple hooks', async () => {
+    it('should import Operations from one external file and use it in multiple composition functions', async () => {
       const config: VueApolloRawPluginConfig = {
         documentMode: DocumentMode.external,
         importDocumentNodeExternallyFrom: 'path/to/documents.tsx',
-
         withCompositionFunctions: true,
       };
 
@@ -920,7 +918,6 @@ export function useListenToCommentsSubscription(baseOptions?: VueApolloComposabl
       const config: VueApolloRawPluginConfig = {
         documentMode: DocumentMode.external,
         importDocumentNodeExternallyFrom: 'near-operation-file',
-
         withCompositionFunctions: true,
       };
 
@@ -943,7 +940,6 @@ export function useListenToCommentsSubscription(baseOptions?: VueApolloComposabl
       const config: VueApolloRawPluginConfig = {
         documentMode: DocumentMode.external,
         importDocumentNodeExternallyFrom: 'near-operation-file',
-
         withCompositionFunctions: true,
       };
 
@@ -965,7 +961,6 @@ export function useListenToCommentsSubscription(baseOptions?: VueApolloComposabl
       const config: VueApolloRawPluginConfig = {
         documentMode: DocumentMode.external,
         importDocumentNodeExternallyFrom: 'near-operation-file',
-
         withCompositionFunctions: true,
       };
 
@@ -983,11 +978,10 @@ export function useListenToCommentsSubscription(baseOptions?: VueApolloComposabl
       await validateTypeScript(content, schema, docs, {});
     });
 
-    it('should import Operations from near operation file and use it in multiple hooks', async () => {
+    it('should import Operations from near operation file and use it in multiple composition functions', async () => {
       const config: VueApolloRawPluginConfig = {
         documentMode: DocumentMode.external,
         importDocumentNodeExternallyFrom: 'near-operation-file',
-
         withCompositionFunctions: true,
       };
 
