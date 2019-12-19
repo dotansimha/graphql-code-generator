@@ -59,19 +59,19 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
  * you can use to render your UI.`;
 
     const queryExample = `
- * const { result, loading, error } = use${operationName}({
- *   variables: {${variableString}
- *   },
- * });`;
+ * const { result, loading, error } = use${operationName}(
+ *   {${variableString}
+ *   }
+ * );`;
 
     const mutationDescription = `
  * To run a mutation, you first call \`use${operationName}\` within a Vue component and pass it any options that fit your needs.
- * When your component renders, \`use${operationName}\` returns a tuple that includes:
+ * When your component renders, \`use${operationName}\` returns an object that includes:
  * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution`;
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return`;
 
     const mutationExample = `
- * const [{ mutate, result, loading, error }] = use${operationName}({
+ * const { mutate, loading, error, onDone } = use${operationName}({
  *   variables: {${variableString}
  *   },
  * });`;
