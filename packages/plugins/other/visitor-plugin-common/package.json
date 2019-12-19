@@ -12,7 +12,7 @@
     "auto-bind": "4.0.0",
     "dependency-graph": "0.8.1",
     "graphql-tag": "2.10.1",
-    "relay-compiler": "7.1.0",
+    "relay-compiler": "8.0.0",
     "tslib": "1.10.0"
   },
   "peerDependencies": {
