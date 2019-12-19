@@ -2,7 +2,7 @@ import { ClientSideBaseVisitor, ClientSideBasePluginConfig, LoadedFragment, inde
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, print, visit, GraphQLSchema, Kind } from 'graphql';
 import { ApolloAngularRawPluginConfig } from './index';
-import { camelCase } from 'change-case';
+import { camelCase } from 'camel-case';
 
 const R_MOD = /module\:\s*"([^"]+)"/; // matches: module: "..."
 const R_NAME = /name\:\s*"([^"]+)"/; // matches: name: "..."
@@ -51,16 +51,18 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<ApolloAngularRaw
 
     const defs: Record<string, { path: string; module: string }> = {};
 
-    this._allOperations.filter(op => this._operationHasDirective(op, 'NgModule') || !!this.config.ngModule).forEach(op => {
-      const def = this._operationHasDirective(op, 'NgModule') ? this._extractNgModule(op) : this._parseNgModule(this.config.ngModule);
+    this._allOperations
+      .filter(op => this._operationHasDirective(op, 'NgModule') || !!this.config.ngModule)
+      .forEach(op => {
+        const def = this._operationHasDirective(op, 'NgModule') ? this._extractNgModule(op) : this._parseNgModule(this.config.ngModule);
 
-      // by setting key as link we easily get rid of duplicated imports
-      // every path should be relative to the output file
-      defs[def.link] = {
-        path: def.path,
-        module: def.module,
-      };
-    });
+        // by setting key as link we easily get rid of duplicated imports
+        // every path should be relative to the output file
+        defs[def.link] = {
+          path: def.path,
+          module: def.module,
+        };
+      });
 
     Object.keys(defs).forEach(key => {
       const def = defs[key];
