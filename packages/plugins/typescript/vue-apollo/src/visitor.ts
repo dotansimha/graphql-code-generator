@@ -55,7 +55,7 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
 
     const queryDescription = `
  * To run a query within a Vue component, call \`use${operationName}\` and pass it any options that fit your needs.
- * When your component renders, \`use${operationName}\` returns an object from Apollo Client that contains loading, error, and result properties
+ * When your component renders, \`use${operationName}\` returns an object from Apollo Client that contains result, loading and error properties
  * you can use to render your UI.`;
 
     const queryExample = `
