@@ -542,31 +542,31 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
  * __useFeedQuery__
  *
  * To run a query within a Vue component, call \`useFeedQuery\` and pass it any options that fit your needs.
- * When your component renders, \`useFeedQuery\` returns an object from Apollo Client that contains loading, error, and result properties
+ * When your component renders, \`useFeedQuery\` returns an object from Apollo Client that contains result, loading and error properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/query.html#options;
  *
  * @example
- * const { result, loading, error } = useFeedQuery({
- *   variables: {
+ * const { result, loading, error } = useFeedQuery(
+ *   {
  *      id: // value for 'id'
- *   },
- * });
+ *   }
+ * );
  */`;
 
     const mutationDocBlockSnapshot = `/**
  * __useSubmitRepositoryMutation__
  *
  * To run a mutation, you first call \`useSubmitRepositoryMutation\` within a Vue component and pass it any options that fit your needs.
- * When your component renders, \`useSubmitRepositoryMutation\` returns a tuple that includes:
+ * When your component renders, \`useSubmitRepositoryMutation\` returns an object that includes:
  * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
+ * - Several other properties: https://v4.apollo.vuejs.org/api/use-mutation.html#return
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/mutation.html#options;
  *
  * @example
- * const [{ mutate, result, loading, error }] = useSubmitRepositoryMutation({
+ * const { mutate, loading, error, onDone } = useSubmitRepositoryMutation({
  *   variables: {
  *      name: // value for 'name'
  *   },
