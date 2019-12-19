@@ -377,7 +377,7 @@ query MyFeed {
       const content = (await plugin(
         schema,
         docs,
-        { withCompositionFunctions: true },
+        {},
         {
           outputFile: 'graphql.ts',
         }
@@ -522,7 +522,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
       const content = (await plugin(
         schema,
         docs,
-        { withCompositionFunctions: true },
+        {},
         {
           outputFile: 'graphql.ts',
         }
@@ -535,6 +535,56 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
       expect(content.content).toBeSimilarStringTo(`
       export type SubmitRepositoryMutationCompositionFunctionResult = ReturnType<typeof useSubmitRepositoryMutation>;
       `);
+      await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('Should generate required variables if required in graphql document', async () => {
+      const documents = parse(/* GraphQL */ `
+        query feed($id: ID!) {
+          feed(id: $id) {
+            id
+          }
+        }
+        mutation submitRepository($name: String!) {
+          submitRepository(repoFullName: $name) {
+            id
+          }
+        }
+        subscription subscribeToFeed($id: ID!) {
+          feedAdded(id: $id) {
+            id
+          }
+        }
+      `);
+      const docs = [{ filePath: '', content: documents }];
+
+      const content = (await plugin(
+        schema,
+        docs,
+        {},
+        {
+          outputFile: 'graphql.ts',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      // query with required variables
+      expect(content.content).toBeSimilarStringTo(`
+      export function useFeedQuery(variables: FeedQueryVariables, baseOptions?: VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables>) {
+        return VueApolloComposable.useQuery<FeedQuery, FeedQueryVariables>(FeedDocument, variables, baseOptions);
+      }`);
+
+      // subscription with required variables
+      expect(content.content).toBeSimilarStringTo(`
+      export function useSubscribeToFeedSubscription(variables: SubscribeToFeedSubscriptionVariables, baseOptions?: VueApolloComposable.UseSubscriptionOptions<SubscribeToFeedSubscription, SubscribeToFeedSubscriptionVariables>) {
+        return VueApolloComposable.useSubscription<SubscribeToFeedSubscription, SubscribeToFeedSubscriptionVariables>(SubscribeToFeedDocument, variables, baseOptions);
+      }`);
+
+      // mutation with required variables
+      expect(content.content).toBeSimilarStringTo(`
+      export function useSubmitRepositoryMutation(baseOptions: { Omit<VueApolloComposable.UseMutationOptions<SubmitRepositoryMutation>, 'variables'>; variables: SubmitRepositoryMutationVariables }) {
+        return VueApolloComposable.useMutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(SubmitRepositoryDocument, baseOptions);
+      }`);
+
       await validateTypeScript(content, schema, docs, {});
     });
 
@@ -592,7 +642,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
       const content = (await plugin(
         schema,
         docs,
-        { withCompositionFunctions: true },
+        {},
         {
           outputFile: 'graphql.ts',
         }
