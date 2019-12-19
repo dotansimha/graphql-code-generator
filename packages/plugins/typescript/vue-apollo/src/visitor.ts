@@ -11,7 +11,6 @@ export interface VueApolloPluginConfig extends ClientSideBasePluginConfig {
   vueApolloComposableImportFrom: string;
   addDocBlocks: boolean;
 }
-
 export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginConfig, VueApolloPluginConfig> {
   private _externalImportPrefix: string;
   private imports = new Set<string>();
