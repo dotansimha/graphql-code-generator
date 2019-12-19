@@ -262,6 +262,93 @@ describe('Apollo Angular', () => {
     });
   });
 
+  describe('SDK Service', () => {
+    it('should generate a SDK service', async () => {
+      const modifiedSchema = extendSchema(schema, addToSchema);
+      const myFeed = gql(`
+        query MyFeed {
+          feed {
+            id
+          }
+        }
+      `);
+      const docs = [{ filePath: '', content: myFeed }];
+      const content = (await plugin(
+        modifiedSchema,
+        docs,
+        { sdkClass: true },
+        {
+          outputFile: 'graphql.ts',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      // NgModule
+      expect(content.prepend).toContain(`import { MutationOptionsAlone, QueryOptionsAlone, SubscriptionOptionsAlone, WatchQueryOptionsAlone } from 'apollo-angular/types';`);
+      // console.log('content.content', content.content);
+      expect(content.content).toBeSimilarStringTo(`
+        @Injectable({ providedIn: 'root' })
+        export class ApolloAngularSDK {
+        constructor(
+          private myFeedGql: MyFeedGQL
+        ) {}
+        
+        myFeed(variables?: MyFeedQueryVariables, options?: QueryOptionsAlone<MyFeedQueryVariables>) {
+          return this.myFeedGql.fetch(variables, options)
+        }
+
+        myFeedWatch(variables?: MyFeedQueryVariables, options?: WatchQueryOptionsAlone<MyFeedQueryVariables>) {
+          return this.myFeedGql.watch(variables, options)
+        }
+        }
+      `);
+      validateTypeScript(content, modifiedSchema, docs, {});
+    });
+    it('should generate a SDK service with custom settings', async () => {
+      const modifiedSchema = extendSchema(schema, addToSchema);
+      const myFeed = gql(`
+        query MyFeed {
+          feed {
+            id
+          }
+        }
+      `);
+      const docs = [{ filePath: '', content: myFeed }];
+      const content = (await plugin(
+        modifiedSchema,
+        docs,
+        {
+          sdkClass: true,
+          serviceName: 'MySDK',
+          serviceProvidedInRoot: false,
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      // NgModule
+      expect(content.prepend).toContain(`import { MutationOptionsAlone, QueryOptionsAlone, SubscriptionOptionsAlone, WatchQueryOptionsAlone } from 'apollo-angular/types';`);
+      // console.log('content.content', content.content);
+      expect(content.content).toBeSimilarStringTo(`
+        @Injectable()
+        export class MySDK {
+        constructor(
+          private myFeedGql: MyFeedGQL
+        ) {}
+        
+        myFeed(variables?: MyFeedQueryVariables, options?: QueryOptionsAlone<MyFeedQueryVariables>) {
+          return this.myFeedGql.fetch(variables, options)
+        }
+
+        myFeedWatch(variables?: MyFeedQueryVariables, options?: WatchQueryOptionsAlone<MyFeedQueryVariables>) {
+          return this.myFeedGql.watch(variables, options)
+        }
+        }
+      `);
+      validateTypeScript(content, modifiedSchema, docs, {});
+    });
+  });
+
   describe('others', () => {
     it('should handle fragments', async () => {
       const myFeed = gql`

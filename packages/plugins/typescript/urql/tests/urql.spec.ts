@@ -1,4 +1,4 @@
-import { validateTs } from '@graphql-codegen/testing';
+import { validateTs, compileTs } from '@graphql-codegen/testing';
 import { plugin } from '../src/index';
 import { parse, GraphQLSchema, buildClientSchema, buildASTSchema } from 'graphql';
 import gql from 'graphql-tag';
@@ -29,7 +29,14 @@ describe('urql', () => {
     const tsOutput = await tsPlugin(testSchema, documents, config, { outputFile: '' });
     const tsDocumentsOutput = await tsDocumentsPlugin(testSchema, documents, config, { outputFile: '' });
     const merged = mergeOutputs([tsOutput, tsDocumentsOutput, output]);
-    validateTs(merged, undefined, true);
+    await validateTs(merged, undefined, true);
+  };
+
+  const compileTypeScript = async (output: Types.PluginOutput, testSchema: GraphQLSchema, documents: Types.DocumentFile[], config: any) => {
+    const tsOutput = await tsPlugin(testSchema, documents, config, { outputFile: '' });
+    const tsDocumentsOutput = await tsDocumentsPlugin(testSchema, documents, config, { outputFile: '' });
+    const merged = mergeOutputs([tsOutput, tsDocumentsOutput, output]);
+    await compileTs(merged, undefined, true);
   };
 
   describe('Imports', () => {
@@ -566,9 +573,9 @@ export function useSubmitRepositoryMutation() {
 
       expect(content.content).toBeSimilarStringTo(`
       export function useListenToCommentsSubscription<TData = any>(options: Omit<Urql.UseSubscriptionArgs<ListenToCommentsSubscriptionVariables>, 'query'> = {}, handler?: Urql.SubscriptionHandler<ListenToCommentsSubscription, TData>) {
-        return Urql.useSubscription<ListenToCommentsSubscription>({ query: ListenToCommentsDocument, ...options }, handler);
+        return Urql.useSubscription<ListenToCommentsSubscription, TData, ListenToCommentsSubscriptionVariables>({ query: ListenToCommentsDocument, ...options }, handler);
       };`);
-      await validateTypeScript(content, schema, docs, {});
+      await compileTypeScript(content, schema, docs, {});
     });
 
     it('Should not add typesPrefix to hooks', async () => {

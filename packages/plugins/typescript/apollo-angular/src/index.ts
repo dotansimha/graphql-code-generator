@@ -30,6 +30,38 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    * ```
    */
   namedClient?: string;
+  /**
+   * @name serviceName
+   * @type string
+   * @description Defined the global value of `serviceName`.
+   *
+   * @example graphql.macro
+   * ```yml
+   * config:
+   *   serviceName: 'MySDK'
+   * ```
+   */
+  serviceName?: string;
+  /**
+   * @name serviceProvidedInRoot
+   * @type string
+   * @description Defined the global value of `serviceProvidedInRoot`.
+   *
+   * @example graphql.macro
+   * ```yml
+   * config:
+   *   serviceProvidedInRoot: false
+   * ```
+   */
+  serviceProvidedInRoot?: boolean;
+  /**
+   * @name sdkClass
+   * @type boolean
+   * @description Set to `true` in order to generate a SDK service class that uses all generated services.
+   * @default false
+   *
+   */
+  sdkClass?: boolean;
 }
 
 export const plugin: PluginFunction<ApolloAngularRawPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config) => {
@@ -49,7 +81,7 @@ export const plugin: PluginFunction<ApolloAngularRawPluginConfig> = (schema: Gra
 
   return {
     prepend: visitor.getImports(),
-    content: [visitor.fragments, ...visitorResult.definitions.filter(t => typeof t === 'string')].join('\n'),
+    content: [visitor.fragments, ...visitorResult.definitions.filter(t => typeof t === 'string'), config.sdkClass ? visitor.sdkClass : null].filter(a => a).join('\n'),
   };
 };
 

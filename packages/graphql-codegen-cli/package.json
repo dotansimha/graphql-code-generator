@@ -42,7 +42,7 @@
   },
   "homepage": "https://github.com/dotansimha/graphql-code-generator#readme",
   "dependencies": {
-    "@babel/parser": "7.7.5",
+    "@babel/parser": "7.7.7",
     "@graphql-codegen/core": "1.9.1",
     "@graphql-codegen/plugin-helpers": "1.9.1",
     "@graphql-toolkit/code-file-loader": "0.7.4",
@@ -64,7 +64,7 @@
     "upper-case": "2.0.1",
     "constant-case": "3.0.3",
     "camel-case": "4.1.1",
-    "chokidar": "3.3.0",
+    "chokidar": "3.3.1",
     "commander": "4.0.1",
     "common-tags": "1.8.0",
     "cosmiconfig": "6.0.0",
@@ -92,7 +92,7 @@
     "valid-url": "1.0.9"
   },
   "devDependencies": {
-    "@ardatan/bob": "0.1.7",
+    "bob-the-bundler": "0.2.2",
     "@types/chokidar": "1.7.5",
     "@types/detect-indent": "5.0.0",
     "@types/inquirer": "6.5.0",
