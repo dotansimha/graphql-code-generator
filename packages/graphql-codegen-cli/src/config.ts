@@ -222,7 +222,7 @@ export class CodegenContext {
   loadSchema(pointer: Types.Schema) {
     if (this._graphqlConfig) {
       // TODO: SchemaWithLoader won't work here
-      return this._graphqlConfig.getProject(this._project).loadSchema(pointer as any, 'DocumentNode');
+      return this._graphqlConfig.getProject(this._project).loadSchema(pointer as any);
     }
 
     return loadSchema(pointer, this.getConfig());
