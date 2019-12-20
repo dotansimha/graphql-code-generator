@@ -130,7 +130,8 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
       useTypesPrefix: false,
     });
 
-    this.imports.add(this.getVueApolloComposableImport());
+    this.imports.add(this.vueApolloComposableImport);
+    this.imports.add(this.vueCompositionApiImport);
 
     const documentNodeVariable = this.getDocumentNodeVariable(node, documentVariableName); // i.e. TestDocument
 
