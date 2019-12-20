@@ -1,6 +1,6 @@
 import { compileTs, validateTs } from '@graphql-codegen/testing';
 import { plugin, VueApolloRawPluginConfig } from '../src/index';
-import { parse, GraphQLSchema, buildClientSchema, buildASTSchema } from 'graphql';
+import { parse, GraphQLSchema, buildClientSchema } from 'graphql';
 import gql from 'graphql-tag';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { plugin as tsPlugin } from '../../typescript/src/index';
