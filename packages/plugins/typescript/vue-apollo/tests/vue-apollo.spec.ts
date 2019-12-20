@@ -135,21 +135,6 @@ describe('Vue Apollo', () => {
       expect(((await plugin(schema, [{ filePath: 'test-file.ts', content: ast2 }], { dedupeOperationSuffix: false }, { outputFile: '' })) as any).content).toContain('ReturnType<typeof useNotificationsQuery>;');
     });
 
-    it('should import VueApolloComposable dependencies', async () => {
-      const docs = [{ filePath: '', content: basicDoc }];
-      const content = (await plugin(
-        schema,
-        docs,
-        { withCompositionFunctions: true },
-        {
-          outputFile: 'graphql.ts',
-        }
-      )) as Types.ComplexPluginOutput;
-
-      expect(content.prepend).toContain(`import * as VueApolloComposable from '@vue/apollo-composable';`);
-      await validateTypeScript(content, schema, docs, {});
-    });
-
     it('should import VueApolloComposable from VueApolloComposableImportFrom config option', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
       const content = (await plugin(
