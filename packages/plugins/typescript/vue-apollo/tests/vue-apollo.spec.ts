@@ -369,7 +369,7 @@ query MyFeed {
         }
       )) as Types.ComplexPluginOutput;
       expect(content.content).toBeSimilarStringTo(`
-export function useFeedQuery(variables?: FeedQueryVariables, baseOptions?: VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables>) {
+export function useFeedQuery(variables?: FeedQueryVariables | VueCompositionApi.Ref<FeedQueryVariables> | VueApolloComposable.ReactiveFunction<FeedQueryVariables>, baseOptions?: VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables>) {
   return VueApolloComposable.useQuery<FeedQuery, FeedQueryVariables>(FeedDocument, variables, baseOptions);
 }`);
 
@@ -414,7 +414,7 @@ export function useSubmitRepositoryMutation(baseOptions?: VueApolloComposable.Us
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(`
-export function useFeedQuery(variables?: FeedQueryVariables, baseOptions?: VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables>) {
+export function useFeedQuery(variables?: FeedQueryVariables | VueCompositionApi.Ref<FeedQueryVariables> | VueApolloComposable.ReactiveFunction<FeedQueryVariables>, baseOptions?: VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables>) {
   return VueApolloComposable.useQuery<FeedQuery, FeedQueryVariables>(FeedQueryDocument, variables, baseOptions);
 }`);
 
