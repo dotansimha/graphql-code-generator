@@ -1,5 +1,5 @@
 import { Types, PluginValidateFn, PluginFunction } from '@graphql-codegen/plugin-helpers';
-import { visit, GraphQLSchema, concatAST, Kind, FragmentDefinitionNode } from 'graphql';
+import { visit, GraphQLSchema, concatAST, Kind, FragmentDefinitionNode, DocumentNode } from 'graphql';
 import { RawClientSideBasePluginConfig, LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
 import { VueApolloVisitor } from './visitor';
 import { extname } from 'path';
@@ -56,8 +56,8 @@ export interface VueApolloRawPluginConfig extends RawClientSideBasePluginConfig 
 
 export const plugin: PluginFunction<VueApolloRawPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: VueApolloRawPluginConfig) => {
   const allAst = concatAST(
-    documents.reduce((prev, v) => {
-      return [...prev, v.content];
+    documents.reduce((accumulator: DocumentNode[], currentDocument) => {
+      return [...accumulator, currentDocument.content];
     }, [])
   );
 
@@ -71,11 +71,11 @@ export const plugin: PluginFunction<VueApolloRawPluginConfig> = (schema: GraphQL
 
   return {
     prepend: visitor.getImports(),
-    content: [visitor.fragments, ...visitorResult.definitions.filter(t => typeof t === 'string')].join('\n'),
+    content: [visitor.fragments, ...visitorResult.definitions.filter((definition: string) => typeof definition === 'string')].join('\n'),
   };
 };
 
-export const validate: PluginValidateFn<any> = async (schema: GraphQLSchema, documents: Types.DocumentFile[], config: VueApolloRawPluginConfig, outputFile: string) => {
+export const validate: PluginValidateFn<any> = async (_schema: GraphQLSchema, _documents: Types.DocumentFile[], _config: VueApolloRawPluginConfig, outputFile: string) => {
   if (extname(outputFile) !== '.ts') {
     throw new Error(`Plugin "vue-apollo" requires extension to be ".ts"!`);
   }
