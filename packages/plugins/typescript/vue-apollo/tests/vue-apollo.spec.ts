@@ -694,6 +694,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
           }
         }
       }
+
       mutation testTwo($name: String) {
         submitRepository(repoFullName: $name) {
           id
@@ -738,7 +739,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
         }
       )) as Types.ComplexPluginOutput;
 
-      expect(content.content).toBeSimilarStringTo(`export const TestDocument: DocumentNode = {"kind":"Document","defin`);
+      expect(content.content).toBeSimilarStringTo(`export const TestDocument`);
 
       // For issue #1599 - make sure there are not `loc` properties
       expect(content.content).not.toContain(`loc":`);
@@ -777,7 +778,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
         }
       )) as Types.ComplexPluginOutput;
 
-      expect(content.content).not.toBeSimilarStringTo(`export const FeedFragmentFragmentDoc = gql`);
+      expect(content.content).not.toBeSimilarStringTo(`export const FeedFragmentFragmentDoc`);
 
       await validateTypeScript(content, schema, docs, {});
     });
@@ -814,7 +815,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
         }
       )) as Types.ComplexPluginOutput;
 
-      expect(content.content).not.toBeSimilarStringTo(`export const FeedFragmentFragmentDoc = gql`);
+      expect(content.content).not.toBeSimilarStringTo(`export const FeedFragmentFragmentDoc`);
       await validateTypeScript(content, schema, docs, {});
     });
 
@@ -845,7 +846,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
         }
       )) as Types.ComplexPluginOutput;
 
-      expect(content.content).not.toBeSimilarStringTo(`export const FeedFragmentFragmentDoc = gql`);
+      expect(content.content).not.toBeSimilarStringTo(`export const FeedFragmentFragmentDoc`);
 
       await validateTypeScript(content, schema, docs, { ...config });
     });
@@ -863,11 +864,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
       })) as Types.ComplexPluginOutput;
 
       expect(content.prepend).toContain(`import * as Operations from 'path/to/documents';`);
-      expect(content.content).toBeSimilarStringTo(`
-      export function useTestQuery(variables?: TestQueryVariables, baseOptions?: VueApolloComposable.UseQueryOptions<TestQuery, TestQueryVariables>) {
-        return VueApolloComposable.useQuery<TestQuery, TestQueryVariables>(Operations.test, variables, baseOptions);
-      }
-      `);
+      expect(content.content).toBeSimilarStringTo(`export function useTestQuery`);
       await validateTypeScript(content, schema, docs, {});
     });
 
@@ -884,11 +881,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
       })) as Types.ComplexPluginOutput;
 
       expect(content.prepend).toContain(`import * as Operations from 'path/to/documents';`);
-      expect(content.content).toBeSimilarStringTo(`
-      export function useTestMutation(baseOptions?: VueApolloComposable.UseMutationOptions<TestMutation, TestMutationVariables>) {
-        return VueApolloComposable.useMutation<TestMutation, TestMutationVariables>(Operations.test, baseOptions);
-      }
-      `);
+      expect(content.content).toBeSimilarStringTo(`export function useTestMutation`);
       await validateTypeScript(content, schema, docs, {});
     });
 
@@ -905,11 +898,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
       })) as Types.ComplexPluginOutput;
 
       expect(content.prepend).toContain(`import * as Operations from 'path/to/documents';`);
-      expect(content.content).toBeSimilarStringTo(`
-      export function useTestSubscription(variables?: TestSubscriptionVariables, baseOptions?: VueApolloComposable.UseSubscriptionOptions<TestSubscription, TestSubscriptionVariables>) {
-        return VueApolloComposable.useSubscription<TestSubscription, TestSubscriptionVariables>(Operations.test, variables, baseOptions);
-      }
-      `);
+      expect(content.content).toBeSimilarStringTo(`export function useTestSubscription`);
       await validateTypeScript(content, schema, docs, {});
     });
 
@@ -926,21 +915,9 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
       })) as Types.ComplexPluginOutput;
 
       expect(content.prepend).toContain(`import * as Operations from 'path/to/documents';`);
-      expect(content.content).toBeSimilarStringTo(`
-      export function useTestOneQuery(variables?: TestOneQueryVariables, baseOptions?: VueApolloComposable.UseQueryOptions<TestOneQuery, TestOneQueryVariables>) {
-        return VueApolloComposable.useQuery<TestOneQuery, TestOneQueryVariables>(Operations.testOne, variables, baseOptions);
-      }
-      `);
-      expect(content.content).toBeSimilarStringTo(`
-      export function useTestTwoMutation(baseOptions?: VueApolloComposable.UseMutationOptions<TestTwoMutation, TestTwoMutationVariables>) {
-        return VueApolloComposable.useMutation<TestTwoMutation, TestTwoMutationVariables>(Operations.testTwo, baseOptions);
-      }
-      `);
-
-      expect(content.content).toBeSimilarStringTo(`
-      export function useTestThreeSubscription(variables?: TestThreeSubscriptionVariables, baseOptions?: VueApolloComposable.UseSubscriptionOptions<TestThreeSubscription, TestThreeSubscriptionVariables>) {
-        return VueApolloComposable.useSubscription<TestThreeSubscription, TestThreeSubscriptionVariables>(Operations.testThree, variables, baseOptions);
-      }`);
+      expect(content.content).toBeSimilarStringTo(`export function useTestOneQuery`);
+      expect(content.content).toBeSimilarStringTo(`export function useTestTwoMutation`);
+      expect(content.content).toBeSimilarStringTo(`export function useTestThreeSubscription`);
 
       await validateTypeScript(content, schema, docs, {});
     });
@@ -958,11 +935,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
       })) as Types.ComplexPluginOutput;
 
       expect(content.prepend).toContain(`import * as Operations from './document.graphql';`);
-      expect(content.content).toBeSimilarStringTo(`
-      export function useTestQuery(variables?: TestQueryVariables, baseOptions?: VueApolloComposable.UseQueryOptions<TestQuery, TestQueryVariables>) {
-        return VueApolloComposable.useQuery<TestQuery, TestQueryVariables>(Operations.test, variables, baseOptions);
-      }
-      `);
+      expect(content.content).toBeSimilarStringTo(`export function useTestQuery`);
       await validateTypeScript(content, schema, docs, {});
     });
 
@@ -979,10 +952,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
       })) as Types.ComplexPluginOutput;
 
       expect(content.prepend).toContain(`import * as Operations from './document.graphql';`);
-      expect(content.content).toBeSimilarStringTo(`
-      export function useTestMutation(baseOptions?: VueApolloComposable.UseMutationOptions<TestMutation, TestMutationVariables>) {
-        return VueApolloComposable.useMutation<TestMutation, TestMutationVariables>(Operations.test, baseOptions);
-      }`);
+      expect(content.content).toBeSimilarStringTo(`export function useTestMutation`);
       await validateTypeScript(content, schema, docs, {});
     });
 
@@ -999,10 +969,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
       })) as Types.ComplexPluginOutput;
 
       expect(content.prepend).toContain(`import * as Operations from './document.graphql';`);
-      expect(content.content).toBeSimilarStringTo(`
-      export function useTestSubscription(variables?: TestSubscriptionVariables, baseOptions?: VueApolloComposable.UseSubscriptionOptions<TestSubscription, TestSubscriptionVariables>) {
-        return VueApolloComposable.useSubscription<TestSubscription, TestSubscriptionVariables>(Operations.test, variables, baseOptions);
-      }`);
+      expect(content.content).toBeSimilarStringTo(`export function useTestSubscription`);
       await validateTypeScript(content, schema, docs, {});
     });
 
@@ -1019,20 +986,9 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
       })) as Types.ComplexPluginOutput;
 
       expect(content.prepend).toContain(`import * as Operations from './document.graphql';`);
-      expect(content.content).toBeSimilarStringTo(`
-      export function useTestOneQuery(variables?: TestOneQueryVariables, baseOptions?: VueApolloComposable.UseQueryOptions<TestOneQuery, TestOneQueryVariables>) {
-        return VueApolloComposable.useQuery<TestOneQuery, TestOneQueryVariables>(Operations.testOne, variables, baseOptions);
-      }
-      `);
-      expect(content.content).toBeSimilarStringTo(`
-      export function useTestTwoMutation(baseOptions?: VueApolloComposable.UseMutationOptions<TestTwoMutation, TestTwoMutationVariables>) {
-        return VueApolloComposable.useMutation<TestTwoMutation, TestTwoMutationVariables>(Operations.testTwo, baseOptions);
-      }
-      `);
-      expect(content.content).toBeSimilarStringTo(`
-      export function useTestThreeSubscription(variables?: TestThreeSubscriptionVariables, baseOptions?: VueApolloComposable.UseSubscriptionOptions<TestThreeSubscription, TestThreeSubscriptionVariables>) {
-        return VueApolloComposable.useSubscription<TestThreeSubscription, TestThreeSubscriptionVariables>(Operations.testThree, variables, baseOptions);
-      }`);
+      expect(content.content).toBeSimilarStringTo(`export function useTestOneQuery`);
+      expect(content.content).toBeSimilarStringTo(`export function useTestTwoMutation`);
+      expect(content.content).toBeSimilarStringTo(`export function useTestThreeSubscription`);
 
       await validateTypeScript(content, schema, docs, {});
     });
