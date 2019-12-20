@@ -13,7 +13,7 @@
     "@graphql-codegen/plugin-helpers": "1.9.1",
     "@graphql-codegen/typescript": "1.9.1",
     "@graphql-codegen/visitor-plugin-common": "1.9.1",
-    "@graphql-toolkit/common": "0.7.5-alpha-5153853.28+5153853",
+    "@graphql-toolkit/common": "0.7.5-alpha-862bf62.29+862bf62",
     "tslib": "1.10.0"
   },
   "devDependencies": {
