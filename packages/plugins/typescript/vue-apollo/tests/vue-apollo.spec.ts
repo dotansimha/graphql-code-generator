@@ -526,7 +526,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
 
     it('Should generate required variables if required in graphql document', async () => {
       const documents = parse(/* GraphQL */ `
-        query feed($id: ID!) {
+        query feed($id: ID!, $name: String, $people: [String]!) {
           feed(id: $id) {
             id
           }
@@ -536,8 +536,9 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
             id
           }
         }
-        subscription subscribeToFeed($id: ID!) {
-          feedAdded(id: $id) {
+
+        subscription test($name: String!) {
+          commentAdded(repoFullName: $name) {
             id
           }
         }
@@ -555,20 +556,20 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
 
       // query with required variables
       expect(content.content).toBeSimilarStringTo(`
-      export function useFeedQuery(variables: FeedQueryVariables, baseOptions?: VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables>) {
+      export function useFeedQuery(variables: FeedQueryVariables | VueCompositionApi.Ref<FeedQueryVariables> | VueApolloComposable.ReactiveFunction<FeedQueryVariables>, baseOptions?: VueApolloComposable.UseQueryOptions<FeedQuery, FeedQueryVariables>) {
         return VueApolloComposable.useQuery<FeedQuery, FeedQueryVariables>(FeedDocument, variables, baseOptions);
-      }`);
-
-      // subscription with required variables
-      expect(content.content).toBeSimilarStringTo(`
-      export function useSubscribeToFeedSubscription(variables: SubscribeToFeedSubscriptionVariables, baseOptions?: VueApolloComposable.UseSubscriptionOptions<SubscribeToFeedSubscription, SubscribeToFeedSubscriptionVariables>) {
-        return VueApolloComposable.useSubscription<SubscribeToFeedSubscription, SubscribeToFeedSubscriptionVariables>(SubscribeToFeedDocument, variables, baseOptions);
       }`);
 
       // mutation with required variables
       expect(content.content).toBeSimilarStringTo(`
-      export function useSubmitRepositoryMutation(baseOptions: { Omit<VueApolloComposable.UseMutationOptions<SubmitRepositoryMutation>, 'variables'>; variables: SubmitRepositoryMutationVariables }) {
+      export function useSubmitRepositoryMutation(baseOptions?: VueApolloComposable.UseMutationOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>) {
         return VueApolloComposable.useMutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(SubmitRepositoryDocument, baseOptions);
+      }`);
+
+      // subscription with required variables
+      expect(content.content).toBeSimilarStringTo(`
+      export function useTestSubscription(variables: TestSubscriptionVariables, baseOptions?: VueApolloComposable.UseSubscriptionOptions<TestSubscription, TestSubscriptionVariables>) {
+        return VueApolloComposable.useSubscription<TestSubscription, TestSubscriptionVariables>(TestDocument, variables, baseOptions);
       }`);
 
       await validateTypeScript(content, schema, docs, {});
