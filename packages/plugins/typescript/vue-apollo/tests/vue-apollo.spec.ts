@@ -62,7 +62,7 @@ describe('Vue Apollo', () => {
   };
 
   describe('Imports', () => {
-    it('should import VueApollo dependencies', async () => {
+    it('should import VueApollo and VueCompositionApi dependencies', async () => {
       const docs = [{ filePath: '', content: basicDoc }];
       const content = (await plugin(
         schema,
@@ -74,6 +74,7 @@ describe('Vue Apollo', () => {
       )) as Types.ComplexPluginOutput;
 
       expect(content.prepend).toContain(`import * as VueApolloComposable from '@vue/apollo-composable';`);
+      expect(content.prepend).toContain(`import * as VueCompositionApi from '@vue/composition-api';`);
       expect(content.prepend).toContain(`import gql from 'graphql-tag';`);
       await validateTypeScript(content, schema, docs, {});
     });
