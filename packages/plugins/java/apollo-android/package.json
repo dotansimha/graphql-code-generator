@@ -23,7 +23,7 @@
     "java-ast": "0.1.0",
     "jest": "24.8.0",
     "ts-jest": "24.2.0",
-    "typescript": "3.7.3"
+    "typescript": "3.7.4"
   },
   "sideEffects": false,
   "main": "dist/index.cjs.js",
