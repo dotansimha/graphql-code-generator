@@ -15,9 +15,10 @@ export interface VueApolloPluginConfig extends ClientSideBasePluginConfig {
 interface BuildCompositionFunctions {
   operationName: string;
   operationType: 'Query' | 'Mutation' | 'Subscription';
-  documentNodeVariable: string;
   operationResultType: string;
   operationVariablesTypes: string;
+  operationHasNonNullableVariable: boolean;
+  documentNodeVariable: string;
 }
 
 function insertIf(condition: boolean, ...elements: any[]) {
@@ -41,8 +42,12 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
     autoBind(this);
   }
 
-  private getVueApolloComposableImport(): string {
+  private get vueApolloComposableImport(): string {
     return `import * as VueApolloComposable from '${this.config.vueApolloComposableImportFrom}';`;
+  }
+
+  private get vueCompositionApiImport(): string {
+    return `import * as VueCompositionApi from '@vue/composition-api';`;
   }
 
   private getDocumentNodeVariable(node: OperationDefinitionNode, documentVariableName: string): string {
@@ -130,6 +135,8 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
       useTypesPrefix: false,
     });
 
+    const operationHasNonNullableVariable = !!node.variableDefinitions?.some(({ type }) => type.kind === 'NonNullType');
+
     this.imports.add(this.vueApolloComposableImport);
     this.imports.add(this.vueCompositionApiImport);
 
@@ -142,26 +149,30 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
       operationType,
       operationResultType,
       operationVariablesTypes,
+      operationHasNonNullableVariable,
       documentNodeVariable,
     });
     return [...insertIf(this.config.addDocBlocks, [this.buildCompositionFunctionsJSDoc(node, operationName, operationType)]), compositionFunction, compositionFunctionResultType].join('\n');
   }
 
-  private buildCompositionFunction({ operationName, operationType, documentNodeVariable, operationResultType, operationVariablesTypes }: BuildCompositionFunctions): string {
+  private buildCompositionFunction({ operationName, operationType, operationHasNonNullableVariable, operationResultType, operationVariablesTypes, documentNodeVariable }: BuildCompositionFunctions): string {
     switch (operationType) {
       case 'Query':
-        return `export function use${operationName}(variables?: ${operationVariablesTypes}, baseOptions?: VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}>) {
+        return `export function use${operationName}(variables${
+          operationHasNonNullableVariable ? '' : '?'
+        }: ${operationVariablesTypes} | VueCompositionApi.Ref<${operationVariablesTypes}> | VueApolloComposable.ReactiveFunction<${operationVariablesTypes}>, baseOptions?: VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}>) {
           return VueApolloComposable.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${documentNodeVariable}, variables, baseOptions);
         }`;
       case 'Mutation':
-        // Omit<VueApolloComposable.UseMutationOptions<SubmitRepositoryMutation>, 'variables'>, variables: SubmitRepositoryMutationVariables }
         return `export function use${operationName}(baseOptions?: VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}>) {
             return VueApolloComposable.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${documentNodeVariable}, baseOptions);
           }`;
       case 'Subscription':
-        return `export function use${operationName}(variables?: ${operationVariablesTypes}, baseOptions?: VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}>) {
-            return VueApolloComposable.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${documentNodeVariable}, variables, baseOptions);
-          }`;
+        return `export function use${operationName}(variables${
+          operationHasNonNullableVariable ? '' : '?'
+        }: ${operationVariablesTypes}, baseOptions?: VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}>) {
+          return VueApolloComposable.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${documentNodeVariable}, variables, baseOptions);
+        }`;
     }
   }
 
