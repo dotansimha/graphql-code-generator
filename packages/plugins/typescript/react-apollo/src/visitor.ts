@@ -76,7 +76,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
   }
 
   private getOmitType(): string {
-    return `import * as ApolloClient from 'apollo-client';`;
+    return `export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;`;
   }
 
   private getOmitDeclaration(): string {
