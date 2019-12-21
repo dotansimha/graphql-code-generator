@@ -1165,6 +1165,63 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
     });
   });
 
+
+  describe('Imperative', () => {
+    it('Should generate imperative query', async () => {
+      const documents = parse(/* GraphQL */ `
+        query feed {
+          feed {
+            id
+            commentCount
+            repository {
+              full_name
+              html_url
+              owner {
+                avatar_url
+              }
+            }
+          }
+        }
+
+        mutation submitRepository($name: String) {
+          submitRepository(repoFullName: $name) {
+            id
+          }
+        }
+      `);
+      const docs = [{ filePath: '', content: documents }];
+
+      const content = (await plugin(
+        schema,
+        docs,
+        {
+          withHooks: false,
+          withComponent: false,
+          withHOC: false,
+          withMutationFn: false,
+          withImperativeQuery: true,
+         },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      console.log('Output', content.content);
+
+      // TODO assertions
+//       expect(content.content).toBeSimilarStringTo(`
+// export function useFeedQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<FeedQuery, FeedQueryVariables>) {
+//   return ApolloReactHooks.useQuery<FeedQuery, FeedQueryVariables>(FeedDocument, baseOptions);
+// }`);
+
+//       expect(content.content).toBeSimilarStringTo(`
+// export function useSubmitRepositoryMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>) {
+//   return ApolloReactHooks.useMutation<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>(SubmitRepositoryDocument, baseOptions);
+// }`);
+
+      await validateTypeScript(content, schema, docs, {});
+    });
+
   describe('ResultType', () => {
     const config: ReactApolloRawPluginConfig = {
       withHOC: false,

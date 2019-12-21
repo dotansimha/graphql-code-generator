@@ -82,6 +82,25 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    * ```
    */
   withMutationFn?: boolean;
+  /**
+   * @name withImperativeQuery
+   * @type boolean
+   * @description TODO description
+   * @default false
+   *
+   * @example
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *    - typescript-operations
+   *    - typescript-react-apollo
+   *  config:
+   *    withImperativeQuery: true
+   * ```
+   */
+  withImperativeQuery?: boolean;
 
   /**
    * @name apolloReactCommonImportFrom

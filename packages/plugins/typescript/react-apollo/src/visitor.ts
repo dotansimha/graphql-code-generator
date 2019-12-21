@@ -11,6 +11,7 @@ export interface ReactApolloPluginConfig extends ClientSideBasePluginConfig {
   withHOC: boolean;
   withHooks: boolean;
   withMutationFn: boolean;
+  withImperativeQuery: boolean;
   apolloReactCommonImportFrom: string;
   apolloReactComponentsImportFrom: string;
   apolloReactHocImportFrom: string;
@@ -33,6 +34,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
       withComponent: getConfigValue(rawConfig.withComponent, true),
       withHooks: getConfigValue(rawConfig.withHooks, false),
       withMutationFn: getConfigValue(rawConfig.withMutationFn, true),
+      withImperativeQuery: getConfigValue(rawConfig.withImperativeQuery, false),
       apolloReactCommonImportFrom: getConfigValue(rawConfig.apolloReactCommonImportFrom, rawConfig.reactApolloVersion === 3 ? '@apollo/client' : '@apollo/react-common'),
       apolloReactComponentsImportFrom: getConfigValue(rawConfig.apolloReactComponentsImportFrom, rawConfig.reactApolloVersion === 3 ? '@apollo/client' : '@apollo/react-components'),
       apolloReactHocImportFrom: getConfigValue(rawConfig.apolloReactHocImportFrom, rawConfig.reactApolloVersion === 3 ? '@apollo/client' : '@apollo/react-hoc'),
@@ -69,6 +71,14 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     return `import * as ApolloReactHooks from '${this.config.apolloReactHooksImportFrom}';`;
   }
 
+  private getApolloClientImport(): string {
+    return `import * as ApolloClient from 'apollo-client';`;
+  }
+
+  private getOmitType(): string {
+    return `import * as ApolloClient from 'apollo-client';`;
+  }
+
   private getOmitDeclaration(): string {
     return OMIT_TYPE;
   }
@@ -103,6 +113,32 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     if (node.operation === 'mutation') {
       this.imports.add(this.getApolloReactCommonImport());
       return `export type ${this.convertName(node.name.value + 'MutationFn')} = ApolloReactCommon.MutationFunction<${operationResultType}, ${operationVariablesTypes}>;`;
+    }
+    return null;
+  }
+
+  private _buildImperativeQuery(node: OperationDefinitionNode, documentVariableName: string, operationResultType: string, operationVariablesTypes: string): string {
+    if (node.operation === 'query') {
+      const operationName: string = this.convertName(node.name.value, { useTypesPrefix: false });
+      const document = this.getDocumentNodeVariable(node, documentVariableName);
+      this.imports.add(this.getApolloClientImport());
+      this.imports.add(this.getOmitType());
+
+      // return ApolloReactHoc.withQuery<TProps, ICurationPageEventByIdQuery, ICurationPageEventByIdQueryVariables, ICurationPageEventByIdProps<TChildProps>>(CurationPageEventByIdDocument, {
+      return `
+export function query${operationName}<T>(
+  client: ApolloClient.ApolloClient<T>,
+  options: Omit<
+    ApolloClient.QueryOptions<${operationVariablesTypes}>,
+    'query'
+  >,
+) {
+  return client.query<${operationResultType}>({
+    query: ${document},
+    ...options,
+  });
+}
+`;
     }
     return null;
   }
@@ -294,7 +330,8 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     const hooks = this.config.withHooks ? this._buildHooks(node, operationType, documentVariableName, operationResultType, operationVariablesTypes) : null;
     const resultType = this.config.withResultType ? this._buildResultType(node, operationType, operationResultType, operationVariablesTypes) : null;
     const mutationOptionsType = this.config.withMutationOptionsType ? this._buildWithMutationOptionsType(node, operationResultType, operationVariablesTypes) : null;
+    const imperativeQuery = this.config.withImperativeQuery ? this._buildImperativeQuery(node, documentVariableName, operationResultType, operationVariablesTypes) : null;
 
-    return [mutationFn, component, hoc, hooks, resultType, mutationOptionsType].filter(a => a).join('\n');
+    return [mutationFn, component, hoc, hooks, resultType, mutationOptionsType, imperativeQuery].filter(a => a).join('\n');
   }
 }
