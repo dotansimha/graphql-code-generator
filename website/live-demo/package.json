@@ -4,9 +4,9 @@
   "private": true,
   "homepage": "/live-demo/",
   "devDependencies": {
-    "aws-sdk": "2.593.0",
+    "aws-sdk": "2.595.0",
     "source-map-explorer": "2.1.2",
-    "typescript": "3.7.3"
+    "typescript": "3.7.4"
   },
   "dependencies": {
     "@graphql-codegen/add": "1.9.1",
@@ -33,9 +33,9 @@
     "@graphql-codegen/website": "1.9.1",
     "@material-ui/core": "4.8.0",
     "@types/codemirror": "0.0.81",
-    "@types/react": "16.9.16",
+    "@types/react": "16.9.17",
     "@types/react-dom": "16.9.4",
-    "codemirror": "5.49.2",
+    "codemirror": "5.50.0",
     "codemirror-graphql": "0.11.6",
     "js-yaml": "3.13.1",
     "react": "16.12.0",

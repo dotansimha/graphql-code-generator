@@ -15,7 +15,7 @@
   "devDependencies": {
     "bob-the-bundler": "0.2.2",
     "graphql": "14.5.8",
-    "typescript": "3.7.3"
+    "typescript": "3.7.4"
   },
   "sideEffects": false,
   "main": "dist/index.cjs.js",

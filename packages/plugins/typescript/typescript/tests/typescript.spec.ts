@@ -1,6 +1,6 @@
 import { validateTs } from '@graphql-codegen/testing';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
-import { buildSchema, parse } from 'graphql';
+import { buildSchema, parse, GraphQLSchema, GraphQLObjectType, GraphQLEnumType } from 'graphql';
 import { plugin } from '../src/index';
 
 describe('TypeScript', () => {
@@ -1981,6 +1981,33 @@ describe('TypeScript', () => {
         orderBy?: Maybe<OrderBy>,
         filter: Filter
       };
+    `);
+  });
+
+  it('should respect defined enum values', async () => {
+    const testSchema = new GraphQLSchema({
+      query: new GraphQLObjectType({
+        name: 'Query',
+        fields: {
+          foo: {
+            type: new GraphQLEnumType({
+              name: 'Foo',
+              values: {
+                Bar: {
+                  value: 'Qux',
+                },
+              },
+            }),
+          },
+        },
+      }),
+    });
+    const output = (await plugin(testSchema, [], {}, { outputFile: 'graphql.ts' })) as Types.ComplexPluginOutput;
+
+    expect(output.content).toBeSimilarStringTo(`
+      export enum Foo {
+        Bar = 'Qux'
+      }
     `);
   });
 });
