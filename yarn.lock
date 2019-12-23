@@ -656,11 +656,6 @@
     esutils "^2.0.2"
     js-tokens "^4.0.0"
 
-"@babel/parser@7.7.4", "@babel/parser@^7.7.4":
-  version "7.7.4"
-  resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.7.4.tgz#75ab2d7110c2cf2fa949959afb05fa346d2231bb"
-  integrity sha512-jIwvLO0zCL+O/LmEJQjWA75MQTWwx3c3u2JOTDK5D3/9egrWRRA0/0hk9XXywYnXZVVpzrBYeIQTmhwUaePI9g==
-
 "@babel/parser@7.7.7":
   version "7.7.7"
   resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.7.7.tgz#1b886595419cf92d811316d5b715a53ff38b4937"
@@ -680,6 +675,11 @@
   version "7.6.0"
   resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.6.0.tgz#3e05d0647432a8326cb28d0de03895ae5a57f39b"
   integrity sha512-+o2q111WEx4srBs7L9eJmcwi655eD8sXniLqMB93TBK9GrNzGrxDWSjiqz2hLU0Ha8MTXFIP0yd9fNdP+m43ZQ==
+
+"@babel/parser@^7.7.4":
+  version "7.7.4"
+  resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.7.4.tgz#75ab2d7110c2cf2fa949959afb05fa346d2231bb"
+  integrity sha512-jIwvLO0zCL+O/LmEJQjWA75MQTWwx3c3u2JOTDK5D3/9egrWRRA0/0hk9XXywYnXZVVpzrBYeIQTmhwUaePI9g==
 
 "@babel/plugin-proposal-async-generator-functions@^7.2.0":
   version "7.2.0"
@@ -2032,14 +2032,13 @@
     apollo-language-server "1.17.2"
     tslib "1.10.0"
 
-"@graphql-toolkit/code-file-loader@0.7.4":
-  version "0.7.4"
-  resolved "https://registry.yarnpkg.com/@graphql-toolkit/code-file-loader/-/code-file-loader-0.7.4.tgz#17f508473ca97fcbd7b530d7606529b94af9cc28"
-  integrity sha512-FCLHOPfwSzJduFBH3xpjT9+GsVsZKsyikKpFqnHRj7k4isYP67MEEJ7KshWvzC9hwEeySxCzVbN7UwlYhIRtwQ==
+"@graphql-toolkit/code-file-loader@0.7.5":
+  version "0.7.5"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/code-file-loader/-/code-file-loader-0.7.5.tgz#065ea6d30511baf24fe79a9cadd3258e59b0e761"
+  integrity sha512-nJVkmcvYRfcx+wxJR7hyjmko4gEZSJOhp0UEPny3LOf4PIDUvDvtsKmz1P4J2RIRph9wieEG0jgkLoEvqE7vCA==
   dependencies:
-    "@graphql-toolkit/common" "0.7.4"
-    "@graphql-toolkit/graphql-tag-pluck" "0.7.4"
-    is-valid-path "0.1.1"
+    "@graphql-toolkit/common" "0.7.5"
+    "@graphql-toolkit/graphql-tag-pluck" "0.7.5"
     tslib "1.10.0"
 
 "@graphql-toolkit/common@0.6.2":
@@ -2118,14 +2117,16 @@
     is-valid-path "0.1.1"
     tslib "1.10.0"
 
-"@graphql-toolkit/graphql-tag-pluck@0.7.4":
-  version "0.7.4"
-  resolved "https://registry.yarnpkg.com/@graphql-toolkit/graphql-tag-pluck/-/graphql-tag-pluck-0.7.4.tgz#a608ef067cf51fb521b9d13552b33cc5e0636df5"
-  integrity sha512-41gc5AHNoabnk+lXKHdyjY2aoDOTmaHY5Fda99I0MVYmgrULJla/TxAKeyBgphxhQ/f3W1KXlawsFaiLAJ9xUg==
+"@graphql-toolkit/graphql-tag-pluck@0.7.5":
+  version "0.7.5"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/graphql-tag-pluck/-/graphql-tag-pluck-0.7.5.tgz#09f65e41bb220716595a758158285f09cbe5c294"
+  integrity sha512-dvbdwTivzWP66wtqSSJnr6Wesgk6zSo1M8XQGuMtsHmgbhXWwrlGYvz7CEUn0cIFKpi5cpyduKZG8Xy3UX6sIQ==
   dependencies:
-    "@babel/parser" "7.7.4"
+    "@babel/parser" "7.7.7"
     "@babel/traverse" "7.7.4"
     "@babel/types" "7.7.4"
+  optionalDependencies:
+    vue-template-compiler "^2.6.10"
 
 "@graphql-toolkit/json-file-loader@0.6.2":
   version "0.6.2"
@@ -7202,6 +7203,11 @@ dateformat@^3.0.0:
   resolved "https://registry.yarnpkg.com/dateformat/-/dateformat-3.0.3.tgz#a6e37499a4d9a9cf85ef5872044d62901c9889ae"
   integrity sha512-jyCETtSl3VMZMWeRo7iY1FL19ges1t55hMo5yaam4Jrsm5EPL89UQkoQRyiI+Yf4k8r2ZpdngkV8hr1lIdjb3Q==
 
+de-indent@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/de-indent/-/de-indent-1.0.2.tgz#b2038e846dc33baa5796128d0804b455b8c1e21d"
+  integrity sha1-sgOOhG3DO6pXlhKNCAS0VbjB4h0=
+
 debounce@1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/debounce/-/debounce-1.2.0.tgz#44a540abc0ea9943018dc0eaa95cce87f65cd131"
@@ -9746,7 +9752,7 @@ hash.js@^1.0.0, hash.js@^1.0.3:
     inherits "^2.0.3"
     minimalistic-assert "^1.0.1"
 
-he@1.2.x:
+he@1.2.x, he@^1.1.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/he/-/he-1.2.0.tgz#84ae65fa7eafb165fddb61566ae14baf05664f0f"
   integrity sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==
@@ -17983,6 +17989,14 @@ vscode-uri@^1.0.6:
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/vscode-uri/-/vscode-uri-1.0.8.tgz#9769aaececae4026fb6e22359cb38946580ded59"
   integrity sha512-obtSWTlbJ+a+TFRYGaUumtVwb+InIUVI0Lu0VBUAPmj2cU5JutEXg3xUE0c2J5Tcy7h2DEKVJBFi+Y9ZSFzzPQ==
+
+vue-template-compiler@^2.6.10:
+  version "2.6.11"
+  resolved "https://registry.yarnpkg.com/vue-template-compiler/-/vue-template-compiler-2.6.11.tgz#c04704ef8f498b153130018993e56309d4698080"
+  integrity sha512-KIq15bvQDrcCjpGjrAhx4mUlyyHfdmTaoNfeoATHLAiWB+MU3cx4lOzMwrnUh9cCxy0Lt1T11hAFY6TQgroUAA==
+  dependencies:
+    de-indent "^1.0.2"
+    he "^1.1.0"
 
 w3c-hr-time@^1.0.1:
   version "1.0.1"
