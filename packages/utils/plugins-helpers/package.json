@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@graphql-toolkit/common": "0.7.5",
-    "change-case": "3.1.0",
+    "change-case": "4.1.1",
     "common-tags": "1.8.0",
     "import-from": "3.0.0",
     "tslib": "1.10.0"
