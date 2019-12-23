@@ -3,7 +3,7 @@ import { StencilApolloRawPluginConfig, StencilComponentType } from './index';
 import autoBind from 'auto-bind';
 import { FragmentDefinitionNode, OperationDefinitionNode, GraphQLSchema } from 'graphql';
 import { toPascalCase } from '@graphql-codegen/plugin-helpers';
-import changeCase from 'change-case';
+import { paramCase } from 'param-case';
 
 export interface StencilApolloPluginConfig extends ClientSideBasePluginConfig {
   componentType: StencilComponentType;
@@ -43,7 +43,7 @@ export class StencilApolloVisitor extends ClientSideBaseVisitor<StencilApolloRaw
     const operationName: string = this.convertName(node.name.value);
     const propsTypeName: string = this.convertName(operationName + 'Props');
     const rendererSignature = toPascalCase(`${operationType}Renderer`) + `<${operationResultType}, ${operationVariablesTypes}>`;
-    const apolloStencilComponentTag = changeCase.paramCase(`Apollo${operationType}`);
+    const apolloStencilComponentTag = paramCase(`Apollo${operationType}`);
     const componentName = this.convertName(`${operationName}Component`);
 
     const propsVar = `
@@ -64,12 +64,12 @@ export const ${componentName} = (props: ${propsTypeName}, children: [StencilApol
 
   private _buildClassComponent(node: OperationDefinitionNode, documentVariableName: string, operationType: string, operationResultType: string, operationVariablesTypes: string): string {
     const componentName: string = this.convertName(node.name.value + 'Component');
-    const apolloStencilComponentTag = changeCase.paramCase(`Apollo${operationType}`);
+    const apolloStencilComponentTag = paramCase(`Apollo${operationType}`);
     const rendererSignature = toPascalCase(`${operationType}Renderer`);
 
     return `
 @Component({
-    tag: '${changeCase.paramCase(`Apollo${toPascalCase(node.name.value)}`)}'
+    tag: '${paramCase(`Apollo${toPascalCase(node.name.value)}`)}'
 })
 export class ${componentName} {
     @Prop() renderer: import('stencil-apollo').${rendererSignature}<${operationResultType}, ${operationVariablesTypes}>;

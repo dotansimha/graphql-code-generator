@@ -52,17 +52,15 @@ export const loadDocuments = async (documentPointers: UnnormalizedTypeDefPointer
     ...config,
   });
 
-  return loadedFromToolkit
-    .map(({ location, document }) => ({ filePath: location, content: document }))
-    .sort((a, b) => {
-      if (a.filePath < b.filePath) {
-        return -1;
-      }
+  return loadedFromToolkit.map(({ location, document }) => ({ filePath: location, content: document })).sort((a, b) => {
+    if (a.filePath < b.filePath) {
+      return -1;
+    }
 
-      if (a.filePath > b.filePath) {
-        return 1;
-      }
+    if (a.filePath > b.filePath) {
+      return 1;
+    }
 
-      return 0;
-    });
+    return 0;
+  });
 };

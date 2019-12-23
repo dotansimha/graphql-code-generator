@@ -138,7 +138,7 @@ describe('TypeScript Mongo', () => {
     });
 
     it('Should allow to customize namingConvention', async () => {
-      const result = await plugin(schema, [], { namingConvention: 'change-case#lowerCase' }, { outputFile: '' });
+      const result = await plugin(schema, [], { namingConvention: 'lower-case#lowerCase' }, { outputFile: '' });
       expect(result).toContain('export type userdbobject = {');
       expect(result).toContain(`export type feeditemdbinterface = {`);
       await validate(result, schema, {});

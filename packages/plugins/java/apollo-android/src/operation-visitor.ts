@@ -32,7 +32,7 @@ import { VisitorConfig } from './visitor-config';
 import { singular, isPlural } from 'pluralize';
 import { visitFieldArguments } from './field-arguments';
 import { FragmentDefinitionNode, GraphQLInterfaceType } from 'graphql';
-import { camelCase } from 'change-case';
+import { camelCase } from 'camel-case';
 
 export interface ChildField {
   type: GraphQLNamedType;

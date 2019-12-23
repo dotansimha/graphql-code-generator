@@ -318,13 +318,11 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
     }
 
     if (this.config.documentMode === DocumentMode.graphQLTag) {
-      (this._fragments || [])
-        .filter(f => f.isExternal && f.importFrom && (!f['level'] || (f['level'] !== undefined && f['level'] === 0)))
-        .forEach(externalFragment => {
-          const identifierName = this._getFragmentName(externalFragment.name);
+      (this._fragments || []).filter(f => f.isExternal && f.importFrom && (!f['level'] || (f['level'] !== undefined && f['level'] === 0))).forEach(externalFragment => {
+        const identifierName = this._getFragmentName(externalFragment.name);
 
-          imports.push(`import { ${identifierName} } from '${externalFragment.importFrom}';`);
-        });
+        imports.push(`import { ${identifierName} } from '${externalFragment.importFrom}';`);
+      });
     }
 
     return imports;

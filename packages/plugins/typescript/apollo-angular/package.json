@@ -15,7 +15,8 @@
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "1.9.1",
     "@graphql-codegen/visitor-plugin-common": "1.9.1",
-    "tslib": "1.10.0"
+    "tslib": "1.10.0",
+    "camel-case": "4.1.1"
   },
   "devDependencies": {
     "bob-the-bundler": "0.2.2",

@@ -2,7 +2,7 @@ import { ClientSideBaseVisitor, ClientSideBasePluginConfig, LoadedFragment, inde
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, print, visit, GraphQLSchema, Kind } from 'graphql';
 import { ApolloAngularRawPluginConfig } from './index';
-import { camelCase } from 'change-case';
+import { camelCase } from 'camel-case';
 
 const R_MOD = /module\:\s*"([^"]+)"/; // matches: module: "..."
 const R_NAME = /name\:\s*"([^"]+)"/; // matches: name: "..."

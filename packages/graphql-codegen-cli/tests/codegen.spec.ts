@@ -386,7 +386,7 @@ describe('Codegen Executor', () => {
         schema: SIMPLE_TEST_SCHEMA,
         documents: `query root { f }`,
         config: {
-          namingConvention: 'change-case#lowerCase',
+          namingConvention: 'lower-case#lowerCase',
         },
         generates: {
           'out1.ts': ['typescript', 'typescript-operations'],
@@ -405,13 +405,13 @@ describe('Codegen Executor', () => {
         generates: {
           'out1.ts': {
             config: {
-              namingConvention: 'change-case#lowerCase',
+              namingConvention: 'lower-case#lowerCase',
             },
             plugins: ['typescript', 'typescript-operations'],
           },
           'out2.ts': {
             config: {
-              namingConvention: 'change-case#upperCase',
+              namingConvention: 'upper-case#upperCase',
             },
             plugins: ['typescript', 'typescript-operations'],
           },
@@ -432,7 +432,7 @@ describe('Codegen Executor', () => {
             plugins: [
               {
                 'typescript-operations': {
-                  namingConvention: 'change-case#lowerCase',
+                  namingConvention: 'lower-case#lowerCase',
                 },
               },
             ],
@@ -450,14 +450,14 @@ describe('Codegen Executor', () => {
         schema: SIMPLE_TEST_SCHEMA,
         documents: `query root { f }`,
         config: {
-          namingConvention: 'change-case#lowerCase',
+          namingConvention: 'lower-case#lowerCase',
         },
         generates: {
           'out1.ts': {
             plugins: [
               {
                 'typescript-operations': {
-                  namingConvention: 'change-case#upperCase',
+                  namingConvention: 'upper-case#upperCase',
                 },
               },
             ],
@@ -466,7 +466,7 @@ describe('Codegen Executor', () => {
             plugins: [
               {
                 'typescript-operations': {
-                  namingConvention: 'change-case#pascalCase',
+                  namingConvention: 'pascal-case#pascalCase',
                 },
               },
             ],

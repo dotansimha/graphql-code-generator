@@ -222,10 +222,7 @@ describe('Apollo Angular', () => {
           }
         }
       `);
-      const docs = [
-        { filePath: '', content: myFeed },
-        { filePath: 'a.ts', content: myExtraFeed },
-      ];
+      const docs = [{ filePath: '', content: myFeed }, { filePath: 'a.ts', content: myExtraFeed }];
       const content = (await plugin(
         modifiedSchema,
         docs,

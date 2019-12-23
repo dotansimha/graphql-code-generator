@@ -4,7 +4,7 @@ import { executeCodegen } from './codegen';
 import { createWatcher } from './utils/watcher';
 import { fileExists, readSync, writeSync } from './utils/file-system';
 import { sync as mkdirpSync } from 'mkdirp';
-import { dirname } from 'path';
+import { dirname, join } from 'path';
 import { debugLog } from './utils/debugging';
 import { CodegenContext, ensureContext } from './config';
 import { createHash } from 'crypto';
@@ -58,7 +58,7 @@ export async function generate(input: CodegenContext | Types.Config, saveToFile 
         await lifecycleHooks(result.hooks).beforeOneFileWrite(result.filename);
         await lifecycleHooks(config.hooks).beforeOneFileWrite(result.filename);
         mkdirpSync(basedir);
-        writeSync(result.filename, result.content);
+        writeSync(join(input.cwd || process.cwd(), result.filename), result.content);
         await lifecycleHooks(result.hooks).afterOneFileWrite(result.filename);
         await lifecycleHooks(config.hooks).afterOneFileWrite(result.filename);
       })

@@ -238,7 +238,7 @@ describe('TypeScript', () => {
         }
 
         type Query {
-          a(i: UpdateFilterOptionInput, t: FilterOption): String
+          exampleQuery(i: UpdateFilterOptionInput, t: FilterOption): String
         }
       `);
 
@@ -266,7 +266,7 @@ describe('TypeScript', () => {
         newOption: FilterOption,
       };`);
       expect(output).toBeSimilarStringTo(`   
-      export type IQueryAArgs = {
+      export type IQueryExampleQueryArgs = {
         i?: Maybe<IUpdateFilterOptionInput>,
         t?: Maybe<FilterOption>
       };`);
@@ -290,7 +290,7 @@ describe('TypeScript', () => {
         [],
         {
           typesPrefix: 'I',
-          namingConvention: { enumValues: 'change-case#constantCase' },
+          namingConvention: { enumValues: 'constant-case#constantCase' },
           enumValues: {
             MyEnum: './files#MyEnum',
           },
@@ -569,7 +569,7 @@ describe('TypeScript', () => {
         [],
         {
           namingConvention: {
-            typeNames: 'change-case#lowerCase',
+            typeNames: 'lower-case#lowerCase',
             enumValues: 'keep',
           },
         },
@@ -616,7 +616,7 @@ describe('TypeScript', () => {
         [],
         {
           namingConvention: {
-            enumValues: 'change-case#lowerCase',
+            enumValues: 'lower-case#lowerCase',
           },
         },
         { outputFile: '' }
@@ -645,7 +645,7 @@ describe('TypeScript', () => {
         {
           namingConvention: {
             typeNames: 'keep',
-            enumValues: 'change-case#lowerCase',
+            enumValues: 'lower-case#lowerCase',
           },
         },
         { outputFile: '' }
@@ -1324,7 +1324,7 @@ describe('TypeScript', () => {
   describe('Naming Convention & Types Prefix', () => {
     it('Should use custom namingConvention for type name and args typename', async () => {
       const schema = buildSchema(`type MyType { foo(a: String!, b: String, c: [String], d: [Int!]!): String }`);
-      const result = (await plugin(schema, [], { namingConvention: 'change-case#lowerCase' }, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = (await plugin(schema, [], { namingConvention: 'lower-case#lowerCase' }, { outputFile: '' })) as Types.ComplexPluginOutput;
 
       expect(result.content).toBeSimilarStringTo(`
         export type mytypefooargs = {
@@ -1346,7 +1346,7 @@ describe('TypeScript', () => {
 
     it('Should use custom namingConvention and add custom prefix', async () => {
       const schema = buildSchema(`type MyType { foo(a: String!, b: String, c: [String], d: [Int!]!): String }`);
-      const result = (await plugin(schema, [], { namingConvention: 'change-case#lowerCase', typesPrefix: 'I' }, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = (await plugin(schema, [], { namingConvention: 'lower-case#lowerCase', typesPrefix: 'I' }, { outputFile: '' })) as Types.ComplexPluginOutput;
 
       expect(result.content).toBeSimilarStringTo(`
         export type Imytypefooargs = {
@@ -1430,7 +1430,7 @@ describe('TypeScript', () => {
   `);
 
     it('Should generate correct values when using links between types - lowerCase', async () => {
-      const result = (await plugin(schema, [], { namingConvention: 'change-case#lowerCase' }, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = (await plugin(schema, [], { namingConvention: 'lower-case#lowerCase' }, { outputFile: '' })) as Types.ComplexPluginOutput;
 
       expect(result.content).toBeSimilarStringTo(`
         export enum myenum {

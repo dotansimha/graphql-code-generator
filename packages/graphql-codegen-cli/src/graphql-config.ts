@@ -1,14 +1,21 @@
 import { loadConfig, GraphQLExtensionDeclaration, GraphQLConfig } from 'graphql-config';
+import { ApolloEngineLoader } from '@graphql-toolkit/apollo-engine-loader';
 import { CodeFileLoader } from '@graphql-toolkit/code-file-loader';
+import { GitLoader } from '@graphql-toolkit/git-loader';
+import { GithubLoader } from '@graphql-toolkit/github-loader';
+import { PrismaLoader } from '@graphql-toolkit/prisma-loader';
 
-const CodegenExtension: GraphQLExtensionDeclaration = api => {
+export const CodegenExtension: GraphQLExtensionDeclaration = api => {
   // Schema
   api.loaders.schema.register(new CodeFileLoader());
+  api.loaders.schema.register(new GitLoader());
+  api.loaders.schema.register(new GithubLoader());
+  api.loaders.schema.register(new ApolloEngineLoader());
+  api.loaders.schema.register(new PrismaLoader());
   // Documents
   api.loaders.documents.register(new CodeFileLoader());
-
-  // KAMIL: maybe we should let extensions return an array with schema and document loaders
-  // instead of exposing an api for that
+  api.loaders.documents.register(new GitLoader());
+  api.loaders.documents.register(new GithubLoader());
 
   return {
     name: 'codegen',

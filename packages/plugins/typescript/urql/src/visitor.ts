@@ -2,7 +2,7 @@ import { ClientSideBaseVisitor, ClientSideBasePluginConfig, LoadedFragment, getC
 import { UrqlRawPluginConfig } from './index';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, Kind } from 'graphql';
-import { pascalCase } from 'change-case';
+import { pascalCase } from 'pascal-case';
 import { GraphQLSchema } from 'graphql';
 
 export interface UrqlPluginConfig extends ClientSideBasePluginConfig {

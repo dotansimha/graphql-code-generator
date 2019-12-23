@@ -3,7 +3,8 @@ import { ReactApolloRawPluginConfig } from './index';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, Kind } from 'graphql';
 import { toPascalCase, Types } from '@graphql-codegen/plugin-helpers';
-import { pascalCase, camelCase } from 'change-case';
+import { pascalCase } from 'pascal-case';
+import { camelCase } from 'camel-case';
 import { GraphQLSchema } from 'graphql';
 
 export interface ReactApolloPluginConfig extends ClientSideBasePluginConfig {

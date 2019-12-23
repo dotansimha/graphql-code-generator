@@ -3,7 +3,7 @@
   "scripts": {
     "clean": "lerna clean --yes && rm -rf node_modules",
     "build": "lerna run build --ignore @graphql-codegen/live-demo --ignore @graphql-codegen/website",
-    "test": "lerna run test --ignore @graphql-codegen/live-demo --ignore @graphql-codegen/website",
+    "test": "lerna run test --ignore @graphql-codegen/live-demo --ignore @graphql-codegen/website --parallel",
     "lint": "lerna run lint --ignore @graphql-codegen/live-demo --ignore @graphql-codegen/website",
     "test-and-build": " yarn build && yarn test",
     "prerelease": "yarn test-and-build",
