@@ -1,7 +1,6 @@
-import { loadTypedefsUsingLoaders, loadDocumentsUsingLoaders as loadDocumentsToolkit, UnnormalizedTypeDefPointer } from '@graphql-toolkit/core';
-import { mergeTypeDefs } from '@graphql-toolkit/schema-merging';
+import { loadSchemaUsingLoaders, loadDocumentsUsingLoaders as loadDocumentsToolkit, UnnormalizedTypeDefPointer, loadTypedefsUsingLoaders } from '@graphql-toolkit/core';
 import { Types } from '@graphql-codegen/plugin-helpers';
-import { DocumentNode } from 'graphql';
+import { GraphQLSchema, DocumentNode } from 'graphql';
 import { DetailedError } from '@graphql-codegen/core';
 import { CodeFileLoader } from '@graphql-toolkit/code-file-loader';
 import { GitLoader } from '@graphql-toolkit/git-loader';
@@ -11,13 +10,19 @@ import { JsonFileLoader } from '@graphql-toolkit/json-file-loader';
 import { UrlLoader } from '@graphql-toolkit/url-loader';
 import { ApolloEngineLoader } from '@graphql-toolkit/apollo-engine-loader';
 import { PrismaLoader } from '@graphql-toolkit/prisma-loader';
+import { mergeTypeDefs } from '@graphql-toolkit/schema-merging';
 import { join } from 'path';
 
-export const loadSchema = async (schemaPointers: UnnormalizedTypeDefPointer, config: Types.Config): Promise<DocumentNode> => {
+export const loadSchema = async (schemaPointers: UnnormalizedTypeDefPointer, config: Types.Config, out?: 'GraphQLSchema' | 'DocumentNode'): Promise<GraphQLSchema | DocumentNode> => {
   try {
-    const docs = await loadTypedefsUsingLoaders([new CodeFileLoader(), new GitLoader(), new GithubLoader(), new GraphQLFileLoader(), new JsonFileLoader(), new UrlLoader(), new ApolloEngineLoader(), new PrismaLoader()], schemaPointers, config);
-
-    return mergeTypeDefs(docs.map(({ document }) => document));
+    const loaders = [new CodeFileLoader(), new GitLoader(), new GithubLoader(), new GraphQLFileLoader(), new JsonFileLoader(), new UrlLoader(), new ApolloEngineLoader(), new PrismaLoader()];
+    if (out === 'DocumentNode') {
+      const documents = await loadTypedefsUsingLoaders(loaders, schemaPointers, config);
+      return mergeTypeDefs(documents.map(doc => doc.document));
+    } else {
+      const schema = await loadSchemaUsingLoaders(loaders, schemaPointers, config);
+      return schema;
+    }
   } catch (e) {
     throw new DetailedError(
       'Failed to load schema',

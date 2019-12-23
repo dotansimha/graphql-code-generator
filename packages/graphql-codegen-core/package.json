@@ -41,8 +41,8 @@
   },
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "1.9.1",
-    "@graphql-toolkit/common": "0.7.4",
-    "@graphql-toolkit/schema-merging": "0.7.4",
+    "@graphql-toolkit/common": "0.7.5",
+    "@graphql-toolkit/schema-merging": "0.7.5",
     "tslib": "1.10.0"
   },
   "devDependencies": {

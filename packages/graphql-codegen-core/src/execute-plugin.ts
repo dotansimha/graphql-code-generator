@@ -32,9 +32,7 @@ export async function executePlugin(options: ExecutePluginOptions, plugin: Codeg
     );
   }
 
-  const schema = options.schemaAst;
-
-  const outputSchema: GraphQLSchema = schema || buildASTSchema(options.schema);
+  const outputSchema: GraphQLSchema = options.schemaAst || buildASTSchema(options.schema, options.config as any);
   const documents = options.documents || [];
 
   if (plugin.validate && typeof plugin.validate === 'function') {

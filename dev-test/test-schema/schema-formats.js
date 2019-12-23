@@ -13,7 +13,23 @@ const GraphQL = require("graphql");
 const fs = require('fs');
 const path = require('path');
 const schemaText = fs.readFileSync(path.join(__dirname, "schema.graphql"), 'utf8');
-const schemaObject = GraphQL.buildSchema(schemaText);
+const schemaObject = new GraphQL.GraphQLSchema({
+    query: new GraphQL.GraphQLObjectType({
+        name: 'Query',
+        fields: {
+            foo: {
+                type: new GraphQL.GraphQLEnumType({
+                    name: 'Foo',
+                    values: {
+                        BAR: {
+                            value: 'QUX',
+                        }
+                    }
+                })
+            }
+        }
+    })
+});
 const schemaAst = GraphQL.parse(schemaText);
 const schemaJson = require("./schema.json");
 module.exports.schemaText = schemaText;
