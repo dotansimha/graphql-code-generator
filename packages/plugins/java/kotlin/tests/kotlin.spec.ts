@@ -93,7 +93,7 @@ describe('Kotlin', () => {
         Admin("ADMIN"),
         User("USER"),
         Editor("EDITOR");
-        
+
         companion object {
           @JvmStatic
           fun valueOfLabel(label: String): UserRole? {
@@ -130,13 +130,7 @@ describe('Kotlin', () => {
       expect(result).toBeSimilarStringTo(`data class InputWithArrayInput(
         val f: Iterable<String>? = null,
         val g: Iterable<SearchUserInput>? = null
-      ) {
-        @Suppress("UNCHECKED_CAST")
-        constructor(args: Map<String, Any>) : this(
-          args["f"] as Iterable<String>?,
-          args["g"]?.let { g -> (g as List<Map<String, Any>>).map { SearchUserInput(it) } }
-        )
-      }`);
+      )`);
     });
 
     it('Should generate input class per each type with field arguments', async () => {
@@ -146,12 +140,7 @@ describe('Kotlin', () => {
       expect(result).toBeSimilarStringTo(`data class UserFriendsArgs(
         val skip: Int? = null,
         val limit: Int? = null
-      ) {
-        constructor(args: Map<String, Any>) : this(
-          args["skip"] as Int?,
-          args["limit"] as Int?
-        )
-      }`);
+      )`);
     });
 
     it('Should generate argument defaults', async () => {
@@ -161,12 +150,7 @@ describe('Kotlin', () => {
       expect(result).toBeSimilarStringTo(`data class UserHobbiesArgs(
         val skip: Int? = 0,
         val limit: Int = 10
-      ) {
-        constructor(args: Map<String, Any>) : this(
-          args["skip"] as Int? ?: 0,
-          args["limit"] as Int? ?: 10
-        )
-      }`);
+      )`);
     });
 
     it('Should generate input class per each query with arguments', async () => {
@@ -175,21 +159,12 @@ describe('Kotlin', () => {
       // language=kotlin
       expect(result).toBeSimilarStringTo(`data class QueryUserArgs(
         val id: Any
-      ) {
-        constructor(args: Map<String, Any>) : this(
-          args["id"] as Any
-        )
-      }`);
+      )`);
 
       // language=kotlin
       expect(result).toBeSimilarStringTo(`data class QuerySearchUserArgs(
         val searchFields: SearchUserInput
-      ) {
-        @Suppress("UNCHECKED_CAST")
-        constructor(args: Map<String, Any>) : this(
-            SearchUserInput(args["searchFields"] as Map<String, Any>)
-        )
-      }`);
+      )`);
     });
 
     it('Should generate input class per each input, also with nested input types', async () => {
@@ -198,11 +173,7 @@ describe('Kotlin', () => {
       // language=kotlin
       expect(result).toBeSimilarStringTo(`data class MetadataSearchInput(
           val something: Int? = null
-        ) {
-          constructor(args: Map<String, Any>) : this(
-              args["something"] as Int?
-          )
-        }`);
+        )`);
 
       // language=kotlin
       expect(result).toBeSimilarStringTo(`data class SearchUserInput(
@@ -211,16 +182,7 @@ describe('Kotlin', () => {
           val name: String? = null,
           val sort: ResultSort? = null,
           val metadata: MetadataSearchInput? = null
-        ) {
-          @Suppress("UNCHECKED_CAST")
-          constructor(args: Map<String, Any>) : this(
-              args["username"] as String?,
-              args["email"] as String?,
-              args["name"] as String?,
-              args["sort"] as ResultSort?,
-              args["metadata"]?.let { MetadataSearchInput(it as Map<String, Any>) }
-          )
-        }`);
+        )`);
     });
   });
 });
