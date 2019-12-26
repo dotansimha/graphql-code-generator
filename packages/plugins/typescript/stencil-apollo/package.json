@@ -22,7 +22,7 @@
   "devDependencies": {
     "bob-the-bundler": "0.2.2",
     "@graphql-codegen/testing": "1.9.1",
-    "@types/node": "10.17.12",
+    "@types/node": "10.17.13",
     "graphql": "14.5.8",
     "jest": "24.9.0",
     "ts-jest": "24.2.0",
