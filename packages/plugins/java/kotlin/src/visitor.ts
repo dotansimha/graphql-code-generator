@@ -18,7 +18,7 @@ import {
 import { wrapTypeWithModifiers } from '@graphql-codegen/java-common';
 
 export const KOTLIN_SCALARS = {
-  ID: 'Any',
+  ID: 'String',
   String: 'String',
   Boolean: 'Boolean',
   Int: 'Int',
