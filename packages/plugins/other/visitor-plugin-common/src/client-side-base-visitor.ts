@@ -1,6 +1,6 @@
 import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor';
 import autoBind from 'auto-bind';
-import { FragmentDefinitionNode, print, OperationDefinitionNode, visit, FragmentSpreadNode, GraphQLSchema } from 'graphql';
+import { FragmentDefinitionNode, print, OperationDefinitionNode, visit, FragmentSpreadNode, GraphQLSchema, Kind } from 'graphql';
 import { DepGraph } from 'dependency-graph';
 import gqlTag from 'graphql-tag';
 import { toPascalCase, Types } from '@graphql-codegen/plugin-helpers';
@@ -29,6 +29,7 @@ export interface RawClientSideBasePluginConfig extends RawConfig {
   documentMode?: DocumentMode;
   importOperationTypesFrom?: string;
   importDocumentNodeExternallyFrom?: string;
+  importDocumentNodeFragments?: boolean;
 }
 
 export interface ClientSideBasePluginConfig extends ParsedConfig {
@@ -106,6 +107,20 @@ export interface ClientSideBasePluginConfig extends ParsedConfig {
    */
   importDocumentNodeExternallyFrom?: string;
 
+  /**
+   * @name importDocumentNodeFragments
+   * @type boolean
+   * @default false
+   * @description Set this configuration to `true` if you wish to import external document node fragments instead of embedding them.
+   * @example
+   * ```yml
+   * config:
+   *   documentMode: documentNode
+   *   importDocumentNodeFragments: true
+   * ```
+   */
+  importDocumentNodeFragments: boolean;
+
   // The following are internal, and used by presets
   importOperationTypesFrom?: string;
 }
@@ -134,6 +149,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
         return getConfigValue(rawConfig.documentMode, DocumentMode.graphQLTag);
       })(rawConfig),
       importDocumentNodeExternallyFrom: getConfigValue(rawConfig.importDocumentNodeExternallyFrom, ''),
+      importDocumentNodeFragments: getConfigValue(rawConfig.importDocumentNodeFragments, false),
       ...additionalConfig,
     } as any);
 
@@ -175,6 +191,9 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
   protected _includeFragments(fragments: string[]): string {
     if (fragments && fragments.length > 0) {
       if (this.config.documentMode === DocumentMode.documentNode) {
+        if (this.config.importDocumentNodeFragments) {
+          return '';
+        }
         return `${fragments
           .filter((name, i, all) => all.indexOf(name) === i)
           .map(name => {
@@ -204,21 +223,25 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
   }
 
   protected _gql(node: FragmentDefinitionNode | OperationDefinitionNode): string {
+    const fragments = this._transformFragments(node);
     const doc = this._prepareDocument(`
     ${
       print(node)
         .split('\\')
         .join('\\\\') /* Re-escape escaped values in GraphQL syntax */
     }
-    ${this._includeFragments(this._transformFragments(node))}`);
+    ${this._includeFragments(fragments)}`);
 
     if (this.config.documentMode === DocumentMode.documentNode) {
       const gqlObj = gqlTag(doc);
-
       if (gqlObj && gqlObj['loc']) {
         delete gqlObj.loc;
       }
-
+      if (this.config.importDocumentNodeFragments && fragments.length > 0) {
+        const fragmentsSpreads = fragments.filter((name, i, all) => all.indexOf(name) === i).map(name => `...${name}.definitions`);
+        const definitions = [...gqlObj.definitions.map(JSON.stringify), ...fragmentsSpreads].join();
+        return `{"kind":"${Kind.DOCUMENT}","definitions":[${definitions}]}`;
+      }
       return JSON.stringify(gqlObj);
     } else if (this.config.documentMode === DocumentMode.string) {
       return '`' + doc + '`';
@@ -317,12 +340,14 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
         break;
     }
 
-    if (this.config.documentMode === DocumentMode.graphQLTag) {
-      (this._fragments || []).filter(f => f.isExternal && f.importFrom && (!f['level'] || (f['level'] !== undefined && f['level'] === 0))).forEach(externalFragment => {
-        const identifierName = this._getFragmentName(externalFragment.name);
+    if (this.config.documentMode === DocumentMode.graphQLTag || (this.config.documentMode === DocumentMode.documentNode && this.config.importDocumentNodeFragments)) {
+      (this._fragments || [])
+        .filter(f => f.isExternal && f.importFrom && (!f['level'] || (f['level'] !== undefined && f['level'] === 0)))
+        .forEach(externalFragment => {
+          const identifierName = this._getFragmentName(externalFragment.name);
 
-        imports.push(`import { ${identifierName} } from '${externalFragment.importFrom}';`);
-      });
+          imports.push(`import { ${identifierName} } from '${externalFragment.importFrom}';`);
+        });
     }
 
     return imports;
