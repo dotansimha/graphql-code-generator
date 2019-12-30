@@ -34,7 +34,9 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
 
   if (isFederation) {
     schemaChanged = true;
-    schema = turnExtensionsIntoObjectTypes(mergeSchemas([schema, federationSpec]));
+    if (!schema.definitions.find(definition => definition.kind === 'DirectiveDefinition' && (definition.name.value === 'external' || definition.name.value === 'requires' || definition.name.value === 'provides' || definition.name.value === 'key'))) {
+      schema = turnExtensionsIntoObjectTypes(mergeSchemas([schema, federationSpec]));
+    }
   }
 
   if (schemaChanged) {

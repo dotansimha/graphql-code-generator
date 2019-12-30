@@ -5,6 +5,7 @@ import { buildASTSchema, parse } from 'graphql';
 import gql from 'graphql-tag';
 
 import { plugin, validate } from '../src';
+import { federationSpec } from '@graphql-codegen/plugin-helpers';
 
 const schema = buildASTSchema(gql`
   type Character {
@@ -276,6 +277,53 @@ describe('Fragment Matcher Plugin', () => {
 
   it('should support Apollo Federation', async () => {
     const federatedSchema = parse(/* GraphQL */ `
+      type Character @key(fields: "id") {
+        id: ID
+        name: String
+      }
+
+      type Jedi @key(fields: "id") {
+        id: ID
+        side: String
+      }
+
+      type Droid @key(fields: "id") {
+        id: ID
+        model: String
+      }
+
+      union People = Character | Jedi | Droid
+
+      type Query {
+        allPeople: [People]
+      }
+    `);
+    const content = await codegen({
+      filename: 'foo.json',
+      schema: federatedSchema,
+      documents: [],
+      plugins: [
+        {
+          'fragment-matcher': {},
+        },
+      ],
+      config: {
+        federation: true,
+      },
+      pluginMap: {
+        'fragment-matcher': {
+          plugin,
+          validate,
+        },
+      },
+    });
+
+    expect(content).toEqual(introspection);
+  });
+  it('should support Apollo Federation with predefined directive definitions', async () => {
+    const federatedSchema = parse(/* GraphQL */ `
+      directive @key(fields: String!) on FIELD_DEFINITION
+
       type Character @key(fields: "id") {
         id: ID
         name: String
