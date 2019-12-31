@@ -158,7 +158,7 @@ describe('Kotlin', () => {
 
       // language=kotlin
       expect(result).toBeSimilarStringTo(`data class QueryUserArgs(
-        val id: Any
+        val id: String
       )`);
 
       // language=kotlin
