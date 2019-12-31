@@ -2032,13 +2032,13 @@
     apollo-language-server "1.17.2"
     tslib "1.10.0"
 
-"@graphql-toolkit/code-file-loader@0.7.5":
-  version "0.7.5"
-  resolved "https://registry.yarnpkg.com/@graphql-toolkit/code-file-loader/-/code-file-loader-0.7.5.tgz#065ea6d30511baf24fe79a9cadd3258e59b0e761"
-  integrity sha512-nJVkmcvYRfcx+wxJR7hyjmko4gEZSJOhp0UEPny3LOf4PIDUvDvtsKmz1P4J2RIRph9wieEG0jgkLoEvqE7vCA==
+"@graphql-toolkit/code-file-loader@0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/code-file-loader/-/code-file-loader-0.8.0.tgz#7c98cd5b716764c20889907351912370febe6c47"
+  integrity sha512-6cCda/eknTF2b4/tKxDhsCkUhiNQwEzfOl4LpUAmWPriCIynEkFnAzkx3HZE/Wo5lF1/9HiZZwv1EiqL/73ofg==
   dependencies:
-    "@graphql-toolkit/common" "0.7.5"
-    "@graphql-toolkit/graphql-tag-pluck" "0.7.5"
+    "@graphql-toolkit/common" "0.8.0"
+    "@graphql-toolkit/graphql-tag-pluck" "0.8.0"
     tslib "1.10.0"
 
 "@graphql-toolkit/common@0.6.2":
@@ -2054,6 +2054,16 @@
   version "0.7.5"
   resolved "https://registry.yarnpkg.com/@graphql-toolkit/common/-/common-0.7.5.tgz#4fbca5a2bb562ff4bc7adc0e494cb6d21283472b"
   integrity sha512-pu7tKY6KW7+4noJQPCbIxKzv54tSl/FME9wU0rNSwcr4O3By+pv7VCYXxkhCSnftJcXsXAuAcdjcV2CBsjnZNg==
+  dependencies:
+    "@kamilkisiela/graphql-tools" "4.0.6"
+    aggregate-error "3.0.1"
+    is-glob "4.0.1"
+    lodash "4.17.15"
+
+"@graphql-toolkit/common@0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/common/-/common-0.8.0.tgz#2bc21effaea0c35a65d464ba35bca24bae5c40d9"
+  integrity sha512-Dhr5dt5HbQe63t8teo0MEt1YnYQhfIKfbm25lZLCXxwR6aPfetzRUEfTDFrrlP+ltTA7JU7ujk9DjsEZM4uxAw==
   dependencies:
     "@kamilkisiela/graphql-tools" "4.0.6"
     aggregate-error "3.0.1"
@@ -2107,10 +2117,10 @@
     graphql-import "0.7.1"
     tslib "1.10.0"
 
-"@graphql-toolkit/graphql-tag-pluck@0.7.5":
-  version "0.7.5"
-  resolved "https://registry.yarnpkg.com/@graphql-toolkit/graphql-tag-pluck/-/graphql-tag-pluck-0.7.5.tgz#09f65e41bb220716595a758158285f09cbe5c294"
-  integrity sha512-dvbdwTivzWP66wtqSSJnr6Wesgk6zSo1M8XQGuMtsHmgbhXWwrlGYvz7CEUn0cIFKpi5cpyduKZG8Xy3UX6sIQ==
+"@graphql-toolkit/graphql-tag-pluck@0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/graphql-tag-pluck/-/graphql-tag-pluck-0.8.0.tgz#ce1fdbd9f42c4ceac347c75ea9adb1be517ba278"
+  integrity sha512-JQjT/nxv95q3bGep0PXsjhu6DtCRRAnpOcgjDaNdrSC3NSkH5gv+Vfij/niBLK/3n0RFRb6C3ybyNtMgBlEOqw==
   dependencies:
     "@babel/parser" "7.7.7"
     "@babel/traverse" "7.7.4"
