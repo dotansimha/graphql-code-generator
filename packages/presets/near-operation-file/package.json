@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/near-operation-file-preset",
-  "version": "1.9.3",
+  "version": "1.9.1",
   "description": "GraphQL Code Generator preset for generating operation code near the operation file",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
