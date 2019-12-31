@@ -145,8 +145,9 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
       const scalarValue = this.config.scalars[scalarName].type;
       const scalarType = this._schema.getType(scalarName);
       const comment = scalarType && scalarType.astNode && scalarType.description ? transformComment(scalarType.description, 1) : '';
+      const { type } = this._parsedConfig.declarationKind;
 
-      return comment + indent(`${scalarName}: ${scalarValue},`);
+      return comment + indent(`${scalarName}: ${scalarValue}${type === 'class' ? ';' : ','}`);
     });
 
     return new DeclarationBlock(this._declarationBlockConfig)
@@ -197,8 +198,9 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
   FieldDefinition(node: FieldDefinitionNode): string {
     const typeString = (node.type as any) as string;
     const comment = transformComment((node.description as any) as string, 1);
+    const { type } = this._parsedConfig.declarationKind;
 
-    return comment + indent(`${node.name}: ${typeString},`);
+    return comment + indent(`${node.name}: ${typeString}${type === 'class' ? ';' : ','}`);
   }
 
   UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number | undefined, parent: any): string {

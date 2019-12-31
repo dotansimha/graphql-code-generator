@@ -73,15 +73,17 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
     const originalFieldNode = parent[key] as FieldDefinitionNode;
     const addOptionalSign = !this.config.avoidOptionals.object && originalFieldNode.type.kind !== Kind.NON_NULL_TYPE;
     const comment = transformComment((node.description as any) as string, 1);
+    const { type } = this.config.declarationKind;
 
-    return comment + indent(`${this.config.immutableTypes ? 'readonly ' : ''}${node.name}${addOptionalSign ? '?' : ''}: ${typeString},`);
+    return comment + indent(`${this.config.immutableTypes ? 'readonly ' : ''}${node.name}${addOptionalSign ? '?' : ''}: ${typeString}${type === 'class' ? ';' : ','}`);
   }
 
   InputValueDefinition(node: InputValueDefinitionNode, key?: number | string, parent?: any): string {
     const originalFieldNode = parent[key] as FieldDefinitionNode;
     const addOptionalSign = !this.config.avoidOptionals.inputValue && originalFieldNode.type.kind !== Kind.NON_NULL_TYPE;
     const comment = transformComment((node.description as any) as string, 1);
-    return comment + indent(`${this.config.immutableTypes ? 'readonly ' : ''}${node.name}${addOptionalSign ? '?' : ''}: ${node.type},`);
+    const { type } = this.config.declarationKind;
+    return comment + indent(`${this.config.immutableTypes ? 'readonly ' : ''}${node.name}${addOptionalSign ? '?' : ''}: ${node.type}${type === 'class' ? ';' : ','}`);
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
