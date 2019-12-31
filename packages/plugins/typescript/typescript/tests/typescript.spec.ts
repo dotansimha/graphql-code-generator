@@ -733,6 +733,45 @@ describe('TypeScript', () => {
       `);
     });
 
+    it('Should use class correctly when declarationKind: class is set', async () => {
+      const schema = buildSchema(`
+        input MyInput {
+          id: ID!
+          displayName: String
+        }
+
+        type MyType {
+          id: ID!
+          displayName: String
+        }
+      `);
+      const result = (await plugin(
+        schema,
+        [],
+        {
+          declarationKind: 'class',
+        },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`
+        export class MyInput {
+          id: Scalars['ID'];
+          displayName?: Maybe<Scalars['String']>;
+        }
+      `);
+
+      expect(result.content).toBeSimilarStringTo(`
+        export class MyType {
+          __typename?: 'MyType';
+          id: Scalars['ID'];
+          displayName?: Maybe<Scalars['String']>;
+        }
+      `);
+
+      validateTs(result);
+    });
+
     it('Should use interface for type when declarationKind for types is set', async () => {
       const schema = buildSchema(`
         input MyInput {
