@@ -48,7 +48,7 @@ export function block(array) {
 }
 
 export function wrapWithSingleQuotes(value: string | number | NameNode): string {
-  if (typeof value === 'number' || (typeof value === 'string' && !isNaN(parseInt(value)))) {
+  if (typeof value === 'number' || (typeof value === 'string' && !isNaN(parseInt(value)) && parseFloat(value).toString() === value)) {
     return `${value}`;
   }
 
