@@ -332,9 +332,9 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
       .map(enumOption => {
         const optionName = this.convertName(enumOption, { useTypesPrefix: false, transformUnderscore: true });
         const comment = transformComment((enumOption.description as any) as string, 1);
-        let enumValue: string = (enumOption.name as any) as string;
+        let enumValue: string | number = enumOption.name as any;
 
-        if (this.config.enumValues[typeName] && this.config.enumValues[typeName].mappedValues && this.config.enumValues[typeName].mappedValues[enumValue]) {
+        if (this.config.enumValues[typeName] && this.config.enumValues[typeName].mappedValues && typeof this.config.enumValues[typeName].mappedValues[enumValue] !== 'undefined') {
           enumValue = this.config.enumValues[typeName].mappedValues[enumValue];
         }
 

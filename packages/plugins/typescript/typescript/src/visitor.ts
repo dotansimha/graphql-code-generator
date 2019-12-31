@@ -106,10 +106,10 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
           '\n' +
             node.values
               .map(enumOption => {
-                let enumValue: string = (enumOption.name as any) as string;
+                let enumValue: string | number = (enumOption.name as any) as string;
                 const comment = transformComment((enumOption.description as any) as string, 1);
 
-                if (this.config.enumValues[enumName] && this.config.enumValues[enumName].mappedValues && this.config.enumValues[enumName].mappedValues[enumValue]) {
+                if (this.config.enumValues[enumName] && this.config.enumValues[enumName].mappedValues && typeof this.config.enumValues[enumName].mappedValues[enumValue] !== 'undefined') {
                   enumValue = this.config.enumValues[enumName].mappedValues[enumValue];
                 }
 

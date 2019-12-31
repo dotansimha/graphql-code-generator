@@ -47,8 +47,12 @@ export function block(array) {
   return array && array.length !== 0 ? '{\n' + array.join('\n') + '\n}' : '';
 }
 
-export function wrapWithSingleQuotes(str: string | NameNode): string {
-  return `'${str}'`;
+export function wrapWithSingleQuotes(value: string | number | NameNode): string {
+  if (typeof value === 'number' || (typeof value === 'string' && !isNaN(parseInt(value)) && parseFloat(value).toString() === value)) {
+    return `${value}`;
+  }
+
+  return `'${value}'`;
 }
 
 export function breakLine(str: string): string {
