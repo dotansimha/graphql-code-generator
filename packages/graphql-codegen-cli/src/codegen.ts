@@ -2,7 +2,7 @@ import { Types, CodegenPlugin } from '@graphql-codegen/plugin-helpers';
 import { DetailedError, codegen } from '@graphql-codegen/core';
 import { normalizeOutputParam, normalizeInstanceOrArray, normalizeConfig } from '@graphql-codegen/plugin-helpers';
 import { Renderer } from './utils/listr-renderer';
-import { GraphQLError, GraphQLSchema, DocumentNode, buildASTSchema } from 'graphql';
+import { GraphQLError, GraphQLSchema, DocumentNode } from 'graphql';
 import { getPluginByName } from './plugins';
 import { getPresetByName } from './presets';
 import { debugLog } from './utils/debugging';
@@ -183,14 +183,8 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                           Object.assign(schemaPointerMap, unnormalizedPtr);
                         }
                       }
-                      const loadedSchema = await context.loadSchema(schemaPointerMap);
-                      if (loadedSchema instanceof GraphQLSchema) {
-                        outputSchemaAst = loadedSchema;
-                        outputSchema = parse(printSchemaWithDirectives(loadedSchema));
-                      } else {
-                        outputSchema = loadedSchema;
-                        outputSchemaAst = buildASTSchema(outputSchema, { assumeValidSDL: true });
-                      }
+                      outputSchemaAst = await context.loadSchema(schemaPointerMap);
+                      outputSchema = parse(printSchemaWithDirectives(outputSchemaAst));
                     }, filename),
                   },
                   {
