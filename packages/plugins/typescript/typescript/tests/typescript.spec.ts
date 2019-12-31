@@ -225,6 +225,41 @@ describe('TypeScript', () => {
   });
 
   describe('Issues', () => {
+    it('#3137 - numeric enum value', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Query {
+          test: Test!
+        }
+
+        enum Test {
+          A
+          B
+          C
+        }
+      `);
+
+      const result = (await plugin(
+        testSchema,
+        [],
+        {
+          enumValues: {
+            Test: {
+              A: 0,
+              B: 'test',
+              C: '2',
+            },
+          },
+        },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+      const output = mergeOutputs([result]);
+      expect(output).toBeSimilarStringTo(`export enum Test {
+        A = 0,
+        B = 'test',
+        C = 2
+      }`);
+    });
+
     it('#2679 - incorrect prefix for enums', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         enum FilterOption {
