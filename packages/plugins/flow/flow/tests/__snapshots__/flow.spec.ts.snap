@@ -208,18 +208,18 @@ export type impl_2 = {|
   |}
 |};
 
-export type impl_3 = {|
-  ...some_interface,
-  ...{|
-     __typename?: 'impl_3',
-    id: $ElementType<Scalars, 'ID'>,
-  |}
-|};
-
 export type impl1 = {|
   ...some_interface,
   ...{|
      __typename?: 'Impl1',
+    id: $ElementType<Scalars, 'ID'>,
+  |}
+|};
+
+export type impl_3 = {|
+  ...some_interface,
+  ...{|
+     __typename?: 'impl_3',
     id: $ElementType<Scalars, 'ID'>,
   |}
 |};
@@ -278,18 +278,18 @@ export type Impl_2 = {|
   |}
 |};
 
-export type Impl_3 = {|
-  ...Some_Interface,
-  ...{|
-     __typename?: 'impl_3',
-    id: $ElementType<Scalars, 'ID'>,
-  |}
-|};
-
 export type Impl1 = {|
   ...Some_Interface,
   ...{|
      __typename?: 'Impl1',
+    id: $ElementType<Scalars, 'ID'>,
+  |}
+|};
+
+export type Impl_3 = {|
+  ...Some_Interface,
+  ...{|
+     __typename?: 'impl_3',
     id: $ElementType<Scalars, 'ID'>,
   |}
 |};
@@ -348,18 +348,18 @@ export type IImpl_2 = {|
   |}
 |};
 
-export type IImpl_3 = {|
-  ...ISome_Interface,
-  ...{|
-     __typename?: 'impl_3',
-    id: $ElementType<Scalars, 'ID'>,
-  |}
-|};
-
 export type IImpl1 = {|
   ...ISome_Interface,
   ...{|
      __typename?: 'Impl1',
+    id: $ElementType<Scalars, 'ID'>,
+  |}
+|};
+
+export type IImpl_3 = {|
+  ...ISome_Interface,
+  ...{|
+     __typename?: 'impl_3',
     id: $ElementType<Scalars, 'ID'>,
   |}
 |};
