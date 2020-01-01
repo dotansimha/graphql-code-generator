@@ -45,7 +45,7 @@
     "@babel/parser": "7.7.7",
     "@graphql-codegen/core": "1.9.1",
     "@graphql-codegen/plugin-helpers": "1.9.1",
-    "@graphql-toolkit/code-file-loader": "0.8.0",
+    "@graphql-toolkit/code-file-loader": "0.8.1",
     "@graphql-toolkit/core": "0.8.0",
     "@graphql-toolkit/git-loader": "0.8.0",
     "@graphql-toolkit/github-loader": "0.8.0",
