@@ -18,10 +18,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '12.x'
-      - name: TEST
-        run: |
-          echo "test"
-          env
+
       - name: Get yarn cache
         id: yarn-cache
         run: echo "::set-output name=dir::$(yarn cache dir)"
@@ -34,6 +31,15 @@ jobs:
             ${{ runner.os }}-yarn-
       - name: Install Dependencies using Yarn
         run: yarn install --frozen-lockfile
+      - name: TEST
+        run: |
+          echo "test"
+          export SYSTEM_PULLREQUEST_PULLREQUESTNUMBER=`echo $GITHUB_REF | grep -Eo '[0-9]{1,4}'`
+          export BUILD_REPOSITORY_NAME="${{github.repository}}"
+          export COMMENT_BODY="TEST"
+          export VERSION=`yarn lerna-current-version`
+          env
+          yarn pr-comment
       - name: Build
         run: yarn build
       - name: Test
@@ -44,9 +50,6 @@ jobs:
             if [ "${{github.repository}}" == "dotansimha/graphql-code-generator" ] && [ "${{ secrets.NODE_AUTH_TOKEN }}" != "" ]
             then
                 echo "//registry.npmjs.org/:_authToken=${{ secrets.NODE_AUTH_TOKEN }}" > .npmrc
-                # export BUILD_REPOSITORY_NAME="${{github.repository}}"
-                # export SYSTEM_PULLREQUEST_PULLREQUESTNUMBER=""
-                # yarn dfds-github-scripts
                 npm run ci:release:canary
             else    
                 echo "Skipping canary publish due to a fork/PR..."
