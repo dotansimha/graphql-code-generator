@@ -134,7 +134,7 @@ export const DIRECTIVES = gql`
 export const addToSchema = DIRECTIVES;
 
 export const validate: PluginValidateFn<any> = async (schema: GraphQLSchema, documents: Types.DocumentFile[], config: any, outputFile: string) => {
-  if (extname(outputFile) !== '.ts') {
-    throw new Error(`Plugin "typescript-mongodb" requires extension to be ".ts"!`);
+  if (extname(outputFile) !== '.ts' && extname(outputFile) !== '.tsx') {
+    throw new Error(`Plugin "typescript-mongodb" requires extension to be ".ts" or ".tsx"!`);
   }
 };
