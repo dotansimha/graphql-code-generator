@@ -12,6 +12,10 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '12.x'
+      - name: TEST
+        run: |
+          echo "test"
+          env
       - name: Get yarn cache
         id: yarn-cache
         run: echo "::set-output name=dir::$(yarn cache dir)"
@@ -34,7 +38,9 @@ jobs:
             if [ "${{github.repository}}" == "dotansimha/graphql-code-generator" ] && [ "${{ secrets.NODE_AUTH_TOKEN }}" != "" ]
             then
                 echo "//registry.npmjs.org/:_authToken=${{ secrets.NODE_AUTH_TOKEN }}" > .npmrc
-                npm whoami
+                # export BUILD_REPOSITORY_NAME="${{github.repository}}"
+                # export SYSTEM_PULLREQUEST_PULLREQUESTNUMBER=""
+                # yarn dfds-github-scripts
                 npm run ci:release:canary
             else    
                 echo "Skipping canary publish due to a fork/PR..."
