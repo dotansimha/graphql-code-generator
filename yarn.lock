@@ -7647,6 +7647,13 @@ dezalgo@^1.0.0:
     asap "^2.0.0"
     wrappy "1"
 
+dfds-github-scripts@0.0.2:
+  version "0.0.2"
+  resolved "https://registry.npmjs.org/dfds-github-scripts/-/dfds-github-scripts-0.0.2.tgz#73ab8c5599ab1a521277e0e00431e3e4f85d8b27"
+  integrity sha512-jSCr4z7te0dUoxGsklRk4WMFK0OlsJy9h8RRjQNMI4adCNQ1/PeMLcOoIEa0gffkQGbpLph3bozmLSpIeSuQrQ==
+  dependencies:
+    graphql-request "1.8.2"
+
 diacritics-map@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/diacritics-map/-/diacritics-map-0.1.0.tgz#6dfc0ff9d01000a2edf2865371cac316e94977af"
@@ -9685,9 +9692,9 @@ graphql-language-service-utils@^2.3.3:
     graphql-config "2.2.1"
     graphql-language-service-types "^1.5.2"
 
-graphql-request@^1.5.0:
+graphql-request@1.8.2, graphql-request@^1.5.0:
   version "1.8.2"
-  resolved "https://registry.yarnpkg.com/graphql-request/-/graphql-request-1.8.2.tgz#398d10ae15c585676741bde3fc01d5ca948f8fbe"
+  resolved "https://registry.npmjs.org/graphql-request/-/graphql-request-1.8.2.tgz#398d10ae15c585676741bde3fc01d5ca948f8fbe"
   integrity sha512-dDX2M+VMsxXFCmUX0Vo0TopIZIX4ggzOtiCsThgtrKR4niiaagsGTDIHj3fsOMFETpa064vzovI+4YV4QnMbcg==
   dependencies:
     cross-fetch "2.2.2"

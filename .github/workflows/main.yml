@@ -1,6 +1,12 @@
 name: CI
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
   build:
@@ -12,6 +18,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '12.x'
+
       - name: Get yarn cache
         id: yarn-cache
         run: echo "::set-output name=dir::$(yarn cache dir)"
@@ -30,12 +37,22 @@ jobs:
         run: yarn test
       - name: Release Canary
         run: |
-            echo "Source Repo: ${{github.repository}}"
-            if [ "${{github.repository}}" == "dotansimha/graphql-code-generator" ] && [ "${{ secrets.NODE_AUTH_TOKEN }}" != "" ]
-            then
-                echo "//registry.npmjs.org/:_authToken=${{ secrets.NODE_AUTH_TOKEN }}" > .npmrc
-                npm whoami
-                npm run ci:release:canary
-            else    
-                echo "Skipping canary publish due to a fork/PR..."
-            fi
+          echo "Source Repo: ${{github.repository}}"
+          if [ "${{github.repository}}" == "dotansimha/graphql-code-generator" ] && [ "${{ secrets.NODE_AUTH_TOKEN }}" != "" ]
+          then
+              echo "//registry.npmjs.org/:_authToken=${{ secrets.NODE_AUTH_TOKEN }}" > .npmrc
+              npm run ci:release:canary > out.txt
+              export SYSTEM_PULLREQUEST_PULLREQUESTNUMBER=`echo $GITHUB_REF | grep -Eo '[0-9]{1,4}'`
+
+              if [ "$SYSTEM_PULLREQUEST_PULLREQUESTNUMBER" != "" ]
+              then
+                npm install -g dfds-github-scripts
+                export BUILD_REPOSITORY_NAME="${{github.repository}}"
+                export ALPHA_VERSION=`cat out.txt | sed -n 's/.*cli => //p' | sed -n 's/+.*//p'`
+                export GH_API_TOKEN="${{ secrets.GH_API_TOKEN }}"
+                export COMMENT_BODY="The latest changes of this PR are available as alpha in npm: \`$ALPHA_VERSION\`"
+                pr-comment
+              fi
+          else    
+              echo "Skipping canary publish due to a fork/PR..."
+          fi
