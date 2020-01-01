@@ -296,7 +296,11 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
           if (mappedValue.sourceIdentifier === 'default') {
             return this._buildTypeImport(mappedValue.typeIdentifier, mappedValue.sourceFile, true);
           }
-          const identifier = mappedValue.sourceIdentifier !== mappedValue.typeIdentifier ? `${mappedValue.sourceIdentifier} as ${mappedValue.typeIdentifier}` : mappedValue.sourceIdentifier;
+          let identifier = mappedValue.sourceIdentifier;
+
+          if (mappedValue.sourceIdentifier !== mappedValue.typeIdentifier && !mappedValue.sourceIdentifier.includes(' as ')) {
+            identifier = `${mappedValue.sourceIdentifier} as ${mappedValue.typeIdentifier}`;
+          }
 
           return this._buildTypeImport(identifier, mappedValue.sourceFile);
         }

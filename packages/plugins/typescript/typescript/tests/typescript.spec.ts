@@ -307,6 +307,35 @@ describe('TypeScript', () => {
       };`);
     });
 
+    it('#3180 - enumValues and named default import', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        enum MyEnum {
+          A
+          B
+          C
+        }
+
+        type Test {
+          t: MyEnum
+          test(a: MyEnum): String
+        }
+      `);
+      const result = (await plugin(
+        testSchema,
+        [],
+        {
+          typesPrefix: 'I',
+          namingConvention: { enumValues: 'constant-case#constantCase' },
+          enumValues: {
+            MyEnum: './files#default as MyEnum',
+          },
+        },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.prepend[0]).toBe(`import { default as MyEnum } from './files';`);
+    });
+
     it('#2976 - Issues with mapped enumValues and type prefix in args', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         enum MyEnum {
