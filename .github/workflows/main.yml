@@ -36,9 +36,10 @@ jobs:
           echo "test"
           export SYSTEM_PULLREQUEST_PULLREQUESTNUMBER=`echo $GITHUB_REF | grep -Eo '[0-9]{1,4}'`
           export BUILD_REPOSITORY_NAME="${{github.repository}}"
-          export COMMENT_BODY="TEST"
+          export COMMENT_BODY="WIP"
           export VERSION=`yarn lerna-current-version`
-          env
+          export LERNA_PATH="./lerna.json"
+          export GH_API_TOKEN="${{ secrets.GH_API_TOKEN }}"
           yarn pr-comment
       - name: Build
         run: yarn build
