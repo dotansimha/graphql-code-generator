@@ -6,24 +6,6 @@ import { TypeScriptResolversVisitor } from './visitor';
 
 export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
   /**
-   * @name immutableTypes
-   * @type boolean
-   * @description Generates immutable types by adding `readonly` to properties and uses `ReadonlyArray`.
-   * @default false
-   *
-   * @example
-   * ```yml
-   * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-resolvers
-   *  config:
-   *    immutableTypes: true
-   * ```
-   */
-  immutableTypes?: boolean;
-  /**
    * @name useIndexSignature
    * @type boolean
    * @description Adds an index signature to any generates resolver.
