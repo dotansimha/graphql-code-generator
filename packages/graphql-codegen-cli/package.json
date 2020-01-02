@@ -51,7 +51,7 @@
     "@graphql-toolkit/github-loader": "0.8.1",
     "@graphql-toolkit/graphql-file-loader": "0.8.1",
     "@graphql-toolkit/json-file-loader": "0.8.1",
-    "@graphql-toolkit/url-loader": "0.8.0",
+    "@graphql-toolkit/url-loader": "0.8.1",
     "@graphql-toolkit/apollo-engine-loader": "0.8.1",
     "@graphql-toolkit/prisma-loader": "0.8.1",
     "@types/debounce": "1.2.0",
