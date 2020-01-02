@@ -294,7 +294,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
           }
 
           if (!selectedField) {
-            throw new TypeError(`Could not find field type. ${parentSchemaType}.${selectionNode.name.value}`);
+            continue;
           }
 
           const fieldName = getFieldNodeNameValue(selectionNode);

@@ -3317,6 +3317,85 @@ describe('TypeScript Operations Plugin', () => {
   });
 
   describe('Issues', () => {
+    it('#3064 - fragments over interfaces causes issues with fields', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        interface Venue {
+          id: String!
+          name: String!
+        }
+
+        type GPSPosition {
+          lat: Float!
+          lng: Float!
+        }
+
+        interface VenueWithPosition {
+          id: String!
+          gpsPosition: GPSPosition!
+        }
+
+        type Hotel implements VenueWithPosition & Venue {
+          id: String!
+          gpsPosition: GPSPosition!
+          name: String!
+        }
+
+        type Transport implements Venue {
+          id: String!
+          name: String!
+        }
+
+        type Query {
+          hotel: Hotel!
+          transport: Transport!
+        }
+      `);
+
+      const query = parse(/* GraphQL */ `
+        fragment venue on Venue {
+          id
+          ... on VenueWithPosition {
+            gpsPosition {
+              lat
+              lng
+            }
+          }
+        }
+
+        query q {
+          hotel {
+            ...venue
+          }
+          transport {
+            ...venue
+          }
+        }
+      `);
+
+      const config = {};
+
+      const content = await plugin(testSchema, [{ filePath: '', content: query }], config, {
+        outputFile: 'graphql.ts',
+      });
+
+      expect(content).toMatchSnapshot();
+
+      const o = await validateAndCompile(
+        content,
+        {},
+        testSchema,
+        `function test(q: QQuery) {
+        if (q.hotel) {
+            const t1 = q.hotel.gpsPosition.lat
+        }
+        
+        if (q.transport) {
+            const t2 = q.transport.id;
+        }
+    }`
+      );
+    });
+
     it('#2916 - Missing import prefix with preResolveTypes: true and near-operation-file preset', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         type Query {
