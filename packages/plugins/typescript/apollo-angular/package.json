@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/typescript-apollo-angular",
-  "version": "1.9.1",
+  "version": "1.10.0",
   "description": "GraphQL Code Generator plugin for generating ready-to-use Angular Components based on GraphQL operations",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
@@ -13,14 +13,14 @@
     "graphql-tag": "^2.0.0"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "1.9.1",
-    "@graphql-codegen/visitor-plugin-common": "1.9.1",
-    "tslib": "1.10.0",
-    "camel-case": "4.1.1"
+    "@graphql-codegen/plugin-helpers": "1.10.0",
+    "@graphql-codegen/visitor-plugin-common": "1.10.0",
+    "camel-case": "4.1.1",
+    "tslib": "1.10.0"
   },
   "devDependencies": {
+    "@graphql-codegen/testing": "1.10.0",
     "bob-the-bundler": "0.2.2",
-    "@graphql-codegen/testing": "1.9.1",
     "graphql": "14.5.8",
     "jest": "24.9.0",
     "ts-jest": "24.2.0",

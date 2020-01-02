@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/website",
-  "version": "1.9.1",
+  "version": "1.10.0",
   "private": true,
   "scripts": {
     "dev": "docusaurus-start",
@@ -12,7 +12,7 @@
     "write-translations": "docusaurus-write-translations"
   },
   "devDependencies": {
-    "@graphql-codegen/config-markdown-generator": "1.9.1",
+    "@graphql-codegen/config-markdown-generator": "1.10.0",
     "babel-preset-minify": "0.5.1",
     "docusaurus": "1.14.3",
     "remarkable-embed": "0.4.1"
