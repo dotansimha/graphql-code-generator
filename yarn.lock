@@ -2134,12 +2134,12 @@
   dependencies:
     "@graphql-toolkit/common" "0.6.2"
 
-"@graphql-toolkit/json-file-loader@0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@graphql-toolkit/json-file-loader/-/json-file-loader-0.8.0.tgz#a63450ce409ff3e0d92647e483d1980f01d64601"
-  integrity sha512-KbX5N1EulKdbeKMwoLy870Dce+jyop6Bapys39J0fqzl4lFj+eXdodSSgG4zpo/PRs4YhlEwpD+6Ij6gS0nsGw==
+"@graphql-toolkit/json-file-loader@0.8.1":
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/json-file-loader/-/json-file-loader-0.8.1.tgz#9f619c0e191a0ebd9f81bef77dde82040e088755"
+  integrity sha512-ILP/q1Rams9W6/ITqjb8ZEqoBKFeb7RJlbqnDOVYHX+gr51KeyuLOszfwhoR1AlnYT7dw7sCeR8/ekISvirmUg==
   dependencies:
-    "@graphql-toolkit/common" "0.8.0"
+    "@graphql-toolkit/common" "0.8.1"
     tslib "1.10.0"
 
 "@graphql-toolkit/prisma-loader@0.8.0":
