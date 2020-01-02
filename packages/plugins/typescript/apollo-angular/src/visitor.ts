@@ -1,8 +1,9 @@
-import { ClientSideBaseVisitor, ClientSideBasePluginConfig, LoadedFragment, indentMultiline } from '@graphql-codegen/visitor-plugin-common';
+import { ClientSideBaseVisitor, ClientSideBasePluginConfig, DocumentMode, LoadedFragment, indentMultiline } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, print, visit, GraphQLSchema, Kind } from 'graphql';
 import { ApolloAngularRawPluginConfig } from './index';
 import { camelCase } from 'camel-case';
+import { Types } from '@graphql-codegen/plugin-helpers';
 
 const R_MOD = /module\:\s*"([^"]+)"/; // matches: module: "..."
 const R_NAME = /name\:\s*"([^"]+)"/; // matches: name: "..."
@@ -28,13 +29,19 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<ApolloAngularRaw
     serviceName: string;
   }[] = [];
 
-  constructor(schema: GraphQLSchema, fragments: LoadedFragment[], private _allOperations: OperationDefinitionNode[], rawConfig: ApolloAngularRawPluginConfig) {
-    super(schema, fragments, rawConfig, {
-      ngModule: rawConfig.ngModule,
-      namedClient: rawConfig.namedClient,
-      serviceName: rawConfig.serviceName,
-      serviceProvidedInRoot: rawConfig.serviceProvidedInRoot,
-    });
+  constructor(schema: GraphQLSchema, fragments: LoadedFragment[], private _allOperations: OperationDefinitionNode[], rawConfig: ApolloAngularRawPluginConfig, documents?: Types.DocumentFile[]) {
+    super(
+      schema,
+      fragments,
+      rawConfig,
+      {
+        ngModule: rawConfig.ngModule,
+        namedClient: rawConfig.namedClient,
+        serviceName: rawConfig.serviceName,
+        serviceProvidedInRoot: rawConfig.serviceProvidedInRoot,
+      },
+      documents
+    );
 
     autoBind(this);
   }
@@ -161,6 +168,10 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<ApolloAngularRaw
     return `'root'`;
   }
 
+  private _getDocumentNodeVariable(node: OperationDefinitionNode, documentVariableName: string): string {
+    return this.config.documentMode === DocumentMode.external ? `Operations.${node.name.value}` : documentVariableName;
+  }
+
   protected buildOperation(node: OperationDefinitionNode, documentVariableName: string, operationType: string, operationResultType: string, operationVariablesTypes: string): string {
     const serviceName = `${this.convertName(node)}GQL`;
     this._operationsToInclude.push({
@@ -177,7 +188,7 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<ApolloAngularRaw
     providedIn: ${this._providedIn(node)}
   })
   export class ${serviceName} extends Apollo.${operationType}<${operationResultType}, ${operationVariablesTypes}> {
-    document = ${documentVariableName};
+    document = ${this._getDocumentNodeVariable(node, documentVariableName)};
     ${this._namedClient(node)}
   }`;
 
