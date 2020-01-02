@@ -2108,12 +2108,12 @@
     "@graphql-toolkit/common" "0.6.2"
     graphql-import "0.7.1"
 
-"@graphql-toolkit/graphql-file-loader@0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@graphql-toolkit/graphql-file-loader/-/graphql-file-loader-0.8.0.tgz#a591b8763e314d1a624e4f2c0fdd745d646e2998"
-  integrity sha512-jf6GiqhxB/EjU8KM89MUmXy62F8t0Hlh6COXy7xzWm4x2z2BBRm73MxrW9G/3HswCei2YxoptN/lvPpBg0dHNg==
+"@graphql-toolkit/graphql-file-loader@0.8.1":
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/graphql-file-loader/-/graphql-file-loader-0.8.1.tgz#352d31ce84402ade13be90f38901b202a5aee99f"
+  integrity sha512-/YLysiFBKx5lZHL3hJpGYz2rHYlgf+2tI/OkP1yEACO/gPswQ3CI8tpBipxPQqewa+o/4vrcvAWCrLWtD85oag==
   dependencies:
-    "@graphql-toolkit/common" "0.8.0"
+    "@graphql-toolkit/common" "0.8.1"
     tslib "1.10.0"
 
 "@graphql-toolkit/graphql-tag-pluck@0.8.1":
