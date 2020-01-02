@@ -2161,16 +2161,6 @@
     "@kamilkisiela/graphql-tools" "4.0.6"
     deepmerge "4.2.0"
 
-"@graphql-toolkit/schema-merging@0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@graphql-toolkit/schema-merging/-/schema-merging-0.8.0.tgz#8ad00ec4cb87c249b1daa0abcfa1005b53865dba"
-  integrity sha512-u9gOoYux6DfckuEdv9jg+r3iLY6RFjzej5moRtJPowjbHBGOP/QbrY4W+0HiPa5QcOxJYj1sGc3FvSJC/HViyw==
-  dependencies:
-    "@graphql-toolkit/common" "0.8.0"
-    "@kamilkisiela/graphql-tools" "4.0.6"
-    deepmerge "4.2.2"
-    tslib "1.10.0"
-
 "@graphql-toolkit/schema-merging@0.8.1":
   version "0.8.1"
   resolved "https://registry.yarnpkg.com/@graphql-toolkit/schema-merging/-/schema-merging-0.8.1.tgz#b1175af317b2c954477eb5477af439b7bc8012f8"
