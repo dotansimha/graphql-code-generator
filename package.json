@@ -57,7 +57,7 @@
     "jest": "24.9.0",
     "jest-docblock": "24.9.0",
     "jest-junit": "10.0.0",
-    "lerna": "3.20.1",
+    "lerna": "3.20.2",
     "lint-staged": "9.5.0",
     "rimraf": "3.0.0",
     "ts-jest": "24.2.0",
