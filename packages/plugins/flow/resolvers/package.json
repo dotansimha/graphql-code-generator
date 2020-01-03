@@ -19,7 +19,7 @@
   "devDependencies": {
     "@graphql-codegen/testing": "1.10.0",
     "bob-the-bundler": "0.2.2",
-    "flow-bin": "0.114.0",
+    "flow-bin": "0.115.0",
     "flow-parser": "0.115.0",
     "graphql": "14.5.8",
     "jest": "24.9.0",
