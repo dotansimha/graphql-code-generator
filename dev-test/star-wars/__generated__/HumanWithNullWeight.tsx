@@ -2,7 +2,6 @@ import * as Types from '../types.d';
 
 import { HumanFieldsFragment } from './HumanFields';
 import gql from 'graphql-tag';
-import { HumanFieldsFragmentDoc } from './HumanFields';
 import * as React from 'react';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactComponents from '@apollo/react-components';

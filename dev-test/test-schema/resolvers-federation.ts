@@ -17,11 +17,6 @@ export type Book = {
   id: Scalars['ID'];
 };
 
-export type Query = {
-  __typename?: 'Query';
-  users?: Maybe<Array<Maybe<User>>>;
-};
-
 export type User = {
   __typename?: 'User';
   id: Scalars['ID'];
@@ -68,26 +63,20 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
-  Query: ResolverTypeWrapper<{}>;
-  User: ResolverTypeWrapper<User>;
-  ID: ResolverTypeWrapper<Scalars['ID']>;
   String: ResolverTypeWrapper<Scalars['String']>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  User: ResolverTypeWrapper<User>;
+  ID: ResolverTypeWrapper<Scalars['ID']>;
   Book: ResolverTypeWrapper<Book>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
-  Query: {};
-  User: User;
-  ID: Scalars['ID'];
   String: Scalars['String'];
   Boolean: Scalars['Boolean'];
+  User: User;
+  ID: Scalars['ID'];
   Book: Book;
-};
-
-export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  users?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
 };
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
@@ -102,7 +91,6 @@ export type BookResolvers<ContextType = any, ParentType extends ResolversParentT
 };
 
 export type Resolvers<ContextType = any> = {
-  Query?: QueryResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
   Book?: BookResolvers<ContextType>;
 };

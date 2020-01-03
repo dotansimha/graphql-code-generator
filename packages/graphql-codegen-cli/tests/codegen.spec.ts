@@ -1,6 +1,6 @@
 import '@graphql-codegen/testing';
 import { GraphQLObjectType, buildSchema, buildASTSchema, parse, print } from 'graphql';
-import { mergeSchemas } from '@graphql-codegen/core';
+import { mergeTypeDefs } from '@graphql-toolkit/schema-merging';
 import { executeCodegen } from '../src';
 
 const SHOULD_NOT_THROW_STRING = 'SHOULD_NOT_THROW';
@@ -556,7 +556,7 @@ describe('Codegen Executor', () => {
   describe('Schema Merging', () => {
     it('should keep definitions of all directives', async () => {
       const merged = buildASTSchema(
-        await mergeSchemas([
+        mergeTypeDefs([
           buildSchema(SIMPLE_TEST_SCHEMA),
           buildSchema(/* GraphQL */ `
             directive @id on FIELD_DEFINITION
@@ -573,7 +573,7 @@ describe('Codegen Executor', () => {
 
     it('should keep directives in types', async () => {
       const merged = buildASTSchema(
-        await mergeSchemas([
+        mergeTypeDefs([
           buildSchema(SIMPLE_TEST_SCHEMA),
           buildSchema(/* GraphQL */ `
             directive @id on FIELD_DEFINITION
@@ -611,7 +611,7 @@ describe('Codegen Executor', () => {
         scalar NotUniqueID
       `);
 
-      const merged = await mergeSchemas([schemaA, schemaB, schemaC]);
+      const merged = mergeTypeDefs([schemaA, schemaB, schemaC]);
 
       expect(print(merged)).toContain('scalar UniqueID');
       expect(print(merged)).toContain('scalar NotUniqueID');
