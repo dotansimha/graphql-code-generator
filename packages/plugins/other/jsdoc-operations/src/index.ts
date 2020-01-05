@@ -81,13 +81,22 @@ export const plugin: PluginFunction = schema => {
         };
       },
       FieldDefinition(node) {
-        return { name: node.name.value, type: node.type };
+        return {
+          name: node.name.value,
+          type: node.type,
+        };
       },
       NamedType(node) {
-        return { kind: node.kind, value: node.name.value };
+        return {
+          kind: node.kind,
+          value: node.name.value,
+        };
       },
       NonNullType(node) {
-        return { ...node.type, isRequired: true };
+        return {
+          ...node.type,
+          isRequired: true,
+        };
       },
       UnionTypeDefinition(node) {
         return {
@@ -97,7 +106,10 @@ export const plugin: PluginFunction = schema => {
         };
       },
       ListType(node) {
-        return { kind: node.kind, item: node.type };
+        return {
+          kind: node.kind,
+          item: node.type,
+        };
       },
     },
   });

@@ -3,14 +3,14 @@ import { plugin } from '../src/index';
 
 describe('JSDoc Operations Plugin', () => {
   const schema = buildSchema(/* GraphQL */ `
+    type Bar {
+      amount: Int!
+    }
+
     union FooBar = Foo | Bar
 
     type Foo {
       id: String!
-    }
-
-    type Bar {
-      amount: Int!
     }
 
     type Query {
@@ -20,6 +20,8 @@ describe('JSDoc Operations Plugin', () => {
       bars: [Bar!]!
       foobar: FooBar!
       fooOrbar: FooBar
+      computedFoo(bar: Bar): Foo
+      computedRequiredFoo(bar: Bar): Foo!
     }
 
     schema {
