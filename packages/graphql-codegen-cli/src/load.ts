@@ -20,6 +20,8 @@ export const loadSchema = async (schemaPointers: UnnormalizedTypeDefPointer, con
       assumeValidSDL: true,
       loaders,
       sort: true,
+      convertExtensions: true,
+      commentDescriptions: true,
       ...config,
     });
     return schema;

@@ -13,13 +13,14 @@
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0"
   },
   "dependencies": {
-    "@graphql-toolkit/common": "0.8.2-alpha-eaf33e5.3+eaf33e5",
+    "@graphql-toolkit/common": "0.8.2-alpha-0274a7c.9+0274a7c",
     "camel-case": "4.1.1",
     "common-tags": "1.8.0",
     "constant-case": "3.0.3",
     "import-from": "3.0.0",
     "lower-case": "2.0.1",
     "pascal-case": "3.1.1",
+    "param-case": "3.0.3",
     "tslib": "1.10.0",
     "upper-case": "2.0.1"
   },

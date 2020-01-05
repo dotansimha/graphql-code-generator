@@ -59,7 +59,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
   const prepend: Set<string> = new Set<string>();
   const append: Set<string> = new Set<string>();
 
-  const output$ = Promise.all(
+  const output = await Promise.all(
     options.plugins.map(async plugin => {
       const name = Object.keys(plugin)[0];
       const pluginPackage = options.pluginMap[name];
@@ -108,8 +108,6 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
       return '';
     })
   );
-
-  const output = await output$;
 
   return [...sortPrependValues(Array.from(prepend.values())), ...output, ...append.values()].join('\n');
 }

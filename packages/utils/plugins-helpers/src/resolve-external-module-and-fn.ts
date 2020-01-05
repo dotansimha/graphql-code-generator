@@ -1,7 +1,7 @@
 import { resolve } from 'path';
 import { existsSync } from 'fs';
 import importFrom from 'import-from';
-import { camelCase } from 'camel-case';
+import { paramCase } from 'param-case';
 
 export function resolveExternalModuleAndFn(pointer: any): any {
   if (typeof pointer === 'function') {
@@ -11,7 +11,7 @@ export function resolveExternalModuleAndFn(pointer: any): any {
   let [moduleName, functionName] = pointer.split('#');
   // Temp workaround until v2
   if (moduleName === 'change-case') {
-    moduleName = camelCase(functionName);
+    moduleName = paramCase(functionName);
   }
   const localFilePath = resolve(process.cwd(), moduleName);
   const localFileExists = existsSync(localFilePath);
