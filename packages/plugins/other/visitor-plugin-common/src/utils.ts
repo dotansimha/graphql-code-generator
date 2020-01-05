@@ -248,10 +248,6 @@ export function convertNameParts(str: string, func: (str: string) => string, rem
     .join('_');
 }
 
-export function toPascalCase(str: string, transformUnderscore = false): string {
-  return convertNameParts(str, pascalCase, transformUnderscore);
-}
-
 export function buildScalars(schema: GraphQLSchema | undefined, scalarsMapping: ScalarsMap, defaultScalarsMapping: NormalizedScalarsMap = DEFAULT_SCALARS): ParsedScalarsMap {
   let result: ParsedScalarsMap = {};
 
