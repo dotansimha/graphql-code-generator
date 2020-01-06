@@ -13,7 +13,7 @@
     "@graphql-codegen/flow": "1.10.0",
     "@graphql-codegen/plugin-helpers": "1.10.0",
     "@graphql-codegen/visitor-plugin-common": "1.10.0",
-    "@graphql-toolkit/common": "0.8.2-alpha-be2cdf2.10+be2cdf2",
+    "@graphql-toolkit/common": "0.8.2-alpha-e6711b7.11+e6711b7",
     "tslib": "1.10.0"
   },
   "devDependencies": {
