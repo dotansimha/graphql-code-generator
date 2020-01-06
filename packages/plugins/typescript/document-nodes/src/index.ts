@@ -51,12 +51,13 @@ export interface TypeScriptDocumentNodesRawPluginConfig extends RawClientSideBas
    *
    * @example
    * ```yml
-   *  generates: src/api/user-service/queries.ts
    *  documents: src/api/user-service/queries.graphql
-   *  plugins:
-   *    - graphql-codegen-typescript-document-nodes
-   *  config:
-   *    namePrefix: 'gql'
+   *  generates:
+   *    src/api/user-service/queries.ts:
+   *    plugins:
+   *      - typescript-document-nodes
+   *    config:
+   *      namePrefix: 'gql'
    * ```
    */
   namePrefix?: string;
@@ -68,12 +69,13 @@ export interface TypeScriptDocumentNodesRawPluginConfig extends RawClientSideBas
    *
    * @example
    * ```yml
-   *  generates: src/api/user-service/queries.ts
    *  documents: src/api/user-service/queries.graphql
-   *  plugins:
-   *    - graphql-codegen-typescript-document-nodes
-   *  config:
-   *    nameSuffix: 'Query'
+   *  generates:
+   *    src/api/user-service/queries.ts:
+   *    plugins:
+   *      - typescript-document-nodes
+   *    config:
+   *      nameSuffix: 'Query'
    * ```
    */
   nameSuffix?: string;
