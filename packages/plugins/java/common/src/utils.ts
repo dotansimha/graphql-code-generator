@@ -1,7 +1,10 @@
 import { Kind, TypeNode } from 'graphql';
+import unixify from 'unixify';
 
 export function buildPackageNameFromPath(path: string): string {
-  return (path || '').replace(/src\/main\/.*?\//, '').replace(/\//g, '.');
+  return unixify(path || '')
+    .replace(/src\/main\/.*?\//, '')
+    .replace(/\//g, '.');
 }
 
 export function wrapTypeWithModifiers(baseType: string, typeNode: TypeNode, listType = 'Iterable'): string {
