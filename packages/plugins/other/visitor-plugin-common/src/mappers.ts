@@ -53,7 +53,7 @@ export function parseMapper(mapper: string, gqlTypeName: string | null = null): 
       isExternal: true,
       source,
       type,
-      import: importElement,
+      import: importElement.replace(/<(.*)>/, ''),
     };
   }
 
@@ -64,7 +64,7 @@ export function parseMapper(mapper: string, gqlTypeName: string | null = null): 
 }
 
 export function isExternalMapper(value: string): boolean {
-  return value.includes('#') && !value.includes('"') && !value.includes("'");
+  return value.includes('#') && !value.includes('"') && !value.includes('\'');
 }
 
 export function transformMappers(rawMappers: RawResolversConfig['mappers']): ParsedResolversConfig['mappers'] {

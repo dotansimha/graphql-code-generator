@@ -28,7 +28,7 @@ export type TwoHeroesComponentProps = Omit<ApolloReactComponents.QueryComponentO
 
 export const TwoHeroesComponent = (props: TwoHeroesComponentProps) => <ApolloReactComponents.Query<TwoHeroesQuery, TwoHeroesQueryVariables> query={TwoHeroesDocument} {...props} />;
 
-export type TwoHeroesProps<TChildProps = {}> = ApolloReactHoc.DataProps<TwoHeroesQuery, TwoHeroesQueryVariables> | TChildProps;
+export type TwoHeroesProps<TChildProps = {}> = ApolloReactHoc.DataProps<TwoHeroesQuery, TwoHeroesQueryVariables> & TChildProps;
 export function withTwoHeroes<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<TProps, TwoHeroesQuery, TwoHeroesQueryVariables, TwoHeroesProps<TChildProps>>) {
   return ApolloReactHoc.withQuery<TProps, TwoHeroesQuery, TwoHeroesQueryVariables, TwoHeroesProps<TChildProps>>(TwoHeroesDocument, {
     alias: 'twoHeroes',

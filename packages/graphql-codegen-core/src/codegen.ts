@@ -1,10 +1,10 @@
 import { Types, isComplexPluginOutput, turnExtensionsIntoObjectTypes, federationSpec } from '@graphql-codegen/plugin-helpers';
 import { visit, buildASTSchema } from 'graphql';
-import { mergeSchemas } from './merge-schemas';
 import { executePlugin } from './execute-plugin';
 import { DetailedError } from './errors';
 import { checkValidationErrors, validateGraphQlDocuments } from '@graphql-toolkit/common';
 import { Kind } from 'graphql';
+import { mergeTypeDefs } from '@graphql-toolkit/schema-merging';
 
 export async function codegen(options: Types.GenerateOptions): Promise<string> {
   const documents = options.documents || [];
@@ -26,7 +26,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
 
     schemaChanged = true;
 
-    return mergeSchemas([schema, addToSchema]);
+    return mergeTypeDefs([schema, addToSchema]);
   }, options.schema);
 
   const federationInConfig = pickFlag('federation', options.config);
@@ -35,7 +35,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
   if (isFederation) {
     schemaChanged = true;
     if (!schema.definitions.find(definition => definition.kind === 'DirectiveDefinition' && (definition.name.value === 'external' || definition.name.value === 'requires' || definition.name.value === 'provides' || definition.name.value === 'key'))) {
-      schema = turnExtensionsIntoObjectTypes(mergeSchemas([schema, federationSpec]));
+      schema = turnExtensionsIntoObjectTypes(mergeTypeDefs([schema, federationSpec]));
     }
   }
 
@@ -59,7 +59,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
   const prepend: Set<string> = new Set<string>();
   const append: Set<string> = new Set<string>();
 
-  const output$ = Promise.all(
+  const output = await Promise.all(
     options.plugins.map(async plugin => {
       const name = Object.keys(plugin)[0];
       const pluginPackage = options.pluginMap[name];
@@ -108,8 +108,6 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
       return '';
     })
   );
-
-  const output = await output$;
 
   return [...sortPrependValues(Array.from(prepend.values())), ...output, ...append.values()].join('\n');
 }

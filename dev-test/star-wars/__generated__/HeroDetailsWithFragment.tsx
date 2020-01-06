@@ -2,7 +2,6 @@ import * as Types from '../types.d';
 
 import { HeroDetails_Human_Fragment, HeroDetails_Droid_Fragment } from './HeroDetailsFragment';
 import gql from 'graphql-tag';
-import { HeroDetailsFragmentDoc } from './HeroDetailsFragment';
 import * as React from 'react';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactComponents from '@apollo/react-components';
@@ -27,7 +26,7 @@ export type HeroDetailsWithFragmentComponentProps = Omit<ApolloReactComponents.Q
 
 export const HeroDetailsWithFragmentComponent = (props: HeroDetailsWithFragmentComponentProps) => <ApolloReactComponents.Query<HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables> query={HeroDetailsWithFragmentDocument} {...props} />;
 
-export type HeroDetailsWithFragmentProps<TChildProps = {}> = ApolloReactHoc.DataProps<HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables> | TChildProps;
+export type HeroDetailsWithFragmentProps<TChildProps = {}> = ApolloReactHoc.DataProps<HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables> & TChildProps;
 export function withHeroDetailsWithFragment<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<TProps, HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables, HeroDetailsWithFragmentProps<TChildProps>>) {
   return ApolloReactHoc.withQuery<TProps, HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables, HeroDetailsWithFragmentProps<TChildProps>>(HeroDetailsWithFragmentDocument, {
     alias: 'heroDetailsWithFragment',

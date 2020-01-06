@@ -1,6 +1,6 @@
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { BaseVisitor, LoadedFragment, buildScalars, getPossibleTypes } from '@graphql-codegen/visitor-plugin-common';
-import { Kind, FragmentDefinitionNode, GraphQLSchema, DocumentNode } from 'graphql';
+import { Kind, FragmentDefinitionNode, GraphQLSchema, DocumentNode, print } from 'graphql';
 
 import { extractExternalFragmentsInUse } from './utils';
 
@@ -56,7 +56,7 @@ function buildFragmentRegistry<T>({ fragmentSuffix, generateFilePath }: Document
           fragmentSuffix
         );
 
-        if (prev[fragment.name.value]) {
+        if (prev[fragment.name.value] && print(fragment) !== print(prev[fragment.name.value].node)) {
           duplicateFragmentNames.push(fragment.name.value);
         }
 

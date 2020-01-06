@@ -1,7 +1,8 @@
-import { Types, toPascalCase } from '@graphql-codegen/plugin-helpers';
+import { Types } from '@graphql-codegen/plugin-helpers';
 import { visit, concatAST, InputObjectTypeDefinitionNode, DocumentNode, Kind, OperationDefinitionNode, FragmentDefinitionNode } from 'graphql';
 import { join } from 'path';
 import { FileType } from './file-type';
+import { pascalCase } from 'pascal-case';
 
 const packageNameToDirectory = (packageName: string): string => {
   return `./${packageName.split('.').join('/')}/`;
@@ -59,7 +60,7 @@ export const preset: Types.OutputPreset = {
         };
       }),
       ...operationsAst.map((ast: OperationDefinitionNode) => {
-        const fileName = ast.name.value.toLowerCase().endsWith(ast.operation) ? ast.name.value : `${ast.name.value}${toPascalCase(ast.operation)}`;
+        const fileName = ast.name.value.toLowerCase().endsWith(ast.operation) ? ast.name.value : `${ast.name.value}${pascalCase(ast.operation)}`;
 
         return {
           filename: join(outDir, packageNameToDirectory(options.config.package), fileName + '.java'),

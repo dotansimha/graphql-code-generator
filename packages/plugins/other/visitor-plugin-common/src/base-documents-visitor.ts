@@ -1,12 +1,13 @@
 import { NormalizedScalarsMap, ConvertOptions } from './types';
 import autoBind from 'auto-bind';
 import { DEFAULT_SCALARS } from './scalars';
-import { toPascalCase, DeclarationBlock, DeclarationBlockConfig, buildScalars, getConfigValue } from './utils';
+import { DeclarationBlock, DeclarationBlockConfig, buildScalars, getConfigValue } from './utils';
 import { GraphQLSchema, FragmentDefinitionNode, GraphQLObjectType, OperationDefinitionNode, VariableDefinitionNode, OperationTypeNode, ASTNode } from 'graphql';
 import { SelectionSetToObject } from './selection-set-to-object';
 import { OperationVariablesToObject } from './variables-to-object';
 import { BaseVisitor, BaseVisitorConvertOptions } from './base-visitor';
 import { ParsedTypesConfig, RawTypesConfig } from './base-types-visitor';
+import { pascalCase } from 'pascal-case';
 
 function getRootType(operation: OperationTypeNode, schema: GraphQLSchema) {
   switch (operation) {
@@ -167,7 +168,7 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
 
     const selectionSet = this._selectionSetToObject.createNext(operationRootType, node.selectionSet);
     const visitedOperationVariables = this._variablesTransfomer.transform<VariableDefinitionNode>(node.variableDefinitions);
-    const operationTypeSuffix = this.config.dedupeOperationSuffix && name.toLowerCase().endsWith(node.operation) ? '' : toPascalCase(node.operation);
+    const operationTypeSuffix = this.config.dedupeOperationSuffix && name.toLowerCase().endsWith(node.operation) ? '' : pascalCase(node.operation);
 
     const operationResult = new DeclarationBlock(this._declarationBlockConfig)
       .export()

@@ -44,7 +44,7 @@ Adds prefix to the name
  generates: src/api/user-service/queries.ts
  documents: src/api/user-service/queries.graphql
  plugins:
-   - graphql-codegen-typescript-document-nodes
+   - typescript-document-nodes
  config:
    namePrefix: 'gql'
 ```
@@ -60,7 +60,7 @@ Adds suffix to the name
  generates: src/api/user-service/queries.ts
  documents: src/api/user-service/queries.graphql
  plugins:
-   - graphql-codegen-typescript-document-nodes
+   - typescript-document-nodes
  config:
    nameSuffix: 'Query'
 ```

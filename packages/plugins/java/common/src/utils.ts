@@ -1,7 +1,10 @@
 import { Kind, TypeNode } from 'graphql';
 
 export function buildPackageNameFromPath(path: string): string {
-  return (path || '').replace(/src\/main\/.*?\//, '').replace(/\//g, '.');
+  const unixify = require('unixify');
+  return unixify(path || '')
+    .replace(/src\/main\/.*?\//, '')
+    .replace(/\//g, '.');
 }
 
 export function wrapTypeWithModifiers(baseType: string, typeNode: TypeNode, listType = 'Iterable'): string {

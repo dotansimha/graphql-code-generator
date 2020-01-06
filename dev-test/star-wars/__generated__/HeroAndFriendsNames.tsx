@@ -32,7 +32,7 @@ export type HeroAndFriendsNamesComponentProps = Omit<ApolloReactComponents.Query
 
 export const HeroAndFriendsNamesComponent = (props: HeroAndFriendsNamesComponentProps) => <ApolloReactComponents.Query<HeroAndFriendsNamesQuery, HeroAndFriendsNamesQueryVariables> query={HeroAndFriendsNamesDocument} {...props} />;
 
-export type HeroAndFriendsNamesProps<TChildProps = {}> = ApolloReactHoc.DataProps<HeroAndFriendsNamesQuery, HeroAndFriendsNamesQueryVariables> | TChildProps;
+export type HeroAndFriendsNamesProps<TChildProps = {}> = ApolloReactHoc.DataProps<HeroAndFriendsNamesQuery, HeroAndFriendsNamesQueryVariables> & TChildProps;
 export function withHeroAndFriendsNames<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<TProps, HeroAndFriendsNamesQuery, HeroAndFriendsNamesQueryVariables, HeroAndFriendsNamesProps<TChildProps>>) {
   return ApolloReactHoc.withQuery<TProps, HeroAndFriendsNamesQuery, HeroAndFriendsNamesQueryVariables, HeroAndFriendsNamesProps<TChildProps>>(HeroAndFriendsNamesDocument, {
     alias: 'heroAndFriendsNames',

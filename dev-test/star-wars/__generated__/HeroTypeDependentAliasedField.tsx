@@ -31,7 +31,7 @@ export const HeroTypeDependentAliasedFieldComponent = (props: HeroTypeDependentA
   <ApolloReactComponents.Query<HeroTypeDependentAliasedFieldQuery, HeroTypeDependentAliasedFieldQueryVariables> query={HeroTypeDependentAliasedFieldDocument} {...props} />
 );
 
-export type HeroTypeDependentAliasedFieldProps<TChildProps = {}> = ApolloReactHoc.DataProps<HeroTypeDependentAliasedFieldQuery, HeroTypeDependentAliasedFieldQueryVariables> | TChildProps;
+export type HeroTypeDependentAliasedFieldProps<TChildProps = {}> = ApolloReactHoc.DataProps<HeroTypeDependentAliasedFieldQuery, HeroTypeDependentAliasedFieldQueryVariables> & TChildProps;
 export function withHeroTypeDependentAliasedField<TProps, TChildProps = {}>(
   operationOptions?: ApolloReactHoc.OperationOption<TProps, HeroTypeDependentAliasedFieldQuery, HeroTypeDependentAliasedFieldQueryVariables, HeroTypeDependentAliasedFieldProps<TChildProps>>
 ) {

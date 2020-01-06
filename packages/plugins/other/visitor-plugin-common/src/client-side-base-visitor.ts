@@ -3,11 +3,12 @@ import autoBind from 'auto-bind';
 import { FragmentDefinitionNode, print, OperationDefinitionNode, visit, FragmentSpreadNode, GraphQLSchema } from 'graphql';
 import { DepGraph } from 'dependency-graph';
 import gqlTag from 'graphql-tag';
-import { toPascalCase, Types } from '@graphql-codegen/plugin-helpers';
+import { Types } from '@graphql-codegen/plugin-helpers';
 import { getConfigValue, buildScalars } from './utils';
 import { LoadedFragment } from './types';
 import { basename, extname } from 'path';
 import { DEFAULT_SCALARS } from './scalars';
+import { pascalCase } from 'pascal-case';
 
 export enum DocumentMode {
   graphQLTag = 'graphQLTag',
@@ -318,11 +319,13 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
     }
 
     if (this.config.documentMode === DocumentMode.graphQLTag) {
-      (this._fragments || []).filter(f => f.isExternal && f.importFrom && (!f['level'] || (f['level'] !== undefined && f['level'] === 0))).forEach(externalFragment => {
-        const identifierName = this._getFragmentName(externalFragment.name);
+      (this._fragments || [])
+        .filter(f => f.isExternal && f.importFrom && (!f['level'] || (f['level'] !== undefined && f['level'] === 0)))
+        .forEach(externalFragment => {
+          const identifierName = this._getFragmentName(externalFragment.name);
 
-        imports.push(`import { ${identifierName} } from '${externalFragment.importFrom}';`);
-      });
+          imports.push(`import { ${identifierName} } from '${externalFragment.importFrom}';`);
+        });
     }
 
     return imports;
@@ -350,7 +353,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
       documentString = `${this.config.noExport ? '' : 'export'} const ${documentVariableName}${this.config.documentMode === DocumentMode.documentNode ? ': DocumentNode' : ''} = ${this._gql(node)};`;
     }
 
-    const operationType: string = toPascalCase(node.operation);
+    const operationType: string = pascalCase(node.operation);
     const operationTypeSuffix: string = this.config.dedupeOperationSuffix && node.name.value.toLowerCase().endsWith(node.operation) ? '' : operationType;
 
     const operationResultType: string = this.convertName(node, {

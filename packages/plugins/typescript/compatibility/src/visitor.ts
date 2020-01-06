@@ -1,8 +1,9 @@
 import { CompatabilityPluginRawConfig } from './index';
-import { BaseVisitor, DeclarationBlock, indent, toPascalCase, getConfigValue, buildScalars } from '@graphql-codegen/visitor-plugin-common';
+import { BaseVisitor, DeclarationBlock, indent, getConfigValue, buildScalars } from '@graphql-codegen/visitor-plugin-common';
 import { GraphQLSchema, OperationDefinitionNode, OperationTypeNode, FragmentDefinitionNode } from 'graphql';
 import { ParsedConfig } from '@graphql-codegen/visitor-plugin-common';
 import { selectionSetToTypes, SelectionSetToObjectResult } from './selection-set-to-types';
+import { pascalCase } from 'pascal-case';
 
 export interface CompatabilityPluginConfig extends ParsedConfig {
   reactApollo: any;
@@ -36,12 +37,12 @@ export class CompatabilityPluginVisitor extends BaseVisitor<CompatabilityPluginR
 
   protected buildOperationBlock(node: OperationDefinitionNode): SelectionSetToObjectResult {
     const typeName = this.getRootType(node.operation);
-    const baseName = this.convertName(node.name.value, { suffix: `${toPascalCase(node.operation)}` });
+    const baseName = this.convertName(node.name.value, { suffix: `${pascalCase(node.operation)}` });
     const typesPrefix = this.config.noNamespaces ? this.convertName(node.name.value) : '';
     const selectionSetTypes: SelectionSetToObjectResult = {
       [typesPrefix + this.convertName('Variables')]: {
         export: 'type',
-        name: this.convertName(node.name.value, { suffix: `${toPascalCase(node.operation)}Variables` }),
+        name: this.convertName(node.name.value, { suffix: `${pascalCase(node.operation)}Variables` }),
       },
     };
 
@@ -146,7 +147,7 @@ export class CompatabilityPluginVisitor extends BaseVisitor<CompatabilityPluginR
       if (hooks) {
         selectionSetTypes['use' + prefix] = {
           export: 'const',
-          name: 'use' + this.convertName(baseName, { suffix: toPascalCase(node.operation) }),
+          name: 'use' + this.convertName(baseName, { suffix: pascalCase(node.operation) }),
         };
       }
     }

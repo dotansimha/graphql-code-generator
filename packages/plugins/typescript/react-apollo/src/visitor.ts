@@ -2,7 +2,7 @@ import { ClientSideBaseVisitor, ClientSideBasePluginConfig, getConfigValue, Load
 import { ReactApolloRawPluginConfig } from './index';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, Kind } from 'graphql';
-import { toPascalCase, Types } from '@graphql-codegen/plugin-helpers';
+import { Types } from '@graphql-codegen/plugin-helpers';
 import { pascalCase } from 'pascal-case';
 import { camelCase } from 'camel-case';
 import { GraphQLSchema } from 'graphql';
@@ -90,8 +90,8 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
   }
 
   private _buildHocProps(operationName: string, operationType: string): string {
-    const typeVariableName = this._externalImportPrefix + this.convertName(operationName + toPascalCase(operationType) + this._parsedConfig.operationResultSuffix);
-    const variablesVarName = this._externalImportPrefix + this.convertName(operationName + toPascalCase(operationType) + 'Variables');
+    const typeVariableName = this._externalImportPrefix + this.convertName(operationName + pascalCase(operationType) + this._parsedConfig.operationResultSuffix);
+    const variablesVarName = this._externalImportPrefix + this.convertName(operationName + pascalCase(operationType) + 'Variables');
     const argType = operationType === 'mutation' ? 'MutateProps' : 'DataProps';
 
     this.imports.add(this.getApolloReactCommonImport());
@@ -114,7 +114,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     const operationName: string = this.convertName(node.name.value, { useTypesPrefix: false });
     const propsTypeName: string = this.convertName(node.name.value, { suffix: 'Props' });
 
-    const propsVar = `export type ${propsTypeName}<TChildProps = {}> = ${this._buildHocProps(node.name.value, node.operation)} | TChildProps;`;
+    const propsVar = `export type ${propsTypeName}<TChildProps = {}> = ${this._buildHocProps(node.name.value, node.operation)} & TChildProps;`;
 
     const hocString = `export function with${operationName}<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
   TProps,
