@@ -2032,13 +2032,13 @@
     apollo-language-server "1.17.2"
     tslib "1.10.0"
 
-"@graphql-toolkit/code-file-loader@0.8.1":
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/@graphql-toolkit/code-file-loader/-/code-file-loader-0.8.1.tgz#ff57461421215fc6dcd5ae697d7233d8840f8552"
-  integrity sha512-2h0ik5Wff0N9BGMua1RO9JU5iRvksClIZM2syDyCF2WeVq2gxOdaIY0J73tJYAJANJ/3oicKLPljL6lUizfUTA==
+"@graphql-toolkit/code-file-loader@0.9.0":
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/code-file-loader/-/code-file-loader-0.9.0.tgz#45b05801392378a611a755c5214333b820fd3e35"
+  integrity sha512-Aswx0oFctDhzg53jY1nwyMwRl/NLYB8jP0Du2SQkXIeSWy5UDqMdMa48VQgwERnmXv13OIqeSR4Oh+Ri30bhyw==
   dependencies:
-    "@graphql-toolkit/common" "0.8.1"
-    "@graphql-toolkit/graphql-tag-pluck" "0.8.1"
+    "@graphql-toolkit/common" "0.9.0"
+    "@graphql-toolkit/graphql-tag-pluck" "0.9.0"
     tslib "1.10.0"
 
 "@graphql-toolkit/common@0.6.2":
@@ -2115,10 +2115,10 @@
     "@graphql-toolkit/common" "0.8.1"
     tslib "1.10.0"
 
-"@graphql-toolkit/graphql-tag-pluck@0.8.1":
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/@graphql-toolkit/graphql-tag-pluck/-/graphql-tag-pluck-0.8.1.tgz#3e6ec62b45e61cbe0317b6253e68a74212ad59d5"
-  integrity sha512-xPDDKtBKnuAjTP1D9MFXQRQnShu1bjECwvQ/oskTwkBPMHVwi6bXLiL7dQLBsdyel8OYs3KfqDWrqt9WK8Yy3w==
+"@graphql-toolkit/graphql-tag-pluck@0.9.0":
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/graphql-tag-pluck/-/graphql-tag-pluck-0.9.0.tgz#687a3b4a863eeb4a43ad796768d45ffcfb87a6b2"
+  integrity sha512-MiMxyBM4DK+7hZNjdWeiNTw/K/8M/gSHkEPtbSGaCn0csy9GYeLM6ojz2JDdg0rxNT4Zb9Z1DzQcauMpnX3tmA==
   dependencies:
     "@babel/parser" "7.7.7"
     "@babel/traverse" "7.7.4"
