@@ -13,7 +13,7 @@
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0"
   },
   "dependencies": {
-    "@graphql-toolkit/common": "0.8.1",
+    "@graphql-toolkit/common": "0.9.0",
     "camel-case": "4.1.1",
     "common-tags": "1.8.0",
     "constant-case": "3.0.3",
