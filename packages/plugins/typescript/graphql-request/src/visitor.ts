@@ -50,12 +50,12 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<RawGraphQLReque
           return `${o.node.name.value}(variables${optionalVariables ? '?' : ''}: ${o.operationVariablesTypes}): Promise<{ data?: ${
             o.operationResultType
           } | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
-              return client.rawRequest<${o.operationResultType}>(${doc}, variables);
-          }`;
+    return client.rawRequest<${o.operationResultType}>(${doc}, variables);
+}`;
         } else {
           return `${o.node.name.value}(variables${optionalVariables ? '?' : ''}: ${o.operationVariablesTypes}): Promise<${o.operationResultType}> {
-            return client.request<${o.operationResultType}>(${doc}, variables);
-          }`;
+  return client.request<${o.operationResultType}>(${doc}, variables);
+}`;
         }
       })
       .map(s => indentMultiline(s, 2));
