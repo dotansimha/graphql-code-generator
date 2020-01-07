@@ -47,7 +47,7 @@
   },
   "devDependencies": {
     "bob-the-bundler": "0.2.2",
-    "ts-jest": "24.2.0"
+    "ts-jest": "24.3.0"
   },
   "sideEffects": false,
   "main": "dist/index.cjs.js",
