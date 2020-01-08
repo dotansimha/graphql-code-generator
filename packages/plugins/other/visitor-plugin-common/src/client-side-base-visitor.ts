@@ -178,7 +178,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
   protected _includeFragments(fragments: string[]): string {
     if (fragments && fragments.length > 0) {
       if (this.config.documentMode === DocumentMode.documentNode) {
-        return this._fragments.map(fragment => print(fragment.node)).join('');
+        return this._fragments.map(fragment => print(fragment.node)).join('\n');
       } else if (this.config.documentMode === DocumentMode.documentNodeImportFragments) {
         return '';
       } else {
