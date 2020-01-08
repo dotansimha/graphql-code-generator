@@ -107,6 +107,13 @@ export function isUsingTypes(document: DocumentNode, externalFragments: string[]
           return;
         }
 
+        const selections = node.selectionSet ? node.selectionSet.selections || [] : [];
+        const relevantFragmentSpreads = selections.filter(s => s.kind === Kind.FRAGMENT_SPREAD && !externalFragments.includes(s.name.value));
+
+        if (selections.length === 0 || relevantFragmentSpreads.length > 0) {
+          foundFields++;
+        }
+
         if (schema) {
           const lastType = typesStack[typesStack.length - 1];
 
@@ -125,16 +132,13 @@ export function isUsingTypes(document: DocumentNode, externalFragments: string[]
                 foundFields++;
               }
 
-              typesStack.push(getBaseType(currentType));
+              const fieldBaseType = getBaseType(currentType);
+
+              if (selections.length > 0) {
+                typesStack.push(fieldBaseType);
+              }
             }
           }
-        }
-
-        const selections = node.selectionSet ? node.selectionSet.selections || [] : [];
-        const relevantFragmentSpreads = selections.filter(s => s.kind === Kind.FRAGMENT_SPREAD && !externalFragments.includes(s.name.value));
-
-        if (selections.length === 0 || relevantFragmentSpreads.length > 0) {
-          foundFields++;
         }
       },
       leave: (node: FieldNode, key, parent, path, anscestors) => {
@@ -149,8 +153,9 @@ export function isUsingTypes(document: DocumentNode, externalFragments: string[]
         }
 
         if (schema) {
+          const selections = node.selectionSet ? node.selectionSet.selections || [] : [];
           const currentType = typesStack[typesStack.length - 1];
-          if (currentType && isObjectType(currentType)) {
+          if (currentType && selections.length > 0) {
             typesStack.pop();
           }
         }

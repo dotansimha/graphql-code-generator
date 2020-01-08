@@ -2,6 +2,86 @@ import { parse, buildSchema } from 'graphql';
 import { isUsingTypes } from '../src/helpers';
 
 describe('isUsingTypes', () => {
+  describe('Issues', () => {
+    it('#3217 - complex selection set causes issues with incorrect parent type', () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type BrazilianCompany {
+          _id: ID!
+          ratings: [BrazilianCompanyRating!]!
+          chiefExecutiveOfficer: String!
+          financials: BrazilianCompanyFinancials!
+        }
+
+        type BrazilianCompanyFinancials {
+          template: BrazilianCompanyFinancialsTemplate!
+        }
+
+        enum BrazilianCompanyFinancialsTemplate {
+          BANK
+          COMPANY
+          INSURER
+        }
+
+        type GlassdoorRating {
+          linkHref: String!
+          overallRating: Float!
+          reviewsCount: Int!
+          recommendToFriend: Int!
+          dateOfReference: String!
+        }
+
+        type ReclameAquiRating {
+          linkHref: String!
+          humanReadablePeriod: String
+          classification: String
+          score: Float
+          formattedScore: String
+        }
+
+        union BrazilianCompanyRating = GlassdoorRating | ReclameAquiRating
+
+        type Query {
+          assetById(id: String!): Asset
+        }
+
+        union Asset = BrazilianCompany
+      `);
+      const ast = parse(/* GraphQL */ `
+        query AssetById($id: String!) {
+          assetById(id: $id) {
+            __typename
+            ... on BrazilianCompany {
+              ...BrazilianCompanyTopLevel
+            }
+          }
+        }
+
+        fragment BrazilianCompanyTopLevel on BrazilianCompany {
+          _id
+          ratings {
+            ... on ReclameAquiRating {
+              linkHref
+              humanReadablePeriod
+              classification
+              score
+              formattedScore
+            }
+            ... on GlassdoorRating {
+              linkHref
+              overallRating
+            }
+          }
+          chiefExecutiveOfficer
+          financials {
+            template
+          }
+        }
+      `);
+
+      expect(isUsingTypes(ast, [], schema)).toBeTruthy();
+    });
+  });
+
   it('Should work with __typename on fragments', () => {
     const schema = buildSchema(/* GraphQL */ `
       type Query {

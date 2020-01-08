@@ -52,8 +52,8 @@ export function writePackage(answers: Answers, configLocation: string) {
     // Works in tests
     version = require('../../package.json').version;
   } catch (e) {
-    // Works in production (because of esm and cjs directories)
-    version = require('../../../package.json').version;
+    // Works in production (package dist is flat, everything is in the same folder)
+    version = require('./package.json').version;
   }
 
   answers.plugins.forEach(plugin => {

@@ -229,18 +229,9 @@ export class CodegenContext {
   async loadSchema(pointer: Types.Schema) {
     if (this._graphqlConfig) {
       // TODO: SchemaWithLoader won't work here
-      try {
-        return await this._graphqlConfig.getProject(this._project).loadSchema(pointer as any, 'GraphQLSchema');
-      } catch (e) {
-        return await this._graphqlConfig.getProject(this._project).loadSchema(pointer as any, 'DocumentNode');
-      }
+      return await this._graphqlConfig.getProject(this._project).loadSchema(pointer as any);
     }
-
-    try {
-      return await loadSchema(pointer, this.getConfig(), 'GraphQLSchema');
-    } catch (e) {
-      return await loadSchema(pointer, this.getConfig(), 'DocumentNode');
-    }
+    return loadSchema(pointer, this.getConfig());
   }
 
   async loadDocuments(pointer: Types.OperationDocument[]): Promise<Types.DocumentFile[]> {

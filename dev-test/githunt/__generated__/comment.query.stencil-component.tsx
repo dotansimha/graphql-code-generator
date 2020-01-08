@@ -1,8 +1,5 @@
 // tslint:disable
-import * as Types from '../types.d';
-
 import gql from 'graphql-tag';
-import { CommentsPageCommentFragmentDoc } from './comments-page-comment.fragment.stencil-component';
 import 'stencil-apollo';
 import { Component, Prop, h } from '@stencil/core';
 

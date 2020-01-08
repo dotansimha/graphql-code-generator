@@ -225,6 +225,41 @@ describe('TypeScript', () => {
   });
 
   describe('Issues', () => {
+    it('#3137 - numeric enum value', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Query {
+          test: Test!
+        }
+
+        enum Test {
+          A
+          B
+          C
+        }
+      `);
+
+      const result = (await plugin(
+        testSchema,
+        [],
+        {
+          enumValues: {
+            Test: {
+              A: 0,
+              B: 'test',
+              C: '2',
+            },
+          },
+        },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+      const output = mergeOutputs([result]);
+      expect(output).toBeSimilarStringTo(`export enum Test {
+        A = 0,
+        B = 'test',
+        C = 2
+      }`);
+    });
+
     it('#2679 - incorrect prefix for enums', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         enum FilterOption {
@@ -270,6 +305,35 @@ describe('TypeScript', () => {
         i?: Maybe<IUpdateFilterOptionInput>,
         t?: Maybe<FilterOption>
       };`);
+    });
+
+    it('#3180 - enumValues and named default import', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        enum MyEnum {
+          A
+          B
+          C
+        }
+
+        type Test {
+          t: MyEnum
+          test(a: MyEnum): String
+        }
+      `);
+      const result = (await plugin(
+        testSchema,
+        [],
+        {
+          typesPrefix: 'I',
+          namingConvention: { enumValues: 'constant-case#constantCase' },
+          enumValues: {
+            MyEnum: './files#default as MyEnum',
+          },
+        },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.prepend[0]).toBe(`import { default as MyEnum } from './files';`);
     });
 
     it('#2976 - Issues with mapped enumValues and type prefix in args', async () => {
@@ -731,6 +795,45 @@ describe('TypeScript', () => {
         NonNull = 'NON_NULL'
       }
       `);
+    });
+
+    it('Should use class correctly when declarationKind: class is set', async () => {
+      const schema = buildSchema(`
+        input MyInput {
+          id: ID!
+          displayName: String
+        }
+
+        type MyType {
+          id: ID!
+          displayName: String
+        }
+      `);
+      const result = (await plugin(
+        schema,
+        [],
+        {
+          declarationKind: 'class',
+        },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`
+        export class MyInput {
+          id: Scalars['ID'];
+          displayName?: Maybe<Scalars['String']>;
+        }
+      `);
+
+      expect(result.content).toBeSimilarStringTo(`
+        export class MyType {
+          __typename?: 'MyType';
+          id: Scalars['ID'];
+          displayName?: Maybe<Scalars['String']>;
+        }
+      `);
+
+      validateTs(result);
     });
 
     it('Should use interface for type when declarationKind for types is set', async () => {

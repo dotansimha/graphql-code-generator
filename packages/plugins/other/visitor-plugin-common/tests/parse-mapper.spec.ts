@@ -56,4 +56,16 @@ describe('parseMapper', () => {
       source: 'file',
     });
   });
+
+  it('Should support generics', () => {
+    const result = parseMapper('file#Type<Generic>', 'SomeType');
+
+    expect(result).toEqual({
+      default: false,
+      isExternal: true,
+      import: 'Type',
+      type: 'Type<Generic>',
+      source: 'file',
+    });
+  });
 });

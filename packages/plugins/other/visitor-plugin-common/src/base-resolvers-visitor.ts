@@ -43,6 +43,7 @@ export interface ParsedResolversConfig extends ParsedConfig {
   federation: boolean;
   enumPrefix: boolean;
   optionalResolveType: boolean;
+  immutableTypes: boolean;
 }
 
 export interface RawResolversConfig extends RawConfig {
@@ -252,6 +253,13 @@ export interface RawResolversConfig extends RawConfig {
    * @description Sets the `__resolveType` field as optional field.
    */
   optionalResolveType?: boolean;
+  /**
+   * @name immutableTypes
+   * @type boolean
+   * @default false
+   * @description Generates immutable types by adding `readonly` to properties and uses `ReadonlyArray`.
+   */
+  immutableTypes?: boolean;
 }
 
 export type ResolverTypes = { [gqlType: string]: string };
@@ -276,6 +284,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
 
   constructor(rawConfig: TRawConfig, additionalConfig: TPluginConfig, private _schema: GraphQLSchema, defaultScalars: NormalizedScalarsMap = DEFAULT_SCALARS) {
     super(rawConfig, {
+      immutableTypes: getConfigValue(rawConfig.immutableTypes, false),
       optionalResolveType: getConfigValue(rawConfig.optionalResolveType, false),
       enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
       federation: getConfigValue(rawConfig.federation, false),
@@ -296,8 +305,16 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
     this._federation = new ApolloFederation({ enabled: this.config.federation, schema: this.schema });
     this._rootTypeNames = getRootTypeNames(_schema);
     this._variablesTransfomer = new OperationVariablesToObject(this.scalars, this.convertName);
-    this._resolversTypes = this.createResolversFields(type => this.applyResolverTypeWrapper(type), type => this.clearResolverTypeWrapper(type), name => this.getTypeToUse(name));
-    this._resolversParentTypes = this.createResolversFields(type => type, type => type, name => this.getParentTypeToUse(name));
+    this._resolversTypes = this.createResolversFields(
+      type => this.applyResolverTypeWrapper(type),
+      type => this.clearResolverTypeWrapper(type),
+      name => this.getTypeToUse(name)
+    );
+    this._resolversParentTypes = this.createResolversFields(
+      type => type,
+      type => type,
+      name => this.getParentTypeToUse(name)
+    );
     this._fieldContextTypeMap = this.createFieldContextTypeMap();
   }
 
@@ -361,96 +378,93 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
       nestedMapping[typeName] = this.shouldMapType(schemaType, nestedMapping);
     });
 
-    return typeNames.reduce(
-      (prev: ResolverTypes, typeName: string) => {
-        if (typeName.startsWith('__')) {
-          return prev;
-        }
+    return typeNames.reduce((prev: ResolverTypes, typeName: string) => {
+      if (typeName.startsWith('__')) {
+        return prev;
+      }
 
-        let shouldApplyOmit = false;
-        const isRootType = this._rootTypeNames.includes(typeName);
+      let shouldApplyOmit = false;
+      const isRootType = this._rootTypeNames.includes(typeName);
 
-        const isMapped = this.config.mappers[typeName];
-        const isScalar = this.config.scalars[typeName];
-        const hasDefaultMapper = !!(this.config.defaultMapper && this.config.defaultMapper.type);
-        const schemaType = allSchemaTypes[typeName];
+      const isMapped = this.config.mappers[typeName];
+      const isScalar = this.config.scalars[typeName];
+      const hasDefaultMapper = !!(this.config.defaultMapper && this.config.defaultMapper.type);
+      const schemaType = allSchemaTypes[typeName];
 
-        if (isRootType) {
-          prev[typeName] = applyWrapper(this.config.rootValueType.type);
-
-          return prev;
-        } else if (isEnumType(schemaType) && this.config.enumValues[typeName]) {
-          prev[typeName] = this.config.enumValues[typeName].typeIdentifier;
-        } else if (isMapped && this.config.mappers[typeName].type) {
-          this.markMapperAsUsed(typeName);
-          prev[typeName] = applyWrapper(this.config.mappers[typeName].type);
-        } else if (hasDefaultMapper && !hasPlaceholder(this.config.defaultMapper.type)) {
-          prev[typeName] = applyWrapper(this.config.defaultMapper.type);
-        } else if (isScalar) {
-          prev[typeName] = applyWrapper(this._getScalar(typeName));
-        } else if (isUnionType(schemaType)) {
-          prev[typeName] = schemaType
-            .getTypes()
-            .map(type => getTypeToUse(type.name))
-            .join(' | ');
-        } else {
-          shouldApplyOmit = true;
-          prev[typeName] = this.convertName(typeName, { useTypesPrefix: this.config.enumPrefix });
-        }
-
-        if ((shouldApplyOmit && prev[typeName] !== 'any' && isObjectType(schemaType)) || (isInterfaceType(schemaType) && !isMapped)) {
-          const fields = schemaType.getFields();
-          const relevantFields: { addOptionalSign: boolean; fieldName: string; replaceWithType: string }[] = this._federation
-            .filterFieldNames(Object.keys(fields))
-            .map(fieldName => {
-              const field = fields[fieldName];
-              const baseType = getBaseType(field.type);
-              const isUnion = isUnionType(baseType);
-
-              if (!this.config.mappers[baseType.name] && !isUnion && !nestedMapping[baseType.name]) {
-                return null;
-              }
-
-              const addOptionalSign = !this.config.avoidOptionals && !isNonNullType(field.type);
-
-              return {
-                addOptionalSign,
-                fieldName,
-                replaceWithType: this.wrapTypeWithModifiers(getTypeToUse(baseType.name), field.type),
-              };
-            })
-            .filter(a => a);
-
-          if (relevantFields.length > 0) {
-            // Puts ResolverTypeWrapper on top of an entire type
-            prev[typeName] = applyWrapper(this.replaceFieldsInType(prev[typeName], relevantFields));
-          } else {
-            // We still want to use ResolverTypeWrapper, even if we don't touch any fields
-            prev[typeName] = applyWrapper(prev[typeName]);
-          }
-        }
-
-        if (isMapped && hasPlaceholder(prev[typeName])) {
-          prev[typeName] = replacePlaceholder(prev[typeName], typeName);
-        }
-
-        if (!isMapped && hasDefaultMapper && hasPlaceholder(this.config.defaultMapper.type)) {
-          // Make sure the inner type has no ResolverTypeWrapper
-          const name = clearWrapper(isScalar ? this._getScalar(typeName) : prev[typeName]);
-          const replaced = replacePlaceholder(this.config.defaultMapper.type, name);
-
-          // Don't wrap Union with ResolverTypeWrapper, each inner type already has it
-          if (isUnionType(schemaType)) {
-            prev[typeName] = replaced;
-          } else {
-            prev[typeName] = applyWrapper(replacePlaceholder(this.config.defaultMapper.type, name));
-          }
-        }
+      if (isRootType) {
+        prev[typeName] = applyWrapper(this.config.rootValueType.type);
 
         return prev;
-      },
-      {} as ResolverTypes
-    );
+      } else if (isEnumType(schemaType) && this.config.enumValues[typeName]) {
+        prev[typeName] = this.config.enumValues[typeName].typeIdentifier;
+      } else if (isMapped && this.config.mappers[typeName].type) {
+        this.markMapperAsUsed(typeName);
+        prev[typeName] = applyWrapper(this.config.mappers[typeName].type);
+      } else if (hasDefaultMapper && !hasPlaceholder(this.config.defaultMapper.type)) {
+        prev[typeName] = applyWrapper(this.config.defaultMapper.type);
+      } else if (isScalar) {
+        prev[typeName] = applyWrapper(this._getScalar(typeName));
+      } else if (isUnionType(schemaType)) {
+        prev[typeName] = schemaType
+          .getTypes()
+          .map(type => getTypeToUse(type.name))
+          .join(' | ');
+      } else {
+        shouldApplyOmit = true;
+        prev[typeName] = this.convertName(typeName, { useTypesPrefix: this.config.enumPrefix });
+      }
+
+      if ((shouldApplyOmit && prev[typeName] !== 'any' && isObjectType(schemaType)) || (isInterfaceType(schemaType) && !isMapped)) {
+        const fields = schemaType.getFields();
+        const relevantFields: { addOptionalSign: boolean; fieldName: string; replaceWithType: string }[] = this._federation
+          .filterFieldNames(Object.keys(fields))
+          .map(fieldName => {
+            const field = fields[fieldName];
+            const baseType = getBaseType(field.type);
+            const isUnion = isUnionType(baseType);
+
+            if (!this.config.mappers[baseType.name] && !isUnion && !nestedMapping[baseType.name]) {
+              return null;
+            }
+
+            const addOptionalSign = !this.config.avoidOptionals && !isNonNullType(field.type);
+
+            return {
+              addOptionalSign,
+              fieldName,
+              replaceWithType: this.wrapTypeWithModifiers(getTypeToUse(baseType.name), field.type),
+            };
+          })
+          .filter(a => a);
+
+        if (relevantFields.length > 0) {
+          // Puts ResolverTypeWrapper on top of an entire type
+          prev[typeName] = applyWrapper(this.replaceFieldsInType(prev[typeName], relevantFields));
+        } else {
+          // We still want to use ResolverTypeWrapper, even if we don't touch any fields
+          prev[typeName] = applyWrapper(prev[typeName]);
+        }
+      }
+
+      if (isMapped && hasPlaceholder(prev[typeName])) {
+        prev[typeName] = replacePlaceholder(prev[typeName], typeName);
+      }
+
+      if (!isMapped && hasDefaultMapper && hasPlaceholder(this.config.defaultMapper.type)) {
+        // Make sure the inner type has no ResolverTypeWrapper
+        const name = clearWrapper(isScalar ? this._getScalar(typeName) : prev[typeName]);
+        const replaced = replacePlaceholder(this.config.defaultMapper.type, name);
+
+        // Don't wrap Union with ResolverTypeWrapper, each inner type already has it
+        if (isUnionType(schemaType)) {
+          prev[typeName] = replaced;
+        } else {
+          prev[typeName] = applyWrapper(replacePlaceholder(this.config.defaultMapper.type, name));
+        }
+      }
+
+      return prev;
+    }, {} as ResolverTypes);
   }
 
   protected replaceFieldsInType(typeName: string, relevantFields: { addOptionalSign: boolean; fieldName: string; replaceWithType: string }[]): string {
@@ -482,13 +496,21 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
     return str;
   }
 
+  protected wrapWithArray(t: string): string {
+    if (this.config.immutableTypes) {
+      return `ReadonlyArray<${t}>`;
+    }
+
+    return `Array<${t}>`;
+  }
+
   protected wrapTypeWithModifiers(baseType: string, type: GraphQLOutputType): string {
     if (isNonNullType(type)) {
       return this.clearMaybe(this.wrapTypeWithModifiers(baseType, type.ofType));
     } else if (isListType(type)) {
       const innerType = this.wrapTypeWithModifiers(baseType, type.ofType);
 
-      return this.applyMaybe(`Array<${innerType}>`);
+      return this.applyMaybe(this.wrapWithArray(innerType));
     } else {
       // ResolverTypeWrapper here?
       return this.applyMaybe(baseType);
@@ -697,7 +719,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
   ListType(node: ListTypeNode): string {
     const asString = (node.type as any) as string;
 
-    return `Array<${asString}>`;
+    return this.wrapWithArray(asString);
   }
 
   protected _getScalar(name: string): string {

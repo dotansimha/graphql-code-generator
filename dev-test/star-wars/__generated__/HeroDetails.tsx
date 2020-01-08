@@ -30,7 +30,7 @@ export type HeroDetailsComponentProps = Omit<ApolloReactComponents.QueryComponen
 
 export const HeroDetailsComponent = (props: HeroDetailsComponentProps) => <ApolloReactComponents.Query<HeroDetailsQuery, HeroDetailsQueryVariables> query={HeroDetailsDocument} {...props} />;
 
-export type HeroDetailsProps<TChildProps = {}> = ApolloReactHoc.DataProps<HeroDetailsQuery, HeroDetailsQueryVariables> | TChildProps;
+export type HeroDetailsProps<TChildProps = {}> = ApolloReactHoc.DataProps<HeroDetailsQuery, HeroDetailsQueryVariables> & TChildProps;
 export function withHeroDetails<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<TProps, HeroDetailsQuery, HeroDetailsQueryVariables, HeroDetailsProps<TChildProps>>) {
   return ApolloReactHoc.withQuery<TProps, HeroDetailsQuery, HeroDetailsQueryVariables, HeroDetailsProps<TChildProps>>(HeroDetailsDocument, {
     alias: 'heroDetails',
