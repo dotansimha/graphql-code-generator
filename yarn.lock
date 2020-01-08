@@ -9516,12 +9516,13 @@ graphql-config@2.2.1:
     lodash "^4.17.4"
     minimatch "^3.0.4"
 
-graphql-config@3.0.0-alpha.15:
-  version "3.0.0-alpha.15"
-  resolved "https://registry.npmjs.org/graphql-config/-/graphql-config-3.0.0-alpha.15.tgz#95941dc1b69322cab415bf20f4f2bfcdc21d956f"
-  integrity sha512-4ip4Ys9Q9NGdNsSHRVqURFNy8jz/IfCO6EY2uOu+EXbWY6rDMXjkovvKsfHmPH1+QuxMXEhE3MtUHS6vkfRZ+g==
+graphql-config@3.0.0-alpha.16:
+  version "3.0.0-alpha.16"
+  resolved "https://registry.yarnpkg.com/graphql-config/-/graphql-config-3.0.0-alpha.16.tgz#a9805425c4e16ab0bb7d2722a1cd451de165cef1"
+  integrity sha512-xicNKGoaaD+xkK5fg5frLYqaUjXxpySRbOd1NHx6nIBkuTD8pcUt0mPatJ0NC3DMDr7sbMsOYZk9Vfp4PnJwQA==
   dependencies:
     "@graphql-toolkit/common" "0.9.0"
+    "@graphql-toolkit/core" "0.9.0"
     "@graphql-toolkit/graphql-file-loader" "0.9.0"
     "@graphql-toolkit/json-file-loader" "0.9.0"
     "@graphql-toolkit/schema-merging" "0.9.0"
