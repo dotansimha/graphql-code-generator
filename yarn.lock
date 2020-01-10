@@ -15297,10 +15297,10 @@ react-transition-group@^4.3.0:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
-react-wonka@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/react-wonka/-/react-wonka-1.0.3.tgz#2d997403be347489e1161cb58d502ac683499847"
-  integrity sha512-7ocCcMnSxc7zD06V6H2Er4PJNbHQL2bityy6aZPrsn2JqJSP4SEkCzdvCk+nQVKDDqO8Lk5L5F9GG7PUB8gGsA==
+react-wonka@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-wonka/-/react-wonka-2.0.0.tgz#d62d87c9c93ec3e603ecf1582df3615aadc5c2e9"
+  integrity sha512-7q0CNBnSltRyzb61joCxKqVntHbRJRhP/WPxEx+zM8l9Yd+0IRevJuPG8iCamgrGphusX5xtEtd4yyX7qvRM1g==
 
 react@16.12.0:
   version "16.12.0"
@@ -17904,13 +17904,13 @@ url@^0.11.0:
     punycode "1.3.2"
     querystring "0.2.0"
 
-urql@1.7.0:
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/urql/-/urql-1.7.0.tgz#3b5d53451e9b45163288618f2bad6fe0afc02e0e"
-  integrity sha512-mw9gZhq3u33FzT6nLIQGzTF/cVkl3+pM1Jr2mya9pyTQfRBMugurGpZTyIFZKZQK1zjSnO8LbI2gzelydctq3A==
+urql@1.8.0:
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/urql/-/urql-1.8.0.tgz#1aa002f74b178ea845122ec2f77f7a5d2ce766d3"
+  integrity sha512-JW6vFMeVv6QETyBw0iFCqDe1lviCdl8uLOQ7et8NkenLK3DE8RTv3ObYF6G+S8Jdmn7w08e6eNvqF9gr0+5b3g==
   dependencies:
-    react-wonka "^1.0.3"
-    wonka "^3.2.1"
+    react-wonka "^2.0.0"
+    wonka "^4.0.5"
 
 use@^3.1.0:
   version "3.1.1"
@@ -18305,10 +18305,10 @@ windows-release@^3.1.0:
   dependencies:
     execa "^1.0.0"
 
-wonka@^3.2.1:
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/wonka/-/wonka-3.2.1.tgz#f66123fabbb260f23a4e89f1526317169203e258"
-  integrity sha512-LpquZ9PJtYJ31AlMPp5tEba1y+S+wUmY7OyFLGZCmGSNO1ZOTTZGp/HbieFzP5fVJ9fWXCus3ecgDjwAssHSGg==
+wonka@^4.0.5:
+  version "4.0.5"
+  resolved "https://registry.yarnpkg.com/wonka/-/wonka-4.0.5.tgz#3384b90ed8c1e6e182d6e2fb18468c33ab94e0af"
+  integrity sha512-XKnzSpsk2UcPfyjecdc14b7LZSPeOEhYEs+/oAZ+gXV9BuYIcZC3hpapFi2DFHj1Bk38/npusgkiSD0+KdyCzQ==
 
 word-wrap@~1.2.3:
   version "1.2.3"
