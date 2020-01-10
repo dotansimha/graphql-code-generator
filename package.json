@@ -70,7 +70,7 @@
     "tslint": "5.20.1",
     "stencil-apollo": "0.1.5",
     "typescript": "3.7.4",
-    "urql": "1.7.0"
+    "urql": "1.8.0"
   },
   "lint-staged": {
     "packages/**/*.{ts,tsx}": [
