@@ -158,9 +158,10 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
   private buildCompositionFunction({ operationName, operationType, operationHasNonNullableVariable, operationResultType, operationVariablesTypes, documentNodeVariable }: BuildCompositionFunctions): string {
     switch (operationType) {
       case 'Query':
-        return `export function use${operationName}(variables${
+        const reactiveFunctionTypeName = `ReactiveFunction${operationName}`;
+        return `type ${reactiveFunctionTypeName} = () => ${operationVariablesTypes}\nexport function use${operationName}(variables${
           operationHasNonNullableVariable ? '' : '?'
-        }: ${operationVariablesTypes} | VueCompositionApi.Ref<${operationVariablesTypes}> | VueApolloComposable.ReactiveFunction<${operationVariablesTypes}>, baseOptions?: VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}>) {
+          }: ${operationVariablesTypes} | VueCompositionApi.Ref<${operationVariablesTypes}> | ${reactiveFunctionTypeName}, baseOptions?: VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}>) {
           return VueApolloComposable.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${documentNodeVariable}, variables, baseOptions);
         }`;
       case 'Mutation':
@@ -170,7 +171,7 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
       case 'Subscription':
         return `export function use${operationName}(variables${
           operationHasNonNullableVariable ? '' : '?'
-        }: ${operationVariablesTypes}, baseOptions?: VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}>) {
+          }: ${operationVariablesTypes}, baseOptions?: VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}>) {
           return VueApolloComposable.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${documentNodeVariable}, variables, baseOptions);
         }`;
     }
