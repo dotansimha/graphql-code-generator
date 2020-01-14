@@ -1,5 +1,6 @@
 import { PluginFunction } from '@graphql-codegen/plugin-helpers';
 import { printSchema, parse, visit } from 'graphql';
+import { DEFAULT_SCALARS } from '@graphql-codegen/visitor-plugin-common';
 
 type NamedType = {
   kind: 'NamedType';
@@ -26,19 +27,11 @@ type TypeDef = {
 };
 
 const transformScalar = (scalar: string) => {
-  const scalarMap = {
-    Int: 'number',
-    Float: 'number',
-    String: 'string',
-    Boolean: 'boolean',
-    ID: 'string',
-  };
-
-  if (scalarMap[scalar] === undefined) {
+  if (DEFAULT_SCALARS[scalar] === undefined) {
     return scalar;
   }
 
-  return scalarMap[scalar];
+  return DEFAULT_SCALARS[scalar];
 };
 
 const createTypeDef = ({ name, properties, types }: TypeDef) => {
