@@ -175,7 +175,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
 
   protected _includeFragments(fragments: string[]): string {
     if (fragments && fragments.length > 0) {
-      if (this.config.documentMode === DocumentMode.documentNode) {
+      if (this.config.documentMode === DocumentMode.documentNode || this.config.documentMode === DocumentMode.string) {
         return `${fragments
           .filter((name, i, all) => all.indexOf(name) === i)
           .map(name => {
@@ -222,7 +222,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
 
       return JSON.stringify(gqlObj);
     } else if (this.config.documentMode === DocumentMode.string) {
-      return '`' + doc + '`';
+      return '`' + print(gqlTag(doc)) + '`';
     }
 
     return 'gql`' + doc + '`';

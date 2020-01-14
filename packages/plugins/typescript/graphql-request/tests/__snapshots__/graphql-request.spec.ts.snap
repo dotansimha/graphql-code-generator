@@ -528,8 +528,7 @@ export type Feed4Query = (
   )>>> }
 );
 
-export const FeedDocument = \`
-    query feed {
+export const FeedDocument = \`query feed {
   feed {
     id
     commentCount
@@ -540,28 +539,25 @@ export const FeedDocument = \`
     }
   }
 }
-    \`;
-export const Feed2Document = \`
-    query feed2($v: String!) {
+\`;
+export const Feed2Document = \`query feed2($v: String!) {
   feed {
     id
   }
 }
-    \`;
-export const Feed3Document = \`
-    query feed3($v: String) {
+\`;
+export const Feed3Document = \`query feed3($v: String) {
   feed {
     id
   }
 }
-    \`;
-export const Feed4Document = \`
-    query feed4($v: String! = \\"TEST\\") {
+\`;
+export const Feed4Document = \`query feed4($v: String! = \\"TEST\\") {
   feed {
     id
   }
 }
-    \`;
+\`;
 export function getSdk(client: GraphQLClient) {
   return {
     feed(variables?: FeedQueryVariables): Promise<FeedQuery> {
