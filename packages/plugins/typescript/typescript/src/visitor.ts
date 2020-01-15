@@ -10,9 +10,11 @@ export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
   avoidOptionals: AvoidOptionalsConfig;
   constEnums: boolean;
   enumsAsTypes: boolean;
+  fieldWrapperValue: string;
   immutableTypes: boolean;
   maybeValue: string;
   noExport: boolean;
+  wrapFieldDefinitions: boolean;
 }
 
 export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPluginConfig, TParsedConfig extends TypeScriptPluginParsedConfig = TypeScriptPluginParsedConfig> extends BaseTypesVisitor<TRawConfig, TParsedConfig> {
@@ -21,9 +23,11 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
       noExport: getConfigValue(pluginConfig.noExport, false),
       avoidOptionals: normalizeAvoidOptionals(getConfigValue(pluginConfig.avoidOptionals, false)),
       maybeValue: getConfigValue(pluginConfig.maybeValue, 'T | null'),
+      fieldWrapperValue: getConfigValue(pluginConfig.fieldWrapperValue, 'T'),
       constEnums: getConfigValue(pluginConfig.constEnums, false),
       enumsAsTypes: getConfigValue(pluginConfig.enumsAsTypes, false),
       immutableTypes: getConfigValue(pluginConfig.immutableTypes, false),
+      wrapFieldDefinitions: getConfigValue(pluginConfig.wrapFieldDefinitions, false),
       ...(additionalConfig || {}),
     } as TParsedConfig);
 
@@ -38,8 +42,20 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
     });
   }
 
+  public getWrapperDefinitions(): string[] {
+    const definitions: string[] = [this.getMaybeValue()];
+    if (this.config.wrapFieldDefinitions) {
+      definitions.push(this.getFieldWrapperValue());
+    }
+    return definitions;
+  }
+
   public getMaybeValue(): string {
     return `${this.config.noExport ? '' : 'export '}type Maybe<T> = ${this.config.maybeValue};`;
+  }
+
+  public getFieldWrapperValue(): string {
+    return `${this.config.noExport ? '' : 'export '}type FieldWrapper<T> = ${this.config.fieldWrapperValue};`;
   }
 
   protected clearOptional(str: string): string {
@@ -69,7 +85,7 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
   }
 
   FieldDefinition(node: FieldDefinitionNode, key?: number | string, parent?: any): string {
-    const typeString = (node.type as any) as string;
+    const typeString = this.config.wrapFieldDefinitions ? `FieldWrapper<${node.type}>` : ((node.type as any) as string);
     const originalFieldNode = parent[key] as FieldDefinitionNode;
     const addOptionalSign = !this.config.avoidOptionals.object && originalFieldNode.type.kind !== Kind.NON_NULL_TYPE;
     const comment = transformComment((node.description as any) as string, 1);

@@ -14,13 +14,12 @@ export const plugin: PluginFunction<TypeScriptPluginConfig> = (schema: GraphQLSc
   const visitor = new TsVisitor(schema, config);
   const printedSchema = printSchema(schema);
   const astNode = parse(printedSchema);
-  const maybeValue = visitor.getMaybeValue();
   const visitorResult = visit(astNode, { leave: visitor });
   const introspectionDefinitions = includeIntrospectionDefinitions(schema, documents, config);
   const scalars = visitor.scalarsDefinition;
 
   return {
-    prepend: [...visitor.getEnumsImports(), ...visitor.getScalarsImports(), maybeValue],
+    prepend: [...visitor.getEnumsImports(), ...visitor.getScalarsImports(), ...visitor.getWrapperDefinitions()],
     content: [scalars, ...visitorResult.definitions, ...introspectionDefinitions].join('\n'),
   };
 };
