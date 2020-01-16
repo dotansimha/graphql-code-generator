@@ -49,7 +49,7 @@
     "@graphql-toolkit/code-file-loader": "0.9.1",
     "@graphql-toolkit/core": "0.9.1",
     "@graphql-toolkit/git-loader": "0.9.1",
-    "@graphql-toolkit/github-loader": "0.9.0",
+    "@graphql-toolkit/github-loader": "0.9.1",
     "@graphql-toolkit/graphql-file-loader": "0.9.0",
     "@graphql-toolkit/json-file-loader": "0.9.0",
     "@graphql-toolkit/prisma-loader": "0.9.0",
