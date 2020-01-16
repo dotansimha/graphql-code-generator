@@ -1,6 +1,7 @@
-import { GraphQLSchema, visit, parse, buildASTSchema, FieldDefinitionNode, Kind, ObjectTypeDefinitionNode, DirectiveNode, StringValueNode, GraphQLObjectType, isObjectType, isNonNullType, GraphQLNamedType, printSchema, DocumentNode } from 'graphql';
+import { GraphQLSchema, visit, parse, FieldDefinitionNode, Kind, ObjectTypeDefinitionNode, DirectiveNode, StringValueNode, GraphQLObjectType, isObjectType, isNonNullType, GraphQLNamedType, printSchema, DocumentNode } from 'graphql';
 import { printSchemaWithDirectives } from '@graphql-toolkit/common';
 import { getBaseType } from './utils';
+import { mergeSchemas } from '@graphql-toolkit/schema-merging';
 
 interface FieldSetItem {
   name: string;
@@ -25,65 +26,25 @@ export const federationSpec = parse(/* GraphQL */ `
  */
 export function addFederationReferencesToSchema(schema: GraphQLSchema): GraphQLSchema {
   const doc = parse(printSchemaWithDirectives(schema));
-  const visited = visit(doc, {
+  const newReferences: string[] = [];
+  visit(doc, {
     ObjectTypeDefinition(node) {
-      if (!isFederationObjectType(node)) {
-        return node;
+      if (isFederationObjectType(node)) {
+        newReferences.push(/* GraphQL */ `
+          extend type ${node.name.value} {
+            ${resolveReferenceFieldName}: ${node.name.value}
+          }
+        `);
       }
-
-      return {
-        ...node,
-        fields: [
-          {
-            kind: Kind.FIELD_DEFINITION,
-            name: {
-              kind: Kind.NAME,
-              value: resolveReferenceFieldName,
-            },
-            type: {
-              kind: Kind.NAMED_TYPE,
-              name: {
-                kind: Kind.NAME,
-                value: node.name.value,
-              },
-            },
-            arguments: [],
-          } as FieldDefinitionNode,
-          ...node.fields,
-        ],
-      };
     },
   });
 
-  return buildASTSchema(visited, {
+  return mergeSchemas({
+    schemas: [schema],
+    typeDefs: newReferences,
+    assumeValid: true,
     assumeValidSDL: true,
   });
-}
-
-/**
- * Turns ObjectType extensions into ObjectTypes
- * @param ast Schema AST
- */
-export function turnExtensionsIntoObjectTypes(ast: DocumentNode): DocumentNode {
-  return {
-    ...ast,
-    definitions: ast.definitions.map(def => {
-      if (def.kind !== Kind.OBJECT_TYPE_EXTENSION) {
-        return def;
-      }
-
-      const isDefined = ast.definitions.some(d => d.kind === Kind.OBJECT_TYPE_DEFINITION && d.name.value === def.name.value);
-
-      if (isDefined) {
-        return def;
-      }
-
-      return {
-        ...def,
-        kind: Kind.OBJECT_TYPE_DEFINITION,
-      };
-    }),
-  };
 }
 
 /**
@@ -91,53 +52,15 @@ export function turnExtensionsIntoObjectTypes(ast: DocumentNode): DocumentNode {
  * @param schema
  * @param config
  */
-export function removeFederation(
-  schema: GraphQLSchema,
-  {
-    withDirectives,
-  }: {
-    withDirectives: boolean;
-  }
-): GraphQLSchema {
+export function removeFederation(schema: GraphQLSchema): GraphQLSchema {
   const queryTypeName = schema.getQueryType().name;
-  const printedSchema = withDirectives ? printSchemaWithDirectives(schema) : printSchema(schema);
-  const astNode = parse(printedSchema);
-  const emptyNode: void = null;
-  const docWithoutFederation = visit(astNode, {
-    ScalarTypeDefinition(node) {
-      if (node.name.value === '_Any') {
-        return emptyNode;
-      }
 
-      return node;
-    },
-
-    UnionTypeDefinition(node) {
-      if (node.name.value === '_Entity') {
-        return emptyNode;
-      }
-
-      return node;
-    },
-
-    ObjectTypeDefinition(node) {
-      if (node.name.value === '_Service') {
-        return emptyNode;
-      }
-
-      if (node.name.value === queryTypeName) {
-        return {
-          ...node,
-          fields: node.fields.filter(field => ['_entities', '_service'].includes(field.name.value) === false),
-        };
-      }
-
-      return node;
-    },
-  });
-
-  return buildASTSchema(docWithoutFederation, {
-    commentDescriptions: false,
+  return mergeSchemas({
+    schemas: [schema],
+    typeDefs: [],
+    exclusions: ['_Service', '_Entity', '_Any', `${queryTypeName}._entities`, `${queryTypeName}._service`],
+    assumeValid: true,
+    assumeValidSDL: true,
   });
 }
 

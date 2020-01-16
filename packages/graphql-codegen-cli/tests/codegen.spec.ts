@@ -892,4 +892,18 @@ describe('Codegen Executor', () => {
       expect(e).toBeFalsy();
     }
   });
+  it('Should allow plugins to extend schema with custom root', async () => {
+    try {
+      const output = await executeCodegen({
+        schema: `schema { query: RootQuery } type MyType { f: String } type RootQuery { f: String }`,
+        documents: `query root { f }`,
+        generates: {
+          'out1.ts': ['./tests/custom-plugins/extends-schema.js', './tests/custom-plugins/checks-extended-schema.js'],
+        },
+      });
+      expect(output.length).toBe(1);
+    } catch (e) {
+      expect(e.errors[0].message).not.toBe('Query root type must be provided.');
+    }
+  });
 });
