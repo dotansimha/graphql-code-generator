@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/flow-resolvers",
-  "version": "1.10.0",
+  "version": "1.11.2",
   "description": "GraphQL Code Generator plugin for generating Flow types for GraphQL resolvers signature",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
@@ -10,20 +10,20 @@
     "test": "jest --no-watchman --config ../../../../jest.config.js"
   },
   "dependencies": {
-    "@graphql-codegen/flow": "1.10.0",
-    "@graphql-codegen/plugin-helpers": "1.10.0",
-    "@graphql-codegen/visitor-plugin-common": "1.10.0",
+    "@graphql-codegen/flow": "1.11.2",
+    "@graphql-codegen/plugin-helpers": "1.11.2",
+    "@graphql-codegen/visitor-plugin-common": "1.11.2",
     "@graphql-toolkit/common": "0.9.0",
     "tslib": "1.10.0"
   },
   "devDependencies": {
-    "@graphql-codegen/testing": "1.10.0",
+    "@graphql-codegen/testing": "1.11.2",
     "bob-the-bundler": "0.2.2",
-    "flow-bin": "0.115.0",
-    "flow-parser": "0.115.0",
+    "flow-bin": "0.116.0",
+    "flow-parser": "0.116.0",
     "graphql": "14.5.8",
     "jest": "24.9.0",
-    "ts-jest": "24.2.0",
+    "ts-jest": "24.3.0",
     "typescript": "3.7.4"
   },
   "sideEffects": false,

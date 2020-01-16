@@ -17,9 +17,9 @@ export function resolveExternalModuleAndFn(pointer: any): any {
   const localFileExists = existsSync(localFilePath);
   const loadedModule = localFileExists ? require(localFilePath) : importFrom(process.cwd(), moduleName);
 
-  if (!(functionName in loadedModule)) {
+  if (!(functionName in loadedModule) && typeof loadedModule !== 'function') {
     throw new Error(`${functionName} couldn't be found in module ${moduleName}!`);
   }
 
-  return loadedModule[functionName];
+  return loadedModule[functionName] || loadedModule;
 }
