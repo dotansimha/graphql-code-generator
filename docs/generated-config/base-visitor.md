@@ -61,7 +61,7 @@ config:
 
 ### skipTypename (`boolean`, default value: `false`)
 
-Does not add __typename to the generated types, unless it was specified in the selection set. in the selection set.
+Does not add __typename to the generated types, unless it was specified in the selection set.
 
 
 #### Usage Example
