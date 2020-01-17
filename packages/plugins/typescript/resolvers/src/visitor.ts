@@ -1,5 +1,5 @@
 import { TypeScriptResolversPluginConfig } from './config';
-import { ListTypeNode, NamedTypeNode, NonNullTypeNode, GraphQLSchema } from 'graphql';
+import { FieldDefinitionNode, ListTypeNode, NamedTypeNode, NonNullTypeNode, GraphQLSchema } from 'graphql';
 import autoBind from 'auto-bind';
 import { ParsedResolversConfig, BaseResolversVisitor, getConfigValue } from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptOperationVariablesToObject } from '@graphql-codegen/typescript';
@@ -7,6 +7,7 @@ import { TypeScriptOperationVariablesToObject } from '@graphql-codegen/typescrip
 export interface ParsedTypeScriptResolversConfig extends ParsedResolversConfig {
   avoidOptionals: boolean;
   useIndexSignature: boolean;
+  wrapFieldDefinitions: boolean;
 }
 
 export class TypeScriptResolversVisitor extends BaseResolversVisitor<TypeScriptResolversPluginConfig, ParsedTypeScriptResolversConfig> {
@@ -16,6 +17,7 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<TypeScriptR
       {
         avoidOptionals: getConfigValue(pluginConfig.avoidOptionals, false),
         useIndexSignature: getConfigValue(pluginConfig.useIndexSignature, false),
+        wrapFieldDefinitions: getConfigValue(pluginConfig.wrapFieldDefinitions, false),
       } as ParsedTypeScriptResolversConfig,
       schema
     );
@@ -49,6 +51,13 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<TypeScriptR
 
   protected wrapWithListType(str: string): string {
     return `${this.config.immutableTypes ? 'ReadonlyArray' : 'Array'}<${str}>`;
+  }
+
+  protected getParentTypeForSignature(node: FieldDefinitionNode) {
+    if (this._federation.isResolveReferenceField(node) && this.config.wrapFieldDefinitions) {
+      return 'UnwrappedObject<ParentType>';
+    }
+    return 'ParentType';
   }
 
   NamedType(node: NamedTypeNode): string {
