@@ -47,13 +47,14 @@ export async function writePackage(answers: Answers, configLocation: string) {
   // read codegen's version
   let version: string;
 
+  const dynamicImport = (m: string) => import(m).then(m => ('default' in m ? m.default : m));
   try {
     // Works in tests
-    const packageJson = await import('../../package.json').then(m => ('default' in m ? m.default : m));
+    const packageJson = await dynamicImport('../../package.json');
     version = packageJson.version;
   } catch (e) {
     // Works in production (package dist is flat, everything is in the same folder)
-    const packageJson = await import('./package.json').then(m => ('default' in m ? m.default : m));
+    const packageJson = await dynamicImport('./package.json');
     version = packageJson.version;
   }
 
