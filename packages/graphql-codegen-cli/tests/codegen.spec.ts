@@ -26,7 +26,7 @@ describe('Codegen Executor', () => {
     it('Should load require extensions', async () => {
       expect((global as any).dummyWasLoaded).toBeFalsy();
       const output = await executeCodegen({
-        schema: '../tests/test-files/schema-dir/with-extend.js',
+        schema: '../tests/test-files/schema-dir/schema-object.js',
         require: '../tests/dummy-require.js',
         generates: {
           'out1.ts': ['typescript'],
@@ -40,7 +40,7 @@ describe('Codegen Executor', () => {
     it('Should throw when require extension is invalid', async () => {
       try {
         await executeCodegen({
-          schema: 'tests/test-files/schema-dir/with-extend.js',
+          schema: 'tests/test-files/schema-dir/schema-object.js',
           require: 'tests/missing.js',
           generates: {
             'out1.ts': ['typescript'],
