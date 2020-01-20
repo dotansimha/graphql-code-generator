@@ -20,7 +20,7 @@
   "dependencies": {
     "@microsoft/tsdoc": "0.12.16",
     "tslib": "1.10.0",
-    "typescript": "3.7.4"
+    "typescript": "3.7.5"
   },
   "devDependencies": {
     "bob-the-bundler": "0.2.2",
