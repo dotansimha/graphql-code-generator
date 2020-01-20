@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "@ardatan/bob": "0.2.6",
-    "typescript": "3.7.4"
+    "typescript": "3.7.5"
   },
   "publishConfig": {
     "access": "public"
