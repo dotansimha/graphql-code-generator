@@ -229,7 +229,7 @@ export class CodegenContext {
   async loadSchema(pointer: Types.Schema) {
     if (this._graphqlConfig) {
       // TODO: SchemaWithLoader won't work here
-      return await this._graphqlConfig.getProject(this._project).loadSchema(pointer as any);
+      return await this._graphqlConfig.getProject(this._project).loadSchema(pointer);
     }
     return loadSchema(pointer, this.getConfig());
   }
@@ -237,7 +237,7 @@ export class CodegenContext {
   async loadDocuments(pointer: Types.OperationDocument[]): Promise<Types.DocumentFile[]> {
     if (this._graphqlConfig) {
       // TODO: pointer won't work here
-      const documents = await this._graphqlConfig.getProject(this._project).loadDocuments(pointer as any);
+      const documents = await this._graphqlConfig.getProject(this._project).loadDocuments(pointer);
 
       return documents.map<Types.DocumentFile>(source => {
         return {
