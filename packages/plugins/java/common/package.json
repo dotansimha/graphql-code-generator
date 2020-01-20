@@ -16,7 +16,7 @@
     "unixify": "1.0.0"
   },
   "devDependencies": {
-    "@ardatan/bob": "0.2.6",
+    "@ardatan/bob": "0.2.7",
     "graphql": "14.5.8",
     "java-ast": "0.1.0",
     "typescript": "3.7.5"
