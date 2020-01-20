@@ -38,7 +38,7 @@ export async function init() {
   }
 
   // config file
-  const { relativePath } = writeConfig(answers, config);
+  const { relativePath } = await writeConfig(answers, config);
 
   // write package.json
   writePackage(answers, relativePath);
