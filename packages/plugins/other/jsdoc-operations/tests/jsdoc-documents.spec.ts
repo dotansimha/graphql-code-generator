@@ -62,7 +62,7 @@ describe('JSDoc Operations Plugin', () => {
  */`);
   });
 
-  it('should generate a typedef with a List property', async () => {
+  it('should generate a typedef with a list property', async () => {
     const schema = buildSchema(/* Graphql */ `
         type Foo {
             foo: [Int!]!
@@ -85,5 +85,26 @@ describe('JSDoc Operations Plugin', () => {
     expect(result).toEqual(expect.stringContaining('@property {Array<Int>} [nullableFoo]'));
     expect(result).toEqual(expect.stringContaining('@property {Array<Int|null|undefined>} nullableItemsFoo'));
     expect(result).toEqual(expect.stringContaining('@property {Array<Int|null|undefined>} [nullableItemsNullableFoo]'));
+  });
+
+  it('should generate a typedef with a custom scalar', async () => {
+    const schema = buildSchema(/* Graphql */ `
+        scalar Bar
+
+        type Foo {
+            foo: Bar
+        }
+    `);
+
+    const ast = parse(/* GraphQL */ `
+      query {
+        foo
+      }
+    `);
+
+    const config = {};
+    const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
+
+    expect(result).toEqual(expect.stringContaining('@property {Bar} [foo]'));
   });
 });
