@@ -1,6 +1,6 @@
-import { GraphQLSchema, GraphQLObjectType, GraphQLString } from 'graphql';
+const { GraphQLSchema, GraphQLObjectType, GraphQLString } = require('graphql');
 
-export default new GraphQLSchema({
+module.exports = new GraphQLSchema({
   query: new GraphQLObjectType({
     name: 'Query',
     fields: {
