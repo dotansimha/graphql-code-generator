@@ -75,11 +75,7 @@ export const plugin: PluginFunction = async (schema: GraphQLSchema, _documents, 
     ...pluginConfig,
   };
 
-  const cleanSchema = config.federation
-    ? removeFederation(schema, {
-        withDirectives: false,
-      })
-    : schema;
+  const cleanSchema = config.federation ? removeFederation(schema) : schema;
 
   const introspection = await execute<IntrospectionResultData>({
     schema: cleanSchema,

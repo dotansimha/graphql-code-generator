@@ -44,11 +44,7 @@ export interface SchemaASTConfig {
   federation?: boolean;
 }
 export const plugin: PluginFunction<SchemaASTConfig> = async (schema: GraphQLSchema, _documents, { commentDescriptions = false, includeDirectives = false, federation }): Promise<string> => {
-  const outputSchema = federation
-    ? removeFederation(schema, {
-        withDirectives: includeDirectives,
-      })
-    : schema;
+  const outputSchema = federation ? removeFederation(schema) : schema;
 
   if (includeDirectives) {
     return printSchemaWithDirectives(outputSchema);

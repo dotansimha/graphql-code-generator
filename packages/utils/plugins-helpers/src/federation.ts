@@ -1,5 +1,4 @@
-import { GraphQLSchema, visit, parse, buildASTSchema, FieldDefinitionNode, Kind, ObjectTypeDefinitionNode, DirectiveNode, StringValueNode, GraphQLObjectType, isObjectType, isNonNullType, GraphQLNamedType, printSchema, DocumentNode } from 'graphql';
-import { printSchemaWithDirectives } from '@graphql-toolkit/common';
+import { GraphQLSchema, parse, FieldDefinitionNode, ObjectTypeDefinitionNode, DirectiveNode, StringValueNode, GraphQLObjectType, isObjectType, isNonNullType, GraphQLNamedType, printType, Kind } from 'graphql';
 import { getBaseType } from './utils';
 
 interface FieldSetItem {
@@ -24,66 +23,40 @@ export const federationSpec = parse(/* GraphQL */ `
  * @param schema
  */
 export function addFederationReferencesToSchema(schema: GraphQLSchema): GraphQLSchema {
-  const doc = parse(printSchemaWithDirectives(schema));
-  const visited = visit(doc, {
-    ObjectTypeDefinition(node) {
-      if (!isFederationObjectType(node)) {
-        return node;
-      }
-
-      return {
-        ...node,
-        fields: [
-          {
-            kind: Kind.FIELD_DEFINITION,
-            name: {
-              kind: Kind.NAME,
-              value: resolveReferenceFieldName,
-            },
-            type: {
-              kind: Kind.NAMED_TYPE,
-              name: {
-                kind: Kind.NAME,
-                value: node.name.value,
-              },
-            },
-            arguments: [],
-          } as FieldDefinitionNode,
-          ...node.fields,
-        ],
+  const typeMap = schema.getTypeMap();
+  // tslint:disable-next-line: forin
+  for (const typeName in typeMap) {
+    const type = schema.getType(typeName);
+    if (isObjectType(type) && isFederationObjectType(type)) {
+      const typeConfig = type.toConfig();
+      typeConfig.fields = {
+        [resolveReferenceFieldName]: {
+          type,
+        },
+        ...typeConfig.fields,
       };
-    },
-  });
 
-  return buildASTSchema(visited, {
-    assumeValidSDL: true,
-  });
-}
+      const newType = new GraphQLObjectType(typeConfig);
+      newType.astNode = newType.astNode || (parse(printType(newType)).definitions[0] as ObjectTypeDefinitionNode);
+      (newType.astNode.fields as FieldDefinitionNode[]).unshift({
+        kind: Kind.FIELD_DEFINITION,
+        name: {
+          kind: Kind.NAME,
+          value: resolveReferenceFieldName,
+        },
+        type: {
+          kind: Kind.NAMED_TYPE,
+          name: {
+            kind: Kind.NAME,
+            value: typeName,
+          },
+        },
+      });
+      typeMap[typeName] = newType;
+    }
+  }
 
-/**
- * Turns ObjectType extensions into ObjectTypes
- * @param ast Schema AST
- */
-export function turnExtensionsIntoObjectTypes(ast: DocumentNode): DocumentNode {
-  return {
-    ...ast,
-    definitions: ast.definitions.map(def => {
-      if (def.kind !== Kind.OBJECT_TYPE_EXTENSION) {
-        return def;
-      }
-
-      const isDefined = ast.definitions.some(d => d.kind === Kind.OBJECT_TYPE_DEFINITION && d.name.value === def.name.value);
-
-      if (isDefined) {
-        return def;
-      }
-
-      return {
-        ...def,
-        kind: Kind.OBJECT_TYPE_DEFINITION,
-      };
-    }),
-  };
+  return schema;
 }
 
 /**
@@ -91,54 +64,18 @@ export function turnExtensionsIntoObjectTypes(ast: DocumentNode): DocumentNode {
  * @param schema
  * @param config
  */
-export function removeFederation(
-  schema: GraphQLSchema,
-  {
-    withDirectives,
-  }: {
-    withDirectives: boolean;
-  }
-): GraphQLSchema {
-  const queryTypeName = schema.getQueryType().name;
-  const printedSchema = withDirectives ? printSchemaWithDirectives(schema) : printSchema(schema);
-  const astNode = parse(printedSchema);
-  const emptyNode: void = null;
-  const docWithoutFederation = visit(astNode, {
-    ScalarTypeDefinition(node) {
-      if (node.name.value === '_Any') {
-        return emptyNode;
-      }
+export function removeFederation(schema: GraphQLSchema): GraphQLSchema {
+  const queryType = schema.getQueryType();
+  const queryTypeFields = queryType.getFields();
+  delete queryTypeFields['_entities'];
+  delete queryTypeFields['_service'];
 
-      return node;
-    },
+  const typeMap = schema.getTypeMap();
+  delete typeMap['_Service'];
+  delete typeMap['_Entity'];
+  delete typeMap['_Any'];
 
-    UnionTypeDefinition(node) {
-      if (node.name.value === '_Entity') {
-        return emptyNode;
-      }
-
-      return node;
-    },
-
-    ObjectTypeDefinition(node) {
-      if (node.name.value === '_Service') {
-        return emptyNode;
-      }
-
-      if (node.name.value === queryTypeName) {
-        return {
-          ...node,
-          fields: node.fields.filter(field => ['_entities', '_service'].includes(field.name.value) === false),
-        };
-      }
-
-      return node;
-    },
-  });
-
-  return buildASTSchema(docWithoutFederation, {
-    commentDescriptions: false,
-  });
+  return schema;
 }
 
 const resolveReferenceFieldName = '__resolveReference';
@@ -311,8 +248,10 @@ export class ApolloFederation {
  * @param node Type
  */
 function isFederationObjectType(node: ObjectTypeDefinitionNode | GraphQLObjectType): boolean {
-  const name = isObjectType(node) ? node.name : node.name.value;
-  const directives = isObjectType(node) ? node.astNode.directives : node.directives;
+  let definition = isObjectType(node) ? node.astNode || (parse(printType(node)).definitions[0] as ObjectTypeDefinitionNode) : node;
+
+  const name = definition.name.value;
+  const directives = definition.directives;
 
   const isNotRoot = !['Query', 'Mutation', 'Subscription'].includes(name);
   const isNotIntrospection = !name.startsWith('__');

@@ -4,7 +4,7 @@
   "private": true,
   "homepage": "/live-demo/",
   "devDependencies": {
-    "aws-sdk": "2.606.0",
+    "aws-sdk": "2.608.0",
     "source-map-explorer": "2.2.2",
     "typescript": "3.7.5"
   },
@@ -34,7 +34,7 @@
     "@material-ui/core": "4.8.3",
     "@types/codemirror": "0.0.82",
     "@types/react": "16.9.17",
-    "@types/react-dom": "16.9.4",
+    "@types/react-dom": "16.9.5",
     "codemirror": "5.51.0",
     "codemirror-graphql": "0.11.6",
     "js-yaml": "3.13.1",
