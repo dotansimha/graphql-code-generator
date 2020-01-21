@@ -1,5 +1,5 @@
 import { Types, isComplexPluginOutput, federationSpec } from '@graphql-codegen/plugin-helpers';
-import { visit, parse, DefinitionNode, buildASTSchema } from 'graphql';
+import { visit, parse, DefinitionNode } from 'graphql';
 import { executePlugin } from './execute-plugin';
 import { DetailedError } from './errors';
 import { checkValidationErrors, validateGraphQlDocuments, printSchemaWithDirectives } from '@graphql-toolkit/common';
@@ -16,7 +16,10 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
   const pluginPackages = Object.keys(options.pluginMap).map(key => options.pluginMap[key]);
 
   if (!options.schemaAst) {
-    options.schemaAst = buildASTSchema(options.schema, {
+    options.schemaAst = mergeSchemas({
+      schemas: [],
+      typeDefs: [options.schema],
+      convertExtensions: true,
       assumeValid: true,
       assumeValidSDL: true,
       ...options.config,
@@ -47,6 +50,8 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
       schemas: [schemaAst],
       typeDefs: [federationSpec],
       convertExtensions: true,
+      assumeValid: true,
+      assumeValidSDL: true,
     });
   }
 
