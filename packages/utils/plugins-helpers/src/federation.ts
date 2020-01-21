@@ -37,6 +37,21 @@ export function addFederationReferencesToSchema(schema: GraphQLSchema): GraphQLS
       };
 
       const newType = new GraphQLObjectType(typeConfig);
+      newType.astNode = newType.astNode || (parse(printType(newType)).definitions[0] as ObjectTypeDefinitionNode);
+      (newType.astNode.fields as FieldDefinitionNode[]).unshift({
+        kind: Kind.FIELD_DEFINITION,
+        name: {
+          kind: Kind.NAME,
+          value: resolveReferenceFieldName,
+        },
+        type: {
+          kind: Kind.NAMED_TYPE,
+          name: {
+            kind: Kind.NAME,
+            value: typeName,
+          },
+        },
+      });
       typeMap[typeName] = newType;
     }
   }
@@ -233,7 +248,7 @@ export class ApolloFederation {
  * @param node Type
  */
 function isFederationObjectType(node: ObjectTypeDefinitionNode | GraphQLObjectType): boolean {
-  let definition = isObjectType(node) ? (parse(printType(node)).definitions[0] as ObjectTypeDefinitionNode) : node;
+  let definition = isObjectType(node) ? node.astNode || (parse(printType(node)).definitions[0] as ObjectTypeDefinitionNode) : node;
 
   const name = definition.name.value;
   const directives = definition.directives;
