@@ -24,11 +24,7 @@ export interface IntrospectionPluginConfig {
 }
 
 export const plugin: PluginFunction<IntrospectionPluginConfig> = async (schema: GraphQLSchema, _documents, pluginConfig: IntrospectionPluginConfig): Promise<string> => {
-  const cleanSchema = pluginConfig.federation
-    ? removeFederation(schema, {
-        withDirectives: true,
-      })
-    : schema;
+  const cleanSchema = pluginConfig.federation ? removeFederation(schema) : schema;
 
   const introspection = introspectionFromSchema(cleanSchema, { descriptions: true });
 

@@ -1,10 +1,10 @@
-import { Types, isComplexPluginOutput, turnExtensionsIntoObjectTypes, federationSpec } from '@graphql-codegen/plugin-helpers';
-import { visit, buildASTSchema } from 'graphql';
+import { Types, isComplexPluginOutput, federationSpec } from '@graphql-codegen/plugin-helpers';
+import { visit, parse, DefinitionNode } from 'graphql';
 import { executePlugin } from './execute-plugin';
 import { DetailedError } from './errors';
-import { checkValidationErrors, validateGraphQlDocuments } from '@graphql-toolkit/common';
+import { checkValidationErrors, validateGraphQlDocuments, printSchemaWithDirectives } from '@graphql-toolkit/common';
 import { Kind } from 'graphql';
-import { mergeTypeDefs } from '@graphql-toolkit/schema-merging';
+import { mergeSchemas } from '@graphql-toolkit/schema-merging';
 
 export async function codegen(options: Types.GenerateOptions): Promise<string> {
   const documents = options.documents || [];
@@ -15,43 +15,57 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
 
   const pluginPackages = Object.keys(options.pluginMap).map(key => options.pluginMap[key]);
 
+  if (!options.schemaAst) {
+    options.schemaAst = mergeSchemas({
+      schemas: [],
+      typeDefs: [options.schema],
+      convertExtensions: true,
+      assumeValid: true,
+      assumeValidSDL: true,
+      ...options.config,
+    });
+  }
+
   // merged schema with parts added by plugins
   let schemaChanged = false;
-  let schema = pluginPackages.reduce((schema, plugin) => {
+  let schemaAst = pluginPackages.reduce((schemaAst, plugin) => {
     const addToSchema = typeof plugin.addToSchema === 'function' ? plugin.addToSchema(options.config) : plugin.addToSchema;
 
     if (!addToSchema) {
-      return schema;
+      return schemaAst;
     }
 
-    schemaChanged = true;
-
-    return mergeTypeDefs([schema, addToSchema]);
-  }, options.schema);
+    return mergeSchemas({
+      schemas: [schemaAst],
+      typeDefs: [addToSchema],
+    });
+  }, options.schemaAst);
 
   const federationInConfig = pickFlag('federation', options.config);
   const isFederation = prioritize(federationInConfig, false);
 
-  if (isFederation) {
+  if (isFederation && !schemaAst.getDirective('external') && !schemaAst.getDirective('requires') && !schemaAst.getDirective('provides') && !schemaAst.getDirective('key')) {
     schemaChanged = true;
-    if (!schema.definitions.find(definition => definition.kind === 'DirectiveDefinition' && (definition.name.value === 'external' || definition.name.value === 'requires' || definition.name.value === 'provides' || definition.name.value === 'key'))) {
-      schema = turnExtensionsIntoObjectTypes(mergeTypeDefs([schema, federationSpec]));
-    }
+    schemaAst = mergeSchemas({
+      schemas: [schemaAst],
+      typeDefs: [federationSpec],
+      convertExtensions: true,
+      assumeValid: true,
+      assumeValidSDL: true,
+    });
   }
 
   if (schemaChanged) {
-    options.schemaAst = buildASTSchema(schema, {
-      assumeValidSDL: isFederation,
-    });
+    options.schema = parse(printSchemaWithDirectives(schemaAst));
   }
 
   const skipDocumentValidation = typeof options.config === 'object' && !Array.isArray(options.config) && options.config.skipDocumentsValidation;
 
   if (options.schemaAst && documents.length > 0 && !skipDocumentValidation) {
-    const extraFragments = options.config && (options.config as any)['externalFragments'] ? (options.config as any)['externalFragments'] : [];
+    const extraFragments: { importFrom: string; node: DefinitionNode }[] = options.config && (options.config as any)['externalFragments'] ? (options.config as any)['externalFragments'] : [];
     const errors = await validateGraphQlDocuments(options.schemaAst, [
       ...documents.map(({ filePath, content }) => ({ location: filePath, document: content })),
-      ...extraFragments.map((f: any) => ({ location: f.importFrom, document: { kind: Kind.DOCUMENT, definitions: [f.node] } })),
+      ...extraFragments.map(f => ({ location: f.importFrom, document: { kind: Kind.DOCUMENT, definitions: [f.node] } })),
     ]);
     checkValidationErrors(errors);
   }
@@ -78,8 +92,8 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
           name,
           config: execConfig,
           parentConfig: options.config,
-          schema,
-          schemaAst: options.schemaAst,
+          schema: options.schema,
+          schemaAst,
           documents: options.documents,
           outputFilename: options.filename,
           allPlugins: options.plugins,
