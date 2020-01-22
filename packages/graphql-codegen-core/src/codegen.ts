@@ -63,10 +63,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
 
   if (options.schemaAst && documents.length > 0 && !skipDocumentValidation) {
     const extraFragments: { importFrom: string; node: DefinitionNode }[] = options.config && (options.config as any)['externalFragments'] ? (options.config as any)['externalFragments'] : [];
-    const errors = await validateGraphQlDocuments(options.schemaAst, [
-      ...documents.map(({ filePath, content }) => ({ location: filePath, document: content })),
-      ...extraFragments.map(f => ({ location: f.importFrom, document: { kind: Kind.DOCUMENT, definitions: [f.node] } })),
-    ]);
+    const errors = await validateGraphQlDocuments(options.schemaAst, [...documents, ...extraFragments.map(f => ({ location: f.importFrom, document: { kind: Kind.DOCUMENT, definitions: [f.node] } }))]);
     checkValidationErrors(errors);
   }
 
@@ -164,7 +161,7 @@ function validateDuplicateDocuments(files: Types.DocumentFile[]) {
   } = {};
 
   files.forEach(file => {
-    visit(file.content, {
+    visit(file.document, {
       OperationDefinition(node) {
         if (typeof node.name !== 'undefined') {
           if (!operationMap[node.name.value]) {
@@ -174,7 +171,7 @@ function validateDuplicateDocuments(files: Types.DocumentFile[]) {
             };
           }
 
-          operationMap[node.name.value].paths.add(file.filePath);
+          operationMap[node.name.value].paths.add(file.location);
           operationMap[node.name.value].contents.add(print(node));
         }
       },

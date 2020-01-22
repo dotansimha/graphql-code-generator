@@ -67,7 +67,7 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
 export const plugin: PluginFunction<ApolloAngularRawPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config) => {
   const allAst = concatAST(
     documents.reduce((prev, v) => {
-      return [...prev, v.content];
+      return [...prev, v.document];
     }, [])
   );
   const operations = allAst.definitions.filter(d => d.kind === Kind.OPERATION_DEFINITION) as OperationDefinitionNode[];

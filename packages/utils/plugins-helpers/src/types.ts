@@ -1,4 +1,5 @@
 import { GraphQLSchema, DocumentNode } from 'graphql';
+import { Source } from '@graphql-toolkit/common';
 
 export namespace Types {
   export interface GenerateOptions {
@@ -23,10 +24,7 @@ export namespace Types {
     };
   };
 
-  export type DocumentFile = {
-    filePath: string;
-    content: DocumentNode;
-  };
+  export type DocumentFile = Source;
 
   /* Utils */
   export type ObjectMap<T = any> = { [key: string]: T };

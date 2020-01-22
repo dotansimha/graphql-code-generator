@@ -2,15 +2,23 @@ import { printSchemaWithDirectives } from '@graphql-toolkit/common';
 import { parse, GraphQLSchema, DefinitionNode } from 'graphql';
 import { Types, PluginFunction } from '@graphql-codegen/plugin-helpers';
 
-import { transformASTSchema, Parser as RelayParser } from 'relay-compiler';
 import * as SkipRedundantNodesTransform from 'relay-compiler/lib/transforms/SkipRedundantNodesTransform';
 import * as InlineFragmentsTransform from 'relay-compiler/lib/transforms/InlineFragmentsTransform';
 import * as ApplyFragmentArgumentTransform from 'relay-compiler/lib/transforms/ApplyFragmentArgumentTransform';
 import * as FlattenTransform from 'relay-compiler/lib/transforms/FlattenTransform';
+import { GraphQLCompilerContext, CompilerContextDocument } from 'relay-compiler/lib/core/GraphQLCompilerContext';
+import * as RelayParser from 'relay-compiler/lib/core/RelayParser';
+import * as RelayPrinter from 'relay-compiler/lib/core/GraphQLIRPrinter';
+import { transformASTSchema } from 'relay-compiler/lib/core/ASTConvert';
+import * as RelayCreate from 'relay-compiler/lib/core/Schema';
 
-const RelayCreate = require('relay-compiler/lib/core/Schema');
-const GraphQLCompilerContext = require('relay-compiler/lib/core/GraphQLCompilerContext');
-const { print } = require('relay-compiler/lib/core/GraphQLIRPrinter');
+declare module 'relay-compiler/lib/core/Schema' {
+  export function create(schema: string): GraphQLSchema;
+}
+
+declare module 'relay-compiler/lib/core/GraphQLIRPrinter' {
+  export function print(schema: GraphQLSchema, document: CompilerContextDocument): string;
+}
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface RelayOptimizerPluginConfig {}
@@ -35,7 +43,7 @@ export const plugin: PluginFunction<RelayOptimizerPluginConfig> = (
     )
   );
   const documentAsts = documents.reduce((prev, v) => {
-    return [...prev, ...v.content.definitions];
+    return [...prev, ...v.document.definitions];
   }, [] as DefinitionNode[]);
 
   const relayDocuments = RelayParser.transform(adjustedSchema, documentAsts);
@@ -51,15 +59,15 @@ export const plugin: PluginFunction<RelayOptimizerPluginConfig> = (
     .addAll(relayDocuments)
     .applyTransforms([ApplyFragmentArgumentTransform.transform, InlineFragmentsTransform.transform, FlattenTransform.transformWithOptions({ flattenAbstractTypes: false }), SkipRedundantNodesTransform.transform]);
 
-  const newQueryDocuments = queryCompilerContext.documents().map(doc => ({
-    filePath: 'optimized by relay',
-    content: parse(print(adjustedSchema, doc)),
+  const newQueryDocuments: Types.DocumentFile[] = queryCompilerContext.documents().map(doc => ({
+    location: 'optimized by relay',
+    content: parse(RelayPrinter.print(adjustedSchema, doc)),
   }));
 
-  const newDocuments = [
+  const newDocuments: Types.DocumentFile[] = [
     ...fragmentDocuments.map(doc => ({
-      filePath: 'optimized by relay',
-      content: parse(print(adjustedSchema, doc)),
+      location: 'optimized by relay',
+      document: parse(RelayPrinter.print(adjustedSchema, doc)),
     })),
     ...newQueryDocuments,
   ];

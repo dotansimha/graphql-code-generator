@@ -239,12 +239,7 @@ export class CodegenContext {
       // TODO: pointer won't work here
       const documents = await this._graphqlConfig.getProject(this._project).loadDocuments(pointer);
 
-      return documents.map<Types.DocumentFile>(source => {
-        return {
-          filePath: source.location,
-          content: source.document,
-        };
-      });
+      return documents;
     }
 
     return loadDocuments(pointer, this.getConfig());

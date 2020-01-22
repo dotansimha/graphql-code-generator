@@ -14,21 +14,19 @@ const { print } = require('relay-compiler/lib/core/GraphQLIRPrinter');
 
 export function optimizeOperations(schema: GraphQLSchema, documents: Types.DocumentFile[]): Types.DocumentFile[] {
   const documentAsts = documents.reduce((prev, v) => {
-    return [...prev, ...v.content.definitions];
+    return [...prev, ...v.document.definitions];
   }, [] as DefinitionNode[]);
-  const adjustedSchema = RelayCreate.create(
-    printSchemaWithDirectives(schema)
-  );
+  const adjustedSchema = RelayCreate.create(printSchemaWithDirectives(schema));
   const relayDocuments = RelayParser.transform(adjustedSchema, documentAsts);
 
   const queryCompilerContext = new GraphQLCompilerContext(adjustedSchema)
     .addAll(relayDocuments)
     .applyTransforms([ApplyFragmentArgumentTransform.transform, InlineFragmentsTransform.transform, FlattenTransform.transformWithOptions({ flattenAbstractTypes: false }), SkipRedundantNodesTransform.transform]);
 
-    const newQueryDocuments = queryCompilerContext.documents().map(doc => ({
-      filePath: 'optimized by relay',
-      content: parse(print(adjustedSchema, doc)),
-    }));
+  const newQueryDocuments = queryCompilerContext.documents().map(doc => ({
+    filePath: 'optimized by relay',
+    content: parse(print(adjustedSchema, doc)),
+  }));
 
   return newQueryDocuments;
 }
