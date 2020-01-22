@@ -3,7 +3,7 @@ import { visit, parse, DefinitionNode } from 'graphql';
 import { executePlugin } from './execute-plugin';
 import { DetailedError } from './errors';
 import { checkValidationErrors, validateGraphQlDocuments, printSchemaWithDirectives } from '@graphql-toolkit/common';
-import { Kind } from 'graphql';
+import { Kind, print } from 'graphql';
 import { mergeSchemas } from '@graphql-toolkit/schema-merging';
 
 export async function codegen(options: Types.GenerateOptions): Promise<string> {
@@ -157,7 +157,10 @@ export function sortPrependValues(values: string[]): string[] {
 function validateDuplicateDocuments(files: Types.DocumentFile[]) {
   // duplicated names
   const operationMap: {
-    [name: string]: string[];
+    [name: string]: {
+      paths: Set<string>;
+      contents: Set<string>;
+    };
   } = {};
 
   files.forEach(file => {
@@ -165,10 +168,14 @@ function validateDuplicateDocuments(files: Types.DocumentFile[]) {
       OperationDefinition(node) {
         if (typeof node.name !== 'undefined') {
           if (!operationMap[node.name.value]) {
-            operationMap[node.name.value] = [];
+            operationMap[node.name.value] = {
+              paths: new Set(),
+              contents: new Set(),
+            };
           }
 
-          operationMap[node.name.value].push(file.filePath);
+          operationMap[node.name.value].paths.add(file.filePath);
+          operationMap[node.name.value].contents.add(print(node));
         }
       },
     });
@@ -177,7 +184,7 @@ function validateDuplicateDocuments(files: Types.DocumentFile[]) {
   const names = Object.keys(operationMap);
 
   if (names.length) {
-    const duplicated = names.filter(name => operationMap[name].length > 1);
+    const duplicated = names.filter(name => operationMap[name].contents.size > 1);
 
     if (!duplicated.length) {
       return;
@@ -187,7 +194,7 @@ function validateDuplicateDocuments(files: Types.DocumentFile[]) {
       .map(name =>
         `
       * ${name} found in:
-        ${operationMap[name]
+        ${[...operationMap[name].paths]
           .map(filepath => {
             return `
             - ${filepath}

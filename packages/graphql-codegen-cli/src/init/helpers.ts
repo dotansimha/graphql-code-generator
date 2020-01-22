@@ -5,10 +5,9 @@ import { Types } from '@graphql-codegen/plugin-helpers';
 import detectIndent from 'detect-indent';
 import { Answers } from './types';
 
-const YAML = require('json-to-pretty-yaml');
-
 // Parses config and writes it to a file
-export function writeConfig(answers: Answers, config: Types.Config) {
+export async function writeConfig(answers: Answers, config: Types.Config) {
+  const YAML = await import('json-to-pretty-yaml').then(m => ('default' in m ? m.default : m));
   const ext = answers.config.toLocaleLowerCase().endsWith('.json') ? 'json' : 'yml';
   const content = ext === 'json' ? JSON.stringify(config) : YAML.stringify(config);
   const fullPath = resolve(process.cwd(), answers.config);
@@ -25,7 +24,7 @@ export function writeConfig(answers: Answers, config: Types.Config) {
 }
 
 // Updates package.json (script and plugins as dependencies)
-export function writePackage(answers: Answers, configLocation: string) {
+export async function writePackage(answers: Answers, configLocation: string) {
   // script
   const pkgPath = resolve(process.cwd(), 'package.json');
   const pkgContent = readFileSync(pkgPath, {
@@ -48,12 +47,15 @@ export function writePackage(answers: Answers, configLocation: string) {
   // read codegen's version
   let version: string;
 
+  const dynamicImport = (m: string) => import(m).then(m => ('default' in m ? m.default : m));
   try {
     // Works in tests
-    version = require('../../package.json').version;
+    const packageJson = await dynamicImport('../../package.json');
+    version = packageJson.version;
   } catch (e) {
     // Works in production (package dist is flat, everything is in the same folder)
-    version = require('./package.json').version;
+    const packageJson = await dynamicImport('./package.json');
+    version = packageJson.version;
   }
 
   answers.plugins.forEach(plugin => {

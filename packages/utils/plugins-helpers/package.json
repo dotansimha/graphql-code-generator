@@ -25,7 +25,7 @@
     "upper-case": "2.0.1"
   },
   "devDependencies": {
-    "bob-the-bundler": "0.2.2",
+    "@ardatan/bob": "0.2.7",
     "jest": "25.1.0",
     "ts-jest": "24.3.0",
     "typescript": "3.7.5"

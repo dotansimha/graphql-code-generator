@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "@graphql-codegen/testing": "1.11.2",
-    "bob-the-bundler": "0.2.2",
+    "@ardatan/bob": "0.2.7",
     "graphql": "14.5.8",
     "jest": "25.1.0",
     "ts-jest": "24.3.0",

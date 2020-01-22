@@ -10,8 +10,6 @@ import { printSchemaWithDirectives } from '@graphql-toolkit/common';
 import { CodegenContext, ensureContext } from './config';
 import { parse } from 'graphql';
 
-const Listr = require('listr');
-
 export const defaultLoader = (mod: string) => import(mod);
 
 export async function executeCodegen(input: CodegenContext | Types.Config): Promise<Types.FileOutput[]> {
@@ -35,6 +33,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
   const commonListrOptions = {
     exitOnError: true,
   };
+  const Listr = await import('listr').then(m => ('default' in m ? m.default : m));
   let listr: import('listr');
 
   if (process.env.VERBOSE) {
@@ -65,12 +64,6 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
   let generates: { [filename: string]: Types.ConfiguredOutput } = {};
 
   async function normalize() {
-    /* Load Require extensions */
-    const requireExtensions = normalizeInstanceOrArray<string>(config.require);
-    for (const mod of requireExtensions) {
-      await import(mod);
-    }
-
     /* Root templates-config */
     rootConfig = config.config || {};
 

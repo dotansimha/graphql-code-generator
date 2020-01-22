@@ -2,6 +2,7 @@ import '@graphql-codegen/testing';
 import { GraphQLObjectType, buildSchema, buildASTSchema, parse, print } from 'graphql';
 import { mergeTypeDefs } from '@graphql-toolkit/schema-merging';
 import { executeCodegen } from '../src';
+import { join } from 'path';
 
 const SHOULD_NOT_THROW_STRING = 'SHOULD_NOT_THROW';
 const SIMPLE_TEST_SCHEMA = `type MyType { f: String } type Query { f: String }`;
@@ -26,11 +27,12 @@ describe('Codegen Executor', () => {
     it('Should load require extensions', async () => {
       expect((global as any).dummyWasLoaded).toBeFalsy();
       const output = await executeCodegen({
-        schema: SIMPLE_TEST_SCHEMA,
-        require: '../tests/dummy-require.js',
+        schema: join(__dirname, './test-files/schema-dir/schema-object.js'),
+        require: join(__dirname, './dummy-require.js'),
         generates: {
           'out1.ts': ['typescript'],
         },
+        cwd: __dirname,
       });
 
       expect(output.length).toBe(1);
@@ -40,11 +42,12 @@ describe('Codegen Executor', () => {
     it('Should throw when require extension is invalid', async () => {
       try {
         await executeCodegen({
-          schema: SIMPLE_TEST_SCHEMA,
-          require: 'tests/missing.js',
+          schema: join(__dirname, './test-files/schema-dir/schema-object.js'),
+          require: join(__dirname + './missing.js'),
           generates: {
             'out1.ts': ['typescript'],
           },
+          cwd: __dirname,
         });
 
         throw new Error(SHOULD_NOT_THROW_STRING);

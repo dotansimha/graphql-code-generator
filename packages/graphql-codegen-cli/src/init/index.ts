@@ -38,10 +38,10 @@ export async function init() {
   }
 
   // config file
-  const { relativePath } = writeConfig(answers, config);
+  const { relativePath } = await writeConfig(answers, config);
 
   // write package.json
-  writePackage(answers, relativePath);
+  await writePackage(answers, relativePath);
 
   // Emit status to the terminal
   log(`

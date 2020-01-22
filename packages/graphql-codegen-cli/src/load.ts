@@ -55,6 +55,7 @@ export const loadDocuments = async (documentPointers: UnnormalizedTypeDefPointer
     ignore: Object.keys(config.generates).map(p => join(process.cwd(), p)),
     loaders,
     sort: true,
+    skipGraphQLImport: true,
     ...config,
   });
 
