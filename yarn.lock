@@ -3861,10 +3861,10 @@
     "@types/events" "*"
     "@types/node" "*"
 
-"@types/codemirror@0.0.82":
-  version "0.0.82"
-  resolved "https://registry.yarnpkg.com/@types/codemirror/-/codemirror-0.0.82.tgz#6d0c50036a023980318a6ed9f85ff5cc6b24172a"
-  integrity sha512-EVlPrt1rB256CRTlhNCXXLYaN24n3qZNStM6dRWaV6sUYyJA1SC5hvDSCHEHDg1SB93X8TwAGWRjEVdmUWPHmQ==
+"@types/codemirror@0.0.83":
+  version "0.0.83"
+  resolved "https://registry.yarnpkg.com/@types/codemirror/-/codemirror-0.0.83.tgz#a31fa87e8135cf5c091b8848bd2318ab624a7050"
+  integrity sha512-u2/1QnESsrIWgnZOidPJDyzU1WPw3CGHB+jDh6KgZrwevmayV99KBpNduonbsVg2ERLLaCBoUXRGGxvanP1hmQ==
   dependencies:
     "@types/tern" "*"
 
