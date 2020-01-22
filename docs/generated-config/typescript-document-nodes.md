@@ -41,12 +41,13 @@ Adds prefix to the name
 #### Usage Example
 
 ```yml
- generates: src/api/user-service/queries.ts
  documents: src/api/user-service/queries.graphql
- plugins:
-   - typescript-document-nodes
- config:
-   namePrefix: 'gql'
+ generates:
+   src/api/user-service/queries.ts:
+   plugins:
+     - typescript-document-nodes
+   config:
+     namePrefix: 'gql'
 ```
 
 ### nameSuffix (`string`, default value: `''`)
@@ -57,10 +58,11 @@ Adds suffix to the name
 #### Usage Example
 
 ```yml
- generates: src/api/user-service/queries.ts
  documents: src/api/user-service/queries.graphql
- plugins:
-   - typescript-document-nodes
- config:
-   nameSuffix: 'Query'
+ generates:
+   src/api/user-service/queries.ts:
+   plugins:
+     - typescript-document-nodes
+   config:
+     nameSuffix: 'Query'
 ```

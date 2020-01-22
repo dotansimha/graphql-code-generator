@@ -32,6 +32,22 @@ plugins
     contextType: ./my-types#MyContext
 ```
 
+### fieldContextTypes (`string array`)
+
+Use this to set a custom type for a specific field `context`. It will only affect the targeted resolvers. You can either use `Field.Path#ContextTypeName` or `Field.Path#ExternalFileName#ContextTypeName`
+
+
+#### Usage Example: Custom Field Context Types
+
+```
+plugins
+  config:
+    fieldContextTypes:
+      - MyType.foo#CustomContextType
+      - MyType.bar#./my-file#ContextTypeOne
+```
+
+
 ### rootValueType (`string`)
 
 Use this configuration to set a custom type for the `rootValue`, and it will effect resolvers of all root types (Query, Mutation and Subscription), without the need to override it using generics each time. If you wish to use an external type and import it from another file, you can use `add` plugin and add the required `import` statement, or you can use both `module#type` or `module#namespace#type` syntax.
@@ -164,3 +180,16 @@ Allow you to disable prefixing for generated enums, works in combination with `t
     typesPrefix: I
     enumPrefix: false
 ```
+
+### optionalResolveType (`boolean`, default value: `false`)
+
+Sets the `__resolveType` field as optional field.
+
+
+
+
+### immutableTypes (`boolean`, default value: `false`)
+
+Generates immutable types by adding `readonly` to properties and uses `ReadonlyArray`.
+
+
