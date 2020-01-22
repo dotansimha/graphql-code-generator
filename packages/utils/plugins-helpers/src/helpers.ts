@@ -19,7 +19,7 @@ import {
   isUnionType,
 } from 'graphql';
 import { getBaseType } from './utils';
-import { InlineFragmentNode } from 'graphql';
+import { InlineFragmentNode, SelectionSetNode } from 'graphql';
 
 export function isOutputConfigArray(type: any): type is Types.OutputConfig[] {
   return Array.isArray(type);
@@ -95,6 +95,22 @@ export function isUsingTypes(document: DocumentNode, externalFragments: string[]
         }
       },
     },
+    // SelectionSet: {
+    //   enter: (node: SelectionSetNode, key, parent: any) => {
+    //     if (node.selections && node.selections.length > 0) {
+    //       const currentType = typesStack[typesStack.length - 1];
+
+    //       if (isObjectType(currentType)) {
+    //         console.log('enter selection set, field:', parent.name.value, currentType.name);
+    //       }
+    //     }
+    //   },
+    //   leave: (node: SelectionSetNode) => {
+    //     if (node.selections && node.selections.length > 0) {
+    //       console.log('leave selection set');
+    //     }
+    //   },
+    // },
     Field: {
       enter: (node: FieldNode, key, parent, path, anscestors) => {
         if (node.name.value.startsWith('__')) {
@@ -116,6 +132,7 @@ export function isUsingTypes(document: DocumentNode, externalFragments: string[]
 
         if (schema) {
           const lastType = typesStack[typesStack.length - 1];
+          console.log('hit field enter', node.name.value, 'last type: ', lastType.name);
 
           if (lastType) {
             if (isObjectType(lastType)) {
@@ -135,6 +152,8 @@ export function isUsingTypes(document: DocumentNode, externalFragments: string[]
               const fieldBaseType = getBaseType(currentType);
 
               if (selections.length > 0) {
+                console.log(`adding type ${fieldBaseType.name}`);
+
                 typesStack.push(fieldBaseType);
               }
             }
@@ -156,6 +175,7 @@ export function isUsingTypes(document: DocumentNode, externalFragments: string[]
           const selections = node.selectionSet ? node.selectionSet.selections || [] : [];
           const currentType = typesStack[typesStack.length - 1];
           if (currentType && selections.length > 0) {
+            console.log(`popping ${currentType.name}`);
             typesStack.pop();
           }
         }

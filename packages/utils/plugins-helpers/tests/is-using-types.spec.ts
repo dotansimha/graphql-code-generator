@@ -3,6 +3,71 @@ import { isUsingTypes } from '../src/helpers';
 
 describe('isUsingTypes', () => {
   describe('Issues', () => {
+    it.only('#3248 - error on missing field on type', () => {
+      const schema = buildSchema(/* GraphQL */ `
+        scalar ObjectId
+
+        type UserTypeA {
+          _id: ObjectId!
+        }
+
+        type UserTypeB {
+          _id: ObjectId!
+        }
+
+        union User = UserTypeA | UserTypeB
+
+        interface Request {
+          _id: ObjectId!
+          foo: User
+          barRequired: User!
+        }
+
+        type ARequest implements Request {
+          _id: ObjectId!
+          foo: User
+          barRequired: User!
+        }
+
+        type BRequest implements Request {
+          _id: ObjectId!
+          foo: User
+          barRequired: User!
+        }
+
+        type Query {
+          allRequests: [Request!]!
+        }
+      `);
+      const ast = parse(/* GraphQL */ `
+        query AllRequests {
+          allRequests {
+            _id
+
+            foo {
+              ... on UserTypeA {
+                _id
+              }
+              ... on UserTypeB {
+                _id
+              }
+            }
+
+            barRequired {
+              ... on UserTypeA {
+                _id
+              }
+              ... on UserTypeB {
+                _id
+              }
+            }
+          }
+        }
+      `);
+
+      expect(isUsingTypes(ast, [], schema)).toBeTruthy();
+    });
+
     it('#3217 - complex selection set causes issues with incorrect parent type', () => {
       const schema = buildSchema(/* GraphQL */ `
         type BrazilianCompany {
