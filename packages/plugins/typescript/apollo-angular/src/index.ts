@@ -76,7 +76,7 @@ export const plugin: PluginFunction<ApolloAngularRawPluginConfig> = (schema: Gra
     ...(config.externalFragments || []),
   ];
 
-  const visitor = new ApolloAngularVisitor(schema, allFragments, operations, config, documents) as any;
+  const visitor = new ApolloAngularVisitor(schema, allFragments, operations, config, documents);
   const visitorResult = visit(allAst, { leave: visitor });
 
   return {
