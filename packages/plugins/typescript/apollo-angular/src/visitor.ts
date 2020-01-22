@@ -17,6 +17,7 @@ export interface ApolloAngularPluginConfig extends ClientSideBasePluginConfig {
   namedClient?: string;
   serviceName?: string;
   serviceProvidedInRoot?: boolean;
+  sdkClass?: boolean;
 }
 
 export class ApolloAngularVisitor extends ClientSideBaseVisitor<ApolloAngularRawPluginConfig, ApolloAngularPluginConfig> {
@@ -35,6 +36,7 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<ApolloAngularRaw
       fragments,
       rawConfig,
       {
+        sdkClass: rawConfig.sdkClass,
         ngModule: rawConfig.ngModule,
         namedClient: rawConfig.namedClient,
         serviceName: rawConfig.serviceName,
@@ -54,7 +56,11 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<ApolloAngularRaw
       return baseImports;
     }
 
-    const imports = [`import { Injectable } from '@angular/core';`, `import * as Apollo from 'apollo-angular';`, `import { MutationOptionsAlone, QueryOptionsAlone, SubscriptionOptionsAlone, WatchQueryOptionsAlone } from 'apollo-angular/types';`];
+    const imports = [`import { Injectable } from '@angular/core';`, `import * as Apollo from 'apollo-angular';`];
+
+    if (this.config.sdkClass) {
+      imports.push(`import { MutationOptionsAlone, QueryOptionsAlone, SubscriptionOptionsAlone, WatchQueryOptionsAlone } from 'apollo-angular/types';`);
+    }
 
     const defs: Record<string, { path: string; module: string }> = {};
 
