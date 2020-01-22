@@ -864,4 +864,182 @@ describe('Compatibility Plugin', () => {
       await validate(mergeOutputs([raPluginResult, result]), schema, ast, config, true);
     });
   });
+
+  describe('multiple named fragments', () => {
+    it('supports query fields', async () => {
+      const query = parse(/* GraphQL */ `
+        query multipleSpreads {
+          me {
+            id
+            ...UserFields
+            ...UserFriends
+          }
+        }
+
+        fragment UserFields on User {
+          id
+          name
+        }
+
+        fragment UserFriends on User {
+          friends {
+            ...UserFields
+          }
+        }
+
+        fragment FullUser on User {
+          id
+          ...UserFields
+          ...UserFriends
+        }
+      `);
+
+      const ast = [{ filePath: '', content: query }];
+      const result = await plugin(schema, ast, {});
+
+      expect(result).toContain(`export type Me = MultipleSpreadsQuery['me'];`);
+    });
+
+    it('supports named fragments', async () => {
+      const query = parse(/* GraphQL */ `
+        fragment UserFields on User {
+          id
+          name
+        }
+
+        fragment UserFriends on User {
+          friends {
+            id
+          }
+        }
+
+        fragment FullUser on User {
+          id
+          ...UserFields
+          ...UserFriends
+        }
+      `);
+
+      const ast = [{ filePath: '', content: query }];
+      const result = await plugin(schema, ast, {});
+
+      expect(result).toBeSimilarStringTo(`
+        export namespace FullUser {
+          export type Fragment = FullUserFragment;
+        }
+      `);
+    });
+
+    it('supports inline fragments', async () => {
+      const query = parse(/* GraphQL */ `
+        query multipleSpreads {
+          me {
+            ... on User {
+              id
+              ...UserFields
+              ...UserFriends
+            }
+          }
+        }
+      `);
+
+      const ast = [{ filePath: '', content: query }];
+      const result = await plugin(schema, ast, {});
+
+      expect(result).toContain(`export type UserInlineFragment = ({ __typename: 'User' } & Pick<MultipleSpreadsQuery['me'], 'id' | keyof UserFieldsFragment | keyof UserFriendsFragment>);`);
+    });
+
+    it('throws on nested inline fragments', async () => {
+      const query = parse(/* GraphQL */ `
+        query multipleSpreads {
+          me {
+            ... on User {
+              ... on User {
+                id
+                ...UserFields
+                ...UserFriends
+              }
+            }
+          }
+        }
+      `);
+
+      const ast = [{ filePath: '', content: query }];
+      await expect(plugin(schema, ast, {})).rejects.toThrow('Nested inline fragments');
+    });
+
+    it('supports inline fragments on unions and interfaces', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        interface User {
+          id: ID!
+          name: String
+        }
+        type SocialUser implements User {
+          id: ID!
+          name: String
+          friends: [User!]!
+        }
+        type WorkplaceUser implements User {
+          id: ID!
+          name: String
+          colleagues: [User!]!
+        }
+
+        type Query {
+          me: User!
+        }
+      `);
+
+      const query = parse(/* GraphQL */ `
+        query multipleSpreads {
+          me {
+            id
+            ... on SocialUser {
+              friends {
+                ...UserBasics
+              }
+            }
+            ... on WorkplaceUser {
+              colleagues {
+                ...UserBasics
+              }
+            }
+          }
+        }
+
+        fragment UserBasics on User {
+          id
+          name
+        }
+
+        fragment UserNetwork on User {
+          ... on SocialUser {
+            friends {
+              ...UserBasics
+            }
+          }
+          ... on WorkplaceUser {
+            colleagues {
+              ...UserBasics
+            }
+          }
+        }
+      `);
+
+      const ast = [{ filePath: '', content: query }];
+      const result = await plugin(schema, ast, {});
+
+      expect(result).toBeSimilarStringTo(`
+        export namespace MultipleSpreads {
+          export type Variables = MultipleSpreadsQueryVariables;
+          export type Query = MultipleSpreadsQuery;
+          export type Me = MultipleSpreadsQuery['me'];
+          export type SocialUserInlineFragment = (DiscriminateUnion<RequireField<MultipleSpreadsQuery['me'], '__typename'>, { __typename: 'SocialUser' }>);
+          export type Friends = (DiscriminateUnion<RequireField<MultipleSpreadsQuery['me'], '__typename'>, { __typename: 'SocialUser' }>)['friends'][0];
+          export type WorkplaceUserInlineFragment = (DiscriminateUnion<RequireField<MultipleSpreadsQuery['me'], '__typename'>, { __typename: 'WorkplaceUser' }>);
+          export type Colleagues = (DiscriminateUnion<RequireField<MultipleSpreadsQuery['me'], '__typename'>, { __typename: 'WorkplaceUser' }>)['colleagues'][0];
+        }
+      `);
+    });
+  });
 });
