@@ -44,32 +44,32 @@ describe('near-operation-file preset', () => {
   `);
   const testDocuments = [
     {
-      filePath: '/some/deep/path/src/graphql/me-query.graphql',
-      content: operationAst,
+      location: '/some/deep/path/src/graphql/me-query.graphql',
+      document: operationAst,
     },
     {
-      filePath: '/some/deep/path/src/graphql/user-fragment.graphql',
-      content: fragmentAst,
+      location: '/some/deep/path/src/graphql/user-fragment.graphql',
+      document: fragmentAst,
     },
     {
-      filePath: '/some/deep/path/src/graphql/me.query.graphql',
-      content: operationAst,
+      location: '/some/deep/path/src/graphql/me.query.graphql',
+      document: operationAst,
     },
     {
-      filePath: '/some/deep/path/src/graphql/something-query.graphql',
-      content: operationAst,
+      location: '/some/deep/path/src/graphql/something-query.graphql',
+      document: operationAst,
     },
     {
-      filePath: '/some/deep/path/src/graphql/nested/somethingElse.graphql',
-      content: operationAst,
+      location: '/some/deep/path/src/graphql/nested/somethingElse.graphql',
+      document: operationAst,
     },
     {
-      filePath: '/some/deep/path/src/graphql/nested/from-js.js',
-      content: operationAst,
+      location: '/some/deep/path/src/graphql/nested/from-js.js',
+      document: operationAst,
     },
     {
-      filePath: '/some/deep/path/src/graphql/component.ts',
-      content: operationAst,
+      location: '/some/deep/path/src/graphql/component.ts',
+      document: operationAst,
     },
   ];
 
@@ -195,7 +195,7 @@ describe('near-operation-file preset', () => {
       },
       schema: schemaDocumentNode,
       schemaAst: schemaNode,
-      documents: [{ filePath: '/some/deep/path/src/graphql/me-query.graphql', content: minimalOperationAst }, testDocuments[1]],
+      documents: [{ location: '/some/deep/path/src/graphql/me-query.graphql', document: minimalOperationAst }, testDocuments[1]],
       plugins: [{ typescript: {} }],
       pluginMap: { typescript: {} as any },
     });
@@ -217,8 +217,8 @@ describe('near-operation-file preset', () => {
         documents: [
           testDocuments[1],
           {
-            filePath: `/some/deep/path/src/graphql/user-fragment.graphql`,
-            content: parse(/* GraphQL */ `
+            location: `/some/deep/path/src/graphql/user-fragment.graphql`,
+            document: parse(/* GraphQL */ `
               fragment UserFields on User {
                 id
               }
@@ -261,8 +261,8 @@ describe('near-operation-file preset', () => {
       schema: schemaDocumentNode,
       documents: [
         {
-          filePath: './test.graphql',
-          content: parse(/* GraphQL */ `
+          location: './test.graphql',
+          document: parse(/* GraphQL */ `
             query {
               user {
                 ...UserFields
@@ -291,8 +291,8 @@ describe('near-operation-file preset', () => {
       schema: schemaDocumentNode,
       documents: [
         {
-          filePath: './test.graphql',
-          content: parse(/* GraphQL */ `
+          location: './test.graphql',
+          document: parse(/* GraphQL */ `
             query($id: String) {
               user(id: $id) {
                 ...UserFields
@@ -321,8 +321,8 @@ describe('near-operation-file preset', () => {
       schema: schemaDocumentNode,
       documents: [
         {
-          filePath: '/some/deep/path/src/graphql/nested/here/me-query.graphql',
-          content: operationAst,
+          location: '/some/deep/path/src/graphql/nested/here/me-query.graphql',
+          document: operationAst,
         },
         testDocuments[1],
       ],
@@ -344,8 +344,8 @@ describe('near-operation-file preset', () => {
       schema: schemaDocumentNode,
       documents: [
         {
-          filePath: '/some/deep/path/src/me-query.graphql',
-          content: operationAst,
+          location: '/some/deep/path/src/me-query.graphql',
+          document: operationAst,
         },
         testDocuments[1],
       ],
@@ -367,8 +367,8 @@ describe('near-operation-file preset', () => {
       schema: schemaDocumentNode,
       documents: [
         {
-          filePath: '/some/deep/path/src/me-query.graphql',
-          content: operationAst,
+          location: '/some/deep/path/src/me-query.graphql',
+          document: operationAst,
         },
         testDocuments[1],
       ],
@@ -456,8 +456,8 @@ describe('near-operation-file preset', () => {
       schema: schemaDocumentNode,
       documents: [
         {
-          filePath: '/some/deep/path/src/graphql/nested/down/here/me-query.graphql',
-          content: operationAst,
+          location: '/some/deep/path/src/graphql/nested/down/here/me-query.graphql',
+          document: operationAst,
         },
         testDocuments[1],
       ],
@@ -487,8 +487,8 @@ describe('near-operation-file preset', () => {
       documents: [
         testDocuments[0],
         {
-          filePath: '/some/deep/path/src/graphql/nested/down/here/user-fragment.graphql',
-          content: fragmentAst,
+          location: '/some/deep/path/src/graphql/nested/down/here/user-fragment.graphql',
+          document: fragmentAst,
         },
       ],
       plugins: [{ typescript: {} }],

@@ -24,7 +24,7 @@ export type Comment = {
   /** A timestamp of when the comment was posted */
   createdAt: Scalars['Float'],
   /** The text of the comment */
-  content: Scalars['String'],
+  document: Scalars['String'],
   /** The repository which this comment is about */
   repoName: Scalars['String'],
 };
@@ -321,7 +321,7 @@ export type Comment = {
   /** A timestamp of when the comment was posted */
   createdAt: Scalars['Float'],
   /** The text of the comment */
-  content: Scalars['String'],
+  document: Scalars['String'],
   /** The repository which this comment is about */
   repoName: Scalars['String'],
 };

@@ -205,7 +205,7 @@ describe('Operations Visitor', () => {
           }
         }
       `),
-      filePath: '',
+      location: '',
     };
 
     const result = await plugin(schema, [ast], { package: 'app.test.generated.graphql', fileType: FileType.OPERATION });
@@ -295,7 +295,7 @@ describe('Operations Visitor', () => {
           content
         }
       `),
-      filePath: '',
+      location: '',
     };
 
     const result = await plugin(schema, [ast], { package: 'app.test.generated.graphql', fileType: FileType.OPERATION });

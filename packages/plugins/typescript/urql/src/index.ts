@@ -58,7 +58,7 @@ export interface UrqlRawPluginConfig extends RawClientSideBasePluginConfig {
 export const plugin: PluginFunction<UrqlRawPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: UrqlRawPluginConfig) => {
   const allAst = concatAST(
     documents.reduce((prev, v) => {
-      return [...prev, v.content];
+      return [...prev, v.document];
     }, [])
   );
   const allFragments: LoadedFragment[] = [

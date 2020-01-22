@@ -98,7 +98,7 @@ export const plugin: PluginFunction<TypeScriptDocumentsPluginConfig> = (schema: 
   const documents = config.flattenGeneratedTypes ? optimizeOperations(schema, rawDocuments) : rawDocuments;
   const allAst = concatAST(
     documents.reduce((prev, v) => {
-      return [...prev, v.content];
+      return [...prev, v.document];
     }, [])
   );
 

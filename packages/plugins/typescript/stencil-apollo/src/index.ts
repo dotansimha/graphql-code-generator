@@ -34,7 +34,7 @@ export interface StencilApolloRawPluginConfig extends RawClientSideBasePluginCon
 export const plugin: PluginFunction<StencilApolloRawPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: StencilApolloRawPluginConfig) => {
   const allAst = concatAST(
     documents.reduce((prev, v) => {
-      return [...prev, v.content];
+      return [...prev, v.document];
     }, [])
   );
 

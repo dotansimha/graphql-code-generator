@@ -64,7 +64,7 @@ export const plugin: PluginFunction<FlowDocumentsPluginConfig> = (schema: GraphQ
 
   const allAst = concatAST(
     documents.reduce((prev, v) => {
-      return [...prev, v.content];
+      return [...prev, v.document];
     }, [])
   );
 

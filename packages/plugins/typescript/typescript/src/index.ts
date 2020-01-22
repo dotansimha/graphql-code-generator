@@ -38,7 +38,7 @@ export function includeIntrospectionDefinitions(schema: GraphQLSchema, documents
     },
   });
 
-  documents.forEach(doc => visit(doc.content, documentsVisitor));
+  documents.forEach(doc => visit(doc.document, documentsVisitor));
 
   const typesToInclude: GraphQLNamedType[] = [];
 

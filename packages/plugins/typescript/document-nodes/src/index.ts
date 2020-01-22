@@ -86,7 +86,7 @@ export interface TypeScriptDocumentNodesRawPluginConfig extends RawClientSideBas
 export const plugin: PluginFunction<TypeScriptDocumentNodesRawPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: TypeScriptDocumentNodesRawPluginConfig) => {
   const allAst = concatAST(
     documents.reduce((prev, v) => {
-      return [...prev, v.content];
+      return [...prev, v.document];
     }, [])
   );
 

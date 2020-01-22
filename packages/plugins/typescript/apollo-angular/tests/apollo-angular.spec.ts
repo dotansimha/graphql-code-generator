@@ -34,7 +34,7 @@ describe('Apollo Angular', () => {
 
   describe('Imports', () => {
     it('should import DocumentNode when using noGraphQLTag', async () => {
-      const docs = [{ filePath: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -52,7 +52,7 @@ describe('Apollo Angular', () => {
     });
 
     it(`should use gql import from gqlImport config option`, async () => {
-      const docs = [{ filePath: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -67,7 +67,7 @@ describe('Apollo Angular', () => {
     });
 
     it(`should add the correct angular imports`, async () => {
-      const docs = [{ filePath: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -95,7 +95,7 @@ describe('Apollo Angular', () => {
           }
         }
       `);
-      const docs = [{ filePath: '', content: myFeed }];
+      const docs = [{ location: '', document: myFeed }];
       const content = (await plugin(
         modifiedSchema,
         docs,
@@ -130,7 +130,7 @@ describe('Apollo Angular', () => {
         }
       `);
 
-      const docs = [{ filePath: '', content: myFeed }];
+      const docs = [{ location: '', document: myFeed }];
       const content = (await plugin(
         modifiedSchema,
         docs,
@@ -161,7 +161,7 @@ describe('Apollo Angular', () => {
           f
         }
       `;
-      const docs = [{ filePath: '', content: query }];
+      const docs = [{ location: '', document: query }];
       const content = (await plugin(
         rootSchema,
         docs,
@@ -189,7 +189,7 @@ describe('Apollo Angular', () => {
         }
       `;
 
-      const docs = [{ filePath: '', content: myFeed }];
+      const docs = [{ location: '', document: myFeed }];
       const content = (await plugin(
         schema,
         docs,
@@ -222,7 +222,10 @@ describe('Apollo Angular', () => {
           }
         }
       `);
-      const docs = [{ filePath: '', content: myFeed }, { filePath: 'a.ts', content: myExtraFeed }];
+      const docs = [
+        { location: '', document: myFeed },
+        { location: 'a.ts', document: myExtraFeed },
+      ];
       const content = (await plugin(
         modifiedSchema,
         docs,
@@ -272,7 +275,7 @@ describe('Apollo Angular', () => {
           }
         }
       `);
-      const docs = [{ filePath: '', content: myFeed }];
+      const docs = [{ location: '', document: myFeed }];
       const content = (await plugin(
         modifiedSchema,
         docs,
@@ -312,7 +315,7 @@ describe('Apollo Angular', () => {
           }
         }
       `);
-      const docs = [{ filePath: '', content: myFeed }];
+      const docs = [{ location: '', document: myFeed }];
       const content = (await plugin(
         modifiedSchema,
         docs,
@@ -364,7 +367,7 @@ describe('Apollo Angular', () => {
         }
       `;
 
-      const docs = [{ filePath: '', content: myFeed }];
+      const docs = [{ location: '', document: myFeed }];
       const content = (await plugin(
         schema,
         docs,

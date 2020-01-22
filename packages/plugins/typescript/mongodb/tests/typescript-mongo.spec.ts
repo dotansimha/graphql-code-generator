@@ -5,7 +5,7 @@ import { plugin as tsPlugin } from '../../typescript/src/index';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 
 describe('TypeScript Mongo', () => {
-  const validate = async (content: Types.PluginOutput, schema: GraphQLSchema, config: any) => {
+  const validate = async (document: Types.PluginOutput, schema: GraphQLSchema, config: any) => {
     const tsPluginOutput = await tsPlugin(schema, [], config, { outputFile: '' });
     const result = mergeOutputs([tsPluginOutput, content]);
     await validateTs(result);
@@ -74,12 +74,12 @@ describe('TypeScript Mongo', () => {
 
     interface FeedItem @abstractEntity(discriminatorField: "kind") {
       id: ID! @id
-      content: String! @column
+      document: String! @column
     }
 
     type Post implements FeedItem @entity {
       id: ID! @id
-      content: String! @column
+      document: String! @column
       author: User! @link
     }
 

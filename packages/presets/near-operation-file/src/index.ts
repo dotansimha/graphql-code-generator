@@ -106,7 +106,7 @@ export type NearOperationFileConfig = {
   importTypesNamespace?: string;
 };
 
-export type FragmentNameToFile = { [fragmentName: string]: { filePath: string; importsNames: string[]; onType: string; node: FragmentDefinitionNode } };
+export type FragmentNameToFile = { [fragmentName: string]: { location: string; importsNames: string[]; onType: string; node: FragmentDefinitionNode } };
 
 export const preset: Types.OutputPreset<NearOperationFileConfig> = {
   buildGeneratesSection: options => {
@@ -142,8 +142,8 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
     }
 
     const sources = resolveDocumentImports(options, schemaObject, {
-      generateFilePath(filePath: string) {
-        const newFilePath = defineFilepathSubfolder(filePath, folder);
+      generateFilePath(location: string) {
+        const newFilePath = defineFilepathSubfolder(location, folder);
         return appendExtensionToFilePath(newFilePath, extension);
       },
       fragmentSuffix: 'Fragment',

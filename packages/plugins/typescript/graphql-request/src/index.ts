@@ -11,7 +11,7 @@ export interface RawGraphQLRequestPluginConfig extends RawClientSideBasePluginCo
 export const plugin: PluginFunction<RawGraphQLRequestPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: RawGraphQLRequestPluginConfig) => {
   const allAst = concatAST(
     documents.reduce((prev, v) => {
-      return [...prev, v.content];
+      return [...prev, v.document];
     }, [])
   );
   const allFragments: LoadedFragment[] = [

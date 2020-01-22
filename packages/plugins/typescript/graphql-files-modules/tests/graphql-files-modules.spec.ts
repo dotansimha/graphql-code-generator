@@ -8,8 +8,8 @@ describe('graphql-codegen typescript-graphql-files-modules', () => {
       null,
       [
         {
-          filePath: 'some/file/my-query.graphql',
-          content: parse(/* GraphQL */ `
+          location: 'some/file/my-query.graphql',
+          document: parse(/* GraphQL */ `
             query MyQuery {
               field
             }
@@ -37,16 +37,16 @@ describe('graphql-codegen typescript-graphql-files-modules', () => {
       null,
       [
         {
-          filePath: 'some/file/my-query.graphql',
-          content: parse(/* GraphQL */ `
+          location: 'some/file/my-query.graphql',
+          document: parse(/* GraphQL */ `
             query MyQuery {
               field
             }
           `),
         },
         {
-          filePath: 'some/file/my-other-query.graphql',
-          content: parse(/* GraphQL */ `
+          location: 'some/file/my-other-query.graphql',
+          document: parse(/* GraphQL */ `
             query OtherQuery {
               field
             }
@@ -82,8 +82,8 @@ describe('graphql-codegen typescript-graphql-files-modules', () => {
       null,
       [
         {
-          filePath: 'some/file/my-query.graphql',
-          content: parse(/* GraphQL */ `
+          location: 'some/file/my-query.graphql',
+          document: parse(/* GraphQL */ `
             query {
               field
             }
@@ -110,8 +110,8 @@ describe('graphql-codegen typescript-graphql-files-modules', () => {
       null,
       [
         {
-          filePath: 'some/file/my-query.graphql',
-          content: parse(/* GraphQL */ `
+          location: 'some/file/my-query.graphql',
+          document: parse(/* GraphQL */ `
             query MyQuery {
               field
             }
@@ -144,16 +144,16 @@ describe('graphql-codegen typescript-graphql-files-modules', () => {
       null,
       [
         {
-          filePath: 'some/file/my-query.graphql',
-          content: parse(/* GraphQL */ `
+          location: 'some/file/my-query.graphql',
+          document: parse(/* GraphQL */ `
             query MyQuery {
               field
             }
           `),
         },
         {
-          filePath: 'some/file-other-path/my-query.graphql',
-          content: parse(/* GraphQL */ `
+          location: 'some/file-other-path/my-query.graphql',
+          document: parse(/* GraphQL */ `
             query OtherQuery {
               field
             }
@@ -182,8 +182,8 @@ describe('graphql-codegen typescript-graphql-files-modules', () => {
       null,
       [
         {
-          filePath: 'some/file/my-query.graphql',
-          content: parse(/* GraphQL */ `
+          location: 'some/file/my-query.graphql',
+          document: parse(/* GraphQL */ `
             query MyQuery {
               field
             }

@@ -52,7 +52,7 @@ export const plugin: PluginFunction = async (schema: GraphQLSchema, documents: T
     prev[fileName].push(...documentRecord.document.definitions.filter(document => document.kind === 'OperationDefinition' || document.kind === 'FragmentDefinition'));
 
     return prev;
-  }, {});
+  }, {} as any);
 
   return Object.keys(mappedDocuments)
     .filter(fileName => mappedDocuments[fileName].length > 0)

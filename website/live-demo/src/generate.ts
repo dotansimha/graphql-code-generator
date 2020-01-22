@@ -31,7 +31,7 @@ export async function generate(config: string, schema: string, documents?: strin
       documents: documents
         ? [
             {
-              filePath: '',
+              location: '',
               content: parse(documents),
             },
           ]
