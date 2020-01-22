@@ -64,7 +64,7 @@ module.exports = {
       .map(doc => {
         const docsNames = doc.content.definitions.map(def => def.name.value);
 
-        return `File ${doc.filePath} contains: ${docsNames.join(', ')}`;
+        return `File ${doc.location} contains: ${docsNames.join(', ')}`;
       })
       .join('\n');
   },

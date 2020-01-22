@@ -27,7 +27,7 @@ type GenerateImportStatement = (paths: { relativeOutputPath: string; importSourc
 
 export type DocumentImportResolverOptions = {
   /**
-   * Generates a target file path from the source `document.filePath`
+   * Generates a target file path from the source `document.location`
    */
   generateFilePath: (filePath: string) => string;
   /**
@@ -57,13 +57,13 @@ export default function resolveDocumentImportStatements<T>(presetOptions: Types.
   const { generateFilePath, generateImportStatement, schemaTypesSource } = importResolverOptions;
 
   return documents.map(documentFile => {
-    const generatedFilePath = generateFilePath(documentFile.filePath);
+    const generatedFilePath = generateFilePath(documentFile.location);
 
     const { externalFragments, fragmentImportStatements: importStatements } = resolveFragments(generatedFilePath, documentFile.content);
 
     if (
       isUsingTypes(
-        documentFile.content,
+        documentFile.document,
         externalFragments.map(m => m.name),
         schemaObject
       )
