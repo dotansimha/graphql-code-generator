@@ -1,21 +1,4 @@
 
-### immutableTypes (`boolean`, default value: `false`)
-
-Generates immutable types by adding `readonly` to properties and uses `ReadonlyArray`.
-
-
-#### Usage Example
-
-```yml
-generates:
-path/to/file.ts:
- plugins:
-   - typescript
-   - typescript-resolvers
- config:
-   immutableTypes: true
-```
-
 ### useIndexSignature (`boolean`, default value: `false`)
 
 Adds an index signature to any generates resolver.
