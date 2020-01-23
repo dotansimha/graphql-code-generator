@@ -83,24 +83,8 @@ export function isUsingTypes(document: DocumentNode, externalFragments: string[]
   let typesStack: GraphQLObjectType[] = [];
 
   visit(document, {
-    // InlineFragment: {
-    //   enter: (node: InlineFragmentNode) => {
-    //     if (node.typeCondition && schema) {
-    //       typesStack.push(schema.getType(node.typeCondition.name.value));
-    //     }
-    //   },
-    //   leave: (node: InlineFragmentNode) => {
-    //     if (node.typeCondition && schema) {
-    //       typesStack.pop();
-    //     }
-    //   },
-    // },
     SelectionSet: {
       enter(node: SelectionSetNode, key, parent: InlineFragmentNode | FragmentDefinitionNode | FieldNode | OperationDefinitionNode, anscestors) {
-        if (parent && (parent as any).name && (parent as any).name.value.startsWith('__')) {
-          return;
-        }
-
         const insideIgnoredFragment = (anscestors as any).find((f: ASTNode) => f.kind && f.kind === 'FragmentDefinition' && externalFragments.includes(f.name.value));
 
         if (insideIgnoredFragment) {
@@ -190,36 +174,6 @@ export function isUsingTypes(document: DocumentNode, externalFragments: string[]
               }
             }
           }
-        }
-      },
-    },
-    // FragmentDefinition: {
-    //   enter: (node: FragmentDefinitionNode) => {
-    //     if (schema) {
-    //       typesStack.push(schema.getType(node.typeCondition.name.value));
-    //     }
-    //   },
-    //   leave: () => {
-    //     if (schema) {
-    //       typesStack.pop();
-    //     }
-    //   },
-    // },
-    OperationDefinition: {
-      enter: (node: OperationDefinitionNode) => {
-        if (schema) {
-          if (node.operation === 'query') {
-            typesStack.push(schema.getQueryType());
-          } else if (node.operation === 'mutation') {
-            typesStack.push(schema.getMutationType());
-          } else if (node.operation === 'subscription') {
-            typesStack.push(schema.getSubscriptionType());
-          }
-        }
-      },
-      leave: () => {
-        if (schema) {
-          typesStack.pop();
         }
       },
     },
