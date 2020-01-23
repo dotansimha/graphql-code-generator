@@ -22,7 +22,7 @@ export const preset: Types.OutputPreset = {
     });
 
     const inputTypesDocumentNode: DocumentNode = { kind: Kind.DOCUMENT, definitions: inputTypesAst };
-    const allAst = concatAST(options.documents.reduce((prev, v) => [...prev, v.document], []));
+    const allAst = concatAST(options.documents.map(v => v.document));
     const operationsAst = allAst.definitions.filter(d => d.kind === Kind.OPERATION_DEFINITION) as OperationDefinitionNode[];
     const fragments = allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[];
     const externalFragments = fragments.map(frag => ({

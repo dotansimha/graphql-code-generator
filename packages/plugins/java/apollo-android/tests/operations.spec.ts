@@ -191,7 +191,7 @@ describe('Operations Visitor', () => {
 
   it('Should handle Query correctly', async () => {
     const ast = {
-      content: parse(/* GraphQL */ `
+      document: parse(/* GraphQL */ `
         query ListProducts($filter: ModelProductFilterInput, $limit: Int, $nextToken: String) {
           listProducts(filter: $filter, limit: $limit, nextToken: $nextToken) {
             items {
@@ -271,7 +271,7 @@ describe('Operations Visitor', () => {
 
   it('Should handle Query correctly with fragments', async () => {
     const ast = {
-      content: parse(/* GraphQL */ `
+      document: parse(/* GraphQL */ `
         query ListProducts($filter: ModelProductFilterInput, $limit: Int, $nextToken: String) {
           listProducts(filter: $filter, limit: $limit, nextToken: $nextToken) {
             items {

@@ -66,7 +66,7 @@ describe('React Apollo', () => {
       const docs = [
         {
           location: '',
-          content: parse(/* GraphQL */ `
+          document: parse(/* GraphQL */ `
             query GET_SOMEHTING {
               feed {
                 id
@@ -96,7 +96,7 @@ describe('React Apollo', () => {
       const docs = [
         {
           location: '',
-          content: parse(/* GraphQL */ `
+          document: parse(/* GraphQL */ `
             query GET_SOMEHTING {
               feed {
                 id
@@ -126,7 +126,7 @@ describe('React Apollo', () => {
       const docs = [
         {
           location: '',
-          content: parse(/* GraphQL */ `
+          document: parse(/* GraphQL */ `
             query GET_SOMEHTING {
               feed {
                 id
@@ -159,7 +159,7 @@ describe('React Apollo', () => {
       const docs = [
         {
           location: '',
-          content: parse(/* GraphQL */ `
+          document: parse(/* GraphQL */ `
             query test {
               feed {
                 id
@@ -345,7 +345,7 @@ describe('React Apollo', () => {
       const docs = [
         {
           location: 'a.graphql',
-          content: parse(/* GraphQL */ `
+          document: parse(/* GraphQL */ `
             fragment MyFragment on Repository {
               full_name
             }
@@ -582,7 +582,7 @@ query MyFeed {
       const docs = [
         {
           location: '',
-          content: parse(/* GraphQL */ `
+          document: parse(/* GraphQL */ `
             mutation Test {
               submitRepository(repoFullName: "\\"REPONAME\\"") {
                 createdAt
@@ -840,7 +840,7 @@ query MyFeed {
       const docs = [
         {
           location: '',
-          content: parse(/* GraphQL */ `
+          document: parse(/* GraphQL */ `
             mutation submitComment($repoFullName: String!, $commentContent: String!) {
               submitComment(repoFullName: $repoFullName, commentContent: $commentContent) {
                 id
@@ -1508,7 +1508,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       const docs = [
         {
           location: '',
-          content: parse(/* GraphQL */ `
+          document: parse(/* GraphQL */ `
             fragment feedFragment on Entry {
               id
               commentCount
@@ -1543,7 +1543,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       const docs = [
         {
           location: '',
-          content: parse(/* GraphQL */ `
+          document: parse(/* GraphQL */ `
             fragment feedFragment on Entry {
               id
               commentCount
@@ -1579,7 +1579,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       const docs = [
         {
           location: '',
-          content: parse(/* GraphQL */ `
+          document: parse(/* GraphQL */ `
             fragment feedFragment on Entry {
               id
               commentCount
@@ -2340,7 +2340,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       const docs = [
         {
           location: 'path/to/document.graphql',
-          content: parse(/* GraphQL */ `
+          document: parse(/* GraphQL */ `
             fragment feedFragment on Entry {
               id
               commentCount
@@ -2368,7 +2368,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       const docs = [
         {
           location: 'a.graphql',
-          content: parse(/* GraphQL */ `
+          document: parse(/* GraphQL */ `
             fragment feedFragment1 on Entry {
               id
               commentCount
@@ -2377,7 +2377,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         },
         {
           location: 'b.graphql',
-          content: parse(/* GraphQL */ `
+          document: parse(/* GraphQL */ `
             fragment feedFragment2 on Entry {
               id
               commentCount

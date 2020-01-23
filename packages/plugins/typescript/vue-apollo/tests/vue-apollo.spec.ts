@@ -156,7 +156,7 @@ describe('Vue Apollo', () => {
       const docs = [
         {
           filePath: 'a.graphql',
-          content: parse(/* GraphQL */ `
+          document: parse(/* GraphQL */ `
             fragment MyFragment on Repository {
               full_name
             }
@@ -752,7 +752,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
       const docs = [
         {
           filePath: '',
-          content: parse(/* GraphQL */ `
+          document: parse(/* GraphQL */ `
             fragment feedFragment on Entry {
               id
               commentCount
@@ -787,7 +787,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
       const docs = [
         {
           filePath: '',
-          content: parse(/* GraphQL */ `
+          document: parse(/* GraphQL */ `
             fragment feedFragment on Entry {
               id
               commentCount
@@ -823,7 +823,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
       const docs = [
         {
           filePath: '',
-          content: parse(/* GraphQL */ `
+          document: parse(/* GraphQL */ `
             fragment feedFragment on Entry {
               id
               commentCount
@@ -997,7 +997,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
       const docs = [
         {
           filePath: 'path/to/document.graphql',
-          content: parse(/* GraphQL */ `
+          document: parse(/* GraphQL */ `
             fragment feedFragment on Entry {
               id
               commentCount
@@ -1025,7 +1025,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
       const docs = [
         {
           filePath: 'a.graphql',
-          content: parse(/* GraphQL */ `
+          document: parse(/* GraphQL */ `
             fragment feedFragment1 on Entry {
               id
               commentCount
@@ -1034,7 +1034,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
         },
         {
           filePath: 'b.graphql',
-          content: parse(/* GraphQL */ `
+          document: parse(/* GraphQL */ `
             fragment feedFragment2 on Entry {
               id
               commentCount
