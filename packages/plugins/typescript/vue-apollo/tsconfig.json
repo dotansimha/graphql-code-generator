@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "esModuleInterop": true,
+    "importHelpers": true,
+    "module": "esnext",
+    "target": "es2018",
+    "lib": ["es6", "esnext", "es2015"],
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "declaration": true,
+    "outDir": "./dist/",
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
+  },
+  "exclude": ["node_modules", "tests", "dist", "example"]
+}
