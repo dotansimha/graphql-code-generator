@@ -1,5 +1,5 @@
 import { Types, PluginValidateFn, PluginFunction } from '@graphql-codegen/plugin-helpers';
-import { visit, GraphQLSchema, concatAST, Kind, FragmentDefinitionNode, DocumentNode } from 'graphql';
+import { visit, GraphQLSchema, concatAST, Kind, FragmentDefinitionNode } from 'graphql';
 import { RawClientSideBasePluginConfig, LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
 import { VueApolloVisitor } from './visitor';
 import { extname } from 'path';
@@ -55,11 +55,7 @@ export interface VueApolloRawPluginConfig extends RawClientSideBasePluginConfig 
 }
 
 export const plugin: PluginFunction<VueApolloRawPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: VueApolloRawPluginConfig) => {
-  const allAst = concatAST(
-    documents.reduce((accumulator: DocumentNode[], currentDocument) => {
-      return [...accumulator, currentDocument.content];
-    }, [])
-  );
+  const allAst = concatAST(documents.map(s => s.document));
 
   const allFragments: LoadedFragment[] = [
     ...(allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[]).map(fragmentDef => ({ node: fragmentDef, name: fragmentDef.name.value, onType: fragmentDef.typeCondition.name.value, isExternal: false })),
