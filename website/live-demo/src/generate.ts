@@ -32,7 +32,7 @@ export async function generate(config: string, schema: string, documents?: strin
         ? [
             {
               location: '',
-              content: parse(documents),
+              document: parse(documents),
             },
           ]
         : [],
