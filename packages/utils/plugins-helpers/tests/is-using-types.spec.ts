@@ -37,10 +37,51 @@ describe('isUsingTypes', () => {
 
         type Query {
           allRequests: [Request!]!
+          nodes: [Node!]!
+        }
+
+        interface Node {
+          id: ID!
+          s: NodeSelection
+        }
+
+        type NodeSelection {
+          foo: String
+        }
+
+        type A implements Node {
+          id: ID!
+          s: NodeSelection
+          a: String
+          b: AInner
+        }
+
+        type AInner {
+          id: ID!
+          inner: AInner2
+        }
+
+        type AInner2 {
+          f: String
         }
       `);
       const ast = parse(/* GraphQL */ `
         query AllRequests {
+          nodes {
+            id
+            s {
+              foo
+            }
+            ... on A {
+              a
+              b {
+                id
+                inner {
+                  f
+                }
+              }
+            }
+          }
           allRequests {
             _id
 
