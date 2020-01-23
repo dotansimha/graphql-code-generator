@@ -86,14 +86,14 @@ describe('TypeScript Operations Plugin', () => {
     }
   `);
 
-  const validate = async (document: Types.PluginOutput, config: any = {}, pluginSchema = schema, usage = '', openPlayground = false) => {
+  const validate = async (content: Types.PluginOutput, config: any = {}, pluginSchema = schema, usage = '', openPlayground = false) => {
     const m = mergeOutputs([await tsPlugin(pluginSchema, [], config, { outputFile: '' }), content, usage]);
     await validateTs(m, null, null, null, openPlayground);
 
     return m;
   };
 
-  const validateAndCompile = async (document: Types.PluginOutput, config: any = {}, pluginSchema = schema, usage = '', openPlayground = false) => {
+  const validateAndCompile = async (content: Types.PluginOutput, config: any = {}, pluginSchema = schema, usage = '', openPlayground = false) => {
     const m = mergeOutputs([await tsPlugin(pluginSchema, [], config, { outputFile: '' }), content, usage]);
     await compileTs(m);
 

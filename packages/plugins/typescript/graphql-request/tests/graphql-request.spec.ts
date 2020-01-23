@@ -41,7 +41,7 @@ describe('graphql-request', () => {
     }
   `);
 
-  const validateAndCompile = async (document: Types.PluginOutput, config, docs, pluginSchema, usage = '') => {
+  const validateAndCompile = async (content: Types.PluginOutput, config, docs, pluginSchema, usage = '') => {
     const m = mergeOutputs([await tsPlugin(pluginSchema, docs, config, { outputFile: '' }), await tsDocumentsPlugin(pluginSchema, docs, config), content, usage]);
 
     await compileTs(m);

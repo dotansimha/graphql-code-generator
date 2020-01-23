@@ -8,7 +8,7 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 
-const validate = async (document: Types.PluginOutput, schema: GraphQLSchema, operations, config = {}, tsx = false, strict = false) => {
+const validate = async (content: Types.PluginOutput, schema: GraphQLSchema, operations, config = {}, tsx = false, strict = false) => {
   const tsPluginResult = await tsPlugin(schema, operations, config, { outputFile: '' });
   const tsOperationPluginResult = await tsOperationPlugin(schema, operations, config, { outputFile: '' });
   const mergedOutput = mergeOutputs([tsPluginResult, tsOperationPluginResult, content]);
@@ -16,7 +16,7 @@ const validate = async (document: Types.PluginOutput, schema: GraphQLSchema, ope
   validateTs(mergedOutput, undefined, tsx, strict);
 };
 
-const validateAndCompile = async (document: Types.PluginOutput, schema: GraphQLSchema, operations, config = {}, tsx = false, options = undefined) => {
+const validateAndCompile = async (content: Types.PluginOutput, schema: GraphQLSchema, operations, config = {}, tsx = false, options = undefined) => {
   const tsPluginResult = await tsPlugin(schema, operations, config, { outputFile: '' });
   const tsOperationPluginResult = await tsOperationPlugin(schema, operations, config, { outputFile: '' });
   const mergedOutput = mergeOutputs([tsPluginResult, tsOperationPluginResult, content]);
