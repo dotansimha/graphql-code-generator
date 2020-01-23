@@ -95,22 +95,6 @@ export function isUsingTypes(document: DocumentNode, externalFragments: string[]
         }
       },
     },
-    // SelectionSet: {
-    //   enter: (node: SelectionSetNode, key, parent: any) => {
-    //     if (node.selections && node.selections.length > 0) {
-    //       const currentType = typesStack[typesStack.length - 1];
-
-    //       if (isObjectType(currentType)) {
-    //         console.log('enter selection set, field:', parent.name.value, currentType.name);
-    //       }
-    //     }
-    //   },
-    //   leave: (node: SelectionSetNode) => {
-    //     if (node.selections && node.selections.length > 0) {
-    //       console.log('leave selection set');
-    //     }
-    //   },
-    // },
     Field: {
       enter: (node: FieldNode, key, parent, path, anscestors) => {
         if (node.name.value.startsWith('__')) {
@@ -132,7 +116,6 @@ export function isUsingTypes(document: DocumentNode, externalFragments: string[]
 
         if (schema) {
           const lastType = typesStack[typesStack.length - 1];
-          console.log('hit field enter', node.name.value, 'last type: ', lastType.name);
 
           if (lastType) {
             if (isObjectType(lastType)) {
@@ -152,31 +135,9 @@ export function isUsingTypes(document: DocumentNode, externalFragments: string[]
               const fieldBaseType = getBaseType(currentType);
 
               if (selections.length > 0) {
-                console.log(`adding type ${fieldBaseType.name}`);
-
                 typesStack.push(fieldBaseType);
               }
             }
-          }
-        }
-      },
-      leave: (node: FieldNode, key, parent, path, anscestors) => {
-        if (node.name.value.startsWith('__')) {
-          return;
-        }
-
-        const insideIgnoredFragment = (anscestors as any).find((f: ASTNode) => f.kind && f.kind === 'FragmentDefinition' && externalFragments.includes(f.name.value));
-
-        if (insideIgnoredFragment) {
-          return;
-        }
-
-        if (schema) {
-          const selections = node.selectionSet ? node.selectionSet.selections || [] : [];
-          const currentType = typesStack[typesStack.length - 1];
-          if (currentType && selections.length > 0) {
-            console.log(`popping ${currentType.name}`);
-            typesStack.pop();
           }
         }
       },

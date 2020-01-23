@@ -3,7 +3,7 @@ import { isUsingTypes } from '../src/helpers';
 
 describe('isUsingTypes', () => {
   describe('Issues', () => {
-    it.only('#3248 - error on missing field on type', () => {
+    it('#3248 - error on missing field on type', () => {
       const schema = buildSchema(/* GraphQL */ `
         scalar ObjectId
 
