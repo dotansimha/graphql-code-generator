@@ -19,7 +19,7 @@ import {
   isUnionType,
 } from 'graphql';
 import { getBaseType } from './utils';
-import { InlineFragmentNode } from 'graphql';
+import { InlineFragmentNode, SelectionSetNode, FragmentSpreadNode, GraphQLObjectType } from 'graphql';
 
 export function isOutputConfigArray(type: any): type is Types.OutputConfig[] {
   return Array.isArray(type);
@@ -80,17 +80,58 @@ export function hasNullableTypeRecursively(type: GraphQLOutputType): boolean {
 
 export function isUsingTypes(document: DocumentNode, externalFragments: string[], schema?: GraphQLSchema): boolean {
   let foundFields = 0;
-  let typesStack: GraphQLNamedType[] = [];
+  let typesStack: GraphQLObjectType[] = [];
 
   visit(document, {
-    InlineFragment: {
-      enter: (node: InlineFragmentNode) => {
-        if (node.typeCondition && schema) {
-          typesStack.push(schema.getType(node.typeCondition.name.value));
+    SelectionSet: {
+      enter(node: SelectionSetNode, key, parent: InlineFragmentNode | FragmentDefinitionNode | FieldNode | OperationDefinitionNode, anscestors) {
+        const insideIgnoredFragment = (anscestors as any).find((f: ASTNode) => f.kind && f.kind === 'FragmentDefinition' && externalFragments.includes(f.name.value));
+
+        if (insideIgnoredFragment) {
+          return;
+        }
+
+        const selections = node.selections || [];
+
+        if (schema && selections.length > 0) {
+          const nextTypeName = (() => {
+            if (parent.kind === Kind.FRAGMENT_DEFINITION) {
+              return parent.typeCondition.name.value;
+            } else if (parent.kind === Kind.FIELD) {
+              const lastType = typesStack[typesStack.length - 1];
+
+              if (!lastType) {
+                throw new Error(`Unable to find parent type! Please make sure you operation passes validation`);
+              }
+              const field = lastType.getFields()[parent.name.value];
+
+              if (!field) {
+                throw new Error(`Unable to find field "${parent.name.value}" on type "${lastType}"!`);
+              }
+
+              return getBaseType(field.type).name;
+            } else if (parent.kind === Kind.OPERATION_DEFINITION) {
+              if (parent.operation === 'query') {
+                return schema.getQueryType().name;
+              } else if (parent.operation === 'mutation') {
+                return schema.getMutationType().name;
+              } else if (parent.operation === 'subscription') {
+                return schema.getSubscriptionType().name;
+              }
+            } else if (parent.kind === Kind.INLINE_FRAGMENT && parent.typeCondition) {
+              return parent.typeCondition.name.value;
+            }
+
+            return null;
+          })();
+
+          typesStack.push(schema.getType(nextTypeName) as any);
         }
       },
-      leave: (node: InlineFragmentNode) => {
-        if (node.typeCondition && schema) {
+      leave(node: SelectionSetNode) {
+        const selections = node.selections || [];
+
+        if (schema && selections.length > 0) {
           typesStack.pop();
         }
       },
@@ -131,63 +172,8 @@ export function isUsingTypes(document: DocumentNode, externalFragments: string[]
               if (hasNullableTypeRecursively(currentType)) {
                 foundFields++;
               }
-
-              const fieldBaseType = getBaseType(currentType);
-
-              if (selections.length > 0) {
-                typesStack.push(fieldBaseType);
-              }
             }
           }
-        }
-      },
-      leave: (node: FieldNode, key, parent, path, anscestors) => {
-        if (node.name.value.startsWith('__')) {
-          return;
-        }
-
-        const insideIgnoredFragment = (anscestors as any).find((f: ASTNode) => f.kind && f.kind === 'FragmentDefinition' && externalFragments.includes(f.name.value));
-
-        if (insideIgnoredFragment) {
-          return;
-        }
-
-        if (schema) {
-          const selections = node.selectionSet ? node.selectionSet.selections || [] : [];
-          const currentType = typesStack[typesStack.length - 1];
-          if (currentType && selections.length > 0) {
-            typesStack.pop();
-          }
-        }
-      },
-    },
-    FragmentDefinition: {
-      enter: (node: FragmentDefinitionNode) => {
-        if (schema) {
-          typesStack.push(schema.getType(node.typeCondition.name.value));
-        }
-      },
-      leave: () => {
-        if (schema) {
-          typesStack.pop();
-        }
-      },
-    },
-    OperationDefinition: {
-      enter: (node: OperationDefinitionNode) => {
-        if (schema) {
-          if (node.operation === 'query') {
-            typesStack.push(schema.getQueryType());
-          } else if (node.operation === 'mutation') {
-            typesStack.push(schema.getMutationType());
-          } else if (node.operation === 'subscription') {
-            typesStack.push(schema.getSubscriptionType());
-          }
-        }
-      },
-      leave: () => {
-        if (schema) {
-          typesStack.pop();
         }
       },
     },
