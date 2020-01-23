@@ -3,7 +3,7 @@ import { VueApolloRawPluginConfig } from './index';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode } from 'graphql';
 import { Types } from '@graphql-codegen/plugin-helpers';
-import { pascalCase } from 'change-case';
+import { pascalCase } from 'pascal-case';
 import { GraphQLSchema } from 'graphql';
 
 export interface VueApolloPluginConfig extends ClientSideBasePluginConfig {
@@ -161,7 +161,7 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
         const reactiveFunctionTypeName = `ReactiveFunction${operationName}`;
         return `type ${reactiveFunctionTypeName} = () => ${operationVariablesTypes}\nexport function use${operationName}(variables${
           operationHasNonNullableVariable ? '' : '?'
-          }: ${operationVariablesTypes} | VueCompositionApi.Ref<${operationVariablesTypes}> | ${reactiveFunctionTypeName}, baseOptions?: VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}>) {
+        }: ${operationVariablesTypes} | VueCompositionApi.Ref<${operationVariablesTypes}> | ${reactiveFunctionTypeName}, baseOptions?: VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}>) {
           return VueApolloComposable.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${documentNodeVariable}, variables, baseOptions);
         }`;
       case 'Mutation':
@@ -171,7 +171,7 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
       case 'Subscription':
         return `export function use${operationName}(variables${
           operationHasNonNullableVariable ? '' : '?'
-          }: ${operationVariablesTypes}, baseOptions?: VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}>) {
+        }: ${operationVariablesTypes}, baseOptions?: VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}>) {
           return VueApolloComposable.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${documentNodeVariable}, variables, baseOptions);
         }`;
     }
