@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@graphql-codegen/testing": "1.11.2",
-    "@types/jest": "24.9.0",
+    "@types/jest": "24.9.1",
     "@types/relay-compiler": "7.0.2",
     "@ardatan/bob": "0.2.7",
     "graphql": "14.5.8",
