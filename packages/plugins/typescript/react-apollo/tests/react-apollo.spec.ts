@@ -197,7 +197,7 @@ describe('React Apollo', () => {
 
   describe('Imports', () => {
     it('should import React and ReactApollo dependencies', async () => {
-      const docs = [{ location: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -215,7 +215,7 @@ describe('React Apollo', () => {
     });
 
     it('should import DocumentNode when using noGraphQLTag', async () => {
-      const docs = [{ location: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -233,7 +233,7 @@ describe('React Apollo', () => {
     });
 
     it(`should use gql import from gqlImport config option`, async () => {
-      const docs = [{ location: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -273,7 +273,7 @@ describe('React Apollo', () => {
     });
 
     it('should import ApolloReactHooks dependencies', async () => {
-      const docs = [{ location: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -288,7 +288,7 @@ describe('React Apollo', () => {
     });
 
     it('should import ApolloReactHooks from apolloReactHooksImportFrom config option', async () => {
-      const docs = [{ location: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -303,7 +303,7 @@ describe('React Apollo', () => {
     });
 
     it('should import ApolloReactCommon from apolloReactCommonImportFrom config option', async () => {
-      const docs = [{ location: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -318,7 +318,7 @@ describe('React Apollo', () => {
     });
 
     it('should skip import React and ApolloReactComponents if only hooks are used', async () => {
-      const docs = [{ location: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -526,7 +526,7 @@ query MyFeed {
 
   describe('Component', () => {
     it('should generate Document variable', async () => {
-      const docs = [{ location: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -557,7 +557,7 @@ query MyFeed {
     });
 
     it('should generate Document variable with noGraphQlTag', async () => {
-      const docs = [{ location: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -614,7 +614,7 @@ query MyFeed {
     });
 
     it('should generate Component', async () => {
-      const docs = [{ location: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -638,7 +638,7 @@ query MyFeed {
     });
 
     it('should generate a component with a custom suffix when specified', async () => {
-      const docs = [{ location: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -661,7 +661,7 @@ query MyFeed {
     });
 
     it('should not generate Component', async () => {
-      const docs = [{ location: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -749,7 +749,7 @@ query MyFeed {
     });
 
     it('should not add typesPrefix to Component', async () => {
-      const docs = [{ location: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -765,7 +765,7 @@ query MyFeed {
 
   describe('HOC', () => {
     it('should generate HOCs', async () => {
-      const docs = [{ location: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -791,7 +791,7 @@ query MyFeed {
     });
 
     it('should generate HOC props with correct operation result type name', async () => {
-      const docs = [{ location: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -807,7 +807,7 @@ query MyFeed {
     });
 
     it('should not generate HOCs', async () => {
-      const docs = [{ location: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -823,7 +823,7 @@ query MyFeed {
     });
 
     it('should not add typesPrefix to HOCs', async () => {
-      const docs = [{ location: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -955,7 +955,7 @@ export function useSubmitRepositoryMutation(baseOptions?: ApolloReactHooks.Mutat
     });
 
     it('Should not generate hooks for query and mutation', async () => {
-      const docs = [{ location: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -1001,7 +1001,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
     });
 
     it('Should not add typesPrefix to hooks', async () => {
-      const docs = [{ location: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -1192,7 +1192,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
     `);
 
     it('should generate ResultType for Query if withResultType is true', async () => {
-      const docs = [{ location: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -1208,7 +1208,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
     });
 
     it('should NOT generate ResultType for Query if withResultType is false', async () => {
-      const docs = [{ location: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -1370,7 +1370,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
     });
 
     it('should NOT generate MutationOptions for Query if withMutationOptionsType is true', async () => {
-      const docs = [{ location: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -1386,7 +1386,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
     });
 
     it('should NOT generate MutationOptions for Query if withMutationOptionsType is false', async () => {
-      const docs = [{ location: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -1465,7 +1465,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
     `);
 
     it('should import DocumentNode when documentMode is "documentNode"', async () => {
-      const docs = [{ location: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -1483,7 +1483,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
     });
 
     it('should generate Document variable when documentMode is "documentNode"', async () => {
-      const docs = [{ location: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -1616,7 +1616,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         withHOC: false,
       };
 
-      const docs = [{ location: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
 
       const content = (await plugin(schema, docs, config, {
         outputFile: 'graphql.tsx',
@@ -1639,7 +1639,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         withHOC: false,
       };
 
-      const docs = [{ location: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
 
       const content = (await plugin(schema, docs, config, {
         outputFile: 'graphql.tsx',
@@ -1668,7 +1668,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         withHOC: true,
       };
 
-      const docs = [{ location: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
 
       const content = (await plugin(schema, docs, config, {
         outputFile: 'graphql.tsx',
@@ -1982,7 +1982,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         withHOC: false,
       };
 
-      const docs = [{ location: 'path/to/document.graphql', content: basicDoc }];
+      const docs = [{ location: 'path/to/document.graphql', document: basicDoc }];
 
       const content = (await plugin(schema, docs, config, {
         outputFile: 'graphql.tsx',
@@ -2005,7 +2005,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         withHOC: false,
       };
 
-      const docs = [{ location: 'path/to/document.graphql', content: basicDoc }];
+      const docs = [{ location: 'path/to/document.graphql', document: basicDoc }];
 
       const content = (await plugin(schema, docs, config, {
         outputFile: 'graphql.tsx',
@@ -2034,7 +2034,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         withHOC: true,
       };
 
-      const docs = [{ location: 'path/to/document.graphql', content: basicDoc }];
+      const docs = [{ location: 'path/to/document.graphql', document: basicDoc }];
 
       const content = (await plugin(schema, docs, config, {
         outputFile: 'graphql.tsx',

@@ -63,7 +63,7 @@ describe('Vue Apollo', () => {
 
   describe('Imports', () => {
     it('should import VueApollo and VueCompositionApi dependencies', async () => {
-      const docs = [{ filePath: '', content: basicDoc }];
+      const docs = [{ filePath: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -80,7 +80,7 @@ describe('Vue Apollo', () => {
     });
 
     it('should import DocumentNode when using noGraphQLTag', async () => {
-      const docs = [{ filePath: '', content: basicDoc }];
+      const docs = [{ filePath: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -98,7 +98,7 @@ describe('Vue Apollo', () => {
     });
 
     it(`should use gql import from gqlImport config option`, async () => {
-      const docs = [{ filePath: '', content: basicDoc }];
+      const docs = [{ filePath: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -136,7 +136,7 @@ describe('Vue Apollo', () => {
     });
 
     it('should import VueApolloComposable from VueApolloComposableImportFrom config option', async () => {
-      const docs = [{ filePath: '', content: basicDoc }];
+      const docs = [{ filePath: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -426,7 +426,7 @@ export function useSubmitRepositoryMutation(baseOptions?: VueApolloComposable.Us
     });
 
     it('Should not generate composition functions for query and mutation', async () => {
-      const docs = [{ filePath: '', content: basicDoc }];
+      const docs = [{ filePath: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -468,7 +468,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
     });
 
     it('Should not add typesPrefix to composition functions', async () => {
-      const docs = [{ filePath: '', content: basicDoc }];
+      const docs = [{ filePath: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -709,7 +709,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
     `);
 
     it('should import DocumentNode when documentMode is "documentNode"', async () => {
-      const docs = [{ filePath: '', content: basicDoc }];
+      const docs = [{ filePath: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -727,7 +727,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
     });
 
     it('should generate Document variable when documentMode is "documentNode"', async () => {
-      const docs = [{ filePath: '', content: basicDoc }];
+      const docs = [{ filePath: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -857,7 +857,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
         importDocumentNodeExternallyFrom: 'path/to/documents',
       };
 
-      const docs = [{ filePath: '', content: basicDoc }];
+      const docs = [{ filePath: '', document: basicDoc }];
 
       const content = (await plugin(schema, docs, config, {
         outputFile: 'graphql.ts',
@@ -928,7 +928,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
         importDocumentNodeExternallyFrom: 'near-operation-file',
       };
 
-      const docs = [{ filePath: 'path/to/document.graphql', content: basicDoc }];
+      const docs = [{ filePath: 'path/to/document.graphql', document: basicDoc }];
 
       const content = (await plugin(schema, docs, config, {
         outputFile: 'graphql.ts',
