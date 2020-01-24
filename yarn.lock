@@ -2385,6 +2385,16 @@
     tslib "1.10.0"
     valid-url "1.0.9"
 
+"@graphql-toolkit/url-loader@0.9.4":
+  version "0.9.4"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/url-loader/-/url-loader-0.9.4.tgz#b8d5095dd9bfe842005121decfeddac8f3e67929"
+  integrity sha512-gBV7JQyxCMZHpGuSaXBaNVfPwR0U5DB4IHkHb0d95N/M814gPcFacxPvHejavG6W6XrlMBD+J3IeFpCVJcDsxg==
+  dependencies:
+    "@graphql-toolkit/common" "0.9.4"
+    cross-fetch "3.0.4"
+    tslib "1.10.0"
+    valid-url "1.0.9"
+
 "@hapi/address@2.x.x":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@hapi/address/-/address-2.0.0.tgz#9f05469c88cb2fd3dcd624776b54ee95c312126a"
