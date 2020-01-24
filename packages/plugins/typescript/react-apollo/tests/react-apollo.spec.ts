@@ -400,7 +400,7 @@ describe('React Apollo', () => {
         ${feedWithRepository}
       `;
 
-      const docs = [{ location: '', content: myFeed }];
+      const docs = [{ location: '', document: myFeed }];
 
       const content = (await plugin(
         schema,
@@ -457,7 +457,7 @@ query MyFeed {
         }
       `;
       const documents = [simpleFeed, myFeed];
-      const docs = documents.map(content => ({ content, location: '' }));
+      const docs = documents.map(document => ({ document, location: '' }));
       const content = (await plugin(
         schema,
         docs,
@@ -507,7 +507,7 @@ query MyFeed {
         }
       `;
       const documents = [myFeed];
-      const docs = documents.map(content => ({ content, location: '' }));
+      const docs = documents.map(document => ({ document, location: '' }));
       const content = (await plugin(
         schema,
         docs,
@@ -679,7 +679,7 @@ query MyFeed {
       const docs = [
         {
           location: '',
-          content: gql`
+          document: gql`
             query Test($foo: String!) {
               test(foo: $foo)
             }
@@ -717,7 +717,7 @@ query MyFeed {
       const docs = [
         {
           location: '',
-          content: gql`
+          document: gql`
             mutation Test($foo: String!) {
               test(foo: $foo)
             }
@@ -886,7 +886,7 @@ query MyFeed {
           }
         }
       `);
-      const docs = [{ location: '', content: documents }];
+      const docs = [{ location: '', document: documents }];
 
       const content = (await plugin(
         schema,
@@ -931,7 +931,7 @@ export function useSubmitRepositoryMutation(baseOptions?: ApolloReactHooks.Mutat
           }
         }
       `);
-      const docs = [{ location: '', content: documents }];
+      const docs = [{ location: '', document: documents }];
 
       const content = (await plugin(
         schema,
@@ -978,7 +978,7 @@ export function useSubmitRepositoryMutation(baseOptions?: ApolloReactHooks.Mutat
         }
       `);
 
-      const docs = [{ location: '', content: documents }];
+      const docs = [{ location: '', document: documents }];
 
       const content = (await plugin(
         schema,
@@ -1036,7 +1036,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
           }
         }
       `);
-      const docs = [{ location: '', content: documents }];
+      const docs = [{ location: '', document: documents }];
 
       const content = (await plugin(
         schema,
@@ -1110,7 +1110,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         }
       `);
 
-      const docs = [{ location: '', content: documents }];
+      const docs = [{ location: '', document: documents }];
 
       const content = (await plugin(
         schema,
@@ -1144,7 +1144,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         }
       `);
 
-      const docs = [{ location: '', content: documents }];
+      const docs = [{ location: '', document: documents }];
 
       const content = (await plugin(
         schema,
@@ -1224,7 +1224,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
     });
 
     it('should generate ResultType for Mutation if withResultType is true', async () => {
-      const docs = [{ location: '', content: mutationDoc }];
+      const docs = [{ location: '', document: mutationDoc }];
 
       const content = (await plugin(
         schema,
@@ -1241,7 +1241,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
     });
 
     it('should NOT generate ResultType for Mutation if withResultType is false', async () => {
-      const docs = [{ location: '', content: mutationDoc }];
+      const docs = [{ location: '', document: mutationDoc }];
 
       const content = (await plugin(
         schema,
@@ -1258,7 +1258,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
     });
 
     it('should generate ResultType for Subscription if withResultType is true', async () => {
-      const docs = [{ location: '', content: subscriptionDoc }];
+      const docs = [{ location: '', document: subscriptionDoc }];
 
       const content = (await plugin(
         schema,
@@ -1275,7 +1275,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
     });
 
     it('should NOT generate ResultType for Subscription if withResultType is false', async () => {
-      const docs = [{ location: '', content: subscriptionDoc }];
+      const docs = [{ location: '', document: subscriptionDoc }];
 
       const content = (await plugin(
         schema,
@@ -1306,7 +1306,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
           }
         }
       `);
-      const docs = [{ location: '', content: documents }];
+      const docs = [{ location: '', document: documents }];
 
       const content = (await plugin(
         schema,
@@ -1336,7 +1336,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
     };
 
     it('should generate MutationOptions for Mutation if withMutationOptionsType is true', async () => {
-      const docs = [{ location: '', content: mutationDoc }];
+      const docs = [{ location: '', document: mutationDoc }];
 
       const content = (await plugin(
         schema,
@@ -1353,7 +1353,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
     });
 
     it('should NOT generate MutationOptions for Mutation if withMutationOptionsType is false', async () => {
-      const docs = [{ location: '', content: mutationDoc }];
+      const docs = [{ location: '', document: mutationDoc }];
 
       const content = (await plugin(
         schema,
@@ -1402,7 +1402,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
     });
 
     it('should NOT generate MutationOptions for Subscription if withMutationOptionsType is true', async () => {
-      const docs = [{ location: '', content: subscriptionDoc }];
+      const docs = [{ location: '', document: subscriptionDoc }];
 
       const content = (await plugin(
         schema,
@@ -1419,7 +1419,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
     });
 
     it('should NOT generate MutationOptions for Subscription if withMutationOptionsType is false', async () => {
-      const docs = [{ location: '', content: subscriptionDoc }];
+      const docs = [{ location: '', document: subscriptionDoc }];
 
       const content = (await plugin(
         schema,
@@ -1699,7 +1699,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         withHOC: false,
       };
 
-      const docs = [{ location: '', content: mutationDoc }];
+      const docs = [{ location: '', document: mutationDoc }];
 
       const content = (await plugin(schema, docs, config, {
         outputFile: 'graphql.tsx',
@@ -1722,7 +1722,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         withHOC: false,
       };
 
-      const docs = [{ location: '', content: mutationDoc }];
+      const docs = [{ location: '', document: mutationDoc }];
 
       const content = (await plugin(schema, docs, config, {
         outputFile: 'graphql.tsx',
@@ -1746,7 +1746,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         withHOC: true,
       };
 
-      const docs = [{ location: '', content: mutationDoc }];
+      const docs = [{ location: '', document: mutationDoc }];
 
       const content = (await plugin(schema, docs, config, {
         outputFile: 'graphql.tsx',
@@ -1777,7 +1777,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         withHOC: false,
       };
 
-      const docs = [{ location: '', content: subscriptionDoc }];
+      const docs = [{ location: '', document: subscriptionDoc }];
 
       const content = (await plugin(schema, docs, config, {
         outputFile: 'graphql.tsx',
@@ -1800,7 +1800,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         withHOC: false,
       };
 
-      const docs = [{ location: '', content: subscriptionDoc }];
+      const docs = [{ location: '', document: subscriptionDoc }];
 
       const content = (await plugin(schema, docs, config, {
         outputFile: 'graphql.tsx',
@@ -1824,7 +1824,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         withHOC: true,
       };
 
-      const docs = [{ location: '', content: subscriptionDoc }];
+      const docs = [{ location: '', document: subscriptionDoc }];
 
       const content = (await plugin(schema, docs, config, {
         outputFile: 'graphql.tsx',
@@ -1855,7 +1855,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         withHOC: false,
       };
 
-      const docs = [{ location: '', content: multipleOperationDoc }];
+      const docs = [{ location: '', document: multipleOperationDoc }];
 
       const content = (await plugin(schema, docs, config, {
         outputFile: 'graphql.tsx',
@@ -1887,7 +1887,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         withHOC: false,
       };
 
-      const docs = [{ location: '', content: multipleOperationDoc }];
+      const docs = [{ location: '', document: multipleOperationDoc }];
 
       const content = (await plugin(schema, docs, config, {
         outputFile: 'graphql.tsx',
@@ -1927,7 +1927,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         withHOC: true,
       };
 
-      const docs = [{ location: '', content: multipleOperationDoc }];
+      const docs = [{ location: '', document: multipleOperationDoc }];
 
       const content = (await plugin(schema, docs, config, {
         outputFile: 'graphql.tsx',
@@ -2065,7 +2065,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         withHOC: false,
       };
 
-      const docs = [{ location: 'path/to/document.graphql', content: mutationDoc }];
+      const docs = [{ location: 'path/to/document.graphql', document: mutationDoc }];
 
       const content = (await plugin(schema, docs, config, {
         outputFile: 'graphql.tsx',
@@ -2088,7 +2088,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         withHOC: false,
       };
 
-      const docs = [{ location: 'path/to/document.graphql', content: mutationDoc }];
+      const docs = [{ location: 'path/to/document.graphql', document: mutationDoc }];
 
       const content = (await plugin(schema, docs, config, {
         outputFile: 'graphql.tsx',
@@ -2111,7 +2111,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         withHOC: true,
       };
 
-      const docs = [{ location: 'path/to/document.graphql', content: mutationDoc }];
+      const docs = [{ location: 'path/to/document.graphql', document: mutationDoc }];
 
       const content = (await plugin(schema, docs, config, {
         outputFile: 'graphql.tsx',
@@ -2142,7 +2142,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         withHOC: false,
       };
 
-      const docs = [{ location: 'path/to/document.graphql', content: subscriptionDoc }];
+      const docs = [{ location: 'path/to/document.graphql', document: subscriptionDoc }];
 
       const content = (await plugin(schema, docs, config, {
         outputFile: 'graphql.tsx',
@@ -2165,7 +2165,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         withHOC: false,
       };
 
-      const docs = [{ location: 'path/to/document.graphql', content: subscriptionDoc }];
+      const docs = [{ location: 'path/to/document.graphql', document: subscriptionDoc }];
 
       const content = (await plugin(schema, docs, config, {
         outputFile: 'graphql.tsx',
@@ -2188,7 +2188,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         withHOC: true,
       };
 
-      const docs = [{ location: 'path/to/document.graphql', content: subscriptionDoc }];
+      const docs = [{ location: 'path/to/document.graphql', document: subscriptionDoc }];
 
       const content = (await plugin(schema, docs, config, {
         outputFile: 'graphql.tsx',
@@ -2218,7 +2218,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         withHOC: false,
       };
 
-      const docs = [{ location: 'path/to/document.graphql', content: multipleOperationDoc }];
+      const docs = [{ location: 'path/to/document.graphql', document: multipleOperationDoc }];
 
       const content = (await plugin(schema, docs, config, {
         outputFile: 'graphql.tsx',
@@ -2250,7 +2250,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         withHOC: false,
       };
 
-      const docs = [{ location: 'path/to/document.graphql', content: multipleOperationDoc }];
+      const docs = [{ location: 'path/to/document.graphql', document: multipleOperationDoc }];
 
       const content = (await plugin(schema, docs, config, {
         outputFile: 'graphql.tsx',
@@ -2289,7 +2289,7 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
         withHOC: true,
       };
 
-      const docs = [{ location: 'path/to/document.graphql', content: multipleOperationDoc }];
+      const docs = [{ location: 'path/to/document.graphql', document: multipleOperationDoc }];
 
       const content = (await plugin(schema, docs, config, {
         outputFile: 'graphql.tsx',

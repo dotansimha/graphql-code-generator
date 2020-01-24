@@ -8,9 +8,9 @@ export function readSync(filepath: string) {
   return readFileSync(filepath, 'utf-8');
 }
 
-export function fileExists(filepath: string): boolean {
+export function fileExists(filePath: string): boolean {
   try {
-    return statSync(filepath).isFile();
+    return statSync(filePath).isFile();
   } catch (err) {
     return false;
   }

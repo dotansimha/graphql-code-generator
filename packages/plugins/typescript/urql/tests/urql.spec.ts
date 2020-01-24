@@ -223,7 +223,7 @@ query MyFeed {
         }
       `;
       const documents = [simpleFeed, myFeed];
-      const docs = documents.map(content => ({ content, location: '' }));
+      const docs = documents.map(document => ({ document, location: '' }));
       const content = (await plugin(
         schema,
         docs,
@@ -273,7 +273,7 @@ query MyFeed {
         }
       `;
       const documents = [myFeed];
-      const docs = documents.map(content => ({ content, location: '' }));
+      const docs = documents.map(document => ({ document, location: '' }));
       const content = (await plugin(
         schema,
         docs,
