@@ -2319,6 +2319,14 @@
     "@graphql-toolkit/common" "0.9.1"
     tslib "1.10.0"
 
+"@graphql-toolkit/graphql-file-loader@0.9.4":
+  version "0.9.4"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/graphql-file-loader/-/graphql-file-loader-0.9.4.tgz#e3b73c6f7ccc25193cae13f935945bcc4c0aeb22"
+  integrity sha512-wp4FHX+nuRzXt7hW7FkUQ1KYLu2znAi/7qPQsgEg20i8A0BYnmtYCidLaz4v1rw/HTNUdSsqKy3AxWYT489fXw==
+  dependencies:
+    "@graphql-toolkit/common" "0.9.4"
+    tslib "1.10.0"
+
 "@graphql-toolkit/graphql-tag-pluck@0.9.4":
   version "0.9.4"
   resolved "https://registry.yarnpkg.com/@graphql-toolkit/graphql-tag-pluck/-/graphql-tag-pluck-0.9.4.tgz#f21cd6eba4a106c3f373d8d7e3428abbcdcbd033"
