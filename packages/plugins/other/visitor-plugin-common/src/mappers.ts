@@ -13,6 +13,10 @@ export interface ExternalParsedMapper {
   default: boolean;
 }
 
+export function isExternalMapperType(m: ParsedMapper): m is ExternalParsedMapper {
+  return !!m['import'];
+}
+
 export function parseMapper(mapper: string, gqlTypeName: string | null = null): ParsedMapper {
   if (isExternalMapper(mapper)) {
     const items = mapper.split('#');
@@ -27,10 +31,11 @@ export function parseMapper(mapper: string, gqlTypeName: string | null = null): 
       type = `${ns}.${items[2]}`;
       importElement = ns;
     } else {
+      const namedDefault = items[1].includes('default as');
       asDefault = items[1] === 'default';
-      if (asDefault) {
+      if (asDefault || namedDefault) {
         type = `${gqlTypeName}`;
-        importElement = `${gqlTypeName}`;
+        importElement = namedDefault ? `default as ${gqlTypeName}` : `${gqlTypeName}`;
       } else {
         if (items[1].includes(' as ')) {
           const [importedType, aliasType] = items[1].split(' as ');
@@ -48,7 +53,7 @@ export function parseMapper(mapper: string, gqlTypeName: string | null = null): 
       isExternal: true,
       source,
       type,
-      import: importElement,
+      import: importElement.replace(/<(.*)>/, ''),
     };
   }
 

@@ -6,7 +6,6 @@ import { TypeScriptOperationVariablesToObject } from '@graphql-codegen/typescrip
 
 export interface ParsedTypeScriptResolversConfig extends ParsedResolversConfig {
   avoidOptionals: boolean;
-  immutableTypes: boolean;
   useIndexSignature: boolean;
 }
 
@@ -16,7 +15,6 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<TypeScriptR
       pluginConfig,
       {
         avoidOptionals: getConfigValue(pluginConfig.avoidOptionals, false),
-        immutableTypes: getConfigValue(pluginConfig.immutableTypes, false),
         useIndexSignature: getConfigValue(pluginConfig.useIndexSignature, false),
       } as ParsedTypeScriptResolversConfig,
       schema

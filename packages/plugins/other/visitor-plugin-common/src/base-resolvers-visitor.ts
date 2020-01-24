@@ -43,6 +43,7 @@ export interface ParsedResolversConfig extends ParsedConfig {
   federation: boolean;
   enumPrefix: boolean;
   optionalResolveType: boolean;
+  immutableTypes: boolean;
 }
 
 export interface RawResolversConfig extends RawConfig {
@@ -252,6 +253,13 @@ export interface RawResolversConfig extends RawConfig {
    * @description Sets the `__resolveType` field as optional field.
    */
   optionalResolveType?: boolean;
+  /**
+   * @name immutableTypes
+   * @type boolean
+   * @default false
+   * @description Generates immutable types by adding `readonly` to properties and uses `ReadonlyArray`.
+   */
+  immutableTypes?: boolean;
 }
 
 export type ResolverTypes = { [gqlType: string]: string };
@@ -276,6 +284,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
 
   constructor(rawConfig: TRawConfig, additionalConfig: TPluginConfig, private _schema: GraphQLSchema, defaultScalars: NormalizedScalarsMap = DEFAULT_SCALARS) {
     super(rawConfig, {
+      immutableTypes: getConfigValue(rawConfig.immutableTypes, false),
       optionalResolveType: getConfigValue(rawConfig.optionalResolveType, false),
       enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
       federation: getConfigValue(rawConfig.federation, false),
@@ -487,13 +496,21 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
     return str;
   }
 
+  protected wrapWithArray(t: string): string {
+    if (this.config.immutableTypes) {
+      return `ReadonlyArray<${t}>`;
+    }
+
+    return `Array<${t}>`;
+  }
+
   protected wrapTypeWithModifiers(baseType: string, type: GraphQLOutputType): string {
     if (isNonNullType(type)) {
       return this.clearMaybe(this.wrapTypeWithModifiers(baseType, type.ofType));
     } else if (isListType(type)) {
       const innerType = this.wrapTypeWithModifiers(baseType, type.ofType);
 
-      return this.applyMaybe(`Array<${innerType}>`);
+      return this.applyMaybe(this.wrapWithArray(innerType));
     } else {
       // ResolverTypeWrapper here?
       return this.applyMaybe(baseType);
@@ -702,7 +719,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
   ListType(node: ListTypeNode): string {
     const asString = (node.type as any) as string;
 
-    return `Array<${asString}>`;
+    return this.wrapWithArray(asString);
   }
 
   protected _getScalar(name: string): string {

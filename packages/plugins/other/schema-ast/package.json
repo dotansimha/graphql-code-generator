@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/schema-ast",
-  "version": "1.9.1",
+  "version": "1.11.2",
   "description": "GraphQL Code Generator plugin for generating a .graphql file from a given schema",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
@@ -10,18 +10,18 @@
     "test": "jest --no-watchman --config ../../../../jest.config.js"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "1.9.1",
-    "@graphql-toolkit/common": "0.7.4",
+    "@graphql-codegen/plugin-helpers": "1.11.2",
+    "@graphql-toolkit/common": "0.9.1",
     "tslib": "1.10.0"
   },
   "devDependencies": {
-    "bob-the-bundler": "0.2.2",
+    "@ardatan/bob": "0.2.7",
     "graphql": "14.5.8",
     "graphql-tag": "2.10.1",
-    "jest": "24.9.0",
-    "ts-jest": "24.2.0",
+    "jest": "25.1.0",
+    "ts-jest": "24.3.0",
     "tslib": "1.10.0",
-    "typescript": "3.7.3"
+    "typescript": "3.7.5"
   },
   "peerDependencies": {
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0"

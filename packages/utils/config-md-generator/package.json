@@ -1,7 +1,7 @@
 {
   "name": "@graphql-codegen/config-markdown-generator",
   "private": true,
-  "version": "1.9.1",
+  "version": "1.11.2",
   "license": "MIT",
   "scripts": {
     "prepack": "bob-update-version",
@@ -20,10 +20,10 @@
   "dependencies": {
     "@microsoft/tsdoc": "0.12.16",
     "tslib": "1.10.0",
-    "typescript": "3.7.3"
+    "typescript": "3.7.5"
   },
   "devDependencies": {
-    "bob-the-bundler": "0.2.2",
+    "@ardatan/bob": "0.2.7",
     "ts-node": "8.5.4"
   }
 }

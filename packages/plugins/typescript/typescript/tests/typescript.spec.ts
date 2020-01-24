@@ -1,6 +1,6 @@
 import { validateTs } from '@graphql-codegen/testing';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
-import { buildSchema, parse } from 'graphql';
+import { buildSchema, parse, GraphQLSchema, GraphQLObjectType, GraphQLEnumType } from 'graphql';
 import { plugin } from '../src/index';
 
 describe('TypeScript', () => {
@@ -225,6 +225,41 @@ describe('TypeScript', () => {
   });
 
   describe('Issues', () => {
+    it('#3137 - numeric enum value', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Query {
+          test: Test!
+        }
+
+        enum Test {
+          A
+          B
+          C
+        }
+      `);
+
+      const result = (await plugin(
+        testSchema,
+        [],
+        {
+          enumValues: {
+            Test: {
+              A: 0,
+              B: 'test',
+              C: '2',
+            },
+          },
+        },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+      const output = mergeOutputs([result]);
+      expect(output).toBeSimilarStringTo(`export enum Test {
+        A = 0,
+        B = 'test',
+        C = 2
+      }`);
+    });
+
     it('#2679 - incorrect prefix for enums', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         enum FilterOption {
@@ -238,7 +273,7 @@ describe('TypeScript', () => {
         }
 
         type Query {
-          a(i: UpdateFilterOptionInput, t: FilterOption): String
+          exampleQuery(i: UpdateFilterOptionInput, t: FilterOption): String
         }
       `);
 
@@ -266,10 +301,39 @@ describe('TypeScript', () => {
         newOption: FilterOption,
       };`);
       expect(output).toBeSimilarStringTo(`   
-      export type IQueryAArgs = {
+      export type IQueryExampleQueryArgs = {
         i?: Maybe<IUpdateFilterOptionInput>,
         t?: Maybe<FilterOption>
       };`);
+    });
+
+    it('#3180 - enumValues and named default import', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        enum MyEnum {
+          A
+          B
+          C
+        }
+
+        type Test {
+          t: MyEnum
+          test(a: MyEnum): String
+        }
+      `);
+      const result = (await plugin(
+        testSchema,
+        [],
+        {
+          typesPrefix: 'I',
+          namingConvention: { enumValues: 'constant-case#constantCase' },
+          enumValues: {
+            MyEnum: './files#default as MyEnum',
+          },
+        },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.prepend[0]).toBe(`import { default as MyEnum } from './files';`);
     });
 
     it('#2976 - Issues with mapped enumValues and type prefix in args', async () => {
@@ -290,7 +354,7 @@ describe('TypeScript', () => {
         [],
         {
           typesPrefix: 'I',
-          namingConvention: { enumValues: 'change-case#constantCase' },
+          namingConvention: { enumValues: 'constant-case#constantCase' },
           enumValues: {
             MyEnum: './files#MyEnum',
           },
@@ -569,7 +633,7 @@ describe('TypeScript', () => {
         [],
         {
           namingConvention: {
-            typeNames: 'change-case#lowerCase',
+            typeNames: 'lower-case#lowerCase',
             enumValues: 'keep',
           },
         },
@@ -616,7 +680,7 @@ describe('TypeScript', () => {
         [],
         {
           namingConvention: {
-            enumValues: 'change-case#lowerCase',
+            enumValues: 'lower-case#lowerCase',
           },
         },
         { outputFile: '' }
@@ -645,7 +709,7 @@ describe('TypeScript', () => {
         {
           namingConvention: {
             typeNames: 'keep',
-            enumValues: 'change-case#lowerCase',
+            enumValues: 'lower-case#lowerCase',
           },
         },
         { outputFile: '' }
@@ -731,6 +795,45 @@ describe('TypeScript', () => {
         NonNull = 'NON_NULL'
       }
       `);
+    });
+
+    it('Should use class correctly when declarationKind: class is set', async () => {
+      const schema = buildSchema(`
+        input MyInput {
+          id: ID!
+          displayName: String
+        }
+
+        type MyType {
+          id: ID!
+          displayName: String
+        }
+      `);
+      const result = (await plugin(
+        schema,
+        [],
+        {
+          declarationKind: 'class',
+        },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`
+        export class MyInput {
+          id: Scalars['ID'];
+          displayName?: Maybe<Scalars['String']>;
+        }
+      `);
+
+      expect(result.content).toBeSimilarStringTo(`
+        export class MyType {
+          __typename?: 'MyType';
+          id: Scalars['ID'];
+          displayName?: Maybe<Scalars['String']>;
+        }
+      `);
+
+      validateTs(result);
     });
 
     it('Should use interface for type when declarationKind for types is set', async () => {
@@ -1324,7 +1427,7 @@ describe('TypeScript', () => {
   describe('Naming Convention & Types Prefix', () => {
     it('Should use custom namingConvention for type name and args typename', async () => {
       const schema = buildSchema(`type MyType { foo(a: String!, b: String, c: [String], d: [Int!]!): String }`);
-      const result = (await plugin(schema, [], { namingConvention: 'change-case#lowerCase' }, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = (await plugin(schema, [], { namingConvention: 'lower-case#lowerCase' }, { outputFile: '' })) as Types.ComplexPluginOutput;
 
       expect(result.content).toBeSimilarStringTo(`
         export type mytypefooargs = {
@@ -1346,7 +1449,7 @@ describe('TypeScript', () => {
 
     it('Should use custom namingConvention and add custom prefix', async () => {
       const schema = buildSchema(`type MyType { foo(a: String!, b: String, c: [String], d: [Int!]!): String }`);
-      const result = (await plugin(schema, [], { namingConvention: 'change-case#lowerCase', typesPrefix: 'I' }, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = (await plugin(schema, [], { namingConvention: 'lower-case#lowerCase', typesPrefix: 'I' }, { outputFile: '' })) as Types.ComplexPluginOutput;
 
       expect(result.content).toBeSimilarStringTo(`
         export type Imytypefooargs = {
@@ -1430,7 +1533,7 @@ describe('TypeScript', () => {
   `);
 
     it('Should generate correct values when using links between types - lowerCase', async () => {
-      const result = (await plugin(schema, [], { namingConvention: 'change-case#lowerCase' }, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = (await plugin(schema, [], { namingConvention: 'lower-case#lowerCase' }, { outputFile: '' })) as Types.ComplexPluginOutput;
 
       expect(result.content).toBeSimilarStringTo(`
         export enum myenum {
@@ -1981,6 +2084,33 @@ describe('TypeScript', () => {
         orderBy?: Maybe<OrderBy>,
         filter: Filter
       };
+    `);
+  });
+
+  it('should respect defined enum values', async () => {
+    const testSchema = new GraphQLSchema({
+      query: new GraphQLObjectType({
+        name: 'Query',
+        fields: {
+          foo: {
+            type: new GraphQLEnumType({
+              name: 'Foo',
+              values: {
+                Bar: {
+                  value: 'Qux',
+                },
+              },
+            }),
+          },
+        },
+      }),
+    });
+    const output = (await plugin(testSchema, [], {}, { outputFile: 'graphql.ts' })) as Types.ComplexPluginOutput;
+
+    expect(output.content).toBeSimilarStringTo(`
+      export enum Foo {
+        Bar = 'Qux'
+      }
     `);
   });
 });

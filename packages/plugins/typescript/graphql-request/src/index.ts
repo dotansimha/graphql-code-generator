@@ -4,7 +4,11 @@ import { RawClientSideBasePluginConfig, LoadedFragment } from '@graphql-codegen/
 import { GraphQLRequestVisitor } from './visitor';
 import { extname } from 'path';
 
-export const plugin: PluginFunction<RawClientSideBasePluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: RawClientSideBasePluginConfig) => {
+export interface RawGraphQLRequestPluginConfig extends RawClientSideBasePluginConfig {
+  rawRequest?: boolean;
+}
+
+export const plugin: PluginFunction<RawGraphQLRequestPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: RawGraphQLRequestPluginConfig) => {
   const allAst = concatAST(
     documents.reduce((prev, v) => {
       return [...prev, v.content];

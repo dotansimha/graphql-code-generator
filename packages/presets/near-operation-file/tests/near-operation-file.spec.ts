@@ -203,7 +203,35 @@ describe('near-operation-file preset', () => {
     expect(result.map(o => o.plugins)[1]).toEqual(expect.arrayContaining([{ add: `import * as Types from '../types';\n` }]));
   });
 
-  it('should fail when multiple fragments with the same name are found', () => {
+  it('should fail when multiple fragments with the same name but different definition are found', () => {
+    expect(() =>
+      preset.buildGeneratesSection({
+        baseOutputDir: './src/',
+        config: {},
+        presetConfig: {
+          cwd: '/some/deep/path',
+          baseTypesPath: 'types.ts',
+        },
+        schema: schemaDocumentNode,
+        schemaAst: schemaNode,
+        documents: [
+          testDocuments[1],
+          {
+            filePath: `/some/deep/path/src/graphql/user-fragment.graphql`,
+            content: parse(/* GraphQL */ `
+              fragment UserFields on User {
+                id
+              }
+            `),
+          },
+        ],
+        plugins: [{ typescript: {} }],
+        pluginMap: { typescript: {} as any },
+      })
+    ).toThrow('Multiple fragments with the name(s) "UserFields" were found.');
+  });
+
+  it('should NOT fail when multiple fragments with the same name and definition are found', () => {
     expect(() =>
       preset.buildGeneratesSection({
         baseOutputDir: './src/',
@@ -218,7 +246,7 @@ describe('near-operation-file preset', () => {
         plugins: [{ typescript: {} }],
         pluginMap: { typescript: {} as any },
       })
-    ).toThrow('Multiple fragments with the name(s) "UserFields" were found.');
+    ).not.toThrow('Multiple fragments with the name(s) "UserFields" were found.');
   });
 
   it('Should NOT prepend the "add" plugin with Types import when selection set does not include direct fields', async () => {

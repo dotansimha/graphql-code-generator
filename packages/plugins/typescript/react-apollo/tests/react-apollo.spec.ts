@@ -142,7 +142,7 @@ describe('React Apollo', () => {
         withHOC: false,
         skipTypename: true,
         namingConvention: {
-          typeNames: 'change-case#pascalCase',
+          typeNames: 'pascal-case#pascalCase',
           enumValues: 'keep',
           transformUnderscore: true,
         },
@@ -642,22 +642,22 @@ query MyFeed {
       const content = (await plugin(
         schema,
         docs,
-        { componentSuffix: 'Q' },
+        { componentSuffix: 'Element' },
         {
           outputFile: 'graphql.tsx',
         }
       )) as Types.ComplexPluginOutput;
 
       expect(content.content).toBeSimilarStringTo(`
-      export type TestQProps = Omit<ApolloReactComponents.QueryComponentOptions<TestQuery, TestQueryVariables>, 'query'>;
+      export type TestElementProps = Omit<ApolloReactComponents.QueryComponentOptions<TestQuery, TestQueryVariables>, 'query'>;
       `);
       expect(content.content).toBeSimilarStringTo(`
-      export const TestQ = (props: TestQProps) =>
+      export const TestElement = (props: TestElementProps) =>
       (
           <ApolloReactComponents.Query<TestQuery, TestQueryVariables> query={TestDocument} {...props} />
       );
       `);
-      await validateTypeScript(content, schema, docs, { componentSuffix: 'Q' });
+      await validateTypeScript(content, schema, docs, { componentSuffix: 'Element' });
     });
 
     it('should not generate Component', async () => {
@@ -775,7 +775,7 @@ query MyFeed {
         }
       )) as Types.ComplexPluginOutput;
 
-      expect(content.content).toBeSimilarStringTo(`export type TestProps<TChildProps = {}> = ApolloReactHoc.DataProps<TestQuery, TestQueryVariables> | TChildProps;`);
+      expect(content.content).toBeSimilarStringTo(`export type TestProps<TChildProps = {}> = ApolloReactHoc.DataProps<TestQuery, TestQueryVariables> & TChildProps;`);
 
       expect(content.content).toBeSimilarStringTo(`export function withTest<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<
   TProps,
@@ -801,7 +801,7 @@ query MyFeed {
         }
       )) as Types.ComplexPluginOutput;
 
-      expect(content.content).toBeSimilarStringTo(`export type TestProps<TChildProps = {}> = ApolloReactHoc.DataProps<TestQueryResponse, TestQueryVariables> | TChildProps;`);
+      expect(content.content).toBeSimilarStringTo(`export type TestProps<TChildProps = {}> = ApolloReactHoc.DataProps<TestQueryResponse, TestQueryVariables> & TChildProps;`);
 
       await validateTypeScript(content, schema, docs, {});
     });

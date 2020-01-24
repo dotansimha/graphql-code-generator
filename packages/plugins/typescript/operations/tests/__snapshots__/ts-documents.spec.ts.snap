@@ -125,3 +125,36 @@ exports[`TypeScript Operations Plugin Issues #2916 - Missing import prefix with 
 export type UserQuery = { user: { id: string, username: string, email: string, dep: Types.Department } };
 "
 `;
+
+exports[`TypeScript Operations Plugin Issues #3064 - fragments over interfaces causes issues with fields 1`] = `
+"type Venue_Hotel_Fragment = (
+  { __typename?: 'Hotel' }
+  & Pick<Hotel, 'id'>
+  & { gpsPosition: (
+    { __typename?: 'GPSPosition' }
+    & Pick<GpsPosition, 'lat' | 'lng'>
+  ) }
+);
+
+type Venue_Transport_Fragment = (
+  { __typename?: 'Transport' }
+  & Pick<Transport, 'id'>
+);
+
+export type VenueFragment = Venue_Hotel_Fragment | Venue_Transport_Fragment;
+
+export type QQueryVariables = {};
+
+
+export type QQuery = (
+  { __typename?: 'Query' }
+  & { hotel: (
+    { __typename?: 'Hotel' }
+    & Venue_Hotel_Fragment
+  ), transport: (
+    { __typename?: 'Transport' }
+    & Venue_Transport_Fragment
+  ) }
+);
+"
+`;

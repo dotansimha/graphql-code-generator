@@ -656,7 +656,7 @@ describe('Compatibility Plugin', () => {
 
   describe('Config', () => {
     it('Should produce valid ts code with naming convention', async () => {
-      const config = { namingConvention: 'change-case#lowerCase' };
+      const config = { namingConvention: 'lower-case#lowerCase' };
       const ast = [{ filePath: '', content: basicQuery }];
       const result = await plugin(schema, ast, config);
       const usage = `const myVar: me.__friends = { name: '1' }`;
@@ -698,7 +698,7 @@ describe('Compatibility Plugin', () => {
         withComponent: false,
         noNamespaces: true,
         preResolveTypes: true,
-        namingConvention: { typeNames: 'change-case#pascalCase' },
+        namingConvention: { typeNames: 'pascal-case#pascalCase' },
         transformUnderscore: true,
       };
       const ast = [{ filePath: '', content: basicQuery }];

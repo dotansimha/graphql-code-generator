@@ -102,7 +102,7 @@ describe('Flow Operations Plugin', () => {
             content: ast,
           },
         ],
-        { namingConvention: 'change-case#lowerCase' },
+        { namingConvention: 'lower-case#lowerCase' },
         { outputFile: '' }
       );
 
@@ -152,7 +152,7 @@ describe('Flow Operations Plugin', () => {
             content: ast,
           },
         ],
-        { typesPrefix: 'i', namingConvention: 'change-case#lowerCase' },
+        { typesPrefix: 'i', namingConvention: 'lower-case#lowerCase' },
         { outputFile: '' }
       );
 

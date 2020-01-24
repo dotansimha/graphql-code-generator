@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/flow-operations",
-  "version": "1.9.1",
+  "version": "1.11.2",
   "description": "GraphQL Code Generator plugin for generating Flow types for GraphQL operations (query/mutation/subscription/fragment)",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
@@ -10,20 +10,20 @@
     "test": "jest --no-watchman --config ../../../../jest.config.js"
   },
   "dependencies": {
-    "@graphql-codegen/flow": "1.9.1",
-    "@graphql-codegen/plugin-helpers": "1.9.1",
-    "@graphql-codegen/visitor-plugin-common": "1.9.1",
+    "@graphql-codegen/flow": "1.11.2",
+    "@graphql-codegen/plugin-helpers": "1.11.2",
+    "@graphql-codegen/visitor-plugin-common": "1.11.2",
     "tslib": "1.10.0"
   },
   "devDependencies": {
-    "bob-the-bundler": "0.2.2",
-    "@graphql-codegen/testing": "1.9.1",
-    "flow-bin": "0.114.0",
-    "flow-parser": "0.114.0",
+    "@graphql-codegen/testing": "1.11.2",
+    "@ardatan/bob": "0.2.7",
+    "flow-bin": "0.116.1",
+    "flow-parser": "0.116.1",
     "graphql": "14.5.8",
-    "jest": "24.9.0",
-    "ts-jest": "24.2.0",
-    "typescript": "3.7.3"
+    "jest": "25.1.0",
+    "ts-jest": "24.3.0",
+    "typescript": "3.7.5"
   },
   "sideEffects": false,
   "main": "dist/index.cjs.js",

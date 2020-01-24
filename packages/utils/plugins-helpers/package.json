@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/plugin-helpers",
-  "version": "1.9.1",
+  "version": "1.11.2",
   "description": "GraphQL Code Generator common utils and types",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
@@ -13,17 +13,22 @@
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0"
   },
   "dependencies": {
-    "@graphql-toolkit/common": "0.7.4",
-    "change-case": "3.1.0",
+    "@graphql-toolkit/common": "0.9.1",
+    "camel-case": "4.1.1",
     "common-tags": "1.8.0",
+    "constant-case": "3.0.3",
     "import-from": "3.0.0",
-    "tslib": "1.10.0"
+    "lower-case": "2.0.1",
+    "param-case": "3.0.3",
+    "pascal-case": "3.1.1",
+    "tslib": "1.10.0",
+    "upper-case": "2.0.1"
   },
   "devDependencies": {
-    "bob-the-bundler": "0.2.2",
-    "jest": "24.9.0",
-    "ts-jest": "24.2.0",
-    "typescript": "3.7.3"
+    "@ardatan/bob": "0.2.7",
+    "jest": "25.1.0",
+    "ts-jest": "24.3.0",
+    "typescript": "3.7.5"
   },
   "sideEffects": false,
   "main": "dist/index.cjs.js",

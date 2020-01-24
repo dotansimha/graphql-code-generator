@@ -47,7 +47,7 @@ export const HeroParentTypeDependentFieldComponent = (props: HeroParentTypeDepen
   <ApolloReactComponents.Query<HeroParentTypeDependentFieldQuery, HeroParentTypeDependentFieldQueryVariables> query={HeroParentTypeDependentFieldDocument} {...props} />
 );
 
-export type HeroParentTypeDependentFieldProps<TChildProps = {}> = ApolloReactHoc.DataProps<HeroParentTypeDependentFieldQuery, HeroParentTypeDependentFieldQueryVariables> | TChildProps;
+export type HeroParentTypeDependentFieldProps<TChildProps = {}> = ApolloReactHoc.DataProps<HeroParentTypeDependentFieldQuery, HeroParentTypeDependentFieldQueryVariables> & TChildProps;
 export function withHeroParentTypeDependentField<TProps, TChildProps = {}>(
   operationOptions?: ApolloReactHoc.OperationOption<TProps, HeroParentTypeDependentFieldQuery, HeroParentTypeDependentFieldQueryVariables, HeroParentTypeDependentFieldProps<TChildProps>>
 ) {

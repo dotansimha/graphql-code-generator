@@ -125,9 +125,9 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
           .map(enumOption => {
             const comment = transformComment((enumOption.description as any) as string, 1);
             const optionName = this.convertName(enumOption, { transformUnderscore: true, useTypesPrefix: false });
-            let enumValue: string = (enumOption.name as any) as string;
+            let enumValue: string | number = enumOption.name as any;
 
-            if (this.config.enumValues[typeName] && this.config.enumValues[typeName].mappedValues && this.config.enumValues[typeName].mappedValues[enumValue]) {
+            if (this.config.enumValues[typeName] && this.config.enumValues[typeName].mappedValues && typeof this.config.enumValues[typeName].mappedValues[enumValue] !== 'undefined') {
               enumValue = this.config.enumValues[typeName].mappedValues[enumValue];
             }
 

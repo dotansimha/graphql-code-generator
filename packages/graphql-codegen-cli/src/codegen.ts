@@ -2,14 +2,13 @@ import { Types, CodegenPlugin } from '@graphql-codegen/plugin-helpers';
 import { DetailedError, codegen } from '@graphql-codegen/core';
 import { normalizeOutputParam, normalizeInstanceOrArray, normalizeConfig } from '@graphql-codegen/plugin-helpers';
 import { Renderer } from './utils/listr-renderer';
-import { GraphQLError, DocumentNode } from 'graphql';
+import { GraphQLError, GraphQLSchema, DocumentNode } from 'graphql';
 import { getPluginByName } from './plugins';
 import { getPresetByName } from './presets';
 import { debugLog } from './utils/debugging';
-import { tryToBuildSchema } from './utils/try-to-build-schema';
+import { printSchemaWithDirectives } from '@graphql-toolkit/common';
 import { CodegenContext, ensureContext } from './config';
-
-const Listr = require('listr');
+import { parse } from 'graphql';
 
 export const defaultLoader = (mod: string) => import(mod);
 
@@ -34,6 +33,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
   const commonListrOptions = {
     exitOnError: true,
   };
+  const Listr = await import('listr').then(m => ('default' in m ? m.default : m));
   let listr: import('listr');
 
   if (process.env.VERBOSE) {
@@ -64,12 +64,6 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
   let generates: { [filename: string]: Types.ConfiguredOutput } = {};
 
   async function normalize() {
-    /* Load Require extensions */
-    const requireExtensions = normalizeInstanceOrArray<string>(config.require);
-    for (const mod of requireExtensions) {
-      await import(mod);
-    }
-
     /* Root templates-config */
     rootConfig = config.config || {};
 
@@ -162,6 +156,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
             task: () => {
               const outputFileTemplateConfig = outputConfig.config || {};
               const outputDocuments: Types.DocumentFile[] = [];
+              let outputSchemaAst: GraphQLSchema;
               let outputSchema: DocumentNode;
               const outputSpecificSchemas = normalizeInstanceOrArray<Types.Schema>(outputConfig.schema);
               const outputSpecificDocuments = normalizeInstanceOrArray<Types.OperationDocument>(outputConfig.documents);
@@ -181,7 +176,8 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                           Object.assign(schemaPointerMap, unnormalizedPtr);
                         }
                       }
-                      outputSchema = await context.loadSchema(schemaPointerMap);
+                      outputSchemaAst = await context.loadSchema(schemaPointerMap);
+                      outputSchema = parse(printSchemaWithDirectives(outputSchemaAst));
                     }, filename),
                   },
                   {
@@ -219,7 +215,6 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                       };
 
                       let outputs: Types.GenerateOptions[] = [];
-                      const builtSchema = tryToBuildSchema(outputSchema);
 
                       if (hasPreset) {
                         outputs = await preset.buildGeneratesSection({
@@ -227,7 +222,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                           presetConfig: outputConfig.presetConfig || {},
                           plugins: normalizedPluginsArray,
                           schema: outputSchema,
-                          schemaAst: builtSchema,
+                          schemaAst: outputSchemaAst,
                           documents: outputDocuments,
                           config: mergedConfig,
                           pluginMap,
@@ -238,7 +233,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
                             filename,
                             plugins: normalizedPluginsArray,
                             schema: outputSchema,
-                            schemaAst: builtSchema,
+                            schemaAst: outputSchemaAst,
                             documents: outputDocuments,
                             config: mergedConfig,
                             pluginMap,

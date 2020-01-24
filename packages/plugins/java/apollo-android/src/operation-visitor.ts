@@ -1,5 +1,5 @@
 import { BaseJavaVisitor, SCALAR_TO_WRITER_METHOD } from './base-java-visitor';
-import { toPascalCase, indent, indentMultiline, LoadedFragment, getBaseTypeNode } from '@graphql-codegen/visitor-plugin-common';
+import { indent, indentMultiline, LoadedFragment, getBaseTypeNode } from '@graphql-codegen/visitor-plugin-common';
 import { buildPackageNameFromPath, JavaDeclarationBlock } from '@graphql-codegen/java-common';
 import { getBaseType } from '@graphql-codegen/plugin-helpers';
 import {
@@ -32,7 +32,8 @@ import { VisitorConfig } from './visitor-config';
 import { singular, isPlural } from 'pluralize';
 import { visitFieldArguments } from './field-arguments';
 import { FragmentDefinitionNode, GraphQLInterfaceType } from 'graphql';
-import { camelCase } from 'change-case';
+import { camelCase } from 'camel-case';
+import { pascalCase } from 'pascal-case';
 
 export interface ChildField {
   type: GraphQLNamedType;
@@ -841,7 +842,7 @@ ${indentMultiline(inner, 2)}
 
   OperationDefinition(node: OperationDefinitionNode): string {
     this.visitingFragment = false;
-    const operationType = toPascalCase(node.operation);
+    const operationType = pascalCase(node.operation);
     const operationSchemaType = this.getRootType(node.operation);
     const className = node.name.value.endsWith(operationType) ? operationType : `${node.name.value}${operationType}`;
     this._imports.add(Imports[operationType]);

@@ -1,7 +1,7 @@
 import { ASTNode } from 'graphql';
 import { resolveExternalModuleAndFn } from '@graphql-codegen/plugin-helpers';
 import { NamingConventionMap, NamingConvention, ConvertFn, ConvertOptions } from './types';
-import { pascalCase } from 'change-case';
+import { pascalCase } from 'pascal-case';
 import { convertNameParts, getConfigValue } from './utils';
 
 function getKind(node: ASTNode | string): keyof NamingConventionMap {
@@ -76,7 +76,7 @@ export function convertFactory(config: { namingConvention?: NamingConvention }):
 
     if (typeof config.namingConvention === 'function') {
       return (str: string, opts: ConvertOptions = {}) => {
-        return convertNameParts(str, config.namingConvention as ((str: string) => string), getConfigValue((opts || {}).transformUnderscore, false));
+        return convertNameParts(str, config.namingConvention as (str: string) => string, getConfigValue((opts || {}).transformUnderscore, false));
       };
     }
 

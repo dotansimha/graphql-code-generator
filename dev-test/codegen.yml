@@ -60,6 +60,10 @@ generates:
       imutableTypes: true
     plugins:
       - typescript
+  ./dev-test/test-schema/typings.enum.ts:
+    schema: ./dev-test/test-schema/schema-object.js
+    plugins:
+      - typescript
   ./dev-test/githunt/graphql-declared-modules.d.ts:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql

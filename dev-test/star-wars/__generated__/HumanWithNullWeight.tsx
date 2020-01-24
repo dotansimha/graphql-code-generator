@@ -2,7 +2,6 @@ import * as Types from '../types.d';
 
 import { HumanFieldsFragment } from './HumanFields';
 import gql from 'graphql-tag';
-import { HumanFieldsFragmentDoc } from './HumanFields';
 import * as React from 'react';
 import * as ApolloReactCommon from '@apollo/react-common';
 import * as ApolloReactComponents from '@apollo/react-components';
@@ -25,7 +24,7 @@ export type HumanWithNullHeightComponentProps = Omit<ApolloReactComponents.Query
 
 export const HumanWithNullHeightComponent = (props: HumanWithNullHeightComponentProps) => <ApolloReactComponents.Query<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables> query={HumanWithNullHeightDocument} {...props} />;
 
-export type HumanWithNullHeightProps<TChildProps = {}> = ApolloReactHoc.DataProps<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables> | TChildProps;
+export type HumanWithNullHeightProps<TChildProps = {}> = ApolloReactHoc.DataProps<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables> & TChildProps;
 export function withHumanWithNullHeight<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<TProps, HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables, HumanWithNullHeightProps<TChildProps>>) {
   return ApolloReactHoc.withQuery<TProps, HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables, HumanWithNullHeightProps<TChildProps>>(HumanWithNullHeightDocument, {
     alias: 'humanWithNullHeight',

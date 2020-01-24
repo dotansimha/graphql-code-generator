@@ -65,14 +65,19 @@ export namespace Types {
   };
 
   /* Output Builder Preset */
-  export type PresetFnArgs<Config = any> = {
+  export type PresetFnArgs<
+    Config = any,
+    PluginConfig = {
+      [key: string]: any;
+    }
+  > = {
     presetConfig: Config;
     baseOutputDir: string;
     plugins: Types.ConfiguredPlugin[];
     schema: DocumentNode;
     schemaAst?: GraphQLSchema;
     documents: Types.DocumentFile[];
-    config: { [key: string]: any };
+    config: PluginConfig;
     pluginMap: {
       [name: string]: CodegenPlugin;
     };
@@ -110,6 +115,7 @@ export namespace Types {
       globalIdentifier?: string;
     };
     hooks?: LifecycleHooksDefinition<string | string[]>;
+    cwd?: string;
   }
 
   export type ComplexPluginOutput = { content: string; prepend?: string[]; append?: string[] };
