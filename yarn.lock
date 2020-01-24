@@ -2337,6 +2337,14 @@
     "@graphql-toolkit/common" "0.9.1"
     tslib "1.10.0"
 
+"@graphql-toolkit/json-file-loader@0.9.4":
+  version "0.9.4"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/json-file-loader/-/json-file-loader-0.9.4.tgz#7a3b4c6ed103e9997b792ea8debe0e5bb949f65c"
+  integrity sha512-O94OxLeu5B07yeW95XZpiEzLH9pHqsutwqIGPH5I0AQ3gmbAxrUAPTaCkFUwXQKRVB8m+13DF+wipSUmp0rbTQ==
+  dependencies:
+    "@graphql-toolkit/common" "0.9.4"
+    tslib "1.10.0"
+
 "@graphql-toolkit/prisma-loader@0.9.1":
   version "0.9.1"
   resolved "https://registry.yarnpkg.com/@graphql-toolkit/prisma-loader/-/prisma-loader-0.9.1.tgz#f027f60d0cddbf1c4a8e3a4733655c93897ab95e"
