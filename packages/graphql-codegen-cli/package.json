@@ -47,7 +47,7 @@
     "@graphql-codegen/plugin-helpers": "1.11.2",
     "@graphql-toolkit/apollo-engine-loader": "0.9.4",
     "@graphql-toolkit/code-file-loader": "0.9.4",
-    "@graphql-toolkit/core": "0.9.1",
+    "@graphql-toolkit/core": "0.9.4",
     "@graphql-toolkit/git-loader": "0.9.1",
     "@graphql-toolkit/github-loader": "0.9.1",
     "@graphql-toolkit/graphql-file-loader": "0.9.1",
