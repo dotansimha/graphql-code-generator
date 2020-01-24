@@ -27,4 +27,5 @@ export enum Tags {
   angular = 'Angular',
   stencil = 'Stencil',
   react = 'React',
+  vue = 'Vue',
 }

@@ -114,6 +114,17 @@ export const EXAMPLES: { [name: string]: Example } = {
     schema: TS_SCHEMA,
     documents: TS_QUERY,
   },
+  'vue-apollo': {
+    name: 'TypeScript Vue-Apollo composition functions',
+    config: `generates:
+  composition-functions.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-vue-apollo`,
+    schema: TS_SCHEMA,
+    documents: TS_QUERY,
+  },
   'apollo-angular': {
     name: 'TypeScript Apollo-Angular Components',
     config: `generates:
@@ -217,7 +228,7 @@ export const EXAMPLES: { [name: string]: Example } = {
   chats: [Chat!]! @link
 }
 
-type Profile @entity(embedded: true, 
+type Profile @entity(embedded: true,
   additionalFields: [
     { path: "dateOfBirth", type: "string" }
   ]) {
@@ -236,7 +247,7 @@ type ChatMessage @entity {
   chat: Chat! @link
   content: String! @column
   author: User! @link
-}      
+}
 `,
     documents: '',
   },
