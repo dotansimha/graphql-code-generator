@@ -81,7 +81,7 @@
     "log-symbols": "3.0.0",
     "log-update": "3.3.0",
     "lower-case": "2.0.1",
-    "mkdirp": "0.5.1",
+    "mkdirp": "1.0.3",
     "pascal-case": "3.1.1",
     "prettier": "1.19.1",
     "request": "2.88.0",
