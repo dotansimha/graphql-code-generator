@@ -45,7 +45,7 @@
     "@babel/parser": "7.8.3",
     "@graphql-codegen/core": "1.11.2",
     "@graphql-codegen/plugin-helpers": "1.11.2",
-    "@graphql-toolkit/apollo-engine-loader": "0.9.1",
+    "@graphql-toolkit/apollo-engine-loader": "0.9.3",
     "@graphql-toolkit/code-file-loader": "0.9.1",
     "@graphql-toolkit/core": "0.9.1",
     "@graphql-toolkit/git-loader": "0.9.1",
