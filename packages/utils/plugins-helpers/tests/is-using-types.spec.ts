@@ -3,6 +3,112 @@ import { isUsingTypes } from '../src/helpers';
 
 describe('isUsingTypes', () => {
   describe('Issues', () => {
+    it('#3248 - error on missing field on type', () => {
+      const schema = buildSchema(/* GraphQL */ `
+        scalar ObjectId
+
+        type UserTypeA {
+          _id: ObjectId!
+        }
+
+        type UserTypeB {
+          _id: ObjectId!
+        }
+
+        union User = UserTypeA | UserTypeB
+
+        interface Request {
+          _id: ObjectId!
+          foo: User
+          barRequired: User!
+        }
+
+        type ARequest implements Request {
+          _id: ObjectId!
+          foo: User
+          barRequired: User!
+        }
+
+        type BRequest implements Request {
+          _id: ObjectId!
+          foo: User
+          barRequired: User!
+        }
+
+        type Query {
+          allRequests: [Request!]!
+          nodes: [Node!]!
+        }
+
+        interface Node {
+          id: ID!
+          s: NodeSelection
+        }
+
+        type NodeSelection {
+          foo: String
+        }
+
+        type A implements Node {
+          id: ID!
+          s: NodeSelection
+          a: String
+          b: AInner
+        }
+
+        type AInner {
+          id: ID!
+          inner: AInner2
+        }
+
+        type AInner2 {
+          f: String
+        }
+      `);
+      const ast = parse(/* GraphQL */ `
+        query AllRequests {
+          nodes {
+            id
+            s {
+              foo
+            }
+            ... on A {
+              a
+              b {
+                id
+                inner {
+                  f
+                }
+              }
+            }
+          }
+          allRequests {
+            _id
+
+            foo {
+              ... on UserTypeA {
+                _id
+              }
+              ... on UserTypeB {
+                _id
+              }
+            }
+
+            barRequired {
+              ... on UserTypeA {
+                _id
+              }
+              ... on UserTypeB {
+                _id
+              }
+            }
+          }
+        }
+      `);
+
+      expect(isUsingTypes(ast, [], schema)).toBeTruthy();
+    });
+
     it('#3217 - complex selection set causes issues with incorrect parent type', () => {
       const schema = buildSchema(/* GraphQL */ `
         type BrazilianCompany {

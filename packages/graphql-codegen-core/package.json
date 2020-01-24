@@ -47,7 +47,7 @@
   },
   "devDependencies": {
     "@ardatan/bob": "0.2.7",
-    "ts-jest": "24.3.0"
+    "ts-jest": "25.0.0"
   },
   "sideEffects": false,
   "main": "dist/index.cjs.js",
