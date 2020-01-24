@@ -2207,12 +2207,12 @@
     relay-compiler "7.1.0"
     tslib "1.10.0"
 
-"@graphql-toolkit/apollo-engine-loader@0.9.1":
-  version "0.9.1"
-  resolved "https://registry.yarnpkg.com/@graphql-toolkit/apollo-engine-loader/-/apollo-engine-loader-0.9.1.tgz#1ddce9f0ee3d08e81570c02da6a5b5e9fcc8e20f"
-  integrity sha512-LNaQPeUnkmGykM+d6PMz5jeTQkkI6xd+Dx62ZckS8bG+iIp8SehJQbvp+SYVTiGtqdPPbyw71X1Jg/dvohB4xQ==
+"@graphql-toolkit/apollo-engine-loader@0.9.3":
+  version "0.9.3"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/apollo-engine-loader/-/apollo-engine-loader-0.9.3.tgz#38835d675c72f730a79718abaee2c459a8fc3139"
+  integrity sha512-0AOJ1hlkTj96Gkpbvq3AlKjAY2kdAdF5mzIcD7n9gqnqNT382QU5GC/VScLv27xih2YgQX29CKuJP8uy+F5vTQ==
   dependencies:
-    "@graphql-toolkit/common" "0.9.1"
+    "@graphql-toolkit/common" "0.9.3"
     apollo-language-server "1.18.0"
     tslib "1.10.0"
 
@@ -2238,6 +2238,15 @@
   version "0.9.1"
   resolved "https://registry.yarnpkg.com/@graphql-toolkit/common/-/common-0.9.1.tgz#b18ed68c8170a4a9cc6a7ce2fa5b77e2420ce1c8"
   integrity sha512-V1lVWQXNC45dmQqKW+xi1ROEPZSLTLd0fsRYu+4rYruzgyZ4X20v6VMLOAZxIhTSpWpzwF2P1WF4R0s38FxPUg==
+  dependencies:
+    "@ardatan/graphql-tools" "4.1.0"
+    aggregate-error "3.0.1"
+    lodash "4.17.15"
+
+"@graphql-toolkit/common@0.9.3":
+  version "0.9.3"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/common/-/common-0.9.3.tgz#02449d36e291f335f8bf936d2837060838023477"
+  integrity sha512-WJX/ZG0CKdC5Tu2U4dRXhb6P+LSit5m6j8BKevhoxsLUELNQFYL/g+W1X+v61z3yvuJe14Uj3kVNgT4BA/XGOw==
   dependencies:
     "@ardatan/graphql-tools" "4.1.0"
     aggregate-error "3.0.1"
