@@ -2216,13 +2216,13 @@
     apollo-language-server "1.18.0"
     tslib "1.10.0"
 
-"@graphql-toolkit/code-file-loader@0.9.1":
-  version "0.9.1"
-  resolved "https://registry.yarnpkg.com/@graphql-toolkit/code-file-loader/-/code-file-loader-0.9.1.tgz#a4f599bc02942e725a4c2b5842b70d78edba60b3"
-  integrity sha512-2dlt2dX12e/OA/pY+2ORxphiD9MNydc1zulq3fKlhGp76CvVRdf7sTmVjt+BwOYWJYZu6zotNfAjmHTY8VPIdQ==
+"@graphql-toolkit/code-file-loader@0.9.4":
+  version "0.9.4"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/code-file-loader/-/code-file-loader-0.9.4.tgz#5ae7546ebd2f16280e6b748368deb58011218eaa"
+  integrity sha512-qekbJ6X/uVCM0FCAhrSKa8t9KMKURXCN4/M7y9BA2sQWlDs7M9i1a6kqemaNCVIELW3Lgbjr99r2xxZBr6zX3w==
   dependencies:
-    "@graphql-toolkit/common" "0.9.1"
-    "@graphql-toolkit/graphql-tag-pluck" "0.9.1"
+    "@graphql-toolkit/common" "0.9.4"
+    "@graphql-toolkit/graphql-tag-pluck" "0.9.4"
     tslib "1.10.0"
 
 "@graphql-toolkit/common@0.7.4":
@@ -2247,6 +2247,15 @@
   version "0.9.3"
   resolved "https://registry.yarnpkg.com/@graphql-toolkit/common/-/common-0.9.3.tgz#02449d36e291f335f8bf936d2837060838023477"
   integrity sha512-WJX/ZG0CKdC5Tu2U4dRXhb6P+LSit5m6j8BKevhoxsLUELNQFYL/g+W1X+v61z3yvuJe14Uj3kVNgT4BA/XGOw==
+  dependencies:
+    "@ardatan/graphql-tools" "4.1.0"
+    aggregate-error "3.0.1"
+    lodash "4.17.15"
+
+"@graphql-toolkit/common@0.9.4":
+  version "0.9.4"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/common/-/common-0.9.4.tgz#71bf4f6633faf025558e5f1448730dd58f04b1d9"
+  integrity sha512-dChN//1/kiUAUvmVaaZcdJuHemrVY/30jXDCNrA6j4CDvrg7252DbFLX5v0rG0inc5QDvCNQ0T3X1ckOTlnR6A==
   dependencies:
     "@ardatan/graphql-tools" "4.1.0"
     aggregate-error "3.0.1"
@@ -2311,6 +2320,16 @@
     "@babel/parser" "7.8.3"
     "@babel/traverse" "7.8.3"
     "@babel/types" "7.8.3"
+
+"@graphql-toolkit/graphql-tag-pluck@0.9.4":
+  version "0.9.4"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/graphql-tag-pluck/-/graphql-tag-pluck-0.9.4.tgz#f21cd6eba4a106c3f373d8d7e3428abbcdcbd033"
+  integrity sha512-oNugYqToq72xWT5wCZ/uyljo95eBDYKodZBudkb/+dBPNZN5fuxG5Ls59MPw3jPoKc33xCZWUpAhMXhW9G3ZbQ==
+  dependencies:
+    "@babel/parser" "7.8.3"
+    "@babel/traverse" "7.8.3"
+    "@babel/types" "7.8.3"
+    "@graphql-toolkit/common" "0.9.4"
 
 "@graphql-toolkit/json-file-loader@0.9.1":
   version "0.9.1"
