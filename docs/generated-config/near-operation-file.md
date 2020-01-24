@@ -18,7 +18,7 @@ src/:
 
 ### extension (`string`, default value: `.generates.ts`)
 
-Optional, sets the extension for the generated files. Use this to override the extension if you are using plugins that requires a different type of extensions (such as `typescript-react-apollo`)
+Optional, sets the extension for the generated files. Use this to override the extension if you are using plugins that requires a different type of extensions (such as `typescript-react-apollo` or `typescript-vue-apollo`)
 
 
 #### Usage Example

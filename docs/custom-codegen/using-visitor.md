@@ -117,6 +117,6 @@ It includes set of Visitor classes that you can use and extend, to implement you
 
 - `BaseDocumentsVisitor` is class that contains implementation for transforming GraphQL operations (query/mutation/subscription/fragment) with a resursive handler for selection-sets. It's the base implementation for [`flow-operations`](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/plugins/flow/operations/src/visitor.ts#L14) and [`typescript-operations`](https://github.com/dotansimha/graphql-code-generator/blob/master/packages/plugins/typescript/operations/src/visitor.ts#L15)
 
-- `ClientSideBaseVisitor` is a class that contains implementation for creating client-side code for consuming GraphQL operations, it's in use by `typescript-apollo-angular`, `typescript-react-apollo` and `typescript-apollo-stencil` plugins.
+- `ClientSideBaseVisitor` is a class that contains implementation for creating client-side code for consuming GraphQL operations, it's in use by `typescript-apollo-angular`, `typescript-react-apollo`, `typescript-vue-apollo` and `typescript-apollo-stencil` plugins.
 
 You can use the above classes as base, and extend it as you wish, to create a custom plugin.
