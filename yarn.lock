@@ -2353,13 +2353,13 @@
     "@graphql-toolkit/common" "0.9.4"
     tslib "1.10.0"
 
-"@graphql-toolkit/prisma-loader@0.9.1":
-  version "0.9.1"
-  resolved "https://registry.yarnpkg.com/@graphql-toolkit/prisma-loader/-/prisma-loader-0.9.1.tgz#f027f60d0cddbf1c4a8e3a4733655c93897ab95e"
-  integrity sha512-wHA8bPr9uDdJG1z4bB3DjzSLELGp8a8eLgAVJFIYjaSMIPJ42LBBbPoKL7o/zWZexV/GkOBNQKkQYigj/PyiVQ==
+"@graphql-toolkit/prisma-loader@0.9.4":
+  version "0.9.4"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/prisma-loader/-/prisma-loader-0.9.4.tgz#608c1ca0a79a5e2787667cdde8400a3b4cbf6103"
+  integrity sha512-Nn/pkygMwY/Ez3lXBhOsiyHL1R3VsWmZroxyBhKKJyplE/x7LlBXkywyK5XCxDp3umXBcxM8rTN4moqGuw4pCQ==
   dependencies:
-    "@graphql-toolkit/common" "0.9.1"
-    "@graphql-toolkit/url-loader" "0.9.1"
+    "@graphql-toolkit/common" "0.9.4"
+    "@graphql-toolkit/url-loader" "0.9.4"
     prisma-yml "1.34.10"
     tslib "1.10.0"
 
