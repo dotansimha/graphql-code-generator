@@ -74,12 +74,12 @@ describe('TypeScript Mongo', () => {
 
     interface FeedItem @abstractEntity(discriminatorField: "kind") {
       id: ID! @id
-      content: String! @column
+      document: String! @column
     }
 
     type Post implements FeedItem @entity {
       id: ID! @id
-      content: String! @column
+      document: String! @column
       author: User! @link
     }
 

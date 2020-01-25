@@ -186,7 +186,7 @@ describe('Compatibility Plugin', () => {
         }
       `);
 
-      const operations = [{ filePath: '', content: testQuery }];
+      const operations = [{ location: '', document: testQuery }];
       const config = { strict: true, noNamespaces: true };
       const result = await plugin(testSchema, operations, config);
 
@@ -300,7 +300,7 @@ describe('Compatibility Plugin', () => {
         }
       `);
 
-      const result = await plugin(testSchema, [{ filePath: '', content: testQuery }], {});
+      const result = await plugin(testSchema, [{ location: '', document: testQuery }], {});
       expect(result).toContain('CanErrorEventInlineFragment');
       expect(result).toContain('DamageReportEventInlineFragment');
       expect(result).toContain('PrecheckEventInlineFragment');
@@ -347,7 +347,7 @@ describe('Compatibility Plugin', () => {
           }
         }
       `);
-      const ast = [{ filePath: '', content: testQuery }];
+      const ast = [{ location: '', document: testQuery }];
       const result = await plugin(testSchema, ast, {});
       expect(result).toContain('ServerChangeImacInlineFragment');
       expect(result).toContain('ServerDecomImacInlineFragment');
@@ -464,14 +464,14 @@ describe('Compatibility Plugin', () => {
         }
       `);
 
-      const ast = [{ filePath: '', content: testQuery }];
+      const ast = [{ location: '', document: testQuery }];
       const result = await plugin(testSchema, ast, {});
       await validateAndCompile(result, testSchema, ast, {});
     });
   });
 
   it('Should work with fragments and generate namespaces', async () => {
-    const ast = [{ filePath: '', content: basicQuery }];
+    const ast = [{ location: '', document: basicQuery }];
     const result = await plugin(schema, ast, {});
 
     expect(result).toBeSimilarStringTo(`export namespace UserFields {
@@ -506,7 +506,7 @@ describe('Compatibility Plugin', () => {
       }
     `);
 
-    const ast = [{ filePath: '', content: basicQuery }];
+    const ast = [{ location: '', document: basicQuery }];
     const result = await plugin(testSchema, ast, {});
 
     expect(result).toContain(`export type Query = Me4Query;`);
@@ -537,8 +537,8 @@ describe('Compatibility Plugin', () => {
 
     const ast = [
       {
-        filePath: '',
-        content: parse(/* GraphQL */ `
+        location: '',
+        document: parse(/* GraphQL */ `
           query something {
             node {
               ... on A {
@@ -558,33 +558,33 @@ describe('Compatibility Plugin', () => {
   });
 
   it('Should generate namepsace and the internal types correctly', async () => {
-    const result = await plugin(schema, [{ filePath: '', content: basicQuery }], {});
+    const result = await plugin(schema, [{ location: '', document: basicQuery }], {});
 
     expect(result).toContain('export namespace Me {');
   });
 
   it('Should generate variables and point to the correct variables', async () => {
-    const result = await plugin(schema, [{ filePath: '', content: basicQuery }], {});
+    const result = await plugin(schema, [{ location: '', document: basicQuery }], {});
 
     expect(result).toContain('export type Variables = MeQueryVariables;');
   });
 
   it('Should handle field name aliasing', async () => {
-    const result = await plugin(schema, [{ filePath: '', content: basicQuery }], {});
+    const result = await plugin(schema, [{ location: '', document: basicQuery }], {});
 
     expect(result).toContain(`export type Query = AliasTestQuery;`);
     expect(result).toContain(`export type CurrentUser = AliasTestQuery['currentUser'];`);
   });
 
   it('Should generate mapping to 1.0 types according to fields usage and selection set', async () => {
-    const result = await plugin(schema, [{ filePath: '', content: basicQuery }], {});
+    const result = await plugin(schema, [{ location: '', document: basicQuery }], {});
 
     expect(result).toContain('export type Query = MeQuery;');
     expect(result).toContain(`export type Me = MeQuery['me'];`);
   });
 
   it('Should generate mapping to 1.0 types according to fields usage and selection set when array is in use', async () => {
-    const result = await plugin(schema, [{ filePath: '', content: basicQuery }], {});
+    const result = await plugin(schema, [{ location: '', document: basicQuery }], {});
 
     expect(result).toContain('export type Query = MeQuery;');
     expect(result).toContain(`export type Me = MeQuery['me'];`);
@@ -592,7 +592,7 @@ describe('Compatibility Plugin', () => {
   });
 
   it('Should generate mapping to 1.0 types according to fields usage and selection set when array is in use and have duplicate names', async () => {
-    const ast = [{ filePath: '', content: basicQuery }];
+    const ast = [{ location: '', document: basicQuery }];
     const result = await plugin(schema, ast, {});
 
     expect(result).toContain('export type Query = MeQuery;');
@@ -604,7 +604,7 @@ describe('Compatibility Plugin', () => {
   });
 
   it('Should work with fragment spread', async () => {
-    const ast = [{ filePath: '', content: basicQuery }];
+    const ast = [{ location: '', document: basicQuery }];
     const result = await plugin(schema, ast, {});
 
     expect(result).toContain(`export type Me = UserFieldsFragment;`);
@@ -612,7 +612,7 @@ describe('Compatibility Plugin', () => {
   });
 
   it('Should work with inline fragment', async () => {
-    const ast = [{ filePath: '', content: basicQuery }];
+    const ast = [{ location: '', document: basicQuery }];
     const result = await plugin(schema, ast, {});
 
     expect(result).toContain('export type Query = Me3Query;');
@@ -622,7 +622,7 @@ describe('Compatibility Plugin', () => {
   });
 
   it('Should work with inline fragment nested', async () => {
-    const ast = [{ filePath: '', content: basicQuery }];
+    const ast = [{ location: '', document: basicQuery }];
     const result = await plugin(schema, ast, {});
 
     expect(result).toContain('export type Query = Me3Query;');
@@ -633,7 +633,7 @@ describe('Compatibility Plugin', () => {
   });
 
   it('Should produce valid ts code', async () => {
-    const ast = [{ filePath: '', content: basicQuery }];
+    const ast = [{ location: '', document: basicQuery }];
     const result = await plugin(schema, ast, {});
     const usage = `const myVar: Me.__Friends = { name: '1' }`; // Should refer to a single item and not to it's array
 
@@ -641,14 +641,14 @@ describe('Compatibility Plugin', () => {
   });
 
   it('Should produce valid ts code with strict mode', async () => {
-    const ast = [{ filePath: '', content: basicQuery }];
+    const ast = [{ location: '', document: basicQuery }];
     const result = await plugin(schema, ast, { strict: true });
 
     await validate(result, schema, ast, {}, false, true);
   });
 
   it('Should produce valid ts code with strict mode and mutations returning arrays', async () => {
-    const ast = [{ filePath: '', content: basicMutation }];
+    const ast = [{ location: '', document: basicMutation }];
     const result = await plugin(schema, ast, { strict: true });
 
     await validate(result, schema, ast, {}, false, true);
@@ -657,7 +657,7 @@ describe('Compatibility Plugin', () => {
   describe('Config', () => {
     it('Should produce valid ts code with naming convention', async () => {
       const config = { namingConvention: 'lower-case#lowerCase' };
-      const ast = [{ filePath: '', content: basicQuery }];
+      const ast = [{ location: '', document: basicQuery }];
       const result = await plugin(schema, ast, config);
       const usage = `const myVar: me.__friends = { name: '1' }`;
 
@@ -666,7 +666,7 @@ describe('Compatibility Plugin', () => {
 
     it('Should produce valid ts code with prefix', async () => {
       const config = { typesPrefix: 'I' };
-      const ast = [{ filePath: '', content: basicQuery }];
+      const ast = [{ location: '', document: basicQuery }];
       const result = await plugin(schema, ast, config);
       const usage = `const myVar: IMe.__IFriends = { name: '1' }`;
 
@@ -675,7 +675,7 @@ describe('Compatibility Plugin', () => {
 
     it('Should produce valid ts code with noNamepsaces', async () => {
       const config = { noNamespaces: true };
-      const ast = [{ filePath: '', content: basicQuery }];
+      const ast = [{ location: '', document: basicQuery }];
       const result = await plugin(schema, ast, config);
 
       expect(result).toContain(`export type Me4Variables = Me4QueryVariables;`);
@@ -701,7 +701,7 @@ describe('Compatibility Plugin', () => {
         namingConvention: { typeNames: 'pascal-case#pascalCase' },
         transformUnderscore: true,
       };
-      const ast = [{ filePath: '', content: basicQuery }];
+      const ast = [{ location: '', document: basicQuery }];
       const result = await plugin(schema, ast, config, {
         allPlugins: [
           {
@@ -716,7 +716,7 @@ describe('Compatibility Plugin', () => {
 
     it('Should produce valid ts code with react-apollo', async () => {
       const config = {};
-      const ast = [{ filePath: '', content: basicQuery }];
+      const ast = [{ location: '', document: basicQuery }];
       const result = await plugin(schema, ast, config, {
         allPlugins: [
           {
@@ -744,7 +744,7 @@ describe('Compatibility Plugin', () => {
 
     it('Should produce valid ts code with react-apollo and noNamespaces', async () => {
       const config = { noNamespaces: true, withHooks: true };
-      const ast = [{ filePath: '', content: basicQuery }];
+      const ast = [{ location: '', document: basicQuery }];
       const result = await plugin(schema, ast, config, {
         allPlugins: [
           {
@@ -769,7 +769,7 @@ describe('Compatibility Plugin', () => {
       const config = {
         withHooks: true,
       };
-      const ast = [{ filePath: '', content: basicQuery }];
+      const ast = [{ location: '', document: basicQuery }];
       const result = await plugin(schema, ast, config as any, {
         allPlugins: [
           {
@@ -800,7 +800,7 @@ describe('Compatibility Plugin', () => {
       const config = {
         withHOC: false,
       };
-      const ast = [{ filePath: '', content: basicQuery }];
+      const ast = [{ location: '', document: basicQuery }];
       const result = await plugin(schema, ast, config as any, {
         allPlugins: [
           {

@@ -308,7 +308,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
       case DocumentMode.external:
         if (this._collectedOperations.length > 0) {
           if (this.config.importDocumentNodeExternallyFrom === 'near-operation-file' && this._documents.length === 1) {
-            imports.push(`import * as Operations from './${this.clearExtension(basename(this._documents[0].filePath))}';`);
+            imports.push(`import * as Operations from './${this.clearExtension(basename(this._documents[0].location))}';`);
           } else {
             imports.push(`import * as Operations from '${this.clearExtension(this.config.importDocumentNodeExternallyFrom)}';`);
           }

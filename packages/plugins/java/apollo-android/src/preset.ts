@@ -22,7 +22,7 @@ export const preset: Types.OutputPreset = {
     });
 
     const inputTypesDocumentNode: DocumentNode = { kind: Kind.DOCUMENT, definitions: inputTypesAst };
-    const allAst = concatAST(options.documents.reduce((prev, v) => [...prev, v.content], []));
+    const allAst = concatAST(options.documents.map(v => v.document));
     const operationsAst = allAst.definitions.filter(d => d.kind === Kind.OPERATION_DEFINITION) as OperationDefinitionNode[];
     const fragments = allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[];
     const externalFragments = fragments.map(frag => ({
@@ -56,7 +56,7 @@ export const preset: Types.OutputPreset = {
             skipDocumentsValidation: true,
           },
           schema: options.schema,
-          documents: [{ content: { kind: Kind.DOCUMENT, definitions: [ast] }, filePath: '' }],
+          documents: [{ document: { kind: Kind.DOCUMENT, definitions: [ast] }, location: '' }],
         };
       }),
       ...operationsAst.map((ast: OperationDefinitionNode) => {
@@ -72,7 +72,7 @@ export const preset: Types.OutputPreset = {
             externalFragments,
           },
           schema: options.schema,
-          documents: [{ content: { kind: Kind.DOCUMENT, definitions: [ast] }, filePath: '' }],
+          documents: [{ document: { kind: Kind.DOCUMENT, definitions: [ast] }, location: '' }],
         };
       }),
       ...fragments.map((ast: FragmentDefinitionNode) => {
@@ -86,7 +86,7 @@ export const preset: Types.OutputPreset = {
             externalFragments,
           },
           schema: options.schema,
-          documents: [{ content: { kind: Kind.DOCUMENT, definitions: [ast] }, filePath: '' }],
+          documents: [{ document: { kind: Kind.DOCUMENT, definitions: [ast] }, location: '' }],
         };
       }),
     ];

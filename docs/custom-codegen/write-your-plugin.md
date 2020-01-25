@@ -49,9 +49,9 @@ module.exports = {
 
 ## Using the documents
 
-The second argument of your `plugin` method is an array of GraphQL documents. This array contains a list of `{ filePath: string, content: DocumentNode }`.
+The second argument of your `plugin` method is an array of GraphQL documents. This array contains a list of `{ location: string, document: DocumentNode }`.
 
-The `filePath` field is the path of the file, and `DocumentNode` is an object containing all GraphQL documents that has been found in that file.
+The `location` field is the path of the file, and `DocumentNode` is an object containing all GraphQL documents that has been found in that file.
 
 You can find the full, typed, [API of `DocumentNode` here](https://github.com/graphql/graphql-js/blob/master/src/language/ast.d.ts#L198-L202)
 
@@ -64,7 +64,7 @@ module.exports = {
       .map(doc => {
         const docsNames = doc.content.definitions.map(def => def.name.value);
 
-        return `File ${doc.filePath} contains: ${docsNames.join(', ')}`;
+        return `File ${doc.location} contains: ${docsNames.join(', ')}`;
       })
       .join('\n');
   },

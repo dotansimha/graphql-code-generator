@@ -43,16 +43,16 @@ export const plugin: PluginFunction = async (schema: GraphQLSchema, documents: T
   const useRelative = relativeToCwd === true;
 
   const mappedDocuments: { [fileName: string]: OperationDefinitionNode[] } = documents.reduce((prev, documentRecord) => {
-    const fileName = useRelative ? relative(process.cwd(), documentRecord.filePath) : basename(documentRecord.filePath);
+    const fileName = useRelative ? relative(process.cwd(), documentRecord.location) : basename(documentRecord.location);
 
     if (!prev[fileName]) {
       prev[fileName] = [];
     }
 
-    prev[fileName].push(...documentRecord.content.definitions.filter(document => document.kind === 'OperationDefinition' || document.kind === 'FragmentDefinition'));
+    prev[fileName].push(...documentRecord.document.definitions.filter(document => document.kind === 'OperationDefinition' || document.kind === 'FragmentDefinition'));
 
     return prev;
-  }, {});
+  }, {} as any);
 
   return Object.keys(mappedDocuments)
     .filter(fileName => mappedDocuments[fileName].length > 0)

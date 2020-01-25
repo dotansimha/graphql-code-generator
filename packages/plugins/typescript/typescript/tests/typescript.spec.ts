@@ -767,7 +767,7 @@ describe('TypeScript', () => {
 
       const result = (await plugin(
         testSchema,
-        [{ filePath: '', content: query }],
+        [{ location: '', document: query }],
         {},
         {
           outputFile: 'graphql.ts',

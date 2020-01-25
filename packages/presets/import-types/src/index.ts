@@ -42,7 +42,7 @@ export type ImportTypesConfig = {
   importTypesNamespace?: string;
 };
 
-export type FragmentNameToFile = { [fragmentName: string]: { filePath: string; importName: string; onType: string; node: FragmentDefinitionNode } };
+export type FragmentNameToFile = { [fragmentName: string]: { location: string; importName: string; onType: string; node: FragmentDefinitionNode } };
 
 export const preset: Types.OutputPreset<ImportTypesConfig> = {
   buildGeneratesSection: options => {
@@ -67,7 +67,7 @@ export const preset: Types.OutputPreset<ImportTypesConfig> = {
     options.documents.map(documentFile => {
       if (
         isUsingTypes(
-          documentFile.content,
+          documentFile.document,
           config.externalFragments.map(m => m.name),
           options.schemaAst
         )

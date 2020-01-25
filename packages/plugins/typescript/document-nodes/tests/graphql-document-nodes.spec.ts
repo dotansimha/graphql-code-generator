@@ -11,8 +11,8 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
       null,
       [
         {
-          filePath: 'some/file/my-query.graphql',
-          content: parse(/* GraphQL */ `
+          location: 'some/file/my-query.graphql',
+          document: parse(/* GraphQL */ `
             query MyQuery {
               field
             }
@@ -40,16 +40,16 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
       null,
       [
         {
-          filePath: 'some/file/my-query.graphql',
-          content: parse(/* GraphQL */ `
+          location: 'some/file/my-query.graphql',
+          document: parse(/* GraphQL */ `
             query MyQuery {
               field
             }
           `),
         },
         {
-          filePath: 'some/file/my-other-query.graphql',
-          content: parse(/* GraphQL */ `
+          location: 'some/file/my-other-query.graphql',
+          document: parse(/* GraphQL */ `
             query OtherQuery {
               field
             }
@@ -83,8 +83,8 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
       null,
       [
         {
-          filePath: 'some/file/my-query.graphql',
-          content: parse(/* GraphQL */ `
+          location: 'some/file/my-query.graphql',
+          document: parse(/* GraphQL */ `
             query {
               field
             }
@@ -104,8 +104,8 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
       null,
       [
         {
-          filePath: 'some/file/my-query.graphql',
-          content: parse(/* GraphQL */ `
+          location: 'some/file/my-query.graphql',
+          document: parse(/* GraphQL */ `
             query MyQuery {
               field
             }
@@ -143,8 +143,8 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
       null,
       [
         {
-          filePath: 'some/file/my-query.graphql',
-          content: parse(/* GraphQL */ `
+          location: 'some/file/my-query.graphql',
+          document: parse(/* GraphQL */ `
             query MyQuery {
               field
             }
@@ -172,8 +172,8 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
       null,
       [
         {
-          filePath: 'some/file/my-query.graphql',
-          content: parse(/* GraphQL */ `
+          location: 'some/file/my-query.graphql',
+          document: parse(/* GraphQL */ `
             query My_Query {
               field
             }
@@ -201,8 +201,8 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
       null,
       [
         {
-          filePath: 'some/file/my-query.graphql',
-          content: parse(/* GraphQL */ `
+          location: 'some/file/my-query.graphql',
+          document: parse(/* GraphQL */ `
             query My_Query {
               field
             }
@@ -235,8 +235,8 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
       null,
       [
         {
-          filePath: 'some/file/my-query.graphql',
-          content: parse(/* GraphQL */ `
+          location: 'some/file/my-query.graphql',
+          document: parse(/* GraphQL */ `
             query MyQuery {
               field
             }
@@ -264,8 +264,8 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
       null,
       [
         {
-          filePath: 'some/file/my-query.graphql',
-          content: parse(/* GraphQL */ `
+          location: 'some/file/my-query.graphql',
+          document: parse(/* GraphQL */ `
             query MyQuery {
               field
             }
@@ -293,8 +293,8 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
       null,
       [
         {
-          filePath: 'some/file/my-query.graphql',
-          content: parse(/* GraphQL */ `
+          location: 'some/file/my-query.graphql',
+          document: parse(/* GraphQL */ `
             query MyQuery {
               field
             }
@@ -322,8 +322,8 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
       null,
       [
         {
-          filePath: 'some/file/my-query.graphql',
-          content: parse(/* GraphQL */ `
+          location: 'some/file/my-query.graphql',
+          document: parse(/* GraphQL */ `
             query MyQuery {
               field
             }
@@ -346,8 +346,8 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
       null,
       [
         {
-          filePath: 'some/file/my-query.graphql',
-          content: parse(/* GraphQL */ `
+          location: 'some/file/my-query.graphql',
+          document: parse(/* GraphQL */ `
             # Put your operations here
             fragment fragment1 on User {
               id

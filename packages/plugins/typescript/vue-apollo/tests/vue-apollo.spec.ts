@@ -63,7 +63,7 @@ describe('Vue Apollo', () => {
 
   describe('Imports', () => {
     it('should import VueApollo and VueCompositionApi dependencies', async () => {
-      const docs = [{ filePath: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -80,7 +80,7 @@ describe('Vue Apollo', () => {
     });
 
     it('should import DocumentNode when using noGraphQLTag', async () => {
-      const docs = [{ filePath: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -98,7 +98,7 @@ describe('Vue Apollo', () => {
     });
 
     it(`should use gql import from gqlImport config option`, async () => {
-      const docs = [{ filePath: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -128,15 +128,15 @@ describe('Vue Apollo', () => {
         }
       `);
 
-      expect(((await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], {}, { outputFile: '' })) as any).content).toContain('ReturnType<typeof useNotificationsQueryQuery>;');
-      expect(((await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], { dedupeOperationSuffix: false }, { outputFile: '' })) as any).content).toContain('ReturnType<typeof useNotificationsQueryQuery>;');
-      expect(((await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], { dedupeOperationSuffix: true }, { outputFile: '' })) as any).content).toContain('ReturnType<typeof useNotificationsQuery>;');
-      expect(((await plugin(schema, [{ filePath: 'test-file.ts', content: ast2 }], { dedupeOperationSuffix: true }, { outputFile: '' })) as any).content).toContain('ReturnType<typeof useNotificationsQuery>;');
-      expect(((await plugin(schema, [{ filePath: 'test-file.ts', content: ast2 }], { dedupeOperationSuffix: false }, { outputFile: '' })) as any).content).toContain('ReturnType<typeof useNotificationsQuery>;');
+      expect(((await plugin(schema, [{ location: 'test-file.ts', document: ast }], {}, { outputFile: '' })) as any).content).toContain('ReturnType<typeof useNotificationsQueryQuery>;');
+      expect(((await plugin(schema, [{ location: 'test-file.ts', document: ast }], { dedupeOperationSuffix: false }, { outputFile: '' })) as any).content).toContain('ReturnType<typeof useNotificationsQueryQuery>;');
+      expect(((await plugin(schema, [{ location: 'test-file.ts', document: ast }], { dedupeOperationSuffix: true }, { outputFile: '' })) as any).content).toContain('ReturnType<typeof useNotificationsQuery>;');
+      expect(((await plugin(schema, [{ location: 'test-file.ts', document: ast2 }], { dedupeOperationSuffix: true }, { outputFile: '' })) as any).content).toContain('ReturnType<typeof useNotificationsQuery>;');
+      expect(((await plugin(schema, [{ location: 'test-file.ts', document: ast2 }], { dedupeOperationSuffix: false }, { outputFile: '' })) as any).content).toContain('ReturnType<typeof useNotificationsQuery>;');
     });
 
     it('should import VueApolloComposable from VueApolloComposableImportFrom config option', async () => {
-      const docs = [{ filePath: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -155,8 +155,8 @@ describe('Vue Apollo', () => {
     it('Should generate basic fragments documents correctly', async () => {
       const docs = [
         {
-          filePath: 'a.graphql',
-          content: parse(/* GraphQL */ `
+          location: 'a.graphql',
+          document: parse(/* GraphQL */ `
             fragment MyFragment on Repository {
               full_name
             }
@@ -211,7 +211,7 @@ describe('Vue Apollo', () => {
         ${feedWithRepository}
       `;
 
-      const docs = [{ filePath: '', content: myFeed }];
+      const docs = [{ location: '', document: myFeed }];
 
       const content = (await plugin(
         schema,
@@ -268,7 +268,7 @@ query MyFeed {
         }
       `;
       const documents = [simpleFeed, myFeed];
-      const docs = documents.map(content => ({ content, filePath: '' }));
+      const docs = documents.map(document => ({ document, location: '' }));
       const content = (await plugin(
         schema,
         docs,
@@ -318,7 +318,7 @@ query MyFeed {
         }
       `;
       const documents = [myFeed];
-      const docs = documents.map(content => ({ content, filePath: '' }));
+      const docs = documents.map(document => ({ document, location: '' }));
       const content = (await plugin(
         schema,
         docs,
@@ -358,7 +358,7 @@ query MyFeed {
           }
         }
       `);
-      const docs = [{ filePath: '', content: documents }];
+      const docs = [{ location: '', document: documents }];
 
       const content = (await plugin(
         schema,
@@ -402,7 +402,7 @@ export function useSubmitRepositoryMutation(baseOptions?: VueApolloComposable.Us
           }
         }
       `);
-      const docs = [{ filePath: '', content: documents }];
+      const docs = [{ location: '', document: documents }];
 
       const content = (await plugin(
         schema,
@@ -426,7 +426,7 @@ export function useSubmitRepositoryMutation(baseOptions?: VueApolloComposable.Us
     });
 
     it('Should not generate composition functions for query and mutation', async () => {
-      const docs = [{ filePath: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -449,7 +449,7 @@ export function useSubmitRepositoryMutation(baseOptions?: VueApolloComposable.Us
         }
       `);
 
-      const docs = [{ filePath: '', content: documents }];
+      const docs = [{ location: '', document: documents }];
 
       const content = (await plugin(
         schema,
@@ -468,7 +468,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
     });
 
     it('Should not add typesPrefix to composition functions', async () => {
-      const docs = [{ filePath: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -503,7 +503,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
           }
         }
       `);
-      const docs = [{ filePath: '', content: documents }];
+      const docs = [{ location: '', document: documents }];
 
       const content = (await plugin(
         schema,
@@ -543,7 +543,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
           }
         }
       `);
-      const docs = [{ filePath: '', content: documents }];
+      const docs = [{ location: '', document: documents }];
 
       const content = (await plugin(
         schema,
@@ -624,7 +624,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
         }
       `);
 
-      const docs = [{ filePath: '', content: documents }];
+      const docs = [{ location: '', document: documents }];
 
       const content = (await plugin(
         schema,
@@ -658,7 +658,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
         }
       `);
 
-      const docs = [{ filePath: '', content: documents }];
+      const docs = [{ location: '', document: documents }];
 
       const content = (await plugin(
         schema,
@@ -709,7 +709,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
     `);
 
     it('should import DocumentNode when documentMode is "documentNode"', async () => {
-      const docs = [{ filePath: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -727,7 +727,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
     });
 
     it('should generate Document variable when documentMode is "documentNode"', async () => {
-      const docs = [{ filePath: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -751,8 +751,8 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
     it('should NOT generate inline fragment docs for external mode: file with operation using inline fragment', async () => {
       const docs = [
         {
-          filePath: '',
-          content: parse(/* GraphQL */ `
+          location: '',
+          document: parse(/* GraphQL */ `
             fragment feedFragment on Entry {
               id
               commentCount
@@ -786,8 +786,8 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
     it('should NOT generate inline fragment docs for external mode: file with operation NOT using inline fragment', async () => {
       const docs = [
         {
-          filePath: '',
-          content: parse(/* GraphQL */ `
+          location: '',
+          document: parse(/* GraphQL */ `
             fragment feedFragment on Entry {
               id
               commentCount
@@ -822,8 +822,8 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
     it('should NOT generate inline fragment docs for external mode: file with just fragment', async () => {
       const docs = [
         {
-          filePath: '',
-          content: parse(/* GraphQL */ `
+          location: '',
+          document: parse(/* GraphQL */ `
             fragment feedFragment on Entry {
               id
               commentCount
@@ -857,7 +857,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
         importDocumentNodeExternallyFrom: 'path/to/documents',
       };
 
-      const docs = [{ filePath: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
 
       const content = (await plugin(schema, docs, config, {
         outputFile: 'graphql.ts',
@@ -874,7 +874,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
         importDocumentNodeExternallyFrom: 'path/to/documents.ts',
       };
 
-      const docs = [{ filePath: '', content: mutationDoc }];
+      const docs = [{ location: '', document: mutationDoc }];
 
       const content = (await plugin(schema, docs, config, {
         outputFile: 'graphql.ts',
@@ -891,7 +891,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
         importDocumentNodeExternallyFrom: 'path/to/documents.tsx',
       };
 
-      const docs = [{ filePath: '', content: subscriptionDoc }];
+      const docs = [{ location: '', document: subscriptionDoc }];
 
       const content = (await plugin(schema, docs, config, {
         outputFile: 'graphql.ts',
@@ -908,7 +908,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
         importDocumentNodeExternallyFrom: 'path/to/documents.tsx',
       };
 
-      const docs = [{ filePath: '', content: multipleOperationDoc }];
+      const docs = [{ location: '', document: multipleOperationDoc }];
 
       const content = (await plugin(schema, docs, config, {
         outputFile: 'graphql.ts',
@@ -928,7 +928,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
         importDocumentNodeExternallyFrom: 'near-operation-file',
       };
 
-      const docs = [{ filePath: 'path/to/document.graphql', content: basicDoc }];
+      const docs = [{ location: 'path/to/document.graphql', document: basicDoc }];
 
       const content = (await plugin(schema, docs, config, {
         outputFile: 'graphql.ts',
@@ -945,7 +945,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
         importDocumentNodeExternallyFrom: 'near-operation-file',
       };
 
-      const docs = [{ filePath: 'path/to/document.graphql', content: mutationDoc }];
+      const docs = [{ location: 'path/to/document.graphql', document: mutationDoc }];
 
       const content = (await plugin(schema, docs, config, {
         outputFile: 'graphql.ts',
@@ -962,7 +962,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
         importDocumentNodeExternallyFrom: 'near-operation-file',
       };
 
-      const docs = [{ filePath: 'path/to/document.graphql', content: subscriptionDoc }];
+      const docs = [{ location: 'path/to/document.graphql', document: subscriptionDoc }];
 
       const content = (await plugin(schema, docs, config, {
         outputFile: 'graphql.ts',
@@ -979,7 +979,7 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
         importDocumentNodeExternallyFrom: 'near-operation-file',
       };
 
-      const docs = [{ filePath: 'path/to/document.graphql', content: multipleOperationDoc }];
+      const docs = [{ location: 'path/to/document.graphql', document: multipleOperationDoc }];
 
       const content = (await plugin(schema, docs, config, {
         outputFile: 'graphql.ts',
@@ -996,8 +996,8 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
     it(`should NOT import Operations if no operation collected: external mode and one file`, async () => {
       const docs = [
         {
-          filePath: 'path/to/document.graphql',
-          content: parse(/* GraphQL */ `
+          location: 'path/to/document.graphql',
+          document: parse(/* GraphQL */ `
             fragment feedFragment on Entry {
               id
               commentCount
@@ -1024,8 +1024,8 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
     it(`should NOT import Operations if no operation collected: external mode and multiple files`, async () => {
       const docs = [
         {
-          filePath: 'a.graphql',
-          content: parse(/* GraphQL */ `
+          location: 'a.graphql',
+          document: parse(/* GraphQL */ `
             fragment feedFragment1 on Entry {
               id
               commentCount
@@ -1033,8 +1033,8 @@ export function useListenToCommentsSubscription(variables?: ListenToCommentsSubs
           `),
         },
         {
-          filePath: 'b.graphql',
-          content: parse(/* GraphQL */ `
+          location: 'b.graphql',
+          document: parse(/* GraphQL */ `
             fragment feedFragment2 on Entry {
               id
               commentCount

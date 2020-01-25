@@ -84,11 +84,7 @@ export interface TypeScriptDocumentNodesRawPluginConfig extends RawClientSideBas
 }
 
 export const plugin: PluginFunction<TypeScriptDocumentNodesRawPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: TypeScriptDocumentNodesRawPluginConfig) => {
-  const allAst = concatAST(
-    documents.reduce((prev, v) => {
-      return [...prev, v.content];
-    }, [])
-  );
+  const allAst = concatAST(documents.map(v => v.document));
 
   const allFragments: LoadedFragment[] = [
     ...(allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[]).map(fragmentDef => ({ node: fragmentDef, name: fragmentDef.name.value, onType: fragmentDef.typeCondition.name.value, isExternal: false })),

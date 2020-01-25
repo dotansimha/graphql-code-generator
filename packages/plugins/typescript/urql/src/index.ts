@@ -56,11 +56,7 @@ export interface UrqlRawPluginConfig extends RawClientSideBasePluginConfig {
 }
 
 export const plugin: PluginFunction<UrqlRawPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: UrqlRawPluginConfig) => {
-  const allAst = concatAST(
-    documents.reduce((prev, v) => {
-      return [...prev, v.content];
-    }, [])
-  );
+  const allAst = concatAST(documents.map(v => v.document));
   const allFragments: LoadedFragment[] = [
     ...(allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[]).map(fragmentDef => ({ node: fragmentDef, name: fragmentDef.name.value, onType: fragmentDef.typeCondition.name.value, isExternal: false })),
     ...(config.externalFragments || []),

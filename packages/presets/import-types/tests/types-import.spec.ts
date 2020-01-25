@@ -42,32 +42,32 @@ describe('import-types preset', () => {
   `);
   const testDocuments = [
     {
-      filePath: '/some/deep/path/src/graphql/me-query.graphql',
-      content: operationAst,
+      location: '/some/deep/path/src/graphql/me-query.graphql',
+      document: operationAst,
     },
     {
-      filePath: '/some/deep/path/src/graphql/user-fragment.graphql',
-      content: fragmentAst,
+      location: '/some/deep/path/src/graphql/user-fragment.graphql',
+      document: fragmentAst,
     },
     {
-      filePath: '/some/deep/path/src/graphql/me.query.graphql',
-      content: operationAst,
+      location: '/some/deep/path/src/graphql/me.query.graphql',
+      document: operationAst,
     },
     {
-      filePath: '/some/deep/path/src/graphql/something-query.graphql',
-      content: operationAst,
+      location: '/some/deep/path/src/graphql/something-query.graphql',
+      document: operationAst,
     },
     {
-      filePath: '/some/deep/path/src/graphql/nested/somethingElse.graphql',
-      content: operationAst,
+      location: '/some/deep/path/src/graphql/nested/somethingElse.graphql',
+      document: operationAst,
     },
     {
-      filePath: '/some/deep/path/src/graphql/nested/from-js.js',
-      content: operationAst,
+      location: '/some/deep/path/src/graphql/nested/from-js.js',
+      document: operationAst,
     },
     {
-      filePath: '/some/deep/path/src/graphql/component.ts',
-      content: operationAst,
+      location: '/some/deep/path/src/graphql/component.ts',
+      document: operationAst,
     },
   ];
 
@@ -111,7 +111,7 @@ describe('import-types preset', () => {
         typesPath: './types',
       },
       schema: schemaDocumentNode,
-      documents: [{ filePath: '/some/deep/path/src/graphql/me-query.graphql', content: minimalOperationAst }, testDocuments[1]],
+      documents: [{ location: '/some/deep/path/src/graphql/me-query.graphql', document: minimalOperationAst }, testDocuments[1]],
       plugins: [{ typescript: {} }],
       pluginMap: { typescript: {} as any },
     });
@@ -129,8 +129,8 @@ describe('import-types preset', () => {
       schema: schemaDocumentNode,
       documents: [
         {
-          filePath: './test.graphql',
-          content: parse(/* GraphQL */ `
+          location: './test.graphql',
+          document: parse(/* GraphQL */ `
             query {
               user {
                 ...UserFields

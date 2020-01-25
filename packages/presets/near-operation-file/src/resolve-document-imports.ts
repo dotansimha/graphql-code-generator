@@ -2,7 +2,7 @@ import { isUsingTypes, Types } from '@graphql-codegen/plugin-helpers';
 import { FragmentDefinitionNode, GraphQLSchema } from 'graphql';
 import buildFragmentResolver from './fragment-resolver';
 
-export type FragmentRegistry = { [fragmentName: string]: { filePath: string; importNames: string[]; onType: string; node: FragmentDefinitionNode } };
+export type FragmentRegistry = { [fragmentName: string]: { location: string; importNames: string[]; onType: string; node: FragmentDefinitionNode } };
 
 export type ImportSourceDefinition = {
   /**
@@ -27,9 +27,9 @@ type GenerateImportStatement = (paths: { relativeOutputPath: string; importSourc
 
 export type DocumentImportResolverOptions = {
   /**
-   * Generates a target file path from the source `document.filePath`
+   * Generates a target file path from the source `document.location`
    */
-  generateFilePath: (filePath: string) => string;
+  generateFilePath: (location: string) => string;
   /**
    * String to append to all fragments
    */
@@ -57,13 +57,13 @@ export default function resolveDocumentImportStatements<T>(presetOptions: Types.
   const { generateFilePath, generateImportStatement, schemaTypesSource } = importResolverOptions;
 
   return documents.map(documentFile => {
-    const generatedFilePath = generateFilePath(documentFile.filePath);
+    const generatedFilePath = generateFilePath(documentFile.location);
 
-    const { externalFragments, fragmentImportStatements: importStatements } = resolveFragments(generatedFilePath, documentFile.content);
+    const { externalFragments, fragmentImportStatements: importStatements } = resolveFragments(generatedFilePath, documentFile.document);
 
     if (
       isUsingTypes(
-        documentFile.content,
+        documentFile.document,
         externalFragments.map(m => m.name),
         schemaObject
       )

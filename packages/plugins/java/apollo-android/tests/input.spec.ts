@@ -25,7 +25,7 @@ describe('java-apollo-android', () => {
       }
     `);
     const config = { typePackage: 'com.app.generated.graphql', fragmentPackage: 'com.app.generated.graphql.fragment', package: 'com.app.generated.graphql', fileType: FileType.INPUT_TYPE };
-    const files: Types.DocumentFile[] = [{ content: { kind: Kind.DOCUMENT, definitions: [schema.getType('MyInput').astNode] }, filePath: '' }];
+    const files: Types.DocumentFile[] = [{ document: { kind: Kind.DOCUMENT, definitions: [schema.getType('MyInput').astNode] }, location: '' }];
 
     it('Should produce valid Java code', async () => {
       const result = (await plugin(schema, files, config)) as Types.ComplexPluginOutput;

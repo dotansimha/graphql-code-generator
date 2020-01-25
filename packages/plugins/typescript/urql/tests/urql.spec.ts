@@ -41,7 +41,7 @@ describe('urql', () => {
 
   describe('Imports', () => {
     it('should import Urql dependencies', async () => {
-      const docs = [{ filePath: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -58,7 +58,7 @@ describe('urql', () => {
     });
 
     it('should import DocumentNode when using noGraphQLTag', async () => {
-      const docs = [{ filePath: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -76,7 +76,7 @@ describe('urql', () => {
     });
 
     it(`should use gql import from gqlImport config option`, async () => {
-      const docs = [{ filePath: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -91,7 +91,7 @@ describe('urql', () => {
     });
 
     it('should import Urql from urqlImportFrom config option', async () => {
-      const docs = [{ filePath: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -110,8 +110,8 @@ describe('urql', () => {
     it('Should generate basic fragments documents correctly', async () => {
       const docs = [
         {
-          filePath: 'a.graphql',
-          content: parse(/* GraphQL */ `
+          location: 'a.graphql',
+          document: parse(/* GraphQL */ `
             fragment MyFragment on Repository {
               full_name
             }
@@ -166,7 +166,7 @@ describe('urql', () => {
         ${feedWithRepository}
       `;
 
-      const docs = [{ filePath: '', content: myFeed }];
+      const docs = [{ location: '', document: myFeed }];
 
       const content = (await plugin(
         schema,
@@ -223,7 +223,7 @@ query MyFeed {
         }
       `;
       const documents = [simpleFeed, myFeed];
-      const docs = documents.map(content => ({ content, filePath: '' }));
+      const docs = documents.map(document => ({ document, location: '' }));
       const content = (await plugin(
         schema,
         docs,
@@ -273,7 +273,7 @@ query MyFeed {
         }
       `;
       const documents = [myFeed];
-      const docs = documents.map(content => ({ content, filePath: '' }));
+      const docs = documents.map(document => ({ document, location: '' }));
       const content = (await plugin(
         schema,
         docs,
@@ -292,7 +292,7 @@ query MyFeed {
 
   describe('Component', () => {
     it('should generate Document variable', async () => {
-      const docs = [{ filePath: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -323,7 +323,7 @@ query MyFeed {
     });
 
     it('should generate Document variable with noGraphQlTag', async () => {
-      const docs = [{ filePath: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -345,7 +345,7 @@ query MyFeed {
     });
 
     it('should generate Component', async () => {
-      const docs = [{ filePath: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -365,7 +365,7 @@ query MyFeed {
     });
 
     it('should not generate Component', async () => {
-      const docs = [{ filePath: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -382,8 +382,8 @@ query MyFeed {
     it('should make variables property required if any of variable definitions is non-null', async () => {
       const docs = [
         {
-          filePath: '',
-          content: gql`
+          location: '',
+          document: gql`
             query Test($foo: String!) {
               test(foo: $foo)
             }
@@ -414,8 +414,8 @@ query MyFeed {
     it('should make variables property optional if operationType is mutation', async () => {
       const docs = [
         {
-          filePath: '',
-          content: gql`
+          location: '',
+          document: gql`
             mutation Test($foo: String!) {
               test(foo: $foo)
             }
@@ -444,7 +444,7 @@ query MyFeed {
     });
 
     it('should not add typesPrefix to Component', async () => {
-      const docs = [{ filePath: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -466,7 +466,7 @@ query MyFeed {
         }
       `);
 
-      const docs = [{ filePath: '', content: documents }];
+      const docs = [{ location: '', document: documents }];
 
       const content = (await plugin(
         schema,
@@ -510,7 +510,7 @@ query MyFeed {
           }
         }
       `);
-      const docs = [{ filePath: '', content: documents }];
+      const docs = [{ location: '', document: documents }];
 
       const content = (await plugin(
         schema,
@@ -534,7 +534,7 @@ export function useSubmitRepositoryMutation() {
     });
 
     it('Should not generate hooks for query and mutation', async () => {
-      const docs = [{ filePath: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,
@@ -557,7 +557,7 @@ export function useSubmitRepositoryMutation() {
         }
       `);
 
-      const docs = [{ filePath: '', content: documents }];
+      const docs = [{ location: '', document: documents }];
 
       const content = (await plugin(
         schema,
@@ -579,7 +579,7 @@ export function useSubmitRepositoryMutation() {
     });
 
     it('Should not add typesPrefix to hooks', async () => {
-      const docs = [{ filePath: '', content: basicDoc }];
+      const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
         schema,
         docs,

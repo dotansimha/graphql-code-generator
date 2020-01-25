@@ -98,8 +98,8 @@ describe('Flow Operations Plugin', () => {
         schema,
         [
           {
-            filePath: '',
-            content: ast,
+            location: '',
+            document: ast,
           },
         ],
         { namingConvention: 'lower-case#lowerCase' },
@@ -148,8 +148,8 @@ describe('Flow Operations Plugin', () => {
         schema,
         [
           {
-            filePath: '',
-            content: ast,
+            location: '',
+            document: ast,
           },
         ],
         { typesPrefix: 'i', namingConvention: 'lower-case#lowerCase' },
@@ -197,7 +197,7 @@ describe('Flow Operations Plugin', () => {
           }
         }
       `);
-      const result = await plugin(schema, [{ filePath: '', content: ast }], { namespacedImportName: 'Types' }, { outputFile: '' });
+      const result = await plugin(schema, [{ location: '', document: ast }], { namespacedImportName: 'Types' }, { outputFile: '' });
 
       expect(result).toBeSimilarStringTo(`
       export type NotificationsQuery = ({
@@ -230,8 +230,8 @@ describe('Flow Operations Plugin', () => {
         schema,
         [
           {
-            filePath: '',
-            content: ast,
+            location: '',
+            document: ast,
           },
         ],
         { skipTypename: true },
@@ -252,8 +252,8 @@ describe('Flow Operations Plugin', () => {
         schema,
         [
           {
-            filePath: '',
-            content: ast,
+            location: '',
+            document: ast,
           },
         ],
         {},
@@ -278,8 +278,8 @@ describe('Flow Operations Plugin', () => {
         schema,
         [
           {
-            filePath: '',
-            content: ast,
+            location: '',
+            document: ast,
           },
         ],
         {},
@@ -305,8 +305,8 @@ describe('Flow Operations Plugin', () => {
         schema,
         [
           {
-            filePath: '',
-            content: ast,
+            location: '',
+            document: ast,
           },
         ],
         { skipTypename: true },
@@ -339,8 +339,8 @@ describe('Flow Operations Plugin', () => {
         schema,
         [
           {
-            filePath: '',
-            content: ast,
+            location: '',
+            document: ast,
           },
         ],
         {},
@@ -380,8 +380,8 @@ describe('Flow Operations Plugin', () => {
         schema,
         [
           {
-            filePath: '',
-            content: ast,
+            location: '',
+            document: ast,
           },
         ],
         { nonOptionalTypename: true },
@@ -426,8 +426,8 @@ describe('Flow Operations Plugin', () => {
         schema,
         [
           {
-            filePath: '',
-            content: ast,
+            location: '',
+            document: ast,
           },
         ],
         {},
@@ -464,8 +464,8 @@ describe('Flow Operations Plugin', () => {
         schema,
         [
           {
-            filePath: '',
-            content: ast,
+            location: '',
+            document: ast,
           },
         ],
         { skipTypename: true },
@@ -491,8 +491,8 @@ describe('Flow Operations Plugin', () => {
         schema,
         [
           {
-            filePath: '',
-            content: ast,
+            location: '',
+            document: ast,
           },
         ],
         { skipTypename: true },
@@ -528,8 +528,8 @@ describe('Flow Operations Plugin', () => {
         schema,
         [
           {
-            filePath: '',
-            content: ast,
+            location: '',
+            document: ast,
           },
         ],
         { skipTypename: true },
@@ -562,8 +562,8 @@ describe('Flow Operations Plugin', () => {
         schema,
         [
           {
-            filePath: '',
-            content: ast,
+            location: '',
+            document: ast,
           },
         ],
         { skipTypename: true },
@@ -604,8 +604,8 @@ describe('Flow Operations Plugin', () => {
         schema,
         [
           {
-            filePath: '',
-            content: ast,
+            location: '',
+            document: ast,
           },
         ],
         { skipTypename: true },
@@ -645,8 +645,8 @@ describe('Flow Operations Plugin', () => {
         schema,
         [
           {
-            filePath: '',
-            content: ast,
+            location: '',
+            document: ast,
           },
         ],
         { skipTypename: true },
@@ -680,8 +680,8 @@ describe('Flow Operations Plugin', () => {
         schema,
         [
           {
-            filePath: '',
-            content: ast,
+            location: '',
+            document: ast,
           },
         ],
         { skipTypename: true },
@@ -712,8 +712,8 @@ describe('Flow Operations Plugin', () => {
         schema,
         [
           {
-            filePath: '',
-            content: ast,
+            location: '',
+            document: ast,
           },
         ],
         { skipTypename: true },
@@ -750,8 +750,8 @@ describe('Flow Operations Plugin', () => {
         gitHuntSchema,
         [
           {
-            filePath: '',
-            content: ast,
+            location: '',
+            document: ast,
           },
         ],
         { skipTypename: true },
@@ -781,8 +781,8 @@ describe('Flow Operations Plugin', () => {
         schema,
         [
           {
-            filePath: '',
-            content: ast,
+            location: '',
+            document: ast,
           },
         ],
         { skipTypename: true },
@@ -805,8 +805,8 @@ describe('Flow Operations Plugin', () => {
         schema,
         [
           {
-            filePath: '',
-            content: ast,
+            location: '',
+            document: ast,
           },
         ],
         { skipTypename: true },
@@ -839,8 +839,8 @@ describe('Flow Operations Plugin', () => {
         schema,
         [
           {
-            filePath: '',
-            content: ast,
+            location: '',
+            document: ast,
           },
         ],
         { skipTypename: true },
@@ -873,8 +873,8 @@ describe('Flow Operations Plugin', () => {
         schema,
         [
           {
-            filePath: '',
-            content: ast,
+            location: '',
+            document: ast,
           },
         ],
         { skipTypename: true },
@@ -908,8 +908,8 @@ describe('Flow Operations Plugin', () => {
         schema,
         [
           {
-            filePath: '',
-            content: ast,
+            location: '',
+            document: ast,
           },
         ],
         { skipTypename: true },
@@ -935,8 +935,8 @@ describe('Flow Operations Plugin', () => {
         schema,
         [
           {
-            filePath: '',
-            content: ast,
+            location: '',
+            document: ast,
           },
         ],
         { skipTypename: true },
@@ -959,8 +959,8 @@ describe('Flow Operations Plugin', () => {
         schema,
         [
           {
-            filePath: '',
-            content: ast,
+            location: '',
+            document: ast,
           },
         ],
         { skipTypename: true },
@@ -980,8 +980,8 @@ describe('Flow Operations Plugin', () => {
         schema,
         [
           {
-            filePath: '',
-            content: ast,
+            location: '',
+            document: ast,
           },
         ],
         { skipTypename: true },
@@ -1013,8 +1013,8 @@ describe('Flow Operations Plugin', () => {
         schema,
         [
           {
-            filePath: '',
-            content: ast,
+            location: '',
+            document: ast,
           },
         ],
         { skipTypename: true },
@@ -1044,8 +1044,8 @@ describe('Flow Operations Plugin', () => {
         schema,
         [
           {
-            filePath: '',
-            content: ast,
+            location: '',
+            document: ast,
           },
         ],
         { skipTypename: true, useFlowExactObjects: false },
@@ -1079,8 +1079,8 @@ describe('Flow Operations Plugin', () => {
         schema,
         [
           {
-            filePath: '',
-            content: ast,
+            location: '',
+            document: ast,
           },
         ],
         { skipTypename: true, useFlowReadOnlyTypes: true },
