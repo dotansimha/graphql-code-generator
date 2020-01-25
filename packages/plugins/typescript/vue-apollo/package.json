@@ -1,7 +1,7 @@
 {
   "name": "@graphql-codegen/typescript-vue-apollo",
   "version": "1.11.2",
-  "description": "GraphQL Code Generator plugin for generating a ready-to-use Vue-Apollo composition functions based on GraphQL operations",
+  "description": "GraphQL Code Generator plugin for generating ready-to-use Vue-Apollo composition functions based on GraphQL operations",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
   "scripts": {
@@ -19,12 +19,12 @@
     "tslib": "1.10.0"
   },
   "devDependencies": {
-    "bob-the-bundler": "0.2.2",
     "@graphql-codegen/testing": "1.11.2",
+    "@ardatan/bob": "0.2.7",
     "graphql": "14.5.8",
     "jest": "25.1.0",
     "ts-jest": "25.0.0",
-    "typescript": "3.7.3"
+    "typescript": "3.7.5"
   },
   "sideEffects": false,
   "main": "dist/index.cjs.js",
