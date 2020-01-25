@@ -73,7 +73,7 @@
     "graphql-tag-pluck": "0.8.7",
     "graphql-tools": "4.0.6",
     "indent-string": "4.0.0",
-    "inquirer": "7.0.3",
+    "inquirer": "7.0.4",
     "is-glob": "4.0.1",
     "json-to-pretty-yaml": "1.2.2",
     "listr": "0.14.3",
