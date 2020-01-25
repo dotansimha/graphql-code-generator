@@ -22,7 +22,7 @@
     "bob-the-bundler": "0.2.2",
     "@graphql-codegen/testing": "1.11.2",
     "graphql": "14.5.8",
-    "jest": "24.9.0",
+    "jest": "25.1.0",
     "ts-jest": "25.0.0",
     "typescript": "3.7.3"
   },
