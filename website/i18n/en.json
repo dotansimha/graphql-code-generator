@@ -242,6 +242,9 @@
       "plugins/typescript-urql": {
         "title": "TypeScript Urql"
       },
+      "plugins/typescript-vue-apollo": {
+        "title": "TypeScript Vue Apollo"
+      },
       "plugins/typescript": {
         "title": "TypeScript"
       },

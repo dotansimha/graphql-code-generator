@@ -19,6 +19,7 @@ const mapping = {
   '../packages/plugins/typescript/apollo-angular/src/index.ts': BASE_DIR + '/typescript-apollo-angular.md',
   '../packages/plugins/typescript/urql/src/index.ts': BASE_DIR + '/typescript-urql.md',
   '../packages/plugins/typescript/react-apollo/src/index.ts': BASE_DIR + '/typescript-react-apollo.md',
+  '../packages/plugins/typescript/vue-apollo/src/index.ts': BASE_DIR + '/typescript-vue-apollo.md',
   '../packages/plugins/typescript/stencil-apollo/src/index.ts': BASE_DIR + '/typescript-stencil-apollo.md',
   '../packages/plugins/typescript/document-nodes/src/index.ts': BASE_DIR + '/typescript-document-nodes.md',
   '../packages/plugins/java/apollo-android/src/plugin.ts': BASE_DIR + '/java-apollo-android.md',

@@ -66,6 +66,15 @@ export const plugins: Array<PluginOption> = [
     defaultExtension: '.js',
   },
   {
+    name: `TypeScript Vue Apollo ${italic('(typed composition functions)')}`,
+    package: '@graphql-codegen/typescript-vue-apollo',
+    value: 'typescript-vue-apollo',
+    pathInRepo: 'typescript/vue-apollo',
+    available: tags => allOf(tags, Tags.vue, Tags.typescript),
+    shouldBeSelected: () => true,
+    defaultExtension: '.ts',
+  },
+  {
     name: `TypeScript React Apollo ${italic('(typed components and HOCs)')}`,
     package: '@graphql-codegen/typescript-react-apollo',
     value: 'typescript-react-apollo',
