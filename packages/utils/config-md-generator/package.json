@@ -24,6 +24,6 @@
   },
   "devDependencies": {
     "@ardatan/bob": "0.2.7",
-    "ts-node": "8.5.4"
+    "ts-node": "8.6.2"
   }
 }
