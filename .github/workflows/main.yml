@@ -17,16 +17,24 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         node_version: [10, 12, 13]
-        yarn_version: [^1, ^2]
+        yarn_version: [1, 2]
     steps:
       - name: Checkout Master
         uses: actions/checkout@v1
       - name: Use Node ${{matrix.node_version}}
         uses: actions/setup-node@master
         with:
-          version: ${{ matrix.node_version }}
+          node-version: ${{ matrix.node_version }}
       - name: Setup Yarn
-        run: yarn policies set-version ${{ matrix.yarn_version }} && yarn -v 
+        run: |
+          if [ "${{ matrix.yarn_version }}" == "1" ] 
+          then
+            yarn policies set-version ${{ matrix.yarn_version }}
+          else
+            npm install -g yarn@berry
+          fi
+
+          yarn -v 
       - name: Install Dependencies using Yarn
         run: yarn install
       - name: Build
