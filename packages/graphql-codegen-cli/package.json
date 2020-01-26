@@ -100,7 +100,7 @@
     "bdd-stdin": "0.2.0",
     "@ardatan/bob": "0.2.7",
     "dotenv": "8.2.0",
-    "graphql": "14.5.8",
+    "graphql": "14.6.0",
     "js-yaml": "3.13.1",
     "make-dir": "3.0.0",
     "ts-jest": "25.0.0"
