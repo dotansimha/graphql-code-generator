@@ -17,7 +17,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         node_version: [10, 12, 13]
-        yarn_version: [1.x, 2.x]
+        yarn_version: [^1, ^2]
     steps:
       - name: Checkout Master
         uses: actions/checkout@v1
