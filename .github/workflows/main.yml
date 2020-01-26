@@ -17,6 +17,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         node_version: [10, 12, 13]
+        yarn_version: [1.x, 2.x]
     steps:
       - name: Checkout Master
         uses: actions/checkout@v1
@@ -24,6 +25,8 @@ jobs:
         uses: actions/setup-node@master
         with:
           version: ${{ matrix.node_version }}
+      - name: Setup Yarn
+        run: yarn policies set-version ${{ matrix.yarn_version }} && yarn -v 
       - name: Install Dependencies using Yarn
         run: yarn install
       - name: Build
