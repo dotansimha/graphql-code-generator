@@ -21,13 +21,13 @@ jobs:
     steps:
       - name: Checkout Master
         uses: actions/checkout@v1
-      - name: Use Node ${{matrix.node_version}}
+      - name: Use Node ${{matrix.yarn_version}}
         uses: actions/setup-node@master
         with:
           node-version: ${{ matrix.node_version }}
       - name: Use Yarn ${{ matrix.node_version }}
         run: node .github/workflows/set-yarn.js ${{ matrix.yarn_version }}
-      - name: Install Dependencies using Yarn
+      - name: Install Dependencies using Yarn ${{matrix.yarn_version}}
         run: yarn install
       - name: Build
         run: yarn build
