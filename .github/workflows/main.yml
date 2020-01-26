@@ -11,7 +11,7 @@ on:
 jobs:
 
   test:
-    name: Testing on ${{matrix.os}} and Node ${{matrix.node_version}}
+    name: Testing on ${{matrix.os}}/Node ${{matrix.node_version}}/Yarn ${{matrix.yarn_version}}
     runs-on: ${{matrix.os}}
     strategy:
       matrix:
