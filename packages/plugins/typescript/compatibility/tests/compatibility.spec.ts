@@ -624,7 +624,7 @@ describe('Compatibility Plugin', () => {
     const ast = [{ location: '', document: basicQuery }];
     const result = await plugin(schema, ast, {});
 
-    expect(result).toContain(`export type Me = UserFieldsFragment;`);
+    expect(result).toContain(`export type Me = MeQuery['me'];`);
     await validate(result, schema, ast, {});
   });
 
