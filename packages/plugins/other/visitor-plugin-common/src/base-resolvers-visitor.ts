@@ -897,7 +897,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
       .withBlock(indent(`name: '${node.name}'`)).string;
   }
 
-  DirectiveDefinition(node: DirectiveDefinitionNode): string {
+  DirectiveDefinition(node: DirectiveDefinitionNode, key, parent): string {
     if (this._federation.skipDirective(node.name as any)) {
       return null;
     }
@@ -905,8 +905,9 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     const directiveName = this.convertName(node, {
       suffix: 'DirectiveResolver',
     });
-    const hasArguments = node.arguments && node.arguments.length > 0;
-    const directiveArgs = hasArguments ? this._variablesTransfomer.transform<InputValueDefinitionNode>(node.arguments) : '';
+    const sourceNode = parent[key] as DirectiveDefinitionNode;
+    const hasArguments = sourceNode.arguments && sourceNode.arguments.length > 0;
+    const directiveArgs = hasArguments ? this._variablesTransfomer.transform<InputValueDefinitionNode>(sourceNode.arguments) : '';
 
     this._collectedDirectiveResolvers[node.name as any] = directiveName + '<any, any, ContextType>';
 
