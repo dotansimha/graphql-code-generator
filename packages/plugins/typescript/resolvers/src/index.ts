@@ -96,7 +96,7 @@ export type StitchingResolver<TResult, TParent, TContext, TArgs> = {
   const resolverFnUsage = `ResolverFn<TResult, TParent, TContext, TArgs>`;
   const stitchingResolverUsage = `StitchingResolver<TResult, TParent, TContext, TArgs>`;
 
-  const resolverDefParts = [resolverType, `  | TResult`, `  | Promise<TResult>`];
+  const resolverDefParts = [resolverType, `TResult`, `Promise<TResult>`, resolverFnUsage];
 
   if (visitor.hasFederation()) {
     defsToInclude.push(`export type ReferenceResolver<TResult, TReference, TContext> = (
@@ -106,13 +106,7 @@ export type StitchingResolver<TResult, TParent, TContext, TArgs> = {
     ) => Promise<TResult> | TResult;`);
   }
 
-  if (noSchemaStitching) {
-    // Resolver =
-    // | TResult
-    // | Promise<TResult>
-    // | ResolverFn;
-    resolverDefParts.push(`  | ${resolverFnUsage};`);
-  } else {
+  if (!noSchemaStitching) {
     // StitchingResolver
     // Resolver =
     // | TResult
@@ -120,10 +114,9 @@ export type StitchingResolver<TResult, TParent, TContext, TArgs> = {
     // | ResolverFn
     // | StitchingResolver;
     defsToInclude.push(stitchingResolverType);
-    resolverDefParts.push(`  | ${resolverFnUsage}`);
-    resolverDefParts.push(`  | ${stitchingResolverUsage};`);
+    resolverDefParts.push(stitchingResolverUsage);
   }
-  defsToInclude.push(resolverDefParts.join('\n'));
+  defsToInclude.push(resolverDefParts.join('\n  | ') + ';');
 
   const header = `${indexSignature}
 
