@@ -18,8 +18,8 @@
     "tslib": "1.10.0"
   },
   "devDependencies": {
-    "@types/pluralize": "0.0.29",
     "@ardatan/bob": "0.2.7",
+    "@types/pluralize": "0.0.29",
     "graphql": "14.5.8",
     "java-ast": "0.1.0",
     "jest": "25.1.0",

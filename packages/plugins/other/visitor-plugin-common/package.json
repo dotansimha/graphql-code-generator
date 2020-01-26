@@ -19,10 +19,10 @@
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0"
   },
   "devDependencies": {
+    "@ardatan/bob": "0.2.7",
     "@graphql-codegen/testing": "1.11.2",
     "@types/jest": "24.9.1",
     "@types/relay-compiler": "7.0.2",
-    "@ardatan/bob": "0.2.7",
     "graphql": "14.5.8",
     "jest": "25.1.0",
     "ts-jest": "25.0.0",
