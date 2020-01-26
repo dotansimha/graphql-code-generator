@@ -83,13 +83,6 @@ export function selectionSetToTypes(
           break;
         }
 
-        case Kind.FRAGMENT_SPREAD: {
-          const fragmentName = baseVisitor.convertName(selection.name.value, { suffix: 'Fragment' });
-          result[typeToUse] = { export: 'type', name: fragmentName };
-
-          break;
-        }
-
         case Kind.INLINE_FRAGMENT: {
           const typeCondition = selection.typeCondition.name.value;
           const fragmentName = baseVisitor.convertName(typeCondition, { suffix: 'InlineFragment' });
@@ -98,23 +91,41 @@ export function selectionSetToTypes(
           if (isUnionType(parentType) || isInterfaceType(parentType)) {
             inlineFragmentValue = `DiscriminateUnion<RequireField<${stack}, '__typename'>, { __typename: '${typeCondition}' }>`;
           } else {
-            inlineFragmentValue = `{ __typename: '${typeCondition}' } & Pick<${stack}, ${selection.selectionSet.selections
-              .map(subSelection => (subSelection.kind === Kind.FIELD ? `'${subSelection.name.value}'` : null))
-              .filter(a => a)
-              .join(' | ')}>`;
+            let encounteredNestedInlineFragment = false;
+            const subSelections = selection.selectionSet.selections
+              .map(subSelection => {
+                switch (subSelection.kind) {
+                  case Kind.FIELD:
+                    return `'${subSelection.name.value}'`;
+                  case Kind.FRAGMENT_SPREAD:
+                    return `keyof ${baseVisitor.convertName(subSelection.name.value, { suffix: 'Fragment' })}`;
+                  case Kind.INLINE_FRAGMENT:
+                    encounteredNestedInlineFragment = true;
+                    return null;
+                }
+              })
+              .filter(a => a);
+
+            if (encounteredNestedInlineFragment) {
+              throw new Error('Nested inline fragments are not supported the `typescript-compatibility` plugin');
+            } else if (subSelections.length) {
+              inlineFragmentValue = `{ __typename: '${typeCondition}' } & Pick<${stack}, ${subSelections.join(' | ')}>`;
+            }
           }
 
-          selectionSetToTypes(
-            typesPrefix,
-            baseVisitor,
-            schema,
-            typeCondition,
-            `(${inlineFragmentValue})`,
-            fragmentName,
-            selection.selectionSet,
-            preResolveTypes,
-            result
-          );
+          if (inlineFragmentValue) {
+            selectionSetToTypes(
+              typesPrefix,
+              baseVisitor,
+              schema,
+              typeCondition,
+              `(${inlineFragmentValue})`,
+              fragmentName,
+              selection.selectionSet,
+              preResolveTypes,
+              result
+            );
+          }
 
           break;
         }
