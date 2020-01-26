@@ -26,13 +26,7 @@ jobs:
         with:
           node-version: ${{ matrix.node_version }}
       - name: Use Yarn ${{ matrix.node_version }}
-        run: |
-          if [ "${{ matrix.yarn_version }}" == "1" ] 
-          then
-            yarn policies set-version ${{ matrix.yarn_version }}
-          else
-            npm install -g yarn@berry
-          fi
+        run: node .github/workflows/set-yarn.js ${{ matrix.yarn_version }}
       - name: Install Dependencies using Yarn
         run: yarn install
       - name: Build
