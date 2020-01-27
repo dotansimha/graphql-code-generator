@@ -3315,10 +3315,10 @@
     "@types/prop-types" "*"
     csstype "^2.2.0"
 
-"@types/relay-compiler@7.0.2":
-  version "7.0.2"
-  resolved "https://registry.yarnpkg.com/@types/relay-compiler/-/relay-compiler-7.0.2.tgz#3d5ddd33aeea7a248a86f197a9f847be14874c6d"
-  integrity sha512-qmK4itE/82YG9Xt6WFCj8oDvAgdpPWU5GV5TbDRfn2dgMbq9vVFeLiNw+uymzLurQTlKPJejZnL0ByYq+pkFSg==
+"@types/relay-compiler@8.0.0":
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/@types/relay-compiler/-/relay-compiler-8.0.0.tgz#98961b923555145067d3895f8774f3024f14e6fa"
+  integrity sha512-rSR62gfhm2ZZp888RK93/jODOCA1j2MpWr5ibZEyYprmVG1G9KE5TfNUERCcc9z58F4d8tMIX00ZpBOU1sWcDA==
   dependencies:
     "@types/relay-runtime" "*"
     graphql "^14.5.3"
