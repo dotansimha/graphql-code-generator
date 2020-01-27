@@ -1,5 +1,5 @@
-import { Types, CodegenPlugin } from '@graphql-codegen/plugin-helpers';
-import { DetailedError, codegen } from '@graphql-codegen/core';
+import { DetailedError, Types, CodegenPlugin } from '@graphql-codegen/plugin-helpers';
+import { codegen } from '@graphql-codegen/core';
 import { normalizeOutputParam, normalizeInstanceOrArray, normalizeConfig } from '@graphql-codegen/plugin-helpers';
 import { Renderer } from './utils/listr-renderer';
 import { GraphQLError, GraphQLSchema, DocumentNode } from 'graphql';

@@ -4,7 +4,7 @@ import indentString from 'indent-string';
 import logSymbol from 'log-symbols';
 import { stripIndent } from 'common-tags';
 import { ListrTask } from 'listr';
-import { DetailedError, isDetailedError } from '@graphql-codegen/core';
+import { DetailedError, isDetailedError } from '@graphql-codegen/plugin-helpers';
 import { Source } from 'graphql';
 import { debugLog, printLogs } from './debugging';
 
