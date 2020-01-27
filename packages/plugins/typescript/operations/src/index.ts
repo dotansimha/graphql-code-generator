@@ -2,7 +2,7 @@ import { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
 import { visit, concatAST, GraphQLSchema, Kind, FragmentDefinitionNode } from 'graphql';
 import { TypeScriptDocumentsVisitor } from './visitor';
 import { RawDocumentsConfig, LoadedFragment, optimizeOperations } from '@graphql-codegen/visitor-plugin-common';
-import { AvoidOptionalsConfig } from '../../typescript/src';
+import { AvoidOptionalsConfig } from '@graphql-codegen/typescript';
 
 export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
   /**
