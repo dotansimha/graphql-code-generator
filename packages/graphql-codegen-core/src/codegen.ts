@@ -1,7 +1,6 @@
-import { Types, isComplexPluginOutput, federationSpec } from '@graphql-codegen/plugin-helpers';
+import { DetailedError, Types, isComplexPluginOutput, federationSpec } from '@graphql-codegen/plugin-helpers';
 import { visit, parse, DefinitionNode } from 'graphql';
 import { executePlugin } from './execute-plugin';
-import { DetailedError } from './errors';
 import { checkValidationErrors, validateGraphQlDocuments, printSchemaWithDirectives } from '@graphql-toolkit/common';
 import { Kind, print } from 'graphql';
 import { mergeSchemas } from '@graphql-toolkit/schema-merging';
