@@ -264,6 +264,7 @@ export interface RawResolversConfig extends RawConfig {
 
 export type ResolverTypes = { [gqlType: string]: string };
 export type ResolverParentTypes = { [gqlType: string]: string };
+export type GroupedMappers = Record<string, { identifier: string; asDefault?: boolean }[]>;
 type FieldContextTypeMap = Record<string, ParsedMapper>;
 
 export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawResolversConfig, TPluginConfig extends ParsedResolversConfig = ParsedResolversConfig> extends BaseVisitor<TRawConfig, TPluginConfig> {
@@ -571,25 +572,35 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
     return Array.from(this._globalDeclarations);
   }
 
+  protected isMapperImported(groupedMappers: GroupedMappers, identifier: string, source: string): boolean {
+    const exists = !groupedMappers[source] ? false : !!groupedMappers[source].find(m => m.identifier === identifier);
+    const existsFromEnums = !!Object.keys(this.config.enumValues)
+      .map(key => this.config.enumValues[key])
+      .find(o => o.sourceFile === source && o.typeIdentifier === identifier);
+
+    return exists || existsFromEnums;
+  }
+
   public get mappersImports(): string[] {
-    const groupedMappers: { [sourceFile: string]: { identifier: string; asDefault?: boolean }[] } = {};
+    const groupedMappers: GroupedMappers = {};
 
     const addMapper = (source: string, identifier: string, asDefault: boolean) => {
-      if (!groupedMappers[source]) {
-        groupedMappers[source] = [];
-      }
+      if (!this.isMapperImported(groupedMappers, identifier, source)) {
+        if (!groupedMappers[source]) {
+          groupedMappers[source] = [];
+        }
 
-      if (!groupedMappers[source].find(m => m.identifier === identifier)) {
         groupedMappers[source].push({ identifier, asDefault });
       }
     };
 
     Object.keys(this.config.mappers)
-      .map(gqlTypeName => this.config.mappers[gqlTypeName])
-      .filter((gqlType): gqlType is ExternalParsedMapper => gqlType.isExternal)
-      .forEach(mapper => {
-        const identifier = stripMapperTypeInterpolation(mapper.import);
-        addMapper(mapper.source, identifier, mapper.default);
+      .map(gqlTypeName => ({ gqlType: gqlTypeName, mapper: this.config.mappers[gqlTypeName] }))
+      .filter(({ mapper }) => mapper.isExternal)
+      .forEach(({ mapper }) => {
+        const externalMapper = mapper as ExternalParsedMapper;
+        const identifier = stripMapperTypeInterpolation(externalMapper.import);
+        addMapper(externalMapper.source, identifier, externalMapper.default);
       });
 
     if (this.config.contextType.isExternal) {
@@ -611,10 +622,16 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
       }
     });
 
-    return Object.keys(groupedMappers).map(source => this.buildMapperImport(source, groupedMappers[source]));
+    return Object.keys(groupedMappers)
+      .map(source => this.buildMapperImport(source, groupedMappers[source]))
+      .filter(Boolean);
   }
 
-  protected buildMapperImport(source: string, types: { identifier: string; asDefault?: boolean }[]): string {
+  protected buildMapperImport(source: string, types: { identifier: string; asDefault?: boolean }[]): string | null {
+    if (!types || types.length === 0) {
+      return null;
+    }
+
     if (types[0] && types[0].asDefault) {
       return `import ${types[0].identifier} from '${source}';`;
     }
