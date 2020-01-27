@@ -91,9 +91,9 @@ export type ResolversParentTypes = {
   Int: $ElementType<Scalars, 'Int'>,
 };
 
-export type MyDirectiveDirectiveResolver<Result, Parent, ContextType = any, Args = {   arg?: ?$ElementType<Scalars, 'Int'>,
-  arg2?: ?$ElementType<Scalars, 'String'>,
-  arg3?: ?$ElementType<Scalars, 'Boolean'> }> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+export type MyDirectiveDirectiveResolver<Result, Parent, ContextType = any, Args = {   arg: $ElementType<Scalars, 'Int'>,
+  arg2: $ElementType<Scalars, 'String'>,
+  arg3: $ElementType<Scalars, 'Boolean'> }> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
 export type MyOtherTypeResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'MyOtherType'>> = {
   bar?: Resolver<$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
