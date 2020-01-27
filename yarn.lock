@@ -1367,13 +1367,13 @@
     apollo-language-server "1.18.0"
     tslib "1.10.0"
 
-"@graphql-toolkit/code-file-loader@0.9.4":
-  version "0.9.4"
-  resolved "https://registry.yarnpkg.com/@graphql-toolkit/code-file-loader/-/code-file-loader-0.9.4.tgz#5ae7546ebd2f16280e6b748368deb58011218eaa"
-  integrity sha512-qekbJ6X/uVCM0FCAhrSKa8t9KMKURXCN4/M7y9BA2sQWlDs7M9i1a6kqemaNCVIELW3Lgbjr99r2xxZBr6zX3w==
+"@graphql-toolkit/code-file-loader@0.9.5":
+  version "0.9.5"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/code-file-loader/-/code-file-loader-0.9.5.tgz#236db3c2660514cd56d48b211182f4705e13ee1e"
+  integrity sha512-ZsDrLFuggzDON12i5+HtSJ5NCv71k+XrMpr9bYWbBuS7QzE98r4klp7fXrPu5FfheFvTrDEyTi6LQTe9GOjwNQ==
   dependencies:
-    "@graphql-toolkit/common" "0.9.4"
-    "@graphql-toolkit/graphql-tag-pluck" "0.9.4"
+    "@graphql-toolkit/common" "0.9.5"
+    "@graphql-toolkit/graphql-tag-pluck" "0.9.5"
     tslib "1.10.0"
 
 "@graphql-toolkit/common@0.9.1":
@@ -1389,6 +1389,15 @@
   version "0.9.4"
   resolved "https://registry.yarnpkg.com/@graphql-toolkit/common/-/common-0.9.4.tgz#71bf4f6633faf025558e5f1448730dd58f04b1d9"
   integrity sha512-dChN//1/kiUAUvmVaaZcdJuHemrVY/30jXDCNrA6j4CDvrg7252DbFLX5v0rG0inc5QDvCNQ0T3X1ckOTlnR6A==
+  dependencies:
+    "@ardatan/graphql-tools" "4.1.0"
+    aggregate-error "3.0.1"
+    lodash "4.17.15"
+
+"@graphql-toolkit/common@0.9.5":
+  version "0.9.5"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/common/-/common-0.9.5.tgz#6eec9804627eaf2b686b47330037a20fa5020873"
+  integrity sha512-yot36v0ytePfHuG9o0R19VHxGykz3GlmzxWCMqbhvXMf/4N5exIw81iwBReB95fuEv0mu/EqmT29NEu50Ve/zg==
   dependencies:
     "@ardatan/graphql-tools" "4.1.0"
     aggregate-error "3.0.1"
@@ -1478,6 +1487,18 @@
     "@babel/traverse" "7.8.3"
     "@babel/types" "7.8.3"
     "@graphql-toolkit/common" "0.9.4"
+
+"@graphql-toolkit/graphql-tag-pluck@0.9.5":
+  version "0.9.5"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/graphql-tag-pluck/-/graphql-tag-pluck-0.9.5.tgz#5b0289acc30edb4c8a09322e2958197775e709ab"
+  integrity sha512-loZdRTDx3Cm8UPZyRhwWgZ2rQbcTHgkXiggQ06AnMFvHK+8uk25bss0htNipx80RD2MBsqkTfUkjtqXtWbaDZA==
+  dependencies:
+    "@babel/parser" "7.8.3"
+    "@babel/traverse" "7.8.3"
+    "@babel/types" "7.8.3"
+    "@graphql-toolkit/common" "0.9.5"
+  optionalDependencies:
+    vue-template-compiler "^2.6.11"
 
 "@graphql-toolkit/json-file-loader@0.9.1":
   version "0.9.1"
@@ -6632,6 +6653,11 @@ dateformat@^3.0.0:
   resolved "https://registry.yarnpkg.com/dateformat/-/dateformat-3.0.3.tgz#a6e37499a4d9a9cf85ef5872044d62901c9889ae"
   integrity sha512-jyCETtSl3VMZMWeRo7iY1FL19ges1t55hMo5yaam4Jrsm5EPL89UQkoQRyiI+Yf4k8r2ZpdngkV8hr1lIdjb3Q==
 
+de-indent@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/de-indent/-/de-indent-1.0.2.tgz#b2038e846dc33baa5796128d0804b455b8c1e21d"
+  integrity sha1-sgOOhG3DO6pXlhKNCAS0VbjB4h0=
+
 debounce@1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/debounce/-/debounce-1.2.0.tgz#44a540abc0ea9943018dc0eaa95cce87f65cd131"
@@ -9163,7 +9189,7 @@ hash.js@^1.0.0, hash.js@^1.0.3:
     inherits "^2.0.3"
     minimalistic-assert "^1.0.1"
 
-he@1.2.x:
+he@1.2.x, he@^1.1.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/he/-/he-1.2.0.tgz#84ae65fa7eafb165fddb61566ae14baf05664f0f"
   integrity sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==
@@ -17595,6 +17621,14 @@ vscode-uri@^1.0.6:
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/vscode-uri/-/vscode-uri-1.0.8.tgz#9769aaececae4026fb6e22359cb38946580ded59"
   integrity sha512-obtSWTlbJ+a+TFRYGaUumtVwb+InIUVI0Lu0VBUAPmj2cU5JutEXg3xUE0c2J5Tcy7h2DEKVJBFi+Y9ZSFzzPQ==
+
+vue-template-compiler@^2.6.11:
+  version "2.6.11"
+  resolved "https://registry.yarnpkg.com/vue-template-compiler/-/vue-template-compiler-2.6.11.tgz#c04704ef8f498b153130018993e56309d4698080"
+  integrity sha512-KIq15bvQDrcCjpGjrAhx4mUlyyHfdmTaoNfeoATHLAiWB+MU3cx4lOzMwrnUh9cCxy0Lt1T11hAFY6TQgroUAA==
+  dependencies:
+    de-indent "^1.0.2"
+    he "^1.1.0"
 
 w3c-hr-time@^1.0.1:
   version "1.0.1"
