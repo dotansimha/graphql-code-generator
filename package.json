@@ -73,7 +73,7 @@
     "urql": "1.8.2"
   },
   "lint-staged": {
-    "packages/**/*.{ts,tsx}": [
+    "packages/**/src/**/*.{ts,tsx}": [
       "tslint --fix",
       "git add"
     ],

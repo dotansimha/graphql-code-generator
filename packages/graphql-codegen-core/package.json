@@ -7,9 +7,9 @@
     "url": "git+https://github.com/dotansimha/graphql-code-generator.git"
   },
   "scripts": {
+    "lint": "tslint src/**/*.ts",
     "prepack": "bob-update-version",
     "clean": "rimraf ./dist",
-    "lint": "tslint src/**/*.ts",
     "prebuild": "yarn clean",
     "build": "bob",
     "test": "jest --no-watchman --config ../../jest.config.js"

@@ -3,6 +3,7 @@
   "version": "1.11.2",
   "license": "MIT",
   "scripts": {
+    "lint": "tslint src/**/*.ts",
     "prepack": "bob-update-version",
     "test": "jest --no-watchman --config ../../../../jest.config.js",
     "build": "bob"
@@ -12,6 +13,7 @@
     "@graphql-toolkit/relay-operation-optimizer": "0.9.4",
     "auto-bind": "4.0.0",
     "dependency-graph": "0.8.1",
+    "pascal-case": "3.1.1",
     "graphql-tag": "2.10.1",
     "tslib": "1.10.0"
   },

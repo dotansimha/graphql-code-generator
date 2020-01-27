@@ -12,9 +12,9 @@
     "url": "git+https://github.com/dotansimha/graphql-code-generator.git"
   },
   "scripts": {
+    "lint": "tslint src/**/*.ts",
     "prepack": "bob-update-version",
     "clean": "rimraf ./dist",
-    "lint": "tslint src/**/*.ts",
     "prebuild": "yarn clean",
     "build": "bob",
     "test": "jest --no-watchman --config ../../jest.config.js"
@@ -47,6 +47,7 @@
     "@graphql-codegen/plugin-helpers": "1.11.2",
     "@graphql-toolkit/apollo-engine-loader": "0.9.4",
     "@graphql-toolkit/code-file-loader": "0.9.4",
+    "@graphql-toolkit/common": "0.9.4",
     "@graphql-toolkit/core": "0.9.4",
     "@graphql-toolkit/git-loader": "0.9.4",
     "@graphql-toolkit/github-loader": "0.9.4",

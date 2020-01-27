@@ -4,6 +4,7 @@
   "version": "1.11.2",
   "license": "MIT",
   "scripts": {
+    "lint": "tslint src/**/*.ts",
     "prepack": "bob-update-version",
     "start": "ts-node src/index.ts",
     "build": "bob"
