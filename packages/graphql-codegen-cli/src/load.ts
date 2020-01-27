@@ -1,7 +1,6 @@
 import { loadSchema as loadSchemaToolkit, loadDocuments as loadDocumentsToolkit, UnnormalizedTypeDefPointer } from '@graphql-toolkit/core';
-import { Types } from '@graphql-codegen/plugin-helpers';
+import { DetailedError, Types } from '@graphql-codegen/plugin-helpers';
 import { GraphQLSchema } from 'graphql';
-import { DetailedError } from '@graphql-codegen/core';
 import { CodeFileLoader } from '@graphql-toolkit/code-file-loader';
 import { GitLoader } from '@graphql-toolkit/git-loader';
 import { GithubLoader } from '@graphql-toolkit/github-loader';

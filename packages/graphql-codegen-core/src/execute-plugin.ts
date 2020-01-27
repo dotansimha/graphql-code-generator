@@ -1,6 +1,5 @@
-import { Types, CodegenPlugin } from '@graphql-codegen/plugin-helpers';
+import { DetailedError, Types, CodegenPlugin } from '@graphql-codegen/plugin-helpers';
 import { DocumentNode, GraphQLSchema, buildASTSchema } from 'graphql';
-import { DetailedError } from './errors';
 
 export interface ExecutePluginOptions {
   name: string;
