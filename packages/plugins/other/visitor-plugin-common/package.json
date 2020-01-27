@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "@graphql-codegen/testing": "1.11.2",
-    "@types/jest": "24.9.1",
+    "@types/jest": "25.1.0",
     "@ardatan/bob": "0.2.7",
     "graphql": "14.6.0",
     "jest": "25.1.0",
