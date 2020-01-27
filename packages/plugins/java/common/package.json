@@ -5,6 +5,7 @@
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
   "scripts": {
+    "lint": "tslint src/**/*.ts",
     "prepack": "bob-update-version",
     "build": "bob"
   },
@@ -14,6 +15,9 @@
     "strip-indent": "3.0.0",
     "tslib": "1.10.0",
     "unixify": "1.0.0"
+  },
+  "peerDependencies": {
+    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0"
   },
   "devDependencies": {
     "@ardatan/bob": "0.2.7",
