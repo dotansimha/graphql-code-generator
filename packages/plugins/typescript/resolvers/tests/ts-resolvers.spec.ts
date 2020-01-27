@@ -1528,6 +1528,50 @@ describe('TypeScript Resolvers Plugin', () => {
       `);
     });
 
+    it('#3257 - should not import mapper when its already imported because of enumValues', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        schema {
+          query: Query
+        }
+
+        type Query {
+          role: [ProjectRoleDetail!]!
+        }
+
+        enum ProjectRole {
+          PROJECT_MANAGER
+          ETC
+        }
+
+        type ProjectRoleDetail {
+          code: ProjectRole!
+          name: String!
+        }
+      `);
+
+      const config = {
+        noSchemaStitching: true,
+        contextType: '@src/context#Context',
+        useIndexSignature: true,
+        avoidOptionals: true,
+        mappers: {
+          ProjectRoleDetail: '../entities#ProjectRole',
+        },
+        enumValues: {
+          ProjectRole: '../entities#ProjectRole',
+        },
+      };
+
+      const tsContent = (await tsPlugin(testSchema, [], config, { outputFile: 'graphql.ts' })) as Types.ComplexPluginOutput;
+      const output = (await plugin(testSchema, [], config, { outputFile: 'graphql.ts' })) as Types.ComplexPluginOutput;
+
+      expect(output.prepend.length).toBe(2);
+      expect(output.prepend.filter(t => t.includes('ProjectRole')).length).toBe(0);
+      expect(tsContent.prepend.filter(t => t.includes('ProjectRole')).length).toBe(1);
+      expect(tsContent.prepend.includes(`import { ProjectRole } from '../entities';`)).toBeTruthy();
+      expect(output.prepend.includes(`import { ProjectRole } from '../entities';`)).toBeFalsy();
+    });
+
     it('#3264 - enumValues is not being applied to directive resolver', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
         directive @auth(role: UserRole = ADMIN) on OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
