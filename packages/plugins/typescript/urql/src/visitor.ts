@@ -1,5 +1,5 @@
 import { ClientSideBaseVisitor, ClientSideBasePluginConfig, LoadedFragment, getConfigValue, OMIT_TYPE } from '@graphql-codegen/visitor-plugin-common';
-import { UrqlRawPluginConfig } from './index';
+import { UrqlRawPluginConfig } from './config';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, Kind } from 'graphql';
 import { pascalCase } from 'pascal-case';

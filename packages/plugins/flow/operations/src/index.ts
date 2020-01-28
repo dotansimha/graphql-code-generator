@@ -1,62 +1,8 @@
 import { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
 import { visit, concatAST, GraphQLSchema, Kind, FragmentDefinitionNode } from 'graphql';
 import { FlowDocumentsVisitor } from './visitor';
-import { RawDocumentsConfig, LoadedFragment, optimizeOperations } from '@graphql-codegen/visitor-plugin-common';
-
-export interface FlowDocumentsPluginConfig extends RawDocumentsConfig {
-  /**
-   * @name useFlowExactObjects
-   * @type boolean
-   * @description Generates Flow types as Exact types.
-   * @default true
-   *
-   * @example
-   * ```yml
-   * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - flow
-   *  config:
-   *    useFlowExactObjects: false
-   * ```
-   */
-  useFlowExactObjects?: boolean;
-  /**
-   * @name useFlowReadOnlyTypes
-   * @type boolean
-   * @description Generates read-only Flow types
-   * @default false
-   *
-   * @example
-   * ```yml
-   * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - flow
-   *  config:
-   *    useFlowReadOnlyTypes: true
-   * ```
-   */
-  useFlowReadOnlyTypes?: boolean;
-  /**
-   * @name flattenGeneratedTypes
-   * @type boolean
-   * @description Flatten fragment spread and inline fragments into a simple selection set before generating.
-   * @default false
-   *
-   * @example
-   * ```yml
-   * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-operations
-   *  config:
-   *    flattenGeneratedTypes: true
-   * ```
-   */
-  flattenGeneratedTypes?: boolean;
-}
+import { LoadedFragment, optimizeOperations } from '@graphql-codegen/visitor-plugin-common';
+import { FlowDocumentsPluginConfig } from './config';
 
 export const plugin: PluginFunction<FlowDocumentsPluginConfig> = (schema: GraphQLSchema, rawDocuments: Types.DocumentFile[], config: FlowDocumentsPluginConfig) => {
   const documents = config.flattenGeneratedTypes ? optimizeOperations(schema, rawDocuments) : rawDocuments;

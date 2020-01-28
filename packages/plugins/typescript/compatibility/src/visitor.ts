@@ -1,4 +1,4 @@
-import { CompatabilityPluginRawConfig } from './index';
+import { CompatabilityPluginRawConfig } from './config';
 import { BaseVisitor, DeclarationBlock, indent, getConfigValue, buildScalars } from '@graphql-codegen/visitor-plugin-common';
 import { GraphQLSchema, OperationDefinitionNode, OperationTypeNode, FragmentDefinitionNode } from 'graphql';
 import { ParsedConfig } from '@graphql-codegen/visitor-plugin-common';

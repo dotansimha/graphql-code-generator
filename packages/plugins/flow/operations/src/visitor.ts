@@ -1,6 +1,6 @@
 import { FlowWithPickSelectionSetProcessor } from './flow-selection-set-processor';
 import { GraphQLSchema, isListType, GraphQLObjectType, GraphQLNonNull, GraphQLList, isEnumType } from 'graphql';
-import { FlowDocumentsPluginConfig } from './index';
+import { FlowDocumentsPluginConfig } from './config';
 import { FlowOperationVariablesToObject } from '@graphql-codegen/flow';
 import { PreResolveTypesProcessor, ParsedDocumentsConfig, BaseDocumentsVisitor, LoadedFragment, SelectionSetProcessorConfig, SelectionSetToObject, getConfigValue } from '@graphql-codegen/visitor-plugin-common';
 import { isNonNullType } from 'graphql';

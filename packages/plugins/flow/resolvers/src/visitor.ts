@@ -1,14 +1,13 @@
-import { FlowResolversPluginConfig } from './index';
 import { ListTypeNode, NamedTypeNode, NonNullTypeNode, GraphQLSchema, ScalarTypeDefinitionNode, InputValueDefinitionNode } from 'graphql';
 import autoBind from 'auto-bind';
-import { indent, ParsedResolversConfig, BaseResolversVisitor, DeclarationBlock } from '@graphql-codegen/visitor-plugin-common';
+import { RawResolversConfig, indent, ParsedResolversConfig, BaseResolversVisitor, DeclarationBlock } from '@graphql-codegen/visitor-plugin-common';
 import { FlowOperationVariablesToObject } from '@graphql-codegen/flow';
 import { FLOW_REQUIRE_FIELDS_TYPE } from './flow-util-types';
 
 export interface ParsedFlorResolversConfig extends ParsedResolversConfig {}
 
-export class FlowResolversVisitor extends BaseResolversVisitor<FlowResolversPluginConfig, ParsedFlorResolversConfig> {
-  constructor(pluginConfig: FlowResolversPluginConfig, schema: GraphQLSchema) {
+export class FlowResolversVisitor extends BaseResolversVisitor<RawResolversConfig, ParsedFlorResolversConfig> {
+  constructor(pluginConfig: RawResolversConfig, schema: GraphQLSchema) {
     super(pluginConfig, null, schema);
     autoBind(this);
     this.setVariablesTransformer(new FlowOperationVariablesToObject(this.scalars, this.convertName));

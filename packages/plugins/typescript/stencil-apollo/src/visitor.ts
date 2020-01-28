@@ -1,5 +1,5 @@
 import { ClientSideBaseVisitor, ClientSideBasePluginConfig, getConfigValue, LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
-import { StencilApolloRawPluginConfig, StencilComponentType } from './index';
+import { StencilComponentType, StencilApolloRawPluginConfig } from './config';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, GraphQLSchema } from 'graphql';
 import { paramCase } from 'param-case';

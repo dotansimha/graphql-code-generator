@@ -1,5 +1,5 @@
 import { ClientSideBaseVisitor, ClientSideBasePluginConfig, getConfigValue, LoadedFragment, DocumentMode } from '@graphql-codegen/visitor-plugin-common';
-import { VueApolloRawPluginConfig } from './index';
+import { VueApolloRawPluginConfig } from './config';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode } from 'graphql';
 import { Types } from '@graphql-codegen/plugin-helpers';

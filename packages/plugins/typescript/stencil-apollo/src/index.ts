@@ -1,35 +1,9 @@
 import { Types, PluginValidateFn, PluginFunction } from '@graphql-codegen/plugin-helpers';
 import { visit, GraphQLSchema, concatAST, Kind, FragmentDefinitionNode } from 'graphql';
-import { RawClientSideBasePluginConfig, LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
+import { LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
 import { StencilApolloVisitor } from './visitor';
 import { extname } from 'path';
-
-export enum StencilComponentType {
-  functional = 'functional',
-  class = 'class',
-}
-
-export interface StencilApolloRawPluginConfig extends RawClientSideBasePluginConfig {
-  /**
-   * @name componentType
-   * @type functional / class
-   * @description Customize the output of the plugin - you can choose to generate a Component class or a function component.
-   * @default functional
-   *
-   * @example
-   * ```yml
-   * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-operations
-   *    - typescript-stencil-apollo
-   *  config:
-   *    componentType: class
-   * ```
-   */
-  componentType?: StencilComponentType;
-}
+import { StencilApolloRawPluginConfig } from './config';
 
 export const plugin: PluginFunction<StencilApolloRawPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: StencilApolloRawPluginConfig) => {
   const allAst = concatAST(documents.map(v => v.document));

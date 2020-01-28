@@ -1,5 +1,5 @@
 import { BaseVisitor, buildScalars, EnumValuesMap, indent, indentMultiline, ParsedConfig, transformComment, getBaseTypeNode } from '@graphql-codegen/visitor-plugin-common';
-import { KotlinResolversPluginRawConfig } from './index';
+import { KotlinResolversPluginRawConfig } from './config';
 import {
   EnumTypeDefinitionNode,
   EnumValueDefinitionNode,

@@ -1,5 +1,5 @@
 import { ParsedConfig, BaseVisitor, EnumValuesMap, indentMultiline, indent, buildScalars, getBaseTypeNode } from '@graphql-codegen/visitor-plugin-common';
-import { JavaResolversPluginRawConfig } from './index';
+import { JavaResolversPluginRawConfig } from './config';
 import {
   GraphQLSchema,
   EnumTypeDefinitionNode,

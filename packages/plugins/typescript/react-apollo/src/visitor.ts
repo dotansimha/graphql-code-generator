@@ -1,5 +1,5 @@
 import { ClientSideBaseVisitor, ClientSideBasePluginConfig, getConfigValue, LoadedFragment, OMIT_TYPE, DocumentMode } from '@graphql-codegen/visitor-plugin-common';
-import { ReactApolloRawPluginConfig } from './index';
+import { ReactApolloRawPluginConfig } from './config';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, Kind } from 'graphql';
 import { Types } from '@graphql-codegen/plugin-helpers';
