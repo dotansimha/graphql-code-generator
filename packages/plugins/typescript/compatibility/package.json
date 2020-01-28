@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/typescript-compatibility",
-  "version": "1.11.2",
+  "version": "1.12.0",
   "description": "GraphQL Code Generator plugin for TypeScript plugins backward compatability for <1.0",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
@@ -11,8 +11,8 @@
     "test": "jest --no-watchman --config ../../../../jest.config.js"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "1.11.2",
-    "@graphql-codegen/visitor-plugin-common": "1.11.2",
+    "@graphql-codegen/plugin-helpers": "1.12.0",
+    "@graphql-codegen/visitor-plugin-common": "1.12.0",
     "pascal-case": "3.1.1",
     "tslib": "1.10.0"
   },

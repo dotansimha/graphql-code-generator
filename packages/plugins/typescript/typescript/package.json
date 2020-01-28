@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/typescript",
-  "version": "1.11.2",
+  "version": "1.12.0",
   "description": "GraphQL Code Generator plugin for generating TypeScript types",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
@@ -11,14 +11,14 @@
     "test": "jest --no-watchman --config ../../../../jest.config.js"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "1.11.2",
-    "@graphql-codegen/visitor-plugin-common": "1.11.2",
+    "@graphql-codegen/plugin-helpers": "1.12.0",
+    "@graphql-codegen/visitor-plugin-common": "1.12.0",
     "auto-bind": "4.0.0",
     "tslib": "1.10.0"
   },
   "devDependencies": {
-    "@graphql-codegen/testing": "1.11.2",
     "@ardatan/bob": "0.2.7",
+    "@graphql-codegen/testing": "1.12.0",
     "graphql": "14.6.0",
     "jest": "25.1.0",
     "ts-jest": "25.0.0",

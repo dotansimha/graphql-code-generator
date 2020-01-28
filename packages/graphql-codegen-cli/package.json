@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/cli",
-  "version": "1.11.2",
+  "version": "1.12.0",
   "license": "MIT",
   "bin": {
     "gql-gen": "dist/bin.js",
@@ -43,8 +43,8 @@
   "homepage": "https://github.com/dotansimha/graphql-code-generator#readme",
   "dependencies": {
     "@babel/parser": "7.8.3",
-    "@graphql-codegen/core": "1.11.2",
-    "@graphql-codegen/plugin-helpers": "1.11.2",
+    "@graphql-codegen/core": "1.12.0",
+    "@graphql-codegen/plugin-helpers": "1.12.0",
     "@graphql-toolkit/apollo-engine-loader": "0.9.6",
     "@graphql-toolkit/code-file-loader": "0.9.6",
     "@graphql-toolkit/common": "0.9.6",
@@ -92,6 +92,7 @@
     "valid-url": "1.0.9"
   },
   "devDependencies": {
+    "@ardatan/bob": "0.2.7",
     "@types/chokidar": "1.7.5",
     "@types/detect-indent": "5.0.0",
     "@types/inquirer": "6.5.0",
@@ -99,7 +100,6 @@
     "@types/listr": "0.14.2",
     "@types/log-symbols": "2.0.0",
     "bdd-stdin": "0.2.0",
-    "@ardatan/bob": "0.2.7",
     "dotenv": "8.2.0",
     "graphql": "14.6.0",
     "js-yaml": "3.13.1",
