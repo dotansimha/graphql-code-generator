@@ -1358,12 +1358,12 @@
     unique-filename "^1.1.1"
     which "^1.3.1"
 
-"@graphql-toolkit/apollo-engine-loader@0.9.5":
-  version "0.9.5"
-  resolved "https://registry.npmjs.org/@graphql-toolkit/apollo-engine-loader/-/apollo-engine-loader-0.9.5.tgz#cc8d9b7bd2e592fdc34bf6dd03b41278ed641472"
-  integrity sha512-MUxqlnpL7lwF9OUtktZJmAjtvorXvHri02reeP+d4oh7DOHqQB1d4Vrpkc8wDIm0QC2koDDhKQbA1wgKST3kEA==
+"@graphql-toolkit/apollo-engine-loader@0.9.6":
+  version "0.9.6"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/apollo-engine-loader/-/apollo-engine-loader-0.9.6.tgz#95198e2a9fb3d9dd4b76bd5010e3ae85c6a5de21"
+  integrity sha512-gTj9mGBgKUL6jUk7jqdLAaf1qz3il8sd7/YlGuAOI8tos1igqjMJVRbCUbdlU8gFhObLSO9kKKRRvsVK+wmQ2A==
   dependencies:
-    "@graphql-toolkit/common" "0.9.5"
+    "@graphql-toolkit/common" "0.9.6"
     apollo-language-server "1.18.0"
     tslib "1.10.0"
 
