@@ -1,67 +1,9 @@
 import { printSchemaWithDirectives } from '@graphql-toolkit/common';
-import { RawResolversConfig, parseMapper } from '@graphql-codegen/visitor-plugin-common';
+import { parseMapper } from '@graphql-codegen/visitor-plugin-common';
 import { Types, PluginFunction, addFederationReferencesToSchema } from '@graphql-codegen/plugin-helpers';
-import { isScalarType, parse, visit, GraphQLSchema, printSchema } from 'graphql';
+import { parse, visit, GraphQLSchema, printSchema } from 'graphql';
 import { TypeScriptResolversVisitor } from './visitor';
-
-export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
-  /**
-   * @name useIndexSignature
-   * @type boolean
-   * @description Adds an index signature to any generates resolver.
-   * @default false
-   *
-   * @example
-   * ```yml
-   * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-resolvers
-   *  config:
-   *    useIndexSignature: true
-   * ```
-   */
-  useIndexSignature?: boolean;
-  /**
-   * @name noSchemaStitching
-   * @type boolean
-   * @description Disables Schema Stitching support
-   * @default false
-   * @warning The default behavior will be reversed in the next major release. Support for Schema Stitching will be disabled by default.
-   *
-   * @example
-   * ```yml
-   * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-resolvers
-   *  config:
-   *    noSchemaStitching: true
-   * ```
-   */
-  noSchemaStitching?: boolean;
-
-  /**
-   * @name customResolveInfo
-   * @type string
-   * @description You can provide your custom GraphQLResolveInfo instead of the default one from graphql-js
-   * @default "graphql#GraphQLResolveInfo"
-   *
-   * @example
-   * ```yml
-   * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *    - typescript-resolvers
-   *  config:
-   *    customResolveInfo: ./my-types#MyResolveInfo
-   * ```
-   */
-  customResolveInfo?: string;
-}
+import { TypeScriptResolversPluginConfig } from './config';
 
 export const plugin: PluginFunction<TypeScriptResolversPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: TypeScriptResolversPluginConfig) => {
   const imports = [];

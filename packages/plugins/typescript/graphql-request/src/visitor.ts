@@ -2,7 +2,7 @@ import { ClientSideBaseVisitor, ClientSideBasePluginConfig, LoadedFragment, getC
 import autoBind from 'auto-bind';
 import { GraphQLSchema, Kind } from 'graphql';
 import { OperationDefinitionNode } from 'graphql';
-import { RawGraphQLRequestPluginConfig } from './index';
+import { RawGraphQLRequestPluginConfig } from './config';
 
 export interface GraphQLRequestPluginConfig extends ClientSideBasePluginConfig {
   rawRequest: boolean;

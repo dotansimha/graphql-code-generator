@@ -1,7 +1,7 @@
 import { NonNullTypeNode, ListTypeNode, ObjectTypeDefinitionNode, FieldDefinitionNode, EnumTypeDefinitionNode, NamedTypeNode, GraphQLSchema, InputValueDefinitionNode, Kind, GraphQLEnumType } from 'graphql';
 import { BaseTypesVisitor, DeclarationBlock, wrapWithSingleQuotes, indent, ParsedTypesConfig, transformComment, getConfigValue } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
-import { FlowPluginConfig } from './index';
+import { FlowPluginConfig } from './config';
 import { FlowOperationVariablesToObject } from './flow-variables-to-object';
 
 export interface FlowPluginParsedConfig extends ParsedTypesConfig {

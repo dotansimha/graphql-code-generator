@@ -1,4 +1,4 @@
-import { TypeScriptResolversPluginConfig } from './index';
+import { TypeScriptResolversPluginConfig } from './config';
 import { ListTypeNode, NamedTypeNode, NonNullTypeNode, GraphQLSchema } from 'graphql';
 import autoBind from 'auto-bind';
 import { ParsedResolversConfig, BaseResolversVisitor, getConfigValue } from '@graphql-codegen/visitor-plugin-common';

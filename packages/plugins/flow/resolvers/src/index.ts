@@ -4,9 +4,7 @@ import { Types, PluginFunction, addFederationReferencesToSchema } from '@graphql
 import { parse, printSchema, visit, GraphQLSchema } from 'graphql';
 import { FlowResolversVisitor } from './visitor';
 
-export interface FlowResolversPluginConfig extends RawResolversConfig {}
-
-export const plugin: PluginFunction<FlowResolversPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: FlowResolversPluginConfig) => {
+export const plugin: PluginFunction<RawResolversConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: RawResolversConfig) => {
   const imports = ['type GraphQLResolveInfo'];
   const showUnusedMappers = typeof config.showUnusedMappers === 'boolean' ? config.showUnusedMappers : true;
 

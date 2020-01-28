@@ -2,7 +2,7 @@ import { FieldsTree } from './fields-tree';
 import { getBaseTypeNode, DeclarationBlock, getConfigValue, ParsedConfig, BaseVisitor, buildScalars, DEFAULT_SCALARS } from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptOperationVariablesToObject, plugin } from '@graphql-codegen/typescript';
 import autoBind from 'auto-bind';
-import { Directives, TypeScriptMongoPluginConfig } from './index';
+import { Directives, TypeScriptMongoPluginConfig } from './config';
 import { DirectiveNode, GraphQLSchema, ObjectTypeDefinitionNode, NamedTypeNode, FieldDefinitionNode, Kind, ValueNode, isEnumType, InterfaceTypeDefinitionNode, UnionTypeDefinitionNode } from 'graphql';
 
 type AdditionalField = { path: string; type: string };

@@ -1,5 +1,5 @@
 import { ParsedConfig, BaseVisitor, ParsedMapper, transformMappers, parseMapper, indent, indentMultiline, getBaseTypeNode, buildScalars, ExternalParsedMapper } from '@graphql-codegen/visitor-plugin-common';
-import { JavaResolversPluginRawConfig } from './index';
+import { JavaResolversPluginRawConfig } from './config';
 import { JAVA_SCALARS, JavaDeclarationBlock, wrapTypeWithModifiers } from '@graphql-codegen/java-common';
 import { GraphQLSchema, NamedTypeNode, ObjectTypeDefinitionNode, FieldDefinitionNode, InterfaceTypeDefinitionNode, TypeNode } from 'graphql';
 import { UnionTypeDefinitionNode } from 'graphql/language/ast';

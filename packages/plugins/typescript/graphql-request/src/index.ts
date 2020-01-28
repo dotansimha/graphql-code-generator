@@ -3,10 +3,7 @@ import { visit, GraphQLSchema, concatAST, Kind, FragmentDefinitionNode } from 'g
 import { RawClientSideBasePluginConfig, LoadedFragment } from '@graphql-codegen/visitor-plugin-common';
 import { GraphQLRequestVisitor } from './visitor';
 import { extname } from 'path';
-
-export interface RawGraphQLRequestPluginConfig extends RawClientSideBasePluginConfig {
-  rawRequest?: boolean;
-}
+import { RawGraphQLRequestPluginConfig } from './config';
 
 export const plugin: PluginFunction<RawGraphQLRequestPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: RawGraphQLRequestPluginConfig) => {
   const allAst = concatAST(documents.map(v => v.document));
