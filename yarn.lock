@@ -1394,6 +1394,15 @@
     aggregate-error "3.0.1"
     lodash "4.17.15"
 
+"@graphql-toolkit/common@0.9.6":
+  version "0.9.6"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/common/-/common-0.9.6.tgz#8335cdcbfbc6b593098bd9ab47de2c8b661f22a6"
+  integrity sha512-KnNo55Jrf80V17H0LoQeKeT1DTnVnsBvJv2NNQAYdcy5k11ELXuRQ3nJN9YjGhxsp5TOHiHIGh4CQcUlmlllVA==
+  dependencies:
+    "@ardatan/graphql-tools" "4.1.0"
+    aggregate-error "3.0.1"
+    lodash "4.17.15"
+
 "@graphql-toolkit/core@0.9.1":
   version "0.9.1"
   resolved "https://registry.yarnpkg.com/@graphql-toolkit/core/-/core-0.9.1.tgz#0219648fe127b81558828f8a6ddac2ba42ed44d0"
@@ -1462,12 +1471,12 @@
     "@graphql-toolkit/common" "0.9.1"
     tslib "1.10.0"
 
-"@graphql-toolkit/graphql-file-loader@0.9.5":
-  version "0.9.5"
-  resolved "https://registry.npmjs.org/@graphql-toolkit/graphql-file-loader/-/graphql-file-loader-0.9.5.tgz#9680bf3b27bdc0029a22a97e21877053cdf53c0d"
-  integrity sha512-+3rIayvzJOdFahyAUBHiojaIMni7u4Z00naDz4JNN88tWaP26Uh4xI4n29BLkHp9NgWaCl1ojgernPz073RXpQ==
+"@graphql-toolkit/graphql-file-loader@0.9.6":
+  version "0.9.6"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/graphql-file-loader/-/graphql-file-loader-0.9.6.tgz#6f362f1e6bcb1071ffbf51e9f17db36c48bd5923"
+  integrity sha512-rxN+rIQX87nI20R6XHuNi4e/2/jSl9MrLQw0C5NUqcZLdy7FD89wbnnA1CPLVMEFMR/VyFRVUV0jk5ZCiTIQ1Q==
   dependencies:
-    "@graphql-toolkit/common" "0.9.5"
+    "@graphql-toolkit/common" "0.9.6"
     tslib "1.10.0"
 
 "@graphql-toolkit/graphql-tag-pluck@0.9.5":
