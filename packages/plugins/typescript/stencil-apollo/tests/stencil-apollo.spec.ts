@@ -1,5 +1,6 @@
 import '@graphql-codegen/testing';
-import { plugin, StencilComponentType } from '../src/index';
+import { StencilComponentType } from '../src/config';
+import { plugin } from '../src';
 import { buildClientSchema } from 'graphql';
 import gql from 'graphql-tag';
 import { readFileSync } from 'fs';
