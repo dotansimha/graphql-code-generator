@@ -1367,13 +1367,13 @@
     apollo-language-server "1.18.0"
     tslib "1.10.0"
 
-"@graphql-toolkit/code-file-loader@0.9.5":
-  version "0.9.5"
-  resolved "https://registry.npmjs.org/@graphql-toolkit/code-file-loader/-/code-file-loader-0.9.5.tgz#236db3c2660514cd56d48b211182f4705e13ee1e"
-  integrity sha512-ZsDrLFuggzDON12i5+HtSJ5NCv71k+XrMpr9bYWbBuS7QzE98r4klp7fXrPu5FfheFvTrDEyTi6LQTe9GOjwNQ==
+"@graphql-toolkit/code-file-loader@0.9.6":
+  version "0.9.6"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/code-file-loader/-/code-file-loader-0.9.6.tgz#4b3c719e53aed33b4459c82f9ae36780e34da80b"
+  integrity sha512-/5knaLbwJut8TENpGQKcNS4HxLqlwPhVpDeSI7ljixJ3Ke6lLPaCvu+aJKPe4OtR/e4eB2BK0X7tXV0FxHOW+g==
   dependencies:
-    "@graphql-toolkit/common" "0.9.5"
-    "@graphql-toolkit/graphql-tag-pluck" "0.9.5"
+    "@graphql-toolkit/common" "0.9.6"
+    "@graphql-toolkit/graphql-tag-pluck" "0.9.6"
     tslib "1.10.0"
 
 "@graphql-toolkit/common@0.9.1":
@@ -1385,10 +1385,10 @@
     aggregate-error "3.0.1"
     lodash "4.17.15"
 
-"@graphql-toolkit/common@0.9.5":
-  version "0.9.5"
-  resolved "https://registry.npmjs.org/@graphql-toolkit/common/-/common-0.9.5.tgz#6eec9804627eaf2b686b47330037a20fa5020873"
-  integrity sha512-yot36v0ytePfHuG9o0R19VHxGykz3GlmzxWCMqbhvXMf/4N5exIw81iwBReB95fuEv0mu/EqmT29NEu50Ve/zg==
+"@graphql-toolkit/common@0.9.6":
+  version "0.9.6"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/common/-/common-0.9.6.tgz#8335cdcbfbc6b593098bd9ab47de2c8b661f22a6"
+  integrity sha512-KnNo55Jrf80V17H0LoQeKeT1DTnVnsBvJv2NNQAYdcy5k11ELXuRQ3nJN9YjGhxsp5TOHiHIGh4CQcUlmlllVA==
   dependencies:
     "@ardatan/graphql-tools" "4.1.0"
     aggregate-error "3.0.1"
@@ -1420,13 +1420,13 @@
     unixify "1.0.0"
     valid-url "1.0.9"
 
-"@graphql-toolkit/core@0.9.5":
-  version "0.9.5"
-  resolved "https://registry.npmjs.org/@graphql-toolkit/core/-/core-0.9.5.tgz#a4d05b94c4177eee47d9cbb89b3fe59d058d0ec3"
-  integrity sha512-Bufn+CBv0V3vEgQhA2bZN93krgE0qg7DquOkNqp6pfY7OFRUOJD37KOKKzFQGeyHxcPlPABGZx35W/77GCNmlg==
+"@graphql-toolkit/core@0.9.6":
+  version "0.9.6"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/core/-/core-0.9.6.tgz#42a27bd6edd68d01d8402a8cd3c632a251f636da"
+  integrity sha512-kqqlqPUwcEpznv95tGrL+FmpvRq8HlTd9yZOpozifJf5aUcdyjTffVZwtqYX7/d+hAEr2I6Md3zZfOJG6onHuQ==
   dependencies:
-    "@graphql-toolkit/common" "0.9.5"
-    "@graphql-toolkit/schema-merging" "0.9.5"
+    "@graphql-toolkit/common" "0.9.6"
+    "@graphql-toolkit/schema-merging" "0.9.6"
     aggregate-error "3.0.1"
     globby "11.0.0"
     import-from "^3.0.0"
@@ -1445,22 +1445,22 @@
     globby "11.0.0"
     unixify "1.0.0"
 
-"@graphql-toolkit/git-loader@0.9.5":
-  version "0.9.5"
-  resolved "https://registry.npmjs.org/@graphql-toolkit/git-loader/-/git-loader-0.9.5.tgz#5aa5eb194926bc63c945756f972d3e61925dd952"
-  integrity sha512-pEPcWbC5tGqjwdT6aMEm8RF2V3QYadgRgZ49BN3GfR2aX5PF/qwypE/WopVlZEcUViPFAhmETYiN9sZz81rDmg==
+"@graphql-toolkit/git-loader@0.9.6":
+  version "0.9.6"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/git-loader/-/git-loader-0.9.6.tgz#1ca05f73000c82e79e9afc3136e4b80072a64e35"
+  integrity sha512-eRdkoZq5hUpwz3ihr1wDMV8gHIQPupNeGsi3dygAG+60rH0ZK0ypNSHKkaO3OnFVPfjNAO7nIPw1+O7vD7IbsA==
   dependencies:
-    "@graphql-toolkit/common" "0.9.5"
-    "@graphql-toolkit/graphql-tag-pluck" "0.9.5"
+    "@graphql-toolkit/common" "0.9.6"
+    "@graphql-toolkit/graphql-tag-pluck" "0.9.6"
     simple-git "1.131.0"
 
-"@graphql-toolkit/github-loader@0.9.5":
-  version "0.9.5"
-  resolved "https://registry.npmjs.org/@graphql-toolkit/github-loader/-/github-loader-0.9.5.tgz#399dd786c7a344fed33d9e9bb0befad2c4d445d4"
-  integrity sha512-no3WD7Ai38BxvTSsAFFwGIcBfHTKC9IiOmJoDRVd78DviC8vMFzKAJNo9yc78HLCu/8GoXSgaE2nldTaZy91SA==
+"@graphql-toolkit/github-loader@0.9.6":
+  version "0.9.6"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/github-loader/-/github-loader-0.9.6.tgz#ca57eab635bf4ab2ddbbde980294cc27c6942a89"
+  integrity sha512-SKfhijp47SVQgzt1OK5B/xPrQwIcumr46wveeYrjVDqloXbukF40kluVS3rYGmlo9TKoNK0P4fYY/FanHtfZ0w==
   dependencies:
-    "@graphql-toolkit/common" "0.9.5"
-    "@graphql-toolkit/graphql-tag-pluck" "0.9.5"
+    "@graphql-toolkit/common" "0.9.6"
+    "@graphql-toolkit/graphql-tag-pluck" "0.9.6"
     cross-fetch "3.0.4"
 
 "@graphql-toolkit/graphql-file-loader@0.9.1":
@@ -1479,15 +1479,15 @@
     "@graphql-toolkit/common" "0.9.6"
     tslib "1.10.0"
 
-"@graphql-toolkit/graphql-tag-pluck@0.9.5":
-  version "0.9.5"
-  resolved "https://registry.npmjs.org/@graphql-toolkit/graphql-tag-pluck/-/graphql-tag-pluck-0.9.5.tgz#5b0289acc30edb4c8a09322e2958197775e709ab"
-  integrity sha512-loZdRTDx3Cm8UPZyRhwWgZ2rQbcTHgkXiggQ06AnMFvHK+8uk25bss0htNipx80RD2MBsqkTfUkjtqXtWbaDZA==
+"@graphql-toolkit/graphql-tag-pluck@0.9.6":
+  version "0.9.6"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/graphql-tag-pluck/-/graphql-tag-pluck-0.9.6.tgz#96d96358978034ed271e4e242b82e61ec5443c3b"
+  integrity sha512-d/+CX9n01p5LCU9u5fQjKop+etmtXYxXyxd/vczcgKq3hMjd0lGTfyQZPbXDJ7uLZWT6jMWhRHN5hy1yDYVs2w==
   dependencies:
     "@babel/parser" "7.8.3"
     "@babel/traverse" "7.8.3"
     "@babel/types" "7.8.3"
-    "@graphql-toolkit/common" "0.9.5"
+    "@graphql-toolkit/common" "0.9.6"
   optionalDependencies:
     vue-template-compiler "^2.6.11"
 
@@ -1499,30 +1499,30 @@
     "@graphql-toolkit/common" "0.9.1"
     tslib "1.10.0"
 
-"@graphql-toolkit/json-file-loader@0.9.5":
-  version "0.9.5"
-  resolved "https://registry.npmjs.org/@graphql-toolkit/json-file-loader/-/json-file-loader-0.9.5.tgz#b36d31467f98366a9da80438c3089fb6b5a5f9c4"
-  integrity sha512-Zs6k7cf83qnFTS0txf/CmGros9OXvIhXxg4YfcrZmJzrRT5vbhTygdtLnmAYMnrZC8nsG6q1x31IIJ4zjBViHQ==
+"@graphql-toolkit/json-file-loader@0.9.6":
+  version "0.9.6"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/json-file-loader/-/json-file-loader-0.9.6.tgz#0a391fad921ab23f7912ce517b5eee21695a9854"
+  integrity sha512-MZlwRSKQSKK8uimoHYYHIlWExHWQV6yOz5WC1fggYm+jYHDbkrmBuxI1b0qYWhyOj+umeGgyenVjvzA+kGMzvg==
   dependencies:
-    "@graphql-toolkit/common" "0.9.5"
+    "@graphql-toolkit/common" "0.9.6"
     tslib "1.10.0"
 
-"@graphql-toolkit/prisma-loader@0.9.5":
-  version "0.9.5"
-  resolved "https://registry.npmjs.org/@graphql-toolkit/prisma-loader/-/prisma-loader-0.9.5.tgz#a0c4faa0f1975dadbc5815f2912da5b3654a2567"
-  integrity sha512-5SwKPXTWuSuSWgb2Vz1vzWM/CL6VRSO9qzN95hFv1H3JGnUBMo/Unh6czS/DEJUHGNcqvm8s82iJ+TqS+qH7Wg==
+"@graphql-toolkit/prisma-loader@0.9.6":
+  version "0.9.6"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/prisma-loader/-/prisma-loader-0.9.6.tgz#27110c6b7ac91cda7df46e79eb34db4365337b05"
+  integrity sha512-l/kSWlvtVJQzH6/KASnwneP9u8vu7jFz0Wuu2CO0sFjVCaKLMQDMvteyoLB0M0AmkJuEEOfXmcav+DNyRi4yvg==
   dependencies:
-    "@graphql-toolkit/common" "0.9.5"
-    "@graphql-toolkit/url-loader" "0.9.5"
+    "@graphql-toolkit/common" "0.9.6"
+    "@graphql-toolkit/url-loader" "0.9.6"
     prisma-yml "1.34.10"
     tslib "1.10.0"
 
-"@graphql-toolkit/relay-operation-optimizer@0.9.5":
-  version "0.9.5"
-  resolved "https://registry.npmjs.org/@graphql-toolkit/relay-operation-optimizer/-/relay-operation-optimizer-0.9.5.tgz#8ee6654f91024ddbcadff4f87cbc32d48210c52a"
-  integrity sha512-LNkdxvPUZNXhxFlqHZhb0KrkRw+DUUZAz4hw+ocEGIgDgLxdCnQAIypQ/Pvj/gV69YiLbd7bV0WlOGWbmxsmXA==
+"@graphql-toolkit/relay-operation-optimizer@0.9.6":
+  version "0.9.6"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/relay-operation-optimizer/-/relay-operation-optimizer-0.9.6.tgz#048d5b0773d62c21f7e07d9814d9d2ae37087f23"
+  integrity sha512-4JGoWs/pkUyqnLmMZRKQdZSb4E4JFd/nPoPCqf1p2eNUoJNnYZddj9IC93985AFCvrtTwFoabVHnNH4lPyiFuQ==
   dependencies:
-    "@graphql-toolkit/common" "0.9.5"
+    "@graphql-toolkit/common" "0.9.6"
     relay-compiler "8.0.0"
 
 "@graphql-toolkit/schema-merging@0.9.1":
@@ -1535,13 +1535,13 @@
     graphql-tools "4.0.6"
     tslib "1.10.0"
 
-"@graphql-toolkit/schema-merging@0.9.5":
-  version "0.9.5"
-  resolved "https://registry.npmjs.org/@graphql-toolkit/schema-merging/-/schema-merging-0.9.5.tgz#c88ca970d5d6ce9183ce2acb38a8173a1f8164ed"
-  integrity sha512-rNgE2o3y0y2Gn+KK10PpdoJDOMPnhO5jJ1FUed8X65Nhb505ljUfGpZi4wSBkkn3g8enQNxO0azF1ewX4JSnVA==
+"@graphql-toolkit/schema-merging@0.9.6":
+  version "0.9.6"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/schema-merging/-/schema-merging-0.9.6.tgz#c714a4daab93e6abc1423dae439faa5e2eadfb2e"
+  integrity sha512-uatZr9rAMbXqDl8HfTpjxH+g9UlC+NKhTlIeM21YnrpBwTo+16ahHAhAdT0500umXiI6K/wOqsnMeMfF1Va7gA==
   dependencies:
     "@ardatan/graphql-tools" "4.1.0"
-    "@graphql-toolkit/common" "0.9.5"
+    "@graphql-toolkit/common" "0.9.6"
     deepmerge "4.2.2"
     tslib "1.10.0"
 
@@ -1555,13 +1555,13 @@
     tslib "1.10.0"
     valid-url "1.0.9"
 
-"@graphql-toolkit/url-loader@0.9.5":
-  version "0.9.5"
-  resolved "https://registry.npmjs.org/@graphql-toolkit/url-loader/-/url-loader-0.9.5.tgz#3e7161bc5adea1b07f31381bfc8f8b18ba801664"
-  integrity sha512-cPs5tN8j7jB1AAjgePFJ23YN7K35peSi39CpPQd79H4XlP75KuzgFdCgJ7xdYwOYOEtXfPvVMAYfsD7NcoenmQ==
+"@graphql-toolkit/url-loader@0.9.6":
+  version "0.9.6"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/url-loader/-/url-loader-0.9.6.tgz#f5d71f703ebdb3f353bcb7a7bd011b2794360101"
+  integrity sha512-jvwNARD4xe7tTkby80W2nGJ8J0itgOyZ0THG2evnSzYhXmrQhRVGuIA6jDwhnV0YI2a4uWK/hnbCVMAPorO6tw==
   dependencies:
     "@ardatan/graphql-tools" "4.1.0"
-    "@graphql-toolkit/common" "0.9.5"
+    "@graphql-toolkit/common" "0.9.6"
     cross-fetch "3.0.4"
     tslib "1.10.0"
     valid-url "1.0.9"
