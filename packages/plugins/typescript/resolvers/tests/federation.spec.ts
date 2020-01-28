@@ -118,6 +118,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
         __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>, { __typename: 'User' } & Pick<ParentType, 'id'>, ContextType>,
         id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
         username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+        __isTypeOf?: isTypeOfResolverFn,
       };
     `);
   });
@@ -152,6 +153,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
         __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>, { __typename: 'User' } & Pick<ParentType, 'id'>, ContextType>,
         id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
         name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+        __isTypeOf?: isTypeOfResolverFn,
       };
     `);
   });
@@ -279,6 +281,7 @@ describe('TypeScript Resolvers Plugin + Apollo Federation', () => {
         id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
         name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
         username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+        __isTypeOf?: isTypeOfResolverFn,
       };
     `);
   });

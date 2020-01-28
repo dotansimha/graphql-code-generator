@@ -852,14 +852,21 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     const name = this.convertName(node, {
       suffix: 'Resolvers',
     });
+    const typeName = (node.name as any) as string;
+    const parentType = this.getParentTypeToUse(typeName);
+    const isRootType = [this.schema.getQueryType()?.name, this.schema.getMutationType()?.name, this.schema.getSubscriptionType()?.name].includes(typeName);
 
-    const parentType = this.getParentTypeToUse((node.name as any) as string);
+    const fieldsContent = node.fields.map((f: any) => f(node.name));
+
+    if (!isRootType) {
+      fieldsContent.push(indent(`__isTypeOf?: isTypeOfResolverFn,`));
+    }
 
     const block = new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
       .withName(name, `<ContextType = ${this.config.contextType.type}, ${this.transformParentGenericType(parentType)}>`)
-      .withBlock(node.fields.map((f: any) => f(node.name)).join('\n'));
+      .withBlock(fieldsContent.join('\n'));
 
     this._collectedResolvers[node.name as any] = name + '<ContextType>';
 

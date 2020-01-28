@@ -211,6 +211,7 @@ describe('ResolversTypes', () => {
     expect(result.content).toBeSimilarStringTo(`
         export type MyOtherTypeResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'MyOtherType'>> = {
           bar?: Resolver<$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
+          __isTypeOf?: isTypeOfResolverFn,
         };
       `);
 
@@ -225,6 +226,7 @@ describe('ResolversTypes', () => {
         foo?: Resolver<$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
         otherType?: Resolver<?$ElementType<ResolversTypes, 'MyOtherType'>, ParentType, ContextType>,
         withArgs?: Resolver<?$ElementType<ResolversTypes, 'String'>, ParentType, ContextType, $RequireFields<MyTypeWithArgsArgs, { arg2: * }>>,
+        __isTypeOf?: isTypeOfResolverFn,
       };
     `);
 
@@ -250,6 +252,7 @@ describe('ResolversTypes', () => {
     expect(result.content).toBeSimilarStringTo(`
       export type SomeNodeResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'SomeNode'>> = {
         id?: Resolver<$ElementType<ResolversTypes, 'ID'>, ParentType, ContextType>,
+        __isTypeOf?: isTypeOfResolverFn,
       };
     `);
 
@@ -282,6 +285,7 @@ describe('ResolversTypes', () => {
     expect(result.content).toBeSimilarStringTo(`
         export type MyOtherTypeResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'MyOtherType'>> = {
           bar?: Resolver<$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
+          __isTypeOf?: isTypeOfResolverFn,
         };
       `);
 
@@ -296,6 +300,7 @@ describe('ResolversTypes', () => {
         foo?: Resolver<$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
         otherType?: Resolver<?$ElementType<ResolversTypes, 'MyOtherType'>, ParentType, ContextType>,
         withArgs?: Resolver<?$ElementType<ResolversTypes, 'String'>, ParentType, ContextType, $RequireFields<MyTypeWithArgsArgs, { arg2: * }>>,
+        __isTypeOf?: isTypeOfResolverFn,
       };
     `);
 
@@ -321,6 +326,7 @@ describe('ResolversTypes', () => {
     expect(result.content).toBeSimilarStringTo(`
       export type SomeNodeResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'SomeNode'>> = {
         id?: Resolver<$ElementType<ResolversTypes, 'ID'>, ParentType, ContextType>,
+        __isTypeOf?: isTypeOfResolverFn,
       };
     `);
 
@@ -351,6 +357,7 @@ describe('ResolversTypes', () => {
     expect(result.content).toBeSimilarStringTo(`
       export type MyOtherTypeResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'MyOtherType'>> = {
         bar?: Resolver<$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
+        __isTypeOf?: isTypeOfResolverFn,
       };
     `);
 
@@ -365,6 +372,7 @@ describe('ResolversTypes', () => {
         foo?: Resolver<$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
         otherType?: Resolver<?$ElementType<ResolversTypes, 'MyOtherType'>, ParentType, ContextType>,
         withArgs?: Resolver<?$ElementType<ResolversTypes, 'String'>, ParentType, ContextType, $RequireFields<MyTypeWithArgsArgs, { arg2: * }>>,
+        __isTypeOf?: isTypeOfResolverFn,
       };
     `);
 
@@ -390,6 +398,7 @@ describe('ResolversTypes', () => {
     expect(result.content).toBeSimilarStringTo(`
       export type SomeNodeResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'SomeNode'>> = {
         id?: Resolver<$ElementType<ResolversTypes, 'ID'>, ParentType, ContextType>,
+        __isTypeOf?: isTypeOfResolverFn,
       };
     `);
 
@@ -418,6 +427,7 @@ describe('ResolversTypes', () => {
     expect(result.content).toBeSimilarStringTo(`
       export type MyOtherTypeResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'MyOtherType'>> = {
         bar?: Resolver<$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
+        __isTypeOf?: isTypeOfResolverFn,
       };
     `);
 
@@ -432,6 +442,7 @@ describe('ResolversTypes', () => {
         foo?: Resolver<$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
         otherType?: Resolver<?$ElementType<ResolversTypes, 'MyOtherType'>, ParentType, ContextType>,
         withArgs?: Resolver<?$ElementType<ResolversTypes, 'String'>, ParentType, ContextType, $RequireFields<MyTypeWithArgsArgs, { arg2: * }>>,
+        __isTypeOf?: isTypeOfResolverFn,
       };
     `);
 
@@ -457,6 +468,7 @@ describe('ResolversTypes', () => {
     expect(result.content).toBeSimilarStringTo(`
       export type SomeNodeResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'SomeNode'>> = {
         id?: Resolver<$ElementType<ResolversTypes, 'ID'>, ParentType, ContextType>,
+        __isTypeOf?: isTypeOfResolverFn,
       };
     `);
 
@@ -487,6 +499,7 @@ describe('ResolversTypes', () => {
     expect(result.content).toBeSimilarStringTo(`
       export type MyOtherTypeResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'MyOtherType'>> = {
         bar?: Resolver<$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
+        __isTypeOf?: isTypeOfResolverFn,
       };
     `);
 
@@ -501,6 +514,7 @@ describe('ResolversTypes', () => {
         foo?: Resolver<$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
         otherType?: Resolver<?$ElementType<ResolversTypes, 'MyOtherType'>, ParentType, ContextType>,
         withArgs?: Resolver<?$ElementType<ResolversTypes, 'String'>, ParentType, ContextType, $RequireFields<MyTypeWithArgsArgs, { arg2: * }>>,
+        __isTypeOf?: isTypeOfResolverFn,
       };
     `);
 
@@ -526,6 +540,7 @@ describe('ResolversTypes', () => {
     expect(result.content).toBeSimilarStringTo(`
       export type SomeNodeResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'SomeNode'>> = {
         id?: Resolver<$ElementType<ResolversTypes, 'ID'>, ParentType, ContextType>,
+        __isTypeOf?: isTypeOfResolverFn,
       };
     `);
 
