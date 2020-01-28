@@ -1394,6 +1394,15 @@
     aggregate-error "3.0.1"
     lodash "4.17.15"
 
+"@graphql-toolkit/common@0.9.7":
+  version "0.9.7"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/common/-/common-0.9.7.tgz#63bc6233c4fd88bc94dfe6a3ec85b8f961f780f9"
+  integrity sha512-dpSRBMLeIiRct2gkjj24bp0EV7hbK/7dpJAPqNgvDH2535LhOkprYiCXQJyP4N1LODAEkpN/zzlJfKMVn773MQ==
+  dependencies:
+    "@ardatan/graphql-tools" "4.1.0"
+    aggregate-error "3.0.1"
+    lodash "4.17.15"
+
 "@graphql-toolkit/core@0.9.1":
   version "0.9.1"
   resolved "https://registry.yarnpkg.com/@graphql-toolkit/core/-/core-0.9.1.tgz#0219648fe127b81558828f8a6ddac2ba42ed44d0"
@@ -1508,12 +1517,12 @@
     prisma-yml "1.34.10"
     tslib "1.10.0"
 
-"@graphql-toolkit/relay-operation-optimizer@0.9.6":
-  version "0.9.6"
-  resolved "https://registry.npmjs.org/@graphql-toolkit/relay-operation-optimizer/-/relay-operation-optimizer-0.9.6.tgz#048d5b0773d62c21f7e07d9814d9d2ae37087f23"
-  integrity sha512-4JGoWs/pkUyqnLmMZRKQdZSb4E4JFd/nPoPCqf1p2eNUoJNnYZddj9IC93985AFCvrtTwFoabVHnNH4lPyiFuQ==
+"@graphql-toolkit/relay-operation-optimizer@0.9.7":
+  version "0.9.7"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/relay-operation-optimizer/-/relay-operation-optimizer-0.9.7.tgz#e13034f835231b268ee355bfac6228dd34f9b951"
+  integrity sha512-IPFAbKMOX3RdjyDuamK9ziuTFD5tsCiTVvHACHA2wgg+32krJZJsV6STKhFLqIwytS40vt5zhZydQCFxIrCD5g==
   dependencies:
-    "@graphql-toolkit/common" "0.9.6"
+    "@graphql-toolkit/common" "0.9.7"
     relay-compiler "8.0.0"
 
 "@graphql-toolkit/schema-merging@0.9.1":
