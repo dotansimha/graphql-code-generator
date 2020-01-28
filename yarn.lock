@@ -1394,6 +1394,15 @@
     aggregate-error "3.0.1"
     lodash "4.17.15"
 
+"@graphql-toolkit/common@0.9.6":
+  version "0.9.6"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/common/-/common-0.9.6.tgz#8335cdcbfbc6b593098bd9ab47de2c8b661f22a6"
+  integrity sha512-KnNo55Jrf80V17H0LoQeKeT1DTnVnsBvJv2NNQAYdcy5k11ELXuRQ3nJN9YjGhxsp5TOHiHIGh4CQcUlmlllVA==
+  dependencies:
+    "@ardatan/graphql-tools" "4.1.0"
+    aggregate-error "3.0.1"
+    lodash "4.17.15"
+
 "@graphql-toolkit/core@0.9.1":
   version "0.9.1"
   resolved "https://registry.yarnpkg.com/@graphql-toolkit/core/-/core-0.9.1.tgz#0219648fe127b81558828f8a6ddac2ba42ed44d0"
