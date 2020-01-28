@@ -47,6 +47,8 @@ export type TypeResolveFn<Types, Parent = {}, Context = {}> = (
   info: GraphQLResolveInfo
 ) => ?Types;
 
+export type isTypeOfResolverFn = (obj: any, info: GraphQLResolveInfo) => boolean;
+
 export type NextResolverFn<T> = () => Promise<T>;
 
 export type DirectiveResolverFn<Result = {}, Parent = {}, Args = {}, Context = {}> = (
@@ -97,6 +99,7 @@ export type MyDirectiveDirectiveResolver<Result, Parent, ContextType = any, Args
 
 export type MyOtherTypeResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'MyOtherType'>> = {
   bar?: Resolver<$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
+  __isTypeOf?: isTypeOfResolverFn,
 };
 
 export type MyScalarScalarConfig = {
@@ -108,6 +111,7 @@ export type MyTypeResolvers<ContextType = any, ParentType = $ElementType<Resolve
   foo?: Resolver<$ElementType<ResolversTypes, 'String'>, ParentType, ContextType>,
   otherType?: Resolver<?$ElementType<ResolversTypes, 'MyOtherType'>, ParentType, ContextType>,
   withArgs?: Resolver<?$ElementType<ResolversTypes, 'String'>, ParentType, ContextType, $RequireFields<MyTypeWithArgsArgs, { arg2: * }>>,
+  __isTypeOf?: isTypeOfResolverFn,
 };
 
 export type MyUnionResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'MyUnion'>> = {
@@ -125,6 +129,7 @@ export type QueryResolvers<ContextType = any, ParentType = $ElementType<Resolver
 
 export type SomeNodeResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'SomeNode'>> = {
   id?: Resolver<$ElementType<ResolversTypes, 'ID'>, ParentType, ContextType>,
+  __isTypeOf?: isTypeOfResolverFn,
 };
 
 export type SubscriptionResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'Subscription'>> = {
