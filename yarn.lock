@@ -1367,13 +1367,13 @@
     apollo-language-server "1.18.0"
     tslib "1.10.0"
 
-"@graphql-toolkit/code-file-loader@0.9.5":
-  version "0.9.5"
-  resolved "https://registry.npmjs.org/@graphql-toolkit/code-file-loader/-/code-file-loader-0.9.5.tgz#236db3c2660514cd56d48b211182f4705e13ee1e"
-  integrity sha512-ZsDrLFuggzDON12i5+HtSJ5NCv71k+XrMpr9bYWbBuS7QzE98r4klp7fXrPu5FfheFvTrDEyTi6LQTe9GOjwNQ==
+"@graphql-toolkit/code-file-loader@0.9.6":
+  version "0.9.6"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/code-file-loader/-/code-file-loader-0.9.6.tgz#4b3c719e53aed33b4459c82f9ae36780e34da80b"
+  integrity sha512-/5knaLbwJut8TENpGQKcNS4HxLqlwPhVpDeSI7ljixJ3Ke6lLPaCvu+aJKPe4OtR/e4eB2BK0X7tXV0FxHOW+g==
   dependencies:
-    "@graphql-toolkit/common" "0.9.5"
-    "@graphql-toolkit/graphql-tag-pluck" "0.9.5"
+    "@graphql-toolkit/common" "0.9.6"
+    "@graphql-toolkit/graphql-tag-pluck" "0.9.6"
     tslib "1.10.0"
 
 "@graphql-toolkit/common@0.9.1":
@@ -1488,6 +1488,18 @@
     "@babel/traverse" "7.8.3"
     "@babel/types" "7.8.3"
     "@graphql-toolkit/common" "0.9.5"
+  optionalDependencies:
+    vue-template-compiler "^2.6.11"
+
+"@graphql-toolkit/graphql-tag-pluck@0.9.6":
+  version "0.9.6"
+  resolved "https://registry.yarnpkg.com/@graphql-toolkit/graphql-tag-pluck/-/graphql-tag-pluck-0.9.6.tgz#96d96358978034ed271e4e242b82e61ec5443c3b"
+  integrity sha512-d/+CX9n01p5LCU9u5fQjKop+etmtXYxXyxd/vczcgKq3hMjd0lGTfyQZPbXDJ7uLZWT6jMWhRHN5hy1yDYVs2w==
+  dependencies:
+    "@babel/parser" "7.8.3"
+    "@babel/traverse" "7.8.3"
+    "@babel/types" "7.8.3"
+    "@graphql-toolkit/common" "0.9.6"
   optionalDependencies:
     vue-template-compiler "^2.6.11"
 
