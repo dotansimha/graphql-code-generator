@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/visitor-plugin-common",
-  "version": "1.12.0",
+  "version": "1.12.1",
   "license": "MIT",
   "scripts": {
     "lint": "tslint src/**/*.ts",
@@ -9,7 +9,7 @@
     "build": "bob"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "1.12.0",
+    "@graphql-codegen/plugin-helpers": "1.12.1",
     "@graphql-toolkit/relay-operation-optimizer": "0.9.7",
     "auto-bind": "4.0.0",
     "dependency-graph": "0.8.1",
@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "@ardatan/bob": "0.2.7",
-    "@graphql-codegen/testing": "1.12.0",
+    "@graphql-codegen/testing": "1.12.1",
     "@types/jest": "25.1.0",
     "graphql": "14.6.0",
     "jest": "25.1.0",

@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/typescript-mongodb",
-  "version": "1.12.0",
+  "version": "1.12.1",
   "description": "GraphQL Code Generator plugin for generting a ready-to-use ORM types for MongoDB",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
@@ -11,9 +11,9 @@
     "test": "jest --no-watchman --config ../../../../jest.config.js"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "1.12.0",
-    "@graphql-codegen/typescript": "1.12.0",
-    "@graphql-codegen/visitor-plugin-common": "1.12.0",
+    "@graphql-codegen/plugin-helpers": "1.12.1",
+    "@graphql-codegen/typescript": "1.12.1",
+    "@graphql-codegen/visitor-plugin-common": "1.12.1",
     "@graphql-toolkit/common": "0.9.7",
     "auto-bind": "4.0.0",
     "lodash": "4.17.15",
@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "@ardatan/bob": "0.2.7",
-    "@graphql-codegen/testing": "1.12.0",
+    "@graphql-codegen/testing": "1.12.1",
     "@types/lodash": "4.14.149",
     "graphql": "14.6.0",
     "jest": "25.1.0",
