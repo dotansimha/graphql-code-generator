@@ -26,7 +26,7 @@
     "@graphql-codegen/testing": "1.12.1",
     "graphql": "14.6.0",
     "jest": "25.1.0",
-    "ts-jest": "25.0.0",
+    "ts-jest": "25.1.0",
     "typescript": "3.7.5"
   },
   "sideEffects": false,
