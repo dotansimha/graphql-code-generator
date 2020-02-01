@@ -10,14 +10,7 @@ export {resolveDocumentImports, DocumentImportResolverOptions};
 
 export type NearOperationFileConfig = {
 
-    /**
-     * @name importTypeFromPackage
-     * @type boolean
-     * @description Optional, imports file from nearest package name, for use in monorepo situations.  Allows
-     * resolution to modules rather than relative and absolute paths
-     *
-     */
-    importTypeFromPackage?: boolean,
+
 
     /**
      * @name schemaTypesPath
@@ -96,6 +89,15 @@ export type NearOperationFileConfig = {
      */
     folder?: string;
     /**
+     * @name importTypeFromPackage
+     * @type boolean
+     * @description Optional, imports file from nearest package name, for use in monorepo situations.  Allows
+     * resolution to modules rather than relative and absolute paths
+     *
+     */
+    importTypeFromPackage?: boolean;
+
+    /**
      * @name importTypesNamespace
      * @type string
      * @description Optional, override the name of the import namespace used to import from the `baseTypesPath` file.
@@ -114,6 +116,8 @@ export type NearOperationFileConfig = {
      * ```
      */
     importTypesNamespace?: string;
+
+
 };
 
 export type FragmentNameToFile = { [fragmentName: string]: { location: string; importsNames: string[]; onType: string; node: FragmentDefinitionNode } };
