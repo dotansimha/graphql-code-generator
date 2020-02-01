@@ -1,191 +1,210 @@
-import { Types, CodegenPlugin } from '@graphql-codegen/plugin-helpers';
 import addPlugin from '@graphql-codegen/add';
-import { join, resolve } from 'path';
-import { FragmentDefinitionNode, buildASTSchema, GraphQLSchema } from 'graphql';
-import { appendExtensionToFilePath, defineFilepathSubfolder, resolveRelativeImport } from './utils';
+import {Types, CodegenPlugin} from '@graphql-codegen/plugin-helpers';
+import {FragmentDefinitionNode, buildASTSchema, GraphQLSchema} from 'graphql';
+import {join, resolve, isAbsolute, extname} from 'path';
 
-import resolveDocumentImports, { DocumentImportResolverOptions } from './resolve-document-imports';
+import resolveDocumentImports, {DocumentImportResolverOptions} from './resolve-document-imports';
+import {appendExtensionToFilePath, defineFilepathSubfolder, resolveRelativeImport, resolveImportPathFromPackage} from './utils';
 
-export { resolveDocumentImports, DocumentImportResolverOptions };
+export {resolveDocumentImports, DocumentImportResolverOptions};
 
 export type NearOperationFileConfig = {
-  /**
-   * @name schemaTypesPath
-   * @type string
-   * @description Required, should point to the base schema types file.
-   * The key of the output is used a the base path for this file.
-   *
-   * @example
-   * ```yml
-   * generates:
-   * src/:
-   *  preset: near-operation-file
-   *  presetConfig:
-   *    schemaTypesPath: types.ts
-   *  plugins:
-   *    - typescript-operations
-   * ```
-   */
-  baseTypesPath: string;
-  /**
-   * @name extension
-   * @type string
-   * @description Optional, sets the extension for the generated files. Use this to override the extension if you are using plugins that requires a different type of extensions (such as `typescript-react-apollo`)
-   * @default .generates.ts
-   *
-   * @example
-   * ```yml
-   * generates:
-   * src/:
-   *  preset: near-operation-file
-   *  presetConfig:
-   *    baseTypesPath: types.ts
-   *    extension: .generated.tsx
-   *  plugins:
-   *    - typescript-operations
-   *    - typescript-react-apollo
-   * ```
-   */
-  extension?: string;
-  /**
-   * @name cwd
-   * @type string
-   * @description Optional, override the `cwd` of the execution. We are using `cwd` to figure out the imports between files. Use this if your execuion path is not your project root directory.
-   * @default process.cwd()
-   *
-   * @example
-   * ```yml
-   * generates:
-   * src/:
-   *  preset: near-operation-file
-   *  presetConfig:
-   *    baseTypesPath: types.ts
-   *    cwd: /some/path
-   *  plugins:
-   *    - typescript-operations
-   * ```
-   */
-  cwd?: string;
-  /**
-   * @name folder
-   * @type string
-   * @description Optional, defines a folder, (Relative to the source files) where the generated files will be created.
-   * @default ''
-   *
-   * @example
-   * ```yml
-   * generates:
-   * src/:
-   *  preset: near-operation-file
-   *  presetConfig:
-   *    baseTypesPath: types.ts
-   *    folder: __generated__
-   *  plugins:
-   *    - typescript-operations
-   * ```
-   */
-  folder?: string;
-  /**
-   * @name importTypesNamespace
-   * @type string
-   * @description Optional, override the name of the import namespace used to import from the `baseTypesPath` file.
-   * @default Types
-   *
-   * @example
-   * ```yml
-   * generates:
-   * src/:
-   *  preset: near-operation-file
-   *  presetConfig:
-   *    baseTypesPath: types.ts
-   *    importTypesNamespace: SchemaTypes
-   *  plugins:
-   *    - typescript-operations
-   * ```
-   */
-  importTypesNamespace?: string;
+
+    /**
+     * @name importTypeFromPackage
+     * @type boolean
+     * @description Optional, imports file from nearest package name, for use in monorepo situations.  Allows
+     * resolution to modules rather than relative and absolute paths
+     *
+     */
+    importTypeFromPackage?: boolean,
+
+    /**
+     * @name schemaTypesPath
+     * @type string
+     * @description Required, should point to the base schema types file.
+     * The key of the output is used a the base path for this file.
+     *
+     * @example
+     * ```yml
+     * generates:
+     * src/:
+     *  preset: near-operation-file
+     *  presetConfig:
+     *    schemaTypesPath: types.ts
+     *  plugins:
+     *    - typescript-operations
+     * ```
+     */
+    baseTypesPath: string;
+    /**
+     * @name extension
+     * @type string
+     * @description Optional, sets the extension for the generated files. Use this to override the extension if you are using plugins that requires a different type of extensions (such as `typescript-react-apollo`)
+     * @default .generates.ts
+     *
+     * @example
+     * ```yml
+     * generates:
+     * src/:
+     *  preset: near-operation-file
+     *  presetConfig:
+     *    baseTypesPath: types.ts
+     *    extension: .generated.tsx
+     *  plugins:
+     *    - typescript-operations
+     *    - typescript-react-apollo
+     * ```
+     */
+    extension?: string;
+    /**
+     * @name cwd
+     * @type string
+     * @description Optional, override the `cwd` of the execution. We are using `cwd` to figure out the imports between files. Use this if your execuion path is not your project root directory.
+     * @default process.cwd()
+     *
+     * @example
+     * ```yml
+     * generates:
+     * src/:
+     *  preset: near-operation-file
+     *  presetConfig:
+     *    baseTypesPath: types.ts
+     *    cwd: /some/path
+     *  plugins:
+     *    - typescript-operations
+     * ```
+     */
+    cwd?: string;
+    /**
+     * @name folder
+     * @type string
+     * @description Optional, defines a folder, (Relative to the source files) where the generated files will be created.
+     * @default ''
+     *
+     * @example
+     * ```yml
+     * generates:
+     * src/:
+     *  preset: near-operation-file
+     *  presetConfig:
+     *    baseTypesPath: types.ts
+     *    folder: __generated__
+     *  plugins:
+     *    - typescript-operations
+     * ```
+     */
+    folder?: string;
+    /**
+     * @name importTypesNamespace
+     * @type string
+     * @description Optional, override the name of the import namespace used to import from the `baseTypesPath` file.
+     * @default Types
+     *
+     * @example
+     * ```yml
+     * generates:
+     * src/:
+     *  preset: near-operation-file
+     *  presetConfig:
+     *    baseTypesPath: types.ts
+     *    importTypesNamespace: SchemaTypes
+     *  plugins:
+     *    - typescript-operations
+     * ```
+     */
+    importTypesNamespace?: string;
 };
 
 export type FragmentNameToFile = { [fragmentName: string]: { location: string; importsNames: string[]; onType: string; node: FragmentDefinitionNode } };
 
+const isShouldAbsolute = (baseTypesPath: string): boolean => {
+    return !(baseTypesPath.startsWith('.') || baseTypesPath.startsWith('~'));
+};
+
 export const preset: Types.OutputPreset<NearOperationFileConfig> = {
-  buildGeneratesSection: options => {
-    const schemaObject: GraphQLSchema = options.schemaAst ? options.schemaAst : buildASTSchema(options.schema, options.config as any);
+    buildGeneratesSection: options => {
+        const schemaObject: GraphQLSchema = options.schemaAst ? options.schemaAst : buildASTSchema(options.schema, options.config as any);
 
-    const baseDir = options.presetConfig.cwd || process.cwd();
-    const extension = options.presetConfig.extension || '.generated.ts';
-    const folder = options.presetConfig.folder || '';
-    const importTypesNamespace = options.presetConfig.importTypesNamespace || 'Types';
+        const baseDir = options.presetConfig.cwd || process.cwd();
+        const extension = options.presetConfig.extension || '.generated.ts';
+        const folder = options.presetConfig.folder || '';
+        const importTypesNamespace = options.presetConfig.importTypesNamespace || 'Types';
+        const isImportPathFromPkg = options.presetConfig.importTypeFromPackage || false;
+        const baseTypesPath = options.presetConfig.baseTypesPath;
 
-    const baseTypesPath = options.presetConfig.baseTypesPath;
+        if (!baseTypesPath) {
+            throw new Error(`Preset "near-operation-file" requires you to specify "baseTypesPath" configuration and point it to your base types file (generated by "typescript" plugin)!`);
+        }
 
-    if (!baseTypesPath) {
-      throw new Error(`Preset "near-operation-file" requires you to specify "baseTypesPath" configuration and point it to your base types file (generated by "typescript" plugin)!`);
-    }
+        const shouldAbsolute = isShouldAbsolute(baseTypesPath);
 
-    const shouldAbsolute = !baseTypesPath.startsWith('~');
+        const pluginMap: { [name: string]: CodegenPlugin } = {
+            ...options.pluginMap,
+            add: addPlugin,
+        };
 
-    const pluginMap: { [name: string]: CodegenPlugin } = {
-      ...options.pluginMap,
-      add: addPlugin,
-    };
+        function resolveImportPath(baseOutputDir: string, relativeOutputPath: string, sourcePath: string): string {
 
-    function resolveImportPath(baseOutputDir: string, relativeOutputPath: string, sourcePath: string) {
-      const shouldAbsolute = !sourcePath.startsWith('~');
-      if (shouldAbsolute) {
-        const absGeneratedFilePath = resolve(baseDir, relativeOutputPath);
-        const absImportFilePath = resolve(baseDir, sourcePath);
-        return resolveRelativeImport(absGeneratedFilePath, absImportFilePath);
-      } else {
-        return sourcePath.replace(`~`, '');
-      }
-    }
+            if (isShouldAbsolute(sourcePath)) {
+                const absGeneratedFilePath = resolve(baseDir, relativeOutputPath);
+                const absImportFilePath = resolve(baseDir, sourcePath);
+                return resolveRelativeImport(absGeneratedFilePath, absImportFilePath);
+            } else {
+                return sourcePath.replace(`~`, '');
+            }
+        }
 
-    const sources = resolveDocumentImports(options, schemaObject, {
-      generateFilePath(location: string) {
-        const newFilePath = defineFilepathSubfolder(location, folder);
-        return appendExtensionToFilePath(newFilePath, extension);
-      },
-      fragmentSuffix: 'Fragment',
-      generateImportStatement({ relativeOutputPath, importSource, baseOutputDir }) {
-        const importPath = resolveImportPath(baseOutputDir, relativeOutputPath, importSource.path);
-        const importNames = importSource.names && importSource.names.length ? `{ ${importSource.names} }` : '*';
-        const importAlias = importSource.namespace ? ` as ${importSource.namespace}` : '';
-        return `import ${importNames}${importAlias} from '${importPath}';${importAlias ? '\n' : ''}`;
-      },
+        const sources = resolveDocumentImports(options, schemaObject, {
+            generateFilePath(location: string) {
+                const newFilePath = defineFilepathSubfolder(location, folder);
+                return appendExtensionToFilePath(newFilePath, extension);
+            },
+            fragmentSuffix: 'Fragment',
+            generateImportStatement({relativeOutputPath, importSource, baseOutputDir}) {
+                const importNames: string = (importSource.names && importSource.names.length) ?
+                        '{ ' + importSource.names.reduce((ret, name) => [...ret, name, `${name}Doc`], []) + ' }'
+                    : '*';
 
-      schemaTypesSource: {
-        path: shouldAbsolute ? join(options.baseOutputDir, baseTypesPath) : baseTypesPath,
-        namespace: importTypesNamespace,
-      },
-    });
+                const importAlias = importSource.namespace ? ` as ${importSource.namespace}` : '';
+                let importPath = isImportPathFromPkg ?
+                    resolveImportPathFromPackage(baseDir, importSource.path) : resolveImportPath(baseOutputDir, relativeOutputPath, importSource.path);
 
-    return sources.map<Types.GenerateOptions>(({ importStatements, externalFragments, ...source }) => {
-      const plugins = [
-        // TODO/NOTE I made globalNamespace include schema types - is that correct?
-        ...(options.config.globalNamespace ? [] : importStatements.map(importStatement => ({ add: importStatement }))),
-        ...options.plugins,
-      ];
-      const config = {
-        ...options.config,
-        // This is set here in order to make sure the fragment spreads sub types
-        // are exported from operations file
-        exportFragmentSpreadSubTypes: true,
-        namespacedImportName: importTypesNamespace,
-        externalFragments,
-      };
+                return `import ${importNames}${importAlias} from '${importPath}';${importAlias ? '\n' : ''}`;
+            },
 
-      return {
-        ...source,
-        plugins,
-        pluginMap,
-        config,
-        schema: options.schema,
-        schemaAst: schemaObject,
-        skipDocumentsValidation: true,
-      };
-    });
-  },
+            schemaTypesSource: {
+                path: shouldAbsolute ? join(options.baseOutputDir, baseTypesPath) : baseTypesPath,
+                namespace: importTypesNamespace,
+            },
+        });
+
+        return sources.map<Types.GenerateOptions>(({importStatements, externalFragments, ...source}) => {
+            const plugins = [
+                // TODO/NOTE I made globalNamespace include schema types - is that correct?
+                ...(options.config.globalNamespace ? [] : importStatements.map(importStatement => ({add: importStatement}))),
+                ...options.plugins,
+            ];
+            const config = {
+                ...options.config,
+                // This is set here in order to make sure the fragment spreads sub types
+                // are exported from operations file
+                exportFragmentSpreadSubTypes: true,
+                namespacedImportName: importTypesNamespace,
+                externalFragments,
+            };
+
+            return {
+                ...source,
+                plugins,
+                pluginMap,
+                config,
+                schema: options.schema,
+                schemaAst: schemaObject,
+                skipDocumentsValidation: true,
+            };
+        });
+    },
 };
 
 export default preset;

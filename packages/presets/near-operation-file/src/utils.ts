@@ -70,3 +70,29 @@ export function resolveRelativeImport(from: string, to: string): string {
   }
   return fixLocalFile(clearExtension(relative(dirname(from), to)));
 }
+
+
+export function resolveImportPathFromPackage(baseDir: string, absPath: string | string[], relToPath: string | string[] = []): string {
+  const leftParts: string[] = Array.isArray(absPath) ? absPath : absPath.split('/');
+  const rightParts: string[] = Array.isArray(relToPath) ? relToPath : relToPath.split('/');
+
+  if (!leftParts.length) {
+    throw new Error(`Could not find a 'package.json' for '${baseDir}/${rightParts.join('/')}' `);
+  }
+
+  rightParts.unshift(leftParts.pop());
+
+    //going to absolute paths if it starts with a ., should be ok for ., .., .stuff
+  if (leftParts[0]  && leftParts[0].startsWith('.') && ! leftParts[0].startsWith(baseDir)) {
+      leftParts[0] = join(baseDir, leftParts[0]);
+  }
+
+  const pkgPath = [...leftParts, 'package.json'].join('/');
+
+  try {
+    const obj = require.main.require(pkgPath);
+    return [obj.name, ...rightParts].join('/');
+  } catch (e) {
+    return resolveImportPathFromPackage(baseDir, leftParts, rightParts);
+  }
+}
