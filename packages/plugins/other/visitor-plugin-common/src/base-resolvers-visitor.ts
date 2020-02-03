@@ -859,7 +859,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     const fieldsContent = node.fields.map((f: any) => f(node.name));
 
     if (!isRootType) {
-      fieldsContent.push(indent(`__isTypeOf?: isTypeOfResolverFn,`));
+      fieldsContent.push(indent(`__isTypeOf?: isTypeOfResolverFn<ParentType>,`));
     }
 
     const block = new DeclarationBlock(this._declarationBlockConfig)
@@ -931,20 +931,36 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     });
     const sourceNode = parent[key] as DirectiveDefinitionNode;
     const hasArguments = sourceNode.arguments && sourceNode.arguments.length > 0;
-    const directiveArgs = hasArguments ? this._variablesTransfomer.transform<InputValueDefinitionNode>(sourceNode.arguments) : '';
 
     this._collectedDirectiveResolvers[node.name as any] = directiveName + '<any, any, ContextType>';
 
-    return new DeclarationBlock({
-      ...this._declarationBlockConfig,
-      blockTransformer(block) {
-        return block;
-      },
-    })
+    const directiveArgsTypeName = this.convertName(node, {
+      suffix: 'DirectiveArgs',
+    });
+
+    return [
+      new DeclarationBlock({
+        ...this._declarationBlockConfig,
+        blockTransformer(block) {
+          return block;
+        },
+      })
       .export()
       .asKind('type')
-      .withName(directiveName, `<Result, Parent, ContextType = ${this.config.contextType.type}, Args = { ${directiveArgs} }>`)
-      .withContent(`DirectiveResolverFn<Result, Parent, ContextType, Args>`).string;
+      .withName(directiveArgsTypeName)
+      .withContent(`{ ${(hasArguments ? this._variablesTransfomer.transform<InputValueDefinitionNode>(sourceNode.arguments) : '')} }`)
+      .string,
+      new DeclarationBlock({
+        ...this._declarationBlockConfig,
+        blockTransformer(block) {
+          return block;
+        },
+      })
+        .export()
+        .asKind('type')
+        .withName(directiveName, `<Result, Parent, ContextType = ${this.config.contextType.type}, Args = ${directiveArgsTypeName}>`)
+        .withContent(`DirectiveResolverFn<Result, Parent, ContextType, Args>`).string,
+    ].join('\n');
   }
 
   InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode): string {
