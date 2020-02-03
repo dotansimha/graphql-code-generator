@@ -11,29 +11,41 @@ export type FragmentRegistry = { [fragmentName: string]: { filePath: string; imp
 /**
  * Used by `buildFragmentResolver` to  build a mapping of fragmentNames to paths, importNames, and other useful info
  */
-function buildFragmentRegistry<T>({ fragmentSuffix, generateFilePath }: DocumentImportResolverOptions, { documents, config }: Types.PresetFnArgs<{}>, schemaObject: GraphQLSchema) {
+function buildFragmentRegistry({ fragmentSuffix, generateFilePath }: DocumentImportResolverOptions, { documents, config }: Types.PresetFnArgs<{}>, schemaObject: GraphQLSchema) {
   const baseVisitor = new BaseVisitor(config, {
     scalars: buildScalars(schemaObject, config.scalars),
   });
 
   const getAllFragmentSubTypes = (possbileTypes: string[], name: string, suffix: string): string[] => {
-    if (possbileTypes.length === 0) {
-      return [];
-    } else if (possbileTypes.length === 1) {
-      return [
+    const subTypes = [];
+    if (config.documentMode !== 'documentNode' || config.documentMode !== 'external') {
+      subTypes.push(
+        baseVisitor.convertName(name, {
+          useTypesPrefix: true,
+          suffix: suffix + 'Doc',
+        })
+      );
+    }
+
+    if (possbileTypes.length === 1) {
+      subTypes.push(
         baseVisitor.convertName(name, {
           useTypesPrefix: true,
           suffix: suffix,
         }),
-      ];
-    } else {
-      return possbileTypes.map(typeName =>
-        baseVisitor.convertName(name, {
-          useTypesPrefix: true,
-          suffix: `_${typeName}_${suffix}`,
-        })
       );
+    } else if (possbileTypes.length !== 0) {
+      possbileTypes.forEach(typeName => {
+        subTypes.push(
+          baseVisitor.convertName(name, {
+            useTypesPrefix: true,
+            suffix: `_${typeName}_${suffix}`,
+          })
+        );
+      });
     }
+
+    return subTypes;
   };
 
   const duplicateFragmentNames: string[] = [];
