@@ -22,7 +22,7 @@ function buildFragmentRegistry({ fragmentSuffix, generateFilePath }: DocumentImp
       subTypes.push(
         baseVisitor.convertName(name, {
           useTypesPrefix: true,
-          suffix: 'Doc',
+          suffix: suffix + 'Doc',
         })
       );
     }
