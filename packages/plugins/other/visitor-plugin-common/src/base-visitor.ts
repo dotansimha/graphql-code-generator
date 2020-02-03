@@ -88,7 +88,6 @@ export interface RawConfig {
    * @type boolean
    * @default false
    * @description Does not add __typename to the generated types, unless it was specified in the selection set.
-   * in the selection set.
    *
    * @example
    * ```yml
