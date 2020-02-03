@@ -28,7 +28,7 @@
   "devDependencies": {
     "@ardatan/bob": "0.2.7",
     "jest": "25.1.0",
-    "ts-jest": "25.1.0",
+    "ts-jest": "25.2.0",
     "typescript": "3.7.5"
   },
   "sideEffects": false,
