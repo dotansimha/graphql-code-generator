@@ -1,29 +1,32 @@
 {
   "name": "@graphql-codegen/typescript-generic-sdk",
-  "version": "1.8.3",
+  "version": "1.12.1",
   "description": "GraphQL Code Generator plugin for generating a ready-to-use client-agnostic SDK based on GraphQL operations",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
   "scripts": {
+    "lint": "tslint src/**/*.ts",
     "prepack": "bob-update-version",
     "build": "bob",
     "test": "jest --no-watchman --config ../../../../jest.config.js"
   },
-  "peerDependenxcies": {
+  "peerDependencies": {
+    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0",
     "graphql-tag": "^2.0.0"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "1.8.3",
-    "@graphql-codegen/visitor-plugin-common": "1.8.3",
+    "@graphql-codegen/plugin-helpers": "1.12.1",
+    "@graphql-codegen/visitor-plugin-common": "1.12.1",
+    "auto-bind": "4.0.0",
     "tslib": "1.10.0"
   },
   "devDependencies": {
-    "@ardatan/bob": "0.1.4",
-    "@graphql-codegen/testing": "1.8.3",
-    "graphql": "14.5.8",
-    "jest": "24.9.0",
-    "ts-jest": "24.1.0",
-    "typescript": "3.7.2"
+    "@ardatan/bob": "0.2.7",
+    "@graphql-codegen/testing": "1.12.1",
+    "graphql": "14.6.0",
+    "jest": "25.1.0",
+    "ts-jest": "25.2.0",
+    "typescript": "3.7.5"
   },
   "sideEffects": false,
   "main": "dist/index.cjs.js",

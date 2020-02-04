@@ -52,7 +52,7 @@ describe('generic-sdk', () => {
   describe('sdk', () => {
     it('Should generate a correct wrap method', async () => {
       const config = {};
-      const docs = [{ filePath: '', content: basicDoc }];
+      const docs = [{ filePath: '', document: basicDoc }];
       const result = (await plugin(schema, docs, config, {
         outputFile: 'graphql.ts',
       })) as Types.ComplexPluginOutput;
@@ -81,7 +81,7 @@ async function test() {
 
     it('Should generate a correct wrap method with documentMode=string', async () => {
       const config = { documentMode: DocumentMode.string };
-      const docs = [{ filePath: '', content: basicDoc }];
+      const docs = [{ filePath: '', document: basicDoc }];
       const result = (await plugin(schema, docs, config, {
         outputFile: 'graphql.ts',
       })) as Types.ComplexPluginOutput;

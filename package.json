@@ -5,7 +5,7 @@
     "build": "lerna run build --ignore @graphql-codegen/live-demo --ignore @graphql-codegen/website",
     "test": "lerna run test --ignore @graphql-codegen/live-demo --ignore @graphql-codegen/website",
     "lint": "lerna run lint --ignore @graphql-codegen/live-demo --ignore @graphql-codegen/website",
-    "test-and-build": " yarn build && yarn test",
+    "test-and-build": "yarn build && yarn test",
     "prerelease": "yarn test-and-build",
     "prerelease:canary": "yarn test-and-build",
     "release": "lerna publish --contents dist --exact --force-publish=\"*\" --ignore @graphql-codegen/live-demo --ignore @graphql-codegen/website",

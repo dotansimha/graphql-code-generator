@@ -7,7 +7,7 @@ import { extname } from 'path';
 export const plugin: PluginFunction<RawClientSideBasePluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: RawClientSideBasePluginConfig) => {
   const allAst = concatAST(
     documents.reduce((prev, v) => {
-      return [...prev, v.content];
+      return [...prev, v.document];
     }, [])
   );
   const allFragments: LoadedFragment[] = [
