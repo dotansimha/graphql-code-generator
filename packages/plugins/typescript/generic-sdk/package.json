@@ -1,0 +1,44 @@
+{
+  "name": "@graphql-codegen/typescript-generic-sdk",
+  "version": "1.8.3",
+  "description": "GraphQL Code Generator plugin for generating a ready-to-use client-agnostic SDK based on GraphQL operations",
+  "repository": "git@github.com:dotansimha/graphql-code-generator.git",
+  "license": "MIT",
+  "scripts": {
+    "prepack": "bob-update-version",
+    "build": "bob",
+    "test": "jest --no-watchman --config ../../../../jest.config.js"
+  },
+  "peerDependenxcies": {
+    "graphql-tag": "^2.0.0"
+  },
+  "dependencies": {
+    "@graphql-codegen/plugin-helpers": "1.8.3",
+    "@graphql-codegen/visitor-plugin-common": "1.8.3",
+    "tslib": "1.10.0"
+  },
+  "devDependencies": {
+    "@ardatan/bob": "0.1.4",
+    "@graphql-codegen/testing": "1.8.3",
+    "graphql": "14.5.8",
+    "jest": "24.9.0",
+    "ts-jest": "24.1.0",
+    "typescript": "3.7.2"
+  },
+  "sideEffects": false,
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "typings": "dist/index.d.ts",
+  "typescript": {
+    "definition": "dist/index.d.ts"
+  },
+  "buildOptions": {
+    "input": "./src/index.ts"
+  },
+  "jest-junit": {
+    "outputDirectory": "../../../../test-results/typescript-react-apollo"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
