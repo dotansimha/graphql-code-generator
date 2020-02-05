@@ -178,6 +178,24 @@ generates:
       - typescript-react-apollo
     config:
       withHooks: true
+  ./dev-test/githunt/types.apolloAngular.ts:
+    schema: ./dev-test/githunt/schema.json
+    documents: ./dev-test/githunt/**/*.graphql
+    plugins:
+      - add: // tslint:disable
+      - typescript
+      - typescript-operations
+      - typescript-apollo-angular
+  ./dev-test/githunt/types.apolloAngular.sdk.ts:
+      schema: ./dev-test/githunt/schema.json
+      documents: ./dev-test/githunt/**/*.graphql
+      config:
+        sdkClass: true
+      plugins:
+        - add: // tslint:disable
+        - typescript
+        - typescript-operations
+        - typescript-apollo-angular
   ./dev-test/githunt/types.stencilApollo.tsx:
     schema: ./dev-test/githunt/schema.json
     documents: ./dev-test/githunt/**/*.graphql
