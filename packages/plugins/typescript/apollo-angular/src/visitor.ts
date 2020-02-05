@@ -59,7 +59,7 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<ApolloAngularRaw
     const imports = [`import { Injectable } from '@angular/core';`, `import * as Apollo from 'apollo-angular';`];
 
     if (this.config.sdkClass) {
-      imports.push(`import { MutationOptionsAlone, QueryOptionsAlone, SubscriptionOptionsAlone, WatchQueryOptionsAlone } from 'apollo-angular/types';`);
+      imports.push(`import * as ApolloCore from 'apollo-client';`);
     }
 
     const defs: Record<string, { path: string; module: string }> = {};
@@ -248,6 +248,20 @@ ${camelCase(o.node.name.value)}Watch(variables${optionalVariables ? '?' : ''}: $
     const providedIn = this.config.serviceProvidedInRoot === false ? '' : `{ providedIn: 'root' }`;
 
     return `
+  type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+
+  interface WatchQueryOptionsAlone<V>
+    extends Omit<ApolloCore.WatchQueryOptions<V>, 'query' | 'variables'> {}
+    
+  interface QueryOptionsAlone<V>
+    extends Omit<ApolloCore.QueryOptions<V>, 'query' | 'variables'> {}
+    
+  interface MutationOptionsAlone<T, V>
+    extends Omit<ApolloCore.MutationOptions<T, V>, 'mutation' | 'variables'> {}
+    
+  interface SubscriptionOptionsAlone<V>
+    extends Omit<ApolloCore.SubscriptionOptions<V>, 'query' | 'variables'> {}
+
   @Injectable(${providedIn})
   export class ${serviceName} {
     constructor(

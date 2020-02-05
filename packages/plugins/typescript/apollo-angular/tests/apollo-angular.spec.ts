@@ -286,7 +286,7 @@ describe('Apollo Angular', () => {
       )) as Types.ComplexPluginOutput;
 
       // NgModule
-      expect(content.prepend).toContain(`import { MutationOptionsAlone, QueryOptionsAlone, SubscriptionOptionsAlone, WatchQueryOptionsAlone } from 'apollo-angular/types';`);
+      expect(content.prepend).toContain(`import * as ApolloCore from 'apollo-client';`);
       // console.log('content.content', content.content);
       expect(content.content).toBeSimilarStringTo(`
         @Injectable({ providedIn: 'root' })
@@ -330,7 +330,7 @@ describe('Apollo Angular', () => {
       )) as Types.ComplexPluginOutput;
 
       // NgModule
-      expect(content.prepend).toContain(`import { MutationOptionsAlone, QueryOptionsAlone, SubscriptionOptionsAlone, WatchQueryOptionsAlone } from 'apollo-angular/types';`);
+      expect(content.prepend).toContain(`import * as ApolloCore from 'apollo-client';`);
       // console.log('content.content', content.content);
       expect(content.content).toBeSimilarStringTo(`
         @Injectable()
