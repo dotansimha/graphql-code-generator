@@ -68,4 +68,75 @@ describe('parseMapper', () => {
       source: 'file',
     });
   });
+
+  describe('suffix', () => {
+    it('Should return the correct values for a simple named mapper', () => {
+      const result = parseMapper('MyType', null, 'Model');
+
+      expect(result).toEqual({
+        isExternal: false,
+        type: 'MyType',
+      });
+    });
+
+    it('Should return the correct values for a external named mapper', () => {
+      const result = parseMapper('file#Type', null, 'Model');
+
+      expect(result).toEqual({
+        default: false,
+        isExternal: true,
+        import: 'Type as TypeModel',
+        type: 'TypeModel',
+        source: 'file',
+      });
+    });
+
+    it('Should return the correct values for a external default mapper', () => {
+      const result = parseMapper('file#default', 'MyGqlType', 'Model');
+
+      expect(result).toEqual({
+        default: true,
+        isExternal: true,
+        import: 'MyGqlType',
+        type: 'MyGqlType',
+        source: 'file',
+      });
+    });
+
+    it('Should support generics', () => {
+      const result = parseMapper('file#Type<Generic>', 'SomeType', 'Model');
+
+      expect(result).toEqual({
+        default: false,
+        isExternal: true,
+        import: 'Type as TypeModel',
+        type: 'TypeModel<Generic>',
+        source: 'file',
+      });
+    });
+
+    it('Should not affect namespaces', () => {
+      const result = parseMapper('file#Namespace#Type', 'MyGqlType', 'Model');
+
+      expect(result).toEqual({
+        default: false,
+        isExternal: true,
+        import: 'Namespace',
+        type: 'Namespace.Type',
+        source: 'file',
+      });
+    });
+
+    it('Should not affect aliases', () => {
+      const result = parseMapper('file#Type as SomeOtherType', 'SomeType', 'Model');
+
+      expect(result).toEqual({
+        default: false,
+        isExternal: true,
+        import: 'Type as SomeOtherType',
+        type: 'SomeOtherType',
+        source: 'file',
+      });
+    });
+  });
 });

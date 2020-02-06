@@ -17,7 +17,7 @@ export function isExternalMapperType(m: ParsedMapper): m is ExternalParsedMapper
   return !!m['import'];
 }
 
-export function parseMapper(mapper: string, gqlTypeName: string | null = null): ParsedMapper {
+export function parseMapper(mapper: string, gqlTypeName: string | null = null, suffix?: string): ParsedMapper {
   if (isExternalMapper(mapper)) {
     const items = mapper.split('#');
     const isNamespace = items.length === 3;
@@ -42,8 +42,13 @@ export function parseMapper(mapper: string, gqlTypeName: string | null = null): 
           type = aliasType;
           importElement = `${importedType} as ${aliasType}`;
         } else {
-          type = items[1];
-          importElement = items[1];
+          if (suffix) {
+            type = addSuffix(items[1], suffix);
+            importElement = `${items[1]} as ${type}`;
+          } else {
+            type = items[1];
+            importElement = items[1];
+          }
         }
       }
     }
@@ -53,7 +58,7 @@ export function parseMapper(mapper: string, gqlTypeName: string | null = null): 
       isExternal: true,
       source,
       type,
-      import: importElement.replace(/<(.*)>/, ''),
+      import: importElement.replace(/<(.*?)>/g, ''),
     };
   }
 
@@ -63,16 +68,24 @@ export function parseMapper(mapper: string, gqlTypeName: string | null = null): 
   };
 }
 
+function addSuffix(element: string, suffix: string): string {
+  const generic = element.indexOf('<');
+  if (generic === -1) {
+    return `${element}${suffix}`;
+  }
+  return `${element.slice(0, generic)}${suffix}${element.slice(generic)}`;
+}
+
 export function isExternalMapper(value: string): boolean {
   return value.includes('#') && !value.includes('"') && !value.includes('\'');
 }
 
-export function transformMappers(rawMappers: RawResolversConfig['mappers']): ParsedResolversConfig['mappers'] {
+export function transformMappers(rawMappers: RawResolversConfig['mappers'], mapperTypeSuffix?: string): ParsedResolversConfig['mappers'] {
   const result: ParsedResolversConfig['mappers'] = {};
 
   Object.keys(rawMappers).forEach(gqlTypeName => {
     const mapperDef = rawMappers[gqlTypeName];
-    const parsedMapper = parseMapper(mapperDef, gqlTypeName);
+    const parsedMapper = parseMapper(mapperDef, gqlTypeName, mapperTypeSuffix);
     result[gqlTypeName] = parsedMapper;
   });
 
