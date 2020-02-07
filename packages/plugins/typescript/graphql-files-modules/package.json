@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/typescript-graphql-files-modules",
-  "version": "1.12.1",
+  "version": "1.12.2",
   "description": "GraphQL Code Generator plugin for generating TypeScript module declarations based on GraphQL operations",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
@@ -11,7 +11,7 @@
     "test": "jest --no-watchman --config ../../../../jest.config.js"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "1.12.1",
+    "@graphql-codegen/plugin-helpers": "1.12.2",
     "tslib": "1.10.0"
   },
   "peerDependencies": {
@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "@ardatan/bob": "0.2.7",
-    "@graphql-codegen/testing": "1.12.1",
+    "@graphql-codegen/testing": "1.12.2",
     "graphql": "14.6.0",
     "jest": "25.1.0",
     "ts-jest": "25.2.0",

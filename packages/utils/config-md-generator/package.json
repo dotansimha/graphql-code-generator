@@ -1,7 +1,7 @@
 {
   "name": "@graphql-codegen/config-markdown-generator",
   "private": true,
-  "version": "1.12.1",
+  "version": "1.12.2",
   "license": "MIT",
   "scripts": {
     "lint": "tslint src/**/*.ts",
