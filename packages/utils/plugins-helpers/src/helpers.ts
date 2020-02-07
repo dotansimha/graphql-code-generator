@@ -18,7 +18,7 @@ import {
   ASTNode,
   isUnionType,
 } from 'graphql';
-import { getBaseType } from './utils';
+import { getBaseType, getMetaField } from './utils';
 import { InlineFragmentNode, SelectionSetNode, FragmentSpreadNode, GraphQLObjectType } from 'graphql';
 
 export function isOutputConfigArray(type: any): type is Types.OutputConfig[] {
@@ -103,7 +103,7 @@ export function isUsingTypes(document: DocumentNode, externalFragments: string[]
               if (!lastType) {
                 throw new Error(`Unable to find parent type! Please make sure you operation passes validation`);
               }
-              const field = lastType.getFields()[parent.name.value];
+              const field = getMetaField(parent.name.value) || lastType.getFields()[parent.name.value];
 
               if (!field) {
                 throw new Error(`Unable to find field "${parent.name.value}" on type "${lastType}"!`);

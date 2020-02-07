@@ -186,6 +186,26 @@ describe('isUsingTypes', () => {
 
       expect(isUsingTypes(ast, [], schema)).toBeTruthy();
     });
+
+    it('#3459 - error on meta fields', () => {
+      const schema = buildSchema(/* GraphQL */ `
+        scalar Placeholder
+
+        type Query {
+          placeholder: Placeholder
+        }
+      `);
+
+      const ast = parse(/* GraphQL */ `
+        query Query {
+          __schema {
+            __typename
+          }
+        }
+      `);
+
+      expect(() => isUsingTypes(ast, [], schema)).not.toThrow();
+    });
   });
 
   it('Should work with __typename on fragments', () => {
