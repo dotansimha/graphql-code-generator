@@ -4408,10 +4408,10 @@ await-to-js@^2.0.1:
   resolved "https://registry.yarnpkg.com/await-to-js/-/await-to-js-2.1.1.tgz#c2093cd5a386f2bb945d79b292817bbc3f41b31b"
   integrity sha512-CHBC6gQGCIzjZ09tJ+XmpQoZOn4GdWePB4qUweCaKNJ0D3f115YdhmYVTZ4rMVpiJ3cFzZcTYK1VMYEICV4YXw==
 
-aws-sdk@2.614.0:
-  version "2.614.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.614.0.tgz#e954824c1b9e566691a24ed8491ebf1d68350d37"
-  integrity sha512-o7utaxDMo9ri1VyPKw8Kcmpy5uZOqMeok2cgur70iZ94zsLIRnHKrBv1wMBbyRGuUbfJRq76HGAS9QxdiSqQHw==
+aws-sdk@2.615.0:
+  version "2.615.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.615.0.tgz#36233df3ae603ad38cc4181e8d92c7d6e5dae16c"
+  integrity sha512-ktkOQgJLTcsfLzy/GPfUiEJd09SeJPnUj7ZeXa0Wb2/JVIRDbSmyG/IYQqAvXWUcD4thuv2h9wbLgXyzvX8dtw==
   dependencies:
     buffer "4.9.1"
     events "1.1.1"
