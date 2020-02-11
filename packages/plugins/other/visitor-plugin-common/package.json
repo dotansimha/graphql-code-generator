@@ -12,7 +12,7 @@
     "@graphql-codegen/plugin-helpers": "1.12.2",
     "@graphql-toolkit/relay-operation-optimizer": "0.9.7",
     "auto-bind": "4.0.0",
-    "dependency-graph": "0.8.1",
+    "dependency-graph": "0.9.0",
     "graphql-tag": "2.10.1",
     "pascal-case": "3.1.1",
     "tslib": "1.10.0"
