@@ -32,6 +32,10 @@ jobs:
         run: yarn build
       - name: Test
         run: yarn test
+      - name: Test dev-tests
+        run: |
+          dev-test/generate-all.sh
+          git diff --exit-code -- dev-test/
 
   publish-canary:
     name: Publish Canary
