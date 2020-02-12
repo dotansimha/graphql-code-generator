@@ -123,6 +123,18 @@ export interface RawResolversConfig extends RawConfig {
    */
   rootValueType?: string;
   /**
+   * @name mapperTypeSuffix
+   * @type string
+   * @description Adds a suffix to the imported names to prevent name clashes.
+   *
+   * ```yml
+   * plugins
+   *   config:
+   *     mapperTypeSuffix: Model
+   * ```
+   */
+  mapperTypeSuffix?: string;
+  /**
    * @name mappers
    * @type Object
    * @description Replaces a GraphQL type usage with a custom type, allowing you to return custom object from
@@ -297,7 +309,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
       rootValueType: parseMapper(rawConfig.rootValueType || '{}', 'RootValueType'),
       avoidOptionals: getConfigValue(rawConfig.avoidOptionals, false),
       defaultMapper: rawConfig.defaultMapper ? parseMapper(rawConfig.defaultMapper || 'any', 'DefaultMapperType') : null,
-      mappers: transformMappers(rawConfig.mappers || {}),
+      mappers: transformMappers(rawConfig.mappers || {}, rawConfig.mapperTypeSuffix),
       scalars: buildScalars(_schema, rawConfig.scalars, defaultScalars),
       ...(additionalConfig || {}),
     } as TPluginConfig);
