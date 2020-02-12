@@ -89,17 +89,28 @@ export const plugin: PluginFunction = schema => {
 
         return createTypeDef([`@typedef {Object} ${node.name}`, ...fields]);
       },
+      UnionTypeDefinition(node) {
+        return `/**
+ * @typedef {(${node.types.join('|')})} ${node.name}
+ */`;
+      },
       Name(node) {
-        return transformScalar(node.value);
+        return node.value;
       },
       NamedType(node) {
-        return node.name;
+        return transformScalar(node.name);
       },
-      NonNullType(node) {
+      NonNullType(node, _, parent) {
+        if (parent.kind === 'FieldDefinition') {
+          parent.nonNullable = true;
+        }
+
         return node.type;
       },
       FieldDefinition(node) {
-        return `@property {${node.type}} ${node.name}`;
+        const fieldName = node.nonNullable ? node.name : `[${node.name}]`;
+
+        return `@property {${node.type}} ${fieldName}`;
       },
       ListType(node) {
         return `Array<${node.type}>`;

@@ -28,6 +28,7 @@ describe('JSDoc Operations Plugin', () => {
     const schema = buildSchema(/* Graphql */ `
         type Foo {
             foo: Int
+            foop: Int!
         }
     `);
 
@@ -58,7 +59,7 @@ describe('JSDoc Operations Plugin', () => {
     const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
     expect(result).toEqual(`/**
- * @typedef {(Int|Boolean)} FooBar
+ * @typedef {(number|boolean)} FooBar
  */`);
   });
 
@@ -81,10 +82,10 @@ describe('JSDoc Operations Plugin', () => {
     const config = {};
     const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
-    expect(result).toEqual(expect.stringContaining('@property {Array<Int>} foo'));
-    expect(result).toEqual(expect.stringContaining('@property {Array<Int>} [nullableFoo]'));
-    expect(result).toEqual(expect.stringContaining('@property {Array<Int|null|undefined>} nullableItemsFoo'));
-    expect(result).toEqual(expect.stringContaining('@property {Array<Int|null|undefined>} [nullableItemsNullableFoo]'));
+    expect(result).toEqual(expect.stringContaining('@property {Array<number>} foo'));
+    expect(result).toEqual(expect.stringContaining('@property {Array<number>} [nullableFoo]'));
+    expect(result).toEqual(expect.stringContaining('@property {Array<number|null|undefined>} nullableItemsFoo'));
+    expect(result).toEqual(expect.stringContaining('@property {Array<number|null|undefined>} [nullableItemsNullableFoo]'));
   });
 
   it('should generate a typedef with a custom scalar', async () => {
