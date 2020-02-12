@@ -33,7 +33,7 @@ export type DocumentImportResolverOptions = {
   /**
    * String to append to all fragments
    */
-  fragmentSuffix: string;
+  fragmentSuffix: (fragmentName: string) => string;
   /**
    *
    */
@@ -52,13 +52,11 @@ export type DocumentImportResolverOptions = {
  */
 export default function resolveDocumentImportStatements<T>(presetOptions: Types.PresetFnArgs<T>, schemaObject: GraphQLSchema, importResolverOptions: DocumentImportResolverOptions) {
   const resolveFragments = buildFragmentResolver(importResolverOptions, presetOptions, schemaObject);
-
   const { baseOutputDir, documents } = presetOptions;
   const { generateFilePath, generateImportStatement, schemaTypesSource } = importResolverOptions;
 
   return documents.map(documentFile => {
     const generatedFilePath = generateFilePath(documentFile.location);
-
     const { externalFragments, fragmentImportStatements: importStatements } = resolveFragments(generatedFilePath, documentFile.document);
 
     if (

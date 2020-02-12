@@ -110,8 +110,8 @@ export type FragmentNameToFile = { [fragmentName: string]: { location: string; i
 
 export const preset: Types.OutputPreset<NearOperationFileConfig> = {
   buildGeneratesSection: options => {
+    const dedupeOperationSuffix = options.config && options.config.dedupeOperationSuffix ? true : false;
     const schemaObject: GraphQLSchema = options.schemaAst ? options.schemaAst : buildASTSchema(options.schema, options.config as any);
-
     const baseDir = options.presetConfig.cwd || process.cwd();
     const extension = options.presetConfig.extension || '.generated.ts';
     const folder = options.presetConfig.folder || '';
@@ -130,7 +130,7 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
       add: addPlugin,
     };
 
-    function resolveImportPath(baseOutputDir: string, relativeOutputPath: string, sourcePath: string) {
+    function resolveImportPath(relativeOutputPath: string, sourcePath: string) {
       const shouldAbsolute = !sourcePath.startsWith('~');
       if (shouldAbsolute) {
         const absGeneratedFilePath = resolve(baseDir, relativeOutputPath);
@@ -146,9 +146,15 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
         const newFilePath = defineFilepathSubfolder(location, folder);
         return appendExtensionToFilePath(newFilePath, extension);
       },
-      fragmentSuffix: 'Fragment',
-      generateImportStatement({ relativeOutputPath, importSource, baseOutputDir }) {
-        const importPath = resolveImportPath(baseOutputDir, relativeOutputPath, importSource.path);
+      fragmentSuffix: name => {
+        if (name.toLowerCase().endsWith('fragment') && dedupeOperationSuffix) {
+          return '';
+        } else {
+          return 'Fragment';
+        }
+      },
+      generateImportStatement({ relativeOutputPath, importSource }) {
+        const importPath = resolveImportPath(relativeOutputPath, importSource.path);
         const importNames = importSource.names && importSource.names.length ? `{ ${importSource.names.join(', ')} }` : '*';
         const importAlias = importSource.namespace ? ` as ${importSource.namespace}` : '';
         return `import ${importNames}${importAlias} from '${importPath}';${importAlias ? '\n' : ''}`;
