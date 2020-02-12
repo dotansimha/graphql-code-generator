@@ -84,8 +84,8 @@ describe('JSDoc Operations Plugin', () => {
 
     expect(result).toEqual(expect.stringContaining('@property {Array<number>} foo'));
     expect(result).toEqual(expect.stringContaining('@property {Array<number>} [nullableFoo]'));
-    expect(result).toEqual(expect.stringContaining('@property {Array<number|null|undefined>} nullableItemsFoo'));
-    expect(result).toEqual(expect.stringContaining('@property {Array<number|null|undefined>} [nullableItemsNullableFoo]'));
+    expect(result).toEqual(expect.stringContaining('@property {Array<(number|null|undefined)>} nullableItemsFoo'));
+    expect(result).toEqual(expect.stringContaining('@property {Array<(number|null|undefined)>} [nullableItemsNullableFoo]'));
   });
 
   it('should generate a typedef with a custom scalar', async () => {

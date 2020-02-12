@@ -45,33 +45,6 @@ const createTypeDef = (lines: Array<string>) => {
   return typedef.join('\n');
 };
 
-// const createTypeDeffff = ({ name, properties, types }: TypeDef) => {
-//   const optionalType = 'null|undefined';
-//   const typeDef = [`/**`];
-
-//   if (types) {
-//     typeDef.push(` * @typedef {(${types.map(type => type.value).join('|')})} ${name}`);
-//   } else {
-//     typeDef.push(` * @typedef {Object} ${name}`);
-//   }
-
-//   if (properties) {
-//     typeDef.push(
-//       ...properties.map(property => {
-//         const name = !property.type.isRequired ? `[${property.name}]` : property.name;
-
-//         if (property.type.kind === 'ListType') {
-//           return ` * @property {Array<${property.type.item.value}${property.type.item.isRequired ? '' : `|${optionalType}`}>} ${name}`;
-//         }
-
-//         return ` * @property {${transformScalar(property.type.value)}} ${name}`;
-//       })
-//     );
-//   }
-
-//   return [...typeDef, ' */'].join('\n');
-// };
-
 export const plugin: PluginFunction = schema => {
   const visited: Array<string> = visit(parse(printSchema(schema)), {
     leave: {
@@ -101,8 +74,16 @@ export const plugin: PluginFunction = schema => {
         return transformScalar(node.name);
       },
       NonNullType(node, _, parent) {
+        if (parent === undefined) {
+          return;
+        }
+
         if (parent.kind === 'FieldDefinition') {
           parent.nonNullable = true;
+        }
+
+        if (parent.kind === 'ListType') {
+          parent.nonNullableItems = true;
         }
 
         return node.type;
@@ -113,10 +94,12 @@ export const plugin: PluginFunction = schema => {
         return `@property {${node.type}} ${fieldName}`;
       },
       ListType(node) {
-        return `Array<${node.type}>`;
+        const type = node.nonNullableItems ? node.type : `(${node.type}|null|undefined)`;
+
+        return `Array<${type}>`;
       },
       ScalarTypeDefinition(node) {
-        return createTypeDef([`@typedef {*} ${node.name.value}`]);
+        return createTypeDef([`@typedef {*} ${node.name}`]);
       },
     },
   });
