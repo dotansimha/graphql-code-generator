@@ -103,7 +103,7 @@
     "dotenv": "8.2.0",
     "graphql": "14.6.0",
     "js-yaml": "3.13.1",
-    "make-dir": "3.0.0",
+    "make-dir": "3.0.1",
     "ts-jest": "25.2.0"
   },
   "peerDependencies": {
