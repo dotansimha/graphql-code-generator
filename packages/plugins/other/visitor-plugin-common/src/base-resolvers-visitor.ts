@@ -824,6 +824,8 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
 
         if (argsToForceRequire.length > 0) {
           argsType = this.applyRequireFields(argsType, argsToForceRequire);
+        } else if (original.arguments.length > 0) {
+          argsType = this.applyOptionalFields(argsType, original.arguments);
         }
       }
 
@@ -858,6 +860,11 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
   protected applyRequireFields(argsType: string, fields: InputValueDefinitionNode[]): string {
     this._globalDeclarations.add(REQUIRE_FIELDS_TYPE);
     return `RequireFields<${argsType}, ${fields.map(f => `'${f.name.value}'`).join(' | ')}>`;
+  }
+
+  protected applyOptionalFields(argsType: string, fields: readonly InputValueDefinitionNode[]): string {
+    this._globalDeclarations.add(REQUIRE_FIELDS_TYPE);
+    return `RequireFields<${argsType}, never>`;
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode) {

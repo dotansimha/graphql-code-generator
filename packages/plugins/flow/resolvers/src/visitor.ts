@@ -22,6 +22,10 @@ export class FlowResolversVisitor extends BaseResolversVisitor<RawResolversConfi
     return `$RequireFields<${argsType}, { ${fields.map(f => `${f.name.value}: *`).join(', ')} }>`;
   }
 
+  protected applyOptionalFields(argsType: string, fields: readonly InputValueDefinitionNode[]): string {
+    return argsType;
+  }
+
   protected buildMapperImport(source: string, types: { identifier: string; asDefault?: boolean }[]): string {
     if (types[0] && types[0].asDefault) {
       return `import type ${types[0].identifier} from '${source}';`;
