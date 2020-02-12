@@ -12,6 +12,7 @@ export interface ReactApolloPluginConfig extends ClientSideBasePluginConfig {
   withHOC: boolean;
   withHooks: boolean;
   withMutationFn: boolean;
+  withRefetchFn: boolean;
   apolloReactCommonImportFrom: string;
   apolloReactComponentsImportFrom: string;
   apolloReactHocImportFrom: string;
@@ -34,6 +35,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
       withComponent: getConfigValue(rawConfig.withComponent, true),
       withHooks: getConfigValue(rawConfig.withHooks, false),
       withMutationFn: getConfigValue(rawConfig.withMutationFn, true),
+      withRefetchFn: getConfigValue(rawConfig.withRefetchFn, false),
       apolloReactCommonImportFrom: getConfigValue(rawConfig.apolloReactCommonImportFrom, rawConfig.reactApolloVersion === 3 ? '@apollo/client' : '@apollo/react-common'),
       apolloReactComponentsImportFrom: getConfigValue(rawConfig.apolloReactComponentsImportFrom, rawConfig.reactApolloVersion === 3 ? '@apollo/client' : '@apollo/react-components'),
       apolloReactHocImportFrom: getConfigValue(rawConfig.apolloReactHocImportFrom, rawConfig.reactApolloVersion === 3 ? '@apollo/client' : '@apollo/react-hoc'),
@@ -285,6 +287,21 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     return `export type ${mutationOptionsType} = ApolloReactCommon.BaseMutationOptions<${operationResultType}, ${operationVariablesTypes}>;`;
   }
 
+  private _buildRefetchFn(node: OperationDefinitionNode, documentVariableName: string, operationType: string, operationVariablesTypes: string): string {
+    if (node.operation !== 'query') {
+      return '';
+    }
+
+    const operationName: string = this.convertName(node.name.value, {
+      suffix: this._getHookSuffix(node.name.value, operationType),
+      useTypesPrefix: false,
+    });
+
+    return `export function refetch${operationName}(variables?: ${operationVariablesTypes}) {
+      return { query: ${this.getDocumentNodeVariable(node, documentVariableName)}, variables: variables }
+    }`;
+  }
+
   protected buildOperation(node: OperationDefinitionNode, documentVariableName: string, operationType: string, operationResultType: string, operationVariablesTypes: string): string {
     operationResultType = this._externalImportPrefix + operationResultType;
     operationVariablesTypes = this._externalImportPrefix + operationVariablesTypes;
@@ -295,7 +312,8 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
     const hooks = this.config.withHooks ? this._buildHooks(node, operationType, documentVariableName, operationResultType, operationVariablesTypes) : null;
     const resultType = this.config.withResultType ? this._buildResultType(node, operationType, operationResultType, operationVariablesTypes) : null;
     const mutationOptionsType = this.config.withMutationOptionsType ? this._buildWithMutationOptionsType(node, operationResultType, operationVariablesTypes) : null;
+    const refetchFn = this.config.withRefetchFn ? this._buildRefetchFn(node, documentVariableName, operationType, operationVariablesTypes) : null;
 
-    return [mutationFn, component, hoc, hooks, resultType, mutationOptionsType].filter(a => a).join('\n');
+    return [mutationFn, component, hoc, hooks, resultType, mutationOptionsType, refetchFn].filter(a => a).join('\n');
   }
 }

@@ -77,6 +77,25 @@ export interface ReactApolloRawPluginConfig extends RawClientSideBasePluginConfi
    */
   withMutationFn?: boolean;
   /**
+   * @name withRefetchFn
+   * @type boolean
+   * @description Enable generating a function to be used with refetchQueries
+   * @default false
+   *
+   * @example
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *    - typescript-operations
+   *    - typescript-react-apollo
+   *  config:
+   *    withRefetchFn: false
+   * ```
+   */
+  withRefetchFn?: boolean;
+  /**
    * @name apolloReactCommonImportFrom
    * @type string
    * @default @apollo/react-common

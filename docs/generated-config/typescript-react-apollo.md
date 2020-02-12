@@ -71,6 +71,36 @@ path/to/file.ts:
    withMutationFn: true
 ```
 
+### withRefetchFn (`boolean`, default value: `false`)
+
+Enable generating a function to be used with refetchQueries.
+
+
+#### Usage Example
+
+```yml
+generates:
+path/to/file.ts:
+ plugins:
+   - typescript
+   - typescript-operations
+   - typescript-react-apollo
+ config:
+   withRefetchFn: true
+```
+
+```ts
+useAddPersonToFamilyMutation({
+   variables: {
+      familyId: 1,
+      personId: 2,
+   },
+   refetchQueries: [
+      refetchGetFamilyMembersQuery({ familyId: 1 }),
+   ],
+})
+```
+
 ### apolloReactCommonImportFrom (`string`, default value: `apollo/react-common`)
 
 

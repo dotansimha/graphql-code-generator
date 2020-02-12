@@ -1436,6 +1436,31 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
     });
   });
 
+  describe('withRefetchFn', () => {
+    it('should generate a function for use with refetchQueries', async () => {
+      const docs = [{ location: '', document: basicDoc }];
+
+      const content = (await plugin(
+        schema,
+        docs,
+        {
+          withHooks: true,
+          withRefetchFn: true,
+        },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.content).toContain(
+        `export function refetchTestQuery(variables?: TestQueryVariables) {
+      return { query: TestDocument, variables: variables }
+    }`
+      );
+      await validateTypeScript(content, schema, docs, {});
+    });
+  });
+
   describe('documentMode and importDocumentNodeExternallyFrom', () => {
     const multipleOperationDoc = parse(/* GraphQL */ `
       query testOne {
