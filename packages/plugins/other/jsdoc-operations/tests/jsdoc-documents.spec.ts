@@ -105,6 +105,7 @@ describe('JSDoc Operations Plugin', () => {
     const config = {};
     const result = await plugin(schema, [{ filePath: 'test-file.ts', content: ast }], config, { outputFile: '' });
 
+    expect(result).toEqual(expect.stringContaining('@typedef {*} Bar'));
     expect(result).toEqual(expect.stringContaining('@property {Bar} [foo]'));
   });
 });

@@ -14,6 +14,11 @@ type ListType = {
   isRequired?: boolean;
 };
 
+type ScalarType = {
+  kind: 'ScalarTypeDefinition';
+  name: string;
+};
+
 type Property = {
   name: string;
   type: ListType | NamedType;
@@ -34,78 +39,76 @@ const transformScalar = (scalar: string) => {
   return DEFAULT_SCALARS[scalar];
 };
 
-const createTypeDef = ({ name, properties, types }: TypeDef) => {
-  const optionalType = 'null|undefined';
-  const typeDef = [`/**`];
+const createTypeDef = (lines: Array<string>) => {
+  const typedef = ['/**', ...lines.map(line => ` * ${line}`), ' */'];
 
-  if (types) {
-    typeDef.push(` * @typedef {(${types.map(type => type.value).join('|')})} ${name}`);
-  } else {
-    typeDef.push(` * @typedef {Object} ${name}`);
-  }
-
-  if (properties) {
-    typeDef.push(
-      ...properties.map(property => {
-        const name = !property.type.isRequired ? `[${property.name}]` : property.name;
-
-        if (property.type.kind === 'ListType') {
-          return ` * @property {Array<${property.type.item.value}${property.type.item.isRequired ? '' : `|${optionalType}`}>} ${name}`;
-        }
-
-        return ` * @property {${transformScalar(property.type.value)}} ${name}`;
-      })
-    );
-  }
-
-  return [...typeDef, ' */'].join('\n');
+  return typedef.join('\n');
 };
 
+// const createTypeDeffff = ({ name, properties, types }: TypeDef) => {
+//   const optionalType = 'null|undefined';
+//   const typeDef = [`/**`];
+
+//   if (types) {
+//     typeDef.push(` * @typedef {(${types.map(type => type.value).join('|')})} ${name}`);
+//   } else {
+//     typeDef.push(` * @typedef {Object} ${name}`);
+//   }
+
+//   if (properties) {
+//     typeDef.push(
+//       ...properties.map(property => {
+//         const name = !property.type.isRequired ? `[${property.name}]` : property.name;
+
+//         if (property.type.kind === 'ListType') {
+//           return ` * @property {Array<${property.type.item.value}${property.type.item.isRequired ? '' : `|${optionalType}`}>} ${name}`;
+//         }
+
+//         return ` * @property {${transformScalar(property.type.value)}} ${name}`;
+//       })
+//     );
+//   }
+
+//   return [...typeDef, ' */'].join('\n');
+// };
+
 export const plugin: PluginFunction = schema => {
-  const visited: Array<TypeDef> = visit(parse(printSchema(schema)), {
+  const visited: Array<string> = visit(parse(printSchema(schema)), {
     leave: {
       Document(node) {
         return node.definitions;
       },
       ObjectTypeDefinition(node) {
-        return {
-          name: node.name.value,
-          properties: node.fields,
-        };
+        let fields: Array<string> = [];
+
+        if (node.fields !== undefined) {
+          for (let i = 0; i < node.fields.length; i++) {
+            fields.push(node.fields[i]);
+          }
+        }
+
+        return createTypeDef([`@typedef {Object} ${node.name}`, ...fields]);
       },
-      FieldDefinition(node) {
-        return {
-          name: node.name.value,
-          type: node.type,
-        };
+      Name(node) {
+        return transformScalar(node.value);
       },
       NamedType(node) {
-        return {
-          kind: node.kind,
-          value: node.name.value,
-        };
+        return node.name;
       },
       NonNullType(node) {
-        return {
-          ...node.type,
-          isRequired: true,
-        };
+        return node.type;
       },
-      UnionTypeDefinition(node) {
-        return {
-          kind: node.kind,
-          name: node.name.value,
-          types: node.types,
-        };
+      FieldDefinition(node) {
+        return `@property {${node.type}} ${node.name}`;
       },
       ListType(node) {
-        return {
-          kind: node.kind,
-          item: node.type,
-        };
+        return `Array<${node.type}>`;
+      },
+      ScalarTypeDefinition(node) {
+        return createTypeDef([`@typedef {*} ${node.name.value}`]);
       },
     },
   });
 
-  return visited.map(operation => createTypeDef(operation)).join('\n\n');
+  return visited.join('\n\n');
 };
