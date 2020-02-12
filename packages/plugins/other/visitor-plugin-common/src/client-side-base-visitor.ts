@@ -24,6 +24,7 @@ export interface RawClientSideBasePluginConfig extends RawConfig {
   gqlImport?: string;
   noExport?: boolean;
   dedupeOperationSuffix?: boolean;
+  omitOperationSuffix?: boolean;
   operationResultSuffix?: string;
   documentVariablePrefix?: string;
   documentVariableSuffix?: string;
@@ -66,6 +67,13 @@ export interface ClientSideBasePluginConfig extends ParsedConfig {
    * @description Set this configuration to `true` if you wish to make sure to remove duplicate operation name suffix.
    */
   dedupeOperationSuffix: boolean;
+  /**
+   * @name omitOperationSuffix
+   * @type boolean
+   * @default false
+   * @description Set this configuration to `true` if you wish to disable auto add suffix of operation name, like `Query`, `Mutation`, `Subscription`, `Fragment`.
+   */
+  omitOperationSuffix: boolean;
   noExport: boolean;
   documentVariablePrefix: string;
   documentVariableSuffix: string;
@@ -120,6 +128,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
     super(rawConfig, {
       scalars: buildScalars(_schema, rawConfig.scalars, DEFAULT_SCALARS),
       dedupeOperationSuffix: getConfigValue(rawConfig.dedupeOperationSuffix, false),
+      omitOperationSuffix: getConfigValue(rawConfig.omitOperationSuffix, false),
       gqlImport: rawConfig.gqlImport || null,
       noExport: !!rawConfig.noExport,
       importOperationTypesFrom: getConfigValue(rawConfig.importOperationTypesFrom, null),
@@ -354,7 +363,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
     }
 
     const operationType: string = pascalCase(node.operation);
-    const operationTypeSuffix: string = this.config.dedupeOperationSuffix && node.name.value.toLowerCase().endsWith(node.operation) ? '' : operationType;
+    const operationTypeSuffix: string = this.config.dedupeOperationSuffix && node.name.value.toLowerCase().endsWith(node.operation) ? '' : this.config.omitOperationSuffix ? '' : operationType;
 
     const operationResultType: string = this.convertName(node, {
       suffix: operationTypeSuffix + this._parsedConfig.operationResultSuffix,

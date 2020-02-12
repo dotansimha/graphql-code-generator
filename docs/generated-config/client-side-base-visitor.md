@@ -31,6 +31,13 @@ Set this configuration to `true` if you wish to make sure to remove duplicate op
 
 
 
+### omitOperationSuffix (`boolean`, default value: `false`)
+
+Set this configuration to `true` if you wish to disable auto add suffix of operation name, like `Query`, `Mutation`, `Subscription`, `Fragment`.
+
+
+
+
 ### documentMode (`'graphQLTag' | 'documentNode' | 'external'`, default value: `'graphQLTag'`)
 
 Declares how DocumentNode are created: - `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client - `documentNode`: document nodes will be generated as objects when we generate the templates. - `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`

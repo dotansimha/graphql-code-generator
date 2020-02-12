@@ -272,6 +272,31 @@ describe('React Apollo', () => {
       expect(((await plugin(schema, [{ location: 'test-file.ts', document: ast2 }], { dedupeOperationSuffix: false }, { outputFile: '' })) as any).content).toContain('ApolloReactCommon.QueryResult<NotificationsQuery, NotificationsQueryVariables>');
     });
 
+    it(`tests for omitOperationSuffix`, async () => {
+      const ast = parse(/* GraphQL */ `
+        query notificationsQuery {
+          notifications {
+            id
+          }
+        }
+      `);
+      const ast2 = parse(/* GraphQL */ `
+        query notifications {
+          notifications {
+            id
+          }
+        }
+      `);
+
+      expect(((await plugin(schema, [{ location: 'test-file.ts', document: ast }], {}, { outputFile: '' })) as any).content).toContain('ApolloReactCommon.QueryResult<NotificationsQueryQuery, NotificationsQueryQueryVariables>;');
+      expect(((await plugin(schema, [{ location: 'test-file.ts', document: ast }], { omitOperationSuffix: false }, { outputFile: '' })) as any).content).toContain(
+        'ApolloReactCommon.QueryResult<NotificationsQueryQuery, NotificationsQueryQueryVariables>'
+      );
+      expect(((await plugin(schema, [{ location: 'test-file.ts', document: ast }], { omitOperationSuffix: true }, { outputFile: '' })) as any).content).toContain('ApolloReactCommon.QueryResult<NotificationsQuery, NotificationsQueryVariables>');
+      expect(((await plugin(schema, [{ location: 'test-file.ts', document: ast2 }], { omitOperationSuffix: true }, { outputFile: '' })) as any).content).toContain('ApolloReactCommon.QueryResult<Notifications, NotificationsVariables>');
+      expect(((await plugin(schema, [{ location: 'test-file.ts', document: ast2 }], { omitOperationSuffix: false }, { outputFile: '' })) as any).content).toContain('ApolloReactCommon.QueryResult<NotificationsQuery, NotificationsQueryVariables>');
+    });
+
     it('should import ApolloReactHooks dependencies', async () => {
       const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
