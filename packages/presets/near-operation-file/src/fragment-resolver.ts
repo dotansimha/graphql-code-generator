@@ -32,7 +32,7 @@ function buildFragmentRegistry({ fragmentSuffix, generateFilePath }: DocumentImp
         baseVisitor.convertName(name, {
           useTypesPrefix: true,
           suffix: suffix,
-        }),
+        })
       );
     } else if (possbileTypes.length !== 0) {
       possbileTypes.forEach(typeName => {
@@ -65,7 +65,7 @@ function buildFragmentRegistry({ fragmentSuffix, generateFilePath }: DocumentImp
         const importNames = getAllFragmentSubTypes(
           possibleTypes.map(t => t.name),
           fragment.name.value,
-          fragmentSuffix
+          fragmentSuffix(fragment.name.value)
         );
 
         if (prev[fragment.name.value] && print(fragment) !== print(prev[fragment.name.value].node)) {
@@ -90,7 +90,6 @@ function buildFragmentRegistry({ fragmentSuffix, generateFilePath }: DocumentImp
  */
 export default function buildFragmentResolver<T>(collectorOptions: DocumentImportResolverOptions, presetOptions: Types.PresetFnArgs<T>, schemaObject: GraphQLSchema) {
   const fragmentRegistry = buildFragmentRegistry(collectorOptions, presetOptions, schemaObject);
-
   const { baseOutputDir } = presetOptions;
   const { generateImportStatement } = collectorOptions;
 

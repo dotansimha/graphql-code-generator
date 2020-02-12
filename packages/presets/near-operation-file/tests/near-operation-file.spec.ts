@@ -73,6 +73,112 @@ describe('near-operation-file preset', () => {
     },
   ];
 
+  describe('Issues', () => {
+    it('#2365 - Should not add Fragment suffix to import identifier when dedupeOperationSuffix: true', async () => {
+      const result = await preset.buildGeneratesSection({
+        baseOutputDir: './src/',
+        config: {
+          dedupeOperationSuffix: true,
+        },
+        presetConfig: {
+          cwd: '/some/deep/path',
+          baseTypesPath: 'types.ts',
+        },
+        schemaAst: schemaNode,
+        schema: schemaDocumentNode,
+        documents: [
+          {
+            location: '/some/deep/path/src/graphql/me-query.graphql',
+            document: parse(/* GraphQL */ `
+              query {
+                user {
+                  id
+                  ...UserFieldsFragment
+                }
+              }
+            `),
+          },
+          {
+            location: '/some/deep/path/src/graphql/user-fragment.graphql',
+            document: parse(/* GraphQL */ `
+              fragment UserFieldsFragment on User {
+                id
+                username
+              }
+            `),
+          },
+        ],
+        plugins: [{ typescript: {} }],
+        pluginMap: { typescript: {} as any },
+      });
+
+      expect(result.map(o => o.plugins)[0]).toEqual(
+        expect.arrayContaining([
+          {
+            add: `import * as Types from '../types';\n`,
+          },
+          {
+            typescript: {},
+          },
+          {
+            add: `import { UserFieldsFragmentDoc, UserFieldsFragment } from './user-fragment.generated';`,
+          },
+        ])
+      );
+    });
+
+    it('#2365 - Should add Fragment suffix to import identifier when dedupeOperationSuffix not set', async () => {
+      const result = await preset.buildGeneratesSection({
+        baseOutputDir: './src/',
+        config: {},
+        presetConfig: {
+          cwd: '/some/deep/path',
+          baseTypesPath: 'types.ts',
+        },
+        schemaAst: schemaNode,
+        schema: schemaDocumentNode,
+        documents: [
+          {
+            location: '/some/deep/path/src/graphql/me-query.graphql',
+            document: parse(/* GraphQL */ `
+              query {
+                user {
+                  id
+                  ...UserFieldsFragment
+                }
+              }
+            `),
+          },
+          {
+            location: '/some/deep/path/src/graphql/user-fragment.graphql',
+            document: parse(/* GraphQL */ `
+              fragment UserFieldsFragment on User {
+                id
+                username
+              }
+            `),
+          },
+        ],
+        plugins: [{ typescript: {} }],
+        pluginMap: { typescript: {} as any },
+      });
+
+      expect(result.map(o => o.plugins)[0]).toEqual(
+        expect.arrayContaining([
+          {
+            add: `import * as Types from '../types';\n`,
+          },
+          {
+            typescript: {},
+          },
+          {
+            add: `import { UserFieldsFragmentFragmentDoc, UserFieldsFragmentFragment } from './user-fragment.generated';`,
+          },
+        ])
+      );
+    });
+  });
+
   it('Should build the correct operation files paths', async () => {
     const result = await preset.buildGeneratesSection({
       baseOutputDir: './src/',
