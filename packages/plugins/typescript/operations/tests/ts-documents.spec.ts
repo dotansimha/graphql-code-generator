@@ -482,6 +482,75 @@ describe('TypeScript Operations Plugin', () => {
     });
   });
 
+  it('Test for omitOperationSuffix', async () => {
+    const ast = parse(/* GraphQL */ `
+      query notificationsQuery {
+        notifications {
+          id
+        }
+      }
+
+      fragment MyFragment on Query {
+        notifications {
+          id
+        }
+      }
+    `);
+    const ast2 = parse(/* GraphQL */ `
+      query notifications {
+        notifications {
+          id
+        }
+      }
+
+      fragment My on Query {
+        notifications {
+          id
+        }
+      }
+    `);
+    const ast3 = parse(/* GraphQL */ `
+      query notifications {
+        ...My
+      }
+
+      fragment My on Query {
+        notifications {
+          id
+        }
+      }
+    `);
+
+    expect(await plugin(schema, [{ location: 'test-file.ts', document: ast }], {}, { outputFile: '' })).toContain('export type NotificationsQueryQuery =');
+    expect(await plugin(schema, [{ location: 'test-file.ts', document: ast }], {}, { outputFile: '' })).toContain('export type MyFragmentFragment =');
+    expect(await plugin(schema, [{ location: 'test-file.ts', document: ast }], { omitOperationSuffix: true }, { outputFile: '' })).toContain('export type NotificationsQuery =');
+    expect(await plugin(schema, [{ location: 'test-file.ts', document: ast }], { omitOperationSuffix: true }, { outputFile: '' })).toContain('export type MyFragment =');
+    expect(await plugin(schema, [{ location: 'test-file.ts', document: ast2 }], { omitOperationSuffix: true }, { outputFile: '' })).toContain('export type Notifications =');
+    expect(await plugin(schema, [{ location: 'test-file.ts', document: ast2 }], { omitOperationSuffix: true }, { outputFile: '' })).toContain('export type My =');
+    expect(await plugin(schema, [{ location: 'test-file.ts', document: ast2 }], { omitOperationSuffix: false }, { outputFile: '' })).toContain('export type NotificationsQuery =');
+    expect(await plugin(schema, [{ location: 'test-file.ts', document: ast2 }], { omitOperationSuffix: false }, { outputFile: '' })).toContain('export type MyFragment =');
+
+    const withUsage = await plugin(schema, [{ location: 'test-file.ts', document: ast3 }], { omitOperationSuffix: true }, { outputFile: '' });
+    expect(withUsage).toBeSimilarStringTo(`
+      export type My = (
+        { __typename?: 'Query' }
+        & { notifications: Array<(
+          { __typename?: 'TextNotification' }
+          & Pick<TextNotification, 'id'>
+        ) | (
+          { __typename?: 'ImageNotification' }
+          & Pick<ImageNotification, 'id'>
+        )> }
+      );
+    `);
+    expect(withUsage).toBeSimilarStringTo(`
+    export type Notifications = (
+      { __typename?: 'Query' }
+      & My
+    );
+    `);
+  });
+
   describe('__typename', () => {
     it('Should add __typename correctly with nonOptionalTypename=false,skipTypename=true,preResolveTypes=true and explicit field', async () => {
       const testSchema = buildSchema(/* GraphQL */ `

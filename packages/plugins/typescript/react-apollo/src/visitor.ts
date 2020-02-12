@@ -245,6 +245,9 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<ReactApolloRawPlug
   }
 
   private _getHookSuffix(name: string, operationType: string) {
+    if (this.config.omitOperationSuffix) {
+      return '';
+    }
     if (!this.config.dedupeOperationSuffix) {
       return pascalCase(operationType);
     }

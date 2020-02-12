@@ -166,7 +166,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
         const possibleTypesForFragment = getPossibleTypes(this._schema, schemaType);
 
         for (const possibleType of possibleTypesForFragment) {
-          const fragmentSuffix = this._config.dedupeOperationSuffix && spread.name.value.toLowerCase().endsWith('fragment') ? '' : 'Fragment';
+          const fragmentSuffix = this._config.omitOperationSuffix ? '' : this._config.dedupeOperationSuffix && spread.name.value.toLowerCase().endsWith('fragment') ? '' : 'Fragment';
           const usage = this.buildFragmentTypeName(spread.name.value, fragmentSuffix, possibleTypesForFragment.length === 1 ? null : possibleType.name);
 
           if (!selectionNodesByTypeName[possibleType.name]) {

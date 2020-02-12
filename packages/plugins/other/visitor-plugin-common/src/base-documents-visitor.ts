@@ -26,6 +26,7 @@ export interface ParsedDocumentsConfig extends ParsedTypesConfig {
   globalNamespace: boolean;
   operationResultSuffix: string;
   dedupeOperationSuffix: boolean;
+  omitOperationSuffix: boolean;
   namespacedImportName: string | null;
   exportFragmentSpreadSubTypes: boolean;
 }
@@ -74,6 +75,13 @@ export interface RawDocumentsConfig extends RawTypesConfig {
    */
   dedupeOperationSuffix?: boolean;
   /**
+   * @name omitOperationSuffix
+   * @type boolean
+   * @default false
+   * @description Set this configuration to `true` if you wish to disable auto add suffix of operation name, like `Query`, `Mutation`, `Subscription`, `Fragment`.
+   */
+  omitOperationSuffix?: boolean;
+  /**
    * @name exportFragmentSpreadSubTypes
    * @type boolean
    * @default false
@@ -96,6 +104,7 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
       enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
       preResolveTypes: getConfigValue(rawConfig.preResolveTypes, false),
       dedupeOperationSuffix: getConfigValue(rawConfig.dedupeOperationSuffix, false),
+      omitOperationSuffix: getConfigValue(rawConfig.omitOperationSuffix, false),
       namespacedImportName: getConfigValue(rawConfig.namespacedImportName, null),
       addTypename: !rawConfig.skipTypename,
       globalNamespace: !!rawConfig.globalNamespace,
@@ -153,7 +162,7 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
   FragmentDefinition(node: FragmentDefinitionNode): string {
     const fragmentRootType = this._schema.getType(node.typeCondition.name.value) as GraphQLObjectType;
     const selectionSet = this._selectionSetToObject.createNext(fragmentRootType, node.selectionSet);
-    const fragmentSuffix = this.config.dedupeOperationSuffix && node.name.value.toLowerCase().endsWith('fragment') ? '' : 'Fragment';
+    const fragmentSuffix = this.config.omitOperationSuffix ? '' : this.config.dedupeOperationSuffix && node.name.value.toLowerCase().endsWith('fragment') ? '' : 'Fragment';
 
     return selectionSet.transformFragmentSelectionSetToTypes(node.name.value, fragmentSuffix, this._declarationBlockConfig);
   }
@@ -168,7 +177,7 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
 
     const selectionSet = this._selectionSetToObject.createNext(operationRootType, node.selectionSet);
     const visitedOperationVariables = this._variablesTransfomer.transform<VariableDefinitionNode>(node.variableDefinitions);
-    const operationTypeSuffix = this.config.dedupeOperationSuffix && name.toLowerCase().endsWith(node.operation) ? '' : pascalCase(node.operation);
+    const operationTypeSuffix = this.config.omitOperationSuffix ? '' : this.config.dedupeOperationSuffix && name.toLowerCase().endsWith(node.operation) ? '' : pascalCase(node.operation);
 
     const operationResult = new DeclarationBlock(this._declarationBlockConfig)
       .export()
