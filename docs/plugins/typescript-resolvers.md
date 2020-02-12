@@ -7,7 +7,7 @@ This plugin generates types for resolve functions.
 
 ## Installation
 
-    $ yarn add @graphql-codegen/typescript-resolvers
+    $ yarn add -D @graphql-codegen/typescript-resolvers
 
 ## Usage
 
