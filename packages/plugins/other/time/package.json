@@ -16,7 +16,7 @@
   "devDependencies": {
     "@ardatan/bob": "0.2.7",
     "graphql": "14.6.0",
-    "graphql-tag": "2.10.2",
+    "graphql-tag": "2.10.3",
     "typescript": "3.7.5"
   },
   "peerDependencies": {
