@@ -1,4 +1,4 @@
-import { writeFileSync, statSync, readFileSync } from 'fs';
+import { writeFileSync, statSync, readFileSync, unlink } from 'fs';
 
 export function writeSync(filepath: string, content: string) {
   return writeFileSync(filepath, content);
@@ -14,4 +14,8 @@ export function fileExists(filePath: string): boolean {
   } catch (err) {
     return false;
   }
+}
+
+export function unlinkFile(filePath: string, cb?: (err?: Error) => any): void {
+  unlink(filePath, cb);
 }
