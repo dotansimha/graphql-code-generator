@@ -766,8 +766,26 @@ describe('TypeScript Resolvers Plugin', () => {
     const config = { typesPrefix: 'T' };
     const result = (await plugin(testSchema, [], config, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-    expect(result.content).toBeSimilarStringTo(`f?: Resolver<Maybe<TResolversTypes['String']>, ParentType, ContextType, TMyTypeFArgs>,`);
+    expect(result.content).toBeSimilarStringTo(`f?: Resolver<Maybe<TResolversTypes['String']>, ParentType, ContextType, RequireFields<TMyTypeFArgs, never>>,`);
     await validate(result, config, testSchema);
+  });
+
+  // dotansimha/graphql-code-generator#3322
+  it('should make list of all-optional arguments include undefined types', async () => {
+    const testSchema = buildSchema(`type MyType { f(a: String, b: Int): String }`);
+    const result = (await plugin(testSchema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+
+    expect(result.content).toBeSimilarStringTo(`f?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeFArgs, never>>,`);
+    await validate(result, {}, testSchema);
+  });
+
+  // dotansimha/graphql-code-generator#3322
+  it('should include generic wrapper type only when necessary', async () => {
+    const testSchema = buildSchema(`type MyType { f: String }`);
+    const result = (await plugin(testSchema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+
+    expect(result.content).toBeSimilarStringTo(`f?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,`);
+    await validate(result, {}, testSchema);
   });
 
   it('should generate Resolvers interface', async () => {
