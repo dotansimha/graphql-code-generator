@@ -1,6 +1,6 @@
 import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor';
 import autoBind from 'auto-bind';
-import { FragmentDefinitionNode, print, OperationDefinitionNode, visit, FragmentSpreadNode, GraphQLSchema, Kind } from 'graphql';
+import { FragmentDefinitionNode, print, OperationDefinitionNode, visit, FragmentSpreadNode, GraphQLSchema, Kind, DocumentNode } from 'graphql';
 import { DepGraph } from 'dependency-graph';
 import gqlTag from 'graphql-tag';
 import { Types } from '@graphql-codegen/plugin-helpers';
@@ -207,19 +207,19 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
     ${this._includeFragments(fragments)}`);
 
     if (this.config.documentMode === DocumentMode.documentNode) {
-      const gqlObj = gqlTag(doc);
+      const gqlObj = gqlTag([doc]) as DocumentNode;
       if (gqlObj && gqlObj['loc']) {
-        delete gqlObj.loc;
+        delete (gqlObj as any).loc;
       }
       return JSON.stringify(gqlObj);
     } else if (this.config.documentMode === DocumentMode.documentNodeImportFragments) {
-      const gqlObj = gqlTag(doc);
+      const gqlObj = gqlTag([doc]);
       if (gqlObj && gqlObj['loc']) {
-        delete gqlObj.loc;
+        delete (gqlObj as any).loc;
       }
       if (fragments.length > 0) {
         const fragmentsSpreads = fragments.filter((name, i, all) => all.indexOf(name) === i).map(name => `...${name}.definitions`);
-        const definitions = [...gqlObj.definitions.map(JSON.stringify), ...fragmentsSpreads].join();
+        const definitions = [...gqlObj.definitions.map(t => JSON.stringify(t)), ...fragmentsSpreads].join();
         return `{"kind":"${Kind.DOCUMENT}","definitions":[${definitions}]}`;
       }
       return JSON.stringify(gqlObj);
