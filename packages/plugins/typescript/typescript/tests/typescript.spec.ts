@@ -1886,7 +1886,7 @@ describe('TypeScript', () => {
       validateTs(result);
     });
 
-    it('Should imoprt all enums from a single file when specified as string', async () => {
+    it('Should import all enums from a single file when specified as string', async () => {
       const schema = buildSchema(`enum MyEnum { A, B, C } enum MyEnum2 { X, Y, Z }`);
       const result = (await plugin(schema, [], { enumValues: './my-file' }, { outputFile: '' })) as Types.ComplexPluginOutput;
 
