@@ -446,6 +446,38 @@ describe('ResolversTypes', () => {
     };`);
   });
 
+  it('Should build ResolversTypes with mapper set for concrete type using renamed external identifier (with default)', async () => {
+    const result = (await plugin(
+      schema,
+      [],
+      {
+        noSchemaStitching: true,
+        mappers: {
+          MyOtherType: './my-type#default as DatabaseMyOtherType',
+          MyType: './my-type#MyType as DatabaseMyType',
+        },
+      },
+      { outputFile: '' }
+    )) as Types.ComplexPluginOutput;
+
+    expect(result.prepend).toContain(`import DatabaseMyOtherType, { MyType as DatabaseMyType } from './my-type';`);
+    expect(result.content).toBeSimilarStringTo(`
+    export type ResolversTypes = {
+      Query: ResolverTypeWrapper<{}>,
+      MyType: ResolverTypeWrapper<DatabaseMyType>,
+      String: ResolverTypeWrapper<Scalars['String']>,
+      MyOtherType: ResolverTypeWrapper<DatabaseMyOtherType>,
+      Subscription: ResolverTypeWrapper<{}>,
+      Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
+      Node: ResolverTypeWrapper<Node>,
+      ID: ResolverTypeWrapper<Scalars['ID']>,
+      SomeNode: ResolverTypeWrapper<SomeNode>,
+      MyUnion: ResolversTypes['MyType'] | ResolversTypes['MyOtherType'],
+      MyScalar: ResolverTypeWrapper<Scalars['MyScalar']>,
+      Int: ResolverTypeWrapper<Scalars['Int']>,
+    };`);
+  });
+
   it('Should build ResolversTypes with defaultMapper set', async () => {
     const result = (await plugin(
       schema,
