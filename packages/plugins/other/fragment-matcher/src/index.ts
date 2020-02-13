@@ -43,7 +43,7 @@ export interface FragmentMatcherConfig {
   module?: 'commonjs' | 'es2015';
   /**
    * @name apolloClientVersion
-   * @type string
+   * @type number
    * @description Compatible only with TS/TSX/JS/JSX extensions, allow you to generate output based on your Apollo-Client version. Valid values are: `2`, `3`.
    * @default 2
    *
@@ -57,7 +57,7 @@ export interface FragmentMatcherConfig {
    *    apolloClientVersion: 3
    * ```
    */
-  apolloClientVersion?: '2' | '3';
+  apolloClientVersion?: 2 | 3;
   federation?: boolean;
 }
 
@@ -71,10 +71,11 @@ export const plugin: PluginFunction = async (schema: GraphQLSchema, _documents, 
   const config: Required<FragmentMatcherConfig> = {
     module: 'es2015',
     federation: false,
-    apolloClientVersion: '2',
+    apolloClientVersion: 2,
     ...pluginConfig,
   };
 
+  const apolloClientVersion = parseInt(config.apolloClientVersion as any);
   const cleanSchema = config.federation ? removeFederation(schema) : schema;
 
   const introspection = await execute<IntrospectionResultData>({
@@ -105,7 +106,7 @@ export const plugin: PluginFunction = async (schema: GraphQLSchema, _documents, 
   };
 
   const filteredData: PossibleTypesResultData | IntrospectionResultData =
-    config.apolloClientVersion === '2'
+    apolloClientVersion === 2
       ? {
           __schema: {
             ...introspection.data.__schema,
@@ -131,7 +132,7 @@ export const plugin: PluginFunction = async (schema: GraphQLSchema, _documents, 
   }
 
   if (extensions.ts.includes(ext)) {
-    if (config.apolloClientVersion === '2') {
+    if (apolloClientVersion === 2) {
       return `
       export interface IntrospectionResultData {
         __schema: {
@@ -147,7 +148,7 @@ export const plugin: PluginFunction = async (schema: GraphQLSchema, _documents, 
       const result: IntrospectionResultData = ${content};
       export default result;
     `;
-    } else if (config.apolloClientVersion === '3') {
+    } else if (apolloClientVersion === 3) {
       return `
       export interface PossibleTypesResultData {
         possibleTypes: {
