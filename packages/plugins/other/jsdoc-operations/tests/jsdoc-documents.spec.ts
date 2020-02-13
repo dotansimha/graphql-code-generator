@@ -28,7 +28,6 @@ describe('JSDoc Operations Plugin', () => {
     const schema = buildSchema(/* Graphql */ `
         type Foo {
             foo: Int
-            foop: Int!
         }
     `);
 

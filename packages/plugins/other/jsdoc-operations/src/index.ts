@@ -1,5 +1,5 @@
 import { PluginFunction } from '@graphql-codegen/plugin-helpers';
-import { printSchema, parse, visit } from 'graphql';
+import { printSchema, parse, visit, ListTypeNode, FieldDefinitionNode, NamedTypeNode } from 'graphql';
 import { DEFAULT_SCALARS } from '@graphql-codegen/visitor-plugin-common';
 
 const transformScalar = (scalar: string) => {
@@ -10,10 +10,11 @@ const transformScalar = (scalar: string) => {
   return DEFAULT_SCALARS[scalar];
 };
 
-const createTypeDef = (lines: Array<string>) => {
+const createDocBlock = (lines: Array<string>) => {
   const typedef = ['/**', ...lines.map(line => ` * ${line}`), ' */'];
+  const block = typedef.join('\n');
 
-  return typedef.join('\n');
+  return block;
 };
 
 export const plugin: PluginFunction = schema => {
@@ -24,23 +25,21 @@ export const plugin: PluginFunction = schema => {
       },
     },
     ObjectTypeDefinition: {
-      leave(node) {
-        let fields: Array<string> = [];
+      leave(node: unknown) {
+        const typedNode = node as { name: string; fields: Array<string> };
 
-        if (node.fields !== undefined) {
-          for (let i = 0; i < node.fields.length; i++) {
-            fields.push(node.fields[i]);
-          }
-        }
-
-        return createTypeDef([`@typedef {Object} ${node.name}`, ...fields]);
+        return createDocBlock([`@typedef {Object} ${typedNode.name}`, ...typedNode.fields]);
       },
     },
     UnionTypeDefinition: {
       leave(node) {
-        return `/**
+        if (node.types !== undefined) {
+          return `/**
  * @typedef {(${node.types.join('|')})} ${node.name}
  */`;
+        }
+
+        return node;
       },
     },
     Name: {
@@ -49,8 +48,8 @@ export const plugin: PluginFunction = schema => {
       },
     },
     NamedType: {
-      leave(node) {
-        return transformScalar(node.name);
+      leave(node: unknown) {
+        return transformScalar((node as { name: string }).name);
       },
     },
     NonNullType: {
@@ -59,34 +58,40 @@ export const plugin: PluginFunction = schema => {
           return;
         }
 
-        if (parent.kind === 'FieldDefinition') {
-          parent.nonNullable = true;
-        }
-
-        if (parent.kind === 'ListType') {
-          parent.nonNullableItems = true;
-        }
-
         return node.type;
       },
     },
     FieldDefinition: {
-      leave(node) {
+      enter(node) {
+        if (node.type.kind === 'NonNullType') {
+          return { ...node, nonNullable: true };
+        }
+
+        return node;
+      },
+      leave(node: FieldDefinitionNode & { nonNullable?: boolean }) {
         const fieldName = node.nonNullable ? node.name : `[${node.name}]`;
 
         return `@property {${node.type}} ${fieldName}`;
       },
     },
     ListType: {
-      leave(node) {
-        const type = node.nonNullableItems ? node.type : `(${node.type}|null|undefined)`;
+      enter(node) {
+        if (node.type.kind === 'NonNullType') {
+          return { ...node, nonNullItems: true };
+        }
+
+        return node;
+      },
+      leave(node: ListTypeNode & { nonNullItems?: boolean }) {
+        const type = node.nonNullItems ? node.type : `(${node.type}|null|undefined)`;
 
         return `Array<${type}>`;
       },
     },
     ScalarTypeDefinition: {
       leave(node) {
-        return createTypeDef([`@typedef {*} ${node.name}`]);
+        return createDocBlock([`@typedef {*} ${node.name}`]);
       },
     },
   });
