@@ -213,7 +213,7 @@ describe('Fragment Matcher Plugin', () => {
         schema,
         [],
         {
-          apolloClientVersion: '3',
+          apolloClientVersion: 3,
         },
         {
           outputFile: 'foo.ts',
@@ -223,7 +223,7 @@ describe('Fragment Matcher Plugin', () => {
         schema,
         [],
         {
-          apolloClientVersion: '3',
+          apolloClientVersion: 3,
         },
         {
           outputFile: 'foo.tsx',
