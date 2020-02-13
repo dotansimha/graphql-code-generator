@@ -35,6 +35,7 @@ export function parseEnumValues(schema: GraphQLSchema, mapOrStr: EnumValuesMap =
         return {
           ...prev,
           [gqlIdentifier]: {
+            isDefault: mapper.isExternal && mapper.default,
             typeIdentifier: gqlIdentifier,
             sourceFile: mapper.isExternal ? mapper.source : undefined,
             sourceIdentifier: isExternalMapperType(mapper) ? mapper.import : mapper.type,
@@ -45,6 +46,7 @@ export function parseEnumValues(schema: GraphQLSchema, mapOrStr: EnumValuesMap =
         return {
           ...prev,
           [gqlIdentifier]: {
+            isDefault: false,
             typeIdentifier: gqlIdentifier,
             sourceFile: null,
             sourceIdentifier: null,
@@ -62,6 +64,7 @@ export function parseEnumValues(schema: GraphQLSchema, mapOrStr: EnumValuesMap =
         return {
           ...prev,
           [enumName]: {
+            isDefault: false,
             typeIdentifier: enumName,
             sourceFile: mapOrStr,
             sourceIdentifier: enumName,
