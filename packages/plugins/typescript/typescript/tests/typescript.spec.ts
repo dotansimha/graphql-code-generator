@@ -333,7 +333,7 @@ describe('TypeScript', () => {
         { outputFile: '' }
       )) as Types.ComplexPluginOutput;
 
-      expect(result.prepend[0]).toBe(`import { default as MyEnum } from './files';`);
+      expect(result.prepend[0]).toBe(`import MyEnum from './files';`);
     });
 
     it('#2976 - Issues with mapped enumValues and type prefix in args', async () => {
