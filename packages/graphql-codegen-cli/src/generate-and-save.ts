@@ -2,7 +2,7 @@ import { lifecycleHooks } from './hooks';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { executeCodegen } from './codegen';
 import { createWatcher } from './utils/watcher';
-import { fileExists, readSync, writeSync } from './utils/file-system';
+import { fileExists, readSync, writeSync, unlinkFile } from './utils/file-system';
 import { sync as mkdirpSync } from 'mkdirp';
 import { dirname, join, isAbsolute } from 'path';
 import { debugLog } from './utils/debugging';
@@ -18,11 +18,35 @@ export async function generate(input: CodegenContext | Types.Config, saveToFile 
   const context = ensureContext(input);
   const config = context.getConfig();
   await lifecycleHooks(config.hooks).afterStart();
-  let recentOutputHash = new Map<string, string>();
 
+  let previouslyGeneratedFilenames: string[] = [];
+  function removeStaleFiles(config: Types.Config, generationResult: Types.FileOutput[]) {
+    const filenames = generationResult.map(o => o.filename);
+    // find stale files from previous build which are not present in current build
+    const staleFilenames = previouslyGeneratedFilenames.filter(f => !filenames.includes(f));
+    staleFilenames.forEach(filename => {
+      if (shouldOverwrite(config, filename)) {
+        unlinkFile(filename, err => {
+          const prettyFilename = filename.replace(`${input.cwd || process.cwd()}/`, '');
+          if (err) {
+            debugLog(`Cannot remove stale file: ${prettyFilename}\n${err}`);
+          } else {
+            debugLog(`Removed stale file: ${prettyFilename}`);
+          }
+        });
+      }
+    });
+    previouslyGeneratedFilenames = filenames;
+  }
+
+  let recentOutputHash = new Map<string, string>();
   async function writeOutput(generationResult: Types.FileOutput[]) {
     if (!saveToFile) {
       return generationResult;
+    }
+
+    if (config.watch) {
+      removeStaleFiles(config, generationResult);
     }
 
     await lifecycleHooks(config.hooks).beforeAllFileWrite(generationResult.map(r => r.filename));
