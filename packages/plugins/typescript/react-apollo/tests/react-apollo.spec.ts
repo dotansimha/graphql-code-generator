@@ -67,7 +67,7 @@ describe('React Apollo', () => {
         {
           location: '',
           document: parse(/* GraphQL */ `
-            query GET_SOMEHTING {
+            query GET_SOMETHING {
               feed {
                 id
               }
@@ -89,7 +89,7 @@ describe('React Apollo', () => {
       })) as Types.ComplexPluginOutput;
 
       const output = await validateAndCompile(content, config, schema, docs, '');
-      expect(output).toContain(`export type Get_SomehtingQueryResult = ApolloReactCommon.QueryResult<Types.Get_SomehtingQuery, Types.Get_SomehtingQueryVariables>;`);
+      expect(output).toContain(`export type Get_SomethingQueryResult = ApolloReactCommon.QueryResult<Types.Get_SomethingQuery, Types.Get_SomethingQueryVariables>;`);
     });
 
     it('Issue #2826 - Incorrect prefix', async () => {
@@ -97,7 +97,7 @@ describe('React Apollo', () => {
         {
           location: '',
           document: parse(/* GraphQL */ `
-            query GET_SOMEHTING {
+            query GET_SOMETHING {
               feed {
                 id
               }
@@ -119,7 +119,7 @@ describe('React Apollo', () => {
       })) as Types.ComplexPluginOutput;
 
       const output = await validateAndCompile(content, config, schema, docs, '');
-      expect(output).toContain(`export type Get_SomehtingQueryResult = ApolloReactCommon.QueryResult<GQLGet_SomehtingQuery, GQLGet_SomehtingQueryVariables>;`);
+      expect(output).toContain(`export type Get_SomethingQueryResult = ApolloReactCommon.QueryResult<GQLGet_SomethingQuery, GQLGet_SomethingQueryVariables>;`);
     });
 
     it('PR #2725 - transformUnderscore: true causes invalid output', async () => {
@@ -127,7 +127,7 @@ describe('React Apollo', () => {
         {
           location: '',
           document: parse(/* GraphQL */ `
-            query GET_SOMEHTING {
+            query GET_SOMETHING {
               feed {
                 id
               }

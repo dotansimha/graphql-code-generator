@@ -166,25 +166,25 @@ export enum VoteType {
   DOWN = 'DOWN',
   CANCEL = 'CANCEL'
 }
-export type GetSomehtingQueryVariables = {};
+export type GetSomethingQueryVariables = {};
 
 
-export type GetSomehtingQuery = { feed: Maybe<Array<Maybe<Pick<Entry, 'id'>>>> };
+export type GetSomethingQuery = { feed: Maybe<Array<Maybe<Pick<Entry, 'id'>>>> };
 
-export const GetSomehtingDocument = gql\`
-    query GET_SOMEHTING {
+export const GetSomethingDocument = gql\`
+    query GET_SOMETHING {
   feed {
     id
   }
 }
     \`;
-export function useGetSomehtingQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetSomehtingQuery, GetSomehtingQueryVariables>) {
-        return ApolloReactHooks.useQuery<GetSomehtingQuery, GetSomehtingQueryVariables>(GetSomehtingDocument, baseOptions);
+export function useGetSomethingQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetSomethingQuery, GetSomethingQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetSomethingQuery, GetSomethingQueryVariables>(GetSomethingDocument, baseOptions);
       }
-export function useGetSomehtingLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetSomehtingQuery, GetSomehtingQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<GetSomehtingQuery, GetSomehtingQueryVariables>(GetSomehtingDocument, baseOptions);
+export function useGetSomethingLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetSomethingQuery, GetSomethingQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetSomethingQuery, GetSomethingQueryVariables>(GetSomethingDocument, baseOptions);
         }
-export type GetSomehtingQueryHookResult = ReturnType<typeof useGetSomehtingQuery>;
-export type GetSomehtingLazyQueryHookResult = ReturnType<typeof useGetSomehtingLazyQuery>;
-export type GetSomehtingQueryResult = ApolloReactCommon.QueryResult<GetSomehtingQuery, GetSomehtingQueryVariables>;"
+export type GetSomethingQueryHookResult = ReturnType<typeof useGetSomethingQuery>;
+export type GetSomethingLazyQueryHookResult = ReturnType<typeof useGetSomethingLazyQuery>;
+export type GetSomethingQueryResult = ApolloReactCommon.QueryResult<GetSomethingQuery, GetSomethingQueryVariables>;"
 `;
