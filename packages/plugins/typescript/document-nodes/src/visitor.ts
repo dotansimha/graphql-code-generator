@@ -10,7 +10,9 @@ export interface TypeScriptDocumentNodesPluginConfig extends ClientSideBasePlugi
 
 export class TypeScriptDocumentNodesVisitor extends ClientSideBaseVisitor<TypeScriptDocumentNodesRawPluginConfig, TypeScriptDocumentNodesPluginConfig> {
   constructor(schema: GraphQLSchema, fragments: LoadedFragment[], rawConfig: TypeScriptDocumentNodesRawPluginConfig) {
+    // TODO: allow to use `useDefaultExport` only within `near-operation-file` preset
     super(schema, fragments, rawConfig, {
+      exportAsDefault: rawConfig.useDefaultExport,
       documentVariablePrefix: getConfigValue(rawConfig.namePrefix, ''),
       documentVariableSuffix: getConfigValue(rawConfig.nameSuffix, ''),
       fragmentVariablePrefix: getConfigValue(rawConfig.fragmentPrefix, ''),

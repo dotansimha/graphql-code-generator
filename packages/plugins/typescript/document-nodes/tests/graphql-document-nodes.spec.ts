@@ -35,6 +35,37 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
     validateTs(result);
   });
 
+  test('Should allow to use default export on demand', async () => {
+    const result = plugin(
+      null,
+      [
+        {
+          location: 'some/file/my-query.graphql',
+          document: parse(/* GraphQL */ `
+            query MyQuery {
+              field
+            }
+          `),
+        },
+      ],
+      { useDefaultExport: true },
+      { outputFile: '' }
+    ) as string;
+
+    expect(result).toBeSimilarStringTo(`
+      import gql from 'graphql-tag';
+
+      const MyQuery = gql\`
+        query MyQuery {
+          field
+        }
+      \`;
+
+      export default MyQuery;
+    `);
+    validateTs(result);
+  });
+
   it('Should generate correctly for mutiple files', async () => {
     const result = (await plugin(
       null,

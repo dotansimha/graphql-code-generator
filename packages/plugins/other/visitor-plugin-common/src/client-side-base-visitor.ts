@@ -24,6 +24,7 @@ export interface RawClientSideBasePluginConfig extends RawConfig {
   noGraphQLTag?: boolean;
   gqlImport?: string;
   noExport?: boolean;
+  exportAsDefault?: boolean;
   dedupeOperationSuffix?: boolean;
   omitOperationSuffix?: boolean;
   operationResultSuffix?: string;
@@ -76,6 +77,7 @@ export interface ClientSideBasePluginConfig extends ParsedConfig {
    */
   omitOperationSuffix: boolean;
   noExport: boolean;
+  exportAsDefault: boolean;
   documentVariablePrefix: string;
   documentVariableSuffix: string;
   fragmentVariablePrefix: string;
@@ -133,6 +135,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
       omitOperationSuffix: getConfigValue(rawConfig.omitOperationSuffix, false),
       gqlImport: rawConfig.gqlImport || null,
       noExport: !!rawConfig.noExport,
+      exportAsDefault: !!rawConfig.exportAsDefault,
       importOperationTypesFrom: getConfigValue(rawConfig.importOperationTypesFrom, null),
       operationResultSuffix: getConfigValue(rawConfig.operationResultSuffix, ''),
       documentVariablePrefix: getConfigValue(rawConfig.documentVariablePrefix, ''),
@@ -363,7 +366,14 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
     let documentString = '';
     if (this.config.documentMode !== DocumentMode.external) {
       const isDocumentNode = this.config.documentMode === DocumentMode.documentNode || this.config.documentMode === DocumentMode.documentNodeImportFragments;
-      documentString = `${this.config.noExport ? '' : 'export'} const ${documentVariableName}${isDocumentNode ? ': DocumentNode' : ''} = ${this._gql(node)};`;
+      const variableName = `${documentVariableName}${isDocumentNode ? ': DocumentNode' : ''}`;
+      const exportKeyword = this.config.noExport || this.config.exportAsDefault ? '' : 'export';
+
+      documentString = `${exportKeyword} const ${variableName} = ${this._gql(node)};`;
+
+      if (this.config.exportAsDefault) {
+        documentString += `\nexport default ${variableName};`;
+      }
     }
 
     const operationType: string = pascalCase(node.operation);

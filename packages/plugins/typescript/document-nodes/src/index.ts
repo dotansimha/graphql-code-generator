@@ -81,6 +81,29 @@ export interface TypeScriptDocumentNodesRawPluginConfig extends RawClientSideBas
   nameSuffix?: string;
   fragmentPrefix?: string;
   fragmentSuffix?: string;
+  /**
+   * @name useDefaultExport
+   * @type boolean
+   * @default false
+   * @description Exposes a document through a default export (works only with "near-operation-file")
+   *
+   * @example
+   * ```yml
+   *  documents: src/api/user-service/queries.graphql
+   *  generates:
+   *    src:
+   *      preset: near-operation-file
+   *      presetConfig:
+   *        extension: .graphql.ts
+   *        baseTypesPath: __generated__/graphql.ts
+   *      plugins:
+   *        - typescript-operations
+   *        - typescript-document-nodes
+   *      config:
+   *        useDefaultExport: true
+   * ```
+   */
+  useDefaultExport?: boolean;
 }
 
 export const plugin: PluginFunction<TypeScriptDocumentNodesRawPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: TypeScriptDocumentNodesRawPluginConfig) => {
