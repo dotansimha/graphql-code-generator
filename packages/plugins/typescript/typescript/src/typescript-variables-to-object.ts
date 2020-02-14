@@ -1,4 +1,4 @@
-import { ParsedEnumValuesMap, OperationVariablesToObject, NormalizedScalarsMap, ConvertNameFn } from '@graphql-codegen/visitor-plugin-common';
+import { ParsedEnumValuesMap, OperationVariablesToObject, NormalizedScalarsMap, ConvertNameFn, InterfaceOrVariable, indent } from '@graphql-codegen/visitor-plugin-common';
 import { TypeNode, Kind } from 'graphql';
 
 export class TypeScriptOperationVariablesToObject extends OperationVariablesToObject {
@@ -55,5 +55,9 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
     }
 
     return fieldType;
+  }
+
+  protected getPunctuation(): string {
+    return ';';
   }
 }

@@ -1,5 +1,5 @@
 import { NonNullTypeNode, ListTypeNode, ObjectTypeDefinitionNode, FieldDefinitionNode, EnumTypeDefinitionNode, NamedTypeNode, GraphQLSchema, InputValueDefinitionNode, Kind, GraphQLEnumType } from 'graphql';
-import { BaseTypesVisitor, DeclarationBlock, wrapWithSingleQuotes, indent, ParsedTypesConfig, transformComment, getConfigValue } from '@graphql-codegen/visitor-plugin-common';
+import { BaseTypesVisitor, DeclarationBlock, wrapWithSingleQuotes, indent, ParsedTypesConfig, transformComment, getConfigValue, DeclarationKind } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
 import { FlowPluginConfig } from './config';
 import { FlowOperationVariablesToObject } from './flow-variables-to-object';
@@ -144,5 +144,9 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
       .withContent(`$Values<typeof ${enumValuesName}>`).string;
 
     return [enumValues, enumType].join('\n\n');
+  }
+
+  protected getPunctuation(declarationKind: DeclarationKind): string {
+    return declarationKind === 'type' ? ',' : ';';
   }
 }

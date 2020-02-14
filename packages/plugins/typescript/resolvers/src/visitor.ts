@@ -1,7 +1,7 @@
 import { TypeScriptResolversPluginConfig } from './config';
 import { ListTypeNode, NamedTypeNode, NonNullTypeNode, GraphQLSchema } from 'graphql';
 import autoBind from 'auto-bind';
-import { ParsedResolversConfig, BaseResolversVisitor, getConfigValue } from '@graphql-codegen/visitor-plugin-common';
+import { ParsedResolversConfig, BaseResolversVisitor, getConfigValue, DeclarationKind } from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptOperationVariablesToObject } from '@graphql-codegen/typescript';
 
 export interface ParsedTypeScriptResolversConfig extends ParsedResolversConfig {
@@ -59,5 +59,9 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<TypeScriptR
     const baseValue = super.NonNullType(node);
 
     return this.clearOptional(baseValue);
+  }
+
+  protected getPunctuation(declarationKind: DeclarationKind): string {
+    return ';';
   }
 }
