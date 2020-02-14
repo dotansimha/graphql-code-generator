@@ -244,7 +244,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
 
   protected _generateFragment(fragmentDocument: FragmentDefinitionNode): string | void {
     const name = this._getFragmentName(fragmentDocument);
-    const isDocumentNode = this.config.documentMode === DocumentMode.documentNode || this.config.documentMode === DocumentMode.documentNodeImportFragments;
+    const isDocumentNode = [DocumentMode.documentNode, DocumentMode.documentNodeImportFragments, DocumentMode.graphQLTag].includes(this.config.documentMode);
     return `export const ${name}${isDocumentNode ? ': DocumentNode' : ''} = ${this._gql(fragmentDocument)};`;
   }
 
@@ -365,14 +365,13 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
 
     let documentString = '';
     if (this.config.documentMode !== DocumentMode.external) {
-      const isDocumentNode = this.config.documentMode === DocumentMode.documentNode || this.config.documentMode === DocumentMode.documentNodeImportFragments;
-      const variableName = `${documentVariableName}${isDocumentNode ? ': DocumentNode' : ''}`;
+      const isDocumentNode = [DocumentMode.documentNode, DocumentMode.documentNodeImportFragments, DocumentMode.graphQLTag].includes(this.config.documentMode);
       const exportKeyword = this.config.noExport || this.config.exportAsDefault ? '' : 'export';
 
-      documentString = `${exportKeyword} const ${variableName} = ${this._gql(node)};`;
+      documentString = `${exportKeyword} const ${documentVariableName}${isDocumentNode ? ': DocumentNode' : ''} = ${this._gql(node)};`;
 
       if (this.config.exportAsDefault) {
-        documentString += `\nexport default ${variableName};`;
+        documentString += `\nexport default ${documentVariableName};`;
       }
     }
 
