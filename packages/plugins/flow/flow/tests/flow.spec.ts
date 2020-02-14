@@ -387,7 +387,7 @@ describe('Flow Plugin', () => {
           a: $ElementType<Scalars, 'String'>,
           b?: ?$ElementType<Scalars, 'String'>,
           c?: ?Array<?$ElementType<Scalars, 'String'>>,
-          d: Array<$ElementType<Scalars, 'Int'>>
+          d: Array<$ElementType<Scalars, 'Int'>>,
         |};
       `);
 

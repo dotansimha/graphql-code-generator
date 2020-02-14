@@ -2,8 +2,8 @@
 
 exports[`TypeScript Operations Plugin Issues #2699 - Issues with multiple interfaces and unions 1`] = `
 "export type GetEntityBrandDataQueryVariables = {
-  gid: Scalars['ID'],
-  brand: Scalars['ID']
+  gid: Scalars['ID'];
+  brand: Scalars['ID'];
 };
 
 

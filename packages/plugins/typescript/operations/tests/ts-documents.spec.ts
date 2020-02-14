@@ -1735,7 +1735,7 @@ describe('TypeScript Operations Plugin', () => {
 
       expect(result).toBeSimilarStringTo(
         `export type MeQueryVariables = {
-          repoFullName: Scalars['String']
+          repoFullName: Scalars['String'];
         };`
       );
       expect(result).toBeSimilarStringTo(`
@@ -1864,7 +1864,7 @@ describe('TypeScript Operations Plugin', () => {
 
       const o = await validate(result, config, testSchema);
       expect(o).toBeSimilarStringTo(` export type ITestQueryVariables = {
-        e: Information_EntryType
+        e: Information_EntryType;
       };`);
       expect(o).toContain(`export type IQuery = {`);
       expect(o).toContain(`export enum Information_EntryType {`);
@@ -2025,14 +2025,14 @@ describe('TypeScript Operations Plugin', () => {
 
       expect(result).toBeSimilarStringTo(
         `export type TestQueryQueryVariables = {
-          username?: Maybe<Scalars['String']>,
-          email?: Maybe<Scalars['String']>,
-          password: Scalars['String'],
-          input?: Maybe<InputType>,
-          mandatoryInput: InputType,
-          testArray?: Maybe<Array<Maybe<Scalars['String']>>>,
-          requireString: Array<Maybe<Scalars['String']>>,
-          innerRequired: Array<Scalars['String']>
+          username?: Maybe<Scalars['String']>;
+          email?: Maybe<Scalars['String']>;
+          password: Scalars['String'];
+          input?: Maybe<InputType>;
+          mandatoryInput: InputType;
+          testArray?: Maybe<Array<Maybe<Scalars['String']>>>;
+          requireString: Array<Maybe<Scalars['String']>>;
+          innerRequired: Array<Scalars['String']>;
         };`
       );
       await validate(result, config);
@@ -2049,7 +2049,7 @@ describe('TypeScript Operations Plugin', () => {
 
       expect(result).toBeSimilarStringTo(
         `export type TestQueryQueryVariables = {
-          test?: Maybe<Scalars['DateTime']>
+          test?: Maybe<Scalars['DateTime']>;
         };`
       );
       await validate(result, config);
@@ -2359,7 +2359,7 @@ describe('TypeScript Operations Plugin', () => {
 
       expect(content).toBeSimilarStringTo(`
         export type PREFIX_UsersQueryVariables = {
-          filter: PREFIX_Filter
+          filter: PREFIX_Filter;
         };
       `);
       expect(content).toBeSimilarStringTo(`
@@ -2401,7 +2401,7 @@ describe('TypeScript Operations Plugin', () => {
 
       expect(content).toBeSimilarStringTo(`
         export type UsersQueryVariables = {
-          reverse?: Maybe<Scalars['Boolean']>
+          reverse?: Maybe<Scalars['Boolean']>;
         };
       `);
     });
