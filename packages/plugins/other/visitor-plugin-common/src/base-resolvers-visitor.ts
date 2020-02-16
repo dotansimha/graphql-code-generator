@@ -787,6 +787,10 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
     return `${resolversType}['${name}']`;
   }
 
+  protected getParentTypeForSignature(node: FieldDefinitionNode) {
+    return 'ParentType';
+  }
+
   protected transformParentGenericType(parentType: string): string {
     return `ParentType extends ${parentType} = ${parentType}`;
   }
@@ -829,7 +833,11 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
         }
       }
 
-      const parentTypeSignature = this._federation.transformParentType({ fieldNode: original, parentType, parentTypeSignature: 'ParentType' });
+      const parentTypeSignature = this._federation.transformParentType({
+        fieldNode: original,
+        parentType,
+        parentTypeSignature: this.getParentTypeForSignature(node),
+      });
       const mappedTypeKey = isSubscriptionType ? `${mappedType}, "${node.name}"` : mappedType;
 
       let signature: {

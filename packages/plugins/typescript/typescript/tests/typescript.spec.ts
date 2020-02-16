@@ -1229,6 +1229,26 @@ describe('TypeScript', () => {
       };`);
       validateTs(result);
     });
+
+    it('Should add FieldWrapper when field definition wrapping is enabled', async () => {
+      const schema = buildSchema(`
+      scalar A
+      `);
+
+      const result = (await plugin(schema, [], { wrapFieldDefinitions: true }, { outputFile: '' })) as Types.ComplexPluginOutput;
+      expect(result.prepend).toBeSimilarStringTo('export type FieldWrapper<T> =');
+      validateTs(result);
+    });
+
+    it('Should allow the FieldWrapper type to be modified', async () => {
+      const schema = buildSchema(`
+      scalar A
+      `);
+
+      const result = (await plugin(schema, [], { fieldWrapperValue: 'T | Promise<T>', wrapFieldDefinitions: true }, { outputFile: '' })) as Types.ComplexPluginOutput;
+      expect(result.prepend).toBeSimilarStringTo('export type FieldWrapper<T> = T | Promise<T>');
+      validateTs(result);
+    });
   });
 
   describe('Object (type)', () => {
@@ -1358,6 +1378,48 @@ describe('TypeScript', () => {
         export type MyOtherType = {
           __typename?: 'MyOtherType',
           bar: Scalars['String'],
+        };
+      `);
+      validateTs(result);
+    });
+
+    it('Should build type correctly when wrapping field definitions', async () => {
+      const schema = buildSchema(`
+        interface MyInterface {
+          foo: String!
+        }
+
+        type MyType implements MyInterface {
+          foo: String!
+        }
+        `);
+      const result = (await plugin(schema, [], { wrapFieldDefinitions: true }, { outputFile: '' })) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type MyInterface = {
+          foo: FieldWrapper<Scalars['String']>,
+        };
+      `);
+      expect(result.content).toBeSimilarStringTo(`
+        export type MyType = MyInterface & {
+          __typename?: 'MyType',
+          foo: FieldWrapper<Scalars['String']>,
+        };
+      `);
+      validateTs(result);
+    });
+
+    it('Should not wrap input type fields', async () => {
+      const schema = buildSchema(`
+        input MyInput {
+          foo: String!
+        }
+        `);
+      const result = (await plugin(schema, [], { wrapFieldDefinitions: true }, { outputFile: '' })) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`
+        export type MyInput = {
+          foo: Scalars['String'],
         };
       `);
       validateTs(result);
