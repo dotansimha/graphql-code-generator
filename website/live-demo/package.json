@@ -32,7 +32,7 @@
     "@graphql-codegen/typescript-urql": "1.12.2",
     "@graphql-codegen/typescript-vue-apollo": "1.12.2",
     "@graphql-codegen/website": "1.12.2",
-    "@material-ui/core": "4.9.2",
+    "@material-ui/core": "4.9.3",
     "@types/codemirror": "0.0.85",
     "@types/react": "16.9.19",
     "@types/react-dom": "16.9.5",
