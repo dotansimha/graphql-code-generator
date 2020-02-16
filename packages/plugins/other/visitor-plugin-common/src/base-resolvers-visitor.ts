@@ -644,11 +644,16 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
       return null;
     }
 
-    if (types[0] && types[0].asDefault) {
-      return `import ${types[0].identifier} from '${source}';`;
-    }
+    const defaultType = types.find(t => t.asDefault === true);
+    const namedTypes = types.filter(t => !t.asDefault);
 
-    return `import { ${types.map(t => t.identifier).join(', ')} } from '${source}';`;
+    // { Foo, Bar as BarModel }
+    const namedImports = namedTypes.length ? `{ ${namedTypes.map(t => t.identifier).join(', ')} }` : '';
+    // Baz
+    const defaultImport = defaultType ? defaultType.identifier : '';
+
+    // Baz, { Foo, Bar as BarModel }
+    return `import ${[defaultImport, namedImports].filter(Boolean).join(', ')} from '${source}';`;
   }
 
   setDeclarationBlockConfig(config: DeclarationBlockConfig): void {
@@ -972,11 +977,10 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
           return block;
         },
       })
-      .export()
-      .asKind('type')
-      .withName(directiveArgsTypeName)
-      .withContent(`{ ${(hasArguments ? this._variablesTransfomer.transform<InputValueDefinitionNode>(sourceNode.arguments) : '')} }`)
-      .string,
+        .export()
+        .asKind('type')
+        .withName(directiveArgsTypeName)
+        .withContent(`{ ${hasArguments ? this._variablesTransfomer.transform<InputValueDefinitionNode>(sourceNode.arguments) : ''} }`).string,
       new DeclarationBlock({
         ...this._declarationBlockConfig,
         blockTransformer(block) {

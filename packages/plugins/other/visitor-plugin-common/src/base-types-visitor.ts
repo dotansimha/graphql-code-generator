@@ -294,7 +294,7 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
         const mappedValue = this.config.enumValues[enumName];
 
         if (mappedValue.sourceFile) {
-          if (mappedValue.sourceIdentifier === 'default') {
+          if (mappedValue.isDefault) {
             return this._buildTypeImport(mappedValue.typeIdentifier, mappedValue.sourceFile, true);
           }
           let identifier = mappedValue.sourceIdentifier;

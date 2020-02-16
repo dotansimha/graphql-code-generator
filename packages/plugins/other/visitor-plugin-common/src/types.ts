@@ -5,7 +5,7 @@ export type ScalarsMap = string | { [name: string]: string };
 export type NormalizedScalarsMap = { [name: string]: string };
 export type ParsedScalarsMap = { [name: string]: ParsedMapper };
 export type EnumValuesMap<AdditionalProps = {}> = string | { [enumName: string]: string | ({ [key: string]: string | number } & AdditionalProps) };
-export type ParsedEnumValuesMap = { [enumName: string]: { mappedValues?: { [valueName: string]: string | number }; typeIdentifier: string; sourceIdentifier?: string; sourceFile?: string } };
+export type ParsedEnumValuesMap = { [enumName: string]: { mappedValues?: { [valueName: string]: string | number }; typeIdentifier: string; sourceIdentifier?: string; sourceFile?: string; isDefault?: boolean } };
 export type ConvertNameFn<T = {}> = ConvertFn<T>;
 
 export interface ConvertOptions {

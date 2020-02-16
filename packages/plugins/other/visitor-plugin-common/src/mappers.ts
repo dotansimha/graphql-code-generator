@@ -17,46 +17,90 @@ export function isExternalMapperType(m: ParsedMapper): m is ExternalParsedMapper
   return !!m['import'];
 }
 
+enum MapperKind {
+  Namespace,
+  Default,
+  Regular,
+}
+
 export function parseMapper(mapper: string, gqlTypeName: string | null = null, suffix?: string): ParsedMapper {
   if (isExternalMapper(mapper)) {
     const items = mapper.split('#');
     const isNamespace = items.length === 3;
-    const source = items[0];
-    let type,
-      importElement,
-      asDefault = false;
+    const isDefault = items[1].trim() === 'default' || items[1].startsWith('default ');
+    const hasAlias = items[1].includes(' as ');
 
-    if (isNamespace) {
-      const ns = items[1];
-      type = `${ns}.${items[2]}`;
-      importElement = ns;
-    } else {
-      const namedDefault = items[1].includes('default as');
-      asDefault = items[1] === 'default';
-      if (asDefault || namedDefault) {
-        type = `${gqlTypeName}`;
-        importElement = namedDefault ? `default as ${gqlTypeName}` : `${gqlTypeName}`;
-      } else {
-        if (items[1].includes(' as ')) {
-          const [importedType, aliasType] = items[1].split(' as ');
-          type = aliasType;
-          importElement = `${importedType} as ${aliasType}`;
-        } else {
-          if (suffix) {
-            type = addSuffix(items[1], suffix);
-            importElement = `${items[1]} as ${type}`;
-          } else {
-            type = items[1];
-            importElement = items[1];
+    const mapperKind: MapperKind = isNamespace ? MapperKind.Namespace : isDefault ? MapperKind.Default : MapperKind.Regular;
+
+    function handleAlias(isDefault = false) {
+      const [importedType, aliasType] = items[1].split(/\s+as\s+/);
+
+      return {
+        importElement: isDefault ? aliasType : `${importedType} as ${aliasType}`,
+        type: aliasType,
+      };
+    }
+
+    function handle(): {
+      importElement: string;
+      type: string;
+    } {
+      switch (mapperKind) {
+        // ./my/module#Namespace#Identifier
+        case MapperKind.Namespace: {
+          const [, ns, identifier] = items;
+
+          return {
+            type: `${ns}.${identifier}`,
+            importElement: ns,
+          };
+        }
+
+        case MapperKind.Default: {
+          // ./my/module#Namespace#default as alias
+          if (hasAlias) {
+            return handleAlias(true);
           }
+
+          // ./my/module#Namespace#default
+          return {
+            importElement: `${gqlTypeName}`,
+            type: `${gqlTypeName}`,
+          };
+        }
+
+        case MapperKind.Regular: {
+          // ./my/module#Identifier as alias
+          if (hasAlias) {
+            return handleAlias();
+          }
+
+          const identifier = items[1];
+
+          if (suffix) {
+            const type = addSuffix(identifier, suffix);
+
+            return {
+              type,
+              importElement: `${identifier} as ${type}`,
+            };
+          }
+
+          // ./my/module#Identifier
+          return {
+            type: identifier,
+            importElement: identifier,
+          };
         }
       }
     }
 
+    const { type, importElement } = handle();
+
     return {
-      default: asDefault,
+      default: isDefault,
       isExternal: true,
-      source,
+      source: items[0],
       type,
       import: importElement.replace(/<(.*?)>/g, ''),
     };
@@ -77,7 +121,8 @@ function addSuffix(element: string, suffix: string): string {
 }
 
 export function isExternalMapper(value: string): boolean {
-  return value.includes('#') && !value.includes('"') && !value.includes('\'');
+  // tslint:disable-next-line:quotemark
+  return value.includes('#') && !value.includes('"') && !value.includes("'");
 }
 
 export function transformMappers(rawMappers: RawResolversConfig['mappers'], mapperTypeSuffix?: string): ParsedResolversConfig['mappers'] {
