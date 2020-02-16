@@ -22,7 +22,7 @@ export type TMutation = {|
 
 export type TMutationFooArgs = {|
   id?: ?$ElementType<Scalars, 'String'>,
-  input?: ?TInput
+  input?: ?TInput,
 |};
 "
 `;
@@ -47,7 +47,7 @@ export type MyTypeFooArgs = {|
   a: $ElementType<Scalars, 'String'>,
   b?: ?$ElementType<Scalars, 'String'>,
   c?: ?Array<?$ElementType<Scalars, 'String'>>,
-  d: Array<$ElementType<Scalars, 'Int'>>
+  d: Array<$ElementType<Scalars, 'Int'>>,
 |};
 "
 `;
@@ -71,7 +71,7 @@ export type MyType = {|
 export type MyTypeFooArgs = {|
   a: $ElementType<Scalars, 'String'>,
   b: $ElementType<Scalars, 'String'>,
-  c?: ?$ElementType<Scalars, 'String'>
+  c?: ?$ElementType<Scalars, 'String'>,
 |};
 "
 `;
@@ -101,7 +101,7 @@ export type MyTypeFooArgs = {|
   b: MyInput,
   c?: ?Array<?MyInput>,
   d: Array<?MyInput>,
-  e: Array<MyInput>
+  e: Array<MyInput>,
 |};
 "
 `;
@@ -173,7 +173,7 @@ export type Mutation = {|
 
 export type MutationUpdateUserArgs = {|
   userId: $ElementType<Scalars, 'ID'>,
-  update?: ?UpdateUser
+  update?: ?UpdateUser,
 |};
 
 export type UpdateUser = {|
@@ -440,7 +440,7 @@ export type Imytypefooargs = {|
   a: $ElementType<Scalars, 'String'>,
   b?: ?$ElementType<Scalars, 'String'>,
   c?: ?Array<?$ElementType<Scalars, 'String'>>,
-  d: Array<$ElementType<Scalars, 'Int'>>
+  d: Array<$ElementType<Scalars, 'Int'>>,
 |};
 "
 `;
@@ -465,7 +465,7 @@ export type mytypefooargs = {|
   a: $ElementType<Scalars, 'String'>,
   b?: ?$ElementType<Scalars, 'String'>,
   c?: ?Array<?$ElementType<Scalars, 'String'>>,
-  d: Array<$ElementType<Scalars, 'Int'>>
+  d: Array<$ElementType<Scalars, 'Int'>>,
 |};
 "
 `;
@@ -730,7 +730,7 @@ export type TMutation = {|
 
 export type TMutationFooArgs = {|
   id?: ?$ElementType<Scalars, 'String'>,
-  input?: ?TInput
+  input?: ?TInput,
 |};
 "
 `;
@@ -755,7 +755,7 @@ export type MyTypeFooArgs = {|
   a: $ElementType<Scalars, 'String'>,
   b?: ?$ElementType<Scalars, 'String'>,
   c?: ?Array<?$ElementType<Scalars, 'String'>>,
-  d: Array<$ElementType<Scalars, 'Int'>>
+  d: Array<$ElementType<Scalars, 'Int'>>,
 |};
 "
 `;
@@ -779,7 +779,7 @@ export type MyType = {|
 export type MyTypeFooArgs = {|
   a: $ElementType<Scalars, 'String'>,
   b: $ElementType<Scalars, 'String'>,
-  c?: ?$ElementType<Scalars, 'String'>
+  c?: ?$ElementType<Scalars, 'String'>,
 |};
 "
 `;
@@ -809,7 +809,7 @@ export type MyTypeFooArgs = {|
   b: MyInput,
   c?: ?Array<?MyInput>,
   d: Array<?MyInput>,
-  e: Array<MyInput>
+  e: Array<MyInput>,
 |};
 "
 `;
@@ -881,7 +881,7 @@ export type Mutation = {|
 
 export type MutationUpdateUserArgs = {|
   userId: $ElementType<Scalars, 'ID'>,
-  update?: ?UpdateUser
+  update?: ?UpdateUser,
 |};
 
 export type UpdateUser = {|
@@ -1148,7 +1148,7 @@ export type Imytypefooargs = {|
   a: $ElementType<Scalars, 'String'>,
   b?: ?$ElementType<Scalars, 'String'>,
   c?: ?Array<?$ElementType<Scalars, 'String'>>,
-  d: Array<$ElementType<Scalars, 'Int'>>
+  d: Array<$ElementType<Scalars, 'Int'>>,
 |};
 "
 `;
@@ -1173,7 +1173,7 @@ export type mytypefooargs = {|
   a: $ElementType<Scalars, 'String'>,
   b?: ?$ElementType<Scalars, 'String'>,
   c?: ?Array<?$ElementType<Scalars, 'String'>>,
-  d: Array<$ElementType<Scalars, 'Int'>>
+  d: Array<$ElementType<Scalars, 'Int'>>,
 |};
 "
 `;

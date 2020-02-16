@@ -1,6 +1,6 @@
 import { ListTypeNode, NamedTypeNode, NonNullTypeNode, GraphQLSchema, ScalarTypeDefinitionNode, InputValueDefinitionNode } from 'graphql';
 import autoBind from 'auto-bind';
-import { RawResolversConfig, indent, ParsedResolversConfig, BaseResolversVisitor, DeclarationBlock } from '@graphql-codegen/visitor-plugin-common';
+import { RawResolversConfig, indent, ParsedResolversConfig, BaseResolversVisitor, DeclarationBlock, DeclarationKind } from '@graphql-codegen/visitor-plugin-common';
 import { FlowOperationVariablesToObject } from '@graphql-codegen/flow';
 import { FLOW_REQUIRE_FIELDS_TYPE } from './flow-util-types';
 
@@ -107,5 +107,9 @@ export class FlowResolversVisitor extends BaseResolversVisitor<RawResolversConfi
         })
       )
       .withBlock([indent(`...GraphQLScalarTypeConfig<${baseName}, any>`), indent(`name: '${node.name}'`)].join(', \n')).string;
+  }
+
+  protected getPunctuation(declarationKind: DeclarationKind): string {
+    return declarationKind === 'type' ? ',' : ';';
   }
 }

@@ -759,7 +759,7 @@ describe('Flow Operations Plugin', () => {
       );
       expect(result).toBeSimilarStringTo(
         `export type MeQueryVariables = {
-          repoFullName: $ElementType<Scalars, 'String'>
+          repoFullName: $ElementType<Scalars, 'String'>,
         };`
       );
       expect(result).toBeSimilarStringTo(`
@@ -997,7 +997,7 @@ describe('Flow Operations Plugin', () => {
           mandatoryInput: InputType,
           testArray?: ?Array<?$ElementType<Scalars, 'String'>>,
           requireString: Array<?$ElementType<Scalars, 'String'>>,
-          innerRequired: Array<$ElementType<Scalars, 'String'>>
+          innerRequired: Array<$ElementType<Scalars, 'String'>>,
         };`
       );
       validateFlow(result);

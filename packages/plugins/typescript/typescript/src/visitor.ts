@@ -1,4 +1,4 @@
-import { transformComment, wrapWithSingleQuotes, DeclarationBlock, indent, BaseTypesVisitor, ParsedTypesConfig, getConfigValue } from '@graphql-codegen/visitor-plugin-common';
+import { transformComment, wrapWithSingleQuotes, DeclarationBlock, indent, BaseTypesVisitor, ParsedTypesConfig, getConfigValue, DeclarationKind } from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptPluginConfig } from './config';
 import { AvoidOptionalsConfig } from './types';
 import autoBind from 'auto-bind';
@@ -91,7 +91,7 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
     const comment = transformComment((node.description as any) as string, 1);
     const { type } = this.config.declarationKind;
 
-    return comment + indent(`${this.config.immutableTypes ? 'readonly ' : ''}${node.name}${addOptionalSign ? '?' : ''}: ${typeString}${type === 'class' ? ';' : ','}`);
+    return comment + indent(`${this.config.immutableTypes ? 'readonly ' : ''}${node.name}${addOptionalSign ? '?' : ''}: ${typeString}${this.getPunctuation(type)}`);
   }
 
   InputValueDefinition(node: InputValueDefinitionNode, key?: number | string, parent?: any): string {
@@ -99,7 +99,7 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
     const addOptionalSign = !this.config.avoidOptionals.inputValue && originalFieldNode.type.kind !== Kind.NON_NULL_TYPE;
     const comment = transformComment((node.description as any) as string, 1);
     const { type } = this.config.declarationKind;
-    return comment + indent(`${this.config.immutableTypes ? 'readonly ' : ''}${node.name}${addOptionalSign ? '?' : ''}: ${node.type}${type === 'class' ? ';' : ','}`);
+    return comment + indent(`${this.config.immutableTypes ? 'readonly ' : ''}${node.name}${addOptionalSign ? '?' : ''}: ${node.type}${this.getPunctuation(type)}`);
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
@@ -141,5 +141,9 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
         .withComment((node.description as any) as string)
         .withBlock(this.buildEnumValuesBlock(enumName, node.values)).string;
     }
+  }
+
+  protected getPunctuation(declarationKind: DeclarationKind): string {
+    return ';';
   }
 }

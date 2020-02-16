@@ -207,7 +207,7 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
     export type MyDirectiveDirectiveArgs = {   arg: $ElementType<Scalars, 'Int'>,
-    arg2: $ElementType<Scalars, 'String'>, arg3: $ElementType<Scalars, 'Boolean'> };
+    arg2: $ElementType<Scalars, 'String'>, arg3: $ElementType<Scalars, 'Boolean'>, };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
@@ -285,7 +285,7 @@ describe('ResolversTypes', () => {
     expect(result.prepend).toContain(`import { type MyCustomOtherType } from './my-file';`);
     expect(result.content).toBeSimilarStringTo(`
     export type MyDirectiveDirectiveArgs = {   arg: $ElementType<Scalars, 'Int'>,
-    arg2: $ElementType<Scalars, 'String'>, arg3: $ElementType<Scalars, 'Boolean'> };
+    arg2: $ElementType<Scalars, 'String'>, arg3: $ElementType<Scalars, 'Boolean'>, };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
@@ -361,7 +361,7 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
     export type MyDirectiveDirectiveArgs = {   arg: $ElementType<Scalars, 'Int'>,
-    arg2: $ElementType<Scalars, 'String'>, arg3: $ElementType<Scalars, 'Boolean'> };
+    arg2: $ElementType<Scalars, 'String'>, arg3: $ElementType<Scalars, 'Boolean'>, };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
@@ -435,7 +435,7 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
     export type MyDirectiveDirectiveArgs = {   arg: $ElementType<Scalars, 'Int'>,
-    arg2: $ElementType<Scalars, 'String'>, arg3: $ElementType<Scalars, 'Boolean'> };
+    arg2: $ElementType<Scalars, 'String'>, arg3: $ElementType<Scalars, 'Boolean'>, };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
@@ -511,7 +511,7 @@ describe('ResolversTypes', () => {
 
     expect(result.content).toBeSimilarStringTo(`
     export type MyDirectiveDirectiveArgs = {   arg: $ElementType<Scalars, 'Int'>,
-    arg2: $ElementType<Scalars, 'String'>, arg3: $ElementType<Scalars, 'Boolean'> };
+    arg2: $ElementType<Scalars, 'String'>, arg3: $ElementType<Scalars, 'Boolean'>, };
     `);
 
     expect(result.content).toBeSimilarStringTo(`

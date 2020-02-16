@@ -42,7 +42,7 @@ export class OperationVariablesToObject {
       return null;
     }
 
-    return variablesNode.map(variable => indent(this.transformVariable(variable))).join(',\n');
+    return variablesNode.map(variable => indent(this.transformVariable(variable))).join(`${this.getPunctuation()}\n`) + this.getPunctuation();
   }
 
   protected getScalar(name: string): string {
@@ -100,5 +100,9 @@ export class OperationVariablesToObject {
     }
 
     return fieldType;
+  }
+
+  protected getPunctuation(): string {
+    return ',';
   }
 }

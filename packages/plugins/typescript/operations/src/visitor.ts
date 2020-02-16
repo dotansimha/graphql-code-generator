@@ -1,5 +1,5 @@
 import { GraphQLSchema, isListType, GraphQLObjectType, GraphQLNonNull, GraphQLList, isEnumType } from 'graphql';
-import { PreResolveTypesProcessor, ParsedDocumentsConfig, BaseDocumentsVisitor, LoadedFragment, getConfigValue, SelectionSetProcessorConfig, SelectionSetToObject } from '@graphql-codegen/visitor-plugin-common';
+import { PreResolveTypesProcessor, ParsedDocumentsConfig, BaseDocumentsVisitor, LoadedFragment, getConfigValue, SelectionSetProcessorConfig, SelectionSetToObject, DeclarationKind } from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptOperationVariablesToObject } from './ts-operation-variables-to-object';
 import { TypeScriptDocumentsPluginConfig } from './config';
 import { isNonNullType } from 'graphql';
@@ -69,5 +69,9 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<TypeScriptD
     this._declarationBlockConfig = {
       ignoreExport: this.config.noExport,
     };
+  }
+
+  protected getPunctuation(declarationKind: DeclarationKind): string {
+    return ';';
   }
 }

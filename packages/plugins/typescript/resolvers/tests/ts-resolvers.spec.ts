@@ -312,9 +312,9 @@ describe('TypeScript Resolvers Plugin', () => {
     const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
 
     expect(result.content).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveArgs = {   arg: Scalars['Int'],
-    arg2: Scalars['String'],
-    arg3: Scalars['Boolean'] };
+    export type MyDirectiveDirectiveArgs = {   arg: Scalars['Int'];
+    arg2: Scalars['String'];
+    arg3: Scalars['Boolean']; };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
@@ -379,9 +379,9 @@ describe('TypeScript Resolvers Plugin', () => {
     const result = (await plugin(schema, [], { avoidOptionals: true }, { outputFile: '' })) as Types.ComplexPluginOutput;
 
     expect(result.content).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveArgs = {   arg: Scalars['Int'],
-    arg2: Scalars['String'],
-    arg3: Scalars['Boolean'] };`);
+    export type MyDirectiveDirectiveArgs = {   arg: Scalars['Int'];
+    arg2: Scalars['String'];
+    arg3: Scalars['Boolean']; };`);
 
     expect(result.content).toBeSimilarStringTo(`
     export type MyDirectiveDirectiveResolver<Result, Parent, ContextType = any, Args = MyDirectiveDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;`);
@@ -452,9 +452,9 @@ describe('TypeScript Resolvers Plugin', () => {
     )) as Types.ComplexPluginOutput;
 
     expect(result.content).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveArgs = {   arg: Scalars['Int'],
-    arg2: Scalars['String'],
-    arg3: Scalars['Boolean'] };
+    export type MyDirectiveDirectiveArgs = {   arg: Scalars['Int'];
+    arg2: Scalars['String'];
+    arg3: Scalars['Boolean']; };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
@@ -540,9 +540,9 @@ describe('TypeScript Resolvers Plugin', () => {
     expect(result.prepend).toContain(`import { MyCustomCtx } from './my-file';`);
 
     expect(result.content).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveArgs = {   arg: Scalars['Int'],
-    arg2: Scalars['String'],
-    arg3: Scalars['Boolean'] };
+    export type MyDirectiveDirectiveArgs = {   arg: Scalars['Int'];
+    arg2: Scalars['String'];
+    arg3: Scalars['Boolean']; };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
@@ -612,9 +612,9 @@ describe('TypeScript Resolvers Plugin', () => {
     expect(result.prepend).toContain(`import ContextType from './my-file';`);
 
     expect(result.content).toBeSimilarStringTo(`
-    export type MyDirectiveDirectiveArgs = {   arg: Scalars['Int'],
-    arg2: Scalars['String'],
-    arg3: Scalars['Boolean'] };
+    export type MyDirectiveDirectiveArgs = {   arg: Scalars['Int'];
+    arg2: Scalars['String'];
+    arg3: Scalars['Boolean']; };
     `);
 
     expect(result.content).toBeSimilarStringTo(`
@@ -1664,7 +1664,7 @@ describe('TypeScript Resolvers Plugin', () => {
         { outputFile: 'graphql.ts' }
       )) as Types.ComplexPluginOutput;
 
-      expect(output.content).toContain(`export type GqlAuthDirectiveArgs = {   role?: Maybe<UserRole> };`)
+      expect(output.content).toContain(`export type GqlAuthDirectiveArgs = {   role?: Maybe<UserRole>; };`)
       expect(output.content).toContain(`export type GqlAuthDirectiveResolver<Result, Parent, ContextType = any, Args = GqlAuthDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;`);
     });
   });

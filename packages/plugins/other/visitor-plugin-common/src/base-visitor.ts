@@ -1,4 +1,4 @@
-import { ScalarsMap, ParsedScalarsMap, NamingConvention, ConvertFn, ConvertOptions, LoadedFragment, NormalizedScalarsMap } from './types';
+import { ScalarsMap, ParsedScalarsMap, NamingConvention, ConvertFn, ConvertOptions, LoadedFragment, NormalizedScalarsMap, DeclarationKind } from './types';
 import { DeclarationBlockConfig } from './utils';
 import autoBind from 'auto-bind';
 import { convertFactory } from './naming';
@@ -147,5 +147,9 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
     const useTypesPrefix = typeof (options && options.useTypesPrefix) === 'boolean' ? options.useTypesPrefix : true;
 
     return (useTypesPrefix ? this.config.typesPrefix : '') + this.config.convert(node, options);
+  }
+
+  protected getPunctuation(declarationKind: DeclarationKind): string {
+    return '';
   }
 }

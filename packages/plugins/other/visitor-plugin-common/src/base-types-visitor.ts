@@ -145,9 +145,9 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
       const scalarValue = this.config.scalars[scalarName].type;
       const scalarType = this._schema.getType(scalarName);
       const comment = scalarType && scalarType.astNode && scalarType.description ? transformComment(scalarType.description, 1) : '';
-      const { type } = this._parsedConfig.declarationKind;
+      const { scalar } = this._parsedConfig.declarationKind;
 
-      return comment + indent(`${scalarName}: ${scalarValue}${type === 'class' ? ';' : ','}`);
+      return comment + indent(`${scalarName}: ${scalarValue}${this.getPunctuation(scalar)}`);
     });
 
     return new DeclarationBlock(this._declarationBlockConfig)
@@ -187,8 +187,9 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
 
   InputValueDefinition(node: InputValueDefinitionNode): string {
     const comment = transformComment((node.description as any) as string, 1);
+    const { input } = this._parsedConfig.declarationKind;
 
-    return comment + indent(`${node.name}: ${node.type},`);
+    return comment + indent(`${node.name}: ${node.type}${this.getPunctuation(input)}`);
   }
 
   Name(node: NameNode): string {
@@ -200,7 +201,7 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
     const comment = transformComment((node.description as any) as string, 1);
     const { type } = this._parsedConfig.declarationKind;
 
-    return comment + indent(`${node.name}: ${typeString}${type === 'class' ? ';' : ','}`);
+    return comment + indent(`${node.name}: ${typeString}${this.getPunctuation(type)}`);
   }
 
   UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number | undefined, parent: any): string {
@@ -227,7 +228,7 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
   getObjectTypeDeclarationBlock(node: ObjectTypeDefinitionNode, originalNode: ObjectTypeDefinitionNode): DeclarationBlock {
     const optionalTypename = this.config.nonOptionalTypename ? '__typename' : '__typename?';
     const { type } = this._parsedConfig.declarationKind;
-    const allFields = [...(this.config.addTypename ? [indent(`${this.config['immutableTypes'] ? 'readonly' : ''} ${optionalTypename}: '${node.name}'${type === 'class' ? ';' : ','}`)] : []), ...node.fields] as string[];
+    const allFields = [...(this.config.addTypename ? [indent(`${this.config['immutableTypes'] ? 'readonly' : ''} ${optionalTypename}: '${node.name}'${this.getPunctuation(type)}`)] : []), ...node.fields] as string[];
     const interfacesNames = originalNode.interfaces ? originalNode.interfaces.map(i => this.convertName(i)) : [];
 
     const declarationBlock = new DeclarationBlock(this._declarationBlockConfig)
