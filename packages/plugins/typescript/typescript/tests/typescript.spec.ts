@@ -1203,23 +1203,23 @@ describe('TypeScript', () => {
       expect(result.prepend).toContain(`import { MyAliasedScalar as AliasedScalar } from '../../scalars';`);
       expect(result.content).toBeSimilarStringTo(`
       export type Scalars = {
-        ID: string,
-        String: string,
-        Boolean: boolean,
-        Int: number,
-        Float: number,
-        MyScalar: MyScalar,
-        MyOtherScalar: MyOtherScalar,
-        MyAliasedScalar: AliasedScalar,
+        ID: string;
+        String: string;
+        Boolean: boolean;
+        Int: number;
+        Float: number;
+        MyScalar: MyScalar;
+        MyOtherScalar: MyOtherScalar;
+        MyAliasedScalar: AliasedScalar;
       };`);
 
       expect(result.content).toBeSimilarStringTo(`
       export type MyType = {
-        __typename?: 'MyType',
-        foo?: Maybe<Scalars['String']>,
-        bar: Scalars['MyScalar'],
-        baz: Scalars['MyOtherScalar'],
-        qux: Scalars['MyAliasedScalar'],
+        __typename?: 'MyType';
+        foo?: Maybe<Scalars['String']>;
+        bar: Scalars['MyScalar'];
+        baz: Scalars['MyOtherScalar'];
+        qux: Scalars['MyAliasedScalar'];
       };`);
       validateTs(result);
     });
@@ -1449,13 +1449,13 @@ describe('TypeScript', () => {
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyInterface = {
-          foo: FieldWrapper<Scalars['String']>,
+          foo: FieldWrapper<Scalars['String']>;
         };
       `);
       expect(result.content).toBeSimilarStringTo(`
         export type MyType = MyInterface & {
-          __typename?: 'MyType',
-          foo: FieldWrapper<Scalars['String']>,
+          __typename?: 'MyType';
+          foo: FieldWrapper<Scalars['String']>;
         };
       `);
       validateTs(result);
@@ -1471,7 +1471,7 @@ describe('TypeScript', () => {
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyInput = {
-          foo: Scalars['String'],
+          foo: Scalars['String'];
         };
       `);
       validateTs(result);
