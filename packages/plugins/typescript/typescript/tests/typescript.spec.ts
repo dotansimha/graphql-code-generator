@@ -1255,14 +1255,14 @@ describe('TypeScript', () => {
       expect(result.prepend).toContain(`import { MyAliasedScalar as AliasedScalar } from '../../scalars';`);
       expect(result.content).toBeSimilarStringTo(`
       export type Scalars = {
-        ID: string,
-        String: string,
-        Boolean: boolean,
-        Int: number,
-        Float: number,
-        MyScalar: MyScalar,
-        MyOtherScalar: MyOtherScalar,
-        MyAliasedScalar: AliasedScalar,
+        ID: string;
+        String: string;
+        Boolean: boolean;
+        Int: number;
+        Float: number;
+        MyScalar: MyScalar;
+        MyOtherScalar: MyOtherScalar;
+        MyAliasedScalar: AliasedScalar;
       };`);
 
       expect(result.content).toBeSimilarStringTo(`
