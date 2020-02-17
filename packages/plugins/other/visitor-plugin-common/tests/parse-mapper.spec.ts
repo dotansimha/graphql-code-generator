@@ -34,9 +34,20 @@ describe('parseMapper', () => {
   });
 
   it('Should support namespaces', () => {
-    const result = parseMapper('file#Namespace#Type', 'MyGqlType');
+    const result = parseMapper('file#Namespace.Type', 'MyGqlType');
 
     expect(result).toEqual({
+      default: false,
+      isExternal: true,
+      import: 'Namespace',
+      type: 'Namespace.Type',
+      source: 'file',
+    });
+
+    // legacy
+    const legacyResult = parseMapper('file#Namespace#Type', 'MyGqlType');
+
+    expect(legacyResult).toEqual({
       default: false,
       isExternal: true,
       import: 'Namespace',
@@ -52,6 +63,18 @@ describe('parseMapper', () => {
       default: false,
       isExternal: true,
       import: 'Type as SomeOtherType',
+      type: 'SomeOtherType',
+      source: 'file',
+    });
+  });
+
+  it('Should support aliases (default)', () => {
+    const result = parseMapper('file#default as SomeOtherType', 'SomeType');
+
+    expect(result).toEqual({
+      default: true,
+      isExternal: true,
+      import: 'SomeOtherType',
       type: 'SomeOtherType',
       source: 'file',
     });
@@ -116,9 +139,20 @@ describe('parseMapper', () => {
     });
 
     it('Should not affect namespaces', () => {
-      const result = parseMapper('file#Namespace#Type', 'MyGqlType', 'Model');
+      const result = parseMapper('file#Namespace.Type', 'MyGqlType', 'Model');
 
       expect(result).toEqual({
+        default: false,
+        isExternal: true,
+        import: 'Namespace',
+        type: 'Namespace.Type',
+        source: 'file',
+      });
+
+      // legacy
+      const legacyResult = parseMapper('file#Namespace#Type', 'MyGqlType', 'Model');
+
+      expect(legacyResult).toEqual({
         default: false,
         isExternal: true,
         import: 'Namespace',

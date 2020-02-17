@@ -23,12 +23,48 @@ enum MapperKind {
   Regular,
 }
 
+interface Helpers {
+  items: string[];
+  isNamespace: boolean;
+  isDefault: boolean;
+  hasAlias: boolean;
+}
+
+function prepareLegacy(mapper: string): Helpers {
+  const items = mapper.split('#');
+  const isNamespace = items.length === 3;
+  const isDefault = items[1].trim() === 'default' || items[1].startsWith('default ');
+  const hasAlias = items[1].includes(' as ');
+
+  return {
+    items,
+    isDefault,
+    isNamespace,
+    hasAlias,
+  };
+}
+
+function prepare(mapper: string): Helpers {
+  const [source, path] = mapper.split('#');
+  const isNamespace = path.includes('.');
+  const isDefault = path.trim() === 'default' || path.startsWith('default ');
+  const hasAlias = path.includes(' as ');
+
+  return {
+    items: isNamespace ? [source, ...path.split('.')] : [source, path],
+    isDefault,
+    isNamespace,
+    hasAlias,
+  };
+}
+
+function isLegacyMode(mapper: string) {
+  return mapper.split('#').length === 3;
+}
+
 export function parseMapper(mapper: string, gqlTypeName: string | null = null, suffix?: string): ParsedMapper {
   if (isExternalMapper(mapper)) {
-    const items = mapper.split('#');
-    const isNamespace = items.length === 3;
-    const isDefault = items[1].trim() === 'default' || items[1].startsWith('default ');
-    const hasAlias = items[1].includes(' as ');
+    const { isNamespace, isDefault, hasAlias, items } = isLegacyMode(mapper) ? prepareLegacy(mapper) : prepare(mapper);
 
     const mapperKind: MapperKind = isNamespace ? MapperKind.Namespace : isDefault ? MapperKind.Default : MapperKind.Regular;
 
