@@ -1224,58 +1224,6 @@ describe('TypeScript', () => {
       validateTs(result);
     });
 
-    it('Should import a type of a mapped scalar', async () => {
-      const schema = buildSchema(`
-      scalar MyScalar
-      scalar MyOtherScalar
-      scalar MyAliasedScalar
-
-      type MyType {
-        foo: String
-        bar: MyScalar!
-        baz: MyOtherScalar!
-        qux: MyAliasedScalar!
-      }`);
-      const result = (await plugin(
-        schema,
-        [],
-        {
-          scalars: {
-            MyScalar: '../../scalars#default',
-            MyOtherScalar: '../../scalars#MyOtherScalar',
-            MyAliasedScalar: '../../scalars#MyAliasedScalar as AliasedScalar',
-          },
-        },
-        { outputFile: '' }
-      )) as Types.ComplexPluginOutput;
-
-      // It seems like we don't group imports...
-      expect(result.prepend).toContain(`import MyScalar from '../../scalars';`);
-      expect(result.prepend).toContain(`import { MyOtherScalar } from '../../scalars';`);
-      expect(result.prepend).toContain(`import { MyAliasedScalar as AliasedScalar } from '../../scalars';`);
-      expect(result.content).toBeSimilarStringTo(`
-      export type Scalars = {
-        ID: string;
-        String: string;
-        Boolean: boolean;
-        Int: number;
-        Float: number;
-        MyScalar: MyScalar;
-        MyOtherScalar: MyOtherScalar;
-        MyAliasedScalar: AliasedScalar;
-      };`);
-
-      expect(result.content).toBeSimilarStringTo(`
-      export type MyType = {
-        __typename?: 'MyType',
-        foo?: Maybe<Scalars['String']>,
-        bar: Scalars['MyScalar'],
-        baz: Scalars['MyOtherScalar'],
-        qux: Scalars['MyAliasedScalar'],
-      };`);
-      validateTs(result);
-    });
-
     it('Should generate a scalars mapping correctly for custom scalars', async () => {
       const schema = buildSchema(`
       scalar MyScalar
