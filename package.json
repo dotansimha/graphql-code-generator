@@ -47,7 +47,7 @@
     "@types/jest": "25.1.2",
     "@types/mkdirp": "1.0.0",
     "@types/node": "10.17.15",
-    "@types/react": "16.9.19",
+    "@types/react": "16.9.20",
     "@types/request": "2.48.4",
     "react": "16.12.0",
     "react-dom": "16.12.0",
@@ -83,6 +83,6 @@
     ]
   },
   "resolutions": {
-    "@types/react": "16.9.19"
+    "@types/react": "16.9.20"
   }
 }
