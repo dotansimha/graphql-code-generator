@@ -10,7 +10,7 @@ Extends or overrides the built-in scalars and custom GraphQL scalars to a custom
 config:
   scalars:
     DateTime: Date
-    JSON: { [key: string]: any }
+    JSON: "{ [key: string]: any }"
 ```
 
 ### namingConvention (`NamingConvention`, default value: `pascal-case#pascalCase`)

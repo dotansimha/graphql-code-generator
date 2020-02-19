@@ -28,7 +28,7 @@ export interface RawConfig {
    * config:
    *   scalars:
    *     DateTime: Date
-   *     JSON: { [key: string]: any }
+   *     JSON: "{ [key: string]: any }"
    * ```
    */
   scalars?: ScalarsMap;
