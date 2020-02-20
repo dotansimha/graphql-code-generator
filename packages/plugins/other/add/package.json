@@ -19,7 +19,7 @@
   "devDependencies": {
     "@ardatan/bob": "0.2.7",
     "graphql": "14.6.0",
-    "typescript": "3.7.5"
+    "typescript": "3.8.2"
   },
   "sideEffects": false,
   "main": "dist/index.cjs.js",
