@@ -16209,10 +16209,10 @@ source-list-map@^2.0.0:
   resolved "https://registry.yarnpkg.com/source-list-map/-/source-list-map-2.0.1.tgz#3993bd873bfc48479cca9ea3a547835c7c154b34"
   integrity sha512-qnQ7gVMxGNxsiL4lEuJwe/To8UnK7fAnmbGEEH8RpLouuKbeEm0lhbQVFIrNSuB+G7tVrAlVsZgETT5nljf+Iw==
 
-source-map-explorer@2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/source-map-explorer/-/source-map-explorer-2.3.0.tgz#498ff29ff5b95e23beae898a6d84c8a997a29800"
-  integrity sha512-OABtjj3e1HeTtAs5d89uTDQfzkK5p4eLPquKIWceTqEMA3zmPwqx16h6jiEeHqkyvPDh+HHUsVxVEC03G23K1A==
+source-map-explorer@2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/source-map-explorer/-/source-map-explorer-2.3.1.tgz#d91615a19ad1f4e08d05616bee6e30ddb770ae70"
+  integrity sha512-l3WQUCwaqia5x7EBnNp4GYwhXnROMz3NqKM2QMwQ3ADgjekp+enP+PHkjjbjoVX6WJ2G5mbvM6TjeE/q7fnIFw==
   dependencies:
     btoa "^1.2.1"
     chalk "^3.0.0"
