@@ -34,7 +34,7 @@
     "definition": "dist/esnext/index.d.ts"
   },
   "jest-junit": {
-    "outputDirectory": "../../../../test-results/typescript-react-apollo"
+    "outputDirectory": "../../../../test-results/typescript-oclif"
   },
   "publishConfig": {
     "access": "public"
