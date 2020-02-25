@@ -75,4 +75,40 @@ export interface TypeScriptResolversPluginConfig extends RawResolversConfig {
    * ```
    */
   customResolveInfo?: string;
+  /**
+   * @name customResolverFn
+   * @type string
+   * @description You can provide your custom ResolveFn instead the default. It has to be a type that uses the generics <TResult, TParent, TContext, TArgs>
+   * @default "(parent: TParent, args: TArgs, context: TContext, info: GraphQLResolveInfo) => Promise<TResult> | TResult"
+   *
+   * @example
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *    - typescript-resolvers
+   *  config:
+   *    customResolverFn: ./my-types#MyResolveFn
+   * ```
+   *
+   * @example
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - add: "import { GraphileHelpers } from 'graphile-utils/node8plus/fieldHelpers';"
+   *    - typescript
+   *    - typescript-resolvers
+   *  config:
+   *    customResolverFn: |
+   *      (
+   *        parent: TParent,
+   *        args: TArgs,
+   *        context: TContext,
+   *        info: GraphQLResolveInfo & { graphile: GraphileHelpers<TParent> }
+   *      ) => Promise<TResult> | TResult;
+   * ```
+   */
+  customResolverFn?: string;
 }

@@ -27,7 +27,8 @@ export const plugin: PluginFunction<TypeScriptResolversPluginConfig> = (schema: 
   // runs visitor
   const visitorResult = visit(astNode, { leave: visitor });
 
-  const defsToInclude = [];
+  const prepend: string[] = [];
+  const defsToInclude: string[] = [];
   const stitchingResolverType = `
 export type StitchingResolver<TResult, TParent, TContext, TArgs> = {
   fragment: string;
@@ -64,16 +65,33 @@ export type StitchingResolver<TResult, TParent, TContext, TArgs> = {
     defsToInclude.push([stitchingResolverType, resolverType, `  | ${resolverFnUsage}`, `  | ${stitchingResolverUsage};`].join('\n'));
   }
 
-  const header = `${indexSignature}
-
-${visitor.getResolverTypeWrapperSignature()}
-
+  if (config.customResolverFn) {
+    const parsedMapper = parseMapper(config.customResolverFn);
+    if (parsedMapper.isExternal) {
+      if (parsedMapper.default) {
+        prepend.push(`import ResolverFn from '${parsedMapper.source}';`);
+      } else {
+        prepend.push(`import { ${parsedMapper.import} ${parsedMapper.import !== 'ResolverFn' ? 'as ResolverFn ' : ''}} from '${parsedMapper.source}';`);
+      }
+      prepend.push(`export { ResolverFn };`);
+    } else {
+      prepend.push(`export type ResolverFn<TResult, TParent, TContext, TArgs> = ${parsedMapper.type}`);
+    }
+  } else {
+    const defaultResolverFn = `
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
   args: TArgs,
   context: TContext,
   info: GraphQLResolveInfo
-) => Promise<TResult> | TResult;
+) => Promise<TResult> | TResult;`;
+
+    defsToInclude.push(defaultResolverFn);
+  }
+
+  const header = `${indexSignature}
+
+${visitor.getResolverTypeWrapperSignature()}
 
 ${defsToInclude.join('\n')}
 
@@ -139,8 +157,6 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   if (showUnusedMappers && unusedMappers.length) {
     console['warn'](`Unused mappers: ${unusedMappers.join(',')}`);
   }
-
-  const prepend: string[] = [];
 
   if (imports.length) {
     prepend.push(`import { ${imports.join(', ')} } from 'graphql';`);
