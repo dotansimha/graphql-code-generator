@@ -26,7 +26,7 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<Config, ClientS
     super(schema, fragments, rawConfig, {});
     this._info = info;
 
-    const { clientPath = '../../client' } = rawConfig;
+    const { handlerPath = '../../handler' } = rawConfig;
 
     // FIXME: This is taken in part from
     //  presets/near-operation-file/src/index.ts:139. How do I build a path relative to the outputFile in the same way?
@@ -35,7 +35,7 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<Config, ClientS
 
     autoBind(this);
     this._additionalImports.push(`import { Command, flags } from '@oclif/command'`);
-    this._additionalImports.push(`import client from '${clientPath}'`);
+    this._additionalImports.push(`import handler from '${handlerPath}'`);
   }
 
   protected buildOperation(node: OperationDefinitionNode, documentVariableName: string, operationType: string, operationResultType: string, operationVariablesTypes: string): string {
@@ -104,14 +104,7 @@ ${indentMultiline(flags.join(',\n'), 2)}
 
   async run() {
     const { flags } = this.parse(${operation.node.name.value});
-    client.request(${operation.documentVariableName}, flags)
-      .then(data => {
-        this.log(JSON.stringify(data, null, 2));
-      })
-      .catch(error => {
-        console.log(error.response.data);
-        console.error(error.response.errors.map((e: Error) => e.message).join("\\n"));
-      });
+    await handler({ command: this, query: ${operation.documentVariableName}, variables: flags });
   }
 }
 `;

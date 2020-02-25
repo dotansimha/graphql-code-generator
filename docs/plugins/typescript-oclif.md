@@ -28,7 +28,7 @@ generates:
       baseTypesPath: ../types.ts
     plugins:
       - typescript-oclif:
-          clientPath: ../../client
+          handlerPath: ../../handler
 ```
 
 
@@ -50,11 +50,68 @@ You'll be starting from your projects directory. From there, generate the CLI sk
 
 These documents are how `oclif` will interact with your API. For each document, there will be exactly one command.
 
-Within the directory created by the `oclif` tool, you'll have a subdirectory `src/commands`. That's where you'll put your GraphQL documents. Ie, to create a `<cli-name> hello` command, you'd write a `src/commands/hello.graphql` document, which will be used to generate a `src/commands/hello.ts` file. **Important**: each document should have exactly one GraphQL operation.
+Within the directory created by the `oclif` tool, you'll have a subdirectory `src/commands`. That's 
+where you'll put your GraphQL documents. Ie, to create a `<cli-name> hello` command, you'd write a 
+`src/commands/hello.graphql` document, which will be used to generate a `src/commands/hello.ts` 
+file. **Important**: each document should have exactly one GraphQL operation.
 
-### Step 3: Add & Export a GraphQL Client
+### Step 3: Add & Export a GraphQL Query Handler
 
-Which client you use, and how you configure it, is entirely up to you! It just has to conform to the `GraphQLClient` type interface exported by `graphql`. You can add a `src/client.ts` (or any other path), configure your client there, and then export it as the **default** (check out [our example](src/client.ts)). `graphql-request` should work for most use cases. It's in this module that you can handle auth logic, read config files, etc., and that will apply to all CLI operations. This file will not be modified by the codegen.
+Which client you use, and how you configure it, is entirely up to you! It just has to conform to
+this `QueryHandler` signature:
+
+```ts
+import { Command } from '@oclif/command';
+
+interface QueryHandlerProps {
+  command: Command
+  query: string;
+  variables?: Record<string, any>;
+}
+
+type QueryHandler = (props: QueryHandlerProps) => any;
+```
+
+This allows you to pre-process, send, and post-process requests however you'd like, as well as format
+the results returned. The arguments are:
+
+* `command`: the command object being executed, described [here](https://oclif.io/docs/commands)
+  in the `oclif` documentation.
+* `query`: the string version of the GraphQL query being executed.
+* `variables`: the variables as configured in your GraphQL operation and parsed by `oclif`.
+
+You can add a `src/handler.ts` (or any other path), configure your handler function there, and then 
+export your handler as the **default export**. It's in this module that you can handle auth logic,
+read config files, etc., and that will apply to all CLI operations. This file will not be modified
+by the codegen.
+
+To get started quickly and easily, consider using the simple `graphql-request` as your handler:
+
+```ts
+// handler.ts
+
+import { GraphQLClient } from "graphql-request";
+import { Command } from "@oclif/command";
+
+interface QueryHandlerProps {
+  command: Command;
+  query: string;
+  variables?: Record<string, any>;
+}
+
+// Change the URL to the endpoint your CLI will use
+const client = new GraphQLClient("http://localhost:4000");
+
+const handler = ({ command, query, variables }: QueryHandlerProps) => {
+  return client
+    .request(query, variables)
+    .then(command.log)
+    .catch(command.error);
+};
+
+export default handler;
+
+```
 
 ### Step 4: Add & Configure GraphQL Codegen
 

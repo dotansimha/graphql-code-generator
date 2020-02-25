@@ -5,7 +5,7 @@ import { GraphQLRequestVisitor } from './visitor';
 import { extname } from 'path';
 
 export interface Config extends RawClientSideBasePluginConfig {
-  clientPath?: string;
+  handlerPath?: string;
 }
 
 export interface Info {

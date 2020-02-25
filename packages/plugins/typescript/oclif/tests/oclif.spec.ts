@@ -19,7 +19,7 @@ describe('oclif', () => {
       `);
 
       const config = {};
-      const docs = [{ filePath: '', content: document }];
+      const docs = [{ location: '', document }];
       const result = (await plugin(schema, docs, config, {
         outputFile: 'graphql.ts',
       })) as Types.ComplexPluginOutput;
@@ -38,7 +38,7 @@ describe('oclif', () => {
       `);
 
       const config = {};
-      const docs = [{ filePath: '', content: document }];
+      const docs = [{ location: '', document }];
       const result = (await plugin(schema, docs, config, {
         outputFile: 'graphql.ts',
       })) as Types.ComplexPluginOutput;
@@ -57,7 +57,7 @@ describe('oclif', () => {
       `);
 
       const config = {};
-      const docs = [{ filePath: '', content: document }];
+      const docs = [{ location: '', document }];
       const result = (await plugin(schema, docs, config, {
         outputFile: 'graphql.ts',
       })) as Types.ComplexPluginOutput;
@@ -75,7 +75,7 @@ describe('oclif', () => {
       `);
 
       const config = {};
-      const docs = [{ filePath: '', content: document }];
+      const docs = [{ location: '', document }];
       const result = (await plugin(schema, docs, config, {
         outputFile: 'graphql.ts',
       })) as Types.ComplexPluginOutput;
@@ -93,7 +93,7 @@ describe('oclif', () => {
       `);
 
       const config = {};
-      const docs = [{ filePath: '', content: document }];
+      const docs = [{ location: '', document }];
       const result = (await plugin(schema, docs, config, {
         outputFile: 'graphql.ts',
       })) as Types.ComplexPluginOutput;

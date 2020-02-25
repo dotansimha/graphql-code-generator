@@ -26,14 +26,7 @@ export default class Vote extends Command {
 
   async run() {
     const { flags } = this.parse(Vote);
-    client.request(VoteDocument, flags)
-      .then(data => {
-        this.log(JSON.stringify(data, null, 2));
-      })
-      .catch(error => {
-        console.log(error.response.data);
-        console.error(error.response.errors.map((e: Error) => e.message).join(\\"\\\\n\\"));
-      });
+    await handler({ command: this, query: VoteDocument, variables: flags });
   }
 }
 "
@@ -70,14 +63,7 @@ export default class GetFeed extends Command {
 
   async run() {
     const { flags } = this.parse(GetFeed);
-    client.request(GetFeedDocument, flags)
-      .then(data => {
-        this.log(JSON.stringify(data, null, 2));
-      })
-      .catch(error => {
-        console.log(error.response.data);
-        console.error(error.response.errors.map((e: Error) => e.message).join(\\"\\\\n\\"));
-      });
+    await handler({ command: this, query: GetFeedDocument, variables: flags });
   }
 }
 "
@@ -106,14 +92,7 @@ export default class GetFeed extends Command {
 
   async run() {
     const { flags } = this.parse(GetFeed);
-    client.request(GetFeedDocument, flags)
-      .then(data => {
-        this.log(JSON.stringify(data, null, 2));
-      })
-      .catch(error => {
-        console.log(error.response.data);
-        console.error(error.response.errors.map((e: Error) => e.message).join(\\"\\\\n\\"));
-      });
+    await handler({ command: this, query: GetFeedDocument, variables: flags });
   }
 }
 "
@@ -143,14 +122,7 @@ export default class GetEntry extends Command {
 
   async run() {
     const { flags } = this.parse(GetEntry);
-    client.request(GetEntryDocument, flags)
-      .then(data => {
-        this.log(JSON.stringify(data, null, 2));
-      })
-      .catch(error => {
-        console.log(error.response.data);
-        console.error(error.response.errors.map((e: Error) => e.message).join(\\"\\\\n\\"));
-      });
+    await handler({ command: this, query: GetEntryDocument, variables: flags });
   }
 }
 "
@@ -179,14 +151,7 @@ static examples: string[] = [\\"cli get-current-user\\",\\"hello\\"];
 
   async run() {
     const { flags } = this.parse(GetCurrentUser);
-    client.request(GetCurrentUserDocument, flags)
-      .then(data => {
-        this.log(JSON.stringify(data, null, 2));
-      })
-      .catch(error => {
-        console.log(error.response.data);
-        console.error(error.response.errors.map((e: Error) => e.message).join(\\"\\\\n\\"));
-      });
+    await handler({ command: this, query: GetCurrentUserDocument, variables: flags });
   }
 }
 "
