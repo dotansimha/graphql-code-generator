@@ -1,7 +1,6 @@
-import { compileTs } from '@graphql-codegen/testing';
 import { plugin } from '../src/index';
 import { parse, buildClientSchema } from 'graphql';
-import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
+import { Types } from '@graphql-codegen/plugin-helpers';
 import { readFileSync } from 'fs';
 
 describe('oclif', () => {
