@@ -3023,10 +3023,10 @@
     "@types/events" "*"
     "@types/node" "*"
 
-"@types/codemirror@0.0.85":
-  version "0.0.85"
-  resolved "https://registry.yarnpkg.com/@types/codemirror/-/codemirror-0.0.85.tgz#6fc36a0e8b76d58365c4b8a496873f9ed559039c"
-  integrity sha512-ZAVyNzXAHu/mkvvZlq2IYPBjm4X3mEno27epXpBRXwWbX75zAAeGZfubXxft1kWNqBSI2f50kvuJTG+fRwHaNg==
+"@types/codemirror@0.0.86":
+  version "0.0.86"
+  resolved "https://registry.yarnpkg.com/@types/codemirror/-/codemirror-0.0.86.tgz#f6972d60e57024f7d787839a72cec8bdcb98edbb"
+  integrity sha512-BKUn2ojSwB0VMUzIOglC3Ka1+AjZDciak4h0CX1rpnzZ/ceawx0X0RyLMDLVfoeaDABmnYp9SfKY3go0RJKBvQ==
   dependencies:
     "@types/tern" "*"
 
