@@ -16,7 +16,7 @@ export interface Info {
 export const plugin: PluginFunction = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: Config, info: Info) => {
   const allAst = concatAST(
     documents.reduce((prev, v) => {
-      return [...prev, v.content];
+      return [...prev, v.document];
     }, [])
   );
   const allFragments: LoadedFragment[] = [
