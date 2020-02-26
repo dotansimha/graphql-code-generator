@@ -39,8 +39,8 @@
     "codemirror": "5.52.0",
     "codemirror-graphql": "0.11.6",
     "js-yaml": "3.13.1",
-    "react": "16.12.0",
-    "react-dom": "16.12.0",
+    "react": "16.13.0",
+    "react-dom": "16.13.0",
     "react-scripts": "3.4.0"
   },
   "scripts": {
