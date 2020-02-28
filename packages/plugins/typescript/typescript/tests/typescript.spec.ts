@@ -219,7 +219,8 @@ describe('TypeScript', () => {
         XYZ: 'X_Y_Z',
         Test: '_TEST',
         MyValue: 'My_Value'
-      } as const;`);
+      } as const;
+      export type MyEnum = typeof MyEnum[keyof typeof MyEnum];`);
     });
 
     it('Should work with enum and enum values (enumsAsTypes)', async () => {

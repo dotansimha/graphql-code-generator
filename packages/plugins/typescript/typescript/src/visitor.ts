@@ -138,7 +138,8 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
     }
 
     if (this.config.enumsAsConst) {
-      return new DeclarationBlock({
+      const typeName = `export type ${enumTypeName} = typeof ${enumTypeName}[keyof typeof ${enumTypeName}];`;
+      const enumAsConst = new DeclarationBlock({
         ...this._declarationBlockConfig,
         blockTransformer: block => {
           return block + ' as const';
@@ -163,6 +164,8 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
             })
             .join(',\n')
         ).string;
+
+      return [enumAsConst, typeName].join('\n');
     }
 
     return new DeclarationBlock(this._declarationBlockConfig)
