@@ -18,6 +18,9 @@ export interface ApolloAngularPluginConfig extends ClientSideBasePluginConfig {
   serviceName?: string;
   serviceProvidedInRoot?: boolean;
   sdkClass?: boolean;
+  querySuffix?: string;
+  mutationSuffix?: string;
+  subscriptionSuffix?: string;
 }
 
 export class ApolloAngularVisitor extends ClientSideBaseVisitor<ApolloAngularRawPluginConfig, ApolloAngularPluginConfig> {
@@ -41,6 +44,9 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<ApolloAngularRaw
         namedClient: rawConfig.namedClient,
         serviceName: rawConfig.serviceName,
         serviceProvidedInRoot: rawConfig.serviceProvidedInRoot,
+        querySuffix: rawConfig.querySuffix,
+        mutationSuffix: rawConfig.mutationSuffix,
+        subscriptionSuffix: rawConfig.subscriptionSuffix,
       },
       documents
     );
@@ -178,8 +184,22 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<ApolloAngularRaw
     return this.config.documentMode === DocumentMode.external ? `Operations.${node.name.value}` : documentVariableName;
   }
 
+  private _operationSuffix(operationType: string): string {
+    const defaultSuffix = 'GQL';
+    switch (operationType) {
+      case 'Query':
+        return this.config.querySuffix || defaultSuffix;
+      case 'Mutation':
+        return this.config.mutationSuffix || defaultSuffix;
+      case 'Subscription':
+        return this.config.subscriptionSuffix || defaultSuffix;
+      default:
+        return defaultSuffix;
+    }
+  }
+
   protected buildOperation(node: OperationDefinitionNode, documentVariableName: string, operationType: string, operationResultType: string, operationVariablesTypes: string): string {
-    const serviceName = `${this.convertName(node)}GQL`;
+    const serviceName = `${this.convertName(node)}${this._operationSuffix(operationType)}`;
     this._operationsToInclude.push({
       node,
       documentVariableName,
