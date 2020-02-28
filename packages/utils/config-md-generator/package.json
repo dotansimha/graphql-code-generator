@@ -21,7 +21,7 @@
   "dependencies": {
     "@microsoft/tsdoc": "0.12.16",
     "tslib": "1.11.1",
-    "typescript": "3.8.2"
+    "typescript": "3.8.3"
   },
   "devDependencies": {
     "@ardatan/bob": "0.2.7",
