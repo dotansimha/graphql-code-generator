@@ -65,7 +65,7 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    * @example graphql.macro
    * ```yml
    * config:
-   *   ngModule: 'QueryService'
+   *   querySuffix: 'QueryService'
    * ```
    */
   querySuffix?: string;
@@ -78,7 +78,7 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    * @example graphql.macro
    * ```yml
    * config:
-   *   ngModule: 'MutationService'
+   *   mutationSuffix: 'MutationService'
    * ```
    */
   mutationSuffix?: string;
@@ -91,7 +91,7 @@ export interface ApolloAngularRawPluginConfig extends RawClientSideBasePluginCon
    * @example graphql.macro
    * ```yml
    * config:
-   *   ngModule: 'SubscriptionService'
+   *   subscriptionSuffix: 'SubscriptionService'
    * ```
    */
   subscriptionSuffix?: string;
