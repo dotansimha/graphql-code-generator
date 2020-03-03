@@ -1,0 +1,42 @@
+{
+  "name": "@graphql-codegen/typescript-oclif",
+  "version": "1.8.1",
+  "description": "GraphQL Code Generator plugin for generating a CLI tool with oclif",
+  "repository": "git@github.com:dotansimha/graphql-code-generator.git",
+  "author": "Kalan Snyder <hello@kalan.io>",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc -m esnext --outDir dist/esnext && tsc -m commonjs --outDir dist/commonjs",
+    "test": "jest --no-watchman --config ../../../../jest.config.js"
+  },
+  "peerDependencies": {
+    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0",
+    "graphql-tag": "^2.0.0"
+  },
+  "dependencies": {
+    "auto-bind": "4.0.0",
+    "@graphql-codegen/plugin-helpers": "1.12.2",
+    "@graphql-codegen/visitor-plugin-common": "1.12.2",
+    "tslib": "1.10.0"
+  },
+  "devDependencies": {
+    "@graphql-codegen/testing": "1.12.2",
+    "@oclif/command": "^1.5.19",
+    "jest": "25.1.0",
+    "ts-jest": "25.2.1",
+    "typescript": "3.8.2"
+  },
+  "sideEffects": false,
+  "main": "dist/commonjs/index.js",
+  "module": "dist/esnext/index.js",
+  "typings": "dist/esnext/index.d.ts",
+  "typescript": {
+    "definition": "dist/esnext/index.d.ts"
+  },
+  "jest-junit": {
+    "outputDirectory": "../../../../test-results/typescript-oclif"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
