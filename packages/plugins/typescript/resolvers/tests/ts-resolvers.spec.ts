@@ -87,14 +87,14 @@ describe('TypeScript Resolvers Plugin', () => {
         resolversContent,
         `
           import { makeExecutableSchema } from 'graphql-tools';
-  
+
           interface Context {
             users: Array<{
               id: string;
               name: string;
             }>;
           }
-  
+
           const resolvers: IResolvers = {
             Query: {
               users(parent, args, ctx, info) {
@@ -102,7 +102,7 @@ describe('TypeScript Resolvers Plugin', () => {
               }
             }
           }
-  
+
           makeExecutableSchema({
             typeDefs: '',
             resolvers
@@ -731,6 +731,77 @@ describe('TypeScript Resolvers Plugin', () => {
     await validate(result, {}, testSchema);
   });
 
+  describe('Should generate the correct imports when customResolverFn defined in config', () => {
+    it('./my-type#MyResolverFn', async () => {
+      const testSchema = buildSchema(`scalar MyScalar`);
+      const result = (await plugin(
+        testSchema,
+        [],
+        {
+          customResolverFn: './my-type#MyResolverFn',
+        },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.prepend).toContain(`import { MyResolverFn as ResolverFn } from './my-type';`);
+      expect(result.prepend).toContain(`export { ResolverFn };`);
+      await validate(result, {}, testSchema);
+    });
+
+    it('./my-type#ResolverFn', async () => {
+      const testSchema = buildSchema(`scalar MyScalar`);
+      const result = (await plugin(
+        testSchema,
+        [],
+        {
+          customResolverFn: './my-type#ResolverFn',
+        },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.prepend).toContain(`import { ResolverFn } from './my-type';`);
+      expect(result.prepend).toContain(`export { ResolverFn };`);
+      await validate(result, {}, testSchema);
+    });
+
+    it(`definition directly`, async () => {
+      const testSchema = buildSchema(`scalar MyScalar`);
+      const fnDefinition = `(
+        parent: TParent,
+        args: TArgs,
+        context: TContext,
+        info: GraphQLResolveInfo & { nestedStuff: GraphQLResolveInfo }
+      ) => Promise<TResult> | TResult;
+      `;
+      const result = (await plugin(
+        testSchema,
+        [],
+        {
+          customResolverFn: fnDefinition,
+        },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.prepend).toContain(`export type ResolverFn<TResult, TParent, TContext, TArgs> = ${fnDefinition}`);
+      await validate(result, {}, testSchema);
+    });
+
+    it(`ok with default`, async () => {
+      const testSchema = buildSchema(`scalar MyScalar`);
+      const defaultResolverFn = `
+export type ResolverFn<TResult, TParent, TContext, TArgs> = (
+  parent: TParent,
+  args: TArgs,
+  context: TContext,
+  info: GraphQLResolveInfo
+) => Promise<TResult> | TResult;`;
+      const result = (await plugin(testSchema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+
+      expect(result.content).toContain(defaultResolverFn);
+      await validate(result, {}, testSchema);
+    });
+  });
+
   it('Should not convert type names in unions', async () => {
     const testSchema = buildSchema(/* GraphQL */ `
       type CCCFoo {
@@ -1158,7 +1229,7 @@ describe('TypeScript Resolvers Plugin', () => {
       `
         import { PubSub } from 'graphql-subscriptions';
         const pubsub = new PubSub();
-        
+
         const POST_ADDED = 'POST_ADDED';
 
         const resolvers: Resolvers = {
@@ -1179,7 +1250,7 @@ describe('TypeScript Resolvers Plugin', () => {
 
               // Pass correct data
               pubsub.publish(POST_ADDED, post);
-              
+
               // Return correct data
               return post;
             }
@@ -1277,7 +1348,7 @@ describe('TypeScript Resolvers Plugin', () => {
           resolversContent,
           `
             import { PubSub } from 'graphql-subscriptions';
-        
+
             const pubsub = new PubSub();
             const POST_ADDED = 'POST_ADDED';
           `,
@@ -1295,7 +1366,7 @@ describe('TypeScript Resolvers Plugin', () => {
         text: string;
         user: string;
       };
-  
+
       const resolvers: Resolvers = {
         Subscription: {
           postAdded: {
@@ -1319,15 +1390,15 @@ describe('TypeScript Resolvers Plugin', () => {
     expect(() => {
       validateResolvers(`
       import { PubSub } from 'graphql-subscriptions';
-      
+
       const pubsub = new PubSub();
       const POST_ADDED = 'POST_ADDED';
-      
+
       type PubSubEvent = {
         text: string;
         user: string;
       };
-  
+
       const resolvers: Resolvers = {
         Subscription: {
           postAdded: {
@@ -1344,17 +1415,17 @@ describe('TypeScript Resolvers Plugin', () => {
     expect(() => {
       validateResolvers(`
       import { PubSub } from 'graphql-subscriptions';
-      
+
       const pubsub = new PubSub();
       const POST_ADDED = 'POST_ADDED';
-      
+
       type PubSubEvent = {
         postAdded: {
           comment: string;
           author: string;
         }
       };
-  
+
       const resolvers: Resolvers = {
         Subscription: {
           postAdded: {
@@ -1370,17 +1441,17 @@ describe('TypeScript Resolvers Plugin', () => {
     expect(() => {
       validateResolvers(`
       import { PubSub } from 'graphql-subscriptions';
-      
+
       const pubsub = new PubSub();
       const POST_ADDED = 'POST_ADDED';
-      
+
       type PubSubEvent = {
         postAdded: {
           comment: string;
           author: string;
         }
       };
-  
+
       const resolvers: Resolvers = {
         Subscription: {
           postAdded: {
@@ -1397,17 +1468,17 @@ describe('TypeScript Resolvers Plugin', () => {
     expect(() => {
       validateResolvers(`
       import { PubSub } from 'graphql-subscriptions';
-      
+
       const pubsub = new PubSub();
       const POST_ADDED = 'POST_ADDED';
-      
+
       type PubSubEvent = {
         postAdded: {
           text: string;
           user: string;
         }
       };
-  
+
       const resolvers: Resolvers = {
         Subscription: {
           postAdded: {
@@ -1423,17 +1494,17 @@ describe('TypeScript Resolvers Plugin', () => {
     expect(() => {
       validateResolvers(`
       import { PubSub } from 'graphql-subscriptions';
-      
+
       const pubsub = new PubSub();
       const POST_ADDED = 'POST_ADDED';
-      
+
       type PubSubEvent = {
         postAdded: {
           text: string;
           user: string;
         }
       };
-  
+
       const resolvers: Resolvers = {
         Subscription: {
           postAdded: {
@@ -1455,15 +1526,15 @@ describe('TypeScript Resolvers Plugin', () => {
     expect(() => {
       validateResolvers(`
       import { PubSub } from 'graphql-subscriptions';
-      
+
       const pubsub = new PubSub();
       const POST_ADDED = 'POST_ADDED';
-      
+
       type PubSubEvent = {
         comment: string;
         author: string;
       };
-  
+
       const resolvers: Resolvers = {
         Subscription: {
           postAdded: {
@@ -1479,15 +1550,15 @@ describe('TypeScript Resolvers Plugin', () => {
     expect(() => {
       validateResolvers(`
       import { PubSub } from 'graphql-subscriptions';
-      
+
       const pubsub = new PubSub();
       const POST_ADDED = 'POST_ADDED';
-      
+
       type PubSubEvent = {
         comment: string;
         author: string;
       };
-  
+
       const resolvers: Resolvers = {
         Subscription: {
           postAdded: {
@@ -1664,7 +1735,7 @@ describe('TypeScript Resolvers Plugin', () => {
         { outputFile: 'graphql.ts' }
       )) as Types.ComplexPluginOutput;
 
-      expect(output.content).toContain(`export type GqlAuthDirectiveArgs = {   role?: Maybe<UserRole>; };`)
+      expect(output.content).toContain(`export type GqlAuthDirectiveArgs = {   role?: Maybe<UserRole>; };`);
       expect(output.content).toContain(`export type GqlAuthDirectiveResolver<Result, Parent, ContextType = any, Args = GqlAuthDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;`);
     });
   });
