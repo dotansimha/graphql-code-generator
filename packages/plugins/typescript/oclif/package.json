@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "@graphql-codegen/testing": "1.12.2",
-    "@oclif/command": "^1.5.19",
+    "@oclif/command": "1.5.19",
     "jest": "25.1.0",
     "ts-jest": "25.2.1",
     "typescript": "3.8.2"
