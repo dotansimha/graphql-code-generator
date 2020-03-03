@@ -263,6 +263,54 @@ describe('Apollo Angular', () => {
 
       validateTypeScript(content, modifiedSchema, docs, {});
     });
+    it('should be allowed to define custom operation suffixes in config', async () => {
+      const modifiedSchema = extendSchema(schema, addToSchema);
+      const myFeed = gql(`
+        query MyFeed {
+          feed {
+            id
+          }
+        }
+      `);
+      const upVotePost = gql(`
+        mutation upVotePost($postId: Int!) {
+          upVotePost(postId: $postId) {
+            id
+            votes
+          }
+        }
+      `);
+      const newPost = gql(`
+        subscription newPost {
+          newPost {
+            id
+            title
+          }
+        }
+      `);
+      const docs = [
+        { location: '', document: myFeed },
+        { location: '', document: upVotePost },
+        { location: '', document: newPost },
+      ];
+      const content = (await plugin(
+        modifiedSchema,
+        docs,
+        {
+          querySuffix: 'QueryService',
+          mutationSuffix: 'MutationService',
+          subscriptionSuffix: 'SubscriptionService',
+        },
+        {
+          outputFile: 'graphql.ts',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.content).toContain(`export class MyFeedQueryService`);
+      expect(content.content).toContain(`export class UpVotePostMutationService`);
+      expect(content.content).toContain(`export class NewPostSubscriptionService`);
+      validateTypeScript(content, modifiedSchema, docs, {});
+    });
   });
 
   describe('SDK Service', () => {
