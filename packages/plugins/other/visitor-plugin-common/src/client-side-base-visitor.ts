@@ -29,6 +29,8 @@ export interface RawClientSideBasePluginConfig extends RawConfig {
   operationResultSuffix?: string;
   documentVariablePrefix?: string;
   documentVariableSuffix?: string;
+  fragmentVariablePrefix: string;
+  fragmentVariableSuffix: string;
   documentMode?: DocumentMode;
   importOperationTypesFrom?: string;
   importDocumentNodeExternallyFrom?: string;
@@ -137,8 +139,8 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
       operationResultSuffix: getConfigValue(rawConfig.operationResultSuffix, ''),
       documentVariablePrefix: getConfigValue(rawConfig.documentVariablePrefix, ''),
       documentVariableSuffix: getConfigValue(rawConfig.documentVariableSuffix, 'Document'),
-      fragmentVariablePrefix: getConfigValue(rawConfig.documentVariablePrefix, ''),
-      fragmentVariableSuffix: getConfigValue(rawConfig.documentVariableSuffix, 'FragmentDoc'),
+      fragmentVariablePrefix: getConfigValue(rawConfig.fragmentVariablePrefix, ''),
+      fragmentVariableSuffix: getConfigValue(rawConfig.fragmentVariableSuffix, 'FragmentDoc'),
       documentMode: ((rawConfig: RawClientSideBasePluginConfig) => {
         if (typeof rawConfig.noGraphQLTag === 'boolean') {
           return rawConfig.noGraphQLTag ? DocumentMode.documentNode : DocumentMode.graphQLTag;
