@@ -117,11 +117,11 @@ public static ${enumName} valueOfLabel(String label) {
       .withBlock(enumBlock).string;
   }
 
-  protected resolveInputFieldType(typeNode: TypeNode): { baseType: string; typeName: string; isScalar: boolean; isArray: boolean } {
+  protected resolveInputFieldType(typeNode: TypeNode): { baseType: string; typeName: string; isScalar: boolean; isArray: boolean; isEnum: boolean } {
     const innerType = getBaseTypeNode(typeNode);
     const schemaType = this._schema.getType(innerType.name.value);
     const isArray = typeNode.kind === Kind.LIST_TYPE || (typeNode.kind === Kind.NON_NULL_TYPE && typeNode.type.kind === Kind.LIST_TYPE);
-    let result: { baseType: string; typeName: string; isScalar: boolean; isArray: boolean } = null;
+    let result: { baseType: string; typeName: string; isScalar: boolean; isArray: boolean; isEnum: boolean } = null;
 
     if (isScalarType(schemaType)) {
       if (this.scalars[schemaType.name]) {
@@ -129,22 +129,24 @@ public static ${enumName} valueOfLabel(String label) {
           baseType: this.scalars[schemaType.name],
           typeName: this.scalars[schemaType.name],
           isScalar: true,
+          isEnum: false,
           isArray,
         };
       } else {
-        result = { isArray, baseType: 'Object', typeName: 'Object', isScalar: true };
+        result = { isArray, baseType: 'Object', typeName: 'Object', isScalar: true, isEnum: false };
       }
     } else if (isInputObjectType(schemaType)) {
       result = {
         baseType: `${this.convertName(schemaType.name)}Input`,
         typeName: `${this.convertName(schemaType.name)}Input`,
         isScalar: false,
+        isEnum: false,
         isArray,
       };
     } else if (isEnumType(schemaType)) {
-      result = { isArray, baseType: this.convertName(schemaType.name), typeName: this.convertName(schemaType.name), isScalar: true };
+      result = { isArray, baseType: this.convertName(schemaType.name), typeName: this.convertName(schemaType.name), isScalar: false, isEnum: true };
     } else {
-      result = { isArray, baseType: 'Object', typeName: 'Object', isScalar: true };
+      result = { isArray, baseType: 'Object', typeName: 'Object', isScalar: true, isEnum: false };
     }
 
     if (result) {
@@ -173,6 +175,15 @@ public static ${enumName} valueOfLabel(String label) {
           return indent(`this._${arg.name.value} = ((List<Map<String, Object>>) args.get("${arg.name.value}")).stream().map(${typeToUse.baseType}::new).collect(Collectors.toList());`, 3);
         } else if (typeToUse.isScalar) {
           return indent(`this._${arg.name.value} = (${typeToUse.typeName}) args.get("${arg.name.value}");`, 3);
+        } else if (typeToUse.isEnum) {
+          return indentMultiline(
+            `if (args.get("${arg.name.value}") instanceof ${typeToUse.typeName}) {
+  this._${arg.name.value} = (${typeToUse.typeName}) args.get("${arg.name.value}");
+} else {
+  this._${arg.name.value} = ${typeToUse.typeName}.valueOfLabel(args.get("${arg.name.value}"));
+}`,
+            3
+          );
         } else {
           return indent(`this._${arg.name.value} = new ${typeToUse.typeName}((Map<String, Object>) args.get("${arg.name.value}"));`, 3);
         }
