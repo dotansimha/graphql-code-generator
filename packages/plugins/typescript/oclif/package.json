@@ -17,7 +17,7 @@
     "auto-bind": "4.0.0",
     "@graphql-codegen/plugin-helpers": "1.12.2",
     "@graphql-codegen/visitor-plugin-common": "1.12.2",
-    "tslib": "1.10.0"
+    "tslib": "1.11.1"
   },
   "devDependencies": {
     "@graphql-codegen/testing": "1.12.2",
