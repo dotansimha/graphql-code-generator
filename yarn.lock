@@ -2671,10 +2671,10 @@
     prop-types "^15.7.2"
     react-is "^16.8.0"
 
-"@microsoft/tsdoc@0.12.16":
-  version "0.12.16"
-  resolved "https://registry.yarnpkg.com/@microsoft/tsdoc/-/tsdoc-0.12.16.tgz#13869988581fddbdfdbcb92e26edc955fc6e00ca"
-  integrity sha512-SX8JNEVy6U5+56aQnQB8A2XK+WSF//b0kBa6KqxE48pcccqVuIu1ePAR/EWd1cQB6zWv26QIY5uv/++qm+Z3Mw==
+"@microsoft/tsdoc@0.12.18":
+  version "0.12.18"
+  resolved "https://registry.yarnpkg.com/@microsoft/tsdoc/-/tsdoc-0.12.18.tgz#7e7aadc7009e57a25fbf6c9f48b44c2fe30ada88"
+  integrity sha512-3rypGnknRaPGlU4HFx2MorC4zmhoGJx773cVbDfcUgc6zI/PFfFaiWmeRR6JiVyKRrLnU/ZH0pc/6jePzy/QyQ==
 
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
@@ -4513,10 +4513,10 @@ await-to-js@^2.0.1:
   resolved "https://registry.yarnpkg.com/await-to-js/-/await-to-js-2.1.1.tgz#c2093cd5a386f2bb945d79b292817bbc3f41b31b"
   integrity sha512-CHBC6gQGCIzjZ09tJ+XmpQoZOn4GdWePB4qUweCaKNJ0D3f115YdhmYVTZ4rMVpiJ3cFzZcTYK1VMYEICV4YXw==
 
-aws-sdk@2.630.0:
-  version "2.630.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.630.0.tgz#108ccd50b585226db8d1798def73f7b873a2efa6"
-  integrity sha512-7BDPUIqmMZfZf+KN2Z3RpGDYGkEucQORLM2EqXuE91ETW5ySvoNd771+EaE3OS+FUx3JejfcVk8Rr2ZFU38RjA==
+aws-sdk@2.635.0:
+  version "2.635.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.635.0.tgz#a440e465ad44e5a982680acd3bf0747eef9f7818"
+  integrity sha512-NlKqMB4HqMqSutY6YmPzQVa+mMhqo0655hYYl8G2zkUvrYy+YxDitvwDEUkSsNKVFkEvmHtZggFCgVYIUu/sXg==
   dependencies:
     buffer "4.9.1"
     events "1.1.1"
