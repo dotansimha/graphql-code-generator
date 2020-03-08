@@ -12,3 +12,4 @@ temp
 test-results/
 junit.xml
 dist
+out.txt

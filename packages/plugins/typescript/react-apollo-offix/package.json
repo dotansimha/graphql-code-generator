@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/typescript-react-offix",
-  "version": "0.0.1",
+  "version": "1.12.2",
   "description": "GraphQL Code Generator plugin for generating useOffline mutations for offix use",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",

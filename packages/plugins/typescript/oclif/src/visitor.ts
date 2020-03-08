@@ -1,5 +1,5 @@
 import { ClientSideBaseVisitor, ClientSideBasePluginConfig, LoadedFragment, indentMultiline } from '@graphql-codegen/visitor-plugin-common';
-import * as autoBind from 'auto-bind';
+import autoBind from 'auto-bind';
 import { GraphQLSchema, OperationDefinitionNode, print } from 'graphql';
 
 import { Config, Info } from '.';
