@@ -179,6 +179,17 @@ export interface RawResolversConfig extends RawConfig {
    *   config:
    *     defaultMapper: Partial<{T}>
    * ```
+   *
+   * @example Allow deep partial with `utility-types`
+   * ```yml
+   * plugins
+   *  plugins:
+   *    - "typescript"
+   *    - "typescript-resolvers"
+   *    - add: "import { DeepPartial } from 'utility-types';"
+   *  config:
+   *    defaultMapper: DeepPartial<{T}>
+   * ```
    */
   defaultMapper?: string;
   /**

@@ -128,11 +128,21 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @example Allow undefined
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *  config:
-   *    maybeValue: T | null | undefined
+   *  path/to/file.ts:
+   *    plugins:
+   *      - typescript
+   *    config:
+   *      maybeValue: T | null | undefined
+   * ```
+   * @example Allow `null` in resolvers:
+   * ```yml
+   * generates:
+   *  path/to/file.ts:
+   *    plugins:
+   *      - typescript
+   *      - typescript-resolves
+   *    config:
+   *      maybeValue: 'T extends PromiseLike<infer U> ? Promise<U | null> : T | null'
    * ```
    */
   maybeValue?: string;
