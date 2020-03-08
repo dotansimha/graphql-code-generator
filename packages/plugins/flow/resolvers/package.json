@@ -25,7 +25,7 @@
     "@ardatan/bob": "0.2.7",
     "@graphql-codegen/testing": "1.12.2",
     "flow-bin": "0.120.1",
-    "flow-parser": "0.119.1",
+    "flow-parser": "0.120.1",
     "graphql": "14.6.0",
     "jest": "25.1.0",
     "ts-jest": "25.2.1",
