@@ -48,9 +48,9 @@ export type SubscriptionObject<Result, Key: string, Parent, Context, Args> = Sub
 
 export type SubscriptionResolver<Result, Key: string, Parent = {}, Context = {}, Args = {}> = ((...args: Array<any>) => SubscriptionObject<Result, Key, Parent, Context, Args>) | SubscriptionObject<Result, Key, Parent, Context, Args>;
 
-export type TypeResolveFn<Types, Parent = {}, Context = {}> = (parent: Parent, context: Context, info: GraphQLResolveInfo) => ?Types;
+export type TypeResolveFn<Types, Parent = {}, Context = {}> = (parent: Parent, context: Context, info: GraphQLResolveInfo) => ?Types | Promise<?Types>;
 
-export type isTypeOfResolverFn<T = {}> = (obj: T, info: GraphQLResolveInfo) => boolean;
+export type isTypeOfResolverFn<T = {}> = (obj: T, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
 
 export type NextResolverFn<T> = () => Promise<T>;
 
