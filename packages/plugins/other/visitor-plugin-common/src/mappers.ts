@@ -71,10 +71,20 @@ export function parseMapper(mapper: string, gqlTypeName: string | null = null, s
     function handleAlias(isDefault = false) {
       const [importedType, aliasType] = items[1].split(/\s+as\s+/);
 
+      let type = maybeSuffix(aliasType);
+
       return {
-        importElement: isDefault ? aliasType : `${importedType} as ${aliasType}`,
-        type: aliasType,
+        importElement: isDefault ? type : `${importedType} as ${type}`,
+        type: type,
       };
+    }
+
+    function maybeSuffix(type: string) {
+      if (suffix) {
+        return addSuffix(type, suffix);
+      }
+
+      return type;
     }
 
     function handle(): {
@@ -93,15 +103,17 @@ export function parseMapper(mapper: string, gqlTypeName: string | null = null, s
         }
 
         case MapperKind.Default: {
-          // ./my/module#Namespace#default as alias
+          // ./my/module#default as alias
           if (hasAlias) {
             return handleAlias(true);
           }
 
-          // ./my/module#Namespace#default
+          const type = maybeSuffix(`${gqlTypeName}`);
+
+          // ./my/module#default
           return {
-            importElement: `${gqlTypeName}`,
-            type: `${gqlTypeName}`,
+            importElement: type,
+            type,
           };
         }
 
@@ -113,19 +125,12 @@ export function parseMapper(mapper: string, gqlTypeName: string | null = null, s
 
           const identifier = items[1];
 
-          if (suffix) {
-            const type = addSuffix(identifier, suffix);
-
-            return {
-              type,
-              importElement: `${identifier} as ${type}`,
-            };
-          }
+          const type = maybeSuffix(identifier);
 
           // ./my/module#Identifier
           return {
-            type: identifier,
-            importElement: identifier,
+            type,
+            importElement: suffix ? `${identifier} as ${type}` : type,
           };
         }
       }
