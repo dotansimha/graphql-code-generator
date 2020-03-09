@@ -4,7 +4,7 @@
     "clean": "lerna clean --yes && rm -rf node_modules",
     "build": "lerna run build --ignore @graphql-codegen/live-demo --ignore @graphql-codegen/website",
     "test": "lerna run test --ignore @graphql-codegen/live-demo --ignore @graphql-codegen/website",
-    "lint": "eslint **/*.ts",
+    "lint": "eslint --ext .ts .",
     "test-and-build": "yarn build && yarn test",
     "prerelease": "yarn test-and-build",
     "prerelease:canary": "yarn test-and-build",
