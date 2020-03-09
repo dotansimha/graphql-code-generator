@@ -164,39 +164,59 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
     });
   }
 
-  protected _extractFragments(document: FragmentDefinitionNode | OperationDefinitionNode): string[] {
+  protected _extractFragments(document: FragmentDefinitionNode | OperationDefinitionNode, withNested = false): string[] {
     if (!document) {
       return [];
     }
 
-    const names = [];
+    const names: Set<string> = new Set();
 
     visit(document, {
       enter: {
         FragmentSpread: (node: FragmentSpreadNode) => {
-          names.push(node.name.value);
+          if (node.name.value !== document.name.value) {
+            names.add(node.name.value);
+
+            if (withNested) {
+              const foundFragment = this._fragments.find(f => f.name === node.name.value);
+
+              if (foundFragment) {
+                const childItems = this._extractFragments(foundFragment.node, true);
+
+                if (childItems && childItems.length > 0) {
+                  for (const item of childItems) {
+                    if (item !== document.name.value) {
+                      names.add(item);
+                    }
+                  }
+                }
+              }
+            }
+          }
         },
       },
     });
 
-    return names;
+    return Array.from(names);
   }
 
   protected _transformFragments(document: FragmentDefinitionNode | OperationDefinitionNode): string[] {
-    return this._extractFragments(document).map(document => this._getFragmentName(document));
+    const includeNestedFragments = this.config.documentMode === DocumentMode.documentNode;
+
+    return this._extractFragments(document, includeNestedFragments).map(document => this._getFragmentName(document));
   }
 
   protected _includeFragments(fragments: string[]): string {
     if (fragments && fragments.length > 0) {
       if (this.config.documentMode === DocumentMode.documentNode) {
-        return this._fragments.map(fragment => print(fragment.node)).join('\n');
+        return this._fragments
+          .filter(f => fragments.includes(`${this.config.fragmentVariablePrefix}${f.name}${this.config.fragmentVariableSuffix}`))
+          .map(fragment => print(fragment.node))
+          .join('\n');
       } else if (this.config.documentMode === DocumentMode.documentNodeImportFragments) {
         return '';
       } else {
-        return `${fragments
-          .filter((name, i, all) => all.indexOf(name) === i)
-          .map(name => '${' + name + '}')
-          .join('\n')}`;
+        return `${fragments.map(name => '${' + name + '}').join('\n')}`;
       }
     }
 
@@ -209,6 +229,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
 
   protected _gql(node: FragmentDefinitionNode | OperationDefinitionNode): string {
     const fragments = this._transformFragments(node);
+
     const doc = this._prepareDocument(`
     ${
       print(node)
