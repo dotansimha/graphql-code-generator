@@ -426,7 +426,7 @@ describe('TypeScript', () => {
       const schema = buildSchema(`
       type User {
         fullName: String!
-        firstName: String! @deprecated(reason: "Field \`fullName\` has been superseded by \`firstName\`")
+        firstName: String! @deprecated(reason: "Field \`fullName\` has been superseded by \`firstName\`.")
       }`);
 
       const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
