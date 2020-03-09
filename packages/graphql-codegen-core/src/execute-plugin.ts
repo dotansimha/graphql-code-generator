@@ -47,10 +47,8 @@ export async function executePlugin(options: ExecutePluginOptions, plugin: Codeg
     }
   }
 
-  return await Promise.resolve(
-    plugin.plugin(outputSchema, documents, typeof options.config === 'object' ? { ...options.config } : options.config, {
-      outputFile: options.outputFilename,
-      allPlugins: options.allPlugins,
-    })
-  );
+  return plugin.plugin(outputSchema, documents, typeof options.config === 'object' ? { ...options.config } : options.config, {
+    outputFile: options.outputFilename,
+    allPlugins: options.allPlugins,
+  });
 }

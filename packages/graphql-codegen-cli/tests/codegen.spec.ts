@@ -43,7 +43,7 @@ describe('Codegen Executor', () => {
       try {
         await executeCodegen({
           schema: join(__dirname, './test-files/schema-dir/schema-object.js'),
-          require: join(__dirname + './missing.js'),
+          require: join(__dirname, './missing.js'),
           generates: {
             'out1.ts': ['typescript'],
           },

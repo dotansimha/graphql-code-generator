@@ -16,8 +16,6 @@ export function cliError(err: any, exitOnError = true) {
 
   if (exitOnError && isNode) {
     process.exit(1);
-
-    return;
   } else if (exitOnError && isBrowser) {
     throw err;
   }

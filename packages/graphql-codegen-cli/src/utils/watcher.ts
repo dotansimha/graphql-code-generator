@@ -137,7 +137,7 @@ export const createWatcher = (initalContext: CodegenContext, onNext: (result: Ty
   };
 
   // the promise never resolves to keep process running
-  return new Promise((_, reject) => {
+  return new Promise((resolve, reject) => {
     executeCodegen(initalContext)
       .then(onNext, () => Promise.resolve())
       .then(runWatcher)

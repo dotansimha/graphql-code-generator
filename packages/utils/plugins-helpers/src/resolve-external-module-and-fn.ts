@@ -1,6 +1,7 @@
 import { paramCase } from 'param-case';
 
 export function resolveExternalModuleAndFn(pointer: any): any {
+  // eslint-disable-next-line no-eval
   const importExternally = (moduleName: string) => eval(`require('${moduleName}')`);
 
   if (typeof pointer === 'function') {
