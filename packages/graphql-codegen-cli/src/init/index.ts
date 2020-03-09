@@ -6,7 +6,7 @@ import { Answers, Tags } from './types';
 import { writeConfig, writePackage, bold } from './helpers';
 
 function log(...msgs: string[]) {
-  // tslint:disable-next-line
+  // eslint-disable-next-line no-console
   console.log(...msgs);
 }
 

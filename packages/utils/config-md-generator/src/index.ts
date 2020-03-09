@@ -30,10 +30,10 @@ export async function generateConfig(inputFile: string): Promise<string> {
       if (diagnostic.file) {
         const location: ts.LineAndCharacter = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start!);
         const formattedMessage: string = `${diagnostic.file.fileName}(${location.line + 1},${location.character + 1}):` + ` [TypeScript] ${message}`;
-        // tslint:disable-next-line:no-console
+        // eslint-disable-next-line no-console
         console.error(formattedMessage);
       } else {
-        // tslint:disable-next-line:no-console
+        // eslint-disable-next-line no-console
         console.error(message);
       }
     }

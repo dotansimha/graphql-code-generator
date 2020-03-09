@@ -14,7 +14,8 @@ export const plugin: PluginFunction<TypeScriptResolversPluginConfig> = (schema: 
   const noSchemaStitching = typeof config.noSchemaStitching === 'boolean' ? config.noSchemaStitching : false;
 
   if (config.noSchemaStitching === false) {
-    console['warn'](`The default behavior of 'noSchemaStitching' will be reversed in the next major release. Support for Schema Stitching will be disabled by default.`);
+    // eslint-disable-next-line no-console
+    console.warn(`The default behavior of 'noSchemaStitching' will be reversed in the next major release. Support for Schema Stitching will be disabled by default.`);
   }
 
   const indexSignature = config.useIndexSignature ? ['export type WithIndex<TObject> = TObject & Record<string, any>;', 'export type ResolversObject<TObject> = WithIndex<TObject>;'].join('\n') : '';
@@ -155,7 +156,8 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   }
 
   if (showUnusedMappers && unusedMappers.length) {
-    console['warn'](`Unused mappers: ${unusedMappers.join(',')}`);
+    // eslint-disable-next-line no-console
+    console.warn(`Unused mappers: ${unusedMappers.join(',')}`);
   }
 
   if (imports.length) {

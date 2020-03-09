@@ -98,7 +98,8 @@ ${defsToInclude.join('\n')}
   }
 
   if (showUnusedMappers && unusedMappers.length) {
-    console['warn'](`Unused mappers: ${unusedMappers.join(',')}`);
+    // eslint-disable-next-line no-console
+    console.warn(`Unused mappers: ${unusedMappers.join(',')}`);
   }
 
   return {

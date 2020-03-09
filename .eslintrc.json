@@ -9,6 +9,7 @@
   "plugins": ["@typescript-eslint"],
   "rules": {
     "no-empty": "off",
+    "no-console": "error",
     "no-prototype-builtins": "off",
     "@typescript-eslint/no-unused-vars": ["warn", {"args":  "none"}],
     "@typescript-eslint/no-use-before-define": "off",
