@@ -19,13 +19,9 @@ export function clearExtension(path: string): string {
   return join(parsedPath.dir, parsedPath.name).replace(/\\/g, '/');
 }
 
-export function extractExternalFragmentsInUse(
-  documentNode: DocumentNode | FragmentDefinitionNode,
-  fragmentNameToFile: FragmentRegistry,
-  result: { [fragmentName: string]: number } = {},
-  ignoreList: Set<string> = new Set(),
-  level = 0
-): { [fragmentName: string]: number } {
+export function extractExternalFragmentsInUse(documentNode: DocumentNode | FragmentDefinitionNode, fragmentNameToFile: FragmentRegistry, result: { [fragmentName: string]: number } = {}, level = 0): { [fragmentName: string]: number } {
+  const ignoreList: Set<string> = new Set();
+
   // First, take all fragments definition from the current file, and mark them as ignored
   visit(documentNode, {
     enter: {
@@ -40,10 +36,12 @@ export function extractExternalFragmentsInUse(
     enter: {
       FragmentSpread: (node: FragmentSpreadNode) => {
         if (!ignoreList.has(node.name.value)) {
-          result[node.name.value] = level;
+          if (result[node.name.value] === undefined || (result[node.name.value] !== undefined && level < result[node.name.value])) {
+            result[node.name.value] = level;
 
-          if (fragmentNameToFile[node.name.value]) {
-            extractExternalFragmentsInUse(fragmentNameToFile[node.name.value].node, fragmentNameToFile, result, ignoreList, level + 1);
+            if (fragmentNameToFile[node.name.value]) {
+              extractExternalFragmentsInUse(fragmentNameToFile[node.name.value].node, fragmentNameToFile, result, level + 1);
+            }
           }
         }
       },
