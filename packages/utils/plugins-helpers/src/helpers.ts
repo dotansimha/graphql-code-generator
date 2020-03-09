@@ -80,7 +80,7 @@ export function hasNullableTypeRecursively(type: GraphQLOutputType): boolean {
 
 export function isUsingTypes(document: DocumentNode, externalFragments: string[], schema?: GraphQLSchema): boolean {
   let foundFields = 0;
-  let typesStack: GraphQLObjectType[] = [];
+  const typesStack: GraphQLObjectType[] = [];
 
   visit(document, {
     SelectionSet: {

@@ -61,7 +61,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
   let rootConfig: { [key: string]: any } = {};
   let rootSchemas: Types.Schema[];
   let rootDocuments: Types.OperationDocument[];
-  let generates: { [filename: string]: Types.ConfiguredOutput } = {};
+  const generates: { [filename: string]: Types.ConfiguredOutput } = {};
 
   async function normalize() {
     /* Root templates-config */

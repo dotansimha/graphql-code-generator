@@ -248,7 +248,7 @@ export class ApolloFederation {
  * @param node Type
  */
 function isFederationObjectType(node: ObjectTypeDefinitionNode | GraphQLObjectType): boolean {
-  let definition = isObjectType(node) ? node.astNode || (parse(printType(node)).definitions[0] as ObjectTypeDefinitionNode) : node;
+  const definition = isObjectType(node) ? node.astNode || (parse(printType(node)).definitions[0] as ObjectTypeDefinitionNode) : node;
 
   const name = definition.name.value;
   const directives = definition.directives;

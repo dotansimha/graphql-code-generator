@@ -2,7 +2,7 @@ import { GraphQLOutputType, GraphQLNamedType, GraphQLNonNull, GraphQLList, isLis
 import { Types } from './types';
 
 export function mergeOutputs(content: Types.PluginOutput | Array<Types.PluginOutput>): string {
-  let result: Types.ComplexPluginOutput = { content: '', prepend: [], append: [] };
+  const result: Types.ComplexPluginOutput = { content: '', prepend: [], append: [] };
 
   if (Array.isArray(content)) {
     content.forEach(item => {

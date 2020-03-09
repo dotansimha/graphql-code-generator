@@ -856,7 +856,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
       });
       const mappedTypeKey = isSubscriptionType ? `${mappedType}, "${node.name}"` : mappedType;
 
-      let signature: {
+      const signature: {
         name: string;
         modifier: string;
         type: string;

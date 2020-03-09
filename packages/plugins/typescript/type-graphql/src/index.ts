@@ -19,7 +19,7 @@ export const plugin: PluginFunction<TypeGraphQLPluginConfig> = (schema: GraphQLS
   const introspectionDefinitions = includeIntrospectionDefinitions(schema, documents, config);
   const scalars = visitor.scalarsDefinition;
 
-  let definitions = visitorResult.definitions;
+  const definitions = visitorResult.definitions;
   // Sort output by interfaces first, classes last to prevent TypeScript errors
   definitions.sort((definition1, definition2) => (isDefinitionInterface(definition1) ? -1 : 1));
 

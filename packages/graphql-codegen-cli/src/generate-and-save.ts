@@ -39,7 +39,7 @@ export async function generate(input: CodegenContext | Types.Config, saveToFile 
     previouslyGeneratedFilenames = filenames;
   }
 
-  let recentOutputHash = new Map<string, string>();
+  const recentOutputHash = new Map<string, string>();
   async function writeOutput(generationResult: Types.FileOutput[]) {
     if (!saveToFile) {
       return generationResult;

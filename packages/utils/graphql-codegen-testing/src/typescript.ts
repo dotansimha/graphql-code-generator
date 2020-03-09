@@ -55,8 +55,8 @@ export function validateTs(
 
       allDiagnostics.forEach(diagnostic => {
         if (diagnostic.file) {
-          let { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start!);
-          let message = flattenDiagnosticMessageText(diagnostic.messageText, '\n');
+          const { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start!);
+          const message = flattenDiagnosticMessageText(diagnostic.messageText, '\n');
           errors.push(`${line + 1},${character + 1}: ${message} ->
     ${contents.split('\n')[line]}`);
         } else {
@@ -112,7 +112,7 @@ export function compileTs(
   try {
     const testFile = `test-file.${isTsx ? 'tsx' : 'ts'}`;
     const host = createCompilerHost(options);
-    let program = createProgram([testFile], options, {
+    const program = createProgram([testFile], options, {
       ...host,
       getSourceFile: (fileName: string, languageVersion: ScriptTarget, onError?: (message: string) => void, shouldCreateNewSourceFile?: boolean) => {
         if (fileName === testFile) {
@@ -135,14 +135,14 @@ export function compileTs(
         return '\n';
       },
     });
-    let emitResult = program.emit();
-    let allDiagnostics = emitResult.diagnostics;
+    const emitResult = program.emit();
+    const allDiagnostics = emitResult.diagnostics;
     const errors: string[] = [];
 
     allDiagnostics.forEach(diagnostic => {
       if (diagnostic.file) {
-        let { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start!);
-        let message = flattenDiagnosticMessageText(diagnostic.messageText, '\n');
+        const { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start!);
+        const message = flattenDiagnosticMessageText(diagnostic.messageText, '\n');
         errors.push(`${line + 1},${character + 1}: ${message} ->
   ${contents.split('\n')[line]}`);
       } else {

@@ -127,7 +127,7 @@ export class TypeGraphQLVisitor<TRawConfig extends TypeGraphQLPluginConfig = Typ
     const interfaceDecorator = this.config.decoratorName.interface;
     const originalNode = parent[key] as InterfaceTypeDefinitionNode;
 
-    let declarationBlock = this.getInterfaceTypeDeclarationBlock(node, originalNode).withDecorator(`@TypeGraphQL.${interfaceDecorator}()`);
+    const declarationBlock = this.getInterfaceTypeDeclarationBlock(node, originalNode).withDecorator(`@TypeGraphQL.${interfaceDecorator}()`);
 
     return [declarationBlock.string, this.buildArgumentsBlock(originalNode)].filter(f => f).join('\n\n');
   }
@@ -213,7 +213,7 @@ export class TypeGraphQLVisitor<TRawConfig extends TypeGraphQLPluginConfig = Typ
 
   InputValueDefinition(node: InputValueDefinitionNode, key?: number | string, parent?: any): string {
     const fieldDecorator = this.config.decoratorName.field;
-    let rawType = node.type as TypeNode | string;
+    const rawType = node.type as TypeNode | string;
     const comment = transformComment((node.description as any) as string, 1);
 
     const type = this.parseType(rawType);

@@ -329,7 +329,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
   }
 
   public getImports(): string[] {
-    let imports = [...this._additionalImports];
+    const imports = [...this._additionalImports];
 
     switch (this.config.documentMode) {
       case DocumentMode.documentNode:

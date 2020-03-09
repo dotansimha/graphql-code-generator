@@ -249,7 +249,7 @@ export function convertNameParts(str: string, func: (str: string) => string, rem
 }
 
 export function buildScalars(schema: GraphQLSchema | undefined, scalarsMapping: ScalarsMap, defaultScalarsMapping: NormalizedScalarsMap = DEFAULT_SCALARS): ParsedScalarsMap {
-  let result: ParsedScalarsMap = {};
+  const result: ParsedScalarsMap = {};
 
   Object.keys(defaultScalarsMapping).forEach(name => {
     result[name] = parseMapper(defaultScalarsMapping[name]);

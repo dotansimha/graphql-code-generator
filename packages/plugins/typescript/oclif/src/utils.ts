@@ -40,7 +40,7 @@ const mapVariableTypeToOclifType = (type: NamedTypeNode): OclifFlagType => {
 
 // Retrieve the inner type if nested within List and/or NonNull
 const getInnerType = (type: TypeNode): TypeConfig => {
-  let result: Partial<TypeConfig> = {
+  const result: Partial<TypeConfig> = {
     list: false,
     required: false,
   };

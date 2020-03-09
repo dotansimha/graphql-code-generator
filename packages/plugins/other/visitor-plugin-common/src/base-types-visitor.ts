@@ -261,7 +261,7 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
   }
 
   getInterfaceTypeDeclarationBlock(node: InterfaceTypeDefinitionNode, originalNode: InterfaceTypeDefinitionNode): DeclarationBlock {
-    let declarationBlock = new DeclarationBlock(this._declarationBlockConfig)
+    const declarationBlock = new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind(this._parsedConfig.declarationKind.interface)
       .withName(this.convertName(node))
