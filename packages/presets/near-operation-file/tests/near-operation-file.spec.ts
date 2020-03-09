@@ -1,5 +1,5 @@
 import { preset } from '../src/index';
-import { parse } from 'graphql';
+import { parse, buildSchema, printSchema } from 'graphql';
 import { buildASTSchema } from 'graphql';
 
 describe('near-operation-file preset', () => {
@@ -74,6 +74,105 @@ describe('near-operation-file preset', () => {
   ];
 
   describe('Issues', () => {
+    it('#3066 - should respect higher level of fragments usage, and ignore fragments per input', async () => {
+      const doTest = async (operationsStr: string, expected: string) => {
+        const testSchema = buildSchema(/* GraphQL */ `
+          schema {
+            query: Query
+          }
+
+          type Query {
+            list: [Book]
+            pages: [Page]
+          }
+
+          type Book {
+            id: ID!
+            title: String!
+            pages: [Page!]!
+          }
+
+          type Page {
+            id: ID!
+            number: Int!
+          }
+        `);
+        const result = await preset.buildGeneratesSection({
+          baseOutputDir: './src/',
+          config: {},
+          presetConfig: {
+            cwd: '/some/deep/path',
+            baseTypesPath: 'types.ts',
+          },
+          schemaAst: testSchema,
+          schema: parse(printSchema(testSchema)),
+          documents: [
+            {
+              location: '/some/deep/path/src/graphql/queries.graphql',
+              document: parse(operationsStr),
+            },
+            {
+              location: '/some/deep/path/src/graphql/fragments.graphql',
+              document: parse(/* GraphQL */ `
+                fragment Page on Page {
+                  id
+                  number
+                }
+
+                fragment Book on Book {
+                  id
+                  title
+                  pages {
+                    ...Page
+                  }
+                }
+              `),
+            },
+          ],
+          plugins: [{ typescript: {} }],
+          pluginMap: { typescript: {} as any },
+        });
+
+        expect(result[0].filename).toContain(`queries.generated.ts`);
+        expect(result[0].plugins[1]['add']).toBe(expected);
+      };
+
+      await doTest(
+        /* GraphQL */ `
+          query Pages {
+            pages {
+              ...Page
+            }
+          }
+
+          query List {
+            list {
+              ...Book
+            }
+          }
+        `,
+        `import { PageFragmentDoc, PageFragment, BookFragmentDoc, BookFragment } from './fragments.generated';`
+      );
+
+      // Try to flip the order of operations to see if it's still works
+      await doTest(
+        /* GraphQL */ `
+          query List {
+            list {
+              ...Book
+            }
+          }
+
+          query Pages {
+            pages {
+              ...Page
+            }
+          }
+        `,
+        `import { BookFragmentDoc, BookFragment, PageFragmentDoc, PageFragment } from './fragments.generated';`
+      );
+    });
+
     it('#2365 - Should not add Fragment suffix to import identifier when dedupeOperationSuffix: true', async () => {
       const result = await preset.buildGeneratesSection({
         baseOutputDir: './src/',
