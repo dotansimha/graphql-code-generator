@@ -164,7 +164,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
     });
   }
 
-  protected _extractFragments(document: FragmentDefinitionNode | OperationDefinitionNode): string[] {
+  protected _extractFragments(document: FragmentDefinitionNode | OperationDefinitionNode, withNested = false): string[] {
     if (!document) {
       return [];
     }
@@ -175,6 +175,18 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
       enter: {
         FragmentSpread: (node: FragmentSpreadNode) => {
           names.push(node.name.value);
+
+          if (withNested) {
+            const foundFragment = this._fragments.find(f => f.name === node.name.value);
+
+            if (foundFragment) {
+              const childItems = this._extractFragments(foundFragment.node, true);
+
+              if (childItems && childItems.length > 0) {
+                names.push(...childItems);
+              }
+            }
+          }
         },
       },
     });
@@ -183,7 +195,9 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
   }
 
   protected _transformFragments(document: FragmentDefinitionNode | OperationDefinitionNode): string[] {
-    return this._extractFragments(document).map(document => this._getFragmentName(document));
+    const includeNestedFragments = this.config.documentMode === DocumentMode.documentNode;
+
+    return this._extractFragments(document, includeNestedFragments).map(document => this._getFragmentName(document));
   }
 
   protected _includeFragments(fragments: string[]): string {
@@ -209,6 +223,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
 
   protected _gql(node: FragmentDefinitionNode | OperationDefinitionNode): string {
     const fragments = this._transformFragments(node);
+
     const doc = this._prepareDocument(`
     ${
       print(node)
