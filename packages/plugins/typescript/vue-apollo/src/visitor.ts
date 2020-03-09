@@ -160,23 +160,26 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
 
   private buildCompositionFunction({ operationName, operationType, operationHasNonNullableVariable, operationResultType, operationVariablesTypes, documentNodeVariable }: BuildCompositionFunctions): string {
     switch (operationType) {
-      case 'Query':
+      case 'Query': {
         const reactiveFunctionTypeName = `ReactiveFunction${operationName}`;
         return `type ${reactiveFunctionTypeName} = () => ${operationVariablesTypes}\nexport function use${operationName}(variables${
           operationHasNonNullableVariable ? '' : '?'
         }: ${operationVariablesTypes} | VueCompositionApi.Ref<${operationVariablesTypes}> | ${reactiveFunctionTypeName}, baseOptions?: VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}>) {
           return VueApolloComposable.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${documentNodeVariable}, variables, baseOptions);
         }`;
-      case 'Mutation':
+      }
+      case 'Mutation': {
         return `export function use${operationName}(baseOptions?: VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}>) {
             return VueApolloComposable.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${documentNodeVariable}, baseOptions);
           }`;
-      case 'Subscription':
+      }
+      case 'Subscription': {
         return `export function use${operationName}(variables${
           operationHasNonNullableVariable ? '' : '?'
         }: ${operationVariablesTypes}, baseOptions?: VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}>) {
           return VueApolloComposable.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${documentNodeVariable}, variables, baseOptions);
         }`;
+      }
     }
   }
 

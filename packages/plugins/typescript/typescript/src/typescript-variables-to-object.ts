@@ -1,4 +1,4 @@
-import { ParsedEnumValuesMap, OperationVariablesToObject, NormalizedScalarsMap, ConvertNameFn, InterfaceOrVariable, indent } from '@graphql-codegen/visitor-plugin-common';
+import { ParsedEnumValuesMap, OperationVariablesToObject, NormalizedScalarsMap, ConvertNameFn } from '@graphql-codegen/visitor-plugin-common';
 import { TypeNode, Kind } from 'graphql';
 
 export class TypeScriptOperationVariablesToObject extends OperationVariablesToObject {
@@ -16,7 +16,7 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
   }
 
   private clearOptional(str: string): string {
-    const prefix = this._namespacedImportName ? `${this._namespacedImportName}\.` : '';
+    const prefix = this._namespacedImportName ? `${this._namespacedImportName}.` : '';
     const rgx = new RegExp(`^${prefix}Maybe<(.*?)>$`, 'i');
 
     if (str.startsWith(`${this._namespacedImportName ? `${this._namespacedImportName}.` : ''}Maybe`)) {

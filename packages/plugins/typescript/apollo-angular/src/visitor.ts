@@ -5,8 +5,8 @@ import { ApolloAngularRawPluginConfig } from './config';
 import { camelCase } from 'camel-case';
 import { Types } from '@graphql-codegen/plugin-helpers';
 
-const R_MOD = /module\:\s*"([^"]+)"/; // matches: module: "..."
-const R_NAME = /name\:\s*"([^"]+)"/; // matches: name: "..."
+const R_MOD = /module:\s*"([^"]+)"/; // matches: module: "..."
+const R_NAME = /name:\s*"([^"]+)"/; // matches: name: "..."
 
 function R_DEF(directive: string) {
   return new RegExp(`\\s+\\@${directive}\\([^)]+\\)`, 'gm');

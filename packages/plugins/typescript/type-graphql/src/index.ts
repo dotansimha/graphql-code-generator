@@ -21,7 +21,7 @@ export const plugin: PluginFunction<TypeGraphQLPluginConfig> = (schema: GraphQLS
 
   const definitions = visitorResult.definitions;
   // Sort output by interfaces first, classes last to prevent TypeScript errors
-  definitions.sort((definition1, definition2) => (isDefinitionInterface(definition1) ? -1 : 1));
+  definitions.sort((definition1, definition2) => +isDefinitionInterface(definition2) - +isDefinitionInterface(definition1));
 
   return {
     prepend: [...visitor.getEnumsImports(), maybeValue, TYPE_GRAPHQL_IMPORT, DECORATOR_FIX],

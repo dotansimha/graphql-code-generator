@@ -1,4 +1,3 @@
-import { pascalCase } from 'pascal-case';
 import {
   NameNode,
   Kind,

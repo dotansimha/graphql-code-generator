@@ -28,7 +28,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<TypeScriptD
     autoBind(this);
 
     const clearOptional = (str: string): string => {
-      const prefix = this.config.namespacedImportName ? `${this.config.namespacedImportName}\.` : '';
+      const prefix = this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '';
       const rgx = new RegExp(`^${prefix}Maybe<(.*?)>$`, 'is');
 
       if (str.startsWith(`${this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : ''}Maybe`)) {

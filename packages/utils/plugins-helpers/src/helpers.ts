@@ -1,25 +1,7 @@
 import { Types } from './types';
-import {
-  FragmentDefinitionNode,
-  visit,
-  DocumentNode,
-  isListType,
-  isInterfaceType,
-  VariableDefinitionNode,
-  isObjectType,
-  FieldNode,
-  Kind,
-  InputValueDefinitionNode,
-  GraphQLSchema,
-  OperationDefinitionNode,
-  GraphQLNamedType,
-  isNonNullType,
-  GraphQLOutputType,
-  ASTNode,
-  isUnionType,
-} from 'graphql';
+import { FragmentDefinitionNode, visit, DocumentNode, isListType, VariableDefinitionNode, isObjectType, FieldNode, Kind, InputValueDefinitionNode, GraphQLSchema, OperationDefinitionNode, isNonNullType, GraphQLOutputType, ASTNode } from 'graphql';
 import { getBaseType } from './utils';
-import { InlineFragmentNode, SelectionSetNode, FragmentSpreadNode, GraphQLObjectType } from 'graphql';
+import { InlineFragmentNode, SelectionSetNode, GraphQLObjectType } from 'graphql';
 
 export function isOutputConfigArray(type: any): type is Types.OutputConfig[] {
   return Array.isArray(type);

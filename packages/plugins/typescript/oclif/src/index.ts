@@ -24,7 +24,7 @@ export const plugin: PluginFunction = (schema: GraphQLSchema, documents: Types.D
     ...(config.externalFragments || []),
   ];
   const visitor = new GraphQLRequestVisitor(schema, allFragments, config, info);
-  const visitorResult = visit(allAst, { leave: visitor });
+  visit(allAst, { leave: visitor });
 
   return {
     prepend: visitor.getImports(),

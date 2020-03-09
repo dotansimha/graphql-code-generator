@@ -1,3 +1,4 @@
+/* eslint-disable no-inner-declarations */
 import { RawResolversConfig, ParsedResolversConfig } from './base-resolvers-visitor';
 
 export type ParsedMapper = InternalParsedMapper | ExternalParsedMapper;
@@ -71,7 +72,7 @@ export function parseMapper(mapper: string, gqlTypeName: string | null = null, s
     function handleAlias(isDefault = false) {
       const [importedType, aliasType] = items[1].split(/\s+as\s+/);
 
-      let type = maybeSuffix(aliasType);
+      const type = maybeSuffix(aliasType);
 
       return {
         importElement: isDefault ? type : `${importedType} as ${type}`,

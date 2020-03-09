@@ -210,7 +210,7 @@ export class ApolloFederation {
     const arg = directive.arguments.find(arg => arg.name.value === 'fields');
     const value = (arg.value as StringValueNode).value;
 
-    if (/[\{\}]+/gi.test(value)) {
+    if (/[{}]/gi.test(value)) {
       throw new Error('Nested fields in _FieldSet is not supported');
     }
 

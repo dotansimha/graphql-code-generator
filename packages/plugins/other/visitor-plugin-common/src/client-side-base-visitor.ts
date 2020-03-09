@@ -333,14 +333,16 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
 
     switch (this.config.documentMode) {
       case DocumentMode.documentNode:
-      case DocumentMode.documentNodeImportFragments:
+      case DocumentMode.documentNodeImportFragments: {
         imports.push(`import { DocumentNode } from 'graphql';`);
         break;
-      case DocumentMode.graphQLTag:
+      }
+      case DocumentMode.graphQLTag: {
         const gqlImport = this._parseImport(this.config.gqlImport || 'graphql-tag');
         imports.push(`import ${gqlImport.propName ? `{ ${gqlImport.propName === 'gql' ? 'gql' : `${gqlImport.propName} as gql`} }` : 'gql'} from '${gqlImport.moduleName}';`);
         break;
-      case DocumentMode.external:
+      }
+      case DocumentMode.external: {
         if (this._collectedOperations.length > 0) {
           if (this.config.importDocumentNodeExternallyFrom === 'near-operation-file' && this._documents.length === 1) {
             imports.push(`import * as Operations from './${this.clearExtension(basename(this._documents[0].location))}';`);
@@ -349,6 +351,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
           }
         }
         break;
+      }
       default:
         break;
     }

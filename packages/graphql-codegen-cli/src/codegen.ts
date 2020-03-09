@@ -147,7 +147,7 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
     title: 'Generate outputs',
     task: () => {
       return new Listr(
-        Object.keys(generates).map<import('listr').ListrTask>((filename, i) => {
+        Object.keys(generates).map<import('listr').ListrTask>(filename => {
           const outputConfig = generates[filename];
           const hasPreset = !!outputConfig.preset;
 
