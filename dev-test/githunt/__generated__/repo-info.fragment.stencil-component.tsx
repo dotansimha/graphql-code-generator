@@ -1,4 +1,3 @@
-// tslint:disable
 import gql from 'graphql-tag';
 
 declare global {

@@ -1,10 +1,8 @@
-// tslint:disable
 import gql from 'graphql-tag';
 import { Injectable } from '@angular/core';
 import * as Apollo from 'apollo-angular';
 import * as ApolloCore from 'apollo-client';
 export type Maybe<T> = T | null;
-
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
