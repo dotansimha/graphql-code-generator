@@ -70,14 +70,13 @@
     "lint-staged": "10.0.8",
     "rimraf": "3.0.2",
     "ts-jest": "25.2.1",
-    "tslint": "5.20.1",
     "stencil-apollo": "0.1.5",
     "typescript": "3.8.3",
     "urql": "1.9.0"
   },
   "lint-staged": {
     "packages/**/src/**/*.{ts,tsx}": [
-      "tslint --fix",
+      "eslint --fix",
       "git add"
     ],
     "packages/**/*.{js,json,css,md,ts,tsx}": [

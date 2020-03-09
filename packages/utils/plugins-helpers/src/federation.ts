@@ -24,7 +24,6 @@ export const federationSpec = parse(/* GraphQL */ `
  */
 export function addFederationReferencesToSchema(schema: GraphQLSchema): GraphQLSchema {
   const typeMap = schema.getTypeMap();
-  // tslint:disable-next-line: forin
   for (const typeName in typeMap) {
     const type = schema.getType(typeName);
     if (isObjectType(type) && isFederationObjectType(type)) {
