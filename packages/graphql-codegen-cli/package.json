@@ -12,7 +12,7 @@
     "url": "git+https://github.com/dotansimha/graphql-code-generator.git"
   },
   "scripts": {
-    "lint": "tslint src/**/*.ts",
+    "lint": "eslint **/*.ts",
     "prepack": "bob-update-version",
     "clean": "rimraf ./dist",
     "prebuild": "yarn clean",
