@@ -172,7 +172,12 @@ public static ${enumName} valueOfLabel(String label) {
 
         if (typeToUse.isArray && !typeToUse.isScalar) {
           this._addListImport = true;
-          return indent(`this._${arg.name.value} = ((List<Map<String, Object>>) args.get("${arg.name.value}")).stream().map(${typeToUse.baseType}::new).collect(Collectors.toList());`, 3);
+          return indentMultiline(
+            `if (args.get("${arg.name.value}") != null) {
+  this._${arg.name.value} = ((List<Map<String, Object>>) args.get("${arg.name.value}")).stream().map(${typeToUse.baseType}::new).collect(Collectors.toList());
+}`,
+            3
+          );
         } else if (typeToUse.isScalar) {
           return indent(`this._${arg.name.value} = (${typeToUse.typeName}) args.get("${arg.name.value}");`, 3);
         } else if (typeToUse.isEnum) {
