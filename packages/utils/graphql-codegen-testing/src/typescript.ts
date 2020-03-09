@@ -1,5 +1,5 @@
 import { Types } from '@graphql-codegen/plugin-helpers';
-import { CompilerOptions, ModuleResolutionKind, ScriptTarget, JsxEmit, ModuleKind, createSourceFile, ScriptKind, flattenDiagnosticMessageText, createCompilerHost, createProgram } from 'typescript';
+import { CompilerOptions, ModuleResolutionKind, ScriptTarget, JsxEmit, ModuleKind, createSourceFile, ScriptKind, flattenDiagnosticMessageText, createCompilerHost, createProgram, Diagnostic } from 'typescript';
 import { resolve, join, dirname } from 'path';
 import open from 'open';
 
@@ -47,11 +47,12 @@ export function validateTs(
 
   try {
     const testFile = `test-file.${isTsx ? 'tsx' : 'ts'}`;
-    const result = createSourceFile(testFile, contents, ScriptTarget.ES2016, false, isTsx ? ScriptKind.TSX : undefined);
+    const result = createSourceFile(testFile, contents, ScriptTarget.ES2016, false, isTsx ? ScriptKind.TSX : undefined) as { parseDiagnostics?: Diagnostic[] };
 
-    if (result.parseDiagnostics && result.parseDiagnostics.length > 0) {
+    const allDiagnostics = result.parseDiagnostics;
+
+    if (allDiagnostics && allDiagnostics.length > 0) {
       const errors: string[] = [];
-      const allDiagnostics: any[] = result.parseDiagnostics;
 
       allDiagnostics.forEach(diagnostic => {
         if (diagnostic.file) {

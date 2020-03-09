@@ -15,6 +15,7 @@ export interface ParsedConfig {
   addTypename: boolean;
   nonOptionalTypename: boolean;
   externalFragments: LoadedFragment[];
+  immutableTypes: boolean;
 }
 
 export interface RawConfig {

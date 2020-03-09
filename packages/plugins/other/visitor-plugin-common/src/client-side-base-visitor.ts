@@ -1,6 +1,6 @@
 import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor';
 import autoBind from 'auto-bind';
-import { FragmentDefinitionNode, print, OperationDefinitionNode, visit, FragmentSpreadNode, GraphQLSchema, Kind, DocumentNode } from 'graphql';
+import { FragmentDefinitionNode, print, OperationDefinitionNode, visit, FragmentSpreadNode, GraphQLSchema, Kind } from 'graphql';
 import { DepGraph } from 'dependency-graph';
 import gqlTag from 'graphql-tag';
 import { Types } from '@graphql-codegen/plugin-helpers';
@@ -29,8 +29,8 @@ export interface RawClientSideBasePluginConfig extends RawConfig {
   operationResultSuffix?: string;
   documentVariablePrefix?: string;
   documentVariableSuffix?: string;
-  fragmentVariablePrefix: string;
-  fragmentVariableSuffix: string;
+  fragmentVariablePrefix?: string;
+  fragmentVariableSuffix?: string;
   documentMode?: DocumentMode;
   importOperationTypesFrom?: string;
   importDocumentNodeExternallyFrom?: string;
@@ -358,7 +358,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
 
     if (this.config.documentMode === DocumentMode.graphQLTag || this.config.documentMode === DocumentMode.documentNodeImportFragments) {
       (this._fragments || [])
-        .filter(f => f.isExternal && f.importFrom && (!f.level || (f.level !== undefined && f.level === 0)))
+        .filter(f => f.isExternal && f.importFrom && !(f as any).level)
         .forEach(externalFragment => {
           const identifierName = this._getFragmentName(externalFragment.name);
 

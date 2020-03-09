@@ -22,7 +22,6 @@ import {
   isInputObjectType,
   GraphQLString,
   isListType,
-  FieldNode,
   ExecutableDefinitionNode,
   FragmentDefinitionNode,
   GraphQLInterfaceType,

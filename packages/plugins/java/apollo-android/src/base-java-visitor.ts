@@ -16,7 +16,7 @@ export const SCALAR_TO_WRITER_METHOD = {
 };
 
 function isTypeNode(type: TypeNode | GraphQLOutputType): type is TypeNode {
-  return type && type.kind;
+  return type && !!(type as TypeNode).kind;
 }
 
 export class BaseJavaVisitor<Config extends VisitorConfig = any> extends BaseVisitor<JavaApolloAndroidPluginConfig, Config> {
