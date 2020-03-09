@@ -24,6 +24,8 @@ import {
   isListType,
   FieldNode,
   ExecutableDefinitionNode,
+  FragmentDefinitionNode,
+  GraphQLInterfaceType,
 } from 'graphql';
 import { JavaApolloAndroidPluginConfig } from './plugin';
 import { Imports } from './imports';
@@ -31,7 +33,7 @@ import { createHash } from 'crypto';
 import { VisitorConfig } from './visitor-config';
 import { singular, isPlural } from 'pluralize';
 import { visitFieldArguments } from './field-arguments';
-import { FragmentDefinitionNode, GraphQLInterfaceType } from 'graphql';
+
 import { camelCase } from 'camel-case';
 import { pascalCase } from 'pascal-case';
 

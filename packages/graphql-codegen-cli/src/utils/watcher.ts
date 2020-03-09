@@ -1,6 +1,6 @@
 import { executeCodegen } from '../codegen';
-import { Types } from '@graphql-codegen/plugin-helpers';
-import { normalizeInstanceOrArray, normalizeOutputParam } from '@graphql-codegen/plugin-helpers';
+import { Types, normalizeInstanceOrArray, normalizeOutputParam } from '@graphql-codegen/plugin-helpers';
+
 import isGlob from 'is-glob';
 import debounce from 'debounce';
 import logSymbols from 'log-symbols';

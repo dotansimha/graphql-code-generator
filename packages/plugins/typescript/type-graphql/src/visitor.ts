@@ -1,9 +1,8 @@
 import { transformComment, indent, DeclarationBlock } from '@graphql-codegen/visitor-plugin-common';
 import { TypeGraphQLPluginConfig } from './config';
 import autoBind from 'auto-bind';
-import { FieldDefinitionNode, EnumTypeDefinitionNode, InputValueDefinitionNode, GraphQLSchema, ObjectTypeDefinitionNode, InterfaceTypeDefinitionNode, TypeNode, NameNode, GraphQLEnumType } from 'graphql';
+import { FieldDefinitionNode, EnumTypeDefinitionNode, InputValueDefinitionNode, GraphQLSchema, ObjectTypeDefinitionNode, InterfaceTypeDefinitionNode, TypeNode, NameNode, GraphQLEnumType, InputObjectTypeDefinitionNode } from 'graphql';
 import { TypeScriptOperationVariablesToObject, TypeScriptPluginParsedConfig, TsVisitor, AvoidOptionalsConfig } from '@graphql-codegen/typescript';
-import { InputObjectTypeDefinitionNode } from 'graphql';
 
 export type DecoratorConfig = {
   type: string;

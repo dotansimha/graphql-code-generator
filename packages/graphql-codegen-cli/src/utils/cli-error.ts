@@ -21,6 +21,4 @@ export function cliError(err: any, exitOnError = true) {
   } else if (exitOnError && isBrowser) {
     throw err;
   }
-
-  return;
 }

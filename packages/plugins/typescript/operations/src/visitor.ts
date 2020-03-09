@@ -1,8 +1,8 @@
-import { GraphQLSchema, isListType, GraphQLObjectType, GraphQLNonNull, GraphQLList, isEnumType } from 'graphql';
+import { GraphQLSchema, isListType, GraphQLObjectType, GraphQLNonNull, GraphQLList, isEnumType, isNonNullType } from 'graphql';
 import { PreResolveTypesProcessor, ParsedDocumentsConfig, BaseDocumentsVisitor, LoadedFragment, getConfigValue, SelectionSetProcessorConfig, SelectionSetToObject, DeclarationKind } from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptOperationVariablesToObject } from './ts-operation-variables-to-object';
 import { TypeScriptDocumentsPluginConfig } from './config';
-import { isNonNullType } from 'graphql';
+
 import { TypeScriptSelectionSetProcessor } from './ts-selection-set-processor';
 import autoBind from 'auto-bind';
 

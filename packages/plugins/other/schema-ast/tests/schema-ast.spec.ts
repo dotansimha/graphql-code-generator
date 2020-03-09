@@ -1,8 +1,8 @@
 import { validate, plugin } from '../src/index';
-import { buildSchema } from 'graphql';
+import { buildSchema, buildASTSchema, parse } from 'graphql';
 import '@graphql-codegen/testing';
 import { Types } from '@graphql-codegen/plugin-helpers';
-import { buildASTSchema, parse } from 'graphql';
+
 import { codegen } from '@graphql-codegen/core';
 
 const SHOULD_THROW_ERROR = 'SHOULD_THROW_ERROR';

@@ -66,13 +66,13 @@ export function addFederationReferencesToSchema(schema: GraphQLSchema): GraphQLS
 export function removeFederation(schema: GraphQLSchema): GraphQLSchema {
   const queryType = schema.getQueryType();
   const queryTypeFields = queryType.getFields();
-  delete queryTypeFields['_entities'];
-  delete queryTypeFields['_service'];
+  delete queryTypeFields._entities;
+  delete queryTypeFields._service;
 
   const typeMap = schema.getTypeMap();
-  delete typeMap['_Service'];
-  delete typeMap['_Entity'];
-  delete typeMap['_Any'];
+  delete typeMap._Service;
+  delete typeMap._Entity;
+  delete typeMap._Any;
 
   return schema;
 }

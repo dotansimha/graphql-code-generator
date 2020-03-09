@@ -1,6 +1,6 @@
-import '@graphql-codegen/testing';
-import { parse } from 'graphql';
 import { validateTs } from '@graphql-codegen/testing';
+import { parse } from 'graphql';
+
 import { plugin } from '../src/index';
 import { Types } from '@graphql-codegen/plugin-helpers';
 
@@ -55,7 +55,7 @@ describe('graphql-codegen typescript-graphql-document-nodes', () => {
       ],
       {},
       { outputFile: '' }
-    ))as Types.ComplexPluginOutput;
+    )) as Types.ComplexPluginOutput;
 
     expect(result.content).toBeSimilarStringTo(`
       export const MyQuery = gql\`

@@ -1,9 +1,8 @@
 import { ClientSideBaseVisitor, ClientSideBasePluginConfig, LoadedFragment, getConfigValue, OMIT_TYPE } from '@graphql-codegen/visitor-plugin-common';
 import { UrqlRawPluginConfig } from './config';
 import autoBind from 'auto-bind';
-import { OperationDefinitionNode, Kind } from 'graphql';
+import { OperationDefinitionNode, Kind, GraphQLSchema } from 'graphql';
 import { pascalCase } from 'pascal-case';
-import { GraphQLSchema } from 'graphql';
 
 export interface UrqlPluginConfig extends ClientSideBasePluginConfig {
   withComponent: boolean;

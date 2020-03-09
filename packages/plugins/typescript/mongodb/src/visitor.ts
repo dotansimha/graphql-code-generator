@@ -134,10 +134,10 @@ export class TsMongoVisitor extends BaseVisitor<TypeScriptMongoPluginConfig, Typ
 
   private _handleLinkField(fieldNode: FieldDefinitionNode, tree: FieldsTree, linkDirective: DirectiveNode, mapPath: string | null, addOptionalSign: boolean): void {
     const overrideType = this._getDirectiveArgValue<string>(linkDirective, 'overrideType');
-    const coreType = overrideType ? overrideType : getBaseTypeNode(fieldNode.type);
+    const coreType = overrideType || getBaseTypeNode(fieldNode.type);
     const type = this.convertName(coreType, { suffix: this.config.dbTypeSuffix });
 
-    tree.addField(mapPath ? mapPath : `${fieldNode.name.value}${addOptionalSign ? '?' : ''}`, this._variablesTransformer.wrapAstTypeWithModifiers(`${type}['${this.config.idFieldName}']`, fieldNode.type));
+    tree.addField(mapPath || `${fieldNode.name.value}${addOptionalSign ? '?' : ''}`, this._variablesTransformer.wrapAstTypeWithModifiers(`${type}['${this.config.idFieldName}']`, fieldNode.type));
   }
 
   private _handleColumnField(fieldNode: FieldDefinitionNode, tree: FieldsTree, columnDirective: DirectiveNode, mapPath: string | null, addOptionalSign: boolean): void {
@@ -157,14 +157,14 @@ export class TsMongoVisitor extends BaseVisitor<TypeScriptMongoPluginConfig, Typ
       }
     }
 
-    tree.addField(mapPath ? mapPath : `${fieldNode.name.value}${addOptionalSign ? '?' : ''}`, overrideType ? overrideType : this._variablesTransformer.wrapAstTypeWithModifiers(type, fieldNode.type));
+    tree.addField(mapPath || `${fieldNode.name.value}${addOptionalSign ? '?' : ''}`, overrideType || this._variablesTransformer.wrapAstTypeWithModifiers(type, fieldNode.type));
   }
 
   private _handleEmbeddedField(fieldNode: FieldDefinitionNode, tree: FieldsTree, mapPath: string | null, addOptionalSign: boolean): void {
     const coreType = getBaseTypeNode(fieldNode.type);
     const type = this.convertName(coreType, { suffix: this.config.dbTypeSuffix });
 
-    tree.addField(mapPath ? mapPath : `${fieldNode.name.value}${addOptionalSign ? '?' : ''}`, this._variablesTransformer.wrapAstTypeWithModifiers(type, fieldNode.type));
+    tree.addField(mapPath || `${fieldNode.name.value}${addOptionalSign ? '?' : ''}`, this._variablesTransformer.wrapAstTypeWithModifiers(type, fieldNode.type));
   }
 
   private _buildFieldsTree(fields: ReadonlyArray<FieldDefinitionNode>): FieldsTree {

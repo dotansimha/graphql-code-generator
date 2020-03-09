@@ -49,9 +49,9 @@ export function validateTs(
     const testFile = `test-file.${isTsx ? 'tsx' : 'ts'}`;
     const result = createSourceFile(testFile, contents, ScriptTarget.ES2016, false, isTsx ? ScriptKind.TSX : undefined);
 
-    if (result['parseDiagnostics'] && result['parseDiagnostics'].length > 0) {
+    if (result.parseDiagnostics && result.parseDiagnostics.length > 0) {
       const errors: string[] = [];
-      const allDiagnostics: any[] = result['parseDiagnostics'];
+      const allDiagnostics: any[] = result.parseDiagnostics;
 
       allDiagnostics.forEach(diagnostic => {
         if (diagnostic.file) {

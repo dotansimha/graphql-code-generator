@@ -1,10 +1,9 @@
 import { ClientSideBaseVisitor, ClientSideBasePluginConfig, getConfigValue, LoadedFragment, DocumentMode } from '@graphql-codegen/visitor-plugin-common';
 import { VueApolloRawPluginConfig } from './config';
 import autoBind from 'auto-bind';
-import { OperationDefinitionNode } from 'graphql';
+import { OperationDefinitionNode, GraphQLSchema } from 'graphql';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { pascalCase } from 'pascal-case';
-import { GraphQLSchema } from 'graphql';
 
 export interface VueApolloPluginConfig extends ClientSideBasePluginConfig {
   withCompositionFunctions: boolean;

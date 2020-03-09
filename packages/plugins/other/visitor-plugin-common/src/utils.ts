@@ -17,12 +17,12 @@ import {
   InlineFragmentNode,
   isNonNullType,
   isObjectType,
+  isListType,
+  isAbstractType,
 } from 'graphql';
 import { ScalarsMap, NormalizedScalarsMap, ParsedScalarsMap } from './types';
 import { DEFAULT_SCALARS } from './scalars';
 import { parseMapper } from './mappers';
-import { isListType } from 'graphql';
-import { isAbstractType } from 'graphql';
 
 export const getConfigValue = <T = any>(value: T, defaultValue: T): T => {
   if (value === null || value === undefined) {

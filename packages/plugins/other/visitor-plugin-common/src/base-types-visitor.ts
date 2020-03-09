@@ -228,7 +228,7 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
   getObjectTypeDeclarationBlock(node: ObjectTypeDefinitionNode, originalNode: ObjectTypeDefinitionNode): DeclarationBlock {
     const optionalTypename = this.config.nonOptionalTypename ? '__typename' : '__typename?';
     const { type } = this._parsedConfig.declarationKind;
-    const allFields = [...(this.config.addTypename ? [indent(`${this.config['immutableTypes'] ? 'readonly' : ''} ${optionalTypename}: '${node.name}'${this.getPunctuation(type)}`)] : []), ...node.fields] as string[];
+    const allFields = [...(this.config.addTypename ? [indent(`${this.config.immutableTypes ? 'readonly' : ''} ${optionalTypename}: '${node.name}'${this.getPunctuation(type)}`)] : []), ...node.fields] as string[];
     const interfacesNames = originalNode.interfaces ? originalNode.interfaces.map(i => this.convertName(i)) : [];
 
     const declarationBlock = new DeclarationBlock(this._declarationBlockConfig)

@@ -21,8 +21,12 @@ import {
   isUnionType,
   GraphQLNamedType,
   isEnumType,
+  DirectiveDefinitionNode,
+  GraphQLObjectType,
+  InputValueDefinitionNode,
+  GraphQLOutputType,
 } from 'graphql';
-import { DirectiveDefinitionNode, GraphQLObjectType, InputValueDefinitionNode, GraphQLOutputType } from 'graphql';
+
 import { OperationVariablesToObject } from './variables-to-object';
 import { ParsedMapper, parseMapper, transformMappers, ExternalParsedMapper } from './mappers';
 import { parseEnumValues } from './enum-values';

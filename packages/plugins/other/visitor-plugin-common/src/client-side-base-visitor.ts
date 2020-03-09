@@ -240,13 +240,13 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
 
     if (this.config.documentMode === DocumentMode.documentNode) {
       const gqlObj = gqlTag([doc]) as DocumentNode;
-      if (gqlObj && gqlObj['loc']) {
+      if (gqlObj && gqlObj.loc) {
         delete (gqlObj as any).loc;
       }
       return JSON.stringify(gqlObj);
     } else if (this.config.documentMode === DocumentMode.documentNodeImportFragments) {
       const gqlObj = gqlTag([doc]);
-      if (gqlObj && gqlObj['loc']) {
+      if (gqlObj && gqlObj.loc) {
         delete (gqlObj as any).loc;
       }
       if (fragments.length > 0) {
@@ -358,7 +358,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
 
     if (this.config.documentMode === DocumentMode.graphQLTag || this.config.documentMode === DocumentMode.documentNodeImportFragments) {
       (this._fragments || [])
-        .filter(f => f.isExternal && f.importFrom && (!f['level'] || (f['level'] !== undefined && f['level'] === 0)))
+        .filter(f => f.isExternal && f.importFrom && (!f.level || (f.level !== undefined && f.level === 0)))
         .forEach(externalFragment => {
           const identifierName = this._getFragmentName(externalFragment.name);
 

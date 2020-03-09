@@ -110,7 +110,7 @@ export type FragmentNameToFile = { [fragmentName: string]: { location: string; i
 
 export const preset: Types.OutputPreset<NearOperationFileConfig> = {
   buildGeneratesSection: options => {
-    const dedupeOperationSuffix = options.config && options.config.dedupeOperationSuffix ? true : false;
+    const dedupeOperationSuffix = !!(options.config && options.config.dedupeOperationSuffix);
     const schemaObject: GraphQLSchema = options.schemaAst ? options.schemaAst : buildASTSchema(options.schema, options.config as any);
     const baseDir = options.presetConfig.cwd || process.cwd();
     const extension = options.presetConfig.extension || '.generated.ts';

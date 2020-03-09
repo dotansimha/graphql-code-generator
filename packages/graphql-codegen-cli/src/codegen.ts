@@ -1,14 +1,13 @@
-import { DetailedError, Types, CodegenPlugin } from '@graphql-codegen/plugin-helpers';
+import { DetailedError, Types, CodegenPlugin, normalizeOutputParam, normalizeInstanceOrArray, normalizeConfig } from '@graphql-codegen/plugin-helpers';
 import { codegen } from '@graphql-codegen/core';
-import { normalizeOutputParam, normalizeInstanceOrArray, normalizeConfig } from '@graphql-codegen/plugin-helpers';
+
 import { Renderer } from './utils/listr-renderer';
-import { GraphQLError, GraphQLSchema, DocumentNode } from 'graphql';
+import { GraphQLError, GraphQLSchema, DocumentNode, parse } from 'graphql';
 import { getPluginByName } from './plugins';
 import { getPresetByName } from './presets';
 import { debugLog } from './utils/debugging';
 import { printSchemaWithDirectives } from '@graphql-toolkit/common';
 import { CodegenContext, ensureContext } from './config';
-import { parse } from 'graphql';
 
 export const defaultLoader = (mod: string) => import(mod);
 

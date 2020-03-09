@@ -1,14 +1,31 @@
 import { Types } from './types';
-import { FragmentDefinitionNode, visit, DocumentNode, isListType, VariableDefinitionNode, isObjectType, FieldNode, Kind, InputValueDefinitionNode, GraphQLSchema, OperationDefinitionNode, isNonNullType, GraphQLOutputType, ASTNode } from 'graphql';
+import {
+  FragmentDefinitionNode,
+  visit,
+  DocumentNode,
+  isListType,
+  VariableDefinitionNode,
+  isObjectType,
+  FieldNode,
+  Kind,
+  InputValueDefinitionNode,
+  GraphQLSchema,
+  OperationDefinitionNode,
+  isNonNullType,
+  GraphQLOutputType,
+  ASTNode,
+  InlineFragmentNode,
+  SelectionSetNode,
+  GraphQLObjectType,
+} from 'graphql';
 import { getBaseType } from './utils';
-import { InlineFragmentNode, SelectionSetNode, GraphQLObjectType } from 'graphql';
 
 export function isOutputConfigArray(type: any): type is Types.OutputConfig[] {
   return Array.isArray(type);
 }
 
 export function isConfiguredOutput(type: any): type is Types.ConfiguredOutput {
-  return typeof type === 'object' && type['plugins'];
+  return typeof type === 'object' && type.plugins;
 }
 
 export function normalizeOutputParam(config: Types.OutputConfig | Types.ConfiguredOutput): Types.ConfiguredOutput {
