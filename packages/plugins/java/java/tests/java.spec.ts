@@ -148,7 +148,9 @@ describe('Java', () => {
         public InputWithArrayInput(Map<String, Object> args) {
           if (args != null) {
             this._f = (Iterable<String>) args.get("f");
-            this._g = ((List<Map<String, Object>>) args.get("g")).stream().map(SearchUserInput::new).collect(Collectors.toList());
+            if (args.get("g") != null) {
+              this._g = ((List<Map<String, Object>>) args.get("g")).stream().map(SearchUserInput::new).collect(Collectors.toList());
+            }
           }
         }
       
