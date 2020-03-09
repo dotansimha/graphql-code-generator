@@ -191,7 +191,6 @@ describe('React Apollo', () => {
           outputFile: 'graphql.tsx',
         }
       )) as Types.ComplexPluginOutput;
-      // make sure the fragment is there twice.
       expect(content.content.split('{"kind":"FragmentDefinition","name":{"kind":"Name","value":"RepositoryFields"}').length).toBe(3);
     });
   });
