@@ -28,7 +28,7 @@ export async function generateConfig(inputFile: string): Promise<string> {
     for (const diagnostic of compilerDiagnostics) {
       const message: string = ts.flattenDiagnosticMessageText(diagnostic.messageText, os.EOL);
       if (diagnostic.file) {
-        const location: ts.LineAndCharacter = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start!);
+        const location: ts.LineAndCharacter = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
         const formattedMessage: string = `${diagnostic.file.fileName}(${location.line + 1},${location.character + 1}):` + ` [TypeScript] ${message}`;
         // eslint-disable-next-line no-console
         console.error(formattedMessage);

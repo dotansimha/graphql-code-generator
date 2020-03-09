@@ -50,7 +50,7 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
   }
 
   private getDocumentNodeVariable(node: OperationDefinitionNode, documentVariableName: string): string {
-    return this.config.documentMode === DocumentMode.external ? `Operations.${node.name!.value}` : documentVariableName;
+    return this.config.documentMode === DocumentMode.external ? `Operations.${node.name.value}` : documentVariableName;
   }
 
   public getImports(): string[] {

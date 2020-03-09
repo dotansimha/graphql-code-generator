@@ -103,7 +103,7 @@ export const createWatcher = (initalContext: CodegenContext, onNext: (result: Ty
 
     debugLog(`[Watcher] Started`);
 
-    const shutdown = async () => {
+    const shutdown = () => {
       isShutdown = true;
       debugLog(`[Watcher] Shutting down`);
       log(`Shutting down watch...`);
@@ -121,7 +121,7 @@ export const createWatcher = (initalContext: CodegenContext, onNext: (result: Ty
         log(`${logSymbols.info} Config file has changed, reloading...`);
         const context = await loadContext(config.configFilePath);
 
-        const newParsedConfig = context.getConfig() as Types.Config;
+        const newParsedConfig = context.getConfig();
         newParsedConfig.watch = config.watch;
         newParsedConfig.silent = config.silent;
         newParsedConfig.overwrite = config.overwrite;

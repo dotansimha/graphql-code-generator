@@ -226,7 +226,7 @@ export class OperationVisitor extends BaseJavaVisitor<VisitorConfig> {
         this._imports.add(Imports.ResponseField);
         this._imports.add(Imports.Collections);
 
-        const operationArgs = visitFieldArguments(selection as FieldNode, this._imports);
+        const operationArgs = visitFieldArguments(selection, this._imports);
         const responseFieldMethod = this._resolveResponseFieldMethodForBaseType(field.type);
 
         responseFieldArr.push(

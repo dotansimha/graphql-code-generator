@@ -76,7 +76,7 @@ export class TypeGraphQLVisitor<TRawConfig extends TypeGraphQLPluginConfig = Typ
     const originalNode = parent[key] as ObjectTypeDefinitionNode;
 
     let declarationBlock = this.getObjectTypeDeclarationBlock(node, originalNode);
-    if (GRAPHQL_TYPES.indexOf((node.name as unknown) as string) === -1) {
+    if (!GRAPHQL_TYPES.includes((node.name as unknown) as string)) {
       // Add type-graphql ObjectType decorator
       const interfaces = originalNode.interfaces.map(i => this.convertName(i));
       let decoratorOptions = '';
@@ -219,7 +219,7 @@ export class TypeGraphQLVisitor<TRawConfig extends TypeGraphQLPluginConfig = Typ
     const typeGraphQLType = type.isScalar && TYPE_GRAPHQL_SCALARS.includes(type.type) ? `TypeGraphQL.${type.type}` : type.type;
     const decorator = '\n' + indent(`@TypeGraphQL.${fieldDecorator}(type => ${type.isArray ? `[${typeGraphQLType}]` : typeGraphQLType}${type.isNullable ? ', { nullable: true }' : ''})`) + '\n';
 
-    const nameString = (node.name as NameNode).kind ? (node.name as NameNode).value : node.name;
+    const nameString = node.name.kind ? node.name.value : node.name;
     const typeString = (rawType as TypeNode).kind ? this.buildTypeString(type) : this.fixDecorator(type, rawType as string);
 
     return comment + decorator + indent(`${this.config.immutableTypes ? 'readonly ' : ''}${nameString}!: ${typeString};`);

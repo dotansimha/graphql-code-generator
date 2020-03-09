@@ -239,7 +239,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
     ${this._includeFragments(fragments)}`);
 
     if (this.config.documentMode === DocumentMode.documentNode) {
-      const gqlObj = gqlTag([doc]) as DocumentNode;
+      const gqlObj = gqlTag([doc]);
       if (gqlObj && gqlObj.loc) {
         delete (gqlObj as any).loc;
       }

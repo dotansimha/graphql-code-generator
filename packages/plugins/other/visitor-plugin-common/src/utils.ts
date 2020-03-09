@@ -214,9 +214,9 @@ export class DeclarationBlock {
       const block = [before, this._block, after].filter(val => !!val).join('\n');
 
       if (this._methodName) {
-        result += `${this._methodName}(${this._config.blockTransformer!(block)})`;
+        result += `${this._methodName}(${this._config.blockTransformer(block)})`;
       } else {
-        result += this._config.blockTransformer!(block);
+        result += this._config.blockTransformer(block);
       }
     } else if (this._content) {
       result += this._content;

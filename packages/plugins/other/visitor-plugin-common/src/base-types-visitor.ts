@@ -205,7 +205,7 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
   }
 
   UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number | undefined, parent: any): string {
-    const originalNode = parent[key!] as UnionTypeDefinitionNode;
+    const originalNode = parent[key] as UnionTypeDefinitionNode;
     const possibleTypes = originalNode.types.map(t => (this.scalars[t.name.value] ? this._getScalar(t.name.value) : this.convertName(t))).join(' | ');
 
     return new DeclarationBlock(this._declarationBlockConfig)
@@ -255,7 +255,7 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: number | string | undefined, parent: any): string {
-    const originalNode = parent[key!] as ObjectTypeDefinitionNode;
+    const originalNode = parent[key] as ObjectTypeDefinitionNode;
 
     return [this.getObjectTypeDeclarationBlock(node, originalNode).string, this.buildArgumentsBlock(originalNode)].filter(f => f).join('\n\n');
   }
@@ -271,7 +271,7 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
   }
 
   InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode, key: number | string | undefined, parent: any): string {
-    const originalNode = parent[key!] as InterfaceTypeDefinitionNode;
+    const originalNode = parent[key] as InterfaceTypeDefinitionNode;
 
     return [this.getInterfaceTypeDeclarationBlock(node, originalNode).string, this.buildArgumentsBlock(originalNode)].filter(f => f).join('\n\n');
   }

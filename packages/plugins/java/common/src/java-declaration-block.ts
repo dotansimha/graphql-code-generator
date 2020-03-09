@@ -86,7 +86,7 @@ export class JavaDeclarationBlock {
   }
 
   withName(name: string | NameNode): JavaDeclarationBlock {
-    this._name = typeof name === 'object' ? (name as NameNode).value : name;
+    this._name = typeof name === 'object' ? name.value : name;
 
     return this;
   }

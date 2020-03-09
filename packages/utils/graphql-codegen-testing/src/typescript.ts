@@ -141,7 +141,7 @@ export function compileTs(
 
     allDiagnostics.forEach(diagnostic => {
       if (diagnostic.file) {
-        const { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start!);
+        const { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
         const message = flattenDiagnosticMessageText(diagnostic.messageText, '\n');
         errors.push(`${line + 1},${character + 1}: ${message} ->
   ${contents.split('\n')[line]}`);
