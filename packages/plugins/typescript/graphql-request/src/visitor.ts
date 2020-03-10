@@ -27,6 +27,8 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<RawGraphQLReque
     if (this.config.rawRequest) {
       this._additionalImports.push(`import { GraphQLError } from 'graphql-request/dist/src/types';`);
     }
+
+    this._additionalImports.push(`import { SdkFunctionWrapper, defaultWrapper } from '@graphql-codegen/typescript-graphql-request';`);
   }
 
   protected buildOperation(node: OperationDefinitionNode, documentVariableName: string, operationType: string, operationResultType: string, operationVariablesTypes: string): string {
@@ -50,17 +52,17 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<RawGraphQLReque
           return `${o.node.name.value}(variables${optionalVariables ? '?' : ''}: ${o.operationVariablesTypes}): Promise<{ data?: ${
             o.operationResultType
           } | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
-    return client.rawRequest<${o.operationResultType}>(${doc}, variables);
+    return withWrapper(() => client.rawRequest<${o.operationResultType}>(${doc}, variables));
 }`;
         } else {
           return `${o.node.name.value}(variables${optionalVariables ? '?' : ''}: ${o.operationVariablesTypes}): Promise<${o.operationResultType}> {
-  return client.request<${o.operationResultType}>(${doc}, variables);
+  return withWrapper(() => client.request<${o.operationResultType}>(${doc}, variables));
 }`;
         }
       })
       .map(s => indentMultiline(s, 2));
 
-    return `export function getSdk(client: GraphQLClient) {
+    return `export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
 ${allPossibleActions.join(',\n')}
   };

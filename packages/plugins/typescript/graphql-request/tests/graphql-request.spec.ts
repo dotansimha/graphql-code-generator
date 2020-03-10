@@ -107,5 +107,41 @@ async function test() {
 
       expect(output).toMatchSnapshot();
     });
+
+    it('Should allow passing wrapper arg to generated getSdk', async () => {
+      const config = { documentMode: DocumentMode.string };
+      const docs = [{ location: '', document: basicDoc }];
+      const result = (await plugin(schema, docs, config, {
+        outputFile: 'graphql.ts',
+      })) as Types.ComplexPluginOutput;
+
+      const usage = `
+async function test() {
+  const client = new GraphQLClient('');
+  const functionWrapper: SdkFunctionWrapper = async <T>(action: () => Promise<T>): Promise<T> => {
+    console.log('before');
+    const result = await action();
+    console.log('after');
+    return result;
+  }
+
+  const sdk = getSdk(client, functionWrapper);
+  
+  await sdk.feed();
+  await sdk.feed3();
+  await sdk.feed4();
+
+  const result = await sdk.feed2({ v: "1" });
+
+  if (result.feed) {
+    if (result.feed[0]) {
+      const id = result.feed[0].id
+    }
+  }
+}`;
+      const output = await validateAndCompile(result, config, docs, schema, usage);
+
+      expect(output).toMatchSnapshot();
+    });
   });
 });
