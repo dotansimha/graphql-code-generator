@@ -22,7 +22,7 @@ type Graph = {
 function createLazyPromise() {
   let error: any;
   let resolved = false;
-  let promise: Promise<void> = undefined;
+  let promise: Promise<void>;
 
   let resolve: () => void;
   let reject: (error: any) => void;
@@ -66,6 +66,7 @@ function createLazyPromise() {
         } else {
           // if there was no reject() or resolve() postponed
           // just create a new promise
+          // eslint-disable-next-line promise/param-names
           promise = new Promise<void>((yes, not) => {
             resolve = yes;
             reject = not;

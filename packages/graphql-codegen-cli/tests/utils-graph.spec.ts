@@ -146,7 +146,7 @@ describe('Graph', () => {
       });
 
       expect(graph.overallOrder()).toEqual([schemaFile, fooFile]);
-    }*/
+    } */
   );
 
   it('should resolve outputs in a proper order', async () => {
