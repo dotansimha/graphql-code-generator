@@ -37,7 +37,7 @@ describe('Flow Resolvers Plugin', () => {
         MyOtherType: MyOtherType,
         Subscription: {},
         Boolean: $ElementType<Scalars, 'Boolean'>,
-        Node: Node,
+        Node: $ElementType<ResolversParentTypes, 'SomeNode'>,
         ID: $ElementType<Scalars, 'ID'>,
         SomeNode: SomeNode,
         MyUnion: $ElementType<ResolversParentTypes, 'MyType'> | $ElementType<ResolversParentTypes, 'MyOtherType'>,
