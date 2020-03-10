@@ -1,7 +1,7 @@
 import { CompatabilityPluginRawConfig } from './config';
-import { BaseVisitor, DeclarationBlock, indent, getConfigValue, buildScalars } from '@graphql-codegen/visitor-plugin-common';
+import { BaseVisitor, DeclarationBlock, indent, getConfigValue, buildScalars, ParsedConfig } from '@graphql-codegen/visitor-plugin-common';
 import { GraphQLSchema, OperationDefinitionNode, OperationTypeNode, FragmentDefinitionNode } from 'graphql';
-import { ParsedConfig } from '@graphql-codegen/visitor-plugin-common';
+
 import { selectionSetToTypes, SelectionSetToObjectResult } from './selection-set-to-types';
 import { pascalCase } from 'pascal-case';
 

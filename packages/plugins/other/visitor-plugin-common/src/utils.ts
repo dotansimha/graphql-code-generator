@@ -1,4 +1,3 @@
-import { pascalCase } from 'pascal-case';
 import {
   NameNode,
   Kind,
@@ -18,12 +17,12 @@ import {
   InlineFragmentNode,
   isNonNullType,
   isObjectType,
+  isListType,
+  isAbstractType,
 } from 'graphql';
 import { ScalarsMap, NormalizedScalarsMap, ParsedScalarsMap } from './types';
 import { DEFAULT_SCALARS } from './scalars';
 import { parseMapper } from './mappers';
-import { isListType } from 'graphql';
-import { isAbstractType } from 'graphql';
 
 export const getConfigValue = <T = any>(value: T, defaultValue: T): T => {
   if (value === null || value === undefined) {
@@ -215,9 +214,9 @@ export class DeclarationBlock {
       const block = [before, this._block, after].filter(val => !!val).join('\n');
 
       if (this._methodName) {
-        result += `${this._methodName}(${this._config.blockTransformer!(block)})`;
+        result += `${this._methodName}(${this._config.blockTransformer(block)})`;
       } else {
-        result += this._config.blockTransformer!(block);
+        result += this._config.blockTransformer(block);
       }
     } else if (this._content) {
       result += this._content;
@@ -249,7 +248,7 @@ export function convertNameParts(str: string, func: (str: string) => string, rem
 }
 
 export function buildScalars(schema: GraphQLSchema | undefined, scalarsMapping: ScalarsMap, defaultScalarsMapping: NormalizedScalarsMap = DEFAULT_SCALARS): ParsedScalarsMap {
-  let result: ParsedScalarsMap = {};
+  const result: ParsedScalarsMap = {};
 
   Object.keys(defaultScalarsMapping).forEach(name => {
     result[name] = parseMapper(defaultScalarsMapping[name]);

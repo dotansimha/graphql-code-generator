@@ -16,10 +16,10 @@ interface ModuleWithProviders {
 
 export class FooModule {
   static forRoot() {
-    return <ModuleWithProviders>{
+    return {
       ngModule: 'foo',
-      value: Foo.foo
-    };
+      value: Foo.foo,
+    } as ModuleWithProviders;
   }
 }
 

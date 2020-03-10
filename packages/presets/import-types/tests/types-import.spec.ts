@@ -160,7 +160,7 @@ describe('import-types preset', () => {
       pluginMap: { typescript: {} as any },
     });
 
-    expect(result.map(o => o.pluginMap['add'])[0]).toBeDefined();
+    expect(result.map(o => o.pluginMap.add)[0]).toBeDefined();
   });
 
   it('Should add "namespacedImportName" to config', async () => {

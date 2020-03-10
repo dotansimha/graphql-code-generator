@@ -48,9 +48,6 @@
     "start": "NODE_OPTIONS=--max_old_space_size=8192 react-scripts start",
     "build": "GENERATE_SOURCEMAP=false NODE_OPTIONS=--max_old_space_size=8192 react-scripts build && cp -r ./build ../build/graphql-code-generator/live-demo"
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
   "browserslist": [
     ">0.2%",
     "not dead",

@@ -1,6 +1,6 @@
 import '@graphql-codegen/testing';
 import { Types } from '@graphql-codegen/plugin-helpers';
-import { buildSchema, parse } from 'graphql';
+import { buildSchema } from 'graphql';
 import { plugin } from '../src/index';
 
 describe('type-graphql', () => {

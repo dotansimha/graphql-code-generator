@@ -10,7 +10,6 @@ import {
   InputValueDefinitionNode,
   TypeNode,
   Kind,
-  NamedTypeNode,
   isScalarType,
   isInputObjectType,
   isEnumType,

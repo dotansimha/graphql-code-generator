@@ -49,7 +49,7 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
   NonNullType(node: NonNullTypeNode): string {
     const baseValue = super.NonNullType(node);
 
-    if (baseValue.charAt(0) === '?') {
+    if (baseValue.startsWith('?')) {
       return baseValue.substr(1);
     }
 
@@ -58,7 +58,7 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
 
   FieldDefinition(node: FieldDefinitionNode): string {
     const typeString = (node.type as any) as string;
-    const namePostfix = typeString.charAt(0) === '?' ? '?' : '';
+    const namePostfix = typeString.startsWith('?') ? '?' : '';
     const comment = transformComment((node.description as any) as string, 1);
 
     return comment + indent(`${this.config.useFlowReadOnlyTypes ? '+' : ''}${node.name}${namePostfix}: ${typeString},`);

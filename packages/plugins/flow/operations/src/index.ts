@@ -6,7 +6,7 @@ import { FlowDocumentsPluginConfig } from './config';
 
 export const plugin: PluginFunction<FlowDocumentsPluginConfig> = (schema: GraphQLSchema, rawDocuments: Types.DocumentFile[], config: FlowDocumentsPluginConfig) => {
   const documents = config.flattenGeneratedTypes ? optimizeOperations(schema, rawDocuments) : rawDocuments;
-  let prefix = `type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;\n`;
+  const prefix = `type $Pick<Origin: Object, Keys: Object> = $ObjMapi<Keys, <Key>(k: Key) => $ElementType<Origin, Key>>;\n`;
 
   const allAst = concatAST(documents.map(v => v.document));
 

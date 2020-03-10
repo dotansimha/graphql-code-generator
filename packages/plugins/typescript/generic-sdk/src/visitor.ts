@@ -1,7 +1,6 @@
-import { ClientSideBaseVisitor, ClientSideBasePluginConfig, LoadedFragment, getConfigValue, OMIT_TYPE, indentMultiline, RawClientSideBasePluginConfig, DocumentMode } from '@graphql-codegen/visitor-plugin-common';
+import { ClientSideBaseVisitor, ClientSideBasePluginConfig, LoadedFragment, indentMultiline, RawClientSideBasePluginConfig, DocumentMode } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
-import { GraphQLSchema, Kind } from 'graphql';
-import { OperationDefinitionNode } from 'graphql';
+import { GraphQLSchema, Kind, OperationDefinitionNode } from 'graphql';
 
 export class GenericSdkVisitor extends ClientSideBaseVisitor<RawClientSideBasePluginConfig, ClientSideBasePluginConfig> {
   private _operationsToInclude: { node: OperationDefinitionNode; documentVariableName: string; operationType: string; operationResultType: string; operationVariablesTypes: string }[] = [];

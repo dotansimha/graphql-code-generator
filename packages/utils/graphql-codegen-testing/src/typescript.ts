@@ -1,5 +1,5 @@
 import { Types } from '@graphql-codegen/plugin-helpers';
-import { CompilerOptions, ModuleResolutionKind, ScriptTarget, JsxEmit, ModuleKind, createSourceFile, ScriptKind, flattenDiagnosticMessageText, createCompilerHost, createProgram } from 'typescript';
+import { CompilerOptions, ModuleResolutionKind, ScriptTarget, JsxEmit, ModuleKind, createSourceFile, ScriptKind, flattenDiagnosticMessageText, createCompilerHost, createProgram, Diagnostic } from 'typescript';
 import { resolve, join, dirname } from 'path';
 import open from 'open';
 
@@ -47,16 +47,17 @@ export function validateTs(
 
   try {
     const testFile = `test-file.${isTsx ? 'tsx' : 'ts'}`;
-    const result = createSourceFile(testFile, contents, ScriptTarget.ES2016, false, isTsx ? ScriptKind.TSX : undefined);
+    const result = createSourceFile(testFile, contents, ScriptTarget.ES2016, false, isTsx ? ScriptKind.TSX : undefined) as { parseDiagnostics?: Diagnostic[] };
 
-    if (result['parseDiagnostics'] && result['parseDiagnostics'].length > 0) {
+    const allDiagnostics = result.parseDiagnostics;
+
+    if (allDiagnostics && allDiagnostics.length > 0) {
       const errors: string[] = [];
-      const allDiagnostics: any[] = result['parseDiagnostics'];
 
       allDiagnostics.forEach(diagnostic => {
         if (diagnostic.file) {
-          let { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start!);
-          let message = flattenDiagnosticMessageText(diagnostic.messageText, '\n');
+          const { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start!);
+          const message = flattenDiagnosticMessageText(diagnostic.messageText, '\n');
           errors.push(`${line + 1},${character + 1}: ${message} ->
     ${contents.split('\n')[line]}`);
         } else {
@@ -112,7 +113,7 @@ export function compileTs(
   try {
     const testFile = `test-file.${isTsx ? 'tsx' : 'ts'}`;
     const host = createCompilerHost(options);
-    let program = createProgram([testFile], options, {
+    const program = createProgram([testFile], options, {
       ...host,
       getSourceFile: (fileName: string, languageVersion: ScriptTarget, onError?: (message: string) => void, shouldCreateNewSourceFile?: boolean) => {
         if (fileName === testFile) {
@@ -135,14 +136,14 @@ export function compileTs(
         return '\n';
       },
     });
-    let emitResult = program.emit();
-    let allDiagnostics = emitResult.diagnostics;
+    const emitResult = program.emit();
+    const allDiagnostics = emitResult.diagnostics;
     const errors: string[] = [];
 
     allDiagnostics.forEach(diagnostic => {
       if (diagnostic.file) {
-        let { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start!);
-        let message = flattenDiagnosticMessageText(diagnostic.messageText, '\n');
+        const { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
+        const message = flattenDiagnosticMessageText(diagnostic.messageText, '\n');
         errors.push(`${line + 1},${character + 1}: ${message} ->
   ${contents.split('\n')[line]}`);
       } else {

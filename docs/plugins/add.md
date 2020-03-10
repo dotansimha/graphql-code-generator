@@ -31,7 +31,7 @@ as an object. The object takes two parameters:
 generates:
   path/to/file.ts:
     plugins:
-      - add: '/* tslint:disable */'
+      - add: '/* eslint-disable */'
       - add:
           content:
             - ''

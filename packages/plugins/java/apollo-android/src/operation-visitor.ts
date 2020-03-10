@@ -22,8 +22,9 @@ import {
   isInputObjectType,
   GraphQLString,
   isListType,
-  FieldNode,
   ExecutableDefinitionNode,
+  FragmentDefinitionNode,
+  GraphQLInterfaceType,
 } from 'graphql';
 import { JavaApolloAndroidPluginConfig } from './plugin';
 import { Imports } from './imports';
@@ -31,7 +32,7 @@ import { createHash } from 'crypto';
 import { VisitorConfig } from './visitor-config';
 import { singular, isPlural } from 'pluralize';
 import { visitFieldArguments } from './field-arguments';
-import { FragmentDefinitionNode, GraphQLInterfaceType } from 'graphql';
+
 import { camelCase } from 'camel-case';
 import { pascalCase } from 'pascal-case';
 
@@ -224,7 +225,7 @@ export class OperationVisitor extends BaseJavaVisitor<VisitorConfig> {
         this._imports.add(Imports.ResponseField);
         this._imports.add(Imports.Collections);
 
-        const operationArgs = visitFieldArguments(selection as FieldNode, this._imports);
+        const operationArgs = visitFieldArguments(selection, this._imports);
         const responseFieldMethod = this._resolveResponseFieldMethodForBaseType(field.type);
 
         responseFieldArr.push(

@@ -1,8 +1,8 @@
 import { DetailedError, Types, isComplexPluginOutput, federationSpec } from '@graphql-codegen/plugin-helpers';
-import { visit, parse, DefinitionNode } from 'graphql';
+import { visit, parse, DefinitionNode, Kind, print } from 'graphql';
 import { executePlugin } from './execute-plugin';
 import { checkValidationErrors, validateGraphQlDocuments, printSchemaWithDirectives } from '@graphql-toolkit/common';
-import { Kind, print } from 'graphql';
+
 import { mergeSchemas } from '@graphql-toolkit/schema-merging';
 
 export async function codegen(options: Types.GenerateOptions): Promise<string> {
@@ -61,7 +61,7 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
   const skipDocumentValidation = typeof options.config === 'object' && !Array.isArray(options.config) && options.config.skipDocumentsValidation;
 
   if (options.schemaAst && documents.length > 0 && !skipDocumentValidation) {
-    const extraFragments: { importFrom: string; node: DefinitionNode }[] = options.config && (options.config as any)['externalFragments'] ? (options.config as any)['externalFragments'] : [];
+    const extraFragments: { importFrom: string; node: DefinitionNode }[] = options.config && (options.config as any).externalFragments ? (options.config as any).externalFragments : [];
     const errors = await validateGraphQlDocuments(options.schemaAst, [...documents, ...extraFragments.map(f => ({ location: f.importFrom, document: { kind: Kind.DOCUMENT, definitions: [f.node] } }))]);
     checkValidationErrors(errors);
   }

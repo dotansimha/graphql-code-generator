@@ -1,6 +1,6 @@
 import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor';
 import autoBind from 'auto-bind';
-import { FragmentDefinitionNode, print, OperationDefinitionNode, visit, FragmentSpreadNode, GraphQLSchema, Kind, DocumentNode } from 'graphql';
+import { FragmentDefinitionNode, print, OperationDefinitionNode, visit, FragmentSpreadNode, GraphQLSchema, Kind } from 'graphql';
 import { DepGraph } from 'dependency-graph';
 import gqlTag from 'graphql-tag';
 import { Types } from '@graphql-codegen/plugin-helpers';
@@ -29,8 +29,8 @@ export interface RawClientSideBasePluginConfig extends RawConfig {
   operationResultSuffix?: string;
   documentVariablePrefix?: string;
   documentVariableSuffix?: string;
-  fragmentVariablePrefix: string;
-  fragmentVariableSuffix: string;
+  fragmentVariablePrefix?: string;
+  fragmentVariableSuffix?: string;
   documentMode?: DocumentMode;
   importOperationTypesFrom?: string;
   importDocumentNodeExternallyFrom?: string;
@@ -239,14 +239,14 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
     ${this._includeFragments(fragments)}`);
 
     if (this.config.documentMode === DocumentMode.documentNode) {
-      const gqlObj = gqlTag([doc]) as DocumentNode;
-      if (gqlObj && gqlObj['loc']) {
+      const gqlObj = gqlTag([doc]);
+      if (gqlObj && gqlObj.loc) {
         delete (gqlObj as any).loc;
       }
       return JSON.stringify(gqlObj);
     } else if (this.config.documentMode === DocumentMode.documentNodeImportFragments) {
       const gqlObj = gqlTag([doc]);
-      if (gqlObj && gqlObj['loc']) {
+      if (gqlObj && gqlObj.loc) {
         delete (gqlObj as any).loc;
       }
       if (fragments.length > 0) {
@@ -329,18 +329,20 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
   }
 
   public getImports(): string[] {
-    let imports = [...this._additionalImports];
+    const imports = [...this._additionalImports];
 
     switch (this.config.documentMode) {
       case DocumentMode.documentNode:
-      case DocumentMode.documentNodeImportFragments:
+      case DocumentMode.documentNodeImportFragments: {
         imports.push(`import { DocumentNode } from 'graphql';`);
         break;
-      case DocumentMode.graphQLTag:
+      }
+      case DocumentMode.graphQLTag: {
         const gqlImport = this._parseImport(this.config.gqlImport || 'graphql-tag');
         imports.push(`import ${gqlImport.propName ? `{ ${gqlImport.propName === 'gql' ? 'gql' : `${gqlImport.propName} as gql`} }` : 'gql'} from '${gqlImport.moduleName}';`);
         break;
-      case DocumentMode.external:
+      }
+      case DocumentMode.external: {
         if (this._collectedOperations.length > 0) {
           if (this.config.importDocumentNodeExternallyFrom === 'near-operation-file' && this._documents.length === 1) {
             imports.push(`import * as Operations from './${this.clearExtension(basename(this._documents[0].location))}';`);
@@ -349,13 +351,14 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
           }
         }
         break;
+      }
       default:
         break;
     }
 
     if (this.config.documentMode === DocumentMode.graphQLTag || this.config.documentMode === DocumentMode.documentNodeImportFragments) {
       (this._fragments || [])
-        .filter(f => f.isExternal && f.importFrom && (!f['level'] || (f['level'] !== undefined && f['level'] === 0)))
+        .filter(f => f.isExternal && f.importFrom && !(f as any).level)
         .forEach(externalFragment => {
           const identifierName = this._getFragmentName(externalFragment.name);
 

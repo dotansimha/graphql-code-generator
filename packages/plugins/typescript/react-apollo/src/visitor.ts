@@ -1,11 +1,10 @@
 import { ClientSideBaseVisitor, ClientSideBasePluginConfig, getConfigValue, LoadedFragment, OMIT_TYPE, DocumentMode } from '@graphql-codegen/visitor-plugin-common';
 import { ReactApolloRawPluginConfig } from './config';
 import autoBind from 'auto-bind';
-import { OperationDefinitionNode, Kind } from 'graphql';
+import { OperationDefinitionNode, Kind, GraphQLSchema } from 'graphql';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { pascalCase } from 'pascal-case';
 import { camelCase } from 'camel-case';
-import { GraphQLSchema } from 'graphql';
 
 export interface ReactApolloPluginConfig extends ClientSideBasePluginConfig {
   withComponent: boolean;

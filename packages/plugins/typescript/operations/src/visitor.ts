@@ -1,8 +1,8 @@
-import { GraphQLSchema, isListType, GraphQLObjectType, GraphQLNonNull, GraphQLList, isEnumType } from 'graphql';
+import { GraphQLSchema, isListType, GraphQLObjectType, GraphQLNonNull, GraphQLList, isEnumType, isNonNullType } from 'graphql';
 import { PreResolveTypesProcessor, ParsedDocumentsConfig, BaseDocumentsVisitor, LoadedFragment, getConfigValue, SelectionSetProcessorConfig, SelectionSetToObject, DeclarationKind } from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptOperationVariablesToObject } from './ts-operation-variables-to-object';
 import { TypeScriptDocumentsPluginConfig } from './config';
-import { isNonNullType } from 'graphql';
+
 import { TypeScriptSelectionSetProcessor } from './ts-selection-set-processor';
 import autoBind from 'auto-bind';
 
@@ -28,7 +28,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<TypeScriptD
     autoBind(this);
 
     const clearOptional = (str: string): string => {
-      const prefix = this.config.namespacedImportName ? `${this.config.namespacedImportName}\.` : '';
+      const prefix = this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '';
       const rgx = new RegExp(`^${prefix}Maybe<(.*?)>$`, 'is');
 
       if (str.startsWith(`${this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : ''}Maybe`)) {

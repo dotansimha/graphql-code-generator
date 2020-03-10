@@ -16,7 +16,7 @@ export const SCALAR_TO_WRITER_METHOD = {
 };
 
 function isTypeNode(type: TypeNode | GraphQLOutputType): type is TypeNode {
-  return type && type['kind'];
+  return type && !!(type as TypeNode).kind;
 }
 
 export class BaseJavaVisitor<Config extends VisitorConfig = any> extends BaseVisitor<JavaApolloAndroidPluginConfig, Config> {
@@ -62,7 +62,7 @@ export class BaseJavaVisitor<Config extends VisitorConfig = any> extends BaseVis
     let isNonNull: boolean;
 
     if (isTypeNode(type)) {
-      const baseTypeNode = getBaseTypeNode(type as TypeNode);
+      const baseTypeNode = getBaseTypeNode(type);
       schemaType = this._schema.getType(baseTypeNode.name.value);
       isNonNull = type.kind === Kind.NON_NULL_TYPE;
     } else {

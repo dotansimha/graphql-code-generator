@@ -1,7 +1,7 @@
-import { ClientSideBaseVisitor, ClientSideBasePluginConfig, LoadedFragment, getConfigValue, OMIT_TYPE, indentMultiline, RawClientSideBasePluginConfig, DocumentMode } from '@graphql-codegen/visitor-plugin-common';
+import { ClientSideBaseVisitor, ClientSideBasePluginConfig, LoadedFragment, getConfigValue, indentMultiline, DocumentMode } from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
-import { GraphQLSchema, Kind } from 'graphql';
-import { OperationDefinitionNode } from 'graphql';
+import { GraphQLSchema, Kind, OperationDefinitionNode } from 'graphql';
+
 import { RawGraphQLRequestPluginConfig } from './config';
 
 export interface GraphQLRequestPluginConfig extends ClientSideBasePluginConfig {

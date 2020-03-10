@@ -24,7 +24,6 @@ export const federationSpec = parse(/* GraphQL */ `
  */
 export function addFederationReferencesToSchema(schema: GraphQLSchema): GraphQLSchema {
   const typeMap = schema.getTypeMap();
-  // tslint:disable-next-line: forin
   for (const typeName in typeMap) {
     const type = schema.getType(typeName);
     if (isObjectType(type) && isFederationObjectType(type)) {
@@ -67,13 +66,13 @@ export function addFederationReferencesToSchema(schema: GraphQLSchema): GraphQLS
 export function removeFederation(schema: GraphQLSchema): GraphQLSchema {
   const queryType = schema.getQueryType();
   const queryTypeFields = queryType.getFields();
-  delete queryTypeFields['_entities'];
-  delete queryTypeFields['_service'];
+  delete queryTypeFields._entities;
+  delete queryTypeFields._service;
 
   const typeMap = schema.getTypeMap();
-  delete typeMap['_Service'];
-  delete typeMap['_Entity'];
-  delete typeMap['_Any'];
+  delete typeMap._Service;
+  delete typeMap._Entity;
+  delete typeMap._Any;
 
   return schema;
 }
@@ -210,7 +209,7 @@ export class ApolloFederation {
     const arg = directive.arguments.find(arg => arg.name.value === 'fields');
     const value = (arg.value as StringValueNode).value;
 
-    if (/[\{\}]+/gi.test(value)) {
+    if (/[{}]/gi.test(value)) {
       throw new Error('Nested fields in _FieldSet is not supported');
     }
 
@@ -248,7 +247,7 @@ export class ApolloFederation {
  * @param node Type
  */
 function isFederationObjectType(node: ObjectTypeDefinitionNode | GraphQLObjectType): boolean {
-  let definition = isObjectType(node) ? node.astNode || (parse(printType(node)).definitions[0] as ObjectTypeDefinitionNode) : node;
+  const definition = isObjectType(node) ? node.astNode || (parse(printType(node)).definitions[0] as ObjectTypeDefinitionNode) : node;
 
   const name = definition.name.value;
   const directives = definition.directives;

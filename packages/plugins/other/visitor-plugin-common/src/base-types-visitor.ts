@@ -205,7 +205,7 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
   }
 
   UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number | undefined, parent: any): string {
-    const originalNode = parent[key!] as UnionTypeDefinitionNode;
+    const originalNode = parent[key] as UnionTypeDefinitionNode;
     const possibleTypes = originalNode.types.map(t => (this.scalars[t.name.value] ? this._getScalar(t.name.value) : this.convertName(t))).join(' | ');
 
     return new DeclarationBlock(this._declarationBlockConfig)
@@ -228,7 +228,7 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
   getObjectTypeDeclarationBlock(node: ObjectTypeDefinitionNode, originalNode: ObjectTypeDefinitionNode): DeclarationBlock {
     const optionalTypename = this.config.nonOptionalTypename ? '__typename' : '__typename?';
     const { type } = this._parsedConfig.declarationKind;
-    const allFields = [...(this.config.addTypename ? [indent(`${this.config['immutableTypes'] ? 'readonly' : ''} ${optionalTypename}: '${node.name}'${this.getPunctuation(type)}`)] : []), ...node.fields] as string[];
+    const allFields = [...(this.config.addTypename ? [indent(`${this.config.immutableTypes ? 'readonly' : ''} ${optionalTypename}: '${node.name}'${this.getPunctuation(type)}`)] : []), ...node.fields] as string[];
     const interfacesNames = originalNode.interfaces ? originalNode.interfaces.map(i => this.convertName(i)) : [];
 
     const declarationBlock = new DeclarationBlock(this._declarationBlockConfig)
@@ -255,13 +255,13 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
   }
 
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: number | string | undefined, parent: any): string {
-    const originalNode = parent[key!] as ObjectTypeDefinitionNode;
+    const originalNode = parent[key] as ObjectTypeDefinitionNode;
 
     return [this.getObjectTypeDeclarationBlock(node, originalNode).string, this.buildArgumentsBlock(originalNode)].filter(f => f).join('\n\n');
   }
 
   getInterfaceTypeDeclarationBlock(node: InterfaceTypeDefinitionNode, originalNode: InterfaceTypeDefinitionNode): DeclarationBlock {
-    let declarationBlock = new DeclarationBlock(this._declarationBlockConfig)
+    const declarationBlock = new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind(this._parsedConfig.declarationKind.interface)
       .withName(this.convertName(node))
@@ -271,7 +271,7 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
   }
 
   InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode, key: number | string | undefined, parent: any): string {
-    const originalNode = parent[key!] as InterfaceTypeDefinitionNode;
+    const originalNode = parent[key] as InterfaceTypeDefinitionNode;
 
     return [this.getInterfaceTypeDeclarationBlock(node, originalNode).string, this.buildArgumentsBlock(originalNode)].filter(f => f).join('\n\n');
   }

@@ -21,8 +21,12 @@ import {
   isUnionType,
   GraphQLNamedType,
   isEnumType,
+  DirectiveDefinitionNode,
+  GraphQLObjectType,
+  InputValueDefinitionNode,
+  GraphQLOutputType,
 } from 'graphql';
-import { DirectiveDefinitionNode, GraphQLObjectType, InputValueDefinitionNode, GraphQLOutputType } from 'graphql';
+
 import { OperationVariablesToObject } from './variables-to-object';
 import { ParsedMapper, parseMapper, transformMappers, ExternalParsedMapper } from './mappers';
 import { parseEnumValues } from './enum-values';
@@ -856,7 +860,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
       });
       const mappedTypeKey = isSubscriptionType ? `${mappedType}, "${node.name}"` : mappedType;
 
-      let signature: {
+      const signature: {
         name: string;
         modifier: string;
         type: string;

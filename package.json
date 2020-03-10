@@ -4,7 +4,7 @@
     "clean": "lerna clean --yes && rm -rf node_modules",
     "build": "lerna run build --ignore @graphql-codegen/live-demo --ignore @graphql-codegen/website",
     "test": "lerna run test --ignore @graphql-codegen/live-demo --ignore @graphql-codegen/website",
-    "lint": "lerna run lint --ignore @graphql-codegen/live-demo --ignore @graphql-codegen/website",
+    "lint": "eslint --ext .ts .",
     "test-and-build": "yarn build && yarn test",
     "prerelease": "yarn test-and-build",
     "prerelease:canary": "yarn test-and-build",
@@ -56,6 +56,15 @@
     "apollo-link": "1.2.13",
     "apollo-server": "2.11.0",
     "apollo-utilities": "1.3.3",
+    "@typescript-eslint/eslint-plugin": "^2.22.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-plugin-import": "^2.20.0",
+    "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-react-hooks": "^2.5.0",
+    "eslint-plugin-standard": "^4.0.1",
     "graphql": "14.6.0",
     "graphql-tag": "2.10.3",
     "graphql-tools": "4.0.7",
@@ -67,14 +76,13 @@
     "lint-staged": "10.0.8",
     "rimraf": "3.0.2",
     "ts-jest": "25.2.1",
-    "tslint": "5.20.1",
     "stencil-apollo": "0.1.5",
     "typescript": "3.8.3",
     "urql": "1.9.0"
   },
   "lint-staged": {
     "packages/**/src/**/*.{ts,tsx}": [
-      "tslint --fix",
+      "eslint --fix",
       "git add"
     ],
     "packages/**/*.{js,json,css,md,ts,tsx}": [

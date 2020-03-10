@@ -12,7 +12,7 @@
     "input": "./src/index.ts"
   },
   "scripts": {
-    "lint": "tslint src/**/*.ts",
+    "lint": "eslint **/*.ts",
     "prepack": "bob-update-version",
     "build": "bob"
   },

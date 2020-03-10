@@ -53,7 +53,7 @@ export class FlowResolversVisitor extends BaseResolversVisitor<RawResolversConfi
   NonNullType(node: NonNullTypeNode): string {
     const baseValue = super.NonNullType(node);
 
-    if (baseValue.charAt(0) === '?') {
+    if (baseValue.startsWith('?')) {
       return baseValue.substr(1);
     }
 

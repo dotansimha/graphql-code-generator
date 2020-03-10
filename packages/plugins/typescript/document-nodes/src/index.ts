@@ -1,7 +1,6 @@
 import { PluginFunction, PluginValidateFn, Types } from '@graphql-codegen/plugin-helpers';
-import { convertFactory, NamingConvention, LoadedFragment, RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-common';
-import { GraphQLSchema, OperationDefinitionNode, visit, concatAST, FragmentDefinitionNode, Kind } from 'graphql';
-import { print } from 'graphql/language/printer';
+import { NamingConvention, LoadedFragment, RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-common';
+import { GraphQLSchema, visit, concatAST, FragmentDefinitionNode, Kind } from 'graphql';
 import { TypeScriptDocumentNodesVisitor } from './visitor';
 
 export interface TypeScriptDocumentNodesRawPluginConfig extends RawClientSideBasePluginConfig {
