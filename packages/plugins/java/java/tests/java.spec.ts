@@ -211,7 +211,7 @@ describe('Java', () => {
       expect(result).toBeSimilarStringTo(`if (args.get("sort") instanceof ResultSort) {
         this._sort = (ResultSort) args.get("sort");
       } else {
-        this._sort = ResultSort.valueOfLabel(args.get("sort"));
+        this._sort = ResultSort.valueOfLabel((String) args.get("sort"));
       }`);
     });
 
@@ -245,7 +245,7 @@ describe('Java', () => {
             if (args.get("sort") instanceof ResultSort) {
               this._sort = (ResultSort) args.get("sort");
             } else {
-              this._sort = ResultSort.valueOfLabel(args.get("sort"));
+              this._sort = ResultSort.valueOfLabel((String) args.get("sort"));
             }
             this._metadata = new MetadataSearchInput((Map<String, Object>) args.get("metadata"));
           }
