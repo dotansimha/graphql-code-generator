@@ -19,7 +19,7 @@ import {
   GraphQLOutputType,
 } from 'graphql';
 import { getPossibleTypes, separateSelectionSet, getFieldNodeNameValue, DeclarationBlock, mergeSelectionSets } from './utils';
-import { NormalizedScalarsMap, ConvertNameFn, LoadedFragment } from './types';
+import { NormalizedScalarsMap, ConvertNameFn, LoadedFragment, GetFragmentSuffixFn } from './types';
 import { BaseVisitorConvertOptions } from './base-visitor';
 import { getBaseType } from '@graphql-codegen/plugin-helpers';
 import { ParsedDocumentsConfig } from './base-documents-visitor';
@@ -46,6 +46,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     protected _scalars: NormalizedScalarsMap,
     protected _schema: GraphQLSchema,
     protected _convertName: ConvertNameFn<BaseVisitorConvertOptions>,
+    protected _getFragmentSuffix: GetFragmentSuffixFn,
     protected _loadedFragments: LoadedFragment[],
     protected _config: Config,
     protected _parentSchemaType?: GraphQLNamedType,
@@ -55,7 +56,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
   }
 
   public createNext(parentSchemaType: GraphQLNamedType, selectionSet: SelectionSetNode): SelectionSetToObject {
-    return new SelectionSetToObject(this._processor, this._scalars, this._schema, this._convertName.bind(this), this._loadedFragments, this._config, parentSchemaType, selectionSet);
+    return new SelectionSetToObject(this._processor, this._scalars, this._schema, this._convertName.bind(this), this._getFragmentSuffix.bind(this), this._loadedFragments, this._config, parentSchemaType, selectionSet);
   }
 
   /**
@@ -166,7 +167,7 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
         const possibleTypesForFragment = getPossibleTypes(this._schema, schemaType);
 
         for (const possibleType of possibleTypesForFragment) {
-          const fragmentSuffix = this._config.omitOperationSuffix ? '' : this._config.dedupeOperationSuffix && spread.name.value.toLowerCase().endsWith('fragment') ? '' : 'Fragment';
+          const fragmentSuffix = this._getFragmentSuffix(spread.name.value);
           const usage = this.buildFragmentTypeName(spread.name.value, fragmentSuffix, possibleTypesForFragment.length === 1 ? null : possibleType.name);
 
           if (!selectionNodesByTypeName[possibleType.name]) {
