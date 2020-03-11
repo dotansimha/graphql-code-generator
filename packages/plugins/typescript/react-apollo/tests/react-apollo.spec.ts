@@ -63,6 +63,53 @@ describe('React Apollo', () => {
   };
 
   describe('Issues', () => {
+    it('Issue #3612 - Missing fragments spread when fragment name is same as operation?', async () => {
+      const docs = [
+        {
+          location: '',
+          document: parse(/* GraphQL */ `
+            query Feed {
+              feed {
+                ...Feed
+              }
+            }
+
+            fragment Feed on Feed {
+              id
+              commentCount
+              repository {
+                ...RepoFields
+              }
+            }
+
+            fragment RepoFields on Repository {
+              full_name
+              html_url
+              owner {
+                avatar_url
+              }
+            }
+          `),
+        },
+      ];
+      const result = (await plugin(
+        schema,
+        docs,
+        {},
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`    export const FeedDocument = gql\`
+      query Feed {
+    feed {
+      ...Feed
+    }
+  }
+      \${FeedFragmentDoc}\`;`);
+    });
+
     it('Issue #2742 - Incorrect import prefix', async () => {
       const docs = [
         {
