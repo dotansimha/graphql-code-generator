@@ -174,21 +174,17 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
     visit(document, {
       enter: {
         FragmentSpread: (node: FragmentSpreadNode) => {
-          if (node.name.value !== document.name.value) {
-            names.add(node.name.value);
+          names.add(node.name.value);
 
-            if (withNested) {
-              const foundFragment = this._fragments.find(f => f.name === node.name.value);
+          if (withNested) {
+            const foundFragment = this._fragments.find(f => f.name === node.name.value);
 
-              if (foundFragment) {
-                const childItems = this._extractFragments(foundFragment.node, true);
+            if (foundFragment) {
+              const childItems = this._extractFragments(foundFragment.node, true);
 
-                if (childItems && childItems.length > 0) {
-                  for (const item of childItems) {
-                    if (item !== document.name.value) {
-                      names.add(item);
-                    }
-                  }
+              if (childItems && childItems.length > 0) {
+                for (const item of childItems) {
+                  names.add(item);
                 }
               }
             }
