@@ -10,6 +10,10 @@ const SIMPLE_TEST_SCHEMA = `type MyType { f: String } type Query { f: String }`;
 jest.mock('some-fetch');
 
 describe('Codegen Executor', () => {
+  beforeEach(() => {
+    jest.useFakeTimers();
+  });
+
   describe('Generator General Options', () => {
     it('Should output the correct filenames', async () => {
       const output = await executeCodegen({
