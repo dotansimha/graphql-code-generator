@@ -184,7 +184,7 @@ public static ${enumName} valueOfLabel(String label) {
             `if (args.get("${arg.name.value}") instanceof ${typeToUse.typeName}) {
   this._${arg.name.value} = (${typeToUse.typeName}) args.get("${arg.name.value}");
 } else {
-  this._${arg.name.value} = ${typeToUse.typeName}.valueOfLabel(args.get("${arg.name.value}"));
+  this._${arg.name.value} = ${typeToUse.typeName}.valueOfLabel((String) args.get("${arg.name.value}"));
 }`,
             3
           );
