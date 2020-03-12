@@ -4,6 +4,7 @@ exports[`graphql-request sdk Should allow passing wrapper arg to generated getSd
 "export type Maybe<T> = T | null;
 import { GraphQLClient } from 'graphql-request';
 import { SdkFunctionWrapper, defaultWrapper } from '@graphql-codegen/typescript-graphql-request';
+import { Headers } from 'graphql-request/dist/src/types';
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -266,16 +267,20 @@ export const Feed4Document = \`
     \`;
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    feed(variables?: FeedQueryVariables): Promise<FeedQuery> {
+    feed(variables?: FeedQueryVariables, headers?: Headers): Promise<FeedQuery> {
+      headers !== undefined && client.setHeaders(headers);
       return withWrapper(() => client.request<FeedQuery>(FeedDocument, variables));
     },
-    feed2(variables: Feed2QueryVariables): Promise<Feed2Query> {
+    feed2(variables: Feed2QueryVariables, headers?: Headers): Promise<Feed2Query> {
+      headers !== undefined && client.setHeaders(headers);
       return withWrapper(() => client.request<Feed2Query>(Feed2Document, variables));
     },
-    feed3(variables?: Feed3QueryVariables): Promise<Feed3Query> {
+    feed3(variables?: Feed3QueryVariables, headers?: Headers): Promise<Feed3Query> {
+      headers !== undefined && client.setHeaders(headers);
       return withWrapper(() => client.request<Feed3Query>(Feed3Document, variables));
     },
-    feed4(variables?: Feed4QueryVariables): Promise<Feed4Query> {
+    feed4(variables?: Feed4QueryVariables, headers?: Headers): Promise<Feed4Query> {
+      headers !== undefined && client.setHeaders(headers);
       return withWrapper(() => client.request<Feed4Query>(Feed4Document, variables));
     }
   };
@@ -320,6 +325,7 @@ exports[`graphql-request sdk Should generate a correct wrap method 1`] = `
 import { GraphQLClient } from 'graphql-request';
 import { print } from 'graphql';
 import { SdkFunctionWrapper, defaultWrapper } from '@graphql-codegen/typescript-graphql-request';
+import { Headers } from 'graphql-request/dist/src/types';
 import gql from 'graphql-tag';
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -583,16 +589,20 @@ export const Feed4Document = gql\`
     \`;
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    feed(variables?: FeedQueryVariables): Promise<FeedQuery> {
+    feed(variables?: FeedQueryVariables, headers?: Headers): Promise<FeedQuery> {
+      headers !== undefined && client.setHeaders(headers);
       return withWrapper(() => client.request<FeedQuery>(print(FeedDocument), variables));
     },
-    feed2(variables: Feed2QueryVariables): Promise<Feed2Query> {
+    feed2(variables: Feed2QueryVariables, headers?: Headers): Promise<Feed2Query> {
+      headers !== undefined && client.setHeaders(headers);
       return withWrapper(() => client.request<Feed2Query>(print(Feed2Document), variables));
     },
-    feed3(variables?: Feed3QueryVariables): Promise<Feed3Query> {
+    feed3(variables?: Feed3QueryVariables, headers?: Headers): Promise<Feed3Query> {
+      headers !== undefined && client.setHeaders(headers);
       return withWrapper(() => client.request<Feed3Query>(print(Feed3Document), variables));
     },
-    feed4(variables?: Feed4QueryVariables): Promise<Feed4Query> {
+    feed4(variables?: Feed4QueryVariables, headers?: Headers): Promise<Feed4Query> {
+      headers !== undefined && client.setHeaders(headers);
       return withWrapper(() => client.request<Feed4Query>(print(Feed4Document), variables));
     }
   };
@@ -619,6 +629,7 @@ exports[`graphql-request sdk Should generate a correct wrap method with document
 "export type Maybe<T> = T | null;
 import { GraphQLClient } from 'graphql-request';
 import { SdkFunctionWrapper, defaultWrapper } from '@graphql-codegen/typescript-graphql-request';
+import { Headers } from 'graphql-request/dist/src/types';
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -881,16 +892,20 @@ export const Feed4Document = \`
     \`;
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    feed(variables?: FeedQueryVariables): Promise<FeedQuery> {
+    feed(variables?: FeedQueryVariables, headers?: Headers): Promise<FeedQuery> {
+      headers !== undefined && client.setHeaders(headers);
       return withWrapper(() => client.request<FeedQuery>(FeedDocument, variables));
     },
-    feed2(variables: Feed2QueryVariables): Promise<Feed2Query> {
+    feed2(variables: Feed2QueryVariables, headers?: Headers): Promise<Feed2Query> {
+      headers !== undefined && client.setHeaders(headers);
       return withWrapper(() => client.request<Feed2Query>(Feed2Document, variables));
     },
-    feed3(variables?: Feed3QueryVariables): Promise<Feed3Query> {
+    feed3(variables?: Feed3QueryVariables, headers?: Headers): Promise<Feed3Query> {
+      headers !== undefined && client.setHeaders(headers);
       return withWrapper(() => client.request<Feed3Query>(Feed3Document, variables));
     },
-    feed4(variables?: Feed4QueryVariables): Promise<Feed4Query> {
+    feed4(variables?: Feed4QueryVariables, headers?: Headers): Promise<Feed4Query> {
+      headers !== undefined && client.setHeaders(headers);
       return withWrapper(() => client.request<Feed4Query>(Feed4Document, variables));
     }
   };
