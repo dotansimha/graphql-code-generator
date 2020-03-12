@@ -69,6 +69,23 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    */
   enumsAsTypes?: boolean;
   /**
+   * @name enumsAsConst
+   * @type boolean
+   * @description Generates enum as TypeScript `const assertions` instead of `enum`. This can even be used to enable enum-like patterns in plain JavaScript code if you choose not to use TypeScript’s enum construct.
+   * @default false
+   *
+   * @example
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *  config:
+   *    enumsAsConst: true
+   * ```
+   */
+  enumsAsConst?: boolean;
+  /**
    * @name fieldWrapperValue
    * @type string
    * @description Allow to override the type value of `FieldWrapper`.
@@ -111,11 +128,21 @@ export interface TypeScriptPluginConfig extends RawTypesConfig {
    * @example Allow undefined
    * ```yml
    * generates:
-   * path/to/file.ts:
-   *  plugins:
-   *    - typescript
-   *  config:
-   *    maybeValue: T | null | undefined
+   *  path/to/file.ts:
+   *    plugins:
+   *      - typescript
+   *    config:
+   *      maybeValue: T | null | undefined
+   * ```
+   * @example Allow `null` in resolvers:
+   * ```yml
+   * generates:
+   *  path/to/file.ts:
+   *    plugins:
+   *      - typescript
+   *      - typescript-resolves
+   *    config:
+   *      maybeValue: 'T extends PromiseLike<infer U> ? Promise<U | null> : T | null'
    * ```
    */
   maybeValue?: string;

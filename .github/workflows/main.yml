@@ -48,7 +48,7 @@ jobs:
         with:
           node-version: '13.x'
       - name: Install Dependencies using Yarn
-        run: yarn install
+        run: yarn install && git checkout yarn.lock
       - name: Build
         run: yarn build
       - name: Release Canary
@@ -57,6 +57,7 @@ jobs:
           if [ "${{github.repository}}" == "dotansimha/graphql-code-generator" ] && [ "${{ secrets.NODE_AUTH_TOKEN }}" != "" ]
           then
               echo "//registry.npmjs.org/:_authToken=${{ secrets.NODE_AUTH_TOKEN }}" > .npmrc
+              rm -rf out.txt
               npm run ci:release:canary > out.txt
               export SYSTEM_PULLREQUEST_PULLREQUESTNUMBER=`echo $GITHUB_REF | grep -Eo '[0-9]{1,4}'`
 

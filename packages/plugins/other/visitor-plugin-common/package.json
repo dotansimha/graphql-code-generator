@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/visitor-plugin-common",
-  "version": "1.12.2",
+  "version": "1.13.0",
   "license": "MIT",
   "scripts": {
     "lint": "tslint src/**/*.ts",
@@ -9,25 +9,25 @@
     "build": "bob"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "1.12.2",
+    "@graphql-codegen/plugin-helpers": "1.13.0",
     "@graphql-toolkit/relay-operation-optimizer": "0.9.7",
     "auto-bind": "4.0.0",
     "dependency-graph": "0.9.0",
     "graphql-tag": "2.10.3",
     "pascal-case": "3.1.1",
-    "tslib": "1.11.0"
+    "tslib": "1.11.1"
   },
   "peerDependencies": {
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0"
   },
   "devDependencies": {
     "@ardatan/bob": "0.2.7",
-    "@graphql-codegen/testing": "1.12.2",
-    "@types/jest": "25.1.3",
+    "@graphql-codegen/testing": "1.13.0",
+    "@types/jest": "25.1.4",
     "graphql": "14.6.0",
     "jest": "25.1.0",
     "ts-jest": "25.2.1",
-    "typescript": "3.8.2"
+    "typescript": "3.8.3"
   },
   "sideEffects": false,
   "main": "dist/index.cjs.js",

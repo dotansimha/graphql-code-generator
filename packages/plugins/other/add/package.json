@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/add",
-  "version": "1.12.2",
+  "version": "1.13.0",
   "description": "GraphQL Code Generator plugin for adding custom content to your output file",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
@@ -10,8 +10,8 @@
     "build": "bob"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "1.12.2",
-    "tslib": "1.11.0"
+    "@graphql-codegen/plugin-helpers": "1.13.0",
+    "tslib": "1.11.1"
   },
   "peerDependencies": {
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0"
@@ -19,7 +19,7 @@
   "devDependencies": {
     "@ardatan/bob": "0.2.7",
     "graphql": "14.6.0",
-    "typescript": "3.8.2"
+    "typescript": "3.8.3"
   },
   "sideEffects": false,
   "main": "dist/index.cjs.js",

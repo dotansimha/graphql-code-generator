@@ -1,6 +1,7 @@
 import { compileTs, validateTs } from '@graphql-codegen/testing';
-import { plugin, ReactApolloRawPluginConfig } from '../src/index';
-import { parse, GraphQLSchema, buildClientSchema, buildASTSchema } from 'graphql';
+import { plugin } from '../src/index';
+import { ReactApolloRawPluginConfig } from '../src/config';
+import { parse, GraphQLSchema, buildClientSchema, buildASTSchema, buildSchema } from 'graphql';
 import gql from 'graphql-tag';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { plugin as tsPlugin } from '../../typescript/src/index';
@@ -190,7 +191,6 @@ describe('React Apollo', () => {
           outputFile: 'graphql.tsx',
         }
       )) as Types.ComplexPluginOutput;
-      // make sure the fragment is there twice.
       expect(content.content.split('{"kind":"FragmentDefinition","name":{"kind":"Name","value":"RepositoryFields"}').length).toBe(3);
     });
   });
@@ -1552,6 +1552,67 @@ export function useListenToCommentsSubscription(baseOptions?: ApolloReactHooks.S
       expect(content.content).not.toContain(`loc':`);
 
       await validateTypeScript(content, schema, docs, {});
+    });
+
+    it('should generate definitions Document variable when documentMode is "documentNode" and nested fragments', async () => {
+      const testSchema = buildSchema(/* GraphQL */ `
+        type Query {
+          a: A
+        }
+
+        type A {
+          bs: [B!]!
+        }
+
+        type B {
+          cs: [C!]!
+        }
+
+        type C {
+          greeting: String!
+        }
+      `);
+      const testDoc = parse(/* GraphQL */ `
+        query Test {
+          a {
+            ...AFields
+          }
+        }
+
+        fragment AFields on A {
+          bs {
+            ...BFields
+          }
+        }
+
+        fragment BFields on B {
+          cs {
+            ...CFields
+          }
+        }
+
+        fragment CFields on C {
+          greeting
+        }
+      `);
+      const docs = [{ location: '', document: testDoc }];
+      const content = (await plugin(
+        testSchema,
+        docs,
+        {
+          withComponent: false,
+          withHOC: false,
+          withHooks: false,
+          documentMode: DocumentMode.documentNode,
+        },
+        {
+          outputFile: 'graphql.tsx',
+        }
+      )) as Types.ComplexPluginOutput;
+
+      expect(content.content).toMatchSnapshot();
+
+      await validateTypeScript(content, testSchema, docs, {});
     });
 
     it('should NOT generate inline fragment docs for external mode: file with operation using inline fragment', async () => {

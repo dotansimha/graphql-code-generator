@@ -148,7 +148,9 @@ describe('Java', () => {
         public InputWithArrayInput(Map<String, Object> args) {
           if (args != null) {
             this._f = (Iterable<String>) args.get("f");
-            this._g = ((List<Map<String, Object>>) args.get("g")).stream().map(SearchUserInput::new).collect(Collectors.toList());
+            if (args.get("g") != null) {
+              this._g = ((List<Map<String, Object>>) args.get("g")).stream().map(SearchUserInput::new).collect(Collectors.toList());
+            }
           }
         }
       
@@ -204,6 +206,15 @@ describe('Java', () => {
       }`);
     });
 
+    it('Should generate check type for enum', async () => {
+      const result = await plugin(schema, [], {}, { outputFile: OUTPUT_FILE });
+      expect(result).toBeSimilarStringTo(`if (args.get("sort") instanceof ResultSort) {
+        this._sort = (ResultSort) args.get("sort");
+      } else {
+        this._sort = ResultSort.valueOfLabel(args.get("sort"));
+      }`);
+    });
+
     it('Should generate input class per each input, also with nested input types', async () => {
       const result = await plugin(schema, [], {}, { outputFile: OUTPUT_FILE });
 
@@ -231,7 +242,11 @@ describe('Java', () => {
             this._username = (String) args.get("username");
             this._email = (String) args.get("email");
             this._name = (String) args.get("name");
-            this._sort = (ResultSort) args.get("sort");
+            if (args.get("sort") instanceof ResultSort) {
+              this._sort = (ResultSort) args.get("sort");
+            } else {
+              this._sort = ResultSort.valueOfLabel(args.get("sort"));
+            }
             this._metadata = new MetadataSearchInput((Map<String, Object>) args.get("metadata"));
           }
         }

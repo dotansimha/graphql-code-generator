@@ -1,7 +1,7 @@
 {
   "name": "@graphql-codegen/config-markdown-generator",
   "private": true,
-  "version": "1.12.2",
+  "version": "1.13.0",
   "license": "MIT",
   "scripts": {
     "lint": "tslint src/**/*.ts",
@@ -19,9 +19,9 @@
     "input": "./src/index.ts"
   },
   "dependencies": {
-    "@microsoft/tsdoc": "0.12.16",
-    "tslib": "1.11.0",
-    "typescript": "3.8.2"
+    "@microsoft/tsdoc": "0.12.18",
+    "tslib": "1.11.1",
+    "typescript": "3.8.3"
   },
   "devDependencies": {
     "@ardatan/bob": "0.2.7",

@@ -10,6 +10,7 @@ export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
   avoidOptionals: AvoidOptionalsConfig;
   constEnums: boolean;
   enumsAsTypes: boolean;
+  enumsAsConst: boolean;
   fieldWrapperValue: string;
   immutableTypes: boolean;
   maybeValue: string;
@@ -26,6 +27,7 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
       fieldWrapperValue: getConfigValue(pluginConfig.fieldWrapperValue, 'T'),
       constEnums: getConfigValue(pluginConfig.constEnums, false),
       enumsAsTypes: getConfigValue(pluginConfig.enumsAsTypes, false),
+      enumsAsConst: getConfigValue(pluginConfig.enumsAsConst, false),
       immutableTypes: getConfigValue(pluginConfig.immutableTypes, false),
       wrapFieldDefinitions: getConfigValue(pluginConfig.wrapFieldDefinitions, false),
       ...(additionalConfig || {}),
@@ -133,14 +135,45 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
               })
               .join(' |\n')
         ).string;
-    } else {
-      return new DeclarationBlock(this._declarationBlockConfig)
+    }
+
+    if (this.config.enumsAsConst) {
+      const typeName = `export type ${enumTypeName} = typeof ${enumTypeName}[keyof typeof ${enumTypeName}];`;
+      const enumAsConst = new DeclarationBlock({
+        ...this._declarationBlockConfig,
+        blockTransformer: block => {
+          return block + ' as const';
+        },
+      })
         .export()
-        .asKind(this.config.constEnums ? 'const enum' : 'enum')
+        .asKind('const')
         .withName(enumTypeName)
         .withComment((node.description as any) as string)
-        .withBlock(this.buildEnumValuesBlock(enumName, node.values)).string;
+        .withBlock(
+          node.values
+            .map(enumOption => {
+              const optionName = this.convertName(enumOption, { useTypesPrefix: false, transformUnderscore: true });
+              const comment = transformComment((enumOption.description as any) as string, 1);
+              let enumValue: string | number = enumOption.name as any;
+
+              if (this.config.enumValues[enumName] && this.config.enumValues[enumName].mappedValues && typeof this.config.enumValues[enumName].mappedValues[enumValue] !== 'undefined') {
+                enumValue = this.config.enumValues[enumName].mappedValues[enumValue];
+              }
+
+              return comment + indent(`${optionName}: ${wrapWithSingleQuotes(enumValue)}`);
+            })
+            .join(',\n')
+        ).string;
+
+      return [enumAsConst, typeName].join('\n');
     }
+
+    return new DeclarationBlock(this._declarationBlockConfig)
+      .export()
+      .asKind(this.config.constEnums ? 'const enum' : 'enum')
+      .withName(enumTypeName)
+      .withComment((node.description as any) as string)
+      .withBlock(this.buildEnumValuesBlock(enumName, node.values)).string;
   }
 
   protected getPunctuation(declarationKind: DeclarationKind): string {

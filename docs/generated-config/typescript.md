@@ -60,6 +60,21 @@ path/to/file.ts:
    enumsAsTypes: true
 ```
 
+### enumsAsConst (`boolean`, default value: `false`)
+
+Generates enum as TypeScript `const assertions` instead of `enum`. This can even be used to enable enum-like patterns in plain JavaScript code if you choose not to use TypeScript’s enum construct.
+
+#### Usage Example
+
+```yml
+generates:
+path/to/file.ts:
+ plugins:
+   - typescript
+ config:
+   enumsAsConst: true
+```
+
 ### immutableTypes (`boolean`, default value: `false`)
 
 Generates immutable types by adding `readonly` to properties and uses `ReadonlyArray`.
