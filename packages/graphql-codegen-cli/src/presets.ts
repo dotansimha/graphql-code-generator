@@ -10,9 +10,9 @@ export async function getPresetByName(name: string, loader: Types.PackageLoaderF
       const loaded = await loader(moduleName);
 
       if (loaded && loaded.preset) {
-        return loaded.preset as Types.OutputPreset;
+        return loaded.preset;
       } else if (loaded && loaded.default) {
-        return loaded.default as Types.OutputPreset;
+        return loaded.default;
       }
 
       return loaded as Types.OutputPreset;

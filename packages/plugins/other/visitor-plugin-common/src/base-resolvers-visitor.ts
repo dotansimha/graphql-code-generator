@@ -21,8 +21,12 @@ import {
   isUnionType,
   GraphQLNamedType,
   isEnumType,
+  DirectiveDefinitionNode,
+  GraphQLObjectType,
+  InputValueDefinitionNode,
+  GraphQLOutputType,
 } from 'graphql';
-import { DirectiveDefinitionNode, GraphQLObjectType, InputValueDefinitionNode, GraphQLOutputType } from 'graphql';
+
 import { OperationVariablesToObject } from './variables-to-object';
 import { ParsedMapper, parseMapper, transformMappers, ExternalParsedMapper } from './mappers';
 import { parseEnumValues } from './enum-values';
@@ -419,6 +423,24 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
         prev[typeName] = applyWrapper(this.config.rootValueType.type);
 
         return prev;
+      } else if (isInterfaceType(schemaType)) {
+        const allTypesMap = this._schema.getTypeMap();
+        const implementingTypes: string[] = [];
+
+        for (const graphqlType of Object.values(allTypesMap)) {
+          if (graphqlType instanceof GraphQLObjectType) {
+            const allInterfaces = graphqlType.getInterfaces();
+
+            if (allInterfaces.some(int => int.name === schemaType.name)) {
+              implementingTypes.push(graphqlType.name);
+            }
+          }
+        }
+
+        const possibleTypes = implementingTypes.map(name => getTypeToUse(name)).join(' | ') || 'never';
+
+        prev[typeName] = possibleTypes;
+        return prev;
       } else if (isEnumType(schemaType) && this.config.enumValues[typeName]) {
         prev[typeName] = this.config.enumValues[typeName].typeIdentifier;
       } else if (isMapped && this.config.mappers[typeName].type) {
@@ -438,7 +460,7 @@ export class BaseResolversVisitor<TRawConfig extends RawResolversConfig = RawRes
         prev[typeName] = this.convertName(typeName, { useTypesPrefix: this.config.enumPrefix });
       }
 
-      if ((shouldApplyOmit && prev[typeName] !== 'any' && isObjectType(schemaType)) || (isInterfaceType(schemaType) && !isMapped)) {
+      if (shouldApplyOmit && prev[typeName] !== 'any' && isObjectType(schemaType)) {
         const fields = schemaType.getFields();
         const relevantFields: { addOptionalSign: boolean; fieldName: string; replaceWithType: string }[] = this._federation
           .filterFieldNames(Object.keys(fields))
@@ -856,7 +878,7 @@ export type IDirectiveResolvers${contextType} = ${name}<ContextType>;`
       });
       const mappedTypeKey = isSubscriptionType ? `${mappedType}, "${node.name}"` : mappedType;
 
-      let signature: {
+      const signature: {
         name: string;
         modifier: string;
         type: string;

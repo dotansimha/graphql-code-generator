@@ -1,9 +1,8 @@
 import { transformComment, indent, DeclarationBlock } from '@graphql-codegen/visitor-plugin-common';
 import { TypeGraphQLPluginConfig } from './config';
 import autoBind from 'auto-bind';
-import { FieldDefinitionNode, EnumTypeDefinitionNode, InputValueDefinitionNode, GraphQLSchema, ObjectTypeDefinitionNode, InterfaceTypeDefinitionNode, TypeNode, NameNode, GraphQLEnumType } from 'graphql';
+import { FieldDefinitionNode, EnumTypeDefinitionNode, InputValueDefinitionNode, GraphQLSchema, ObjectTypeDefinitionNode, InterfaceTypeDefinitionNode, TypeNode, GraphQLEnumType, InputObjectTypeDefinitionNode } from 'graphql';
 import { TypeScriptOperationVariablesToObject, TypeScriptPluginParsedConfig, TsVisitor, AvoidOptionalsConfig } from '@graphql-codegen/typescript';
-import { InputObjectTypeDefinitionNode } from 'graphql';
 
 export type DecoratorConfig = {
   type: string;
@@ -77,7 +76,7 @@ export class TypeGraphQLVisitor<TRawConfig extends TypeGraphQLPluginConfig = Typ
     const originalNode = parent[key] as ObjectTypeDefinitionNode;
 
     let declarationBlock = this.getObjectTypeDeclarationBlock(node, originalNode);
-    if (GRAPHQL_TYPES.indexOf((node.name as unknown) as string) === -1) {
+    if (!GRAPHQL_TYPES.includes((node.name as unknown) as string)) {
       // Add type-graphql ObjectType decorator
       const interfaces = originalNode.interfaces.map(i => this.convertName(i));
       let decoratorOptions = '';
@@ -127,7 +126,7 @@ export class TypeGraphQLVisitor<TRawConfig extends TypeGraphQLPluginConfig = Typ
     const interfaceDecorator = this.config.decoratorName.interface;
     const originalNode = parent[key] as InterfaceTypeDefinitionNode;
 
-    let declarationBlock = this.getInterfaceTypeDeclarationBlock(node, originalNode).withDecorator(`@TypeGraphQL.${interfaceDecorator}()`);
+    const declarationBlock = this.getInterfaceTypeDeclarationBlock(node, originalNode).withDecorator(`@TypeGraphQL.${interfaceDecorator}()`);
 
     return [declarationBlock.string, this.buildArgumentsBlock(originalNode)].filter(f => f).join('\n\n');
   }
@@ -213,14 +212,14 @@ export class TypeGraphQLVisitor<TRawConfig extends TypeGraphQLPluginConfig = Typ
 
   InputValueDefinition(node: InputValueDefinitionNode, key?: number | string, parent?: any): string {
     const fieldDecorator = this.config.decoratorName.field;
-    let rawType = node.type as TypeNode | string;
+    const rawType = node.type as TypeNode | string;
     const comment = transformComment((node.description as any) as string, 1);
 
     const type = this.parseType(rawType);
     const typeGraphQLType = type.isScalar && TYPE_GRAPHQL_SCALARS.includes(type.type) ? `TypeGraphQL.${type.type}` : type.type;
     const decorator = '\n' + indent(`@TypeGraphQL.${fieldDecorator}(type => ${type.isArray ? `[${typeGraphQLType}]` : typeGraphQLType}${type.isNullable ? ', { nullable: true }' : ''})`) + '\n';
 
-    const nameString = (node.name as NameNode).kind ? (node.name as NameNode).value : node.name;
+    const nameString = node.name.kind ? node.name.value : node.name;
     const typeString = (rawType as TypeNode).kind ? this.buildTypeString(type) : this.fixDecorator(type, rawType as string);
 
     return comment + decorator + indent(`${this.config.immutableTypes ? 'readonly ' : ''}${nameString}!: ${typeString};`);

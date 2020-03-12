@@ -1,37 +1,47 @@
 import { Types } from '@graphql-codegen/plugin-helpers';
-import { BaseVisitor, LoadedFragment, buildScalars, getPossibleTypes } from '@graphql-codegen/visitor-plugin-common';
+import { BaseVisitor, LoadedFragment, buildScalars, getPossibleTypes, getConfigValue, RawConfig, ParsedConfig } from '@graphql-codegen/visitor-plugin-common';
 import { Kind, FragmentDefinitionNode, GraphQLSchema, DocumentNode, print } from 'graphql';
 
 import { extractExternalFragmentsInUse } from './utils';
 
 import { DocumentImportResolverOptions } from './resolve-document-imports';
 
+export interface NearOperationFileParsedConfig extends ParsedConfig {
+  importTypesNamespace?: string;
+  dedupeOperationSuffix: boolean;
+  omitOperationSuffix: boolean;
+  fragmentVariablePrefix: string;
+  fragmentVariableSuffix: string;
+}
+
 export type FragmentRegistry = { [fragmentName: string]: { filePath: string; importNames: string[]; onType: string; node: FragmentDefinitionNode } };
 
 /**
  * Used by `buildFragmentResolver` to  build a mapping of fragmentNames to paths, importNames, and other useful info
  */
-function buildFragmentRegistry({ fragmentSuffix, generateFilePath }: DocumentImportResolverOptions, { documents, config }: Types.PresetFnArgs<{}>, schemaObject: GraphQLSchema) {
-  const baseVisitor = new BaseVisitor(config, {
+function buildFragmentRegistry({ generateFilePath }: DocumentImportResolverOptions, { documents, config }: Types.PresetFnArgs<{}>, schemaObject: GraphQLSchema) {
+  const baseVisitor = new BaseVisitor<RawConfig, NearOperationFileParsedConfig>(config, {
     scalars: buildScalars(schemaObject, config.scalars),
+    dedupeOperationSuffix: getConfigValue(config.dedupeOperationSuffix, false),
+    omitOperationSuffix: getConfigValue(config.omitOperationSuffix, false),
+    fragmentVariablePrefix: getConfigValue(config.fragmentVariablePrefix, ''),
+    fragmentVariableSuffix: getConfigValue(config.fragmentVariableSuffix, 'FragmentDoc'),
   });
 
-  const getAllFragmentSubTypes = (possbileTypes: string[], name: string, suffix: string): string[] => {
+  const getAllFragmentSubTypes = (possbileTypes: string[], name: string): string[] => {
     const subTypes = [];
+
     if (config.documentMode !== 'documentNode' || config.documentMode !== 'external') {
-      subTypes.push(
-        baseVisitor.convertName(name, {
-          useTypesPrefix: true,
-          suffix: suffix + 'Doc',
-        })
-      );
+      subTypes.push(baseVisitor.getFragmentVariableName(name));
     }
+
+    const fragmentSuffix = baseVisitor.getFragmentSuffix(name);
 
     if (possbileTypes.length === 1) {
       subTypes.push(
         baseVisitor.convertName(name, {
           useTypesPrefix: true,
-          suffix: suffix,
+          suffix: fragmentSuffix,
         })
       );
     } else if (possbileTypes.length !== 0) {
@@ -39,7 +49,7 @@ function buildFragmentRegistry({ fragmentSuffix, generateFilePath }: DocumentImp
         subTypes.push(
           baseVisitor.convertName(name, {
             useTypesPrefix: true,
-            suffix: `_${typeName}_${suffix}`,
+            suffix: `_${typeName}_${fragmentSuffix}`,
           })
         );
       });
@@ -64,8 +74,7 @@ function buildFragmentRegistry({ fragmentSuffix, generateFilePath }: DocumentImp
         const filePath = generateFilePath(documentRecord.location);
         const importNames = getAllFragmentSubTypes(
           possibleTypes.map(t => t.name),
-          fragment.name.value,
-          fragmentSuffix(fragment.name.value)
+          fragment.name.value
         );
 
         if (prev[fragment.name.value] && print(fragment) !== print(prev[fragment.name.value].node)) {

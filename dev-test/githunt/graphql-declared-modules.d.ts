@@ -1,5 +1,3 @@
-// tslint:disable
-
 declare module '*/comment-added.subscription.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;

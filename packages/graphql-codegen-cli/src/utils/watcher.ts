@@ -1,6 +1,6 @@
 import { executeCodegen } from '../codegen';
-import { Types } from '@graphql-codegen/plugin-helpers';
-import { normalizeInstanceOrArray, normalizeOutputParam } from '@graphql-codegen/plugin-helpers';
+import { Types, normalizeInstanceOrArray, normalizeOutputParam } from '@graphql-codegen/plugin-helpers';
+
 import isGlob from 'is-glob';
 import debounce from 'debounce';
 import logSymbols from 'log-symbols';
@@ -103,7 +103,7 @@ export const createWatcher = (initalContext: CodegenContext, onNext: (result: Ty
 
     debugLog(`[Watcher] Started`);
 
-    const shutdown = async () => {
+    const shutdown = () => {
       isShutdown = true;
       debugLog(`[Watcher] Shutting down`);
       log(`Shutting down watch...`);
@@ -121,7 +121,7 @@ export const createWatcher = (initalContext: CodegenContext, onNext: (result: Ty
         log(`${logSymbols.info} Config file has changed, reloading...`);
         const context = await loadContext(config.configFilePath);
 
-        const newParsedConfig = context.getConfig() as Types.Config;
+        const newParsedConfig = context.getConfig();
         newParsedConfig.watch = config.watch;
         newParsedConfig.silent = config.silent;
         newParsedConfig.overwrite = config.overwrite;
@@ -137,7 +137,7 @@ export const createWatcher = (initalContext: CodegenContext, onNext: (result: Ty
   };
 
   // the promise never resolves to keep process running
-  return new Promise((_, reject) => {
+  return new Promise((resolve, reject) => {
     executeCodegen(initalContext)
       .then(onNext, () => Promise.resolve())
       .then(runWatcher)

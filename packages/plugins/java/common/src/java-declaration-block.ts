@@ -1,4 +1,4 @@
-import { transformComment, indent, indentMultiline } from '@graphql-codegen/visitor-plugin-common';
+import { transformComment, indentMultiline } from '@graphql-codegen/visitor-plugin-common';
 import { StringValueNode, NameNode } from 'graphql';
 const stripIndent = require('strip-indent');
 
@@ -86,7 +86,7 @@ export class JavaDeclarationBlock {
   }
 
   withName(name: string | NameNode): JavaDeclarationBlock {
-    this._name = typeof name === 'object' ? (name as NameNode).value : name;
+    this._name = typeof name === 'object' ? name.value : name;
 
     return this;
   }

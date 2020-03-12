@@ -4,7 +4,7 @@
   "private": true,
   "homepage": "/live-demo/",
   "devDependencies": {
-    "aws-sdk": "2.635.0",
+    "aws-sdk": "2.638.0",
     "source-map-explorer": "2.3.1",
     "typescript": "3.8.3"
   },
@@ -47,9 +47,6 @@
     "analyze": "NODE_OPTIONS=--max_old_space_size=8192 react-scripts build && source-map-explorer build/static/js/main.*",
     "start": "NODE_OPTIONS=--max_old_space_size=8192 react-scripts start",
     "build": "GENERATE_SOURCEMAP=false NODE_OPTIONS=--max_old_space_size=8192 react-scripts build && cp -r ./build ../build/graphql-code-generator/live-demo"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
   },
   "browserslist": [
     ">0.2%",

@@ -1,6 +1,5 @@
 import { preset } from '../src/index';
-import { parse, buildSchema, printSchema } from 'graphql';
-import { buildASTSchema } from 'graphql';
+import { parse, buildSchema, printSchema, buildASTSchema } from 'graphql';
 
 describe('near-operation-file preset', () => {
   const schemaDocumentNode = parse(/* GraphQL */ `
@@ -134,7 +133,7 @@ describe('near-operation-file preset', () => {
         });
 
         expect(result[0].filename).toContain(`queries.generated.ts`);
-        expect(result[0].plugins[1]['add']).toBe(expected);
+        expect(result[0].plugins[1].add).toBe(expected);
       };
 
       await doTest(
@@ -598,7 +597,7 @@ describe('near-operation-file preset', () => {
       pluginMap: { typescript: {} as any },
     });
 
-    expect(result.map(o => o.pluginMap['add'])[0]).toBeDefined();
+    expect(result.map(o => o.pluginMap.add)[0]).toBeDefined();
   });
 
   it('Should add "namespacedImportName" to config', async () => {

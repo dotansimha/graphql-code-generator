@@ -29,7 +29,7 @@ export class Renderer {
   ) {
     this.updateRenderer.end(err);
 
-    if (typeof err === undefined) {
+    if (typeof err === 'undefined') {
       logUpdate.clear();
       return;
     }

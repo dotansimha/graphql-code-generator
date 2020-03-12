@@ -4,7 +4,6 @@ import {
   visit,
   DocumentNode,
   isListType,
-  isInterfaceType,
   VariableDefinitionNode,
   isObjectType,
   FieldNode,
@@ -12,21 +11,21 @@ import {
   InputValueDefinitionNode,
   GraphQLSchema,
   OperationDefinitionNode,
-  GraphQLNamedType,
   isNonNullType,
   GraphQLOutputType,
   ASTNode,
-  isUnionType,
+  InlineFragmentNode,
+  SelectionSetNode,
+  GraphQLObjectType,
 } from 'graphql';
 import { getBaseType } from './utils';
-import { InlineFragmentNode, SelectionSetNode, FragmentSpreadNode, GraphQLObjectType } from 'graphql';
 
 export function isOutputConfigArray(type: any): type is Types.OutputConfig[] {
   return Array.isArray(type);
 }
 
 export function isConfiguredOutput(type: any): type is Types.ConfiguredOutput {
-  return typeof type === 'object' && type['plugins'];
+  return typeof type === 'object' && type.plugins;
 }
 
 export function normalizeOutputParam(config: Types.OutputConfig | Types.ConfiguredOutput): Types.ConfiguredOutput {
@@ -80,7 +79,7 @@ export function hasNullableTypeRecursively(type: GraphQLOutputType): boolean {
 
 export function isUsingTypes(document: DocumentNode, externalFragments: string[], schema?: GraphQLSchema): boolean {
   let foundFields = 0;
-  let typesStack: GraphQLObjectType[] = [];
+  const typesStack: GraphQLObjectType[] = [];
 
   visit(document, {
     SelectionSet: {

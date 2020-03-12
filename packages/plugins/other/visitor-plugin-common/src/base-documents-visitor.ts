@@ -1,11 +1,11 @@
-import { NormalizedScalarsMap, ConvertOptions } from './types';
+import { NormalizedScalarsMap } from './types';
 import autoBind from 'auto-bind';
 import { DEFAULT_SCALARS } from './scalars';
 import { DeclarationBlock, DeclarationBlockConfig, buildScalars, getConfigValue } from './utils';
-import { GraphQLSchema, FragmentDefinitionNode, GraphQLObjectType, OperationDefinitionNode, VariableDefinitionNode, OperationTypeNode, ASTNode } from 'graphql';
+import { GraphQLSchema, FragmentDefinitionNode, GraphQLObjectType, OperationDefinitionNode, VariableDefinitionNode, OperationTypeNode } from 'graphql';
 import { SelectionSetToObject } from './selection-set-to-object';
 import { OperationVariablesToObject } from './variables-to-object';
-import { BaseVisitor, BaseVisitorConvertOptions } from './base-visitor';
+import { BaseVisitor } from './base-visitor';
 import { ParsedTypesConfig, RawTypesConfig } from './base-types-visitor';
 import { pascalCase } from 'pascal-case';
 
@@ -129,12 +129,6 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
     this._variablesTransfomer = variablesTransfomer;
   }
 
-  public convertName(node: ASTNode | string, options?: ConvertOptions & BaseVisitorConvertOptions): string {
-    const useTypesPrefix = options && typeof options.useTypesPrefix === 'boolean' ? options.useTypesPrefix : true;
-
-    return (useTypesPrefix ? this._parsedConfig.typesPrefix : '') + this._parsedConfig.convert(node, options);
-  }
-
   public get schema(): GraphQLSchema {
     return this._schema;
   }
@@ -162,7 +156,7 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
   FragmentDefinition(node: FragmentDefinitionNode): string {
     const fragmentRootType = this._schema.getType(node.typeCondition.name.value) as GraphQLObjectType;
     const selectionSet = this._selectionSetToObject.createNext(fragmentRootType, node.selectionSet);
-    const fragmentSuffix = this.config.omitOperationSuffix ? '' : this.config.dedupeOperationSuffix && node.name.value.toLowerCase().endsWith('fragment') ? '' : 'Fragment';
+    const fragmentSuffix = this.getFragmentSuffix(node);
 
     return selectionSet.transformFragmentSelectionSetToTypes(node.name.value, fragmentSuffix, this._declarationBlockConfig);
   }
@@ -177,7 +171,8 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
 
     const selectionSet = this._selectionSetToObject.createNext(operationRootType, node.selectionSet);
     const visitedOperationVariables = this._variablesTransfomer.transform<VariableDefinitionNode>(node.variableDefinitions);
-    const operationTypeSuffix = this.config.omitOperationSuffix ? '' : this.config.dedupeOperationSuffix && name.toLowerCase().endsWith(node.operation) ? '' : pascalCase(node.operation);
+    const operationType: string = pascalCase(node.operation);
+    const operationTypeSuffix = this.getOperationSuffix(name, operationType);
 
     const operationResult = new DeclarationBlock(this._declarationBlockConfig)
       .export()

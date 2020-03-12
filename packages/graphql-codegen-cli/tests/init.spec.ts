@@ -1,4 +1,3 @@
-jest.mock('fs');
 import bddStdin from 'bdd-stdin';
 import { resolve } from 'path';
 import { init } from '../src/init';
@@ -7,8 +6,10 @@ import { guessTargets } from '../src/init/targets';
 import { plugins } from '../src/init/plugins';
 import { bold } from '../src/init/helpers';
 import { getApplicationTypeChoices, getPluginChoices } from '../src/init/questions';
-const { version } = require('../package.json');
 import { safeLoad } from 'js-yaml';
+
+jest.mock('fs');
+const { version } = require('../package.json');
 
 const SELECT = ' '; // checkbox
 const ENTER = '\n';
@@ -287,7 +288,7 @@ describe('init', () => {
     const config = safeLoad(writeFileSpy.mock.calls[0][1] as string);
     const pkg = JSON.parse(writeFileSpy.mock.calls[1][1] as string);
 
-    expect(pkg.scripts['graphql']).toEqual(`graphql-codegen --config ${defaults.config}`);
+    expect(pkg.scripts.graphql).toEqual(`graphql-codegen --config ${defaults.config}`);
     expect(configFile).toEqual(resolve(process.cwd(), defaults.config));
     expect(config.overwrite).toEqual(true);
     expect(config.schema).toEqual(defaults.schema);

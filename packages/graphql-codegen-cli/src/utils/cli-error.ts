@@ -11,15 +11,12 @@ export function cliError(err: any, exitOnError = true) {
     msg = JSON.stringify(err);
   }
 
-  console['error'](msg);
+  // eslint-disable-next-line no-console
+  console.error(msg);
 
   if (exitOnError && isNode) {
     process.exit(1);
-
-    return;
   } else if (exitOnError && isBrowser) {
     throw err;
   }
-
-  return;
 }

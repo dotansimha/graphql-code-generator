@@ -1,6 +1,6 @@
 import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor';
 import autoBind from 'auto-bind';
-import { FragmentDefinitionNode, print, OperationDefinitionNode, visit, FragmentSpreadNode, GraphQLSchema, Kind, DocumentNode } from 'graphql';
+import { FragmentDefinitionNode, print, OperationDefinitionNode, visit, FragmentSpreadNode, GraphQLSchema, Kind } from 'graphql';
 import { DepGraph } from 'dependency-graph';
 import gqlTag from 'graphql-tag';
 import { Types } from '@graphql-codegen/plugin-helpers';
@@ -29,8 +29,8 @@ export interface RawClientSideBasePluginConfig extends RawConfig {
   operationResultSuffix?: string;
   documentVariablePrefix?: string;
   documentVariableSuffix?: string;
-  fragmentVariablePrefix: string;
-  fragmentVariableSuffix: string;
+  fragmentVariablePrefix?: string;
+  fragmentVariableSuffix?: string;
   documentMode?: DocumentMode;
   importOperationTypesFrom?: string;
   importDocumentNodeExternallyFrom?: string;
@@ -156,14 +156,6 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
     autoBind(this);
   }
 
-  protected _getFragmentName(fragment: FragmentDefinitionNode | string): string {
-    return this.convertName(fragment, {
-      suffix: this.config.fragmentVariableSuffix,
-      prefix: this.config.fragmentVariablePrefix,
-      useTypesPrefix: false,
-    });
-  }
-
   protected _extractFragments(document: FragmentDefinitionNode | OperationDefinitionNode, withNested = false): string[] {
     if (!document) {
       return [];
@@ -174,21 +166,17 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
     visit(document, {
       enter: {
         FragmentSpread: (node: FragmentSpreadNode) => {
-          if (node.name.value !== document.name.value) {
-            names.add(node.name.value);
+          names.add(node.name.value);
 
-            if (withNested) {
-              const foundFragment = this._fragments.find(f => f.name === node.name.value);
+          if (withNested) {
+            const foundFragment = this._fragments.find(f => f.name === node.name.value);
 
-              if (foundFragment) {
-                const childItems = this._extractFragments(foundFragment.node, true);
+            if (foundFragment) {
+              const childItems = this._extractFragments(foundFragment.node, true);
 
-                if (childItems && childItems.length > 0) {
-                  for (const item of childItems) {
-                    if (item !== document.name.value) {
-                      names.add(item);
-                    }
-                  }
+              if (childItems && childItems.length > 0) {
+                for (const item of childItems) {
+                  names.add(item);
                 }
               }
             }
@@ -203,14 +191,14 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
   protected _transformFragments(document: FragmentDefinitionNode | OperationDefinitionNode): string[] {
     const includeNestedFragments = this.config.documentMode === DocumentMode.documentNode;
 
-    return this._extractFragments(document, includeNestedFragments).map(document => this._getFragmentName(document));
+    return this._extractFragments(document, includeNestedFragments).map(document => this.getFragmentVariableName(document));
   }
 
   protected _includeFragments(fragments: string[]): string {
     if (fragments && fragments.length > 0) {
       if (this.config.documentMode === DocumentMode.documentNode) {
         return this._fragments
-          .filter(f => fragments.includes(`${this.config.fragmentVariablePrefix}${f.name}${this.config.fragmentVariableSuffix}`))
+          .filter(f => fragments.includes(this.getFragmentVariableName(f.name)))
           .map(fragment => print(fragment.node))
           .join('\n');
       } else if (this.config.documentMode === DocumentMode.documentNodeImportFragments) {
@@ -239,19 +227,18 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
     ${this._includeFragments(fragments)}`);
 
     if (this.config.documentMode === DocumentMode.documentNode) {
-      const gqlObj = gqlTag([doc]) as DocumentNode;
-      if (gqlObj && gqlObj['loc']) {
+      const gqlObj = gqlTag([doc]);
+      if (gqlObj && gqlObj.loc) {
         delete (gqlObj as any).loc;
       }
       return JSON.stringify(gqlObj);
     } else if (this.config.documentMode === DocumentMode.documentNodeImportFragments) {
       const gqlObj = gqlTag([doc]);
-      if (gqlObj && gqlObj['loc']) {
+      if (gqlObj && gqlObj.loc) {
         delete (gqlObj as any).loc;
       }
       if (fragments.length > 0) {
-        const fragmentsSpreads = fragments.filter((name, i, all) => all.indexOf(name) === i).map(name => `...${name}.definitions`);
-        const definitions = [...gqlObj.definitions.map(t => JSON.stringify(t)), ...fragmentsSpreads].join();
+        const definitions = [...gqlObj.definitions.map(t => JSON.stringify(t)), ...fragments.map(name => `...${name}.definitions`)].join();
         return `{"kind":"${Kind.DOCUMENT}","definitions":[${definitions}]}`;
       }
       return JSON.stringify(gqlObj);
@@ -263,7 +250,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
   }
 
   protected _generateFragment(fragmentDocument: FragmentDefinitionNode): string | void {
-    const name = this._getFragmentName(fragmentDocument);
+    const name = this.getFragmentVariableName(fragmentDocument);
     const isDocumentNode = this.config.documentMode === DocumentMode.documentNode || this.config.documentMode === DocumentMode.documentNodeImportFragments;
     return `export const ${name}${isDocumentNode ? ': DocumentNode' : ''} = ${this._gql(fragmentDocument)};`;
   }
@@ -329,18 +316,20 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
   }
 
   public getImports(): string[] {
-    let imports = [...this._additionalImports];
+    const imports = [...this._additionalImports];
 
     switch (this.config.documentMode) {
       case DocumentMode.documentNode:
-      case DocumentMode.documentNodeImportFragments:
+      case DocumentMode.documentNodeImportFragments: {
         imports.push(`import { DocumentNode } from 'graphql';`);
         break;
-      case DocumentMode.graphQLTag:
+      }
+      case DocumentMode.graphQLTag: {
         const gqlImport = this._parseImport(this.config.gqlImport || 'graphql-tag');
         imports.push(`import ${gqlImport.propName ? `{ ${gqlImport.propName === 'gql' ? 'gql' : `${gqlImport.propName} as gql`} }` : 'gql'} from '${gqlImport.moduleName}';`);
         break;
-      case DocumentMode.external:
+      }
+      case DocumentMode.external: {
         if (this._collectedOperations.length > 0) {
           if (this.config.importDocumentNodeExternallyFrom === 'near-operation-file' && this._documents.length === 1) {
             imports.push(`import * as Operations from './${this.clearExtension(basename(this._documents[0].location))}';`);
@@ -349,15 +338,16 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
           }
         }
         break;
+      }
       default:
         break;
     }
 
     if (this.config.documentMode === DocumentMode.graphQLTag || this.config.documentMode === DocumentMode.documentNodeImportFragments) {
       (this._fragments || [])
-        .filter(f => f.isExternal && f.importFrom && (!f['level'] || (f['level'] !== undefined && f['level'] === 0)))
+        .filter(f => f.isExternal && f.importFrom && !(f as any).level)
         .forEach(externalFragment => {
-          const identifierName = this._getFragmentName(externalFragment.name);
+          const identifierName = this.getFragmentName(externalFragment.name);
 
           imports.push(`import { ${identifierName} } from '${externalFragment.importFrom}';`);
         });
@@ -390,7 +380,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
     }
 
     const operationType: string = pascalCase(node.operation);
-    const operationTypeSuffix: string = this.config.dedupeOperationSuffix && node.name.value.toLowerCase().endsWith(node.operation) ? '' : this.config.omitOperationSuffix ? '' : operationType;
+    const operationTypeSuffix: string = this.getOperationSuffix(node, operationType);
 
     const operationResultType: string = this.convertName(node, {
       suffix: operationTypeSuffix + this._parsedConfig.operationResultSuffix,

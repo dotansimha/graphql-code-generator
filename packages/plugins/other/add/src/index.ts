@@ -20,7 +20,7 @@ export const plugin: PluginFunction<AddPluginConfig> = async (schema: GraphQLSch
   }
 
   let placement = config.placement;
-  let content = config.content;
+  const content = config.content;
 
   if (placement && placement !== 'prepend' && placement !== 'content' && placement !== 'append') {
     throw Error('Add plugin, faulty placement option');

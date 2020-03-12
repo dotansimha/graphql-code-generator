@@ -120,7 +120,7 @@ describe('CLI Flags', () => {
   });
 
   it('Should interpolate environmental variables in YML', async () => {
-    process.env['SCHEMA_PATH'] = 'schema-env.graphql';
+    process.env.SCHEMA_PATH = 'schema-env.graphql';
     mockConfig(`
         schema: \${SCHEMA_PATH}
         generates:
@@ -134,8 +134,8 @@ describe('CLI Flags', () => {
   });
 
   it('Should interpolate multiple environmental variables in YML', async () => {
-    process.env['SCHEMA_SCHEME'] = 'https';
-    process.env['SCHEMA_HOST'] = 'localhost';
+    process.env.SCHEMA_SCHEME = 'https';
+    process.env.SCHEMA_HOST = 'localhost';
     mockConfig(`
         schema: \${SCHEMA_SCHEME}://\${SCHEMA_HOST}/graphql
         generates:
@@ -149,7 +149,7 @@ describe('CLI Flags', () => {
   });
 
   it('Should interpolate environmental variables in YML and support default value', async () => {
-    process.env['SCHEMA_PATH'] = '';
+    process.env.SCHEMA_PATH = '';
 
     mockConfig(`
         schema: \${SCHEMA_PATH:schema.graphql}
@@ -164,7 +164,7 @@ describe('CLI Flags', () => {
   });
 
   it('Should interpolate environmental variables in YML and support default value containing ":"', async () => {
-    process.env['SCHEMA_PATH'] = '';
+    process.env.SCHEMA_PATH = '';
 
     mockConfig(`
         schema: \${SCHEMA_PATH:http://url-to-graphql-api}
@@ -179,7 +179,7 @@ describe('CLI Flags', () => {
   });
 
   it('Should load require extensions provided by cli flags', async () => {
-    process.env['SCHEMA_PATH'] = 'schema-env.graphql';
+    process.env.SCHEMA_PATH = 'schema-env.graphql';
     mockConfig(`
         schema: \${SCHEMA_PATH}
         generates:

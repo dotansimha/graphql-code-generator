@@ -18,7 +18,7 @@ export const plugin: PluginFunction<StencilApolloRawPluginConfig> = (schema: Gra
 
   return {
     prepend: visitor.getImports(),
-    content: [, visitor.fragments, ...visitorResult.definitions.filter(t => typeof t === 'string')].join('\n'),
+    content: ['', visitor.fragments, ...visitorResult.definitions.filter(t => typeof t === 'string')].join('\n'),
   };
 };
 

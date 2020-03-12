@@ -5,7 +5,7 @@
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
   "license": "MIT",
   "scripts": {
-    "lint": "tslint src/**/*.ts",
+    "lint": "eslint **/*.ts",
     "prepack": "bob-update-version",
     "build": "bob",
     "test": "jest --no-watchman --config ../../../../jest.config.js"
@@ -28,7 +28,8 @@
     "graphql": "14.6.0",
     "jest": "25.1.0",
     "ts-jest": "25.2.1",
-    "typescript": "3.8.3"
+    "typescript": "3.8.3",
+    "nock": "12.0.2"
   },
   "sideEffects": false,
   "main": "dist/index.cjs.js",

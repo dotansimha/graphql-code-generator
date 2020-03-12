@@ -28,12 +28,12 @@ export async function generateConfig(inputFile: string): Promise<string> {
     for (const diagnostic of compilerDiagnostics) {
       const message: string = ts.flattenDiagnosticMessageText(diagnostic.messageText, os.EOL);
       if (diagnostic.file) {
-        const location: ts.LineAndCharacter = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start!);
+        const location: ts.LineAndCharacter = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
         const formattedMessage: string = `${diagnostic.file.fileName}(${location.line + 1},${location.character + 1}):` + ` [TypeScript] ${message}`;
-        // tslint:disable-next-line:no-console
+        // eslint-disable-next-line no-console
         console.error(formattedMessage);
       } else {
-        // tslint:disable-next-line:no-console
+        // eslint-disable-next-line no-console
         console.error(message);
       }
     }
@@ -45,7 +45,7 @@ export async function generateConfig(inputFile: string): Promise<string> {
     throw new Error('Error retrieving source file: ' + inputFile);
   }
 
-  const foundComments: IFoundComment[] = [];
+  const foundComments: FoundComment[] = [];
   walkCompilerAstAndFindComments(sourceFile, foundComments);
   const configuration: ConfigComment[] = foundComments.map(comment => parseTSDoc(comment));
 
@@ -94,7 +94,7 @@ const warningDefinition: tsdoc.TSDocTagDefinition = new tsdoc.TSDocTagDefinition
   allowMultiple: false,
 });
 
-function parseTSDoc(foundComment: IFoundComment): ConfigComment {
+function parseTSDoc(foundComment: FoundComment): ConfigComment {
   const customConfiguration: tsdoc.TSDocConfiguration = new tsdoc.TSDocConfiguration();
 
   customConfiguration.addTagDefinitions([nameDefinition, typeDefinition, descriptionDefinition, warningDefinition, defaultDefinition]);
@@ -201,12 +201,12 @@ function extractStringFromNode(node: tsdoc.DocNode, withLineBreaks = true): stri
   return '';
 }
 
-interface IFoundComment {
+interface FoundComment {
   compilerNode: ts.Node;
   textRange: tsdoc.TextRange;
 }
 
-function walkCompilerAstAndFindComments(node: ts.Node, foundComments: IFoundComment[]): void {
+function walkCompilerAstAndFindComments(node: ts.Node, foundComments: FoundComment[]): void {
   const buffer: string = node.getSourceFile().getFullText(); // don't use getText() here!
 
   // Only consider nodes that are part of a declaration form.  Without this, we could discover

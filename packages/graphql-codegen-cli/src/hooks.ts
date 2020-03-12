@@ -20,24 +20,21 @@ function normalizeHooks(_hooks: Partial<Types.LifecycleHooksDefinition<string | 
     ...(_hooks || {}),
   });
 
-  return keys.reduce(
-    (prev: Types.LifecycleHooksDefinition<string[]>, hookName: string) => {
-      if (typeof _hooks[hookName] === 'string') {
-        return {
-          ...prev,
-          [hookName]: [_hooks[hookName]] as string[],
-        };
-      } else if (Array.isArray(_hooks[hookName])) {
-        return {
-          ...prev,
-          [hookName]: _hooks[hookName] as string[],
-        };
-      } else {
-        return prev;
-      }
-    },
-    {} as Types.LifecycleHooksDefinition<string[]>
-  );
+  return keys.reduce((prev: Types.LifecycleHooksDefinition<string[]>, hookName: string) => {
+    if (typeof _hooks[hookName] === 'string') {
+      return {
+        ...prev,
+        [hookName]: [_hooks[hookName]] as string[],
+      };
+    } else if (Array.isArray(_hooks[hookName])) {
+      return {
+        ...prev,
+        [hookName]: _hooks[hookName] as string[],
+      };
+    } else {
+      return prev;
+    }
+  }, {} as Types.LifecycleHooksDefinition<string[]>);
 }
 
 function execShellCommand(cmd: string): Promise<string> {
@@ -54,7 +51,7 @@ function execShellCommand(cmd: string): Promise<string> {
         if (error) {
           reject(error);
         } else {
-          resolve(stdout ? stdout : stderr);
+          resolve(stdout || stderr);
         }
       }
     );

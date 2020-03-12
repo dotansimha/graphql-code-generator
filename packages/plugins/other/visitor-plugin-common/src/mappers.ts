@@ -1,3 +1,4 @@
+/* eslint-disable no-inner-declarations */
 import { RawResolversConfig, ParsedResolversConfig } from './base-resolvers-visitor';
 
 export type ParsedMapper = InternalParsedMapper | ExternalParsedMapper;
@@ -14,7 +15,7 @@ export interface ExternalParsedMapper {
 }
 
 export function isExternalMapperType(m: ParsedMapper): m is ExternalParsedMapper {
-  return !!m['import'];
+  return !!(m as ExternalParsedMapper).import;
 }
 
 enum MapperKind {
@@ -71,7 +72,7 @@ export function parseMapper(mapper: string, gqlTypeName: string | null = null, s
     function handleAlias(isDefault = false) {
       const [importedType, aliasType] = items[1].split(/\s+as\s+/);
 
-      let type = maybeSuffix(aliasType);
+      const type = maybeSuffix(aliasType);
 
       return {
         importElement: isDefault ? type : `${importedType} as ${type}`,
@@ -162,7 +163,6 @@ function addSuffix(element: string, suffix: string): string {
 }
 
 export function isExternalMapper(value: string): boolean {
-  // tslint:disable-next-line:quotemark
   return value.includes('#') && !value.includes('"') && !value.includes("'");
 }
 

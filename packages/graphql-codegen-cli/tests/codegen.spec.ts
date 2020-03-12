@@ -10,6 +10,10 @@ const SIMPLE_TEST_SCHEMA = `type MyType { f: String } type Query { f: String }`;
 jest.mock('some-fetch');
 
 describe('Codegen Executor', () => {
+  beforeEach(() => {
+    jest.useFakeTimers();
+  });
+
   describe('Generator General Options', () => {
     it('Should output the correct filenames', async () => {
       const output = await executeCodegen({
@@ -43,7 +47,7 @@ describe('Codegen Executor', () => {
       try {
         await executeCodegen({
           schema: join(__dirname, './test-files/schema-dir/schema-object.js'),
-          require: join(__dirname + './missing.js'),
+          require: join(__dirname, './missing.js'),
           generates: {
             'out1.ts': ['typescript'],
           },
@@ -598,7 +602,7 @@ describe('Codegen Executor', () => {
       );
 
       expect(merged.getType('Post').astNode.directives.map(({ name }) => name.value)).toContainEqual('test');
-      expect((merged.getType('Post') as GraphQLObjectType).getFields()['id'].astNode.directives.map(({ name }) => name.value)).toContainEqual('id');
+      expect((merged.getType('Post') as GraphQLObjectType).getFields().id.astNode.directives.map(({ name }) => name.value)).toContainEqual('id');
     });
 
     it('should keep scalars', async () => {
@@ -879,7 +883,7 @@ describe('Codegen Executor', () => {
         'out1.ts': ['typescript'],
       },
     });
-    expect(global['CUSTOM_FETCH_FN_CALLED']).toBeTruthy();
+    expect(global.CUSTOM_FETCH_FN_CALLED).toBeTruthy();
   });
 
   it('should evaluate glob expressions correctly', async () => {

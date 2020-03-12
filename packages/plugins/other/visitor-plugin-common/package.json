@@ -3,7 +3,7 @@
   "version": "1.13.0",
   "license": "MIT",
   "scripts": {
-    "lint": "tslint src/**/*.ts",
+    "lint": "eslint **/*.ts",
     "prepack": "bob-update-version",
     "test": "jest --no-watchman --config ../../../../jest.config.js",
     "build": "bob"

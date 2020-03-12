@@ -1,4 +1,3 @@
-// tslint:disable
 import gql from 'graphql-tag';
 import 'stencil-apollo';
 import { Component, Prop, h } from '@stencil/core';

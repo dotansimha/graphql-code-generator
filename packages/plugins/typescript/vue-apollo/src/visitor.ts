@@ -1,10 +1,9 @@
 import { ClientSideBaseVisitor, ClientSideBasePluginConfig, getConfigValue, LoadedFragment, DocumentMode } from '@graphql-codegen/visitor-plugin-common';
 import { VueApolloRawPluginConfig } from './config';
 import autoBind from 'auto-bind';
-import { OperationDefinitionNode } from 'graphql';
+import { OperationDefinitionNode, GraphQLSchema } from 'graphql';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { pascalCase } from 'pascal-case';
-import { GraphQLSchema } from 'graphql';
 
 export interface VueApolloPluginConfig extends ClientSideBasePluginConfig {
   withCompositionFunctions: boolean;
@@ -51,7 +50,7 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
   }
 
   private getDocumentNodeVariable(node: OperationDefinitionNode, documentVariableName: string): string {
-    return this.config.documentMode === DocumentMode.external ? `Operations.${node.name!.value}` : documentVariableName;
+    return this.config.documentMode === DocumentMode.external ? `Operations.${node.name.value}` : documentVariableName;
   }
 
   public getImports(): string[] {
@@ -160,23 +159,26 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
 
   private buildCompositionFunction({ operationName, operationType, operationHasNonNullableVariable, operationResultType, operationVariablesTypes, documentNodeVariable }: BuildCompositionFunctions): string {
     switch (operationType) {
-      case 'Query':
+      case 'Query': {
         const reactiveFunctionTypeName = `ReactiveFunction${operationName}`;
         return `type ${reactiveFunctionTypeName} = () => ${operationVariablesTypes}\nexport function use${operationName}(variables${
           operationHasNonNullableVariable ? '' : '?'
         }: ${operationVariablesTypes} | VueCompositionApi.Ref<${operationVariablesTypes}> | ${reactiveFunctionTypeName}, baseOptions?: VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}>) {
           return VueApolloComposable.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${documentNodeVariable}, variables, baseOptions);
         }`;
-      case 'Mutation':
+      }
+      case 'Mutation': {
         return `export function use${operationName}(baseOptions?: VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}>) {
             return VueApolloComposable.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${documentNodeVariable}, baseOptions);
           }`;
-      case 'Subscription':
+      }
+      case 'Subscription': {
         return `export function use${operationName}(variables${
           operationHasNonNullableVariable ? '' : '?'
         }: ${operationVariablesTypes}, baseOptions?: VueApolloComposable.Use${operationType}Options<${operationResultType}, ${operationVariablesTypes}>) {
           return VueApolloComposable.use${operationType}<${operationResultType}, ${operationVariablesTypes}>(${documentNodeVariable}, variables, baseOptions);
         }`;
+      }
     }
   }
 
