@@ -31,10 +31,6 @@ export type DocumentImportResolverOptions = {
    */
   generateFilePath: (location: string) => string;
   /**
-   * String to append to all fragments
-   */
-  fragmentSuffix: (fragmentName: string) => string;
-  /**
    *
    */
   generateImportStatement: GenerateImportStatement;

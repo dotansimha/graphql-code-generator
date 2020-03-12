@@ -156,14 +156,6 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
     autoBind(this);
   }
 
-  protected _getFragmentName(fragment: FragmentDefinitionNode | string): string {
-    return this.convertName(fragment, {
-      suffix: this.config.fragmentVariableSuffix,
-      prefix: this.config.fragmentVariablePrefix,
-      useTypesPrefix: false,
-    });
-  }
-
   protected _extractFragments(document: FragmentDefinitionNode | OperationDefinitionNode, withNested = false): string[] {
     if (!document) {
       return [];
@@ -199,14 +191,14 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
   protected _transformFragments(document: FragmentDefinitionNode | OperationDefinitionNode): string[] {
     const includeNestedFragments = this.config.documentMode === DocumentMode.documentNode;
 
-    return this._extractFragments(document, includeNestedFragments).map(document => this._getFragmentName(document));
+    return this._extractFragments(document, includeNestedFragments).map(document => this.getFragmentVariableName(document));
   }
 
   protected _includeFragments(fragments: string[]): string {
     if (fragments && fragments.length > 0) {
       if (this.config.documentMode === DocumentMode.documentNode) {
         return this._fragments
-          .filter(f => fragments.includes(`${this.config.fragmentVariablePrefix}${f.name}${this.config.fragmentVariableSuffix}`))
+          .filter(f => fragments.includes(this.getFragmentVariableName(f.name)))
           .map(fragment => print(fragment.node))
           .join('\n');
       } else if (this.config.documentMode === DocumentMode.documentNodeImportFragments) {
@@ -246,8 +238,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
         delete (gqlObj as any).loc;
       }
       if (fragments.length > 0) {
-        const fragmentsSpreads = fragments.filter((name, i, all) => all.indexOf(name) === i).map(name => `...${name}.definitions`);
-        const definitions = [...gqlObj.definitions.map(t => JSON.stringify(t)), ...fragmentsSpreads].join();
+        const definitions = [...gqlObj.definitions.map(t => JSON.stringify(t)), ...fragments.map(name => `...${name}.definitions`)].join();
         return `{"kind":"${Kind.DOCUMENT}","definitions":[${definitions}]}`;
       }
       return JSON.stringify(gqlObj);
@@ -259,7 +250,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
   }
 
   protected _generateFragment(fragmentDocument: FragmentDefinitionNode): string | void {
-    const name = this._getFragmentName(fragmentDocument);
+    const name = this.getFragmentVariableName(fragmentDocument);
     const isDocumentNode = this.config.documentMode === DocumentMode.documentNode || this.config.documentMode === DocumentMode.documentNodeImportFragments;
     return `export const ${name}${isDocumentNode ? ': DocumentNode' : ''} = ${this._gql(fragmentDocument)};`;
   }
@@ -356,7 +347,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
       (this._fragments || [])
         .filter(f => f.isExternal && f.importFrom && !(f as any).level)
         .forEach(externalFragment => {
-          const identifierName = this._getFragmentName(externalFragment.name);
+          const identifierName = this.getFragmentName(externalFragment.name);
 
           imports.push(`import { ${identifierName} } from '${externalFragment.importFrom}';`);
         });
@@ -389,7 +380,7 @@ export class ClientSideBaseVisitor<TRawConfig extends RawClientSideBasePluginCon
     }
 
     const operationType: string = pascalCase(node.operation);
-    const operationTypeSuffix: string = this.config.dedupeOperationSuffix && node.name.value.toLowerCase().endsWith(node.operation) ? '' : this.config.omitOperationSuffix ? '' : operationType;
+    const operationTypeSuffix: string = this.getOperationSuffix(node, operationType);
 
     const operationResultType: string = this.convertName(node, {
       suffix: operationTypeSuffix + this._parsedConfig.operationResultSuffix,

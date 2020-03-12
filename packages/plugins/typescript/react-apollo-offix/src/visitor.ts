@@ -79,7 +79,7 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<RawClientSideBaseP
     });
 
     const operationType = pascalCase(node.operation);
-    const operationTypeSuffix = this.config.dedupeOperationSuffix && node.name.value.toLowerCase().endsWith(node.operation) ? '' : operationType;
+    const operationTypeSuffix = this.getOperationSuffix(node, operationType);
     const operationResultType = this.convertName(node, {
       suffix: operationTypeSuffix + this._parsedConfig.operationResultSuffix,
     });

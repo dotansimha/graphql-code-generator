@@ -2,7 +2,7 @@ import { ScalarsMap, ParsedScalarsMap, NamingConvention, ConvertFn, ConvertOptio
 import { DeclarationBlockConfig } from './utils';
 import autoBind from 'auto-bind';
 import { convertFactory } from './naming';
-import { ASTNode } from 'graphql';
+import { ASTNode, FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
 
 export interface BaseVisitorConvertOptions {
   useTypesPrefix?: boolean;
@@ -148,6 +148,40 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
     const useTypesPrefix = typeof (options && options.useTypesPrefix) === 'boolean' ? options.useTypesPrefix : true;
 
     return (useTypesPrefix ? this.config.typesPrefix : '') + this.config.convert(node, options);
+  }
+
+  public getOperationSuffix(node: FragmentDefinitionNode | OperationDefinitionNode | string, operationType: string): string {
+    const { omitOperationSuffix = false, dedupeOperationSuffix = false } = this.config as { [key: string]: any };
+    const operationName = typeof node === 'string' ? node : node.name.value;
+    return omitOperationSuffix ? '' : dedupeOperationSuffix && operationName.toLowerCase().endsWith(operationType.toLowerCase()) ? '' : operationType;
+  }
+
+  public getFragmentSuffix(node: FragmentDefinitionNode | string): string {
+    return this.getOperationSuffix(node, 'Fragment');
+  }
+
+  public getFragmentName(node: FragmentDefinitionNode | string): string {
+    return this.convertName(node, {
+      suffix: this.getFragmentSuffix(node),
+      useTypesPrefix: false,
+    });
+  }
+
+  public getFragmentVariableName(node: FragmentDefinitionNode | string): string {
+    const { omitOperationSuffix = false, dedupeOperationSuffix = false, fragmentVariableSuffix = 'FragmentDoc', fragmentVariablePrefix = '' } = this.config as { [key: string]: any };
+
+    const fragmentName = typeof node === 'string' ? node : node.name.value;
+    const suffix = omitOperationSuffix
+      ? ''
+      : dedupeOperationSuffix && fragmentName.toLowerCase().endsWith('fragment') && fragmentVariableSuffix.toLowerCase().startsWith('fragment')
+      ? fragmentVariableSuffix.substring('fragment'.length)
+      : fragmentVariableSuffix;
+
+    return this.convertName(node, {
+      prefix: fragmentVariablePrefix,
+      suffix,
+      useTypesPrefix: false,
+    });
   }
 
   protected getPunctuation(declarationKind: DeclarationKind): string {
