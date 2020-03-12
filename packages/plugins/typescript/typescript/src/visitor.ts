@@ -2,7 +2,7 @@ import { transformComment, wrapWithSingleQuotes, DeclarationBlock, indent, BaseT
 import { TypeScriptPluginConfig } from './config';
 import { AvoidOptionalsConfig } from './types';
 import autoBind from 'auto-bind';
-import { FieldDefinitionNode, NamedTypeNode, ListTypeNode, NonNullTypeNode, EnumTypeDefinitionNode, Kind, InputValueDefinitionNode, GraphQLSchema, GraphQLEnumType, DirectiveNode } from 'graphql';
+import { FieldDefinitionNode, NamedTypeNode, ListTypeNode, NonNullTypeNode, EnumTypeDefinitionNode, Kind, InputValueDefinitionNode, GraphQLSchema, GraphQLEnumType } from 'graphql';
 import { TypeScriptOperationVariablesToObject } from './typescript-variables-to-object';
 import { normalizeAvoidOptionals } from './avoid-optionals';
 
@@ -88,14 +88,8 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
     const typeString = this.config.wrapFieldDefinitions ? `FieldWrapper<${node.type}>` : ((node.type as any) as string);
     const originalFieldNode = parent[key] as FieldDefinitionNode;
     const addOptionalSign = !this.config.avoidOptionals.object && originalFieldNode.type.kind !== Kind.NON_NULL_TYPE;
+    const comment = this.getFieldComment(node);
     const { type } = this.config.declarationKind;
-    let commentText: string = node.description as any;
-    const deprecationDirective = node.directives.find((v: any) => v.name === 'deprecated');
-    if (deprecationDirective) {
-      const deprecationReason = this.getDeprecationReason(deprecationDirective);
-      commentText = `${commentText ? `${commentText}\n` : ''}@deprecated ${deprecationReason}`;
-    }
-    const comment = transformComment(commentText, 1);
 
     return comment + indent(`${this.config.immutableTypes ? 'readonly ' : ''}${node.name}${addOptionalSign ? '?' : ''}: ${typeString}${this.getPunctuation(type)}`);
   }
@@ -146,17 +140,6 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
         .withName(enumTypeName)
         .withComment((node.description as any) as string)
         .withBlock(this.buildEnumValuesBlock(enumName, node.values)).string;
-    }
-  }
-
-  protected getDeprecationReason(directive: DirectiveNode): string | void {
-    if ((directive.name as any) === 'deprecated') {
-      const hasArguments = directive.arguments.length > 0;
-      let reason = 'Field no longer supported';
-      if (hasArguments) {
-        reason = directive.arguments[0].value as any;
-      }
-      return reason;
     }
   }
 
