@@ -1,6 +1,6 @@
 ---
-id: typescript-graphql-request
-title: TypeScript GraphQL-Request
+id: typescript-oclif
+title: TypeScript oclif
 ---
 
 This plugin generates [`oclif`](https://www.npmjs.com/package/oclif) CLI commands.
