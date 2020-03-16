@@ -183,7 +183,7 @@ async function test() {
       };
     };
 
-    it(
+    it.skip(
       'should execute default no-op middleware when none passed to getSdk',
       async () => {
         const { sdk, scope } = await perpareTranspiledModule();
@@ -196,7 +196,7 @@ async function test() {
       20 * 1000
     );
 
-    it(
+    it.skip(
       'Should execute middleware passed to getSdk',
       async () => {
         let middlewareExecuted = false;
