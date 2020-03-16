@@ -7,10 +7,14 @@ import {
 } from '@graphql-codegen/visitor-plugin-common';
 import { UrqlRawPluginConfig } from './config';
 import autoBind from 'auto-bind';
-import { OperationDefinitionNode, Kind, GraphQLSchema } from 'graphql';
+import { OperationDefinitionNode, Kind, GraphQLSchema, visit, visitWithTypeInfo, TypeInfo, GraphQLOutputType, isWrappingType, SelectionNode, GraphQLWrappingType } from 'graphql';
 import { pascalCase } from 'pascal-case';
 
+export type SelectionSet = ReadonlyArray<SelectionNode>;
+export type GraphQLFlatType = Exclude<GraphQLOutputType, GraphQLWrappingType>;
+
 export interface UrqlPluginConfig extends ClientSideBasePluginConfig {
+  withAdditionalTypenames?: boolean;
   withComponent: boolean;
   withHooks: boolean;
   urqlImportFrom: string;
@@ -19,6 +23,7 @@ export interface UrqlPluginConfig extends ClientSideBasePluginConfig {
 export class UrqlVisitor extends ClientSideBaseVisitor<UrqlRawPluginConfig, UrqlPluginConfig> {
   constructor(schema: GraphQLSchema, fragments: LoadedFragment[], rawConfig: UrqlRawPluginConfig) {
     super(schema, fragments, rawConfig, {
+      withAdditionalTypenames: getConfigValue(rawConfig.withAdditionalTypenames, false),
       withComponent: getConfigValue(rawConfig.withComponent, true),
       withHooks: getConfigValue(rawConfig.withHooks, false),
       urqlImportFrom: getConfigValue(rawConfig.urqlImportFrom, null),
@@ -102,6 +107,17 @@ export function use${operationName}<TData = any>(options: Omit<Urql.Use${operati
 };`;
     }
 
+    if (this.config.withAdditionalTypenames) {
+      return `
+export function use${operationName}(options: Omit<Urql.Use${operationType}Args<${operationVariablesTypes}>, 'query'> = {}) {
+  const context = useMemo(() => ({
+    ...(options.context || {}),
+    additionalTypenames: [${this.getTypenames(node)}],
+  }, [options.context]));
+  return Urql.use${operationType}<${operationResultType}>({ query: ${documentVariableName}, ...options, context });
+};`;
+    }
+
     return `
 export function use${operationName}(options: Omit<Urql.Use${operationType}Args<${operationVariablesTypes}>, 'query'> = {}) {
   return Urql.use${operationType}<${operationResultType}>({ query: ${documentVariableName}, ...options });
@@ -118,10 +134,46 @@ export function use${operationName}(options: Omit<Urql.Use${operationType}Args<$
     const component = this.config.withComponent
       ? this._buildComponent(node, documentVariableName, operationType, operationResultType, operationVariablesTypes)
       : null;
+
     const hooks = this.config.withHooks
       ? this._buildHooks(node, operationType, documentVariableName, operationResultType, operationVariablesTypes)
       : null;
 
     return [component, hooks].filter(a => a).join('\n');
   }
+
+  private getTypenames(
+    node: OperationDefinitionNode,
+  ) {
+    const typenames = [];
+    const typeInfo = new TypeInfo(this._schema);
+
+    visit(
+      node,
+      visitWithTypeInfo(typeInfo, {
+        Field: node => {
+          if (node.selectionSet) {
+            typenames.push(getTypename(typeInfo.getType()));
+          }
+        },
+      })
+    );
+
+    return typenames.reduce((acc, type, i) => i === 0 ? `${type}` : `${acc}, ${type}`, '');
+  }
+}
+
+const unwrapType = (
+  type: null | undefined | GraphQLOutputType
+): GraphQLFlatType | null => {
+  if (isWrappingType(type)) {
+    return unwrapType(type.ofType);
+  }
+
+  return type || null;
+};
+
+const getTypename = (type: GraphQLOutputType) => {
+  return unwrapType(type).toString();
+  
 }

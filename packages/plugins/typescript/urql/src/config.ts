@@ -1,6 +1,25 @@
 import { RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-common';
 
 export interface UrqlRawPluginConfig extends RawClientSideBasePluginConfig {
+    /**
+   * @name withAdditionalTypenames
+   * @type boolean
+   * @description Adds the additionalTypenames to queries for refetching when for instance a list is empty.
+   * @default false
+   *
+   * @example
+   * ```yml
+   * generates:
+   * path/to/file.ts:
+   *  plugins:
+   *    - typescript
+   *    - typescript-operations
+   *    - typescript-urql
+   *  config:
+   *    withAdditionalTypenames: true
+   * ```
+   */
+  withAdditionalTypenames?: boolean;
   /**
    * @name withComponent
    * @type boolean

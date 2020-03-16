@@ -590,6 +590,110 @@ export function useSubmitRepositoryMutation() {
       await compileTypeScript(content, schema, docs, {});
     });
 
+    it('should correctly generate additionalTypenames', async () => {
+      const documents = parse(/* GraphQL */ `
+        query feed {
+          feed {
+            id
+          }
+        }
+      `);
+
+      const docs = [{ location: '', document: documents }];
+
+      const content = (await plugin(
+        schema,
+        docs,
+        { withHooks: true, typesPrefix: 'I', withAdditionalTypenames: true },
+        {
+          outputFile: 'graphql.tsx',
+        },
+      ));
+
+      expect(content.content).toBeSimilarStringTo(`
+      export function useFeedQuery(options: Omit<Urql.UseQueryArgs<IFeedQueryVariables>, 'query'> = {}) {
+        const context = useMemo(() => ({
+          ...(options.context || {}),
+          additionalTypenames: [Entry],
+        }, [options.context]));
+        return Urql.useQuery<IFeedQuery>({ query: FeedDocument, ...options, context });
+      };
+      `);
+    });
+
+    it('should correctly generate nested additionalTypenames', async () => {
+      const documents = parse(/* GraphQL */ `
+        query feed {
+          feed {
+            id
+            repository {
+              full_name
+              owner {
+                avatar_url
+              }
+            }
+          }
+        }
+      `);
+
+      const docs = [{ location: '', document: documents }];
+
+      const content = (await plugin(
+        schema,
+        docs,
+        { withHooks: true, typesPrefix: 'I', withAdditionalTypenames: true },
+        {
+          outputFile: 'graphql.tsx',
+        },
+      ));
+
+      expect(content.content).toBeSimilarStringTo(`
+      export function useFeedQuery(options: Omit<Urql.UseQueryArgs<IFeedQueryVariables>, 'query'> = {}) {
+        const context = useMemo(() => ({
+          ...(options.context || {}),
+          additionalTypenames: [Entry, Repository, User],
+        }, [options.context]));
+        return Urql.useQuery<IFeedQuery>({ query: FeedDocument, ...options, context });
+      };
+      `);
+    });
+
+    it('should correctly generate additionalTypenames with fragments', async () => {
+      const documents = parse(/* GraphQL */ `
+        query feed {
+          feed {
+            ...MyEntry
+          }
+        }
+
+        fragment MyEntry on Entry {
+          id
+          commentCount
+        }
+      `);
+
+      const docs = [{ location: '', document: documents }];
+
+      const content = (await plugin(
+        schema,
+        docs,
+        { withHooks: true, typesPrefix: 'I', withAdditionalTypenames: true },
+        {
+          outputFile: 'graphql.tsx',
+        },
+      ));
+
+      expect(content.content).toBeSimilarStringTo(`
+      export function useFeedQuery(options: Omit<Urql.UseQueryArgs<IFeedQueryVariables>, 'query'> = {}) {
+        const context = useMemo(() => ({
+          ...(options.context || {}),
+          additionalTypenames: [Entry],
+        }, [options.context]));
+        return Urql.useQuery<IFeedQuery>({ query: FeedDocument, ...options, context });
+      };
+      `);
+    });
+
     it('Should not add typesPrefix to hooks', async () => {
       const docs = [{ location: '', document: basicDoc }];
       const content = (await plugin(
