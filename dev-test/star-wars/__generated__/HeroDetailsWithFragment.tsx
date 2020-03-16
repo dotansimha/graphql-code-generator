@@ -12,7 +12,11 @@ export type HeroDetailsWithFragmentQueryVariables = {
   episode?: Types.Maybe<Types.Episode>;
 };
 
-export type HeroDetailsWithFragmentQuery = { __typename?: 'Query' } & { hero: Types.Maybe<({ __typename?: 'Human' } & HeroDetails_Human_Fragment) | ({ __typename?: 'Droid' } & HeroDetails_Droid_Fragment)> };
+export type HeroDetailsWithFragmentQuery = { __typename?: 'Query' } & {
+  hero: Types.Maybe<
+    ({ __typename?: 'Human' } & HeroDetails_Human_Fragment) | ({ __typename?: 'Droid' } & HeroDetails_Droid_Fragment)
+  >;
+};
 
 export const HeroDetailsWithFragmentDocument = gql`
   query HeroDetailsWithFragment($episode: Episode) {
@@ -22,15 +26,42 @@ export const HeroDetailsWithFragmentDocument = gql`
   }
   ${HeroDetailsFragmentDoc}
 `;
-export type HeroDetailsWithFragmentComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables>, 'query'>;
+export type HeroDetailsWithFragmentComponentProps = Omit<
+  ApolloReactComponents.QueryComponentOptions<HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables>,
+  'query'
+>;
 
-export const HeroDetailsWithFragmentComponent = (props: HeroDetailsWithFragmentComponentProps) => <ApolloReactComponents.Query<HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables> query={HeroDetailsWithFragmentDocument} {...props} />;
+export const HeroDetailsWithFragmentComponent = (props: HeroDetailsWithFragmentComponentProps) => (
+  <ApolloReactComponents.Query<HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables>
+    query={HeroDetailsWithFragmentDocument}
+    {...props}
+  />
+);
 
-export type HeroDetailsWithFragmentProps<TChildProps = {}> = ApolloReactHoc.DataProps<HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables> & TChildProps;
-export function withHeroDetailsWithFragment<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<TProps, HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables, HeroDetailsWithFragmentProps<TChildProps>>) {
-  return ApolloReactHoc.withQuery<TProps, HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables, HeroDetailsWithFragmentProps<TChildProps>>(HeroDetailsWithFragmentDocument, {
+export type HeroDetailsWithFragmentProps<TChildProps = {}> = ApolloReactHoc.DataProps<
+  HeroDetailsWithFragmentQuery,
+  HeroDetailsWithFragmentQueryVariables
+> &
+  TChildProps;
+export function withHeroDetailsWithFragment<TProps, TChildProps = {}>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    HeroDetailsWithFragmentQuery,
+    HeroDetailsWithFragmentQueryVariables,
+    HeroDetailsWithFragmentProps<TChildProps>
+  >
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    HeroDetailsWithFragmentQuery,
+    HeroDetailsWithFragmentQueryVariables,
+    HeroDetailsWithFragmentProps<TChildProps>
+  >(HeroDetailsWithFragmentDocument, {
     alias: 'heroDetailsWithFragment',
     ...operationOptions,
   });
 }
-export type HeroDetailsWithFragmentQueryResult = ApolloReactCommon.QueryResult<HeroDetailsWithFragmentQuery, HeroDetailsWithFragmentQueryVariables>;
+export type HeroDetailsWithFragmentQueryResult = ApolloReactCommon.QueryResult<
+  HeroDetailsWithFragmentQuery,
+  HeroDetailsWithFragmentQueryVariables
+>;

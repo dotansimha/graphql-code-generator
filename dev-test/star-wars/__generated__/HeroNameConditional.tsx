@@ -12,14 +12,22 @@ export type HeroNameConditionalInclusionQueryVariables = {
   includeName: Types.Scalars['Boolean'];
 };
 
-export type HeroNameConditionalInclusionQuery = { __typename?: 'Query' } & { hero: Types.Maybe<({ __typename?: 'Human' } & Pick<Types.Human, 'name'>) | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'>)> };
+export type HeroNameConditionalInclusionQuery = { __typename?: 'Query' } & {
+  hero: Types.Maybe<
+    ({ __typename?: 'Human' } & Pick<Types.Human, 'name'>) | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'>)
+  >;
+};
 
 export type HeroNameConditionalExclusionQueryVariables = {
   episode?: Types.Maybe<Types.Episode>;
   skipName: Types.Scalars['Boolean'];
 };
 
-export type HeroNameConditionalExclusionQuery = { __typename?: 'Query' } & { hero: Types.Maybe<({ __typename?: 'Human' } & Pick<Types.Human, 'name'>) | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'>)> };
+export type HeroNameConditionalExclusionQuery = { __typename?: 'Query' } & {
+  hero: Types.Maybe<
+    ({ __typename?: 'Human' } & Pick<Types.Human, 'name'>) | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'>)
+  >;
+};
 
 export const HeroNameConditionalInclusionDocument = gql`
   query HeroNameConditionalInclusion($episode: Episode, $includeName: Boolean!) {
@@ -28,23 +36,49 @@ export const HeroNameConditionalInclusionDocument = gql`
     }
   }
 `;
-export type HeroNameConditionalInclusionComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<HeroNameConditionalInclusionQuery, HeroNameConditionalInclusionQueryVariables>, 'query'> &
+export type HeroNameConditionalInclusionComponentProps = Omit<
+  ApolloReactComponents.QueryComponentOptions<
+    HeroNameConditionalInclusionQuery,
+    HeroNameConditionalInclusionQueryVariables
+  >,
+  'query'
+> &
   ({ variables: HeroNameConditionalInclusionQueryVariables; skip?: boolean } | { skip: boolean });
 
 export const HeroNameConditionalInclusionComponent = (props: HeroNameConditionalInclusionComponentProps) => (
-  <ApolloReactComponents.Query<HeroNameConditionalInclusionQuery, HeroNameConditionalInclusionQueryVariables> query={HeroNameConditionalInclusionDocument} {...props} />
+  <ApolloReactComponents.Query<HeroNameConditionalInclusionQuery, HeroNameConditionalInclusionQueryVariables>
+    query={HeroNameConditionalInclusionDocument}
+    {...props}
+  />
 );
 
-export type HeroNameConditionalInclusionProps<TChildProps = {}> = ApolloReactHoc.DataProps<HeroNameConditionalInclusionQuery, HeroNameConditionalInclusionQueryVariables> & TChildProps;
+export type HeroNameConditionalInclusionProps<TChildProps = {}> = ApolloReactHoc.DataProps<
+  HeroNameConditionalInclusionQuery,
+  HeroNameConditionalInclusionQueryVariables
+> &
+  TChildProps;
 export function withHeroNameConditionalInclusion<TProps, TChildProps = {}>(
-  operationOptions?: ApolloReactHoc.OperationOption<TProps, HeroNameConditionalInclusionQuery, HeroNameConditionalInclusionQueryVariables, HeroNameConditionalInclusionProps<TChildProps>>
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    HeroNameConditionalInclusionQuery,
+    HeroNameConditionalInclusionQueryVariables,
+    HeroNameConditionalInclusionProps<TChildProps>
+  >
 ) {
-  return ApolloReactHoc.withQuery<TProps, HeroNameConditionalInclusionQuery, HeroNameConditionalInclusionQueryVariables, HeroNameConditionalInclusionProps<TChildProps>>(HeroNameConditionalInclusionDocument, {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    HeroNameConditionalInclusionQuery,
+    HeroNameConditionalInclusionQueryVariables,
+    HeroNameConditionalInclusionProps<TChildProps>
+  >(HeroNameConditionalInclusionDocument, {
     alias: 'heroNameConditionalInclusion',
     ...operationOptions,
   });
 }
-export type HeroNameConditionalInclusionQueryResult = ApolloReactCommon.QueryResult<HeroNameConditionalInclusionQuery, HeroNameConditionalInclusionQueryVariables>;
+export type HeroNameConditionalInclusionQueryResult = ApolloReactCommon.QueryResult<
+  HeroNameConditionalInclusionQuery,
+  HeroNameConditionalInclusionQueryVariables
+>;
 export const HeroNameConditionalExclusionDocument = gql`
   query HeroNameConditionalExclusion($episode: Episode, $skipName: Boolean!) {
     hero(episode: $episode) {
@@ -52,20 +86,46 @@ export const HeroNameConditionalExclusionDocument = gql`
     }
   }
 `;
-export type HeroNameConditionalExclusionComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<HeroNameConditionalExclusionQuery, HeroNameConditionalExclusionQueryVariables>, 'query'> &
+export type HeroNameConditionalExclusionComponentProps = Omit<
+  ApolloReactComponents.QueryComponentOptions<
+    HeroNameConditionalExclusionQuery,
+    HeroNameConditionalExclusionQueryVariables
+  >,
+  'query'
+> &
   ({ variables: HeroNameConditionalExclusionQueryVariables; skip?: boolean } | { skip: boolean });
 
 export const HeroNameConditionalExclusionComponent = (props: HeroNameConditionalExclusionComponentProps) => (
-  <ApolloReactComponents.Query<HeroNameConditionalExclusionQuery, HeroNameConditionalExclusionQueryVariables> query={HeroNameConditionalExclusionDocument} {...props} />
+  <ApolloReactComponents.Query<HeroNameConditionalExclusionQuery, HeroNameConditionalExclusionQueryVariables>
+    query={HeroNameConditionalExclusionDocument}
+    {...props}
+  />
 );
 
-export type HeroNameConditionalExclusionProps<TChildProps = {}> = ApolloReactHoc.DataProps<HeroNameConditionalExclusionQuery, HeroNameConditionalExclusionQueryVariables> & TChildProps;
+export type HeroNameConditionalExclusionProps<TChildProps = {}> = ApolloReactHoc.DataProps<
+  HeroNameConditionalExclusionQuery,
+  HeroNameConditionalExclusionQueryVariables
+> &
+  TChildProps;
 export function withHeroNameConditionalExclusion<TProps, TChildProps = {}>(
-  operationOptions?: ApolloReactHoc.OperationOption<TProps, HeroNameConditionalExclusionQuery, HeroNameConditionalExclusionQueryVariables, HeroNameConditionalExclusionProps<TChildProps>>
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    HeroNameConditionalExclusionQuery,
+    HeroNameConditionalExclusionQueryVariables,
+    HeroNameConditionalExclusionProps<TChildProps>
+  >
 ) {
-  return ApolloReactHoc.withQuery<TProps, HeroNameConditionalExclusionQuery, HeroNameConditionalExclusionQueryVariables, HeroNameConditionalExclusionProps<TChildProps>>(HeroNameConditionalExclusionDocument, {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    HeroNameConditionalExclusionQuery,
+    HeroNameConditionalExclusionQueryVariables,
+    HeroNameConditionalExclusionProps<TChildProps>
+  >(HeroNameConditionalExclusionDocument, {
     alias: 'heroNameConditionalExclusion',
     ...operationOptions,
   });
 }
-export type HeroNameConditionalExclusionQueryResult = ApolloReactCommon.QueryResult<HeroNameConditionalExclusionQuery, HeroNameConditionalExclusionQueryVariables>;
+export type HeroNameConditionalExclusionQueryResult = ApolloReactCommon.QueryResult<
+  HeroNameConditionalExclusionQuery,
+  HeroNameConditionalExclusionQueryVariables
+>;

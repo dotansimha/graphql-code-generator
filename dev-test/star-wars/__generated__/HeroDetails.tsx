@@ -11,7 +11,12 @@ export type HeroDetailsQueryVariables = {
   episode?: Types.Maybe<Types.Episode>;
 };
 
-export type HeroDetailsQuery = { __typename?: 'Query' } & { hero: Types.Maybe<({ __typename?: 'Human' } & Pick<Types.Human, 'height' | 'name'>) | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'primaryFunction' | 'name'>)> };
+export type HeroDetailsQuery = { __typename?: 'Query' } & {
+  hero: Types.Maybe<
+    | ({ __typename?: 'Human' } & Pick<Types.Human, 'height' | 'name'>)
+    | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'primaryFunction' | 'name'>)
+  >;
+};
 
 export const HeroDetailsDocument = gql`
   query HeroDetails($episode: Episode) {
@@ -26,15 +31,31 @@ export const HeroDetailsDocument = gql`
     }
   }
 `;
-export type HeroDetailsComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<HeroDetailsQuery, HeroDetailsQueryVariables>, 'query'>;
+export type HeroDetailsComponentProps = Omit<
+  ApolloReactComponents.QueryComponentOptions<HeroDetailsQuery, HeroDetailsQueryVariables>,
+  'query'
+>;
 
-export const HeroDetailsComponent = (props: HeroDetailsComponentProps) => <ApolloReactComponents.Query<HeroDetailsQuery, HeroDetailsQueryVariables> query={HeroDetailsDocument} {...props} />;
+export const HeroDetailsComponent = (props: HeroDetailsComponentProps) => (
+  <ApolloReactComponents.Query<HeroDetailsQuery, HeroDetailsQueryVariables> query={HeroDetailsDocument} {...props} />
+);
 
-export type HeroDetailsProps<TChildProps = {}> = ApolloReactHoc.DataProps<HeroDetailsQuery, HeroDetailsQueryVariables> & TChildProps;
-export function withHeroDetails<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<TProps, HeroDetailsQuery, HeroDetailsQueryVariables, HeroDetailsProps<TChildProps>>) {
-  return ApolloReactHoc.withQuery<TProps, HeroDetailsQuery, HeroDetailsQueryVariables, HeroDetailsProps<TChildProps>>(HeroDetailsDocument, {
-    alias: 'heroDetails',
-    ...operationOptions,
-  });
+export type HeroDetailsProps<TChildProps = {}> = ApolloReactHoc.DataProps<HeroDetailsQuery, HeroDetailsQueryVariables> &
+  TChildProps;
+export function withHeroDetails<TProps, TChildProps = {}>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    HeroDetailsQuery,
+    HeroDetailsQueryVariables,
+    HeroDetailsProps<TChildProps>
+  >
+) {
+  return ApolloReactHoc.withQuery<TProps, HeroDetailsQuery, HeroDetailsQueryVariables, HeroDetailsProps<TChildProps>>(
+    HeroDetailsDocument,
+    {
+      alias: 'heroDetails',
+      ...operationOptions,
+    }
+  );
 }
 export type HeroDetailsQueryResult = ApolloReactCommon.QueryResult<HeroDetailsQuery, HeroDetailsQueryVariables>;

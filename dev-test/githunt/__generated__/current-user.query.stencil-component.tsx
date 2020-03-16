@@ -5,7 +5,9 @@ import { Component, Prop, h } from '@stencil/core';
 declare global {
   export type CurrentUserForProfileQueryVariables = {};
 
-  export type CurrentUserForProfileQuery = { __typename?: 'Query' } & { currentUser: Types.Maybe<{ __typename?: 'User' } & Pick<Types.User, 'login' | 'avatar_url'>> };
+  export type CurrentUserForProfileQuery = { __typename?: 'Query' } & {
+    currentUser: Types.Maybe<{ __typename?: 'User' } & Pick<Types.User, 'login' | 'avatar_url'>>;
+  };
 }
 
 const CurrentUserForProfileDocument = gql`
@@ -21,7 +23,10 @@ const CurrentUserForProfileDocument = gql`
   tag: 'apollo-current-user-for-profile',
 })
 export class CurrentUserForProfileComponent {
-  @Prop() renderer: import('stencil-apollo').QueryRenderer<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables>;
+  @Prop() renderer: import('stencil-apollo').QueryRenderer<
+    CurrentUserForProfileQuery,
+    CurrentUserForProfileQueryVariables
+  >;
   @Prop() variables: CurrentUserForProfileQueryVariables;
   render() {
     return <apollo-query query={CurrentUserForProfileDocument} variables={this.variables} renderer={this.renderer} />;

@@ -8,7 +8,9 @@ declare global {
     commentContent: Types.Scalars['String'];
   };
 
-  export type SubmitCommentMutation = { __typename?: 'Mutation' } & { submitComment: Types.Maybe<{ __typename?: 'Comment' } & CommentsPageCommentFragment> };
+  export type SubmitCommentMutation = { __typename?: 'Mutation' } & {
+    submitComment: Types.Maybe<{ __typename?: 'Comment' } & CommentsPageCommentFragment>;
+  };
 }
 
 const SubmitCommentDocument = gql`

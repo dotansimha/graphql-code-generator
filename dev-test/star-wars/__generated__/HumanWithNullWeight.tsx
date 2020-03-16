@@ -10,7 +10,9 @@ export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
 export type HumanWithNullHeightQueryVariables = {};
 
-export type HumanWithNullHeightQuery = { __typename?: 'Query' } & { human: Types.Maybe<{ __typename?: 'Human' } & HumanFieldsFragment> };
+export type HumanWithNullHeightQuery = { __typename?: 'Query' } & {
+  human: Types.Maybe<{ __typename?: 'Human' } & HumanFieldsFragment>;
+};
 
 export const HumanWithNullHeightDocument = gql`
   query HumanWithNullHeight {
@@ -20,15 +22,42 @@ export const HumanWithNullHeightDocument = gql`
   }
   ${HumanFieldsFragmentDoc}
 `;
-export type HumanWithNullHeightComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables>, 'query'>;
+export type HumanWithNullHeightComponentProps = Omit<
+  ApolloReactComponents.QueryComponentOptions<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables>,
+  'query'
+>;
 
-export const HumanWithNullHeightComponent = (props: HumanWithNullHeightComponentProps) => <ApolloReactComponents.Query<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables> query={HumanWithNullHeightDocument} {...props} />;
+export const HumanWithNullHeightComponent = (props: HumanWithNullHeightComponentProps) => (
+  <ApolloReactComponents.Query<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables>
+    query={HumanWithNullHeightDocument}
+    {...props}
+  />
+);
 
-export type HumanWithNullHeightProps<TChildProps = {}> = ApolloReactHoc.DataProps<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables> & TChildProps;
-export function withHumanWithNullHeight<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<TProps, HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables, HumanWithNullHeightProps<TChildProps>>) {
-  return ApolloReactHoc.withQuery<TProps, HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables, HumanWithNullHeightProps<TChildProps>>(HumanWithNullHeightDocument, {
+export type HumanWithNullHeightProps<TChildProps = {}> = ApolloReactHoc.DataProps<
+  HumanWithNullHeightQuery,
+  HumanWithNullHeightQueryVariables
+> &
+  TChildProps;
+export function withHumanWithNullHeight<TProps, TChildProps = {}>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    HumanWithNullHeightQuery,
+    HumanWithNullHeightQueryVariables,
+    HumanWithNullHeightProps<TChildProps>
+  >
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    HumanWithNullHeightQuery,
+    HumanWithNullHeightQueryVariables,
+    HumanWithNullHeightProps<TChildProps>
+  >(HumanWithNullHeightDocument, {
     alias: 'humanWithNullHeight',
     ...operationOptions,
   });
 }
-export type HumanWithNullHeightQueryResult = ApolloReactCommon.QueryResult<HumanWithNullHeightQuery, HumanWithNullHeightQueryVariables>;
+export type HumanWithNullHeightQueryResult = ApolloReactCommon.QueryResult<
+  HumanWithNullHeightQuery,
+  HumanWithNullHeightQueryVariables
+>;

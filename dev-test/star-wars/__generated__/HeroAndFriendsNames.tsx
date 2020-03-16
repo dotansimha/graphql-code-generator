@@ -13,8 +13,26 @@ export type HeroAndFriendsNamesQueryVariables = {
 
 export type HeroAndFriendsNamesQuery = { __typename?: 'Query' } & {
   hero: Types.Maybe<
-    | ({ __typename?: 'Human' } & Pick<Types.Human, 'name'> & { friends: Types.Maybe<Array<Types.Maybe<({ __typename?: 'Human' } & Pick<Types.Human, 'name'>) | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'>)>>> })
-    | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'> & { friends: Types.Maybe<Array<Types.Maybe<({ __typename?: 'Human' } & Pick<Types.Human, 'name'>) | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'>)>>> })
+    | ({ __typename?: 'Human' } & Pick<Types.Human, 'name'> & {
+          friends: Types.Maybe<
+            Array<
+              Types.Maybe<
+                | ({ __typename?: 'Human' } & Pick<Types.Human, 'name'>)
+                | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'>)
+              >
+            >
+          >;
+        })
+    | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'> & {
+          friends: Types.Maybe<
+            Array<
+              Types.Maybe<
+                | ({ __typename?: 'Human' } & Pick<Types.Human, 'name'>)
+                | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'>)
+              >
+            >
+          >;
+        })
   >;
 };
 
@@ -28,15 +46,42 @@ export const HeroAndFriendsNamesDocument = gql`
     }
   }
 `;
-export type HeroAndFriendsNamesComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<HeroAndFriendsNamesQuery, HeroAndFriendsNamesQueryVariables>, 'query'>;
+export type HeroAndFriendsNamesComponentProps = Omit<
+  ApolloReactComponents.QueryComponentOptions<HeroAndFriendsNamesQuery, HeroAndFriendsNamesQueryVariables>,
+  'query'
+>;
 
-export const HeroAndFriendsNamesComponent = (props: HeroAndFriendsNamesComponentProps) => <ApolloReactComponents.Query<HeroAndFriendsNamesQuery, HeroAndFriendsNamesQueryVariables> query={HeroAndFriendsNamesDocument} {...props} />;
+export const HeroAndFriendsNamesComponent = (props: HeroAndFriendsNamesComponentProps) => (
+  <ApolloReactComponents.Query<HeroAndFriendsNamesQuery, HeroAndFriendsNamesQueryVariables>
+    query={HeroAndFriendsNamesDocument}
+    {...props}
+  />
+);
 
-export type HeroAndFriendsNamesProps<TChildProps = {}> = ApolloReactHoc.DataProps<HeroAndFriendsNamesQuery, HeroAndFriendsNamesQueryVariables> & TChildProps;
-export function withHeroAndFriendsNames<TProps, TChildProps = {}>(operationOptions?: ApolloReactHoc.OperationOption<TProps, HeroAndFriendsNamesQuery, HeroAndFriendsNamesQueryVariables, HeroAndFriendsNamesProps<TChildProps>>) {
-  return ApolloReactHoc.withQuery<TProps, HeroAndFriendsNamesQuery, HeroAndFriendsNamesQueryVariables, HeroAndFriendsNamesProps<TChildProps>>(HeroAndFriendsNamesDocument, {
+export type HeroAndFriendsNamesProps<TChildProps = {}> = ApolloReactHoc.DataProps<
+  HeroAndFriendsNamesQuery,
+  HeroAndFriendsNamesQueryVariables
+> &
+  TChildProps;
+export function withHeroAndFriendsNames<TProps, TChildProps = {}>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    HeroAndFriendsNamesQuery,
+    HeroAndFriendsNamesQueryVariables,
+    HeroAndFriendsNamesProps<TChildProps>
+  >
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    HeroAndFriendsNamesQuery,
+    HeroAndFriendsNamesQueryVariables,
+    HeroAndFriendsNamesProps<TChildProps>
+  >(HeroAndFriendsNamesDocument, {
     alias: 'heroAndFriendsNames',
     ...operationOptions,
   });
 }
-export type HeroAndFriendsNamesQueryResult = ApolloReactCommon.QueryResult<HeroAndFriendsNamesQuery, HeroAndFriendsNamesQueryVariables>;
+export type HeroAndFriendsNamesQueryResult = ApolloReactCommon.QueryResult<
+  HeroAndFriendsNamesQuery,
+  HeroAndFriendsNamesQueryVariables
+>;

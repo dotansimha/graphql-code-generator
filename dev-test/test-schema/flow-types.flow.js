@@ -1,7 +1,8 @@
 /* @flow */
 
 import { type GraphQLResolveInfo } from 'graphql';
-export type $RequireFields<Origin, Keys> = $Diff<Origin, Keys> & $ObjMapi<Keys, <Key>(k: Key) => $NonMaybeType<$ElementType<Origin, Key>>>;
+export type $RequireFields<Origin, Keys> = $Diff<Origin, Keys> &
+  $ObjMapi<Keys, <Key>(k: Key) => $NonMaybeType<$ElementType<Origin, Key>>>;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {|
   ID: string,
@@ -28,11 +29,26 @@ export type User = {|
   email: $ElementType<Scalars, 'String'>,
 |};
 
-export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (parent: Parent, args: Args, context: Context, info: GraphQLResolveInfo) => Promise<Result> | Result;
+export type Resolver<Result, Parent = {}, Context = {}, Args = {}> = (
+  parent: Parent,
+  args: Args,
+  context: Context,
+  info: GraphQLResolveInfo
+) => Promise<Result> | Result;
 
-export type SubscriptionSubscribeFn<Result, Parent, Context, Args> = (parent: Parent, args: Args, context: Context, info: GraphQLResolveInfo) => AsyncIterator<Result> | Promise<AsyncIterator<Result>>;
+export type SubscriptionSubscribeFn<Result, Parent, Context, Args> = (
+  parent: Parent,
+  args: Args,
+  context: Context,
+  info: GraphQLResolveInfo
+) => AsyncIterator<Result> | Promise<AsyncIterator<Result>>;
 
-export type SubscriptionResolveFn<Result, Parent, Context, Args> = (parent: Parent, args: Args, context: Context, info: GraphQLResolveInfo) => Result | Promise<Result>;
+export type SubscriptionResolveFn<Result, Parent, Context, Args> = (
+  parent: Parent,
+  args: Args,
+  context: Context,
+  info: GraphQLResolveInfo
+) => Result | Promise<Result>;
 
 export interface SubscriptionSubscriberObject<Result, Key: string, Parent, Context, Args> {
   subscribe: SubscriptionSubscribeFn<{ [key: Key]: Result }, Parent, Context, Args>;
@@ -44,17 +60,31 @@ export interface SubscriptionResolverObject<Result, Parent, Context, Args> {
   resolve: SubscriptionResolveFn<Result, mixed, Context, Args>;
 }
 
-export type SubscriptionObject<Result, Key: string, Parent, Context, Args> = SubscriptionSubscriberObject<Result, Key, Parent, Context, Args> | SubscriptionResolverObject<Result, Parent, Context, Args>;
+export type SubscriptionObject<Result, Key: string, Parent, Context, Args> =
+  | SubscriptionSubscriberObject<Result, Key, Parent, Context, Args>
+  | SubscriptionResolverObject<Result, Parent, Context, Args>;
 
-export type SubscriptionResolver<Result, Key: string, Parent = {}, Context = {}, Args = {}> = ((...args: Array<any>) => SubscriptionObject<Result, Key, Parent, Context, Args>) | SubscriptionObject<Result, Key, Parent, Context, Args>;
+export type SubscriptionResolver<Result, Key: string, Parent = {}, Context = {}, Args = {}> =
+  | ((...args: Array<any>) => SubscriptionObject<Result, Key, Parent, Context, Args>)
+  | SubscriptionObject<Result, Key, Parent, Context, Args>;
 
-export type TypeResolveFn<Types, Parent = {}, Context = {}> = (parent: Parent, context: Context, info: GraphQLResolveInfo) => ?Types | Promise<?Types>;
+export type TypeResolveFn<Types, Parent = {}, Context = {}> = (
+  parent: Parent,
+  context: Context,
+  info: GraphQLResolveInfo
+) => ?Types | Promise<?Types>;
 
 export type isTypeOfResolverFn<T = {}> = (obj: T, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
 
 export type NextResolverFn<T> = () => Promise<T>;
 
-export type DirectiveResolverFn<Result = {}, Parent = {}, Args = {}, Context = {}> = (next: NextResolverFn<Result>, parent: Parent, args: Args, context: Context, info: GraphQLResolveInfo) => Result | Promise<Result>;
+export type DirectiveResolverFn<Result = {}, Parent = {}, Args = {}, Context = {}> = (
+  next: NextResolverFn<Result>,
+  parent: Parent,
+  args: Args,
+  context: Context,
+  info: GraphQLResolveInfo
+) => Result | Promise<Result>;
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
 
@@ -78,7 +108,12 @@ export type ResolversParentTypes = {
 
 export type QueryResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'Query'>> = {
   allUsers?: Resolver<Array<?$ElementType<ResolversTypes, 'User'>>, ParentType, ContextType>,
-  userById?: Resolver<?$ElementType<ResolversTypes, 'User'>, ParentType, ContextType, $RequireFields<QueryUserByIdArgs, { id: * }>>,
+  userById?: Resolver<
+    ?$ElementType<ResolversTypes, 'User'>,
+    ParentType,
+    ContextType,
+    $RequireFields<QueryUserByIdArgs, { id: * }>
+  >,
 };
 
 export type UserResolvers<ContextType = any, ParentType = $ElementType<ResolversParentTypes, 'User'>> = {

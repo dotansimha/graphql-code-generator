@@ -216,7 +216,10 @@ export type CommentQuery = {
         }>,
         repository: {
           ...{ __typename?: 'Repository' },
-          ...$Pick<Repository, {| description: *, open_issues_count: *, stargazers_count: *, full_name: *, html_url: * |}>,
+          ...$Pick<
+            Repository,
+            {| description: *, open_issues_count: *, stargazers_count: *, full_name: *, html_url: * |}
+          >,
         },
       |},
     },

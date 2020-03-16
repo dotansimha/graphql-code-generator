@@ -11,7 +11,12 @@ export type HeroTypeDependentAliasedFieldQueryVariables = {
   episode?: Types.Maybe<Types.Episode>;
 };
 
-export type HeroTypeDependentAliasedFieldQuery = { __typename?: 'Query' } & { hero: Types.Maybe<({ __typename?: 'Human' } & { property: Types.Human['homePlanet'] }) | ({ __typename?: 'Droid' } & { property: Types.Droid['primaryFunction'] })> };
+export type HeroTypeDependentAliasedFieldQuery = { __typename?: 'Query' } & {
+  hero: Types.Maybe<
+    | ({ __typename?: 'Human' } & { property: Types.Human['homePlanet'] })
+    | ({ __typename?: 'Droid' } & { property: Types.Droid['primaryFunction'] })
+  >;
+};
 
 export const HeroTypeDependentAliasedFieldDocument = gql`
   query HeroTypeDependentAliasedField($episode: Episode) {
@@ -25,19 +30,45 @@ export const HeroTypeDependentAliasedFieldDocument = gql`
     }
   }
 `;
-export type HeroTypeDependentAliasedFieldComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<HeroTypeDependentAliasedFieldQuery, HeroTypeDependentAliasedFieldQueryVariables>, 'query'>;
+export type HeroTypeDependentAliasedFieldComponentProps = Omit<
+  ApolloReactComponents.QueryComponentOptions<
+    HeroTypeDependentAliasedFieldQuery,
+    HeroTypeDependentAliasedFieldQueryVariables
+  >,
+  'query'
+>;
 
 export const HeroTypeDependentAliasedFieldComponent = (props: HeroTypeDependentAliasedFieldComponentProps) => (
-  <ApolloReactComponents.Query<HeroTypeDependentAliasedFieldQuery, HeroTypeDependentAliasedFieldQueryVariables> query={HeroTypeDependentAliasedFieldDocument} {...props} />
+  <ApolloReactComponents.Query<HeroTypeDependentAliasedFieldQuery, HeroTypeDependentAliasedFieldQueryVariables>
+    query={HeroTypeDependentAliasedFieldDocument}
+    {...props}
+  />
 );
 
-export type HeroTypeDependentAliasedFieldProps<TChildProps = {}> = ApolloReactHoc.DataProps<HeroTypeDependentAliasedFieldQuery, HeroTypeDependentAliasedFieldQueryVariables> & TChildProps;
+export type HeroTypeDependentAliasedFieldProps<TChildProps = {}> = ApolloReactHoc.DataProps<
+  HeroTypeDependentAliasedFieldQuery,
+  HeroTypeDependentAliasedFieldQueryVariables
+> &
+  TChildProps;
 export function withHeroTypeDependentAliasedField<TProps, TChildProps = {}>(
-  operationOptions?: ApolloReactHoc.OperationOption<TProps, HeroTypeDependentAliasedFieldQuery, HeroTypeDependentAliasedFieldQueryVariables, HeroTypeDependentAliasedFieldProps<TChildProps>>
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    HeroTypeDependentAliasedFieldQuery,
+    HeroTypeDependentAliasedFieldQueryVariables,
+    HeroTypeDependentAliasedFieldProps<TChildProps>
+  >
 ) {
-  return ApolloReactHoc.withQuery<TProps, HeroTypeDependentAliasedFieldQuery, HeroTypeDependentAliasedFieldQueryVariables, HeroTypeDependentAliasedFieldProps<TChildProps>>(HeroTypeDependentAliasedFieldDocument, {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    HeroTypeDependentAliasedFieldQuery,
+    HeroTypeDependentAliasedFieldQueryVariables,
+    HeroTypeDependentAliasedFieldProps<TChildProps>
+  >(HeroTypeDependentAliasedFieldDocument, {
     alias: 'heroTypeDependentAliasedField',
     ...operationOptions,
   });
 }
-export type HeroTypeDependentAliasedFieldQueryResult = ApolloReactCommon.QueryResult<HeroTypeDependentAliasedFieldQuery, HeroTypeDependentAliasedFieldQueryVariables>;
+export type HeroTypeDependentAliasedFieldQueryResult = ApolloReactCommon.QueryResult<
+  HeroTypeDependentAliasedFieldQuery,
+  HeroTypeDependentAliasedFieldQueryVariables
+>;

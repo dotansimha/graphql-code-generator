@@ -13,8 +13,26 @@ export type HeroParentTypeDependentFieldQueryVariables = {
 
 export type HeroParentTypeDependentFieldQuery = { __typename?: 'Query' } & {
   hero: Types.Maybe<
-    | ({ __typename?: 'Human' } & Pick<Types.Human, 'name'> & { friends: Types.Maybe<Array<Types.Maybe<({ __typename?: 'Human' } & Pick<Types.Human, 'height' | 'name'>) | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'>)>>> })
-    | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'> & { friends: Types.Maybe<Array<Types.Maybe<({ __typename?: 'Human' } & Pick<Types.Human, 'height' | 'name'>) | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'>)>>> })
+    | ({ __typename?: 'Human' } & Pick<Types.Human, 'name'> & {
+          friends: Types.Maybe<
+            Array<
+              Types.Maybe<
+                | ({ __typename?: 'Human' } & Pick<Types.Human, 'height' | 'name'>)
+                | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'>)
+              >
+            >
+          >;
+        })
+    | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'> & {
+          friends: Types.Maybe<
+            Array<
+              Types.Maybe<
+                | ({ __typename?: 'Human' } & Pick<Types.Human, 'height' | 'name'>)
+                | ({ __typename?: 'Droid' } & Pick<Types.Droid, 'name'>)
+              >
+            >
+          >;
+        })
   >;
 };
 
@@ -41,19 +59,45 @@ export const HeroParentTypeDependentFieldDocument = gql`
     }
   }
 `;
-export type HeroParentTypeDependentFieldComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<HeroParentTypeDependentFieldQuery, HeroParentTypeDependentFieldQueryVariables>, 'query'>;
+export type HeroParentTypeDependentFieldComponentProps = Omit<
+  ApolloReactComponents.QueryComponentOptions<
+    HeroParentTypeDependentFieldQuery,
+    HeroParentTypeDependentFieldQueryVariables
+  >,
+  'query'
+>;
 
 export const HeroParentTypeDependentFieldComponent = (props: HeroParentTypeDependentFieldComponentProps) => (
-  <ApolloReactComponents.Query<HeroParentTypeDependentFieldQuery, HeroParentTypeDependentFieldQueryVariables> query={HeroParentTypeDependentFieldDocument} {...props} />
+  <ApolloReactComponents.Query<HeroParentTypeDependentFieldQuery, HeroParentTypeDependentFieldQueryVariables>
+    query={HeroParentTypeDependentFieldDocument}
+    {...props}
+  />
 );
 
-export type HeroParentTypeDependentFieldProps<TChildProps = {}> = ApolloReactHoc.DataProps<HeroParentTypeDependentFieldQuery, HeroParentTypeDependentFieldQueryVariables> & TChildProps;
+export type HeroParentTypeDependentFieldProps<TChildProps = {}> = ApolloReactHoc.DataProps<
+  HeroParentTypeDependentFieldQuery,
+  HeroParentTypeDependentFieldQueryVariables
+> &
+  TChildProps;
 export function withHeroParentTypeDependentField<TProps, TChildProps = {}>(
-  operationOptions?: ApolloReactHoc.OperationOption<TProps, HeroParentTypeDependentFieldQuery, HeroParentTypeDependentFieldQueryVariables, HeroParentTypeDependentFieldProps<TChildProps>>
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    HeroParentTypeDependentFieldQuery,
+    HeroParentTypeDependentFieldQueryVariables,
+    HeroParentTypeDependentFieldProps<TChildProps>
+  >
 ) {
-  return ApolloReactHoc.withQuery<TProps, HeroParentTypeDependentFieldQuery, HeroParentTypeDependentFieldQueryVariables, HeroParentTypeDependentFieldProps<TChildProps>>(HeroParentTypeDependentFieldDocument, {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    HeroParentTypeDependentFieldQuery,
+    HeroParentTypeDependentFieldQueryVariables,
+    HeroParentTypeDependentFieldProps<TChildProps>
+  >(HeroParentTypeDependentFieldDocument, {
     alias: 'heroParentTypeDependentField',
     ...operationOptions,
   });
 }
-export type HeroParentTypeDependentFieldQueryResult = ApolloReactCommon.QueryResult<HeroParentTypeDependentFieldQuery, HeroParentTypeDependentFieldQueryVariables>;
+export type HeroParentTypeDependentFieldQueryResult = ApolloReactCommon.QueryResult<
+  HeroParentTypeDependentFieldQuery,
+  HeroParentTypeDependentFieldQueryVariables
+>;
