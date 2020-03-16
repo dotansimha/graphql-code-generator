@@ -5,7 +5,12 @@ import { buildPackageNameFromPath } from '@graphql-codegen/java-common';
 import { dirname, normalize } from 'path';
 import { JavaResolversPluginRawConfig } from './config';
 
-export const plugin: PluginFunction<JavaResolversPluginRawConfig> = async (schema: GraphQLSchema, documents: Types.DocumentFile[], config: JavaResolversPluginRawConfig, { outputFile }): Promise<string> => {
+export const plugin: PluginFunction<JavaResolversPluginRawConfig> = async (
+  schema: GraphQLSchema,
+  documents: Types.DocumentFile[],
+  config: JavaResolversPluginRawConfig,
+  { outputFile }
+): Promise<string> => {
   const relevantPath = dirname(normalize(outputFile));
   const defaultPackageName = buildPackageNameFromPath(relevantPath);
   const visitor = new JavaResolversVisitor(config, schema, defaultPackageName);

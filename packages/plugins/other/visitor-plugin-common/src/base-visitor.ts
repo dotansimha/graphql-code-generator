@@ -1,4 +1,13 @@
-import { ScalarsMap, ParsedScalarsMap, NamingConvention, ConvertFn, ConvertOptions, LoadedFragment, NormalizedScalarsMap, DeclarationKind } from './types';
+import {
+  ScalarsMap,
+  ParsedScalarsMap,
+  NamingConvention,
+  ConvertFn,
+  ConvertOptions,
+  LoadedFragment,
+  NormalizedScalarsMap,
+  DeclarationKind,
+} from './types';
 import { DeclarationBlockConfig } from './utils';
 import autoBind from 'auto-bind';
 import { convertFactory } from './naming';
@@ -150,10 +159,17 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
     return (useTypesPrefix ? this.config.typesPrefix : '') + this.config.convert(node, options);
   }
 
-  public getOperationSuffix(node: FragmentDefinitionNode | OperationDefinitionNode | string, operationType: string): string {
+  public getOperationSuffix(
+    node: FragmentDefinitionNode | OperationDefinitionNode | string,
+    operationType: string
+  ): string {
     const { omitOperationSuffix = false, dedupeOperationSuffix = false } = this.config as { [key: string]: any };
     const operationName = typeof node === 'string' ? node : node.name.value;
-    return omitOperationSuffix ? '' : dedupeOperationSuffix && operationName.toLowerCase().endsWith(operationType.toLowerCase()) ? '' : operationType;
+    return omitOperationSuffix
+      ? ''
+      : dedupeOperationSuffix && operationName.toLowerCase().endsWith(operationType.toLowerCase())
+      ? ''
+      : operationType;
   }
 
   public getFragmentSuffix(node: FragmentDefinitionNode | string): string {
@@ -168,12 +184,19 @@ export class BaseVisitor<TRawConfig extends RawConfig = RawConfig, TPluginConfig
   }
 
   public getFragmentVariableName(node: FragmentDefinitionNode | string): string {
-    const { omitOperationSuffix = false, dedupeOperationSuffix = false, fragmentVariableSuffix = 'FragmentDoc', fragmentVariablePrefix = '' } = this.config as { [key: string]: any };
+    const {
+      omitOperationSuffix = false,
+      dedupeOperationSuffix = false,
+      fragmentVariableSuffix = 'FragmentDoc',
+      fragmentVariablePrefix = '',
+    } = this.config as { [key: string]: any };
 
     const fragmentName = typeof node === 'string' ? node : node.name.value;
     const suffix = omitOperationSuffix
       ? ''
-      : dedupeOperationSuffix && fragmentName.toLowerCase().endsWith('fragment') && fragmentVariableSuffix.toLowerCase().startsWith('fragment')
+      : dedupeOperationSuffix &&
+        fragmentName.toLowerCase().endsWith('fragment') &&
+        fragmentVariableSuffix.toLowerCase().startsWith('fragment')
       ? fragmentVariableSuffix.substring('fragment'.length)
       : fragmentVariableSuffix;
 

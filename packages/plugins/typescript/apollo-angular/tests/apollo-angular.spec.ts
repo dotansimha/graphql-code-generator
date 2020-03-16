@@ -25,7 +25,12 @@ describe('Apollo Angular', () => {
     }
   `);
 
-  const validateTypeScript = async (output: Types.PluginOutput, testSchema: GraphQLSchema, documents: Types.DocumentFile[], config: any) => {
+  const validateTypeScript = async (
+    output: Types.PluginOutput,
+    testSchema: GraphQLSchema,
+    documents: Types.DocumentFile[],
+    config: any
+  ) => {
     const tsOutput = await tsPlugin(testSchema, documents, config, { outputFile: '' });
     const tsDocumentsOutput = await tsDocumentsPlugin(testSchema, documents, config, { outputFile: '' });
     const merged = mergeOutputs([tsOutput, tsDocumentsOutput, output]);

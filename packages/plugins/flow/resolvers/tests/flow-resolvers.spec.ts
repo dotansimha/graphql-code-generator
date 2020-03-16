@@ -21,8 +21,12 @@ describe('Flow Resolvers Plugin', () => {
     const config: any = { noSchemaStitching: true };
     const result = (await plugin(testSchema, [], config, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-    expect(result.prepend).toContain(`export type $RequireFields<Origin, Keys> = $Diff<Origin, Keys> & $ObjMapi<Keys, <Key>(k: Key) => $NonMaybeType<$ElementType<Origin, Key>>>;`);
-    expect(result.content).toContain(`something?: Resolver<?$ElementType<ResolversTypes, 'String'>, ParentType, ContextType, $RequireFields<QuerySomethingArgs, { arg: * }>>,`);
+    expect(result.prepend).toContain(
+      `export type $RequireFields<Origin, Keys> = $Diff<Origin, Keys> & $ObjMapi<Keys, <Key>(k: Key) => $NonMaybeType<$ElementType<Origin, Key>>>;`
+    );
+    expect(result.content).toContain(
+      `something?: Resolver<?$ElementType<ResolversTypes, 'String'>, ParentType, ContextType, $RequireFields<QuerySomethingArgs, { arg: * }>>,`
+    );
   });
 
   it('Should generate ResolversParentTypes', () => {
@@ -54,9 +58,16 @@ describe('Flow Resolvers Plugin', () => {
   });
 
   it('Should generate the correct imports when schema has no scalars', () => {
-    const result = plugin(buildSchema(`type MyType { f: String }`), [], {}, { outputFile: '' }) as Types.ComplexPluginOutput;
+    const result = plugin(
+      buildSchema(`type MyType { f: String }`),
+      [],
+      {},
+      { outputFile: '' }
+    ) as Types.ComplexPluginOutput;
 
-    expect(result.prepend).not.toContain(`import { type GraphQLResolveInfo, type GraphQLScalarTypeConfig } from 'graphql';`);
+    expect(result.prepend).not.toContain(
+      `import { type GraphQLResolveInfo, type GraphQLScalarTypeConfig } from 'graphql';`
+    );
   });
 
   it('Should generate valid output with args', async () => {
@@ -80,13 +91,22 @@ describe('Flow Resolvers Plugin', () => {
     const result = (await plugin(testSchema, [], config, { outputFile: '' })) as Types.ComplexPluginOutput;
     const o = mergeOutputs([result]);
     expect(o).toContain(`$RequireFields<Mutation_RandomArgs, { byteLength: * }>>,`);
-    expect(o).toContain(`export type $RequireFields<Origin, Keys> = $Diff<Origin, Keys> & $ObjMapi<Keys, <Key>(k: Key) => $NonMaybeType<$ElementType<Origin, Key>>>;`);
+    expect(o).toContain(
+      `export type $RequireFields<Origin, Keys> = $Diff<Origin, Keys> & $ObjMapi<Keys, <Key>(k: Key) => $NonMaybeType<$ElementType<Origin, Key>>>;`
+    );
   });
 
   it('Should generate the correct resolver args type names when typesPrefix is specified', () => {
-    const result = plugin(buildSchema(`type MyType { f(a: String): String }`), [], { typesPrefix: 'T' }, { outputFile: '' }) as Types.ComplexPluginOutput;
+    const result = plugin(
+      buildSchema(`type MyType { f(a: String): String }`),
+      [],
+      { typesPrefix: 'T' },
+      { outputFile: '' }
+    ) as Types.ComplexPluginOutput;
 
-    expect(result.content).toBeSimilarStringTo(`f?: Resolver<?$ElementType<TResolversTypes, 'String'>, ParentType, ContextType, TMyTypeFArgs>,`);
+    expect(result.content).toBeSimilarStringTo(
+      `f?: Resolver<?$ElementType<TResolversTypes, 'String'>, ParentType, ContextType, TMyTypeFArgs>,`
+    );
   });
 
   it('should use MaybePromise in ResolverTypeWrapper', async () => {

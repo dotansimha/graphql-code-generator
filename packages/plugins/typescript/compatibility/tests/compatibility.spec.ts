@@ -8,7 +8,14 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 import { Types, mergeOutputs } from '@graphql-codegen/plugin-helpers';
 
-const validate = async (content: Types.PluginOutput, schema: GraphQLSchema, operations, config = {}, tsx = false, strict = false) => {
+const validate = async (
+  content: Types.PluginOutput,
+  schema: GraphQLSchema,
+  operations,
+  config = {},
+  tsx = false,
+  strict = false
+) => {
   const tsPluginResult = await tsPlugin(schema, operations, config, { outputFile: '' });
   const tsOperationPluginResult = await tsOperationPlugin(schema, operations, config, { outputFile: '' });
   const mergedOutput = mergeOutputs([tsPluginResult, tsOperationPluginResult, content]);
@@ -16,7 +23,14 @@ const validate = async (content: Types.PluginOutput, schema: GraphQLSchema, oper
   validateTs(mergedOutput, undefined, tsx, strict);
 };
 
-const validateAndCompile = async (content: Types.PluginOutput, schema: GraphQLSchema, operations, config = {}, tsx = false, options = undefined) => {
+const validateAndCompile = async (
+  content: Types.PluginOutput,
+  schema: GraphQLSchema,
+  operations,
+  config = {},
+  tsx = false,
+  options = undefined
+) => {
   const tsPluginResult = await tsPlugin(schema, operations, config, { outputFile: '' });
   const tsOperationPluginResult = await tsOperationPlugin(schema, operations, config, { outputFile: '' });
   const mergedOutput = mergeOutputs([tsPluginResult, tsOperationPluginResult, content]);
@@ -228,7 +242,13 @@ describe('Compatibility Plugin', () => {
           details: UnitEventDetails
         }
 
-        union UnitEventDetails = DamageReportEvent | CanErrorEvent | PrecheckEvent | ServiceCalendarEvent | ServiceHourEvent | ServiceKmEvent
+        union UnitEventDetails =
+            DamageReportEvent
+          | CanErrorEvent
+          | PrecheckEvent
+          | ServiceCalendarEvent
+          | ServiceHourEvent
+          | ServiceKmEvent
 
         type DamageReportEvent {
           state: Int
@@ -391,7 +411,13 @@ describe('Compatibility Plugin', () => {
           details: UnitEventDetails
         }
 
-        union UnitEventDetails = DamageReportEvent | CanErrorEvent | PrecheckEvent | ServiceCalendarEvent | ServiceHourEvent | ServiceKmEvent
+        union UnitEventDetails =
+            DamageReportEvent
+          | CanErrorEvent
+          | PrecheckEvent
+          | ServiceCalendarEvent
+          | ServiceHourEvent
+          | ServiceKmEvent
 
         type DamageReportEvent {
           state: Int
@@ -616,8 +642,12 @@ describe('Compatibility Plugin', () => {
     const result = await plugin(schema, ast, {});
 
     expect(result).toContain('export type Query = Me3Query;');
-    expect(result).toContain(`export type UserInlineFragment = ({ __typename: 'User' } & Pick<Me3Query['me'], 'id' | 'name' | 'friends'>);`);
-    expect(result).toContain(`export type Friends = ({ __typename: 'User' } & Pick<Me3Query['me'], 'id' | 'name' | 'friends'>)['friends'][0];`);
+    expect(result).toContain(
+      `export type UserInlineFragment = ({ __typename: 'User' } & Pick<Me3Query['me'], 'id' | 'name' | 'friends'>);`
+    );
+    expect(result).toContain(
+      `export type Friends = ({ __typename: 'User' } & Pick<Me3Query['me'], 'id' | 'name' | 'friends'>)['friends'][0];`
+    );
     await validate(result, schema, ast, {});
   });
 
@@ -626,9 +656,15 @@ describe('Compatibility Plugin', () => {
     const result = await plugin(schema, ast, {});
 
     expect(result).toContain('export type Query = Me3Query;');
-    expect(result).toContain(`export type UserInlineFragment = ({ __typename: 'User' } & Pick<Me3Query['me'], 'id' | 'name' | 'friends'>);`);
-    expect(result).toContain(`export type Friends = ({ __typename: 'User' } & Pick<Me3Query['me'], 'id' | 'name' | 'friends'>)['friends'][0];`);
-    expect(result).toContain(`export type _UserInlineFragment = ({ __typename: 'User' } & Pick<({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][0], 'id' | 'name'>);`);
+    expect(result).toContain(
+      `export type UserInlineFragment = ({ __typename: 'User' } & Pick<Me3Query['me'], 'id' | 'name' | 'friends'>);`
+    );
+    expect(result).toContain(
+      `export type Friends = ({ __typename: 'User' } & Pick<Me3Query['me'], 'id' | 'name' | 'friends'>)['friends'][0];`
+    );
+    expect(result).toContain(
+      `export type _UserInlineFragment = ({ __typename: 'User' } & Pick<({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][0], 'id' | 'name'>);`
+    );
     await validate(result, schema, ast, {});
   });
 
@@ -680,9 +716,15 @@ describe('Compatibility Plugin', () => {
 
       expect(result).toContain(`export type Me4Variables = Me4QueryVariables;`);
       expect(result).toContain(`export type Me4Me = Me4Query['me'];`);
-      expect(result).toContain(`export type Me4UserInlineFragment = ({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>);`);
-      expect(result).toContain(`export type Me4Friends = ({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][0];`);
-      expect(result).toContain(`export type Me4_UserInlineFragment = ({ __typename: 'User' } & Pick<({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][0], 'id' | 'name'>);`);
+      expect(result).toContain(
+        `export type Me4UserInlineFragment = ({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>);`
+      );
+      expect(result).toContain(
+        `export type Me4Friends = ({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][0];`
+      );
+      expect(result).toContain(
+        `export type Me4_UserInlineFragment = ({ __typename: 'User' } & Pick<({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][0], 'id' | 'name'>);`
+      );
 
       await validate(result, schema, ast, config);
     });
@@ -755,9 +797,15 @@ describe('Compatibility Plugin', () => {
 
       expect(result).toContain(`export type Me4Variables = Me4QueryVariables;`);
       expect(result).toContain(`export type Me4Me = Me4Query['me'];`);
-      expect(result).toContain(`export type Me4UserInlineFragment = ({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>);`);
-      expect(result).toContain(`export type Me4Friends = ({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][0];`);
-      expect(result).toContain(`export type Me4_UserInlineFragment = ({ __typename: 'User' } & Pick<({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][0], 'id' | 'name'>);`);
+      expect(result).toContain(
+        `export type Me4UserInlineFragment = ({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>);`
+      );
+      expect(result).toContain(
+        `export type Me4Friends = ({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][0];`
+      );
+      expect(result).toContain(
+        `export type Me4_UserInlineFragment = ({ __typename: 'User' } & Pick<({ __typename: 'User' } & Pick<Me4Query['me'], 'name' | 'friends'>)['friends'][0], 'id' | 'name'>);`
+      );
       expect(result).toContain(`export const Me4HOC = withMe4;`);
       expect(result).toContain(`export const useMe4 = useMe4Query;`);
 

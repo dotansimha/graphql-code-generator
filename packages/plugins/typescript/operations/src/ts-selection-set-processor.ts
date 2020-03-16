@@ -1,8 +1,18 @@
-import { BaseSelectionSetProcessor, ProcessResult, LinkField, PrimitiveAliasedFields, PrimitiveField, SelectionSetProcessorConfig } from '@graphql-codegen/visitor-plugin-common';
+import {
+  BaseSelectionSetProcessor,
+  ProcessResult,
+  LinkField,
+  PrimitiveAliasedFields,
+  PrimitiveField,
+  SelectionSetProcessorConfig,
+} from '@graphql-codegen/visitor-plugin-common';
 import { GraphQLObjectType, GraphQLInterfaceType } from 'graphql';
 
 export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<SelectionSetProcessorConfig> {
-  transformPrimitiveFields(schemaType: GraphQLObjectType | GraphQLInterfaceType, fields: PrimitiveField[]): ProcessResult {
+  transformPrimitiveFields(
+    schemaType: GraphQLObjectType | GraphQLInterfaceType,
+    fields: PrimitiveField[]
+  ): ProcessResult {
     if (fields.length === 0) {
       return [];
     }
@@ -20,7 +30,10 @@ export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<S
     return [`{ ${name}: ${type} }`];
   }
 
-  transformAliasesPrimitiveFields(schemaType: GraphQLObjectType | GraphQLInterfaceType, fields: PrimitiveAliasedFields[]): ProcessResult {
+  transformAliasesPrimitiveFields(
+    schemaType: GraphQLObjectType | GraphQLInterfaceType,
+    fields: PrimitiveAliasedFields[]
+  ): ProcessResult {
     if (fields.length === 0) {
       return [];
     }
@@ -34,7 +47,10 @@ export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<S
     return [
       `{ ${fields
         .map(aliasedField => {
-          const value = aliasedField.fieldName === '__typename' ? `'${schemaType.name}'` : `${parentName}['${aliasedField.fieldName}']`;
+          const value =
+            aliasedField.fieldName === '__typename'
+              ? `'${schemaType.name}'`
+              : `${parentName}['${aliasedField.fieldName}']`;
 
           return `${this.config.formatNamedField(aliasedField.alias)}: ${value}`;
         })
@@ -47,6 +63,10 @@ export class TypeScriptSelectionSetProcessor extends BaseSelectionSetProcessor<S
       return [];
     }
 
-    return [`{ ${fields.map(field => `${this.config.formatNamedField(field.alias || field.name)}: ${field.selectionSet}`).join(', ')} }`];
+    return [
+      `{ ${fields
+        .map(field => `${this.config.formatNamedField(field.alias || field.name)}: ${field.selectionSet}`)
+        .join(', ')} }`,
+    ];
   }
 }

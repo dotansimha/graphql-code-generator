@@ -30,7 +30,7 @@ describe('cliError', () => {
 
   it('should handle an object', () => {
     const obj = {
-      foo: 1
+      foo: 1,
     };
 
     cliError(obj);

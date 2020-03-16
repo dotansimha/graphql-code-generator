@@ -21,7 +21,10 @@ function emitWatching() {
   log(`${logSymbols.info} Watching for changes...`);
 }
 
-export const createWatcher = (initalContext: CodegenContext, onNext: (result: Types.FileOutput[]) => Promise<Types.FileOutput[]>) => {
+export const createWatcher = (
+  initalContext: CodegenContext,
+  onNext: (result: Types.FileOutput[]) => Promise<Types.FileOutput[]>
+) => {
   debugLog(`[Watcher] Starting watcher...`);
   let config: Types.Config = initalContext.getConfig();
   const files: string[] = [initalContext.filepath].filter(a => a);

@@ -20,8 +20,22 @@ import {
 import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor';
 import { DEFAULT_SCALARS } from './scalars';
 import { normalizeDeclarationKind } from './declaration-kinds';
-import { EnumValuesMap, NormalizedScalarsMap, DeclarationKindConfig, DeclarationKind, ParsedEnumValuesMap } from './types';
-import { transformComment, buildScalars, DeclarationBlock, DeclarationBlockConfig, indent, wrapWithSingleQuotes, getConfigValue } from './utils';
+import {
+  EnumValuesMap,
+  NormalizedScalarsMap,
+  DeclarationKindConfig,
+  DeclarationKind,
+  ParsedEnumValuesMap,
+} from './types';
+import {
+  transformComment,
+  buildScalars,
+  DeclarationBlock,
+  DeclarationBlockConfig,
+  indent,
+  wrapWithSingleQuotes,
+  getConfigValue,
+} from './utils';
 import { OperationVariablesToObject } from './variables-to-object';
 import { parseEnumValues } from './enum-values';
 
@@ -110,10 +124,18 @@ export interface RawTypesConfig extends RawConfig {
   enumPrefix?: boolean;
 }
 
-export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig, TPluginConfig extends ParsedTypesConfig = ParsedTypesConfig> extends BaseVisitor<TRawConfig, TPluginConfig> {
+export class BaseTypesVisitor<
+  TRawConfig extends RawTypesConfig = RawTypesConfig,
+  TPluginConfig extends ParsedTypesConfig = ParsedTypesConfig
+> extends BaseVisitor<TRawConfig, TPluginConfig> {
   protected _argumentsTransformer: OperationVariablesToObject;
 
-  constructor(protected _schema: GraphQLSchema, rawConfig: TRawConfig, additionalConfig: TPluginConfig, defaultScalars: NormalizedScalarsMap = DEFAULT_SCALARS) {
+  constructor(
+    protected _schema: GraphQLSchema,
+    rawConfig: TRawConfig,
+    additionalConfig: TPluginConfig,
+    defaultScalars: NormalizedScalarsMap = DEFAULT_SCALARS
+  ) {
     super(rawConfig, {
       enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
       addUnderscoreToArgsType: getConfigValue(rawConfig.addUnderscoreToArgsType, false),
@@ -144,7 +166,8 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
     const allScalars = Object.keys(this.config.scalars).map(scalarName => {
       const scalarValue = this.config.scalars[scalarName].type;
       const scalarType = this._schema.getType(scalarName);
-      const comment = scalarType && scalarType.astNode && scalarType.description ? transformComment(scalarType.description, 1) : '';
+      const comment =
+        scalarType && scalarType.astNode && scalarType.description ? transformComment(scalarType.description, 1) : '';
       const { scalar } = this._parsedConfig.declarationKind;
 
       return comment + indent(`${scalarName}: ${scalarValue}${this.getPunctuation(scalar)}`);
@@ -206,7 +229,9 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
 
   UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number | undefined, parent: any): string {
     const originalNode = parent[key] as UnionTypeDefinitionNode;
-    const possibleTypes = originalNode.types.map(t => (this.scalars[t.name.value] ? this._getScalar(t.name.value) : this.convertName(t))).join(' | ');
+    const possibleTypes = originalNode.types
+      .map(t => (this.scalars[t.name.value] ? this._getScalar(t.name.value) : this.convertName(t)))
+      .join(' | ');
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
@@ -225,10 +250,24 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
     block.withBlock(this.mergeAllFields(fields, interfaces.length > 0));
   }
 
-  getObjectTypeDeclarationBlock(node: ObjectTypeDefinitionNode, originalNode: ObjectTypeDefinitionNode): DeclarationBlock {
+  getObjectTypeDeclarationBlock(
+    node: ObjectTypeDefinitionNode,
+    originalNode: ObjectTypeDefinitionNode
+  ): DeclarationBlock {
     const optionalTypename = this.config.nonOptionalTypename ? '__typename' : '__typename?';
     const { type } = this._parsedConfig.declarationKind;
-    const allFields = [...(this.config.addTypename ? [indent(`${this.config.immutableTypes ? 'readonly' : ''} ${optionalTypename}: '${node.name}'${this.getPunctuation(type)}`)] : []), ...node.fields] as string[];
+    const allFields = [
+      ...(this.config.addTypename
+        ? [
+            indent(
+              `${this.config.immutableTypes ? 'readonly' : ''} ${optionalTypename}: '${node.name}'${this.getPunctuation(
+                type
+              )}`
+            ),
+          ]
+        : []),
+      ...node.fields,
+    ] as string[];
     const interfacesNames = originalNode.interfaces ? originalNode.interfaces.map(i => this.convertName(i)) : [];
 
     const declarationBlock = new DeclarationBlock(this._declarationBlockConfig)
@@ -257,10 +296,15 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
   ObjectTypeDefinition(node: ObjectTypeDefinitionNode, key: number | string | undefined, parent: any): string {
     const originalNode = parent[key] as ObjectTypeDefinitionNode;
 
-    return [this.getObjectTypeDeclarationBlock(node, originalNode).string, this.buildArgumentsBlock(originalNode)].filter(f => f).join('\n\n');
+    return [this.getObjectTypeDeclarationBlock(node, originalNode).string, this.buildArgumentsBlock(originalNode)]
+      .filter(f => f)
+      .join('\n\n');
   }
 
-  getInterfaceTypeDeclarationBlock(node: InterfaceTypeDefinitionNode, originalNode: InterfaceTypeDefinitionNode): DeclarationBlock {
+  getInterfaceTypeDeclarationBlock(
+    node: InterfaceTypeDefinitionNode,
+    originalNode: InterfaceTypeDefinitionNode
+  ): DeclarationBlock {
     const declarationBlock = new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind(this._parsedConfig.declarationKind.interface)
@@ -273,7 +317,9 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
   InterfaceTypeDefinition(node: InterfaceTypeDefinitionNode, key: number | string | undefined, parent: any): string {
     const originalNode = parent[key] as InterfaceTypeDefinitionNode;
 
-    return [this.getInterfaceTypeDeclarationBlock(node, originalNode).string, this.buildArgumentsBlock(originalNode)].filter(f => f).join('\n\n');
+    return [this.getInterfaceTypeDeclarationBlock(node, originalNode).string, this.buildArgumentsBlock(originalNode)]
+      .filter(f => f)
+      .join('\n\n');
   }
 
   ScalarTypeDefinition(node: ScalarTypeDefinitionNode): string {
@@ -299,7 +345,10 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
           }
           let identifier = mappedValue.sourceIdentifier;
 
-          if (mappedValue.sourceIdentifier !== mappedValue.typeIdentifier && !mappedValue.sourceIdentifier.includes(' as ')) {
+          if (
+            mappedValue.sourceIdentifier !== mappedValue.typeIdentifier &&
+            !mappedValue.sourceIdentifier.includes(' as ')
+          ) {
             identifier = `${mappedValue.sourceIdentifier} as ${mappedValue.typeIdentifier}`;
           }
 
@@ -339,11 +388,20 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
         const comment = transformComment((enumOption.description as any) as string, 1);
         let enumValue: string | number = enumOption.name as any;
 
-        if (this.config.enumValues[typeName] && this.config.enumValues[typeName].mappedValues && typeof this.config.enumValues[typeName].mappedValues[enumValue] !== 'undefined') {
+        if (
+          this.config.enumValues[typeName] &&
+          this.config.enumValues[typeName].mappedValues &&
+          typeof this.config.enumValues[typeName].mappedValues[enumValue] !== 'undefined'
+        ) {
           enumValue = this.config.enumValues[typeName].mappedValues[enumValue];
         }
 
-        return comment + indent(`${optionName}${this._declarationBlockConfig.enumNameValueSeparator} ${wrapWithSingleQuotes(enumValue)}`);
+        return (
+          comment +
+          indent(
+            `${optionName}${this._declarationBlockConfig.enumNameValueSeparator} ${wrapWithSingleQuotes(enumValue)}`
+          )
+        );
       })
       .join(',\n');
   }
@@ -352,7 +410,11 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
     return '';
   }
 
-  getArgumentsObjectDeclarationBlock(node: InterfaceTypeDefinitionNode | ObjectTypeDefinitionNode, name: string, field: FieldDefinitionNode): DeclarationBlock {
+  getArgumentsObjectDeclarationBlock(
+    node: InterfaceTypeDefinitionNode | ObjectTypeDefinitionNode,
+    name: string,
+    field: FieldDefinitionNode
+  ): DeclarationBlock {
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind(this._parsedConfig.declarationKind.arguments)
@@ -361,7 +423,11 @@ export class BaseTypesVisitor<TRawConfig extends RawTypesConfig = RawTypesConfig
       .withBlock(this._argumentsTransformer.transform<InputValueDefinitionNode>(field.arguments));
   }
 
-  getArgumentsObjectTypeDefinition(node: InterfaceTypeDefinitionNode | ObjectTypeDefinitionNode, name: string, field: FieldDefinitionNode): string {
+  getArgumentsObjectTypeDefinition(
+    node: InterfaceTypeDefinitionNode | ObjectTypeDefinitionNode,
+    name: string,
+    field: FieldDefinitionNode
+  ): string {
     return this.getArgumentsObjectDeclarationBlock(node, name, field).string;
   }
 

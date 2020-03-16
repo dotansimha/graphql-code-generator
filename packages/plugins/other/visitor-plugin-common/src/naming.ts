@@ -70,13 +70,21 @@ export function convertFactory(config: { namingConvention?: NamingConvention }):
       }
 
       return (str: string, opts: ConvertOptions = {}) => {
-        return convertNameParts(str, resolveExternalModuleAndFn(config.namingConvention), getConfigValue((opts || {}).transformUnderscore, false));
+        return convertNameParts(
+          str,
+          resolveExternalModuleAndFn(config.namingConvention),
+          getConfigValue((opts || {}).transformUnderscore, false)
+        );
       };
     }
 
     if (typeof config.namingConvention === 'function') {
       return (str: string, opts: ConvertOptions = {}) => {
-        return convertNameParts(str, config.namingConvention as (str: string) => string, getConfigValue((opts || {}).transformUnderscore, false));
+        return convertNameParts(
+          str,
+          config.namingConvention as (str: string) => string,
+          getConfigValue((opts || {}).transformUnderscore, false)
+        );
       };
     }
 
@@ -87,13 +95,18 @@ export function convertFactory(config: { namingConvention?: NamingConvention }):
     if (typeof config.namingConvention === 'object') {
       if (!config.namingConvention[type]) {
         return (str: string, opts: ConvertOptions = {}) => {
-          const transformUnderscore = (config.namingConvention as NamingConventionMap).transformUnderscore || (opts || {}).transformUnderscore;
+          const transformUnderscore =
+            (config.namingConvention as NamingConventionMap).transformUnderscore || (opts || {}).transformUnderscore;
           return convertNameParts(str, pascalCase, getConfigValue(transformUnderscore, false));
         };
       }
 
       return (str: string, opts: ConvertOptions = {}) => {
-        return convertNameParts(str, resolveExternalModuleAndFn(config.namingConvention[type]), getConfigValue((opts || {}).transformUnderscore, true));
+        return convertNameParts(
+          str,
+          resolveExternalModuleAndFn(config.namingConvention[type]),
+          getConfigValue((opts || {}).transformUnderscore, true)
+        );
       };
     }
 

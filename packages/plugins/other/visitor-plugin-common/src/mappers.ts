@@ -67,7 +67,11 @@ export function parseMapper(mapper: string, gqlTypeName: string | null = null, s
   if (isExternalMapper(mapper)) {
     const { isNamespace, isDefault, hasAlias, items } = isLegacyMode(mapper) ? prepareLegacy(mapper) : prepare(mapper);
 
-    const mapperKind: MapperKind = isNamespace ? MapperKind.Namespace : isDefault ? MapperKind.Default : MapperKind.Regular;
+    const mapperKind: MapperKind = isNamespace
+      ? MapperKind.Namespace
+      : isDefault
+      ? MapperKind.Default
+      : MapperKind.Regular;
 
     function handleAlias(isDefault = false) {
       const [importedType, aliasType] = items[1].split(/\s+as\s+/);
@@ -166,7 +170,10 @@ export function isExternalMapper(value: string): boolean {
   return value.includes('#') && !value.includes('"') && !value.includes("'");
 }
 
-export function transformMappers(rawMappers: RawResolversConfig['mappers'], mapperTypeSuffix?: string): ParsedResolversConfig['mappers'] {
+export function transformMappers(
+  rawMappers: RawResolversConfig['mappers'],
+  mapperTypeSuffix?: string
+): ParsedResolversConfig['mappers'] {
   const result: ParsedResolversConfig['mappers'] = {};
 
   Object.keys(rawMappers).forEach(gqlTypeName => {

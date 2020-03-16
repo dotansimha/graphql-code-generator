@@ -14,7 +14,10 @@ const hash = (content: string): string =>
     .update(content)
     .digest('base64');
 
-export async function generate(input: CodegenContext | Types.Config, saveToFile = true): Promise<Types.FileOutput[] | any> {
+export async function generate(
+  input: CodegenContext | Types.Config,
+  saveToFile = true
+): Promise<Types.FileOutput[] | any> {
   const context = ensureContext(input);
   const config = context.getConfig();
   await lifecycleHooks(config.hooks).afterStart();
@@ -82,7 +85,9 @@ export async function generate(input: CodegenContext | Types.Config, saveToFile 
         await lifecycleHooks(result.hooks).beforeOneFileWrite(result.filename);
         await lifecycleHooks(config.hooks).beforeOneFileWrite(result.filename);
         mkdirpSync(basedir);
-        const absolutePath = isAbsolute(result.filename) ? result.filename : join(input.cwd || process.cwd(), result.filename);
+        const absolutePath = isAbsolute(result.filename)
+          ? result.filename
+          : join(input.cwd || process.cwd(), result.filename);
         writeSync(absolutePath, result.content);
         await lifecycleHooks(result.hooks).afterOneFileWrite(result.filename);
         await lifecycleHooks(config.hooks).afterOneFileWrite(result.filename);

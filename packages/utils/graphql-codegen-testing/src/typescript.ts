@@ -1,5 +1,17 @@
 import { Types } from '@graphql-codegen/plugin-helpers';
-import { CompilerOptions, ModuleResolutionKind, ScriptTarget, JsxEmit, ModuleKind, createSourceFile, ScriptKind, flattenDiagnosticMessageText, createCompilerHost, createProgram, Diagnostic } from 'typescript';
+import {
+  CompilerOptions,
+  ModuleResolutionKind,
+  ScriptTarget,
+  JsxEmit,
+  ModuleKind,
+  createSourceFile,
+  ScriptKind,
+  flattenDiagnosticMessageText,
+  createCompilerHost,
+  createProgram,
+  Diagnostic,
+} from 'typescript';
 import { resolve, join, dirname } from 'path';
 import open from 'open';
 
@@ -43,11 +55,20 @@ export function validateTs(
     options.strictFunctionTypes = true;
   }
 
-  const contents: string = typeof pluginOutput === 'string' ? pluginOutput : [...(pluginOutput.prepend || []), pluginOutput.content, ...(pluginOutput.append || [])].join('\n');
+  const contents: string =
+    typeof pluginOutput === 'string'
+      ? pluginOutput
+      : [...(pluginOutput.prepend || []), pluginOutput.content, ...(pluginOutput.append || [])].join('\n');
 
   try {
     const testFile = `test-file.${isTsx ? 'tsx' : 'ts'}`;
-    const result = createSourceFile(testFile, contents, ScriptTarget.ES2016, false, isTsx ? ScriptKind.TSX : undefined) as { parseDiagnostics?: Diagnostic[] };
+    const result = createSourceFile(
+      testFile,
+      contents,
+      ScriptTarget.ES2016,
+      false,
+      isTsx ? ScriptKind.TSX : undefined
+    ) as { parseDiagnostics?: Diagnostic[] };
 
     const allDiagnostics = result.parseDiagnostics;
 
@@ -115,7 +136,12 @@ export function compileTs(
     const host = createCompilerHost(options);
     const program = createProgram([testFile], options, {
       ...host,
-      getSourceFile: (fileName: string, languageVersion: ScriptTarget, onError?: (message: string) => void, shouldCreateNewSourceFile?: boolean) => {
+      getSourceFile: (
+        fileName: string,
+        languageVersion: ScriptTarget,
+        onError?: (message: string) => void,
+        shouldCreateNewSourceFile?: boolean
+      ) => {
         if (fileName === testFile) {
           return createSourceFile(fileName, contents, options.target);
         }

@@ -301,6 +301,8 @@ describe('Operations Visitor', () => {
     const result = await plugin(schema, [ast], { package: 'app.test.generated.graphql', fileType: FileType.OPERATION });
     const output = mergeOutputs([result]);
     expect(output).toMatchSnapshot();
-    expect(output).toContain(`final Fragments fragments = reader.readConditional($responseFields[1], new ResponseReader.ConditionalTypeReader<Fragments>() {`);
+    expect(output).toContain(
+      `final Fragments fragments = reader.readConditional($responseFields[1], new ResponseReader.ConditionalTypeReader<Fragments>() {`
+    );
   });
 });

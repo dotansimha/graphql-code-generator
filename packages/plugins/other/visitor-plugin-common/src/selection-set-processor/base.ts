@@ -13,7 +13,10 @@ export type SelectionSetProcessorConfig = {
   enumPrefix: boolean | null;
   scalars: ScalarsMap;
   formatNamedField: (name: string) => string;
-  wrapTypeWithModifiers: (baseType: string, type: GraphQLObjectType | GraphQLNonNull<GraphQLObjectType> | GraphQLList<GraphQLObjectType>) => string;
+  wrapTypeWithModifiers: (
+    baseType: string,
+    type: GraphQLObjectType | GraphQLNonNull<GraphQLObjectType> | GraphQLList<GraphQLObjectType>
+  ) => string;
 };
 
 export class BaseSelectionSetProcessor<Config extends SelectionSetProcessorConfig> {
@@ -33,12 +36,22 @@ export class BaseSelectionSetProcessor<Config extends SelectionSetProcessorConfi
     }
   }
 
-  transformPrimitiveFields(schemaType: GraphQLObjectType | GraphQLInterfaceType, fields: PrimitiveField[]): ProcessResult {
-    throw new Error(`Please override "transformPrimitiveFields" as part of your BaseSelectionSetProcessor implementation!`);
+  transformPrimitiveFields(
+    schemaType: GraphQLObjectType | GraphQLInterfaceType,
+    fields: PrimitiveField[]
+  ): ProcessResult {
+    throw new Error(
+      `Please override "transformPrimitiveFields" as part of your BaseSelectionSetProcessor implementation!`
+    );
   }
 
-  transformAliasesPrimitiveFields(schemaType: GraphQLObjectType | GraphQLInterfaceType, fields: PrimitiveAliasedFields[]): ProcessResult {
-    throw new Error(`Please override "transformAliasesPrimitiveFields" as part of your BaseSelectionSetProcessor implementation!`);
+  transformAliasesPrimitiveFields(
+    schemaType: GraphQLObjectType | GraphQLInterfaceType,
+    fields: PrimitiveAliasedFields[]
+  ): ProcessResult {
+    throw new Error(
+      `Please override "transformAliasesPrimitiveFields" as part of your BaseSelectionSetProcessor implementation!`
+    );
   }
 
   transformLinkFields(fields: LinkField[]): ProcessResult {
@@ -46,6 +59,8 @@ export class BaseSelectionSetProcessor<Config extends SelectionSetProcessorConfi
   }
 
   transformTypenameField(type: string, name: string): ProcessResult {
-    throw new Error(`Please override "transformTypenameField" as part of your BaseSelectionSetProcessor implementation!`);
+    throw new Error(
+      `Please override "transformTypenameField" as part of your BaseSelectionSetProcessor implementation!`
+    );
   }
 }

@@ -6,7 +6,11 @@ import gql from 'graphql-tag';
 import { TsMongoVisitor } from './visitor';
 import { TypeScriptMongoPluginConfig, Directives } from './config';
 
-export const plugin: PluginFunction<TypeScriptMongoPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: TypeScriptMongoPluginConfig) => {
+export const plugin: PluginFunction<TypeScriptMongoPluginConfig> = (
+  schema: GraphQLSchema,
+  documents: Types.DocumentFile[],
+  config: TypeScriptMongoPluginConfig
+) => {
   const visitor = new TsMongoVisitor(schema, config);
   const printedSchema = printSchemaWithDirectives(schema);
   const astNode = parse(printedSchema);
@@ -34,7 +38,12 @@ export const DIRECTIVES = gql`
 
 export const addToSchema = DIRECTIVES;
 
-export const validate: PluginValidateFn<any> = async (schema: GraphQLSchema, documents: Types.DocumentFile[], config: any, outputFile: string) => {
+export const validate: PluginValidateFn<any> = async (
+  schema: GraphQLSchema,
+  documents: Types.DocumentFile[],
+  config: any,
+  outputFile: string
+) => {
   if (extname(outputFile) !== '.ts' && extname(outputFile) !== '.tsx') {
     throw new Error(`Plugin "typescript-mongodb" requires extension to be ".ts" or ".tsx"!`);
   }

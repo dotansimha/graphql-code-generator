@@ -82,7 +82,9 @@ describe('Introspection template', () => {
 
     const introspection: IntrospectionQuery = JSON.parse(content);
     const types = introspection.__schema.types;
-    const queryType = types.find(type => type.name === introspection.__schema.queryType.name) as IntrospectionObjectType;
+    const queryType = types.find(
+      type => type.name === introspection.__schema.queryType.name
+    ) as IntrospectionObjectType;
 
     // scalar _Any
     expect(types.some(type => type.name === '_Any')).toBe(false);

@@ -83,8 +83,15 @@ export function isUsingTypes(document: DocumentNode, externalFragments: string[]
 
   visit(document, {
     SelectionSet: {
-      enter(node: SelectionSetNode, key, parent: InlineFragmentNode | FragmentDefinitionNode | FieldNode | OperationDefinitionNode, anscestors) {
-        const insideIgnoredFragment = (anscestors as any).find((f: ASTNode) => f.kind && f.kind === 'FragmentDefinition' && externalFragments.includes(f.name.value));
+      enter(
+        node: SelectionSetNode,
+        key,
+        parent: InlineFragmentNode | FragmentDefinitionNode | FieldNode | OperationDefinitionNode,
+        anscestors
+      ) {
+        const insideIgnoredFragment = (anscestors as any).find(
+          (f: ASTNode) => f.kind && f.kind === 'FragmentDefinition' && externalFragments.includes(f.name.value)
+        );
 
         if (insideIgnoredFragment) {
           return;
@@ -141,14 +148,18 @@ export function isUsingTypes(document: DocumentNode, externalFragments: string[]
           return;
         }
 
-        const insideIgnoredFragment = (anscestors as any).find((f: ASTNode) => f.kind && f.kind === 'FragmentDefinition' && externalFragments.includes(f.name.value));
+        const insideIgnoredFragment = (anscestors as any).find(
+          (f: ASTNode) => f.kind && f.kind === 'FragmentDefinition' && externalFragments.includes(f.name.value)
+        );
 
         if (insideIgnoredFragment) {
           return;
         }
 
         const selections = node.selectionSet ? node.selectionSet.selections || [] : [];
-        const relevantFragmentSpreads = selections.filter(s => s.kind === Kind.FRAGMENT_SPREAD && !externalFragments.includes(s.name.value));
+        const relevantFragmentSpreads = selections.filter(
+          s => s.kind === Kind.FRAGMENT_SPREAD && !externalFragments.includes(s.name.value)
+        );
 
         if (selections.length === 0 || relevantFragmentSpreads.length > 0) {
           foundFields++;
@@ -178,7 +189,9 @@ export function isUsingTypes(document: DocumentNode, externalFragments: string[]
     },
     enter: {
       VariableDefinition: (node: VariableDefinitionNode, key, parent, path, anscestors) => {
-        const insideIgnoredFragment = (anscestors as any).find((f: ASTNode) => f.kind && f.kind === 'FragmentDefinition' && externalFragments.includes(f.name.value));
+        const insideIgnoredFragment = (anscestors as any).find(
+          (f: ASTNode) => f.kind && f.kind === 'FragmentDefinition' && externalFragments.includes(f.name.value)
+        );
 
         if (insideIgnoredFragment) {
           return;
@@ -186,7 +199,9 @@ export function isUsingTypes(document: DocumentNode, externalFragments: string[]
         foundFields++;
       },
       InputValueDefinition: (node: InputValueDefinitionNode, key, parent, path, anscestors) => {
-        const insideIgnoredFragment = (anscestors as any).find((f: ASTNode) => f.kind && f.kind === 'FragmentDefinition' && externalFragments.includes(f.name.value));
+        const insideIgnoredFragment = (anscestors as any).find(
+          (f: ASTNode) => f.kind && f.kind === 'FragmentDefinition' && externalFragments.includes(f.name.value)
+        );
 
         if (insideIgnoredFragment) {
           return;

@@ -1,4 +1,11 @@
-import { DetailedError, Types, CodegenPlugin, normalizeOutputParam, normalizeInstanceOrArray, normalizeConfig } from '@graphql-codegen/plugin-helpers';
+import {
+  DetailedError,
+  Types,
+  CodegenPlugin,
+  normalizeOutputParam,
+  normalizeInstanceOrArray,
+  normalizeConfig,
+} from '@graphql-codegen/plugin-helpers';
 import { codegen } from '@graphql-codegen/core';
 
 import { Renderer } from './utils/listr-renderer';
@@ -120,7 +127,10 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
       }
     }
 
-    if (rootSchemas.length === 0 && Object.keys(generates).some(filename => !generates[filename].schema || generates[filename].schema.length === 0)) {
+    if (
+      rootSchemas.length === 0 &&
+      Object.keys(generates).some(filename => !generates[filename].schema || generates[filename].schema.length === 0)
+    ) {
       throw new DetailedError(
         'Invalid Codegen Configuration!',
         `
@@ -157,7 +167,9 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
           const hasPreset = !!outputConfig.preset;
 
           return {
-            title: hasPreset ? `Generate to ${filename} (using EXPERIMENTAL preset "${outputConfig.preset}")` : `Generate ${filename}`,
+            title: hasPreset
+              ? `Generate to ${filename} (using EXPERIMENTAL preset "${outputConfig.preset}")`
+              : `Generate ${filename}`,
             task: () => {
               let outputSchemaAst: GraphQLSchema;
               let outputSchema: DocumentNode;
@@ -221,9 +233,15 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
 
                         const normalizedPluginsArray = normalizeConfig(outputConfig.plugins);
                         const pluginLoader = config.pluginLoader || defaultLoader;
-                        const pluginPackages = await Promise.all(normalizedPluginsArray.map(plugin => getPluginByName(Object.keys(plugin)[0], pluginLoader)));
+                        const pluginPackages = await Promise.all(
+                          normalizedPluginsArray.map(plugin => getPluginByName(Object.keys(plugin)[0], pluginLoader))
+                        );
                         const pluginMap: { [name: string]: CodegenPlugin } = {};
-                        const preset: Types.OutputPreset = hasPreset ? (typeof outputConfig.preset === 'string' ? await getPresetByName(outputConfig.preset, defaultLoader) : outputConfig.preset) : null;
+                        const preset: Types.OutputPreset = hasPreset
+                          ? typeof outputConfig.preset === 'string'
+                            ? await getPresetByName(outputConfig.preset, defaultLoader)
+                            : outputConfig.preset
+                          : null;
 
                         pluginPackages.forEach((pluginPackage, i) => {
                           const plugin = normalizedPluginsArray[i];
@@ -234,7 +252,9 @@ export async function executeCodegen(input: CodegenContext | Types.Config): Prom
 
                         const mergedConfig = {
                           ...rootConfig,
-                          ...(typeof outputFileTemplateConfig === 'string' ? { value: outputFileTemplateConfig } : outputFileTemplateConfig),
+                          ...(typeof outputFileTemplateConfig === 'string'
+                            ? { value: outputFileTemplateConfig }
+                            : outputFileTemplateConfig),
                         };
 
                         let outputs: Types.GenerateOptions[] = [];

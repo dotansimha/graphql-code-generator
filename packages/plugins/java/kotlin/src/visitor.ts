@@ -1,4 +1,13 @@
-import { BaseVisitor, buildScalars, EnumValuesMap, indent, indentMultiline, ParsedConfig, transformComment, getBaseTypeNode } from '@graphql-codegen/visitor-plugin-common';
+import {
+  BaseVisitor,
+  buildScalars,
+  EnumValuesMap,
+  indent,
+  indentMultiline,
+  ParsedConfig,
+  transformComment,
+  getBaseTypeNode,
+} from '@graphql-codegen/visitor-plugin-common';
 import { KotlinResolversPluginRawConfig } from './config';
 import {
   EnumTypeDefinitionNode,
@@ -46,7 +55,11 @@ export class KotlinResolversVisitor extends BaseVisitor<KotlinResolversPluginRaw
   }
 
   protected getEnumValue(enumName: string, enumOption: string): string {
-    if (this.config.enumValues[enumName] && typeof this.config.enumValues[enumName] === 'object' && this.config.enumValues[enumName][enumOption]) {
+    if (
+      this.config.enumValues[enumName] &&
+      typeof this.config.enumValues[enumName] === 'object' &&
+      this.config.enumValues[enumName][enumOption]
+    ) {
       return this.config.enumValues[enumName][enumOption];
     }
 
@@ -55,14 +68,22 @@ export class KotlinResolversVisitor extends BaseVisitor<KotlinResolversPluginRaw
 
   EnumValueDefinition(node: EnumValueDefinitionNode): (enumName: string) => string {
     return (enumName: string) => {
-      return indent(`${this.convertName(node, { useTypesPrefix: false, transformUnderscore: true })}("${this.getEnumValue(enumName, node.name.value)}")`);
+      return indent(
+        `${this.convertName(node, { useTypesPrefix: false, transformUnderscore: true })}("${this.getEnumValue(
+          enumName,
+          node.name.value
+        )}")`
+      );
     };
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
     const comment = transformComment(node.description, 0);
     const enumName = this.convertName(node.name);
-    const enumValues = indentMultiline(node.values.map(enumValue => (enumValue as any)(node.name.value)).join(',\n') + ';', 2);
+    const enumValues = indentMultiline(
+      node.values.map(enumValue => (enumValue as any)(node.name.value)).join(',\n') + ';',
+      2
+    );
 
     return `${comment}enum class ${enumName}(val label: String) {
 ${enumValues}
@@ -76,10 +97,14 @@ ${enumValues}
 }`;
   }
 
-  protected resolveInputFieldType(typeNode: TypeNode): { baseType: string; typeName: string; isScalar: boolean; isArray: boolean; nullable: boolean } {
+  protected resolveInputFieldType(
+    typeNode: TypeNode
+  ): { baseType: string; typeName: string; isScalar: boolean; isArray: boolean; nullable: boolean } {
     const innerType = getBaseTypeNode(typeNode);
     const schemaType = this._schema.getType(innerType.name.value);
-    const isArray = typeNode.kind === Kind.LIST_TYPE || (typeNode.kind === Kind.NON_NULL_TYPE && typeNode.type.kind === Kind.LIST_TYPE);
+    const isArray =
+      typeNode.kind === Kind.LIST_TYPE ||
+      (typeNode.kind === Kind.NON_NULL_TYPE && typeNode.type.kind === Kind.LIST_TYPE);
     let result: { baseType: string; typeName: string; isScalar: boolean; isArray: boolean; nullable: boolean } = null;
     const nullable = typeNode.kind !== Kind.NON_NULL_TYPE;
 
@@ -104,7 +129,13 @@ ${enumValues}
         nullable: nullable,
       };
     } else if (isEnumType(schemaType)) {
-      result = { isArray, baseType: this.convertName(schemaType.name), typeName: this.convertName(schemaType.name), isScalar: true, nullable: nullable };
+      result = {
+        isArray,
+        baseType: this.convertName(schemaType.name),
+        typeName: this.convertName(schemaType.name),
+        isScalar: true,
+        nullable: nullable,
+      };
     } else {
       result = { isArray, baseType: 'Any', typeName: 'Any', isScalar: true, nullable: nullable };
     }
@@ -135,7 +166,11 @@ ${classMembers}
 
   protected initialValue(typeName: string, defaultValue?: ValueNode): string | undefined {
     if (defaultValue) {
-      if (defaultValue.kind === 'IntValue' || defaultValue.kind === 'FloatValue' || defaultValue.kind === 'BooleanValue') {
+      if (
+        defaultValue.kind === 'IntValue' ||
+        defaultValue.kind === 'FloatValue' ||
+        defaultValue.kind === 'BooleanValue'
+      ) {
         return `${defaultValue.value}`;
       } else if (defaultValue.kind === 'StringValue') {
         return `"""${defaultValue.value}""".trimIndent()`;
@@ -160,7 +195,10 @@ ${classMembers}
   FieldDefinition(node: FieldDefinitionNode): (typeName: string) => string {
     return (typeName: string) => {
       if (node.arguments.length > 0) {
-        const transformerName = `${this.convertName(typeName, { useTypesPrefix: true })}${this.convertName(node.name.value, { useTypesPrefix: false })}Args`;
+        const transformerName = `${this.convertName(typeName, { useTypesPrefix: true })}${this.convertName(
+          node.name.value,
+          { useTypesPrefix: false }
+        )}Args`;
 
         return this.buildInputTransfomer(transformerName, node.arguments);
       }

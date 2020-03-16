@@ -284,7 +284,12 @@ describe('Flow Plugin', () => {
         B
       }
         `);
-      const result = (await plugin(schema, [], { useFlowExactObjects: true }, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = (await plugin(
+        schema,
+        [],
+        { useFlowExactObjects: true },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
 
       expect(result.content).toBeSimilarStringTo(`
       export const MyEnumValues = Object.freeze({
@@ -300,7 +305,12 @@ describe('Flow Plugin', () => {
           foo: String
           bar: String!
         }`);
-      const result = (await plugin(schema, [], { useFlowExactObjects: false }, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = (await plugin(
+        schema,
+        [],
+        { useFlowExactObjects: false },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
 
       expect(result.content).toBeSimilarStringTo(`
         export type MyInterface = {
@@ -324,7 +334,12 @@ describe('Flow Plugin', () => {
           C
         }
       `);
-      const result = (await plugin(schema, [], { useFlowReadOnlyTypes: true }, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = (await plugin(
+        schema,
+        [],
+        { useFlowReadOnlyTypes: true },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
 
       expect(result.content).toMatchSnapshot();
       expect(result.content).toBeSimilarStringTo(`
@@ -349,7 +364,12 @@ describe('Flow Plugin', () => {
   describe('Naming Convention & Types Prefix', () => {
     it('Should use custom namingConvention for type name and args typename', async () => {
       const schema = buildSchema(`type MyType { foo(a: String!, b: String, c: [String], d: [Int!]!): String }`);
-      const result = (await plugin(schema, [], { namingConvention: 'lower-case#lowerCase' }, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = (await plugin(
+        schema,
+        [],
+        { namingConvention: 'lower-case#lowerCase' },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
 
       expect(result.content).toMatchSnapshot();
 
@@ -379,7 +399,12 @@ describe('Flow Plugin', () => {
 
     it('Should use custom namingConvention and add custom prefix', async () => {
       const schema = buildSchema(`type MyType { foo(a: String!, b: String, c: [String], d: [Int!]!): String }`);
-      const result = (await plugin(schema, [], { namingConvention: 'lower-case#lowerCase', typesPrefix: 'I' }, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = (await plugin(
+        schema,
+        [],
+        { namingConvention: 'lower-case#lowerCase', typesPrefix: 'I' },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
 
       expect(result.content).toMatchSnapshot();
       expect(result.content).toBeSimilarStringTo(`
@@ -444,7 +469,12 @@ describe('Flow Plugin', () => {
   `);
 
     it('Should generate correct values when using links between types - lowerCase', async () => {
-      const result = (await plugin(schema, [], { namingConvention: 'lower-case#lowerCase' }, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = (await plugin(
+        schema,
+        [],
+        { namingConvention: 'lower-case#lowerCase' },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
 
       expect(result.content).toMatchSnapshot();
       validateFlow(result);
@@ -591,7 +621,9 @@ describe('Flow Plugin', () => {
     });
 
     it('Should generate correctly types for field arguments - with default value', async () => {
-      const schema = buildSchema(`type MyType { foo(a: String = "default", b: String! = "default", c: String): String }`);
+      const schema = buildSchema(
+        `type MyType { foo(a: String = "default", b: String! = "default", c: String): String }`
+      );
       const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
 
       expect(result.content).toMatchSnapshot();
@@ -599,7 +631,9 @@ describe('Flow Plugin', () => {
     });
 
     it('Should generate correctly types for field arguments - with input type', async () => {
-      const schema = buildSchema(`input MyInput { f: String } type MyType { foo(a: MyInput, b: MyInput!, c: [MyInput], d: [MyInput]!, e: [MyInput!]!): String }`);
+      const schema = buildSchema(
+        `input MyInput { f: String } type MyType { foo(a: MyInput, b: MyInput!, c: [MyInput], d: [MyInput]!, e: [MyInput!]!): String }`
+      );
       const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
 
       expect(result.content).toMatchSnapshot();
@@ -607,7 +641,9 @@ describe('Flow Plugin', () => {
     });
 
     it('Should add custom prefix for mutation arguments', async () => {
-      const schema = buildSchema(`input Input { name: String } type Mutation { foo(id: String, input: Input): String }`);
+      const schema = buildSchema(
+        `input Input { name: String } type Mutation { foo(id: String, input: Input): String }`
+      );
       const result = (await plugin(schema, [], { typesPrefix: 'T' }, { outputFile: '' })) as Types.ComplexPluginOutput;
 
       expect(result.content).toMatchSnapshot();
@@ -635,7 +671,12 @@ describe('Flow Plugin', () => {
 
     it('Should build enum correctly with custom values', async () => {
       const schema = buildSchema(`enum MyEnum { A, B, C }`);
-      const result = (await plugin(schema, [], { enumValues: { MyEnum: { A: 'SomeValue', B: 'TEST' } } }, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = (await plugin(
+        schema,
+        [],
+        { enumValues: { MyEnum: { A: 'SomeValue', B: 'TEST' } } },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
 
       expect(result.content).toBeSimilarStringTo(`
         export const MyEnumValues = Object.freeze({
@@ -652,7 +693,12 @@ describe('Flow Plugin', () => {
 
     it('Should build enum correctly with custom values and map to external enum', async () => {
       const schema = buildSchema(`enum MyEnum { A, B, C }`);
-      const result = (await plugin(schema, [], { enumValues: { MyEnum: './my-file#MyEnum' } }, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = (await plugin(
+        schema,
+        [],
+        { enumValues: { MyEnum: './my-file#MyEnum' } },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
 
       expect(result.content).not.toContain(`export type MyEnum`);
       expect(result.prepend).toContain(`import { type MyEnum } from './my-file';`);
@@ -662,7 +708,12 @@ describe('Flow Plugin', () => {
 
     it('Should build enum correctly with custom values and map to external enum with different identifier', async () => {
       const schema = buildSchema(`enum MyEnum { A, B, C }`);
-      const result = (await plugin(schema, [], { enumValues: { MyEnum: './my-file#MyCustomEnum' } }, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = (await plugin(
+        schema,
+        [],
+        { enumValues: { MyEnum: './my-file#MyCustomEnum' } },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
 
       expect(result.content).not.toContain(`export type MyEnum`);
       expect(result.prepend).toContain(`import { type MyCustomEnum as MyEnum } from './my-file';`);
@@ -684,7 +735,12 @@ describe('Flow Plugin', () => {
 
     it('Should build enum correctly with custom values', async () => {
       const schema = buildSchema(`scalar A`);
-      const result = (await plugin(schema, [], { scalars: { A: 'MyCustomType' } }, { outputFile: '' })) as Types.ComplexPluginOutput;
+      const result = (await plugin(
+        schema,
+        [],
+        { scalars: { A: 'MyCustomType' } },
+        { outputFile: '' }
+      )) as Types.ComplexPluginOutput;
 
       expect(result.content).toMatchSnapshot();
 
@@ -913,7 +969,12 @@ describe('Flow Plugin', () => {
       }
     `);
 
-    const content = (await plugin(schema, [], { addUnderscoreToArgsType: true, skipTypename: true }, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const content = (await plugin(
+      schema,
+      [],
+      { addUnderscoreToArgsType: true, skipTypename: true },
+      { outputFile: '' }
+    )) as Types.ComplexPluginOutput;
     expect(mergeOutputs([content])).toContain(`export type Mutation_RandomArgs = {`);
     validateFlow(content);
   });

@@ -116,7 +116,8 @@ export function getApplicationTypeChoices(possibleTargets: Record<Tags, boolean>
       name: 'Application built with other framework or vanilla JS',
       key: 'client',
       value: [Tags.browser, Tags.typescript, Tags.flow],
-      checked: possibleTargets.Browser && !possibleTargets.Angular && !possibleTargets.React && !possibleTargets.Stencil,
+      checked:
+        possibleTargets.Browser && !possibleTargets.Angular && !possibleTargets.React && !possibleTargets.Stencil,
     },
   ];
 }

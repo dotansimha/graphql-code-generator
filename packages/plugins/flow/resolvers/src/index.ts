@@ -4,7 +4,11 @@ import { Types, PluginFunction, addFederationReferencesToSchema } from '@graphql
 import { parse, printSchema, visit, GraphQLSchema } from 'graphql';
 import { FlowResolversVisitor } from './visitor';
 
-export const plugin: PluginFunction<RawResolversConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: RawResolversConfig) => {
+export const plugin: PluginFunction<RawResolversConfig> = (
+  schema: GraphQLSchema,
+  documents: Types.DocumentFile[],
+  config: RawResolversConfig
+) => {
   const imports = ['type GraphQLResolveInfo'];
   const showUnusedMappers = typeof config.showUnusedMappers === 'boolean' ? config.showUnusedMappers : true;
 
@@ -12,7 +16,9 @@ export const plugin: PluginFunction<RawResolversConfig> = (schema: GraphQLSchema
 
   const transformedSchema = config.federation ? addFederationReferencesToSchema(schema) : schema;
 
-  const printedSchema = config.federation ? printSchemaWithDirectives(transformedSchema) : printSchema(transformedSchema);
+  const printedSchema = config.federation
+    ? printSchemaWithDirectives(transformedSchema)
+    : printSchema(transformedSchema);
   const astNode = parse(printedSchema);
   const visitor = new FlowResolversVisitor(config, transformedSchema);
   const visitorResult = visit(astNode, { leave: visitor });
@@ -104,6 +110,13 @@ ${defsToInclude.join('\n')}
 
   return {
     prepend: [gqlImports, ...mappersImports, ...visitor.globalDeclarations],
-    content: [header, resolversTypeMapping, resolversParentTypeMapping, ...visitorResult.definitions.filter(d => typeof d === 'string'), getRootResolver(), getAllDirectiveResolvers()].join('\n'),
+    content: [
+      header,
+      resolversTypeMapping,
+      resolversParentTypeMapping,
+      ...visitorResult.definitions.filter(d => typeof d === 'string'),
+      getRootResolver(),
+      getAllDirectiveResolvers(),
+    ].join('\n'),
   };
 };

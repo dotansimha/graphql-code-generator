@@ -47,7 +47,10 @@ export function block(array) {
 }
 
 export function wrapWithSingleQuotes(value: string | number | NameNode): string {
-  if (typeof value === 'number' || (typeof value === 'string' && !isNaN(parseInt(value)) && parseFloat(value).toString() === value)) {
+  if (
+    typeof value === 'number' ||
+    (typeof value === 'string' && !isNaN(parseInt(value)) && parseFloat(value).toString() === value)
+  ) {
     return `${value}`;
   }
 
@@ -224,7 +227,12 @@ export class DeclarationBlock {
       result += '{}';
     }
 
-    return (this._comment ? this._comment : '') + result + (this._kind === 'interface' || this._kind === 'enum' || this._kind === 'namespace' ? '' : ';') + '\n';
+    return (
+      (this._comment ? this._comment : '') +
+      result +
+      (this._kind === 'interface' || this._kind === 'enum' || this._kind === 'namespace' ? '' : ';') +
+      '\n'
+    );
   }
 }
 
@@ -247,7 +255,11 @@ export function convertNameParts(str: string, func: (str: string) => string, rem
     .join('_');
 }
 
-export function buildScalars(schema: GraphQLSchema | undefined, scalarsMapping: ScalarsMap, defaultScalarsMapping: NormalizedScalarsMap = DEFAULT_SCALARS): ParsedScalarsMap {
+export function buildScalars(
+  schema: GraphQLSchema | undefined,
+  scalarsMapping: ScalarsMap,
+  defaultScalarsMapping: NormalizedScalarsMap = DEFAULT_SCALARS
+): ParsedScalarsMap {
   const result: ParsedScalarsMap = {};
 
   Object.keys(defaultScalarsMapping).forEach(name => {
@@ -305,11 +317,17 @@ function isStringValueNode(node: any): node is StringValueNode {
 }
 
 export function isRootType(type: GraphQLNamedType, schema: GraphQLSchema): type is GraphQLObjectType {
-  return isEqualType(type, schema.getQueryType()) || isEqualType(type, schema.getMutationType()) || isEqualType(type, schema.getSubscriptionType());
+  return (
+    isEqualType(type, schema.getQueryType()) ||
+    isEqualType(type, schema.getMutationType()) ||
+    isEqualType(type, schema.getSubscriptionType())
+  );
 }
 
 export function getRootTypeNames(schema: GraphQLSchema): string[] {
-  return [schema.getQueryType(), schema.getMutationType(), schema.getSubscriptionType()].filter(t => t).map(t => t.name);
+  return [schema.getQueryType(), schema.getMutationType(), schema.getSubscriptionType()]
+    .filter(t => t)
+    .map(t => t.name);
 }
 
 export function stripMapperTypeInterpolation(identifier: string): string {
@@ -332,7 +350,10 @@ export function mergeSelectionSets(selectionSet1: SelectionSetNode, selectionSet
       throw new TypeError('Invalid state.');
     }
 
-    const match = newSelections.find(selection1 => selection1.kind === 'Field' && getFieldNodeNameValue(selection1) === getFieldNodeNameValue(selection2));
+    const match = newSelections.find(
+      selection1 =>
+        selection1.kind === 'Field' && getFieldNodeNameValue(selection1) === getFieldNodeNameValue(selection2)
+    );
 
     if (match) {
       // recursively merge all selection sets
@@ -353,7 +374,9 @@ export const getFieldNodeNameValue = (node: FieldNode): string => {
   return (node.alias || node.name).value;
 };
 
-export function separateSelectionSet(selections: ReadonlyArray<SelectionNode>): { fields: FieldNode[]; spreads: FragmentSpreadNode[]; inlines: InlineFragmentNode[] } {
+export function separateSelectionSet(
+  selections: ReadonlyArray<SelectionNode>
+): { fields: FieldNode[]; spreads: FragmentSpreadNode[]; inlines: InlineFragmentNode[] } {
   return {
     fields: selections.filter(s => s.kind === Kind.FIELD) as FieldNode[],
     inlines: selections.filter(s => s.kind === Kind.INLINE_FRAGMENT) as InlineFragmentNode[],

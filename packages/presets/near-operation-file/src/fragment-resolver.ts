@@ -1,5 +1,13 @@
 import { Types } from '@graphql-codegen/plugin-helpers';
-import { BaseVisitor, LoadedFragment, buildScalars, getPossibleTypes, getConfigValue, RawConfig, ParsedConfig } from '@graphql-codegen/visitor-plugin-common';
+import {
+  BaseVisitor,
+  LoadedFragment,
+  buildScalars,
+  getPossibleTypes,
+  getConfigValue,
+  RawConfig,
+  ParsedConfig,
+} from '@graphql-codegen/visitor-plugin-common';
 import { Kind, FragmentDefinitionNode, GraphQLSchema, DocumentNode, print } from 'graphql';
 
 import { extractExternalFragmentsInUse } from './utils';
@@ -14,12 +22,18 @@ export interface NearOperationFileParsedConfig extends ParsedConfig {
   fragmentVariableSuffix: string;
 }
 
-export type FragmentRegistry = { [fragmentName: string]: { filePath: string; importNames: string[]; onType: string; node: FragmentDefinitionNode } };
+export type FragmentRegistry = {
+  [fragmentName: string]: { filePath: string; importNames: string[]; onType: string; node: FragmentDefinitionNode };
+};
 
 /**
  * Used by `buildFragmentResolver` to  build a mapping of fragmentNames to paths, importNames, and other useful info
  */
-function buildFragmentRegistry({ generateFilePath }: DocumentImportResolverOptions, { documents, config }: Types.PresetFnArgs<{}>, schemaObject: GraphQLSchema) {
+function buildFragmentRegistry(
+  { generateFilePath }: DocumentImportResolverOptions,
+  { documents, config }: Types.PresetFnArgs<{}>,
+  schemaObject: GraphQLSchema
+) {
   const baseVisitor = new BaseVisitor<RawConfig, NearOperationFileParsedConfig>(config, {
     scalars: buildScalars(schemaObject, config.scalars),
     dedupeOperationSuffix: getConfigValue(config.dedupeOperationSuffix, false),
@@ -60,14 +74,18 @@ function buildFragmentRegistry({ generateFilePath }: DocumentImportResolverOptio
 
   const duplicateFragmentNames: string[] = [];
   const registry = documents.reduce((prev: FragmentRegistry, documentRecord) => {
-    const fragments: FragmentDefinitionNode[] = documentRecord.document.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[];
+    const fragments: FragmentDefinitionNode[] = documentRecord.document.definitions.filter(
+      d => d.kind === Kind.FRAGMENT_DEFINITION
+    ) as FragmentDefinitionNode[];
 
     if (fragments.length > 0) {
       for (const fragment of fragments) {
         const schemaType = schemaObject.getType(fragment.typeCondition.name.value);
 
         if (!schemaType) {
-          throw new Error(`Fragment "${fragment.name.value}" is set on non-existing type "${fragment.typeCondition.name.value}"!`);
+          throw new Error(
+            `Fragment "${fragment.name.value}" is set on non-existing type "${fragment.typeCondition.name.value}"!`
+          );
         }
 
         const possibleTypes = getPossibleTypes(schemaObject, schemaType);
@@ -81,7 +99,12 @@ function buildFragmentRegistry({ generateFilePath }: DocumentImportResolverOptio
           duplicateFragmentNames.push(fragment.name.value);
         }
 
-        prev[fragment.name.value] = { filePath, importNames, onType: fragment.typeCondition.name.value, node: fragment };
+        prev[fragment.name.value] = {
+          filePath,
+          importNames,
+          onType: fragment.typeCondition.name.value,
+          node: fragment,
+        };
       }
     }
 
@@ -97,7 +120,11 @@ function buildFragmentRegistry({ generateFilePath }: DocumentImportResolverOptio
 /**
  *  Builds a fragment "resolver" that collects `externalFragments` definitions and `fragmentImportStatements`
  */
-export default function buildFragmentResolver<T>(collectorOptions: DocumentImportResolverOptions, presetOptions: Types.PresetFnArgs<T>, schemaObject: GraphQLSchema) {
+export default function buildFragmentResolver<T>(
+  collectorOptions: DocumentImportResolverOptions,
+  presetOptions: Types.PresetFnArgs<T>,
+  schemaObject: GraphQLSchema
+) {
   const fragmentRegistry = buildFragmentRegistry(collectorOptions, presetOptions, schemaObject);
   const { baseOutputDir } = presetOptions;
   const { generateImportStatement } = collectorOptions;

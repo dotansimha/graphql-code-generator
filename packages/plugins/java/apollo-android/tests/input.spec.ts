@@ -24,8 +24,15 @@ describe('java-apollo-android', () => {
         f: String
       }
     `);
-    const config = { typePackage: 'com.app.generated.graphql', fragmentPackage: 'com.app.generated.graphql.fragment', package: 'com.app.generated.graphql', fileType: FileType.INPUT_TYPE };
-    const files: Types.DocumentFile[] = [{ document: { kind: Kind.DOCUMENT, definitions: [schema.getType('MyInput').astNode] }, location: '' }];
+    const config = {
+      typePackage: 'com.app.generated.graphql',
+      fragmentPackage: 'com.app.generated.graphql.fragment',
+      package: 'com.app.generated.graphql',
+      fileType: FileType.INPUT_TYPE,
+    };
+    const files: Types.DocumentFile[] = [
+      { document: { kind: Kind.DOCUMENT, definitions: [schema.getType('MyInput').astNode] }, location: '' },
+    ];
 
     it('Should produce valid Java code', async () => {
       const result = (await plugin(schema, files, config)) as Types.ComplexPluginOutput;
@@ -66,7 +73,8 @@ describe('java-apollo-android', () => {
       const result = (await plugin(schema, files, config)) as Types.ComplexPluginOutput;
       const output = mergeOutputs([result]);
 
-      expect(output).toBeSimilarStringTo(`MyInput(@Nonnull Integer foo, Input<String> bar, @Nonnull Boolean something, Input<NestedInput> nested, Input<List<String>> testArr) {
+      expect(output)
+        .toBeSimilarStringTo(`MyInput(@Nonnull Integer foo, Input<String> bar, @Nonnull Boolean something, Input<NestedInput> nested, Input<List<String>> testArr) {
         this.foo = foo;
         this.bar = bar;
         this.something = something;

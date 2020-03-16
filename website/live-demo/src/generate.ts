@@ -3,15 +3,10 @@ import { pluginLoaderMap } from './plugins';
 
 export async function generate(config: string, schema: string, documents?: string): Promise<string> {
   try {
-
-    const [
-      { safeLoad },
-      { codegen },
-      { parse },
-    ] = await Promise.all([
-      import('js-yaml').then(m => 'default' in m ? m.default : m),
-      import('@graphql-codegen/core').then(m => 'default' in m ? m.default : m),
-      import('graphql').then(m => 'default' in m ? m.default : m),
+    const [{ safeLoad }, { codegen }, { parse }] = await Promise.all([
+      import('js-yaml').then(m => ('default' in m ? m.default : m)),
+      import('@graphql-codegen/core').then(m => ('default' in m ? m.default : m)),
+      import('graphql').then(m => ('default' in m ? m.default : m)),
     ]);
 
     const cleanTabs = config.replace(/\t/g, '  ');
@@ -22,10 +17,12 @@ export async function generate(config: string, schema: string, documents?: strin
     const outputConfig = generates[filename].config;
     const pluginMap: any = {};
 
-    await Promise.all(plugins.map(async pluginElement => {
-      const pluginName = Object.keys(pluginElement)[0];
-      pluginMap[pluginName] = await pluginLoaderMap[pluginName]();
-    }));
+    await Promise.all(
+      plugins.map(async pluginElement => {
+        const pluginName = Object.keys(pluginElement)[0];
+        pluginMap[pluginName] = await pluginLoaderMap[pluginName]();
+      })
+    );
 
     const mergedConfig = {
       ...rootConfig,
@@ -49,7 +46,6 @@ export async function generate(config: string, schema: string, documents?: strin
     });
 
     return result;
-
   } catch (e) {
     // tslint:disable-next-line: no-console
     console.error(e);

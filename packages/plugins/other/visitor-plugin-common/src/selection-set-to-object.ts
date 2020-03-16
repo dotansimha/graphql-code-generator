@@ -18,12 +18,25 @@ import {
   GraphQLObjectType,
   GraphQLOutputType,
 } from 'graphql';
-import { getPossibleTypes, separateSelectionSet, getFieldNodeNameValue, DeclarationBlock, mergeSelectionSets } from './utils';
+import {
+  getPossibleTypes,
+  separateSelectionSet,
+  getFieldNodeNameValue,
+  DeclarationBlock,
+  mergeSelectionSets,
+} from './utils';
 import { NormalizedScalarsMap, ConvertNameFn, LoadedFragment, GetFragmentSuffixFn } from './types';
 import { BaseVisitorConvertOptions } from './base-visitor';
 import { getBaseType } from '@graphql-codegen/plugin-helpers';
 import { ParsedDocumentsConfig } from './base-documents-visitor';
-import { LinkField, PrimitiveAliasedFields, PrimitiveField, BaseSelectionSetProcessor, ProcessResult, NameAndType } from './selection-set-processor/base';
+import {
+  LinkField,
+  PrimitiveAliasedFields,
+  PrimitiveField,
+  BaseSelectionSetProcessor,
+  ProcessResult,
+  NameAndType,
+} from './selection-set-processor/base';
 import autoBind from 'auto-bind';
 
 function isMetadataFieldName(name: string) {
@@ -56,13 +69,27 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
   }
 
   public createNext(parentSchemaType: GraphQLNamedType, selectionSet: SelectionSetNode): SelectionSetToObject {
-    return new SelectionSetToObject(this._processor, this._scalars, this._schema, this._convertName.bind(this), this._getFragmentSuffix.bind(this), this._loadedFragments, this._config, parentSchemaType, selectionSet);
+    return new SelectionSetToObject(
+      this._processor,
+      this._scalars,
+      this._schema,
+      this._convertName.bind(this),
+      this._getFragmentSuffix.bind(this),
+      this._loadedFragments,
+      this._config,
+      parentSchemaType,
+      selectionSet
+    );
   }
 
   /**
    * traverse the inline fragment nodes recursively for colleting the selectionSets on each type
    */
-  _collectInlineFragments(parentType: GraphQLNamedType, nodes: InlineFragmentNode[], types: Map<string, Array<SelectionNode | string>>) {
+  _collectInlineFragments(
+    parentType: GraphQLNamedType,
+    nodes: InlineFragmentNode[],
+    types: Map<string, Array<SelectionNode | string>>
+  ) {
     if (isListType(parentType) || isNonNullType(parentType)) {
       return this._collectInlineFragments(parentType.ofType, nodes, types);
     } else if (isObjectType(parentType)) {
@@ -122,7 +149,9 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
           const possibleInterfaceTypes = getPossibleTypes(this._schema, schemaType);
 
           for (const possibleType of possibleTypes) {
-            if (possibleInterfaceTypes.find(possibleInterfaceType => possibleInterfaceType.name === possibleType.name)) {
+            if (
+              possibleInterfaceTypes.find(possibleInterfaceType => possibleInterfaceType.name === possibleType.name)
+            ) {
               this._appendToTypeMap(types, possibleType.name, fields);
               this._appendToTypeMap(types, possibleType.name, spreadsUsage[possibleType.name]);
               this._collectInlineFragments(schemaType, inlines, types);
@@ -138,7 +167,10 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     }
   }
 
-  protected _createInlineFragmentForFieldNodes(parentType: GraphQLNamedType, fieldNodes: FieldNode[]): InlineFragmentNode {
+  protected _createInlineFragmentForFieldNodes(
+    parentType: GraphQLNamedType,
+    fieldNodes: FieldNode[]
+  ): InlineFragmentNode {
     return {
       kind: Kind.INLINE_FRAGMENT,
       typeCondition: {
@@ -168,7 +200,11 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
 
         for (const possibleType of possibleTypesForFragment) {
           const fragmentSuffix = this._getFragmentSuffix(spread.name.value);
-          const usage = this.buildFragmentTypeName(spread.name.value, fragmentSuffix, possibleTypesForFragment.length === 1 ? null : possibleType.name);
+          const usage = this.buildFragmentTypeName(
+            spread.name.value,
+            fragmentSuffix,
+            possibleTypesForFragment.length === 1 ? null : possibleType.name
+          );
 
           if (!selectionNodesByTypeName[possibleType.name]) {
             selectionNodesByTypeName[possibleType.name] = [];
@@ -216,7 +252,11 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     return selectionNodesByTypeName;
   }
 
-  private _appendToTypeMap<T = SelectionNode | string>(types: Map<string, Array<T>>, typeName: string, nodes: Array<T>): void {
+  private _appendToTypeMap<T = SelectionNode | string>(
+    types: Map<string, Array<T>>,
+    typeName: string,
+    nodes: Array<T>
+  ): void {
     if (!types.has(typeName)) {
       types.set(typeName, []);
     }
@@ -259,7 +299,10 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
     return grouped;
   }
 
-  protected buildSelectionSetString(parentSchemaType: GraphQLObjectType, selectionNodes: Array<SelectionNode | string>) {
+  protected buildSelectionSetString(
+    parentSchemaType: GraphQLObjectType,
+    selectionNodes: Array<SelectionNode | string>
+  ) {
     const primitiveFields = new Map<string, FieldNode>();
     const primitiveAliasFields = new Map<string, FieldNode>();
     const linkFieldSelectionSets = new Map<
@@ -332,7 +375,12 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       });
     }
 
-    const typeInfoField = this.buildTypeNameField(parentSchemaType, this._config.nonOptionalTypename, this._config.addTypename, requireTypename);
+    const typeInfoField = this.buildTypeNameField(
+      parentSchemaType,
+      this._config.nonOptionalTypename,
+      this._config.addTypename,
+      requireTypename
+    );
     const transformed: ProcessResult = [
       ...(typeInfoField ? this._processor.transformTypenameField(typeInfoField.type, typeInfoField.name) : []),
       ...this._processor.transformPrimitiveFields(
@@ -341,13 +389,18 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       ),
       ...this._processor.transformAliasesPrimitiveFields(
         parentSchemaType,
-        Array.from(primitiveAliasFields.values()).map(field => ({ alias: field.alias.value, fieldName: field.name.value }))
+        Array.from(primitiveAliasFields.values()).map(field => ({
+          alias: field.alias.value,
+          fieldName: field.name.value,
+        }))
       ),
       ...this._processor.transformLinkFields(linkFields),
     ].filter(Boolean);
 
     const allStrings: string[] = transformed.filter(t => typeof t === 'string') as string[];
-    const allObjectsMerged: string[] = transformed.filter(t => typeof t !== 'string').map((t: NameAndType) => `${t.name}: ${t.type}`);
+    const allObjectsMerged: string[] = transformed
+      .filter(t => typeof t !== 'string')
+      .map((t: NameAndType) => `${t.name}: ${t.type}`);
     let mergedObjectsAsString: string = null;
 
     if (allObjectsMerged.length > 0) {
@@ -396,7 +449,11 @@ export class SelectionSetToObject<Config extends ParsedDocumentsConfig = ParsedD
       .join(' | ');
   }
 
-  public transformFragmentSelectionSetToTypes(fragmentName: string, fragmentSuffix: string, declarationBlockConfig): string {
+  public transformFragmentSelectionSetToTypes(
+    fragmentName: string,
+    fragmentSuffix: string,
+    declarationBlockConfig
+  ): string {
     const grouped = this._buildGroupedSelections();
 
     const subTypes: { name: string; content: string }[] = Object.keys(grouped)

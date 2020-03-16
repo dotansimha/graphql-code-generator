@@ -1,4 +1,12 @@
-import { ParsedConfig, BaseVisitor, EnumValuesMap, indentMultiline, indent, buildScalars, getBaseTypeNode } from '@graphql-codegen/visitor-plugin-common';
+import {
+  ParsedConfig,
+  BaseVisitor,
+  EnumValuesMap,
+  indentMultiline,
+  indent,
+  buildScalars,
+  getBaseTypeNode,
+} from '@graphql-codegen/visitor-plugin-common';
 import { JavaResolversPluginRawConfig } from './config';
 import {
   GraphQLSchema,
@@ -70,7 +78,11 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
   }
 
   protected getEnumValue(enumName: string, enumOption: string): string {
-    if (this.config.enumValues[enumName] && typeof this.config.enumValues[enumName] === 'object' && this.config.enumValues[enumName][enumOption]) {
+    if (
+      this.config.enumValues[enumName] &&
+      typeof this.config.enumValues[enumName] === 'object' &&
+      this.config.enumValues[enumName][enumOption]
+    ) {
       return this.config.enumValues[enumName][enumOption];
     }
 
@@ -79,7 +91,12 @@ export class JavaResolversVisitor extends BaseVisitor<JavaResolversPluginRawConf
 
   EnumValueDefinition(node: EnumValueDefinitionNode): (enumName: string) => string {
     return (enumName: string) => {
-      return indent(`${this.convertName(node, { useTypesPrefix: false, transformUnderscore: true })}("${this.getEnumValue(enumName, node.name.value)}")`);
+      return indent(
+        `${this.convertName(node, { useTypesPrefix: false, transformUnderscore: true })}("${this.getEnumValue(
+          enumName,
+          node.name.value
+        )}")`
+      );
     };
   }
 
@@ -116,10 +133,14 @@ public static ${enumName} valueOfLabel(String label) {
       .withBlock(enumBlock).string;
   }
 
-  protected resolveInputFieldType(typeNode: TypeNode): { baseType: string; typeName: string; isScalar: boolean; isArray: boolean; isEnum: boolean } {
+  protected resolveInputFieldType(
+    typeNode: TypeNode
+  ): { baseType: string; typeName: string; isScalar: boolean; isArray: boolean; isEnum: boolean } {
     const innerType = getBaseTypeNode(typeNode);
     const schemaType = this._schema.getType(innerType.name.value);
-    const isArray = typeNode.kind === Kind.LIST_TYPE || (typeNode.kind === Kind.NON_NULL_TYPE && typeNode.type.kind === Kind.LIST_TYPE);
+    const isArray =
+      typeNode.kind === Kind.LIST_TYPE ||
+      (typeNode.kind === Kind.NON_NULL_TYPE && typeNode.type.kind === Kind.LIST_TYPE);
     let result: { baseType: string; typeName: string; isScalar: boolean; isArray: boolean; isEnum: boolean } = null;
 
     if (isScalarType(schemaType)) {
@@ -143,7 +164,13 @@ public static ${enumName} valueOfLabel(String label) {
         isArray,
       };
     } else if (isEnumType(schemaType)) {
-      result = { isArray, baseType: this.convertName(schemaType.name), typeName: this.convertName(schemaType.name), isScalar: false, isEnum: true };
+      result = {
+        isArray,
+        baseType: this.convertName(schemaType.name),
+        typeName: this.convertName(schemaType.name),
+        isScalar: false,
+        isEnum: true,
+      };
     } else {
       result = { isArray, baseType: 'Object', typeName: 'Object', isScalar: true, isEnum: false };
     }
@@ -189,7 +216,10 @@ public static ${enumName} valueOfLabel(String label) {
             3
           );
         } else {
-          return indent(`this._${arg.name.value} = new ${typeToUse.typeName}((Map<String, Object>) args.get("${arg.name.value}"));`, 3);
+          return indent(
+            `this._${arg.name.value} = new ${typeToUse.typeName}((Map<String, Object>) args.get("${arg.name.value}"));`,
+            3
+          );
         }
       })
       .join('\n');
@@ -197,7 +227,9 @@ public static ${enumName} valueOfLabel(String label) {
       .map(arg => {
         const typeToUse = this.resolveInputFieldType(arg.type);
 
-        return indent(`public ${typeToUse.typeName} get${this.convertName(arg.name.value)}() { return this._${arg.name.value}; }`);
+        return indent(
+          `public ${typeToUse.typeName} get${this.convertName(arg.name.value)}() { return this._${arg.name.value}; }`
+        );
       })
       .join('\n');
 
@@ -217,7 +249,10 @@ ${getters}
   FieldDefinition(node: FieldDefinitionNode): (typeName: string) => string {
     return (typeName: string) => {
       if (node.arguments.length > 0) {
-        const transformerName = `${this.convertName(typeName, { useTypesPrefix: true })}${this.convertName(node.name.value, { useTypesPrefix: false })}Args`;
+        const transformerName = `${this.convertName(typeName, { useTypesPrefix: true })}${this.convertName(
+          node.name.value,
+          { useTypesPrefix: false }
+        )}Args`;
 
         return this.buildInputTransfomer(transformerName, node.arguments);
       }

@@ -1,4 +1,11 @@
-import { ClientSideBaseVisitor, ClientSideBasePluginConfig, LoadedFragment, getConfigValue, indentMultiline, DocumentMode } from '@graphql-codegen/visitor-plugin-common';
+import {
+  ClientSideBaseVisitor,
+  ClientSideBasePluginConfig,
+  LoadedFragment,
+  getConfigValue,
+  indentMultiline,
+  DocumentMode,
+} from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
 import { GraphQLSchema, Kind, OperationDefinitionNode } from 'graphql';
 
@@ -8,8 +15,17 @@ export interface GraphQLRequestPluginConfig extends ClientSideBasePluginConfig {
   rawRequest: boolean;
 }
 
-export class GraphQLRequestVisitor extends ClientSideBaseVisitor<RawGraphQLRequestPluginConfig, GraphQLRequestPluginConfig> {
-  private _operationsToInclude: { node: OperationDefinitionNode; documentVariableName: string; operationType: string; operationResultType: string; operationVariablesTypes: string }[] = [];
+export class GraphQLRequestVisitor extends ClientSideBaseVisitor<
+  RawGraphQLRequestPluginConfig,
+  GraphQLRequestPluginConfig
+> {
+  private _operationsToInclude: {
+    node: OperationDefinitionNode;
+    documentVariableName: string;
+    operationType: string;
+    operationResultType: string;
+    operationVariablesTypes: string;
+  }[] = [];
 
   constructor(schema: GraphQLSchema, fragments: LoadedFragment[], rawConfig: RawGraphQLRequestPluginConfig) {
     super(schema, fragments, rawConfig, {
@@ -28,10 +44,18 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<RawGraphQLReque
       this._additionalImports.push(`import { GraphQLError } from 'graphql-request/dist/src/types';`);
     }
 
-    this._additionalImports.push(`import { SdkFunctionWrapper, defaultWrapper } from '@graphql-codegen/typescript-graphql-request';`);
+    this._additionalImports.push(
+      `import { SdkFunctionWrapper, defaultWrapper } from '@graphql-codegen/typescript-graphql-request';`
+    );
   }
 
-  protected buildOperation(node: OperationDefinitionNode, documentVariableName: string, operationType: string, operationResultType: string, operationVariablesTypes: string): string {
+  protected buildOperation(
+    node: OperationDefinitionNode,
+    documentVariableName: string,
+    operationType: string,
+    operationResultType: string,
+    operationVariablesTypes: string
+  ): string {
     this._operationsToInclude.push({
       node,
       documentVariableName,
@@ -46,16 +70,26 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<RawGraphQLReque
   public get sdkContent(): string {
     const allPossibleActions = this._operationsToInclude
       .map(o => {
-        const optionalVariables = !o.node.variableDefinitions || o.node.variableDefinitions.length === 0 || o.node.variableDefinitions.every(v => v.type.kind !== Kind.NON_NULL_TYPE || v.defaultValue);
-        const doc = this.config.documentMode === DocumentMode.string ? o.documentVariableName : `print(${o.documentVariableName})`;
+        const optionalVariables =
+          !o.node.variableDefinitions ||
+          o.node.variableDefinitions.length === 0 ||
+          o.node.variableDefinitions.every(v => v.type.kind !== Kind.NON_NULL_TYPE || v.defaultValue);
+        const doc =
+          this.config.documentMode === DocumentMode.string
+            ? o.documentVariableName
+            : `print(${o.documentVariableName})`;
         if (this.config.rawRequest) {
-          return `${o.node.name.value}(variables${optionalVariables ? '?' : ''}: ${o.operationVariablesTypes}): Promise<{ data?: ${
+          return `${o.node.name.value}(variables${optionalVariables ? '?' : ''}: ${
+            o.operationVariablesTypes
+          }): Promise<{ data?: ${
             o.operationResultType
           } | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
     return withWrapper(() => client.rawRequest<${o.operationResultType}>(${doc}, variables));
 }`;
         } else {
-          return `${o.node.name.value}(variables${optionalVariables ? '?' : ''}: ${o.operationVariablesTypes}): Promise<${o.operationResultType}> {
+          return `${o.node.name.value}(variables${optionalVariables ? '?' : ''}: ${
+            o.operationVariablesTypes
+          }): Promise<${o.operationResultType}> {
   return withWrapper(() => client.request<${o.operationResultType}>(${doc}, variables));
 }`;
         }

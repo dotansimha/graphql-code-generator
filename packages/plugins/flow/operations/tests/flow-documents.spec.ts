@@ -6,7 +6,9 @@ import { validateFlow } from '../../flow/tests/validate-flow';
 import { readFileSync } from 'fs';
 
 describe('Flow Operations Plugin', () => {
-  const gitHuntSchema = buildClientSchema(JSON.parse(readFileSync('../../../../dev-test/githunt/schema.json', 'utf-8')));
+  const gitHuntSchema = buildClientSchema(
+    JSON.parse(readFileSync('../../../../dev-test/githunt/schema.json', 'utf-8'))
+  );
   const schema = buildSchema(/* GraphQL */ `
     type User {
       id: ID!
@@ -197,7 +199,12 @@ describe('Flow Operations Plugin', () => {
           }
         }
       `);
-      const result = await plugin(schema, [{ location: '', document: ast }], { namespacedImportName: 'Types' }, { outputFile: '' });
+      const result = await plugin(
+        schema,
+        [{ location: '', document: ast }],
+        { namespacedImportName: 'Types' },
+        { outputFile: '' }
+      );
 
       expect(result).toBeSimilarStringTo(`
       export type NotificationsQuery = ({
@@ -966,7 +973,9 @@ describe('Flow Operations Plugin', () => {
         { skipTypename: true },
         { outputFile: '' }
       );
-      expect(result).toBeSimilarStringTo(`export type TestSubscription = {| userCreated: ?$Pick<User, {| id: * |}> |};`);
+      expect(result).toBeSimilarStringTo(
+        `export type TestSubscription = {| userCreated: ?$Pick<User, {| id: * |}> |};`
+      );
       validateFlow(result);
     });
 

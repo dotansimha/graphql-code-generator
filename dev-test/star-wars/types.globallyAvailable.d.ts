@@ -237,7 +237,9 @@ type CreateReviewForEpisodeMutationVariables = {
   review: ReviewInput;
 };
 
-type CreateReviewForEpisodeMutation = { __typename?: 'Mutation' } & { createReview: Maybe<{ __typename?: 'Review' } & Pick<Review, 'stars' | 'commentary'>> };
+type CreateReviewForEpisodeMutation = { __typename?: 'Mutation' } & {
+  createReview: Maybe<{ __typename?: 'Review' } & Pick<Review, 'stars' | 'commentary'>>;
+};
 
 type HeroAndFriendsNamesQueryVariables = {
   episode?: Maybe<Episode>;
@@ -245,20 +247,42 @@ type HeroAndFriendsNamesQueryVariables = {
 
 type HeroAndFriendsNamesQuery = { __typename?: 'Query' } & {
   hero: Maybe<
-    | ({ __typename?: 'Human' } & Pick<Human, 'name'> & { friends: Maybe<Array<Maybe<({ __typename?: 'Human' } & Pick<Human, 'name'>) | ({ __typename?: 'Droid' } & Pick<Droid, 'name'>)>>> })
-    | ({ __typename?: 'Droid' } & Pick<Droid, 'name'> & { friends: Maybe<Array<Maybe<({ __typename?: 'Human' } & Pick<Human, 'name'>) | ({ __typename?: 'Droid' } & Pick<Droid, 'name'>)>>> })
+    | ({ __typename?: 'Human' } & Pick<Human, 'name'> & {
+          friends: Maybe<
+            Array<
+              Maybe<({ __typename?: 'Human' } & Pick<Human, 'name'>) | ({ __typename?: 'Droid' } & Pick<Droid, 'name'>)>
+            >
+          >;
+        })
+    | ({ __typename?: 'Droid' } & Pick<Droid, 'name'> & {
+          friends: Maybe<
+            Array<
+              Maybe<({ __typename?: 'Human' } & Pick<Human, 'name'>) | ({ __typename?: 'Droid' } & Pick<Droid, 'name'>)>
+            >
+          >;
+        })
   >;
 };
 
 type HeroAppearsInQueryVariables = {};
 
-type HeroAppearsInQuery = { __typename?: 'Query' } & { hero: Maybe<({ __typename?: 'Human' } & Pick<Human, 'name' | 'appearsIn'>) | ({ __typename?: 'Droid' } & Pick<Droid, 'name' | 'appearsIn'>)> };
+type HeroAppearsInQuery = { __typename?: 'Query' } & {
+  hero: Maybe<
+    | ({ __typename?: 'Human' } & Pick<Human, 'name' | 'appearsIn'>)
+    | ({ __typename?: 'Droid' } & Pick<Droid, 'name' | 'appearsIn'>)
+  >;
+};
 
 type HeroDetailsQueryVariables = {
   episode?: Maybe<Episode>;
 };
 
-type HeroDetailsQuery = { __typename?: 'Query' } & { hero: Maybe<({ __typename?: 'Human' } & Pick<Human, 'height' | 'name'>) | ({ __typename?: 'Droid' } & Pick<Droid, 'primaryFunction' | 'name'>)> };
+type HeroDetailsQuery = { __typename?: 'Query' } & {
+  hero: Maybe<
+    | ({ __typename?: 'Human' } & Pick<Human, 'height' | 'name'>)
+    | ({ __typename?: 'Droid' } & Pick<Droid, 'primaryFunction' | 'name'>)
+  >;
+};
 
 type HeroDetails_Human_Fragment = { __typename?: 'Human' } & Pick<Human, 'height' | 'name'>;
 
@@ -270,27 +294,37 @@ type HeroDetailsWithFragmentQueryVariables = {
   episode?: Maybe<Episode>;
 };
 
-type HeroDetailsWithFragmentQuery = { __typename?: 'Query' } & { hero: Maybe<({ __typename?: 'Human' } & HeroDetails_Human_Fragment) | ({ __typename?: 'Droid' } & HeroDetails_Droid_Fragment)> };
+type HeroDetailsWithFragmentQuery = { __typename?: 'Query' } & {
+  hero: Maybe<
+    ({ __typename?: 'Human' } & HeroDetails_Human_Fragment) | ({ __typename?: 'Droid' } & HeroDetails_Droid_Fragment)
+  >;
+};
 
 type HeroNameQueryVariables = {
   episode?: Maybe<Episode>;
 };
 
-type HeroNameQuery = { __typename?: 'Query' } & { hero: Maybe<({ __typename?: 'Human' } & Pick<Human, 'name'>) | ({ __typename?: 'Droid' } & Pick<Droid, 'name'>)> };
+type HeroNameQuery = { __typename?: 'Query' } & {
+  hero: Maybe<({ __typename?: 'Human' } & Pick<Human, 'name'>) | ({ __typename?: 'Droid' } & Pick<Droid, 'name'>)>;
+};
 
 type HeroNameConditionalInclusionQueryVariables = {
   episode?: Maybe<Episode>;
   includeName: Scalars['Boolean'];
 };
 
-type HeroNameConditionalInclusionQuery = { __typename?: 'Query' } & { hero: Maybe<({ __typename?: 'Human' } & Pick<Human, 'name'>) | ({ __typename?: 'Droid' } & Pick<Droid, 'name'>)> };
+type HeroNameConditionalInclusionQuery = { __typename?: 'Query' } & {
+  hero: Maybe<({ __typename?: 'Human' } & Pick<Human, 'name'>) | ({ __typename?: 'Droid' } & Pick<Droid, 'name'>)>;
+};
 
 type HeroNameConditionalExclusionQueryVariables = {
   episode?: Maybe<Episode>;
   skipName: Scalars['Boolean'];
 };
 
-type HeroNameConditionalExclusionQuery = { __typename?: 'Query' } & { hero: Maybe<({ __typename?: 'Human' } & Pick<Human, 'name'>) | ({ __typename?: 'Droid' } & Pick<Droid, 'name'>)> };
+type HeroNameConditionalExclusionQuery = { __typename?: 'Query' } & {
+  hero: Maybe<({ __typename?: 'Human' } & Pick<Human, 'name'>) | ({ __typename?: 'Droid' } & Pick<Droid, 'name'>)>;
+};
 
 type HeroParentTypeDependentFieldQueryVariables = {
   episode?: Maybe<Episode>;
@@ -298,8 +332,26 @@ type HeroParentTypeDependentFieldQueryVariables = {
 
 type HeroParentTypeDependentFieldQuery = { __typename?: 'Query' } & {
   hero: Maybe<
-    | ({ __typename?: 'Human' } & Pick<Human, 'name'> & { friends: Maybe<Array<Maybe<({ __typename?: 'Human' } & Pick<Human, 'height' | 'name'>) | ({ __typename?: 'Droid' } & Pick<Droid, 'name'>)>>> })
-    | ({ __typename?: 'Droid' } & Pick<Droid, 'name'> & { friends: Maybe<Array<Maybe<({ __typename?: 'Human' } & Pick<Human, 'height' | 'name'>) | ({ __typename?: 'Droid' } & Pick<Droid, 'name'>)>>> })
+    | ({ __typename?: 'Human' } & Pick<Human, 'name'> & {
+          friends: Maybe<
+            Array<
+              Maybe<
+                | ({ __typename?: 'Human' } & Pick<Human, 'height' | 'name'>)
+                | ({ __typename?: 'Droid' } & Pick<Droid, 'name'>)
+              >
+            >
+          >;
+        })
+    | ({ __typename?: 'Droid' } & Pick<Droid, 'name'> & {
+          friends: Maybe<
+            Array<
+              Maybe<
+                | ({ __typename?: 'Human' } & Pick<Human, 'height' | 'name'>)
+                | ({ __typename?: 'Droid' } & Pick<Droid, 'name'>)
+              >
+            >
+          >;
+        })
   >;
 };
 
@@ -307,13 +359,20 @@ type HeroTypeDependentAliasedFieldQueryVariables = {
   episode?: Maybe<Episode>;
 };
 
-type HeroTypeDependentAliasedFieldQuery = { __typename?: 'Query' } & { hero: Maybe<({ __typename?: 'Human' } & { property: Human['homePlanet'] }) | ({ __typename?: 'Droid' } & { property: Droid['primaryFunction'] })> };
+type HeroTypeDependentAliasedFieldQuery = { __typename?: 'Query' } & {
+  hero: Maybe<
+    | ({ __typename?: 'Human' } & { property: Human['homePlanet'] })
+    | ({ __typename?: 'Droid' } & { property: Droid['primaryFunction'] })
+  >;
+};
 
 type HumanFieldsFragment = { __typename?: 'Human' } & Pick<Human, 'name' | 'mass'>;
 
 type HumanWithNullHeightQueryVariables = {};
 
-type HumanWithNullHeightQuery = { __typename?: 'Query' } & { human: Maybe<{ __typename?: 'Human' } & HumanFieldsFragment> };
+type HumanWithNullHeightQuery = { __typename?: 'Query' } & {
+  human: Maybe<{ __typename?: 'Human' } & HumanFieldsFragment>;
+};
 
 type TwoHeroesQueryVariables = {};
 

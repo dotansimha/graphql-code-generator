@@ -678,7 +678,8 @@ describe('ResolversTypes', () => {
         };
       `);
 
-    expect(result.content).toBeSimilarStringTo(`export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['MyScalar'], any> {
+    expect(result.content)
+      .toBeSimilarStringTo(`export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['MyScalar'], any> {
       name: 'MyScalar'
         }
       `);
@@ -756,7 +757,8 @@ describe('ResolversTypes', () => {
         };
       `);
 
-    expect(result.content).toBeSimilarStringTo(`export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['MyScalar'], any> {
+    expect(result.content)
+      .toBeSimilarStringTo(`export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['MyScalar'], any> {
       name: 'MyScalar'
         }
       `);

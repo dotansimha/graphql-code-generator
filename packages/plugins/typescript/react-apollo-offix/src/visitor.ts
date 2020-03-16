@@ -1,4 +1,10 @@
-import { ClientSideBaseVisitor, ClientSideBasePluginConfig, LoadedFragment, DocumentMode, RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-common';
+import {
+  ClientSideBaseVisitor,
+  ClientSideBasePluginConfig,
+  LoadedFragment,
+  DocumentMode,
+  RawClientSideBasePluginConfig,
+} from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, GraphQLSchema } from 'graphql';
 import { Types } from '@graphql-codegen/plugin-helpers';
@@ -10,7 +16,12 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<RawClientSideBaseP
   private _externalImportPrefix: string;
   private imports = new Set<string>();
 
-  constructor(schema: GraphQLSchema, fragments: LoadedFragment[], rawConfig: RawClientSideBasePluginConfig, documents: Types.DocumentFile[]) {
+  constructor(
+    schema: GraphQLSchema,
+    fragments: LoadedFragment[],
+    rawConfig: RawClientSideBasePluginConfig,
+    documents: Types.DocumentFile[]
+  ) {
     super(schema, fragments, rawConfig, {});
 
     this._externalImportPrefix = this.config.importOperationTypesFrom ? `${this.config.importOperationTypesFrom}.` : '';
@@ -38,7 +49,13 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<RawClientSideBaseP
     return [...baseImports, ...Array.from(this.imports)];
   }
 
-  private _buildHooks(node: OperationDefinitionNode, operationType: string, documentVariableName: string, operationResultType: string, operationVariablesTypes: string): string {
+  private _buildHooks(
+    node: OperationDefinitionNode,
+    operationType: string,
+    documentVariableName: string,
+    operationResultType: string,
+    operationVariablesTypes: string
+  ): string {
     const operationName: string = this.convertName(node.name.value, {
       useTypesPrefix: false,
     });
@@ -50,7 +67,10 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<RawClientSideBaseP
     if (operationType === 'Mutation') {
       hookFns.push(
         `export function useOffline${operationName}(baseOptions?: OffixReactHooks.${operationType}HookOptions<${operationResultType}, ${operationVariablesTypes}>) {
-    return OffixReactHooks.useOfflineMutation<${operationResultType}, ${operationVariablesTypes}>(${this.getDocumentNodeVariable(node, documentVariableName)}, baseOptions);
+    return OffixReactHooks.useOfflineMutation<${operationResultType}, ${operationVariablesTypes}>(${this.getDocumentNodeVariable(
+          node,
+          documentVariableName
+        )}, baseOptions);
 }`
       );
     }
@@ -58,11 +78,23 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<RawClientSideBaseP
     return [...hookFns].join('\n');
   }
 
-  protected buildOperation(node: OperationDefinitionNode, documentVariableName: string, operationType: string, operationResultType: string, operationVariablesTypes: string): string {
+  protected buildOperation(
+    node: OperationDefinitionNode,
+    documentVariableName: string,
+    operationType: string,
+    operationResultType: string,
+    operationVariablesTypes: string
+  ): string {
     operationResultType = this._externalImportPrefix + operationResultType;
     operationVariablesTypes = this._externalImportPrefix + operationVariablesTypes;
 
-    const hooks = this._buildHooks(node, operationType, documentVariableName, operationResultType, operationVariablesTypes);
+    const hooks = this._buildHooks(
+      node,
+      operationType,
+      documentVariableName,
+      operationResultType,
+      operationVariablesTypes
+    );
 
     return [hooks].filter(a => a).join('\n');
   }
@@ -86,7 +118,13 @@ export class ReactApolloVisitor extends ClientSideBaseVisitor<RawClientSideBaseP
     const operationVariablesTypes = this.convertName(node, {
       suffix: operationTypeSuffix + 'Variables',
     });
-    const additional = this.buildOperation(node, documentVariableName, operationType, operationResultType, operationVariablesTypes);
+    const additional = this.buildOperation(
+      node,
+      documentVariableName,
+      operationType,
+      operationResultType,
+      operationVariablesTypes
+    );
     return [additional].filter(a => a).join('\n');
   }
 }

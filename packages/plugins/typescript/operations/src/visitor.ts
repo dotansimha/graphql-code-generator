@@ -1,5 +1,22 @@
-import { GraphQLSchema, isListType, GraphQLObjectType, GraphQLNonNull, GraphQLList, isEnumType, isNonNullType } from 'graphql';
-import { PreResolveTypesProcessor, ParsedDocumentsConfig, BaseDocumentsVisitor, LoadedFragment, getConfigValue, SelectionSetProcessorConfig, SelectionSetToObject, DeclarationKind } from '@graphql-codegen/visitor-plugin-common';
+import {
+  GraphQLSchema,
+  isListType,
+  GraphQLObjectType,
+  GraphQLNonNull,
+  GraphQLList,
+  isEnumType,
+  isNonNullType,
+} from 'graphql';
+import {
+  PreResolveTypesProcessor,
+  ParsedDocumentsConfig,
+  BaseDocumentsVisitor,
+  LoadedFragment,
+  getConfigValue,
+  SelectionSetProcessorConfig,
+  SelectionSetToObject,
+  DeclarationKind,
+} from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptOperationVariablesToObject } from './ts-operation-variables-to-object';
 import { TypeScriptDocumentsPluginConfig } from './config';
 
@@ -12,13 +29,17 @@ export interface TypeScriptDocumentsParsedConfig extends ParsedDocumentsConfig {
   noExport: boolean;
 }
 
-export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<TypeScriptDocumentsPluginConfig, TypeScriptDocumentsParsedConfig> {
+export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
+  TypeScriptDocumentsPluginConfig,
+  TypeScriptDocumentsParsedConfig
+> {
   constructor(schema: GraphQLSchema, config: TypeScriptDocumentsPluginConfig, allFragments: LoadedFragment[]) {
     super(
       config,
       {
         noExport: getConfigValue(config.noExport, false),
-        avoidOptionals: typeof config.avoidOptionals === 'boolean' ? getConfigValue(config.avoidOptionals, false) : false,
+        avoidOptionals:
+          typeof config.avoidOptionals === 'boolean' ? getConfigValue(config.avoidOptionals, false) : false,
         immutableTypes: getConfigValue(config.immutableTypes, false),
         nonOptionalTypename: getConfigValue(config.nonOptionalTypename, false),
       } as TypeScriptDocumentsParsedConfig,
@@ -38,7 +59,10 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<TypeScriptD
       return str;
     };
 
-    const wrapTypeWithModifiers = (baseType: string, type: GraphQLObjectType | GraphQLNonNull<GraphQLObjectType> | GraphQLList<GraphQLObjectType>): string => {
+    const wrapTypeWithModifiers = (
+      baseType: string,
+      type: GraphQLObjectType | GraphQLNonNull<GraphQLObjectType> | GraphQLList<GraphQLObjectType>
+    ): string => {
       const prefix = this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '';
 
       if (isNonNullType(type)) {
@@ -60,11 +84,32 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<TypeScriptD
       formatNamedField: (name: string): string => (this.config.immutableTypes ? `readonly ${name}` : name),
       wrapTypeWithModifiers,
     };
-    const processor = new (config.preResolveTypes ? PreResolveTypesProcessor : TypeScriptSelectionSetProcessor)(processorConfig);
-    this.setSelectionSetHandler(new SelectionSetToObject(processor, this.scalars, this.schema, this.convertName.bind(this), this.getFragmentSuffix.bind(this), allFragments, this.config));
+    const processor = new (config.preResolveTypes ? PreResolveTypesProcessor : TypeScriptSelectionSetProcessor)(
+      processorConfig
+    );
+    this.setSelectionSetHandler(
+      new SelectionSetToObject(
+        processor,
+        this.scalars,
+        this.schema,
+        this.convertName.bind(this),
+        this.getFragmentSuffix.bind(this),
+        allFragments,
+        this.config
+      )
+    );
     const enumsNames = Object.keys(schema.getTypeMap()).filter(typeName => isEnumType(schema.getType(typeName)));
     this.setVariablesTransformer(
-      new TypeScriptOperationVariablesToObject(this.scalars, this.convertName.bind(this), this.config.avoidOptionals, this.config.immutableTypes, this.config.namespacedImportName, enumsNames, this.config.enumPrefix, this.config.enumValues)
+      new TypeScriptOperationVariablesToObject(
+        this.scalars,
+        this.convertName.bind(this),
+        this.config.avoidOptionals,
+        this.config.immutableTypes,
+        this.config.namespacedImportName,
+        enumsNames,
+        this.config.enumPrefix,
+        this.config.enumValues
+      )
     );
     this._declarationBlockConfig = {
       ignoreExport: this.config.noExport,

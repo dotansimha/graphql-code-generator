@@ -1,7 +1,12 @@
 import { TypeScriptResolversPluginConfig } from './config';
 import { FieldDefinitionNode, ListTypeNode, NamedTypeNode, NonNullTypeNode, GraphQLSchema } from 'graphql';
 import autoBind from 'auto-bind';
-import { ParsedResolversConfig, BaseResolversVisitor, getConfigValue, DeclarationKind } from '@graphql-codegen/visitor-plugin-common';
+import {
+  ParsedResolversConfig,
+  BaseResolversVisitor,
+  getConfigValue,
+  DeclarationKind,
+} from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptOperationVariablesToObject } from '@graphql-codegen/typescript';
 
 export interface ParsedTypeScriptResolversConfig extends ParsedResolversConfig {
@@ -10,7 +15,10 @@ export interface ParsedTypeScriptResolversConfig extends ParsedResolversConfig {
   wrapFieldDefinitions: boolean;
 }
 
-export class TypeScriptResolversVisitor extends BaseResolversVisitor<TypeScriptResolversPluginConfig, ParsedTypeScriptResolversConfig> {
+export class TypeScriptResolversVisitor extends BaseResolversVisitor<
+  TypeScriptResolversPluginConfig,
+  ParsedTypeScriptResolversConfig
+> {
   constructor(pluginConfig: TypeScriptResolversPluginConfig, schema: GraphQLSchema) {
     super(
       pluginConfig,
@@ -22,7 +30,18 @@ export class TypeScriptResolversVisitor extends BaseResolversVisitor<TypeScriptR
       schema
     );
     autoBind(this);
-    this.setVariablesTransformer(new TypeScriptOperationVariablesToObject(this.scalars, this.convertName, this.config.avoidOptionals, this.config.immutableTypes, null, [], this.config.enumPrefix, this.config.enumValues));
+    this.setVariablesTransformer(
+      new TypeScriptOperationVariablesToObject(
+        this.scalars,
+        this.convertName,
+        this.config.avoidOptionals,
+        this.config.immutableTypes,
+        null,
+        [],
+        this.config.enumPrefix,
+        this.config.enumValues
+      )
+    );
 
     if (this.config.useIndexSignature) {
       this._declarationBlockConfig = {

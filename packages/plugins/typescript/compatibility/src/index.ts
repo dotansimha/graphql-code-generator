@@ -5,10 +5,17 @@ import { CompatabilityPluginRawConfig } from './config';
 
 const REACT_APOLLO_PLUGIN_NAME = 'typescript-react-apollo';
 
-export const plugin: PluginFunction<CompatabilityPluginRawConfig> = async (schema: GraphQLSchema, documents: Types.DocumentFile[], config: CompatabilityPluginRawConfig, additionalData): Promise<string> => {
+export const plugin: PluginFunction<CompatabilityPluginRawConfig> = async (
+  schema: GraphQLSchema,
+  documents: Types.DocumentFile[],
+  config: CompatabilityPluginRawConfig,
+  additionalData
+): Promise<string> => {
   const allAst = concatAST(documents.map(v => v.document));
 
-  const reactApollo = ((additionalData || {}).allPlugins || []).find(p => Object.keys(p)[0] === REACT_APOLLO_PLUGIN_NAME);
+  const reactApollo = ((additionalData || {}).allPlugins || []).find(
+    p => Object.keys(p)[0] === REACT_APOLLO_PLUGIN_NAME
+  );
   const visitor = new CompatabilityPluginVisitor(config, schema, {
     reactApollo: reactApollo
       ? {

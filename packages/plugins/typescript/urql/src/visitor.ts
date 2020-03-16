@@ -1,4 +1,10 @@
-import { ClientSideBaseVisitor, ClientSideBasePluginConfig, LoadedFragment, getConfigValue, OMIT_TYPE } from '@graphql-codegen/visitor-plugin-common';
+import {
+  ClientSideBaseVisitor,
+  ClientSideBasePluginConfig,
+  LoadedFragment,
+  getConfigValue,
+  OMIT_TYPE,
+} from '@graphql-codegen/visitor-plugin-common';
 import { UrqlRawPluginConfig } from './config';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, Kind, GraphQLSchema } from 'graphql';
@@ -43,10 +49,18 @@ export class UrqlVisitor extends ClientSideBaseVisitor<UrqlRawPluginConfig, Urql
     return [...baseImports, ...imports];
   }
 
-  private _buildComponent(node: OperationDefinitionNode, documentVariableName: string, operationType: string, operationResultType: string, operationVariablesTypes: string): string {
+  private _buildComponent(
+    node: OperationDefinitionNode,
+    documentVariableName: string,
+    operationType: string,
+    operationResultType: string,
+    operationVariablesTypes: string
+  ): string {
     const componentName: string = this.convertName(node.name.value, { suffix: 'Component', useTypesPrefix: false });
 
-    const isVariablesRequired = operationType === 'Query' && node.variableDefinitions.some(variableDef => variableDef.type.kind === Kind.NON_NULL_TYPE);
+    const isVariablesRequired =
+      operationType === 'Query' &&
+      node.variableDefinitions.some(variableDef => variableDef.type.kind === Kind.NON_NULL_TYPE);
 
     const generics = [operationResultType, operationVariablesTypes];
 
@@ -54,14 +68,25 @@ export class UrqlVisitor extends ClientSideBaseVisitor<UrqlRawPluginConfig, Urql
       generics.unshift(operationResultType);
     }
     return `
-export const ${componentName} = (props: Omit<Urql.${operationType}Props<${generics.join(', ')}>, 'query'> & { variables${isVariablesRequired ? '' : '?'}: ${operationVariablesTypes} }) => (
+export const ${componentName} = (props: Omit<Urql.${operationType}Props<${generics.join(
+      ', '
+    )}>, 'query'> & { variables${isVariablesRequired ? '' : '?'}: ${operationVariablesTypes} }) => (
   <Urql.${operationType} {...props} query={${documentVariableName}} />
 );
 `;
   }
 
-  private _buildHooks(node: OperationDefinitionNode, operationType: string, documentVariableName: string, operationResultType: string, operationVariablesTypes: string): string {
-    const operationName: string = this.convertName(node.name.value, { suffix: pascalCase(operationType), useTypesPrefix: false });
+  private _buildHooks(
+    node: OperationDefinitionNode,
+    operationType: string,
+    documentVariableName: string,
+    operationResultType: string,
+    operationVariablesTypes: string
+  ): string {
+    const operationName: string = this.convertName(node.name.value, {
+      suffix: pascalCase(operationType),
+      useTypesPrefix: false,
+    });
 
     if (operationType === 'Mutation') {
       return `
@@ -83,9 +108,19 @@ export function use${operationName}(options: Omit<Urql.Use${operationType}Args<$
 };`;
   }
 
-  protected buildOperation(node: OperationDefinitionNode, documentVariableName: string, operationType: string, operationResultType: string, operationVariablesTypes: string): string {
-    const component = this.config.withComponent ? this._buildComponent(node, documentVariableName, operationType, operationResultType, operationVariablesTypes) : null;
-    const hooks = this.config.withHooks ? this._buildHooks(node, operationType, documentVariableName, operationResultType, operationVariablesTypes) : null;
+  protected buildOperation(
+    node: OperationDefinitionNode,
+    documentVariableName: string,
+    operationType: string,
+    operationResultType: string,
+    operationVariablesTypes: string
+  ): string {
+    const component = this.config.withComponent
+      ? this._buildComponent(node, documentVariableName, operationType, operationResultType, operationVariablesTypes)
+      : null;
+    const hooks = this.config.withHooks
+      ? this._buildHooks(node, operationType, documentVariableName, operationResultType, operationVariablesTypes)
+      : null;
 
     return [component, hooks].filter(a => a).join('\n');
   }

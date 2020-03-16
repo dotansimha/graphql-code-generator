@@ -39,7 +39,11 @@ export type TimePluginConfig =
       message: string;
     };
 
-export const plugin: PluginFunction<TimePluginConfig> = async (schema: GraphQLSchema, documents: Types.DocumentFile[], config: TimePluginConfig): Promise<string> => {
+export const plugin: PluginFunction<TimePluginConfig> = async (
+  schema: GraphQLSchema,
+  documents: Types.DocumentFile[],
+  config: TimePluginConfig
+): Promise<string> => {
   let format;
   let message = 'Generated in ';
 

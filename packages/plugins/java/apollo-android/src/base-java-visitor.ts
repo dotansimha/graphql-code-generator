@@ -3,7 +3,19 @@ import { BaseVisitor, getBaseTypeNode, buildScalars } from '@graphql-codegen/vis
 import { getBaseType } from '@graphql-codegen/plugin-helpers';
 import { JavaApolloAndroidPluginConfig } from './plugin';
 import { JAVA_SCALARS } from '@graphql-codegen/java-common';
-import { GraphQLSchema, isScalarType, isInputObjectType, Kind, GraphQLNamedType, GraphQLOutputType, isNonNullType, isListType, TypeNode, GraphQLInterfaceType, GraphQLObjectType } from 'graphql';
+import {
+  GraphQLSchema,
+  isScalarType,
+  isInputObjectType,
+  Kind,
+  GraphQLNamedType,
+  GraphQLOutputType,
+  isNonNullType,
+  isListType,
+  TypeNode,
+  GraphQLInterfaceType,
+  GraphQLObjectType,
+} from 'graphql';
 import { VisitorConfig } from './visitor-config';
 import { ImportsSet, TransformedType } from './types';
 
@@ -19,10 +31,17 @@ function isTypeNode(type: TypeNode | GraphQLOutputType): type is TypeNode {
   return type && !!(type as TypeNode).kind;
 }
 
-export class BaseJavaVisitor<Config extends VisitorConfig = any> extends BaseVisitor<JavaApolloAndroidPluginConfig, Config> {
+export class BaseJavaVisitor<Config extends VisitorConfig = any> extends BaseVisitor<
+  JavaApolloAndroidPluginConfig,
+  Config
+> {
   protected _imports: ImportsSet = new Set<string>();
 
-  constructor(protected _schema: GraphQLSchema, rawConfig: JavaApolloAndroidPluginConfig, additionalConfig: Partial<Config>) {
+  constructor(
+    protected _schema: GraphQLSchema,
+    rawConfig: JavaApolloAndroidPluginConfig,
+    additionalConfig: Partial<Config>
+  ) {
     super(rawConfig, {
       ...additionalConfig,
       scalars: buildScalars(_schema, { ID: 'String' }, JAVA_SCALARS),
@@ -72,7 +91,9 @@ export class BaseJavaVisitor<Config extends VisitorConfig = any> extends BaseVis
 
     const javaType = this.getJavaClass(schemaType);
     const annotation = isNonNull ? 'Nonnull' : 'Nullable';
-    const typeToUse = isTypeNode(type) ? this.getListTypeNodeWrapped(javaType, type) : this.getListTypeWrapped(javaType, type);
+    const typeToUse = isTypeNode(type)
+      ? this.getListTypeNodeWrapped(javaType, type)
+      : this.getListTypeWrapped(javaType, type);
 
     return {
       baseType: schemaType.name,

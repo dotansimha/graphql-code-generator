@@ -44,7 +44,11 @@ export interface SchemaASTConfig {
   federation?: boolean;
 }
 
-export const plugin: PluginFunction<SchemaASTConfig> = async (schema: GraphQLSchema, _documents, { commentDescriptions = false, includeDirectives = false, federation }): Promise<string> => {
+export const plugin: PluginFunction<SchemaASTConfig> = async (
+  schema: GraphQLSchema,
+  _documents,
+  { commentDescriptions = false, includeDirectives = false, federation }
+): Promise<string> => {
   const outputSchema = federation ? removeFederation(schema) : schema;
 
   if (includeDirectives) {
@@ -54,7 +58,13 @@ export const plugin: PluginFunction<SchemaASTConfig> = async (schema: GraphQLSch
   return printSchema(outputSchema, { commentDescriptions: commentDescriptions });
 };
 
-export const validate: PluginValidateFn<any> = async (_schema: GraphQLSchema, _documents: Types.DocumentFile[], _config: SchemaASTConfig, outputFile: string, allPlugins: Types.ConfiguredPlugin[]) => {
+export const validate: PluginValidateFn<any> = async (
+  _schema: GraphQLSchema,
+  _documents: Types.DocumentFile[],
+  _config: SchemaASTConfig,
+  outputFile: string,
+  allPlugins: Types.ConfiguredPlugin[]
+) => {
   const singlePlugin = allPlugins.length === 1;
 
   if (singlePlugin && extname(outputFile) !== '.graphql') {

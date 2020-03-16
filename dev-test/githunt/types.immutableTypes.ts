@@ -167,7 +167,11 @@ export type OnCommentAddedSubscriptionVariables = {
 };
 
 export type OnCommentAddedSubscription = { readonly __typename?: 'Subscription' } & {
-  readonly commentAdded: Maybe<{ readonly __typename?: 'Comment' } & Pick<Comment, 'id' | 'createdAt' | 'content'> & { readonly postedBy: { readonly __typename?: 'User' } & Pick<User, 'login' | 'html_url'> }>;
+  readonly commentAdded: Maybe<
+    { readonly __typename?: 'Comment' } & Pick<Comment, 'id' | 'createdAt' | 'content'> & {
+        readonly postedBy: { readonly __typename?: 'User' } & Pick<User, 'login' | 'html_url'>;
+      }
+  >;
 };
 
 export type CommentQueryVariables = {
@@ -182,19 +186,29 @@ export type CommentQuery = { readonly __typename?: 'Query' } & {
     { readonly __typename?: 'Entry' } & Pick<Entry, 'id' | 'createdAt' | 'commentCount'> & {
         readonly postedBy: { readonly __typename?: 'User' } & Pick<User, 'login' | 'html_url'>;
         readonly comments: ReadonlyArray<Maybe<{ readonly __typename?: 'Comment' } & CommentsPageCommentFragment>>;
-        readonly repository: { readonly __typename?: 'Repository' } & Pick<Repository, 'description' | 'open_issues_count' | 'stargazers_count' | 'full_name' | 'html_url'>;
+        readonly repository: { readonly __typename?: 'Repository' } & Pick<
+          Repository,
+          'description' | 'open_issues_count' | 'stargazers_count' | 'full_name' | 'html_url'
+        >;
       }
   >;
 };
 
-export type CommentsPageCommentFragment = { readonly __typename?: 'Comment' } & Pick<Comment, 'id' | 'createdAt' | 'content'> & { readonly postedBy: { readonly __typename?: 'User' } & Pick<User, 'login' | 'html_url'> };
+export type CommentsPageCommentFragment = { readonly __typename?: 'Comment' } & Pick<
+  Comment,
+  'id' | 'createdAt' | 'content'
+> & { readonly postedBy: { readonly __typename?: 'User' } & Pick<User, 'login' | 'html_url'> };
 
 export type CurrentUserForProfileQueryVariables = {};
 
-export type CurrentUserForProfileQuery = { readonly __typename?: 'Query' } & { readonly currentUser: Maybe<{ readonly __typename?: 'User' } & Pick<User, 'login' | 'avatar_url'>> };
+export type CurrentUserForProfileQuery = { readonly __typename?: 'Query' } & {
+  readonly currentUser: Maybe<{ readonly __typename?: 'User' } & Pick<User, 'login' | 'avatar_url'>>;
+};
 
 export type FeedEntryFragment = { readonly __typename?: 'Entry' } & Pick<Entry, 'id' | 'commentCount'> & {
-    readonly repository: { readonly __typename?: 'Repository' } & Pick<Repository, 'full_name' | 'html_url'> & { readonly owner: Maybe<{ readonly __typename?: 'User' } & Pick<User, 'avatar_url'>> };
+    readonly repository: { readonly __typename?: 'Repository' } & Pick<Repository, 'full_name' | 'html_url'> & {
+        readonly owner: Maybe<{ readonly __typename?: 'User' } & Pick<User, 'avatar_url'>>;
+      };
   } & VoteButtonsFragment &
   RepoInfoFragment;
 
@@ -204,16 +218,24 @@ export type FeedQueryVariables = {
   limit?: Maybe<Scalars['Int']>;
 };
 
-export type FeedQuery = { readonly __typename?: 'Query' } & { readonly currentUser: Maybe<{ readonly __typename?: 'User' } & Pick<User, 'login'>>; readonly feed: Maybe<ReadonlyArray<Maybe<{ readonly __typename?: 'Entry' } & FeedEntryFragment>>> };
+export type FeedQuery = { readonly __typename?: 'Query' } & {
+  readonly currentUser: Maybe<{ readonly __typename?: 'User' } & Pick<User, 'login'>>;
+  readonly feed: Maybe<ReadonlyArray<Maybe<{ readonly __typename?: 'Entry' } & FeedEntryFragment>>>;
+};
 
 export type SubmitRepositoryMutationVariables = {
   repoFullName: Scalars['String'];
 };
 
-export type SubmitRepositoryMutation = { readonly __typename?: 'Mutation' } & { readonly submitRepository: Maybe<{ readonly __typename?: 'Entry' } & Pick<Entry, 'createdAt'>> };
+export type SubmitRepositoryMutation = { readonly __typename?: 'Mutation' } & {
+  readonly submitRepository: Maybe<{ readonly __typename?: 'Entry' } & Pick<Entry, 'createdAt'>>;
+};
 
 export type RepoInfoFragment = { readonly __typename?: 'Entry' } & Pick<Entry, 'createdAt'> & {
-    readonly repository: { readonly __typename?: 'Repository' } & Pick<Repository, 'description' | 'stargazers_count' | 'open_issues_count'>;
+    readonly repository: { readonly __typename?: 'Repository' } & Pick<
+      Repository,
+      'description' | 'stargazers_count' | 'open_issues_count'
+    >;
     readonly postedBy: { readonly __typename?: 'User' } & Pick<User, 'html_url' | 'login'>;
   };
 
@@ -222,13 +244,23 @@ export type SubmitCommentMutationVariables = {
   commentContent: Scalars['String'];
 };
 
-export type SubmitCommentMutation = { readonly __typename?: 'Mutation' } & { readonly submitComment: Maybe<{ readonly __typename?: 'Comment' } & CommentsPageCommentFragment> };
+export type SubmitCommentMutation = { readonly __typename?: 'Mutation' } & {
+  readonly submitComment: Maybe<{ readonly __typename?: 'Comment' } & CommentsPageCommentFragment>;
+};
 
-export type VoteButtonsFragment = { readonly __typename?: 'Entry' } & Pick<Entry, 'score'> & { readonly vote: { readonly __typename?: 'Vote' } & Pick<Vote, 'vote_value'> };
+export type VoteButtonsFragment = { readonly __typename?: 'Entry' } & Pick<Entry, 'score'> & {
+    readonly vote: { readonly __typename?: 'Vote' } & Pick<Vote, 'vote_value'>;
+  };
 
 export type VoteMutationVariables = {
   repoFullName: Scalars['String'];
   type: VoteType;
 };
 
-export type VoteMutation = { readonly __typename?: 'Mutation' } & { readonly vote: Maybe<{ readonly __typename?: 'Entry' } & Pick<Entry, 'score' | 'id'> & { readonly vote: { readonly __typename?: 'Vote' } & Pick<Vote, 'vote_value'> }> };
+export type VoteMutation = { readonly __typename?: 'Mutation' } & {
+  readonly vote: Maybe<
+    { readonly __typename?: 'Entry' } & Pick<Entry, 'score' | 'id'> & {
+        readonly vote: { readonly __typename?: 'Vote' } & Pick<Vote, 'vote_value'>;
+      }
+  >;
+};

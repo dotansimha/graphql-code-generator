@@ -5,7 +5,11 @@ import { parse, visit, GraphQLSchema, printSchema } from 'graphql';
 import { TypeScriptResolversVisitor } from './visitor';
 import { TypeScriptResolversPluginConfig } from './config';
 
-export const plugin: PluginFunction<TypeScriptResolversPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: TypeScriptResolversPluginConfig) => {
+export const plugin: PluginFunction<TypeScriptResolversPluginConfig> = (
+  schema: GraphQLSchema,
+  documents: Types.DocumentFile[],
+  config: TypeScriptResolversPluginConfig
+) => {
   const imports = [];
   if (!config.customResolveInfo) {
     imports.push('GraphQLResolveInfo');
@@ -15,15 +19,24 @@ export const plugin: PluginFunction<TypeScriptResolversPluginConfig> = (schema: 
 
   if (config.noSchemaStitching === false) {
     // eslint-disable-next-line no-console
-    console.warn(`The default behavior of 'noSchemaStitching' will be reversed in the next major release. Support for Schema Stitching will be disabled by default.`);
+    console.warn(
+      `The default behavior of 'noSchemaStitching' will be reversed in the next major release. Support for Schema Stitching will be disabled by default.`
+    );
   }
 
-  const indexSignature = config.useIndexSignature ? ['export type WithIndex<TObject> = TObject & Record<string, any>;', 'export type ResolversObject<TObject> = WithIndex<TObject>;'].join('\n') : '';
+  const indexSignature = config.useIndexSignature
+    ? [
+        'export type WithIndex<TObject> = TObject & Record<string, any>;',
+        'export type ResolversObject<TObject> = WithIndex<TObject>;',
+      ].join('\n')
+    : '';
 
   const transformedSchema = config.federation ? addFederationReferencesToSchema(schema) : schema;
   const visitor = new TypeScriptResolversVisitor(config, transformedSchema);
 
-  const printedSchema = config.federation ? printSchemaWithDirectives(transformedSchema) : printSchema(transformedSchema);
+  const printedSchema = config.federation
+    ? printSchemaWithDirectives(transformedSchema)
+    : printSchema(transformedSchema);
   const astNode = parse(printedSchema);
   // runs visitor
   const visitorResult = visit(astNode, { leave: visitor });
@@ -63,7 +76,9 @@ export type StitchingResolver<TResult, TParent, TContext, TArgs> = {
     // Resolver =
     // | ResolverFn
     // | StitchingResolver;
-    defsToInclude.push([stitchingResolverType, resolverType, `  | ${resolverFnUsage}`, `  | ${stitchingResolverUsage};`].join('\n'));
+    defsToInclude.push(
+      [stitchingResolverType, resolverType, `  | ${resolverFnUsage}`, `  | ${stitchingResolverUsage};`].join('\n')
+    );
   }
 
   if (config.customResolverFn) {
@@ -72,7 +87,11 @@ export type StitchingResolver<TResult, TParent, TContext, TArgs> = {
       if (parsedMapper.default) {
         prepend.push(`import ResolverFn from '${parsedMapper.source}';`);
       } else {
-        prepend.push(`import { ${parsedMapper.import} ${parsedMapper.import !== 'ResolverFn' ? 'as ResolverFn ' : ''}} from '${parsedMapper.source}';`);
+        prepend.push(
+          `import { ${parsedMapper.import} ${parsedMapper.import !== 'ResolverFn' ? 'as ResolverFn ' : ''}} from '${
+            parsedMapper.source
+          }';`
+        );
       }
       prepend.push(`export { ResolverFn };`);
     } else {
@@ -170,7 +189,11 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
       if (parsedMapper.default) {
         prepend.push(`import GraphQLResolveInfo from '${parsedMapper.source}'`);
       }
-      prepend.push(`import { ${parsedMapper.import} ${parsedMapper.import !== 'GraphQLResolveInfo' ? 'as GraphQLResolveInfo' : ''} } from '${parsedMapper.source}';`);
+      prepend.push(
+        `import { ${parsedMapper.import} ${
+          parsedMapper.import !== 'GraphQLResolveInfo' ? 'as GraphQLResolveInfo' : ''
+        } } from '${parsedMapper.source}';`
+      );
     } else {
       prepend.push(`type GraphQLResolveInfo = ${parsedMapper.type}`);
     }
@@ -180,7 +203,14 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
   return {
     prepend,
-    content: [header, resolversTypeMapping, resolversParentTypeMapping, ...visitorResult.definitions.filter(d => typeof d === 'string'), getRootResolver(), getAllDirectiveResolvers()].join('\n'),
+    content: [
+      header,
+      resolversTypeMapping,
+      resolversParentTypeMapping,
+      ...visitorResult.definitions.filter(d => typeof d === 'string'),
+      getRootResolver(),
+      getAllDirectiveResolvers(),
+    ].join('\n'),
   };
 };
 

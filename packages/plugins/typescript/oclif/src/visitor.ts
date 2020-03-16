@@ -1,4 +1,9 @@
-import { ClientSideBaseVisitor, ClientSideBasePluginConfig, LoadedFragment, indentMultiline } from '@graphql-codegen/visitor-plugin-common';
+import {
+  ClientSideBaseVisitor,
+  ClientSideBasePluginConfig,
+  LoadedFragment,
+  indentMultiline,
+} from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
 import { GraphQLSchema, OperationDefinitionNode, print } from 'graphql';
 
@@ -38,7 +43,13 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<Config, ClientS
     this._additionalImports.push(`import handler from '${handlerPath}'`);
   }
 
-  protected buildOperation(node: OperationDefinitionNode, documentVariableName: string, operationType: string, operationResultType: string, operationVariablesTypes: string): string {
+  protected buildOperation(
+    node: OperationDefinitionNode,
+    documentVariableName: string,
+    operationType: string,
+    operationResultType: string,
+    operationVariablesTypes: string
+  ): string {
     this._operationsToInclude.push({
       node,
       documentVariableName,
@@ -60,7 +71,9 @@ export class GraphQLRequestVisitor extends ClientSideBaseVisitor<Config, ClientS
   // Generate the code required for this CLI operation
   public get cliContent(): string {
     if (this._operationsToInclude.length !== 1) {
-      throw new Error(`Each graphql document should have exactly one operation; found ${this._operationsToInclude.length} while generating ${this._info.outputFile}.`);
+      throw new Error(
+        `Each graphql document should have exactly one operation; found ${this._operationsToInclude.length} while generating ${this._info.outputFile}.`
+      );
     }
 
     const operation = this._operationsToInclude[0];

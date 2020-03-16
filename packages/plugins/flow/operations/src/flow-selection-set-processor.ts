@@ -1,4 +1,12 @@
-import { LinkField, PrimitiveField, PrimitiveAliasedFields, SelectionSetProcessorConfig, ProcessResult, BaseSelectionSetProcessor, indent } from '@graphql-codegen/visitor-plugin-common';
+import {
+  LinkField,
+  PrimitiveField,
+  PrimitiveAliasedFields,
+  SelectionSetProcessorConfig,
+  ProcessResult,
+  BaseSelectionSetProcessor,
+  indent,
+} from '@graphql-codegen/visitor-plugin-common';
 import { GraphQLObjectType, GraphQLInterfaceType } from 'graphql';
 
 export interface FlowSelectionSetProcessorConfig extends SelectionSetProcessorConfig {
@@ -7,7 +15,10 @@ export interface FlowSelectionSetProcessorConfig extends SelectionSetProcessorCo
 }
 
 export class FlowWithPickSelectionSetProcessor extends BaseSelectionSetProcessor<FlowSelectionSetProcessorConfig> {
-  transformAliasesPrimitiveFields(schemaType: GraphQLObjectType | GraphQLInterfaceType, fields: PrimitiveAliasedFields[]): ProcessResult {
+  transformAliasesPrimitiveFields(
+    schemaType: GraphQLObjectType | GraphQLInterfaceType,
+    fields: PrimitiveAliasedFields[]
+  ): ProcessResult {
     if (fields.length === 0) {
       return [];
     }
@@ -20,7 +31,16 @@ export class FlowWithPickSelectionSetProcessor extends BaseSelectionSetProcessor
         useTypesPrefix: true,
       });
 
-    return [`{${useFlowExactObject ? '|' : ''} ${fields.map(aliasedField => `${useFlowReadOnlyTypes ? '+' : ''}${aliasedField.alias}: $ElementType<${parentName}, '${aliasedField.fieldName}'>`).join(', ')} ${useFlowExactObject ? '|' : ''}}`];
+    return [
+      `{${useFlowExactObject ? '|' : ''} ${fields
+        .map(
+          aliasedField =>
+            `${useFlowReadOnlyTypes ? '+' : ''}${aliasedField.alias}: $ElementType<${parentName}, '${
+              aliasedField.fieldName
+            }'>`
+        )
+        .join(', ')} ${useFlowExactObject ? '|' : ''}}`,
+    ];
   }
 
   buildFieldsIntoObject(allObjectsMerged: string[]): string {
@@ -45,10 +65,17 @@ export class FlowWithPickSelectionSetProcessor extends BaseSelectionSetProcessor
     const useFlowExactObject = this.config.useFlowExactObjects;
     const useFlowReadOnlyTypes = this.config.useFlowReadOnlyTypes;
 
-    return [`{${useFlowExactObject ? '|' : ''} ${fields.map(field => `${useFlowReadOnlyTypes ? '+' : ''}${field.alias || field.name}: ${field.selectionSet}`).join(', ')} ${useFlowExactObject ? '|' : ''}}`];
+    return [
+      `{${useFlowExactObject ? '|' : ''} ${fields
+        .map(field => `${useFlowReadOnlyTypes ? '+' : ''}${field.alias || field.name}: ${field.selectionSet}`)
+        .join(', ')} ${useFlowExactObject ? '|' : ''}}`,
+    ];
   }
 
-  transformPrimitiveFields(schemaType: GraphQLObjectType | GraphQLInterfaceType, fields: PrimitiveField[]): ProcessResult {
+  transformPrimitiveFields(
+    schemaType: GraphQLObjectType | GraphQLInterfaceType,
+    fields: PrimitiveField[]
+  ): ProcessResult {
     if (fields.length === 0) {
       return [];
     }
@@ -61,7 +88,11 @@ export class FlowWithPickSelectionSetProcessor extends BaseSelectionSetProcessor
         useTypesPrefix: true,
       });
 
-    return [`$Pick<${parentName}, {${useFlowExactObject ? '|' : ''} ${fields.map(fieldName => `${useFlowReadOnlyTypes ? '+' : ''}${fieldName}: *`).join(', ')} ${useFlowExactObject ? '|' : ''}}>`];
+    return [
+      `$Pick<${parentName}, {${useFlowExactObject ? '|' : ''} ${fields
+        .map(fieldName => `${useFlowReadOnlyTypes ? '+' : ''}${fieldName}: *`)
+        .join(', ')} ${useFlowExactObject ? '|' : ''}}>`,
+    ];
   }
 
   transformTypenameField(type: string, name: string): ProcessResult {

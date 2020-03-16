@@ -6,7 +6,11 @@ import { FlowPluginConfig } from './config';
 export * from './visitor';
 export * from './flow-variables-to-object';
 
-export const plugin: PluginFunction<FlowPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: FlowPluginConfig) => {
+export const plugin: PluginFunction<FlowPluginConfig> = (
+  schema: GraphQLSchema,
+  documents: Types.DocumentFile[],
+  config: FlowPluginConfig
+) => {
   const header = `/* @flow */\n\n`;
   const printedSchema = printSchema(schema);
   const astNode = parse(printedSchema);

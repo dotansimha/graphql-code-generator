@@ -23,7 +23,11 @@ export interface IntrospectionPluginConfig {
   federation?: boolean;
 }
 
-export const plugin: PluginFunction<IntrospectionPluginConfig> = async (schema: GraphQLSchema, _documents, pluginConfig: IntrospectionPluginConfig): Promise<string> => {
+export const plugin: PluginFunction<IntrospectionPluginConfig> = async (
+  schema: GraphQLSchema,
+  _documents,
+  pluginConfig: IntrospectionPluginConfig
+): Promise<string> => {
   const cleanSchema = pluginConfig.federation ? removeFederation(schema) : schema;
 
   const introspection = introspectionFromSchema(cleanSchema, { descriptions: true });
@@ -31,7 +35,12 @@ export const plugin: PluginFunction<IntrospectionPluginConfig> = async (schema: 
   return pluginConfig.minify ? JSON.stringify(introspection) : JSON.stringify(introspection, null, 2);
 };
 
-export const validate: PluginValidateFn<any> = async (schema: GraphQLSchema, documents: Types.DocumentFile[], config: any, outputFile: string) => {
+export const validate: PluginValidateFn<any> = async (
+  schema: GraphQLSchema,
+  documents: Types.DocumentFile[],
+  config: any,
+  outputFile: string
+) => {
   if (extname(outputFile) !== '.json') {
     throw new Error(`Plugin "introspection" requires extension to be ".json"!`);
   }

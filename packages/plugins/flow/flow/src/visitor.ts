@@ -1,5 +1,25 @@
-import { NonNullTypeNode, ListTypeNode, ObjectTypeDefinitionNode, FieldDefinitionNode, EnumTypeDefinitionNode, NamedTypeNode, GraphQLSchema, InputValueDefinitionNode, Kind, GraphQLEnumType } from 'graphql';
-import { BaseTypesVisitor, DeclarationBlock, wrapWithSingleQuotes, indent, ParsedTypesConfig, transformComment, getConfigValue, DeclarationKind } from '@graphql-codegen/visitor-plugin-common';
+import {
+  NonNullTypeNode,
+  ListTypeNode,
+  ObjectTypeDefinitionNode,
+  FieldDefinitionNode,
+  EnumTypeDefinitionNode,
+  NamedTypeNode,
+  GraphQLSchema,
+  InputValueDefinitionNode,
+  Kind,
+  GraphQLEnumType,
+} from 'graphql';
+import {
+  BaseTypesVisitor,
+  DeclarationBlock,
+  wrapWithSingleQuotes,
+  indent,
+  ParsedTypesConfig,
+  transformComment,
+  getConfigValue,
+  DeclarationKind,
+} from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
 import { FlowPluginConfig } from './config';
 import { FlowOperationVariablesToObject } from './flow-variables-to-object';
@@ -20,7 +40,9 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
     const enumNames = Object.values(schema.getTypeMap())
       .map(type => (type instanceof GraphQLEnumType ? type.name : undefined))
       .filter(t => t);
-    this.setArgumentsTransformer(new FlowOperationVariablesToObject(this.scalars, this.convertName, null, enumNames, pluginConfig.enumPrefix));
+    this.setArgumentsTransformer(
+      new FlowOperationVariablesToObject(this.scalars, this.convertName, null, enumNames, pluginConfig.enumPrefix)
+    );
     this.setDeclarationBlockConfig({
       blockWrapper: this.config.useFlowExactObjects ? '|' : '',
     });
@@ -68,7 +90,10 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
     return super.ObjectTypeDefinition(
       {
         ...node,
-        interfaces: node.interfaces && node.interfaces.length > 0 ? node.interfaces.map(name => ((name as any) as string).replace('?', '')) : ([] as any),
+        interfaces:
+          node.interfaces && node.interfaces.length > 0
+            ? node.interfaces.map(name => ((name as any) as string).replace('?', ''))
+            : ([] as any),
       },
       key,
       parent
@@ -88,7 +113,9 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
   }
 
   appendInterfacesAndFieldsToBlock(block: DeclarationBlock, interfaces: string[], fields: string[]): void {
-    block.withBlock(this.mergeInterfaces(interfaces, fields.length > 0) + this.mergeAllFields(fields, interfaces.length > 0));
+    block.withBlock(
+      this.mergeInterfaces(interfaces, fields.length > 0) + this.mergeAllFields(fields, interfaces.length > 0)
+    );
   }
 
   protected mergeAllFields(allFields: string[], hasInterfaces: boolean): string {
@@ -100,7 +127,9 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
       return allFields.join('\n');
     }
 
-    return `...{${this.config.useFlowExactObjects ? '|' : ''}\n${allFields.map(s => indent(s)).join('\n')}\n  ${this.config.useFlowExactObjects ? '|' : ''}}`;
+    return `...{${this.config.useFlowExactObjects ? '|' : ''}\n${allFields.map(s => indent(s)).join('\n')}\n  ${
+      this.config.useFlowExactObjects ? '|' : ''
+    }}`;
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
@@ -127,7 +156,11 @@ export class FlowVisitor extends BaseTypesVisitor<FlowPluginConfig, FlowPluginPa
             const optionName = this.convertName(enumOption, { transformUnderscore: true, useTypesPrefix: false });
             let enumValue: string | number = enumOption.name as any;
 
-            if (this.config.enumValues[typeName] && this.config.enumValues[typeName].mappedValues && typeof this.config.enumValues[typeName].mappedValues[enumValue] !== 'undefined') {
+            if (
+              this.config.enumValues[typeName] &&
+              this.config.enumValues[typeName].mappedValues &&
+              typeof this.config.enumValues[typeName].mappedValues[enumValue] !== 'undefined'
+            ) {
               enumValue = this.config.enumValues[typeName].mappedValues[enumValue];
             }
 

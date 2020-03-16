@@ -1,6 +1,15 @@
 import { BaseVisitor } from '@graphql-codegen/visitor-plugin-common';
 import { getBaseType } from '@graphql-codegen/plugin-helpers';
-import { SelectionSetNode, isObjectType, isInterfaceType, isNonNullType, isListType, Kind, GraphQLSchema, isUnionType } from 'graphql';
+import {
+  SelectionSetNode,
+  isObjectType,
+  isInterfaceType,
+  isNonNullType,
+  isListType,
+  Kind,
+  GraphQLSchema,
+  isUnionType,
+} from 'graphql';
 import { CompatabilityPluginRawConfig } from './config';
 import { CompatabilityPluginConfig } from './visitor';
 
@@ -43,19 +52,31 @@ export function selectionSetToTypes(
       switch (selection.kind) {
         case Kind.FIELD: {
           if (isObjectType(parentType) || isInterfaceType(parentType)) {
-            const selectionName = selection.alias && selection.alias.value ? selection.alias.value : selection.name.value;
+            const selectionName =
+              selection.alias && selection.alias.value ? selection.alias.value : selection.name.value;
 
             if (!selectionName.startsWith('__')) {
               const field = parentType.getFields()[selection.name.value];
               const baseType = getBaseType(field.type);
-              const wrapWithNonNull = (baseVisitor.config.strict || baseVisitor.config.preResolveTypes) && !isNonNullType(field.type);
+              const wrapWithNonNull =
+                (baseVisitor.config.strict || baseVisitor.config.preResolveTypes) && !isNonNullType(field.type);
               const isArray = (isNonNullType(field.type) && isListType(field.type.ofType)) || isListType(field.type);
               const typeRef = `${stack}['${selectionName}']`;
               const nonNullableInnerType = `${wrapWithNonNull ? `(NonNullable<${typeRef}>)` : typeRef}`;
               const arrayInnerType = isArray ? `${nonNullableInnerType}[0]` : nonNullableInnerType;
               const wrapArrayWithNonNull = baseVisitor.config.strict || baseVisitor.config.preResolveTypes;
               const newStack = isArray && wrapArrayWithNonNull ? `(NonNullable<${arrayInnerType}>)` : arrayInnerType;
-              selectionSetToTypes(typesPrefix, baseVisitor, schema, baseType.name, newStack, selectionName, selection.selectionSet, preResolveTypes, result);
+              selectionSetToTypes(
+                typesPrefix,
+                baseVisitor,
+                schema,
+                baseType.name,
+                newStack,
+                selectionName,
+                selection.selectionSet,
+                preResolveTypes,
+                result
+              );
             }
           }
 
@@ -83,7 +104,17 @@ export function selectionSetToTypes(
               .join(' | ')}>`;
           }
 
-          selectionSetToTypes(typesPrefix, baseVisitor, schema, typeCondition, `(${inlineFragmentValue})`, fragmentName, selection.selectionSet, preResolveTypes, result);
+          selectionSetToTypes(
+            typesPrefix,
+            baseVisitor,
+            schema,
+            typeCondition,
+            `(${inlineFragmentValue})`,
+            fragmentName,
+            selection.selectionSet,
+            preResolveTypes,
+            result
+          );
 
           break;
         }

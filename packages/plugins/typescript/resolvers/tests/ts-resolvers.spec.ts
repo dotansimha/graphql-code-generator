@@ -248,7 +248,9 @@ describe('TypeScript Resolvers Plugin', () => {
     ]);
 
     expect(mergedOutputs).toContain(`export type RequireFields`);
-    expect(mergedOutputs).toContain(`something?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QuerySomethingArgs, 'arg'>>,`);
+    expect(mergedOutputs).toContain(
+      `something?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QuerySomethingArgs, 'arg'>>,`
+    );
     validate(mergedOutputs);
   });
 
@@ -281,7 +283,9 @@ describe('TypeScript Resolvers Plugin', () => {
       typesPrefix: 'GQL_',
     };
     const result = (await plugin(testSchema, [], config, { outputFile: '' })) as Types.ComplexPluginOutput;
-    const tsContent = (await tsPlugin(testSchema, [], config, { outputFile: 'graphql.ts' })) as Types.ComplexPluginOutput;
+    const tsContent = (await tsPlugin(testSchema, [], config, {
+      outputFile: 'graphql.ts',
+    })) as Types.ComplexPluginOutput;
     const mergedOutputs = mergeOutputs([result, tsContent]);
 
     expect(mergedOutputs).toContain(`A: A,`);
@@ -292,7 +296,12 @@ describe('TypeScript Resolvers Plugin', () => {
   });
 
   it('Should allow to generate optional __resolveType', async () => {
-    const result = (await plugin(schema, [], { optionalResolveType: true }, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const result = (await plugin(
+      schema,
+      [],
+      { optionalResolveType: true },
+      { outputFile: '' }
+    )) as Types.ComplexPluginOutput;
 
     expect(result.content).toBeSimilarStringTo(`
       export type MyUnionResolvers<ContextType = any, ParentType extends ResolversParentTypes['MyUnion'] = ResolversParentTypes['MyUnion']> = {
@@ -327,7 +336,8 @@ describe('TypeScript Resolvers Plugin', () => {
       };
     `);
 
-    expect(result.content).toBeSimilarStringTo(`export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['MyScalar'], any> {
+    expect(result.content)
+      .toBeSimilarStringTo(`export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['MyScalar'], any> {
       name: 'MyScalar'
     }`);
 
@@ -376,7 +386,12 @@ describe('TypeScript Resolvers Plugin', () => {
   });
 
   it('Should generate basic type resolvers with avoidOptionals', async () => {
-    const result = (await plugin(schema, [], { avoidOptionals: true }, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const result = (await plugin(
+      schema,
+      [],
+      { avoidOptionals: true },
+      { outputFile: '' }
+    )) as Types.ComplexPluginOutput;
 
     expect(result.content).toBeSimilarStringTo(`
     export type MyDirectiveDirectiveArgs = {   arg: Scalars['Int'];
@@ -393,7 +408,8 @@ describe('TypeScript Resolvers Plugin', () => {
       };
     `);
 
-    expect(result.content).toBeSimilarStringTo(`export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['MyScalar'], any> {
+    expect(result.content)
+      .toBeSimilarStringTo(`export interface MyScalarScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['MyScalar'], any> {
       name: 'MyScalar'
     }`);
 
@@ -676,7 +692,11 @@ describe('TypeScript Resolvers Plugin', () => {
       schema,
       [],
       {
-        fieldContextTypes: ['MyType.foo#./my-file#ContextTypeOne', 'Query.something#./my-file#ContextTypeTwo', 'MyType.otherType#SpecialContextType'],
+        fieldContextTypes: [
+          'MyType.foo#./my-file#ContextTypeOne',
+          'Query.something#./my-file#ContextTypeTwo',
+          'MyType.otherType#SpecialContextType',
+        ],
       },
       { outputFile: '' }
     )) as Types.ComplexPluginOutput;
@@ -703,7 +723,9 @@ describe('TypeScript Resolvers Plugin', () => {
     const testSchema = buildSchema(`scalar MyScalar`);
     const result = (await plugin(testSchema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-    expect(result.prepend).toContain(`import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';`);
+    expect(result.prepend).toContain(
+      `import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';`
+    );
     await validate(result, {}, schema);
   });
 
@@ -837,7 +859,9 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
     const config = { typesPrefix: 'T' };
     const result = (await plugin(testSchema, [], config, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-    expect(result.content).toBeSimilarStringTo(`f?: Resolver<Maybe<TResolversTypes['String']>, ParentType, ContextType, RequireFields<TMyTypeFArgs, never>>,`);
+    expect(result.content).toBeSimilarStringTo(
+      `f?: Resolver<Maybe<TResolversTypes['String']>, ParentType, ContextType, RequireFields<TMyTypeFArgs, never>>,`
+    );
     await validate(result, config, testSchema);
   });
 
@@ -846,7 +870,9 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
     const testSchema = buildSchema(`type MyType { f(a: String, b: Int): String }`);
     const result = (await plugin(testSchema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-    expect(result.content).toBeSimilarStringTo(`f?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeFArgs, never>>,`);
+    expect(result.content).toBeSimilarStringTo(
+      `f?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MyTypeFArgs, never>>,`
+    );
     await validate(result, {}, testSchema);
   });
 
@@ -855,7 +881,9 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
     const testSchema = buildSchema(`type MyType { f: String }`);
     const result = (await plugin(testSchema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
 
-    expect(result.content).toBeSimilarStringTo(`f?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,`);
+    expect(result.content).toBeSimilarStringTo(
+      `f?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,`
+    );
     await validate(result, {}, testSchema);
   });
 
@@ -1339,7 +1367,12 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
     `);
 
     const tsContent = await tsPlugin(testSchema, [], {}, { outputFile: 'graphql.ts' });
-    const resolversContent = (await plugin(testSchema, [], {}, { outputFile: 'graphql.ts' })) as Types.ComplexPluginOutput;
+    const resolversContent = (await plugin(
+      testSchema,
+      [],
+      {},
+      { outputFile: 'graphql.ts' }
+    )) as Types.ComplexPluginOutput;
 
     const validateResolvers = (code: string) => {
       validateTs(
@@ -1686,7 +1719,9 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
         },
       };
 
-      const tsContent = (await tsPlugin(testSchema, [], config, { outputFile: 'graphql.ts' })) as Types.ComplexPluginOutput;
+      const tsContent = (await tsPlugin(testSchema, [], config, {
+        outputFile: 'graphql.ts',
+      })) as Types.ComplexPluginOutput;
       const output = (await plugin(testSchema, [], config, { outputFile: 'graphql.ts' })) as Types.ComplexPluginOutput;
 
       expect(output.prepend.length).toBe(2);
@@ -1698,7 +1733,9 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
 
     it('#3264 - enumValues is not being applied to directive resolver', async () => {
       const testSchema = buildSchema(/* GraphQL */ `
-        directive @auth(role: UserRole = ADMIN) on OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+        directive @auth(
+          role: UserRole = ADMIN
+        ) on OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
 
         enum UserRole {
           ADMIN
@@ -1736,7 +1773,9 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
       )) as Types.ComplexPluginOutput;
 
       expect(output.content).toContain(`export type GqlAuthDirectiveArgs = {   role?: Maybe<UserRole>; };`);
-      expect(output.content).toContain(`export type GqlAuthDirectiveResolver<Result, Parent, ContextType = any, Args = GqlAuthDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;`);
+      expect(output.content).toContain(
+        `export type GqlAuthDirectiveResolver<Result, Parent, ContextType = any, Args = GqlAuthDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;`
+      );
     });
   });
 });

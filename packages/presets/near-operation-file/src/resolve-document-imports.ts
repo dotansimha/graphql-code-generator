@@ -2,7 +2,9 @@ import { isUsingTypes, Types } from '@graphql-codegen/plugin-helpers';
 import { FragmentDefinitionNode, GraphQLSchema } from 'graphql';
 import buildFragmentResolver from './fragment-resolver';
 
-export type FragmentRegistry = { [fragmentName: string]: { location: string; importNames: string[]; onType: string; node: FragmentDefinitionNode } };
+export type FragmentRegistry = {
+  [fragmentName: string]: { location: string; importNames: string[]; onType: string; node: FragmentDefinitionNode };
+};
 
 export type ImportSourceDefinition = {
   /**
@@ -23,7 +25,11 @@ function resolveImportSource(source: string | ImportSourceDefinition): ImportSou
   return typeof source === 'string' ? { path: source } : source;
 }
 
-type GenerateImportStatement = (paths: { relativeOutputPath: string; importSource: ImportSourceDefinition; baseOutputDir: string }) => string;
+type GenerateImportStatement = (paths: {
+  relativeOutputPath: string;
+  importSource: ImportSourceDefinition;
+  baseOutputDir: string;
+}) => string;
 
 export type DocumentImportResolverOptions = {
   /**
@@ -46,14 +52,21 @@ export type DocumentImportResolverOptions = {
  * Resolves user provided imports and fragment imports using the `DocumentImportResolverOptions`.
  * Does not define specific plugins, but rather returns a string[] of `importStatements` for the calling plugin to make use of
  */
-export default function resolveDocumentImportStatements<T>(presetOptions: Types.PresetFnArgs<T>, schemaObject: GraphQLSchema, importResolverOptions: DocumentImportResolverOptions) {
+export default function resolveDocumentImportStatements<T>(
+  presetOptions: Types.PresetFnArgs<T>,
+  schemaObject: GraphQLSchema,
+  importResolverOptions: DocumentImportResolverOptions
+) {
   const resolveFragments = buildFragmentResolver(importResolverOptions, presetOptions, schemaObject);
   const { baseOutputDir, documents } = presetOptions;
   const { generateFilePath, generateImportStatement, schemaTypesSource } = importResolverOptions;
 
   return documents.map(documentFile => {
     const generatedFilePath = generateFilePath(documentFile.location);
-    const { externalFragments, fragmentImportStatements: importStatements } = resolveFragments(generatedFilePath, documentFile.document);
+    const { externalFragments, fragmentImportStatements: importStatements } = resolveFragments(
+      generatedFilePath,
+      documentFile.document
+    );
 
     if (
       isUsingTypes(

@@ -10,7 +10,11 @@ const TYPE_GRAPHQL_IMPORT = `import * as TypeGraphQL from 'type-graphql';`;
 const DECORATOR_FIX = `type FixDecorator<T> = T;`;
 const isDefinitionInterface = (definition: string) => definition.includes('@TypeGraphQL.InterfaceType()');
 
-export const plugin: PluginFunction<TypeGraphQLPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: TypeGraphQLPluginConfig) => {
+export const plugin: PluginFunction<TypeGraphQLPluginConfig> = (
+  schema: GraphQLSchema,
+  documents: Types.DocumentFile[],
+  config: TypeGraphQLPluginConfig
+) => {
   const visitor = new TypeGraphQLVisitor(schema, config);
   const printedSchema = printSchema(schema);
   const astNode = parse(printedSchema);
@@ -21,7 +25,9 @@ export const plugin: PluginFunction<TypeGraphQLPluginConfig> = (schema: GraphQLS
 
   const definitions = visitorResult.definitions;
   // Sort output by interfaces first, classes last to prevent TypeScript errors
-  definitions.sort((definition1, definition2) => +isDefinitionInterface(definition2) - +isDefinitionInterface(definition1));
+  definitions.sort(
+    (definition1, definition2) => +isDefinitionInterface(definition2) - +isDefinitionInterface(definition1)
+  );
 
   return {
     prepend: [...visitor.getEnumsImports(), maybeValue, TYPE_GRAPHQL_IMPORT, DECORATOR_FIX],

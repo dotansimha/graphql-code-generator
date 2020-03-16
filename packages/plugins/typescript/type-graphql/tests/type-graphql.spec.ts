@@ -293,7 +293,12 @@ describe('type-graphql', () => {
       }
     `);
 
-    const result = (await plugin(schema, [], { decoratorName: { type: 'Foo', field: 'Bar', interface: 'FooBar' } }, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const result = (await plugin(
+      schema,
+      [],
+      { decoratorName: { type: 'Foo', field: 'Bar', interface: 'FooBar' } },
+      { outputFile: '' }
+    )) as Types.ComplexPluginOutput;
 
     expect(result.content).toBeSimilarStringTo(`
         @TypeGraphQL.Foo()
@@ -325,7 +330,12 @@ describe('type-graphql', () => {
       }
     `);
 
-    const result = (await plugin(schema, [], { scalars: { DateTime: 'Date' } }, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const result = (await plugin(
+      schema,
+      [],
+      { scalars: { DateTime: 'Date' } },
+      { outputFile: '' }
+    )) as Types.ComplexPluginOutput;
 
     expect(result.content).toBeSimilarStringTo(`
       @TypeGraphQL.ObjectType()

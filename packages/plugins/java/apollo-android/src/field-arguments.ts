@@ -1,4 +1,14 @@
-import { FieldNode, visit, ArgumentNode, ObjectValueNode, ObjectFieldNode, VariableNode, StringValueNode, IntValueNode, FloatValueNode } from 'graphql';
+import {
+  FieldNode,
+  visit,
+  ArgumentNode,
+  ObjectValueNode,
+  ObjectFieldNode,
+  VariableNode,
+  StringValueNode,
+  IntValueNode,
+  FloatValueNode,
+} from 'graphql';
 import { ImportsSet } from './types';
 import { Imports } from './imports';
 
@@ -14,7 +24,9 @@ export function visitFieldArguments(selection: FieldNode, imports: ImportsSet): 
   return visit(selection, {
     leave: {
       Field: (node: FieldNode) => {
-        return `new UnmodifiableMapBuilder<String, Object>(${node.arguments.length})` + node.arguments.join('') + '.build()';
+        return (
+          `new UnmodifiableMapBuilder<String, Object>(${node.arguments.length})` + node.arguments.join('') + '.build()'
+        );
       },
       Argument: (node: ArgumentNode) => {
         return `.put("${node.name.value}", ${node.value})`;

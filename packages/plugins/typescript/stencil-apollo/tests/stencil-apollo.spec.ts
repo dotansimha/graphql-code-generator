@@ -25,7 +25,12 @@ describe('Components', () => {
       }
     `;
 
-    const content = (await plugin(schema, [{ location: '', document: documents }], { componentType: StencilComponentType.class }, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const content = (await plugin(
+      schema,
+      [{ location: '', document: documents }],
+      { componentType: StencilComponentType.class },
+      { outputFile: '' }
+    )) as Types.ComplexPluginOutput;
 
     expect(content.prepend).toContain(`import 'stencil-apollo';`);
     expect(content.prepend).toContain(`import { Component, Prop, h } from '@stencil/core';`);
@@ -48,7 +53,12 @@ describe('Components', () => {
       }
     `;
 
-    const { content } = (await plugin(schema, [{ location: '', document: documents }], { componentType: StencilComponentType.functional }, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const { content } = (await plugin(
+      schema,
+      [{ location: '', document: documents }],
+      { componentType: StencilComponentType.functional },
+      { outputFile: '' }
+    )) as Types.ComplexPluginOutput;
 
     expect(content).toBeSimilarStringTo(`
         export type FeedProps = {
@@ -81,7 +91,12 @@ describe('Components', () => {
       }
     `;
 
-    const { content } = (await plugin(schema, [{ location: '', document: documents }], { componentType: StencilComponentType.class }, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const { content } = (await plugin(
+      schema,
+      [{ location: '', document: documents }],
+      { componentType: StencilComponentType.class },
+      { outputFile: '' }
+    )) as Types.ComplexPluginOutput;
 
     expect(content).toBeSimilarStringTo(`
             @Component({
@@ -114,7 +129,12 @@ describe('Components', () => {
       }
     `;
 
-    const { content } = (await plugin(schema, [{ location: '', document: documents }], { componentType: StencilComponentType.class }, { outputFile: '' })) as Types.ComplexPluginOutput;
+    const { content } = (await plugin(
+      schema,
+      [{ location: '', document: documents }],
+      { componentType: StencilComponentType.class },
+      { outputFile: '' }
+    )) as Types.ComplexPluginOutput;
 
     expect(content).toBeSimilarStringTo(`
             @Component({

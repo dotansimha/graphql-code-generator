@@ -81,7 +81,13 @@ function createLazyPromise() {
 }
 
 // Generate graph of dependencies
-export function createGraph({ generates, cwd }: { generates: { [filename: string]: Types.ConfiguredOutput }; cwd: string }) {
+export function createGraph({
+  generates,
+  cwd,
+}: {
+  generates: { [filename: string]: Types.ConfiguredOutput };
+  cwd: string;
+}) {
   const graph = new DepGraph<Graph>({
     circular: false,
   });
@@ -124,8 +130,12 @@ export function createGraph({ generates, cwd }: { generates: { [filename: string
       .forEach(output => {
         const { config } = graph.getNodeData(output);
         // normalize so we get arrays (always)
-        const outputSpecificSchemas: string[] = normalizeInstanceOrArray<Types.Schema>(config.schema).filter(isStringOrGlob);
-        const outputSpecificDocuments = normalizeInstanceOrArray<Types.OperationDocument>(config.documents).filter(isStringOrGlob);
+        const outputSpecificSchemas: string[] = normalizeInstanceOrArray<Types.Schema>(config.schema).filter(
+          isStringOrGlob
+        );
+        const outputSpecificDocuments = normalizeInstanceOrArray<Types.OperationDocument>(config.documents).filter(
+          isStringOrGlob
+        );
 
         outputSpecificSchemas.forEach(pointer => {
           if (matchFile(src, pointer)) {
@@ -153,7 +163,13 @@ export function createGraph({ generates, cwd }: { generates: { [filename: string
   return graph;
 }
 
-export async function waitForDependencies({ graph, output }: { graph: DepGraph<Graph>; output: string }): Promise<void> {
+export async function waitForDependencies({
+  graph,
+  output,
+}: {
+  graph: DepGraph<Graph>;
+  output: string;
+}): Promise<void> {
   // wait for other outputs to resolve, the one that we depend on
   await Promise.all(
     graph

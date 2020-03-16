@@ -42,7 +42,12 @@ describe('generic-sdk', () => {
   `);
 
   const validateAndCompile = async (content: Types.PluginOutput, config, docs, pluginSchema, usage = '') => {
-    const m = mergeOutputs([await tsPlugin(pluginSchema, docs, config, { outputFile: '' }), await tsDocumentsPlugin(pluginSchema, docs, config, { outputFile: '' }), content, usage]);
+    const m = mergeOutputs([
+      await tsPlugin(pluginSchema, docs, config, { outputFile: '' }),
+      await tsDocumentsPlugin(pluginSchema, docs, config, { outputFile: '' }),
+      content,
+      usage,
+    ]);
 
     await compileTs(m);
 

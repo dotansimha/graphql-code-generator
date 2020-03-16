@@ -170,7 +170,13 @@ export type OnCommentAddedSubscriptionVariables = {
   repoFullName: Scalars['String'];
 };
 
-export type OnCommentAddedSubscription = { __typename?: 'Subscription' } & { commentAdded: Maybe<{ __typename?: 'Comment' } & Pick<Comment, 'id' | 'createdAt' | 'content'> & { postedBy: { __typename?: 'User' } & Pick<User, 'login' | 'html_url'> }> };
+export type OnCommentAddedSubscription = { __typename?: 'Subscription' } & {
+  commentAdded: Maybe<
+    { __typename?: 'Comment' } & Pick<Comment, 'id' | 'createdAt' | 'content'> & {
+        postedBy: { __typename?: 'User' } & Pick<User, 'login' | 'html_url'>;
+      }
+  >;
+};
 
 export type CommentQueryVariables = {
   repoFullName: Scalars['String'];
@@ -184,19 +190,28 @@ export type CommentQuery = { __typename?: 'Query' } & {
     { __typename?: 'Entry' } & Pick<Entry, 'id' | 'createdAt' | 'commentCount'> & {
         postedBy: { __typename?: 'User' } & Pick<User, 'login' | 'html_url'>;
         comments: Array<Maybe<{ __typename?: 'Comment' } & CommentsPageCommentFragment>>;
-        repository: { __typename?: 'Repository' } & Pick<Repository, 'description' | 'open_issues_count' | 'stargazers_count' | 'full_name' | 'html_url'>;
+        repository: { __typename?: 'Repository' } & Pick<
+          Repository,
+          'description' | 'open_issues_count' | 'stargazers_count' | 'full_name' | 'html_url'
+        >;
       }
   >;
 };
 
-export type CommentsPageCommentFragment = { __typename?: 'Comment' } & Pick<Comment, 'id' | 'createdAt' | 'content'> & { postedBy: { __typename?: 'User' } & Pick<User, 'login' | 'html_url'> };
+export type CommentsPageCommentFragment = { __typename?: 'Comment' } & Pick<Comment, 'id' | 'createdAt' | 'content'> & {
+    postedBy: { __typename?: 'User' } & Pick<User, 'login' | 'html_url'>;
+  };
 
 export type CurrentUserForProfileQueryVariables = {};
 
-export type CurrentUserForProfileQuery = { __typename?: 'Query' } & { currentUser: Maybe<{ __typename?: 'User' } & Pick<User, 'login' | 'avatar_url'>> };
+export type CurrentUserForProfileQuery = { __typename?: 'Query' } & {
+  currentUser: Maybe<{ __typename?: 'User' } & Pick<User, 'login' | 'avatar_url'>>;
+};
 
 export type FeedEntryFragment = { __typename?: 'Entry' } & Pick<Entry, 'id' | 'commentCount'> & {
-    repository: { __typename?: 'Repository' } & Pick<Repository, 'full_name' | 'html_url'> & { owner: Maybe<{ __typename?: 'User' } & Pick<User, 'avatar_url'>> };
+    repository: { __typename?: 'Repository' } & Pick<Repository, 'full_name' | 'html_url'> & {
+        owner: Maybe<{ __typename?: 'User' } & Pick<User, 'avatar_url'>>;
+      };
   } & VoteButtonsFragment &
   RepoInfoFragment;
 
@@ -206,16 +221,24 @@ export type FeedQueryVariables = {
   limit?: Maybe<Scalars['Int']>;
 };
 
-export type FeedQuery = { __typename?: 'Query' } & { currentUser: Maybe<{ __typename?: 'User' } & Pick<User, 'login'>>; feed: Maybe<Array<Maybe<{ __typename?: 'Entry' } & FeedEntryFragment>>> };
+export type FeedQuery = { __typename?: 'Query' } & {
+  currentUser: Maybe<{ __typename?: 'User' } & Pick<User, 'login'>>;
+  feed: Maybe<Array<Maybe<{ __typename?: 'Entry' } & FeedEntryFragment>>>;
+};
 
 export type SubmitRepositoryMutationVariables = {
   repoFullName: Scalars['String'];
 };
 
-export type SubmitRepositoryMutation = { __typename?: 'Mutation' } & { submitRepository: Maybe<{ __typename?: 'Entry' } & Pick<Entry, 'createdAt'>> };
+export type SubmitRepositoryMutation = { __typename?: 'Mutation' } & {
+  submitRepository: Maybe<{ __typename?: 'Entry' } & Pick<Entry, 'createdAt'>>;
+};
 
 export type RepoInfoFragment = { __typename?: 'Entry' } & Pick<Entry, 'createdAt'> & {
-    repository: { __typename?: 'Repository' } & Pick<Repository, 'description' | 'stargazers_count' | 'open_issues_count'>;
+    repository: { __typename?: 'Repository' } & Pick<
+      Repository,
+      'description' | 'stargazers_count' | 'open_issues_count'
+    >;
     postedBy: { __typename?: 'User' } & Pick<User, 'html_url' | 'login'>;
   };
 
@@ -224,16 +247,26 @@ export type SubmitCommentMutationVariables = {
   commentContent: Scalars['String'];
 };
 
-export type SubmitCommentMutation = { __typename?: 'Mutation' } & { submitComment: Maybe<{ __typename?: 'Comment' } & CommentsPageCommentFragment> };
+export type SubmitCommentMutation = { __typename?: 'Mutation' } & {
+  submitComment: Maybe<{ __typename?: 'Comment' } & CommentsPageCommentFragment>;
+};
 
-export type VoteButtonsFragment = { __typename?: 'Entry' } & Pick<Entry, 'score'> & { vote: { __typename?: 'Vote' } & Pick<Vote, 'vote_value'> };
+export type VoteButtonsFragment = { __typename?: 'Entry' } & Pick<Entry, 'score'> & {
+    vote: { __typename?: 'Vote' } & Pick<Vote, 'vote_value'>;
+  };
 
 export type VoteMutationVariables = {
   repoFullName: Scalars['String'];
   type: VoteType;
 };
 
-export type VoteMutation = { __typename?: 'Mutation' } & { vote: Maybe<{ __typename?: 'Entry' } & Pick<Entry, 'score' | 'id'> & { vote: { __typename?: 'Vote' } & Pick<Vote, 'vote_value'> }> };
+export type VoteMutation = { __typename?: 'Mutation' } & {
+  vote: Maybe<
+    { __typename?: 'Entry' } & Pick<Entry, 'score' | 'id'> & {
+        vote: { __typename?: 'Vote' } & Pick<Vote, 'vote_value'>;
+      }
+  >;
+};
 
 export const CommentsPageCommentFragmentDoc = gql`
   fragment CommentsPageComment on Comment {
@@ -302,7 +335,10 @@ export const OnCommentAddedDocument = gql`
 @Injectable({
   providedIn: 'root',
 })
-export class OnCommentAddedGQL extends Apollo.Subscription<OnCommentAddedSubscription, OnCommentAddedSubscriptionVariables> {
+export class OnCommentAddedGQL extends Apollo.Subscription<
+  OnCommentAddedSubscription,
+  OnCommentAddedSubscriptionVariables
+> {
   document = OnCommentAddedDocument;
 }
 export const CommentDocument = gql`
@@ -354,7 +390,10 @@ export const CurrentUserForProfileDocument = gql`
 @Injectable({
   providedIn: 'root',
 })
-export class CurrentUserForProfileGQL extends Apollo.Query<CurrentUserForProfileQuery, CurrentUserForProfileQueryVariables> {
+export class CurrentUserForProfileGQL extends Apollo.Query<
+  CurrentUserForProfileQuery,
+  CurrentUserForProfileQueryVariables
+> {
   document = CurrentUserForProfileDocument;
 }
 export const FeedDocument = gql`
@@ -445,7 +484,10 @@ export class ApolloAngularSDK {
     private voteGql: VoteGQL
   ) {}
 
-  onCommentAdded(variables: OnCommentAddedSubscriptionVariables, options?: SubscriptionOptionsAlone<OnCommentAddedSubscriptionVariables>) {
+  onCommentAdded(
+    variables: OnCommentAddedSubscriptionVariables,
+    options?: SubscriptionOptionsAlone<OnCommentAddedSubscriptionVariables>
+  ) {
     return this.onCommentAddedGql.subscribe(variables, options);
   }
 
@@ -457,11 +499,17 @@ export class ApolloAngularSDK {
     return this.commentGql.watch(variables, options);
   }
 
-  currentUserForProfile(variables?: CurrentUserForProfileQueryVariables, options?: QueryOptionsAlone<CurrentUserForProfileQueryVariables>) {
+  currentUserForProfile(
+    variables?: CurrentUserForProfileQueryVariables,
+    options?: QueryOptionsAlone<CurrentUserForProfileQueryVariables>
+  ) {
     return this.currentUserForProfileGql.fetch(variables, options);
   }
 
-  currentUserForProfileWatch(variables?: CurrentUserForProfileQueryVariables, options?: WatchQueryOptionsAlone<CurrentUserForProfileQueryVariables>) {
+  currentUserForProfileWatch(
+    variables?: CurrentUserForProfileQueryVariables,
+    options?: WatchQueryOptionsAlone<CurrentUserForProfileQueryVariables>
+  ) {
     return this.currentUserForProfileGql.watch(variables, options);
   }
 
@@ -473,11 +521,17 @@ export class ApolloAngularSDK {
     return this.feedGql.watch(variables, options);
   }
 
-  submitRepository(variables: SubmitRepositoryMutationVariables, options?: MutationOptionsAlone<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>) {
+  submitRepository(
+    variables: SubmitRepositoryMutationVariables,
+    options?: MutationOptionsAlone<SubmitRepositoryMutation, SubmitRepositoryMutationVariables>
+  ) {
     return this.submitRepositoryGql.mutate(variables, options);
   }
 
-  submitComment(variables: SubmitCommentMutationVariables, options?: MutationOptionsAlone<SubmitCommentMutation, SubmitCommentMutationVariables>) {
+  submitComment(
+    variables: SubmitCommentMutationVariables,
+    options?: MutationOptionsAlone<SubmitCommentMutation, SubmitCommentMutationVariables>
+  ) {
     return this.submitCommentGql.mutate(variables, options);
   }
 

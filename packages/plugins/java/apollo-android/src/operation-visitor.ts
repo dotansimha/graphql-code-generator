@@ -62,7 +62,11 @@ export interface TransformSelectionSetOptions {
 export class OperationVisitor extends BaseJavaVisitor<VisitorConfig> {
   private visitingFragment = false;
 
-  constructor(_schema: GraphQLSchema, rawConfig: JavaApolloAndroidPluginConfig, private _availableFragments: LoadedFragment[]) {
+  constructor(
+    _schema: GraphQLSchema,
+    rawConfig: JavaApolloAndroidPluginConfig,
+    private _availableFragments: LoadedFragment[]
+  ) {
     super(_schema, rawConfig, {
       package: rawConfig.package || buildPackageNameFromPath(process.cwd()),
       fragmentPackage: rawConfig.fragmentPackage || 'fragment',
@@ -91,7 +95,14 @@ export class OperationVisitor extends BaseJavaVisitor<VisitorConfig> {
 
         return `Utils.checkNotNull(${v.variable.name.value}, "${v.variable.name.value} == null");`;
       });
-    const impl = [...nonNullVariables, `this.variables = ${!hasVariables ? 'Operation.EMPTY_VARIABLES' : `new ${className}.Variables(${variables.map(v => v.variable.name.value).join(', ')})`};`].join('\n');
+    const impl = [
+      ...nonNullVariables,
+      `this.variables = ${
+        !hasVariables
+          ? 'Operation.EMPTY_VARIABLES'
+          : `new ${className}.Variables(${variables.map(v => v.variable.name.value).join(', ')})`
+      };`,
+    ].join('\n');
 
     cls.addClassMethod(
       className,
@@ -171,7 +182,8 @@ export class OperationVisitor extends BaseJavaVisitor<VisitorConfig> {
       if (selection.kind === Kind.FIELD) {
         this._imports.add(Imports.ResponseField);
         const field = fields[selection.name.value];
-        const isObject = selection.selectionSet && selection.selectionSet.selections && selection.selectionSet.selections.length > 0;
+        const isObject =
+          selection.selectionSet && selection.selectionSet.selections && selection.selectionSet.selections.length > 0;
         const isNonNull = isNonNullType(field.type);
         const fieldAnnotation = isNonNull ? 'Nonnull' : 'Nullable';
         this._imports.add(Imports[fieldAnnotation]);
@@ -229,7 +241,9 @@ export class OperationVisitor extends BaseJavaVisitor<VisitorConfig> {
         const responseFieldMethod = this._resolveResponseFieldMethodForBaseType(field.type);
 
         responseFieldArr.push(
-          `ResponseField.${responseFieldMethod.fn}("${selection.alias ? selection.alias.value : selection.name.value}", "${selection.name.value}", ${operationArgs}, ${!isNonNullType(field.type)},${
+          `ResponseField.${responseFieldMethod.fn}("${
+            selection.alias ? selection.alias.value : selection.name.value
+          }", "${selection.name.value}", ${operationArgs}, ${!isNonNullType(field.type)},${
             responseFieldMethod.custom ? ` CustomType.${baseType.name},` : ''
           } Collections.<ResponseField.Condition>emptyList())`
         );
@@ -299,7 +313,11 @@ export class OperationVisitor extends BaseJavaVisitor<VisitorConfig> {
     }
 
     if (childFragmentSpread.length > 0) {
-      responseFieldArr.push(`ResponseField.forFragment("__typename", "__typename", Arrays.asList(${childFragmentSpread.map(f => `"${f.onType}"`).join(', ')}))`);
+      responseFieldArr.push(
+        `ResponseField.forFragment("__typename", "__typename", Arrays.asList(${childFragmentSpread
+          .map(f => `"${f.onType}"`)
+          .join(', ')}))`
+      );
       this._imports.add(Imports.ResponseField);
       this._imports.add(Imports.Nonnull);
       this._imports.add(Imports.Arrays);
@@ -356,8 +374,24 @@ export class OperationVisitor extends BaseJavaVisitor<VisitorConfig> {
       for (const spread of childFragmentSpread) {
         const fragmentVarName = camelCase(spread.name);
         fragmentsClass.addClassMember(fragmentVarName, spread.name, null, ['Nonnull'], 'private', { final: true });
-        fragmentsClass.addClassMethod(fragmentVarName, spread.name, `return this.${fragmentVarName};`, [], ['Nonnull'], 'public', {}, []);
-        fragmentMapperClass.addClassMember(`${fragmentVarName}FieldMapper`, `${spread.name}.Mapper`, `new ${spread.name}.Mapper()`, [], 'private', { final: true });
+        fragmentsClass.addClassMethod(
+          fragmentVarName,
+          spread.name,
+          `return this.${fragmentVarName};`,
+          [],
+          ['Nonnull'],
+          'public',
+          {},
+          []
+        );
+        fragmentMapperClass.addClassMember(
+          `${fragmentVarName}FieldMapper`,
+          `${spread.name}.Mapper`,
+          `new ${spread.name}.Mapper()`,
+          [],
+          'private',
+          { final: true }
+        );
       }
 
       fragmentMapperClass.addClassMethod(
@@ -414,7 +448,10 @@ ${childFragmentSpread
   .map(spread => {
     const fragmentVarName = camelCase(spread.name);
 
-    return indentMultiline(`final ${spread.name} $${fragmentVarName} = ${fragmentVarName};\nif ($${fragmentVarName} != null) { $${fragmentVarName}.marshaller().marshal(writer); }`, 2);
+    return indentMultiline(
+      `final ${spread.name} $${fragmentVarName} = ${fragmentVarName};\nif ($${fragmentVarName} != null) { $${fragmentVarName}.marshaller().marshal(writer); }`,
+      2
+    );
   })
   .join('\n')}
   }
@@ -510,7 +547,9 @@ ${childFragmentSpread
     }
 
     if (responseFieldArr.length > 0 && !isRoot) {
-      responseFieldArr.unshift(`ResponseField.forString("__typename", "__typename", null, false, Collections.<ResponseField.Condition>emptyList())`);
+      responseFieldArr.unshift(
+        `ResponseField.forString("__typename", "__typename", null, false, Collections.<ResponseField.Condition>emptyList())`
+      );
     }
 
     if (!isRoot) {
@@ -531,7 +570,14 @@ ${childFragmentSpread
 
     // Add members
     childFields.forEach(c => {
-      cls.addClassMember(c.fieldName, this.getListTypeWrapped(c.className, c.rawType), null, [c.annotation], 'private', { final: true });
+      cls.addClassMember(
+        c.fieldName,
+        this.getListTypeWrapped(c.className, c.rawType),
+        null,
+        [c.annotation],
+        'private',
+        { final: true }
+      );
     });
 
     // Add $toString, $hashCode, $hashCodeMemoized
@@ -539,21 +585,47 @@ ${childFragmentSpread
     cls.addClassMember('$hashCode', 'int', null, [], 'private', { volatile: true });
     cls.addClassMember('$hashCodeMemoized', 'boolean', null, [], 'private', { volatile: true });
     // Add responseFields for all fields
-    cls.addClassMember('$responseFields', 'ResponseField[]', `{\n${indentMultiline(responseFieldArr.join(',\n'), 2) + '\n  }'}`, [], null, { static: true, final: true });
+    cls.addClassMember(
+      '$responseFields',
+      'ResponseField[]',
+      `{\n${indentMultiline(responseFieldArr.join(',\n'), 2) + '\n  }'}`,
+      [],
+      null,
+      { static: true, final: true }
+    );
     // Add Ctor
     this._imports.add(Imports.Utils);
     cls.addClassMethod(
       className,
       null,
-      childFields.map(c => `this.${c.fieldName} = ${c.isNonNull ? `Utils.checkNotNull(${c.fieldName}, "${c.fieldName} == null")` : c.fieldName};`).join('\n'),
-      childFields.map(c => ({ name: c.fieldName, type: this.getListTypeWrapped(c.className, c.rawType), annotations: [c.annotation] })),
+      childFields
+        .map(
+          c =>
+            `this.${c.fieldName} = ${
+              c.isNonNull ? `Utils.checkNotNull(${c.fieldName}, "${c.fieldName} == null")` : c.fieldName
+            };`
+        )
+        .join('\n'),
+      childFields.map(c => ({
+        name: c.fieldName,
+        type: this.getListTypeWrapped(c.className, c.rawType),
+        annotations: [c.annotation],
+      })),
       null,
       'public'
     );
 
     // Add getters for all members
     childFields.forEach(c => {
-      cls.addClassMethod(c.fieldName, this.getListTypeWrapped(c.className, c.rawType), `return this.${c.fieldName};`, [], [c.annotation], 'public', {});
+      cls.addClassMethod(
+        c.fieldName,
+        this.getListTypeWrapped(c.className, c.rawType),
+        `return this.${c.fieldName};`,
+        [],
+        [c.annotation],
+        'public',
+        {}
+      );
     });
 
     // Add .toString()
@@ -583,7 +655,13 @@ return $toString;`,
 }
 if (o instanceof ${className}) {
   ${className} that = (${className}) o;
-  return ${childFields.map(c => (c.isNonNull ? `this.${c.fieldName}.equals(that.${c.fieldName})` : `((this.${c.fieldName} == null) ? (that.${c.fieldName} == null) : this.${c.fieldName}.equals(that.${c.fieldName}))`)).join(' && ')};
+  return ${childFields
+    .map(c =>
+      c.isNonNull
+        ? `this.${c.fieldName}.equals(that.${c.fieldName})`
+        : `((this.${c.fieldName} == null) ? (that.${c.fieldName} == null) : this.${c.fieldName}.equals(that.${c.fieldName}))`
+    )
+    .join(' && ')};
 }
 
 return false;`,
@@ -600,7 +678,14 @@ return false;`,
       'int',
       `if (!$hashCodeMemoized) {
   int h = 1;
-${childFields.map(f => indentMultiline(`h *= 1000003;\nh ^= ${!f.isNonNull ? `(${f.fieldName} == null) ? 0 : ` : ''}${f.fieldName}.hashCode();`, 1)).join('\n')}
+${childFields
+  .map(f =>
+    indentMultiline(
+      `h *= 1000003;\nh ^= ${!f.isNonNull ? `(${f.fieldName} == null) ? 0 : ` : ''}${f.fieldName}.hashCode();`,
+      1
+    )
+  )
+  .join('\n')}
   $hashCode = h;
   $hashCodeMemoized = true;
 }
@@ -646,7 +731,12 @@ ${childFields
       fValue = `${f.fieldName} != null ? ${fValue} : null`;
     }
 
-    return indent(`writer.${writerMethod.name}(${writerMethod.castTo ? `(${writerMethod.castTo}) ` : ''}$responseFields[${index}], ${fValue});`, 2);
+    return indent(
+      `writer.${writerMethod.name}(${
+        writerMethod.castTo ? `(${writerMethod.castTo}) ` : ''
+      }$responseFields[${index}], ${fValue});`,
+      2
+    );
   })
   .join('\n')}
   }
@@ -736,11 +826,16 @@ ${indentMultiline(inner, 2)}
           }
         });`;
       } else {
-        return `${varDec} reader.${readerFn.fn}(${readerFn.custom ? '(ResponseField.CustomTypeField) ' : ''}$responseFields[${index}]);`;
+        return `${varDec} reader.${readerFn.fn}(${
+          readerFn.custom ? '(ResponseField.CustomTypeField) ' : ''
+        }$responseFields[${index}]);`;
       }
     });
 
-    const mapperImpl = [...mapperBody, `return new ${parentClassName}(${childFields.map(f => f.fieldName).join(', ')});`].join('\n');
+    const mapperImpl = [
+      ...mapperBody,
+      `return new ${parentClassName}(${childFields.map(f => f.fieldName).join(', ')});`,
+    ].join('\n');
 
     const cls = new JavaDeclarationBlock()
       .access('public')
@@ -768,7 +863,14 @@ ${indentMultiline(inner, 2)}
     childFields
       .filter(c => c.isObject)
       .forEach(childField => {
-        cls.addClassMember(`${childField.fieldName}FieldMapper`, `${childField.className}.Mapper`, `new ${childField.className}.Mapper()`, [], 'private', { final: true });
+        cls.addClassMember(
+          `${childField.fieldName}FieldMapper`,
+          `${childField.className}.Mapper`,
+          `new ${childField.className}.Mapper()`,
+          [],
+          'private',
+          { final: true }
+        );
       });
 
     return cls;
@@ -802,7 +904,9 @@ ${indentMultiline(inner, 2)}
   FragmentDefinition(node: FragmentDefinitionNode): string {
     this.visitingFragment = true;
     const className = node.name.value;
-    const schemaType: GraphQLObjectType | GraphQLInterfaceType = this._schema.getType(node.typeCondition.name.value) as GraphQLObjectType | GraphQLInterfaceType;
+    const schemaType: GraphQLObjectType | GraphQLInterfaceType = this._schema.getType(node.typeCondition.name.value) as
+      | GraphQLObjectType
+      | GraphQLInterfaceType;
 
     this._imports.add(Imports.Arrays);
     this._imports.add(Imports.GraphqlFragment);
@@ -827,10 +931,20 @@ ${indentMultiline(inner, 2)}
 
     const rootCls = dataClasses[className];
     const printed = this.printDocument(node);
-    rootCls.addClassMember('FRAGMENT_DEFINITION', 'String', `"${printed}"`, [], 'public', { static: true, final: true });
+    rootCls.addClassMember('FRAGMENT_DEFINITION', 'String', `"${printed}"`, [], 'public', {
+      static: true,
+      final: true,
+    });
 
     const possibleTypes = isObjectType(schemaType) ? [schemaType.name] : this.getImplementingTypes(schemaType);
-    rootCls.addClassMember('POSSIBLE_TYPES', 'List<String>', `Collections.unmodifiableList(Arrays.asList(${possibleTypes.map(t => `"${t}"`).join(', ')}))`, [], 'public', { static: true, final: true });
+    rootCls.addClassMember(
+      'POSSIBLE_TYPES',
+      'List<String>',
+      `Collections.unmodifiableList(Arrays.asList(${possibleTypes.map(t => `"${t}"`).join(', ')}))`,
+      [],
+      'public',
+      { static: true, final: true }
+    );
 
     Object.keys(dataClasses)
       .filter(name => name !== className)
@@ -863,7 +977,11 @@ ${indentMultiline(inner, 2)}
 
     const printed = this.printDocument(node);
 
-    cls.implements([`${operationType}<${className}.Data, ${className}.Data, ${node.variableDefinitions.length === 0 ? 'Operation' : className}.Variables>`]);
+    cls.implements([
+      `${operationType}<${className}.Data, ${className}.Data, ${
+        node.variableDefinitions.length === 0 ? 'Operation' : className
+      }.Variables>`,
+    ]);
 
     cls.addClassMember('OPERATION_DEFINITION', 'String', `"${printed}"`, [], 'public', { static: true, final: true });
     cls.addClassMember('QUERY_DOCUMENT', 'String', 'OPERATION_DEFINITION', [], 'public', { static: true, final: true });
@@ -880,7 +998,14 @@ ${indentMultiline(inner, 2)}
       'public',
       { static: true, final: true }
     );
-    cls.addClassMember('variables', `${node.variableDefinitions.length === 0 ? 'Operation' : className}.Variables`, null, [], 'private', { final: true });
+    cls.addClassMember(
+      'variables',
+      `${node.variableDefinitions.length === 0 ? 'Operation' : className}.Variables`,
+      null,
+      [],
+      'private',
+      { final: true }
+    );
     cls.addClassMethod('queryDocument', `String`, `return QUERY_DOCUMENT;`, [], [], 'public', {}, ['Override']);
     cls.addClassMethod(
       'wrapData',
@@ -897,8 +1022,26 @@ ${indentMultiline(inner, 2)}
       {},
       ['Override']
     );
-    cls.addClassMethod('variables', `${node.variableDefinitions.length === 0 ? 'Operation' : className}.Variables`, `return variables;`, [], [], 'public', {}, ['Override']);
-    cls.addClassMethod('responseFieldMapper', `ResponseFieldMapper<${className}.Data>`, `return new Data.Mapper();`, [], [], 'public', {}, ['Override']);
+    cls.addClassMethod(
+      'variables',
+      `${node.variableDefinitions.length === 0 ? 'Operation' : className}.Variables`,
+      `return variables;`,
+      [],
+      [],
+      'public',
+      {},
+      ['Override']
+    );
+    cls.addClassMethod(
+      'responseFieldMapper',
+      `ResponseFieldMapper<${className}.Data>`,
+      `return new Data.Mapper();`,
+      [],
+      [],
+      'public',
+      {},
+      ['Override']
+    );
     cls.addClassMethod('builder', `Builder`, `return new Builder();`, [], [], 'public', { static: true }, []);
     cls.addClassMethod('name', `OperationName`, `return OPERATION_NAME;`, [], [], 'public', {}, ['Override']);
     cls.addClassMethod(
@@ -935,7 +1078,10 @@ ${indentMultiline(inner, 2)}
     return cls.string;
   }
 
-  private createVariablesClass(parentClassName: string, variables: ReadonlyArray<VariableDefinitionNode>): JavaDeclarationBlock {
+  private createVariablesClass(
+    parentClassName: string,
+    variables: ReadonlyArray<VariableDefinitionNode>
+  ): JavaDeclarationBlock {
     const className = 'Variables';
     const cls = new JavaDeclarationBlock()
       .static()
@@ -958,14 +1104,33 @@ ${indentMultiline(inner, 2)}
       this._imports.add(Imports[annotation]);
       ctorArgs.push({ name: variable.variable.name.value, type: javaClass, annotations: [annotation] });
       cls.addClassMember(variable.variable.name.value, javaClass, null, [annotation], 'private');
-      cls.addClassMethod(variable.variable.name.value, javaClass, `return ${variable.variable.name.value};`, [], [], 'public');
+      cls.addClassMethod(
+        variable.variable.name.value,
+        javaClass,
+        `return ${variable.variable.name.value};`,
+        [],
+        [],
+        'public'
+      );
     });
 
     this._imports.add(Imports.LinkedHashMap);
     this._imports.add(Imports.Map);
     cls.addClassMethod(className, null, ctorImpl.join('\n'), ctorArgs, [], 'public');
-    cls.addClassMember('valueMap', 'Map<String, Object>', 'new LinkedHashMap<>()', [], 'private', { final: true, transient: true });
-    cls.addClassMethod('valueMap', 'Map<String, Object>', 'return Collections.unmodifiableMap(valueMap);', [], [], 'public', {}, ['Override']);
+    cls.addClassMember('valueMap', 'Map<String, Object>', 'new LinkedHashMap<>()', [], 'private', {
+      final: true,
+      transient: true,
+    });
+    cls.addClassMethod(
+      'valueMap',
+      'Map<String, Object>',
+      'return Collections.unmodifiableMap(valueMap);',
+      [],
+      [],
+      'public',
+      {},
+      ['Override']
+    );
 
     const marshallerImpl = `return new InputFieldMarshaller() {
   @Override
@@ -977,7 +1142,13 @@ ${variables
     const writerMethod = this._getWriterMethodByType(schemaType, true);
 
     return indent(
-      `writer.${writerMethod.name}("${v.variable.name.value}", ${writerMethod.checkNull ? `${v.variable.name.value} != null ? ${v.variable.name.value}${writerMethod.useMarshaller ? '.marshaller()' : ''} : null` : v.variable.name.value});`,
+      `writer.${writerMethod.name}("${v.variable.name.value}", ${
+        writerMethod.checkNull
+          ? `${v.variable.name.value} != null ? ${v.variable.name.value}${
+              writerMethod.useMarshaller ? '.marshaller()' : ''
+            } : null`
+          : v.variable.name.value
+      });`,
       2
     );
   })
@@ -992,7 +1163,10 @@ ${variables
     return cls;
   }
 
-  private _getWriterMethodByType(schemaType: GraphQLNamedType, idAsString = false): { name: string; checkNull: boolean; useMarshaller: boolean; castTo?: string } {
+  private _getWriterMethodByType(
+    schemaType: GraphQLNamedType,
+    idAsString = false
+  ): { name: string; checkNull: boolean; useMarshaller: boolean; castTo?: string } {
     if (isScalarType(schemaType)) {
       if (SCALAR_TO_WRITER_METHOD[schemaType.name] && (idAsString || schemaType.name !== 'ID')) {
         return {
@@ -1014,7 +1188,10 @@ ${variables
     return { name: 'writeString', useMarshaller: false, checkNull: false };
   }
 
-  private createBuilderClass(parentClassName: string, variables: ReadonlyArray<VariableDefinitionNode>): JavaDeclarationBlock {
+  private createBuilderClass(
+    parentClassName: string,
+    variables: ReadonlyArray<VariableDefinitionNode>
+  ): JavaDeclarationBlock {
     const builderClassName = 'Builder';
     const cls = new JavaDeclarationBlock()
       .static()
@@ -1048,7 +1225,9 @@ ${variables
     });
 
     this._imports.add(Imports.Utils);
-    const nonNullChecks = variables.filter(f => isNonNullType(f)).map(f => `Utils.checkNotNull(${f.variable.name.value}, "${f.variable.name.value} == null");`);
+    const nonNullChecks = variables
+      .filter(f => isNonNullType(f))
+      .map(f => `Utils.checkNotNull(${f.variable.name.value}, "${f.variable.name.value} == null");`);
     const returnStatement = `return new ${parentClassName}(${variables.map(v => v.variable.name.value).join(', ')});`;
     cls.addClassMethod('build', parentClassName, `${[...nonNullChecks, returnStatement].join('\n')}`, [], [], 'public');
 

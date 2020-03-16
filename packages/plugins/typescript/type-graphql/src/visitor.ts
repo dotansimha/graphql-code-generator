@@ -1,8 +1,23 @@
 import { transformComment, indent, DeclarationBlock } from '@graphql-codegen/visitor-plugin-common';
 import { TypeGraphQLPluginConfig } from './config';
 import autoBind from 'auto-bind';
-import { FieldDefinitionNode, EnumTypeDefinitionNode, InputValueDefinitionNode, GraphQLSchema, ObjectTypeDefinitionNode, InterfaceTypeDefinitionNode, TypeNode, GraphQLEnumType, InputObjectTypeDefinitionNode } from 'graphql';
-import { TypeScriptOperationVariablesToObject, TypeScriptPluginParsedConfig, TsVisitor, AvoidOptionalsConfig } from '@graphql-codegen/typescript';
+import {
+  FieldDefinitionNode,
+  EnumTypeDefinitionNode,
+  InputValueDefinitionNode,
+  GraphQLSchema,
+  ObjectTypeDefinitionNode,
+  InterfaceTypeDefinitionNode,
+  TypeNode,
+  GraphQLEnumType,
+  InputObjectTypeDefinitionNode,
+} from 'graphql';
+import {
+  TypeScriptOperationVariablesToObject,
+  TypeScriptPluginParsedConfig,
+  TsVisitor,
+  AvoidOptionalsConfig,
+} from '@graphql-codegen/typescript';
 
 export type DecoratorConfig = {
   type: string;
@@ -35,7 +50,10 @@ interface Type {
   isScalar: boolean;
 }
 
-export class TypeGraphQLVisitor<TRawConfig extends TypeGraphQLPluginConfig = TypeGraphQLPluginConfig, TParsedConfig extends TypeGraphQLPluginParsedConfig = TypeGraphQLPluginParsedConfig> extends TsVisitor<TRawConfig, TParsedConfig> {
+export class TypeGraphQLVisitor<
+  TRawConfig extends TypeGraphQLPluginConfig = TypeGraphQLPluginConfig,
+  TParsedConfig extends TypeGraphQLPluginParsedConfig = TypeGraphQLPluginParsedConfig
+> extends TsVisitor<TRawConfig, TParsedConfig> {
   constructor(schema: GraphQLSchema, pluginConfig: TRawConfig, additionalConfig: Partial<TParsedConfig> = {}) {
     super(schema, pluginConfig, {
       avoidOptionals: pluginConfig.avoidOptionals || false,
@@ -65,7 +83,18 @@ export class TypeGraphQLVisitor<TRawConfig extends TypeGraphQLPluginConfig = Typ
     const enumNames = Object.values(schema.getTypeMap())
       .map(type => (type instanceof GraphQLEnumType ? type.name : undefined))
       .filter(t => t);
-    this.setArgumentsTransformer(new TypeScriptOperationVariablesToObject(this.scalars, this.convertName, this.config.avoidOptionals.object, this.config.immutableTypes, null, enumNames, this.config.enumPrefix, this.config.enumValues));
+    this.setArgumentsTransformer(
+      new TypeScriptOperationVariablesToObject(
+        this.scalars,
+        this.convertName,
+        this.config.avoidOptionals.object,
+        this.config.immutableTypes,
+        null,
+        enumNames,
+        this.config.enumPrefix,
+        this.config.enumValues
+      )
+    );
     this.setDeclarationBlockConfig({
       enumNameValueSeparator: ' =',
     });
@@ -102,7 +131,11 @@ export class TypeGraphQLVisitor<TRawConfig extends TypeGraphQLPluginConfig = Typ
     return declarationBlock.string;
   }
 
-  getArgumentsObjectDeclarationBlock(node: InterfaceTypeDefinitionNode | ObjectTypeDefinitionNode, name: string, field: FieldDefinitionNode): DeclarationBlock {
+  getArgumentsObjectDeclarationBlock(
+    node: InterfaceTypeDefinitionNode | ObjectTypeDefinitionNode,
+    name: string,
+    field: FieldDefinitionNode
+  ): DeclarationBlock {
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind(this._parsedConfig.declarationKind.arguments)
@@ -111,7 +144,11 @@ export class TypeGraphQLVisitor<TRawConfig extends TypeGraphQLPluginConfig = Typ
       .withBlock(field.arguments.map(argument => this.InputValueDefinition(argument)).join('\n'));
   }
 
-  getArgumentsObjectTypeDefinition(node: InterfaceTypeDefinitionNode | ObjectTypeDefinitionNode, name: string, field: FieldDefinitionNode): string {
+  getArgumentsObjectTypeDefinition(
+    node: InterfaceTypeDefinitionNode | ObjectTypeDefinitionNode,
+    name: string,
+    field: FieldDefinitionNode
+  ): string {
     const typeDecorator = this.config.decoratorName.arguments;
 
     let declarationBlock = this.getArgumentsObjectDeclarationBlock(node, name, field);
@@ -126,7 +163,9 @@ export class TypeGraphQLVisitor<TRawConfig extends TypeGraphQLPluginConfig = Typ
     const interfaceDecorator = this.config.decoratorName.interface;
     const originalNode = parent[key] as InterfaceTypeDefinitionNode;
 
-    const declarationBlock = this.getInterfaceTypeDeclarationBlock(node, originalNode).withDecorator(`@TypeGraphQL.${interfaceDecorator}()`);
+    const declarationBlock = this.getInterfaceTypeDeclarationBlock(node, originalNode).withDecorator(
+      `@TypeGraphQL.${interfaceDecorator}()`
+    );
 
     return [declarationBlock.string, this.buildArgumentsBlock(originalNode)].filter(f => f).join('\n\n');
   }
@@ -203,11 +242,20 @@ export class TypeGraphQLVisitor<TRawConfig extends TypeGraphQLPluginConfig = Typ
     const comment = transformComment((node.description as any) as string, 1);
 
     const type = this.parseType(typeString);
-    const decorator = '\n' + indent(`@TypeGraphQL.${fieldDecorator}(type => ${type.isArray ? `[${type.type}]` : type.type}${type.isNullable ? ', { nullable: true }' : ''})`) + '\n';
+    const decorator =
+      '\n' +
+      indent(
+        `@TypeGraphQL.${fieldDecorator}(type => ${type.isArray ? `[${type.type}]` : type.type}${
+          type.isNullable ? ', { nullable: true }' : ''
+        })`
+      ) +
+      '\n';
 
     typeString = this.fixDecorator(type, typeString);
 
-    return comment + decorator + indent(`${this.config.immutableTypes ? 'readonly ' : ''}${node.name}!: ${typeString};`);
+    return (
+      comment + decorator + indent(`${this.config.immutableTypes ? 'readonly ' : ''}${node.name}!: ${typeString};`)
+    );
   }
 
   InputValueDefinition(node: InputValueDefinitionNode, key?: number | string, parent?: any): string {
@@ -216,16 +264,31 @@ export class TypeGraphQLVisitor<TRawConfig extends TypeGraphQLPluginConfig = Typ
     const comment = transformComment((node.description as any) as string, 1);
 
     const type = this.parseType(rawType);
-    const typeGraphQLType = type.isScalar && TYPE_GRAPHQL_SCALARS.includes(type.type) ? `TypeGraphQL.${type.type}` : type.type;
-    const decorator = '\n' + indent(`@TypeGraphQL.${fieldDecorator}(type => ${type.isArray ? `[${typeGraphQLType}]` : typeGraphQLType}${type.isNullable ? ', { nullable: true }' : ''})`) + '\n';
+    const typeGraphQLType =
+      type.isScalar && TYPE_GRAPHQL_SCALARS.includes(type.type) ? `TypeGraphQL.${type.type}` : type.type;
+    const decorator =
+      '\n' +
+      indent(
+        `@TypeGraphQL.${fieldDecorator}(type => ${type.isArray ? `[${typeGraphQLType}]` : typeGraphQLType}${
+          type.isNullable ? ', { nullable: true }' : ''
+        })`
+      ) +
+      '\n';
 
     const nameString = node.name.kind ? node.name.value : node.name;
-    const typeString = (rawType as TypeNode).kind ? this.buildTypeString(type) : this.fixDecorator(type, rawType as string);
+    const typeString = (rawType as TypeNode).kind
+      ? this.buildTypeString(type)
+      : this.fixDecorator(type, rawType as string);
 
-    return comment + decorator + indent(`${this.config.immutableTypes ? 'readonly ' : ''}${nameString}!: ${typeString};`);
+    return (
+      comment + decorator + indent(`${this.config.immutableTypes ? 'readonly ' : ''}${nameString}!: ${typeString};`)
+    );
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
-    return super.EnumTypeDefinition(node) + `TypeGraphQL.registerEnumType(${this.convertName(node)}, { name: '${this.convertName(node)}' });\n`;
+    return (
+      super.EnumTypeDefinition(node) +
+      `TypeGraphQL.registerEnumType(${this.convertName(node)}, { name: '${this.convertName(node)}' });\n`
+    );
   }
 }

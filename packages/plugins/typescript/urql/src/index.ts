@@ -5,10 +5,21 @@ import { UrqlVisitor } from './visitor';
 import { extname } from 'path';
 import { UrqlRawPluginConfig } from './config';
 
-export const plugin: PluginFunction<UrqlRawPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: UrqlRawPluginConfig) => {
+export const plugin: PluginFunction<UrqlRawPluginConfig> = (
+  schema: GraphQLSchema,
+  documents: Types.DocumentFile[],
+  config: UrqlRawPluginConfig
+) => {
   const allAst = concatAST(documents.map(v => v.document));
   const allFragments: LoadedFragment[] = [
-    ...(allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[]).map(fragmentDef => ({ node: fragmentDef, name: fragmentDef.name.value, onType: fragmentDef.typeCondition.name.value, isExternal: false })),
+    ...(allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[]).map(
+      fragmentDef => ({
+        node: fragmentDef,
+        name: fragmentDef.name.value,
+        onType: fragmentDef.typeCondition.name.value,
+        isExternal: false,
+      })
+    ),
     ...(config.externalFragments || []),
   ];
   const visitor = new UrqlVisitor(schema, allFragments, config) as any;
@@ -20,7 +31,12 @@ export const plugin: PluginFunction<UrqlRawPluginConfig> = (schema: GraphQLSchem
   };
 };
 
-export const validate: PluginValidateFn<any> = async (schema: GraphQLSchema, documents: Types.DocumentFile[], config: UrqlRawPluginConfig, outputFile: string) => {
+export const validate: PluginValidateFn<any> = async (
+  schema: GraphQLSchema,
+  documents: Types.DocumentFile[],
+  config: UrqlRawPluginConfig,
+  outputFile: string
+) => {
   if (config.withComponent === false) {
     if (extname(outputFile) !== '.ts' && extname(outputFile) !== '.tsx') {
       throw new Error(`Plugin "urql" with "noComponents" requires extension to be ".ts" or ".tsx"!`);

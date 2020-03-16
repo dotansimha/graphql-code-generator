@@ -39,20 +39,33 @@ export interface TypeScriptFilesModulesPluginConfig {
   prefix?: string;
 }
 
-export const plugin: PluginFunction = async (schema: GraphQLSchema, documents: Types.DocumentFile[], { modulePathPrefix = '', relativeToCwd, prefix = '*/' }: TypeScriptFilesModulesPluginConfig): Promise<string> => {
+export const plugin: PluginFunction = async (
+  schema: GraphQLSchema,
+  documents: Types.DocumentFile[],
+  { modulePathPrefix = '', relativeToCwd, prefix = '*/' }: TypeScriptFilesModulesPluginConfig
+): Promise<string> => {
   const useRelative = relativeToCwd === true;
 
-  const mappedDocuments: { [fileName: string]: OperationDefinitionNode[] } = documents.reduce((prev, documentRecord) => {
-    const fileName = useRelative ? relative(process.cwd(), documentRecord.location) : basename(documentRecord.location);
+  const mappedDocuments: { [fileName: string]: OperationDefinitionNode[] } = documents.reduce(
+    (prev, documentRecord) => {
+      const fileName = useRelative
+        ? relative(process.cwd(), documentRecord.location)
+        : basename(documentRecord.location);
 
-    if (!prev[fileName]) {
-      prev[fileName] = [];
-    }
+      if (!prev[fileName]) {
+        prev[fileName] = [];
+      }
 
-    prev[fileName].push(...documentRecord.document.definitions.filter(document => document.kind === 'OperationDefinition' || document.kind === 'FragmentDefinition'));
+      prev[fileName].push(
+        ...documentRecord.document.definitions.filter(
+          document => document.kind === 'OperationDefinition' || document.kind === 'FragmentDefinition'
+        )
+      );
 
-    return prev;
-  }, {} as any);
+      return prev;
+    },
+    {} as any
+  );
 
   return Object.keys(mappedDocuments)
     .filter(fileName => mappedDocuments[fileName].length > 0)
@@ -75,7 +88,12 @@ declare module '${prefix}${modulePathPrefix}${fileName}' {
     .join('\n');
 };
 
-export const validate: PluginValidateFn<any> = async (schema: GraphQLSchema, documents: Types.DocumentFile[], config: any, outputFile: string) => {
+export const validate: PluginValidateFn<any> = async (
+  schema: GraphQLSchema,
+  documents: Types.DocumentFile[],
+  config: any,
+  outputFile: string
+) => {
   if (!outputFile.endsWith('.d.ts')) {
     throw new Error(`Plugin "typescript-graphql-files-modules" requires extension to be ".d.ts"!`);
   }

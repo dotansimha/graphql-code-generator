@@ -1,4 +1,10 @@
-import { ClientSideBaseVisitor, ClientSideBasePluginConfig, DocumentMode, LoadedFragment, indentMultiline } from '@graphql-codegen/visitor-plugin-common';
+import {
+  ClientSideBaseVisitor,
+  ClientSideBasePluginConfig,
+  DocumentMode,
+  LoadedFragment,
+  indentMultiline,
+} from '@graphql-codegen/visitor-plugin-common';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, print, visit, GraphQLSchema, Kind } from 'graphql';
 import { ApolloAngularRawPluginConfig } from './config';
@@ -23,7 +29,10 @@ export interface ApolloAngularPluginConfig extends ClientSideBasePluginConfig {
   subscriptionSuffix?: string;
 }
 
-export class ApolloAngularVisitor extends ClientSideBaseVisitor<ApolloAngularRawPluginConfig, ApolloAngularPluginConfig> {
+export class ApolloAngularVisitor extends ClientSideBaseVisitor<
+  ApolloAngularRawPluginConfig,
+  ApolloAngularPluginConfig
+> {
   private _operationsToInclude: {
     node: OperationDefinitionNode;
     documentVariableName: string;
@@ -33,7 +42,13 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<ApolloAngularRaw
     serviceName: string;
   }[] = [];
 
-  constructor(schema: GraphQLSchema, fragments: LoadedFragment[], private _allOperations: OperationDefinitionNode[], rawConfig: ApolloAngularRawPluginConfig, documents?: Types.DocumentFile[]) {
+  constructor(
+    schema: GraphQLSchema,
+    fragments: LoadedFragment[],
+    private _allOperations: OperationDefinitionNode[],
+    rawConfig: ApolloAngularRawPluginConfig,
+    documents?: Types.DocumentFile[]
+  ) {
     super(
       schema,
       fragments,
@@ -73,7 +88,9 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<ApolloAngularRaw
     this._allOperations
       .filter(op => this._operationHasDirective(op, 'NgModule') || !!this.config.ngModule)
       .forEach(op => {
-        const def = this._operationHasDirective(op, 'NgModule') ? this._extractNgModule(op) : this._parseNgModule(this.config.ngModule);
+        const def = this._operationHasDirective(op, 'NgModule')
+          ? this._extractNgModule(op)
+          : this._parseNgModule(this.config.ngModule);
 
         // by setting key as link we easily get rid of duplicated imports
         // every path should be relative to the output file
@@ -198,7 +215,13 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<ApolloAngularRaw
     }
   }
 
-  protected buildOperation(node: OperationDefinitionNode, documentVariableName: string, operationType: string, operationResultType: string, operationVariablesTypes: string): string {
+  protected buildOperation(
+    node: OperationDefinitionNode,
+    documentVariableName: string,
+    operationType: string,
+    operationResultType: string,
+    operationVariablesTypes: string
+  ): string {
     const serviceName = `${this.convertName(node)}${this._operationSuffix(operationType)}`;
     this._operationsToInclude.push({
       node,
@@ -235,12 +258,20 @@ export class ApolloAngularVisitor extends ClientSideBaseVisitor<ApolloAngularRaw
 
     const allPossibleActions = this._operationsToInclude
       .map(o => {
-        const optionalVariables = !o.node.variableDefinitions || o.node.variableDefinitions.length === 0 || o.node.variableDefinitions.every(v => v.type.kind !== Kind.NON_NULL_TYPE || !!v.defaultValue);
+        const optionalVariables =
+          !o.node.variableDefinitions ||
+          o.node.variableDefinitions.length === 0 ||
+          o.node.variableDefinitions.every(v => v.type.kind !== Kind.NON_NULL_TYPE || !!v.defaultValue);
 
-        const options = o.operationType === 'Mutation' ? `${o.operationType}OptionsAlone<${o.operationResultType}, ${o.operationVariablesTypes}>` : `${o.operationType}OptionsAlone<${o.operationVariablesTypes}>`;
+        const options =
+          o.operationType === 'Mutation'
+            ? `${o.operationType}OptionsAlone<${o.operationResultType}, ${o.operationVariablesTypes}>`
+            : `${o.operationType}OptionsAlone<${o.operationVariablesTypes}>`;
 
         const method = `
-${camelCase(o.node.name.value)}(variables${optionalVariables ? '?' : ''}: ${o.operationVariablesTypes}, options?: ${options}) {
+${camelCase(o.node.name.value)}(variables${optionalVariables ? '?' : ''}: ${
+          o.operationVariablesTypes
+        }, options?: ${options}) {
   return this.${camelCase(o.serviceName)}.${actionType(o.operationType)}(variables, options)
 }`;
 
@@ -249,7 +280,9 @@ ${camelCase(o.node.name.value)}(variables${optionalVariables ? '?' : ''}: ${o.op
         if (o.operationType === 'Query') {
           watchMethod = `
 
-${camelCase(o.node.name.value)}Watch(variables${optionalVariables ? '?' : ''}: ${o.operationVariablesTypes}, options?: WatchQueryOptionsAlone<${o.operationVariablesTypes}>) {
+${camelCase(o.node.name.value)}Watch(variables${optionalVariables ? '?' : ''}: ${
+            o.operationVariablesTypes
+          }, options?: WatchQueryOptionsAlone<${o.operationVariablesTypes}>) {
   return this.${camelCase(o.serviceName)}.watch(variables, options)
 }`;
         }

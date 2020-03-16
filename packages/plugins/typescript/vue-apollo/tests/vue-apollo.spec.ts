@@ -43,7 +43,13 @@ describe('Vue Apollo', () => {
     }
   `);
 
-  const validateTypeScript = async (output: Types.PluginOutput, testSchema: GraphQLSchema, documents: Types.DocumentFile[], config: any, playground = false) => {
+  const validateTypeScript = async (
+    output: Types.PluginOutput,
+    testSchema: GraphQLSchema,
+    documents: Types.DocumentFile[],
+    config: any,
+    playground = false
+  ) => {
     const tsOutput = await tsPlugin(testSchema, documents, config, { outputFile: '' });
     const tsDocumentsOutput = await tsDocumentsPlugin(testSchema, documents, config, { outputFile: '' });
     const merged = mergeOutputs([tsOutput, tsDocumentsOutput, output]);
@@ -52,7 +58,14 @@ describe('Vue Apollo', () => {
     return merged;
   };
 
-  const validateAndCompile = async (content: Types.PluginOutput, config: any = {}, pluginSchema: GraphQLSchema, documents: Types.DocumentFile[], usage = '', playground = false) => {
+  const validateAndCompile = async (
+    content: Types.PluginOutput,
+    config: any = {},
+    pluginSchema: GraphQLSchema,
+    documents: Types.DocumentFile[],
+    usage = '',
+    playground = false
+  ) => {
     const tsOutput = await tsPlugin(pluginSchema, documents, config, { outputFile: '' });
     const tsDocumentsOutput = await tsDocumentsPlugin(pluginSchema, documents, config, { outputFile: '' });
     const merged = mergeOutputs([tsOutput, tsDocumentsOutput, content]);
@@ -129,11 +142,41 @@ describe('Vue Apollo', () => {
         }
       `);
 
-      expect(((await plugin(schema, [{ location: 'test-file.ts', document: ast }], {}, { outputFile: '' })) as any).content).toContain('ReturnType<typeof useNotificationsQueryQuery>;');
-      expect(((await plugin(schema, [{ location: 'test-file.ts', document: ast }], { dedupeOperationSuffix: false }, { outputFile: '' })) as any).content).toContain('ReturnType<typeof useNotificationsQueryQuery>;');
-      expect(((await plugin(schema, [{ location: 'test-file.ts', document: ast }], { dedupeOperationSuffix: true }, { outputFile: '' })) as any).content).toContain('ReturnType<typeof useNotificationsQuery>;');
-      expect(((await plugin(schema, [{ location: 'test-file.ts', document: ast2 }], { dedupeOperationSuffix: true }, { outputFile: '' })) as any).content).toContain('ReturnType<typeof useNotificationsQuery>;');
-      expect(((await plugin(schema, [{ location: 'test-file.ts', document: ast2 }], { dedupeOperationSuffix: false }, { outputFile: '' })) as any).content).toContain('ReturnType<typeof useNotificationsQuery>;');
+      expect(
+        ((await plugin(schema, [{ location: 'test-file.ts', document: ast }], {}, { outputFile: '' })) as any).content
+      ).toContain('ReturnType<typeof useNotificationsQueryQuery>;');
+      expect(
+        ((await plugin(
+          schema,
+          [{ location: 'test-file.ts', document: ast }],
+          { dedupeOperationSuffix: false },
+          { outputFile: '' }
+        )) as any).content
+      ).toContain('ReturnType<typeof useNotificationsQueryQuery>;');
+      expect(
+        ((await plugin(
+          schema,
+          [{ location: 'test-file.ts', document: ast }],
+          { dedupeOperationSuffix: true },
+          { outputFile: '' }
+        )) as any).content
+      ).toContain('ReturnType<typeof useNotificationsQuery>;');
+      expect(
+        ((await plugin(
+          schema,
+          [{ location: 'test-file.ts', document: ast2 }],
+          { dedupeOperationSuffix: true },
+          { outputFile: '' }
+        )) as any).content
+      ).toContain('ReturnType<typeof useNotificationsQuery>;');
+      expect(
+        ((await plugin(
+          schema,
+          [{ location: 'test-file.ts', document: ast2 }],
+          { dedupeOperationSuffix: false },
+          { outputFile: '' }
+        )) as any).content
+      ).toContain('ReturnType<typeof useNotificationsQuery>;');
     });
 
     it(`tests for omitOperationSuffix`, async () => {
@@ -152,11 +195,41 @@ describe('Vue Apollo', () => {
         }
       `);
 
-      expect(((await plugin(schema, [{ location: 'test-file.ts', document: ast }], {}, { outputFile: '' })) as any).content).toContain('ReturnType<typeof useNotificationsQueryQuery>;');
-      expect(((await plugin(schema, [{ location: 'test-file.ts', document: ast }], { omitOperationSuffix: false }, { outputFile: '' })) as any).content).toContain('ReturnType<typeof useNotificationsQueryQuery>;');
-      expect(((await plugin(schema, [{ location: 'test-file.ts', document: ast }], { omitOperationSuffix: true }, { outputFile: '' })) as any).content).toContain('ReturnType<typeof useNotificationsQuery>;');
-      expect(((await plugin(schema, [{ location: 'test-file.ts', document: ast2 }], { omitOperationSuffix: true }, { outputFile: '' })) as any).content).toContain('ReturnType<typeof useNotifications>;');
-      expect(((await plugin(schema, [{ location: 'test-file.ts', document: ast2 }], { omitOperationSuffix: false }, { outputFile: '' })) as any).content).toContain('ReturnType<typeof useNotificationsQuery>;');
+      expect(
+        ((await plugin(schema, [{ location: 'test-file.ts', document: ast }], {}, { outputFile: '' })) as any).content
+      ).toContain('ReturnType<typeof useNotificationsQueryQuery>;');
+      expect(
+        ((await plugin(
+          schema,
+          [{ location: 'test-file.ts', document: ast }],
+          { omitOperationSuffix: false },
+          { outputFile: '' }
+        )) as any).content
+      ).toContain('ReturnType<typeof useNotificationsQueryQuery>;');
+      expect(
+        ((await plugin(
+          schema,
+          [{ location: 'test-file.ts', document: ast }],
+          { omitOperationSuffix: true },
+          { outputFile: '' }
+        )) as any).content
+      ).toContain('ReturnType<typeof useNotificationsQuery>;');
+      expect(
+        ((await plugin(
+          schema,
+          [{ location: 'test-file.ts', document: ast2 }],
+          { omitOperationSuffix: true },
+          { outputFile: '' }
+        )) as any).content
+      ).toContain('ReturnType<typeof useNotifications>;');
+      expect(
+        ((await plugin(
+          schema,
+          [{ location: 'test-file.ts', document: ast2 }],
+          { omitOperationSuffix: false },
+          { outputFile: '' }
+        )) as any).content
+      ).toContain('ReturnType<typeof useNotificationsQuery>;');
     });
 
     it('should import VueApolloComposable from VueApolloComposableImportFrom config option', async () => {

@@ -8,7 +8,8 @@ export const plugins: Array<PluginOption> = [
     value: 'typescript',
     pathInRepo: 'typescript/typescript',
     available: hasTag(Tags.typescript),
-    shouldBeSelected: tags => oneOf(tags, Tags.angular, Tags.stencil) || allOf(tags, Tags.typescript, Tags.react) || noneOf(tags, Tags.flow),
+    shouldBeSelected: tags =>
+      oneOf(tags, Tags.angular, Tags.stencil) || allOf(tags, Tags.typescript, Tags.react) || noneOf(tags, Tags.flow),
     defaultExtension: '.ts',
   },
   {

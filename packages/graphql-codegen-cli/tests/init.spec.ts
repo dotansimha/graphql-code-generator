@@ -592,6 +592,26 @@ describe('init', () => {
   });
 });
 
-function useInputs(inputs: { onTarget: string[]; onSchema: string[]; onDocuments?: string[]; onPlugins: string[]; onOutput: string[]; onIntrospection: string[]; onConfig: string[]; onScript: string[] }) {
-  bddStdin([].concat(inputs.onTarget, inputs.onSchema, inputs.onDocuments || [], inputs.onPlugins, inputs.onOutput, inputs.onIntrospection, inputs.onConfig, inputs.onScript));
+function useInputs(inputs: {
+  onTarget: string[];
+  onSchema: string[];
+  onDocuments?: string[];
+  onPlugins: string[];
+  onOutput: string[];
+  onIntrospection: string[];
+  onConfig: string[];
+  onScript: string[];
+}) {
+  bddStdin(
+    [].concat(
+      inputs.onTarget,
+      inputs.onSchema,
+      inputs.onDocuments || [],
+      inputs.onPlugins,
+      inputs.onOutput,
+      inputs.onIntrospection,
+      inputs.onConfig,
+      inputs.onScript
+    )
+  );
 }

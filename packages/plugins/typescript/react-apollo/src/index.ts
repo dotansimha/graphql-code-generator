@@ -5,11 +5,22 @@ import { ReactApolloVisitor } from './visitor';
 import { extname } from 'path';
 import { ReactApolloRawPluginConfig } from './config';
 
-export const plugin: PluginFunction<ReactApolloRawPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: ReactApolloRawPluginConfig) => {
+export const plugin: PluginFunction<ReactApolloRawPluginConfig> = (
+  schema: GraphQLSchema,
+  documents: Types.DocumentFile[],
+  config: ReactApolloRawPluginConfig
+) => {
   const allAst = concatAST(documents.map(v => v.document));
 
   const allFragments: LoadedFragment[] = [
-    ...(allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[]).map(fragmentDef => ({ node: fragmentDef, name: fragmentDef.name.value, onType: fragmentDef.typeCondition.name.value, isExternal: false })),
+    ...(allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[]).map(
+      fragmentDef => ({
+        node: fragmentDef,
+        name: fragmentDef.name.value,
+        onType: fragmentDef.typeCondition.name.value,
+        isExternal: false,
+      })
+    ),
     ...(config.externalFragments || []),
   ];
 
@@ -22,7 +33,12 @@ export const plugin: PluginFunction<ReactApolloRawPluginConfig> = (schema: Graph
   };
 };
 
-export const validate: PluginValidateFn<any> = async (schema: GraphQLSchema, documents: Types.DocumentFile[], config: ReactApolloRawPluginConfig, outputFile: string) => {
+export const validate: PluginValidateFn<any> = async (
+  schema: GraphQLSchema,
+  documents: Types.DocumentFile[],
+  config: ReactApolloRawPluginConfig,
+  outputFile: string
+) => {
   if (config.withComponent === false) {
     if (extname(outputFile) !== '.ts' && extname(outputFile) !== '.tsx') {
       throw new Error(`Plugin "react-apollo" with "noComponents" requires extension to be ".ts" or ".tsx"!`);

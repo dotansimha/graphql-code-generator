@@ -166,7 +166,16 @@ export type OnCommentAddedSubscriptionVariables = {
   repoFullName: Scalars['String'];
 };
 
-export type OnCommentAddedSubscription = { __typename?: 'Subscription'; commentAdded: Maybe<{ __typename?: 'Comment'; id: number; createdAt: number; content: string; postedBy: { __typename?: 'User'; login: string; html_url: string } }> };
+export type OnCommentAddedSubscription = {
+  __typename?: 'Subscription';
+  commentAdded: Maybe<{
+    __typename?: 'Comment';
+    id: number;
+    createdAt: number;
+    content: string;
+    postedBy: { __typename?: 'User'; login: string; html_url: string };
+  }>;
+};
 
 export type CommentQueryVariables = {
   repoFullName: Scalars['String'];
@@ -183,14 +192,32 @@ export type CommentQuery = {
     createdAt: number;
     commentCount: number;
     postedBy: { __typename?: 'User'; login: string; html_url: string };
-    comments: Array<Maybe<{ __typename?: 'Comment'; id: number; createdAt: number; content: string; postedBy: { __typename?: 'User'; login: string; html_url: string } }>>;
-    repository: { __typename?: 'Repository'; full_name: string; html_url: string; description: Maybe<string>; open_issues_count: Maybe<number>; stargazers_count: number };
+    comments: Array<
+      Maybe<{
+        __typename?: 'Comment';
+        id: number;
+        createdAt: number;
+        content: string;
+        postedBy: { __typename?: 'User'; login: string; html_url: string };
+      }>
+    >;
+    repository: {
+      __typename?: 'Repository';
+      full_name: string;
+      html_url: string;
+      description: Maybe<string>;
+      open_issues_count: Maybe<number>;
+      stargazers_count: number;
+    };
   }>;
 };
 
 export type CurrentUserForProfileQueryVariables = {};
 
-export type CurrentUserForProfileQuery = { __typename?: 'Query'; currentUser: Maybe<{ __typename?: 'User'; login: string; avatar_url: string }> };
+export type CurrentUserForProfileQuery = {
+  __typename?: 'Query';
+  currentUser: Maybe<{ __typename?: 'User'; login: string; avatar_url: string }>;
+};
 
 export type FeedQueryVariables = {
   type: FeedType;
@@ -209,7 +236,15 @@ export type FeedQuery = {
         commentCount: number;
         score: number;
         createdAt: number;
-        repository: { __typename?: 'Repository'; full_name: string; html_url: string; description: Maybe<string>; stargazers_count: number; open_issues_count: Maybe<number>; owner: Maybe<{ __typename?: 'User'; avatar_url: string }> };
+        repository: {
+          __typename?: 'Repository';
+          full_name: string;
+          html_url: string;
+          description: Maybe<string>;
+          stargazers_count: number;
+          open_issues_count: Maybe<number>;
+          owner: Maybe<{ __typename?: 'User'; avatar_url: string }>;
+        };
         vote: { __typename?: 'Vote'; vote_value: number };
         postedBy: { __typename?: 'User'; html_url: string; login: string };
       }>
@@ -221,18 +256,33 @@ export type SubmitRepositoryMutationVariables = {
   repoFullName: Scalars['String'];
 };
 
-export type SubmitRepositoryMutation = { __typename?: 'Mutation'; submitRepository: Maybe<{ __typename?: 'Entry'; createdAt: number }> };
+export type SubmitRepositoryMutation = {
+  __typename?: 'Mutation';
+  submitRepository: Maybe<{ __typename?: 'Entry'; createdAt: number }>;
+};
 
 export type SubmitCommentMutationVariables = {
   repoFullName: Scalars['String'];
   commentContent: Scalars['String'];
 };
 
-export type SubmitCommentMutation = { __typename?: 'Mutation'; submitComment: Maybe<{ __typename?: 'Comment'; id: number; createdAt: number; content: string; postedBy: { __typename?: 'User'; login: string; html_url: string } }> };
+export type SubmitCommentMutation = {
+  __typename?: 'Mutation';
+  submitComment: Maybe<{
+    __typename?: 'Comment';
+    id: number;
+    createdAt: number;
+    content: string;
+    postedBy: { __typename?: 'User'; login: string; html_url: string };
+  }>;
+};
 
 export type VoteMutationVariables = {
   repoFullName: Scalars['String'];
   type: VoteType;
 };
 
-export type VoteMutation = { __typename?: 'Mutation'; vote: Maybe<{ __typename?: 'Entry'; score: number; id: number; vote: { __typename?: 'Vote'; vote_value: number } }> };
+export type VoteMutation = {
+  __typename?: 'Mutation';
+  vote: Maybe<{ __typename?: 'Entry'; score: number; id: number; vote: { __typename?: 'Vote'; vote_value: number } }>;
+};

@@ -386,7 +386,9 @@ describe('near-operation-file preset', () => {
       pluginMap: { typescript: {} as any },
     });
 
-    expect(result.map(o => o.plugins)[0]).toEqual(expect.arrayContaining([{ add: `import * as Types from '../types';\n` }]));
+    expect(result.map(o => o.plugins)[0]).toEqual(
+      expect.arrayContaining([{ add: `import * as Types from '../types';\n` }])
+    );
   });
 
   it('Should prepend the "add" plugin with the correct import, when only using fragment spread', async () => {
@@ -399,12 +401,17 @@ describe('near-operation-file preset', () => {
       },
       schema: schemaDocumentNode,
       schemaAst: schemaNode,
-      documents: [{ location: '/some/deep/path/src/graphql/me-query.graphql', document: minimalOperationAst }, testDocuments[1]],
+      documents: [
+        { location: '/some/deep/path/src/graphql/me-query.graphql', document: minimalOperationAst },
+        testDocuments[1],
+      ],
       plugins: [{ typescript: {} }],
       pluginMap: { typescript: {} as any },
     });
 
-    expect(result.map(o => o.plugins)[1]).toEqual(expect.arrayContaining([{ add: `import * as Types from '../types';\n` }]));
+    expect(result.map(o => o.plugins)[1]).toEqual(
+      expect.arrayContaining([{ add: `import * as Types from '../types';\n` }])
+    );
   });
 
   it('should fail when multiple fragments with the same name but different definition are found', () => {
@@ -480,7 +487,9 @@ describe('near-operation-file preset', () => {
       pluginMap: { typescript: {} as any },
     });
 
-    expect(result.map(o => o.plugins)[0]).not.toEqual(expect.arrayContaining([{ add: `import * as Types from '../types';\n` }]));
+    expect(result.map(o => o.plugins)[0]).not.toEqual(
+      expect.arrayContaining([{ add: `import * as Types from '../types';\n` }])
+    );
   });
 
   it('Should prepend the "add" plugin with Types import when arguments are used', async () => {
@@ -510,7 +519,9 @@ describe('near-operation-file preset', () => {
       pluginMap: { typescript: {} as any },
     });
 
-    expect(result.map(o => o.plugins)[0]).toEqual(expect.arrayContaining([{ add: `import * as Types from './src/types';\n` }]));
+    expect(result.map(o => o.plugins)[0]).toEqual(
+      expect.arrayContaining([{ add: `import * as Types from './src/types';\n` }])
+    );
   });
 
   it('Should prepend the "add" plugin with the correct import (long path)', async () => {
@@ -533,7 +544,9 @@ describe('near-operation-file preset', () => {
       plugins: [{ typescript: {} }],
       pluginMap: { typescript: {} as any },
     });
-    expect(result.map(o => o.plugins)[0]).toEqual(expect.arrayContaining([{ add: `import * as Types from '../../../types';\n` }]));
+    expect(result.map(o => o.plugins)[0]).toEqual(
+      expect.arrayContaining([{ add: `import * as Types from '../../../types';\n` }])
+    );
   });
 
   it('Should prepend the "add" plugin with the correct import (siblings)', async () => {
@@ -556,7 +569,9 @@ describe('near-operation-file preset', () => {
       plugins: [{ typescript: {} }],
       pluginMap: { typescript: {} as any },
     });
-    expect(result.map(o => o.plugins)[0]).toEqual(expect.arrayContaining([{ add: `import * as Types from './types';\n` }]));
+    expect(result.map(o => o.plugins)[0]).toEqual(
+      expect.arrayContaining([{ add: `import * as Types from './types';\n` }])
+    );
   });
 
   it('Should not generate an absolute path if the path starts with "~"', async () => {
@@ -579,7 +594,9 @@ describe('near-operation-file preset', () => {
       plugins: [{ typescript: {} }],
       pluginMap: { typescript: {} as any },
     });
-    expect(result.map(o => o.plugins)[0]).toEqual(expect.arrayContaining([{ add: `import * as Types from '@internal/types';\n` }]));
+    expect(result.map(o => o.plugins)[0]).toEqual(
+      expect.arrayContaining([{ add: `import * as Types from '@internal/types';\n` }])
+    );
   });
 
   it('Should add "add" plugin to plugins map if its not there', async () => {

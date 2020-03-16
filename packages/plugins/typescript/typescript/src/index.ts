@@ -1,5 +1,18 @@
 import { Types, PluginFunction } from '@graphql-codegen/plugin-helpers';
-import { parse, printSchema, visit, GraphQLSchema, TypeInfo, GraphQLNamedType, visitWithTypeInfo, getNamedType, isIntrospectionType, DocumentNode, printIntrospectionSchema, isObjectType } from 'graphql';
+import {
+  parse,
+  printSchema,
+  visit,
+  GraphQLSchema,
+  TypeInfo,
+  GraphQLNamedType,
+  visitWithTypeInfo,
+  getNamedType,
+  isIntrospectionType,
+  DocumentNode,
+  printIntrospectionSchema,
+  isObjectType,
+} from 'graphql';
 import { TsVisitor } from './visitor';
 import { TsIntrospectionVisitor } from './introspection-visitor';
 import { TypeScriptPluginConfig } from './config';
@@ -10,7 +23,11 @@ export * from './types';
 export * from './config';
 export * from './introspection-visitor';
 
-export const plugin: PluginFunction<TypeScriptPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: TypeScriptPluginConfig) => {
+export const plugin: PluginFunction<TypeScriptPluginConfig> = (
+  schema: GraphQLSchema,
+  documents: Types.DocumentFile[],
+  config: TypeScriptPluginConfig
+) => {
   const visitor = new TsVisitor(schema, config);
   const printedSchema = printSchema(schema);
   const astNode = parse(printedSchema);
@@ -24,7 +41,11 @@ export const plugin: PluginFunction<TypeScriptPluginConfig> = (schema: GraphQLSc
   };
 };
 
-export function includeIntrospectionDefinitions(schema: GraphQLSchema, documents: Types.DocumentFile[], config: TypeScriptPluginConfig): string[] {
+export function includeIntrospectionDefinitions(
+  schema: GraphQLSchema,
+  documents: Types.DocumentFile[],
+  config: TypeScriptPluginConfig
+): string[] {
   const typeInfo = new TypeInfo(schema);
   const usedTypes: GraphQLNamedType[] = [];
   const documentsVisitor = visitWithTypeInfo(typeInfo, {

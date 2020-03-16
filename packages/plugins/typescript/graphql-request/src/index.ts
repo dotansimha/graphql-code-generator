@@ -8,10 +8,21 @@ import { RawGraphQLRequestPluginConfig } from './config';
 export type SdkFunctionWrapper = <T>(action: () => Promise<T>) => Promise<T>;
 export const defaultWrapper: SdkFunctionWrapper = sdkFunction => sdkFunction();
 
-export const plugin: PluginFunction<RawGraphQLRequestPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: RawGraphQLRequestPluginConfig) => {
+export const plugin: PluginFunction<RawGraphQLRequestPluginConfig> = (
+  schema: GraphQLSchema,
+  documents: Types.DocumentFile[],
+  config: RawGraphQLRequestPluginConfig
+) => {
   const allAst = concatAST(documents.map(v => v.document));
   const allFragments: LoadedFragment[] = [
-    ...(allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[]).map(fragmentDef => ({ node: fragmentDef, name: fragmentDef.name.value, onType: fragmentDef.typeCondition.name.value, isExternal: false })),
+    ...(allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[]).map(
+      fragmentDef => ({
+        node: fragmentDef,
+        name: fragmentDef.name.value,
+        onType: fragmentDef.typeCondition.name.value,
+        isExternal: false,
+      })
+    ),
     ...(config.externalFragments || []),
   ];
   const visitor = new GraphQLRequestVisitor(schema, allFragments, config);
@@ -19,11 +30,20 @@ export const plugin: PluginFunction<RawGraphQLRequestPluginConfig> = (schema: Gr
 
   return {
     prepend: visitor.getImports(),
-    content: [visitor.fragments, ...visitorResult.definitions.filter(t => typeof t === 'string'), visitor.sdkContent].join('\n'),
+    content: [
+      visitor.fragments,
+      ...visitorResult.definitions.filter(t => typeof t === 'string'),
+      visitor.sdkContent,
+    ].join('\n'),
   };
 };
 
-export const validate: PluginValidateFn<any> = async (schema: GraphQLSchema, documents: Types.DocumentFile[], config: RawClientSideBasePluginConfig, outputFile: string) => {
+export const validate: PluginValidateFn<any> = async (
+  schema: GraphQLSchema,
+  documents: Types.DocumentFile[],
+  config: RawClientSideBasePluginConfig,
+  outputFile: string
+) => {
   if (extname(outputFile) !== '.ts') {
     throw new Error(`Plugin "typescript-graphql-request" requires extension to be ".ts"!`);
   }

@@ -14,7 +14,9 @@ const DEFAULT_HOOKS: Types.LifecycleHooksDefinition<string[]> = {
   beforeAllFileWrite: [],
 };
 
-function normalizeHooks(_hooks: Partial<Types.LifecycleHooksDefinition<string | string[]>>): Types.LifecycleHooksDefinition<string[]> {
+function normalizeHooks(
+  _hooks: Partial<Types.LifecycleHooksDefinition<string | string[]>>
+): Types.LifecycleHooksDefinition<string[]> {
   const keys = Object.keys({
     ...DEFAULT_HOOKS,
     ...(_hooks || {}),
@@ -72,12 +74,17 @@ export const lifecycleHooks = (_hooks: Partial<Types.LifecycleHooksDefinition<st
 
   return {
     afterStart: async (): Promise<void> => executeHooks('afterStart', hooks.afterStart),
-    onWatchTriggered: async (event: string, path: string): Promise<void> => executeHooks('onWatchTriggered', hooks.onWatchTriggered, [event, path]),
+    onWatchTriggered: async (event: string, path: string): Promise<void> =>
+      executeHooks('onWatchTriggered', hooks.onWatchTriggered, [event, path]),
     onError: async (error: string): Promise<void> => executeHooks('onError', hooks.onError, [`"${error}"`]),
-    afterOneFileWrite: async (path: string): Promise<void> => executeHooks('afterOneFileWrite', hooks.afterOneFileWrite, [path]),
-    afterAllFileWrite: async (paths: string[]): Promise<void> => executeHooks('afterAllFileWrite', hooks.afterAllFileWrite, paths),
-    beforeOneFileWrite: async (path: string): Promise<void> => executeHooks('beforeOneFileWrite', hooks.beforeOneFileWrite, [path]),
-    beforeAllFileWrite: async (paths: string[]): Promise<void> => executeHooks('beforeAllFileWrite', hooks.beforeAllFileWrite, paths),
+    afterOneFileWrite: async (path: string): Promise<void> =>
+      executeHooks('afterOneFileWrite', hooks.afterOneFileWrite, [path]),
+    afterAllFileWrite: async (paths: string[]): Promise<void> =>
+      executeHooks('afterAllFileWrite', hooks.afterAllFileWrite, paths),
+    beforeOneFileWrite: async (path: string): Promise<void> =>
+      executeHooks('beforeOneFileWrite', hooks.beforeOneFileWrite, [path]),
+    beforeAllFileWrite: async (paths: string[]): Promise<void> =>
+      executeHooks('beforeAllFileWrite', hooks.beforeAllFileWrite, paths),
     beforeDone: async (): Promise<void> => executeHooks('beforeDone', hooks.beforeDone),
   };
 };

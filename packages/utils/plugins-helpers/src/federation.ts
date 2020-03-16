@@ -1,4 +1,17 @@
-import { GraphQLSchema, parse, FieldDefinitionNode, ObjectTypeDefinitionNode, DirectiveNode, StringValueNode, GraphQLObjectType, isObjectType, isNonNullType, GraphQLNamedType, printType, Kind } from 'graphql';
+import {
+  GraphQLSchema,
+  parse,
+  FieldDefinitionNode,
+  ObjectTypeDefinitionNode,
+  DirectiveNode,
+  StringValueNode,
+  GraphQLObjectType,
+  isObjectType,
+  isNonNullType,
+  GraphQLNamedType,
+  printType,
+  Kind,
+} from 'graphql';
 import { getBaseType } from './utils';
 
 interface FieldSetItem {
@@ -143,8 +156,21 @@ export class ApolloFederation {
    * Transforms ParentType signature in ObjectTypes involved in Federation
    * @param data
    */
-  transformParentType({ fieldNode, parentType, parentTypeSignature }: { fieldNode: FieldDefinitionNode; parentType: GraphQLNamedType; parentTypeSignature: string }) {
-    if (this.enabled && isObjectType(parentType) && isFederationObjectType(parentType) && fieldNode.name.value === resolveReferenceFieldName) {
+  transformParentType({
+    fieldNode,
+    parentType,
+    parentTypeSignature,
+  }: {
+    fieldNode: FieldDefinitionNode;
+    parentType: GraphQLNamedType;
+    parentTypeSignature: string;
+  }) {
+    if (
+      this.enabled &&
+      isObjectType(parentType) &&
+      isFederationObjectType(parentType) &&
+      fieldNode.name.value === resolveReferenceFieldName
+    ) {
       const keys = getDirectivesByName('key', parentType);
 
       if (keys.length) {
@@ -247,7 +273,9 @@ export class ApolloFederation {
  * @param node Type
  */
 function isFederationObjectType(node: ObjectTypeDefinitionNode | GraphQLObjectType): boolean {
-  const definition = isObjectType(node) ? node.astNode || (parse(printType(node)).definitions[0] as ObjectTypeDefinitionNode) : node;
+  const definition = isObjectType(node)
+    ? node.astNode || (parse(printType(node)).definitions[0] as ObjectTypeDefinitionNode)
+    : node;
 
   const name = definition.name.value;
   const directives = definition.directives;
@@ -268,7 +296,10 @@ function deduplicate<T>(items: T[]): T[] {
  * @param name directive name
  * @param node ObjectType or Field
  */
-function getDirectivesByName(name: string, node: ObjectTypeDefinitionNode | GraphQLObjectType | FieldDefinitionNode): readonly DirectiveNode[] {
+function getDirectivesByName(
+  name: string,
+  node: ObjectTypeDefinitionNode | GraphQLObjectType | FieldDefinitionNode
+): readonly DirectiveNode[] {
   let astNode: ObjectTypeDefinitionNode | FieldDefinitionNode;
 
   if (isObjectType(node)) {

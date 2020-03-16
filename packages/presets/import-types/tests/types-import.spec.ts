@@ -100,7 +100,9 @@ describe('import-types preset', () => {
       pluginMap: { typescript: {} as any },
     });
 
-    expect(result.map(o => o.plugins)[0]).toEqual(expect.arrayContaining([{ add: `import * as Types from './types';\n` }]));
+    expect(result.map(o => o.plugins)[0]).toEqual(
+      expect.arrayContaining([{ add: `import * as Types from './types';\n` }])
+    );
   });
 
   it('Should prepend the "add" plugin with the correct import, when only using fragment spread', async () => {
@@ -111,12 +113,17 @@ describe('import-types preset', () => {
         typesPath: './types',
       },
       schema: schemaDocumentNode,
-      documents: [{ location: '/some/deep/path/src/graphql/me-query.graphql', document: minimalOperationAst }, testDocuments[1]],
+      documents: [
+        { location: '/some/deep/path/src/graphql/me-query.graphql', document: minimalOperationAst },
+        testDocuments[1],
+      ],
       plugins: [{ typescript: {} }],
       pluginMap: { typescript: {} as any },
     });
 
-    expect(result.map(o => o.plugins)[0]).toEqual(expect.arrayContaining([{ add: `import * as Types from './types';\n` }]));
+    expect(result.map(o => o.plugins)[0]).toEqual(
+      expect.arrayContaining([{ add: `import * as Types from './types';\n` }])
+    );
   });
 
   it('Should NOT prepend the "add" plugin with Types import when selection set does not include direct fields', async () => {
@@ -144,7 +151,9 @@ describe('import-types preset', () => {
       pluginMap: { typescript: {} as any },
     });
 
-    expect(result.map(o => o.plugins)[0]).not.toEqual(expect.arrayContaining([{ add: `import * as Types from '../types';\n` }]));
+    expect(result.map(o => o.plugins)[0]).not.toEqual(
+      expect.arrayContaining([{ add: `import * as Types from '../types';\n` }])
+    );
   });
 
   it('Should add "add" plugin to plugins map if its not there', async () => {

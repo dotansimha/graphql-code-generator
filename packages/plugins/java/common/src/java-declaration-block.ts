@@ -5,8 +5,24 @@ const stripIndent = require('strip-indent');
 export type Access = 'private' | 'public' | 'protected';
 export type Kind = 'class' | 'interface' | 'enum';
 export type MemberFlags = { transient?: boolean; final?: boolean; volatile?: boolean; static?: boolean };
-export type ClassMember = { value: string; name: string; access: Access; type: string; annotations: string[]; flags: MemberFlags };
-export type ClassMethod = { methodAnnotations: string[]; args: Partial<ClassMember>[]; implementation: string; name: string; access: Access; returnType: string | null; returnTypeAnnotations: string[]; flags: MemberFlags };
+export type ClassMember = {
+  value: string;
+  name: string;
+  access: Access;
+  type: string;
+  annotations: string[];
+  flags: MemberFlags;
+};
+export type ClassMethod = {
+  methodAnnotations: string[];
+  args: Partial<ClassMember>[];
+  implementation: string;
+  name: string;
+  access: Access;
+  returnType: string | null;
+  returnTypeAnnotations: string[];
+  flags: MemberFlags;
+};
 
 export class JavaDeclarationBlock {
   _name: string = null;
@@ -128,7 +144,14 @@ ${indentMultiline(method.implementation)}
 }`;
   }
 
-  addClassMember(name: string, type: string, value: string, typeAnnotations: string[] = [], access: Access = null, flags: MemberFlags = {}): JavaDeclarationBlock {
+  addClassMember(
+    name: string,
+    type: string,
+    value: string,
+    typeAnnotations: string[] = [],
+    access: Access = null,
+    flags: MemberFlags = {}
+  ): JavaDeclarationBlock {
     this._members.push({
       name,
       type,
@@ -147,7 +170,16 @@ ${indentMultiline(method.implementation)}
     return this;
   }
 
-  addClassMethod(name: string, returnType: string | null, impl: string, args: Partial<ClassMember>[] = [], returnTypeAnnotations: string[] = [], access: Access = null, flags: MemberFlags = {}, methodAnnotations: string[] = []): JavaDeclarationBlock {
+  addClassMethod(
+    name: string,
+    returnType: string | null,
+    impl: string,
+    args: Partial<ClassMember>[] = [],
+    returnTypeAnnotations: string[] = [],
+    access: Access = null,
+    flags: MemberFlags = {},
+    methodAnnotations: string[] = []
+  ): JavaDeclarationBlock {
     this._methods.push({
       name,
       returnType,
@@ -199,9 +231,15 @@ ${indentMultiline(method.implementation)}
       result += `${annotatesStr}${this._access}${isStatic}${final} ${this._kind} ${name}${extendStr}${implementsStr} `;
     }
 
-    const members = this._members.length ? indentMultiline(stripIndent(this._members.map(member => this.printMember(member) + ';').join('\n'))) : null;
-    const methods = this._methods.length ? indentMultiline(stripIndent(this._methods.map(method => this.printMethod(method)).join('\n\n'))) : null;
-    const nestedClasses = this._nestedClasses.length ? this._nestedClasses.map(c => indentMultiline(c.string)).join('\n\n') : null;
+    const members = this._members.length
+      ? indentMultiline(stripIndent(this._members.map(member => this.printMember(member) + ';').join('\n')))
+      : null;
+    const methods = this._methods.length
+      ? indentMultiline(stripIndent(this._methods.map(method => this.printMethod(method)).join('\n\n')))
+      : null;
+    const nestedClasses = this._nestedClasses.length
+      ? this._nestedClasses.map(c => indentMultiline(c.string)).join('\n\n')
+      : null;
     const before = '{';
     const after = '}';
     const block = [before, members, methods, nestedClasses, this._block, after].filter(f => f).join('\n');

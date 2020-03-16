@@ -1,6 +1,20 @@
-import { ListTypeNode, NamedTypeNode, NonNullTypeNode, GraphQLSchema, ScalarTypeDefinitionNode, InputValueDefinitionNode } from 'graphql';
+import {
+  ListTypeNode,
+  NamedTypeNode,
+  NonNullTypeNode,
+  GraphQLSchema,
+  ScalarTypeDefinitionNode,
+  InputValueDefinitionNode,
+} from 'graphql';
 import autoBind from 'auto-bind';
-import { RawResolversConfig, indent, ParsedResolversConfig, BaseResolversVisitor, DeclarationBlock, DeclarationKind } from '@graphql-codegen/visitor-plugin-common';
+import {
+  RawResolversConfig,
+  indent,
+  ParsedResolversConfig,
+  BaseResolversVisitor,
+  DeclarationBlock,
+  DeclarationKind,
+} from '@graphql-codegen/visitor-plugin-common';
 import { FlowOperationVariablesToObject } from '@graphql-codegen/flow';
 import { FLOW_REQUIRE_FIELDS_TYPE } from './flow-util-types';
 
@@ -84,8 +98,13 @@ export class FlowResolversVisitor extends BaseResolversVisitor<RawResolversConfi
     return `$ElementType<${resolversType}, '${name}'>`;
   }
 
-  protected replaceFieldsInType(typeName: string, relevantFields: { fieldName: string; replaceWithType: string }[]): string {
-    return `$Diff<${typeName}, { ${relevantFields.map(f => `${f.fieldName}: * `).join(', ')} }> & { ${relevantFields.map(f => `${f.fieldName}: ${f.replaceWithType}`).join(', ')} }`;
+  protected replaceFieldsInType(
+    typeName: string,
+    relevantFields: { fieldName: string; replaceWithType: string }[]
+  ): string {
+    return `$Diff<${typeName}, { ${relevantFields
+      .map(f => `${f.fieldName}: * `)
+      .join(', ')} }> & { ${relevantFields.map(f => `${f.fieldName}: ${f.replaceWithType}`).join(', ')} }`;
   }
 
   ScalarTypeDefinition(node: ScalarTypeDefinitionNode): string {
@@ -106,7 +125,8 @@ export class FlowResolversVisitor extends BaseResolversVisitor<RawResolversConfi
           suffix: 'ScalarConfig',
         })
       )
-      .withBlock([indent(`...GraphQLScalarTypeConfig<${baseName}, any>`), indent(`name: '${node.name}'`)].join(', \n')).string;
+      .withBlock([indent(`...GraphQLScalarTypeConfig<${baseName}, any>`), indent(`name: '${node.name}'`)].join(', \n'))
+      .string;
   }
 
   protected getPunctuation(declarationKind: DeclarationKind): string {

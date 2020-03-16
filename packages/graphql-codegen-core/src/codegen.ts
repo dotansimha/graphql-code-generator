@@ -28,7 +28,8 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
   // merged schema with parts added by plugins
   let schemaChanged = false;
   let schemaAst = pluginPackages.reduce((schemaAst, plugin) => {
-    const addToSchema = typeof plugin.addToSchema === 'function' ? plugin.addToSchema(options.config) : plugin.addToSchema;
+    const addToSchema =
+      typeof plugin.addToSchema === 'function' ? plugin.addToSchema(options.config) : plugin.addToSchema;
 
     if (!addToSchema) {
       return schemaAst;
@@ -43,7 +44,13 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
   const federationInConfig = pickFlag('federation', options.config);
   const isFederation = prioritize(federationInConfig, false);
 
-  if (isFederation && !schemaAst.getDirective('external') && !schemaAst.getDirective('requires') && !schemaAst.getDirective('provides') && !schemaAst.getDirective('key')) {
+  if (
+    isFederation &&
+    !schemaAst.getDirective('external') &&
+    !schemaAst.getDirective('requires') &&
+    !schemaAst.getDirective('provides') &&
+    !schemaAst.getDirective('key')
+  ) {
     schemaChanged = true;
     schemaAst = mergeSchemas({
       schemas: [schemaAst],
@@ -58,11 +65,19 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
     options.schema = parse(printSchemaWithDirectives(schemaAst));
   }
 
-  const skipDocumentValidation = typeof options.config === 'object' && !Array.isArray(options.config) && options.config.skipDocumentsValidation;
+  const skipDocumentValidation =
+    typeof options.config === 'object' && !Array.isArray(options.config) && options.config.skipDocumentsValidation;
 
   if (options.schemaAst && documents.length > 0 && !skipDocumentValidation) {
-    const extraFragments: { importFrom: string; node: DefinitionNode }[] = options.config && (options.config as any).externalFragments ? (options.config as any).externalFragments : [];
-    const errors = await validateGraphQlDocuments(options.schemaAst, [...documents, ...extraFragments.map(f => ({ location: f.importFrom, document: { kind: Kind.DOCUMENT, definitions: [f.node] } }))]);
+    const extraFragments: { importFrom: string; node: DefinitionNode }[] =
+      options.config && (options.config as any).externalFragments ? (options.config as any).externalFragments : [];
+    const errors = await validateGraphQlDocuments(options.schemaAst, [
+      ...documents,
+      ...extraFragments.map(f => ({
+        location: f.importFrom,
+        document: { kind: Kind.DOCUMENT, definitions: [f.node] },
+      })),
+    ]);
     checkValidationErrors(errors);
   }
 

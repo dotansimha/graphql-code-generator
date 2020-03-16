@@ -132,19 +132,30 @@ function collect<T = string>(val: T, memo: T[]): T[] {
 export function setCommandOptions(commandInstance: Command) {
   return commandInstance
     .allowUnknownOption(true)
-    .option('-c, --config <path>', 'Path to GraphQL codegen YAML config file, defaults to "codegen.yml" on the current directory')
+    .option(
+      '-c, --config <path>',
+      'Path to GraphQL codegen YAML config file, defaults to "codegen.yml" on the current directory'
+    )
     .option('-w, --watch', 'Watch for changes and execute generation automatically')
     .option('-s, --silent', 'A flag to not print errors in case they occur')
-    .option('-r, --require [value]', 'Loads specific require.extensions before running the codegen and reading the configuration', collect, [])
+    .option(
+      '-r, --require [value]',
+      'Loads specific require.extensions before running the codegen and reading the configuration',
+      collect,
+      []
+    )
     .option('-o, --overwrite', 'Overwrites existing files')
     .option('-p, --project <name>', 'Name of a project in GraphQL Config');
 }
 
 export function parseArgv(argv = process.argv): Command & YamlCliFlags {
-  return (setCommandOptions(new Command().usage('graphql-codegen [options]')).parse(argv) as any) as Command & YamlCliFlags;
+  return (setCommandOptions(new Command().usage('graphql-codegen [options]')).parse(argv) as any) as Command &
+    YamlCliFlags;
 }
 
-export async function createContext(cliFlags: Command & YamlCliFlags = parseArgv(process.argv)): Promise<CodegenContext> {
+export async function createContext(
+  cliFlags: Command & YamlCliFlags = parseArgv(process.argv)
+): Promise<CodegenContext> {
   if (cliFlags.require && cliFlags.require.length > 0) {
     for (const mod of cliFlags.require) {
       await import(mod);
@@ -189,7 +200,15 @@ export class CodegenContext {
   cwd: string;
   filepath: string;
 
-  constructor({ config, graphqlConfig, filepath }: { config?: Types.Config; graphqlConfig?: GraphQLConfig; filepath?: string }) {
+  constructor({
+    config,
+    graphqlConfig,
+    filepath,
+  }: {
+    config?: Types.Config;
+    graphqlConfig?: GraphQLConfig;
+    filepath?: string;
+  }) {
     this._config = config;
     this._graphqlConfig = graphqlConfig;
     this.filepath = this._graphqlConfig ? this._graphqlConfig.filepath : filepath;

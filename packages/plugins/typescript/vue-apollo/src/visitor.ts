@@ -1,4 +1,10 @@
-import { ClientSideBaseVisitor, ClientSideBasePluginConfig, getConfigValue, LoadedFragment, DocumentMode } from '@graphql-codegen/visitor-plugin-common';
+import {
+  ClientSideBaseVisitor,
+  ClientSideBasePluginConfig,
+  getConfigValue,
+  LoadedFragment,
+  DocumentMode,
+} from '@graphql-codegen/visitor-plugin-common';
 import { VueApolloRawPluginConfig } from './config';
 import autoBind from 'auto-bind';
 import { OperationDefinitionNode, GraphQLSchema } from 'graphql';
@@ -28,7 +34,12 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
   private externalImportPrefix: string;
   private imports = new Set<string>();
 
-  constructor(schema: GraphQLSchema, fragments: LoadedFragment[], rawConfig: VueApolloRawPluginConfig, documents: Types.DocumentFile[]) {
+  constructor(
+    schema: GraphQLSchema,
+    fragments: LoadedFragment[],
+    rawConfig: VueApolloRawPluginConfig,
+    documents: Types.DocumentFile[]
+  ) {
     super(schema, fragments, rawConfig, {
       withCompositionFunctions: getConfigValue(rawConfig.withCompositionFunctions, true),
       vueApolloComposableImportFrom: getConfigValue(rawConfig.vueApolloComposableImportFrom, '@vue/apollo-composable'),
@@ -63,7 +74,11 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
     return [...baseImports, ...Array.from(this.imports)];
   }
 
-  private buildCompositionFunctionsJSDoc(node: OperationDefinitionNode, operationName: string, operationType: string): string {
+  private buildCompositionFunctionsJSDoc(
+    node: OperationDefinitionNode,
+    operationName: string,
+    operationType: string
+  ): string {
     const variableString = node.variableDefinitions?.reduce((accumulator, currentDefinition) => {
       const name = currentDefinition.variable.name.value;
 
@@ -98,7 +113,9 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
  * __use${operationName}__
  *${operationType === 'Mutation' ? mutationDescription : queryDescription}
  *
- * @param baseOptions options that will be passed into the ${operationType.toLowerCase()}, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/${operationType === 'Mutation' ? 'mutation' : 'query'}.html#options;
+ * @param baseOptions options that will be passed into the ${operationType.toLowerCase()}, supported options are listed on: https://v4.apollo.vuejs.org/guide-composable/${
+      operationType === 'Mutation' ? 'mutation' : 'query'
+    }.html#options;
  *
  * @example${operationType === 'Mutation' ? mutationExample : queryExample}
  */`;
@@ -117,7 +134,13 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
     return pascalCase(operationType);
   }
 
-  protected buildOperation(node: OperationDefinitionNode, documentVariableName: string, operationType: 'Query' | 'Mutation' | 'Subscription', operationResultType: string, operationVariablesTypes: string): string {
+  protected buildOperation(
+    node: OperationDefinitionNode,
+    documentVariableName: string,
+    operationType: 'Query' | 'Mutation' | 'Subscription',
+    operationResultType: string,
+    operationVariablesTypes: string
+  ): string {
     operationResultType = this.externalImportPrefix + operationResultType;
     operationVariablesTypes = this.externalImportPrefix + operationVariablesTypes;
 
@@ -154,10 +177,21 @@ export class VueApolloVisitor extends ClientSideBaseVisitor<VueApolloRawPluginCo
       operationHasNonNullableVariable,
       documentNodeVariable,
     });
-    return [...insertIf(this.config.addDocBlocks, [this.buildCompositionFunctionsJSDoc(node, operationName, operationType)]), compositionFunction, compositionFunctionResultType].join('\n');
+    return [
+      ...insertIf(this.config.addDocBlocks, [this.buildCompositionFunctionsJSDoc(node, operationName, operationType)]),
+      compositionFunction,
+      compositionFunctionResultType,
+    ].join('\n');
   }
 
-  private buildCompositionFunction({ operationName, operationType, operationHasNonNullableVariable, operationResultType, operationVariablesTypes, documentNodeVariable }: BuildCompositionFunctions): string {
+  private buildCompositionFunction({
+    operationName,
+    operationType,
+    operationHasNonNullableVariable,
+    operationResultType,
+    operationVariablesTypes,
+    documentNodeVariable,
+  }: BuildCompositionFunctions): string {
     switch (operationType) {
       case 'Query': {
         const reactiveFunctionTypeName = `ReactiveFunction${operationName}`;

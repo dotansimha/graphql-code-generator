@@ -602,7 +602,9 @@ describe('Codegen Executor', () => {
       );
 
       expect(merged.getType('Post').astNode.directives.map(({ name }) => name.value)).toContainEqual('test');
-      expect((merged.getType('Post') as GraphQLObjectType).getFields().id.astNode.directives.map(({ name }) => name.value)).toContainEqual('id');
+      expect(
+        (merged.getType('Post') as GraphQLObjectType).getFields().id.astNode.directives.map(({ name }) => name.value)
+      ).toContainEqual('id');
     });
 
     it('should keep scalars', async () => {
@@ -890,7 +892,11 @@ describe('Codegen Executor', () => {
     try {
       await executeCodegen({
         schema: ['./tests/test-documents/*schema.graphql', '!./tests/test-documents/invalid-schema.graphql'],
-        documents: ['./tests/test-documents/*.graphql', '!./tests/test-documents/invalid-*.graphql', '!./tests/test-documents/unused-*.graphql'],
+        documents: [
+          './tests/test-documents/*.graphql',
+          '!./tests/test-documents/invalid-*.graphql',
+          '!./tests/test-documents/unused-*.graphql',
+        ],
         generates: {
           'out1.ts': ['typescript'],
         },

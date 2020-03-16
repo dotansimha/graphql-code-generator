@@ -1,5 +1,12 @@
 import { CompatabilityPluginRawConfig } from './config';
-import { BaseVisitor, DeclarationBlock, indent, getConfigValue, buildScalars, ParsedConfig } from '@graphql-codegen/visitor-plugin-common';
+import {
+  BaseVisitor,
+  DeclarationBlock,
+  indent,
+  getConfigValue,
+  buildScalars,
+  ParsedConfig,
+} from '@graphql-codegen/visitor-plugin-common';
 import { GraphQLSchema, OperationDefinitionNode, OperationTypeNode, FragmentDefinitionNode } from 'graphql';
 
 import { selectionSetToTypes, SelectionSetToObjectResult } from './selection-set-to-types';
@@ -46,7 +53,17 @@ export class CompatabilityPluginVisitor extends BaseVisitor<CompatabilityPluginR
       },
     };
 
-    selectionSetToTypes(typesPrefix, this, this._schema, typeName, baseName, node.operation, node.selectionSet, this.config.preResolveTypes, selectionSetTypes);
+    selectionSetToTypes(
+      typesPrefix,
+      this,
+      this._schema,
+      typeName,
+      baseName,
+      node.operation,
+      node.selectionSet,
+      this.config.preResolveTypes,
+      selectionSetTypes
+    );
 
     return selectionSetTypes;
   }
@@ -57,7 +74,17 @@ export class CompatabilityPluginVisitor extends BaseVisitor<CompatabilityPluginR
     const typesPrefix = this.config.noNamespaces ? this.convertName(node.name.value) : '';
     const selectionSetTypes: SelectionSetToObjectResult = {};
 
-    selectionSetToTypes(typesPrefix, this, this._schema, typeName, baseName, 'fragment', node.selectionSet, this.config.preResolveTypes, selectionSetTypes);
+    selectionSetToTypes(
+      typesPrefix,
+      this,
+      this._schema,
+      typeName,
+      baseName,
+      'fragment',
+      node.selectionSet,
+      this.config.preResolveTypes,
+      selectionSetTypes
+    );
 
     return selectionSetTypes;
   }
@@ -65,7 +92,9 @@ export class CompatabilityPluginVisitor extends BaseVisitor<CompatabilityPluginR
   protected printTypes(selectionSetTypes: SelectionSetToObjectResult): string {
     return Object.keys(selectionSetTypes)
       .filter(typeName => typeName !== selectionSetTypes[typeName].name)
-      .map(typeName => `export ${selectionSetTypes[typeName].export} ${typeName} = ${selectionSetTypes[typeName].name};`)
+      .map(
+        typeName => `export ${selectionSetTypes[typeName].export} ${typeName} = ${selectionSetTypes[typeName].name};`
+      )
       .map(m => (this.config.noNamespaces ? m : indent(m)))
       .join('\n');
   }

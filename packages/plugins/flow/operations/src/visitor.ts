@@ -1,8 +1,25 @@
 import { FlowWithPickSelectionSetProcessor } from './flow-selection-set-processor';
-import { GraphQLSchema, isListType, GraphQLObjectType, GraphQLNonNull, GraphQLList, isEnumType, isNonNullType } from 'graphql';
+import {
+  GraphQLSchema,
+  isListType,
+  GraphQLObjectType,
+  GraphQLNonNull,
+  GraphQLList,
+  isEnumType,
+  isNonNullType,
+} from 'graphql';
 import { FlowDocumentsPluginConfig } from './config';
 import { FlowOperationVariablesToObject } from '@graphql-codegen/flow';
-import { PreResolveTypesProcessor, ParsedDocumentsConfig, BaseDocumentsVisitor, LoadedFragment, SelectionSetProcessorConfig, SelectionSetToObject, getConfigValue, DeclarationKind } from '@graphql-codegen/visitor-plugin-common';
+import {
+  PreResolveTypesProcessor,
+  ParsedDocumentsConfig,
+  BaseDocumentsVisitor,
+  LoadedFragment,
+  SelectionSetProcessorConfig,
+  SelectionSetToObject,
+  getConfigValue,
+  DeclarationKind,
+} from '@graphql-codegen/visitor-plugin-common';
 
 import autoBind from 'auto-bind';
 
@@ -32,7 +49,10 @@ export class FlowDocumentsVisitor extends BaseDocumentsVisitor<FlowDocumentsPlug
       return str;
     };
 
-    const wrapTypeWithModifiers = (baseType: string, type: GraphQLObjectType | GraphQLNonNull<GraphQLObjectType> | GraphQLList<GraphQLObjectType>): string => {
+    const wrapTypeWithModifiers = (
+      baseType: string,
+      type: GraphQLObjectType | GraphQLNonNull<GraphQLObjectType> | GraphQLList<GraphQLObjectType>
+    ): string => {
       if (isNonNullType(type)) {
         return clearOptional(wrapTypeWithModifiers(baseType, type.ofType));
       } else if (isListType(type)) {
@@ -60,8 +80,26 @@ export class FlowDocumentsVisitor extends BaseDocumentsVisitor<FlowDocumentsPlug
           useFlowReadOnlyTypes: this.config.useFlowReadOnlyTypes,
         });
     const enumsNames = Object.keys(schema.getTypeMap()).filter(typeName => isEnumType(schema.getType(typeName)));
-    this.setSelectionSetHandler(new SelectionSetToObject(processor, this.scalars, this.schema, this.convertName.bind(this), this.getFragmentSuffix.bind(this), allFragments, this.config));
-    this.setVariablesTransformer(new FlowOperationVariablesToObject(this.scalars, this.convertName.bind(this), this.config.namespacedImportName, enumsNames, this.config.enumPrefix));
+    this.setSelectionSetHandler(
+      new SelectionSetToObject(
+        processor,
+        this.scalars,
+        this.schema,
+        this.convertName.bind(this),
+        this.getFragmentSuffix.bind(this),
+        allFragments,
+        this.config
+      )
+    );
+    this.setVariablesTransformer(
+      new FlowOperationVariablesToObject(
+        this.scalars,
+        this.convertName.bind(this),
+        this.config.namespacedImportName,
+        enumsNames,
+        this.config.enumPrefix
+      )
+    );
   }
 
   protected getPunctuation(declarationKind: DeclarationKind): string {

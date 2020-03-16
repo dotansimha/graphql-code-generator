@@ -1,8 +1,27 @@
-import { transformComment, wrapWithSingleQuotes, DeclarationBlock, indent, BaseTypesVisitor, ParsedTypesConfig, getConfigValue, DeclarationKind } from '@graphql-codegen/visitor-plugin-common';
+import {
+  transformComment,
+  wrapWithSingleQuotes,
+  DeclarationBlock,
+  indent,
+  BaseTypesVisitor,
+  ParsedTypesConfig,
+  getConfigValue,
+  DeclarationKind,
+} from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptPluginConfig } from './config';
 import { AvoidOptionalsConfig } from './types';
 import autoBind from 'auto-bind';
-import { FieldDefinitionNode, NamedTypeNode, ListTypeNode, NonNullTypeNode, EnumTypeDefinitionNode, Kind, InputValueDefinitionNode, GraphQLSchema, GraphQLEnumType } from 'graphql';
+import {
+  FieldDefinitionNode,
+  NamedTypeNode,
+  ListTypeNode,
+  NonNullTypeNode,
+  EnumTypeDefinitionNode,
+  Kind,
+  InputValueDefinitionNode,
+  GraphQLSchema,
+  GraphQLEnumType,
+} from 'graphql';
 import { TypeScriptOperationVariablesToObject } from './typescript-variables-to-object';
 import { normalizeAvoidOptionals } from './avoid-optionals';
 
@@ -18,7 +37,10 @@ export interface TypeScriptPluginParsedConfig extends ParsedTypesConfig {
   wrapFieldDefinitions: boolean;
 }
 
-export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPluginConfig, TParsedConfig extends TypeScriptPluginParsedConfig = TypeScriptPluginParsedConfig> extends BaseTypesVisitor<TRawConfig, TParsedConfig> {
+export class TsVisitor<
+  TRawConfig extends TypeScriptPluginConfig = TypeScriptPluginConfig,
+  TParsedConfig extends TypeScriptPluginParsedConfig = TypeScriptPluginParsedConfig
+> extends BaseTypesVisitor<TRawConfig, TParsedConfig> {
   constructor(schema: GraphQLSchema, pluginConfig: TRawConfig, additionalConfig: Partial<TParsedConfig> = {}) {
     super(schema, pluginConfig, {
       noExport: getConfigValue(pluginConfig.noExport, false),
@@ -37,7 +59,18 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
     const enumNames = Object.values(schema.getTypeMap())
       .map(type => (type instanceof GraphQLEnumType ? type.name : undefined))
       .filter(t => t);
-    this.setArgumentsTransformer(new TypeScriptOperationVariablesToObject(this.scalars, this.convertName, this.config.avoidOptionals.object, this.config.immutableTypes, null, enumNames, pluginConfig.enumPrefix, this.config.enumValues));
+    this.setArgumentsTransformer(
+      new TypeScriptOperationVariablesToObject(
+        this.scalars,
+        this.convertName,
+        this.config.avoidOptionals.object,
+        this.config.immutableTypes,
+        null,
+        enumNames,
+        pluginConfig.enumPrefix,
+        this.config.enumValues
+      )
+    );
     this.setDeclarationBlockConfig({
       enumNameValueSeparator: ' =',
       ignoreExport: this.config.noExport,
@@ -93,15 +126,30 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
     const comment = transformComment((node.description as any) as string, 1);
     const { type } = this.config.declarationKind;
 
-    return comment + indent(`${this.config.immutableTypes ? 'readonly ' : ''}${node.name}${addOptionalSign ? '?' : ''}: ${typeString}${this.getPunctuation(type)}`);
+    return (
+      comment +
+      indent(
+        `${this.config.immutableTypes ? 'readonly ' : ''}${node.name}${
+          addOptionalSign ? '?' : ''
+        }: ${typeString}${this.getPunctuation(type)}`
+      )
+    );
   }
 
   InputValueDefinition(node: InputValueDefinitionNode, key?: number | string, parent?: any): string {
     const originalFieldNode = parent[key] as FieldDefinitionNode;
-    const addOptionalSign = !this.config.avoidOptionals.inputValue && originalFieldNode.type.kind !== Kind.NON_NULL_TYPE;
+    const addOptionalSign =
+      !this.config.avoidOptionals.inputValue && originalFieldNode.type.kind !== Kind.NON_NULL_TYPE;
     const comment = transformComment((node.description as any) as string, 1);
     const { type } = this.config.declarationKind;
-    return comment + indent(`${this.config.immutableTypes ? 'readonly ' : ''}${node.name}${addOptionalSign ? '?' : ''}: ${node.type}${this.getPunctuation(type)}`);
+    return (
+      comment +
+      indent(
+        `${this.config.immutableTypes ? 'readonly ' : ''}${node.name}${addOptionalSign ? '?' : ''}: ${
+          node.type
+        }${this.getPunctuation(type)}`
+      )
+    );
   }
 
   EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
@@ -127,7 +175,11 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
                 let enumValue: string | number = (enumOption.name as any) as string;
                 const comment = transformComment((enumOption.description as any) as string, 1);
 
-                if (this.config.enumValues[enumName] && this.config.enumValues[enumName].mappedValues && typeof this.config.enumValues[enumName].mappedValues[enumValue] !== 'undefined') {
+                if (
+                  this.config.enumValues[enumName] &&
+                  this.config.enumValues[enumName].mappedValues &&
+                  typeof this.config.enumValues[enumName].mappedValues[enumValue] !== 'undefined'
+                ) {
                   enumValue = this.config.enumValues[enumName].mappedValues[enumValue];
                 }
 
@@ -156,7 +208,11 @@ export class TsVisitor<TRawConfig extends TypeScriptPluginConfig = TypeScriptPlu
               const comment = transformComment((enumOption.description as any) as string, 1);
               let enumValue: string | number = enumOption.name as any;
 
-              if (this.config.enumValues[enumName] && this.config.enumValues[enumName].mappedValues && typeof this.config.enumValues[enumName].mappedValues[enumValue] !== 'undefined') {
+              if (
+                this.config.enumValues[enumName] &&
+                this.config.enumValues[enumName].mappedValues &&
+                typeof this.config.enumValues[enumName].mappedValues[enumValue] !== 'undefined'
+              ) {
                 enumValue = this.config.enumValues[enumName].mappedValues[enumValue];
               }
 

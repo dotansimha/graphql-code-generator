@@ -1,5 +1,13 @@
 import { Types } from '@graphql-codegen/plugin-helpers';
-import { visit, concatAST, InputObjectTypeDefinitionNode, DocumentNode, Kind, OperationDefinitionNode, FragmentDefinitionNode } from 'graphql';
+import {
+  visit,
+  concatAST,
+  InputObjectTypeDefinitionNode,
+  DocumentNode,
+  Kind,
+  OperationDefinitionNode,
+  FragmentDefinitionNode,
+} from 'graphql';
 import { join } from 'path';
 import { FileType } from './file-type';
 import { pascalCase } from 'pascal-case';
@@ -23,7 +31,9 @@ export const preset: Types.OutputPreset = {
 
     const inputTypesDocumentNode: DocumentNode = { kind: Kind.DOCUMENT, definitions: inputTypesAst };
     const allAst = concatAST(options.documents.map(v => v.document));
-    const operationsAst = allAst.definitions.filter(d => d.kind === Kind.OPERATION_DEFINITION) as OperationDefinitionNode[];
+    const operationsAst = allAst.definitions.filter(
+      d => d.kind === Kind.OPERATION_DEFINITION
+    ) as OperationDefinitionNode[];
     const fragments = allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[];
     const externalFragments = fragments.map(frag => ({
       isExternal: true,
@@ -60,7 +70,9 @@ export const preset: Types.OutputPreset = {
         };
       }),
       ...operationsAst.map((ast: OperationDefinitionNode) => {
-        const fileName = ast.name.value.toLowerCase().endsWith(ast.operation) ? ast.name.value : `${ast.name.value}${pascalCase(ast.operation)}`;
+        const fileName = ast.name.value.toLowerCase().endsWith(ast.operation)
+          ? ast.name.value
+          : `${ast.name.value}${pascalCase(ast.operation)}`;
 
         return {
           filename: join(outDir, packageNameToDirectory(options.config.package), fileName + '.java'),

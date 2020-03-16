@@ -239,7 +239,9 @@ export type CreateReviewForEpisodeMutationVariables = {
   review: ReviewInput;
 };
 
-export type CreateReviewForEpisodeMutation = { readonly __typename?: 'Mutation' } & { readonly createReview: Maybe<{ readonly __typename?: 'Review' } & Pick<Review, 'stars' | 'commentary'>> };
+export type CreateReviewForEpisodeMutation = { readonly __typename?: 'Mutation' } & {
+  readonly createReview: Maybe<{ readonly __typename?: 'Review' } & Pick<Review, 'stars' | 'commentary'>>;
+};
 
 export type HeroAndFriendsNamesQueryVariables = {
   episode?: Maybe<Episode>;
@@ -247,20 +249,48 @@ export type HeroAndFriendsNamesQueryVariables = {
 
 export type HeroAndFriendsNamesQuery = { readonly __typename?: 'Query' } & {
   readonly hero: Maybe<
-    | ({ readonly __typename?: 'Human' } & Pick<Human, 'name'> & { readonly friends: Maybe<ReadonlyArray<Maybe<({ readonly __typename?: 'Human' } & Pick<Human, 'name'>) | ({ readonly __typename?: 'Droid' } & Pick<Droid, 'name'>)>>> })
-    | ({ readonly __typename?: 'Droid' } & Pick<Droid, 'name'> & { readonly friends: Maybe<ReadonlyArray<Maybe<({ readonly __typename?: 'Human' } & Pick<Human, 'name'>) | ({ readonly __typename?: 'Droid' } & Pick<Droid, 'name'>)>>> })
+    | ({ readonly __typename?: 'Human' } & Pick<Human, 'name'> & {
+          readonly friends: Maybe<
+            ReadonlyArray<
+              Maybe<
+                | ({ readonly __typename?: 'Human' } & Pick<Human, 'name'>)
+                | ({ readonly __typename?: 'Droid' } & Pick<Droid, 'name'>)
+              >
+            >
+          >;
+        })
+    | ({ readonly __typename?: 'Droid' } & Pick<Droid, 'name'> & {
+          readonly friends: Maybe<
+            ReadonlyArray<
+              Maybe<
+                | ({ readonly __typename?: 'Human' } & Pick<Human, 'name'>)
+                | ({ readonly __typename?: 'Droid' } & Pick<Droid, 'name'>)
+              >
+            >
+          >;
+        })
   >;
 };
 
 export type HeroAppearsInQueryVariables = {};
 
-export type HeroAppearsInQuery = { readonly __typename?: 'Query' } & { readonly hero: Maybe<({ readonly __typename?: 'Human' } & Pick<Human, 'name' | 'appearsIn'>) | ({ readonly __typename?: 'Droid' } & Pick<Droid, 'name' | 'appearsIn'>)> };
+export type HeroAppearsInQuery = { readonly __typename?: 'Query' } & {
+  readonly hero: Maybe<
+    | ({ readonly __typename?: 'Human' } & Pick<Human, 'name' | 'appearsIn'>)
+    | ({ readonly __typename?: 'Droid' } & Pick<Droid, 'name' | 'appearsIn'>)
+  >;
+};
 
 export type HeroDetailsQueryVariables = {
   episode?: Maybe<Episode>;
 };
 
-export type HeroDetailsQuery = { readonly __typename?: 'Query' } & { readonly hero: Maybe<({ readonly __typename?: 'Human' } & Pick<Human, 'height' | 'name'>) | ({ readonly __typename?: 'Droid' } & Pick<Droid, 'primaryFunction' | 'name'>)> };
+export type HeroDetailsQuery = { readonly __typename?: 'Query' } & {
+  readonly hero: Maybe<
+    | ({ readonly __typename?: 'Human' } & Pick<Human, 'height' | 'name'>)
+    | ({ readonly __typename?: 'Droid' } & Pick<Droid, 'primaryFunction' | 'name'>)
+  >;
+};
 
 type HeroDetails_Human_Fragment = { readonly __typename?: 'Human' } & Pick<Human, 'height' | 'name'>;
 
@@ -272,27 +302,47 @@ export type HeroDetailsWithFragmentQueryVariables = {
   episode?: Maybe<Episode>;
 };
 
-export type HeroDetailsWithFragmentQuery = { readonly __typename?: 'Query' } & { readonly hero: Maybe<({ readonly __typename?: 'Human' } & HeroDetails_Human_Fragment) | ({ readonly __typename?: 'Droid' } & HeroDetails_Droid_Fragment)> };
+export type HeroDetailsWithFragmentQuery = { readonly __typename?: 'Query' } & {
+  readonly hero: Maybe<
+    | ({ readonly __typename?: 'Human' } & HeroDetails_Human_Fragment)
+    | ({ readonly __typename?: 'Droid' } & HeroDetails_Droid_Fragment)
+  >;
+};
 
 export type HeroNameQueryVariables = {
   episode?: Maybe<Episode>;
 };
 
-export type HeroNameQuery = { readonly __typename?: 'Query' } & { readonly hero: Maybe<({ readonly __typename?: 'Human' } & Pick<Human, 'name'>) | ({ readonly __typename?: 'Droid' } & Pick<Droid, 'name'>)> };
+export type HeroNameQuery = { readonly __typename?: 'Query' } & {
+  readonly hero: Maybe<
+    | ({ readonly __typename?: 'Human' } & Pick<Human, 'name'>)
+    | ({ readonly __typename?: 'Droid' } & Pick<Droid, 'name'>)
+  >;
+};
 
 export type HeroNameConditionalInclusionQueryVariables = {
   episode?: Maybe<Episode>;
   includeName: Scalars['Boolean'];
 };
 
-export type HeroNameConditionalInclusionQuery = { readonly __typename?: 'Query' } & { readonly hero: Maybe<({ readonly __typename?: 'Human' } & Pick<Human, 'name'>) | ({ readonly __typename?: 'Droid' } & Pick<Droid, 'name'>)> };
+export type HeroNameConditionalInclusionQuery = { readonly __typename?: 'Query' } & {
+  readonly hero: Maybe<
+    | ({ readonly __typename?: 'Human' } & Pick<Human, 'name'>)
+    | ({ readonly __typename?: 'Droid' } & Pick<Droid, 'name'>)
+  >;
+};
 
 export type HeroNameConditionalExclusionQueryVariables = {
   episode?: Maybe<Episode>;
   skipName: Scalars['Boolean'];
 };
 
-export type HeroNameConditionalExclusionQuery = { readonly __typename?: 'Query' } & { readonly hero: Maybe<({ readonly __typename?: 'Human' } & Pick<Human, 'name'>) | ({ readonly __typename?: 'Droid' } & Pick<Droid, 'name'>)> };
+export type HeroNameConditionalExclusionQuery = { readonly __typename?: 'Query' } & {
+  readonly hero: Maybe<
+    | ({ readonly __typename?: 'Human' } & Pick<Human, 'name'>)
+    | ({ readonly __typename?: 'Droid' } & Pick<Droid, 'name'>)
+  >;
+};
 
 export type HeroParentTypeDependentFieldQueryVariables = {
   episode?: Maybe<Episode>;
@@ -300,8 +350,26 @@ export type HeroParentTypeDependentFieldQueryVariables = {
 
 export type HeroParentTypeDependentFieldQuery = { readonly __typename?: 'Query' } & {
   readonly hero: Maybe<
-    | ({ readonly __typename?: 'Human' } & Pick<Human, 'name'> & { readonly friends: Maybe<ReadonlyArray<Maybe<({ readonly __typename?: 'Human' } & Pick<Human, 'height' | 'name'>) | ({ readonly __typename?: 'Droid' } & Pick<Droid, 'name'>)>>> })
-    | ({ readonly __typename?: 'Droid' } & Pick<Droid, 'name'> & { readonly friends: Maybe<ReadonlyArray<Maybe<({ readonly __typename?: 'Human' } & Pick<Human, 'height' | 'name'>) | ({ readonly __typename?: 'Droid' } & Pick<Droid, 'name'>)>>> })
+    | ({ readonly __typename?: 'Human' } & Pick<Human, 'name'> & {
+          readonly friends: Maybe<
+            ReadonlyArray<
+              Maybe<
+                | ({ readonly __typename?: 'Human' } & Pick<Human, 'height' | 'name'>)
+                | ({ readonly __typename?: 'Droid' } & Pick<Droid, 'name'>)
+              >
+            >
+          >;
+        })
+    | ({ readonly __typename?: 'Droid' } & Pick<Droid, 'name'> & {
+          readonly friends: Maybe<
+            ReadonlyArray<
+              Maybe<
+                | ({ readonly __typename?: 'Human' } & Pick<Human, 'height' | 'name'>)
+                | ({ readonly __typename?: 'Droid' } & Pick<Droid, 'name'>)
+              >
+            >
+          >;
+        })
   >;
 };
 
@@ -310,18 +378,29 @@ export type HeroTypeDependentAliasedFieldQueryVariables = {
 };
 
 export type HeroTypeDependentAliasedFieldQuery = { readonly __typename?: 'Query' } & {
-  readonly hero: Maybe<({ readonly __typename?: 'Human' } & { readonly property: Human['homePlanet'] }) | ({ readonly __typename?: 'Droid' } & { readonly property: Droid['primaryFunction'] })>;
+  readonly hero: Maybe<
+    | ({ readonly __typename?: 'Human' } & { readonly property: Human['homePlanet'] })
+    | ({ readonly __typename?: 'Droid' } & { readonly property: Droid['primaryFunction'] })
+  >;
 };
 
 export type HumanFieldsFragment = { readonly __typename?: 'Human' } & Pick<Human, 'name' | 'mass'>;
 
 export type HumanWithNullHeightQueryVariables = {};
 
-export type HumanWithNullHeightQuery = { readonly __typename?: 'Query' } & { readonly human: Maybe<{ readonly __typename?: 'Human' } & HumanFieldsFragment> };
+export type HumanWithNullHeightQuery = { readonly __typename?: 'Query' } & {
+  readonly human: Maybe<{ readonly __typename?: 'Human' } & HumanFieldsFragment>;
+};
 
 export type TwoHeroesQueryVariables = {};
 
 export type TwoHeroesQuery = { readonly __typename?: 'Query' } & {
-  readonly r2: Maybe<({ readonly __typename?: 'Human' } & Pick<Human, 'name'>) | ({ readonly __typename?: 'Droid' } & Pick<Droid, 'name'>)>;
-  readonly luke: Maybe<({ readonly __typename?: 'Human' } & Pick<Human, 'name'>) | ({ readonly __typename?: 'Droid' } & Pick<Droid, 'name'>)>;
+  readonly r2: Maybe<
+    | ({ readonly __typename?: 'Human' } & Pick<Human, 'name'>)
+    | ({ readonly __typename?: 'Droid' } & Pick<Droid, 'name'>)
+  >;
+  readonly luke: Maybe<
+    | ({ readonly __typename?: 'Human' } & Pick<Human, 'name'>)
+    | ({ readonly __typename?: 'Droid' } & Pick<Droid, 'name'>)
+  >;
 };

@@ -1,7 +1,16 @@
 import { getBaseTypeNode, indent, indentMultiline } from '@graphql-codegen/visitor-plugin-common';
 import { JavaApolloAndroidPluginConfig } from './plugin';
 import { JavaDeclarationBlock } from '@graphql-codegen/java-common';
-import { InputObjectTypeDefinitionNode, GraphQLSchema, InputValueDefinitionNode, isScalarType, isInputObjectType, Kind, isEnumType, VariableDefinitionNode } from 'graphql';
+import {
+  InputObjectTypeDefinitionNode,
+  GraphQLSchema,
+  InputValueDefinitionNode,
+  isScalarType,
+  isInputObjectType,
+  Kind,
+  isEnumType,
+  VariableDefinitionNode,
+} from 'graphql';
 import { Imports } from './imports';
 import { BaseJavaVisitor, SCALAR_TO_WRITER_METHOD } from './base-java-visitor';
 import { VisitorConfig } from './visitor-config';
@@ -25,11 +34,22 @@ export class InputTypeVisitor extends BaseJavaVisitor<VisitorConfig> {
       this._imports.add(Imports[type.annotation]);
 
       cls.addClassMember(field.name.value, actualType, null, annotations, 'private', { final: true });
-      cls.addClassMethod(field.name.value, actualType, `return this.${field.name.value};`, [], [type.annotation], 'public');
+      cls.addClassMethod(
+        field.name.value,
+        actualType,
+        `return this.${field.name.value};`,
+        [],
+        [type.annotation],
+        'public'
+      );
     });
   }
 
-  private addInputCtor(cls: JavaDeclarationBlock, className: string, fields: ReadonlyArray<InputValueDefinitionNode>): void {
+  private addInputCtor(
+    cls: JavaDeclarationBlock,
+    className: string,
+    fields: ReadonlyArray<InputValueDefinitionNode>
+  ): void {
     const impl = fields.map(field => `this.${field.name.value} = ${field.name.value};`).join('\n');
 
     cls.addClassMethod(
@@ -61,15 +81,23 @@ export class InputTypeVisitor extends BaseJavaVisitor<VisitorConfig> {
     if (isScalarType(schemaType)) {
       writerMethod = SCALAR_TO_WRITER_METHOD[schemaType.name] || 'writeCustom';
     } else if (isInputObjectType(schemaType)) {
-      return listItemCall ? `writeObject($item.marshaller())` : `writeObject("${field.name.value}", ${field.name.value}.value != null ? ${field.name.value}.value.marshaller() : null)`;
+      return listItemCall
+        ? `writeObject($item.marshaller())`
+        : `writeObject("${field.name.value}", ${field.name.value}.value != null ? ${field.name.value}.value.marshaller() : null)`;
     } else if (isEnumType(schemaType)) {
       writerMethod = 'writeString';
     }
 
-    return listItemCall ? `${writerMethod}($item)` : `${writerMethod}("${field.name.value}", ${field.name.value}${isNonNull ? '' : '.value'})`;
+    return listItemCall
+      ? `${writerMethod}($item)`
+      : `${writerMethod}("${field.name.value}", ${field.name.value}${isNonNull ? '' : '.value'})`;
   }
 
-  protected getFieldWithTypePrefix(field: InputValueDefinitionNode | VariableDefinitionNode, wrapWith: ((s: string) => string) | string | null = null, applyNullable = false): string {
+  protected getFieldWithTypePrefix(
+    field: InputValueDefinitionNode | VariableDefinitionNode,
+    wrapWith: ((s: string) => string) | string | null = null,
+    applyNullable = false
+  ): string {
     this._imports.add(Imports.Input);
     const typeToUse = this.getJavaClass(this._schema.getType(getBaseTypeNode(field.type).name.value));
     const isNonNull = field.type.kind === Kind.NON_NULL_TYPE;
@@ -93,7 +121,9 @@ export class InputTypeVisitor extends BaseJavaVisitor<VisitorConfig> {
 
   private buildFieldsMarshaller(field: InputValueDefinitionNode): string {
     const isNonNull = field.type.kind === Kind.NON_NULL_TYPE;
-    const isArray = field.type.kind === Kind.LIST_TYPE || (field.type.kind === Kind.NON_NULL_TYPE && field.type.type.kind === Kind.LIST_TYPE);
+    const isArray =
+      field.type.kind === Kind.LIST_TYPE ||
+      (field.type.kind === Kind.NON_NULL_TYPE && field.type.type.kind === Kind.LIST_TYPE);
     const call = this.getFieldWriterCall(field, isArray);
     const baseTypeNode = getBaseTypeNode(field.type);
     const listItemType = this.getJavaClass(this._schema.getType(baseTypeNode.name.value));
@@ -144,7 +174,9 @@ ${allMarshallers.join('\n')}
     const builderClassName = 'Builder';
     const privateFields = fields
       .map<string>(field => {
-        const isArray = field.type.kind === Kind.LIST_TYPE || (field.type.kind === Kind.NON_NULL_TYPE && field.type.type.kind === Kind.LIST_TYPE);
+        const isArray =
+          field.type.kind === Kind.LIST_TYPE ||
+          (field.type.kind === Kind.NON_NULL_TYPE && field.type.type.kind === Kind.LIST_TYPE);
         const fieldType = this.getFieldWithTypePrefix(field, v => (!isArray ? `Input<${v}>` : `Input<List<${v}>>`));
         const isNonNull = field.type.kind === Kind.NON_NULL_TYPE;
 
@@ -154,7 +186,9 @@ ${allMarshallers.join('\n')}
 
     const setters = fields
       .map<string>(field => {
-        const isArray = field.type.kind === Kind.LIST_TYPE || (field.type.kind === Kind.NON_NULL_TYPE && field.type.type.kind === Kind.LIST_TYPE);
+        const isArray =
+          field.type.kind === Kind.LIST_TYPE ||
+          (field.type.kind === Kind.NON_NULL_TYPE && field.type.type.kind === Kind.LIST_TYPE);
         const fieldType = this.getFieldWithTypePrefix(field, isArray ? 'List' : null);
         const isNonNull = field.type.kind === Kind.NON_NULL_TYPE;
 

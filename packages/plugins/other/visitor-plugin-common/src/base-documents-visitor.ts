@@ -2,7 +2,14 @@ import { NormalizedScalarsMap } from './types';
 import autoBind from 'auto-bind';
 import { DEFAULT_SCALARS } from './scalars';
 import { DeclarationBlock, DeclarationBlockConfig, buildScalars, getConfigValue } from './utils';
-import { GraphQLSchema, FragmentDefinitionNode, GraphQLObjectType, OperationDefinitionNode, VariableDefinitionNode, OperationTypeNode } from 'graphql';
+import {
+  GraphQLSchema,
+  FragmentDefinitionNode,
+  GraphQLObjectType,
+  OperationDefinitionNode,
+  VariableDefinitionNode,
+  OperationTypeNode,
+} from 'graphql';
 import { SelectionSetToObject } from './selection-set-to-object';
 import { OperationVariablesToObject } from './variables-to-object';
 import { BaseVisitor } from './base-visitor';
@@ -93,12 +100,20 @@ export interface RawDocumentsConfig extends RawTypesConfig {
   namespacedImportName?: string;
 }
 
-export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDocumentsConfig, TPluginConfig extends ParsedDocumentsConfig = ParsedDocumentsConfig> extends BaseVisitor<TRawConfig, TPluginConfig> {
+export class BaseDocumentsVisitor<
+  TRawConfig extends RawDocumentsConfig = RawDocumentsConfig,
+  TPluginConfig extends ParsedDocumentsConfig = ParsedDocumentsConfig
+> extends BaseVisitor<TRawConfig, TPluginConfig> {
   protected _unnamedCounter = 1;
   protected _variablesTransfomer: OperationVariablesToObject;
   protected _selectionSetToObject: SelectionSetToObject;
 
-  constructor(rawConfig: TRawConfig, additionalConfig: TPluginConfig, protected _schema: GraphQLSchema, defaultScalars: NormalizedScalarsMap = DEFAULT_SCALARS) {
+  constructor(
+    rawConfig: TRawConfig,
+    additionalConfig: TPluginConfig,
+    protected _schema: GraphQLSchema,
+    defaultScalars: NormalizedScalarsMap = DEFAULT_SCALARS
+  ) {
     super(rawConfig, {
       exportFragmentSpreadSubTypes: getConfigValue(rawConfig.exportFragmentSpreadSubTypes, false),
       enumPrefix: getConfigValue(rawConfig.enumPrefix, true),
@@ -114,7 +129,11 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
     });
 
     autoBind(this);
-    this._variablesTransfomer = new OperationVariablesToObject(this.scalars, this.convertName, this.config.namespacedImportName);
+    this._variablesTransfomer = new OperationVariablesToObject(
+      this.scalars,
+      this.convertName,
+      this.config.namespacedImportName
+    );
   }
 
   setSelectionSetHandler(handler: SelectionSetToObject) {
@@ -158,7 +177,11 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
     const selectionSet = this._selectionSetToObject.createNext(fragmentRootType, node.selectionSet);
     const fragmentSuffix = this.getFragmentSuffix(node);
 
-    return selectionSet.transformFragmentSelectionSetToTypes(node.name.value, fragmentSuffix, this._declarationBlockConfig);
+    return selectionSet.transformFragmentSelectionSetToTypes(
+      node.name.value,
+      fragmentSuffix,
+      this._declarationBlockConfig
+    );
   }
 
   OperationDefinition(node: OperationDefinitionNode): string {
@@ -170,7 +193,9 @@ export class BaseDocumentsVisitor<TRawConfig extends RawDocumentsConfig = RawDoc
     }
 
     const selectionSet = this._selectionSetToObject.createNext(operationRootType, node.selectionSet);
-    const visitedOperationVariables = this._variablesTransfomer.transform<VariableDefinitionNode>(node.variableDefinitions);
+    const visitedOperationVariables = this._variablesTransfomer.transform<VariableDefinitionNode>(
+      node.variableDefinitions
+    );
     const operationType: string = pascalCase(node.operation);
     const operationTypeSuffix = this.getOperationSuffix(name, operationType);
 

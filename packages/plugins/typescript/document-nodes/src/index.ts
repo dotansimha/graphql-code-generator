@@ -1,5 +1,9 @@
 import { PluginFunction, PluginValidateFn, Types } from '@graphql-codegen/plugin-helpers';
-import { NamingConvention, LoadedFragment, RawClientSideBasePluginConfig } from '@graphql-codegen/visitor-plugin-common';
+import {
+  NamingConvention,
+  LoadedFragment,
+  RawClientSideBasePluginConfig,
+} from '@graphql-codegen/visitor-plugin-common';
 import { GraphQLSchema, visit, concatAST, FragmentDefinitionNode, Kind } from 'graphql';
 import { TypeScriptDocumentNodesVisitor } from './visitor';
 
@@ -82,11 +86,22 @@ export interface TypeScriptDocumentNodesRawPluginConfig extends RawClientSideBas
   fragmentSuffix?: string;
 }
 
-export const plugin: PluginFunction<TypeScriptDocumentNodesRawPluginConfig> = (schema: GraphQLSchema, documents: Types.DocumentFile[], config: TypeScriptDocumentNodesRawPluginConfig) => {
+export const plugin: PluginFunction<TypeScriptDocumentNodesRawPluginConfig> = (
+  schema: GraphQLSchema,
+  documents: Types.DocumentFile[],
+  config: TypeScriptDocumentNodesRawPluginConfig
+) => {
   const allAst = concatAST(documents.map(v => v.document));
 
   const allFragments: LoadedFragment[] = [
-    ...(allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[]).map(fragmentDef => ({ node: fragmentDef, name: fragmentDef.name.value, onType: fragmentDef.typeCondition.name.value, isExternal: false })),
+    ...(allAst.definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION) as FragmentDefinitionNode[]).map(
+      fragmentDef => ({
+        node: fragmentDef,
+        name: fragmentDef.name.value,
+        onType: fragmentDef.typeCondition.name.value,
+        isExternal: false,
+      })
+    ),
     ...(config.externalFragments || []),
   ];
 
@@ -99,7 +114,12 @@ export const plugin: PluginFunction<TypeScriptDocumentNodesRawPluginConfig> = (s
   };
 };
 
-export const validate: PluginValidateFn<any> = async (schema: GraphQLSchema, documents: Types.DocumentFile[], config: any, outputFile: string) => {
+export const validate: PluginValidateFn<any> = async (
+  schema: GraphQLSchema,
+  documents: Types.DocumentFile[],
+  config: any,
+  outputFile: string
+) => {
   if (!outputFile.endsWith('.ts')) {
     throw new Error(`Plugin "typescript-document-nodes" requires extension to be ".ts"!`);
   }

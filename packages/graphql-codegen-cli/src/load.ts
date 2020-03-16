@@ -1,4 +1,8 @@
-import { loadSchema as loadSchemaToolkit, loadDocuments as loadDocumentsToolkit, UnnormalizedTypeDefPointer } from '@graphql-toolkit/core';
+import {
+  loadSchema as loadSchemaToolkit,
+  loadDocuments as loadDocumentsToolkit,
+  UnnormalizedTypeDefPointer,
+} from '@graphql-toolkit/core';
 import { DetailedError, Types } from '@graphql-codegen/plugin-helpers';
 import { GraphQLSchema } from 'graphql';
 import { CodeFileLoader } from '@graphql-toolkit/code-file-loader';
@@ -11,9 +15,21 @@ import { ApolloEngineLoader } from '@graphql-toolkit/apollo-engine-loader';
 import { PrismaLoader } from '@graphql-toolkit/prisma-loader';
 import { join } from 'path';
 
-export const loadSchema = async (schemaPointers: UnnormalizedTypeDefPointer, config: Types.Config): Promise<GraphQLSchema> => {
+export const loadSchema = async (
+  schemaPointers: UnnormalizedTypeDefPointer,
+  config: Types.Config
+): Promise<GraphQLSchema> => {
   try {
-    const loaders = [new CodeFileLoader(), new GitLoader(), new GithubLoader(), new GraphQLFileLoader(), new JsonFileLoader(), new UrlLoader(), new ApolloEngineLoader(), new PrismaLoader()];
+    const loaders = [
+      new CodeFileLoader(),
+      new GitLoader(),
+      new GithubLoader(),
+      new GraphQLFileLoader(),
+      new JsonFileLoader(),
+      new UrlLoader(),
+      new ApolloEngineLoader(),
+      new PrismaLoader(),
+    ];
 
     const schema = await loadSchemaToolkit(schemaPointers, {
       assumeValidSDL: true,
@@ -47,7 +63,10 @@ export const loadSchema = async (schemaPointers: UnnormalizedTypeDefPointer, con
   }
 };
 
-export const loadDocuments = async (documentPointers: UnnormalizedTypeDefPointer | UnnormalizedTypeDefPointer[], config: Types.Config): Promise<Types.DocumentFile[]> => {
+export const loadDocuments = async (
+  documentPointers: UnnormalizedTypeDefPointer | UnnormalizedTypeDefPointer[],
+  config: Types.Config
+): Promise<Types.DocumentFile[]> => {
   const loaders = [new CodeFileLoader(), new GitLoader(), new GithubLoader(), new GraphQLFileLoader()];
 
   const loadedFromToolkit = await loadDocumentsToolkit(documentPointers, {

@@ -25,14 +25,24 @@ describe('urql', () => {
     }
   `);
 
-  const validateTypeScript = async (output: Types.PluginOutput, testSchema: GraphQLSchema, documents: Types.DocumentFile[], config: any) => {
+  const validateTypeScript = async (
+    output: Types.PluginOutput,
+    testSchema: GraphQLSchema,
+    documents: Types.DocumentFile[],
+    config: any
+  ) => {
     const tsOutput = await tsPlugin(testSchema, documents, config, { outputFile: '' });
     const tsDocumentsOutput = await tsDocumentsPlugin(testSchema, documents, config, { outputFile: '' });
     const merged = mergeOutputs([tsOutput, tsDocumentsOutput, output]);
     await validateTs(merged, undefined, true);
   };
 
-  const compileTypeScript = async (output: Types.PluginOutput, testSchema: GraphQLSchema, documents: Types.DocumentFile[], config: any) => {
+  const compileTypeScript = async (
+    output: Types.PluginOutput,
+    testSchema: GraphQLSchema,
+    documents: Types.DocumentFile[],
+    config: any
+  ) => {
     const tsOutput = await tsPlugin(testSchema, documents, config, { outputFile: '' });
     const tsDocumentsOutput = await tsDocumentsPlugin(testSchema, documents, config, { outputFile: '' });
     const merged = mergeOutputs([tsOutput, tsDocumentsOutput, output]);
@@ -335,7 +345,9 @@ query MyFeed {
         }
       )) as Types.ComplexPluginOutput;
 
-      expect(content.content).toBeSimilarStringTo(`export const TestDocument: DocumentNode = {"kind":"Document","defin`);
+      expect(content.content).toBeSimilarStringTo(
+        `export const TestDocument: DocumentNode = {"kind":"Document","defin`
+      );
 
       // For issue #1599 - make sure there are not `loc` properties
       expect(content.content).not.toContain(`loc":`);

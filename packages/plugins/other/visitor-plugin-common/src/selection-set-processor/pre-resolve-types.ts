@@ -1,4 +1,11 @@
-import { BaseSelectionSetProcessor, ProcessResult, LinkField, PrimitiveAliasedFields, PrimitiveField, SelectionSetProcessorConfig } from './base';
+import {
+  BaseSelectionSetProcessor,
+  ProcessResult,
+  LinkField,
+  PrimitiveAliasedFields,
+  PrimitiveField,
+  SelectionSetProcessorConfig,
+} from './base';
 import { GraphQLObjectType, GraphQLInterfaceType, isEnumType } from 'graphql';
 import { getBaseType } from '@graphql-codegen/plugin-helpers';
 
@@ -12,7 +19,10 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
     ];
   }
 
-  transformPrimitiveFields(schemaType: GraphQLObjectType | GraphQLInterfaceType, fields: PrimitiveField[]): ProcessResult {
+  transformPrimitiveFields(
+    schemaType: GraphQLObjectType | GraphQLInterfaceType,
+    fields: PrimitiveField[]
+  ): ProcessResult {
     if (fields.length === 0) {
       return [];
     }
@@ -23,7 +33,9 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
       let typeToUse = baseType.name;
 
       if (isEnumType(baseType)) {
-        typeToUse = (this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '') + this.config.convertName(baseType.name, { useTypesPrefix: this.config.enumPrefix });
+        typeToUse =
+          (this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '') +
+          this.config.convertName(baseType.name, { useTypesPrefix: this.config.enumPrefix });
       } else if (this.config.scalars[baseType.name]) {
         typeToUse = this.config.scalars[baseType.name];
       }
@@ -37,7 +49,10 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
     });
   }
 
-  transformAliasesPrimitiveFields(schemaType: GraphQLObjectType | GraphQLInterfaceType, fields: PrimitiveAliasedFields[]): ProcessResult {
+  transformAliasesPrimitiveFields(
+    schemaType: GraphQLObjectType | GraphQLInterfaceType,
+    fields: PrimitiveAliasedFields[]
+  ): ProcessResult {
     if (fields.length === 0) {
       return [];
     }
@@ -56,7 +71,9 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
         let typeToUse = this.config.scalars[baseType.name] || baseType.name;
 
         if (isEnumType(baseType)) {
-          typeToUse = (this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '') + this.config.convertName(baseType.name, { useTypesPrefix: this.config.enumPrefix });
+          typeToUse =
+            (this.config.namespacedImportName ? `${this.config.namespacedImportName}.` : '') +
+            this.config.convertName(baseType.name, { useTypesPrefix: this.config.enumPrefix });
         }
 
         const wrappedType = this.config.wrapTypeWithModifiers(typeToUse, fieldObj.type as GraphQLObjectType);
@@ -74,6 +91,9 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
       return [];
     }
 
-    return fields.map(field => ({ name: this.config.formatNamedField(field.alias || field.name), type: field.selectionSet }));
+    return fields.map(field => ({
+      name: this.config.formatNamedField(field.alias || field.name),
+      type: field.selectionSet,
+    }));
   }
 }

@@ -29,7 +29,8 @@ export async function generateConfig(inputFile: string): Promise<string> {
       const message: string = ts.flattenDiagnosticMessageText(diagnostic.messageText, os.EOL);
       if (diagnostic.file) {
         const location: ts.LineAndCharacter = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
-        const formattedMessage: string = `${diagnostic.file.fileName}(${location.line + 1},${location.character + 1}):` + ` [TypeScript] ${message}`;
+        const formattedMessage: string =
+          `${diagnostic.file.fileName}(${location.line + 1},${location.character + 1}):` + ` [TypeScript] ${message}`;
         // eslint-disable-next-line no-console
         console.error(formattedMessage);
       } else {
@@ -97,7 +98,13 @@ const warningDefinition: tsdoc.TSDocTagDefinition = new tsdoc.TSDocTagDefinition
 function parseTSDoc(foundComment: FoundComment): ConfigComment {
   const customConfiguration: tsdoc.TSDocConfiguration = new tsdoc.TSDocConfiguration();
 
-  customConfiguration.addTagDefinitions([nameDefinition, typeDefinition, descriptionDefinition, warningDefinition, defaultDefinition]);
+  customConfiguration.addTagDefinitions([
+    nameDefinition,
+    typeDefinition,
+    descriptionDefinition,
+    warningDefinition,
+    defaultDefinition,
+  ]);
 
   const tsdocParser: tsdoc.TSDocParser = new tsdoc.TSDocParser(customConfiguration);
   const parserContext: tsdoc.ParserContext = tsdocParser.parseRange(foundComment.textRange);
@@ -149,7 +156,11 @@ function extractExamples(docComment: tsdoc.DocComment): Example[] {
   });
 }
 
-function getTagValue(tag: tsdoc.TSDocTagDefinition, docComment: tsdoc.DocComment, withLineBreaks = true): string | null {
+function getTagValue(
+  tag: tsdoc.TSDocTagDefinition,
+  docComment: tsdoc.DocComment,
+  withLineBreaks = true
+): string | null {
   const block = docComment.customBlocks.find(block => block.blockTag.tagName === tag.tagName);
 
   if (!block) {
@@ -245,7 +256,10 @@ function getJSDocCommentRanges(node: ts.Node, text: string): ts.CommentRange[] {
 
   // True if the comment starts with '/**' but not if it is '/**/'
   return commentRanges.filter(
-    comment => text.charCodeAt(comment.pos + 1) === 0x2a /* ts.CharacterCodes.asterisk */ && text.charCodeAt(comment.pos + 2) === 0x2a /* ts.CharacterCodes.asterisk */ && text.charCodeAt(comment.pos + 3) !== 0x2f /* ts.CharacterCodes.slash */
+    comment =>
+      text.charCodeAt(comment.pos + 1) === 0x2a /* ts.CharacterCodes.asterisk */ &&
+      text.charCodeAt(comment.pos + 2) === 0x2a /* ts.CharacterCodes.asterisk */ &&
+      text.charCodeAt(comment.pos + 3) !== 0x2f /* ts.CharacterCodes.slash */
   );
 }
 
