@@ -38,9 +38,9 @@ Set this configuration to `true` if you wish to disable auto add suffix of opera
 
 
 
-### documentMode (`'graphQLTag' | 'documentNode' | 'external'`, default value: `'graphQLTag'`)
+### documentMode (`'graphQLTag' | 'documentNode' | 'documentNodeImportFragments' | 'external'`, default value: `'graphQLTag'`)
 
-Declares how DocumentNode are created: - `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client - `documentNode`: document nodes will be generated as objects when we generate the templates. - `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`
+Declares how DocumentNode are created: - `graphQLTag`: `graphql-tag` or other modules (check `gqlImport`) will be used to generate document nodes. If this is used, document nodes are generated on client side i.e. the module used to generate this will be shipped to the client - `documentNode`: document nodes will be generated as objects when we generate the templates. - `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them. - `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`
 
 
 

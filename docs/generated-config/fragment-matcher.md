@@ -15,7 +15,7 @@ path/to/file.json:
    module: commonjs
 ```
 
-### apolloClientVersion (`string`, default value: `2`)
+### apolloClientVersion (`number`, default value: `2`)
 
 Compatible only with TS/TSX/JS/JSX extensions, allow you to generate output based on your Apollo-Client version. Valid values are: `2`, `3`.
 

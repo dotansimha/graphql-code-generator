@@ -64,6 +64,7 @@ async function main() {
 
 {@import: ../docs/generated-config/base-visitor.md}
 {@import: ../docs/generated-config/client-side-base-visitor.md}
+{@import: ../docs/generated-config/typescript-graphql-request.md}
 
 ## Simple Request Middleware
 

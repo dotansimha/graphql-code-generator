@@ -68,6 +68,13 @@ plugins
     rootValueType: ./my-types#MyRootValue
 ```
 
+### mapperTypeSuffix (`string`)
+
+Adds a suffix to the imported names to prevent name clashes.
+
+
+
+
 ### mappers (`Object`)
 
 Replaces a GraphQL type usage with a custom type, allowing you to return custom object from your resolvers. You can use both `module#type` and `module#namespace#type` syntax.
@@ -111,6 +118,18 @@ You can also specify a custom wrapper for the original type, without overring th
 plugins
   config:
     defaultMapper: Partial<{T}>
+```
+
+#### Usage Example: Allow deep partial with `utility-types`
+
+```yml
+plugins
+ plugins:
+   - "typescript"
+   - "typescript-resolvers"
+   - add: "import { DeepPartial } from 'utility-types';"
+ config:
+   defaultMapper: DeepPartial<{T}>
 ```
 
 ### avoidOptionals (`boolean`, default value: `false`)
