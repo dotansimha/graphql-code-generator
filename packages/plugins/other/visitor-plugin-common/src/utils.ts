@@ -89,20 +89,12 @@ export function transformComment(comment: string | StringValueNode, indentLevel 
   }
 
   comment = comment.split('*/').join('*\\/');
-  const lines = comment.split('\n');
-
-  return lines
-    .map((line, index) => {
-      const isLast = lines.length === index + 1;
-      const isFirst = index === 0;
-
-      if (isFirst && isLast) {
-        return indent(`/** ${comment} */\n`, indentLevel);
-      }
-
-      return indent(`${isFirst ? '/** \n' : ''} * ${line}${isLast ? '\n */\n' : ''}`, indentLevel);
-    })
-    .join('\n');
+  let lines = comment.split('\n');
+  if (lines.length === 1) {
+    return indent(`/** ${lines[0]} */\n`, indentLevel);
+  }
+  lines = ['/**', ...lines.map(line => ` * ${line}`), ' */\n'];
+  return lines.map(line => indent(line, indentLevel)).join('\n');
 }
 
 export class DeclarationBlock {

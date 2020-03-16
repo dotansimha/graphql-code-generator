@@ -123,7 +123,7 @@ export class TsVisitor<
     const typeString = this.config.wrapFieldDefinitions ? `FieldWrapper<${node.type}>` : ((node.type as any) as string);
     const originalFieldNode = parent[key] as FieldDefinitionNode;
     const addOptionalSign = !this.config.avoidOptionals.object && originalFieldNode.type.kind !== Kind.NON_NULL_TYPE;
-    const comment = transformComment((node.description as any) as string, 1);
+    const comment = this.getFieldComment(node);
     const { type } = this.config.declarationKind;
 
     return (

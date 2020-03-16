@@ -16,6 +16,7 @@ import {
   UnionTypeDefinitionNode,
   StringValueNode,
   isEnumType,
+  DirectiveNode,
 } from 'graphql';
 import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor';
 import { DEFAULT_SCALARS } from './scalars';
@@ -221,8 +222,8 @@ export class BaseTypesVisitor<
 
   FieldDefinition(node: FieldDefinitionNode): string {
     const typeString = (node.type as any) as string;
-    const comment = transformComment((node.description as any) as string, 1);
     const { type } = this._parsedConfig.declarationKind;
+    const comment = this.getFieldComment(node);
 
     return comment + indent(`${node.name}: ${typeString}${this.getPunctuation(type)}`);
   }
@@ -287,6 +288,17 @@ export class BaseTypesVisitor<
     }
 
     return declarationBlock;
+  }
+
+  getFieldComment(node: FieldDefinitionNode): string {
+    let commentText: string = node.description as any;
+    const deprecationDirective = node.directives.find((v: any) => v.name === 'deprecated');
+    if (deprecationDirective) {
+      const deprecationReason = this.getDeprecationReason(deprecationDirective);
+      commentText = `${commentText ? `${commentText}\n` : ''}@deprecated ${deprecationReason}`;
+    }
+    const comment = transformComment(commentText, 1);
+    return comment;
   }
 
   protected mergeAllFields(allFields: string[], hasInterfaces: boolean): string {
@@ -482,6 +494,17 @@ export class BaseTypesVisitor<
 
   SchemaDefinition() {
     return null;
+  }
+
+  protected getDeprecationReason(directive: DirectiveNode): string | void {
+    if ((directive.name as any) === 'deprecated') {
+      const hasArguments = directive.arguments.length > 0;
+      let reason = 'Field no longer supported';
+      if (hasArguments) {
+        reason = directive.arguments[0].value as any;
+      }
+      return reason;
+    }
   }
 
   protected wrapWithListType(str: string): string {
