@@ -7,6 +7,7 @@ import {
   getConfigValue,
   RawConfig,
   ParsedConfig,
+  DocumentMode,
 } from '@graphql-codegen/visitor-plugin-common';
 import { Kind, FragmentDefinitionNode, GraphQLSchema, DocumentNode, print } from 'graphql';
 
@@ -26,12 +27,38 @@ export type FragmentRegistry = {
   [fragmentName: string]: { filePath: string; importNames: string[]; onType: string; node: FragmentDefinitionNode };
 };
 
+// List of plugins that creates document variable (`XQuery` or `XFragmentDoc`), this is needed to avoid non-exists imports
+// Dotan: I know this is not the best way to do this, but this might solve most issues related to presets and imports.
+const DOC_VAR_PLUGINS: string[] = [
+  'typescript-react-apollo',
+  'typescript-apollo-angular',
+  'typescript-document-nodes',
+  'typescript-generic-sdk',
+  'typescript-graphql-request',
+  'typescript-oclif',
+  'typescript-stencil-apollo',
+  'typescript-urql',
+  'typescript-vue-apollo',
+];
+
+function isUsingDocVarPlugin(plugins: Types.PresetFnArgs<{}>['plugins']): boolean {
+  for (const pluginRecord of plugins) {
+    const pluginKey = Object.keys(pluginRecord)[0].toLowerCase();
+
+    if (DOC_VAR_PLUGINS.find(t => pluginKey === t || `@graphql-codegen/${t}` === pluginKey)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 /**
  * Used by `buildFragmentResolver` to  build a mapping of fragmentNames to paths, importNames, and other useful info
  */
 function buildFragmentRegistry(
   { generateFilePath }: DocumentImportResolverOptions,
-  { documents, config }: Types.PresetFnArgs<{}>,
+  { documents, config, plugins }: Types.PresetFnArgs<{}>,
   schemaObject: GraphQLSchema
 ) {
   const baseVisitor = new BaseVisitor<RawConfig, NearOperationFileParsedConfig>(config, {
@@ -44,9 +71,17 @@ function buildFragmentRegistry(
 
   const getAllFragmentSubTypes = (possbileTypes: string[], name: string): string[] => {
     const subTypes = [];
+    const hasDocVarPlugin = isUsingDocVarPlugin(plugins);
+    const documentMode = config.documentMode || DocumentMode.graphQLTag;
 
-    if (config.documentMode !== 'documentNode' || config.documentMode !== 'external') {
-      subTypes.push(baseVisitor.getFragmentVariableName(name));
+    if (hasDocVarPlugin) {
+      if (
+        documentMode !== DocumentMode.documentNode &&
+        documentMode !== DocumentMode.external &&
+        documentMode !== DocumentMode.documentNodeImportFragments
+      ) {
+        subTypes.push(baseVisitor.getFragmentVariableName(name));
+      }
     }
 
     const fragmentSuffix = baseVisitor.getFragmentSuffix(name);
