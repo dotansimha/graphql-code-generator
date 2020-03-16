@@ -443,6 +443,24 @@ describe('TypeScript', () => {
       validateTs(result);
     });
 
+    it('#3141 - @deprecated directive support', async () => {
+      const schema = buildSchema(`
+      type User {
+        fullName: String!
+        firstName: String! @deprecated(reason: "Field \`fullName\` has been superseded by \`firstName\`.")
+      }`);
+
+      const result = (await plugin(schema, [], {}, { outputFile: '' })) as Types.ComplexPluginOutput;
+      expect(result.content).toBeSimilarStringTo(`
+      export type User = {
+        __typename?: 'User';
+        fullName: Scalars['String'];
+        /** @deprecated Field \`fullName\` has been superseded by \`firstName\`. */
+        firstName: Scalars['String'];
+      };`);
+      validateTs(result);
+    });
+
     it('#1462 - Union of scalars and argument of directive', async () => {
       const schema = buildSchema(`
       union Any = String | Int | Float | ID
