@@ -13,6 +13,7 @@ import {
   stripMapperTypeInterpolation,
   OMIT_TYPE,
   REQUIRE_FIELDS_TYPE,
+  wrapTypeWithModifiers,
 } from './utils';
 import {
   NameNode,
@@ -28,14 +29,12 @@ import {
   isObjectType,
   isInterfaceType,
   isNonNullType,
-  isListType,
   isUnionType,
   GraphQLNamedType,
   isEnumType,
   DirectiveDefinitionNode,
   GraphQLObjectType,
   InputValueDefinitionNode,
-  GraphQLOutputType,
 } from 'graphql';
 
 import { OperationVariablesToObject } from './variables-to-object';
@@ -511,7 +510,10 @@ export class BaseResolversVisitor<
             return {
               addOptionalSign,
               fieldName,
-              replaceWithType: this.wrapTypeWithModifiers(getTypeToUse(baseType.name), field.type),
+              replaceWithType: wrapTypeWithModifiers(getTypeToUse(baseType.name), field.type, {
+                wrapOptional: this.applyMaybe,
+                wrapArray: this.wrapWithArray,
+              }),
             };
           })
           .filter(a => a);
@@ -586,19 +588,6 @@ export class BaseResolversVisitor<
     }
 
     return `Array<${t}>`;
-  }
-
-  protected wrapTypeWithModifiers(baseType: string, type: GraphQLOutputType): string {
-    if (isNonNullType(type)) {
-      return this.clearMaybe(this.wrapTypeWithModifiers(baseType, type.ofType));
-    } else if (isListType(type)) {
-      const innerType = this.wrapTypeWithModifiers(baseType, type.ofType);
-
-      return this.applyMaybe(this.wrapWithArray(innerType));
-    } else {
-      // ResolverTypeWrapper here?
-      return this.applyMaybe(baseType);
-    }
   }
 
   protected createFieldContextTypeMap(): FieldContextTypeMap {

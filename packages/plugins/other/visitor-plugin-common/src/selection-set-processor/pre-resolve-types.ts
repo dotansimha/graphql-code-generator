@@ -40,10 +40,11 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
         typeToUse = this.config.scalars[baseType.name];
       }
 
-      const wrappedType = this.config.wrapTypeWithModifiers(typeToUse, fieldObj.type as GraphQLObjectType);
+      const name = this.config.formatNamedField(field, fieldObj.type);
+      const wrappedType = this.config.wrapTypeWithModifiers(typeToUse, fieldObj.type);
 
       return {
-        name: this.config.formatNamedField(field),
+        name,
         type: wrappedType,
       };
     });
@@ -58,9 +59,8 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
     }
 
     return fields.map(aliasedField => {
-      const name = this.config.formatNamedField(aliasedField.alias);
-
       if (aliasedField.fieldName === '__typename') {
+        const name = this.config.formatNamedField(aliasedField.alias, null);
         return {
           name,
           type: `'${schemaType.name}'`,
@@ -76,7 +76,8 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
             this.config.convertName(baseType.name, { useTypesPrefix: this.config.enumPrefix });
         }
 
-        const wrappedType = this.config.wrapTypeWithModifiers(typeToUse, fieldObj.type as GraphQLObjectType);
+        const name = this.config.formatNamedField(aliasedField.alias, fieldObj.type);
+        const wrappedType = this.config.wrapTypeWithModifiers(typeToUse, fieldObj.type);
 
         return {
           name,
@@ -92,7 +93,7 @@ export class PreResolveTypesProcessor extends BaseSelectionSetProcessor<Selectio
     }
 
     return fields.map(field => ({
-      name: this.config.formatNamedField(field.alias || field.name),
+      name: field.alias || field.name,
       type: field.selectionSet,
     }));
   }

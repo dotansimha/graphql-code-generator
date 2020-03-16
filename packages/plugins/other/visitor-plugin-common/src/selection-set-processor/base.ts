@@ -1,5 +1,5 @@
 import { ScalarsMap, ConvertNameFn } from '../types';
-import { GraphQLObjectType, GraphQLInterfaceType, GraphQLNonNull, GraphQLList } from 'graphql';
+import { GraphQLObjectType, GraphQLInterfaceType, GraphQLOutputType } from 'graphql';
 
 export type PrimitiveField = string;
 export type PrimitiveAliasedFields = { alias: string; fieldName: string };
@@ -12,11 +12,8 @@ export type SelectionSetProcessorConfig = {
   convertName: ConvertNameFn<any>;
   enumPrefix: boolean | null;
   scalars: ScalarsMap;
-  formatNamedField: (name: string) => string;
-  wrapTypeWithModifiers: (
-    baseType: string,
-    type: GraphQLObjectType | GraphQLNonNull<GraphQLObjectType> | GraphQLList<GraphQLObjectType>
-  ) => string;
+  formatNamedField(name: string, type?: GraphQLOutputType | null): string;
+  wrapTypeWithModifiers(baseType: string, type: GraphQLOutputType): string;
 };
 
 export class BaseSelectionSetProcessor<Config extends SelectionSetProcessorConfig> {
