@@ -150,7 +150,7 @@ describe('near-operation-file preset', () => {
             }
           }
         `,
-        `import { PageFragmentDoc, PageFragment, BookFragmentDoc, BookFragment } from './fragments.generated';`
+        `import { PageFragment, BookFragment } from './fragments.generated';`
       );
 
       // Try to flip the order of operations to see if it's still works
@@ -168,7 +168,7 @@ describe('near-operation-file preset', () => {
             }
           }
         `,
-        `import { BookFragmentDoc, BookFragment, PageFragmentDoc, PageFragment } from './fragments.generated';`
+        `import { BookFragment, PageFragment } from './fragments.generated';`
       );
     });
 
@@ -219,7 +219,7 @@ describe('near-operation-file preset', () => {
             typescript: {},
           },
           {
-            add: `import { UserFieldsFragmentDoc, UserFieldsFragment } from './user-fragment.generated';`,
+            add: `import { UserFieldsFragment } from './user-fragment.generated';`,
           },
         ])
       );
@@ -270,7 +270,7 @@ describe('near-operation-file preset', () => {
             typescript: {},
           },
           {
-            add: `import { UserFieldsFragmentFragmentDoc, UserFieldsFragmentFragment } from './user-fragment.generated';`,
+            add: `import { UserFieldsFragmentFragment } from './user-fragment.generated';`,
           },
         ])
       );
@@ -659,7 +659,7 @@ describe('near-operation-file preset', () => {
           typescript: {},
         },
         {
-          add: `import { UserFieldsFragmentDoc, UserFieldsFragment } from './user-fragment.generated';`,
+          add: `import { UserFieldsFragment } from './user-fragment.generated';`,
         },
       ])
     );
@@ -689,7 +689,7 @@ describe('near-operation-file preset', () => {
     expect(result.map(o => o.plugins)[0]).toEqual(
       expect.arrayContaining([
         {
-          add: `import { UserFieldsFragmentDoc, UserFieldsFragment } from '../../../user-fragment.generated';`,
+          add: `import { UserFieldsFragment } from '../../../user-fragment.generated';`,
         },
       ])
     );
@@ -719,7 +719,7 @@ describe('near-operation-file preset', () => {
     expect(result.map(o => o.plugins)[0]).toEqual(
       expect.arrayContaining([
         {
-          add: `import { UserFieldsFragmentDoc, UserFieldsFragment } from './nested/down/here/user-fragment.generated';`,
+          add: `import { UserFieldsFragment } from './nested/down/here/user-fragment.generated';`,
         },
       ])
     );

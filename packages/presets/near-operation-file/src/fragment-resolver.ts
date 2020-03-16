@@ -8,9 +8,10 @@ import {
   RawConfig,
   ParsedConfig,
 } from '@graphql-codegen/visitor-plugin-common';
+import { resolve } from 'path';
 import { Kind, FragmentDefinitionNode, GraphQLSchema, DocumentNode, print } from 'graphql';
 
-import { extractExternalFragmentsInUse } from './utils';
+import { extractExternalFragmentsInUse, resolveRelativeImport } from './utils';
 
 import { DocumentImportResolverOptions } from './resolve-document-imports';
 
@@ -44,11 +45,6 @@ function buildFragmentRegistry(
 
   const getAllFragmentSubTypes = (possbileTypes: string[], name: string): string[] => {
     const subTypes = [];
-
-    if (config.documentMode !== 'documentNode' || config.documentMode !== 'external') {
-      subTypes.push(baseVisitor.getFragmentVariableName(name));
-    }
-
     const fragmentSuffix = baseVisitor.getFragmentSuffix(name);
 
     if (possbileTypes.length === 1) {
@@ -149,16 +145,16 @@ export default function buildFragmentResolver<T>(
           }
         }
 
+        const absGeneratedFilePath = resolve(baseOutputDir, generatedFilePath);
+        const absFragmentFilePath = resolve(baseOutputDir, fragmentDetails.filePath);
+
         externalFragments.push({
           level,
           isExternal: true,
           name: fragmentName,
+          importFrom: resolveRelativeImport(absGeneratedFilePath, absFragmentFilePath),
           onType: fragmentDetails.onType,
           node: fragmentDetails.node,
-          // TODO replaced importFrom with importStatement for langauge agnosticism.
-          // reluctant to add cwd or another relative path injector here just to do
-          // relativePath({ from: fragment, to: generatedFilePath })
-          // importFrom : importStatement,
         });
       }
     }
